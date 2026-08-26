@@ -126,3 +126,16 @@ The probe rejects a non-canonical binary, evaluates the decoded program on
 CPU and GPU, compares pose/`H`/`Hdot` within FP32 tolerance, and repeats the
 GPU result byte-for-byte. The articulated solver does not yet consume this IR;
 this is not a substitute for that lowerer or a physical validation.
+
+## 8. Export BodyParts3D nerve annotations
+
+```sh
+numi human nerve-annotations \
+  --sources Sources \
+  --output Build/bodyparts3d-nerve-annotations.json
+```
+
+This retains the selected nerve labels, `FJ...` mesh references, and incident
+`is_a`/`part_of` source hierarchy edges. It is deliberately annotation-only;
+no neural conduction, activation, collision, or deformable model is inferred
+from BodyParts3D geometry.

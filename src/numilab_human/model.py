@@ -1756,6 +1756,64 @@ def parse_bodyparts3d(sources: Path, classification_path: Path) -> dict[str, Any
     }
 
 
+def bodyparts_nerve_annotation(anatomy: dict[str, Any]) -> dict[str, Any]:
+    """Emit an annotation-only nerve graph without inventing neural physics."""
+    components = [
+        component
+        for component in anatomy.get("components", [])
+        if component.get("anatomy_class") == "nerve_surface"
+    ]
+    components.sort(
+        key=lambda component: (
+            str(component.get("hierarchy")),
+            str(component.get("concept_id")),
+            str(component.get("representation_id")),
+        )
+    )
+    concepts_by_hierarchy = {
+        hierarchy: {
+            component["concept_id"]
+            for component in components
+            if component.get("hierarchy") == hierarchy
+        }
+        for hierarchy in {component.get("hierarchy") for component in components}
+    }
+    edges = [
+        edge
+        for edge in anatomy.get("hierarchy_edges", [])
+        if edge.get("hierarchy") in concepts_by_hierarchy
+        and (
+            edge.get("parent_id") in concepts_by_hierarchy[edge["hierarchy"]]
+            or edge.get("child_id") in concepts_by_hierarchy[edge["hierarchy"]]
+        )
+    ]
+    edges.sort(
+        key=lambda edge: (
+            str(edge.get("hierarchy")),
+            str(edge.get("parent_id")),
+            str(edge.get("child_id")),
+        )
+    )
+    return {
+        "schema": "numi.human.bodyparts3d-nerve-annotation.v1",
+        "source": {
+            "id": anatomy.get("source_id"),
+            "version": anatomy.get("version"),
+            "archives": anatomy.get("archives"),
+        },
+        "component_count": len(components),
+        "hierarchy_edge_count": len(edges),
+        "components": components,
+        "hierarchy_edges": edges,
+        "numi_role": "anatomical_geometry_only",
+        "evidence_boundary": (
+            "BodyParts3D nerve labels, element meshes, and source hierarchy only. "
+            "This artifact has no conduction, activation, attachment, collision, or "
+            "deformable-physics semantics."
+        ),
+    }
+
+
 def _locked_file_gate(path: Path, metadata: dict[str, Any]) -> dict[str, Any]:
     expected_hash = metadata.get("sha256")
     expected_bytes = metadata.get("bytes")
@@ -2076,7 +2134,7 @@ def gate_report(
             },
             {
                 "id": "nerve_annotation",
-                "status": "blocked",
+                "status": "ready" if bodyparts_ready else "blocked",
                 "requirement": "A verified BodyParts3D source import; geometry alone must remain annotation-only.",
             },
             {

@@ -9,6 +9,7 @@ from subprocess import run
 
 from numilab_human.model import (
     bodyparts_geometry_preflight,
+    bodyparts_nerve_annotation,
     build_rajagopal_distal_pin_preview,
     evaluate_opensim_custom_joint,
     gate_report,
@@ -130,6 +131,50 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(geometry["summary"]["invalid_face_reference_count"], 0)
         self.assertEqual(geometry["archives"][0]["meshes"][0]["vertex_count"], 4)
         self.assertEqual(geometry["archives"][0]["meshes"][0]["face_count"], 4)
+
+    def test_nerve_annotation_preserves_components_and_incident_hierarchy_edges(self) -> None:
+        annotation = bodyparts_nerve_annotation(
+            {
+                "source_id": "bodyparts3d_4",
+                "version": "4.0",
+                "archives": [{"file": "isa.zip", "sha256": "a" * 64}],
+                "components": [
+                    {
+                        "concept_id": "FMA7157",
+                        "representation_id": "BP1",
+                        "hierarchy": "is_a",
+                        "anatomy_class": "nerve_surface",
+                        "element_meshes": [{"element_id": "FJ1", "mesh_present": True}],
+                    },
+                    {
+                        "concept_id": "FMA5018",
+                        "representation_id": "BP2",
+                        "hierarchy": "is_a",
+                        "anatomy_class": "bone",
+                        "element_meshes": [{"element_id": "FJ2", "mesh_present": True}],
+                    },
+                ],
+                "hierarchy_edges": [
+                    {
+                        "hierarchy": "is_a",
+                        "parent_id": "FMA7157",
+                        "parent_name": "nervous system",
+                        "child_id": "FMA5865",
+                        "child_name": "cranial nerve",
+                    },
+                    {
+                        "hierarchy": "is_a",
+                        "parent_id": "FMA5018",
+                        "parent_name": "anatomical structure",
+                        "child_id": "FMA23881",
+                        "child_name": "bone",
+                    },
+                ],
+            }
+        )
+        self.assertEqual(annotation["component_count"], 1)
+        self.assertEqual(annotation["hierarchy_edge_count"], 1)
+        self.assertEqual(annotation["numi_role"], "anatomical_geometry_only")
 
     def test_gate_report_keeps_unavailable_sources_blocked(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

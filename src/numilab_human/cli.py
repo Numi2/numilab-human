@@ -11,6 +11,7 @@ from pathlib import Path
 from .model import (
     ImportError,
     bodyparts_geometry_preflight,
+    bodyparts_nerve_annotation,
     build_rajagopal_distal_pin_preview,
     build_manifest,
     gate_report,
@@ -163,6 +164,22 @@ def geometry_audit(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def nerve_annotations(arguments: argparse.Namespace) -> int:
+    anatomy = parse_bodyparts3d(
+        arguments.sources.resolve(),
+        REPOSITORY_ROOT / "config/anatomy-classification.v1.json",
+    )
+    annotation = bodyparts_nerve_annotation(anatomy)
+    output = arguments.output.resolve()
+    write_json(output, annotation)
+    print(f"wrote {output}")
+    print(
+        f"annotated {annotation['component_count']} nerve components and "
+        f"{annotation['hierarchy_edge_count']} source hierarchy edges"
+    )
+    return 0
+
+
 def preview(arguments: argparse.Namespace) -> int:
     source = arguments.sources.resolve()
     lower = parse_opensim(
@@ -232,6 +249,13 @@ def parser() -> argparse.ArgumentParser:
     geometry_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
     geometry_parser.add_argument("--output", type=Path, help="optional JSON report path")
     geometry_parser.set_defaults(handler=geometry_audit)
+    nerve_parser = commands.add_parser(
+        "nerve-annotations",
+        help="emit BodyParts3D nerve labels, meshes, and source hierarchy as annotations only",
+    )
+    nerve_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
+    nerve_parser.add_argument("--output", type=Path, required=True, help="annotation JSON output path")
+    nerve_parser.set_defaults(handler=nerve_annotations)
     preview_parser = commands.add_parser(
         "preview",
         help="emit an explicitly limited Rajagopal distal-leg URDF compile preview",
