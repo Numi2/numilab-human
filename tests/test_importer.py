@@ -19,6 +19,7 @@ from numilab_human.model import (
     rajagopal_custom_joint_gpu_artifacts,
     read_json,
     rajagopal_custom_joint_ir,
+    rajagopal_millard_muscle_ir,
     runtime_compatibility_report,
     runtime_checkout_gate,
 )
@@ -420,6 +421,52 @@ class ImporterTests(unittest.TestCase):
             Path("opensim-spatial-programs/fixture_custom.velocity-q.mrospatialinput")
         ]
         self.assertEqual(struct.unpack("<16f", unit_input)[8:], (1.0,) + (0.0,) * 7)
+
+    def test_millard_muscle_ir_preserves_curve_path_and_wrap_records(self) -> None:
+        parameters = {
+            "max_isometric_force": 1000.0,
+            "optimal_fiber_length": 0.1,
+            "tendon_slack_length": 0.2,
+            "pennation_angle_at_optimal": 0.1,
+            "ignore_tendon_compliance": "false",
+            "fiber_damping": 0.1,
+            "default_activation": 0.01,
+            "minimum_activation": 0.01,
+            "TendonForceLengthCurve": [],
+        }
+        result = rajagopal_millard_muscle_ir(
+            {
+                "source_id": "fixture",
+                "source_file": "fixture.osim",
+                "source_sha256": "d" * 64,
+                "model_id": "fixture",
+                "bodies": [{"id": "pelvis"}, {"id": "femur"}],
+                "wrap_objects": [{"id": "pelvis_wrap"}],
+                "muscles": [
+                    {
+                        "id": "iliacus",
+                        "kind": "Millard2012EquilibriumMuscle",
+                        "parameters": parameters,
+                        "curves": {
+                            "ActiveForceLengthCurve": {"parameters": {}},
+                            "FiberForceLengthCurve": {"parameters": {}},
+                            "ForceVelocityCurve": {"parameters": {}},
+                            "TendonForceLengthCurve": {"parameters": {}},
+                        },
+                        "path_points": [
+                            {"parent_frame": "/bodyset/pelvis", "location_m": [0.0, 0.0, 0.0]},
+                            {"parent_frame": "/bodyset/femur", "location_m": [0.0, 0.1, 0.0]},
+                        ],
+                        "path_wraps": [{"wrap_object": "pelvis_wrap"}],
+                        "source_xml": "<Millard2012EquilibriumMuscle />",
+                    }
+                ],
+            }
+        )
+        self.assertEqual(result["muscle_count"], 1)
+        self.assertEqual(result["path_point_count"], 2)
+        self.assertEqual(result["path_wrap_count"], 1)
+        self.assertEqual(result["muscles"][0]["parameters"], parameters)
 
     def test_opensim_archive_parser_preserves_selected_member_and_archive_hash(self) -> None:
         source = """<?xml version=\"1.0\"?>

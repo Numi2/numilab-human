@@ -19,6 +19,7 @@ from .model import (
     parse_opensim,
     rajagopal_custom_joint_gpu_artifacts,
     rajagopal_custom_joint_ir,
+    rajagopal_millard_muscle_ir,
     read_json,
     report_for,
     sha256,
@@ -220,6 +221,18 @@ def kinematics(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def muscles(arguments: argparse.Namespace) -> int:
+    source = arguments.sources.resolve()
+    lower = parse_opensim(
+        source / "RajagopalLaiUhlrich2023.osim",
+        "rajagopal_lai_uhlrich_2023",
+    )
+    output = arguments.output.resolve()
+    write_json(output, rajagopal_millard_muscle_ir(lower))
+    print(f"wrote {output}")
+    return 0
+
+
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description="Build provenance-locked NumiLab Human v1 import artifacts")
     commands = result.add_subparsers(dest="command", required=True)
@@ -271,6 +284,13 @@ def parser() -> argparse.ArgumentParser:
     kinematics_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
     kinematics_parser.add_argument("--output", type=Path, required=True, help="ignored local output directory")
     kinematics_parser.set_defaults(handler=kinematics)
+    muscle_parser = commands.add_parser(
+        "muscles",
+        help="emit the exact Rajagopal Millard muscle, curve, path, and wrap IR",
+    )
+    muscle_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
+    muscle_parser.add_argument("--output", type=Path, required=True, help="muscle IR JSON output path")
+    muscle_parser.set_defaults(handler=muscles)
     return result
 
 

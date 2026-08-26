@@ -139,3 +139,17 @@ This retains the selected nerve labels, `FJ...` mesh references, and incident
 `is_a`/`part_of` source hierarchy edges. It is deliberately annotation-only;
 no neural conduction, activation, collision, or deformable model is inferred
 from BodyParts3D geometry.
+
+## 9. Preserve the Rajagopal Millard muscle source contract
+
+```sh
+numi human muscles \
+  --sources Sources \
+  --output Build/rajagopal-millard-muscle-ir.json
+```
+
+The IR validates and retains all 80 `Millard2012EquilibriumMuscle` records,
+their source parameters and curve subtrees, 288 body-frame path points, 46
+path-wrap references, and 44 source wrap objects. It does not evaluate a
+Hill-type force or apply one to a Numi coordinate; that requires the future
+device activation/fiber/tendon, path/wrap, moment-arm, and validation path.

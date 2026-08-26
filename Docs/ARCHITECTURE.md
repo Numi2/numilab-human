@@ -92,3 +92,8 @@ function tables and default/unit-velocity pose, `H`, and `Hdot` test vectors,
 plus canonical `MROpenSimSpatialTransformGPU` binary programs and fixed-state
 sidecars. This is compiler IR for a function-based articulation extension; the
 matching Metal evaluator is a kinematic boundary, not an articulated solver.
+
+`numi human muscles` emits a separately validated Millard source IR: the
+parameters, curve subtrees, GeometryPath points, PathWrap records, and wrap
+objects remain source-faithful and frame-resolved. It is an input to a future
+active muscle-tendon compiler, not a passive tendon surrogate or force proof.

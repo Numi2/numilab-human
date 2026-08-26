@@ -938,6 +938,119 @@ def rajagopal_custom_joint_gpu_artifacts(
     )
 
 
+def rajagopal_millard_muscle_ir(model: dict[str, Any]) -> dict[str, Any]:
+    """Validate and retain every source field needed by a Millard lowerer."""
+    expected_parameters = {
+        "max_isometric_force",
+        "optimal_fiber_length",
+        "tendon_slack_length",
+        "pennation_angle_at_optimal",
+        "ignore_tendon_compliance",
+        "fiber_damping",
+        "default_activation",
+        "minimum_activation",
+        "TendonForceLengthCurve",
+    }
+    muscles = [
+        muscle
+        for muscle in model.get("muscles", [])
+        if muscle.get("kind") == "Millard2012EquilibriumMuscle"
+    ]
+    if len(muscles) != len(model.get("muscles", [])):
+        unsupported = sorted(
+            {
+                str(muscle.get("kind"))
+                for muscle in model.get("muscles", [])
+                if muscle.get("kind") != "Millard2012EquilibriumMuscle"
+            }
+        )
+        raise ImportError(
+            "Rajagopal muscle IR requires only Millard2012EquilibriumMuscle; found "
+            + ", ".join(unsupported)
+        )
+    body_ids = {body.get("id") for body in model.get("bodies", [])}
+    wrap_ids = {wrap.get("id") for wrap in model.get("wrap_objects", [])}
+    compiled: list[dict[str, Any]] = []
+    for muscle in muscles:
+        identifier = muscle.get("id")
+        parameters = muscle.get("parameters")
+        curves = muscle.get("curves")
+        points = muscle.get("path_points")
+        wraps = muscle.get("path_wraps")
+        if not isinstance(identifier, str) or not identifier:
+            raise ImportError("Millard muscle has no identifier")
+        if not isinstance(parameters, dict) or set(parameters) != expected_parameters:
+            raise ImportError(f"Millard muscle {identifier} has an incomplete parameter contract")
+        for name in (
+            "max_isometric_force",
+            "optimal_fiber_length",
+            "tendon_slack_length",
+            "pennation_angle_at_optimal",
+            "fiber_damping",
+            "default_activation",
+            "minimum_activation",
+        ):
+            _finite_scalar(parameters[name], f"Millard muscle {identifier} {name}")
+        if parameters["ignore_tendon_compliance"] not in ("true", "false", True, False):
+            raise ImportError(f"Millard muscle {identifier} has invalid tendon-compliance flag")
+        if not isinstance(curves, dict) or set(curves) != {
+            "ActiveForceLengthCurve",
+            "FiberForceLengthCurve",
+            "ForceVelocityCurve",
+            "TendonForceLengthCurve",
+        }:
+            raise ImportError(f"Millard muscle {identifier} has incomplete curve records")
+        if not isinstance(points, list) or len(points) < 2:
+            raise ImportError(f"Millard muscle {identifier} requires two or more path points")
+        if not isinstance(wraps, list):
+            raise ImportError(f"Millard muscle {identifier} has invalid path wraps")
+        for point in points:
+            frame = point.get("parent_frame")
+            if not isinstance(frame, str) or not frame.startswith("/bodyset/"):
+                raise ImportError(f"Millard muscle {identifier} has unresolved path-point frame")
+            body = frame.rsplit("/", 1)[-1]
+            if body not in body_ids:
+                raise ImportError(f"Millard muscle {identifier} references unknown body {body}")
+            _vector3(point.get("location_m"), f"Millard muscle {identifier} path point")
+        for wrap in wraps:
+            wrap_id = wrap.get("wrap_object")
+            if not isinstance(wrap_id, str) or wrap_id not in wrap_ids:
+                raise ImportError(f"Millard muscle {identifier} references unknown wrap object {wrap_id}")
+        compiled.append(
+            {
+                "id": identifier,
+                "parameters": parameters,
+                "curves": curves,
+                "path_points": points,
+                "path_wraps": wraps,
+                "source_xml": muscle.get("source_xml"),
+            }
+        )
+    return {
+        "schema": "numi.human.opensim-millard-muscle-ir.v1",
+        "source": {
+            "id": model.get("source_id"),
+            "file": model.get("source_file"),
+            "sha256": model.get("source_sha256"),
+            "model_id": model.get("model_id"),
+        },
+        "muscle_count": len(compiled),
+        "path_point_count": sum(len(muscle["path_points"]) for muscle in compiled),
+        "path_wrap_count": sum(len(muscle["path_wraps"]) for muscle in compiled),
+        "wrap_objects": model.get("wrap_objects", []),
+        "muscles": compiled,
+        "runtime_requirement": (
+            "Device-resident Millard2012EquilibriumMuscle activation/fiber/tendon "
+            "state, source GeometryPath wrapping, body-frame moment-arm scatter, and "
+            "force-length/force-velocity validation."
+        ),
+        "evidence_boundary": (
+            "Exact OpenSim muscle, curve, GeometryPath, and wrap source records only. "
+            "No Hill-type force is evaluated or applied to Numi articulated coordinates."
+        ),
+    }
+
+
 def _wrap_objects(model: ET.Element) -> list[dict[str, Any]]:
     result: list[dict[str, Any]] = []
     for frame in model.iter():
