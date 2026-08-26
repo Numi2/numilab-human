@@ -43,6 +43,10 @@ numi human audit \
 # Fingerprint every separate BodyParts3D OBJ and conservatively preflight its
 # surface topology. This does not repair or convert a source mesh.
 numi human geometry-audit --sources Sources --output Build/bodyparts3d-topology.json
+
+# Produce one source-derived distal-leg PinJoint URDF for native compiler
+# validation. It intentionally has no collision geometry or muscle lowering.
+numi human preview --sources Sources --side right --output Build/right-pin-preview
 ```
 
 ## What the first manifest means

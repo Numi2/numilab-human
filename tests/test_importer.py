@@ -8,6 +8,7 @@ from subprocess import run
 
 from numilab_human.model import (
     bodyparts_geometry_preflight,
+    build_rajagopal_distal_pin_preview,
     gate_report,
     parse_bodyparts3d,
     parse_opensim_archive,
@@ -196,6 +197,71 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(result["source_file"], "nested/bimanual_fixture.osim")
         self.assertEqual(result["source_archive"]["file"], "upper.zip")
         self.assertEqual(len(result["source_archive"]["sha256"]), 64)
+
+    def test_rajagopal_distal_pin_preview_preserves_source_rigid_bodies(self) -> None:
+        bodies = []
+        for identifier in ("tibia_r", "talus_r", "calcn_r", "toes_r"):
+            bodies.append(
+                {
+                    "id": identifier,
+                    "mass_kg": 1.0,
+                    "mass_center_m": [0.0, 0.0, 0.0],
+                    "inertia_kg_m2": {
+                        "xx": 1.0,
+                        "yy": 1.0,
+                        "zz": 1.0,
+                        "xy": 0.0,
+                        "xz": 0.0,
+                        "yz": 0.0,
+                    },
+                }
+            )
+        joints = []
+        for name, parent, child in (
+            ("ankle_r", "tibia_r", "talus_r"),
+            ("subtalar_r", "talus_r", "calcn_r"),
+            ("mtp_r", "calcn_r", "toes_r"),
+        ):
+            joints.append(
+                {
+                    "id": name,
+                    "kind": "PinJoint",
+                    "parent_frame": f"{parent}_offset",
+                    "child_frame": f"{child}_offset",
+                    "coordinates": [{"id": name + "_coordinate", "range": [-1.0, 1.0]}],
+                    "frames": [
+                        {
+                            "id": f"{parent}_offset",
+                            "parent_frame": f"/bodyset/{parent}",
+                            "translation_m": [0.0, -0.1, 0.0],
+                            "orientation_rad": [0.0, 0.0, 0.0],
+                        },
+                        {
+                            "id": f"{child}_offset",
+                            "parent_frame": f"/bodyset/{child}",
+                            "translation_m": [0.0, 0.0, 0.0],
+                            "orientation_rad": [0.0, 0.0, 0.0],
+                        },
+                    ],
+                }
+            )
+        urdf, report = build_rajagopal_distal_pin_preview(
+            {
+                "source_id": "fixture",
+                "source_file": "fixture.osim",
+                "source_sha256": "a" * 64,
+                "model_id": "fixture",
+                "bodies": bodies,
+                "joints": joints,
+                "muscles": [],
+            },
+            "right",
+        )
+        self.assertIn('<robot name="numilab_human_rajagopal_right_distal_pin_preview">', urdf)
+        self.assertIn('<joint name="ankle_r" type="revolute">', urdf)
+        self.assertEqual(report["joint_lowering"][0]["axis_in_child_body_frame"], [0.0, 0.0, 1.0])
+        self.assertEqual(report["included_bodies"][0]["inertia_kg_m2"]["xx"], 1.0)
+        self.assertEqual(report["excluded_source_muscles"], 0)
 
     def test_gate_report_parses_available_upper_archive_for_runtime_compatibility(self) -> None:
         source = """<?xml version=\"1.0\"?>

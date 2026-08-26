@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import re
 import subprocess
 import tempfile
@@ -366,6 +367,269 @@ def parse_opensim(path: Path, source_id: str) -> dict[str, Any]:
         "joints": joints,
         "muscles": muscles,
         "wrap_objects": _wrap_objects(model),
+    }
+
+
+def _vector3(value: Any, context: str) -> list[float]:
+    if (
+        not isinstance(value, list)
+        or len(value) != 3
+        or not all(isinstance(entry, float) and math.isfinite(entry) for entry in value)
+    ):
+        raise ImportError(f"{context} must be a finite OpenSim three-vector")
+    return value
+
+
+def _matrix_from_body_fixed_xyz(orientation: list[float]) -> list[list[float]]:
+    """OpenSim body-fixed XYZ and URDF RPY use the same Rz*Ry*Rx algebra."""
+    roll, pitch, yaw = orientation
+    cosine_roll, sine_roll = math.cos(roll), math.sin(roll)
+    cosine_pitch, sine_pitch = math.cos(pitch), math.sin(pitch)
+    cosine_yaw, sine_yaw = math.cos(yaw), math.sin(yaw)
+    return [
+        [
+            cosine_yaw * cosine_pitch,
+            cosine_yaw * sine_pitch * sine_roll - sine_yaw * cosine_roll,
+            cosine_yaw * sine_pitch * cosine_roll + sine_yaw * sine_roll,
+        ],
+        [
+            sine_yaw * cosine_pitch,
+            sine_yaw * sine_pitch * sine_roll + cosine_yaw * cosine_roll,
+            sine_yaw * sine_pitch * cosine_roll - cosine_yaw * sine_roll,
+        ],
+        [
+            -sine_pitch,
+            cosine_pitch * sine_roll,
+            cosine_pitch * cosine_roll,
+        ],
+    ]
+
+
+def _matrix_transpose(matrix: list[list[float]]) -> list[list[float]]:
+    return [[matrix[column][row] for column in range(3)] for row in range(3)]
+
+
+def _matrix_product(
+    left: list[list[float]], right: list[list[float]]
+) -> list[list[float]]:
+    return [
+        [sum(left[row][index] * right[index][column] for index in range(3)) for column in range(3)]
+        for row in range(3)
+    ]
+
+
+def _matrix_vector(matrix: list[list[float]], vector: list[float]) -> list[float]:
+    return [sum(matrix[row][index] * vector[index] for index in range(3)) for row in range(3)]
+
+
+def _rpy_from_matrix(matrix: list[list[float]]) -> list[float]:
+    pitch = math.asin(max(-1.0, min(1.0, -matrix[2][0])))
+    cosine_pitch = math.cos(pitch)
+    if abs(cosine_pitch) < 1.0e-8:
+        return [0.0, pitch, math.atan2(-matrix[0][1], matrix[1][1])]
+    return [
+        math.atan2(matrix[2][1], matrix[2][2]),
+        pitch,
+        math.atan2(matrix[1][0], matrix[0][0]),
+    ]
+
+
+def _format_vector(values: Iterable[float]) -> str:
+    return " ".join(format(value, ".17g") for value in values)
+
+
+def _body_id_from_frame(frame: dict[str, Any], context: str) -> str:
+    parent = frame.get("parent_frame")
+    if not isinstance(parent, str) or not parent.startswith("/bodyset/"):
+        raise ImportError(f"{context} is not attached to an OpenSim body frame")
+    return parent.rsplit("/", 1)[-1]
+
+
+def _preview_joint_frames(joint: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+    frames = {frame["id"]: frame for frame in joint["frames"]}
+    parent_id = joint.get("parent_frame")
+    child_id = joint.get("child_frame")
+    if not isinstance(parent_id, str) or not isinstance(child_id, str):
+        raise ImportError(f"OpenSim preview joint {joint['id']} has unresolved frame sockets")
+    parent = frames.get(parent_id.rsplit("/", 1)[-1])
+    child = frames.get(child_id.rsplit("/", 1)[-1])
+    if parent is None or child is None:
+        raise ImportError(f"OpenSim preview joint {joint['id']} omits resolved PhysicalOffsetFrames")
+    return parent, child
+
+
+def _append_urdf_link(root: ET.Element, body: dict[str, Any]) -> None:
+    mass = body.get("mass_kg")
+    centre = body.get("mass_center_m")
+    inertia = body.get("inertia_kg_m2")
+    if not isinstance(mass, float) or not math.isfinite(mass) or mass <= 0.0:
+        raise ImportError(f"OpenSim preview body {body['id']} has no positive mass")
+    centre = _vector3(centre, f"OpenSim preview body {body['id']} mass centre")
+    if not isinstance(inertia, dict) or set(inertia) != {"xx", "yy", "zz", "xy", "xz", "yz"}:
+        raise ImportError(f"OpenSim preview body {body['id']} has no complete inertia tensor")
+    link = ET.SubElement(root, "link", {"name": body["id"]})
+    inertial = ET.SubElement(link, "inertial")
+    ET.SubElement(inertial, "origin", {"xyz": _format_vector(centre), "rpy": "0 0 0"})
+    ET.SubElement(inertial, "mass", {"value": format(mass, ".17g")})
+    ET.SubElement(
+        inertial,
+        "inertia",
+        {
+            "ixx": format(inertia["xx"], ".17g"),
+            "ixy": format(inertia["xy"], ".17g"),
+            "ixz": format(inertia["xz"], ".17g"),
+            "iyy": format(inertia["yy"], ".17g"),
+            "iyz": format(inertia["yz"], ".17g"),
+            "izz": format(inertia["zz"], ".17g"),
+        },
+    )
+
+
+def build_rajagopal_distal_pin_preview(
+    model: dict[str, Any], side: str
+) -> tuple[str, dict[str, Any]]:
+    """Create an explicitly limited native-cookable distal-leg URDF preview.
+
+    It represents only the three source PinJoints for a single leg.  The root
+    tibia is floating, no collision proxy is invented, and no muscle is
+    lowered.  That makes the artifact useful for Numi's imported-URDF compiler
+    while keeping its scope distinct from a source-faithful Human RobotPack.
+    """
+    suffix = {"right": "r", "left": "l"}.get(side)
+    if suffix is None:
+        raise ImportError("Rajagopal preview side must be 'right' or 'left'")
+    joint_ids = [f"ankle_{suffix}", f"subtalar_{suffix}", f"mtp_{suffix}"]
+    joints_by_id = {joint["id"]: joint for joint in model["joints"]}
+    selected = [joints_by_id.get(identifier) for identifier in joint_ids]
+    if any(joint is None for joint in selected):
+        missing = [identifier for identifier, joint in zip(joint_ids, selected) if joint is None]
+        raise ImportError("Rajagopal preview is missing source joints: " + ", ".join(missing))
+    if any(joint["kind"] != "PinJoint" for joint in selected if joint is not None):
+        raise ImportError("Rajagopal distal preview only accepts exact source PinJoints")
+    source_joints = [joint for joint in selected if joint is not None]
+    frames = [_preview_joint_frames(joint) for joint in source_joints]
+    body_ids = [_body_id_from_frame(frames[0][0], f"{joint_ids[0]} parent")]
+    for joint, (_, child_frame) in zip(source_joints, frames):
+        body_ids.append(_body_id_from_frame(child_frame, f"{joint['id']} child"))
+    for joint, (_, child_frame), expected_parent in zip(
+        source_joints[1:], frames[1:], body_ids[1:-1], strict=True
+    ):
+        parent_frame, _ = _preview_joint_frames(joint)
+        actual_parent = _body_id_from_frame(parent_frame, f"{joint['id']} parent")
+        if actual_parent != expected_parent:
+            raise ImportError(f"Rajagopal preview joints are not one serial distal-leg chain at {joint['id']}")
+    bodies_by_id = {body["id"]: body for body in model["bodies"]}
+    try:
+        bodies = [bodies_by_id[identifier] for identifier in body_ids]
+    except KeyError as error:
+        raise ImportError(f"Rajagopal preview is missing body {error.args[0]}") from error
+
+    robot = ET.Element(
+        "robot",
+        {"name": f"numilab_human_rajagopal_{side}_distal_pin_preview"},
+    )
+    for body in bodies:
+        _append_urdf_link(robot, body)
+    lowering: list[dict[str, Any]] = []
+    for joint, (parent_frame, child_frame) in zip(source_joints, frames):
+        coordinate = joint["coordinates"]
+        if len(coordinate) != 1:
+            raise ImportError(f"Rajagopal preview joint {joint['id']} is not scalar")
+        range_value = coordinate[0].get("range")
+        if (
+            not isinstance(range_value, list)
+            or len(range_value) != 2
+            or not all(isinstance(value, float) and math.isfinite(value) for value in range_value)
+        ):
+            raise ImportError(f"Rajagopal preview joint {joint['id']} has invalid source range")
+        parent_translation = _vector3(
+            parent_frame.get("translation_m"), f"{joint['id']} parent translation"
+        )
+        parent_orientation = _matrix_from_body_fixed_xyz(
+            _vector3(parent_frame.get("orientation_rad"), f"{joint['id']} parent orientation")
+        )
+        child_translation = _vector3(
+            child_frame.get("translation_m"), f"{joint['id']} child translation"
+        )
+        if any(abs(value) > 1.0e-10 for value in child_translation):
+            raise ImportError(
+                f"Rajagopal preview cannot preserve nonzero child-frame translation at {joint['id']}"
+            )
+        child_orientation = _matrix_from_body_fixed_xyz(
+            _vector3(child_frame.get("orientation_rad"), f"{joint['id']} child orientation")
+        )
+        origin_rotation = _matrix_product(parent_orientation, _matrix_transpose(child_orientation))
+        axis = _matrix_vector(child_orientation, [0.0, 0.0, 1.0])
+        axis_norm = math.sqrt(sum(value * value for value in axis))
+        if not axis_norm > 0.0:
+            raise ImportError(f"Rajagopal preview joint {joint['id']} has zero transformed axis")
+        axis = [value / axis_norm for value in axis]
+        urdf_joint = ET.SubElement(
+            robot,
+            "joint",
+            {"name": joint["id"], "type": "revolute"},
+        )
+        ET.SubElement(urdf_joint, "parent", {"link": _body_id_from_frame(parent_frame, joint["id"])})
+        ET.SubElement(urdf_joint, "child", {"link": _body_id_from_frame(child_frame, joint["id"])})
+        ET.SubElement(
+            urdf_joint,
+            "origin",
+            {"xyz": _format_vector(parent_translation), "rpy": _format_vector(_rpy_from_matrix(origin_rotation))},
+        )
+        ET.SubElement(urdf_joint, "axis", {"xyz": _format_vector(axis)})
+        ET.SubElement(
+            urdf_joint,
+            "limit",
+            {"lower": format(range_value[0], ".17g"), "upper": format(range_value[1], ".17g")},
+        )
+        lowering.append(
+            {
+                "source_joint": joint["id"],
+                "source_coordinate": coordinate[0]["id"],
+                "source_range_rad": range_value,
+                "source_parent_frame": parent_frame["id"],
+                "source_child_frame": child_frame["id"],
+                "numi_urdf_joint": joint["id"],
+                "numi_joint_kind": "revolute",
+                "origin_xyz_m": parent_translation,
+                "origin_rpy_rad": _rpy_from_matrix(origin_rotation),
+                "axis_in_child_body_frame": axis,
+            }
+        )
+    ET.indent(robot, space="  ")
+    urdf = ET.tostring(robot, encoding="unicode") + "\n"
+    all_custom = [joint["id"] for joint in model["joints"] if joint["kind"] != "PinJoint"]
+    return urdf, {
+        "schema": "numi.human.rajagopal-distal-pin-preview.v1",
+        "source": {
+            "id": model["source_id"],
+            "file": model["source_file"],
+            "sha256": model["source_sha256"],
+            "model_id": model["model_id"],
+        },
+        "side": side,
+        "urdf_name": robot.attrib["name"],
+        "included_bodies": [
+            {
+                "id": body["id"],
+                "mass_kg": body["mass_kg"],
+                "mass_center_m": body["mass_center_m"],
+                "inertia_kg_m2": body["inertia_kg_m2"],
+            }
+            for body in bodies
+        ],
+        "joint_lowering": lowering,
+        "excluded_source_joints": all_custom,
+        "excluded_source_muscles": len(model["muscles"]),
+        "collision_geometry": "none; BodyParts3D geometry has not yet been source-frame registered",
+        "actuation": (
+            "No actuator is lowered; the bounded ABA probe applies zero generalized effort "
+            "and no OpenSim Hill-type muscle-tendon lowering."
+        ),
+        "evidence_boundary": (
+            "A source-derived distal-leg compile preview, not a complete Human RobotPack, "
+            "collision-qualified limb, muscle-actuated model, or physical validation."
+        ),
     }
 
 

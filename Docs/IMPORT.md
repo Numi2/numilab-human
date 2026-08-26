@@ -70,3 +70,30 @@ This writes the exact archive/member name and SHA-256 for every OBJ, with raw
 vertex/face counts, bounds, and conservative edge-manifold facts. It does not
 repair a mesh, establish an anatomical frame registration, create a volume
 mesh, or infer a material law. Those remain separate, source-specific gates.
+
+## 6. Compile a limited source-derived distal-leg preview
+
+```sh
+numi human preview \
+  --sources Sources \
+  --side right \
+  --output Build/right-pin-preview
+```
+
+This output contains the right tibia, talus, calcaneus, and toes with their
+Rajagopal mass/inertia data and the exact supported ankle, subtalar, and MTP
+PinJoint transforms. It purposefully contains no collision geometry and no
+muscle lowering, so it is only a native imported-URDF compiler preview—not a
+complete Human RobotPack or physical validation.
+
+When the matching Numi runtime is available, the bounded Metal ABA check is:
+
+```sh
+metalrobo_robot_description_cooker_probe \
+  --metal Build/right-pin-preview/rajagopal-right-distal-pin-preview.urdf
+```
+
+It reports the Metal device, a successful GPU status, and a numerical payload
+fingerprint. Repeat the same invocation on the same binary and device before
+calling it a deterministic replay. This proves neither collision, contact,
+muscle actuation, nor full-human physics.

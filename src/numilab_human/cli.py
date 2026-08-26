@@ -11,9 +11,11 @@ from pathlib import Path
 from .model import (
     ImportError,
     bodyparts_geometry_preflight,
+    build_rajagopal_distal_pin_preview,
     build_manifest,
     gate_report,
     parse_bodyparts3d,
+    parse_opensim,
     read_json,
     report_for,
     sha256,
@@ -159,6 +161,24 @@ def geometry_audit(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def preview(arguments: argparse.Namespace) -> int:
+    source = arguments.sources.resolve()
+    lower = parse_opensim(
+        source / "RajagopalLaiUhlrich2023.osim",
+        "rajagopal_lai_uhlrich_2023",
+    )
+    urdf, report = build_rajagopal_distal_pin_preview(lower, arguments.side)
+    output = arguments.output.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    urdf_path = output / f"rajagopal-{arguments.side}-distal-pin-preview.urdf"
+    report_path = output / f"rajagopal-{arguments.side}-distal-pin-preview.json"
+    urdf_path.write_text(urdf, encoding="utf-8")
+    write_json(report_path, report)
+    print(f"wrote {urdf_path}")
+    print(f"wrote {report_path}")
+    return 0
+
+
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description="Build provenance-locked NumiLab Human v1 import artifacts")
     commands = result.add_subparsers(dest="command", required=True)
@@ -188,6 +208,14 @@ def parser() -> argparse.ArgumentParser:
     geometry_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
     geometry_parser.add_argument("--output", type=Path, help="optional JSON report path")
     geometry_parser.set_defaults(handler=geometry_audit)
+    preview_parser = commands.add_parser(
+        "preview",
+        help="emit an explicitly limited Rajagopal distal-leg URDF compile preview",
+    )
+    preview_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
+    preview_parser.add_argument("--side", choices=("right", "left"), default="right")
+    preview_parser.add_argument("--output", type=Path, required=True, help="ignored local preview directory")
+    preview_parser.set_defaults(handler=preview)
     return result
 
 
