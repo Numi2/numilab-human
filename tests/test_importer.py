@@ -10,6 +10,7 @@ from subprocess import run
 from numilab_human.model import (
     ImportError as HumanImportError,
     bodyparts_geometry_preflight,
+    bodyparts_lower_body_attachment_worklist,
     bodyparts_nerve_annotation,
     bodyparts_visual_preview,
     build_rajagopal_distal_pin_preview,
@@ -34,6 +35,17 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ImporterTests(unittest.TestCase):
+    def test_lower_body_attachment_worklist_never_promotes_name_matches_to_bindings(self) -> None:
+        anatomy = {"source_id": "fixture", "version": "4.0", "archives": {}, "components": [
+            {"concept_id": "FMA1", "name": "right calcaneus", "anatomy_class": "bone",
+             "element_meshes": [{"element_id": "FJ1", "mesh_present": True}]},
+            {"concept_id": "FMA2", "name": "left toe muscle", "anatomy_class": "muscle_surface",
+             "element_meshes": [{"element_id": "FJ2", "mesh_present": True}]},
+        ]}
+        result = bodyparts_lower_body_attachment_worklist(anatomy, {"bodies": []})
+        self.assertEqual(result["candidate_count"], 2)
+        self.assertEqual(result["candidates"][0]["status"], "candidate_requires_rest_frame_registration")
+        self.assertEqual(result["foot_collider_work"]["status"], "blocked_by_registration_and_calibration")
     def test_walking_contract_requires_source_mobile_root_and_complete_muscles(self) -> None:
         model = {
             "source_id": "fixture", "source_file": "fixture.osim", "source_sha256": "0" * 64,
