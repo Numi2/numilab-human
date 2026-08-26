@@ -1,5 +1,16 @@
 # Bounded execution evidence
 
+## FunctionBased inverse-response reference — 2026-08-26
+
+Core revision `38cb6bb` adds the FP64 `M⁻¹·rhs` oracle used to qualify future
+FunctionBased contact-response columns. On the M4 Pro it loaded the complete
+22-body, 35-DoF Rajagopal tree and recovered a unit generalized impulse through
+the source mass matrix within `1e-10`. Probe SHA-256:
+`6be91d6093cf32524acd708cfff9a1bb0eeb64ab7be59f0e2402dff1950c4087`.
+
+This is an inverse-response *reference* only. Metal contact response columns,
+registered feet, contact parameters, policy rollouts, and walking remain open.
+
 ## Complete locally available source-artifact sweep — 2026-08-26
 
 All locally available, provenance-locked source compilers were rerun from the
