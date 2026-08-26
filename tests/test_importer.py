@@ -9,11 +9,13 @@ from subprocess import run
 from numilab_human.model import (
     bodyparts_geometry_preflight,
     build_rajagopal_distal_pin_preview,
+    evaluate_opensim_custom_joint,
     gate_report,
     parse_bodyparts3d,
     parse_opensim_archive,
     parse_opensim,
     read_json,
+    rajagopal_custom_joint_ir,
     runtime_compatibility_report,
     runtime_checkout_gate,
 )
@@ -181,6 +183,97 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(report["muscle_tendon"]["status"], "blocked")
         self.assertEqual(report["source_model"]["muscle_path_wraps"], 1)
         self.assertEqual(report["source_model"]["muscle_curve_kinds"], {})
+
+    def test_custom_joint_evaluator_keeps_function_values_and_derivatives(self) -> None:
+        joint = {
+            "id": "fixture_custom",
+            "kind": "CustomJoint",
+            "coordinates": [{"id": "q", "default_value": 0.25}],
+            "motion_axes": [
+                {
+                    "id": "rotation1",
+                    "coordinates": "q",
+                    "axis": [1.0, 0.0, 0.0],
+                    "function_kind": "LinearFunction",
+                    "function_parameters": {"coefficients": [2.0, 1.0]},
+                },
+                {
+                    "id": "rotation2",
+                    "coordinates": "q",
+                    "axis": [0.0, 1.0, 0.0],
+                    "function_kind": "PolynomialFunction",
+                    "function_parameters": {"coefficients": [3.0, 2.0, 1.0]},
+                },
+                {
+                    "id": "rotation3",
+                    "coordinates": "q",
+                    "axis": [0.0, 0.0, 1.0],
+                    "function_kind": "SimmSpline",
+                    "function_parameters": {"x": [0.0, 1.0], "y": [0.0, 2.0]},
+                },
+                {
+                    "id": "translation1",
+                    "coordinates": "",
+                    "axis": [1.0, 0.0, 0.0],
+                    "function_kind": "Constant",
+                    "function_parameters": {"value": 4.0},
+                },
+                {
+                    "id": "translation2",
+                    "coordinates": "",
+                    "axis": [0.0, 1.0, 0.0],
+                    "function_kind": "Constant",
+                    "function_parameters": {"value": 0.0},
+                },
+                {
+                    "id": "translation3",
+                    "coordinates": "",
+                    "axis": [0.0, 0.0, 1.0],
+                    "function_kind": "Constant",
+                    "function_parameters": {"value": 0.0},
+                },
+            ],
+        }
+        result = evaluate_opensim_custom_joint(joint)
+        self.assertEqual(result["coordinate_values"], {"q": 0.25})
+        self.assertEqual(result["axes"][0]["displacement"], 1.5)
+        self.assertEqual(result["axes"][0]["derivative"], 2.0)
+        self.assertEqual(result["axes"][1]["displacement"], 1.6875)
+        self.assertEqual(result["axes"][1]["derivative"], 3.5)
+        self.assertEqual(result["axes"][2]["displacement"], 0.5)
+        self.assertEqual(result["axes"][2]["derivative"], 2.0)
+        self.assertEqual(result["axes"][3]["spatial_kind"], "translation")
+
+    def test_custom_joint_ir_carries_source_tables_and_default_test_vector(self) -> None:
+        joint = {
+            "id": "fixture_custom",
+            "kind": "CustomJoint",
+            "coordinates": [{"id": "q", "default_value": 0.0}],
+            "motion_axes": [
+                {
+                    "id": f"axis_{index}",
+                    "coordinates": "q" if index == 0 else "",
+                    "axis": [1.0, 0.0, 0.0],
+                    "function_kind": "LinearFunction" if index == 0 else "Constant",
+                    "function_parameters": (
+                        {"coefficients": [1.0, 0.0]} if index == 0 else {"value": 0.0}
+                    ),
+                }
+                for index in range(6)
+            ],
+        }
+        result = rajagopal_custom_joint_ir(
+            {
+                "source_id": "fixture",
+                "source_file": "fixture.osim",
+                "source_sha256": "b" * 64,
+                "model_id": "fixture",
+                "joints": [joint],
+            }
+        )
+        self.assertEqual(result["joint_count"], 1)
+        self.assertEqual(result["function_kinds"], {"Constant": 5, "LinearFunction": 1})
+        self.assertEqual(result["joints"][0]["default_value_test_vector"]["axes"][0]["displacement"], 0.0)
 
     def test_opensim_archive_parser_preserves_selected_member_and_archive_hash(self) -> None:
         source = """<?xml version=\"1.0\"?>

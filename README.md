@@ -47,6 +47,10 @@ numi human geometry-audit --sources Sources --output Build/bodyparts3d-topology.
 # Produce one source-derived distal-leg PinJoint URDF for native compiler
 # validation. It intentionally has no collision geometry or muscle lowering.
 numi human preview --sources Sources --side right --output Build/right-pin-preview
+
+# Preserve and evaluate all Rajagopal CustomJoint function tables as compiler
+# IR and default-value test vectors. This does not lower them into Metal yet.
+numi human kinematics --sources Sources --output Build/custom-joint-ir
 ```
 
 ## What the first manifest means

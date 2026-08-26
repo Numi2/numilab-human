@@ -16,6 +16,7 @@ from .model import (
     gate_report,
     parse_bodyparts3d,
     parse_opensim,
+    rajagopal_custom_joint_ir,
     read_json,
     report_for,
     sha256,
@@ -179,6 +180,19 @@ def preview(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def kinematics(arguments: argparse.Namespace) -> int:
+    source = arguments.sources.resolve()
+    lower = parse_opensim(
+        source / "RajagopalLaiUhlrich2023.osim",
+        "rajagopal_lai_uhlrich_2023",
+    )
+    output = arguments.output.resolve()
+    report_path = output / "rajagopal-custom-joint-ir.json"
+    write_json(report_path, rajagopal_custom_joint_ir(lower))
+    print(f"wrote {report_path}")
+    return 0
+
+
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description="Build provenance-locked NumiLab Human v1 import artifacts")
     commands = result.add_subparsers(dest="command", required=True)
@@ -216,6 +230,13 @@ def parser() -> argparse.ArgumentParser:
     preview_parser.add_argument("--side", choices=("right", "left"), default="right")
     preview_parser.add_argument("--output", type=Path, required=True, help="ignored local preview directory")
     preview_parser.set_defaults(handler=preview)
+    kinematics_parser = commands.add_parser(
+        "kinematics",
+        help="emit source-faithful Rajagopal CustomJoint function tables and default test vectors",
+    )
+    kinematics_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
+    kinematics_parser.add_argument("--output", type=Path, required=True, help="ignored local output directory")
+    kinematics_parser.set_defaults(handler=kinematics)
     return result
 
 

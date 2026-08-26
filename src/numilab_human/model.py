@@ -200,6 +200,276 @@ def _joint_motion_axes(joint: ET.Element) -> list[dict[str, Any]]:
     return result
 
 
+_SIMM_TINY = 1.0e-7
+_SIMM_ROUNDOFF = 2.0e-13
+
+
+def _finite_scalar(value: Any, context: str) -> float:
+    if not isinstance(value, float) or not math.isfinite(value):
+        raise ImportError(f"{context} must be a finite scalar")
+    return value
+
+
+def _finite_scalars(value: Any, context: str, minimum: int = 1) -> list[float]:
+    if (
+        not isinstance(value, list)
+        or len(value) < minimum
+        or not all(isinstance(item, float) and math.isfinite(item) for item in value)
+    ):
+        raise ImportError(f"{context} must be {minimum} or more finite scalars")
+    return value
+
+
+def _simm_spline_coefficients(
+    abscissae: list[float], ordinates: list[float]
+) -> tuple[list[float], list[float], list[float]]:
+    """Match OpenSim's serialized SimmSpline coefficient construction."""
+    if len(abscissae) != len(ordinates) or len(abscissae) < 2:
+        raise ImportError("SimmSpline requires equally sized x/y arrays with at least two points")
+    if any(right <= left for left, right in zip(abscissae, abscissae[1:])):
+        raise ImportError("SimmSpline x values must be strictly increasing")
+    count = len(abscissae)
+    slope = [0.0] * count
+    quadratic = [0.0] * count
+    cubic = [0.0] * count
+    if count == 2:
+        value = (ordinates[1] - ordinates[0]) / max(_SIMM_TINY, abscissae[1] - abscissae[0])
+        return [value, value], quadratic, cubic
+
+    final = count - 1
+    penultimate = count - 2
+    cubic[0] = max(_SIMM_TINY, abscissae[1] - abscissae[0])
+    quadratic[1] = (ordinates[1] - ordinates[0]) / cubic[0]
+    for index in range(1, final):
+        cubic[index] = max(_SIMM_TINY, abscissae[index + 1] - abscissae[index])
+        slope[index] = 2.0 * (cubic[index - 1] + cubic[index])
+        quadratic[index + 1] = (ordinates[index + 1] - ordinates[index]) / cubic[index]
+        quadratic[index] = quadratic[index + 1] - quadratic[index]
+
+    slope[0] = -cubic[0]
+    slope[final] = -cubic[penultimate]
+    quadratic[0] = 0.0
+    quadratic[final] = 0.0
+    if count > 3:
+        d31 = max(_SIMM_TINY, abscissae[3] - abscissae[1])
+        d20 = max(_SIMM_TINY, abscissae[2] - abscissae[0])
+        d1 = max(_SIMM_TINY, abscissae[final] - abscissae[count - 3])
+        d2 = max(_SIMM_TINY, abscissae[penultimate] - abscissae[count - 4])
+        d30 = max(_SIMM_TINY, abscissae[3] - abscissae[0])
+        d3 = max(_SIMM_TINY, abscissae[final] - abscissae[count - 4])
+        quadratic[0] = (quadratic[2] / d31 - quadratic[1] / d20) * cubic[0] * cubic[0] / d30
+        quadratic[final] = -(
+            quadratic[penultimate] / d1 - quadratic[count - 3] / d2
+        ) * cubic[penultimate] * cubic[penultimate] / d3
+
+    for index in range(1, count):
+        scale = cubic[index - 1] / slope[index - 1]
+        slope[index] -= scale * cubic[index - 1]
+        quadratic[index] -= scale * quadratic[index - 1]
+    quadratic[final] /= slope[final]
+    for offset in range(final):
+        index = penultimate - offset
+        quadratic[index] = (quadratic[index] - cubic[index] * quadratic[index + 1]) / slope[index]
+
+    slope[final] = (
+        (ordinates[final] - ordinates[penultimate]) / cubic[penultimate]
+        + cubic[penultimate] * (quadratic[penultimate] + 2.0 * quadratic[final])
+    )
+    for index in range(final):
+        slope[index] = (
+            (ordinates[index + 1] - ordinates[index]) / cubic[index]
+            - cubic[index] * (quadratic[index + 1] + 2.0 * quadratic[index])
+        )
+        cubic[index] = (quadratic[index + 1] - quadratic[index]) / cubic[index]
+        quadratic[index] *= 3.0
+    quadratic[final] *= 3.0
+    cubic[final] = cubic[penultimate]
+    return slope, quadratic, cubic
+
+
+def evaluate_opensim_axis_function(
+    axis: dict[str, Any], coordinate_values: dict[str, float]
+) -> tuple[float, float]:
+    """Return an OpenSim TransformAxis displacement and first derivative.
+
+    The supported function set is exactly the one in the pinned Rajagopal
+    source.  The caller still has to compose the six spatial axes in a
+    function-based articulated solver; this is a source-faithful evaluator,
+    not a surrogate joint lowerer.
+    """
+    kind = axis.get("function_kind")
+    parameters = axis.get("function_parameters")
+    if not isinstance(parameters, dict):
+        raise ImportError(f"OpenSim TransformAxis {axis.get('id')} has no function parameters")
+    coordinate = axis.get("coordinates")
+    coordinate = coordinate.strip() if isinstance(coordinate, str) else ""
+    if coordinate:
+        if any(character.isspace() for character in coordinate):
+            raise ImportError(
+                f"OpenSim TransformAxis {axis.get('id')} has a multi-coordinate function; "
+                "the source evaluator requires an explicit multi-coordinate extension"
+            )
+        try:
+            argument = _finite_scalar(
+                coordinate_values[coordinate], f"coordinate {coordinate}"
+            )
+        except KeyError as error:
+            raise ImportError(f"missing OpenSim coordinate value {coordinate}") from error
+    elif kind != "Constant":
+        raise ImportError(f"OpenSim TransformAxis {axis.get('id')} has no independent coordinate")
+    else:
+        argument = 0.0
+
+    if kind == "Constant":
+        return _finite_scalar(parameters.get("value"), "OpenSim Constant value"), 0.0
+    if kind == "LinearFunction":
+        coefficients = _finite_scalars(
+            parameters.get("coefficients"), "OpenSim LinearFunction coefficients", 2
+        )
+        if len(coefficients) != 2:
+            raise ImportError("OpenSim LinearFunction must have slope and intercept")
+        return coefficients[0] * argument + coefficients[1], coefficients[0]
+    if kind == "PolynomialFunction":
+        coefficients = _finite_scalars(
+            parameters.get("coefficients"), "OpenSim PolynomialFunction coefficients"
+        )
+        value = 0.0
+        derivative = 0.0
+        for coefficient in coefficients:
+            derivative = derivative * argument + value
+            value = value * argument + coefficient
+        return value, derivative
+    if kind == "SimmSpline":
+        abscissae = _finite_scalars(parameters.get("x"), "OpenSim SimmSpline x", 2)
+        ordinates = _finite_scalars(parameters.get("y"), "OpenSim SimmSpline y", 2)
+        slope, quadratic, cubic = _simm_spline_coefficients(abscissae, ordinates)
+        final = len(abscissae) - 1
+        if argument < abscissae[0]:
+            return ordinates[0] + (argument - abscissae[0]) * slope[0], slope[0]
+        if argument > abscissae[final]:
+            return ordinates[final] + (argument - abscissae[final]) * slope[final], slope[final]
+        if abs(argument - abscissae[0]) <= _SIMM_ROUNDOFF:
+            return ordinates[0], slope[0]
+        if abs(argument - abscissae[final]) <= _SIMM_ROUNDOFF:
+            return ordinates[final], slope[final]
+        low, high = 0, final
+        while True:
+            index = (low + high) // 2
+            if argument < abscissae[index]:
+                high = index
+            elif argument > abscissae[index + 1]:
+                low = index
+            else:
+                break
+        delta = argument - abscissae[index]
+        return (
+            ordinates[index] + delta * (slope[index] + delta * (quadratic[index] + delta * cubic[index])),
+            slope[index] + delta * (2.0 * quadratic[index] + 3.0 * delta * cubic[index]),
+        )
+    raise ImportError(
+        f"OpenSim TransformAxis {axis.get('id')} has unsupported function {kind!r}"
+    )
+
+
+def evaluate_opensim_custom_joint(
+    joint: dict[str, Any], coordinate_values: dict[str, float] | None = None
+) -> dict[str, Any]:
+    """Evaluate source transform axes without pretending to lower the joint."""
+    if joint.get("kind") != "CustomJoint":
+        raise ImportError(f"OpenSim joint {joint.get('id')} is not a CustomJoint")
+    supplied = {} if coordinate_values is None else dict(coordinate_values)
+    for coordinate in joint.get("coordinates", []):
+        identifier = coordinate.get("id")
+        if not isinstance(identifier, str):
+            raise ImportError(f"OpenSim CustomJoint {joint.get('id')} has unnamed coordinates")
+        if identifier not in supplied:
+            supplied[identifier] = _finite_scalar(
+                coordinate.get("default_value"), f"OpenSim coordinate {identifier} default value"
+            )
+    values = {
+        identifier: _finite_scalar(value, f"OpenSim coordinate {identifier}")
+        for identifier, value in supplied.items()
+    }
+    axes = joint.get("motion_axes")
+    if not isinstance(axes, list) or len(axes) != 6:
+        raise ImportError(
+            f"OpenSim CustomJoint {joint.get('id')} must retain six SpatialTransform axes"
+        )
+    evaluated = []
+    for index, axis in enumerate(axes):
+        displacement, derivative = evaluate_opensim_axis_function(axis, values)
+        direction = _vector3(axis.get("axis"), f"OpenSim TransformAxis {axis.get('id')} axis")
+        evaluated.append(
+            {
+                "id": axis.get("id"),
+                "spatial_kind": "rotation" if index < 3 else "translation",
+                "axis": direction,
+                "coordinate": axis.get("coordinates") or None,
+                "function_kind": axis.get("function_kind"),
+                "displacement": displacement,
+                "derivative": derivative,
+            }
+        )
+    return {
+        "source_joint": joint.get("id"),
+        "coordinate_values": values,
+        "axes": evaluated,
+    }
+
+
+def rajagopal_custom_joint_ir(model: dict[str, Any]) -> dict[str, Any]:
+    """Emit exact CustomJoint function tables and default-value test vectors."""
+    joints = [joint for joint in model.get("joints", []) if joint.get("kind") == "CustomJoint"]
+    compiled = []
+    for joint in joints:
+        default = evaluate_opensim_custom_joint(joint)
+        compiled.append(
+            {
+                "id": joint["id"],
+                "coordinates": joint["coordinates"],
+                "spatial_transform": [
+                    {
+                        "id": axis["id"],
+                        "coordinates": axis["coordinates"],
+                        "axis": axis["axis"],
+                        "function_kind": axis["function_kind"],
+                        "function_parameters": axis["function_parameters"],
+                    }
+                    for axis in joint["motion_axes"]
+                ],
+                "default_value_test_vector": default,
+            }
+        )
+    return {
+        "schema": "numi.human.opensim-custom-joint-ir.v1",
+        "source": {
+            "id": model.get("source_id"),
+            "file": model.get("source_file"),
+            "sha256": model.get("source_sha256"),
+            "model_id": model.get("model_id"),
+        },
+        "joint_count": len(compiled),
+        "function_kinds": dict(
+            sorted(
+                Counter(
+                    axis["function_kind"]
+                    for joint in compiled
+                    for axis in joint["spatial_transform"]
+                ).items()
+            )
+        ),
+        "runtime_requirement": (
+            "Function-based articulated joints with source-order SpatialTransform composition, "
+            "analytic first derivatives, and per-coordinate generalized-force projection."
+        ),
+        "evidence_boundary": (
+            "Host-side source semantics and default test vectors only. This IR is not a Numi "
+            "device lowerer, a dynamics proof, or a replacement for the source OpenSim model."
+        ),
+        "joints": compiled,
+    }
+
+
 def _wrap_objects(model: ET.Element) -> list[dict[str, Any]]:
     result: list[dict[str, Any]] = []
     for frame in model.iter():

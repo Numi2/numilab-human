@@ -97,3 +97,17 @@ It reports the Metal device, a successful GPU status, and a numerical payload
 fingerprint. Repeat the same invocation on the same binary and device before
 calling it a deterministic replay. This proves neither collision, contact,
 muscle actuation, nor full-human physics.
+
+## 7. Preserve the source CustomJoint functions for the core lowerer
+
+```sh
+numi human kinematics \
+  --sources Sources \
+  --output Build/custom-joint-ir
+```
+
+The resulting IR includes all 10 Rajagopal `CustomJoint` SpatialTransforms,
+their `Constant`, `LinearFunction`, `PolynomialFunction`, and `SimmSpline`
+tables, plus displacement/first-derivative default-state test vectors. It is a
+host-side source-semantic artifact for a future device function-based joint
+lowerer, not a substitute for that lowerer or a physical validation.
