@@ -28,6 +28,7 @@ from numilab_human.model import (
     read_json,
     rajagopal_custom_joint_ir,
     rajagopal_millard_muscle_ir,
+    rajagopal_lower_body_pilot,
     rajagopal_walking_contract,
     rajagopal_rigid_skeleton_ir,
     runtime_compatibility_report,
@@ -228,6 +229,20 @@ class ImporterTests(unittest.TestCase):
         # The compiler deliberately rejects incomplete muscle admission rather than inventing actions.
         with self.assertRaises(HumanImportError):
             rajagopal_walking_contract(model)
+
+    def test_lower_body_pilot_uses_four_temporary_foot_pads(self) -> None:
+        model = parse_opensim(
+            ROOT / "Sources/RajagopalLaiUhlrich2023.osim",
+            "rajagopal_lai_uhlrich_2023",
+        )
+        result = rajagopal_lower_body_pilot(model)
+        self.assertEqual(result["contact"]["mode"], "temporary_engineering_pads")
+        self.assertEqual(result["contact"]["full_dimensions_m"], [0.06, 0.03, 0.06])
+        self.assertEqual(
+            [pad["body"] for pad in result["contact"]["pads"]],
+            ["calcn_r", "toes_r", "calcn_l", "toes_l"],
+        )
+        self.assertEqual(result["policy"]["action_count"], 80)
     def test_bodyparts_visual_preview_preserves_one_source_member(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             source = Path(temporary) / "Sources"
@@ -251,7 +266,7 @@ class ImporterTests(unittest.TestCase):
         result = run([command, "--numi-describe"], capture_output=True, text=True, check=True)
         self.assertEqual(
             result.stdout,
-            "Build provenance-locked NumiLab Human v1 source artifacts.\n",
+            "Build NumiLab Human source artifacts and a lower-body walking pilot.\n",
         )
 
     def test_opensim_parser_retains_mechanical_fields(self) -> None:

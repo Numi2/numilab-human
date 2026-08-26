@@ -53,6 +53,11 @@ numi human visual-preview --sources Sources --output Build/bodyparts3d-skin-prev
 # collider registration/contact calibration as gated work.
 numi human walking-contract --sources Sources --output Build/rajagopal-walking-contract.json
 
+# Build and run the immediate goal: a mobile, muscle-driven lower body on
+# flat ground. The four simple foot pads are temporary engineering scaffolding,
+# not anatomical BodyParts3D foot geometry.
+numi human pilot --sources Sources --output Build/lower-body-pilot --smoke
+
 # Produce review-only lower-body anatomy attachment and foot-collider work items.
 numi human attachment-worklist --sources Sources --output Build/lower-body-attachments.json
 

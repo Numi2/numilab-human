@@ -1156,6 +1156,65 @@ def rajagopal_walking_contract(model: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def rajagopal_lower_body_pilot(model: dict[str, Any]) -> dict[str, Any]:
+    """Build the small, runnable lower-body contact scaffold.
+
+    This is deliberately an engineering prototype: it uses the real Rajagopal
+    mobile pelvis and 80 muscle controls, but gives the four foot bodies simple
+    pads so that standing and walking work can start before anatomical meshes
+    are attached.  The pads are not BodyParts3D geometry and must never be
+    presented as anatomical contact surfaces.
+    """
+    walking = rajagopal_walking_contract(model)
+    core_manifest, _ = rajagopal_core_reference_artifact(model)
+    body_order = core_manifest.get("body_order")
+    if not isinstance(body_order, list) or body_order[:1] != ["__ground__"]:
+        raise ImportError("lower-body pilot requires canonical Rajagopal Core body order")
+    body_indices = {body: index - 1 for index, body in enumerate(body_order) if index > 0}
+    foot_bodies = ["calcn_r", "toes_r", "calcn_l", "toes_l"]
+    if any(body not in body_indices for body in foot_bodies):
+        raise ImportError("lower-body pilot requires all four Rajagopal foot bodies")
+    return {
+        "schema": "numi.human.lower-body-pilot.v1",
+        "source": walking["source"],
+        "intent": "muscle-driven lower-body standing and flat-ground walking prototype",
+        "articulation": walking["articulation"],
+        "policy": {
+            "action_kind": "bounded_muscle_excitation",
+            "action_count": walking["policy"]["action_count"],
+            "action_order": walking["policy"]["action_order"],
+        },
+        "contact": {
+            "terrain": "flat_ground",
+            "mode": "temporary_engineering_pads",
+            "shape": "box",
+            "full_dimensions_m": [0.06, 0.03, 0.06],
+            "local_position_m": [0.0, 0.0, 0.0],
+            "local_orientation_xyzw": [0.0, 0.0, 0.0, 1.0],
+            "collision_scope": "pads_to_ground_only",
+            "pads": [
+                {"body": body, "mobile_body_index": body_indices[body]}
+                for body in foot_bodies
+            ],
+        },
+        "curriculum": [
+            "deterministic contact",
+            "standing",
+            "forward commanded walking",
+        ],
+        "visual": {
+            "layers": ["skin", "bones", "muscles", "organs", "vessels", "nerves"],
+            "current_mode": "source_static_reference_layers",
+            "next_step": "attach visual meshes to lower-body segments for runtime inspection",
+        },
+        "boundary": (
+            "The foot pads are temporary non-anatomical engineering scaffolding. "
+            "They enable native task/contact work but do not register, calibrate, or replace "
+            "BodyParts3D foot geometry."
+        ),
+    }
+
+
 def bodyparts_lower_body_attachment_worklist(
     anatomy: dict[str, Any], model: dict[str, Any]
 ) -> dict[str, Any]:

@@ -4,6 +4,7 @@ import argparse
 import json
 import os
 import shutil
+import subprocess
 import sys
 import urllib.request
 from pathlib import Path
@@ -29,6 +30,7 @@ from .model import (
     rajagopal_custom_joint_ir,
     rajagopal_millard_muscle_ir,
     rajagopal_millard_reference_artifact,
+    rajagopal_lower_body_pilot,
     rajagopal_rigid_skeleton_ir,
     rajagopal_walking_contract,
     read_json,
@@ -313,6 +315,56 @@ def walking_contract(arguments: argparse.Namespace) -> int:
     print(f"wrote {output}")
     return 0
 
+
+def lower_body_pilot(arguments: argparse.Namespace) -> int:
+    source = arguments.sources.resolve()
+    lower = parse_opensim(source / "RajagopalLaiUhlrich2023.osim", "rajagopal_lai_uhlrich_2023")
+    output = arguments.output.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    core_manifest, core_payload = rajagopal_core_reference_artifact(lower)
+    millard_manifest, millard_payload = rajagopal_millard_reference_artifact(lower)
+    pilot = rajagopal_lower_body_pilot(lower)
+    core_path = output / core_manifest["payload"]["file"]
+    millard_path = output / millard_manifest["payload"]["file"]
+    core_path.write_bytes(core_payload)
+    millard_path.write_bytes(millard_payload)
+    write_json(output / "rajagopal-core-reference.manifest.json", core_manifest)
+    write_json(output / "rajagopal-millard-reference.manifest.json", millard_manifest)
+    pilot_path = output / "lower-body-pilot.json"
+    write_json(pilot_path, pilot)
+    print(f"wrote {pilot_path}")
+    if not arguments.smoke:
+        return 0
+    runtime_root = arguments.runtime_root.resolve()
+    probe = runtime_root / "build/bin/metalrobo_numilab_human_core_reference_probe"
+    if not probe.is_file() or not os.access(probe, os.X_OK):
+        raise ImportError(
+            "Human Core probe is unavailable; build metalrobo_numilab_human_core_reference_probe "
+            f"under {runtime_root / 'build'} first"
+        )
+    pad_indices = ",".join(
+        str(pad["mobile_body_index"]) for pad in pilot["contact"]["pads"]
+    )
+    command = [
+        str(probe), str(core_path), "--millard", str(millard_path), "--metal",
+        "--pilot-foot-bodies", pad_indices,
+    ]
+    completed = subprocess.run(command, capture_output=True, text=True, check=False)
+    transcript = output / "lower-body-pilot-smoke.txt"
+    transcript.write_text(
+        "command: " + " ".join(command) + "\n\nstdout:\n" + completed.stdout +
+        "\nstderr:\n" + completed.stderr,
+        encoding="utf-8",
+    )
+    if completed.stdout:
+        print(completed.stdout, end="")
+    if completed.returncode != 0:
+        if completed.stderr:
+            print(completed.stderr, end="", file=sys.stderr)
+        raise ImportError(f"lower-body pilot smoke failed; see {transcript}")
+    print(f"wrote {transcript}")
+    return 0
+
 def attachment_worklist(arguments: argparse.Namespace) -> int:
     sources = arguments.sources.resolve()
     anatomy = parse_bodyparts3d(sources, REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
@@ -472,6 +524,24 @@ def parser() -> argparse.ArgumentParser:
     walking_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
     walking_parser.add_argument("--output", type=Path, required=True, help="walking contract JSON output path")
     walking_parser.set_defaults(handler=walking_contract)
+    pilot_parser = commands.add_parser(
+        "pilot",
+        help="build the mobile lower-body, muscle-driven flat-ground pilot",
+    )
+    pilot_parser.add_argument("--sources", type=Path, required=True, help="directory containing Rajagopal source")
+    pilot_parser.add_argument("--output", type=Path, required=True, help="local pilot artifact directory")
+    pilot_parser.add_argument(
+        "--runtime-root",
+        type=Path,
+        default=Path(os.environ.get("NUMI_LAB_ROOT", "/Users/home/Documents/emergentnumilife/MetalRobo")),
+        help="MetalRobo checkout used only when --smoke is requested",
+    )
+    pilot_parser.add_argument(
+        "--smoke",
+        action="store_true",
+        help="run the local Apple-Metal four-pad contact and native-muscle smoke",
+    )
+    pilot_parser.set_defaults(handler=lower_body_pilot)
     attachment_parser = commands.add_parser("attachment-worklist", help="emit review-only lower-body BodyParts3D attachment and foot-collider work items")
     attachment_parser.add_argument("--sources", type=Path, required=True)
     attachment_parser.add_argument("--output", type=Path, required=True)
