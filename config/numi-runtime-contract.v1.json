@@ -2,7 +2,7 @@
   "schema": "numi.human.runtime-contract.v1",
   "runtime": {
     "repository": "MetalRobo",
-    "revision": "380f96bd8baf691980197aebd162a0f9d19c5aa7",
+    "revision": "479ccdf905c3b0145e13cca9c673b410ecea5b4f",
     "articulated_joint_primitives": [
       "fixed",
       "revolute",
@@ -29,7 +29,10 @@
       "src/metal/ArticulatedOperator.metal",
       "apps/opensim_spatial_transform_probe.cpp",
       "apps/opensim_spatial_transform_gpu_probe.mm",
-      "apps/numilab_human_core_reference_probe.cpp"
+      "apps/numilab_human_core_reference_probe.cpp",
+      "include/metalrobo/MillardMuscleReference.hpp",
+      "src/core/MillardMuscleReference.cpp",
+      "apps/millard_muscle_reference_probe.cpp"
     ]
   },
   "opensim_joint_lowering": {
@@ -61,13 +64,12 @@
     }
   },
   "muscle_tendon": {
-    "current_contract": "linear_sparse_tendon_position",
-    "current_contract_evidence": "RobotActuatorKind::tendonPosition",
+    "current_contract": "millard_static_equilibrium_geometrypath_tension_projection_reference",
+    "current_contract_evidence": "MillardMuscleReference evaluates source-parameterized curves, solves static fiber-tendon equilibrium, evaluates finite-cylinder GeometryPath wrapping, and scatters tendon tension through analytic articulated point Jacobians in the FP64 reference.",
     "source_faithful_requirements": [
-      "Hill-type activation and fiber/tendon state",
-      "GeometryPath attachment and wrapping evaluation",
-      "source-frame muscle force and moment-arm scatter",
-      "force-length and force-velocity validation"
+      "Metal-resident activation/fiber/tendon state advancement and actuator lowering",
+      "OpenSim binary-equivalence comparison for curves, path wrapping, moment arms, and muscle force",
+      "held-out force-length, force-velocity, and anatomical moment-arm validation"
     ]
   }
 }

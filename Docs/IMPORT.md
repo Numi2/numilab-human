@@ -154,8 +154,41 @@ numi human muscles \
 The IR validates and retains all 80 `Millard2012EquilibriumMuscle` records,
 their source parameters and curve subtrees, 288 body-frame path points, 46
 path-wrap references, and 44 source wrap objects. It does not evaluate a
-Hill-type force or apply one to a Numi coordinate; that requires the future
-device activation/fiber/tendon, path/wrap, moment-arm, and validation path.
+Hill-type force or apply one to a Numi coordinate by itself; use the matching
+reference artifact below for the bounded static-equilibrium path.
+
+## 9a. Compile the Rajagopal Millard reference payload
+
+```sh
+numi human millard-reference \
+  --sources Sources \
+  --output Build/rajagopal-millard-reference
+```
+
+This provenance-locked `NHMUSC1` ABI v2 payload binds to the matching rigid
+tree source hash and carries all 80 source muscle scalars, 22 source curve
+parameters per muscle, 288 COM-relative path points, and 46 finite-cylinder
+wrap definitions. Optional source curve properties that are absent in the
+model are materialized only with the documented OpenSim class defaults.
+
+At the matching Core revision, run both the source tree and its muscle
+reference together:
+
+```sh
+metalrobo_numilab_human_core_reference_probe \
+  Build/rajagopal-core-reference/rajagopal-core-reference.nhrigid \
+  --metal \
+  --millard Build/rajagopal-millard-reference/rajagopal-millard-reference.nhmuscle
+```
+
+The bounded FP64 reference reconstructs the source quintic-Bezier curves,
+solves static fiber-tendon equilibrium at the imported reference pose, evaluates
+the finite-cylinder GeometryPaths, and scatters tensile path force through the
+articulated point Jacobians. The same invocation can run the independent
+FunctionBased Metal operator gate. This is not OpenSim binary-equivalence,
+Metal actuator/state stepping, or a full implementation of OpenSim's hybrid
+wrap-history behavior; the source PathWrap XML, including method and range,
+remains in the companion IR for that later equivalence gate.
 
 ## 10. Resolve the Rajagopal rigid-body tree
 
@@ -199,7 +232,8 @@ then requires forward dynamics to recover a source-state inverse-dynamics
 acceleration. With `--metal`, it additionally runs source poses, non-collinear
 point Jacobians, and the dense mass matrix through the bounded Metal articulated
 operator against the FP64 reference. It does not compare against an OpenSim
-runtime, register BodyParts3D meshes, add collision/contact, or run
-muscle/tendon force. Metal ABA and MetalWorld still reject FunctionBased
+runtime, register BodyParts3D meshes, or add collision/contact. Supplying a
+matching `--millard` payload additionally runs the bounded static muscle
+reference described above. Metal ABA and MetalWorld still reject FunctionBased
 joints, so this is accelerated operator evidence, not an accelerated human
 state-step simulation.

@@ -21,6 +21,7 @@ from .model import (
     rajagopal_custom_joint_gpu_artifacts,
     rajagopal_custom_joint_ir,
     rajagopal_millard_muscle_ir,
+    rajagopal_millard_reference_artifact,
     rajagopal_rigid_skeleton_ir,
     read_json,
     report_for,
@@ -235,6 +236,24 @@ def muscles(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def millard_reference(arguments: argparse.Namespace) -> int:
+    source = arguments.sources.resolve()
+    lower = parse_opensim(
+        source / "RajagopalLaiUhlrich2023.osim",
+        "rajagopal_lai_uhlrich_2023",
+    )
+    output = arguments.output.resolve()
+    manifest, payload = rajagopal_millard_reference_artifact(lower)
+    output.mkdir(parents=True, exist_ok=True)
+    payload_path = output / "rajagopal-millard-reference.nhmuscle"
+    payload_path.write_bytes(payload)
+    manifest_path = output / "rajagopal-millard-reference.manifest.json"
+    write_json(manifest_path, manifest)
+    print(f"wrote {payload_path}")
+    print(f"wrote {manifest_path}")
+    return 0
+
+
 def skeleton(arguments: argparse.Namespace) -> int:
     source = arguments.sources.resolve()
     lower = parse_opensim(
@@ -323,6 +342,15 @@ def parser() -> argparse.ArgumentParser:
     muscle_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
     muscle_parser.add_argument("--output", type=Path, required=True, help="muscle IR JSON output path")
     muscle_parser.set_defaults(handler=muscles)
+    millard_reference_parser = commands.add_parser(
+        "millard-reference",
+        help="compile all Rajagopal Millard body-frame paths and cylinders for the Core reference",
+    )
+    millard_reference_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
+    millard_reference_parser.add_argument(
+        "--output", type=Path, required=True, help="ignored local output directory"
+    )
+    millard_reference_parser.set_defaults(handler=millard_reference)
     skeleton_parser = commands.add_parser(
         "skeleton",
         help="emit exact Rajagopal rigid-body and resolved joint-topology IR",

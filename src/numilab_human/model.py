@@ -1200,6 +1200,8 @@ def rajagopal_rigid_skeleton_ir(model: dict[str, Any]) -> dict[str, Any]:
 
 _RAJAGOPAL_CORE_REFERENCE_MAGIC = b"NHRIGID1"
 _RAJAGOPAL_CORE_REFERENCE_ABI = 1
+_RAJAGOPAL_MILLARD_REFERENCE_MAGIC = b"NHMUSC1\0"
+_RAJAGOPAL_MILLARD_REFERENCE_ABI = 2
 _MR_ENGINE_ABI_VERSION = 5
 _MR_MOTION_DYNAMIC = 2
 _MR_ROOT_FIXED = 0
@@ -1591,6 +1593,261 @@ def rajagopal_core_reference_artifact(
             "evidence_boundary": (
                 "Source-faithful rigid-tree data and canonical FunctionBased programs only. "
                 "The synthetic fixed ground anchor has no source-anatomy meaning and no generalized mass column."
+            ),
+        },
+        payload,
+    )
+
+
+def rajagopal_millard_reference_artifact(
+    model: dict[str, Any],
+) -> tuple[dict[str, Any], bytes]:
+    """Compile source Millard records into Core's fixed-layout reference ABI.
+
+    This binary owns every source muscle scalar, curve property, COM-relative
+    GeometryPath point, and source-order PathWrap cylinder. Empty optional
+    curve properties are materialized only with their documented OpenSim class
+    defaults, preserving the source curve semantics without fitting or
+    approximating any curve.
+    """
+    millard = rajagopal_millard_muscle_ir(model)
+    core_manifest, _ = rajagopal_core_reference_artifact(model)
+    body_order = core_manifest.get("body_order")
+    if not isinstance(body_order, list) or body_order[:1] != ["__ground__"]:
+        raise ImportError("Millard reference requires canonical Core body order")
+    body_index = {identifier: index for index, identifier in enumerate(body_order)}
+    bodies = {body.get("id"): body for body in model.get("bodies", [])}
+    if len(bodies) != len(model.get("bodies", [])):
+        raise ImportError("Millard reference requires unique source body identities")
+    wraps = {wrap.get("id"): wrap for wrap in model.get("wrap_objects", [])}
+    if len(wraps) != len(model.get("wrap_objects", [])):
+        raise ImportError("Millard reference requires unique source wrap identities")
+
+    muscle_records: list[bytes] = []
+    curve_records: list[bytes] = []
+    point_records: list[bytes] = []
+    wrap_records: list[bytes] = []
+    muscle_manifest: list[dict[str, Any]] = []
+    for muscle in millard["muscles"]:
+        identifier = muscle["id"]
+        parameters = muscle["parameters"]
+        curves = muscle["curves"]
+
+        def curve_values(
+            curve_name: str,
+            required: tuple[str, ...],
+            defaults: dict[str, float],
+        ) -> list[float]:
+            curve = curves.get(curve_name)
+            values = curve.get("parameters") if isinstance(curve, dict) else None
+            if not isinstance(values, dict):
+                raise ImportError(f"Millard muscle {identifier} has invalid {curve_name}")
+            allowed = set(required) | set(defaults)
+            unknown = set(values) - allowed
+            if unknown:
+                raise ImportError(
+                    f"Millard muscle {identifier} has unsupported {curve_name} properties: "
+                    + ", ".join(sorted(unknown))
+                )
+            missing = set(required) - set(values)
+            if missing:
+                raise ImportError(
+                    f"Millard muscle {identifier} has incomplete {curve_name} properties: "
+                    + ", ".join(sorted(missing))
+                )
+            materialized = {**defaults, **values}
+            return [
+                _finite_scalar(materialized[name], f"Millard muscle {identifier} {curve_name} {name}")
+                for name in (*required, *defaults)
+            ]
+
+        active = curve_values(
+            "ActiveForceLengthCurve",
+            (
+                "min_norm_active_fiber_length",
+                "transition_norm_fiber_length",
+                "max_norm_active_fiber_length",
+                "shallow_ascending_slope",
+                "minimum_value",
+            ),
+            {},
+        )
+        velocity = curve_values(
+            "ForceVelocityCurve",
+            (
+                "concentric_slope_at_vmax",
+                "concentric_slope_near_vmax",
+                "isometric_slope",
+                "eccentric_slope_at_vmax",
+                "eccentric_slope_near_vmax",
+                "max_eccentric_velocity_force_multiplier",
+            ),
+            {
+                "concentric_curviness": 0.6,
+                "eccentric_curviness": 0.9,
+            },
+        )
+        passive = curve_values(
+            "FiberForceLengthCurve",
+            (
+                "strain_at_zero_force",
+                "strain_at_one_norm_force",
+                "stiffness_at_low_force",
+                "stiffness_at_one_norm_force",
+                "curviness",
+            ),
+            {},
+        )
+        tendon = curve_values(
+            "TendonForceLengthCurve",
+            (),
+            {
+                "strain_at_one_norm_force": 0.049,
+                "stiffness_at_one_norm_force": 1.375 / 0.049,
+                "norm_force_at_toe_end": 2.0 / 3.0,
+                "curviness": 0.5,
+            },
+        )
+        curve_records.append(struct.pack("<22f", *(active + velocity + passive + tendon)))
+        point_offset = len(point_records)
+        for point in muscle["path_points"]:
+            frame = point["parent_frame"]
+            body_id = frame.rsplit("/", 1)[-1]
+            body = bodies.get(body_id)
+            if body is None or body_id not in body_index:
+                raise ImportError(f"Millard muscle {identifier} has unresolved path body {body_id}")
+            location = _vector3(point["location_m"], f"Millard muscle {identifier} path point")
+            center = _vector3(body["mass_center_m"], f"Millard body {body_id} mass centre")
+            point_records.append(
+                struct.pack(
+                    "<I3f",
+                    body_index[body_id],
+                    *[location[index] - center[index] for index in range(3)],
+                )
+            )
+        wrap_offset = len(wrap_records)
+        for path_wrap in muscle["path_wraps"]:
+            source_wrap = wraps.get(path_wrap["wrap_object"])
+            if source_wrap is None or source_wrap.get("kind") != "WrapCylinder":
+                raise ImportError(
+                    f"Millard muscle {identifier} requires supported WrapCylinder "
+                    f"{path_wrap.get('wrap_object')}"
+                )
+            parent = source_wrap.get("parent_frame")
+            if not isinstance(parent, str) or parent not in bodies or parent not in body_index:
+                raise ImportError(f"Millard muscle {identifier} has unresolved cylinder parent")
+            source_parameters = source_wrap.get("parameters")
+            if not isinstance(source_parameters, dict):
+                raise ImportError(f"Millard cylinder {source_wrap.get('id')} has invalid parameters")
+            translation = _vector3(
+                source_parameters.get("translation"),
+                f"Millard cylinder {source_wrap.get('id')} translation",
+            )
+            rotation = _vector3(
+                source_parameters.get("xyz_body_rotation"),
+                f"Millard cylinder {source_wrap.get('id')} rotation",
+            )
+            radius = _finite_scalar(
+                source_parameters.get("radius"),
+                f"Millard cylinder {source_wrap.get('id')} radius",
+            )
+            length = _finite_scalar(
+                source_parameters.get("length"),
+                f"Millard cylinder {source_wrap.get('id')} length",
+            )
+            if radius <= 0.0 or length <= 0.0:
+                raise ImportError(f"Millard cylinder {source_wrap.get('id')} dimensions must be positive")
+            center = _vector3(bodies[parent]["mass_center_m"], f"Millard body {parent} mass centre")
+            wrap_records.append(
+                struct.pack(
+                    "<I8f",
+                    body_index[parent],
+                    *[translation[index] - center[index] for index in range(3)],
+                    *rotation,
+                    radius,
+                    length,
+                )
+            )
+        ignore_tendon = parameters["ignore_tendon_compliance"] in (True, "true")
+        muscle_records.append(
+            struct.pack(
+                "<7f5I",
+                _finite_scalar(parameters["max_isometric_force"], f"Millard muscle {identifier} maximum force"),
+                _finite_scalar(parameters["optimal_fiber_length"], f"Millard muscle {identifier} optimal fibre length"),
+                _finite_scalar(parameters["tendon_slack_length"], f"Millard muscle {identifier} tendon slack length"),
+                _finite_scalar(parameters["pennation_angle_at_optimal"], f"Millard muscle {identifier} pennation"),
+                _finite_scalar(parameters["fiber_damping"], f"Millard muscle {identifier} damping"),
+                _finite_scalar(parameters["default_activation"], f"Millard muscle {identifier} default activation"),
+                _finite_scalar(parameters["minimum_activation"], f"Millard muscle {identifier} minimum activation"),
+                point_offset,
+                len(muscle["path_points"]),
+                wrap_offset,
+                len(muscle["path_wraps"]),
+                1 if ignore_tendon else 0,
+            )
+        )
+        muscle_manifest.append(
+            {
+                "id": identifier,
+                "path_point_offset": point_offset,
+                "path_point_count": len(muscle["path_points"]),
+                "wrap_offset": wrap_offset,
+                "wrap_count": len(muscle["path_wraps"]),
+            }
+        )
+    source_hash = millard["source"].get("sha256")
+    if not isinstance(source_hash, str) or not re.fullmatch(r"[0-9a-f]{64}", source_hash):
+        raise ImportError("Millard reference requires a source SHA-256")
+    header = struct.pack(
+        "<8s6I32s",
+        _RAJAGOPAL_MILLARD_REFERENCE_MAGIC,
+        _RAJAGOPAL_MILLARD_REFERENCE_ABI,
+        len(body_order) - 1,
+        len(muscle_records),
+        len(point_records),
+        len(wrap_records),
+        0,
+        bytes.fromhex(source_hash),
+    )
+    payload = b"".join(
+        [header, *muscle_records, *curve_records, *point_records, *wrap_records]
+    )
+    expected_bytes = (
+        64
+        + 48 * len(muscle_records)
+        + 88 * len(curve_records)
+        + 16 * len(point_records)
+        + 36 * len(wrap_records)
+    )
+    if len(payload) != expected_bytes:
+        raise ImportError("internal Rajagopal Millard reference payload ABI size mismatch")
+    return (
+        {
+            "schema": "numi.human.rajagopal-millard-reference.v1",
+            "source": millard["source"],
+            "payload": {
+                "file": "rajagopal-millard-reference.nhmuscle",
+                "sha256": hashlib.sha256(payload).hexdigest(),
+                "bytes": len(payload),
+                "payload_abi": _RAJAGOPAL_MILLARD_REFERENCE_ABI,
+                "byte_order": "little-endian IEEE-754 binary32",
+            },
+            "body_order": body_order,
+            "muscle_count": len(muscle_records),
+            "path_point_count": len(point_records),
+            "path_wrap_count": len(wrap_records),
+            "curve_record_bytes": 88,
+            "muscles": muscle_manifest,
+            "curve_ir_schema": millard["schema"],
+            "runtime_requirement": (
+                "Load this payload with the matching rigid-tree payload into "
+                "MillardMuscleReference, evaluate source curves, solve force equilibrium, "
+                "then project GeometryPath tension into articulated generalized force."
+            ),
+            "evidence_boundary": (
+                "Exact source scalars, curve properties (including OpenSim class defaults where "
+                "the source leaves them empty), body-frame path points, and WrapCylinder definitions. "
+                "Neither artifact is a validated OpenSim-equivalence or device-resident muscle result."
             ),
         },
         payload,

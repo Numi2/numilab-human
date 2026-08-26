@@ -21,6 +21,44 @@ open-surface candidates, infer BodyParts3D-to-OpenSim frames, or assign tissue
 material constants. Those are explicit evidence gates rather than recoverable
 metadata omissions.
 
+## Rajagopal Millard static-equilibrium reference and combined device gate — 2026-08-26
+
+This is a source-code-level Millard reference and a separate whole-tree Metal
+operator invocation. It is not a device-resident muscle actuator, Metal ABA or
+MetalWorld state step, OpenSim binary-equivalence result, contact run, or
+material calibration.
+
+| Item | Exact value |
+| --- | --- |
+| Rajagopal source SHA-256 | `8f30d0b64750b87eb7f705907862590535212b4afd7e919faa3fd7d1683d22ec` |
+| Core revision | `479ccdf905c3b0145e13cca9c673b410ecea5b4f` |
+| Isolated Mini checkout | `/Users/n/MetalRobo-numilab-human-functionbased-837ccb2` |
+| Device / toolchain | Apple M4 Pro on `macmini`; AppleClang `21.0.0.21000101` |
+| Millard payload | ABI v2; 80 muscles; 288 path points; 46 source path wraps; 22 source curve scalars per muscle |
+| Millard payload SHA-256 | `101b2a549e4d20145391138e268642e6cd2ab99bd77005ad3f6ab5875b3a08c1` |
+| Combined-reference probe SHA-256 | `3e3f66c0e10b2e589b424c90363975540d73ec9c56d14fa67cc6dfe3d91bacca` |
+| Millard reference-probe SHA-256 | `feb17da21ccd009b2a32119ca413efa36b4c9704cd730ce301e9a4bb8e8e3de5` |
+| Metal library SHA-256 | `9dbb88b2adeb2e3d7456dcddc7411c0ecb83c6bebb58ca976608c4768f4ce8c3` |
+| Combined run log SHA-256 | `3b25bd0eda222a37a45bdabeaa56878f3f1a5b3d3474f5e5beafde138e9f0c46` |
+
+The Mini rebuilt the exact Core revision, ran the generic finite-cylinder
+reference probe, then loaded the matching full Rajagopal rigid and Millard
+payloads. All 80 source muscle records reached static fiber-tendon equilibrium
+at their default activation and the imported reference pose; all 288 source
+attachment points and 46 source wrap records were admitted. Twenty-six
+cylinders were geometrically active in that one pose. The resulting tension
+projection had generalized-force L1 norm `1.653391e+04` and maximum reported
+equilibrium residual `0` at the probe precision.
+
+The same invocation ran the pre-existing whole-tree FunctionBased Metal
+operator: body poses, point Jacobians, and the 35x35 mass matrix agreed with
+the FP64 reference within its existing FP32 thresholds (absolute mass error
+`1.7e-05`, scaled `2e-06`; printed pose and point errors `0`). The muscle
+reference itself runs in the owner FP64 Core path. Its source curve construction
+and finite-cylinder projection still require a pinned OpenSim comparison,
+including hybrid wrap-history behavior and measured moment arms, before any
+OpenSim-equivalence claim.
+
 ## Full Rajagopal rigid-tree CPU reference and device-program regression — 2026-08-26
 
 This establishes one executable source-faithful rigid-body *reference* tree.

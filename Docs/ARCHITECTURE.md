@@ -87,7 +87,10 @@ or whole-human physical validation.
 The bounded Metal articulated operator now consumes that program for the
 whole Rajagopal tree: source poses, point Jacobians, dense mass assembly, and
 impulse response run on-device. Metal ABA and MetalWorld state stepping still
-do not consume it, and there is no Hill-type wrapped-muscle lowerer. Those
+do not consume it. The matching FP64 Millard reference reconstructs the source
+curve parameters, solves static fiber-tendon equilibrium, evaluates finite
+cylinder GeometryPaths, and projects tendon tension into generalized force;
+it is not a Metal actuator/state lowerer or OpenSim-equivalence result. Those
 remain typed integration blocks, not permission to approximate the source
 model.
 
@@ -111,5 +114,8 @@ matching Metal evaluator is a kinematic boundary, not an articulated solver.
 
 `numi human muscles` emits a separately validated Millard source IR: the
 parameters, curve subtrees, GeometryPath points, PathWrap records, and wrap
-objects remain source-faithful and frame-resolved. It is an input to a future
-active muscle-tendon compiler, not a passive tendon surrogate or force proof.
+objects remain source-faithful and frame-resolved. `numi human
+millard-reference` compiles its static-reference companion payload, including
+the documented OpenSim defaults for omitted optional curve properties. The
+owner Core reference then evaluates that payload, but a device-resident active
+muscle-tendon compiler and pinned OpenSim parity remain separate gates.
