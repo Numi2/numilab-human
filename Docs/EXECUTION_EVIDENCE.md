@@ -1,16 +1,24 @@
 # Bounded execution evidence
 
-## FunctionBased streamed source-contact smoke — 2026-08-26
+## FunctionBased active-Millard streamed source-contact smoke — 2026-08-26
 
-Core revision `cf7245cdd041786f02cd5291eca9179cd2b689a8` adds a dedicated
-Metal kernel that assembles the exact bounded FunctionBased mass matrix and
-writes the existing temporal-cone streamed response-column ABI. A local Apple
-M4 run loaded the complete 22-body Rajagopal source tree, added only a
-synthetic static plane and source-body sphere, then completed two direct-effort
-contact steps with one active contact and one constraint. The same probe still
-passed the three-step source dynamics parity gate: maximum acceleration error
-`1.75e-04`, velocity error `1e-06`, and configuration error `0` at printed
-precision.
+Core revision `7d3b87c2c23255f45fcd1628a20ca17bf0f2024d` adds the source
+Millard force stage to the bounded FunctionBased streamed temporal-cone
+response path. A local Apple M4 run loaded the complete 22-body Rajagopal
+source tree and 80-muscle ABI-v3 payload, added only a synthetic static plane
+and source-body sphere, then completed two direct-effort contact steps with one
+active contact and one constraint. The contact submission published nonzero
+source muscle force with L1 `37802.936219`. The same probe still passed the
+three-step source dynamics parity gate: maximum acceleration error `1.75e-04`,
+velocity error `1e-06`, and configuration error `0` at printed precision.
+
+| Item | SHA-256 |
+| --- | --- |
+| Rigid source payload | `da7e52ddd64728ed0a63e73a11cf857ec5489b3eb29e32d11f352f35507cdee6` |
+| Millard source payload | `ecc900d71369c3c0cbf7a09fbdc33a2194f6a77edcddf594d306d850de60fbf4` |
+| Probe binary | `4c9f53e76f1aa2b06320442579447dd455c3bf97e533921eaa58a0b8b99bfbac` |
+| Core library | `cdde3ec8b811292b3f3590ecd5f14d77e016b5e876c19b838a9a2c64c6ad21cc` |
+| Metal library | `1288ce2ab2c619c770f8151cdccbf69b7ba073a7b6555f5f67ea444b77a5028c` |
 
 This is a local device smoke test, not the pending Mac mini reproduction or a
 walking result. The plane/sphere are test-only collider proxies, not
