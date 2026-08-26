@@ -58,6 +58,11 @@ numi human attachment-worklist --sources Sources --output Build/lower-body-attac
 # Export exact source-static skin, bone, muscle, vessel, and nerve layer previews.
 numi human visual-layers --sources Sources --output Build/bodyparts3d-layers
 
+The five source-static anatomy layers have passed three-angle Apple M4 Pro
+inspection; see [visual validation](Docs/VISUAL_VALIDATION.md). This confirms
+geometry cooking and visibility only—not registration, deformation, contact,
+or walking.
+
 # Produce one source-derived distal-leg PinJoint URDF for native compiler
 # validation. It intentionally has no collision geometry or muscle lowering.
 numi human preview --sources Sources --side right --output Build/right-pin-preview

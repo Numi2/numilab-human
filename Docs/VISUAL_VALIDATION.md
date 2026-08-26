@@ -41,3 +41,26 @@ third-party BodyParts3D geometry source. They validate source-surface cooking,
 camera framing, and renderer visibility only. They do **not** validate anatomy
 registration, skinned deformation, joint motion, muscles, collision, contact,
 organ/vessel mechanics, tissue material parameters, or a full Human RobotPack.
+
+## Source-static anatomy-layer previews — 2026-08-26
+
+`numi human visual-layers` selected the largest exact source mesh for each
+requested layer, then each GLB was cooked and rendered by
+`metalrobo_bodyparts3d_visual_probe` on the Apple M4 Pro. All three stable
+inspection cameras contained source pixels for every layer.
+
+| Layer | Source mesh | Vertices / triangles | Front / oblique / rear pixels |
+| --- | --- | --- | --- |
+| Skin | `FJ2810` | 102,467 / 203,382 | 13,045 / 8,455 / 13,345 |
+| Bone | `FJ1368` | 20,582 / 39,524 | 14 / 9 / 14 |
+| Muscle | `FJ1451` | 85,775 / 98,928 | 507 / 488 / 538 |
+| Vessel | `FJ2145` | 15,163 / 30,036 | 58 / 51 / 67 |
+| Nerve | `FJ1806` | 15,757 / 26,512 | 110 / 155 / 120 |
+
+This used the isolated Core `14c64f3` visual worktree and its M4 Pro probe.
+The packs and PPM captures are retained outside Git at
+`/Users/n/numilab-human-layer-renders-2d570d5-v2`; they are third-party
+geometry-derived evidence. This validation establishes only source-static
+layer visibility from three angles. It does not establish an anatomical
+attachment transform, skinned motion, collision/contact, tissue mechanics, or
+a walking Human.

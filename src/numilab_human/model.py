@@ -1203,17 +1203,33 @@ def bodyparts_lower_body_attachment_worklist(
 def bodyparts_visual_layer_previews(sources: Path, output: Path, anatomy: dict[str, Any]) -> dict[str, Any]:
     """Export one exact, reviewable source mesh for each requested anatomy layer."""
     requested = ("skin_surface", "bone", "muscle_surface", "vessel_surface", "nerve_surface")
-    selected: dict[str, str] = {"skin_surface": "FJ2810"}
+    selected: dict[str, tuple[str, str]] = {"skin_surface": ("FJ2810", "is_a")}
+    archive_sizes: dict[tuple[str, str], int] = {}
+    for archive_kind, filename in (("is_a", "isa_BP3D_4.0_obj_99.zip"), ("part_of", "partof_BP3D_4.0_obj_99.zip")):
+        with zipfile.ZipFile(sources / filename) as archive:
+            for info in archive.infolist():
+                match = re.search(r"/(FJ\d+)\.obj$", info.filename)
+                if match:
+                    archive_sizes[(archive_kind, match.group(1))] = info.file_size
     for layer in requested[1:]:
+        best: tuple[int, str, str] | None = None
         for component in anatomy.get("components", []):
-            if component.get("anatomy_class") == layer and component.get("element_meshes"):
-                selected[layer] = component["element_meshes"][0]["element_id"]
-                break
+            if component.get("anatomy_class") != layer:
+                continue
+            for element in component.get("element_meshes", []):
+                member = element.get("element_id")
+                hierarchy = element.get("hierarchy")
+                if isinstance(member, str) and isinstance(hierarchy, str):
+                    candidate = (archive_sizes.get((hierarchy, member), 0), member, hierarchy)
+                    if best is None or candidate > best:
+                        best = candidate
+        if best is not None:
+            selected[layer] = (best[1], best[2])
     missing = [layer for layer in requested if layer not in selected]
     if missing:
         raise ImportError("BodyParts3D is missing preview meshes for: " + ", ".join(missing))
-    layers = {layer: bodyparts_visual_preview(sources, output / layer, member_id=member)
-              for layer, member in selected.items()}
+    layers = {layer: bodyparts_visual_preview(sources, output / layer, member_id=member, archive_kind=archive_kind)
+              for layer, (member, archive_kind) in selected.items()}
     return {"schema": "numi.human.bodyparts-visual-layers.v1", "layers": layers,
             "evidence_boundary": "Exact source-static mesh previews only; no registration, skinning, collision, contact, or tissue mechanics."}
 
