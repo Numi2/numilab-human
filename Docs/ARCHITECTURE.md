@@ -66,7 +66,7 @@ repository's source-faithful artifact; it cannot register a robot or schedule
 a rollout until the core lowerer exists and all gated sources are supplied.
 
 `numi human audit` now records the inspected Numi runtime contract alongside
-the imported lower-body source. At runtime revision `94d5a36`, Rajagopal's
+the imported lower-body source. At runtime revision `bafc28d`, Rajagopal's
 `CustomJoint` transforms and `UniversalJoint` wrists do not lower into the
 scalar articulated Metal primitives, and its Hill-type wrapped muscle paths do
 not equal the runtime's linear sparse tendon-position controller. Those are
@@ -77,3 +77,8 @@ muscle curve parameters, every path-point and wrap subtree, and each wrap
 object subtree. A source-faithful Metal extension therefore has the source
 data it needs; a provisional preview must identify each deliberately reduced
 joint, collision, or actuator contract instead of overwriting this record.
+
+`numi human kinematics` additionally emits the exact Rajagopal CustomJoint
+function tables and default-state displacement/derivative test vectors. This
+is compiler IR for a function-based articulation extension; it is not yet
+executed by the Metal solver.
