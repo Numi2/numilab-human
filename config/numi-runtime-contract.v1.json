@@ -2,7 +2,7 @@
   "schema": "numi.human.runtime-contract.v1",
   "runtime": {
     "repository": "MetalRobo",
-    "revision": "38cb6bb7c7d9ff6941aa2a7ee7bc91bdd463d854",
+    "revision": "cf7245cdd041786f02cd5291eca9179cd2b689a8",
     "articulated_joint_primitives": [
       "fixed",
       "revolute",
@@ -56,10 +56,10 @@
       "numi_primitive": "fixed"
     },
     "CustomJoint": {
-      "status": "supported_bounded_fixed_root_free_motion",
-      "kinematic_program": "source-derived canonical FunctionBased binary sidecars have bounded Metal pose, H, Hdot, H-transpose wrench projection, and Hdot times qdot primitives; the pinned CPU FP64 reference admits immutable FunctionBasedJointProgram records into analytic Jacobian mass/bias and state advance; MetalWorld now executes the bounded fixed-root dense source dynamics path against resident q/v/effort state.",
+      "status": "supported_bounded_fixed_root_direct_effort",
+      "kinematic_program": "source-derived canonical FunctionBased binary sidecars have bounded Metal pose, H, Hdot, H-transpose wrench projection, and Hdot times qdot primitives; the pinned CPU FP64 reference admits immutable FunctionBasedJointProgram records into analytic Jacobian mass/bias and state advance; MetalWorld executes the bounded fixed-root dense source dynamics path and source-mass streamed temporal-cone response columns against resident q/v/effort state.",
       "cpu_reference_payload": "The provenance-locked 22-body Rajagopal rigid tree can load source mass, inertia, COM, joint-frame, coordinate, and FunctionBased-program records into the FP64 reference probe.",
-      "requirement": "The qualified path is one fixed-root articulation in free motion with direct effort. BodyParts3D frame registration, collision/contact, multi-articulation composition, and mobile/joint-class extensions remain separate source or calibration gates."
+      "requirement": "The bounded path is one fixed-root direct-effort articulation in free motion or temporal-cone contact using source-mass streamed responses. The contact probe uses synthetic plane/sphere colliders only; BodyParts3D frame registration, anatomical collision/material calibration, multi-articulation composition, native task/policy binding, and mobile/joint-class extensions remain separate gates."
     },
     "UniversalJoint": {
       "status": "requires_core_extension",

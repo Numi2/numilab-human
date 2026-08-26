@@ -21,6 +21,15 @@ For the pinned Rajagopal XML the optional activation-time properties are absent.
 OpenSim Millard class defaults used by the activation contract. They are not
 subject calibration and must remain separately identified in any policy result.
 
+Core revision `cf7245c` adds source-mass streamed response columns for the
+direct-effort temporal-cone contact graph. Its device probe reaches a real
+constraint using a source-tree body plus a deliberately synthetic sphere and
+plane. This closes neither a BodyParts3D foot attachment nor a walking contact
+model: the temporary shapes, plane height, friction, and compliance exist only
+to exercise the owner contact ABI. Registered foot colliders, calibrated
+material/contact parameters, and replayed policy outcomes are still required
+before a walking rollout can be claimed.
+
 The flat-ground walking scenario is blocked until the following artifacts are
 present and validated: per-foot BodyParts3D-to-Rajagopal registration,
 conservative collision proxies, friction/compliance parameters, collision

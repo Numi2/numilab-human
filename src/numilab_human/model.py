@@ -1370,9 +1370,10 @@ def rajagopal_rigid_skeleton_ir(model: dict[str, Any]) -> dict[str, Any]:
         ),
         "runtime_requirement": (
             "The qualified Core path assembles one fixed-root source body/frame/inertia "
-            "tree and FunctionBased programs into MetalWorld-resident free-motion "
-            "state. BodyParts3D registration, collision/contact, and broader model "
-            "admission remain separate work."
+            "tree and FunctionBased programs into MetalWorld-resident direct-effort "
+            "state, including a bounded synthetic streamed-contact response probe. "
+            "BodyParts3D registration, anatomical colliders/materials, and broader "
+            "model admission remain separate work."
         ),
         "evidence_boundary": (
             "Exact OpenSim body, frame, joint, and coordinate topology only. This IR does "
@@ -3236,6 +3237,7 @@ def runtime_compatibility_report(
         if contract.get("status") in {
             "supported",
             "supported_bounded_fixed_root_free_motion",
+            "supported_bounded_fixed_root_direct_effort",
         }:
             continue
         locked_lowering = contract.get("fully_locked_zero_default_lowering")
@@ -3299,7 +3301,7 @@ def runtime_compatibility_report(
             else:
                 bounded_function_based = True
                 bounded_admission = {
-                    "status": "eligible_fixed_root_free_motion",
+                    "status": "eligible_fixed_root_direct_effort_contact",
                     "body_count": skeleton_ir["body_count"],
                     "coordinate_count": coordinate_count,
                     "maximum_body_count": 32,
@@ -3332,7 +3334,7 @@ def runtime_compatibility_report(
                 "blocked"
                 if unsupported or (bounded_admission is not None and not bounded_function_based)
                 else (
-                    "compatible_bounded_fixed_root_free_motion"
+                    "compatible_bounded_fixed_root_direct_effort_contact"
                     if bounded_function_based
                     else "compatible"
                 )
@@ -3344,8 +3346,8 @@ def runtime_compatibility_report(
             "requirement": (
                 "All source joint semantics must lower exactly into supported "
                 "Numi articulated primitives. FunctionBased admission is "
-                "bounded to one fixed-root articulation in free motion with "
-                "direct effort."
+                "bounded to one fixed-root direct-effort articulation in free "
+                "motion or synthetic temporal-cone contact."
             ),
         },
         "muscle_tendon": {
@@ -3540,7 +3542,7 @@ def gate_report(
             {
                 "id": "skeleton_robotpack_lowering",
                 "status": "qualified_bounded_device",
-                "requirement": "Qualified: one fixed-root FunctionBased source tree advances in MetalWorld free motion with direct effort. BodyParts3D frame registration, collision/contact, and broader RobotPack admission remain separate source or calibration work.",
+                "requirement": "Qualified: one fixed-root FunctionBased source tree advances with direct effort and source-mass streamed temporal-cone responses in a synthetic device contact probe. BodyParts3D frame registration, anatomical collision/material calibration, and broader RobotPack admission remain separate source or calibration work.",
             },
             {
                 "id": "muscle_tendon_lowering",
@@ -3580,7 +3582,7 @@ def gate_report(
             {
                 "id": "native_physics_evidence",
                 "status": "qualified_bounded_device",
-                "requirement": "Apple-GPU evidence qualifies the bounded source mechanics path; it does not qualify contact, deformable anatomy, source authentication, or tissue calibration.",
+                "requirement": "Apple-GPU evidence qualifies bounded source mechanics and a synthetic source-contact response probe; it does not qualify registered anatomical contact, deformable anatomy, source authentication, or tissue calibration.",
             },
         ],
         "evidence_boundary": "This report is source and integration status, not medical or physical validation.",

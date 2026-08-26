@@ -49,7 +49,8 @@ numi human geometry-audit --sources Sources --output Build/bodyparts3d-topology.
 numi human visual-preview --sources Sources --output Build/bodyparts3d-skin-preview
 
 # Emit the source-derived mobile pelvis and 80-muscle learned-walking contract.
-# It explicitly leaves collider registration/contact calibration as gated work.
+# It records the bounded synthetic contact-response path but leaves anatomical
+# collider registration/contact calibration as gated work.
 numi human walking-contract --sources Sources --output Build/rajagopal-walking-contract.json
 
 # Produce review-only lower-body anatomy attachment and foot-collider work items.
@@ -82,7 +83,7 @@ numi human core-reference --sources Sources --output Build/rajagopal-core-refere
 
 | Source data | NumiLab Human v1 role | Current physical boundary |
 | --- | --- | --- |
-| OpenSim bodies, joints, masses, inertias | articulated rigid-body specification | bounded fixed-root FunctionBased free-motion execution is device-qualified; registration and contact remain separate |
+| OpenSim bodies, joints, masses, inertias | articulated rigid-body specification | bounded fixed-root FunctionBased free motion and synthetic source-contact response are device-qualified; anatomical registration/contact remain separate |
 | OpenSim muscle paths and Hill-type parameters | active muscle–tendon specification | 80 Rajagopal Millard elements are reduced into the bounded MetalWorld effort arena; OpenSim equivalence remains open |
 | BodyParts3D bones and muscles | named geometry attached to semantic anatomy | visual/anatomical geometry, not a new independent physical source |
 | BodyParts3D skin, organs, vessels, nerves | deformable/anatomical geometry candidates | no material constants or volumetric meshes are supplied upstream |

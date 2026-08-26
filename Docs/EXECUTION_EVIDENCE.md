@@ -1,5 +1,22 @@
 # Bounded execution evidence
 
+## FunctionBased streamed source-contact smoke — 2026-08-26
+
+Core revision `cf7245cdd041786f02cd5291eca9179cd2b689a8` adds a dedicated
+Metal kernel that assembles the exact bounded FunctionBased mass matrix and
+writes the existing temporal-cone streamed response-column ABI. A local Apple
+M4 run loaded the complete 22-body Rajagopal source tree, added only a
+synthetic static plane and source-body sphere, then completed two direct-effort
+contact steps with one active contact and one constraint. The same probe still
+passed the three-step source dynamics parity gate: maximum acceleration error
+`1.75e-04`, velocity error `1e-06`, and configuration error `0` at printed
+precision.
+
+This is a local device smoke test, not the pending Mac mini reproduction or a
+walking result. The plane/sphere are test-only collider proxies, not
+BodyParts3D registrations; no anatomical contact material, active gait policy,
+deformable anatomy, or visual motion is qualified by it.
+
 ## FunctionBased inverse-response reference — 2026-08-26
 
 Core revision `38cb6bb` adds the FP64 `M⁻¹·rhs` oracle used to qualify future
