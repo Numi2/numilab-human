@@ -1049,10 +1049,10 @@ def rajagopal_millard_muscle_ir(model: dict[str, Any]) -> dict[str, Any]:
         "wrap_objects": model.get("wrap_objects", []),
         "muscles": compiled,
         "runtime_requirement": (
-            "The qualified Core path evaluates source static fiber-tendon equilibrium, "
-            "GeometryPath wrapping, and body-frame moment-arm force scatter on device. "
-            "Dynamic activation/fiber/tendon state advancement and held-out validation "
-            "remain separate requirements."
+            "The qualified bounded Core path evaluates source static fiber-tendon equilibrium, "
+            "GeometryPath wrapping, body-frame moment-arm force scatter, and explicitly "
+            "parameterized per-control activation on device. Dynamic fibre/tendon state "
+            "advancement and held-out validation remain separate requirements."
         ),
         "evidence_boundary": (
             "Exact OpenSim muscle, curve, GeometryPath, and wrap source records only. "
@@ -3723,7 +3723,7 @@ def gate_report(
         "mechanics_execution": {
             "status": "qualified_bounded_device",
             "runtime_revision": runtime_contract["runtime"]["revision"],
-            "contract": "One fixed-root FunctionBased articulation executes resident q/v/effort state on device; source Millard static-equilibrium forces are reduced into that same effort arena before every microstep.",
+            "contract": "One fixed-root FunctionBased articulation executes resident q/v/effort state on device; source Millard static-equilibrium forces are reduced into that same effort arena before every microstep, with an optional explicit per-control excitation stream advanced by device first-order activation dynamics.",
             "remaining_evidence": runtime_contract["muscle_tendon"][
                 "source_faithful_requirements"
             ],
@@ -3742,7 +3742,7 @@ def gate_report(
             {
                 "id": "muscle_tendon_lowering",
                 "status": "qualified_bounded_device",
-                "requirement": "Qualified: source Millard curves, static fiber-tendon equilibrium, finite-cylinder paths/wraps, and per-muscle forces execute and reduce into MetalWorld's resident effort arena. OpenSim equivalence and held-out force/moment-arm validation remain evidence gates.",
+                "requirement": "Qualified: source Millard curves, static fiber-tendon equilibrium, finite-cylinder paths/wraps, per-control first-order activation, and per-muscle forces execute and reduce into MetalWorld's resident effort arena. Mobile-root policy actuation, dynamic fibre/tendon state, OpenSim equivalence, and held-out force/moment-arm validation remain evidence gates.",
             },
             {
                 "id": "skin_shell",

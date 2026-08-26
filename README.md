@@ -95,7 +95,7 @@ numi human core-reference --sources Sources --output Build/rajagopal-core-refere
 | Source data | NumiLab Human v1 role | Current physical boundary |
 | --- | --- | --- |
 | OpenSim bodies, joints, masses, inertias | articulated rigid-body specification | bounded fixed-root FunctionBased free motion and synthetic source-contact response are device-qualified; anatomical registration/contact remain separate |
-| OpenSim muscle paths and Hill-type parameters | active muscle–tendon specification | 80 Rajagopal Millard elements react to supplied activation state in the bounded effort arena and synthetic source-contact probe; OpenSim equivalence remains open |
+| OpenSim muscle paths and Hill-type parameters | active muscle–tendon specification | 80 Rajagopal Millard elements accept explicit per-control excitation and update activation on device in the bounded fixed-root effort arena and synthetic source-contact probe; OpenSim equivalence remains open |
 | BodyParts3D bones and muscles | named geometry attached to semantic anatomy | visual/anatomical geometry, not a new independent physical source |
 | BodyParts3D skin, organs, vessels, nerves | deformable/anatomical geometry candidates | no material constants or volumetric meshes are supplied upstream |
 | tendons, ligaments, cartilage | nonlinear tensile / compliant-contact candidates | only OpenSim tendon parameters are active-source data; all other constitutive data needs a cited calibration |

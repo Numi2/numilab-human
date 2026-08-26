@@ -53,14 +53,15 @@ as explicit conversion gates rather than assigning unsupported physics.
 ## Numi execution boundary
 
 `numi.human.v1` remains an owner-neutral intermediate artifact, but Core
-revision `a975e85` now executes the bounded Rajagopal mechanics path: one
+revision `bb6f8f2` now executes the bounded Rajagopal mechanics path: one
 fixed-root FunctionBased articulation runs persistent free-motion state on
 Metal, and 80 source Millard muscles calculate path tension on device and
-reduce it into that same effort arena before each microstep. The same bounded
-path also drives a synthetic plane/sphere streamed-contact probe and responds
-to supplied source-muscle activation state. This is a source-mechanics
-admission, not a generic external-human RobotPack, BodyParts3D contact world,
-or deformable-body claim.
+reduce it into that same effort arena before each microstep. An optional packed
+per-control excitation stream advances device activation by an exact
+first-order hold with explicit caller-owned time constants. The same bounded
+path also drives a synthetic plane/sphere streamed-contact probe. This is a
+source-mechanics admission, not a generic external-human RobotPack,
+BodyParts3D contact world, or deformable-body claim.
 
 The tracked workspace command `numi human` is the bridge at this stage. It
 uses the normal Numi capability discovery path to fetch and compile this
@@ -68,7 +69,7 @@ repository's source-faithful artifact; it cannot register a robot or schedule
 a rollout until the core lowerer exists and all gated sources are supplied.
 
 `numi human audit` records the inspected Numi runtime contract alongside the
-imported lower-body source. At runtime revision `a975e85`, the Core preserves
+imported lower-body source. At runtime revision `bb6f8f2`, the Core preserves
 the canonical source program, evaluates its source-order pose/motion subspace,
 and advances the bounded fixed-root FunctionBased state through MetalWorld's
 resident `q`/`v`/effort arenas, including the synthetic source-contact probe.
@@ -87,10 +88,11 @@ or whole-human physical validation.
 The bounded Metal articulated operator consumes the program for the whole
 Rajagopal tree: source poses, point Jacobians, and dense mass assembly run on
 device. MetalWorld then runs the same FunctionBased kinematics/Jacobians,
-source-materialized Millard static fiber-tendon equilibrium, finite-cylinder
-GeometryPaths, and a deterministic per-DoF force reduction in one command
-buffer before the persistent source-dynamics step or its synthetic streamed
-contact response. This is not an OpenSim binary-equivalence result,
+source-materialized Millard static fiber-tendon equilibrium, optional
+per-control first-order activation, finite-cylinder GeometryPaths, and a
+deterministic per-DoF force reduction in one command buffer before the
+persistent source-dynamics step or its synthetic streamed contact response.
+This is not an OpenSim binary-equivalence result,
 hybrid wrap-history implementation, anatomical contact claim, or material
 calibration.
 

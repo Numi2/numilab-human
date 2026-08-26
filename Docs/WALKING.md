@@ -12,22 +12,23 @@ numi human walking-contract --sources Sources --output Build/rajagopal-walking-c
 The contract deliberately rejects a substituted floating base or an incomplete
 muscle set. Core must execute the source `ground_pelvis` FunctionBased joint as
 a mobile root; a policy action is a bounded excitation, not a direct joint
-torque. The Core reference also provides a deterministic persistent activation
-update with explicit time constants. Those constants must be provenance-locked
-by the later source/contact task before training.
+torque. The bounded fixed-root Core path now executes deterministic per-control
+activation updates on device with explicit time constants. Mobile-root task and
+policy wiring still needs its own admission before training.
 
 For the pinned Rajagopal XML the optional activation-time properties are absent.
 `config/opensim-millard-activation-defaults.v1.json` therefore records the
 OpenSim Millard class defaults used by the activation contract. They are not
 subject calibration and must remain separately identified in any policy result.
 
-Core revision `a975e85` adds an activation-response check to the source Millard
-effort and source-mass streamed-response path for the direct-effort
-temporal-cone contact graph. Its local Apple M4 smoke probe evaluates all 80
-source muscles and reaches a real constraint using a source-tree body plus a
-deliberately synthetic sphere and plane. Supplying full activation produces a
-larger device force than the source-default state. This closes neither a
-BodyParts3D foot attachment nor a walking contact model: the temporary shapes,
+Core revision `bb6f8f2` adds a packed per-control excitation stream and
+device first-order activation update to the source Millard effort and
+source-mass streamed-response path for the direct-effort temporal-cone contact
+graph. Its local Apple M4 smoke probe evaluates all 80 source muscles and
+reaches a real constraint using a source-tree body plus a deliberately
+synthetic sphere and plane. Supplying full excitation produces a larger device
+force than the source-default state without CPU force restaging. This closes
+neither a BodyParts3D foot attachment nor a walking contact model: the temporary shapes,
 plane height, friction, and compliance exist only to exercise the owner contact
 ABI. Registered foot colliders, calibrated material/contact parameters,
 deterministic reset/replay, and policy outcomes are still required before a
