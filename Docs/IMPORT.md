@@ -184,11 +184,14 @@ metalrobo_numilab_human_core_reference_probe \
 The bounded FP64 reference reconstructs the source quintic-Bezier curves,
 solves static fiber-tendon equilibrium at the imported reference pose, evaluates
 the finite-cylinder GeometryPaths, and scatters tensile path force through the
-articulated point Jacobians. The same invocation can run the independent
-FunctionBased Metal operator gate. This is not OpenSim binary-equivalence,
-Metal actuator/state stepping, or a full implementation of OpenSim's hybrid
-wrap-history behavior; the source PathWrap XML, including method and range,
-remains in the companion IR for that later equivalence gate.
+articulated point Jacobians. With both `--metal` and `--millard`, the same
+invocation follows the FunctionBased operator with a device-resident Millard
+reference pass in the same command buffer: it consumes private body poses,
+path points, and point Jacobians and writes one generalized-force vector per
+muscle. This is not OpenSim binary-equivalence, MetalWorld actuator/state
+stepping, or a full implementation of OpenSim's hybrid wrap-history behavior;
+the source PathWrap XML, including method and range, remains in the companion
+IR for that later equivalence gate.
 
 ## 10. Resolve the Rajagopal rigid-body tree
 
@@ -234,6 +237,8 @@ point Jacobians, and the dense mass matrix through the bounded Metal articulated
 operator against the FP64 reference. It does not compare against an OpenSim
 runtime, register BodyParts3D meshes, or add collision/contact. Supplying a
 matching `--millard` payload additionally runs the bounded static muscle
-reference described above. Metal ABA and MetalWorld still reject FunctionBased
-joints, so this is accelerated operator evidence, not an accelerated human
-state-step simulation.
+reference described above; with `--metal` it also requires the device Millard
+reference pass to agree with the FP64 source bridge on per-muscle path length,
+wrap selection, tendon force, and generalized-force magnitude. Metal ABA and
+MetalWorld still reject FunctionBased joints, so this is accelerated operator
+evidence, not an accelerated human state-step simulation.

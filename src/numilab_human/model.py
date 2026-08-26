@@ -3021,7 +3021,7 @@ def gate_report(
             {
                 "id": "muscle_tendon_lowering",
                 "status": "blocked",
-                "requirement": "Device-resident Hill-type muscle-tendon evaluation, registered paths/wraps, and force-length validation.",
+                "requirement": "MetalWorld-resident Hill-type muscle state/actuator lowering, registered paths/wraps, and force-length validation.",
             },
             {
                 "id": "skin_shell",

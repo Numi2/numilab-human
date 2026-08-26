@@ -86,13 +86,15 @@ or whole-human physical validation.
 
 The bounded Metal articulated operator now consumes that program for the
 whole Rajagopal tree: source poses, point Jacobians, dense mass assembly, and
-impulse response run on-device. Metal ABA and MetalWorld state stepping still
-do not consume it. The matching FP64 Millard reference reconstructs the source
-curve parameters, solves static fiber-tendon equilibrium, evaluates finite
-cylinder GeometryPaths, and projects tendon tension into generalized force;
-it is not a Metal actuator/state lowerer or OpenSim-equivalence result. Those
-remain typed integration blocks, not permission to approximate the source
-model.
+impulse response run on-device. Its optional Millard sidecar then consumes
+those private device outputs in the same command buffer, reconstructs the
+source curve parameters, solves static fiber-tendon equilibrium, evaluates
+finite-cylinder GeometryPaths, and publishes one generalized-force vector per
+muscle. Metal ABA and MetalWorld state stepping still do not consume either
+program. The sidecar is therefore a device-resident active-force *reference*,
+not a persistent muscle-state/actuator lowerer or an OpenSim-equivalence
+result. Those remain typed integration blocks, not permission to approximate
+the source model.
 
 Rajagopal's `radius_hand_r` and `radius_hand_l` are a narrower case: both
 source UniversalJoint coordinates are explicitly locked at a zero default, so
@@ -117,5 +119,6 @@ parameters, curve subtrees, GeometryPath points, PathWrap records, and wrap
 objects remain source-faithful and frame-resolved. `numi human
 millard-reference` compiles its static-reference companion payload, including
 the documented OpenSim defaults for omitted optional curve properties. The
-owner Core reference then evaluates that payload, but a device-resident active
-muscle-tendon compiler and pinned OpenSim parity remain separate gates.
+owner Core evaluates it both in the FP64 bridge and in the attached Metal
+reference pass, but a MetalWorld-resident muscle-state/actuator compiler and
+pinned OpenSim parity remain separate gates.

@@ -21,6 +21,41 @@ open-surface candidates, infer BodyParts3D-to-OpenSim frames, or assign tissue
 material constants. Those are explicit evidence gates rather than recoverable
 metadata omissions.
 
+## Device-resident Rajagopal Millard reference pass — 2026-08-26
+
+This is a bounded device execution of a static Millard active-force reference.
+It is not Metal ABA or MetalWorld state stepping, a persistent muscle-state
+integrator, contact/deformable-anatomy evidence, an OpenSim binary-equivalence
+result, or a material-calibration result.
+
+| Item | Exact value |
+| --- | --- |
+| Rajagopal source SHA-256 | `8f30d0b64750b87eb7f705907862590535212b4afd7e919faa3fd7d1683d22ec` |
+| Core revision | `4e1f4e9d95f3632826cf60b72b2ab9cef394c612` |
+| Isolated Mini checkout | `/Users/n/MetalRobo-numilab-human-functionbased-837ccb2` |
+| Device / toolchain | Apple M4 Pro on `macmini`; AppleClang `21.0.0.21000101` |
+| Millard payload | ABI v2; 80 muscles; 288 source path points; 46 source path wraps; 22 source curve scalars per muscle |
+| Millard payload SHA-256 | `101b2a549e4d20145391138e268642e6cd2ab99bd77005ad3f6ab5875b3a08c1` |
+| Device probe SHA-256 | `d876b551bb07d8117f4dee51db76e000c5860dc252c0d55bc24de6c7b6115c1e` |
+| Metal library SHA-256 | `b2085a46b0e4b804c73114719751335095201e7520228842ea96977506e86a56` |
+| Device run log SHA-256 | `c84f1c71ad23ee43bbd7cd2eb8e5d8b4ffa400422b102a5130cca8378357ebe1` |
+
+The generic FunctionBased operator first produced source-tree body poses,
+path-point world positions, and analytic point Jacobians in its private Metal
+buffers. The typed Millard pass then consumed those buffers in the *same command
+buffer*, reconstructed the source-materialized curves, applied finite-cylinder
+wrap selection, solved static fiber-tendon equilibrium, and wrote one
+generalized-force vector per muscle. All 80 muscles completed; the device and
+FP64 bridge selected the same 26 active cylinders. Maximum per-muscle relative
+errors were `0` for path length at printed precision, `3.11e-04` for tendon
+force, and `1.70e-04` for generalized-force L1; the maximum device equilibrium
+residual was `4.899e-03` N.
+
+This closes the source-backed device-reference gate for the imported pose. It
+does not lower muscles into MetalWorld, advance activation/fiber/tendon state,
+admit the FunctionBased skeleton to Metal ABA, or validate the source against
+an OpenSim binary/trajectory or measured anatomical moment arms.
+
 ## Rajagopal Millard static-equilibrium reference and combined device gate — 2026-08-26
 
 This is a source-code-level Millard reference and a separate whole-tree Metal

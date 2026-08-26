@@ -2,7 +2,7 @@
   "schema": "numi.human.runtime-contract.v1",
   "runtime": {
     "repository": "MetalRobo",
-    "revision": "479ccdf905c3b0145e13cca9c673b410ecea5b4f",
+    "revision": "4e1f4e9d95f3632826cf60b72b2ab9cef394c612",
     "articulated_joint_primitives": [
       "fixed",
       "revolute",
@@ -27,6 +27,8 @@
       "include/metalrobo/MetalArticulatedOperator.hpp",
       "src/metal/MetalArticulatedOperator.mm",
       "src/metal/ArticulatedOperator.metal",
+      "include/metalrobo/millard_muscle_gpu.h",
+      "src/metal/MillardMuscleReference.metal",
       "apps/opensim_spatial_transform_probe.cpp",
       "apps/opensim_spatial_transform_gpu_probe.mm",
       "apps/numilab_human_core_reference_probe.cpp",
@@ -50,7 +52,7 @@
     },
     "CustomJoint": {
       "status": "requires_core_extension",
-      "kinematic_program": "source-derived canonical FunctionBased binary sidecars have bounded Metal pose, H, Hdot, H-transpose wrench projection, and Hdot times qdot primitives; the pinned CPU FP64 reference admits immutable FunctionBasedJointProgram records into analytic Jacobian mass/bias evaluation and state advance",
+      "kinematic_program": "source-derived canonical FunctionBased binary sidecars have bounded Metal pose, H, Hdot, H-transpose wrench projection, and Hdot times qdot primitives; the pinned CPU FP64 reference admits immutable FunctionBasedJointProgram records into analytic Jacobian mass/bias evaluation and state advance; the bounded Metal articulated operator admits whole-tree source poses, point Jacobians, dense mass, impulse response, and an attached Millard reference pass",
       "cpu_reference_payload": "The provenance-locked 22-body Rajagopal rigid tree can load source mass, inertia, COM, joint-frame, coordinate, and FunctionBased-program records into the FP64 reference probe.",
       "requirement": "Register source frames to BodyParts3D geometry and collision proxies, then extend Metal ABA and MetalWorld state stepping. The bounded Metal articulated operator admits FunctionBased joints for source-tree poses, point Jacobians, mass assembly, and impulse response; it is not an ABA or MetalWorld admission."
     },
@@ -64,10 +66,10 @@
     }
   },
   "muscle_tendon": {
-    "current_contract": "millard_static_equilibrium_geometrypath_tension_projection_reference",
-    "current_contract_evidence": "MillardMuscleReference evaluates source-parameterized curves, solves static fiber-tendon equilibrium, evaluates finite-cylinder GeometryPath wrapping, and scatters tendon tension through analytic articulated point Jacobians in the FP64 reference.",
+    "current_contract": "metal_millard_static_equilibrium_geometrypath_tension_projection_reference",
+    "current_contract_evidence": "The FP64 source bridge and attached Metal operator sidecar evaluate source-parameterized curves, static fiber-tendon equilibrium, finite-cylinder GeometryPath wrapping, and one generalized-force vector per muscle. The Metal pass consumes the operator's private source-tree poses and analytic point Jacobians in the same command buffer.",
     "source_faithful_requirements": [
-      "Metal-resident activation/fiber/tendon state advancement and actuator lowering",
+      "MetalWorld-resident activation/fiber/tendon state advancement and actuator lowering",
       "OpenSim binary-equivalence comparison for curves, path wrapping, moment arms, and muscle force",
       "held-out force-length, force-velocity, and anatomical moment-arm validation"
     ]
