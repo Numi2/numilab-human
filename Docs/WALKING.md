@@ -46,8 +46,25 @@ OpenSim parity result, or tissue-physics implementation.
 numi human attachment-worklist --sources Sources --output Build/lower-body-attachments.json
 ```
 
-This emits  review candidates from the original BodyParts3D labels for the
+This emits review candidates from the original BodyParts3D labels for the
 Rajagopal pelvis, legs, and feet. It also records the four source foot bodies
 that need conservative collision proxies. Candidate names are not transforms:
 every entry must be registered and visually reviewed before animation or
 collision use.
+
+For the four walking-contact bodies, produce the stricter, provenance-pinned
+handoff before authoring a collider manifest:
+
+```sh
+numi human foot-registration-template \
+  --sources Sources \
+  --output Build/foot-registration-template.json
+```
+
+The template enumerates `calcn_r`, `toes_r`, `calcn_l`, and `toes_l`, retains
+the BodyParts3D archive hashes and Rajagopal XML hash, and lists only
+side-specific review candidates. It intentionally contains no transform,
+proxy, pair exclusion, or material value. Each entry must receive a reviewed
+source-to-body rest transform, multi-angle landmark/residual evidence, a
+conservative collision proxy, and a contact-calibration receipt before it can
+be converted into a walking task artifact.

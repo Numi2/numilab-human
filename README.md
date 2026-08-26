@@ -56,6 +56,11 @@ numi human walking-contract --sources Sources --output Build/rajagopal-walking-c
 # Produce review-only lower-body anatomy attachment and foot-collider work items.
 numi human attachment-worklist --sources Sources --output Build/lower-body-attachments.json
 
+# Create the provenance-pinned, fail-closed hand-off for the four source foot
+# bodies. A reviewer must add transforms and collider/calibration receipts;
+# this command never infers them from names.
+numi human foot-registration-template --sources Sources --output Build/foot-registration-template.json
+
 # Export exact source-static skin, bone, muscle, vessel, and nerve layer previews.
 numi human visual-layers --sources Sources --output Build/bodyparts3d-layers
 

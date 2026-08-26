@@ -10,6 +10,7 @@ from subprocess import run
 from numilab_human.model import (
     ImportError as HumanImportError,
     bodyparts_geometry_preflight,
+    bodyparts_foot_registration_template,
     bodyparts_lower_body_attachment_worklist,
     bodyparts_nerve_annotation,
     bodyparts_visual_preview,
@@ -35,6 +36,31 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ImporterTests(unittest.TestCase):
+    def test_foot_registration_template_requires_exact_source_bodies_and_has_no_transform(self) -> None:
+        anatomy = {
+            "source_id": "fixture-bodyparts", "version": "4.0",
+            "archives": [{"hierarchy": "is_a", "file": "fixture.zip", "sha256": "a" * 64}],
+            "components": [
+                {"concept_id": "FMA1", "name": "right calcaneus", "anatomy_class": "bone", "hierarchy": "is_a",
+                 "element_meshes": [{"element_id": "FJ1", "mesh_present": True}]},
+                {"concept_id": "FMA2", "name": "left toes", "anatomy_class": "bone", "hierarchy": "is_a",
+                 "element_meshes": [{"element_id": "FJ2", "mesh_present": True}]},
+            ],
+        }
+        model = {
+            "source_id": "fixture-rajagopal", "source_file": "fixture.osim", "source_sha256": "b" * 64,
+            "bodies": [{"id": body_id} for body_id in ("calcn_r", "toes_r", "calcn_l", "toes_l")],
+        }
+        result = bodyparts_foot_registration_template(anatomy, model)
+        self.assertEqual(result["walking_contact_bodies"], ["calcn_r", "toes_r", "calcn_l", "toes_l"])
+        self.assertEqual(result["registrations"][0]["bodyparts_candidate_count"], 1)
+        self.assertEqual(result["registrations"][1]["bodyparts_candidate_count"], 0)
+        self.assertEqual(result["registrations"][3]["bodyparts_candidate_count"], 1)
+        self.assertEqual(result["registrations"][0]["registration"]["status"], "requires_explicit_reviewed_transform")
+        self.assertNotIn("transform", result["registrations"][0]["registration"])
+        with self.assertRaises(HumanImportError):
+            bodyparts_foot_registration_template(anatomy, {"bodies": []})
+
     def test_lower_body_attachment_worklist_never_promotes_name_matches_to_bindings(self) -> None:
         anatomy = {"source_id": "fixture", "version": "4.0", "archives": {}, "components": [
             {"concept_id": "FMA1", "name": "right calcaneus", "anatomy_class": "bone",

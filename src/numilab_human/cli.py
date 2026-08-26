@@ -11,6 +11,7 @@ from pathlib import Path
 from .model import (
     ImportError,
     bodyparts_geometry_preflight,
+    bodyparts_foot_registration_template,
     bodyparts_lower_body_attachment_worklist,
     bodyparts_nerve_annotation,
     bodyparts_visual_preview,
@@ -318,6 +319,17 @@ def attachment_worklist(arguments: argparse.Namespace) -> int:
     print(f"wrote {output}")
     return 0
 
+
+def foot_registration_template(arguments: argparse.Namespace) -> int:
+    sources = arguments.sources.resolve()
+    anatomy = parse_bodyparts3d(sources, REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
+    lower = parse_opensim(sources / "RajagopalLaiUhlrich2023.osim", "rajagopal_lai_uhlrich_2023")
+    output = arguments.output.resolve()
+    write_json(output, bodyparts_foot_registration_template(anatomy, lower))
+    print(f"wrote {output}")
+    return 0
+
+
 def visual_layers(arguments: argparse.Namespace) -> int:
     sources = arguments.sources.resolve()
     anatomy = parse_bodyparts3d(sources, REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
@@ -430,6 +442,13 @@ def parser() -> argparse.ArgumentParser:
     attachment_parser.add_argument("--sources", type=Path, required=True)
     attachment_parser.add_argument("--output", type=Path, required=True)
     attachment_parser.set_defaults(handler=attachment_worklist)
+    foot_registration_parser = commands.add_parser(
+        "foot-registration-template",
+        help="emit a fail-closed four-foot registration and collider-review hand-off",
+    )
+    foot_registration_parser.add_argument("--sources", type=Path, required=True)
+    foot_registration_parser.add_argument("--output", type=Path, required=True)
+    foot_registration_parser.set_defaults(handler=foot_registration_template)
     layers_parser = commands.add_parser("visual-layers", help="export exact source-static previews for the five requested anatomy layers")
     layers_parser.add_argument("--sources", type=Path, required=True)
     layers_parser.add_argument("--output", type=Path, required=True)

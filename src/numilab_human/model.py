@@ -1200,6 +1200,113 @@ def bodyparts_lower_body_attachment_worklist(
     }
 
 
+def bodyparts_foot_registration_template(
+    anatomy: dict[str, Any], model: dict[str, Any]
+) -> dict[str, Any]:
+    """Emit a fail-closed hand-off for the four walking-contact foot bodies.
+
+    BodyParts3D labels can help a reviewer find a mesh, but do not establish
+    coordinate frames, handedness, scale, or a collision proxy.  This template
+    deliberately carries no matrix or physical constant; a later reviewed
+    registration receipt must supply those values for each source body.
+    """
+    foot_targets = (
+        ("calcn_r", "right", "calcaneus", ("calcaneus",)),
+        ("toes_r", "right", "toes", ("toe",)),
+        ("calcn_l", "left", "calcaneus", ("calcaneus",)),
+        ("toes_l", "left", "toes", ("toe",)),
+    )
+    known_bodies = {body.get("id") for body in model.get("bodies", [])}
+    missing = [body_id for body_id, _, _, _ in foot_targets if body_id not in known_bodies]
+    if missing:
+        raise ImportError(
+            "foot registration template requires Rajagopal bodies: " + ", ".join(missing)
+        )
+
+    def laterality(name: str) -> str | None:
+        lowered = name.lower()
+        has_right = bool(re.search(r"\bright\b", lowered))
+        has_left = bool(re.search(r"\bleft\b", lowered))
+        if has_right == has_left:
+            return None
+        return "right" if has_right else "left"
+
+    archive_by_hierarchy = {
+        archive.get("hierarchy"): {
+            "file": archive.get("file"), "sha256": archive.get("sha256"),
+        }
+        for archive in anatomy.get("archives", [])
+    }
+    registrations: list[dict[str, Any]] = []
+    for body_id, side, landmark, terms in foot_targets:
+        candidates: list[dict[str, Any]] = []
+        for component in anatomy.get("components", []):
+            component_name = str(component.get("name", ""))
+            if not any(term in component_name.lower() for term in terms) or laterality(component_name) != side:
+                continue
+            hierarchy = component.get("hierarchy")
+            for element in component.get("element_meshes", []):
+                if not element.get("mesh_present"):
+                    continue
+                candidates.append({
+                    "element_id": element["element_id"],
+                    "concept_id": component["concept_id"],
+                    "name": component["name"],
+                    "anatomy_class": component.get("anatomy_class"),
+                    "archive": archive_by_hierarchy.get(hierarchy),
+                    "status": "candidate_requires_human_review",
+                })
+        registrations.append({
+            "opensim_body": body_id,
+            "laterality": side,
+            "anatomical_landmark": landmark,
+            "bodyparts_candidates": candidates,
+            "bodyparts_candidate_count": len(candidates),
+            "registration": {
+                "status": "requires_explicit_reviewed_transform",
+                "source_frame": "BodyParts3D OBJ coordinates (axis convention must be verified)",
+                "target_frame": f"Rajagopal OpenSim body frame: {body_id}",
+                "required_receipt_fields": [
+                    "reviewed source member IDs and hashes",
+                    "axis and unit conversion",
+                    "4x4 source-to-body rest-frame transform",
+                    "landmark/residual visual review from multiple angles",
+                ],
+            },
+            "collision_proxy": {
+                "status": "requires_separate_reviewed_proxy",
+                "required_receipt_fields": [
+                    "conservative proxy geometry",
+                    "ground/self pair exclusions",
+                    "friction and compliance calibration receipt",
+                ],
+            },
+        })
+    return {
+        "schema": "numi.human.bodyparts-foot-registration-template.v1",
+        "source": {
+            "bodyparts": {
+                "id": anatomy.get("source_id"),
+                "version": anatomy.get("version"),
+                "archives": anatomy.get("archives"),
+            },
+            "opensim": {
+                "id": model.get("source_id"),
+                "file": model.get("source_file"),
+                "sha256": model.get("source_sha256"),
+            },
+        },
+        "walking_contact_bodies": [body_id for body_id, _, _, _ in foot_targets],
+        "registrations": registrations,
+        "status": "blocked_by_explicit_transform_and_contact_calibration_receipts",
+        "evidence_boundary": (
+            "This is a provenance-pinned review template, not a registration manifest. "
+            "It contains no source-to-body transform, collision geometry, pair exclusion, "
+            "friction, compliance, or walking claim."
+        ),
+    }
+
+
 def bodyparts_visual_layer_previews(sources: Path, output: Path, anatomy: dict[str, Any]) -> dict[str, Any]:
     """Export one exact, reviewable source mesh for each requested anatomy layer."""
     requested = ("skin_surface", "bone", "muscle_surface", "vessel_surface", "nerve_surface")
