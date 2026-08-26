@@ -64,5 +64,6 @@ numi human kinematics --sources Sources --output Build/custom-joint-ir
 | tendons, ligaments, cartilage | nonlinear tensile / compliant-contact candidates | only OpenSim tendon parameters are active-source data; all other constitutive data needs a cited calibration |
 
 See [the architecture](Docs/ARCHITECTURE.md), [import procedure](Docs/IMPORT.md),
-and [third-party notices](THIRD_PARTY_NOTICES.md) before building or publishing
+[bounded execution evidence](Docs/EXECUTION_EVIDENCE.md), and
+[third-party notices](THIRD_PARTY_NOTICES.md) before building or publishing
 derived data.
