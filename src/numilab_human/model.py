@@ -1120,8 +1120,9 @@ def rajagopal_rigid_skeleton_ir(model: dict[str, Any]) -> dict[str, Any]:
             lowering = {"status": "core_scalar_supported", "numi_primitive": "revolute"}
         elif kind == "CustomJoint":
             lowering = {
-                "status": "requires_core_extension",
+                "status": "core_fp64_reference_supported",
                 "program_file": f"opensim-spatial-programs/{identifier}.mrospatial",
+                "accelerated_runtime": "requires_core_extension",
             }
         elif kind == "UniversalJoint":
             coordinates = joint.get("coordinates", [])
@@ -1185,9 +1186,9 @@ def rajagopal_rigid_skeleton_ir(model: dict[str, Any]) -> dict[str, Any]:
             sorted(Counter(joint["lowering"]["status"] for joint in joints).items())
         ),
         "runtime_requirement": (
-            "Register source frames to BodyParts3D geometry, upload FunctionBased program "
-            "columns to an articulated multi-body solver, and validate source inertia and "
-            "joint-state dynamics."
+            "Assemble the source body/frame/inertia tree and FunctionBased programs into "
+            "the Core FP64 reference, register it to BodyParts3D geometry, then add "
+            "accelerated solver admission and validate source inertia/joint-state dynamics."
         ),
         "evidence_boundary": (
             "Exact OpenSim body, frame, joint, and coordinate topology only. This IR does "

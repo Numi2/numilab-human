@@ -66,14 +66,18 @@ repository's source-faithful artifact; it cannot register a robot or schedule
 a rollout until the core lowerer exists and all gated sources are supplied.
 
 `numi human audit` now records the inspected Numi runtime contract alongside
-the imported lower-body source. At runtime revision `58dc262`, the core can
+the imported lower-body source. At runtime revision `f1c7ac5`, the Core can
 decode a canonical source-derived FunctionBased program/input sidecar,
 round-trip its program bytes, and evaluate source-order pose, motion subspace
 `H`, and `Hdot` in bounded Metal, plus `H`-transpose source-wrench projection
-and `Hdot*qdot` bias. The articulated Metal solver still does not consume that
-program: it has no function-based joint, multi-axis
-UniversalJoint, or Hill-type wrapped-muscle lowerer. Those are typed
-integration blocks, not permission to approximate the source model.
+and `Hdot*qdot` bias. Its FP64 articulated reference also admits an immutable
+FunctionBased program into analytic Jacobian mass/bias and state advancement;
+the probe closes forward/inverse dynamics on source-derived `walker_knee_r`.
+That does not assemble this human skeleton or establish whole-human dynamics.
+The articulated Metal solver still does not consume that program: it has no
+function-based joint, multi-axis UniversalJoint, or Hill-type wrapped-muscle
+lowerer. Those are typed integration blocks, not permission to approximate the
+source model.
 
 Rajagopal's `radius_hand_r` and `radius_hand_l` are a narrower case: both
 source UniversalJoint coordinates are explicitly locked at a zero default, so

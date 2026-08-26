@@ -124,8 +124,11 @@ metalrobo_opensim_spatial_transform_gpu_probe \
 
 The probe rejects a non-canonical binary, evaluates the decoded program on
 CPU and GPU, compares pose/`H`/`Hdot` within FP32 tolerance, and repeats the
-GPU result byte-for-byte. The articulated solver does not yet consume this IR;
-this is not a substitute for that lowerer or a physical validation.
+GPU result byte-for-byte. The pinned FP64 reference can consume an immutable
+FunctionBased program in its analytic mass/bias and state path, but this
+command does not assemble the Rajagopal skeleton into that model. Metal ABA
+does not yet consume this IR; none of this substitutes for the human lowerer
+or physical validation.
 
 ## 8. Export BodyParts3D nerve annotations
 
@@ -166,5 +169,7 @@ This resolves every OpenSim joint socket through its local frame chain to the
 22 source rigid bodies, retains all mass/inertia, frames, coordinates, and
 motion axes, and links each CustomJoint to its canonical program filename. It
 records 10 scalar-core-supported PinJoints, two exact locked-fixed wrists, and
-10 FunctionBased joints still awaiting multi-body solver admission. It is not
-a body-to-BodyParts3D registration, collider cook, or articulated execution.
+10 FunctionBased joints whose source programs are ready for the Core FP64
+reference but still need full-skeleton assembly and accelerated solver
+admission. It is not a body-to-BodyParts3D registration, collider cook, or
+articulated execution.

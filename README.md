@@ -49,7 +49,9 @@ numi human geometry-audit --sources Sources --output Build/bodyparts3d-topology.
 numi human preview --sources Sources --side right --output Build/right-pin-preview
 
 # Preserve and evaluate all Rajagopal CustomJoint function tables as compiler
-# IR and default-value test vectors. This does not lower them into Metal yet.
+# IR and default-value test vectors. The pinned CPU reference can consume an
+# immutable program, but this command does not assemble a full human model and
+# Metal ABA does not lower it yet.
 numi human kinematics --sources Sources --output Build/custom-joint-ir
 ```
 

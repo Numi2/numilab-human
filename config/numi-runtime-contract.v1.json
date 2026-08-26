@@ -2,7 +2,7 @@
   "schema": "numi.human.runtime-contract.v1",
   "runtime": {
     "repository": "MetalRobo",
-    "revision": "58dc262977092e63bd0f73e1d34c1edc306a6959",
+    "revision": "f1c7ac5aa609e37196720d13f0f9011f59d29cc1",
     "articulated_joint_primitives": [
       "fixed",
       "revolute",
@@ -18,6 +18,9 @@
       "src/core/OpenSimFunction.cpp",
       "include/metalrobo/OpenSimSpatialTransform.hpp",
       "src/core/OpenSimSpatialTransform.cpp",
+      "include/metalrobo/EngineModel.hpp",
+      "include/metalrobo/ArticulatedDynamics.hpp",
+      "src/core/ArticulatedDynamics.cpp",
       "include/metalrobo/opensim_spatial_transform_gpu.h",
       "src/metal/OpenSimSpatialTransform.metal",
       "apps/opensim_spatial_transform_probe.cpp",
@@ -39,8 +42,8 @@
     },
     "CustomJoint": {
       "status": "requires_core_extension",
-      "kinematic_program": "source-derived canonical FunctionBased binary sidecars have bounded Metal pose, H, Hdot, H-transpose wrench projection, and Hdot times qdot primitives",
-      "requirement": "Admit the compiled FunctionBased program into the articulated solver's multi-body mass/bias assembly and state advance."
+      "kinematic_program": "source-derived canonical FunctionBased binary sidecars have bounded Metal pose, H, Hdot, H-transpose wrench projection, and Hdot times qdot primitives; the pinned CPU FP64 reference also admits an immutable FunctionBasedJointProgram into analytic Jacobian mass/bias evaluation and state advance",
+      "requirement": "Assemble the source skeleton into EngineModel with source frames and inertias, then extend the accelerated articulated solver. Current Metal ABA/operator/MetalWorld paths explicitly reject FunctionBased joints."
     },
     "UniversalJoint": {
       "status": "requires_core_extension",

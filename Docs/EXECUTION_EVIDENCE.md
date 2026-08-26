@@ -1,5 +1,36 @@
 # Bounded execution evidence
 
+## FunctionBased CPU reference and device-program regression — 2026-08-26
+
+This is a bounded Core contract for one source-derived FunctionBased joint and
+the canonical device-program suite. It is not an assembled Rajagopal human,
+contact qualification, muscle actuation, or experimental validation.
+
+| Item | Exact value |
+| --- | --- |
+| Rajagopal source SHA-256 | `8f30d0b64750b87eb7f705907862590535212b4afd7e919faa3fd7d1683d22ec` |
+| Numi runtime revision | `f1c7ac5aa609e37196720d13f0f9011f59d29cc1` |
+| Isolated Mini checkout | `/Users/n/MetalRobo-numilab-function-f1c7ac5` |
+| Device | Apple M4 Pro on `macmini` |
+| Toolchain | AppleClang `21.0.0.21000101` |
+| Source program package | 10 canonical 2,512-byte programs and 35 canonical 64-byte state inputs |
+| GPU-probe SHA-256 | `a8f2f11d00394e30222403574356ffe0e68c729983f19effb0cb41ef2fb11cde` |
+| Metal-library SHA-256 | `673c798ae28f1cb92803c58114fdfe1f003ac0b4e2bc29d0c0390ab2966d6619` |
+
+`metalrobo_articulated_dynamics_probe` passed on the Mini. Its source-derived
+`walker_knee_r` FunctionBased check reproduced the source joint-frame
+translation, `H*qdot`, and linear Jacobian with error `2.710505e-18`, then
+closed inverse-to-forward acceleration with error `2.220446e-16`. The model is
+a two-body FP64 reference fixture using the real joint function; it is not the
+22-body human or a calibrated inertial validation.
+
+The same isolated checkout ran all 35 Rajagopal program/input sidecars through
+the existing Metal pose/`H`/`Hdot`, source-wrench projection, and `Hdot*qdot`
+device path. Every case passed; a representative `hip_r` run reported
+`device=Apple M4 Pro` and `tau0=0.41`. Current Metal ABA/operator/MetalWorld
+kernels explicitly reject FunctionBased joints, so this does not make the
+source skeleton GPU-executable.
+
 ## FunctionBased source-wrench projection — 2026-08-26
 
 This extends the prior source-sidecar kinematic proof with a bounded
