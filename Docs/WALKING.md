@@ -71,3 +71,17 @@ proxy, pair exclusion, or material value. Each entry must receive a reviewed
 source-to-body rest transform, multi-angle landmark/residual evidence, a
 conservative collision proxy, and a contact-calibration receipt before it can
 be converted into a walking task artifact.
+
+The source-local proxy preflight makes the geometry side of that review
+reproducible without claiming a collision binding:
+
+```sh
+numi human foot-collider-preflight \
+  --sources Sources \
+  --output Build/foot-collider-preflight.json
+```
+
+It emits the exact OBJ hashes, source-millimetre bounds, and a conservative
+axis-aligned enclosure for every laterality-qualified foot mesh. The boxes do
+not have an OpenSim transform, contact pair, or material; they become eligible
+for conversion only after the corresponding reviewed registration receipt.

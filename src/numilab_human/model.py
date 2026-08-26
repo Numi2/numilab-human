@@ -1253,6 +1253,7 @@ def bodyparts_foot_registration_template(
                     "concept_id": component["concept_id"],
                     "name": component["name"],
                     "anatomy_class": component.get("anatomy_class"),
+                    "hierarchy": hierarchy,
                     "archive": archive_by_hierarchy.get(hierarchy),
                     "status": "candidate_requires_human_review",
                 })
@@ -1303,6 +1304,93 @@ def bodyparts_foot_registration_template(
             "This is a provenance-pinned review template, not a registration manifest. "
             "It contains no source-to-body transform, collision geometry, pair exclusion, "
             "friction, compliance, or walking claim."
+        ),
+    }
+
+
+def bodyparts_foot_collider_preflight(
+    sources: Path, anatomy: dict[str, Any], model: dict[str, Any]
+) -> dict[str, Any]:
+    """Derive exact source-local enclosing-box candidates for foot review.
+
+    The boxes enclose the original OBJ triangles in BodyParts3D coordinates.
+    They are not colliders until a reviewer supplies a source-to-Rajagopal
+    rest-frame transform, chooses a contact representation, and calibrates its
+    material response.
+    """
+    template = bodyparts_foot_registration_template(anatomy, model)
+    per_foot: list[dict[str, Any]] = []
+    total_meshes = 0
+    for registration in template["registrations"]:
+        unique_candidates: dict[tuple[str, str], dict[str, Any]] = {}
+        for candidate in registration["bodyparts_candidates"]:
+            hierarchy = candidate.get("hierarchy")
+            element_id = candidate.get("element_id")
+            if not isinstance(hierarchy, str) or not isinstance(element_id, str):
+                raise ImportError("foot registration candidate lacks a source hierarchy or OBJ member")
+            unique_candidates.setdefault((hierarchy, element_id), candidate)
+        meshes: list[dict[str, Any]] = []
+        for (hierarchy, element_id), candidate in sorted(unique_candidates.items()):
+            archive_path, member, obj = _bodyparts_obj_member(sources, hierarchy, element_id)
+            vertices, triangles = _bodyparts_obj_triangles(obj, member)
+            lower = [min(vertex[axis] for vertex in vertices) for axis in range(3)]
+            upper = [max(vertex[axis] for vertex in vertices) for axis in range(3)]
+            center = [(lower[axis] + upper[axis]) * 0.5 for axis in range(3)]
+            half_extent = [(upper[axis] - lower[axis]) * 0.5 for axis in range(3)]
+            meshes.append({
+                "source": {
+                    "archive": archive_path.name,
+                    "archive_sha256": sha256(archive_path),
+                    "member": member,
+                    "member_id": element_id,
+                    "member_sha256": hashlib.sha256(obj).hexdigest(),
+                    "hierarchy": hierarchy,
+                    "concept_id": candidate["concept_id"],
+                    "name": candidate["name"],
+                },
+                "geometry": {
+                    "vertex_count": len(vertices),
+                    "triangle_count": len(triangles),
+                    "bounds_mm": {"minimum": lower, "maximum": upper},
+                },
+                "source_local_proxy_candidate": {
+                    "shape": "axis_aligned_box",
+                    "center_mm": center,
+                    "half_extents_mm": half_extent,
+                    "enclosure": "each source triangle is enclosed by the source-coordinate AABB",
+                    "status": "source_local_only_requires_registered_transform",
+                },
+            })
+        total_meshes += len(meshes)
+        per_foot.append({
+            "opensim_body": registration["opensim_body"],
+            "laterality": registration["laterality"],
+            "anatomical_landmark": registration["anatomical_landmark"],
+            "source_mesh_count": len(meshes),
+            "source_meshes": meshes,
+            "admission": {
+                "status": "blocked_by_registered_transform_and_contact_calibration",
+                "required_receipt_fields": [
+                    "selected source members or a reviewed merged proxy",
+                    "BodyParts3D-to-Rajagopal rest-frame transform",
+                    "ground/self pair exclusions",
+                    "friction, compliance, and restitution calibration receipt",
+                    "multi-angle transformed-mesh and proxy residual review",
+                ],
+            },
+        })
+    return {
+        "schema": "numi.human.bodyparts-foot-collider-preflight.v1",
+        "source": template["source"],
+        "walking_contact_bodies": template["walking_contact_bodies"],
+        "source_coordinate_units": "BodyParts3D OBJ millimetres",
+        "per_foot": per_foot,
+        "source_mesh_count": total_meshes,
+        "status": "source_local_proxy_candidates_not_admitted",
+        "evidence_boundary": (
+            "The emitted boxes exactly enclose source mesh triangles in BodyParts3D coordinates. "
+            "They are not OpenSim-frame colliders, collision-pair settings, contact parameters, "
+            "or walking evidence."
         ),
     }
 

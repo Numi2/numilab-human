@@ -61,6 +61,11 @@ numi human attachment-worklist --sources Sources --output Build/lower-body-attac
 # this command never infers them from names.
 numi human foot-registration-template --sources Sources --output Build/foot-registration-template.json
 
+# Derive hash-pinned, source-local enclosing-box candidates for the same foot
+# meshes. These are not OpenSim-frame colliders until the reviewed transform
+# and contact-calibration receipts are supplied.
+numi human foot-collider-preflight --sources Sources --output Build/foot-collider-preflight.json
+
 # Export exact source-static skin, bone, muscle, vessel, and nerve layer previews.
 numi human visual-layers --sources Sources --output Build/bodyparts3d-layers
 

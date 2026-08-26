@@ -9,6 +9,7 @@ from subprocess import run
 
 from numilab_human.model import (
     ImportError as HumanImportError,
+    bodyparts_foot_collider_preflight,
     bodyparts_geometry_preflight,
     bodyparts_foot_registration_template,
     bodyparts_lower_body_attachment_worklist,
@@ -36,6 +37,36 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ImporterTests(unittest.TestCase):
+    def test_foot_collider_preflight_emits_only_source_local_enclosure(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            sources = Path(temporary) / "Sources"
+            sources.mkdir()
+            archive = sources / "isa_BP3D_4.0_obj_99.zip"
+            with zipfile.ZipFile(archive, "w") as bundle:
+                bundle.writestr(
+                    "isa_BP3D_4.0_obj_99/FJ1.obj",
+                    "v -2 -1 3\nv 4 -1 3\nv -2 5 3\nf 1 2 3\n",
+                )
+            anatomy = {
+                "source_id": "fixture-bodyparts", "version": "4.0",
+                "archives": [{"hierarchy": "is_a", "file": archive.name, "sha256": "a" * 64}],
+                "components": [
+                    {"concept_id": "FMA1", "name": "right calcaneus", "anatomy_class": "bone", "hierarchy": "is_a",
+                     "element_meshes": [{"element_id": "FJ1", "mesh_present": True}]},
+                ],
+            }
+            model = {
+                "source_id": "fixture-rajagopal", "source_file": "fixture.osim", "source_sha256": "b" * 64,
+                "bodies": [{"id": body_id} for body_id in ("calcn_r", "toes_r", "calcn_l", "toes_l")],
+            }
+            result = bodyparts_foot_collider_preflight(sources, anatomy, model)
+            mesh = result["per_foot"][0]["source_meshes"][0]
+            self.assertEqual(result["status"], "source_local_proxy_candidates_not_admitted")
+            self.assertEqual(mesh["geometry"]["bounds_mm"], {"minimum": [-2.0, -1.0, 3.0], "maximum": [4.0, 5.0, 3.0]})
+            self.assertEqual(mesh["source_local_proxy_candidate"]["center_mm"], [1.0, 2.0, 3.0])
+            self.assertEqual(mesh["source_local_proxy_candidate"]["half_extents_mm"], [3.0, 3.0, 0.0])
+            self.assertNotIn("transform", mesh["source_local_proxy_candidate"])
+
     def test_foot_registration_template_requires_exact_source_bodies_and_has_no_transform(self) -> None:
         anatomy = {
             "source_id": "fixture-bodyparts", "version": "4.0",
