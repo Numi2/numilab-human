@@ -2,7 +2,7 @@
 
 ## FunctionBased device-updated Millard excitation streamed source-contact smoke — 2026-08-26
 
-Core revision `bb6f8f26275cc132f4cddcf77dc461addbbe18d9` adds a device
+Core revision `b4e34b6ae6ee83226ff138201f24a04683aa4a51` adds a device
 activation-control stage to the bounded FunctionBased streamed temporal-cone
 response path. A local Apple M4 run loaded the complete 22-body Rajagopal
 source tree and 80-muscle ABI-v3 payload, added only a synthetic static plane
@@ -14,6 +14,9 @@ device applied the exact first-order activation hold with explicit `0.01 s` and
 `0.04 s` time constants before its own force projection and published
 `60180.837369` L1. Those explicit values are a smoke-test input matching the
 separately recorded OpenSim Millard class defaults, not a calibration claim.
+The final private device activation state that produced each force vector was
+read back for audit and matched the same exact first-order reference at `0` at
+printed precision.
 The same probe still passed the three-step source-dynamics parity gate: maximum
 acceleration error `1.75e-04`, velocity error `1e-06`, and configuration error
 `0` at printed precision.
@@ -22,8 +25,8 @@ acceleration error `1.75e-04`, velocity error `1e-06`, and configuration error
 | --- | --- |
 | Rigid source payload | `da7e52ddd64728ed0a63e73a11cf857ec5489b3eb29e32d11f352f35507cdee6` |
 | Millard source payload | `ecc900d71369c3c0cbf7a09fbdc33a2194f6a77edcddf594d306d850de60fbf4` |
-| Probe binary | `4bed5319f52fe76983a07254453edadb94e3ef41f42ac6e722af3c2817827cc6` |
-| Core library | `b04703e4733fef9ce97b471d966cad45d412574a86587fb1649f93e412beb676` |
+| Probe binary | `b0d63f1feb93af0a4d956283e02999fad594698147900865d9a49f0c7cf39341` |
+| Core library | `8d4d39887e6763320f5e94e3367351b07791fb9b3257ae0732313700c80beedf` |
 | Metal library | `941b8eb24fa00d6a2431d80285f9bb430a781c28a601d6e36c3c12db686cb6d1` |
 
 This is a local device smoke test, not the pending Mac mini reproduction or a
