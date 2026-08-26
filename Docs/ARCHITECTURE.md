@@ -66,7 +66,7 @@ repository's source-faithful artifact; it cannot register a robot or schedule
 a rollout until the core lowerer exists and all gated sources are supplied.
 
 `numi human audit` now records the inspected Numi runtime contract alongside
-the imported lower-body source. At runtime revision `47a3a2e`, the Core can
+the imported lower-body source. At runtime revision `380f96b`, the Core can
 decode a canonical source-derived FunctionBased program/input sidecar,
 round-trip its program bytes, and evaluate source-order pose, motion subspace
 `H`, and `Hdot` in bounded Metal, plus `H`-transpose source-wrench projection
@@ -84,10 +84,12 @@ source-faithful *rigid-tree CPU reference*, not BodyParts3D registration,
 collision/contact, muscle actuation, an OpenSim numerical equivalence study,
 or whole-human physical validation.
 
-The articulated Metal solver still does not consume that program: it has no
-function-based joint, multi-axis UniversalJoint, or Hill-type wrapped-muscle
-lowerer. Those are typed integration blocks, not permission to approximate the
-source model.
+The bounded Metal articulated operator now consumes that program for the
+whole Rajagopal tree: source poses, point Jacobians, dense mass assembly, and
+impulse response run on-device. Metal ABA and MetalWorld state stepping still
+do not consume it, and there is no Hill-type wrapped-muscle lowerer. Those
+remain typed integration blocks, not permission to approximate the source
+model.
 
 Rajagopal's `radius_hand_r` and `radius_hand_l` are a narrower case: both
 source UniversalJoint coordinates are explicitly locked at a zero default, so

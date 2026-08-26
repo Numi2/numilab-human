@@ -2,12 +2,13 @@
   "schema": "numi.human.runtime-contract.v1",
   "runtime": {
     "repository": "MetalRobo",
-    "revision": "47a3a2e80a4d49506377304a4cfc7315388eff45",
+    "revision": "380f96bd8baf691980197aebd162a0f9d19c5aa7",
     "articulated_joint_primitives": [
       "fixed",
       "revolute",
       "continuous",
-      "prismatic"
+      "prismatic",
+      "function_based"
     ],
     "evidence": [
       "include/metalrobo/engine_types.h",
@@ -23,6 +24,9 @@
       "src/core/ArticulatedDynamics.cpp",
       "include/metalrobo/opensim_spatial_transform_gpu.h",
       "src/metal/OpenSimSpatialTransform.metal",
+      "include/metalrobo/MetalArticulatedOperator.hpp",
+      "src/metal/MetalArticulatedOperator.mm",
+      "src/metal/ArticulatedOperator.metal",
       "apps/opensim_spatial_transform_probe.cpp",
       "apps/opensim_spatial_transform_gpu_probe.mm",
       "apps/numilab_human_core_reference_probe.cpp"
@@ -45,7 +49,7 @@
       "status": "requires_core_extension",
       "kinematic_program": "source-derived canonical FunctionBased binary sidecars have bounded Metal pose, H, Hdot, H-transpose wrench projection, and Hdot times qdot primitives; the pinned CPU FP64 reference admits immutable FunctionBasedJointProgram records into analytic Jacobian mass/bias evaluation and state advance",
       "cpu_reference_payload": "The provenance-locked 22-body Rajagopal rigid tree can load source mass, inertia, COM, joint-frame, coordinate, and FunctionBased-program records into the FP64 reference probe.",
-      "requirement": "Register source frames to BodyParts3D geometry and collision proxies, then extend the accelerated articulated solver. Current Metal ABA/operator/MetalWorld paths explicitly reject FunctionBased joints."
+      "requirement": "Register source frames to BodyParts3D geometry and collision proxies, then extend Metal ABA and MetalWorld state stepping. The bounded Metal articulated operator admits FunctionBased joints for source-tree poses, point Jacobians, mass assembly, and impulse response; it is not an ABA or MetalWorld admission."
     },
     "UniversalJoint": {
       "status": "requires_core_extension",

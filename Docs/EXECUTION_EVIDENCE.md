@@ -56,6 +56,34 @@ and `Hdot*qdot` checks. The current Metal ABA/operator/MetalWorld paths still
 explicitly reject FunctionBased joints; this sweep is device-program evidence,
 not a full-tree accelerated solve.
 
+## Whole-tree FunctionBased Metal articulated-operator gate — 2026-08-26
+
+This is device execution of the bounded articulated *operator*, not Metal ABA
+or MetalWorld state stepping, BodyParts3D registration, contact, or muscle
+actuation.
+
+| Item | Exact value |
+| --- | --- |
+| Rajagopal source SHA-256 | `8f30d0b64750b87eb7f705907862590535212b4afd7e919faa3fd7d1683d22ec` |
+| Core revision | `380f96bd8baf691980197aebd162a0f9d19c5aa7` |
+| Isolated Mini checkout | `/Users/n/MetalRobo-numilab-human-functionbased-837ccb2` |
+| Device / toolchain | Apple M4 Pro on `macmini`; AppleClang `21.0.0.21000101` |
+| Payload SHA-256 | `da7e52ddd64728ed0a63e73a11cf857ec5489b3eb29e32d11f352f35507cdee6` |
+| Probe binary SHA-256 | `ca0293d14f06a886cafdacbf46ab6e6991083866f1dda506f934ef6732d158db` |
+| Metal library SHA-256 | `9dbb88b2adeb2e3d7456dcddc7411c0ecb83c6bebb58ca976608c4768f4ce8c3` |
+| Operator log SHA-256 | `8674feda46783794ee092379485f637f29f8ed053b72bc218ac78a413628f297` |
+
+The complete source tree (22 source bodies; 23 engine bodies including its
+fixed synthetic root; 22 joints; 35 `q`/`v`; and 10 FunctionBased programs)
+passed one Apple-GPU operator invocation at a deliberately non-neutral
+configuration. It verified body poses and non-collinear point Jacobians against
+the FP64 reference, then assembled and factorized the 35×35 mass matrix. The
+maximum reported FP32-to-FP64 mass error was `1.7e-05` (scaled `2e-06`); all
+reported pose and point-Jacobian errors rounded to zero at the probe's printed
+precision. This qualifies only the owner Metal operator path. It does not
+qualify ABA/MetalWorld state advancement, contact, muscles, anatomy
+registration, OpenSim trajectory equivalence, or material behavior.
+
 ## FunctionBased CPU reference and device-program regression — 2026-08-26
 
 This is a bounded Core contract for one source-derived FunctionBased joint and

@@ -190,13 +190,16 @@ At the exact matching Core revision, execute its bounded FP64 reference gate:
 
 ```sh
 metalrobo_numilab_human_core_reference_probe \
-  Build/rajagopal-core-reference/rajagopal-core-reference.nhrigid
+  Build/rajagopal-core-reference/rajagopal-core-reference.nhrigid --metal
 ```
 
 The probe rejects an incompatible or trailing-byte payload, validates Core
 ownership rules, evaluates whole-tree kinematics and the analytic mass matrix,
 then requires forward dynamics to recover a source-state inverse-dynamics
-acceleration. It does not compare against an OpenSim runtime, register
-BodyParts3D meshes, add collision/contact, or run muscle/tendon force. Metal
-ABA and MetalWorld still reject FunctionBased joints, so this is a CPU
-reference gate rather than an accelerated human simulation.
+acceleration. With `--metal`, it additionally runs source poses, non-collinear
+point Jacobians, and the dense mass matrix through the bounded Metal articulated
+operator against the FP64 reference. It does not compare against an OpenSim
+runtime, register BodyParts3D meshes, add collision/contact, or run
+muscle/tendon force. Metal ABA and MetalWorld still reject FunctionBased
+joints, so this is accelerated operator evidence, not an accelerated human
+state-step simulation.
