@@ -1,0 +1,26 @@
+{
+  "schema": "numi.human.anatomy-classification.v1",
+  "description": "FMA anchors used only to classify BodyParts3D representation candidates. Their two source hierarchies remain unmodified in the generated manifest.",
+  "classes": {
+    "bone": ["FMA5018", "FMA23881"],
+    "muscle_surface": ["FMA5022"],
+    "organ_surface": ["FMA67498"],
+    "vessel_surface": ["FMA3710", "FMA50720", "FMA50723", "FMA7161"],
+    "nerve_surface": ["FMA5865", "FMA5913", "FMA7157"],
+    "skin_surface": ["FMA7163", "FMA72979"],
+    "ligament_surface": ["FMA21496"],
+    "tendon_surface": ["FMA9721"],
+    "cartilage_surface": ["FMA7538"]
+  },
+  "physical_roles": {
+    "bone": "rigid_geometry_candidate",
+    "muscle_surface": "anatomical_geometry_only",
+    "organ_surface": "surface_to_volume_conversion_required",
+    "vessel_surface": "solid_surface_to_tube_conversion_required",
+    "nerve_surface": "anatomical_geometry_only",
+    "skin_surface": "deformable_shell_material_required",
+    "ligament_surface": "nonlinear_tensile_parameters_required",
+    "tendon_surface": "register_to_opensim_tendon_paths",
+    "cartilage_surface": "compliant_contact_parameters_required"
+  }
+}

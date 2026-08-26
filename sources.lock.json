@@ -1,0 +1,40 @@
+{
+  "schema": "numi.human.source-lock.v1",
+  "sources": {
+    "bodyparts3d_4": {
+      "version": "4.0",
+      "license": "CC-BY-4.0",
+      "license_url": "https://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html",
+      "attribution": "BodyParts3D, © The Database Center for Life Science licensed under CC Attribution 4.0 International",
+      "base_url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/",
+      "files": {
+        "isa_parts_list_e.txt": {"sha256": "ab7796deedd49205e77f3609a1cb8c53e2bbee14ecb5c9a6ca05227469780513", "role": "is_a_labels"},
+        "partof_parts_list_e.txt": {"sha256": "9224080557053e6f1322f1e13ab27f0ecde0db19bb3b505f0631afad230eeebd", "role": "part_of_labels"},
+        "partof_inclusion_relation_list.txt": {"sha256": "1b40738270931e3c1d955ce34e0fce0d8d10d8c5ad543463e40b4b4c0243007c", "role": "part_of_edges"},
+        "isa_inclusion_relation_list.txt": {"sha256": "26e7d818e03a8c909fe09c561f38d0d513423c87681f9450a803bc38f5b07564", "role": "is_a_edges"},
+        "isa_element_parts.txt": {"sha256": "a3de74423f943b0d724ae8f59b3a817f87c423a544f8db98113b1980817cbeaf", "role": "is_a_compound_definitions"},
+        "partof_element_parts.txt": {"sha256": "3f5f6df1028eb122b30de77c711597b6bb8e5541658e5985859fd228adbf88ea", "role": "part_of_compound_definitions"},
+        "isa_BP3D_4.0_obj_99.zip": {"sha256": null, "role": "is_a_obj_geometry"},
+        "partof_BP3D_4.0_obj_99.zip": {"sha256": null, "role": "part_of_obj_geometry"}
+      }
+    },
+    "rajagopal_lai_uhlrich_2023": {
+      "repository": "https://github.com/opensim-org/opensim-models",
+      "revision": "d9b05d470b1a481c222372c85b75772faf8f7792",
+      "path": "Models/Rajagopal/RajagopalLaiUhlrich2023.osim",
+      "url": "https://raw.githubusercontent.com/opensim-org/opensim-models/d9b05d470b1a481c222372c85b75772faf8f7792/Models/Rajagopal/RajagopalLaiUhlrich2023.osim",
+      "sha256": "8f30d0b64750b87eb7f705907862590535212b4afd7e919faa3fd7d1683d22ec",
+      "credits": ["Rajagopal et al. (2016)", "Lai et al. (2017)", "Uhlrich et al. (2022)"],
+      "redistribution": "model-specific upstream license not stated in the pinned repository; reference-only until confirmed"
+    },
+    "mobl_arms_upper_extremity": {
+      "project_url": "https://simtk.org/projects/upexdyn/",
+      "release_file": "MobL_ARMS_OpenSim3_bimanual_model.zip",
+      "release_id": "6366",
+      "download_url": "https://simtk.org/frs/download_confirm.php/file/6366/MobL_ARMS_OpenSim3_bimanual_model.zip?group_id=657",
+      "license": "official project terms: non-commercial use only, BSD-3-Clause text, acknowledgement required",
+      "manual_download_required": true,
+      "redistribution": "do not redistribute from this repository"
+    }
+  }
+}

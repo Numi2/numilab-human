@@ -1,0 +1,48 @@
+{
+  "schema": "numi.human.target-mapping.v1",
+  "targets": {
+    "skeleton": {
+      "numi_representation": "articulated_rigid_bodies",
+      "mechanics_sources": ["rajagopal_lai_uhlrich_2023", "mobl_arms_upper_extremity"],
+      "geometry_class": "bone",
+      "gate": "frame registration, collision proxies, and Numi RobotPack lowering"
+    },
+    "muscles": {
+      "numi_representation": "active_muscle_tendon_elements",
+      "mechanics_sources": ["rajagopal_lai_uhlrich_2023", "mobl_arms_upper_extremity"],
+      "geometry_class": "muscle_surface",
+      "gate": "device-resident Hill-type actuator lowering plus force-length validation"
+    },
+    "skin": {
+      "numi_representation": "deformable_shell",
+      "geometry_class": "skin_surface",
+      "gate": "shell topology, thickness, and cited material calibration"
+    },
+    "organs": {
+      "numi_representation": "deformable_fem_or_mpm_bodies",
+      "geometry_class": "organ_surface",
+      "gate": "watertight volume mesh plus organ-specific constitutive model"
+    },
+    "ligaments_tendons": {
+      "numi_representation": "nonlinear_tensile_elements",
+      "geometry_classes": ["ligament_surface", "tendon_surface"],
+      "mechanics_sources": ["rajagopal_lai_uhlrich_2023", "mobl_arms_upper_extremity"],
+      "gate": "register tendon paths; calibrate ligament attachment and tensile parameters"
+    },
+    "cartilage": {
+      "numi_representation": "compliant_contact",
+      "geometry_class": "cartilage_surface",
+      "gate": "thickness, material law, and contact validation"
+    },
+    "vessels": {
+      "numi_representation": "deformable_tubular_structures",
+      "geometry_class": "vessel_surface",
+      "gate": "centreline/tube conversion, wall model, and fluid/solid scope"
+    },
+    "nerves": {
+      "numi_representation": "anatomical_annotation_geometry",
+      "geometry_class": "nerve_surface",
+      "gate": "no neural-control or sensory-physiology claim from geometry alone"
+    }
+  }
+}
