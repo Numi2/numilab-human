@@ -1051,6 +1051,152 @@ def rajagopal_millard_muscle_ir(model: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _opensim_joint_frame_body(
+    joint: dict[str, Any], frame_reference: Any, context: str
+) -> str | None:
+    """Resolve an OpenSim joint socket through its local frame chain to a body."""
+    if not isinstance(frame_reference, str) or not frame_reference:
+        raise ImportError(f"OpenSim joint {joint.get('id')} has unresolved {context} frame")
+    frames = {
+        frame.get("id"): frame
+        for frame in joint.get("frames", [])
+        if isinstance(frame, dict) and isinstance(frame.get("id"), str)
+    }
+    current = frame_reference
+    seen: set[str] = set()
+    while True:
+        if current in {"ground", "/ground"}:
+            return None
+        if current.startswith("/bodyset/"):
+            body = current.rsplit("/", 1)[-1]
+            if not body:
+                raise ImportError(f"OpenSim joint {joint.get('id')} has invalid {context} body frame")
+            return body
+        local = current.rsplit("/", 1)[-1]
+        if local in seen:
+            raise ImportError(f"OpenSim joint {joint.get('id')} has cyclic {context} frame chain")
+        seen.add(local)
+        frame = frames.get(local)
+        if frame is None:
+            raise ImportError(
+                f"OpenSim joint {joint.get('id')} cannot resolve {context} frame {frame_reference}"
+            )
+        parent = frame.get("parent_frame")
+        if not isinstance(parent, str) or not parent:
+            raise ImportError(f"OpenSim joint {joint.get('id')} has unresolved {context} frame parent")
+        current = parent
+
+
+def rajagopal_rigid_skeleton_ir(model: dict[str, Any]) -> dict[str, Any]:
+    """Resolve source OpenSim joint sockets to an exact rigid-body tree IR."""
+    body_ids = {body.get("id") for body in model.get("bodies", [])}
+    if not body_ids or not all(isinstance(identifier, str) and identifier for identifier in body_ids):
+        raise ImportError("Rajagopal skeleton has invalid body identifiers")
+    inbound: dict[str, str] = {}
+    joints: list[dict[str, Any]] = []
+    for joint in model.get("joints", []):
+        identifier = joint.get("id")
+        kind = joint.get("kind")
+        if not isinstance(identifier, str) or not isinstance(kind, str):
+            raise ImportError("Rajagopal skeleton has unnamed joint")
+        parent_body = _opensim_joint_frame_body(
+            joint, joint.get("parent_frame"), "parent"
+        )
+        child_body = _opensim_joint_frame_body(
+            joint, joint.get("child_frame"), "child"
+        )
+        if child_body is None or child_body not in body_ids:
+            raise ImportError(f"OpenSim joint {identifier} has invalid child body")
+        if parent_body is not None and parent_body not in body_ids:
+            raise ImportError(f"OpenSim joint {identifier} has invalid parent body")
+        if child_body in inbound:
+            raise ImportError(
+                f"OpenSim body {child_body} has multiple inbound joints: "
+                f"{inbound[child_body]} and {identifier}"
+            )
+        inbound[child_body] = identifier
+        lowering: dict[str, Any]
+        if kind == "PinJoint":
+            lowering = {"status": "core_scalar_supported", "numi_primitive": "revolute"}
+        elif kind == "CustomJoint":
+            lowering = {
+                "status": "requires_core_extension",
+                "program_file": f"opensim-spatial-programs/{identifier}.mrospatial",
+            }
+        elif kind == "UniversalJoint":
+            coordinates = joint.get("coordinates", [])
+            if (
+                isinstance(coordinates, list)
+                and coordinates
+                and all(
+                    coordinate.get("locked") in (True, "true", "True")
+                    and coordinate.get("default_value") == 0.0
+                    for coordinate in coordinates
+                )
+            ):
+                lowering = {
+                    "status": "exact_locked_lowering",
+                    "numi_primitive": "fixed",
+                    "condition": "all source coordinates locked at zero default",
+                }
+            else:
+                lowering = {"status": "requires_core_extension"}
+        else:
+            lowering = {"status": "unsupported_source_kind"}
+        joints.append(
+            {
+                "id": identifier,
+                "kind": kind,
+                "parent_body": parent_body,
+                "child_body": child_body,
+                "parent_frame": joint.get("parent_frame"),
+                "child_frame": joint.get("child_frame"),
+                "coordinates": joint.get("coordinates"),
+                "frames": joint.get("frames"),
+                "motion_axes": joint.get("motion_axes"),
+                "lowering": lowering,
+                "source_xml": joint.get("source_xml"),
+            }
+        )
+    roots = sorted(
+        joint["child_body"] for joint in joints if joint["parent_body"] is None
+    )
+    if len(roots) != 1:
+        raise ImportError(
+            "Rajagopal skeleton requires one ground-attached rigid-tree root; found "
+            + ", ".join(roots)
+        )
+    if len(joints) != len(body_ids):
+        raise ImportError("Rajagopal skeleton source does not form one body/joint tree")
+    return {
+        "schema": "numi.human.opensim-rigid-skeleton-ir.v1",
+        "source": {
+            "id": model.get("source_id"),
+            "file": model.get("source_file"),
+            "sha256": model.get("source_sha256"),
+            "model_id": model.get("model_id"),
+        },
+        "root_body": roots[0],
+        "body_count": len(body_ids),
+        "joint_count": len(joints),
+        "bodies": model.get("bodies", []),
+        "joints": joints,
+        "lowering_summary": dict(
+            sorted(Counter(joint["lowering"]["status"] for joint in joints).items())
+        ),
+        "runtime_requirement": (
+            "Register source frames to BodyParts3D geometry, upload FunctionBased program "
+            "columns to an articulated multi-body solver, and validate source inertia and "
+            "joint-state dynamics."
+        ),
+        "evidence_boundary": (
+            "Exact OpenSim body, frame, joint, and coordinate topology only. This IR does "
+            "not register BodyParts3D geometry, create collision proxies, or execute an "
+            "articulated solve."
+        ),
+    }
+
+
 def _wrap_objects(model: ET.Element) -> list[dict[str, Any]]:
     result: list[dict[str, Any]] = []
     for frame in model.iter():

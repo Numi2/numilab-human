@@ -20,6 +20,7 @@ from numilab_human.model import (
     read_json,
     rajagopal_custom_joint_ir,
     rajagopal_millard_muscle_ir,
+    rajagopal_rigid_skeleton_ir,
     runtime_compatibility_report,
     runtime_checkout_gate,
 )
@@ -467,6 +468,37 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(result["path_point_count"], 2)
         self.assertEqual(result["path_wrap_count"], 1)
         self.assertEqual(result["muscles"][0]["parameters"], parameters)
+
+    def test_rigid_skeleton_ir_resolves_ground_and_custom_joint_program_link(self) -> None:
+        result = rajagopal_rigid_skeleton_ir(
+            {
+                "source_id": "fixture",
+                "source_file": "fixture.osim",
+                "source_sha256": "e" * 64,
+                "model_id": "fixture",
+                "bodies": [{"id": "pelvis"}],
+                "joints": [
+                    {
+                        "id": "ground_pelvis",
+                        "kind": "CustomJoint",
+                        "parent_frame": "ground",
+                        "child_frame": "/bodyset/pelvis",
+                        "coordinates": [],
+                        "frames": [],
+                        "motion_axes": [],
+                        "source_xml": "<CustomJoint />",
+                    }
+                ],
+            }
+        )
+        self.assertEqual(result["root_body"], "pelvis")
+        self.assertEqual(result["body_count"], 1)
+        self.assertEqual(result["joint_count"], 1)
+        self.assertEqual(result["joints"][0]["parent_body"], None)
+        self.assertEqual(
+            result["joints"][0]["lowering"]["program_file"],
+            "opensim-spatial-programs/ground_pelvis.mrospatial",
+        )
 
     def test_opensim_archive_parser_preserves_selected_member_and_archive_hash(self) -> None:
         source = """<?xml version=\"1.0\"?>

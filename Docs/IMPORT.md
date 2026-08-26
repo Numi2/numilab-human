@@ -153,3 +153,18 @@ their source parameters and curve subtrees, 288 body-frame path points, 46
 path-wrap references, and 44 source wrap objects. It does not evaluate a
 Hill-type force or apply one to a Numi coordinate; that requires the future
 device activation/fiber/tendon, path/wrap, moment-arm, and validation path.
+
+## 10. Resolve the Rajagopal rigid-body tree
+
+```sh
+numi human skeleton \
+  --sources Sources \
+  --output Build/rajagopal-rigid-skeleton-ir.json
+```
+
+This resolves every OpenSim joint socket through its local frame chain to the
+22 source rigid bodies, retains all mass/inertia, frames, coordinates, and
+motion axes, and links each CustomJoint to its canonical program filename. It
+records 10 scalar-core-supported PinJoints, two exact locked-fixed wrists, and
+10 FunctionBased joints still awaiting multi-body solver admission. It is not
+a body-to-BodyParts3D registration, collider cook, or articulated execution.
