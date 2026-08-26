@@ -2,7 +2,7 @@
   "schema": "numi.human.runtime-contract.v1",
   "runtime": {
     "repository": "MetalRobo",
-    "revision": "bafc28d",
+    "revision": "3f25a29",
     "articulated_joint_primitives": [
       "fixed",
       "revolute",
@@ -13,7 +13,9 @@
       "include/metalrobo/engine_types.h",
       "src/metal/ArticulatedABA.metal",
       "src/metal/LocomotionTask.metal",
-      "apps/robot_description_cooker_probe.cpp"
+      "apps/robot_description_cooker_probe.cpp",
+      "include/metalrobo/OpenSimFunction.hpp",
+      "src/core/OpenSimFunction.cpp"
     ]
   },
   "opensim_joint_lowering": {

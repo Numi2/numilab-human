@@ -66,11 +66,11 @@ repository's source-faithful artifact; it cannot register a robot or schedule
 a rollout until the core lowerer exists and all gated sources are supplied.
 
 `numi human audit` now records the inspected Numi runtime contract alongside
-the imported lower-body source. At runtime revision `bafc28d`, Rajagopal's
-`CustomJoint` transforms and `UniversalJoint` wrists do not lower into the
-scalar articulated Metal primitives, and its Hill-type wrapped muscle paths do
-not equal the runtime's linear sparse tendon-position controller. Those are
-typed integration blocks, not permission to approximate the source model.
+the imported lower-body source. At runtime revision `3f25a29`, the core has a
+source-faithful host evaluator for Rajagopal's OpenSim function families, but
+the articulated Metal solver still has no function-based joint, multi-axis
+UniversalJoint, or Hill-type wrapped-muscle lowerer. Those are typed
+integration blocks, not permission to approximate the source model.
 
 The importer retains every `TransformAxis` function and XML subtree, all
 muscle curve parameters, every path-point and wrap subtree, and each wrap
