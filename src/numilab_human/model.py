@@ -1204,7 +1204,7 @@ def rajagopal_rigid_skeleton_ir(model: dict[str, Any]) -> dict[str, Any]:
 _RAJAGOPAL_CORE_REFERENCE_MAGIC = b"NHRIGID1"
 _RAJAGOPAL_CORE_REFERENCE_ABI = 1
 _RAJAGOPAL_MILLARD_REFERENCE_MAGIC = b"NHMUSC1\0"
-_RAJAGOPAL_MILLARD_REFERENCE_ABI = 2
+_RAJAGOPAL_MILLARD_REFERENCE_ABI = 3
 _MR_ENGINE_ABI_VERSION = 5
 _MR_MOTION_DYNAMIC = 2
 _MR_ROOT_FIXED = 0
@@ -1729,6 +1729,7 @@ def rajagopal_millard_reference_artifact(
                 )
             )
         wrap_offset = len(wrap_records)
+        compiled_wraps: list[dict[str, Any]] = []
         for path_wrap in muscle["path_wraps"]:
             source_wrap = wraps.get(path_wrap["wrap_object"])
             if source_wrap is None or source_wrap.get("kind") != "WrapCylinder":
@@ -1760,16 +1761,58 @@ def rajagopal_millard_reference_artifact(
             )
             if radius <= 0.0 or length <= 0.0:
                 raise ImportError(f"Millard cylinder {source_wrap.get('id')} dimensions must be positive")
+            method = path_wrap.get("method") or "hybrid"
+            method_codes = {"hybrid": 0, "midpoint": 1, "axial": 2}
+            if method not in method_codes:
+                raise ImportError(
+                    f"Millard muscle {identifier} has unsupported PathWrap method {method!r}"
+                )
+            source_range = path_wrap.get("range")
+            if source_range is None:
+                start_point, end_point = -1, -1
+            else:
+                if not isinstance(source_range, list) or len(source_range) != 2:
+                    raise ImportError(
+                        f"Millard muscle {identifier} PathWrap range must have two indices"
+                    )
+                range_values = [
+                    _finite_scalar(value, f"Millard muscle {identifier} PathWrap range")
+                    for value in source_range
+                ]
+                if any(value != int(value) for value in range_values):
+                    raise ImportError(
+                        f"Millard muscle {identifier} PathWrap range must use integral indices"
+                    )
+                start_point, end_point = (int(value) for value in range_values)
+            if not (
+                (start_point == -1 or 1 <= start_point <= len(muscle["path_points"]))
+                and (end_point == -1 or 1 <= end_point <= len(muscle["path_points"]))
+                and (start_point == -1 or end_point == -1 or start_point <= end_point)
+            ):
+                raise ImportError(
+                    f"Millard muscle {identifier} has invalid PathWrap range "
+                    f"[{start_point}, {end_point}]"
+                )
             center = _vector3(bodies[parent]["mass_center_m"], f"Millard body {parent} mass centre")
             wrap_records.append(
                 struct.pack(
-                    "<I8f",
+                    "<I8fiiI",
                     body_index[parent],
                     *[translation[index] - center[index] for index in range(3)],
                     *rotation,
                     radius,
                     length,
+                    start_point,
+                    end_point,
+                    method_codes[method],
                 )
+            )
+            compiled_wraps.append(
+                {
+                    "source_wrap_object": path_wrap["wrap_object"],
+                    "method": method,
+                    "range": [start_point, end_point],
+                }
             )
         ignore_tendon = parameters["ignore_tendon_compliance"] in (True, "true")
         muscle_records.append(
@@ -1796,6 +1839,7 @@ def rajagopal_millard_reference_artifact(
                 "path_point_count": len(muscle["path_points"]),
                 "wrap_offset": wrap_offset,
                 "wrap_count": len(muscle["path_wraps"]),
+                "wraps": compiled_wraps,
             }
         )
     source_hash = millard["source"].get("sha256")
@@ -1820,7 +1864,7 @@ def rajagopal_millard_reference_artifact(
         + 48 * len(muscle_records)
         + 88 * len(curve_records)
         + 16 * len(point_records)
-        + 36 * len(wrap_records)
+        + 48 * len(wrap_records)
     )
     if len(payload) != expected_bytes:
         raise ImportError("internal Rajagopal Millard reference payload ABI size mismatch")
@@ -1840,6 +1884,7 @@ def rajagopal_millard_reference_artifact(
             "path_point_count": len(point_records),
             "path_wrap_count": len(wrap_records),
             "curve_record_bytes": 88,
+            "wrap_record_bytes": 48,
             "muscles": muscle_manifest,
             "curve_ir_schema": millard["schema"],
             "runtime_requirement": (
@@ -1849,7 +1894,8 @@ def rajagopal_millard_reference_artifact(
             ),
             "evidence_boundary": (
                 "Exact source scalars, curve properties (including OpenSim class defaults where "
-                "the source leaves them empty), body-frame path points, and WrapCylinder definitions. "
+                "the source leaves them empty), body-frame path points, and WrapCylinder definitions "
+                "with source PathWrap method and range. "
                 "Neither artifact is a validated OpenSim-equivalence or device-resident muscle result."
             ),
         },

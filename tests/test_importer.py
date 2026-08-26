@@ -460,17 +460,26 @@ class ImporterTests(unittest.TestCase):
                         "path_points": [
                             {"parent_frame": "/bodyset/pelvis", "location_m": [0.0, 0.0, 0.0]},
                             {"parent_frame": "/bodyset/femur", "location_m": [0.0, 0.1, 0.0]},
+                            {"parent_frame": "/bodyset/femur", "location_m": [0.1, 0.1, 0.0]},
                         ],
-                        "path_wraps": [{"wrap_object": "pelvis_wrap"}],
+                        "path_wraps": [
+                            {
+                                "wrap_object": "pelvis_wrap",
+                                "method": "hybrid",
+                                "range": [2.0, 3.0],
+                            }
+                        ],
                         "source_xml": "<Millard2012EquilibriumMuscle />",
                     }
                 ],
             }
         )
         self.assertEqual(result["muscle_count"], 1)
-        self.assertEqual(result["path_point_count"], 2)
+        self.assertEqual(result["path_point_count"], 3)
         self.assertEqual(result["path_wrap_count"], 1)
         self.assertEqual(result["muscles"][0]["parameters"], parameters)
+        self.assertEqual(result["muscles"][0]["path_wraps"][0]["method"], "hybrid")
+        self.assertEqual(result["muscles"][0]["path_wraps"][0]["range"], [2.0, 3.0])
 
     def test_rigid_skeleton_ir_resolves_ground_and_custom_joint_program_link(self) -> None:
         result = rajagopal_rigid_skeleton_ir(

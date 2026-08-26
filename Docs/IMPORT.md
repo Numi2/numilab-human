@@ -165,11 +165,12 @@ numi human millard-reference \
   --output Build/rajagopal-millard-reference
 ```
 
-This provenance-locked `NHMUSC1` ABI v2 payload binds to the matching rigid
+This provenance-locked `NHMUSC1` ABI v3 payload binds to the matching rigid
 tree source hash and carries all 80 source muscle scalars, 22 source curve
 parameters per muscle, 288 COM-relative path points, and 46 finite-cylinder
-wrap definitions. Optional source curve properties that are absent in the
-model are materialized only with the documented OpenSim class defaults.
+wrap definitions with their source `PathWrap` method and 1-based range.
+Optional source curve properties that are absent in the model are materialized
+only with the documented OpenSim class defaults.
 
 At the matching Core revision, run both the source tree and its muscle
 reference together:

@@ -23,21 +23,21 @@ metadata omissions.
 
 ## Bounded FunctionBased skeleton and active Millard actuation — 2026-08-26
 
-Core revision `da9051e` was built in the isolated Mini checkout and ran the
+Core revision `4b60f8f` was built in the isolated Mini checkout and ran the
 source-locked Rajagopal reference on the Apple M4 Pro. This is the current
 mechanics qualification; older sections that describe an operator-only or
 static-sidecar boundary are historical evidence for preceding revisions.
 
 | Item | Exact value |
 | --- | --- |
-| Core revision | `da9051e` (`origin/coupled`) |
+| Core revision | `4b60f8f` (`origin/coupled`) |
 | Source rigid payload SHA-256 | `da7e52ddd64728ed0a63e73a11cf857ec5489b3eb29e32d11f352f35507cdee6` |
-| Source Millard payload SHA-256 | `101b2a549e4d20145391138e268642e6cd2ab99bd77005ad3f6ab5875b3a08c1` |
+| Source Millard payload SHA-256 | `ecc900d71369c3c0cbf7a09fbdc33a2194f6a77edcddf594d306d850de60fbf4` |
 | Device / toolchain | Apple M4 Pro on `macmini`; AppleClang `21.0.0.21000101` |
-| Probe SHA-256 | `7e93f6f93df015b450c71901e2bed678928dd6004fd2b58efddc18baf2e5405d` |
-| Core library SHA-256 | `f4d5e35a61c192e66c17c48a8274b6f279a6a753f603779e5414ca56069ce0a5` |
-| Metal library SHA-256 | `52489654513d7852d6dd5e7a7ca6a01ae2d0c1150c5e98e88d0fcd9fba6d2ffa` |
-| Device log SHA-256 | `9d99a79fc45aaf890362e5ded3f51b0de3584c4bcfca8a813def1dac990e5031` |
+| Probe SHA-256 | `0d2eb367fe4f09fd6b577f2648f79ec78edab85cd8baac1362fa60f1e2e9b86f` |
+| Core library SHA-256 | `4f04f0a411d3c5c561aec306744a2cf6b7b4856273499c0da596843440eadc6f` |
+| Metal library SHA-256 | `8351863cbbf5ce523956d9b49484ae39c315f9b8bdec54285544bcffaff71922` |
+| Device log SHA-256 | `ed9ffd6d83df248f8cb0ed8d965a507066fe5ed23dafb998936aeec3b7715269` |
 
 The run admitted one fixed-root source tree with 22 source bodies, 35
 coordinates/velocities, and 10 FunctionBased programs to MetalWorld's
@@ -45,13 +45,16 @@ resident free-motion state step. Three persisted direct-effort steps matched
 the FP64 reference with maximum acceleration, velocity, and configuration
 errors of `1.75e-04`, `1e-06`, and `0` at printed precision.
 
-The same command buffer then evaluated all 80 source Millard muscles from the
+The Millard payload is ABI v3: all 46 source `PathWrap` methods and 1-based
+ranges are carried into both Core paths. All source methods are `hybrid`; four
+authored ranges are `[2,3]` and were no longer treated as unconstrained. The
+same command buffer then evaluated all 80 source Millard muscles from the
 private FunctionBased pose/Jacobian streams, applied 26 finite-cylinder wraps,
 and reduced their per-muscle force vectors into MetalWorld's working-effort
 arena before the source-dynamics step. The aggregate device force L1 was
-`12175.300129`; its relative difference from the CPU source bridge was
+`12065.227945`; its relative difference from the CPU source bridge was
 `3e-06`. The force changed accepted velocity from the passive state by
-`89.417320`, and aggregate acceleration L1 relative error was `8e-06`.
+`89.405083`, and aggregate acceleration L1 relative error was `8e-06`.
 
 This qualifies bounded source skeleton and static-equilibrium muscle actuation
 on device. It does not authenticate the unavailable MoBL-ARMS archive,
