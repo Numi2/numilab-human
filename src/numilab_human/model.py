@@ -19,6 +19,15 @@ class ImportError(ValueError):
     """Raised when a source cannot make a source-faithful Human v1 artifact."""
 
 
+# Rajagopal's serialized Millard muscles omit these optional properties.  They
+# are the documented OpenSim Millard2012EquilibriumMuscle class defaults, kept
+# explicit here so a learned-excitation path never silently assumes a cadence.
+_MILLARD_ACTIVATION_DEFAULTS = {
+    "activation_time_constant_seconds": 0.01,
+    "deactivation_time_constant_seconds": 0.04,
+}
+
+
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as stream:
@@ -1112,6 +1121,11 @@ def rajagopal_walking_contract(model: dict[str, Any]) -> dict[str, Any]:
             "state": {
                 "persistent_activation": "source default/minimum activation bounded by excitation",
                 "fiber_tendon": "equilibrium warm-start state; no OpenSim-equivalence claim",
+                "activation_dynamics": {
+                    "model": "first_order_excitation_to_activation",
+                    "parameters": _MILLARD_ACTIVATION_DEFAULTS,
+                    "provenance": "OpenSim Millard2012EquilibriumMuscle documented class defaults; absent from the pinned Rajagopal XML",
+                },
             },
         },
         "contact": {

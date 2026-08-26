@@ -16,6 +16,11 @@ torque. The Core reference also provides a deterministic persistent activation
 update with explicit time constants. Those constants must be provenance-locked
 by the later source/contact task before training.
 
+For the pinned Rajagopal XML the optional activation-time properties are absent.
+`config/opensim-millard-activation-defaults.v1.json` therefore records the
+OpenSim Millard class defaults used by the activation contract. They are not
+subject calibration and must remain separately identified in any policy result.
+
 The flat-ground walking scenario is blocked until the following artifacts are
 present and validated: per-foot BodyParts3D-to-Rajagopal registration,
 conservative collision proxies, friction/compliance parameters, collision
