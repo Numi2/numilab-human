@@ -71,3 +71,9 @@ the imported lower-body source. At runtime revision `94d5a36`, Rajagopal's
 scalar articulated Metal primitives, and its Hill-type wrapped muscle paths do
 not equal the runtime's linear sparse tendon-position controller. Those are
 typed integration blocks, not permission to approximate the source model.
+
+The importer retains every `TransformAxis` function and XML subtree, all
+muscle curve parameters, every path-point and wrap subtree, and each wrap
+object subtree. A source-faithful Metal extension therefore has the source
+data it needs; a provisional preview must identify each deliberately reduced
+joint, collision, or actuator contract instead of overwriting this record.

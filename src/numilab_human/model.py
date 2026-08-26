@@ -75,24 +75,25 @@ def _opensim_direct_properties(element: ET.Element, names: Iterable[str]) -> dic
     return result
 
 
-_MUSCLE_PROPERTIES = (
-    "max_isometric_force",
-    "optimal_fiber_length",
-    "tendon_slack_length",
-    "pennation_angle_at_optimal",
-    "max_contraction_velocity",
-    "activation_time_constant",
-    "deactivation_time_constant",
-    "fiber_damping",
-    "tendon_strain_at_one_norm_force",
-    "passive_fiber_strain_at_one_norm_force",
-    "active_force_width_scale",
-    "ignore_tendon_compliance",
-    "default_activation",
-    "default_fiber_length",
-    "min_control",
-    "max_control",
-)
+def _opensim_direct_leaf_properties(
+    element: ET.Element, excluded: Iterable[str] = ()
+) -> dict[str, Any]:
+    """Preserve every direct scalar OpenSim property without flattening trees."""
+    ignored = set(excluded)
+    result: dict[str, Any] = {}
+    for child in element:
+        name = _local_name(child)
+        if name in ignored or any(isinstance(item.tag, str) for item in child):
+            continue
+        value = _number_or_text(child.text)
+        if value is not None:
+            result[name] = value
+    return result
+
+
+def _source_xml(element: ET.Element) -> str:
+    """Keep a source subtree available to a future lowerer that needs more data."""
+    return ET.tostring(element, encoding="unicode")
 
 
 def _joint_frames(joint: ET.Element) -> list[dict[str, Any]]:
@@ -116,6 +117,36 @@ def _joint_frames(joint: ET.Element) -> list[dict[str, Any]]:
     return result
 
 
+def _body_inertia(body: ET.Element) -> dict[str, float]:
+    """Normalize either OpenSim inertia spelling into one explicit tensor map."""
+    compact = _number_or_text(_text(body, "inertia"))
+    names = ("xx", "yy", "zz", "xy", "xz", "yz")
+    if compact is not None:
+        if (
+            not isinstance(compact, list)
+            or len(compact) != len(names)
+            or not all(isinstance(value, float) for value in compact)
+        ):
+            raise ImportError(
+                f"Body {body.get('name', '<unnamed>')} has malformed OpenSim inertia"
+            )
+        return dict(zip(names, compact, strict=True))
+    direct = _opensim_direct_properties(
+        body,
+        tuple(f"inertia_{name}" for name in names),
+    )
+    if not direct:
+        return {}
+    if not {"inertia_xx", "inertia_yy", "inertia_zz"}.issubset(direct):
+        raise ImportError(
+            f"Body {body.get('name', '<unnamed>')} has incomplete principal inertia"
+        )
+    return {
+        name: float(direct.get(f"inertia_{name}", 0.0))
+        for name in names
+    }
+
+
 def _joint_motion_axes(joint: ET.Element) -> list[dict[str, Any]]:
     result: list[dict[str, Any]] = []
     for axis in joint.iter():
@@ -130,11 +161,17 @@ def _joint_motion_axes(joint: ET.Element) -> list[dict[str, Any]]:
             None,
         )
         function_kind = None
+        function_element = function
         if function is not None:
             if _local_name(function) == "function":
-                function_kind = next(
-                    (_local_name(item) for item in function if isinstance(item.tag, str)),
+                function_element = next(
+                    (item for item in function if isinstance(item.tag, str)),
                     None,
+                )
+                function_kind = (
+                    _local_name(function_element)
+                    if function_element is not None
+                    else None
                 )
             else:
                 function_kind = _local_name(function)
@@ -144,9 +181,19 @@ def _joint_motion_axes(joint: ET.Element) -> list[dict[str, Any]]:
                 "coordinates": _text(axis, "coordinates"),
                 "axis": _number_or_text(_text(axis, "axis")),
                 "function_kind": function_kind,
-                # A lowerer must preserve this function's source semantics;
+                "function_parameters": (
+                    _opensim_direct_leaf_properties(function_element)
+                    if function_element is not None
+                    else {}
+                ),
+                "function_source_xml": (
+                    _source_xml(function_element)
+                    if function_element is not None
+                    else None
+                ),
+                # A lowerer must preserve this transform's source semantics;
                 # carrying its XML prevents a lossy host-side approximation.
-                "source_xml": ET.tostring(axis, encoding="unicode"),
+                "source_xml": _source_xml(axis),
             }
         )
     return result
@@ -170,18 +217,8 @@ def _wrap_objects(model: ET.Element) -> list[dict[str, Any]]:
                     "id": identifier,
                     "kind": _local_name(wrap),
                     "parent_frame": frame.get("name"),
-                    "parameters": _opensim_direct_properties(
-                        wrap,
-                        (
-                            "active",
-                            "translation",
-                            "xyz_body_rotation",
-                            "quadrant",
-                            "radius",
-                            "length",
-                            "dimensions",
-                        ),
-                    ),
+                    "parameters": _opensim_direct_leaf_properties(wrap),
+                    "source_xml": _source_xml(wrap),
                 }
             )
     return result
@@ -209,16 +246,13 @@ def parse_opensim(path: Path, source_id: str) -> dict[str, Any]:
         identifier = body.get("name")
         if not identifier:
             continue
-        inertia = _opensim_direct_properties(
-            body,
-            ("inertia_xx", "inertia_yy", "inertia_zz", "inertia_xy", "inertia_xz", "inertia_yz"),
-        )
         bodies.append(
             {
                 "id": identifier,
                 "mass_kg": _number_or_text(_text(body, "mass")),
                 "mass_center_m": _number_or_text(_text(body, "mass_center")),
-                "inertia_kg_m2": inertia,
+                "inertia_kg_m2": _body_inertia(body),
+                "source_xml": _source_xml(body),
             }
         )
 
@@ -250,6 +284,7 @@ def parse_opensim(path: Path, source_id: str) -> dict[str, Any]:
                 "coordinates": coordinates,
                 "frames": _joint_frames(joint),
                 "motion_axes": _joint_motion_axes(joint),
+                "source_xml": _source_xml(joint),
             }
         )
 
@@ -275,6 +310,11 @@ def parse_opensim(path: Path, source_id: str) -> dict[str, Any]:
                         "kind": point_kind,
                         "parent_frame": _text(point, "socket_parent_frame") or _text(point, "body"),
                         "location_m": _number_or_text(_text(point, "location")),
+                        "parameters": _opensim_direct_leaf_properties(
+                            point,
+                            ("socket_parent_frame", "body", "location"),
+                        ),
+                        "source_xml": _source_xml(point),
                     }
                 )
         path_wraps = []
@@ -288,15 +328,30 @@ def parse_opensim(path: Path, source_id: str) -> dict[str, Any]:
                     "wrap_object": _text(path_wrap, "socket_wrap_object") or _text(path_wrap, "wrap_object"),
                     "range": _number_or_text(_text(path_wrap, "range")),
                     "method": _text(path_wrap, "method"),
+                    "parameters": _opensim_direct_leaf_properties(
+                        path_wrap,
+                        ("socket_wrap_object", "wrap_object", "range", "method"),
+                    ),
+                    "source_xml": _source_xml(path_wrap),
                 }
             )
         muscles.append(
             {
                 "id": identifier,
                 "kind": kind,
-                "parameters": _opensim_direct_properties(force, _MUSCLE_PROPERTIES),
+                "parameters": _opensim_direct_leaf_properties(force),
+                "curves": {
+                    _local_name(curve): {
+                        "kind": _local_name(curve),
+                        "parameters": _opensim_direct_leaf_properties(curve),
+                        "source_xml": _source_xml(curve),
+                    }
+                    for curve in force
+                    if _local_name(curve).endswith("Curve")
+                },
                 "path_points": path_points,
                 "path_wraps": path_wraps,
+                "source_xml": _source_xml(force),
             }
         )
 
@@ -753,6 +808,11 @@ def runtime_compatibility_report(
         for axis in joint["motion_axes"]
     )
     muscle_kinds = Counter(muscle["kind"] for muscle in model["muscles"])
+    muscle_curves = Counter(
+        curve_kind
+        for muscle in model["muscles"]
+        for curve_kind in muscle.get("curves", {})
+    )
     path_points = sum(len(muscle["path_points"]) for muscle in model["muscles"])
     path_wraps = sum(len(muscle["path_wraps"]) for muscle in model["muscles"])
     return {
@@ -763,6 +823,7 @@ def runtime_compatibility_report(
             "joint_kinds": dict(sorted(joint_kinds.items())),
             "transform_functions": dict(sorted(transform_functions.items())),
             "muscle_kinds": dict(sorted(muscle_kinds.items())),
+            "muscle_curve_kinds": dict(sorted(muscle_curves.items())),
             "muscle_path_points": path_points,
             "muscle_path_wraps": path_wraps,
             "wrap_objects": len(model["wrap_objects"]),

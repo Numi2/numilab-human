@@ -36,7 +36,7 @@ class ImporterTests(unittest.TestCase):
   <gravity>0 -9.81 0</gravity>
   <BodySet><objects><Body name=\"pelvis\"><mass>11.2</mass><mass_center>0 0.1 0</mass_center><inertia_xx>1</inertia_xx><inertia_yy>2</inertia_yy><inertia_zz>3</inertia_zz></Body></objects></BodySet>
   <JointSet><objects><CustomJoint name=\"hip\"><socket_parent_frame>/ground</socket_parent_frame><socket_child_frame>/bodyset/pelvis</socket_child_frame><coordinates><Coordinate name=\"hip_flexion\"><default_value>0</default_value><range>-1 1</range><clamped>true</clamped><locked>false</locked></Coordinate></coordinates><frames><PhysicalOffsetFrame name=\"hip_center\"><socket_parent>/bodyset/pelvis</socket_parent><translation>0 0.1 0</translation><orientation>0 0 0</orientation></PhysicalOffsetFrame></frames><SpatialTransform><TransformAxis name=\"rotation1\"><coordinates>hip_flexion</coordinates><axis>0 0 1</axis><function><LinearFunction><coefficients>1 0</coefficients></LinearFunction></function></TransformAxis></SpatialTransform></CustomJoint></objects></JointSet>
-  <ForceSet><objects><Millard2012EquilibriumMuscle name=\"iliacus\"><max_isometric_force>1000</max_isometric_force><optimal_fiber_length>0.1</optimal_fiber_length><tendon_slack_length>0.2</tendon_slack_length><GeometryPath><PathPointSet><objects><PathPoint name=\"origin\"><socket_parent_frame>/bodyset/pelvis</socket_parent_frame><location>0 0 0</location></PathPoint></objects></PathPointSet><PathWrapSet><objects><PathWrap name=\"wrap\"><socket_wrap_object>/bodyset/pelvis/wrap_object</socket_wrap_object></PathWrap></objects></PathWrapSet></GeometryPath></Millard2012EquilibriumMuscle></objects></ForceSet>
+  <ForceSet><objects><Millard2012EquilibriumMuscle name=\"iliacus\"><max_isometric_force>1000</max_isometric_force><optimal_fiber_length>0.1</optimal_fiber_length><tendon_slack_length>0.2</tendon_slack_length><minimum_activation>0.01</minimum_activation><ActiveForceLengthCurve><min_norm_active_fiber_length>0.5</min_norm_active_fiber_length></ActiveForceLengthCurve><GeometryPath><PathPointSet><objects><PathPoint name=\"origin\"><socket_parent_frame>/bodyset/pelvis</socket_parent_frame><location>0 0 0</location></PathPoint></objects></PathPointSet><PathWrapSet><objects><PathWrap name=\"wrap\"><socket_wrap_object>/bodyset/pelvis/wrap_object</socket_wrap_object></PathWrap></objects></PathWrapSet></GeometryPath></Millard2012EquilibriumMuscle></objects></ForceSet>
 </Model></OpenSimDocument>"""
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary) / "fixture.osim"
@@ -44,13 +44,27 @@ class ImporterTests(unittest.TestCase):
             result = parse_opensim(path, "fixture")
         self.assertEqual(result["model_id"], "fixture")
         self.assertEqual(result["bodies"][0]["mass_kg"], 11.2)
+        self.assertEqual(
+            result["bodies"][0]["inertia_kg_m2"],
+            {"xx": 1.0, "yy": 2.0, "zz": 3.0, "xy": 0.0, "xz": 0.0, "yz": 0.0},
+        )
         self.assertEqual(result["joints"][0]["coordinates"][0]["id"], "hip_flexion")
         self.assertEqual(result["muscles"][0]["parameters"]["tendon_slack_length"], 0.2)
         self.assertEqual(result["muscles"][0]["path_points"][0]["parent_frame"], "/bodyset/pelvis")
         self.assertEqual(result["joints"][0]["frames"][0]["id"], "hip_center")
         self.assertEqual(result["joints"][0]["motion_axes"][0]["coordinates"], "hip_flexion")
         self.assertEqual(result["joints"][0]["motion_axes"][0]["function_kind"], "LinearFunction")
+        self.assertEqual(
+            result["joints"][0]["motion_axes"][0]["function_parameters"]["coefficients"],
+            [1.0, 0.0],
+        )
         self.assertEqual(result["muscles"][0]["path_wraps"][0]["wrap_object"], "/bodyset/pelvis/wrap_object")
+        self.assertEqual(result["muscles"][0]["parameters"]["minimum_activation"], 0.01)
+        self.assertEqual(
+            result["muscles"][0]["curves"]["ActiveForceLengthCurve"]["parameters"]
+            ["min_norm_active_fiber_length"],
+            0.5,
+        )
 
     def test_bodyparts_parser_preserves_two_hierarchies(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -165,6 +179,7 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(report["skeleton"]["unsupported_joint_kinds"], {"CustomJoint": 1, "UniversalJoint": 1})
         self.assertEqual(report["muscle_tendon"]["status"], "blocked")
         self.assertEqual(report["source_model"]["muscle_path_wraps"], 1)
+        self.assertEqual(report["source_model"]["muscle_curve_kinds"], {})
 
     def test_opensim_archive_parser_preserves_selected_member_and_archive_hash(self) -> None:
         source = """<?xml version=\"1.0\"?>
