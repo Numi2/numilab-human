@@ -71,6 +71,11 @@ numi human foot-collider-preflight --sources Sources --output Build/foot-collide
 # calibrated contact values on the reviewer's behalf.
 numi human foot-registration-receipt-template --sources Sources --output Build/foot-registration-receipt-template.json
 
+# After a reviewer completes the receipt, verify its source hashes, rigid
+# transform math, three-view evidence, and contact-field completeness. This
+# does not turn the review into a physics or walking qualification.
+numi human foot-registration-receipt-check --sources Sources --receipt Build/reviewed-foot-receipt.json --output Build/reviewed-foot-receipt-validation.json
+
 # Export exact source-static skin, bone, muscle, vessel, and nerve layer previews.
 numi human visual-layers --sources Sources --output Build/bodyparts3d-layers
 

@@ -115,3 +115,18 @@ rest-frame transform, at least three visual-review views with artifact hashes
 and residuals, a conservative OpenSim-frame proxy, pair exclusions, and a
 contact-calibration receipt. The command itself supplies none of those values
 and therefore cannot admit a walking task.
+
+Once the reviewer fills the receipt, validate its pinned provenance, transform
+shape, independent three-view evidence records, and contact-field completeness:
+
+```sh
+numi human foot-registration-receipt-check \
+  --sources Sources \
+  --receipt Build/reviewed-foot-receipt.json \
+  --output Build/reviewed-foot-receipt-validation.json
+```
+
+Successful validation is only `structurally_complete_not_physics_or_walking_qualified`.
+It proves neither landmark accuracy nor contact behavior; those still require
+the recorded review artifacts, Core collider lowering, deterministic replay,
+and held-out gait outcomes.

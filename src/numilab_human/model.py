@@ -1479,6 +1479,160 @@ def bodyparts_foot_registration_receipt_template(
     }
 
 
+def validate_bodyparts_foot_registration_receipt(
+    receipt: dict[str, Any], sources: Path, anatomy: dict[str, Any], model: dict[str, Any]
+) -> dict[str, Any]:
+    """Fail closed on a reviewer-completed registration/contact receipt.
+
+    Structural completeness and provenance are necessary before a Core
+    lowerer can consume a foot manifest. They are not evidence that the
+    registration, collider, or calibration is physically valid.
+    """
+    expected = bodyparts_foot_registration_receipt_template(sources, anatomy, model)
+    if receipt.get("schema") != expected["schema"]:
+        raise ImportError("foot receipt has an unsupported schema")
+    if receipt.get("source") != expected["source"]:
+        raise ImportError("foot receipt source provenance does not match the pinned sources")
+    if receipt.get("preflight_sha256") != expected["preflight_sha256"]:
+        raise ImportError("foot receipt does not bind to the current source-local preflight")
+    if receipt.get("walking_contact_bodies") != expected["walking_contact_bodies"]:
+        raise ImportError("foot receipt walking-contact body order drifted")
+    actual_receipts = receipt.get("receipts")
+    if not isinstance(actual_receipts, list) or len(actual_receipts) != len(expected["receipts"]):
+        raise ImportError("foot receipt must contain exactly one entry for every walking-contact body")
+
+    def finite_number(value: Any, field: str) -> float:
+        if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value):
+            raise ImportError(f"foot receipt {field} must be a finite number")
+        return float(value)
+
+    def text(value: Any, field: str) -> str:
+        if not isinstance(value, str) or not value.strip():
+            raise ImportError(f"foot receipt {field} must be a nonempty string")
+        return value
+
+    def sha(value: Any, field: str) -> str:
+        candidate = text(value, field)
+        if not re.fullmatch(r"[0-9a-fA-F]{64}", candidate):
+            raise ImportError(f"foot receipt {field} must be a SHA-256 digest")
+        return candidate.lower()
+
+    def rigid_transform(value: Any, body: str) -> None:
+        if not isinstance(value, dict):
+            raise ImportError(f"foot receipt {body} rest transform must be an object")
+        matrix = value.get("matrix")
+        if not isinstance(matrix, list) or len(matrix) != 4 or any(
+            not isinstance(row, list) or len(row) != 4 for row in matrix
+        ):
+            raise ImportError(f"foot receipt {body} rest transform must be a 4x4 matrix")
+        m = [[finite_number(cell, f"{body} rest transform") for cell in row] for row in matrix]
+        tolerance = 1.0e-5
+        if any(abs(m[3][column] - (1.0 if column == 3 else 0.0)) > tolerance
+               for column in range(4)):
+            raise ImportError(f"foot receipt {body} rest transform is not affine")
+        rotation = [[m[row][column] for column in range(3)] for row in range(3)]
+        for row in rotation:
+            if abs(sum(value * value for value in row) - 1.0) > tolerance:
+                raise ImportError(f"foot receipt {body} rest transform rotation is not orthonormal")
+        for first in range(3):
+            for second in range(first + 1, 3):
+                if abs(sum(rotation[first][axis] * rotation[second][axis] for axis in range(3))) > tolerance:
+                    raise ImportError(f"foot receipt {body} rest transform rotation is not orthogonal")
+        determinant = (
+            rotation[0][0] * (rotation[1][1] * rotation[2][2] - rotation[1][2] * rotation[2][1])
+            - rotation[0][1] * (rotation[1][0] * rotation[2][2] - rotation[1][2] * rotation[2][0])
+            + rotation[0][2] * (rotation[1][0] * rotation[2][1] - rotation[1][1] * rotation[2][0])
+        )
+        if abs(determinant - 1.0) > tolerance:
+            raise ImportError(f"foot receipt {body} rest transform must have a proper rotation")
+
+    verified_bodies: list[str] = []
+    for expected_entry, entry in zip(expected["receipts"], actual_receipts, strict=True):
+        body = expected_entry["opensim_body"]
+        if not isinstance(entry, dict) or entry.get("opensim_body") != body or \
+                entry.get("laterality") != expected_entry["laterality"] or \
+                entry.get("anatomical_landmark") != expected_entry["anatomical_landmark"]:
+            raise ImportError("foot receipt body identities do not match the reviewed template")
+        if not expected_entry["source_meshes"]:
+            raise ImportError(f"foot receipt {body} has no BodyParts3D source mesh to register")
+        if entry.get("source_meshes") != expected_entry["source_meshes"]:
+            raise ImportError(f"foot receipt {body} source mesh identities changed")
+        registration = entry.get("reviewed_registration")
+        if not isinstance(registration, dict):
+            raise ImportError(f"foot receipt {body} is missing reviewed registration")
+        conversion = registration.get("axis_and_unit_conversion")
+        if not isinstance(conversion, dict):
+            raise ImportError(f"foot receipt {body} is missing axis/unit conversion")
+        if conversion.get("axis_permutation") not in ([0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0]):
+            raise ImportError(f"foot receipt {body} must provide an axis permutation")
+        signs = conversion.get("axis_signs")
+        if not isinstance(signs, list) or len(signs) != 3 or any(sign not in (-1, 1) for sign in signs):
+            raise ImportError(f"foot receipt {body} must provide three axis signs")
+        if finite_number(conversion.get("scale_m_per_source_unit"), f"{body} unit scale") <= 0.0:
+            raise ImportError(f"foot receipt {body} unit scale must be positive")
+        text(conversion.get("reviewer"), f"{body} conversion reviewer")
+        rigid_transform(registration.get("source_to_body_rest_transform"), body)
+        visual = registration.get("multi_angle_visual_review")
+        if not isinstance(visual, dict):
+            raise ImportError(f"foot receipt {body} is missing multi-angle visual review")
+        views = visual.get("views")
+        if not isinstance(views, list) or len(views) < 3:
+            raise ImportError(f"foot receipt {body} requires at least three visual-review views")
+        view_ids: set[str] = set()
+        for index, view in enumerate(views):
+            if not isinstance(view, dict):
+                raise ImportError(f"foot receipt {body} visual view {index} must be an object")
+            view_id = text(view.get("id"), f"{body} visual view id")
+            if view_id in view_ids:
+                raise ImportError(f"foot receipt {body} visual view identifiers must be unique")
+            view_ids.add(view_id)
+            sha(view.get("artifact_sha256"), f"{body} visual artifact")
+            if finite_number(view.get("maximum_landmark_residual_mm"), f"{body} visual residual") < 0.0:
+                raise ImportError(f"foot receipt {body} visual residual cannot be negative")
+        text(visual.get("reviewer"), f"{body} visual reviewer")
+        contact = entry.get("reviewed_contact")
+        if not isinstance(contact, dict):
+            raise ImportError(f"foot receipt {body} is missing reviewed contact")
+        proxy = contact.get("proxy_geometry")
+        if not isinstance(proxy, dict) or proxy.get("body_frame") != body:
+            raise ImportError(f"foot receipt {body} proxy must be authored in its OpenSim body frame")
+        if proxy.get("shape") not in {"box", "convex_hull", "capsule"}:
+            raise ImportError(f"foot receipt {body} proxy shape is not an admitted conservative primitive")
+        if not isinstance(proxy.get("parameters"), dict) or not proxy["parameters"]:
+            raise ImportError(f"foot receipt {body} proxy requires parameters")
+        exclusions = contact.get("collision_exclusions")
+        if not isinstance(exclusions, list):
+            raise ImportError(f"foot receipt {body} collision exclusions must be an array")
+        calibration = contact.get("calibration")
+        if not isinstance(calibration, dict):
+            raise ImportError(f"foot receipt {body} is missing contact calibration")
+        if finite_number(calibration.get("friction"), f"{body} friction") <= 0.0 or \
+                finite_number(calibration.get("normal_stiffness"), f"{body} normal stiffness") <= 0.0 or \
+                finite_number(calibration.get("normal_damping"), f"{body} normal damping") < 0.0:
+            raise ImportError(f"foot receipt {body} contact calibration must be physically signed")
+        restitution = finite_number(calibration.get("restitution"), f"{body} restitution")
+        if restitution < 0.0 or restitution > 1.0:
+            raise ImportError(f"foot receipt {body} restitution must be in [0, 1]")
+        sha(calibration.get("evidence_sha256"), f"{body} contact calibration evidence")
+        text(calibration.get("reviewer"), f"{body} contact reviewer")
+        verified_bodies.append(body)
+    return {
+        "schema": "numi.human.bodyparts-foot-registration-receipt-validation.v1",
+        "source": expected["source"],
+        "preflight_sha256": expected["preflight_sha256"],
+        "reviewed_foot_bodies": verified_bodies,
+        "receipt_sha256": hashlib.sha256(
+            json.dumps(receipt, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest(),
+        "status": "structurally_complete_not_physics_or_walking_qualified",
+        "evidence_boundary": (
+            "This validator checks source provenance and reviewer-supplied structural "
+            "fields. It does not establish transform accuracy, collider conservatism, "
+            "contact calibration validity, runtime admission, or walking performance."
+        ),
+    }
+
+
 def bodyparts_visual_layer_previews(sources: Path, output: Path, anatomy: dict[str, Any]) -> dict[str, Any]:
     """Export one exact, reviewable source mesh for each requested anatomy layer."""
     requested = ("skin_surface", "bone", "muscle_surface", "vessel_surface", "nerve_surface")

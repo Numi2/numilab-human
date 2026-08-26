@@ -11,6 +11,7 @@ from numilab_human.model import (
     ImportError as HumanImportError,
     bodyparts_foot_collider_preflight,
     bodyparts_foot_registration_receipt_template,
+    validate_bodyparts_foot_registration_receipt,
     bodyparts_geometry_preflight,
     bodyparts_foot_registration_template,
     bodyparts_lower_body_attachment_worklist,
@@ -134,6 +135,70 @@ class ImporterTests(unittest.TestCase):
         self.assertNotIn(
             "transform", right_calcaneus["reviewed_registration"]
         )
+
+    def test_foot_registration_receipt_validator_requires_complete_review_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            sources = Path(temporary) / "Sources"
+            sources.mkdir()
+            archive = sources / "isa_BP3D_4.0_obj_99.zip"
+            with zipfile.ZipFile(archive, "w") as bundle:
+                bundle.writestr(
+                    "isa_BP3D_4.0_obj_99/FJ1.obj",
+                    "v 0 0 0\nv 1 0 0\nv 0 1 0\nf 1 2 3\n",
+                )
+            anatomy = {
+                "source_id": "fixture-bodyparts", "version": "4.0",
+                "archives": [{"hierarchy": "is_a", "file": archive.name, "sha256": "a" * 64}],
+                "components": [
+                    {"concept_id": f"FMA{index}", "name": name, "anatomy_class": "bone", "hierarchy": "is_a",
+                     "element_meshes": [{"element_id": "FJ1", "mesh_present": True}]}
+                    for index, name in enumerate((
+                        "right calcaneus", "right toes", "left calcaneus", "left toes",
+                    ), 1)
+                ],
+            }
+            model = {
+                "source_id": "fixture-rajagopal", "source_file": "fixture.osim",
+                "source_sha256": "b" * 64,
+                "bodies": [{"id": body_id} for body_id in (
+                    "calcn_r", "toes_r", "calcn_l", "toes_l"
+                )],
+            }
+            receipt = bodyparts_foot_registration_receipt_template(sources, anatomy, model)
+            with self.assertRaises(HumanImportError):
+                validate_bodyparts_foot_registration_receipt(receipt, sources, anatomy, model)
+            for index, entry in enumerate(receipt["receipts"]):
+                entry["reviewed_registration"] = {
+                    "axis_and_unit_conversion": {
+                        "axis_permutation": [0, 1, 2], "axis_signs": [1, 1, 1],
+                        "scale_m_per_source_unit": 0.001, "reviewer": "fixture reviewer",
+                    },
+                    "source_to_body_rest_transform": {
+                        "matrix": [[1.0, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0],
+                                   [0.0, 0.0, 1.0, 0.0], [0.0, 0.0, 0.0, 1.0]],
+                    },
+                    "multi_angle_visual_review": {
+                        "reviewer": "fixture reviewer",
+                        "views": [{
+                            "id": view, "artifact_sha256": f"{index:064x}",
+                            "maximum_landmark_residual_mm": 0.0,
+                        } for view in ("front", "side", "rear")],
+                    },
+                }
+                entry["reviewed_contact"] = {
+                    "proxy_geometry": {"shape": "box", "body_frame": entry["opensim_body"], "parameters": {"half_extents_m": [0.1, 0.1, 0.1]}},
+                    "collision_exclusions": [],
+                    "calibration": {
+                        "friction": 0.8, "normal_stiffness": 1000.0,
+                        "normal_damping": 10.0, "restitution": 0.0,
+                        "evidence_sha256": f"{index + 4:064x}", "reviewer": "fixture reviewer",
+                    },
+                }
+            result = validate_bodyparts_foot_registration_receipt(receipt, sources, anatomy, model)
+        self.assertEqual(
+            result["status"], "structurally_complete_not_physics_or_walking_qualified"
+        )
+        self.assertEqual(result["reviewed_foot_bodies"], ["calcn_r", "toes_r", "calcn_l", "toes_l"])
 
     def test_lower_body_attachment_worklist_never_promotes_name_matches_to_bindings(self) -> None:
         anatomy = {"source_id": "fixture", "version": "4.0", "archives": {}, "components": [
