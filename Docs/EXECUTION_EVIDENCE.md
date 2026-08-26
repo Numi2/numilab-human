@@ -1,5 +1,34 @@
 # Bounded execution evidence
 
+## FunctionBased source-wrench projection — 2026-08-26
+
+This extends the prior source-sidecar kinematic proof with a bounded
+generalized-force primitive. It is not multi-body articulated dynamics,
+contact, muscle actuation, or full-human evidence.
+
+| Item | Exact value |
+| --- | --- |
+| Rajagopal source SHA-256 | `8f30d0b64750b87eb7f705907862590535212b4afd7e919faa3fd7d1683d22ec` |
+| Numi runtime revision | `58dc262977092e63bd0f73e1d34c1edc306a6959` |
+| Isolated Mini checkout | `/Users/n/MetalRobo-numilab-spatial-58dc262` |
+| Device | Apple M4 Pro on `macmini` |
+| Source program package | 10 canonical 2,512-byte programs and 35 canonical 64-byte state inputs |
+| GPU-probe SHA-256 | `c9d246e42b6d1a2f8b129337602bdf3d40cd2d9450ca8367894239aef3bdf176` |
+| Metal-library SHA-256 | `fdeca34b9ccb492fd874dc3879e2b77434b97a79c79e3c834494a0f0c5619ecd` |
+
+The isolated Mini checkout was configured with AppleClang `21.0.0.21000101`.
+The Function, spatial-transform, and GPU probes passed. Every one of the 35
+source program/input cases then ran the device transform followed in the same
+command buffer by `H`-transpose projection of a fixed finite source-frame
+wrench and `Hdot*qdot` spatial-bias evaluation. Each result matched the
+decoded FP64 Core evaluation within FP32 tolerance, and both full GPU payloads
+were byte-identical on the repeated invocation.
+
+The fixed wrench is a numerical projection probe, not a Rajagopal muscle,
+contact, or measured load. The current Core still does not assemble these
+columns into a multi-body mass/bias solve or advance a FunctionBased body, so
+the CustomJoint skeleton gate remains blocked.
+
 ## Canonical Rajagopal CustomJoint program sidecars — 2026-08-26
 
 This is source-derived kinematic evidence for every Rajagopal `CustomJoint`.

@@ -2,7 +2,7 @@
   "schema": "numi.human.runtime-contract.v1",
   "runtime": {
     "repository": "MetalRobo",
-    "revision": "bfd95d22413290215cdeba55ad51d8abea5f2d33",
+    "revision": "58dc262977092e63bd0f73e1d34c1edc306a6959",
     "articulated_joint_primitives": [
       "fixed",
       "revolute",
@@ -39,8 +39,8 @@
     },
     "CustomJoint": {
       "status": "requires_core_extension",
-      "kinematic_program": "source-derived canonical FunctionBased binary sidecars have a bounded Metal pose, H, and Hdot evaluator",
-      "requirement": "Admit the compiled FunctionBased program into the articulated solver, including generalized-force projection and bias acceleration."
+      "kinematic_program": "source-derived canonical FunctionBased binary sidecars have bounded Metal pose, H, Hdot, H-transpose wrench projection, and Hdot times qdot primitives",
+      "requirement": "Admit the compiled FunctionBased program into the articulated solver's multi-body mass/bias assembly and state advance."
     },
     "UniversalJoint": {
       "status": "requires_core_extension",

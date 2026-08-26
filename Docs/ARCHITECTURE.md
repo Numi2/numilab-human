@@ -66,11 +66,12 @@ repository's source-faithful artifact; it cannot register a robot or schedule
 a rollout until the core lowerer exists and all gated sources are supplied.
 
 `numi human audit` now records the inspected Numi runtime contract alongside
-the imported lower-body source. At runtime revision `bfd95d2`, the core can
+the imported lower-body source. At runtime revision `58dc262`, the core can
 decode a canonical source-derived FunctionBased program/input sidecar,
 round-trip its program bytes, and evaluate source-order pose, motion subspace
-`H`, and `Hdot` in bounded Metal. The articulated Metal solver still does not
-consume that program: it has no function-based joint, multi-axis
+`H`, and `Hdot` in bounded Metal, plus `H`-transpose source-wrench projection
+and `Hdot*qdot` bias. The articulated Metal solver still does not consume that
+program: it has no function-based joint, multi-axis
 UniversalJoint, or Hill-type wrapped-muscle lowerer. Those are typed
 integration blocks, not permission to approximate the source model.
 
