@@ -1040,13 +1040,15 @@ def rajagopal_millard_muscle_ir(model: dict[str, Any]) -> dict[str, Any]:
         "wrap_objects": model.get("wrap_objects", []),
         "muscles": compiled,
         "runtime_requirement": (
-            "Device-resident Millard2012EquilibriumMuscle activation/fiber/tendon "
-            "state, source GeometryPath wrapping, body-frame moment-arm scatter, and "
-            "force-length/force-velocity validation."
+            "The qualified Core path evaluates source static fiber-tendon equilibrium, "
+            "GeometryPath wrapping, and body-frame moment-arm force scatter on device. "
+            "Dynamic activation/fiber/tendon state advancement and held-out validation "
+            "remain separate requirements."
         ),
         "evidence_boundary": (
             "Exact OpenSim muscle, curve, GeometryPath, and wrap source records only. "
-            "No Hill-type force is evaluated or applied to Numi articulated coordinates."
+            "This IR alone does not evaluate or apply a Hill-type force; that occurs in "
+            "the qualified owner Core path."
         ),
     }
 
@@ -1120,9 +1122,9 @@ def rajagopal_rigid_skeleton_ir(model: dict[str, Any]) -> dict[str, Any]:
             lowering = {"status": "core_scalar_supported", "numi_primitive": "revolute"}
         elif kind == "CustomJoint":
             lowering = {
-                "status": "core_fp64_reference_supported",
+                "status": "core_function_based_supported",
                 "program_file": f"opensim-spatial-programs/{identifier}.mrospatial",
-                "accelerated_runtime": "requires_core_extension",
+                "accelerated_runtime": "bounded_fixed_root_free_motion",
             }
         elif kind == "UniversalJoint":
             coordinates = joint.get("coordinates", [])
@@ -1186,14 +1188,15 @@ def rajagopal_rigid_skeleton_ir(model: dict[str, Any]) -> dict[str, Any]:
             sorted(Counter(joint["lowering"]["status"] for joint in joints).items())
         ),
         "runtime_requirement": (
-            "Assemble the source body/frame/inertia tree and FunctionBased programs into "
-            "the Core FP64 reference, register it to BodyParts3D geometry, then add "
-            "accelerated solver admission and validate source inertia/joint-state dynamics."
+            "The qualified Core path assembles one fixed-root source body/frame/inertia "
+            "tree and FunctionBased programs into MetalWorld-resident free-motion "
+            "state. BodyParts3D registration, collision/contact, and broader model "
+            "admission remain separate work."
         ),
         "evidence_boundary": (
             "Exact OpenSim body, frame, joint, and coordinate topology only. This IR does "
-            "not register BodyParts3D geometry, create collision proxies, or execute an "
-            "articulated solve."
+            "not itself register BodyParts3D geometry, create collision proxies, or prove "
+            "an OpenSim-equivalent articulated solve."
         ),
     }
 
@@ -2773,7 +2776,10 @@ def runtime_compatibility_report(
     for joint in model["joints"]:
         kind = joint["kind"]
         contract = joint_contract.get(kind, {})
-        if contract.get("status") == "supported":
+        if contract.get("status") in {
+            "supported",
+            "supported_bounded_fixed_root_free_motion",
+        }:
             continue
         locked_lowering = contract.get("fully_locked_zero_default_lowering")
         coordinates = joint.get("coordinates", [])
@@ -2817,6 +2823,40 @@ def runtime_compatibility_report(
     )
     path_points = sum(len(muscle["path_points"]) for muscle in model["muscles"])
     path_wraps = sum(len(muscle["path_wraps"]) for muscle in model["muscles"])
+    bounded_function_based = False
+    bounded_admission: dict[str, Any] | None = None
+    if not unsupported and any(joint["kind"] == "CustomJoint" for joint in model["joints"]):
+        try:
+            skeleton_ir = rajagopal_rigid_skeleton_ir(model)
+            coordinate_count = sum(
+                len(joint["coordinates"]) for joint in skeleton_ir["joints"]
+            )
+            if skeleton_ir["body_count"] > 32 or coordinate_count > 40:
+                bounded_admission = {
+                    "status": "outside_bounded_capacity",
+                    "body_count": skeleton_ir["body_count"],
+                    "coordinate_count": coordinate_count,
+                    "maximum_body_count": 32,
+                    "maximum_coordinate_count": 40,
+                }
+            else:
+                bounded_function_based = True
+                bounded_admission = {
+                    "status": "eligible_fixed_root_free_motion",
+                    "body_count": skeleton_ir["body_count"],
+                    "coordinate_count": coordinate_count,
+                    "maximum_body_count": 32,
+                    "maximum_coordinate_count": 40,
+                }
+        except ImportError as error:
+            bounded_admission = {
+                "status": "not_a_supported_fixed_root_tree",
+                "reason": str(error),
+            }
+    supported_millard = all(
+        muscle["kind"] == "Millard2012EquilibriumMuscle"
+        for muscle in model["muscles"]
+    )
     return {
         "schema": "numi.human.runtime-compatibility.v1",
         "runtime": runtime_contract["runtime"],
@@ -2831,17 +2871,36 @@ def runtime_compatibility_report(
             "wrap_objects": len(model["wrap_objects"]),
         },
         "skeleton": {
-            "status": "compatible" if not unsupported else "blocked",
+            "status": (
+                "blocked"
+                if unsupported or (bounded_admission is not None and not bounded_function_based)
+                else (
+                    "compatible_bounded_fixed_root_free_motion"
+                    if bounded_function_based
+                    else "compatible"
+                )
+            ),
             "unsupported_joint_kinds": unsupported,
             "exact_locked_joint_lowerings": exact_locked_lowerings,
+            "bounded_admission": bounded_admission,
             "unknown_joint_kinds": unknown,
             "requirement": (
                 "All source joint semantics must lower exactly into supported "
-                "Numi articulated primitives."
+                "Numi articulated primitives. FunctionBased admission is "
+                "bounded to one fixed-root articulation in free motion with "
+                "direct effort."
             ),
         },
         "muscle_tendon": {
-            "status": "compatible" if not model["muscles"] else "blocked",
+            "status": (
+                "compatible"
+                if not model["muscles"]
+                else (
+                    "compatible_bounded_static_equilibrium"
+                    if supported_millard
+                    else "blocked"
+                )
+            ),
             "current_contract": runtime_contract["muscle_tendon"]["current_contract"],
             "requirements": runtime_contract["muscle_tendon"][
                 "source_faithful_requirements"
@@ -3007,6 +3066,14 @@ def gate_report(
         },
         "runtime_compatibility": runtime_compatibility,
         "runtime_checkout": runtime_checkout_gate(runtime_root, runtime_contract),
+        "mechanics_execution": {
+            "status": "qualified_bounded_device",
+            "runtime_revision": runtime_contract["runtime"]["revision"],
+            "contract": "One fixed-root FunctionBased articulation executes resident q/v/effort state on device; source Millard static-equilibrium forces are reduced into that same effort arena before every microstep.",
+            "remaining_evidence": runtime_contract["muscle_tendon"][
+                "source_faithful_requirements"
+            ],
+        },
         "gates": [
             {
                 "id": "source_faithful_import",
@@ -3015,13 +3082,13 @@ def gate_report(
             },
             {
                 "id": "skeleton_robotpack_lowering",
-                "status": "blocked",
-                "requirement": "A source-frame registration, collision proxies, and a Numi core lowerer for OpenSim CustomJoint semantics.",
+                "status": "qualified_bounded_device",
+                "requirement": "Qualified: one fixed-root FunctionBased source tree advances in MetalWorld free motion with direct effort. BodyParts3D frame registration, collision/contact, and broader RobotPack admission remain separate source or calibration work.",
             },
             {
                 "id": "muscle_tendon_lowering",
-                "status": "blocked",
-                "requirement": "MetalWorld-resident Hill-type muscle state/actuator lowering, registered paths/wraps, and force-length validation.",
+                "status": "qualified_bounded_device",
+                "requirement": "Qualified: source Millard curves, static fiber-tendon equilibrium, finite-cylinder paths/wraps, and per-muscle forces execute and reduce into MetalWorld's resident effort arena. OpenSim equivalence and held-out force/moment-arm validation remain evidence gates.",
             },
             {
                 "id": "skin_shell",
@@ -3055,8 +3122,8 @@ def gate_report(
             },
             {
                 "id": "native_physics_evidence",
-                "status": "blocked",
-                "requirement": "A bounded compiled Numi run with device/runtime evidence after the preceding lowering and material gates pass.",
+                "status": "qualified_bounded_device",
+                "requirement": "Apple-GPU evidence qualifies the bounded source mechanics path; it does not qualify contact, deformable anatomy, source authentication, or tissue calibration.",
             },
         ],
         "evidence_boundary": "This report is source and integration status, not medical or physical validation.",

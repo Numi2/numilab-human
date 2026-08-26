@@ -36,8 +36,8 @@ Numi RobotPack          Numi actuator        Numi visual/deformable candidates
 
 | Numi subsystem | Imported evidence | Required before physical use |
 | --- | --- | --- |
-| Skeleton | OpenSim rigid segments, joints, mass centres, inertia tensors | source-frame to Numi-frame registration, collision proxies, and compiled-run validation |
-| Muscles | OpenSim GeometryPath and Hill-type muscle/tendon fields | Metal muscle-tendon actuator lowering and force/length validation |
+| Skeleton | OpenSim rigid segments, joints, mass centres, inertia tensors | bounded fixed-root FunctionBased device execution is qualified; source-frame registration and collision/contact remain open |
+| Muscles | OpenSim GeometryPath and Hill-type muscle/tendon fields | bounded source static-equilibrium actuator lowering is qualified; OpenSim equivalence and held-out force/moment-arm validation remain open |
 | Skin | BodyParts3D skin OBJ | shell topology repair and cited constitutive model |
 | Organs | BodyParts3D organ surface OBJ | watertight volume mesh plus organ-specific FEM/MPM material model |
 | Ligaments | BodyParts3D ligament OBJ, OpenSim coordinate limits where present | attachment paths, nonlinear tensile parameters, and calibration |
@@ -52,26 +52,24 @@ as explicit conversion gates rather than assigning unsupported physics.
 
 ## Numi execution boundary
 
-The live Numi runtime currently supplies built-in robot packs, but not a generic
-external-human pack loader. `numi.human.v1` is deliberately an owner-neutral
-intermediate artifact. The follow-on Numi core change must lower its selected
-mechanics into a `RobotPack`, preserve source hashes in the compiled-run
-fingerprint, execute all active muscle-tendon elements in Metal, and validate
-the resulting contact/force behavior. Until then, generated manifests are
-integration inputs, not runnable human dynamics.
+`numi.human.v1` remains an owner-neutral intermediate artifact, but Core
+revision `da9051e` now executes the bounded Rajagopal mechanics path: one
+fixed-root FunctionBased articulation runs persistent free-motion state on
+Metal, and 80 source Millard muscles calculate path tension on device and
+reduce it into that same effort arena before each microstep. This is a source
+mechanics admission, not a generic external-human RobotPack, contact world, or
+deformable-body claim.
 
 The tracked workspace command `numi human` is the bridge at this stage. It
 uses the normal Numi capability discovery path to fetch and compile this
 repository's source-faithful artifact; it cannot register a robot or schedule
 a rollout until the core lowerer exists and all gated sources are supplied.
 
-`numi human audit` now records the inspected Numi runtime contract alongside
-the imported lower-body source. At runtime revision `380f96b`, the Core can
-decode a canonical source-derived FunctionBased program/input sidecar,
-round-trip its program bytes, and evaluate source-order pose, motion subspace
-`H`, and `Hdot` in bounded Metal, plus `H`-transpose source-wrench projection
-and `Hdot*qdot` bias. Its FP64 articulated reference also admits an immutable
-FunctionBased program into analytic Jacobian mass/bias and state advancement.
+`numi human audit` records the inspected Numi runtime contract alongside the
+imported lower-body source. At runtime revision `da9051e`, the Core preserves
+the canonical source program, evaluates its source-order pose/motion subspace,
+and advances the bounded fixed-root FunctionBased state through MetalWorld's
+resident `q`/`v`/effort arenas.
 
 `numi human core-reference` now compiles the complete 22-body Rajagopal tree
 into a fixed-layout payload: each source body supplies its mass, COM, and
@@ -84,17 +82,14 @@ source-faithful *rigid-tree CPU reference*, not BodyParts3D registration,
 collision/contact, muscle actuation, an OpenSim numerical equivalence study,
 or whole-human physical validation.
 
-The bounded Metal articulated operator now consumes that program for the
-whole Rajagopal tree: source poses, point Jacobians, dense mass assembly, and
-impulse response run on-device. Its optional Millard sidecar then consumes
-those private device outputs in the same command buffer, reconstructs the
-source curve parameters, solves static fiber-tendon equilibrium, evaluates
-finite-cylinder GeometryPaths, and publishes one generalized-force vector per
-muscle. Metal ABA and MetalWorld state stepping still do not consume either
-program. The sidecar is therefore a device-resident active-force *reference*,
-not a persistent muscle-state/actuator lowerer or an OpenSim-equivalence
-result. Those remain typed integration blocks, not permission to approximate
-the source model.
+The bounded Metal articulated operator consumes the program for the whole
+Rajagopal tree: source poses, point Jacobians, and dense mass assembly run on
+device. MetalWorld then runs the same FunctionBased kinematics/Jacobians,
+source-materialized Millard static fiber-tendon equilibrium, finite-cylinder
+GeometryPaths, and a deterministic per-DoF force reduction in one command
+buffer before the persistent source-dynamics step. This is not an OpenSim
+binary-equivalence result, hybrid wrap-history implementation, contact claim,
+or material calibration.
 
 Rajagopal's `radius_hand_r` and `radius_hand_l` are a narrower case: both
 source UniversalJoint coordinates are explicitly locked at a zero default, so
@@ -119,6 +114,5 @@ parameters, curve subtrees, GeometryPath points, PathWrap records, and wrap
 objects remain source-faithful and frame-resolved. `numi human
 millard-reference` compiles its static-reference companion payload, including
 the documented OpenSim defaults for omitted optional curve properties. The
-owner Core evaluates it both in the FP64 bridge and in the attached Metal
-reference pass, but a MetalWorld-resident muscle-state/actuator compiler and
-pinned OpenSim parity remain separate gates.
+owner Core executes its source force projection inside MetalWorld; pinned
+OpenSim parity and held-out force/moment-arm validation remain separate gates.

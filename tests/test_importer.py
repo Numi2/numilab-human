@@ -207,7 +207,7 @@ class ImporterTests(unittest.TestCase):
         )
         self.assertEqual(report["status"], "missing")
 
-    def test_runtime_compatibility_does_not_silently_lower_custom_joints_or_muscles(self) -> None:
+    def test_runtime_compatibility_preserves_unsupported_joints_and_muscle_evidence_gates(self) -> None:
         model = {
             "model_id": "fixture",
             "joints": [
@@ -229,8 +229,10 @@ class ImporterTests(unittest.TestCase):
             read_json(ROOT / "config/numi-runtime-contract.v1.json"),
         )
         self.assertEqual(report["skeleton"]["status"], "blocked")
-        self.assertEqual(report["skeleton"]["unsupported_joint_kinds"], {"CustomJoint": 1, "UniversalJoint": 1})
-        self.assertEqual(report["muscle_tendon"]["status"], "blocked")
+        self.assertEqual(report["skeleton"]["unsupported_joint_kinds"], {"UniversalJoint": 1})
+        self.assertEqual(
+            report["muscle_tendon"]["status"], "compatible_bounded_static_equilibrium"
+        )
         self.assertEqual(report["source_model"]["muscle_path_wraps"], 1)
         self.assertEqual(report["source_model"]["muscle_curve_kinds"], {})
 

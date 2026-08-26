@@ -2,7 +2,7 @@
   "schema": "numi.human.runtime-contract.v1",
   "runtime": {
     "repository": "MetalRobo",
-    "revision": "4e1f4e9d95f3632826cf60b72b2ab9cef394c612",
+    "revision": "da9051ee704085ba89a1c288288affa9b580a7c9",
     "articulated_joint_primitives": [
       "fixed",
       "revolute",
@@ -29,6 +29,9 @@
       "src/metal/ArticulatedOperator.metal",
       "include/metalrobo/millard_muscle_gpu.h",
       "src/metal/MillardMuscleReference.metal",
+      "src/metal/FunctionBasedDenseDynamics.metal",
+      "include/metalrobo/MetalWorld.hpp",
+      "src/metal/MetalWorld.mm",
       "apps/opensim_spatial_transform_probe.cpp",
       "apps/opensim_spatial_transform_gpu_probe.mm",
       "apps/numilab_human_core_reference_probe.cpp",
@@ -51,10 +54,10 @@
       "numi_primitive": "fixed"
     },
     "CustomJoint": {
-      "status": "requires_core_extension",
-      "kinematic_program": "source-derived canonical FunctionBased binary sidecars have bounded Metal pose, H, Hdot, H-transpose wrench projection, and Hdot times qdot primitives; the pinned CPU FP64 reference admits immutable FunctionBasedJointProgram records into analytic Jacobian mass/bias evaluation and state advance; the bounded Metal articulated operator admits whole-tree source poses, point Jacobians, dense mass, impulse response, and an attached Millard reference pass",
+      "status": "supported_bounded_fixed_root_free_motion",
+      "kinematic_program": "source-derived canonical FunctionBased binary sidecars have bounded Metal pose, H, Hdot, H-transpose wrench projection, and Hdot times qdot primitives; the pinned CPU FP64 reference admits immutable FunctionBasedJointProgram records into analytic Jacobian mass/bias and state advance; MetalWorld now executes the bounded fixed-root dense source dynamics path against resident q/v/effort state.",
       "cpu_reference_payload": "The provenance-locked 22-body Rajagopal rigid tree can load source mass, inertia, COM, joint-frame, coordinate, and FunctionBased-program records into the FP64 reference probe.",
-      "requirement": "Register source frames to BodyParts3D geometry and collision proxies, then extend Metal ABA and MetalWorld state stepping. The bounded Metal articulated operator admits FunctionBased joints for source-tree poses, point Jacobians, mass assembly, and impulse response; it is not an ABA or MetalWorld admission."
+      "requirement": "The qualified path is one fixed-root articulation in free motion with direct effort. BodyParts3D frame registration, collision/contact, multi-articulation composition, and mobile/joint-class extensions remain separate source or calibration gates."
     },
     "UniversalJoint": {
       "status": "requires_core_extension",
@@ -66,10 +69,9 @@
     }
   },
   "muscle_tendon": {
-    "current_contract": "metal_millard_static_equilibrium_geometrypath_tension_projection_reference",
-    "current_contract_evidence": "The FP64 source bridge and attached Metal operator sidecar evaluate source-parameterized curves, static fiber-tendon equilibrium, finite-cylinder GeometryPath wrapping, and one generalized-force vector per muscle. The Metal pass consumes the operator's private source-tree poses and analytic point Jacobians in the same command buffer.",
+    "current_contract": "metalworld_functionbased_millard_static_equilibrium_actuation",
+    "current_contract_evidence": "The FP64 source bridge and MetalWorld execute source-parameterized curves, static fiber-tendon equilibrium, finite-cylinder GeometryPath wrapping, and one generalized-force vector per muscle. MetalWorld reduces those device-only vectors into its resident effort arena before the bounded FunctionBased state step; no CPU force restaging occurs.",
     "source_faithful_requirements": [
-      "MetalWorld-resident activation/fiber/tendon state advancement and actuator lowering",
       "OpenSim binary-equivalence comparison for curves, path wrapping, moment arms, and muscle force",
       "held-out force-length, force-velocity, and anatomical moment-arm validation"
     ]

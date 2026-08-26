@@ -49,9 +49,9 @@ numi human geometry-audit --sources Sources --output Build/bodyparts3d-topology.
 numi human preview --sources Sources --side right --output Build/right-pin-preview
 
 # Preserve and evaluate all Rajagopal CustomJoint function tables as compiler
-# IR and default-value test vectors. The pinned CPU reference can consume an
-# immutable program, but this command does not assemble a full human model and
-# Metal ABA does not lower it yet.
+# IR and default-value test vectors. The matching Core revision executes the
+# bounded fixed-root FunctionBased tree in MetalWorld free motion; this command
+# remains the provenance compiler for that source program.
 numi human kinematics --sources Sources --output Build/custom-joint-ir
 
 # Compile the entire Rajagopal rigid tree into the provenance-locked Core CPU
@@ -63,8 +63,8 @@ numi human core-reference --sources Sources --output Build/rajagopal-core-refere
 
 | Source data | NumiLab Human v1 role | Current physical boundary |
 | --- | --- | --- |
-| OpenSim bodies, joints, masses, inertias | articulated rigid-body specification | lower body and arms are source-authored; runtime lowering remains a Numi core extension |
-| OpenSim muscle paths and Hill-type parameters | active muscle–tendon specification | source values are retained, not converted to joint torques |
+| OpenSim bodies, joints, masses, inertias | articulated rigid-body specification | bounded fixed-root FunctionBased free-motion execution is device-qualified; registration and contact remain separate |
+| OpenSim muscle paths and Hill-type parameters | active muscle–tendon specification | 80 Rajagopal Millard elements are reduced into the bounded MetalWorld effort arena; OpenSim equivalence remains open |
 | BodyParts3D bones and muscles | named geometry attached to semantic anatomy | visual/anatomical geometry, not a new independent physical source |
 | BodyParts3D skin, organs, vessels, nerves | deformable/anatomical geometry candidates | no material constants or volumetric meshes are supplied upstream |
 | tendons, ligaments, cartilage | nonlinear tensile / compliant-contact candidates | only OpenSim tendon parameters are active-source data; all other constitutive data needs a cited calibration |
