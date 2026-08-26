@@ -4,6 +4,7 @@ import hashlib
 import json
 import math
 import re
+import struct
 import subprocess
 import tempfile
 import xml.etree.ElementTree as ET
@@ -642,6 +643,299 @@ def rajagopal_custom_joint_ir(model: dict[str, Any]) -> dict[str, Any]:
         ),
         "joints": compiled,
     }
+
+
+# These fields mirror MetalRobo's
+# include/metalrobo/opensim_spatial_transform_gpu.h.  They are deliberately
+# written here rather than inferred from a host compiler so a provenance-locked
+# Human artifact can be transferred to the pinned Apple runtime unchanged.
+_OPENSIM_SPATIAL_GPU_ABI_VERSION = 1
+_OPENSIM_SPATIAL_GPU_AXIS_COUNT = 6
+_OPENSIM_SPATIAL_GPU_MAX_COORDINATES = 6
+_OPENSIM_SPATIAL_GPU_MAX_COEFFICIENTS = 16
+_OPENSIM_SPATIAL_GPU_MAX_KNOTS = 16
+_OPENSIM_SPATIAL_GPU_NO_COORDINATE = 0xFFFFFFFF
+_OPENSIM_SPATIAL_GPU_PROGRAM_BYTES = 2512
+_OPENSIM_SPATIAL_GPU_INPUT_BYTES = 64
+_OPENSIM_SPATIAL_GPU_FUNCTION_KIND = {
+    "Constant": 0,
+    "LinearFunction": 1,
+    "PolynomialFunction": 2,
+    "SimmSpline": 3,
+}
+
+
+def _pack_opensim_float_block(
+    values: list[float], capacity: int, context: str
+) -> bytes:
+    """Pack a fixed-capacity float stream in the Core ABI's float4 order."""
+    if len(values) > capacity or not all(math.isfinite(value) for value in values):
+        raise ImportError(f"{context} exceeds its finite GPU capacity")
+    padded = values + [0.0] * (capacity - len(values))
+    try:
+        return struct.pack(f"<{capacity}f", *padded)
+    except OverflowError as error:
+        raise ImportError(f"{context} is outside the finite FP32 GPU range") from error
+
+
+def _opensim_gpu_function_bytes(
+    axis: dict[str, Any], coordinate_index: int
+) -> bytes:
+    """Compile one parsed TransformAxis to MetalRobo's fixed ABI record."""
+    kind_name = axis.get("function_kind")
+    if kind_name not in _OPENSIM_SPATIAL_GPU_FUNCTION_KIND:
+        raise ImportError(
+            f"OpenSim TransformAxis {axis.get('id')} has unsupported GPU function {kind_name!r}"
+        )
+    parameters = axis.get("function_parameters")
+    if not isinstance(parameters, dict):
+        raise ImportError(f"OpenSim TransformAxis {axis.get('id')} has no function parameters")
+    kind = _OPENSIM_SPATIAL_GPU_FUNCTION_KIND[kind_name]
+    coefficients: list[float] = []
+    abscissae: list[float] = []
+    ordinates: list[float] = []
+    slope: list[float] = []
+    quadratic: list[float] = []
+    cubic: list[float] = []
+    if kind_name == "Constant":
+        coefficients = [_finite_scalar(parameters.get("value"), f"OpenSim {axis.get('id')} value")]
+        if coordinate_index != _OPENSIM_SPATIAL_GPU_NO_COORDINATE:
+            raise ImportError(f"OpenSim constant TransformAxis {axis.get('id')} selects a coordinate")
+    elif kind_name == "LinearFunction":
+        coefficients = _finite_scalars(
+            parameters.get("coefficients"), f"OpenSim {axis.get('id')} coefficients"
+        )
+        if len(coefficients) != 2:
+            raise ImportError(f"OpenSim LinearFunction {axis.get('id')} requires two coefficients")
+    elif kind_name == "PolynomialFunction":
+        coefficients = _finite_scalars(
+            parameters.get("coefficients"), f"OpenSim {axis.get('id')} coefficients"
+        )
+    else:
+        abscissae = _finite_scalars(parameters.get("x"), f"OpenSim {axis.get('id')} x", 2)
+        ordinates = _finite_scalars(parameters.get("y"), f"OpenSim {axis.get('id')} y", 2)
+        slope, quadratic, cubic = _simm_spline_coefficients(abscissae, ordinates)
+    direction = _normalize_spatial_axis(
+        _vector3(axis.get("axis"), f"OpenSim TransformAxis {axis.get('id')} axis"),
+        f"OpenSim TransformAxis {axis.get('id')} axis",
+    )
+    try:
+        header = struct.pack(
+            "<4I", kind, coordinate_index, len(coefficients), len(abscissae)
+        )
+        direction_bytes = struct.pack("<4f", *direction, 0.0)
+    except OverflowError as error:
+        raise ImportError(f"OpenSim TransformAxis {axis.get('id')} is outside FP32 range") from error
+    payload = b"".join(
+        (
+            header,
+            direction_bytes,
+            _pack_opensim_float_block(
+                coefficients,
+                _OPENSIM_SPATIAL_GPU_MAX_COEFFICIENTS,
+                f"OpenSim {axis.get('id')} coefficients",
+            ),
+            _pack_opensim_float_block(
+                abscissae,
+                _OPENSIM_SPATIAL_GPU_MAX_KNOTS,
+                f"OpenSim {axis.get('id')} abscissae",
+            ),
+            _pack_opensim_float_block(
+                ordinates,
+                _OPENSIM_SPATIAL_GPU_MAX_KNOTS,
+                f"OpenSim {axis.get('id')} ordinates",
+            ),
+            _pack_opensim_float_block(
+                slope,
+                _OPENSIM_SPATIAL_GPU_MAX_KNOTS,
+                f"OpenSim {axis.get('id')} spline slope",
+            ),
+            _pack_opensim_float_block(
+                quadratic,
+                _OPENSIM_SPATIAL_GPU_MAX_KNOTS,
+                f"OpenSim {axis.get('id')} spline quadratic",
+            ),
+            _pack_opensim_float_block(
+                cubic,
+                _OPENSIM_SPATIAL_GPU_MAX_KNOTS,
+                f"OpenSim {axis.get('id')} spline cubic",
+            ),
+        )
+    )
+    if len(payload) != 416:
+        raise ImportError("internal OpenSim spatial-function GPU ABI size mismatch")
+    return payload
+
+
+def pack_opensim_spatial_transform_gpu(joint: dict[str, Any]) -> tuple[bytes, list[str]]:
+    """Compile a parsed CustomJoint into the fixed MetalRobo program ABI.
+
+    This returns a kinematic program only.  It deliberately does not lower a
+    CustomJoint into a serial chain, a rigid-body dynamics joint, or a muscle
+    actuator.
+    """
+    if joint.get("kind") != "CustomJoint":
+        raise ImportError(f"OpenSim joint {joint.get('id')} is not a CustomJoint")
+    coordinates = joint.get("coordinates")
+    axes = joint.get("motion_axes")
+    if not isinstance(coordinates, list) or not (1 <= len(coordinates) <= 6):
+        raise ImportError(f"OpenSim CustomJoint {joint.get('id')} has invalid coordinate count")
+    if not isinstance(axes, list) or len(axes) != _OPENSIM_SPATIAL_GPU_AXIS_COUNT:
+        raise ImportError(f"OpenSim CustomJoint {joint.get('id')} must retain six SpatialTransform axes")
+    coordinate_ids = [coordinate.get("id") for coordinate in coordinates]
+    if (
+        not all(isinstance(identifier, str) and identifier for identifier in coordinate_ids)
+        or len(set(coordinate_ids)) != len(coordinate_ids)
+    ):
+        raise ImportError(f"OpenSim CustomJoint {joint.get('id')} has invalid coordinate identifiers")
+    coordinate_index = {identifier: index for index, identifier in enumerate(coordinate_ids)}
+    records: list[bytes] = []
+    for axis in axes:
+        selected = axis.get("coordinates")
+        selected = selected.strip() if isinstance(selected, str) else ""
+        if any(character.isspace() for character in selected):
+            raise ImportError(
+                f"OpenSim TransformAxis {axis.get('id')} has a multi-coordinate function"
+            )
+        if selected and selected not in coordinate_index:
+            raise ImportError(
+                f"OpenSim TransformAxis {axis.get('id')} selects unknown coordinate {selected}"
+            )
+        records.append(
+            _opensim_gpu_function_bytes(
+                axis,
+                coordinate_index[selected]
+                if selected
+                else _OPENSIM_SPATIAL_GPU_NO_COORDINATE,
+            )
+        )
+    payload = struct.pack(
+        "<4I", _OPENSIM_SPATIAL_GPU_ABI_VERSION, len(coordinate_ids), 0, 0
+    ) + b"".join(records)
+    if len(payload) != _OPENSIM_SPATIAL_GPU_PROGRAM_BYTES:
+        raise ImportError("internal OpenSim spatial-transform GPU ABI size mismatch")
+    return payload, coordinate_ids
+
+
+def pack_opensim_spatial_transform_input_gpu(
+    coordinate_ids: list[str], coordinate_values: dict[str, float], coordinate_velocities: dict[str, float]
+) -> bytes:
+    """Pack one six-coordinate state record consumed by the Metal probe ABI."""
+    if not (1 <= len(coordinate_ids) <= _OPENSIM_SPATIAL_GPU_MAX_COORDINATES):
+        raise ImportError("OpenSim spatial-transform GPU input has invalid coordinate count")
+    values = [
+        _finite_scalar(coordinate_values[identifier], f"OpenSim coordinate {identifier}")
+        for identifier in coordinate_ids
+    ]
+    velocities = [
+        _finite_scalar(coordinate_velocities[identifier], f"OpenSim coordinate velocity {identifier}")
+        for identifier in coordinate_ids
+    ]
+    try:
+        payload = struct.pack(
+            "<16f",
+            *(values + [0.0] * (8 - len(values)) + velocities + [0.0] * (8 - len(velocities))),
+        )
+    except OverflowError as error:
+        raise ImportError("OpenSim spatial-transform GPU input is outside finite FP32 range") from error
+    if len(payload) != _OPENSIM_SPATIAL_GPU_INPUT_BYTES:
+        raise ImportError("internal OpenSim spatial-transform GPU input ABI size mismatch")
+    return payload
+
+
+def _safe_gpu_artifact_component(value: str, context: str) -> str:
+    if not re.fullmatch(r"[A-Za-z0-9_.-]+", value):
+        raise ImportError(f"{context} cannot be represented in a safe artifact path")
+    return value
+
+
+def rajagopal_custom_joint_gpu_artifacts(
+    model: dict[str, Any],
+) -> tuple[dict[str, Any], dict[Path, bytes]]:
+    """Return source-derived Core program/input sidecars and their manifest."""
+    joints = [joint for joint in model.get("joints", []) if joint.get("kind") == "CustomJoint"]
+    artifacts: dict[Path, bytes] = {}
+    programs: list[dict[str, Any]] = []
+    for joint in joints:
+        identifier = joint.get("id")
+        if not isinstance(identifier, str):
+            raise ImportError("OpenSim CustomJoint has no identifier")
+        safe_joint = _safe_gpu_artifact_component(identifier, "OpenSim CustomJoint identifier")
+        program, coordinate_ids = pack_opensim_spatial_transform_gpu(joint)
+        program_path = Path("opensim-spatial-programs") / f"{safe_joint}.mrospatial"
+        artifacts[program_path] = program
+        default_values = {
+            coordinate["id"]: _finite_scalar(
+                coordinate.get("default_value"),
+                f"OpenSim coordinate {coordinate['id']} default value",
+            )
+            for coordinate in joint["coordinates"]
+        }
+        input_specs: list[tuple[str, dict[str, float]]] = [("default", {})]
+        input_specs.extend(
+            (f"velocity-{_safe_gpu_artifact_component(coordinate, 'OpenSim coordinate identifier')}", {coordinate: 1.0})
+            for coordinate in coordinate_ids
+        )
+        inputs: list[dict[str, Any]] = []
+        for label, supplied_velocities in input_specs:
+            velocities = {coordinate: supplied_velocities.get(coordinate, 0.0) for coordinate in coordinate_ids}
+            input_path = Path("opensim-spatial-programs") / f"{safe_joint}.{label}.mrospatialinput"
+            content = pack_opensim_spatial_transform_input_gpu(
+                coordinate_ids, default_values, velocities
+            )
+            artifacts[input_path] = content
+            inputs.append(
+                {
+                    "id": label,
+                    "file": input_path.as_posix(),
+                    "sha256": hashlib.sha256(content).hexdigest(),
+                    "bytes": len(content),
+                    "coordinate_values": default_values,
+                    "coordinate_velocities": velocities,
+                }
+            )
+        programs.append(
+            {
+                "id": identifier,
+                "coordinate_ids": coordinate_ids,
+                "program_file": program_path.as_posix(),
+                "program_sha256": hashlib.sha256(program).hexdigest(),
+                "program_bytes": len(program),
+                "inputs": inputs,
+            }
+        )
+    return (
+        {
+            "schema": "numi.human.opensim-spatial-transform-artifacts.v1",
+            "source": {
+                "id": model.get("source_id"),
+                "file": model.get("source_file"),
+                "sha256": model.get("source_sha256"),
+                "model_id": model.get("model_id"),
+            },
+            "core_program_abi": {
+                "name": "MROpenSimSpatialTransformGPU",
+                "version": _OPENSIM_SPATIAL_GPU_ABI_VERSION,
+                "bytes": _OPENSIM_SPATIAL_GPU_PROGRAM_BYTES,
+                "byte_order": "little-endian IEEE-754 binary32",
+                "coordinate_capacity": _OPENSIM_SPATIAL_GPU_MAX_COORDINATES,
+            },
+            "core_input_abi": {
+                "name": "MROpenSimSpatialTransformInputGPU",
+                "version": _OPENSIM_SPATIAL_GPU_ABI_VERSION,
+                "bytes": _OPENSIM_SPATIAL_GPU_INPUT_BYTES,
+                "byte_order": "little-endian IEEE-754 binary32",
+            },
+            "evidence_boundary": (
+                "These immutable source-derived sidecars are accepted by the bounded Core "
+                "kinematic evaluator only. They are not an articulated-dynamics, force "
+                "projection, contact, or muscle-actuation admission."
+            ),
+            "program_count": len(programs),
+            "programs": programs,
+        },
+        artifacts,
+    )
 
 
 def _wrap_objects(model: ET.Element) -> list[dict[str, Any]]:

@@ -1,5 +1,35 @@
 # Bounded execution evidence
 
+## Canonical Rajagopal CustomJoint program sidecars — 2026-08-26
+
+This is source-derived kinematic evidence for every Rajagopal `CustomJoint`.
+It is not articulated dynamics, contact, muscle actuation, or full-human
+evidence.
+
+| Item | Exact value |
+| --- | --- |
+| Rajagopal source SHA-256 | `8f30d0b64750b87eb7f705907862590535212b4afd7e919faa3fd7d1683d22ec` |
+| Numi runtime revision | `bfd95d22413290215cdeba55ad51d8abea5f2d33` |
+| Isolated Mini checkout | `/Users/n/MetalRobo-numilab-spatial-bfd95d2` |
+| Device | Apple M4 Pro on `macmini` |
+| Source program package | 10 canonical 2,512-byte programs and 35 canonical 64-byte state inputs |
+| Sample source-program SHA-256 | `walker_knee_r.mrospatial`: `834fc89a5efdc999b23a34d55bc1e7bf8782a90479f4f4deedce337ac7da0ebf` |
+| GPU-probe SHA-256 | `de96c25362aae09d85fd31b960bf79e380e2c4c99beac65b1d65a0a5a389bbf7` |
+| Metal-library SHA-256 | `1853cf21ee01fdee89466d87df054f612ce1cee5a25b690aa4ceb27d0c90facb` |
+
+The isolated Mini checkout was configured with AppleClang `21.0.0.21000101`.
+`metalrobo_opensim_function_probe` and
+`metalrobo_opensim_spatial_transform_probe` passed. The device run then
+loaded each generated program and its default plus each coordinate's
+unit-velocity sidecar: 35 source-artifact GPU cases in total. Each case
+validated the fixed binary with a Core decode/re-pack byte round trip,
+compared source-order pose, `H`, and `Hdot` against the decoded FP64
+evaluator, and compared two GPU payloads byte-for-byte.
+
+The Core program is not admitted into ABA, does not project generalized
+forces, and does not step a body. Therefore the CustomJoint skeleton gate
+remains blocked despite this complete bounded kinematic evidence.
+
 ## OpenSim FunctionBased spatial-transform program — 2026-08-26
 
 This is source-derived kinematic evidence for the pinned Rajagopal

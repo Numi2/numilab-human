@@ -16,6 +16,7 @@ from .model import (
     gate_report,
     parse_bodyparts3d,
     parse_opensim,
+    rajagopal_custom_joint_gpu_artifacts,
     rajagopal_custom_joint_ir,
     read_json,
     report_for,
@@ -189,7 +190,16 @@ def kinematics(arguments: argparse.Namespace) -> int:
     output = arguments.output.resolve()
     report_path = output / "rajagopal-custom-joint-ir.json"
     write_json(report_path, rajagopal_custom_joint_ir(lower))
+    artifacts_manifest, artifacts = rajagopal_custom_joint_gpu_artifacts(lower)
+    for relative_path, content in artifacts.items():
+        target = output / relative_path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(content)
+    program_manifest_path = output / "opensim-spatial-programs.manifest.json"
+    write_json(program_manifest_path, artifacts_manifest)
     print(f"wrote {report_path}")
+    print(f"wrote {program_manifest_path}")
+    print(f"wrote {len(artifacts)} OpenSim spatial-transform binary sidecars")
     return 0
 
 
@@ -232,7 +242,7 @@ def parser() -> argparse.ArgumentParser:
     preview_parser.set_defaults(handler=preview)
     kinematics_parser = commands.add_parser(
         "kinematics",
-        help="emit source-faithful Rajagopal CustomJoint function tables and default test vectors",
+        help="emit source-faithful Rajagopal CustomJoint IR, Core programs, and test inputs",
     )
     kinematics_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
     kinematics_parser.add_argument("--output", type=Path, required=True, help="ignored local output directory")

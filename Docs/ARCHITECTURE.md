@@ -66,9 +66,10 @@ repository's source-faithful artifact; it cannot register a robot or schedule
 a rollout until the core lowerer exists and all gated sources are supplied.
 
 `numi human audit` now records the inspected Numi runtime contract alongside
-the imported lower-body source. At runtime revision `a1b81d1`, the core can
-compile source-order FunctionBased pose, motion subspace `H`, and `Hdot` into
-a bounded Metal kinematic program. The articulated Metal solver still does not
+the imported lower-body source. At runtime revision `bfd95d2`, the core can
+decode a canonical source-derived FunctionBased program/input sidecar,
+round-trip its program bytes, and evaluate source-order pose, motion subspace
+`H`, and `Hdot` in bounded Metal. The articulated Metal solver still does not
 consume that program: it has no function-based joint, multi-axis
 UniversalJoint, or Hill-type wrapped-muscle lowerer. Those are typed
 integration blocks, not permission to approximate the source model.
@@ -80,7 +81,7 @@ data it needs; a provisional preview must identify each deliberately reduced
 joint, collision, or actuator contract instead of overwriting this record.
 
 `numi human kinematics` additionally emits the exact Rajagopal CustomJoint
-function tables and default/unit-velocity pose, `H`, and `Hdot` test vectors.
-This is compiler IR for a function-based articulation extension; the matching
-Metal evaluator has been device-tested, but it is not yet executed by the
-articulated solver.
+function tables and default/unit-velocity pose, `H`, and `Hdot` test vectors,
+plus canonical `MROpenSimSpatialTransformGPU` binary programs and fixed-state
+sidecars. This is compiler IR for a function-based articulation extension; the
+matching Metal evaluator is a kinematic boundary, not an articulated solver.

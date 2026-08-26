@@ -2,7 +2,7 @@
   "schema": "numi.human.runtime-contract.v1",
   "runtime": {
     "repository": "MetalRobo",
-    "revision": "a1b81d168b79b117c1b81d145d0838a571aeeb4e",
+    "revision": "bfd95d22413290215cdeba55ad51d8abea5f2d33",
     "articulated_joint_primitives": [
       "fixed",
       "revolute",
@@ -20,6 +20,7 @@
       "src/core/OpenSimSpatialTransform.cpp",
       "include/metalrobo/opensim_spatial_transform_gpu.h",
       "src/metal/OpenSimSpatialTransform.metal",
+      "apps/opensim_spatial_transform_probe.cpp",
       "apps/opensim_spatial_transform_gpu_probe.mm"
     ]
   },
@@ -38,7 +39,7 @@
     },
     "CustomJoint": {
       "status": "requires_core_extension",
-      "kinematic_program": "compiled source-order FunctionBased pose, H, and Hdot has a bounded Metal evaluator",
+      "kinematic_program": "source-derived canonical FunctionBased binary sidecars have a bounded Metal pose, H, and Hdot evaluator",
       "requirement": "Admit the compiled FunctionBased program into the articulated solver, including generalized-force projection and bias acceleration."
     },
     "UniversalJoint": {

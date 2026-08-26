@@ -3,6 +3,7 @@ from __future__ import annotations
 import tempfile
 import unittest
 import zipfile
+import struct
 from pathlib import Path
 from subprocess import run
 
@@ -14,6 +15,7 @@ from numilab_human.model import (
     parse_bodyparts3d,
     parse_opensim_archive,
     parse_opensim,
+    rajagopal_custom_joint_gpu_artifacts,
     read_json,
     rajagopal_custom_joint_ir,
     runtime_compatibility_report,
@@ -290,6 +292,62 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(result["function_kinds"], {"Constant": 5, "LinearFunction": 1})
         self.assertEqual(result["joints"][0]["default_value_test_vector"]["axes"][0]["displacement"], 0.0)
         self.assertEqual(len(result["joints"][0]["unit_velocity_test_vectors"]), 1)
+
+    def test_custom_joint_gpu_artifact_uses_the_pinned_core_abi(self) -> None:
+        joint = {
+            "id": "fixture_custom",
+            "kind": "CustomJoint",
+            "coordinates": [{"id": "q", "default_value": 0.25}],
+            "motion_axes": [
+                {
+                    "id": "rotation1",
+                    "coordinates": "q",
+                    "axis": [1.0, 0.0, 0.0],
+                    "function_kind": "LinearFunction",
+                    "function_parameters": {"coefficients": [2.0, 1.0]},
+                },
+                *[
+                    {
+                        "id": f"axis_{index}",
+                        "coordinates": "",
+                        "axis": [
+                            [0.0, 1.0, 0.0],
+                            [0.0, 0.0, 1.0],
+                            [1.0, 0.0, 0.0],
+                            [0.0, 1.0, 0.0],
+                            [0.0, 0.0, 1.0],
+                        ][index - 1],
+                        "function_kind": "Constant",
+                        "function_parameters": {"value": 0.0},
+                    }
+                    for index in range(1, 6)
+                ],
+            ],
+        }
+        manifest, artifacts = rajagopal_custom_joint_gpu_artifacts(
+            {
+                "source_id": "fixture",
+                "source_file": "fixture.osim",
+                "source_sha256": "c" * 64,
+                "model_id": "fixture",
+                "joints": [joint],
+            }
+        )
+        program = artifacts[Path("opensim-spatial-programs/fixture_custom.mrospatial")]
+        self.assertEqual(len(program), 2512)
+        self.assertEqual(struct.unpack_from("<4I", program), (1, 1, 0, 0))
+        self.assertEqual(struct.unpack_from("<4I", program, 16), (1, 0, 2, 0))
+        self.assertEqual(manifest["program_count"], 1)
+        self.assertEqual(manifest["programs"][0]["coordinate_ids"], ["q"])
+        default_input = artifacts[
+            Path("opensim-spatial-programs/fixture_custom.default.mrospatialinput")
+        ]
+        self.assertEqual(len(default_input), 64)
+        self.assertEqual(struct.unpack("<16f", default_input)[:8], (0.25,) + (0.0,) * 7)
+        unit_input = artifacts[
+            Path("opensim-spatial-programs/fixture_custom.velocity-q.mrospatialinput")
+        ]
+        self.assertEqual(struct.unpack("<16f", unit_input)[8:], (1.0,) + (0.0,) * 7)
 
     def test_opensim_archive_parser_preserves_selected_member_and_archive_hash(self) -> None:
         source = """<?xml version=\"1.0\"?>

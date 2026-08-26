@@ -109,6 +109,20 @@ numi human kinematics \
 The resulting IR includes all 10 Rajagopal `CustomJoint` SpatialTransforms,
 their `Constant`, `LinearFunction`, `PolynomialFunction`, and `SimmSpline`
 tables, plus source-order pose, motion-subspace `H`, and `Hdot` default and
-unit-velocity test vectors. The pinned core has a matching bounded Metal
-kinematic evaluator, but its articulated solver does not yet consume this IR;
-it is not a substitute for that lowerer or a physical validation.
+unit-velocity test vectors. It also writes one 2,512-byte canonical
+`MROpenSimSpatialTransformGPU` program per joint and 64-byte input sidecars
+under `opensim-spatial-programs/`; the manifest hashes every file.
+
+At the pinned Core revision, check one source-derived program on an Apple
+Metal device with:
+
+```sh
+metalrobo_opensim_spatial_transform_gpu_probe \
+  --program Build/custom-joint-ir/opensim-spatial-programs/walker_knee_r.mrospatial \
+  --input Build/custom-joint-ir/opensim-spatial-programs/walker_knee_r.default.mrospatialinput
+```
+
+The probe rejects a non-canonical binary, evaluates the decoded program on
+CPU and GPU, compares pose/`H`/`Hdot` within FP32 tolerance, and repeats the
+GPU result byte-for-byte. The articulated solver does not yet consume this IR;
+this is not a substitute for that lowerer or a physical validation.
