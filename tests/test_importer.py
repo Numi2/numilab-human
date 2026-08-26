@@ -6,7 +6,14 @@ import zipfile
 from pathlib import Path
 from subprocess import run
 
-from numilab_human.model import gate_report, parse_bodyparts3d, parse_opensim
+from numilab_human.model import (
+    gate_report,
+    parse_bodyparts3d,
+    parse_opensim_archive,
+    parse_opensim,
+    read_json,
+    runtime_compatibility_report,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -96,10 +103,85 @@ class ImporterTests(unittest.TestCase):
                     "mobl_arms_upper_extremity": {"release_file": "upper.zip", "license": "non-commercial"},
                 }
             }
-            report = gate_report(sources=source, upper_archive=None, source_lock=lock)
+            report = gate_report(
+                sources=source,
+                upper_archive=None,
+                source_lock=lock,
+                runtime_contract=read_json(ROOT / "config/numi-runtime-contract.v1.json"),
+            )
         self.assertEqual(report["source_artifacts"]["bodyparts3d_4"][0]["status"], "missing")
         self.assertEqual(report["source_artifacts"]["mobl_arms_upper_extremity"]["status"], "missing_authenticated_archive")
         self.assertEqual(report["gates"][0]["status"], "blocked")
+
+    def test_runtime_compatibility_does_not_silently_lower_custom_joints_or_muscles(self) -> None:
+        model = {
+            "model_id": "fixture",
+            "joints": [
+                {"kind": "PinJoint", "motion_axes": []},
+                {"kind": "CustomJoint", "motion_axes": [{"function_kind": "SimmSpline"}]},
+                {"kind": "UniversalJoint", "motion_axes": []},
+            ],
+            "muscles": [
+                {
+                    "kind": "Millard2012EquilibriumMuscle",
+                    "path_points": [{}, {}],
+                    "path_wraps": [{}],
+                }
+            ],
+            "wrap_objects": [{}],
+        }
+        report = runtime_compatibility_report(
+            model,
+            read_json(ROOT / "config/numi-runtime-contract.v1.json"),
+        )
+        self.assertEqual(report["skeleton"]["status"], "blocked")
+        self.assertEqual(report["skeleton"]["unsupported_joint_kinds"], {"CustomJoint": 1, "UniversalJoint": 1})
+        self.assertEqual(report["muscle_tendon"]["status"], "blocked")
+        self.assertEqual(report["source_model"]["muscle_path_wraps"], 1)
+
+    def test_opensim_archive_parser_preserves_selected_member_and_archive_hash(self) -> None:
+        source = """<?xml version=\"1.0\"?>
+<OpenSimDocument Version=\"40000\"><Model name=\"fixture\">
+  <BodySet><objects><Body name=\"pelvis\"><mass>1</mass><mass_center>0 0 0</mass_center><inertia_xx>1</inertia_xx><inertia_yy>1</inertia_yy><inertia_zz>1</inertia_zz></Body></objects></BodySet>
+  <JointSet><objects /></JointSet><ForceSet><objects /></ForceSet>
+</Model></OpenSimDocument>"""
+        with tempfile.TemporaryDirectory() as temporary:
+            archive = Path(temporary) / "upper.zip"
+            with zipfile.ZipFile(archive, "w") as output:
+                output.writestr("nested/bimanual_fixture.osim", source)
+            result = parse_opensim_archive(archive, "upper")
+        self.assertEqual(result["model_id"], "fixture")
+        self.assertEqual(result["source_file"], "nested/bimanual_fixture.osim")
+        self.assertEqual(result["source_archive"]["file"], "upper.zip")
+        self.assertEqual(len(result["source_archive"]["sha256"]), 64)
+
+    def test_gate_report_parses_available_upper_archive_for_runtime_compatibility(self) -> None:
+        source = """<?xml version=\"1.0\"?>
+<OpenSimDocument Version=\"40000\"><Model name=\"upper_fixture\">
+  <BodySet><objects><Body name=\"upper\"><mass>1</mass><mass_center>0 0 0</mass_center><inertia_xx>1</inertia_xx><inertia_yy>1</inertia_yy><inertia_zz>1</inertia_zz></Body></objects></BodySet>
+  <JointSet><objects><PinJoint name=\"elbow\"><parent_body>ground</parent_body><child_body>upper</child_body><coordinates><Coordinate name=\"flexion\"><default_value>0</default_value><range>-1 1</range></Coordinate></coordinates></PinJoint></objects></JointSet><ForceSet><objects /></ForceSet>
+</Model></OpenSimDocument>"""
+        lock = {
+            "sources": {
+                "bodyparts3d_4": {"files": {}},
+                "rajagopal_lai_uhlrich_2023": {"sha256": "def"},
+                "mobl_arms_upper_extremity": {"release_file": "upper.zip", "license": "non-commercial"},
+            }
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            archive = directory / "upper.zip"
+            with zipfile.ZipFile(archive, "w") as output:
+                output.writestr("bimanual_fixture.osim", source)
+            report = gate_report(
+                sources=directory,
+                upper_archive=archive,
+                source_lock=lock,
+                runtime_contract=read_json(ROOT / "config/numi-runtime-contract.v1.json"),
+            )
+        upper = report["runtime_compatibility"]["upper_extremities"]
+        self.assertEqual(upper["source_model"]["id"], "upper_fixture")
+        self.assertEqual(upper["skeleton"]["status"], "compatible")
 
 
 if __name__ == "__main__":

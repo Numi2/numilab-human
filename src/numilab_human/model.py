@@ -3,9 +3,10 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import tempfile
 import xml.etree.ElementTree as ET
 import zipfile
-from collections import defaultdict, deque
+from collections import Counter, defaultdict, deque
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
@@ -499,11 +500,104 @@ def _locked_file_gate(path: Path, metadata: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
+def runtime_compatibility_report(
+    model: dict[str, Any], runtime_contract: dict[str, Any]
+) -> dict[str, Any]:
+    """Compare imported OpenSim semantics with the revision-pinned Numi ABI.
+
+    This is deliberately a compatibility report, never an approximation pass.
+    A source model that asks for a primitive the Metal runtime cannot execute
+    remains blocked instead of being silently converted to joint torque or a
+    linear tendon surrogate.
+    """
+    joint_contract = runtime_contract["opensim_joint_lowering"]
+    joint_kinds = Counter(joint["kind"] for joint in model["joints"])
+    unsupported = {
+        kind: count
+        for kind, count in sorted(joint_kinds.items())
+        if joint_contract.get(kind, {}).get("status") != "supported"
+    }
+    unknown = {
+        kind: count
+        for kind, count in sorted(joint_kinds.items())
+        if kind not in joint_contract
+    }
+    transform_functions = Counter(
+        axis["function_kind"] or "unspecified"
+        for joint in model["joints"]
+        for axis in joint["motion_axes"]
+    )
+    muscle_kinds = Counter(muscle["kind"] for muscle in model["muscles"])
+    path_points = sum(len(muscle["path_points"]) for muscle in model["muscles"])
+    path_wraps = sum(len(muscle["path_wraps"]) for muscle in model["muscles"])
+    return {
+        "schema": "numi.human.runtime-compatibility.v1",
+        "runtime": runtime_contract["runtime"],
+        "source_model": {
+            "id": model["model_id"],
+            "joint_kinds": dict(sorted(joint_kinds.items())),
+            "transform_functions": dict(sorted(transform_functions.items())),
+            "muscle_kinds": dict(sorted(muscle_kinds.items())),
+            "muscle_path_points": path_points,
+            "muscle_path_wraps": path_wraps,
+            "wrap_objects": len(model["wrap_objects"]),
+        },
+        "skeleton": {
+            "status": "compatible" if not unsupported else "blocked",
+            "unsupported_joint_kinds": unsupported,
+            "unknown_joint_kinds": unknown,
+            "requirement": (
+                "All source joint semantics must lower exactly into supported "
+                "Numi articulated primitives."
+            ),
+        },
+        "muscle_tendon": {
+            "status": "compatible" if not model["muscles"] else "blocked",
+            "current_contract": runtime_contract["muscle_tendon"]["current_contract"],
+            "requirements": runtime_contract["muscle_tendon"][
+                "source_faithful_requirements"
+            ],
+        },
+    }
+
+
+def parse_opensim_archive(path: Path, source_id: str) -> dict[str, Any]:
+    """Parse an authenticated OpenSim archive without losing member provenance."""
+    try:
+        with zipfile.ZipFile(path) as archive:
+            candidates = sorted(
+                member for member in archive.namelist() if member.lower().endswith(".osim")
+            )
+            if not candidates:
+                raise ImportError(f"{path.name} contains no OpenSim model")
+            member = next(
+                (candidate for candidate in candidates if "bimanual" in candidate.lower()),
+                candidates[0],
+            )
+            contents = archive.read(member)
+    except zipfile.BadZipFile as error:
+        raise ImportError(f"{path.name} is not a valid OpenSim archive") from error
+    with tempfile.NamedTemporaryFile(suffix=".osim", delete=False) as temporary:
+        temporary.write(contents)
+        extracted = Path(temporary.name)
+    try:
+        model = parse_opensim(extracted, source_id)
+    finally:
+        extracted.unlink(missing_ok=True)
+    model["source_file"] = member
+    model["source_archive"] = {
+        "file": path.name,
+        "sha256": sha256(path),
+    }
+    return model
+
+
 def gate_report(
     *,
     sources: Path,
     upper_archive: Path | None,
     source_lock: dict[str, Any],
+    runtime_contract: dict[str, Any],
 ) -> dict[str, Any]:
     """Report every Human v1 dependency without pretending open gates passed."""
     bodyparts = source_lock["sources"]["bodyparts3d_4"]
@@ -544,6 +638,28 @@ def gate_report(
         and lower_gate["status"] == "verified"
         and upper_gate["status"] == "ready_for_import"
     )
+    runtime_compatibility: dict[str, Any] = {
+        "schema": "numi.human.runtime-compatibility-report.v1",
+        "lower_body_and_pelvis": {
+            "status": "lower_source_not_verified",
+        },
+        "upper_extremities": {
+            "status": upper_gate["status"],
+        },
+    }
+    if lower_gate["status"] == "verified":
+        runtime_compatibility["lower_body_and_pelvis"] = runtime_compatibility_report(
+            parse_opensim(
+                sources / "RajagopalLaiUhlrich2023.osim",
+                "rajagopal_lai_uhlrich_2023",
+            ),
+            runtime_contract,
+        )
+    if upper_gate["status"] == "ready_for_import" and upper_archive is not None:
+        runtime_compatibility["upper_extremities"] = runtime_compatibility_report(
+            parse_opensim_archive(upper_archive, "mobl_arms_upper_extremity"),
+            runtime_contract,
+        )
     return {
         "schema": "numi.human.gate-report.v1",
         "source_artifacts": {
@@ -551,6 +667,7 @@ def gate_report(
             "rajagopal_lai_uhlrich_2023": lower_gate,
             "mobl_arms_upper_extremity": upper_gate,
         },
+        "runtime_compatibility": runtime_compatibility,
         "gates": [
             {
                 "id": "source_faithful_import",
@@ -668,20 +785,7 @@ def build_manifest(
     if lower["source_sha256"] != expected_lower_hash:
         raise ImportError("RajagopalLaiUhlrich2023.osim SHA-256 differs from sources.lock.json")
 
-    try:
-        with zipfile.ZipFile(upper_archive) as archive:
-            candidates = sorted(name for name in archive.namelist() if name.lower().endswith(".osim"))
-            if not candidates:
-                raise ImportError("MoBL-ARMS archive contains no .osim model")
-            preferred = next((name for name in candidates if "bimanual" in name.lower()), candidates[0])
-            upper_path = sources / "_extracted_upper.osim"
-            upper_path.write_bytes(archive.read(preferred))
-    except zipfile.BadZipFile as error:
-        raise ImportError("MoBL-ARMS input must be the original authenticated ZIP archive") from error
-    try:
-        upper = parse_opensim(upper_path, "mobl_arms_upper_extremity")
-    finally:
-        upper_path.unlink(missing_ok=True)
+    upper = parse_opensim_archive(upper_archive, "mobl_arms_upper_extremity")
 
     mechanics = [lower, upper]
     manifest = {

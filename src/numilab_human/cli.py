@@ -124,6 +124,7 @@ def audit(arguments: argparse.Namespace) -> int:
         sources=arguments.sources.resolve(),
         upper_archive=(arguments.upper_archive.resolve() if arguments.upper_archive else None),
         source_lock=read_json(REPOSITORY_ROOT / "sources.lock.json"),
+        runtime_contract=read_json(REPOSITORY_ROOT / "config/numi-runtime-contract.v1.json"),
     )
     if arguments.output:
         write_json(arguments.output.resolve(), report)

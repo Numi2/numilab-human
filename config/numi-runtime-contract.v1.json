@@ -1,0 +1,50 @@
+{
+  "schema": "numi.human.runtime-contract.v1",
+  "runtime": {
+    "repository": "MetalRobo",
+    "revision": "94d5a36",
+    "articulated_joint_primitives": [
+      "fixed",
+      "revolute",
+      "continuous",
+      "prismatic"
+    ],
+    "evidence": [
+      "include/metalrobo/engine_types.h",
+      "src/metal/ArticulatedABA.metal",
+      "src/metal/LocomotionTask.metal"
+    ]
+  },
+  "opensim_joint_lowering": {
+    "PinJoint": {
+      "status": "supported",
+      "numi_primitive": "revolute"
+    },
+    "SliderJoint": {
+      "status": "supported",
+      "numi_primitive": "prismatic"
+    },
+    "WeldJoint": {
+      "status": "supported",
+      "numi_primitive": "fixed"
+    },
+    "CustomJoint": {
+      "status": "requires_core_extension",
+      "requirement": "Evaluate OpenSim TransformAxis functions and their multi-coordinate kinematics in the articulated solver."
+    },
+    "UniversalJoint": {
+      "status": "requires_core_extension",
+      "requirement": "Represent a source-faithful coupled two-axis joint in the articulated solver."
+    }
+  },
+  "muscle_tendon": {
+    "current_contract": "linear_sparse_tendon_position",
+    "current_contract_evidence": "RobotActuatorKind::tendonPosition",
+    "source_faithful_requirements": [
+      "Hill-type activation and fiber/tendon state",
+      "GeometryPath attachment and wrapping evaluation",
+      "source-frame muscle force and moment-arm scatter",
+      "force-length and force-velocity validation"
+    ]
+  }
+}

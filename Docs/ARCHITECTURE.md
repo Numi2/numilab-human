@@ -64,3 +64,10 @@ The tracked workspace command `numi human` is the bridge at this stage. It
 uses the normal Numi capability discovery path to fetch and compile this
 repository's source-faithful artifact; it cannot register a robot or schedule
 a rollout until the core lowerer exists and all gated sources are supplied.
+
+`numi human audit` now records the inspected Numi runtime contract alongside
+the imported lower-body source. At runtime revision `94d5a36`, Rajagopal's
+`CustomJoint` transforms and `UniversalJoint` wrists do not lower into the
+scalar articulated Metal primitives, and its Hill-type wrapped muscle paths do
+not equal the runtime's linear sparse tendon-position controller. Those are
+typed integration blocks, not permission to approximate the source model.
