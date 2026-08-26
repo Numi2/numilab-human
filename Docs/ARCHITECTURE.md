@@ -66,14 +66,24 @@ repository's source-faithful artifact; it cannot register a robot or schedule
 a rollout until the core lowerer exists and all gated sources are supplied.
 
 `numi human audit` now records the inspected Numi runtime contract alongside
-the imported lower-body source. At runtime revision `f1c7ac5`, the Core can
+the imported lower-body source. At runtime revision `47a3a2e`, the Core can
 decode a canonical source-derived FunctionBased program/input sidecar,
 round-trip its program bytes, and evaluate source-order pose, motion subspace
 `H`, and `Hdot` in bounded Metal, plus `H`-transpose source-wrench projection
 and `Hdot*qdot` bias. Its FP64 articulated reference also admits an immutable
-FunctionBased program into analytic Jacobian mass/bias and state advancement;
-the probe closes forward/inverse dynamics on source-derived `walker_knee_r`.
-That does not assemble this human skeleton or establish whole-human dynamics.
+FunctionBased program into analytic Jacobian mass/bias and state advancement.
+
+`numi human core-reference` now compiles the complete 22-body Rajagopal tree
+into a fixed-layout payload: each source body supplies its mass, COM, and
+inertia; each source joint supplies its resolved body-frame anchors and
+rotations; every scalar coordinate is retained; and all 10 CustomJoint
+programs are decoded into the same Core model. The loader then executes
+kinematics, a positive-definite FP64 mass matrix, inverse dynamics, forward
+dynamics, and invariant evaluation. This establishes an executable
+source-faithful *rigid-tree CPU reference*, not BodyParts3D registration,
+collision/contact, muscle actuation, an OpenSim numerical equivalence study,
+or whole-human physical validation.
+
 The articulated Metal solver still does not consume that program: it has no
 function-based joint, multi-axis UniversalJoint, or Hill-type wrapped-muscle
 lowerer. Those are typed integration blocks, not permission to approximate the

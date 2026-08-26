@@ -169,7 +169,34 @@ This resolves every OpenSim joint socket through its local frame chain to the
 22 source rigid bodies, retains all mass/inertia, frames, coordinates, and
 motion axes, and links each CustomJoint to its canonical program filename. It
 records 10 scalar-core-supported PinJoints, two exact locked-fixed wrists, and
-10 FunctionBased joints whose source programs are ready for the Core FP64
-reference but still need full-skeleton assembly and accelerated solver
-admission. It is not a body-to-BodyParts3D registration, collider cook, or
-articulated execution.
+10 FunctionBased joints. It is not a body-to-BodyParts3D registration or
+collider cook.
+
+## 11. Compile and run the complete Rajagopal CPU reference tree
+
+```sh
+numi human core-reference \
+  --sources Sources \
+  --output Build/rajagopal-core-reference
+```
+
+This writes `rajagopal-core-reference.nhrigid` plus a SHA-256 manifest. The
+binary has a documented little-endian ABI containing a synthetic fixed root,
+the 22 source bodies, 22 joints, 35 coordinates/velocities, and all 10
+canonical FunctionBased programs. It is intentionally source-locked rather
+than a general interchange format.
+
+At the exact matching Core revision, execute its bounded FP64 reference gate:
+
+```sh
+metalrobo_numilab_human_core_reference_probe \
+  Build/rajagopal-core-reference/rajagopal-core-reference.nhrigid
+```
+
+The probe rejects an incompatible or trailing-byte payload, validates Core
+ownership rules, evaluates whole-tree kinematics and the analytic mass matrix,
+then requires forward dynamics to recover a source-state inverse-dynamics
+acceleration. It does not compare against an OpenSim runtime, register
+BodyParts3D meshes, add collision/contact, or run muscle/tendon force. Metal
+ABA and MetalWorld still reject FunctionBased joints, so this is a CPU
+reference gate rather than an accelerated human simulation.

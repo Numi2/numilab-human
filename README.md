@@ -53,6 +53,10 @@ numi human preview --sources Sources --side right --output Build/right-pin-previ
 # immutable program, but this command does not assemble a full human model and
 # Metal ABA does not lower it yet.
 numi human kinematics --sources Sources --output Build/custom-joint-ir
+
+# Compile the entire Rajagopal rigid tree into the provenance-locked Core CPU
+# reference payload. This is neither a RobotPack nor an accelerated rollout.
+numi human core-reference --sources Sources --output Build/rajagopal-core-reference
 ```
 
 ## What the first manifest means

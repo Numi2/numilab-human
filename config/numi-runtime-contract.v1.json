@@ -2,7 +2,7 @@
   "schema": "numi.human.runtime-contract.v1",
   "runtime": {
     "repository": "MetalRobo",
-    "revision": "f1c7ac5aa609e37196720d13f0f9011f59d29cc1",
+    "revision": "47a3a2e80a4d49506377304a4cfc7315388eff45",
     "articulated_joint_primitives": [
       "fixed",
       "revolute",
@@ -24,7 +24,8 @@
       "include/metalrobo/opensim_spatial_transform_gpu.h",
       "src/metal/OpenSimSpatialTransform.metal",
       "apps/opensim_spatial_transform_probe.cpp",
-      "apps/opensim_spatial_transform_gpu_probe.mm"
+      "apps/opensim_spatial_transform_gpu_probe.mm",
+      "apps/numilab_human_core_reference_probe.cpp"
     ]
   },
   "opensim_joint_lowering": {
@@ -42,8 +43,9 @@
     },
     "CustomJoint": {
       "status": "requires_core_extension",
-      "kinematic_program": "source-derived canonical FunctionBased binary sidecars have bounded Metal pose, H, Hdot, H-transpose wrench projection, and Hdot times qdot primitives; the pinned CPU FP64 reference also admits an immutable FunctionBasedJointProgram into analytic Jacobian mass/bias evaluation and state advance",
-      "requirement": "Assemble the source skeleton into EngineModel with source frames and inertias, then extend the accelerated articulated solver. Current Metal ABA/operator/MetalWorld paths explicitly reject FunctionBased joints."
+      "kinematic_program": "source-derived canonical FunctionBased binary sidecars have bounded Metal pose, H, Hdot, H-transpose wrench projection, and Hdot times qdot primitives; the pinned CPU FP64 reference admits immutable FunctionBasedJointProgram records into analytic Jacobian mass/bias evaluation and state advance",
+      "cpu_reference_payload": "The provenance-locked 22-body Rajagopal rigid tree can load source mass, inertia, COM, joint-frame, coordinate, and FunctionBased-program records into the FP64 reference probe.",
+      "requirement": "Register source frames to BodyParts3D geometry and collision proxies, then extend the accelerated articulated solver. Current Metal ABA/operator/MetalWorld paths explicitly reject FunctionBased joints."
     },
     "UniversalJoint": {
       "status": "requires_core_extension",

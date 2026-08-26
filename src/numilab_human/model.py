@@ -1198,6 +1198,405 @@ def rajagopal_rigid_skeleton_ir(model: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+_RAJAGOPAL_CORE_REFERENCE_MAGIC = b"NHRIGID1"
+_RAJAGOPAL_CORE_REFERENCE_ABI = 1
+_MR_ENGINE_ABI_VERSION = 5
+_MR_MOTION_DYNAMIC = 2
+_MR_ROOT_FIXED = 0
+_MR_JOINT_REVOLUTE = 0
+_MR_JOINT_FIXED = 5
+_MR_JOINT_FUNCTION_BASED = 7
+_MR_DOF_POSITION_LIMIT = 1 << 2
+
+
+def _quaternion_xyzw_from_matrix(matrix: list[list[float]]) -> list[float]:
+    """Return the deterministic xyzw quaternion for a proper rotation matrix."""
+    trace = matrix[0][0] + matrix[1][1] + matrix[2][2]
+    if trace > 0.0:
+        scale = 2.0 * math.sqrt(trace + 1.0)
+        result = [
+            (matrix[2][1] - matrix[1][2]) / scale,
+            (matrix[0][2] - matrix[2][0]) / scale,
+            (matrix[1][0] - matrix[0][1]) / scale,
+            0.25 * scale,
+        ]
+    elif matrix[0][0] > matrix[1][1] and matrix[0][0] > matrix[2][2]:
+        scale = 2.0 * math.sqrt(1.0 + matrix[0][0] - matrix[1][1] - matrix[2][2])
+        result = [
+            0.25 * scale,
+            (matrix[0][1] + matrix[1][0]) / scale,
+            (matrix[0][2] + matrix[2][0]) / scale,
+            (matrix[2][1] - matrix[1][2]) / scale,
+        ]
+    elif matrix[1][1] > matrix[2][2]:
+        scale = 2.0 * math.sqrt(1.0 + matrix[1][1] - matrix[0][0] - matrix[2][2])
+        result = [
+            (matrix[0][1] + matrix[1][0]) / scale,
+            0.25 * scale,
+            (matrix[1][2] + matrix[2][1]) / scale,
+            (matrix[0][2] - matrix[2][0]) / scale,
+        ]
+    else:
+        scale = 2.0 * math.sqrt(1.0 + matrix[2][2] - matrix[0][0] - matrix[1][1])
+        result = [
+            (matrix[0][2] + matrix[2][0]) / scale,
+            (matrix[1][2] + matrix[2][1]) / scale,
+            0.25 * scale,
+            (matrix[1][0] - matrix[0][1]) / scale,
+        ]
+    magnitude = math.sqrt(sum(value * value for value in result))
+    if not math.isfinite(magnitude) or not magnitude > 1.0e-12:
+        raise ImportError("OpenSim frame orientation cannot form a unit quaternion")
+    result = [value / magnitude for value in result]
+    return [-value for value in result] if result[3] < 0.0 else result
+
+
+def _inverse_symmetric3(inertia: dict[str, Any], context: str) -> list[list[float]]:
+    required = {"xx", "xy", "xz", "yy", "yz", "zz"}
+    if not isinstance(inertia, dict) or set(inertia) != required:
+        raise ImportError(f"{context} has incomplete inertia")
+    xx, xy, xz, yy, yz, zz = (
+        _finite_scalar(inertia[key], f"{context} {key}")
+        for key in ("xx", "xy", "xz", "yy", "yz", "zz")
+    )
+    determinant = (
+        xx * (yy * zz - yz * yz)
+        - xy * (xy * zz - yz * xz)
+        + xz * (xy * yz - yy * xz)
+    )
+    if not determinant > 0.0 or not math.isfinite(determinant):
+        raise ImportError(f"{context} is not positive definite")
+    inverse = [
+        [(yy * zz - yz * yz) / determinant, (xz * yz - xy * zz) / determinant, (xy * yz - xz * yy) / determinant],
+        [(xz * yz - xy * zz) / determinant, (xx * zz - xz * xz) / determinant, (xy * xz - xx * yz) / determinant],
+        [(xy * yz - xz * yy) / determinant, (xy * xz - xx * yz) / determinant, (xx * yy - xy * xy) / determinant],
+    ]
+    if not all(math.isfinite(value) for row in inverse for value in row):
+        raise ImportError(f"{context} inverse is non-finite")
+    return inverse
+
+
+def _joint_frame_body_transform(
+    joint: dict[str, Any], frame_reference: Any, context: str
+) -> tuple[str | None, list[float], list[list[float]]]:
+    """Resolve a joint socket to its source body and body-frame transform."""
+    frames = {
+        frame.get("id"): frame
+        for frame in joint.get("frames", [])
+        if isinstance(frame, dict) and isinstance(frame.get("id"), str)
+    }
+
+    def resolve(reference: Any, seen: set[str]) -> tuple[str | None, list[float], list[list[float]]]:
+        if not isinstance(reference, str) or not reference:
+            raise ImportError(f"OpenSim joint {joint.get('id')} has unresolved {context} frame")
+        if reference in {"ground", "/ground"}:
+            return None, [0.0, 0.0, 0.0], _matrix_from_body_fixed_xyz([0.0, 0.0, 0.0])
+        if reference.startswith("/bodyset/"):
+            body = reference.rsplit("/", 1)[-1]
+            if not body:
+                raise ImportError(f"OpenSim joint {joint.get('id')} has invalid {context} body frame")
+            return body, [0.0, 0.0, 0.0], _matrix_from_body_fixed_xyz([0.0, 0.0, 0.0])
+        local = reference.rsplit("/", 1)[-1]
+        if local in seen:
+            raise ImportError(f"OpenSim joint {joint.get('id')} has cyclic {context} frame chain")
+        frame = frames.get(local)
+        if frame is None:
+            raise ImportError(f"OpenSim joint {joint.get('id')} cannot resolve {context} frame {reference}")
+        parent, parent_translation, parent_rotation = resolve(
+            frame.get("parent_frame"), seen | {local}
+        )
+        translation = _vector3(frame.get("translation_m"), f"OpenSim {joint['id']} {context} translation")
+        rotation = _matrix_from_body_fixed_xyz(
+            _vector3(frame.get("orientation_rad"), f"OpenSim {joint['id']} {context} orientation")
+        )
+        return (
+            parent,
+            [
+                parent_translation[index] + _matrix_vector(parent_rotation, translation)[index]
+                for index in range(3)
+            ],
+            _matrix_product(parent_rotation, rotation),
+        )
+
+    return resolve(frame_reference, set())
+
+
+def _pack_float4(values: Iterable[float], context: str) -> bytes:
+    materialized = list(values)
+    if len(materialized) != 4:
+        raise ImportError(f"{context} must have four scalar lanes")
+    try:
+        return struct.pack("<4f", *(_finite_scalar(value, context) for value in materialized))
+    except OverflowError as error:
+        raise ImportError(f"{context} is outside FP32 range") from error
+
+
+def rajagopal_core_reference_artifact(
+    model: dict[str, Any],
+) -> tuple[dict[str, Any], bytes]:
+    """Compile the full Rajagopal tree into the Core FP64 reference payload.
+
+    The artifact preserves source masses, COMs, inertia tensors, joint frames,
+    coordinates, and all CustomJoint binary programs. It deliberately owns no
+    BodyParts3D registration, collision geometry, muscle/tendon state, or
+    accelerated Metal function-based solver contract.
+    """
+    skeleton = rajagopal_rigid_skeleton_ir(model)
+    source_hash = skeleton["source"].get("sha256")
+    if not isinstance(source_hash, str) or not re.fullmatch(r"[0-9a-f]{64}", source_hash):
+        raise ImportError("Rajagopal Core reference payload requires a source SHA-256")
+    bodies_by_id = {body.get("id"): body for body in model.get("bodies", [])}
+    if len(bodies_by_id) != len(model.get("bodies", [])) or not bodies_by_id:
+        raise ImportError("Rajagopal Core reference payload has invalid body identities")
+    unresolved = list(model.get("joints", []))
+    ordered_joints: list[dict[str, Any]] = []
+    ordered_body_ids = ["__ground__"]
+    body_index = {"__ground__": 0}
+    while unresolved:
+        progressed = False
+        for joint in list(unresolved):
+            parent, _, _ = _joint_frame_body_transform(joint, joint.get("parent_frame"), "parent")
+            child, _, _ = _joint_frame_body_transform(joint, joint.get("child_frame"), "child")
+            parent_id = "__ground__" if parent is None else parent
+            if parent_id not in body_index:
+                continue
+            if not isinstance(child, str) or child not in bodies_by_id or child in body_index:
+                raise ImportError(f"Rajagopal Core reference tree has invalid child at {joint.get('id')}")
+            body_index[child] = len(ordered_body_ids)
+            ordered_body_ids.append(child)
+            ordered_joints.append(joint)
+            unresolved.remove(joint)
+            progressed = True
+        if not progressed:
+            raise ImportError("Rajagopal Core reference tree is disconnected or cyclic")
+    if len(ordered_joints) != len(model.get("joints", [])):
+        raise ImportError("Rajagopal Core reference payload did not retain every source joint")
+
+    body_records: list[bytes] = []
+    # Fixed roots do not contribute a generalized coordinate. This synthetic
+    # dynamic anchor exists solely because the current Core fixed-tree ABI
+    # requires one in-articulation root body; its inertial fields are never a
+    # source-anatomy claim and contribute no articulated mass column.
+    body_records.append(
+        struct.pack(
+            "<4I", 0, 0xFFFFFFFF, 0xFFFFFFFF, _MR_MOTION_DYNAMIC
+        )
+        + _pack_float4([1.0, 1.0, 0.0, 0.0], "synthetic ground mass")
+        + _pack_float4([0.0, 0.0, 0.0, 0.0], "synthetic ground COM")
+        + _pack_float4([1.0, 0.0, 0.0, 0.0], "synthetic ground inertia row 0")
+        + _pack_float4([0.0, 1.0, 0.0, 0.0], "synthetic ground inertia row 1")
+        + _pack_float4([0.0, 0.0, 1.0, 0.0], "synthetic ground inertia row 2")
+        + _pack_float4([1.0, 0.0, 0.0, 0.0], "synthetic ground inverse inertia row 0")
+        + _pack_float4([0.0, 1.0, 0.0, 0.0], "synthetic ground inverse inertia row 1")
+        + _pack_float4([0.0, 0.0, 1.0, 0.0], "synthetic ground inverse inertia row 2")
+        + _pack_float4([0.0, 0.0, 1.0e6, 1.0e6], "synthetic ground damping")
+    )
+    for identifier in ordered_body_ids[1:]:
+        body = bodies_by_id[identifier]
+        mass = _finite_scalar(body.get("mass_kg"), f"OpenSim body {identifier} mass")
+        if not mass > 0.0:
+            raise ImportError(f"OpenSim body {identifier} mass must be positive")
+        com = _vector3(body.get("mass_center_m"), f"OpenSim body {identifier} COM")
+        inertia = body.get("inertia_kg_m2")
+        inverse = _inverse_symmetric3(inertia, f"OpenSim body {identifier} inertia")
+        matrix = [
+            [inertia["xx"], inertia["xy"], inertia["xz"]],
+            [inertia["xy"], inertia["yy"], inertia["yz"]],
+            [inertia["xz"], inertia["yz"], inertia["zz"]],
+        ]
+        parent_joint_index = next(
+            index for index, joint in enumerate(ordered_joints) if joint.get("child_frame")
+            and _joint_frame_body_transform(joint, joint.get("child_frame"), "child")[0] == identifier
+        )
+        parent_body, _, _ = _joint_frame_body_transform(
+            ordered_joints[parent_joint_index], ordered_joints[parent_joint_index].get("parent_frame"), "parent"
+        )
+        body_records.append(
+            struct.pack(
+                "<4I",
+                0,
+                body_index["__ground__" if parent_body is None else parent_body],
+                parent_joint_index,
+                _MR_MOTION_DYNAMIC,
+            )
+            + _pack_float4([mass, 1.0 / mass, 0.0, 0.0], f"OpenSim body {identifier} mass")
+            + _pack_float4([*com, 0.0], f"OpenSim body {identifier} COM")
+            + b"".join(_pack_float4([*row, 0.0], f"OpenSim body {identifier} inertia") for row in matrix)
+            + b"".join(_pack_float4([*row, 0.0], f"OpenSim body {identifier} inverse inertia") for row in inverse)
+            + _pack_float4([0.0, 0.0, 1.0e6, 1.0e6], f"OpenSim body {identifier} damping")
+        )
+
+    default_q: list[float] = []
+    default_v: list[float] = []
+    joint_records: list[bytes] = []
+    dof_records: list[bytes] = []
+    function_programs: list[tuple[int, bytes]] = []
+    joint_manifest: list[dict[str, Any]] = []
+    for joint_index, joint in enumerate(ordered_joints):
+        identifier = joint.get("id")
+        if not isinstance(identifier, str) or not identifier:
+            raise ImportError("Rajagopal Core reference payload has unnamed joint")
+        parent_body, parent_translation, parent_rotation = _joint_frame_body_transform(
+            joint, joint.get("parent_frame"), "parent"
+        )
+        child_body, child_translation, child_rotation = _joint_frame_body_transform(
+            joint, joint.get("child_frame"), "child"
+        )
+        if not isinstance(child_body, str) or child_body not in bodies_by_id:
+            raise ImportError(f"Rajagopal Core reference joint {identifier} has invalid child")
+        parent_id = "__ground__" if parent_body is None else parent_body
+        if parent_id not in body_index:
+            raise ImportError(f"Rajagopal Core reference joint {identifier} has invalid parent")
+        child_com = _vector3(bodies_by_id[child_body].get("mass_center_m"), f"OpenSim body {child_body} COM")
+        parent_com = [0.0, 0.0, 0.0] if parent_body is None else _vector3(
+            bodies_by_id[parent_body].get("mass_center_m"), f"OpenSim body {parent_body} COM"
+        )
+        parent_anchor = [parent_translation[index] - parent_com[index] for index in range(3)]
+        child_anchor = [child_translation[index] - child_com[index] for index in range(3)]
+        kind = joint.get("kind")
+        coordinates = joint.get("coordinates")
+        if not isinstance(coordinates, list):
+            raise ImportError(f"Rajagopal Core reference joint {identifier} has invalid coordinates")
+        if kind == "PinJoint":
+            joint_type, nq, nv = _MR_JOINT_REVOLUTE, 1, 1
+            axis0 = [0.0, 0.0, 1.0]
+        elif kind == "CustomJoint":
+            joint_type, nq, nv = _MR_JOINT_FUNCTION_BASED, len(coordinates), len(coordinates)
+            program, coordinate_ids = pack_opensim_spatial_transform_gpu(joint)
+            if len(coordinate_ids) != nq:
+                raise ImportError(f"Rajagopal Core reference program coordinates mismatch at {identifier}")
+            function_programs.append((joint_index, program))
+            axis0 = [0.0, 0.0, 0.0]
+        elif kind == "UniversalJoint" and coordinates and all(
+            coordinate.get("locked") in (True, "true", "True")
+            and coordinate.get("default_value") == 0.0
+            for coordinate in coordinates
+        ):
+            joint_type, nq, nv = _MR_JOINT_FIXED, 0, 0
+            axis0 = [0.0, 0.0, 0.0]
+        else:
+            raise ImportError(f"Rajagopal Core reference cannot exactly lower {kind} {identifier}")
+        q_offset = len(default_q)
+        v_offset = len(default_v)
+        for local_dof, coordinate in enumerate(coordinates[:nv]):
+            default = _finite_scalar(coordinate.get("default_value"), f"OpenSim coordinate {identifier}")
+            default_q.append(default)
+            default_v.append(0.0)
+            flags = 0
+            limits = [0.0, 0.0, 0.0, 0.0]
+            range_value = coordinate.get("range")
+            if coordinate.get("clamped") in (True, "true", "True"):
+                if not isinstance(range_value, list) or len(range_value) != 2:
+                    raise ImportError(f"OpenSim coordinate {identifier} has invalid position range")
+                lower = _finite_scalar(range_value[0], f"OpenSim coordinate {identifier} lower range")
+                upper = _finite_scalar(range_value[1], f"OpenSim coordinate {identifier} upper range")
+                if lower > upper or default < lower or default > upper:
+                    raise ImportError(f"OpenSim coordinate {identifier} default violates source range")
+                flags |= _MR_DOF_POSITION_LIMIT
+                limits[0], limits[1] = lower, upper
+            dof_records.append(
+                struct.pack("<8I", 0, joint_index, q_offset + local_dof, v_offset + local_dof, local_dof, flags, 0, 0)
+                + _pack_float4(limits, f"OpenSim coordinate {identifier} limits")
+                + _pack_float4([0.0, 0.0, 0.0, 0.0], f"OpenSim coordinate {identifier} drive")
+            )
+        joint_records.append(
+            struct.pack("<8I", body_index[parent_id], body_index[child_body], joint_type, 0, q_offset, nq, v_offset, nv)
+            + _pack_float4([*axis0, 0.0], f"OpenSim joint {identifier} axis 0")
+            + _pack_float4([0.0, 0.0, 0.0, 0.0], f"OpenSim joint {identifier} axis 1")
+            + _pack_float4([0.0, 0.0, 0.0, 0.0], f"OpenSim joint {identifier} axis 2")
+            + _pack_float4([*parent_anchor, 0.0], f"OpenSim joint {identifier} parent anchor")
+            + _pack_float4([*child_anchor, 0.0], f"OpenSim joint {identifier} child anchor")
+            + _pack_float4(_quaternion_xyzw_from_matrix(parent_rotation), f"OpenSim joint {identifier} parent rotation")
+            + _pack_float4(_quaternion_xyzw_from_matrix(child_rotation), f"OpenSim joint {identifier} child rotation")
+        )
+        joint_manifest.append({
+            "id": identifier,
+            "source_kind": kind,
+            "core_joint_type": joint_type,
+            "q_offset": q_offset,
+            "nq": nq,
+            "v_offset": v_offset,
+            "nv": nv,
+            "parent_body": parent_id,
+            "child_body": child_body,
+        })
+
+    nq, nv = len(default_q), len(default_v)
+    world = struct.pack(
+        "<16I8f",
+        _MR_ENGINE_ABI_VERSION, len(body_records), 1, len(joint_records),
+        0, 0, nq, nv,
+        1, 1, 1, 1,
+        0, 0, 0, 0,
+        0.0, -9.81, 0.0, 1.0 / 1000.0,
+        1.0e-8, 1.0e-9, 2.0, 1.0e-4,
+    )
+    articulation = struct.pack(
+        "<12I", 0, _MR_ROOT_FIXED, 0, len(body_records), 0, len(joint_records), 0, nq, 0, nv, 0, 0
+    )
+    header = struct.pack(
+        "<8s9I32s",
+        _RAJAGOPAL_CORE_REFERENCE_MAGIC,
+        _RAJAGOPAL_CORE_REFERENCE_ABI,
+        _MR_ENGINE_ABI_VERSION,
+        len(ordered_body_ids) - 1,
+        len(body_records),
+        len(joint_records),
+        nq,
+        nv,
+        len(function_programs),
+        0,
+        bytes.fromhex(source_hash),
+    )
+    payload = b"".join(
+        [
+            header,
+            world,
+            articulation,
+            *body_records,
+            *joint_records,
+            *dof_records,
+            *(struct.pack("<2I", joint_index, 0) + program for joint_index, program in function_programs),
+            struct.pack(f"<{nq}f", *default_q),
+            struct.pack(f"<{nv}f", *default_v),
+        ]
+    )
+    expected_bytes = 76 + 96 + 48 + 160 * len(body_records) + 144 * len(joint_records) + 64 * nv + 2520 * len(function_programs) + 4 * (nq + nv)
+    if len(payload) != expected_bytes:
+        raise ImportError("internal Rajagopal Core reference payload ABI size mismatch")
+    return (
+        {
+            "schema": "numi.human.rajagopal-core-reference.v1",
+            "source": skeleton["source"],
+            "payload": {
+                "file": "rajagopal-core-reference.nhrigid",
+                "sha256": hashlib.sha256(payload).hexdigest(),
+                "bytes": len(payload),
+                "byte_order": "little-endian IEEE-754 binary32",
+                "payload_abi": _RAJAGOPAL_CORE_REFERENCE_ABI,
+                "engine_abi": _MR_ENGINE_ABI_VERSION,
+            },
+            "source_body_count": len(ordered_body_ids) - 1,
+            "engine_body_count": len(body_records),
+            "joint_count": len(joint_records),
+            "nq": nq,
+            "nv": nv,
+            "function_based_program_count": len(function_programs),
+            "body_order": ordered_body_ids,
+            "joints": joint_manifest,
+            "runtime_requirement": (
+                "Load this payload into the Core FP64 FunctionBased reference; Metal ABA, "
+                "BodyParts3D registration/colliders, and muscle-tendon runtime remain separate gates."
+            ),
+            "evidence_boundary": (
+                "Source-faithful rigid-tree data and canonical FunctionBased programs only. "
+                "The synthetic fixed ground anchor has no source-anatomy meaning and no generalized mass column."
+            ),
+        },
+        payload,
+    )
+
+
 def _wrap_objects(model: ET.Element) -> list[dict[str, Any]]:
     result: list[dict[str, Any]] = []
     for frame in model.iter():

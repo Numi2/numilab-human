@@ -17,6 +17,7 @@ from .model import (
     gate_report,
     parse_bodyparts3d,
     parse_opensim,
+    rajagopal_core_reference_artifact,
     rajagopal_custom_joint_gpu_artifacts,
     rajagopal_custom_joint_ir,
     rajagopal_millard_muscle_ir,
@@ -246,6 +247,24 @@ def skeleton(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def core_reference(arguments: argparse.Namespace) -> int:
+    source = arguments.sources.resolve()
+    lower = parse_opensim(
+        source / "RajagopalLaiUhlrich2023.osim",
+        "rajagopal_lai_uhlrich_2023",
+    )
+    output = arguments.output.resolve()
+    manifest, payload = rajagopal_core_reference_artifact(lower)
+    output.mkdir(parents=True, exist_ok=True)
+    payload_path = output / "rajagopal-core-reference.nhrigid"
+    payload_path.write_bytes(payload)
+    manifest_path = output / "rajagopal-core-reference.manifest.json"
+    write_json(manifest_path, manifest)
+    print(f"wrote {payload_path}")
+    print(f"wrote {manifest_path}")
+    return 0
+
+
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description="Build provenance-locked NumiLab Human v1 import artifacts")
     commands = result.add_subparsers(dest="command", required=True)
@@ -311,6 +330,15 @@ def parser() -> argparse.ArgumentParser:
     skeleton_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
     skeleton_parser.add_argument("--output", type=Path, required=True, help="skeleton IR JSON output path")
     skeleton_parser.set_defaults(handler=skeleton)
+    core_reference_parser = commands.add_parser(
+        "core-reference",
+        help="compile the full Rajagopal rigid tree for the Core FP64 FunctionBased reference",
+    )
+    core_reference_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
+    core_reference_parser.add_argument(
+        "--output", type=Path, required=True, help="ignored local output directory"
+    )
+    core_reference_parser.set_defaults(handler=core_reference)
     return result
 
 

@@ -17,6 +17,7 @@ from numilab_human.model import (
     parse_opensim_archive,
     parse_opensim,
     rajagopal_custom_joint_gpu_artifacts,
+    rajagopal_core_reference_artifact,
     read_json,
     rajagopal_custom_joint_ir,
     rajagopal_millard_muscle_ir,
@@ -499,6 +500,69 @@ class ImporterTests(unittest.TestCase):
             result["joints"][0]["lowering"]["program_file"],
             "opensim-spatial-programs/ground_pelvis.mrospatial",
         )
+
+    def test_core_reference_artifact_keeps_rigid_tree_and_function_program_abi(self) -> None:
+        axes = [
+            {
+                "id": f"axis_{index}",
+                "coordinates": "pelvis_tilt" if index == 0 else "",
+                "axis": [
+                    [0.0, 0.0, 1.0],
+                    [0.0, 1.0, 0.0],
+                    [1.0, 0.0, 0.0],
+                    [1.0, 0.0, 0.0],
+                    [0.0, 1.0, 0.0],
+                    [0.0, 0.0, 1.0],
+                ][index],
+                "function_kind": "LinearFunction" if index == 0 else "Constant",
+                "function_parameters": (
+                    {"coefficients": [1.0, 0.0]} if index == 0 else {"value": 0.0}
+                ),
+            }
+            for index in range(6)
+        ]
+        manifest, payload = rajagopal_core_reference_artifact(
+            {
+                "source_id": "fixture",
+                "source_file": "fixture.osim",
+                "source_sha256": "f" * 64,
+                "model_id": "fixture",
+                "bodies": [
+                    {
+                        "id": "pelvis",
+                        "mass_kg": 11.2,
+                        "mass_center_m": [0.0, 0.1, 0.0],
+                        "inertia_kg_m2": {
+                            "xx": 1.0, "xy": 0.0, "xz": 0.0,
+                            "yy": 2.0, "yz": 0.0, "zz": 3.0,
+                        },
+                    }
+                ],
+                "joints": [
+                    {
+                        "id": "ground_pelvis",
+                        "kind": "CustomJoint",
+                        "parent_frame": "ground",
+                        "child_frame": "/bodyset/pelvis",
+                        "coordinates": [
+                            {
+                                "id": "pelvis_tilt", "default_value": 0.25,
+                                "range": [-1.0, 1.0], "clamped": True,
+                            }
+                        ],
+                        "frames": [],
+                        "motion_axes": axes,
+                    }
+                ],
+            }
+        )
+        header = struct.unpack_from("<8s9I32s", payload)
+        self.assertEqual(header[:10], (b"NHRIGID1", 1, 5, 1, 2, 1, 1, 1, 1, 0))
+        self.assertEqual(header[10], bytes.fromhex("f" * 64))
+        self.assertEqual(manifest["body_order"], ["__ground__", "pelvis"])
+        self.assertEqual(manifest["function_based_program_count"], 1)
+        self.assertEqual(manifest["payload"]["bytes"], len(payload))
+        self.assertEqual(len(payload), 3276)
 
     def test_opensim_archive_parser_preserves_selected_member_and_archive_hash(self) -> None:
         source = """<?xml version=\"1.0\"?>

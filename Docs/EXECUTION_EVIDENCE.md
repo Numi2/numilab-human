@@ -1,5 +1,40 @@
 # Bounded execution evidence
 
+## Full Rajagopal rigid-tree CPU reference and device-program regression — 2026-08-26
+
+This establishes one executable source-faithful rigid-body *reference* tree.
+It is not a Metal FunctionBased ABA run, a BodyParts3D registration, contact,
+muscle actuation, deformable anatomy, calibration, or an OpenSim numerical
+equivalence study.
+
+| Item | Exact value |
+| --- | --- |
+| Rajagopal source SHA-256 | `8f30d0b64750b87eb7f705907862590535212b4afd7e919faa3fd7d1683d22ec` |
+| Core revision | `47a3a2e80a4d49506377304a4cfc7315388eff45` |
+| Isolated Mini checkout | `/Users/n/MetalRobo-numilab-human-core-reference-47a3a2e` |
+| Device / toolchain | Apple M4 Pro on `macmini`; AppleClang `21.0.0.21000101` |
+| Reference payload | 22 source bodies, 23 engine bodies (one synthetic fixed root), 22 joints, 35 `q`, 35 `v`, 10 FunctionBased programs |
+| Payload SHA-256 | `da7e52ddd64728ed0a63e73a11cf857ec5489b3eb29e32d11f352f35507cdee6` |
+| Core-reference probe SHA-256 | `7442907040afbce05b6cd7efae68d728c18f4fb34f53a2145e0ccd8524ca84b3` |
+| GPU-program probe SHA-256 | `0e34cff18f33bb300d77ede410310a2445b1e0ed06bd817e9688d01896efd4ec` |
+| Metal library SHA-256 | `673c798ae28f1cb92803c58114fdfe1f003ac0b4e2bc29d0c0390ab2966d6619` |
+| GPU sweep log SHA-256 | `0846615cd4d416cff5c94ffa531bac6e6abd8642963365c931b90048bb860385` |
+
+`metalrobo_numilab_human_core_reference_probe` loaded the exact payload on the
+Mini and completed whole-tree kinematics, a finite symmetric positive-definite
+mass matrix (minimum Cholesky pivot `1.578273e-02`), inverse dynamics, forward
+dynamics, and invariants. The prescribed inverse-to-forward recovery error was
+`4.438117e-14`. That demonstrates the payload is admitted to the actual FP64
+Core reference solver, but it neither proves agreement with an OpenSim
+trajectory nor validates anatomical geometry registration or tissue physics.
+
+The same isolated checkout rebuilt the device probe and ran every 35 existing
+Rajagopal FunctionBased program/input sidecar on the Apple GPU. All 35 passed
+the canonical decode/re-pack, source-order pose/`H`/`Hdot`, wrench projection,
+and `Hdot*qdot` checks. The current Metal ABA/operator/MetalWorld paths still
+explicitly reject FunctionBased joints; this sweep is device-program evidence,
+not a full-tree accelerated solve.
+
 ## FunctionBased CPU reference and device-program regression — 2026-08-26
 
 This is a bounded Core contract for one source-derived FunctionBased joint and
