@@ -125,6 +125,7 @@ def audit(arguments: argparse.Namespace) -> int:
         upper_archive=(arguments.upper_archive.resolve() if arguments.upper_archive else None),
         source_lock=read_json(REPOSITORY_ROOT / "sources.lock.json"),
         runtime_contract=read_json(REPOSITORY_ROOT / "config/numi-runtime-contract.v1.json"),
+        runtime_root=(arguments.runtime_root.resolve() if arguments.runtime_root else None),
     )
     if arguments.output:
         write_json(arguments.output.resolve(), report)
@@ -149,6 +150,11 @@ def parser() -> argparse.ArgumentParser:
     audit_parser = commands.add_parser("audit", help="report every source, runtime, and physics gate")
     audit_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
     audit_parser.add_argument("--upper-archive", type=Path, help="original SimTK MoBL-ARMS bimanual ZIP")
+    audit_parser.add_argument(
+        "--runtime-root",
+        type=Path,
+        help="optional checked-out MetalRobo root to verify against the pinned runtime revision",
+    )
     audit_parser.add_argument("--output", type=Path, help="optional JSON report path")
     audit_parser.set_defaults(handler=audit)
     return result

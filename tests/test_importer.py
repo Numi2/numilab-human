@@ -13,6 +13,7 @@ from numilab_human.model import (
     parse_opensim,
     read_json,
     runtime_compatibility_report,
+    runtime_checkout_gate,
 )
 
 
@@ -112,6 +113,14 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(report["source_artifacts"]["bodyparts3d_4"][0]["status"], "missing")
         self.assertEqual(report["source_artifacts"]["mobl_arms_upper_extremity"]["status"], "missing_authenticated_archive")
         self.assertEqual(report["gates"][0]["status"], "blocked")
+        self.assertEqual(report["runtime_checkout"]["status"], "not_provided")
+
+    def test_runtime_checkout_gate_rejects_a_missing_runtime_root(self) -> None:
+        report = runtime_checkout_gate(
+            Path("/nonexistent/numilab-human-test-runtime"),
+            read_json(ROOT / "config/numi-runtime-contract.v1.json"),
+        )
+        self.assertEqual(report["status"], "missing")
 
     def test_runtime_compatibility_does_not_silently_lower_custom_joints_or_muscles(self) -> None:
         model = {

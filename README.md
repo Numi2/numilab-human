@@ -35,7 +35,10 @@ numi human build \
   --output Build/human-v1
 
 # Write an explicit report of source, runtime, material, and evidence gates.
-numi human audit --sources Sources --output Build/human-v1-gates.json
+numi human audit \
+  --sources Sources \
+  --runtime-root /path/to/MetalRobo \
+  --output Build/human-v1-gates.json
 ```
 
 ## What the first manifest means

@@ -41,7 +41,10 @@ is required.
 ## 4. Audit every gate
 
 ```sh
-numi human audit --sources Sources --output Build/human-v1-gates.json
+numi human audit \
+  --sources Sources \
+  --runtime-root /absolute/path/to/MetalRobo \
+  --output Build/human-v1-gates.json
 ```
 
 The gate report is deliberately strict. It distinguishes a verified source
@@ -49,3 +52,8 @@ artifact from an authenticated source not yet supplied, a source manifest from
 an executable Numi `RobotPack`, and a software integration from material or
 physical validation. It never promotes an open gate based on a naming match or
 a successful JSON build.
+
+When `--runtime-root` is supplied, it also records whether that checkout is
+clean and at the exact runtime revision whose lowering capabilities were
+audited. A missing, dirty, or revision-mismatched checkout is not runtime
+evidence.

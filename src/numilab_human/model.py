@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import subprocess
 import tempfile
 import xml.etree.ElementTree as ET
 import zipfile
@@ -561,6 +562,54 @@ def runtime_compatibility_report(
     }
 
 
+def runtime_checkout_gate(
+    runtime_root: Path | None, runtime_contract: dict[str, Any]
+) -> dict[str, Any]:
+    """Verify that an audit inspected the exact Numi runtime revision it names."""
+    runtime = runtime_contract["runtime"]
+    result: dict[str, Any] = {
+        "repository": runtime["repository"],
+        "expected_revision": runtime["revision"],
+    }
+    if runtime_root is None:
+        return {"status": "not_provided", **result}
+    if not runtime_root.is_dir():
+        return {"status": "missing", "path": str(runtime_root), **result}
+    try:
+        revision = subprocess.run(
+            ["git", "-C", str(runtime_root), "rev-parse", "HEAD"],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+        changes = subprocess.run(
+            ["git", "-C", str(runtime_root), "status", "--porcelain"],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+    except (OSError, subprocess.CalledProcessError) as error:
+        return {
+            "status": "unverifiable",
+            "path": str(runtime_root),
+            "error": str(error),
+            **result,
+        }
+    if not revision.startswith(runtime["revision"]):
+        status = "revision_mismatch"
+    elif changes:
+        status = "dirty_checkout"
+    else:
+        status = "verified"
+    return {
+        "status": status,
+        "path": str(runtime_root),
+        "actual_revision": revision,
+        "working_tree": "dirty" if changes else "clean",
+        **result,
+    }
+
+
 def parse_opensim_archive(path: Path, source_id: str) -> dict[str, Any]:
     """Parse an authenticated OpenSim archive without losing member provenance."""
     try:
@@ -598,6 +647,7 @@ def gate_report(
     upper_archive: Path | None,
     source_lock: dict[str, Any],
     runtime_contract: dict[str, Any],
+    runtime_root: Path | None = None,
 ) -> dict[str, Any]:
     """Report every Human v1 dependency without pretending open gates passed."""
     bodyparts = source_lock["sources"]["bodyparts3d_4"]
@@ -668,6 +718,7 @@ def gate_report(
             "mobl_arms_upper_extremity": upper_gate,
         },
         "runtime_compatibility": runtime_compatibility,
+        "runtime_checkout": runtime_checkout_gate(runtime_root, runtime_contract),
         "gates": [
             {
                 "id": "source_faithful_import",
