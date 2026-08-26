@@ -14,6 +14,7 @@ from .model import (
     bodyparts_lower_body_attachment_worklist,
     bodyparts_nerve_annotation,
     bodyparts_visual_preview,
+    bodyparts_visual_layer_previews,
     build_rajagopal_distal_pin_preview,
     build_manifest,
     gate_report,
@@ -317,6 +318,14 @@ def attachment_worklist(arguments: argparse.Namespace) -> int:
     print(f"wrote {output}")
     return 0
 
+def visual_layers(arguments: argparse.Namespace) -> int:
+    sources = arguments.sources.resolve()
+    anatomy = parse_bodyparts3d(sources, REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
+    output = arguments.output.resolve()
+    write_json(output / "visual-layers.manifest.json", bodyparts_visual_layer_previews(sources, output, anatomy))
+    print(f"wrote {output / 'visual-layers.manifest.json'}")
+    return 0
+
 
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description="Build provenance-locked NumiLab Human v1 import artifacts")
@@ -421,6 +430,10 @@ def parser() -> argparse.ArgumentParser:
     attachment_parser.add_argument("--sources", type=Path, required=True)
     attachment_parser.add_argument("--output", type=Path, required=True)
     attachment_parser.set_defaults(handler=attachment_worklist)
+    layers_parser = commands.add_parser("visual-layers", help="export exact source-static previews for the five requested anatomy layers")
+    layers_parser.add_argument("--sources", type=Path, required=True)
+    layers_parser.add_argument("--output", type=Path, required=True)
+    layers_parser.set_defaults(handler=visual_layers)
     return result
 
 

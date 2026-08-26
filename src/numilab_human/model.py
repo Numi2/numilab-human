@@ -1164,6 +1164,7 @@ def bodyparts_lower_body_attachment_worklist(
         "pelvis": "pelvis", "femur": "femur", "tibia": "tibia", "fibula": "fibula",
         "patella": "patella", "talus": "talus", "calcaneus": "calcn", "toe": "toes",
     }
+
     candidates: list[dict[str, Any]] = []
     layer_counts: Counter[str] = Counter()
     for component in anatomy.get("components", []):
@@ -1197,6 +1198,24 @@ def bodyparts_lower_body_attachment_worklist(
         },
         "evidence_boundary": "String/name correspondence proposes review only; this file contains no transform, skinning weight, collider, or physical material parameter.",
     }
+
+
+def bodyparts_visual_layer_previews(sources: Path, output: Path, anatomy: dict[str, Any]) -> dict[str, Any]:
+    """Export one exact, reviewable source mesh for each requested anatomy layer."""
+    requested = ("skin_surface", "bone", "muscle_surface", "vessel_surface", "nerve_surface")
+    selected: dict[str, str] = {"skin_surface": "FJ2810"}
+    for layer in requested[1:]:
+        for component in anatomy.get("components", []):
+            if component.get("anatomy_class") == layer and component.get("element_meshes"):
+                selected[layer] = component["element_meshes"][0]["element_id"]
+                break
+    missing = [layer for layer in requested if layer not in selected]
+    if missing:
+        raise ImportError("BodyParts3D is missing preview meshes for: " + ", ".join(missing))
+    layers = {layer: bodyparts_visual_preview(sources, output / layer, member_id=member)
+              for layer, member in selected.items()}
+    return {"schema": "numi.human.bodyparts-visual-layers.v1", "layers": layers,
+            "evidence_boundary": "Exact source-static mesh previews only; no registration, skinning, collision, contact, or tissue mechanics."}
 
 
 def _opensim_joint_frame_body(

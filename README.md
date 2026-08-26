@@ -55,6 +55,9 @@ numi human walking-contract --sources Sources --output Build/rajagopal-walking-c
 # Produce review-only lower-body anatomy attachment and foot-collider work items.
 numi human attachment-worklist --sources Sources --output Build/lower-body-attachments.json
 
+# Export exact source-static skin, bone, muscle, vessel, and nerve layer previews.
+numi human visual-layers --sources Sources --output Build/bodyparts3d-layers
+
 # Produce one source-derived distal-leg PinJoint URDF for native compiler
 # validation. It intentionally has no collision geometry or muscle lowering.
 numi human preview --sources Sources --side right --output Build/right-pin-preview
