@@ -2,7 +2,7 @@
   "schema": "numi.human.runtime-contract.v1",
   "runtime": {
     "repository": "MetalRobo",
-    "revision": "d768527",
+    "revision": "a1b81d168b79b117c1b81d145d0838a571aeeb4e",
     "articulated_joint_primitives": [
       "fixed",
       "revolute",
@@ -15,7 +15,12 @@
       "src/metal/LocomotionTask.metal",
       "apps/robot_description_cooker_probe.cpp",
       "include/metalrobo/OpenSimFunction.hpp",
-      "src/core/OpenSimFunction.cpp"
+      "src/core/OpenSimFunction.cpp",
+      "include/metalrobo/OpenSimSpatialTransform.hpp",
+      "src/core/OpenSimSpatialTransform.cpp",
+      "include/metalrobo/opensim_spatial_transform_gpu.h",
+      "src/metal/OpenSimSpatialTransform.metal",
+      "apps/opensim_spatial_transform_gpu_probe.mm"
     ]
   },
   "opensim_joint_lowering": {
@@ -33,7 +38,8 @@
     },
     "CustomJoint": {
       "status": "requires_core_extension",
-      "requirement": "Evaluate OpenSim TransformAxis functions and their multi-coordinate kinematics in the articulated solver."
+      "kinematic_program": "compiled source-order FunctionBased pose, H, and Hdot has a bounded Metal evaluator",
+      "requirement": "Admit the compiled FunctionBased program into the articulated solver, including generalized-force projection and bias acceleration."
     },
     "UniversalJoint": {
       "status": "requires_core_extension",

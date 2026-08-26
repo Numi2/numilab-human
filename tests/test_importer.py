@@ -234,15 +234,22 @@ class ImporterTests(unittest.TestCase):
                 },
             ],
         }
-        result = evaluate_opensim_custom_joint(joint)
+        result = evaluate_opensim_custom_joint(joint, coordinate_velocities={"q": -0.5})
         self.assertEqual(result["coordinate_values"], {"q": 0.25})
+        self.assertEqual(result["coordinate_velocities"], {"q": -0.5})
         self.assertEqual(result["axes"][0]["displacement"], 1.5)
         self.assertEqual(result["axes"][0]["derivative"], 2.0)
         self.assertEqual(result["axes"][1]["displacement"], 1.6875)
         self.assertEqual(result["axes"][1]["derivative"], 3.5)
+        self.assertEqual(result["axes"][1]["second_derivative"], 6.0)
         self.assertEqual(result["axes"][2]["displacement"], 0.5)
         self.assertEqual(result["axes"][2]["derivative"], 2.0)
         self.assertEqual(result["axes"][3]["spatial_kind"], "translation")
+        self.assertEqual(
+            result["spatial_transform"]["translation_parent_frame_m"], [4.0, 0.0, 0.0]
+        )
+        self.assertEqual(len(result["spatial_transform"]["motion_subspace_parent_frame"]), 1)
+        self.assertEqual(len(result["spatial_transform"]["motion_subspace_dot_parent_frame"]), 1)
 
     def test_custom_joint_ir_carries_source_tables_and_default_test_vector(self) -> None:
         joint = {
@@ -253,7 +260,14 @@ class ImporterTests(unittest.TestCase):
                 {
                     "id": f"axis_{index}",
                     "coordinates": "q" if index == 0 else "",
-                    "axis": [1.0, 0.0, 0.0],
+                    "axis": [
+                        [1.0, 0.0, 0.0],
+                        [0.0, 1.0, 0.0],
+                        [0.0, 0.0, 1.0],
+                        [1.0, 0.0, 0.0],
+                        [0.0, 1.0, 0.0],
+                        [0.0, 0.0, 1.0],
+                    ][index],
                     "function_kind": "LinearFunction" if index == 0 else "Constant",
                     "function_parameters": (
                         {"coefficients": [1.0, 0.0]} if index == 0 else {"value": 0.0}
@@ -272,8 +286,10 @@ class ImporterTests(unittest.TestCase):
             }
         )
         self.assertEqual(result["joint_count"], 1)
+        self.assertEqual(result["schema"], "numi.human.opensim-custom-joint-ir.v2")
         self.assertEqual(result["function_kinds"], {"Constant": 5, "LinearFunction": 1})
         self.assertEqual(result["joints"][0]["default_value_test_vector"]["axes"][0]["displacement"], 0.0)
+        self.assertEqual(len(result["joints"][0]["unit_velocity_test_vectors"]), 1)
 
     def test_opensim_archive_parser_preserves_selected_member_and_archive_hash(self) -> None:
         source = """<?xml version=\"1.0\"?>

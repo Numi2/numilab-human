@@ -1,5 +1,37 @@
 # Bounded execution evidence
 
+## OpenSim FunctionBased spatial-transform program — 2026-08-26
+
+This is source-derived kinematic evidence for the pinned Rajagopal
+`walker_knee_r` `CustomJoint`; it is not articulated dynamics, contact,
+muscle actuation, or full-human evidence.
+
+| Item | Exact value |
+| --- | --- |
+| Rajagopal source SHA-256 | `8f30d0b64750b87eb7f705907862590535212b4afd7e919faa3fd7d1683d22ec` |
+| Numi runtime revision | `a1b81d168b79b117c1b81d145d0838a571aeeb4e` |
+| Isolated Mini checkout | `/Users/n/MetalRobo-numilab-spatial-a1b81d1` |
+| Device | Apple M4 Pro on `macmini` |
+| Source test state | `knee_angle_r = 0.43 rad`, `qdot = -0.71 rad/s` |
+| GPU-probe SHA-256 | `980ec46741b6251b51c53f958e19039f0baaaa25b09fbc4f6fe5f74d88f43d9d` |
+| Metal-library SHA-256 | `a0c8968b61d9f5183e8dc99e631f63b8b14f707a2549e263dec0868768f5e081` |
+
+The isolated Mini checkout was configured with AppleClang `21.0.0.21000101`.
+`metalrobo_opensim_function_probe` and
+`metalrobo_opensim_spatial_transform_probe` both passed. The GPU probe then
+ran twice and each invocation reported:
+
+```text
+opensim_spatial_transform_gpu=ok device=Apple M4 Pro \
+  tx=0.000271367 h_angular_x=0.993748 hdot_linear_x=-0.000971865
+```
+
+The probe packs the source-order six-axis FunctionBased program, evaluates the
+pose, `H`, and `Hdot` on device, compares every returned component with the
+compiled CPU program within FP32 tolerance, and compares the two GPU payloads
+byte-for-byte. It does not feed the program into ABA, project forces, or step
+an articulated body; the CustomJoint skeleton gate remains blocked.
+
 ## Rajagopal distal-leg PinJoint preview — 2026-08-26
 
 This is evidence for a deliberately reduced source-derived preview. It is not

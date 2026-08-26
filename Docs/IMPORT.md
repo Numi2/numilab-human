@@ -108,6 +108,7 @@ numi human kinematics \
 
 The resulting IR includes all 10 Rajagopal `CustomJoint` SpatialTransforms,
 their `Constant`, `LinearFunction`, `PolynomialFunction`, and `SimmSpline`
-tables, plus displacement/first-derivative default-state test vectors. It is a
-host-side source-semantic artifact for a future device function-based joint
-lowerer, not a substitute for that lowerer or a physical validation.
+tables, plus source-order pose, motion-subspace `H`, and `Hdot` default and
+unit-velocity test vectors. The pinned core has a matching bounded Metal
+kinematic evaluator, but its articulated solver does not yet consume this IR;
+it is not a substitute for that lowerer or a physical validation.

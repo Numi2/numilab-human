@@ -290,12 +290,21 @@ def _simm_spline_coefficients(
 def evaluate_opensim_axis_function(
     axis: dict[str, Any], coordinate_values: dict[str, float]
 ) -> tuple[float, float]:
-    """Return an OpenSim TransformAxis displacement and first derivative.
+    """Return an OpenSim TransformAxis displacement and first derivative."""
+    value, derivative, _ = _evaluate_opensim_axis_function_with_second_derivative(
+        axis, coordinate_values
+    )
+    return value, derivative
+
+
+def _evaluate_opensim_axis_function_with_second_derivative(
+    axis: dict[str, Any], coordinate_values: dict[str, float]
+) -> tuple[float, float, float]:
+    """Return source displacement plus its first two scalar derivatives.
 
     The supported function set is exactly the one in the pinned Rajagopal
-    source.  The caller still has to compose the six spatial axes in a
-    function-based articulated solver; this is a source-faithful evaluator,
-    not a surrogate joint lowerer.
+    source. The second derivative is retained for the FunctionBased Hdot
+    term; it does not claim that the host evaluator is the articulated solver.
     """
     kind = axis.get("function_kind")
     parameters = axis.get("function_parameters")
@@ -321,37 +330,39 @@ def evaluate_opensim_axis_function(
         argument = 0.0
 
     if kind == "Constant":
-        return _finite_scalar(parameters.get("value"), "OpenSim Constant value"), 0.0
+        return _finite_scalar(parameters.get("value"), "OpenSim Constant value"), 0.0, 0.0
     if kind == "LinearFunction":
         coefficients = _finite_scalars(
             parameters.get("coefficients"), "OpenSim LinearFunction coefficients", 2
         )
         if len(coefficients) != 2:
             raise ImportError("OpenSim LinearFunction must have slope and intercept")
-        return coefficients[0] * argument + coefficients[1], coefficients[0]
+        return coefficients[0] * argument + coefficients[1], coefficients[0], 0.0
     if kind == "PolynomialFunction":
         coefficients = _finite_scalars(
             parameters.get("coefficients"), "OpenSim PolynomialFunction coefficients"
         )
         value = 0.0
         derivative = 0.0
+        second_derivative = 0.0
         for coefficient in coefficients:
+            second_derivative = second_derivative * argument + 2.0 * derivative
             derivative = derivative * argument + value
             value = value * argument + coefficient
-        return value, derivative
+        return value, derivative, second_derivative
     if kind == "SimmSpline":
         abscissae = _finite_scalars(parameters.get("x"), "OpenSim SimmSpline x", 2)
         ordinates = _finite_scalars(parameters.get("y"), "OpenSim SimmSpline y", 2)
         slope, quadratic, cubic = _simm_spline_coefficients(abscissae, ordinates)
         final = len(abscissae) - 1
         if argument < abscissae[0]:
-            return ordinates[0] + (argument - abscissae[0]) * slope[0], slope[0]
+            return ordinates[0] + (argument - abscissae[0]) * slope[0], slope[0], 0.0
         if argument > abscissae[final]:
-            return ordinates[final] + (argument - abscissae[final]) * slope[final], slope[final]
+            return ordinates[final] + (argument - abscissae[final]) * slope[final], slope[final], 0.0
         if abs(argument - abscissae[0]) <= _SIMM_ROUNDOFF:
-            return ordinates[0], slope[0]
+            return ordinates[0], slope[0], 2.0 * quadratic[0]
         if abs(argument - abscissae[final]) <= _SIMM_ROUNDOFF:
-            return ordinates[final], slope[final]
+            return ordinates[final], slope[final], 2.0 * quadratic[final]
         low, high = 0, final
         while True:
             index = (low + high) // 2
@@ -365,16 +376,158 @@ def evaluate_opensim_axis_function(
         return (
             ordinates[index] + delta * (slope[index] + delta * (quadratic[index] + delta * cubic[index])),
             slope[index] + delta * (2.0 * quadratic[index] + 3.0 * delta * cubic[index]),
+            2.0 * quadratic[index] + 6.0 * delta * cubic[index],
         )
     raise ImportError(
         f"OpenSim TransformAxis {axis.get('id')} has unsupported function {kind!r}"
     )
 
 
-def evaluate_opensim_custom_joint(
-    joint: dict[str, Any], coordinate_values: dict[str, float] | None = None
+def _normalize_spatial_axis(value: list[float], label: str) -> list[float]:
+    magnitude = math.sqrt(sum(component * component for component in value))
+    if not math.isfinite(magnitude) or magnitude <= 1.0e-10:
+        raise ImportError(f"{label} must have a finite non-zero axis")
+    return [component / magnitude for component in value]
+
+
+def _cross3(left: list[float], right: list[float]) -> list[float]:
+    return [
+        left[1] * right[2] - left[2] * right[1],
+        left[2] * right[0] - left[0] * right[2],
+        left[0] * right[1] - left[1] * right[0],
+    ]
+
+
+def _add3(left: list[float], right: list[float]) -> list[float]:
+    return [left[index] + right[index] for index in range(3)]
+
+
+def _scaled3(value: list[float], scalar: float) -> list[float]:
+    return [component * scalar for component in value]
+
+
+def _matrix_multiply3(left: list[list[float]], right: list[list[float]]) -> list[list[float]]:
+    return [
+        [sum(left[row][cursor] * right[cursor][column] for cursor in range(3)) for column in range(3)]
+        for row in range(3)
+    ]
+
+
+def _matrix_apply3(matrix: list[list[float]], value: list[float]) -> list[float]:
+    return [sum(matrix[row][column] * value[column] for column in range(3)) for row in range(3)]
+
+
+def _axis_angle_matrix3(axis: list[float], angle: float) -> list[list[float]]:
+    cosine = math.cos(angle)
+    sine = math.sin(angle)
+    remainder = 1.0 - cosine
+    x, y, z = axis
+    return [
+        [cosine + x * x * remainder, x * y * remainder - z * sine, x * z * remainder + y * sine],
+        [y * x * remainder + z * sine, cosine + y * y * remainder, y * z * remainder - x * sine],
+        [z * x * remainder - y * sine, z * y * remainder + x * sine, cosine + z * z * remainder],
+    ]
+
+
+def _evaluate_opensim_spatial_transform(
+    axes: list[dict[str, Any]], coordinate_values: dict[str, float], coordinate_velocities: dict[str, float]
 ) -> dict[str, Any]:
-    """Evaluate source transform axes without pretending to lower the joint."""
+    """Evaluate Simbody FunctionBased pose, H, and Hdot in source axis order."""
+    normalized_axes = [
+        _normalize_spatial_axis(axis["axis"], f"OpenSim TransformAxis {axis.get('id')} axis")
+        for axis in axes
+    ]
+    for first, second in ((0, 1), (0, 2), (1, 2), (3, 4), (3, 5), (4, 5)):
+        cross = _cross3(normalized_axes[first], normalized_axes[second])
+        if sum(component * component for component in cross) <= 1.0e-10:
+            raise ImportError("OpenSim FunctionBased SpatialTransform has colinear source axes")
+
+    values: list[tuple[float, float, float]] = [
+        _evaluate_opensim_axis_function_with_second_derivative(axis, coordinate_values)
+        for axis in axes
+    ]
+    rotation0 = _axis_angle_matrix3(normalized_axes[0], values[0][0])
+    rotation01 = _matrix_multiply3(
+        rotation0, _axis_angle_matrix3(normalized_axes[1], values[1][0])
+    )
+    rotation = _matrix_multiply3(
+        rotation01, _axis_angle_matrix3(normalized_axes[2], values[2][0])
+    )
+    translation = [0.0, 0.0, 0.0]
+    for index in range(3, 6):
+        translation = _add3(translation, _scaled3(normalized_axes[index], values[index][0]))
+
+    angular_axes = [
+        normalized_axes[0],
+        _matrix_apply3(rotation0, normalized_axes[1]),
+        _matrix_apply3(rotation01, normalized_axes[2]),
+    ]
+    def velocity_for(index: int) -> float:
+        coordinate = axes[index].get("coordinates")
+        if not isinstance(coordinate, str) or not coordinate.strip():
+            return 0.0
+        return _finite_scalar(
+            coordinate_velocities[coordinate.strip()], f"OpenSim coordinate velocity {coordinate.strip()}"
+        )
+
+    theta_dot0 = values[0][1] * velocity_for(0)
+    theta_dot1 = values[1][1] * velocity_for(1)
+    angular_axis_dots = [
+        [0.0, 0.0, 0.0],
+        _cross3(_scaled3(angular_axes[0], theta_dot0), angular_axes[1]),
+        _cross3(
+            _add3(_scaled3(angular_axes[0], theta_dot0), _scaled3(angular_axes[1], theta_dot1)),
+            angular_axes[2],
+        ),
+    ]
+    motion = {
+        coordinate: {"coordinate": coordinate, "angular": [0.0, 0.0, 0.0], "linear": [0.0, 0.0, 0.0]}
+        for coordinate in coordinate_values
+    }
+    motion_dot = {
+        coordinate: {"coordinate": coordinate, "angular": [0.0, 0.0, 0.0], "linear": [0.0, 0.0, 0.0]}
+        for coordinate in coordinate_values
+    }
+    for index, axis in enumerate(axes):
+        coordinate = axis.get("coordinates")
+        coordinate = coordinate.strip() if isinstance(coordinate, str) else ""
+        if not coordinate:
+            continue
+        derivative = values[index][1]
+        derivative_dot = values[index][2] * velocity_for(index)
+        if index < 3:
+            motion[coordinate]["angular"] = _add3(
+                motion[coordinate]["angular"], _scaled3(angular_axes[index], derivative)
+            )
+            motion_dot[coordinate]["angular"] = _add3(
+                motion_dot[coordinate]["angular"],
+                _add3(
+                    _scaled3(angular_axis_dots[index], derivative),
+                    _scaled3(angular_axes[index], derivative_dot),
+                ),
+            )
+        else:
+            motion[coordinate]["linear"] = _add3(
+                motion[coordinate]["linear"], _scaled3(normalized_axes[index], derivative)
+            )
+            motion_dot[coordinate]["linear"] = _add3(
+                motion_dot[coordinate]["linear"], _scaled3(normalized_axes[index], derivative_dot)
+            )
+    return {
+        "composition": "R0(axis0)*R1(axis1)*R2(axis2); p=sum(translation_axis_i*function_i)",
+        "rotation_parent_frame_row_major": [component for row in rotation for component in row],
+        "translation_parent_frame_m": translation,
+        "motion_subspace_parent_frame": [motion[coordinate] for coordinate in coordinate_values],
+        "motion_subspace_dot_parent_frame": [motion_dot[coordinate] for coordinate in coordinate_values],
+    }
+
+
+def evaluate_opensim_custom_joint(
+    joint: dict[str, Any],
+    coordinate_values: dict[str, float] | None = None,
+    coordinate_velocities: dict[str, float] | None = None,
+) -> dict[str, Any]:
+    """Evaluate source FunctionBased axes, pose, H, and Hdot without lowering it."""
     if joint.get("kind") != "CustomJoint":
         raise ImportError(f"OpenSim joint {joint.get('id')} is not a CustomJoint")
     supplied = {} if coordinate_values is None else dict(coordinate_values)
@@ -390,6 +543,15 @@ def evaluate_opensim_custom_joint(
         identifier: _finite_scalar(value, f"OpenSim coordinate {identifier}")
         for identifier, value in supplied.items()
     }
+    supplied_velocities = {} if coordinate_velocities is None else dict(coordinate_velocities)
+    velocities = {
+        coordinate["id"]: _finite_scalar(
+            supplied_velocities.get(coordinate["id"], 0.0),
+            f"OpenSim coordinate velocity {coordinate['id']}",
+        )
+        for coordinate in joint.get("coordinates", [])
+        if isinstance(coordinate.get("id"), str)
+    }
     axes = joint.get("motion_axes")
     if not isinstance(axes, list) or len(axes) != 6:
         raise ImportError(
@@ -397,7 +559,9 @@ def evaluate_opensim_custom_joint(
         )
     evaluated = []
     for index, axis in enumerate(axes):
-        displacement, derivative = evaluate_opensim_axis_function(axis, values)
+        displacement, derivative, second_derivative = (
+            _evaluate_opensim_axis_function_with_second_derivative(axis, values)
+        )
         direction = _vector3(axis.get("axis"), f"OpenSim TransformAxis {axis.get('id')} axis")
         evaluated.append(
             {
@@ -408,17 +572,20 @@ def evaluate_opensim_custom_joint(
                 "function_kind": axis.get("function_kind"),
                 "displacement": displacement,
                 "derivative": derivative,
+                "second_derivative": second_derivative,
             }
         )
     return {
         "source_joint": joint.get("id"),
         "coordinate_values": values,
+        "coordinate_velocities": velocities,
         "axes": evaluated,
+        "spatial_transform": _evaluate_opensim_spatial_transform(axes, values, velocities),
     }
 
 
 def rajagopal_custom_joint_ir(model: dict[str, Any]) -> dict[str, Any]:
-    """Emit exact CustomJoint function tables and default-value test vectors."""
+    """Emit source FunctionBased tables plus pose/H/Hdot test vectors."""
     joints = [joint for joint in model.get("joints", []) if joint.get("kind") == "CustomJoint"]
     compiled = []
     for joint in joints:
@@ -438,10 +605,16 @@ def rajagopal_custom_joint_ir(model: dict[str, Any]) -> dict[str, Any]:
                     for axis in joint["motion_axes"]
                 ],
                 "default_value_test_vector": default,
+                "unit_velocity_test_vectors": [
+                    evaluate_opensim_custom_joint(
+                        joint, coordinate_velocities={coordinate["id"]: 1.0}
+                    )
+                    for coordinate in joint["coordinates"]
+                ],
             }
         )
     return {
-        "schema": "numi.human.opensim-custom-joint-ir.v1",
+        "schema": "numi.human.opensim-custom-joint-ir.v2",
         "source": {
             "id": model.get("source_id"),
             "file": model.get("source_file"),
@@ -460,11 +633,12 @@ def rajagopal_custom_joint_ir(model: dict[str, Any]) -> dict[str, Any]:
         ),
         "runtime_requirement": (
             "Function-based articulated joints with source-order SpatialTransform composition, "
-            "analytic first derivatives, and per-coordinate generalized-force projection."
+            "analytic H/Hdot, and per-coordinate generalized-force projection."
         ),
         "evidence_boundary": (
-            "Host-side source semantics and default test vectors only. This IR is not a Numi "
-            "device lowerer, a dynamics proof, or a replacement for the source OpenSim model."
+            "Source semantics and compiler test vectors only. The pinned core revision has a "
+            "matching bounded Metal kinematic evaluator, but the articulated solver does not "
+            "yet consume this IR; this is not a dynamics proof or a replacement for OpenSim."
         ),
         "joints": compiled,
     }
