@@ -1400,6 +1400,85 @@ def bodyparts_foot_collider_preflight(
     }
 
 
+def bodyparts_foot_registration_receipt_template(
+    sources: Path, anatomy: dict[str, Any], model: dict[str, Any]
+) -> dict[str, Any]:
+    """Compose one provenance-pinned, reviewer-completed foot hand-off.
+
+    This is intentionally a blank receipt, not a registration or collider
+    manifest.  It joins the source identities and source-local enclosure
+    candidates that a reviewer must inspect before supplying transforms,
+    visual evidence, and calibrated contact values.
+    """
+    preflight = bodyparts_foot_collider_preflight(sources, anatomy, model)
+    canonical_preflight = json.dumps(
+        preflight, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
+    receipts: list[dict[str, Any]] = []
+    for foot in preflight["per_foot"]:
+        meshes = foot["source_meshes"]
+        receipts.append({
+            "opensim_body": foot["opensim_body"],
+            "laterality": foot["laterality"],
+            "anatomical_landmark": foot["anatomical_landmark"],
+            "source_meshes": [
+                {
+                    "source": mesh["source"],
+                    "source_local_proxy_candidate": mesh[
+                        "source_local_proxy_candidate"
+                    ],
+                }
+                for mesh in meshes
+            ],
+            "reviewed_registration": {
+                "status": "requires_reviewer_completion",
+                "axis_and_unit_conversion": {
+                    "status": "required",
+                    "source_units": "BodyParts3D OBJ millimetres",
+                    "target_frame": (
+                        "Rajagopal OpenSim body frame: " + foot["opensim_body"]
+                    ),
+                },
+                "source_to_body_rest_transform": {
+                    "status": "required",
+                    "format": "4x4 rigid affine matrix after reviewed unit conversion",
+                },
+                "multi_angle_visual_review": {
+                    "status": "required",
+                    "minimum_distinct_views": 3,
+                    "required_fields": [
+                        "camera/view identifiers",
+                        "render artifact hashes",
+                        "landmark and proxy residual measurements",
+                        "reviewer identity and date",
+                    ],
+                },
+            },
+            "reviewed_contact": {
+                "status": "requires_reviewer_completion",
+                "required_fields": [
+                    "conservative OpenSim-frame proxy geometry",
+                    "ground and self-collision exclusions",
+                    "friction, compliance, and restitution calibration receipt",
+                ],
+            },
+            "admission": "blocked_by_reviewer_completed_registration_and_contact_receipts",
+        })
+    return {
+        "schema": "numi.human.bodyparts-foot-registration-receipt-template.v1",
+        "source": preflight["source"],
+        "preflight_sha256": hashlib.sha256(canonical_preflight).hexdigest(),
+        "walking_contact_bodies": preflight["walking_contact_bodies"],
+        "receipts": receipts,
+        "status": "not_a_registration_or_collider_manifest",
+        "evidence_boundary": (
+            "This template carries exact source mesh identities and local enclosure "
+            "candidates only. It contains no reviewed transform, visual evidence, "
+            "contact parameter, collider binding, task admission, or walking claim."
+        ),
+    }
+
+
 def bodyparts_visual_layer_previews(sources: Path, output: Path, anatomy: dict[str, Any]) -> dict[str, Any]:
     """Export one exact, reviewable source mesh for each requested anatomy layer."""
     requested = ("skin_surface", "bone", "muscle_surface", "vessel_surface", "nerve_surface")

@@ -10,6 +10,7 @@ from subprocess import run
 from numilab_human.model import (
     ImportError as HumanImportError,
     bodyparts_foot_collider_preflight,
+    bodyparts_foot_registration_receipt_template,
     bodyparts_geometry_preflight,
     bodyparts_foot_registration_template,
     bodyparts_lower_body_attachment_worklist,
@@ -91,6 +92,48 @@ class ImporterTests(unittest.TestCase):
         self.assertNotIn("transform", result["registrations"][0]["registration"])
         with self.assertRaises(HumanImportError):
             bodyparts_foot_registration_template(anatomy, {"bodies": []})
+
+    def test_foot_registration_receipt_template_is_pinned_but_not_admitted(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            sources = Path(temporary) / "Sources"
+            sources.mkdir()
+            archive = sources / "isa_BP3D_4.0_obj_99.zip"
+            with zipfile.ZipFile(archive, "w") as bundle:
+                bundle.writestr(
+                    "isa_BP3D_4.0_obj_99/FJ1.obj",
+                    "v 0 0 0\nv 1 0 0\nv 0 1 0\nf 1 2 3\n",
+                )
+            anatomy = {
+                "source_id": "fixture-bodyparts", "version": "4.0",
+                "archives": [{"hierarchy": "is_a", "file": archive.name, "sha256": "a" * 64}],
+                "components": [{
+                    "concept_id": "FMA1", "name": "right calcaneus",
+                    "anatomy_class": "bone", "hierarchy": "is_a",
+                    "element_meshes": [{"element_id": "FJ1", "mesh_present": True}],
+                }],
+            }
+            model = {
+                "source_id": "fixture-rajagopal", "source_file": "fixture.osim",
+                "source_sha256": "b" * 64,
+                "bodies": [{"id": body_id} for body_id in (
+                    "calcn_r", "toes_r", "calcn_l", "toes_l"
+                )],
+            }
+            receipt = bodyparts_foot_registration_receipt_template(sources, anatomy, model)
+        self.assertEqual(
+            receipt["status"], "not_a_registration_or_collider_manifest"
+        )
+        self.assertEqual(len(receipt["preflight_sha256"]), 64)
+        right_calcaneus = receipt["receipts"][0]
+        self.assertEqual(right_calcaneus["opensim_body"], "calcn_r")
+        self.assertEqual(right_calcaneus["source_meshes"][0]["source"]["member_id"], "FJ1")
+        self.assertEqual(
+            right_calcaneus["reviewed_registration"]["multi_angle_visual_review"]
+            ["minimum_distinct_views"], 3
+        )
+        self.assertNotIn(
+            "transform", right_calcaneus["reviewed_registration"]
+        )
 
     def test_lower_body_attachment_worklist_never_promotes_name_matches_to_bindings(self) -> None:
         anatomy = {"source_id": "fixture", "version": "4.0", "archives": {}, "components": [

@@ -100,3 +100,18 @@ It emits the exact OBJ hashes, source-millimetre bounds, and a conservative
 axis-aligned enclosure for every laterality-qualified foot mesh. The boxes do
 not have an OpenSim transform, contact pair, or material; they become eligible
 for conversion only after the corresponding reviewed registration receipt.
+
+Use the combined receipt template to hand those exact source identities and
+enclosures to the reviewer without turning them into a collider:
+
+```sh
+numi human foot-registration-receipt-template \
+  --sources Sources \
+  --output Build/foot-registration-receipt-template.json
+```
+
+Each of the four receipts requires a reviewed unit/axis conversion, 4×4
+rest-frame transform, at least three visual-review views with artifact hashes
+and residuals, a conservative OpenSim-frame proxy, pair exclusions, and a
+contact-calibration receipt. The command itself supplies none of those values
+and therefore cannot admit a walking task.

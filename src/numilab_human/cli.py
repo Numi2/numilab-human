@@ -11,6 +11,7 @@ from pathlib import Path
 from .model import (
     ImportError,
     bodyparts_foot_collider_preflight,
+    bodyparts_foot_registration_receipt_template,
     bodyparts_geometry_preflight,
     bodyparts_foot_registration_template,
     bodyparts_lower_body_attachment_worklist,
@@ -341,6 +342,16 @@ def foot_collider_preflight(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def foot_registration_receipt_template(arguments: argparse.Namespace) -> int:
+    sources = arguments.sources.resolve()
+    anatomy = parse_bodyparts3d(sources, REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
+    lower = parse_opensim(sources / "RajagopalLaiUhlrich2023.osim", "rajagopal_lai_uhlrich_2023")
+    output = arguments.output.resolve()
+    write_json(output, bodyparts_foot_registration_receipt_template(sources, anatomy, lower))
+    print(f"wrote {output}")
+    return 0
+
+
 def visual_layers(arguments: argparse.Namespace) -> int:
     sources = arguments.sources.resolve()
     anatomy = parse_bodyparts3d(sources, REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
@@ -467,6 +478,13 @@ def parser() -> argparse.ArgumentParser:
     foot_collider_parser.add_argument("--sources", type=Path, required=True)
     foot_collider_parser.add_argument("--output", type=Path, required=True)
     foot_collider_parser.set_defaults(handler=foot_collider_preflight)
+    foot_receipt_parser = commands.add_parser(
+        "foot-registration-receipt-template",
+        help="compose a provenance-pinned reviewer receipt template for foot registration",
+    )
+    foot_receipt_parser.add_argument("--sources", type=Path, required=True)
+    foot_receipt_parser.add_argument("--output", type=Path, required=True)
+    foot_receipt_parser.set_defaults(handler=foot_registration_receipt_template)
     layers_parser = commands.add_parser("visual-layers", help="export exact source-static previews for the five requested anatomy layers")
     layers_parser.add_argument("--sources", type=Path, required=True)
     layers_parser.add_argument("--output", type=Path, required=True)
