@@ -1,6 +1,17 @@
 {
   "schema": "numi.human.anatomy-classification.v1",
   "description": "FMA anchors used only to classify BodyParts3D representation candidates. Their two source hierarchies remain unmodified in the generated manifest.",
+  "classification_priority": [
+    "bone",
+    "muscle_surface",
+    "vessel_surface",
+    "nerve_surface",
+    "skin_surface",
+    "ligament_surface",
+    "tendon_surface",
+    "cartilage_surface",
+    "organ_surface"
+  ],
   "classes": {
     "bone": ["FMA5018", "FMA23881"],
     "muscle_surface": ["FMA5022"],

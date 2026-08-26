@@ -17,8 +17,10 @@ Numi RobotPack          Numi actuator        Numi visual/deformable candidates
 ## Source-of-truth rules
 
 - **Geometry:** BodyParts3D owns anatomical names, FMA identifiers, OBJ paths,
-  and both parent/child hierarchies. It never supplies mass, inertia, joint
-  centres, activation, or material parameters.
+  and both parent/child hierarchies. Its `BP…` representation identifiers and
+  `FJ…` OBJ-element identifiers are distinct, so the importer retains their
+  explicit mapping rather than deriving filenames from labels. It never
+  supplies mass, inertia, joint centres, activation, or material parameters.
 - **Lower-body mechanics:** RajagopalLaiUhlrich2023 owns its own segment
   frames, joints, masses, inertias, muscle geometry paths, and Hill-type
   muscle/tendon values. No geometry-derived inertia may replace it.

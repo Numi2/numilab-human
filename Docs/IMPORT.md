@@ -37,3 +37,15 @@ The command emits:
 Both output directories are ignored because they are derived from source data.
 Re-run the command from clean third-party archives when a new import revision
 is required.
+
+## 4. Audit every gate
+
+```sh
+numi human audit --sources Sources --output Build/human-v1-gates.json
+```
+
+The gate report is deliberately strict. It distinguishes a verified source
+artifact from an authenticated source not yet supplied, a source manifest from
+an executable Numi `RobotPack`, and a software integration from material or
+physical validation. It never promotes an open gate based on a naming match or
+a successful JSON build.

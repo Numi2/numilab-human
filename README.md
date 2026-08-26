@@ -33,6 +33,9 @@ numi human build \
   --upper-archive /path/to/MobL_ARMS_OpenSim3_bimanual_model.zip \
   --accept-upper-noncommercial-terms \
   --output Build/human-v1
+
+# Write an explicit report of source, runtime, material, and evidence gates.
+numi human audit --sources Sources --output Build/human-v1-gates.json
 ```
 
 ## What the first manifest means

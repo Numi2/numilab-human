@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import shutil
 import sys
 import urllib.request
 from pathlib import Path
 
-from .model import ImportError, build_manifest, read_json, report_for, sha256, write_json
+from .model import ImportError, build_manifest, gate_report, read_json, report_for, sha256, write_json
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
@@ -62,6 +63,12 @@ def fetch(arguments: argparse.Namespace) -> int:
         if not target.is_file():
             print(f"fetching {filename}")
             _download(bodyparts["base_url"] + filename, target)
+        expected_bytes = metadata.get("bytes")
+        if expected_bytes is not None and target.stat().st_size != expected_bytes:
+            raise ImportError(
+                f"byte-size mismatch for {target}; expected {expected_bytes}, "
+                f"got {target.stat().st_size}"
+            )
         expected = metadata["sha256"]
         actual = sha256(target)
         if expected and actual != expected:
@@ -112,6 +119,20 @@ def build(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def audit(arguments: argparse.Namespace) -> int:
+    report = gate_report(
+        sources=arguments.sources.resolve(),
+        upper_archive=(arguments.upper_archive.resolve() if arguments.upper_archive else None),
+        source_lock=read_json(REPOSITORY_ROOT / "sources.lock.json"),
+    )
+    if arguments.output:
+        write_json(arguments.output.resolve(), report)
+        print(f"wrote {arguments.output.resolve()}")
+    else:
+        print(json.dumps(report, indent=2, sort_keys=True))
+    return 0
+
+
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description="Build provenance-locked NumiLab Human v1 import artifacts")
     commands = result.add_subparsers(dest="command", required=True)
@@ -124,6 +145,11 @@ def parser() -> argparse.ArgumentParser:
     build_parser.add_argument("--output", type=Path, required=True, help="local output directory")
     build_parser.add_argument("--accept-upper-noncommercial-terms", action="store_true")
     build_parser.set_defaults(handler=build)
+    audit_parser = commands.add_parser("audit", help="report every source, runtime, and physics gate")
+    audit_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
+    audit_parser.add_argument("--upper-archive", type=Path, help="original SimTK MoBL-ARMS bimanual ZIP")
+    audit_parser.add_argument("--output", type=Path, help="optional JSON report path")
+    audit_parser.set_defaults(handler=audit)
     return result
 
 

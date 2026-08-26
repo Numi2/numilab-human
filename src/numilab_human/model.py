@@ -82,11 +82,107 @@ _MUSCLE_PROPERTIES = (
     "activation_time_constant",
     "deactivation_time_constant",
     "fiber_damping",
+    "tendon_strain_at_one_norm_force",
+    "passive_fiber_strain_at_one_norm_force",
+    "active_force_width_scale",
+    "ignore_tendon_compliance",
     "default_activation",
     "default_fiber_length",
     "min_control",
     "max_control",
 )
+
+
+def _joint_frames(joint: ET.Element) -> list[dict[str, Any]]:
+    frames = next((item for item in joint if _local_name(item) == "frames"), None)
+    if frames is None:
+        return []
+    result: list[dict[str, Any]] = []
+    for frame in frames:
+        identifier = frame.get("name")
+        if not identifier:
+            continue
+        result.append(
+            {
+                "id": identifier,
+                "kind": _local_name(frame),
+                "parent_frame": _text(frame, "socket_parent") or _text(frame, "socket_parent_frame"),
+                "translation_m": _number_or_text(_text(frame, "translation")),
+                "orientation_rad": _number_or_text(_text(frame, "orientation")),
+            }
+        )
+    return result
+
+
+def _joint_motion_axes(joint: ET.Element) -> list[dict[str, Any]]:
+    result: list[dict[str, Any]] = []
+    for axis in joint.iter():
+        if _local_name(axis) != "TransformAxis":
+            continue
+        function = next(
+            (
+                item
+                for item in axis
+                if _local_name(item) not in {"coordinates", "axis"}
+            ),
+            None,
+        )
+        function_kind = None
+        if function is not None:
+            if _local_name(function) == "function":
+                function_kind = next(
+                    (_local_name(item) for item in function if isinstance(item.tag, str)),
+                    None,
+                )
+            else:
+                function_kind = _local_name(function)
+        result.append(
+            {
+                "id": axis.get("name"),
+                "coordinates": _text(axis, "coordinates"),
+                "axis": _number_or_text(_text(axis, "axis")),
+                "function_kind": function_kind,
+                # A lowerer must preserve this function's source semantics;
+                # carrying its XML prevents a lossy host-side approximation.
+                "source_xml": ET.tostring(axis, encoding="unicode"),
+            }
+        )
+    return result
+
+
+def _wrap_objects(model: ET.Element) -> list[dict[str, Any]]:
+    result: list[dict[str, Any]] = []
+    for frame in model.iter():
+        wrap_set = next((item for item in frame if _local_name(item) == "WrapObjectSet"), None)
+        if wrap_set is None:
+            continue
+        objects = next((item for item in wrap_set if _local_name(item) == "objects"), None)
+        if objects is None:
+            continue
+        for wrap in objects:
+            identifier = wrap.get("name")
+            if not identifier:
+                continue
+            result.append(
+                {
+                    "id": identifier,
+                    "kind": _local_name(wrap),
+                    "parent_frame": frame.get("name"),
+                    "parameters": _opensim_direct_properties(
+                        wrap,
+                        (
+                            "active",
+                            "translation",
+                            "xyz_body_rotation",
+                            "quadrant",
+                            "radius",
+                            "length",
+                            "dimensions",
+                        ),
+                    ),
+                }
+            )
+    return result
 
 
 def parse_opensim(path: Path, source_id: str) -> dict[str, Any]:
@@ -150,6 +246,8 @@ def parse_opensim(path: Path, source_id: str) -> dict[str, Any]:
                 "parent_frame": _text(joint, "socket_parent_frame") or _text(joint, "parent_body"),
                 "child_frame": _text(joint, "socket_child_frame") or _text(joint, "child_body"),
                 "coordinates": coordinates,
+                "frames": _joint_frames(joint),
+                "motion_axes": _joint_motion_axes(joint),
             }
         )
 
@@ -177,11 +275,19 @@ def parse_opensim(path: Path, source_id: str) -> dict[str, Any]:
                         "location_m": _number_or_text(_text(point, "location")),
                     }
                 )
-        path_wraps = [
-            item.get("name")
-            for item in force.iter()
-            if "PathWrap" in _local_name(item) and item.get("name")
-        ]
+        path_wraps = []
+        for path_wrap in force.iter():
+            if _local_name(path_wrap) != "PathWrap":
+                continue
+            path_wraps.append(
+                {
+                    "id": path_wrap.get("name"),
+                    "kind": _local_name(path_wrap),
+                    "wrap_object": _text(path_wrap, "socket_wrap_object") or _text(path_wrap, "wrap_object"),
+                    "range": _number_or_text(_text(path_wrap, "range")),
+                    "method": _text(path_wrap, "method"),
+                }
+            )
         muscles.append(
             {
                 "id": identifier,
@@ -202,6 +308,7 @@ def parse_opensim(path: Path, source_id: str) -> dict[str, Any]:
         "bodies": bodies,
         "joints": joints,
         "muscles": muscles,
+        "wrap_objects": _wrap_objects(model),
     }
 
 
@@ -237,6 +344,27 @@ def _edges(path: Path, hierarchy: str) -> list[dict[str, str]]:
         }
         for row in _tab_rows(path, 4)
     ]
+
+
+def _element_meshes(path: Path, hierarchy: str) -> dict[str, list[dict[str, str]]]:
+    """Keep BodyParts3D's concept-to-element mapping alongside its FMA trees.
+
+    The hierarchy tables name representations with ``BP...`` identifiers, while
+    the OBJ archives contain the element files named ``FJ...``.  Treating the
+    representation identifier as an OBJ filename loses real geometry for most
+    components, so both identifiers must remain in the intermediate artifact.
+    """
+    output: dict[str, list[dict[str, str]]] = defaultdict(list)
+    for row in _tab_rows(path, 3):
+        output[row[0]].append(
+            {
+                "concept_id": row[0],
+                "name": row[1],
+                "element_id": row[2],
+                "hierarchy": hierarchy,
+            }
+        )
+    return output
 
 
 def _descendants(edges: list[dict[str, str]], roots: set[str]) -> set[str]:
@@ -275,6 +403,8 @@ def parse_bodyparts3d(sources: Path, classification_path: Path) -> dict[str, Any
         "partof_labels": sources / "partof_parts_list_e.txt",
         "isa_edges": sources / "isa_inclusion_relation_list.txt",
         "partof_edges": sources / "partof_inclusion_relation_list.txt",
+        "isa_elements": sources / "isa_element_parts.txt",
+        "partof_elements": sources / "partof_element_parts.txt",
         "isa_archive": sources / "isa_BP3D_4.0_obj_99.zip",
         "partof_archive": sources / "partof_BP3D_4.0_obj_99.zip",
     }
@@ -286,6 +416,8 @@ def parse_bodyparts3d(sources: Path, classification_path: Path) -> dict[str, Any
     partof_labels = _labels(files["partof_labels"], "part_of")
     isa_edges = _edges(files["isa_edges"], "is_a")
     partof_edges = _edges(files["partof_edges"], "part_of")
+    isa_element_meshes = _element_meshes(files["isa_elements"], "is_a")
+    partof_element_meshes = _element_meshes(files["partof_elements"], "part_of")
     isa_members, isa_hash = _zip_members(files["isa_archive"])
     partof_members, partof_hash = _zip_members(files["partof_archive"])
 
@@ -293,10 +425,22 @@ def parse_bodyparts3d(sources: Path, classification_path: Path) -> dict[str, Any
     isa_by_class = {key: _descendants(isa_edges, set(values)) for key, values in classes.items()}
     partof_by_class = {key: _descendants(partof_edges, set(values)) for key, values in classes.items()}
     physical_roles = classification["physical_roles"]
-    component_priority = list(classes)
+    component_priority = classification.get("classification_priority", list(classes))
+    if set(component_priority) != set(classes):
+        raise ImportError("anatomy classification priority must name every anatomy class exactly once")
     components: list[dict[str, Any]] = []
     for label in [*isa_labels, *partof_labels]:
         members = isa_members if label.hierarchy == "is_a" else partof_members
+        element_lookup = (
+            isa_element_meshes if label.hierarchy == "is_a" else partof_element_meshes
+        )
+        element_meshes = [
+            {
+                **element,
+                "mesh_present": element["element_id"] in members,
+            }
+            for element in element_lookup.get(label.concept_id, [])
+        ]
         classes_for_tree = isa_by_class if label.hierarchy == "is_a" else partof_by_class
         anatomy_class = next(
             (name for name in component_priority if label.concept_id in classes_for_tree[name]),
@@ -308,7 +452,11 @@ def parse_bodyparts3d(sources: Path, classification_path: Path) -> dict[str, Any
                 "representation_id": label.representation_id,
                 "name": label.name,
                 "hierarchy": label.hierarchy,
-                "mesh_present": label.representation_id in members,
+                "representation_mesh_present": label.representation_id in members,
+                "element_meshes": element_meshes,
+                "mesh_present": bool(element_meshes) and any(
+                    element["mesh_present"] for element in element_meshes
+                ),
                 "anatomy_class": anatomy_class,
                 "numi_role": physical_roles.get(anatomy_class, "manual_classification_required"),
             }
@@ -322,6 +470,140 @@ def parse_bodyparts3d(sources: Path, classification_path: Path) -> dict[str, Any
         ],
         "components": components,
         "hierarchy_edges": [*isa_edges, *partof_edges],
+    }
+
+
+def _locked_file_gate(path: Path, metadata: dict[str, Any]) -> dict[str, Any]:
+    expected_hash = metadata.get("sha256")
+    expected_bytes = metadata.get("bytes")
+    result: dict[str, Any] = {
+        "file": path.name,
+        "role": metadata.get("role"),
+        "expected_sha256": expected_hash,
+        "expected_bytes": expected_bytes,
+    }
+    if not path.is_file():
+        result["status"] = "missing"
+        return result
+    result["actual_bytes"] = path.stat().st_size
+    if expected_bytes is not None and result["actual_bytes"] != expected_bytes:
+        result["status"] = "size_mismatch"
+        return result
+    result["actual_sha256"] = sha256(path)
+    if not isinstance(expected_hash, str) or not expected_hash:
+        result["status"] = "source_lock_requires_sha256"
+        return result
+    result["status"] = (
+        "verified" if result["actual_sha256"] == expected_hash else "sha256_mismatch"
+    )
+    return result
+
+
+def gate_report(
+    *,
+    sources: Path,
+    upper_archive: Path | None,
+    source_lock: dict[str, Any],
+) -> dict[str, Any]:
+    """Report every Human v1 dependency without pretending open gates passed."""
+    bodyparts = source_lock["sources"]["bodyparts3d_4"]
+    bodyparts_files = [
+        _locked_file_gate(sources / filename, metadata)
+        for filename, metadata in bodyparts["files"].items()
+    ]
+    lower_metadata = source_lock["sources"]["rajagopal_lai_uhlrich_2023"]
+    lower_gate = _locked_file_gate(
+        sources / "RajagopalLaiUhlrich2023.osim",
+        {"role": "lower_body_opensim", "sha256": lower_metadata["sha256"]},
+    )
+    upper_gate: dict[str, Any] = {
+        "required_file": source_lock["sources"]["mobl_arms_upper_extremity"]["release_file"],
+        "terms": source_lock["sources"]["mobl_arms_upper_extremity"]["license"],
+        "status": "missing_authenticated_archive",
+    }
+    if upper_archive is not None:
+        upper_gate["path"] = str(upper_archive)
+        if upper_archive.is_file():
+            upper_gate["actual_sha256"] = sha256(upper_archive)
+            try:
+                with zipfile.ZipFile(upper_archive) as archive:
+                    osim_members = sorted(
+                        member for member in archive.namelist() if member.lower().endswith(".osim")
+                    )
+            except zipfile.BadZipFile:
+                upper_gate["status"] = "invalid_archive"
+            else:
+                upper_gate["osim_members"] = osim_members
+                upper_gate["status"] = (
+                    "ready_for_import" if osim_members else "missing_osim_model"
+                )
+
+    bodyparts_ready = all(item["status"] == "verified" for item in bodyparts_files)
+    source_import_ready = (
+        bodyparts_ready
+        and lower_gate["status"] == "verified"
+        and upper_gate["status"] == "ready_for_import"
+    )
+    return {
+        "schema": "numi.human.gate-report.v1",
+        "source_artifacts": {
+            "bodyparts3d_4": bodyparts_files,
+            "rajagopal_lai_uhlrich_2023": lower_gate,
+            "mobl_arms_upper_extremity": upper_gate,
+        },
+        "gates": [
+            {
+                "id": "source_faithful_import",
+                "status": "ready" if source_import_ready else "blocked",
+                "requirement": "All three exact source artifacts must verify before a local manifest is built.",
+            },
+            {
+                "id": "skeleton_robotpack_lowering",
+                "status": "blocked",
+                "requirement": "A source-frame registration, collision proxies, and a Numi core lowerer for OpenSim CustomJoint semantics.",
+            },
+            {
+                "id": "muscle_tendon_lowering",
+                "status": "blocked",
+                "requirement": "Device-resident Hill-type muscle-tendon evaluation, registered paths/wraps, and force-length validation.",
+            },
+            {
+                "id": "skin_shell",
+                "status": "blocked",
+                "requirement": "A repaired shell topology, thickness, and cited skin material calibration.",
+            },
+            {
+                "id": "organ_fem_or_mpm",
+                "status": "blocked",
+                "requirement": "Watertight organ volume meshes and organ-specific constitutive calibration.",
+            },
+            {
+                "id": "ligament_and_tendon_tensile",
+                "status": "blocked",
+                "requirement": "Registered attachment paths plus nonlinear ligament/tendon parameters and calibration.",
+            },
+            {
+                "id": "cartilage_contact",
+                "status": "blocked",
+                "requirement": "Cartilage thickness, compliant-contact law, and contact validation.",
+            },
+            {
+                "id": "vessel_tube",
+                "status": "blocked",
+                "requirement": "Centreline/tube conversion, vessel wall model, and explicit fluid/solid scope.",
+            },
+            {
+                "id": "nerve_annotation",
+                "status": "blocked",
+                "requirement": "A verified BodyParts3D source import; geometry alone must remain annotation-only.",
+            },
+            {
+                "id": "native_physics_evidence",
+                "status": "blocked",
+                "requirement": "A bounded compiled Numi run with device/runtime evidence after the preceding lowering and material gates pass.",
+            },
+        ],
+        "evidence_boundary": "This report is source and integration status, not medical or physical validation.",
     }
 
 
@@ -366,6 +648,19 @@ def build_manifest(
     target_mapping_path: Path,
     source_lock: dict[str, Any],
 ) -> dict[str, Any]:
+    bodyparts_lock = source_lock["sources"]["bodyparts3d_4"]["files"]
+    bodyparts_gates = [
+        _locked_file_gate(sources / filename, metadata)
+        for filename, metadata in bodyparts_lock.items()
+    ]
+    unverified_bodyparts = [
+        gate["file"] for gate in bodyparts_gates if gate["status"] != "verified"
+    ]
+    if unverified_bodyparts:
+        raise ImportError(
+            "BodyParts3D inputs are not all provenance-verified: "
+            + ", ".join(unverified_bodyparts)
+        )
     anatomy = parse_bodyparts3d(sources, classification_path)
     lower_path = sources / "RajagopalLaiUhlrich2023.osim"
     lower = parse_opensim(lower_path, "rajagopal_lai_uhlrich_2023")
