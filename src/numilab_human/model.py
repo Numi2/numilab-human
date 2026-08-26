@@ -1794,11 +1794,37 @@ def runtime_compatibility_report(
     """
     joint_contract = runtime_contract["opensim_joint_lowering"]
     joint_kinds = Counter(joint["kind"] for joint in model["joints"])
-    unsupported = {
-        kind: count
-        for kind, count in sorted(joint_kinds.items())
-        if joint_contract.get(kind, {}).get("status") != "supported"
-    }
+    unsupported_counter: Counter[str] = Counter()
+    exact_locked_lowerings: list[dict[str, Any]] = []
+    for joint in model["joints"]:
+        kind = joint["kind"]
+        contract = joint_contract.get(kind, {})
+        if contract.get("status") == "supported":
+            continue
+        locked_lowering = contract.get("fully_locked_zero_default_lowering")
+        coordinates = joint.get("coordinates", [])
+        all_locked_zero = (
+            isinstance(locked_lowering, dict)
+            and isinstance(coordinates, list)
+            and bool(coordinates)
+            and all(
+                coordinate.get("locked") in (True, "true", "True")
+                and coordinate.get("default_value") == 0.0
+                for coordinate in coordinates
+            )
+        )
+        if all_locked_zero:
+            exact_locked_lowerings.append(
+                {
+                    "source_joint": joint.get("id"),
+                    "source_kind": kind,
+                    "numi_primitive": locked_lowering["numi_primitive"],
+                    "condition": locked_lowering["condition"],
+                }
+            )
+            continue
+        unsupported_counter[kind] += 1
+    unsupported = dict(sorted(unsupported_counter.items()))
     unknown = {
         kind: count
         for kind, count in sorted(joint_kinds.items())
@@ -1833,6 +1859,7 @@ def runtime_compatibility_report(
         "skeleton": {
             "status": "compatible" if not unsupported else "blocked",
             "unsupported_joint_kinds": unsupported,
+            "exact_locked_joint_lowerings": exact_locked_lowerings,
             "unknown_joint_kinds": unknown,
             "requirement": (
                 "All source joint semantics must lower exactly into supported "

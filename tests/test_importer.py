@@ -186,6 +186,33 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(report["source_model"]["muscle_path_wraps"], 1)
         self.assertEqual(report["source_model"]["muscle_curve_kinds"], {})
 
+    def test_locked_zero_universal_joint_lowers_exactly_as_fixed(self) -> None:
+        report = runtime_compatibility_report(
+            {
+                "model_id": "locked-universal-fixture",
+                "joints": [
+                    {
+                        "id": "locked_wrist",
+                        "kind": "UniversalJoint",
+                        "coordinates": [
+                            {"id": "q0", "locked": "true", "default_value": 0.0},
+                            {"id": "q1", "locked": "true", "default_value": 0.0},
+                        ],
+                        "motion_axes": [],
+                    }
+                ],
+                "muscles": [],
+                "wrap_objects": [],
+            },
+            read_json(ROOT / "config/numi-runtime-contract.v1.json"),
+        )
+        self.assertEqual(report["skeleton"]["status"], "compatible")
+        self.assertEqual(report["skeleton"]["unsupported_joint_kinds"], {})
+        self.assertEqual(
+            report["skeleton"]["exact_locked_joint_lowerings"][0]["numi_primitive"],
+            "fixed",
+        )
+
     def test_custom_joint_evaluator_keeps_function_values_and_derivatives(self) -> None:
         joint = {
             "id": "fixture_custom",

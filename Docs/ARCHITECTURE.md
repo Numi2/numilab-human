@@ -74,6 +74,12 @@ consume that program: it has no function-based joint, multi-axis
 UniversalJoint, or Hill-type wrapped-muscle lowerer. Those are typed
 integration blocks, not permission to approximate the source model.
 
+Rajagopal's `radius_hand_r` and `radius_hand_l` are a narrower case: both
+source UniversalJoint coordinates are explicitly locked at a zero default, so
+their source transform is exactly the fixed zero-coordinate transform. The
+importer records those two fixed lowerings individually; it does not claim
+that arbitrary movable UniversalJoints are supported.
+
 The importer retains every `TransformAxis` function and XML subtree, all
 muscle curve parameters, every path-point and wrap subtree, and each wrap
 object subtree. A source-faithful Metal extension therefore has the source

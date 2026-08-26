@@ -44,7 +44,11 @@
     },
     "UniversalJoint": {
       "status": "requires_core_extension",
-      "requirement": "Represent a source-faithful coupled two-axis joint in the articulated solver."
+      "requirement": "Represent a source-faithful coupled two-axis joint in the articulated solver.",
+      "fully_locked_zero_default_lowering": {
+        "numi_primitive": "fixed",
+        "condition": "All source coordinates are locked and have exactly zero default value, so the source joint transform is its fixed zero-coordinate transform."
+      }
     }
   },
   "muscle_tendon": {
