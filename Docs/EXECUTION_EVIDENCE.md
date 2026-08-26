@@ -1,5 +1,26 @@
 # Bounded execution evidence
 
+## Complete locally available source-artifact sweep — 2026-08-26
+
+All locally available, provenance-locked source compilers were rerun from the
+two BodyParts3D 4.0 archives and the pinned Rajagopal model. This is inventory
+and import evidence; it does not turn source surfaces into calibrated physical
+objects.
+
+| Artifact | Result |
+| --- | --- |
+| BodyParts3D OBJ preflight | 3,492 meshes; 6,055,747 valid vertices; 9,820,026 triangular faces; 227 closed 2-manifold candidates and 3,265 open surfaces; no invalid OBJ face or vertex references |
+| Neural annotations | 101 named nerve-surface components and 101 source hierarchy edges, annotation-only |
+| Rajagopal FunctionBased IR | 10 CustomJoints and 10 canonical programs: 21 Constant, 23 LinearFunction, 10 PolynomialFunction, and 6 SimmSpline axes |
+| Rajagopal Millard IR | 80 muscles, 288 source body-frame path points, 46 PathWrap records, and 44 WrapCylinder definitions |
+| Distal-leg preview | 4 source bodies and 3 source PinJoints; intentionally excludes all 80 muscles and all BodyParts3D collision geometry |
+
+The source sweep does not include MoBL-ARMS because the original authenticated
+SimTK archive has not been supplied. It also does not repair the 3,265
+open-surface candidates, infer BodyParts3D-to-OpenSim frames, or assign tissue
+material constants. Those are explicit evidence gates rather than recoverable
+metadata omissions.
+
 ## Full Rajagopal rigid-tree CPU reference and device-program regression — 2026-08-26
 
 This establishes one executable source-faithful rigid-body *reference* tree.
