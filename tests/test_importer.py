@@ -4,6 +4,7 @@ import tempfile
 import unittest
 import zipfile
 from pathlib import Path
+from subprocess import run
 
 from numilab_human.model import parse_bodyparts3d, parse_opensim
 
@@ -12,6 +13,14 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ImporterTests(unittest.TestCase):
+    def test_numi_workspace_command_describes_itself(self) -> None:
+        command = ROOT / ".numi/commands/human"
+        result = run([command, "--numi-describe"], capture_output=True, text=True, check=True)
+        self.assertEqual(
+            result.stdout,
+            "Build provenance-locked NumiLab Human v1 source artifacts.\n",
+        )
+
     def test_opensim_parser_retains_mechanical_fields(self) -> None:
         source = """<?xml version=\"1.0\"?>
 <OpenSimDocument Version=\"40000\"><Model name=\"fixture\">

@@ -57,3 +57,8 @@ mechanics into a `RobotPack`, preserve source hashes in the compiled-run
 fingerprint, execute all active muscle-tendon elements in Metal, and validate
 the resulting contact/force behavior. Until then, generated manifests are
 integration inputs, not runnable human dynamics.
+
+The tracked workspace command `numi human` is the bridge at this stage. It
+uses the normal Numi capability discovery path to fetch and compile this
+repository's source-faithful artifact; it cannot register a robot or schedule
+a rollout until the core lowerer exists and all gated sources are supplied.

@@ -3,7 +3,7 @@
 ## 1. Fetch the password-free sources
 
 ```sh
-numilab-human fetch --output Sources
+numi human fetch --output Sources
 ```
 
 This fetches the six official BodyParts3D hierarchy/definition tables, the two
@@ -21,7 +21,7 @@ the source URL and licence gate part of the output fingerprint.
 ## 3. Build an audit artifact
 
 ```sh
-numilab-human build \
+numi human build \
   --sources Sources \
   --upper-archive /absolute/path/MobL_ARMS_OpenSim3_bimanual_model.zip \
   --accept-upper-noncommercial-terms \

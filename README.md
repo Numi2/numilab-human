@@ -21,13 +21,14 @@ auditable.
 python3 -m venv .venv
 .venv/bin/pip install -e .
 
-# Fetches only BodyParts3D 4.0 and the pinned Rajagopal model. It never tries
+# `numi human` is this repository's workspace capability. It fetches only
+# BodyParts3D 4.0 and the pinned Rajagopal model; it never tries
 # to bypass the SimTK login required for MoBL-ARMS.
-numilab-human fetch --output Sources
+numi human fetch --output Sources
 
 # Download the original bimanual MoBL-ARMS archive while signed into SimTK,
 # then build a local Human v1 manifest.
-numilab-human build \
+numi human build \
   --sources Sources \
   --upper-archive /path/to/MobL_ARMS_OpenSim3_bimanual_model.zip \
   --accept-upper-noncommercial-terms \
