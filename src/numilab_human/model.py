@@ -1137,6 +1137,54 @@ def rajagopal_walking_contract(model: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def bodyparts_lower_body_attachment_worklist(
+    anatomy: dict[str, Any], model: dict[str, Any]
+) -> dict[str, Any]:
+    """Produce reviewable BodyParts3D-to-Rajagopal candidates, never bindings.
+
+    Names are only useful for triage.  A candidate still needs a rest-frame
+    transform and visual/collision review before it may move with a body.
+    """
+    body_ids = {body.get("id") for body in model.get("bodies", [])}
+    target_terms = {
+        "pelvis": "pelvis", "femur": "femur", "tibia": "tibia", "fibula": "fibula",
+        "patella": "patella", "talus": "talus", "calcaneus": "calcn", "toe": "toes",
+    }
+    candidates: list[dict[str, Any]] = []
+    layer_counts: Counter[str] = Counter()
+    for component in anatomy.get("components", []):
+        name = str(component.get("name", "")).lower()
+        target = next((body for term, body in target_terms.items() if term in name), None)
+        if target is None:
+            continue
+        for element in component.get("element_meshes", []):
+            if not element.get("mesh_present"):
+                continue
+            layer = str(component.get("anatomy_class", "unclassified_surface"))
+            candidates.append({
+                "element_id": element["element_id"], "concept_id": component["concept_id"],
+                "name": component["name"], "layer": layer, "candidate_body": target,
+                "status": "candidate_requires_rest_frame_registration",
+            })
+            layer_counts[layer] += 1
+    foot = [entry for entry in candidates if entry["candidate_body"] in {"calcn", "toes"}]
+    if not foot:
+        raise ImportError("BodyParts3D attachment worklist found no foot candidate surfaces")
+    return {
+        "schema": "numi.human.bodyparts-lower-body-attachment-worklist.v1",
+        "source": {"id": anatomy.get("source_id"), "version": anatomy.get("version"), "archives": anatomy.get("archives")},
+        "candidate_count": len(candidates), "layer_counts": dict(sorted(layer_counts.items())),
+        "candidates": candidates,
+        "foot_collider_work": {
+            "source_bodies": ["calcn_r", "toes_r", "calcn_l", "toes_l"],
+            "bodyparts_candidate_count": len(foot),
+            "required": ["validated source-to-body transforms", "conservative proxy geometry", "pair exclusions", "contact parameter receipt"],
+            "status": "blocked_by_registration_and_calibration",
+        },
+        "evidence_boundary": "String/name correspondence proposes review only; this file contains no transform, skinning weight, collider, or physical material parameter.",
+    }
+
+
 def _opensim_joint_frame_body(
     joint: dict[str, Any], frame_reference: Any, context: str
 ) -> str | None:

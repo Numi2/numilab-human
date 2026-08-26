@@ -52,6 +52,9 @@ numi human visual-preview --sources Sources --output Build/bodyparts3d-skin-prev
 # It explicitly leaves collider registration/contact calibration as gated work.
 numi human walking-contract --sources Sources --output Build/rajagopal-walking-contract.json
 
+# Produce review-only lower-body anatomy attachment and foot-collider work items.
+numi human attachment-worklist --sources Sources --output Build/lower-body-attachments.json
+
 # Produce one source-derived distal-leg PinJoint URDF for native compiler
 # validation. It intentionally has no collision geometry or muscle lowering.
 numi human preview --sources Sources --side right --output Build/right-pin-preview

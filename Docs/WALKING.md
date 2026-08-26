@@ -25,3 +25,15 @@ attachment; unregistered geometry stays hidden or static.
 
 This contract is not a Human RobotPack, trained policy, calibrated gait model,
 OpenSim parity result, or tissue-physics implementation.
+
+## Attachment and contact worklist
+
+```sh
+numi human attachment-worklist --sources Sources --output Build/lower-body-attachments.json
+```
+
+This emits  review candidates from the original BodyParts3D labels for the
+Rajagopal pelvis, legs, and feet. It also records the four source foot bodies
+that need conservative collision proxies. Candidate names are not transforms:
+every entry must be registered and visually reviewed before animation or
+collision use.

@@ -11,6 +11,7 @@ from pathlib import Path
 from .model import (
     ImportError,
     bodyparts_geometry_preflight,
+    bodyparts_lower_body_attachment_worklist,
     bodyparts_nerve_annotation,
     bodyparts_visual_preview,
     build_rajagopal_distal_pin_preview,
@@ -307,6 +308,15 @@ def walking_contract(arguments: argparse.Namespace) -> int:
     print(f"wrote {output}")
     return 0
 
+def attachment_worklist(arguments: argparse.Namespace) -> int:
+    sources = arguments.sources.resolve()
+    anatomy = parse_bodyparts3d(sources, REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
+    lower = parse_opensim(sources / "RajagopalLaiUhlrich2023.osim", "rajagopal_lai_uhlrich_2023")
+    output = arguments.output.resolve()
+    write_json(output, bodyparts_lower_body_attachment_worklist(anatomy, lower))
+    print(f"wrote {output}")
+    return 0
+
 
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description="Build provenance-locked NumiLab Human v1 import artifacts")
@@ -407,6 +417,10 @@ def parser() -> argparse.ArgumentParser:
     walking_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
     walking_parser.add_argument("--output", type=Path, required=True, help="walking contract JSON output path")
     walking_parser.set_defaults(handler=walking_contract)
+    attachment_parser = commands.add_parser("attachment-worklist", help="emit review-only lower-body BodyParts3D attachment and foot-collider work items")
+    attachment_parser.add_argument("--sources", type=Path, required=True)
+    attachment_parser.add_argument("--output", type=Path, required=True)
+    attachment_parser.set_defaults(handler=attachment_worklist)
     return result
 
 
