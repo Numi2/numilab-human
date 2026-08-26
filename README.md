@@ -80,7 +80,7 @@ numi human preview --sources Sources --side right --output Build/right-pin-previ
 
 # Preserve and evaluate all Rajagopal CustomJoint function tables as compiler
 # IR and default-value test vectors. The matching Core revision executes the
-# bounded fixed-root FunctionBased tree and source Millard effort in MetalWorld
+# bounded FunctionBased tree, mobile pelvis root, and source Millard effort in MetalWorld
 # free motion or a synthetic streamed-contact probe; this command remains the
 # provenance compiler for that source program.
 numi human kinematics --sources Sources --output Build/custom-joint-ir
@@ -94,8 +94,8 @@ numi human core-reference --sources Sources --output Build/rajagopal-core-refere
 
 | Source data | NumiLab Human v1 role | Current physical boundary |
 | --- | --- | --- |
-| OpenSim bodies, joints, masses, inertias | articulated rigid-body specification | bounded fixed-root FunctionBased free motion and synthetic source-contact response are device-qualified; anatomical registration/contact remain separate |
-| OpenSim muscle paths and Hill-type parameters | active muscle–tendon specification | 80 Rajagopal Millard elements accept an explicit control stream or a fail-closed, complete ordered native-task excitation surface, then update activation on device in the bounded fixed-root effort arena and synthetic source-contact probe; OpenSim equivalence remains open |
+| OpenSim bodies, joints, masses, inertias | articulated rigid-body specification | bounded FunctionBased free motion and synthetic source-contact response are device-qualified for the fixed tree and a fail-closed source-default mobile pelvis-root reducer; anatomical registration/contact remain separate |
+| OpenSim muscle paths and Hill-type parameters | active muscle–tendon specification | 80 Rajagopal Millard elements accept an explicit control stream or a fail-closed, complete ordered native-task excitation surface, then update activation on device for the fixed tree or source-default mobile root in the synthetic source-contact probe; OpenSim equivalence remains open |
 | BodyParts3D bones and muscles | named geometry attached to semantic anatomy | visual/anatomical geometry, not a new independent physical source |
 | BodyParts3D skin, organs, vessels, nerves | deformable/anatomical geometry candidates | no material constants or volumetric meshes are supplied upstream |
 | tendons, ligaments, cartilage | nonlinear tensile / compliant-contact candidates | only OpenSim tendon parameters are active-source data; all other constitutive data needs a cited calibration |

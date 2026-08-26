@@ -1,5 +1,21 @@
 # Bounded execution evidence
 
+## Source-default mobile-root FunctionBased contact and Millard-task gate — 2026-08-26
+
+Core revision `730aba49546f7708b85dd14f522799b19a757747` exposes `reduceFixedFunctionBasedRootToMobileDefaultPose` for the physical mobile root used by the bounded FunctionBased dense-dynamics and streamed-contact-response kernels. The reducer removes the persisted synthetic ground anchor, promotes the source pelvis to a 7-configuration/6-velocity root, returns canonical source body/joint index maps, and retains the remaining nine immutable FunctionBased programs. It requires the exact stationary source default and rejects actuator profiles, geometry, constraints, and moving roots rather than silently reinterpreting them. CPU default-pose continuity is `0` position and orientation error at printed precision. This is deliberately not an equivalence claim for arbitrary OpenSim `ground_pelvis` Euler-coordinate perturbations.
+
+A local Apple M4 run completed the mobile-root operator, three-step free-motion parity, and two-step synthetic plane/sphere streamed-contact pass (one active contact and one constraint). The mobile free-motion errors were `5.1e-05` acceleration, `0` velocity, and `0` configuration at printed precision. The same mobile contact probe evaluated all 80 source Millard muscles: source-default generalized-force L1 `17090.605002`, explicit fully-excited L1 `39231.409699`, and fail-closed native-task L1 `35447.637453`; the final first-order activation state matched the exact reference at printed precision. The probe emitted `metal_function_based_mobile_root_operator=ok`, `metal_function_based_mobile_root_dynamics=ok`, `metal_function_based_mobile_root_streamed_contact=ok`, `metal_function_based_mobile_root_millard_streamed_contact=ok`, and `metal_function_based_mobile_root_millard_native_task_bridge=ok`.
+
+| Item | SHA-256 |
+| --- | --- |
+| Rigid source payload | `da7e52ddd64728ed0a63e73a11cf857ec5489b3eb29e32d11f352f35507cdee6` |
+| Millard source payload | `ecc900d71369c3c0cbf7a09fbdc33a2194f6a77edcddf594d306d850de60fbf4` |
+| Probe binary | `f6a5620bb5901ff48d4eba77033c52a858a1c91758a96f21f214492df39401e7` |
+| Core library | `3e59a1d808c5a57a1d92779f2ab0596196b6775dfae123fd5918041624be545e` |
+| Metal library | `58aa6f454905a1cdebed4e36e8e1b1fd633aab26ef340882895610a42be16429` |
+
+This is local Apple M4 device evidence for a source-default mobile mechanics reduction, not a Mac mini reproduction, BodyParts3D registration, anatomical foot-contact model, walking result, trained policy, or visual-motion result. The plane/sphere remain test-only colliders. Registered foot colliders, calibrated contact material, deterministic replay, held-out gait outcomes, deformable anatomy, and multi-angle runtime Human evidence remain open.
+
 ## Fail-closed native-task Millard excitation bridge — 2026-08-26
 
 Core revision `5e46d13eeb32ab25cfb1aa09503cab58f8275d68` extends the bounded FunctionBased source-Millard path with a native task actuator, not a generic effort actuator. Admission requires exactly one ordered action for each of the 80 immutable source muscles, a unit actuator scale, no generic joint/body or tendon side effect, positive activation constants, and no concurrent packed host excitation stream. The task compiler fingerprints the action identities; the device reads filtered action history, maps signed action `[-1, 1]` exactly to excitation `[0, 1]`, and advances the same first-order activation state before source force reduction. The reference probe supplies every native task action as `+1`, asserts the exact CPU activation recurrence, and verifies a force response distinct from the source-default state.
@@ -14,7 +30,7 @@ A local Apple M4 run regenerated the source sidecars and completed the fixed-roo
 | Core library | `d279b3b813c901b9baa9edaa95d957208f75bcbe32ccfdbcc1405e757d255679` |
 | Metal library | `eca0d59fa84e5d510ab940831e413490bd1900e27afa1042f2380cdfe00ac338` |
 
-This is local Apple M4 device evidence for the source-actuation ABI, not a Mac mini reproduction, Human walking result, trained policy, or visual-motion result. The root remains fixed and the plane/sphere are test-only colliders: there is no BodyParts3D foot registration, mobile-root source dynamics, anatomical contact material, deformable anatomy, or multi-angle runtime human evidence in this result.
+This retained fixed-root result is local Apple M4 device evidence for the source-actuation ABI, not a Mac mini reproduction, Human walking result, trained policy, or visual-motion result. The newer mobile-root section above extends the same probe family; neither result supplies BodyParts3D foot registration, anatomical contact material, deformable anatomy, or multi-angle runtime Human evidence.
 
 ## FunctionBased device-updated Millard excitation streamed source-contact smoke — 2026-08-26
 

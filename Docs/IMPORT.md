@@ -208,7 +208,9 @@ the finite-cylinder GeometryPaths, and scatters tensile path force through the
 articulated point Jacobians. With both `--metal` and `--millard`, the same
 invocation also runs the bounded MetalWorld path: source poses/Jacobians,
 Millard force projection, deterministic generalized-force reduction, and the
-fixed-root FunctionBased free-motion state step remain in one command buffer.
+fixed-root FunctionBased state step plus the Core-owned
+`reduceFixedFunctionBasedRootToMobileDefaultPose` source-default mobile-root
+reduction remain in one command buffer.
 This is not OpenSim binary-equivalence, a full implementation of OpenSim's
 hybrid wrap-history behavior, contact, or material validation; the source
 PathWrap XML, including method and range, remains in the companion IR for that
@@ -257,6 +259,7 @@ acceleration. With `--metal`, it additionally runs the bounded persistent
 FunctionBased MetalWorld state step against the FP64 reference. Supplying a
 matching `--millard` payload adds 80 source muscle forces to MetalWorld's
 resident effort arena and verifies their aggregate force and resulting
-acceleration against the FP64 bridge. It does not compare against an OpenSim
-runtime, register BodyParts3D meshes, add collision/contact, or qualify
+acceleration against the FP64 bridge. The probe also runs a synthetic
+plane/sphere contact witness; it does not compare against an OpenSim runtime,
+register BodyParts3D meshes, admit anatomical collision/contact, or qualify
 deformable anatomy.

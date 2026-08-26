@@ -1103,9 +1103,14 @@ def rajagopal_walking_contract(model: dict[str, Any]) -> dict[str, Any]:
             "root_mode": "source_function_based_mobile",
             "coordinates": root_ids,
             "coordinate_count": len(coordinates),
+            "qualified_core": [
+                "source-default-preserving 7-q/6-v pelvis mobile-root reduction",
+                "reusable Core mobile-root reducer with canonical source-index maps",
+                "FunctionBased dense free motion and streamed contact response",
+                "complete ordered Millard native-task excitation surface",
+            ],
             "requires_core": [
-                "mobile FunctionBased MetalWorld state advancement",
-                "articulated contact response for FunctionBased root",
+                "walking-task scenario admission after anatomical collider registration",
             ],
         },
         "policy": {
@@ -1500,7 +1505,7 @@ def rajagopal_rigid_skeleton_ir(model: dict[str, Any]) -> dict[str, Any]:
             lowering = {
                 "status": "core_function_based_supported",
                 "program_file": f"opensim-spatial-programs/{identifier}.mrospatial",
-                "accelerated_runtime": "bounded_fixed_root_free_motion",
+                "accelerated_runtime": "bounded_fixed_or_source_default_mobile_root",
             }
         elif kind == "UniversalJoint":
             coordinates = joint.get("coordinates", [])
@@ -1564,9 +1569,10 @@ def rajagopal_rigid_skeleton_ir(model: dict[str, Any]) -> dict[str, Any]:
             sorted(Counter(joint["lowering"]["status"] for joint in joints).items())
         ),
         "runtime_requirement": (
-            "The qualified Core path assembles one fixed-root source body/frame/inertia "
+            "The qualified Core path assembles one source body/frame/inertia "
             "tree and FunctionBased programs into MetalWorld-resident direct-effort "
-            "state, including a bounded synthetic streamed-contact response probe. "
+            "state, including fixed-root and source-default-preserving mobile-root "
+            "synthetic streamed-contact response probes. "
             "BodyParts3D registration, anatomical colliders/materials, and broader "
             "model admission remain separate work."
         ),
@@ -3433,6 +3439,7 @@ def runtime_compatibility_report(
             "supported",
             "supported_bounded_fixed_root_free_motion",
             "supported_bounded_fixed_root_direct_effort",
+            "supported_bounded_mobile_root_direct_effort",
         }:
             continue
         locked_lowering = contract.get("fully_locked_zero_default_lowering")
@@ -3496,7 +3503,7 @@ def runtime_compatibility_report(
             else:
                 bounded_function_based = True
                 bounded_admission = {
-                    "status": "eligible_fixed_root_direct_effort_contact",
+                    "status": "eligible_mobile_root_direct_effort_contact",
                     "body_count": skeleton_ir["body_count"],
                     "coordinate_count": coordinate_count,
                     "maximum_body_count": 32,
@@ -3504,7 +3511,7 @@ def runtime_compatibility_report(
                 }
         except ImportError as error:
             bounded_admission = {
-                "status": "not_a_supported_fixed_root_tree",
+                "status": "not_a_supported_function_based_tree",
                 "reason": str(error),
             }
     supported_millard = all(
@@ -3529,7 +3536,7 @@ def runtime_compatibility_report(
                 "blocked"
                 if unsupported or (bounded_admission is not None and not bounded_function_based)
                 else (
-                    "compatible_bounded_fixed_root_direct_effort_contact"
+                    "compatible_bounded_mobile_root_direct_effort_contact"
                     if bounded_function_based
                     else "compatible"
                 )
@@ -3541,8 +3548,9 @@ def runtime_compatibility_report(
             "requirement": (
                 "All source joint semantics must lower exactly into supported "
                 "Numi articulated primitives. FunctionBased admission is "
-                "bounded to one fixed-root direct-effort articulation in free "
-                "motion or synthetic temporal-cone contact."
+                "bounded to one direct-effort articulation in fixed-root or "
+                "source-default mobile-root free motion or synthetic temporal-cone "
+                "contact."
             ),
         },
         "muscle_tendon": {
@@ -3723,7 +3731,7 @@ def gate_report(
         "mechanics_execution": {
             "status": "qualified_bounded_device",
             "runtime_revision": runtime_contract["runtime"]["revision"],
-            "contract": "One fixed-root FunctionBased articulation executes resident q/v/effort state on device; source Millard static-equilibrium forces are reduced into that same effort arena before every microstep. Excitation is supplied either by an explicit per-control stream or by a fail-closed complete, source-ordered native-task action surface mapped from signed action to normalized excitation and advanced by device first-order activation dynamics.",
+            "contract": "One FunctionBased articulation executes resident q/v/effort state on device with either a fixed root or a source-default-preserving 7-q/6-v physical pelvis root. Source Millard static-equilibrium forces are reduced into that same effort arena before every microstep. Excitation is supplied either by an explicit per-control stream or by a fail-closed complete, source-ordered native-task action surface mapped from signed action to normalized excitation and advanced by device first-order activation dynamics.",
             "remaining_evidence": runtime_contract["muscle_tendon"][
                 "source_faithful_requirements"
             ],
@@ -3737,12 +3745,12 @@ def gate_report(
             {
                 "id": "skeleton_robotpack_lowering",
                 "status": "qualified_bounded_device",
-                "requirement": "Qualified: one fixed-root FunctionBased source tree advances with direct effort and source-mass streamed temporal-cone responses in a synthetic device contact probe. BodyParts3D frame registration, anatomical collision/material calibration, and broader RobotPack admission remain separate source or calibration work.",
+                "requirement": "Qualified: one FunctionBased source tree advances with direct effort and source-mass streamed temporal-cone responses in a synthetic device contact probe, including a source-default-preserving mobile pelvis root. The mobile reduction is not arbitrary ground_pelvis Euler-coordinate equivalence. BodyParts3D frame registration, anatomical collision/material calibration, replay, and broader RobotPack admission remain separate source or calibration work.",
             },
             {
                 "id": "muscle_tendon_lowering",
                 "status": "qualified_bounded_device",
-                "requirement": "Qualified: source Millard curves, static fiber-tendon equilibrium, finite-cylinder paths/wraps, per-control or fail-closed complete native-task first-order activation, and per-muscle forces execute and reduce into MetalWorld's resident effort arena. Mobile-root policy actuation, dynamic fibre/tendon state, OpenSim equivalence, and held-out force/moment-arm validation remain evidence gates.",
+                "requirement": "Qualified: source Millard curves, static fiber-tendon equilibrium, finite-cylinder paths/wraps, per-control or fail-closed complete native-task first-order activation, and per-muscle forces execute and reduce into MetalWorld's resident effort arena for fixed and source-default mobile roots. Dynamic fibre/tendon state, OpenSim equivalence, registered anatomical contact, replay, and held-out force/moment-arm validation remain evidence gates.",
             },
             {
                 "id": "skin_shell",

@@ -2,7 +2,7 @@
   "schema": "numi.human.runtime-contract.v1",
   "runtime": {
     "repository": "MetalRobo",
-    "revision": "5e46d13eeb32ab25cfb1aa09503cab58f8275d68",
+    "revision": "730aba49546f7708b85dd14f522799b19a757747",
     "articulated_joint_primitives": [
       "fixed",
       "revolute",
@@ -19,6 +19,8 @@
       "src/core/OpenSimFunction.cpp",
       "include/metalrobo/OpenSimSpatialTransform.hpp",
       "src/core/OpenSimSpatialTransform.cpp",
+      "include/metalrobo/OpenSimMobileRoot.hpp",
+      "src/core/OpenSimMobileRoot.cpp",
       "include/metalrobo/EngineModel.hpp",
       "include/metalrobo/ArticulatedDynamics.hpp",
       "src/core/ArticulatedDynamics.cpp",
@@ -62,10 +64,10 @@
       "numi_primitive": "fixed"
     },
     "CustomJoint": {
-      "status": "supported_bounded_fixed_root_direct_effort",
-      "kinematic_program": "source-derived canonical FunctionBased binary sidecars have bounded Metal pose, H, Hdot, H-transpose wrench projection, and Hdot times qdot primitives; the pinned CPU FP64 reference admits immutable FunctionBasedJointProgram records into analytic Jacobian mass/bias and state advance; MetalWorld executes the bounded fixed-root dense source dynamics path, source Millard effort reduction, and source-mass streamed temporal-cone response columns against resident q/v/effort state.",
+      "status": "supported_bounded_mobile_root_direct_effort",
+      "kinematic_program": "source-derived canonical FunctionBased binary sidecars have bounded Metal pose, H, Hdot, H-transpose wrench projection, and Hdot times qdot primitives; the pinned CPU FP64 reference admits immutable FunctionBasedJointProgram records into analytic Jacobian mass/bias and state advance; MetalWorld executes the bounded dense source dynamics path, source Millard effort reduction, and source-mass streamed temporal-cone response columns against resident q/v/effort state for a fixed root or a source-default-preserving mobile-root reduction.",
       "cpu_reference_payload": "The provenance-locked 22-body Rajagopal rigid tree can load source mass, inertia, COM, joint-frame, coordinate, and FunctionBased-program records into the FP64 reference probe.",
-      "requirement": "The bounded path is one fixed-root direct-effort articulation in free motion or temporal-cone contact using source-mass streamed responses. A complete, ordered native source-Millard action surface is device-qualified only in that fixed-root synthetic probe. The contact probe uses synthetic plane/sphere colliders only; BodyParts3D frame registration, anatomical collision/material calibration, multi-articulation composition, mobile-root task/policy execution, and joint-class extensions remain separate gates."
+      "requirement": "The bounded path is one direct-effort articulation in free motion or temporal-cone contact using source-mass streamed responses. Core exposes `reduceFixedFunctionBasedRootToMobileDefaultPose` for a source-default-preserving mobile reduction of `ground_pelvis`: it removes the synthetic fixed anchor, promotes the pelvis to a 7-q/6-v physical root, preserves the exact stationary source default pose, returns canonical source-index maps, and retains the remaining immutable source transforms. It explicitly rejects actuator profiles, shapes, constraints, and a moving source root rather than reinterpreting them. It does not claim arbitrary Euler-coordinate root-transform equivalence. A complete ordered native source-Millard action surface is device-qualified in that synthetic mobile probe. The contact probe uses synthetic plane/sphere colliders only; BodyParts3D frame registration, anatomical collision/material calibration, multi-articulation composition, rollout qualification, and joint-class extensions remain separate gates."
     },
     "UniversalJoint": {
       "status": "requires_core_extension",
@@ -78,8 +80,8 @@
   },
   "muscle_tendon": {
     "current_contract": "metalworld_functionbased_millard_static_equilibrium_with_explicit_or_native_task_excitation",
-    "current_contract_evidence": "The FP64 source bridge and MetalWorld execute source-parameterized curves, static fiber-tendon equilibrium, finite-cylinder GeometryPath wrapping with each source PathWrap method and range, and one generalized-force vector per muscle. For the bounded fixed-root direct-effort path, MetalWorld accepts either an explicit packed per-control excitation stream or a fail-closed native task surface containing exactly one ordered Millard-excitation action per immutable source muscle and no mixed host stream. Native actions use the normal signed range and map exactly from [-1, 1] to normalized excitation [0, 1] from filtered task-action history. Both surfaces advance private activation by an exact first-order hold with caller-owned positive time constants, then reduce device-only source forces into the resident effort arena before free motion or the synthetic streamed temporal-cone contact probe. The final device state used by force projection is published for audit and matches the source-reference activation hold in the smoke probe; source-default, explicit, and native-task inputs produce distinct device forces without CPU force restaging.",
-    "persistent_activation_reference": "Rajagopal's XML omits the optional activation time constants. The Human walking contract materializes the documented OpenSim Millard2012EquilibriumMuscle defaults separately; Core now executes an explicitly supplied first-order activation update on device in the bounded fixed-root direct-effort path, whether the excitation arrives by packed test stream or the exact native task surface. Mobile-root task/policy execution, persistent fibre/tendon dynamics, and source-equivalence validation remain separate gates.",
+    "current_contract_evidence": "The FP64 source bridge and MetalWorld execute source-parameterized curves, static fiber-tendon equilibrium, finite-cylinder GeometryPath wrapping with each source PathWrap method and range, and one generalized-force vector per muscle. For the bounded direct-effort path, MetalWorld accepts either an explicit packed per-control excitation stream or a fail-closed native task surface containing exactly one ordered Millard-excitation action per immutable source muscle and no mixed host stream. Native actions use the normal signed range and map exactly from [-1, 1] to normalized excitation [0, 1] from filtered task-action history. Both surfaces advance private activation by an exact first-order hold with caller-owned positive time constants, then reduce device-only source forces into the resident effort arena before free motion or the synthetic streamed temporal-cone contact probe. The mobile source reference removes its synthetic fixed anchor, remaps all source body/path/wrap indices, and uses a physical pelvis 7-q/6-v root seeded from the exact source default pose; it retains the remaining source transforms but is not an arbitrary ground_pelvis Euler-coordinate equivalence claim. The final device state used by force projection is published for audit and matches the source-reference activation hold in the smoke probe; source-default, explicit, and native-task inputs produce distinct device forces without CPU force restaging.",
+    "persistent_activation_reference": "Rajagopal's XML omits the optional activation time constants. The Human walking contract materializes the documented OpenSim Millard2012EquilibriumMuscle defaults separately; Core executes an explicitly supplied first-order activation update on device in the bounded fixed- or source-default mobile-root direct-effort path, whether the excitation arrives by packed test stream or the exact native task surface. Persistent fibre/tendon dynamics, OpenSim equivalence, registered anatomical contact, and held-out walking qualification remain separate gates.",
     "source_faithful_requirements": [
       "OpenSim binary-equivalence comparison for curves, path wrapping, moment arms, and muscle force",
       "held-out force-length, force-velocity, and anatomical moment-arm validation"

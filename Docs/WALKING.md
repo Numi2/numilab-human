@@ -10,34 +10,43 @@ numi human walking-contract --sources Sources --output Build/rajagopal-walking-c
 ```
 
 The contract deliberately rejects a substituted floating base or an incomplete
-muscle set. Core must execute the source `ground_pelvis` FunctionBased joint as
-a mobile root; a policy action is a bounded excitation, not a direct joint
-torque. The bounded fixed-root Core path can now consume that complete action
-surface through a native task bridge and execute deterministic device activation
-updates with explicit time constants. Mobile-root task and policy execution
-still needs its own admission before training.
+muscle set. Core executes a source-default-preserving reduction of
+`ground_pelvis` as a physical pelvis root (7 configuration values / 6
+velocities), while retaining the remaining source FunctionBased programs; a
+policy action is a bounded excitation, not a direct joint torque. This is exact
+at the source default pose, not an equivalence claim for arbitrary OpenSim
+Euler-coordinate root perturbations. The bounded Core path consumes the
+complete action surface through a native task bridge and executes deterministic
+device activation updates with explicit time constants. A deployable walking
+task and policy still need registered feet, calibrated contact, deterministic
+replay, and held-out outcomes before training can be claimed.
 
 For the pinned Rajagopal XML the optional activation-time properties are absent.
 `config/opensim-millard-activation-defaults.v1.json` therefore records the
 OpenSim Millard class defaults used by the activation contract. They are not
 subject calibration and must remain separately identified in any policy result.
 
-Core revision `5e46d13` adds a fail-closed native-task bridge alongside the
-packed per-control excitation stream. It admits exactly one ordered
-Millard-excitation action per source muscle, rejects mixed generic actuation or
-partial action surfaces, maps the conventional signed task action from `[-1, 1]`
-to excitation `[0, 1]`, and applies the same device first-order activation
-update before source force projection. Its local Apple M4 smoke probe evaluates
-all 80 source muscles and reaches a real constraint using a source-tree body
-plus a deliberately synthetic sphere and plane. Full explicit excitation and a
+Core revision `730aba4` exposes the bounded source-default mobile-root
+reducer used by the dense source-dynamics and streamed-response kernels, then
+remaps source Millard path/wrap body identities after removing the synthetic
+anchor. The reusable reducer returns canonical source body/joint maps and
+rejects actuator profiles or a moving source default rather than inferring a
+different mobile state.
+It retains the fail-closed native-task bridge: exactly one ordered
+Millard-excitation action per source muscle, no mixed generic actuation or
+partial action surface, signed task action `[-1, 1]` mapped to excitation
+`[0, 1]`, and device first-order activation before source force projection.
+Its local Apple M4 smoke probe preserves the source default pose, evaluates all
+80 source muscles, and reaches a real constraint using a source-tree body plus
+a deliberately synthetic sphere and plane. Full explicit excitation and a
 complete native task action surface both produce larger device force than the
 source-default state without CPU force restaging; final device activation values
 match the exact first-order reference. This closes neither a BodyParts3D foot
 attachment nor a walking contact model: the temporary shapes, plane height,
 friction, and compliance exist only to exercise the owner contact ABI.
 Registered foot colliders, calibrated material/contact parameters,
-mobile-root source dynamics, deterministic reset/replay, and policy outcomes
-are still required before a walking rollout can be claimed.
+deterministic reset/replay, and policy outcomes are still required before a
+walking rollout can be claimed.
 
 The flat-ground walking scenario is blocked until the following artifacts are
 present and validated: per-foot BodyParts3D-to-Rajagopal registration,
