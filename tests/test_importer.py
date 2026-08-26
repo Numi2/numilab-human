@@ -305,6 +305,25 @@ class ImporterTests(unittest.TestCase):
             0.5,
         )
 
+    def test_opensim3_parser_retains_body_owned_joint_frames(self) -> None:
+        source = """<?xml version=\"1.0\"?>
+<OpenSimDocument Version=\"30000\"><Model name=\"legacy\">
+  <gravity>0 -9.81 0</gravity>
+  <BodySet><objects><Body name=\"cerv7\"><mass>0.5</mass><mass_center>0 0 0</mass_center><inertia>1 1 1 0 0 0</inertia><Joint><CustomJoint name=\"neck\"><parent_body>spine</parent_body><location_in_parent>0 0.1 0</location_in_parent><orientation_in_parent>0 0 0</orientation_in_parent><location>0 0 0</location><orientation>0 0 0</orientation><CoordinateSet><objects><Coordinate name=\"pitch\"><default_value>0</default_value><range>-1 1</range></Coordinate></objects></CoordinateSet></CustomJoint></Joint></Body></objects></BodySet>
+  <ForceSet><objects></objects></ForceSet>
+</Model></OpenSimDocument>"""
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "legacy.osim"
+            path.write_text(source, encoding="utf-8")
+            result = parse_opensim(path, "legacy")
+        joint = result["joints"][0]
+        self.assertEqual(result["opensim_document_version"], "30000")
+        self.assertTrue(joint["legacy_opensim3"])
+        self.assertEqual(joint["parent_frame"], "spine")
+        self.assertEqual(joint["child_frame"], "cerv7")
+        self.assertEqual(joint["frames"][0]["translation_m"], [0.0, 0.1, 0.0])
+        self.assertEqual(joint["coordinates"][0]["id"], "pitch")
+
     def test_bodyparts_parser_preserves_two_hierarchies(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             source = Path(temporary)

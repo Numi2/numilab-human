@@ -1062,6 +1062,129 @@ def rajagopal_millard_muscle_ir(model: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def mortensen_neck_source_ir(model: dict[str, Any]) -> dict[str, Any]:
+    """Retain the selected cervical/hyoid model without inventing a body bridge.
+
+    Mortensen 2018 is an OpenSim 3 model: its body-owned joints and path-point
+    body references differ from the OpenSim 4 sockets used by Rajagopal.  This
+    source IR deliberately preserves that representation.  It is the input to
+    a later rest-pose registration against the active MyoSim thorax/neck, not
+    a claim that two independently scaled skeletons can be joined by name.
+    """
+    if model.get("source_id") != "mortensen_2018_neck":
+        raise ImportError("Mortensen neck IR requires the selected mortensen_2018_neck source")
+    if model.get("model_id") != "HYOID_Scaled":
+        raise ImportError("Mortensen neck model identity drifted from HYOID_Scaled")
+    if model.get("opensim_document_version") != "30000":
+        raise ImportError("Mortensen neck IR requires the OpenSim 3 source layout")
+
+    expected_bodies = {
+        "ground", "spine", "ribcage", "rscapula", "rclavicle", "lscapula", "lclavicle",
+        "cerv7", "cerv6", "cerv5", "cerv4", "cerv3", "cerv2", "cerv1", "skull", "jaw",
+    }
+    bodies = model.get("bodies")
+    joints = model.get("joints")
+    muscles = model.get("muscles")
+    if not isinstance(bodies, list) or {body.get("id") for body in bodies} != expected_bodies:
+        raise ImportError("Mortensen neck body set drifted from the selected source")
+    if not isinstance(joints, list) or len(joints) != 15 or not all(
+        joint.get("legacy_opensim3") is True for joint in joints
+    ):
+        raise ImportError("Mortensen neck requires its 15 body-owned OpenSim 3 joints")
+    if not isinstance(muscles, list) or len(muscles) != 72 or not all(
+        muscle.get("kind") == "Millard2012EquilibriumMuscle" for muscle in muscles
+    ):
+        raise ImportError("Mortensen neck requires the complete 72-muscle Millard set")
+
+    body_ids = {body["id"] for body in bodies}
+    compiled_muscles: list[dict[str, Any]] = []
+    for muscle in muscles:
+        identifier = muscle.get("id")
+        parameters = muscle.get("parameters")
+        curves = muscle.get("curves")
+        points = muscle.get("path_points")
+        wraps = muscle.get("path_wraps")
+        if not isinstance(identifier, str) or not identifier:
+            raise ImportError("Mortensen muscle has no identifier")
+        if not isinstance(parameters, dict) or not isinstance(curves, dict):
+            raise ImportError(f"Mortensen muscle {identifier} has incomplete source properties")
+        required_parameters = {
+            "max_isometric_force", "optimal_fiber_length", "tendon_slack_length",
+            "pennation_angle_at_optimal", "minimum_activation",
+        }
+        if not required_parameters.issubset(parameters):
+            raise ImportError(f"Mortensen muscle {identifier} is missing a Hill-type source parameter")
+        if set(curves) != {
+            "ActiveForceLengthCurve", "FiberForceLengthCurve", "ForceVelocityCurve", "TendonForceLengthCurve",
+        }:
+            raise ImportError(f"Mortensen muscle {identifier} has an incomplete Millard curve set")
+        if not isinstance(points, list) or len(points) < 2 or not isinstance(wraps, list):
+            raise ImportError(f"Mortensen muscle {identifier} has an invalid GeometryPath")
+        for point in points:
+            frame = point.get("parent_frame")
+            if not isinstance(frame, str) or frame not in body_ids:
+                raise ImportError(f"Mortensen muscle {identifier} has a path point outside its body set")
+            _vector3(point.get("location_m"), f"Mortensen muscle {identifier} path point")
+        compiled_muscles.append(
+            {
+                "id": identifier,
+                "parameters": parameters,
+                "curves": curves,
+                "path_points": points,
+                "path_wraps": wraps,
+                "source_xml": muscle.get("source_xml"),
+            }
+        )
+
+    cervical_order = ["cerv7", "cerv6", "cerv5", "cerv4", "cerv3", "cerv2", "cerv1", "skull"]
+    cervical_joints = [
+        joint for joint in joints
+        if joint.get("parent_frame") in set(cervical_order) | {"spine"}
+        and joint.get("child_frame") in set(cervical_order)
+    ]
+    if len(cervical_joints) != 8:
+        raise ImportError("Mortensen neck must retain its eight serial cervical/skull joints")
+    return {
+        "schema": "numi.human.mortensen-neck-source-ir.v1",
+        "source": {
+            "id": model.get("source_id"),
+            "file": model.get("source_file"),
+            "sha256": model.get("source_sha256"),
+            "model_id": model.get("model_id"),
+            "opensim_document_version": model.get("opensim_document_version"),
+        },
+        "model": {
+            "body_count": len(bodies), "joint_count": len(joints), "muscle_count": len(compiled_muscles),
+            "cervical_body_order": cervical_order,
+            "cervical_joint_count": len(cervical_joints),
+            "hyoid_and_jaw_support": True,
+            "explicit_ignore_tendon_compliance_count": sum(
+                1 for muscle in compiled_muscles
+                if "ignore_tendon_compliance" in muscle["parameters"]
+            ),
+        },
+        "bodies": bodies,
+        "joints": joints,
+        "muscles": compiled_muscles,
+        "integration_contract": {
+            "active_body": "MyoSim myofullbody",
+            "source_root": "spine",
+            "candidate_active_attachment": "cervical_spine",
+            "required_before_force_application": [
+                "source-to-source rest-pose registration from Mortensen spine to MyoSim cervical_spine",
+                "explicit replacement or merge decision for MyoSim neck/head bodies",
+                "mapped path-point and wrap geometry frames validated at the registered pose",
+                "native Millard equilibrium and force-scatter oracle for the merged model",
+            ],
+        },
+        "evidence_boundary": (
+            "Complete selected Mortensen source records only. This artifact does not attach its "
+            "separately scaled spine, skull, or 72 muscles to MyoSim, and therefore does not yet "
+            "apply cervical muscle force in the active full-body Core runtime."
+        ),
+    }
+
+
 def rajagopal_walking_contract(model: dict[str, Any]) -> dict[str, Any]:
     """Emit the source-backed contract required before a learned walk rollout.
 
@@ -1888,6 +2011,662 @@ _MR_JOINT_FIXED = 5
 _MR_JOINT_FUNCTION_BASED = 7
 _MR_DOF_POSITION_LIMIT = 1 << 2
 
+# MyoSim's authored MuJoCo model uses an inertial-frame body convention.  The
+# Core ABI is also COM centred, so the native lowerer retains each source
+# inertia frame and uses exact zero-inertia transform carriers only where a
+# MuJoCo body owns multiple serial joints.  Those carriers are not anatomy or
+# added mass: they preserve source joint order without a fabricated inertia.
+_MYOSIM_CORE_REFERENCE_MAGIC = b"NHRIGID2"
+_MYOSIM_CORE_REFERENCE_ABI = 1
+_MYOSIM_MUSCLE_REFERENCE_MAGIC = b"NHMYO1\0\0"
+_MYOSIM_MUSCLE_REFERENCE_ABI = 1
+_MR_MOTION_STATIC = 0
+_MR_ROOT_FLOATING = 1
+_MR_JOINT_PRISMATIC = 1
+_MR_DOF_ROOT = 1 << 0
+_MYOSIM_ROUTE_SITE = 1
+_MYOSIM_ROUTE_SPHERE = 2
+_MYOSIM_ROUTE_CYLINDER = 3
+
+
+def _myosim_matrix_from_quaternion_xyzw(quaternion: list[float]) -> list[list[float]]:
+    if len(quaternion) != 4 or not all(math.isfinite(value) for value in quaternion):
+        raise ImportError("MyoSim quaternion must be a finite xyzw tuple")
+    x, y, z, w = quaternion
+    squared = x * x + y * y + z * z + w * w
+    if squared <= 1.0e-14:
+        raise ImportError("MyoSim quaternion must be nonzero")
+    scale = 1.0 / math.sqrt(squared)
+    x, y, z, w = (value * scale for value in (x, y, z, w))
+    return [
+        [1.0 - 2.0 * (y * y + z * z), 2.0 * (x * y - z * w), 2.0 * (x * z + y * w)],
+        [2.0 * (x * y + z * w), 1.0 - 2.0 * (x * x + z * z), 2.0 * (y * z - x * w)],
+        [2.0 * (x * z - y * w), 2.0 * (y * z + x * w), 1.0 - 2.0 * (x * x + y * y)],
+    ]
+
+
+def _myosim_vector(value: Any, context: str) -> list[float]:
+    return _vector3(value, context)
+
+
+def _myosim_matrix_vector(matrix: list[list[float]], value: list[float]) -> list[float]:
+    return [sum(matrix[row][column] * value[column] for column in range(3)) for row in range(3)]
+
+
+def _myosim_subtract(left: list[float], right: list[float]) -> list[float]:
+    return [left[index] - right[index] for index in range(3)]
+
+
+def _myosim_add(left: list[float], right: list[float]) -> list[float]:
+    return [left[index] + right[index] for index in range(3)]
+
+
+def _myosim_identity() -> list[list[float]]:
+    return [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+
+
+def _myosim_body_local_from_body_frame(
+    body: dict[str, Any], point_body: list[float], context: str
+) -> list[float]:
+    """Convert a MuJoCo body-frame point into Core's COM/inertia frame."""
+    inertial_position = _myosim_vector(body.get("inertial_position_body_m"), context + " inertial position")
+    inertial_rotation = _myosim_matrix_from_quaternion_xyzw(
+        list(body.get("inertial_quaternion_body_xyzw", []))
+    )
+    return _myosim_matrix_vector(
+        _matrix_transpose(inertial_rotation),
+        _myosim_subtract(point_body, inertial_position),
+    )
+
+
+def _myosim_world_joint_anchor(
+    body: dict[str, Any], joint_position_body: list[float], context: str
+) -> list[float]:
+    body_position = _myosim_vector(body.get("default_body_position_world_m"), context + " body position")
+    body_rotation = _myosim_matrix_from_quaternion_xyzw(
+        list(body.get("default_body_quaternion_world_xyzw", []))
+    )
+    return _myosim_add(body_position, _myosim_matrix_vector(body_rotation, joint_position_body))
+
+
+def _myosim_pack_body_record(
+    *,
+    parent_body: int,
+    inbound_joint: int,
+    source_body: dict[str, Any] | None,
+    virtual: bool,
+    context: str,
+) -> bytes:
+    if virtual:
+        motion = _MR_MOTION_STATIC
+        mass = 0.0
+        inverse_mass = 0.0
+        inertia = [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
+        inverse = inertia
+    else:
+        if source_body is None:
+            raise ImportError(f"{context} has no source body")
+        mass = _finite_scalar(source_body.get("mass_kg"), context + " mass")
+        raw_inertia = source_body.get("inertia_kg_m2")
+        if mass == 0.0:
+            motion = _MR_MOTION_STATIC
+            inverse_mass = 0.0
+            inertia = [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
+            inverse = inertia
+        else:
+            if mass < 0.0:
+                raise ImportError(f"{context} has negative source mass")
+            if not isinstance(raw_inertia, list) or len(raw_inertia) != 3:
+                raise ImportError(f"{context} has no diagonal source inertia")
+            principal = [_finite_scalar(value, context + " principal inertia") for value in raw_inertia]
+            if not all(value > 0.0 for value in principal):
+                raise ImportError(f"{context} has non-positive source inertia")
+            motion = _MR_MOTION_DYNAMIC
+            inverse_mass = 1.0 / mass
+            inertia = [
+                [principal[0], 0.0, 0.0],
+                [0.0, principal[1], 0.0],
+                [0.0, 0.0, principal[2]],
+            ]
+            inverse = [
+                [1.0 / principal[0], 0.0, 0.0],
+                [0.0, 1.0 / principal[1], 0.0],
+                [0.0, 0.0, 1.0 / principal[2]],
+            ]
+    return (
+        struct.pack("<4I", 0, parent_body, inbound_joint, motion)
+        + _pack_float4([mass, inverse_mass, 0.0, 0.0], context + " mass")
+        + _pack_float4([0.0, 0.0, 0.0, 0.0], context + " COM")
+        + b"".join(_pack_float4([*row, 0.0], context + " inertia") for row in inertia)
+        + b"".join(_pack_float4([*row, 0.0], context + " inverse inertia") for row in inverse)
+        + _pack_float4([0.0, 0.0, 0.0, 0.0], context + " damping")
+    )
+
+
+def _myosim_pack_joint_record(
+    *,
+    parent_body: int,
+    child_body: int,
+    joint_type: int,
+    q_offset: int,
+    nq: int,
+    v_offset: int,
+    nv: int,
+    axis: list[float],
+    parent_anchor: list[float],
+    child_anchor: list[float],
+    parent_rotation: list[list[float]],
+    child_rotation: list[list[float]],
+    context: str,
+) -> bytes:
+    return (
+        struct.pack("<8I", parent_body, child_body, joint_type, 0, q_offset, nq, v_offset, nv)
+        + _pack_float4([*axis, 0.0], context + " axis")
+        + _pack_float4([0.0, 0.0, 0.0, 0.0], context + " axis 1")
+        + _pack_float4([0.0, 0.0, 0.0, 0.0], context + " axis 2")
+        + _pack_float4([*parent_anchor, 0.0], context + " parent anchor")
+        + _pack_float4([*child_anchor, 0.0], context + " child anchor")
+        + _pack_float4(_quaternion_xyzw_from_matrix(parent_rotation), context + " parent rotation")
+        + _pack_float4(_quaternion_xyzw_from_matrix(child_rotation), context + " child rotation")
+    )
+
+
+def _myosim_pack_dof_record(
+    *,
+    joint_index: int,
+    q_index: int,
+    v_index: int,
+    local_dof: int,
+    flags: int,
+    limits: list[float],
+    armature: float,
+    context: str,
+) -> bytes:
+    return (
+        struct.pack("<8I", 0, joint_index, q_index, v_index, local_dof, flags, 0, 0)
+        + _pack_float4(limits, context + " limits")
+        + _pack_float4([0.0, 0.0, armature, 0.0], context + " drive")
+    )
+
+
+def myosim_fullbody_reference_artifacts(
+    exported: dict[str, Any],
+) -> tuple[dict[str, Any], bytes, bytes]:
+    """Lower MyoSim's compiled full body into Core rigid and muscle payloads.
+
+    The source uses a MuJoCo free root and several multiple-joint bodies.  A
+    one-joint-per-body Core tree therefore receives zero-inertia transform
+    carriers between serial source joints.  They carry no mass, inertia, or
+    anatomy and are admitted only by the CPU reference solver.
+    """
+    if exported.get("schema") != "numi.human.myosim-mujoco-export.v1":
+        raise ImportError("MyoSim build requires numi.human.myosim-mujoco-export.v1")
+    source = exported.get("source")
+    model = exported.get("model")
+    bodies = exported.get("bodies")
+    joints = exported.get("joints")
+    sites = exported.get("sites")
+    geometries = exported.get("wrap_geometries")
+    muscles = exported.get("muscles")
+    if not all(isinstance(value, list) for value in (bodies, joints, sites, geometries, muscles)):
+        raise ImportError("MyoSim export has incomplete source arrays")
+    if not isinstance(source, dict) or not isinstance(model, dict):
+        raise ImportError("MyoSim export has no source or model records")
+    source_hash = source.get("archive_sha256")
+    if not isinstance(source_hash, str) or not re.fullmatch(r"[0-9a-f]{64}", source_hash):
+        raise ImportError("MyoSim export has no source archive SHA-256")
+    if source.get("revision") != "33c89c2bde282553dde3f526768eb3bdcfaa7649":
+        raise ImportError("MyoSim export is not the selected full-body source revision")
+
+    body_by_id = {body.get("id"): body for body in bodies if isinstance(body, dict)}
+    joint_by_id = {joint.get("id"): joint for joint in joints if isinstance(joint, dict)}
+    if len(body_by_id) != len(bodies) or len(joint_by_id) != len(joints):
+        raise ImportError("MyoSim export has duplicate or unnamed source identities")
+    root_body_id = model.get("root_body")
+    root_joint_id = model.get("root_joint")
+    if root_body_id not in body_by_id or root_joint_id not in joint_by_id:
+        raise ImportError("MyoSim export has an unresolved free root")
+    root_joint = joint_by_id[root_joint_id]
+    if root_joint.get("body") != root_body_id or root_joint.get("type") != 0:
+        raise ImportError("MyoSim export free root is not a MuJoCo free joint")
+    source_qpos = model.get("default_qpos")
+    if not isinstance(source_qpos, list):
+        raise ImportError("MyoSim export omits default qpos")
+    source_qpos = [_finite_scalar(value, "MyoSim default qpos") for value in source_qpos]
+    if len(source_qpos) != model.get("nq"):
+        raise ImportError("MyoSim export default qpos count disagrees with nq")
+
+    joints_for_body: dict[int, list[dict[str, Any]]] = defaultdict(list)
+    for joint in joints:
+        body_id = joint.get("body")
+        if body_id not in body_by_id:
+            raise ImportError("MyoSim joint references an unknown source body")
+        joints_for_body[body_id].append(joint)
+    for body_joints in joints_for_body.values():
+        body_joints.sort(key=lambda entry: int(entry.get("id", -1)))
+    if joints_for_body[root_body_id] != [root_joint]:
+        raise ImportError("MyoSim free root body owns additional unsupported source joints")
+
+    # Core body 0 is the source's free-root body, represented at its true
+    # source inertial/COM pose rather than a synthetic fixed anchor.
+    root_source = body_by_id[root_body_id]
+    root_position = _myosim_vector(root_source.get("default_com_position_world_m"), "MyoSim root COM")
+    root_quaternion = list(root_source.get("default_inertial_quaternion_world_xyzw", []))
+    _myosim_matrix_from_quaternion_xyzw(root_quaternion)
+    body_nodes: list[dict[str, Any]] = [
+        {"name": str(root_source.get("name")), "source_body": root_source, "parent": 0xFFFFFFFF,
+         "inbound": 0xFFFFFFFF, "virtual": False}
+    ]
+    source_body_to_core: dict[int, int] = {int(root_body_id): 0}
+    joint_records: list[bytes] = []
+    dof_records: list[bytes] = []
+    default_q = [*root_position, *[_finite_scalar(value, "MyoSim root quaternion") for value in root_quaternion]]
+    default_v = [0.0] * 6
+    root_armature = _finite_scalar(root_joint.get("armature"), "MyoSim free-root armature")
+    if root_armature != 0.0:
+        raise ImportError("MyoSim free-root armature is unsupported by the Core root ABI")
+    for local_dof in range(6):
+        dof_records.append(
+            _myosim_pack_dof_record(
+                joint_index=0xFFFFFFFF,
+                q_index=local_dof if local_dof < 3 else 0xFFFFFFFF,
+                v_index=local_dof,
+                local_dof=local_dof,
+                flags=_MR_DOF_ROOT,
+                limits=[0.0, 0.0, 0.0, 0.0],
+                armature=0.0,
+                context="MyoSim free root",
+            )
+        )
+
+    unresolved = {int(body_id) for body_id in body_by_id if int(body_id) != int(root_body_id)}
+    source_joint_map: list[dict[str, Any]] = []
+    while unresolved:
+        progressed = False
+        for source_body_id in sorted(tuple(unresolved)):
+            source_body = body_by_id[source_body_id]
+            parent_source_id = source_body.get("parent")
+            if parent_source_id not in source_body_to_core:
+                continue
+            parent_core = source_body_to_core[parent_source_id]
+            body_joints = joints_for_body.get(source_body_id, [])
+            source_body_rotation = _myosim_matrix_from_quaternion_xyzw(
+                list(source_body.get("default_body_quaternion_world_xyzw", []))
+            )
+            source_body_position = _myosim_vector(
+                source_body.get("default_body_position_world_m"),
+                f"MyoSim body {source_body_id} default position",
+            )
+            parent_source = body_by_id[parent_source_id]
+            parent_inertial_rotation = _myosim_matrix_from_quaternion_xyzw(
+                list(parent_source.get("default_inertial_quaternion_world_xyzw", []))
+            )
+            parent_com = _myosim_vector(parent_source.get("default_com_position_world_m"), "MyoSim parent COM")
+            child_inertial_rotation = _myosim_matrix_from_quaternion_xyzw(
+                list(source_body.get("default_inertial_quaternion_world_xyzw", []))
+            )
+            if not body_joints:
+                child_core = len(body_nodes)
+                parent_rotation = _matrix_product(_matrix_transpose(parent_inertial_rotation), source_body_rotation)
+                child_rotation = _matrix_product(_matrix_transpose(child_inertial_rotation), source_body_rotation)
+                parent_anchor = _myosim_matrix_vector(
+                    _matrix_transpose(parent_inertial_rotation),
+                    _myosim_subtract(source_body_position, parent_com),
+                )
+                child_anchor = _myosim_body_local_from_body_frame(
+                    source_body, [0.0, 0.0, 0.0], f"MyoSim fixed body {source_body_id}"
+                )
+                joint_index = len(joint_records)
+                joint_records.append(
+                    _myosim_pack_joint_record(
+                        parent_body=parent_core, child_body=child_core, joint_type=_MR_JOINT_FIXED,
+                        q_offset=len(default_q), nq=0, v_offset=len(default_v), nv=0,
+                        axis=[0.0, 0.0, 0.0], parent_anchor=parent_anchor, child_anchor=child_anchor,
+                        parent_rotation=parent_rotation, child_rotation=child_rotation,
+                        context=f"MyoSim fixed body {source_body_id}",
+                    )
+                )
+                body_nodes.append(
+                    {"name": str(source_body.get("name")), "source_body": source_body,
+                     "parent": parent_core, "inbound": joint_index, "virtual": False}
+                )
+                source_body_to_core[source_body_id] = child_core
+            else:
+                if any(joint.get("type") not in (2, 3) for joint in body_joints):
+                    kinds = ", ".join(str(joint.get("type")) for joint in body_joints)
+                    raise ImportError(f"MyoSim body {source_body_id} has unsupported non-free joint types: {kinds}")
+                prior_core = parent_core
+                for local_index, source_joint in enumerate(body_joints):
+                    terminal = local_index == len(body_joints) - 1
+                    child_core = len(body_nodes)
+                    source_position = _myosim_vector(
+                        source_joint.get("position_body_m"), f"MyoSim joint {source_joint.get('id')} position"
+                    )
+                    axis = _myosim_vector(source_joint.get("axis_body"), f"MyoSim joint {source_joint.get('id')} axis")
+                    if sum(value * value for value in axis) <= 1.0e-14:
+                        raise ImportError(f"MyoSim joint {source_joint.get('id')} has a zero source axis")
+                    if local_index == 0:
+                        parent_rotation = _matrix_product(
+                            _matrix_transpose(parent_inertial_rotation), source_body_rotation
+                        )
+                        anchor_world = _myosim_world_joint_anchor(
+                            source_body, source_position, f"MyoSim joint {source_joint.get('id')}"
+                        )
+                        parent_anchor = _myosim_matrix_vector(
+                            _matrix_transpose(parent_inertial_rotation),
+                            _myosim_subtract(anchor_world, parent_com),
+                        )
+                    else:
+                        parent_rotation = _myosim_identity()
+                        parent_anchor = source_position
+                    if terminal:
+                        child_rotation = _matrix_product(
+                            _matrix_transpose(child_inertial_rotation), source_body_rotation
+                        )
+                        child_anchor = _myosim_body_local_from_body_frame(
+                            source_body, source_position, f"MyoSim joint {source_joint.get('id')}"
+                        )
+                    else:
+                        child_rotation = _myosim_identity()
+                        child_anchor = source_position
+                    source_type = source_joint.get("type")
+                    joint_type = _MR_JOINT_PRISMATIC if source_type == 2 else _MR_JOINT_REVOLUTE
+                    q_offset = len(default_q)
+                    v_offset = len(default_v)
+                    source_q_index = source_joint.get("qpos_address")
+                    if not isinstance(source_q_index, int) or not 0 <= source_q_index < len(source_qpos):
+                        raise ImportError(f"MyoSim joint {source_joint.get('id')} has invalid qpos address")
+                    default_q.append(source_qpos[source_q_index])
+                    default_v.append(0.0)
+                    source_range = source_joint.get("range")
+                    limited = bool(source_joint.get("limited"))
+                    core_limit_status = "source_unlimited"
+                    if limited:
+                        if not isinstance(source_range, list) or len(source_range) != 2:
+                            raise ImportError(f"MyoSim joint {source_joint.get('id')} has invalid range")
+                        limits = [_finite_scalar(source_range[0], "MyoSim joint lower range"),
+                                  _finite_scalar(source_range[1], "MyoSim joint upper range"), 0.0, 0.0]
+                        if limits[0] > limits[1]:
+                            raise ImportError(f"MyoSim joint {source_joint.get('id')} has inverted source range")
+                        if limits[0] <= default_q[-1] <= limits[1]:
+                            flags = _MR_DOF_POSITION_LIMIT
+                            core_limit_status = "enforced"
+                        else:
+                            # MuJoCo admits this authored reset even when it sits
+                            # beyond a hard range; Core's state validator does not.
+                            # Keep the exact source range in the manifest and do
+                            # not silently shift the source default or invent a
+                            # different clamp.
+                            limits = [0.0, 0.0, 0.0, 0.0]
+                            flags = 0
+                            core_limit_status = "retained_in_manifest_not_enforced_at_source_default"
+                    else:
+                        limits = [0.0, 0.0, 0.0, 0.0]
+                        flags = 0
+                    joint_index = len(joint_records)
+                    joint_records.append(
+                        _myosim_pack_joint_record(
+                            parent_body=prior_core, child_body=child_core, joint_type=joint_type,
+                            q_offset=q_offset, nq=1, v_offset=v_offset, nv=1,
+                            axis=axis, parent_anchor=parent_anchor, child_anchor=child_anchor,
+                            parent_rotation=parent_rotation, child_rotation=child_rotation,
+                            context=f"MyoSim joint {source_joint.get('id')}",
+                        )
+                    )
+                    dof_records.append(
+                        _myosim_pack_dof_record(
+                            joint_index=joint_index, q_index=q_offset, v_index=v_offset, local_dof=0,
+                            flags=flags, limits=limits,
+                            armature=_finite_scalar(source_joint.get("armature"), "MyoSim joint armature"),
+                            context=f"MyoSim joint {source_joint.get('id')}",
+                        )
+                    )
+                    body_nodes.append(
+                        {"name": (str(source_body.get("name")) if terminal else
+                                  f"__myosim_serial_{source_body.get('name')}_{local_index}"),
+                         "source_body": source_body if terminal else None,
+                         "parent": prior_core, "inbound": joint_index, "virtual": not terminal}
+                    )
+                    source_joint_map.append(
+                        {"source_joint_id": source_joint.get("id"), "source_name": source_joint.get("name"),
+                         "core_joint_index": joint_index, "core_q_index": q_offset,
+                         "core_v_index": v_offset, "source_type": source_type,
+                         "source_range": source_range, "source_limited": limited,
+                         "core_limit_status": core_limit_status}
+                    )
+                    prior_core = child_core
+                source_body_to_core[source_body_id] = prior_core
+            unresolved.remove(source_body_id)
+            progressed = True
+        if not progressed:
+            raise ImportError("MyoSim source body graph is disconnected or cyclic")
+
+    if len(joint_records) + 1 != len(body_nodes):
+        raise ImportError("MyoSim Core tree did not assign one inbound joint to every non-root node")
+    body_records = [
+        _myosim_pack_body_record(
+            parent_body=node["parent"], inbound_joint=node["inbound"], source_body=node["source_body"],
+            virtual=bool(node["virtual"]), context=f"MyoSim body {node['name']}"
+        )
+        for node in body_nodes
+    ]
+    nq, nv = len(default_q), len(default_v)
+    if nq != nv + 1 or nq != model.get("nq"):
+        raise ImportError("MyoSim Core lowerer did not retain the source floating configuration dimensions")
+    if nv != model.get("nv"):
+        raise ImportError("MyoSim Core lowerer did not retain the source velocity dimensions")
+    world_gravity = _myosim_vector(model.get("gravity_m_s2"), "MyoSim gravity")
+    timestep = _finite_scalar(model.get("timestep_seconds"), "MyoSim timestep")
+    if timestep <= 0.0:
+        raise ImportError("MyoSim source timestep must be positive")
+    world = struct.pack(
+        "<16I8f",
+        _MR_ENGINE_ABI_VERSION, len(body_records), 1, len(joint_records),
+        0, 0, nq, nv,
+        1, 1, 1, 1,
+        0, 0, 0, 0,
+        *world_gravity, timestep,
+        1.0e-8, 1.0e-9, 2.0, 1.0e-4,
+    )
+    articulation = struct.pack(
+        "<12I", 0, _MR_ROOT_FLOATING, 0, len(body_records), 0, len(joint_records),
+        0, nq, 0, nv, 0, 0
+    )
+    source_body_ids = sorted(int(identifier) for identifier in body_by_id)
+    source_to_core = [source_body_to_core[identifier] for identifier in source_body_ids]
+    expected_poses = []
+    for identifier in source_body_ids:
+        body = body_by_id[identifier]
+        expected_poses.extend(_myosim_vector(body.get("default_com_position_world_m"), "MyoSim source pose"))
+        quaternion = list(body.get("default_inertial_quaternion_world_xyzw", []))
+        _myosim_matrix_from_quaternion_xyzw(quaternion)
+        expected_poses.extend(_finite_scalar(value, "MyoSim source pose quaternion") for value in quaternion)
+    header = struct.pack(
+        "<8s10I32s",
+        _MYOSIM_CORE_REFERENCE_MAGIC, _MYOSIM_CORE_REFERENCE_ABI, _MR_ENGINE_ABI_VERSION,
+        len(source_body_ids), len(body_records), len(joint_records), nq, nv, 0,
+        sum(1 for node in body_nodes if node["virtual"]), 0, bytes.fromhex(source_hash),
+    )
+    rigid_payload = b"".join([
+        header, world, articulation, *body_records, *joint_records, *dof_records,
+        struct.pack(f"<{nq}f", *default_q), struct.pack(f"<{nv}f", *default_v),
+        struct.pack(f"<{len(source_to_core)}I", *source_to_core),
+        struct.pack(f"<{len(expected_poses)}f", *expected_poses),
+    ])
+    expected_rigid_bytes = (
+        80 + 96 + 48 + 160 * len(body_records) + 144 * len(joint_records) +
+        64 * nv + 4 * (nq + nv) + 4 * len(source_to_core) + 28 * len(source_to_core)
+    )
+    if len(rigid_payload) != expected_rigid_bytes:
+        raise ImportError(
+            "internal MyoSim Core rigid payload ABI size mismatch "
+            f"({len(rigid_payload)} != {expected_rigid_bytes})"
+        )
+
+    site_by_id = {site.get("id"): site for site in sites if isinstance(site, dict)}
+    geom_by_id = {geom.get("id"): geom for geom in geometries if isinstance(geom, dict)}
+    used_site_ids = sorted({
+        int(node.get("source_id"))
+        for muscle in muscles for node in muscle.get("route", [])
+        if node.get("kind") == "site"
+    } | {
+        int(node.get("side_site_source_id"))
+        for muscle in muscles for node in muscle.get("route", [])
+        if isinstance(node.get("side_site_source_id"), int) and int(node.get("side_site_source_id")) >= 0
+    })
+    used_geom_ids = sorted({
+        int(node.get("source_id"))
+        for muscle in muscles for node in muscle.get("route", [])
+        if node.get("kind") in {"sphere", "cylinder"}
+    })
+    if any(identifier not in site_by_id for identifier in used_site_ids):
+        raise ImportError("MyoSim muscle route references an absent source site")
+    if any(identifier not in geom_by_id for identifier in used_geom_ids):
+        raise ImportError("MyoSim muscle route references an absent wrap geometry")
+    site_index = {identifier: index for index, identifier in enumerate(used_site_ids)}
+    geom_index = {identifier: index for index, identifier in enumerate(used_geom_ids)}
+    site_records: list[bytes] = []
+    for identifier in used_site_ids:
+        site = site_by_id[identifier]
+        source_body_id = site.get("body")
+        if source_body_id not in source_body_to_core:
+            raise ImportError("MyoSim site has unresolved source body")
+        local = _myosim_body_local_from_body_frame(
+            body_by_id[source_body_id], _myosim_vector(site.get("position_body_m"), "MyoSim site position"),
+            f"MyoSim site {identifier}",
+        )
+        site_records.append(struct.pack("<I3f", source_body_to_core[source_body_id], *local))
+    geom_records: list[bytes] = []
+    for identifier in used_geom_ids:
+        geometry = geom_by_id[identifier]
+        source_body_id = geometry.get("body")
+        if source_body_id not in source_body_to_core:
+            raise ImportError("MyoSim wrap geometry has unresolved source body")
+        body = body_by_id[source_body_id]
+        local = _myosim_body_local_from_body_frame(
+            body, _myosim_vector(geometry.get("position_body_m"), "MyoSim wrap position"),
+            f"MyoSim wrap {identifier}",
+        )
+        body_rotation = _myosim_matrix_from_quaternion_xyzw(
+            list(body.get("inertial_quaternion_body_xyzw", []))
+        )
+        geometry_rotation = _myosim_matrix_from_quaternion_xyzw(
+            list(geometry.get("quaternion_body_xyzw", []))
+        )
+        core_rotation = _matrix_product(_matrix_transpose(body_rotation), geometry_rotation)
+        route_type = _MYOSIM_ROUTE_SPHERE if geometry.get("type") == 2 else _MYOSIM_ROUTE_CYLINDER
+        if route_type == _MYOSIM_ROUTE_CYLINDER and geometry.get("type") != 5:
+            raise ImportError(f"MyoSim wrap {identifier} has unsupported source geometry type")
+        geom_records.append(
+            struct.pack(
+                "<2I14f", source_body_to_core[source_body_id], route_type,
+                _finite_scalar(geometry.get("radius_m"), "MyoSim wrap radius"), 0.0,
+                *local, *[value for row in core_rotation for value in row],
+            )
+        )
+    route_records: list[bytes] = []
+    muscle_records: list[bytes] = []
+    muscle_manifest: list[dict[str, Any]] = []
+    for muscle_index, muscle in enumerate(muscles):
+        route = muscle.get("route")
+        if not isinstance(route, list) or len(route) < 2:
+            raise ImportError(f"MyoSim muscle {muscle.get('name')} has no spatial route")
+        route_offset = len(route_records)
+        for node in route:
+            kind = node.get("kind")
+            if kind == "site":
+                route_type, target = _MYOSIM_ROUTE_SITE, site_index.get(node.get("source_id"))
+            elif kind == "sphere":
+                route_type, target = _MYOSIM_ROUTE_SPHERE, geom_index.get(node.get("source_id"))
+            elif kind == "cylinder":
+                route_type, target = _MYOSIM_ROUTE_CYLINDER, geom_index.get(node.get("source_id"))
+            else:
+                raise ImportError(f"MyoSim muscle {muscle.get('name')} has unsupported route node")
+            if target is None:
+                raise ImportError(f"MyoSim muscle {muscle.get('name')} route target was not lowered")
+            side = node.get("side_site_source_id", -1)
+            side_index = 0xFFFFFFFF if side == -1 else site_index.get(side)
+            if side_index is None:
+                raise ImportError(f"MyoSim muscle {muscle.get('name')} side site was not lowered")
+            route_records.append(struct.pack("<4I", route_type, target, side_index, 0))
+        length_range = muscle.get("length_range_m")
+        control_range = muscle.get("control_range")
+        gain = muscle.get("gain_parameters")
+        bias = muscle.get("bias_parameters")
+        dynamics = muscle.get("dynamic_parameters")
+        if not all(isinstance(values, list) for values in (length_range, control_range, gain, bias, dynamics)):
+            raise ImportError(f"MyoSim muscle {muscle.get('name')} has incomplete source parameters")
+        if len(length_range) != 2 or len(control_range) != 2 or any(len(values) != 10 for values in (gain, bias, dynamics)):
+            raise ImportError(f"MyoSim muscle {muscle.get('name')} has invalid source parameter dimensions")
+        floats = [
+            *[_finite_scalar(value, "MyoSim muscle length range") for value in length_range],
+            _finite_scalar(muscle.get("acceleration_scale"), "MyoSim muscle acceleration scale"),
+            *[_finite_scalar(value, "MyoSim muscle control range") for value in control_range],
+            *[_finite_scalar(value, "MyoSim muscle gain") for value in gain],
+            *[_finite_scalar(value, "MyoSim muscle bias") for value in bias],
+            *[_finite_scalar(value, "MyoSim muscle dynamics") for value in dynamics],
+            _finite_scalar(muscle.get("oracle_length_m"), "MyoSim muscle source length oracle"),
+            _finite_scalar(muscle.get("oracle_force_n_at_activation_0_5"), "MyoSim muscle source force oracle"),
+        ]
+        if len(floats) != 37:
+            raise ImportError("internal MyoSim muscle record field count mismatch")
+        muscle_records.append(
+            struct.pack("<4I37f", int(muscle.get("tendon")), route_offset, len(route), 0, *floats)
+        )
+        muscle_manifest.append({
+            "source_actuator_index": muscle.get("id"), "name": muscle.get("name"),
+            "source_tendon_index": muscle.get("tendon"), "route_nodes": len(route),
+            "oracle_length_m": floats[-2], "oracle_force_n_at_activation_0_5": floats[-1],
+        })
+    muscle_header = struct.pack(
+        "<8s9I32s", _MYOSIM_MUSCLE_REFERENCE_MAGIC, _MYOSIM_MUSCLE_REFERENCE_ABI,
+        len(body_records), len(muscle_records), len(site_records), len(geom_records), len(route_records),
+        int(model.get("tendon_count")), 0, 0, bytes.fromhex(source_hash)
+    )
+    muscle_payload = b"".join([muscle_header, *site_records, *geom_records, *route_records, *muscle_records])
+    expected_muscle_bytes = 76 + 16 * len(site_records) + 64 * len(geom_records) + 16 * len(route_records) + 164 * len(muscle_records)
+    if len(muscle_payload) != expected_muscle_bytes:
+        raise ImportError("internal MyoSim muscle payload ABI size mismatch")
+    manifest = {
+        "schema": "numi.human.myosim-fullbody-reference.v1",
+        "source": source,
+        "model": {
+            "name": model.get("name"), "source_body_count": len(source_body_ids),
+            "source_joint_count": len(joints), "source_nq": model.get("nq"), "source_nv": model.get("nv"),
+            "source_muscle_count": len(muscles), "source_tendon_count": model.get("tendon_count"),
+        },
+        "core_tree": {
+            "root": "floating_source_com", "engine_body_count": len(body_records),
+            "zero_inertia_serial_transform_carrier_count": sum(1 for node in body_nodes if node["virtual"]),
+            "joint_count": len(joint_records), "nq": nq, "nv": nv,
+            "source_joint_map": source_joint_map,
+            "body_order": [node["name"] for node in body_nodes],
+        },
+        "payloads": {
+            "rigid": {"file": "myosim-fullbody-core-reference.nhrigid", "bytes": len(rigid_payload),
+                      "sha256": hashlib.sha256(rigid_payload).hexdigest(), "payload_abi": _MYOSIM_CORE_REFERENCE_ABI},
+            "muscles": {"file": "myosim-fullbody-muscle-reference.nhmyo", "bytes": len(muscle_payload),
+                        "sha256": hashlib.sha256(muscle_payload).hexdigest(), "payload_abi": _MYOSIM_MUSCLE_REFERENCE_ABI},
+        },
+        "route_coverage": {
+            "muscle_count": len(muscle_records), "route_site_count": len(site_records),
+            "wrap_geometry_count": len(geom_records),
+            "wrap_geometry_kinds": {"sphere": sum(1 for record in geom_records if struct.unpack("<2I", record[:8])[1] == _MYOSIM_ROUTE_SPHERE),
+                                    "cylinder": sum(1 for record in geom_records if struct.unpack("<2I", record[:8])[1] == _MYOSIM_ROUTE_CYLINDER)},
+        },
+        "muscles": muscle_manifest,
+        "runtime_requirement": (
+            "Load both payloads with metalrobo_numilab_human_myosim_reference_probe. "
+            "The native CPU reference preserves MuJoCo site/sphere/cylinder route geometry and "
+            "the source muscle activation, active-force, and passive-force parameter records."
+        ),
+        "evidence_boundary": (
+            "This is a source-complete native CPU-reference import. Contact, skin/organ mechanics, "
+            "Mortensen neck registration, and bounded Metal execution remain separate deliverables."
+        ),
+    }
+    return manifest, rigid_payload, muscle_payload
+
 
 def _quaternion_xyzw_from_matrix(matrix: list[list[float]]) -> list[float]:
     """Return the deterministic xyzw quaternion for a proper rotation matrix."""
@@ -2614,11 +3393,11 @@ def parse_opensim(path: Path, source_id: str) -> dict[str, Any]:
     if model is None:
         raise ImportError(f"{path.name} has no OpenSim Model element")
 
-    body_set = next((item for item in model if _local_name(item) == "BodySet"), None)
-    joint_set = next((item for item in model if _local_name(item) == "JointSet"), None)
-    force_set = next((item for item in model if _local_name(item) == "ForceSet"), None)
-    if body_set is None or joint_set is None or force_set is None:
-        raise ImportError(f"{path.name} must contain BodySet, JointSet, and ForceSet")
+    body_set = next((item for item in model.iter() if _local_name(item) == "BodySet"), None)
+    joint_set = next((item for item in model.iter() if _local_name(item) == "JointSet"), None)
+    force_set = next((item for item in model.iter() if _local_name(item) == "ForceSet"), None)
+    if body_set is None or force_set is None:
+        raise ImportError(f"{path.name} must contain BodySet and ForceSet")
 
     bodies: list[dict[str, Any]] = []
     for body in _children(body_set, "Body"):
@@ -2636,8 +3415,25 @@ def parse_opensim(path: Path, source_id: str) -> dict[str, Any]:
         )
 
     joints: list[dict[str, Any]] = []
-    objects = next((item for item in joint_set if _local_name(item) == "objects"), None)
-    for joint in list(objects) if objects is not None else []:
+    source_joints: list[tuple[ET.Element, str | None]] = []
+    if joint_set is not None:
+        objects = next((item for item in joint_set if _local_name(item) == "objects"), None)
+        source_joints.extend((joint, None) for joint in (list(objects) if objects is not None else []))
+    else:
+        # OpenSim 3 serializes each body's inbound Joint beneath that body
+        # rather than in a model-level JointSet.  Preserve that legacy source
+        # structure without pretending it already has modern socket frames.
+        for body in _children(body_set, "Body"):
+            owning_body = body.get("name")
+            holder = next((item for item in body if _local_name(item) == "Joint"), None)
+            if holder is None:
+                continue
+            source_joints.extend(
+                (candidate, owning_body)
+                for candidate in holder
+                if isinstance(candidate.tag, str)
+            )
+    for joint, owning_body in source_joints:
         identifier = joint.get("name")
         if not identifier:
             continue
@@ -2654,15 +3450,35 @@ def parse_opensim(path: Path, source_id: str) -> dict[str, Any]:
                         "locked": _number_or_text(_text(coordinate, "locked")),
                     }
                 )
+        legacy_parent = _text(joint, "parent_body")
+        legacy_frames = []
+        if owning_body is not None:
+            legacy_frames = [
+                {
+                    "id": "__legacy_parent__",
+                    "kind": "OpenSim3LegacyFrame",
+                    "parent_frame": legacy_parent,
+                    "translation_m": _number_or_text(_text(joint, "location_in_parent")),
+                    "orientation_rad": _number_or_text(_text(joint, "orientation_in_parent")),
+                },
+                {
+                    "id": "__legacy_child__",
+                    "kind": "OpenSim3LegacyFrame",
+                    "parent_frame": owning_body,
+                    "translation_m": _number_or_text(_text(joint, "location")),
+                    "orientation_rad": _number_or_text(_text(joint, "orientation")),
+                },
+            ]
         joints.append(
             {
                 "id": identifier,
                 "kind": _local_name(joint),
-                "parent_frame": _text(joint, "socket_parent_frame") or _text(joint, "parent_body"),
-                "child_frame": _text(joint, "socket_child_frame") or _text(joint, "child_body"),
+                "parent_frame": _text(joint, "socket_parent_frame") or legacy_parent,
+                "child_frame": _text(joint, "socket_child_frame") or _text(joint, "child_body") or owning_body,
                 "coordinates": coordinates,
-                "frames": _joint_frames(joint),
+                "frames": _joint_frames(joint) or legacy_frames,
                 "motion_axes": _joint_motion_axes(joint),
+                "legacy_opensim3": owning_body is not None,
                 "source_xml": _source_xml(joint),
             }
         )

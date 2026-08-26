@@ -6,6 +6,8 @@ import os
 import shutil
 import subprocess
 import sys
+import tarfile
+import tempfile
 import urllib.request
 from pathlib import Path
 
@@ -33,6 +35,8 @@ from .model import (
     rajagopal_lower_body_pilot,
     rajagopal_rigid_skeleton_ir,
     rajagopal_walking_contract,
+    myosim_fullbody_reference_artifacts,
+    mortensen_neck_source_ir,
     read_json,
     report_for,
     sha256,
@@ -121,6 +125,185 @@ def fetch(arguments: argparse.Namespace) -> int:
             "upper_extremity_next_step": "Manually download the original authenticated MoBL-ARMS bimanual archive from SimTK.",
         },
     )
+    return 0
+
+
+def _extract_pinned_tarball(archive: Path, destination: Path) -> None:
+    """Extract one GitHub source archive without accepting archive traversal."""
+    try:
+        with tarfile.open(archive, "r:gz") as bundle:
+            members = bundle.getmembers()
+            roots = {member.name.split("/", 1)[0] for member in members if member.name}
+            if len(roots) != 1:
+                raise ImportError(f"{archive.name} must have exactly one source root")
+            root = next(iter(roots))
+            for member in members:
+                relative = Path(member.name)
+                if relative.is_absolute() or ".." in relative.parts or member.issym() or member.islnk():
+                    raise ImportError(f"{archive.name} contains an unsafe source member")
+            temporary = destination.with_name(destination.name + ".partial")
+            shutil.rmtree(temporary, ignore_errors=True)
+            temporary.mkdir(parents=True, exist_ok=False)
+            for member in members:
+                relative = Path(member.name).relative_to(root)
+                if not relative.parts:
+                    continue
+                target = temporary / relative
+                if member.isdir():
+                    target.mkdir(parents=True, exist_ok=True)
+                    continue
+                if not member.isfile():
+                    continue
+                target.parent.mkdir(parents=True, exist_ok=True)
+                extracted = bundle.extractfile(member)
+                if extracted is None:
+                    raise ImportError(f"{archive.name} could not extract {member.name}")
+                with target.open("wb") as stream:
+                    shutil.copyfileobj(extracted, stream)
+    except tarfile.TarError as error:
+        raise ImportError(f"{archive.name} is not a readable gzip tar archive: {error}") from error
+    shutil.rmtree(destination, ignore_errors=True)
+    temporary.replace(destination)
+
+
+def myosim_fetch(arguments: argparse.Namespace) -> int:
+    source_lock = read_json(REPOSITORY_ROOT / "sources.lock.json")
+    source_dir = arguments.output.resolve()
+    source_dir.mkdir(parents=True, exist_ok=True)
+    for key in ("myosim_fullbody", "mortensen_2018_neck"):
+        source = source_lock["sources"][key]
+        storage = source.get("storage_dir")
+        if not isinstance(storage, str) or not storage:
+            raise ImportError(f"source lock {key} has no storage directory")
+        archive = source_dir / storage / source["archive_file"]
+        if not archive.is_file():
+            print(f"fetching {archive.name}")
+            _download(source["archive_url"], archive)
+        actual = sha256(archive)
+        if actual != source["archive_sha256"]:
+            raise ImportError(f"SHA-256 mismatch for {archive}; remove it and re-run myosim-fetch")
+        checkout = archive.parent / "checkout"
+        expected = checkout / source["expected_file"]
+        if not expected.is_file():
+            print(f"extracting {archive.name}")
+            _extract_pinned_tarball(archive, checkout)
+        if not expected.is_file():
+            raise ImportError(f"{archive.name} did not contain expected source {source['expected_file']}")
+        print(f"verified {key} {actual}")
+    return 0
+
+
+def myosim_build(arguments: argparse.Namespace) -> int:
+    source_dir = arguments.sources.resolve()
+    # Do not resolve the interpreter symlink: virtual-environment ``python``
+    # links point at the base interpreter, and resolving them drops site-packages.
+    exporter = arguments.python.expanduser().absolute()
+    if not exporter.is_file() or not os.access(exporter, os.X_OK):
+        raise ImportError(f"MyoSim exporter Python is unavailable: {exporter}")
+    with tempfile.TemporaryDirectory(prefix="numilab-human-myosim-") as temporary:
+        exported_path = Path(temporary) / "myosim-export.json"
+        environment = dict(os.environ)
+        source_path = str(REPOSITORY_ROOT / "src")
+        environment["PYTHONPATH"] = source_path + (
+            os.pathsep + environment["PYTHONPATH"] if environment.get("PYTHONPATH") else ""
+        )
+        command = [
+            str(exporter), "-m", "numilab_human.myosim_export",
+            "--sources", str(source_dir), "--output", str(exported_path),
+        ]
+        completed = subprocess.run(command, capture_output=True, text=True, check=False, env=environment)
+        if completed.returncode != 0:
+            detail = completed.stderr.strip() or completed.stdout.strip() or "no exporter output"
+            raise ImportError(f"MyoSim source export failed: {detail}")
+        exported = read_json(exported_path)
+    manifest, rigid_payload, muscle_payload = myosim_fullbody_reference_artifacts(exported)
+    output = arguments.output.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    rigid = output / manifest["payloads"]["rigid"]["file"]
+    muscle = output / manifest["payloads"]["muscles"]["file"]
+    rigid.write_bytes(rigid_payload)
+    muscle.write_bytes(muscle_payload)
+    write_json(output / "myosim-fullbody-reference.manifest.json", manifest)
+    print(f"wrote {rigid}")
+    print(f"wrote {muscle}")
+    print(f"wrote {output / 'myosim-fullbody-reference.manifest.json'}")
+    return 0
+
+
+def myosim_probe(arguments: argparse.Namespace) -> int:
+    artifact = arguments.artifact.resolve()
+    manifest = read_json(artifact / "myosim-fullbody-reference.manifest.json")
+    payloads = manifest.get("payloads")
+    if not isinstance(payloads, dict):
+        raise ImportError("MyoSim artifact manifest has no payloads")
+    rigid = artifact / str(payloads.get("rigid", {}).get("file", ""))
+    muscles = artifact / str(payloads.get("muscles", {}).get("file", ""))
+    if not rigid.is_file() or not muscles.is_file():
+        raise ImportError("MyoSim artifact is missing its rigid or muscle payload")
+    runtime_root = arguments.runtime_root.resolve()
+    probe = runtime_root / "build/bin/metalrobo_numilab_human_myosim_reference_probe"
+    if not probe.is_file() or not os.access(probe, os.X_OK):
+        raise ImportError(
+            "MyoSim Core probe is unavailable; build "
+            "metalrobo_numilab_human_myosim_reference_probe under "
+            f"{runtime_root / 'build'} first"
+        )
+    command = [str(probe), str(rigid), str(muscles)]
+    completed = subprocess.run(command, capture_output=True, text=True, check=False)
+    transcript = artifact / "myosim-fullbody-core-probe.txt"
+    transcript.write_text(
+        "command: " + " ".join(command) + "\n\nstdout:\n" + completed.stdout +
+        "\nstderr:\n" + completed.stderr,
+        encoding="utf-8",
+    )
+    if completed.stdout:
+        print(completed.stdout, end="")
+    if completed.returncode != 0:
+        if completed.stderr:
+            print(completed.stderr, end="", file=sys.stderr)
+        raise ImportError(f"MyoSim Core probe failed; see {transcript}")
+    print(f"wrote {transcript}")
+    return 0
+
+
+def myosim_visuals(arguments: argparse.Namespace) -> int:
+    exporter = arguments.python.expanduser().absolute()
+    if not exporter.is_file() or not os.access(exporter, os.X_OK):
+        raise ImportError(f"MyoSim visual Python is unavailable: {exporter}")
+    output = arguments.output.resolve()
+    environment = dict(os.environ)
+    source_path = str(REPOSITORY_ROOT / "src")
+    environment["PYTHONPATH"] = source_path + (
+        os.pathsep + environment["PYTHONPATH"] if environment.get("PYTHONPATH") else ""
+    )
+    command = [
+        str(exporter), "-m", "numilab_human.myosim_visual",
+        "--sources", str(arguments.sources.resolve()), "--output", str(output),
+    ]
+    completed = subprocess.run(command, capture_output=True, text=True, check=False, env=environment)
+    output.mkdir(parents=True, exist_ok=True)
+    transcript = output / "myosim-fullbody-source-visual.txt"
+    transcript.write_text(
+        "command: " + " ".join(command) + "\n\nstdout:\n" + completed.stdout +
+        "\nstderr:\n" + completed.stderr,
+        encoding="utf-8",
+    )
+    if completed.returncode != 0:
+        detail = completed.stderr.strip() or completed.stdout.strip() or "no renderer output"
+        raise ImportError(f"MyoSim multi-angle source render failed: {detail}")
+    if completed.stdout:
+        print(completed.stdout, end="")
+    print(f"wrote {transcript}")
+    return 0
+
+
+def mortensen_neck(arguments: argparse.Namespace) -> int:
+    """Emit the selected cervical/hyoid source IR for later MyoSim registration."""
+    source = arguments.sources.resolve() / "mortensen" / "checkout" / "models/reference/Mortensen2018.osim"
+    lower = parse_opensim(source, "mortensen_2018_neck")
+    output = arguments.output.resolve()
+    write_json(output, mortensen_neck_source_ir(lower))
+    print(f"wrote {output}")
     return 0
 
 
@@ -428,6 +611,51 @@ def visual_layers(arguments: argparse.Namespace) -> int:
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description="Build provenance-locked NumiLab Human v1 import artifacts")
     commands = result.add_subparsers(dest="command", required=True)
+    myosim_fetch_parser = commands.add_parser(
+        "myosim-fetch",
+        help="fetch and safely extract the selected MyoSim full-body and Mortensen neck sources",
+    )
+    myosim_fetch_parser.add_argument("--output", type=Path, required=True, help="ignored Sources directory")
+    myosim_fetch_parser.set_defaults(handler=myosim_fetch)
+    myosim_build_parser = commands.add_parser(
+        "myosim-build",
+        help="compile MyoSim full-body source records into native Core rigid and muscle payloads",
+    )
+    myosim_build_parser.add_argument("--sources", type=Path, required=True, help="directory made by myosim-fetch")
+    myosim_build_parser.add_argument("--output", type=Path, required=True, help="ignored local artifact directory")
+    myosim_build_parser.add_argument(
+        "--python", type=Path, default=Path(sys.executable),
+        help="Python environment with the pinned myo-sim checkout and mujoco installed",
+    )
+    myosim_build_parser.set_defaults(handler=myosim_build)
+    myosim_probe_parser = commands.add_parser(
+        "myosim-probe",
+        help="run the native Core full-body muscle-reference probe against a compiled MyoSim artifact",
+    )
+    myosim_probe_parser.add_argument("--artifact", type=Path, required=True)
+    myosim_probe_parser.add_argument(
+        "--runtime-root", type=Path,
+        default=Path(os.environ.get("NUMI_LAB_ROOT", "/Users/home/Documents/emergentnumilife/MetalRobo")),
+    )
+    myosim_probe_parser.set_defaults(handler=myosim_probe)
+    myosim_visuals_parser = commands.add_parser(
+        "myosim-visuals",
+        help="render three default-pose MyoSim source-model views for visual validation",
+    )
+    myosim_visuals_parser.add_argument("--sources", type=Path, required=True)
+    myosim_visuals_parser.add_argument("--output", type=Path, required=True, help="ignored local visual artifact directory")
+    myosim_visuals_parser.add_argument(
+        "--python", type=Path, default=Path(sys.executable),
+        help="Python environment with the pinned myo-sim checkout and mujoco installed",
+    )
+    myosim_visuals_parser.set_defaults(handler=myosim_visuals)
+    mortensen_neck_parser = commands.add_parser(
+        "mortensen-neck",
+        help="emit the complete selected OpenSim 3 cervical/hyoid source IR for MyoSim registration",
+    )
+    mortensen_neck_parser.add_argument("--sources", type=Path, required=True, help="directory made by myosim-fetch")
+    mortensen_neck_parser.add_argument("--output", type=Path, required=True, help="ignored local source-IR artifact")
+    mortensen_neck_parser.set_defaults(handler=mortensen_neck)
     fetch_parser = commands.add_parser("fetch", help="fetch BodyParts3D 4.0 and the pinned lower-body model")
     fetch_parser.add_argument("--output", type=Path, required=True, help="local, ignored source directory")
     fetch_parser.set_defaults(handler=fetch)
