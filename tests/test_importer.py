@@ -7,6 +7,7 @@ from pathlib import Path
 from subprocess import run
 
 from numilab_human.model import (
+    bodyparts_geometry_preflight,
     gate_report,
     parse_bodyparts3d,
     parse_opensim_archive,
@@ -79,13 +80,25 @@ class ImporterTests(unittest.TestCase):
                 encoding="utf-8",
             )
             for archive_name, members in {
-                "isa_BP3D_4.0_obj_99.zip": ("FJ100.obj",),
+                "isa_BP3D_4.0_obj_99.zip": ("FJ100.obj", "FJ101.obj"),
                 "partof_BP3D_4.0_obj_99.zip": ("FJ200.obj",),
             }.items():
                 with zipfile.ZipFile(source / archive_name, "w") as archive:
                     for member in members:
-                        archive.writestr(member, "o fixture\nv 0 0 0\n")
+                        archive.writestr(
+                            member,
+                            "o fixture\n"
+                            "v 0 0 0\n"
+                            "v 1 0 0\n"
+                            "v 0 1 0\n"
+                            "v 0 0 1\n"
+                            "f 1 3 2\n"
+                            "f 1 2 4\n"
+                            "f 2 3 4\n"
+                            "f 3 1 4\n",
+                        )
             result = parse_bodyparts3d(source, ROOT / "config/anatomy-classification.v1.json")
+            geometry = bodyparts_geometry_preflight(source, result)
         lookup = {item["concept_id"]: item for item in result["components"]}
         self.assertEqual(len(result["hierarchy_edges"]), 2)
         self.assertEqual(lookup["FMA9611"]["anatomy_class"], "bone")
@@ -93,6 +106,11 @@ class ImporterTests(unittest.TestCase):
         self.assertTrue(lookup["FMA9611"]["mesh_present"])
         self.assertEqual(lookup["FMA9611"]["element_meshes"][0]["element_id"], "FJ100")
         self.assertTrue(lookup["FMA5865"]["element_meshes"][0]["mesh_present"])
+        self.assertEqual(geometry["summary"]["mesh_count"], 3)
+        self.assertEqual(geometry["summary"]["closed_2_manifold_candidates"], 3)
+        self.assertEqual(geometry["summary"]["invalid_face_reference_count"], 0)
+        self.assertEqual(geometry["archives"][0]["meshes"][0]["vertex_count"], 4)
+        self.assertEqual(geometry["archives"][0]["meshes"][0]["face_count"], 4)
 
     def test_gate_report_keeps_unavailable_sources_blocked(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

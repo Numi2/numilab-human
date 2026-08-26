@@ -399,6 +399,230 @@ def _zip_members(path: Path) -> tuple[set[str], str]:
     return members, sha256(path)
 
 
+def _obj_mesh_topology(stream: Iterable[bytes]) -> dict[str, Any]:
+    """Return topology facts from one OBJ member without modifying its geometry.
+
+    BodyParts3D is a surface source.  This preflight deliberately records only
+    exact source-member facts and a conservative edge-manifold candidate; it
+    does not repair meshes, create tetrahedra, or infer material properties.
+    """
+    digest = hashlib.sha256()
+    vertex_count = 0
+    valid_vertex_count = 0
+    face_count = 0
+    triangle_count = 0
+    invalid_vertex_rows = 0
+    invalid_faces = 0
+    invalid_face_references = 0
+    edge_counts: dict[tuple[int, int], int] = defaultdict(int)
+    lower_bounds = [float("inf"), float("inf"), float("inf")]
+    upper_bounds = [float("-inf"), float("-inf"), float("-inf")]
+
+    for raw_line in stream:
+        digest.update(raw_line)
+        line = raw_line.decode("utf-8", errors="replace").split("#", 1)[0].strip()
+        if not line:
+            continue
+        tokens = line.split()
+        if tokens[0] == "v":
+            vertex_count += 1
+            if len(tokens) < 4:
+                invalid_vertex_rows += 1
+                continue
+            try:
+                position = [float(tokens[index]) for index in range(1, 4)]
+            except ValueError:
+                invalid_vertex_rows += 1
+                continue
+            valid_vertex_count += 1
+            for index, coordinate in enumerate(position):
+                lower_bounds[index] = min(lower_bounds[index], coordinate)
+                upper_bounds[index] = max(upper_bounds[index], coordinate)
+        elif tokens[0] == "f":
+            if len(tokens) < 4:
+                invalid_faces += 1
+                continue
+            indices: list[int] = []
+            face_is_valid = True
+            for token in tokens[1:]:
+                try:
+                    source_index = int(token.split("/", 1)[0])
+                except ValueError:
+                    invalid_face_references += 1
+                    face_is_valid = False
+                    continue
+                if source_index == 0:
+                    invalid_face_references += 1
+                    face_is_valid = False
+                    continue
+                index = source_index - 1 if source_index > 0 else vertex_count + source_index
+                if index < 0 or index >= vertex_count:
+                    invalid_face_references += 1
+                    face_is_valid = False
+                    continue
+                indices.append(index)
+            if not face_is_valid or len(indices) != len(tokens) - 1:
+                invalid_faces += 1
+                continue
+            face_count += 1
+            triangle_count += len(indices) - 2
+            for first, second in zip(indices, [*indices[1:], indices[0]]):
+                edge_counts[tuple(sorted((first, second)))] += 1
+
+    boundary_edges = sum(count == 1 for count in edge_counts.values())
+    nonmanifold_edges = sum(count > 2 for count in edge_counts.values())
+    closed_2_manifold_candidate = (
+        face_count > 0
+        and not boundary_edges
+        and not nonmanifold_edges
+        and not invalid_vertex_rows
+        and not invalid_faces
+        and not invalid_face_references
+    )
+    return {
+        "sha256": digest.hexdigest(),
+        "vertex_count": vertex_count,
+        "valid_vertex_count": valid_vertex_count,
+        "face_count": face_count,
+        "triangulated_face_count": triangle_count,
+        "edge_count": len(edge_counts),
+        "boundary_edge_count": boundary_edges,
+        "nonmanifold_edge_count": nonmanifold_edges,
+        "invalid_vertex_row_count": invalid_vertex_rows,
+        "invalid_face_count": invalid_faces,
+        "invalid_face_reference_count": invalid_face_references,
+        "bounds": (
+            {"minimum": lower_bounds, "maximum": upper_bounds}
+            if valid_vertex_count
+            else None
+        ),
+        "closed_2_manifold_candidate": closed_2_manifold_candidate,
+        "topology_boundary": (
+            "A closed 2-manifold candidate has no edge-count or parse defect; "
+            "self-intersection, orientation, volume conversion, and material "
+            "validation remain separate gates."
+        ),
+    }
+
+
+def _topology_summary(meshes: Iterable[dict[str, Any]]) -> dict[str, int]:
+    mesh_list = list(meshes)
+    return {
+        "mesh_count": len(mesh_list),
+        "vertex_count": sum(mesh["vertex_count"] for mesh in mesh_list),
+        "valid_vertex_count": sum(mesh["valid_vertex_count"] for mesh in mesh_list),
+        "face_count": sum(mesh["face_count"] for mesh in mesh_list),
+        "triangulated_face_count": sum(mesh["triangulated_face_count"] for mesh in mesh_list),
+        "closed_2_manifold_candidates": sum(
+            mesh["closed_2_manifold_candidate"] for mesh in mesh_list
+        ),
+        "open_or_invalid_meshes": sum(
+            not mesh["closed_2_manifold_candidate"] for mesh in mesh_list
+        ),
+        "boundary_edge_count": sum(mesh["boundary_edge_count"] for mesh in mesh_list),
+        "nonmanifold_edge_count": sum(
+            mesh["nonmanifold_edge_count"] for mesh in mesh_list
+        ),
+        "invalid_face_reference_count": sum(
+            mesh["invalid_face_reference_count"] for mesh in mesh_list
+        ),
+        "invalid_vertex_row_count": sum(
+            mesh["invalid_vertex_row_count"] for mesh in mesh_list
+        ),
+        "invalid_face_count": sum(mesh["invalid_face_count"] for mesh in mesh_list),
+    }
+
+
+def bodyparts_geometry_preflight(sources: Path, anatomy: dict[str, Any]) -> dict[str, Any]:
+    """Fingerprint every separate BodyParts3D OBJ and report its raw topology.
+
+    The returned records retain archive/member identity and hash.  They are an
+    import preflight, not a registration or deformable-body conversion.
+    """
+    classes_by_element: dict[tuple[str, str], set[str]] = defaultdict(set)
+    roles_by_element: dict[tuple[str, str], set[str]] = defaultdict(set)
+    for component in anatomy["components"]:
+        for element in component["element_meshes"]:
+            if element["mesh_present"]:
+                key = (component["hierarchy"], element["element_id"])
+                classes_by_element[key].add(component["anatomy_class"])
+                roles_by_element[key].add(component["numi_role"])
+
+    archive_paths = {
+        "is_a": sources / "isa_BP3D_4.0_obj_99.zip",
+        "part_of": sources / "partof_BP3D_4.0_obj_99.zip",
+    }
+    archives: list[dict[str, Any]] = []
+    all_meshes: list[dict[str, Any]] = []
+    for hierarchy, archive_path in archive_paths.items():
+        try:
+            with zipfile.ZipFile(archive_path) as archive:
+                members = sorted(
+                    (
+                        info for info in archive.infolist()
+                        if not info.is_dir() and Path(info.filename).suffix.lower() == ".obj"
+                    ),
+                    key=lambda info: info.filename,
+                )
+                if not members:
+                    raise ImportError(f"BodyParts3D archive has no OBJ meshes: {archive_path}")
+                meshes: list[dict[str, Any]] = []
+                for info in members:
+                    element_id = Path(info.filename).stem
+                    with archive.open(info) as stream:
+                        topology = _obj_mesh_topology(stream)
+                    mesh = {
+                        "archive": archive_path.name,
+                        "hierarchy": hierarchy,
+                        "member": info.filename,
+                        "element_id": element_id,
+                        "uncompressed_bytes": info.file_size,
+                        "anatomy_classes": sorted(
+                            classes_by_element[(hierarchy, element_id)]
+                        ),
+                        "numi_roles": sorted(roles_by_element[(hierarchy, element_id)]),
+                        **topology,
+                    }
+                    meshes.append(mesh)
+                    all_meshes.append(mesh)
+        except zipfile.BadZipFile as error:
+            raise ImportError(f"BodyParts3D archive is not a ZIP file: {archive_path}") from error
+        archives.append(
+            {
+                "file": archive_path.name,
+                "hierarchy": hierarchy,
+                "sha256": sha256(archive_path),
+                "summary": _topology_summary(meshes),
+                "meshes": meshes,
+            }
+        )
+    classes = sorted(
+        {
+            anatomy_class
+            for mesh in all_meshes
+            for anatomy_class in mesh["anatomy_classes"]
+        }
+    )
+    return {
+        "schema": "numi.human.bodyparts3d-geometry-preflight.v1",
+        "source_id": anatomy["source_id"],
+        "source_version": anatomy["version"],
+        "archives": archives,
+        "summary": _topology_summary(all_meshes),
+        "anatomy_class_summaries": {
+            anatomy_class: _topology_summary(
+                mesh for mesh in all_meshes if anatomy_class in mesh["anatomy_classes"]
+            )
+            for anatomy_class in classes
+        },
+        "evidence_boundary": (
+            "Exact OBJ member topology only; this preflight does not establish "
+            "frame registration, collision suitability, watertight volume meshes, "
+            "material calibration, or validated physical behavior."
+        ),
+    }
+
+
 def parse_bodyparts3d(sources: Path, classification_path: Path) -> dict[str, Any]:
     files = {
         "isa_labels": sources / "isa_parts_list_e.txt",
@@ -830,6 +1054,7 @@ def build_manifest(
             + ", ".join(unverified_bodyparts)
         )
     anatomy = parse_bodyparts3d(sources, classification_path)
+    geometry_preflight = bodyparts_geometry_preflight(sources, anatomy)
     lower_path = sources / "RajagopalLaiUhlrich2023.osim"
     lower = parse_opensim(lower_path, "rajagopal_lai_uhlrich_2023")
     expected_lower_hash = source_lock["sources"]["rajagopal_lai_uhlrich_2023"]["sha256"]
@@ -849,6 +1074,7 @@ def build_manifest(
             "upper_archive_sha256": sha256(upper_archive),
         },
         "anatomy": anatomy,
+        "geometry_preflight": geometry_preflight,
         "musculoskeletal_mechanics": {
             "lower_body_and_pelvis": lower,
             "upper_extremities": upper,

@@ -8,7 +8,17 @@ import sys
 import urllib.request
 from pathlib import Path
 
-from .model import ImportError, build_manifest, gate_report, read_json, report_for, sha256, write_json
+from .model import (
+    ImportError,
+    bodyparts_geometry_preflight,
+    build_manifest,
+    gate_report,
+    parse_bodyparts3d,
+    read_json,
+    report_for,
+    sha256,
+    write_json,
+)
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
@@ -135,6 +145,20 @@ def audit(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def geometry_audit(arguments: argparse.Namespace) -> int:
+    anatomy = parse_bodyparts3d(
+        arguments.sources.resolve(),
+        REPOSITORY_ROOT / "config/anatomy-classification.v1.json",
+    )
+    report = bodyparts_geometry_preflight(arguments.sources.resolve(), anatomy)
+    if arguments.output:
+        write_json(arguments.output.resolve(), report)
+        print(f"wrote {arguments.output.resolve()}")
+    else:
+        print(json.dumps(report, indent=2, sort_keys=True))
+    return 0
+
+
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description="Build provenance-locked NumiLab Human v1 import artifacts")
     commands = result.add_subparsers(dest="command", required=True)
@@ -157,6 +181,13 @@ def parser() -> argparse.ArgumentParser:
     )
     audit_parser.add_argument("--output", type=Path, help="optional JSON report path")
     audit_parser.set_defaults(handler=audit)
+    geometry_parser = commands.add_parser(
+        "geometry-audit",
+        help="fingerprint BodyParts3D OBJ members and conservatively preflight topology",
+    )
+    geometry_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
+    geometry_parser.add_argument("--output", type=Path, help="optional JSON report path")
+    geometry_parser.set_defaults(handler=geometry_audit)
     return result
 
 

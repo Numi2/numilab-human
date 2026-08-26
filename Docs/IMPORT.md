@@ -57,3 +57,16 @@ When `--runtime-root` is supplied, it also records whether that checkout is
 clean and at the exact runtime revision whose lowering capabilities were
 audited. A missing, dirty, or revision-mismatched checkout is not runtime
 evidence.
+
+## 5. Preflight every BodyParts3D OBJ member
+
+```sh
+numi human geometry-audit \
+  --sources Sources \
+  --output Build/bodyparts3d-topology.json
+```
+
+This writes the exact archive/member name and SHA-256 for every OBJ, with raw
+vertex/face counts, bounds, and conservative edge-manifold facts. It does not
+repair a mesh, establish an anatomical frame registration, create a volume
+mesh, or infer a material law. Those remain separate, source-specific gates.

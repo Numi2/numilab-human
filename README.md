@@ -39,6 +39,10 @@ numi human audit \
   --sources Sources \
   --runtime-root /path/to/MetalRobo \
   --output Build/human-v1-gates.json
+
+# Fingerprint every separate BodyParts3D OBJ and conservatively preflight its
+# surface topology. This does not repair or convert a source mesh.
+numi human geometry-audit --sources Sources --output Build/bodyparts3d-topology.json
 ```
 
 ## What the first manifest means
