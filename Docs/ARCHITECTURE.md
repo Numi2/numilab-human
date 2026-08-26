@@ -66,7 +66,7 @@ repository's source-faithful artifact; it cannot register a robot or schedule
 a rollout until the core lowerer exists and all gated sources are supplied.
 
 `numi human audit` now records the inspected Numi runtime contract alongside
-the imported lower-body source. At runtime revision `3f25a29`, the core has a
+the imported lower-body source. At runtime revision `b103dc1`, the core has a
 source-faithful host evaluator for Rajagopal's OpenSim function families, but
 the articulated Metal solver still has no function-based joint, multi-axis
 UniversalJoint, or Hill-type wrapped-muscle lowerer. Those are typed
