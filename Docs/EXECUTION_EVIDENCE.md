@@ -1,22 +1,24 @@
 # Bounded execution evidence
 
-## FunctionBased active-Millard streamed source-contact smoke — 2026-08-26
+## FunctionBased activation-responsive Millard streamed source-contact smoke — 2026-08-26
 
-Core revision `7d3b87c2c23255f45fcd1628a20ca17bf0f2024d` adds the source
-Millard force stage to the bounded FunctionBased streamed temporal-cone
-response path. A local Apple M4 run loaded the complete 22-body Rajagopal
-source tree and 80-muscle ABI-v3 payload, added only a synthetic static plane
-and source-body sphere, then completed two direct-effort contact steps with one
-active contact and one constraint. The contact submission published nonzero
-source muscle force with L1 `37802.936219`. The same probe still passed the
-three-step source dynamics parity gate: maximum acceleration error `1.75e-04`,
-velocity error `1e-06`, and configuration error `0` at printed precision.
+Core revision `a975e85b2a24585db75413e9ddf9f0ce551d94b5` adds an explicit
+source-activation response gate to the bounded FunctionBased streamed
+temporal-cone response path. A local Apple M4 run loaded the complete 22-body
+Rajagopal source tree and 80-muscle ABI-v3 payload, added only a synthetic
+static plane and source-body sphere, then completed two direct-effort contact
+steps with one active contact and one constraint. The contact submission
+published source muscle force L1 `37802.936219` at source-default activation
+and `85063.141170` when all 80 supplied activation states were set to one. The
+same probe still passed the three-step source dynamics parity gate: maximum
+acceleration error `1.75e-04`, velocity error `1e-06`, and configuration error
+`0` at printed precision.
 
 | Item | SHA-256 |
 | --- | --- |
 | Rigid source payload | `da7e52ddd64728ed0a63e73a11cf857ec5489b3eb29e32d11f352f35507cdee6` |
 | Millard source payload | `ecc900d71369c3c0cbf7a09fbdc33a2194f6a77edcddf594d306d850de60fbf4` |
-| Probe binary | `4c9f53e76f1aa2b06320442579447dd455c3bf97e533921eaa58a0b8b99bfbac` |
+| Probe binary | `ebd9b1a0337ec900667aa054d8ec391f4efaffc5761aaa228afca8379dea1320` |
 | Core library | `cdde3ec8b811292b3f3590ecd5f14d77e016b5e876c19b838a9a2c64c6ad21cc` |
 | Metal library | `1288ce2ab2c619c770f8151cdccbf69b7ba073a7b6555f5f67ea444b77a5028c` |
 

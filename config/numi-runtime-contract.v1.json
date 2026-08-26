@@ -2,7 +2,7 @@
   "schema": "numi.human.runtime-contract.v1",
   "runtime": {
     "repository": "MetalRobo",
-    "revision": "7d3b87c2c23255f45fcd1628a20ca17bf0f2024d",
+    "revision": "a975e85b2a24585db75413e9ddf9f0ce551d94b5",
     "articulated_joint_primitives": [
       "fixed",
       "revolute",
@@ -72,7 +72,7 @@
   },
   "muscle_tendon": {
     "current_contract": "metalworld_functionbased_millard_static_equilibrium_actuation",
-    "current_contract_evidence": "The FP64 source bridge and MetalWorld execute source-parameterized curves, static fiber-tendon equilibrium, finite-cylinder GeometryPath wrapping with each source PathWrap method and range, and one generalized-force vector per muscle. MetalWorld reduces those device-only vectors into its resident effort arena before bounded FunctionBased free motion or the synthetic streamed temporal-cone contact probe; no CPU force restaging occurs.",
+    "current_contract_evidence": "The FP64 source bridge and MetalWorld execute source-parameterized curves, static fiber-tendon equilibrium, finite-cylinder GeometryPath wrapping with each source PathWrap method and range, and one generalized-force vector per muscle. MetalWorld reduces those device-only vectors into its resident effort arena before bounded FunctionBased free motion or the synthetic streamed temporal-cone contact probe; the source-default and fully-excited state inputs produce distinct device forces without CPU force restaging.",
     "persistent_activation_reference": "Core supplies a deterministic first-order persistent activation update with explicit caller-owned time constants and fiber-length warm-start storage. The imported Rajagopal source contract does not yet materialize those constants or execute this state on device.",
     "source_faithful_requirements": [
       "OpenSim binary-equivalence comparison for curves, path wrapping, moment arms, and muscle force",
