@@ -2645,6 +2645,236 @@ def bodyparts_geometry_preflight(sources: Path, anatomy: dict[str, Any]) -> dict
     }
 
 
+def _bodyparts_obj_member(
+    sources: Path, archive_kind: str, member_id: str
+) -> tuple[Path, str, bytes]:
+    """Read one exact BodyParts3D OBJ member without extracting its archive."""
+    archive_names = {
+        "is_a": "isa_BP3D_4.0_obj_99.zip",
+        "part_of": "partof_BP3D_4.0_obj_99.zip",
+    }
+    try:
+        archive_name = archive_names[archive_kind]
+    except KeyError as error:
+        raise ImportError(f"unknown BodyParts3D archive {archive_kind!r}") from error
+    if not re.fullmatch(r"FJ[0-9]+M?", member_id):
+        raise ImportError(f"BodyParts3D member identity is invalid: {member_id!r}")
+    archive_path = sources / archive_name
+    try:
+        with zipfile.ZipFile(archive_path) as archive:
+            candidates = [
+                info for info in archive.infolist()
+                if not info.is_dir()
+                and Path(info.filename).suffix.lower() == ".obj"
+                and Path(info.filename).stem == member_id
+            ]
+            if len(candidates) != 1:
+                raise ImportError(
+                    f"BodyParts3D archive {archive_name} has {len(candidates)} OBJ members named "
+                    f"{member_id}"
+                )
+            return archive_path, candidates[0].filename, archive.read(candidates[0])
+    except zipfile.BadZipFile as error:
+        raise ImportError(f"BodyParts3D archive is not a ZIP file: {archive_path}") from error
+
+
+def _bodyparts_obj_triangles(
+    obj: bytes, source_name: str
+) -> tuple[list[tuple[float, float, float]], list[tuple[int, int, int]]]:
+    """Parse a conservative vertex/face-only subset of an OBJ source member."""
+    vertices: list[tuple[float, float, float]] = []
+    triangles: list[tuple[int, int, int]] = []
+    try:
+        lines = obj.decode("utf-8").splitlines()
+    except UnicodeDecodeError as error:
+        raise ImportError(f"BodyParts3D OBJ is not UTF-8 text: {source_name}") from error
+    for line_number, raw in enumerate(lines, start=1):
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        fields = line.split()
+        if fields[0] == "v":
+            if len(fields) < 4:
+                raise ImportError(f"BodyParts3D OBJ vertex is truncated: {source_name}:{line_number}")
+            try:
+                position = tuple(float(value) for value in fields[1:4])
+            except ValueError as error:
+                raise ImportError(
+                    f"BodyParts3D OBJ vertex is non-numeric: {source_name}:{line_number}"
+                ) from error
+            if not all(math.isfinite(value) for value in position):
+                raise ImportError(f"BodyParts3D OBJ vertex is non-finite: {source_name}:{line_number}")
+            vertices.append(position)
+        elif fields[0] == "f":
+            if len(fields) < 4:
+                raise ImportError(f"BodyParts3D OBJ face is truncated: {source_name}:{line_number}")
+            face: list[int] = []
+            for field in fields[1:]:
+                index_text = field.split("/", 1)[0]
+                try:
+                    index = int(index_text)
+                except ValueError as error:
+                    raise ImportError(
+                        f"BodyParts3D OBJ face index is invalid: {source_name}:{line_number}"
+                    ) from error
+                index = index - 1 if index > 0 else len(vertices) + index
+                if index < 0 or index >= len(vertices):
+                    raise ImportError(
+                        f"BodyParts3D OBJ face index is outside its vertex set: "
+                        f"{source_name}:{line_number}"
+                    )
+                face.append(index)
+            for index in range(1, len(face) - 1):
+                triangles.append((face[0], face[index], face[index + 1]))
+    if not vertices or not triangles:
+        raise ImportError(f"BodyParts3D OBJ has no drawable triangles: {source_name}")
+    return vertices, triangles
+
+
+def _bodyparts_glb(
+    vertices_mm: list[tuple[float, float, float]],
+    triangles: list[tuple[int, int, int]],
+) -> tuple[bytes, dict[str, list[float]]]:
+    """Write a minimal self-contained glTF 2.0 binary with generated normals."""
+    normals = [[0.0, 0.0, 0.0] for _ in vertices_mm]
+    for first, second, third in triangles:
+        a, b, c = vertices_mm[first], vertices_mm[second], vertices_mm[third]
+        edge_one = [b[index] - a[index] for index in range(3)]
+        edge_two = [c[index] - a[index] for index in range(3)]
+        normal = [
+            edge_one[1] * edge_two[2] - edge_one[2] * edge_two[1],
+            edge_one[2] * edge_two[0] - edge_one[0] * edge_two[2],
+            edge_one[0] * edge_two[1] - edge_one[1] * edge_two[0],
+        ]
+        for vertex in (first, second, third):
+            for component in range(3):
+                normals[vertex][component] += normal[component]
+    position_bytes = bytearray()
+    normal_bytes = bytearray()
+    minimum_mm = [float("inf")] * 3
+    maximum_mm = [float("-inf")] * 3
+    for position, normal in zip(vertices_mm, normals, strict=True):
+        for component in range(3):
+            minimum_mm[component] = min(minimum_mm[component], position[component])
+            maximum_mm[component] = max(maximum_mm[component], position[component])
+        normal_length = math.sqrt(sum(value * value for value in normal))
+        unit_normal = (
+            (0.0, 0.0, 1.0)
+            if normal_length == 0.0
+            else tuple(value / normal_length for value in normal)
+        )
+        position_bytes.extend(struct.pack("<3f", *(value * 0.001 for value in position)))
+        normal_bytes.extend(struct.pack("<3f", *unit_normal))
+    index_bytes = bytearray()
+    for triangle in triangles:
+        index_bytes.extend(struct.pack("<3I", *triangle))
+
+    binary = bytearray()
+    views: list[dict[str, int]] = []
+    for data, target in ((position_bytes, 34962), (normal_bytes, 34962), (index_bytes, 34963)):
+        while len(binary) % 4:
+            binary.append(0)
+        offset = len(binary)
+        binary.extend(data)
+        views.append({"buffer": 0, "byteOffset": offset, "byteLength": len(data), "target": target})
+    bounds_m = {
+        "minimum": [value * 0.001 for value in minimum_mm],
+        "maximum": [value * 0.001 for value in maximum_mm],
+    }
+    document = {
+        "asset": {"version": "2.0", "generator": "numilab-human bodyparts preview v1"},
+        "scene": 0,
+        "scenes": [{"nodes": [0]}],
+        "nodes": [{"name": "bodyparts3d_source_static", "mesh": 0}],
+        "meshes": [{
+            "name": "bodyparts3d_source_surface",
+            "primitives": [{"attributes": {"POSITION": 0, "NORMAL": 1}, "indices": 2, "material": 0}],
+        }],
+        "materials": [{
+            "name": "source_surface_preview",
+            "doubleSided": True,
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [0.72, 0.47, 0.35, 1.0],
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.72,
+            },
+        }],
+        "buffers": [{"byteLength": len(binary)}],
+        "bufferViews": views,
+        "accessors": [
+            {
+                "bufferView": 0,
+                "componentType": 5126,
+                "count": len(vertices_mm),
+                "type": "VEC3",
+                "min": bounds_m["minimum"],
+                "max": bounds_m["maximum"],
+            },
+            {"bufferView": 1, "componentType": 5126, "count": len(vertices_mm), "type": "VEC3"},
+            {"bufferView": 2, "componentType": 5125, "count": len(triangles) * 3, "type": "SCALAR"},
+        ],
+    }
+    json_chunk = json.dumps(document, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    while len(json_chunk) % 4:
+        json_chunk += b" "
+    while len(binary) % 4:
+        binary.append(0)
+    length = 12 + 8 + len(json_chunk) + 8 + len(binary)
+    glb = b"".join(
+        (
+            struct.pack("<4sII", b"glTF", 2, length),
+            struct.pack("<I4s", len(json_chunk), b"JSON"),
+            json_chunk,
+            struct.pack("<I4s", len(binary), b"BIN" + bytes((0,))),
+            bytes(binary),
+        )
+    )
+    return glb, {"minimum_mm": minimum_mm, "maximum_mm": maximum_mm}
+
+
+def bodyparts_visual_preview(
+    sources: Path,
+    output: Path,
+    archive_kind: str = "is_a",
+    member_id: str = "FJ2810",
+) -> dict[str, Any]:
+    """Export one source OBJ surface as a static, non-physical GLB preview."""
+    archive_path, member, obj = _bodyparts_obj_member(sources, archive_kind, member_id)
+    vertices, triangles = _bodyparts_obj_triangles(obj, member)
+    glb, bounds = _bodyparts_glb(vertices, triangles)
+    output.mkdir(parents=True, exist_ok=True)
+    glb_path = output / f"{member_id}-source-static.glb"
+    glb_path.write_bytes(glb)
+    manifest = {
+        "schema": "numi.human.bodyparts3d-visual-preview.v1",
+        "source": {
+            "archive": archive_path.name,
+            "archive_sha256": sha256(archive_path),
+            "member": member,
+            "member_sha256": hashlib.sha256(obj).hexdigest(),
+            "member_id": member_id,
+        },
+        "geometry": {
+            "vertex_count": len(vertices),
+            "triangle_count": len(triangles),
+            **bounds,
+        },
+        "preview": {
+            "glb": glb_path.name,
+            "glb_sha256": sha256(glb_path),
+            "unit_conversion": "source millimetres to preview metres",
+            "attachment": "static BodyParts3D source geometry only",
+        },
+        "evidence_boundary": (
+            "This generated GLB is a static visual conversion of one exact BodyParts3D OBJ "
+            "member. It does not establish a BodyParts3D-to-OpenSim frame registration, skin "
+            "deformation, collision, material law, or a physical Human RobotPack."
+        ),
+    }
+    write_json(output / f"{member_id}-source-static.manifest.json", manifest)
+    return manifest
+
+
 def parse_bodyparts3d(sources: Path, classification_path: Path) -> dict[str, Any]:
     files = {
         "isa_labels": sources / "isa_parts_list_e.txt",

@@ -71,7 +71,27 @@ vertex/face counts, bounds, and conservative edge-manifold facts. It does not
 repair a mesh, establish an anatomical frame registration, create a volume
 mesh, or infer a material law. Those remain separate, source-specific gates.
 
-## 6. Compile a limited source-derived distal-leg preview
+## 6. Export a source-static BodyParts3D visual preview
+
+```sh
+numi human visual-preview \
+  --sources Sources \
+  --output Build/bodyparts3d-skin-preview
+```
+
+The default member is the exact `FJ2810` full-skin OBJ. The command emits a
+self-contained GLB with millimetres converted to metres and a provenance
+manifest containing the archive, member, and generated-file hashes. It is an
+inspection artifact only: no BodyParts3D-to-OpenSim frame registration, skin
+deformation, collision, material property, or Human RobotPack is inferred.
+
+At the matching Core revision, cook the GLB and render its three static
+inspection cameras with `metalrobo_visual_cook` and
+`metalrobo_bodyparts3d_visual_probe`. The probe emits PPM frames; retain their
+hashes with the source member and device log. Do not publish those frames as a
+physically actuated Human result.
+
+## 7. Compile a limited source-derived distal-leg preview
 
 ```sh
 numi human preview \
@@ -98,7 +118,7 @@ fingerprint. Repeat the same invocation on the same binary and device before
 calling it a deterministic replay. This proves neither collision, contact,
 muscle actuation, nor full-human physics.
 
-## 7. Preserve the source CustomJoint functions for the core lowerer
+## 8. Preserve the source CustomJoint functions for the core lowerer
 
 ```sh
 numi human kinematics \
@@ -130,7 +150,7 @@ command does not assemble the Rajagopal skeleton into that model. Metal ABA
 does not yet consume this IR; none of this substitutes for the human lowerer
 or physical validation.
 
-## 8. Export BodyParts3D nerve annotations
+## 9. Export BodyParts3D nerve annotations
 
 ```sh
 numi human nerve-annotations \
@@ -143,7 +163,7 @@ This retains the selected nerve labels, `FJ...` mesh references, and incident
 no neural conduction, activation, collision, or deformable model is inferred
 from BodyParts3D geometry.
 
-## 9. Preserve the Rajagopal Millard muscle source contract
+## 10. Preserve the Rajagopal Millard muscle source contract
 
 ```sh
 numi human muscles \
@@ -157,7 +177,7 @@ path-wrap references, and 44 source wrap objects. It does not evaluate a
 Hill-type force or apply one to a Numi coordinate by itself; use the matching
 reference artifact below for the bounded static-equilibrium path.
 
-## 9a. Compile the Rajagopal Millard reference payload
+## 10a. Compile the Rajagopal Millard reference payload
 
 ```sh
 numi human millard-reference \
@@ -194,7 +214,7 @@ hybrid wrap-history behavior, contact, or material validation; the source
 PathWrap XML, including method and range, remains in the companion IR for that
 later equivalence gate.
 
-## 10. Resolve the Rajagopal rigid-body tree
+## 11. Resolve the Rajagopal rigid-body tree
 
 ```sh
 numi human skeleton \
@@ -209,7 +229,7 @@ records 10 scalar-core-supported PinJoints, two exact locked-fixed wrists, and
 10 FunctionBased joints. It is not a body-to-BodyParts3D registration or
 collider cook.
 
-## 11. Compile and run the complete Rajagopal CPU reference tree
+## 12. Compile and run the complete Rajagopal CPU reference tree
 
 ```sh
 numi human core-reference \

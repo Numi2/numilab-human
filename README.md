@@ -44,6 +44,10 @@ numi human audit \
 # surface topology. This does not repair or convert a source mesh.
 numi human geometry-audit --sources Sources --output Build/bodyparts3d-topology.json
 
+# Export the exact BodyParts3D full-skin OBJ as a source-static visual preview.
+# This is intentionally unregistered to OpenSim frames and has no physics semantics.
+numi human visual-preview --sources Sources --output Build/bodyparts3d-skin-preview
+
 # Produce one source-derived distal-leg PinJoint URDF for native compiler
 # validation. It intentionally has no collision geometry or muscle lowering.
 numi human preview --sources Sources --side right --output Build/right-pin-preview
@@ -70,6 +74,7 @@ numi human core-reference --sources Sources --output Build/rajagopal-core-refere
 | tendons, ligaments, cartilage | nonlinear tensile / compliant-contact candidates | only OpenSim tendon parameters are active-source data; all other constitutive data needs a cited calibration |
 
 See [the architecture](Docs/ARCHITECTURE.md), [import procedure](Docs/IMPORT.md),
-[bounded execution evidence](Docs/EXECUTION_EVIDENCE.md), and
+[bounded execution evidence](Docs/EXECUTION_EVIDENCE.md),
+[source-static visual validation](Docs/VISUAL_VALIDATION.md), and
 [third-party notices](THIRD_PARTY_NOTICES.md) before building or publishing
 derived data.

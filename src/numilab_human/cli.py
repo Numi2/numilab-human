@@ -12,6 +12,7 @@ from .model import (
     ImportError,
     bodyparts_geometry_preflight,
     bodyparts_nerve_annotation,
+    bodyparts_visual_preview,
     build_rajagopal_distal_pin_preview,
     build_manifest,
     gate_report,
@@ -236,6 +237,19 @@ def muscles(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def visual_preview(arguments: argparse.Namespace) -> int:
+    output = arguments.output.resolve()
+    manifest = bodyparts_visual_preview(
+        arguments.sources.resolve(),
+        output,
+        archive_kind=arguments.archive,
+        member_id=arguments.member,
+    )
+    print(f"wrote {output / manifest['preview']['glb']}")
+    print(f"wrote {output / (arguments.member + '-source-static.manifest.json')}")
+    return 0
+
+
 def millard_reference(arguments: argparse.Namespace) -> int:
     source = arguments.sources.resolve()
     lower = parse_opensim(
@@ -320,6 +334,15 @@ def parser() -> argparse.ArgumentParser:
     nerve_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
     nerve_parser.add_argument("--output", type=Path, required=True, help="annotation JSON output path")
     nerve_parser.set_defaults(handler=nerve_annotations)
+    visual_preview_parser = commands.add_parser(
+        "visual-preview",
+        help="export one exact BodyParts3D surface as a static non-physical GLB preview",
+    )
+    visual_preview_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
+    visual_preview_parser.add_argument("--output", type=Path, required=True, help="ignored local output directory")
+    visual_preview_parser.add_argument("--archive", choices=("is_a", "part_of"), default="is_a")
+    visual_preview_parser.add_argument("--member", default="FJ2810", help="BodyParts3D OBJ member identity")
+    visual_preview_parser.set_defaults(handler=visual_preview)
     preview_parser = commands.add_parser(
         "preview",
         help="emit an explicitly limited Rajagopal distal-leg URDF compile preview",

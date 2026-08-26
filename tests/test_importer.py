@@ -10,6 +10,7 @@ from subprocess import run
 from numilab_human.model import (
     bodyparts_geometry_preflight,
     bodyparts_nerve_annotation,
+    bodyparts_visual_preview,
     build_rajagopal_distal_pin_preview,
     evaluate_opensim_custom_joint,
     gate_report,
@@ -31,6 +32,24 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ImporterTests(unittest.TestCase):
+    def test_bodyparts_visual_preview_preserves_one_source_member(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            source = Path(temporary) / "Sources"
+            source.mkdir()
+            archive = source / "isa_BP3D_4.0_obj_99.zip"
+            with zipfile.ZipFile(archive, "w") as bundle:
+                bundle.writestr(
+                    "isa_BP3D_4.0_obj_99/FJ2810.obj",
+                    "v 0 0 0\nv 1000 0 0\nv 0 1000 0\nf 1 2 3\n",
+                )
+            result = bodyparts_visual_preview(source, Path(temporary) / "Preview")
+            preview = Path(temporary) / "Preview"
+            self.assertEqual(result["geometry"]["vertex_count"], 3)
+            self.assertEqual(result["geometry"]["triangle_count"], 1)
+            self.assertEqual(result["geometry"]["maximum_mm"], [1000.0, 1000.0, 0.0])
+            self.assertTrue((preview / "FJ2810-source-static.glb").is_file())
+            self.assertEqual((preview / "FJ2810-source-static.glb").read_bytes()[:4], b"glTF")
+
     def test_numi_workspace_command_describes_itself(self) -> None:
         command = ROOT / ".numi/commands/human"
         result = run([command, "--numi-describe"], capture_output=True, text=True, check=True)

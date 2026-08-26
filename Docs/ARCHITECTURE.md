@@ -53,7 +53,7 @@ as explicit conversion gates rather than assigning unsupported physics.
 ## Numi execution boundary
 
 `numi.human.v1` remains an owner-neutral intermediate artifact, but Core
-revision `4b60f8f` now executes the bounded Rajagopal mechanics path: one
+revision `14c64f3` now executes the bounded Rajagopal mechanics path: one
 fixed-root FunctionBased articulation runs persistent free-motion state on
 Metal, and 80 source Millard muscles calculate path tension on device and
 reduce it into that same effort arena before each microstep. This is a source
@@ -66,7 +66,7 @@ repository's source-faithful artifact; it cannot register a robot or schedule
 a rollout until the core lowerer exists and all gated sources are supplied.
 
 `numi human audit` records the inspected Numi runtime contract alongside the
-imported lower-body source. At runtime revision `4b60f8f`, the Core preserves
+imported lower-body source. At runtime revision `14c64f3`, the Core preserves
 the canonical source program, evaluates its source-order pose/motion subspace,
 and advances the bounded fixed-root FunctionBased state through MetalWorld's
 resident `q`/`v`/effort arenas.
