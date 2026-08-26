@@ -37,7 +37,7 @@ Numi RobotPack          Numi actuator        Numi visual/deformable candidates
 | Numi subsystem | Imported evidence | Required before physical use |
 | --- | --- | --- |
 | Skeleton | OpenSim rigid segments, joints, mass centres, inertia tensors | bounded fixed-root FunctionBased device execution is qualified; source-frame registration and collision/contact remain open |
-| Muscles | OpenSim GeometryPath and Hill-type muscle/tendon fields | bounded source static-equilibrium actuator lowering is qualified; OpenSim equivalence and held-out force/moment-arm validation remain open |
+| Muscles | OpenSim GeometryPath and Hill-type muscle/tendon fields | bounded source static-equilibrium actuator lowering, including an exact complete native-task excitation surface, is qualified; OpenSim equivalence and held-out force/moment-arm validation remain open |
 | Skin | BodyParts3D skin OBJ | shell topology repair and cited constitutive model |
 | Organs | BodyParts3D organ surface OBJ | watertight volume mesh plus organ-specific FEM/MPM material model |
 | Ligaments | BodyParts3D ligament OBJ, OpenSim coordinate limits where present | attachment paths, nonlinear tensile parameters, and calibration |
@@ -53,14 +53,15 @@ as explicit conversion gates rather than assigning unsupported physics.
 ## Numi execution boundary
 
 `numi.human.v1` remains an owner-neutral intermediate artifact, but Core
-revision `b4e34b6` now executes the bounded Rajagopal mechanics path: one
+revision `5e46d13` now executes the bounded Rajagopal mechanics path: one
 fixed-root FunctionBased articulation runs persistent free-motion state on
 Metal, and 80 source Millard muscles calculate path tension on device and
 reduce it into that same effort arena before each microstep. An optional packed
-per-control excitation stream advances device activation by an exact
-first-order hold with explicit caller-owned time constants. The same bounded
-path also drives a synthetic plane/sphere streamed-contact probe. This is a
-source-mechanics admission, not a generic external-human RobotPack,
+per-control excitation stream or a fail-closed, complete ordered native-task
+action surface advances device activation by an exact first-order hold with
+explicit caller-owned time constants. The same bounded path also drives a
+synthetic plane/sphere streamed-contact probe. This is a source-mechanics
+admission, not a generic external-human RobotPack,
 BodyParts3D contact world, or deformable-body claim.
 
 The tracked workspace command `numi human` is the bridge at this stage. It
@@ -69,7 +70,7 @@ repository's source-faithful artifact; it cannot register a robot or schedule
 a rollout until the core lowerer exists and all gated sources are supplied.
 
 `numi human audit` records the inspected Numi runtime contract alongside the
-imported lower-body source. At runtime revision `b4e34b6`, the Core preserves
+imported lower-body source. At runtime revision `5e46d13`, the Core preserves
 the canonical source program, evaluates its source-order pose/motion subspace,
 and advances the bounded fixed-root FunctionBased state through MetalWorld's
 resident `q`/`v`/effort arenas, including the synthetic source-contact probe.
@@ -88,8 +89,8 @@ or whole-human physical validation.
 The bounded Metal articulated operator consumes the program for the whole
 Rajagopal tree: source poses, point Jacobians, and dense mass assembly run on
 device. MetalWorld then runs the same FunctionBased kinematics/Jacobians,
-source-materialized Millard static fiber-tendon equilibrium, optional
-per-control first-order activation, finite-cylinder GeometryPaths, and a
+source-materialized Millard static fiber-tendon equilibrium, optional packed
+or exact complete native-task first-order activation, finite-cylinder GeometryPaths, and a
 deterministic per-DoF force reduction in one command buffer before the
 persistent source-dynamics step or its synthetic streamed contact response.
 This is not an OpenSim binary-equivalence result,

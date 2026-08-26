@@ -3723,7 +3723,7 @@ def gate_report(
         "mechanics_execution": {
             "status": "qualified_bounded_device",
             "runtime_revision": runtime_contract["runtime"]["revision"],
-            "contract": "One fixed-root FunctionBased articulation executes resident q/v/effort state on device; source Millard static-equilibrium forces are reduced into that same effort arena before every microstep, with an optional explicit per-control excitation stream advanced by device first-order activation dynamics.",
+            "contract": "One fixed-root FunctionBased articulation executes resident q/v/effort state on device; source Millard static-equilibrium forces are reduced into that same effort arena before every microstep. Excitation is supplied either by an explicit per-control stream or by a fail-closed complete, source-ordered native-task action surface mapped from signed action to normalized excitation and advanced by device first-order activation dynamics.",
             "remaining_evidence": runtime_contract["muscle_tendon"][
                 "source_faithful_requirements"
             ],
@@ -3742,7 +3742,7 @@ def gate_report(
             {
                 "id": "muscle_tendon_lowering",
                 "status": "qualified_bounded_device",
-                "requirement": "Qualified: source Millard curves, static fiber-tendon equilibrium, finite-cylinder paths/wraps, per-control first-order activation, and per-muscle forces execute and reduce into MetalWorld's resident effort arena. Mobile-root policy actuation, dynamic fibre/tendon state, OpenSim equivalence, and held-out force/moment-arm validation remain evidence gates.",
+                "requirement": "Qualified: source Millard curves, static fiber-tendon equilibrium, finite-cylinder paths/wraps, per-control or fail-closed complete native-task first-order activation, and per-muscle forces execute and reduce into MetalWorld's resident effort arena. Mobile-root policy actuation, dynamic fibre/tendon state, OpenSim equivalence, and held-out force/moment-arm validation remain evidence gates.",
             },
             {
                 "id": "skin_shell",

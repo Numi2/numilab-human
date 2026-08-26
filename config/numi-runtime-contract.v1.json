@@ -2,7 +2,7 @@
   "schema": "numi.human.runtime-contract.v1",
   "runtime": {
     "repository": "MetalRobo",
-    "revision": "b4e34b6ae6ee83226ff138201f24a04683aa4a51",
+    "revision": "5e46d13eeb32ab25cfb1aa09503cab58f8275d68",
     "articulated_joint_primitives": [
       "fixed",
       "revolute",
@@ -35,6 +35,11 @@
       "src/metal/FunctionBasedDenseDynamics.metal",
       "include/metalrobo/MetalWorld.hpp",
       "src/metal/MetalWorld.mm",
+      "include/metalrobo/TaskProgram.hpp",
+      "include/metalrobo/task_program_types.h",
+      "src/core/TaskProgram.cpp",
+      "src/core/RunProgram.cpp",
+      "src/metal/LocomotionTask.metal",
       "apps/opensim_spatial_transform_probe.cpp",
       "apps/opensim_spatial_transform_gpu_probe.mm",
       "apps/numilab_human_core_reference_probe.cpp",
@@ -60,7 +65,7 @@
       "status": "supported_bounded_fixed_root_direct_effort",
       "kinematic_program": "source-derived canonical FunctionBased binary sidecars have bounded Metal pose, H, Hdot, H-transpose wrench projection, and Hdot times qdot primitives; the pinned CPU FP64 reference admits immutable FunctionBasedJointProgram records into analytic Jacobian mass/bias and state advance; MetalWorld executes the bounded fixed-root dense source dynamics path, source Millard effort reduction, and source-mass streamed temporal-cone response columns against resident q/v/effort state.",
       "cpu_reference_payload": "The provenance-locked 22-body Rajagopal rigid tree can load source mass, inertia, COM, joint-frame, coordinate, and FunctionBased-program records into the FP64 reference probe.",
-      "requirement": "The bounded path is one fixed-root direct-effort articulation in free motion or temporal-cone contact using source-mass streamed responses. The contact probe uses synthetic plane/sphere colliders only; BodyParts3D frame registration, anatomical collision/material calibration, multi-articulation composition, native task/policy binding, and mobile/joint-class extensions remain separate gates."
+      "requirement": "The bounded path is one fixed-root direct-effort articulation in free motion or temporal-cone contact using source-mass streamed responses. A complete, ordered native source-Millard action surface is device-qualified only in that fixed-root synthetic probe. The contact probe uses synthetic plane/sphere colliders only; BodyParts3D frame registration, anatomical collision/material calibration, multi-articulation composition, mobile-root task/policy execution, and joint-class extensions remain separate gates."
     },
     "UniversalJoint": {
       "status": "requires_core_extension",
@@ -72,9 +77,9 @@
     }
   },
   "muscle_tendon": {
-    "current_contract": "metalworld_functionbased_millard_static_equilibrium_with_per_control_excitation",
-    "current_contract_evidence": "The FP64 source bridge and MetalWorld execute source-parameterized curves, static fiber-tendon equilibrium, finite-cylinder GeometryPath wrapping with each source PathWrap method and range, and one generalized-force vector per muscle. For the bounded fixed-root direct-effort path, MetalWorld accepts an explicit packed per-control excitation stream, advances private activation by an exact first-order hold with caller-owned positive time constants, then reduces its device-only source forces into the resident effort arena before free motion or the synthetic streamed temporal-cone contact probe. The final device state used by force projection is published for audit and matches the source-reference activation hold in the smoke probe; source-default and device-updated excitation inputs produce distinct device forces without CPU force restaging.",
-    "persistent_activation_reference": "Rajagopal's XML omits the optional activation time constants. The Human walking contract materializes the documented OpenSim Millard2012EquilibriumMuscle defaults separately; Core now executes an explicitly supplied first-order activation update on device only in the bounded fixed-root direct-effort path. Mobile-root task/policy execution, persistent fibre/tendon dynamics, and source-equivalence validation remain separate gates.",
+    "current_contract": "metalworld_functionbased_millard_static_equilibrium_with_explicit_or_native_task_excitation",
+    "current_contract_evidence": "The FP64 source bridge and MetalWorld execute source-parameterized curves, static fiber-tendon equilibrium, finite-cylinder GeometryPath wrapping with each source PathWrap method and range, and one generalized-force vector per muscle. For the bounded fixed-root direct-effort path, MetalWorld accepts either an explicit packed per-control excitation stream or a fail-closed native task surface containing exactly one ordered Millard-excitation action per immutable source muscle and no mixed host stream. Native actions use the normal signed range and map exactly from [-1, 1] to normalized excitation [0, 1] from filtered task-action history. Both surfaces advance private activation by an exact first-order hold with caller-owned positive time constants, then reduce device-only source forces into the resident effort arena before free motion or the synthetic streamed temporal-cone contact probe. The final device state used by force projection is published for audit and matches the source-reference activation hold in the smoke probe; source-default, explicit, and native-task inputs produce distinct device forces without CPU force restaging.",
+    "persistent_activation_reference": "Rajagopal's XML omits the optional activation time constants. The Human walking contract materializes the documented OpenSim Millard2012EquilibriumMuscle defaults separately; Core now executes an explicitly supplied first-order activation update on device in the bounded fixed-root direct-effort path, whether the excitation arrives by packed test stream or the exact native task surface. Mobile-root task/policy execution, persistent fibre/tendon dynamics, and source-equivalence validation remain separate gates.",
     "source_faithful_requirements": [
       "OpenSim binary-equivalence comparison for curves, path wrapping, moment arms, and muscle force",
       "held-out force-length, force-velocity, and anatomical moment-arm validation"
