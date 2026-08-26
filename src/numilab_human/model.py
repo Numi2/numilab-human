@@ -1053,6 +1053,90 @@ def rajagopal_millard_muscle_ir(model: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def rajagopal_walking_contract(model: dict[str, Any]) -> dict[str, Any]:
+    """Emit the source-backed contract required before a learned walk rollout.
+
+    This is intentionally a *contract*, not a RobotPack or a gait claim.  It
+    makes the mobile source root and the 80-dimensional excitation surface
+    inspectable while refusing to manufacture the BodyParts3D registrations,
+    foot colliders, or calibrated contact constants that the sources do not
+    contain.
+    """
+    skeleton = rajagopal_rigid_skeleton_ir(model)
+    millard = rajagopal_millard_muscle_ir(model)
+    root = next((joint for joint in skeleton["joints"] if joint["id"] == "ground_pelvis"), None)
+    if not isinstance(root, dict) or root.get("kind") != "CustomJoint":
+        raise ImportError("walking contract requires the Rajagopal ground_pelvis CustomJoint")
+    root_coordinates = root.get("coordinates")
+    if not isinstance(root_coordinates, list) or len(root_coordinates) != 6:
+        raise ImportError("walking contract requires six mobile ground_pelvis coordinates")
+    root_ids = [coordinate.get("id") for coordinate in root_coordinates]
+    expected_root_ids = [
+        "pelvis_tilt", "pelvis_list", "pelvis_rotation",
+        "pelvis_tx", "pelvis_ty", "pelvis_tz",
+    ]
+    if root_ids != expected_root_ids:
+        raise ImportError("walking contract ground_pelvis coordinate order drifted from Rajagopal source")
+    muscle_ids = [muscle["id"] for muscle in millard["muscles"]]
+    if len(muscle_ids) != 80 or len(set(muscle_ids)) != len(muscle_ids):
+        raise ImportError("walking contract requires the complete unique 80-muscle Rajagopal set")
+    coordinates = [
+        coordinate["id"]
+        for joint in skeleton["joints"]
+        for coordinate in joint.get("coordinates", [])
+        if isinstance(coordinate.get("id"), str)
+    ]
+    return {
+        "schema": "numi.human.rajagopal-walking-contract.v1",
+        "source": skeleton["source"],
+        "articulation": {
+            "root_joint": "ground_pelvis",
+            "root_mode": "source_function_based_mobile",
+            "coordinates": root_ids,
+            "coordinate_count": len(coordinates),
+            "requires_core": [
+                "mobile FunctionBased MetalWorld state advancement",
+                "articulated contact response for FunctionBased root",
+            ],
+        },
+        "policy": {
+            "action_kind": "bounded_muscle_excitation",
+            "action_count": len(muscle_ids),
+            "action_order": muscle_ids,
+            "observation": {
+                "coordinates": coordinates,
+                "velocity_coordinates": coordinates,
+                "muscle_activation_order": muscle_ids,
+                "contact_features": "requires registered foot colliders",
+            },
+            "state": {
+                "persistent_activation": "source default/minimum activation bounded by excitation",
+                "fiber_tendon": "equilibrium warm-start state; no OpenSim-equivalence claim",
+            },
+        },
+        "contact": {
+            "scenario": "flat_ground",
+            "foot_bodies": ["calcn_r", "toes_r", "calcn_l", "toes_l"],
+            "status": "blocked_by_bodyparts_registration_and_contact_calibration",
+            "required_artifacts": [
+                "per-foot source-to-body registration",
+                "conservative collider proxy manifest",
+                "friction/compliance parameter manifest",
+                "collision exclusions and deterministic replay scenario",
+            ],
+        },
+        "visual_layers": {
+            "requested": ["skin", "bones", "muscles", "vessels", "nerves"],
+            "status": "blocked_by_per-mesh_body_attachment_validation",
+            "rule": "unregistered BodyParts3D geometry must remain static or hidden",
+        },
+        "evidence_boundary": (
+            "This source-derived policy and mobile-root contract does not provide a trained policy, "
+            "registered collider, contact calibration, gait validation, or deformable anatomy."
+        ),
+    }
+
+
 def _opensim_joint_frame_body(
     joint: dict[str, Any], frame_reference: Any, context: str
 ) -> str | None:

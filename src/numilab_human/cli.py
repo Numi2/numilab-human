@@ -24,6 +24,7 @@ from .model import (
     rajagopal_millard_muscle_ir,
     rajagopal_millard_reference_artifact,
     rajagopal_rigid_skeleton_ir,
+    rajagopal_walking_contract,
     read_json,
     report_for,
     sha256,
@@ -298,6 +299,15 @@ def core_reference(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def walking_contract(arguments: argparse.Namespace) -> int:
+    source = arguments.sources.resolve()
+    lower = parse_opensim(source / "RajagopalLaiUhlrich2023.osim", "rajagopal_lai_uhlrich_2023")
+    output = arguments.output.resolve()
+    write_json(output, rajagopal_walking_contract(lower))
+    print(f"wrote {output}")
+    return 0
+
+
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description="Build provenance-locked NumiLab Human v1 import artifacts")
     commands = result.add_subparsers(dest="command", required=True)
@@ -390,6 +400,13 @@ def parser() -> argparse.ArgumentParser:
         "--output", type=Path, required=True, help="ignored local output directory"
     )
     core_reference_parser.set_defaults(handler=core_reference)
+    walking_parser = commands.add_parser(
+        "walking-contract",
+        help="emit the source-backed mobile-root, learned-excitation, and contact/visual gate contract",
+    )
+    walking_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
+    walking_parser.add_argument("--output", type=Path, required=True, help="walking contract JSON output path")
+    walking_parser.set_defaults(handler=walking_contract)
     return result
 
 

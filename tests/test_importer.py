@@ -8,6 +8,7 @@ from pathlib import Path
 from subprocess import run
 
 from numilab_human.model import (
+    ImportError as HumanImportError,
     bodyparts_geometry_preflight,
     bodyparts_nerve_annotation,
     bodyparts_visual_preview,
@@ -22,6 +23,7 @@ from numilab_human.model import (
     read_json,
     rajagopal_custom_joint_ir,
     rajagopal_millard_muscle_ir,
+    rajagopal_walking_contract,
     rajagopal_rigid_skeleton_ir,
     runtime_compatibility_report,
     runtime_checkout_gate,
@@ -32,6 +34,23 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ImporterTests(unittest.TestCase):
+    def test_walking_contract_requires_source_mobile_root_and_complete_muscles(self) -> None:
+        model = {
+            "source_id": "fixture", "source_file": "fixture.osim", "source_sha256": "0" * 64,
+            "bodies": [{"id": "pelvis"}],
+            "joints": [{"id": "ground_pelvis", "kind": "CustomJoint", "parent_frame": "/ground",
+                "child_frame": "/bodyset/pelvis", "coordinates": [
+                    {"id": name, "default_value": 0.0, "range": [-1.0, 1.0], "clamped": "true", "locked": "false"}
+                    for name in ("pelvis_tilt", "pelvis_list", "pelvis_rotation", "pelvis_tx", "pelvis_ty", "pelvis_tz")],
+                "frames": [], "motion_axes": [{"id": f"axis{i}", "coordinates": name, "axis": axis,
+                    "function_kind": "LinearFunction", "function_parameters": {"coefficients": [1.0, 0.0]}}
+                    for i, (name, axis) in enumerate(zip(("pelvis_tilt", "pelvis_list", "pelvis_rotation", "pelvis_tx", "pelvis_ty", "pelvis_tz"),
+                        ([0,0,1], [1,0,0], [0,1,0], [1,0,0], [0,1,0], [0,0,1])), 1)]}],
+            "muscles": [], "wrap_objects": [], "model_id": "fixture",
+        }
+        # The compiler deliberately rejects incomplete muscle admission rather than inventing actions.
+        with self.assertRaises(HumanImportError):
+            rajagopal_walking_contract(model)
     def test_bodyparts_visual_preview_preserves_one_source_member(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             source = Path(temporary) / "Sources"

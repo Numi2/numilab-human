@@ -48,6 +48,10 @@ numi human geometry-audit --sources Sources --output Build/bodyparts3d-topology.
 # This is intentionally unregistered to OpenSim frames and has no physics semantics.
 numi human visual-preview --sources Sources --output Build/bodyparts3d-skin-preview
 
+# Emit the source-derived mobile pelvis and 80-muscle learned-walking contract.
+# It explicitly leaves collider registration/contact calibration as gated work.
+numi human walking-contract --sources Sources --output Build/rajagopal-walking-contract.json
+
 # Produce one source-derived distal-leg PinJoint URDF for native compiler
 # validation. It intentionally has no collision geometry or muscle lowering.
 numi human preview --sources Sources --side right --output Build/right-pin-preview
