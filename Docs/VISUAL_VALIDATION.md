@@ -1,5 +1,24 @@
 # Visual validation
 
+## Native torso anatomy check — 2026-08-27
+
+The [four-angle torso anatomy review](VISUAL_PROGRESS.md#native-source-bound-torso-anatomy--2026-08-27)
+uses the native `NHANAT1` payload paired with the same v2 BodyParts3D/MyoSim
+registration as the bone pack. It contains 12 exact source components across
+organ, vessel, and neural layers; all are bound to either articulated `torso`
+or `Abdomen` links. The local Apple M4 ran all 416 MyoSim paths at activation
+0.05 for one 100 µs update, then rendered 2048 px front, oblique, side, and
+rear views. Every frame had nonzero layer coverage: organs 110,361 / 79,523 /
+54,673 / 28,838 pixels; vessels 41,719 / 35,101 / 21,719 / 2,476; spinal cord
+115 / 21 / 191 / 138.
+
+Visual inspection establishes source-to-render continuity and readable
+multi-angle placement for this selected torso layer. It does not validate
+organ deformation, vessel compliance or flow, neural mechanics, material
+parameters, collision/contact, force transfer, gait, complete anatomy, or
+clinical registration. The execution boundary and inputs are retained in the
+[capture record](media/myosim-native-torso-anatomy-2048/capture.transcript.txt).
+
 ## Corrected BodyParts3D calcaneal attachment check — 2026-08-27
 
 The four-angle [source-bound attachment review](VISUAL_PROGRESS.md#corrected-bodyparts3d-calcaneal-attachment--2026-08-27)

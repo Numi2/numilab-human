@@ -45,6 +45,23 @@ muscle-to-tendon-to-bone geometry inspectable, but remains an anatomical
 source-surface view—not photorealistic skin, a tendon continuum, or a physical
 attachment certificate. The [capture record](Docs/media/myosim-native-calcaneal-attachment-2048/capture.transcript.txt) records the execution boundary.
 
+### Muscle-driven torso anatomy
+
+<p align="center">
+  <img src="Docs/media/myosim-native-torso-anatomy-2048/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-muscle-driven-focus-body-20-front.png" width="49%" alt="Source-bound torso anatomy, front" />
+  <img src="Docs/media/myosim-native-torso-anatomy-2048/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-muscle-driven-focus-body-20-oblique.png" width="49%" alt="Source-bound torso anatomy, oblique" />
+</p>
+
+The native `NHANAT1` path adds 12 exact BodyParts3D components to the exposed
+Human: one source component from the heart group, stomach, pancreas, both
+kidneys, four named aortic segments, both caval segments, and spinal cord.
+Thoracic components follow MyoSim `torso`; abdominal components follow
+`Abdomen`. The Apple-M4 2K capture applies all 416 MyoSim paths for one
+100 µs bounded update before rendering all four angles. It is a source-bound
+kinematic anatomy view—not a complete organ inventory, photorealistic body,
+deformable organ/vessel model, or medical registration. See the
+[capture record](Docs/media/myosim-native-torso-anatomy-2048/capture.transcript.txt).
+
 ### Muscle-driven source-surface exterior
 
 <p align="center">

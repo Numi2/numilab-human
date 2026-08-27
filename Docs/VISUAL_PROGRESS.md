@@ -1,5 +1,34 @@
 # NumiLab Human visual progress
 
+## Native source-bound torso anatomy — 2026-08-27
+
+<p align="center">
+  <img src="media/myosim-native-torso-anatomy-2048/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-muscle-driven-focus-body-20-front.png" width="24%" alt="Native source-bound torso anatomy, front" />
+  <img src="media/myosim-native-torso-anatomy-2048/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-muscle-driven-focus-body-20-oblique.png" width="24%" alt="Native source-bound torso anatomy, oblique" />
+  <img src="media/myosim-native-torso-anatomy-2048/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-muscle-driven-focus-body-20-side.png" width="24%" alt="Native source-bound torso anatomy, side" />
+  <img src="media/myosim-native-torso-anatomy-2048/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-muscle-driven-focus-body-20-rear.png" width="24%" alt="Native source-bound torso anatomy, rear" />
+</p>
+
+`NHANAT1` is the native C++/Metal input for a deliberately bounded, exposed
+torso layer. It retains 12 exact BodyParts3D 4.0 OBJ components (21,648
+vertices / 40,410 triangles): a selected heart-group component, stomach,
+pancreas, both kidneys, ascending/arch/descending/abdominal aorta, superior
+and inferior vena cava, and spinal cord. The offline importer places each
+source triangle set in the registered default inertial frame of MyoSim `torso`
+or `Abdomen`; the native renderer binds it to that articulated link.
+
+The local Apple M4 rendered the four 2048 px frames after one 100 µs,
+all-416-path MyoSim update at activation 0.05. Organ/vessel/nerve coverage was
+110,361/41,719/115 (front), 79,523/35,101/21 (oblique),
+54,673/21,719/191 (side), and 28,838/2,476/138 (rear). Visual review confirms
+readable placement from every angle; the [capture record](media/myosim-native-torso-anatomy-2048/capture.transcript.txt)
+has the full native transcript.
+
+This is source-surface kinematic presentation only. It does not infer missing
+heart/lung/liver components, create deformable organs, compliant vessels or
+neural mechanics, introduce material parameters, or establish collision,
+contact, force transfer, clinical registration, or photorealism.
+
 ## Corrected BodyParts3D calcaneal attachment — 2026-08-27
 
 <p align="center">

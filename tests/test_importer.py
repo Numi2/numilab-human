@@ -620,6 +620,41 @@ class ImporterTests(unittest.TestCase):
             "[--dimension <512..2048; multiple-of-64>]\n",
         )
 
+    def test_numi_workspace_torso_anatomy_visual_command_rejects_missing_paths_before_python(self) -> None:
+        command = ROOT / ".numi/commands/human"
+        result = run(
+            [command, "myosim-native-torso-anatomy-visuals"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(result.stdout, "")
+        self.assertEqual(
+            result.stderr,
+            "usage: numi human myosim-native-torso-anatomy-visuals "
+            "<artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> "
+            "<bodyparts3d-myosim-torso-anatomy.nhanatomy> <output-directory> "
+            "[--dimension <512..2048; multiple-of-64>]\n",
+        )
+
+    def test_torso_anatomy_map_is_unique_and_source_backed(self) -> None:
+        mapping = read_json(ROOT / "config/bodyparts3d-myosim-torso-anatomy-map.v1.json")
+        self.assertEqual(mapping["schema"], "numi.human.bodyparts3d-myosim-torso-anatomy-map.v1")
+        entries = mapping["entries"]
+        self.assertEqual(len(entries), 12)
+        self.assertEqual({entry["layer"] for entry in entries}, {"organ", "vessel", "nerve"})
+        self.assertEqual(len({entry["member_id"] for entry in entries}), len(entries))
+        source_relations = {
+            tuple(line.split("\t"))
+            for line in (ROOT / "Sources/partof_element_parts.txt").read_text(encoding="utf-8").splitlines()
+        }
+        for entry in entries:
+            self.assertIn(
+                (entry["concept_id"], entry["source_name"], entry["member_id"]),
+                source_relations,
+            )
+
     def test_numi_workspace_supported_muscle_surface_command_rejects_missing_paths_before_python(self) -> None:
         command = ROOT / ".numi/commands/human"
         result = run(

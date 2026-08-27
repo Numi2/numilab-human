@@ -1,0 +1,42 @@
+Native source-bound torso anatomy capture — 2026-08-27
+
+Machine: local Apple M4. macmini was not used because its crow workload was active.
+Runtime: /Users/home/Documents/emergentnumilife/MetalRobo @ 77534a34b72dc8c01aa6d0a23d22bd2fcb18eee7 (coupled)
+Human source: /Users/home/numilab-human, torso-anatomy implementation before publication
+
+Offline source payload:
+  BodyParts3D 4.0 exact OBJ components selected in config/bodyparts3d-myosim-torso-anatomy-map.v1.json
+  registration: /private/tmp/numilab-human-calf.rcyGOW/registration
+  payload: NHANAT1 ABI 1; 12 source surfaces; 21,648 vertices; 40,410 triangles
+  layers: five organ components, six vessel components, one spinal-cord component
+  binding: registered single-link source surfaces, each following MyoSim torso (20) or Abdomen (7)
+
+Native invocation:
+  metalrobo_numilab_human_myosim_visual_probe
+    Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid
+    Build/myosim-fullbody/myosim-fullbody-muscle-reference.nhmyo
+    /private/tmp/numilab-human-calf.rcyGOW/bones/bodyparts3d-myosim-major-bones.nhbones
+    <output>
+    --torso-anatomy-payload <NHANAT1>
+    --focus-body-index 20
+    --muscle-step-seconds 0.0001 --muscle-step-count 1 --muscle-activation 0.05
+    --dimension 2048
+
+Native result:
+  Metal pose device: Apple M4
+  Renderer device: Apple M4
+  all 416 MyoSim source paths evaluated; 90 wraps; 2 Metal force transactions; 416 active records
+  muscle force stage: 71.421333 ms (single reference pass; not a performance qualification)
+  maximum configuration delta: 7.2006588519e-05
+  184 source bone meshes and 12 selected torso-anatomy source surfaces rendered
+  source support contact: not requested
+  physical boundary: Metal muscle force projection followed by bounded CPU FP64 free dynamics, then Metal pose/render; no full device-resident human dynamics or contact qualification
+
+Coverage (organ / vessel / spinal-cord pixels):
+  front:   110361 / 41719 / 115
+  oblique:  79523 / 35101 / 21
+  side:     54673 / 21719 / 191
+  rear:     28838 / 2476 / 138
+
+Visual interpretation:
+  The images are native multi-angle source-surface anatomy inspection. They do not prove an organ FEM/MPM body, vessel mechanics/flow, neural mechanics, material calibration, collision/contact, force transfer, complete organ coverage, photorealism, medical registration, or clinical validity.

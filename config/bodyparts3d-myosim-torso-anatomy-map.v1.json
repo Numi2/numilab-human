@@ -1,0 +1,18 @@
+{
+  "schema": "numi.human.bodyparts3d-myosim-torso-anatomy-map.v1",
+  "description": "A small, explicit BodyParts3D 4.0 source-surface selection for native torso anatomy inspection. Each row preserves its source FMA parent relationship, exact OBJ member, and one inspected MyoSim torso or abdomen link. These are kinematic visual bindings only: they do not make an organ a FEM body, a vessel a compliant tube, or the spinal cord a neural mechanics model.",
+  "entries": [
+    {"concept_id": "FMA7088", "source_name": "heart", "member_id": "FJ2439", "hierarchy": "part_of", "layer": "organ", "myosim_body": "torso"},
+    {"concept_id": "FMA7148", "source_name": "stomach", "member_id": "FJ2564", "hierarchy": "part_of", "layer": "organ", "myosim_body": "Abdomen"},
+    {"concept_id": "FMA7198", "source_name": "pancreas", "member_id": "FJ1895", "hierarchy": "part_of", "layer": "organ", "myosim_body": "Abdomen"},
+    {"concept_id": "FMA7204", "source_name": "right kidney", "member_id": "FJ3147", "hierarchy": "part_of", "layer": "organ", "myosim_body": "Abdomen"},
+    {"concept_id": "FMA7205", "source_name": "left kidney", "member_id": "FJ3145", "hierarchy": "part_of", "layer": "organ", "myosim_body": "Abdomen"},
+    {"concept_id": "FMA3736", "source_name": "ascending aorta", "member_id": "FJ3413", "hierarchy": "part_of", "layer": "vessel", "myosim_body": "torso"},
+    {"concept_id": "FMA3768", "source_name": "arch of aorta", "member_id": "FJ3411", "hierarchy": "part_of", "layer": "vessel", "myosim_body": "torso"},
+    {"concept_id": "FMA3784", "source_name": "descending aorta", "member_id": "FJ3427", "hierarchy": "part_of", "layer": "vessel", "myosim_body": "torso"},
+    {"concept_id": "FMA3789", "source_name": "abdominal aorta", "member_id": "FJ1932", "hierarchy": "part_of", "layer": "vessel", "myosim_body": "Abdomen"},
+    {"concept_id": "FMA4720", "source_name": "superior vena cava", "member_id": "FJ3645", "hierarchy": "part_of", "layer": "vessel", "myosim_body": "torso"},
+    {"concept_id": "FMA10951", "source_name": "inferior vena cava", "member_id": "FJ3441", "hierarchy": "part_of", "layer": "vessel", "myosim_body": "Abdomen"},
+    {"concept_id": "FMA7647", "source_name": "spinal cord", "member_id": "FJ1737", "hierarchy": "part_of", "layer": "nerve", "myosim_body": "torso"}
+  ]
+}

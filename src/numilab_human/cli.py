@@ -23,6 +23,7 @@ from .model import (
     bodyparts_right_lower_leg_anatomy_preview,
     bodyparts_myosim_bone_visual_payload,
     bodyparts_myosim_fullbody_soft_tissue_visual_payload,
+    bodyparts_myosim_torso_anatomy_visual_payload,
     bodyparts_myosim_skinned_shell_visual_payload,
     bodyparts_myosim_right_posterior_chain_visual_payload,
     bodyparts_myosim_attachment_surface_registration_candidate,
@@ -748,6 +749,18 @@ def myosim_bodyparts_fullbody_soft_tissue_visual_payload(arguments: argparse.Nam
     return 0
 
 
+def myosim_bodyparts_torso_anatomy_visual_payload(arguments: argparse.Namespace) -> int:
+    sources = arguments.sources.resolve()
+    anatomy = parse_bodyparts3d(sources, REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
+    manifest = bodyparts_myosim_torso_anatomy_visual_payload(
+        sources, anatomy, arguments.registration.resolve(), arguments.artifact.resolve(),
+        arguments.output.resolve(),
+    )
+    print(f"wrote {arguments.output.resolve() / manifest['payload']['file']}")
+    print(f"wrote {arguments.output.resolve() / 'bodyparts3d-myosim-torso-anatomy.manifest.json'}")
+    return 0
+
+
 def zanatomy_calf_visual_supplement_payload(arguments: argparse.Namespace) -> int:
     manifest = build_zanatomy_calf_visual_supplement_payload(
         arguments.sources.resolve(), arguments.registration.resolve(), arguments.base_payload.resolve(),
@@ -886,6 +899,23 @@ def parser() -> argparse.ArgumentParser:
     myosim_fullbody_tissue_payload_parser.add_argument("--output", type=Path, required=True)
     myosim_fullbody_tissue_payload_parser.set_defaults(
         handler=myosim_bodyparts_fullbody_soft_tissue_visual_payload,
+    )
+    myosim_torso_anatomy_payload_parser = commands.add_parser(
+        "myosim-bodyparts-torso-anatomy-payload",
+        help="prepare selected exact BodyParts3D organ, vessel, and spinal-cord surfaces for native torso inspection",
+    )
+    myosim_torso_anatomy_payload_parser.add_argument("--sources", type=Path, required=True)
+    myosim_torso_anatomy_payload_parser.add_argument(
+        "--registration", type=Path, required=True,
+        help="unmodified visual-registration candidate from myosim-bodyparts-registration",
+    )
+    myosim_torso_anatomy_payload_parser.add_argument(
+        "--artifact", type=Path, required=True,
+        help="compiled MyoSim full-body artifact directory from myosim-build",
+    )
+    myosim_torso_anatomy_payload_parser.add_argument("--output", type=Path, required=True)
+    myosim_torso_anatomy_payload_parser.set_defaults(
+        handler=myosim_bodyparts_torso_anatomy_visual_payload,
     )
     zanatomy_calf_payload_parser = commands.add_parser(
         "zanatomy-calf-visual-supplement-payload",

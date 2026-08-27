@@ -101,6 +101,46 @@ if [ "${1:-}" = "myosim-native-bone-visuals" ]; then
         "$output_directory"
 fi
 
+# The compact NHANAT1 layer keeps exact selected BodyParts3D organ, vessel,
+# and spinal-cord triangles in their registered MyoSim torso/abdomen links.
+# It remains a native C++/Metal inspection path, not an organ material model.
+if [ "${1:-}" = "myosim-native-torso-anatomy-visuals" ]; then
+    if [ "$#" -ne 5 ] && { [ "$#" -ne 7 ] || [ "$6" != "--dimension" ]; }; then
+        printf '%s\n' "usage: numi human myosim-native-torso-anatomy-visuals <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <bodyparts3d-myosim-torso-anatomy.nhanatomy> <output-directory> [--dimension <512..2048; multiple-of-64>]" >&2
+        exit 2
+    fi
+    artifact_directory=$2
+    bone_payload=$3
+    torso_anatomy_payload=$4
+    output_directory=$5
+    frame_dimension=
+    if [ "$#" -eq 7 ]; then
+        frame_dimension=$7
+    fi
+    runtime_root=${NUMI_LAB_ROOT:-/Users/home/Documents/emergentnumilife/MetalRobo}
+    build_directory=${NUMI_BUILD_DIR:-$runtime_root/build}
+    probe=$build_directory/bin/metalrobo_numilab_human_myosim_visual_probe
+    if [ ! -x "$probe" ]; then
+        printf '%s\n' "native Human visual probe is unavailable: $probe" >&2
+        printf '%s\n' "build target metalrobo_numilab_human_myosim_visual_probe in $runtime_root" >&2
+        exit 2
+    fi
+    set -- "$probe" \
+        "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
+        "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
+        "$bone_payload" \
+        "$output_directory" \
+        --torso-anatomy-payload "$torso_anatomy_payload" \
+        --focus-body-index 20 \
+        --muscle-step-seconds 0.0001 \
+        --muscle-step-count 1 \
+        --muscle-activation 0.05
+    if [ -n "$frame_dimension" ]; then
+        set -- "$@" --dimension "$frame_dimension"
+    fi
+    exec "$@"
+fi
+
 # This is intentionally a bounded sensitivity capture rather than a simulation
 # loop: the complete source muscle set is projected by the retained Metal
 # articulated operator, compared against a matched device passive baseline,

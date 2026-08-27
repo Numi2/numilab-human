@@ -3611,6 +3611,11 @@ _BODYPARTS_MYOSIM_SKIN_VISUAL_MAGIC = b"NHSKIN1\0"
 # weights were derived from envelope *boundaries*, not zero-inside envelope
 # volumes.  Native readers retain ABI 1 only for reproduction of old captures.
 _BODYPARTS_MYOSIM_SKIN_VISUAL_ABI = 3
+_BODYPARTS_MYOSIM_TORSO_ANATOMY_VISUAL_MAGIC = b"NHANAT1\0"
+_BODYPARTS_MYOSIM_TORSO_ANATOMY_VISUAL_ABI = 1
+_BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_ORGAN = 1
+_BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_VESSEL = 2
+_BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_NERVE = 3
 
 
 def _bodyparts_visual_registration_fingerprint(registration_file: Path) -> int:
@@ -4881,6 +4886,213 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         "evidence_boundary": "This source-authored surface package visually follows exact named articulated endpoint bodies. It does not make the source surface a force-transmitting continuum, add a tendon constitutive law, create collision/contact, or establish a medical registration.",
     }
     write_json(output / "bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json", manifest)
+    return manifest
+
+
+def _bodyparts_source_element_relation_names(sources: Path, hierarchy: str) -> set[tuple[str, str, str]]:
+    """Read one BodyParts3D FMA-to-element table for exact map validation."""
+    if hierarchy == "part_of":
+        source = sources / "partof_element_parts.txt"
+    elif hierarchy == "is_a":
+        source = sources / "isa_element_parts.txt"
+    else:
+        raise ImportError(f"BodyParts3D source hierarchy is unsupported: {hierarchy}")
+    if not source.is_file():
+        raise ImportError(f"BodyParts3D element relation source is unavailable: {source.name}")
+    result: set[tuple[str, str, str]] = set()
+    for raw in source.read_text(encoding="utf-8").splitlines():
+        columns = raw.split("\t")
+        if len(columns) != 3:
+            raise ImportError(f"BodyParts3D element relation source has an invalid row: {source.name}")
+        result.add((columns[0], columns[1], columns[2]))
+    return result
+
+
+def _bodyparts_unit_vector(value: list[float], context: str) -> list[float]:
+    if len(value) != 3 or not all(math.isfinite(component) for component in value):
+        raise ImportError(f"{context} is not a finite 3-vector")
+    magnitude = math.sqrt(sum(component * component for component in value))
+    if magnitude <= 1.0e-12:
+        raise ImportError(f"{context} has zero length")
+    return [component / magnitude for component in value]
+
+
+def bodyparts_myosim_torso_anatomy_visual_payload(
+    sources: Path, anatomy: dict[str, Any], registration_path: Path, myosim_artifact: Path, output: Path,
+) -> dict[str, Any]:
+    """Package selected exact organs, vessels, and spinal cord for native posing.
+
+    The BodyParts3D surfaces remain their supplied triangle topology.  Each
+    selected component is converted into the named MyoSim torso or abdomen
+    inertial frame at the registered default pose, so the Metal visual runtime
+    moves it with that articulated link.  This is intentionally a compact
+    anatomical inspection layer, never a material or continuum lowerer.
+    """
+    registration_file = registration_path.resolve()
+    registration = read_json(registration_file)
+    if registration.get("schema") not in {
+        "numi.human.bodyparts3d-myosim-bone-registration-candidate.v1",
+        "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2",
+    } or registration.get("status") not in {
+        "provisional_visual_registration_not_admitted_to_collision_or_physics",
+        "inferred_attachment_surface_visual_registration_not_admitted_to_collision_or_physics",
+    }:
+        raise ImportError("BodyParts3D torso anatomy payload requires an unmodified visual registration")
+    expected_bodyparts = {
+        "id": anatomy.get("source_id"), "version": anatomy.get("version"),
+        "archives": anatomy.get("archives"),
+    }
+    source = registration.get("source")
+    if not isinstance(source, dict) or source.get("bodyparts") != expected_bodyparts:
+        raise ImportError("BodyParts3D torso anatomy registration does not match parsed source provenance")
+    myosim = source.get("myosim")
+    source_sha = myosim.get("source", {}).get("archive_sha256") if isinstance(myosim, dict) else None
+    if not isinstance(source_sha, str) or not re.fullmatch(r"[0-9a-f]{64}", source_sha):
+        raise ImportError("BodyParts3D torso anatomy payload has no MyoSim source SHA-256")
+    coordinates = registration.get("coordinate_system")
+    global_matrix = coordinates.get("global_source_mm_to_myosim_world_m") if isinstance(coordinates, dict) else None
+    global_translation, global_quaternion, global_scale = _bodyparts_visual_local_pose(
+        global_matrix, "BodyParts3D torso anatomy global transform",
+    )
+    bodies, _, myosim_manifest = _myosim_surface_route_context(myosim_artifact, source_sha)
+    map_path = REPOSITORY_ROOT / "config/bodyparts3d-myosim-torso-anatomy-map.v1.json"
+    surface_map = read_json(map_path)
+    if surface_map.get("schema") != "numi.human.bodyparts3d-myosim-torso-anatomy-map.v1":
+        raise ImportError("BodyParts3D torso anatomy surface map schema is unsupported")
+    specifications = surface_map.get("entries")
+    if not isinstance(specifications, list) or not specifications:
+        raise ImportError("BodyParts3D torso anatomy surface map has no entries")
+    relation_cache = {
+        hierarchy: _bodyparts_source_element_relation_names(sources, hierarchy)
+        for hierarchy in {entry.get("hierarchy") for entry in specifications if isinstance(entry, dict)}
+        if isinstance(hierarchy, str)
+    }
+    if not relation_cache:
+        raise ImportError("BodyParts3D torso anatomy surface map has no source hierarchies")
+    layer_codes = {
+        "organ": _BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_ORGAN,
+        "vessel": _BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_VESSEL,
+        "nerve": _BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_NERVE,
+    }
+    global_rotation = _myosim_matrix_from_quaternion_xyzw(global_quaternion)
+    vertices_payload: list[tuple[float, float, float, float, float, float]] = []
+    indices_payload: list[int] = []
+    records_payload: list[bytes] = []
+    provenance: list[dict[str, Any]] = []
+    seen_members: set[str] = set()
+    for stable_id, specification in enumerate(specifications, start=1):
+        if not isinstance(specification, dict):
+            raise ImportError("BodyParts3D torso anatomy surface map has an invalid entry")
+        concept_id = specification.get("concept_id")
+        label = specification.get("source_name")
+        member_id = specification.get("member_id")
+        hierarchy = specification.get("hierarchy")
+        layer_name = specification.get("layer")
+        body_name = specification.get("myosim_body")
+        if not all(isinstance(value, str) and value for value in (
+            concept_id, label, member_id, hierarchy, layer_name, body_name,
+        )) or member_id in seen_members or hierarchy not in relation_cache or layer_name not in layer_codes:
+            raise ImportError("BodyParts3D torso anatomy surface map identity is invalid")
+        seen_members.add(member_id)
+        if (concept_id, label, member_id) not in relation_cache[hierarchy]:
+            raise ImportError(f"BodyParts3D torso anatomy source relation drifted: {member_id}")
+        target = bodies.get(body_name)
+        if not isinstance(target, dict):
+            raise ImportError(f"BodyParts3D torso anatomy has no named MyoSim body: {body_name}")
+        body_index = target.get("core_body_index")
+        position = target.get("default_com_position_world_m")
+        quaternion = target.get("default_inertial_quaternion_world_xyzw")
+        if not isinstance(body_index, int) or body_index < 0 or not isinstance(position, list) or not isinstance(quaternion, list):
+            raise ImportError(f"BodyParts3D torso anatomy target body is malformed: {body_name}")
+        archive_path, member, obj = _bodyparts_obj_member(sources, hierarchy, member_id)
+        vertices_mm, triangles = _bodyparts_obj_triangles(obj, member)
+        normals = _bodyparts_vertex_normals(vertices_mm, triangles, member)
+        world_vertices = _bodyparts_source_mm_to_body_world(
+            vertices_mm, [0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 1.0],
+            global_translation, global_quaternion, global_scale,
+        )
+        stored_vertices = _bodyparts_world_to_body_stored_m(
+            world_vertices, position, quaternion, [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0], 1.0, f"BodyParts3D torso anatomy {member_id}",
+        )
+        body_world_rotation = _myosim_matrix_from_quaternion_xyzw(quaternion)
+        body_world_rotation_inverse = _matrix_transpose(body_world_rotation)
+        stored_normals = []
+        for normal in normals:
+            world_normal = _bodyparts_unit_vector(
+                _myosim_matrix_vector(global_rotation, list(normal)),
+                f"BodyParts3D torso anatomy {member_id} world normal",
+            )
+            stored_normals.append(_bodyparts_unit_vector(
+                _myosim_matrix_vector(body_world_rotation_inverse, world_normal),
+                f"BodyParts3D torso anatomy {member_id} local normal",
+            ))
+        first_vertex, first_index = len(vertices_payload), len(indices_payload)
+        vertices_payload.extend(
+            (*vertex, *normal) for vertex, normal in zip(stored_vertices, stored_normals, strict=True)
+        )
+        indices_payload.extend(first_vertex + index for triangle in triangles for index in triangle)
+        records_payload.append(struct.pack(
+            "<8I", body_index, first_vertex, len(vertices_mm), first_index,
+            len(triangles) * 3, stable_id, layer_codes[layer_name], 0,
+        ))
+        provenance.append({
+            "stable_id": stable_id, "concept_id": concept_id, "label": label,
+            "member_id": member_id, "member": member,
+            "member_sha256": hashlib.sha256(obj).hexdigest(),
+            "hierarchy": hierarchy, "layer": layer_name,
+            "myosim_body": body_name, "core_body_index": body_index,
+            "vertex_count": len(vertices_mm), "triangle_count": len(triangles),
+        })
+    if len(vertices_payload) > 0xFFFFFFFF or len(indices_payload) > 0xFFFFFFFF:
+        raise ImportError("BodyParts3D torso anatomy payload exceeds the uint32 native renderer capacity")
+    registration_fingerprint = _bodyparts_visual_registration_fingerprint(registration_file)
+    payload = b"".join([
+        struct.pack(
+            "<8s5I32s", _BODYPARTS_MYOSIM_TORSO_ANATOMY_VISUAL_MAGIC,
+            _BODYPARTS_MYOSIM_TORSO_ANATOMY_VISUAL_ABI, len(records_payload),
+            len(vertices_payload), len(indices_payload), registration_fingerprint,
+            bytes.fromhex(source_sha),
+        ),
+        *records_payload,
+        b"".join(struct.pack("<6f", *vertex) for vertex in vertices_payload),
+        struct.pack(f"<{len(indices_payload)}I", *indices_payload),
+    ])
+    output = output.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    payload_path = output / "bodyparts3d-myosim-torso-anatomy.nhanatomy"
+    payload_path.write_bytes(payload)
+    manifest = {
+        "schema": "numi.human.bodyparts3d-myosim-torso-anatomy-visual-payload.v1",
+        "payload": {
+            "file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
+            "magic": _BODYPARTS_MYOSIM_TORSO_ANATOMY_VISUAL_MAGIC.rstrip(b"\0").decode("ascii"),
+            "payload_abi": _BODYPARTS_MYOSIM_TORSO_ANATOMY_VISUAL_ABI,
+            "registration_fingerprint32": f"{registration_fingerprint:08x}",
+            "surface_count": len(records_payload), "vertex_count": len(vertices_payload),
+            "index_count": len(indices_payload),
+        },
+        "source": {
+            "registration": {"file": registration_file.name, "sha256": sha256(registration_file)},
+            "bodyparts": expected_bodyparts, "myosim_source_archive_sha256": source_sha,
+            "myosim_manifest": {
+                "file": "myosim-fullbody-reference.manifest.json",
+                "sha256": sha256((myosim_artifact.resolve() / "myosim-fullbody-reference.manifest.json")),
+            },
+            "surface_map": {"file": map_path.name, "sha256": sha256(map_path)},
+            "surfaces": provenance,
+        },
+        "coverage": {
+            "configured_surface_count": len(provenance),
+            "organ_surface_count": sum(entry["layer"] == "organ" for entry in provenance),
+            "vessel_surface_count": sum(entry["layer"] == "vessel" for entry in provenance),
+            "nerve_surface_count": sum(entry["layer"] == "nerve" for entry in provenance),
+        },
+        "runtime_binding": "each exact BodyParts3D source component is converted into the declared MyoSim torso or abdomen inertial frame at the registered default pose and then follows that one articulated visual link in the native renderer",
+        "status": "native_single_link_kinematic_anatomy_surface_binding_input_not_collision_or_physics",
+        "evidence_boundary": "This compact source-surface layer does not create organ FEM or MPM bodies, vessel tube mechanics, neural mechanics, tissue material parameters, collision/contact, force transmission, or medical registration.",
+    }
+    write_json(output / "bodyparts3d-myosim-torso-anatomy.manifest.json", manifest)
     return manifest
 
 
