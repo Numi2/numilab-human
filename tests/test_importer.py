@@ -88,6 +88,40 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(left_gastrocnemius["source_name"], "lateral head of left gastrocnemius")
         self.assertEqual(left_gastrocnemius["myosim_muscles"], ["gaslat_l"])
 
+    def test_fullbody_surface_map_pins_native_right_upper_limb_inspection_ids(self) -> None:
+        surfaces = _bodyparts_myosim_surface_specifications()
+        selected = {
+            stable_id: surfaces[stable_id - 1]
+            for stable_id in range(69, 110, 2)
+        }
+        self.assertEqual(
+            [surface["source_name"] for surface in selected.values()],
+            [
+                "abdominal part of right pectoralis major",
+                "clavicular part of right pectoralis major",
+                "sternocostal part of right pectoralis major",
+                "acromial part of right deltoid",
+                "clavicular part of right deltoid",
+                "spinal part of right deltoid",
+                "right supraspinatus",
+                "right infraspinatus muscle",
+                "right subscapularis",
+                "right teres major",
+                "right teres minor",
+                "right coracobrachialis",
+                "long head of right triceps brachii",
+                "lateral head of right triceps brachii",
+                "medial head of right triceps brachii",
+                "right anconeus",
+                "right supinator",
+                "long head of right biceps brachii",
+                "short head of right biceps brachii",
+                "right brachialis",
+                "right brachioradialis",
+            ],
+        )
+        self.assertTrue(all(surface.get("layer", "muscle") == "muscle" for surface in selected.values()))
+
     def test_visual_skeleton_extension_preserves_the_validated_fit_set(self) -> None:
         fit_anchors = [
             anchor for anchor in _BODYPARTS_MYOSIM_BONE_ANCHORS
@@ -509,6 +543,27 @@ class ImporterTests(unittest.TestCase):
             "usage: numi human myosim-native-posterior-tendon-inspection "
             "<artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> "
             "<bodyparts3d-myosim-soft-tissue.nhtissue> <output-directory> "
+            "[--dimension <512..2048; multiple-of-64>]\n",
+        )
+
+    def test_numi_workspace_upper_limb_inspection_rejects_missing_paths_before_python(self) -> None:
+        command = ROOT / ".numi/commands/human"
+        result = run(
+            [command, "myosim-native-upper-limb-inspection"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(result.stdout, "")
+        self.assertEqual(
+            result.stderr,
+            "usage: numi human myosim-native-upper-limb-inspection "
+            "<artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> "
+            "<bodyparts3d-myosim-soft-tissue.nhtissue> <output-directory> "
+            "[--muscle-step-seconds <1e-6..1e-3>] "
+            "[--muscle-step-count <1..64>] "
+            "[--muscle-activation <0..1>] "
             "[--dimension <512..2048; multiple-of-64>]\n",
         )
 

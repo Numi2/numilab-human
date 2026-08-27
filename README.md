@@ -46,6 +46,23 @@ It confirms the visible source insertion under that bounded update; it is not
 a deformable tendon, triangle force transfer, stable gait, general collision,
 or clinical-attachment claim.
 
+### Upper-limb muscle-driven inspection
+
+<p align="center">
+  <img src="Docs/media/myosim-native-upper-limb-inspection-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-41-front.png" width="32%" alt="Right upper-limb source anatomy, front" />
+  <img src="Docs/media/myosim-native-upper-limb-inspection-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-41-oblique.png" width="32%" alt="Right upper-limb source anatomy, oblique" />
+  <img src="Docs/media/myosim-native-upper-limb-inspection-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-focus-body-41-rear.png" width="32%" alt="Right upper-limb after bounded muscle-driven update, rear" />
+</p>
+
+The same native path now isolates the right torso–scapula–humerus–forearm
+chain: 42 source bone meshes on six articulated bodies and 21 exact
+BodyParts3D pectoral, deltoid, rotator-cuff, arm, and forearm surfaces. The
+third frame follows eight 100 microsecond updates, each evaluated over all 416
+MyoSim muscle paths, and differs from passive dynamics by
+0.00106265418885 rad/m. It is an Apple-M4 pose/render and Core-FP64 bounded
+free-dynamics inspection, not contact, deformable soft tissue, tendon
+continuum, stable movement, or clinical-registration evidence.
+
 ### Reviewed full-skeleton native inspection
 
 <p align="center">
@@ -185,6 +202,17 @@ numi human myosim-native-fullbody-soft-tissue-visuals \
   Build/bodyparts3d-myosim-fullbody-muscle-surfaces/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue \
   Docs/media/myosim-native-fullbody-geometry-framed-2048 \
   --dimension 2048
+
+# Focus the right shoulder-to-forearm chain. The filter chooses exact source
+# surfaces, while the bounded update still evaluates all 416 MyoSim muscles.
+# This final command is entirely native C++/Metal; no Python runtime starts.
+numi human myosim-native-upper-limb-inspection \
+  Build/myosim-fullbody \
+  Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
+  Build/bodyparts3d-myosim-fullbody-muscle-surfaces/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue \
+  Docs/media/myosim-native-upper-limb-inspection-2048 \
+  --muscle-step-seconds 0.0001 --muscle-step-count 8 \
+  --muscle-activation 0.05 --dimension 2048
 
 # Export a separate exact BodyParts3D rest-frame reference for the right lower
 # leg. It contains source bone, muscle, and calcaneal-tendon surfaces and is
