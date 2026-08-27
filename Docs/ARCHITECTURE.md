@@ -95,16 +95,16 @@ per-step host loop exists after the payload has been created. The dense
 remain Core CPU reference stages today; this does not claim a complete
 device-resident muscle-force rollout.
 
-At the same Core revision, `numi human myosim-native-visuals` executes a
-separate native default-pose capture path: Metal produces the 157-body
-articulated pose; the host publishes that one snapshot to the Core visual
-renderer; the renderer binds 96 non-zero-mass inertial-body proxies and 1,815
-MyoSim sites to their articulated links, then draws 1,432 route-centreline
-segments in world space. This establishes an inspected joint state → body pose
-→ rendered-instance chain. The snapshot's explicit host publication boundary
-means it is not a device-resident live presentation path; the proxies and
-route centre lines are not BodyParts3D surface registration, anatomical skin,
-or deformable-muscle rendering.
+The original `numi human myosim-native-visuals` capture drew every route as a
+straight site/wrap-centre segment. That output is retained only as a coverage
+regression because it can cross a wrap and does not depict a tendon. The
+current native inspection path still receives a Metal-produced 157-body pose,
+but leaves route geometry hidden by default. Its opt-in focused diagnostic
+evaluates the same posed source route on the CPU reference, then emits exact
+site endpoints, tangent contacts, and sampled sphere/cylinder wrap arcs. The
+host publication and CPU route-resolution boundaries mean this is neither a
+device-resident live presentation path nor tendon-surface or BodyParts3D
+attachment geometry.
 
 Core `2aab522` consumes the explicitly provisional `NHBONES1` visual input.
 The offline importer records exact BodyParts3D triangles and one decomposed

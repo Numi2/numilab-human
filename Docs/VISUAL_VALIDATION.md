@@ -1,11 +1,21 @@
 # Source-static visual validation
 
+## Presentation correction — 2026-08-27
+
+The linked 640 × 640 native bone views use the former dense straight-line route
+overlay. Retain them only as historical pose-to-mesh coverage evidence; they
+are not current tendon imagery and cannot establish a tendon-to-BodyParts3D
+surface attachment. The replacement renderer resolves source tangent contacts
+and sampled wrap arcs only in an explicit focused diagnostic; its per-bone
+attachment-site refinement is visual-only and remains outside physical
+admission.
+
 For the active MyoSim full-body muscle source, see the newer
 [visual-progress record](VISUAL_PROGRESS.md). Its three Apache-2.0-derived
 frames are source-rendered and are intentionally kept distinct from the
 BodyParts3D source-static evidence below.
 
-## Native muscle-driven BodyParts3D major bones — 2026-08-27
+## Retired native muscle-driven BodyParts3D major-bone overlay — 2026-08-27
 
 The four M4 Pro frames in
 [visual progress](VISUAL_PROGRESS.md#native-bounded-muscle-driven-27-bone-snapshot--2026-08-27)
@@ -13,17 +23,17 @@ re-run the current 27-mesh `NHBONES1` binding after one bounded full-body muscle
 force step. Core `2aab522` projects all 416 source MyoSim muscles at the
 source-default activation/excitation, advances an FP64 free-body state, and
 passes only that resulting configuration to Metal for the final articulated
-pose/render snapshot. The observed four-view skeleton remains coherent; the
-tracked transcript records 90 applied wraps and the matched passive-state
-deltas. This verifies a force-to-pose visual chain, not a trajectory or a
+pose/render snapshot. The tracked transcript records 90 applied wraps and the
+matched passive-state deltas, but the straight-line overlay cannot assess
+surface attachment. This is a force-to-pose diagnostic, not a trajectory or a
 biomechanical behavior claim: the 1 ms co-activation probe has no controller,
 contact, recurrence, muscle-belly/skin deformation, or stability validation.
 
-## Native articulated BodyParts3D major bones — 2026-08-27
+## Retired native articulated BodyParts3D major-bone overlay — 2026-08-27
 
 The four inspected frames in
 [visual progress](VISUAL_PROGRESS.md#native-bodyparts3d-27-major-bone-binding--2026-08-27)
-are the current pose-bound BodyParts3D geometry evidence. An offline import
+are historical pose-bound BodyParts3D geometry evidence. An offline import
 uses an 18-mesh unambiguous similarity-fit set, then writes 27 exact source
 bone meshes and their link-local uniform-scale transforms into `NHBONES1`.
 The native Core capture binds each record to its Metal-computed MyoSim

@@ -19,7 +19,9 @@ from .model import (
     bodyparts_geometry_preflight,
     bodyparts_foot_registration_template,
     bodyparts_lower_body_attachment_worklist,
+    bodyparts_right_lower_leg_anatomy_preview,
     bodyparts_myosim_bone_visual_payload,
+    bodyparts_myosim_attachment_surface_registration_candidate,
     bodyparts_myosim_registration_candidate,
     bodyparts_nerve_annotation,
     bodyparts_visual_preview,
@@ -446,6 +448,14 @@ def visual_preview(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def right_lower_leg_anatomy_preview(arguments: argparse.Namespace) -> int:
+    output = arguments.output.resolve()
+    manifest = bodyparts_right_lower_leg_anatomy_preview(arguments.sources.resolve(), output)
+    print(f"wrote {output / manifest['preview']['glb']}")
+    print(f"wrote {output / 'bodyparts3d-right-lower-leg-anatomy-source-static.manifest.json'}")
+    return 0
+
+
 def millard_reference(arguments: argparse.Namespace) -> int:
     source = arguments.sources.resolve()
     lower = parse_opensim(
@@ -615,6 +625,20 @@ def myosim_bodyparts_registration(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def myosim_bodyparts_attachment_registration(arguments: argparse.Namespace) -> int:
+    sources = arguments.sources.resolve()
+    anatomy = parse_bodyparts3d(sources, REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
+    output = arguments.output.resolve()
+    write_json(
+        output,
+        bodyparts_myosim_attachment_surface_registration_candidate(
+            sources, anatomy, arguments.artifact.resolve(),
+        ),
+    )
+    print(f"wrote {output}")
+    return 0
+
+
 def myosim_bodyparts_bone_visual_payload(arguments: argparse.Namespace) -> int:
     sources = arguments.sources.resolve()
     anatomy = parse_bodyparts3d(sources, REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
@@ -692,6 +716,17 @@ def parser() -> argparse.ArgumentParser:
     )
     myosim_registration_parser.add_argument("--output", type=Path, required=True)
     myosim_registration_parser.set_defaults(handler=myosim_bodyparts_registration)
+    myosim_attachment_registration_parser = commands.add_parser(
+        "myosim-bodyparts-attachment-registration",
+        help="infer visual-only per-bone BodyParts3D surface correspondences from source MyoSim attachment sites",
+    )
+    myosim_attachment_registration_parser.add_argument("--sources", type=Path, required=True)
+    myosim_attachment_registration_parser.add_argument(
+        "--artifact", type=Path, required=True,
+        help="compiled MyoSim full-body artifact directory from myosim-build",
+    )
+    myosim_attachment_registration_parser.add_argument("--output", type=Path, required=True)
+    myosim_attachment_registration_parser.set_defaults(handler=myosim_bodyparts_attachment_registration)
     myosim_bone_payload_parser = commands.add_parser(
         "myosim-bodyparts-bone-payload",
         help="prepare source-major-bone triangles and articulated local transforms for the native Human visual renderer",
@@ -752,6 +787,13 @@ def parser() -> argparse.ArgumentParser:
     visual_preview_parser.add_argument("--archive", choices=("is_a", "part_of"), default="is_a")
     visual_preview_parser.add_argument("--member", default="FJ2810", help="BodyParts3D OBJ member identity")
     visual_preview_parser.set_defaults(handler=visual_preview)
+    lower_leg_anatomy_parser = commands.add_parser(
+        "right-lower-leg-anatomy-preview",
+        help="export exact source-static BodyParts3D right lower-leg bone, muscle, and tendon geometry",
+    )
+    lower_leg_anatomy_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
+    lower_leg_anatomy_parser.add_argument("--output", type=Path, required=True, help="local output directory")
+    lower_leg_anatomy_parser.set_defaults(handler=right_lower_leg_anatomy_preview)
     preview_parser = commands.add_parser(
         "preview",
         help="emit an explicitly limited Rajagopal distal-leg URDF compile preview",

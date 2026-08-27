@@ -2945,6 +2945,185 @@ def bodyparts_myosim_registration_candidate(
     }
 
 
+def _myosim_attachment_sites_from_payload(
+    payload: Path, expected_payload_sha256: str, expected_source_sha256: str,
+) -> dict[int, list[list[float]]]:
+    """Read the source-preserving NHRMYO1 site records for visual registration.
+
+    This is deliberately an offline import operation.  It makes no change to
+    the runtime muscle path: it only supplies anatomical surface observations
+    for the explicitly inferred BodyParts3D visual correspondence below.
+    """
+    if not payload.is_file() or sha256(payload) != expected_payload_sha256:
+        raise ImportError("BodyParts3D attachment registration muscle payload is missing or has drifted")
+    raw = payload.read_bytes()
+    header_format = "<8s9I32s"
+    header_bytes = struct.calcsize(header_format)
+    if len(raw) < header_bytes:
+        raise ImportError("BodyParts3D attachment registration muscle payload is truncated")
+    (
+        magic, abi, body_count, muscle_count, site_count, wrap_count,
+        route_count, tendon_count, reserved0, reserved1, source_sha,
+    ) = struct.unpack_from(header_format, raw)
+    expected_bytes = header_bytes + 16 * site_count + 64 * wrap_count + 16 * route_count + 164 * muscle_count
+    if (
+        magic != _MYOSIM_MUSCLE_REFERENCE_MAGIC or abi != _MYOSIM_MUSCLE_REFERENCE_ABI
+        or body_count == 0 or tendon_count == 0 or reserved0 != 0 or reserved1 != 0
+        or source_sha.hex() != expected_source_sha256 or len(raw) != expected_bytes
+    ):
+        raise ImportError("BodyParts3D attachment registration muscle payload ABI/provenance disagreement")
+    result: dict[int, list[list[float]]] = defaultdict(list)
+    offset = header_bytes
+    for index in range(site_count):
+        body_index, x, y, z = struct.unpack_from("<I3f", raw, offset + 16 * index)
+        if body_index >= body_count or not all(math.isfinite(value) for value in (x, y, z)):
+            raise ImportError("BodyParts3D attachment registration site record is malformed")
+        result[body_index].append([x, y, z])
+    return dict(result)
+
+
+def _bodyparts_attachment_quantile(values: list[float], percentile: float) -> float:
+    if not values or not 0.0 <= percentile <= 1.0:
+        raise ImportError("BodyParts3D attachment residual quantile is undefined")
+    ordered = sorted(values)
+    return ordered[min(len(ordered) - 1, int(math.ceil(percentile * len(ordered))) - 1)]
+
+
+def bodyparts_myosim_attachment_surface_registration_candidate(
+    sources: Path, anatomy: dict[str, Any], myosim_artifact: Path,
+) -> dict[str, Any]:
+    """Infer a constrained per-bone translation from source muscle sites.
+
+    The base common-frame fit aligns only mesh centroids to inertial COMs,
+    which is insufficient evidence for a muscle insertion.  This importer
+    therefore uses the exact source site records on each already-bound link to
+    refine *translation only* against the corresponding BodyParts3D triangle
+    vertices.  It never changes source paths, forces, body binding, scale, or
+    orientation, and remains visual-only until independently reviewed.
+    """
+    candidate = json.loads(json.dumps(
+        bodyparts_myosim_registration_candidate(sources, anatomy, myosim_artifact)
+    ))
+    muscle_descriptor = candidate["source"]["myosim"]["payloads"].get("muscles")
+    if not isinstance(muscle_descriptor, dict):
+        raise ImportError("BodyParts3D attachment registration has no MyoSim muscle payload descriptor")
+    muscle_file = muscle_descriptor.get("file")
+    muscle_sha = muscle_descriptor.get("sha256")
+    if not isinstance(muscle_file, str) or not isinstance(muscle_sha, str) or not re.fullmatch(r"[0-9a-f]{64}", muscle_sha):
+        raise ImportError("BodyParts3D attachment registration muscle payload descriptor is invalid")
+    source_sha = candidate["source"]["myosim"]["source"].get("archive_sha256")
+    if not isinstance(source_sha, str) or not re.fullmatch(r"[0-9a-f]{64}", source_sha):
+        raise ImportError("BodyParts3D attachment registration has no MyoSim source SHA-256")
+    sites_by_body = _myosim_attachment_sites_from_payload(
+        myosim_artifact.resolve() / muscle_file, muscle_sha, source_sha,
+    )
+    max_correspondence_distance_m = 0.12
+    maximum_iterations = 8
+    summary: list[dict[str, Any]] = []
+    for anchor in candidate["anchors"]:
+        target = anchor["target"]
+        registration = anchor["registration"]
+        body_index = target["core_body_index"]
+        sites = sites_by_body.get(body_index, [])
+        source = anchor["source"]
+        archive_path, member, obj = _bodyparts_obj_member(sources, source["hierarchy"], source["member_id"])
+        if archive_path.name != source["archive"] or hashlib.sha256(obj).hexdigest() != source["member_sha256"]:
+            raise ImportError("BodyParts3D attachment registration source mesh provenance drifted")
+        vertices_mm, _ = _bodyparts_obj_triangles(obj, member)
+        translation, quaternion, scale = _bodyparts_visual_local_pose(
+            registration["source_obj_mm_to_core_inertial_body_m"],
+            f"BodyParts3D attachment local transform for {source['member_id']}",
+        )
+        rotation = _myosim_matrix_from_quaternion_xyzw(quaternion)
+        vertices = [
+            _myosim_add(translation, [
+                scale * value for value in _myosim_matrix_vector(
+                    rotation, [coordinate * 0.001 for coordinate in vertex]
+                )
+            ])
+            for vertex in vertices_mm
+        ]
+
+        def nearest(point: list[float]) -> tuple[list[float], float]:
+            vertex = min(vertices, key=lambda candidate_vertex: sum(
+                (point[axis] - candidate_vertex[axis]) ** 2 for axis in range(3)
+            ))
+            return vertex, math.sqrt(sum((point[axis] - vertex[axis]) ** 2 for axis in range(3)))
+
+        initial_pairs = [(*nearest(point), point) for point in sites]
+        initial_distances = [distance for _, distance, _ in initial_pairs if distance <= max_correspondence_distance_m]
+        delta = [0.0, 0.0, 0.0]
+        if len(initial_distances) >= 3:
+            for _ in range(maximum_iterations):
+                pairs = [(*nearest(point), point) for point in sites]
+                accepted = [(vertex, point) for vertex, distance, point in pairs if distance <= max_correspondence_distance_m]
+                if len(accepted) < 3:
+                    break
+                correction = [
+                    sum(point[axis] - vertex[axis] for vertex, point in accepted) / len(accepted)
+                    for axis in range(3)
+                ]
+                if math.sqrt(sum(value * value for value in correction)) <= 1.0e-5:
+                    break
+                for axis in range(3):
+                    delta[axis] += correction[axis]
+                vertices = [
+                    [vertex[axis] + correction[axis] for axis in range(3)]
+                    for vertex in vertices
+                ]
+        final_pairs = [(*nearest(point), point) for point in sites]
+        final_distances = [distance for _, distance, _ in final_pairs if distance <= max_correspondence_distance_m]
+        initial_median = _bodyparts_attachment_quantile(initial_distances, 0.5) if initial_distances else None
+        final_median = _bodyparts_attachment_quantile(final_distances, 0.5) if final_distances else None
+        apply = (
+            initial_median is not None and final_median is not None
+            and final_median + 0.001 < initial_median
+        )
+        if apply:
+            local_matrix = registration["source_obj_mm_to_core_inertial_body_m"]
+            for axis in range(3):
+                local_matrix[axis][3] += delta[axis]
+            body_rotation = _myosim_matrix_from_quaternion_xyzw(
+                target["default_inertial_quaternion_world_xyzw"]
+            )
+            world_delta = _myosim_matrix_vector(body_rotation, delta)
+            registration["default_pose_vertex_centroid_world_m"] = _myosim_add(
+                registration["default_pose_vertex_centroid_world_m"], world_delta
+            )
+            registration["status"] = "inferred_visual_attachment_surface_refinement"
+        registration["attachment_surface_refinement"] = {
+            "method": "iterative_nearest_bodyparts3d_vertex_to_exact_myosim_site_translation_only",
+            "maximum_correspondence_distance_m": max_correspondence_distance_m,
+            "maximum_iterations": maximum_iterations,
+            "source_site_count": len(sites),
+            "accepted_site_count_before": len(initial_distances),
+            "accepted_site_count_after": len(final_distances),
+            "median_distance_before_m": initial_median,
+            "p90_distance_before_m": _bodyparts_attachment_quantile(initial_distances, 0.9) if initial_distances else None,
+            "median_distance_after_m": final_median,
+            "p90_distance_after_m": _bodyparts_attachment_quantile(final_distances, 0.9) if final_distances else None,
+            "translation_delta_core_body_m": delta,
+            "applied": apply,
+        }
+        summary.append({
+            "myosim_body": target["name"], "core_body_index": body_index,
+            "applied": apply, "median_distance_before_m": initial_median,
+            "median_distance_after_m": final_median,
+        })
+    candidate["schema"] = "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2"
+    candidate["status"] = "inferred_attachment_surface_visual_registration_not_admitted_to_collision_or_physics"
+    candidate["attachment_surface_refinement"] = {
+        "source_muscle_payload": {"file": muscle_file, "sha256": muscle_sha},
+        "records": summary,
+    }
+    candidate["evidence_boundary"] = (
+        "This inferred BodyParts3D/MyoSim surface correspondence is visual-only. "
+        "It does not alter source muscle sites or paths, create a source attachment certificate, "
+        "or admit collision, contact, skinning, soft-tissue mechanics, or medical validation."
+    )
+    return candidate
+
+
 _BODYPARTS_MYOSIM_BONE_VISUAL_MAGIC = b"NHBONES1"
 _BODYPARTS_MYOSIM_BONE_VISUAL_ABI = 1
 
@@ -3023,9 +3202,15 @@ def bodyparts_myosim_bone_visual_payload(
     """
     registration_file = registration_path.resolve()
     registration = read_json(registration_file)
-    if registration.get("schema") != "numi.human.bodyparts3d-myosim-bone-registration-candidate.v1":
+    if registration.get("schema") not in {
+        "numi.human.bodyparts3d-myosim-bone-registration-candidate.v1",
+        "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2",
+    }:
         raise ImportError("BodyParts3D visual payload requires a major-bone registration candidate")
-    if registration.get("status") != "provisional_visual_registration_not_admitted_to_collision_or_physics":
+    if registration.get("status") not in {
+        "provisional_visual_registration_not_admitted_to_collision_or_physics",
+        "inferred_attachment_surface_visual_registration_not_admitted_to_collision_or_physics",
+    }:
         raise ImportError("BodyParts3D visual payload requires an unmodified visual-only registration candidate")
     source = registration.get("source")
     expected_bodyparts = {
@@ -4818,6 +5003,231 @@ def bodyparts_visual_preview(
         ),
     }
     write_json(output / f"{member_id}-source-static.manifest.json", manifest)
+    return manifest
+
+
+# These source members form a coherent right lower-leg reference in the shared
+# BodyParts3D rest frame. They are deliberately a source-static anatomy bundle:
+# exact geometry is useful for assessing muscle and calcaneal-tendon shape, but
+# the bundle does not pretend that those surfaces are already registered to or
+# driven by the MyoSim articulated tree.
+_BODYPARTS_RIGHT_LOWER_LEG_ANATOMY = (
+    ("FJ3365", "right femur", "bone"),
+    ("FJ3381", "right patella", "bone"),
+    ("FJ3387", "right tibia", "bone"),
+    ("FJ3366", "right fibula", "bone"),
+    ("FJ3385", "right talus", "bone"),
+    ("FJ3360", "right calcaneus", "bone"),
+    ("FJ1394", "right lateral head of gastrocnemius", "muscle"),
+    ("FJ1397", "right medial head of gastrocnemius", "muscle"),
+    ("FJ1437", "right soleus", "muscle"),
+    ("FJ1439", "right tibialis anterior", "muscle"),
+    ("FJ1405", "right calcaneal tendon", "tendon"),
+)
+
+
+def _bodyparts_normals(
+    vertices_mm: list[tuple[float, float, float]],
+    triangles: list[tuple[int, int, int]],
+) -> list[tuple[float, float, float]]:
+    normals = [[0.0, 0.0, 0.0] for _ in vertices_mm]
+    for first, second, third in triangles:
+        a, b, c = vertices_mm[first], vertices_mm[second], vertices_mm[third]
+        edge_one = [b[index] - a[index] for index in range(3)]
+        edge_two = [c[index] - a[index] for index in range(3)]
+        normal = [
+            edge_one[1] * edge_two[2] - edge_one[2] * edge_two[1],
+            edge_one[2] * edge_two[0] - edge_one[0] * edge_two[2],
+            edge_one[0] * edge_two[1] - edge_one[1] * edge_two[0],
+        ]
+        for vertex in (first, second, third):
+            for component in range(3):
+                normals[vertex][component] += normal[component]
+    result: list[tuple[float, float, float]] = []
+    for normal in normals:
+        length = math.sqrt(sum(value * value for value in normal))
+        result.append(
+            (0.0, 0.0, 1.0)
+            if length == 0.0
+            else tuple(value / length for value in normal)
+        )
+    return result
+
+
+def _bodyparts_anatomy_bundle_glb(
+    surfaces: list[dict[str, Any]],
+) -> tuple[bytes, dict[str, list[float]]]:
+    """Write a multi-surface GLB with semantic source-layer materials."""
+    if not surfaces:
+        raise ImportError("BodyParts3D anatomy bundle requires at least one source surface")
+    colors = {
+        "bone": [0.72, 0.61, 0.43, 1.0],
+        "muscle": [0.48, 0.055, 0.035, 1.0],
+        "tendon": [0.84, 0.73, 0.55, 1.0],
+    }
+    if any(surface.get("layer") not in colors for surface in surfaces):
+        raise ImportError("BodyParts3D anatomy bundle has an unsupported source layer")
+    binary = bytearray()
+    views: list[dict[str, int]] = []
+    accessors: list[dict[str, Any]] = []
+    meshes: list[dict[str, Any]] = []
+    nodes: list[dict[str, Any]] = []
+    minimum_mm = [float("inf")] * 3
+    maximum_mm = [float("-inf")] * 3
+
+    def append_view(data: bytes, target: int) -> int:
+        while len(binary) % 4:
+            binary.append(0)
+        index = len(views)
+        views.append({"buffer": 0, "byteOffset": len(binary), "byteLength": len(data), "target": target})
+        binary.extend(data)
+        return index
+
+    for surface in surfaces:
+        vertices = surface["vertices_mm"]
+        triangles = surface["triangles"]
+        normals = _bodyparts_normals(vertices, triangles)
+        positions = bytearray()
+        normal_bytes = bytearray()
+        indices = bytearray()
+        local_minimum = [float("inf")] * 3
+        local_maximum = [float("-inf")] * 3
+        for position, normal in zip(vertices, normals, strict=True):
+            for component in range(3):
+                local_minimum[component] = min(local_minimum[component], position[component])
+                local_maximum[component] = max(local_maximum[component], position[component])
+                minimum_mm[component] = min(minimum_mm[component], position[component])
+                maximum_mm[component] = max(maximum_mm[component], position[component])
+            positions.extend(struct.pack("<3f", *(value * 0.001 for value in position)))
+            normal_bytes.extend(struct.pack("<3f", *normal))
+        for triangle in triangles:
+            indices.extend(struct.pack("<3I", *triangle))
+        position_view = append_view(bytes(positions), 34962)
+        normal_view = append_view(bytes(normal_bytes), 34962)
+        index_view = append_view(bytes(indices), 34963)
+        accessor_base = len(accessors)
+        accessors.extend((
+            {
+                "bufferView": position_view,
+                "componentType": 5126,
+                "count": len(vertices),
+                "type": "VEC3",
+                "min": [value * 0.001 for value in local_minimum],
+                "max": [value * 0.001 for value in local_maximum],
+            },
+            {"bufferView": normal_view, "componentType": 5126, "count": len(vertices), "type": "VEC3"},
+            {"bufferView": index_view, "componentType": 5125, "count": len(triangles) * 3, "type": "SCALAR"},
+        ))
+        material = ("bone", "muscle", "tendon").index(surface["layer"])
+        mesh_index = len(meshes)
+        meshes.append({
+            "name": surface["label"],
+            "primitives": [{
+                "attributes": {"POSITION": accessor_base, "NORMAL": accessor_base + 1},
+                "indices": accessor_base + 2,
+                "material": material,
+            }],
+        })
+        nodes.append({"name": surface["label"], "mesh": mesh_index})
+    while len(binary) % 4:
+        binary.append(0)
+    document = {
+        "asset": {"version": "2.0", "generator": "numilab-human bodyparts anatomy bundle v1"},
+        "scene": 0,
+        "scenes": [{"nodes": list(range(len(nodes)))}],
+        "nodes": nodes,
+        "meshes": meshes,
+        "materials": [
+            {
+                "name": layer,
+                "doubleSided": True,
+                "pbrMetallicRoughness": {
+                    "baseColorFactor": colors[layer],
+                    "metallicFactor": 0.0,
+                    "roughnessFactor": 0.64,
+                },
+            }
+            for layer in ("bone", "muscle", "tendon")
+        ],
+        "buffers": [{"byteLength": len(binary)}],
+        "bufferViews": views,
+        "accessors": accessors,
+    }
+    json_chunk = json.dumps(document, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    while len(json_chunk) % 4:
+        json_chunk += b" "
+    length = 12 + 8 + len(json_chunk) + 8 + len(binary)
+    glb = b"".join((
+        struct.pack("<4sII", b"glTF", 2, length),
+        struct.pack("<I4s", len(json_chunk), b"JSON"),
+        json_chunk,
+        struct.pack("<I4s", len(binary), b"BIN" + bytes((0,))),
+        bytes(binary),
+    ))
+    return glb, {"minimum_mm": minimum_mm, "maximum_mm": maximum_mm}
+
+
+def bodyparts_right_lower_leg_anatomy_preview(sources: Path, output: Path) -> dict[str, Any]:
+    """Export exact static BodyParts3D muscle, tendon, and bone surfaces."""
+    surfaces: list[dict[str, Any]] = []
+    archive_path: Path | None = None
+    for member_id, label, layer in _BODYPARTS_RIGHT_LOWER_LEG_ANATOMY:
+        member_archive, member, obj = _bodyparts_obj_member(sources, "is_a", member_id)
+        if archive_path is None:
+            archive_path = member_archive
+        elif member_archive != archive_path:
+            raise ImportError("BodyParts3D anatomy bundle members must share one source archive")
+        vertices, triangles = _bodyparts_obj_triangles(obj, member)
+        surfaces.append({
+            "member_id": member_id,
+            "member": member,
+            "member_sha256": hashlib.sha256(obj).hexdigest(),
+            "label": label,
+            "layer": layer,
+            "vertices_mm": vertices,
+            "triangles": triangles,
+        })
+    if archive_path is None:
+        raise ImportError("BodyParts3D anatomy bundle has no source archive")
+    glb, bounds = _bodyparts_anatomy_bundle_glb(surfaces)
+    output.mkdir(parents=True, exist_ok=True)
+    glb_path = output / "bodyparts3d-right-lower-leg-anatomy-source-static.glb"
+    glb_path.write_bytes(glb)
+    manifest = {
+        "schema": "numi.human.bodyparts3d-right-lower-leg-anatomy-preview.v1",
+        "source": {"archive": archive_path.name, "archive_sha256": sha256(archive_path)},
+        "surfaces": [
+            {
+                "member_id": surface["member_id"],
+                "member": surface["member"],
+                "member_sha256": surface["member_sha256"],
+                "label": surface["label"],
+                "layer": surface["layer"],
+                "vertex_count": len(surface["vertices_mm"]),
+                "triangle_count": len(surface["triangles"]),
+            }
+            for surface in surfaces
+        ],
+        "geometry": {
+            "surface_count": len(surfaces),
+            "vertex_count": sum(len(surface["vertices_mm"]) for surface in surfaces),
+            "triangle_count": sum(len(surface["triangles"]) for surface in surfaces),
+            **bounds,
+        },
+        "preview": {
+            "glb": glb_path.name,
+            "glb_sha256": sha256(glb_path),
+            "unit_conversion": "source millimetres to preview metres",
+            "attachment": "shared BodyParts3D source rest frame only",
+            "materials": "semantic preview materials for bone, muscle, and tendon source layers",
+        },
+        "evidence_boundary": (
+            "This is exact BodyParts3D source-static lower-leg geometry. It does not establish "
+            "a MyoSim-body transform, anatomical attachment transfer, articulated skinning, "
+            "collision/contact, tissue mechanics, or physical Human RobotPack."
+        ),
+    }
+    write_json(output / "bodyparts3d-right-lower-leg-anatomy-source-static.manifest.json", manifest)
     return manifest
 
 

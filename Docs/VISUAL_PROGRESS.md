@@ -1,5 +1,21 @@
 # NumiLab Human visual progress
 
+## Presentation correction — 2026-08-27
+
+The earlier native route galleries below are retained only for renderer
+regression and source-coverage evidence; they are **retired as anatomy
+presentation**. They drew every MyoSim route as a straight line between sites
+and wrap centres, which can cut through a sphere/cylinder wrap and visibly miss
+an anatomical surface. They are not acceptable tendon imagery.
+
+The current native renderer keeps routes hidden by default. Its focused
+1024 × 1024 inspection mode starts and ends at exact source sites, uses the
+source solver's tangent contacts, and samples the wrapped sphere/cylinder arc.
+The BodyParts3D major-bone payload also has a visual-only per-bone refinement
+against exact MyoSim attachment sites. That is an alignment diagnostic, not
+tendon-surface geometry, an attachment transfer, or a medical registration.
+Focused replacement captures remain outside the showcase until review.
+
 ## Active full-body source validation — 2026-08-27
 
 <p align="center">
@@ -26,22 +42,15 @@ animated shells. They are visual evidence of the source model only. They do
 not show native Core rendering, mesh registration, skinning, contact,
 locomotion, deformable anatomy, or biological validation.
 
-## Native articulated route snapshot — 2026-08-27
-
-<p align="center">
-  <img src="media/myosim-native-articulated/myosim-fullbody-articulated-front.png" width="32%" alt="Front native articulated route snapshot">
-  <img src="media/myosim-native-articulated/myosim-fullbody-articulated-side.png" width="32%" alt="Side native articulated route snapshot">
-  <img src="media/myosim-native-articulated/myosim-fullbody-articulated-rear.png" width="32%" alt="Rear native articulated route snapshot">
-</p>
+## Retired native articulated route snapshot — 2026-08-27
 
 Core `79cc34a` captured these 640 × 640 default-pose views on an Apple M4 using
 `numi human myosim-native-visuals`. The command directly reads `NHRIGID2` and
 `NHMYO1`, runs the Metal articulated operator, then renders the published pose
 through Core's native visual renderer. The pale shapes are intentionally simple
 inertial-body proxies; red geometry is 1,815 source attachment sites plus 1,432
-straight route-centreline segments. Wrap traversal remains owned by the muscle
-probe; the visual centreline is a compact inspection representation, not a
-claim of exact tangent geometry.
+straight route-centreline segments. It remains a historical coverage artifact,
+not a tendon rendering or a path-to-bone attachment assessment.
 
 | View | SHA-256 | Rendered coverage | Inspection result |
 | --- | --- | --- | --- |
@@ -57,14 +66,7 @@ scene provenance alongside the three frames. Its pack and manifest SHA-256
 values are `633ddb213167c1cc47b733ae80d8f25a7af36d86bf830fbf67a625f16e2a8b59`
 and `8d21b2f3a265285655dde72f3611891c69a187248627419dc1be2788b101734f`.
 
-## Native BodyParts3D 27-major-bone binding — 2026-08-27
-
-<p align="center">
-  <img src="media/myosim-native-bodyparts-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-front.png" width="24%" alt="Front BodyParts3D 27-major-bone native binding">
-  <img src="media/myosim-native-bodyparts-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-oblique.png" width="24%" alt="Oblique BodyParts3D 27-major-bone native binding">
-  <img src="media/myosim-native-bodyparts-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-side.png" width="24%" alt="Side BodyParts3D 27-major-bone native binding">
-  <img src="media/myosim-native-bodyparts-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-rear.png" width="24%" alt="Rear BodyParts3D 27-major-bone native binding">
-</p>
+## Retired native BodyParts3D 27-major-bone route-overlay snapshot — 2026-08-27
 
 Core `2aab522f92f44644c35bbde1a8ea3fd85356b027` captured this exact
 `NHBONES1` package on the Apple M4 Pro on `macmini`. The native C++ program
@@ -72,7 +74,7 @@ read the compiled `NHRIGID2`/`NHMYO1` payloads plus 27 source-derived
 BodyParts3D major-bone meshes (56,995 vertices; 322,074 indices), dispatched
 the Metal articulated operator, and bound each mesh to its named Core
 inertial-body pose. It also rendered all 1,815 compiled muscle sites and
-1,432 route-centreline segments, in a thinner red inspection overlay.
+1,432 straight route-centreline segments in a now-retired diagnostic overlay.
 
 The offline rest-frame fit is deliberately unchanged: its original 18
 unambiguous segment anchors enumerate 24 proper signed axis maps and select
@@ -95,20 +97,11 @@ diagnostics—not surface-registration accuracy or a medical registration claim.
 
 The native [transcript](media/myosim-native-bodyparts-major-bones-27/native-articulated-major-bones-27.transcript.txt),
 visual-pack manifest, and `.mrvpack` accompany the four frames. This validates
-the complete `Metal pose → articulated BodyParts3D bone instance → native
-renderer` chain at the source default pose. It does **not** admit those
-provisional mesh transforms to collision or contact; it does not provide skin
-weights, organ/vessel/nerve deformation, unregistered small bones, live
-device-buffer presentation, a motion replay, gait, or clinical validation.
+the historical `Metal pose → articulated BodyParts3D bone instance → native
+renderer` chain at the source default pose. The red overlay does **not**
+validate tendon attachment and is not current showcase material.
 
-## Native bounded muscle-driven 27-bone snapshot — 2026-08-27
-
-<p align="center">
-  <img src="media/myosim-native-muscle-driven-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-front.png" width="24%" alt="Front muscle-driven BodyParts3D 27-bone sensitivity snapshot">
-  <img src="media/myosim-native-muscle-driven-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-oblique.png" width="24%" alt="Oblique muscle-driven BodyParts3D 27-bone sensitivity snapshot">
-  <img src="media/myosim-native-muscle-driven-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-side.png" width="24%" alt="Side muscle-driven BodyParts3D 27-bone sensitivity snapshot">
-  <img src="media/myosim-native-muscle-driven-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-rear.png" width="24%" alt="Rear muscle-driven BodyParts3D 27-bone sensitivity snapshot">
-</p>
+## Retired bounded muscle-driven 27-bone route-overlay snapshot — 2026-08-27
 
 Core `2aab522f92f44644c35bbde1a8ea3fd85356b027` captured these 640 × 640
 frames on the Apple M4 Pro on `macmini`. The new native visual mode reads the
@@ -116,8 +109,9 @@ same verified `NHRIGID2`, `NHMYO1`, and `NHBONES1` inputs as the default-pose
 binding, reconstructs all 416 source MuJoCo muscle definitions, projects their
 source-default `0.5` excitation / `0.5` activation forces in Core FP64, and
 advances one free-body step. Metal then computes the final 157-body pose; Core
-binds the 27 BodyParts3D bone instances and complete site/route overlay to
-that pose for rendering. There is no Python process in this capture.
+bound the 27 BodyParts3D bone instances and complete site/route overlay to
+that pose for rendering. There is no Python process in this capture, but its
+straight-line overlay is retired for the same reason as the default-pose view.
 
 The selected 1 ms step is deliberately a bounded visual sensitivity probe. It
 applies all 90 source-default wraps and changes the active state relative to
@@ -137,10 +131,10 @@ contact, repeated integration, or stability qualification.
 The native [transcript](media/myosim-native-muscle-driven-major-bones-27/native-articulated-muscle-driven-major-bones-27.transcript.txt),
 visual-pack manifest, and `.mrvpack` accompany the four frames. This closes the
 bounded `complete 416-muscle force → articulated state step → Metal pose →
-BodyParts3D bone renderer` evidence chain. It does **not** make the provisional
-bone transforms colliders; prove deformable muscle bellies, skinning, organs,
-vessels, nerves, contact, a sustained muscle-force rollout, or clinical
-anatomical validity separately.
+BodyParts3D bone renderer` evidence chain. It is not valid tendon-attachment
+imagery and does not make the provisional bone transforms colliders; prove
+deformable muscle bellies, skinning, organs, vessels, nerves, contact, a
+sustained muscle-force rollout, or clinical anatomy separately.
 
 ## Native mechanics progress
 

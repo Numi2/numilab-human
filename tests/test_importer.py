@@ -19,6 +19,7 @@ from numilab_human.model import (
     bodyparts_foot_registration_template,
     bodyparts_lower_body_attachment_worklist,
     bodyparts_nerve_annotation,
+    bodyparts_right_lower_leg_anatomy_preview,
     bodyparts_visual_preview,
     build_rajagopal_distal_pin_preview,
     evaluate_opensim_custom_joint,
@@ -306,6 +307,33 @@ class ImporterTests(unittest.TestCase):
             self.assertEqual(result["geometry"]["maximum_mm"], [1000.0, 1000.0, 0.0])
             self.assertTrue((preview / "FJ2810-source-static.glb").is_file())
             self.assertEqual((preview / "FJ2810-source-static.glb").read_bytes()[:4], b"glTF")
+
+    def test_right_lower_leg_anatomy_preview_preserves_source_surfaces(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            source = Path(temporary) / "Sources"
+            source.mkdir()
+            archive = source / "isa_BP3D_4.0_obj_99.zip"
+            members = (
+                "FJ3365", "FJ3381", "FJ3387", "FJ3366", "FJ3385", "FJ3360",
+                "FJ1394", "FJ1397", "FJ1437", "FJ1439", "FJ1405",
+            )
+            with zipfile.ZipFile(archive, "w") as bundle:
+                for index, member in enumerate(members):
+                    bundle.writestr(
+                        f"isa_BP3D_4.0_obj_99/{member}.obj",
+                        f"v {index} 0 0\nv {index + 1} 0 0\nv {index} 1 0\nf 1 2 3\n",
+                    )
+            preview = Path(temporary) / "Preview"
+            result = bodyparts_right_lower_leg_anatomy_preview(source, preview)
+            self.assertEqual(result["geometry"]["surface_count"], len(members))
+            self.assertEqual(result["geometry"]["vertex_count"], 3 * len(members))
+            self.assertEqual(result["geometry"]["triangle_count"], len(members))
+            self.assertEqual(
+                {surface["layer"] for surface in result["surfaces"]},
+                {"bone", "muscle", "tendon"},
+            )
+            glb = preview / "bodyparts3d-right-lower-leg-anatomy-source-static.glb"
+            self.assertEqual(glb.read_bytes()[:4], b"glTF")
 
     def test_numi_workspace_command_describes_itself(self) -> None:
         command = ROOT / ".numi/commands/human"

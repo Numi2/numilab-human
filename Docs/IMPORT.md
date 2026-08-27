@@ -19,7 +19,8 @@ numi human myosim-build \
 # muscle-route, and static-force parity.
 numi human myosim-native-probe Build/myosim-fullbody --metal
 
-# Apple-native default-pose route-centreline visual evidence.
+# Optional Apple-native default-pose proxy capture. Routes are hidden by
+# default because an all-muscle overlay is not anatomy presentation.
 # This is a native executable; no Python process is started.
 numi human myosim-native-visuals \
   Build/myosim-fullbody \
@@ -31,9 +32,13 @@ numi human myosim-bodyparts-registration \
   --sources Sources \
   --artifact Build/myosim-fullbody \
   --output Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json
+numi human myosim-bodyparts-attachment-registration \
+  --sources Sources \
+  --artifact Build/myosim-fullbody \
+  --output Build/myosim-fullbody/bodyparts3d-myosim-attachment-registration.candidate.json
 numi human myosim-bodyparts-bone-payload \
   --sources Sources \
-  --registration Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json \
+  --registration Build/myosim-fullbody/bodyparts3d-myosim-attachment-registration.candidate.json \
   --output Build/bodyparts3d-myosim-major-bones
 
 # Native C++/Metal capture: no Python process is started here.
@@ -41,6 +46,15 @@ numi human myosim-native-bone-visuals \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
   Build/bodyparts3d-myosim-major-bones/native-articulated-major-bones-27-views
+
+# Focused native path diagnostic: MyoSim indices 348/349/369/371 are right
+# gastrocnemius lateralis/medialis, soleus, and tibialis anterior; body 136 is
+# its right tibial link. The renderer resolves tangent contacts and wrap arcs.
+numi human myosim-native-route-inspection \
+  Build/myosim-fullbody \
+  Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
+  Build/route-inspection-right-lower-leg \
+  136 348 349 369 371
 
 # Native bounded force-to-pose capture: Core FP64 projects all 416 source
 # muscles, integrates one free-body sensitivity step, and Metal renders only
@@ -65,10 +79,11 @@ rest-pose registration. See
 [architecture](ARCHITECTURE.md) for runtime ownership.
 
 The native marker visual command emits four fixed cameras plus a Core visual-pack and
-manifest. It binds 96 inertial-body proxies and every compiled MyoSim site/route
-to the default Metal articulated-pose snapshot. It is proof of this snapshot
-render chain only; BodyParts3D registration and live device-resident presentation
-remain separate work.
+manifest. It binds inertial-body proxies to the default Metal articulated-pose
+snapshot and hides all route lines. Use `myosim-native-route-inspection` with
+an explicit small muscle set when inspecting tangent/arc path geometry. It is
+proof of this snapshot render chain only; BodyParts3D registration and live
+device-resident presentation remain separate work.
 
 The bone-payload importer is also offline source preparation. It checks the
 selected archive/member identities, converts only exact OBJ triangles and
@@ -181,6 +196,37 @@ inspection cameras with `metalrobo_visual_cook` and
 `metalrobo_bodyparts3d_visual_probe`. The probe emits PPM frames; retain their
 hashes with the source member and device log. Do not publish those frames as a
 physically actuated Human result.
+
+### Right lower-leg source anatomy reference
+
+The focused native MyoSim route diagnostic is deliberately a centreline tool,
+not a tendon mesh. Export the exact source-static BodyParts3D alternative when
+reviewing visible lower-leg anatomy:
+
+```sh
+numi human right-lower-leg-anatomy-preview \
+  --sources Sources \
+  --output Build/bodyparts3d-right-lower-leg-anatomy
+
+$NUMI_LAB_ROOT/build/bin/metalrobo_visual_cook \
+  Build/bodyparts3d-right-lower-leg-anatomy/bodyparts3d-right-lower-leg-anatomy-source-static.glb \
+  Build/bodyparts3d-right-lower-leg-anatomy/bodyparts3d-right-lower-leg-anatomy-source-static.mrvpack \
+  --id bodyparts3d-right-lower-leg-anatomy-source-static \
+  --license CC-BY-4.0 \
+  --provenance 'BodyParts3D 4.0 exact source-static right lower-leg bundle'
+
+$NUMI_LAB_ROOT/build/bin/metalrobo_bodyparts3d_visual_probe \
+  Build/bodyparts3d-right-lower-leg-anatomy/bodyparts3d-right-lower-leg-anatomy-source-static.mrvpack \
+  Build/bodyparts3d-right-lower-leg-anatomy/native-views \
+  --dimension 1024 --tight-frame
+```
+
+The bundle contains exact right femur/patella/tibia/fibula/talus/calcaneus,
+gastrocnemius heads, soleus, tibialis anterior, and calcaneal-tendon source
+surfaces. Its three semantic preview materials distinguish source bone, muscle,
+and tendon layers; they do not add tissue parameters. All components share the
+BodyParts3D rest frame, but that fact is not a MyoSim attachment transform,
+skinning map, collision admission, or dynamic tendon claim.
 
 ## 7. Compile a limited source-derived distal-leg preview
 
