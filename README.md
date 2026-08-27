@@ -10,7 +10,7 @@ the native Human execution path.
 | --- | --- | --- |
 | Active full-body mechanics | MyoSim `myofullbody` | 103 source bodies, 416 muscles, native Core reference |
 | Cervical/hyoid mechanics | Mortensen 2018 | complete 72-muscle OpenSim 3 source IR; merge registration remains explicit |
-| Anatomy/visual layers | BodyParts3D 4.0 | named geometry/hierarchy; 18 major bones are pose-bound for native visual inspection |
+| Anatomy/visual layers | BodyParts3D 4.0 | named geometry/hierarchy; 27 major bones are pose-bound for native visual inspection |
 | Comparative lower-body mechanics | RajagopalLaiUhlrich2023 | retained source-faithful bounded Metal path |
 | Comparative upper extremities | MoBL-ARMS | retained authenticated OpenSim source import |
 
@@ -56,27 +56,31 @@ measured and reviewed.
 ### Native articulated BodyParts3D major-bone view
 
 <p align="center">
-  <img src="Docs/media/myosim-native-bodyparts-bones/myosim-fullbody-articulated-bodyparts-bones-front.png" width="24%" alt="Native BodyParts3D articulated bone view, front">
-  <img src="Docs/media/myosim-native-bodyparts-bones/myosim-fullbody-articulated-bodyparts-bones-oblique.png" width="24%" alt="Native BodyParts3D articulated bone view, oblique">
-  <img src="Docs/media/myosim-native-bodyparts-bones/myosim-fullbody-articulated-bodyparts-bones-side.png" width="24%" alt="Native BodyParts3D articulated bone view, side">
-  <img src="Docs/media/myosim-native-bodyparts-bones/myosim-fullbody-articulated-bodyparts-bones-rear.png" width="24%" alt="Native BodyParts3D articulated bone view, rear">
+  <img src="Docs/media/myosim-native-bodyparts-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-front.png" width="24%" alt="Native BodyParts3D 27-bone articulated view, front">
+  <img src="Docs/media/myosim-native-bodyparts-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-oblique.png" width="24%" alt="Native BodyParts3D 27-bone articulated view, oblique">
+  <img src="Docs/media/myosim-native-bodyparts-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-side.png" width="24%" alt="Native BodyParts3D 27-bone articulated view, side">
+  <img src="Docs/media/myosim-native-bodyparts-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-rear.png" width="24%" alt="Native BodyParts3D 27-bone articulated view, rear">
 </p>
 
-These M4 Pro captures bind 18 exact CC-BY-4.0 BodyParts3D major-bone meshes to
-their corresponding Metal-computed MyoSim inertial-body poses. The slim red
-overlay remains the complete 1,815-site / 1,432-route muscle-path map, making
-the skeleton–muscle relationship inspectable from four angles. This is the
-first native anatomy binding, not a claim that every bone, the skin, organs,
-collision, deformable tissue, gait, or clinical anatomy registration is done.
-The fit and evidence boundary are in [visual progress](Docs/VISUAL_PROGRESS.md).
+These M4 Pro captures bind 27 exact CC-BY-4.0 BodyParts3D major-bone meshes to
+Metal-computed MyoSim inertial-body poses. The original 18 unambiguous segment
+anchors establish the common-frame fit; bilateral hip bones, fibulae, tali,
+patellae, and sternum body inherit that measured frame and conservative live
+parent links; fibulae use the ipsilateral tibial link because MyoSim has no
+separate fibular body. The slim red overlay remains the complete 1,815-site /
+1,432-route muscle-path map, making the skeleton–muscle relationship
+inspectable from four angles. This is an anatomy binding, not a claim that
+every bone, the skin, organs, collision, deformable tissue, gait, or clinical
+registration is done. The fit and evidence boundary are in
+[visual progress](Docs/VISUAL_PROGRESS.md).
 
 ### Bounded muscle-driven BodyParts3D bone snapshot
 
 <p align="center">
-  <img src="Docs/media/myosim-native-muscle-driven-bones/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-front.png" width="24%" alt="Muscle-driven BodyParts3D bone sensitivity snapshot, front">
-  <img src="Docs/media/myosim-native-muscle-driven-bones/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-oblique.png" width="24%" alt="Muscle-driven BodyParts3D bone sensitivity snapshot, oblique">
-  <img src="Docs/media/myosim-native-muscle-driven-bones/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-side.png" width="24%" alt="Muscle-driven BodyParts3D bone sensitivity snapshot, side">
-  <img src="Docs/media/myosim-native-muscle-driven-bones/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-rear.png" width="24%" alt="Muscle-driven BodyParts3D bone sensitivity snapshot, rear">
+  <img src="Docs/media/myosim-native-muscle-driven-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-front.png" width="24%" alt="Muscle-driven BodyParts3D 27-bone sensitivity snapshot, front">
+  <img src="Docs/media/myosim-native-muscle-driven-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-oblique.png" width="24%" alt="Muscle-driven BodyParts3D 27-bone sensitivity snapshot, oblique">
+  <img src="Docs/media/myosim-native-muscle-driven-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-side.png" width="24%" alt="Muscle-driven BodyParts3D 27-bone sensitivity snapshot, side">
+  <img src="Docs/media/myosim-native-muscle-driven-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-rear.png" width="24%" alt="Muscle-driven BodyParts3D 27-bone sensitivity snapshot, rear">
 </p>
 
 These Apple M4 Pro frames extend the bone binding with a real complete-muscle
@@ -84,7 +88,7 @@ state input: Core projects all 416 MyoSim spatial-tendon forces at source
 activation/excitation `0.5`, advances one bounded FP64 free-body step, and
 Metal poses the resulting state before native rendering. The 1 ms sensitivity
 capture differs from the matched passive step by `0.0714839058782` maximum
-configuration coordinate and retains all 18 bone meshes, 1,815 sites, and
+configuration coordinate and retains all 27 bone meshes, 1,815 sites, and
 1,432 route-centreline segments across four inspected views. It is a
 force-to-pose proof, **not** a controlled movement, contact result, gait,
 deformable muscle/skin render, or physiological co-activation claim. The red
@@ -120,14 +124,14 @@ numi human myosim-bodyparts-bone-payload \
 numi human myosim-native-bone-visuals \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
-  Docs/media/myosim-native-bodyparts-bones
+  Docs/media/myosim-native-bodyparts-major-bones-27
 
 # Native bounded force-to-pose sensitivity capture (no Python process).  The
 # 1 ms limit is an inspection step, not an uncontrolled rollout duration.
 numi human myosim-native-muscle-bone-visuals \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
-  Docs/media/myosim-native-muscle-driven-bones \
+  Docs/media/myosim-native-muscle-driven-major-bones-27 \
   --muscle-step-seconds 0.001
 ```
 

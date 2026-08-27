@@ -106,16 +106,22 @@ means it is not a device-resident live presentation path; the proxies and
 route centre lines are not BodyParts3D surface registration, anatomical skin,
 or deformable-muscle rendering.
 
-Core `818e587` adds a second, explicitly provisional visual input:
-`NHBONES1`. The offline importer records exact BodyParts3D triangles and one
-decomposed uniform-scale rest transform for each selected major bone. The
-native visual probe validates that payload against the same MyoSim archive
-identity, attaches every instance to its Core articulated-link index, then
-uses the Metal pose snapshot for rendering. The M4 Pro evidence covers 18
-major bones (47,649 vertices; 277,164 indices) plus the complete route/site
-overlay. This is now an executable body-frame visual binding, but it remains
-outside physical admission: its common-frame centroid/COM fit cannot stand in
-for anatomical landmarks, collision calibration, skinning, or tissue models.
+Core `2aab522` consumes the explicitly provisional `NHBONES1` visual input.
+The offline importer records exact BodyParts3D triangles and one decomposed
+uniform-scale rest transform for each selected major bone. Its 18 unambiguous
+segment meshes establish the source-to-MyoSim common-frame fit; nine additional
+named meshes—bilateral hip bones, fibulae, tali, patellae, and sternum body—use
+that fixed common frame and their conservative parent links. The native visual
+probe validates the payload against the same MyoSim archive identity, attaches
+all 27 instances to Core articulated-link indices, then uses the Metal pose
+snapshot for rendering. The M4 Pro evidence covers 56,995 vertices and 322,074
+indices plus the complete route/site overlay. This is an executable body-frame
+visual binding, but it remains outside physical admission: its common-frame
+centroid/COM fit cannot stand in for anatomical landmarks, collision
+calibration, skinning, or tissue models. In particular, the active MyoSim
+source has no separate fibular rigid body, so each fibula remains a visual
+attachment to the ipsilateral tibial link rather than a claimed independent
+articulated segment.
 
 Core `2aab522` adds a separate, opt-in bounded muscle-driven visual state.
 `myosim-native-muscle-bone-visuals` evaluates the complete 416 MyoSim route

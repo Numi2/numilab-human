@@ -14,15 +14,16 @@ every other source in local generated artifacts.
   `is-a` and `part-of` hierarchy relationships.
 - Tracked derivatives: the three `Docs/media/bodyparts3d-native-skin/` PNGs
   are unmodified-frame renders of the exact `FJ2810` full-skin source mesh.
-  The four PNGs plus native visual pack in
-  `Docs/media/myosim-native-bodyparts-bones/` render 18 exact named
+  The current four PNGs plus native visual pack in
+  `Docs/media/myosim-native-bodyparts-major-bones-27/` render 27 exact named
   BodyParts3D bone members under provisional MyoSim link transforms. Their
   source members, hashes, Core renderer revision, attribution, and
   non-registration boundary are recorded in `Docs/VISUAL_PROGRESS.md` and
   `Docs/VISUAL_VALIDATION.md`. The four PNGs plus native visual pack in
-  `Docs/media/myosim-native-muscle-driven-bones/` use the same 18 exact
-  BodyParts3D source meshes after a bounded Core muscle-force state step; the
-  source attribution and non-registration boundary remain unchanged.
+  `Docs/media/myosim-native-muscle-driven-major-bones-27/` use the same 27
+  exact BodyParts3D source meshes after a bounded Core muscle-force state step;
+  the source attribution and non-registration boundary remain unchanged. The
+  earlier 18-mesh galleries remain tracked as provenance-preserving milestones.
 
 ## OpenSim RajagopalLaiUhlrich2023
 

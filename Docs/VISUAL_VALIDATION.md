@@ -8,8 +8,8 @@ BodyParts3D source-static evidence below.
 ## Native muscle-driven BodyParts3D major bones — 2026-08-27
 
 The four M4 Pro frames in
-[visual progress](VISUAL_PROGRESS.md#native-bounded-muscle-driven-bone-snapshot--2026-08-27)
-re-run the same 18-mesh `NHBONES1` binding after one bounded full-body muscle
+[visual progress](VISUAL_PROGRESS.md#native-bounded-muscle-driven-27-bone-snapshot--2026-08-27)
+re-run the current 27-mesh `NHBONES1` binding after one bounded full-body muscle
 force step. Core `2aab522` projects all 416 source MyoSim muscles at the
 source-default activation/excitation, advances an FP64 free-body state, and
 passes only that resulting configuration to Metal for the final articulated
@@ -22,19 +22,21 @@ contact, recurrence, muscle-belly/skin deformation, or stability validation.
 ## Native articulated BodyParts3D major bones — 2026-08-27
 
 The four inspected frames in
-[visual progress](VISUAL_PROGRESS.md#native-bodyparts3d-major-bone-binding--2026-08-27)
-are the first pose-bound BodyParts3D geometry evidence. An offline import
-selected 18 unambiguous source bone meshes, wrote their exact triangles and
-link-local uniform-scale transforms into `NHBONES1`, and the native Core
-capture bound each record to its Metal-computed MyoSim inertial-body pose.
+[visual progress](VISUAL_PROGRESS.md#native-bodyparts3d-27-major-bone-binding--2026-08-27)
+are the current pose-bound BodyParts3D geometry evidence. An offline import
+uses an 18-mesh unambiguous similarity-fit set, then writes 27 exact source
+bone meshes and their link-local uniform-scale transforms into `NHBONES1`.
+The native Core capture binds each record to its Metal-computed MyoSim
+inertial-body pose.
 
 This establishes a shared default-frame candidate and an executable
 `articulated pose → BodyParts3D bone instance → renderer` chain. It is stronger
 than the static skin preview below, but remains deliberately narrower than a
 physical registration: the centroid/COM score is a common-frame diagnostic,
-not a surface-landmark residual; collision/contact, skin weights, unregistered
-small bones, soft-tissue deformation, and motion-replay qualification are not
-included.
+not a surface-landmark residual; fibulae use the ipsilateral tibial link because
+the active MyoSim source has no separate fibular body; collision/contact, skin
+weights, unregistered small bones, soft-tissue deformation, and motion-replay
+qualification are not included.
 
 ## Native BodyParts3D skin render — 2026-08-27
 

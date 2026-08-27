@@ -57,39 +57,43 @@ scene provenance alongside the three frames. Its pack and manifest SHA-256
 values are `633ddb213167c1cc47b733ae80d8f25a7af36d86bf830fbf67a625f16e2a8b59`
 and `8d21b2f3a265285655dde72f3611891c69a187248627419dc1be2788b101734f`.
 
-## Native BodyParts3D major-bone binding — 2026-08-27
+## Native BodyParts3D 27-major-bone binding — 2026-08-27
 
 <p align="center">
-  <img src="media/myosim-native-bodyparts-bones/myosim-fullbody-articulated-bodyparts-bones-front.png" width="24%" alt="Front BodyParts3D major-bone native binding">
-  <img src="media/myosim-native-bodyparts-bones/myosim-fullbody-articulated-bodyparts-bones-oblique.png" width="24%" alt="Oblique BodyParts3D major-bone native binding">
-  <img src="media/myosim-native-bodyparts-bones/myosim-fullbody-articulated-bodyparts-bones-side.png" width="24%" alt="Side BodyParts3D major-bone native binding">
-  <img src="media/myosim-native-bodyparts-bones/myosim-fullbody-articulated-bodyparts-bones-rear.png" width="24%" alt="Rear BodyParts3D major-bone native binding">
+  <img src="media/myosim-native-bodyparts-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-front.png" width="24%" alt="Front BodyParts3D 27-major-bone native binding">
+  <img src="media/myosim-native-bodyparts-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-oblique.png" width="24%" alt="Oblique BodyParts3D 27-major-bone native binding">
+  <img src="media/myosim-native-bodyparts-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-side.png" width="24%" alt="Side BodyParts3D 27-major-bone native binding">
+  <img src="media/myosim-native-bodyparts-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-rear.png" width="24%" alt="Rear BodyParts3D 27-major-bone native binding">
 </p>
 
-Core `818e5871f5d79f5f01b61305a49b14eac7035aae` captured this exact
+Core `2aab522f92f44644c35bbde1a8ea3fd85356b027` captured this exact
 `NHBONES1` package on the Apple M4 Pro on `macmini`. The native C++ program
-read the compiled `NHRIGID2`/`NHMYO1` payloads plus 18 source-derived
-BodyParts3D major-bone meshes (47,649 vertices; 277,164 indices), dispatched
+read the compiled `NHRIGID2`/`NHMYO1` payloads plus 27 source-derived
+BodyParts3D major-bone meshes (56,995 vertices; 322,074 indices), dispatched
 the Metal articulated operator, and bound each mesh to its named Core
 inertial-body pose. It also rendered all 1,815 compiled muscle sites and
 1,432 route-centreline segments, in a thinner red inspection overlay.
 
-The offline rest-frame fit enumerated 24 proper signed axis maps and selected
+The offline rest-frame fit is deliberately unchanged: its original 18
+unambiguous segment anchors enumerate 24 proper signed axis maps and select
 the identity axis map with positive scale `1.007736155369` after mm→m
 conversion. Its equal-weight mesh-vertex-centroid to source-inertial-COM score
-was `0.059372888 m` RMS (`0.123618266 m` maximum). A mesh centroid and an
-inertial COM are not homologous anatomical landmarks, so these are
-common-frame plausibility diagnostics—not surface-registration accuracy or a
-medical registration claim.
+is `0.059372888 m` RMS (`0.123618266 m` maximum). The nine additions are
+bilateral hip bones, fibulae, tali, patellae, and sternum body. They inherit
+that fitted common frame instead of re-fitting to less meaningful centroids;
+the fibulae attach visually to their ipsilateral tibial link because MyoSim has
+no separate fibular segment. A mesh centroid and an inertial COM are not
+homologous anatomical landmarks, so these remain common-frame plausibility
+diagnostics—not surface-registration accuracy or a medical registration claim.
 
 | View | PNG SHA-256 | Bone / site / route pixels | Inspection result |
 | --- | --- | --- | --- |
-| Front | `e7d3700be997e623447aea1751d877c55256d114ce2fee984a2afffa977c29cf` | `3,538 / 1,067 / 3,305` | bilateral shoulders, arms, pelvis, legs, and feet are articulated together with the complete path overlay |
-| Oblique | `28218653090bab514f68b2f0c70efb81190ef191d0fdde092bb35fcf9629e3e3` | `2,937 / 998 / 3,054` | shoulder/scapular and pelvic depth are visible without a mirrored frame |
-| Side | `bf5e50c8895431c492cf74fb4f0aa9e44fbd0b4afe2ff38bff476bacb2c1559d` | `1,574 / 744 / 1,971` | sagittal skull–shoulder–pelvis–leg–foot sequence is continuous |
-| Rear | `9ca74e452b0430703553471c3528d57dd040545a7b7dbef4c5485e4256f95b1f` | `3,618 / 1,087 / 3,753` | posterior bilateral limbs and the sacral/pelvic connection are visible |
+| Front | `a611906f2f92ba02cc271e53cd095d14535d340a5d6a17bc4c942aed418dbc66` | `4,529 / 1,035 / 3,195` | bilateral hip bones, patellae, fibulae, and both leg/foot chains are visible with the complete path overlay |
+| Oblique | `9eec3e986be00463e6f6482a4faa8427dba8952c01155606e9a34694d23ac04d` | `3,654 / 936 / 2,911` | sternum, shoulder/scapular depth, pelvis, and distal-leg additions are visible without a mirrored frame |
+| Side | `4cd9519bcb1520cd368b50ebedf4540dcd19cd8cff5b645835d52fd78508139b` | `2,017 / 714 / 1,855` | sagittal skull–sternum–pelvis–patella–leg–foot sequence is continuous |
+| Rear | `d8f1ae245b74b1f119289e1b3aace0eba5bc6645310473e5288f4ee929818eaf` | `4,797 / 1,003 / 3,558` | posterior bilateral limbs, fibulae, and sacral/pelvic connection are visible |
 
-The native [transcript](media/myosim-native-bodyparts-bones/native-articulated-bones.transcript.txt),
+The native [transcript](media/myosim-native-bodyparts-major-bones-27/native-articulated-major-bones-27.transcript.txt),
 visual-pack manifest, and `.mrvpack` accompany the four frames. This validates
 the complete `Metal pose → articulated BodyParts3D bone instance → native
 renderer` chain at the source default pose. It does **not** admit those
@@ -97,13 +101,13 @@ provisional mesh transforms to collision or contact; it does not provide skin
 weights, organ/vessel/nerve deformation, unregistered small bones, live
 device-buffer presentation, a motion replay, gait, or clinical validation.
 
-## Native bounded muscle-driven bone snapshot — 2026-08-27
+## Native bounded muscle-driven 27-bone snapshot — 2026-08-27
 
 <p align="center">
-  <img src="media/myosim-native-muscle-driven-bones/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-front.png" width="24%" alt="Front muscle-driven BodyParts3D bone sensitivity snapshot">
-  <img src="media/myosim-native-muscle-driven-bones/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-oblique.png" width="24%" alt="Oblique muscle-driven BodyParts3D bone sensitivity snapshot">
-  <img src="media/myosim-native-muscle-driven-bones/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-side.png" width="24%" alt="Side muscle-driven BodyParts3D bone sensitivity snapshot">
-  <img src="media/myosim-native-muscle-driven-bones/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-rear.png" width="24%" alt="Rear muscle-driven BodyParts3D bone sensitivity snapshot">
+  <img src="media/myosim-native-muscle-driven-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-front.png" width="24%" alt="Front muscle-driven BodyParts3D 27-bone sensitivity snapshot">
+  <img src="media/myosim-native-muscle-driven-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-oblique.png" width="24%" alt="Oblique muscle-driven BodyParts3D 27-bone sensitivity snapshot">
+  <img src="media/myosim-native-muscle-driven-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-side.png" width="24%" alt="Side muscle-driven BodyParts3D 27-bone sensitivity snapshot">
+  <img src="media/myosim-native-muscle-driven-major-bones-27/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-rear.png" width="24%" alt="Rear muscle-driven BodyParts3D 27-bone sensitivity snapshot">
 </p>
 
 Core `2aab522f92f44644c35bbde1a8ea3fd85356b027` captured these 640 × 640
@@ -112,7 +116,7 @@ same verified `NHRIGID2`, `NHMYO1`, and `NHBONES1` inputs as the default-pose
 binding, reconstructs all 416 source MuJoCo muscle definitions, projects their
 source-default `0.5` excitation / `0.5` activation forces in Core FP64, and
 advances one free-body step. Metal then computes the final 157-body pose; Core
-binds the 18 BodyParts3D bone instances and complete site/route overlay to
+binds the 27 BodyParts3D bone instances and complete site/route overlay to
 that pose for rendering. There is no Python process in this capture.
 
 The selected 1 ms step is deliberately a bounded visual sensitivity probe. It
@@ -125,12 +129,12 @@ contact, repeated integration, or stability qualification.
 
 | View | PNG SHA-256 | Bone / site / route pixels | Inspection result |
 | --- | --- | --- | --- |
-| Front | `36e56b0d77d7ded66ed248801c04a0199e3d6448c893a59d1eb65562c14c58ca` | `3,536 / 1,084 / 3,336` | bilateral major-bone skeleton, arms, pelvis, legs, and feet stay coherent with the complete path overlay |
-| Oblique | `d6a609a3a1a3b214c6df31f395c5ad70e7f5b7c445fa6513539bb035f0d0eccd` | `2,942 / 995 / 3,080` | depth of both shoulder girdles and pelvis remains visible after the force-driven state change |
-| Side | `4d2436a575cf8ef94312992c46ef2a1fbbf3267daad622fa7c722d46004b3340` | `1,589 / 755 / 1,981` | sagittal skull–shoulder–pelvis–leg–foot sequence remains continuous |
-| Rear | `f9f081b8b18e8c2fec8d2f894bd9dabcea31e309ecaac590a15459b4c6a354cb` | `3,622 / 1,093 / 3,738` | posterior bilateral limbs and sacral/pelvic connection remain present |
+| Front | `1c4f91fa09c4b1bba7482040a00e8f7d2a03d86941c079fde95222c454449c7a` | `4,525 / 1,044 / 3,237` | bilateral hip bones, patellae, fibulae, and limb chains remain coherent with the complete path overlay |
+| Oblique | `359d06e9fc1f6107f0335e91e2d1c9360f42dc710b7813ec2cc77304ad29a405` | `3,697 / 931 / 2,943` | sternum, shoulder girdles, pelvic depth, and distal-leg additions remain visible after the force-driven state change |
+| Side | `1d26bc3ef918e74c865a71b256d3581ae6565427ec28723ba32eba5211efd2eb` | `2,047 / 723 / 1,873` | sagittal skull–sternum–pelvis–patella–leg–foot sequence remains continuous |
+| Rear | `d27152ce837f7eaec25cfd34f4422b6531d19fb2abea9423b16e9d1fe04c3c15` | `4,802 / 1,007 / 3,542` | posterior bilateral limbs, fibulae, and sacral/pelvic connection remain present |
 
-The native [transcript](media/myosim-native-muscle-driven-bones/native-articulated-muscle-driven.transcript.txt),
+The native [transcript](media/myosim-native-muscle-driven-major-bones-27/native-articulated-muscle-driven-major-bones-27.transcript.txt),
 visual-pack manifest, and `.mrvpack` accompany the four frames. This closes the
 bounded `complete 416-muscle force → articulated state step → Metal pose →
 BodyParts3D bone renderer` evidence chain. It does **not** make the provisional
@@ -208,9 +212,9 @@ owner; no contact or locomotion is claimed here.
 
 ## Remaining visual/mechanical steps
 
-1. Extend the inspected major-bone rest-frame binding to vertebrae, pelvis,
-   hands/digits, toes, fibulae, talus, patellae, and the remaining named
-   skeleton meshes; matching anatomical labels remain insufficient evidence.
+1. Extend the inspected major-bone rest-frame binding to vertebrae, ribs,
+   hands/digits, toes, and the remaining named skeleton meshes; matching
+   anatomical labels remain insufficient evidence.
 2. Add the deformable skin path after those reviewed skeletal attachments; do
    not replace it with rigid-bone parenting.
 3. Resolve the Mortensen spine-to-`cervical_spine` rest registration and make

@@ -40,7 +40,7 @@ numi human myosim-bodyparts-bone-payload \
 numi human myosim-native-bone-visuals \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
-  Build/bodyparts3d-myosim-major-bones/native-articulated-views
+  Build/bodyparts3d-myosim-major-bones/native-articulated-major-bones-27-views
 
 # Native bounded force-to-pose capture: Core FP64 projects all 416 source
 # muscles, integrates one free-body sensitivity step, and Metal renders only
@@ -48,7 +48,7 @@ numi human myosim-native-bone-visuals \
 numi human myosim-native-muscle-bone-visuals \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
-  Build/bodyparts3d-myosim-major-bones/native-muscle-driven-views \
+  Build/bodyparts3d-myosim-major-bones/native-muscle-driven-major-bones-27-views \
   --muscle-step-seconds 0.001
 ```
 
@@ -74,10 +74,13 @@ The bone-payload importer is also offline source preparation. It checks the
 selected archive/member identities, converts only exact OBJ triangles and
 triangle-derived normals, and carries one uniform-scale local transform per
 bone. `myosim-native-bone-visuals` consumes that compact payload directly in
-the native executable, binding 18 major-bone meshes to the Metal pose and
-retaining the full route/site overlay. The candidate is visual-only: it does
-not create colliders, contact constants, skinning weights, soft tissue, or a
-medical registration result.
+the native executable, binding 27 major-bone meshes to the Metal pose and
+retaining the full route/site overlay. The initial 18 unambiguous segment
+meshes own the common-frame fit; bilateral hip bones, fibulae, tali, patellae,
+and sternum body inherit it. The fibulae attach visually to their ipsilateral
+tibial link because MyoSim has no separate fibular segment. The candidate is
+visual-only: it does not create colliders, contact constants, skinning weights,
+soft tissue, or a medical registration result.
 
 `myosim-native-muscle-bone-visuals` is a visual sensitivity command, not a
 rollout interface. It only permits a 1 µs–1 ms step (default 1 ms), projects

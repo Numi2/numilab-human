@@ -116,9 +116,10 @@
     "bodyparts_major_bone_visual_snapshot": {
       "contract": "metal_articulated_pose_snapshot_to_provisional_bodyparts3d_major_bone_renderer",
       "device": "Apple M4 Pro",
-      "bodyparts_major_bone_count": 18,
-      "source_vertex_count": 47649,
-      "source_index_count": 277164,
+      "bodyparts_major_bone_count": 27,
+      "similarity_fit_anchor_count": 18,
+      "source_vertex_count": 56995,
+      "source_index_count": 322074,
       "route_site_count": 1815,
       "route_centerline_segments": 1432,
       "views": [
@@ -127,7 +128,7 @@
         "side",
         "rear"
       ],
-      "boundary": "The native renderer binds source-derived BodyParts3D major-bone instances through a provisional rest-frame fit to Metal articulated-body poses. It is visual registration evidence only, not collision/contact admission, skinning, soft-tissue deformation, motion replay, gait, or clinical validation."
+      "boundary": "The native renderer binds 27 source-derived BodyParts3D major-bone instances through a provisional common frame to Metal articulated-body poses. Eighteen unambiguous segment meshes establish the fit; the added hip bones, fibulae, tali, patellae, and sternum body inherit it, with fibulae bound visually to the ipsilateral tibial links because MyoSim has no separate fibular body. This is visual registration evidence only, not collision/contact admission, skinning, soft-tissue deformation, motion replay, gait, or clinical validation."
     },
     "muscle_driven_bodyparts_major_bone_visual_snapshot": {
       "contract": "cpu_fp64_complete_mujoco_muscle_force_free_body_step_to_metal_articulated_pose_to_provisional_bodyparts3d_major_bone_renderer",
@@ -139,9 +140,10 @@
       "applied_wrap_count": 90,
       "maximum_velocity_delta_from_matched_passive": 71.4839058782,
       "maximum_configuration_delta_from_matched_passive": 0.0714839058782,
-      "bodyparts_major_bone_count": 18,
-      "source_vertex_count": 47649,
-      "source_index_count": 277164,
+      "bodyparts_major_bone_count": 27,
+      "similarity_fit_anchor_count": 18,
+      "source_vertex_count": 56995,
+      "source_index_count": 322074,
       "route_site_count": 1815,
       "route_centerline_segments": 1432,
       "views": [
