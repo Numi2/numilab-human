@@ -363,6 +363,47 @@ if [ "${1:-}" = "myosim-native-posterior-tendon-inspection" ]; then
     exec "$@"
 fi
 
+# Native close inspection of the exact right calcaneal tendon and calcaneus.
+# It deliberately filters out the surrounding muscle bellies and foot meshes:
+# the purpose is to judge the source tendon-to-bone insertion at useful scale,
+# not to replace the broad posterior-chain anatomy inspection.  This remains a
+# visual two-body surface bind; the source MyoSim muscle paths own force
+# attachments separately.
+if [ "${1:-}" = "myosim-native-calcaneal-tendon-detail" ]; then
+    if [ "$#" -ne 5 ] && { [ "$#" -ne 7 ] || [ "$6" != "--dimension" ]; }; then
+        printf '%s\n' "usage: numi human myosim-native-calcaneal-tendon-detail <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <bodyparts3d-myosim-soft-tissue.nhtissue> <output-directory> [--dimension <512..2048; multiple-of-64>]" >&2
+        exit 2
+    fi
+    artifact_directory=$2
+    bone_payload=$3
+    soft_tissue_payload=$4
+    output_directory=$5
+    frame_dimension=
+    if [ "$#" -eq 7 ]; then
+        frame_dimension=$7
+    fi
+    runtime_root=${NUMI_LAB_ROOT:-/Users/home/Documents/emergentnumilife/MetalRobo}
+    build_directory=${NUMI_BUILD_DIR:-$runtime_root/build}
+    probe=$build_directory/bin/metalrobo_numilab_human_myosim_visual_probe
+    if [ ! -x "$probe" ]; then
+        printf '%s\n' "native Human visual probe is unavailable: $probe" >&2
+        printf '%s\n' "build target metalrobo_numilab_human_myosim_visual_probe in $runtime_root" >&2
+        exit 2
+    fi
+    set -- "$probe" \
+        "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
+        "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
+        "$bone_payload" \
+        "$output_directory" \
+        --soft-tissue-payload "$soft_tissue_payload" \
+        --visible-bone-body-index 138 \
+        --soft-tissue-stable-id 7
+    if [ -n "$frame_dimension" ]; then
+        set -- "$@" --dimension "$frame_dimension"
+    fi
+    exec "$@"
+fi
+
 # Native right upper-limb inspection. The selected BodyParts3D source surfaces
 # are the shoulder stabilizers, deltoid, biceps, triceps, brachialis, and
 # brachioradialis that span MyoSim's torso/scapula/humerus/forearm chain. The

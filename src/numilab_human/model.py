@@ -3534,11 +3534,24 @@ def bodyparts_myosim_attachment_surface_registration_candidate(
 
 
 _BODYPARTS_MYOSIM_BONE_VISUAL_MAGIC = b"NHBONES1"
-_BODYPARTS_MYOSIM_BONE_VISUAL_ABI = 1
+_BODYPARTS_MYOSIM_BONE_VISUAL_ABI = 2
 _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_MAGIC = b"NHTISS2\0"
-_BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_ABI = 2
+_BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_ABI = 3
 _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE = 1
 _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON = 2
+
+
+def _bodyparts_visual_registration_fingerprint(registration_file: Path) -> int:
+    """Return a compact compatibility discriminator for paired visual payloads.
+
+    Bone and soft-tissue payloads are separately importable, but their local
+    transforms only compose correctly when both were produced from the same
+    visual-registration receipt.  This is deliberately not a provenance gate:
+    both complete receipt SHA-256 values stay in the adjacent manifests.  The
+    compact value only prevents the native renderer from silently combining
+    transform sets that have different rest frames.
+    """
+    return int(sha256(registration_file)[:8], 16)
 
 # This is deliberately a small, exact source-surface bundle for the first
 # articulated anatomy presentation.  Every selected surface spans a named
@@ -3701,9 +3714,11 @@ def bodyparts_myosim_bone_visual_payload(
         })
     if len(vertices_payload) > 0xFFFFFFFF or len(indices_payload) > 0xFFFFFFFF:
         raise ImportError("BodyParts3D visual payload exceeds the uint32 native renderer capacity")
+    registration_fingerprint = _bodyparts_visual_registration_fingerprint(registration_file)
     header = struct.pack(
         "<8s5I32s", _BODYPARTS_MYOSIM_BONE_VISUAL_MAGIC, _BODYPARTS_MYOSIM_BONE_VISUAL_ABI,
-        len(records_payload), len(vertices_payload), len(indices_payload), 0, bytes.fromhex(source_sha),
+        len(records_payload), len(vertices_payload), len(indices_payload), registration_fingerprint,
+        bytes.fromhex(source_sha),
     )
     payload = b"".join([
         header, *records_payload,
@@ -3719,6 +3734,7 @@ def bodyparts_myosim_bone_visual_payload(
         "payload": {
             "file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
             "magic": _BODYPARTS_MYOSIM_BONE_VISUAL_MAGIC.decode("ascii"), "payload_abi": _BODYPARTS_MYOSIM_BONE_VISUAL_ABI,
+            "registration_fingerprint32": f"{registration_fingerprint:08x}",
             "bone_count": len(records_payload), "vertex_count": len(vertices_payload), "index_count": len(indices_payload),
         },
         "source": {
@@ -3912,10 +3928,12 @@ def bodyparts_myosim_right_posterior_chain_visual_payload(
             provenance[-1]["secondary_attachment_weight_lock"] = attachment_weight_lock
     if len(vertices_payload) > 0xFFFFFFFF or len(indices_payload) > 0xFFFFFFFF:
         raise ImportError("BodyParts3D posterior-chain payload exceeds the uint32 native renderer capacity")
+    registration_fingerprint = _bodyparts_visual_registration_fingerprint(registration_file)
     header = struct.pack(
         "<8s5I32s", _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_MAGIC,
         _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_ABI, len(records_payload),
-        len(vertices_payload), len(indices_payload), 0, bytes.fromhex(source_sha),
+        len(vertices_payload), len(indices_payload), registration_fingerprint,
+        bytes.fromhex(source_sha),
     )
     payload = b"".join([
         header, *records_payload,
@@ -3932,6 +3950,7 @@ def bodyparts_myosim_right_posterior_chain_visual_payload(
             "file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
             "magic": _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_MAGIC.rstrip(b"\0").decode("ascii"),
             "payload_abi": _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_ABI,
+            "registration_fingerprint32": f"{registration_fingerprint:08x}",
             "surface_count": len(records_payload), "vertex_count": len(vertices_payload),
             "index_count": len(indices_payload),
         },
@@ -4437,9 +4456,11 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             provenance[-1]["secondary_attachment_weight_lock"] = attachment_weight_lock
     if len(vertices_payload) > 0xFFFFFFFF or len(indices_payload) > 0xFFFFFFFF:
         raise ImportError("BodyParts3D full-body tissue payload exceeds the uint32 native renderer capacity")
+    registration_fingerprint = _bodyparts_visual_registration_fingerprint(registration_file)
     payload = b"".join([
         struct.pack("<8s5I32s", _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_MAGIC, _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_ABI,
-                    len(records_payload), len(vertices_payload), len(indices_payload), 0, bytes.fromhex(source_sha)),
+                    len(records_payload), len(vertices_payload), len(indices_payload), registration_fingerprint,
+                    bytes.fromhex(source_sha)),
         *records_payload, b"".join(struct.pack("<7f", *vertex) for vertex in vertices_payload),
         struct.pack(f"<{len(indices_payload)}I", *indices_payload),
     ])
@@ -4451,7 +4472,9 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         "schema": "numi.human.bodyparts3d-myosim-fullbody-muscle-surface-visual-payload.v1",
         "payload": {"file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
                     "magic": _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_MAGIC.rstrip(b"\0").decode("ascii"),
-                    "payload_abi": _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_ABI, "surface_count": len(records_payload),
+                    "payload_abi": _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_ABI,
+                    "registration_fingerprint32": f"{registration_fingerprint:08x}",
+                    "surface_count": len(records_payload),
                     "vertex_count": len(vertices_payload), "index_count": len(indices_payload)},
         "source": {"registration": {"file": registration_file.name, "sha256": sha256(registration_file)},
                    "bodyparts": expected_bodyparts, "myosim_source_archive_sha256": source_sha,
