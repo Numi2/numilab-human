@@ -11,6 +11,7 @@ import xml.etree.ElementTree as ET
 import zipfile
 from collections import Counter, defaultdict, deque
 from dataclasses import dataclass
+from itertools import permutations, product
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -2681,6 +2682,423 @@ def myosim_fullbody_reference_artifacts(
         ),
     }
     return manifest, rigid_payload, muscle_payload
+
+
+# These are intentionally limited to major bones whose BodyParts3D label and
+# MyoSim body both identify one unambiguous segment.  They make a useful first
+# whole-body visual skeleton, not a complete small-bone or soft-tissue map.
+_BODYPARTS_MYOSIM_BONE_ANCHORS = (
+    {"myosim_body": "sacrum", "bodyparts_name": "sacrum", "hierarchy": "is_a", "member_id": "FJ3393"},
+    {"myosim_body": "femur_r", "bodyparts_name": "right femur", "hierarchy": "is_a", "member_id": "FJ3365"},
+    {"myosim_body": "femur_l", "bodyparts_name": "left femur", "hierarchy": "is_a", "member_id": "FJ3259"},
+    {"myosim_body": "tibia_r", "bodyparts_name": "right tibia", "hierarchy": "is_a", "member_id": "FJ3387"},
+    {"myosim_body": "tibia_l", "bodyparts_name": "left tibia", "hierarchy": "is_a", "member_id": "FJ3282"},
+    {"myosim_body": "calcn_r", "bodyparts_name": "right calcaneus", "hierarchy": "is_a", "member_id": "FJ3360"},
+    {"myosim_body": "calcn_l", "bodyparts_name": "left calcaneus", "hierarchy": "is_a", "member_id": "FJ3256"},
+    {"myosim_body": "clavicle_r", "bodyparts_name": "right clavicle", "hierarchy": "is_a", "member_id": "FJ3362"},
+    {"myosim_body": "clavicle_l", "bodyparts_name": "left clavicle", "hierarchy": "is_a", "member_id": "FJ3237"},
+    {"myosim_body": "scapula_r", "bodyparts_name": "right scapula", "hierarchy": "is_a", "member_id": "FJ3384"},
+    {"myosim_body": "scapula_l", "bodyparts_name": "left scapula", "hierarchy": "is_a", "member_id": "FJ3279"},
+    {"myosim_body": "humerus_r", "bodyparts_name": "right humerus", "hierarchy": "is_a", "member_id": "FJ3368"},
+    {"myosim_body": "humerus_l", "bodyparts_name": "left humerus", "hierarchy": "is_a", "member_id": "FJ3262"},
+    {"myosim_body": "ulna_r", "bodyparts_name": "right ulna", "hierarchy": "is_a", "member_id": "FJ3391"},
+    {"myosim_body": "ulna_l", "bodyparts_name": "left ulna", "hierarchy": "is_a", "member_id": "FJ3286"},
+    {"myosim_body": "radius_r", "bodyparts_name": "right radius", "hierarchy": "is_a", "member_id": "FJ3349"},
+    {"myosim_body": "radius_l", "bodyparts_name": "left radius", "hierarchy": "is_a", "member_id": "FJ3277"},
+    {"myosim_body": "head", "bodyparts_name": "skull", "hierarchy": "part_of", "member_id": "FJ1282"},
+)
+
+
+def _matrix3_determinant(matrix: list[list[float]]) -> float:
+    return (
+        matrix[0][0] * (matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1])
+        - matrix[0][1] * (matrix[1][0] * matrix[2][2] - matrix[1][2] * matrix[2][0])
+        + matrix[0][2] * (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0])
+    )
+
+
+def _bodyparts_similarity_fit(
+    source_points_m: list[list[float]], target_points_m: list[list[float]],
+) -> dict[str, Any]:
+    """Find the best proper signed-axis similarity, excluding reflections."""
+    if len(source_points_m) != len(target_points_m) or len(source_points_m) < 3:
+        raise ImportError("BodyParts3D registration requires at least three matched landmarks")
+    source = [_vector3(value, "BodyParts3D registration source point") for value in source_points_m]
+    target = [_vector3(value, "MyoSim registration target point") for value in target_points_m]
+    target_mean = [sum(point[axis] for point in target) / len(target) for axis in range(3)]
+    best: tuple[float, list[list[float]], tuple[int, int, int], tuple[int, int, int], float, list[float], list[float]] | None = None
+    for axes in permutations(range(3)):
+        for signs in product((-1, 1), repeat=3):
+            rotation = [[0.0, 0.0, 0.0] for _ in range(3)]
+            for row, source_axis in enumerate(axes):
+                rotation[row][source_axis] = float(signs[row])
+            if _matrix3_determinant(rotation) < 0.5:
+                continue
+            mapped = [_myosim_matrix_vector(rotation, point) for point in source]
+            mapped_mean = [sum(point[axis] for point in mapped) / len(mapped) for axis in range(3)]
+            denominator = sum((point[axis] - mapped_mean[axis]) ** 2 for point in mapped for axis in range(3))
+            if denominator <= 1.0e-16:
+                continue
+            scale = sum(
+                (point[axis] - mapped_mean[axis]) * (target[index][axis] - target_mean[axis])
+                for index, point in enumerate(mapped) for axis in range(3)
+            ) / denominator
+            if not math.isfinite(scale) or scale <= 0.0:
+                continue
+            translation = [target_mean[axis] - scale * mapped_mean[axis] for axis in range(3)]
+            residuals = [
+                math.sqrt(sum(
+                    (scale * mapped[index][axis] + translation[axis] - target[index][axis]) ** 2
+                    for axis in range(3)
+                ))
+                for index in range(len(source))
+            ]
+            rms = math.sqrt(sum(value * value for value in residuals) / len(residuals))
+            candidate = (rms, rotation, tuple(axes), tuple(signs), scale, translation, residuals)
+            if best is None or candidate[0] < best[0]:
+                best = candidate
+    if best is None:
+        raise ImportError("BodyParts3D registration could not find a proper positive-scale similarity")
+    rms, rotation, axes, signs, scale, translation, residuals = best
+    return {
+        "rotation": rotation, "axis_permutation": list(axes), "axis_signs": list(signs),
+        "scale_after_mm_to_m": scale, "translation_world_m": translation,
+        "residuals_m": residuals, "rms_residual_m": rms,
+    }
+
+
+def _bodyparts_registration_matrix(
+    rotation: list[list[float]], scale_after_mm_to_m: float, translation_world_m: list[float],
+) -> list[list[float]]:
+    linear_scale_m_per_mm = 0.001 * scale_after_mm_to_m
+    return [
+        [*(linear_scale_m_per_mm * value for value in row), translation_world_m[index]]
+        for index, row in enumerate(rotation)
+    ] + [[0.0, 0.0, 0.0, 1.0]]
+
+
+def _bodyparts_local_registration_matrix(
+    global_matrix: list[list[float]], body_com_world_m: list[float], body_quaternion_world_xyzw: list[float],
+) -> list[list[float]]:
+    world_to_body = _matrix_transpose(_myosim_matrix_from_quaternion_xyzw(body_quaternion_world_xyzw))
+    local_linear = _matrix_product(world_to_body, [row[:3] for row in global_matrix[:3]])
+    local_translation = _myosim_matrix_vector(
+        world_to_body, _myosim_subtract([row[3] for row in global_matrix[:3]], body_com_world_m),
+    )
+    return [[*local_linear[row], local_translation[row]] for row in range(3)] + [[0.0, 0.0, 0.0, 1.0]]
+
+
+def bodyparts_myosim_registration_candidate(
+    sources: Path, anatomy: dict[str, Any], myosim_artifact: Path,
+) -> dict[str, Any]:
+    """Build a source-pinned, visual-only BodyParts3D/MyoSim rest-frame fit.
+
+    Each local matrix maps exact OBJ millimetres to a Core inertial-body frame.
+    This is sufficient for a native articulated bone visual, but it is not a
+    collider, skinning, material, or physiology admission.
+    """
+    artifact = myosim_artifact.resolve()
+    manifest_path = artifact / "myosim-fullbody-reference.manifest.json"
+    manifest = read_json(manifest_path)
+    if manifest.get("schema") != "numi.human.myosim-fullbody-reference.v1":
+        raise ImportError("BodyParts3D registration requires a MyoSim full-body reference artifact")
+    payloads = manifest.get("payloads")
+    if not isinstance(payloads, dict):
+        raise ImportError("MyoSim registration artifact has no payload records")
+    payload_provenance: dict[str, dict[str, Any]] = {}
+    for key in ("rigid", "muscles"):
+        descriptor = payloads.get(key)
+        if not isinstance(descriptor, dict) or not isinstance(descriptor.get("file"), str):
+            raise ImportError(f"MyoSim registration artifact has no {key} payload descriptor")
+        payload = artifact / descriptor["file"]
+        expected_hash = descriptor.get("sha256")
+        if not payload.is_file() or not isinstance(expected_hash, str) or sha256(payload) != expected_hash:
+            raise ImportError(f"MyoSim registration artifact {key} payload is missing or has drifted")
+        payload_provenance[key] = {"file": descriptor["file"], "sha256": expected_hash, "bytes": payload.stat().st_size}
+    core_tree = manifest.get("core_tree")
+    records = core_tree.get("source_body_records") if isinstance(core_tree, dict) else None
+    if not isinstance(records, list):
+        raise ImportError("MyoSim registration artifact does not expose source rest-pose body records")
+    body_by_name: dict[str, dict[str, Any]] = {}
+    for record in records:
+        if not isinstance(record, dict) or not isinstance(record.get("name"), str):
+            raise ImportError("MyoSim registration artifact has an unnamed body record")
+        name = record["name"]
+        if name in body_by_name or not isinstance(record.get("source_body_id"), int) or not isinstance(record.get("core_body_index"), int):
+            raise ImportError("MyoSim registration artifact has duplicate or invalid body identities")
+        record["default_com_position_world_m"] = _myosim_vector(record.get("default_com_position_world_m"), f"MyoSim registration body {name} COM")
+        record["default_inertial_quaternion_world_xyzw"] = list(record.get("default_inertial_quaternion_world_xyzw", []))
+        _myosim_matrix_from_quaternion_xyzw(record["default_inertial_quaternion_world_xyzw"])
+        body_by_name[name] = record
+    archive_by_hierarchy = {
+        descriptor.get("hierarchy"): descriptor
+        for descriptor in anatomy.get("archives", []) if isinstance(descriptor, dict)
+    }
+    components_by_name: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    for component in anatomy.get("components", []):
+        if isinstance(component, dict) and isinstance(component.get("hierarchy"), str) and isinstance(component.get("name"), str):
+            components_by_name[(component["hierarchy"], component["name"])].append(component)
+
+    anchors: list[dict[str, Any]] = []
+    source_points_m: list[list[float]] = []
+    target_points_m: list[list[float]] = []
+    for specification in _BODYPARTS_MYOSIM_BONE_ANCHORS:
+        target_name = specification["myosim_body"]
+        target = body_by_name.get(target_name)
+        if target is None:
+            raise ImportError(f"MyoSim registration artifact has no required body {target_name}")
+        hierarchy = specification["hierarchy"]
+        components = components_by_name.get((hierarchy, specification["bodyparts_name"]), [])
+        if len(components) != 1:
+            raise ImportError(f"BodyParts3D registration requires one component for {hierarchy}:{specification['bodyparts_name']}")
+        component = components[0]
+        member_id = specification["member_id"]
+        if not any(entry.get("element_id") == member_id and entry.get("mesh_present") for entry in component.get("element_meshes", []) if isinstance(entry, dict)):
+            raise ImportError(f"BodyParts3D registration component {component['name']} has no expected mesh {member_id}")
+        archive_path, member, obj = _bodyparts_obj_member(sources, hierarchy, member_id)
+        archive_descriptor = archive_by_hierarchy.get(hierarchy)
+        if not isinstance(archive_descriptor, dict) or archive_descriptor.get("sha256") != sha256(archive_path):
+            raise ImportError(f"BodyParts3D registration archive provenance drifted for {hierarchy}")
+        vertices_mm, triangles = _bodyparts_obj_triangles(obj, member)
+        centroid_mm = [sum(vertex[axis] for vertex in vertices_mm) / len(vertices_mm) for axis in range(3)]
+        source_points_m.append([value * 0.001 for value in centroid_mm])
+        target_points_m.append(target["default_com_position_world_m"])
+        anchors.append({
+            "source": {
+                "archive": archive_path.name, "archive_sha256": sha256(archive_path), "hierarchy": hierarchy,
+                "member": member, "member_id": member_id, "member_sha256": hashlib.sha256(obj).hexdigest(),
+                "concept_id": component.get("concept_id"), "name": component["name"],
+                "vertex_count": len(vertices_mm), "triangle_count": len(triangles), "vertex_centroid_mm": centroid_mm,
+            },
+            "target": {
+                "source_body_id": target["source_body_id"], "core_body_index": target["core_body_index"], "name": target_name,
+                "default_com_position_world_m": target["default_com_position_world_m"],
+                "default_inertial_quaternion_world_xyzw": target["default_inertial_quaternion_world_xyzw"],
+            },
+        })
+    fit = _bodyparts_similarity_fit(source_points_m, target_points_m)
+    global_matrix = _bodyparts_registration_matrix(fit["rotation"], fit["scale_after_mm_to_m"], fit["translation_world_m"])
+    for index, anchor in enumerate(anchors):
+        target = anchor["target"]
+        centroid_world_m = [
+            sum(global_matrix[row][column] * anchor["source"]["vertex_centroid_mm"][column] for column in range(3)) + global_matrix[row][3]
+            for row in range(3)
+        ]
+        anchor["registration"] = {
+            "source_obj_mm_to_core_inertial_body_m": _bodyparts_local_registration_matrix(
+                global_matrix, target["default_com_position_world_m"], target["default_inertial_quaternion_world_xyzw"],
+            ),
+            "default_pose_vertex_centroid_world_m": centroid_world_m,
+            "vertex_centroid_to_source_com_residual_m": fit["residuals_m"][index],
+            "status": "provisional_visual_binding_only",
+        }
+    return {
+        "schema": "numi.human.bodyparts3d-myosim-bone-registration-candidate.v1",
+        "source": {
+            "bodyparts": {"id": anatomy.get("source_id"), "version": anatomy.get("version"), "archives": anatomy.get("archives")},
+            "myosim": {"artifact_manifest": manifest_path.name, "artifact_manifest_sha256": sha256(manifest_path), "source": manifest.get("source"), "payloads": payload_provenance},
+        },
+        "coordinate_system": {
+            "source": "BodyParts3D OBJ millimetres", "target": "MyoSim default world metres and Core inertial-body frames",
+            "global_source_mm_to_myosim_world_m": global_matrix, "proper_axis_permutation": fit["axis_permutation"],
+            "proper_axis_signs": fit["axis_signs"], "uniform_scale_after_mm_to_m": fit["scale_after_mm_to_m"], "translation_world_m": fit["translation_world_m"],
+        },
+        "fit": {
+            "method": "equal-weight vertex-centroid to source inertial-COM similarity over 24 proper signed-axis maps",
+            "anchor_count": len(anchors), "rms_vertex_centroid_to_com_residual_m": fit["rms_residual_m"], "max_vertex_centroid_to_com_residual_m": max(fit["residuals_m"]),
+            "interpretation": "A mesh vertex centroid and rigid-body inertial COM are not homologous landmarks. These residuals diagnose common-frame plausibility only, not surface registration accuracy.",
+        },
+        "anchors": anchors,
+        "coverage": {
+            "registered_major_bone_count": len(anchors), "registered_myo_bodies": [anchor["target"]["name"] for anchor in anchors],
+            "not_yet_registered": ["vertebrae, pelvis, ribs, hands, digits, toes, patellae, talus, fibulae, and soft-tissue layers"],
+        },
+        "status": "provisional_visual_registration_not_admitted_to_collision_or_physics",
+        "next_visual_validation": [
+            "bind every emitted local matrix to the corresponding Metal articulated inertial-body pose",
+            "inspect default-pose front, side, rear, and oblique bone overlays against the BodyParts3D skin reference",
+            "review per-bone landmark offsets before admitting any additional skeleton mesh",
+        ],
+        "evidence_boundary": "This inferred source-geometry/MyoSim-pose candidate is not collision/contact geometry, skinning, soft-tissue mechanics, joint-limit transfer, muscle-attachment transfer, or a medically validated anatomical registration.",
+    }
+
+
+_BODYPARTS_MYOSIM_BONE_VISUAL_MAGIC = b"NHBONES1"
+_BODYPARTS_MYOSIM_BONE_VISUAL_ABI = 1
+
+
+def _bodyparts_vertex_normals(
+    vertices: list[tuple[float, float, float]], triangles: list[tuple[int, int, int]], source_name: str,
+) -> list[tuple[float, float, float]]:
+    """Build unit vertex normals from exact source triangles without smoothing geometry."""
+    accum = [[0.0, 0.0, 0.0] for _ in vertices]
+    for first, second, third in triangles:
+        a, b, c = vertices[first], vertices[second], vertices[third]
+        left = [b[index] - a[index] for index in range(3)]
+        right = [c[index] - a[index] for index in range(3)]
+        normal = [
+            left[1] * right[2] - left[2] * right[1],
+            left[2] * right[0] - left[0] * right[2],
+            left[0] * right[1] - left[1] * right[0],
+        ]
+        for vertex_index in (first, second, third):
+            for axis in range(3):
+                accum[vertex_index][axis] += normal[axis]
+    center = [sum(vertex[axis] for vertex in vertices) / len(vertices) for axis in range(3)]
+    normals: list[tuple[float, float, float]] = []
+    for index, normal in enumerate(accum):
+        squared = sum(value * value for value in normal)
+        if squared <= 1.0e-24:
+            normal = [vertices[index][axis] - center[axis] for axis in range(3)]
+            squared = sum(value * value for value in normal)
+        if squared <= 1.0e-24:
+            raise ImportError(f"BodyParts3D mesh has no usable vertex normal: {source_name}")
+        magnitude = math.sqrt(squared)
+        normals.append(tuple(value / magnitude for value in normal))
+    return normals
+
+
+def _bodyparts_unit_tangent(normal: tuple[float, float, float]) -> tuple[float, float, float]:
+    reference = (0.0, 0.0, 1.0) if abs(normal[2]) < 0.9 else (0.0, 1.0, 0.0)
+    tangent = (
+        reference[1] * normal[2] - reference[2] * normal[1],
+        reference[2] * normal[0] - reference[0] * normal[2],
+        reference[0] * normal[1] - reference[1] * normal[0],
+    )
+    magnitude = math.sqrt(sum(value * value for value in tangent))
+    if magnitude <= 1.0e-12:
+        raise ImportError("BodyParts3D vertex normal cannot form a tangent")
+    return tuple(value / magnitude for value in tangent)
+
+
+def _bodyparts_visual_local_pose(matrix: Any, context: str) -> tuple[list[float], list[float], float]:
+    if not isinstance(matrix, list) or len(matrix) != 4 or any(not isinstance(row, list) or len(row) != 4 for row in matrix):
+        raise ImportError(f"{context} is not a 4x4 transform")
+    rows = [[_finite_scalar(value, context) for value in row] for row in matrix]
+    if any(abs(rows[3][axis] - (1.0 if axis == 3 else 0.0)) > 1.0e-6 for axis in range(4)):
+        raise ImportError(f"{context} is not affine")
+    linear = [row[:3] for row in rows[:3]]
+    scales = [math.sqrt(sum(value * value for value in row)) for row in linear]
+    scale_m_per_mm = sum(scales) / len(scales)
+    if not math.isfinite(scale_m_per_mm) or scale_m_per_mm <= 0.0 or any(abs(value - scale_m_per_mm) > 1.0e-6 * scale_m_per_mm for value in scales):
+        raise ImportError(f"{context} has non-uniform scale")
+    rotation = [[value / scale_m_per_mm for value in row] for row in linear]
+    if abs(_matrix3_determinant(rotation) - 1.0) > 1.0e-5:
+        raise ImportError(f"{context} is not a proper rotation and uniform scale")
+    quaternion = _quaternion_xyzw_from_matrix(rotation)
+    # The source vertices below are authored in metres, not the OBJ's mm.
+    return [row[3] for row in rows[:3]], quaternion, scale_m_per_mm / 0.001
+
+
+def bodyparts_myosim_bone_visual_payload(
+    sources: Path, anatomy: dict[str, Any], registration_path: Path, output: Path,
+) -> dict[str, Any]:
+    """Prepare exact major-bone triangles for the native articulated renderer.
+
+    This is an offline source importer.  Its ``.nhbones`` payload is consumed
+    by a C++/Metal visual executable, which receives only compact geometry and
+    link-local transforms; no Python is involved in rendering or simulation.
+    """
+    registration_file = registration_path.resolve()
+    registration = read_json(registration_file)
+    if registration.get("schema") != "numi.human.bodyparts3d-myosim-bone-registration-candidate.v1":
+        raise ImportError("BodyParts3D visual payload requires a major-bone registration candidate")
+    if registration.get("status") != "provisional_visual_registration_not_admitted_to_collision_or_physics":
+        raise ImportError("BodyParts3D visual payload requires an unmodified visual-only registration candidate")
+    source = registration.get("source")
+    expected_bodyparts = {
+        "id": anatomy.get("source_id"), "version": anatomy.get("version"),
+        "archives": anatomy.get("archives"),
+    }
+    if not isinstance(source, dict) or source.get("bodyparts") != expected_bodyparts:
+        raise ImportError("BodyParts3D visual payload registration does not match parsed source provenance")
+    myosim = source.get("myosim")
+    if not isinstance(myosim, dict) or not isinstance(myosim.get("source"), dict):
+        raise ImportError("BodyParts3D visual payload registration has no MyoSim source provenance")
+    source_sha = myosim["source"].get("archive_sha256")
+    if not isinstance(source_sha, str) or not re.fullmatch(r"[0-9a-f]{64}", source_sha):
+        raise ImportError("BodyParts3D visual payload registration has no MyoSim source SHA-256")
+    anchors = registration.get("anchors")
+    if not isinstance(anchors, list) or len(anchors) != len(_BODYPARTS_MYOSIM_BONE_ANCHORS):
+        raise ImportError("BodyParts3D visual payload requires the complete major-bone anchor set")
+    vertices_payload: list[tuple[float, float, float, float, float, float]] = []
+    indices_payload: list[int] = []
+    records_payload: list[bytes] = []
+    provenance_anchors: list[dict[str, Any]] = []
+    for stable_id, (specification, anchor) in enumerate(zip(_BODYPARTS_MYOSIM_BONE_ANCHORS, anchors, strict=True), start=1):
+        if not isinstance(anchor, dict):
+            raise ImportError("BodyParts3D visual payload has an invalid anchor")
+        source_record = anchor.get("source")
+        target_record = anchor.get("target")
+        registration_record = anchor.get("registration")
+        if not isinstance(source_record, dict) or not isinstance(target_record, dict) or not isinstance(registration_record, dict):
+            raise ImportError("BodyParts3D visual payload anchor is incomplete")
+        if source_record.get("hierarchy") != specification["hierarchy"] or source_record.get("member_id") != specification["member_id"] or source_record.get("name") != specification["bodyparts_name"] or target_record.get("name") != specification["myosim_body"]:
+            raise ImportError("BodyParts3D visual payload anchor identity drifted")
+        core_body_index = target_record.get("core_body_index")
+        if not isinstance(core_body_index, int) or core_body_index < 0:
+            raise ImportError("BodyParts3D visual payload anchor has an invalid Core body index")
+        archive_path, member, obj = _bodyparts_obj_member(sources, specification["hierarchy"], specification["member_id"])
+        if source_record.get("archive_sha256") != sha256(archive_path) or source_record.get("member") != member or source_record.get("member_sha256") != hashlib.sha256(obj).hexdigest():
+            raise ImportError("BodyParts3D visual payload source mesh provenance drifted")
+        vertices_mm, triangles = _bodyparts_obj_triangles(obj, member)
+        if source_record.get("vertex_count") != len(vertices_mm) or source_record.get("triangle_count") != len(triangles):
+            raise ImportError("BodyParts3D visual payload source topology drifted")
+        translation, quaternion, scale = _bodyparts_visual_local_pose(
+            registration_record.get("source_obj_mm_to_core_inertial_body_m"),
+            f"BodyParts3D visual payload {specification['member_id']} local transform",
+        )
+        normals = _bodyparts_vertex_normals(vertices_mm, triangles, member)
+        first_vertex = len(vertices_payload)
+        first_index = len(indices_payload)
+        for vertex, normal in zip(vertices_mm, normals, strict=True):
+            vertices_payload.append((
+                vertex[0] * 0.001, vertex[1] * 0.001, vertex[2] * 0.001,
+                normal[0], normal[1], normal[2],
+            ))
+        indices_payload.extend(first_vertex + index for triangle in triangles for index in triangle)
+        records_payload.append(struct.pack(
+            "<6I8f", core_body_index, first_vertex, len(vertices_mm), first_index,
+            len(triangles) * 3, stable_id, *translation, *quaternion, scale,
+        ))
+        provenance_anchors.append({
+            "member_id": specification["member_id"], "member_sha256": source_record["member_sha256"],
+            "core_body_index": core_body_index, "myosim_body": specification["myosim_body"],
+            "vertex_count": len(vertices_mm), "triangle_count": len(triangles),
+        })
+    if len(vertices_payload) > 0xFFFFFFFF or len(indices_payload) > 0xFFFFFFFF:
+        raise ImportError("BodyParts3D visual payload exceeds the uint32 native renderer capacity")
+    header = struct.pack(
+        "<8s5I32s", _BODYPARTS_MYOSIM_BONE_VISUAL_MAGIC, _BODYPARTS_MYOSIM_BONE_VISUAL_ABI,
+        len(records_payload), len(vertices_payload), len(indices_payload), 0, bytes.fromhex(source_sha),
+    )
+    payload = b"".join([
+        header, *records_payload,
+        b"".join(struct.pack("<6f", *vertex) for vertex in vertices_payload),
+        struct.pack(f"<{len(indices_payload)}I", *indices_payload),
+    ])
+    output = output.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    payload_path = output / "bodyparts3d-myosim-major-bones.nhbones"
+    payload_path.write_bytes(payload)
+    manifest = {
+        "schema": "numi.human.bodyparts3d-myosim-major-bone-visual-payload.v1",
+        "payload": {
+            "file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
+            "magic": _BODYPARTS_MYOSIM_BONE_VISUAL_MAGIC.decode("ascii"), "payload_abi": _BODYPARTS_MYOSIM_BONE_VISUAL_ABI,
+            "bone_count": len(records_payload), "vertex_count": len(vertices_payload), "index_count": len(indices_payload),
+        },
+        "source": {
+            "registration": {"file": registration_file.name, "sha256": sha256(registration_file)},
+            "bodyparts": expected_bodyparts, "myosim_source_archive_sha256": source_sha,
+            "anchors": provenance_anchors,
+        },
+        "runtime_binding": "one source-local bone instance per Core articulated inertial body; local translation, rotation, and uniform scale are carried in the native payload",
+        "status": "native_visual_binding_input_not_collision_or_physics",
+        "evidence_boundary": "The payload contains triangle surfaces for a provisional bone visual only. It does not create colliders, skinning weights, soft-tissue mechanics, muscle attachments, or a medical registration claim.",
+    }
+    write_json(output / "bodyparts3d-myosim-major-bones.manifest.json", manifest)
+    return manifest
 
 
 def _quaternion_xyzw_from_matrix(matrix: list[list[float]]) -> list[float]:

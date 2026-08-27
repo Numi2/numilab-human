@@ -67,6 +67,32 @@ if [ "${1:-}" = "myosim-native-visuals" ]; then
         "$output_directory"
 fi
 
+# The source-prepared .nhbones package is consumed only by the native C++/Metal
+# capture path.  It binds exact BodyParts3D major-bone triangles to the current
+# Metal articulated-body pose; Python is not started for this command.
+if [ "${1:-}" = "myosim-native-bone-visuals" ]; then
+    if [ "$#" -ne 4 ]; then
+        printf '%s\n' "usage: numi human myosim-native-bone-visuals <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <output-directory>" >&2
+        exit 2
+    fi
+    artifact_directory=$2
+    bone_payload=$3
+    output_directory=$4
+    runtime_root=${NUMI_LAB_ROOT:-/Users/home/Documents/emergentnumilife/MetalRobo}
+    build_directory=${NUMI_BUILD_DIR:-$runtime_root/build}
+    probe=$build_directory/bin/metalrobo_numilab_human_myosim_visual_probe
+    if [ ! -x "$probe" ]; then
+        printf '%s\n' "native Human visual probe is unavailable: $probe" >&2
+        printf '%s\n' "build target metalrobo_numilab_human_myosim_visual_probe in $runtime_root" >&2
+        exit 2
+    fi
+    exec "$probe" \
+        "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
+        "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
+        "$bone_payload" \
+        "$output_directory"
+fi
+
 if [ -n "${PYTHONPATH:-}" ]; then
     export PYTHONPATH="$repository_root/src:$PYTHONPATH"
 else

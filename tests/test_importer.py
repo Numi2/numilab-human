@@ -9,6 +9,7 @@ from pathlib import Path
 from subprocess import run
 
 from numilab_human.model import (
+    _bodyparts_similarity_fit,
     ImportError as HumanImportError,
     bodyparts_foot_collider_preflight,
     bodyparts_foot_registration_receipt_template,
@@ -41,6 +42,23 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ImporterTests(unittest.TestCase):
+    def test_bodyparts_similarity_fit_keeps_proper_axes_and_positive_scale(self) -> None:
+        source = [
+            [0.0, 0.0, 0.0], [1.0, 0.0, 0.0],
+            [0.0, 2.0, 0.0], [0.0, 0.0, 3.0],
+        ]
+        # target = 2 * (source-z, source-x, source-y) + translation.
+        target = [
+            [4.0 + 2.0 * point[2], -1.0 + 2.0 * point[0], 7.0 + 2.0 * point[1]]
+            for point in source
+        ]
+        fit = _bodyparts_similarity_fit(source, target)
+        self.assertEqual(fit["axis_permutation"], [2, 0, 1])
+        self.assertEqual(fit["axis_signs"], [1, 1, 1])
+        self.assertAlmostEqual(fit["scale_after_mm_to_m"], 2.0)
+        self.assertAlmostEqual(fit["rms_residual_m"], 0.0)
+        self.assertTrue(all(abs(value) < 1.0e-12 for value in fit["residuals_m"]))
+
     def test_foot_collider_preflight_emits_only_source_local_enclosure(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             sources = Path(temporary) / "Sources"

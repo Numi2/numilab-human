@@ -19,6 +19,8 @@ from .model import (
     bodyparts_geometry_preflight,
     bodyparts_foot_registration_template,
     bodyparts_lower_body_attachment_worklist,
+    bodyparts_myosim_bone_visual_payload,
+    bodyparts_myosim_registration_candidate,
     bodyparts_nerve_annotation,
     bodyparts_visual_preview,
     bodyparts_visual_layer_previews,
@@ -601,6 +603,29 @@ def foot_registration_receipt_check(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def myosim_bodyparts_registration(arguments: argparse.Namespace) -> int:
+    sources = arguments.sources.resolve()
+    anatomy = parse_bodyparts3d(sources, REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
+    output = arguments.output.resolve()
+    write_json(
+        output,
+        bodyparts_myosim_registration_candidate(sources, anatomy, arguments.artifact.resolve()),
+    )
+    print(f"wrote {output}")
+    return 0
+
+
+def myosim_bodyparts_bone_visual_payload(arguments: argparse.Namespace) -> int:
+    sources = arguments.sources.resolve()
+    anatomy = parse_bodyparts3d(sources, REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
+    manifest = bodyparts_myosim_bone_visual_payload(
+        sources, anatomy, arguments.registration.resolve(), arguments.output.resolve(),
+    )
+    print(f"wrote {arguments.output.resolve() / manifest['payload']['file']}")
+    print(f"wrote {arguments.output.resolve() / 'bodyparts3d-myosim-major-bones.manifest.json'}")
+    return 0
+
+
 def visual_layers(arguments: argparse.Namespace) -> int:
     sources = arguments.sources.resolve()
     anatomy = parse_bodyparts3d(sources, REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
@@ -656,6 +681,28 @@ def parser() -> argparse.ArgumentParser:
         help="Python environment with the pinned myo-sim checkout and mujoco installed",
     )
     myosim_visuals_parser.set_defaults(handler=myosim_visuals)
+    myosim_registration_parser = commands.add_parser(
+        "myosim-bodyparts-registration",
+        help="infer a source-pinned visual-only BodyParts3D major-bone rest-frame candidate for MyoSim",
+    )
+    myosim_registration_parser.add_argument("--sources", type=Path, required=True)
+    myosim_registration_parser.add_argument(
+        "--artifact", type=Path, required=True,
+        help="compiled MyoSim full-body artifact directory from myosim-build",
+    )
+    myosim_registration_parser.add_argument("--output", type=Path, required=True)
+    myosim_registration_parser.set_defaults(handler=myosim_bodyparts_registration)
+    myosim_bone_payload_parser = commands.add_parser(
+        "myosim-bodyparts-bone-payload",
+        help="prepare source-major-bone triangles and articulated local transforms for the native Human visual renderer",
+    )
+    myosim_bone_payload_parser.add_argument("--sources", type=Path, required=True)
+    myosim_bone_payload_parser.add_argument(
+        "--registration", type=Path, required=True,
+        help="candidate JSON from myosim-bodyparts-registration",
+    )
+    myosim_bone_payload_parser.add_argument("--output", type=Path, required=True)
+    myosim_bone_payload_parser.set_defaults(handler=myosim_bodyparts_bone_visual_payload)
     mortensen_neck_parser = commands.add_parser(
         "mortensen-neck",
         help="emit the complete selected OpenSim 3 cervical/hyoid source IR for MyoSim registration",
