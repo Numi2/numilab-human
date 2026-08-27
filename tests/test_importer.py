@@ -303,6 +303,23 @@ class ImporterTests(unittest.TestCase):
             "usage: numi human myosim-native-visuals <artifact-directory> <output-directory>\n",
         )
 
+    def test_numi_workspace_muscle_bone_visual_command_rejects_missing_paths_before_python(self) -> None:
+        command = ROOT / ".numi/commands/human"
+        result = run(
+            [command, "myosim-native-muscle-bone-visuals"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(result.stdout, "")
+        self.assertEqual(
+            result.stderr,
+            "usage: numi human myosim-native-muscle-bone-visuals <artifact-directory> "
+            "<bodyparts3d-myosim-major-bones.nhbones> <output-directory> "
+            "[--muscle-step-seconds <1e-6..1e-3>]\n",
+        )
+
     def test_opensim_parser_retains_mechanical_fields(self) -> None:
         source = """<?xml version=\"1.0\"?>
 <OpenSimDocument Version=\"40000\"><Model name=\"fixture\">

@@ -117,6 +117,21 @@ overlay. This is now an executable body-frame visual binding, but it remains
 outside physical admission: its common-frame centroid/COM fit cannot stand in
 for anatomical landmarks, collision calibration, skinning, or tissue models.
 
+Core `2aab522` adds a separate, opt-in bounded muscle-driven visual state.
+`myosim-native-muscle-bone-visuals` evaluates the complete 416 MyoSim route
+definitions at source-default excitation/activation (`0.5` / `0.5`) in the
+existing FP64 Core reference, scatters the resulting generalized muscle force,
+and compares a one-step free-body integration to an identically integrated
+passive state. Only the resulting active configuration is supplied to the
+Metal articulated operator; Metal owns final pose computation and rendering,
+not the force projection or dense forward-dynamics integration. The command
+allows only a 1 µs–1 ms step and defaults to 1 ms for an inspectable
+sensitivity capture. That boundary is intentional: the 1 ms all-muscle
+co-activation probe differs from passive by `71.4839058782` maximum velocity
+and `0.0714839058782` maximum configuration, so it demonstrates native
+force-to-pose coupling but cannot be interpreted as a stable stance, control
+policy, contact result, gait, or physiological prediction.
+
 `numi.human.v1` remains an owner-neutral intermediate artifact, but Core
 revision `730aba4` now executes the bounded Rajagopal mechanics path: the
 source fixed tree and a source-default-preserving physical pelvis mobile-root

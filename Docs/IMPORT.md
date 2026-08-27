@@ -41,6 +41,15 @@ numi human myosim-native-bone-visuals \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
   Build/bodyparts3d-myosim-major-bones/native-articulated-views
+
+# Native bounded force-to-pose capture: Core FP64 projects all 416 source
+# muscles, integrates one free-body sensitivity step, and Metal renders only
+# its final articulated pose. No Python process is started.
+numi human myosim-native-muscle-bone-visuals \
+  Build/myosim-fullbody \
+  Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
+  Build/bodyparts3d-myosim-major-bones/native-muscle-driven-views \
+  --muscle-step-seconds 0.001
 ```
 
 The native probe validates 416 full-body muscle-tendon elements and their
@@ -69,6 +78,14 @@ the native executable, binding 18 major-bone meshes to the Metal pose and
 retaining the full route/site overlay. The candidate is visual-only: it does
 not create colliders, contact constants, skinning weights, soft tissue, or a
 medical registration result.
+
+`myosim-native-muscle-bone-visuals` is a visual sensitivity command, not a
+rollout interface. It only permits a 1 µs–1 ms step (default 1 ms), projects
+all 416 `NHMYO1` source muscles at their deterministic source-default
+activation/excitation, and compares the active configuration to a matched
+passive step before the final Metal pose/render pass. The command does not
+create a controller, keep force/dynamics resident on Metal, add contact, or
+validate standing or gait.
 
 ## 1. Fetch the password-free sources
 

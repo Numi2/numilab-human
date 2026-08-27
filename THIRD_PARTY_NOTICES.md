@@ -19,7 +19,10 @@ every other source in local generated artifacts.
   BodyParts3D bone members under provisional MyoSim link transforms. Their
   source members, hashes, Core renderer revision, attribution, and
   non-registration boundary are recorded in `Docs/VISUAL_PROGRESS.md` and
-  `Docs/VISUAL_VALIDATION.md`.
+  `Docs/VISUAL_VALIDATION.md`. The four PNGs plus native visual pack in
+  `Docs/media/myosim-native-muscle-driven-bones/` use the same 18 exact
+  BodyParts3D source meshes after a bounded Core muscle-force state step; the
+  source attribution and non-registration boundary remain unchanged.
 
 ## OpenSim RajagopalLaiUhlrich2023
 

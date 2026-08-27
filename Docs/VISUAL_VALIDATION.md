@@ -5,6 +5,20 @@ For the active MyoSim full-body muscle source, see the newer
 frames are source-rendered and are intentionally kept distinct from the
 BodyParts3D source-static evidence below.
 
+## Native muscle-driven BodyParts3D major bones — 2026-08-27
+
+The four M4 Pro frames in
+[visual progress](VISUAL_PROGRESS.md#native-bounded-muscle-driven-bone-snapshot--2026-08-27)
+re-run the same 18-mesh `NHBONES1` binding after one bounded full-body muscle
+force step. Core `2aab522` projects all 416 source MyoSim muscles at the
+source-default activation/excitation, advances an FP64 free-body state, and
+passes only that resulting configuration to Metal for the final articulated
+pose/render snapshot. The observed four-view skeleton remains coherent; the
+tracked transcript records 90 applied wraps and the matched passive-state
+deltas. This verifies a force-to-pose visual chain, not a trajectory or a
+biomechanical behavior claim: the 1 ms co-activation probe has no controller,
+contact, recurrence, muscle-belly/skin deformation, or stability validation.
+
 ## Native articulated BodyParts3D major bones — 2026-08-27
 
 The four inspected frames in

@@ -97,6 +97,47 @@ provisional mesh transforms to collision or contact; it does not provide skin
 weights, organ/vessel/nerve deformation, unregistered small bones, live
 device-buffer presentation, a motion replay, gait, or clinical validation.
 
+## Native bounded muscle-driven bone snapshot — 2026-08-27
+
+<p align="center">
+  <img src="media/myosim-native-muscle-driven-bones/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-front.png" width="24%" alt="Front muscle-driven BodyParts3D bone sensitivity snapshot">
+  <img src="media/myosim-native-muscle-driven-bones/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-oblique.png" width="24%" alt="Oblique muscle-driven BodyParts3D bone sensitivity snapshot">
+  <img src="media/myosim-native-muscle-driven-bones/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-side.png" width="24%" alt="Side muscle-driven BodyParts3D bone sensitivity snapshot">
+  <img src="media/myosim-native-muscle-driven-bones/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-rear.png" width="24%" alt="Rear muscle-driven BodyParts3D bone sensitivity snapshot">
+</p>
+
+Core `2aab522f92f44644c35bbde1a8ea3fd85356b027` captured these 640 × 640
+frames on the Apple M4 Pro on `macmini`. The new native visual mode reads the
+same verified `NHRIGID2`, `NHMYO1`, and `NHBONES1` inputs as the default-pose
+binding, reconstructs all 416 source MuJoCo muscle definitions, projects their
+source-default `0.5` excitation / `0.5` activation forces in Core FP64, and
+advances one free-body step. Metal then computes the final 157-body pose; Core
+binds the 18 BodyParts3D bone instances and complete site/route overlay to
+that pose for rendering. There is no Python process in this capture.
+
+The selected 1 ms step is deliberately a bounded visual sensitivity probe. It
+applies all 90 source-default wraps and changes the active state relative to
+the identically integrated passive state by maximum velocity
+`71.4839058782` and configuration `0.0714839058782`. This large
+co-activation response is exactly why the capture is **not** called a posture,
+trajectory, gait, or physiological prediction: there is no controller,
+contact, repeated integration, or stability qualification.
+
+| View | PNG SHA-256 | Bone / site / route pixels | Inspection result |
+| --- | --- | --- | --- |
+| Front | `36e56b0d77d7ded66ed248801c04a0199e3d6448c893a59d1eb65562c14c58ca` | `3,536 / 1,084 / 3,336` | bilateral major-bone skeleton, arms, pelvis, legs, and feet stay coherent with the complete path overlay |
+| Oblique | `d6a609a3a1a3b214c6df31f395c5ad70e7f5b7c445fa6513539bb035f0d0eccd` | `2,942 / 995 / 3,080` | depth of both shoulder girdles and pelvis remains visible after the force-driven state change |
+| Side | `4d2436a575cf8ef94312992c46ef2a1fbbf3267daad622fa7c722d46004b3340` | `1,589 / 755 / 1,981` | sagittal skull–shoulder–pelvis–leg–foot sequence remains continuous |
+| Rear | `f9f081b8b18e8c2fec8d2f894bd9dabcea31e309ecaac590a15459b4c6a354cb` | `3,622 / 1,093 / 3,738` | posterior bilateral limbs and sacral/pelvic connection remain present |
+
+The native [transcript](media/myosim-native-muscle-driven-bones/native-articulated-muscle-driven.transcript.txt),
+visual-pack manifest, and `.mrvpack` accompany the four frames. This closes the
+bounded `complete 416-muscle force → articulated state step → Metal pose →
+BodyParts3D bone renderer` evidence chain. It does **not** make the provisional
+bone transforms colliders; prove deformable muscle bellies, skinning, organs,
+vessels, nerves, contact, a sustained muscle-force rollout, or clinical
+anatomical validity separately.
+
 ## Native mechanics progress
 
 ```text
@@ -175,9 +216,16 @@ owner; no contact or locomotion is claimed here.
 3. Resolve the Mortensen spine-to-`cervical_spine` rest registration and make
    an explicit MyoSim neck/head replacement decision before applying its 72
    cervical/hyoid muscle forces.
-4. Promote the default native capture into a device-resident live presentation
-   sidecar, then repeat the three views over a replayed physical motion.
-5. Add registered anatomical colliders and calibrated contact before any
+4. Replace the one-step sensitivity capture with a deterministic native
+   free-body replay: persist `q`/`v` and the 416 activation states, advance
+   source-defined activation dynamics from an explicit recorded control stream,
+   emit a bounded frame sequence, and compare it with the matched passive
+   replay. Until a controller and contact are validated, call that evidence a
+   free-body response—not a posture or gait.
+5. Move the complete MyoSim `J^T` force scatter and dense forward-dynamics
+   update to a measured device-resident path, preserving CPU-vs-Metal replay
+   parity before promoting the native capture to a live presentation sidecar.
+6. Add registered anatomical colliders and calibrated contact before any
    standing or walking qualification.
 
 This ordering keeps the Human more realistic by retaining source mechanics and

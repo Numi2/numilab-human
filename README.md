@@ -70,6 +70,27 @@ first native anatomy binding, not a claim that every bone, the skin, organs,
 collision, deformable tissue, gait, or clinical anatomy registration is done.
 The fit and evidence boundary are in [visual progress](Docs/VISUAL_PROGRESS.md).
 
+### Bounded muscle-driven BodyParts3D bone snapshot
+
+<p align="center">
+  <img src="Docs/media/myosim-native-muscle-driven-bones/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-front.png" width="24%" alt="Muscle-driven BodyParts3D bone sensitivity snapshot, front">
+  <img src="Docs/media/myosim-native-muscle-driven-bones/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-oblique.png" width="24%" alt="Muscle-driven BodyParts3D bone sensitivity snapshot, oblique">
+  <img src="Docs/media/myosim-native-muscle-driven-bones/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-side.png" width="24%" alt="Muscle-driven BodyParts3D bone sensitivity snapshot, side">
+  <img src="Docs/media/myosim-native-muscle-driven-bones/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-rear.png" width="24%" alt="Muscle-driven BodyParts3D bone sensitivity snapshot, rear">
+</p>
+
+These Apple M4 Pro frames extend the bone binding with a real complete-muscle
+state input: Core projects all 416 MyoSim spatial-tendon forces at source
+activation/excitation `0.5`, advances one bounded FP64 free-body step, and
+Metal poses the resulting state before native rendering. The 1 ms sensitivity
+capture differs from the matched passive step by `0.0714839058782` maximum
+configuration coordinate and retains all 18 bone meshes, 1,815 sites, and
+1,432 route-centreline segments across four inspected views. It is a
+force-to-pose proof, **not** a controlled movement, contact result, gait,
+deformable muscle/skin render, or physiological co-activation claim. The red
+overlay remains attachment/path evidence rather than rendered muscle bellies.
+See [visual progress](Docs/VISUAL_PROGRESS.md) for exact hashes and limits.
+
 ## Native full-body execution
 
 After a local artifact has been acquired and compiled, the production-facing
@@ -100,6 +121,14 @@ numi human myosim-native-bone-visuals \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
   Docs/media/myosim-native-bodyparts-bones
+
+# Native bounded force-to-pose sensitivity capture (no Python process).  The
+# 1 ms limit is an inspection step, not an uncontrolled rollout duration.
+numi human myosim-native-muscle-bone-visuals \
+  Build/myosim-fullbody \
+  Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
+  Docs/media/myosim-native-muscle-driven-bones \
+  --muscle-step-seconds 0.001
 ```
 
 This loads the `NHRIGID2` and `NHMYO1` payloads directly into Core, validates

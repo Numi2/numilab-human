@@ -2,7 +2,7 @@
   "schema": "numi.human.runtime-contract.v1",
   "runtime": {
     "repository": "MetalRobo",
-    "revision": "818e5871f5d79f5f01b61305a49b14eac7035aae",
+    "revision": "2aab522f92f44644c35bbde1a8ea3fd85356b027",
     "articulated_joint_primitives": [
       "fixed",
       "revolute",
@@ -128,6 +128,29 @@
         "rear"
       ],
       "boundary": "The native renderer binds source-derived BodyParts3D major-bone instances through a provisional rest-frame fit to Metal articulated-body poses. It is visual registration evidence only, not collision/contact admission, skinning, soft-tissue deformation, motion replay, gait, or clinical validation."
+    },
+    "muscle_driven_bodyparts_major_bone_visual_snapshot": {
+      "contract": "cpu_fp64_complete_mujoco_muscle_force_free_body_step_to_metal_articulated_pose_to_provisional_bodyparts3d_major_bone_renderer",
+      "device": "Apple M4 Pro",
+      "muscle_count": 416,
+      "activation": 0.5,
+      "excitation": 0.5,
+      "integration_step_seconds": 0.001,
+      "applied_wrap_count": 90,
+      "maximum_velocity_delta_from_matched_passive": 71.4839058782,
+      "maximum_configuration_delta_from_matched_passive": 0.0714839058782,
+      "bodyparts_major_bone_count": 18,
+      "source_vertex_count": 47649,
+      "source_index_count": 277164,
+      "route_site_count": 1815,
+      "route_centerline_segments": 1432,
+      "views": [
+        "front",
+        "oblique",
+        "side",
+        "rear"
+      ],
+      "boundary": "Core FP64 owns source muscle projection and the bounded free-body state step; Metal owns final pose evaluation and the native renderer consumes that pose. This is one complete-muscle force-to-pose sensitivity snapshot, not a device-resident force rollout, controller, contact result, stable posture, gait, skin or muscle deformation, collision/contact admission, or clinical validation."
     },
     "cpu_state_actuation_smoke": {
       "contract": "complete_mujoco_route_force_scatter_drives_articulated_state",

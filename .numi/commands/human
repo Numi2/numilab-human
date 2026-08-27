@@ -93,6 +93,39 @@ if [ "${1:-}" = "myosim-native-bone-visuals" ]; then
         "$output_directory"
 fi
 
+# This is intentionally a bounded sensitivity capture rather than a simulation
+# loop: the complete source muscle set is projected in Core FP64, compared
+# against the matched passive free-body step, then the resulting one-step q is
+# posed and rendered by the native Metal path.  Python is never started.
+if [ "${1:-}" = "myosim-native-muscle-bone-visuals" ]; then
+    if [ "$#" -ne 4 ] && [ "$#" -ne 6 ]; then
+        printf '%s\n' "usage: numi human myosim-native-muscle-bone-visuals <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <output-directory> [--muscle-step-seconds <1e-6..1e-3>]" >&2
+        exit 2
+    fi
+    if [ "$#" -eq 6 ] && [ "$5" != "--muscle-step-seconds" ]; then
+        printf '%s\n' "usage: numi human myosim-native-muscle-bone-visuals <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <output-directory> [--muscle-step-seconds <1e-6..1e-3>]" >&2
+        exit 2
+    fi
+    artifact_directory=$2
+    bone_payload=$3
+    output_directory=$4
+    muscle_step_seconds=${6:-0.001}
+    runtime_root=${NUMI_LAB_ROOT:-/Users/home/Documents/emergentnumilife/MetalRobo}
+    build_directory=${NUMI_BUILD_DIR:-$runtime_root/build}
+    probe=$build_directory/bin/metalrobo_numilab_human_myosim_visual_probe
+    if [ ! -x "$probe" ]; then
+        printf '%s\n' "native Human visual probe is unavailable: $probe" >&2
+        printf '%s\n' "build target metalrobo_numilab_human_myosim_visual_probe in $runtime_root" >&2
+        exit 2
+    fi
+    exec "$probe" \
+        "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
+        "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
+        "$bone_payload" \
+        "$output_directory" \
+        --muscle-step-seconds "$muscle_step_seconds"
+fi
+
 if [ -n "${PYTHONPATH:-}" ]; then
     export PYTHONPATH="$repository_root/src:$PYTHONPATH"
 else
