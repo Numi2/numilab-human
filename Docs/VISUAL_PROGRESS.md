@@ -211,27 +211,30 @@ continuum, deformable anatomy, or device-only Human rollout is claimed.
 ## Focused right upper-limb actuation — 2026-08-27
 
 <p align="center">
-  <img src="media/myosim-native-upper-limb-inspection-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-41-front.png" width="32%" alt="Right upper-limb source anatomy, front" />
-  <img src="media/myosim-native-upper-limb-inspection-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-41-oblique.png" width="32%" alt="Right upper-limb source anatomy, oblique" />
-  <img src="media/myosim-native-upper-limb-inspection-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-focus-body-41-rear.png" width="32%" alt="Right upper-limb after bounded muscle update, rear" />
+  <img src="media/myosim-native-right-upper-limb-flexion-drive-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-41-front.png" width="24%" alt="Right upper-limb source drive, front" />
+  <img src="media/myosim-native-right-upper-limb-flexion-drive-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-41-oblique.png" width="24%" alt="Right upper-limb source drive, oblique" />
+  <img src="media/myosim-native-right-upper-limb-flexion-drive-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-41-side.png" width="24%" alt="Right upper-limb source drive, side" />
+  <img src="media/myosim-native-right-upper-limb-flexion-drive-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-41-rear.png" width="24%" alt="Right upper-limb source drive, rear" />
 </p>
 
-This native 2048 px inspection focuses on the right torso, clavicle, scapula,
+This native 2048 px inspection focuses on the torso, right clavicle, scapula,
 humerus, ulna, and radius—not a separate animated arm. It shows 42 exact
-BodyParts3D bone meshes and 21 selected source surfaces: pectoralis major,
-deltoid, rotator cuff, teres, coracobrachialis, triceps, anconeus, supinator,
-biceps, brachialis, and brachioradialis. The oblique view exposes the
+BodyParts3D bone meshes and 20 selected source surfaces: pectoralis major,
+deltoid, rotator cuff, teres, coracobrachialis, triceps, anconeus, biceps,
+brachialis, and brachioradialis. The oblique view exposes the
 shoulder/scapular relationship that a full-body frame hides.
 
-The driven capture takes eight 100 microsecond Core FP64 steps. Every step
-evaluates all 416 authored MyoSim muscle paths and then sends the resulting
-pose to the Apple M4 Metal operator and renderer. Its maximum active/passive
-configuration difference is 0.00106265418885 rad/m; it applied 720 wrapped
-path contacts across the sequence. The
-[capture transcript](media/myosim-native-upper-limb-inspection-2048/capture.transcript.txt)
+The drive does not simply activate the whole model. It applies 0.2 excitation
+to source indices `210`, `211`, `218`, `219`, `220`, `224`, `230`, `231`,
+`232`, and `233`: pectoralis major, anterior/acromial deltoid,
+coracobrachialis, both biceps heads, brachialis, and brachioradialis. All 416
+authored paths remain evaluated on the Apple M4 in every step. The 64 × 100 µs
+run recorded 128 Metal force transactions, 26,624 active records, 5,765 source
+wrap applications, and an active/passive configuration difference of
+`0.0446275454086`. The [capture transcript](media/myosim-native-right-upper-limb-flexion-drive-2048/capture.transcript.txt)
 pins the source package and all output hashes.
 
-This is source geometry through a bounded all-muscle free-dynamics update. It
+This is source geometry through a bounded selective-muscle free-dynamics update. It
 does not establish upper-limb contact, a deformable tendon or skin model,
 surface-force transfer, stable movement, or clinical registration.
 

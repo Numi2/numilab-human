@@ -1,6 +1,6 @@
 {
   "schema": "numi.human.bodyparts3d-myosim-surface-map.v1",
-  "description": "Auditable BodyParts3D source-surface to authored MyoSim muscle-route correspondence. A mirrored entry resolves the BodyParts3D FJ...M mesh and the left MyoSim actuator names. Entries with multiple actuators require identical source-route endpoint bodies. The calcaneal tendon has an explicit anatomically named tibia-to-calcaneus pair because its contributing authored routes do not share a single proximal body.",
+  "description": "Auditable BodyParts3D source-surface to authored MyoSim muscle-route correspondence. A mirrored entry resolves the BodyParts3D FJ...M mesh and the left MyoSim actuator names. Entries with multiple actuators require identical source-route endpoint bodies unless an explicit shared-tendon endpoint pair is supplied. The calcaneal tendon supplies its named distal calcaneus anchor this way; the native NHTISS3 importer preserves every contributing source-route body, including both femoral gastrocnemius origins and the tibial soleus origin.",
   "entries": [
     {"member_id": "FJ1394", "source_name": "lateral head of right gastrocnemius", "myosim_muscles": ["gaslat_r"], "mirror": true},
     {"member_id": "FJ1397", "source_name": "medial head of right gastrocnemius", "myosim_muscles": ["gasmed_r"], "mirror": true},

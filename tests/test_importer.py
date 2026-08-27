@@ -582,6 +582,24 @@ class ImporterTests(unittest.TestCase):
             "[--dimension <512..2048; multiple-of-64>]\n",
         )
 
+    def test_numi_workspace_right_upper_limb_flexion_drive_rejects_missing_paths_before_python(self) -> None:
+        command = ROOT / ".numi/commands/human"
+        result = run(
+            [command, "myosim-native-right-upper-limb-flexion-drive"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(result.stdout, "")
+        self.assertEqual(
+            result.stderr,
+            "usage: numi human myosim-native-right-upper-limb-flexion-drive "
+            "<artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> "
+            "<bodyparts3d-myosim-soft-tissue.nhtissue> <output-directory> "
+            "[--dimension <512..2048; multiple-of-64>]\n",
+        )
+
     def test_opensim_parser_retains_mechanical_fields(self) -> None:
         source = """<?xml version=\"1.0\"?>
 <OpenSimDocument Version=\"40000\"><Model name=\"fixture\">

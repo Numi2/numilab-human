@@ -103,22 +103,27 @@ which the native shell payload is made. The runtime uses four proximity-derived
 registered bone-envelope influences per vertex; it is not a deformable-shell
 mechanics result.
 
-### Upper-limb muscle-driven inspection
+### Selective upper-limb source-actuator drive
 
 <p align="center">
-  <img src="Docs/media/myosim-native-upper-limb-inspection-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-41-front.png" width="32%" alt="Right upper-limb source anatomy, front" />
-  <img src="Docs/media/myosim-native-upper-limb-inspection-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-41-oblique.png" width="32%" alt="Right upper-limb source anatomy, oblique" />
-  <img src="Docs/media/myosim-native-upper-limb-inspection-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-focus-body-41-rear.png" width="32%" alt="Right upper-limb after bounded muscle-driven update, rear" />
+  <img src="Docs/media/myosim-native-right-upper-limb-flexion-drive-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-41-front.png" width="24%" alt="Right upper-limb source drive, front" />
+  <img src="Docs/media/myosim-native-right-upper-limb-flexion-drive-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-41-oblique.png" width="24%" alt="Right upper-limb source drive, oblique" />
+  <img src="Docs/media/myosim-native-right-upper-limb-flexion-drive-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-41-side.png" width="24%" alt="Right upper-limb source drive, side" />
+  <img src="Docs/media/myosim-native-right-upper-limb-flexion-drive-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-41-rear.png" width="24%" alt="Right upper-limb source drive, rear" />
 </p>
 
-The same native path now isolates the right torso–scapula–humerus–forearm
-chain: 42 source bone meshes on six articulated bodies and 21 exact
-BodyParts3D pectoral, deltoid, rotator-cuff, arm, and forearm surfaces. The
-third frame follows eight 100 microsecond updates, each evaluated over all 416
-MyoSim muscle paths, and differs from passive dynamics by
-0.00106265418885 rad/m. It is an Apple-M4 pose/render and Core-FP64 bounded
-free-dynamics inspection, not contact, deformable soft tissue, tendon
-continuum, stable movement, or clinical-registration evidence.
+This torso–scapula–humerus–forearm view uses 42 source bone meshes on
+six articulated bodies and 20 exact BodyParts3D muscle surfaces. It excites
+only ten named MyoSim sources: three pectoralis-major slips, anterior and
+acromial deltoid, coracobrachialis, both biceps heads, brachialis, and
+brachioradialis. The remaining 406 are set to zero excitation, but Metal still
+evaluates all 416 authored routes at every one of the 64 × 100 µs updates.
+The active/passive configuration difference is `0.0446275454086`; the
+[capture record](Docs/media/myosim-native-right-upper-limb-flexion-drive-2048/capture.transcript.txt)
+contains exact muscle indices, device counters, and frame hashes. This is a
+bounded Apple-M4 muscle-force/free-dynamics inspection—not contact, a
+controller, deformable soft tissue, tendon continuum, stable movement, or
+clinical-registration evidence.
 
 ### Reviewed full-skeleton native inspection
 
@@ -311,16 +316,15 @@ numi human myosim-native-calcaneal-tendon-detail \
   Docs/media/myosim-native-calcaneal-tendon-detail-2048 \
   --dimension 2048
 
-# Focus the right shoulder-to-forearm chain. The filter chooses exact source
-# surfaces, while the bounded update still evaluates all 416 MyoSim muscles.
-# This final command is entirely native C++/Metal; no Python runtime starts.
-numi human myosim-native-upper-limb-inspection \
+# Run the named right shoulder/elbow flexion set. Its ten source actuators are
+# explicit; every one of the 416 MyoSim routes is still evaluated natively.
+# This command starts no Python runtime.
+numi human myosim-native-right-upper-limb-flexion-drive \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
   Build/bodyparts3d-myosim-fullbody-muscle-surfaces/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue \
-  Docs/media/myosim-native-upper-limb-inspection-2048 \
-  --muscle-step-seconds 0.0001 --muscle-step-count 8 \
-  --muscle-activation 0.05 --dimension 2048
+  Docs/media/myosim-native-right-upper-limb-flexion-drive-2048 \
+  --dimension 2048
 
 # Export a separate exact BodyParts3D rest-frame reference for the right lower
 # leg. It contains source bone, muscle, and calcaneal-tendon surfaces and is

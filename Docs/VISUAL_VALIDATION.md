@@ -1,5 +1,22 @@
 # Visual validation
 
+## Selective right upper-limb source-actuator check — 2026-08-27
+
+The 2048 px four-angle [upper-limb source-drive review](VISUAL_PROGRESS.md#focused-right-upper-limb-actuation--2026-08-27)
+uses 42 BodyParts3D source bone meshes across the torso–scapula–humerus–forearm
+chain and 20 exact source muscle surfaces. Rather than applying uniform
+activation, it excites the ten pinned pectoralis/deltoid/coracobrachialis/elbow
+flexor paths at `0.2`; the other 406 source actuators receive zero excitation.
+All 416 source paths are still evaluated on the Apple M4 at each of 64
+100 µs steps. The run published four non-empty bone/muscle views and a maximum
+active/passive configuration difference of `0.0446275454086`.
+
+This validates a selective source-actuator force path through the native
+MyoSim/Core/Metal render sequence. It does not validate upper-limb contact,
+an anatomical motion controller, stable movement, deformable tissue, or
+clinical registration. Exact indices, counters, and image hashes are in the
+[capture record](media/myosim-native-right-upper-limb-flexion-drive-2048/capture.transcript.txt).
+
 ## Shared three-body Achilles check — 2026-08-27
 
 The current 2048 px four-angle [Achilles review](VISUAL_PROGRESS.md#shared-three-body-achilles-review--2026-08-27)
