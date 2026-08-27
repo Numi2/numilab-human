@@ -2029,6 +2029,12 @@ _MYOSIM_MUSCLE_REFERENCE_ABI = 1
 # not BodyParts3D collision proxies.
 _MYOSIM_SUPPORT_CONTACT_MAGIC = b"NHCNT1\0\0"
 _MYOSIM_SUPPORT_CONTACT_ABI = 1
+# Canonical Numi Human endpoint program.  The compact eight-byte magic is the
+# binary spelling of the public ``NHTENDON1`` payload name.
+_NUMI_HUMAN_TENDON_MAGIC = b"NHTEND1\0"
+_NUMI_HUMAN_TENDON_ABI = 1
+_NUMI_HUMAN_TENDON_POINT = 0
+_NUMI_HUMAN_TENDON_TRIANGLE = 1
 _MR_MOTION_STATIC = 0
 _MR_ROOT_FLOATING = 1
 _MR_JOINT_PRISMATIC = 1
@@ -4642,6 +4648,412 @@ def _myosim_surface_route_context(artifact: Path, source_sha: str) -> tuple[
             "secondary_body": body_by_index[secondary_index]["name"],
         }
     return bodies, routes_by_muscle, manifest
+
+
+def numi_human_tendon_endpoint_payload(
+    myosim_artifact: Path, output: Path, surface_receipt_path: Path | None = None,
+    allow_unadmitted_surface: bool = False,
+) -> dict[str, Any]:
+    """Compile one authoritative origin/insertion binding for every route.
+
+    Point bindings preserve the authored MyoSim site exactly.  An optional,
+    explicit surface receipt may replace an endpoint with a named bone
+    triangle and barycentric point.  The native runtime consumes the resolved
+    point as the route site itself, so the existing J^T projection remains the
+    only force scatter.
+    """
+    artifact = myosim_artifact.resolve()
+    manifest_path = artifact / "myosim-fullbody-reference.manifest.json"
+    manifest = read_json(manifest_path)
+    if manifest.get("schema") != "numi.human.myosim-fullbody-reference.v1":
+        raise ImportError("Numi Human tendon payload requires the full-body MyoSim reference")
+    source = manifest.get("source")
+    source_sha = source.get("archive_sha256") if isinstance(source, dict) else None
+    if not isinstance(source_sha, str) or not re.fullmatch(r"[0-9a-f]{64}", source_sha):
+        raise ImportError("Numi Human tendon payload has no source archive identity")
+    payloads = manifest.get("payloads")
+    muscle_descriptor = payloads.get("muscles") if isinstance(payloads, dict) else None
+    rigid_descriptor = payloads.get("rigid") if isinstance(payloads, dict) else None
+    if not isinstance(muscle_descriptor, dict) or not isinstance(rigid_descriptor, dict):
+        raise ImportError("Numi Human tendon payload requires rigid and muscle descriptors")
+    muscle_file, muscle_sha = muscle_descriptor.get("file"), muscle_descriptor.get("sha256")
+    if not isinstance(muscle_file, str) or not isinstance(muscle_sha, str) or not re.fullmatch(r"[0-9a-f]{64}", muscle_sha):
+        raise ImportError("Numi Human tendon muscle descriptor is invalid")
+    muscle_path = artifact / muscle_file
+    if not muscle_path.is_file() or sha256(muscle_path) != muscle_sha:
+        raise ImportError("Numi Human tendon muscle payload is missing or has drifted")
+    raw = muscle_path.read_bytes()
+    header_format = "<8s9I32s"
+    header_size = struct.calcsize(header_format)
+    if len(raw) < header_size:
+        raise ImportError("Numi Human tendon muscle payload is truncated")
+    (
+        magic, abi, body_count, muscle_count, site_count, wrap_count,
+        route_count, tendon_count, reserved0, reserved1, embedded_source_sha,
+    ) = struct.unpack_from(header_format, raw)
+    expected_size = header_size + 16 * site_count + 64 * wrap_count + 16 * route_count + 164 * muscle_count
+    if (
+        magic != _MYOSIM_MUSCLE_REFERENCE_MAGIC or abi != _MYOSIM_MUSCLE_REFERENCE_ABI
+        or body_count == 0 or muscle_count == 0 or site_count == 0 or tendon_count == 0
+        or reserved0 != 0 or reserved1 != 0 or embedded_source_sha.hex() != source_sha
+        or len(raw) != expected_size
+    ):
+        raise ImportError("Numi Human tendon muscle payload ABI disagrees with its manifest")
+    offset = header_size
+    sites = [struct.unpack_from("<I3f", raw, offset + 16 * index) for index in range(site_count)]
+    offset += 16 * site_count + 64 * wrap_count
+    routes = [struct.unpack_from("<4I", raw, offset + 16 * index) for index in range(route_count)]
+    offset += 16 * route_count
+    muscles = [struct.unpack_from("<4I37f", raw, offset + 164 * index) for index in range(muscle_count)]
+    muscle_metadata = manifest.get("muscles")
+    if not isinstance(muscle_metadata, list) or len(muscle_metadata) != muscle_count:
+        raise ImportError("Numi Human tendon muscle identity table is incomplete")
+
+    receipt_records: dict[tuple[str, int], dict[str, Any]] = {}
+    receipt_descriptor: dict[str, Any] | None = None
+    if surface_receipt_path is not None:
+        receipt_path = surface_receipt_path.resolve()
+        receipt = read_json(receipt_path)
+        if receipt.get("schema") != "numi.human.tendon-surface-registration.v1":
+            raise ImportError("Numi Human tendon surface receipt has an unsupported schema")
+        admission = receipt.get("admission")
+        mechanically_admitted = isinstance(admission, dict) and admission.get("mechanical") is True
+        if not mechanically_admitted and not allow_unadmitted_surface:
+            raise ImportError("Numi Human tendon surface receipt is a candidate, not a mechanically admitted registration")
+        records = receipt.get("records")
+        if not isinstance(records, list):
+            raise ImportError("Numi Human tendon surface receipt has no records")
+        for record in records:
+            if not isinstance(record, dict):
+                raise ImportError("Numi Human tendon surface receipt has a malformed record")
+            name, endpoint = record.get("muscle"), record.get("endpoint")
+            ordinal = 0 if endpoint == "origin" else 1 if endpoint == "insertion" else None
+            key = (name, ordinal) if isinstance(name, str) and ordinal is not None else None
+            if key is None or key in receipt_records:
+                raise ImportError("Numi Human tendon surface receipt has a duplicate or invalid endpoint")
+            receipt_records[key] = record
+        receipt_descriptor = {"file": receipt_path.name, "sha256": sha256(receipt_path),
+                              "mechanically_admitted": mechanically_admitted}
+
+    endpoint_records: list[bytes] = []
+    endpoint_manifest: list[dict[str, Any]] = []
+    triangle_records: list[bytes] = []
+    consumed_receipts: set[tuple[str, int]] = set()
+    for muscle_index, (record, metadata) in enumerate(zip(muscles, muscle_metadata, strict=True)):
+        route_offset, count = record[1], record[2]
+        name = metadata.get("name") if isinstance(metadata, dict) else None
+        if not isinstance(name, str) or metadata.get("source_actuator_index") != muscle_index or count < 2 or route_offset + count > route_count:
+            raise ImportError("Numi Human tendon route identity is invalid")
+        endpoint_nodes = ((0, route_offset), (1, route_offset + count - 1))
+        for endpoint_ordinal, route_node_index in endpoint_nodes:
+            route = routes[route_node_index]
+            if route[0] != _MYOSIM_ROUTE_SITE or route[1] >= site_count:
+                raise ImportError(f"Numi Human tendon route {name} has no source-site endpoint")
+            site_index = route[1]
+            source_site = sites[site_index]
+            body_index = source_site[0]
+            if body_index >= body_count or not all(math.isfinite(value) for value in source_site[1:]):
+                raise ImportError(f"Numi Human tendon route {name} has an invalid source site")
+            mode = _NUMI_HUMAN_TENDON_POINT
+            triangle_index = 0xFFFFFFFF
+            bone_stable_id = 0
+            local_point = [float(value) for value in source_site[1:]]
+            barycentric = [0.0, 0.0, 0.0]
+            migration = 0.0
+            surface_identity: dict[str, Any] | None = None
+            receipt_key = (name, endpoint_ordinal)
+            surface = receipt_records.get(receipt_key)
+            if surface is not None:
+                consumed_receipts.add(receipt_key)
+                if surface.get("body_index") != body_index:
+                    raise ImportError(f"Numi Human tendon surface {name} changes the endpoint body")
+                vertices = surface.get("triangle_local_m")
+                barycentric_source = surface.get("barycentric")
+                bone_member_id = surface.get("bone_member_id")
+                source_triangle_index = surface.get("source_triangle_index")
+                bone_stable_id = surface.get("bone_stable_id")
+                if (
+                    not isinstance(vertices, list) or len(vertices) != 3
+                    or not isinstance(barycentric_source, list) or len(barycentric_source) != 3
+                    or not isinstance(bone_member_id, str) or not re.fullmatch(r"FJ[0-9]+M?", bone_member_id)
+                    or not isinstance(source_triangle_index, int) or source_triangle_index < 0
+                    or not isinstance(bone_stable_id, int) or not 0 < bone_stable_id <= 0xFFFFFFFF
+                ):
+                    raise ImportError(f"Numi Human tendon surface {name} has invalid triangle identity")
+                parsed_vertices = [_myosim_vector(vertex, f"Numi Human tendon surface {name} triangle") for vertex in vertices]
+                barycentric = [_finite_scalar(value, f"Numi Human tendon surface {name} barycentric") for value in barycentric_source]
+                if any(value < 0.0 or value > 1.0 for value in barycentric) or abs(sum(barycentric) - 1.0) > 1.0e-6:
+                    raise ImportError(f"Numi Human tendon surface {name} has invalid barycentric weights")
+                local_point = [
+                    sum(barycentric[vertex] * parsed_vertices[vertex][axis] for vertex in range(3))
+                    for axis in range(3)
+                ]
+                migration = math.sqrt(sum((local_point[axis] - source_site[axis + 1]) ** 2 for axis in range(3)))
+                mode = _NUMI_HUMAN_TENDON_TRIANGLE
+                triangle_index = len(triangle_records)
+                triangle_records.append(struct.pack(
+                    "<4I12f", body_index, bone_stable_id, source_triangle_index, 0,
+                    *[component for vertex in parsed_vertices for component in (*vertex, 0.0)],
+                ))
+                surface_identity = {
+                    "bone_member_id": bone_member_id,
+                    "bone_stable_id": bone_stable_id,
+                    "source_triangle_index": source_triangle_index,
+                    "triangle_index": triangle_index,
+                    "barycentric": barycentric,
+                }
+            endpoint_records.append(struct.pack(
+                "<8I8f", muscle_index, endpoint_ordinal, route_node_index, site_index,
+                body_index, mode, triangle_index, bone_stable_id,
+                *local_point, *barycentric, migration, 0.0,
+            ))
+            endpoint_manifest.append({
+                "muscle_index": muscle_index, "muscle": name,
+                "endpoint": "origin" if endpoint_ordinal == 0 else "insertion",
+                "route_node_index": route_node_index, "source_site_index": site_index,
+                "body_index": body_index,
+                "attachment_mode": "source_site_point" if mode == _NUMI_HUMAN_TENDON_POINT else "registered_bone_triangle",
+                "resolved_local_point_m": local_point,
+                "endpoint_migration_m": migration,
+                "surface": surface_identity,
+            })
+    unused_receipts = set(receipt_records) - consumed_receipts
+    if unused_receipts:
+        raise ImportError("Numi Human tendon surface receipt names unknown route endpoints")
+    if len(endpoint_records) != 2 * muscle_count:
+        raise ImportError("Numi Human tendon endpoint coverage is incomplete")
+    unadmitted_surface_candidate = (
+        receipt_descriptor is not None
+        and receipt_descriptor["mechanically_admitted"] is False
+    )
+
+    header = struct.pack(
+        "<8s8I32s32s", _NUMI_HUMAN_TENDON_MAGIC, _NUMI_HUMAN_TENDON_ABI,
+        body_count, muscle_count, site_count, len(endpoint_records), len(triangle_records), 0, 0,
+        bytes.fromhex(source_sha), bytes.fromhex(muscle_sha),
+    )
+    payload = b"".join([header, *endpoint_records, *triangle_records])
+    if len(payload) != 104 + 64 * len(endpoint_records) + 64 * len(triangle_records):
+        raise ImportError("Numi Human tendon payload ABI size mismatch")
+    output = output.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    tendon_path = output / "numi-human-tendon-endpoints.nhtendon"
+    tendon_path.write_bytes(payload)
+    tendon_manifest = {
+        "schema": "numi.human.tendon-endpoint-payload.v1",
+        "payload": {"file": tendon_path.name, "sha256": sha256(tendon_path), "bytes": len(payload),
+                    "magic": "NHTENDON1", "payload_abi": _NUMI_HUMAN_TENDON_ABI},
+        "source": {"myosim_manifest": {"file": manifest_path.name, "sha256": sha256(manifest_path)},
+                   "myosim_archive_sha256": source_sha, "myosim_muscle_payload_sha256": muscle_sha,
+                   "surface_receipt": receipt_descriptor},
+        "coverage": {"muscle_count": muscle_count, "mechanical_endpoint_count": len(endpoint_records),
+                     "expected_endpoint_count": 2 * muscle_count,
+                     "source_site_point_count": sum(1 for item in endpoint_manifest if item["attachment_mode"] == "source_site_point"),
+                     "registered_bone_triangle_count": len(triangle_records)},
+        "endpoints": endpoint_manifest,
+        "runtime_contract": "resolve each route endpoint once before the existing route-length Jacobian projection; never add a second force scatter",
+        "status": (
+            "candidate_route_endpoint_program_not_mechanically_admitted"
+            if unadmitted_surface_candidate
+            else "complete_route_endpoint_mechanical_coverage"
+        ),
+        "evidence_boundary": (
+            "All routes retain an explicit bone-owned mechanical endpoint. This candidate includes an explicitly unadmitted surface registration and must not replace the production point program."
+            if unadmitted_surface_candidate
+            else "All routes retain an explicit bone-owned mechanical endpoint. Triangle records represent admitted surface traction points; this payload is not a deformable tendon material or clinical registration."
+        ),
+    }
+    tendon_manifest_path = output / "numi-human-tendon-endpoints.manifest.json"
+    write_json(tendon_manifest_path, tendon_manifest)
+    canonical_manifest = {
+        "schema": "numi.human.pack.v1",
+        "owner": "Numi Lab Human",
+        "payloads": {
+            "rigid": rigid_descriptor,
+            "muscles": muscle_descriptor,
+            "support_contact": payloads.get("support_contact"),
+            "tendon_endpoints": tendon_manifest["payload"],
+        },
+        "coverage": tendon_manifest["coverage"],
+        "status": tendon_manifest["status"],
+        "source_authorities": {
+            "geometry": "BodyParts3D 4.0",
+            "active_full_body_seed": "compiled MyoSim full-body source program",
+            "lower_body_comparison": "OpenSim RajagopalLaiUhlrich2023",
+            "upper_extremity_comparison": "OpenSim Upper Extremity Dynamic Model",
+        },
+        "runtime_owner": "Numi Lab C++/Metal; offline import is not a runtime force path",
+    }
+    write_json(output / "numi-human-pack.manifest.json", canonical_manifest)
+    return tendon_manifest
+
+
+def numi_human_achilles_surface_receipt(
+    sources: Path, registration_path: Path, myosim_artifact: Path, output: Path,
+) -> dict[str, Any]:
+    """Register the six bilateral triceps-surae insertions to calcaneus faces.
+
+    This is an explicit endpoint migration receipt, not an automatic admission
+    rule. It preserves the exact source triangle and barycentric point so the
+    native probe can measure the resulting path/force change.
+    """
+    registration_path = registration_path.resolve()
+    registration = read_json(registration_path)
+    if registration.get("schema") != "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2":
+        raise ImportError("Achilles surface receipt requires the attachment-refined v2 bone registration")
+    anchors = registration.get("anchors")
+    if not isinstance(anchors, list) or len(anchors) != len(_BODYPARTS_MYOSIM_BONE_ANCHORS):
+        raise ImportError("Achilles surface receipt requires the complete BodyParts3D bone registration")
+    artifact = myosim_artifact.resolve()
+    manifest = read_json(artifact / "myosim-fullbody-reference.manifest.json")
+    source = manifest.get("source")
+    source_sha = source.get("archive_sha256") if isinstance(source, dict) else None
+    if not isinstance(source_sha, str):
+        raise ImportError("Achilles surface receipt has no MyoSim source identity")
+    payload_descriptor = manifest.get("payloads", {}).get("muscles")
+    if not isinstance(payload_descriptor, dict):
+        raise ImportError("Achilles surface receipt has no MyoSim muscle payload")
+    payload_path = artifact / str(payload_descriptor.get("file"))
+    expected_sha = payload_descriptor.get("sha256")
+    if not payload_path.is_file() or not isinstance(expected_sha, str) or sha256(payload_path) != expected_sha:
+        raise ImportError("Achilles surface receipt muscle payload is missing or has drifted")
+    payload = payload_path.read_bytes()
+    header_size = struct.calcsize("<8s9I32s")
+    magic, abi, body_count, muscle_count, site_count, wrap_count, route_count, _, _, _, embedded_sha = struct.unpack_from(
+        "<8s9I32s", payload
+    )
+    if magic != _MYOSIM_MUSCLE_REFERENCE_MAGIC or abi != _MYOSIM_MUSCLE_REFERENCE_ABI or embedded_sha.hex() != source_sha:
+        raise ImportError("Achilles surface receipt muscle payload ABI is invalid")
+    offset = header_size
+    sites = [struct.unpack_from("<I3f", payload, offset + 16 * index) for index in range(site_count)]
+    offset += 16 * site_count + 64 * wrap_count
+    routes = [struct.unpack_from("<4I", payload, offset + 16 * index) for index in range(route_count)]
+    offset += 16 * route_count
+    muscle_records = [struct.unpack_from("<4I37f", payload, offset + 164 * index) for index in range(muscle_count)]
+    metadata = manifest.get("muscles")
+    if not isinstance(metadata, list) or len(metadata) != muscle_count:
+        raise ImportError("Achilles surface receipt has no complete muscle identity table")
+    muscle_index = {
+        entry.get("name"): index for index, entry in enumerate(metadata) if isinstance(entry, dict)
+    }
+
+    def dot(left: list[float], right: list[float]) -> float:
+        return sum(left[axis] * right[axis] for axis in range(3))
+
+    def subtract(left: list[float], right: list[float]) -> list[float]:
+        return [left[axis] - right[axis] for axis in range(3)]
+
+    def closest_barycentric(point: list[float], triangle: list[list[float]]) -> tuple[list[float], list[float]]:
+        a, b, c = triangle
+        ab, ac, ap = subtract(b, a), subtract(c, a), subtract(point, a)
+        d1, d2 = dot(ab, ap), dot(ac, ap)
+        if d1 <= 0.0 and d2 <= 0.0:
+            return list(a), [1.0, 0.0, 0.0]
+        bp = subtract(point, b)
+        d3, d4 = dot(ab, bp), dot(ac, bp)
+        if d3 >= 0.0 and d4 <= d3:
+            return list(b), [0.0, 1.0, 0.0]
+        vc = d1 * d4 - d3 * d2
+        if vc <= 0.0 and d1 >= 0.0 and d3 <= 0.0:
+            v = d1 / (d1 - d3)
+            return [a[axis] + v * ab[axis] for axis in range(3)], [1.0 - v, v, 0.0]
+        cp = subtract(point, c)
+        d5, d6 = dot(ab, cp), dot(ac, cp)
+        if d6 >= 0.0 and d5 <= d6:
+            return list(c), [0.0, 0.0, 1.0]
+        vb = d5 * d2 - d1 * d6
+        if vb <= 0.0 and d2 >= 0.0 and d6 <= 0.0:
+            w = d2 / (d2 - d6)
+            return [a[axis] + w * ac[axis] for axis in range(3)], [1.0 - w, 0.0, w]
+        va = d3 * d6 - d5 * d4
+        if va <= 0.0 and d4 - d3 >= 0.0 and d5 - d6 >= 0.0:
+            w = (d4 - d3) / ((d4 - d3) + (d5 - d6))
+            edge = subtract(c, b)
+            return [b[axis] + w * edge[axis] for axis in range(3)], [0.0, 1.0 - w, w]
+        denominator = va + vb + vc
+        if abs(denominator) <= 1.0e-18:
+            raise ImportError("Achilles surface receipt encountered a degenerate calcaneus triangle")
+        inverse = 1.0 / denominator
+        v, w = vb * inverse, vc * inverse
+        barycentric = [1.0 - v - w, v, w]
+        return [sum(barycentric[index] * triangle[index][axis] for index in range(3)) for axis in range(3)], barycentric
+
+    records: list[dict[str, Any]] = []
+    for side, body_name, names in (
+        ("right", "calcn_r", ("gaslat_r", "gasmed_r", "soleus_r")),
+        ("left", "calcn_l", ("gaslat_l", "gasmed_l", "soleus_l")),
+    ):
+        stable_index = next(
+            index for index, specification in enumerate(_BODYPARTS_MYOSIM_BONE_ANCHORS, start=1)
+            if specification["myosim_body"] == body_name
+        )
+        anchor = anchors[stable_index - 1]
+        source_record, target, registration_record = anchor.get("source"), anchor.get("target"), anchor.get("registration")
+        if not all(isinstance(value, dict) for value in (source_record, target, registration_record)):
+            raise ImportError(f"Achilles surface receipt has no {side} calcaneus anchor")
+        body_index = target.get("core_body_index")
+        matrix = registration_record.get("source_obj_mm_to_core_inertial_body_m")
+        if not isinstance(body_index, int) or not isinstance(matrix, list) or len(matrix) != 4:
+            raise ImportError(f"Achilles surface receipt has an invalid {side} calcaneus transform")
+        _, member, obj = _bodyparts_obj_member(
+            sources.resolve(), source_record["hierarchy"], source_record["member_id"]
+        )
+        vertices_mm, triangles = _bodyparts_obj_triangles(obj, member)
+        vertices_local = [
+            [sum(matrix[row][column] * vertex[column] for column in range(3)) + matrix[row][3] for row in range(3)]
+            for vertex in vertices_mm
+        ]
+        for name in names:
+            index = muscle_index.get(name)
+            if not isinstance(index, int):
+                raise ImportError(f"Achilles surface receipt has no MyoSim muscle {name}")
+            route_offset, route_nodes = muscle_records[index][1], muscle_records[index][2]
+            terminal = routes[route_offset + route_nodes - 1]
+            if terminal[0] != _MYOSIM_ROUTE_SITE or terminal[1] >= len(sites):
+                raise ImportError(f"Achilles surface receipt muscle {name} has no terminal site")
+            site = sites[terminal[1]]
+            if site[0] != body_index:
+                raise ImportError(f"Achilles surface receipt muscle {name} terminates on the wrong body")
+            point = [float(value) for value in site[1:]]
+            nearest: tuple[float, int, list[list[float]], list[float], list[float]] | None = None
+            for triangle_index, triangle_indices in enumerate(triangles):
+                triangle = [vertices_local[vertex] for vertex in triangle_indices]
+                candidate, barycentric = closest_barycentric(point, triangle)
+                squared = sum((candidate[axis] - point[axis]) ** 2 for axis in range(3))
+                if nearest is None or squared < nearest[0]:
+                    nearest = (squared, triangle_index, triangle, candidate, barycentric)
+            if nearest is None:
+                raise ImportError(f"Achilles surface receipt has no calcaneus triangle for {name}")
+            squared, triangle_index, triangle, candidate, barycentric = nearest
+            records.append({
+                "muscle": name, "endpoint": "insertion", "body_index": body_index,
+                "body": body_name, "bone_member_id": source_record["member_id"],
+                "bone_stable_id": stable_index, "source_triangle_index": triangle_index,
+                "triangle_local_m": triangle, "barycentric": barycentric,
+                "source_site_index": terminal[1], "source_local_point_m": point,
+                "resolved_local_point_m": candidate, "endpoint_migration_m": math.sqrt(squared),
+            })
+    receipt = {
+        "schema": "numi.human.tendon-surface-registration.v1",
+        "scope": "bilateral Achilles insertions for gaslat, gasmed, and soleus",
+        "source": {"registration": {"file": registration_path.name, "sha256": sha256(registration_path)},
+                   "myosim_archive_sha256": source_sha, "myosim_muscle_payload_sha256": expected_sha},
+        "records": records,
+        "summary": {"record_count": len(records),
+                    "maximum_endpoint_migration_m": max(record["endpoint_migration_m"] for record in records),
+                    "rms_endpoint_migration_m": math.sqrt(sum(record["endpoint_migration_m"] ** 2 for record in records) / len(records))},
+        "status": "explicit_inferred_surface_registration_for_native_force_validation",
+        "admission": {
+            "mechanical": False,
+            "reason": (
+                f"maximum {max(record['endpoint_migration_m'] for record in records) * 1000.0:.3f} mm "
+                "route-site migration requires native path/force impact review; retain source point mechanics"
+            ),
+        },
+        "evidence_boundary": "The receipt makes each route migration explicit and auditable. It is a simulation attachment registration, not medical or clinical validation.",
+    }
+    write_json(output.resolve(), receipt)
+    return receipt
 
 
 def bodyparts_myosim_fullbody_soft_tissue_visual_payload(

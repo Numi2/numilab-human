@@ -45,6 +45,8 @@ from .model import (
     rajagopal_rigid_skeleton_ir,
     rajagopal_walking_contract,
     myosim_fullbody_reference_artifacts,
+    numi_human_tendon_endpoint_payload,
+    numi_human_achilles_surface_receipt,
     mortensen_neck_source_ir,
     read_json,
     report_for,
@@ -701,6 +703,28 @@ def myosim_bodyparts_registration(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def numi_human_tendon_payload(arguments: argparse.Namespace) -> int:
+    manifest = numi_human_tendon_endpoint_payload(
+        arguments.artifact.resolve(), arguments.output.resolve(),
+        arguments.surface_receipt.resolve() if arguments.surface_receipt is not None else None,
+        arguments.allow_unadmitted_surface,
+    )
+    print(f"wrote {arguments.output.resolve() / manifest['payload']['file']}")
+    print(f"wrote {arguments.output.resolve() / 'numi-human-tendon-endpoints.manifest.json'}")
+    print(f"wrote {arguments.output.resolve() / 'numi-human-pack.manifest.json'}")
+    return 0
+
+
+def numi_human_achilles_receipt(arguments: argparse.Namespace) -> int:
+    receipt = numi_human_achilles_surface_receipt(
+        arguments.sources.resolve(), arguments.registration.resolve(),
+        arguments.artifact.resolve(), arguments.output.resolve(),
+    )
+    print(f"wrote {arguments.output.resolve()}")
+    print(f"registered {receipt['summary']['record_count']} bilateral Achilles insertions")
+    return 0
+
+
 def myosim_bodyparts_attachment_registration(arguments: argparse.Namespace) -> int:
     sources = arguments.sources.resolve()
     anatomy = parse_bodyparts3d(sources, REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
@@ -849,6 +873,33 @@ def parser() -> argparse.ArgumentParser:
     )
     myosim_registration_parser.add_argument("--output", type=Path, required=True)
     myosim_registration_parser.set_defaults(handler=myosim_bodyparts_registration)
+    tendon_payload_parser = commands.add_parser(
+        "numi-human-tendon-payload",
+        help="compile complete Numi-owned route endpoint mechanics and optional admitted bone-triangle bindings",
+    )
+    tendon_payload_parser.add_argument(
+        "--artifact", type=Path, required=True,
+        help="compiled MyoSim full-body artifact directory from myosim-build",
+    )
+    tendon_payload_parser.add_argument("--output", type=Path, required=True)
+    tendon_payload_parser.add_argument(
+        "--surface-receipt", type=Path,
+        help="optional explicit numi.human.tendon-surface-registration.v1 receipt",
+    )
+    tendon_payload_parser.add_argument(
+        "--allow-unadmitted-surface", action="store_true",
+        help="compile a rejected surface candidate for native impact measurement; never use for production",
+    )
+    tendon_payload_parser.set_defaults(handler=numi_human_tendon_payload)
+    achilles_receipt_parser = commands.add_parser(
+        "numi-human-achilles-surface-receipt",
+        help="register six bilateral Achilles route insertions to exact BodyParts3D calcaneus triangles",
+    )
+    achilles_receipt_parser.add_argument("--sources", type=Path, required=True)
+    achilles_receipt_parser.add_argument("--registration", type=Path, required=True)
+    achilles_receipt_parser.add_argument("--artifact", type=Path, required=True)
+    achilles_receipt_parser.add_argument("--output", type=Path, required=True)
+    achilles_receipt_parser.set_defaults(handler=numi_human_achilles_receipt)
     myosim_attachment_registration_parser = commands.add_parser(
         "myosim-bodyparts-attachment-registration",
         help="infer visual-only per-bone BodyParts3D surface correspondences from source MyoSim attachment sites",

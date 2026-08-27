@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import struct
 import tempfile
 import unittest
@@ -53,6 +54,7 @@ from numilab_human.model import (
     read_json,
     rajagopal_custom_joint_ir,
     rajagopal_millard_muscle_ir,
+    numi_human_tendon_endpoint_payload,
     rajagopal_lower_body_pilot,
     rajagopal_walking_contract,
     rajagopal_rigid_skeleton_ir,
@@ -71,6 +73,110 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ImporterTests(unittest.TestCase):
+    def _minimal_myosim_tendon_artifact(self, directory: Path) -> Path:
+        directory.mkdir(parents=True)
+        source_sha = "11" * 32
+        payload = b"".join([
+            struct.pack(
+                "<8s9I32s", b"NHMYO1\0\0", 1, 2, 1, 2, 0, 2, 1, 0, 0,
+                bytes.fromhex(source_sha),
+            ),
+            struct.pack("<I3f", 0, 0.1, 0.2, 0.3),
+            struct.pack("<I3f", 1, 0.4, 0.5, 0.6),
+            struct.pack("<4I", 1, 0, 0xFFFFFFFF, 0),
+            struct.pack("<4I", 1, 1, 0xFFFFFFFF, 0),
+            struct.pack("<4I37f", 0, 0, 2, 0, *([0.0] * 37)),
+        ])
+        muscle_path = directory / "myosim-fullbody-muscle-reference.nhmyo"
+        muscle_path.write_bytes(payload)
+        manifest = {
+            "schema": "numi.human.myosim-fullbody-reference.v1",
+            "source": {"archive_sha256": source_sha},
+            "payloads": {
+                "rigid": {"file": "fixture.nhrigid", "sha256": "22" * 32,
+                          "bytes": 0, "payload_abi": 1},
+                "muscles": {"file": muscle_path.name,
+                            "sha256": hashlib.sha256(payload).hexdigest(),
+                            "bytes": len(payload), "payload_abi": 1},
+                "support_contact": None,
+            },
+            "muscles": [{"source_actuator_index": 0, "name": "fixture_muscle"}],
+        }
+        (directory / "myosim-fullbody-reference.manifest.json").write_text(
+            json.dumps(manifest), encoding="utf-8"
+        )
+        return directory
+
+    def test_numi_human_tendon_payload_covers_both_route_endpoints_once(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            artifact = self._minimal_myosim_tendon_artifact(directory / "artifact")
+            manifest = numi_human_tendon_endpoint_payload(artifact, directory / "output")
+            self.assertEqual(manifest["status"], "complete_route_endpoint_mechanical_coverage")
+            self.assertEqual(manifest["coverage"]["muscle_count"], 1)
+            self.assertEqual(manifest["coverage"]["mechanical_endpoint_count"], 2)
+            self.assertEqual(manifest["coverage"]["source_site_point_count"], 2)
+            self.assertEqual(manifest["coverage"]["registered_bone_triangle_count"], 0)
+            payload = (directory / "output" / manifest["payload"]["file"]).read_bytes()
+            self.assertEqual(len(payload), 104 + 2 * 64)
+            first = struct.unpack_from("<8I8f", payload, 104)
+            second = struct.unpack_from("<8I8f", payload, 168)
+            self.assertEqual((first[1], first[3], first[4], first[5]), (0, 0, 0, 0))
+            self.assertEqual((second[1], second[3], second[4], second[5]), (1, 1, 1, 0))
+
+    def test_numi_human_tendon_surface_receipt_replaces_only_named_endpoint(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            artifact = self._minimal_myosim_tendon_artifact(directory / "artifact")
+            receipt = directory / "surface.json"
+            receipt.write_text(json.dumps({
+                "schema": "numi.human.tendon-surface-registration.v1",
+                "admission": {"mechanical": True},
+                "records": [{
+                    "muscle": "fixture_muscle", "endpoint": "insertion", "body_index": 1,
+                    "bone_member_id": "FJ3360", "bone_stable_id": 7,
+                    "source_triangle_index": 12,
+                    "triangle_local_m": [[0.3, 0.5, 0.6], [0.5, 0.5, 0.6], [0.4, 0.7, 0.6]],
+                    "barycentric": [0.25, 0.5, 0.25],
+                }],
+            }), encoding="utf-8")
+            manifest = numi_human_tendon_endpoint_payload(
+                artifact, directory / "output", receipt,
+            )
+            self.assertEqual(manifest["coverage"]["source_site_point_count"], 1)
+            self.assertEqual(manifest["coverage"]["registered_bone_triangle_count"], 1)
+            payload = (directory / "output" / manifest["payload"]["file"]).read_bytes()
+            insertion = struct.unpack_from("<8I8f", payload, 168)
+            triangle = struct.unpack_from("<4I12f", payload, 232)
+            self.assertEqual((insertion[4], insertion[5], insertion[6], insertion[7]), (1, 1, 0, 7))
+            self.assertAlmostEqual(insertion[8], 0.425)
+            self.assertAlmostEqual(insertion[9], 0.55)
+            self.assertAlmostEqual(insertion[10], 0.6)
+            self.assertEqual(triangle[:4], (1, 7, 12, 0))
+
+    def test_numi_human_tendon_surface_candidate_fails_closed_and_stays_labeled(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            artifact = self._minimal_myosim_tendon_artifact(directory / "artifact")
+            receipt = directory / "surface.json"
+            receipt.write_text(json.dumps({
+                "schema": "numi.human.tendon-surface-registration.v1",
+                "admission": {"mechanical": False, "reason": "fixture candidate"},
+                "records": [],
+            }), encoding="utf-8")
+            with self.assertRaisesRegex(HumanImportError, "not a mechanically admitted"):
+                numi_human_tendon_endpoint_payload(artifact, directory / "rejected", receipt)
+            manifest = numi_human_tendon_endpoint_payload(
+                artifact, directory / "candidate", receipt,
+                allow_unadmitted_surface=True,
+            )
+            self.assertEqual(
+                manifest["status"],
+                "candidate_route_endpoint_program_not_mechanically_admitted",
+            )
+            pack = read_json(directory / "candidate" / "numi-human-pack.manifest.json")
+            self.assertEqual(pack["status"], manifest["status"])
+
     def test_skin_bone_envelope_distance_is_zero_inside_and_metric_outside(self) -> None:
         self.assertEqual(
             _bodyparts_skin_bbox_distance_squared(

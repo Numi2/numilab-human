@@ -9,6 +9,71 @@ fi
 command_directory=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
 repository_root=$(CDPATH= cd -- "$command_directory/../.." && pwd -P)
 
+# Canonical Numi-owned Human probe. NHRIGID2/NHMYO1 remain source payloads,
+# while NHTENDON1 supplies complete route endpoint ownership and optional
+# admitted surface bindings. The native probe resolves the endpoint program
+# before the existing single J^T force projection.
+if [ "${1:-}" = "tendon-probe" ] || [ "${1:-}" = "probe" ]; then
+    if [ "$#" -ne 3 ] && [ "$#" -ne 4 ]; then
+        printf '%s\n' "usage: numi human ${1:-tendon-probe} <artifact-directory> <numi-human-tendon-endpoints.nhtendon> [--metal]" >&2
+        exit 2
+    fi
+    if [ "$#" -eq 4 ] && [ "$4" != "--metal" ]; then
+        printf '%s\n' "usage: numi human $1 <artifact-directory> <numi-human-tendon-endpoints.nhtendon> [--metal]" >&2
+        exit 2
+    fi
+    artifact_directory=$2
+    tendon_payload=$3
+    runtime_root=${NUMI_LAB_ROOT:-/Users/home/Documents/emergentnumilife/MetalRobo}
+    build_directory=${NUMI_BUILD_DIR:-$runtime_root/build}
+    probe=$build_directory/bin/metalrobo_numilab_human_myosim_reference_probe
+    if [ ! -x "$probe" ]; then
+        printf '%s\n' "native Numi Human probe is unavailable: $probe" >&2
+        exit 2
+    fi
+    if [ "$#" -eq 4 ]; then
+        exec "$probe" \
+            "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
+            "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
+            "$tendon_payload" --metal
+    fi
+    exec "$probe" \
+        "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
+        "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
+        "$tendon_payload"
+fi
+
+# Numi-owned anatomical render. The same resolved NHTENDON1 site program feeds
+# the Metal route force path and the native BodyParts3D renderer.
+if [ "${1:-}" = "render" ]; then
+    if [ "$#" -ne 6 ] && { [ "$#" -ne 8 ] || [ "$7" != "--dimension" ]; }; then
+        printf '%s\n' "usage: numi human render <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <bodyparts3d-myosim-soft-tissue.nhtissue> <numi-human-tendon-endpoints.nhtendon> <output-directory> [--dimension <512..2048; multiple-of-64>]" >&2
+        exit 2
+    fi
+    artifact_directory=$2
+    bone_payload=$3
+    soft_tissue_payload=$4
+    tendon_payload=$5
+    output_directory=$6
+    runtime_root=${NUMI_LAB_ROOT:-/Users/home/Documents/emergentnumilife/MetalRobo}
+    build_directory=${NUMI_BUILD_DIR:-$runtime_root/build}
+    probe=$build_directory/bin/metalrobo_numilab_human_myosim_visual_probe
+    if [ ! -x "$probe" ]; then
+        printf '%s\n' "native Numi Human visual probe is unavailable: $probe" >&2
+        exit 2
+    fi
+    set -- "$probe" \
+        "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
+        "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
+        "$bone_payload" "$output_directory" \
+        --soft-tissue-payload "$soft_tissue_payload" \
+        --tendon-payload "$tendon_payload"
+    if [ "${7:-}" = "--dimension" ]; then
+        set -- "$@" --dimension "$8"
+    fi
+    exec "$@"
+fi
+
 # The production-facing source-complete full-body reference never starts a
 # Python process.  Python remains only in the offline upstream import adapter
 # below, where MyoSim itself owns model composition.  Keeping this command

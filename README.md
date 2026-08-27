@@ -51,10 +51,28 @@ display offset. This makes the bone
 insertion continuous in the render, but does not create a tendon continuum,
 weld, force-transfer law, or photorealistic anatomy.
 
-The next mechanics milestone is a native, no-double-count enthesis traction
-path: it will replace a supported route's terminal force scatter with a
-force-and-moment-equivalent distribution over named calcaneus triangles. See
-[tendon force transfer](Docs/TENDON_FORCE_TRANSFER.md).
+`NHTENDON1` now gives every one of the 416 active routes an explicit origin and
+insertion record: 832 bone-owned mechanical endpoints. Core resolves that
+program before the existing route-length-Jacobian projection, and Metal uses
+the resolved route sites directly, so there is still exactly one force path.
+The Apple M4 probe reproduced the original point-owned generalized force with
+zero difference and zero force/moment traction residual.
+
+The first inferred bilateral Achilles surface candidate was deliberately not
+admitted: its current cross-source registration would move the six terminal
+sites by about 49 mm, changing default muscle force by as much as 181 N. The
+source point attachments therefore remain authoritative until the anatomical
+registration improves. See [tendon force transfer](Docs/TENDON_FORCE_TRANSFER.md).
+
+<p align="center">
+  <img src="Docs/media/numi-human-right-achilles-mechanics-640/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-138-front.png" width="24%" alt="Numi Human right Achilles endpoint diagnostic, front" />
+  <img src="Docs/media/numi-human-right-achilles-mechanics-640/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-138-oblique.png" width="24%" alt="Numi Human right Achilles endpoint diagnostic, oblique" />
+  <img src="Docs/media/numi-human-right-achilles-mechanics-640/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-138-side.png" width="24%" alt="Numi Human right Achilles endpoint diagnostic, side" />
+  <img src="Docs/media/numi-human-right-achilles-mechanics-640/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-138-rear.png" width="24%" alt="Numi Human right Achilles endpoint diagnostic, rear" />
+</p>
+
+These native 640 px views are geometry diagnostics from the production point
+endpoint program, not photorealistic or clinical attachment evidence.
 
 ### Muscle-driven torso anatomy
 
