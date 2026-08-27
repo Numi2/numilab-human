@@ -48,6 +48,10 @@ points and tubes are the 1,815 source attachment sites and 1,432 route-centrelin
 segments. They demonstrate the joint state → articulated pose → rendered
 instance chain, but intentionally are **not** anatomical BodyParts3D mesh
 registration, skin/muscle-belly deformation, a live visual sidecar, or walking.
+A fresh Core-native three-angle render of the exact BodyParts3D skin source is
+also retained in [visual validation](Docs/VISUAL_VALIDATION.md); it remains a
+high-fidelity static geometry reference until its body-frame registration is
+measured and reviewed.
 
 ## Native full-body execution
 

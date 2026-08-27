@@ -1,9 +1,9 @@
 # Third-party source notices
 
-No BodyParts3D or OpenSim source data is committed to this repository. The
-Apache-2.0 MyoSim visual-progress frames listed below are the sole tracked
-source-derived media; the importer records every other source in local
-generated artifacts.
+No raw BodyParts3D or OpenSim source data is committed to this repository. The
+Apache-2.0 MyoSim visual-progress frames and the CC-BY-4.0 BodyParts3D
+source-static skin frames listed below are the tracked source-derived media;
+the importer records every other source in local generated artifacts.
 
 ## BodyParts3D 4.0
 
@@ -12,6 +12,10 @@ generated artifacts.
 - Required attribution: `BodyParts3D, © The Database Center for Life Science licensed under CC Attribution 4.0 International`.
 - Imported material: 4.0 OBJ meshes, FMA identifiers, English labels, and both
   `is-a` and `part-of` hierarchy relationships.
+- Tracked derivatives: the three `Docs/media/bodyparts3d-native-skin/` PNGs
+  are unmodified-frame renders of the exact `FJ2810` full-skin source mesh;
+  their source member, hashes, Core renderer revision, and non-registration
+  boundary are recorded in `Docs/VISUAL_VALIDATION.md`.
 
 ## OpenSim RajagopalLaiUhlrich2023
 

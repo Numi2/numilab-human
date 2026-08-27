@@ -5,6 +5,32 @@ For the active MyoSim full-body muscle source, see the newer
 frames are source-rendered and are intentionally kept distinct from the
 BodyParts3D source-static evidence below.
 
+## Native BodyParts3D skin render — 2026-08-27
+
+<p align="center">
+  <img src="media/bodyparts3d-native-skin/bodyparts3d-skin-front.png" width="32%" alt="Native BodyParts3D full-skin front view">
+  <img src="media/bodyparts3d-native-skin/bodyparts3d-skin-oblique.png" width="32%" alt="Native BodyParts3D full-skin oblique view">
+  <img src="media/bodyparts3d-native-skin/bodyparts3d-skin-rear.png" width="32%" alt="Native BodyParts3D full-skin rear view">
+</p>
+
+The exact CC-BY-4.0 `FJ2810` full-skin OBJ was converted from source millimetres
+to metres into a GLB, cooked into a Core visual pack, and rendered through
+`metalrobo_bodyparts3d_visual_probe` on the local Apple M4 at Core `86790f3`.
+The cooked mesh contains 102,467 vertices and 203,382 triangles. Each 512 × 512
+inspection camera had nonzero source coverage: 13,045 anterior, 8,455 oblique,
+and 13,345 posterior pixels.
+
+| View | PNG SHA-256 | Inspection result |
+| --- | --- | --- |
+| Anterior | `4dcff97fe2bbf275cfe3afa2b8e2bc23a0e2eaa616925cf5495f7b25e30f8bcd` | upright face, torso, bilateral arms/hands, legs, and feet visible |
+| Oblique | `d6823e87efb7c444a9c1072b6dd539f01cd4580a0d83b89e695f68fb72c68691` | continuous head–shoulder–torso–pelvis–leg silhouette visible |
+| Posterior | `f782071f9713112e4244821759e8e9c9e8401aa785ea818160d2ea125791186a` | rear contour, arms/hands, legs, and feet visible |
+
+This confirms the complete source skin survives native Core cooking and
+multi-angle rendering. It does **not** establish a MyoSim-body transform,
+skinning weights, collision, deformable shell mechanics, or a live articulated
+surface; those require registration evidence rather than a plausible overlay.
+
 ## BodyParts3D full-skin preview — 2026-08-26
 
 The visual preview begins with the exact `FJ2810` skin OBJ from
