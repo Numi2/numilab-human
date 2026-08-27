@@ -1,5 +1,21 @@
 # NumiLab Human visual progress
 
+## Current tendon visual lead — 2026-08-27
+
+<p align="center">
+  <img src="media/myosim-native-zanatomy-smooth-insertion-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-front.png" width="24%" alt="Smooth-insertion right calf, front" />
+  <img src="media/myosim-native-zanatomy-smooth-insertion-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-oblique.png" width="24%" alt="Smooth-insertion right calf, oblique" />
+  <img src="media/myosim-native-zanatomy-smooth-insertion-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-side.png" width="24%" alt="Smooth-insertion right calf, side" />
+  <img src="media/myosim-native-zanatomy-smooth-insertion-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-rear.png" width="24%" alt="Smooth-insertion right calf, rear" />
+</p>
+
+This is the visual lead because every angle shows the smooth tendon continuing
+under the matching calcaneus overlay rather than terminating in a visible
+source cap. It is the same bounded 416-path MyoSim/Core/Metal capture
+described in the [smooth-insertion inspection](#smooth-insertion-right-calf-mechanics-inspection--2026-08-27).
+It changes neither an authored force path nor a material law, and is not a
+claim of tendon continuum mechanics, contact, gait, or clinical attachment.
+
 ## Native source-bound torso anatomy — 2026-08-27
 
 <p align="center">
@@ -29,16 +45,10 @@ heart/lung/liver components, create deformable organs, compliant vessels or
 neural mechanics, introduce material parameters, or establish collision,
 contact, force transfer, clinical registration, or photorealism.
 
-## Corrected BodyParts3D calcaneal attachment — 2026-08-27
+## Retained BodyParts3D calcaneal correspondence evidence — 2026-08-27
 
-<p align="center">
-  <img src="media/myosim-native-calcaneal-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-138-front.png" width="24%" alt="Corrected calcaneal tendon attachment, front" />
-  <img src="media/myosim-native-calcaneal-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-138-oblique.png" width="24%" alt="Corrected calcaneal tendon attachment, oblique" />
-  <img src="media/myosim-native-calcaneal-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-138-side.png" width="24%" alt="Corrected calcaneal tendon attachment, side" />
-  <img src="media/myosim-native-calcaneal-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-138-rear.png" width="24%" alt="Corrected calcaneal tendon attachment, rear" />
-</p>
-
-This replaces the generated tendon-to-bone collar in the normal Human view.
+This replaces the generated tendon-to-bone collar in the source correspondence
+check, but it is not gallery imagery.
 The exact BodyParts3D `FJ1405` calcaneal-tendon topology now uses the same
 per-anchor calcaneus registration as the rendered `FJ3360` bone. Its 944
 distal lock vertices and 26-vertex feather band are projected directly onto
@@ -52,9 +62,12 @@ The 2K Apple M4 capture applies a 100 µs, 0.5 activation pulse to MyoSim
 evaluates all 416 authored source routes. It has nonzero muscle, tendon, and
 calcaneus coverage in all four views and zero generated collar pixels. The
 [capture record](media/myosim-native-calcaneal-attachment-2048/capture.transcript.txt)
-keeps the native execution and the intentional boundary. This is a clean
-source-surface anatomy check—not a claim of photorealistic skin, deformable
-tendon, force transfer, collision/contact, gait, or clinical validation.
+keeps the native execution and the intentional boundary. Its low-detail source
+framing and visible source discontinuity are not accepted as a tendon-quality
+showcase; use the smooth-insertion visual lead above for attachment inspection.
+This remains a source-surface ownership check—not a claim of photorealistic
+skin, deformable tendon, force transfer, collision/contact, gait, or clinical
+validation.
 
 ## Smooth-insertion right-calf mechanics inspection — 2026-08-27
 

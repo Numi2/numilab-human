@@ -22,24 +22,21 @@ derivatives; all other raw or derived source artifacts remain local. See
 
 ## Visual progress
 
-The lead visuals are exposed source anatomy, where muscles and tendons can be
-inspected directly against named bones. The BodyParts3D exterior is retained as
-a static source mesh only: it has no authored skin weights and is not presented
-as a muscle-driven Human. See [visual progress](Docs/VISUAL_PROGRESS.md) for
-the exact evidence boundary.
+The lead visual is a close anatomical inspection, not a generic whole-body
+thumbnail. It is the current high-resolution tendon-to-bone presentation:
 
-### Corrected muscle-driven calcaneal attachment
+<p align="center">
+  <img src="Docs/media/myosim-native-zanatomy-smooth-insertion-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-oblique.png" width="49%" alt="Right calf, oblique: smooth tendon entering the matching calcaneus" />
+  <img src="Docs/media/myosim-native-zanatomy-smooth-insertion-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-rear.png" width="49%" alt="Right calf, rear: smooth tendon entering the matching calcaneus" />
+</p>
 
-The native base anatomy now renders the BodyParts3D `FJ1405` tendon directly
-against its named `FJ3360` calcaneus, using the bone's exact per-anchor
-registration. Its 944 distal lock vertices and 26-vertex feather band are
-projected onto the calcaneal source triangles with a 0.35 mm exterior offset;
-the old generated collar is diagnostic-only and absent here. The 2K Apple-M4
-capture drives MyoSim `gaslat_r`, `gasmed_r`, and `soleus_r` at `0.5` for one
-100 µs step while Metal evaluates all 416 source paths. It makes the
-muscle-to-tendon-to-bone geometry inspectable, but remains an anatomical
-source-surface view—not photorealistic skin, a tendon continuum, or a physical
-attachment certificate. The [capture record](Docs/media/myosim-native-calcaneal-attachment-2048/capture.transcript.txt) records the execution boundary.
+The exposed source anatomy is where muscles and tendons can be inspected
+against named bones. The BodyParts3D exterior is retained as a static source
+mesh only: it has no authored skin weights and is not presented as a
+muscle-driven Human. See [visual progress](Docs/VISUAL_PROGRESS.md) for the
+exact evidence boundary.
+
+### Tendon-to-bone presentation
 
 For the detailed right-calf inspection, the matching free Z-Anatomy
 `Calcaneus.r` replaces only the visible calcaneus and is rigidly attached to
@@ -47,8 +44,18 @@ the same MyoSim `calcn_r` body. The current four-angle record uses a
 deterministic visual derivative of its tendon: one Catmull-Clark evaluation
 level plus a smooth 8 mm distal inset under the matching calcaneus. That hides
 the atlas's serrated closed endcap without adding a bridge or changing the
-MyoSim mechanics. It is a scoped anatomy inspection, not a photorealistic,
+MyoSim mechanics. It is the gallery’s tendon-quality reference: the tendon is
+visibly continuous into its matching calcaneus in front, oblique, side, and
+rear views. It remains a scoped anatomy inspection, not a photorealistic,
 deformable, or force-transfer claim. Its [four-angle record](Docs/media/myosim-native-zanatomy-smooth-insertion-2048/capture.transcript.txt) keeps the exact evidence.
+
+The lower-detail BodyParts3D `FJ1405`/`FJ3360` pair remains a source ownership
+and route-correspondence record: 944 distal lock vertices and a 26-vertex
+feather band are projected to the named calcaneus triangles, with no generated
+collar. Its framing and source discontinuity do not meet the gallery’s tendon
+presentation standard, so it is retained as diagnostic evidence rather than a
+lead image. The [capture record](Docs/media/myosim-native-calcaneal-attachment-2048/capture.transcript.txt)
+records that narrower check.
 
 ### Muscle-driven torso anatomy
 
