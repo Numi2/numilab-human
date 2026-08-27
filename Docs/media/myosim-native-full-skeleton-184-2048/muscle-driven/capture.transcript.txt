@@ -1,0 +1,27 @@
+NumiLab Human BodyParts3D/MyoSim bounded complete-muscle force-to-pose visual-skeleton capture
+capture_date=2026-08-27
+workspace_source_state=uncommitted 184-mesh visual-skeleton extension
+core_commit=1e247dd775e46af724950a8bf9465732bf17e6f8
+core_branch=coupled
+core_runtime_device=Apple M4
+runtime_probe_sha256=42268f663601aa7a587c76212a2625b66bd8961441b803f81e10ba0d9ea28706
+bodyparts_myosim_source_archive_sha256=280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975
+registration_sha256=263ef6136caaa429f6ca40065d0a5e497c8f62c12e9a07478ec46e24e68fb83e
+nhbones_sha256=bc856ec7d2188e1ee6371f056ff29ab38c4d4b018e5b5dfe3bca9a91abeeb4a1
+nhbones_bytes=11511380
+nhbones_bones=184
+nhbones_vertices=250721
+nhbones_indices=1370928
+command=numi human myosim-native-muscle-bone-visuals Build/myosim-fullbody <NHBONES1> <output> --muscle-step-seconds 0.001 --dimension 2048
+view=front bone_pixels=85171 png_sha256=ddbd1d97118ffe6001be63f61721fe5c89d8378d78560c9712edb78977865095
+view=oblique bone_pixels=77029 png_sha256=19c07753e142ef6064cf904eb0d50949c665688e79f5d627e95a11afa87db575
+view=side bone_pixels=53742 png_sha256=6ba8e9f0b87de0a64b886bfdfd6de5ca86a1ce1bab5e1c66fe6369c2249bc152
+view=rear bone_pixels=88256 png_sha256=efea614d06ffbe41e02ec7d288fac3c34eb50ff5fc728c0fbb17341b21e0a912
+muscle_step_seconds=0.001
+muscle_count=416
+muscle_sites=1815
+applied_wraps=90
+maximum_velocity_delta=71.4839058782
+maximum_configuration_delta=0.0714839058782
+runtime_result=cpu_fp64_complete_416_muscle_force_and_articulated_free_body_step_to_metal_pose_snapshot_with_provisional_bodyparts_bone_registration_not_contact_or_live_rollout
+note=This is one bounded source-default co-activation sensitivity step, not a controller, replay, standing, gait, contact, skin, or tissue-mechanics qualification. Mac mini was occupied by an unrelated BirdFlow workload; this bounded four-angle local Apple M4 fallback did not use or contend with it.

@@ -10,7 +10,7 @@ the native Human execution path.
 | --- | --- | --- |
 | Active full-body mechanics | MyoSim `myofullbody` | 103 source bodies, 416 muscles, native Core reference |
 | Cervical/hyoid mechanics | Mortensen 2018 | complete 72-muscle OpenSim 3 source IR; merge registration remains explicit |
-| Anatomy/visual layers | BodyParts3D 4.0 | named geometry/hierarchy; 180 source bone meshes are pose-bound for native visual inspection |
+| Anatomy/visual layers | BodyParts3D 4.0 | named geometry/hierarchy; 184 source bone meshes are pose-bound for native visual inspection |
 | Comparative lower-body mechanics | RajagopalLaiUhlrich2023 | retained source-faithful bounded Metal path |
 | Comparative upper extremities | MoBL-ARMS | retained authenticated OpenSim source import |
 
@@ -48,18 +48,18 @@ reference, not an articulated, force-coupled, deformable, or clinical claim.
 ### Reviewed full-skeleton native inspection
 
 <p align="center">
-  <img src="Docs/media/myosim-native-full-skeleton-180-2048/default/myosim-fullbody-articulated-bodyparts-bones-front.png" width="32%" alt="Full BodyParts3D visual skeleton, front" />
-  <img src="Docs/media/myosim-native-full-skeleton-180-2048/default/myosim-fullbody-articulated-bodyparts-bones-oblique.png" width="32%" alt="Full BodyParts3D visual skeleton, oblique" />
-  <img src="Docs/media/myosim-native-full-skeleton-180-2048/default/myosim-fullbody-articulated-bodyparts-bones-rear.png" width="32%" alt="Full BodyParts3D visual skeleton, rear" />
+  <img src="Docs/media/myosim-native-full-skeleton-184-2048/default/myosim-fullbody-articulated-bodyparts-bones-front.png" width="32%" alt="Full BodyParts3D visual skeleton, front" />
+  <img src="Docs/media/myosim-native-full-skeleton-184-2048/default/myosim-fullbody-articulated-bodyparts-bones-oblique.png" width="32%" alt="Full BodyParts3D visual skeleton, oblique" />
+  <img src="Docs/media/myosim-native-full-skeleton-184-2048/default/myosim-fullbody-articulated-bodyparts-bones-rear.png" width="32%" alt="Full BodyParts3D visual skeleton, rear" />
 </p>
 
-This four-angle 2048 × 2048 native inspection binds 180 exact BodyParts3D
+This four-angle 2048 × 2048 native inspection binds 184 exact BodyParts3D
 bone meshes—cranial bones, vertebrae, ribs, hands, feet, and the major
-limbs—to 84 active MyoSim rigid parents and the Metal-computed 157-body pose.
+limbs—to 86 active MyoSim rigid parents and the Metal-computed 157-body pose.
 A separate four-angle 1 ms snapshot uses all 416 source muscle-tendon forces
 before the final native render. These are visual-skeleton and bounded
 force-to-pose evidence, respectively; neither makes skin, tendons, organs,
-contact, gait, or clinical-registration claims. See [visual progress](Docs/VISUAL_PROGRESS.md#reviewed-native-180-mesh-full-skeleton--2026-08-27).
+contact, gait, or clinical-registration claims. See [visual progress](Docs/VISUAL_PROGRESS.md#reviewed-native-184-mesh-full-skeleton--2026-08-27).
 
 ### Native anatomy presentation reset
 
@@ -112,7 +112,7 @@ numi human myosim-bodyparts-bone-payload \
 numi human myosim-native-bone-visuals \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
-  Docs/media/myosim-native-full-skeleton-180-2048/default \
+  Docs/media/myosim-native-full-skeleton-184-2048/default \
   --dimension 2048
 
 # Native bounded force-to-pose sensitivity capture (no Python process).  The
@@ -120,7 +120,7 @@ numi human myosim-native-bone-visuals \
 numi human myosim-native-muscle-bone-visuals \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
-  Docs/media/myosim-native-full-skeleton-180-2048/muscle-driven \
+  Docs/media/myosim-native-full-skeleton-184-2048/muscle-driven \
   --muscle-step-seconds 0.001 --dimension 2048
 
 # Inspect a named source subset by its manifest actuator indices. This native

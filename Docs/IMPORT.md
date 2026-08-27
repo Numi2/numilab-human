@@ -43,7 +43,7 @@ numi human myosim-bodyparts-bone-payload \
 numi human myosim-native-bone-visuals \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
-  Build/bodyparts3d-myosim-major-bones/native-articulated-full-skeleton-180-views \
+  Build/bodyparts3d-myosim-major-bones/native-articulated-full-skeleton-184-views \
   --dimension 2048
 
 # Focused native path diagnostic: MyoSim indices 348/349/369/371 are right
@@ -63,7 +63,7 @@ numi human myosim-native-route-inspection \
 numi human myosim-native-muscle-bone-visuals \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
-  Build/bodyparts3d-myosim-major-bones/native-muscle-driven-full-skeleton-180-views \
+  Build/bodyparts3d-myosim-major-bones/native-muscle-driven-full-skeleton-184-views \
   --muscle-step-seconds 0.001 --dimension 2048
 ```
 
@@ -91,7 +91,7 @@ The bone-payload importer is also offline source preparation. It checks the
 selected archive/member identities, converts only exact OBJ triangles and
 triangle-derived normals, and carries one uniform-scale local transform per
 bone. `myosim-native-bone-visuals` consumes that compact payload directly in
-the native executable, binding 180 named source meshes to the Metal pose with
+the native executable, binding 184 named source meshes to the Metal pose with
 routes hidden by default. Seventeen conservative major-bone landmarks own the
 common-frame fit; the cranial bones, ribs, hands, feet, and axial meshes inherit
 that frame and bind to their named MyoSim parent. Where MyoSim provides only a

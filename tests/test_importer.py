@@ -12,6 +12,7 @@ from numilab_human.model import (
     _BODYPARTS_MYOSIM_AXIAL_EXTENSIONS,
     _BODYPARTS_MYOSIM_BONE_ANCHORS,
     _BODYPARTS_MYOSIM_CRANIAL_EXTENSIONS,
+    _BODYPARTS_MYOSIM_REMAINING_SOURCE_EXTENSIONS,
     _BODYPARTS_MYOSIM_THORACIC_FOOT_EXTENSIONS,
     _BODYPARTS_MYOSIM_TOE_EXTENSIONS,
     _BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS,
@@ -62,10 +63,11 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(len(fit_anchors), 17)
         self.assertEqual(len(_BODYPARTS_MYOSIM_CRANIAL_EXTENSIONS), 8)
         self.assertEqual(len(_BODYPARTS_MYOSIM_THORACIC_FOOT_EXTENSIONS), 34)
+        self.assertEqual(len(_BODYPARTS_MYOSIM_REMAINING_SOURCE_EXTENSIONS), 4)
         self.assertEqual(len(_BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS), 52)
         self.assertEqual(len(_BODYPARTS_MYOSIM_TOE_EXTENSIONS), 38)
         self.assertEqual(len(_BODYPARTS_MYOSIM_AXIAL_EXTENSIONS), 22)
-        self.assertEqual(len(_BODYPARTS_MYOSIM_BONE_ANCHORS), 180)
+        self.assertEqual(len(_BODYPARTS_MYOSIM_BONE_ANCHORS), 184)
         baseline_extension = {
                 ("right hip bone", "pelvis"), ("left hip bone", "pelvis"),
                 ("right fibula", "tibia_r"), ("left fibula", "tibia_l"),

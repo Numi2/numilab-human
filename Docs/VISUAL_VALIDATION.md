@@ -30,9 +30,9 @@ or dynamic tendon mechanics.
 ## Current native full-skeleton visual check — 2026-08-27
 
 The four default-pose and four 1 ms complete-muscle frames in
-[visual progress](VISUAL_PROGRESS.md#reviewed-native-180-mesh-full-skeleton--2026-08-27)
+[visual progress](VISUAL_PROGRESS.md#reviewed-native-184-mesh-full-skeleton--2026-08-27)
 were inspected from front, oblique, side, and rear views at 2048 × 2048. The
-180 source meshes make the skull, cervical/thoracic/lumbar spine, rib cage,
+184 source meshes make the skull, atlas/axis, cervical/thoracic/lumbar spine, rib cage,
 shoulders, hands/digits, pelvis, bilateral legs, and complete feet legible as
 one skeleton. The earlier isolated ocular dot is gone: the renderer now uses
 named cranial and mandibular meshes rather than `FJ1282`.

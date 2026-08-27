@@ -2804,6 +2804,17 @@ _BODYPARTS_MYOSIM_THORACIC_FOOT_EXTENSIONS = tuple(
 )
 
 
+_BODYPARTS_MYOSIM_REMAINING_SOURCE_EXTENSIONS = tuple(
+    _bodyparts_visual_only_bone(body, name, member)
+    for body, name, member in (
+        ("cervical_spine", "atlas", "FJ3176"),
+        ("cervical_spine", "axis", "FJ3177"),
+        ("triquetrum_r", "right triquetral", "FJ3390"),
+        ("triquetrum_l", "left triquetral", "FJ3285"),
+    )
+)
+
+
 _BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS = tuple(
     _bodyparts_visual_only_bone(body, name, member)
     for body, name, member in (
@@ -2951,6 +2962,7 @@ _BODYPARTS_MYOSIM_BONE_ANCHORS = (
     + _BODYPARTS_MYOSIM_MAJOR_BONE_EXTENSIONS
     + _BODYPARTS_MYOSIM_CRANIAL_EXTENSIONS
     + _BODYPARTS_MYOSIM_THORACIC_FOOT_EXTENSIONS
+    + _BODYPARTS_MYOSIM_REMAINING_SOURCE_EXTENSIONS
     + _BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS
     + _BODYPARTS_MYOSIM_TOE_EXTENSIONS
     + _BODYPARTS_MYOSIM_AXIAL_EXTENSIONS
@@ -3174,12 +3186,12 @@ def bodyparts_myosim_registration_candidate(
                 "major_bone_extensions": len(_BODYPARTS_MYOSIM_MAJOR_BONE_EXTENSIONS),
                 "cranial_mandibular_bones": len(_BODYPARTS_MYOSIM_CRANIAL_EXTENSIONS),
                 "ribs_and_midfoot_tarsals": len(_BODYPARTS_MYOSIM_THORACIC_FOOT_EXTENSIONS),
+                "atlas_axis_and_triquetra": len(_BODYPARTS_MYOSIM_REMAINING_SOURCE_EXTENSIONS),
                 "wrists_hands_digits": len(_BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS),
                 "feet_toes": len(_BODYPARTS_MYOSIM_TOE_EXTENSIONS),
                 "axial_vertebrae": len(_BODYPARTS_MYOSIM_AXIAL_EXTENSIONS),
             },
             "not_yet_represented": [
-                "first and second cervical vertebrae", "bilateral triquetra without separate BodyParts3D v4.0 OBJ meshes",
                 "skin, muscles, tendons, organs, vessels, nerves, and other soft-tissue layers",
             ],
         },

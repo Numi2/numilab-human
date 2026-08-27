@@ -61,20 +61,21 @@ render, skin, organ/vessel/nerve view, articulated deformation, muscle-driven
 rollout, or medically validated attachment model. Those claims remain gated by
 their own geometry and mechanics evidence.
 
-## Reviewed native 180-mesh full skeleton — 2026-08-27
+## Reviewed native 184-mesh full skeleton — 2026-08-27
 
 <p align="center">
-  <img src="media/myosim-native-full-skeleton-180-2048/default/myosim-fullbody-articulated-bodyparts-bones-front.png" width="32%" alt="Native full skeleton, front" />
-  <img src="media/myosim-native-full-skeleton-180-2048/default/myosim-fullbody-articulated-bodyparts-bones-oblique.png" width="32%" alt="Native full skeleton, oblique" />
-  <img src="media/myosim-native-full-skeleton-180-2048/default/myosim-fullbody-articulated-bodyparts-bones-rear.png" width="32%" alt="Native full skeleton, rear" />
+  <img src="media/myosim-native-full-skeleton-184-2048/default/myosim-fullbody-articulated-bodyparts-bones-front.png" width="32%" alt="Native full skeleton, front" />
+  <img src="media/myosim-native-full-skeleton-184-2048/default/myosim-fullbody-articulated-bodyparts-bones-oblique.png" width="32%" alt="Native full skeleton, oblique" />
+  <img src="media/myosim-native-full-skeleton-184-2048/default/myosim-fullbody-articulated-bodyparts-bones-rear.png" width="32%" alt="Native full skeleton, rear" />
 </p>
 
 Core `1e247dd` rendered four inspected 2048 × 2048 reference frames on the
-local Apple M4 from a `NHBONES1` package with 180 exact BodyParts3D 4.0 source
-meshes (247,429 vertices, 1,356,360 indices). The package binds 17 conservative
+local Apple M4 from a `NHBONES1` package with 184 exact BodyParts3D 4.0 source
+meshes (250,721 vertices, 1,370,928 indices). The package binds 17 conservative
 fit landmarks plus 9 major extensions, 8 cranial/mandibular bones, 24 ribs, 10
-mid-foot tarsals, 52 wrists/hands/digits, 38 feet/toes, and 22 axial vertebrae
-to 84 named MyoSim parents in the active 157-body pose. `FJ1282`, the retired
+mid-foot tarsals, atlas, axis, both triquetra, 52 wrists/hands/digits, 38
+feet/toes, and 22 axial vertebrae to 86 named MyoSim parents in the active
+157-body pose. `FJ1282`, the retired
 "skull" selection, was an ocular component from a broad `part_of` listing; it
 was removed and replaced by explicitly named cranial and mandibular source
 bones before this capture.
@@ -88,17 +89,17 @@ instead of receiving fabricated joint mechanics.
 
 | View | Default-pose SHA-256 | Bone pixels | 1 ms complete-muscle SHA-256 | Bone pixels |
 | --- | --- | ---: | --- | ---: |
-| Front | `1e85bf2dbc9ac171a245afdcf236e1296a1ef23d3fd9f649379269b0d338bbf6` | 84,958 | `7a481f9d6ec5f72a358084d4682cac77f0be457cc443b6f25b5f7711dbd8efa1` | 84,915 |
-| Oblique | `eb48629f99e9c814e24a91e1004a530af330d0b6b148983f3c02eae3f3339da1` | 76,363 | `491edd7290e824e8d9673d8d203412b9001be82098e0c6f5c45471ffc9d6188e` | 76,737 |
-| Side | `71c07933e1f16f3e48385eaf92a3c4fc7c44b54d974e980ae17cf35da3310960` | 53,117 | `99297bb4377acd88152b1d282dfef7292e1c924eab3bbab52195debb22843211` | 53,294 |
-| Rear | `bb2560cab9a947284e44a0acd54da88271e7923c54111998fd785b23bda46569` | 87,861 | `ad7b8c3efb23e86034117e1de88f828edf9622d98e6e2bfa3be4dfb0bfa0f7a4` | 87,669 |
+| Front | `133a26781ad42893f69849073900a2827c30e85e7e49a06de55c917e5014d1d6` | 85,215 | `ddbd1d97118ffe6001be63f61721fe5c89d8378d78560c9712edb78977865095` | 85,171 |
+| Oblique | `db8e1aa49a897f66882937be27456c6c0bef9c60ae5e06a7614a3033c6b37c8c` | 76,658 | `19c07753e142ef6064cf904eb0d50949c665688e79f5d627e95a11afa87db575` | 77,029 |
+| Side | `44630a447c9865bef5cd22eb80113dd376a51419737e983b03af1b1b11de40f4` | 53,566 | `6ba8e9f0b87de0a64b886bfdfd6de5ca86a1ce1bab5e1c66fe6369c2249bc152` | 53,742 |
+| Rear | `6d39289f874ae87bb13f09751aa2c764943ad5401334fe0b3aa165f537627b17` | 88,448 | `efea614d06ffbe41e02ec7d288fac3c34eb50ff5fc728c0fbb17341b21e0a912` | 88,256 |
 
 The paired muscle-driven frames use the complete 416 source muscle-tendon
 force set, 90 applied wraps, and one 1 ms CPU-FP64 free-body sensitivity step
-before Metal poses the final 180 visual meshes. Exact commands, device,
+before Metal poses the final 184 visual meshes. Exact commands, device,
 payload/registration hashes, and every image hash are in the
-[default-pose transcript](media/myosim-native-full-skeleton-180-2048/default/capture.transcript.txt)
-and [muscle-driven transcript](media/myosim-native-full-skeleton-180-2048/muscle-driven/capture.transcript.txt).
+[default-pose transcript](media/myosim-native-full-skeleton-184-2048/default/capture.transcript.txt)
+and [muscle-driven transcript](media/myosim-native-full-skeleton-184-2048/muscle-driven/capture.transcript.txt).
 The Mac mini was running an unrelated BirdFlow workload, so this is a bounded
 local Apple M4 fallback; it is not an M4 Pro qualification.
 
