@@ -51,6 +51,11 @@ display offset. This makes the bone
 insertion continuous in the render, but does not create a tendon continuum,
 weld, force-transfer law, or photorealistic anatomy.
 
+The next mechanics milestone is a native, no-double-count enthesis traction
+path: it will replace a supported route's terminal force scatter with a
+force-and-moment-equivalent distribution over named calcaneus triangles. See
+[tendon force transfer](Docs/TENDON_FORCE_TRANSFER.md).
+
 ### Muscle-driven torso anatomy
 
 The native `NHANAT1` path adds 12 exact BodyParts3D components to the exposed
