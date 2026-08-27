@@ -58,6 +58,24 @@ and authored foot-witness contact step. Metal still does not admit the
 Core FP64 before Metal renders the pose. It is an articulated anatomy
 presentation—not an exterior shell, a tendon continuum, gait, or clinical anatomy evidence.
 
+### Muscle-driven tendon junction review
+
+<p align="center">
+  <img src="Docs/media/myosim-native-supported-tendon-junction-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-front.png" width="24%" alt="Muscle-driven tendon junction, front" />
+  <img src="Docs/media/myosim-native-supported-tendon-junction-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-oblique.png" width="24%" alt="Muscle-driven tendon junction, oblique" />
+  <img src="Docs/media/myosim-native-supported-tendon-junction-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-side.png" width="24%" alt="Muscle-driven tendon junction, side" />
+  <img src="Docs/media/myosim-native-supported-tendon-junction-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-rear.png" width="24%" alt="Muscle-driven tendon junction, rear" />
+</p>
+
+This 2K native review keeps the exposed calf anatomy in the same 32-step,
+all-416-muscle-driven pose as the full body. BodyParts3D delivers the exact
+muscle, tendon, and bone meshes; at an open tendon boundary, the renderer adds
+a short source-proximity collar to the nearest visible endpoint-compatible
+muscle or named secondary bone surface. That closes a raster seam without
+changing the authored MyoSim spatial route or force. Its [capture record](Docs/media/myosim-native-supported-tendon-junction-2048/capture.transcript.txt)
+names inputs, execution, and frame hashes. This is visual continuity—not a
+tendon weld, force-transfer law, deformable tendon, or attachment certificate.
+
 ### Posterior-chain tendon-to-bone inspection
 
 <p align="center">

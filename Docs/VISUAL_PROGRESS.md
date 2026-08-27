@@ -18,7 +18,7 @@ reconstructs the registered rest pose with a maximum error of
 
 The Apple M4 2K run executed 32 × 100 µs updates, 64 Metal force
 transactions, 13,312 active-muscle records, and 2,866 wrapped route contacts.
-Its four frames have 351,252 / 306,694 / 218,852 / 369,374 nonzero skin pixels
+Its four frames have 485,845 / 426,364 / 308,186 / 516,832 nonzero skin pixels
 (front / oblique / side / rear). The dynamic source-foot support probe retained
 two contacts at the final step (six at peak); as with the exposed anatomy,
 full-tree contact was correctly not admitted to the installed Metal bucket and
@@ -213,6 +213,28 @@ pins the exact inputs, options, output hashes, and limitations. This is visual
 continuity of source geometry through a bounded update. It does not establish
 a tendon continuum, tendon-to-bone force transfer, deformable tissue, stable
 standing or gait, general collision, skin, or clinical registration.
+
+## Muscle-driven tendon junction continuity — 2026-08-27
+
+<p align="center">
+  <img src="media/myosim-native-supported-tendon-junction-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-front.png" width="24%" alt="Driven tendon junction, front" />
+  <img src="media/myosim-native-supported-tendon-junction-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-oblique.png" width="24%" alt="Driven tendon junction, oblique" />
+  <img src="media/myosim-native-supported-tendon-junction-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-side.png" width="24%" alt="Driven tendon junction, side" />
+  <img src="media/myosim-native-supported-tendon-junction-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-rear.png" width="24%" alt="Driven tendon junction, rear" />
+</p>
+
+This four-angle Apple-M4 2048 px check uses the 150-surface exact
+BodyParts3D `NHTISS2` import in the same 32 × 100 µs all-416-muscle,
+ground-supported pose as the broad gallery. A visual-only collar is emitted
+only at an open source tendon boundary and only to the nearest visible muscle
+sharing an authored endpoint or to the named secondary bone surface, within
+30 mm. It closes the source-mesh raster gap through the final dynamic pose;
+it does not alter the MyoSim route, activation, force, or Core dynamics.
+
+The 2K frames and input/output identities are retained in the [capture record](media/myosim-native-supported-tendon-junction-2048/capture.transcript.txt).
+This is a rendering continuity improvement, not a tendon weld, constitutive
+model, force-transfer result, collision result, gait result, or clinical
+attachment validation.
 
 ## Presentation correction — 2026-08-27
 

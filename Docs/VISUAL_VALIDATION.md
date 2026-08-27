@@ -10,13 +10,29 @@ bindings, then verifies the registered rest-pose reconstruction to
 `1.0111756560930368e-15 m`. The runtime command starts no Python process:
 the final 157-body pose and all four Apple-M4 renders are native C++/Metal.
 
-The reviewed frame coverage is 351,252 / 306,694 / 218,852 / 369,374 skin
+The reviewed frame coverage is 485,845 / 426,364 / 308,186 / 516,832 skin
 pixels from front through rear, with no bone, muscle, or tendon proxy leaking
 through the opaque source shell. This makes the whole Human materially more
 legible than the prior exposed-only gallery. It does not establish physical
 skin deformation, material calibration, collision/contact geometry, or a
 clinical soft-tissue registration. The exposed tendon inspection remains the
 authority for tendon-to-bone visual continuity.
+
+## Current driven tendon-junction check — 2026-08-27
+
+The four-angle 2048 px [driven tendon-junction capture](VISUAL_PROGRESS.md#muscle-driven-tendon-junction-continuity--2026-08-27)
+uses the exact 150-surface BodyParts3D muscle/tendon import after the same
+32-step all-416-muscle Metal force update and Core FP64 source-foot-contact
+fallback. At a source tendon mesh's open boundary, the native renderer may
+close a visible raster seam with a short source-proximity collar to the nearest
+visible endpoint-compatible muscle surface or its named secondary-bone
+surface. The rendered collar is reported separately from source tendon pixels
+and follows the final articulated pose.
+
+This corrects the exposed anatomy presentation. It does not change MyoSim
+spatial routes, attach a new force, weld a tendon to bone, define a material,
+or prove physical tendon continuity, contact, gait, or clinical registration.
+The exact inputs and image hashes are in its [capture record](media/myosim-native-supported-tendon-junction-2048/capture.transcript.txt).
 
 ## Presentation correction — 2026-08-27
 
