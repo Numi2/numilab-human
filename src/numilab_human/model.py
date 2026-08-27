@@ -3895,7 +3895,7 @@ def bodyparts_myosim_right_posterior_chain_visual_payload(
                 for vertex in bone_vertices_mm
             ]
             primary_weights, attachment_weight_lock = _bodyparts_secondary_attachment_weight_lock(
-                global_vertices_m, primary_weights, bone_vertices_world_m,
+                global_vertices_m, primary_weights, bone_vertices_world_m, bone_triangles,
             )
             attachment_weight_lock.update({
                 "secondary_body": secondary_target_name,
@@ -3963,7 +3963,7 @@ def bodyparts_myosim_right_posterior_chain_visual_payload(
             "exact BodyParts3D source surfaces use the visual-skeleton common rest frame and a "
             "per-vertex two-body linear blend in named Core articulated body frames; gastrocnemius "
             "spans femur-to-calcaneus while soleus and the calcaneal tendon span tibia-to-calcaneus; "
-            "the calcaneal-tendon insertion uses a source-mesh-proximity secondary-calcaneus weight lock"
+            "the calcaneal-tendon insertion uses an exact source-triangle proximity secondary-calcaneus weight lock"
         ),
         "status": "native_two_body_kinematic_surface_binding_input_not_collision_or_physics",
         "evidence_boundary": (

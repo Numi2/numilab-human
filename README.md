@@ -21,11 +21,25 @@ or derived source artifacts remain local. See
 
 ## Visual progress
 
-The broad source-model images remain provenance artifacts, not a claim of
-photoreal skin or deformable tissue. The current review isolates the named
-calcaneal tendon and calcaneus at native resolution, using bone and soft-tissue
-payloads made from one visual-registration receipt. See
-[visual progress](Docs/VISUAL_PROGRESS.md) for the evidence boundary.
+The lead inspection is a complete body, not a marker cloud or isolated tendon.
+It uses BodyParts3D's 184 bone meshes plus 150 named muscle/tendon surfaces,
+posed by the native Human runtime. See [visual progress](Docs/VISUAL_PROGRESS.md)
+for the evidence boundary.
+
+### Full-body Metal muscle-force inspection
+
+<p align="center">
+  <img src="Docs/media/myosim-native-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-front.png" width="24%" alt="Muscle-driven BodyParts3D Human, front" />
+  <img src="Docs/media/myosim-native-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-oblique.png" width="24%" alt="Muscle-driven BodyParts3D Human, oblique" />
+  <img src="Docs/media/myosim-native-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-side.png" width="24%" alt="Muscle-driven BodyParts3D Human, side" />
+  <img src="Docs/media/myosim-native-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-rear.png" width="24%" alt="Muscle-driven BodyParts3D Human, rear" />
+</p>
+
+This Apple-M4 2K capture follows eight 100 µs updates. Each update evaluates
+all 416 MyoSim muscle paths, their activation sidecars, and the 128-DoF
+generalized-force projection on Metal before the current Core FP64 dynamics
+step. It is an articulated anatomy presentation—not skin, a tendon continuum,
+contact, gait, or clinical anatomy evidence.
 
 ### Posterior-chain tendon-to-bone inspection
 
@@ -35,9 +49,10 @@ payloads made from one visual-registration receipt. See
   <img src="Docs/media/myosim-native-calcaneal-tendon-detail-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-side.png" width="32%" alt="Right calcaneal tendon and calcaneus, side" />
 </p>
 
-This fresh 2048 × 2048 native inspection renders the exact BodyParts3D right
-calcaneal tendon over the named calcaneus only, so the insertion is visible
-from front, oblique, side, and rear rather than hidden by a full-body frame.
+This focused 2048 × 2048 diagnostic renders the exact BodyParts3D right
+calcaneal tendon over the named calcaneus only. It is deliberately not the
+lead Human image: without the gastrocnemius and soleus chain, an isolated
+tendon cannot show its proximal anatomical context.
 The native loader rejects a bone/tissue pair with different registration
 fingerprints before it can render. The frames therefore establish source-mesh
 registration continuity—not tendon force transfer, a deformable tendon,

@@ -1,5 +1,33 @@
 # NumiLab Human visual progress
 
+## Full-body all-muscle Metal force inspection — 2026-08-27
+
+<p align="center">
+  <img src="media/myosim-native-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-front.png" width="24%" alt="Muscle-driven BodyParts3D Human, front" />
+  <img src="media/myosim-native-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-oblique.png" width="24%" alt="Muscle-driven BodyParts3D Human, oblique" />
+  <img src="media/myosim-native-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-side.png" width="24%" alt="Muscle-driven BodyParts3D Human, side" />
+  <img src="media/myosim-native-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-rear.png" width="24%" alt="Muscle-driven BodyParts3D Human, rear" />
+</p>
+
+This is the current Human presentation: 184 BodyParts3D bone meshes and 150
+named muscle/tendon surfaces at 2048 × 2048 from front, oblique, side, and
+rear. The posterior tendons are rendered with their associated muscle chain
+in the full-body view rather than as an anatomically misleading free segment.
+
+The capture executes eight 100 µs bounded updates. Per update, Metal evaluates
+all 416 authored MyoSim routes, active and zero-activation sidecars, and the
+summed 128-DoF force vector; Core FP64 then performs the currently supported
+state step and Metal renders the resulting pose. The run reported 16 Metal
+force transactions, 3,328 active-muscle records, 720 wrapped path contacts,
+and a maximum active/passive configuration difference of 0.00252694050715.
+The four images have nonzero bone, muscle, and tendon coverage. The concise
+[capture record](media/myosim-native-fullbody-metal-force-2048/capture.transcript.txt)
+contains the exact runtime boundary and output identities.
+
+This establishes a bounded, muscle-driven articulated presentation. It does
+not establish skinning, tendon force transfer, a tendon continuum, deformable
+soft tissue, contact, gait, or clinical registration.
+
 ## Registration-compatible calcaneal tendon detail — 2026-08-27
 
 <p align="center">
