@@ -48,6 +48,23 @@ pose cannot shear the tendon apart by treating it as one rigid child. The
 triangles remain exact source geometry; this is not yet deformable tissue,
 force transfer, or a medical attachment claim.
 
+### Reviewed full-body muscle-surface inspection
+
+<p align="center">
+  <img src="Docs/media/myosim-native-fullbody-muscle-surfaces-2048/default/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-128-front.png" width="32%" alt="BodyParts3D muscle surfaces posed over the native full-body skeleton, front" />
+  <img src="Docs/media/myosim-native-fullbody-muscle-surfaces-2048/default/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-128-oblique.png" width="32%" alt="BodyParts3D muscle surfaces posed over the native full-body skeleton, oblique" />
+  <img src="Docs/media/myosim-native-fullbody-muscle-surfaces-2048/default/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-128-rear.png" width="32%" alt="BodyParts3D muscle surfaces posed over the native full-body skeleton, rear" />
+</p>
+
+This is the current Human anatomy presentation: 148 exact BodyParts3D muscle
+surfaces plus bilateral calcaneal tendon surfaces, bound to the 157-body Core
+pose. The 150 surfaces are selected by an audited source-name table; ordinary
+muscles use the first and last sites of their named MyoSim route, not nearest
+visual bones. The full-resolution and lower-leg checks are documented in
+[visual progress](Docs/VISUAL_PROGRESS.md#reviewed-native-full-body-muscle-surface-inspection--2026-08-27).
+It is source geometry with two-body kinematic presentation binding—not a
+deformable continuum, contact result, gait, or medical registration.
+
 ### Reviewed full-skeleton native inspection
 
 <p align="center">
@@ -160,6 +177,21 @@ numi human myosim-native-muscle-soft-tissue-visuals \
   Build/bodyparts3d-myosim-right-posterior-chain/bodyparts3d-myosim-right-posterior-chain.nhtissue \
   Build/myosim-native-posterior-chain-muscle-stress \
   136 --muscle-step-seconds 0.001 --dimension 2048
+
+# Package the audited full-body muscle-surface map. The offline importer
+# verifies every ordinary surface against its exact BodyParts3D FJ mesh and
+# named MyoSim route endpoints; the native capture remains Python-free.
+numi human myosim-bodyparts-fullbody-muscle-surface-payload \
+  --sources Sources \
+  --registration Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json \
+  --artifact Build/myosim-fullbody \
+  --output Build/bodyparts3d-myosim-fullbody-muscle-surfaces
+numi human myosim-native-soft-tissue-visuals \
+  Build/myosim-fullbody \
+  Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
+  Build/bodyparts3d-myosim-fullbody-muscle-surfaces/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue \
+  Docs/media/myosim-native-fullbody-muscle-surfaces-2048/default \
+  128 --dimension 2048
 
 # Export a separate exact BodyParts3D rest-frame reference for the right lower
 # leg. It contains source bone, muscle, and calcaneal-tendon surfaces and is

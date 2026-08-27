@@ -16,6 +16,9 @@ from pathlib import Path
 from typing import Any, Iterable
 
 
+REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
+
+
 class ImportError(ValueError):
     """Raised when a source cannot make a source-faithful Human v1 artifact."""
 
@@ -3762,6 +3765,309 @@ def bodyparts_myosim_right_posterior_chain_visual_payload(
         ),
     }
     write_json(output / "bodyparts3d-myosim-right-posterior-chain.manifest.json", manifest)
+    return manifest
+
+
+def _bodyparts_mirror_surface_specification(specification: dict[str, Any]) -> dict[str, Any]:
+    """Mirror one right-side audited surface-map row without guessing anatomy."""
+    mirrored = json.loads(json.dumps(specification))
+    member_id = mirrored.get("member_id")
+    if not isinstance(member_id, str) or not re.fullmatch(r"FJ[0-9]+", member_id):
+        raise ImportError("BodyParts3D surface-map mirror has an invalid right-side member")
+    mirrored["member_id"] = member_id + "M"
+    source_name = mirrored.get("source_name")
+    if not isinstance(source_name, str) or "right" not in source_name:
+        raise ImportError("BodyParts3D surface-map mirror has no right-side source name")
+    mirrored["source_name"] = source_name.replace("right", "left")
+
+    def mirror_name(value: Any, context: str) -> str:
+        if not isinstance(value, str) or not value:
+            raise ImportError("BodyParts3D surface-map mirror has an invalid " + context)
+        return value[:-2] + "_l" if value.endswith("_r") else value + "_l"
+
+    muscles = mirrored.get("myosim_muscles")
+    if not isinstance(muscles, list):
+        raise ImportError("BodyParts3D surface-map mirror has no MyoSim muscle list")
+    mirrored["myosim_muscles"] = [mirror_name(value, "MyoSim muscle") for value in muscles]
+    for key in ("primary_body", "secondary_body"):
+        if key in mirrored:
+            mirrored[key] = mirror_name(mirrored[key], key)
+    mirrored.pop("mirror", None)
+    return mirrored
+
+
+def _bodyparts_myosim_surface_specifications() -> list[dict[str, Any]]:
+    """Read the versioned semantic table used for full-body surface binding."""
+    mapping = read_json(REPOSITORY_ROOT / "config/bodyparts3d-myosim-surface-map.v1.json")
+    if mapping.get("schema") != "numi.human.bodyparts3d-myosim-surface-map.v1":
+        raise ImportError("BodyParts3D/MyoSim surface map schema is unsupported")
+    entries = mapping.get("entries")
+    if not isinstance(entries, list) or not entries:
+        raise ImportError("BodyParts3D/MyoSim surface map has no entries")
+    result: list[dict[str, Any]] = []
+    for raw in entries:
+        if not isinstance(raw, dict):
+            raise ImportError("BodyParts3D/MyoSim surface map has an invalid entry")
+        result.append(dict(raw))
+        if raw.get("mirror") is True:
+            result.append(_bodyparts_mirror_surface_specification(raw))
+        elif raw.get("mirror") not in (None, False):
+            raise ImportError("BodyParts3D/MyoSim surface map mirror must be boolean")
+    members = [entry.get("member_id") for entry in result]
+    if any(not isinstance(member, str) or not re.fullmatch(r"FJ[0-9]+M?", member) for member in members):
+        raise ImportError("BodyParts3D/MyoSim surface map has an invalid member identity")
+    if len(set(members)) != len(members):
+        raise ImportError("BodyParts3D/MyoSim surface map duplicates a source surface")
+    return result
+
+
+def _bodyparts_source_element_names(sources: Path) -> set[tuple[str, str]]:
+    """Read source FMA labels only to validate explicit map rows, never infer one."""
+    source = sources / "isa_element_parts.txt"
+    if not source.is_file():
+        raise ImportError("BodyParts3D element relation source is unavailable")
+    names: set[tuple[str, str]] = set()
+    for raw in source.read_text(encoding="utf-8").splitlines():
+        columns = raw.split("\t")
+        if len(columns) != 3:
+            raise ImportError("BodyParts3D element relation source has an invalid row")
+        _, name, member_id = columns
+        names.add((member_id, name))
+    return names
+
+
+def _myosim_surface_route_context(artifact: Path, source_sha: str) -> tuple[
+    dict[str, dict[str, Any]], dict[str, dict[str, Any]], dict[str, Any],
+]:
+    """Load exact MyoSim source route endpoints from the compact native payload."""
+    artifact = artifact.resolve()
+    manifest_path = artifact / "myosim-fullbody-reference.manifest.json"
+    manifest = read_json(manifest_path)
+    if manifest.get("schema") != "numi.human.myosim-fullbody-reference.v1":
+        raise ImportError("MyoSim surface binding requires the full-body reference manifest")
+    manifest_source = manifest.get("source")
+    if not isinstance(manifest_source, dict) or manifest_source.get("archive_sha256") != source_sha:
+        raise ImportError("MyoSim surface binding source provenance does not match registration")
+    payloads = manifest.get("payloads")
+    descriptor = payloads.get("muscles") if isinstance(payloads, dict) else None
+    if not isinstance(descriptor, dict):
+        raise ImportError("MyoSim surface binding manifest has no muscle payload")
+    filename, expected_hash = descriptor.get("file"), descriptor.get("sha256")
+    if not isinstance(filename, str) or not isinstance(expected_hash, str) or not re.fullmatch(r"[0-9a-f]{64}", expected_hash):
+        raise ImportError("MyoSim surface binding muscle payload descriptor is invalid")
+    payload_path = artifact / filename
+    if not payload_path.is_file() or sha256(payload_path) != expected_hash:
+        raise ImportError("MyoSim surface binding muscle payload provenance drifted")
+    payload = payload_path.read_bytes()
+    header_size = struct.calcsize("<8s9I32s")
+    if len(payload) < header_size:
+        raise ImportError("MyoSim surface binding muscle payload is truncated")
+    magic, abi, body_count, muscle_count, site_count, geometry_count, route_count, _, _, _, payload_sha = struct.unpack_from(
+        "<8s9I32s", payload
+    )
+    if magic != _MYOSIM_MUSCLE_REFERENCE_MAGIC or abi != _MYOSIM_MUSCLE_REFERENCE_ABI or payload_sha.hex() != source_sha:
+        raise ImportError("MyoSim surface binding muscle payload ABI or source provenance is invalid")
+    expected_bytes = header_size + 16 * site_count + 64 * geometry_count + 16 * route_count + 164 * muscle_count
+    if len(payload) != expected_bytes or body_count == 0 or muscle_count == 0 or site_count == 0:
+        raise ImportError("MyoSim surface binding muscle payload length is invalid")
+    offset = header_size
+    sites = [struct.unpack_from("<I3f", payload, offset + index * 16) for index in range(site_count)]
+    offset += 16 * site_count + 64 * geometry_count
+    routes = [struct.unpack_from("<4I", payload, offset + index * 16) for index in range(route_count)]
+    offset += 16 * route_count
+    muscle_records = [struct.unpack_from("<4I37f", payload, offset + index * 164) for index in range(muscle_count)]
+    source_tree = manifest.get("core_tree")
+    source_bodies = source_tree.get("source_body_records") if isinstance(source_tree, dict) else None
+    if not isinstance(source_bodies, list):
+        raise ImportError("MyoSim surface binding manifest has no source-body records")
+    bodies: dict[str, dict[str, Any]] = {}
+    core_indices: set[int] = set()
+    for body in source_bodies:
+        if not isinstance(body, dict):
+            raise ImportError("MyoSim surface binding has an invalid source-body record")
+        name, index = body.get("name"), body.get("core_body_index")
+        if not isinstance(name, str) or not isinstance(index, int) or not 0 <= index < body_count or name in bodies or index in core_indices:
+            raise ImportError("MyoSim surface binding source-body identity is invalid")
+        _myosim_vector(body.get("default_com_position_world_m"), "MyoSim surface body position")
+        _myosim_matrix_from_quaternion_xyzw(list(body.get("default_inertial_quaternion_world_xyzw", [])))
+        bodies[name] = body
+        core_indices.add(index)
+    # The Core lowerer intentionally interposes zero-inertia serial-joint
+    # carriers.  They are not source bodies and cannot own a MyoSim site, so
+    # the source-body table must be a strict subset when carriers are present.
+    if not core_indices or len(core_indices) > body_count:
+        raise ImportError("MyoSim surface binding source-body coverage is invalid")
+    body_by_index = {body["core_body_index"]: body for body in bodies.values()}
+    muscles = manifest.get("muscles")
+    if not isinstance(muscles, list) or len(muscles) != muscle_count:
+        raise ImportError("MyoSim surface binding muscle manifest length is invalid")
+    routes_by_muscle: dict[str, dict[str, Any]] = {}
+    for index, metadata in enumerate(muscles):
+        if not isinstance(metadata, dict):
+            raise ImportError("MyoSim surface binding has an invalid muscle manifest record")
+        name = metadata.get("name")
+        record = muscle_records[index]
+        route_offset, count = record[1], record[2]
+        if not isinstance(name, str) or name in routes_by_muscle or metadata.get("source_actuator_index") != index or count < 2 or route_offset + count > len(routes):
+            raise ImportError("MyoSim surface binding muscle route identity is invalid")
+        first, last = routes[route_offset], routes[route_offset + count - 1]
+        if first[0] != _MYOSIM_ROUTE_SITE or last[0] != _MYOSIM_ROUTE_SITE or first[1] >= len(sites) or last[1] >= len(sites):
+            raise ImportError("MyoSim surface binding route has no source-site endpoints")
+        primary_index, secondary_index = sites[first[1]][0], sites[last[1]][0]
+        if primary_index == secondary_index or primary_index not in body_by_index or secondary_index not in body_by_index:
+            raise ImportError("MyoSim surface binding route endpoint bodies are invalid")
+        routes_by_muscle[name] = {
+            "source_actuator_index": index,
+            "source_route_node_count": count,
+            "primary_body": body_by_index[primary_index]["name"],
+            "secondary_body": body_by_index[secondary_index]["name"],
+        }
+    return bodies, routes_by_muscle, manifest
+
+
+def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
+    sources: Path, anatomy: dict[str, Any], registration_path: Path, myosim_artifact: Path, output: Path,
+) -> dict[str, Any]:
+    """Package source-authored limb, shoulder, arm, hand and abdominal surfaces.
+
+    Every ordinary row uses the first and final **authored MyoSim route sites**
+    of its named muscle. The limited calcaneal-tendon row is explicitly marked
+    as an anatomical shared-tendon pair because its three contributing routes
+    begin on two distinct links. This is still a two-body kinematic visual
+    binding, not a deformable tissue or a replacement for the MyoSim force path.
+    """
+    registration_file = registration_path.resolve()
+    registration = read_json(registration_file)
+    if registration.get("schema") != "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2" or \
+            registration.get("status") != "provisional_visual_registration_not_admitted_to_collision_or_physics":
+        raise ImportError("BodyParts3D full-body tissue payload requires the unmodified v2 visual registration")
+    expected_bodyparts = {"id": anatomy.get("source_id"), "version": anatomy.get("version"), "archives": anatomy.get("archives")}
+    source = registration.get("source")
+    if not isinstance(source, dict) or source.get("bodyparts") != expected_bodyparts:
+        raise ImportError("BodyParts3D full-body tissue payload registration does not match parsed source provenance")
+    myosim = source.get("myosim")
+    source_sha = myosim.get("source", {}).get("archive_sha256") if isinstance(myosim, dict) else None
+    if not isinstance(source_sha, str) or not re.fullmatch(r"[0-9a-f]{64}", source_sha):
+        raise ImportError("BodyParts3D full-body tissue payload has no MyoSim source SHA-256")
+    coordinates = registration.get("coordinate_system")
+    global_matrix = coordinates.get("global_source_mm_to_myosim_world_m") if isinstance(coordinates, dict) else None
+    if not isinstance(global_matrix, list) or len(global_matrix) != 4:
+        raise ImportError("BodyParts3D full-body tissue payload has no global rest-frame registration")
+    # Validate it eagerly before using its rows to transform hundreds of exact OBJ vertices.
+    _bodyparts_visual_local_pose(global_matrix, "BodyParts3D full-body tissue global transform")
+    bodies, route_muscles, myosim_manifest = _myosim_surface_route_context(myosim_artifact, source_sha)
+    element_names = _bodyparts_source_element_names(sources)
+    specifications = _bodyparts_myosim_surface_specifications()
+
+    vertices_payload: list[tuple[float, float, float, float, float, float, float]] = []
+    indices_payload: list[int] = []
+    records_payload: list[bytes] = []
+    provenance: list[dict[str, Any]] = []
+    for stable_id, specification in enumerate(specifications, start=1):
+        member_id, label = specification.get("member_id"), specification.get("source_name")
+        source_muscles = specification.get("myosim_muscles")
+        if not isinstance(member_id, str) or not isinstance(label, str) or (member_id, label) not in element_names:
+            raise ImportError("BodyParts3D full-body tissue surface-map source identity drifted")
+        if not isinstance(source_muscles, list) or not source_muscles or any(not isinstance(value, str) for value in source_muscles):
+            raise ImportError("BodyParts3D full-body tissue surface-map has no named MyoSim muscles")
+        matched_routes = []
+        for muscle_name in source_muscles:
+            route = route_muscles.get(muscle_name)
+            if route is None:
+                raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has unknown MyoSim muscle {muscle_name}")
+            matched_routes.append(route)
+        explicit_primary, explicit_secondary = specification.get("primary_body"), specification.get("secondary_body")
+        if explicit_primary is None and explicit_secondary is None:
+            route_pairs = {(route["primary_body"], route["secondary_body"]) for route in matched_routes}
+            if len(route_pairs) != 1:
+                raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has non-uniform MyoSim endpoints")
+            primary_name, secondary_name = next(iter(route_pairs))
+            endpoint_source = "all_named_authored_myosim_route_endpoints"
+        elif isinstance(explicit_primary, str) and isinstance(explicit_secondary, str):
+            primary_name, secondary_name = explicit_primary, explicit_secondary
+            endpoint_source = "explicit_anatomical_shared_tendon_pair_with_named_contributing_authored_routes"
+        else:
+            raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has incomplete explicit endpoint bodies")
+        primary_target, secondary_target = bodies.get(primary_name), bodies.get(secondary_name)
+        if primary_target is None or secondary_target is None or primary_name == secondary_name:
+            raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has unresolved endpoint bodies")
+        primary_body_index, secondary_body_index = primary_target["core_body_index"], secondary_target["core_body_index"]
+        primary_position = _myosim_vector(primary_target.get("default_com_position_world_m"), f"BodyParts3D {member_id} primary position")
+        secondary_position = _myosim_vector(secondary_target.get("default_com_position_world_m"), f"BodyParts3D {member_id} secondary position")
+        primary_quaternion = list(primary_target.get("default_inertial_quaternion_world_xyzw", []))
+        secondary_quaternion = list(secondary_target.get("default_inertial_quaternion_world_xyzw", []))
+        _myosim_matrix_from_quaternion_xyzw(primary_quaternion)
+        _myosim_matrix_from_quaternion_xyzw(secondary_quaternion)
+        archive_path, member, obj = _bodyparts_obj_member(sources, "is_a", member_id)
+        vertices_mm, triangles = _bodyparts_obj_triangles(obj, member)
+        normals = _bodyparts_vertex_normals(vertices_mm, triangles, member)
+        primary_transform = _bodyparts_local_registration_matrix(global_matrix, primary_position, primary_quaternion)
+        secondary_transform = _bodyparts_local_registration_matrix(global_matrix, secondary_position, secondary_quaternion)
+        primary_translation, primary_rotation, primary_scale = _bodyparts_visual_local_pose(primary_transform, f"BodyParts3D {member_id} primary transform")
+        secondary_translation, secondary_rotation, secondary_scale = _bodyparts_visual_local_pose(secondary_transform, f"BodyParts3D {member_id} secondary transform")
+        body_axis = _myosim_subtract(secondary_position, primary_position)
+        squared_axis = sum(value * value for value in body_axis)
+        if squared_axis <= 1.0e-10:
+            raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has coincident endpoint centres")
+        global_vertices = [[sum(global_matrix[row][column] * vertex[column] for column in range(3)) + global_matrix[row][3] for row in range(3)] for vertex in vertices_mm]
+        projections = [sum((vertex[axis] - primary_position[axis]) * body_axis[axis] for axis in range(3)) for vertex in global_vertices]
+        minimum, maximum = min(projections), max(projections)
+        if maximum - minimum <= 1.0e-6:
+            raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has no two-body blend extent")
+        first_vertex, first_index = len(vertices_payload), len(indices_payload)
+        for vertex, normal, projection in zip(vertices_mm, normals, projections, strict=True):
+            primary_weight = (maximum - projection) / (maximum - minimum)
+            vertices_payload.append((*[coordinate * 0.001 for coordinate in vertex], *normal, max(0.0, min(1.0, primary_weight))))
+        indices_payload.extend(first_vertex + index for triangle in triangles for index in triangle)
+        layer_name = specification.get("layer", "muscle")
+        layer = _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE if layer_name == "muscle" else _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON if layer_name == "tendon" else None
+        if layer is None:
+            raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has an invalid layer")
+        records_payload.append(struct.pack(
+            "<8I16f", primary_body_index, secondary_body_index, first_vertex, len(vertices_mm), first_index,
+            len(triangles) * 3, stable_id, layer,
+            *primary_translation, *primary_rotation, primary_scale,
+            *secondary_translation, *secondary_rotation, secondary_scale,
+        ))
+        provenance.append({
+            "member_id": member_id, "member": member, "member_sha256": hashlib.sha256(obj).hexdigest(),
+            "label": label, "layer": layer_name, "endpoint_source": endpoint_source,
+            "primary_myosim_body": primary_name, "primary_core_body_index": primary_body_index,
+            "secondary_myosim_body": secondary_name, "secondary_core_body_index": secondary_body_index,
+            "matched_muscles": [dict(route, name=name) for name, route in zip(source_muscles, matched_routes, strict=True)],
+            "primary_weight_range": [0.0, 1.0], "vertex_count": len(vertices_mm), "triangle_count": len(triangles),
+        })
+    if len(vertices_payload) > 0xFFFFFFFF or len(indices_payload) > 0xFFFFFFFF:
+        raise ImportError("BodyParts3D full-body tissue payload exceeds the uint32 native renderer capacity")
+    payload = b"".join([
+        struct.pack("<8s5I32s", _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_MAGIC, _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_ABI,
+                    len(records_payload), len(vertices_payload), len(indices_payload), 0, bytes.fromhex(source_sha)),
+        *records_payload, b"".join(struct.pack("<7f", *vertex) for vertex in vertices_payload),
+        struct.pack(f"<{len(indices_payload)}I", *indices_payload),
+    ])
+    output = output.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    payload_path = output / "bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue"
+    payload_path.write_bytes(payload)
+    manifest = {
+        "schema": "numi.human.bodyparts3d-myosim-fullbody-muscle-surface-visual-payload.v1",
+        "payload": {"file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
+                    "magic": _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_MAGIC.rstrip(b"\0").decode("ascii"),
+                    "payload_abi": _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_ABI, "surface_count": len(records_payload),
+                    "vertex_count": len(vertices_payload), "index_count": len(indices_payload)},
+        "source": {"registration": {"file": registration_file.name, "sha256": sha256(registration_file)},
+                   "bodyparts": expected_bodyparts, "myosim_source_archive_sha256": source_sha,
+                   "myosim_manifest": {"file": "myosim-fullbody-reference.manifest.json", "sha256": sha256((myosim_artifact.resolve() / "myosim-fullbody-reference.manifest.json"))},
+                   "surface_map": {"file": "bodyparts3d-myosim-surface-map.v1.json", "sha256": sha256(REPOSITORY_ROOT / "config/bodyparts3d-myosim-surface-map.v1.json")},
+                   "surfaces": provenance},
+        "coverage": {"configured_surface_count": len(specifications), "muscle_surface_count": sum(1 for entry in provenance if entry["layer"] == "muscle"),
+                     "tendon_surface_count": sum(1 for entry in provenance if entry["layer"] == "tendon"),
+                     "authored_myosim_muscle_count": len(myosim_manifest["muscles"])},
+        "runtime_binding": "exact BodyParts3D source surfaces use a per-vertex two-body linear blend in their named Core articulated endpoint frames; ordinary entries derive both endpoint bodies directly from the named authored MyoSim route sites",
+        "status": "native_two_body_kinematic_surface_binding_input_not_collision_or_physics",
+        "evidence_boundary": "This source-authored surface package visually follows exact named articulated endpoint bodies. It does not make the source surface a force-transmitting continuum, add a tendon constitutive law, create collision/contact, or establish a medical registration.",
+    }
+    write_json(output / "bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json", manifest)
     return manifest
 
 

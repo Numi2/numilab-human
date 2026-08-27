@@ -16,6 +16,7 @@ from numilab_human.model import (
     _BODYPARTS_MYOSIM_THORACIC_FOOT_EXTENSIONS,
     _BODYPARTS_MYOSIM_TOE_EXTENSIONS,
     _BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS,
+    _bodyparts_myosim_surface_specifications,
     _bodyparts_similarity_fit,
     ImportError as HumanImportError,
     bodyparts_foot_collider_preflight,
@@ -51,6 +52,16 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ImporterTests(unittest.TestCase):
+    def test_fullbody_surface_map_is_mirrored_and_explicit(self) -> None:
+        surfaces = _bodyparts_myosim_surface_specifications()
+        self.assertEqual(len(surfaces), 150)
+        self.assertEqual(len({surface["member_id"] for surface in surfaces}), 150)
+        self.assertEqual(sum(surface.get("layer", "muscle") == "muscle" for surface in surfaces), 148)
+        self.assertEqual(sum(surface.get("layer") == "tendon" for surface in surfaces), 2)
+        left_gastrocnemius = next(surface for surface in surfaces if surface["member_id"] == "FJ1394M")
+        self.assertEqual(left_gastrocnemius["source_name"], "lateral head of left gastrocnemius")
+        self.assertEqual(left_gastrocnemius["myosim_muscles"], ["gaslat_l"])
+
     def test_visual_skeleton_extension_preserves_the_validated_fit_set(self) -> None:
         fit_anchors = [
             anchor for anchor in _BODYPARTS_MYOSIM_BONE_ANCHORS

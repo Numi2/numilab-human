@@ -17,6 +17,52 @@ surface geometry or a medical registration. The reviewed showcase below uses
 the separate exact BodyParts3D muscle/tendon surfaces instead of that route
 diagnostic.
 
+## Reviewed native full-body muscle-surface inspection — 2026-08-27
+
+<p align="center">
+  <img src="media/myosim-native-fullbody-muscle-surfaces-2048/default/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-128-front.png" width="32%" alt="Native full-body muscle surfaces, front" />
+  <img src="media/myosim-native-fullbody-muscle-surfaces-2048/default/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-128-oblique.png" width="32%" alt="Native full-body muscle surfaces, oblique" />
+  <img src="media/myosim-native-fullbody-muscle-surfaces-2048/default/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-128-rear.png" width="32%" alt="Native full-body muscle surfaces, rear" />
+</p>
+
+This replaces the isolated-calf presentation as the main Human anatomical
+view. The native Apple M4 capture poses 150 exact BodyParts3D surfaces over
+the 184-mesh articulated skeleton: 148 muscle surfaces across both limbs,
+shoulders, arms, forearms, hands, abdomen, pelvis, and legs; plus two
+calcaneal tendon surfaces. The 19.9 MB `NHTISS2` package has 438,491 vertices
+and 1,894,392 indices.
+
+The offline package checks each source FJ member and FMA name against the
+versioned map. For each ordinary muscle, it reads the first and final site of
+the named MyoSim actuator route from the compiled `NHMYO1` source payload and
+uses those exact Core bodies as the two skinning parents. Partitioned source
+muscles such as gluteus and adductor magnus require all named MyoSim routes to
+agree on the endpoint pair. Only the bilateral calcaneal tendon is an
+explicitly labelled anatomical shared-tendon pair, because gastrocnemius and
+soleus routes have distinct proximal links.
+
+| View | PNG SHA-256 | Bone / muscle / tendon pixels |
+| --- | --- | ---: |
+| Front | `c3f2eaeddefb8308cb300ecdbe71278982356a68a20b619e36036faf4ea9c153` | 132,739 / 1,586,546 / 0 |
+| Oblique | `f050fcf464c93818273a1b2d72a0cb4c1259e4180e759461a7a326af53f617ad` | 118,157 / 1,315,689 / 0 |
+| Side | `138b4422a645713ff4fa0b1b56537736fe6ddc3a2210fad2f4fad792fd65bc30` | 74,180 / 775,656 / 0 |
+| Rear | `1582eb21926cdcaeeeac42ddd22e2166f093dca7bba1591fc57c74d187e60677` | 353,793 / 1,201,421 / 0 |
+
+The full-body camera is deliberately torso-centred, so the Achilles surfaces
+are occluded in those four views. A separate lower-leg capture retains
+nonzero tendon coverage from all directions, including 11,613 tendon pixels
+in the rear view; the posterior-calf gallery below is the clearer high-detail
+attachment inspection. The complete command, payload/map hashes, device,
+coverage, and the bounded 416-muscle 10 microsecond coupling smoke are in the
+[capture transcript](media/myosim-native-fullbody-muscle-surfaces-2048/default/capture.transcript.txt).
+
+This validates source surface → named MyoSim endpoint bodies → Metal pose →
+native renderer. It does not claim force transfer from surface triangles,
+continuum muscle/tendon deformation, collision/contact, a controller, gait,
+or medical registration. The active bounded force step is retained as a
+coupling smoke only; unsupported free-body co-activation is not presentation
+motion.
+
 ## Reviewed native posterior-calf source-surface inspection — 2026-08-27
 
 <p align="center">

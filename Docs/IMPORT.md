@@ -80,6 +80,22 @@ numi human myosim-native-muscle-soft-tissue-visuals \
   Build/bodyparts3d-myosim-right-posterior-chain/native-muscle-stress \
   136 --muscle-step-seconds 0.001 --dimension 2048
 
+# Broader source anatomy: every map row names a BodyParts3D mesh and one or
+# more authored MyoSim muscles. Ordinary rows are admitted only if their route
+# endpoint body pairs agree; the bilateral calcaneal tendon is the explicitly
+# labelled shared-tendon exception.
+numi human myosim-bodyparts-fullbody-muscle-surface-payload \
+  --sources Sources \
+  --registration Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json \
+  --artifact Build/myosim-fullbody \
+  --output Build/bodyparts3d-myosim-fullbody-muscle-surfaces
+numi human myosim-native-soft-tissue-visuals \
+  Build/myosim-fullbody \
+  Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
+  Build/bodyparts3d-myosim-fullbody-muscle-surfaces/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue \
+  Build/bodyparts3d-myosim-fullbody-muscle-surfaces/native-views \
+  128 --dimension 2048
+
 # Native bounded force-to-pose capture: Core FP64 projects all 416 source
 # muscles, integrates one free-body sensitivity step, and Metal renders only
 # its final articulated pose. No Python process is started.

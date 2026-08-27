@@ -135,6 +135,17 @@ This is explicit kinematic skinning for presentation only—not FEM/MPM,
 muscle-fibre contraction, tendon constitutive response, collision, force
 transfer, or a biological attachment certificate.
 
+The full-body `NHTISS2` package uses the same native ABI but is generated from
+`bodyparts3d-myosim-surface-map.v1.json`. Each normal row is source-name
+validated, then resolves its two parents from the first and final sites of its
+named compiled MyoSim actuator route. A row that names a partitioned muscle
+must have agreeing route endpoint pairs; it fails closed otherwise. The two
+calcaneal tendon rows are the explicit shared-tendon exception and identify
+their contributing gastrocnemius/soleus routes while binding the surface from
+tibia to calcaneus. This is stronger source ownership than visual proximity,
+but still only pose-driven linear-blend rendering; `NHMYO1` remains the force
+path authority.
+
 Core `2aab522` adds a separate, opt-in bounded muscle-driven visual state.
 `myosim-native-muscle-bone-visuals` evaluates the complete 416 MyoSim route
 definitions at source-default excitation/activation (`0.5` / `0.5`) in the
