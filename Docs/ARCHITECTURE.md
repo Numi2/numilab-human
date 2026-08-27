@@ -67,22 +67,26 @@ Python simulator wrapped by Numi. An offline MyoSim composition step writes two
 immutable payloads: `NHRIGID2` contains the 157-body Core tree (103 authored
 source bodies plus 54 exact zero-inertia transform carriers), while `NHMYO1`
 contains all 416 actuator definitions, 1,815 sites, and 143 wrap geometries.
-At Core `b2d4490`, `MujocoMuscleReference` evaluates the MuJoCo general-muscle
+At Core `f564977`, `MujocoMuscleReference` evaluates the MuJoCo general-muscle
 activation/force equations and sphere/cylinder spatial tendon routes, scatters
 `F * d(length)/d(v)` through Core point Jacobians, and drives the same native
 forward-dynamics owner.
 
 `numi human myosim-native-probe Build/myosim-fullbody --metal` executes that
-path by directly launching the C++ Core binary, then dispatches the same full
-body's pose and analytic point-Jacobian stream to Metal. On the local Apple M4,
-the 157-body / 128-DoF source tree passed CPU/GPU parity with maximum body
-position, orientation-component, point-position, and point-Jacobian errors of
-`6.32e-07 m`, `1.43e-07`, `6.54e-07 m`, and `7.35e-07`. No Python process,
-interpreter-owned physics, or per-step host loop exists after the payload has
-been created. The dense 128-DoF mass factor and the MuJoCo-source muscle route
-force pass remain Core CPU reference stages today; this hardware parity does
-not claim a device-resident muscle-force rollout or equivalence beyond the
-kinematics/Jacobian owner stream.
+path by directly launching the C++ Core binary, then dispatches the full body's
+pose and analytic point-Jacobian stream to Metal. In the same command buffer,
+the MyoSim kernel consumes the private pose output to evaluate all 416
+sphere/cylinder spatial routes and their default-state static actuator forces;
+no CPU-restaged geometry is admitted. On the local Apple M4, the 157-body /
+128-DoF source tree passed CPU/GPU parity with maximum body position,
+orientation-component, point-position, point-Jacobian, muscle-length, and
+muscle-force errors of `6.32e-07 m`, `1.43e-07`, `6.54e-07 m`, `7.35e-07`,
+`7.46e-07 m`, and `2.63e-03 N`, respectively, while applying all 90
+source-default wraps. No Python process, interpreter-owned physics, or
+per-step host loop exists after the payload has been created. The dense
+128-DoF mass factor, muscle `J^T` force scatter, and forward-dynamics update
+remain Core CPU reference stages today; this does not claim a complete
+device-resident muscle-force rollout.
 
 `numi.human.v1` remains an owner-neutral intermediate artifact, but Core
 revision `730aba4` now executes the bounded Rajagopal mechanics path: the

@@ -40,10 +40,10 @@ MyoSim source composition (offline)
               v
              forward dynamics (FP64 reference)
               |
-              +--> Metal: full-body poses + analytic point Jacobians
+              +--> Metal: poses + analytic point Jacobians -> 416 routes + static force
 ```
 
-The native probe at Core `b2d4490` passed with:
+The native probe at Core `f564977` passed with:
 
 | Native property | Measured result |
 | --- | --- |
@@ -63,8 +63,8 @@ numi human myosim-native-probe Build/myosim-fullbody
 
 ## Apple-GPU full-body mechanics progress
 
-The same fixed source pose is now checked through the native Metal
-kinematics/Jacobian route:
+The same fixed source pose is checked through the native Metal
+kinematics/Jacobian plus MyoSim route-force route:
 
 ```sh
 numi human myosim-native-probe Build/myosim-fullbody --metal
@@ -79,12 +79,15 @@ compared all body poses plus one nonzero point query per body against Core.
 | Body orientation component | `1.42935285885e-07` |
 | Point position | `6.54161804947e-07 m` |
 | Analytic point Jacobian | `7.34255547086e-07` |
+| Spatial-muscle path length | `7.45058059692e-07 m` |
+| Static actuator force | `2.62451171875e-03 N` |
+| Applied spatial wraps | `90 / 90` |
 
 This is actual Apple-GPU articulated execution, not a compile-only claim. The
 kinematics-only route admits up to 192 bodies and 160 DoF because it does not
-reserve the dense mass-factor scratch space. The 128-DoF dense mass solve and
-the MyoSim route-force/forward-dynamics stages remain the CPU reference owner;
-no Metal muscle-force rollout, contact, or locomotion is claimed here.
+reserve the dense mass-factor scratch space. The 128-DoF dense mass solve,
+MyoSim `J^T` scatter, and forward-dynamics stages remain the CPU reference
+owner; no contact or locomotion is claimed here.
 
 ## Remaining visual/mechanical steps
 

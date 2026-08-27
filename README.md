@@ -41,17 +41,20 @@ reference needs only the Apple-native Numi Core executable:
 
 ```sh
 # No Python process is started by this command. `--metal` additionally
-# executes the full articulated pose/Jacobian pass on the Apple GPU.
+# executes full-body pose/Jacobians plus all MyoSim route and static-force
+# evaluations on the Apple GPU.
 numi human myosim-native-probe Build/myosim-fullbody --metal
 ```
 
 This loads the `NHRIGID2` and `NHMYO1` payloads directly into Core, validates
 the 128-DoF floating articulated tree, evaluates every muscle route, applies
 the resulting generalized force, and executes forward dynamics. With `--metal`,
-the same full-body pose and analytic point-Jacobian stream also executes on
-Apple GPU and is compared against the Core oracle. Dense 128-DoF mass dynamics,
-the MuJoCo-source muscle route pass, contact, skin/organ solvers, and clinical
-qualification remain separate work; this is not a full Metal rollout.
+the same command buffer also evaluates all 416 MuJoCo-source spatial routes
+and their default-state static actuator forces on the Apple GPU, without
+restaging poses through the CPU; each result is compared with the source oracle.
+Dense 128-DoF mass dynamics, muscle `J^T` force scatter, contact, skin/organ
+solvers, and clinical qualification remain separate work; this is not a full
+Metal rollout.
 
 ## Offline source import
 
