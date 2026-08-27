@@ -21,27 +21,12 @@ or derived source artifacts remain local. See
 
 ## Visual progress
 
-The lead inspection is now an articulated exterior as well as an exposed
-anatomy check. It uses the exact BodyParts3D skin mesh with native multi-bone
-posing, while the separate muscle/tendon views remain visible evidence rather
-than being hidden behind a cosmetic shell. See [visual progress](Docs/VISUAL_PROGRESS.md)
-for the evidence boundary.
-
-### Native exterior shell — rest-pose quality reference
-
-<p align="center">
-  <img src="Docs/media/bodyparts3d-native-rest-shell-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-front.png" width="49%" alt="BodyParts3D native exterior shell, front" />
-  <img src="Docs/media/bodyparts3d-native-rest-shell-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-rear.png" width="49%" alt="BodyParts3D native exterior shell, rear" />
-</p>
-
-This Apple-M4 2K review is the exact 102,467-vertex BodyParts3D exterior at
-the registered source rest pose. The current four-bone proximity shell is
-clean at rest but can visibly fold during a long unconstrained muscle update,
-so that older dynamic shell gallery is no longer showcase material. Muscle
-drive is evidenced with exposed bones, source muscle surfaces, exact routes,
-and the attachment review below until the exterior has anatomical skin weights
-or a deformable skin solve. The shell is not an FEM/MPM skin, collision shell,
-tissue-material model, or clinical-registration claim.
+The lead visual is the exposed source anatomy, where BodyParts3D muscle and
+tendon surfaces can be inspected directly against their named bones. The raw
+BodyParts3D exterior is retained as a provenance/rest-frame artifact but is
+deliberately withheld from the showcase: it is not presentation-grade or valid
+under driven motion. See [visual progress](Docs/VISUAL_PROGRESS.md) for the
+exact evidence boundary.
 
 ### Muscle-driven full-body anatomy
 
@@ -109,17 +94,11 @@ three-body review above.
 
 ### Source skin provenance
 
-<p align="center">
-  <img src="Docs/media/bodyparts3d-skin-source-reference-2048/axis_negative_y.png" width="32%" alt="BodyParts3D source skin, front" />
-  <img src="Docs/media/bodyparts3d-skin-source-reference-2048/oblique_positive_x_negative_y.png" width="32%" alt="BodyParts3D source skin, oblique" />
-  <img src="Docs/media/bodyparts3d-skin-source-reference-2048/axis_positive_y.png" width="32%" alt="BodyParts3D source skin, rear" />
-</p>
-
-This source-static reference remains alongside the dynamic exterior capture
-above: it is the exact 102,467-vertex, 203,382-triangle BodyParts3D mesh from
-which the native shell payload is made. The runtime uses four proximity-derived
-registered bone-envelope influences per vertex; it is not a deformable-shell
-mechanics result.
+The exact 102,467-vertex, 203,382-triangle BodyParts3D `FJ2810` shell is
+retained locally for source provenance and rest-frame reconstruction, but its
+raw imagery is intentionally not displayed here. The current runtime uses
+four proximity-derived registered bone-envelope influences per vertex; it is
+not a deformable-shell mechanics result or a human-quality exterior.
 
 ### Selective upper-limb source-actuator drive
 

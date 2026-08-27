@@ -1,26 +1,19 @@
 # NumiLab Human visual progress
 
-## Native exterior shell — rest-pose quality review — 2026-08-27
+## Withheld exterior-shell source reference — 2026-08-27
 
-<p align="center">
-  <img src="media/bodyparts3d-native-rest-shell-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-front.png" width="24%" alt="Native exterior, front" />
-  <img src="media/bodyparts3d-native-rest-shell-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-oblique.png" width="24%" alt="Native exterior, oblique" />
-  <img src="media/bodyparts3d-native-rest-shell-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-side.png" width="24%" alt="Native exterior, side" />
-  <img src="media/bodyparts3d-native-rest-shell-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-rear.png" width="24%" alt="Native exterior, rear" />
-</p>
+The exact 102,467-vertex, 203,382-triangle BodyParts3D exterior is retained
+as a native rest-frame provenance artifact, not as a current visual showcase.
+Its raw source appearance is not presentation-grade, and the current
+proximity-derived four-bone weights can visibly fold under driven motion. The
+[capture record](media/bodyparts3d-native-rest-shell-2048/capture.transcript.txt)
+keeps the four-angle source evidence (485,889 / 425,643 / 307,044 / 516,748
+shell pixels) without promoting those frames as Human-quality imagery.
 
-The clean presentation reference is the exact 102,467-vertex, 203,382-triangle
-BodyParts3D exterior at the registered source rest pose, rendered natively on
-Apple M4 at 2048 px. All four views have nonzero shell coverage: 485,889 /
-425,643 / 307,044 / 516,748 pixels. The [capture record](media/bodyparts3d-native-rest-shell-2048/capture.transcript.txt)
-records the frame hashes and native devices.
-
-The former long free-dynamics shell capture is retained only as an engineering
-artifact. Its proximity-derived four-bone weights visibly fold on a dynamic
-pose, so it is not current showcase material. The active anatomy evidence is
-the exposed source-muscle and tendon review; a dynamic exterior returns only
-after anatomical skin weights or a deformable skin solve. This rest-pose
-review is not skin mechanics, collision, or clinical registration.
+The current visual authority is the exposed source-muscle/tendon review below.
+An exterior returns only with anatomical skin weights or a deformable skin
+solve; this stored rest reference is not skin mechanics, collision, or
+clinical registration.
 
 ## Current full-body source-muscle and tendon review — 2026-08-27
 

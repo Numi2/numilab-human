@@ -77,9 +77,9 @@ the final pose, not a replacement tendon mesh or a physical attachment result.
 The [capture record](media/myosim-native-selective-calf-route-attachment-2048/capture.transcript.txt)
 contains the parameters, device counters, and exact images.
 
-## Current native exterior-shell quality check — 2026-08-27
+## Withheld native exterior-shell source check — 2026-08-27
 
-The four-angle 2048 px [rest-pose exterior-shell capture](VISUAL_PROGRESS.md#native-exterior-shell--rest-pose-quality-review--2026-08-27)
+The four-angle 2048 px [rest-pose exterior-shell capture](VISUAL_PROGRESS.md#withheld-exterior-shell-source-reference--2026-08-27)
 uses the exact BodyParts3D `FJ2810` skin mesh: 102,467 vertices and 203,382
 triangles. The offline source package derives four proximity-weighted,
 registration-compatible Core body influences per vertex across 86 body
@@ -87,26 +87,27 @@ bindings, then verifies the registered rest-pose reconstruction to
 `1.0111756560930368e-15 m`. The runtime command starts no Python process:
 the final 157-body pose and all four Apple-M4 renders are native C++/Metal.
 
-The reviewed frame coverage is 485,889 / 425,643 / 307,044 / 516,748 skin
-pixels from front through rear, with no bone, muscle, or tendon proxy leaking
-through the opaque source shell. A longer free-dynamics capture exposed visible
-proximity-skin folds, so it is deliberately retired from presentation instead
-of being promoted as a realistic moving exterior. This establishes only a
-clean native rest-pose visual reference; it does not establish physical skin
-deformation, material calibration, collision/contact geometry, or a clinical
-soft-tissue registration. The exposed tendon inspection remains the authority
-for tendon-to-bone visual continuity.
+The stored frames have 485,889 / 425,643 / 307,044 / 516,748 skin pixels from
+front through rear, with no bone, muscle, or tendon proxy leaking through the
+opaque source shell. Its raw source appearance is not presentation-grade, and
+a longer free-dynamics capture exposed visible proximity-skin folds. It is
+therefore withheld from the showcase rather than presented as a realistic
+moving exterior. This establishes only source rest-pose provenance, not
+physical skin deformation, material calibration, collision/contact geometry,
+or clinical soft-tissue registration. The exposed tendon inspection remains
+the authority for tendon-to-bone visual continuity.
 
-## Current driven tendon-junction check — 2026-08-27
+## Retained driven tendon-junction check — 2026-08-27
 
 The four-angle 2048 px [driven tendon-junction capture](VISUAL_PROGRESS.md#muscle-driven-tendon-junction-continuity--2026-08-27)
 uses the exact 150-surface BodyParts3D muscle/tendon import after the same
 32-step all-416-muscle Metal force update and Core FP64 source-foot-contact
-fallback. At a source tendon mesh's open boundary, the native renderer may
-close a visible raster seam with a short source-proximity collar to the nearest
-visible endpoint-compatible muscle surface or its named secondary-bone
-surface. The rendered collar is reported separately from source tendon pixels
-and follows the final articulated pose.
+fallback. At an open boundary whose source vertices are already locked to the
+named distal body, the native renderer may close a visible raster seam with a
+short source-proximity collar to that named bone surface only. It never
+searches for or fabricates a muscle-to-tendon bridge. The rendered collar is
+reported separately from source tendon pixels and follows the final articulated
+pose.
 
 This corrects the exposed anatomy presentation. It does not change MyoSim
 spatial routes, attach a new force, weld a tendon to bone, define a material,
