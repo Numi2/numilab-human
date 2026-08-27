@@ -11,7 +11,7 @@ the native Human execution path.
 | Active full-body mechanics | MyoSim `myofullbody` | 103 source bodies, 416 muscles, native Core reference |
 | Cervical/hyoid mechanics | Mortensen 2018 | complete 72-muscle OpenSim 3 source IR; merge registration remains explicit |
 | Anatomy/visual layers | BodyParts3D 4.0 | named geometry/hierarchy; 184 source bone meshes are pose-bound for native visual inspection |
-| Detailed calf visual supplement | Z-Anatomy | four right-calf surfaces only; CC-BY-SA geometry, BodyParts3D/MyoSim body bindings retained |
+| Detailed calf visual supplement | Z-Anatomy | four right-calf surfaces plus the matching calcaneus overlay; CC-BY-SA geometry rigidly bound to the existing BodyParts3D/MyoSim `calcn_r` body |
 | Comparative lower-body mechanics | RajagopalLaiUhlrich2023 | retained source-faithful bounded Metal path |
 | Comparative upper extremities | MoBL-ARMS | authenticated bimanual import or pinned public unimanual 4.1 source variant |
 
@@ -40,6 +40,12 @@ capture drives MyoSim `gaslat_r`, `gasmed_r`, and `soleus_r` at `0.5` for one
 muscle-to-tendon-to-bone geometry inspectable, but remains an anatomical
 source-surface view—not photorealistic skin, a tendon continuum, or a physical
 attachment certificate. The [capture record](Docs/media/myosim-native-calcaneal-attachment-2048/capture.transcript.txt) records the execution boundary.
+
+For the detailed right-calf inspection, the matching free Z-Anatomy
+`Calcaneus.r` now replaces only the visible calcaneus and is rigidly attached
+to the same MyoSim `calcn_r` body. This prevents the prior cross-source tendon
+projection; it is still a scoped mechanics inspection, not a photorealistic
+showcase. Its [four-angle record](Docs/media/myosim-native-zanatomy-matched-calcaneus-2048/capture.transcript.txt) keeps the exact evidence.
 
 ### Muscle-driven torso anatomy
 
@@ -287,9 +293,10 @@ numi human myosim-native-fullbody-soft-tissue-visuals \
 
 # Optional detailed right-calf geometry. Blender is used only for this
 # offline, CC-BY-SA source export; neither native inspection command starts
-# Blender or Python. The payload retains MyoSim/BodyParts3D body bindings and
-# projects only the already source-triangle-locked tendon insertion band onto
-# the named BodyParts3D calcaneus surface.
+# Blender or Python. The payload retains MyoSim/BodyParts3D body bindings.
+# For this scoped inspection its matching free Calcaneus.r replaces only the
+# visible BodyParts3D calcaneus, while remaining rigidly bound to the existing
+# `calcn_r` body; this avoids warping the authored tendon onto a different mesh.
 /opt/homebrew/bin/blender --background /path/to/Startup.blend \
   --python tools/export_zanatomy_calf.py -- Build/zanatomy-calf-export.json
 numi human zanatomy-calf-visual-supplement-payload \

@@ -32,12 +32,14 @@ every other source in local generated artifacts.
 - License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 - Required attribution: `Z-Anatomy, Lluis Vinas, CC BY-SA 4.0`.
 - Imported material: only the right lateral/medial gastrocnemius, soleus,
-  calcaneal tendon, and a non-rendered right-calcaneus registration landmark.
-  No other Z-Anatomy organs or ancillary assets are imported.
-- Tracked derivatives: `Docs/media/myosim-native-zanatomy-calf-2048/` is a
-  CC-BY-SA source-derived visual supplement. It keeps BodyParts3D articulated
-  bones and copied named MyoSim body weights; it is not a replacement force or
-  mechanics asset. The raw blend and intermediate Blender export remain local.
+  calcaneal tendon, and matching right calcaneus. The calcaneus is a rigid
+  visual overlay for the scoped calf inspection, bound to the existing MyoSim
+  `calcn_r` body; no other Z-Anatomy organs or ancillary assets are imported.
+- Tracked derivatives: `Docs/media/myosim-native-zanatomy-matched-calcaneus-2048/`
+  is a CC-BY-SA source-derived mechanics inspection. It keeps the whole-body
+  BodyParts3D skeleton and copied named MyoSim body weights; it is not a
+  replacement force or mechanics asset. The raw blend and intermediate Blender
+  export remain local.
 
 ## OpenSim RajagopalLaiUhlrich2023
 

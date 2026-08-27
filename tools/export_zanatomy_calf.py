@@ -25,10 +25,11 @@ OBJECTS = (
     ("medial_gastrocnemius", "Medial head of gastrocnemius.r", "muscle"),
     ("soleus", "Soleus muscle.r", "muscle"),
     ("calcaneal_tendon", "Calcaneal tendon.r", "tendon"),
-    # This is a rest-frame registration landmark only.  It is never emitted
-    # into the Human tissue payload because the articulated BodyParts3D bone
-    # remains the visual skeletal authority.
-    ("calcaneus_landmark", "Calcaneus.r", "landmark"),
+    # The narrowly scoped heel overlay is rigidly bound to the existing
+    # MyoSim calcn_r body. It keeps the detailed free tendon and its authored
+    # calcaneal insertion in one matching source-surface pair; BodyParts3D
+    # remains the geometry authority everywhere else.
+    ("calcaneus_overlay", "Calcaneus.r", "bone"),
 )
 
 

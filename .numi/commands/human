@@ -459,9 +459,10 @@ if [ "${1:-}" = "myosim-native-passive-fem-calf" ]; then
 fi
 
 # Detailed Z-Anatomy geometry is restricted to the visually demanding right
-# calf.  The NHTISS3 payload has already transferred the existing named
-# BodyParts3D/MyoSim femur, tibia and calcaneus weights; this native command
-# performs no Blender or Python work and keeps the MyoSim force route primary.
+# calf. The NHTISS3 payload transfers the existing named BodyParts3D/MyoSim
+# femur, tibia and calcaneus weights, and adds one matching Calcaneus.r mesh
+# rigidly bound to the same calcn_r body. This native command performs no
+# Blender or Python work and keeps the MyoSim force route primary.
 if [ "${1:-}" = "myosim-native-zanatomy-calf-inspection" ]; then
     if [ "$#" -ne 5 ] && { [ "$#" -ne 7 ] || [ "$6" != "--dimension" ]; }; then
         printf '%s\n' "usage: numi human myosim-native-zanatomy-calf-inspection <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <zanatomy-calf-myosim-tissues.nhtissue> <output-directory> [--dimension <512..2048; multiple-of-64>]" >&2
@@ -490,11 +491,11 @@ if [ "${1:-}" = "myosim-native-zanatomy-calf-inspection" ]; then
         "$output_directory" \
         --soft-tissue-payload "$soft_tissue_payload" \
         --zanatomy-calf-visual-supplement \
-        --visible-bone-body-index 138 \
         --soft-tissue-stable-id 1 \
         --soft-tissue-stable-id 2 \
         --soft-tissue-stable-id 3 \
         --soft-tissue-stable-id 4 \
+        --soft-tissue-stable-id 5 \
         --focus-body-index 136 \
         --muscle-step-seconds 0.0001 \
         --muscle-step-count 1 \
@@ -509,9 +510,9 @@ if [ "${1:-}" = "myosim-native-zanatomy-calf-inspection" ]; then
 fi
 
 # This is the focused counterpart to the detailed calf plate above.  It keeps
-# the identical four named visual surfaces and all-416-path source-force
-# evaluation, but centres the native camera on the right calcaneus so the
-# source-triangle-registered tendon insertion is large enough to inspect.
+# the identical four named visual surfaces plus matching calcaneus overlay and
+# all-416-path source-force evaluation, but centres the native camera on the
+# right calcaneus so the source-authored insertion is large enough to inspect.
 if [ "${1:-}" = "myosim-native-zanatomy-calcaneal-insertion" ]; then
     if [ "$#" -ne 5 ] && { [ "$#" -ne 7 ] || [ "$6" != "--dimension" ]; }; then
         printf '%s\n' "usage: numi human myosim-native-zanatomy-calcaneal-insertion <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <zanatomy-calf-myosim-tissues.nhtissue> <output-directory> [--dimension <512..2048; multiple-of-64>]" >&2
@@ -540,11 +541,11 @@ if [ "${1:-}" = "myosim-native-zanatomy-calcaneal-insertion" ]; then
         "$output_directory" \
         --soft-tissue-payload "$soft_tissue_payload" \
         --zanatomy-calf-visual-supplement \
-        --visible-bone-body-index 138 \
         --soft-tissue-stable-id 1 \
         --soft-tissue-stable-id 2 \
         --soft-tissue-stable-id 3 \
         --soft-tissue-stable-id 4 \
+        --soft-tissue-stable-id 5 \
         --focus-body-index 138 \
         --muscle-step-seconds 0.0001 \
         --muscle-step-count 1 \

@@ -36,6 +36,7 @@ _PAYLOAD_HEADER = struct.Struct("<8s5I32s")
 _PAYLOAD_RECORD = struct.Struct("<10I24f")
 _PAYLOAD_VERTEX = struct.Struct("<9f")
 _INVALID = 0xFFFFFFFF
+_ZANATOMY_OVERLAY_BONE_LAYER = 3
 
 
 def _finite_vector(value: Any, context: str) -> list[float]:
@@ -84,7 +85,7 @@ def _read_export(path: Path, configuration: dict[str, Any]) -> dict[str, dict[st
         vertices = entry.get("vertices_world_m")
         normals = entry.get("normals_world")
         triangles = entry.get("triangles")
-        if layer not in {"muscle", "tendon", "landmark"} or \
+        if layer not in {"muscle", "tendon", "bone"} or \
                 not isinstance(vertices, list) or not isinstance(normals, list) or \
                 not isinstance(triangles, list) or len(vertices) != len(normals) or not vertices:
             raise ImportError(f"Z-Anatomy calf export {identifier} has invalid geometry arrays")
@@ -320,10 +321,13 @@ def build_zanatomy_calf_visual_supplement_payload(
 ) -> dict[str, Any]:
     """Build an NHTISS3 visual-only Z-Anatomy right-calf supplement.
 
-    The source geometry is more detailed than the BodyParts3D calf slice, but
-    the force-route and body-binding authority remains the existing source
-    payload: values are copied only from the named matching BodyParts3D
-    record, then its calcaneal attachment lock is reapplied to the new tendon.
+    The source geometry is more detailed than the BodyParts3D calf slice. The
+    force-route and body-binding authority remains the existing source
+    payload: muscles and tendon inherit named BodyParts3D body weights, while
+    the matching Z-Anatomy calcaneus is rigidly bound to the existing MyoSim
+    calcn_r body for this narrow five-surface inspection. This preserves the
+    source-authored tendon-to-bone visual connection without changing a force
+    path or the whole-body skeletal source.
     """
     configuration_path = Path(__file__).resolve().parents[2] / "config/zanatomy-calf-visual-supplement.v1.json"
     configuration = read_json(configuration_path)
@@ -339,13 +343,13 @@ def build_zanatomy_calf_visual_supplement_payload(
     _, _, _, _, _, registration_fingerprint, source_sha = header
     _, world_translation, world_rotation, world_scale = _registration_world_transform(registration_path.resolve())
 
-    landmark_entry = next((entry for entry in entries if entry.get("layer") == "landmark"), None)
-    if not isinstance(landmark_entry, dict):
-        raise ImportError("Z-Anatomy calf supplement has no calcaneus registration landmark")
-    landmark_id = landmark_entry.get("id")
-    if not isinstance(landmark_id, str) or landmark_id not in exported:
-        raise ImportError("Z-Anatomy calf supplement calcaneus landmark is absent from the export")
-    member_id, hierarchy = landmark_entry.get("bodyparts_member_id"), landmark_entry.get("bodyparts_hierarchy")
+    overlay_entry = next((entry for entry in entries if entry.get("layer") == "bone"), None)
+    if not isinstance(overlay_entry, dict):
+        raise ImportError("Z-Anatomy calf supplement has no calcaneus overlay")
+    overlay_id = overlay_entry.get("id")
+    if not isinstance(overlay_id, str) or overlay_id not in exported:
+        raise ImportError("Z-Anatomy calf supplement calcaneus overlay is absent from the export")
+    member_id, hierarchy = overlay_entry.get("bodyparts_member_id"), overlay_entry.get("bodyparts_hierarchy")
     if not isinstance(member_id, str) or not isinstance(hierarchy, str):
         raise ImportError("Z-Anatomy calf supplement calcaneus target is incomplete")
     _, bone_member, bone_obj = _bodyparts_obj_member(sources.resolve(), hierarchy, member_id)
@@ -357,29 +361,43 @@ def build_zanatomy_calf_visual_supplement_payload(
         ]
         for vertex in bone_vertices_mm
     ]
-    landmark_world = exported[landmark_id]["vertices"]
+    overlay_world = exported[overlay_id]["vertices"]
     registration_translation = [
-        target - origin for target, origin in zip(_vector_mean(bone_world, "BodyParts3D calcaneus"), _vector_mean(landmark_world, "Z-Anatomy calcaneus"), strict=True)
+        target - origin for target, origin in zip(_vector_mean(bone_world, "BodyParts3D calcaneus"), _vector_mean(overlay_world, "Z-Anatomy calcaneus"), strict=True)
     ]
+    overlay_world_registered = [
+        [point[axis] + registration_translation[axis] for axis in range(3)]
+        for point in overlay_world
+    ]
+    overlay_triangles = exported[overlay_id]["triangles"]
 
     records: list[bytes] = []
     stored_vertices: list[tuple[float, ...]] = []
     stored_indices: list[int] = []
     surfaces: list[dict[str, Any]] = []
-    surface_entries = [entry for entry in entries if isinstance(entry, dict) and entry.get("layer") != "landmark"]
+    surface_entries = [entry for entry in entries if isinstance(entry, dict)]
     for output_stable_id, entry in enumerate(surface_entries, start=1):
         identifier, base_stable_id, layer_name = entry.get("id"), entry.get("base_stable_id"), entry.get("layer")
         if not isinstance(identifier, str) or not isinstance(base_stable_id, int) or identifier not in exported or base_stable_id not in base_records:
             raise ImportError("Z-Anatomy calf supplement source/body binding is unresolved")
         zmesh = exported[identifier]
-        expected_layer = _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE if layer_name == "muscle" else _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON if layer_name == "tendon" else None
         base = base_records[base_stable_id]
-        if expected_layer is None or zmesh["layer"] != layer_name or base[8] != expected_layer:
+        expected_layer = _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE if layer_name == "muscle" else \
+            _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON if layer_name == "tendon" else \
+            _ZANATOMY_OVERLAY_BONE_LAYER if layer_name == "bone" else None
+        if expected_layer is None or zmesh["layer"] != layer_name:
             raise ImportError(f"Z-Anatomy calf supplement {identifier} layer conflicts with its BodyParts3D binding")
-        expected_bodies = entry.get("body_indices")
-        if not isinstance(expected_bodies, list) or not 2 <= len(expected_bodies) <= 3 or \
+        if layer_name == "bone":
+            expected_bodies = [entry.get("body_index")]
+            if expected_bodies != [138] or base[2] != 138:
+                raise ImportError("Z-Anatomy calcaneus overlay must use the named MyoSim calcn_r binding")
+        else:
+            expected_bodies = entry.get("body_indices")
+            if base[8] != expected_layer:
+                raise ImportError(f"Z-Anatomy calf supplement {identifier} layer conflicts with its BodyParts3D binding")
+        if not isinstance(expected_bodies, list) or not 1 <= len(expected_bodies) <= 3 or \
                 any(not isinstance(body, int) for body in expected_bodies) or \
-                tuple(expected_bodies) != tuple(body for body in base[:3] if body != _INVALID):
+                (layer_name != "bone" and tuple(expected_bodies) != tuple(body for body in base[:3] if body != _INVALID)):
             raise ImportError(f"Z-Anatomy calf supplement {identifier} has a different named MyoSim body binding")
         first_vertex, base_count = base[3], base[4]
         base_points = [
@@ -391,14 +409,20 @@ def build_zanatomy_calf_visual_supplement_payload(
             [point[axis] + registration_translation[axis] for axis in range(3)]
             for point in zmesh["vertices"]
         ]
-        weights, correspondence = _nearest_weights(world_vertices, base_points, base_weights, identifier)
+        if layer_name == "bone":
+            weights = [(1.0, 0.0, 0.0)] * len(world_vertices)
+            correspondence = {"method": "rigid existing_MyoSim_calcn_r_body_binding"}
+            record_bodies = (138, _INVALID, _INVALID)
+            identity_binding = (0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0)
+            record_bindings = (*base[26:34], *identity_binding, *identity_binding)
+        else:
+            weights, correspondence = _nearest_weights(world_vertices, base_points, base_weights, identifier)
+            record_bodies = base[:3]
+            record_bindings = base[10:]
         attachment_lock: dict[str, Any] | None = None
         if layer_name == "tendon":
             attenuation, attachment_lock = _bodyparts_secondary_attachment_weight_lock(
-                world_vertices, [1.0] * len(world_vertices), bone_world, bone_triangles,
-            )
-            world_vertices, surface_projection = _project_tendon_attachment_band(
-                world_vertices, attenuation, bone_world, bone_triangles,
+                world_vertices, [1.0] * len(world_vertices), overlay_world_registered, overlay_triangles,
             )
             proximal_base = [
                 (point, weight) for point, weight in zip(base_points, base_weights, strict=True)
@@ -430,10 +454,11 @@ def build_zanatomy_calf_visual_supplement_payload(
                 **fallback_correspondence,
             }
             attachment_lock["method"] = (
-                "Z-Anatomy tendon vertices with named BodyParts3D calcaneus source-triangle lock; "
-                "proximal MyoSim body proportions transferred from nearest named BodyParts3D tendon vertex"
+                "Z-Anatomy tendon vertices with named matching Z-Anatomy calcaneus source-triangle lock; "
+                "the calcaneus is rigidly bound to existing MyoSim calcn_r while proximal MyoSim body "
+                "proportions transfer from the nearest named BodyParts3D tendon vertex"
             )
-            attachment_lock["surface_projection"] = surface_projection
+            attachment_lock["paired_calcaneus_overlay"] = overlay_id
         first_output_vertex, first_output_index = len(stored_vertices), len(stored_indices)
         for world_vertex, normal, weight in zip(world_vertices, zmesh["normals"], weights, strict=True):
             if abs(sum(weight) - 1.0) > 1.0e-6 or any(value < 0.0 or not math.isfinite(value) for value in weight):
@@ -442,8 +467,8 @@ def build_zanatomy_calf_visual_supplement_payload(
                                     *_stored_normal_from_world(normal, world_rotation), *weight))
         stored_indices.extend(first_output_vertex + index for triangle in zmesh["triangles"] for index in triangle)
         records.append(_PAYLOAD_RECORD.pack(
-            *base[:3], first_output_vertex, len(zmesh["vertices"]), first_output_index,
-            len(zmesh["triangles"]) * 3, output_stable_id, expected_layer, 0, *base[10:],
+            *record_bodies, first_output_vertex, len(zmesh["vertices"]), first_output_index,
+            len(zmesh["triangles"]) * 3, output_stable_id, expected_layer, 0, *record_bindings,
         ))
         surface = {
             "id": identifier,
@@ -452,14 +477,16 @@ def build_zanatomy_calf_visual_supplement_payload(
             "layer": layer_name,
             "vertex_count": len(zmesh["vertices"]),
             "triangle_count": len(zmesh["triangles"]),
-            "body_bindings": list(base[:3]),
-            "body_weight_transfer": "nearest named matching BodyParts3D source vertex",
+            "body_bindings": list(record_bodies),
+            "body_weight_transfer": correspondence.get(
+                "method", "nearest named matching BodyParts3D source vertex"
+            ),
             **correspondence,
         }
         if attachment_lock is not None:
             surface["named_calcaneus_attachment_lock"] = attachment_lock
         surfaces.append(surface)
-    if len(records) != 4 or len(stored_vertices) > 0xFFFFFFFF or len(stored_indices) > 0xFFFFFFFF:
+    if len(records) != 5 or len(stored_vertices) > 0xFFFFFFFF or len(stored_indices) > 0xFFFFFFFF:
         raise ImportError("Z-Anatomy calf supplement payload capacity or scope is invalid")
     payload = b"".join((
         _PAYLOAD_HEADER.pack(_BODYPARTS_MYOSIM_MULTI_BODY_SOFT_TISSUE_VISUAL_MAGIC,
@@ -491,14 +518,14 @@ def build_zanatomy_calf_visual_supplement_payload(
         "registration": {
             "method": configuration["registration"]["method"],
             "translation_world_m": registration_translation,
-            "zanatomy_calcaneus_centroid_world_m": _vector_mean(landmark_world, "Z-Anatomy calcaneus"),
+            "zanatomy_calcaneus_centroid_world_m": _vector_mean(overlay_world, "Z-Anatomy calcaneus"),
             "bodyparts_calcaneus_centroid_world_m": _vector_mean(bone_world, "BodyParts3D calcaneus"),
             "rotation": "identity",
         },
         "surfaces": surfaces,
-        "runtime_binding": "Z-Anatomy right-calf visual geometry with copied named BodyParts3D/Myosim NHTISS3 articulated-body weights; named calcaneal source-triangle lock reapplied to the supplemental tendon",
+        "runtime_binding": "Z-Anatomy right-calf visual geometry with copied named BodyParts3D/MyoSim muscle and tendon weights plus one matching Z-Anatomy calcaneus rigidly bound to the existing MyoSim calcn_r body; the paired tendon remains on its authored source attachment without a generated cross-source projection",
         "status": "visual_supplement_input_not_a_force_path_or_continuum",
-        "evidence_boundary": "The Z-Anatomy mesh is a CC-BY-SA visual supplement for the selected right-calf slice. BodyParts3D and MyoSim remain the geometry registration, articulated-body, source route, tendon parameter, and force authority. This does not create a deformable muscle/tendon continuum, change a MyoSim attachment, or establish medical registration or collision.",
+        "evidence_boundary": "The Z-Anatomy mesh is a CC-BY-SA visual supplement for the selected right-calf slice. The detailed calcaneus replaces the BodyParts3D calcaneus only in that visual inspection and remains rigidly attached to the existing MyoSim calcn_r body. BodyParts3D and MyoSim remain the whole-body geometry registration, articulated-body, source route, tendon parameter, and force authority. This does not create a deformable muscle/tendon continuum, change a MyoSim attachment, or establish medical registration or collision.",
     }
     write_json(output / "zanatomy-calf-myosim-tissues.manifest.json", manifest)
     return manifest

@@ -181,15 +181,19 @@ class ImporterTests(unittest.TestCase):
         normal = _stored_normal_from_world([0.0, 1.0, 0.0], rotation)
         self.assertEqual(normal, [1.0, 0.0, 0.0])
 
-    def test_zanatomy_supplement_scope_is_four_named_surfaces_and_one_landmark(self) -> None:
+    def test_zanatomy_supplement_scope_is_four_named_surfaces_and_matching_calcaneus(self) -> None:
         configuration = read_json(ROOT / "config/zanatomy-calf-visual-supplement.v1.json")
         self.assertEqual(configuration["source"]["license"], "CC-BY-SA-4.0")
-        surfaces = [entry for entry in configuration["objects"] if entry["layer"] != "landmark"]
+        surfaces = [entry for entry in configuration["objects"] if entry["layer"] != "bone"]
         self.assertEqual([entry["id"] for entry in surfaces], [
             "lateral_gastrocnemius", "medial_gastrocnemius", "soleus", "calcaneal_tendon",
         ])
         self.assertEqual([entry["base_stable_id"] for entry in surfaces], [1, 3, 5, 7])
         self.assertEqual(surfaces[-1]["body_indices"], [131, 136, 138])
+        overlay = next(entry for entry in configuration["objects"] if entry["layer"] == "bone")
+        self.assertEqual(overlay["id"], "calcaneus_overlay")
+        self.assertEqual(overlay["body_index"], 138)
+        self.assertEqual(overlay["base_stable_id"], 7)
 
     def test_fullbody_surface_map_is_mirrored_and_explicit(self) -> None:
         surfaces = _bodyparts_myosim_surface_specifications()

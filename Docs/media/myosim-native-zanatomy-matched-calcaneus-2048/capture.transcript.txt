@@ -1,0 +1,15 @@
+NumiLab Human matched-calcaneus muscle-driven inspection — 2026-08-27
+
+execution_host=local Apple M4; Mac mini was not used because it was occupied by the user's crow-training workload
+source_geometry=Z-Anatomy repository revision 9a2ef22cc8443d14f9aa18ba91246416b1c6ab7a, exported from Z-Anatomy.zip/Startup.blend; CC-BY-SA-4.0; attribution: Z-Anatomy, Lluis Vinas
+scope=right lateral gastrocnemius (2454 vertices/4908 triangles), medial gastrocnemius (3233/6462), soleus (3379/6774), calcaneal tendon (2191/4377), and matching Calcaneus.r overlay (726/1448)
+binding=BodyParts3D remains the whole-body visual skeleton. In this five-surface calf inspection only, the matching free Calcaneus.r overlay replaces BodyParts3D FJ3360 visually and is rigidly bound to the existing MyoSim calcn_r/Core body 138. The source tendon retains three named MyoSim owners: femur 131, tibia 136, calcaneus 138. It has 224 named matching-calcaneus lock vertices and 40 feather vertices; minimum source-triangle distance is 2.75238675716e-08 m.
+force_probe=selected source actuators 348 gaslat_r, 349 gasmed_r, 369 soleus_r at activation 0.5 for one 100 us step; all 416 source paths evaluated on Apple M4 Metal; 2 transactions; 416 active records; 90 applied wraps; force elapsed 57.786333 ms
+pose_result=maximum_velocity_delta 0.380576572213; maximum_configuration_delta 0.000123820761832; dynamic authored foot witness-plane contact 10 witnesses, 6 active; Metal contact not admitted because the 157-body articulation exceeds its current contact bucket and Core FP64 performed this bounded contact solve
+renderer=Apple M4 native sensorReference; complete 2048 px front, oblique, side, rear capture; fresh renderer/world context per view
+coverage=front bone:487847,muscle:70194,tendon:367; oblique bone:760476,muscle:84678,tendon:25380; side bone:1329690,muscle:9329,tendon:789; rear bone:418665,muscle:32739,tendon:169724
+input_sha256=zanatomy_export:0fe9d0079555f9cb37f1a17811a7f174ec721bcf826ac7f794778c4bea5ee6a0; tissue_payload:f5abf0cfe3bd9cd04828cfbd6e7e54e6f35b4d7ea74acf75ddd93286192c2bf4; tissue_manifest:0d88e9f1404b6eb14c730c7a329ac69c0bddaf39f500b01799ad36b0431e23df
+native_sha256=probe:fdafcfd34b3999caacb228ca30c815370d5da80efc32318f71c600271187ef4e; libmetalrobo:b01297666eefa0841cb969d2280654ef198f9c2759211a864d8e3e454fd87dc6
+image_sha256=front:1d668c677f6913cfc3589d21a53cc0aba03c948ba468081c63fe449f60596376; oblique:acf14757e7996be8ab0dbe9626c63d1b2c79e89c082edd8b0ad8ba97ba8c77fb; side:690bb3f6d204aae5e39e101b9790f59ebeb1c7ed9ca4dd62935fab0e4c0732bf; rear:09acdc728ba4e75950778a0fa0744dd4faeb64a2082ba557be3b52c34292a360
+asset_sha256=mrvpack:b02b1c2d436d3c9d32daa88cfafa0ce32704f16e795bcd9a0d7f5ab5e1697f76; visual_manifest:2350ea3e32c6a9a5b580eb9e90dcf56ac328d64e77e1c6f300932fddd189e69e
+boundary=This is a mechanically driven, source-bound visual inspection. The scoped matching calcaneus overlay removes the prior cross-source visual projection, but it is not photorealistic skin, a tendon continuum, a tendon-to-bone force-transfer law, calibrated collision/contact, gait, or clinical attachment validation.

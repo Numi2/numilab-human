@@ -13,13 +13,13 @@
     {"id": "medial_gastrocnemius", "layer": "muscle", "base_stable_id": 3, "myosim_muscles": ["gasmed_r"], "body_indices": [131, 138]},
     {"id": "soleus", "layer": "muscle", "base_stable_id": 5, "myosim_muscles": ["soleus_r"], "body_indices": [136, 138]},
     {"id": "calcaneal_tendon", "layer": "tendon", "base_stable_id": 7, "myosim_muscles": ["gaslat_r", "gasmed_r", "soleus_r"], "body_indices": [131, 136, 138]},
-    {"id": "calcaneus_landmark", "layer": "landmark", "bodyparts_member_id": "FJ3360", "bodyparts_hierarchy": "is_a"}
+    {"id": "calcaneus_overlay", "layer": "bone", "body_index": 138, "base_stable_id": 7, "bodyparts_member_id": "FJ3360", "bodyparts_hierarchy": "is_a"}
   ],
   "registration": {
     "method": "named_right_calcaneus_surface_centroid_translation",
-    "source": "Z-Anatomy Calcaneus.r evaluated world mesh",
+    "source": "Z-Anatomy Calcaneus.r evaluated world mesh; this is a scoped rigid overlay bound to the existing MyoSim calcn_r body",
     "target": "BodyParts3D FJ3360 right calcaneus under the existing MyoSim rest registration",
     "rotation": "identity_required",
-    "boundary": "A rest-frame visual registration. It does not alter MyoSim attachment sites, paths, force parameters, tendon parameters, rigid bodies, or anatomical collision."
+    "boundary": "A rest-frame visual registration. The overlay replaces BodyParts3D only for the visible calcaneus in this narrowly scoped calf inspection so the matching free tendon and bone meshes retain their authored enthesis. It does not alter MyoSim attachment sites, paths, force parameters, tendon parameters, rigid bodies, or anatomical collision."
   }
 }
