@@ -67,6 +67,17 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(evidence["feathered_vertex_count"], 1)
         self.assertEqual(evidence["nearest_vertex_distance_m"], 0.0)
 
+    def test_tendon_attachment_weight_lock_uses_bone_surface_not_only_vertices(self) -> None:
+        weights, evidence = _bodyparts_secondary_attachment_weight_lock(
+            [[0.01, 0.01, 0.0]], [0.8],
+            [[0.0, 0.0, 0.0], [0.02, 0.0, 0.0], [0.0, 0.02, 0.0]],
+            [(0, 1, 2)],
+        )
+        self.assertEqual(weights, [0.0])
+        self.assertEqual(evidence["method"],
+                         "exact-source-triangle proximity to named secondary BodyParts3D bone mesh")
+        self.assertEqual(evidence["nearest_vertex_distance_m"], 0.0)
+
     def test_fullbody_surface_map_is_mirrored_and_explicit(self) -> None:
         surfaces = _bodyparts_myosim_surface_specifications()
         self.assertEqual(len(surfaces), 150)

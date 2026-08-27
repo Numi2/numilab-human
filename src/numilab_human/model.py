@@ -3869,7 +3869,7 @@ def bodyparts_myosim_right_posterior_chain_visual_payload(
                     f"BodyParts3D posterior-chain tendon {member_id} has an invalid secondary-bone source mesh"
                 )
             _, bone_member, bone_obj = _bodyparts_obj_member(sources, bone_hierarchy, bone_member_id)
-            bone_vertices_mm, _ = _bodyparts_obj_triangles(bone_obj, bone_member)
+            bone_vertices_mm, bone_triangles = _bodyparts_obj_triangles(bone_obj, bone_member)
             bone_vertices_world_m = [
                 [
                     sum(global_matrix[row][column] * vertex[column] for column in range(3)) +
@@ -4014,6 +4014,7 @@ def _bodyparts_secondary_attachment_weight_lock(
     tissue_vertices_world_m: list[list[float]],
     primary_weights: list[float],
     secondary_bone_vertices_world_m: list[list[float]],
+    secondary_bone_triangles: list[tuple[int, int, int]] | None = None,
 ) -> tuple[list[float], dict[str, Any]]:
     """Lock a source tendon insertion to its named source bone mesh.
 
@@ -4021,8 +4022,8 @@ def _bodyparts_secondary_attachment_weight_lock(
     presentation approximation for a crossing muscle belly, but endpoint
     weights inferred from body-centre projection can leave a visible tendon
     insertion moving partly with the wrong body.  For a named tendon surface,
-    retain the exact source mesh and use only its close rest-frame proximity to
-    the named *secondary* bone mesh to force that endpoint's weight to zero.
+    retain the exact source mesh and use close rest-frame proximity to the
+    named *secondary* bone *surface* to force that endpoint's weight to zero.
     The transition is feathered over a short source-space band, so the result
     does not introduce a hard seam in the rendered surface.
 
@@ -4042,6 +4043,64 @@ def _bodyparts_secondary_attachment_weight_lock(
             raise ImportError("BodyParts3D tendon attachment lock has a non-finite bone vertex")
         key = tuple(math.floor(value / cell_size_m) for value in vertex)
         grid.setdefault(key, []).append(vertex)
+    surface_triangles: list[tuple[list[float], list[float], list[float]]] = []
+    if secondary_bone_triangles is not None:
+        for triangle in secondary_bone_triangles:
+            if len(triangle) != 3 or any(
+                not isinstance(index, int) or not 0 <= index < len(secondary_bone_vertices_world_m)
+                for index in triangle
+            ):
+                raise ImportError("BodyParts3D tendon attachment lock has an invalid bone triangle")
+            surface_triangles.append(tuple(secondary_bone_vertices_world_m[index] for index in triangle))
+        if not surface_triangles:
+            raise ImportError("BodyParts3D tendon attachment lock has no secondary-bone triangles")
+
+    def point_triangle_squared_distance(
+        point: list[float], triangle: tuple[list[float], list[float], list[float]]
+    ) -> float:
+        # Christer Ericson, Real-Time Collision Detection: exact closest point
+        # on a triangle, expressed directly in the source registration frame.
+        first, second, third = triangle
+        ab = [second[index] - first[index] for index in range(3)]
+        ac = [third[index] - first[index] for index in range(3)]
+        ap = [point[index] - first[index] for index in range(3)]
+        dot = lambda left, right: sum(left[index] * right[index] for index in range(3))
+        d1, d2 = dot(ab, ap), dot(ac, ap)
+        if d1 <= 0.0 and d2 <= 0.0:
+            return dot(ap, ap)
+        bp = [point[index] - second[index] for index in range(3)]
+        d3, d4 = dot(ab, bp), dot(ac, bp)
+        if d3 >= 0.0 and d4 <= d3:
+            return dot(bp, bp)
+        vc = d1 * d4 - d3 * d2
+        if vc <= 0.0 and d1 >= 0.0 and d3 <= 0.0:
+            factor = d1 / (d1 - d3)
+            difference = [ap[index] - factor * ab[index] for index in range(3)]
+            return dot(difference, difference)
+        cp = [point[index] - third[index] for index in range(3)]
+        d5, d6 = dot(ab, cp), dot(ac, cp)
+        if d6 >= 0.0 and d5 <= d6:
+            return dot(cp, cp)
+        vb = d5 * d2 - d1 * d6
+        if vb <= 0.0 and d2 >= 0.0 and d6 <= 0.0:
+            factor = d2 / (d2 - d6)
+            difference = [ap[index] - factor * ac[index] for index in range(3)]
+            return dot(difference, difference)
+        va = d3 * d6 - d5 * d4
+        if va <= 0.0 and d4 - d3 >= 0.0 and d5 - d6 >= 0.0:
+            factor = (d4 - d3) / ((d4 - d3) + (d5 - d6))
+            bc = [third[index] - second[index] for index in range(3)]
+            difference = [bp[index] - factor * bc[index] for index in range(3)]
+            return dot(difference, difference)
+        denominator = 1.0 / (va + vb + vc)
+        first_weight, second_weight = vb * denominator, vc * denominator
+        closest = [
+            first[index] + first_weight * ab[index] + second_weight * ac[index]
+            for index in range(3)
+        ]
+        difference = [point[index] - closest[index] for index in range(3)]
+        return dot(difference, difference)
+
     result: list[float] = []
     locked = 0
     feathered = 0
@@ -4058,6 +4117,17 @@ def _bodyparts_secondary_attachment_weight_lock(
                     for candidate in grid.get((key[0] + dx, key[1] + dy, key[2] + dz), []):
                         squared = sum((vertex[axis] - candidate[axis]) ** 2 for axis in range(3))
                         nearest_squared = min(nearest_squared, squared)
+        if surface_triangles:
+            # The local vertex grid is a cheap early candidate; the final
+            # source-triangle query removes visible gaps caused by sparse
+            # tessellation around a calcaneal insertion.
+            nearest_squared = min(
+                nearest_squared,
+                min(
+                    point_triangle_squared_distance(vertex, triangle)
+                    for triangle in surface_triangles
+                ),
+            )
         if nearest_squared == math.inf:
             result.append(primary_weight)
             continue
@@ -4077,7 +4147,11 @@ def _bodyparts_secondary_attachment_weight_lock(
             "BodyParts3D tendon surface has no source-mesh-proximate secondary-bone insertion"
         )
     return result, {
-        "method": "exact-source-vertex proximity to named secondary BodyParts3D bone mesh",
+        "method": (
+            "exact-source-triangle proximity to named secondary BodyParts3D bone mesh"
+            if surface_triangles else
+            "exact-source-vertex proximity to named secondary BodyParts3D bone mesh"
+        ),
         "lock_radius_m": lock_radius_m,
         "feather_radius_m": feather_radius_m,
         "locked_vertex_count": locked,
@@ -4322,7 +4396,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                     f"BodyParts3D tendon surface {member_id} has an invalid secondary-bone source mesh"
                 )
             _, bone_member, bone_obj = _bodyparts_obj_member(sources, bone_hierarchy, bone_member_id)
-            bone_vertices_mm, _ = _bodyparts_obj_triangles(bone_obj, bone_member)
+            bone_vertices_mm, bone_triangles = _bodyparts_obj_triangles(bone_obj, bone_member)
             bone_vertices_world_m = [
                 [
                     sum(global_matrix[row][column] * vertex[column] for column in range(3)) +
@@ -4332,7 +4406,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                 for vertex in bone_vertices_mm
             ]
             primary_weights, attachment_weight_lock = _bodyparts_secondary_attachment_weight_lock(
-                global_vertices, primary_weights, bone_vertices_world_m,
+                global_vertices, primary_weights, bone_vertices_world_m, bone_triangles,
             )
             attachment_weight_lock.update({
                 "secondary_body": secondary_name,

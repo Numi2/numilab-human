@@ -21,13 +21,28 @@ The current broad visual reference is the four-angle 2048 px
 Its native camera framing is evaluated from the rendered source geometry, not
 the narrower articulated COM envelope that cropped the earlier broad view.
 The review has nonzero bone, muscle, and tendon segmentation in every angle,
-including 4,633 tendon pixels in the rear frame. It covers 184 exact
+including 5,502 tendon pixels in the rear frame. The camera is world-anchored
+and targets the exact rendered-vertex centroid, avoiding the empty-space
+oblique framing of the prior gallery. It covers 184 exact
 BodyParts3D bone meshes and 150 source muscle/tendon surfaces at the
 Metal-computed MyoSim pose on the local Apple M4.
 
 This validates visibility and framing of the source anatomy at the captured
 pose only. It is not skin realism, deformable muscle/tendon physics, contact,
 stable support, a motion rollout, or medical registration.
+
+## Current triangle-locked calcaneal-tendon check — 2026-08-27
+
+The four-angle 2048 px [calcaneal-tendon inspection](VISUAL_PROGRESS.md#triangle-locked-calcaneal-tendon-inspection--2026-08-27)
+uses the exact BodyParts3D tendon triangles and tests insertion vertices
+against the exact named calcaneus triangle surface, not only against its
+vertices. The 3 mm lock / 15 mm feather binds 944 + 26 right and 943 + 25
+left vertices to their named calcanei. The native rear image retains 46,393
+tendon pixels and visibly continues each Achilles mesh to its calcaneus.
+
+This is a stronger presentation continuity check, not a tissue weld, tendon
+force-transfer law, deformable tendon solve, dynamic contact result, or a
+medical attachment validation.
 
 ## Current supported tendon attachment check — 2026-08-27
 

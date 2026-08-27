@@ -26,9 +26,9 @@ showcase. They remain provenance artifacts, but their framing and tendon
 appearance are not the quality bar for NumiLab Human. The replacement uses
 exact BodyParts3D muscle/tendon surfaces in the same source-default frame as
 the articulated skeleton, with a native two-body surface bind for structures
-that span a joint. The broad view is framed from the rendered source geometry
-itself—not approximate rigid-body centre bounds—and keeps the tendon force-path
-diagnostic separate from anatomy presentation. See
+that span a joint. The broad view uses exact rendered geometry bounds and its
+rendered-vertex centroid—not approximate rigid-body centre bounds—and keeps
+the tendon force-path diagnostic separate from anatomy presentation. See
 [visual progress](Docs/VISUAL_PROGRESS.md) for the evidence boundary.
 
 ### Geometry-framed full-body source anatomy
@@ -41,28 +41,28 @@ diagnostic separate from anatomy presentation. See
 
 This current 2048 × 2048 Apple-M4 inspection keeps the full source anatomy in
 frame: 184 exact BodyParts3D bone meshes, 148 muscle surfaces, and the two
-calcaneal tendon surfaces. The rear view retains 4,633 tendon pixels, while
+calcaneal tendon surfaces. The rear view retains 5,502 tendon pixels, while
 the close inspection below proves the tendon-to-calcaneus presentation bind.
 It is a native Metal-pose anatomy snapshot, not skin, deformable-tissue,
 contact, gait, or clinical-registration evidence.
 
-### Supported posterior-calf tendon attachment inspection
+### Calcaneal tendon-to-bone inspection
 
 <p align="center">
-  <img src="Docs/media/myosim-native-supported-posterior-chain-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-side.png" width="32%" alt="Supported right posterior-calf source surfaces, side" />
-  <img src="Docs/media/myosim-native-supported-posterior-chain-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-oblique.png" width="32%" alt="Supported right posterior-calf source surfaces, oblique" />
-  <img src="Docs/media/myosim-native-supported-posterior-chain-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-rear.png" width="32%" alt="Supported right posterior-calf source surfaces, rear" />
+  <img src="Docs/media/myosim-native-calcaneal-tendon-triangle-lock-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-side.png" width="32%" alt="Right posterior-calf source surfaces, side" />
+  <img src="Docs/media/myosim-native-calcaneal-tendon-triangle-lock-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-oblique.png" width="32%" alt="Right posterior-calf source surfaces, oblique" />
+  <img src="Docs/media/myosim-native-calcaneal-tendon-triangle-lock-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-rear.png" width="32%" alt="Right posterior-calf source surfaces, rear" />
 </p>
 
 This 2048 × 2048 four-angle native inspection is the current tendon view. It
 uses the exact BodyParts3D lateral/medial gastrocnemius, soleus, and
-calcaneal-tendon meshes after a 1 ms, 5%-activation all-416-muscle step and
-MyoSim-authored foot support contact. The two Achilles meshes now lock their
-insertion-side source vertices to the named calcaneus mesh (341 right / 492
-left vertices, with a 15 mm feather), so the driven view keeps the tendon
-continuous at bone rather than relying only on a body-centre blend. The
-triangles remain exact source geometry; this is presentation binding, not a
-deformable tendon, force-transfer, gait, or medical-attachment claim.
+calcaneal-tendon meshes. The two Achilles meshes now test proximity against
+the exact named calcaneus triangles: 944 right and 943 left insertion vertices
+are calcaneus-bound, with 26 and 25 vertices feathered through 3–15 mm. That
+keeps the visible insertion continuous at bone rather than depending on a
+body-centre blend. The triangles remain exact source geometry; this is
+presentation binding, not a deformable tendon, force-transfer, gait, or
+medical-attachment claim.
 
 ### Reviewed full-skeleton native inspection
 

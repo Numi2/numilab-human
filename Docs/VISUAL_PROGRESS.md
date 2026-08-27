@@ -29,26 +29,49 @@ The prior broad muscle-surface capture focused camera body 128, which made
 the source anatomy read as an unhelpful torso close-up. The new native
 `myosim-native-fullbody-soft-tissue-visuals` entry point builds the visual
 pack first, evaluates its exact current world-space source geometry bounds,
-and frames all four cameras from those bounds. It is not a camera-distance
-guess from rigid-body centres.
+and targets each camera at the rendered-vertex centroid. It is not a
+camera-distance guess from rigid-body centres or an AABB midpoint in empty
+oblique-view space.
 
 The reviewed 2048 × 2048 M4 capture contains 184 BodyParts3D bone meshes and
 150 source tissue surfaces (148 muscle, two calcaneal tendon). The source
-geometry extent was 1.72125351429 m and the native camera distance was
-2.06550431252 m. Every view has nonzero bone, muscle, and tendon coverage:
+geometry extent was 1.72125351429 m and the native camera distance is
+1.85895383358 m. Every view has nonzero bone, muscle, and tendon coverage:
 
 | View | Bone / muscle / tendon pixels |
 | --- | ---: |
-| Front | 45,610 / 198,045 / 102 |
-| Oblique | 42,911 / 165,685 / 560 |
-| Side | 34,381 / 98,834 / 549 |
-| Rear | 66,137 / 179,811 / 4,633 |
+| Front | 56,105 / 240,748 / 101 |
+| Oblique | 52,332 / 198,083 / 660 |
+| Side | 41,616 / 118,125 / 619 |
+| Rear | 79,396 / 215,071 / 5,502 |
 
 The full [capture transcript](media/myosim-native-fullbody-geometry-framed-2048/capture.transcript.txt)
 pins the rendered input hashes and output frames. This repairs presentation
 framing only: it is a Metal articulated-pose snapshot with visual two-body
 muscle/tendon surfaces, not a deformable-tissue solve, contact qualification,
 controller, rollout, or medical registration.
+
+## Triangle-locked calcaneal tendon inspection — 2026-08-27
+
+<p align="center">
+  <img src="media/myosim-native-calcaneal-tendon-triangle-lock-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-side.png" width="32%" alt="Triangle-locked right Achilles insertion, side" />
+  <img src="media/myosim-native-calcaneal-tendon-triangle-lock-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-oblique.png" width="32%" alt="Triangle-locked right Achilles insertion, oblique" />
+  <img src="media/myosim-native-calcaneal-tendon-triangle-lock-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-rear.png" width="32%" alt="Triangle-locked right Achilles insertion, rear" />
+</p>
+
+The old nearest-vertex test left sparsely tessellated areas of a tendon eligible
+to blend with the wrong body even when they sat on the calcaneal surface. The
+current package measures exact closest points to the named BodyParts3D
+calcaneus triangles. Vertices within 3 mm are fully calcaneus-bound and the
+3–15 mm band is feathered: 944 locked + 26 feathered on the right, and 943 +
+25 on the left. The four native 2048 px views all contain bone, muscle, and
+tendon pixels; the rear tendon coverage is 46,393 pixels. See the
+[capture transcript](media/myosim-native-calcaneal-tendon-triangle-lock-2048/capture.transcript.txt).
+
+This is a source-default Metal-pose inspection that prevents a visible
+two-body presentation seam at the named insertion. It does not constitute a
+tendon weld, force transfer, a constitutive model, deformable tissue, or a
+medical attachment claim.
 
 ## Supported tendon attachment review — 2026-08-27
 

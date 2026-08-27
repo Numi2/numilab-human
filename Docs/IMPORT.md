@@ -94,7 +94,9 @@ numi human myosim-native-supported-muscle-soft-tissue-visuals \
 # Broader source anatomy: every map row names a BodyParts3D mesh and one or
 # more authored MyoSim muscles. Ordinary rows are admitted only if their route
 # endpoint body pairs agree; the bilateral calcaneal tendon is the explicitly
-# labelled shared-tendon exception.
+# labelled shared-tendon exception. Its insertion-side vertices are evaluated
+# against the exact named calcaneus triangle surface: 3 mm locks the bone
+# parent and 3–15 mm feathers the two-body transition.
 numi human myosim-bodyparts-fullbody-muscle-surface-payload \
   --sources Sources \
   --registration Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json \
