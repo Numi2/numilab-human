@@ -1,5 +1,24 @@
 # NumiLab Human visual progress
 
+## Device-resident full-body muscle-force projection — 2026-08-27
+
+The visual captures below now have a stronger mechanical companion check. The
+Apple M4 native probe evaluates the 416 authored MyoSim MuJoCo muscle routes,
+their static actuator forces, each route's `J^T` generalized-force contribution,
+and the deterministic full-body force reduction in one Metal command-buffer
+sequence. It compares the results with the FP64 Core reference at the same
+source-default pose: maximum per-muscle generalized-force error is
+`0.00471758869298`, and the summed 128-DoF vector differs by
+`0.00642352090836`.
+
+This means the device no longer stops at a visual muscle route or scalar force:
+its force projection follows the current source attachments and wrapped path
+segments. The next boundary is deliberately explicit: the 157-body/128-DoF
+Human exceeds the current Metal **dynamics** bucket, so CPU FP64 still owns the
+bounded forward-dynamics state step and support contact. This validation does
+not claim a device-resident full-body integrator, tendon continuum, deformable
+soft tissue, gait, or clinical anatomy.
+
 ## Focused right upper-limb actuation — 2026-08-27
 
 <p align="center">

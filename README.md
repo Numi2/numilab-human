@@ -233,12 +233,14 @@ numi human right-calcaneal-tendon-continuity-preview \
 This loads the `NHRIGID2` and `NHMYO1` payloads directly into Core, validates
 the 128-DoF floating articulated tree, evaluates every muscle route, applies
 the resulting generalized force, and executes forward dynamics. With `--metal`,
-the same command buffer also evaluates all 416 MuJoCo-source spatial routes
-and their default-state static actuator forces on the Apple GPU, without
-restaging poses through the CPU; each result is compared with the source oracle.
-Dense 128-DoF mass dynamics, muscle `J^T` force scatter, contact, skin/organ
-solvers, and clinical qualification remain separate work; this is not a full
-Metal rollout.
+the same command buffer also evaluates all 416 MuJoCo-source spatial routes,
+their default-state static actuator forces, and the complete source
+`J^T` generalized-force projection on the Apple GPU, without restaging poses
+through the CPU. On Apple M4, the device’s maximum per-muscle force-vector
+error is `0.00471758869298`; the deterministic all-416 reduction differs by
+`0.00642352090836` from the FP64 source reference. Dense 128-DoF device mass
+dynamics, contact, skin/organ solvers, and clinical qualification remain
+separate work; this is not a full Metal rollout.
 
 The same native reference also compares one unconstrained 1 µs FP64 state step
 with the complete 416-muscle generalized force against the identical passive
