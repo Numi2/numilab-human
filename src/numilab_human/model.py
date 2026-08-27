@@ -4777,6 +4777,36 @@ def gate_report(
         sources / "RajagopalLaiUhlrich2023.osim",
         {"role": "lower_body_opensim", "sha256": lower_metadata["sha256"]},
     )
+    myosim_metadata = source_lock["sources"].get("myosim_fullbody")
+    myosim_gate: dict[str, Any] = {"status": "not_selected"}
+    if isinstance(myosim_metadata, dict):
+        storage_dir = myosim_metadata.get("storage_dir")
+        archive_file = myosim_metadata.get("archive_file")
+        expected_file = myosim_metadata.get("expected_file")
+        if not all(isinstance(value, str) and value for value in (
+            storage_dir, archive_file, expected_file,
+        )):
+            myosim_gate = {
+                "status": "invalid_source_lock",
+                "role": myosim_metadata.get("role"),
+            }
+        else:
+            archive = sources / storage_dir / archive_file
+            myosim_gate = _locked_file_gate(
+                archive,
+                {
+                    "role": myosim_metadata.get("role"),
+                    "sha256": myosim_metadata.get("archive_sha256"),
+                },
+            )
+            myosim_gate["source_revision"] = myosim_metadata.get("revision")
+            myosim_gate["license"] = myosim_metadata.get("license")
+            checkout_file = sources / storage_dir / "checkout" / expected_file
+            myosim_gate["expected_source_file"] = str(checkout_file)
+            myosim_gate["source_checkout"] = (
+                "verified" if checkout_file.is_file() else "missing"
+            )
+
     upper_gate: dict[str, Any] = {
         "required_file": source_lock["sources"]["mobl_arms_upper_extremity"]["release_file"],
         "terms": source_lock["sources"]["mobl_arms_upper_extremity"]["license"],
@@ -4800,6 +4830,10 @@ def gate_report(
                 )
 
     bodyparts_ready = all(item["status"] == "verified" for item in bodyparts_files)
+    myosim_source_ready = (
+        myosim_gate.get("status") == "verified" and
+        myosim_gate.get("source_checkout") == "verified"
+    )
     source_import_ready = (
         bodyparts_ready
         and lower_gate["status"] == "verified"
@@ -4833,22 +4867,34 @@ def gate_report(
             "bodyparts3d_4": bodyparts_files,
             "rajagopal_lai_uhlrich_2023": lower_gate,
             "mobl_arms_upper_extremity": upper_gate,
+            "myosim_fullbody": myosim_gate,
         },
         "runtime_compatibility": runtime_compatibility,
         "runtime_checkout": runtime_checkout_gate(runtime_root, runtime_contract),
         "mechanics_execution": {
-            "status": "qualified_bounded_device",
+            "status": "qualified_fullbody_static_device_reference",
             "runtime_revision": runtime_contract["runtime"]["revision"],
-            "contract": "One FunctionBased articulation executes resident q/v/effort state on device with either a fixed root or a source-default-preserving 7-q/6-v physical pelvis root. Source Millard static-equilibrium forces are reduced into that same effort arena before every microstep. Excitation is supplied either by an explicit per-control stream or by a fail-closed complete, source-ordered native-task action surface mapped from signed action to normalized excitation and advanced by device first-order activation dynamics.",
-            "remaining_evidence": runtime_contract["muscle_tendon"][
-                "source_faithful_requirements"
-            ],
+            "active_fullbody": runtime_contract["myosim_fullbody"],
+            "comparative_lower_body": {
+                "contract": "One FunctionBased articulation executes resident q/v/effort state on device with either a fixed root or a source-default-preserving 7-q/6-v physical pelvis root. Source Millard static-equilibrium forces are reduced into that same effort arena before every microstep. Excitation is supplied either by an explicit per-control stream or by a fail-closed complete, source-ordered native-task action surface mapped from signed action to normalized excitation and advanced by device first-order activation dynamics.",
+                "remaining_evidence": runtime_contract["muscle_tendon"][
+                    "source_faithful_requirements"
+                ],
+            },
         },
         "gates": [
             {
                 "id": "source_faithful_import",
                 "status": "ready" if source_import_ready else "blocked",
-                "requirement": "All three exact source artifacts must verify before a local manifest is built.",
+                "requirement": "The legacy BodyParts3D + Rajagopal + authenticated MoBL-ARMS manifest requires all three exact source artifacts.",
+            },
+            {
+                "id": "active_myosim_fullbody_mechanics",
+                "status": (
+                    "qualified_static_device_reference"
+                    if myosim_source_ready else "blocked"
+                ),
+                "requirement": "The active full-body mechanical route requires the pinned Apache-2.0 MyoSim source archive and extracted composition source. Its 416 default-state routes and static actuator forces have Apple-GPU parity; device-resident J^T scatter and forward dynamics remain separate work.",
             },
             {
                 "id": "skeleton_robotpack_lowering",

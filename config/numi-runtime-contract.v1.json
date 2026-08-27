@@ -2,7 +2,7 @@
   "schema": "numi.human.runtime-contract.v1",
   "runtime": {
     "repository": "MetalRobo",
-    "revision": "730aba49546f7708b85dd14f522799b19a757747",
+    "revision": "f56497701c1f11ded5a309f6300cd95ac7bba4aa",
     "articulated_joint_primitives": [
       "fixed",
       "revolute",
@@ -47,7 +47,10 @@
       "apps/numilab_human_core_reference_probe.cpp",
       "include/metalrobo/MillardMuscleReference.hpp",
       "src/core/MillardMuscleReference.cpp",
-      "apps/millard_muscle_reference_probe.cpp"
+      "apps/millard_muscle_reference_probe.cpp",
+      "include/metalrobo/mujoco_muscle_gpu.h",
+      "src/metal/MujocoMuscleReference.metal",
+      "apps/numilab_human_myosim_reference_probe.cpp"
     ]
   },
   "opensim_joint_lowering": {
@@ -85,6 +88,26 @@
     "source_faithful_requirements": [
       "OpenSim binary-equivalence comparison for curves, path wrapping, moment arms, and muscle force",
       "held-out force-length, force-velocity, and anatomical moment-arm validation"
+    ]
+  },
+  "myosim_fullbody": {
+    "current_contract": "metal_articulated_operator_mujoco_general_muscle_route_static_force_reference",
+    "current_contract_evidence": "The active MyoSim full-body NHRIGID2/NHMYO1 path owns a 157-body floating articulation and 416 MuJoCo general-muscle definitions. Metal evaluates articulated poses, analytic point Jacobians, every sphere/cylinder spatial route, and default-state static actuator force in one command-buffer sequence without CPU-restaged geometry. Core's FP64 reference performs the complete length-Jacobian scatter and forward-dynamics update.",
+    "device_parity": {
+      "device": "Apple M4",
+      "body_count": 157,
+      "dof_count": 128,
+      "muscle_count": 416,
+      "route_site_count": 1815,
+      "wrap_count": 143,
+      "applied_default_pose_wrap_count": 90,
+      "maximum_path_length_error_m": 7.45058059692e-07,
+      "maximum_static_force_error_n": 0.00262451171875
+    },
+    "remaining_evidence": [
+      "device-resident length-Jacobian force scatter and forward-dynamics update",
+      "held-out MuJoCo pose, force, and moment-arm trajectories",
+      "registered anatomical contact and deformable-tissue calibration"
     ]
   }
 }

@@ -79,11 +79,12 @@ numi human audit \
   --output Build/human-v1-gates.json
 ```
 
-The gate report is deliberately strict. It distinguishes a verified source
-artifact from an authenticated source not yet supplied, a source manifest from
-an executable Numi `RobotPack`, and a software integration from material or
-physical validation. It never promotes an open gate based on a naming match or
-a successful JSON build.
+The gate report distinguishes the active pinned Apache-2.0 MyoSim full-body
+route from the legacy BodyParts3D + Rajagopal + authenticated MoBL-ARMS
+manifest. It reports source readiness, the current Core contract, and the
+separate evidence boundaries for device route-force parity, `J^T` scatter,
+forward dynamics, anatomical registration, and material validation. It never
+promotes an open gate based on a naming match or a successful JSON build.
 
 When `--runtime-root` is supplied, it also records whether that checkout is
 clean and at the exact runtime revision whose lowering capabilities were

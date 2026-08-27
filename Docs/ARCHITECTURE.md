@@ -111,12 +111,13 @@ uses the normal Numi capability discovery path to fetch and compile this
 repository's source-faithful artifact; it cannot register a robot or schedule
 a rollout until the core lowerer exists and all gated sources are supplied.
 
-`numi human audit` records the inspected Numi runtime contract alongside the
-imported lower-body source. At runtime revision `730aba4`, the Core preserves
-the canonical source program, evaluates its source-order pose/motion subspace,
-and advances the bounded FunctionBased state through MetalWorld's resident
-`q`/`v`/effort arenas, including the synthetic source-contact probe and the
-source-default mobile-root reduction.
+`numi human audit` records the active MyoSim full-body route separately from
+the legacy stitched source manifest and verifies the inspected runtime checkout.
+At Core `f564977`, it reports the Apple M4 parity evidence for the 157-body /
+416-muscle route-force reference while retaining the bounded Rajagopal
+FunctionBased execution as comparative lower-body mechanics. It does not
+present the unavailable authenticated MoBL-ARMS archive as a blocker to the
+active full-body MyoSim route.
 
 `numi human core-reference` now compiles the complete 22-body Rajagopal tree
 into a fixed-layout payload: each source body supplies its mass, COM, and

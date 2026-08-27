@@ -93,7 +93,8 @@ numi human build \
   --accept-upper-noncommercial-terms \
   --output Build/human-v1
 
-# Write an explicit report of source, runtime, material, and evidence gates.
+# Audit the active MyoSim full-body route separately from the legacy stitched
+# BodyParts3D + Rajagopal + authenticated MoBL-ARMS manifest.
 numi human audit \
   --sources Sources \
   --runtime-root /path/to/MetalRobo \

@@ -249,6 +249,8 @@ def myosim_probe(arguments: argparse.Namespace) -> int:
             f"{runtime_root / 'build'} first"
         )
     command = [str(probe), str(rigid), str(muscles)]
+    if arguments.metal:
+        command.append("--metal")
     completed = subprocess.run(command, capture_output=True, text=True, check=False)
     transcript = artifact / "myosim-fullbody-core-probe.txt"
     transcript.write_text(
@@ -636,6 +638,11 @@ def parser() -> argparse.ArgumentParser:
     myosim_probe_parser.add_argument(
         "--runtime-root", type=Path,
         default=Path(os.environ.get("NUMI_LAB_ROOT", "/Users/home/Documents/emergentnumilife/MetalRobo")),
+    )
+    myosim_probe_parser.add_argument(
+        "--metal",
+        action="store_true",
+        help="also execute Apple-GPU pose/Jacobian/muscle-route/static-force parity",
     )
     myosim_probe_parser.set_defaults(handler=myosim_probe)
     myosim_visuals_parser = commands.add_parser(

@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+import hashlib
+import struct
 import tempfile
 import unittest
 import zipfile
-import struct
 from pathlib import Path
 from subprocess import run
 
@@ -455,6 +456,53 @@ class ImporterTests(unittest.TestCase):
             read_json(ROOT / "config/numi-runtime-contract.v1.json"),
         )
         self.assertEqual(report["status"], "missing")
+
+    def test_gate_report_exposes_the_active_myosim_fullbody_route(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            source = Path(temporary)
+            archive = source / "myosim" / "myo.tar.gz"
+            archive.parent.mkdir()
+            archive.write_bytes(b"pinned-myosim-source")
+            checkout = archive.parent / "checkout" / "myo_sim" / "build"
+            checkout.mkdir(parents=True)
+            (checkout / "compose.py").write_text("# fixture\n", encoding="utf-8")
+            lock = {
+                "sources": {
+                    "bodyparts3d_4": {"files": {}},
+                    "rajagopal_lai_uhlrich_2023": {"sha256": "def"},
+                    "mobl_arms_upper_extremity": {
+                        "release_file": "upper.zip", "license": "non-commercial",
+                    },
+                    "myosim_fullbody": {
+                        "storage_dir": "myosim",
+                        "archive_file": "myo.tar.gz",
+                        "archive_sha256": hashlib.sha256(
+                            b"pinned-myosim-source"
+                        ).hexdigest(),
+                        "expected_file": "myo_sim/build/compose.py",
+                        "revision": "fixture-revision",
+                        "license": "Apache-2.0",
+                        "role": "active full-body mechanics",
+                    },
+                }
+            }
+            report = gate_report(
+                sources=source,
+                upper_archive=None,
+                source_lock=lock,
+                runtime_contract=read_json(ROOT / "config/numi-runtime-contract.v1.json"),
+            )
+        self.assertEqual(
+            report["source_artifacts"]["myosim_fullbody"]["status"],
+            "verified",
+        )
+        active_gate = next(
+            gate for gate in report["gates"]
+            if gate["id"] == "active_myosim_fullbody_mechanics"
+        )
+        self.assertEqual(
+            active_gate["status"], "qualified_static_device_reference"
+        )
 
     def test_runtime_compatibility_preserves_unsupported_joints_and_muscle_evidence_gates(self) -> None:
         model = {
