@@ -3610,7 +3610,7 @@ _BODYPARTS_MYOSIM_SKIN_VISUAL_MAGIC = b"NHSKIN1\0"
 # ABI 2 preserves the compact vertex/binding layout but records that the
 # weights were derived from envelope *boundaries*, not zero-inside envelope
 # volumes.  Native readers retain ABI 1 only for reproduction of old captures.
-_BODYPARTS_MYOSIM_SKIN_VISUAL_ABI = 2
+_BODYPARTS_MYOSIM_SKIN_VISUAL_ABI = 3
 
 
 def _bodyparts_visual_registration_fingerprint(registration_file: Path) -> int:
@@ -4714,6 +4714,101 @@ def _bodyparts_skin_bbox_surface_distance_squared(
     )
 
 
+@dataclass(frozen=True)
+class _BodyPartsSkinSurfaceNode:
+    """One deterministic source-bone surface sample in a balanced 3-D tree."""
+
+    point: tuple[float, float, float]
+    binding_index: int
+    axis: int
+    left: _BodyPartsSkinSurfaceNode | None = None
+    right: _BodyPartsSkinSurfaceNode | None = None
+
+
+def _bodyparts_skin_surface_sample_indices(vertex_count: int, maximum_samples: int = 64) -> list[int]:
+    """Uniformly subsample an exact source mesh without randomisation."""
+    if vertex_count <= 0 or maximum_samples <= 0:
+        raise ImportError("BodyParts3D skin surface sampler has an invalid mesh extent")
+    sample_count = min(vertex_count, maximum_samples)
+    if sample_count == vertex_count:
+        return list(range(vertex_count))
+    return [index * (vertex_count - 1) // (sample_count - 1) for index in range(sample_count)]
+
+
+def _bodyparts_skin_surface_index(
+    samples: list[tuple[tuple[float, float, float], int]],
+) -> _BodyPartsSkinSurfaceNode:
+    """Build a balanced nearest-source-vertex index for registered bone meshes."""
+    if not samples:
+        raise ImportError("BodyParts3D skin surface index has no bone samples")
+    if any(
+        len(point) != 3 or not isinstance(binding_index, int) or binding_index < 0 or
+        not all(math.isfinite(value) for value in point)
+        for point, binding_index in samples
+    ):
+        raise ImportError("BodyParts3D skin surface index has an invalid bone sample")
+
+    def build(
+        candidates: list[tuple[tuple[float, float, float], int]], depth: int,
+    ) -> _BodyPartsSkinSurfaceNode | None:
+        if not candidates:
+            return None
+        axis = depth % 3
+        candidates.sort(key=lambda value: (value[0][axis], value[0], value[1]))
+        middle = len(candidates) // 2
+        point, binding_index = candidates[middle]
+        return _BodyPartsSkinSurfaceNode(
+            point, binding_index, axis,
+            build(candidates[:middle], depth + 1),
+            build(candidates[middle + 1:], depth + 1),
+        )
+
+    result = build(list(samples), 0)
+    if result is None:
+        raise ImportError("BodyParts3D skin surface index did not build")
+    return result
+
+
+def _bodyparts_skin_nearest_surface_bindings(
+    index: _BodyPartsSkinSurfaceNode,
+    point: list[float],
+    count: int = 4,
+) -> list[tuple[float, int]]:
+    """Return nearest distinct registered bodies from exact source-bone samples."""
+    if len(point) != 3 or count <= 0 or not all(math.isfinite(value) for value in point):
+        raise ImportError("BodyParts3D skin surface query has invalid input")
+    nearest_by_binding: dict[int, float] = {}
+
+    def worst_distance_squared() -> float:
+        return (
+            max(nearest_by_binding.values())
+            if len(nearest_by_binding) >= count
+            else math.inf
+        )
+
+    def visit(node: _BodyPartsSkinSurfaceNode | None) -> None:
+        if node is None:
+            return
+        squared = sum((point[axis] - node.point[axis]) ** 2 for axis in range(3))
+        prior = nearest_by_binding.get(node.binding_index)
+        if prior is None or squared < prior:
+            nearest_by_binding[node.binding_index] = squared
+        if len(nearest_by_binding) > count:
+            worst_binding = max(nearest_by_binding, key=nearest_by_binding.__getitem__)
+            del nearest_by_binding[worst_binding]
+        delta = point[node.axis] - node.point[node.axis]
+        near, far = (node.left, node.right) if delta <= 0.0 else (node.right, node.left)
+        visit(near)
+        if delta * delta <= worst_distance_squared():
+            visit(far)
+
+    visit(index)
+    result = sorted((distance, binding_index) for binding_index, distance in nearest_by_binding.items())
+    if len(result) < count:
+        raise ImportError("BodyParts3D skin surface index has fewer than four registered bodies")
+    return result[:count]
+
+
 def bodyparts_myosim_skinned_shell_visual_payload(
     sources: Path, anatomy: dict[str, Any], registration_path: Path, output: Path,
 ) -> dict[str, Any]:
@@ -4721,14 +4816,14 @@ def bodyparts_myosim_skinned_shell_visual_payload(
 
     The source has one exact exterior mesh, while the registered skeleton has
     many named source bones.  This offline importer assigns each source skin
-    vertex to its four nearest *registered articulated bone-envelope
-    boundaries* in the shared rest frame.  Its sharply local, joint-banded
-    blend avoids the old failure mode where every envelope containing a vertex
-    had distance zero and unrelated bones could pull the same skin vertex.  It records
-    source-to-body transforms separately so the C++/Metal renderer can linearly
-    blend the shell at the current articulated pose without a Python process.
-    This is an improved visual shell, deliberately not a claimed FEM skin,
-    collision shell, or clinical soft-tissue registration.
+    vertex to its four nearest *sampled exact registered source-bone surfaces*
+    in the shared rest frame.  The samples replace coarse box-distance
+    selection; a short joint band permits blending only between genuinely local
+    candidate bodies.  Source-to-body transforms are recorded separately so
+    the C++/Metal renderer can linearly blend the shell at the current
+    articulated pose without a Python process.  This is an improved visual
+    shell, deliberately not a claimed FEM skin, collision shell, closest-triangle
+    skin-weight dataset, or clinical soft-tissue registration.
     """
     registration_file = registration_path.resolve()
     registration = read_json(registration_file)
@@ -4801,6 +4896,7 @@ def bodyparts_myosim_skinned_shell_visual_payload(
                 "minimum": [math.inf, math.inf, math.inf],
                 "maximum": [-math.inf, -math.inf, -math.inf],
                 "source_members": [],
+                "surface_samples": [],
             }
             bindings_by_body[body_index] = record
         else:
@@ -4823,6 +4919,11 @@ def bodyparts_myosim_skinned_shell_visual_payload(
             for axis in range(3):
                 record["minimum"][axis] = min(record["minimum"][axis], point[axis])
                 record["maximum"][axis] = max(record["maximum"][axis], point[axis])
+        # A small stratified sample from every named source mesh preserves
+        # hands, vertebrae, and paired small bones that a global downsample
+        # would otherwise erase before body-level balancing below.
+        for sample_index in _bodyparts_skin_surface_sample_indices(len(bone_vertices_mm)):
+            record["surface_samples"].append(tuple(world_point(bone_vertices_mm[sample_index])))
         record["source_members"].append(specification["member_id"])
     if not bindings_by_body:
         raise ImportError("BodyParts3D skinned shell has no registered bone envelopes")
@@ -4831,6 +4932,22 @@ def bodyparts_myosim_skinned_shell_visual_payload(
         if not all(math.isfinite(value) for value in (*binding["minimum"], *binding["maximum"])) or \
                 any(binding["minimum"][axis] > binding["maximum"][axis] for axis in range(3)):
             raise ImportError("BodyParts3D skinned shell has an empty registered bone envelope")
+        if not binding["surface_samples"]:
+            raise ImportError("BodyParts3D skinned shell has an empty registered bone surface")
+        # Axial bodies can own many small meshes.  Cap only after each source
+        # member has contributed samples, so a dense spine cannot make the
+        # offline nearest-source index needlessly dominate build time.
+        samples = binding["surface_samples"]
+        if len(samples) > 256:
+            binding["surface_samples"] = [
+                samples[index]
+                for index in _bodyparts_skin_surface_sample_indices(len(samples), 256)
+            ]
+    surface_index = _bodyparts_skin_surface_index([
+        (sample, binding_index)
+        for binding_index, binding in enumerate(bindings)
+        for sample in binding["surface_samples"]
+    ])
 
     archive_path, member, obj = _bodyparts_obj_member(sources, "is_a", "FJ2810")
     vertices_mm, triangles = _bodyparts_obj_triangles(obj, member)
@@ -4842,23 +4959,13 @@ def bodyparts_myosim_skinned_shell_visual_payload(
     for vertex, normal in zip(vertices_mm, normals, strict=True):
         position_m = [coordinate * 0.001 for coordinate in vertex]
         world = world_point(vertex)
-        candidates = sorted(
-            (
-                _bodyparts_skin_bbox_surface_distance_squared(
-                    world, binding["minimum"], binding["maximum"]
-                ),
-                binding_index,
-            )
-            for binding_index, binding in enumerate(bindings)
-        )[:4]
+        candidates = _bodyparts_skin_nearest_surface_bindings(surface_index, world)
         if len(candidates) != 4:
             raise ImportError("BodyParts3D skinned shell has fewer than four bone bindings")
-        # Only a candidate genuinely close to the nearest envelope boundary
-        # may share this vertex.  The prior all-four inverse-distance blend
-        # could retain nontrivial influences from non-adjacent axial and limb
-        # envelopes; under pose that produced a visible second silhouette.
-        # The band is wide enough to retain a conventional linear blend at a
-        # source joint but leaves ordinary limb/torso skin rigidly local.
+        # Only a candidate genuinely close to the nearest registered source
+        # bone surface may share this vertex.  The band preserves conventional
+        # local blend at a source joint while leaving ordinary limb/torso skin
+        # rigidly local rather than letting a distant box overlap pull it.
         nearest_distance_m = math.sqrt(candidates[0][0])
         joint_band_m = 0.0125
         unnormalized = [
@@ -4923,7 +5030,7 @@ def bodyparts_myosim_skinned_shell_visual_payload(
     payload_path = output / "bodyparts3d-myosim-skinned-shell.nhskin"
     payload_path.write_bytes(payload)
     manifest = {
-        "schema": "numi.human.bodyparts3d-myosim-skinned-shell-visual-payload.v2",
+        "schema": "numi.human.bodyparts3d-myosim-skinned-shell-visual-payload.v3",
         "payload": {
             "file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
             "magic": _BODYPARTS_MYOSIM_SKIN_VISUAL_MAGIC.rstrip(b"\0").decode("ascii"),
@@ -4944,6 +5051,7 @@ def bodyparts_myosim_skinned_shell_visual_payload(
                     "core_body_index": binding["body_index"],
                     "source_members": binding["source_members"],
                     "minimum_world_m": binding["minimum"], "maximum_world_m": binding["maximum"],
+                    "surface_sample_count": len(binding["surface_samples"]),
                 }
                 for binding in bindings
             ],
@@ -4952,11 +5060,14 @@ def bodyparts_myosim_skinned_shell_visual_payload(
             "influences_per_vertex": 4,
             "distinct_influence_quartets": len(influence_histogram),
             "joint_band_m": 0.0125,
+            "source_bone_surface_sample_count": sum(
+                len(binding["surface_samples"]) for binding in bindings
+            ),
             "rest_pose_reconstruction_max_error_m": maximum_rest_error_m,
         },
-        "runtime_binding": "exact BodyParts3D skin triangles use four registered articulated bone-envelope boundary distances with deterministic inverse-quartic weights, restricted to candidates within a 12.5 mm source-joint band of the nearest boundary; each influence carries its source-to-Core local transform for native C++/Metal posing",
-        "status": "native_four_body_boundary_local_linear_blend_skin_shell_visual_input_not_collision_or_physics",
-        "evidence_boundary": "This is a boundary-proximity-derived articulated visual shell, not FEM/MPM skin, a tissue material law, collision/contact geometry, clinical registration, closest-triangle anatomical skin weights, or a force-coupled soft-tissue model.",
+        "runtime_binding": "exact BodyParts3D skin triangles use four nearest distinct registered source-bone surface samples with deterministic inverse-quartic weights, restricted to candidates within a 12.5 mm source-joint band of the nearest sample; each influence carries its source-to-Core local transform for native C++/Metal posing",
+        "status": "native_four_body_source_surface_local_linear_blend_skin_shell_visual_input_not_collision_or_physics",
+        "evidence_boundary": "This is a sampled-source-bone-surface-proximity-derived articulated visual shell, not FEM/MPM skin, a tissue material law, collision/contact geometry, clinical registration, closest-triangle anatomical skin weights, or a force-coupled soft-tissue model.",
     }
     write_json(output / "bodyparts3d-myosim-skinned-shell.manifest.json", manifest)
     return manifest

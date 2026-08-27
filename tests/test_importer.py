@@ -19,6 +19,8 @@ from numilab_human.model import (
     _bodyparts_secondary_attachment_weight_lock,
     _bodyparts_skin_bbox_distance_squared,
     _bodyparts_skin_bbox_surface_distance_squared,
+    _bodyparts_skin_nearest_surface_bindings,
+    _bodyparts_skin_surface_index,
     _bodyparts_myosim_surface_specifications,
     _bodyparts_similarity_fit,
     ImportError as HumanImportError,
@@ -83,6 +85,15 @@ class ImporterTests(unittest.TestCase):
             _bodyparts_skin_bbox_surface_distance_squared([3.0, 5.0, 0.0], minimum, maximum),
             13.0,
         )
+
+    def test_skin_source_surface_index_returns_nearest_distinct_bodies(self) -> None:
+        index = _bodyparts_skin_surface_index([
+            ((0.0, 0.0, 0.0), 7), ((0.1, 0.0, 0.0), 7),
+            ((0.2, 0.0, 0.0), 3), ((0.3, 0.0, 0.0), 5),
+            ((0.4, 0.0, 0.0), 11), ((0.5, 0.0, 0.0), 13),
+        ])
+        candidates = _bodyparts_skin_nearest_surface_bindings(index, [0.09, 0.0, 0.0])
+        self.assertEqual([binding for _, binding in candidates], [7, 3, 5, 11])
 
     def test_tendon_attachment_weight_lock_holds_secondary_bone_insertion(self) -> None:
         weights, evidence = _bodyparts_secondary_attachment_weight_lock(
