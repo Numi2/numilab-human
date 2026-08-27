@@ -30,6 +30,28 @@ one rest frame and that the tendon reaches the named calcaneus in the rendered
 source geometry. They do not prove a continuum tendon, tendon-to-bone force
 transfer, deformable tissue, collision, gait, or clinical registration.
 
+## Native source-skin context — 2026-08-27
+
+<p align="center">
+  <img src="media/bodyparts3d-skin-source-reference-2048/axis_negative_y.png" width="32%" alt="BodyParts3D full-skin source, front" />
+  <img src="media/bodyparts3d-skin-source-reference-2048/oblique_positive_x_negative_y.png" width="32%" alt="BodyParts3D full-skin source, oblique" />
+  <img src="media/bodyparts3d-skin-source-reference-2048/axis_positive_y.png" width="32%" alt="BodyParts3D full-skin source, rear" />
+</p>
+
+The source skin is a materially better whole-human visual context than the
+small bone/tendon inspection meshes: 102,467 vertices and 203,382 triangles
+from exact BodyParts3D member `FJ2810`. The native C++/Metal preview now builds
+a camera-relative three-point studio rig per view, avoiding the old fixed key
+that overexposed the front and flattened the rear. The Apple M4 capture is
+2048 × 2048 and retains 425,068, 277,323, and 440,136 covered pixels in its
+front, oblique, and rear frames respectively; its transcript and output hashes
+are retained beside the images.
+
+This improves visual legibility, not mechanics. The skin mesh has no authored
+MyoSim weights, contact geometry, constitutive parameters, or volume. It is a
+source-static native reference and must stay separate from the articulated
+muscle/bone runtime until those data are established.
+
 ## Device-resident full-body muscle-force projection — 2026-08-27
 
 The visual captures below now have a stronger mechanical companion check. The

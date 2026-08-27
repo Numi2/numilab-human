@@ -43,6 +43,20 @@ fingerprints before it can render. The frames therefore establish source-mesh
 registration continuity—not tendon force transfer, a deformable tendon,
 stable gait, general collision, clinical registration, or photoreal anatomy.
 
+### Source skin context
+
+<p align="center">
+  <img src="Docs/media/bodyparts3d-skin-source-reference-2048/axis_negative_y.png" width="32%" alt="BodyParts3D source skin, front" />
+  <img src="Docs/media/bodyparts3d-skin-source-reference-2048/oblique_positive_x_negative_y.png" width="32%" alt="BodyParts3D source skin, oblique" />
+  <img src="Docs/media/bodyparts3d-skin-source-reference-2048/axis_positive_y.png" width="32%" alt="BodyParts3D source skin, rear" />
+</p>
+
+This Apple-M4 native 2K context layer uses the exact 102,467-vertex,
+203,382-triangle BodyParts3D skin source under a camera-relative studio rig.
+It improves the human-scale visual reference without substituting a rigidly
+parented or fabricated animated skin. It remains a source-static shell until
+validated MyoSim skinning weights and deformable-shell mechanics exist.
+
 ### Upper-limb muscle-driven inspection
 
 <p align="center">
