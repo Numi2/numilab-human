@@ -1,0 +1,22 @@
+NumiLab Human detailed Z-Anatomy right-calf visual supplement — 2026-08-27
+
+execution_host=local_Apple_M4; Mac mini intentionally not used because its GPU was occupied by the user's crow-training process
+source_geometry=Z-Anatomy Startup.blend at repository revision 9a2ef22cc8443d14f9aa18ba91246416b1c6ab7a; CC-BY-SA-4.0; attributed as Z-Anatomy, Lluis Vinas
+source_scope=right lateral gastrocnemius:2454 vertices/4908 triangles; right medial gastrocnemius:3233/6462; right soleus:3379/6774; right calcaneal tendon:2191/4377; Calcaneus.r:registration_landmark_only
+registration=identity rotation plus named right-calcaneus centroid translation [-0.023426469453094123,0.13721865336658154,0.046469326429591416] m into the existing BodyParts3D/MyoSim rest frame; BodyParts3D FJ3360 remains the rendered calcaneus
+runtime_binding=each supplement vertex copies its nearest named matching BodyParts3D NHTISS3 MyoSim body weights; lateral/medial gastrocnemius femur_r:131+calcn_r:138; soleus tibia_r:136+calcn_r:138; tendon femur_r:131+tibia_r:136+calcn_r:138; named BodyParts3D calcaneus source-triangle lock=96 supplemental tendon vertices
+attachment_surface_registration=the lock plus 155-vertex feather band is projected to exact named FJ3360 calcaneus triangles with a 0.35 mm exterior offset; projected=251; RMS correction=2.82160798357 mm; maximum correction=4.47071980122 mm; visual rest-surface registration only
+visual_supplement=CC-BY-SA Z-Anatomy geometry plus CC-BY BodyParts3D bone geometry plus Apache-2.0 MyoSim mechanics; native visual pack license=CC-BY-SA-4.0 AND CC-BY-4.0 AND Apache-2.0
+metal_pose_device=Apple M4
+renderer_device=Apple M4
+frame_dimension=2048
+force_probe=selected MyoSim source actuators 348:gaslat_r,349:gasmed_r,369:soleus_r at activation 0.5 for one 100us step; all 416 source paths evaluated on Metal; 2 transactions; 416 active records; 90 applied wraps; full-calf elapsed=68.409209ms; insertion elapsed=63.720625ms
+pose_result=maximum_velocity_delta=1.23820755509; maximum_configuration_delta=0.000123820755509; no contact requested
+full_calf_coverage=front bone:11476,muscle:152695,tendon:8792; oblique bone:13685,muscle:133039,tendon:8463; side bone:15270,muscle:115313,tendon:10123; rear bone:10330,muscle:168365,tendon:35495
+insertion_coverage=front bone:27850,muscle:152156,tendon:22868; oblique bone:37124,muscle:125478,tendon:29124; side bone:50106,muscle:62844,tendon:40343; rear bone:42030,muscle:32739,tendon:164285; focus_body=138; camera_distance=0.34m
+input_sha256=rigid:91faa4f471653ec859f47af696e89b59a99f19decb0bb77b8bbd02d5725335b8; muscle:64c1f24fb76e7ebac256688f8f969e7b81232f6cbd7e419e8998622bd3476af1; bones:b43be1457bc08238225a899e576121891592dbd734e488206ce526e65caa0ebc; Z-Anatomy Blender export:974b5fa40de0e03914de154a99dde8ace0f57f4c0d91819d96840d594115d02c; tissue supplement:4355fb2411fda814349c20c06933492ad18a45272fd3a5150434d347ef5b0ac4
+native_sha256=probe:7467b36e405adfea37e4c277438bc65656d4aa7f687fa8ec8562a70fdf0998cc; libmetalrobo:b01297666eefa0841cb969d2280654ef198f9c2759211a864d8e3e454fd87dc6
+full_calf_image_sha256=front:3a82e8f6dec4820514850677260b9e7e629623e1d8045ad8a7a2946fad55fabb; oblique:101b2df42c5389cf061837dc03a4e38e0087ed691e038abf9fa3915233733b2e; side:670c97d915f4a98074dbceb4c26505006fabd89b6fc60ffa00eae7b8b421029b; rear:768dff1e2742475d4c67020f3f1416c96b2890331d472af579179049cda44394
+insertion_image_sha256=front:40dfcf6b842123de91c5e37bb154a6bc4207d172289304131f841266c17a3798; oblique:da1e7229b1d6c60bacfb715625c7e1b005caa8afb09f9206331eff2c0bc303dc; side:a7c4f9a3578eb07dc6e7c387cd4ae669ec349161db851506768821b3265ac97b; rear:6ca8c2ade8f6a06a4ea7ab959810643d4b78b7ee8ddbfc144d0af4601abe49fb
+asset_sha256=full_calf_mrvpack:52d02a5901d3fff2255cdff1f7d4a78aff16e5162442e3238da685f936ea696b; full_calf_visual_manifest:0243606c16a69d58507a0ef3ce39bb5290a2a246c5e9ed761704c43d087d5c05; insertion_visual_manifest:aab331d112818d33f0e46646e3847663b66ae0e51e0f7355fb2ac4474bc72c7e
+boundary=The inspections are source-registered, named-body-weighted visual supplements captured after a bounded muscle-force pose update. The actual distal geometry is registered to named calcaneus triangles, but this is not photorealistic skin, active muscle shape change, a calibrated tendon or muscle continuum, a tendon-to-bone force-transfer law, collision/contact, gait, or clinical validation.

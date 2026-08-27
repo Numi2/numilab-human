@@ -51,6 +51,12 @@ from numilab_human.model import (
     runtime_compatibility_report,
     runtime_checkout_gate,
 )
+from numilab_human.zanatomy import (
+    _project_tendon_attachment_band,
+    _stored_normal_from_world,
+    _stored_source_from_world,
+    _world_from_stored_source,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -119,6 +125,39 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(evidence["method"],
                          "exact-source-triangle proximity to named secondary BodyParts3D bone mesh")
         self.assertEqual(evidence["nearest_vertex_distance_m"], 0.0)
+
+    def test_zanatomy_tendon_attachment_projection_targets_named_calcaneus_surface(self) -> None:
+        bone = [[0.0, 0.0, 0.0], [0.02, 0.0, 0.0], [0.0, 0.02, 0.0]]
+        projected, evidence = _project_tendon_attachment_band(
+            [[0.01, 0.01, 0.002], [0.01, 0.01, 0.002]], [0.0, 0.5], bone, [(0, 1, 2)],
+        )
+        self.assertAlmostEqual(projected[0][0], 0.01)
+        self.assertAlmostEqual(projected[0][1], 0.01)
+        self.assertAlmostEqual(projected[0][2], 0.00035)
+        self.assertAlmostEqual(projected[1][2], 0.001175)
+        self.assertEqual(evidence["fully_locked_vertex_count"], 1)
+        self.assertEqual(evidence["feathered_vertex_count"], 1)
+
+    def test_zanatomy_source_transform_round_trip_preserves_rotated_vectors(self) -> None:
+        rotation = [[0.0, -1.0, 0.0], [1.0, 0.0, 0.0], [0.0, 0.0, 1.0]]
+        translation = [0.4, -0.3, 0.2]
+        stored = [0.12, -0.08, 0.31]
+        world = _world_from_stored_source(stored, translation, rotation, 1.7)
+        reconstructed = _stored_source_from_world(world, translation, rotation, 1.7)
+        for actual, expected in zip(reconstructed, stored, strict=True):
+            self.assertAlmostEqual(actual, expected)
+        normal = _stored_normal_from_world([0.0, 1.0, 0.0], rotation)
+        self.assertEqual(normal, [1.0, 0.0, 0.0])
+
+    def test_zanatomy_supplement_scope_is_four_named_surfaces_and_one_landmark(self) -> None:
+        configuration = read_json(ROOT / "config/zanatomy-calf-visual-supplement.v1.json")
+        self.assertEqual(configuration["source"]["license"], "CC-BY-SA-4.0")
+        surfaces = [entry for entry in configuration["objects"] if entry["layer"] != "landmark"]
+        self.assertEqual([entry["id"] for entry in surfaces], [
+            "lateral_gastrocnemius", "medial_gastrocnemius", "soleus", "calcaneal_tendon",
+        ])
+        self.assertEqual([entry["base_stable_id"] for entry in surfaces], [1, 3, 5, 7])
+        self.assertEqual(surfaces[-1]["body_indices"], [131, 136, 138])
 
     def test_fullbody_surface_map_is_mirrored_and_explicit(self) -> None:
         surfaces = _bodyparts_myosim_surface_specifications()

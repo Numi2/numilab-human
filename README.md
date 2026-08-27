@@ -11,12 +11,13 @@ the native Human execution path.
 | Active full-body mechanics | MyoSim `myofullbody` | 103 source bodies, 416 muscles, native Core reference |
 | Cervical/hyoid mechanics | Mortensen 2018 | complete 72-muscle OpenSim 3 source IR; merge registration remains explicit |
 | Anatomy/visual layers | BodyParts3D 4.0 | named geometry/hierarchy; 184 source bone meshes are pose-bound for native visual inspection |
+| Detailed calf visual supplement | Z-Anatomy | four right-calf surfaces only; CC-BY-SA geometry, BodyParts3D/MyoSim body bindings retained |
 | Comparative lower-body mechanics | RajagopalLaiUhlrich2023 | retained source-faithful bounded Metal path |
 | Comparative upper extremities | MoBL-ARMS | authenticated bimanual import or pinned public unimanual 4.1 source variant |
 
-The importer preserves upstream records locally. The tracked MyoSim and
-BodyParts3D validation media below are attributed derivatives; all other raw
-or derived source artifacts remain local. See
+The importer preserves upstream records locally. The tracked MyoSim,
+BodyParts3D, and explicitly marked Z-Anatomy validation media are attributed
+derivatives; all other raw or derived source artifacts remain local. See
 [third-party notices](THIRD_PARTY_NOTICES.md).
 
 ## Visual progress
@@ -25,6 +26,27 @@ The lead visual pairs exposed source anatomy—where muscles and tendons can be
 inspected directly against named bones—with a source-surface-bound exterior
 that remains coherent under the bounded all-muscle probe. See
 [visual progress](Docs/VISUAL_PROGRESS.md) for the exact evidence boundary.
+
+### Detailed muscle-driven right-calf anatomy
+
+<p align="center">
+  <img src="Docs/media/myosim-native-zanatomy-calf-2048/calcaneal-insertion/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-oblique.png" width="49%" alt="Detailed right calcaneal tendon insertion, oblique" />
+  <img src="Docs/media/myosim-native-zanatomy-calf-2048/calcaneal-insertion/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-rear.png" width="49%" alt="Detailed right calcaneal tendon insertion, rear" />
+</p>
+
+The visual-only right-calf slice uses the CC-BY-SA 4.0 Z-Anatomy lateral and
+medial gastrocnemius, soleus, and calcaneal-tendon meshes. Its named calcaneus
+is registered to BodyParts3D `FJ3360`; its four tissues retain the existing
+MyoSim femur/tibia/calcaneus bindings, including the Achilles three-body
+ownership. The distal tendon does not merely follow the calcaneus by a blend:
+its 96 source-triangle-locked vertices and 155-vertex feather band are
+registered directly to named `FJ3360` calcaneus triangles (0.35 mm exterior
+offset). The 2K capture runs the three named calf actuators at `0.5` for one
+100 µs step while Metal evaluates all 416 source paths, so it has a measured
+small pose delta (`0.000123820755509`) rather than an uncontrolled pose drift.
+This makes the muscle-to-tendon-to-calcaneus geometry inspectable, but it is
+still an anatomical visual plate—not photorealistic skin, a tendon continuum,
+or a physical attachment certificate. The [capture record](Docs/media/myosim-native-zanatomy-calf-2048/capture.transcript.txt) records the source and output identities.
 
 ### Muscle-driven source-surface exterior
 
@@ -287,6 +309,30 @@ numi human myosim-native-fullbody-soft-tissue-visuals \
   Build/bodyparts3d-myosim-fullbody-muscle-surfaces/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue \
   Docs/media/myosim-native-fullbody-geometry-framed-2048 \
   --dimension 2048
+
+# Optional detailed right-calf geometry. Blender is used only for this
+# offline, CC-BY-SA source export; neither native inspection command starts
+# Blender or Python. The payload retains MyoSim/BodyParts3D body bindings and
+# projects only the already source-triangle-locked tendon insertion band onto
+# the named BodyParts3D calcaneus surface.
+/opt/homebrew/bin/blender --background /path/to/Startup.blend \
+  --python tools/export_zanatomy_calf.py -- Build/zanatomy-calf-export.json
+numi human zanatomy-calf-visual-supplement-payload \
+  --sources Sources \
+  --registration Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json \
+  --base-payload Build/bodyparts3d-myosim-fullbody-muscle-surfaces/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue \
+  --zanatomy-export Build/zanatomy-calf-export.json \
+  --output Build/zanatomy-calf-myosim-tissues
+numi human myosim-native-zanatomy-calf-inspection \
+  Build/myosim-fullbody \
+  Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
+  Build/zanatomy-calf-myosim-tissues/zanatomy-calf-myosim-tissues.nhtissue \
+  Docs/media/myosim-native-zanatomy-calf-2048 --dimension 2048
+numi human myosim-native-zanatomy-calcaneal-insertion \
+  Build/myosim-fullbody \
+  Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
+  Build/zanatomy-calf-myosim-tissues/zanatomy-calf-myosim-tissues.nhtissue \
+  Docs/media/myosim-native-zanatomy-calf-2048/calcaneal-insertion --dimension 2048
 
 # Default whole-body, ground-supported muscle-force presentation. This starts
 # no Python process: all 416 MyoSim routes and activation sidecars run on

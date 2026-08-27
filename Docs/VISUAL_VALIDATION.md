@@ -1,5 +1,25 @@
 # Visual validation
 
+## Detailed Z-Anatomy right-calf and calcaneal-insertion check — 2026-08-27
+
+The four-angle [right-calf and insertion review](VISUAL_PROGRESS.md#detailed-z-anatomy-right-calf-and-calcaneal-insertion-inspection--2026-08-27)
+was inspected from front, oblique, side, and rear at 2048 px. Both the
+full-calf and body-`138` insertion views have nonzero muscle/tendon/calcaneus
+coverage. The imported distal tendon is no longer only skinned to calcaneus:
+its 96 lock vertices and 155-vertex feather band are projected to exact named
+BodyParts3D `FJ3360` calcaneus triangles, retaining a 0.35 mm exterior offset
+to avoid depth fighting. The run is a small muscle-driven state change:
+selected source indices `348`, `349`, and `369` use 0.5 activation for one
+100 µs step, while all 416 MyoSim paths remain evaluated on the Apple M4. The
+final configuration delta is `0.000123820755509`.
+
+The Z-Anatomy geometry is CC-BY-SA 4.0 and remains only a visual supplement.
+Its four output surfaces retain the named existing MyoSim body bindings copied
+from BodyParts3D. This establishes source-to-render visual continuity at the
+captured pose, not anatomical force transfer, a continuum tendon,
+deformable tissue, collision/contact, gait, or clinical validity. Exact
+artifacts and hashes are in the [capture record](media/myosim-native-zanatomy-calf-2048/capture.transcript.txt).
+
 ## Native passive-FEM soleus check — 2026-08-27
 
 The four-angle [passive soleus FEM specimen](VISUAL_PROGRESS.md#native-passive-fem-soleus-specimen--2026-08-27)

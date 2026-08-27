@@ -50,6 +50,7 @@ from .model import (
     sha256,
     write_json,
 )
+from .zanatomy import build_zanatomy_calf_visual_supplement_payload
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
@@ -747,6 +748,16 @@ def myosim_bodyparts_fullbody_soft_tissue_visual_payload(arguments: argparse.Nam
     return 0
 
 
+def zanatomy_calf_visual_supplement_payload(arguments: argparse.Namespace) -> int:
+    manifest = build_zanatomy_calf_visual_supplement_payload(
+        arguments.sources.resolve(), arguments.registration.resolve(), arguments.base_payload.resolve(),
+        arguments.zanatomy_export.resolve(), arguments.output.resolve(),
+    )
+    print(f"wrote {arguments.output.resolve() / manifest['payload']['file']}")
+    print(f"wrote {arguments.output.resolve() / 'zanatomy-calf-myosim-tissues.manifest.json'}")
+    return 0
+
+
 def myosim_bodyparts_skinned_shell_visual_payload(arguments: argparse.Namespace) -> int:
     sources = arguments.sources.resolve()
     anatomy = parse_bodyparts3d(sources, REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
@@ -876,6 +887,22 @@ def parser() -> argparse.ArgumentParser:
     myosim_fullbody_tissue_payload_parser.set_defaults(
         handler=myosim_bodyparts_fullbody_soft_tissue_visual_payload,
     )
+    zanatomy_calf_payload_parser = commands.add_parser(
+        "zanatomy-calf-visual-supplement-payload",
+        help="prepare the narrowly scoped CC-BY-SA Z-Anatomy right-calf visual supplement with existing MyoSim body bindings",
+    )
+    zanatomy_calf_payload_parser.add_argument("--sources", type=Path, required=True)
+    zanatomy_calf_payload_parser.add_argument("--registration", type=Path, required=True)
+    zanatomy_calf_payload_parser.add_argument(
+        "--base-payload", type=Path, required=True,
+        help="audited NHTISS3 BodyParts3D full-body muscle-surface payload",
+    )
+    zanatomy_calf_payload_parser.add_argument(
+        "--zanatomy-export", type=Path, required=True,
+        help="right-calf interchange emitted by Blender with tools/export_zanatomy_calf.py",
+    )
+    zanatomy_calf_payload_parser.add_argument("--output", type=Path, required=True)
+    zanatomy_calf_payload_parser.set_defaults(handler=zanatomy_calf_visual_supplement_payload)
     myosim_skinned_shell_payload_parser = commands.add_parser(
         "myosim-bodyparts-skinned-shell-payload",
         help="prepare the exact BodyParts3D exterior mesh with four registered articulated visual influences per vertex",

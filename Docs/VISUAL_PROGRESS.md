@@ -1,5 +1,39 @@
 # NumiLab Human visual progress
 
+## Detailed Z-Anatomy right-calf and calcaneal-insertion inspection — 2026-08-27
+
+<p align="center">
+  <img src="media/myosim-native-zanatomy-calf-2048/calcaneal-insertion/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-front.png" width="24%" alt="Calcaneal tendon insertion, front" />
+  <img src="media/myosim-native-zanatomy-calf-2048/calcaneal-insertion/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-oblique.png" width="24%" alt="Calcaneal tendon insertion, oblique" />
+  <img src="media/myosim-native-zanatomy-calf-2048/calcaneal-insertion/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-side.png" width="24%" alt="Calcaneal tendon insertion, side" />
+  <img src="media/myosim-native-zanatomy-calf-2048/calcaneal-insertion/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-rear.png" width="24%" alt="Calcaneal tendon insertion, rear" />
+</p>
+
+This close 2048 px review replaces the coarse posterior-calf surface view
+with four selected Z-Anatomy meshes: lateral gastrocnemius (2,454 vertices),
+medial gastrocnemius (3,233), soleus (3,379), and calcaneal tendon (2,191).
+The fifth selected mesh, `Calcaneus.r`, is a registration landmark only: its
+centroid aligns with exact BodyParts3D `FJ3360`, while the rendered bone stays
+the articulated BodyParts3D calcaneus. The imported Achilles reuses the
+existing three named MyoSim/Core owners—femur `131`, tibia `136`, and calcaneus
+`138`. Its 96 source-triangle-locked tendon vertices and 155-vertex feather
+band are registered directly to exact BodyParts3D `FJ3360` calcaneus triangles
+with a 0.35 mm exterior offset. This is actual visual surface registration of
+the imported distal tendon, rather than a colour bridge or a body-centre bind.
+
+The native Apple M4 run excites only MyoSim indices `348`, `349`, and `369` at
+`0.5` for one 100 µs step. Metal evaluates all 416 source routes in two force
+transactions (416 active records, 90 wraps); the bounded pose displacement is
+`0.000123820755509`. The full-calf and close insertion cameras both carry
+nonzero muscle, tendon, and calcaneus coverage; the latter centres body `138`
+at 0.34 m for an attachment-scale read. The [capture record](media/myosim-native-zanatomy-calf-2048/capture.transcript.txt)
+contains exact frame hashes, input identities, and the CC-BY-SA attribution.
+
+This is a visual supplement with copied named BodyParts3D/MyoSim articulated
+weights—not a replacement mechanics source, texture/photorealism claim,
+deformable muscle or tendon solve, force-transfer law, contact, gait, or
+clinical attachment validation.
+
 ## Native passive-FEM soleus specimen — 2026-08-27
 
 <p align="center">

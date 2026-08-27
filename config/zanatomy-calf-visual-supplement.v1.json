@@ -1,0 +1,25 @@
+{
+  "schema": "numi.human.zanatomy-calf-visual-supplement.v1",
+  "source": {
+    "repository": "https://github.com/Z-Anatomy/Models-of-human-anatomy",
+    "revision": "9a2ef22cc8443d14f9aa18ba91246416b1c6ab7a",
+    "blend_file": "Startup.blend",
+    "license": "CC-BY-SA-4.0",
+    "attribution": "Z-Anatomy, Lluis Vinas, CC BY-SA 4.0",
+    "role": "narrow right-calf visual supplement only"
+  },
+  "objects": [
+    {"id": "lateral_gastrocnemius", "layer": "muscle", "base_stable_id": 1, "myosim_muscles": ["gaslat_r"], "body_indices": [131, 138]},
+    {"id": "medial_gastrocnemius", "layer": "muscle", "base_stable_id": 3, "myosim_muscles": ["gasmed_r"], "body_indices": [131, 138]},
+    {"id": "soleus", "layer": "muscle", "base_stable_id": 5, "myosim_muscles": ["soleus_r"], "body_indices": [136, 138]},
+    {"id": "calcaneal_tendon", "layer": "tendon", "base_stable_id": 7, "myosim_muscles": ["gaslat_r", "gasmed_r", "soleus_r"], "body_indices": [131, 136, 138]},
+    {"id": "calcaneus_landmark", "layer": "landmark", "bodyparts_member_id": "FJ3360", "bodyparts_hierarchy": "is_a"}
+  ],
+  "registration": {
+    "method": "named_right_calcaneus_surface_centroid_translation",
+    "source": "Z-Anatomy Calcaneus.r evaluated world mesh",
+    "target": "BodyParts3D FJ3360 right calcaneus under the existing MyoSim rest registration",
+    "rotation": "identity_required",
+    "boundary": "A rest-frame visual registration. It does not alter MyoSim attachment sites, paths, force parameters, tendon parameters, rigid bodies, or anatomical collision."
+  }
+}
