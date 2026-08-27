@@ -8,58 +8,55 @@ presentation**. They drew every MyoSim route as a straight line between sites
 and wrap centres, which can cut through a sphere/cylinder wrap and visibly miss
 an anatomical surface. They are not acceptable tendon imagery.
 
-The current native renderer keeps routes hidden by default. Its focused
-1024 × 1024 inspection mode starts and ends at exact source sites, uses the
-source solver's tangent contacts, and samples the wrapped sphere/cylinder arc.
-The Numi route-inspection command projects only those authored source-site
-endpoints to their nearest matching BodyParts3D bone triangles for visible
-attachment; it never changes the underlying force path. The BodyParts3D
-major-bone payload also has a visual-only per-bone refinement against exact
-MyoSim attachment sites. These are alignment diagnostics, not tendon-surface
-geometry, an attachment transfer, or a medical registration. Focused
-replacement captures remain outside the showcase until review.
+The current native renderer keeps routes hidden by default. Its opt-in focused
+inspection starts and ends at exact source sites, uses the source solver's
+tangent contacts, and samples the wrapped sphere/cylinder arc. Surface-anchor
+caps make the projected origin/insertion points readable at the bone without
+changing the force path. That remains an alignment diagnostic, not tendon
+surface geometry or a medical registration. The reviewed showcase below uses
+the separate exact BodyParts3D muscle/tendon surfaces instead of that route
+diagnostic.
 
-## Reviewed focused calcaneal-tendon source inspection — 2026-08-27
+## Reviewed native posterior-calf source-surface inspection — 2026-08-27
 
 <p align="center">
-  <img src="media/bodyparts3d-right-calcaneal-tendon-2048/right-lower-leg-anterior.png" width="32%" alt="Right posterior lower-leg source anatomy, axis-negative-y camera" />
-  <img src="media/bodyparts3d-right-calcaneal-tendon-2048/right-lower-leg-oblique.png" width="32%" alt="Right posterior lower-leg source anatomy, oblique camera" />
-  <img src="media/bodyparts3d-right-calcaneal-tendon-2048/right-lower-leg-posterior.png" width="32%" alt="Right posterior lower-leg source anatomy, axis-positive-y camera" />
+  <img src="media/myosim-native-posterior-chain-2048/default/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-front.png" width="32%" alt="Right posterior-calf source surfaces, front" />
+  <img src="media/myosim-native-posterior-chain-2048/default/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-oblique.png" width="32%" alt="Right posterior-calf source surfaces, oblique" />
+  <img src="media/myosim-native-posterior-chain-2048/default/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-rear.png" width="32%" alt="Right posterior-calf source surfaces, rear" />
 </p>
 
-These are reviewed native 2048 × 2048 reference frames of a deliberately
-uncluttered, exact BodyParts3D 4.0 source-rest-frame bundle: right tibia,
-fibula, talus, calcaneus, lateral and medial gastrocnemius, soleus, and the
-right calcaneal tendon. The importer preserves every compatible authored OBJ
-vertex normal (eight of eight selected surfaces) rather than replacing the
-source shading with generated normals. The tendon is a distinct gold semantic
-layer, muscle is red, and bone is ivory; those colours are presentation labels,
-not tissue parameters.
+These are reviewed native 2048 × 2048 reference frames of the exact
+BodyParts3D 4.0 right lateral/medial gastrocnemius, soleus, and calcaneal
+tendon surfaces over the 184-mesh BodyParts3D skeleton. The posterior view
+shows the gold tendon surface continuing from the calf surfaces to the
+calcaneus; it no longer uses a straight route line as a visual stand-in. The
+four source surfaces contain 10,348 vertices and 45,582 indices. Muscle is
+red, tendon gold, and bone ivory solely as presentation labels.
 
-The offline source check finds exact nearest-vertex separations of `0.828009`
-mm from calcaneal tendon to calcaneus, `0.143963` mm to lateral gastrocnemius,
-`0.398794` mm to medial gastrocnemius, and `0.248701` mm to soleus. That makes
-the selected source surfaces visibly continuous in this cutaway; it does not
-prove a watertight biological attachment, a MyoSim registration, a force-path
-transfer, or a mechanical tendon constraint.
+The four surfaces use the same fitted BodyParts3D → MyoSim source-default
+frame as the skeleton. The gastrocnemius meshes are visually parented at the
+right femur, soleus at the right tibia, and the tendon at the right calcaneus.
+This preserves the visible rest-frame continuation while retaining the source
+model's real insertion-side parent. It does not prove a watertight biological
+attachment, deformable tissue, force-path transfer, or a mechanical tendon
+constraint.
 
-Core `e028486` cooked the 13,349-vertex / 20,642-triangle GLB (three semantic
-materials) and rendered each camera with an independent native reference
-workspace on the local Apple M4. The Mac mini was occupied by an unrelated
-BirdFlow training run, so these are a bounded local-GPU fallback rather than
-an M4 Pro qualification. Each camera had nonzero source segmentation and its
-exact capture metadata is retained in the [transcript](media/bodyparts3d-right-calcaneal-tendon-2048/capture.transcript.txt).
+The local Apple M4 native probe uses one fresh reference renderer per camera;
+the occupied Mac mini was not touched. All four cameras report nonzero bone,
+muscle-surface, and tendon-surface coverage. Exact payload, runtime, and image
+hashes are in the [transcript](media/myosim-native-posterior-chain-2048/default/capture.transcript.txt).
 
-| Camera | PNG SHA-256 | Source pixels |
+| Camera | PNG SHA-256 | Bone / muscle / tendon pixels |
 | --- | --- | ---: |
-| `axis_negative_y` | `4effa463ec9034bd1dd5d730d119132af0d1bad9dfe370cb010d54c9e74979f0` | 295,907 |
-| `oblique_positive_x_negative_y` | `04cb010ccb88e2e8fba6bc0c2deb85e78b8707fd43179fbd25198e77f31c3b7a` | 239,767 |
-| `axis_positive_y` | `40b3a2501ce4e8eee597ea143b9fe98eb94c8a990f5f82a7c9998e21e84b9c5a` | 311,627 |
+| Front | `37913b642ad6d2869959e918e58f6ab07dd84ed7b568cc44fbd9db3d0fddd7e6` | 343,221 / 42,225 / 1,656 |
+| Oblique | `b95641cf0a06f1ea0c995e32afa728fbc6458ec0f60c687b14916621197af765` | 379,512 / 64,441 / 5,467 |
+| Side | `2740aa68d8e32cf80835e1978ce8e6d67c2809c220d2c44c98b3f0403fdb490e` | 302,924 / 45,325 / 6,384 |
+| Rear | `76b70bab5959855b012301a16f07c3e61d1d42c6a3ec33d39c01a444e8a78e84` | 247,853 / 121,509 / 22,255 |
 
-This is the current source-anatomy presentation. It is not a full Human beauty
-render, skin, organ/vessel/nerve view, articulated deformation, muscle-driven
-rollout, or medically validated attachment model. Those claims remain gated by
-their own geometry and mechanics evidence.
+This is the current focused source-anatomy presentation. It is not a full Human
+beauty render, skin, organ/vessel/nerve view, articulated deformation,
+muscle-driven rollout, or medically validated attachment model. Those claims
+remain separate from this source-default visual binding.
 
 ## Reviewed native 184-mesh full skeleton — 2026-08-27
 

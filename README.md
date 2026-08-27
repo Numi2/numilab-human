@@ -23,27 +23,27 @@ or derived source artifacts remain local. See
 
 The previous 640 × 480 source-model images have been withdrawn from the
 showcase. They remain provenance artifacts, but their framing and tendon
-appearance are not the quality bar for NumiLab Human. The replacement work
-separates two things that must not be conflated: high-resolution BodyParts3D
-source anatomy surfaces, including the actual lower-leg calcaneal tendon, and
-focused MyoSim force-path diagnostics with resolved tangencies/wrap arcs. See
-[visual progress](Docs/VISUAL_PROGRESS.md) for the evidence boundary.
+appearance are not the quality bar for NumiLab Human. The replacement uses
+exact BodyParts3D muscle/tendon surfaces in the same source-default frame as
+the articulated skeleton; it keeps a force-path diagnostic separate from
+anatomy presentation. See [visual progress](Docs/VISUAL_PROGRESS.md) for the
+evidence boundary.
 
-### Reviewed calcaneal-tendon source inspection
+### Reviewed posterior-calf tendon attachment inspection
 
 <p align="center">
-  <img src="Docs/media/bodyparts3d-right-calcaneal-tendon-2048/right-lower-leg-anterior.png" width="32%" alt="Focused right lower-leg source anatomy, axis-negative-y camera" />
-  <img src="Docs/media/bodyparts3d-right-calcaneal-tendon-2048/right-lower-leg-oblique.png" width="32%" alt="Focused right lower-leg source anatomy, oblique camera" />
-  <img src="Docs/media/bodyparts3d-right-calcaneal-tendon-2048/right-lower-leg-posterior.png" width="32%" alt="Focused right lower-leg source anatomy, axis-positive-y camera" />
+  <img src="Docs/media/myosim-native-posterior-chain-2048/default/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-front.png" width="32%" alt="Right posterior-calf source surfaces over the native articulated skeleton, front" />
+  <img src="Docs/media/myosim-native-posterior-chain-2048/default/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-oblique.png" width="32%" alt="Right posterior-calf source surfaces over the native articulated skeleton, oblique" />
+  <img src="Docs/media/myosim-native-posterior-chain-2048/default/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-rear.png" width="32%" alt="Right posterior-calf source surfaces over the native articulated skeleton, rear" />
 </p>
 
-This 2048 × 2048 three-angle cutaway is the exact BodyParts3D right posterior
-lower-leg source geometry: tibia, fibula, talus, calcaneus, the two
-gastrocnemius heads, soleus, and the calcaneal tendon. The tendon is visibly
-continuous with its selected source neighbours; the source mesh's closest
-vertices are 0.828 mm from the calcaneus and 0.144/0.399/0.249 mm from lateral
-gastrocnemius, medial gastrocnemius, and soleus. It is a static anatomical
-reference, not an articulated, force-coupled, deformable, or clinical claim.
+This 2048 × 2048 four-angle native inspection binds the exact BodyParts3D
+right lateral/medial gastrocnemius, soleus, and calcaneal-tendon meshes over
+the 184-mesh articulated skeleton. At the shared source-default pose, the
+posterior view visibly carries the tendon from the calf surfaces to the
+calcaneus rather than substituting a route line. The muscle and tendon meshes
+are exact source triangles; their current single-parent visual bindings are
+not deformable tissue, force transfer, or a medical attachment claim.
 
 ### Reviewed full-skeleton native inspection
 
@@ -133,6 +133,20 @@ numi human myosim-native-route-inspection \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
   Build/route-inspection-right-lower-leg \
   136 348 349 369 371
+
+# Prepare exact BodyParts3D posterior-calf muscle/tendon surfaces in the same
+# source-default frame, then render them over the focused native skeleton.
+# This is a visual source-surface binding, not deformable tissue mechanics.
+numi human myosim-bodyparts-right-posterior-chain-payload \
+  --sources Sources \
+  --registration Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json \
+  --output Build/bodyparts3d-myosim-right-posterior-chain
+numi human myosim-native-soft-tissue-visuals \
+  Build/myosim-fullbody \
+  Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
+  Build/bodyparts3d-myosim-right-posterior-chain/bodyparts3d-myosim-right-posterior-chain.nhtissue \
+  Docs/media/myosim-native-posterior-chain-2048/default \
+  136 --dimension 2048
 
 # Export a separate exact BodyParts3D rest-frame reference for the right lower
 # leg. It contains source bone, muscle, and calcaneal-tendon surfaces and is

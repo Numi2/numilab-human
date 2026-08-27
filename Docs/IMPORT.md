@@ -57,6 +57,20 @@ numi human myosim-native-route-inspection \
   Build/route-inspection-right-lower-leg \
   136 348 349 369 371
 
+# Offline source-surface package plus native source-default inspection. The
+# final command starts no Python process. Its rigid visual parents do not make
+# the muscle/tendon surfaces deformable.
+numi human myosim-bodyparts-right-posterior-chain-payload \
+  --sources Sources \
+  --registration Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json \
+  --output Build/bodyparts3d-myosim-right-posterior-chain
+numi human myosim-native-soft-tissue-visuals \
+  Build/myosim-fullbody \
+  Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
+  Build/bodyparts3d-myosim-right-posterior-chain/bodyparts3d-myosim-right-posterior-chain.nhtissue \
+  Build/bodyparts3d-myosim-right-posterior-chain/native-views \
+  136 --dimension 2048
+
 # Native bounded force-to-pose capture: Core FP64 projects all 416 source
 # muscles, integrates one free-body sensitivity step, and Metal renders only
 # its final articulated pose. No Python process is started.
