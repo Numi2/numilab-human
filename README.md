@@ -77,6 +77,12 @@ Dense 128-DoF mass dynamics, muscle `J^T` force scatter, contact, skin/organ
 solvers, and clinical qualification remain separate work; this is not a full
 Metal rollout.
 
+The same native reference also compares one unconstrained 1 µs FP64 state step
+with the complete 416-muscle generalized force against the identical passive
+state. The active route force changes velocity by `0.0714839058782` and
+configuration by `7.14839058782e-08`; this is a bounded state-coupling smoke
+test, not stable movement, contact, gait, or physiological calibration.
+
 ## Offline source import
 
 MyoSim's own upstream composition API is Python. It is used *only* to acquire

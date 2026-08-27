@@ -74,7 +74,7 @@ MyoSim source composition (offline)
               +--> Metal: poses + analytic point Jacobians -> 416 routes + static force
 ```
 
-The native probe at Core `79cc34a` passed with:
+The native probe at Core `86790f3` passed with:
 
 | Native property | Measured result |
 | --- | --- |
@@ -85,6 +85,11 @@ The native probe at Core `79cc34a` passed with:
 | Default-pose position / orientation error | `6.27e-08 m` / `9.88e-08 rad` |
 | Source-oracle muscle length / force error | `2.56e-08 m` / `4.89e-04 N` |
 | Inverse/forward dynamics round-trip error | `4.92e-13` |
+| 416-muscle 1 µs state-coupling delta | `7.15e-02` velocity / `7.15e-08` configuration |
+
+The last row is an unconstrained FP64 sensitivity comparison against the same
+passive state, not a standing, walking, contact, or physiological-stability
+result.
 
 Run that exact native path without a Python process:
 

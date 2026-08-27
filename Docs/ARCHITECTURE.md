@@ -67,10 +67,17 @@ Python simulator wrapped by Numi. An offline MyoSim composition step writes two
 immutable payloads: `NHRIGID2` contains the 157-body Core tree (103 authored
 source bodies plus 54 exact zero-inertia transform carriers), while `NHMYO1`
 contains all 416 actuator definitions, 1,815 sites, and 143 wrap geometries.
-At Core `79cc34a`, `MujocoMuscleReference` evaluates the MuJoCo general-muscle
+At Core `86790f3`, `MujocoMuscleReference` evaluates the MuJoCo general-muscle
 activation/force equations and sphere/cylinder spatial tendon routes, scatters
 `F * d(length)/d(v)` through Core point Jacobians, and drives the same native
 forward-dynamics owner.
+
+The full-body reference also makes that force-to-state coupling executable: an
+otherwise identical passive and 416-muscle free-body state are each integrated
+for 1 µs in the FP64 Core. The muscle-driven state differs by maximum velocity
+`0.0714839058782` and configuration `7.14839058782e-08`. This is deliberately
+a short unconstrained sensitivity check, not an assertion that the source
+default co-activation is a stable posture, realistic gait, or contact result.
 
 `numi human myosim-native-probe Build/myosim-fullbody --metal` executes that
 path by directly launching the C++ Core binary, then dispatches the full body's
@@ -124,7 +131,7 @@ a rollout until the core lowerer exists and all gated sources are supplied.
 
 `numi human audit` records the active MyoSim full-body route separately from
 the legacy stitched source manifest and verifies the inspected runtime checkout.
-At Core `79cc34a`, it reports the Apple M4 parity evidence for the 157-body /
+At Core `86790f3`, it reports the Apple M4 parity evidence for the 157-body /
 416-muscle route-force reference while retaining the bounded Rajagopal
 FunctionBased execution as comparative lower-body mechanics. It does not
 present the unavailable authenticated MoBL-ARMS archive as a blocker to the
