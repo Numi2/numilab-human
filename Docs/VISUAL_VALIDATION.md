@@ -93,16 +93,18 @@ an anatomical motion controller, stable movement, deformable tissue, or
 clinical registration. Exact indices, counters, and image hashes are in the
 [capture record](media/myosim-native-right-upper-limb-flexion-drive-2048/capture.transcript.txt).
 
-## Current full-body muscle and tendon check — 2026-08-27
+## Current full-body muscle and tendon check — isolated cameras — 2026-08-27
 
-The [current four-angle full-body review](VISUAL_PROGRESS.md#current-full-body-source-muscle-and-tendon-review--2026-08-27)
+The [current four-angle full-body review](VISUAL_PROGRESS.md#current-full-body-source-muscle-and-tendon-review--isolated-cameras--2026-08-27)
 keeps all 184 BodyParts3D bones and 150 named source surfaces visible after a
 small, active all-416 route update. Its M4 execution has two Metal force
 transactions, 416 active source records, 90 applied wraps, six final active
 contacts among ten source-foot witnesses, and a `1.44013083483e-05`
 configuration difference from the passive reference. The four views retain nonzero bone/muscle/tendon
-coverage: 77,924/331,756/132, 72,578/273,205/770,
-58,434/165,371/640, and 111,564/295,853/7,389 pixels.
+coverage: 77,908/331,431/116, 72,543/272,920/819,
+58,478/165,156/784, and 111,714/295,787/7,335 pixels. A fresh native
+renderer and Metal world sample are constructed per camera; the validated
+images therefore cannot reuse another angle's sampled render state.
 
 Only the already source-triangle-locked distal boundary of each calcaneal
 tendon can be visually closed to its named calcaneus. This avoids both the old
@@ -110,7 +112,7 @@ wrong two-body ownership and an invented muscle-to-tendon bridge, while making
 the observed collagen-to-bone continuity readable at full-body scale. It does
 not validate physical tendon attachment, a force-transfer law, deformable
 tissue, contact, gait, or clinical registration. The exact native output is in
-its [capture record](media/myosim-native-fullbody-nhtiss3-bone-collars-2048/capture.transcript.txt).
+its [capture record](media/myosim-native-fullbody-isolated-cameras-2048/capture.transcript.txt).
 
 ## Shared three-body Achilles check — 2026-08-27
 
@@ -153,29 +155,21 @@ the final pose, not a replacement tendon mesh or a physical attachment result.
 The [capture record](media/myosim-native-selective-calf-route-attachment-2048/capture.transcript.txt)
 contains the parameters, device counters, and exact images.
 
-## Current source-surface-bound exterior check — 2026-08-27
+## Rejected inferred exterior binding — 2026-08-27
 
-The four-angle 2048 px [source-surface exterior review](VISUAL_PROGRESS.md#current-source-surface-bound-exterior-review--2026-08-27)
-uses the exact BodyParts3D `FJ2810` skin mesh: 102,467 vertices and 203,382
-triangles. The offline ABI-3 package selects four distinct bodies from 6,656
-deterministic samples of exact registered source-bone surfaces across 86 Core
-body bindings, and only preserves blends within a 12.5 mm local joint band.
-It reconstructs the registered rest pose to `1.3383253895372864e-15 m`.
+The exact BodyParts3D `FJ2810` skin mesh has 102,467 vertices and 203,382
+triangles but no upstream anatomical skin weights. The ABI-3 proximity package
+can reconstruct the registered rest pose, yet the 2048-pixel all-416-muscle
+review revealed split/overlapping shell patches in oblique and rear views.
+Both a narrower proximity band and a sole nearest-bone owner were checked; the
+discontinuities persisted or moved, so neither is admitted as articulated skin
+evidence.
 
-The native C++/Metal run on Apple M4 Pro executed all 416 authored source
-paths at every one of 32 × 100 µs updates (64 Metal force transactions,
-13,312 active records, and 2,866 wraps) before rendering its final 157-body
-pose. The frames have 485,784 / 426,800 / 309,847 / 516,855 shell pixels from
-front through rear, and visual inspection found one coherent exterior in all
-four angles rather than the former oblique/lateral split silhouette. The
-[capture record](media/myosim-native-skinned-fullbody-source-surface-2048/capture.transcript.txt)
-contains output identities and devices.
-
-This validates an articulated source-surface-local exterior binding under a
-bounded muscle-force update. It does not validate physical skin deformation,
-material calibration, collision/contact geometry, gait, or clinical
-soft-tissue registration. The exposed tendon inspection remains the authority
-for tendon-to-bone visual continuity.
+The retained exterior frames and transcript are rejected diagnostics, not
+current Human imagery. They establish neither articulated skin, physical skin
+deformation, material calibration, collision/contact geometry, gait, nor
+clinical soft-tissue registration. The exposed tendon inspection remains the
+authority for tendon-to-bone visual continuity.
 
 ## Retained driven tendon-junction check — 2026-08-27
 

@@ -119,38 +119,28 @@ force-transfer law, whole-body deformable tissue, collision/contact, gait, or
 clinical validation. The matte, separate BodyParts3D surfaces remain visible
 by design so this evidence is not mistaken for a finished human presentation.
 
-## Current source-surface-bound exterior review — 2026-08-27
+## Retired inferred exterior binding — 2026-08-27
+
+The exact 102,467-vertex, 203,382-triangle BodyParts3D `FJ2810` shell is a
+valuable static source mesh, but it has no authored per-vertex anatomical skin
+weights. The `NHSKIN1` proximity-derived binding therefore remains diagnostic
+only. A 2048-pixel all-416-muscle recheck found split/overlapping shell patches
+in the oblique and rear views; reducing the proximity band or selecting only
+the nearest bone merely changed where the discontinuities appeared.
+
+The older exterior frames and their transcript are retained as rejected
+diagnostic evidence, not linked as current gallery imagery or motion proof.
+They do not establish articulated skin, a deformable tissue law,
+collision shell, gait result, or clinical registration. The exposed source
+muscle/bone/tendon captures below are the current muscle-driven presentation.
+
+## Current full-body source-muscle and tendon review — isolated cameras — 2026-08-27
 
 <p align="center">
-  <img src="media/myosim-native-skinned-fullbody-source-surface-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-front.png" width="24%" alt="Source-surface exterior, front" />
-  <img src="media/myosim-native-skinned-fullbody-source-surface-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-oblique.png" width="24%" alt="Source-surface exterior, oblique" />
-  <img src="media/myosim-native-skinned-fullbody-source-surface-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-side.png" width="24%" alt="Source-surface exterior, side" />
-  <img src="media/myosim-native-skinned-fullbody-source-surface-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-rear.png" width="24%" alt="Source-surface exterior, rear" />
-</p>
-
-This current 2048 px Apple-M4-Pro review keeps the exact 102,467-vertex,
-203,382-triangle BodyParts3D exterior coherent through the bounded all-416
-muscle probe. The `NHSKIN1` ABI 3 payload chooses from 6,656 deterministic
-samples of the exact registered source bone surfaces across 86 body bindings;
-only bodies within 12.5 mm of the nearest source surface sample share a skin
-vertex. The earlier box-proximity shell is retained only as a reproducibility
-artifact, not current imagery.
-
-The native run performed 32 × 100 µs all-muscle updates at 0.05 activation
-(64 Metal force transactions, 13,312 active records, and 2,866 wraps) before
-the final render. All four frames have source-shell coverage: 485,784 /
-426,800 / 309,847 / 516,855 pixels. The [capture record](media/myosim-native-skinned-fullbody-source-surface-2048/capture.transcript.txt)
-retains inputs, hashes, and device evidence. This is articulated source skin,
-not a deformable tissue law, collision shell, gait result, or clinical
-registration.
-
-## Current full-body source-muscle and tendon review — 2026-08-27
-
-<p align="center">
-  <img src="media/myosim-native-fullbody-nhtiss3-bone-collars-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-front.png" width="24%" alt="All-muscle Human, front" />
-  <img src="media/myosim-native-fullbody-nhtiss3-bone-collars-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-oblique.png" width="24%" alt="All-muscle Human, oblique" />
-  <img src="media/myosim-native-fullbody-nhtiss3-bone-collars-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-side.png" width="24%" alt="All-muscle Human, side" />
-  <img src="media/myosim-native-fullbody-nhtiss3-bone-collars-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-rear.png" width="24%" alt="All-muscle Human, rear" />
+  <img src="media/myosim-native-fullbody-isolated-cameras-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-front.png" width="24%" alt="All-muscle Human, front" />
+  <img src="media/myosim-native-fullbody-isolated-cameras-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-oblique.png" width="24%" alt="All-muscle Human, oblique" />
+  <img src="media/myosim-native-fullbody-isolated-cameras-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-side.png" width="24%" alt="All-muscle Human, side" />
+  <img src="media/myosim-native-fullbody-isolated-cameras-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-rear.png" width="24%" alt="All-muscle Human, rear" />
 </p>
 
 This is the current whole-body mechanical anatomy reference: 184 exact
@@ -158,11 +148,13 @@ BodyParts3D bone meshes and 150 named muscle/tendon surfaces at 2048 px.
 All 416 authored MyoSim routes ran on Apple M4 before one 100 µs bounded state
 update at 0.01 activation (two Metal force transactions, 416 active records,
 90 wraps, and `1.44013083483e-05` maximum configuration delta). It uses the
-`NHTISS3` three-body Achilles binding. The normal source tendon boundary is
+`NHTISS3` three-body Achilles binding. Each angle creates a fresh native
+renderer and Metal world sample, eliminating the former prior-camera leakage.
+The normal source tendon boundary is
 triangle-projected onto its named calcaneus; the old short visual collar is
 available only as an explicit diagnostic, so the renderer no longer adds a
 synthetic muscle-to-tendon bridge. The
-[capture record](media/myosim-native-fullbody-nhtiss3-bone-collars-2048/capture.transcript.txt)
+[capture record](media/myosim-native-fullbody-isolated-cameras-2048/capture.transcript.txt)
 has the four image hashes, coverage, and devices.
 
 This is an active muscle-force and articulated-anatomy inspection. The collar
@@ -336,10 +328,9 @@ front, oblique, and rear frames respectively; its transcript and output hashes
 are retained beside the images.
 
 This retained source-static reference establishes mesh provenance only. The
-current exterior capture above uses a separate, explicitly marked
-four-influence visual binding derived from registered bone envelopes. Neither
-view provides contact geometry, constitutive parameters, volume, or physical
-skin deformation.
+proximity-derived animated exterior binding is retired after its high-resolution
+visual failure. Neither view provides contact geometry, constitutive parameters,
+volume, or physical skin deformation.
 
 ## Device-resident full-body muscle-force projection — 2026-08-27
 

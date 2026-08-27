@@ -22,17 +22,13 @@ derivatives; all other raw or derived source artifacts remain local. See
 
 ## Visual progress
 
-The lead visual pairs exposed source anatomy—where muscles and tendons can be
-inspected directly against named bones—with a source-surface-bound exterior
-that remains coherent under the bounded all-muscle probe. See
-[visual progress](Docs/VISUAL_PROGRESS.md) for the exact evidence boundary.
+The lead visuals are exposed source anatomy, where muscles and tendons can be
+inspected directly against named bones. The BodyParts3D exterior is retained as
+a static source mesh only: it has no authored skin weights and is not presented
+as a muscle-driven Human. See [visual progress](Docs/VISUAL_PROGRESS.md) for
+the exact evidence boundary.
 
 ### Corrected muscle-driven calcaneal attachment
-
-<p align="center">
-  <img src="Docs/media/myosim-native-calcaneal-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-138-oblique.png" width="49%" alt="Corrected right calcaneal tendon attachment, oblique" />
-  <img src="Docs/media/myosim-native-calcaneal-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-138-rear.png" width="49%" alt="Corrected right calcaneal tendon attachment, rear" />
-</p>
 
 The native base anatomy now renders the BodyParts3D `FJ1405` tendon directly
 against its named `FJ3360` calcaneus, using the bone's exact per-anchor
@@ -47,11 +43,6 @@ attachment certificate. The [capture record](Docs/media/myosim-native-calcaneal-
 
 ### Muscle-driven torso anatomy
 
-<p align="center">
-  <img src="Docs/media/myosim-native-torso-anatomy-2048/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-muscle-driven-focus-body-20-front.png" width="49%" alt="Source-bound torso anatomy, front" />
-  <img src="Docs/media/myosim-native-torso-anatomy-2048/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-muscle-driven-focus-body-20-oblique.png" width="49%" alt="Source-bound torso anatomy, oblique" />
-</p>
-
 The native `NHANAT1` path adds 12 exact BodyParts3D components to the exposed
 Human: one source component from the heart group, stomach, pancreas, both
 kidneys, four named aortic segments, both caval segments, and spinal cord.
@@ -62,26 +53,21 @@ kinematic anatomy view—not a complete organ inventory, photorealistic body,
 deformable organ/vessel model, or medical registration. See the
 [capture record](Docs/media/myosim-native-torso-anatomy-2048/capture.transcript.txt).
 
-### Muscle-driven source-surface exterior
+### Exterior source boundary
 
-<p align="center">
-  <img src="Docs/media/myosim-native-skinned-fullbody-source-surface-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-front.png" width="49%" alt="Source-surface-bound muscle-driven Human exterior, front" />
-  <img src="Docs/media/myosim-native-skinned-fullbody-source-surface-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-oblique.png" width="49%" alt="Source-surface-bound muscle-driven Human exterior, oblique" />
-</p>
-
-This Apple-M4-Pro 2K exterior review uses the exact 102,467-vertex BodyParts3D
-skin mesh. Each vertex selects from 6,656 sampled exact source-bone surface
-points across 86 registered articulated bodies, with blending limited to a
-12.5 mm local joint band. All 416 authored MyoSim paths ran on Metal for 32 ×
-100 µs bounded updates before the native render. It is a coherent articulated
-source exterior, not a textured avatar, deformable skin/tissue solve,
-collision shell, gait result, or clinical registration.
+BodyParts3D `FJ2810` remains the exact 102,467-vertex exterior source mesh,
+but BodyParts3D supplies no compatible per-vertex skin weights. A high-
+resolution all-muscle review exposed split shell patches in oblique and rear
+views, so that inferred animated exterior is retired from the gallery rather
+than presented as a plausible Human. The source skin remains useful for static
+reference only; the exposed muscle, bone, and tendon views are the current
+muscle-driven presentation.
 
 ### Muscle-driven full-body anatomy
 
 <p align="center">
-  <img src="Docs/media/myosim-native-fullbody-nhtiss3-bone-collars-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-front.png" width="49%" alt="All-muscle BodyParts3D Human, front" />
-  <img src="Docs/media/myosim-native-fullbody-nhtiss3-bone-collars-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-rear.png" width="49%" alt="All-muscle BodyParts3D Human, rear" />
+  <img src="Docs/media/myosim-native-fullbody-isolated-cameras-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-front.png" width="49%" alt="All-muscle BodyParts3D Human, front" />
+  <img src="Docs/media/myosim-native-fullbody-isolated-cameras-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-rear.png" width="49%" alt="All-muscle BodyParts3D Human, rear" />
 </p>
 
 This separate Apple-M4 2K anatomy pass is the active full-body mechanical
@@ -90,17 +76,13 @@ state update. It renders 184 BodyParts3D bone meshes and 150 named
 muscle/tendon surfaces. The two Achilles meshes use corrected three-body
 femur/tibia/calcaneus ownership and source-triangle projected distal
 boundaries; the old short collar is now explicit diagnostic-only geometry, not
-part of the normal anatomy render. It is an anatomy/force-path inspection, not a
-deformable tissue or tendon result.
+part of the normal anatomy render. Each of the four 2K views uses a fresh
+native renderer and world sample, so no preceding angle can leak into the
+frame. It is an anatomy/force-path inspection, not a deformable tissue or
+tendon result. The [capture record](Docs/media/myosim-native-fullbody-isolated-cameras-2048/capture.transcript.txt)
+keeps the exact inputs, counters, and image hashes.
 
 ### Shared-tendon, source-body attachment review
-
-<p align="center">
-  <img src="Docs/media/myosim-native-three-body-achilles-2048/rest/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-front.png" width="24%" alt="Three-body Achilles binding, front" />
-  <img src="Docs/media/myosim-native-three-body-achilles-2048/rest/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-oblique.png" width="24%" alt="Three-body Achilles binding, oblique" />
-  <img src="Docs/media/myosim-native-three-body-achilles-2048/rest/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-side.png" width="24%" alt="Three-body Achilles binding, side" />
-  <img src="Docs/media/myosim-native-three-body-achilles-2048/rest/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-rear.png" width="24%" alt="Three-body Achilles binding, rear" />
-</p>
 
 The previous two-body Achilles presentation was wrong: it reduced the two
 gastrocnemius femoral origins and soleus tibial origin to one tibia–calcaneus
@@ -115,13 +97,6 @@ kinematic visual surface, not a tendon continuum, weld, force-transfer law,
 contact result, gait result, or clinical attachment certificate.
 
 ### Selective muscle-to-bone route review
-
-<p align="center">
-  <img src="Docs/media/myosim-native-three-body-achilles-2048/selective-drive/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-surface-projected-sites-focus-body-136-front.png" width="24%" alt="Selective calf route review, front" />
-  <img src="Docs/media/myosim-native-three-body-achilles-2048/selective-drive/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-surface-projected-sites-focus-body-136-oblique.png" width="24%" alt="Selective calf route review, oblique" />
-  <img src="Docs/media/myosim-native-three-body-achilles-2048/selective-drive/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-surface-projected-sites-focus-body-136-side.png" width="24%" alt="Selective calf route review, side" />
-  <img src="Docs/media/myosim-native-three-body-achilles-2048/selective-drive/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-surface-projected-sites-focus-body-136-rear.png" width="24%" alt="Selective calf route review, rear" />
-</p>
 
 This is the mechanical counterpart to the collagen-surface review. Only the
 current pinned MyoSim gastrocnemius lateralis/medialis and soleus actuators
@@ -144,19 +119,11 @@ three-body review above.
 ### Source skin provenance
 
 The exact 102,467-vertex, 203,382-triangle BodyParts3D `FJ2810` shell remains
-the exterior source. Its current native payload uses source-bone surface
-samples—not broad bone-box proximity—to choose four candidate bodies per
-vertex, then restricts nonzero blends to the local source joint band. It is
+the exterior source. It has no upstream skin weights, so proximity-derived
+articulation is a rejected diagnostic rather than a Human presentation. It is
 not a deformable-shell mechanics result or a human-quality textured avatar.
 
 ### Selective upper-limb source-actuator drive
-
-<p align="center">
-  <img src="Docs/media/myosim-native-right-upper-limb-flexion-drive-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-41-front.png" width="24%" alt="Right upper-limb source drive, front" />
-  <img src="Docs/media/myosim-native-right-upper-limb-flexion-drive-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-41-oblique.png" width="24%" alt="Right upper-limb source drive, oblique" />
-  <img src="Docs/media/myosim-native-right-upper-limb-flexion-drive-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-41-side.png" width="24%" alt="Right upper-limb source drive, side" />
-  <img src="Docs/media/myosim-native-right-upper-limb-flexion-drive-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-41-rear.png" width="24%" alt="Right upper-limb source drive, rear" />
-</p>
 
 This torso–scapula–humerus–forearm view uses 42 source bone meshes on
 six articulated bodies and 20 exact BodyParts3D muscle surfaces. It excites
@@ -172,12 +139,6 @@ controller, deformable soft tissue, tendon continuum, stable movement, or
 clinical-registration evidence.
 
 ### Reviewed full-skeleton native inspection
-
-<p align="center">
-  <img src="Docs/media/myosim-native-full-skeleton-184-2048/default/myosim-fullbody-articulated-bodyparts-bones-front.png" width="32%" alt="Full BodyParts3D visual skeleton, front" />
-  <img src="Docs/media/myosim-native-full-skeleton-184-2048/default/myosim-fullbody-articulated-bodyparts-bones-oblique.png" width="32%" alt="Full BodyParts3D visual skeleton, oblique" />
-  <img src="Docs/media/myosim-native-full-skeleton-184-2048/default/myosim-fullbody-articulated-bodyparts-bones-rear.png" width="32%" alt="Full BodyParts3D visual skeleton, rear" />
-</p>
 
 This four-angle 2048 × 2048 native inspection binds 184 exact BodyParts3D
 bone meshes—cranial bones, vertebrae, ribs, hands, feet, and the major
@@ -360,10 +321,9 @@ numi human myosim-native-supported-fullbody-muscle-visuals \
   --muscle-step-seconds 0.0001 --muscle-step-count 32 \
   --muscle-activation 0.05 --dimension 2048
 
-# Build the exact exterior BodyParts3D shell once, then run the separate
-# Python-free native muscle-driven presentation.  The offline import derives
-# four registered visual influences per vertex and verifies its rest-pose
-# reconstruction; it does not claim a physical skin material or collision.
+# Build the exact exterior BodyParts3D shell for source-static inspection only.
+# The source has no anatomical skin weights. The optional proximity binding is
+# a rejected diagnostic, not current muscle-driven gallery or motion evidence.
 numi human myosim-bodyparts-skinned-shell-payload \
   --sources Sources \
   --registration Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json \
