@@ -474,10 +474,12 @@ numi human build \
   --accept-upper-noncommercial-terms \
   --output Build/human-v1-public-unimanual
 
-# Audit the active MyoSim full-body route separately from the legacy stitched
-# BodyParts3D + Rajagopal + authenticated MoBL-ARMS manifest.
+# Audit the selected free foundation separately from the authenticated-bimanual
+# manifest and from the active MyoSim full-body route. This marks the public
+# MoBL source correctly as a non-commercial unimanual upper-body variant.
 numi human audit \
   --sources Sources \
+  --upper-public-mobl-41 \
   --runtime-root /path/to/MetalRobo \
   --output Build/human-v1-gates.json
 

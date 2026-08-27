@@ -8190,6 +8190,14 @@ def gate_report(
                 "requirement": "The public CEINMS MoBL-ARMS 4.1 mirror is a hash-pinned, non-commercial unimanual source variant. It does not replace the authenticated bimanual archive.",
             },
             {
+                "id": "free_human_foundation_source_stack",
+                "status": (
+                    "ready_for_source_import_unimanual_upper_variant"
+                    if public_upper_source_ready else "not_selected"
+                ),
+                "requirement": "The free Human foundation is the verified BodyParts3D 4.0 geometry/hierarchy, RajagopalLaiUhlrich2023 lower-body mechanics, and public CEINMS MoBL-ARMS 4.1 upper-extremity source. Its upper source is a non-commercial unimanual variant; this source-import gate does not claim the authenticated bimanual archive, bilateral upper-body completion, frame registration, or physical qualification.",
+            },
+            {
                 "id": "active_myosim_fullbody_mechanics",
                 "status": (
                     "qualified_static_device_reference"

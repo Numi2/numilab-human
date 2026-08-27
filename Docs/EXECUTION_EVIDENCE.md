@@ -1,5 +1,23 @@
 # Bounded execution evidence
 
+## Rebuilt Rajagopal lower-body pilot smoke — 2026-08-27
+
+The lower-body pilot was rerun after rebuilding the Human reference probe and
+its linked Core library together, eliminating a stale probe/library mismatch
+from the local build directory. On the local Apple M4, the source-locked
+Rajagopal payload completed the full CPU/Metal reference suite: 22 source
+bodies (23 Core bodies with the synthetic fixed anchor), 22 joints, 10
+FunctionBased programs, all 80 Millard muscles, and 46 authored wraps. The
+four temporary `calcn_r`, `toes_r`, `calcn_l`, and `toes_l` foot pads produced
+eight active contact witnesses; the pilot reports
+`lower_body_pilot=ok` and `lower_body_pilot_millard_force_l1=284189.943656`.
+
+This confirms the bounded source-default lower-body contact and muscle path on
+the rebuilt local runtime. The pads remain engineering scaffolding, not
+BodyParts3D foot geometry or calibrated anatomy. It does not qualify walking,
+replay, registered anatomical contact, deformable tissue, or a visual-motion
+result.
+
 ## MyoSim full-body Metal activation-state transaction — 2026-08-27
 
 Core revision `bab29ddc0ae9eb7d19655def7e10a95c26bd8aa1` extends the MyoSim

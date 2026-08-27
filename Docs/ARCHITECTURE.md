@@ -209,6 +209,15 @@ FunctionBased execution as comparative lower-body mechanics. It does not
 present the unavailable authenticated MoBL-ARMS archive as a blocker to the
 active full-body MyoSim route.
 
+When selected explicitly, the audit also exposes
+`free_human_foundation_source_stack`: verified BodyParts3D 4.0 anatomy,
+RajagopalLaiUhlrich2023 lower-body mechanics, and the pinned public CEINMS
+MoBL-ARMS 4.1 upper-extremity model. It is ready for a source import with a
+non-commercial **unimanual** upper-body variant. That is intentionally a
+different claim from the original authenticated bimanual archive, and it does
+not imply bilateral upper-body completion, body-frame registration, or a
+physical qualification.
+
 `numi human core-reference` now compiles the complete 22-body Rajagopal tree
 into a fixed-layout payload: each source body supplies its mass, COM, and
 inertia; each source joint supplies its resolved body-frame anchors and

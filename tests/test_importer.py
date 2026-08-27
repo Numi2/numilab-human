@@ -971,6 +971,30 @@ class ImporterTests(unittest.TestCase):
             active_gate["status"], "qualified_static_device_reference"
         )
 
+    def test_gate_report_exposes_the_selected_free_human_foundation_stack(self) -> None:
+        source_lock = read_json(ROOT / "sources.lock.json")
+        public_upper = source_lock["sources"]["mobl_arms_ceinms_41_public_mirror"]
+        report = gate_report(
+            sources=ROOT / "Sources",
+            upper_archive=None,
+            upper_public_model=ROOT / "Sources" / public_upper["model_file"],
+            source_lock=source_lock,
+            runtime_contract=read_json(ROOT / "config/numi-runtime-contract.v1.json"),
+        )
+        free_foundation_gate = next(
+            gate for gate in report["gates"]
+            if gate["id"] == "free_human_foundation_source_stack"
+        )
+        original_bimanual_gate = next(
+            gate for gate in report["gates"]
+            if gate["id"] == "source_faithful_import"
+        )
+        self.assertEqual(
+            free_foundation_gate["status"],
+            "ready_for_source_import_unimanual_upper_variant",
+        )
+        self.assertEqual(original_bimanual_gate["status"], "blocked")
+
     def test_runtime_compatibility_preserves_unsupported_joints_and_muscle_evidence_gates(self) -> None:
         model = {
             "model_id": "fixture",
