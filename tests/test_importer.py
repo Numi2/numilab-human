@@ -9,6 +9,7 @@ from pathlib import Path
 from subprocess import run
 
 from numilab_human.model import (
+    _BODYPARTS_MYOSIM_BONE_ANCHORS,
     _bodyparts_similarity_fit,
     ImportError as HumanImportError,
     bodyparts_foot_collider_preflight,
@@ -42,6 +43,32 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ImporterTests(unittest.TestCase):
+    def test_major_bone_extension_preserves_the_validated_fit_set(self) -> None:
+        fit_anchors = [
+            anchor for anchor in _BODYPARTS_MYOSIM_BONE_ANCHORS
+            if anchor.get("registration_anchor", True)
+        ]
+        extension = [
+            anchor for anchor in _BODYPARTS_MYOSIM_BONE_ANCHORS
+            if not anchor.get("registration_anchor", True)
+        ]
+        self.assertEqual(len(fit_anchors), 18)
+        self.assertEqual(len(_BODYPARTS_MYOSIM_BONE_ANCHORS), 27)
+        self.assertEqual(
+            {(anchor["bodyparts_name"], anchor["myosim_body"]) for anchor in extension},
+            {
+                ("right hip bone", "pelvis"), ("left hip bone", "pelvis"),
+                ("right fibula", "tibia_r"), ("left fibula", "tibia_l"),
+                ("right talus", "talus_r"), ("left talus", "talus_l"),
+                ("right patella", "patella_r"), ("left patella", "patella_l"),
+                ("body of sternum", "torso"),
+            },
+        )
+        self.assertEqual(
+            len({anchor["member_id"] for anchor in _BODYPARTS_MYOSIM_BONE_ANCHORS}),
+            len(_BODYPARTS_MYOSIM_BONE_ANCHORS),
+        )
+
     def test_bodyparts_similarity_fit_keeps_proper_axes_and_positive_scale(self) -> None:
         source = [
             [0.0, 0.0, 0.0], [1.0, 0.0, 0.0],

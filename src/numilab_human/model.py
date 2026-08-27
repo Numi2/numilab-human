@@ -2706,6 +2706,19 @@ _BODYPARTS_MYOSIM_BONE_ANCHORS = (
     {"myosim_body": "radius_r", "bodyparts_name": "right radius", "hierarchy": "is_a", "member_id": "FJ3349"},
     {"myosim_body": "radius_l", "bodyparts_name": "left radius", "hierarchy": "is_a", "member_id": "FJ3277"},
     {"myosim_body": "head", "bodyparts_name": "skull", "hierarchy": "part_of", "member_id": "FJ1282"},
+    # These exact meshes have unambiguous named source members and a sound
+    # MyoSim rigid-link parent, but they remain out of the fitted landmark set:
+    # their OBJ vertex centroids are especially poor proxies for the target
+    # inertial COMs.  They inherit the established 18-anchor common frame.
+    {"myosim_body": "pelvis", "bodyparts_name": "right hip bone", "hierarchy": "is_a", "member_id": "FJ3152", "registration_anchor": False},
+    {"myosim_body": "pelvis", "bodyparts_name": "left hip bone", "hierarchy": "is_a", "member_id": "FJ3288", "registration_anchor": False},
+    {"myosim_body": "tibia_r", "bodyparts_name": "right fibula", "hierarchy": "is_a", "member_id": "FJ3366", "registration_anchor": False},
+    {"myosim_body": "tibia_l", "bodyparts_name": "left fibula", "hierarchy": "is_a", "member_id": "FJ3260", "registration_anchor": False},
+    {"myosim_body": "talus_r", "bodyparts_name": "right talus", "hierarchy": "is_a", "member_id": "FJ3385", "registration_anchor": False},
+    {"myosim_body": "talus_l", "bodyparts_name": "left talus", "hierarchy": "is_a", "member_id": "FJ3280", "registration_anchor": False},
+    {"myosim_body": "patella_r", "bodyparts_name": "right patella", "hierarchy": "is_a", "member_id": "FJ3381", "registration_anchor": False},
+    {"myosim_body": "patella_l", "bodyparts_name": "left patella", "hierarchy": "is_a", "member_id": "FJ3275", "registration_anchor": False},
+    {"myosim_body": "torso", "bodyparts_name": "body of sternum", "hierarchy": "is_a", "member_id": "FJ3178", "registration_anchor": False},
 )
 
 
@@ -2842,6 +2855,7 @@ def bodyparts_myosim_registration_candidate(
     anchors: list[dict[str, Any]] = []
     source_points_m: list[list[float]] = []
     target_points_m: list[list[float]] = []
+    fit_anchor_indices: list[int] = []
     for specification in _BODYPARTS_MYOSIM_BONE_ANCHORS:
         target_name = specification["myosim_body"]
         target = body_by_name.get(target_name)
@@ -2861,8 +2875,6 @@ def bodyparts_myosim_registration_candidate(
             raise ImportError(f"BodyParts3D registration archive provenance drifted for {hierarchy}")
         vertices_mm, triangles = _bodyparts_obj_triangles(obj, member)
         centroid_mm = [sum(vertex[axis] for vertex in vertices_mm) / len(vertices_mm) for axis in range(3)]
-        source_points_m.append([value * 0.001 for value in centroid_mm])
-        target_points_m.append(target["default_com_position_world_m"])
         anchors.append({
             "source": {
                 "archive": archive_path.name, "archive_sha256": sha256(archive_path), "hierarchy": hierarchy,
@@ -2876,8 +2888,13 @@ def bodyparts_myosim_registration_candidate(
                 "default_inertial_quaternion_world_xyzw": target["default_inertial_quaternion_world_xyzw"],
             },
         })
+        if specification.get("registration_anchor", True):
+            source_points_m.append([value * 0.001 for value in centroid_mm])
+            target_points_m.append(target["default_com_position_world_m"])
+            fit_anchor_indices.append(len(anchors) - 1)
     fit = _bodyparts_similarity_fit(source_points_m, target_points_m)
     global_matrix = _bodyparts_registration_matrix(fit["rotation"], fit["scale_after_mm_to_m"], fit["translation_world_m"])
+    residual_by_anchor = dict(zip(fit_anchor_indices, fit["residuals_m"], strict=True))
     for index, anchor in enumerate(anchors):
         target = anchor["target"]
         centroid_world_m = [
@@ -2889,8 +2906,12 @@ def bodyparts_myosim_registration_candidate(
                 global_matrix, target["default_com_position_world_m"], target["default_inertial_quaternion_world_xyzw"],
             ),
             "default_pose_vertex_centroid_world_m": centroid_world_m,
-            "vertex_centroid_to_source_com_residual_m": fit["residuals_m"][index],
-            "status": "provisional_visual_binding_only",
+            "vertex_centroid_to_source_com_residual_m": residual_by_anchor.get(index),
+            "status": (
+                "provisional_visual_fit_anchor"
+                if index in residual_by_anchor
+                else "provisional_visual_binding_from_fitted_common_frame"
+            ),
         }
     return {
         "schema": "numi.human.bodyparts3d-myosim-bone-registration-candidate.v1",
@@ -2905,13 +2926,14 @@ def bodyparts_myosim_registration_candidate(
         },
         "fit": {
             "method": "equal-weight vertex-centroid to source inertial-COM similarity over 24 proper signed-axis maps",
-            "anchor_count": len(anchors), "rms_vertex_centroid_to_com_residual_m": fit["rms_residual_m"], "max_vertex_centroid_to_com_residual_m": max(fit["residuals_m"]),
+            "anchor_count": len(fit_anchor_indices), "rms_vertex_centroid_to_com_residual_m": fit["rms_residual_m"], "max_vertex_centroid_to_com_residual_m": max(fit["residuals_m"]),
             "interpretation": "A mesh vertex centroid and rigid-body inertial COM are not homologous landmarks. These residuals diagnose common-frame plausibility only, not surface registration accuracy.",
         },
         "anchors": anchors,
         "coverage": {
-            "registered_major_bone_count": len(anchors), "registered_myo_bodies": [anchor["target"]["name"] for anchor in anchors],
-            "not_yet_registered": ["vertebrae, pelvis, ribs, hands, digits, toes, patellae, talus, fibulae, and soft-tissue layers"],
+            "registered_major_bone_count": len(anchors), "similarity_fit_anchor_count": len(fit_anchor_indices),
+            "registered_myo_bodies": [anchor["target"]["name"] for anchor in anchors],
+            "not_yet_registered": ["vertebrae, ribs, hands, digits, toes, and soft-tissue layers"],
         },
         "status": "provisional_visual_registration_not_admitted_to_collision_or_physics",
         "next_visual_validation": [
