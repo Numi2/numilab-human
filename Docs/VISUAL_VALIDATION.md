@@ -1,5 +1,24 @@
 # Visual validation
 
+## Native passive-FEM soleus check — 2026-08-27
+
+The four-angle [passive soleus FEM specimen](VISUAL_PROGRESS.md#native-passive-fem-soleus-specimen--2026-08-27)
+is the first native continuum slice in the Human visual path. It uses exact
+`FJ1437` source-surface endpoints with the MyoSim-driven right tibia and
+calcaneus as prescribed FEM end rings. The local Apple M4 completed eight
+Matter steps for 12 nodes and nine tetrahedra after the all-416-path, 64-step
+MyoSim drive, reporting `J_min = 0.900724887848`, two peak FGMRES iterations,
+and nonzero bone/muscle/tendon/FEM coverage in front, oblique, side, and rear
+views.
+
+That validates the bounded native pose-to-FEM-to-render execution only. Its
+Neo-Hookean material is explicitly uncalibrated, and the source tendon mesh is
+still a separate visual surface rather than a force-transfer continuum. It
+does not validate active muscle constitutive behavior, physiological tendon
+attachment, full-body tissue, contact, gait, or clinical anatomy. Exact
+device, inputs, image hashes, and limits are in the
+[capture record](media/myosim-native-passive-fem-calf-2048/capture.transcript.txt).
+
 ## Selective right upper-limb source-actuator check — 2026-08-27
 
 The 2048 px four-angle [upper-limb source-drive review](VISUAL_PROGRESS.md#focused-right-upper-limb-actuation--2026-08-27)

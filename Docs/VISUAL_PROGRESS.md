@@ -1,5 +1,34 @@
 # NumiLab Human visual progress
 
+## Native passive-FEM soleus specimen — 2026-08-27
+
+<p align="center">
+  <img src="media/myosim-native-passive-fem-calf-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-passive-fem-tissue-muscle-driven-selected-actuators-focus-body-136-front.png" width="24%" alt="Source-bound passive soleus FEM, front" />
+  <img src="media/myosim-native-passive-fem-calf-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-passive-fem-tissue-muscle-driven-selected-actuators-focus-body-136-oblique.png" width="24%" alt="Source-bound passive soleus FEM, oblique" />
+  <img src="media/myosim-native-passive-fem-calf-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-passive-fem-tissue-muscle-driven-selected-actuators-focus-body-136-side.png" width="24%" alt="Source-bound passive soleus FEM, side" />
+  <img src="media/myosim-native-passive-fem-calf-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-passive-fem-tissue-muscle-driven-selected-actuators-focus-body-136-rear.png" width="24%" alt="Source-bound passive soleus FEM, rear" />
+</p>
+
+This focused lower-leg specimen begins from exact BodyParts3D `FJ1437` soleus
+surface geometry, then executes the same all-416-path MyoSim force update as
+the anatomy view. Only source actuator `369` (right soleus) receives 0.5
+activation for 64 × 100 µs; the final tibia (`136`) and calcaneus (`138`)
+poses prescribe the two ends of a 12-node, nine-tetrahedron native Matter FEM
+cage. Eight further 100 µs Matter steps completed on the local Apple M4 with
+two peak FGMRES iterations, a minimum `J` of `0.900724887848`, 13.58 mm
+prescribed-anchor travel, and 0.269 mm maximum free-node movement. The exact
+source soleus surface is deformed by that native cage for all four inspected
+views; the adjacent gastrocnemius and Achilles remain their named
+source-surface bindings.
+
+The [capture record](media/myosim-native-passive-fem-calf-2048/capture.transcript.txt)
+has complete hashes, devices, coverage, and the non-qualification boundary.
+This is a source-bound passive FEM specimen, not a realistic skin render,
+active muscle stress law, calibrated muscle volume, tendon-to-bone
+force-transfer law, whole-body deformable tissue, collision/contact, gait, or
+clinical validation. The matte, separate BodyParts3D surfaces remain visible
+by design so this evidence is not mistaken for a finished human presentation.
+
 ## Current source-surface-bound exterior review — 2026-08-27
 
 <p align="center">
