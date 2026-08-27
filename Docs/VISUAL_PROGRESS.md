@@ -16,19 +16,14 @@ against exact MyoSim attachment sites. That is an alignment diagnostic, not
 tendon-surface geometry, an attachment transfer, or a medical registration.
 Focused replacement captures remain outside the showcase until review.
 
-## Active full-body source validation — 2026-08-27
+## Retired full-body source validation snapshot — 2026-08-27
 
-<p align="center">
-  <img src="media/myosim-fullbody-front.png" width="32%" alt="Anterior MyoSim full-body view">
-  <img src="media/myosim-fullbody-side.png" width="32%" alt="Lateral MyoSim full-body view">
-  <img src="media/myosim-fullbody-rear.png" width="32%" alt="Posterior MyoSim full-body view">
-</p>
-
-These three images are retained visual-progress artifacts from the pinned
-MyoHub `myo_sim` `33c89c2bde282553dde3f526768eb3bdcfaa7649` source. They
-are 640 × 480 default-pose renders of the composed `myofullbody` model. The
-source is Apache-2.0; its attribution and the exact pin are in
-[third-party notices](../THIRD_PARTY_NOTICES.md).
+These images are retained source-provenance artifacts from the pinned MyoHub
+`myo_sim` `33c89c2bde282553dde3f526768eb3bdcfaa7649` source. They are 640 ×
+480 default-pose renders of the composed `myofullbody` model, and are retired
+from presentation because their framing and generic source geometry do not
+make a credible anatomical tendon view. The source is Apache-2.0; its
+attribution and exact pin are in [third-party notices](../THIRD_PARTY_NOTICES.md).
 
 | View | SHA-256 | Inspection result |
 | --- | --- | --- |

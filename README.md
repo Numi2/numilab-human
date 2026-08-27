@@ -21,18 +21,13 @@ or derived source artifacts remain local. See
 
 ## Visual progress
 
-<p align="center">
-  <img src="Docs/media/myosim-fullbody-front.png" width="32%" alt="MyoSim full-body muscle model, anterior source validation view">
-  <img src="Docs/media/myosim-fullbody-side.png" width="32%" alt="MyoSim full-body muscle model, lateral source validation view">
-  <img src="Docs/media/myosim-fullbody-rear.png" width="32%" alt="MyoSim full-body muscle model, posterior source validation view">
-</p>
-
-The front, side, and rear default-pose views show a continuous full-body
-musculoskeletal model: skull, thorax, spine, shoulders/scapulae, arms/hands,
-pelvis, legs, and feet are all visible. They are source-rendered visual
-evidence—not a claim of Core-native rendering, skin deformation, contact, or
-locomotion. See [visual progress](Docs/VISUAL_PROGRESS.md) for provenance,
-inspection notes, and the current implementation boundary.
+The previous 640 × 480 source-model images have been withdrawn from the
+showcase. They remain provenance artifacts, but their framing and tendon
+appearance are not the quality bar for NumiLab Human. The replacement work
+separates two things that must not be conflated: high-resolution BodyParts3D
+source anatomy surfaces, including the actual lower-leg calcaneal tendon, and
+focused MyoSim force-path diagnostics with resolved tangencies/wrap arcs. See
+[visual progress](Docs/VISUAL_PROGRESS.md) for the evidence boundary.
 
 ### Native anatomy presentation reset
 

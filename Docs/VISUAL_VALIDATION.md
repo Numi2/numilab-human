@@ -10,10 +10,9 @@ and sampled wrap arcs only in an explicit focused diagnostic; its per-bone
 attachment-site refinement is visual-only and remains outside physical
 admission.
 
-For the active MyoSim full-body muscle source, see the newer
-[visual-progress record](VISUAL_PROGRESS.md). Its three Apache-2.0-derived
-frames are source-rendered and are intentionally kept distinct from the
-BodyParts3D source-static evidence below.
+The earlier MyoSim source frames in [visual progress](VISUAL_PROGRESS.md) are
+retained as Apache-2.0 provenance records but are retired from presentation.
+They remain distinct from the BodyParts3D source-static evidence below.
 
 ## Retired native muscle-driven BodyParts3D major-bone overlay — 2026-08-27
 
@@ -48,20 +47,16 @@ the active MyoSim source has no separate fibular body; collision/contact, skin
 weights, unregistered small bones, soft-tissue deformation, and motion-replay
 qualification are not included.
 
-## Native BodyParts3D skin render — 2026-08-27
-
-<p align="center">
-  <img src="media/bodyparts3d-native-skin/bodyparts3d-skin-front.png" width="32%" alt="Native BodyParts3D full-skin front view">
-  <img src="media/bodyparts3d-native-skin/bodyparts3d-skin-oblique.png" width="32%" alt="Native BodyParts3D full-skin oblique view">
-  <img src="media/bodyparts3d-native-skin/bodyparts3d-skin-rear.png" width="32%" alt="Native BodyParts3D full-skin rear view">
-</p>
+## Retired native BodyParts3D skin source snapshot — 2026-08-27
 
 The exact CC-BY-4.0 `FJ2810` full-skin OBJ was converted from source millimetres
 to metres into a GLB, cooked into a Core visual pack, and rendered through
 `metalrobo_bodyparts3d_visual_probe` on the local Apple M4 at Core `86790f3`.
-The cooked mesh contains 102,467 vertices and 203,382 triangles. Each 512 × 512
-inspection camera had nonzero source coverage: 13,045 anterior, 8,455 oblique,
-and 13,345 posterior pixels.
+The 512 × 512 output is retained as cooking/visibility evidence, but is retired
+from presentation while high-resolution source anatomy references are reviewed.
+The cooked mesh contains 102,467 vertices and 203,382 triangles. Each camera
+had nonzero source coverage: 13,045 anterior, 8,455 oblique, and 13,345
+posterior pixels.
 
 | View | PNG SHA-256 | Inspection result |
 | --- | --- | --- |
