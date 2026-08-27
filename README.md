@@ -21,12 +21,25 @@ or derived source artifacts remain local. See
 
 ## Visual progress
 
-The lead visual is the exposed source anatomy, where BodyParts3D muscle and
-tendon surfaces can be inspected directly against their named bones. The raw
-BodyParts3D exterior is retained as a provenance/rest-frame artifact but is
-deliberately withheld from the showcase: it is not presentation-grade or valid
-under driven motion. See [visual progress](Docs/VISUAL_PROGRESS.md) for the
-exact evidence boundary.
+The lead visual pairs exposed source anatomy—where muscles and tendons can be
+inspected directly against named bones—with a source-surface-bound exterior
+that remains coherent under the bounded all-muscle probe. See
+[visual progress](Docs/VISUAL_PROGRESS.md) for the exact evidence boundary.
+
+### Muscle-driven source-surface exterior
+
+<p align="center">
+  <img src="Docs/media/myosim-native-skinned-fullbody-source-surface-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-front.png" width="49%" alt="Source-surface-bound muscle-driven Human exterior, front" />
+  <img src="Docs/media/myosim-native-skinned-fullbody-source-surface-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-oblique.png" width="49%" alt="Source-surface-bound muscle-driven Human exterior, oblique" />
+</p>
+
+This Apple-M4-Pro 2K exterior review uses the exact 102,467-vertex BodyParts3D
+skin mesh. Each vertex selects from 6,656 sampled exact source-bone surface
+points across 86 registered articulated bodies, with blending limited to a
+12.5 mm local joint band. All 416 authored MyoSim paths ran on Metal for 32 ×
+100 µs bounded updates before the native render. It is a coherent articulated
+source exterior, not a textured avatar, deformable skin/tissue solve,
+collision shell, gait result, or clinical registration.
 
 ### Muscle-driven full-body anatomy
 
@@ -94,11 +107,11 @@ three-body review above.
 
 ### Source skin provenance
 
-The exact 102,467-vertex, 203,382-triangle BodyParts3D `FJ2810` shell is
-retained locally for source provenance and rest-frame reconstruction, but its
-raw imagery is intentionally not displayed here. The current runtime uses
-four proximity-derived registered bone-envelope influences per vertex; it is
-not a deformable-shell mechanics result or a human-quality exterior.
+The exact 102,467-vertex, 203,382-triangle BodyParts3D `FJ2810` shell remains
+the exterior source. Its current native payload uses source-bone surface
+samples—not broad bone-box proximity—to choose four candidate bodies per
+vertex, then restricts nonzero blends to the local source joint band. It is
+not a deformable-shell mechanics result or a human-quality textured avatar.
 
 ### Selective upper-limb source-actuator drive
 

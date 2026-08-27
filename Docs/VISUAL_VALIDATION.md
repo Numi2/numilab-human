@@ -77,25 +77,29 @@ the final pose, not a replacement tendon mesh or a physical attachment result.
 The [capture record](media/myosim-native-selective-calf-route-attachment-2048/capture.transcript.txt)
 contains the parameters, device counters, and exact images.
 
-## Withheld native exterior-shell source check — 2026-08-27
+## Current source-surface-bound exterior check — 2026-08-27
 
-The four-angle 2048 px [rest-pose exterior-shell capture](VISUAL_PROGRESS.md#withheld-exterior-shell-source-reference--2026-08-27)
+The four-angle 2048 px [source-surface exterior review](VISUAL_PROGRESS.md#current-source-surface-bound-exterior-review--2026-08-27)
 uses the exact BodyParts3D `FJ2810` skin mesh: 102,467 vertices and 203,382
-triangles. The offline source package derives four proximity-weighted,
-registration-compatible Core body influences per vertex across 86 body
-bindings, then verifies the registered rest-pose reconstruction to
-`1.0111756560930368e-15 m`. The runtime command starts no Python process:
-the final 157-body pose and all four Apple-M4 renders are native C++/Metal.
+triangles. The offline ABI-3 package selects four distinct bodies from 6,656
+deterministic samples of exact registered source-bone surfaces across 86 Core
+body bindings, and only preserves blends within a 12.5 mm local joint band.
+It reconstructs the registered rest pose to `1.3383253895372864e-15 m`.
 
-The stored frames have 485,889 / 425,643 / 307,044 / 516,748 skin pixels from
-front through rear, with no bone, muscle, or tendon proxy leaking through the
-opaque source shell. Its raw source appearance is not presentation-grade, and
-a longer free-dynamics capture exposed visible proximity-skin folds. It is
-therefore withheld from the showcase rather than presented as a realistic
-moving exterior. This establishes only source rest-pose provenance, not
-physical skin deformation, material calibration, collision/contact geometry,
-or clinical soft-tissue registration. The exposed tendon inspection remains
-the authority for tendon-to-bone visual continuity.
+The native C++/Metal run on Apple M4 Pro executed all 416 authored source
+paths at every one of 32 × 100 µs updates (64 Metal force transactions,
+13,312 active records, and 2,866 wraps) before rendering its final 157-body
+pose. The frames have 485,784 / 426,800 / 309,847 / 516,855 shell pixels from
+front through rear, and visual inspection found one coherent exterior in all
+four angles rather than the former oblique/lateral split silhouette. The
+[capture record](media/myosim-native-skinned-fullbody-source-surface-2048/capture.transcript.txt)
+contains output identities and devices.
+
+This validates an articulated source-surface-local exterior binding under a
+bounded muscle-force update. It does not validate physical skin deformation,
+material calibration, collision/contact geometry, gait, or clinical
+soft-tissue registration. The exposed tendon inspection remains the authority
+for tendon-to-bone visual continuity.
 
 ## Retained driven tendon-junction check — 2026-08-27
 

@@ -1,19 +1,29 @@
 # NumiLab Human visual progress
 
-## Withheld exterior-shell source reference — 2026-08-27
+## Current source-surface-bound exterior review — 2026-08-27
 
-The exact 102,467-vertex, 203,382-triangle BodyParts3D exterior is retained
-as a native rest-frame provenance artifact, not as a current visual showcase.
-Its raw source appearance is not presentation-grade, and the current
-proximity-derived four-bone weights can visibly fold under driven motion. The
-[capture record](media/bodyparts3d-native-rest-shell-2048/capture.transcript.txt)
-keeps the four-angle source evidence (485,889 / 425,643 / 307,044 / 516,748
-shell pixels) without promoting those frames as Human-quality imagery.
+<p align="center">
+  <img src="media/myosim-native-skinned-fullbody-source-surface-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-front.png" width="24%" alt="Source-surface exterior, front" />
+  <img src="media/myosim-native-skinned-fullbody-source-surface-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-oblique.png" width="24%" alt="Source-surface exterior, oblique" />
+  <img src="media/myosim-native-skinned-fullbody-source-surface-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-side.png" width="24%" alt="Source-surface exterior, side" />
+  <img src="media/myosim-native-skinned-fullbody-source-surface-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-rear.png" width="24%" alt="Source-surface exterior, rear" />
+</p>
 
-The current visual authority is the exposed source-muscle/tendon review below.
-An exterior returns only with anatomical skin weights or a deformable skin
-solve; this stored rest reference is not skin mechanics, collision, or
-clinical registration.
+This current 2048 px Apple-M4-Pro review keeps the exact 102,467-vertex,
+203,382-triangle BodyParts3D exterior coherent through the bounded all-416
+muscle probe. The `NHSKIN1` ABI 3 payload chooses from 6,656 deterministic
+samples of the exact registered source bone surfaces across 86 body bindings;
+only bodies within 12.5 mm of the nearest source surface sample share a skin
+vertex. The earlier box-proximity shell is retained only as a reproducibility
+artifact, not current imagery.
+
+The native run performed 32 × 100 µs all-muscle updates at 0.05 activation
+(64 Metal force transactions, 13,312 active records, and 2,866 wraps) before
+the final render. All four frames have source-shell coverage: 485,784 /
+426,800 / 309,847 / 516,855 pixels. The [capture record](media/myosim-native-skinned-fullbody-source-surface-2048/capture.transcript.txt)
+retains inputs, hashes, and device evidence. This is articulated source skin,
+not a deformable tissue law, collision shell, gait result, or clinical
+registration.
 
 ## Current full-body source-muscle and tendon review — 2026-08-27
 
