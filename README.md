@@ -42,10 +42,13 @@ source-surface view—not photorealistic skin, a tendon continuum, or a physical
 attachment certificate. The [capture record](Docs/media/myosim-native-calcaneal-attachment-2048/capture.transcript.txt) records the execution boundary.
 
 For the detailed right-calf inspection, the matching free Z-Anatomy
-`Calcaneus.r` now replaces only the visible calcaneus and is rigidly attached
-to the same MyoSim `calcn_r` body. This prevents the prior cross-source tendon
-projection; it is still a scoped mechanics inspection, not a photorealistic
-showcase. Its [four-angle record](Docs/media/myosim-native-zanatomy-matched-calcaneus-2048/capture.transcript.txt) keeps the exact evidence.
+`Calcaneus.r` replaces only the visible calcaneus and is rigidly attached to
+the same MyoSim `calcn_r` body. The current four-angle record uses a
+deterministic visual derivative of its tendon: one Catmull-Clark evaluation
+level plus a smooth 8 mm distal inset under the matching calcaneus. That hides
+the atlas's serrated closed endcap without adding a bridge or changing the
+MyoSim mechanics. It is a scoped anatomy inspection, not a photorealistic,
+deformable, or force-transfer claim. Its [four-angle record](Docs/media/myosim-native-zanatomy-smooth-insertion-2048/capture.transcript.txt) keeps the exact evidence.
 
 ### Muscle-driven torso anatomy
 
@@ -297,8 +300,12 @@ numi human myosim-native-fullbody-soft-tissue-visuals \
 # For this scoped inspection its matching free Calcaneus.r replaces only the
 # visible BodyParts3D calcaneus, while remaining rigidly bound to the existing
 # `calcn_r` body; this avoids warping the authored tendon onto a different mesh.
+# The optional derivative is visual-only: it smooths the atlas tessellation and
+# carries the final 33 mm of the tendon up to 8 mm inside that same calcaneus,
+# hiding its artificial closed cap. It never changes a MyoSim parameter.
 /opt/homebrew/bin/blender --background /path/to/Startup.blend \
-  --python tools/export_zanatomy_calf.py -- Build/zanatomy-calf-export.json
+  --python tools/export_zanatomy_calf.py -- Build/zanatomy-calf-export.json \
+  --tendon-subdivision-level 1 --tendon-insertion-depth-mm 8
 numi human zanatomy-calf-visual-supplement-payload \
   --sources Sources \
   --registration Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json \

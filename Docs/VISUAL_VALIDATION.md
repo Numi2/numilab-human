@@ -37,23 +37,26 @@ it does not validate an enthesis force-transfer law, tendon material,
 deformable tissue, contact, gait, or clinical anatomy. The execution details
 are in the [capture record](media/myosim-native-calcaneal-attachment-2048/capture.transcript.txt).
 
-## Matched-calcaneus right-calf mechanics inspection — 2026-08-27
+## Smooth-insertion right-calf mechanics inspection — 2026-08-27
 
-The four-angle [right-calf mechanics inspection](VISUAL_PROGRESS.md#matched-calcaneus-right-calf-mechanics-inspection--2026-08-27)
-was checked from front, oblique, side, and rear at 2048 px. The earlier
-cross-source tendon projection is replaced: a matching CC-BY-SA Z-Anatomy
-`Calcaneus.r` surface now substitutes only for the visible BodyParts3D
-calcaneus in this scoped view and is rigidly tied to the existing MyoSim
-`calcn_r` body `138`. The tendon retains copied femur/tibia/calcaneus body
-ownership and has 224 matching-calcaneus lock vertices plus 40 feather
-vertices. All four views have nonzero bone, muscle, and tendon coverage.
+The four-angle [right-calf mechanics inspection](VISUAL_PROGRESS.md#smooth-insertion-right-calf-mechanics-inspection--2026-08-27)
+was reviewed from front, oblique, side, and rear at 2048 px. The original
+matching-source tendon is retained as a local provenance record, but its
+serrated closed distal cap is not present in this visual successor. A single
+Catmull-Clark source evaluation produces 13,049 tendon vertices / 26,090
+triangles; a cubic transition then insets the distal 33 mm by up to 8 mm under
+the same CC-BY-SA `Calcaneus.r` overlay. The four frames show no exposed
+serrated terminal cap.
 
-The capture is a bounded muscle-driven state update: MyoSim `348`, `349`, and
-`369` use 0.5 activation for one 100 µs step, while all 416 MyoSim paths remain
-evaluated on Apple M4 Metal. The final configuration delta is
-`0.000123820761832`. The source surface is still too coarse to serve as
-photorealistic presentation media, so it is recorded as mechanics evidence,
-not a showcase. Exact artifacts and hashes are in the [capture record](media/myosim-native-zanatomy-matched-calcaneus-2048/capture.transcript.txt).
+The overlay is still rigidly tied to existing MyoSim `calcn_r` body `138`, and
+the tendon retains copied visual weights for femur `131`, tibia `136`, and
+calcaneus `138`. The capture is a bounded muscle-driven state update: MyoSim
+`348`, `349`, and `369` use 0.5 activation for one 100 µs step while all 416
+MyoSim paths are evaluated on Apple M4 Metal. The final configuration delta is
+`0.000123820755509`. This is visual source repair only, not an enthesis
+force-transfer law, tendon material, deformable tissue, contact, gait, or
+clinical attachment validation. Exact artifacts and hashes are in the
+[capture record](media/myosim-native-zanatomy-smooth-insertion-2048/capture.transcript.txt).
 
 ## Native passive-FEM soleus check — 2026-08-27
 

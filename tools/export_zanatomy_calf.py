@@ -3,6 +3,8 @@
 Run only inside Blender, for example:
 
   blender --background Startup.blend --python tools/export_zanatomy_calf.py -- calf.json
+  blender --background Startup.blend --python tools/export_zanatomy_calf.py -- \
+      calf.json --tendon-subdivision-level 1 --tendon-insertion-depth-mm 8
 
 The output is an offline import interchange.  It contains no simulation
 parameters and is consumed by the Human importer before the Python-free native
@@ -43,9 +45,31 @@ def sha256(path: Path) -> str:
 
 def main() -> None:
     arguments = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
-    if len(arguments) != 1:
-        raise RuntimeError("expected one output JSON path after --")
+    if not arguments:
+        raise RuntimeError("expected an output JSON path after --")
     output = Path(arguments[0]).resolve()
+    tendon_subdivision_level = 0
+    tendon_insertion_depth_mm = 0.0
+    option_arguments = arguments[1:]
+    if len(option_arguments) % 2:
+        raise RuntimeError("each export option requires a value")
+    for option, value in zip(option_arguments[::2], option_arguments[1::2]):
+        if option == "--tendon-subdivision-level":
+            try:
+                tendon_subdivision_level = int(value)
+            except ValueError as error:
+                raise RuntimeError("tendon subdivision level must be an integer") from error
+            if not 0 <= tendon_subdivision_level <= 2:
+                raise RuntimeError("tendon subdivision level must be between 0 and 2")
+        elif option == "--tendon-insertion-depth-mm":
+            try:
+                tendon_insertion_depth_mm = float(value)
+            except ValueError as error:
+                raise RuntimeError("tendon insertion depth must be numeric") from error
+            if not 0.0 <= tendon_insertion_depth_mm <= 12.0:
+                raise RuntimeError("tendon insertion depth must be between 0 and 12 mm")
+        else:
+            raise RuntimeError(f"unsupported export option: {option}")
     blend = Path(bpy.data.filepath).resolve()
     if not blend.is_file():
         raise RuntimeError("the saved Z-Anatomy Startup.blend input is required")
@@ -55,12 +79,40 @@ def main() -> None:
         source = bpy.data.objects.get(object_name)
         if source is None or source.type != "MESH":
             raise RuntimeError(f"required Z-Anatomy mesh is absent: {object_name}")
+        subdivision = None
+        if stable_name == "calcaneal_tendon" and tendon_subdivision_level:
+            # The atlas tendon has a visibly faceted closed terminal cap. This
+            # is a deterministic derivative of the same licensed source mesh,
+            # applied only to the visual supplement before it enters the
+            # native C++/Metal path; it never changes MyoSim mechanics.
+            subdivision = source.modifiers.new("NumiLab tendon smooth derivative", "SUBSURF")
+            subdivision.subdivision_type = "CATMULL_CLARK"
+            subdivision.levels = tendon_subdivision_level
+            subdivision.render_levels = tendon_subdivision_level
+            subdivision.boundary_smooth = "PRESERVE_CORNERS"
+            bpy.context.view_layer.update()
         evaluated = source.evaluated_get(depsgraph)
         mesh = evaluated.to_mesh()
         try:
             if not mesh.vertices or not mesh.polygons:
                 raise RuntimeError(f"Z-Anatomy mesh is empty: {object_name}")
             vertices = [list(evaluated.matrix_world @ vertex.co) for vertex in mesh.vertices]
+            if stable_name == "calcaneal_tendon" and tendon_insertion_depth_mm:
+                # The source's closed terminal cap is visibly serrated.  Its
+                # distal 33 mm is not mechanics geometry: make a smooth,
+                # source-local visual insertion by carrying the terminal
+                # taper 8 mm (or the requested bounded depth) inside the
+                # matching calcaneus.  The overlap hides the artificial cap
+                # without inventing a visible bridge or changing any MyoSim
+                # body, path, tendon, or force parameter.
+                distal_z = min(vertex[2] for vertex in vertices)
+                transition_z = distal_z + 0.033
+                fully_embedded_z = distal_z + 0.010
+                denominator = transition_z - fully_embedded_z
+                for vertex in vertices:
+                    fraction = min(1.0, max(0.0, (transition_z - vertex[2]) / denominator))
+                    smooth_fraction = fraction * fraction * (3.0 - 2.0 * fraction)
+                    vertex[1] -= 0.001 * tendon_insertion_depth_mm * smooth_fraction
             triangles = []
             for polygon in mesh.polygons:
                 if len(polygon.vertices) < 3:
@@ -97,12 +149,17 @@ def main() -> None:
             })
         finally:
             evaluated.to_mesh_clear()
+            if subdivision is not None:
+                source.modifiers.remove(subdivision)
+                bpy.context.view_layer.update()
     payload = {
         "schema": "numi.human.zanatomy-calf-blender-export.v1",
         "source": {
             "blend_file": blend.name,
             "blend_sha256": sha256(blend),
             "coordinate_system": "Blender evaluated object world metres",
+            "calcaneal_tendon_subdivision_level": tendon_subdivision_level,
+            "calcaneal_tendon_insertion_depth_mm": tendon_insertion_depth_mm,
         },
         "objects": records,
     }

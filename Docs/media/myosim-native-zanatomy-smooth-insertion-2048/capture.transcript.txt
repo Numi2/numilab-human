@@ -1,0 +1,17 @@
+NumiLab Human smooth-insertion muscle-driven inspection — 2026-08-27
+
+execution_host=local Apple M4; Mac mini was not used because it was occupied by the user's crow-training workload
+source_geometry=Z-Anatomy repository revision 9a2ef22cc8443d14f9aa18ba91246416b1c6ab7a, exported from Startup.blend; CC-BY-SA-4.0; attribution: Z-Anatomy, Lluis Vinas
+scope=right lateral gastrocnemius (2454 vertices/4908 triangles), medial gastrocnemius (3233/6462), soleus (3379/6774), one-level Catmull-Clark calcaneal-tendon derivative (13049/26090), and matching Calcaneus.r overlay (726/1448)
+visual_derivative=the tendon alone receives one Blender Catmull-Clark evaluation level. Its distal 33 mm receives a cubic source-frame inset of 0 to 8 mm under the matching calcaneus; the terminal 10 mm is fully inset. This hides the atlas's closed serrated cap. No MyoSim model, body, path, tendon, or force parameter is changed.
+binding=BodyParts3D remains the whole-body visual skeleton. In this five-surface calf inspection only, matching Calcaneus.r overlays BodyParts3D FJ3360 and is rigidly bound to MyoSim/Core body 138. The tendon retains copied named visual weights for femur 131, tibia 136, and calcaneus 138.
+force_probe=selected source actuators 348 gaslat_r, 349 gasmed_r, 369 soleus_r at activation 0.5 for one 100 us step; all 416 source paths evaluated on Apple M4 Metal; 2 transactions; 416 active records; 90 applied wraps; force elapsed 65.445459 ms
+pose_result=maximum_velocity_delta 1.23820755509; maximum_configuration_delta 0.000123820755509; no support contact requested
+renderer=Apple M4 native sensorReference; complete 2048 px front, oblique, side, rear capture; fresh renderer/world context per view
+coverage=front bone:487847,muscle:70194,tendon:337; oblique bone:760399,muscle:84764,tendon:24870; side bone:1329688,muscle:9332,tendon:768; rear bone:433824,muscle:33030,tendon:154040
+input_sha256=zanatomy_export:67cf838ea5fd7d3b7cbfcbf17820086fb37aaa6a8f837cef7c60a27d8805d765; tissue_payload:9eceef30e6cd9a7a554050bb3d8513ce229e66991b4e3ef025d71919f8c72333; tissue_manifest:fd842dd8b0b5e6204e3c1f670fd46b6c5f0d5c92579b9a1254c62d5750adc94d
+native_source=MetalRobo coupled b913350fbf46dd88e8eca2a893c08ea4c442b2b0; Human 5d0fc0afc3206e7f2faa177870df8f22d91628da
+native_sha256=probe:30516537461c923f3c679840483d22fbf339da831714ba4d6d8356cbda5e1458; libmetalrobo:b01297666eefa0841cb969d2280654ef198f9c2759211a864d8e3e454fd87dc6
+image_sha256=front:963bfe3f87fba63a04f33b0c1bcf20115f043198ea3d142a553aeb94b65e623d; oblique:dddb4749a44828b390ad28bbdd40aff82339c032b36ce9e86624a80e38171ab8; side:272f2f0bce13ed6278001425805905ca5eee2f6a769a574ac9f927284e72a475; rear:e8c14453e17383dd159c6cac28838f5a90ce6fe2f2cb63a6e3416befc2d67deb
+asset_sha256=mrvpack:935bdcc60d9c634dd7cce1ea5facdb2f962005aa3fbb04b600efaa65cffd73a1; visual_manifest:c75ea4391c697ffe693659413def2acb570cc4552c821d0d57b3509d24f48d64
+boundary=This is a mechanically driven, source-derived visual inspection. It repairs an exposed atlas endcap in the display mesh only; it is not photorealistic skin, a tendon continuum, a tendon-to-bone force-transfer law, calibrated collision/contact, gait, or clinical attachment validation.

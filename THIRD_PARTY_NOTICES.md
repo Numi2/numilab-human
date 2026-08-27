@@ -36,10 +36,13 @@ every other source in local generated artifacts.
   visual overlay for the scoped calf inspection, bound to the existing MyoSim
   `calcn_r` body; no other Z-Anatomy organs or ancillary assets are imported.
 - Tracked derivatives: `Docs/media/myosim-native-zanatomy-matched-calcaneus-2048/`
-  is a CC-BY-SA source-derived mechanics inspection. It keeps the whole-body
-  BodyParts3D skeleton and copied named MyoSim body weights; it is not a
-  replacement force or mechanics asset. The raw blend and intermediate Blender
-  export remain local.
+  preserves the original source-surface mechanics inspection.
+  `Docs/media/myosim-native-zanatomy-smooth-insertion-2048/` is its CC-BY-SA
+  source-derived visual successor: a single Catmull-Clark tendon evaluation
+  level and an 8 mm, smoothly tapered distal inset under the matching
+  calcaneus. Both keep the whole-body BodyParts3D skeleton and copied named
+  MyoSim body weights; neither is a replacement force or mechanics asset. The
+  raw blend and intermediate Blender export remain local.
 
 ## OpenSim RajagopalLaiUhlrich2023
 

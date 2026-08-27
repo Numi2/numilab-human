@@ -56,32 +56,39 @@ keeps the native execution and the intentional boundary. This is a clean
 source-surface anatomy check—not a claim of photorealistic skin, deformable
 tendon, force transfer, collision/contact, gait, or clinical validation.
 
-## Matched-calcaneus right-calf mechanics inspection — 2026-08-27
+## Smooth-insertion right-calf mechanics inspection — 2026-08-27
 
-The earlier four-panel calf media is retired from the showcase: the isolated
-source tendon is useful mechanically but too coarse to present as realistic
-anatomy. The replacement inspection keeps the four Z-Anatomy calf surfaces
-(lateral gastrocnemius 2,454 vertices, medial 3,233, soleus 3,379, tendon
-2,191) together with their matching `Calcaneus.r` surface (726 vertices).
+<p align="center">
+  <img src="media/myosim-native-zanatomy-smooth-insertion-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-front.png" width="24%" alt="Smooth-insertion right calf, front" />
+  <img src="media/myosim-native-zanatomy-smooth-insertion-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-oblique.png" width="24%" alt="Smooth-insertion right calf, oblique" />
+  <img src="media/myosim-native-zanatomy-smooth-insertion-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-side.png" width="24%" alt="Smooth-insertion right calf, side" />
+  <img src="media/myosim-native-zanatomy-smooth-insertion-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-rear.png" width="24%" alt="Smooth-insertion right calf, rear" />
+</p>
 
-Only for this five-surface inspection, `Calcaneus.r` replaces the visible
-BodyParts3D `FJ3360` mesh and is rigidly bound to the existing MyoSim/Core
-`calcn_r` body `138`. The tendon keeps its femur `131`, tibia `136`, and
-calcaneus `138` ownership, with 224 named matching-calcaneus lock vertices and
-40 feather vertices. This removes the old cross-source geometry projection;
-it does not create a tendon continuum or force-transfer law.
+The previous Z-Anatomy tendon was a closed 2,191-vertex surface whose distal
+cap was visibly serrated. This replacement is a deterministic CC-BY-SA visual
+derivative of that same tendon: one Catmull-Clark evaluation level (13,049
+vertices / 26,090 triangles), then a smooth source-frame inset across its
+distal 33 mm, reaching 8 mm under the matching `Calcaneus.r` overlay. The
+bone occludes the artificial cap in front, oblique, side, and rear views, so
+the tendon reads as entering the heel rather than stopping at a jagged edge.
 
-The native Apple M4 capture excites MyoSim `348`, `349`, and `369` at `0.5`
-for one 100 µs step. Metal evaluates all 416 source paths in two transactions
-(416 active records, 90 wraps); the bounded configuration displacement is
-`0.000123820761832`. All four 2048 px views have nonzero bone, muscle, and
-tendon coverage. The [capture record](media/myosim-native-zanatomy-matched-calcaneus-2048/capture.transcript.txt)
-contains the four rendered frames, hashes, source attribution, and the exact
-execution boundary.
+Only in this five-surface inspection, `Calcaneus.r` replaces the visible
+BodyParts3D `FJ3360` mesh and remains rigidly bound to MyoSim/Core `calcn_r`
+body `138`. The tendon retains copied femur `131`, tibia `136`, and calcaneus
+`138` visual weights. This changes no MyoSim path, tendon, body, or force
+parameter and creates neither an enthesis bridge nor a tendon continuum.
 
-This remains a source-bound mechanics inspection—not a texture, photorealism,
-deformable muscle/tendon, force-transfer, collision/contact, gait, or clinical
-attachment claim.
+The local Apple M4 capture excites MyoSim `348`, `349`, and `369` at `0.5` for
+one 100 µs step. Metal evaluates all 416 source paths in two transactions (90
+wraps); the bounded configuration displacement is `0.000123820755509`. Every
+2048 px view has nonzero bone, muscle, and tendon coverage. The [capture
+record](media/myosim-native-zanatomy-smooth-insertion-2048/capture.transcript.txt)
+contains the frames, hashes, source attribution, and exact execution boundary.
+
+This is a source-derived visual repair, not photorealistic skin, deformable
+muscle/tendon, force-transfer, collision/contact, gait, or clinical attachment
+validation.
 
 ## Native passive-FEM soleus specimen — 2026-08-27
 
