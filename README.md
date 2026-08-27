@@ -44,10 +44,10 @@ not the current tendon-quality reference.
 
 For the primary BodyParts3D `FJ1405`/`FJ3360` tendons, the importer now retains
 only the dominant exact source-connected sheet, drops disconnected source
-slivers, removes fully interior terminal-cap faces, and moves the locked
-terminal band 5 mm inside the named calcaneal triangles. It then adds a narrow,
+slivers, and removes fully interior terminal-cap faces. It then adds a narrow,
 explicitly inferred visual enthesis strip from that opened source boundary to
-the named calcaneus (0.35 mm above its display surface). This makes the bone
+the named calcaneus, projected to its exact triangles with a 0.35 mm exterior
+display offset. This makes the bone
 insertion continuous in the render, but does not create a tendon continuum,
 weld, force-transfer law, or photorealistic anatomy.
 
