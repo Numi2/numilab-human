@@ -489,7 +489,26 @@ class ImporterTests(unittest.TestCase):
             "<artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> "
             "<bodyparts3d-myosim-soft-tissue.nhtissue> <output-directory> "
             "<focus-body-index> [--muscle-step-seconds <1e-6..1e-3>] "
+            "[--muscle-step-count <1..64>] "
             "[--muscle-activation <0..1>] "
+            "[--dimension <512..2048; multiple-of-64>]\n",
+        )
+
+    def test_numi_workspace_posterior_tendon_inspection_rejects_missing_paths_before_python(self) -> None:
+        command = ROOT / ".numi/commands/human"
+        result = run(
+            [command, "myosim-native-posterior-tendon-inspection"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(result.stdout, "")
+        self.assertEqual(
+            result.stderr,
+            "usage: numi human myosim-native-posterior-tendon-inspection "
+            "<artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> "
+            "<bodyparts3d-myosim-soft-tissue.nhtissue> <output-directory> "
             "[--dimension <512..2048; multiple-of-64>]\n",
         )
 

@@ -313,6 +313,56 @@ if [ "${1:-}" = "myosim-native-soft-tissue-visuals" ]; then
         --focus-body-index "$focus_body_index"
 fi
 
+# A compact four-angle posterior-chain inspection.  Stable IDs are authored
+# into the versioned full-body surface map in this order: right lateral and
+# medial gastrocnemius (1, 3), right soleus (5), and right calcaneal tendon
+# (7).  Keeping this as a native filter avoids the broad 150-surface anatomy
+# layer obscuring the actual tendon/calcaneus junction.  This is still a
+# visual two-body surface bind, not a claim of tendon mechanics.
+if [ "${1:-}" = "myosim-native-posterior-tendon-inspection" ]; then
+    if [ "$#" -ne 5 ] && { [ "$#" -ne 7 ] || [ "$6" != "--dimension" ]; }; then
+        printf '%s\n' "usage: numi human myosim-native-posterior-tendon-inspection <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <bodyparts3d-myosim-soft-tissue.nhtissue> <output-directory> [--dimension <512..2048; multiple-of-64>]" >&2
+        exit 2
+    fi
+    artifact_directory=$2
+    bone_payload=$3
+    soft_tissue_payload=$4
+    output_directory=$5
+    frame_dimension=
+    if [ "$#" -eq 7 ]; then
+        frame_dimension=$7
+    fi
+    runtime_root=${NUMI_LAB_ROOT:-/Users/home/Documents/emergentnumilife/MetalRobo}
+    build_directory=${NUMI_BUILD_DIR:-$runtime_root/build}
+    probe=$build_directory/bin/metalrobo_numilab_human_myosim_visual_probe
+    if [ ! -x "$probe" ]; then
+        printf '%s\n' "native Human visual probe is unavailable: $probe" >&2
+        printf '%s\n' "build target metalrobo_numilab_human_myosim_visual_probe in $runtime_root" >&2
+        exit 2
+    fi
+    set -- "$probe" \
+        "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
+        "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
+        "$bone_payload" \
+        "$output_directory" \
+        --soft-tissue-payload "$soft_tissue_payload" \
+        --visible-bone-body-index 131 \
+        --visible-bone-body-index 136 \
+        --visible-bone-body-index 137 \
+        --visible-bone-body-index 138 \
+        --visible-bone-body-index 139 \
+        --visible-bone-body-index 142 \
+        --soft-tissue-stable-id 1 \
+        --soft-tissue-stable-id 3 \
+        --soft-tissue-stable-id 5 \
+        --soft-tissue-stable-id 7 \
+        --focus-body-index 136
+    if [ -n "$frame_dimension" ]; then
+        set -- "$@" --dimension "$frame_dimension"
+    fi
+    exec "$@"
+fi
+
 # This is the equivalent bounded muscle-force sensitivity capture with the
 # exact posterior-calf source surfaces. The native probe poses every surface
 # from its two named MyoSim bodies after the 416-muscle Core step, so tendon
@@ -321,7 +371,7 @@ fi
 # pre-stress is removed), and no Python is started by this command.
 if [ "${1:-}" = "myosim-native-muscle-soft-tissue-visuals" ]; then
     if [ "$#" -lt 6 ] || [ $(( ($# - 6) % 2 )) -ne 0 ]; then
-        printf '%s\n' "usage: numi human myosim-native-muscle-soft-tissue-visuals <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <bodyparts3d-myosim-soft-tissue.nhtissue> <output-directory> <focus-body-index> [--muscle-step-seconds <1e-6..1e-3>] [--muscle-activation <0..1>] [--dimension <512..2048; multiple-of-64>]" >&2
+        printf '%s\n' "usage: numi human myosim-native-muscle-soft-tissue-visuals <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <bodyparts3d-myosim-soft-tissue.nhtissue> <output-directory> <focus-body-index> [--muscle-step-seconds <1e-6..1e-3>] [--muscle-step-count <1..64>] [--muscle-activation <0..1>] [--dimension <512..2048; multiple-of-64>]" >&2
         exit 2
     fi
     artifact_directory=$2
@@ -331,9 +381,11 @@ if [ "${1:-}" = "myosim-native-muscle-soft-tissue-visuals" ]; then
     focus_body_index=$6
     shift 6
     muscle_step_seconds=0.001
+    muscle_step_count=1
     muscle_activation=
     frame_dimension=
     saw_muscle_step=0
+    saw_muscle_step_count=0
     saw_muscle_activation=0
     saw_dimension=0
     while [ "$#" -gt 0 ]; do
@@ -345,6 +397,14 @@ if [ "${1:-}" = "myosim-native-muscle-soft-tissue-visuals" ]; then
                 fi
                 muscle_step_seconds=$2
                 saw_muscle_step=1
+                ;;
+            --muscle-step-count)
+                if [ "$saw_muscle_step_count" -ne 0 ]; then
+                    printf '%s\n' "--muscle-step-count may be given only once" >&2
+                    exit 2
+                fi
+                muscle_step_count=$2
+                saw_muscle_step_count=1
                 ;;
             --muscle-activation)
                 if [ "$saw_muscle_activation" -ne 0 ]; then
@@ -386,6 +446,7 @@ if [ "${1:-}" = "myosim-native-muscle-soft-tissue-visuals" ]; then
             --soft-tissue-payload "$soft_tissue_payload" \
             --focus-body-index "$focus_body_index" \
             --muscle-step-seconds "$muscle_step_seconds" \
+            --muscle-step-count "$muscle_step_count" \
             --dimension "$frame_dimension"
         if [ -n "$muscle_activation" ]; then
             set -- "$@" --muscle-activation "$muscle_activation"
@@ -399,7 +460,8 @@ if [ "${1:-}" = "myosim-native-muscle-soft-tissue-visuals" ]; then
         "$output_directory" \
         --soft-tissue-payload "$soft_tissue_payload" \
         --focus-body-index "$focus_body_index" \
-        --muscle-step-seconds "$muscle_step_seconds"
+        --muscle-step-seconds "$muscle_step_seconds" \
+        --muscle-step-count "$muscle_step_count"
     if [ -n "$muscle_activation" ]; then
         set -- "$@" --muscle-activation "$muscle_activation"
     fi
@@ -414,7 +476,7 @@ fi
 # is started by this command.
 if [ "${1:-}" = "myosim-native-supported-muscle-soft-tissue-visuals" ]; then
     if [ "$#" -lt 6 ] || [ $(( ($# - 6) % 2 )) -ne 0 ]; then
-        printf '%s\n' "usage: numi human myosim-native-supported-muscle-soft-tissue-visuals <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <bodyparts3d-myosim-soft-tissue.nhtissue> <output-directory> <focus-body-index> [--muscle-step-seconds <1e-6..1e-3>] [--muscle-activation <0..1>] [--dimension <512..2048; multiple-of-64>]" >&2
+        printf '%s\n' "usage: numi human myosim-native-supported-muscle-soft-tissue-visuals <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <bodyparts3d-myosim-soft-tissue.nhtissue> <output-directory> <focus-body-index> [--muscle-step-seconds <1e-6..1e-3>] [--muscle-step-count <1..64>] [--muscle-activation <0..1>] [--dimension <512..2048; multiple-of-64>]" >&2
         exit 2
     fi
     artifact_directory=$2
@@ -424,9 +486,11 @@ if [ "${1:-}" = "myosim-native-supported-muscle-soft-tissue-visuals" ]; then
     focus_body_index=$6
     shift 6
     muscle_step_seconds=0.001
+    muscle_step_count=1
     muscle_activation=0.05
     frame_dimension=
     saw_muscle_step=0
+    saw_muscle_step_count=0
     saw_muscle_activation=0
     saw_dimension=0
     while [ "$#" -gt 0 ]; do
@@ -438,6 +502,14 @@ if [ "${1:-}" = "myosim-native-supported-muscle-soft-tissue-visuals" ]; then
                 fi
                 muscle_step_seconds=$2
                 saw_muscle_step=1
+                ;;
+            --muscle-step-count)
+                if [ "$saw_muscle_step_count" -ne 0 ]; then
+                    printf '%s\n' "--muscle-step-count may be given only once" >&2
+                    exit 2
+                fi
+                muscle_step_count=$2
+                saw_muscle_step_count=1
                 ;;
             --muscle-activation)
                 if [ "$saw_muscle_activation" -ne 0 ]; then
@@ -479,6 +551,7 @@ if [ "${1:-}" = "myosim-native-supported-muscle-soft-tissue-visuals" ]; then
         --support-contact-payload "$artifact_directory/myosim-fullbody-support-contact.nhcnt" \
         --focus-body-index "$focus_body_index" \
         --muscle-step-seconds "$muscle_step_seconds" \
+        --muscle-step-count "$muscle_step_count" \
         --muscle-activation "$muscle_activation"
     if [ -n "$frame_dimension" ]; then
         set -- "$@" --dimension "$frame_dimension"

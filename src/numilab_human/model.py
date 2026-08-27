@@ -3900,7 +3900,8 @@ def bodyparts_myosim_right_posterior_chain_visual_payload(
             *secondary_translation, *secondary_quaternion, secondary_scale,
         ))
         provenance.append({
-            "member_id": member_id, "member": member, "member_sha256": hashlib.sha256(obj).hexdigest(),
+            "stable_id": stable_id, "member_id": member_id, "member": member,
+            "member_sha256": hashlib.sha256(obj).hexdigest(),
             "label": label, "layer": "muscle" if layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE else "tendon",
             "primary_myosim_body": primary_target_name, "primary_core_body_index": primary_body_index,
             "secondary_myosim_body": secondary_target_name, "secondary_core_body_index": secondary_body_index,
@@ -4424,7 +4425,8 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             *secondary_translation, *secondary_rotation, secondary_scale,
         ))
         provenance.append({
-            "member_id": member_id, "member": member, "member_sha256": hashlib.sha256(obj).hexdigest(),
+            "stable_id": stable_id, "member_id": member_id, "member": member,
+            "member_sha256": hashlib.sha256(obj).hexdigest(),
             "label": label, "layer": layer_name, "endpoint_source": endpoint_source,
             "primary_myosim_body": primary_name, "primary_core_body_index": primary_body_index,
             "secondary_myosim_body": secondary_name, "secondary_core_body_index": secondary_body_index,

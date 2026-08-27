@@ -1,5 +1,37 @@
 # NumiLab Human visual progress
 
+## Focused posterior-chain attachment and bounded muscle update — 2026-08-27
+
+<p align="center">
+  <img src="media/myosim-native-posterior-tendon-inspection-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-side.png" width="32%" alt="Right posterior-chain source geometry, side" />
+  <img src="media/myosim-native-posterior-tendon-inspection-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-oblique.png" width="32%" alt="Right posterior-chain source geometry, oblique" />
+  <img src="media/myosim-native-posterior-tendon-inspection-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-rear.png" width="32%" alt="Right posterior-chain after bounded muscle update, rear" />
+</p>
+
+The broad images below are retained as source coverage, not the current Human
+presentation. This 2048 px inspection filters the native scene to 30 meshes
+on six exact source bone parents (right femur, tibia/fibula, talus, calcaneus,
+toes, and patella) plus four exact surfaces: right lateral gastrocnemius,
+right medial gastrocnemius, right soleus, and right calcaneal tendon. The
+side, oblique, and rear views expose the calcaneal insertion instead of
+hiding it behind the full body.
+
+The bounded comparison takes eight 100 microsecond steps. Each step evaluates
+all 416 source muscle-tendon paths, reprojects the ten authored source-foot
+witnesses against their plane, and activates the six witnesses that reach the
+plane. The result reports a maximum configuration difference of
+0.00106110731348 rad/m from the zero-activation baseline, six active support
+contacts, and a minimum plane gap of -0.000000190044077062 m. Pose and
+renderer execute on Apple M4; the current 157-body articulation is explicitly
+not admitted to the installed Metal contact bucket, so contact is Core FP64
+for this capture.
+
+The [capture transcript](media/myosim-native-posterior-tendon-inspection-2048/capture.transcript.txt)
+pins the exact inputs, options, output hashes, and limitations. This is visual
+continuity of source geometry through a bounded update. It does not establish
+a tendon continuum, tendon-to-bone force transfer, deformable tissue, stable
+standing or gait, general collision, skin, or clinical registration.
+
 ## Presentation correction — 2026-08-27
 
 The earlier native route galleries below are retained only for renderer
