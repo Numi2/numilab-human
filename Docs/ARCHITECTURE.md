@@ -106,6 +106,17 @@ means it is not a device-resident live presentation path; the proxies and
 route centre lines are not BodyParts3D surface registration, anatomical skin,
 or deformable-muscle rendering.
 
+Core `818e587` adds a second, explicitly provisional visual input:
+`NHBONES1`. The offline importer records exact BodyParts3D triangles and one
+decomposed uniform-scale rest transform for each selected major bone. The
+native visual probe validates that payload against the same MyoSim archive
+identity, attaches every instance to its Core articulated-link index, then
+uses the Metal pose snapshot for rendering. The M4 Pro evidence covers 18
+major bones (47,649 vertices; 277,164 indices) plus the complete route/site
+overlay. This is now an executable body-frame visual binding, but it remains
+outside physical admission: its common-frame centroid/COM fit cannot stand in
+for anatomical landmarks, collision calibration, skinning, or tissue models.
+
 `numi.human.v1` remains an owner-neutral intermediate artifact, but Core
 revision `730aba4` now executes the bounded Rajagopal mechanics path: the
 source fixed tree and a source-default-preserving physical pelvis mobile-root

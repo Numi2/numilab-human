@@ -10,13 +10,13 @@ the native Human execution path.
 | --- | --- | --- |
 | Active full-body mechanics | MyoSim `myofullbody` | 103 source bodies, 416 muscles, native Core reference |
 | Cervical/hyoid mechanics | Mortensen 2018 | complete 72-muscle OpenSim 3 source IR; merge registration remains explicit |
-| Anatomy/visual layers | BodyParts3D 4.0 | named geometry and hierarchy; source-static visual evidence |
+| Anatomy/visual layers | BodyParts3D 4.0 | named geometry/hierarchy; 18 major bones are pose-bound for native visual inspection |
 | Comparative lower-body mechanics | RajagopalLaiUhlrich2023 | retained source-faithful bounded Metal path |
 | Comparative upper extremities | MoBL-ARMS | retained authenticated OpenSim source import |
 
-The importer preserves upstream records locally. Derived BodyParts3D artifacts
-remain out of Git; the tracked MyoSim validation frames below are permitted
-derivatives of the pinned Apache-2.0 source and carry attribution in
+The importer preserves upstream records locally. The tracked MyoSim and
+BodyParts3D validation media below are attributed derivatives; all other raw
+or derived source artifacts remain local. See
 [third-party notices](THIRD_PARTY_NOTICES.md).
 
 ## Visual progress
@@ -53,6 +53,23 @@ also retained in [visual validation](Docs/VISUAL_VALIDATION.md); it remains a
 high-fidelity static geometry reference until its body-frame registration is
 measured and reviewed.
 
+### Native articulated BodyParts3D major-bone view
+
+<p align="center">
+  <img src="Docs/media/myosim-native-bodyparts-bones/myosim-fullbody-articulated-bodyparts-bones-front.png" width="24%" alt="Native BodyParts3D articulated bone view, front">
+  <img src="Docs/media/myosim-native-bodyparts-bones/myosim-fullbody-articulated-bodyparts-bones-oblique.png" width="24%" alt="Native BodyParts3D articulated bone view, oblique">
+  <img src="Docs/media/myosim-native-bodyparts-bones/myosim-fullbody-articulated-bodyparts-bones-side.png" width="24%" alt="Native BodyParts3D articulated bone view, side">
+  <img src="Docs/media/myosim-native-bodyparts-bones/myosim-fullbody-articulated-bodyparts-bones-rear.png" width="24%" alt="Native BodyParts3D articulated bone view, rear">
+</p>
+
+These M4 Pro captures bind 18 exact CC-BY-4.0 BodyParts3D major-bone meshes to
+their corresponding Metal-computed MyoSim inertial-body poses. The slim red
+overlay remains the complete 1,815-site / 1,432-route muscle-path map, making
+the skeleton–muscle relationship inspectable from four angles. This is the
+first native anatomy binding, not a claim that every bone, the skin, organs,
+collision, deformable tissue, gait, or clinical anatomy registration is done.
+The fit and evidence boundary are in [visual progress](Docs/VISUAL_PROGRESS.md).
+
 ## Native full-body execution
 
 After a local artifact has been acquired and compiled, the production-facing
@@ -69,6 +86,20 @@ numi human myosim-native-probe Build/myosim-fullbody --metal
 numi human myosim-native-visuals \
   Build/myosim-fullbody \
   Docs/media/myosim-native-articulated
+
+# Offline source registration/package preparation, followed by a native
+# C++/Metal bone capture.  The final command starts no Python process.
+numi human myosim-bodyparts-registration \
+  --sources Sources --artifact Build/myosim-fullbody \
+  --output Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json
+numi human myosim-bodyparts-bone-payload \
+  --sources Sources \
+  --registration Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json \
+  --output Build/bodyparts3d-myosim-major-bones
+numi human myosim-native-bone-visuals \
+  Build/myosim-fullbody \
+  Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
+  Docs/media/myosim-native-bodyparts-bones
 ```
 
 This loads the `NHRIGID2` and `NHMYO1` payloads directly into Core, validates

@@ -113,6 +113,22 @@
       "route_centerline_segments": 1432,
       "boundary": "The pose is published from the Metal articulated operator into a native Core renderer for a default-pose capture. It is not BodyParts3D registration, skin deformation, a device-resident live visual sidecar, or a locomotion result."
     },
+    "bodyparts_major_bone_visual_snapshot": {
+      "contract": "metal_articulated_pose_snapshot_to_provisional_bodyparts3d_major_bone_renderer",
+      "device": "Apple M4 Pro",
+      "bodyparts_major_bone_count": 18,
+      "source_vertex_count": 47649,
+      "source_index_count": 277164,
+      "route_site_count": 1815,
+      "route_centerline_segments": 1432,
+      "views": [
+        "front",
+        "oblique",
+        "side",
+        "rear"
+      ],
+      "boundary": "The native renderer binds source-derived BodyParts3D major-bone instances through a provisional rest-frame fit to Metal articulated-body poses. It is visual registration evidence only, not collision/contact admission, skinning, soft-tissue deformation, motion replay, gait, or clinical validation."
+    },
     "cpu_state_actuation_smoke": {
       "contract": "complete_mujoco_route_force_scatter_drives_articulated_state",
       "muscle_count": 416,

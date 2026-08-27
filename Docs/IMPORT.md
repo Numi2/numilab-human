@@ -24,6 +24,23 @@ numi human myosim-native-probe Build/myosim-fullbody --metal
 numi human myosim-native-visuals \
   Build/myosim-fullbody \
   Build/myosim-fullbody/native-articulated-visuals
+
+# Offline BodyParts3D source import: derive a reviewable major-bone rest-frame
+# candidate, then write compact exact-triangle input for the native renderer.
+numi human myosim-bodyparts-registration \
+  --sources Sources \
+  --artifact Build/myosim-fullbody \
+  --output Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json
+numi human myosim-bodyparts-bone-payload \
+  --sources Sources \
+  --registration Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json \
+  --output Build/bodyparts3d-myosim-major-bones
+
+# Native C++/Metal capture: no Python process is started here.
+numi human myosim-native-bone-visuals \
+  Build/myosim-fullbody \
+  Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
+  Build/bodyparts3d-myosim-major-bones/native-articulated-views
 ```
 
 The native probe validates 416 full-body muscle-tendon elements and their
@@ -38,11 +55,20 @@ rest-pose registration. See
 [visual progress](VISUAL_PROGRESS.md) for the inspected full-body views and
 [architecture](ARCHITECTURE.md) for runtime ownership.
 
-The native visual command emits three fixed cameras plus a Core visual-pack and
+The native marker visual command emits four fixed cameras plus a Core visual-pack and
 manifest. It binds 96 inertial-body proxies and every compiled MyoSim site/route
 to the default Metal articulated-pose snapshot. It is proof of this snapshot
 render chain only; BodyParts3D registration and live device-resident presentation
 remain separate work.
+
+The bone-payload importer is also offline source preparation. It checks the
+selected archive/member identities, converts only exact OBJ triangles and
+triangle-derived normals, and carries one uniform-scale local transform per
+bone. `myosim-native-bone-visuals` consumes that compact payload directly in
+the native executable, binding 18 major-bone meshes to the Metal pose and
+retaining the full route/site overlay. The candidate is visual-only: it does
+not create colliders, contact constants, skinning weights, soft tissue, or a
+medical registration result.
 
 ## 1. Fetch the password-free sources
 

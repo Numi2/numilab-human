@@ -57,6 +57,46 @@ scene provenance alongside the three frames. Its pack and manifest SHA-256
 values are `633ddb213167c1cc47b733ae80d8f25a7af36d86bf830fbf67a625f16e2a8b59`
 and `8d21b2f3a265285655dde72f3611891c69a187248627419dc1be2788b101734f`.
 
+## Native BodyParts3D major-bone binding — 2026-08-27
+
+<p align="center">
+  <img src="media/myosim-native-bodyparts-bones/myosim-fullbody-articulated-bodyparts-bones-front.png" width="24%" alt="Front BodyParts3D major-bone native binding">
+  <img src="media/myosim-native-bodyparts-bones/myosim-fullbody-articulated-bodyparts-bones-oblique.png" width="24%" alt="Oblique BodyParts3D major-bone native binding">
+  <img src="media/myosim-native-bodyparts-bones/myosim-fullbody-articulated-bodyparts-bones-side.png" width="24%" alt="Side BodyParts3D major-bone native binding">
+  <img src="media/myosim-native-bodyparts-bones/myosim-fullbody-articulated-bodyparts-bones-rear.png" width="24%" alt="Rear BodyParts3D major-bone native binding">
+</p>
+
+Core `818e5871f5d79f5f01b61305a49b14eac7035aae` captured this exact
+`NHBONES1` package on the Apple M4 Pro on `macmini`. The native C++ program
+read the compiled `NHRIGID2`/`NHMYO1` payloads plus 18 source-derived
+BodyParts3D major-bone meshes (47,649 vertices; 277,164 indices), dispatched
+the Metal articulated operator, and bound each mesh to its named Core
+inertial-body pose. It also rendered all 1,815 compiled muscle sites and
+1,432 route-centreline segments, in a thinner red inspection overlay.
+
+The offline rest-frame fit enumerated 24 proper signed axis maps and selected
+the identity axis map with positive scale `1.007736155369` after mm→m
+conversion. Its equal-weight mesh-vertex-centroid to source-inertial-COM score
+was `0.059372888 m` RMS (`0.123618266 m` maximum). A mesh centroid and an
+inertial COM are not homologous anatomical landmarks, so these are
+common-frame plausibility diagnostics—not surface-registration accuracy or a
+medical registration claim.
+
+| View | PNG SHA-256 | Bone / site / route pixels | Inspection result |
+| --- | --- | --- | --- |
+| Front | `e7d3700be997e623447aea1751d877c55256d114ce2fee984a2afffa977c29cf` | `3,538 / 1,067 / 3,305` | bilateral shoulders, arms, pelvis, legs, and feet are articulated together with the complete path overlay |
+| Oblique | `28218653090bab514f68b2f0c70efb81190ef191d0fdde092bb35fcf9629e3e3` | `2,937 / 998 / 3,054` | shoulder/scapular and pelvic depth are visible without a mirrored frame |
+| Side | `bf5e50c8895431c492cf74fb4f0aa9e44fbd0b4afe2ff38bff476bacb2c1559d` | `1,574 / 744 / 1,971` | sagittal skull–shoulder–pelvis–leg–foot sequence is continuous |
+| Rear | `9ca74e452b0430703553471c3528d57dd040545a7b7dbef4c5485e4256f95b1f` | `3,618 / 1,087 / 3,753` | posterior bilateral limbs and the sacral/pelvic connection are visible |
+
+The native [transcript](media/myosim-native-bodyparts-bones/native-articulated-bones.transcript.txt),
+visual-pack manifest, and `.mrvpack` accompany the four frames. This validates
+the complete `Metal pose → articulated BodyParts3D bone instance → native
+renderer` chain at the source default pose. It does **not** admit those
+provisional mesh transforms to collision or contact; it does not provide skin
+weights, organ/vessel/nerve deformation, unregistered small bones, live
+device-buffer presentation, a motion replay, gait, or clinical validation.
+
 ## Native mechanics progress
 
 ```text
@@ -127,14 +167,17 @@ owner; no contact or locomotion is claimed here.
 
 ## Remaining visual/mechanical steps
 
-1. Register BodyParts3D meshes to this articulated body in an inspected shared
-   rest frame; matching anatomical labels are insufficient evidence.
-2. Resolve the Mortensen spine-to-`cervical_spine` rest registration and make
+1. Extend the inspected major-bone rest-frame binding to vertebrae, pelvis,
+   hands/digits, toes, fibulae, talus, patellae, and the remaining named
+   skeleton meshes; matching anatomical labels remain insufficient evidence.
+2. Add the deformable skin path after those reviewed skeletal attachments; do
+   not replace it with rigid-bone parenting.
+3. Resolve the Mortensen spine-to-`cervical_spine` rest registration and make
    an explicit MyoSim neck/head replacement decision before applying its 72
    cervical/hyoid muscle forces.
-3. Promote the default native capture into a device-resident live presentation
+4. Promote the default native capture into a device-resident live presentation
    sidecar, then repeat the three views over a replayed physical motion.
-4. Add registered anatomical colliders and calibrated contact before any
+5. Add registered anatomical colliders and calibrated contact before any
    standing or walking qualification.
 
 This ordering keeps the Human more realistic by retaining source mechanics and

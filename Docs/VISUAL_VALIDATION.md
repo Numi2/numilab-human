@@ -5,6 +5,23 @@ For the active MyoSim full-body muscle source, see the newer
 frames are source-rendered and are intentionally kept distinct from the
 BodyParts3D source-static evidence below.
 
+## Native articulated BodyParts3D major bones — 2026-08-27
+
+The four inspected frames in
+[visual progress](VISUAL_PROGRESS.md#native-bodyparts3d-major-bone-binding--2026-08-27)
+are the first pose-bound BodyParts3D geometry evidence. An offline import
+selected 18 unambiguous source bone meshes, wrote their exact triangles and
+link-local uniform-scale transforms into `NHBONES1`, and the native Core
+capture bound each record to its Metal-computed MyoSim inertial-body pose.
+
+This establishes a shared default-frame candidate and an executable
+`articulated pose → BodyParts3D bone instance → renderer` chain. It is stronger
+than the static skin preview below, but remains deliberately narrower than a
+physical registration: the centroid/COM score is a common-frame diagnostic,
+not a surface-landmark residual; collision/contact, skin weights, unregistered
+small bones, soft-tissue deformation, and motion-replay qualification are not
+included.
+
 ## Native BodyParts3D skin render — 2026-08-27
 
 <p align="center">
