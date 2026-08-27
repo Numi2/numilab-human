@@ -4809,12 +4809,19 @@ def _bodyparts_obj_member(
         raise ImportError(f"BodyParts3D archive is not a ZIP file: {archive_path}") from error
 
 
-def _bodyparts_obj_triangles(
+def _bodyparts_obj_geometry(
     obj: bytes, source_name: str
-) -> tuple[list[tuple[float, float, float]], list[tuple[int, int, int]]]:
-    """Parse a conservative vertex/face-only subset of an OBJ source member."""
+) -> tuple[
+    list[tuple[float, float, float]],
+    list[tuple[int, int, int]],
+    list[tuple[float, float, float]] | None,
+]:
+    """Parse BodyParts3D geometry, retaining compatible authored OBJ normals."""
     vertices: list[tuple[float, float, float]] = []
+    source_normals: list[tuple[float, float, float]] = []
     triangles: list[tuple[int, int, int]] = []
+    vertex_normal_indices: list[int] = []
+    complete_authored_normals = True
     try:
         lines = obj.decode("utf-8").splitlines()
     except UnicodeDecodeError as error:
@@ -4836,12 +4843,27 @@ def _bodyparts_obj_triangles(
             if not all(math.isfinite(value) for value in position):
                 raise ImportError(f"BodyParts3D OBJ vertex is non-finite: {source_name}:{line_number}")
             vertices.append(position)
+            vertex_normal_indices.append(-1)
+        elif fields[0] == "vn":
+            if len(fields) < 4:
+                raise ImportError(f"BodyParts3D OBJ normal is truncated: {source_name}:{line_number}")
+            try:
+                normal = tuple(float(value) for value in fields[1:4])
+            except ValueError as error:
+                raise ImportError(
+                    f"BodyParts3D OBJ normal is non-numeric: {source_name}:{line_number}"
+                ) from error
+            length = math.sqrt(sum(value * value for value in normal))
+            if not all(math.isfinite(value) for value in normal) or length == 0.0:
+                raise ImportError(f"BodyParts3D OBJ normal is invalid: {source_name}:{line_number}")
+            source_normals.append(tuple(value / length for value in normal))
         elif fields[0] == "f":
             if len(fields) < 4:
                 raise ImportError(f"BodyParts3D OBJ face is truncated: {source_name}:{line_number}")
-            face: list[int] = []
+            face: list[tuple[int, int | None]] = []
             for field in fields[1:]:
-                index_text = field.split("/", 1)[0]
+                components = field.split("/")
+                index_text = components[0]
                 try:
                     index = int(index_text)
                 except ValueError as error:
@@ -4854,11 +4876,54 @@ def _bodyparts_obj_triangles(
                         f"BodyParts3D OBJ face index is outside its vertex set: "
                         f"{source_name}:{line_number}"
                     )
-                face.append(index)
+                normal_index: int | None = None
+                if len(components) >= 3 and components[2]:
+                    try:
+                        normal_index = int(components[2])
+                    except ValueError as error:
+                        raise ImportError(
+                            f"BodyParts3D OBJ normal index is invalid: {source_name}:{line_number}"
+                        ) from error
+                    normal_index = (
+                        normal_index - 1
+                        if normal_index > 0
+                        else len(source_normals) + normal_index
+                    )
+                    if normal_index < 0 or normal_index >= len(source_normals):
+                        raise ImportError(
+                            f"BodyParts3D OBJ normal index is outside its normal set: "
+                            f"{source_name}:{line_number}"
+                        )
+                else:
+                    complete_authored_normals = False
+                face.append((index, normal_index))
             for index in range(1, len(face) - 1):
-                triangles.append((face[0], face[index], face[index + 1]))
+                triangle = (face[0], face[index], face[index + 1])
+                triangles.append(tuple(point[0] for point in triangle))
+                for vertex_index, normal_index in triangle:
+                    if normal_index is None:
+                        complete_authored_normals = False
+                        continue
+                    previous = vertex_normal_indices[vertex_index]
+                    if previous not in (-1, normal_index):
+                        complete_authored_normals = False
+                    else:
+                        vertex_normal_indices[vertex_index] = normal_index
     if not vertices or not triangles:
         raise ImportError(f"BodyParts3D OBJ has no drawable triangles: {source_name}")
+    normals = (
+        [source_normals[index] for index in vertex_normal_indices]
+        if complete_authored_normals and source_normals and all(index >= 0 for index in vertex_normal_indices)
+        else None
+    )
+    return vertices, triangles, normals
+
+
+def _bodyparts_obj_triangles(
+    obj: bytes, source_name: str
+) -> tuple[list[tuple[float, float, float]], list[tuple[int, int, int]]]:
+    """Parse the position/triangle subset needed by physics-facing import stages."""
+    vertices, triangles, _ = _bodyparts_obj_geometry(obj, source_name)
     return vertices, triangles
 
 
@@ -5026,6 +5091,22 @@ _BODYPARTS_RIGHT_LOWER_LEG_ANATOMY = (
 )
 
 
+# A deliberately uncluttered posterior-chain view of the source geometry.
+# Tibialis anterior and the femur/patella are absent so that the actual
+# calcaneal-tendon surface and its two ends are visible rather than hidden by
+# otherwise valid but irrelevant structures.
+_BODYPARTS_RIGHT_CALCANEAL_TENDON_CONTINUITY = (
+    ("FJ3387", "right tibia", "bone"),
+    ("FJ3366", "right fibula", "bone"),
+    ("FJ3385", "right talus", "bone"),
+    ("FJ3360", "right calcaneus", "bone"),
+    ("FJ1394", "right lateral head of gastrocnemius", "muscle"),
+    ("FJ1397", "right medial head of gastrocnemius", "muscle"),
+    ("FJ1437", "right soleus", "muscle"),
+    ("FJ1405", "right calcaneal tendon", "tendon"),
+)
+
+
 def _bodyparts_normals(
     vertices_mm: list[tuple[float, float, float]],
     triangles: list[tuple[int, int, int]],
@@ -5056,14 +5137,14 @@ def _bodyparts_normals(
 
 def _bodyparts_anatomy_bundle_glb(
     surfaces: list[dict[str, Any]],
-) -> tuple[bytes, dict[str, list[float]]]:
+) -> tuple[bytes, dict[str, Any]]:
     """Write a multi-surface GLB with semantic source-layer materials."""
     if not surfaces:
         raise ImportError("BodyParts3D anatomy bundle requires at least one source surface")
     colors = {
-        "bone": [0.72, 0.61, 0.43, 1.0],
-        "muscle": [0.48, 0.055, 0.035, 1.0],
-        "tendon": [0.84, 0.73, 0.55, 1.0],
+        "bone": [0.78, 0.69, 0.53, 1.0],
+        "muscle": [0.56, 0.022, 0.012, 1.0],
+        "tendon": [0.94, 0.74, 0.34, 1.0],
     }
     if any(surface.get("layer") not in colors for surface in surfaces):
         raise ImportError("BodyParts3D anatomy bundle has an unsupported source layer")
@@ -5074,6 +5155,7 @@ def _bodyparts_anatomy_bundle_glb(
     nodes: list[dict[str, Any]] = []
     minimum_mm = [float("inf")] * 3
     maximum_mm = [float("-inf")] * 3
+    authored_normal_surface_count = 0
 
     def append_view(data: bytes, target: int) -> int:
         while len(binary) % 4:
@@ -5086,7 +5168,13 @@ def _bodyparts_anatomy_bundle_glb(
     for surface in surfaces:
         vertices = surface["vertices_mm"]
         triangles = surface["triangles"]
-        normals = _bodyparts_normals(vertices, triangles)
+        normals = surface.get("normals")
+        if normals is None:
+            normals = _bodyparts_normals(vertices, triangles)
+        else:
+            if len(normals) != len(vertices):
+                raise ImportError("BodyParts3D anatomy bundle authored normal count is invalid")
+            authored_normal_surface_count += 1
         positions = bytearray()
         normal_bytes = bytearray()
         indices = bytearray()
@@ -5164,20 +5252,52 @@ def _bodyparts_anatomy_bundle_glb(
         struct.pack("<I4s", len(binary), b"BIN" + bytes((0,))),
         bytes(binary),
     ))
-    return glb, {"minimum_mm": minimum_mm, "maximum_mm": maximum_mm}
+    return glb, {
+        "minimum_mm": minimum_mm,
+        "maximum_mm": maximum_mm,
+        "authored_normal_surface_count": authored_normal_surface_count,
+        "generated_normal_surface_count": len(surfaces) - authored_normal_surface_count,
+    }
 
 
-def bodyparts_right_lower_leg_anatomy_preview(sources: Path, output: Path) -> dict[str, Any]:
-    """Export exact static BodyParts3D muscle, tendon, and bone surfaces."""
+def _bodyparts_nearest_vertex_distance_mm(
+    first: list[tuple[float, float, float]],
+    second: list[tuple[float, float, float]],
+) -> float:
+    """Return an exact source-vertex separation for a small inspection bundle."""
+    if not first or not second:
+        raise ImportError("BodyParts3D continuity check requires nonempty source surfaces")
+    squared_distance = float("inf")
+    for first_point in first:
+        for second_point in second:
+            candidate = sum(
+                (first_point[component] - second_point[component]) ** 2
+                for component in range(3)
+            )
+            squared_distance = min(squared_distance, candidate)
+    return math.sqrt(squared_distance)
+
+
+def _bodyparts_anatomy_preview(
+    sources: Path,
+    output: Path,
+    selection: tuple[tuple[str, str, str], ...],
+    *,
+    stem: str,
+    schema: str,
+    evidence_boundary: str,
+    source_mesh_proximity: tuple[tuple[str, str, str], ...] = (),
+) -> dict[str, Any]:
+    """Export selected source surfaces without inventing an anatomical transform."""
     surfaces: list[dict[str, Any]] = []
     archive_path: Path | None = None
-    for member_id, label, layer in _BODYPARTS_RIGHT_LOWER_LEG_ANATOMY:
+    for member_id, label, layer in selection:
         member_archive, member, obj = _bodyparts_obj_member(sources, "is_a", member_id)
         if archive_path is None:
             archive_path = member_archive
         elif member_archive != archive_path:
             raise ImportError("BodyParts3D anatomy bundle members must share one source archive")
-        vertices, triangles = _bodyparts_obj_triangles(obj, member)
+        vertices, triangles, normals = _bodyparts_obj_geometry(obj, member)
         surfaces.append({
             "member_id": member_id,
             "member": member,
@@ -5186,15 +5306,16 @@ def bodyparts_right_lower_leg_anatomy_preview(sources: Path, output: Path) -> di
             "layer": layer,
             "vertices_mm": vertices,
             "triangles": triangles,
+            "normals": normals,
         })
     if archive_path is None:
         raise ImportError("BodyParts3D anatomy bundle has no source archive")
     glb, bounds = _bodyparts_anatomy_bundle_glb(surfaces)
     output.mkdir(parents=True, exist_ok=True)
-    glb_path = output / "bodyparts3d-right-lower-leg-anatomy-source-static.glb"
+    glb_path = output / f"{stem}-source-static.glb"
     glb_path.write_bytes(glb)
     manifest = {
-        "schema": "numi.human.bodyparts3d-right-lower-leg-anatomy-preview.v1",
+        "schema": schema,
         "source": {"archive": archive_path.name, "archive_sha256": sha256(archive_path)},
         "surfaces": [
             {
@@ -5205,6 +5326,11 @@ def bodyparts_right_lower_leg_anatomy_preview(sources: Path, output: Path) -> di
                 "layer": surface["layer"],
                 "vertex_count": len(surface["vertices_mm"]),
                 "triangle_count": len(surface["triangles"]),
+                "normal_source": (
+                    "authored_obj_vertex_normals"
+                    if surface["normals"] is not None
+                    else "generated_from_source_triangles"
+                ),
             }
             for surface in surfaces
         ],
@@ -5221,14 +5347,69 @@ def bodyparts_right_lower_leg_anatomy_preview(sources: Path, output: Path) -> di
             "attachment": "shared BodyParts3D source rest frame only",
             "materials": "semantic preview materials for bone, muscle, and tendon source layers",
         },
-        "evidence_boundary": (
+        "evidence_boundary": evidence_boundary,
+    }
+    by_member_id = {surface["member_id"]: surface for surface in surfaces}
+    if source_mesh_proximity:
+        manifest["source_mesh_proximity"] = [
+            {
+                "relationship": relationship,
+                "method": "exact nearest source-vertex separation in shared BodyParts3D rest frame",
+                "distance_mm": _bodyparts_nearest_vertex_distance_mm(
+                    by_member_id[first_member]["vertices_mm"],
+                    by_member_id[second_member]["vertices_mm"],
+                ),
+                "boundary": (
+                    "A small mesh-vertex separation makes the selected source surfaces "
+                    "inspectable together. It is not a topological weld, tissue-attachment "
+                    "certificate, MyoSim registration, or mechanical tendon constraint."
+                ),
+            }
+            for first_member, second_member, relationship in source_mesh_proximity
+        ]
+    write_json(output / f"{stem}-source-static.manifest.json", manifest)
+    return manifest
+
+
+def bodyparts_right_lower_leg_anatomy_preview(sources: Path, output: Path) -> dict[str, Any]:
+    """Export exact static BodyParts3D muscle, tendon, and bone surfaces."""
+    return _bodyparts_anatomy_preview(
+        sources,
+        output,
+        _BODYPARTS_RIGHT_LOWER_LEG_ANATOMY,
+        stem="bodyparts3d-right-lower-leg-anatomy",
+        schema="numi.human.bodyparts3d-right-lower-leg-anatomy-preview.v2",
+        evidence_boundary=(
             "This is exact BodyParts3D source-static lower-leg geometry. It does not establish "
             "a MyoSim-body transform, anatomical attachment transfer, articulated skinning, "
             "collision/contact, tissue mechanics, or physical Human RobotPack."
         ),
-    }
-    write_json(output / "bodyparts3d-right-lower-leg-anatomy-source-static.manifest.json", manifest)
-    return manifest
+    )
+
+
+def bodyparts_right_calcaneal_tendon_continuity_preview(
+    sources: Path, output: Path
+) -> dict[str, Any]:
+    """Export the source posterior lower-leg chain with visible tendon ends."""
+    return _bodyparts_anatomy_preview(
+        sources,
+        output,
+        _BODYPARTS_RIGHT_CALCANEAL_TENDON_CONTINUITY,
+        stem="bodyparts3d-right-calcaneal-tendon-continuity",
+        schema="numi.human.bodyparts3d-right-calcaneal-tendon-continuity-preview.v1",
+        evidence_boundary=(
+            "This is a focused exact BodyParts3D source-static posterior lower-leg bundle. "
+            "It makes the source calcaneal-tendon surface and selected neighbouring surfaces "
+            "legible, but does not establish a topological tissue weld, MyoSim-body transform, "
+            "articulated skinning, collision/contact, tissue mechanics, or a physical Human RobotPack."
+        ),
+        source_mesh_proximity=(
+            ("FJ1405", "FJ3360", "calcaneal_tendon_to_right_calcaneus"),
+            ("FJ1405", "FJ1394", "calcaneal_tendon_to_right_lateral_gastrocnemius"),
+            ("FJ1405", "FJ1397", "calcaneal_tendon_to_right_medial_gastrocnemius"),
+            ("FJ1405", "FJ1437", "calcaneal_tendon_to_right_soleus"),
+        ),
+    )
 
 
 def parse_bodyparts3d(sources: Path, classification_path: Path) -> dict[str, Any]:

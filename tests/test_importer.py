@@ -18,6 +18,7 @@ from numilab_human.model import (
     bodyparts_geometry_preflight,
     bodyparts_foot_registration_template,
     bodyparts_lower_body_attachment_worklist,
+    bodyparts_right_calcaneal_tendon_continuity_preview,
     bodyparts_nerve_annotation,
     bodyparts_right_lower_leg_anatomy_preview,
     bodyparts_visual_preview,
@@ -333,6 +334,35 @@ class ImporterTests(unittest.TestCase):
                 {"bone", "muscle", "tendon"},
             )
             glb = preview / "bodyparts3d-right-lower-leg-anatomy-source-static.glb"
+            self.assertEqual(glb.read_bytes()[:4], b"glTF")
+
+    def test_calcaneal_tendon_preview_preserves_authored_normals_and_continuity(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            source = Path(temporary) / "Sources"
+            source.mkdir()
+            archive = source / "isa_BP3D_4.0_obj_99.zip"
+            members = (
+                "FJ3387", "FJ3366", "FJ3385", "FJ3360",
+                "FJ1394", "FJ1397", "FJ1437", "FJ1405",
+            )
+            with zipfile.ZipFile(archive, "w") as bundle:
+                for member in members:
+                    bundle.writestr(
+                        f"isa_BP3D_4.0_obj_99/{member}.obj",
+                        "v 0 0 0\nv 1 0 0\nv 0 1 0\n"
+                        "vn 0 0 1\nvn 0 0 1\nvn 0 0 1\n"
+                        "f 1//1 2//2 3//3\n",
+                    )
+            preview = Path(temporary) / "Preview"
+            result = bodyparts_right_calcaneal_tendon_continuity_preview(source, preview)
+            self.assertEqual(result["geometry"]["surface_count"], len(members))
+            self.assertEqual(result["geometry"]["authored_normal_surface_count"], len(members))
+            self.assertEqual(result["geometry"]["generated_normal_surface_count"], 0)
+            self.assertTrue(all(
+                relationship["distance_mm"] == 0.0
+                for relationship in result["source_mesh_proximity"]
+            ))
+            glb = preview / "bodyparts3d-right-calcaneal-tendon-continuity-source-static.glb"
             self.assertEqual(glb.read_bytes()[:4], b"glTF")
 
     def test_numi_workspace_command_describes_itself(self) -> None:

@@ -19,6 +19,7 @@ from .model import (
     bodyparts_geometry_preflight,
     bodyparts_foot_registration_template,
     bodyparts_lower_body_attachment_worklist,
+    bodyparts_right_calcaneal_tendon_continuity_preview,
     bodyparts_right_lower_leg_anatomy_preview,
     bodyparts_myosim_bone_visual_payload,
     bodyparts_myosim_attachment_surface_registration_candidate,
@@ -456,6 +457,16 @@ def right_lower_leg_anatomy_preview(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def right_calcaneal_tendon_continuity_preview(arguments: argparse.Namespace) -> int:
+    output = arguments.output.resolve()
+    manifest = bodyparts_right_calcaneal_tendon_continuity_preview(
+        arguments.sources.resolve(), output
+    )
+    print(f"wrote {output / manifest['preview']['glb']}")
+    print(f"wrote {output / 'bodyparts3d-right-calcaneal-tendon-continuity-source-static.manifest.json'}")
+    return 0
+
+
 def millard_reference(arguments: argparse.Namespace) -> int:
     source = arguments.sources.resolve()
     lower = parse_opensim(
@@ -794,6 +805,13 @@ def parser() -> argparse.ArgumentParser:
     lower_leg_anatomy_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
     lower_leg_anatomy_parser.add_argument("--output", type=Path, required=True, help="local output directory")
     lower_leg_anatomy_parser.set_defaults(handler=right_lower_leg_anatomy_preview)
+    tendon_continuity_parser = commands.add_parser(
+        "right-calcaneal-tendon-continuity-preview",
+        help="export the exact source-static right posterior lower-leg tendon chain for inspection",
+    )
+    tendon_continuity_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
+    tendon_continuity_parser.add_argument("--output", type=Path, required=True, help="local output directory")
+    tendon_continuity_parser.set_defaults(handler=right_calcaneal_tendon_continuity_preview)
     preview_parser = commands.add_parser(
         "preview",
         help="emit an explicitly limited Rajagopal distal-leg URDF compile preview",
