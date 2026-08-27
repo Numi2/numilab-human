@@ -1,5 +1,30 @@
 # Bounded execution evidence
 
+## MyoSim full-body Metal activation-state transaction — 2026-08-27
+
+Core revision `bab29ddc0ae9eb7d19655def7e10a95c26bd8aa1` extends the MyoSim
+source-muscle pass with a typed GPU activation sidecar update. The command
+buffer first evaluates each current route, force, and `J^T` contribution, then
+uses that same per-muscle derivative for one explicit-Euler activation update.
+The update preserves excitation, clamps only the next activation to `[0, 1]`,
+and keeps the prior state for a rejected source route. It is therefore a
+defined temporal update, not a renderer correction or a fabricated tendon
+connection.
+
+The local Apple M4 probe ran the 103-source-body / 157-Core-body / 128-DoF
+payload with all 416 muscles and deliberately non-equilibrium state values.
+At a `0.0001 s` timestep it reported
+`metal_max_activation_step_error=0`; the retained-arena context produced a
+byte-identical next activation sidecar to the one-shot path. The same run kept
+the previous force validation: `0.00471758869298` maximum per-muscle
+generalized-force error and `0.00642352090836` summed-force error versus the
+FP64 source reference.
+
+This is Apple-GPU evidence for one returned full-body activation transaction.
+It does not establish a persistent device-only Human state loop, 128-DoF
+device forward dynamics, contact, tendon continuum, skin/organ deformation,
+gait, or clinical validity.
+
 ## MyoSim full-body native muscle reference — 2026-08-27
 
 Core revision `b2d449001898f40eecbdede15938c764c304f330` loads the active

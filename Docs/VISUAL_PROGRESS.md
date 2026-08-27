@@ -65,11 +65,15 @@ source-default pose: maximum per-muscle generalized-force error is
 
 This means the device no longer stops at a visual muscle route or scalar force:
 its force projection follows the current source attachments and wrapped path
-segments. The next boundary is deliberately explicit: the 157-body/128-DoF
-Human exceeds the current Metal **dynamics** bucket, so CPU FP64 still owns the
-bounded forward-dynamics state step and support contact. This validation does
-not claim a device-resident full-body integrator, tendon continuum, deformable
-soft tissue, gait, or clinical anatomy.
+segments. The same command-buffer family now advances a non-equilibrium
+416-muscle activation sidecar for one 100 µs explicit Metal step and returns
+it with zero observed update error; this is a mechanical state transition, not
+a visual attachment adjustment. The next boundary is deliberately explicit:
+the 157-body/128-DoF Human exceeds the current Metal **dynamics** bucket, so
+CPU FP64 still owns the bounded forward-dynamics state step and support
+contact. This validation does not claim a persistent device-only full-body
+integrator, tendon continuum, deformable soft tissue, gait, or clinical
+anatomy.
 
 ## Focused right upper-limb actuation — 2026-08-27
 

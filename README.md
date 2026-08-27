@@ -257,11 +257,16 @@ the resulting generalized force, and executes forward dynamics. With `--metal`,
 the same command buffer also evaluates all 416 MuJoCo-source spatial routes,
 their default-state static actuator forces, and the complete source
 `J^T` generalized-force projection on the Apple GPU, without restaging poses
-through the CPU. On Apple M4, the device’s maximum per-muscle force-vector
+through the CPU. The same native transaction can then advance every valid
+MyoSim activation sidecar by one explicit `100 µs` Metal step; the probe uses
+non-equilibrium source states and requires the reusable command-buffer path to
+publish the same next state as the one-shot path. On Apple M4, the device’s
+maximum per-muscle force-vector
 error is `0.00471758869298`; the deterministic all-416 reduction differs by
-`0.00642352090836` from the FP64 source reference. Dense 128-DoF device mass
-dynamics, contact, skin/organ solvers, and clinical qualification remain
-separate work; this is not a full Metal rollout.
+`0.00642352090836` from the FP64 source reference. The activation result is
+currently returned with the operator result; it is not yet a persistent
+device-only full-body rollout. Dense 128-DoF device mass dynamics, contact,
+skin/organ solvers, and clinical qualification remain separate work.
 
 The same native reference also compares one unconstrained 1 µs FP64 state step
 with the complete 416-muscle generalized force against the identical passive
