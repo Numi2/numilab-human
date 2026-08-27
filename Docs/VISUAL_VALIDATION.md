@@ -14,6 +14,24 @@ The earlier MyoSim source frames in [visual progress](VISUAL_PROGRESS.md) are
 retained as Apache-2.0 provenance records but are retired from presentation.
 They remain distinct from the BodyParts3D source-static evidence below.
 
+## Current supported tendon attachment check — 2026-08-27
+
+The current lower-leg reference is the four-angle 2048 px
+[supported tendon attachment review](VISUAL_PROGRESS.md#supported-tendon-attachment-review--2026-08-27).
+It runs the source-derived 5%-activation, 1 ms all-416-muscle state through a
+bounded MyoSim foot-support contact solve before Metal poses and renders the
+result. The exact BodyParts3D calcaneal-tendon triangles are insertion-locked
+to the named calcaneus source mesh inside a 3 mm zone with a 12 mm feather;
+the inspected active images retain tendon coverage from 1,654 to 22,281 pixels
+per camera. The separate cyan route diagnostic resolves the MyoSim
+gastrocnemius/soleus paths and makes their endpoint cues legible without using
+a line as a tendon substitute.
+
+The contact result is Core FP64 exact-cone, not GPU contact: the current Metal
+full-dynamics contact bucket does not admit the 157-body connected tree. This
+snapshot validates neither general collision nor a stable posture, gait,
+deformable tendon, force transfer, or medical attachment.
+
 ## Current posterior-calf source-surface inspection — 2026-08-27
 
 The current visual reference is the reviewed 2048 × 2048 four-angle

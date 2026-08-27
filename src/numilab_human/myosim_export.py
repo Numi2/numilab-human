@@ -39,6 +39,58 @@ def _mujoco_quaternion_to_xyzw(value: object) -> list[float]:
     return [values[1], values[2], values[3], values[0]]
 
 
+def _matrix_columns(value: object, np: object) -> object:
+    """Return MuJoCo's row-major 3x3 matrix as a NumPy matrix.
+
+    MuJoCo publishes world rotations in row-major form.  Keeping this tiny
+    conversion next to the support-witness exporter prevents the contact
+    artifact from relying on MJCF's convenient, but less authoritative,
+    pre-compilation ``fromto``/Euler spellings.
+    """
+    matrix = np.asarray(value, dtype=float)
+    if matrix.size != 9:
+        raise RuntimeError("MuJoCo did not publish a 3x3 rotation matrix")
+    return matrix.reshape(3, 3)
+
+
+def _support_point_on_geometry(
+    *,
+    geom_type: int,
+    sphere_type: int,
+    capsule_type: int,
+    ellipsoid_type: int,
+    center: object,
+    rotation: object,
+    size: object,
+    ground_normal: object,
+    np: object,
+) -> object:
+    """Return the source primitive's lowest point against an authored plane.
+
+    These are exact support witnesses for the *compiled* MuJoCo capsules and
+    ellipsoids—not a BodyParts3D enclosure or a new collision approximation.
+    The native runtime later treats each witness as a unilateral plane-contact
+    point and is deliberately scoped to a stance/support snapshot.
+    """
+    direction = -ground_normal
+    if geom_type == sphere_type:
+        return center + direction * float(size[0])
+    if geom_type == capsule_type:
+        axis = rotation[:, 2]
+        half_length = float(size[1])
+        endpoint = axis * (half_length if float(np.dot(axis, direction)) >= 0.0 else -half_length)
+        return center + endpoint + direction * float(size[0])
+    if geom_type == ellipsoid_type:
+        local_direction = rotation.T @ direction
+        radii = np.asarray(size[:3], dtype=float)
+        denominator = float(np.linalg.norm(radii * local_direction))
+        if not denominator > 0.0:
+            raise RuntimeError("MuJoCo support ellipsoid has a degenerate radius")
+        local_support = (radii * radii * local_direction) / denominator
+        return center + rotation @ local_support
+    raise RuntimeError(f"MyoSim support geometry has unsupported MuJoCo type {geom_type}")
+
+
 def export_fullbody(sources: Path) -> dict[str, object]:
     try:
         import mujoco
@@ -121,6 +173,111 @@ def export_fullbody(sources: Path) -> dict[str, object]:
                 ),
             }
         )
+
+    # Full-body MyoSim's locomotor contact surface is authored as five
+    # primitives per foot.  Preserve those compiled primitive witnesses rather
+    # than deriving boxes from a different visual-anatomy coordinate system.
+    plane_type = int(mujoco.mjtGeom.mjGEOM_PLANE)
+    sphere_type = int(mujoco.mjtGeom.mjGEOM_SPHERE)
+    capsule_type = int(mujoco.mjtGeom.mjGEOM_CAPSULE)
+    ellipsoid_type = int(mujoco.mjtGeom.mjGEOM_ELLIPSOID)
+    ground_candidates = [
+        index for index in range(model.ngeom)
+        if int(model.geom_type[index]) == plane_type and int(model.geom_bodyid[index]) == 0
+    ]
+    if len(ground_candidates) != 1:
+        raise RuntimeError(
+            "myofullbody must compile exactly one world-attached plane for support export"
+        )
+    ground_id = ground_candidates[0]
+    ground_name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_GEOM, ground_id)
+    ground_rotation = _matrix_columns(data.geom_xmat[ground_id], np)
+    ground_normal = ground_rotation[:, 2]
+    normal_length = float(np.linalg.norm(ground_normal))
+    if not normal_length > 0.0:
+        raise RuntimeError("MyoSim ground plane has a degenerate normal")
+    ground_normal = ground_normal / normal_length
+    ground_point = np.asarray(data.geom_xpos[ground_id], dtype=float)
+    support_names = {
+        f"{prefix}_col{ordinal}_{side}"
+        for prefix in ("foot", "bofoot")
+        for ordinal in range(1, 5)
+        for side in ("r", "l")
+    }
+    support_geometries: list[dict[str, object]] = []
+    for index in range(model.ngeom):
+        name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_GEOM, index)
+        if name not in support_names:
+            continue
+        geom_type = int(model.geom_type[index])
+        if geom_type not in {sphere_type, capsule_type, ellipsoid_type}:
+            raise RuntimeError(
+                f"MyoSim support geometry {name} has unsupported MuJoCo type {geom_type}"
+            )
+        body = int(model.geom_bodyid[index])
+        if body <= 0:
+            raise RuntimeError(f"MyoSim support geometry {name} is not attached to a body")
+        rotation = _matrix_columns(data.geom_xmat[index], np)
+        center = np.asarray(data.geom_xpos[index], dtype=float)
+        size = np.asarray(model.geom_size[index], dtype=float)
+        support_world = _support_point_on_geometry(
+            geom_type=geom_type,
+            sphere_type=sphere_type,
+            capsule_type=capsule_type,
+            ellipsoid_type=ellipsoid_type,
+            center=center,
+            rotation=rotation,
+            size=size,
+            ground_normal=ground_normal,
+            np=np,
+        )
+        inertia_rotation = _matrix_columns(data.ximat[body], np)
+        support_local = inertia_rotation.T @ (
+            support_world - np.asarray(data.xipos[body], dtype=float)
+        )
+        support_geometries.append(
+            {
+                "id": index,
+                "name": name,
+                "body": body,
+                "body_name": mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_BODY, body),
+                "type": geom_type,
+                "type_name": (
+                    "sphere" if geom_type == sphere_type else
+                    "capsule" if geom_type == capsule_type else "ellipsoid"
+                ),
+                "size_m": [float(value) for value in size],
+                "support_point_local_com_m": [float(value) for value in support_local],
+                "support_point_world_m": [float(value) for value in support_world],
+                "default_signed_plane_distance_m": float(
+                    np.dot(support_world - ground_point, ground_normal)
+                ),
+                # MuJoCo combines pair friction conservatively; preserving both
+                # source values lets the native contact artifact make that rule
+                # visible instead of silently inventing a generic coefficient.
+                "friction_tangential": float(max(
+                    float(model.geom_friction[index, 0]),
+                    float(model.geom_friction[ground_id, 0]),
+                )),
+            }
+        )
+    expected_support_names = {
+        f"foot_col{ordinal}_{side}"
+        for ordinal in (1, 3, 4)
+        for side in ("r", "l")
+    } | {
+        f"bofoot_col{ordinal}_{side}"
+        for ordinal in (1, 2)
+        for side in ("r", "l")
+    }
+    found_support_names = {str(entry["name"]) for entry in support_geometries}
+    if found_support_names != expected_support_names:
+        raise RuntimeError(
+            "myofullbody support geometry set drifted: expected "
+            + ", ".join(sorted(expected_support_names))
+            + "; found " + ", ".join(sorted(found_support_names))
+        )
+    support_geometries.sort(key=lambda entry: str(entry["name"]))
 
     muscle_actuators: list[int] = []
     spatial_tendon = int(mujoco.mjtTrn.mjTRN_TENDON)
@@ -260,6 +417,16 @@ def export_fullbody(sources: Path) -> dict[str, object]:
             "gravity_m_s2": [float(value) for value in model.opt.gravity],
             "timestep_seconds": float(model.opt.timestep),
             "default_qpos": [float(value) for value in model.qpos0],
+        },
+        "support_contact": {
+            "ground": {
+                "source_geom_id": ground_id,
+                "name": ground_name,
+                "point_world_m": [float(value) for value in ground_point],
+                "normal_world": [float(value) for value in ground_normal],
+                "friction_tangential": float(model.geom_friction[ground_id, 0]),
+            },
+            "geometries": support_geometries,
         },
         "bodies": bodies,
         "joints": joints,

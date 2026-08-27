@@ -1,0 +1,22 @@
+Native supported posterior-chain capture — 2026-08-27
+
+Input
+- NHRIGID2: Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid
+- NHMYO1: Build/myosim-fullbody/myosim-fullbody-muscle-reference.nhmyo
+- NHCNT1: Build/myosim-fullbody/myosim-fullbody-support-contact.nhcnt
+- NHBONES1: complete 184-mesh BodyParts3D visual skeleton
+- NHTISS2: posterior-chain exact source surfaces with calcaneal insertion lock
+
+Native command
+numi human myosim-native-supported-muscle-soft-tissue-visuals Build/myosim-fullbody <NHBONES1> <NHTISS2> <output> 136 --muscle-step-seconds 0.001 --muscle-activation 0.05 --dimension 2048
+
+Result
+- Apple M4 Metal pose and renderer succeeded at 2048 x 2048 from front, oblique, side, and rear.
+- 416 source muscle incremental forces applied; 90 source wraps used.
+- 10 MyoSim-authored foot primitives read; two bilateral lowest witnesses solved after 0.053175445646 m seed translation.
+- CPU FP64 exact-cone support contact succeeded. Metal full-body contact status: not_admitted_articulation_exceeds_metal_contact_bucket.
+- Maximum muscle active/passive deltas: velocity 7.20038099923, configuration 0.00720038099923.
+- Posterior-chain source geometry: 4 surfaces; nonzero tendon coverage in every view.
+
+Boundary
+This is a single bounded support/contact snapshot followed by Metal pose and rendering. It is not a GPU contact solve, general collision system, stable standing/gait rollout, deformable tendon model, force-transfer model, or medical attachment validation.

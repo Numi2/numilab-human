@@ -16,6 +16,7 @@ from numilab_human.model import (
     _BODYPARTS_MYOSIM_THORACIC_FOOT_EXTENSIONS,
     _BODYPARTS_MYOSIM_TOE_EXTENSIONS,
     _BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS,
+    _bodyparts_secondary_attachment_weight_lock,
     _bodyparts_myosim_surface_specifications,
     _bodyparts_similarity_fit,
     ImportError as HumanImportError,
@@ -52,6 +53,20 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ImporterTests(unittest.TestCase):
+    def test_tendon_attachment_weight_lock_holds_secondary_bone_insertion(self) -> None:
+        weights, evidence = _bodyparts_secondary_attachment_weight_lock(
+            [[0.0, 0.0, 0.0], [0.008, 0.0, 0.0], [0.025, 0.0, 0.0]],
+            [0.8, 0.8, 0.8],
+            [[0.0, 0.0, 0.0]],
+        )
+        self.assertEqual(weights[0], 0.0)
+        self.assertGreater(weights[1], 0.0)
+        self.assertLess(weights[1], 0.8)
+        self.assertEqual(weights[2], 0.8)
+        self.assertEqual(evidence["locked_vertex_count"], 1)
+        self.assertEqual(evidence["feathered_vertex_count"], 1)
+        self.assertEqual(evidence["nearest_vertex_distance_m"], 0.0)
+
     def test_fullbody_surface_map_is_mirrored_and_explicit(self) -> None:
         surfaces = _bodyparts_myosim_surface_specifications()
         self.assertEqual(len(surfaces), 150)
@@ -426,6 +441,26 @@ class ImporterTests(unittest.TestCase):
             "usage: numi human myosim-native-muscle-bone-visuals <artifact-directory> "
             "<bodyparts3d-myosim-major-bones.nhbones> <output-directory> "
             "[--muscle-step-seconds <1e-6..1e-3>] "
+            "[--dimension <512..2048; multiple-of-64>]\n",
+        )
+
+    def test_numi_workspace_supported_muscle_surface_command_rejects_missing_paths_before_python(self) -> None:
+        command = ROOT / ".numi/commands/human"
+        result = run(
+            [command, "myosim-native-supported-muscle-soft-tissue-visuals"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(result.stdout, "")
+        self.assertEqual(
+            result.stderr,
+            "usage: numi human myosim-native-supported-muscle-soft-tissue-visuals "
+            "<artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> "
+            "<bodyparts3d-myosim-soft-tissue.nhtissue> <output-directory> "
+            "<focus-body-index> [--muscle-step-seconds <1e-6..1e-3>] "
+            "[--muscle-activation <0..1>] "
             "[--dimension <512..2048; multiple-of-64>]\n",
         )
 

@@ -131,9 +131,13 @@ vertex through both posed bodies and linearly blends the resulting positions
 and normals into a world-surface snapshot. Thus gastrocnemius spans
 femur-to-calcaneus, while soleus and calcaneal tendon span tibia-to-calcaneus;
 it fixes the invalid one-rigid-parent representation of a crossing tendon.
-This is explicit kinematic skinning for presentation only—not FEM/MPM,
-muscle-fibre contraction, tendon constitutive response, collision, force
-transfer, or a biological attachment certificate.
+For the calcaneal-tendon insertion, source vertices within 3 mm of the named
+BodyParts3D calcaneus mesh are locked to the calcaneus parent and the next
+12 mm is feathered before this blend. That prevents the driven visual tendon
+from being pulled off the calcaneus by a body-centre-derived weight; it is
+still explicit presentation skinning only—not FEM/MPM, muscle-fibre
+contraction, tendon constitutive response, collision, force transfer, or a
+biological attachment certificate.
 
 The full-body `NHTISS2` package uses the same native ABI but is generated from
 `bodyparts3d-myosim-surface-map.v1.json`. Each normal row is source-name
@@ -160,6 +164,19 @@ co-activation probe differs from passive by `71.4839058782` maximum velocity
 and `0.0714839058782` maximum configuration, so it demonstrates native
 force-to-pose coupling but cannot be interpreted as a stable stance, control
 policy, contact result, gait, or physiological prediction.
+
+The supported capture adds a narrow, source-owned contact layer. `NHCNT1`
+serializes MyoSim's compiled plane and its five authored capsule/ellipsoid
+foot witnesses per side. The default pose begins about 53.2 mm above that
+plane, so the capture derives a ground-aligned seed from the minimum witness
+gap and retains the two bilateral lowest witnesses. After the all-muscle free
+velocity step, Core's FP64 exact-cone solver resolves that support and Core
+advances the configuration; Metal then owns the articulated pose and renderer.
+The current 157-body connected tree is not admitted to the fixed Metal
+full-dynamics contact bucket, and the executable reports that status rather
+than substituting a GPU claim. This bounded two-witness snapshot is not
+general collision, stable posture, gait, compliance calibration, or a
+deformable-tissue solve.
 
 `numi.human.v1` remains an owner-neutral intermediate artifact, but Core
 revision `730aba4` now executes the bounded Rajagopal mechanics path: the

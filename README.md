@@ -30,23 +30,23 @@ that span a joint. It keeps a force-path diagnostic separate from anatomy
 presentation. See [visual progress](Docs/VISUAL_PROGRESS.md) for the evidence
 boundary.
 
-### Reviewed posterior-calf tendon attachment inspection
+### Supported posterior-calf tendon attachment inspection
 
 <p align="center">
-  <img src="Docs/media/myosim-native-posterior-chain-2048/default/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-front.png" width="32%" alt="Right posterior-calf source surfaces over the native articulated skeleton, front" />
-  <img src="Docs/media/myosim-native-posterior-chain-2048/default/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-oblique.png" width="32%" alt="Right posterior-calf source surfaces over the native articulated skeleton, oblique" />
-  <img src="Docs/media/myosim-native-posterior-chain-2048/default/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-rear.png" width="32%" alt="Right posterior-calf source surfaces over the native articulated skeleton, rear" />
+  <img src="Docs/media/myosim-native-supported-posterior-chain-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-side.png" width="32%" alt="Supported right posterior-calf source surfaces, side" />
+  <img src="Docs/media/myosim-native-supported-posterior-chain-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-oblique.png" width="32%" alt="Supported right posterior-calf source surfaces, oblique" />
+  <img src="Docs/media/myosim-native-supported-posterior-chain-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-rear.png" width="32%" alt="Supported right posterior-calf source surfaces, rear" />
 </p>
 
-This 2048 × 2048 four-angle native inspection binds the exact BodyParts3D
-right lateral/medial gastrocnemius, soleus, and calcaneal-tendon meshes over
-the 184-mesh articulated skeleton. At the shared source-default pose, the
-posterior view visibly carries the tendon from the calf surfaces to the
-calcaneus rather than substituting a route line. Each surface is kinematically
-blended between its named proximal and distal Core bodies, so a muscle-driven
-pose cannot shear the tendon apart by treating it as one rigid child. The
-triangles remain exact source geometry; this is not yet deformable tissue,
-force transfer, or a medical attachment claim.
+This 2048 × 2048 four-angle native inspection is the current tendon view. It
+uses the exact BodyParts3D lateral/medial gastrocnemius, soleus, and
+calcaneal-tendon meshes after a 1 ms, 5%-activation all-416-muscle step and
+MyoSim-authored foot support contact. The two Achilles meshes now lock their
+insertion-side source vertices to the named calcaneus mesh (341 right / 492
+left vertices, with a 15 mm feather), so the driven view keeps the tendon
+continuous at bone rather than relying only on a body-centre blend. The
+triangles remain exact source geometry; this is presentation binding, not a
+deformable tendon, force-transfer, gait, or medical-attachment claim.
 
 ### Reviewed full-body muscle-surface inspection
 
@@ -177,6 +177,17 @@ numi human myosim-native-muscle-soft-tissue-visuals \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
   Build/bodyparts3d-myosim-right-posterior-chain/bodyparts3d-myosim-right-posterior-chain.nhtissue \
   Build/myosim-native-posterior-chain-muscle-stress \
+  136 --muscle-step-seconds 0.001 --muscle-activation 0.05 --dimension 2048
+
+# The source-authored foot primitives provide a bounded support-contact
+# snapshot before the final Metal pose/render. This native command reports
+# whether contact was admitted to Metal; the full 157-body tree currently uses
+# the Core FP64 exact-cone fallback and never claims GPU contact when rejected.
+numi human myosim-native-supported-muscle-soft-tissue-visuals \
+  Build/myosim-fullbody \
+  Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
+  Build/bodyparts3d-myosim-right-posterior-chain/bodyparts3d-myosim-right-posterior-chain.nhtissue \
+  Docs/media/myosim-native-supported-posterior-chain-attachment-2048 \
   136 --muscle-step-seconds 0.001 --muscle-activation 0.05 --dimension 2048
 
 # Package the audited full-body muscle-surface map. The offline importer

@@ -17,6 +17,56 @@ surface geometry or a medical registration. The reviewed showcase below uses
 the separate exact BodyParts3D muscle/tendon surfaces instead of that route
 diagnostic.
 
+## Supported tendon attachment review — 2026-08-27
+
+<p align="center">
+  <img src="media/myosim-native-supported-posterior-chain-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-front.png" width="32%" alt="Supported posterior-chain attachment view, front" />
+  <img src="media/myosim-native-supported-posterior-chain-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-side.png" width="32%" alt="Supported posterior-chain attachment view, side" />
+  <img src="media/myosim-native-supported-posterior-chain-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-rear.png" width="32%" alt="Supported posterior-chain attachment view, rear" />
+</p>
+
+These four inspected 2048 × 2048 Apple M4 frames replace the earlier
+free-body posterior-chain stress picture. The active pose applies the
+zero-baseline-subtracted 5% activation to all 416 MyoSim muscles for 1 ms,
+then resolves two bilateral support witnesses from MyoSim's own authored foot
+collision primitives in Core FP64 exact-cone contact before Metal produces the
+final pose and native renderer frame.
+
+The BodyParts3D calcaneal-tendon surfaces preserve their exact triangles, but
+the generic two-body blend has been corrected where it matters: source vertices
+within 3 mm of the named calcaneus mesh are fully calcaneus-bound and the next
+12 mm is feathered. That locks 341 right and 492 left tendon vertices, with
+629 and 476 feathered vertices. It prevents an active pose from visibly
+pulling an insertion off the bone while retaining a smooth tendon surface.
+
+| View | Bone / muscle / tendon pixels | Review |
+| --- | ---: | --- |
+| Front | 343,512 / 42,216 / 1,654 | insertion and anterior ankle remain visible |
+| Oblique | 380,943 / 64,287 / 5,480 | lateral tendon contour remains continuous |
+| Side | 304,884 / 45,081 / 6,373 | posterior insertion remains attached to calcaneus |
+| Rear | 247,926 / 121,337 / 22,281 | complete calf → Achilles → heel chain is legible |
+
+The companion opt-in route image makes the force-path ownership readable:
+
+<p align="center">
+  <img src="media/myosim-native-supported-posterior-chain-route-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-source-route-centrelines-surface-projected-sites-focus-body-136-rear.png" width="48%" alt="Cyan exact MyoSim gastrocnemius and soleus route attachment diagnostic" />
+</p>
+
+Its cyan curves are the posed MyoSim gastrocnemius lateralis, gastrocnemius
+medialis, and soleus routes, including the source wrap arcs; cyan caps are
+nearest registered-bone endpoint cues. They demonstrate the route-to-bone
+relationship without pretending that a line is tendon geometry. The route is
+naturally occluded in the lateral camera by the anatomy it passes beneath, so
+the diagnostic now requires visibility in at least one reviewed angle rather
+than silently failing valid anatomy views.
+
+This is a bounded supported snapshot, not stable standing or gait. The
+full-body Metal contact program explicitly rejected the 157-body connected
+articulation as larger than its current dynamics bucket, so the capture uses
+the native FP64 contact result and labels GPU contact as not admitted. It does
+not claim general collision, a controller, repeated integration, deformable
+tendon mechanics, force transfer from triangles, or clinical registration.
+
 ## Reviewed native full-body muscle-surface inspection — 2026-08-27
 
 <p align="center">

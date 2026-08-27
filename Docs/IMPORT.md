@@ -81,6 +81,16 @@ numi human myosim-native-muscle-soft-tissue-visuals \
   Build/bodyparts3d-myosim-right-posterior-chain/native-muscle-stress \
   136 --muscle-step-seconds 0.001 --muscle-activation 0.05 --dimension 2048
 
+# Native bounded support capture. The NHCNT1 input is generated with the
+# MyoSim full-body artifact and contains its own five foot support primitives
+# per side. The command itself does not start Python.
+numi human myosim-native-supported-muscle-soft-tissue-visuals \
+  Build/myosim-fullbody \
+  Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
+  Build/bodyparts3d-myosim-right-posterior-chain/bodyparts3d-myosim-right-posterior-chain.nhtissue \
+  Build/myosim-native-supported-posterior-chain \
+  136 --muscle-step-seconds 0.001 --muscle-activation 0.05 --dimension 2048
+
 # Broader source anatomy: every map row names a BodyParts3D mesh and one or
 # more authored MyoSim muscles. Ordinary rows are admitted only if their route
 # endpoint body pairs agree; the bilateral calcaneal tendon is the explicitly
@@ -145,8 +155,14 @@ rollout interface. It only permits a 1 µs–1 ms step (default 1 ms), projects
 all 416 `NHMYO1` source muscles at their deterministic source-default
 activation/excitation, and compares the active configuration to a matched
 passive step before the final Metal pose/render pass. The command does not
-create a controller, keep force/dynamics resident on Metal, add contact, or
-validate standing or gait.
+create a controller, keep force/dynamics resident on Metal, or validate
+standing or gait. Use `myosim-native-supported-muscle-soft-tissue-visuals`
+when a bounded source-authored foot-support snapshot is needed. It derives the
+default ground-aligned seed from the source collision witness with the smallest
+plane gap and resolves the two bilateral lowest witnesses in Core FP64
+exact-cone contact. The executable reports whether the separate full-body
+Metal contact program was admitted; current 157-body capture falls back to
+that native CPU reference and never labels the contact solve as GPU-resident.
 
 ## 1. Fetch the password-free sources
 

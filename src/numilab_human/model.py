@@ -2024,6 +2024,11 @@ _MYOSIM_CORE_REFERENCE_MAGIC = b"NHRIGID2"
 _MYOSIM_CORE_REFERENCE_ABI = 1
 _MYOSIM_MUSCLE_REFERENCE_MAGIC = b"NHMYO1\0\0"
 _MYOSIM_MUSCLE_REFERENCE_ABI = 1
+# Source-authored full-body foot support witnesses.  These are compiled
+# MuJoCo capsule/ellipsoid surface points against MyoSim's own ground plane,
+# not BodyParts3D collision proxies.
+_MYOSIM_SUPPORT_CONTACT_MAGIC = b"NHCNT1\0\0"
+_MYOSIM_SUPPORT_CONTACT_ABI = 1
 _MR_MOTION_STATIC = 0
 _MR_ROOT_FLOATING = 1
 _MR_JOINT_PRISMATIC = 1
@@ -2195,7 +2200,7 @@ def _myosim_pack_dof_record(
 
 def myosim_fullbody_reference_artifacts(
     exported: dict[str, Any],
-) -> tuple[dict[str, Any], bytes, bytes]:
+) -> tuple[dict[str, Any], bytes, bytes, bytes]:
     """Lower MyoSim's compiled full body into Core rigid and muscle payloads.
 
     The source uses a MuJoCo free root and several multiple-joint bodies.  A
@@ -2645,6 +2650,122 @@ def myosim_fullbody_reference_artifacts(
     expected_muscle_bytes = 76 + 16 * len(site_records) + 64 * len(geom_records) + 16 * len(route_records) + 164 * len(muscle_records)
     if len(muscle_payload) != expected_muscle_bytes:
         raise ImportError("internal MyoSim muscle payload ABI size mismatch")
+    support_source = exported.get("support_contact")
+    if not isinstance(support_source, dict):
+        raise ImportError("MyoSim export has no authored support-contact records")
+    ground = support_source.get("ground")
+    support_geometries = support_source.get("geometries")
+    if not isinstance(ground, dict) or not isinstance(support_geometries, list):
+        raise ImportError("MyoSim support-contact export is malformed")
+    ground_point = _myosim_vector(ground.get("point_world_m"), "MyoSim support ground point")
+    ground_normal = _myosim_vector(ground.get("normal_world"), "MyoSim support ground normal")
+    normal_length = math.sqrt(sum(component * component for component in ground_normal))
+    if not 0.999 <= normal_length <= 1.001:
+        raise ImportError("MyoSim support ground normal is not unit length")
+    ground_normal = [component / normal_length for component in ground_normal]
+    ground_friction = _finite_scalar(
+        ground.get("friction_tangential"), "MyoSim support ground friction"
+    )
+    if ground_friction < 0.0:
+        raise ImportError("MyoSim support ground friction is negative")
+    support_records: list[bytes] = []
+    support_manifest: list[dict[str, Any]] = []
+    expected_support_names = {
+        f"foot_col{ordinal}_{side}"
+        for ordinal in (1, 3, 4)
+        for side in ("r", "l")
+    } | {
+        f"bofoot_col{ordinal}_{side}"
+        for ordinal in (1, 2)
+        for side in ("r", "l")
+    }
+    observed_support_names: set[str] = set()
+    for geometry in support_geometries:
+        if not isinstance(geometry, dict):
+            raise ImportError("MyoSim support geometry record is malformed")
+        name = geometry.get("name")
+        source_body_id = geometry.get("body")
+        source_geom_id = geometry.get("id")
+        if not isinstance(name, str) or not isinstance(source_body_id, int) or not isinstance(source_geom_id, int):
+            raise ImportError("MyoSim support geometry lacks source identity")
+        if name in observed_support_names:
+            raise ImportError(f"MyoSim support geometry {name} is duplicated")
+        observed_support_names.add(name)
+        if source_body_id not in source_body_to_core:
+            raise ImportError(f"MyoSim support geometry {name} has unresolved source body")
+        local_point = _myosim_vector(
+            geometry.get("support_point_local_com_m"), f"MyoSim support geometry {name} local point"
+        )
+        world_point = _myosim_vector(
+            geometry.get("support_point_world_m"), f"MyoSim support geometry {name} world point"
+        )
+        signed_distance = _finite_scalar(
+            geometry.get("default_signed_plane_distance_m"),
+            f"MyoSim support geometry {name} signed distance",
+        )
+        derived_distance = sum(
+            (world_point[axis] - ground_point[axis]) * ground_normal[axis]
+            for axis in range(3)
+        )
+        if abs(derived_distance - signed_distance) > 1.0e-5:
+            raise ImportError(f"MyoSim support geometry {name} plane-distance record drifted")
+        # The static-world witness is the exact projection onto the compiled
+        # source plane.  The signed separation remains in the manifest for a
+        # caller to decide whether a support row should be admitted.
+        plane_witness = [
+            world_point[axis] - signed_distance * ground_normal[axis]
+            for axis in range(3)
+        ]
+        friction = _finite_scalar(
+            geometry.get("friction_tangential"), f"MyoSim support geometry {name} friction"
+        )
+        if friction < 0.0:
+            raise ImportError(f"MyoSim support geometry {name} friction is negative")
+        support_records.append(
+            struct.pack(
+                "<2I10f",
+                source_body_to_core[source_body_id], source_geom_id,
+                *local_point, *plane_witness,
+                friction, signed_distance, 0.0, 0.0,
+            )
+        )
+        support_manifest.append({
+            "source_geom_id": source_geom_id,
+            "name": name,
+            "source_body_id": source_body_id,
+            "source_body_name": geometry.get("body_name"),
+            "core_body_index": source_body_to_core[source_body_id],
+            "shape": geometry.get("type_name"),
+            "source_size_m": geometry.get("size_m"),
+            "default_signed_plane_distance_m": signed_distance,
+            "friction_tangential": friction,
+        })
+    if observed_support_names != expected_support_names:
+        raise ImportError(
+            "MyoSim support geometry set drifted: expected " +
+            ", ".join(sorted(expected_support_names)) + "; found " +
+            ", ".join(sorted(observed_support_names))
+        )
+    support_manifest.sort(key=lambda record: str(record["name"]))
+    # Preserve the same deterministic source-name order in the binary.
+    order = {record["name"]: index for index, record in enumerate(support_manifest)}
+    support_records = [
+        record for _, record in sorted(
+            zip((str(geometry.get("name")) for geometry in support_geometries), support_records),
+            key=lambda item: order[item[0]],
+        )
+    ]
+    support_header = struct.pack(
+        "<8s4I32s7f",
+        _MYOSIM_SUPPORT_CONTACT_MAGIC, _MYOSIM_SUPPORT_CONTACT_ABI,
+        len(body_records), len(support_records), 0, bytes.fromhex(source_hash),
+        *ground_point, *ground_normal, ground_friction,
+    )
+    support_payload = b"".join([support_header, *support_records])
+    expected_support_bytes = 84 + 48 * len(support_records)
+    if len(support_payload) != expected_support_bytes:
+        raise ImportError("internal MyoSim support-contact payload ABI size mismatch")
+
     manifest = {
         "schema": "numi.human.myosim-fullbody-reference.v1",
         "source": source,
@@ -2666,6 +2787,30 @@ def myosim_fullbody_reference_artifacts(
                       "sha256": hashlib.sha256(rigid_payload).hexdigest(), "payload_abi": _MYOSIM_CORE_REFERENCE_ABI},
             "muscles": {"file": "myosim-fullbody-muscle-reference.nhmyo", "bytes": len(muscle_payload),
                         "sha256": hashlib.sha256(muscle_payload).hexdigest(), "payload_abi": _MYOSIM_MUSCLE_REFERENCE_ABI},
+            "support_contact": {
+                "file": "myosim-fullbody-support-contact.nhcnt",
+                "bytes": len(support_payload),
+                "sha256": hashlib.sha256(support_payload).hexdigest(),
+                "payload_abi": _MYOSIM_SUPPORT_CONTACT_ABI,
+            },
+        },
+        "support_contact": {
+            "source_ground": {
+                "source_geom_id": ground.get("source_geom_id"),
+                "name": ground.get("name"),
+                "point_world_m": ground_point,
+                "normal_world": ground_normal,
+                "friction_tangential": ground_friction,
+            },
+            "support_geometry_count": len(support_manifest),
+            "support_geometries": support_manifest,
+            "scope": "source-default stance support witnesses only",
+            "boundary": (
+                "Each record is an exact compiled MyoSim foot capsule/ellipsoid surface witness "
+                "against MyoSim's compiled plane. It is admissible to a bounded unilateral support "
+                "contact solve, but is not BodyParts3D collider registration, general collision detection, "
+                "compliance calibration, or gait validation."
+            ),
         },
         "route_coverage": {
             "muscle_count": len(muscle_records), "route_site_count": len(site_records),
@@ -2680,11 +2825,12 @@ def myosim_fullbody_reference_artifacts(
             "the source muscle activation, active-force, and passive-force parameter records."
         ),
         "evidence_boundary": (
-            "This is a source-complete native CPU-reference import. Contact, skin/organ mechanics, "
-            "Mortensen neck registration, and bounded Metal execution remain separate deliverables."
+            "This is a source-complete native CPU-reference import. The optional support payload carries "
+            "authored MyoSim default-stance foot witnesses, not a general collision world. Skin/organ "
+            "mechanics, Mortensen neck registration, and a complete device-resident rollout remain separate deliverables."
         ),
     }
-    return manifest, rigid_payload, muscle_payload
+    return manifest, rigid_payload, muscle_payload, support_payload
 
 
 # The fitted landmarks remain deliberately conservative: a source mesh vertex
@@ -3626,13 +3772,18 @@ def bodyparts_myosim_right_posterior_chain_visual_payload(
     if not isinstance(anchors, list) or len(anchors) != len(_BODYPARTS_MYOSIM_BONE_ANCHORS):
         raise ImportError("BodyParts3D posterior-chain payload requires the complete visual-skeleton anchor set")
     targets: dict[str, dict[str, Any]] = {}
+    secondary_bone_sources: dict[str, dict[str, Any]] = {}
     for anchor in anchors:
-        if not isinstance(anchor, dict) or not isinstance(anchor.get("target"), dict):
+        if not isinstance(anchor, dict) or not isinstance(anchor.get("target"), dict) or \
+                not isinstance(anchor.get("source"), dict):
             raise ImportError("BodyParts3D posterior-chain payload has an incomplete registration target")
         target = anchor["target"]
+        source_record = anchor["source"]
         name = target.get("name")
         if isinstance(name, str) and name not in targets:
             targets[name] = target
+        if isinstance(name, str):
+            secondary_bone_sources.setdefault(name, source_record)
     vertices_payload: list[tuple[float, float, float, float, float, float, float]] = []
     indices_payload: list[int] = []
     records_payload: list[bytes] = []
@@ -3698,13 +3849,48 @@ def bodyparts_myosim_right_posterior_chain_visual_payload(
         projection_maximum = max(projections)
         if projection_maximum - projection_minimum <= 1.0e-6:
             raise ImportError(f"BodyParts3D posterior-chain payload {label} has no two-body blend extent")
+        primary_weights = [
+            max(0.0, min(1.0, (projection_maximum - projection) /
+                            (projection_maximum - projection_minimum)))
+            for projection in projections
+        ]
         first_vertex = len(vertices_payload)
         first_index = len(indices_payload)
-        for vertex, normal, projection in zip(vertices_mm, normals, projections, strict=True):
-            primary_weight = (projection_maximum - projection) / (projection_maximum - projection_minimum)
+        attachment_weight_lock: dict[str, Any] | None = None
+        if layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON:
+            bone_source = secondary_bone_sources.get(secondary_target_name)
+            if not isinstance(bone_source, dict):
+                raise ImportError(
+                    f"BodyParts3D posterior-chain tendon {member_id} has no named secondary-bone source mesh"
+                )
+            bone_member_id, bone_hierarchy = bone_source.get("member_id"), bone_source.get("hierarchy")
+            if not isinstance(bone_member_id, str) or not isinstance(bone_hierarchy, str):
+                raise ImportError(
+                    f"BodyParts3D posterior-chain tendon {member_id} has an invalid secondary-bone source mesh"
+                )
+            _, bone_member, bone_obj = _bodyparts_obj_member(sources, bone_hierarchy, bone_member_id)
+            bone_vertices_mm, _ = _bodyparts_obj_triangles(bone_obj, bone_member)
+            bone_vertices_world_m = [
+                [
+                    sum(global_matrix[row][column] * vertex[column] for column in range(3)) +
+                    global_matrix[row][3]
+                    for row in range(3)
+                ]
+                for vertex in bone_vertices_mm
+            ]
+            primary_weights, attachment_weight_lock = _bodyparts_secondary_attachment_weight_lock(
+                global_vertices_m, primary_weights, bone_vertices_world_m,
+            )
+            attachment_weight_lock.update({
+                "secondary_body": secondary_target_name,
+                "secondary_bone_member_id": bone_member_id,
+                "secondary_bone_member": bone_member,
+                "secondary_bone_member_sha256": hashlib.sha256(bone_obj).hexdigest(),
+            })
+        for vertex, normal, primary_weight in zip(vertices_mm, normals, primary_weights, strict=True):
             vertices_payload.append((
                 vertex[0] * 0.001, vertex[1] * 0.001, vertex[2] * 0.001,
-                normal[0], normal[1], normal[2], max(0.0, min(1.0, primary_weight)),
+                normal[0], normal[1], normal[2], primary_weight,
             ))
         indices_payload.extend(first_vertex + index for triangle in triangles for index in triangle)
         records_payload.append(struct.pack(
@@ -3721,6 +3907,8 @@ def bodyparts_myosim_right_posterior_chain_visual_payload(
             "primary_weight_range": [0.0, 1.0],
             "vertex_count": len(vertices_mm), "triangle_count": len(triangles),
         })
+        if attachment_weight_lock is not None:
+            provenance[-1]["secondary_attachment_weight_lock"] = attachment_weight_lock
     if len(vertices_payload) > 0xFFFFFFFF or len(indices_payload) > 0xFFFFFFFF:
         raise ImportError("BodyParts3D posterior-chain payload exceeds the uint32 native renderer capacity")
     header = struct.pack(
@@ -3754,7 +3942,8 @@ def bodyparts_myosim_right_posterior_chain_visual_payload(
         "runtime_binding": (
             "exact BodyParts3D source surfaces use the visual-skeleton common rest frame and a "
             "per-vertex two-body linear blend in named Core articulated body frames; gastrocnemius "
-            "spans femur-to-calcaneus while soleus and the calcaneal tendon span tibia-to-calcaneus"
+            "spans femur-to-calcaneus while soleus and the calcaneal tendon span tibia-to-calcaneus; "
+            "the calcaneal-tendon insertion uses a source-mesh-proximity secondary-calcaneus weight lock"
         ),
         "status": "native_two_body_kinematic_surface_binding_input_not_collision_or_physics",
         "evidence_boundary": (
@@ -3819,6 +4008,87 @@ def _bodyparts_myosim_surface_specifications() -> list[dict[str, Any]]:
     if len(set(members)) != len(members):
         raise ImportError("BodyParts3D/MyoSim surface map duplicates a source surface")
     return result
+
+
+def _bodyparts_secondary_attachment_weight_lock(
+    tissue_vertices_world_m: list[list[float]],
+    primary_weights: list[float],
+    secondary_bone_vertices_world_m: list[list[float]],
+) -> tuple[list[float], dict[str, Any]]:
+    """Lock a source tendon insertion to its named source bone mesh.
+
+    The two-body interpolation used by the broad surface package is a useful
+    presentation approximation for a crossing muscle belly, but endpoint
+    weights inferred from body-centre projection can leave a visible tendon
+    insertion moving partly with the wrong body.  For a named tendon surface,
+    retain the exact source mesh and use only its close rest-frame proximity to
+    the named *secondary* bone mesh to force that endpoint's weight to zero.
+    The transition is feathered over a short source-space band, so the result
+    does not introduce a hard seam in the rendered surface.
+
+    This is still visual kinematic binding.  It neither alters the MyoSim
+    muscle path nor establishes a mechanical or medical attachment.
+    """
+    if len(tissue_vertices_world_m) != len(primary_weights) or not tissue_vertices_world_m:
+        raise ImportError("BodyParts3D tendon attachment lock has inconsistent source vertices")
+    if not secondary_bone_vertices_world_m:
+        raise ImportError("BodyParts3D tendon attachment lock has no secondary bone vertices")
+    lock_radius_m = 0.003
+    feather_radius_m = 0.015
+    cell_size_m = feather_radius_m
+    grid: dict[tuple[int, int, int], list[list[float]]] = {}
+    for vertex in secondary_bone_vertices_world_m:
+        if len(vertex) != 3 or not all(math.isfinite(value) for value in vertex):
+            raise ImportError("BodyParts3D tendon attachment lock has a non-finite bone vertex")
+        key = tuple(math.floor(value / cell_size_m) for value in vertex)
+        grid.setdefault(key, []).append(vertex)
+    result: list[float] = []
+    locked = 0
+    feathered = 0
+    nearest_distance_m = math.inf
+    for vertex, primary_weight in zip(tissue_vertices_world_m, primary_weights, strict=True):
+        if len(vertex) != 3 or not all(math.isfinite(value) for value in vertex) or \
+                not math.isfinite(primary_weight) or not 0.0 <= primary_weight <= 1.0:
+            raise ImportError("BodyParts3D tendon attachment lock has invalid tissue input")
+        key = tuple(math.floor(value / cell_size_m) for value in vertex)
+        nearest_squared = math.inf
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                for dz in (-1, 0, 1):
+                    for candidate in grid.get((key[0] + dx, key[1] + dy, key[2] + dz), []):
+                        squared = sum((vertex[axis] - candidate[axis]) ** 2 for axis in range(3))
+                        nearest_squared = min(nearest_squared, squared)
+        if nearest_squared == math.inf:
+            result.append(primary_weight)
+            continue
+        distance_m = math.sqrt(nearest_squared)
+        nearest_distance_m = min(nearest_distance_m, distance_m)
+        if distance_m <= lock_radius_m:
+            result.append(0.0)
+            locked += 1
+        elif distance_m < feather_radius_m:
+            result.append(primary_weight * (distance_m - lock_radius_m) /
+                          (feather_radius_m - lock_radius_m))
+            feathered += 1
+        else:
+            result.append(primary_weight)
+    if locked == 0:
+        raise ImportError(
+            "BodyParts3D tendon surface has no source-mesh-proximate secondary-bone insertion"
+        )
+    return result, {
+        "method": "exact-source-vertex proximity to named secondary BodyParts3D bone mesh",
+        "lock_radius_m": lock_radius_m,
+        "feather_radius_m": feather_radius_m,
+        "locked_vertex_count": locked,
+        "feathered_vertex_count": feathered,
+        "nearest_vertex_distance_m": nearest_distance_m,
+        "boundary": (
+            "This changes only visual two-body blend weights at a named tendon insertion; "
+            "it is not a topological weld, a tendon constitutive model, force transfer, "
+            "or medical attachment validation."
+        ),
+    }
 
 
 def _bodyparts_source_element_names(sources: Path) -> set[tuple[str, str]]:
@@ -3958,6 +4228,22 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
     bodies, route_muscles, myosim_manifest = _myosim_surface_route_context(myosim_artifact, source_sha)
     element_names = _bodyparts_source_element_names(sources)
     specifications = _bodyparts_myosim_surface_specifications()
+    registration_anchors = registration.get("anchors")
+    if not isinstance(registration_anchors, list):
+        raise ImportError("BodyParts3D full-body tissue payload has no visual-skeleton anchors")
+    secondary_bone_sources: dict[str, dict[str, Any]] = {}
+    for anchor in registration_anchors:
+        if not isinstance(anchor, dict):
+            raise ImportError("BodyParts3D full-body tissue payload has an invalid visual-skeleton anchor")
+        source_record, target_record = anchor.get("source"), anchor.get("target")
+        if not isinstance(source_record, dict) or not isinstance(target_record, dict):
+            raise ImportError("BodyParts3D full-body tissue payload has an incomplete visual-skeleton anchor")
+        target_name = target_record.get("name")
+        member_id, hierarchy = source_record.get("member_id"), source_record.get("hierarchy")
+        if not isinstance(target_name, str) or not isinstance(member_id, str) or \
+                not isinstance(hierarchy, str):
+            raise ImportError("BodyParts3D full-body tissue payload has an invalid visual-skeleton anchor identity")
+        secondary_bone_sources.setdefault(target_name, source_record)
 
     vertices_payload: list[tuple[float, float, float, float, float, float, float]] = []
     indices_payload: list[int] = []
@@ -4014,15 +4300,49 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         minimum, maximum = min(projections), max(projections)
         if maximum - minimum <= 1.0e-6:
             raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has no two-body blend extent")
+        primary_weights = [
+            max(0.0, min(1.0, (maximum - projection) / (maximum - minimum)))
+            for projection in projections
+        ]
         first_vertex, first_index = len(vertices_payload), len(indices_payload)
-        for vertex, normal, projection in zip(vertices_mm, normals, projections, strict=True):
-            primary_weight = (maximum - projection) / (maximum - minimum)
-            vertices_payload.append((*[coordinate * 0.001 for coordinate in vertex], *normal, max(0.0, min(1.0, primary_weight))))
-        indices_payload.extend(first_vertex + index for triangle in triangles for index in triangle)
         layer_name = specification.get("layer", "muscle")
         layer = _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE if layer_name == "muscle" else _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON if layer_name == "tendon" else None
         if layer is None:
             raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has an invalid layer")
+        attachment_weight_lock: dict[str, Any] | None = None
+        if layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON:
+            bone_source = secondary_bone_sources.get(secondary_name)
+            if not isinstance(bone_source, dict):
+                raise ImportError(
+                    f"BodyParts3D tendon surface {member_id} has no named secondary-bone source mesh"
+                )
+            bone_member_id, bone_hierarchy = bone_source.get("member_id"), bone_source.get("hierarchy")
+            if not isinstance(bone_member_id, str) or not isinstance(bone_hierarchy, str):
+                raise ImportError(
+                    f"BodyParts3D tendon surface {member_id} has an invalid secondary-bone source mesh"
+                )
+            _, bone_member, bone_obj = _bodyparts_obj_member(sources, bone_hierarchy, bone_member_id)
+            bone_vertices_mm, _ = _bodyparts_obj_triangles(bone_obj, bone_member)
+            bone_vertices_world_m = [
+                [
+                    sum(global_matrix[row][column] * vertex[column] for column in range(3)) +
+                    global_matrix[row][3]
+                    for row in range(3)
+                ]
+                for vertex in bone_vertices_mm
+            ]
+            primary_weights, attachment_weight_lock = _bodyparts_secondary_attachment_weight_lock(
+                global_vertices, primary_weights, bone_vertices_world_m,
+            )
+            attachment_weight_lock.update({
+                "secondary_body": secondary_name,
+                "secondary_bone_member_id": bone_member_id,
+                "secondary_bone_member": bone_member,
+                "secondary_bone_member_sha256": hashlib.sha256(bone_obj).hexdigest(),
+            })
+        for vertex, normal, primary_weight in zip(vertices_mm, normals, primary_weights, strict=True):
+            vertices_payload.append((*[coordinate * 0.001 for coordinate in vertex], *normal, primary_weight))
+        indices_payload.extend(first_vertex + index for triangle in triangles for index in triangle)
         records_payload.append(struct.pack(
             "<8I16f", primary_body_index, secondary_body_index, first_vertex, len(vertices_mm), first_index,
             len(triangles) * 3, stable_id, layer,
@@ -4037,6 +4357,8 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             "matched_muscles": [dict(route, name=name) for name, route in zip(source_muscles, matched_routes, strict=True)],
             "primary_weight_range": [0.0, 1.0], "vertex_count": len(vertices_mm), "triangle_count": len(triangles),
         })
+        if attachment_weight_lock is not None:
+            provenance[-1]["secondary_attachment_weight_lock"] = attachment_weight_lock
     if len(vertices_payload) > 0xFFFFFFFF or len(indices_payload) > 0xFFFFFFFF:
         raise ImportError("BodyParts3D full-body tissue payload exceeds the uint32 native renderer capacity")
     payload = b"".join([
@@ -4063,7 +4385,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         "coverage": {"configured_surface_count": len(specifications), "muscle_surface_count": sum(1 for entry in provenance if entry["layer"] == "muscle"),
                      "tendon_surface_count": sum(1 for entry in provenance if entry["layer"] == "tendon"),
                      "authored_myosim_muscle_count": len(myosim_manifest["muscles"])},
-        "runtime_binding": "exact BodyParts3D source surfaces use a per-vertex two-body linear blend in their named Core articulated endpoint frames; ordinary entries derive both endpoint bodies directly from the named authored MyoSim route sites",
+        "runtime_binding": "exact BodyParts3D source surfaces use a per-vertex two-body linear blend in their named Core articulated endpoint frames; ordinary entries derive both endpoint bodies directly from the named authored MyoSim route sites, while the calcaneal-tendon insertion is secondary-calcaneus locked by exact source-mesh proximity",
         "status": "native_two_body_kinematic_surface_binding_input_not_collision_or_physics",
         "evidence_boundary": "This source-authored surface package visually follows exact named articulated endpoint bodies. It does not make the source surface a force-transmitting continuum, add a tendon constitutive law, create collision/contact, or establish a medical registration.",
     }
