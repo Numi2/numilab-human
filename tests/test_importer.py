@@ -995,6 +995,32 @@ class ImporterTests(unittest.TestCase):
         )
         self.assertEqual(original_bimanual_gate["status"], "blocked")
 
+    def test_public_mobl_reports_its_real_runtime_lowering_boundaries(self) -> None:
+        model = parse_opensim(
+            ROOT / "Sources" / "MOBL_ARMS_41.osim",
+            "mobl_arms_ceinms_41_public_mirror",
+        )
+        report = runtime_compatibility_report(
+            model,
+            read_json(ROOT / "config/numi-runtime-contract.v1.json"),
+        )
+        self.assertEqual(report["skeleton"]["status"], "blocked")
+        self.assertEqual(report["skeleton"]["massless_source_bodies"], ["thorax"])
+        self.assertEqual(
+            report["source_model"]["wrap_object_kinds"],
+            {
+                "WrapCylinder": 49,
+                "WrapEllipsoid": 23,
+                "WrapSphere": 4,
+                "WrapTorus": 11,
+            },
+        )
+        self.assertEqual(report["muscle_tendon"]["status"], "blocked")
+        self.assertEqual(
+            report["muscle_tendon"]["unsupported_source_wrap_kinds"],
+            {"WrapEllipsoid": 23, "WrapSphere": 4, "WrapTorus": 11},
+        )
+
     def test_runtime_compatibility_preserves_unsupported_joints_and_muscle_evidence_gates(self) -> None:
         model = {
             "model_id": "fixture",

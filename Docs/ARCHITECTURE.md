@@ -218,6 +218,14 @@ different claim from the original authenticated bimanual archive, and it does
 not imply bilateral upper-body completion, body-frame registration, or a
 physical qualification.
 
+The public MoBL-ARMS 4.1 file is not yet a device-actuated upper-body runtime:
+its `thorax` is a zero-mass kinematic anchor, while its 50 source muscles use
+ellipsoid, sphere, and torus wraps in addition to cylinders. The present
+Core/Millard payload refuses to invent anchor inertia or substitute those
+routes with cylinders. The audit records those exact blockers so a future
+upper-body lowerer can add a source-preserving anchor policy and exact wrap
+families with separate parity validation.
+
 `numi human core-reference` now compiles the complete 22-body Rajagopal tree
 into a fixed-layout payload: each source body supplies its mass, COM, and
 inertia; each source joint supplies its resolved body-frame anchors and

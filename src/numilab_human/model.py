@@ -7826,6 +7826,22 @@ def runtime_compatibility_report(
         for muscle in model["muscles"]
         for curve_kind in muscle.get("curves", {})
     )
+    wrap_kinds = Counter(
+        wrap["kind"]
+        for wrap in model["wrap_objects"]
+        if isinstance(wrap.get("kind"), str) and wrap["kind"]
+    )
+    unsupported_wrap_kinds = {
+        kind: count
+        for kind, count in sorted(wrap_kinds.items())
+        if kind != "WrapCylinder"
+    }
+    massless_bodies = sorted(
+        body["id"]
+        for body in model.get("bodies", [])
+        if isinstance(body.get("id"), str) and
+        _finite_scalar(body.get("mass_kg"), f"OpenSim body {body['id']} mass") == 0.0
+    )
     path_points = sum(len(muscle["path_points"]) for muscle in model["muscles"])
     path_wraps = sum(len(muscle["path_wraps"]) for muscle in model["muscles"])
     bounded_function_based = False
@@ -7861,7 +7877,7 @@ def runtime_compatibility_report(
     supported_millard = all(
         muscle["kind"] == "Millard2012EquilibriumMuscle"
         for muscle in model["muscles"]
-    )
+    ) and not unsupported_wrap_kinds
     return {
         "schema": "numi.human.runtime-compatibility.v1",
         "runtime": runtime_contract["runtime"],
@@ -7874,11 +7890,17 @@ def runtime_compatibility_report(
             "muscle_path_points": path_points,
             "muscle_path_wraps": path_wraps,
             "wrap_objects": len(model["wrap_objects"]),
+            "wrap_object_kinds": dict(sorted(wrap_kinds.items())),
+            "unclassified_wrap_objects": (
+                len(model["wrap_objects"]) - sum(wrap_kinds.values())
+            ),
         },
         "skeleton": {
             "status": (
                 "blocked"
-                if unsupported or (bounded_admission is not None and not bounded_function_based)
+                if unsupported or massless_bodies or (
+                    bounded_admission is not None and not bounded_function_based
+                )
                 else (
                     "compatible_bounded_mobile_root_direct_effort_contact"
                     if bounded_function_based
@@ -7886,6 +7908,14 @@ def runtime_compatibility_report(
                 )
             ),
             "unsupported_joint_kinds": unsupported,
+            "massless_source_bodies": massless_bodies,
+            "massless_body_requirement": (
+                "No massless source bodies require a special anchor policy."
+                if not massless_bodies else
+                "Each massless source body requires an explicit kinematic-anchor "
+                "or zero-inertia-carrier policy before articulated lowering; "
+                "the current OpenSim Core payload refuses to invent its inertia."
+            ),
             "exact_locked_joint_lowerings": exact_locked_lowerings,
             "bounded_admission": bounded_admission,
             "unknown_joint_kinds": unknown,
@@ -7908,6 +7938,7 @@ def runtime_compatibility_report(
                 )
             ),
             "current_contract": runtime_contract["muscle_tendon"]["current_contract"],
+            "unsupported_source_wrap_kinds": unsupported_wrap_kinds,
             "requirements": runtime_contract["muscle_tendon"][
                 "source_faithful_requirements"
             ],
