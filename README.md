@@ -21,12 +21,27 @@ or derived source artifacts remain local. See
 
 ## Visual progress
 
-The lead inspection is a complete body, not a marker cloud or isolated tendon.
-It uses BodyParts3D's 184 bone meshes plus 150 named muscle/tendon surfaces,
-posed by the native Human runtime. See [visual progress](Docs/VISUAL_PROGRESS.md)
+The lead inspection is now an articulated exterior as well as an exposed
+anatomy check. It uses the exact BodyParts3D skin mesh with native multi-bone
+posing, while the separate muscle/tendon views remain visible evidence rather
+than being hidden behind a cosmetic shell. See [visual progress](Docs/VISUAL_PROGRESS.md)
 for the evidence boundary.
 
-### Ground-supported full-body Metal muscle-force inspection
+### Muscle-driven articulated exterior shell
+
+<p align="center">
+  <img src="Docs/media/myosim-native-skinned-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-front.png" width="49%" alt="Muscle-driven BodyParts3D skinned Human, front" />
+  <img src="Docs/media/myosim-native-skinned-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-rear.png" width="49%" alt="Muscle-driven BodyParts3D skinned Human, rear" />
+</p>
+
+This Apple-M4 2K capture poses the exact 102,467-vertex BodyParts3D exterior
+mesh after 32 bounded all-416-muscle updates. Each shell vertex blends four
+registered Core bone envelopes, reconstructing the registered rest pose to
+`1.01e-15 m` before any runtime render. The shell is an articulated visual
+layer, not an FEM/MPM skin, collision shell, tissue-material model, or
+clinical-registration claim.
+
+### Exposed ground-supported full-body Metal muscle-force inspection
 
 <p align="center">
   <img src="Docs/media/myosim-native-fullbody-supported-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-front.png" width="24%" alt="Ground-supported muscle-driven BodyParts3D Human, front" />
@@ -35,13 +50,13 @@ for the evidence boundary.
   <img src="Docs/media/myosim-native-fullbody-supported-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-rear.png" width="24%" alt="Ground-supported muscle-driven BodyParts3D Human, rear" />
 </p>
 
-This Apple-M4 2K capture follows 32 100 µs updates. Each update evaluates
+This exposed-anatomy Apple-M4 2K capture follows 32 100 µs updates. Each update evaluates
 all 416 MyoSim muscle paths, their activation sidecars, and the 128-DoF
 generalized-force projection on Metal before the current Core FP64 dynamics
 and authored foot-witness contact step. Metal still does not admit the
 157-body contact island, so the bounded exact-cone contact step is explicitly
 Core FP64 before Metal renders the pose. It is an articulated anatomy
-presentation—not skin, a tendon continuum, gait, or clinical anatomy evidence.
+presentation—not an exterior shell, a tendon continuum, gait, or clinical anatomy evidence.
 
 ### Posterior-chain tendon-to-bone inspection
 
@@ -60,7 +75,7 @@ fingerprints before it can render. The frames therefore establish source-mesh
 registration continuity—not tendon force transfer, a deformable tendon,
 stable gait, general collision, clinical registration, or photoreal anatomy.
 
-### Source skin context
+### Source skin provenance
 
 <p align="center">
   <img src="Docs/media/bodyparts3d-skin-source-reference-2048/axis_negative_y.png" width="32%" alt="BodyParts3D source skin, front" />
@@ -68,11 +83,11 @@ stable gait, general collision, clinical registration, or photoreal anatomy.
   <img src="Docs/media/bodyparts3d-skin-source-reference-2048/axis_positive_y.png" width="32%" alt="BodyParts3D source skin, rear" />
 </p>
 
-This Apple-M4 native 2K context layer uses the exact 102,467-vertex,
-203,382-triangle BodyParts3D skin source under a camera-relative studio rig.
-It improves the human-scale visual reference without substituting a rigidly
-parented or fabricated animated skin. It remains a source-static shell until
-validated MyoSim skinning weights and deformable-shell mechanics exist.
+This source-static reference remains alongside the dynamic exterior capture
+above: it is the exact 102,467-vertex, 203,382-triangle BodyParts3D mesh from
+which the native shell payload is made. The runtime uses four proximity-derived
+registered bone-envelope influences per vertex; it is not a deformable-shell
+mechanics result.
 
 ### Upper-limb muscle-driven inspection
 
@@ -240,6 +255,22 @@ numi human myosim-native-supported-fullbody-muscle-visuals \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
   Build/bodyparts3d-myosim-fullbody-muscle-surfaces/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue \
   Docs/media/myosim-native-fullbody-supported-metal-force-2048 \
+  --muscle-step-seconds 0.0001 --muscle-step-count 32 \
+  --muscle-activation 0.05 --dimension 2048
+
+# Build the exact exterior BodyParts3D shell once, then run the separate
+# Python-free native muscle-driven presentation.  The offline import derives
+# four registered visual influences per vertex and verifies its rest-pose
+# reconstruction; it does not claim a physical skin material or collision.
+numi human myosim-bodyparts-skinned-shell-payload \
+  --sources Sources \
+  --registration Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json \
+  --output Build/bodyparts3d-myosim-skinned-shell
+numi human myosim-native-supported-skinned-fullbody-visuals \
+  Build/myosim-fullbody \
+  Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
+  Build/bodyparts3d-myosim-skinned-shell/bodyparts3d-myosim-skinned-shell.nhskin \
+  Docs/media/myosim-native-skinned-fullbody-metal-force-2048 \
   --muscle-step-seconds 0.0001 --muscle-step-count 32 \
   --muscle-activation 0.05 --dimension 2048
 

@@ -1,6 +1,36 @@
 # NumiLab Human visual progress
 
-## Ground-supported full-body all-muscle Metal force inspection — 2026-08-27
+## Muscle-driven articulated exterior shell — 2026-08-27
+
+<p align="center">
+  <img src="media/myosim-native-skinned-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-front.png" width="24%" alt="Muscle-driven articulated Human exterior, front" />
+  <img src="media/myosim-native-skinned-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-oblique.png" width="24%" alt="Muscle-driven articulated Human exterior, oblique" />
+  <img src="media/myosim-native-skinned-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-side.png" width="24%" alt="Muscle-driven articulated Human exterior, side" />
+  <img src="media/myosim-native-skinned-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-rear.png" width="24%" alt="Muscle-driven articulated Human exterior, rear" />
+</p>
+
+This is the current whole-human presentation: the exact 102,467-vertex,
+203,382-triangle BodyParts3D exterior mesh is posed natively after the
+all-416-muscle force update. Each vertex carries four registered Core body
+influences selected from 86 bone envelopes. The offline source import
+reconstructs the registered rest pose with a maximum error of
+`1.0111756560930368e-15 m`; native C++/Metal owns the final pose and render.
+
+The Apple M4 2K run executed 32 × 100 µs updates, 64 Metal force
+transactions, 13,312 active-muscle records, and 2,866 wrapped route contacts.
+Its four frames have 351,252 / 306,694 / 218,852 / 369,374 nonzero skin pixels
+(front / oblique / side / rear). The dynamic source-foot support probe retained
+two contacts at the final step (six at peak); as with the exposed anatomy,
+full-tree contact was correctly not admitted to the installed Metal bucket and
+Core FP64 owns that bounded exact-cone fallback. The exact [capture record](media/myosim-native-skinned-fullbody-metal-force-2048/capture.transcript.txt)
+retains parameters and output identities.
+
+This is an articulated visual shell, not FEM/MPM skin, a skin material law,
+collision geometry, general contact, gait, or clinical-registration evidence.
+The separate exposed-anatomy and tendon views below remain the source surface
+evidence; an opaque shell is never used to imply tendon continuity.
+
+## Exposed ground-supported full-body all-muscle Metal force inspection — 2026-08-27
 
 <p align="center">
   <img src="media/myosim-native-fullbody-supported-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-front.png" width="24%" alt="Ground-supported muscle-driven BodyParts3D Human, front" />
@@ -9,7 +39,7 @@
   <img src="media/myosim-native-fullbody-supported-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-rear.png" width="24%" alt="Ground-supported muscle-driven BodyParts3D Human, rear" />
 </p>
 
-This is the current Human presentation: 184 BodyParts3D bone meshes and 150
+This is the current exposed-anatomy presentation: 184 BodyParts3D bone meshes and 150
 named muscle/tendon surfaces at 2048 × 2048 from front, oblique, side, and
 rear. The posterior tendons are rendered with their associated muscle chain
 in the full-body view rather than as an anatomically misleading free segment.
@@ -80,10 +110,11 @@ that overexposed the front and flattened the rear. The Apple M4 capture is
 front, oblique, and rear frames respectively; its transcript and output hashes
 are retained beside the images.
 
-This improves visual legibility, not mechanics. The skin mesh has no authored
-MyoSim weights, contact geometry, constitutive parameters, or volume. It is a
-source-static native reference and must stay separate from the articulated
-muscle/bone runtime until those data are established.
+This retained source-static reference establishes mesh provenance only. The
+current exterior capture above uses a separate, explicitly marked
+four-influence visual binding derived from registered bone envelopes. Neither
+view provides contact geometry, constitutive parameters, volume, or physical
+skin deformation.
 
 ## Device-resident full-body muscle-force projection — 2026-08-27
 
@@ -643,17 +674,18 @@ compared all body poses plus one nonzero point query per body against Core.
 
 This is actual Apple-GPU articulated execution, not a compile-only claim. The
 kinematics-only route admits up to 192 bodies and 160 DoF because it does not
-reserve the dense mass-factor scratch space. The 128-DoF dense mass solve,
-MyoSim `J^T` scatter, and forward-dynamics stages remain the CPU reference
-owner; no contact or locomotion is claimed here.
+reserve the dense mass-factor scratch space. The 128-DoF dense mass solve and
+forward-dynamics stage remain the CPU FP64 reference owner after the
+device-side MyoSim `J^T` projection; no contact or locomotion is claimed here.
 
 ## Remaining visual/mechanical steps
 
 1. Resolve the remaining C1/C2 and triquetrum source-geometry gaps, then review
    their parent-body choice before adding them; matching anatomical labels alone
    remain insufficient evidence.
-2. Add the deformable skin path after the reviewed skeletal attachments; do
-   not replace it with rigid-bone parenting.
+2. Replace the current four-bone visual shell with calibrated deformable skin
+   mechanics only after acquiring a cited material law and validation data; do
+   not call the visual blend a physical shell.
 3. Resolve the Mortensen spine-to-`cervical_spine` rest registration and make
    an explicit MyoSim neck/head replacement decision before applying its 72
    cervical/hyoid muscle forces.
@@ -663,9 +695,9 @@ owner; no contact or locomotion is claimed here.
    emit a bounded frame sequence, and compare it with the matched passive
    replay. Until a controller and contact are validated, call that evidence a
    free-body response—not a posture or gait.
-5. Move the complete MyoSim `J^T` force scatter and dense forward-dynamics
-   update to a measured device-resident path, preserving CPU-vs-Metal replay
-   parity before promoting the native capture to a live presentation sidecar.
+5. Move the dense forward-dynamics update to a measured device-resident path,
+   preserving CPU-vs-Metal replay parity before promoting the native capture
+   to a live presentation sidecar.
 6. Add registered anatomical colliders and calibrated contact before any
    standing or walking qualification.
 

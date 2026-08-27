@@ -17,6 +17,7 @@ from numilab_human.model import (
     _BODYPARTS_MYOSIM_TOE_EXTENSIONS,
     _BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS,
     _bodyparts_secondary_attachment_weight_lock,
+    _bodyparts_skin_bbox_distance_squared,
     _bodyparts_myosim_surface_specifications,
     _bodyparts_similarity_fit,
     ImportError as HumanImportError,
@@ -53,6 +54,20 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ImporterTests(unittest.TestCase):
+    def test_skin_bone_envelope_distance_is_zero_inside_and_metric_outside(self) -> None:
+        self.assertEqual(
+            _bodyparts_skin_bbox_distance_squared(
+                [0.0, 0.0, 0.0], [-1.0, -2.0, -3.0], [1.0, 2.0, 3.0],
+            ),
+            0.0,
+        )
+        self.assertEqual(
+            _bodyparts_skin_bbox_distance_squared(
+                [3.0, 5.0, 0.0], [-1.0, -2.0, -3.0], [1.0, 2.0, 3.0],
+            ),
+            13.0,
+        )
+
     def test_tendon_attachment_weight_lock_holds_secondary_bone_insertion(self) -> None:
         weights, evidence = _bodyparts_secondary_attachment_weight_lock(
             [[0.0, 0.0, 0.0], [0.008, 0.0, 0.0], [0.025, 0.0, 0.0]],

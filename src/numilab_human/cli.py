@@ -23,6 +23,7 @@ from .model import (
     bodyparts_right_lower_leg_anatomy_preview,
     bodyparts_myosim_bone_visual_payload,
     bodyparts_myosim_fullbody_soft_tissue_visual_payload,
+    bodyparts_myosim_skinned_shell_visual_payload,
     bodyparts_myosim_right_posterior_chain_visual_payload,
     bodyparts_myosim_attachment_surface_registration_candidate,
     bodyparts_myosim_registration_candidate,
@@ -689,6 +690,17 @@ def myosim_bodyparts_fullbody_soft_tissue_visual_payload(arguments: argparse.Nam
     return 0
 
 
+def myosim_bodyparts_skinned_shell_visual_payload(arguments: argparse.Namespace) -> int:
+    sources = arguments.sources.resolve()
+    anatomy = parse_bodyparts3d(sources, REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
+    manifest = bodyparts_myosim_skinned_shell_visual_payload(
+        sources, anatomy, arguments.registration.resolve(), arguments.output.resolve(),
+    )
+    print(f"wrote {arguments.output.resolve() / manifest['payload']['file']}")
+    print(f"wrote {arguments.output.resolve() / 'bodyparts3d-myosim-skinned-shell.manifest.json'}")
+    return 0
+
+
 def visual_layers(arguments: argparse.Namespace) -> int:
     sources = arguments.sources.resolve()
     anatomy = parse_bodyparts3d(sources, REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
@@ -806,6 +818,19 @@ def parser() -> argparse.ArgumentParser:
     myosim_fullbody_tissue_payload_parser.add_argument("--output", type=Path, required=True)
     myosim_fullbody_tissue_payload_parser.set_defaults(
         handler=myosim_bodyparts_fullbody_soft_tissue_visual_payload,
+    )
+    myosim_skinned_shell_payload_parser = commands.add_parser(
+        "myosim-bodyparts-skinned-shell-payload",
+        help="prepare the exact BodyParts3D exterior mesh with four registered articulated visual influences per vertex",
+    )
+    myosim_skinned_shell_payload_parser.add_argument("--sources", type=Path, required=True)
+    myosim_skinned_shell_payload_parser.add_argument(
+        "--registration", type=Path, required=True,
+        help="unmodified v2 candidate JSON from myosim-bodyparts-registration",
+    )
+    myosim_skinned_shell_payload_parser.add_argument("--output", type=Path, required=True)
+    myosim_skinned_shell_payload_parser.set_defaults(
+        handler=myosim_bodyparts_skinned_shell_visual_payload,
     )
     mortensen_neck_parser = commands.add_parser(
         "mortensen-neck",

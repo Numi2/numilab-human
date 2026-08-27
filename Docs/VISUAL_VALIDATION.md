@@ -1,4 +1,22 @@
-# Source-static visual validation
+# Visual validation
+
+## Current native articulated exterior-shell check — 2026-08-27
+
+The four-angle 2048 px [articulated exterior-shell capture](VISUAL_PROGRESS.md#muscle-driven-articulated-exterior-shell--2026-08-27)
+uses the exact BodyParts3D `FJ2810` skin mesh: 102,467 vertices and 203,382
+triangles. The offline source package derives four proximity-weighted,
+registration-compatible Core body influences per vertex across 86 body
+bindings, then verifies the registered rest-pose reconstruction to
+`1.0111756560930368e-15 m`. The runtime command starts no Python process:
+the final 157-body pose and all four Apple-M4 renders are native C++/Metal.
+
+The reviewed frame coverage is 351,252 / 306,694 / 218,852 / 369,374 skin
+pixels from front through rear, with no bone, muscle, or tendon proxy leaking
+through the opaque source shell. This makes the whole Human materially more
+legible than the prior exposed-only gallery. It does not establish physical
+skin deformation, material calibration, collision/contact geometry, or a
+clinical soft-tissue registration. The exposed tendon inspection remains the
+authority for tendon-to-bone visual continuity.
 
 ## Presentation correction — 2026-08-27
 

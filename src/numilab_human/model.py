@@ -3539,6 +3539,8 @@ _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_MAGIC = b"NHTISS2\0"
 _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_ABI = 3
 _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE = 1
 _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON = 2
+_BODYPARTS_MYOSIM_SKIN_VISUAL_MAGIC = b"NHSKIN1\0"
+_BODYPARTS_MYOSIM_SKIN_VISUAL_ABI = 1
 
 
 def _bodyparts_visual_registration_fingerprint(registration_file: Path) -> int:
@@ -4489,6 +4491,246 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         "evidence_boundary": "This source-authored surface package visually follows exact named articulated endpoint bodies. It does not make the source surface a force-transmitting continuum, add a tendon constitutive law, create collision/contact, or establish a medical registration.",
     }
     write_json(output / "bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json", manifest)
+    return manifest
+
+
+def _bodyparts_skin_bbox_distance_squared(
+    point: list[float], minimum: list[float], maximum: list[float],
+) -> float:
+    """Squared distance from a world-space point to an articulated bone AABB."""
+    return sum(
+        (minimum[axis] - point[axis]) ** 2 if point[axis] < minimum[axis]
+        else (point[axis] - maximum[axis]) ** 2 if point[axis] > maximum[axis]
+        else 0.0
+        for axis in range(3)
+    )
+
+
+def bodyparts_myosim_skinned_shell_visual_payload(
+    sources: Path, anatomy: dict[str, Any], registration_path: Path, output: Path,
+) -> dict[str, Any]:
+    """Prepare BodyParts3D's exterior shell for native multi-bone posing.
+
+    The source has one exact exterior mesh, while the registered skeleton has
+    many named source bones.  This offline importer assigns each source skin
+    vertex to its four nearest *registered articulated bone envelopes* in the
+    shared rest frame.  It records those source-to-body transforms separately
+    so the C++/Metal renderer can linearly blend the shell at the current
+    articulated pose without a Python process.  This is an improved visual
+    shell, deliberately not a claimed FEM skin, collision shell, or clinical
+    soft-tissue registration.
+    """
+    registration_file = registration_path.resolve()
+    registration = read_json(registration_file)
+    if registration.get("schema") != "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2" or \
+            registration.get("status") != "provisional_visual_registration_not_admitted_to_collision_or_physics":
+        raise ImportError("BodyParts3D skinned shell requires the unmodified v2 visual registration")
+    expected_bodyparts = {
+        "id": anatomy.get("source_id"), "version": anatomy.get("version"),
+        "archives": anatomy.get("archives"),
+    }
+    source = registration.get("source")
+    if not isinstance(source, dict) or source.get("bodyparts") != expected_bodyparts:
+        raise ImportError("BodyParts3D skinned shell registration does not match parsed source provenance")
+    myosim = source.get("myosim")
+    source_sha = myosim.get("source", {}).get("archive_sha256") if isinstance(myosim, dict) else None
+    if not isinstance(source_sha, str) or not re.fullmatch(r"[0-9a-f]{64}", source_sha):
+        raise ImportError("BodyParts3D skinned shell has no MyoSim source SHA-256")
+    coordinates = registration.get("coordinate_system")
+    global_matrix = coordinates.get("global_source_mm_to_myosim_world_m") if isinstance(coordinates, dict) else None
+    if not isinstance(global_matrix, list) or len(global_matrix) != 4:
+        raise ImportError("BodyParts3D skinned shell has no global rest-frame registration")
+    _bodyparts_visual_local_pose(global_matrix, "BodyParts3D skinned shell global transform")
+    anchors = registration.get("anchors")
+    if not isinstance(anchors, list) or len(anchors) != len(_BODYPARTS_MYOSIM_BONE_ANCHORS):
+        raise ImportError("BodyParts3D skinned shell has incomplete visual-skeleton anchors")
+
+    def world_point(vertex_mm: tuple[float, float, float]) -> list[float]:
+        return [
+            sum(global_matrix[row][column] * vertex_mm[column] for column in range(3)) +
+            global_matrix[row][3]
+            for row in range(3)
+        ]
+
+    bindings_by_body: dict[int, dict[str, Any]] = {}
+    for specification, anchor in zip(_BODYPARTS_MYOSIM_BONE_ANCHORS, anchors, strict=True):
+        if not isinstance(anchor, dict):
+            raise ImportError("BodyParts3D skinned shell has an invalid visual-skeleton anchor")
+        source_record, target, fitted = anchor.get("source"), anchor.get("target"), anchor.get("registration")
+        if not isinstance(source_record, dict) or not isinstance(target, dict) or not isinstance(fitted, dict):
+            raise ImportError("BodyParts3D skinned shell visual-skeleton anchor is incomplete")
+        if source_record.get("member_id") != specification["member_id"] or \
+                source_record.get("hierarchy") != specification["hierarchy"] or \
+                target.get("name") != specification["myosim_body"]:
+            raise ImportError("BodyParts3D skinned shell visual-skeleton anchor identity drifted")
+        body_index = target.get("core_body_index")
+        if not isinstance(body_index, int) or body_index < 0:
+            raise ImportError("BodyParts3D skinned shell anchor has an invalid Core body index")
+        translation, quaternion, scale = _bodyparts_visual_local_pose(
+            fitted.get("source_obj_mm_to_core_inertial_body_m"),
+            f"BodyParts3D skinned shell {specification['member_id']} local transform",
+        )
+        body_position = _myosim_vector(
+            target.get("default_com_position_world_m"),
+            f"BodyParts3D skinned shell {specification['member_id']} body position",
+        )
+        body_quaternion = list(target.get("default_inertial_quaternion_world_xyzw", []))
+        _myosim_matrix_from_quaternion_xyzw(body_quaternion)
+        record = bindings_by_body.get(body_index)
+        if record is None:
+            record = {
+                "body_index": body_index,
+                "translation": translation,
+                "quaternion": quaternion,
+                "scale": scale,
+                "rest_position": body_position,
+                "rest_quaternion": body_quaternion,
+                "minimum": [math.inf, math.inf, math.inf],
+                "maximum": [-math.inf, -math.inf, -math.inf],
+                "source_members": [],
+            }
+            bindings_by_body[body_index] = record
+        else:
+            values = (*translation, *quaternion, scale, *body_position, *body_quaternion)
+            existing = (*record["translation"], *record["quaternion"], record["scale"],
+                        *record["rest_position"], *record["rest_quaternion"])
+            if any(abs(float(current) - float(reference)) > 2.0e-5
+                   for current, reference in zip(values, existing, strict=True)):
+                raise ImportError("BodyParts3D skinned shell has inconsistent source-to-body transforms")
+        archive_path, member, obj = _bodyparts_obj_member(
+            sources, specification["hierarchy"], specification["member_id"],
+        )
+        if source_record.get("archive_sha256") != sha256(archive_path) or \
+                source_record.get("member") != member or \
+                source_record.get("member_sha256") != hashlib.sha256(obj).hexdigest():
+            raise ImportError("BodyParts3D skinned shell bone-envelope provenance drifted")
+        bone_vertices_mm, _ = _bodyparts_obj_triangles(obj, member)
+        for vertex in bone_vertices_mm:
+            point = world_point(vertex)
+            for axis in range(3):
+                record["minimum"][axis] = min(record["minimum"][axis], point[axis])
+                record["maximum"][axis] = max(record["maximum"][axis], point[axis])
+        record["source_members"].append(specification["member_id"])
+    if not bindings_by_body:
+        raise ImportError("BodyParts3D skinned shell has no registered bone envelopes")
+    bindings = [bindings_by_body[index] for index in sorted(bindings_by_body)]
+    for binding in bindings:
+        if not all(math.isfinite(value) for value in (*binding["minimum"], *binding["maximum"])) or \
+                any(binding["minimum"][axis] > binding["maximum"][axis] for axis in range(3)):
+            raise ImportError("BodyParts3D skinned shell has an empty registered bone envelope")
+
+    archive_path, member, obj = _bodyparts_obj_member(sources, "is_a", "FJ2810")
+    vertices_mm, triangles = _bodyparts_obj_triangles(obj, member)
+    normals = _bodyparts_vertex_normals(vertices_mm, triangles, member)
+    source_skin_sha = hashlib.sha256(obj).hexdigest()
+    vertex_payload: list[bytes] = []
+    maximum_rest_error_m = 0.0
+    influence_histogram: Counter[tuple[int, int, int, int]] = Counter()
+    for vertex, normal in zip(vertices_mm, normals, strict=True):
+        position_m = [coordinate * 0.001 for coordinate in vertex]
+        world = world_point(vertex)
+        candidates = sorted(
+            (
+                _bodyparts_skin_bbox_distance_squared(world, binding["minimum"], binding["maximum"]),
+                binding_index,
+            )
+            for binding_index, binding in enumerate(bindings)
+        )[:4]
+        if len(candidates) != 4:
+            raise ImportError("BodyParts3D skinned shell has fewer than four bone bindings")
+        unnormalized = [1.0 / (0.0125 + math.sqrt(distance_squared)) ** 2
+                        for distance_squared, _ in candidates]
+        normalizer = sum(unnormalized)
+        if not math.isfinite(normalizer) or normalizer <= 0.0:
+            raise ImportError("BodyParts3D skinned shell has invalid envelope weights")
+        weights = [weight / normalizer for weight in unnormalized]
+        if not all(math.isfinite(weight) and 0.0 < weight <= 1.0 for weight in weights):
+            raise ImportError("BodyParts3D skinned shell has non-finite blend weights")
+        reconstructed = [0.0, 0.0, 0.0]
+        for weight, (_, binding_index) in zip(weights, candidates, strict=True):
+            binding = bindings[binding_index]
+            local_rotation = _myosim_matrix_from_quaternion_xyzw(binding["quaternion"])
+            body_rotation = _myosim_matrix_from_quaternion_xyzw(binding["rest_quaternion"])
+            local = [
+                binding["translation"][axis] + binding["scale"] *
+                _myosim_matrix_vector(local_rotation, position_m)[axis]
+                for axis in range(3)
+            ]
+            posed = [
+                binding["rest_position"][axis] + _myosim_matrix_vector(body_rotation, local)[axis]
+                for axis in range(3)
+            ]
+            for axis in range(3):
+                reconstructed[axis] += weight * posed[axis]
+        maximum_rest_error_m = max(
+            maximum_rest_error_m,
+            math.sqrt(sum((reconstructed[axis] - world[axis]) ** 2 for axis in range(3))),
+        )
+        indices = [binding_index for _, binding_index in candidates]
+        vertex_payload.append(struct.pack(
+            "<6f4I4f", *position_m, *normal, *indices, *weights,
+        ))
+        influence_histogram[tuple(indices)] += 1
+    if maximum_rest_error_m > 2.0e-5:
+        raise ImportError("BodyParts3D skinned shell does not reconstruct its registered rest pose")
+    index_payload = [index for triangle in triangles for index in triangle]
+    if len(bindings) > 0xFFFFFFFF or len(vertex_payload) > 0xFFFFFFFF or len(index_payload) > 0xFFFFFFFF:
+        raise ImportError("BodyParts3D skinned shell exceeds the uint32 native renderer capacity")
+    registration_fingerprint = _bodyparts_visual_registration_fingerprint(registration_file)
+    payload = b"".join([
+        struct.pack(
+            "<8s5I32s", _BODYPARTS_MYOSIM_SKIN_VISUAL_MAGIC,
+            _BODYPARTS_MYOSIM_SKIN_VISUAL_ABI, len(bindings), len(vertex_payload),
+            len(index_payload), registration_fingerprint, bytes.fromhex(source_sha),
+        ),
+        *[
+            struct.pack("<I8f", binding["body_index"], *binding["translation"],
+                        *binding["quaternion"], binding["scale"])
+            for binding in bindings
+        ],
+        *vertex_payload,
+        struct.pack(f"<{len(index_payload)}I", *index_payload),
+    ])
+    output = output.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    payload_path = output / "bodyparts3d-myosim-skinned-shell.nhskin"
+    payload_path.write_bytes(payload)
+    manifest = {
+        "schema": "numi.human.bodyparts3d-myosim-skinned-shell-visual-payload.v1",
+        "payload": {
+            "file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
+            "magic": _BODYPARTS_MYOSIM_SKIN_VISUAL_MAGIC.rstrip(b"\0").decode("ascii"),
+            "payload_abi": _BODYPARTS_MYOSIM_SKIN_VISUAL_ABI,
+            "registration_fingerprint32": f"{registration_fingerprint:08x}",
+            "binding_count": len(bindings), "vertex_count": len(vertices_mm),
+            "triangle_count": len(triangles), "index_count": len(index_payload),
+        },
+        "source": {
+            "registration": {"file": registration_file.name, "sha256": sha256(registration_file)},
+            "bodyparts": expected_bodyparts, "myosim_source_archive_sha256": source_sha,
+            "skin": {
+                "member_id": "FJ2810", "member": member, "archive": archive_path.name,
+                "archive_sha256": sha256(archive_path), "member_sha256": source_skin_sha,
+            },
+            "registered_bone_envelopes": [
+                {
+                    "core_body_index": binding["body_index"],
+                    "source_members": binding["source_members"],
+                    "minimum_world_m": binding["minimum"], "maximum_world_m": binding["maximum"],
+                }
+                for binding in bindings
+            ],
+        },
+        "coverage": {
+            "influences_per_vertex": 4,
+            "distinct_influence_quartets": len(influence_histogram),
+            "rest_pose_reconstruction_max_error_m": maximum_rest_error_m,
+        },
+        "runtime_binding": "exact BodyParts3D skin triangles use four registered articulated bone envelopes with deterministic inverse-distance blend weights; each influence carries its source-to-Core local transform for native C++/Metal posing",
+        "status": "native_four_body_linear_blend_skin_shell_visual_input_not_collision_or_physics",
+        "evidence_boundary": "This is a proximity-derived articulated visual shell, not FEM/MPM skin, a tissue material law, collision/contact geometry, clinical registration, or a force-coupled soft-tissue model.",
+    }
+    write_json(output / "bodyparts3d-myosim-skinned-shell.manifest.json", manifest)
     return manifest
 
 

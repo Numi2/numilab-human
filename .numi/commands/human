@@ -818,6 +818,94 @@ if [ "${1:-}" = "myosim-native-supported-fullbody-muscle-visuals" ]; then
     exec "$@"
 fi
 
+# Exterior counterpart to the exposed-anatomy inspection.  The exact
+# BodyParts3D shell is posed by four registered articulated bone influences per
+# vertex after all 416 source muscle routes run on Metal.  It deliberately
+# does not start Python at runtime; the shell payload is an offline import
+# artifact and Core's present full-body contact boundary remains explicit.
+if [ "${1:-}" = "myosim-native-supported-skinned-fullbody-visuals" ]; then
+    if [ "$#" -lt 5 ] || [ $(( ($# - 5) % 2 )) -ne 0 ]; then
+        printf '%s\n' "usage: numi human myosim-native-supported-skinned-fullbody-visuals <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <bodyparts3d-myosim-skinned-shell.nhskin> <output-directory> [--muscle-step-seconds <1e-6..1e-3>] [--muscle-step-count <1..64>] [--muscle-activation <0..1>] [--dimension <512..2048; multiple-of-64>]" >&2
+        exit 2
+    fi
+    artifact_directory=$2
+    bone_payload=$3
+    skin_payload=$4
+    output_directory=$5
+    shift 5
+    muscle_step_seconds=0.0001
+    muscle_step_count=32
+    muscle_activation=0.05
+    frame_dimension=
+    saw_muscle_step=0
+    saw_muscle_step_count=0
+    saw_muscle_activation=0
+    saw_dimension=0
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --muscle-step-seconds)
+                if [ "$saw_muscle_step" -ne 0 ]; then
+                    printf '%s\n' "--muscle-step-seconds may be given only once" >&2
+                    exit 2
+                fi
+                muscle_step_seconds=$2
+                saw_muscle_step=1
+                ;;
+            --muscle-step-count)
+                if [ "$saw_muscle_step_count" -ne 0 ]; then
+                    printf '%s\n' "--muscle-step-count may be given only once" >&2
+                    exit 2
+                fi
+                muscle_step_count=$2
+                saw_muscle_step_count=1
+                ;;
+            --muscle-activation)
+                if [ "$saw_muscle_activation" -ne 0 ]; then
+                    printf '%s\n' "--muscle-activation may be given only once" >&2
+                    exit 2
+                fi
+                muscle_activation=$2
+                saw_muscle_activation=1
+                ;;
+            --dimension)
+                if [ "$saw_dimension" -ne 0 ]; then
+                    printf '%s\n' "--dimension may be given only once" >&2
+                    exit 2
+                fi
+                frame_dimension=$2
+                saw_dimension=1
+                ;;
+            *)
+                printf '%s\n' "unknown native supported-skinned-fullbody visual option $1" >&2
+                exit 2
+                ;;
+        esac
+        shift 2
+    done
+    runtime_root=${NUMI_LAB_ROOT:-/Users/home/Documents/emergentnumilife/MetalRobo}
+    build_directory=${NUMI_BUILD_DIR:-$runtime_root/build}
+    probe=$build_directory/bin/metalrobo_numilab_human_myosim_visual_probe
+    if [ ! -x "$probe" ]; then
+        printf '%s\n' "native Human visual probe is unavailable: $probe" >&2
+        printf '%s\n' "build target metalrobo_numilab_human_myosim_visual_probe in $runtime_root" >&2
+        exit 2
+    fi
+    set -- "$probe" \
+        "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
+        "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
+        "$bone_payload" \
+        "$output_directory" \
+        --skin-payload "$skin_payload" \
+        --support-contact-payload "$artifact_directory/myosim-fullbody-support-contact.nhcnt" \
+        --muscle-step-seconds "$muscle_step_seconds" \
+        --muscle-step-count "$muscle_step_count" \
+        --muscle-activation "$muscle_activation"
+    if [ -n "$frame_dimension" ]; then
+        set -- "$@" --dimension "$frame_dimension"
+    fi
+    exec "$@"
+fi
+
 if [ -n "${PYTHONPATH:-}" ]; then
     export PYTHONPATH="$repository_root/src:$PYTHONPATH"
 else
