@@ -221,7 +221,7 @@ $NUMI_LAB_ROOT/build/bin/metalrobo_visual_cook \
 $NUMI_LAB_ROOT/build/bin/metalrobo_bodyparts3d_visual_probe \
   Build/bodyparts3d-right-lower-leg-anatomy/bodyparts3d-right-lower-leg-anatomy-source-static.mrvpack \
   Build/bodyparts3d-right-lower-leg-anatomy/native-views \
-  --dimension 1024 --tight-frame
+  --dimension 1024 --focus-lower-third
 ```
 
 The bundle contains exact right femur/patella/tibia/fibula/talus/calcaneus,

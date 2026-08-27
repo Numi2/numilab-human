@@ -103,7 +103,9 @@ numi human myosim-native-route-inspection \
 
 # Export a separate exact BodyParts3D rest-frame reference for the right lower
 # leg. It contains source bone, muscle, and calcaneal-tendon surfaces and is
-# intentionally not claimed as an articulated or physical attachment.
+# intentionally not claimed as an articulated or physical attachment. Render
+# it with `metalrobo_bodyparts3d_visual_probe --dimension 1024
+# --focus-lower-third` for a useful muscle/tendon inspection scale.
 numi human right-lower-leg-anatomy-preview \
   --sources Sources \
   --output Build/bodyparts3d-right-lower-leg-anatomy
