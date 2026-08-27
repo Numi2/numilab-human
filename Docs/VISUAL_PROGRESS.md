@@ -75,6 +75,22 @@ contact. This validation does not claim a persistent device-only full-body
 integrator, tendon continuum, deformable soft tissue, gait, or clinical
 anatomy.
 
+### Current bounded visual-runtime path — 2026-08-27
+
+The current native visual executable no longer projects 416 muscle paths in a
+host loop. For each bounded muscle-driven step it submits both the requested
+and zero-activation MyoSim sidecars to retained Apple-Metal contexts, consumes
+their returned 128-DoF force vectors, and passes only the baseline-subtracted
+force to the current Core FP64 state step. A local M4 four-angle 512 px,
+two-step smoke completed four Metal force transactions and 832 active-muscle
+records before producing every renderer frame.
+
+This changes the live capture path, not the provenance of media already
+published above. Those 2048 images retain their original transcripts and must
+be recaptured before they can evidence the new Metal-force visual path. The
+remaining state integration and support contact are still Core FP64; no tendon
+continuum, deformable anatomy, or device-only Human rollout is claimed.
+
 ## Focused right upper-limb actuation — 2026-08-27
 
 <p align="center">

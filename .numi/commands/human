@@ -102,9 +102,10 @@ if [ "${1:-}" = "myosim-native-bone-visuals" ]; then
 fi
 
 # This is intentionally a bounded sensitivity capture rather than a simulation
-# loop: the complete source muscle set is projected in Core FP64, compared
-# against the matched passive free-body step, then the resulting one-step q is
-# posed and rendered by the native Metal path.  Python is never started.
+# loop: the complete source muscle set is projected by the retained Metal
+# articulated operator, compared against a matched device passive baseline,
+# then Core FP64 advances the currently unsupported full-body state step and
+# the native Metal path poses/renders that q. Python is never started.
 if [ "${1:-}" = "myosim-native-muscle-bone-visuals" ]; then
     if [ "$#" -lt 4 ] || [ $(( ($# - 4) % 2 )) -ne 0 ]; then
         printf '%s\n' "usage: numi human myosim-native-muscle-bone-visuals <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <output-directory> [--muscle-step-seconds <1e-6..1e-3>] [--dimension <512..2048; multiple-of-64>]" >&2

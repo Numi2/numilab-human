@@ -25,6 +25,29 @@ It does not establish a persistent device-only Human state loop, 128-DoF
 device forward dynamics, contact, tendon continuum, skin/organ deformation,
 gait, or clinical validity.
 
+## MyoSim visual updates consume Metal full-body force projection — 2026-08-27
+
+Core revision `1205eb8e06885f013c8065cd489206a85947b964` moves the bounded
+native Human visual-update force stage onto the retained articulated Metal
+operator. At each visual step it packs the 1,815 source sites, 143 wraps, 416
+MuJoCo muscle programs, and four spatial-Jacobian probes for each of the 157
+bodies. It evaluates both the requested activation state and the zero-state
+passive baseline on Metal, subtracts their returned 128-DoF force vectors, and
+only then asks Core FP64 for the present full-body state update. The activation
+sidecar is returned and carried to the next active Metal transaction.
+
+The local Apple M4 four-angle 512 px smoke used two `100 µs` steps at `0.05`
+activation. It completed four Metal force transactions, 832 active muscle
+records, and four successful renderer frames. The output reports
+`muscle_force_metal_device="Apple M4"` and preserves the explicit boundary:
+full-body force and activation evaluation are on Metal, while the 157-body
+forward-dynamics and contact solve remain Core FP64.
+
+This is a native runtime-path check, not a throughput benchmark or a new
+published anatomy gallery. Existing 2048 BodyParts3D images retain the
+transcripts and runtime paths with which they were captured; they must be
+recaptured before being presented as evidence for this newer force path.
+
 ## MyoSim full-body native muscle reference — 2026-08-27
 
 Core revision `b2d449001898f40eecbdede15938c764c304f330` loads the active

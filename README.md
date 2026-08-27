@@ -268,6 +268,14 @@ currently returned with the operator result; it is not yet a persistent
 device-only full-body rollout. Dense 128-DoF device mass dynamics, contact,
 skin/organ solvers, and clinical qualification remain separate work.
 
+The bounded `--muscle-step-*` visual path now consumes that same retained
+Metal force transaction for both the active and zero-activation baseline at
+each step. Core FP64 still receives only the two returned 128-DoF force
+vectors to advance the current full-body state; the final pose and all camera
+renders remain native Metal. This removes the former host loop that projected
+416 individual muscle paths during a visual update, without overstating the
+remaining dynamics/contact boundary.
+
 The same native reference also compares one unconstrained 1 µs FP64 state step
 with the complete 416-muscle generalized force against the identical passive
 state. The active route force changes velocity by `0.0714839058782` and
