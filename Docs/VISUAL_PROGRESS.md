@@ -1,5 +1,27 @@
 # NumiLab Human visual progress
 
+## Native exterior shell — rest-pose quality review — 2026-08-27
+
+<p align="center">
+  <img src="media/bodyparts3d-native-rest-shell-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-front.png" width="24%" alt="Native exterior, front" />
+  <img src="media/bodyparts3d-native-rest-shell-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-oblique.png" width="24%" alt="Native exterior, oblique" />
+  <img src="media/bodyparts3d-native-rest-shell-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-side.png" width="24%" alt="Native exterior, side" />
+  <img src="media/bodyparts3d-native-rest-shell-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-rear.png" width="24%" alt="Native exterior, rear" />
+</p>
+
+The clean presentation reference is the exact 102,467-vertex, 203,382-triangle
+BodyParts3D exterior at the registered source rest pose, rendered natively on
+Apple M4 at 2048 px. All four views have nonzero shell coverage: 485,889 /
+425,643 / 307,044 / 516,748 pixels. The [capture record](media/bodyparts3d-native-rest-shell-2048/capture.transcript.txt)
+records the frame hashes and native devices.
+
+The former long free-dynamics shell capture is retained only as an engineering
+artifact. Its proximity-derived four-bone weights visibly fold on a dynamic
+pose, so it is not current showcase material. The active anatomy evidence is
+the exposed source-muscle and tendon review; a dynamic exterior returns only
+after anatomical skin weights or a deformable skin solve. This rest-pose
+review is not skin mechanics, collision, or clinical registration.
+
 ## Shared three-body Achilles review — 2026-08-27
 
 <p align="center">
@@ -53,7 +75,7 @@ pose, plus visual-only nearest-surface endpoint cues. It is not a collagen
 mesh, tendon material, tendon-to-bone force-transfer law, deformation result,
 stable gait, or clinical attachment validation.
 
-## Muscle-driven articulated exterior shell — 2026-08-27
+## Retired multi-step articulated exterior shell — 2026-08-27
 
 <p align="center">
   <img src="media/myosim-native-skinned-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-front.png" width="24%" alt="Muscle-driven articulated Human exterior, front" />
@@ -62,7 +84,8 @@ stable gait, or clinical attachment validation.
   <img src="media/myosim-native-skinned-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-rear.png" width="24%" alt="Muscle-driven articulated Human exterior, rear" />
 </p>
 
-This is the current whole-human presentation: the exact 102,467-vertex,
+This is a retained engineering artifact, not the current whole-human
+presentation: the exact 102,467-vertex,
 203,382-triangle BodyParts3D exterior mesh is posed natively after the
 all-416-muscle force update. Each vertex carries four registered Core body
 influences selected from 86 bone envelopes. The offline source import
@@ -78,10 +101,12 @@ full-tree contact was correctly not admitted to the installed Metal bucket and
 Core FP64 owns that bounded exact-cone fallback. The exact [capture record](media/myosim-native-skinned-fullbody-metal-force-2048/capture.transcript.txt)
 retains parameters and output identities.
 
-This is an articulated visual shell, not FEM/MPM skin, a skin material law,
-collision geometry, general contact, gait, or clinical-registration evidence.
-The separate exposed-anatomy and tendon views below remain the source surface
-evidence; an opaque shell is never used to imply tendon continuity.
+Its source-proximity weights visibly fold under this long unconstrained update,
+so this gallery is retired from presentation. It remains an articulated visual
+shell, not FEM/MPM skin, a skin material law, collision geometry, general
+contact, gait, or clinical-registration evidence. The separate exposed-anatomy
+and tendon views remain the source surface evidence; an opaque shell is never
+used to imply tendon continuity.
 
 ## Exposed ground-supported full-body all-muscle Metal force inspection — 2026-08-27
 

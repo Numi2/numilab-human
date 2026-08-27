@@ -58,9 +58,9 @@ the final pose, not a replacement tendon mesh or a physical attachment result.
 The [capture record](media/myosim-native-selective-calf-route-attachment-2048/capture.transcript.txt)
 contains the parameters, device counters, and exact images.
 
-## Current native articulated exterior-shell check — 2026-08-27
+## Current native exterior-shell quality check — 2026-08-27
 
-The four-angle 2048 px [articulated exterior-shell capture](VISUAL_PROGRESS.md#muscle-driven-articulated-exterior-shell--2026-08-27)
+The four-angle 2048 px [rest-pose exterior-shell capture](VISUAL_PROGRESS.md#native-exterior-shell--rest-pose-quality-review--2026-08-27)
 uses the exact BodyParts3D `FJ2810` skin mesh: 102,467 vertices and 203,382
 triangles. The offline source package derives four proximity-weighted,
 registration-compatible Core body influences per vertex across 86 body
@@ -68,13 +68,15 @@ bindings, then verifies the registered rest-pose reconstruction to
 `1.0111756560930368e-15 m`. The runtime command starts no Python process:
 the final 157-body pose and all four Apple-M4 renders are native C++/Metal.
 
-The reviewed frame coverage is 485,845 / 426,364 / 308,186 / 516,832 skin
+The reviewed frame coverage is 485,889 / 425,643 / 307,044 / 516,748 skin
 pixels from front through rear, with no bone, muscle, or tendon proxy leaking
-through the opaque source shell. This makes the whole Human materially more
-legible than the prior exposed-only gallery. It does not establish physical
-skin deformation, material calibration, collision/contact geometry, or a
-clinical soft-tissue registration. The exposed tendon inspection remains the
-authority for tendon-to-bone visual continuity.
+through the opaque source shell. A longer free-dynamics capture exposed visible
+proximity-skin folds, so it is deliberately retired from presentation instead
+of being promoted as a realistic moving exterior. This establishes only a
+clean native rest-pose visual reference; it does not establish physical skin
+deformation, material calibration, collision/contact geometry, or a clinical
+soft-tissue registration. The exposed tendon inspection remains the authority
+for tendon-to-bone visual continuity.
 
 ## Current driven tendon-junction check — 2026-08-27
 

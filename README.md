@@ -27,19 +27,21 @@ posing, while the separate muscle/tendon views remain visible evidence rather
 than being hidden behind a cosmetic shell. See [visual progress](Docs/VISUAL_PROGRESS.md)
 for the evidence boundary.
 
-### Muscle-driven articulated exterior shell
+### Native exterior shell — rest-pose quality reference
 
 <p align="center">
-  <img src="Docs/media/myosim-native-skinned-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-front.png" width="49%" alt="Muscle-driven BodyParts3D skinned Human, front" />
-  <img src="Docs/media/myosim-native-skinned-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-muscle-driven-source-support-contact-rear.png" width="49%" alt="Muscle-driven BodyParts3D skinned Human, rear" />
+  <img src="Docs/media/bodyparts3d-native-rest-shell-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-front.png" width="49%" alt="BodyParts3D native exterior shell, front" />
+  <img src="Docs/media/bodyparts3d-native-rest-shell-2048/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-rear.png" width="49%" alt="BodyParts3D native exterior shell, rear" />
 </p>
 
-This Apple-M4 2K capture poses the exact 102,467-vertex BodyParts3D exterior
-mesh after 32 bounded all-416-muscle updates. Each shell vertex blends four
-registered Core bone envelopes, reconstructing the registered rest pose to
-`1.01e-15 m` before any runtime render. The shell is an articulated visual
-layer, not an FEM/MPM skin, collision shell, tissue-material model, or
-clinical-registration claim.
+This Apple-M4 2K review is the exact 102,467-vertex BodyParts3D exterior at
+the registered source rest pose. The current four-bone proximity shell is
+clean at rest but can visibly fold during a long unconstrained muscle update,
+so that older dynamic shell gallery is no longer showcase material. Muscle
+drive is evidenced with exposed bones, source muscle surfaces, exact routes,
+and the attachment review below until the exterior has anatomical skin weights
+or a deformable skin solve. The shell is not an FEM/MPM skin, collision shell,
+tissue-material model, or clinical-registration claim.
 
 ### Shared-tendon, source-body attachment review
 
