@@ -38,7 +38,9 @@ MyoSim source composition (offline)
  C++ Core: kinematics -> spatial tendon routes -> muscle force -> J^T scatter
               |
               v
-             forward dynamics
+             forward dynamics (FP64 reference)
+              |
+              +--> Metal: full-body poses + analytic point Jacobians
 ```
 
 The native probe at Core `b2d4490` passed with:
@@ -58,6 +60,31 @@ Run that exact native path without a Python process:
 ```sh
 numi human myosim-native-probe Build/myosim-fullbody
 ```
+
+## Apple-GPU full-body mechanics progress
+
+The same fixed source pose is now checked through the native Metal
+kinematics/Jacobian route:
+
+```sh
+numi human myosim-native-probe Build/myosim-fullbody --metal
+```
+
+On the local Apple M4, this dispatched one 157-body / 128-DoF Human and
+compared all body poses plus one nonzero point query per body against Core.
+
+| GPU parity property | Measured maximum error |
+| --- | --- |
+| Body position | `6.3206736356e-07 m` |
+| Body orientation component | `1.42935285885e-07` |
+| Point position | `6.54161804947e-07 m` |
+| Analytic point Jacobian | `7.34255547086e-07` |
+
+This is actual Apple-GPU articulated execution, not a compile-only claim. The
+kinematics-only route admits up to 192 bodies and 160 DoF because it does not
+reserve the dense mass-factor scratch space. The 128-DoF dense mass solve and
+the MyoSim route-force/forward-dynamics stages remain the CPU reference owner;
+no Metal muscle-force rollout, contact, or locomotion is claimed here.
 
 ## Remaining visual/mechanical steps
 

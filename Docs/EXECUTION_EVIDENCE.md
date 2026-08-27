@@ -18,6 +18,25 @@ active muscle route evaluation. It does **not** prove Metal execution,
 device-resident rollout performance, contact, walking, BodyParts3D
 registration, deformable tissue, or a clinical outcome.
 
+## MyoSim full-body Apple-GPU kinematics/Jacobian parity — 2026-08-27
+
+The current Core full-body probe reran the same `NHRIGID2` payload with
+`--metal` on the local **Apple M4**. The device dispatched the full 157-body /
+128-DoF tree in kinematics/Jacobian-only mode, including the 54 exact
+zero-inertia serial-joint transform carriers. One nonzero point query per body
+was evaluated against the Core FP64 oracle. Maximum body position,
+orientation-component, point-position, and analytic-Jacobian errors were
+`6.3206736356e-07 m`, `1.42935285885e-07`, `6.54161804947e-07 m`, and
+`7.34255547086e-07`, respectively. The probe reported
+`metal_stage=kinematics_jacobians` and `metal_device="Apple M4"`.
+
+The larger query capacity is deliberately kinematics-only: it avoids the
+threadgroup `128 × 128` dense mass factor and is bounded at 192 bodies / 160
+DoF. It is hardware execution evidence for the full-body pose/Jacobian owner
+stream, but **not** evidence of device-resident MyoSim muscle-route forces,
+dense forward dynamics, contact, rollout throughput, BodyParts3D registration,
+deformable tissue, walking, or clinical validity.
+
 ## Source-default mobile-root FunctionBased contact and Millard-task gate — 2026-08-26
 
 Core revision `730aba49546f7708b85dd14f522799b19a757747` exposes `reduceFixedFunctionBasedRootToMobileDefaultPose` for the physical mobile root used by the bounded FunctionBased dense-dynamics and streamed-contact-response kernels. The reducer removes the persisted synthetic ground anchor, promotes the source pelvis to a 7-configuration/6-velocity root, returns canonical source body/joint index maps, and retains the remaining nine immutable FunctionBased programs. It requires the exact stationary source default and rejects actuator profiles, geometry, constraints, and moving roots rather than silently reinterpreting them. CPU default-pose continuity is `0` position and orientation error at printed precision. This is deliberately not an equivalence claim for arbitrary OpenSim `ground_pelvis` Euler-coordinate perturbations.

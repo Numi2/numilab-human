@@ -40,15 +40,18 @@ After a local artifact has been acquired and compiled, the production-facing
 reference needs only the Apple-native Numi Core executable:
 
 ```sh
-# No Python process is started by this command.
-numi human myosim-native-probe Build/myosim-fullbody
+# No Python process is started by this command. `--metal` additionally
+# executes the full articulated pose/Jacobian pass on the Apple GPU.
+numi human myosim-native-probe Build/myosim-fullbody --metal
 ```
 
 This loads the `NHRIGID2` and `NHMYO1` payloads directly into Core, validates
 the 128-DoF floating articulated tree, evaluates every muscle route, applies
-the resulting generalized force, and executes forward dynamics. The native
-reference is intentionally a source-complete CPU owner path today; it is not a
-Metal rollout, skin/organ solver, contact qualification, or clinical model.
+the resulting generalized force, and executes forward dynamics. With `--metal`,
+the same full-body pose and analytic point-Jacobian stream also executes on
+Apple GPU and is compared against the Core oracle. Dense 128-DoF mass dynamics,
+the MuJoCo-source muscle route pass, contact, skin/organ solvers, and clinical
+qualification remain separate work; this is not a full Metal rollout.
 
 ## Offline source import
 

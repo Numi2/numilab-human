@@ -15,15 +15,18 @@ numi human myosim-build \
   --python /path/to/source-only-myosim-python \
   --output Build/myosim-fullbody
 
-# Native Numi Core execution: NHRIGID2 + NHMYO1 -> muscle force -> dynamics.
-numi human myosim-native-probe Build/myosim-fullbody
+# Native Numi Core execution plus Apple-GPU full-body pose/Jacobian parity.
+numi human myosim-native-probe Build/myosim-fullbody --metal
 ```
 
 The native probe validates 416 full-body muscle-tendon elements and their
-source route geometry at the source default pose. It is a CPU reference owner
-path, not a Metal rollout. The selected Mortensen 2018 neck source is imported
-separately with `numi human mortensen-neck`; do not attach its 72 muscles to
-the active MyoSim body before an explicit rest-pose registration. See
+source route geometry at the source default pose. `--metal` additionally
+validates the entire 157-body / 128-DoF pose and analytic point-Jacobian stream
+on Apple GPU against Core. Its route force and dense forward-dynamics stages
+remain CPU-reference execution, not a Metal rollout. The selected Mortensen
+2018 neck source is imported separately with `numi human mortensen-neck`; do
+not attach its 72 muscles to the active MyoSim body before an explicit
+rest-pose registration. See
 [visual progress](VISUAL_PROGRESS.md) for the inspected full-body views and
 [architecture](ARCHITECTURE.md) for runtime ownership.
 

@@ -72,12 +72,17 @@ activation/force equations and sphere/cylinder spatial tendon routes, scatters
 `F * d(length)/d(v)` through Core point Jacobians, and drives the same native
 forward-dynamics owner.
 
-`numi human myosim-native-probe Build/myosim-fullbody` executes that path by
-directly launching the C++ Core binary. No Python process, interpreter-owned
-physics, or per-step host loop exists after the payload has been created. This
-is deliberately a CPU reference owner path today; a device-resident Metal
-extension must preserve the same payload ABI and oracle before it replaces or
-claims equivalence to this path.
+`numi human myosim-native-probe Build/myosim-fullbody --metal` executes that
+path by directly launching the C++ Core binary, then dispatches the same full
+body's pose and analytic point-Jacobian stream to Metal. On the local Apple M4,
+the 157-body / 128-DoF source tree passed CPU/GPU parity with maximum body
+position, orientation-component, point-position, and point-Jacobian errors of
+`6.32e-07 m`, `1.43e-07`, `6.54e-07 m`, and `7.35e-07`. No Python process,
+interpreter-owned physics, or per-step host loop exists after the payload has
+been created. The dense 128-DoF mass factor and the MuJoCo-source muscle route
+force pass remain Core CPU reference stages today; this hardware parity does
+not claim a device-resident muscle-force rollout or equivalence beyond the
+kinematics/Jacobian owner stream.
 
 `numi.human.v1` remains an owner-neutral intermediate artifact, but Core
 revision `730aba4` now executes the bounded Rajagopal mechanics path: the

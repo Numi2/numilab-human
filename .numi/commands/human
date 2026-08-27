@@ -14,8 +14,12 @@ repository_root=$(CDPATH= cd -- "$command_directory/../.." && pwd -P)
 # below, where MyoSim itself owns model composition.  Keeping this command
 # native prevents the source convenience layer becoming a Numi runtime.
 if [ "${1:-}" = "myosim-native-probe" ]; then
-    if [ "$#" -ne 2 ]; then
-        printf '%s\n' "usage: numi human myosim-native-probe <artifact-directory>" >&2
+    if [ "$#" -ne 2 ] && [ "$#" -ne 3 ]; then
+        printf '%s\n' "usage: numi human myosim-native-probe <artifact-directory> [--metal]" >&2
+        exit 2
+    fi
+    if [ "$#" -eq 3 ] && [ "$3" != "--metal" ]; then
+        printf '%s\n' "usage: numi human myosim-native-probe <artifact-directory> [--metal]" >&2
         exit 2
     fi
     artifact_directory=$2
@@ -26,6 +30,12 @@ if [ "${1:-}" = "myosim-native-probe" ]; then
         printf '%s\n' "native Human probe is unavailable: $probe" >&2
         printf '%s\n' "build target metalrobo_numilab_human_myosim_reference_probe in $runtime_root" >&2
         exit 2
+    fi
+    if [ "$#" -eq 3 ]; then
+        exec "$probe" \
+            "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
+            "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
+            --metal
     fi
     exec "$probe" \
         "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
