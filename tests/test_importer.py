@@ -444,6 +444,24 @@ class ImporterTests(unittest.TestCase):
             "[--dimension <512..2048; multiple-of-64>]\n",
         )
 
+    def test_numi_workspace_fullbody_soft_tissue_visual_command_rejects_missing_paths_before_python(self) -> None:
+        command = ROOT / ".numi/commands/human"
+        result = run(
+            [command, "myosim-native-fullbody-soft-tissue-visuals"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(result.stdout, "")
+        self.assertEqual(
+            result.stderr,
+            "usage: numi human myosim-native-fullbody-soft-tissue-visuals "
+            "<artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> "
+            "<bodyparts3d-myosim-soft-tissue.nhtissue> <output-directory> "
+            "[--dimension <512..2048; multiple-of-64>]\n",
+        )
+
     def test_numi_workspace_supported_muscle_surface_command_rejects_missing_paths_before_python(self) -> None:
         command = ROOT / ".numi/commands/human"
         result = run(

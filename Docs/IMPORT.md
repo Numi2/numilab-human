@@ -100,12 +100,12 @@ numi human myosim-bodyparts-fullbody-muscle-surface-payload \
   --registration Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json \
   --artifact Build/myosim-fullbody \
   --output Build/bodyparts3d-myosim-fullbody-muscle-surfaces
-numi human myosim-native-soft-tissue-visuals \
+numi human myosim-native-fullbody-soft-tissue-visuals \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
   Build/bodyparts3d-myosim-fullbody-muscle-surfaces/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue \
   Build/bodyparts3d-myosim-fullbody-muscle-surfaces/native-views \
-  128 --dimension 2048
+  --dimension 2048
 
 # Native bounded force-to-pose capture: Core FP64 projects all 416 source
 # muscles, integrates one free-body sensitivity step, and Metal renders only

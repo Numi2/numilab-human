@@ -234,6 +234,44 @@ if [ "${1:-}" = "myosim-native-route-inspection" ]; then
     exec "$@"
 fi
 
+# Whole-body source-anatomy capture. Unlike the focused soft-tissue command
+# below, this does not select one link: Core frames the native cameras from
+# the exact rendered BodyParts3D geometry bounds so head, hands, and feet are
+# present in every review angle. No Python runtime is started.
+if [ "${1:-}" = "myosim-native-fullbody-soft-tissue-visuals" ]; then
+    if [ "$#" -ne 5 ] && { [ "$#" -ne 7 ] || [ "$6" != "--dimension" ]; }; then
+        printf '%s\n' "usage: numi human myosim-native-fullbody-soft-tissue-visuals <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <bodyparts3d-myosim-soft-tissue.nhtissue> <output-directory> [--dimension <512..2048; multiple-of-64>]" >&2
+        exit 2
+    fi
+    artifact_directory=$2
+    bone_payload=$3
+    soft_tissue_payload=$4
+    output_directory=$5
+    runtime_root=${NUMI_LAB_ROOT:-/Users/home/Documents/emergentnumilife/MetalRobo}
+    build_directory=${NUMI_BUILD_DIR:-$runtime_root/build}
+    probe=$build_directory/bin/metalrobo_numilab_human_myosim_visual_probe
+    if [ ! -x "$probe" ]; then
+        printf '%s\n' "native Human visual probe is unavailable: $probe" >&2
+        printf '%s\n' "build target metalrobo_numilab_human_myosim_visual_probe in $runtime_root" >&2
+        exit 2
+    fi
+    if [ "$#" -eq 7 ]; then
+        exec "$probe" \
+            "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
+            "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
+            "$bone_payload" \
+            "$output_directory" \
+            --soft-tissue-payload "$soft_tissue_payload" \
+            --dimension "$7"
+    fi
+    exec "$probe" \
+        "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
+        "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
+        "$bone_payload" \
+        "$output_directory" \
+        --soft-tissue-payload "$soft_tissue_payload"
+fi
+
 # Exact BodyParts3D posterior-calf muscle/tendon surfaces use their fitted
 # source-default local poses and two named articulated body frames.  This is
 # native kinematic rendering only: it does not pretend a two-body surface bind

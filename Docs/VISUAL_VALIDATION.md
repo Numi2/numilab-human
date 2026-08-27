@@ -14,6 +14,21 @@ The earlier MyoSim source frames in [visual progress](VISUAL_PROGRESS.md) are
 retained as Apache-2.0 provenance records but are retired from presentation.
 They remain distinct from the BodyParts3D source-static evidence below.
 
+## Current geometry-framed full-body anatomy check — 2026-08-27
+
+The current broad visual reference is the four-angle 2048 px
+[geometry-framed full-body inspection](VISUAL_PROGRESS.md#geometry-framed-full-body-source-anatomy--2026-08-27).
+Its native camera framing is evaluated from the rendered source geometry, not
+the narrower articulated COM envelope that cropped the earlier broad view.
+The review has nonzero bone, muscle, and tendon segmentation in every angle,
+including 4,633 tendon pixels in the rear frame. It covers 184 exact
+BodyParts3D bone meshes and 150 source muscle/tendon surfaces at the
+Metal-computed MyoSim pose on the local Apple M4.
+
+This validates visibility and framing of the source anatomy at the captured
+pose only. It is not skin realism, deformable muscle/tendon physics, contact,
+stable support, a motion rollout, or medical registration.
+
 ## Current supported tendon attachment check — 2026-08-27
 
 The current lower-leg reference is the four-angle 2048 px

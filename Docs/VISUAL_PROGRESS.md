@@ -17,6 +17,39 @@ surface geometry or a medical registration. The reviewed showcase below uses
 the separate exact BodyParts3D muscle/tendon surfaces instead of that route
 diagnostic.
 
+## Geometry-framed full-body source anatomy — 2026-08-27
+
+<p align="center">
+  <img src="media/myosim-native-fullbody-geometry-framed-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-front.png" width="32%" alt="Geometry-framed full BodyParts3D anatomy, front" />
+  <img src="media/myosim-native-fullbody-geometry-framed-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-oblique.png" width="32%" alt="Geometry-framed full BodyParts3D anatomy, oblique" />
+  <img src="media/myosim-native-fullbody-geometry-framed-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-rear.png" width="32%" alt="Geometry-framed full BodyParts3D anatomy, rear" />
+</p>
+
+The prior broad muscle-surface capture focused camera body 128, which made
+the source anatomy read as an unhelpful torso close-up. The new native
+`myosim-native-fullbody-soft-tissue-visuals` entry point builds the visual
+pack first, evaluates its exact current world-space source geometry bounds,
+and frames all four cameras from those bounds. It is not a camera-distance
+guess from rigid-body centres.
+
+The reviewed 2048 × 2048 M4 capture contains 184 BodyParts3D bone meshes and
+150 source tissue surfaces (148 muscle, two calcaneal tendon). The source
+geometry extent was 1.72125351429 m and the native camera distance was
+2.06550431252 m. Every view has nonzero bone, muscle, and tendon coverage:
+
+| View | Bone / muscle / tendon pixels |
+| --- | ---: |
+| Front | 45,610 / 198,045 / 102 |
+| Oblique | 42,911 / 165,685 / 560 |
+| Side | 34,381 / 98,834 / 549 |
+| Rear | 66,137 / 179,811 / 4,633 |
+
+The full [capture transcript](media/myosim-native-fullbody-geometry-framed-2048/capture.transcript.txt)
+pins the rendered input hashes and output frames. This repairs presentation
+framing only: it is a Metal articulated-pose snapshot with visual two-body
+muscle/tendon surfaces, not a deformable-tissue solve, contact qualification,
+controller, rollout, or medical registration.
+
 ## Supported tendon attachment review — 2026-08-27
 
 <p align="center">
@@ -75,9 +108,10 @@ tendon mechanics, force transfer from triangles, or clinical registration.
   <img src="media/myosim-native-fullbody-muscle-surfaces-2048/default/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-128-rear.png" width="32%" alt="Native full-body muscle surfaces, rear" />
 </p>
 
-This replaces the isolated-calf presentation as the main Human anatomical
-view. The native Apple M4 capture poses 150 exact BodyParts3D surfaces over
-the 184-mesh articulated skeleton: 148 muscle surfaces across both limbs,
+This earlier torso-focused capture is retained as a close surface inspection;
+the geometry-framed capture above is now the main Human anatomical view. The
+native Apple M4 capture poses 150 exact BodyParts3D surfaces over the 184-mesh
+articulated skeleton: 148 muscle surfaces across both limbs,
 shoulders, arms, forearms, hands, abdomen, pelvis, and legs; plus two
 calcaneal tendon surfaces. The 19.9 MB `NHTISS2` package has 438,491 vertices
 and 1,894,392 indices.
@@ -98,12 +132,12 @@ soleus routes have distinct proximal links.
 | Side | `138b4422a645713ff4fa0b1b56537736fe6ddc3a2210fad2f4fad792fd65bc30` | 74,180 / 775,656 / 0 |
 | Rear | `1582eb21926cdcaeeeac42ddd22e2166f093dca7bba1591fc57c74d187e60677` | 353,793 / 1,201,421 / 0 |
 
-The full-body camera is deliberately torso-centred, so the Achilles surfaces
-are occluded in those four views. A separate lower-leg capture retains
-nonzero tendon coverage from all directions, including 11,613 tendon pixels
-in the rear view; the posterior-calf gallery below is the clearer high-detail
-attachment inspection. The complete command, payload/map hashes, device,
-coverage, and the bounded 416-muscle incremental-activation coupling smoke are in the
+The close camera is deliberately torso-centred, so the Achilles surfaces are
+occluded in those four views. The geometry-framed replacement above retains
+nonzero tendon coverage from every direction; a separate lower-leg capture
+retains high-detail tendon coverage, including 11,613 pixels in the rear view.
+The complete older close-capture command, payload/map hashes, device, coverage,
+and bounded 416-muscle incremental-activation coupling smoke are in the
 [capture transcript](media/myosim-native-fullbody-muscle-surfaces-2048/default/capture.transcript.txt).
 
 This validates source surface → named MyoSim endpoint bodies → Metal pose →
