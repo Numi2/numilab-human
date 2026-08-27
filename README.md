@@ -34,6 +34,21 @@ evidence—not a claim of Core-native rendering, skin deformation, contact, or
 locomotion. See [visual progress](Docs/VISUAL_PROGRESS.md) for provenance,
 inspection notes, and the current implementation boundary.
 
+### Native articulated route view
+
+<p align="center">
+  <img src="Docs/media/myosim-native-articulated/myosim-fullbody-articulated-front.png" width="32%" alt="Native Core MyoSim articulated route-centreline view, front">
+  <img src="Docs/media/myosim-native-articulated/myosim-fullbody-articulated-side.png" width="32%" alt="Native Core MyoSim articulated route-centreline view, side">
+  <img src="Docs/media/myosim-native-articulated/myosim-fullbody-articulated-rear.png" width="32%" alt="Native Core MyoSim articulated route-centreline view, rear">
+</p>
+
+These three Apple-native captures bind the Metal default-pose articulation to
+Core rendering. Pale shapes are 96 non-zero-mass inertial-body proxies; red
+points and tubes are the 1,815 source attachment sites and 1,432 route-centreline
+segments. They demonstrate the joint state → articulated pose → rendered
+instance chain, but intentionally are **not** anatomical BodyParts3D mesh
+registration, skin/muscle-belly deformation, a live visual sidecar, or walking.
+
 ## Native full-body execution
 
 After a local artifact has been acquired and compiled, the production-facing
@@ -44,6 +59,12 @@ reference needs only the Apple-native Numi Core executable:
 # executes full-body pose/Jacobians plus all MyoSim route and static-force
 # evaluations on the Apple GPU.
 numi human myosim-native-probe Build/myosim-fullbody --metal
+
+# Render the same compiled payload through the native articulated-marker view.
+# This command starts no Python process.
+numi human myosim-native-visuals \
+  Build/myosim-fullbody \
+  Docs/media/myosim-native-articulated
 ```
 
 This loads the `NHRIGID2` and `NHMYO1` payloads directly into Core, validates

@@ -26,6 +26,37 @@ animated shells. They are visual evidence of the source model only. They do
 not show native Core rendering, mesh registration, skinning, contact,
 locomotion, deformable anatomy, or biological validation.
 
+## Native articulated route snapshot — 2026-08-27
+
+<p align="center">
+  <img src="media/myosim-native-articulated/myosim-fullbody-articulated-front.png" width="32%" alt="Front native articulated route snapshot">
+  <img src="media/myosim-native-articulated/myosim-fullbody-articulated-side.png" width="32%" alt="Side native articulated route snapshot">
+  <img src="media/myosim-native-articulated/myosim-fullbody-articulated-rear.png" width="32%" alt="Rear native articulated route snapshot">
+</p>
+
+Core `79cc34a` captured these 640 × 640 default-pose views on an Apple M4 using
+`numi human myosim-native-visuals`. The command directly reads `NHRIGID2` and
+`NHMYO1`, runs the Metal articulated operator, then renders the published pose
+through Core's native visual renderer. The pale shapes are intentionally simple
+inertial-body proxies; red geometry is 1,815 source attachment sites plus 1,432
+straight route-centreline segments. Wrap traversal remains owned by the muscle
+probe; the visual centreline is a compact inspection representation, not a
+claim of exact tangent geometry.
+
+| View | SHA-256 | Rendered coverage | Inspection result |
+| --- | --- | --- | --- |
+| Front | `b11acf05f0f6a46d1fabd5474d4db7266d431d6f8060e30ed7a74c939f6eba47` | `17,415` body / `641` site / `1,147` route pixels | bilateral torso, pelvis, legs, feet, and routed lower-body chains visible |
+| Side | `ce2b2fc5d86437d0646bc6de0644cb0a9597b7b9faaed5544d3add0c3551d484` | `9,844` body / `521` site / `850` route pixels | continuous profile with shoulder, torso, pelvis, lower-leg, and foot route evidence |
+| Rear | `c5067eccb567b71319f7ee49084005f114af71476d478359ccfcaf970380c91b` | `16,873` body / `1,070` site / `2,200` route pixels | posterior trunk, pelvic, calf, and bilateral route coverage visible |
+
+This is native pose-bound visual evidence, not a human anatomy beauty render.
+It proves neither BodyParts3D registration nor skin/organ deformation, live
+device-buffer presentation, contact, motion, muscle-force feedback in a
+rollout, or clinical validation. The tracked visual-pack manifest records the
+scene provenance alongside the three frames. Its pack and manifest SHA-256
+values are `633ddb213167c1cc47b733ae80d8f25a7af36d86bf830fbf67a625f16e2a8b59`
+and `8d21b2f3a265285655dde72f3611891c69a187248627419dc1be2788b101734f`.
+
 ## Native mechanics progress
 
 ```text
@@ -43,7 +74,7 @@ MyoSim source composition (offline)
               +--> Metal: poses + analytic point Jacobians -> 416 routes + static force
 ```
 
-The native probe at Core `f564977` passed with:
+The native probe at Core `79cc34a` passed with:
 
 | Native property | Measured result |
 | --- | --- |
@@ -96,8 +127,8 @@ owner; no contact or locomotion is claimed here.
 2. Resolve the Mortensen spine-to-`cervical_spine` rest registration and make
    an explicit MyoSim neck/head replacement decision before applying its 72
    cervical/hyoid muscle forces.
-3. Add Core-native presentation for the full-body payload, then repeat these
-   three views from the native runtime.
+3. Promote the default native capture into a device-resident live presentation
+   sidecar, then repeat the three views over a replayed physical motion.
 4. Add registered anatomical colliders and calibrated contact before any
    standing or walking qualification.
 

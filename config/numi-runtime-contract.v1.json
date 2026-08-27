@@ -2,7 +2,7 @@
   "schema": "numi.human.runtime-contract.v1",
   "runtime": {
     "repository": "MetalRobo",
-    "revision": "f56497701c1f11ded5a309f6300cd95ac7bba4aa",
+    "revision": "79cc34aab0c359cfe21d92e30cbfe0de20a7345d",
     "articulated_joint_primitives": [
       "fixed",
       "revolute",
@@ -50,7 +50,8 @@
       "apps/millard_muscle_reference_probe.cpp",
       "include/metalrobo/mujoco_muscle_gpu.h",
       "src/metal/MujocoMuscleReference.metal",
-      "apps/numilab_human_myosim_reference_probe.cpp"
+      "apps/numilab_human_myosim_reference_probe.cpp",
+      "apps/numilab_human_myosim_visual_probe.mm"
     ]
   },
   "opensim_joint_lowering": {
@@ -103,6 +104,14 @@
       "applied_default_pose_wrap_count": 90,
       "maximum_path_length_error_m": 7.45058059692e-07,
       "maximum_static_force_error_n": 0.00262451171875
+    },
+    "native_visual_snapshot": {
+      "contract": "metal_articulated_pose_snapshot_to_core_marker_renderer",
+      "device": "Apple M4",
+      "rendered_inertial_bodies": 96,
+      "route_site_count": 1815,
+      "route_centerline_segments": 1432,
+      "boundary": "The pose is published from the Metal articulated operator into a native Core renderer for a default-pose capture. It is not BodyParts3D registration, skin deformation, a device-resident live visual sidecar, or a locomotion result."
     },
     "remaining_evidence": [
       "device-resident length-Jacobian force scatter and forward-dynamics update",

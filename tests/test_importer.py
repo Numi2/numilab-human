@@ -267,7 +267,22 @@ class ImporterTests(unittest.TestCase):
         result = run([command, "--numi-describe"], capture_output=True, text=True, check=True)
         self.assertEqual(
             result.stdout,
-            "Build NumiLab Human source artifacts and run the native full-body muscle reference.\n",
+            "Build NumiLab Human source artifacts and run native full-body muscle and articulated-visual references.\n",
+        )
+
+    def test_numi_workspace_native_visual_command_rejects_missing_paths_before_python(self) -> None:
+        command = ROOT / ".numi/commands/human"
+        result = run(
+            [command, "myosim-native-visuals"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(result.stdout, "")
+        self.assertEqual(
+            result.stderr,
+            "usage: numi human myosim-native-visuals <artifact-directory> <output-directory>\n",
         )
 
     def test_opensim_parser_retains_mechanical_fields(self) -> None:

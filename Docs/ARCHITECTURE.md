@@ -67,7 +67,7 @@ Python simulator wrapped by Numi. An offline MyoSim composition step writes two
 immutable payloads: `NHRIGID2` contains the 157-body Core tree (103 authored
 source bodies plus 54 exact zero-inertia transform carriers), while `NHMYO1`
 contains all 416 actuator definitions, 1,815 sites, and 143 wrap geometries.
-At Core `f564977`, `MujocoMuscleReference` evaluates the MuJoCo general-muscle
+At Core `79cc34a`, `MujocoMuscleReference` evaluates the MuJoCo general-muscle
 activation/force equations and sphere/cylinder spatial tendon routes, scatters
 `F * d(length)/d(v)` through Core point Jacobians, and drives the same native
 forward-dynamics owner.
@@ -87,6 +87,17 @@ per-step host loop exists after the payload has been created. The dense
 128-DoF mass factor, muscle `J^T` force scatter, and forward-dynamics update
 remain Core CPU reference stages today; this does not claim a complete
 device-resident muscle-force rollout.
+
+At the same Core revision, `numi human myosim-native-visuals` executes a
+separate native default-pose capture path: Metal produces the 157-body
+articulated pose; the host publishes that one snapshot to the Core visual
+renderer; the renderer binds 96 non-zero-mass inertial-body proxies and 1,815
+MyoSim sites to their articulated links, then draws 1,432 route-centreline
+segments in world space. This establishes an inspected joint state → body pose
+→ rendered-instance chain. The snapshot's explicit host publication boundary
+means it is not a device-resident live presentation path; the proxies and
+route centre lines are not BodyParts3D surface registration, anatomical skin,
+or deformable-muscle rendering.
 
 `numi.human.v1` remains an owner-neutral intermediate artifact, but Core
 revision `730aba4` now executes the bounded Rajagopal mechanics path: the
@@ -113,7 +124,7 @@ a rollout until the core lowerer exists and all gated sources are supplied.
 
 `numi human audit` records the active MyoSim full-body route separately from
 the legacy stitched source manifest and verifies the inspected runtime checkout.
-At Core `f564977`, it reports the Apple M4 parity evidence for the 157-body /
+At Core `79cc34a`, it reports the Apple M4 parity evidence for the 157-body /
 416-muscle route-force reference while retaining the bounded Rajagopal
 FunctionBased execution as comparative lower-body mechanics. It does not
 present the unavailable authenticated MoBL-ARMS archive as a blocker to the

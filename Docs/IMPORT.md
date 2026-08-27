@@ -18,6 +18,12 @@ numi human myosim-build \
 # Native Numi Core execution plus Apple-GPU full-body pose/Jacobian,
 # muscle-route, and static-force parity.
 numi human myosim-native-probe Build/myosim-fullbody --metal
+
+# Apple-native default-pose route-centreline visual evidence.
+# This is a native executable; no Python process is started.
+numi human myosim-native-visuals \
+  Build/myosim-fullbody \
+  Build/myosim-fullbody/native-articulated-visuals
 ```
 
 The native probe validates 416 full-body muscle-tendon elements and their
@@ -31,6 +37,12 @@ not attach its 72 muscles to the active MyoSim body before an explicit
 rest-pose registration. See
 [visual progress](VISUAL_PROGRESS.md) for the inspected full-body views and
 [architecture](ARCHITECTURE.md) for runtime ownership.
+
+The native visual command emits three fixed cameras plus a Core visual-pack and
+manifest. It binds 96 inertial-body proxies and every compiled MyoSim site/route
+to the default Metal articulated-pose snapshot. It is proof of this snapshot
+render chain only; BodyParts3D registration and live device-resident presentation
+remain separate work.
 
 ## 1. Fetch the password-free sources
 

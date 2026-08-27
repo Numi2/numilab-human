@@ -2,7 +2,7 @@
 set -eu
 
 if [ "${1:-}" = "--numi-describe" ]; then
-    printf '%s\n' 'Build NumiLab Human source artifacts and run the native full-body muscle reference.'
+    printf '%s\n' 'Build NumiLab Human source artifacts and run native full-body muscle and articulated-visual references.'
     exit 0
 fi
 
@@ -40,6 +40,31 @@ if [ "${1:-}" = "myosim-native-probe" ]; then
     exec "$probe" \
         "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
         "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo"
+fi
+
+# This capture has the same no-Python runtime boundary as the full-body
+# reference probe.  The source-default pose comes from the Metal articulated
+# operator; Core's visual renderer then binds inertial-body proxies and the
+# compiled MyoSim route-centerline evidence to that pose.
+if [ "${1:-}" = "myosim-native-visuals" ]; then
+    if [ "$#" -ne 3 ]; then
+        printf '%s\n' "usage: numi human myosim-native-visuals <artifact-directory> <output-directory>" >&2
+        exit 2
+    fi
+    artifact_directory=$2
+    output_directory=$3
+    runtime_root=${NUMI_LAB_ROOT:-/Users/home/Documents/emergentnumilife/MetalRobo}
+    build_directory=${NUMI_BUILD_DIR:-$runtime_root/build}
+    probe=$build_directory/bin/metalrobo_numilab_human_myosim_visual_probe
+    if [ ! -x "$probe" ]; then
+        printf '%s\n' "native Human visual probe is unavailable: $probe" >&2
+        printf '%s\n' "build target metalrobo_numilab_human_myosim_visual_probe in $runtime_root" >&2
+        exit 2
+    fi
+    exec "$probe" \
+        "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
+        "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
+        "$output_directory"
 fi
 
 if [ -n "${PYTHONPATH:-}" ]; then
