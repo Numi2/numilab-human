@@ -19,6 +19,48 @@ MyoSim attachment sites. These are alignment diagnostics, not tendon-surface
 geometry, an attachment transfer, or a medical registration. Focused
 replacement captures remain outside the showcase until review.
 
+## Reviewed focused calcaneal-tendon source inspection — 2026-08-27
+
+<p align="center">
+  <img src="media/bodyparts3d-right-calcaneal-tendon-2048/right-lower-leg-anterior.png" width="32%" alt="Right posterior lower-leg source anatomy, axis-negative-y camera" />
+  <img src="media/bodyparts3d-right-calcaneal-tendon-2048/right-lower-leg-oblique.png" width="32%" alt="Right posterior lower-leg source anatomy, oblique camera" />
+  <img src="media/bodyparts3d-right-calcaneal-tendon-2048/right-lower-leg-posterior.png" width="32%" alt="Right posterior lower-leg source anatomy, axis-positive-y camera" />
+</p>
+
+These are reviewed native 2048 × 2048 reference frames of a deliberately
+uncluttered, exact BodyParts3D 4.0 source-rest-frame bundle: right tibia,
+fibula, talus, calcaneus, lateral and medial gastrocnemius, soleus, and the
+right calcaneal tendon. The importer preserves every compatible authored OBJ
+vertex normal (eight of eight selected surfaces) rather than replacing the
+source shading with generated normals. The tendon is a distinct gold semantic
+layer, muscle is red, and bone is ivory; those colours are presentation labels,
+not tissue parameters.
+
+The offline source check finds exact nearest-vertex separations of `0.828009`
+mm from calcaneal tendon to calcaneus, `0.143963` mm to lateral gastrocnemius,
+`0.398794` mm to medial gastrocnemius, and `0.248701` mm to soleus. That makes
+the selected source surfaces visibly continuous in this cutaway; it does not
+prove a watertight biological attachment, a MyoSim registration, a force-path
+transfer, or a mechanical tendon constraint.
+
+Core `e028486` cooked the 13,349-vertex / 20,642-triangle GLB (three semantic
+materials) and rendered each camera with an independent native reference
+workspace on the local Apple M4. The Mac mini was occupied by an unrelated
+BirdFlow training run, so these are a bounded local-GPU fallback rather than
+an M4 Pro qualification. Each camera had nonzero source segmentation and its
+exact capture metadata is retained in the [transcript](media/bodyparts3d-right-calcaneal-tendon-2048/capture.transcript.txt).
+
+| Camera | PNG SHA-256 | Source pixels |
+| --- | --- | ---: |
+| `axis_negative_y` | `4effa463ec9034bd1dd5d730d119132af0d1bad9dfe370cb010d54c9e74979f0` | 295,907 |
+| `oblique_positive_x_negative_y` | `04cb010ccb88e2e8fba6bc0c2deb85e78b8707fd43179fbd25198e77f31c3b7a` | 239,767 |
+| `axis_positive_y` | `40b3a2501ce4e8eee597ea143b9fe98eb94c8a990f5f82a7c9998e21e84b9c5a` | 311,627 |
+
+This is the current source-anatomy presentation. It is not a full Human beauty
+render, skin, organ/vessel/nerve view, articulated deformation, muscle-driven
+rollout, or medically validated attachment model. Those claims remain gated by
+their own geometry and mechanics evidence.
+
 ## Retired full-body source validation snapshot — 2026-08-27
 
 These images are retained source-provenance artifacts from the pinned MyoHub

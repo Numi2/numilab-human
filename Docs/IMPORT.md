@@ -231,6 +231,31 @@ and tendon layers; they do not add tissue parameters. All components share the
 BodyParts3D rest frame, but that fact is not a MyoSim attachment transform,
 skinning map, collision admission, or dynamic tendon claim.
 
+### Focused calcaneal-tendon source inspection
+
+For a readable posterior-chain inspection, use the smaller exact source bundle
+below. It retains the source OBJ vertex normals where their face mapping is
+compatible and omits unrelated anterior geometry that otherwise hides the
+calcaneal tendon. Its source-mesh proximity report is descriptive only.
+
+```sh
+numi human right-calcaneal-tendon-continuity-preview \
+  --sources Sources \
+  --output Build/bodyparts3d-right-calcaneal-tendon-continuity
+
+$NUMI_LAB_ROOT/build/bin/metalrobo_visual_cook \
+  Build/bodyparts3d-right-calcaneal-tendon-continuity/bodyparts3d-right-calcaneal-tendon-continuity-source-static.glb \
+  Build/bodyparts3d-right-calcaneal-tendon-continuity/bodyparts3d-right-calcaneal-tendon-continuity-source-static.mrvpack \
+  --id bodyparts3d-right-calcaneal-tendon-continuity-source-static \
+  --license CC-BY-4.0 \
+  --provenance 'BodyParts3D 4.0 authored-normal posterior-chain source inspection'
+
+$NUMI_LAB_ROOT/build/bin/metalrobo_bodyparts3d_visual_probe \
+  Build/bodyparts3d-right-calcaneal-tendon-continuity/bodyparts3d-right-calcaneal-tendon-continuity-source-static.mrvpack \
+  Build/bodyparts3d-right-calcaneal-tendon-continuity/native-views \
+  --dimension 2048 --fill-frame
+```
+
 ## 7. Compile a limited source-derived distal-leg preview
 
 ```sh

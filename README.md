@@ -29,6 +29,22 @@ source anatomy surfaces, including the actual lower-leg calcaneal tendon, and
 focused MyoSim force-path diagnostics with resolved tangencies/wrap arcs. See
 [visual progress](Docs/VISUAL_PROGRESS.md) for the evidence boundary.
 
+### Reviewed calcaneal-tendon source inspection
+
+<p align="center">
+  <img src="Docs/media/bodyparts3d-right-calcaneal-tendon-2048/right-lower-leg-anterior.png" width="32%" alt="Focused right lower-leg source anatomy, axis-negative-y camera" />
+  <img src="Docs/media/bodyparts3d-right-calcaneal-tendon-2048/right-lower-leg-oblique.png" width="32%" alt="Focused right lower-leg source anatomy, oblique camera" />
+  <img src="Docs/media/bodyparts3d-right-calcaneal-tendon-2048/right-lower-leg-posterior.png" width="32%" alt="Focused right lower-leg source anatomy, axis-positive-y camera" />
+</p>
+
+This 2048 × 2048 three-angle cutaway is the exact BodyParts3D right posterior
+lower-leg source geometry: tibia, fibula, talus, calcaneus, the two
+gastrocnemius heads, soleus, and the calcaneal tendon. The tendon is visibly
+continuous with its selected source neighbours; the source mesh's closest
+vertices are 0.828 mm from the calcaneus and 0.144/0.399/0.249 mm from lateral
+gastrocnemius, medial gastrocnemius, and soleus. It is a static anatomical
+reference, not an articulated, force-coupled, deformable, or clinical claim.
+
 ### Native anatomy presentation reset
 
 The previous native red-line galleries are retained as diagnostic artifacts but
@@ -109,6 +125,12 @@ numi human myosim-native-route-inspection \
 numi human right-lower-leg-anatomy-preview \
   --sources Sources \
   --output Build/bodyparts3d-right-lower-leg-anatomy
+
+# A more focused posterior-chain source inspection. It preserves authored OBJ
+# normals, excludes anatomy that would hide the tendon, and is static only.
+numi human right-calcaneal-tendon-continuity-preview \
+  --sources Sources \
+  --output Build/bodyparts3d-right-calcaneal-tendon-continuity
 ```
 
 This loads the `NHRIGID2` and `NHMYO1` payloads directly into Core, validates

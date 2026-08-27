@@ -14,6 +14,19 @@ The earlier MyoSim source frames in [visual progress](VISUAL_PROGRESS.md) are
 retained as Apache-2.0 provenance records but are retired from presentation.
 They remain distinct from the BodyParts3D source-static evidence below.
 
+## Current focused calcaneal-tendon source inspection — 2026-08-27
+
+The current visual reference is the reviewed 2048 × 2048 three-angle
+[calcaneal-tendon cutaway](VISUAL_PROGRESS.md#reviewed-focused-calcaneal-tendon-source-inspection--2026-08-27).
+It preserves authored BodyParts3D normals on eight selected source surfaces
+and renders them in isolated native reference workspaces, so a later camera
+cannot reuse an earlier camera's observation. All three views have nonzero
+source segmentation. The source tendon is visibly continuous with the selected
+posterior muscle surfaces and calcaneus, with `0.144–0.828 mm` nearest-source-
+vertex separations. This validates source-mesh visibility and local source
+continuity only; it does not validate a physical attachment, MyoSim transfer,
+or dynamic tendon mechanics.
+
 ## Retired native muscle-driven BodyParts3D major-bone overlay — 2026-08-27
 
 The four M4 Pro frames in
