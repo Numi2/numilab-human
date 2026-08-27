@@ -26,8 +26,10 @@ The published close-up tendon and 2K exposed-anatomy pictures are withdrawn
 from quality presentation. Review found a detached-looking terminal cap and
 disconnected source fragments; they remain only as reproducibility artifacts
 in [visual progress](Docs/VISUAL_PROGRESS.md). The current corrective check is
-a four-angle 512 px native reference render, withheld from the gallery until
-the high-resolution reference path is reliable.
+a four-angle 640 px native diagnostic render. It is deliberately withheld from
+the gallery: the exact-reference renderer is not presently qualified above that
+resolution, so the older 2K commands and media are archival reproduction
+artifacts rather than a current showcase.
 
 The exposed source anatomy is used to inspect muscles and tendons against
 named bones. The BodyParts3D exterior is retained as a static source mesh only:
@@ -43,10 +45,11 @@ not the current tendon-quality reference.
 For the primary BodyParts3D `FJ1405`/`FJ3360` tendons, the importer now retains
 only the dominant exact source-connected sheet, drops disconnected source
 slivers, removes fully interior terminal-cap faces, and moves the locked
-terminal band 5 mm inside the named calcaneal triangles. It generates neither
-a collar nor a bridge. This makes the bone
-insertion inspectable, but does not create a tendon continuum, weld,
-force-transfer law, or photorealistic anatomy.
+terminal band 5 mm inside the named calcaneal triangles. It then adds a narrow,
+explicitly inferred visual enthesis strip from that opened source boundary to
+the named calcaneus (0.35 mm above its display surface). This makes the bone
+insertion continuous in the render, but does not create a tendon continuum,
+weld, force-transfer law, or photorealistic anatomy.
 
 ### Muscle-driven torso anatomy
 

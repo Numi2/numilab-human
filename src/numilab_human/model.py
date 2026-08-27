@@ -4327,6 +4327,7 @@ def _bodyparts_world_to_body_stored_m(
 def _bodyparts_project_tendon_attachment_band(
     vertices_world_m: list[list[float]], distal_attenuation: list[float],
     bone_vertices_world_m: list[list[float]], bone_triangles: list[tuple[int, int, int]],
+    visual_enthesis_inset_m: float = 0.005,
 ) -> tuple[list[list[float]], dict[str, float | int | str]]:
     """Project an already locked tendon insertion band onto named bone triangles.
 
@@ -4336,6 +4337,8 @@ def _bodyparts_project_tendon_attachment_band(
     """
     if len(vertices_world_m) != len(distal_attenuation) or not bone_triangles:
         raise ImportError("BodyParts3D tendon surface projection input is incomplete")
+    if not math.isfinite(visual_enthesis_inset_m):
+        raise ImportError("BodyParts3D tendon surface projection has an invalid enthesis offset")
     if any(len(vertex) != 3 or not all(math.isfinite(value) for value in vertex) for vertex in bone_vertices_world_m):
         raise ImportError("BodyParts3D tendon surface projection has invalid bone vertices")
 
@@ -4415,7 +4418,10 @@ def _bodyparts_project_tendon_attachment_band(
         # terminal cap instead of presenting a floating strip or inventing a
         # connector/collar between two meshes. The feather band preserves a
         # continuous deformation into the unmodified source tendon.
-        target = [closest[index] - side * closest_normal[index] * 0.005 for index in range(3)]
+        target = [
+            closest[index] - side * closest_normal[index] * visual_enthesis_inset_m
+            for index in range(3)
+        ]
         corrected = [vertex[index] * attenuation + target[index] * blend for index in range(3)]
         result.append(corrected)
         corrections.append(math.sqrt(sum((vertex[index] - corrected[index]) ** 2 for index in range(3))))
@@ -4427,13 +4433,76 @@ def _bodyparts_project_tendon_attachment_band(
         raise ImportError("BodyParts3D tendon surface projection has no distal attachment band")
     return result, {
         "method": "exact named secondary BodyParts3D bone triangle interior enthesis inset over the existing lock/feather band",
-        "visual_enthesis_inset_m": 0.005,
+        "visual_enthesis_inset_m": visual_enthesis_inset_m,
         "projected_vertex_count": len(corrections),
         "fully_locked_vertex_count": fully_locked,
         "feathered_vertex_count": feathered,
         "rms_correction_m": math.sqrt(sum(value * value for value in corrections) / len(corrections)),
         "max_correction_m": max(corrections),
         "boundary": "visual rest-surface registration only; not a tendon weld, force-transfer law, continuum, or clinical attachment certificate",
+    }
+
+
+def _bodyparts_stitch_tendon_enthesis_band(
+    vertices_world_m: list[list[float]], triangles: list[tuple[int, int, int]], distal_attenuation: list[float],
+    bone_vertices_world_m: list[list[float]], bone_triangles: list[tuple[int, int, int]], member: str,
+) -> tuple[list[list[float]], list[tuple[int, int, int]], list[float], dict[str, Any]]:
+    """Close the opened distal source cap with a narrow named-bone enthesis strip.
+
+    BodyParts3D's tendon and calcaneus are independently authored closed
+    surfaces.  Hiding a cap that has been inset into the bone prevents the
+    cap from leaking through a coarse calcaneus, but it can leave the visible
+    tendon apparently suspended above the bone.  This visual-only strip
+    stitches the newly-opened *source boundary* to its nearest named
+    calcaneal surface.  The result is a continuous display surface and not a
+    source-geometry claim, weld, force-transfer model, or tendon continuum.
+    """
+    if len(vertices_world_m) != len(distal_attenuation) or not triangles:
+        raise ImportError(f"BodyParts3D tendon {member} enthesis stitching input is incomplete")
+    edge_counts: dict[tuple[int, int], int] = {}
+    for triangle in triangles:
+        if len(triangle) != 3 or any(not 0 <= index < len(vertices_world_m) for index in triangle):
+            raise ImportError(f"BodyParts3D tendon {member} enthesis stitching has an invalid triangle")
+        for first, second in ((triangle[0], triangle[1]), (triangle[1], triangle[2]), (triangle[2], triangle[0])):
+            edge = (min(first, second), max(first, second))
+            edge_counts[edge] = edge_counts.get(edge, 0) + 1
+    # The cap removal leaves an open loop made of fully calcaneus-locked
+    # source edges.  Do not close an arbitrary proximal source opening.
+    source_edges = [
+        edge for edge, count in edge_counts.items()
+        if count == 1 and all(distal_attenuation[index] <= 1.0e-8 for index in edge)
+    ]
+    if not source_edges:
+        raise ImportError(f"BodyParts3D tendon {member} has no distal source-cap boundary to stitch")
+    source_indices = sorted({index for edge in source_edges for index in edge})
+    source_points = [vertices_world_m[index] for index in source_indices]
+    # A 0.35 mm exterior lift defeats z-fighting while remaining a thin
+    # insertion presentation, rather than a synthetic tendon extension.
+    bone_points, projection = _bodyparts_project_tendon_attachment_band(
+        source_points, [0.0] * len(source_points), bone_vertices_world_m, bone_triangles,
+        visual_enthesis_inset_m=-0.00035,
+    )
+    target_indices = {
+        source_index: len(vertices_world_m) + target_index
+        for target_index, source_index in enumerate(source_indices)
+    }
+    stitched_vertices = [*vertices_world_m, *bone_points]
+    stitched_attenuation = [*distal_attenuation, *([0.0] * len(bone_points))]
+    stitched_triangles = list(triangles)
+    for first, second in source_edges:
+        first_target, second_target = target_indices[first], target_indices[second]
+        stitched_triangles.extend(((first, second, second_target), (first, second_target, first_target)))
+    return stitched_vertices, stitched_triangles, stitched_attenuation, {
+        "method": "visual_only_named_bone_enthesis_strip_from_trimmed_source_cap_boundary",
+        "source_boundary_edge_count": len(source_edges),
+        "source_boundary_vertex_count": len(source_indices),
+        "generated_triangle_count": len(source_edges) * 2,
+        "surface_lift_m": 0.00035,
+        "source_projection": projection,
+        "boundary": (
+            "inferred visual display strip from the exact tendon cap boundary to the named calcaneus; "
+            "not BodyParts3D source geometry, a tissue weld, tendon continuum, force-transfer law, or clinical attachment"
+        ),
     }
 
 
@@ -4827,6 +4896,10 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             global_vertices, surface_projection = _bodyparts_project_tendon_attachment_band(
                 global_vertices, distal_attenuation, bone_vertices_world_m, bone_triangles,
             )
+            global_vertices, triangles, distal_attenuation, enthesis_stitch = _bodyparts_stitch_tendon_enthesis_band(
+                global_vertices, triangles, distal_attenuation,
+                bone_vertices_world_m, bone_triangles, member,
+            )
             stored_vertices_m = _bodyparts_world_to_body_stored_m(
                 global_vertices, secondary_position,
                 list(secondary_target.get("default_inertial_quaternion_world_xyzw", [])),
@@ -4843,6 +4916,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                 "secondary_bone_member_sha256": hashlib.sha256(bone_obj).hexdigest(),
                 "surface_projection": surface_projection,
                 "interior_cap_triangle_trim": interior_cap_trim,
+                "enthesis_stitch": enthesis_stitch,
             })
             contributor_bindings = [
                 binding for binding in source_surface_bindings.values()
@@ -4898,7 +4972,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         indices_payload.extend(first_vertex + index for triangle in triangles for index in triangle)
         records_payload.append(struct.pack(
             "<10I24f", *(target["core_body_index"] for target in binding_targets),
-            first_vertex, len(vertices_mm), first_index, len(triangles) * 3, stable_id, layer, 0,
+            first_vertex, len(stored_vertices_m), first_index, len(triangles) * 3, stable_id, layer, 0,
             *binding_transforms,
         ))
         provenance.append({
@@ -4956,7 +5030,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                      "muscle_surface_count": sum(1 for entry in provenance if entry["layer"] == "muscle"),
                      "tendon_surface_count": sum(1 for entry in provenance if entry["layer"] == "tendon"),
                      "authored_myosim_muscle_count": len(myosim_manifest["muscles"])},
-        "runtime_binding": "BodyParts3D source-topology surfaces use per-vertex named Core articulated body weights; ordinary entries retain exact source vertices and derive two bodies directly from authored MyoSim route sites, while each calcaneal-tendon surface inherits three femur/tibia/calcaneus weights from its nearest named source muscle surface and its already locked/feathered distal boundary is registered to exact named calcaneal source triangles",
+        "runtime_binding": "BodyParts3D source-topology surfaces use per-vertex named Core articulated body weights; ordinary entries retain exact source vertices and derive two bodies directly from authored MyoSim route sites, while each calcaneal-tendon surface inherits three femur/tibia/calcaneus weights from its nearest named source muscle surface, registers its locked/feathered distal boundary to exact named calcaneal source triangles, and adds a separately labelled visual enthesis strip at the opened source cap",
         "status": "native_multi_body_kinematic_surface_binding_input_not_collision_or_physics",
         "evidence_boundary": "This source-authored surface package visually follows exact named articulated endpoint bodies. It does not make the source surface a force-transmitting continuum, add a tendon constitutive law, create collision/contact, or establish a medical registration.",
     }

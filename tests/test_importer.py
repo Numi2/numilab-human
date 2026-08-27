@@ -19,6 +19,7 @@ from numilab_human.model import (
     _bodyparts_secondary_attachment_weight_lock,
     _bodyparts_project_tendon_attachment_band,
     _bodyparts_drop_interior_tendon_cap_triangles,
+    _bodyparts_stitch_tendon_enthesis_band,
     _bodyparts_source_mm_to_body_world,
     _bodyparts_world_to_body_stored_m,
     _bodyparts_skin_bbox_distance_squared,
@@ -213,6 +214,20 @@ class ImporterTests(unittest.TestCase):
         )
         self.assertEqual(triangles, [(1, 2, 3), (0, 3, 4)])
         self.assertEqual(evidence["dropped_fully_locked_interior_cap_triangle_count"], 1)
+
+    def test_tendon_enthesis_stitch_closes_only_the_trimmed_distal_cap_boundary(self) -> None:
+        vertices, triangles, attenuation, evidence = _bodyparts_stitch_tendon_enthesis_band(
+            [[0.0, 0.0, 0.002], [0.02, 0.0, 0.002], [0.01, 0.02, 0.012]],
+            [(0, 1, 2)], [0.0, 0.0, 1.0],
+            [[0.0, 0.0, 0.0], [0.02, 0.0, 0.0], [0.0, 0.02, 0.0]], [(0, 1, 2)], "test-tendon",
+        )
+        self.assertEqual(len(vertices), 5)
+        self.assertEqual(len(triangles), 3)
+        self.assertEqual(attenuation, [0.0, 0.0, 1.0, 0.0, 0.0])
+        self.assertEqual(evidence["source_boundary_edge_count"], 1)
+        self.assertEqual(evidence["generated_triangle_count"], 2)
+        self.assertAlmostEqual(vertices[3][2], 0.00035)
+        self.assertAlmostEqual(vertices[4][2], 0.00035)
 
     def test_bodyparts_anchor_binding_round_trip_preserves_projected_tendon_coordinates(self) -> None:
         source_mm = [[100.0, -25.0, 60.0]]

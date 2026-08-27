@@ -292,11 +292,14 @@ artifacts, not gallery media.
 
 The corrective source path retains only the tendon member's dominant connected
 sheet, removes fully interior terminal-cap faces, and moves the terminal lock
-band 5 mm inside the matching calcaneal triangles. It adds no collar, bridge,
-welding, or invented tendon geometry. A
-four-angle Apple-M4 512 px reference check has nonzero bone/muscle/tendon
-coverage; it is withheld from presentation while the high-resolution reference
-renderer is repaired. This is visual kinematic evidence only—not tendon
+band 5 mm inside the matching calcaneal triangles. A narrow, explicitly
+inferred visual enthesis strip joins that opened source boundary to the named
+calcaneal display surface; it is not represented as source geometry or a
+mechanical weld. A
+four-angle Apple-M4 640 px diagnostic check has nonzero bone/muscle/tendon
+coverage. It remains outside the gallery because the exact-reference path is
+not currently qualified above 640 px; historical 2K media remains withheld
+from presentation. This is visual kinematic evidence only—not tendon
 continuity, force transfer, deformable tissue, collision, gait, or clinical
 registration.
 
