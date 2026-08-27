@@ -136,10 +136,12 @@ class ImporterTests(unittest.TestCase):
         )
         self.assertAlmostEqual(projected[0][0], 0.01)
         self.assertAlmostEqual(projected[0][1], 0.01)
-        self.assertAlmostEqual(projected[0][2], 0.00035)
-        self.assertAlmostEqual(projected[1][2], 0.001175)
+        self.assertAlmostEqual(projected[0][2], -0.0015)
+        self.assertAlmostEqual(projected[1][2], 0.00025)
         self.assertEqual(evidence["fully_locked_vertex_count"], 1)
         self.assertEqual(evidence["feathered_vertex_count"], 1)
+        self.assertEqual(evidence["visual_enthesis_inset_m"], 0.0015)
+        self.assertIn("interior enthesis inset", evidence["method"])
 
     def test_bodyparts_tendon_attachment_projection_preserves_source_topology_and_targets_bone(self) -> None:
         bone = [[0.0, 0.0, 0.0], [0.02, 0.0, 0.0], [0.0, 0.02, 0.0]]

@@ -743,6 +743,7 @@ def myosim_bodyparts_fullbody_soft_tissue_visual_payload(arguments: argparse.Nam
     manifest = bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         sources, anatomy, arguments.registration.resolve(), arguments.artifact.resolve(),
         arguments.output.resolve(),
+        set(arguments.stable_id) if arguments.stable_id else None,
     )
     print(f"wrote {arguments.output.resolve() / manifest['payload']['file']}")
     print(f"wrote {arguments.output.resolve() / 'bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json'}")
@@ -895,6 +896,10 @@ def parser() -> argparse.ArgumentParser:
     myosim_fullbody_tissue_payload_parser.add_argument(
         "--artifact", type=Path, required=True,
         help="compiled MyoSim full-body artifact directory from myosim-build",
+    )
+    myosim_fullbody_tissue_payload_parser.add_argument(
+        "--stable-id", type=int, action="append",
+        help="emit only this existing BodyParts3D/MyoSim surface stable ID; repeat as needed",
     )
     myosim_fullbody_tissue_payload_parser.add_argument("--output", type=Path, required=True)
     myosim_fullbody_tissue_payload_parser.set_defaults(

@@ -22,32 +22,29 @@ derivatives; all other raw or derived source artifacts remain local. See
 
 ## Visual progress
 
-The lead visual is a close anatomical inspection, not a generic whole-body
-thumbnail. It is the current high-resolution tendon-to-bone presentation:
+The prior close-up tendon gallery has been withdrawn: review found that its
+closed source cap still read as a detached strip against the calcaneus. The
+next capture uses a small depth-tested, source-triangle-registered enthesis
+inset so the terminal cap is occluded by its matching bone rather than being
+presented as connected. Until that new four-angle capture passes review, the
+older images remain diagnostic evidence only in [visual progress](Docs/VISUAL_PROGRESS.md).
 
-<p align="center">
-  <img src="Docs/media/myosim-native-zanatomy-smooth-insertion-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-oblique.png" width="49%" alt="Right calf, oblique: smooth tendon entering the matching calcaneus" />
-  <img src="Docs/media/myosim-native-zanatomy-smooth-insertion-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-rear.png" width="49%" alt="Right calf, rear: smooth tendon entering the matching calcaneus" />
-</p>
-
-The exposed source anatomy is where muscles and tendons can be inspected
-against named bones. The BodyParts3D exterior is retained as a static source
-mesh only: it has no authored skin weights and is not presented as a
-muscle-driven Human. See [visual progress](Docs/VISUAL_PROGRESS.md) for the
-exact evidence boundary.
+The exposed source anatomy is used to inspect muscles and tendons against
+named bones. The BodyParts3D exterior is retained as a static source mesh only:
+it has no authored skin weights and is not presented as a muscle-driven Human.
 
 ### Tendon-to-bone presentation
 
 For the detailed right-calf inspection, the matching free Z-Anatomy
 `Calcaneus.r` replaces only the visible calcaneus and is rigidly attached to
-the same MyoSim `calcn_r` body. The current four-angle record uses a
-deterministic visual derivative of its tendon: one Catmull-Clark evaluation
-level plus a smooth 8 mm distal inset under the matching calcaneus. That hides
-the atlas's serrated closed endcap without adding a bridge or changing the
-MyoSim mechanics. It is the gallery’s tendon-quality reference: the tendon is
-visibly continuous into its matching calcaneus in front, oblique, side, and
-rear views. It remains a scoped anatomy inspection, not a photorealistic,
-deformable, or force-transfer claim. Its [four-angle record](Docs/media/myosim-native-zanatomy-smooth-insertion-2048/capture.transcript.txt) keeps the exact evidence.
+the same MyoSim `calcn_r` body. Its previous capture is no longer a
+tendon-quality reference: review found that the source’s closed terminal cap
+still read as detached. The revised importer carries the terminal lock band
+1.5 mm into the exact matching calcaneus triangles, so opaque depth testing
+hides the artificial cap instead of presenting it as an external plate. The
+source mesh, MyoSim mechanics, and force path are unchanged. A new four-angle
+capture is required before this scoped visual derivative returns to the
+gallery; it is never a photorealistic, deformable, or force-transfer claim.
 
 The lower-detail BodyParts3D `FJ1405`/`FJ3360` pair remains a source ownership
 and route-correspondence record: 944 distal lock vertices and a 26-vertex
@@ -307,16 +304,26 @@ numi human myosim-native-fullbody-soft-tissue-visuals \
 # For this scoped inspection its matching free Calcaneus.r replaces only the
 # visible BodyParts3D calcaneus, while remaining rigidly bound to the existing
 # `calcn_r` body; this avoids warping the authored tendon onto a different mesh.
-# The optional derivative is visual-only: it smooths the atlas tessellation and
-# carries the final 33 mm of the tendon up to 8 mm inside that same calcaneus,
-# hiding its artificial closed cap. It never changes a MyoSim parameter.
+# The optional derivative is visual-only. It smooths the atlas tendon, then
+# the importer carries only its named terminal lock band 1.5 mm inside the
+# matching calcaneus triangles so opaque bone hides the artificial closed cap.
+# It never changes a MyoSim parameter or force route.
 /opt/homebrew/bin/blender --background /path/to/Startup.blend \
   --python tools/export_zanatomy_calf.py -- Build/zanatomy-calf-export.json \
   --tendon-subdivision-level 1 --tendon-insertion-depth-mm 8
+# Reuse the same exact source lowerer, but emit just the three right-calf
+# muscles and their shared Achilles surface. Stable IDs remain 1/3/5/7, so no
+# attachment is inferred from unrelated whole-body meshes.
+numi human myosim-bodyparts-fullbody-muscle-surface-payload \
+  --sources Sources \
+  --registration Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json \
+  --artifact Build/myosim-fullbody \
+  --stable-id 1 --stable-id 3 --stable-id 5 --stable-id 7 \
+  --output Build/bodyparts3d-myosim-calf-base
 numi human zanatomy-calf-visual-supplement-payload \
   --sources Sources \
   --registration Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json \
-  --base-payload Build/bodyparts3d-myosim-fullbody-muscle-surfaces/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue \
+  --base-payload Build/bodyparts3d-myosim-calf-base/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue \
   --zanatomy-export Build/zanatomy-calf-export.json \
   --output Build/zanatomy-calf-myosim-tissues
 numi human myosim-native-zanatomy-calf-inspection \

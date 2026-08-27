@@ -1,20 +1,16 @@
 # NumiLab Human visual progress
 
-## Current tendon visual lead — 2026-08-27
+## Retired tendon visual lead — 2026-08-27
 
-<p align="center">
-  <img src="media/myosim-native-zanatomy-smooth-insertion-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-front.png" width="24%" alt="Smooth-insertion right calf, front" />
-  <img src="media/myosim-native-zanatomy-smooth-insertion-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-oblique.png" width="24%" alt="Smooth-insertion right calf, oblique" />
-  <img src="media/myosim-native-zanatomy-smooth-insertion-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-side.png" width="24%" alt="Smooth-insertion right calf, side" />
-  <img src="media/myosim-native-zanatomy-smooth-insertion-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-rear.png" width="24%" alt="Smooth-insertion right calf, rear" />
-</p>
-
-This is the visual lead because every angle shows the smooth tendon continuing
-under the matching calcaneus overlay rather than terminating in a visible
-source cap. It is the same bounded 416-path MyoSim/Core/Metal capture
-described in the [smooth-insertion inspection](#smooth-insertion-right-calf-mechanics-inspection--2026-08-27).
-It changes neither an authored force path nor a material law, and is not a
-claim of tendon continuum mechanics, contact, gait, or clinical attachment.
+The prior Z-Anatomy close-up is retained as a diagnostic record, not a visual
+lead. Review found that its closed tendon cap still read as a detached surface
+against the calcaneus, and its composition did not meet the presentation bar.
+The new importer carries the lock band 1.5 mm inside the exact matching
+calcaneus triangles so opaque bone occludes that cap; the renderer also uses a
+higher 32-sample presentation profile for this narrow inspection. A new
+four-angle capture must pass review before any tendon image returns here or to
+the README. Neither version changes an authored force path or material law, or
+establishes tendon continuum mechanics, contact, gait, or clinical attachment.
 
 ## Native source-bound torso anatomy — 2026-08-27
 
@@ -69,22 +65,15 @@ This remains a source-surface ownership check—not a claim of photorealistic
 skin, deformable tendon, force transfer, collision/contact, gait, or clinical
 validation.
 
-## Smooth-insertion right-calf mechanics inspection — 2026-08-27
+## Retired smooth-insertion right-calf diagnostic — 2026-08-27
 
-<p align="center">
-  <img src="media/myosim-native-zanatomy-smooth-insertion-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-front.png" width="24%" alt="Smooth-insertion right calf, front" />
-  <img src="media/myosim-native-zanatomy-smooth-insertion-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-oblique.png" width="24%" alt="Smooth-insertion right calf, oblique" />
-  <img src="media/myosim-native-zanatomy-smooth-insertion-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-side.png" width="24%" alt="Smooth-insertion right calf, side" />
-  <img src="media/myosim-native-zanatomy-smooth-insertion-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-rear.png" width="24%" alt="Smooth-insertion right calf, rear" />
-</p>
-
-The previous Z-Anatomy tendon was a closed 2,191-vertex surface whose distal
-cap was visibly serrated. This replacement is a deterministic CC-BY-SA visual
-derivative of that same tendon: one Catmull-Clark evaluation level (13,049
-vertices / 26,090 triangles), then a smooth source-frame inset across its
-distal 33 mm, reaching 8 mm under the matching `Calcaneus.r` overlay. The
-bone occludes the artificial cap in front, oblique, side, and rear views, so
-the tendon reads as entering the heel rather than stopping at a jagged edge.
+The archived Z-Anatomy capture contains a deterministic CC-BY-SA derivative
+of the source tendon: one Catmull-Clark evaluation level (13,049 vertices /
+26,090 triangles) and an 8 mm source-frame inset. It is retained for source
+provenance, not presented as a successful attachment visual. The current
+importer adds a separate 1.5 mm depth-tested interior enthesis inset at the
+named calcaneus triangles; that corrected result is awaiting a clean remote
+high-resolution review before it is published.
 
 Only in this five-surface inspection, `Calcaneus.r` replaces the visible
 BodyParts3D `FJ3360` mesh and remains rigidly bound to MyoSim/Core `calcn_r`
@@ -99,9 +88,9 @@ wraps); the bounded configuration displacement is `0.000123820755509`. Every
 record](media/myosim-native-zanatomy-smooth-insertion-2048/capture.transcript.txt)
 contains the frames, hashes, source attribution, and exact execution boundary.
 
-This is a source-derived visual repair, not photorealistic skin, deformable
-muscle/tendon, force-transfer, collision/contact, gait, or clinical attachment
-validation.
+Both the archived diagnostic and the current source-derived correction remain
+outside claims of photorealistic skin, deformable muscle/tendon, force
+transfer, collision/contact, gait, or clinical attachment validation.
 
 ## Native passive-FEM soleus specimen — 2026-08-27
 

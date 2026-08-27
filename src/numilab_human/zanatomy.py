@@ -260,14 +260,20 @@ def _project_tendon_attachment_band(
     vertices: list[list[float]], attenuation: list[float],
     bone_vertices: list[list[float]], bone_triangles: list[tuple[int, int, int]],
 ) -> tuple[list[list[float]], dict[str, float | int | str]]:
-    """Snap the already named, lock-weighted tendon band to its bone surface.
+    """Carry the named tendon end just inside its matching bone surface.
 
     The imported Z-Anatomy tendon and the BodyParts3D calcaneus are separate
     licensed meshes.  Matching the calcaneus centroids alone leaves their
     closest contact vertices a few millimetres apart.  We therefore use the
-    same exact named BodyParts3D triangle surface as the existing distal
-    articulated-body lock, and only move the lock/feather band onto it.  This
-    changes no MyoSim path, tendon parameter, or force law.
+    same exact named calcaneus triangle surface as the existing distal
+    articulated-body lock. The prior visual treatment placed every locked
+    vertex *on* that surface with a positive offset. That makes a closed
+    tendon cap read as a detached beige plate even though its pose is tied to
+    the correct bone. Instead, carry the source end through the cortex by a
+    tiny, fixed visual-only inset. Depth testing then occludes the artificial
+    closed cap while the unmodified proximal surface visibly enters the named
+    calcaneus. This is a rendering registration, not a tendon weld: it changes
+    no MyoSim path, tendon parameter, or force law.
     """
     if len(vertices) != len(attenuation) or not bone_triangles:
         raise ImportError("Z-Anatomy tendon attachment-band input is incomplete")
@@ -292,9 +298,12 @@ def _project_tendon_attachment_band(
             raise ImportError("Z-Anatomy tendon attachment band has no calcaneal target")
         difference = [vertex[axis] - closest[axis] for axis in range(3)]
         side = 1.0 if sum(difference[axis] * normal[axis] for axis in range(3)) >= 0.0 else -1.0
-        # Keep a 0.35 mm exterior offset: it prevents depth fighting with the
-        # bone while visually reading as an insertion, not a floating strip.
-        target = [closest[axis] + side * normal[axis] * 0.00035 for axis in range(3)]
+        # An opaque bone should hide the terminal cap instead of displaying a
+        # second, coplanar surface over it. 1.5 mm is deliberately smaller
+        # than the existing 3--15 mm feather band, so this is a local
+        # enthesis presentation correction rather than a replacement tendon.
+        visual_enthesis_inset_m = 0.0015
+        target = [closest[axis] - side * normal[axis] * visual_enthesis_inset_m for axis in range(3)]
         corrected = [vertex[axis] * (1.0 - blend) + target[axis] * blend for axis in range(3)]
         correction = math.sqrt(_distance_squared(vertex, corrected))
         result.append(corrected)
@@ -305,8 +314,8 @@ def _project_tendon_attachment_band(
         else:
             feathered += 1
     return result, {
-        "method": "exact named BodyParts3D calcaneus triangle projection over the existing lock/feather band",
-        "surface_offset_m": 0.00035,
+        "method": "exact named calcaneus triangle projection with a visual-only interior enthesis inset",
+        "visual_enthesis_inset_m": 0.0015,
         "projected_vertex_count": projected,
         "fully_locked_vertex_count": fully_locked,
         "feathered_vertex_count": feathered,

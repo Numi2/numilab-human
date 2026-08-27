@@ -4538,6 +4538,7 @@ def _myosim_surface_route_context(artifact: Path, source_sha: str) -> tuple[
 
 def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
     sources: Path, anatomy: dict[str, Any], registration_path: Path, myosim_artifact: Path, output: Path,
+    stable_id_subset: set[int] | None = None,
 ) -> dict[str, Any]:
     """Package source-authored limb, shoulder, arm, hand and abdominal surfaces.
 
@@ -4575,6 +4576,23 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
     bodies, route_muscles, myosim_manifest = _myosim_surface_route_context(myosim_artifact, source_sha)
     element_names = _bodyparts_source_element_names(sources)
     specifications = _bodyparts_myosim_surface_specifications()
+    if stable_id_subset is not None:
+        if not stable_id_subset or any(
+            not isinstance(stable_id, int) or not 1 <= stable_id <= len(specifications)
+            for stable_id in stable_id_subset
+        ):
+            raise ImportError("BodyParts3D full-body tissue subset has an invalid stable surface ID")
+        # Stable IDs are part of NHTISS3, not output-order counters. A focused
+        # source subset must therefore retain its original IDs so downstream
+        # visual supplements can unambiguously reuse the exact named records.
+        # The shared right calcaneal tendon needs the three source muscle
+        # surfaces that establish its femur/tibia inheritance; reject a subset
+        # that would silently infer those weights from unrelated anatomy.
+        if 7 in stable_id_subset and not {1, 3, 5}.issubset(stable_id_subset):
+            raise ImportError(
+                "BodyParts3D calcaneal-tendon subset requires stable IDs 1, 3, and 5 "
+                "for its named gastrocnemius/soleus body-weight inheritance"
+            )
     registration_anchors = registration.get("anchors")
     if not isinstance(registration_anchors, list):
         raise ImportError("BodyParts3D full-body tissue payload has no visual-skeleton anchors")
@@ -4613,6 +4631,8 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
     # weights; this never guesses a new origin or insertion.
     source_surface_bindings: dict[str, dict[str, Any]] = {}
     for stable_id, specification in enumerate(specifications, start=1):
+        if stable_id_subset is not None and stable_id not in stable_id_subset:
+            continue
         member_id, label = specification.get("member_id"), specification.get("source_name")
         source_muscles = specification.get("myosim_muscles")
         if not isinstance(member_id, str) or not isinstance(label, str) or (member_id, label) not in element_names:
@@ -4878,7 +4898,9 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                    "myosim_manifest": {"file": "myosim-fullbody-reference.manifest.json", "sha256": sha256((myosim_artifact.resolve() / "myosim-fullbody-reference.manifest.json"))},
                    "surface_map": {"file": "bodyparts3d-myosim-surface-map.v1.json", "sha256": sha256(REPOSITORY_ROOT / "config/bodyparts3d-myosim-surface-map.v1.json")},
                    "surfaces": provenance},
-        "coverage": {"configured_surface_count": len(specifications), "muscle_surface_count": sum(1 for entry in provenance if entry["layer"] == "muscle"),
+        "coverage": {"configured_surface_count": len(specifications), "emitted_surface_count": len(provenance),
+                     "selected_stable_ids": sorted(stable_id_subset) if stable_id_subset is not None else None,
+                     "muscle_surface_count": sum(1 for entry in provenance if entry["layer"] == "muscle"),
                      "tendon_surface_count": sum(1 for entry in provenance if entry["layer"] == "tendon"),
                      "authored_myosim_muscle_count": len(myosim_manifest["muscles"])},
         "runtime_binding": "BodyParts3D source-topology surfaces use per-vertex named Core articulated body weights; ordinary entries retain exact source vertices and derive two bodies directly from authored MyoSim route sites, while each calcaneal-tendon surface inherits three femur/tibia/calcaneus weights from its nearest named source muscle surface and its already locked/feathered distal boundary is registered to exact named calcaneal source triangles",
