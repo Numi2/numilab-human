@@ -49,7 +49,9 @@ numi human myosim-native-bone-visuals \
 
 # Focused native path diagnostic: MyoSim indices 348/349/369/371 are right
 # gastrocnemius lateralis/medialis, soleus, and tibialis anterior; body 136 is
-# its right tibial link. The renderer resolves tangent contacts and wrap arcs.
+# its right tibial link. The renderer resolves tangent contacts and wrap arcs,
+# then projects only source-site endpoints to matching BodyParts3D bone
+# triangles for the diagnostic image; force/path evaluation is unchanged.
 numi human myosim-native-route-inspection \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
@@ -81,9 +83,10 @@ rest-pose registration. See
 The native marker visual command emits four fixed cameras plus a Core visual-pack and
 manifest. It binds inertial-body proxies to the default Metal articulated-pose
 snapshot and hides all route lines. Use `myosim-native-route-inspection` with
-an explicit small muscle set when inspecting tangent/arc path geometry. It is
-proof of this snapshot render chain only; BodyParts3D registration and live
-device-resident presentation remain separate work.
+an explicit small muscle set when inspecting tangent/arc path geometry. Its
+endpoint-to-bone projection is visual-only, and it is proof of this snapshot
+render chain only; BodyParts3D registration and live device-resident
+presentation remain separate work.
 
 The bone-payload importer is also offline source preparation. It checks the
 selected archive/member identities, converts only exact OBJ triangles and

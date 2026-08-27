@@ -128,9 +128,10 @@ fi
 
 # Focused route inspection is intentionally separate from the default anatomy
 # capture. It exposes only selected source muscle centrelines, resolved through
-# the MuJoCo tangent/wrap solver, around one requested MyoSim body. This is a
-# visual-registration diagnostic, not a claim that an RGB line is a tendon
-# surface or a medical attachment certificate.
+# the MuJoCo tangent/wrap solver, around one requested MyoSim body. It projects
+# authored source-site endpoints to the nearest registered BodyParts3D bone
+# triangle only for the image, never for muscle force/path evaluation. This is
+# a visual-registration diagnostic, not a tendon surface or medical certificate.
 if [ "${1:-}" = "myosim-native-route-inspection" ]; then
     if [ "$#" -lt 6 ]; then
         printf '%s\n' "usage: numi human myosim-native-route-inspection <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <output-directory> <focus-body-index> <source-muscle-index>..." >&2
@@ -155,6 +156,7 @@ if [ "${1:-}" = "myosim-native-route-inspection" ]; then
         "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
         "$bone_payload" \
         "$output_directory" \
+        --surface-project-source-sites \
         --focus-body-index "$focus_body_index"
     for muscle_index in $muscle_indices; do
         set -- "$@" --source-route-index "$muscle_index"

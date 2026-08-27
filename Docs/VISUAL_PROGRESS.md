@@ -11,10 +11,13 @@ an anatomical surface. They are not acceptable tendon imagery.
 The current native renderer keeps routes hidden by default. Its focused
 1024 × 1024 inspection mode starts and ends at exact source sites, uses the
 source solver's tangent contacts, and samples the wrapped sphere/cylinder arc.
-The BodyParts3D major-bone payload also has a visual-only per-bone refinement
-against exact MyoSim attachment sites. That is an alignment diagnostic, not
-tendon-surface geometry, an attachment transfer, or a medical registration.
-Focused replacement captures remain outside the showcase until review.
+The Numi route-inspection command projects only those authored source-site
+endpoints to their nearest matching BodyParts3D bone triangles for visible
+attachment; it never changes the underlying force path. The BodyParts3D
+major-bone payload also has a visual-only per-bone refinement against exact
+MyoSim attachment sites. These are alignment diagnostics, not tendon-surface
+geometry, an attachment transfer, or a medical registration. Focused
+replacement captures remain outside the showcase until review.
 
 ## Retired full-body source validation snapshot — 2026-08-27
 

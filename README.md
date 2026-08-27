@@ -40,12 +40,13 @@ tendon view.
 The current native renderer resolves the source tangent contacts and samples
 the selected sphere/cylinder wrap arcs at the rendered pose. Its default
 anatomy view hides route lines; its focused inspection mode renders only a
-chosen muscle set around one MyoSim link at 1024 × 1024. The offline
-BodyParts3D registration now also has a visual-only, per-bone attachment-site
-refinement. It is still an inferred correspondence—not tendon-surface geometry
-or a medical attachment certificate—so refined captures are being reviewed
-before they replace the gallery. See [visual progress](Docs/VISUAL_PROGRESS.md)
-for the exact boundary.
+chosen muscle set around one MyoSim link at 1024 × 1024, with source-site
+endpoints visually projected to the nearest matching BodyParts3D bone triangle.
+That projection never alters the force solver. The offline BodyParts3D
+registration also has a visual-only per-bone attachment-site refinement. These
+are inferred correspondences—not tendon-surface geometry or a medical
+attachment certificate—so refined captures are reviewed before replacing the
+gallery. See [visual progress](Docs/VISUAL_PROGRESS.md) for the exact boundary.
 
 ## Native full-body execution
 
