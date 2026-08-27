@@ -2684,10 +2684,12 @@ def myosim_fullbody_reference_artifacts(
     return manifest, rigid_payload, muscle_payload
 
 
-# These are intentionally limited to major bones whose BodyParts3D label and
-# MyoSim body both identify one unambiguous segment.  They make a useful first
-# whole-body visual skeleton, not a complete small-bone or soft-tissue map.
-_BODYPARTS_MYOSIM_BONE_ANCHORS = (
+# The fitted landmarks remain deliberately conservative: a source mesh vertex
+# centroid is not an inertial COM.  The remaining entries below are exact,
+# source-named meshes bound to an existing MyoSim articulated body through that
+# common frame.  They expand the *visual* skeleton without changing the fitted
+# transform or claiming collision, skin, or soft-tissue mechanics.
+_BODYPARTS_MYOSIM_FIT_BONE_ANCHORS = (
     {"myosim_body": "sacrum", "bodyparts_name": "sacrum", "hierarchy": "is_a", "member_id": "FJ3393"},
     {"myosim_body": "femur_r", "bodyparts_name": "right femur", "hierarchy": "is_a", "member_id": "FJ3365"},
     {"myosim_body": "femur_l", "bodyparts_name": "left femur", "hierarchy": "is_a", "member_id": "FJ3259"},
@@ -2705,11 +2707,26 @@ _BODYPARTS_MYOSIM_BONE_ANCHORS = (
     {"myosim_body": "ulna_l", "bodyparts_name": "left ulna", "hierarchy": "is_a", "member_id": "FJ3286"},
     {"myosim_body": "radius_r", "bodyparts_name": "right radius", "hierarchy": "is_a", "member_id": "FJ3349"},
     {"myosim_body": "radius_l", "bodyparts_name": "left radius", "hierarchy": "is_a", "member_id": "FJ3277"},
-    {"myosim_body": "head", "bodyparts_name": "skull", "hierarchy": "part_of", "member_id": "FJ1282"},
+)
+
+
+def _bodyparts_visual_only_bone(
+    myosim_body: str, bodyparts_name: str, member_id: str,
+) -> dict[str, str | bool]:
+    return {
+        "myosim_body": myosim_body,
+        "bodyparts_name": bodyparts_name,
+        "hierarchy": "is_a",
+        "member_id": member_id,
+        "registration_anchor": False,
+    }
+
+
+_BODYPARTS_MYOSIM_MAJOR_BONE_EXTENSIONS = (
     # These exact meshes have unambiguous named source members and a sound
     # MyoSim rigid-link parent, but they remain out of the fitted landmark set:
     # their OBJ vertex centroids are especially poor proxies for the target
-    # inertial COMs.  They inherit the established 18-anchor common frame.
+    # inertial COMs.  They inherit the established 17-anchor common frame.
     {"myosim_body": "pelvis", "bodyparts_name": "right hip bone", "hierarchy": "is_a", "member_id": "FJ3152", "registration_anchor": False},
     {"myosim_body": "pelvis", "bodyparts_name": "left hip bone", "hierarchy": "is_a", "member_id": "FJ3288", "registration_anchor": False},
     {"myosim_body": "tibia_r", "bodyparts_name": "right fibula", "hierarchy": "is_a", "member_id": "FJ3366", "registration_anchor": False},
@@ -2719,6 +2736,224 @@ _BODYPARTS_MYOSIM_BONE_ANCHORS = (
     {"myosim_body": "patella_r", "bodyparts_name": "right patella", "hierarchy": "is_a", "member_id": "FJ3381", "registration_anchor": False},
     {"myosim_body": "patella_l", "bodyparts_name": "left patella", "hierarchy": "is_a", "member_id": "FJ3275", "registration_anchor": False},
     {"myosim_body": "torso", "bodyparts_name": "body of sternum", "hierarchy": "is_a", "member_id": "FJ3178", "registration_anchor": False},
+)
+
+
+_BODYPARTS_MYOSIM_CRANIAL_EXTENSIONS = tuple(
+    _bodyparts_visual_only_bone("head", name, member)
+    for name, member in (
+        # FJ1282, used by the retired first visual binding, is an ocular
+        # component incidentally listed under the broad ``skull`` part_of
+        # hierarchy.  Bind only source meshes whose is_a terms identify the
+        # actual cranial or mandibular bones.
+        ("right parietal bone", "FJ3380"),
+        ("left parietal bone", "FJ3274"),
+        ("right temporal bone", "FJ3386"),
+        ("left temporal bone", "FJ3281"),
+        ("frontal bone", "FJ3200"),
+        ("occipital bone", "FJ3309"),
+        ("sphenoid bone", "FJ3394"),
+        ("mandible", "FJ3289"),
+    )
+)
+
+
+_BODYPARTS_MYOSIM_THORACIC_FOOT_EXTENSIONS = tuple(
+    _bodyparts_visual_only_bone(body, name, member)
+    for body, name, member in (
+        # MyoSim uses one torso body for the thorax.  These remain individual
+        # BodyParts3D source meshes, each carried by that live torso parent.
+        ("torso", "right first rib", "FJ3334"),
+        ("torso", "right second rib", "FJ3336"),
+        ("torso", "right third rib", "FJ3338"),
+        ("torso", "right fourth rib", "FJ3340"),
+        ("torso", "right fifth rib", "FJ3342"),
+        ("torso", "right sixth rib", "FJ3344"),
+        ("torso", "right seventh rib", "FJ3346"),
+        ("torso", "right eighth rib", "FJ3347"),
+        ("torso", "right ninth rib", "FJ3348"),
+        ("torso", "right tenth rib", "FJ3330"),
+        ("torso", "right eleventh rib", "FJ3331"),
+        ("torso", "right twelfth rib", "FJ3332"),
+        ("torso", "left first rib", "FJ3228"),
+        ("torso", "left second rib", "FJ3229"),
+        ("torso", "left third rib", "FJ3230"),
+        ("torso", "left fourth rib", "FJ3231"),
+        ("torso", "left fifth rib", "FJ3232"),
+        ("torso", "left sixth rib", "FJ3233"),
+        ("torso", "left seventh rib", "FJ3234"),
+        ("torso", "left eighth rib", "FJ3235"),
+        ("torso", "left ninth rib", "FJ3236"),
+        ("torso", "left tenth rib", "FJ3225"),
+        ("torso", "left eleventh rib", "FJ3226"),
+        ("torso", "left twelfth rib", "FJ3227"),
+        # MyoSim's toes bodies provide the available articulated foot parent;
+        # bind the remaining source tarsals to that side rather than pretending
+        # the lower-body source contains their individual rigid joints.
+        ("toes_r", "navicular bone of right foot", "FJ3308"),
+        ("toes_r", "right medial cuneiform bone", "FJ3377"),
+        ("toes_r", "right intermediate cuneiform bone", "FJ3370"),
+        ("toes_r", "right lateral cuneiform bone", "FJ3373"),
+        ("toes_r", "right cuboid bone", "FJ3364"),
+        ("toes_l", "navicular bone of left foot", "FJ3307"),
+        ("toes_l", "left medial cuneiform bone", "FJ3271"),
+        ("toes_l", "left intermediate cuneiform bone", "FJ3264"),
+        ("toes_l", "left lateral cuneiform bone", "FJ3267"),
+        ("toes_l", "left cuboid bone", "FJ3258"),
+    )
+)
+
+
+_BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS = tuple(
+    _bodyparts_visual_only_bone(body, name, member)
+    for body, name, member in (
+        # The BodyParts3D v4.0 archive has no separate triquetrum OBJ.  The
+        # other seven named wrist bones are present and bind one-to-one with
+        # MyoSim hand segments.
+        ("scaphoid_r", "right scaphoid", "FJ3383"),
+        ("lunate_r", "right lunate", "FJ3374"),
+        ("pisiform_r", "right pisiform", "FJ3382"),
+        ("capitate_r", "right capitate", "FJ3361"),
+        ("trapezium_r", "right trapezium", "FJ3388"),
+        ("trapezoid_r", "right trapezoid", "FJ3389"),
+        ("hamate_r", "right hamate", "FJ3367"),
+        ("scaphoid_l", "left scaphoid", "FJ3278"),
+        ("lunate_l", "left lunate", "FJ3268"),
+        ("pisiform_l", "left pisiform", "FJ3276"),
+        ("capitate_l", "left capitate", "FJ3257"),
+        ("trapezium_l", "left trapezium", "FJ3283"),
+        ("trapezoid_l", "left trapezoid", "FJ3284"),
+        ("hamate_l", "left hamate", "FJ3261"),
+        ("firstmc_r", "right first metacarpal bone", "FJ3350"),
+        ("secondmc_r", "right second metacarpal bone", "FJ3352"),
+        ("thirdmc_r", "right third metacarpal bone", "FJ3354"),
+        ("fourthmc_r", "right fourth metacarpal bone", "FJ3356"),
+        ("fifthmc_r", "right fifth metacarpal bone", "FJ3358"),
+        ("proximal_thumb_r", "proximal phalanx of right thumb", "FJ3327"),
+        ("distal_thumb_r", "distal phalanx of right thumb", "FJ3198"),
+        ("2proxph_r", "proximal phalanx of right index finger", "FJ3322"),
+        ("midph2_r", "middle phalanx of right index finger", "FJ3303"),
+        ("distph2_r", "distal phalanx of right index finger", "FJ3193"),
+        ("3proxph_r", "proximal phalanx of right middle finger", "FJ3325"),
+        ("midph3_r", "middle phalanx of right middle finger", "FJ3306"),
+        ("distph3_r", "distal phalanx of right middle finger", "FJ3196"),
+        ("4proxph_r", "proximal phalanx of right ring finger", "FJ3326"),
+        ("midph4_r", "middle phalanx of right ring finger", "FJ3292"),
+        ("distph4_r", "distal phalanx of right ring finger", "FJ3197"),
+        ("5proxph_r", "proximal phalanx of right little finger", "FJ3323"),
+        ("midph5_r", "middle phalanx of right little finger", "FJ3304"),
+        ("distph5_r", "distal phalanx of right little finger", "FJ3194"),
+        ("firstmc_l", "left first metacarpal bone", "FJ3240"),
+        ("secondmc_l", "left second metacarpal bone", "FJ3243"),
+        ("thirdmc_l", "left third metacarpal bone", "FJ3246"),
+        ("fourthmc_l", "left fourth metacarpal bone", "FJ3249"),
+        ("fifthmc_l", "left fifth metacarpal bone", "FJ3252"),
+        ("proximal_thumb_l", "proximal phalanx of left thumb", "FJ3318"),
+        ("distal_thumb_l", "distal phalanx of left thumb", "FJ3188"),
+        ("2proxph_l", "proximal phalanx of left index finger", "FJ3313"),
+        ("midph2_l", "middle phalanx of left index finger", "FJ3296"),
+        ("distph2_l", "distal phalanx of left index finger", "FJ3183"),
+        ("3proxph_l", "proximal phalanx of left middle finger", "FJ3316"),
+        ("midph3_l", "middle phalanx of left middle finger", "FJ3299"),
+        ("distph3_l", "distal phalanx of left middle finger", "FJ3186"),
+        ("4proxph_l", "proximal phalanx of left ring finger", "FJ3317"),
+        ("midph4_l", "middle phalanx of left ring finger", "FJ3291"),
+        ("distph4_l", "distal phalanx of left ring finger", "FJ3187"),
+        ("5proxph_l", "proximal phalanx of left little finger", "FJ3314"),
+        ("midph5_l", "middle phalanx of left little finger", "FJ3297"),
+        ("distph5_l", "distal phalanx of left little finger", "FJ3184"),
+    )
+)
+
+
+_BODYPARTS_MYOSIM_TOE_EXTENSIONS = tuple(
+    _bodyparts_visual_only_bone(body, name, member)
+    for body, name, member in (
+        # MyoSim supplies one articulated toes segment per side, rather than
+        # individual toe joints.  These source meshes therefore share that
+        # corresponding side's live parent body.
+        ("toes_r", "right first metatarsal bone", "FJ3351"),
+        ("toes_r", "right second metatarsal bone", "FJ3353"),
+        ("toes_r", "right third metatarsal bone", "FJ3355"),
+        ("toes_r", "right fourth metatarsal bone", "FJ3357"),
+        ("toes_r", "right fifth metatarsal bone", "FJ3359"),
+        ("toes_r", "proximal phalanx of right big toe", "FJ3310"),
+        ("toes_r", "distal phalanx of right big toe", "FJ3192"),
+        ("toes_r", "proximal phalanx of right second toe", "FJ3319"),
+        ("toes_r", "middle phalanx of right second toe", "FJ3300"),
+        ("toes_r", "distal phalanx of right second toe", "FJ3189"),
+        ("toes_r", "proximal phalanx of right third toe", "FJ3320"),
+        ("toes_r", "middle phalanx of right third toe", "FJ3301"),
+        ("toes_r", "distal phalanx of right third toe", "FJ3190"),
+        ("toes_r", "proximal phalanx of right fourth toe", "FJ3321"),
+        ("toes_r", "middle phalanx of right fourth toe", "FJ3302"),
+        ("toes_r", "distal phalanx of right fourth toe", "FJ3191"),
+        ("toes_r", "proximal phalanx of right little toe", "FJ3324"),
+        ("toes_r", "middle phalanx of right little toe", "FJ3305"),
+        ("toes_r", "distal phalanx of right little toe", "FJ3195"),
+        ("toes_l", "left first metatarsal bone", "FJ3241"),
+        ("toes_l", "left second metatarsal bone", "FJ3244"),
+        ("toes_l", "left third metatarsal bone", "FJ3247"),
+        ("toes_l", "left fourth metatarsal bone", "FJ3250"),
+        ("toes_l", "left fifth metatarsal bone", "FJ3253"),
+        ("toes_l", "proximal phalanx of left big toe", "FJ3329"),
+        ("toes_l", "distal phalanx of left big toe", "FJ3182"),
+        ("toes_l", "proximal phalanx of left second toe", "FJ3328"),
+        ("toes_l", "middle phalanx of left second toe", "FJ3293"),
+        ("toes_l", "distal phalanx of left second toe", "FJ3179"),
+        ("toes_l", "proximal phalanx of left third toe", "FJ3311"),
+        ("toes_l", "middle phalanx of left third toe", "FJ3294"),
+        ("toes_l", "distal phalanx of left third toe", "FJ3180"),
+        ("toes_l", "proximal phalanx of left fourth toe", "FJ3312"),
+        ("toes_l", "middle phalanx of left fourth toe", "FJ3295"),
+        ("toes_l", "distal phalanx of left fourth toe", "FJ3181"),
+        ("toes_l", "proximal phalanx of left little toe", "FJ3315"),
+        ("toes_l", "middle phalanx of left little toe", "FJ3298"),
+        ("toes_l", "distal phalanx of left little toe", "FJ3185"),
+    )
+)
+
+
+_BODYPARTS_MYOSIM_AXIAL_EXTENSIONS = tuple(
+    _bodyparts_visual_only_bone(body, name, member)
+    for body, name, member in (
+        ("lumbar1", "first lumbar vertebra", "FJ3157"),
+        ("lumbar2", "second lumbar vertebra", "FJ3159"),
+        ("lumbar3", "third lumbar vertebra", "FJ3162"),
+        ("lumbar4", "fourth lumbar vertebra", "FJ3165"),
+        ("lumbar5", "fifth lumbar vertebra", "FJ3168"),
+        # The source and MyoSim models both expose the thorax as a whole-body
+        # segment.  Retain the individual source vertebrae as a linked visual
+        # layer until a segment-level axial mechanics transfer is qualified.
+        ("torso", "first thoracic vertebra", "FJ3158"),
+        ("torso", "second thoracic vertebra", "FJ3160"),
+        ("torso", "third thoracic vertebra", "FJ3163"),
+        ("torso", "fourth thoracic vertebra", "FJ3166"),
+        ("torso", "fifth thoracic vertebra", "FJ3169"),
+        ("torso", "sixth thoracic vertebra", "FJ3171"),
+        ("torso", "seventh thoracic vertebra", "FJ3173"),
+        ("torso", "eighth thoracic vertebra", "FJ3174"),
+        ("torso", "ninth thoracic vertebra", "FJ3175"),
+        ("torso", "tenth thoracic vertebra", "FJ3154"),
+        ("torso", "eleventh thoracic vertebra", "FJ3155"),
+        ("torso", "twelfth thoracic vertebra", "FJ3156"),
+        ("cervical_spine", "third cervical vertebra", "FJ3161"),
+        ("cervical_spine", "fourth cervical vertebra", "FJ3164"),
+        ("cervical_spine", "fifth cervical vertebra", "FJ3167"),
+        ("cervical_spine", "sixth cervical vertebra", "FJ3170"),
+        ("cervical_spine", "seventh cervical vertebra", "FJ3172"),
+    )
+)
+
+
+_BODYPARTS_MYOSIM_BONE_ANCHORS = (
+    _BODYPARTS_MYOSIM_FIT_BONE_ANCHORS
+    + _BODYPARTS_MYOSIM_MAJOR_BONE_EXTENSIONS
+    + _BODYPARTS_MYOSIM_CRANIAL_EXTENSIONS
+    + _BODYPARTS_MYOSIM_THORACIC_FOOT_EXTENSIONS
+    + _BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS
+    + _BODYPARTS_MYOSIM_TOE_EXTENSIONS
+    + _BODYPARTS_MYOSIM_AXIAL_EXTENSIONS
 )
 
 
@@ -2914,7 +3149,7 @@ def bodyparts_myosim_registration_candidate(
             ),
         }
     return {
-        "schema": "numi.human.bodyparts3d-myosim-bone-registration-candidate.v1",
+        "schema": "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2",
         "source": {
             "bodyparts": {"id": anatomy.get("source_id"), "version": anatomy.get("version"), "archives": anatomy.get("archives")},
             "myosim": {"artifact_manifest": manifest_path.name, "artifact_manifest_sha256": sha256(manifest_path), "source": manifest.get("source"), "payloads": payload_provenance},
@@ -2931,15 +3166,28 @@ def bodyparts_myosim_registration_candidate(
         },
         "anchors": anchors,
         "coverage": {
-            "registered_major_bone_count": len(anchors), "similarity_fit_anchor_count": len(fit_anchor_indices),
-            "registered_myo_bodies": [anchor["target"]["name"] for anchor in anchors],
-            "not_yet_registered": ["vertebrae, ribs, hands, digits, toes, and soft-tissue layers"],
+            "registered_visual_bone_mesh_count": len(anchors),
+            "similarity_fit_anchor_count": len(fit_anchor_indices),
+            "linked_myo_body_count": len({anchor["target"]["name"] for anchor in anchors}),
+            "source_mesh_groups": {
+                "fitted_major_bones": len(_BODYPARTS_MYOSIM_FIT_BONE_ANCHORS),
+                "major_bone_extensions": len(_BODYPARTS_MYOSIM_MAJOR_BONE_EXTENSIONS),
+                "cranial_mandibular_bones": len(_BODYPARTS_MYOSIM_CRANIAL_EXTENSIONS),
+                "ribs_and_midfoot_tarsals": len(_BODYPARTS_MYOSIM_THORACIC_FOOT_EXTENSIONS),
+                "wrists_hands_digits": len(_BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS),
+                "feet_toes": len(_BODYPARTS_MYOSIM_TOE_EXTENSIONS),
+                "axial_vertebrae": len(_BODYPARTS_MYOSIM_AXIAL_EXTENSIONS),
+            },
+            "not_yet_represented": [
+                "first and second cervical vertebrae", "bilateral triquetra without separate BodyParts3D v4.0 OBJ meshes",
+                "skin, muscles, tendons, organs, vessels, nerves, and other soft-tissue layers",
+            ],
         },
         "status": "provisional_visual_registration_not_admitted_to_collision_or_physics",
         "next_visual_validation": [
             "bind every emitted local matrix to the corresponding Metal articulated inertial-body pose",
-            "inspect default-pose front, side, rear, and oblique bone overlays against the BodyParts3D skin reference",
-            "review per-bone landmark offsets before admitting any additional skeleton mesh",
+            "inspect default-pose front, side, rear, and oblique full-skeleton frames at native resolution",
+            "review the feet, wrists/hands, and axial transitions before adding the remaining source meshes",
         ],
         "evidence_boundary": "This inferred source-geometry/MyoSim-pose candidate is not collision/contact geometry, skinning, soft-tissue mechanics, joint-limit transfer, muscle-attachment transfer, or a medically validated anatomical registration.",
     }
@@ -3194,7 +3442,7 @@ def _bodyparts_visual_local_pose(matrix: Any, context: str) -> tuple[list[float]
 def bodyparts_myosim_bone_visual_payload(
     sources: Path, anatomy: dict[str, Any], registration_path: Path, output: Path,
 ) -> dict[str, Any]:
-    """Prepare exact major-bone triangles for the native articulated renderer.
+    """Prepare exact visual-skeleton triangles for the native articulated renderer.
 
     This is an offline source importer.  Its ``.nhbones`` payload is consumed
     by a C++/Metal visual executable, which receives only compact geometry and
@@ -3206,7 +3454,7 @@ def bodyparts_myosim_bone_visual_payload(
         "numi.human.bodyparts3d-myosim-bone-registration-candidate.v1",
         "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2",
     }:
-        raise ImportError("BodyParts3D visual payload requires a major-bone registration candidate")
+        raise ImportError("BodyParts3D visual payload requires a visual-skeleton registration candidate")
     if registration.get("status") not in {
         "provisional_visual_registration_not_admitted_to_collision_or_physics",
         "inferred_attachment_surface_visual_registration_not_admitted_to_collision_or_physics",
@@ -3227,7 +3475,7 @@ def bodyparts_myosim_bone_visual_payload(
         raise ImportError("BodyParts3D visual payload registration has no MyoSim source SHA-256")
     anchors = registration.get("anchors")
     if not isinstance(anchors, list) or len(anchors) != len(_BODYPARTS_MYOSIM_BONE_ANCHORS):
-        raise ImportError("BodyParts3D visual payload requires the complete major-bone anchor set")
+        raise ImportError("BodyParts3D visual payload requires the complete visual-skeleton anchor set")
     vertices_payload: list[tuple[float, float, float, float, float, float]] = []
     indices_payload: list[int] = []
     records_payload: list[bytes] = []

@@ -27,6 +27,23 @@ vertex separations. This validates source-mesh visibility and local source
 continuity only; it does not validate a physical attachment, MyoSim transfer,
 or dynamic tendon mechanics.
 
+## Current native full-skeleton visual check — 2026-08-27
+
+The four default-pose and four 1 ms complete-muscle frames in
+[visual progress](VISUAL_PROGRESS.md#reviewed-native-180-mesh-full-skeleton--2026-08-27)
+were inspected from front, oblique, side, and rear views at 2048 × 2048. The
+180 source meshes make the skull, cervical/thoracic/lumbar spine, rib cage,
+shoulders, hands/digits, pelvis, bilateral legs, and complete feet legible as
+one skeleton. The earlier isolated ocular dot is gone: the renderer now uses
+named cranial and mandibular meshes rather than `FJ1282`.
+
+All eight frames have nonzero bone coverage. The default four demonstrate the
+active Metal articulated-pose binding; the paired frames demonstrate the same
+visual skeleton after the bounded complete-416-muscle free-body step. The
+capture did not use the occupied Mac mini and is therefore local-Apple-M4
+evidence. It does not validate skin or tendon deformation, physical tendon
+attachments, contact, replay, standing, or gait.
+
 ## Retired native muscle-driven BodyParts3D major-bone overlay — 2026-08-27
 
 The four M4 Pro frames in

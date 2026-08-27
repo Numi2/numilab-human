@@ -718,7 +718,7 @@ def parser() -> argparse.ArgumentParser:
     myosim_visuals_parser.set_defaults(handler=myosim_visuals)
     myosim_registration_parser = commands.add_parser(
         "myosim-bodyparts-registration",
-        help="infer a source-pinned visual-only BodyParts3D major-bone rest-frame candidate for MyoSim",
+        help="infer a source-pinned visual-only BodyParts3D visual-skeleton rest-frame candidate for MyoSim",
     )
     myosim_registration_parser.add_argument("--sources", type=Path, required=True)
     myosim_registration_parser.add_argument(
@@ -740,7 +740,7 @@ def parser() -> argparse.ArgumentParser:
     myosim_attachment_registration_parser.set_defaults(handler=myosim_bodyparts_attachment_registration)
     myosim_bone_payload_parser = commands.add_parser(
         "myosim-bodyparts-bone-payload",
-        help="prepare source-major-bone triangles and articulated local transforms for the native Human visual renderer",
+        help="prepare source visual-skeleton triangles and articulated local transforms for the native Human visual renderer",
     )
     myosim_bone_payload_parser.add_argument("--sources", type=Path, required=True)
     myosim_bone_payload_parser.add_argument(

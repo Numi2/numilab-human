@@ -10,7 +10,7 @@ the native Human execution path.
 | --- | --- | --- |
 | Active full-body mechanics | MyoSim `myofullbody` | 103 source bodies, 416 muscles, native Core reference |
 | Cervical/hyoid mechanics | Mortensen 2018 | complete 72-muscle OpenSim 3 source IR; merge registration remains explicit |
-| Anatomy/visual layers | BodyParts3D 4.0 | named geometry/hierarchy; 27 major bones are pose-bound for native visual inspection |
+| Anatomy/visual layers | BodyParts3D 4.0 | named geometry/hierarchy; 180 source bone meshes are pose-bound for native visual inspection |
 | Comparative lower-body mechanics | RajagopalLaiUhlrich2023 | retained source-faithful bounded Metal path |
 | Comparative upper extremities | MoBL-ARMS | retained authenticated OpenSim source import |
 
@@ -44,6 +44,22 @@ continuous with its selected source neighbours; the source mesh's closest
 vertices are 0.828 mm from the calcaneus and 0.144/0.399/0.249 mm from lateral
 gastrocnemius, medial gastrocnemius, and soleus. It is a static anatomical
 reference, not an articulated, force-coupled, deformable, or clinical claim.
+
+### Reviewed full-skeleton native inspection
+
+<p align="center">
+  <img src="Docs/media/myosim-native-full-skeleton-180-2048/default/myosim-fullbody-articulated-bodyparts-bones-front.png" width="32%" alt="Full BodyParts3D visual skeleton, front" />
+  <img src="Docs/media/myosim-native-full-skeleton-180-2048/default/myosim-fullbody-articulated-bodyparts-bones-oblique.png" width="32%" alt="Full BodyParts3D visual skeleton, oblique" />
+  <img src="Docs/media/myosim-native-full-skeleton-180-2048/default/myosim-fullbody-articulated-bodyparts-bones-rear.png" width="32%" alt="Full BodyParts3D visual skeleton, rear" />
+</p>
+
+This four-angle 2048 × 2048 native inspection binds 180 exact BodyParts3D
+bone meshes—cranial bones, vertebrae, ribs, hands, feet, and the major
+limbs—to 84 active MyoSim rigid parents and the Metal-computed 157-body pose.
+A separate four-angle 1 ms snapshot uses all 416 source muscle-tendon forces
+before the final native render. These are visual-skeleton and bounded
+force-to-pose evidence, respectively; neither makes skin, tendons, organs,
+contact, gait, or clinical-registration claims. See [visual progress](Docs/VISUAL_PROGRESS.md#reviewed-native-180-mesh-full-skeleton--2026-08-27).
 
 ### Native anatomy presentation reset
 
@@ -82,29 +98,30 @@ numi human myosim-native-visuals \
   Docs/media/myosim-native-articulated
 
 # Offline source registration/package preparation, followed by a native
-# C++/Metal bone capture.  The final command starts no Python process.
+# C++/Metal visual-skeleton capture.  The final command starts no Python
+# process. The attachment refinement is optional and reserved for focused
+# source-site inspection; the broad visual skeleton uses the common-frame
+# candidate directly.
 numi human myosim-bodyparts-registration \
   --sources Sources --artifact Build/myosim-fullbody \
   --output Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json
-numi human myosim-bodyparts-attachment-registration \
-  --sources Sources --artifact Build/myosim-fullbody \
-  --output Build/myosim-fullbody/bodyparts3d-myosim-attachment-registration.candidate.json
 numi human myosim-bodyparts-bone-payload \
   --sources Sources \
-  --registration Build/myosim-fullbody/bodyparts3d-myosim-attachment-registration.candidate.json \
+  --registration Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json \
   --output Build/bodyparts3d-myosim-major-bones
 numi human myosim-native-bone-visuals \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
-  Docs/media/myosim-native-bodyparts-major-bones-27
+  Docs/media/myosim-native-full-skeleton-180-2048/default \
+  --dimension 2048
 
 # Native bounded force-to-pose sensitivity capture (no Python process).  The
 # 1 ms limit is an inspection step, not an uncontrolled rollout duration.
 numi human myosim-native-muscle-bone-visuals \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
-  Docs/media/myosim-native-muscle-driven-major-bones-27 \
-  --muscle-step-seconds 0.001
+  Docs/media/myosim-native-full-skeleton-180-2048/muscle-driven \
+  --muscle-step-seconds 0.001 --dimension 2048
 
 # Inspect a named source subset by its manifest actuator indices. This native
 # diagnostic resolves tangent contacts and wrap arcs; it is not a rendered

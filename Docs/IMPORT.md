@@ -26,26 +26,25 @@ numi human myosim-native-visuals \
   Build/myosim-fullbody \
   Build/myosim-fullbody/native-articulated-visuals
 
-# Offline BodyParts3D source import: derive a reviewable major-bone rest-frame
-# candidate, then write compact exact-triangle input for the native renderer.
+# Offline BodyParts3D source import: derive a reviewable visual-skeleton
+# rest-frame candidate, then write compact exact-triangle input for the native
+# renderer. The attachment refinement is optional and intended for focused
+# source-site diagnostics, not the broad visual-skeleton package.
 numi human myosim-bodyparts-registration \
   --sources Sources \
   --artifact Build/myosim-fullbody \
   --output Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json
-numi human myosim-bodyparts-attachment-registration \
-  --sources Sources \
-  --artifact Build/myosim-fullbody \
-  --output Build/myosim-fullbody/bodyparts3d-myosim-attachment-registration.candidate.json
 numi human myosim-bodyparts-bone-payload \
   --sources Sources \
-  --registration Build/myosim-fullbody/bodyparts3d-myosim-attachment-registration.candidate.json \
+  --registration Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json \
   --output Build/bodyparts3d-myosim-major-bones
 
 # Native C++/Metal capture: no Python process is started here.
 numi human myosim-native-bone-visuals \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
-  Build/bodyparts3d-myosim-major-bones/native-articulated-major-bones-27-views
+  Build/bodyparts3d-myosim-major-bones/native-articulated-full-skeleton-180-views \
+  --dimension 2048
 
 # Focused native path diagnostic: MyoSim indices 348/349/369/371 are right
 # gastrocnemius lateralis/medialis, soleus, and tibialis anterior; body 136 is
@@ -64,8 +63,8 @@ numi human myosim-native-route-inspection \
 numi human myosim-native-muscle-bone-visuals \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
-  Build/bodyparts3d-myosim-major-bones/native-muscle-driven-major-bones-27-views \
-  --muscle-step-seconds 0.001
+  Build/bodyparts3d-myosim-major-bones/native-muscle-driven-full-skeleton-180-views \
+  --muscle-step-seconds 0.001 --dimension 2048
 ```
 
 The native probe validates 416 full-body muscle-tendon elements and their
@@ -92,13 +91,14 @@ The bone-payload importer is also offline source preparation. It checks the
 selected archive/member identities, converts only exact OBJ triangles and
 triangle-derived normals, and carries one uniform-scale local transform per
 bone. `myosim-native-bone-visuals` consumes that compact payload directly in
-the native executable, binding 27 major-bone meshes to the Metal pose and
-retaining the full route/site overlay. The initial 18 unambiguous segment
-meshes own the common-frame fit; bilateral hip bones, fibulae, tali, patellae,
-and sternum body inherit it. The fibulae attach visually to their ipsilateral
-tibial link because MyoSim has no separate fibular segment. The candidate is
-visual-only: it does not create colliders, contact constants, skinning weights,
-soft tissue, or a medical registration result.
+the native executable, binding 180 named source meshes to the Metal pose with
+routes hidden by default. Seventeen conservative major-bone landmarks own the
+common-frame fit; the cranial bones, ribs, hands, feet, and axial meshes inherit
+that frame and bind to their named MyoSim parent. Where MyoSim provides only a
+whole torso or toes parent, the corresponding ribs or mid-foot/toe source meshes
+share that parent rather than being granted invented individual mechanics. The
+candidate is visual-only: it does not create colliders, contact constants,
+skinning weights, soft tissue, or a medical registration result.
 
 `myosim-native-muscle-bone-visuals` is a visual sensitivity command, not a
 rollout interface. It only permits a 1 µs–1 ms step (default 1 ms), projects

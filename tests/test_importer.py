@@ -9,7 +9,12 @@ from pathlib import Path
 from subprocess import run
 
 from numilab_human.model import (
+    _BODYPARTS_MYOSIM_AXIAL_EXTENSIONS,
     _BODYPARTS_MYOSIM_BONE_ANCHORS,
+    _BODYPARTS_MYOSIM_CRANIAL_EXTENSIONS,
+    _BODYPARTS_MYOSIM_THORACIC_FOOT_EXTENSIONS,
+    _BODYPARTS_MYOSIM_TOE_EXTENSIONS,
+    _BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS,
     _bodyparts_similarity_fit,
     ImportError as HumanImportError,
     bodyparts_foot_collider_preflight,
@@ -45,7 +50,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ImporterTests(unittest.TestCase):
-    def test_major_bone_extension_preserves_the_validated_fit_set(self) -> None:
+    def test_visual_skeleton_extension_preserves_the_validated_fit_set(self) -> None:
         fit_anchors = [
             anchor for anchor in _BODYPARTS_MYOSIM_BONE_ANCHORS
             if anchor.get("registration_anchor", True)
@@ -54,18 +59,23 @@ class ImporterTests(unittest.TestCase):
             anchor for anchor in _BODYPARTS_MYOSIM_BONE_ANCHORS
             if not anchor.get("registration_anchor", True)
         ]
-        self.assertEqual(len(fit_anchors), 18)
-        self.assertEqual(len(_BODYPARTS_MYOSIM_BONE_ANCHORS), 27)
-        self.assertEqual(
-            {(anchor["bodyparts_name"], anchor["myosim_body"]) for anchor in extension},
-            {
+        self.assertEqual(len(fit_anchors), 17)
+        self.assertEqual(len(_BODYPARTS_MYOSIM_CRANIAL_EXTENSIONS), 8)
+        self.assertEqual(len(_BODYPARTS_MYOSIM_THORACIC_FOOT_EXTENSIONS), 34)
+        self.assertEqual(len(_BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS), 52)
+        self.assertEqual(len(_BODYPARTS_MYOSIM_TOE_EXTENSIONS), 38)
+        self.assertEqual(len(_BODYPARTS_MYOSIM_AXIAL_EXTENSIONS), 22)
+        self.assertEqual(len(_BODYPARTS_MYOSIM_BONE_ANCHORS), 180)
+        baseline_extension = {
                 ("right hip bone", "pelvis"), ("left hip bone", "pelvis"),
                 ("right fibula", "tibia_r"), ("left fibula", "tibia_l"),
                 ("right talus", "talus_r"), ("left talus", "talus_l"),
                 ("right patella", "patella_r"), ("left patella", "patella_l"),
                 ("body of sternum", "torso"),
-            },
-        )
+        }
+        self.assertTrue(baseline_extension.issubset(
+            {(anchor["bodyparts_name"], anchor["myosim_body"]) for anchor in extension}
+        ))
         self.assertEqual(
             len({anchor["member_id"] for anchor in _BODYPARTS_MYOSIM_BONE_ANCHORS}),
             len(_BODYPARTS_MYOSIM_BONE_ANCHORS),
@@ -402,7 +412,8 @@ class ImporterTests(unittest.TestCase):
             result.stderr,
             "usage: numi human myosim-native-muscle-bone-visuals <artifact-directory> "
             "<bodyparts3d-myosim-major-bones.nhbones> <output-directory> "
-            "[--muscle-step-seconds <1e-6..1e-3>]\n",
+            "[--muscle-step-seconds <1e-6..1e-3>] "
+            "[--dimension <512..2048; multiple-of-64>]\n",
         )
 
     def test_opensim_parser_retains_mechanical_fields(self) -> None:

@@ -61,6 +61,54 @@ render, skin, organ/vessel/nerve view, articulated deformation, muscle-driven
 rollout, or medically validated attachment model. Those claims remain gated by
 their own geometry and mechanics evidence.
 
+## Reviewed native 180-mesh full skeleton — 2026-08-27
+
+<p align="center">
+  <img src="media/myosim-native-full-skeleton-180-2048/default/myosim-fullbody-articulated-bodyparts-bones-front.png" width="32%" alt="Native full skeleton, front" />
+  <img src="media/myosim-native-full-skeleton-180-2048/default/myosim-fullbody-articulated-bodyparts-bones-oblique.png" width="32%" alt="Native full skeleton, oblique" />
+  <img src="media/myosim-native-full-skeleton-180-2048/default/myosim-fullbody-articulated-bodyparts-bones-rear.png" width="32%" alt="Native full skeleton, rear" />
+</p>
+
+Core `1e247dd` rendered four inspected 2048 × 2048 reference frames on the
+local Apple M4 from a `NHBONES1` package with 180 exact BodyParts3D 4.0 source
+meshes (247,429 vertices, 1,356,360 indices). The package binds 17 conservative
+fit landmarks plus 9 major extensions, 8 cranial/mandibular bones, 24 ribs, 10
+mid-foot tarsals, 52 wrists/hands/digits, 38 feet/toes, and 22 axial vertebrae
+to 84 named MyoSim parents in the active 157-body pose. `FJ1282`, the retired
+"skull" selection, was an ocular component from a broad `part_of` listing; it
+was removed and replaced by explicitly named cranial and mandibular source
+bones before this capture.
+
+The visual probe creates one native reference renderer per fixed camera, so a
+2048 px camera cannot reuse an earlier camera's in-flight workspace. The
+default view deliberately hides route lines. All source mesh instances are
+attached to their current Core articulated parent pose; where the source model
+has only one torso or toes body, ribs or foot meshes share that real parent
+instead of receiving fabricated joint mechanics.
+
+| View | Default-pose SHA-256 | Bone pixels | 1 ms complete-muscle SHA-256 | Bone pixels |
+| --- | --- | ---: | --- | ---: |
+| Front | `1e85bf2dbc9ac171a245afdcf236e1296a1ef23d3fd9f649379269b0d338bbf6` | 84,958 | `7a481f9d6ec5f72a358084d4682cac77f0be457cc443b6f25b5f7711dbd8efa1` | 84,915 |
+| Oblique | `eb48629f99e9c814e24a91e1004a530af330d0b6b148983f3c02eae3f3339da1` | 76,363 | `491edd7290e824e8d9673d8d203412b9001be82098e0c6f5c45471ffc9d6188e` | 76,737 |
+| Side | `71c07933e1f16f3e48385eaf92a3c4fc7c44b54d974e980ae17cf35da3310960` | 53,117 | `99297bb4377acd88152b1d282dfef7292e1c924eab3bbab52195debb22843211` | 53,294 |
+| Rear | `bb2560cab9a947284e44a0acd54da88271e7923c54111998fd785b23bda46569` | 87,861 | `ad7b8c3efb23e86034117e1de88f828edf9622d98e6e2bfa3be4dfb0bfa0f7a4` | 87,669 |
+
+The paired muscle-driven frames use the complete 416 source muscle-tendon
+force set, 90 applied wraps, and one 1 ms CPU-FP64 free-body sensitivity step
+before Metal poses the final 180 visual meshes. Exact commands, device,
+payload/registration hashes, and every image hash are in the
+[default-pose transcript](media/myosim-native-full-skeleton-180-2048/default/capture.transcript.txt)
+and [muscle-driven transcript](media/myosim-native-full-skeleton-180-2048/muscle-driven/capture.transcript.txt).
+The Mac mini was running an unrelated BirdFlow workload, so this is a bounded
+local Apple M4 fallback; it is not an M4 Pro qualification.
+
+This validates `full source visual skeleton → active MyoSim rigid parent →
+Metal pose → native renderer`, and separately a bounded `416 source muscles →
+one free-body step → Metal pose → the same skeleton` chain. It does not
+validate skinning, tendons as surface geometry, organs, vessels, nerves,
+collision/contact, a controller, a replay, gait, deformable tissue, or medical
+registration.
+
 ## Retired full-body source validation snapshot — 2026-08-27
 
 These images are retained source-provenance artifacts from the pinned MyoHub
@@ -246,10 +294,10 @@ owner; no contact or locomotion is claimed here.
 
 ## Remaining visual/mechanical steps
 
-1. Extend the inspected major-bone rest-frame binding to vertebrae, ribs,
-   hands/digits, toes, and the remaining named skeleton meshes; matching
-   anatomical labels remain insufficient evidence.
-2. Add the deformable skin path after those reviewed skeletal attachments; do
+1. Resolve the remaining C1/C2 and triquetrum source-geometry gaps, then review
+   their parent-body choice before adding them; matching anatomical labels alone
+   remain insufficient evidence.
+2. Add the deformable skin path after the reviewed skeletal attachments; do
    not replace it with rigid-bone parenting.
 3. Resolve the Mortensen spine-to-`cervical_spine` rest registration and make
    an explicit MyoSim neck/head replacement decision before applying its 72
