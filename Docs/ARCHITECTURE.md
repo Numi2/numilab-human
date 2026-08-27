@@ -123,6 +123,18 @@ source has no separate fibular rigid body, so each fibula remains a visual
 attachment to the ipsilateral tibial link rather than a claimed independent
 articulated segment.
 
+The focused posterior-calf surface package is a separate `NHTISS2` input. It
+contains the exact BodyParts3D gastrocnemius, soleus, and calcaneal-tendon
+triangles, two named MyoSim body-frame rest transforms per surface, and one
+0–1 proximal weight per source vertex. The native renderer evaluates each
+vertex through both posed bodies and linearly blends the resulting positions
+and normals into a world-surface snapshot. Thus gastrocnemius spans
+femur-to-calcaneus, while soleus and calcaneal tendon span tibia-to-calcaneus;
+it fixes the invalid one-rigid-parent representation of a crossing tendon.
+This is explicit kinematic skinning for presentation only—not FEM/MPM,
+muscle-fibre contraction, tendon constitutive response, collision, force
+transfer, or a biological attachment certificate.
+
 Core `2aab522` adds a separate, opt-in bounded muscle-driven visual state.
 `myosim-native-muscle-bone-visuals` evaluates the complete 416 MyoSim route
 definitions at source-default excitation/activation (`0.5` / `0.5`) in the

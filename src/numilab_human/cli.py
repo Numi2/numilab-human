@@ -763,7 +763,7 @@ def parser() -> argparse.ArgumentParser:
     myosim_bone_payload_parser.set_defaults(handler=myosim_bodyparts_bone_visual_payload)
     myosim_posterior_chain_payload_parser = commands.add_parser(
         "myosim-bodyparts-right-posterior-chain-payload",
-        help="prepare exact right posterior-calf muscle and calcaneal-tendon surfaces for native source-default inspection",
+        help="prepare exact right posterior-calf muscle and calcaneal-tendon surfaces for native two-body kinematic inspection",
     )
     myosim_posterior_chain_payload_parser.add_argument("--sources", type=Path, required=True)
     myosim_posterior_chain_payload_parser.add_argument(

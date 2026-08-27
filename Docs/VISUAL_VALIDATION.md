@@ -19,12 +19,15 @@ They remain distinct from the BodyParts3D source-static evidence below.
 The current visual reference is the reviewed 2048 × 2048 four-angle
 [posterior-calf source-surface inspection](VISUAL_PROGRESS.md#reviewed-native-posterior-calf-source-surface-inspection--2026-08-27).
 It renders the exact BodyParts3D gastrocnemius, soleus, and calcaneal-tendon
-triangles over their named articulated parents in isolated native reference
+triangles over a native two-body skeleton bind in isolated native reference
 workspaces, so a later camera cannot reuse an earlier camera's observation.
 All four views have nonzero bone, muscle-surface, and tendon-surface coverage.
-The posterior view visibly continues the source tendon to the calcaneus. This
-validates source-default mesh visibility and local rest-frame continuity only;
-it does not validate a physical attachment, MyoSim force transfer, or dynamic
+The posterior view visibly continues the source tendon to the calcaneus.
+Gastrocnemius is posed between femur/calcaneus, while soleus and the tendon are
+posed between tibia/calcaneus; a source vertex has matching body-frame rest
+evaluations and a bounded 0–1 per-vertex blend. This validates source-default
+mesh visibility and kinematic crossing-surface continuity only; it does not
+validate a physical attachment, MyoSim force transfer, or dynamic continuum
 tendon mechanics.
 
 ## Current native full-skeleton visual check — 2026-08-27

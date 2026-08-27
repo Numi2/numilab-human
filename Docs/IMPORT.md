@@ -58,8 +58,8 @@ numi human myosim-native-route-inspection \
   136 348 349 369 371
 
 # Offline source-surface package plus native source-default inspection. The
-# final command starts no Python process. Its rigid visual parents do not make
-# the muscle/tendon surfaces deformable.
+# final command starts no Python process. Each selected surface is posed by two
+# named skeleton bodies; that kinematic bind does not make the tissue deformable.
 numi human myosim-bodyparts-right-posterior-chain-payload \
   --sources Sources \
   --registration Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json \
@@ -70,6 +70,15 @@ numi human myosim-native-soft-tissue-visuals \
   Build/bodyparts3d-myosim-right-posterior-chain/bodyparts3d-myosim-right-posterior-chain.nhtissue \
   Build/bodyparts3d-myosim-right-posterior-chain/native-views \
   136 --dimension 2048
+
+# Run the same two-body surface package after the bounded complete-muscle
+# sensitivity step. This is not a stable/contact-qualified animation.
+numi human myosim-native-muscle-soft-tissue-visuals \
+  Build/myosim-fullbody \
+  Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
+  Build/bodyparts3d-myosim-right-posterior-chain/bodyparts3d-myosim-right-posterior-chain.nhtissue \
+  Build/bodyparts3d-myosim-right-posterior-chain/native-muscle-stress \
+  136 --muscle-step-seconds 0.001 --dimension 2048
 
 # Native bounded force-to-pose capture: Core FP64 projects all 416 source
 # muscles, integrates one free-body sensitivity step, and Metal renders only

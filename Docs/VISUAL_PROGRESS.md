@@ -34,12 +34,14 @@ four source surfaces contain 10,348 vertices and 45,582 indices. Muscle is
 red, tendon gold, and bone ivory solely as presentation labels.
 
 The four surfaces use the same fitted BodyParts3D → MyoSim source-default
-frame as the skeleton. The gastrocnemius meshes are visually parented at the
-right femur, soleus at the right tibia, and the tendon at the right calcaneus.
-This preserves the visible rest-frame continuation while retaining the source
-model's real insertion-side parent. It does not prove a watertight biological
-attachment, deformable tissue, force-path transfer, or a mechanical tendon
-constraint.
+frame as the skeleton. The gastrocnemius meshes use a femur-to-calcaneus
+per-vertex blend; soleus and the calcaneal tendon use tibia-to-calcaneus.
+At rest, both body-frame evaluations reproduce the same source vertex; after a
+posed skeleton update, the native renderer blends the two evaluations before
+rendering the world-surface snapshot. This prevents the old one-rigid-parent
+shear at a crossing structure's two ends. It does not prove a watertight
+biological attachment, deformable tissue, force-path transfer, or a mechanical
+tendon constraint.
 
 The local Apple M4 native probe uses one fresh reference renderer per camera;
 the occupied Mac mini was not touched. All four cameras report nonzero bone,
@@ -48,15 +50,18 @@ hashes are in the [transcript](media/myosim-native-posterior-chain-2048/default/
 
 | Camera | PNG SHA-256 | Bone / muscle / tendon pixels |
 | --- | --- | ---: |
-| Front | `37913b642ad6d2869959e918e58f6ab07dd84ed7b568cc44fbd9db3d0fddd7e6` | 343,221 / 42,225 / 1,656 |
-| Oblique | `b95641cf0a06f1ea0c995e32afa728fbc6458ec0f60c687b14916621197af765` | 379,512 / 64,441 / 5,467 |
-| Side | `2740aa68d8e32cf80835e1978ce8e6d67c2809c220d2c44c98b3f0403fdb490e` | 302,924 / 45,325 / 6,384 |
-| Rear | `76b70bab5959855b012301a16f07c3e61d1d42c6a3ec33d39c01a444e8a78e84` | 247,853 / 121,509 / 22,255 |
+| Front | `b919bb34c872f92d1adc9bca89407c73497a7f5b3858bb25041cbd5d0b076e0f` | 343,221 / 42,225 / 1,656 |
+| Oblique | `cc8a60d00eb1fcc0ae99412e78a4eb06287f5ea04bcaa1bf66d49c3e83c1df2c` | 379,512 / 64,441 / 5,467 |
+| Side | `f06ab2d6e9ef05b39c0c8c7643093e502289681963c77c3fbc44da465caf0cd1` | 302,924 / 45,325 / 6,384 |
+| Rear | `623745bf6c83d712fbe083d5fdc7b341fb791134f1101404ab873fee465382eb` | 247,853 / 121,509 / 22,255 |
 
 This is the current focused source-anatomy presentation. It is not a full Human
-beauty render, skin, organ/vessel/nerve view, articulated deformation,
-muscle-driven rollout, or medically validated attachment model. Those claims
-remain separate from this source-default visual binding.
+beauty render, skin, organ/vessel/nerve view, articulated continuum
+deformation, muscle-driven rollout, or medically validated attachment model.
+The active 1 ms all-muscle free-body stress frame was also checked from all
+four angles but is intentionally not presented: without contact or a posture
+controller, unsupported skeletal parts separate. Those claims remain separate
+from this source-default visual binding.
 
 ## Reviewed native 184-mesh full skeleton — 2026-08-27
 

@@ -25,9 +25,10 @@ The previous 640 × 480 source-model images have been withdrawn from the
 showcase. They remain provenance artifacts, but their framing and tendon
 appearance are not the quality bar for NumiLab Human. The replacement uses
 exact BodyParts3D muscle/tendon surfaces in the same source-default frame as
-the articulated skeleton; it keeps a force-path diagnostic separate from
-anatomy presentation. See [visual progress](Docs/VISUAL_PROGRESS.md) for the
-evidence boundary.
+the articulated skeleton, with a native two-body surface bind for structures
+that span a joint. It keeps a force-path diagnostic separate from anatomy
+presentation. See [visual progress](Docs/VISUAL_PROGRESS.md) for the evidence
+boundary.
 
 ### Reviewed posterior-calf tendon attachment inspection
 
@@ -41,9 +42,11 @@ This 2048 × 2048 four-angle native inspection binds the exact BodyParts3D
 right lateral/medial gastrocnemius, soleus, and calcaneal-tendon meshes over
 the 184-mesh articulated skeleton. At the shared source-default pose, the
 posterior view visibly carries the tendon from the calf surfaces to the
-calcaneus rather than substituting a route line. The muscle and tendon meshes
-are exact source triangles; their current single-parent visual bindings are
-not deformable tissue, force transfer, or a medical attachment claim.
+calcaneus rather than substituting a route line. Each surface is kinematically
+blended between its named proximal and distal Core bodies, so a muscle-driven
+pose cannot shear the tendon apart by treating it as one rigid child. The
+triangles remain exact source geometry; this is not yet deformable tissue,
+force transfer, or a medical attachment claim.
 
 ### Reviewed full-skeleton native inspection
 
@@ -136,7 +139,8 @@ numi human myosim-native-route-inspection \
 
 # Prepare exact BodyParts3D posterior-calf muscle/tendon surfaces in the same
 # source-default frame, then render them over the focused native skeleton.
-# This is a visual source-surface binding, not deformable tissue mechanics.
+# The current package requires the complete v2 184-mesh registration and uses
+# a kinematic two-body bind, not deformable tissue mechanics.
 numi human myosim-bodyparts-right-posterior-chain-payload \
   --sources Sources \
   --registration Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json \
@@ -147,6 +151,15 @@ numi human myosim-native-soft-tissue-visuals \
   Build/bodyparts3d-myosim-right-posterior-chain/bodyparts3d-myosim-right-posterior-chain.nhtissue \
   Docs/media/myosim-native-posterior-chain-2048/default \
   136 --dimension 2048
+
+# The same exact surfaces after the bounded complete-416-muscle pose step.
+# This is a stress check, not a stable/contact-qualified animation.
+numi human myosim-native-muscle-soft-tissue-visuals \
+  Build/myosim-fullbody \
+  Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
+  Build/bodyparts3d-myosim-right-posterior-chain/bodyparts3d-myosim-right-posterior-chain.nhtissue \
+  Build/myosim-native-posterior-chain-muscle-stress \
+  136 --muscle-step-seconds 0.001 --dimension 2048
 
 # Export a separate exact BodyParts3D rest-frame reference for the right lower
 # leg. It contains source bone, muscle, and calcaneal-tendon surfaces and is

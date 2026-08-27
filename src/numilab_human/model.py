@@ -3386,21 +3386,22 @@ def bodyparts_myosim_attachment_surface_registration_candidate(
 
 _BODYPARTS_MYOSIM_BONE_VISUAL_MAGIC = b"NHBONES1"
 _BODYPARTS_MYOSIM_BONE_VISUAL_ABI = 1
-_BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_MAGIC = b"NHTISS1\0"
-_BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_ABI = 1
+_BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_MAGIC = b"NHTISS2\0"
+_BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_ABI = 2
 _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE = 1
 _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON = 2
 
 # This is deliberately a small, exact source-surface bundle for the first
-# articulated anatomy presentation.  A single rigid visual parent preserves
-# the registered source-default frame; it is not a deformation model for a
-# biarticular muscle or tendon.  The selected parents retain the real source
-# origin/insertion-side relationship that matters most to the focused view.
+# articulated anatomy presentation.  Every selected surface spans a named
+# proximal and distal source body.  The native visual path uses the two body
+# rest transforms and a source-mesh longitudinal blend to keep both ends
+# continuously posed with the active skeleton.  It is an articulated surface
+# binding, not a continuum constitutive model.
 _BODYPARTS_MYOSIM_RIGHT_POSTERIOR_CHAIN_TISSUES = (
-    ("femur_r", "right lateral head of gastrocnemius", "FJ1394", _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE),
-    ("femur_r", "right medial head of gastrocnemius", "FJ1397", _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE),
-    ("tibia_r", "right soleus", "FJ1437", _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE),
-    ("calcn_r", "right calcaneal tendon", "FJ1405", _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON),
+    ("femur_r", "calcn_r", "right lateral head of gastrocnemius", "FJ1394", _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE),
+    ("femur_r", "calcn_r", "right medial head of gastrocnemius", "FJ1397", _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE),
+    ("tibia_r", "calcn_r", "right soleus", "FJ1437", _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE),
+    ("tibia_r", "calcn_r", "right calcaneal tendon", "FJ1405", _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON),
 )
 
 
@@ -3587,13 +3588,13 @@ def bodyparts_myosim_bone_visual_payload(
 def bodyparts_myosim_right_posterior_chain_visual_payload(
     sources: Path, anatomy: dict[str, Any], registration_path: Path, output: Path,
 ) -> dict[str, Any]:
-    """Package exact posterior-calf source surfaces for native rest-pose inspection.
+    """Package exact posterior-calf source surfaces for native two-body posing.
 
     The compact payload is deliberately independent of ``NHBONES1``: it has
     explicit muscle/tendon layer identities while preserving the same fitted
-    BodyParts3D-to-MyoSim rest frame as the visual skeleton.  Its single-link
-    surface bindings are a source-default presentation aid, never a substitute
-    for muscle/tendon deformation or a surface-attachment transfer.
+    BodyParts3D-to-MyoSim rest frame as the visual skeleton.  Its per-vertex
+    two-body blend is kinematic presentation data, never a substitute for a
+    muscle/tendon continuum solve or an attachment-force transfer.
     """
     registration_file = registration_path.resolve()
     registration = read_json(registration_file)
@@ -3629,50 +3630,92 @@ def bodyparts_myosim_right_posterior_chain_visual_payload(
         name = target.get("name")
         if isinstance(name, str) and name not in targets:
             targets[name] = target
-    vertices_payload: list[tuple[float, float, float, float, float, float]] = []
+    vertices_payload: list[tuple[float, float, float, float, float, float, float]] = []
     indices_payload: list[int] = []
     records_payload: list[bytes] = []
     provenance: list[dict[str, Any]] = []
-    for stable_id, (target_name, label, member_id, layer) in enumerate(
+    for stable_id, (primary_target_name, secondary_target_name, label, member_id, layer) in enumerate(
         _BODYPARTS_MYOSIM_RIGHT_POSTERIOR_CHAIN_TISSUES, start=1
     ):
-        target = targets.get(target_name)
-        if not isinstance(target, dict):
-            raise ImportError(f"BodyParts3D posterior-chain payload has no target body {target_name}")
-        core_body_index = target.get("core_body_index")
-        if not isinstance(core_body_index, int) or core_body_index < 0:
-            raise ImportError(f"BodyParts3D posterior-chain payload target {target_name} has an invalid Core body index")
-        body_position = _myosim_vector(
-            target.get("default_com_position_world_m"),
-            f"BodyParts3D posterior-chain target {target_name} position",
+        primary_target = targets.get(primary_target_name)
+        secondary_target = targets.get(secondary_target_name)
+        if not isinstance(primary_target, dict) or not isinstance(secondary_target, dict):
+            raise ImportError(
+                "BodyParts3D posterior-chain payload has no two-body target for " + label
+            )
+        primary_body_index = primary_target.get("core_body_index")
+        secondary_body_index = secondary_target.get("core_body_index")
+        if not isinstance(primary_body_index, int) or primary_body_index < 0 or \
+                not isinstance(secondary_body_index, int) or secondary_body_index < 0 or \
+                primary_body_index == secondary_body_index:
+            raise ImportError(f"BodyParts3D posterior-chain payload {label} has invalid two-body targets")
+        primary_body_position = _myosim_vector(
+            primary_target.get("default_com_position_world_m"),
+            f"BodyParts3D posterior-chain primary target {primary_target_name} position",
         )
-        body_quaternion = list(target.get("default_inertial_quaternion_world_xyzw", []))
-        _myosim_matrix_from_quaternion_xyzw(body_quaternion)
+        secondary_body_position = _myosim_vector(
+            secondary_target.get("default_com_position_world_m"),
+            f"BodyParts3D posterior-chain secondary target {secondary_target_name} position",
+        )
+        primary_body_quaternion = list(primary_target.get("default_inertial_quaternion_world_xyzw", []))
+        secondary_body_quaternion = list(secondary_target.get("default_inertial_quaternion_world_xyzw", []))
+        _myosim_matrix_from_quaternion_xyzw(primary_body_quaternion)
+        _myosim_matrix_from_quaternion_xyzw(secondary_body_quaternion)
         archive_path, member, obj = _bodyparts_obj_member(sources, "is_a", member_id)
         vertices_mm, triangles = _bodyparts_obj_triangles(obj, member)
         normals = _bodyparts_vertex_normals(vertices_mm, triangles, member)
-        local_matrix = _bodyparts_local_registration_matrix(
-            global_matrix, body_position, body_quaternion,
+        primary_local_matrix = _bodyparts_local_registration_matrix(
+            global_matrix, primary_body_position, primary_body_quaternion,
         )
-        translation, quaternion, scale = _bodyparts_visual_local_pose(
-            local_matrix, f"BodyParts3D posterior-chain payload {member_id} local transform",
+        secondary_local_matrix = _bodyparts_local_registration_matrix(
+            global_matrix, secondary_body_position, secondary_body_quaternion,
         )
+        primary_translation, primary_quaternion, primary_scale = _bodyparts_visual_local_pose(
+            primary_local_matrix, f"BodyParts3D posterior-chain payload {member_id} primary local transform",
+        )
+        secondary_translation, secondary_quaternion, secondary_scale = _bodyparts_visual_local_pose(
+            secondary_local_matrix, f"BodyParts3D posterior-chain payload {member_id} secondary local transform",
+        )
+        body_axis = _myosim_subtract(secondary_body_position, primary_body_position)
+        body_axis_squared = sum(value * value for value in body_axis)
+        if body_axis_squared <= 1.0e-10:
+            raise ImportError(f"BodyParts3D posterior-chain payload {label} has coincident body centres")
+        global_vertices_m = [
+            [
+                sum(global_matrix[row][column] * vertex[column] for column in range(3)) + global_matrix[row][3]
+                for row in range(3)
+            ]
+            for vertex in vertices_mm
+        ]
+        projections = [
+            sum((vertex[axis] - primary_body_position[axis]) * body_axis[axis] for axis in range(3))
+            for vertex in global_vertices_m
+        ]
+        projection_minimum = min(projections)
+        projection_maximum = max(projections)
+        if projection_maximum - projection_minimum <= 1.0e-6:
+            raise ImportError(f"BodyParts3D posterior-chain payload {label} has no two-body blend extent")
         first_vertex = len(vertices_payload)
         first_index = len(indices_payload)
-        for vertex, normal in zip(vertices_mm, normals, strict=True):
+        for vertex, normal, projection in zip(vertices_mm, normals, projections, strict=True):
+            primary_weight = (projection_maximum - projection) / (projection_maximum - projection_minimum)
             vertices_payload.append((
                 vertex[0] * 0.001, vertex[1] * 0.001, vertex[2] * 0.001,
-                normal[0], normal[1], normal[2],
+                normal[0], normal[1], normal[2], max(0.0, min(1.0, primary_weight)),
             ))
         indices_payload.extend(first_vertex + index for triangle in triangles for index in triangle)
         records_payload.append(struct.pack(
-            "<7I8f", core_body_index, first_vertex, len(vertices_mm), first_index,
-            len(triangles) * 3, stable_id, layer, *translation, *quaternion, scale,
+            "<8I16f", primary_body_index, secondary_body_index, first_vertex, len(vertices_mm), first_index,
+            len(triangles) * 3, stable_id, layer,
+            *primary_translation, *primary_quaternion, primary_scale,
+            *secondary_translation, *secondary_quaternion, secondary_scale,
         ))
         provenance.append({
             "member_id": member_id, "member": member, "member_sha256": hashlib.sha256(obj).hexdigest(),
             "label": label, "layer": "muscle" if layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE else "tendon",
-            "myosim_body": target_name, "core_body_index": core_body_index,
+            "primary_myosim_body": primary_target_name, "primary_core_body_index": primary_body_index,
+            "secondary_myosim_body": secondary_target_name, "secondary_core_body_index": secondary_body_index,
+            "primary_weight_range": [0.0, 1.0],
             "vertex_count": len(vertices_mm), "triangle_count": len(triangles),
         })
     if len(vertices_payload) > 0xFFFFFFFF or len(indices_payload) > 0xFFFFFFFF:
@@ -3684,7 +3727,7 @@ def bodyparts_myosim_right_posterior_chain_visual_payload(
     )
     payload = b"".join([
         header, *records_payload,
-        b"".join(struct.pack("<6f", *vertex) for vertex in vertices_payload),
+        b"".join(struct.pack("<7f", *vertex) for vertex in vertices_payload),
         struct.pack(f"<{len(indices_payload)}I", *indices_payload),
     ])
     output = output.resolve()
@@ -3692,7 +3735,7 @@ def bodyparts_myosim_right_posterior_chain_visual_payload(
     payload_path = output / "bodyparts3d-myosim-right-posterior-chain.nhtissue"
     payload_path.write_bytes(payload)
     manifest = {
-        "schema": "numi.human.bodyparts3d-myosim-right-posterior-chain-visual-payload.v1",
+        "schema": "numi.human.bodyparts3d-myosim-right-posterior-chain-visual-payload.v2",
         "payload": {
             "file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
             "magic": _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_MAGIC.rstrip(b"\0").decode("ascii"),
@@ -3706,15 +3749,16 @@ def bodyparts_myosim_right_posterior_chain_visual_payload(
             "surfaces": provenance,
         },
         "runtime_binding": (
-            "exact BodyParts3D source surfaces use the visual-skeleton common rest frame and one "
-            "named Core articulated parent each; gastrocnemius is parented at femur, soleus at tibia, "
-            "and calcaneal tendon at calcaneus"
+            "exact BodyParts3D source surfaces use the visual-skeleton common rest frame and a "
+            "per-vertex two-body linear blend in named Core articulated body frames; gastrocnemius "
+            "spans femur-to-calcaneus while soleus and the calcaneal tendon span tibia-to-calcaneus"
         ),
-        "status": "native_source_surface_visual_input_not_collision_or_physics",
+        "status": "native_two_body_kinematic_surface_binding_input_not_collision_or_physics",
         "evidence_boundary": (
             "This payload exposes exact posterior-calf muscle and calcaneal-tendon triangles at the "
-            "registered source default pose. Its rigid visual bindings do not provide muscle/tendon "
-            "deformation, surface-attachment transfer, collision/contact, force transfer, or medical registration."
+            "registered source default pose. Its two-body kinematic surface binding preserves render "
+            "continuity as the named skeleton moves, but does not provide a muscle/tendon continuum "
+            "solve, surface-attachment force transfer, collision/contact, or medical registration."
         ),
     }
     write_json(output / "bodyparts3d-myosim-right-posterior-chain.manifest.json", manifest)
