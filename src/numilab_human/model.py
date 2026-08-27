@@ -2474,11 +2474,25 @@ def myosim_fullbody_reference_artifacts(
     )
     source_body_ids = sorted(int(identifier) for identifier in body_by_id)
     source_to_core = [source_body_to_core[identifier] for identifier in source_body_ids]
+    source_body_records = [
+        {
+            "source_body_id": identifier,
+            "name": body_by_id[identifier].get("name"),
+            "core_body_index": source_body_to_core[identifier],
+            "default_com_position_world_m": _myosim_vector(
+                body_by_id[identifier].get("default_com_position_world_m"),
+                "MyoSim source body COM",
+            ),
+            "default_inertial_quaternion_world_xyzw": list(
+                body_by_id[identifier].get("default_inertial_quaternion_world_xyzw", [])
+            ),
+        }
+        for identifier in source_body_ids
+    ]
     expected_poses = []
-    for identifier in source_body_ids:
-        body = body_by_id[identifier]
-        expected_poses.extend(_myosim_vector(body.get("default_com_position_world_m"), "MyoSim source pose"))
-        quaternion = list(body.get("default_inertial_quaternion_world_xyzw", []))
+    for record in source_body_records:
+        expected_poses.extend(record["default_com_position_world_m"])
+        quaternion = record["default_inertial_quaternion_world_xyzw"]
         _myosim_matrix_from_quaternion_xyzw(quaternion)
         expected_poses.extend(_finite_scalar(value, "MyoSim source pose quaternion") for value in quaternion)
     header = struct.pack(
@@ -2641,6 +2655,7 @@ def myosim_fullbody_reference_artifacts(
             "joint_count": len(joint_records), "nq": nq, "nv": nv,
             "source_joint_map": source_joint_map,
             "body_order": [node["name"] for node in body_nodes],
+            "source_body_records": source_body_records,
         },
         "payloads": {
             "rigid": {"file": "myosim-fullbody-core-reference.nhrigid", "bytes": len(rigid_payload),
