@@ -124,6 +124,36 @@ def fetch(arguments: argparse.Namespace) -> int:
     if actual != rajagopal["sha256"]:
         raise ImportError("SHA-256 mismatch for RajagopalLaiUhlrich2023.osim")
     print(f"verified {target.name} {actual}")
+    public_mobl_receipt: dict[str, str] | None = None
+    if arguments.include_public_mobl_41:
+        if not arguments.accept_upper_noncommercial_terms:
+            raise ImportError(
+                "The public MoBL-ARMS 4.1 mirror remains non-commercial. "
+                "Re-run with --accept-upper-noncommercial-terms after reviewing THIRD_PARTY_NOTICES.md"
+            )
+        public_mobl = source_lock["sources"].get("mobl_arms_ceinms_41_public_mirror")
+        if not isinstance(public_mobl, dict):
+            raise ImportError("sources.lock.json has no public MoBL-ARMS 4.1 mirror entry")
+        model_file, url, expected = (
+            public_mobl.get("model_file"), public_mobl.get("url"), public_mobl.get("sha256"),
+        )
+        if not all(isinstance(value, str) and value for value in (model_file, url, expected)):
+            raise ImportError("public MoBL-ARMS 4.1 source-lock entry is incomplete")
+        public_target = source_dir / model_file
+        if not public_target.is_file():
+            print(f"fetching {model_file}")
+            _download(url, public_target)
+        public_actual = sha256(public_target)
+        if public_actual != expected:
+            raise ImportError(f"SHA-256 mismatch for {model_file}; remove it and fetch again")
+        public_mobl_receipt = {
+            "variant": "public_unimanual_mirror",
+            "file": model_file,
+            "sha256": public_actual,
+            "repository": str(public_mobl.get("repository")),
+            "revision": str(public_mobl.get("revision")),
+        }
+        print(f"verified {model_file} {public_actual}")
     write_json(
         source_dir / "sources.receipt.json",
         {
@@ -131,6 +161,7 @@ def fetch(arguments: argparse.Namespace) -> int:
             "source_lock": str((REPOSITORY_ROOT / "sources.lock.json").resolve()),
             "bodyparts_attribution": bodyparts["attribution"],
             "upper_extremity_next_step": "Manually download the original authenticated MoBL-ARMS bimanual archive from SimTK.",
+            "public_mobl_41": public_mobl_receipt,
         },
     )
     return 0
@@ -326,15 +357,32 @@ def build(arguments: argparse.Namespace) -> int:
             "MoBL-ARMS official terms restrict this source to non-commercial use. "
             "Re-run with --accept-upper-noncommercial-terms after reviewing THIRD_PARTY_NOTICES.md"
         )
-    upper_archive = arguments.upper_archive.resolve()
-    if not upper_archive.is_file():
-        raise ImportError(f"upper archive does not exist: {upper_archive}")
+    source_lock = read_json(REPOSITORY_ROOT / "sources.lock.json")
+    sources = arguments.sources.resolve()
+    upper_archive = arguments.upper_archive.resolve() if arguments.upper_archive else None
+    upper_public_model: Path | None = None
+    if upper_archive is not None:
+        if not upper_archive.is_file():
+            raise ImportError(f"upper archive does not exist: {upper_archive}")
+    elif arguments.upper_public_mobl_41:
+        public_mobl = source_lock["sources"].get("mobl_arms_ceinms_41_public_mirror")
+        if not isinstance(public_mobl, dict) or not isinstance(public_mobl.get("model_file"), str):
+            raise ImportError("sources.lock.json has no complete public MoBL-ARMS 4.1 mirror entry")
+        upper_public_model = sources / public_mobl["model_file"]
+        if not upper_public_model.is_file():
+            raise ImportError(
+                f"public MoBL-ARMS 4.1 model does not exist: {upper_public_model}; "
+                "run `numi human fetch --include-public-mobl-41 --accept-upper-noncommercial-terms` first"
+            )
+    else:
+        raise ImportError("build requires an upper source")
     manifest = build_manifest(
-        sources=arguments.sources.resolve(),
+        sources=sources,
         upper_archive=upper_archive,
         classification_path=REPOSITORY_ROOT / "config/anatomy-classification.v1.json",
         target_mapping_path=REPOSITORY_ROOT / "config/numi-targets.v1.json",
-        source_lock=read_json(REPOSITORY_ROOT / "sources.lock.json"),
+        source_lock=source_lock,
+        upper_public_model=upper_public_model,
     )
     output = arguments.output.resolve()
     write_json(output / "human.v1.json", manifest)
@@ -345,10 +393,19 @@ def build(arguments: argparse.Namespace) -> int:
 
 
 def audit(arguments: argparse.Namespace) -> int:
+    source_lock = read_json(REPOSITORY_ROOT / "sources.lock.json")
+    sources = arguments.sources.resolve()
+    upper_public_model: Path | None = None
+    if arguments.upper_public_mobl_41:
+        public_mobl = source_lock["sources"].get("mobl_arms_ceinms_41_public_mirror")
+        if not isinstance(public_mobl, dict) or not isinstance(public_mobl.get("model_file"), str):
+            raise ImportError("sources.lock.json has no complete public MoBL-ARMS 4.1 mirror entry")
+        upper_public_model = sources / public_mobl["model_file"]
     report = gate_report(
-        sources=arguments.sources.resolve(),
+        sources=sources,
         upper_archive=(arguments.upper_archive.resolve() if arguments.upper_archive else None),
-        source_lock=read_json(REPOSITORY_ROOT / "sources.lock.json"),
+        upper_public_model=upper_public_model,
+        source_lock=source_lock,
         runtime_contract=read_json(REPOSITORY_ROOT / "config/numi-runtime-contract.v1.json"),
         runtime_root=(arguments.runtime_root.resolve() if arguments.runtime_root else None),
     )
@@ -839,18 +896,24 @@ def parser() -> argparse.ArgumentParser:
     mortensen_neck_parser.add_argument("--sources", type=Path, required=True, help="directory made by myosim-fetch")
     mortensen_neck_parser.add_argument("--output", type=Path, required=True, help="ignored local source-IR artifact")
     mortensen_neck_parser.set_defaults(handler=mortensen_neck)
-    fetch_parser = commands.add_parser("fetch", help="fetch BodyParts3D 4.0 and the pinned lower-body model")
+    fetch_parser = commands.add_parser("fetch", help="fetch BodyParts3D 4.0, Rajagopal, and an optional public MoBL 4.1 mirror")
     fetch_parser.add_argument("--output", type=Path, required=True, help="local, ignored source directory")
+    fetch_parser.add_argument("--include-public-mobl-41", action="store_true", help="fetch the pinned public unimanual MoBL-ARMS 4.1 mirror")
+    fetch_parser.add_argument("--accept-upper-noncommercial-terms", action="store_true")
     fetch_parser.set_defaults(handler=fetch)
     build_parser = commands.add_parser("build", help="combine exact sources into a local audit manifest")
     build_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
-    build_parser.add_argument("--upper-archive", type=Path, required=True, help="original SimTK MoBL-ARMS bimanual ZIP")
+    build_upper_source = build_parser.add_mutually_exclusive_group(required=True)
+    build_upper_source.add_argument("--upper-archive", type=Path, help="original authenticated SimTK MoBL-ARMS bimanual ZIP")
+    build_upper_source.add_argument("--upper-public-mobl-41", action="store_true", help="use the pinned public unimanual MoBL-ARMS 4.1 mirror from --sources")
     build_parser.add_argument("--output", type=Path, required=True, help="local output directory")
     build_parser.add_argument("--accept-upper-noncommercial-terms", action="store_true")
     build_parser.set_defaults(handler=build)
     audit_parser = commands.add_parser("audit", help="report every source, runtime, and physics gate")
     audit_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
-    audit_parser.add_argument("--upper-archive", type=Path, help="original SimTK MoBL-ARMS bimanual ZIP")
+    audit_upper_source = audit_parser.add_mutually_exclusive_group()
+    audit_upper_source.add_argument("--upper-archive", type=Path, help="original authenticated SimTK MoBL-ARMS bimanual ZIP")
+    audit_upper_source.add_argument("--upper-public-mobl-41", action="store_true", help="inspect the pinned public unimanual MoBL-ARMS 4.1 mirror from --sources")
     audit_parser.add_argument(
         "--runtime-root",
         type=Path,

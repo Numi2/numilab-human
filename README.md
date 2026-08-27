@@ -12,7 +12,7 @@ the native Human execution path.
 | Cervical/hyoid mechanics | Mortensen 2018 | complete 72-muscle OpenSim 3 source IR; merge registration remains explicit |
 | Anatomy/visual layers | BodyParts3D 4.0 | named geometry/hierarchy; 184 source bone meshes are pose-bound for native visual inspection |
 | Comparative lower-body mechanics | RajagopalLaiUhlrich2023 | retained source-faithful bounded Metal path |
-| Comparative upper extremities | MoBL-ARMS | retained authenticated OpenSim source import |
+| Comparative upper extremities | MoBL-ARMS | authenticated bimanual import or pinned public unimanual 4.1 source variant |
 
 The importer preserves upstream records locally. The tracked MyoSim and
 BodyParts3D validation media below are attributed derivatives; all other raw
@@ -409,6 +409,19 @@ numi human build \
   --upper-archive /path/to/MobL_ARMS_OpenSim3_bimanual_model.zip \
   --accept-upper-noncommercial-terms \
   --output Build/human-v1
+
+# For non-commercial research, the pinned public unimanual MoBL-ARMS 4.1
+# source variant can be fetched and imported explicitly. It does not replace
+# the original authenticated bimanual release above.
+numi human fetch \
+  --output Sources \
+  --include-public-mobl-41 \
+  --accept-upper-noncommercial-terms
+numi human build \
+  --sources Sources \
+  --upper-public-mobl-41 \
+  --accept-upper-noncommercial-terms \
+  --output Build/human-v1-public-unimanual
 
 # Audit the active MyoSim full-body route separately from the legacy stitched
 # BodyParts3D + Rajagopal + authenticated MoBL-ARMS manifest.

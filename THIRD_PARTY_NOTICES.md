@@ -74,6 +74,19 @@ every other source in local generated artifacts.
   software platforms using an upper limb musculoskeletal model.* CMBE 2015;
   18:1445-58.
 
+### Public unimanual MoBL-ARMS 4.1 mirror
+
+- Upstream mirror: <https://github.com/CEINMS-RT/UpperLimbModel>, pinned to
+  revision `459e2ebbf47acb72b0ecbc59950a2d0a983d28db`, model
+  `MOBL_ARMS_41.osim`.
+- This is a public **unimanual** MoBL-ARMS 4.1 source variant, not a claim that
+  it is the authenticated SimTK bimanual archive. It is available only through
+  an explicit `--accept-upper-noncommercial-terms` opt-in and is not
+  redistributed here.
+- The model's own non-commercial MoBL terms and required acknowledgement above
+  still apply; the repository-level Apache notice does not broaden the model's
+  terms.
+
 ## Numi Lab boundary
 
 The resulting manifest is a source-faithful import artifact, not a validated

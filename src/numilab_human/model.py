@@ -7407,6 +7407,24 @@ def parse_opensim_archive(path: Path, source_id: str) -> dict[str, Any]:
     return model
 
 
+def parse_opensim_source_input(path: Path, source_id: str) -> dict[str, Any]:
+    """Parse either an authenticated archive or a provenance-pinned `.osim` file.
+
+    The public MoBL 4.1 mirror is a single OpenSim file, whereas the original
+    SimTK release is a bimanual ZIP.  Keeping that distinction at the source
+    boundary lets the importer report the public unimanual variant honestly
+    instead of relabelling it as the authenticated original release.
+    """
+    if path.suffix.lower() != ".osim":
+        return parse_opensim_archive(path, source_id)
+    model = parse_opensim(path, source_id)
+    model["source_direct_file"] = {
+        "file": path.name,
+        "sha256": sha256(path),
+    }
+    return model
+
+
 def gate_report(
     *,
     sources: Path,
@@ -7414,6 +7432,7 @@ def gate_report(
     source_lock: dict[str, Any],
     runtime_contract: dict[str, Any],
     runtime_root: Path | None = None,
+    upper_public_model: Path | None = None,
 ) -> dict[str, Any]:
     """Report every Human v1 dependency without pretending open gates passed."""
     bodyparts = source_lock["sources"]["bodyparts3d_4"]
@@ -7456,11 +7475,15 @@ def gate_report(
                 "verified" if checkout_file.is_file() else "missing"
             )
 
+    original_upper = source_lock["sources"]["mobl_arms_upper_extremity"]
     upper_gate: dict[str, Any] = {
-        "required_file": source_lock["sources"]["mobl_arms_upper_extremity"]["release_file"],
-        "terms": source_lock["sources"]["mobl_arms_upper_extremity"]["license"],
+        "source_variant": "authenticated_bimanual_original",
+        "required_file": original_upper["release_file"],
+        "terms": original_upper["license"],
         "status": "missing_authenticated_archive",
     }
+    upper_source: Path | None = None
+    upper_source_id: str | None = None
     if upper_archive is not None:
         upper_gate["path"] = str(upper_archive)
         if upper_archive.is_file():
@@ -7477,6 +7500,38 @@ def gate_report(
                 upper_gate["status"] = (
                     "ready_for_import" if osim_members else "missing_osim_model"
                 )
+                if osim_members:
+                    upper_source = upper_archive
+                    upper_source_id = "mobl_arms_upper_extremity"
+    elif upper_public_model is not None:
+        public_upper = source_lock["sources"].get("mobl_arms_ceinms_41_public_mirror")
+        upper_gate = {
+            "source_variant": "public_unimanual_mirror",
+            "terms": (
+                public_upper.get("license") if isinstance(public_upper, dict)
+                else "missing public MoBL source-lock entry"
+            ),
+            "status": "missing_public_model",
+        }
+        if not isinstance(public_upper, dict):
+            upper_gate["status"] = "invalid_source_lock"
+        else:
+            model_file = public_upper.get("model_file")
+            expected_sha = public_upper.get("sha256")
+            upper_gate["required_file"] = model_file
+            upper_gate["expected_sha256"] = expected_sha
+            upper_gate["path"] = str(upper_public_model)
+            if upper_public_model.is_file():
+                actual_sha = sha256(upper_public_model)
+                upper_gate["actual_sha256"] = actual_sha
+                if actual_sha != expected_sha:
+                    upper_gate["status"] = "sha256_mismatch"
+                elif upper_public_model.name != model_file:
+                    upper_gate["status"] = "unexpected_model_filename"
+                else:
+                    upper_gate["status"] = "ready_for_import_public_mirror"
+                    upper_source = upper_public_model
+                    upper_source_id = "mobl_arms_ceinms_41_public_mirror"
 
     bodyparts_ready = all(item["status"] == "verified" for item in bodyparts_files)
     myosim_source_ready = (
@@ -7487,6 +7542,11 @@ def gate_report(
         bodyparts_ready
         and lower_gate["status"] == "verified"
         and upper_gate["status"] == "ready_for_import"
+    )
+    public_upper_source_ready = (
+        bodyparts_ready
+        and lower_gate["status"] == "verified"
+        and upper_gate["status"] == "ready_for_import_public_mirror"
     )
     runtime_compatibility: dict[str, Any] = {
         "schema": "numi.human.runtime-compatibility-report.v1",
@@ -7505,9 +7565,9 @@ def gate_report(
             ),
             runtime_contract,
         )
-    if upper_gate["status"] == "ready_for_import" and upper_archive is not None:
+    if upper_source is not None and upper_source_id is not None:
         runtime_compatibility["upper_extremities"] = runtime_compatibility_report(
-            parse_opensim_archive(upper_archive, "mobl_arms_upper_extremity"),
+            parse_opensim_source_input(upper_source, upper_source_id),
             runtime_contract,
         )
     return {
@@ -7536,6 +7596,11 @@ def gate_report(
                 "id": "source_faithful_import",
                 "status": "ready" if source_import_ready else "blocked",
                 "requirement": "The legacy BodyParts3D + Rajagopal + authenticated MoBL-ARMS manifest requires all three exact source artifacts.",
+            },
+            {
+                "id": "public_upper_source_variant",
+                "status": "ready" if public_upper_source_ready else "not_selected",
+                "requirement": "The public CEINMS MoBL-ARMS 4.1 mirror is a hash-pinned, non-commercial unimanual source variant. It does not replace the authenticated bimanual archive.",
             },
             {
                 "id": "active_myosim_fullbody_mechanics",
@@ -7631,10 +7696,11 @@ def registration_work_items(
 def build_manifest(
     *,
     sources: Path,
-    upper_archive: Path,
+    upper_archive: Path | None,
     classification_path: Path,
     target_mapping_path: Path,
     source_lock: dict[str, Any],
+    upper_public_model: Path | None = None,
 ) -> dict[str, Any]:
     bodyparts_lock = source_lock["sources"]["bodyparts3d_4"]["files"]
     bodyparts_gates = [
@@ -7657,7 +7723,40 @@ def build_manifest(
     if lower["source_sha256"] != expected_lower_hash:
         raise ImportError("RajagopalLaiUhlrich2023.osim SHA-256 differs from sources.lock.json")
 
-    upper = parse_opensim_archive(upper_archive, "mobl_arms_upper_extremity")
+    if (upper_archive is None) == (upper_public_model is None):
+        raise ImportError("provide exactly one of the authenticated MoBL archive or public MoBL 4.1 model")
+    if upper_archive is not None:
+        upper = parse_opensim_archive(upper_archive, "mobl_arms_upper_extremity")
+        upper_terms = source_lock["sources"]["mobl_arms_upper_extremity"]["license"]
+        upper_provenance = {
+            "variant": "authenticated_bimanual_original",
+            "archive_file": upper_archive.name,
+            "archive_sha256": sha256(upper_archive),
+        }
+    else:
+        assert upper_public_model is not None
+        public_upper = source_lock["sources"].get("mobl_arms_ceinms_41_public_mirror")
+        if not isinstance(public_upper, dict):
+            raise ImportError("sources.lock.json has no public MoBL-ARMS 4.1 mirror entry")
+        if not upper_public_model.is_file():
+            raise ImportError(
+                f"public MoBL-ARMS 4.1 model does not exist: {upper_public_model}"
+            )
+        if upper_public_model.name != public_upper.get("model_file"):
+            raise ImportError("public MoBL-ARMS 4.1 model filename differs from sources.lock.json")
+        actual_sha = sha256(upper_public_model)
+        if actual_sha != public_upper.get("sha256"):
+            raise ImportError("public MoBL-ARMS 4.1 model SHA-256 differs from sources.lock.json")
+        upper = parse_opensim(upper_public_model, "mobl_arms_ceinms_41_public_mirror")
+        upper_terms = public_upper["license"]
+        upper_provenance = {
+            "variant": "public_unimanual_mirror",
+            "repository": public_upper["repository"],
+            "revision": public_upper["revision"],
+            "model_file": upper_public_model.name,
+            "model_sha256": actual_sha,
+            "not_a_substitute_for": "authenticated_bimanual_original",
+        }
 
     mechanics = [lower, upper]
     manifest = {
@@ -7666,8 +7765,8 @@ def build_manifest(
         "provenance": {
             "source_lock_schema": source_lock["schema"],
             "bodyparts_attribution": source_lock["sources"]["bodyparts3d_4"]["attribution"],
-            "upper_extremity_terms": source_lock["sources"]["mobl_arms_upper_extremity"]["license"],
-            "upper_archive_sha256": sha256(upper_archive),
+            "upper_extremity_terms": upper_terms,
+            "upper_source": upper_provenance,
         },
         "anatomy": anatomy,
         "geometry_preflight": geometry_preflight,

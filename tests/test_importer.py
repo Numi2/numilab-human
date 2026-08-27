@@ -1311,6 +1311,44 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(upper["source_model"]["id"], "upper_fixture")
         self.assertEqual(upper["skeleton"]["status"], "compatible")
 
+    def test_gate_report_parses_pinned_public_upper_model_as_unimanual_variant(self) -> None:
+        source = """<?xml version=\"1.0\"?>
+<OpenSimDocument Version=\"40000\"><Model name=\"upper_fixture\">
+  <BodySet><objects><Body name=\"upper\"><mass>1</mass><mass_center>0 0 0</mass_center><inertia_xx>1</inertia_xx><inertia_yy>1</inertia_yy><inertia_zz>1</inertia_zz></Body></objects></BodySet>
+  <JointSet><objects><PinJoint name=\"elbow\"><parent_body>ground</parent_body><child_body>upper</child_body><coordinates><Coordinate name=\"flexion\"><default_value>0</default_value><range>-1 1</range></Coordinate></coordinates></PinJoint></objects></JointSet><ForceSet><objects /></ForceSet>
+</Model></OpenSimDocument>"""
+        lock = {
+            "sources": {
+                "bodyparts3d_4": {"files": {}},
+                "rajagopal_lai_uhlrich_2023": {"sha256": "def"},
+                "mobl_arms_upper_extremity": {
+                    "release_file": "upper.zip", "license": "non-commercial",
+                },
+                "mobl_arms_ceinms_41_public_mirror": {
+                    "model_file": "MOBL_ARMS_41.osim",
+                    "sha256": hashlib.sha256(source.encode()).hexdigest(),
+                    "license": "non-commercial",
+                },
+            }
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            model = directory / "MOBL_ARMS_41.osim"
+            model.write_text(source)
+            report = gate_report(
+                sources=directory,
+                upper_archive=None,
+                upper_public_model=model,
+                source_lock=lock,
+                runtime_contract=read_json(ROOT / "config/numi-runtime-contract.v1.json"),
+            )
+        artifact = report["source_artifacts"]["mobl_arms_upper_extremity"]
+        upper = report["runtime_compatibility"]["upper_extremities"]
+        self.assertEqual(artifact["source_variant"], "public_unimanual_mirror")
+        self.assertEqual(artifact["status"], "ready_for_import_public_mirror")
+        self.assertEqual(upper["source_model"]["id"], "upper_fixture")
+        self.assertEqual(upper["skeleton"]["status"], "compatible")
+
 
 if __name__ == "__main__":
     unittest.main()
