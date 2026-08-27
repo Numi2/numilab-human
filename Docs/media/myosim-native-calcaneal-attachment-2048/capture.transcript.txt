@@ -1,0 +1,9 @@
+NumiLab Human BodyParts3D calcaneal attachment correction — 2026-08-27
+
+execution_host=local Apple M4; the Mac mini was not used because its GPU remained occupied by the user's crow-training workload
+source_geometry=BodyParts3D 4.0 FJ1405 right calcaneal tendon and FJ3360 right calcaneus; CC BY 4.0
+visual_binding=the full NHTISS3 payload carries MyoSim femur 131, tibia 136, and calcaneus 138 ownership; 944 distal lock vertices and 26 feather vertices of FJ1405 are registered onto the exact FJ3360 source triangles with a 0.35 mm exterior offset
+presentation=the normal renderer omits the former generated attachment collar; the visible connection is the corrected source-topology tendon boundary against the articulated source calcaneus
+native_run=Apple M4 Metal evaluated all 416 MyoSim muscle paths; selected gaslat_r 348, gasmed_r 349, and soleus_r 369 ran at 0.5 activation for one 100 us step; 90 wraps; maximum configuration delta 0.000123820755509
+views=front, oblique, side, rear at 2048 px; each frame has nonzero source muscle, tendon, and calcaneus coverage; no generated tendon-attachment collar pixels
+boundary=this is a source-surface registration and articulated anatomy check, not photorealistic tissue, a tendon continuum, force-transfer law, collision/contact result, gait result, or clinical validation

@@ -1,5 +1,23 @@
 # Visual validation
 
+## Corrected BodyParts3D calcaneal attachment check — 2026-08-27
+
+The four-angle [source-bound attachment review](VISUAL_PROGRESS.md#corrected-bodyparts3d-calcaneal-attachment--2026-08-27)
+was rendered at 2048 px on the local Apple M4 after the bounded calf drive.
+It uses the exact `FJ1405` calcaneal tendon and `FJ3360` calcaneus with their
+per-anchor, articulated Core registration. The right tendon has 944 fully
+locked distal vertices and a 26-vertex feather band projected directly to the
+named calcaneus triangles at a 0.35 mm exterior offset. No render-time
+tendon-collar geometry was emitted: all four frames report zero collar pixels
+and nonzero muscle/tendon/bone coverage.
+
+The native run excited only MyoSim indices 348, 349, and 369 at 0.5 for one
+100 µs step, while Metal evaluated all 416 source paths (90 wraps). This
+checks the rendered source-surface endpoint under its real articulated owner;
+it does not validate an enthesis force-transfer law, tendon material,
+deformable tissue, contact, gait, or clinical anatomy. The execution details
+are in the [capture record](media/myosim-native-calcaneal-attachment-2048/capture.transcript.txt).
+
 ## Detailed Z-Anatomy right-calf and calcaneal-insertion check — 2026-08-27
 
 The four-angle [right-calf and insertion review](VISUAL_PROGRESS.md#detailed-z-anatomy-right-calf-and-calcaneal-insertion-inspection--2026-08-27)

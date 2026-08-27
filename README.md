@@ -27,26 +27,23 @@ inspected directly against named bones—with a source-surface-bound exterior
 that remains coherent under the bounded all-muscle probe. See
 [visual progress](Docs/VISUAL_PROGRESS.md) for the exact evidence boundary.
 
-### Detailed muscle-driven right-calf anatomy
+### Corrected muscle-driven calcaneal attachment
 
 <p align="center">
-  <img src="Docs/media/myosim-native-zanatomy-calf-2048/calcaneal-insertion/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-oblique.png" width="49%" alt="Detailed right calcaneal tendon insertion, oblique" />
-  <img src="Docs/media/myosim-native-zanatomy-calf-2048/calcaneal-insertion/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-zanatomy-calf-supplement-muscle-driven-selected-actuators-focus-body-138-rear.png" width="49%" alt="Detailed right calcaneal tendon insertion, rear" />
+  <img src="Docs/media/myosim-native-calcaneal-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-138-oblique.png" width="49%" alt="Corrected right calcaneal tendon attachment, oblique" />
+  <img src="Docs/media/myosim-native-calcaneal-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-138-rear.png" width="49%" alt="Corrected right calcaneal tendon attachment, rear" />
 </p>
 
-The visual-only right-calf slice uses the CC-BY-SA 4.0 Z-Anatomy lateral and
-medial gastrocnemius, soleus, and calcaneal-tendon meshes. Its named calcaneus
-is registered to BodyParts3D `FJ3360`; its four tissues retain the existing
-MyoSim femur/tibia/calcaneus bindings, including the Achilles three-body
-ownership. The distal tendon does not merely follow the calcaneus by a blend:
-its 96 source-triangle-locked vertices and 155-vertex feather band are
-registered directly to named `FJ3360` calcaneus triangles (0.35 mm exterior
-offset). The 2K capture runs the three named calf actuators at `0.5` for one
-100 µs step while Metal evaluates all 416 source paths, so it has a measured
-small pose delta (`0.000123820755509`) rather than an uncontrolled pose drift.
-This makes the muscle-to-tendon-to-calcaneus geometry inspectable, but it is
-still an anatomical visual plate—not photorealistic skin, a tendon continuum,
-or a physical attachment certificate. The [capture record](Docs/media/myosim-native-zanatomy-calf-2048/capture.transcript.txt) records the source and output identities.
+The native base anatomy now renders the BodyParts3D `FJ1405` tendon directly
+against its named `FJ3360` calcaneus, using the bone's exact per-anchor
+registration. Its 944 distal lock vertices and 26-vertex feather band are
+projected onto the calcaneal source triangles with a 0.35 mm exterior offset;
+the old generated collar is diagnostic-only and absent here. The 2K Apple-M4
+capture drives MyoSim `gaslat_r`, `gasmed_r`, and `soleus_r` at `0.5` for one
+100 µs step while Metal evaluates all 416 source paths. It makes the
+muscle-to-tendon-to-bone geometry inspectable, but remains an anatomical
+source-surface view—not photorealistic skin, a tendon continuum, or a physical
+attachment certificate. The [capture record](Docs/media/myosim-native-calcaneal-attachment-2048/capture.transcript.txt) records the execution boundary.
 
 ### Muscle-driven source-surface exterior
 
@@ -73,10 +70,10 @@ collision shell, gait result, or clinical registration.
 This separate Apple-M4 2K anatomy pass is the active full-body mechanical
 view: all 416 authored MyoSim paths ran on Metal before one bounded 100 µs
 state update. It renders 184 BodyParts3D bone meshes and 150 named
-muscle/tendon surfaces. The two Achilles meshes use their corrected three-body
-femur/tibia/calcaneus ownership, and their source-locked distal boundary may
-receive a short collar only onto the named calcaneus—not an inferred
-muscle-to-tendon bridge. It is an anatomy/force-path inspection, not a
+muscle/tendon surfaces. The two Achilles meshes use corrected three-body
+femur/tibia/calcaneus ownership and source-triangle projected distal
+boundaries; the old short collar is now explicit diagnostic-only geometry, not
+part of the normal anatomy render. It is an anatomy/force-path inspection, not a
 deformable tissue or tendon result.
 
 ### Shared-tendon, source-body attachment review

@@ -1,5 +1,32 @@
 # NumiLab Human visual progress
 
+## Corrected BodyParts3D calcaneal attachment — 2026-08-27
+
+<p align="center">
+  <img src="media/myosim-native-calcaneal-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-138-front.png" width="24%" alt="Corrected calcaneal tendon attachment, front" />
+  <img src="media/myosim-native-calcaneal-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-138-oblique.png" width="24%" alt="Corrected calcaneal tendon attachment, oblique" />
+  <img src="media/myosim-native-calcaneal-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-138-side.png" width="24%" alt="Corrected calcaneal tendon attachment, side" />
+  <img src="media/myosim-native-calcaneal-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-focus-body-138-rear.png" width="24%" alt="Corrected calcaneal tendon attachment, rear" />
+</p>
+
+This replaces the generated tendon-to-bone collar in the normal Human view.
+The exact BodyParts3D `FJ1405` calcaneal-tendon topology now uses the same
+per-anchor calcaneus registration as the rendered `FJ3360` bone. Its 944
+distal lock vertices and 26-vertex feather band are projected directly onto
+the named calcaneus triangles with a 0.35 mm exterior offset. In particular,
+the oblique, side, and rear views show the visible tendon ending on the actual
+source bone instead of ending at a synthetic quad collar or drifting from the
+independently registered bone frame.
+
+The 2K Apple M4 capture applies a 100 µs, 0.5 activation pulse to MyoSim
+`gaslat_r` / `gasmed_r` / `soleus_r` (indices 348 / 349 / 369), while Metal
+evaluates all 416 authored source routes. It has nonzero muscle, tendon, and
+calcaneus coverage in all four views and zero generated collar pixels. The
+[capture record](media/myosim-native-calcaneal-attachment-2048/capture.transcript.txt)
+keeps the native execution and the intentional boundary. This is a clean
+source-surface anatomy check—not a claim of photorealistic skin, deformable
+tendon, force transfer, collision/contact, gait, or clinical validation.
+
 ## Detailed Z-Anatomy right-calf and calcaneal-insertion inspection — 2026-08-27
 
 <p align="center">
@@ -102,9 +129,10 @@ BodyParts3D bone meshes and 150 named muscle/tendon surfaces at 2048 px.
 All 416 authored MyoSim routes ran on Apple M4 before one 100 µs bounded state
 update at 0.01 activation (two Metal force transactions, 416 active records,
 90 wraps, and `1.44013083483e-05` maximum configuration delta). It uses the
-`NHTISS3` three-body Achilles binding. Only the source-locked distal tendon
-boundary can receive a short visual collar, projected to its named calcaneus;
-the renderer no longer searches or invents a muscle-to-tendon bridge. The
+`NHTISS3` three-body Achilles binding. The normal source tendon boundary is
+triangle-projected onto its named calcaneus; the old short visual collar is
+available only as an explicit diagnostic, so the renderer no longer adds a
+synthetic muscle-to-tendon bridge. The
 [capture record](media/myosim-native-fullbody-nhtiss3-bone-collars-2048/capture.transcript.txt)
 has the four image hashes, coverage, and devices.
 

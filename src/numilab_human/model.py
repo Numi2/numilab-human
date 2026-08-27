@@ -4260,6 +4260,173 @@ def _bodyparts_secondary_attachment_weight_lock(
     }
 
 
+def _bodyparts_source_mm_to_body_world(
+    vertices_mm: list[list[float]], body_position_world_m: list[float], body_quaternion_xyzw: list[float],
+    local_translation_m: list[float], local_quaternion_xyzw: list[float], local_uniform_scale: float,
+) -> list[list[float]]:
+    """Map source OBJ millimetres through the exact native bone binding at rest."""
+    body_position = _myosim_vector(body_position_world_m, "BodyParts3D visual body position")
+    body_rotation = _myosim_matrix_from_quaternion_xyzw(body_quaternion_xyzw)
+    local_rotation = _myosim_matrix_from_quaternion_xyzw(local_quaternion_xyzw)
+    local_translation = _myosim_vector(local_translation_m, "BodyParts3D visual local translation")
+    if not math.isfinite(local_uniform_scale) or local_uniform_scale <= 0.0:
+        raise ImportError("BodyParts3D visual local scale is invalid")
+    result: list[list[float]] = []
+    for vertex in vertices_mm:
+        if len(vertex) != 3 or not all(math.isfinite(value) for value in vertex):
+            raise ImportError("BodyParts3D visual source mesh has a non-finite vertex")
+        stored_m = [coordinate * 0.001 for coordinate in vertex]
+        local = [
+            local_translation[row] + local_uniform_scale * sum(
+                local_rotation[row][column] * stored_m[column] for column in range(3)
+            )
+            for row in range(3)
+        ]
+        result.append([
+            body_position[row] + sum(body_rotation[row][column] * local[column] for column in range(3))
+            for row in range(3)
+        ])
+    return result
+
+
+def _bodyparts_world_to_body_stored_m(
+    vertices_world_m: list[list[float]], body_position_world_m: list[float], body_quaternion_xyzw: list[float],
+    local_translation_m: list[float], local_quaternion_xyzw: list[float], local_uniform_scale: float,
+    context: str,
+) -> list[list[float]]:
+    """Invert one native bone binding so a visual insertion stays on that bone."""
+    body_position = _myosim_vector(body_position_world_m, context + " body position")
+    body_rotation = _myosim_matrix_from_quaternion_xyzw(body_quaternion_xyzw)
+    local_rotation = _myosim_matrix_from_quaternion_xyzw(local_quaternion_xyzw)
+    local_translation = _myosim_vector(local_translation_m, context + " local translation")
+    if not math.isfinite(local_uniform_scale) or local_uniform_scale <= 0.0:
+        raise ImportError(context + " has an invalid local scale")
+    result: list[list[float]] = []
+    for vertex in vertices_world_m:
+        if len(vertex) != 3 or not all(math.isfinite(value) for value in vertex):
+            raise ImportError(context + " has a non-finite world vertex")
+        body_local = [
+            sum(body_rotation[column][row] * (vertex[column] - body_position[column]) for column in range(3))
+            for row in range(3)
+        ]
+        local_offset = [body_local[row] - local_translation[row] for row in range(3)]
+        result.append([
+            sum(local_rotation[column][row] * local_offset[column] for column in range(3)) / local_uniform_scale
+            for row in range(3)
+        ])
+    return result
+
+
+def _bodyparts_project_tendon_attachment_band(
+    vertices_world_m: list[list[float]], distal_attenuation: list[float],
+    bone_vertices_world_m: list[list[float]], bone_triangles: list[tuple[int, int, int]],
+) -> tuple[list[list[float]], dict[str, float | int | str]]:
+    """Project an already locked tendon insertion band onto named bone triangles.
+
+    The projection acts only in the visual source-registration layer.  The
+    tendon retains its original topology, and MyoSim sites, paths, parameters,
+    force, and tendon dynamics remain untouched.
+    """
+    if len(vertices_world_m) != len(distal_attenuation) or not bone_triangles:
+        raise ImportError("BodyParts3D tendon surface projection input is incomplete")
+    if any(len(vertex) != 3 or not all(math.isfinite(value) for value in vertex) for vertex in bone_vertices_world_m):
+        raise ImportError("BodyParts3D tendon surface projection has invalid bone vertices")
+
+    def closest_point_and_normal(
+        point: list[float], first: list[float], second: list[float], third: list[float],
+    ) -> tuple[list[float], list[float]]:
+        ab = [second[index] - first[index] for index in range(3)]
+        ac = [third[index] - first[index] for index in range(3)]
+        normal = [
+            ab[1] * ac[2] - ab[2] * ac[1],
+            ab[2] * ac[0] - ab[0] * ac[2],
+            ab[0] * ac[1] - ab[1] * ac[0],
+        ]
+        magnitude = math.sqrt(sum(value * value for value in normal))
+        if magnitude <= 1.0e-16:
+            raise ImportError("BodyParts3D tendon surface projection has a degenerate bone triangle")
+        normal = [value / magnitude for value in normal]
+        ap = [point[index] - first[index] for index in range(3)]
+        dot = lambda left, right: sum(left[index] * right[index] for index in range(3))
+        d1, d2 = dot(ab, ap), dot(ac, ap)
+        if d1 <= 0.0 and d2 <= 0.0:
+            return first, normal
+        bp = [point[index] - second[index] for index in range(3)]
+        d3, d4 = dot(ab, bp), dot(ac, bp)
+        if d3 >= 0.0 and d4 <= d3:
+            return second, normal
+        vc = d1 * d4 - d3 * d2
+        if vc <= 0.0 and d1 >= 0.0 and d3 <= 0.0:
+            return [first[index] + ab[index] * d1 / (d1 - d3) for index in range(3)], normal
+        cp = [point[index] - third[index] for index in range(3)]
+        d5, d6 = dot(ab, cp), dot(ac, cp)
+        if d6 >= 0.0 and d5 <= d6:
+            return third, normal
+        vb = d5 * d2 - d1 * d6
+        if vb <= 0.0 and d2 >= 0.0 and d6 <= d2:
+            return [first[index] + ac[index] * d2 / (d2 - d6) for index in range(3)], normal
+        va = d3 * d6 - d5 * d4
+        if va <= 0.0 and d4 - d3 >= 0.0 and d5 - d6 >= 0.0:
+            bc = [third[index] - second[index] for index in range(3)]
+            factor = (d4 - d3) / ((d4 - d3) + (d5 - d6))
+            return [second[index] + bc[index] * factor for index in range(3)], normal
+        denominator = 1.0 / (va + vb + vc)
+        return [
+            first[index] + (vb * ab[index] + vc * ac[index]) * denominator
+            for index in range(3)
+        ], normal
+
+    result: list[list[float]] = []
+    corrections: list[float] = []
+    fully_locked = feathered = 0
+    for vertex, attenuation in zip(vertices_world_m, distal_attenuation, strict=True):
+        if len(vertex) != 3 or not all(math.isfinite(value) for value in vertex) or \
+                not math.isfinite(attenuation) or not 0.0 <= attenuation <= 1.0:
+            raise ImportError("BodyParts3D tendon surface projection has invalid tendon input")
+        blend = 1.0 - attenuation
+        if blend <= 1.0e-8:
+            result.append(vertex)
+            continue
+        closest: list[float] | None = None
+        closest_normal: list[float] | None = None
+        nearest_squared = math.inf
+        for triangle in bone_triangles:
+            if len(triangle) != 3 or any(not 0 <= index < len(bone_vertices_world_m) for index in triangle):
+                raise ImportError("BodyParts3D tendon surface projection has an invalid bone triangle index")
+            candidate, normal = closest_point_and_normal(
+                vertex, *(bone_vertices_world_m[index] for index in triangle),
+            )
+            squared = sum((vertex[index] - candidate[index]) ** 2 for index in range(3))
+            if squared < nearest_squared:
+                closest, closest_normal, nearest_squared = candidate, normal, squared
+        if closest is None or closest_normal is None:
+            raise ImportError("BodyParts3D tendon surface projection has no named bone target")
+        difference = [vertex[index] - closest[index] for index in range(3)]
+        side = 1.0 if sum(difference[index] * closest_normal[index] for index in range(3)) >= 0.0 else -1.0
+        # A sub-millimetre exterior offset avoids depth fighting while still
+        # reading as an enthesis, not a generated collar or a floating strip.
+        target = [closest[index] + side * closest_normal[index] * 0.00035 for index in range(3)]
+        corrected = [vertex[index] * attenuation + target[index] * blend for index in range(3)]
+        result.append(corrected)
+        corrections.append(math.sqrt(sum((vertex[index] - corrected[index]) ** 2 for index in range(3))))
+        if attenuation <= 1.0e-8:
+            fully_locked += 1
+        else:
+            feathered += 1
+    if not corrections:
+        raise ImportError("BodyParts3D tendon surface projection has no distal attachment band")
+    return result, {
+        "method": "exact named secondary BodyParts3D bone triangle projection over the existing lock/feather band",
+        "surface_offset_m": 0.00035,
+        "projected_vertex_count": len(corrections),
+        "fully_locked_vertex_count": fully_locked,
+        "feathered_vertex_count": feathered,
+        "rms_correction_m": math.sqrt(sum(value * value for value in corrections) / len(corrections)),
+        "max_correction_m": max(corrections),
+        "boundary": "visual rest-surface registration only; not a tendon weld, force-transfer law, continuum, or clinical attachment certificate",
+    }
+
+
 def _bodyparts_source_element_names(sources: Path) -> set[tuple[str, str]]:
     """Read source FMA labels only to validate explicit map rows, never infer one."""
     source = sources / "isa_element_parts.txt"
@@ -4407,6 +4574,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
     if not isinstance(registration_anchors, list):
         raise ImportError("BodyParts3D full-body tissue payload has no visual-skeleton anchors")
     secondary_bone_sources: dict[str, dict[str, Any]] = {}
+    body_local_registrations: dict[str, tuple[list[float], list[float], float]] = {}
     for anchor in registration_anchors:
         if not isinstance(anchor, dict):
             raise ImportError("BodyParts3D full-body tissue payload has an invalid visual-skeleton anchor")
@@ -4419,6 +4587,16 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                 not isinstance(hierarchy, str):
             raise ImportError("BodyParts3D full-body tissue payload has an invalid visual-skeleton anchor identity")
         secondary_bone_sources.setdefault(target_name, source_record)
+        registration_record = anchor.get("registration")
+        if not isinstance(registration_record, dict):
+            raise ImportError("BodyParts3D full-body tissue payload has no source-bone local registration")
+        local_matrix = registration_record.get("source_obj_mm_to_core_inertial_body_m")
+        body_local_registrations.setdefault(
+            target_name,
+            tuple(_bodyparts_visual_local_pose(
+                local_matrix, f"BodyParts3D full-body tissue {target_name} local registration",
+            )),
+        )
 
     vertices_payload: list[tuple[float, float, float, float, float, float, float, float, float]] = []
     indices_payload: list[int] = []
@@ -4480,6 +4658,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has incomplete explicit endpoint bodies")
 
         binding_targets: list[dict[str, Any]] = []
+        binding_local_poses: list[tuple[list[float], list[float], float]] = []
         binding_transforms: list[float] = []
         for binding_name in binding_names:
             target = bodies.get(binding_name)
@@ -4491,11 +4670,15 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             )
             quaternion = list(target.get("default_inertial_quaternion_world_xyzw", []))
             _myosim_matrix_from_quaternion_xyzw(quaternion)
-            translation, rotation, scale = _bodyparts_visual_local_pose(
-                _bodyparts_local_registration_matrix(global_matrix, position, quaternion),
-                f"BodyParts3D {member_id} {binding_name} transform",
-            )
+            local_pose = body_local_registrations.get(binding_name)
+            if local_pose is None:
+                local_pose = tuple(_bodyparts_visual_local_pose(
+                    _bodyparts_local_registration_matrix(global_matrix, position, quaternion),
+                    f"BodyParts3D {member_id} {binding_name} transform",
+                ))
+            translation, rotation, scale = local_pose
             binding_targets.append(target)
+            binding_local_poses.append((translation, rotation, scale))
             binding_transforms.extend([*translation, *rotation, scale])
         while len(binding_targets) < 3:
             binding_targets.append({"core_body_index": 0xFFFFFFFF})
@@ -4522,7 +4705,21 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         ]
 
         attachment_weight_lock: dict[str, Any] | None = None
+        stored_vertices_m = [[coordinate * 0.001 for coordinate in vertex] for vertex in vertices_mm]
+        stored_normals = normals
         if layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON:
+            secondary_binding_index = binding_names.index(secondary_name)
+            secondary_local_pose = binding_local_poses[secondary_binding_index]
+            # The bone payload uses its per-anchor local registration, which
+            # may refine the initial global fit.  Put the tendon into that
+            # exact calcaneus rest frame before finding or projecting its
+            # insertion, otherwise matching source OBJ coordinates can still
+            # land on a visibly different rendered bone surface.
+            global_vertices = _bodyparts_source_mm_to_body_world(
+                vertices_mm, secondary_position,
+                list(secondary_target.get("default_inertial_quaternion_world_xyzw", [])),
+                *secondary_local_pose,
+            )
             bone_source = secondary_bone_sources.get(secondary_name)
             if not isinstance(bone_source, dict):
                 raise ImportError(
@@ -4535,25 +4732,41 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                 )
             _, bone_member, bone_obj = _bodyparts_obj_member(sources, bone_hierarchy, bone_member_id)
             bone_vertices_mm, bone_triangles = _bodyparts_obj_triangles(bone_obj, bone_member)
-            bone_vertices_world_m = [
-                [
-                    sum(global_matrix[row][column] * vertex[column] for column in range(3)) +
-                    global_matrix[row][3]
-                    for row in range(3)
-                ]
-                for vertex in bone_vertices_mm
-            ]
+            bone_vertices_world_m = _bodyparts_source_mm_to_body_world(
+                bone_vertices_mm, secondary_position,
+                list(secondary_target.get("default_inertial_quaternion_world_xyzw", [])),
+                *secondary_local_pose,
+            )
             # Passing unit primary weights yields a pure 1 -> 0 distal lock
             # factor, independent of the arbitrary tibia-to-calcaneus body-
             # centre projection used by the old two-body presentation path.
             distal_attenuation, attachment_weight_lock = _bodyparts_secondary_attachment_weight_lock(
                 global_vertices, [1.0] * len(global_vertices), bone_vertices_world_m, bone_triangles,
             )
+            # The named-body weight lock keeps the distal source vertices in
+            # the calcaneus frame, but it cannot repair a rest-frame gap
+            # between independently authored tendon and bone surfaces.  Move
+            # only that already locked/feathered boundary onto the exact
+            # named calcaneal triangles.  This replaces the coarse generated
+            # render-time collar with a continuous source-topology surface.
+            global_vertices, surface_projection = _bodyparts_project_tendon_attachment_band(
+                global_vertices, distal_attenuation, bone_vertices_world_m, bone_triangles,
+            )
+            stored_vertices_m = _bodyparts_world_to_body_stored_m(
+                global_vertices, secondary_position,
+                list(secondary_target.get("default_inertial_quaternion_world_xyzw", [])),
+                *secondary_local_pose,
+                f"BodyParts3D tendon {member_id} attachment projection",
+            )
+            stored_normals = _bodyparts_vertex_normals(
+                [[coordinate * 1000.0 for coordinate in vertex] for vertex in stored_vertices_m], triangles, member,
+            )
             attachment_weight_lock.update({
                 "secondary_body": secondary_name,
                 "secondary_bone_member_id": bone_member_id,
                 "secondary_bone_member": bone_member,
                 "secondary_bone_member_sha256": hashlib.sha256(bone_obj).hexdigest(),
+                "surface_projection": surface_projection,
             })
             contributor_bindings = [
                 binding for binding in source_surface_bindings.values()
@@ -4600,12 +4813,12 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             vertex_weights = [[primary_weight, 1.0 - primary_weight] for primary_weight in base_primary_weights]
 
         first_vertex, first_index = len(vertices_payload), len(indices_payload)
-        for vertex, normal, weights in zip(vertices_mm, normals, vertex_weights, strict=True):
+        for vertex, normal, weights in zip(stored_vertices_m, stored_normals, vertex_weights, strict=True):
             padded_weights = [*weights, *([0.0] * (3 - len(weights)))]
             if len(padded_weights) != 3 or any(weight < 0.0 or not math.isfinite(weight) for weight in padded_weights) or \
                     abs(sum(padded_weights) - 1.0) > 1.0e-6:
                 raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has invalid body weights")
-            vertices_payload.append((*[coordinate * 0.001 for coordinate in vertex], *normal, *padded_weights))
+            vertices_payload.append((*vertex, *normal, *padded_weights))
         indices_payload.extend(first_vertex + index for triangle in triangles for index in triangle)
         records_payload.append(struct.pack(
             "<10I24f", *(target["core_body_index"] for target in binding_targets),
@@ -4621,7 +4834,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                 for name, target in zip(binding_names, binding_targets[:len(binding_names)], strict=True)
             ],
             "matched_muscles": [dict(route, name=name) for name, route in zip(source_muscles, matched_routes, strict=True)],
-            "body_weight_count": len(binding_names), "vertex_count": len(vertices_mm), "triangle_count": len(triangles),
+            "body_weight_count": len(binding_names), "vertex_count": len(stored_vertices_m), "triangle_count": len(triangles),
         })
         if attachment_weight_lock is not None:
             provenance[-1]["secondary_attachment_weight_lock"] = attachment_weight_lock
@@ -4663,7 +4876,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         "coverage": {"configured_surface_count": len(specifications), "muscle_surface_count": sum(1 for entry in provenance if entry["layer"] == "muscle"),
                      "tendon_surface_count": sum(1 for entry in provenance if entry["layer"] == "tendon"),
                      "authored_myosim_muscle_count": len(myosim_manifest["muscles"])},
-        "runtime_binding": "exact BodyParts3D source surfaces use per-vertex named Core articulated body weights; ordinary entries derive two bodies directly from their authored MyoSim route sites, while each calcaneal-tendon surface inherits three femur/tibia/calcaneus weights from its nearest named source muscle surface and exact source-triangle calcaneal lock",
+        "runtime_binding": "BodyParts3D source-topology surfaces use per-vertex named Core articulated body weights; ordinary entries retain exact source vertices and derive two bodies directly from authored MyoSim route sites, while each calcaneal-tendon surface inherits three femur/tibia/calcaneus weights from its nearest named source muscle surface and its already locked/feathered distal boundary is registered to exact named calcaneal source triangles",
         "status": "native_multi_body_kinematic_surface_binding_input_not_collision_or_physics",
         "evidence_boundary": "This source-authored surface package visually follows exact named articulated endpoint bodies. It does not make the source surface a force-transmitting continuum, add a tendon constitutive law, create collision/contact, or establish a medical registration.",
     }

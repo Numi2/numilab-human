@@ -17,6 +17,9 @@ from numilab_human.model import (
     _BODYPARTS_MYOSIM_TOE_EXTENSIONS,
     _BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS,
     _bodyparts_secondary_attachment_weight_lock,
+    _bodyparts_project_tendon_attachment_band,
+    _bodyparts_source_mm_to_body_world,
+    _bodyparts_world_to_body_stored_m,
     _bodyparts_skin_bbox_distance_squared,
     _bodyparts_skin_bbox_surface_distance_squared,
     _bodyparts_skin_nearest_surface_bindings,
@@ -137,6 +140,35 @@ class ImporterTests(unittest.TestCase):
         self.assertAlmostEqual(projected[1][2], 0.001175)
         self.assertEqual(evidence["fully_locked_vertex_count"], 1)
         self.assertEqual(evidence["feathered_vertex_count"], 1)
+
+    def test_bodyparts_tendon_attachment_projection_preserves_source_topology_and_targets_bone(self) -> None:
+        bone = [[0.0, 0.0, 0.0], [0.02, 0.0, 0.0], [0.0, 0.02, 0.0]]
+        source = [[0.01, 0.01, 0.002], [0.01, 0.01, 0.002], [0.03, 0.01, 0.02]]
+        projected, evidence = _bodyparts_project_tendon_attachment_band(
+            source, [0.0, 0.5, 1.0], bone, [(0, 1, 2)],
+        )
+        self.assertAlmostEqual(projected[0][0], 0.01)
+        self.assertAlmostEqual(projected[0][1], 0.01)
+        self.assertAlmostEqual(projected[0][2], 0.00035)
+        self.assertAlmostEqual(projected[1][2], 0.001175)
+        self.assertEqual(projected[2], source[2])
+        self.assertEqual(evidence["projected_vertex_count"], 2)
+        self.assertEqual(evidence["fully_locked_vertex_count"], 1)
+        self.assertEqual(evidence["feathered_vertex_count"], 1)
+
+    def test_bodyparts_anchor_binding_round_trip_preserves_projected_tendon_coordinates(self) -> None:
+        source_mm = [[100.0, -25.0, 60.0]]
+        body_position = [0.5, -0.3, 0.2]
+        identity = [0.0, 0.0, 0.0, 1.0]
+        local_translation = [0.1, 0.2, -0.1]
+        world = _bodyparts_source_mm_to_body_world(
+            source_mm, body_position, identity, local_translation, identity, 1.0,
+        )
+        restored = _bodyparts_world_to_body_stored_m(
+            world, body_position, identity, local_translation, identity, 1.0, "test",
+        )
+        for actual, expected in zip(restored[0], [0.1, -0.025, 0.06], strict=True):
+            self.assertAlmostEqual(actual, expected)
 
     def test_zanatomy_source_transform_round_trip_preserves_rotated_vectors(self) -> None:
         rotation = [[0.0, -1.0, 0.0], [1.0, 0.0, 0.0], [0.0, 0.0, 1.0]]
