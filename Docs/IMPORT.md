@@ -71,14 +71,15 @@ numi human myosim-native-soft-tissue-visuals \
   Build/bodyparts3d-myosim-right-posterior-chain/native-views \
   136 --dimension 2048
 
-# Run the same two-body surface package after the bounded complete-muscle
-# sensitivity step. This is not a stable/contact-qualified animation.
+# Run the same two-body surface package after the bounded all-muscle
+# incremental-activation sensitivity step. The source-default zero-activation
+# pre-stress is subtracted before integration; this is not stable motion.
 numi human myosim-native-muscle-soft-tissue-visuals \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
   Build/bodyparts3d-myosim-right-posterior-chain/bodyparts3d-myosim-right-posterior-chain.nhtissue \
   Build/bodyparts3d-myosim-right-posterior-chain/native-muscle-stress \
-  136 --muscle-step-seconds 0.001 --dimension 2048
+  136 --muscle-step-seconds 0.001 --muscle-activation 0.05 --dimension 2048
 
 # Broader source anatomy: every map row names a BodyParts3D mesh and one or
 # more authored MyoSim muscles. Ordinary rows are admitted only if their route

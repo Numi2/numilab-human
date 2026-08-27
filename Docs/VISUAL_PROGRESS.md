@@ -53,7 +53,7 @@ are occluded in those four views. A separate lower-leg capture retains
 nonzero tendon coverage from all directions, including 11,613 tendon pixels
 in the rear view; the posterior-calf gallery below is the clearer high-detail
 attachment inspection. The complete command, payload/map hashes, device,
-coverage, and the bounded 416-muscle 10 microsecond coupling smoke are in the
+coverage, and the bounded 416-muscle incremental-activation coupling smoke are in the
 [capture transcript](media/myosim-native-fullbody-muscle-surfaces-2048/default/capture.transcript.txt).
 
 This validates source surface → named MyoSim endpoint bodies → Metal pose →
@@ -62,6 +62,22 @@ continuum muscle/tendon deformation, collision/contact, a controller, gait,
 or medical registration. The active bounded force step is retained as a
 coupling smoke only; unsupported free-body co-activation is not presentation
 motion.
+
+The active check now applies 5% activation/excitation to all 416 source
+muscles for 1 ms after subtracting the force at the source-default
+zero-activation state. That reports the activation-induced force rather than
+mistaking passive pre-stress for a control signal. It produces a finite maximum
+configuration difference of `0.00720064735327` and retains tendon coverage in
+all four lower-leg cameras (383 / 1,288 / 1,497 / 11,635 pixels):
+
+<p align="center">
+  <img src="media/myosim-native-fullbody-muscle-surfaces-2048/lower-leg/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-rear.png" width="48%" alt="Rest posterior lower-leg muscle and Achilles surface binding" />
+  <img src="media/myosim-native-fullbody-muscle-surfaces-2048/lower-leg-muscle-driven/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-focus-body-136-rear.png" width="48%" alt="Incremental 416-muscle driven posterior lower-leg binding" />
+</p>
+
+This is a one-step incremental-activation coupling check, not stable standing
+or motion: support/contact, a posture controller, and time-series stability
+are still required before a rollout can be claimed.
 
 ## Reviewed native posterior-calf source-surface inspection — 2026-08-27
 

@@ -169,14 +169,15 @@ numi human myosim-native-soft-tissue-visuals \
   Docs/media/myosim-native-posterior-chain-2048/default \
   136 --dimension 2048
 
-# The same exact surfaces after the bounded complete-416-muscle pose step.
-# This is a stress check, not a stable/contact-qualified animation.
+# The same exact surfaces after a bounded all-416-muscle *incremental*
+# activation step. Zero-activation source pre-stress is subtracted before the
+# force step; this remains a coupling check, not stable/contact-qualified motion.
 numi human myosim-native-muscle-soft-tissue-visuals \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
   Build/bodyparts3d-myosim-right-posterior-chain/bodyparts3d-myosim-right-posterior-chain.nhtissue \
   Build/myosim-native-posterior-chain-muscle-stress \
-  136 --muscle-step-seconds 0.001 --dimension 2048
+  136 --muscle-step-seconds 0.001 --muscle-activation 0.05 --dimension 2048
 
 # Package the audited full-body muscle-surface map. The offline importer
 # verifies every ordinary surface against its exact BodyParts3D FJ mesh and
