@@ -282,35 +282,23 @@ soft tissue, general collision, gait, or clinical registration. The current
 Metal contact bucket; its bounded contact step is Core FP64 rather than a
 claimed GPU contact result.
 
-## Registration-compatible calcaneal tendon detail — 2026-08-27
+## Withdrawn calcaneal-tendon detail — 2026-08-27
 
-<p align="center">
-  <img src="media/myosim-native-calcaneal-tendon-detail-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-front.png" width="24%" alt="Calcaneal tendon and calcaneus, front" />
-  <img src="media/myosim-native-calcaneal-tendon-detail-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-oblique.png" width="24%" alt="Calcaneal tendon and calcaneus, oblique" />
-  <img src="media/myosim-native-calcaneal-tendon-detail-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-side.png" width="24%" alt="Calcaneal tendon and calcaneus, side" />
-  <img src="media/myosim-native-calcaneal-tendon-detail-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-rear.png" width="24%" alt="Calcaneal tendon and calcaneus, rear" />
-</p>
+The archived 2048 calcaneal detail images are not anatomy-quality evidence.
+Review found a detached-looking source terminal cap and disconnected tendon
+fragments; the current high-resolution exact-reference renderer also does not
+produce valid whole-frame coverage. The files remain as reproducibility
+artifacts, not gallery media.
 
-This is the first narrow native review that makes the observed tendon/bone
-pairing explicit. Bone and soft-tissue payloads can contain the same MyoSim
-source identity yet be expressed in different BodyParts3D visual rest frames.
-The native ABI now embeds a compact fingerprint of the complete registration
-receipt in both payload headers and refuses a mixed pair before the renderer
-starts. A deliberately mismatched pair fails with `BodyParts3D bone and
-soft-tissue payloads have different visual registrations`.
-
-The successful Apple M4 capture is 2048 × 2048 from four cameras. It contains
-184 possible bone meshes but selects only the right calcaneus and the exact
-right calcaneal-tendon surface, yielding nonzero bone/tendon coverage in every
-view (front 76,721 / 150,525; oblique 79,974 / 90,141; side 66,943 / 100,742;
-rear 47,431 / 184,238 pixels). The complete native output and artifact hashes
-are retained in the [capture directory](media/myosim-native-calcaneal-tendon-detail-2048).
-
-These are direct BodyParts3D source meshes in a neutral anatomy light rig,
-not a photoreal human surface. They prove that this visual pair is expressed in
-one rest frame and that the tendon reaches the named calcaneus in the rendered
-source geometry. They do not prove a continuum tendon, tendon-to-bone force
-transfer, deformable tissue, collision, gait, or clinical registration.
+The corrective source path retains only the tendon member's dominant connected
+sheet, removes fully interior terminal-cap faces, and moves the terminal lock
+band 5 mm inside the matching calcaneal triangles. It adds no collar, bridge,
+welding, or invented tendon geometry. A
+four-angle Apple-M4 512 px reference check has nonzero bone/muscle/tendon
+coverage; it is withheld from presentation while the high-resolution reference
+renderer is repaired. This is visual kinematic evidence only—not tendon
+continuity, force transfer, deformable tissue, collision, gait, or clinical
+registration.
 
 ## Native source-skin context — 2026-08-27
 

@@ -18,11 +18,15 @@ from numilab_human.model import (
     _BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS,
     _bodyparts_secondary_attachment_weight_lock,
     _bodyparts_project_tendon_attachment_band,
+    _bodyparts_drop_interior_tendon_cap_triangles,
     _bodyparts_source_mm_to_body_world,
     _bodyparts_world_to_body_stored_m,
     _bodyparts_skin_bbox_distance_squared,
     _bodyparts_skin_bbox_surface_distance_squared,
     _bodyparts_skin_nearest_surface_bindings,
+    _bodyparts_largest_connected_surface_component,
+    _bodyparts_skin_outer_surface_component,
+    _bodyparts_skin_smooth_visual_normals,
     _bodyparts_skin_surface_index,
     _bodyparts_myosim_surface_specifications,
     _bodyparts_similarity_fit,
@@ -104,6 +108,49 @@ class ImporterTests(unittest.TestCase):
         candidates = _bodyparts_skin_nearest_surface_bindings(index, [0.09, 0.0, 0.0])
         self.assertEqual([binding for _, binding in candidates], [7, 3, 5, 11])
 
+    def test_skin_visual_normal_smoothing_preserves_finite_unit_normals(self) -> None:
+        normals = _bodyparts_skin_smooth_visual_normals(
+            [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0],
+             [0.0, 0.0, 1.0], [0.0, 0.0, 1.0]],
+            [(0, 1, 2), (0, 2, 3)], iterations=2,
+        )
+        self.assertEqual(len(normals), 4)
+        for normal in normals:
+            self.assertAlmostEqual(sum(value * value for value in normal), 1.0)
+        self.assertGreater(normals[0][2], 0.0)
+
+    def test_skin_outer_surface_selection_retains_enclosing_source_sheet(self) -> None:
+        outer_vertices = [
+            [-1.0, -1.0, -1.0], [1.0, -1.0, -1.0], [0.0, 1.0, -1.0], [0.0, 0.0, 1.0],
+        ]
+        inner_vertices = [
+            [-0.5, -0.5, -0.5], [0.5, -0.5, -0.5], [0.0, 0.5, -0.5], [0.0, 0.0, 0.5],
+        ]
+        tetrahedra = [(0, 1, 2), (0, 3, 1), (1, 3, 2), (2, 3, 0)]
+        vertices, triangles, evidence = _bodyparts_skin_outer_surface_component(
+            outer_vertices + inner_vertices,
+            tetrahedra + [tuple(index + 4 for index in triangle) for triangle in tetrahedra],
+            "test-compound-skin",
+        )
+        self.assertEqual(vertices, outer_vertices)
+        self.assertEqual(triangles, tetrahedra)
+        self.assertEqual(evidence["source_vertex_count"], 8)
+        self.assertEqual(evidence["retained_vertex_count"], 4)
+
+    def test_tendon_component_selection_removes_disconnected_source_sliver(self) -> None:
+        main_vertices = [
+            [-1.0, -1.0, -1.0], [1.0, -1.0, -1.0], [0.0, 1.0, -1.0], [0.0, 0.0, 1.0],
+        ]
+        sliver_vertices = [[5.0, 0.0, 0.0], [5.1, 0.0, 0.0]]
+        tetrahedra = [(0, 1, 2), (0, 3, 1), (1, 3, 2), (2, 3, 0)]
+        vertices, triangles, evidence = _bodyparts_largest_connected_surface_component(
+            main_vertices + sliver_vertices, tetrahedra + [(0, 4, 5)], "test-compound-tendon",
+        )
+        self.assertEqual(vertices, main_vertices)
+        self.assertEqual(triangles, tetrahedra)
+        self.assertEqual(evidence["retained_triangle_count"], 4)
+        self.assertEqual(evidence["discarded_component_count"], 1)
+
     def test_tendon_attachment_weight_lock_holds_secondary_bone_insertion(self) -> None:
         weights, evidence = _bodyparts_secondary_attachment_weight_lock(
             [[0.0, 0.0, 0.0], [0.008, 0.0, 0.0], [0.025, 0.0, 0.0]],
@@ -151,12 +198,21 @@ class ImporterTests(unittest.TestCase):
         )
         self.assertAlmostEqual(projected[0][0], 0.01)
         self.assertAlmostEqual(projected[0][1], 0.01)
-        self.assertAlmostEqual(projected[0][2], 0.00035)
-        self.assertAlmostEqual(projected[1][2], 0.001175)
+        self.assertAlmostEqual(projected[0][2], -0.005)
+        self.assertAlmostEqual(projected[1][2], -0.0015)
         self.assertEqual(projected[2], source[2])
         self.assertEqual(evidence["projected_vertex_count"], 2)
         self.assertEqual(evidence["fully_locked_vertex_count"], 1)
         self.assertEqual(evidence["feathered_vertex_count"], 1)
+        self.assertEqual(evidence["visual_enthesis_inset_m"], 0.005)
+        self.assertIn("interior enthesis inset", evidence["method"])
+
+    def test_tendon_interior_cap_trim_preserves_attachment_transition_faces(self) -> None:
+        triangles, evidence = _bodyparts_drop_interior_tendon_cap_triangles(
+            [(0, 1, 2), (1, 2, 3), (0, 3, 4)], [0.0, 0.0, 0.0, 0.5, 1.0], "test-tendon",
+        )
+        self.assertEqual(triangles, [(1, 2, 3), (0, 3, 4)])
+        self.assertEqual(evidence["dropped_fully_locked_interior_cap_triangle_count"], 1)
 
     def test_bodyparts_anchor_binding_round_trip_preserves_projected_tendon_coordinates(self) -> None:
         source_mm = [[100.0, -25.0, 60.0]]

@@ -3607,10 +3607,12 @@ _BODYPARTS_MYOSIM_MULTI_BODY_SOFT_TISSUE_VISUAL_ABI = 4
 _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE = 1
 _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON = 2
 _BODYPARTS_MYOSIM_SKIN_VISUAL_MAGIC = b"NHSKIN1\0"
-# ABI 2 preserves the compact vertex/binding layout but records that the
-# weights were derived from envelope *boundaries*, not zero-inside envelope
-# volumes.  Native readers retain ABI 1 only for reproduction of old captures.
-_BODYPARTS_MYOSIM_SKIN_VISUAL_ABI = 3
+# ABI 4 retains the compact vertex/binding layout and source-surface-local
+# weights from ABI 3, but stores the rest normal in the registered world frame.
+# Native rendering can then apply each body-relative rotation from that common
+# rest frame rather than blending slightly different fitted source-to-body
+# normal transforms across every skin triangle.
+_BODYPARTS_MYOSIM_SKIN_VISUAL_ABI = 4
 _BODYPARTS_MYOSIM_TORSO_ANATOMY_VISUAL_MAGIC = b"NHANAT1\0"
 _BODYPARTS_MYOSIM_TORSO_ANATOMY_VISUAL_ABI = 1
 _BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_ORGAN = 1
@@ -4408,9 +4410,12 @@ def _bodyparts_project_tendon_attachment_band(
             raise ImportError("BodyParts3D tendon surface projection has no named bone target")
         difference = [vertex[index] - closest[index] for index in range(3)]
         side = 1.0 if sum(difference[index] * closest_normal[index] for index in range(3)) >= 0.0 else -1.0
-        # A sub-millimetre exterior offset avoids depth fighting while still
-        # reading as an enthesis, not a generated collar or a floating strip.
-        target = [closest[index] + side * closest_normal[index] * 0.00035 for index in range(3)]
+        # Put only the locked source boundary slightly *inside* its named
+        # calcaneus. The opaque bone then occludes the independently authored
+        # terminal cap instead of presenting a floating strip or inventing a
+        # connector/collar between two meshes. The feather band preserves a
+        # continuous deformation into the unmodified source tendon.
+        target = [closest[index] - side * closest_normal[index] * 0.005 for index in range(3)]
         corrected = [vertex[index] * attenuation + target[index] * blend for index in range(3)]
         result.append(corrected)
         corrections.append(math.sqrt(sum((vertex[index] - corrected[index]) ** 2 for index in range(3))))
@@ -4421,14 +4426,48 @@ def _bodyparts_project_tendon_attachment_band(
     if not corrections:
         raise ImportError("BodyParts3D tendon surface projection has no distal attachment band")
     return result, {
-        "method": "exact named secondary BodyParts3D bone triangle projection over the existing lock/feather band",
-        "surface_offset_m": 0.00035,
+        "method": "exact named secondary BodyParts3D bone triangle interior enthesis inset over the existing lock/feather band",
+        "visual_enthesis_inset_m": 0.005,
         "projected_vertex_count": len(corrections),
         "fully_locked_vertex_count": fully_locked,
         "feathered_vertex_count": feathered,
         "rms_correction_m": math.sqrt(sum(value * value for value in corrections) / len(corrections)),
         "max_correction_m": max(corrections),
         "boundary": "visual rest-surface registration only; not a tendon weld, force-transfer law, continuum, or clinical attachment certificate",
+    }
+
+
+def _bodyparts_drop_interior_tendon_cap_triangles(
+    triangles: list[tuple[int, int, int]], distal_attenuation: list[float], member: str,
+) -> tuple[list[tuple[int, int, int]], dict[str, Any]]:
+    """Hide only fully interior source terminal-cap faces at a named insertion.
+
+    The locked vertices are inset into the calcaneus, so a triangle made only
+    from them is an interior closure face rather than visible tendon anatomy.
+    Keeping it can expose a small fan through openings in a coarse source bone
+    mesh.  This preserves every non-interior source triangle and creates no
+    connector, weld, or replacement mesh.
+    """
+    retained: list[tuple[int, int, int]] = []
+    removed = 0
+    for triangle in triangles:
+        if len(triangle) != 3 or any(not 0 <= index < len(distal_attenuation) for index in triangle):
+            raise ImportError(f"BodyParts3D tendon {member} has an invalid source triangle")
+        if all(distal_attenuation[index] <= 1.0e-8 for index in triangle):
+            removed += 1
+        else:
+            retained.append(triangle)
+    if not retained:
+        raise ImportError(f"BodyParts3D tendon {member} loses all source triangles at its insertion")
+    return retained, {
+        "method": "drop_exact_source_triangles_fully_interior_to_named_bone_enthesis",
+        "source_triangle_count": len(triangles),
+        "retained_triangle_count": len(retained),
+        "dropped_fully_locked_interior_cap_triangle_count": removed,
+        "boundary": (
+            "removes only source closure faces whose three vertices are already inset inside the named bone; "
+            "does not generate a bridge, weld, continuum, or force-transfer geometry"
+        ),
     }
 
 
@@ -4647,12 +4686,20 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             matched_routes.append(route)
         archive_path, member, obj = _bodyparts_obj_member(sources, "is_a", member_id)
         vertices_mm, triangles = _bodyparts_obj_triangles(obj, member)
-        normals = _bodyparts_vertex_normals(vertices_mm, triangles, member)
-        global_vertices = [[sum(global_matrix[row][column] * vertex[column] for column in range(3)) + global_matrix[row][3] for row in range(3)] for vertex in vertices_mm]
         layer_name = specification.get("layer", "muscle")
         layer = _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE if layer_name == "muscle" else _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON if layer_name == "tendon" else None
         if layer is None:
             raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has an invalid layer")
+        source_component_selection: dict[str, Any] | None = None
+        if layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON:
+            # The named tendon OBJ member is a compound source mesh.  Its
+            # dominant sheet is the only connected anatomical surface; the
+            # small disconnected source shards make a bone insertion look
+            # detached.  Preserve that exact sheet, not a remeshed repair.
+            vertices_mm, triangles, source_component_selection = \
+                _bodyparts_largest_connected_surface_component(vertices_mm, triangles, member)
+        normals = _bodyparts_vertex_normals(vertices_mm, triangles, member)
+        global_vertices = [[sum(global_matrix[row][column] * vertex[column] for column in range(3)) + global_matrix[row][3] for row in range(3)] for vertex in vertices_mm]
         explicit_primary, explicit_secondary = specification.get("primary_body"), specification.get("secondary_body")
         if explicit_primary is None and explicit_secondary is None:
             route_pairs = {(route["primary_body"], route["secondary_body"]) for route in matched_routes}
@@ -4768,6 +4815,9 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             distal_attenuation, attachment_weight_lock = _bodyparts_secondary_attachment_weight_lock(
                 global_vertices, [1.0] * len(global_vertices), bone_vertices_world_m, bone_triangles,
             )
+            triangles, interior_cap_trim = _bodyparts_drop_interior_tendon_cap_triangles(
+                triangles, distal_attenuation, member,
+            )
             # The named-body weight lock keeps the distal source vertices in
             # the calcaneus frame, but it cannot repair a rest-frame gap
             # between independently authored tendon and bone surfaces.  Move
@@ -4792,6 +4842,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                 "secondary_bone_member": bone_member,
                 "secondary_bone_member_sha256": hashlib.sha256(bone_obj).hexdigest(),
                 "surface_projection": surface_projection,
+                "interior_cap_triangle_trim": interior_cap_trim,
             })
             contributor_bindings = [
                 binding for binding in source_surface_bindings.values()
@@ -4863,6 +4914,8 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         })
         if attachment_weight_lock is not None:
             provenance[-1]["secondary_attachment_weight_lock"] = attachment_weight_lock
+        if source_component_selection is not None:
+            provenance[-1]["source_component_selection"] = source_component_selection
         if layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE:
             source_surface_bindings[member_id] = {
                 "member_id": member_id,
@@ -5256,6 +5309,208 @@ def _bodyparts_skin_nearest_surface_bindings(
     return result[:count]
 
 
+def _bodyparts_skin_smooth_visual_normals(
+    normals: list[list[float]], triangles: list[tuple[int, int, int]], iterations: int = 3,
+) -> list[list[float]]:
+    """Smooth only the source-derived visual normal field across skin faces.
+
+    The BodyParts3D exterior has a comparatively sparse faceted tessellation.
+    Its original triangles remain untouched; this limited normal-only filter
+    removes the renderer-visible checkerboard without inventing displacement,
+    texture, skin weights, or material mechanics.
+    """
+    if iterations <= 0 or not normals or not triangles:
+        raise ImportError("BodyParts3D skin visual normal smoothing has invalid input")
+    current = [_bodyparts_unit_vector(list(normal), "BodyParts3D skin source normal") for normal in normals]
+    for _ in range(iterations):
+        accumulated = [[0.0, 0.0, 0.0] for _ in current]
+        for triangle in triangles:
+            if len(triangle) != 3 or any(not 0 <= index < len(current) for index in triangle):
+                raise ImportError("BodyParts3D skin visual normal smoothing has an invalid triangle")
+            first, second, third = triangle
+            combined = [
+                current[first][axis] + current[second][axis] + current[third][axis]
+                for axis in range(3)
+            ]
+            for index in triangle:
+                for axis in range(3):
+                    accumulated[index][axis] += combined[axis]
+        current = [
+            _bodyparts_unit_vector(value, "BodyParts3D skin smoothed visual normal")
+            for value in accumulated
+        ]
+    return current
+
+
+def _bodyparts_skin_outer_surface_component(
+    vertices_mm: list[list[float]], triangles: list[tuple[int, int, int]], member: str,
+) -> tuple[list[list[float]], list[tuple[int, int, int]], dict[str, Any]]:
+    """Extract the outer sheet from BodyParts3D's compound skin solid.
+
+    `FJ2810` carries two near-coincident full-body components: the outside and
+    inside of a thin source skin solid, plus tiny disconnected details.  The
+    exterior is the largest enclosing connected component.  Retaining both
+    sheets is correct for a closed solid but produces an illegible doubled
+    silhouette in the raster inspection path.  This selection preserves every
+    source vertex and triangle of the external component; it does not simplify,
+    displace, fill, or synthesize skin geometry.
+    """
+    if not vertices_mm or not triangles:
+        raise ImportError("BodyParts3D skin outer-surface selection has empty source geometry")
+    # A point-touching triangle is not a continuous anatomical surface.  Work
+    # over triangles connected by a full edge, rather than merely combining
+    # every face that happens to reuse one OBJ vertex.
+    parent = list(range(len(vertices_mm)))
+
+    def find(index: int) -> int:
+        while parent[index] != index:
+            parent[index] = parent[parent[index]]
+            index = parent[index]
+        return index
+
+    def join(first: int, second: int) -> None:
+        first_root, second_root = find(first), find(second)
+        if first_root != second_root:
+            parent[second_root] = first_root
+
+    for triangle in triangles:
+        if len(triangle) != 3 or any(not 0 <= index < len(vertices_mm) for index in triangle):
+            raise ImportError(f"BodyParts3D skin {member} has an invalid source triangle")
+        join(triangle[0], triangle[1])
+        join(triangle[1], triangle[2])
+    component_vertices: dict[int, list[int]] = {}
+    for index in range(len(vertices_mm)):
+        component_vertices.setdefault(find(index), []).append(index)
+    component_triangles: Counter[int] = Counter(find(triangle[0]) for triangle in triangles)
+    components: list[dict[str, Any]] = []
+    for root, indices in component_vertices.items():
+        minimum = [min(vertices_mm[index][axis] for index in indices) for axis in range(3)]
+        maximum = [max(vertices_mm[index][axis] for index in indices) for axis in range(3)]
+        components.append({
+            "root": root,
+            "indices": indices,
+            "vertex_count": len(indices),
+            "triangle_count": component_triangles[root],
+            "minimum_mm": minimum,
+            "maximum_mm": maximum,
+            "volume_mm3": math.prod(maximum[axis] - minimum[axis] for axis in range(3)),
+        })
+    components.sort(key=lambda component: (component["volume_mm3"], component["vertex_count"]), reverse=True)
+    outer = components[0]
+    major_components = [
+        component for component in components
+        if component["vertex_count"] >= 0.5 * outer["vertex_count"]
+    ]
+    if len(major_components) < 2:
+        raise ImportError(
+            f"BodyParts3D skin {member} does not contain the expected nested source skin sheets"
+        )
+    if not any(
+        component is not outer and all(
+            outer["minimum_mm"][axis] <= component["minimum_mm"][axis] and
+            outer["maximum_mm"][axis] >= component["maximum_mm"][axis]
+            for axis in range(3)
+        )
+        for component in major_components
+    ):
+        raise ImportError(
+            f"BodyParts3D skin {member} cannot identify an enclosing outer source sheet"
+        )
+    old_to_new = {index: new_index for new_index, index in enumerate(outer["indices"])}
+    selected_triangles = [
+        tuple(old_to_new[index] for index in triangle)
+        for triangle in triangles
+        if find(triangle[0]) == outer["root"]
+    ]
+    if not selected_triangles:
+        raise ImportError(f"BodyParts3D skin {member} selected outer sheet has no triangles")
+    return [vertices_mm[index] for index in outer["indices"]], selected_triangles, {
+        "method": "exact_outer_connected_component_of_bodyparts3d_compound_skin_solid",
+        "source_vertex_count": len(vertices_mm),
+        "source_triangle_count": len(triangles),
+        "retained_vertex_count": outer["vertex_count"],
+        "retained_triangle_count": outer["triangle_count"],
+        "outer_bounds_mm": [outer["minimum_mm"], outer["maximum_mm"]],
+        "component_count": len(components),
+        "nested_major_component_count": len(major_components),
+        "boundary": (
+            "exact source outer skin-sheet subset; inner sheet and disconnected source details "
+            "are not part of the presented exterior shell"
+        ),
+    }
+
+
+def _bodyparts_largest_connected_surface_component(
+    vertices_mm: list[list[float]], triangles: list[tuple[int, int, int]], member: str,
+) -> tuple[list[list[float]], list[tuple[int, int, int]], dict[str, Any]]:
+    """Retain one source mesh's dominant connected anatomical sheet.
+
+    Some BodyParts3D tendon OBJ members include numerous disconnected sliver
+    components alongside their main sheet. They read as floating collagen
+    shards once the tendon is inspected against a bone. This selector keeps
+    the largest source-connected sheet without moving, filling, welding, or
+    remeshing it; provenance retains the discarded source-component count.
+    """
+    if not vertices_mm or not triangles:
+        raise ImportError(f"BodyParts3D {member} connected-surface selection has empty source geometry")
+    parent = list(range(len(triangles)))
+
+    def find(index: int) -> int:
+        while parent[index] != index:
+            parent[index] = parent[parent[index]]
+            index = parent[index]
+        return index
+
+    def join(first: int, second: int) -> None:
+        first_root, second_root = find(first), find(second)
+        if first_root != second_root:
+            parent[second_root] = first_root
+
+    edge_owner: dict[tuple[int, int], int] = {}
+    for triangle_index, triangle in enumerate(triangles):
+        if len(triangle) != 3 or any(not 0 <= index < len(vertices_mm) for index in triangle):
+            raise ImportError(f"BodyParts3D {member} has an invalid source triangle")
+        for first, second in ((triangle[0], triangle[1]), (triangle[1], triangle[2]), (triangle[2], triangle[0])):
+            edge = (min(first, second), max(first, second))
+            prior_triangle = edge_owner.setdefault(edge, triangle_index)
+            if prior_triangle != triangle_index:
+                join(triangle_index, prior_triangle)
+    component_triangle_indices: dict[int, list[int]] = {}
+    for triangle_index in range(len(triangles)):
+        component_triangle_indices.setdefault(find(triangle_index), []).append(triangle_index)
+    component_vertex_counts = {
+        root: len({index for triangle_index in triangle_indices for index in triangles[triangle_index]})
+        for root, triangle_indices in component_triangle_indices.items()
+    }
+    dominant_root = max(
+        component_triangle_indices,
+        key=lambda root: (len(component_triangle_indices[root]), component_vertex_counts[root]),
+    )
+    selected_triangle_indices = component_triangle_indices[dominant_root]
+    if not selected_triangle_indices:
+        raise ImportError(f"BodyParts3D {member} dominant source component has no triangles")
+    selected_indices = sorted({
+        index for triangle_index in selected_triangle_indices for index in triangles[triangle_index]
+    })
+    old_to_new = {index: new_index for new_index, index in enumerate(selected_indices)}
+    selected_triangles = [
+        tuple(old_to_new[index] for index in triangles[triangle_index])
+        for triangle_index in selected_triangle_indices
+    ]
+    return [vertices_mm[index] for index in selected_indices], selected_triangles, {
+        "method": "exact_largest_edge_connected_component_of_bodyparts3d_source_surface",
+        "source_vertex_count": len(vertices_mm),
+        "source_triangle_count": len(triangles),
+        "retained_vertex_count": len(selected_indices),
+        "retained_triangle_count": len(selected_triangles),
+        "discarded_component_count": len(component_triangle_indices) - 1,
+        "boundary": (
+            "exact dominant edge-connected source sheet; disconnected or point-touching source sliver components are not "
+            "presented as anatomical tendon geometry"
+        ),
+    }
+
+
 def bodyparts_myosim_skinned_shell_visual_payload(
     sources: Path, anatomy: dict[str, Any], registration_path: Path, output: Path,
 ) -> dict[str, Any]:
@@ -5295,7 +5550,10 @@ def bodyparts_myosim_skinned_shell_visual_payload(
     global_matrix = coordinates.get("global_source_mm_to_myosim_world_m") if isinstance(coordinates, dict) else None
     if not isinstance(global_matrix, list) or len(global_matrix) != 4:
         raise ImportError("BodyParts3D skinned shell has no global rest-frame registration")
-    _bodyparts_visual_local_pose(global_matrix, "BodyParts3D skinned shell global transform")
+    _, global_quaternion, _ = _bodyparts_visual_local_pose(
+        global_matrix, "BodyParts3D skinned shell global transform",
+    )
+    global_rotation = _myosim_matrix_from_quaternion_xyzw(global_quaternion)
     anchors = registration.get("anchors")
     if not isinstance(anchors, list) or len(anchors) != len(_BODYPARTS_MYOSIM_BONE_ANCHORS):
         raise ImportError("BodyParts3D skinned shell has incomplete visual-skeleton anchors")
@@ -5397,8 +5655,12 @@ def bodyparts_myosim_skinned_shell_visual_payload(
     ])
 
     archive_path, member, obj = _bodyparts_obj_member(sources, "is_a", "FJ2810")
-    vertices_mm, triangles = _bodyparts_obj_triangles(obj, member)
+    source_vertices_mm, source_triangles = _bodyparts_obj_triangles(obj, member)
+    vertices_mm, triangles, outer_surface = _bodyparts_skin_outer_surface_component(
+        source_vertices_mm, source_triangles, member,
+    )
     normals = _bodyparts_vertex_normals(vertices_mm, triangles, member)
+    normals = _bodyparts_skin_smooth_visual_normals(normals, triangles)
     source_skin_sha = hashlib.sha256(obj).hexdigest()
     vertex_payload: list[bytes] = []
     maximum_rest_error_m = 0.0
@@ -5448,8 +5710,12 @@ def bodyparts_myosim_skinned_shell_visual_payload(
             math.sqrt(sum((reconstructed[axis] - world[axis]) ** 2 for axis in range(3))),
         )
         indices = [binding_index for _, binding_index in candidates]
+        world_normal = _bodyparts_unit_vector(
+            _myosim_matrix_vector(global_rotation, normal),
+            "BodyParts3D skinned shell rest world normal",
+        )
         vertex_payload.append(struct.pack(
-            "<6f4I4f", *position_m, *normal, *indices, *weights,
+            "<6f4I4f", *position_m, *world_normal, *indices, *weights,
         ))
         influence_histogram[tuple(indices)] += 1
     if maximum_rest_error_m > 2.0e-5:
@@ -5477,7 +5743,7 @@ def bodyparts_myosim_skinned_shell_visual_payload(
     payload_path = output / "bodyparts3d-myosim-skinned-shell.nhskin"
     payload_path.write_bytes(payload)
     manifest = {
-        "schema": "numi.human.bodyparts3d-myosim-skinned-shell-visual-payload.v3",
+        "schema": "numi.human.bodyparts3d-myosim-skinned-shell-visual-payload.v4",
         "payload": {
             "file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
             "magic": _BODYPARTS_MYOSIM_SKIN_VISUAL_MAGIC.rstrip(b"\0").decode("ascii"),
@@ -5492,6 +5758,8 @@ def bodyparts_myosim_skinned_shell_visual_payload(
             "skin": {
                 "member_id": "FJ2810", "member": member, "archive": archive_path.name,
                 "archive_sha256": sha256(archive_path), "member_sha256": source_skin_sha,
+                "source_vertex_count": len(source_vertices_mm),
+                "source_triangle_count": len(source_triangles),
             },
             "registered_bone_envelopes": [
                 {
@@ -5511,8 +5779,17 @@ def bodyparts_myosim_skinned_shell_visual_payload(
                 len(binding["surface_samples"]) for binding in bindings
             ),
             "rest_pose_reconstruction_max_error_m": maximum_rest_error_m,
+            "outer_source_surface": outer_surface,
+            "normal_binding": (
+                "registered_world_rest_normal blended through each articulated "
+                "body's current-from-rest rotation"
+            ),
+            "normal_presentation": {
+                "method": "three_pass_triangle_neighbour_source_normal_smoothing",
+                "changes": "visual normals only; exact source vertices and triangle connectivity are retained",
+            },
         },
-        "runtime_binding": "exact BodyParts3D skin triangles use four nearest distinct registered source-bone surface samples with deterministic inverse-quartic weights, restricted to candidates within a 12.5 mm source-joint band of the nearest sample; each influence carries its source-to-Core local transform for native C++/Metal posing",
+        "runtime_binding": "Exact BodyParts3D source skin triangles use four nearest distinct registered source-bone surface samples with deterministic inverse-quartic weights, restricted to candidates within a 12.5 mm source-joint band of the nearest sample; each influence carries its source-to-Core local transform for native C++/Metal posing. The source normal is registered once into the shared world rest frame and follows each articulated influence through its current-from-rest body rotation.",
         "status": "native_four_body_source_surface_local_linear_blend_skin_shell_visual_input_not_collision_or_physics",
         "evidence_boundary": "This is a sampled-source-bone-surface-proximity-derived articulated visual shell, not FEM/MPM skin, a tissue material law, collision/contact geometry, clinical registration, closest-triangle anatomical skin weights, or a force-coupled soft-tissue model.",
     }

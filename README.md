@@ -22,12 +22,12 @@ derivatives; all other raw or derived source artifacts remain local. See
 
 ## Visual progress
 
-The prior close-up tendon gallery has been withdrawn: review found that its
-closed source cap still read as a detached strip against the calcaneus. The
-next capture uses a small depth-tested, source-triangle-registered enthesis
-inset so the terminal cap is occluded by its matching bone rather than being
-presented as connected. Until that new four-angle capture passes review, the
-older images remain diagnostic evidence only in [visual progress](Docs/VISUAL_PROGRESS.md).
+The published close-up tendon and 2K exposed-anatomy pictures are withdrawn
+from quality presentation. Review found a detached-looking terminal cap and
+disconnected source fragments; they remain only as reproducibility artifacts
+in [visual progress](Docs/VISUAL_PROGRESS.md). The current corrective check is
+a four-angle 512 px native reference render, withheld from the gallery until
+the high-resolution reference path is reliable.
 
 The exposed source anatomy is used to inspect muscles and tendons against
 named bones. The BodyParts3D exterior is retained as a static source mesh only:
@@ -37,22 +37,16 @@ it has no authored skin weights and is not presented as a muscle-driven Human.
 
 For the detailed right-calf inspection, the matching free Z-Anatomy
 `Calcaneus.r` replaces only the visible calcaneus and is rigidly attached to
-the same MyoSim `calcn_r` body. Its previous capture is no longer a
-tendon-quality reference: review found that the source’s closed terminal cap
-still read as detached. The revised importer carries the terminal lock band
-1.5 mm into the exact matching calcaneus triangles, so opaque depth testing
-hides the artificial cap instead of presenting it as an external plate. The
-source mesh, MyoSim mechanics, and force path are unchanged. A new four-angle
-capture is required before this scoped visual derivative returns to the
-gallery; it is never a photorealistic, deformable, or force-transfer claim.
+the same MyoSim `calcn_r` body. This optional derivative is visual-only and is
+not the current tendon-quality reference.
 
-The lower-detail BodyParts3D `FJ1405`/`FJ3360` pair remains a source ownership
-and route-correspondence record: 944 distal lock vertices and a 26-vertex
-feather band are projected to the named calcaneus triangles, with no generated
-collar. Its framing and source discontinuity do not meet the gallery’s tendon
-presentation standard, so it is retained as diagnostic evidence rather than a
-lead image. The [capture record](Docs/media/myosim-native-calcaneal-attachment-2048/capture.transcript.txt)
-records that narrower check.
+For the primary BodyParts3D `FJ1405`/`FJ3360` tendons, the importer now retains
+only the dominant exact source-connected sheet, drops disconnected source
+slivers, removes fully interior terminal-cap faces, and moves the locked
+terminal band 5 mm inside the named calcaneal triangles. It generates neither
+a collar nor a bridge. This makes the bone
+insertion inspectable, but does not create a tendon continuum, weld,
+force-transfer law, or photorealistic anatomy.
 
 ### Muscle-driven torso anatomy
 
@@ -68,44 +62,26 @@ deformable organ/vessel model, or medical registration. See the
 
 ### Exterior source boundary
 
-BodyParts3D `FJ2810` remains the exact 102,467-vertex exterior source mesh,
-but BodyParts3D supplies no compatible per-vertex skin weights. A high-
-resolution all-muscle review exposed split shell patches in oblique and rear
-views, so that inferred animated exterior is retired from the gallery rather
-than presented as a plausible Human. The source skin remains useful for static
-reference only; the exposed muscle, bone, and tendon views are the current
-muscle-driven presentation.
+BodyParts3D `FJ2810` contains nested source sheets. The importer selects its
+exact outer connected sheet for a clean, source-derived exterior reference;
+it has no upstream physical skin weights, material model, or deformation
+qualification. The high-resolution animated-shell path remains retired after
+oblique/rear failures.
 
 ### Muscle-driven full-body anatomy
 
-<p align="center">
-  <img src="Docs/media/myosim-native-fullbody-isolated-cameras-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-front.png" width="49%" alt="All-muscle BodyParts3D Human, front" />
-  <img src="Docs/media/myosim-native-fullbody-isolated-cameras-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-rear.png" width="49%" alt="All-muscle BodyParts3D Human, rear" />
-</p>
-
-This separate Apple-M4 2K anatomy pass is the active full-body mechanical
-view: all 416 authored MyoSim paths ran on Metal before one bounded 100 µs
-state update. It renders 184 BodyParts3D bone meshes and 150 named
-muscle/tendon surfaces. The two Achilles meshes use corrected three-body
-femur/tibia/calcaneus ownership and source-triangle projected distal
-boundaries; the old short collar is now explicit diagnostic-only geometry, not
-part of the normal anatomy render. Each of the four 2K views uses a fresh
-native renderer and world sample, so no preceding angle can leak into the
-frame. It is an anatomy/force-path inspection, not a deformable tissue or
-tendon result. The [capture record](Docs/media/myosim-native-fullbody-isolated-cameras-2048/capture.transcript.txt)
-keeps the exact inputs, counters, and image hashes.
+The 2K gallery captures are historical diagnostics, not the active anatomy
+presentation. The current four-angle source check evaluates all 416 MyoSim
+paths before a bounded 100 µs update and renders the named bones and soft
+tissues at 512 px with the exact-reference renderer. It is a kinematic
+anatomy/force-path inspection, not a deformable tissue or tendon result.
 
 ### Shared-tendon, source-body attachment review
 
-The previous two-body Achilles presentation was wrong: it reduced the two
-gastrocnemius femoral origins and soleus tibial origin to one tibia–calcaneus
-blend. The `NHTISS3` source-surface payload instead binds each exact
-BodyParts3D Achilles mesh to femur, tibia, and calcaneus. Its proximal weights
-are inherited from the nearest named gastrocnemius/soleus source surface, and
-944 right / 943 left distal source vertices are locked to the exact calcaneal
-triangle surface. The four static images are a clean anatomy inspection; the
-[capture record](Docs/media/myosim-native-three-body-achilles-2048/capture.transcript.txt)
-also records the selective native muscle-driven check. This remains a
+The `NHTISS3` source-surface payload binds each exact BodyParts3D Achilles
+surface to its femur, tibia, and calcaneus owners. Proximal weights are
+inherited from the named gastrocnemius/soleus source surfaces; the distal
+source band is locked to the named calcaneus triangles. This remains a
 kinematic visual surface, not a tendon continuum, weld, force-transfer law,
 contact result, gait result, or clinical attachment certificate.
 
