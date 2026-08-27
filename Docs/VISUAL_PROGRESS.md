@@ -1,5 +1,31 @@
 # NumiLab Human visual progress
 
+## Selective posterior-calf source-actuator route review — 2026-08-27
+
+<p align="center">
+  <img src="media/myosim-native-selective-calf-route-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-surface-projected-sites-focus-body-136-front.png" width="24%" alt="Selective calf source route, front" />
+  <img src="media/myosim-native-selective-calf-route-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-surface-projected-sites-focus-body-136-oblique.png" width="24%" alt="Selective calf source route, oblique" />
+  <img src="media/myosim-native-selective-calf-route-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-surface-projected-sites-focus-body-136-side.png" width="24%" alt="Selective calf source route, side" />
+  <img src="media/myosim-native-selective-calf-route-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-surface-projected-sites-focus-body-136-rear.png" width="24%" alt="Selective calf source route, rear" />
+</p>
+
+This native 2048 px review is deliberately skeletal: it makes the true
+source-force path legible instead of asking a separate BodyParts3D collagen
+surface to prove force attachment. Actuators `348` (right lateral
+gastrocnemius), `349` (right medial gastrocnemius), and `369` (right soleus)
+alone received `0.5` excitation for 64 × 100 µs steps. Every one of the 416
+authored MyoSim paths was still evaluated on the Apple M4, yielding 128 Metal
+force transactions, 26,624 active records, 11 rendered route segments, and
+six source-projected endpoint cues. The final bounded source-foot contact had
+five active witnesses (six peak); the 157-body contact island remains Core FP64
+because the current Metal contact bucket rejects it. The [capture record](media/myosim-native-selective-calf-route-attachment-2048/capture.transcript.txt)
+retains exact counters and hashes.
+
+The cyan geometry is the CPU FP64 resolved spatial route at that same final
+pose, plus visual-only nearest-surface endpoint cues. It is not a collagen
+mesh, tendon material, tendon-to-bone force-transfer law, deformation result,
+stable gait, or clinical attachment validation.
+
 ## Muscle-driven articulated exterior shell — 2026-08-27
 
 <p align="center">

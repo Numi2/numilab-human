@@ -3401,14 +3401,16 @@ def _bodyparts_attachment_quantile(values: list[float], percentile: float) -> fl
 def bodyparts_myosim_attachment_surface_registration_candidate(
     sources: Path, anatomy: dict[str, Any], myosim_artifact: Path,
 ) -> dict[str, Any]:
-    """Infer a constrained per-bone translation from source muscle sites.
+    """Infer a constrained per-articulated-body translation from source sites.
 
     The base common-frame fit aligns only mesh centroids to inertial COMs,
     which is insufficient evidence for a muscle insertion.  This importer
     therefore uses the exact source site records on each already-bound link to
-    refine *translation only* against the corresponding BodyParts3D triangle
-    vertices.  It never changes source paths, forces, body binding, scale, or
-    orientation, and remains visual-only until independently reviewed.
+    refine *translation only* against the union of that link's BodyParts3D
+    bone surfaces.  Every mesh on one link receives the same correction, so
+    the result remains a coherent rigid visual binding.  It never changes
+    source paths, forces, body binding, scale, or orientation, and remains
+    visual-only until independently reviewed.
     """
     candidate = json.loads(json.dumps(
         bodyparts_myosim_registration_candidate(sources, anatomy, myosim_artifact)
@@ -3428,30 +3430,70 @@ def bodyparts_myosim_attachment_surface_registration_candidate(
     )
     max_correspondence_distance_m = 0.12
     maximum_iterations = 8
-    summary: list[dict[str, Any]] = []
+    # Every BodyParts3D member carried by one articulated link must retain one
+    # shared link-local transform.  Refining each mesh independently can lower
+    # a local site residual while pulling the tibia away from its fibula (or a
+    # skull bone away from its neighbour).  That produces a superficially
+    # better point match but an incoherent rigid body and prevents downstream
+    # skin/tissue payloads from using the same registration.  Refine the union
+    # of source surfaces for each source body instead.
+    anchors_by_body: dict[int, list[dict[str, Any]]] = defaultdict(list)
     for anchor in candidate["anchors"]:
         target = anchor["target"]
-        registration = anchor["registration"]
-        body_index = target["core_body_index"]
+        body_index = target.get("core_body_index") if isinstance(target, dict) else None
+        if not isinstance(body_index, int) or body_index < 0:
+            raise ImportError("BodyParts3D attachment registration has an invalid body index")
+        anchors_by_body[body_index].append(anchor)
+
+    summary: list[dict[str, Any]] = []
+    for body_index, body_anchors in sorted(anchors_by_body.items()):
+        target = body_anchors[0]["target"]
+        if any(anchor.get("target", {}).get("name") != target.get("name") for anchor in body_anchors):
+            raise ImportError("BodyParts3D attachment registration has conflicting source-body identities")
         sites = sites_by_body.get(body_index, [])
-        source = anchor["source"]
-        archive_path, member, obj = _bodyparts_obj_member(sources, source["hierarchy"], source["member_id"])
-        if archive_path.name != source["archive"] or hashlib.sha256(obj).hexdigest() != source["member_sha256"]:
-            raise ImportError("BodyParts3D attachment registration source mesh provenance drifted")
-        vertices_mm, _ = _bodyparts_obj_triangles(obj, member)
-        translation, quaternion, scale = _bodyparts_visual_local_pose(
-            registration["source_obj_mm_to_core_inertial_body_m"],
-            f"BodyParts3D attachment local transform for {source['member_id']}",
-        )
-        rotation = _myosim_matrix_from_quaternion_xyzw(quaternion)
-        vertices = [
-            _myosim_add(translation, [
-                scale * value for value in _myosim_matrix_vector(
-                    rotation, [coordinate * 0.001 for coordinate in vertex]
+        common_translation: list[float] | None = None
+        common_quaternion: list[float] | None = None
+        common_scale: float | None = None
+        vertices: list[list[float]] = []
+        source_member_ids: list[str] = []
+        for anchor in body_anchors:
+            source = anchor["source"]
+            registration = anchor["registration"]
+            archive_path, member, obj = _bodyparts_obj_member(
+                sources, source["hierarchy"], source["member_id"]
+            )
+            if archive_path.name != source["archive"] or hashlib.sha256(obj).hexdigest() != source["member_sha256"]:
+                raise ImportError("BodyParts3D attachment registration source mesh provenance drifted")
+            translation, quaternion, scale = _bodyparts_visual_local_pose(
+                registration["source_obj_mm_to_core_inertial_body_m"],
+                f"BodyParts3D attachment local transform for {source['member_id']}",
+            )
+            if common_translation is None:
+                common_translation, common_quaternion, common_scale = translation, quaternion, scale
+            elif any(
+                abs(current - reference) > 2.0e-5
+                for current, reference in zip(
+                    (*translation, *quaternion, scale),
+                    (*common_translation, *common_quaternion, common_scale),
+                    strict=True,
                 )
-            ])
-            for vertex in vertices_mm
-        ]
+            ):
+                raise ImportError(
+                    "BodyParts3D attachment registration has inconsistent source-to-body transforms"
+                )
+            rotation = _myosim_matrix_from_quaternion_xyzw(quaternion)
+            vertices_mm, _ = _bodyparts_obj_triangles(obj, member)
+            vertices.extend(
+                _myosim_add(translation, [
+                    scale * value for value in _myosim_matrix_vector(
+                        rotation, [coordinate * 0.001 for coordinate in vertex]
+                    )
+                ])
+                for vertex in vertices_mm
+            )
+            source_member_ids.append(source["member_id"])
+        if common_translation is None or common_quaternion is None or common_scale is None or not vertices:
+            raise ImportError("BodyParts3D attachment registration has no source surface vertices")
 
         def nearest(point: list[float]) -> tuple[list[float], float]:
             vertex = min(vertices, key=lambda candidate_vertex: sum(
@@ -3460,12 +3502,18 @@ def bodyparts_myosim_attachment_surface_registration_candidate(
             return vertex, math.sqrt(sum((point[axis] - vertex[axis]) ** 2 for axis in range(3)))
 
         initial_pairs = [(*nearest(point), point) for point in sites]
-        initial_distances = [distance for _, distance, _ in initial_pairs if distance <= max_correspondence_distance_m]
+        initial_distances = [
+            distance for _, distance, _ in initial_pairs
+            if distance <= max_correspondence_distance_m
+        ]
         delta = [0.0, 0.0, 0.0]
         if len(initial_distances) >= 3:
             for _ in range(maximum_iterations):
                 pairs = [(*nearest(point), point) for point in sites]
-                accepted = [(vertex, point) for vertex, distance, point in pairs if distance <= max_correspondence_distance_m]
+                accepted = [
+                    (vertex, point) for vertex, distance, point in pairs
+                    if distance <= max_correspondence_distance_m
+                ]
                 if len(accepted) < 3:
                     break
                 correction = [
@@ -3481,7 +3529,10 @@ def bodyparts_myosim_attachment_surface_registration_candidate(
                     for vertex in vertices
                 ]
         final_pairs = [(*nearest(point), point) for point in sites]
-        final_distances = [distance for _, distance, _ in final_pairs if distance <= max_correspondence_distance_m]
+        final_distances = [
+            distance for _, distance, _ in final_pairs
+            if distance <= max_correspondence_distance_m
+        ]
         initial_median = _bodyparts_attachment_quantile(initial_distances, 0.5) if initial_distances else None
         final_median = _bodyparts_attachment_quantile(final_distances, 0.5) if final_distances else None
         apply = (
@@ -3489,22 +3540,26 @@ def bodyparts_myosim_attachment_surface_registration_candidate(
             and final_median + 0.001 < initial_median
         )
         if apply:
-            local_matrix = registration["source_obj_mm_to_core_inertial_body_m"]
-            for axis in range(3):
-                local_matrix[axis][3] += delta[axis]
             body_rotation = _myosim_matrix_from_quaternion_xyzw(
                 target["default_inertial_quaternion_world_xyzw"]
             )
             world_delta = _myosim_matrix_vector(body_rotation, delta)
-            registration["default_pose_vertex_centroid_world_m"] = _myosim_add(
-                registration["default_pose_vertex_centroid_world_m"], world_delta
-            )
-            registration["status"] = "inferred_visual_attachment_surface_refinement"
-        registration["attachment_surface_refinement"] = {
-            "method": "iterative_nearest_bodyparts3d_vertex_to_exact_myosim_site_translation_only",
+            for anchor in body_anchors:
+                registration = anchor["registration"]
+                local_matrix = registration["source_obj_mm_to_core_inertial_body_m"]
+                for axis in range(3):
+                    local_matrix[axis][3] += delta[axis]
+                registration["default_pose_vertex_centroid_world_m"] = _myosim_add(
+                    registration["default_pose_vertex_centroid_world_m"], world_delta
+                )
+                registration["status"] = "inferred_visual_attachment_surface_refinement"
+        diagnostics = {
+            "method": "iterative_nearest_bodyparts3d_body_surface_union_to_exact_myosim_site_translation_only",
             "maximum_correspondence_distance_m": max_correspondence_distance_m,
             "maximum_iterations": maximum_iterations,
             "source_site_count": len(sites),
+            "source_member_count": len(body_anchors),
+            "source_member_ids": source_member_ids,
             "accepted_site_count_before": len(initial_distances),
             "accepted_site_count_after": len(final_distances),
             "median_distance_before_m": initial_median,
@@ -3514,9 +3569,12 @@ def bodyparts_myosim_attachment_surface_registration_candidate(
             "translation_delta_core_body_m": delta,
             "applied": apply,
         }
+        for anchor in body_anchors:
+            anchor["registration"]["attachment_surface_refinement"] = diagnostics
         summary.append({
             "myosim_body": target["name"], "core_body_index": body_index,
-            "applied": apply, "median_distance_before_m": initial_median,
+            "source_member_count": len(body_anchors), "applied": apply,
+            "median_distance_before_m": initial_median,
             "median_distance_after_m": final_median,
         })
     candidate["schema"] = "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2"
@@ -3767,8 +3825,11 @@ def bodyparts_myosim_right_posterior_chain_visual_payload(
     registration = read_json(registration_file)
     if registration.get("schema") != "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2":
         raise ImportError("BodyParts3D posterior-chain visual payload requires a v2 visual-skeleton registration")
-    if registration.get("status") != "provisional_visual_registration_not_admitted_to_collision_or_physics":
-        raise ImportError("BodyParts3D posterior-chain visual payload requires an unmodified visual-only registration")
+    if registration.get("status") not in {
+        "provisional_visual_registration_not_admitted_to_collision_or_physics",
+        "inferred_attachment_surface_visual_registration_not_admitted_to_collision_or_physics",
+    }:
+        raise ImportError("BodyParts3D posterior-chain visual payload requires a supported visual-only registration")
     source = registration.get("source")
     expected_bodyparts = {
         "id": anatomy.get("source_id"), "version": anatomy.get("version"),
@@ -4305,8 +4366,11 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
     registration_file = registration_path.resolve()
     registration = read_json(registration_file)
     if registration.get("schema") != "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2" or \
-            registration.get("status") != "provisional_visual_registration_not_admitted_to_collision_or_physics":
-        raise ImportError("BodyParts3D full-body tissue payload requires the unmodified v2 visual registration")
+            registration.get("status") not in {
+                "provisional_visual_registration_not_admitted_to_collision_or_physics",
+                "inferred_attachment_surface_visual_registration_not_admitted_to_collision_or_physics",
+            }:
+        raise ImportError("BodyParts3D full-body tissue payload requires a supported v2 visual registration")
     expected_bodyparts = {"id": anatomy.get("source_id"), "version": anatomy.get("version"), "archives": anatomy.get("archives")}
     source = registration.get("source")
     if not isinstance(source, dict) or source.get("bodyparts") != expected_bodyparts:
@@ -4523,8 +4587,11 @@ def bodyparts_myosim_skinned_shell_visual_payload(
     registration_file = registration_path.resolve()
     registration = read_json(registration_file)
     if registration.get("schema") != "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2" or \
-            registration.get("status") != "provisional_visual_registration_not_admitted_to_collision_or_physics":
-        raise ImportError("BodyParts3D skinned shell requires the unmodified v2 visual registration")
+            registration.get("status") not in {
+                "provisional_visual_registration_not_admitted_to_collision_or_physics",
+                "inferred_attachment_surface_visual_registration_not_admitted_to_collision_or_physics",
+            }:
+        raise ImportError("BodyParts3D skinned shell requires a supported v2 visual registration")
     expected_bodyparts = {
         "id": anatomy.get("source_id"), "version": anatomy.get("version"),
         "archives": anatomy.get("archives"),

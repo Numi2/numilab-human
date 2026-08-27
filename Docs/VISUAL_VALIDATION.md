@@ -1,5 +1,24 @@
 # Visual validation
 
+## Selective source-actuator endpoint check — 2026-08-27
+
+The four-angle 2048 px [selective posterior-calf route review](VISUAL_PROGRESS.md#selective-posterior-calf-source-actuator-route-review--2026-08-27)
+isolates the actual source actuator route rather than inferring force
+continuity from the visible collagen surface. The run excites only current
+MyoSim actuator indices `348`, `349`, and `369`, yet executes every one of the
+416 authored paths on the Apple M4 and subtracts the zero-activation baseline
+before Core's bounded FP64 state/contact update. The final pose has nonzero
+route segmentation in every frame: 2,886 / 9,757 / 3,998 / 16,711 pixels from
+front through rear; the source route resolver reports two wraps and six
+surface-projected endpoint cues.
+
+Visual review confirms that the oblique, side, and rear views show the selected
+routes ending on the articulated right calcaneal region rather than floating in
+world space. These cyan lines are exact source route diagnostics evaluated at
+the final pose, not a replacement tendon mesh or a physical attachment result.
+The [capture record](media/myosim-native-selective-calf-route-attachment-2048/capture.transcript.txt)
+contains the parameters, device counters, and exact images.
+
 ## Current native articulated exterior-shell check — 2026-08-27
 
 The four-angle 2048 px [articulated exterior-shell capture](VISUAL_PROGRESS.md#muscle-driven-articulated-exterior-shell--2026-08-27)

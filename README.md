@@ -76,6 +76,26 @@ changing the authored MyoSim spatial route or force. Its [capture record](Docs/m
 names inputs, execution, and frame hashes. This is visual continuity—not a
 tendon weld, force-transfer law, deformable tendon, or attachment certificate.
 
+### Selective muscle-to-bone route review
+
+<p align="center">
+  <img src="Docs/media/myosim-native-selective-calf-route-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-surface-projected-sites-focus-body-136-front.png" width="24%" alt="Selective calf route review, front" />
+  <img src="Docs/media/myosim-native-selective-calf-route-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-surface-projected-sites-focus-body-136-oblique.png" width="24%" alt="Selective calf route review, oblique" />
+  <img src="Docs/media/myosim-native-selective-calf-route-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-surface-projected-sites-focus-body-136-side.png" width="24%" alt="Selective calf route review, side" />
+  <img src="Docs/media/myosim-native-selective-calf-route-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-surface-projected-sites-focus-body-136-rear.png" width="24%" alt="Selective calf route review, rear" />
+</p>
+
+This is the mechanical counterpart to the collagen-surface review. Only the
+current pinned MyoSim gastrocnemius lateralis/medialis and soleus actuators
+(348/349/369) receive `0.5` excitation; Metal still evaluates all 416 authored
+paths before the bounded dynamics/contact step. Cyan is the resolved source
+spatial muscle–tendon route with endpoint cues projected to the articulated
+BodyParts3D bones, so its rear and oblique views make the actual calcaneal
+endpoints inspectable. The [capture record](Docs/media/myosim-native-selective-calf-route-attachment-2048/capture.transcript.txt)
+contains the device counters and frame hashes. This is a force-path diagnostic,
+not a tendon mesh, continuum, force-transfer certificate, gait, or clinical
+attachment claim.
+
 ### Posterior-chain tendon-to-bone inspection
 
 <p align="center">
@@ -212,6 +232,19 @@ numi human myosim-native-route-inspection \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
   Build/route-inspection-right-lower-leg \
   136 348 349 369 371
+
+# To inspect a real selective contraction, add a bounded step. The command
+# excites the listed source actuators while still evaluating all 416 MyoSim
+# paths on Metal, retains the source-foot support fallback when present, and
+# draws the resolved route plus its endpoint cues on the linked bones. It does
+# not turn the route diagnostic into a deformable tendon surface.
+numi human myosim-native-route-inspection \
+  Build/myosim-fullbody \
+  Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
+  Build/route-inspection-right-calf-selective-contraction \
+  136 348 349 369 \
+  --muscle-step-seconds 0.0001 --muscle-step-count 64 \
+  --muscle-activation 0.5 --dimension 2048
 
 # Prepare exact BodyParts3D posterior-calf muscle/tendon surfaces in the same
 # source-default frame, then render them over the focused native skeleton.
