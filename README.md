@@ -21,30 +21,27 @@ or derived source artifacts remain local. See
 
 ## Visual progress
 
-The broad source-model images remain provenance artifacts, but are no longer
-the Human showcase: their framing hides the insertion that needs scrutiny.
-The current review isolates the named posterior chain at native resolution and
-keeps the muscle-driven comparison separate from claims of physical tendon
-continuity. See [visual progress](Docs/VISUAL_PROGRESS.md) for the evidence
-boundary.
+The broad source-model images remain provenance artifacts, not a claim of
+photoreal skin or deformable tissue. The current review isolates the named
+calcaneal tendon and calcaneus at native resolution, using bone and soft-tissue
+payloads made from one visual-registration receipt. See
+[visual progress](Docs/VISUAL_PROGRESS.md) for the evidence boundary.
 
 ### Posterior-chain tendon-to-bone inspection
 
 <p align="center">
-  <img src="Docs/media/myosim-native-posterior-tendon-inspection-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-side.png" width="32%" alt="Right posterior-chain source geometry, side" />
-  <img src="Docs/media/myosim-native-posterior-tendon-inspection-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-rear.png" width="32%" alt="Right posterior-chain source geometry, rear" />
-  <img src="Docs/media/myosim-native-posterior-tendon-inspection-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-rear.png" width="32%" alt="Right posterior-chain after bounded muscle-driven update, rear" />
+  <img src="Docs/media/myosim-native-calcaneal-tendon-detail-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-front.png" width="32%" alt="Right calcaneal tendon and calcaneus, front" />
+  <img src="Docs/media/myosim-native-calcaneal-tendon-detail-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-oblique.png" width="32%" alt="Right calcaneal tendon and calcaneus, oblique" />
+  <img src="Docs/media/myosim-native-calcaneal-tendon-detail-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-side.png" width="32%" alt="Right calcaneal tendon and calcaneus, side" />
 </p>
 
-This 2048 × 2048 native inspection renders only six relevant BodyParts3D bone
-parents (30 of 184 source meshes) and the exact right lateral/medial
-gastrocnemius, soleus, and calcaneal-tendon surfaces. Side, oblique, and rear
-views make the continuous collagen surface into the named calcaneus judgeable.
-The third frame is an eight-step, 0.8 ms comparison driven by all 416 source
-MyoSim muscle paths and six dynamically selected source-foot plane witnesses.
-It confirms the visible source insertion under that bounded update; it is not
-a deformable tendon, triangle force transfer, stable gait, general collision,
-or clinical-attachment claim.
+This fresh 2048 × 2048 native inspection renders the exact BodyParts3D right
+calcaneal tendon over the named calcaneus only, so the insertion is visible
+from front, oblique, side, and rear rather than hidden by a full-body frame.
+The native loader rejects a bone/tissue pair with different registration
+fingerprints before it can render. The frames therefore establish source-mesh
+registration continuity—not tendon force transfer, a deformable tendon,
+stable gait, general collision, clinical registration, or photoreal anatomy.
 
 ### Upper-limb muscle-driven inspection
 
@@ -201,6 +198,16 @@ numi human myosim-native-fullbody-soft-tissue-visuals \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
   Build/bodyparts3d-myosim-fullbody-muscle-surfaces/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue \
   Docs/media/myosim-native-fullbody-geometry-framed-2048 \
+  --dimension 2048
+
+# Four-angle calcaneal insertion review. This consumes a single matched pair
+# of source-prepared visual payloads; the native executable rejects a mixed
+# visual-registration pair before rendering. No Python process is started.
+numi human myosim-native-calcaneal-tendon-detail \
+  Build/myosim-fullbody \
+  Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
+  Build/bodyparts3d-myosim-fullbody-muscle-surfaces/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue \
+  Docs/media/myosim-native-calcaneal-tendon-detail-2048 \
   --dimension 2048
 
 # Focus the right shoulder-to-forearm chain. The filter chooses exact source

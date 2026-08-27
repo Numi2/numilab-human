@@ -1,5 +1,35 @@
 # NumiLab Human visual progress
 
+## Registration-compatible calcaneal tendon detail — 2026-08-27
+
+<p align="center">
+  <img src="media/myosim-native-calcaneal-tendon-detail-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-front.png" width="24%" alt="Calcaneal tendon and calcaneus, front" />
+  <img src="media/myosim-native-calcaneal-tendon-detail-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-oblique.png" width="24%" alt="Calcaneal tendon and calcaneus, oblique" />
+  <img src="media/myosim-native-calcaneal-tendon-detail-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-side.png" width="24%" alt="Calcaneal tendon and calcaneus, side" />
+  <img src="media/myosim-native-calcaneal-tendon-detail-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-rear.png" width="24%" alt="Calcaneal tendon and calcaneus, rear" />
+</p>
+
+This is the first narrow native review that makes the observed tendon/bone
+pairing explicit. Bone and soft-tissue payloads can contain the same MyoSim
+source identity yet be expressed in different BodyParts3D visual rest frames.
+The native ABI now embeds a compact fingerprint of the complete registration
+receipt in both payload headers and refuses a mixed pair before the renderer
+starts. A deliberately mismatched pair fails with `BodyParts3D bone and
+soft-tissue payloads have different visual registrations`.
+
+The successful Apple M4 capture is 2048 × 2048 from four cameras. It contains
+184 possible bone meshes but selects only the right calcaneus and the exact
+right calcaneal-tendon surface, yielding nonzero bone/tendon coverage in every
+view (front 76,721 / 150,525; oblique 79,974 / 90,141; side 66,943 / 100,742;
+rear 47,431 / 184,238 pixels). The complete native output and artifact hashes
+are retained in the [capture directory](media/myosim-native-calcaneal-tendon-detail-2048).
+
+These are direct BodyParts3D source meshes in a neutral anatomy light rig,
+not a photoreal human surface. They prove that this visual pair is expressed in
+one rest frame and that the tendon reaches the named calcaneus in the rendered
+source geometry. They do not prove a continuum tendon, tendon-to-bone force
+transfer, deformable tissue, collision, gait, or clinical registration.
+
 ## Device-resident full-body muscle-force projection — 2026-08-27
 
 The visual captures below now have a stronger mechanical companion check. The
