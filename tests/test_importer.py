@@ -266,7 +266,7 @@ class ImporterTests(unittest.TestCase):
         result = run([command, "--numi-describe"], capture_output=True, text=True, check=True)
         self.assertEqual(
             result.stdout,
-            "Build NumiLab Human source artifacts and a lower-body walking pilot.\n",
+            "Build NumiLab Human source artifacts and run the native full-body muscle reference.\n",
         )
 
     def test_opensim_parser_retains_mechanical_fields(self) -> None:

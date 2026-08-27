@@ -2,12 +2,36 @@
 set -eu
 
 if [ "${1:-}" = "--numi-describe" ]; then
-    printf '%s\n' 'Build NumiLab Human source artifacts and a lower-body walking pilot.'
+    printf '%s\n' 'Build NumiLab Human source artifacts and run the native full-body muscle reference.'
     exit 0
 fi
 
 command_directory=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
 repository_root=$(CDPATH= cd -- "$command_directory/../.." && pwd -P)
+
+# The production-facing source-complete full-body reference never starts a
+# Python process.  Python remains only in the offline upstream import adapter
+# below, where MyoSim itself owns model composition.  Keeping this command
+# native prevents the source convenience layer becoming a Numi runtime.
+if [ "${1:-}" = "myosim-native-probe" ]; then
+    if [ "$#" -ne 2 ]; then
+        printf '%s\n' "usage: numi human myosim-native-probe <artifact-directory>" >&2
+        exit 2
+    fi
+    artifact_directory=$2
+    runtime_root=${NUMI_LAB_ROOT:-/Users/home/Documents/emergentnumilife/MetalRobo}
+    build_directory=${NUMI_BUILD_DIR:-$runtime_root/build}
+    probe=$build_directory/bin/metalrobo_numilab_human_myosim_reference_probe
+    if [ ! -x "$probe" ]; then
+        printf '%s\n' "native Human probe is unavailable: $probe" >&2
+        printf '%s\n' "build target metalrobo_numilab_human_myosim_reference_probe in $runtime_root" >&2
+        exit 2
+    fi
+    exec "$probe" \
+        "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
+        "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo"
+fi
+
 if [ -n "${PYTHONPATH:-}" ]; then
     export PYTHONPATH="$repository_root/src:$PYTHONPATH"
 else

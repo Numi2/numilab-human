@@ -1,7 +1,9 @@
 # Third-party source notices
 
-No third-party source data is committed to this repository. The importer records
-the following sources in each generated local manifest.
+No BodyParts3D or OpenSim source data is committed to this repository. The
+Apache-2.0 MyoSim visual-progress frames listed below are the sole tracked
+source-derived media; the importer records every other source in local
+generated artifacts.
 
 ## BodyParts3D 4.0
 
@@ -22,6 +24,28 @@ the following sources in each generated local manifest.
   `.osim` or generated values, and records the source URL, revision, file hash,
   and credits in local artifacts. Confirm intended distribution rights before
   publishing a derived mechanics package.
+
+## MyoSim `myofullbody`
+
+- Upstream: <https://github.com/MyoHub/myo_sim>, pinned commit
+  `33c89c2bde282553dde3f526768eb3bdcfaa7649`.
+- License: Apache License 2.0. The source archive and all generated local
+  payloads retain that upstream notice.
+- Imported material: full-body articulated segment definitions, source joint
+  records, masses/inertias, spatial-tendon sites and sphere/cylinder wraps,
+  and the authored MuJoCo `general` muscle parameters.
+- The three tracked visual-progress PNGs are source-derived renders under the
+  same Apache-2.0 terms; their exact checksums are recorded in
+  `Docs/VISUAL_PROGRESS.md`.
+
+## Mortensen 2018 cervical/hyoid model
+
+- Upstream: <https://github.com/mjhmilla/kinematicPassengerModel>, pinned
+  commit `b0eb96127ca07dea0266764e837faeaa397092b5`.
+- License: MIT.
+- Imported material: the `HYOID_Scaled` OpenSim 3 body-owned joint structure
+  and 72 Millard muscle records. The model is preserved as an input to an
+  explicit rest-pose registration; it is not redistributed here.
 
 ## MoBL-ARMS Upper Extremity Dynamic Model
 

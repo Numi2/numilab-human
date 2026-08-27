@@ -1,5 +1,23 @@
 # Bounded execution evidence
 
+## MyoSim full-body native muscle reference — 2026-08-27
+
+Core revision `b2d449001898f40eecbdede15938c764c304f330` loads the active
+MyoSim full-body payload without Python. The dedicated C++ probe validated the
+103-source-body / 157-Core-body floating tree (129 configuration and 128
+velocity dimensions), all 416 muscle-tendon elements, 1,815 route sites, and
+143 source wrap geometries. At the imported source default pose it reported
+maximum body position/orientation errors of `6.26739049493e-08 m` and
+`9.88431212412e-08 rad`, muscle length/force errors of
+`2.55601529386e-08 m` and `0.000489447917062 N`, and inverse/forward dynamics
+round-trip error of `4.923435791e-13`.
+
+The probe also projects all muscle generalized forces and obtains finite
+forward dynamics. This proves a native source-reference articulation and
+active muscle route evaluation. It does **not** prove Metal execution,
+device-resident rollout performance, contact, walking, BodyParts3D
+registration, deformable tissue, or a clinical outcome.
+
 ## Source-default mobile-root FunctionBased contact and Millard-task gate — 2026-08-26
 
 Core revision `730aba49546f7708b85dd14f522799b19a757747` exposes `reduceFixedFunctionBasedRootToMobileDefaultPose` for the physical mobile root used by the bounded FunctionBased dense-dynamics and streamed-contact-response kernels. The reducer removes the persisted synthetic ground anchor, promotes the source pelvis to a 7-configuration/6-velocity root, returns canonical source body/joint index maps, and retains the remaining nine immutable FunctionBased programs. It requires the exact stationary source default and rejects actuator profiles, geometry, constraints, and moving roots rather than silently reinterpreting them. CPU default-pose continuity is `0` position and orientation error at printed precision. This is deliberately not an equivalence claim for arbitrary OpenSim `ground_pelvis` Euler-coordinate perturbations.

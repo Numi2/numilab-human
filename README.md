@@ -1,25 +1,78 @@
 # NumiLab Human v1
 
-The provenance-locked foundation for a Numi Lab human built from exactly three
-upstream sources:
+An Apple-native, muscle-driven Human foundation for Numi Lab. The active
+full-body mechanical source is **MyoSim `myofullbody`** (416 authored
+muscle-tendon actuators); the Core owns the articulated state, muscle route
+evaluation, force scatter, and forward dynamics. There is no Python process in
+the native Human execution path.
 
-1. **BodyParts3D 4.0** — named anatomical OBJ geometry and its `is-a` / `part-of`
-   hierarchy.
-2. **OpenSim RajagopalLaiUhlrich2023** — lower-body and pelvis articulated
-   mechanics, inertias, muscle paths, and muscle–tendon parameters.
-3. **MoBL-ARMS OpenSim Upper Extremity Dynamic Model** — bilateral shoulder,
-   elbow, forearm, wrist, and upper-extremity muscle mechanics.
+| Role | Source | Status |
+| --- | --- | --- |
+| Active full-body mechanics | MyoSim `myofullbody` | 103 source bodies, 416 muscles, native Core reference |
+| Cervical/hyoid mechanics | Mortensen 2018 | complete 72-muscle OpenSim 3 source IR; merge registration remains explicit |
+| Anatomy/visual layers | BodyParts3D 4.0 | named geometry and hierarchy; source-static visual evidence |
+| Comparative lower-body mechanics | RajagopalLaiUhlrich2023 | retained source-faithful bounded Metal path |
+| Comparative upper extremities | MoBL-ARMS | retained authenticated OpenSim source import |
 
-This repository tracks source locks and original import code only; no
-third-party geometry or model data is redistributed. The build produces a
-local `numi.human.v1` manifest that keeps every source value and mapping
-auditable.
+The importer preserves upstream records locally. Derived BodyParts3D artifacts
+remain out of Git; the tracked MyoSim validation frames below are permitted
+derivatives of the pinned Apache-2.0 source and carry attribution in
+[third-party notices](THIRD_PARTY_NOTICES.md).
 
-## Start
+## Visual progress
+
+<p align="center">
+  <img src="Docs/media/myosim-fullbody-front.png" width="32%" alt="MyoSim full-body muscle model, anterior source validation view">
+  <img src="Docs/media/myosim-fullbody-side.png" width="32%" alt="MyoSim full-body muscle model, lateral source validation view">
+  <img src="Docs/media/myosim-fullbody-rear.png" width="32%" alt="MyoSim full-body muscle model, posterior source validation view">
+</p>
+
+The front, side, and rear default-pose views show a continuous full-body
+musculoskeletal model: skull, thorax, spine, shoulders/scapulae, arms/hands,
+pelvis, legs, and feet are all visible. They are source-rendered visual
+evidence—not a claim of Core-native rendering, skin deformation, contact, or
+locomotion. See [visual progress](Docs/VISUAL_PROGRESS.md) for provenance,
+inspection notes, and the current implementation boundary.
+
+## Native full-body execution
+
+After a local artifact has been acquired and compiled, the production-facing
+reference needs only the Apple-native Numi Core executable:
+
+```sh
+# No Python process is started by this command.
+numi human myosim-native-probe Build/myosim-fullbody
+```
+
+This loads the `NHRIGID2` and `NHMYO1` payloads directly into Core, validates
+the 128-DoF floating articulated tree, evaluates every muscle route, applies
+the resulting generalized force, and executes forward dynamics. The native
+reference is intentionally a source-complete CPU owner path today; it is not a
+Metal rollout, skin/organ solver, contact qualification, or clinical model.
+
+## Offline source import
+
+MyoSim's own upstream composition API is Python. It is used *only* to acquire
+and serialize source values into immutable native payloads; it is not part of
+the Numi runtime, control loop, or physics execution. Keep it isolated in the
+source environment:
 
 ```sh
 python3 -m venv .venv
 .venv/bin/pip install -e .
+
+# Fetch the pinned Apache-2.0 MyoSim and MIT Mortensen source checkouts.
+numi human myosim-fetch --output Sources
+
+# Offline source compilation only; generated payloads then run natively above.
+numi human myosim-build \
+  --sources Sources \
+  --python .venv-myosim/bin/python \
+  --output Build/myosim-fullbody
+
+numi human mortensen-neck \
+  --sources Sources \
+  --output Build/mortensen-neck/mortensen-neck-source.ir.json
 
 # `numi human` is this repository's workspace capability. It fetches only
 # BodyParts3D 4.0 and the pinned Rajagopal model; it never tries

@@ -1,5 +1,10 @@
 # Source-static visual validation
 
+For the active MyoSim full-body muscle source, see the newer
+[visual-progress record](VISUAL_PROGRESS.md). Its three Apache-2.0-derived
+frames are source-rendered and are intentionally kept distinct from the
+BodyParts3D source-static evidence below.
+
 ## BodyParts3D full-skin preview — 2026-08-26
 
 The visual preview begins with the exact `FJ2810` skin OBJ from

@@ -1,17 +1,17 @@
 # NumiLab Human v1 architecture
 
 ```text
-BodyParts3D 4.0                 OpenSim RLU 2023 + MoBL-ARMS
-named OBJ meshes + FMA trees    bodies + joints + inertias + muscle paths
+BodyParts3D 4.0                 MyoSim `myofullbody`
+named OBJ meshes + FMA trees    103 bodies + 416 active muscle-tendon elements
              \                         /
               \                       /
-               numi.human.v1 source manifest
+               native Human source payloads
                          |
      +-------------------+--------------------+
      |                   |                    |
-articulated skeleton   active muscle-tendon  anatomical geometry registry
+articulated rigid tree active spatial tendon anatomical geometry registry
      |                   |                    |
-Numi RobotPack          Numi actuator        Numi visual/deformable candidates
+Core kinematics/dynamics Core J^T scatter     registered visual/deformable candidates
 ```
 
 ## Source-of-truth rules
@@ -21,7 +21,11 @@ Numi RobotPack          Numi actuator        Numi visual/deformable candidates
   `FJ…` OBJ-element identifiers are distinct, so the importer retains their
   explicit mapping rather than deriving filenames from labels. It never
   supplies mass, inertia, joint centres, activation, or material parameters.
-- **Lower-body mechanics:** RajagopalLaiUhlrich2023 owns its own segment
+- **Active full-body mechanics:** MyoSim `myofullbody` owns the currently
+  active full-body segment topology, source joints, masses/inertias, spatial
+  tendon routes, and all 416 MuJoCo muscle parameter records. Core evaluates
+  this payload directly in C++; Python is not on the native execution path.
+- **Comparative lower-body mechanics:** RajagopalLaiUhlrich2023 owns its own segment
   frames, joints, masses, inertias, muscle geometry paths, and Hill-type
   muscle/tendon values. No geometry-derived inertia may replace it.
 - **Upper-body mechanics:** MoBL-ARMS owns its shoulder girdle constraints,
@@ -31,6 +35,10 @@ Numi RobotPack          Numi actuator        Numi visual/deformable candidates
   each BodyParts3D mesh-to-OpenSim-body association. A shared word such as
   `femur` is evidence to propose a match, never evidence that coordinates,
   scales, or origins already agree.
+- **Cervical/hyoid extension:** Mortensen 2018 supplies a 72-muscle OpenSim 3
+  cervical/hyoid source record. It is not force-applied until its rest pose is
+  explicitly registered to the active MyoSim neck and an overlapping
+  neck/head-body replacement policy is resolved.
 
 ## Target mapping
 
@@ -51,6 +59,25 @@ and represents tube-shaped organs as solids. The importer retains those facts
 as explicit conversion gates rather than assigning unsupported physics.
 
 ## Numi execution boundary
+
+### Active MyoSim full-body reference
+
+The first source-complete full-body owner path is a Core C++ reference, not a
+Python simulator wrapped by Numi. An offline MyoSim composition step writes two
+immutable payloads: `NHRIGID2` contains the 157-body Core tree (103 authored
+source bodies plus 54 exact zero-inertia transform carriers), while `NHMYO1`
+contains all 416 actuator definitions, 1,815 sites, and 143 wrap geometries.
+At Core `b2d4490`, `MujocoMuscleReference` evaluates the MuJoCo general-muscle
+activation/force equations and sphere/cylinder spatial tendon routes, scatters
+`F * d(length)/d(v)` through Core point Jacobians, and drives the same native
+forward-dynamics owner.
+
+`numi human myosim-native-probe Build/myosim-fullbody` executes that path by
+directly launching the C++ Core binary. No Python process, interpreter-owned
+physics, or per-step host loop exists after the payload has been created. This
+is deliberately a CPU reference owner path today; a device-resident Metal
+extension must preserve the same payload ABI and oracle before it replaces or
+claims equivalence to this path.
 
 `numi.human.v1` remains an owner-neutral intermediate artifact, but Core
 revision `730aba4` now executes the bounded Rajagopal mechanics path: the

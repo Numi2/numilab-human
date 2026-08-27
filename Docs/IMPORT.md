@@ -1,5 +1,32 @@
 # Import procedure
 
+## 0. Active full-body source to native Core payload
+
+The primary full-body route is the pinned Apache-2.0 MyoSim composition, not
+the older lower-/upper-body stitching sequence below. Its upstream composition
+adapter is deliberately offline; after it has produced the payloads, Numi
+execution is a shell-dispatched native C++ Core process with no Python runtime.
+
+```sh
+# Offline source acquisition and compilation.
+numi human myosim-fetch --output Sources
+numi human myosim-build \
+  --sources Sources \
+  --python /path/to/source-only-myosim-python \
+  --output Build/myosim-fullbody
+
+# Native Numi Core execution: NHRIGID2 + NHMYO1 -> muscle force -> dynamics.
+numi human myosim-native-probe Build/myosim-fullbody
+```
+
+The native probe validates 416 full-body muscle-tendon elements and their
+source route geometry at the source default pose. It is a CPU reference owner
+path, not a Metal rollout. The selected Mortensen 2018 neck source is imported
+separately with `numi human mortensen-neck`; do not attach its 72 muscles to
+the active MyoSim body before an explicit rest-pose registration. See
+[visual progress](VISUAL_PROGRESS.md) for the inspected full-body views and
+[architecture](ARCHITECTURE.md) for runtime ownership.
+
 ## 1. Fetch the password-free sources
 
 ```sh
