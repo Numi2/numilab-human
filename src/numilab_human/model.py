@@ -3607,7 +3607,10 @@ _BODYPARTS_MYOSIM_MULTI_BODY_SOFT_TISSUE_VISUAL_ABI = 4
 _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE = 1
 _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON = 2
 _BODYPARTS_MYOSIM_SKIN_VISUAL_MAGIC = b"NHSKIN1\0"
-_BODYPARTS_MYOSIM_SKIN_VISUAL_ABI = 1
+# ABI 2 preserves the compact vertex/binding layout but records that the
+# weights were derived from envelope *boundaries*, not zero-inside envelope
+# volumes.  Native readers retain ABI 1 only for reproduction of old captures.
+_BODYPARTS_MYOSIM_SKIN_VISUAL_ABI = 2
 
 
 def _bodyparts_visual_registration_fingerprint(registration_file: Path) -> int:
@@ -4680,6 +4683,37 @@ def _bodyparts_skin_bbox_distance_squared(
     )
 
 
+def _bodyparts_skin_bbox_surface_distance_squared(
+    point: list[float], minimum: list[float], maximum: list[float],
+) -> float:
+    """Squared distance to an articulated bone envelope's *boundary*.
+
+    An ordinary AABB distance is zero throughout its enclosed volume.  That is
+    appropriate for broad-phase collision, but not for exterior skinning: a
+    torso vertex can be inside several overlapping axial envelopes and would
+    otherwise receive arbitrary equal influences.  This keeps the ordinary
+    outside metric while, for an interior point, measuring the nearest face of
+    the envelope.  It is still a deterministic offline visual-binding proxy,
+    not a replacement for a closest triangle or anatomical skin-weight
+    dataset.
+    """
+    outside_squared = _bodyparts_skin_bbox_distance_squared(point, minimum, maximum)
+    if outside_squared > 0.0:
+        return outside_squared
+    if len(point) != 3 or len(minimum) != 3 or len(maximum) != 3 or any(
+            not math.isfinite(value) for value in (*point, *minimum, *maximum)) or any(
+            minimum[axis] > maximum[axis] for axis in range(3)
+    ):
+        raise ImportError("BodyParts3D skin envelope boundary has invalid bounds")
+    return min(
+        min(
+            (point[axis] - minimum[axis]) ** 2,
+            (maximum[axis] - point[axis]) ** 2,
+        )
+        for axis in range(3)
+    )
+
+
 def bodyparts_myosim_skinned_shell_visual_payload(
     sources: Path, anatomy: dict[str, Any], registration_path: Path, output: Path,
 ) -> dict[str, Any]:
@@ -4687,12 +4721,14 @@ def bodyparts_myosim_skinned_shell_visual_payload(
 
     The source has one exact exterior mesh, while the registered skeleton has
     many named source bones.  This offline importer assigns each source skin
-    vertex to its four nearest *registered articulated bone envelopes* in the
-    shared rest frame.  It records those source-to-body transforms separately
-    so the C++/Metal renderer can linearly blend the shell at the current
-    articulated pose without a Python process.  This is an improved visual
-    shell, deliberately not a claimed FEM skin, collision shell, or clinical
-    soft-tissue registration.
+    vertex to its four nearest *registered articulated bone-envelope
+    boundaries* in the shared rest frame.  Its sharply local blend avoids the
+    old failure mode where every envelope containing a vertex had distance
+    zero and unrelated bones could pull the same skin vertex.  It records
+    source-to-body transforms separately so the C++/Metal renderer can linearly
+    blend the shell at the current articulated pose without a Python process.
+    This is an improved visual shell, deliberately not a claimed FEM skin,
+    collision shell, or clinical soft-tissue registration.
     """
     registration_file = registration_path.resolve()
     registration = read_json(registration_file)
@@ -4808,14 +4844,19 @@ def bodyparts_myosim_skinned_shell_visual_payload(
         world = world_point(vertex)
         candidates = sorted(
             (
-                _bodyparts_skin_bbox_distance_squared(world, binding["minimum"], binding["maximum"]),
+                _bodyparts_skin_bbox_surface_distance_squared(
+                    world, binding["minimum"], binding["maximum"]
+                ),
                 binding_index,
             )
             for binding_index, binding in enumerate(bindings)
         )[:4]
         if len(candidates) != 4:
             raise ImportError("BodyParts3D skinned shell has fewer than four bone bindings")
-        unnormalized = [1.0 / (0.0125 + math.sqrt(distance_squared)) ** 2
+        # A fourth-power falloff preserves smooth blending at an actual joint,
+        # while keeping a skin vertex on a limb segment from being meaningfully
+        # pulled by a distant overlapping torso or axial envelope.
+        unnormalized = [1.0 / (0.0075 + math.sqrt(distance_squared)) ** 4
                         for distance_squared, _ in candidates]
         normalizer = sum(unnormalized)
         if not math.isfinite(normalizer) or normalizer <= 0.0:
@@ -4873,7 +4914,7 @@ def bodyparts_myosim_skinned_shell_visual_payload(
     payload_path = output / "bodyparts3d-myosim-skinned-shell.nhskin"
     payload_path.write_bytes(payload)
     manifest = {
-        "schema": "numi.human.bodyparts3d-myosim-skinned-shell-visual-payload.v1",
+        "schema": "numi.human.bodyparts3d-myosim-skinned-shell-visual-payload.v2",
         "payload": {
             "file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
             "magic": _BODYPARTS_MYOSIM_SKIN_VISUAL_MAGIC.rstrip(b"\0").decode("ascii"),
@@ -4903,9 +4944,9 @@ def bodyparts_myosim_skinned_shell_visual_payload(
             "distinct_influence_quartets": len(influence_histogram),
             "rest_pose_reconstruction_max_error_m": maximum_rest_error_m,
         },
-        "runtime_binding": "exact BodyParts3D skin triangles use four registered articulated bone envelopes with deterministic inverse-distance blend weights; each influence carries its source-to-Core local transform for native C++/Metal posing",
-        "status": "native_four_body_linear_blend_skin_shell_visual_input_not_collision_or_physics",
-        "evidence_boundary": "This is a proximity-derived articulated visual shell, not FEM/MPM skin, a tissue material law, collision/contact geometry, clinical registration, or a force-coupled soft-tissue model.",
+        "runtime_binding": "exact BodyParts3D skin triangles use four registered articulated bone-envelope boundary distances with deterministic sharply local inverse-quartic blend weights; each influence carries its source-to-Core local transform for native C++/Metal posing",
+        "status": "native_four_body_boundary_local_linear_blend_skin_shell_visual_input_not_collision_or_physics",
+        "evidence_boundary": "This is a boundary-proximity-derived articulated visual shell, not FEM/MPM skin, a tissue material law, collision/contact geometry, clinical registration, closest-triangle anatomical skin weights, or a force-coupled soft-tissue model.",
     }
     write_json(output / "bodyparts3d-myosim-skinned-shell.manifest.json", manifest)
     return manifest

@@ -18,6 +18,7 @@ from numilab_human.model import (
     _BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS,
     _bodyparts_secondary_attachment_weight_lock,
     _bodyparts_skin_bbox_distance_squared,
+    _bodyparts_skin_bbox_surface_distance_squared,
     _bodyparts_myosim_surface_specifications,
     _bodyparts_similarity_fit,
     ImportError as HumanImportError,
@@ -65,6 +66,21 @@ class ImporterTests(unittest.TestCase):
             _bodyparts_skin_bbox_distance_squared(
                 [3.0, 5.0, 0.0], [-1.0, -2.0, -3.0], [1.0, 2.0, 3.0],
             ),
+            13.0,
+        )
+
+    def test_skin_bone_envelope_boundary_distance_distinguishes_overlapping_bones(self) -> None:
+        minimum, maximum = [-1.0, -2.0, -3.0], [1.0, 2.0, 3.0]
+        self.assertEqual(
+            _bodyparts_skin_bbox_surface_distance_squared([0.0, 0.0, 0.0], minimum, maximum),
+            1.0,
+        )
+        self.assertEqual(
+            _bodyparts_skin_bbox_surface_distance_squared([1.0, 0.0, 0.0], minimum, maximum),
+            0.0,
+        )
+        self.assertEqual(
+            _bodyparts_skin_bbox_surface_distance_squared([3.0, 5.0, 0.0], minimum, maximum),
             13.0,
         )
 
