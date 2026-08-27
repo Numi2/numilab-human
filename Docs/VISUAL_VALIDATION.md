@@ -17,6 +17,25 @@ an anatomical motion controller, stable movement, deformable tissue, or
 clinical registration. Exact indices, counters, and image hashes are in the
 [capture record](media/myosim-native-right-upper-limb-flexion-drive-2048/capture.transcript.txt).
 
+## Current full-body muscle and tendon check — 2026-08-27
+
+The [current four-angle full-body review](VISUAL_PROGRESS.md#current-full-body-source-muscle-and-tendon-review--2026-08-27)
+keeps all 184 BodyParts3D bones and 150 named source surfaces visible after a
+small, active all-416 route update. Its M4 execution has two Metal force
+transactions, 416 active source records, 90 applied wraps, six final active
+contacts among ten source-foot witnesses, and a `1.44013083483e-05`
+configuration difference from the passive reference. The four views retain nonzero bone/muscle/tendon
+coverage: 77,924/331,756/132, 72,578/273,205/770,
+58,434/165,371/640, and 111,564/295,853/7,389 pixels.
+
+Only the already source-triangle-locked distal boundary of each calcaneal
+tendon can be visually closed to its named calcaneus. This avoids both the old
+wrong two-body ownership and an invented muscle-to-tendon bridge, while making
+the observed collagen-to-bone continuity readable at full-body scale. It does
+not validate physical tendon attachment, a force-transfer law, deformable
+tissue, contact, gait, or clinical registration. The exact native output is in
+its [capture record](media/myosim-native-fullbody-nhtiss3-bone-collars-2048/capture.transcript.txt).
+
 ## Shared three-body Achilles check — 2026-08-27
 
 The current 2048 px four-angle [Achilles review](VISUAL_PROGRESS.md#shared-three-body-achilles-review--2026-08-27)

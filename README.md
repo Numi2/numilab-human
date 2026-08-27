@@ -43,6 +43,22 @@ and the attachment review below until the exterior has anatomical skin weights
 or a deformable skin solve. The shell is not an FEM/MPM skin, collision shell,
 tissue-material model, or clinical-registration claim.
 
+### Muscle-driven full-body anatomy
+
+<p align="center">
+  <img src="Docs/media/myosim-native-fullbody-nhtiss3-bone-collars-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-front.png" width="49%" alt="All-muscle BodyParts3D Human, front" />
+  <img src="Docs/media/myosim-native-fullbody-nhtiss3-bone-collars-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-rear.png" width="49%" alt="All-muscle BodyParts3D Human, rear" />
+</p>
+
+This separate Apple-M4 2K anatomy pass is the active full-body mechanical
+view: all 416 authored MyoSim paths ran on Metal before one bounded 100 µs
+state update. It renders 184 BodyParts3D bone meshes and 150 named
+muscle/tendon surfaces. The two Achilles meshes use their corrected three-body
+femur/tibia/calcaneus ownership, and their source-locked distal boundary may
+receive a short collar only onto the named calcaneus—not an inferred
+muscle-to-tendon bridge. It is an anatomy/force-path inspection, not a
+deformable tissue or tendon result.
+
 ### Shared-tendon, source-body attachment review
 
 <p align="center">

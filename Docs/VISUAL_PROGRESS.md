@@ -22,6 +22,30 @@ the exposed source-muscle and tendon review; a dynamic exterior returns only
 after anatomical skin weights or a deformable skin solve. This rest-pose
 review is not skin mechanics, collision, or clinical registration.
 
+## Current full-body source-muscle and tendon review — 2026-08-27
+
+<p align="center">
+  <img src="media/myosim-native-fullbody-nhtiss3-bone-collars-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-front.png" width="24%" alt="All-muscle Human, front" />
+  <img src="media/myosim-native-fullbody-nhtiss3-bone-collars-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-oblique.png" width="24%" alt="All-muscle Human, oblique" />
+  <img src="media/myosim-native-fullbody-nhtiss3-bone-collars-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-side.png" width="24%" alt="All-muscle Human, side" />
+  <img src="media/myosim-native-fullbody-nhtiss3-bone-collars-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-rear.png" width="24%" alt="All-muscle Human, rear" />
+</p>
+
+This is the current whole-body mechanical anatomy reference: 184 exact
+BodyParts3D bone meshes and 150 named muscle/tendon surfaces at 2048 px.
+All 416 authored MyoSim routes ran on Apple M4 before one 100 µs bounded state
+update at 0.01 activation (two Metal force transactions, 416 active records,
+90 wraps, and `1.44013083483e-05` maximum configuration delta). It uses the
+`NHTISS3` three-body Achilles binding. Only the source-locked distal tendon
+boundary can receive a short visual collar, projected to its named calcaneus;
+the renderer no longer searches or invents a muscle-to-tendon bridge. The
+[capture record](media/myosim-native-fullbody-nhtiss3-bone-collars-2048/capture.transcript.txt)
+has the four image hashes, coverage, and devices.
+
+This is an active muscle-force and articulated-anatomy inspection. The collar
+does not create a weld, a tendon material law, contact, gait, or clinical
+attachment validation.
+
 ## Shared three-body Achilles review — 2026-08-27
 
 <p align="center">
@@ -108,7 +132,7 @@ contact, gait, or clinical-registration evidence. The separate exposed-anatomy
 and tendon views remain the source surface evidence; an opaque shell is never
 used to imply tendon continuity.
 
-## Exposed ground-supported full-body all-muscle Metal force inspection — 2026-08-27
+## Retained 32-step full-body all-muscle Metal force inspection — 2026-08-27
 
 <p align="center">
   <img src="media/myosim-native-fullbody-supported-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-front.png" width="24%" alt="Ground-supported muscle-driven BodyParts3D Human, front" />
@@ -117,7 +141,7 @@ used to imply tendon continuity.
   <img src="media/myosim-native-fullbody-supported-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-rear.png" width="24%" alt="Ground-supported muscle-driven BodyParts3D Human, rear" />
 </p>
 
-This is the current exposed-anatomy presentation: 184 BodyParts3D bone meshes and 150
+This is a retained longer-step exposed-anatomy presentation: 184 BodyParts3D bone meshes and 150
 named muscle/tendon surfaces at 2048 × 2048 from front, oblique, side, and
 rear. The posterior tendons are rendered with their associated muscle chain
 in the full-body view rather than as an anatomically misleading free segment.
