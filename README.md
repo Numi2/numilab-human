@@ -26,20 +26,22 @@ It uses BodyParts3D's 184 bone meshes plus 150 named muscle/tendon surfaces,
 posed by the native Human runtime. See [visual progress](Docs/VISUAL_PROGRESS.md)
 for the evidence boundary.
 
-### Full-body Metal muscle-force inspection
+### Ground-supported full-body Metal muscle-force inspection
 
 <p align="center">
-  <img src="Docs/media/myosim-native-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-front.png" width="24%" alt="Muscle-driven BodyParts3D Human, front" />
-  <img src="Docs/media/myosim-native-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-oblique.png" width="24%" alt="Muscle-driven BodyParts3D Human, oblique" />
-  <img src="Docs/media/myosim-native-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-side.png" width="24%" alt="Muscle-driven BodyParts3D Human, side" />
-  <img src="Docs/media/myosim-native-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-rear.png" width="24%" alt="Muscle-driven BodyParts3D Human, rear" />
+  <img src="Docs/media/myosim-native-fullbody-supported-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-front.png" width="24%" alt="Ground-supported muscle-driven BodyParts3D Human, front" />
+  <img src="Docs/media/myosim-native-fullbody-supported-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-oblique.png" width="24%" alt="Ground-supported muscle-driven BodyParts3D Human, oblique" />
+  <img src="Docs/media/myosim-native-fullbody-supported-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-side.png" width="24%" alt="Ground-supported muscle-driven BodyParts3D Human, side" />
+  <img src="Docs/media/myosim-native-fullbody-supported-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-rear.png" width="24%" alt="Ground-supported muscle-driven BodyParts3D Human, rear" />
 </p>
 
-This Apple-M4 2K capture follows eight 100 µs updates. Each update evaluates
+This Apple-M4 2K capture follows 32 100 µs updates. Each update evaluates
 all 416 MyoSim muscle paths, their activation sidecars, and the 128-DoF
 generalized-force projection on Metal before the current Core FP64 dynamics
-step. It is an articulated anatomy presentation—not skin, a tendon continuum,
-contact, gait, or clinical anatomy evidence.
+and authored foot-witness contact step. Metal still does not admit the
+157-body contact island, so the bounded exact-cone contact step is explicitly
+Core FP64 before Metal renders the pose. It is an articulated anatomy
+presentation—not skin, a tendon continuum, gait, or clinical anatomy evidence.
 
 ### Posterior-chain tendon-to-bone inspection
 
@@ -228,6 +230,18 @@ numi human myosim-native-fullbody-soft-tissue-visuals \
   Build/bodyparts3d-myosim-fullbody-muscle-surfaces/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue \
   Docs/media/myosim-native-fullbody-geometry-framed-2048 \
   --dimension 2048
+
+# Default whole-body, ground-supported muscle-force presentation. This starts
+# no Python process: all 416 MyoSim routes and activation sidecars run on
+# Metal; the present 157-body contact island uses the explicitly reported
+# Core-FP64 contact fallback before the final native Metal render.
+numi human myosim-native-supported-fullbody-muscle-visuals \
+  Build/myosim-fullbody \
+  Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
+  Build/bodyparts3d-myosim-fullbody-muscle-surfaces/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue \
+  Docs/media/myosim-native-fullbody-supported-metal-force-2048 \
+  --muscle-step-seconds 0.0001 --muscle-step-count 32 \
+  --muscle-activation 0.05 --dimension 2048
 
 # Four-angle calcaneal insertion review. This consumes a single matched pair
 # of source-prepared visual payloads; the native executable rejects a mixed

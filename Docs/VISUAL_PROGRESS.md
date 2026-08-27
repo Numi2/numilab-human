@@ -1,12 +1,12 @@
 # NumiLab Human visual progress
 
-## Full-body all-muscle Metal force inspection — 2026-08-27
+## Ground-supported full-body all-muscle Metal force inspection — 2026-08-27
 
 <p align="center">
-  <img src="media/myosim-native-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-front.png" width="24%" alt="Muscle-driven BodyParts3D Human, front" />
-  <img src="media/myosim-native-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-oblique.png" width="24%" alt="Muscle-driven BodyParts3D Human, oblique" />
-  <img src="media/myosim-native-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-side.png" width="24%" alt="Muscle-driven BodyParts3D Human, side" />
-  <img src="media/myosim-native-fullbody-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-rear.png" width="24%" alt="Muscle-driven BodyParts3D Human, rear" />
+  <img src="media/myosim-native-fullbody-supported-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-front.png" width="24%" alt="Ground-supported muscle-driven BodyParts3D Human, front" />
+  <img src="media/myosim-native-fullbody-supported-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-oblique.png" width="24%" alt="Ground-supported muscle-driven BodyParts3D Human, oblique" />
+  <img src="media/myosim-native-fullbody-supported-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-side.png" width="24%" alt="Ground-supported muscle-driven BodyParts3D Human, side" />
+  <img src="media/myosim-native-fullbody-supported-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-rear.png" width="24%" alt="Ground-supported muscle-driven BodyParts3D Human, rear" />
 </p>
 
 This is the current Human presentation: 184 BodyParts3D bone meshes and 150
@@ -14,19 +14,24 @@ named muscle/tendon surfaces at 2048 × 2048 from front, oblique, side, and
 rear. The posterior tendons are rendered with their associated muscle chain
 in the full-body view rather than as an anatomically misleading free segment.
 
-The capture executes eight 100 µs bounded updates. Per update, Metal evaluates
+The capture executes 32 100 µs bounded updates. Per update, Metal evaluates
 all 416 authored MyoSim routes, active and zero-activation sidecars, and the
 summed 128-DoF force vector; Core FP64 then performs the currently supported
-state step and Metal renders the resulting pose. The run reported 16 Metal
-force transactions, 3,328 active-muscle records, 720 wrapped path contacts,
-and a maximum active/passive configuration difference of 0.00252694050715.
-The four images have nonzero bone, muscle, and tendon coverage. The concise
-[capture record](media/myosim-native-fullbody-metal-force-2048/capture.transcript.txt)
+state step and its exact-cone support contact over ten source foot witnesses;
+Metal then renders the resulting pose. The run reported 64 Metal force
+transactions, 13,312 active-muscle records, 2,866 wrapped path contacts, and
+a maximum active/passive configuration difference of 0.0278143121505. It
+observed two active contacts in the final step (six at peak) and a minimum
+plane gap of -9.81e-8 m. The four images have nonzero bone, muscle, and tendon
+coverage. The concise [capture record](media/myosim-native-fullbody-supported-metal-force-2048/capture.transcript.txt)
 contains the exact runtime boundary and output identities.
 
 This establishes a bounded, muscle-driven articulated presentation. It does
 not establish skinning, tendon force transfer, a tendon continuum, deformable
-soft tissue, contact, gait, or clinical registration.
+soft tissue, general collision, gait, or clinical registration. The current
+157-body contact island is correctly reported as not admitted to the installed
+Metal contact bucket; its bounded contact step is Core FP64 rather than a
+claimed GPU contact result.
 
 ## Registration-compatible calcaneal tendon detail — 2026-08-27
 
