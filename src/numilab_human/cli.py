@@ -804,7 +804,7 @@ def parser() -> argparse.ArgumentParser:
     )
     myosim_fullbody_tissue_payload_parser = commands.add_parser(
         "myosim-bodyparts-fullbody-muscle-surface-payload",
-        help="prepare audited BodyParts3D limb, torso, arm and hand surfaces for native two-body MyoSim endpoint posing",
+        help="prepare audited BodyParts3D surfaces for native MyoSim endpoint posing with explicit shared-tendon body ownership",
     )
     myosim_fullbody_tissue_payload_parser.add_argument("--sources", type=Path, required=True)
     myosim_fullbody_tissue_payload_parser.add_argument(

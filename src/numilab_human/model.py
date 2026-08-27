@@ -3595,6 +3595,15 @@ _BODYPARTS_MYOSIM_BONE_VISUAL_MAGIC = b"NHBONES1"
 _BODYPARTS_MYOSIM_BONE_VISUAL_ABI = 2
 _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_MAGIC = b"NHTISS2\0"
 _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_ABI = 3
+# ``NHTISS2`` remains the compact two-body payload used by the focused legacy
+# posterior-chain command.  ``NHTISS3`` adds one explicit source-body binding
+# and per-vertex three-way weights for shared tendons.  In particular, the
+# calcaneal tendon cannot faithfully be reduced to tibia-to-calcaneus: its
+# named gastrocnemius contributors originate on the femur while soleus
+# originates on the tibia.  The native renderer accepts both versions so
+# existing audited payloads remain inspectable.
+_BODYPARTS_MYOSIM_MULTI_BODY_SOFT_TISSUE_VISUAL_MAGIC = b"NHTISS3\0"
+_BODYPARTS_MYOSIM_MULTI_BODY_SOFT_TISSUE_VISUAL_ABI = 4
 _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE = 1
 _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON = 2
 _BODYPARTS_MYOSIM_SKIN_VISUAL_MAGIC = b"NHSKIN1\0"
@@ -4241,7 +4250,7 @@ def _bodyparts_secondary_attachment_weight_lock(
         "feathered_vertex_count": feathered,
         "nearest_vertex_distance_m": nearest_distance_m,
         "boundary": (
-            "This changes only visual two-body blend weights at a named tendon insertion; "
+            "This changes only visual articulated-body blend weights at a named tendon insertion; "
             "it is not a topological weld, a tendon constitutive model, force transfer, "
             "or medical attachment validation."
         ),
@@ -4357,11 +4366,14 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
 ) -> dict[str, Any]:
     """Package source-authored limb, shoulder, arm, hand and abdominal surfaces.
 
-    Every ordinary row uses the first and final **authored MyoSim route sites**
-    of its named muscle. The limited calcaneal-tendon row is explicitly marked
-    as an anatomical shared-tendon pair because its three contributing routes
-    begin on two distinct links. This is still a two-body kinematic visual
-    binding, not a deformable tissue or a replacement for the MyoSim force path.
+    Ordinary surfaces bind to their first and final **authored MyoSim route
+    sites**.  The calcaneal tendon is different: the source routes for its two
+    gastrocnemius heads start on the femur, while soleus starts on the tibia
+    and all three terminate on the calcaneus.  Its visual surface therefore
+    inherits a three-body blend from the nearest named source muscle surface
+    and locks its distal insertion to the exact calcaneal source surface.
+    This is kinematic presentation data, not a deformable tendon or a
+    replacement for the MyoSim force path.
     """
     registration_file = registration_path.resolve()
     registration = read_json(registration_file)
@@ -4405,10 +4417,15 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             raise ImportError("BodyParts3D full-body tissue payload has an invalid visual-skeleton anchor identity")
         secondary_bone_sources.setdefault(target_name, source_record)
 
-    vertices_payload: list[tuple[float, float, float, float, float, float, float]] = []
+    vertices_payload: list[tuple[float, float, float, float, float, float, float, float, float]] = []
     indices_payload: list[int] = []
     records_payload: list[bytes] = []
     provenance: list[dict[str, Any]] = []
+    # Earlier source muscle surfaces are the only anatomical correspondences
+    # used to distribute a shared tendon across multiple source bodies.  They
+    # retain exact OBJ vertices and their own source-route-derived binding
+    # weights; this never guesses a new origin or insertion.
+    source_surface_bindings: dict[str, dict[str, Any]] = {}
     for stable_id, specification in enumerate(specifications, start=1):
         member_id, label = specification.get("member_id"), specification.get("source_name")
         source_muscles = specification.get("myosim_muscles")
@@ -4422,53 +4439,85 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             if route is None:
                 raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has unknown MyoSim muscle {muscle_name}")
             matched_routes.append(route)
+        archive_path, member, obj = _bodyparts_obj_member(sources, "is_a", member_id)
+        vertices_mm, triangles = _bodyparts_obj_triangles(obj, member)
+        normals = _bodyparts_vertex_normals(vertices_mm, triangles, member)
+        global_vertices = [[sum(global_matrix[row][column] * vertex[column] for column in range(3)) + global_matrix[row][3] for row in range(3)] for vertex in vertices_mm]
+        layer_name = specification.get("layer", "muscle")
+        layer = _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE if layer_name == "muscle" else _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON if layer_name == "tendon" else None
+        if layer is None:
+            raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has an invalid layer")
         explicit_primary, explicit_secondary = specification.get("primary_body"), specification.get("secondary_body")
         if explicit_primary is None and explicit_secondary is None:
             route_pairs = {(route["primary_body"], route["secondary_body"]) for route in matched_routes}
             if len(route_pairs) != 1:
                 raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has non-uniform MyoSim endpoints")
             primary_name, secondary_name = next(iter(route_pairs))
+            binding_names = [primary_name, secondary_name]
             endpoint_source = "all_named_authored_myosim_route_endpoints"
-        elif isinstance(explicit_primary, str) and isinstance(explicit_secondary, str):
+        elif layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON and \
+                isinstance(explicit_primary, str) and isinstance(explicit_secondary, str):
             primary_name, secondary_name = explicit_primary, explicit_secondary
-            endpoint_source = "explicit_anatomical_shared_tendon_pair_with_named_contributing_authored_routes"
+            # Preserve the full source-route body set instead of falsely
+            # collapsing a shared tendon to the explicitly named tibia-to-
+            # calcaneus pair.  The distal body is intentionally last so the
+            # source-surface lock has one unambiguous attachment target.
+            proximal_names: list[str] = []
+            for route in matched_routes:
+                for name in (route["primary_body"], route["secondary_body"]):
+                    if name != secondary_name and name not in proximal_names:
+                        proximal_names.append(name)
+            binding_names = [*proximal_names, secondary_name]
+            if len(binding_names) != 3 or primary_name not in binding_names:
+                raise ImportError(
+                    f"BodyParts3D shared tendon {member_id} does not resolve exactly three source endpoint bodies"
+                )
+            endpoint_source = "all_named_authored_myosim_route_endpoints_with_shared_tendon_three_body_binding"
         else:
             raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has incomplete explicit endpoint bodies")
+
+        binding_targets: list[dict[str, Any]] = []
+        binding_transforms: list[float] = []
+        for binding_name in binding_names:
+            target = bodies.get(binding_name)
+            if not isinstance(target, dict):
+                raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has unresolved endpoint body {binding_name}")
+            position = _myosim_vector(
+                target.get("default_com_position_world_m"),
+                f"BodyParts3D {member_id} {binding_name} position",
+            )
+            quaternion = list(target.get("default_inertial_quaternion_world_xyzw", []))
+            _myosim_matrix_from_quaternion_xyzw(quaternion)
+            translation, rotation, scale = _bodyparts_visual_local_pose(
+                _bodyparts_local_registration_matrix(global_matrix, position, quaternion),
+                f"BodyParts3D {member_id} {binding_name} transform",
+            )
+            binding_targets.append(target)
+            binding_transforms.extend([*translation, *rotation, scale])
+        while len(binding_targets) < 3:
+            binding_targets.append({"core_body_index": 0xFFFFFFFF})
+            binding_transforms.extend([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0])
+        if len(binding_targets) != 3 or len(binding_transforms) != 24:
+            raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has invalid body binding arity")
+
         primary_target, secondary_target = bodies.get(primary_name), bodies.get(secondary_name)
-        if primary_target is None or secondary_target is None or primary_name == secondary_name:
-            raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has unresolved endpoint bodies")
-        primary_body_index, secondary_body_index = primary_target["core_body_index"], secondary_target["core_body_index"]
+        if not isinstance(primary_target, dict) or not isinstance(secondary_target, dict) or primary_name == secondary_name:
+            raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has unresolved primary/secondary anatomy")
         primary_position = _myosim_vector(primary_target.get("default_com_position_world_m"), f"BodyParts3D {member_id} primary position")
         secondary_position = _myosim_vector(secondary_target.get("default_com_position_world_m"), f"BodyParts3D {member_id} secondary position")
-        primary_quaternion = list(primary_target.get("default_inertial_quaternion_world_xyzw", []))
-        secondary_quaternion = list(secondary_target.get("default_inertial_quaternion_world_xyzw", []))
-        _myosim_matrix_from_quaternion_xyzw(primary_quaternion)
-        _myosim_matrix_from_quaternion_xyzw(secondary_quaternion)
-        archive_path, member, obj = _bodyparts_obj_member(sources, "is_a", member_id)
-        vertices_mm, triangles = _bodyparts_obj_triangles(obj, member)
-        normals = _bodyparts_vertex_normals(vertices_mm, triangles, member)
-        primary_transform = _bodyparts_local_registration_matrix(global_matrix, primary_position, primary_quaternion)
-        secondary_transform = _bodyparts_local_registration_matrix(global_matrix, secondary_position, secondary_quaternion)
-        primary_translation, primary_rotation, primary_scale = _bodyparts_visual_local_pose(primary_transform, f"BodyParts3D {member_id} primary transform")
-        secondary_translation, secondary_rotation, secondary_scale = _bodyparts_visual_local_pose(secondary_transform, f"BodyParts3D {member_id} secondary transform")
         body_axis = _myosim_subtract(secondary_position, primary_position)
         squared_axis = sum(value * value for value in body_axis)
         if squared_axis <= 1.0e-10:
             raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has coincident endpoint centres")
-        global_vertices = [[sum(global_matrix[row][column] * vertex[column] for column in range(3)) + global_matrix[row][3] for row in range(3)] for vertex in vertices_mm]
         projections = [sum((vertex[axis] - primary_position[axis]) * body_axis[axis] for axis in range(3)) for vertex in global_vertices]
         minimum, maximum = min(projections), max(projections)
         if maximum - minimum <= 1.0e-6:
             raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has no two-body blend extent")
-        primary_weights = [
+        base_primary_weights = [
             max(0.0, min(1.0, (maximum - projection) / (maximum - minimum)))
             for projection in projections
         ]
-        first_vertex, first_index = len(vertices_payload), len(indices_payload)
-        layer_name = specification.get("layer", "muscle")
-        layer = _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE if layer_name == "muscle" else _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON if layer_name == "tendon" else None
-        if layer is None:
-            raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has an invalid layer")
+
         attachment_weight_lock: dict[str, Any] | None = None
         if layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON:
             bone_source = secondary_bone_sources.get(secondary_name)
@@ -4491,8 +4540,11 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                 ]
                 for vertex in bone_vertices_mm
             ]
-            primary_weights, attachment_weight_lock = _bodyparts_secondary_attachment_weight_lock(
-                global_vertices, primary_weights, bone_vertices_world_m, bone_triangles,
+            # Passing unit primary weights yields a pure 1 -> 0 distal lock
+            # factor, independent of the arbitrary tibia-to-calcaneus body-
+            # centre projection used by the old two-body presentation path.
+            distal_attenuation, attachment_weight_lock = _bodyparts_secondary_attachment_weight_lock(
+                global_vertices, [1.0] * len(global_vertices), bone_vertices_world_m, bone_triangles,
             )
             attachment_weight_lock.update({
                 "secondary_body": secondary_name,
@@ -4500,34 +4552,92 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                 "secondary_bone_member": bone_member,
                 "secondary_bone_member_sha256": hashlib.sha256(bone_obj).hexdigest(),
             })
-        for vertex, normal, primary_weight in zip(vertices_mm, normals, primary_weights, strict=True):
-            vertices_payload.append((*[coordinate * 0.001 for coordinate in vertex], *normal, primary_weight))
+            contributor_bindings = [
+                binding for binding in source_surface_bindings.values()
+                if set(binding["myosim_muscles"]).intersection(source_muscles)
+            ]
+            if not contributor_bindings:
+                raise ImportError(
+                    f"BodyParts3D shared tendon {member_id} has no prior named source muscle surface to inherit"
+                )
+            vertex_weights: list[list[float]] = []
+            for vertex, attenuation in zip(global_vertices, distal_attenuation, strict=True):
+                nearest: tuple[float, dict[str, Any], int] | None = None
+                for contributor in contributor_bindings:
+                    for contributor_index, candidate in enumerate(contributor["global_vertices"]):
+                        squared_distance = sum(
+                            (vertex[axis] - candidate[axis]) ** 2 for axis in range(3)
+                        )
+                        if nearest is None or squared_distance < nearest[0]:
+                            nearest = (squared_distance, contributor, contributor_index)
+                if nearest is None:
+                    raise ImportError(f"BodyParts3D shared tendon {member_id} has no source muscle vertex")
+                _, contributor, contributor_index = nearest
+                weights_by_name = {name: 0.0 for name in binding_names}
+                for name, weight in zip(
+                    contributor["binding_names"], contributor["vertex_weights"][contributor_index], strict=True
+                ):
+                    if name in weights_by_name:
+                        weights_by_name[name] += weight
+                inherited_total = sum(weights_by_name.values())
+                if inherited_total <= 1.0e-8:
+                    raise ImportError(f"BodyParts3D shared tendon {member_id} inherited no compatible muscle body weight")
+                weights = [weights_by_name[name] / inherited_total * attenuation for name in binding_names]
+                weights[-1] += 1.0 - attenuation
+                total = sum(weights)
+                if not math.isfinite(total) or abs(total - 1.0) > 1.0e-6:
+                    raise ImportError(f"BodyParts3D shared tendon {member_id} has non-unit three-body weight")
+                vertex_weights.append(weights)
+            attachment_weight_lock.update({
+                "method": "exact_source_triangle_distal_lock_plus_nearest_named_source_muscle_three_body_weight_inheritance",
+                "body_bindings": binding_names,
+                "contributing_source_surface_members": sorted(binding["member_id"] for binding in contributor_bindings),
+            })
+        else:
+            vertex_weights = [[primary_weight, 1.0 - primary_weight] for primary_weight in base_primary_weights]
+
+        first_vertex, first_index = len(vertices_payload), len(indices_payload)
+        for vertex, normal, weights in zip(vertices_mm, normals, vertex_weights, strict=True):
+            padded_weights = [*weights, *([0.0] * (3 - len(weights)))]
+            if len(padded_weights) != 3 or any(weight < 0.0 or not math.isfinite(weight) for weight in padded_weights) or \
+                    abs(sum(padded_weights) - 1.0) > 1.0e-6:
+                raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has invalid body weights")
+            vertices_payload.append((*[coordinate * 0.001 for coordinate in vertex], *normal, *padded_weights))
         indices_payload.extend(first_vertex + index for triangle in triangles for index in triangle)
         records_payload.append(struct.pack(
-            "<8I16f", primary_body_index, secondary_body_index, first_vertex, len(vertices_mm), first_index,
-            len(triangles) * 3, stable_id, layer,
-            *primary_translation, *primary_rotation, primary_scale,
-            *secondary_translation, *secondary_rotation, secondary_scale,
+            "<10I24f", *(target["core_body_index"] for target in binding_targets),
+            first_vertex, len(vertices_mm), first_index, len(triangles) * 3, stable_id, layer, 0,
+            *binding_transforms,
         ))
         provenance.append({
             "stable_id": stable_id, "member_id": member_id, "member": member,
             "member_sha256": hashlib.sha256(obj).hexdigest(),
             "label": label, "layer": layer_name, "endpoint_source": endpoint_source,
-            "primary_myosim_body": primary_name, "primary_core_body_index": primary_body_index,
-            "secondary_myosim_body": secondary_name, "secondary_core_body_index": secondary_body_index,
+            "body_bindings": [
+                {"myosim_body": name, "core_body_index": target["core_body_index"]}
+                for name, target in zip(binding_names, binding_targets[:len(binding_names)], strict=True)
+            ],
             "matched_muscles": [dict(route, name=name) for name, route in zip(source_muscles, matched_routes, strict=True)],
-            "primary_weight_range": [0.0, 1.0], "vertex_count": len(vertices_mm), "triangle_count": len(triangles),
+            "body_weight_count": len(binding_names), "vertex_count": len(vertices_mm), "triangle_count": len(triangles),
         })
         if attachment_weight_lock is not None:
             provenance[-1]["secondary_attachment_weight_lock"] = attachment_weight_lock
+        if layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE:
+            source_surface_bindings[member_id] = {
+                "member_id": member_id,
+                "myosim_muscles": list(source_muscles),
+                "binding_names": binding_names,
+                "global_vertices": global_vertices,
+                "vertex_weights": vertex_weights,
+            }
     if len(vertices_payload) > 0xFFFFFFFF or len(indices_payload) > 0xFFFFFFFF:
         raise ImportError("BodyParts3D full-body tissue payload exceeds the uint32 native renderer capacity")
     registration_fingerprint = _bodyparts_visual_registration_fingerprint(registration_file)
     payload = b"".join([
-        struct.pack("<8s5I32s", _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_MAGIC, _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_ABI,
+        struct.pack("<8s5I32s", _BODYPARTS_MYOSIM_MULTI_BODY_SOFT_TISSUE_VISUAL_MAGIC, _BODYPARTS_MYOSIM_MULTI_BODY_SOFT_TISSUE_VISUAL_ABI,
                     len(records_payload), len(vertices_payload), len(indices_payload), registration_fingerprint,
                     bytes.fromhex(source_sha)),
-        *records_payload, b"".join(struct.pack("<7f", *vertex) for vertex in vertices_payload),
+        *records_payload, b"".join(struct.pack("<9f", *vertex) for vertex in vertices_payload),
         struct.pack(f"<{len(indices_payload)}I", *indices_payload),
     ])
     output = output.resolve()
@@ -4537,8 +4647,8 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
     manifest = {
         "schema": "numi.human.bodyparts3d-myosim-fullbody-muscle-surface-visual-payload.v1",
         "payload": {"file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
-                    "magic": _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_MAGIC.rstrip(b"\0").decode("ascii"),
-                    "payload_abi": _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_ABI,
+                    "magic": _BODYPARTS_MYOSIM_MULTI_BODY_SOFT_TISSUE_VISUAL_MAGIC.rstrip(b"\0").decode("ascii"),
+                    "payload_abi": _BODYPARTS_MYOSIM_MULTI_BODY_SOFT_TISSUE_VISUAL_ABI,
                     "registration_fingerprint32": f"{registration_fingerprint:08x}",
                     "surface_count": len(records_payload),
                     "vertex_count": len(vertices_payload), "index_count": len(indices_payload)},
@@ -4550,8 +4660,8 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         "coverage": {"configured_surface_count": len(specifications), "muscle_surface_count": sum(1 for entry in provenance if entry["layer"] == "muscle"),
                      "tendon_surface_count": sum(1 for entry in provenance if entry["layer"] == "tendon"),
                      "authored_myosim_muscle_count": len(myosim_manifest["muscles"])},
-        "runtime_binding": "exact BodyParts3D source surfaces use a per-vertex two-body linear blend in their named Core articulated endpoint frames; ordinary entries derive both endpoint bodies directly from the named authored MyoSim route sites, while the calcaneal-tendon insertion is secondary-calcaneus locked by exact source-mesh proximity",
-        "status": "native_two_body_kinematic_surface_binding_input_not_collision_or_physics",
+        "runtime_binding": "exact BodyParts3D source surfaces use per-vertex named Core articulated body weights; ordinary entries derive two bodies directly from their authored MyoSim route sites, while each calcaneal-tendon surface inherits three femur/tibia/calcaneus weights from its nearest named source muscle surface and exact source-triangle calcaneal lock",
+        "status": "native_multi_body_kinematic_surface_binding_input_not_collision_or_physics",
         "evidence_boundary": "This source-authored surface package visually follows exact named articulated endpoint bodies. It does not make the source surface a force-transmitting continuum, add a tendon constitutive law, create collision/contact, or establish a medical registration.",
     }
     write_json(output / "bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json", manifest)

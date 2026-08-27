@@ -1,5 +1,32 @@
 # NumiLab Human visual progress
 
+## Shared three-body Achilles review — 2026-08-27
+
+<p align="center">
+  <img src="media/myosim-native-three-body-achilles-2048/rest/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-front.png" width="24%" alt="Three-body Achilles, front" />
+  <img src="media/myosim-native-three-body-achilles-2048/rest/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-oblique.png" width="24%" alt="Three-body Achilles, oblique" />
+  <img src="media/myosim-native-three-body-achilles-2048/rest/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-side.png" width="24%" alt="Three-body Achilles, side" />
+  <img src="media/myosim-native-three-body-achilles-2048/rest/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-rear.png" width="24%" alt="Three-body Achilles, rear" />
+</p>
+
+The old Achilles proxy incorrectly used tibia/calcaneus ownership only. The
+new native `NHTISS3` payload carries all source-route body owners: femur,
+tibia, and calcaneus. It inherits proximal weights from the exact named
+gastrocnemius and soleus source surfaces, then locks the distal source
+triangles to the exact calcaneal surface (944 right and 943 left vertices,
+with 26/25 feathered). The 2048 px Apple-M4 review has nonzero tendon coverage
+in every angle: 1,715 / 4,329 / 9,407 / 21,648 pixels. The [capture record](media/myosim-native-three-body-achilles-2048/capture.transcript.txt)
+contains provenance, hashes, and the separate selective contraction result.
+
+The matching small contraction excites only `348`/`349`/`369` at 0.5 for one
+100 µs step. Metal still evaluates all 416 source paths (two transactions;
+416 records) before the bounded Core FP64 update. The cyan paths in that
+separate diagnostic are source routes, not replacement tendon geometry.
+
+This improves visual kinematic ownership of the exact BodyParts3D tendon mesh;
+it does not add tendon material, a surface force-transfer law, a weld, contact,
+gait, or clinical attachment validation.
+
 ## Selective posterior-calf source-actuator route review — 2026-08-27
 
 <p align="center">

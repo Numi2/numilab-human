@@ -1,5 +1,27 @@
 # Visual validation
 
+## Shared three-body Achilles check — 2026-08-27
+
+The current 2048 px four-angle [Achilles review](VISUAL_PROGRESS.md#shared-three-body-achilles-review--2026-08-27)
+replaces the invalid two-body tendon proxy. Exact BodyParts3D `FJ1405` now has
+three explicit MyoSim/Core owners: `femur_r` (131), `tibia_r` (136), and
+`calcn_r` (138); the mirrored surface has the corresponding left owners. The
+distal source-triangle lock has 944 right and 943 left vertices within 3 mm of
+the named calcaneal source surface, with 26 / 25 vertices in the 15 mm feather.
+The rest capture retained nonzero tendon coverage in front, oblique, side, and
+rear views: 1,715 / 4,329 / 9,407 / 21,648 pixels.
+
+The linked selective contraction checks the same payload after one 100 µs
+step. Only source muscles `348`, `349`, and `369` receive 0.5 activation;
+all 416 paths remain device-evaluated on the Apple M4. The final configuration
+differs from its passive reference by `0.000123820755509`, while the visible
+anatomy stays in the small-displacement regime. Full commands, hashes,
+coverage, and the explicit non-physical boundary are in the [capture record](media/myosim-native-three-body-achilles-2048/capture.transcript.txt).
+
+This validates a source-body-weighted visual bind and a source force-path
+inspection. It is not validation of deformable tendon mechanics, a
+tendon-to-bone transfer law, contact, gait, or clinical registration.
+
 ## Selective source-actuator endpoint check — 2026-08-27
 
 The four-angle 2048 px [selective posterior-calf route review](VISUAL_PROGRESS.md#selective-posterior-calf-source-actuator-route-review--2026-08-27)

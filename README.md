@@ -41,77 +41,53 @@ registered Core bone envelopes, reconstructing the registered rest pose to
 layer, not an FEM/MPM skin, collision shell, tissue-material model, or
 clinical-registration claim.
 
-### Exposed ground-supported full-body Metal muscle-force inspection
+### Shared-tendon, source-body attachment review
 
 <p align="center">
-  <img src="Docs/media/myosim-native-fullbody-supported-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-front.png" width="24%" alt="Ground-supported muscle-driven BodyParts3D Human, front" />
-  <img src="Docs/media/myosim-native-fullbody-supported-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-oblique.png" width="24%" alt="Ground-supported muscle-driven BodyParts3D Human, oblique" />
-  <img src="Docs/media/myosim-native-fullbody-supported-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-side.png" width="24%" alt="Ground-supported muscle-driven BodyParts3D Human, side" />
-  <img src="Docs/media/myosim-native-fullbody-supported-metal-force-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-rear.png" width="24%" alt="Ground-supported muscle-driven BodyParts3D Human, rear" />
+  <img src="Docs/media/myosim-native-three-body-achilles-2048/rest/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-front.png" width="24%" alt="Three-body Achilles binding, front" />
+  <img src="Docs/media/myosim-native-three-body-achilles-2048/rest/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-oblique.png" width="24%" alt="Three-body Achilles binding, oblique" />
+  <img src="Docs/media/myosim-native-three-body-achilles-2048/rest/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-side.png" width="24%" alt="Three-body Achilles binding, side" />
+  <img src="Docs/media/myosim-native-three-body-achilles-2048/rest/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-rear.png" width="24%" alt="Three-body Achilles binding, rear" />
 </p>
 
-This exposed-anatomy Apple-M4 2K capture follows 32 100 µs updates. Each update evaluates
-all 416 MyoSim muscle paths, their activation sidecars, and the 128-DoF
-generalized-force projection on Metal before the current Core FP64 dynamics
-and authored foot-witness contact step. Metal still does not admit the
-157-body contact island, so the bounded exact-cone contact step is explicitly
-Core FP64 before Metal renders the pose. It is an articulated anatomy
-presentation—not an exterior shell, a tendon continuum, gait, or clinical anatomy evidence.
-
-### Muscle-driven tendon junction review
-
-<p align="center">
-  <img src="Docs/media/myosim-native-supported-tendon-junction-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-front.png" width="24%" alt="Muscle-driven tendon junction, front" />
-  <img src="Docs/media/myosim-native-supported-tendon-junction-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-oblique.png" width="24%" alt="Muscle-driven tendon junction, oblique" />
-  <img src="Docs/media/myosim-native-supported-tendon-junction-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-side.png" width="24%" alt="Muscle-driven tendon junction, side" />
-  <img src="Docs/media/myosim-native-supported-tendon-junction-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-136-rear.png" width="24%" alt="Muscle-driven tendon junction, rear" />
-</p>
-
-This 2K native review keeps the exposed calf anatomy in the same 32-step,
-all-416-muscle-driven pose as the full body. BodyParts3D delivers the exact
-muscle, tendon, and bone meshes; at an open tendon boundary, the renderer adds
-a short source-proximity collar to the nearest visible endpoint-compatible
-muscle or named secondary bone surface. That closes a raster seam without
-changing the authored MyoSim spatial route or force. Its [capture record](Docs/media/myosim-native-supported-tendon-junction-2048/capture.transcript.txt)
-names inputs, execution, and frame hashes. This is visual continuity—not a
-tendon weld, force-transfer law, deformable tendon, or attachment certificate.
+The previous two-body Achilles presentation was wrong: it reduced the two
+gastrocnemius femoral origins and soleus tibial origin to one tibia–calcaneus
+blend. The `NHTISS3` source-surface payload instead binds each exact
+BodyParts3D Achilles mesh to femur, tibia, and calcaneus. Its proximal weights
+are inherited from the nearest named gastrocnemius/soleus source surface, and
+944 right / 943 left distal source vertices are locked to the exact calcaneal
+triangle surface. The four static images are a clean anatomy inspection; the
+[capture record](Docs/media/myosim-native-three-body-achilles-2048/capture.transcript.txt)
+also records the selective native muscle-driven check. This remains a
+kinematic visual surface, not a tendon continuum, weld, force-transfer law,
+contact result, gait result, or clinical attachment certificate.
 
 ### Selective muscle-to-bone route review
 
 <p align="center">
-  <img src="Docs/media/myosim-native-selective-calf-route-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-surface-projected-sites-focus-body-136-front.png" width="24%" alt="Selective calf route review, front" />
-  <img src="Docs/media/myosim-native-selective-calf-route-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-surface-projected-sites-focus-body-136-oblique.png" width="24%" alt="Selective calf route review, oblique" />
-  <img src="Docs/media/myosim-native-selective-calf-route-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-surface-projected-sites-focus-body-136-side.png" width="24%" alt="Selective calf route review, side" />
-  <img src="Docs/media/myosim-native-selective-calf-route-attachment-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-surface-projected-sites-focus-body-136-rear.png" width="24%" alt="Selective calf route review, rear" />
+  <img src="Docs/media/myosim-native-three-body-achilles-2048/selective-drive/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-surface-projected-sites-focus-body-136-front.png" width="24%" alt="Selective calf route review, front" />
+  <img src="Docs/media/myosim-native-three-body-achilles-2048/selective-drive/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-surface-projected-sites-focus-body-136-oblique.png" width="24%" alt="Selective calf route review, oblique" />
+  <img src="Docs/media/myosim-native-three-body-achilles-2048/selective-drive/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-surface-projected-sites-focus-body-136-side.png" width="24%" alt="Selective calf route review, side" />
+  <img src="Docs/media/myosim-native-three-body-achilles-2048/selective-drive/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-surface-projected-sites-focus-body-136-rear.png" width="24%" alt="Selective calf route review, rear" />
 </p>
 
 This is the mechanical counterpart to the collagen-surface review. Only the
 current pinned MyoSim gastrocnemius lateralis/medialis and soleus actuators
-(348/349/369) receive `0.5` excitation; Metal still evaluates all 416 authored
-paths before the bounded dynamics/contact step. Cyan is the resolved source
+(348/349/369) receive `0.5` excitation for one 100 µs step; Metal still
+evaluates all 416 authored paths before the bounded dynamics step. Cyan is the resolved source
 spatial muscle–tendon route with endpoint cues projected to the articulated
 BodyParts3D bones, so its rear and oblique views make the actual calcaneal
-endpoints inspectable. The [capture record](Docs/media/myosim-native-selective-calf-route-attachment-2048/capture.transcript.txt)
+endpoints inspectable. The [capture record](Docs/media/myosim-native-three-body-achilles-2048/capture.transcript.txt)
 contains the device counters and frame hashes. This is a force-path diagnostic,
 not a tendon mesh, continuum, force-transfer certificate, gait, or clinical
 attachment claim.
 
-### Posterior-chain tendon-to-bone inspection
+### Retired two-body tendon imagery
 
-<p align="center">
-  <img src="Docs/media/myosim-native-calcaneal-tendon-detail-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-front.png" width="32%" alt="Right calcaneal tendon and calcaneus, front" />
-  <img src="Docs/media/myosim-native-calcaneal-tendon-detail-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-oblique.png" width="32%" alt="Right calcaneal tendon and calcaneus, oblique" />
-  <img src="Docs/media/myosim-native-calcaneal-tendon-detail-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-side.png" width="32%" alt="Right calcaneal tendon and calcaneus, side" />
-</p>
-
-This focused 2048 × 2048 diagnostic renders the exact BodyParts3D right
-calcaneal tendon over the named calcaneus only. It is deliberately not the
-lead Human image: without the gastrocnemius and soleus chain, an isolated
-tendon cannot show its proximal anatomical context.
-The native loader rejects a bone/tissue pair with different registration
-fingerprints before it can render. The frames therefore establish source-mesh
-registration continuity—not tendon force transfer, a deformable tendon,
-stable gait, general collision, clinical registration, or photoreal anatomy.
+The older isolated tibia–calcaneus tendon images are retained only as
+reproducibility artifacts. They are not presented as current anatomy because
+they omit the gastrocnemius femoral ownership now represented in the shared
+three-body review above.
 
 ### Source skin provenance
 
