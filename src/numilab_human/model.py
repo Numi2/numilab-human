@@ -2023,8 +2023,12 @@ _MR_DOF_POSITION_LIMIT = 1 << 2
 # added mass: they preserve source joint order without a fabricated inertia.
 _MYOSIM_CORE_REFERENCE_MAGIC = b"NHRIGID2"
 _MYOSIM_CORE_REFERENCE_ABI = 1
-_MYOSIM_MUSCLE_REFERENCE_MAGIC = b"NHMYO1\0\0"
-_MYOSIM_MUSCLE_REFERENCE_ABI = 1
+_MYOSIM_MUSCLE_REFERENCE_LEGACY_MAGIC = b"NHMYO1\0\0"
+_MYOSIM_MUSCLE_REFERENCE_LEGACY_ABI = 1
+_MYOSIM_MUSCLE_REFERENCE_MAGIC = b"NHMYO2\0\0"
+_MYOSIM_MUSCLE_REFERENCE_ABI = 2
+_MYOSIM_MUSCLE_ARCHITECTURE_FORMAT = "<8f"
+_MYOSIM_MUSCLE_ARCHITECTURE_BYTES = struct.calcsize(_MYOSIM_MUSCLE_ARCHITECTURE_FORMAT)
 # Source-authored full-body foot support witnesses.  These are compiled
 # MuJoCo capsule/ellipsoid surface points against MyoSim's own ground plane,
 # not BodyParts3D collision proxies.
@@ -2051,6 +2055,193 @@ _MR_DOF_ROOT = 1 << 0
 _MYOSIM_ROUTE_SITE = 1
 _MYOSIM_ROUTE_SPHERE = 2
 _MYOSIM_ROUTE_CYLINDER = 3
+
+
+def _myosim_muscle_payload_architecture(
+    magic: bytes, abi: int, muscle_count: int, reserved0: int, reserved1: int,
+) -> tuple[int, int]:
+    """Return the optional appended architecture-table shape for NHMYO1/2."""
+    if magic == _MYOSIM_MUSCLE_REFERENCE_LEGACY_MAGIC and abi == _MYOSIM_MUSCLE_REFERENCE_LEGACY_ABI:
+        if reserved0 != 0 or reserved1 != 0:
+            raise ImportError("legacy MyoSim muscle payload has nonzero reserved fields")
+        return 0, 0
+    if magic == _MYOSIM_MUSCLE_REFERENCE_MAGIC and abi == _MYOSIM_MUSCLE_REFERENCE_ABI:
+        if reserved0 != muscle_count or reserved1 != _MYOSIM_MUSCLE_ARCHITECTURE_BYTES:
+            raise ImportError("NHMYO2 architecture table shape is invalid")
+        return reserved0, reserved1
+    raise ImportError("MyoSim muscle payload has an unsupported ABI")
+
+
+def _myosim_muscle_payload_bytes(
+    site_count: int, wrap_count: int, route_count: int, muscle_count: int,
+    architecture_count: int, architecture_bytes: int,
+) -> int:
+    return (
+        struct.calcsize("<8s9I32s") + 16 * site_count + 64 * wrap_count
+        + 16 * route_count + 164 * muscle_count
+        + architecture_count * architecture_bytes
+    )
+
+
+def _myosim_active_force_length(normalized_length: float, lower: float, upper: float) -> float:
+    if normalized_length < lower or normalized_length > upper:
+        return 0.0
+    lower_mid = 0.5 * (lower + 1.0)
+    upper_mid = 0.5 * (1.0 + upper)
+    if normalized_length <= lower_mid:
+        x = (normalized_length - lower) / max(1.0e-12, lower_mid - lower)
+        return 0.5 * x * x
+    if normalized_length <= 1.0:
+        x = (1.0 - normalized_length) / max(1.0e-12, 1.0 - lower_mid)
+        return 1.0 - 0.5 * x * x
+    if normalized_length <= upper_mid:
+        x = (normalized_length - 1.0) / max(1.0e-12, upper_mid - 1.0)
+        return 1.0 - 0.5 * x * x
+    x = (upper - normalized_length) / max(1.0e-12, upper - upper_mid)
+    return 0.5 * x * x
+
+
+def _myosim_passive_force_length(normalized_length: float, upper: float, scale: float) -> float:
+    if normalized_length <= 1.0:
+        return 0.0
+    upper_mid = 0.5 * (1.0 + upper)
+    if normalized_length <= upper_mid:
+        x = (normalized_length - 1.0) / max(1.0e-12, upper_mid - 1.0)
+        return scale * 0.5 * x * x
+    x = (normalized_length - upper_mid) / max(1.0e-12, upper_mid - 1.0)
+    return scale * (0.5 + x)
+
+
+def _numi_generic_tendon_force(normalized_length: float) -> float:
+    """One normalized Rajagopal/OpenSim-derived tendon curve for every muscle."""
+    strain_at_one = 0.049
+    stiffness_at_one = 1.375 / strain_at_one
+    force_at_toe = 2.0 / 3.0
+    strain_at_toe = strain_at_one - (1.0 - force_at_toe) / stiffness_at_one
+    strain = normalized_length - 1.0
+    if strain <= 0.0:
+        return 0.0
+    if strain >= strain_at_toe:
+        return force_at_toe + stiffness_at_one * (strain - strain_at_toe)
+    # C1 Hermite toe: zero force/slope at slack and the source-default force
+    # and slope at the linear transition. The 0.5 curviness is the canonical
+    # OpenSim default retained in the ABI below; no per-muscle curve is fitted.
+    t = strain / strain_at_toe
+    return (-2.0 * t**3 + 3.0 * t**2) * force_at_toe + (t**3 - t**2) * (
+        strain_at_toe * stiffness_at_one
+    )
+
+
+def _numi_static_compliant_force(
+    path_length: float, activation: float, optimal_fiber_length: float,
+    tendon_slack_length: float, gain: list[float], bias: list[float],
+) -> float:
+    """Solve zero-pennation static fibre/tendon equilibrium in normalized force."""
+    lower = min(0.05 * optimal_fiber_length, 0.5 * path_length)
+    upper = path_length
+    if not lower < upper:
+        return 0.0
+
+    def residual(fiber_length: float) -> tuple[float, float]:
+        fiber_normalized = fiber_length / optimal_fiber_length
+        tendon_normalized = (path_length - fiber_length) / tendon_slack_length
+        tendon_force = _numi_generic_tendon_force(tendon_normalized)
+        fiber_force = activation * _myosim_active_force_length(
+            fiber_normalized, gain[4], gain[5]
+        ) + _myosim_passive_force_length(fiber_normalized, bias[5], bias[7])
+        return tendon_force - fiber_force, tendon_force
+
+    left_residual, left_force = residual(lower)
+    right_residual, right_force = residual(upper)
+    if left_residual * right_residual > 0.0:
+        return left_force if abs(left_residual) < abs(right_residual) else right_force
+    midpoint_force = 0.0
+    for _ in range(48):
+        midpoint = 0.5 * (lower + upper)
+        midpoint_residual, midpoint_force = residual(midpoint)
+        if midpoint_residual > 0.0:
+            lower = midpoint
+        else:
+            upper = midpoint
+    return max(0.0, midpoint_force)
+
+
+def _fit_myosim_compliant_architecture(
+    length_range: list[float], acceleration_scale: float,
+    gain: list[float], bias: list[float], oracle_length: float | None = None,
+) -> tuple[float, float, float]:
+    """Fit positive L0/LT to the retained static MuJoCo force surface.
+
+    MyoSim does not identify pennation or elastic tendon architecture. We fit
+    only two positive lengths offline and keep its authored active/passive
+    curves and Fmax authoritative. A two-dimensional bounded search is needed:
+    forcing L0 + 1.049 LT to the source optimum reproduces the nonphysical
+    negative tendon offsets present in many rigid-tendon source actuators.
+    """
+    source_optimal_length = (length_range[1] - length_range[0]) / max(
+        1.0e-12, gain[1] - gain[0]
+    )
+    source_optimal_path = length_range[0] + (1.0 - gain[0]) * source_optimal_length
+    if not math.isfinite(source_optimal_path) or source_optimal_path <= 1.0e-6:
+        raise ImportError("MyoSim muscle has no positive source-optimal path length")
+    maximum_force = gain[2] if gain[2] >= 0.0 else gain[3] / max(1.0e-12, acceleration_scale)
+    passive_force = bias[2] if bias[2] >= 0.0 else bias[3] / max(1.0e-12, acceleration_scale)
+    if not math.isfinite(maximum_force) or maximum_force <= 0.0 or not math.isfinite(passive_force):
+        raise ImportError("MyoSim muscle has no positive finite force scale")
+
+    samples: list[tuple[float, float, float]] = []
+    normalized_minimum = min(gain[0], gain[1])
+    normalized_maximum = max(gain[0], gain[1])
+    normalized_samples = [
+        normalized_minimum + (normalized_maximum - normalized_minimum) * index / 8.0
+        for index in range(9)
+    ]
+    if normalized_minimum <= 1.0 <= normalized_maximum:
+        normalized_samples.append(1.0)
+    if oracle_length is not None and math.isfinite(oracle_length) and oracle_length > 0.0:
+        normalized_samples.append(
+            gain[0] + (oracle_length - length_range[0]) / source_optimal_length
+        )
+    for normalized_length in sorted(set(normalized_samples)):
+        path_length = length_range[0] + (normalized_length - gain[0]) * source_optimal_length
+        if path_length <= 1.0e-6:
+            continue
+        active = _myosim_active_force_length(normalized_length, gain[4], gain[5])
+        passive = _myosim_passive_force_length(normalized_length, bias[5], bias[7])
+        for activation in (0.1, 0.5, 1.0):
+            target = activation * active + (passive_force / maximum_force) * passive
+            samples.append((path_length, activation, max(0.0, target)))
+    if not samples:
+        raise ImportError("MyoSim muscle architecture fit has no valid force samples")
+
+    best: tuple[float, float, float] | None = None
+    minimum_operating_path = min(
+        value for value in length_range if math.isfinite(value) and value > 1.0e-6
+    )
+    for fiber_index in range(17):
+        optimal_fiber = source_optimal_length * (
+            0.35 + 1.30 * fiber_index / 16.0
+        )
+        for tendon_index in range(17):
+            tendon_slack = minimum_operating_path * (
+                0.005 + 0.745 * tendon_index / 16.0
+            )
+            squared_error = 0.0
+            squared_target = 0.0
+            for path_length, activation, target in samples:
+                predicted = _numi_static_compliant_force(
+                    path_length, activation, optimal_fiber, tendon_slack, gain, bias
+                )
+                squared_error += (predicted - target) ** 2
+                squared_target += target * target
+            normalized_rmse = math.sqrt(squared_error / len(samples)) / max(
+                1.0e-6, math.sqrt(squared_target / len(samples))
+            )
+            if best is None or normalized_rmse < best[2]:
+                best = (optimal_fiber, tendon_slack, normalized_rmse)
+    if best is None or not all(math.isfinite(value) and value > 0.0 for value in best):
+        raise ImportError("MyoSim muscle compliant architecture fit failed")
+    return best
 
 
 def _myosim_matrix_from_quaternion_xyzw(quaternion: list[float]) -> list[list[float]]:
@@ -2604,6 +2795,7 @@ def myosim_fullbody_reference_artifacts(
         )
     route_records: list[bytes] = []
     muscle_records: list[bytes] = []
+    architecture_records: list[bytes] = []
     muscle_manifest: list[dict[str, Any]] = []
     for muscle_index, muscle in enumerate(muscles):
         route = muscle.get("route")
@@ -2651,18 +2843,51 @@ def myosim_fullbody_reference_artifacts(
         muscle_records.append(
             struct.pack("<4I37f", int(muscle.get("tendon")), route_offset, len(route), 0, *floats)
         )
+        optimal_fiber_length, tendon_slack_length, fit_normalized_rmse = (
+            _fit_myosim_compliant_architecture(
+                [float(value) for value in length_range],
+                float(muscle.get("acceleration_scale")),
+                [float(value) for value in gain],
+                [float(value) for value in bias],
+                float(muscle.get("oracle_length_m")),
+            )
+        )
+        architecture_records.append(struct.pack(
+            _MYOSIM_MUSCLE_ARCHITECTURE_FORMAT,
+            optimal_fiber_length,
+            tendon_slack_length,
+            0.049,
+            1.375 / 0.049,
+            2.0 / 3.0,
+            0.5,
+            0.1,
+            fit_normalized_rmse,
+        ))
         muscle_manifest.append({
             "source_actuator_index": muscle.get("id"), "name": muscle.get("name"),
             "source_tendon_index": muscle.get("tendon"), "route_nodes": len(route),
             "oracle_length_m": floats[-2], "oracle_force_n_at_activation_0_5": floats[-1],
+            "compliant_architecture": {
+                "optimal_fiber_length_m": optimal_fiber_length,
+                "tendon_slack_length_m": tendon_slack_length,
+                "pennation_angle_rad": 0.0,
+                "fit_normalized_rmse": fit_normalized_rmse,
+            },
         })
     muscle_header = struct.pack(
         "<8s9I32s", _MYOSIM_MUSCLE_REFERENCE_MAGIC, _MYOSIM_MUSCLE_REFERENCE_ABI,
         len(body_records), len(muscle_records), len(site_records), len(geom_records), len(route_records),
-        int(model.get("tendon_count")), 0, 0, bytes.fromhex(source_hash)
+        int(model.get("tendon_count")), len(architecture_records),
+        _MYOSIM_MUSCLE_ARCHITECTURE_BYTES, bytes.fromhex(source_hash)
     )
-    muscle_payload = b"".join([muscle_header, *site_records, *geom_records, *route_records, *muscle_records])
-    expected_muscle_bytes = 76 + 16 * len(site_records) + 64 * len(geom_records) + 16 * len(route_records) + 164 * len(muscle_records)
+    muscle_payload = b"".join([
+        muscle_header, *site_records, *geom_records, *route_records,
+        *muscle_records, *architecture_records,
+    ])
+    expected_muscle_bytes = _myosim_muscle_payload_bytes(
+        len(site_records), len(geom_records), len(route_records), len(muscle_records),
+        len(architecture_records), _MYOSIM_MUSCLE_ARCHITECTURE_BYTES,
+    )
     if len(muscle_payload) != expected_muscle_bytes:
         raise ImportError("internal MyoSim muscle payload ABI size mismatch")
     support_source = exported.get("support_contact")
@@ -2832,6 +3057,26 @@ def myosim_fullbody_reference_artifacts(
             "wrap_geometry_count": len(geom_records),
             "wrap_geometry_kinds": {"sphere": sum(1 for record in geom_records if struct.unpack("<2I", record[:8])[1] == _MYOSIM_ROUTE_SPHERE),
                                     "cylinder": sum(1 for record in geom_records if struct.unpack("<2I", record[:8])[1] == _MYOSIM_ROUTE_CYLINDER)},
+        },
+        "compliant_muscle_architecture": {
+            "record_count": len(architecture_records),
+            "record_bytes": _MYOSIM_MUSCLE_ARCHITECTURE_BYTES,
+            "law": "one normalized damped equilibrium tendon law; per-muscle positive L0/LT fit",
+            "tendon_strain_at_one_normalized_force": 0.049,
+            "tendon_stiffness_at_one_normalized_force": 1.375 / 0.049,
+            "tendon_normalized_force_at_toe_end": 2.0 / 3.0,
+            "tendon_curviness": 0.5,
+            "normalized_fiber_damping": 0.1,
+            "pennation_angle_rad": 0.0,
+            "fit_normalized_rmse": {
+                "maximum": max(record["compliant_architecture"]["fit_normalized_rmse"] for record in muscle_manifest),
+                "mean": sum(record["compliant_architecture"]["fit_normalized_rmse"] for record in muscle_manifest) / len(muscle_manifest),
+            },
+            "boundary": (
+                "MyoSim does not identify pennation or elastic tendon architecture. L0/LT are bounded offline "
+                "fits to its retained static force surface; the normalized tendon curve and damping are shared "
+                "Rajagopal/OpenSim-derived defaults, not per-muscle anatomical measurements."
+            ),
         },
         "muscles": muscle_manifest,
         "runtime_requirement": (
@@ -3389,10 +3634,18 @@ def _myosim_attachment_sites_from_payload(
         magic, abi, body_count, muscle_count, site_count, wrap_count,
         route_count, tendon_count, reserved0, reserved1, source_sha,
     ) = struct.unpack_from(header_format, raw)
-    expected_bytes = header_bytes + 16 * site_count + 64 * wrap_count + 16 * route_count + 164 * muscle_count
+    try:
+        architecture_count, architecture_bytes = _myosim_muscle_payload_architecture(
+            magic, abi, muscle_count, reserved0, reserved1,
+        )
+    except ImportError as error:
+        raise ImportError("BodyParts3D attachment registration muscle payload ABI disagreement") from error
+    expected_bytes = _myosim_muscle_payload_bytes(
+        site_count, wrap_count, route_count, muscle_count,
+        architecture_count, architecture_bytes,
+    )
     if (
-        magic != _MYOSIM_MUSCLE_REFERENCE_MAGIC or abi != _MYOSIM_MUSCLE_REFERENCE_ABI
-        or body_count == 0 or tendon_count == 0 or reserved0 != 0 or reserved1 != 0
+        body_count == 0 or tendon_count == 0
         or source_sha.hex() != expected_source_sha256 or len(raw) != expected_bytes
     ):
         raise ImportError("BodyParts3D attachment registration muscle payload ABI/provenance disagreement")
@@ -4596,12 +4849,21 @@ def _myosim_surface_route_context(artifact: Path, source_sha: str) -> tuple[
     header_size = struct.calcsize("<8s9I32s")
     if len(payload) < header_size:
         raise ImportError("MyoSim surface binding muscle payload is truncated")
-    magic, abi, body_count, muscle_count, site_count, geometry_count, route_count, _, _, _, payload_sha = struct.unpack_from(
+    magic, abi, body_count, muscle_count, site_count, geometry_count, route_count, _, reserved0, reserved1, payload_sha = struct.unpack_from(
         "<8s9I32s", payload
     )
-    if magic != _MYOSIM_MUSCLE_REFERENCE_MAGIC or abi != _MYOSIM_MUSCLE_REFERENCE_ABI or payload_sha.hex() != source_sha:
+    try:
+        architecture_count, architecture_bytes = _myosim_muscle_payload_architecture(
+            magic, abi, muscle_count, reserved0, reserved1,
+        )
+    except ImportError as error:
+        raise ImportError("MyoSim surface binding muscle payload ABI is invalid") from error
+    if payload_sha.hex() != source_sha:
         raise ImportError("MyoSim surface binding muscle payload ABI or source provenance is invalid")
-    expected_bytes = header_size + 16 * site_count + 64 * geometry_count + 16 * route_count + 164 * muscle_count
+    expected_bytes = _myosim_muscle_payload_bytes(
+        site_count, geometry_count, route_count, muscle_count,
+        architecture_count, architecture_bytes,
+    )
     if len(payload) != expected_bytes or body_count == 0 or muscle_count == 0 or site_count == 0:
         raise ImportError("MyoSim surface binding muscle payload length is invalid")
     offset = header_size
@@ -4700,11 +4962,19 @@ def numi_human_tendon_endpoint_payload(
         magic, abi, body_count, muscle_count, site_count, wrap_count,
         route_count, tendon_count, reserved0, reserved1, embedded_source_sha,
     ) = struct.unpack_from(header_format, raw)
-    expected_size = header_size + 16 * site_count + 64 * wrap_count + 16 * route_count + 164 * muscle_count
+    try:
+        architecture_count, architecture_bytes = _myosim_muscle_payload_architecture(
+            magic, abi, muscle_count, reserved0, reserved1,
+        )
+    except ImportError as error:
+        raise ImportError("Numi Human tendon muscle payload ABI is invalid") from error
+    expected_size = _myosim_muscle_payload_bytes(
+        site_count, wrap_count, route_count, muscle_count,
+        architecture_count, architecture_bytes,
+    )
     if (
-        magic != _MYOSIM_MUSCLE_REFERENCE_MAGIC or abi != _MYOSIM_MUSCLE_REFERENCE_ABI
-        or body_count == 0 or muscle_count == 0 or site_count == 0 or tendon_count == 0
-        or reserved0 != 0 or reserved1 != 0 or embedded_source_sha.hex() != source_sha
+        body_count == 0 or muscle_count == 0 or site_count == 0 or tendon_count == 0
+        or embedded_source_sha.hex() != source_sha
         or len(raw) != expected_size
     ):
         raise ImportError("Numi Human tendon muscle payload ABI disagrees with its manifest")
@@ -5342,11 +5612,19 @@ def numi_human_tendon_attachment_envelope_payload(
     magic, abi, body_count, muscle_count, site_count, wrap_count, route_count, tendon_count, reserved0, reserved1, embedded_sha = struct.unpack_from(
         header_format, raw,
     )
-    expected_size = header_size + 16 * site_count + 64 * wrap_count + 16 * route_count + 164 * muscle_count
+    try:
+        architecture_count, architecture_bytes = _myosim_muscle_payload_architecture(
+            magic, abi, muscle_count, reserved0, reserved1,
+        )
+    except ImportError as error:
+        raise ImportError("Numi Human tendon envelope muscle payload ABI is invalid") from error
+    expected_size = _myosim_muscle_payload_bytes(
+        site_count, wrap_count, route_count, muscle_count,
+        architecture_count, architecture_bytes,
+    )
     if (
-        magic != _MYOSIM_MUSCLE_REFERENCE_MAGIC or abi != _MYOSIM_MUSCLE_REFERENCE_ABI
-        or body_count == 0 or muscle_count == 0 or site_count == 0 or tendon_count == 0
-        or reserved0 != 0 or reserved1 != 0 or embedded_sha.hex() != source_sha
+        body_count == 0 or muscle_count == 0 or site_count == 0 or tendon_count == 0
+        or embedded_sha.hex() != source_sha
         or len(raw) != expected_size
     ):
         raise ImportError("Numi Human tendon envelope muscle payload ABI is invalid")
@@ -5573,10 +5851,20 @@ def numi_human_achilles_surface_receipt(
         raise ImportError("Achilles surface receipt muscle payload is missing or has drifted")
     payload = payload_path.read_bytes()
     header_size = struct.calcsize("<8s9I32s")
-    magic, abi, body_count, muscle_count, site_count, wrap_count, route_count, _, _, _, embedded_sha = struct.unpack_from(
+    magic, abi, body_count, muscle_count, site_count, wrap_count, route_count, _, reserved0, reserved1, embedded_sha = struct.unpack_from(
         "<8s9I32s", payload
     )
-    if magic != _MYOSIM_MUSCLE_REFERENCE_MAGIC or abi != _MYOSIM_MUSCLE_REFERENCE_ABI or embedded_sha.hex() != source_sha:
+    try:
+        architecture_count, architecture_bytes = _myosim_muscle_payload_architecture(
+            magic, abi, muscle_count, reserved0, reserved1,
+        )
+    except ImportError as error:
+        raise ImportError("Achilles surface receipt muscle payload ABI is invalid") from error
+    expected_size = _myosim_muscle_payload_bytes(
+        site_count, wrap_count, route_count, muscle_count,
+        architecture_count, architecture_bytes,
+    )
+    if embedded_sha.hex() != source_sha or len(payload) != expected_size:
         raise ImportError("Achilles surface receipt muscle payload ABI is invalid")
     offset = header_size
     sites = [struct.unpack_from("<I3f", payload, offset + 16 * index) for index in range(site_count)]

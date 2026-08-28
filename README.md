@@ -424,19 +424,20 @@ numi human right-calcaneal-tendon-continuity-preview \
   --output Build/bodyparts3d-right-calcaneal-tendon-continuity
 ```
 
-This loads the `NHRIGID2` and `NHMYO1` payloads directly into Core, validates
+This loads the `NHRIGID2` and `NHMYO2` payloads directly into Core, validates
 the 128-DoF floating articulated tree, evaluates every muscle route, applies
 the resulting generalized force, and executes forward dynamics. With `--metal`,
 the same command buffer also evaluates all 416 MuJoCo-source spatial routes,
-their default-state static actuator forces, and the complete source
+their damped compliant fiber/tendon forces, and the complete source
 `J^T` generalized-force projection on the Apple GPU, without restaging poses
 through the CPU. The same native transaction can then advance every valid
 MyoSim activation sidecar by one explicit `100 µs` Metal step; the probe uses
 non-equilibrium source states and requires the reusable command-buffer path to
 publish the same next state as the one-shot path. On Apple M4, the device’s
 maximum per-muscle force-vector
-error is `0.00471758869298`; the deterministic all-416 reduction differs by
-`0.00642352090836` from the FP64 source reference. The reference command still
+error is `0.152346560456 N` against a `1238.3975863 N` maximum reference
+force; the deterministic all-416 generalized-force reduction differs by
+`0.146845914025` against a `4358.68440349` reference scale. The reference command still
 returns its one-step activation result for inspection. The separate
 `numi human stand` path now keeps activation, current-pose route force,
 128-DoF large-state dynamics, and authored foot support on device across a

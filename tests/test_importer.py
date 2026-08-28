@@ -32,6 +32,8 @@ from numilab_human.model import (
     _bodyparts_skin_surface_index,
     _bodyparts_myosim_surface_specifications,
     _bodyparts_similarity_fit,
+    _fit_myosim_compliant_architecture,
+    _myosim_muscle_payload_architecture,
     ImportError as HumanImportError,
     bodyparts_foot_collider_preflight,
     bodyparts_foot_registration_receipt_template,
@@ -74,6 +76,24 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ImporterTests(unittest.TestCase):
+    def test_nhmyo2_fits_positive_compliant_architecture_and_reads_legacy(self) -> None:
+        gain = [0.906929, 1.07277, 102.673, 1.0, 0.0, 2.0, 10.0, 2.41059, 1.4, 0.0]
+        optimal_fiber, tendon_slack, normalized_rmse = _fit_myosim_compliant_architecture(
+            [0.091234, 0.282334], 1.078531, gain, list(gain),
+        )
+        self.assertGreater(optimal_fiber, 0.0)
+        self.assertGreater(tendon_slack, 0.0)
+        self.assertGreaterEqual(normalized_rmse, 0.0)
+        self.assertLess(normalized_rmse, 2.0)
+        self.assertEqual(
+            _myosim_muscle_payload_architecture(b"NHMYO1\0\0", 1, 416, 0, 0),
+            (0, 0),
+        )
+        self.assertEqual(
+            _myosim_muscle_payload_architecture(b"NHMYO2\0\0", 2, 416, 416, 32),
+            (416, 32),
+        )
+
     def _minimal_myosim_tendon_artifact(self, directory: Path) -> Path:
         directory.mkdir(parents=True)
         source_sha = "11" * 32

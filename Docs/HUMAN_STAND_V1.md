@@ -10,7 +10,8 @@ is no per-step CPU dynamics loop.
 ## Canonical inputs
 
 - `NHRIGID2`: one 157-body, 128-DoF floating FunctionBased articulation;
-- `NHMYO1`: 416 MyoSim muscle-tendon routes and their source force parameters;
+- `NHMYO2`: 416 MyoSim muscle-tendon routes, source active/passive/velocity
+  curves, and one appended positive compliant-architecture record per muscle;
 - `NHTENDON2`: 832 explicit bone-owned route endpoints, comprising 295
   four-node surface envelopes and 537 exact source-point fallbacks;
 - `NHCNT1`: ten source-authored calcaneus/toe plane witnesses; and
@@ -29,8 +30,9 @@ substituted for the authoritative mechanical point.
 Each device step runs, in order:
 
 1. current-pose FunctionBased kinematics and analytic point Jacobians;
-2. all 416 wrapped MyoSim route evaluations and per-muscle `J^T` force rows;
-3. activation-dependent force selection and deterministic all-muscle reduction;
+2. all 416 wrapped MyoSim route evaluations, actual `J(q)v` path velocities,
+   and damped backward-Euler fiber/tendon equilibrium;
+3. total tendon-force `J^T` rows and deterministic all-muscle reduction;
 4. `NHTENDON2` terminal-load transfer for all 832 endpoints, with force/moment
    conservation validation and an optional same-command-buffer deformable
    consumer boundary;
@@ -53,12 +55,14 @@ loop. Optional assistance is a world force/torque spring on the floating root;
 it never writes joint torques. The canonical qualification follows an assisted
 phase with an equal-length phase whose root assistance is exactly zero.
 
-The imported MyoSim passive bias is preserved in the typed inspection result
-but excluded from standing dynamics. At the registered v1 pose it is not an
-equilibrium preload: injecting it produced roughly 24,900 maximum generalized
-acceleration units even at zero activation. Activation-dependent source force
-reduced the same first-step measure to about 192. Passive muscle/tendon preload
-must be reintroduced only with a registered equilibrium calibration.
+NHMYO2 includes the source passive curve in the live fiber/tendon equilibrium;
+it is no longer removed as a standing-only bias. The standing posture compiler
+also subtracts this measured passive generalized-force row before recruiting
+activation. The current source-default pose is nevertheless not a calibrated
+whole-body equilibrium: the 2026-08-28 M4 Pro probe reports normalized static
+recruitment residual RMS `14.7176` and maximum generalized acceleration
+`42969.6` in a one-step supported diagnostic. Consequently NHMYO2 tendon
+mechanics and deterministic execution are admitted, but stable standing is not.
 
 ## Run
 
@@ -104,7 +108,7 @@ The original standing capture metrics remain in
 per-step transaction, rollback, replay, and four-angle evidence is recorded in
 [HUMAN_TENDON_STEP_TRANSACTION.md](HUMAN_TENDON_STEP_TRANSACTION.md).
 
-## Qualified evidence and limits
+## Historical NHMYO1 evidence and current limit
 
 The local Apple M4 eight-step qualification (0.8 ms per phase) reported:
 
@@ -116,11 +120,11 @@ The local Apple M4 eight-step qualification (0.8 ms per phase) reported:
   `7.61414882222e-06` in v; and
 - bitwise replay after the assisted and zero-root-wrench phases.
 
-This qualifies a short bounded standing transaction, force ownership, support,
-assistance removal, and deterministic Apple-Metal execution. The newer
-NHTENDON2 qualification additionally covers same-command-buffer terminal-load
-publication, consumer rejection rollback, and no-direct-torque identity. It
-does not yet
+Those values qualify the historical NHMYO1 short bounded transaction. They
+must not be reused as an NHMYO2 stable-standing claim. The current NHMYO2 plus
+NHTENDON2 probe qualifies same-command-buffer terminal-load publication,
+consumer rejection rollback, no-direct-torque identity, and deterministic
+execution. It does not yet
 qualify a seconds-long balance controller, exact high-velocity `Jdot*v`/RNEA
 bias, joint-limit constraints, general self/environment collision, passive
 preload, deformable tendon/skin/organ mechanics, gait, injury prediction, or

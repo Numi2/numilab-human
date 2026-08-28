@@ -65,8 +65,9 @@ as explicit conversion gates rather than assigning unsupported physics.
 The first source-complete full-body owner path is a Core C++ reference, not a
 Python simulator wrapped by Numi. An offline MyoSim composition step writes two
 immutable payloads: `NHRIGID2` contains the 157-body Core tree (103 authored
-source bodies plus 54 exact zero-inertia transform carriers), while `NHMYO1`
-contains all 416 actuator definitions, 1,815 sites, and 143 wrap geometries.
+source bodies plus 54 exact zero-inertia transform carriers), while `NHMYO2`
+contains all 416 actuator definitions, 1,815 sites, 143 wrap geometries, and
+416 appended compliant fiber/tendon architecture records.
 At Core `86790f3`, `MujocoMuscleReference` evaluates the MuJoCo general-muscle
 activation/force equations and sphere/cylinder spatial tendon routes, scatters
 `F * d(length)/d(v)` through Core point Jacobians, and drives the same native
@@ -83,13 +84,17 @@ default co-activation is a stable posture, realistic gait, or contact result.
 path by directly launching the C++ Core binary, then dispatches the full body's
 pose and analytic point-Jacobian stream to Metal. In the same command buffer,
 the MyoSim kernel consumes the private pose output to evaluate all 416
-sphere/cylinder spatial routes and their default-state static actuator forces;
+sphere/cylinder spatial routes, actual `J(q)v` path velocities, and their
+damped backward-Euler compliant tendon forces;
 no CPU-restaged geometry is admitted. On the local Apple M4, the 157-body /
 128-DoF source tree passed CPU/GPU parity with maximum body position,
 orientation-component, point-position, point-Jacobian, muscle-length, and
 muscle-force errors of `6.32e-07 m`, `1.43e-07`, `6.54e-07 m`, `7.35e-07`,
-`7.46e-07 m`, and `2.63e-03 N`, respectively, while applying all 90
-source-default wraps. No Python process, interpreter-owned physics, or
+`7.46e-07 m`, and `0.153 N`, respectively, while applying all 90
+source-default wraps. The force error is `1.23e-4` relative to the
+`1238.4 N` maximum reference force. Maximum normalized tendon tension was
+`0.727` and maximum normalized equilibrium residual was `0.00655`. No Python
+process, interpreter-owned physics, or
 per-step host loop exists after the payload has been created. The dense
 128-DoF mass factor, muscle `J^T` force scatter, and forward-dynamics update
 remain Core CPU reference stages today; this does not claim a complete
@@ -169,7 +174,7 @@ must have agreeing route endpoint pairs; it fails closed otherwise. The two
 calcaneal tendon rows are the explicit shared-tendon exception and identify
 their contributing gastrocnemius/soleus routes while binding the surface from
 tibia to calcaneus. This is stronger source ownership than visual proximity,
-but still only pose-driven linear-blend rendering; `NHMYO1` remains the force
+but still only pose-driven linear-blend rendering; `NHMYO2` remains the force
 path authority.
 
 Core `2aab522` adds a separate, opt-in bounded muscle-driven visual state.
