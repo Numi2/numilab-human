@@ -2398,12 +2398,19 @@ def _myosim_pack_dof_record(
     flags: int,
     limits: list[float],
     armature: float,
+    damping: float,
+    frictionloss: float,
     context: str,
 ) -> bytes:
     return (
         struct.pack("<8I", 0, joint_index, q_index, v_index, local_dof, flags, 0, 0)
         + _pack_float4(limits, context + " limits")
-        + _pack_float4([0.0, 0.0, armature, 0.0], context + " drive")
+        # Core's drive tuple is [stiffness, viscous damping, armature,
+        # dry friction].  MyoSim authors non-zero generalized damping on 122
+        # of the scalar DoFs, including the wrist and finger chains.  Dropping
+        # it made those very small inertias visually explode even when the
+        # muscle-force residual was modest.
+        + _pack_float4([0.0, damping, armature, frictionloss], context + " drive")
     )
 
 
@@ -2496,6 +2503,8 @@ def myosim_fullbody_reference_artifacts(
                 flags=_MR_DOF_ROOT,
                 limits=[0.0, 0.0, 0.0, 0.0],
                 armature=0.0,
+                damping=0.0,
+                frictionloss=0.0,
                 context="MyoSim free root",
             )
         )
@@ -2639,6 +2648,10 @@ def myosim_fullbody_reference_artifacts(
                             joint_index=joint_index, q_index=q_offset, v_index=v_offset, local_dof=0,
                             flags=flags, limits=limits,
                             armature=_finite_scalar(source_joint.get("armature"), "MyoSim joint armature"),
+                            damping=_finite_scalar(source_joint.get("damping"), "MyoSim joint damping"),
+                            frictionloss=_finite_scalar(
+                                source_joint.get("frictionloss"), "MyoSim joint friction loss"
+                            ),
                             context=f"MyoSim joint {source_joint.get('id')}",
                         )
                     )
@@ -2653,6 +2666,12 @@ def myosim_fullbody_reference_artifacts(
                          "core_joint_index": joint_index, "core_q_index": q_offset,
                          "core_v_index": v_offset, "source_type": source_type,
                          "source_range": source_range, "source_limited": limited,
+                         "source_damping": _finite_scalar(
+                             source_joint.get("damping"), "MyoSim joint damping"
+                         ),
+                         "source_frictionloss": _finite_scalar(
+                             source_joint.get("frictionloss"), "MyoSim joint friction loss"
+                         ),
                          "core_limit_status": core_limit_status}
                     )
                     prior_core = child_core
@@ -3966,6 +3985,16 @@ _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_ABI = 3
 # existing audited payloads remain inspectable.
 _BODYPARTS_MYOSIM_MULTI_BODY_SOFT_TISSUE_VISUAL_MAGIC = b"NHTISS3\0"
 _BODYPARTS_MYOSIM_MULTI_BODY_SOFT_TISSUE_VISUAL_ABI = 4
+# ``NHTISS4`` replaces the record-wide three-body ceiling with a variable
+# source-route body table and four sparse influences per vertex.  This matters
+# for the hand: one BodyParts3D flexor/extensor surface contains multiple
+# digital slips, while MyoSim authors a distinct multi-body path for each
+# finger.  Collapsing that surface onto the middle-finger endpoint visibly
+# stretched the other slips and was anatomically wrong.
+_BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_VISUAL_MAGIC = b"NHTISS4\0"
+_BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_VISUAL_ABI = 5
+_BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_MAX_BINDINGS = 24
+_BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_MAX_INFLUENCES = 4
 _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE = 1
 _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON = 2
 _BODYPARTS_MYOSIM_SKIN_VISUAL_MAGIC = b"NHSKIN1\0"
@@ -4962,7 +4991,12 @@ def _myosim_surface_route_context(artifact: Path, source_sha: str) -> tuple[
         raise ImportError("MyoSim surface binding muscle payload length is invalid")
     offset = header_size
     sites = [struct.unpack_from("<I3f", payload, offset + index * 16) for index in range(site_count)]
-    offset += 16 * site_count + 64 * geometry_count
+    offset += 16 * site_count
+    geometries = [
+        struct.unpack_from("<2I14f", payload, offset + index * 64)
+        for index in range(geometry_count)
+    ]
+    offset += 64 * geometry_count
     routes = [struct.unpack_from("<4I", payload, offset + index * 16) for index in range(route_count)]
     offset += 16 * route_count
     muscle_records = [struct.unpack_from("<4I37f", payload, offset + index * 164) for index in range(muscle_count)]
@@ -4988,6 +5022,24 @@ def _myosim_surface_route_context(artifact: Path, source_sha: str) -> tuple[
     if not core_indices or len(core_indices) > body_count:
         raise ImportError("MyoSim surface binding source-body coverage is invalid")
     body_by_index = {body["core_body_index"]: body for body in bodies.values()}
+
+    def route_point(body_index: int, local: tuple[float, float, float]) -> dict[str, Any]:
+        body = body_by_index.get(body_index)
+        if body is None:
+            raise ImportError("MyoSim surface route point has no source-body owner")
+        position = _myosim_vector(
+            body.get("default_com_position_world_m"),
+            "MyoSim surface route body position",
+        )
+        rotation = _myosim_matrix_from_quaternion_xyzw(
+            list(body.get("default_inertial_quaternion_world_xyzw", []))
+        )
+        world = _myosim_add(position, _myosim_matrix_vector(rotation, list(local)))
+        return {
+            "body": body["name"],
+            "core_body_index": body_index,
+            "world_m": world,
+        }
     muscles = manifest.get("muscles")
     if not isinstance(muscles, list) or len(muscles) != muscle_count:
         raise ImportError("MyoSim surface binding muscle manifest length is invalid")
@@ -5000,17 +5052,43 @@ def _myosim_surface_route_context(artifact: Path, source_sha: str) -> tuple[
         route_offset, count = record[1], record[2]
         if not isinstance(name, str) or name in routes_by_muscle or metadata.get("source_actuator_index") != index or count < 2 or route_offset + count > len(routes):
             raise ImportError("MyoSim surface binding muscle route identity is invalid")
-        first, last = routes[route_offset], routes[route_offset + count - 1]
+        muscle_route = routes[route_offset:route_offset + count]
+        first, last = muscle_route[0], muscle_route[-1]
         if first[0] != _MYOSIM_ROUTE_SITE or last[0] != _MYOSIM_ROUTE_SITE or first[1] >= len(sites) or last[1] >= len(sites):
             raise ImportError("MyoSim surface binding route has no source-site endpoints")
         primary_index, secondary_index = sites[first[1]][0], sites[last[1]][0]
         if primary_index == secondary_index or primary_index not in body_by_index or secondary_index not in body_by_index:
             raise ImportError("MyoSim surface binding route endpoint bodies are invalid")
+        points: list[dict[str, Any]] = []
+        binding_bodies: list[str] = []
+        for node in muscle_route:
+            kind, target = node[0], node[1]
+            if kind == _MYOSIM_ROUTE_SITE:
+                if target >= len(sites):
+                    raise ImportError("MyoSim surface route references an absent site")
+                site = sites[target]
+                point = route_point(site[0], (site[1], site[2], site[3]))
+                point["kind"] = "site"
+            elif kind in {_MYOSIM_ROUTE_SPHERE, _MYOSIM_ROUTE_CYLINDER}:
+                if target >= len(geometries):
+                    raise ImportError("MyoSim surface route references an absent wrap")
+                geometry = geometries[target]
+                point = route_point(
+                    geometry[0], (geometry[4], geometry[5], geometry[6])
+                )
+                point["kind"] = "sphere" if kind == _MYOSIM_ROUTE_SPHERE else "cylinder"
+            else:
+                raise ImportError("MyoSim surface route has an unsupported node kind")
+            points.append(point)
+            if point["body"] not in binding_bodies:
+                binding_bodies.append(point["body"])
         routes_by_muscle[name] = {
             "source_actuator_index": index,
             "source_route_node_count": count,
             "primary_body": body_by_index[primary_index]["name"],
             "secondary_body": body_by_index[secondary_index]["name"],
+            "binding_bodies": binding_bodies,
+            "route_points": points,
         }
     return bodies, routes_by_muscle, manifest
 
@@ -6098,8 +6176,12 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
 ) -> dict[str, Any]:
     """Package source-authored limb, shoulder, arm, hand and abdominal surfaces.
 
-    Ordinary surfaces bind to their first and final **authored MyoSim route
-    sites**.  The calcaneal tendon is different: the source routes for its two
+    Ordinary two-body surfaces bind to their first and final **authored MyoSim
+    route sites**. Multi-slip or multi-body surfaces instead retain every
+    named route body and store four sparse, route-proximity influences per
+    vertex. This prevents a shared digital flexor/extensor atlas surface from
+    being dragged only by the middle finger. The calcaneal tendon is different:
+    the source routes for its two
     gastrocnemius heads start on the femur, while soleus starts on the tibia
     and all three terminate on the calcaneus.  Its visual surface therefore
     inherits a three-body blend from the nearest named source muscle surface
@@ -6177,9 +6259,10 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             )),
         )
 
-    vertices_payload: list[tuple[float, float, float, float, float, float, float, float, float]] = []
+    vertices_payload: list[bytes] = []
     indices_payload: list[int] = []
     records_payload: list[bytes] = []
+    bindings_payload: list[bytes] = []
     provenance: list[dict[str, Any]] = []
     # Earlier source muscle surfaces are the only anatomical correspondences
     # used to distribute a shared tendon across multiple source bodies.  They
@@ -6219,12 +6302,33 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         global_vertices = [[sum(global_matrix[row][column] * vertex[column] for column in range(3)) + global_matrix[row][3] for row in range(3)] for vertex in vertices_mm]
         explicit_primary, explicit_secondary = specification.get("primary_body"), specification.get("secondary_body")
         if explicit_primary is None and explicit_secondary is None:
-            route_pairs = {(route["primary_body"], route["secondary_body"]) for route in matched_routes}
-            if len(route_pairs) != 1:
-                raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has non-uniform MyoSim endpoints")
-            primary_name, secondary_name = next(iter(route_pairs))
-            binding_names = [primary_name, secondary_name]
-            endpoint_source = "all_named_authored_myosim_route_endpoints"
+            route_pairs = {
+                (route["primary_body"], route["secondary_body"])
+                for route in matched_routes
+            }
+            binding_names = []
+            for route in matched_routes:
+                for name in route["binding_bodies"]:
+                    if name not in binding_names:
+                        binding_names.append(name)
+            if not 2 <= len(binding_names) <= _BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_MAX_BINDINGS:
+                raise ImportError(
+                    f"BodyParts3D full-body tissue surface {member_id} resolves "
+                    f"{len(binding_names)} route bodies; supported range is 2.."
+                    f"{_BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_MAX_BINDINGS}"
+                )
+            if len(route_pairs) == 1 and len(binding_names) == 2:
+                primary_name, secondary_name = next(iter(route_pairs))
+                # Preserve source endpoint order for the compact two-body
+                # case; the route-body discovery order is otherwise used.
+                binding_names = [primary_name, secondary_name]
+                endpoint_source = "all_named_authored_myosim_route_endpoints"
+            else:
+                primary_name = matched_routes[0]["primary_body"]
+                secondary_name = matched_routes[0]["secondary_body"]
+                endpoint_source = (
+                    "all_named_authored_myosim_route_nodes_with_sparse_four_influence_binding"
+                )
         elif layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON and \
                 isinstance(explicit_primary, str) and isinstance(explicit_secondary, str):
             primary_name, secondary_name = explicit_primary, explicit_secondary
@@ -6269,11 +6373,11 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             binding_targets.append(target)
             binding_local_poses.append((translation, rotation, scale))
             binding_transforms.extend([*translation, *rotation, scale])
-        while len(binding_targets) < 3:
-            binding_targets.append({"core_body_index": 0xFFFFFFFF})
-            binding_transforms.extend([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0])
-        if len(binding_targets) != 3 or len(binding_transforms) != 24:
-            raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has invalid body binding arity")
+        if len(binding_targets) != len(binding_names) or \
+                len(binding_transforms) != 8 * len(binding_names):
+            raise ImportError(
+                f"BodyParts3D full-body tissue surface {member_id} has invalid body binding arity"
+            )
 
         primary_target, secondary_target = bodies.get(primary_name), bodies.get(secondary_name)
         if not isinstance(primary_target, dict) or not isinstance(secondary_target, dict) or primary_name == secondary_name:
@@ -6408,20 +6512,129 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                 "contributing_source_surface_members": sorted(binding["member_id"] for binding in contributor_bindings),
             })
         else:
-            vertex_weights = [[primary_weight, 1.0 - primary_weight] for primary_weight in base_primary_weights]
+            if len(binding_names) == 2 and len(route_pairs) == 1:
+                vertex_weights = [
+                    [primary_weight, 1.0 - primary_weight]
+                    for primary_weight in base_primary_weights
+                ]
+                route_binding_diagnostics = {
+                    "method": "two_authored_route_endpoint_body_axis_linear_blend",
+                    "binding_body_count": 2,
+                    "maximum_vertex_influences": 2,
+                }
+            else:
+                binding_index = {name: index for index, name in enumerate(binding_names)}
+                route_points = [
+                    point
+                    for route in matched_routes
+                    for point in route["route_points"]
+                ]
+                if not route_points:
+                    raise ImportError(
+                        f"BodyParts3D full-body tissue surface {member_id} has no route points"
+                    )
+                vertex_weights = []
+                maximum_influences = 0
+                maximum_nearest_route_distance = 0.0
+                for vertex in global_vertices:
+                    squared_by_binding = [math.inf] * len(binding_names)
+                    for point in route_points:
+                        index = binding_index.get(point["body"])
+                        if index is None:
+                            raise ImportError(
+                                f"BodyParts3D tissue {member_id} route point escapes its binding table"
+                            )
+                        squared = sum(
+                            (vertex[axis] - point["world_m"][axis]) ** 2
+                            for axis in range(3)
+                        )
+                        squared_by_binding[index] = min(squared_by_binding[index], squared)
+                    nearest = sorted(
+                        (squared, index)
+                        for index, squared in enumerate(squared_by_binding)
+                        if math.isfinite(squared)
+                    )[:_BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_MAX_INFLUENCES]
+                    if not nearest:
+                        raise ImportError(
+                            f"BodyParts3D tissue {member_id} vertex has no route-body influence"
+                        )
+                    maximum_nearest_route_distance = max(
+                        maximum_nearest_route_distance, math.sqrt(nearest[0][0])
+                    )
+                    weights = [0.0] * len(binding_names)
+                    if nearest[0][0] <= 1.0e-12:
+                        weights[nearest[0][1]] = 1.0
+                        active_influences = 1
+                    else:
+                        # A 3 mm softening radius avoids singular weights at a
+                        # route point while retaining local digital-slip
+                        # ownership. Four influences provide smooth joint
+                        # transitions without letting a distant finger drag a
+                        # neighboring tendon sheet.
+                        raw = [1.0 / (squared + 9.0e-6) for squared, _ in nearest]
+                        total = sum(raw)
+                        if not math.isfinite(total) or total <= 0.0:
+                            raise ImportError(
+                                f"BodyParts3D tissue {member_id} route weights are non-finite"
+                            )
+                        for value, (_, index) in zip(raw, nearest, strict=True):
+                            weights[index] = value / total
+                        active_influences = len(nearest)
+                    maximum_influences = max(maximum_influences, active_influences)
+                    vertex_weights.append(weights)
+                route_binding_diagnostics = {
+                    "method": "nearest_exact_myosim_route_nodes_inverse_squared_four_influence",
+                    "binding_body_count": len(binding_names),
+                    "maximum_vertex_influences": maximum_influences,
+                    "maximum_nearest_route_distance_m": maximum_nearest_route_distance,
+                    "matched_route_count": len(matched_routes),
+                }
 
+        first_binding = len(bindings_payload)
+        for target, transform in zip(
+            binding_targets,
+            [binding_transforms[index:index + 8] for index in range(0, len(binding_transforms), 8)],
+            strict=True,
+        ):
+            bindings_payload.append(struct.pack(
+                "<I8f", target["core_body_index"], *transform
+            ))
         first_vertex, first_index = len(vertices_payload), len(indices_payload)
         for vertex, normal, weights in zip(stored_vertices_m, stored_normals, vertex_weights, strict=True):
-            padded_weights = [*weights, *([0.0] * (3 - len(weights)))]
-            if len(padded_weights) != 3 or any(weight < 0.0 or not math.isfinite(weight) for weight in padded_weights) or \
-                    abs(sum(padded_weights) - 1.0) > 1.0e-6:
+            active = sorted(
+                ((weight, index) for index, weight in enumerate(weights) if weight > 1.0e-8),
+                reverse=True,
+            )[:_BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_MAX_INFLUENCES]
+            active_total = sum(weight for weight, _ in active)
+            if not active or not math.isfinite(active_total) or active_total <= 0.0:
                 raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has invalid body weights")
-            vertices_payload.append((*vertex, *normal, *padded_weights))
+            influence_indices = [index for _, index in active]
+            influence_weights = [weight / active_total for weight, _ in active]
+            influence_indices.extend(
+                [0xFFFFFFFF] * (
+                    _BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_MAX_INFLUENCES - len(influence_indices)
+                )
+            )
+            influence_weights.extend(
+                [0.0] * (
+                    _BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_MAX_INFLUENCES - len(influence_weights)
+                )
+            )
+            if any(
+                not math.isfinite(weight) or weight < 0.0 or weight > 1.0
+                for weight in influence_weights
+            ) or abs(sum(influence_weights) - 1.0) > 1.0e-6:
+                raise ImportError(
+                    f"BodyParts3D full-body tissue surface {member_id} has invalid sparse weights"
+                )
+            vertices_payload.append(struct.pack(
+                "<6f4I4f", *vertex, *normal, *influence_indices, *influence_weights
+            ))
         indices_payload.extend(first_vertex + index for triangle in triangles for index in triangle)
         records_payload.append(struct.pack(
-            "<10I24f", *(target["core_body_index"] for target in binding_targets),
-            first_vertex, len(stored_vertices_m), first_index, len(triangles) * 3, stable_id, layer, 0,
-            *binding_transforms,
+            "<8I", first_binding, len(binding_names), first_vertex,
+            len(stored_vertices_m), first_index, len(triangles) * 3,
+            stable_id, layer,
         ))
         provenance.append({
             "stable_id": stable_id, "member_id": member_id, "member": member,
@@ -6431,9 +6644,21 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                 {"myosim_body": name, "core_body_index": target["core_body_index"]}
                 for name, target in zip(binding_names, binding_targets[:len(binding_names)], strict=True)
             ],
-            "matched_muscles": [dict(route, name=name) for name, route in zip(source_muscles, matched_routes, strict=True)],
+            "matched_muscles": [
+                {
+                    "name": name,
+                    "source_actuator_index": route["source_actuator_index"],
+                    "source_route_node_count": route["source_route_node_count"],
+                    "primary_body": route["primary_body"],
+                    "secondary_body": route["secondary_body"],
+                    "binding_bodies": route["binding_bodies"],
+                }
+                for name, route in zip(source_muscles, matched_routes, strict=True)
+            ],
             "body_weight_count": len(binding_names), "vertex_count": len(stored_vertices_m), "triangle_count": len(triangles),
         })
+        if layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE:
+            provenance[-1]["route_binding"] = route_binding_diagnostics
         if attachment_weight_lock is not None:
             provenance[-1]["secondary_attachment_weight_lock"] = attachment_weight_lock
         if source_component_selection is not None:
@@ -6450,10 +6675,12 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         raise ImportError("BodyParts3D full-body tissue payload exceeds the uint32 native renderer capacity")
     registration_fingerprint = _bodyparts_visual_registration_fingerprint(registration_file)
     payload = b"".join([
-        struct.pack("<8s5I32s", _BODYPARTS_MYOSIM_MULTI_BODY_SOFT_TISSUE_VISUAL_MAGIC, _BODYPARTS_MYOSIM_MULTI_BODY_SOFT_TISSUE_VISUAL_ABI,
-                    len(records_payload), len(vertices_payload), len(indices_payload), registration_fingerprint,
+        struct.pack("<8s6I32s", _BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_VISUAL_MAGIC,
+                    _BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_VISUAL_ABI,
+                    len(records_payload), len(bindings_payload), len(vertices_payload),
+                    len(indices_payload), registration_fingerprint,
                     bytes.fromhex(source_sha)),
-        *records_payload, b"".join(struct.pack("<9f", *vertex) for vertex in vertices_payload),
+        *records_payload, *bindings_payload, *vertices_payload,
         struct.pack(f"<{len(indices_payload)}I", *indices_payload),
     ])
     output = output.resolve()
@@ -6463,10 +6690,11 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
     manifest = {
         "schema": "numi.human.bodyparts3d-myosim-fullbody-muscle-surface-visual-payload.v1",
         "payload": {"file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
-                    "magic": _BODYPARTS_MYOSIM_MULTI_BODY_SOFT_TISSUE_VISUAL_MAGIC.rstrip(b"\0").decode("ascii"),
-                    "payload_abi": _BODYPARTS_MYOSIM_MULTI_BODY_SOFT_TISSUE_VISUAL_ABI,
+                    "magic": _BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_VISUAL_MAGIC.rstrip(b"\0").decode("ascii"),
+                    "payload_abi": _BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_VISUAL_ABI,
                     "registration_fingerprint32": f"{registration_fingerprint:08x}",
                     "surface_count": len(records_payload),
+                    "binding_count": len(bindings_payload),
                     "vertex_count": len(vertices_payload), "index_count": len(indices_payload)},
         "source": {"registration": {"file": registration_file.name, "sha256": sha256(registration_file)},
                    "bodyparts": expected_bodyparts, "myosim_source_archive_sha256": source_sha,
@@ -6478,8 +6706,8 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                      "muscle_surface_count": sum(1 for entry in provenance if entry["layer"] == "muscle"),
                      "tendon_surface_count": sum(1 for entry in provenance if entry["layer"] == "tendon"),
                      "authored_myosim_muscle_count": len(myosim_manifest["muscles"])},
-        "runtime_binding": "BodyParts3D source-topology surfaces use per-vertex named Core articulated body weights; ordinary entries retain exact source vertices and derive two bodies directly from authored MyoSim route sites, while each calcaneal-tendon surface inherits three femur/tibia/calcaneus weights from its nearest named source muscle surface, registers its locked/feathered distal boundary to exact named calcaneal source triangles, and adds a separately labelled visual enthesis strip at the opened source cap",
-        "status": "native_multi_body_kinematic_surface_binding_input_not_collision_or_physics",
+        "runtime_binding": "BodyParts3D source-topology surfaces use a variable exact MyoSim route-body table with four sparse influences per vertex; shared digital surfaces include every authored digit route instead of a middle-finger proxy, while each calcaneal-tendon surface inherits femur/tibia/calcaneus weights from its nearest named source muscle surface, registers its locked/feathered distal boundary to exact named calcaneal source triangles, and adds a separately labelled visual enthesis strip at the opened source cap",
+        "status": "native_route_body_sparse_kinematic_surface_binding_input_not_collision_or_physics",
         "evidence_boundary": "This source-authored surface package visually follows exact named articulated endpoint bodies. It does not make the source surface a force-transmitting continuum, add a tendon constitutive law, create collision/contact, or establish a medical registration.",
     }
     write_json(output / "bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json", manifest)

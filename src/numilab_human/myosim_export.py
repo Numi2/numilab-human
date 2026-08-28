@@ -151,6 +151,8 @@ def export_fullbody(sources: Path) -> dict[str, object]:
                 "range": [float(value) for value in model.jnt_range[index]],
                 "limited": bool(model.jnt_limited[index]),
                 "armature": float(model.dof_armature[int(model.jnt_dofadr[index])]),
+                "damping": float(model.dof_damping[int(model.jnt_dofadr[index])]),
+                "frictionloss": float(model.dof_frictionloss[int(model.jnt_dofadr[index])]),
             }
         )
 

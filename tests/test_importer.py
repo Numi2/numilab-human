@@ -33,6 +33,7 @@ from numilab_human.model import (
     _bodyparts_myosim_surface_specifications,
     _bodyparts_similarity_fit,
     _fit_myosim_compliant_architecture,
+    _myosim_pack_dof_record,
     _myosim_muscle_payload_architecture,
     ImportError as HumanImportError,
     bodyparts_foot_collider_preflight,
@@ -76,6 +77,38 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ImporterTests(unittest.TestCase):
+    def test_myosim_dof_payload_preserves_passive_damping_without_hidden_drive(self) -> None:
+        record = _myosim_pack_dof_record(
+            joint_index=7, q_index=9, v_index=8, local_dof=0,
+            flags=0, limits=[0.0, 0.0, 0.0, 0.0], armature=0.0001,
+            damping=0.25, frictionloss=0.0, context="left wrist flexion",
+        )
+        self.assertEqual(len(record), 64)
+        self.assertEqual(struct.unpack_from("<8I", record, 0)[5], 0)
+        stiffness, damping, armature, frictionloss = struct.unpack_from("<4f", record, 48)
+        self.assertEqual(stiffness, 0.0)
+        self.assertAlmostEqual(damping, 0.25)
+        self.assertAlmostEqual(armature, 0.0001)
+        self.assertEqual(frictionloss, 0.0)
+
+    def test_shared_digital_surfaces_cover_all_four_authored_routes(self) -> None:
+        surfaces = {
+            entry["source_name"]: entry["myosim_muscles"]
+            for entry in _bodyparts_myosim_surface_specifications()
+        }
+        self.assertEqual(
+            surfaces["right flexor digitorum superficialis"],
+            ["FDS2", "FDS3", "FDS4", "FDS5"],
+        )
+        self.assertEqual(
+            surfaces["left flexor digitorum profundus"],
+            ["FDP2_l", "FDP3_l", "FDP4_l", "FDP5_l"],
+        )
+        self.assertEqual(
+            surfaces["right extensor digitorum"],
+            ["EDC2", "EDC3", "EDC4", "EDC5"],
+        )
+
     def test_nhmyo2_fits_positive_compliant_architecture_and_reads_legacy(self) -> None:
         gain = [0.906929, 1.07277, 102.673, 1.0, 0.0, 2.0, 10.0, 2.41059, 1.4, 0.0]
         optimal_fiber, tendon_slack, normalized_rmse = _fit_myosim_compliant_architecture(

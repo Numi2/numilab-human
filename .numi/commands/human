@@ -16,11 +16,11 @@ repository_root=$(CDPATH= cd -- "$command_directory/../.." && pwd -P)
 # Four native camera frames and a bitwise replay are mandatory evidence.
 if [ "${1:-}" = "stand" ]; then
     if [ "${2:-}" = "--help" ] || [ "${2:-}" = "-h" ]; then
-        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..64>] [--timestep <1e-6..1e-3>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3>]"
+        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..64>] [--timestep <1e-6..1e-3>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay]"
         exit 0
     fi
     if [ "$#" -lt 6 ]; then
-        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..64>] [--timestep <1e-6..1e-3>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3>]" >&2
+        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..64>] [--timestep <1e-6..1e-3>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay]" >&2
         exit 2
     fi
     artifact_directory=$2
@@ -33,6 +33,7 @@ if [ "${1:-}" = "stand" ]; then
     timestep=0.0001
     dimension=640
     soft_tissue_payload=
+    mechanics_overlay=false
     while [ "$#" -gt 0 ]; do
         case "$1" in
             --steps)
@@ -55,6 +56,11 @@ if [ "${1:-}" = "stand" ]; then
                 [ -z "$soft_tissue_payload" ] || { printf '%s\n' "--soft-tissue-payload may be given only once" >&2; exit 2; }
                 soft_tissue_payload=$2
                 shift 2
+                ;;
+            --mechanics-overlay)
+                [ "$mechanics_overlay" = false ] || { printf '%s\n' "--mechanics-overlay may be given only once" >&2; exit 2; }
+                mechanics_overlay=true
+                shift
                 ;;
             *)
                 printf '%s\n' "unknown Numi Human stand option $1" >&2
@@ -88,8 +94,10 @@ if [ "${1:-}" = "stand" ]; then
         --stand-root-assistance \
         --stand-remove-assistance \
         --stand-deterministic-replay \
-        --source-route-centrelines \
         --dimension "$dimension"
+    if [ "$mechanics_overlay" = true ]; then
+        set -- "$@" --source-route-centrelines
+    fi
     if [ -n "$soft_tissue_payload" ]; then
         set -- "$@" --soft-tissue-payload "$soft_tissue_payload"
     fi
