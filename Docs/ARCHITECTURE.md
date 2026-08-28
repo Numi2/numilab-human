@@ -106,6 +106,17 @@ articulated-Jacobian parity. Multi-bone, absent, distant, or ill-conditioned
 surface registrations remain source-point laws. Legacy `NHTENDON1` decoding is
 retained for prior point/triangle impact evidence.
 
+The persistent Human horizon now invokes that exact pass after current-pose
+MyoSim reduction in every step, validates all endpoint records before advancing
+state, and publishes the final accepted loads with cumulative status. The
+original route `J^T` force remains the only rigid generalized force; the
+attachment correction is never applied as joint torque. An encode-only
+same-command-buffer callback exposes bindings, envelopes, body poses, terminal
+and nodal loads, corrections, and stand status. Physical consumers must gate
+writes on the device success/completed-step status. The qualified callback
+copies an exact snapshot; assembling those loads into deformable bone or tendon
+material state remains the next solver boundary.
+
 The original `numi human myosim-native-visuals` capture drew every route as a
 straight site/wrap-centre segment. That output is retained only as a coverage
 regression because it can cross a wrap and does not depict a tendon. The

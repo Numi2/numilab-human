@@ -1,5 +1,22 @@
 # NumiLab Human visual progress
 
+## Per-step tendon-load transaction — 2026-08-28
+
+<p align="center">
+  <img src="media/numi-human-tendon-step-transaction-v3-2048/anconeus/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-42-front.png" width="24%" alt="Persistent anconeus tendon load transaction, front" />
+  <img src="media/numi-human-tendon-step-transaction-v3-2048/anconeus/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-42-oblique.png" width="24%" alt="Persistent anconeus tendon load transaction, oblique" />
+  <img src="media/numi-human-tendon-step-transaction-v3-2048/anconeus/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-42-side.png" width="24%" alt="Persistent anconeus tendon load transaction, side" />
+  <img src="media/numi-human-tendon-step-transaction-v3-2048/anconeus/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-42-rear.png" width="24%" alt="Persistent anconeus tendon load transaction, rear" />
+</p>
+
+These are the first retained attachment views produced by the persistent Human
+horizon rather than a one-step reference pose. Eight assisted and eight
+zero-root-wrench steps generate 13,312 accepted terminal-load records while all
+416 routes are reevaluated on Apple M4 Pro. The same-command-buffer consumer,
+rollback, no-direct-torque identity, and bitwise replay gates pass. All four
+views retain nonzero four-node envelope coverage and manual inspection found no
+floating endpoint. See the [transaction record](HUMAN_TENDON_STEP_TRANSACTION.md).
+
 ## Tendon attachment v2 — 2026-08-28
 
 <p align="center">

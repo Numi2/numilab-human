@@ -18,9 +18,12 @@ the native Human execution path.
 The current standing milestone is native and persistent: `numi human stand`
 executes current-pose force from all 416 routes, activation, 157-body gravity
 dynamics, ten authored foot witnesses, an assisted phase, and a zero-root-wrench
-phase on Apple Metal. It also requires one-step FP64 parity, bitwise replay, and
-four-angle visual review. See [Human Stand v1](Docs/HUMAN_STAND_V1.md) for the
-command, measurements, and remaining limits.
+phase on Apple Metal. `NHTENDON2` now also produces and validates all 832
+terminal-to-bone load records inside every accepted step, with rollback-safe
+same-command-buffer exposure for a downstream deformable consumer. It requires
+one-step FP64 parity, no-direct-torque identity, bitwise replay, and four-angle
+visual review. See [Human Stand v1](Docs/HUMAN_STAND_V1.md) and the
+[per-step tendon transaction](Docs/HUMAN_TENDON_STEP_TRANSACTION.md).
 
 The importer preserves upstream records locally. The tracked MyoSim,
 BodyParts3D, and explicitly marked Z-Anatomy validation media are attributed
@@ -76,21 +79,22 @@ registration improves. See [tendon attachment v2](Docs/TENDON_ATTACHMENT_V2.md)
 and the legacy [point/triangle analysis](Docs/TENDON_FORCE_TRANSFER.md).
 
 <p align="center">
-  <img src="Docs/media/numi-human-tendon-attachment-v2-2048/anconeus/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-tendon-attachment-envelopes-focus-body-42-front.png" width="24%" alt="Numi Human anconeus tendon attachment v2, front" />
-  <img src="Docs/media/numi-human-tendon-attachment-v2-2048/anconeus/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-tendon-attachment-envelopes-focus-body-42-oblique.png" width="24%" alt="Numi Human anconeus tendon attachment v2, oblique" />
-  <img src="Docs/media/numi-human-tendon-attachment-v2-2048/anconeus/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-tendon-attachment-envelopes-focus-body-42-side.png" width="24%" alt="Numi Human anconeus tendon attachment v2, side" />
-  <img src="Docs/media/numi-human-tendon-attachment-v2-2048/anconeus/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-tendon-attachment-envelopes-focus-body-42-rear.png" width="24%" alt="Numi Human anconeus tendon attachment v2, rear" />
+  <img src="Docs/media/numi-human-tendon-step-transaction-v3-2048/anconeus/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-42-front.png" width="24%" alt="Numi Human persistent anconeus tendon load transaction, front" />
+  <img src="Docs/media/numi-human-tendon-step-transaction-v3-2048/anconeus/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-42-oblique.png" width="24%" alt="Numi Human persistent anconeus tendon load transaction, oblique" />
+  <img src="Docs/media/numi-human-tendon-step-transaction-v3-2048/anconeus/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-42-side.png" width="24%" alt="Numi Human persistent anconeus tendon load transaction, side" />
+  <img src="Docs/media/numi-human-tendon-step-transaction-v3-2048/anconeus/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-42-rear.png" width="24%" alt="Numi Human persistent anconeus tendon load transaction, rear" />
 </p>
 
-This Mac-mini run excites only anconeus source actuator `228` at `0.2` for one
-100 µs step while Apple Metal evaluates all 416 routes. Both endpoints use
-admitted v2 envelopes. The warm footprints/fans are the actual four-node
-transfer program; cyan is the unchanged source route. All four frames have
-nonzero envelope coverage. Exact counters and hashes are retained in the
-[capture record](Docs/media/numi-human-tendon-attachment-v2-2048/anconeus/capture.transcript.txt)
-and [checksum set](Docs/media/numi-human-tendon-attachment-v2-2048/checksums.sha256).
-This is force-path and attachment-program evidence, not photorealistic skin,
-clinical anatomy, or a deformable tendon continuum.
+This Mac-mini run executes eight assisted and eight zero-root-wrench 100 us
+steps while Apple Metal reevaluates all 416 routes. It validates 13,312
+terminal loads, including 4,720 four-node envelopes, and preserves bitwise
+`q`/`v` identity against the output-only no-tendon path. The borrowed consumer,
+rollback, and replay gates pass. The warm footprints/fans are the actual
+four-node transfer program; cyan is the unchanged source route. Exact counters
+and hashes are retained in the [capture record](Docs/media/numi-human-tendon-step-transaction-v3-2048/anconeus/capture.transcript.txt)
+and [checksum set](Docs/media/numi-human-tendon-step-transaction-v3-2048/checksums.sha256).
+This is per-step force-path and attachment-program evidence, not photorealistic
+skin, clinical anatomy, or a deformable tendon continuum.
 
 ### Muscle-driven torso anatomy
 

@@ -11,16 +11,18 @@ is no per-step CPU dynamics loop.
 
 - `NHRIGID2`: one 157-body, 128-DoF floating FunctionBased articulation;
 - `NHMYO1`: 416 MyoSim muscle-tendon routes and their source force parameters;
-- `NHTENDON1`: 832 explicit bone-owned route endpoints;
+- `NHTENDON2`: 832 explicit bone-owned route endpoints, comprising 295
+  four-node surface envelopes and 537 exact source-point fallbacks;
 - `NHCNT1`: ten source-authored calcaneus/toe plane witnesses; and
 - BodyParts3D 4.0 bone and optional named muscle surfaces for visual review.
 
-The production endpoint program currently uses 832 authored point bindings.
-Point attachment transfers force and moment to the named rigid body through
-the route-length Jacobian. The rejected six-endpoint Achilles triangle
-candidate remains rejected because its cross-source registration moved sites
-by about 49.9 mm. A visible surface touching a bone is not substituted for the
-authoritative mechanical point.
+Every production endpoint preserves its source OpenSim/MyoSim attachment
+location. An admitted four-node envelope distributes the endpoint load over a
+connected patch on the owning BodyParts3D bone; otherwise the exact source
+point remains the explicit fallback. The rejected six-endpoint Achilles
+triangle candidate remains rejected because its cross-source registration
+moved sites by about 49.9 mm. A visible surface touching a bone is not
+substituted for the authoritative mechanical point.
 
 ## Runtime transaction
 
@@ -28,11 +30,21 @@ Each device step runs, in order:
 
 1. current-pose FunctionBased kinematics and analytic point Jacobians;
 2. all 416 wrapped MyoSim route evaluations and per-muscle `J^T` force rows;
-3. activation-dependent force selection, deterministic all-muscle reduction,
-   and explicit activation advancement;
-4. 157-body spatial-Jacobian mass assembly, gravity/gyroscopic/body-damping
+3. activation-dependent force selection and deterministic all-muscle reduction;
+4. `NHTENDON2` terminal-load transfer for all 832 endpoints, with force/moment
+   conservation validation and an optional same-command-buffer deformable
+   consumer boundary;
+5. explicit activation advancement;
+6. 157-body spatial-Jacobian mass assembly, gravity/gyroscopic/body-damping
    bias, Cholesky forward dynamics, and symplectic state integration; and
-5. Coulomb plane support at the ten exact foot witnesses.
+7. Coulomb plane support at the ten exact foot witnesses.
+
+The distributed terminal loads are output-only with respect to the rigid-body
+step: the original source-route `J^T` projection remains the sole rigid force
+authority, so publishing the envelope loads cannot add direct joint torque or
+double-count muscle force. A borrowed consumer may encode into the same Metal
+command buffer, but it may not commit, wait, retain, or replace that buffer and
+must gate physical writes on the accepted stand status.
 
 The standing posture compiler runs before the horizon. It solves a bounded
 nonnegative activation vector against the source gravity target using the
@@ -54,7 +66,7 @@ must be reintroduced only with a registered equilibrium calibration.
 numi human stand \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones-v2/bodyparts3d-myosim-major-bones.nhbones \
-  Build/numi-human/numi-human-tendon-endpoints.nhtendon \
+  Build/numi-human-tendon-v2/numi-human-tendon-attachments.nhtendon \
   Build/myosim-fullbody/myosim-fullbody-support-contact.nhcnt \
   Build/numi-human-stand-v1 \
   --steps 64 --timestep 0.0001 --dimension 640
@@ -64,7 +76,9 @@ The command automatically adds the canonical BodyParts3D full-body muscle
 surface payload when it exists. It renders front, oblique, side, and rear
 frames with dimension-invariant camera field of view, checks a one-step FP64
 reference, executes assisted and assistance-removed horizons, and requires a
-bitwise replay of final q, v, and status.
+bitwise replay of final q, v, stand status, terminal-load records, and
+generalized-correction diagnostics. The stand path rejects NHTENDON1 rather
+than silently running without per-step terminal loads.
 
 ## Visual review
 
@@ -85,8 +99,10 @@ path, not a claim that a resolved tendon surface was imported. Mechanical
 attachment is owned by each named bone endpoint and its route Jacobian, which
 transfers the route tension into force and moment on that rigid body.
 
-The capture metrics and image checksums are recorded in
-[qualification.txt](media/numi-human-stand-v1/qualification.txt).
+The original standing capture metrics remain in
+[qualification.txt](media/numi-human-stand-v1/qualification.txt). The current
+per-step transaction, rollback, replay, and four-angle evidence is recorded in
+[HUMAN_TENDON_STEP_TRANSACTION.md](HUMAN_TENDON_STEP_TRANSACTION.md).
 
 ## Qualified evidence and limits
 
@@ -101,7 +117,10 @@ The local Apple M4 eight-step qualification (0.8 ms per phase) reported:
 - bitwise replay after the assisted and zero-root-wrench phases.
 
 This qualifies a short bounded standing transaction, force ownership, support,
-assistance removal, and deterministic Apple-Metal execution. It does not yet
+assistance removal, and deterministic Apple-Metal execution. The newer
+NHTENDON2 qualification additionally covers same-command-buffer terminal-load
+publication, consumer rejection rollback, and no-direct-torque identity. It
+does not yet
 qualify a seconds-long balance controller, exact high-velocity `Jdot*v`/RNEA
 bias, joint-limit constraints, general self/environment collision, passive
 preload, deformable tendon/skin/organ mechanics, gait, injury prediction, or

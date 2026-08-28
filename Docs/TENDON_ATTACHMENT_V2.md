@@ -82,7 +82,7 @@ each admitted endpoint. Every endpoint record retains its exact source local
 point. The native decoder accepts legacy `NHTENDON1`, but the v2 Metal packer
 rejects triangle-migrated programs and accepts only source points or distributed
 envelopes. The owning Numi Lab runtime revision is
-`2069c2175bd2f1f41d7d74bfe9cd26c206640379` on `coupled`.
+`86c24d8a024fbb0ea314a376f0f1e112d52b7e9e` on `coupled`.
 
 ## Reproduce
 
@@ -146,8 +146,11 @@ a cosmetic tendon line. The admitted surface coordinates are nevertheless
 simulation-inferred from a cross-source registration. They are not
 source-authored enthesis measurements, a clinical attachment certificate, a
 deformable tendon continuum, calibrated tendon damage mechanics, or validation
-of anatomical stress distribution. The current native reference pass publishes
-the four nodal forces and generalized correction; the persistent stand solver
-does not yet feed those nodal loads into a deformable tendon/bone consumer.
-The explicit point fallbacks must remain until better attachment data or an
-endpoint-specific registration receipt is available.
+of anatomical stress distribution. The persistent stand now recomputes,
+validates, and publishes those terminal and four-node loads in every accepted
+step. It also exposes a borrowed same-command-buffer consumer boundary whose
+exact snapshot and rollback were qualified on Apple M4 Pro. A production
+deformable tendon/bone solver has not yet assembled these loads into material
+state, so tissue stress and deformation remain open. The explicit point
+fallbacks must remain until better attachment data or an endpoint-specific
+registration receipt is available.
