@@ -15,6 +15,13 @@ the native Human execution path.
 | Comparative lower-body mechanics | RajagopalLaiUhlrich2023 | retained source-faithful bounded Metal path |
 | Comparative upper extremities | MoBL-ARMS | authenticated bimanual import or pinned public unimanual 4.1 source variant |
 
+The current standing milestone is native and persistent: `numi human stand`
+executes current-pose force from all 416 routes, activation, 157-body gravity
+dynamics, ten authored foot witnesses, an assisted phase, and a zero-root-wrench
+phase on Apple Metal. It also requires one-step FP64 parity, bitwise replay, and
+four-angle visual review. See [Human Stand v1](Docs/HUMAN_STAND_V1.md) for the
+command, measurements, and remaining limits.
+
 The importer preserves upstream records locally. The tracked MyoSim,
 BodyParts3D, and explicitly marked Z-Anatomy validation media are attributed
 derivatives; all other raw or derived source artifacts remain local. See
@@ -414,9 +421,11 @@ non-equilibrium source states and requires the reusable command-buffer path to
 publish the same next state as the one-shot path. On Apple M4, the device’s
 maximum per-muscle force-vector
 error is `0.00471758869298`; the deterministic all-416 reduction differs by
-`0.00642352090836` from the FP64 source reference. The activation result is
-currently returned with the operator result; it is not yet a persistent
-device-only full-body rollout. Dense 128-DoF device mass dynamics, contact,
+`0.00642352090836` from the FP64 source reference. The reference command still
+returns its one-step activation result for inspection. The separate
+`numi human stand` path now keeps activation, current-pose route force,
+128-DoF large-state dynamics, and authored foot support on device across a
+bounded horizon; its exact high-velocity bias, joint limits, general collision,
 skin/organ solvers, and clinical qualification remain separate work.
 
 The bounded `--muscle-step-*` visual path now consumes that same retained

@@ -2,12 +2,97 @@
 set -eu
 
 if [ "${1:-}" = "--numi-describe" ]; then
-    printf '%s\n' 'Build NumiLab Human source artifacts and run native full-body muscle and articulated-visual references.'
+    printf '%s\n' 'Build NumiLab Human artifacts and run native full-body references, persistent muscle-driven standing, and four-angle visual validation.'
     exit 0
 fi
 
 command_directory=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
 repository_root=$(CDPATH= cd -- "$command_directory/../.." && pwd -P)
+
+# Canonical Numi Human v1 standing transaction. The native runtime compiles a
+# bounded posture activation from all 416 current-pose source force rows, then
+# executes assisted and zero-root-wrench horizons in persistent Apple Metal.
+# Four native camera frames and a bitwise replay are mandatory evidence.
+if [ "${1:-}" = "stand" ]; then
+    if [ "${2:-}" = "--help" ] || [ "${2:-}" = "-h" ]; then
+        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <numi-human-tendon-endpoints.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..64>] [--timestep <1e-6..1e-3>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3>]"
+        exit 0
+    fi
+    if [ "$#" -lt 6 ]; then
+        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <numi-human-tendon-endpoints.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..64>] [--timestep <1e-6..1e-3>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3>]" >&2
+        exit 2
+    fi
+    artifact_directory=$2
+    bone_payload=$3
+    tendon_payload=$4
+    support_payload=$5
+    output_directory=$6
+    shift 6
+    steps=64
+    timestep=0.0001
+    dimension=640
+    soft_tissue_payload=
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --steps)
+                [ "$#" -ge 2 ] || { printf '%s\n' "--steps requires one value" >&2; exit 2; }
+                steps=$2
+                shift 2
+                ;;
+            --timestep)
+                [ "$#" -ge 2 ] || { printf '%s\n' "--timestep requires one value" >&2; exit 2; }
+                timestep=$2
+                shift 2
+                ;;
+            --dimension)
+                [ "$#" -ge 2 ] || { printf '%s\n' "--dimension requires one value" >&2; exit 2; }
+                dimension=$2
+                shift 2
+                ;;
+            --soft-tissue-payload)
+                [ "$#" -ge 2 ] || { printf '%s\n' "--soft-tissue-payload requires one value" >&2; exit 2; }
+                [ -z "$soft_tissue_payload" ] || { printf '%s\n' "--soft-tissue-payload may be given only once" >&2; exit 2; }
+                soft_tissue_payload=$2
+                shift 2
+                ;;
+            *)
+                printf '%s\n' "unknown Numi Human stand option $1" >&2
+                exit 2
+                ;;
+        esac
+    done
+    if [ -z "$soft_tissue_payload" ] && \
+       [ -f "$repository_root/Build/bodyparts3d-myosim-fullbody-muscle-surfaces/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue" ]; then
+        soft_tissue_payload=$repository_root/Build/bodyparts3d-myosim-fullbody-muscle-surfaces/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue
+    fi
+    runtime_root=${NUMI_LAB_ROOT:-/Users/home/Documents/emergentnumilife/MetalRobo}
+    build_directory=${NUMI_BUILD_DIR:-$runtime_root/build}
+    probe=$build_directory/bin/metalrobo_numilab_human_myosim_visual_probe
+    if [ ! -x "$probe" ]; then
+        printf '%s\n' "native Numi Human stand probe is unavailable: $probe" >&2
+        printf '%s\n' "build target metalrobo_numilab_human_myosim_visual_probe in $runtime_root" >&2
+        exit 2
+    fi
+    set -- "$probe" \
+        "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
+        "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
+        "$bone_payload" "$output_directory" \
+        --tendon-payload "$tendon_payload" \
+        --support-contact-payload "$support_payload" \
+        --muscle-step-seconds "$timestep" \
+        --muscle-step-count "$steps" \
+        --muscle-activation 1 \
+        --persistent-metal-stand \
+        --stand-root-assistance \
+        --stand-remove-assistance \
+        --stand-deterministic-replay \
+        --source-route-centrelines \
+        --dimension "$dimension"
+    if [ -n "$soft_tissue_payload" ]; then
+        set -- "$@" --soft-tissue-payload "$soft_tissue_payload"
+    fi
+    exec "$@"
+fi
 
 # Canonical Numi-owned Human probe. NHRIGID2/NHMYO1 remain source payloads,
 # while NHTENDON1 supplies complete route endpoint ownership and optional
