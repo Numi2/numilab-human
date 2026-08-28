@@ -154,6 +154,33 @@ def export_fullbody(sources: Path) -> dict[str, object]:
             }
         )
 
+    joint_equalities: list[dict[str, object]] = []
+    joint_equality_type = int(mujoco.mjtEq.mjEQ_JOINT)
+    for index in range(model.neq):
+        if not bool(model.eq_active0[index]):
+            continue
+        if int(model.eq_type[index]) != joint_equality_type:
+            raise RuntimeError(
+                f"myofullbody active equality {index} is not a supported joint equality"
+            )
+        dependent = int(model.eq_obj1id[index])
+        master = int(model.eq_obj2id[index])
+        if not 0 <= dependent < model.njnt or master >= model.njnt:
+            raise RuntimeError(f"myofullbody joint equality {index} has invalid joints")
+        dependent_q = int(model.jnt_qposadr[dependent])
+        master_q = int(model.jnt_qposadr[master]) if master >= 0 else -1
+        joint_equalities.append({
+            "id": index,
+            "name": mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_EQUALITY, index),
+            "dependent_joint": dependent,
+            "master_joint": master,
+            "dependent_reference": float(model.qpos0[dependent_q]),
+            "master_reference": float(model.qpos0[master_q]) if master_q >= 0 else 0.0,
+            "polycoef": [float(value) for value in model.eq_data[index, :5]],
+            "solref": [float(value) for value in model.eq_solref[index]],
+            "solimp": [float(value) for value in model.eq_solimp[index]],
+        })
+
     bodies: list[dict[str, object]] = []
     for index in range(1, model.nbody):
         bodies.append(
@@ -430,6 +457,7 @@ def export_fullbody(sources: Path) -> dict[str, object]:
         },
         "bodies": bodies,
         "joints": joints,
+        "joint_equalities": joint_equalities,
         "sites": list(sites.values()),
         "wrap_geometries": list(geoms.values()),
         "muscles": muscles,

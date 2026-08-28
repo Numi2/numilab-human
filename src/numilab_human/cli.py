@@ -260,19 +260,25 @@ def myosim_build(arguments: argparse.Namespace) -> int:
             detail = completed.stderr.strip() or completed.stdout.strip() or "no exporter output"
             raise ImportError(f"MyoSim source export failed: {detail}")
         exported = read_json(exported_path)
-    manifest, rigid_payload, muscle_payload, support_payload = myosim_fullbody_reference_artifacts(exported)
+    (
+        manifest, rigid_payload, muscle_payload, support_payload,
+        equality_payload,
+    ) = myosim_fullbody_reference_artifacts(exported)
     output = arguments.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     rigid = output / manifest["payloads"]["rigid"]["file"]
     muscle = output / manifest["payloads"]["muscles"]["file"]
     support = output / manifest["payloads"]["support_contact"]["file"]
+    equalities = output / manifest["payloads"]["joint_equalities"]["file"]
     rigid.write_bytes(rigid_payload)
     muscle.write_bytes(muscle_payload)
     support.write_bytes(support_payload)
+    equalities.write_bytes(equality_payload)
     write_json(output / "myosim-fullbody-reference.manifest.json", manifest)
     print(f"wrote {rigid}")
     print(f"wrote {muscle}")
     print(f"wrote {support}")
+    print(f"wrote {equalities}")
     print(f"wrote {output / 'myosim-fullbody-reference.manifest.json'}")
     return 0
 

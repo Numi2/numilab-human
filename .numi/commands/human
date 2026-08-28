@@ -10,8 +10,9 @@ command_directory=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
 repository_root=$(CDPATH= cd -- "$command_directory/../.." && pwd -P)
 
 # Canonical Numi Human v1 standing transaction. The native runtime compiles a
-# bounded posture activation from all 416 current-pose source force rows, then
-# executes assisted and zero-root-wrench horizons in persistent Apple Metal.
+# bounded posture activation from all 416 current-pose source force rows and
+# 51 exact source joint equalities, then executes assisted and zero-root-wrench
+# horizons in persistent Apple Metal.
 # Four native camera frames and a bitwise replay are mandatory evidence.
 if [ "${1:-}" = "stand" ]; then
     if [ "${2:-}" = "--help" ] || [ "${2:-}" = "-h" ]; then
@@ -79,6 +80,7 @@ if [ "${1:-}" = "stand" ]; then
         "$bone_payload" "$output_directory" \
         --tendon-payload "$tendon_payload" \
         --support-contact-payload "$support_payload" \
+        --joint-equality-payload "$artifact_directory/myosim-fullbody-joint-equalities.nheq" \
         --muscle-step-seconds "$timestep" \
         --muscle-step-count "$steps" \
         --muscle-activation 1 \
