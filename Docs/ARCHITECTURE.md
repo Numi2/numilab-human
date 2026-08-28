@@ -95,15 +95,16 @@ per-step host loop exists after the payload has been created. The dense
 remain Core CPU reference stages today; this does not claim a complete
 device-resident muscle-force rollout.
 
-`NHTENDON1` now makes the endpoint ownership of that active program explicit.
-It contains two records for each of the 416 routes and fail-closes unless all
-832 origin/insertion bindings agree with their real source sites and bodies.
-Core gives an admitted triangle attachment a route-private site before the
-existing evaluation; the unchanged Metal route kernel therefore remains the
-single `J^T` force authority. The Numi-owned `numi human tendon-probe` command
-validated the point program with zero generalized-force change and also
-measured—then rejected—the current approximately 49 mm bilateral Achilles
-surface migration candidate.
+`NHTENDON2` makes endpoint ownership and distributed surface transfer
+explicit. It contains two records for each of the 416 routes and fail-closes
+unless all 832 origin/insertion bindings agree with their real source sites and
+bodies. It never creates a route-private migrated site. Instead, the Metal
+route kernel publishes the exact wrapped terminal gradients used by its own
+`J^T` scatter; a typed Metal attachment pass distributes each admitted terminal
+force over four connected same-bone nodes and checks force, moment, and
+articulated-Jacobian parity. Multi-bone, absent, distant, or ill-conditioned
+surface registrations remain source-point laws. Legacy `NHTENDON1` decoding is
+retained for prior point/triangle impact evidence.
 
 The original `numi human myosim-native-visuals` capture drew every route as a
 straight site/wrap-centre segment. That output is retained only as a coverage

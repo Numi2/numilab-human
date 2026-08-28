@@ -54,6 +54,7 @@ from numilab_human.model import (
     read_json,
     rajagopal_custom_joint_ir,
     rajagopal_millard_muscle_ir,
+    numi_human_tendon_attachment_envelope_payload,
     numi_human_tendon_endpoint_payload,
     rajagopal_lower_body_pilot,
     rajagopal_walking_contract,
@@ -104,6 +105,75 @@ class ImporterTests(unittest.TestCase):
         }
         (directory / "myosim-fullbody-reference.manifest.json").write_text(
             json.dumps(manifest), encoding="utf-8"
+        )
+        return directory
+
+    def _minimal_bodyparts_bone_artifact(self, directory: Path) -> Path:
+        directory.mkdir(parents=True)
+        source_sha = "11" * 32
+        fingerprint = 0x1234ABCD
+        vertices: list[tuple[float, float, float, float, float, float]] = []
+        indices: list[int] = []
+        records: list[bytes] = []
+        anchors: list[dict[str, object]] = []
+        for body_index, center in enumerate(((0.1, 0.2, 0.299), (0.4, 0.5, 0.599))):
+            first_vertex = len(vertices)
+            cx, cy, cz = center
+            vertices.extend([
+                (cx, cy, cz, 0.0, 0.0, 1.0),
+                (cx + 0.005, cy, cz, 0.0, 0.0, 1.0),
+                (cx, cy + 0.005, cz, 0.0, 0.0, 1.0),
+                (cx - 0.005, cy, cz, 0.0, 0.0, 1.0),
+                (cx, cy - 0.005, cz, 0.0, 0.0, 1.0),
+            ])
+            first_index = len(indices)
+            indices.extend(first_vertex + value for value in (
+                0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 1,
+            ))
+            records.append(struct.pack(
+                "<6I8f", body_index, first_vertex, 5, first_index, 12, body_index + 1,
+                0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0,
+            ))
+            anchors.append({
+                "member_id": f"FJ{1000 + body_index}",
+                "core_body_index": body_index,
+                "myosim_body": f"fixture_{body_index}",
+                "vertex_count": 5,
+                "triangle_count": 4,
+            })
+        payload = b"".join([
+            struct.pack(
+                "<8s5I32s", b"NHBONES1", 2, 2, len(vertices), len(indices),
+                fingerprint, bytes.fromhex(source_sha),
+            ),
+            *records,
+            *(struct.pack("<6f", *vertex) for vertex in vertices),
+            struct.pack(f"<{len(indices)}I", *indices),
+        ])
+        payload_path = directory / "bodyparts3d-myosim-major-bones.nhbones"
+        payload_path.write_bytes(payload)
+        manifest = {
+            "schema": "numi.human.bodyparts3d-myosim-major-bone-visual-payload.v1",
+            "payload": {
+                "file": payload_path.name,
+                "sha256": hashlib.sha256(payload).hexdigest(),
+                "bytes": len(payload),
+                "magic": "NHBONES1",
+                "payload_abi": 2,
+                "registration_fingerprint32": f"{fingerprint:08x}",
+                "bone_count": 2,
+                "vertex_count": len(vertices),
+                "index_count": len(indices),
+            },
+            "source": {
+                "registration": {"file": "fixture.json", "sha256": "33" * 32},
+                "bodyparts": {},
+                "myosim_source_archive_sha256": source_sha,
+                "anchors": anchors,
+            },
+        }
+        (directory / "bodyparts3d-myosim-major-bones.manifest.json").write_text(
+            json.dumps(manifest), encoding="utf-8",
         )
         return directory
 
@@ -176,6 +246,57 @@ class ImporterTests(unittest.TestCase):
             )
             pack = read_json(directory / "candidate" / "numi-human-pack.manifest.json")
             self.assertEqual(pack["status"], manifest["status"])
+
+    def test_numi_human_tendon_envelopes_preserve_source_points_and_wrench(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            artifact = self._minimal_myosim_tendon_artifact(directory / "artifact")
+            bones = self._minimal_bodyparts_bone_artifact(directory / "bones")
+            manifest = numi_human_tendon_attachment_envelope_payload(
+                artifact, bones, directory / "output",
+            )
+            self.assertEqual(manifest["coverage"]["mechanical_endpoint_count"], 2)
+            self.assertEqual(
+                manifest["coverage"]["registered_bone_distributed_envelope_count"], 2,
+            )
+            self.assertEqual(manifest["coverage"]["maximum_endpoint_migration_m"], 0.0)
+            payload = (directory / "output" / manifest["payload"]["file"]).read_bytes()
+            header = struct.unpack_from("<8s10I32s32s32s", payload)
+            self.assertEqual((header[0], header[1], header[5], header[6]), (b"NHTEND2\0", 2, 2, 2))
+            first = struct.unpack_from("<8I8f", payload, 144)
+            second = struct.unpack_from("<8I8f", payload, 208)
+            self.assertEqual(first[5], 2)
+            self.assertEqual(second[5], 2)
+            self.assertEqual(tuple(round(value, 6) for value in first[8:11]), (0.1, 0.2, 0.3))
+            envelope = struct.unpack_from("<4I68f", payload, 272)
+            values = envelope[4:]
+            nodes = [list(values[4 * index:4 * index + 3]) for index in range(4)]
+            maps_offset = 16
+            maps = []
+            for node in range(4):
+                matrix = []
+                for row in range(3):
+                    start = maps_offset + node * 12 + row * 4
+                    matrix.append(list(values[start:start + 3]))
+                maps.append(matrix)
+            source_point = list(first[8:11])
+            for input_axis in range(3):
+                nodal = [
+                    [maps[node][row][input_axis] for row in range(3)]
+                    for node in range(4)
+                ]
+                resultant = [sum(force[axis] for force in nodal) for axis in range(3)]
+                self.assertLess(sum(
+                    (resultant[axis] - (1.0 if axis == input_axis else 0.0)) ** 2
+                    for axis in range(3)
+                ) ** 0.5, 2.0e-5)
+                moment = [0.0, 0.0, 0.0]
+                for point, force in zip(nodes, nodal, strict=True):
+                    rx, ry, rz = [point[axis] - source_point[axis] for axis in range(3)]
+                    fx, fy, fz = force
+                    contribution = (ry * fz - rz * fy, rz * fx - rx * fz, rx * fy - ry * fx)
+                    moment = [moment[axis] + contribution[axis] for axis in range(3)]
+                self.assertLess(sum(value * value for value in moment) ** 0.5, 2.0e-7)
 
     def test_skin_bone_envelope_distance_is_zero_inside_and_metric_outside(self) -> None:
         self.assertEqual(
@@ -749,7 +870,7 @@ class ImporterTests(unittest.TestCase):
         result = run([command, "--numi-describe"], capture_output=True, text=True, check=True)
         self.assertEqual(
             result.stdout,
-            "Build NumiLab Human source artifacts and run native full-body muscle and articulated-visual references.\n",
+            "Build NumiLab Human artifacts and run native full-body references, persistent muscle-driven standing, and four-angle visual validation.\n",
         )
 
     def test_numi_workspace_native_visual_command_rejects_missing_paths_before_python(self) -> None:

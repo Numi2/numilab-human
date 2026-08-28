@@ -1,5 +1,9 @@
 # Tendon force transfer
 
+> This document records the legacy `NHTENDON1` point/triangle analysis and the
+> rejected endpoint-migration experiment. The current source-point-preserving
+> distributed law is [NHTENDON2 tendon attachment v2](TENDON_ATTACHMENT_V2.md).
+
 ## Purpose
 
 The Human already evaluates MyoSim's authored spatial muscle-tendon routes and

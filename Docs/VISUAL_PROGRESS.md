@@ -1,16 +1,53 @@
 # NumiLab Human visual progress
 
+## Tendon attachment v2 — 2026-08-28
+
+<p align="center">
+  <img src="media/numi-human-tendon-attachment-v2-2048/anconeus/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-tendon-attachment-envelopes-focus-body-42-front.png" width="24%" alt="Muscle-driven anconeus attachment v2, front" />
+  <img src="media/numi-human-tendon-attachment-v2-2048/anconeus/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-tendon-attachment-envelopes-focus-body-42-oblique.png" width="24%" alt="Muscle-driven anconeus attachment v2, oblique" />
+  <img src="media/numi-human-tendon-attachment-v2-2048/anconeus/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-tendon-attachment-envelopes-focus-body-42-side.png" width="24%" alt="Muscle-driven anconeus attachment v2, side" />
+  <img src="media/numi-human-tendon-attachment-v2-2048/anconeus/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-tendon-attachment-envelopes-focus-body-42-rear.png" width="24%" alt="Muscle-driven anconeus attachment v2, rear" />
+</p>
+
+This current mechanical-anatomy lead shows exact BodyParts3D right anconeus
+surface stable ID 99, humerus/ulna owners 41/42, and source actuator 228. Both
+source endpoints pass the v2 envelope gates. Warm strands connect the unchanged
+source terminal to its four actual transfer nodes, and the warm footprint joins
+those nodes on the bone surface. Cyan remains a deliberately separate route
+diagnostic. No source-proximity cap, triangle migration, or visual collar is
+used. The front/oblique/side/rear frames retain 182/446/940/1,160 attachment
+pixels.
+
+<p align="center">
+  <img src="media/numi-human-tendon-attachment-v2-2048/subscapularis/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-tendon-attachment-envelopes-focus-body-34-front.png" width="24%" alt="Muscle-driven subscapularis attachment v2, front" />
+  <img src="media/numi-human-tendon-attachment-v2-2048/subscapularis/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-tendon-attachment-envelopes-focus-body-34-oblique.png" width="24%" alt="Muscle-driven subscapularis attachment v2, oblique" />
+  <img src="media/numi-human-tendon-attachment-v2-2048/subscapularis/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-tendon-attachment-envelopes-focus-body-34-side.png" width="24%" alt="Muscle-driven subscapularis attachment v2, side" />
+  <img src="media/numi-human-tendon-attachment-v2-2048/subscapularis/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-tendon-attachment-envelopes-focus-body-34-rear.png" width="24%" alt="Muscle-driven subscapularis attachment v2, rear" />
+</p>
+
+The second check uses exact BodyParts3D right subscapularis stable ID 85,
+owners 41/34, and source actuator 215. It exercises a six-segment route with
+one source wrap and admitted envelopes at both endpoints. Coverage is
+443/287/106/1,463 pixels. Manual review of all eight images confirms that the
+surface footprint stays on the named bone and that occlusion changes naturally
+across the cameras rather than making a floating connection appear valid.
+
+Both Mac-mini captures excite only their selected source at `0.2` for one
+100 µs update while Apple Metal evaluates all 416 paths. The images show the
+loaded transfer program; the separate [all-endpoint reference transcripts](media/numi-human-tendon-attachment-v2-2048/reference/)
+execute its forces. See the [capture records and hashes](media/numi-human-tendon-attachment-v2-2048/).
+This is exposed mechanics evidence, not a finished skin render, deformable
+tendon continuum, clinical enthesis map, contact result, or gait validation.
+
 ## Retired tendon visual lead — 2026-08-27
 
 The prior Z-Anatomy close-up is retained as a diagnostic record, not a visual
 lead. Review found that its closed tendon cap still read as a detached surface
 against the calcaneus, and its composition did not meet the presentation bar.
-The new importer carries the lock band 1.5 mm inside the exact matching
-calcaneus triangles so opaque bone occludes that cap; the renderer also uses a
-higher 32-sample presentation profile for this narrow inspection. A new
-four-angle capture must pass review before any tendon image returns here or to
-the README. Neither version changes an authored force path or material law, or
-establishes tendon continuum mechanics, contact, gait, or clinical attachment.
+Its visual-only mesh repair is no longer used as evidence for mechanics; the
+reviewed `NHTENDON2` source-point and four-node program above is the current
+attachment diagnostic. Neither the archived mesh nor v2 establishes a
+deformable tendon continuum, contact, gait, or clinical attachment.
 
 ## Native source-bound torso anatomy — 2026-08-27
 

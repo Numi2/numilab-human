@@ -131,6 +131,21 @@ rest-pose registration. See
 [visual progress](VISUAL_PROGRESS.md) for the inspected full-body views and
 [architecture](ARCHITECTURE.md) for runtime ownership.
 
+Compile the source-point-preserving distributed attachment program only after
+the paired `NHBONES1` geometry exists:
+
+```bash
+numi human numi-human-tendon-envelope-payload \
+  --artifact Build/myosim-fullbody \
+  --bone-artifact Build/bodyparts3d-myosim-major-bones-v2 \
+  --output Build/numi-human-tendon-v2
+```
+
+The default compiler admits only one-member, connected, nearby, conditioned
+bone patches. Every rejected endpoint remains an explicit MyoSim source-site
+law. See [tendon attachment v2](TENDON_ATTACHMENT_V2.md) for the ABI, gates,
+coverage, and Apple Metal qualification.
+
 The native marker visual command emits four fixed cameras plus a Core visual-pack and
 manifest. It binds inertial-body proxies to the default Metal articulated-pose
 snapshot and hides all route lines. Use `myosim-native-route-inspection` with

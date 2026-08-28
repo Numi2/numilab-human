@@ -45,6 +45,7 @@ from .model import (
     rajagopal_rigid_skeleton_ir,
     rajagopal_walking_contract,
     myosim_fullbody_reference_artifacts,
+    numi_human_tendon_attachment_envelope_payload,
     numi_human_tendon_endpoint_payload,
     numi_human_achilles_surface_receipt,
     mortensen_neck_source_ir,
@@ -715,6 +716,18 @@ def numi_human_tendon_payload(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def numi_human_tendon_envelope_payload(arguments: argparse.Namespace) -> int:
+    manifest = numi_human_tendon_attachment_envelope_payload(
+        arguments.artifact.resolve(), arguments.bone_artifact.resolve(),
+        arguments.output.resolve(), arguments.maximum_surface_distance,
+        arguments.maximum_patch_radius, arguments.maximum_force_amplification,
+    )
+    print(f"wrote {arguments.output.resolve() / manifest['payload']['file']}")
+    print(f"wrote {arguments.output.resolve() / 'numi-human-tendon-attachments.manifest.json'}")
+    print(f"wrote {arguments.output.resolve() / 'numi-human-pack.manifest.json'}")
+    return 0
+
+
 def numi_human_achilles_receipt(arguments: argparse.Namespace) -> int:
     receipt = numi_human_achilles_surface_receipt(
         arguments.sources.resolve(), arguments.registration.resolve(),
@@ -891,6 +904,32 @@ def parser() -> argparse.ArgumentParser:
         help="compile a rejected surface candidate for native impact measurement; never use for production",
     )
     tendon_payload_parser.set_defaults(handler=numi_human_tendon_payload)
+    tendon_envelope_parser = commands.add_parser(
+        "numi-human-tendon-envelope-payload",
+        help="compile fail-closed source-point-preserving BodyParts3D tendon attachment envelopes",
+    )
+    tendon_envelope_parser.add_argument(
+        "--artifact", type=Path, required=True,
+        help="compiled MyoSim full-body artifact directory from myosim-build",
+    )
+    tendon_envelope_parser.add_argument(
+        "--bone-artifact", type=Path, required=True,
+        help="directory containing the exact paired NHBONES1 payload and manifest",
+    )
+    tendon_envelope_parser.add_argument("--output", type=Path, required=True)
+    tendon_envelope_parser.add_argument(
+        "--maximum-surface-distance", type=float, default=0.012,
+        help="maximum exact source-point to registered bone-surface distance in metres (default: 0.012)",
+    )
+    tendon_envelope_parser.add_argument(
+        "--maximum-patch-radius", type=float, default=0.012,
+        help="maximum connected attachment patch radius in metres (default: 0.012)",
+    )
+    tendon_envelope_parser.add_argument(
+        "--maximum-force-amplification", type=float, default=4.0,
+        help="maximum sampled sum of nodal force magnitudes for a unit terminal force (default: 4.0)",
+    )
+    tendon_envelope_parser.set_defaults(handler=numi_human_tendon_envelope_payload)
     achilles_receipt_parser = commands.add_parser(
         "numi-human-achilles-surface-receipt",
         help="register six bilateral Achilles route insertions to exact BodyParts3D calcaneus triangles",

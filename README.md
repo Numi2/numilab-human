@@ -29,18 +29,18 @@ derivatives; all other raw or derived source artifacts remain local. See
 
 ## Visual progress
 
-The published close-up tendon and 2K exposed-anatomy pictures are withdrawn
-from quality presentation. Review found a detached-looking terminal cap and
-disconnected source fragments; they remain only as reproducibility artifacts
-in [visual progress](Docs/VISUAL_PROGRESS.md). The current corrective check is
-a four-angle 640 px native diagnostic render. It is deliberately withheld from
-the gallery: the exact-reference renderer is not presently qualified above that
-resolution, so the older 2K commands and media are archival reproduction
-artifacts rather than a current showcase.
+The detached-looking tendon close-ups remain withdrawn. Their replacement is
+a reviewed 2048 px mechanical-anatomy diagnostic: exact BodyParts3D muscle and
+bone surfaces, the unchanged OpenSim/MyoSim route, and the four-node
+`NHTENDON2` transfer footprint are shown together from four cameras. These are
+not photorealistic skin renders; they are deliberately exposed evidence that a
+route terminates on the actual force-transfer nodes rather than on a floating
+decorative tendon. See [visual progress](Docs/VISUAL_PROGRESS.md).
 
 The exposed source anatomy is used to inspect muscles and tendons against
-named bones. The BodyParts3D exterior is retained as a static source mesh only:
-it has no authored skin weights and is not presented as a muscle-driven Human.
+named bones. The BodyParts3D exterior remains a static source mesh only: it
+has no authored skin weights and is not passed off as a finished realistic
+muscle-driven Human exterior.
 
 ### Tendon-to-bone presentation
 
@@ -58,28 +58,39 @@ display offset. This makes the bone
 insertion continuous in the render, but does not create a tendon continuum,
 weld, force-transfer law, or photorealistic anatomy.
 
-`NHTENDON1` now gives every one of the 416 active routes an explicit origin and
-insertion record: 832 bone-owned mechanical endpoints. Core resolves that
-program before the existing route-length-Jacobian projection, and Metal uses
-the resolved route sites directly, so there is still exactly one force path.
-The Apple M4 probe reproduced the original point-owned generalized force with
-zero difference and zero force/moment traction residual.
+`NHTENDON2` now gives all 832 origin/insertion endpoints a fail-closed
+tendon-to-bone law without moving an authored route site. It admits 295
+connected four-node BodyParts3D bone-surface envelopes under strict distance
+and force-conditioning gates; the other 537 endpoints remain explicit source
+point laws. The owning Metal route kernel publishes its exact wrapped terminal
+directions, and a second Metal pass distributes those forces while conserving
+their resultant and source-point moment. The Apple M4 Pro probe transferred all
+832 endpoints with maximum residuals of `6.824e-5 N` and `3.007e-6 Nm`, a
+maximum generalized-force correction of `7.935e-4`, and byte-identical replay.
 
 The first inferred bilateral Achilles surface candidate was deliberately not
 admitted: its current cross-source registration would move the six terminal
 sites by about 49 mm, changing default muscle force by as much as 181 N. The
 source point attachments therefore remain authoritative until the anatomical
-registration improves. See [tendon force transfer](Docs/TENDON_FORCE_TRANSFER.md).
+registration improves. See [tendon attachment v2](Docs/TENDON_ATTACHMENT_V2.md)
+and the legacy [point/triangle analysis](Docs/TENDON_FORCE_TRANSFER.md).
 
 <p align="center">
-  <img src="Docs/media/numi-human-right-achilles-mechanics-640/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-138-front.png" width="24%" alt="Numi Human right Achilles endpoint diagnostic, front" />
-  <img src="Docs/media/numi-human-right-achilles-mechanics-640/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-138-oblique.png" width="24%" alt="Numi Human right Achilles endpoint diagnostic, oblique" />
-  <img src="Docs/media/numi-human-right-achilles-mechanics-640/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-138-side.png" width="24%" alt="Numi Human right Achilles endpoint diagnostic, side" />
-  <img src="Docs/media/numi-human-right-achilles-mechanics-640/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-138-rear.png" width="24%" alt="Numi Human right Achilles endpoint diagnostic, rear" />
+  <img src="Docs/media/numi-human-tendon-attachment-v2-2048/anconeus/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-tendon-attachment-envelopes-focus-body-42-front.png" width="24%" alt="Numi Human anconeus tendon attachment v2, front" />
+  <img src="Docs/media/numi-human-tendon-attachment-v2-2048/anconeus/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-tendon-attachment-envelopes-focus-body-42-oblique.png" width="24%" alt="Numi Human anconeus tendon attachment v2, oblique" />
+  <img src="Docs/media/numi-human-tendon-attachment-v2-2048/anconeus/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-tendon-attachment-envelopes-focus-body-42-side.png" width="24%" alt="Numi Human anconeus tendon attachment v2, side" />
+  <img src="Docs/media/numi-human-tendon-attachment-v2-2048/anconeus/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-route-centrelines-tendon-attachment-envelopes-focus-body-42-rear.png" width="24%" alt="Numi Human anconeus tendon attachment v2, rear" />
 </p>
 
-These native 640 px views are geometry diagnostics from the production point
-endpoint program, not photorealistic or clinical attachment evidence.
+This Mac-mini run excites only anconeus source actuator `228` at `0.2` for one
+100 µs step while Apple Metal evaluates all 416 routes. Both endpoints use
+admitted v2 envelopes. The warm footprints/fans are the actual four-node
+transfer program; cyan is the unchanged source route. All four frames have
+nonzero envelope coverage. Exact counters and hashes are retained in the
+[capture record](Docs/media/numi-human-tendon-attachment-v2-2048/anconeus/capture.transcript.txt)
+and [checksum set](Docs/media/numi-human-tendon-attachment-v2-2048/checksums.sha256).
+This is force-path and attachment-program evidence, not photorealistic skin,
+clinical anatomy, or a deformable tendon continuum.
 
 ### Muscle-driven torso anatomy
 

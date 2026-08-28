@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import heapq
 import json
 import math
 import re
@@ -2035,6 +2036,14 @@ _NUMI_HUMAN_TENDON_MAGIC = b"NHTEND1\0"
 _NUMI_HUMAN_TENDON_ABI = 1
 _NUMI_HUMAN_TENDON_POINT = 0
 _NUMI_HUMAN_TENDON_TRIANGLE = 1
+# NHTENDON2 never migrates an authored MyoSim endpoint.  A mechanically
+# admitted record instead carries a source-point-preserving distributed wrench
+# envelope on one exact NHBONES1 member.  The runtime keeps the source route
+# and force law authoritative, then transfers its terminal force across the
+# envelope while conserving both resultant force and moment.
+_NUMI_HUMAN_TENDON_ENVELOPE_MAGIC = b"NHTEND2\0"
+_NUMI_HUMAN_TENDON_ENVELOPE_ABI = 2
+_NUMI_HUMAN_TENDON_ENVELOPE = 2
 _MR_MOTION_STATIC = 0
 _MR_ROOT_FLOATING = 1
 _MR_JOINT_PRISMATIC = 1
@@ -4886,6 +4895,651 @@ def numi_human_tendon_endpoint_payload(
     }
     write_json(output / "numi-human-pack.manifest.json", canonical_manifest)
     return tendon_manifest
+
+
+def _tendon_closest_point_on_triangle(
+    point: list[float], triangle: list[list[float]],
+) -> tuple[list[float], list[float]]:
+    """Return the exact Euclidean closest point and barycentric coordinates."""
+    a, b, c = triangle
+    subtract = lambda left, right: [left[axis] - right[axis] for axis in range(3)]
+    dot = lambda left, right: sum(left[axis] * right[axis] for axis in range(3))
+    ab, ac, ap = subtract(b, a), subtract(c, a), subtract(point, a)
+    d1, d2 = dot(ab, ap), dot(ac, ap)
+    if d1 <= 0.0 and d2 <= 0.0:
+        return list(a), [1.0, 0.0, 0.0]
+    bp = subtract(point, b)
+    d3, d4 = dot(ab, bp), dot(ac, bp)
+    if d3 >= 0.0 and d4 <= d3:
+        return list(b), [0.0, 1.0, 0.0]
+    vc = d1 * d4 - d3 * d2
+    if vc <= 0.0 and d1 >= 0.0 and d3 <= 0.0:
+        value = d1 / (d1 - d3)
+        return [a[axis] + value * ab[axis] for axis in range(3)], [1.0 - value, value, 0.0]
+    cp = subtract(point, c)
+    d5, d6 = dot(ab, cp), dot(ac, cp)
+    if d6 >= 0.0 and d5 <= d6:
+        return list(c), [0.0, 0.0, 1.0]
+    vb = d5 * d2 - d1 * d6
+    if vb <= 0.0 and d2 >= 0.0 and d6 <= 0.0:
+        value = d2 / (d2 - d6)
+        return [a[axis] + value * ac[axis] for axis in range(3)], [1.0 - value, 0.0, value]
+    va = d3 * d6 - d5 * d4
+    if va <= 0.0 and d4 - d3 >= 0.0 and d5 - d6 >= 0.0:
+        value = (d4 - d3) / ((d4 - d3) + (d5 - d6))
+        edge = subtract(c, b)
+        return [b[axis] + value * edge[axis] for axis in range(3)], [0.0, 1.0 - value, value]
+    denominator = va + vb + vc
+    if abs(denominator) <= 1.0e-20:
+        raise ImportError("Numi Human tendon envelope encountered a degenerate bone triangle")
+    inverse = 1.0 / denominator
+    v, w = vb * inverse, vc * inverse
+    barycentric = [1.0 - v - w, v, w]
+    return [
+        sum(barycentric[index] * triangle[index][axis] for index in range(3))
+        for axis in range(3)
+    ], barycentric
+
+
+def _tendon_inverse_matrix(matrix: list[list[float]]) -> list[list[float]] | None:
+    size = len(matrix)
+    augmented = [
+        list(row) + [1.0 if row_index == column else 0.0 for column in range(size)]
+        for row_index, row in enumerate(matrix)
+    ]
+    scale = max((abs(value) for row in matrix for value in row), default=0.0)
+    if not math.isfinite(scale) or scale <= 0.0:
+        return None
+    for column in range(size):
+        pivot = max(range(column, size), key=lambda row: abs(augmented[row][column]))
+        if abs(augmented[pivot][column]) <= 1.0e-10 * scale:
+            return None
+        augmented[column], augmented[pivot] = augmented[pivot], augmented[column]
+        inverse_pivot = 1.0 / augmented[column][column]
+        augmented[column] = [value * inverse_pivot for value in augmented[column]]
+        for row in range(size):
+            if row == column:
+                continue
+            factor = augmented[row][column]
+            if factor != 0.0:
+                augmented[row] = [
+                    augmented[row][index] - factor * augmented[column][index]
+                    for index in range(2 * size)
+                ]
+    return [row[size:] for row in augmented]
+
+
+def _tendon_envelope_force_maps(
+    source_point: list[float], nodes: list[list[float]], patch_radius: float,
+) -> tuple[list[list[list[float]]], dict[str, float]] | None:
+    """Minimum-L2 nodal-force map conserving source force and moment.
+
+    For every source-local terminal force F the returned matrices M_i satisfy
+    sum(M_i F)=F and sum((x_i-a) cross (M_i F))=0.  Moment rows are scaled by
+    the patch radius only for conditioning; the physical zero-moment equation
+    is unchanged.
+    """
+    if len(nodes) != 4 or not math.isfinite(patch_radius) or patch_radius <= 1.0e-6:
+        return None
+    constraint = [[0.0 for _ in range(12)] for _ in range(6)]
+    for node_index, node in enumerate(nodes):
+        base = 3 * node_index
+        for axis in range(3):
+            constraint[axis][base + axis] = 1.0
+        rx, ry, rz = [
+            (node[axis] - source_point[axis]) / patch_radius for axis in range(3)
+        ]
+        skew = ((0.0, -rz, ry), (rz, 0.0, -rx), (-ry, rx, 0.0))
+        for row in range(3):
+            for column in range(3):
+                constraint[3 + row][base + column] = skew[row][column]
+    normal = [[
+        sum(constraint[row][column] * constraint[other][column] for column in range(12))
+        for other in range(6)
+    ] for row in range(6)]
+    inverse = _tendon_inverse_matrix(normal)
+    if inverse is None:
+        return None
+    flat = [[
+        sum(constraint[row][output] * inverse[row][axis] for row in range(6))
+        for axis in range(3)
+    ] for output in range(12)]
+    maps = [
+        [[flat[3 * node + row][column] for column in range(3)] for row in range(3)]
+        for node in range(4)
+    ]
+    maximum_force_residual = 0.0
+    maximum_moment_residual = 0.0
+    for axis in range(3):
+        nodal = [[maps[node][row][axis] for row in range(3)] for node in range(4)]
+        resultant = [sum(force[row] for force in nodal) for row in range(3)]
+        maximum_force_residual = max(maximum_force_residual, math.sqrt(sum(
+            (resultant[row] - (1.0 if row == axis else 0.0)) ** 2 for row in range(3)
+        )))
+        moment = [0.0, 0.0, 0.0]
+        for node, force in zip(nodes, nodal, strict=True):
+            rx, ry, rz = [node[row] - source_point[row] for row in range(3)]
+            fx, fy, fz = force
+            cross = (ry * fz - rz * fy, rz * fx - rx * fz, rx * fy - ry * fx)
+            moment = [moment[row] + cross[row] for row in range(3)]
+        maximum_moment_residual = max(
+            maximum_moment_residual, math.sqrt(sum(value * value for value in moment)),
+        )
+    gram = [[
+        sum(flat[row][left] * flat[row][right] for row in range(12))
+        for right in range(3)
+    ] for left in range(3)]
+    direction = [1.0 / math.sqrt(3.0)] * 3
+    for _ in range(24):
+        next_direction = [sum(gram[row][column] * direction[column] for column in range(3)) for row in range(3)]
+        magnitude = math.sqrt(sum(value * value for value in next_direction))
+        if magnitude <= 1.0e-18:
+            break
+        direction = [value / magnitude for value in next_direction]
+    eigenvalue = sum(
+        direction[row] * gram[row][column] * direction[column]
+        for row in range(3) for column in range(3)
+    )
+    sampled_total_amplification = 0.0
+    for components in product((-1.0, 0.0, 1.0), repeat=3):
+        magnitude = math.sqrt(sum(value * value for value in components))
+        if magnitude == 0.0:
+            continue
+        unit = [value / magnitude for value in components]
+        total = 0.0
+        for matrix in maps:
+            force = [sum(matrix[row][column] * unit[column] for column in range(3)) for row in range(3)]
+            total += math.sqrt(sum(value * value for value in force))
+        sampled_total_amplification = max(sampled_total_amplification, total)
+    metrics = {
+        "force_residual": maximum_force_residual,
+        "moment_residual_m": maximum_moment_residual,
+        "l2_force_amplification": math.sqrt(max(0.0, eigenvalue)),
+        "sampled_total_force_amplification": sampled_total_amplification,
+    }
+    if not all(math.isfinite(value) for value in metrics.values()):
+        return None
+    return maps, metrics
+
+
+def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> tuple[
+    dict[int, list[dict[str, Any]]], dict[str, Any], Path,
+]:
+    artifact = bone_artifact.resolve()
+    manifest_path = artifact / "bodyparts3d-myosim-major-bones.manifest.json"
+    manifest = read_json(manifest_path)
+    if manifest.get("schema") != "numi.human.bodyparts3d-myosim-major-bone-visual-payload.v1":
+        raise ImportError("Numi Human tendon envelopes require an NHBONES1 manifest")
+    descriptor = manifest.get("payload")
+    if not isinstance(descriptor, dict):
+        raise ImportError("Numi Human tendon envelope bone descriptor is missing")
+    filename, expected_sha = descriptor.get("file"), descriptor.get("sha256")
+    if not isinstance(filename, str) or not isinstance(expected_sha, str) or not re.fullmatch(r"[0-9a-f]{64}", expected_sha):
+        raise ImportError("Numi Human tendon envelope bone descriptor is invalid")
+    payload_path = artifact / filename
+    if not payload_path.is_file() or sha256(payload_path) != expected_sha:
+        raise ImportError("Numi Human tendon envelope bone payload is missing or drifted")
+    source = manifest.get("source")
+    if not isinstance(source, dict) or source.get("myosim_source_archive_sha256") != source_sha:
+        raise ImportError("Numi Human tendon envelope bone registration targets another MyoSim source")
+    anchors = source.get("anchors")
+    if not isinstance(anchors, list):
+        raise ImportError("Numi Human tendon envelope bone member identities are absent")
+    raw = payload_path.read_bytes()
+    header_size = struct.calcsize("<8s5I32s")
+    if len(raw) < header_size:
+        raise ImportError("Numi Human tendon envelope bone payload is truncated")
+    magic, abi, bone_count, vertex_count, index_count, fingerprint, embedded_source = struct.unpack_from(
+        "<8s5I32s", raw,
+    )
+    if (
+        magic != _BODYPARTS_MYOSIM_BONE_VISUAL_MAGIC
+        or abi != _BODYPARTS_MYOSIM_BONE_VISUAL_ABI
+        or bone_count == 0 or bone_count != len(anchors)
+        or embedded_source.hex() != source_sha
+        or descriptor.get("registration_fingerprint32") != f"{fingerprint:08x}"
+    ):
+        raise ImportError("Numi Human tendon envelope NHBONES1 identity is invalid")
+    record_size = struct.calcsize("<6I8f")
+    vertex_size = struct.calcsize("<6f")
+    expected_size = header_size + record_size * bone_count + vertex_size * vertex_count + 4 * index_count
+    if len(raw) != expected_size:
+        raise ImportError("Numi Human tendon envelope NHBONES1 length is invalid")
+    offset = header_size
+    records = [struct.unpack_from("<6I8f", raw, offset + record_size * index) for index in range(bone_count)]
+    offset += record_size * bone_count
+    vertices = [struct.unpack_from("<6f", raw, offset + vertex_size * index) for index in range(vertex_count)]
+    offset += vertex_size * vertex_count
+    indices = struct.unpack_from(f"<{index_count}I", raw, offset)
+    by_body: dict[int, list[dict[str, Any]]] = defaultdict(list)
+    for stable_id, (record, anchor) in enumerate(zip(records, anchors, strict=True), start=1):
+        body_index, first_vertex, count, first_index, count_indices, record_stable_id, *pose = record
+        if (
+            record_stable_id != stable_id or count == 0 or count_indices == 0 or count_indices % 3 != 0
+            or first_vertex + count > vertex_count or first_index + count_indices > index_count
+            or not isinstance(anchor, dict) or anchor.get("core_body_index") != body_index
+        ):
+            raise ImportError("Numi Human tendon envelope NHBONES1 record is malformed")
+        translation = pose[:3]
+        rotation = _myosim_matrix_from_quaternion_xyzw(list(pose[3:7]))
+        scale = pose[7]
+        if not math.isfinite(scale) or scale <= 0.0:
+            raise ImportError("Numi Human tendon envelope bone scale is invalid")
+        local_vertices = []
+        for vertex in vertices[first_vertex:first_vertex + count]:
+            transformed = _myosim_matrix_vector(rotation, [scale * vertex[axis] for axis in range(3)])
+            local_vertices.append([translation[axis] + transformed[axis] for axis in range(3)])
+        local_indices = indices[first_index:first_index + count_indices]
+        if any(index < first_vertex or index >= first_vertex + count for index in local_indices):
+            raise ImportError("Numi Human tendon envelope bone index escapes its member")
+        triangles = [
+            tuple(local_indices[index + axis] - first_vertex for axis in range(3))
+            for index in range(0, count_indices, 3)
+        ]
+        by_body[body_index].append({
+            "stable_id": stable_id,
+            "member_id": anchor.get("member_id"),
+            "vertices": local_vertices,
+            "triangles": triangles,
+        })
+    return dict(by_body), {
+        "file": payload_path.name,
+        "sha256": expected_sha,
+        "bytes": len(raw),
+        "bone_count": bone_count,
+        "registration_fingerprint32": f"{fingerprint:08x}",
+        "manifest": {"file": manifest_path.name, "sha256": sha256(manifest_path)},
+    }, payload_path
+
+
+def _numi_human_tendon_surface_envelope(
+    source_point: list[float], surface: dict[str, Any], maximum_distance_m: float,
+    maximum_patch_radius_m: float, maximum_force_amplification: float,
+) -> tuple[dict[str, Any] | None, str]:
+    vertices: list[list[float]] = surface["vertices"]
+    triangles: list[tuple[int, int, int]] = surface["triangles"]
+    nearest: tuple[float, int, list[float], list[float]] | None = None
+    for triangle_index, triangle_indices in enumerate(triangles):
+        triangle = [vertices[index] for index in triangle_indices]
+        closest, barycentric = _tendon_closest_point_on_triangle(source_point, triangle)
+        squared = sum((closest[axis] - source_point[axis]) ** 2 for axis in range(3))
+        if nearest is None or squared < nearest[0]:
+            nearest = (squared, triangle_index, closest, barycentric)
+    if nearest is None:
+        return None, "no_surface_triangle"
+    squared_distance, source_triangle_index, closest_point, barycentric = nearest
+    surface_distance = math.sqrt(squared_distance)
+    if surface_distance > maximum_distance_m:
+        return None, "surface_distance_exceeds_gate"
+    seed_triangle = triangles[source_triangle_index]
+    a, b, c = [vertices[index] for index in seed_triangle]
+    left = [b[axis] - a[axis] for axis in range(3)]
+    right = [c[axis] - a[axis] for axis in range(3)]
+    normal = [
+        left[1] * right[2] - left[2] * right[1],
+        left[2] * right[0] - left[0] * right[2],
+        left[0] * right[1] - left[1] * right[0],
+    ]
+    normal_length = math.sqrt(sum(value * value for value in normal))
+    left_length = math.sqrt(sum(value * value for value in left))
+    if normal_length <= 1.0e-12 or left_length <= 1.0e-12:
+        return None, "degenerate_nearest_triangle"
+    normal = [value / normal_length for value in normal]
+    tangent0 = [value / left_length for value in left]
+    tangent1 = [
+        normal[1] * tangent0[2] - normal[2] * tangent0[1],
+        normal[2] * tangent0[0] - normal[0] * tangent0[2],
+        normal[0] * tangent0[1] - normal[1] * tangent0[0],
+    ]
+    adjacency = surface.get("adjacency")
+    if adjacency is None:
+        adjacency = [dict() for _ in vertices]
+        for first, second, third in triangles:
+            for start, end in ((first, second), (second, third), (third, first)):
+                edge = math.sqrt(sum((vertices[start][axis] - vertices[end][axis]) ** 2 for axis in range(3)))
+                previous = adjacency[start].get(end)
+                if previous is None or edge < previous:
+                    adjacency[start][end] = edge
+                    adjacency[end][start] = edge
+        adjacency = [tuple(neighbours.items()) for neighbours in adjacency]
+        surface["adjacency"] = adjacency
+    geodesic = [math.inf] * len(vertices)
+    queue: list[tuple[float, int]] = []
+    for index in seed_triangle:
+        distance = math.sqrt(sum((vertices[index][axis] - closest_point[axis]) ** 2 for axis in range(3)))
+        geodesic[index] = distance
+        heapq.heappush(queue, (distance, index))
+    while queue:
+        distance, index = heapq.heappop(queue)
+        if distance != geodesic[index] or distance > maximum_patch_radius_m:
+            continue
+        for neighbour, edge in adjacency[index]:
+            candidate = distance + edge
+            if candidate <= maximum_patch_radius_m and candidate < geodesic[neighbour]:
+                geodesic[neighbour] = candidate
+                heapq.heappush(queue, (candidate, neighbour))
+    candidates = [index for index, distance in enumerate(geodesic) if math.isfinite(distance)]
+    if len(candidates) < 4:
+        return None, "surface_patch_has_fewer_than_four_vertices"
+    best: tuple[float, dict[str, Any]] | None = None
+    radii = sorted(set(min(maximum_patch_radius_m, value) for value in (0.006, 0.009, 0.012, 0.016)))
+    for radius in radii:
+        if radius < 0.003:
+            continue
+        eligible = [index for index in candidates if geodesic[index] <= radius]
+        if len(eligible) < 4:
+            continue
+        for phase in (0.0, math.pi / 8.0, math.pi / 4.0):
+            selected: list[int] = []
+            valid = True
+            for direction_index in range(4):
+                angle = phase + 0.5 * math.pi * direction_index
+                target = (math.cos(angle), math.sin(angle))
+                ranked: list[tuple[float, int]] = []
+                for index in eligible:
+                    delta = [vertices[index][axis] - closest_point[axis] for axis in range(3)]
+                    x = sum(delta[axis] * tangent0[axis] for axis in range(3))
+                    y = sum(delta[axis] * tangent1[axis] for axis in range(3))
+                    radial = math.hypot(x, y)
+                    if radial < 0.32 * radius:
+                        continue
+                    cosine = (x * target[0] + y * target[1]) / radial
+                    if cosine < 0.45:
+                        continue
+                    normal_offset = abs(sum(delta[axis] * normal[axis] for axis in range(3)))
+                    score = cosine * radial - 0.25 * abs(radial - 0.78 * radius) - 0.35 * normal_offset
+                    ranked.append((score, index))
+                ranked.sort(reverse=True)
+                chosen = next((index for _, index in ranked if index not in selected), None)
+                if chosen is None:
+                    valid = False
+                    break
+                selected.append(chosen)
+            if not valid:
+                continue
+            nodes = [vertices[index] for index in selected]
+            patch_radius = max(math.sqrt(sum(
+                (node[axis] - closest_point[axis]) ** 2 for axis in range(3)
+            )) for node in nodes)
+            mapped = _tendon_envelope_force_maps(source_point, nodes, patch_radius)
+            if mapped is None:
+                continue
+            maps, metrics = mapped
+            amplification = metrics["sampled_total_force_amplification"]
+            if (
+                metrics["force_residual"] > 2.0e-6
+                or metrics["moment_residual_m"] > 2.0e-8
+                or amplification > maximum_force_amplification
+            ):
+                continue
+            score = amplification + 0.05 * metrics["l2_force_amplification"]
+            record = {
+                "body_index": surface["body_index"],
+                "bone_stable_id": surface["stable_id"],
+                "bone_member_id": surface["member_id"],
+                "source_triangle_index": source_triangle_index,
+                "nearest_barycentric": barycentric,
+                "nearest_local_point_m": closest_point,
+                "node_vertex_indices": selected,
+                "node_local_points_m": nodes,
+                "force_maps": maps,
+                "surface_distance_m": surface_distance,
+                "patch_radius_m": patch_radius,
+                **metrics,
+            }
+            if best is None or score < best[0]:
+                best = (score, record)
+    return (best[1], "admitted") if best is not None else (None, "surface_patch_conditioning_failed")
+
+
+def numi_human_tendon_attachment_envelope_payload(
+    myosim_artifact: Path, bone_artifact: Path, output: Path,
+    maximum_surface_distance_m: float = 0.012,
+    maximum_patch_radius_m: float = 0.012,
+    maximum_force_amplification: float = 4.0,
+) -> dict[str, Any]:
+    """Compile fail-closed source-point-preserving BodyParts3D enthesis laws.
+
+    Automatic admission is deliberately limited to a body with exactly one
+    registered NHBONES1 member.  Multi-bone bodies, absent geometry, distant
+    surfaces, and ill-conditioned patches remain explicit source-site point
+    laws.  No authored MyoSim site, route, path length, or force parameter is
+    changed by this compiler.
+    """
+    for value, label in (
+        (maximum_surface_distance_m, "maximum surface distance"),
+        (maximum_patch_radius_m, "maximum patch radius"),
+        (maximum_force_amplification, "maximum force amplification"),
+    ):
+        if not math.isfinite(value) or value <= 0.0:
+            raise ImportError(f"Numi Human tendon envelope {label} must be finite and positive")
+    artifact = myosim_artifact.resolve()
+    manifest_path = artifact / "myosim-fullbody-reference.manifest.json"
+    manifest = read_json(manifest_path)
+    if manifest.get("schema") != "numi.human.myosim-fullbody-reference.v1":
+        raise ImportError("Numi Human tendon envelopes require the full-body MyoSim reference")
+    source = manifest.get("source")
+    source_sha = source.get("archive_sha256") if isinstance(source, dict) else None
+    payloads = manifest.get("payloads")
+    muscle_descriptor = payloads.get("muscles") if isinstance(payloads, dict) else None
+    rigid_descriptor = payloads.get("rigid") if isinstance(payloads, dict) else None
+    if (
+        not isinstance(source_sha, str) or not re.fullmatch(r"[0-9a-f]{64}", source_sha)
+        or not isinstance(muscle_descriptor, dict) or not isinstance(rigid_descriptor, dict)
+    ):
+        raise ImportError("Numi Human tendon envelope MyoSim provenance is incomplete")
+    muscle_file, muscle_sha = muscle_descriptor.get("file"), muscle_descriptor.get("sha256")
+    if not isinstance(muscle_file, str) or not isinstance(muscle_sha, str) or not re.fullmatch(r"[0-9a-f]{64}", muscle_sha):
+        raise ImportError("Numi Human tendon envelope muscle descriptor is invalid")
+    muscle_path = artifact / muscle_file
+    if not muscle_path.is_file() or sha256(muscle_path) != muscle_sha:
+        raise ImportError("Numi Human tendon envelope muscle payload is missing or drifted")
+    raw = muscle_path.read_bytes()
+    header_format = "<8s9I32s"
+    header_size = struct.calcsize(header_format)
+    if len(raw) < header_size:
+        raise ImportError("Numi Human tendon envelope muscle payload is truncated")
+    magic, abi, body_count, muscle_count, site_count, wrap_count, route_count, tendon_count, reserved0, reserved1, embedded_sha = struct.unpack_from(
+        header_format, raw,
+    )
+    expected_size = header_size + 16 * site_count + 64 * wrap_count + 16 * route_count + 164 * muscle_count
+    if (
+        magic != _MYOSIM_MUSCLE_REFERENCE_MAGIC or abi != _MYOSIM_MUSCLE_REFERENCE_ABI
+        or body_count == 0 or muscle_count == 0 or site_count == 0 or tendon_count == 0
+        or reserved0 != 0 or reserved1 != 0 or embedded_sha.hex() != source_sha
+        or len(raw) != expected_size
+    ):
+        raise ImportError("Numi Human tendon envelope muscle payload ABI is invalid")
+    offset = header_size
+    sites = [struct.unpack_from("<I3f", raw, offset + 16 * index) for index in range(site_count)]
+    offset += 16 * site_count + 64 * wrap_count
+    routes = [struct.unpack_from("<4I", raw, offset + 16 * index) for index in range(route_count)]
+    offset += 16 * route_count
+    muscles = [struct.unpack_from("<4I37f", raw, offset + 164 * index) for index in range(muscle_count)]
+    metadata = manifest.get("muscles")
+    if not isinstance(metadata, list) or len(metadata) != muscle_count:
+        raise ImportError("Numi Human tendon envelope muscle identity table is incomplete")
+    surfaces_by_body, bone_descriptor, _ = _numi_human_bone_envelope_surfaces(
+        bone_artifact, source_sha,
+    )
+    for body_index, surfaces in surfaces_by_body.items():
+        for surface in surfaces:
+            surface["body_index"] = body_index
+    endpoint_payload: list[bytes] = []
+    envelope_payload: list[bytes] = []
+    endpoint_manifest: list[dict[str, Any]] = []
+    rejection_counts: Counter[str] = Counter()
+    admitted_distances: list[float] = []
+    admitted_amplifications: list[float] = []
+    for muscle_index, (record, muscle_metadata) in enumerate(zip(muscles, metadata, strict=True)):
+        route_offset, count = record[1], record[2]
+        name = muscle_metadata.get("name") if isinstance(muscle_metadata, dict) else None
+        if not isinstance(name, str) or muscle_metadata.get("source_actuator_index") != muscle_index or count < 2 or route_offset + count > route_count:
+            raise ImportError("Numi Human tendon envelope route identity is invalid")
+        for endpoint_ordinal, route_node_index in ((0, route_offset), (1, route_offset + count - 1)):
+            route = routes[route_node_index]
+            if route[0] != _MYOSIM_ROUTE_SITE or route[1] >= site_count:
+                raise ImportError(f"Numi Human tendon envelope route {name} has no source-site endpoint")
+            site_index = route[1]
+            site = sites[site_index]
+            body_index = site[0]
+            source_point = [float(value) for value in site[1:]]
+            if body_index >= body_count or not all(math.isfinite(value) for value in source_point):
+                raise ImportError(f"Numi Human tendon envelope route {name} has an invalid source endpoint")
+            surfaces = surfaces_by_body.get(body_index, [])
+            envelope: dict[str, Any] | None = None
+            if not surfaces:
+                reason = "body_has_no_registered_bone_surface"
+            elif len(surfaces) != 1:
+                reason = "body_has_multiple_bone_members_without_semantic_enthesis_map"
+            else:
+                envelope, reason = _numi_human_tendon_surface_envelope(
+                    source_point, surfaces[0], maximum_surface_distance_m,
+                    maximum_patch_radius_m, maximum_force_amplification,
+                )
+            if envelope is None:
+                rejection_counts[reason] += 1
+                mode = _NUMI_HUMAN_TENDON_POINT
+                envelope_index = 0xFFFFFFFF
+                stable_id = 0
+                metrics = (0.0, 0.0, 0.0, 0.0)
+                surface_manifest = None
+            else:
+                mode = _NUMI_HUMAN_TENDON_ENVELOPE
+                envelope_index = len(envelope_payload)
+                stable_id = envelope["bone_stable_id"]
+                metrics = (
+                    envelope["surface_distance_m"],
+                    envelope["sampled_total_force_amplification"],
+                    envelope["patch_radius_m"],
+                    envelope["moment_residual_m"],
+                )
+                node_values = [component for node in envelope["node_local_points_m"] for component in (*node, 0.0)]
+                map_values = [
+                    component
+                    for matrix in envelope["force_maps"]
+                    for row in matrix
+                    for component in (*row, 0.0)
+                ]
+                envelope_payload.append(struct.pack(
+                    "<4I68f", body_index, stable_id, envelope["source_triangle_index"], 4,
+                    *node_values, *map_values,
+                    envelope["surface_distance_m"], envelope["patch_radius_m"],
+                    envelope["sampled_total_force_amplification"], envelope["l2_force_amplification"],
+                ))
+                admitted_distances.append(envelope["surface_distance_m"])
+                admitted_amplifications.append(envelope["sampled_total_force_amplification"])
+                surface_manifest = {
+                    key: envelope[key] for key in (
+                        "bone_member_id", "bone_stable_id", "source_triangle_index",
+                        "nearest_barycentric", "nearest_local_point_m", "node_vertex_indices",
+                        "node_local_points_m", "surface_distance_m", "patch_radius_m",
+                        "force_residual", "moment_residual_m", "l2_force_amplification",
+                        "sampled_total_force_amplification",
+                    )
+                }
+            endpoint_payload.append(struct.pack(
+                "<8I8f", muscle_index, endpoint_ordinal, route_node_index, site_index,
+                body_index, mode, envelope_index, stable_id,
+                *source_point, *metrics, 0.0,
+            ))
+            endpoint_manifest.append({
+                "muscle": name,
+                "muscle_index": muscle_index,
+                "endpoint": "origin" if endpoint_ordinal == 0 else "insertion",
+                "route_node_index": route_node_index,
+                "source_site_index": site_index,
+                "body_index": body_index,
+                "source_local_point_m": source_point,
+                "attachment_mode": "registered_bone_distributed_envelope" if envelope is not None else "source_site_point",
+                "admission_reason": reason,
+                "surface": surface_manifest,
+            })
+    if len(endpoint_payload) != 2 * muscle_count:
+        raise ImportError("Numi Human tendon envelope endpoint coverage is incomplete")
+    header = struct.pack(
+        "<8s10I32s32s32s", _NUMI_HUMAN_TENDON_ENVELOPE_MAGIC,
+        _NUMI_HUMAN_TENDON_ENVELOPE_ABI, body_count, muscle_count, site_count,
+        len(endpoint_payload), len(envelope_payload), bone_descriptor["bone_count"],
+        int(bone_descriptor["registration_fingerprint32"], 16), 0, 0,
+        bytes.fromhex(source_sha), bytes.fromhex(muscle_sha), bytes.fromhex(bone_descriptor["sha256"]),
+    )
+    payload = b"".join([header, *endpoint_payload, *envelope_payload])
+    if len(payload) != 144 + 64 * len(endpoint_payload) + 288 * len(envelope_payload):
+        raise ImportError("Numi Human tendon envelope payload ABI size mismatch")
+    output = output.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    payload_path = output / "numi-human-tendon-attachments.nhtendon"
+    payload_path.write_bytes(payload)
+    admitted_count = len(envelope_payload)
+    point_count = len(endpoint_payload) - admitted_count
+    manifest_value = {
+        "schema": "numi.human.tendon-attachment-envelope-payload.v2",
+        "payload": {
+            "file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
+            "magic": "NHTENDON2", "payload_abi": _NUMI_HUMAN_TENDON_ENVELOPE_ABI,
+        },
+        "source": {
+            "myosim_manifest": {"file": manifest_path.name, "sha256": sha256(manifest_path)},
+            "myosim_archive_sha256": source_sha,
+            "myosim_muscle_payload_sha256": muscle_sha,
+            "bodyparts3d_bone_payload": bone_descriptor,
+        },
+        "admission": {
+            "method": "single_named_NHBONES1_member_exact_nearest_triangle_connected_surface_patch_minimum_L2_wrench_distribution",
+            "maximum_surface_distance_m": maximum_surface_distance_m,
+            "maximum_patch_radius_m": maximum_patch_radius_m,
+            "maximum_sampled_total_force_amplification": maximum_force_amplification,
+            "multiple_bone_members_fail_closed": True,
+            "source_endpoint_migration_m": 0.0,
+            "rejection_counts": dict(sorted(rejection_counts.items())),
+        },
+        "coverage": {
+            "muscle_count": muscle_count,
+            "mechanical_endpoint_count": len(endpoint_payload),
+            "expected_endpoint_count": 2 * muscle_count,
+            "registered_bone_distributed_envelope_count": admitted_count,
+            "source_site_point_fallback_count": point_count,
+            "surface_coverage_fraction": admitted_count / len(endpoint_payload),
+            "maximum_endpoint_migration_m": 0.0,
+            "maximum_admitted_surface_distance_m": max(admitted_distances, default=0.0),
+            "maximum_admitted_sampled_total_force_amplification": max(admitted_amplifications, default=0.0),
+        },
+        "endpoints": endpoint_manifest,
+        "runtime_contract": (
+            "retain each authored MyoSim route endpoint and force law; on Apple Metal distribute its exact terminal force "
+            "across four same-bone nodes with precompiled 3x3 maps, conserve resultant force and moment, and derive any "
+            "generalized contribution only through articulated point Jacobians"
+        ),
+        "status": "complete_endpoint_coverage_with_inferred_surface_envelopes_and_explicit_point_fallbacks",
+        "evidence_boundary": (
+            "Admitted envelopes are simulation-inferred from the source-pinned BodyParts3D/MyoSim registration and strict "
+            "distance/conditioning gates. They are not source-authored enthesis coordinates, a deformable tendon continuum, "
+            "a clinical attachment certificate, or permission to migrate an OpenSim/MyoSim route endpoint."
+        ),
+    }
+    write_json(output / "numi-human-tendon-attachments.manifest.json", manifest_value)
+    write_json(output / "numi-human-pack.manifest.json", {
+        "schema": "numi.human.pack.v2",
+        "owner": "Numi Lab Human",
+        "payloads": {
+            "rigid": rigid_descriptor,
+            "muscles": muscle_descriptor,
+            "support_contact": payloads.get("support_contact"),
+            "bone_surfaces": bone_descriptor,
+            "tendon_attachments": manifest_value["payload"],
+        },
+        "coverage": manifest_value["coverage"],
+        "status": manifest_value["status"],
+        "source_authorities": {
+            "geometry": "BodyParts3D 4.0",
+            "active_full_body_seed": "compiled MyoSim full-body source program",
+            "lower_body_comparison": "OpenSim RajagopalLaiUhlrich2023",
+            "upper_extremity_comparison": "OpenSim Upper Extremity Dynamic Model",
+        },
+        "runtime_owner": "Numi Lab C++/Metal; Python is an offline compiler only",
+    })
+    return manifest_value
 
 
 def numi_human_achilles_surface_receipt(

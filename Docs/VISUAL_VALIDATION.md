@@ -1,5 +1,32 @@
 # Visual validation
 
+## Tendon attachment v2 — 2026-08-28
+
+The current [four-angle tendon attachment review](VISUAL_PROGRESS.md#tendon-attachment-v2--2026-08-28)
+replaces the detached-looking calf close-up as the mechanical attachment lead.
+It loads `NHTENDON2` and renders its actual four-node transfer envelopes on the
+exact paired `NHBONES1` surfaces; no source endpoint is visually migrated and
+no generated collar is present. Exact BodyParts3D right anconeus and
+subscapularis surfaces provide two independently registered upper-extremity
+checks in front, oblique, side, and rear cameras at 2048 px.
+
+On the Mac mini Apple M4 Pro, each selected actuator received `0.2` excitation
+for one 100 µs step while Metal evaluated all 416 MyoSim routes. Both routes
+have admitted envelopes at origin and insertion. Every frame retained nonzero
+envelope pixels: anconeus 182 / 446 / 940 / 1,160 and subscapularis 443 / 287 /
+106 / 1,463. Manual review of all eight source frames found the warm footprint
+on the named bone surface and the unchanged cyan route terminating at that
+footprint; the side/rear pairs expose both rather than relying on a favorable
+front view.
+
+The separate all-endpoint Metal reference transferred 832 endpoints, including
+295 distributed envelopes, with maximum residuals `6.824e-5 N` and
+`3.007e-6 Nm`; two process transcripts were byte-identical. Visual continuity
+and force-transfer execution are therefore separate retained gates. These
+frames validate the exposed attachment program, not photorealistic skin,
+deformable tendon mechanics, clinical enthesis coordinates, contact, or gait.
+Exact counters and hashes are in the [evidence directory](media/numi-human-tendon-attachment-v2-2048/).
+
 ## Native torso anatomy check — 2026-08-27
 
 The [four-angle torso anatomy review](VISUAL_PROGRESS.md#native-source-bound-torso-anatomy--2026-08-27)
