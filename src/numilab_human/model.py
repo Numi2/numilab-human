@@ -11993,8 +11993,8 @@ def _bodyparts_obj_triangles(
     return vertices, triangles
 
 
-_NUMI_HUMAN_PECTORAL_FASCIA_MAGIC = b"NHFASC1\0"
-_NUMI_HUMAN_PECTORAL_FASCIA_ABI = 1
+_NUMI_HUMAN_PECTORAL_FASCIA_MAGIC = b"NHFASC2\0"
+_NUMI_HUMAN_PECTORAL_FASCIA_ABI = 2
 _NUMI_HUMAN_PECTORAL_FASCIA_MEMBERS = (
     ("FJ1446", "abdominal part of right pectoralis major", "PECM3"),
     ("FJ1447", "clavicular part of right pectoralis major", "PECM1"),
@@ -12636,6 +12636,7 @@ def bodyparts_pectoralis_fascia_payload(
     node_regions: list[int] = []
     node_flags: list[int] = []
     tetrahedra: list[tuple[int, int, int, int, int]] = []
+    presentation_triangles: list[tuple[int, int, int, int]] = []
     regions: list[dict[str, Any]] = []
     source_members: list[dict[str, Any]] = []
     for region_index, (member_id, source_name, muscle_name) in enumerate(
@@ -12676,6 +12677,10 @@ def bodyparts_pectoralis_fascia_payload(
         used_source_vertices = sorted({index for triangle in selected_triangles for index in triangle})
         if len(used_source_vertices) < 32 or len(selected_triangles) < 32:
             raise ImportError(f"pectoralis fascia {member_id} has insufficient anterior source topology")
+        presentation_triangles.extend(
+            (region_index, first, second, third)
+            for first, second, third in selected_triangles
+        )
         # The exact source surface remains the high-resolution presentation
         # geometry.  A bounded mechanics mesh uses the x-z convex envelope of
         # that anterior selection so interactive implicit solves do not carry
@@ -12808,7 +12813,7 @@ def bodyparts_pectoralis_fascia_payload(
         _NUMI_HUMAN_PECTORAL_FASCIA_MAGIC,
         _NUMI_HUMAN_PECTORAL_FASCIA_ABI,
         len(regions), len(nodes), len(tetrahedra),
-        thickness_m, muscle_load_fraction, 0, 0,
+        thickness_m, muscle_load_fraction, len(presentation_triangles), 0,
         bytes.fromhex(sha256(archive_path)), bytes.fromhex(sha256(myosim_manifest_path)),
     )
     region_payload = b"".join(struct.pack(
@@ -12823,7 +12828,10 @@ def bodyparts_pectoralis_fascia_payload(
         node_source_indices[index], 0,
     ) for index, point in enumerate(nodes))
     tetrahedron_payload = b"".join(struct.pack("<5I", *tetrahedron) for tetrahedron in tetrahedra)
-    payload = header + region_payload + node_payload + tetrahedron_payload
+    presentation_payload = b"".join(
+        struct.pack("<4I", *triangle) for triangle in presentation_triangles
+    )
+    payload = header + region_payload + node_payload + tetrahedron_payload + presentation_payload
     output = output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     payload_path = output / "bodyparts3d-pectoralis-fascia.nhfascia"
@@ -12832,9 +12840,10 @@ def bodyparts_pectoralis_fascia_payload(
         "schema": "numi.human.pectoralis-fascia-mechanics-payload.v1",
         "payload": {
             "file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
-            "magic": "NHFASC1", "payload_abi": _NUMI_HUMAN_PECTORAL_FASCIA_ABI,
+            "magic": "NHFASC2", "payload_abi": _NUMI_HUMAN_PECTORAL_FASCIA_ABI,
             "region_count": len(regions), "node_count": len(nodes),
             "tetrahedron_count": len(tetrahedra),
+            "exact_anterior_presentation_triangle_count": len(presentation_triangles),
         },
         "source": {
             "bodyparts3d_archive": {"file": archive_path.name, "sha256": sha256(archive_path), "license": "CC-BY-4.0"},

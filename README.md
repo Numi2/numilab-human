@@ -11,7 +11,7 @@ the native Human execution path.
 | Active full-body mechanics | MyoSim `myofullbody` | 103 source bodies, 416 muscles, native Core reference |
 | Cervical/hyoid mechanics | Mortensen 2018 | complete 72-muscle OpenSim 3 source IR; merge registration remains explicit |
 | Anatomy/visual layers | BodyParts3D 4.0 | named geometry/hierarchy; 184 source bone meshes are pose-bound for native visual inspection |
-| Regional fascia mechanics | BodyParts3D + human pectoralis-fascia literature + Matter | six load-driven pectoral regions; explicit generated NHFASC1 fallback, not a source segmentation |
+| Regional fascia mechanics | BodyParts3D + human pectoralis-fascia literature + Matter | six same-command-buffer load-driven pectoral regions; explicit generated NHFASC2 fallback, not a source segmentation |
 | Detailed calf visual supplement | Z-Anatomy | four right-calf surfaces plus the matching calcaneus overlay; CC-BY-SA geometry rigidly bound to the existing BodyParts3D/MyoSim `calcn_r` body |
 | Comparative lower-body mechanics | RajagopalLaiUhlrich2023 | retained source-faithful bounded Metal path |
 | Comparative upper extremities | MoBL-ARMS | authenticated bimanual import or pinned public unimanual 4.1 source variant |
@@ -29,12 +29,14 @@ no-direct-torque identity, bitwise replay, and four-angle visual review. See
 [per-step tendon transaction](Docs/HUMAN_TENDON_STEP_TRANSACTION.md).
 
 The next completed regional layer is deformable pectoralis fascia: six named
-MyoSim/NHTENDON2 loads drive a 326-node Matter FEM solid with a human uniaxial
-GOH mean fit, deterministic replay, and rejection rollback. The resulting
-bounded displacement is presented on the exact 15,971-vertex BodyParts3D
-pectoralis surfaces. Its mechanics geometry, anchors, and 10% load share are
-explicit fallbacks because BodyParts3D has no pectoral-fascia mesh. See
-[deformable pectoralis fascia v1](Docs/PECTORALIS_FASCIA_V1.md).
+MyoSim/NHTENDON2 loads drive a 326-node Matter FEM solid in the owning Human
+command buffer with a human uniaxial GOH mean fit, deterministic replay, and
+rejection rollback. `NHFASC2` carries the exact compiler-selected anterior
+BodyParts3D presentation topology (6,601 referenced vertices and 8,449
+triangles), so the renderer no longer guesses a fascia sheet from the entire
+closed pectoralis muscle volume. Its mechanics geometry, anchors, and 10% load
+share remain explicit fallbacks because BodyParts3D has no pectoral-fascia
+segmentation. See [deformable pectoralis fascia v2](Docs/PECTORALIS_FASCIA_V2.md).
 
 The importer preserves upstream records locally. The tracked MyoSim,
 BodyParts3D, and explicitly marked Z-Anatomy validation media are attributed

@@ -1317,13 +1317,17 @@ class ImporterTests(unittest.TestCase):
                 ROOT / "sources", ROOT / "build/myosim-fullbody", second,
             )
             payload = (first / manifest["payload"]["file"]).read_bytes()
-        self.assertEqual(payload[:8], b"NHFASC1\0")
+        self.assertEqual(payload[:8], b"NHFASC2\0")
         self.assertEqual(manifest["payload"]["sha256"], replay["payload"]["sha256"])
         self.assertEqual(manifest["payload"]["region_count"], 6)
         self.assertGreater(manifest["payload"]["node_count"], 250)
         self.assertLess(manifest["payload"]["node_count"], 1000)
         self.assertGreater(manifest["payload"]["tetrahedron_count"], 350)
         self.assertLess(manifest["payload"]["tetrahedron_count"], 2000)
+        self.assertGreater(
+            manifest["payload"]["exact_anterior_presentation_triangle_count"],
+            5_000,
+        )
         self.assertEqual(
             manifest["source"]["geometry_status"],
             "generated_bounded_thin_solid_mechanics_fallback_from_exact_anterior_pectoralis_major_source_vertex_envelope",
