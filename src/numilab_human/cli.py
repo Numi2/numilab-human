@@ -376,6 +376,35 @@ def myosim_upper_limb_registration(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def myosim_upper_limb_pose_audit(arguments: argparse.Namespace) -> int:
+    auditor = arguments.python.expanduser().absolute()
+    if not auditor.is_file() or not os.access(auditor, os.X_OK):
+        raise ImportError(f"MyoSim upper-limb pose-audit Python is unavailable: {auditor}")
+    output = arguments.output.resolve()
+    environment = dict(os.environ)
+    source_path = str(REPOSITORY_ROOT / "src")
+    environment["PYTHONPATH"] = source_path + (
+        os.pathsep + environment["PYTHONPATH"] if environment.get("PYTHONPATH") else ""
+    )
+    command = [
+        str(auditor), "-m", "numilab_human.upper_limb_pose_audit",
+        "--sources", str(arguments.sources.resolve()),
+        "--registration", str(arguments.registration.resolve()),
+        "--output", str(output),
+    ]
+    completed = subprocess.run(command, capture_output=True, text=True, check=False, env=environment)
+    if completed.returncode != 0:
+        detail = completed.stderr.strip() or completed.stdout.strip() or "no pose-audit output"
+        raise ImportError(f"MyoSim upper-limb pose audit failed: {detail}")
+    receipt = read_json(output)
+    if receipt.get("schema") != (
+        "numi.human.bodyparts3d-myosim-upper-limb-multi-pose-audit.v1"
+    ):
+        raise ImportError("MyoSim upper-limb pose audit wrote an unsupported schema")
+    print(f"wrote {output}")
+    return 0
+
+
 def myosim_lower_limb_registration(arguments: argparse.Namespace) -> int:
     output = arguments.output.resolve()
     try:
@@ -1077,6 +1106,18 @@ def parser() -> argparse.ArgumentParser:
         help="Python environment with the pinned myo-sim checkout, NumPy, and MuJoCo installed",
     )
     upper_limb_registration_parser.set_defaults(handler=myosim_upper_limb_registration)
+    upper_limb_pose_audit_parser = commands.add_parser(
+        "myosim-upper-limb-pose-audit",
+        help="prove bilateral shoulder-to-finger registration across bounded source poses",
+    )
+    upper_limb_pose_audit_parser.add_argument("--sources", type=Path, required=True)
+    upper_limb_pose_audit_parser.add_argument("--registration", type=Path, required=True)
+    upper_limb_pose_audit_parser.add_argument("--output", type=Path, required=True)
+    upper_limb_pose_audit_parser.add_argument(
+        "--python", type=Path, default=Path(sys.executable),
+        help="Python environment with the pinned myo-sim checkout, NumPy, and MuJoCo installed",
+    )
+    upper_limb_pose_audit_parser.set_defaults(handler=myosim_upper_limb_pose_audit)
     lower_limb_registration_parser = commands.add_parser(
         "myosim-lower-limb-registration",
         help="preserve qualified registration while assigning tarsals/metatarsals to Rajagopal's rigid foot",

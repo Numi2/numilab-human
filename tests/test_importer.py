@@ -107,6 +107,12 @@ from numilab_human.upper_limb_registration import (
     SCAPULAR_REFINEMENT_MAXIMUM_TRANSLATION_M,
     _refine_scapular_endpoint_translation,
 )
+from numilab_human.upper_limb_pose_audit import (
+    BILATERAL_GAP_PARITY_MAXIMUM_M,
+    POSE_CONTINUITY_ALLOWANCE_M,
+    POSE_SUITE,
+    _continuity_transitions,
+)
 from numilab_human.lower_limb_registration import (
     RIGID_FOOT_MEMBERS,
     propose_lower_limb_registration,
@@ -1211,6 +1217,29 @@ class ImporterTests(unittest.TestCase):
                 [[0.0, 0.0, 0.0]], [[0.011, 0.0, 0.0]], 0.010,
                 "fixture", "upper-limb continuity",
             )
+
+    def test_upper_limb_pose_audit_covers_bilateral_functional_motion(self) -> None:
+        self.assertEqual(POSE_CONTINUITY_ALLOWANCE_M, 0.001)
+        self.assertEqual(BILATERAL_GAP_PARITY_MAXIMUM_M, 0.002)
+        self.assertEqual(len(_continuity_transitions()), 52)
+        self.assertEqual(
+            [name for name, _ in POSE_SUITE],
+            [
+                "neutral",
+                "bilateral_shoulder_elevation",
+                "bilateral_elbow_flexion",
+                "bilateral_forearm_pronation",
+                "bilateral_wrist_deviation_flexion",
+                "bilateral_functional_fist",
+            ],
+        )
+        for name, overrides in POSE_SUITE:
+            indices = [index for index, _ in overrides]
+            self.assertEqual(len(indices), len(set(indices)), name)
+        fist = dict(POSE_SUITE[-1][1])
+        self.assertEqual(len(fist), 30)
+        self.assertEqual(fist[47], fist[85])
+        self.assertEqual(fist[62], fist[100])
 
     def test_scapular_endpoint_refinement_moves_one_bounded_rigid_surface(self) -> None:
         try:

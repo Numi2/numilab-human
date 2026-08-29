@@ -56,6 +56,7 @@ scapula uses one bounded proper-rigid transform, not endpoint edits or separate
 attachment patches. The result ran through native Metal force/replay gates and
 bilateral four-angle 2048 px shoulder inspection on Apple M4 Pro. See the
 [upper-limb source-mesh registration](Docs/UPPER_LIMB_SOURCE_MESH_REGISTRATION_V1.md),
+[upper-limb multi-pose continuity](Docs/UPPER_LIMB_MULTI_POSE_REGISTRATION_V2.md),
 [rigid-foot ownership and entheses](Docs/RIGID_FOOT_OWNERSHIP_V1.md),
 [visual progress](Docs/VISUAL_PROGRESS.md), and the
 [completion gap ledger](Docs/HUMAN_COMPLETION_GAP_LEDGER.md).
@@ -85,10 +86,10 @@ and the preceding [fixed-bone foot entheses](Docs/FIXED_BONE_FOOT_ENTHESES_V1.md
 </p>
 
 <p align="center">
-  <img src="Docs/media/numi-human-upper-limb-source-mesh-registration-v1-2048/right-hand-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-57-oblique.png" width="24%" alt="Registered right hand and transfer routes" />
-  <img src="Docs/media/numi-human-upper-limb-source-mesh-registration-v1-2048/left-hand-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-107-side.png" width="24%" alt="Registered left hand and transfer routes" />
-  <img src="Docs/media/numi-human-upper-limb-source-mesh-registration-v1-2048/right-elbow-wrist-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-43-front.png" width="24%" alt="Registered right elbow and wrist" />
-  <img src="Docs/media/numi-human-upper-limb-source-mesh-registration-v1-2048/left-elbow-wrist-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-93-oblique.png" width="24%" alt="Registered left elbow and wrist" />
+  <img src="Docs/media/numi-human-upper-limb-multi-pose-v2-2048/shoulder/right-rear.png" width="24%" alt="Right shoulder elevation, source-geometry framing" />
+  <img src="Docs/media/numi-human-upper-limb-multi-pose-v2-2048/elbow/left-oblique.png" width="24%" alt="Left elbow flexion, source-geometry framing" />
+  <img src="Docs/media/numi-human-upper-limb-multi-pose-v2-2048/wrist/right-oblique.png" width="24%" alt="Right wrist deviation and flexion" />
+  <img src="Docs/media/numi-human-upper-limb-multi-pose-v2-2048/fist/left-rear.png" width="24%" alt="Left functional fist" />
 </p>
 
 <p align="center">
