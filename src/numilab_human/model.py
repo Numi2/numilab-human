@@ -12005,6 +12005,579 @@ _NUMI_HUMAN_PECTORAL_FASCIA_MEMBERS = (
 )
 
 
+_NUMI_HUMAN_ANTERIOR_THORAX_MAGIC = b"NHTHRC1\0"
+_NUMI_HUMAN_ANTERIOR_THORAX_ABI = 1
+_NUMI_HUMAN_ANTERIOR_THORAX_COMPONENT_SPACING_M = {1: 0.0025}
+
+
+def _closed_surface_volume(
+    vertices: list[tuple[float, float, float]],
+    triangles: list[tuple[int, int, int]],
+) -> float:
+    signed_six_volume = 0.0
+    for first, second, third in triangles:
+        a, b, c = vertices[first], vertices[second], vertices[third]
+        signed_six_volume += (
+            a[0] * (b[1] * c[2] - b[2] * c[1])
+            - a[1] * (b[0] * c[2] - b[2] * c[0])
+            + a[2] * (b[0] * c[1] - b[1] * c[0])
+        )
+    return abs(signed_six_volume) / 6.0
+
+
+def _voxel_cells_inside_closed_surface(
+    vertices: list[tuple[float, float, float]],
+    triangles: list[tuple[int, int, int]],
+    spacing_m: float,
+) -> tuple[set[tuple[int, int, int]], tuple[float, float, float], tuple[int, int, int]]:
+    """Voxelize a closed surface with a deterministic half-open +X ray rule.
+
+    Ray crossings are evaluated once per y/z column. Coincident crossings at
+    shared triangle edges are merged before parity is applied, avoiding the
+    common double-hit defect without a third-party meshing dependency.
+    """
+    minimum = tuple(min(point[axis] for point in vertices) for axis in range(3))
+    maximum = tuple(max(point[axis] for point in vertices) for axis in range(3))
+    origin = tuple(math.floor(value / spacing_m) * spacing_m for value in minimum)
+    dimensions = tuple(
+        max(1, math.ceil((maximum[axis] - origin[axis]) / spacing_m))
+        for axis in range(3)
+    )
+    projected: list[tuple[float, ...]] = []
+    for triangle in triangles:
+        a, b, c = (vertices[index] for index in triangle)
+        denominator = (b[1] - c[1]) * (a[2] - c[2]) + (c[2] - b[2]) * (a[1] - c[1])
+        if abs(denominator) <= 1.0e-18:
+            continue
+        projected.append((
+            a[0], a[1], a[2], b[0], b[1], b[2], c[0], c[1], c[2],
+            denominator,
+            min(a[1], b[1], c[1]), max(a[1], b[1], c[1]),
+            min(a[2], b[2], c[2]), max(a[2], b[2], c[2]),
+        ))
+    cells: set[tuple[int, int, int]] = set()
+    merge_tolerance = max(1.0e-9, spacing_m * 1.0e-6)
+    barycentric_tolerance = 2.0e-12
+    for j in range(dimensions[1]):
+        y = origin[1] + (j + 0.5) * spacing_m
+        for k in range(dimensions[2]):
+            z = origin[2] + (k + 0.5) * spacing_m
+            intersections: list[float] = []
+            for (
+                ax, ay, az, bx, by, bz, cx, cy, cz, denominator,
+                minimum_y, maximum_y, minimum_z, maximum_z,
+            ) in projected:
+                if not minimum_y <= y <= maximum_y or not minimum_z <= z <= maximum_z:
+                    continue
+                first = ((by - cy) * (z - cz) + (cz - bz) * (y - cy)) / denominator
+                second = ((cy - ay) * (z - cz) + (az - cz) * (y - cy)) / denominator
+                third = 1.0 - first - second
+                if min(first, second, third) < -barycentric_tolerance:
+                    continue
+                intersections.append(first * ax + second * bx + third * cx)
+            intersections.sort()
+            unique: list[float] = []
+            for value in intersections:
+                if not unique or abs(value - unique[-1]) > merge_tolerance:
+                    unique.append(value)
+                else:
+                    unique[-1] = 0.5 * (unique[-1] + value)
+            if len(unique) % 2:
+                raise ImportError("anterior-thorax surface ray parity is odd")
+            for lower, upper in zip(unique[::2], unique[1::2], strict=True):
+                first_i = max(0, math.ceil((lower - origin[0]) / spacing_m - 0.5))
+                last_i = min(
+                    dimensions[0] - 1,
+                    math.floor((upper - origin[0]) / spacing_m - 0.5),
+                )
+                for i in range(first_i, last_i + 1):
+                    center = origin[0] + (i + 0.5) * spacing_m
+                    if lower < center < upper:
+                        cells.add((i, j, k))
+    if not cells:
+        raise ImportError("anterior-thorax surface contains no voxel centres")
+    return cells, origin, dimensions
+
+
+def _voxel_cell_component_count(cells: set[tuple[int, int, int]]) -> int:
+    remaining = set(cells)
+    count = 0
+    while remaining:
+        count += 1
+        queue = [remaining.pop()]
+        while queue:
+            i, j, k = queue.pop()
+            for neighbor in (
+                (i - 1, j, k), (i + 1, j, k),
+                (i, j - 1, k), (i, j + 1, k),
+                (i, j, k - 1), (i, j, k + 1),
+            ):
+                if neighbor in remaining:
+                    remaining.remove(neighbor)
+                    queue.append(neighbor)
+    return count
+
+
+def _nearest_four_node_map(
+    point: tuple[float, float, float],
+    nodes: list[tuple[float, float, float]],
+    candidates: Iterable[int],
+) -> tuple[tuple[int, int, int, int], tuple[float, float, float, float], float]:
+    distances = sorted(
+        (
+            sum((nodes[index][axis] - point[axis]) ** 2 for axis in range(3)),
+            index,
+        )
+        for index in candidates
+    )[:4]
+    if len(distances) != 4:
+        raise ImportError("anterior-thorax continuum has fewer than four mapping nodes")
+    if distances[0][0] <= 1.0e-20:
+        weights = [1.0 if item == 0 else 0.0 for item in range(4)]
+    else:
+        inverse = [1.0 / max(distance, 1.0e-20) for distance, _ in distances]
+        total = sum(inverse)
+        weights = [value / total for value in inverse]
+    mapped = tuple(
+        sum(weights[item] * nodes[distances[item][1]][axis] for item in range(4))
+        for axis in range(3)
+    )
+    error = math.sqrt(sum((mapped[axis] - point[axis]) ** 2 for axis in range(3)))
+    return (
+        tuple(index for _, index in distances),
+        tuple(weights),
+        error,
+    )
+
+
+def anterior_thorax_composite_payload(
+    registration_path: Path,
+    tendon_artifact: Path,
+    output: Path,
+    maximum_volume_error_fraction: float = 0.03,
+    qualification_probe_load_fraction: float = 0.10,
+) -> dict[str, Any]:
+    """Compile the exact closed anterior-thorax components into FEM volumes.
+
+    The source classification remains an unresolved anterior-thorax composite.
+    This stage adds deterministic volumetric connectivity and explicit mapping,
+    not an invented cartilage/fascia/material identity. Production force
+    ownership stays disabled until a two-way runtime replaces the matching
+    endpoint J^T share and returns accepted anchor reactions.
+    """
+    if (
+        not math.isfinite(maximum_volume_error_fraction)
+        or not 0.0 < maximum_volume_error_fraction <= 0.05
+    ):
+        raise ImportError("anterior-thorax maximum volume error must be in (0, 0.05]")
+    if (
+        not math.isfinite(qualification_probe_load_fraction)
+        or not 0.0 < qualification_probe_load_fraction <= 0.25
+    ):
+        raise ImportError("anterior-thorax qualification load fraction must be in (0, 0.25]")
+    registration_path = registration_path.resolve()
+    tendon_artifact = tendon_artifact.resolve()
+    tendon_manifest_path = tendon_artifact / "numi-human-tendon-attachments.manifest.json"
+    tendon_payload_path = tendon_artifact / "numi-human-tendon-attachments.nhtendon"
+    registration = read_json(registration_path)
+    tendon_manifest = read_json(tendon_manifest_path)
+    if not tendon_payload_path.is_file():
+        raise ImportError("anterior-thorax tendon payload is unavailable")
+    receipt = registration.get("abdominal_source_component_enthesis_registration")
+    embedded = tendon_manifest.get("source", {}).get(
+        "bodyparts3d_bone_payload", {}
+    ).get("source_component_enthesis_registration")
+    if receipt != embedded:
+        raise ImportError("anterior-thorax registration differs from the tendon source receipt")
+    source_sha = tendon_manifest.get("source", {}).get("myosim_archive_sha256")
+    if not isinstance(source_sha, str):
+        raise ImportError("anterior-thorax tendon manifest has no MyoSim source hash")
+    rib_member_indices = {
+        member: 20
+        for side in _NUMI_HUMAN_RIB_ENTHESIS_MEMBER_IDS.values()
+        for member in side.values()
+    }
+    validated = _numi_human_source_component_enthesis_receipt(
+        receipt, rib_member_indices, source_sha,
+    )
+    if validated is None:
+        raise ImportError("anterior-thorax source receipt is unavailable")
+    endpoint_rows = [
+        endpoint for endpoint in tendon_manifest.get("endpoints", [])
+        if endpoint.get("attachment_mode")
+        == "registered_source_composite_surface_distributed_envelope"
+    ]
+    if len(endpoint_rows) != 8:
+        raise ImportError("anterior-thorax tendon manifest does not expose eight composite endpoints")
+    composite_surfaces = [
+        surface for surface in receipt["source_component_surfaces"]
+        if "exact_pinned_source_anterior_thorax_composite_attachment_surface"
+        in surface["mechanics_roles"]
+    ]
+    if [surface["source_component_index"] for surface in composite_surfaces] != [1, 17]:
+        raise ImportError("anterior-thorax exact source component set drifted")
+    conflicted_surfaces = [
+        surface for surface in composite_surfaces
+        if "exact_pinned_source_surface_fallback_after_bodyparts_rejection"
+        in surface["mechanics_roles"]
+    ]
+    surfaces = [surface for surface in composite_surfaces if surface not in conflicted_surfaces]
+    if [surface["source_component_index"] for surface in surfaces] != [1] or [
+        surface["source_component_index"] for surface in conflicted_surfaces
+    ] != [17]:
+        raise ImportError("anterior-thorax deformable/rigid source ownership conflict drifted")
+
+    density_kg_m3 = 1000.0
+    surface_vertices: list[tuple[float, float, float]] = []
+    surface_triangles: list[tuple[int, int, int, int]] = []
+    continuum_nodes: list[tuple[float, float, float]] = []
+    node_flags: list[int] = []
+    node_component_indices: list[int] = []
+    tetrahedra: list[tuple[int, int, int, int, int]] = []
+    surface_maps: list[tuple[tuple[int, int, int, int], tuple[float, float, float, float]]] = []
+    anchors: list[int] = []
+    attachments: list[dict[str, Any]] = []
+    attachment_maps: list[tuple[tuple[int, int, int, int], tuple[float, float, float, float]]] = []
+    components: list[dict[str, Any]] = []
+    mapping_errors: list[float] = []
+
+    cube_tetrahedra = (
+        (0, 1, 3, 7), (0, 3, 2, 7), (0, 2, 6, 7),
+        (0, 6, 4, 7), (0, 4, 5, 7), (0, 5, 1, 7),
+    )
+    cube_corners = (
+        (0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0),
+        (0, 0, 1), (1, 0, 1), (0, 1, 1), (1, 1, 1),
+    )
+    for local_component, surface in enumerate(surfaces):
+        component_index = surface["source_component_index"]
+        spacing_m = _NUMI_HUMAN_ANTERIOR_THORAX_COMPONENT_SPACING_M[component_index]
+        vertices = [tuple(point) for point in surface["vertices_core_m"]]
+        triangles = [tuple(triangle) for triangle in surface["triangles"]]
+        exact_volume = _closed_surface_volume(vertices, triangles)
+        if not math.isfinite(exact_volume) or exact_volume <= 0.0:
+            raise ImportError("anterior-thorax exact surface volume is non-positive")
+        cells, origin, _ = _voxel_cells_inside_closed_surface(
+            vertices, triangles, spacing_m,
+        )
+        cell_component_count = _voxel_cell_component_count(cells)
+        if cell_component_count != 1:
+            raise ImportError("anterior-thorax voxel volume is disconnected")
+        voxel_volume = len(cells) * spacing_m ** 3
+        volume_error = abs(voxel_volume - exact_volume) / exact_volume
+        if volume_error > maximum_volume_error_fraction:
+            raise ImportError(
+                f"anterior-thorax component {component_index} volume error "
+                f"{volume_error:.6f} exceeds {maximum_volume_error_fraction:.6f}"
+            )
+        convergence_spacing_m = 0.003
+        convergence_cells, _, _ = _voxel_cells_inside_closed_surface(
+            vertices, triangles, convergence_spacing_m,
+        )
+        convergence_volume = len(convergence_cells) * convergence_spacing_m ** 3
+        convergence_error = abs(convergence_volume - exact_volume) / exact_volume
+        if (
+            _voxel_cell_component_count(convergence_cells) != 1
+            or volume_error >= convergence_error
+        ):
+            raise ImportError("anterior-thorax voxel refinement does not converge")
+        first_surface_vertex = len(surface_vertices)
+        surface_vertices.extend(vertices)
+        first_surface_triangle = len(surface_triangles)
+        surface_triangles.extend(
+            (first_surface_vertex + a, first_surface_vertex + b, first_surface_vertex + c, local_component)
+            for a, b, c in triangles
+        )
+        first_node = len(continuum_nodes)
+        grid_to_node: dict[tuple[int, int, int], int] = {}
+        for cell in sorted(cells):
+            for corner in cube_corners:
+                grid = tuple(cell[axis] + corner[axis] for axis in range(3))
+                if grid not in grid_to_node:
+                    grid_to_node[grid] = len(continuum_nodes)
+                    continuum_nodes.append(tuple(
+                        origin[axis] + grid[axis] * spacing_m for axis in range(3)
+                    ))
+                    node_flags.append(0)
+                    node_component_indices.append(local_component)
+        first_tetrahedron = len(tetrahedra)
+        for cell in sorted(cells):
+            corners = [grid_to_node[tuple(cell[axis] + corner[axis] for axis in range(3))] for corner in cube_corners]
+            for local_tetrahedron in cube_tetrahedra:
+                candidate = tuple(corners[index] for index in local_tetrahedron)
+                if _signed_tetrahedron_volume(continuum_nodes, candidate) < 0.0:
+                    candidate = (candidate[1], candidate[0], candidate[2], candidate[3])
+                tetrahedra.append((*candidate, local_component))
+        component_node_indices = range(first_node, len(continuum_nodes))
+        cell_corner_use: Counter[tuple[int, int, int]] = Counter(
+            tuple(cell[axis] + corner[axis] for axis in range(3))
+            for cell in cells for corner in cube_corners
+        )
+        boundary_nodes = {
+            grid_to_node[grid] for grid, use_count in cell_corner_use.items()
+            if use_count < 8
+        }
+        for index in boundary_nodes:
+            node_flags[index] |= 1
+        first_surface_map = len(surface_maps)
+        local_surface_maps: list[tuple[tuple[int, int, int, int], tuple[float, float, float, float]]] = []
+        for point in vertices:
+            indices, weights, error = _nearest_four_node_map(
+                point, continuum_nodes, boundary_nodes,
+            )
+            local_surface_maps.append((indices, weights))
+            surface_maps.append((indices, weights))
+            mapping_errors.append(error)
+        maximum_y = max(point[1] for point in vertices)
+        minimum_y = min(point[1] for point in vertices)
+        anchor_band = max(2.0 * spacing_m, 0.08 * (maximum_y - minimum_y))
+        posterior_surface_indices = [
+            index for index, point in enumerate(vertices)
+            if point[1] >= maximum_y - anchor_band
+        ]
+        component_anchors = sorted({
+            node
+            for surface_index in posterior_surface_indices
+            for node, weight in zip(*local_surface_maps[surface_index], strict=True)
+            if weight >= 0.05
+        })
+        if len(component_anchors) < 4:
+            raise ImportError("anterior-thorax posterior anchor band is underconstrained")
+        first_anchor = len(anchors)
+        anchors.extend(component_anchors)
+        for index in component_anchors:
+            node_flags[index] |= 2
+        first_attachment = len(attachments)
+        for endpoint in endpoint_rows:
+            semantic = endpoint.get("surface", {}).get("semantic_enthesis_map", {})
+            if semantic.get("source_component_index") != component_index:
+                continue
+            first_sample = len(attachment_maps)
+            for point_value in endpoint["surface"]["node_local_points_m"]:
+                indices, weights, error = _nearest_four_node_map(
+                    tuple(point_value), continuum_nodes, boundary_nodes,
+                )
+                attachment_maps.append((indices, weights))
+                mapping_errors.append(error)
+                for index, weight in zip(indices, weights, strict=True):
+                    if weight >= 0.05:
+                        node_flags[index] |= 4
+            attachments.append({
+                "muscle": endpoint["muscle"],
+                "muscle_index": endpoint["muscle_index"],
+                "endpoint": endpoint["endpoint"],
+                "endpoint_ordinal": 0 if endpoint["endpoint"] == "origin" else 1,
+                "source_actuator_index": next(
+                    record["source_actuator_index"]
+                    for record in receipt["endpoint_records"]
+                    if record["muscle"] == endpoint["muscle"]
+                    and record["endpoint"] == endpoint["endpoint"]
+                ),
+                "source_component_index": component_index,
+                "component_record_index": local_component,
+                "first_sample_map": first_sample,
+                "sample_map_count": 4,
+                "source_local_point_m": endpoint["source_local_point_m"],
+                "production_force_owner_fraction": 0.0,
+                "qualification_probe_load_fraction": qualification_probe_load_fraction,
+            })
+        components.append({
+            "source_component_index": component_index,
+            "source_surface_content_sha256": surface["surface_content_sha256"],
+            "first_surface_vertex": first_surface_vertex,
+            "surface_vertex_count": len(vertices),
+            "first_surface_triangle": first_surface_triangle,
+            "surface_triangle_count": len(triangles),
+            "first_node": first_node,
+            "node_count": len(continuum_nodes) - first_node,
+            "first_tetrahedron": first_tetrahedron,
+            "tetrahedron_count": len(tetrahedra) - first_tetrahedron,
+            "first_surface_map": first_surface_map,
+            "surface_map_count": len(vertices),
+            "first_anchor": first_anchor,
+            "anchor_count": len(component_anchors),
+            "first_attachment": first_attachment,
+            "attachment_count": len(attachments) - first_attachment,
+            "spacing_m": spacing_m,
+            "exact_closed_surface_volume_m3": exact_volume,
+            "voxel_rest_volume_m3": voxel_volume,
+            "relative_volume_error": volume_error,
+            "voxel_cell_count": len(cells),
+            "voxel_cell_component_count": cell_component_count,
+            "volume_convergence": [{
+                "spacing_m": convergence_spacing_m,
+                "voxel_cell_count": len(convergence_cells),
+                "voxel_rest_volume_m3": convergence_volume,
+                "relative_volume_error": convergence_error,
+                "voxel_cell_component_count": 1,
+            }, {
+                "spacing_m": spacing_m,
+                "voxel_cell_count": len(cells),
+                "voxel_rest_volume_m3": voxel_volume,
+                "relative_volume_error": volume_error,
+                "voxel_cell_component_count": cell_component_count,
+            }],
+            "bounds_m": {
+                "minimum": [min(point[axis] for point in vertices) for axis in range(3)],
+                "maximum": [max(point[axis] for point in vertices) for axis in range(3)],
+            },
+            "posterior_anchor_band_m": anchor_band,
+            "posterior_anchor_policy": "source_surface_maximum_y_band_mapped_to_voxel_boundary",
+        })
+
+    nodal_mass = [0.0] * len(continuum_nodes)
+    total_rest_volume = 0.0
+    for a, b, c, d, _ in tetrahedra:
+        volume = _signed_tetrahedron_volume(continuum_nodes, (a, b, c, d))
+        if not math.isfinite(volume) or volume <= 0.0:
+            raise ImportError("anterior-thorax payload contains a non-positive tetrahedron")
+        total_rest_volume += volume
+        share = density_kg_m3 * volume / 4.0
+        for node in (a, b, c, d):
+            nodal_mass[node] += share
+    excluded_endpoint_rows = [
+        endpoint for endpoint in endpoint_rows
+        if endpoint.get("surface", {}).get("semantic_enthesis_map", {}).get(
+            "source_component_index"
+        ) in {surface["source_component_index"] for surface in conflicted_surfaces}
+    ]
+    if (
+        len(attachments) != 7 or len(attachment_maps) != 28
+        or len(excluded_endpoint_rows) != 1
+        or excluded_endpoint_rows[0].get("muscle") != "EO4_l"
+    ):
+        raise ImportError("anterior-thorax continuum attachment coverage is incomplete")
+
+    registration_hash = sha256(registration_path)
+    tendon_manifest_hash = sha256(tendon_manifest_path)
+    tendon_payload_hash = sha256(tendon_payload_path)
+    header = struct.pack(
+        "<8s12I3fI32s32s32s",
+        _NUMI_HUMAN_ANTERIOR_THORAX_MAGIC, _NUMI_HUMAN_ANTERIOR_THORAX_ABI,
+        len(components), len(surface_vertices), len(surface_triangles),
+        len(continuum_nodes), len(tetrahedra), len(surface_maps),
+        len(attachments), len(attachment_maps), len(anchors), 15, 0,
+        density_kg_m3, 0.0, qualification_probe_load_fraction, 0,
+        bytes.fromhex(registration_hash), bytes.fromhex(tendon_manifest_hash),
+        bytes.fromhex(tendon_payload_hash),
+    )
+    component_payload = b"".join(struct.pack(
+        "<14I10f32s",
+        component["source_component_index"], component["first_surface_vertex"],
+        component["surface_vertex_count"], component["first_surface_triangle"],
+        component["surface_triangle_count"], component["first_node"],
+        component["node_count"], component["first_tetrahedron"],
+        component["tetrahedron_count"], component["first_surface_map"],
+        component["surface_map_count"], component["first_anchor"],
+        component["anchor_count"], component["first_attachment"],
+        component["spacing_m"], component["exact_closed_surface_volume_m3"],
+        component["voxel_rest_volume_m3"], component["relative_volume_error"],
+        *component["bounds_m"]["minimum"], *component["bounds_m"]["maximum"],
+        bytes.fromhex(component["source_surface_content_sha256"]),
+    ) for component in components)
+    surface_vertex_payload = b"".join(
+        struct.pack("<4f", *point, 0.0) for point in surface_vertices
+    )
+    surface_triangle_payload = b"".join(
+        struct.pack("<4I", *triangle) for triangle in surface_triangles
+    )
+    node_payload = b"".join(struct.pack(
+        "<4f4I", *point, nodal_mass[index], node_flags[index],
+        node_component_indices[index], 0, 0,
+    ) for index, point in enumerate(continuum_nodes))
+    tetrahedron_payload = b"".join(
+        struct.pack("<5I", *tetrahedron) for tetrahedron in tetrahedra
+    )
+    map_payload = b"".join(
+        struct.pack("<4I4f", *indices, *weights)
+        for indices, weights in [*surface_maps, *attachment_maps]
+    )
+    attachment_payload = b"".join(struct.pack(
+        "<8I4f", attachment["muscle_index"], attachment["endpoint_ordinal"],
+        attachment["source_actuator_index"], attachment["component_record_index"],
+        attachment["first_sample_map"], attachment["sample_map_count"], 1, 0,
+        *attachment["source_local_point_m"], 0.0,
+    ) for attachment in attachments)
+    anchor_payload = b"".join(struct.pack("<I", index) for index in anchors)
+    payload = b"".join((
+        header, component_payload, surface_vertex_payload, surface_triangle_payload,
+        node_payload, tetrahedron_payload, map_payload, attachment_payload,
+        anchor_payload,
+    ))
+    output = output.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    payload_path = output / "anterior-thorax-composite.nhthorax"
+    payload_path.write_bytes(payload)
+    manifest = {
+        "schema": "numi.human.anterior-thorax-composite-continuum.v1",
+        "payload": {
+            "file": payload_path.name, "sha256": sha256(payload_path),
+            "bytes": len(payload), "magic": "NHTHRC1", "payload_abi": 1,
+            "component_count": len(components),
+            "exact_surface_vertex_count": len(surface_vertices),
+            "exact_surface_triangle_count": len(surface_triangles),
+            "continuum_node_count": len(continuum_nodes),
+            "tetrahedron_count": len(tetrahedra),
+            "surface_map_count": len(surface_maps),
+            "attachment_count": len(attachments),
+            "attachment_sample_map_count": len(attachment_maps),
+            "anchor_count": len(anchors),
+        },
+        "source": {
+            "registration": {"file": registration_path.name, "sha256": registration_hash},
+            "tendon_manifest": {"file": tendon_manifest_path.name, "sha256": tendon_manifest_hash},
+            "tendon_payload": {"file": tendon_payload_path.name, "sha256": tendon_payload_hash},
+            "source_component_indices": [1],
+            "excluded_conflicting_source_components": [{
+                "source_component_index": 17,
+                "reason": "same_exact_source_component_also_owns_left_tenth_rib_fallback_endpoints",
+                "excluded_endpoint": "EO4_l:origin",
+                "required_resolution": "bilateral_cartilage_or_rib_correspondence_before_deformable_ownership",
+            }],
+            "mechanics_tissue_classification": "unresolved_anterior_thorax_composite_not_bone_or_material_identity",
+        },
+        "continuum": {
+            "method": "deterministic_closed_surface_cell_center_voxelization_with_freudenthal_six_tetrahedron_cells",
+            "density_kg_m3": density_kg_m3,
+            "total_rest_volume_m3": total_rest_volume,
+            "total_mass_kg": sum(nodal_mass),
+            "maximum_allowed_relative_volume_error": maximum_volume_error_fraction,
+            "maximum_observed_relative_volume_error": max(
+                component["relative_volume_error"] for component in components
+            ),
+            "components": components,
+            "all_tetrahedra_positive": True,
+            "all_voxel_components_connected": True,
+        },
+        "mapping": {
+            "method": "four_nearest_voxel_boundary_nodes_inverse_squared_distance",
+            "maximum_mapping_error_m": max(mapping_errors),
+            "rms_mapping_error_m": math.sqrt(
+                sum(error * error for error in mapping_errors) / len(mapping_errors)
+            ),
+            "exact_surface_deformation_map_count": len(surface_maps),
+            "tendon_attachment_sample_map_count": len(attachment_maps),
+            "attachments": attachments,
+        },
+        "force_ownership": {
+            "production_tissue_owner_fraction": 0.0,
+            "qualification_probe_load_fraction": qualification_probe_load_fraction,
+            "state": "fail_closed_nonowning_until_matching_rigid_Jt_endpoint_share_is_replaced_and_accepted_anchor_reactions_are_returned",
+            "direct_joint_torque_allowed": False,
+            "duplicate_rigid_and_tissue_force_allowed": False,
+        },
+        "status": "compiled_nonconflicting_full_surface_continuum_nonowning_until_two_way_runtime_gate",
+        "evidence_boundary": (
+            "The exact closed source component 1 and seven matching tendon envelopes are pinned. "
+            "Component 17 and EO4_l remain excluded because that same source surface already owns left-tenth-rib fallback endpoints; overlapping rigid/deformable ownership is forbidden. "
+            "Voxel connectivity, density, posterior anchor band, interpolation, and qualification load share are generated mechanics assumptions. "
+            "This payload is not a tissue classification, calibrated material, two-way muscle-tissue-rigid solve, or clinical validation."
+        ),
+    }
+    write_json(output / "anterior-thorax-composite.manifest.json", manifest)
+    return manifest
+
+
 def _signed_tetrahedron_volume(
     points: list[tuple[float, float, float]], tetrahedron: tuple[int, int, int, int],
 ) -> float:

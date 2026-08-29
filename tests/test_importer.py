@@ -75,6 +75,7 @@ from numilab_human.model import (
     bodyparts_foot_registration_template,
     bodyparts_lower_body_attachment_worklist,
     bodyparts_pectoralis_fascia_payload,
+    anterior_thorax_composite_payload,
     bodyparts_right_calcaneal_tendon_continuity_preview,
     bodyparts_nerve_annotation,
     bodyparts_right_lower_leg_anatomy_preview,
@@ -1333,6 +1334,52 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual([region["source_actuator_index"] for region in regions], [220, 218, 219, 283, 281, 282])
         self.assertTrue(all(region["fixed_node_count"] >= 6 for region in regions))
         self.assertTrue(all(region["load_node_count"] >= 6 for region in regions))
+
+    def test_anterior_thorax_continuum_is_connected_converged_and_nonduplicating(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            first = Path(temporary) / "first"
+            second = Path(temporary) / "second"
+            manifest = anterior_thorax_composite_payload(
+                ROOT / "Build/anterior-thorax-composite-v3.registration.json",
+                ROOT / "Build/anterior-thorax-composite-v3-tendon", first,
+            )
+            replay = anterior_thorax_composite_payload(
+                ROOT / "Build/anterior-thorax-composite-v3.registration.json",
+                ROOT / "Build/anterior-thorax-composite-v3-tendon", second,
+            )
+            payload = (first / manifest["payload"]["file"]).read_bytes()
+        self.assertEqual(payload[:8], b"NHTHRC1\0")
+        self.assertEqual(manifest["payload"]["sha256"], replay["payload"]["sha256"])
+        self.assertEqual(manifest["payload"]["component_count"], 1)
+        self.assertEqual(manifest["payload"]["attachment_count"], 7)
+        self.assertEqual(manifest["payload"]["attachment_sample_map_count"], 28)
+        self.assertEqual(manifest["payload"]["exact_surface_vertex_count"], 723)
+        self.assertEqual(manifest["payload"]["exact_surface_triangle_count"], 1450)
+        self.assertGreater(manifest["payload"]["continuum_node_count"], 10_000)
+        self.assertGreater(manifest["payload"]["tetrahedron_count"], 40_000)
+        continuum = manifest["continuum"]
+        self.assertTrue(continuum["all_tetrahedra_positive"])
+        self.assertTrue(continuum["all_voxel_components_connected"])
+        component = continuum["components"][0]
+        self.assertEqual(component["source_component_index"], 1)
+        self.assertLess(component["relative_volume_error"], 0.002)
+        self.assertLess(
+            component["volume_convergence"][1]["relative_volume_error"],
+            component["volume_convergence"][0]["relative_volume_error"],
+        )
+        self.assertEqual(
+            manifest["source"]["excluded_conflicting_source_components"][0][
+                "source_component_index"
+            ],
+            17,
+        )
+        self.assertEqual(
+            manifest["force_ownership"]["production_tissue_owner_fraction"], 0.0,
+        )
+        self.assertFalse(manifest["force_ownership"]["direct_joint_torque_allowed"])
+        self.assertFalse(
+            manifest["force_ownership"]["duplicate_rigid_and_tissue_force_allowed"]
+        )
 
     def test_visual_skeleton_extension_preserves_the_validated_fit_set(self) -> None:
         fit_anchors = [

@@ -125,8 +125,8 @@ deformable costal-margin/aponeurosis body. It is still a terminal
 force-transfer law. It does not create a tissue volume, constitutive response,
 contact, damage, breathing mechanics, or two-way tissue reaction.
 
-The next production step is not another bone offset. It is to preserve these
-closed component surfaces in a native attachment-surface payload, classify
-their named BodyParts overlap and missing lower-costal extent, generate a
-converged volumetric or MPM discretization, and replace—not duplicate—the
-corresponding rigid `J^T` force share when returning tissue reactions.
+The non-conflicting component-1 volume and maps now exist in
+[anterior thorax continuum v1](ANTERIOR_THORAX_CONTINUUM_V1.md). Component 17
+is excluded because its exact surface also owns left-tenth-rib fallback
+endpoints. Material classification and two-way force ownership remain open;
+the existing rigid `J^T` share is not duplicated.

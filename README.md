@@ -97,8 +97,13 @@ bone and two pinned source-rib surfaces. The next pass admits the eight exact
 anterior-thorax components as separately typed composite attachment surfaces,
 raising coverage to 638 envelopes plus 194 point laws with no endpoint or bone
 migration. They are not relabelled as bone, cartilage, sternum, or fascia and
-remain the boundary for future deformable tissue mechanics. See the
+remain the boundary for future deformable tissue mechanics. The
+non-conflicting component 1 now also has a deterministic connected,
+volume-converged `NHTHRC1` tetrahedral payload and seven exact tendon support
+maps; production force ownership remains disabled pending material identity
+and two-way reaction closure. See the
 [anterior-thorax record](Docs/ANTERIOR_THORAX_COMPOSITE_FORCE_TRANSFER_V3.md),
+[continuum record](Docs/ANTERIOR_THORAX_CONTINUUM_V1.md),
 [EO3 force-transfer record](Docs/EO3_SOURCE_COMPONENT_FORCE_TRANSFER_V2.md),
 and preceding [abdominal source-component record](Docs/ABDOMINAL_SOURCE_COMPONENT_ENTHESES_V1.md).
 

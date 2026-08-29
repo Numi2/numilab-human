@@ -27,6 +27,7 @@ from .model import (
     bodyparts_myosim_skinned_shell_visual_payload,
     bodyparts_myosim_right_posterior_chain_visual_payload,
     bodyparts_pectoralis_fascia_payload,
+    anterior_thorax_composite_payload,
     bodyparts_myosim_attachment_surface_registration_candidate,
     bodyparts_myosim_registration_candidate,
     bodyparts_nerve_annotation,
@@ -1101,6 +1102,17 @@ def numi_human_pectoralis_fascia_payload(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def numi_human_anterior_thorax_payload(arguments: argparse.Namespace) -> int:
+    manifest = anterior_thorax_composite_payload(
+        arguments.registration.resolve(), arguments.tendon_artifact.resolve(),
+        arguments.output.resolve(), arguments.maximum_volume_error,
+        arguments.qualification_load_fraction,
+    )
+    print(f"wrote {arguments.output.resolve() / manifest['payload']['file']}")
+    print(f"wrote {arguments.output.resolve() / 'anterior-thorax-composite.manifest.json'}")
+    return 0
+
+
 def numi_human_achilles_receipt(arguments: argparse.Namespace) -> int:
     receipt = numi_human_achilles_surface_receipt(
         arguments.sources.resolve(), arguments.registration.resolve(),
@@ -1499,6 +1511,28 @@ def parser() -> argparse.ArgumentParser:
         help="bounded share of named pectoralis terminal force applied to fascia (default: 0.10)",
     )
     pectoralis_fascia_parser.set_defaults(handler=numi_human_pectoralis_fascia_payload)
+    anterior_thorax_parser = commands.add_parser(
+        "numi-human-anterior-thorax-continuum-payload",
+        help="compile exact pinned anterior-thorax closed surfaces into a deterministic FEM volume",
+    )
+    anterior_thorax_parser.add_argument(
+        "--registration", type=Path, required=True,
+        help="admitted registration containing the exact source-component surfaces",
+    )
+    anterior_thorax_parser.add_argument(
+        "--tendon-artifact", type=Path, required=True,
+        help="paired NHTENDON3 artifact directory containing the embedded source receipt",
+    )
+    anterior_thorax_parser.add_argument("--output", type=Path, required=True)
+    anterior_thorax_parser.add_argument(
+        "--maximum-volume-error", type=float, default=0.03,
+        help="maximum voxel-to-exact closed-surface relative volume error (default: 0.03)",
+    )
+    anterior_thorax_parser.add_argument(
+        "--qualification-load-fraction", type=float, default=0.10,
+        help="non-owning bounded terminal-load share for deformation qualification only (default: 0.10)",
+    )
+    anterior_thorax_parser.set_defaults(handler=numi_human_anterior_thorax_payload)
     achilles_receipt_parser = commands.add_parser(
         "numi-human-achilles-surface-receipt",
         help="register six bilateral Achilles route insertions to exact BodyParts3D calcaneus triangles",
