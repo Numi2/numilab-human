@@ -49,6 +49,18 @@ named bones. The BodyParts3D exterior remains a static source mesh only: it
 has no authored skin weights and is not passed off as a finished realistic
 muscle-driven Human exterior.
 
+### Body-part control
+
+`numi human control-list Build/myosim-fullbody` lists every Core body crossed
+by an exact source muscle route. `numi human control ... <part-name>` then
+resolves that name to the source actuator rows, applies a capped diagnostic
+activation, and replaces the launch-time resolver with the native Metal probe.
+The same fail-closed compiler now validates all ten bilateral toe chains and
+their exact hallux versus lesser-toe terminal identities. See
+[source-derived part control v1](Docs/PART_CONTROL_V1.md). This is an
+inspectable coactivation interface, not yet a learned movement controller or
+independent finger/toe articulation.
+
 ### Tendon-to-bone presentation
 
 For the detailed right-calf inspection, the matching free Z-Anatomy

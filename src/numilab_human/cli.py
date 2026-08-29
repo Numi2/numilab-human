@@ -45,6 +45,8 @@ from .model import (
     rajagopal_rigid_skeleton_ir,
     rajagopal_walking_contract,
     myosim_fullbody_reference_artifacts,
+    myosim_part_control_catalog,
+    myosim_part_control_plan,
     numi_human_tendon_attachment_envelope_payload,
     numi_human_tendon_endpoint_payload,
     numi_human_achilles_surface_receipt,
@@ -318,6 +320,37 @@ def myosim_probe(arguments: argparse.Namespace) -> int:
             print(completed.stderr, end="", file=sys.stderr)
         raise ImportError(f"MyoSim Core probe failed; see {transcript}")
     print(f"wrote {transcript}")
+    return 0
+
+
+def myosim_part_controls(arguments: argparse.Namespace) -> int:
+    artifact = arguments.artifact.resolve()
+    if arguments.list:
+        if arguments.part or arguments.muscle or arguments.emit != "json":
+            raise ImportError("MyoSim part-control --list cannot be combined with a selection or --emit")
+        catalog = myosim_part_control_catalog(artifact)
+        print("body_name\tcore_body_index\tsource_muscle_count")
+        for part in catalog["parts"]:
+            print(
+                f"{part['body_name']}\t{part['core_body_index']}\t"
+                f"{part['source_muscle_count']}"
+            )
+        return 0
+    plan = myosim_part_control_plan(
+        artifact, arguments.part or [], arguments.muscle or [],
+    )
+    if arguments.emit == "indices":
+        print(" ".join(
+            str(muscle["source_actuator_index"])
+            for muscle in plan["selected_source_muscles"]
+        ))
+    elif arguments.emit == "focus":
+        focus = plan["focus_core_body_index"]
+        if focus is None:
+            raise ImportError("MyoSim part-control focus emission requires exactly one part")
+        print(focus)
+    else:
+        print(json.dumps(plan, indent=2, sort_keys=True))
     return 0
 
 
@@ -870,6 +903,25 @@ def parser() -> argparse.ArgumentParser:
         help="also execute Apple-GPU pose/Jacobian/muscle-route/static-force parity",
     )
     myosim_probe_parser.set_defaults(handler=myosim_probe)
+    myosim_part_control_parser = commands.add_parser(
+        "myosim-part-controls",
+        help="list or resolve exact source muscles for bounded body-part control",
+    )
+    myosim_part_control_parser.add_argument("--artifact", type=Path, required=True)
+    myosim_part_control_parser.add_argument(
+        "--list", action="store_true", help="list every source-route-controllable Core body",
+    )
+    myosim_part_control_parser.add_argument(
+        "--part", action="append", help="select every exact source muscle routed through this body",
+    )
+    myosim_part_control_parser.add_argument(
+        "--muscle", action="append", help="also select one exact source muscle name",
+    )
+    myosim_part_control_parser.add_argument(
+        "--emit", choices=("json", "indices", "focus"), default="json",
+        help="emit the complete plan, native source indices, or single selected focus body",
+    )
+    myosim_part_control_parser.set_defaults(handler=myosim_part_controls)
     myosim_visuals_parser = commands.add_parser(
         "myosim-visuals",
         help="render three default-pose MyoSim source-model views for visual validation",

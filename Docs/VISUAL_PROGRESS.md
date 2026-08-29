@@ -1,5 +1,23 @@
 # NumiLab Human visual progress
 
+## Source-derived body-part control — 2026-08-29
+
+<p align="center">
+  <img src="media/numi-human-part-control-v1-2048/toes_l/front.png" width="24%" alt="Left toe selective muscle control, front" />
+  <img src="media/numi-human-part-control-v1-2048/toes_l/oblique.png" width="24%" alt="Left toe selective muscle control, oblique" />
+  <img src="media/numi-human-part-control-v1-2048/toes_l/side.png" width="24%" alt="Left toe selective muscle control, side" />
+  <img src="media/numi-human-part-control-v1-2048/toes_l/rear.png" width="24%" alt="Left toe selective muscle control, rear" />
+</p>
+
+The exact source-route catalog now makes every route-controllable Core body a
+named diagnostic target. The left-toes check resolves only EDL, EHL, FDL, and
+FHL, while the compiler verifies all five co-rigid toe chains on both sides
+and rejects a hallux/lesser-toe identity shift. A second four-angle left
+humerus run validates the same selection path outside the foot. Both ran at
+2048 px on Apple M4 Pro; see the [part-control record](PART_CONTROL_V1.md) and
+retained transcripts. This is bounded source-muscle coactivation, not learned
+movement control or independent toe articulation.
+
 ## Hallux insertion continuity — 2026-08-29
 
 <p align="center">

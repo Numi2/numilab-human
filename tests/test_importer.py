@@ -19,6 +19,7 @@ from numilab_human.model import (
     _BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS,
     _NUMI_HUMAN_HALLUX_DOMINANT_SOURCE_SURFACE_MEMBERS,
     _NUMI_HUMAN_HALLUX_RIGID_COMPOUNDS,
+    _NUMI_HUMAN_TOE_RIGID_CHAINS,
     _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS,
     _bodyparts_secondary_attachment_weight_lock,
     _bodyparts_project_tendon_attachment_band,
@@ -38,6 +39,8 @@ from numilab_human.model import (
     _fit_myosim_compliant_architecture,
     _myosim_pack_dof_record,
     _myosim_muscle_payload_architecture,
+    myosim_part_control_catalog,
+    myosim_part_control_plan,
     _numi_human_semantic_enthesis_envelope,
     ImportError as HumanImportError,
     bodyparts_foot_collider_preflight,
@@ -80,7 +83,86 @@ from numilab_human.zanatomy import (
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def _write_part_control_fixture(directory: Path) -> Path:
+    source_sha = "11" * 32
+    sites = b"".join(
+        struct.pack("<I3f", body_index, 0.0, 0.0, 0.0)
+        for body_index in (0, 1, 1, 2)
+    )
+    routes = b"".join(
+        struct.pack("<4I", 1, site_index, 0, 0)
+        for site_index in range(4)
+    )
+    muscles = b"".join((
+        struct.pack("<4I37f", 0, 0, 2, 0, *([0.0] * 37)),
+        struct.pack("<4I37f", 1, 2, 2, 0, *([0.0] * 37)),
+    ))
+    payload = (
+        struct.pack(
+            "<8s9I32s", b"NHMYO1\0\0", 1, 3, 2, 4, 0, 4, 2, 0, 0,
+            bytes.fromhex(source_sha),
+        )
+        + sites + routes + muscles
+    )
+    payload_path = directory / "myosim-fullbody-muscle-reference.nhmyo"
+    payload_path.write_bytes(payload)
+    manifest = {
+        "schema": "numi.human.myosim-fullbody-reference.v1",
+        "source": {"archive_sha256": source_sha},
+        "payloads": {
+            "muscles": {
+                "file": payload_path.name,
+                "sha256": hashlib.sha256(payload).hexdigest(),
+            },
+        },
+        "core_tree": {"body_order": ["root", "tibia_l", "toes_l"]},
+        "muscles": [
+            {"source_actuator_index": 0, "name": "ankle_fixture_l"},
+            {"source_actuator_index": 1, "name": "toe_fixture_l"},
+        ],
+    }
+    (directory / "myosim-fullbody-reference.manifest.json").write_text(
+        json.dumps(manifest), encoding="utf-8",
+    )
+    return directory
+
+
 class ImporterTests(unittest.TestCase):
+    def test_part_control_catalog_uses_exact_source_route_incidence(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            artifact = _write_part_control_fixture(Path(temporary))
+            catalog = myosim_part_control_catalog(artifact)
+        self.assertEqual(catalog["coverage"], {
+            "core_body_count": 3,
+            "controllable_part_count": 3,
+            "source_muscle_count": 2,
+        })
+        parts = {part["body_name"]: part for part in catalog["parts"]}
+        self.assertEqual(
+            [muscle["source_actuator_index"] for muscle in parts["tibia_l"]["source_muscles"]],
+            [0, 1],
+        )
+        self.assertEqual(parts["toes_l"]["source_muscles"], [
+            {"source_actuator_index": 1, "name": "toe_fixture_l"},
+        ])
+
+    def test_part_control_plan_is_exact_bounded_and_rejects_unknown_parts(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            artifact = _write_part_control_fixture(Path(temporary))
+            plan = myosim_part_control_plan(artifact, ["toes_l"])
+            combined = myosim_part_control_plan(
+                artifact, ["root"], ["toe_fixture_l"],
+            )
+            with self.assertRaisesRegex(HumanImportError, "unknown controllable"):
+                myosim_part_control_plan(artifact, ["hallux_l"])
+        self.assertEqual(plan["focus_core_body_index"], 2)
+        self.assertEqual(plan["selected_source_muscle_count"], 1)
+        self.assertEqual(plan["selected_source_muscles"][0]["source_actuator_index"], 1)
+        self.assertEqual(
+            [muscle["source_actuator_index"] for muscle in combined["selected_source_muscles"]],
+            [0, 1],
+        )
+
     def test_myosim_dof_payload_preserves_passive_damping_without_hidden_drive(self) -> None:
         record = _myosim_pack_dof_record(
             joint_index=7, q_index=9, v_index=8, local_dof=0,
@@ -196,6 +278,20 @@ class ImporterTests(unittest.TestCase):
                 [extension_by_member[member] for member in members],
                 [body, body, body],
             )
+        self.assertEqual(
+            [len(chains) for chains in _NUMI_HUMAN_TOE_RIGID_CHAINS.values()],
+            [5, 5],
+        )
+        for body, chains in _NUMI_HUMAN_TOE_RIGID_CHAINS.items():
+            self.assertEqual([len(chain) for chain in chains], [3, 4, 4, 4, 4])
+            self.assertEqual(
+                [extension_by_member[member] for chain in chains for member in chain],
+                [body] * 19,
+            )
+        self.assertEqual(
+            tuple(chain[-1] for chain in _NUMI_HUMAN_TOE_RIGID_CHAINS["toes_l"][1:]),
+            _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS[("edl_l", 1)],
+        )
 
     def test_nhmyo2_fits_positive_compliant_architecture_and_reads_legacy(self) -> None:
         gain = [0.906929, 1.07277, 102.673, 1.0, 0.0, 2.0, 10.0, 2.41059, 1.4, 0.0]
@@ -1011,7 +1107,7 @@ class ImporterTests(unittest.TestCase):
         result = run([command, "--numi-describe"], capture_output=True, text=True, check=True)
         self.assertEqual(
             result.stdout,
-            "Build NumiLab Human artifacts and run native full-body references, persistent muscle-driven standing, and four-angle visual validation.\n",
+            "Build NumiLab Human artifacts; run source-derived body-part controls, native full-body references, persistent muscle-driven standing, and four-angle visual validation.\n",
         )
 
     def test_numi_workspace_native_visual_command_rejects_missing_paths_before_python(self) -> None:

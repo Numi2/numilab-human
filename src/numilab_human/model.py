@@ -2086,6 +2086,221 @@ def _myosim_muscle_payload_bytes(
     )
 
 
+def myosim_part_control_catalog(myosim_artifact: Path) -> dict[str, Any]:
+    """Resolve exact source muscles incident to each compiled Human body.
+
+    This is launch-time control metadata. It reads the source-pinned NHMYO
+    route table and never invents a joint, torque, muscle, or anatomical
+    grouping. Native Metal still owns force evaluation and pose execution.
+    """
+    artifact = myosim_artifact.resolve()
+    manifest_path = artifact / "myosim-fullbody-reference.manifest.json"
+    manifest = read_json(manifest_path)
+    if (
+        not isinstance(manifest, dict)
+        or manifest.get("schema") != "numi.human.myosim-fullbody-reference.v1"
+    ):
+        raise ImportError("MyoSim part control requires a full-body reference manifest")
+    source = manifest.get("source")
+    source_sha = source.get("archive_sha256") if isinstance(source, dict) else None
+    payloads = manifest.get("payloads")
+    payload_descriptor = payloads.get("muscles") if isinstance(payloads, dict) else None
+    if (
+        not isinstance(source_sha, str)
+        or not re.fullmatch(r"[0-9a-f]{64}", source_sha)
+        or not isinstance(payload_descriptor, dict)
+    ):
+        raise ImportError("MyoSim part control has incomplete source provenance")
+    payload_path = artifact / str(payload_descriptor.get("file"))
+    expected_payload_sha = payload_descriptor.get("sha256")
+    if (
+        not payload_path.is_file()
+        or not isinstance(expected_payload_sha, str)
+        or sha256(payload_path) != expected_payload_sha
+    ):
+        raise ImportError("MyoSim part control muscle payload is missing or drifted")
+    payload = payload_path.read_bytes()
+    header_format = "<8s9I32s"
+    header_bytes = struct.calcsize(header_format)
+    if len(payload) < header_bytes:
+        raise ImportError("MyoSim part control muscle payload header is truncated")
+    (
+        magic, abi, body_count, muscle_count, site_count, wrap_count,
+        route_count, _, reserved0, reserved1, embedded_sha,
+    ) = struct.unpack_from(header_format, payload)
+    architecture_count, architecture_bytes = _myosim_muscle_payload_architecture(
+        magic, abi, muscle_count, reserved0, reserved1,
+    )
+    if (
+        embedded_sha.hex() != source_sha
+        or len(payload) != _myosim_muscle_payload_bytes(
+            site_count, wrap_count, route_count, muscle_count,
+            architecture_count, architecture_bytes,
+        )
+    ):
+        raise ImportError("MyoSim part control muscle payload ABI is invalid")
+    core_tree = manifest.get("core_tree")
+    body_order = core_tree.get("body_order") if isinstance(core_tree, dict) else None
+    muscle_metadata = manifest.get("muscles")
+    if (
+        not isinstance(body_order, list) or len(body_order) != body_count
+        or any(not isinstance(name, str) or not name for name in body_order)
+        or len(set(body_order)) != body_count
+        or not isinstance(muscle_metadata, list) or len(muscle_metadata) != muscle_count
+    ):
+        raise ImportError("MyoSim part control identity tables are incomplete")
+    offset = header_bytes
+    sites = [
+        struct.unpack_from("<I3f", payload, offset + 16 * index)
+        for index in range(site_count)
+    ]
+    offset += 16 * site_count
+    wraps = [
+        struct.unpack_from("<2I14f", payload, offset + 64 * index)
+        for index in range(wrap_count)
+    ]
+    offset += 64 * wrap_count
+    routes = [
+        struct.unpack_from("<4I", payload, offset + 16 * index)
+        for index in range(route_count)
+    ]
+    offset += 16 * route_count
+    muscle_records = [
+        struct.unpack_from("<4I37f", payload, offset + 164 * index)
+        for index in range(muscle_count)
+    ]
+    muscles: list[dict[str, Any]] = []
+    muscles_by_part: dict[int, list[dict[str, Any]]] = {}
+    seen_names: set[str] = set()
+    for muscle_index, (record, metadata) in enumerate(
+        zip(muscle_records, muscle_metadata, strict=True)
+    ):
+        if not isinstance(metadata, dict):
+            raise ImportError("MyoSim part control has an invalid muscle identity")
+        source_index = metadata.get("source_actuator_index")
+        name = metadata.get("name")
+        route_offset, muscle_route_count = record[1], record[2]
+        if (
+            source_index != muscle_index
+            or not isinstance(name, str) or not name or name in seen_names
+            or route_offset + muscle_route_count > len(routes)
+            or muscle_route_count < 2
+        ):
+            raise ImportError("MyoSim part control muscle identity or route drifted")
+        seen_names.add(name)
+        route_body_indices: list[int] = []
+        for route in routes[route_offset:route_offset + muscle_route_count]:
+            kind, target = route[0], route[1]
+            if kind == _MYOSIM_ROUTE_SITE:
+                if target >= len(sites):
+                    raise ImportError("MyoSim part control route references an absent site")
+                body_index = sites[target][0]
+            elif kind in {_MYOSIM_ROUTE_SPHERE, _MYOSIM_ROUTE_CYLINDER}:
+                if target >= len(wraps):
+                    raise ImportError("MyoSim part control route references an absent wrap")
+                body_index = wraps[target][0]
+            else:
+                raise ImportError("MyoSim part control route has an unsupported node kind")
+            if body_index >= body_count:
+                raise ImportError("MyoSim part control route escapes the Core body table")
+            if body_index not in route_body_indices:
+                route_body_indices.append(body_index)
+        muscle_record = {
+            "source_actuator_index": source_index,
+            "name": name,
+            "route_core_body_indices": route_body_indices,
+            "route_body_names": [body_order[index] for index in route_body_indices],
+        }
+        muscles.append(muscle_record)
+        for body_index in route_body_indices:
+            muscles_by_part.setdefault(body_index, []).append({
+                "source_actuator_index": source_index,
+                "name": name,
+            })
+    parts = [
+        {
+            "core_body_index": body_index,
+            "body_name": body_order[body_index],
+            "source_muscle_count": len(muscles_by_part[body_index]),
+            "source_muscles": muscles_by_part[body_index],
+        }
+        for body_index in sorted(muscles_by_part)
+    ]
+    return {
+        "schema": "numi.human.myosim-part-control-catalog.v1",
+        "source": {
+            "manifest_file": manifest_path.name,
+            "manifest_sha256": sha256(manifest_path),
+            "muscle_payload_file": payload_path.name,
+            "muscle_payload_sha256": expected_payload_sha,
+            "myosim_source_archive_sha256": source_sha,
+        },
+        "coverage": {
+            "core_body_count": body_count,
+            "controllable_part_count": len(parts),
+            "source_muscle_count": len(muscles),
+        },
+        "parts": parts,
+        "muscles": muscles,
+        "control_semantics": (
+            "selecting a part activates the union of exact source muscles whose compiled route "
+            "contains that Core body; selecting a muscle activates only that exact source actuator"
+        ),
+        "evidence_boundary": (
+            "This catalog exposes bounded diagnostic excitation, not a movement controller, "
+            "synergy inference, direct torque path, clinical motor map, or independent digit articulation."
+        ),
+    }
+
+
+def myosim_part_control_plan(
+    myosim_artifact: Path, part_names: list[str], muscle_names: list[str] | None = None,
+) -> dict[str, Any]:
+    """Resolve requested source body and muscle names to exact actuator rows."""
+    catalog = myosim_part_control_catalog(myosim_artifact)
+    requested_parts = list(dict.fromkeys(part_names))
+    requested_muscles = list(dict.fromkeys(muscle_names or []))
+    if not requested_parts and not requested_muscles:
+        raise ImportError("MyoSim part control requires at least one part or muscle")
+    parts_by_name = {part["body_name"]: part for part in catalog["parts"]}
+    muscles_by_name = {muscle["name"]: muscle for muscle in catalog["muscles"]}
+    unknown_parts = [name for name in requested_parts if name not in parts_by_name]
+    unknown_muscles = [name for name in requested_muscles if name not in muscles_by_name]
+    if unknown_parts:
+        raise ImportError("unknown controllable MyoSim part: " + ", ".join(unknown_parts))
+    if unknown_muscles:
+        raise ImportError("unknown MyoSim source muscle: " + ", ".join(unknown_muscles))
+    selected_indices = {
+        muscle["source_actuator_index"]
+        for name in requested_parts
+        for muscle in parts_by_name[name]["source_muscles"]
+    }
+    selected_indices.update(
+        muscles_by_name[name]["source_actuator_index"] for name in requested_muscles
+    )
+    selected_muscles = [
+        muscle for muscle in catalog["muscles"]
+        if muscle["source_actuator_index"] in selected_indices
+    ]
+    if not selected_muscles:
+        raise ImportError("MyoSim part control selection resolved no source muscles")
+    focus_body_index = (
+        parts_by_name[requested_parts[0]]["core_body_index"]
+        if len(requested_parts) == 1 else None
+    )
+    return {
+        "schema": "numi.human.myosim-part-control-plan.v1",
+        "source": catalog["source"],
+        "requested_parts": requested_parts,
+        "requested_muscles": requested_muscles,
+        "focus_core_body_index": focus_body_index,
+        "selected_source_muscle_count": len(selected_muscles),
+        "selected_source_muscles": selected_muscles,
+        "control_semantics": catalog["control_semantics"],
+        "evidence_boundary": catalog["evidence_boundary"],
+    }
+
+
 def _myosim_active_force_length(normalized_length: float, lower: float, upper: float) -> float:
     if normalized_length < lower or normalized_length > upper:
         return 0.0
@@ -3447,14 +3662,29 @@ _BODYPARTS_MYOSIM_TOE_EXTENSIONS = tuple(
 )
 
 
-# A separate hallux joint is not required to preserve the visible three-bone
-# chain or its tendon insertion. Each side is one exact BodyParts3D compound
-# carried by the existing MyoSim toes body. Compilation below rejects a
+# Separate digital joints are not required to preserve the visible source toe
+# chains and their insertions. Ten exact BodyParts3D compounds, five per side,
+# are carried by the two existing MyoSim toes bodies. Compilation below rejects a
 # missing member, a one-toe identity shift, a split Core owner, a mismatched
 # local transform, or a disconnected source chain.
+_NUMI_HUMAN_TOE_RIGID_CHAINS = {
+    "toes_r": (
+        ("FJ3351", "FJ3310", "FJ3192"),
+        ("FJ3353", "FJ3319", "FJ3300", "FJ3189"),
+        ("FJ3355", "FJ3320", "FJ3301", "FJ3190"),
+        ("FJ3357", "FJ3321", "FJ3302", "FJ3191"),
+        ("FJ3359", "FJ3324", "FJ3305", "FJ3195"),
+    ),
+    "toes_l": (
+        ("FJ3241", "FJ3329", "FJ3182"),
+        ("FJ3244", "FJ3328", "FJ3293", "FJ3179"),
+        ("FJ3247", "FJ3311", "FJ3294", "FJ3180"),
+        ("FJ3250", "FJ3312", "FJ3295", "FJ3181"),
+        ("FJ3253", "FJ3315", "FJ3298", "FJ3185"),
+    ),
+}
 _NUMI_HUMAN_HALLUX_RIGID_COMPOUNDS = {
-    "toes_r": ("FJ3351", "FJ3310", "FJ3192"),
-    "toes_l": ("FJ3241", "FJ3329", "FJ3182"),
+    body: chains[0] for body, chains in _NUMI_HUMAN_TOE_RIGID_CHAINS.items()
 }
 _NUMI_HUMAN_HALLUX_RIGID_COMPOUND_MAXIMUM_GAP_M = 0.001
 
@@ -4331,12 +4561,13 @@ def bodyparts_myosim_bone_visual_payload(
     indices_payload: list[int] = []
     records_payload: list[bytes] = []
     provenance_anchors: list[dict[str, Any]] = []
-    hallux_member_ids = frozenset(
+    toe_member_ids = frozenset(
         member
-        for members in _NUMI_HUMAN_HALLUX_RIGID_COMPOUNDS.values()
-        for member in members
+        for chains in _NUMI_HUMAN_TOE_RIGID_CHAINS.values()
+        for chain in chains
+        for member in chain
     )
-    hallux_geometry: dict[str, dict[str, Any]] = {}
+    toe_geometry: dict[str, dict[str, Any]] = {}
     for stable_id, (specification, anchor) in enumerate(zip(_BODYPARTS_MYOSIM_BONE_ANCHORS, anchors, strict=True), start=1):
         if not isinstance(anchor, dict):
             raise ImportError("BodyParts3D visual payload has an invalid anchor")
@@ -4360,11 +4591,11 @@ def bodyparts_myosim_bone_visual_payload(
             registration_record.get("source_obj_mm_to_core_inertial_body_m"),
             f"BodyParts3D visual payload {specification['member_id']} local transform",
         )
-        if specification["member_id"] in hallux_member_ids:
-            if specification["member_id"] in hallux_geometry:
-                raise ImportError("BodyParts3D hallux rigid compound duplicates a source member")
+        if specification["member_id"] in toe_member_ids:
+            if specification["member_id"] in toe_geometry:
+                raise ImportError("BodyParts3D toe rigid chain duplicates a source member")
             rotation = _myosim_matrix_from_quaternion_xyzw(quaternion)
-            hallux_geometry[specification["member_id"]] = {
+            toe_geometry[specification["member_id"]] = {
                 "myosim_body": specification["myosim_body"],
                 "core_body_index": core_body_index,
                 "local_pose": (*translation, *quaternion, scale),
@@ -4395,57 +4626,60 @@ def bodyparts_myosim_bone_visual_payload(
             "core_body_index": core_body_index, "myosim_body": specification["myosim_body"],
             "vertex_count": len(vertices_mm), "triangle_count": len(triangles),
         })
-    hallux_rigid_compounds: list[dict[str, Any]] = []
-    for myosim_body, member_ids in _NUMI_HUMAN_HALLUX_RIGID_COMPOUNDS.items():
-        records = [hallux_geometry.get(member_id) for member_id in member_ids]
-        if any(record is None for record in records):
-            raise ImportError(
-                f"BodyParts3D {myosim_body} hallux rigid compound is incomplete"
-            )
-        typed_records = [record for record in records if record is not None]
-        core_body_indices = {record["core_body_index"] for record in typed_records}
-        if (
-            {record["myosim_body"] for record in typed_records} != {myosim_body}
-            or len(core_body_indices) != 1
-        ):
-            raise ImportError(
-                f"BodyParts3D {myosim_body} hallux rigid compound has split body ownership"
-            )
-        reference_pose = typed_records[0]["local_pose"]
-        if any(
-            any(abs(value - reference) > 1.0e-9 for value, reference in zip(
-                record["local_pose"], reference_pose, strict=True,
-            ))
-            for record in typed_records[1:]
-        ):
-            raise ImportError(
-                f"BodyParts3D {myosim_body} hallux rigid compound has inconsistent local transforms"
-            )
-        adjacent_surface_gaps_m = [
-            min(
-                math.dist(first, second)
-                for first in typed_records[index]["vertices_core_body_m"]
-                for second in typed_records[index + 1]["vertices_core_body_m"]
-            )
-            for index in range(len(typed_records) - 1)
-        ]
-        maximum_gap_m = max(adjacent_surface_gaps_m)
-        if maximum_gap_m > _NUMI_HUMAN_HALLUX_RIGID_COMPOUND_MAXIMUM_GAP_M:
-            raise ImportError(
-                f"BodyParts3D {myosim_body} hallux rigid compound source chain is disconnected"
-            )
-        hallux_rigid_compounds.append({
-            "myosim_body": myosim_body,
-            "core_body_index": next(iter(core_body_indices)),
-            "source_member_ids": list(member_ids),
-            "adjacent_surface_gaps_m": adjacent_surface_gaps_m,
-            "maximum_adjacent_surface_gap_m": maximum_gap_m,
-            "maximum_allowed_adjacent_surface_gap_m": (
-                _NUMI_HUMAN_HALLUX_RIGID_COMPOUND_MAXIMUM_GAP_M
-            ),
-            "independent_articulation_count": 0,
-            "binding": "one shared existing MyoSim toes rigid-body transform",
-        })
+    toe_rigid_compounds: list[dict[str, Any]] = []
+    for myosim_body, chains in _NUMI_HUMAN_TOE_RIGID_CHAINS.items():
+        for digit, member_ids in enumerate(chains, start=1):
+            records = [toe_geometry.get(member_id) for member_id in member_ids]
+            if any(record is None for record in records):
+                raise ImportError(
+                    f"BodyParts3D {myosim_body} digit {digit} rigid chain is incomplete"
+                )
+            typed_records = [record for record in records if record is not None]
+            core_body_indices = {record["core_body_index"] for record in typed_records}
+            if (
+                {record["myosim_body"] for record in typed_records} != {myosim_body}
+                or len(core_body_indices) != 1
+            ):
+                raise ImportError(
+                    f"BodyParts3D {myosim_body} digit {digit} rigid chain has split body ownership"
+                )
+            reference_pose = typed_records[0]["local_pose"]
+            if any(
+                any(abs(value - reference) > 1.0e-9 for value, reference in zip(
+                    record["local_pose"], reference_pose, strict=True,
+                ))
+                for record in typed_records[1:]
+            ):
+                raise ImportError(
+                    f"BodyParts3D {myosim_body} digit {digit} rigid chain has inconsistent local transforms"
+                )
+            adjacent_surface_gaps_m = [
+                min(
+                    math.dist(first, second)
+                    for first in typed_records[index]["vertices_core_body_m"]
+                    for second in typed_records[index + 1]["vertices_core_body_m"]
+                )
+                for index in range(len(typed_records) - 1)
+            ]
+            maximum_gap_m = max(adjacent_surface_gaps_m)
+            if maximum_gap_m > _NUMI_HUMAN_HALLUX_RIGID_COMPOUND_MAXIMUM_GAP_M:
+                raise ImportError(
+                    f"BodyParts3D {myosim_body} digit {digit} rigid source chain is disconnected"
+                )
+            toe_rigid_compounds.append({
+                "myosim_body": myosim_body,
+                "core_body_index": next(iter(core_body_indices)),
+                "digit": digit,
+                "source_member_ids": list(member_ids),
+                "distal_phalanx_member_id": member_ids[-1],
+                "adjacent_surface_gaps_m": adjacent_surface_gaps_m,
+                "maximum_adjacent_surface_gap_m": maximum_gap_m,
+                "maximum_allowed_adjacent_surface_gap_m": (
+                    _NUMI_HUMAN_HALLUX_RIGID_COMPOUND_MAXIMUM_GAP_M
+                ),
+                "independent_articulation_count": 0,
+                "binding": "one shared existing MyoSim toes rigid-body transform",
+            })
     if len(vertices_payload) > 0xFFFFFFFF or len(indices_payload) > 0xFFFFFFFF:
         raise ImportError("BodyParts3D visual payload exceeds the uint32 native renderer capacity")
     registration_fingerprint = _bodyparts_visual_registration_fingerprint(registration_file)
@@ -4477,7 +4711,10 @@ def bodyparts_myosim_bone_visual_payload(
             "anchors": provenance_anchors,
         },
         "runtime_binding": "one source-local bone instance per Core articulated inertial body; local translation, rotation, and uniform scale are carried in the native payload",
-        "hallux_rigid_compounds": hallux_rigid_compounds,
+        "toe_rigid_compounds": toe_rigid_compounds,
+        "hallux_rigid_compounds": [
+            record for record in toe_rigid_compounds if record["digit"] == 1
+        ],
         "status": "native_visual_binding_input_not_collision_or_physics",
         "evidence_boundary": "The payload contains triangle surfaces for a provisional bone visual only. It does not create colliders, skinning weights, soft-tissue mechanics, muscle attachments, or a medical registration claim.",
     }
@@ -7064,22 +7301,41 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                 secondary_binding_index = binding_names.index(secondary_name)
                 secondary_target = binding_targets[secondary_binding_index]
                 secondary_local_pose = binding_local_poses[secondary_binding_index]
+                rigid_chains = _NUMI_HUMAN_TOE_RIGID_CHAINS.get(secondary_name)
+                expected_semantic_members = (
+                    (rigid_chains[0][-1],) if len(semantic_members) == 1
+                    else tuple(chain[-1] for chain in rigid_chains[1:])
+                ) if rigid_chains is not None else ()
+                selected_rigid_chains = (
+                    rigid_chains[:1] if len(semantic_members) == 1 else rigid_chains[1:]
+                ) if rigid_chains is not None else ()
+                if (
+                    semantic_members != expected_semantic_members
+                    or any(
+                        member not in sources_by_member
+                        for chain in selected_rigid_chains
+                        for member in chain
+                    )
+                ):
+                    raise ImportError(
+                        f"BodyParts3D digital surface {member_id} escapes its single-body toe compounds"
+                    )
+                toe_rigid_compounds = {
+                    "myosim_body": secondary_name,
+                    "core_body_index": secondary_target["core_body_index"],
+                    "digits": [1] if len(semantic_members) == 1 else [2, 3, 4, 5],
+                    "source_member_chains": [list(chain) for chain in selected_rigid_chains],
+                    "distal_enthesis_member_ids": list(semantic_members),
+                    "independent_articulation_count": 0,
+                    "binding": "bone chains and terminal visual patch share one existing toes-body transform",
+                }
                 hallux_rigid_compound: dict[str, Any] | None = None
                 if len(semantic_members) == 1:
-                    rigid_members = _NUMI_HUMAN_HALLUX_RIGID_COMPOUNDS.get(secondary_name)
-                    if (
-                        rigid_members is None
-                        or semantic_members != (rigid_members[-1],)
-                        or any(member not in sources_by_member for member in rigid_members)
-                    ):
-                        raise ImportError(
-                            f"BodyParts3D hallucis surface {member_id} escapes its single-body hallux compound"
-                        )
                     hallux_rigid_compound = {
                         "myosim_body": secondary_name,
                         "core_body_index": secondary_target["core_body_index"],
-                        "source_member_ids": list(rigid_members),
-                        "distal_enthesis_member_id": rigid_members[-1],
+                        "source_member_ids": list(selected_rigid_chains[0]),
+                        "distal_enthesis_member_id": semantic_members[0],
                         "independent_articulation_count": 0,
                         "binding": "bone chain and terminal visual patch share one existing toes-body transform",
                     }
@@ -7255,6 +7511,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                     toe_enthesis_weight_lock["hallux_rigid_compound"] = (
                         hallux_rigid_compound
                     )
+                toe_enthesis_weight_lock["toe_rigid_compounds"] = toe_rigid_compounds
 
         first_binding = len(bindings_payload)
         for target, transform in zip(

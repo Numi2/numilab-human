@@ -52,6 +52,11 @@ exact transformed source surfaces: maximum adjacent gaps are 0.727 mm right
 and 0.629 mm left, below the 1 mm gate. A missing member, split transform, or
 one-toe identity shift now fails compilation instead of reaching the renderer.
 
+The later [part-control v1](PART_CONTROL_V1.md) generalizes this same gate to
+all five digits on both feet. The ten complete source chains contain 38 meshes;
+their measured adjacent gaps are all below 0.73 mm. EHL/FHL remain digit-1-only
+while EDL/FDL require the exact digit 2--5 distal union.
+
 ## Apple M4 Pro validation
 
 Runtime code `45fede450ba889b8feb1df0a8330db3c31706497` decoded and rendered the
