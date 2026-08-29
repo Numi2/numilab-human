@@ -1,5 +1,25 @@
 # NumiLab Human visual progress
 
+## Source-component abdominal rib entheses — 2026-08-29
+
+<p align="center">
+  <img src="media/numi-human-abdominal-source-component-entheses-v1-2048/admitted-rib-entheses/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-front.png" width="24%" alt="Abdominal rib entheses, front" />
+  <img src="media/numi-human-abdominal-source-component-entheses-v1-2048/admitted-rib-entheses/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-oblique.png" width="24%" alt="Abdominal rib entheses, oblique" />
+  <img src="media/numi-human-abdominal-source-component-entheses-v1-2048/admitted-rib-entheses/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-side.png" width="24%" alt="Abdominal rib entheses, side" />
+  <img src="media/numi-human-abdominal-source-component-entheses-v1-2048/admitted-rib-entheses/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-rear.png" width="24%" alt="Abdominal rib entheses, rear" />
+</p>
+
+The tan fans are eight admitted four-node BodyParts3D rib load envelopes for
+bilateral EO1, EO5, EO6, and IO5 termini. Direct inspection of all four 2048 px
+Apple-M4-Pro views finds the fans on the intended inferior rib surfaces with
+coherent bilateral cyan source routes. The payload executes 628 envelopes and
+204 point laws with byte-identical Metal replay.
+
+This view deliberately excludes the two EO3 registration candidates and the
+eight exact anterior non-rib termini. Cyan is a source route centreline, not a
+deformable tendon surface; the opposite route end can still be point-owned.
+See the [source-component record](ABDOMINAL_SOURCE_COMPONENT_ENTHESES_V1.md).
+
 ## Source-registered rib cage, thoracic spine, and pelvis — 2026-08-29
 
 <p align="center">

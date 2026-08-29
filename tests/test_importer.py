@@ -35,6 +35,13 @@ from numilab_human.model import (
     _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS,
     _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS,
     _NUMI_HUMAN_SEMANTIC_ENTHESIS_MEMBERS,
+    _NUMI_HUMAN_RIB_ENTHESIS_MEMBER_IDS,
+    _NUMI_HUMAN_SOURCE_COMPONENT_ENTHESIS_SCHEMA,
+    _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION,
+    _NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION,
+    _NUMI_HUMAN_SOURCE_COMPONENT_NON_BONE_DISPOSITION,
+    _NUMI_HUMAN_SOURCE_COMPONENT_EXPECTED_RECORDS,
+    _numi_human_source_component_enthesis_receipt,
     _bodyparts_primary_bone_attachment_weights,
     _bodyparts_bounded_vertex_gap,
     _bodyparts_secondary_attachment_weight_lock,
@@ -173,6 +180,88 @@ def _write_part_control_fixture(directory: Path) -> Path:
 
 
 class ImporterTests(unittest.TestCase):
+    def test_source_component_enthesis_receipt_fails_closed_on_bone_identity(self) -> None:
+        source_sha = "34" * 32
+        records = []
+        pairs = []
+        for pair_index, (base, ordinal) in enumerate((
+            ("rect_abd", 1), ("EO1", 1), ("EO2", 0), ("EO3", 0),
+            ("EO4", 0), ("EO5", 0), ("EO6", 0), ("IO4", 0),
+            ("IO5", 0), ("IO6", 0),
+        )):
+            for side in ("r", "l"):
+                muscle = f"{base}_{side}"
+                actuator, disposition, level = (
+                    _NUMI_HUMAN_SOURCE_COMPONENT_EXPECTED_RECORDS[(muscle, ordinal)]
+                )
+                member = (
+                    _NUMI_HUMAN_RIB_ENTHESIS_MEMBER_IDS[side][level]
+                    if level is not None else None
+                )
+                record = {
+                    "source_actuator_index": actuator,
+                    "muscle": muscle,
+                    "endpoint": "origin" if ordinal == 0 else "insertion",
+                    "endpoint_ordinal": ordinal,
+                    "source_site_id": 100 + 2 * pair_index + (side == "l"),
+                    "source_body_id": 9,
+                    "source_body_name": "torso",
+                    "source_model_classification": (
+                        "source_model_not_bone_adjacent"
+                        if disposition == _NUMI_HUMAN_SOURCE_COMPONENT_NON_BONE_DISPOSITION
+                        else "source_model_bone_adjacent"
+                    ),
+                    "disposition": disposition,
+                    "bone_member_ids": [member]
+                    if disposition == _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION else [],
+                    "endpoint_migration_m": 0.0,
+                }
+                if disposition == _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION:
+                    record.update({
+                        "side": "right" if side == "r" else "left",
+                        "thoracic_level": level,
+                        "source_component_index": pair_index * 2 + (side == "l"),
+                        "source_triangle_index": pair_index,
+                        "source_component_vertex_index_sha256": "56" * 32,
+                    })
+                records.append(record)
+            pairs.append({"muscle_base": base, "passed": True})
+        counts = {
+            _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION: 10,
+            _NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION: 8,
+            _NUMI_HUMAN_SOURCE_COMPONENT_NON_BONE_DISPOSITION: 2,
+        }
+        receipt = {
+            "schema": _NUMI_HUMAN_SOURCE_COMPONENT_ENTHESIS_SCHEMA,
+            "status": "candidate_passed_exact_component_identity_and_bilateral_gates",
+            "inputs": {"myosim_archive_sha256": source_sha},
+            "endpoint_count": 20,
+            "bilateral_pair_count": 10,
+            "endpoint_migration_m": 0.0,
+            "new_joint_count": 0,
+            "source_mesh_name": "torso_geom_13_ribcage_s",
+            "source_connected_component_count": 36,
+            "source_rib_component_count": 24,
+            "disposition_counts": counts,
+            "bilateral_pairs": pairs,
+            "endpoint_records": records,
+        }
+        member_bodies = {
+            member: 20
+            for side_members in _NUMI_HUMAN_RIB_ENTHESIS_MEMBER_IDS.values()
+            for member in side_members.values()
+        }
+        validated = _numi_human_source_component_enthesis_receipt(
+            receipt, member_bodies, source_sha,
+        )
+        self.assertEqual(validated["disposition_counts"], counts)
+        drifted = json.loads(json.dumps(receipt))
+        drifted["endpoint_records"][0]["bone_member_ids"] = ["FJ999999"]
+        with self.assertRaises(HumanImportError):
+            _numi_human_source_component_enthesis_receipt(
+                drifted, member_bodies, source_sha,
+            )
+
     def test_rib_topology_decomposition_is_deterministic_and_disconnected(self) -> None:
         vertices = [[0.0, 0.0, 0.0] for _ in range(8)]
         faces = [
@@ -195,6 +284,8 @@ class ImporterTests(unittest.TestCase):
             (2, "source_site_point", "surface_distance_exceeds_gate", "source_model_not_bone_adjacent"),
             (3, "source_site_point", "surface_patch_conditioning_failed_after_topology_aware_exact_surface_points", "source_model_bone_adjacent"),
             (4, "source_site_point", "body_has_multiple_bone_members_without_semantic_enthesis_map", "source_model_bone_adjacent"),
+            (6, "source_site_point", "source_thorax_non_rib_component_endpoint", "source_model_bone_adjacent"),
+            (7, "source_site_point", "source_model_non_bone_endpoint", "source_model_not_bone_adjacent"),
         )
         for index, attachment_mode, reason, source_class in fixtures:
             audit_endpoints.append({
@@ -229,16 +320,17 @@ class ImporterTests(unittest.TestCase):
             "endpoints": tendon_endpoints,
         }
         worklist = registration_worklist(audit, tendon)
-        self.assertEqual(worklist["summary"]["endpoint_count"], 6)
+        self.assertEqual(worklist["summary"]["endpoint_count"], 8)
         self.assertEqual(worklist["summary"]["already_surface_admitted_count"], 2)
-        self.assertEqual(worklist["summary"]["point_fallback_count"], 4)
+        self.assertEqual(worklist["summary"]["point_fallback_count"], 6)
         self.assertEqual(
             worklist["summary"]["disposition_counts"],
             {
                 "already_surface_admitted": 2,
                 "bodyparts_registration_candidate": 1,
                 "semantic_bone_member_resolution_needed": 1,
-                "source_model_non_bone_endpoint": 1,
+                "source_model_non_bone_endpoint": 2,
+                "source_thorax_non_rib_component_endpoint": 1,
                 "surface_patch_conditioning_backlog": 1,
             },
         )

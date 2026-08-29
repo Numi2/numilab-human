@@ -3816,8 +3816,9 @@ _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS = {
 # Resolve only identities that are explicit in both pinned sources: ``Tn`` is
 # thoracic vertebra n, ``Rn`` is the same-side rib n, QL ``12.1``--``12.3``
 # labels terminate on the same-side twelfth rib, and QL ``T12`` terminates on
-# the twelfth thoracic vertebra. Abdominal-wall routes such as EO/IO do not
-# name a unique bony member and remain point-owned.
+# the twelfth thoracic vertebra. Abdominal-wall route names such as EO/IO are
+# not member authority by themselves. Only a validated pinned-source connected-
+# component receipt may map them to a rib; all other termini remain point-owned.
 _NUMI_HUMAN_THORACIC_VERTEBRA_ENTHESIS_MEMBER_IDS = {
     1: "FJ3158", 2: "FJ3160", 3: "FJ3163", 4: "FJ3166",
     5: "FJ3169", 6: "FJ3171", 7: "FJ3173", 8: "FJ3174",
@@ -3881,6 +3882,150 @@ _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS = {
         for side in ("r", "l")
     },
 }
+_NUMI_HUMAN_SOURCE_COMPONENT_ENTHESIS_SCHEMA = (
+    "numi.human.myosim-abdominal-source-component-enthesis.v1"
+)
+_NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION = (
+    "source_topology_resolved_rib_member"
+)
+_NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION = (
+    "source_thorax_non_rib_component_endpoint"
+)
+_NUMI_HUMAN_SOURCE_COMPONENT_NON_BONE_DISPOSITION = (
+    "source_model_non_bone_endpoint"
+)
+_NUMI_HUMAN_SOURCE_COMPONENT_EXPECTED_RECORDS = {
+    ("rect_abd_r", 1): (22, _NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION, None),
+    ("rect_abd_l", 1): (23, _NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION, None),
+    ("EO1_r", 1): (186, _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION, 7),
+    ("EO2_r", 0): (187, _NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION, None),
+    ("EO3_r", 0): (188, _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION, 9),
+    ("EO4_r", 0): (189, _NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION, None),
+    ("EO5_r", 0): (190, _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION, 10),
+    ("EO6_r", 0): (191, _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION, 11),
+    ("IO4_r", 0): (195, _NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION, None),
+    ("IO5_r", 0): (196, _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION, 10),
+    ("IO6_r", 0): (197, _NUMI_HUMAN_SOURCE_COMPONENT_NON_BONE_DISPOSITION, None),
+    ("EO1_l", 1): (198, _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION, 7),
+    ("EO2_l", 0): (199, _NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION, None),
+    ("EO3_l", 0): (200, _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION, 9),
+    ("EO4_l", 0): (201, _NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION, None),
+    ("EO5_l", 0): (202, _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION, 10),
+    ("EO6_l", 0): (203, _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION, 11),
+    ("IO4_l", 0): (207, _NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION, None),
+    ("IO5_l", 0): (208, _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION, 10),
+    ("IO6_l", 0): (209, _NUMI_HUMAN_SOURCE_COMPONENT_NON_BONE_DISPOSITION, None),
+}
+
+
+def _numi_human_source_component_enthesis_receipt(
+    receipt: Any, member_body_indices: dict[str, int], source_sha: str,
+) -> dict[str, Any] | None:
+    """Validate the optional source-topology endpoint-ownership receipt."""
+    if receipt is None:
+        return None
+    if (
+        not isinstance(receipt, dict)
+        or receipt.get("schema") != _NUMI_HUMAN_SOURCE_COMPONENT_ENTHESIS_SCHEMA
+        or receipt.get("status")
+        != "candidate_passed_exact_component_identity_and_bilateral_gates"
+        or receipt.get("inputs", {}).get("myosim_archive_sha256") != source_sha
+        or receipt.get("endpoint_count") != 20
+        or receipt.get("bilateral_pair_count") != 10
+        or receipt.get("endpoint_migration_m") != 0.0
+        or receipt.get("new_joint_count") != 0
+        or receipt.get("source_mesh_name") != "torso_geom_13_ribcage_s"
+        or receipt.get("source_connected_component_count") != 36
+        or receipt.get("source_rib_component_count") != 24
+    ):
+        raise ImportError("Numi Human source-component enthesis receipt is invalid")
+    records = receipt.get("endpoint_records")
+    pairs = receipt.get("bilateral_pairs")
+    if (
+        not isinstance(records, list) or len(records) != 20
+        or not isinstance(pairs, list) or len(pairs) != 10
+        or any(not isinstance(pair, dict) or pair.get("passed") is not True for pair in pairs)
+    ):
+        raise ImportError("Numi Human source-component enthesis receipt is incomplete")
+    allowed_dispositions = {
+        _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION,
+        _NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION,
+        _NUMI_HUMAN_SOURCE_COMPONENT_NON_BONE_DISPOSITION,
+    }
+    counts: Counter[str] = Counter()
+    keys: set[tuple[str, int]] = set()
+    rib_members = {
+        member
+        for side_members in _NUMI_HUMAN_RIB_ENTHESIS_MEMBER_IDS.values()
+        for member in side_members.values()
+    }
+    for record in records:
+        if not isinstance(record, dict):
+            raise ImportError("Numi Human source-component enthesis record is malformed")
+        muscle = record.get("muscle")
+        endpoint = record.get("endpoint")
+        ordinal = record.get("endpoint_ordinal")
+        disposition = record.get("disposition")
+        members = record.get("bone_member_ids")
+        expected = _NUMI_HUMAN_SOURCE_COMPONENT_EXPECTED_RECORDS.get(
+            (muscle, ordinal)
+        )
+        if (
+            not isinstance(muscle, str)
+            or endpoint not in {"origin", "insertion"}
+            or ordinal != (0 if endpoint == "origin" else 1)
+            or disposition not in allowed_dispositions
+            or not isinstance(members, list)
+            or record.get("source_body_name") != "torso"
+            or record.get("endpoint_migration_m") != 0.0
+            or (muscle, ordinal) in keys
+            or expected is None
+            or record.get("source_actuator_index") != expected[0]
+            or disposition != expected[1]
+        ):
+            raise ImportError("Numi Human source-component enthesis identity is invalid")
+        keys.add((muscle, ordinal))
+        counts[disposition] += 1
+        if disposition == _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION:
+            side = muscle.rsplit("_", 1)[-1]
+            level = expected[2]
+            expected_member = _NUMI_HUMAN_RIB_ENTHESIS_MEMBER_IDS[side][level]
+            if (
+                len(members) != 1 or members[0] != expected_member
+                or members[0] not in rib_members
+                or members[0] not in member_body_indices
+                or member_body_indices[members[0]] != 20
+                or record.get("side") != ("right" if side == "r" else "left")
+                or record.get("thoracic_level") != level
+                or not isinstance(record.get("source_component_index"), int)
+                or not isinstance(record.get("source_triangle_index"), int)
+                or not isinstance(record.get("source_component_vertex_index_sha256"), str)
+                or not re.fullmatch(
+                    r"[0-9a-f]{64}", record["source_component_vertex_index_sha256"]
+                )
+            ):
+                raise ImportError(
+                    "Numi Human source-component rib ownership is invalid"
+                )
+        elif (
+            members or record.get("side") is not None
+            or record.get("thoracic_level") is not None
+        ):
+            raise ImportError("Numi Human non-rib source-component endpoint names a bone")
+    expected_counts = {
+        _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION: 10,
+        _NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION: 8,
+        _NUMI_HUMAN_SOURCE_COMPONENT_NON_BONE_DISPOSITION: 2,
+    }
+    if (
+        keys != set(_NUMI_HUMAN_SOURCE_COMPONENT_EXPECTED_RECORDS)
+        or dict(counts) != expected_counts
+        or receipt.get("disposition_counts") != expected_counts
+    ):
+        raise ImportError("Numi Human source-component enthesis counts drifted")
+    return json.loads(json.dumps(receipt))
+
+
 _NUMI_HUMAN_SEMANTIC_ENTHESIS_MEMBERS = {
     **_NUMI_HUMAN_TOE_ENTHESIS_MEMBERS,
     **_NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS,
@@ -5210,6 +5355,17 @@ def bodyparts_myosim_bone_visual_payload(
     anchors = registration.get("anchors")
     if not isinstance(anchors, list) or len(anchors) != len(_BODYPARTS_MYOSIM_BONE_ANCHORS):
         raise ImportError("BodyParts3D visual payload requires the complete visual-skeleton anchor set")
+    member_body_indices = {
+        str(anchor.get("source", {}).get("member_id")): int(
+            anchor.get("target", {}).get("core_body_index", -1)
+        )
+        for anchor in anchors if isinstance(anchor, dict)
+    }
+    source_component_enthesis_receipt = _numi_human_source_component_enthesis_receipt(
+        registration.get("abdominal_source_component_enthesis_registration"),
+        member_body_indices,
+        source_sha,
+    )
     vertices_payload: list[tuple[float, float, float, float, float, float]] = []
     indices_payload: list[int] = []
     records_payload: list[bytes] = []
@@ -5522,6 +5678,9 @@ def bodyparts_myosim_bone_visual_payload(
             "anchors": provenance_anchors,
         },
         "runtime_binding": "one source-local bone instance per Core articulated inertial body; local translation, rotation, and uniform scale are carried in the native payload",
+        **({
+            "source_component_enthesis_registration": source_component_enthesis_receipt,
+        } if source_component_enthesis_receipt is not None else {}),
         "toe_rigid_compounds": toe_rigid_compounds,
         "hallux_rigid_compounds": [
             record for record in toe_rigid_compounds if record["digit"] == 1
@@ -6964,6 +7123,15 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
     anchors = source.get("anchors")
     if not isinstance(anchors, list):
         raise ImportError("Numi Human tendon envelope bone member identities are absent")
+    member_body_indices = {
+        str(anchor.get("member_id")): int(anchor.get("core_body_index", -1))
+        for anchor in anchors if isinstance(anchor, dict)
+    }
+    source_component_enthesis_receipt = _numi_human_source_component_enthesis_receipt(
+        manifest.get("source_component_enthesis_registration"),
+        member_body_indices,
+        source_sha,
+    )
     raw = payload_path.read_bytes()
     header_size = struct.calcsize("<8s5I32s")
     if len(raw) < header_size:
@@ -7028,6 +7196,9 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
         "bone_count": bone_count,
         "registration_fingerprint32": f"{fingerprint:08x}",
         "manifest": {"file": manifest_path.name, "sha256": sha256(manifest_path)},
+        **({
+            "source_component_enthesis_registration": source_component_enthesis_receipt,
+        } if source_component_enthesis_receipt is not None else {}),
     }, payload_path
 
 
@@ -7284,22 +7455,46 @@ def _numi_human_tendon_surface_envelope(
                 ranked.append((x * direction[0] + y * direction[1], -geodesic[index], -index, index))
             if ranked:
                 directional_vertices.append(max(ranked)[3])
+        # A nearly planar tangent stencil can be rank-valid yet require large
+        # opposing nodal forces when the source point sits off a curved bone
+        # surface. Add deterministic 3-D support extrema from the same
+        # connected geodesic patch. These are still exact existing vertices;
+        # the extra directions improve the wrench basis without enlarging the
+        # 12 mm patch or relaxing the amplification gate.
+        for first in (-1.0, 0.0, 1.0):
+            for second in (-1.0, 0.0, 1.0):
+                for third in (-1.0, 0.0, 1.0):
+                    if first == second == third == 0.0:
+                        continue
+                    magnitude = math.sqrt(first * first + second * second + third * third)
+                    direction = (first / magnitude, second / magnitude, third / magnitude)
+                    ranked = []
+                    for index in eligible_vertices:
+                        delta = [
+                            vertices[index][axis] - closest_point[axis]
+                            for axis in range(3)
+                        ]
+                        ranked.append((
+                            sum(delta[axis] * direction[axis] for axis in range(3)),
+                            -geodesic[index], -index, index,
+                        ))
+                    if ranked:
+                        directional_vertices.append(max(ranked)[3])
         directional_vertices.extend(sorted(
             eligible_vertices,
             key=lambda index: (-geodesic[index], index),
-        )[:2])
+        )[:4])
         for index in directional_vertices:
             add_topology_candidate(
                 vertices[index], {"kind": "connected_bone_vertex", "vertex_index": index}, index,
             )
 
-        # Retain the complete deterministic eight-direction surface stencil
-        # plus its two geodesic extrema. The former 14-point cap truncated the
-        # last directions and could lose an already-admitted enthesis after a
-        # proper rigid source-bone registration. Eighteen candidates bound the
-        # search to 3060 four-point combinations while preserving all exact
-        # surface/force gates.
-        topology_candidates = topology_candidates[:18]
+        # Retain the seed-triangle points plus tangent and 3-D surface extrema.
+        # Thirty-two candidates bound the fallback to 35,960 four-point
+        # combinations. This is paid only after the fast compass patch fails;
+        # all candidates remain on the original connected surface and every
+        # force, moment, radius, and amplification gate remains unchanged.
+        topology_candidates = topology_candidates[:32]
         topology_candidate_count = len(topology_candidates)
         for selected_candidates in combinations(topology_candidates, 4):
             nodes = [candidate["point"] for candidate in selected_candidates]
@@ -7550,6 +7745,22 @@ def numi_human_tendon_attachment_envelope_payload(
             if not isinstance(member_id, str) or member_id in surfaces_by_member:
                 raise ImportError("Numi Human tendon envelope bone-member identity is invalid")
             surfaces_by_member[member_id] = surface
+    source_component_members: dict[tuple[str, int], tuple[str, ...]] = {}
+    source_component_point_reasons: dict[tuple[str, int], str] = {}
+    source_component_receipt = bone_descriptor.get(
+        "source_component_enthesis_registration"
+    )
+    if source_component_receipt is not None:
+        for record in source_component_receipt["endpoint_records"]:
+            key = (str(record["muscle"]), int(record["endpoint_ordinal"]))
+            if key in _NUMI_HUMAN_SEMANTIC_ENTHESIS_MEMBERS:
+                raise ImportError(
+                    f"Numi Human source-component enthesis duplicates semantic map {key}"
+                )
+            if record["disposition"] == _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION:
+                source_component_members[key] = tuple(record["bone_member_ids"])
+            else:
+                source_component_point_reasons[key] = str(record["disposition"])
     endpoint_payload: list[bytes] = []
     envelope_payload: list[bytes] = []
     endpoint_manifest: list[dict[str, Any]] = []
@@ -7559,6 +7770,7 @@ def numi_human_tendon_attachment_envelope_payload(
     semantic_toe_enthesis_count = 0
     semantic_limb_enthesis_count = 0
     semantic_axial_enthesis_count = 0
+    source_component_enthesis_count = 0
     compass_vertex_envelope_count = 0
     topology_aware_exact_surface_envelope_count = 0
     for muscle_index, (record, muscle_metadata) in enumerate(zip(muscles, metadata, strict=True)):
@@ -7583,8 +7795,9 @@ def numi_human_tendon_attachment_envelope_payload(
                 migrate_semantic_rigid_foot_endpoints
                 and semantic_key in _NUMI_HUMAN_RIGID_FOOT_MIGRATABLE_ENTHESES
             )
-            semantic_members = _NUMI_HUMAN_SEMANTIC_ENTHESIS_MEMBERS.get(
-                semantic_key
+            semantic_members = (
+                _NUMI_HUMAN_SEMANTIC_ENTHESIS_MEMBERS.get(semantic_key)
+                or source_component_members.get(semantic_key)
             )
             if semantic_members is not None:
                 semantic_surfaces = [
@@ -7599,15 +7812,22 @@ def numi_human_tendon_attachment_envelope_payload(
                         maximum_migrated_endpoint_distance_m
                         if migrate_endpoint else maximum_surface_distance_m
                     )
+                    semantic_kind = (
+                        "source_topology_resolved_lateralized_rib_member"
+                        if semantic_key in source_component_members
+                        else _numi_human_semantic_enthesis_kind(
+                            semantic_key, len(semantic_members),
+                        )
+                    )
                     envelope, reason = _numi_human_semantic_enthesis_envelope(
                         source_point, semantic_surfaces, semantic_members,
                         semantic_maximum_distance, maximum_patch_radius_m,
                         maximum_force_amplification,
-                        _numi_human_semantic_enthesis_kind(
-                            semantic_key, len(semantic_members),
-                        ),
+                        semantic_kind,
                         migrate_endpoint,
                     )
+            elif semantic_key in source_component_point_reasons:
+                reason = source_component_point_reasons[semantic_key]
             elif not surfaces:
                 reason = "body_has_no_registered_bone_surface"
             elif len(surfaces) != 1:
@@ -7657,7 +7877,10 @@ def numi_human_tendon_attachment_envelope_payload(
                 elif envelope.get("surface_patch_method") == "connected_geodesic_topology_aware_exact_surface_points":
                     topology_aware_exact_surface_envelope_count += 1
                 if "semantic_enthesis_map" in envelope:
-                    if semantic_key in _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS:
+                    if semantic_key in source_component_members:
+                        semantic_axial_enthesis_count += 1
+                        source_component_enthesis_count += 1
+                    elif semantic_key in _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS:
                         semantic_toe_enthesis_count += 1
                     elif semantic_key in _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS:
                         semantic_limb_enthesis_count += 1
@@ -7779,7 +8002,8 @@ def numi_human_tendon_attachment_envelope_payload(
             "multiple_bone_members_fail_closed": True,
             "multiple_bone_exception": (
                 "only exact source-pinned toe maps, declared bilateral hip/tibia/fibula/rigid-foot "
-                "route-member maps, and source-named thoracic vertebra/rib maps are admitted; "
+                "route-member maps, source-named thoracic maps, and a validated pinned-source "
+                "component receipt are admitted; "
                 "all other multi-bone bodies fail closed"
             ),
             "toe_semantic_enthesis_map": {
@@ -7810,6 +8034,21 @@ def numi_human_tendon_attachment_envelope_payload(
                     _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS.items()
                 )
             },
+            "source_component_enthesis_map": {
+                f"{muscle}:{endpoint}": {
+                    "bone_member_ids": list(members),
+                    "kind": "source_topology_resolved_lateralized_rib_member",
+                }
+                for (muscle, endpoint), members in sorted(
+                    source_component_members.items()
+                )
+            },
+            "source_component_point_dispositions": {
+                f"{muscle}:{endpoint}": reason
+                for (muscle, endpoint), reason in sorted(
+                    source_component_point_reasons.items()
+                )
+            },
             "maximum_toe_semantic_spread_m": _NUMI_HUMAN_TOE_ENTHESIS_MAXIMUM_SPREAD_M,
             "source_endpoint_migration_m": max(
                 (item["endpoint_migration_m"] for item in endpoint_manifest),
@@ -7829,6 +8068,7 @@ def numi_human_tendon_attachment_envelope_payload(
             "semantic_toe_enthesis_envelope_count": semantic_toe_enthesis_count,
             "semantic_limb_enthesis_envelope_count": semantic_limb_enthesis_count,
             "semantic_axial_enthesis_envelope_count": semantic_axial_enthesis_count,
+            "source_component_enthesis_envelope_count": source_component_enthesis_count,
             "compass_vertex_envelope_count": compass_vertex_envelope_count,
             "topology_aware_exact_surface_envelope_count": topology_aware_exact_surface_envelope_count,
             "source_site_point_fallback_count": point_count,

@@ -82,6 +82,22 @@ explicit source-site point laws. The full payload passes native Metal
 force-transfer and byte-identical replay on Apple M4 Pro. See the
 [torso and axial source registration](Docs/TORSO_AXIAL_SOURCE_REGISTRATION_V1.md).
 
+The follow-on abdominal component pass resolves the former 20 ambiguous torso
+termini from the exact connected component of the pinned MyoSim thorax mesh:
+10 are rib-owned, eight are anterior non-rib, and two are explicitly non-bone.
+Eight of the rib termini pass the unchanged surface and force-transfer gates,
+raising `NHTENDON3` to 628 distributed envelopes and 204 point laws. Bilateral
+EO3 remain honest registration candidates; the anterior sites remain reserved
+for cartilage/fascia mechanics. See the
+[abdominal source-component entheses record](Docs/ABDOMINAL_SOURCE_COMPONENT_ENTHESES_V1.md).
+
+<p align="center">
+  <img src="Docs/media/numi-human-abdominal-source-component-entheses-v1-2048/admitted-rib-entheses/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-front.png" width="24%" alt="Abdominal rib entheses, front" />
+  <img src="Docs/media/numi-human-abdominal-source-component-entheses-v1-2048/admitted-rib-entheses/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-oblique.png" width="24%" alt="Abdominal rib entheses, oblique" />
+  <img src="Docs/media/numi-human-abdominal-source-component-entheses-v1-2048/admitted-rib-entheses/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-side.png" width="24%" alt="Abdominal rib entheses, side" />
+  <img src="Docs/media/numi-human-abdominal-source-component-entheses-v1-2048/admitted-rib-entheses/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-rear.png" width="24%" alt="Abdominal rib entheses, rear" />
+</p>
+
 <p align="center">
   <img src="Docs/media/numi-human-torso-axial-source-registration-v1-2048/torso-clean/myosim-fullbody-articulated-bodyparts-bones-focus-body-20-front.png" width="24%" alt="Registered rib cage and thoracic spine, front" />
   <img src="Docs/media/numi-human-torso-axial-source-registration-v1-2048/torso-clean/myosim-fullbody-articulated-bodyparts-bones-focus-body-20-oblique.png" width="24%" alt="Registered rib cage and thoracic spine, oblique" />
@@ -186,8 +202,9 @@ The promoted `NHTENDON3` artifact gives all 832 origin/insertion endpoints a
 fail-closed tendon-to-bone law without silently moving an authored route site.
 After source-coherent anatomy, semantic same-body ownership, topology-aware
 exact-surface search, upper/lower-limb registration, and torso/axial
-registration, 620 endpoints admit distributed BodyParts3D four-node surface
-envelopes and 212 remain explicit body-owned source-point laws (74.52% surface
+registration plus exact abdominal source-component ownership, 628 endpoints
+admit distributed BodyParts3D four-node surface envelopes and 204 remain
+explicit body-owned source-point laws (75.48% surface
 coverage). Eighteen of those envelopes are the reviewed route-private
 foot/hallux terminals with deterministic reference calibration; maximum
 endpoint migration remains `17.262 mm`.
@@ -199,6 +216,7 @@ payload passes all 832 transfers with a maximum `0.000244141 N` force residual,
 `0.000008126 N m` moment residual, and byte-identical replay. The standing
 controller still reports `balanced=false`; this is force-path/runtime evidence,
 not stable-standing qualification. See the
+[abdominal component record](Docs/ABDOMINAL_SOURCE_COMPONENT_ENTHESES_V1.md),
 [torso/axial record](Docs/TORSO_AXIAL_SOURCE_REGISTRATION_V1.md),
 [lower-limb record](Docs/LOWER_LIMB_SOURCE_REGISTRATION_V2.md), and historical
 [fixed-bone foot record](Docs/FIXED_BONE_FOOT_ENTHESES_V1.md).

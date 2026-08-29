@@ -62,6 +62,9 @@ from .lower_limb_registration import propose_lower_limb_registration
 from .thoracic_registration import SCHEMA as THORACIC_REGISTRATION_SCHEMA
 from .pelvis_registration import SCHEMA as PELVIS_REGISTRATION_SCHEMA
 from .rib_registration import SCHEMA as RIB_REGISTRATION_SCHEMA
+from .abdominal_enthesis_registration import (
+    SCHEMA as ABDOMINAL_ENTHESIS_REGISTRATION_SCHEMA,
+)
 from .myosim_bone_proximity import (
     AUDIT_SCHEMA as MYOSIM_SOURCE_BONE_PROXIMITY_SCHEMA,
     WORKLIST_SCHEMA as BODYPARTS_REGISTRATION_WORKLIST_SCHEMA,
@@ -554,6 +557,52 @@ def myosim_rib_registration(arguments: argparse.Namespace) -> int:
         or receipt.get("schema") != RIB_REGISTRATION_SCHEMA
     ):
         raise ImportError("MyoSim rib registration wrote an unsupported schema")
+    print(f"wrote {output}")
+    return 0
+
+
+def myosim_abdominal_enthesis_registration(arguments: argparse.Namespace) -> int:
+    exporter = arguments.python.expanduser().absolute()
+    if not exporter.is_file() or not os.access(exporter, os.X_OK):
+        raise ImportError(
+            f"MyoSim abdominal enthesis registration Python is unavailable: {exporter}"
+        )
+    output = arguments.output.resolve()
+    environment = dict(os.environ)
+    source_path = str(REPOSITORY_ROOT / "src")
+    environment["PYTHONPATH"] = source_path + (
+        os.pathsep + environment["PYTHONPATH"]
+        if environment.get("PYTHONPATH") else ""
+    )
+    command = [
+        str(exporter), "-m", "numilab_human.abdominal_enthesis_registration",
+        "--sources", str(arguments.sources.resolve()),
+        "--registration", str(arguments.registration.resolve()),
+        "--source-audit", str(arguments.source_audit.resolve()),
+        "--worklist", str(arguments.worklist.resolve()),
+        "--tendon-manifest", str(arguments.tendon_manifest.resolve()),
+        "--output", str(output),
+    ]
+    completed = subprocess.run(
+        command, capture_output=True, text=True, check=False, env=environment,
+    )
+    if completed.returncode != 0:
+        detail = (
+            completed.stderr.strip() or completed.stdout.strip()
+            or "no registration output"
+        )
+        raise ImportError(f"MyoSim abdominal enthesis registration failed: {detail}")
+    candidate = read_json(output)
+    receipt = candidate.get("abdominal_source_component_enthesis_registration")
+    if (
+        candidate.get("schema")
+        != "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2"
+        or not isinstance(receipt, dict)
+        or receipt.get("schema") != ABDOMINAL_ENTHESIS_REGISTRATION_SCHEMA
+    ):
+        raise ImportError(
+            "MyoSim abdominal enthesis registration wrote an unsupported schema"
+        )
     print(f"wrote {output}")
     return 0
 
@@ -1288,6 +1337,34 @@ def parser() -> argparse.ArgumentParser:
         help="Python environment with the pinned myo-sim checkout, NumPy, and MuJoCo installed",
     )
     rib_registration_parser.set_defaults(handler=myosim_rib_registration)
+    abdominal_registration_parser = commands.add_parser(
+        "myosim-abdominal-enthesis-registration",
+        help=(
+            "resolve abdominal endpoint ownership from exact pinned thorax components"
+        ),
+    )
+    abdominal_registration_parser.add_argument("--sources", type=Path, required=True)
+    abdominal_registration_parser.add_argument(
+        "--registration", type=Path, required=True,
+    )
+    abdominal_registration_parser.add_argument(
+        "--source-audit", type=Path, required=True,
+    )
+    abdominal_registration_parser.add_argument("--worklist", type=Path, required=True)
+    abdominal_registration_parser.add_argument(
+        "--tendon-manifest", type=Path, required=True,
+    )
+    abdominal_registration_parser.add_argument("--output", type=Path, required=True)
+    abdominal_registration_parser.add_argument(
+        "--python", type=Path, default=Path(sys.executable),
+        help=(
+            "Python environment with the pinned myo-sim checkout, NumPy, and "
+            "MuJoCo installed"
+        ),
+    )
+    abdominal_registration_parser.set_defaults(
+        handler=myosim_abdominal_enthesis_registration
+    )
     myosim_probe_parser = commands.add_parser(
         "myosim-probe",
         help="run the native Core full-body muscle-reference probe against a compiled MyoSim artifact",

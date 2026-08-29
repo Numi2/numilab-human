@@ -101,6 +101,47 @@ def _components(vertices: Any, faces: Any) -> list[list[int]]:
     return sorted(result.values(), key=lambda value: (-len(value), value[0]))
 
 
+def _rib_components_by_side_level(
+    vertices: Any, faces: Any, np: Any,
+) -> tuple[list[list[int]], dict[tuple[str, int], list[int]]]:
+    """Resolve the pinned thorax mesh's 24 bilateral rib components.
+
+    The remaining 12 connected components are deliberately not called bone:
+    the source mesh combines anterior thoracic structures under one visual
+    asset and does not give those components a unique bone identity.
+    """
+    all_components = _components(vertices, faces)
+    rib_components = [
+        component for component in all_components
+        if float(np.mean(vertices[component], axis=0)[0]) < 0.0
+    ]
+    if len(all_components) != 36 or len(rib_components) != 24:
+        raise RuntimeError(
+            "ribcage topology drifted; expected 36 components including 24 ribs"
+        )
+    rib_components.sort(key=lambda component: (
+        -float(np.mean(vertices[component], axis=0)[1]),
+        -float(np.mean(vertices[component], axis=0)[2]),
+    ))
+    component_by_side_level: dict[tuple[str, int], list[int]] = {}
+    for level in range(1, 13):
+        pair = rib_components[(level - 1) * 2:level * 2]
+        if len(pair) != 2:
+            raise RuntimeError(
+                f"rib registration cannot form source pair at level {level}"
+            )
+        for component in pair:
+            centroid = np.mean(vertices[component], axis=0)
+            side = "r" if float(centroid[2]) > 0.0 else "l"
+            key = (side, level)
+            if key in component_by_side_level:
+                raise RuntimeError(
+                    f"rib registration source pair is not bilateral at level {level}"
+                )
+            component_by_side_level[key] = component
+    return all_components, component_by_side_level
+
+
 def _dense_component_surface(
     vertices: Any, faces: Any, component: list[int], np: Any,
 ) -> Any:
@@ -228,31 +269,9 @@ def propose_rib_registration(
         np.asarray(ribcage["vertices"], dtype=float), torso_body, np
     )
     source_faces = np.asarray(ribcage["faces"], dtype=int)
-    all_components = _components(source_vertices, source_faces)
-    rib_components = [
-        component for component in all_components
-        if float(np.mean(source_vertices[component], axis=0)[0]) < 0.0
-    ]
-    if len(all_components) != 36 or len(rib_components) != 24:
-        raise RuntimeError(
-            "ribcage topology drifted; expected 36 components including 24 ribs"
-        )
-    rib_components.sort(key=lambda component: (
-        -float(np.mean(source_vertices[component], axis=0)[1]),
-        -float(np.mean(source_vertices[component], axis=0)[2]),
-    ))
-    component_by_side_level: dict[tuple[str, int], list[int]] = {}
-    for level in range(1, 13):
-        pair = rib_components[(level - 1) * 2:level * 2]
-        if len(pair) != 2:
-            raise RuntimeError(f"rib registration cannot form source pair at level {level}")
-        for component in pair:
-            centroid = np.mean(source_vertices[component], axis=0)
-            side = "r" if float(centroid[2]) > 0.0 else "l"
-            key = (side, level)
-            if key in component_by_side_level:
-                raise RuntimeError(f"rib registration source pair is not bilateral at level {level}")
-            component_by_side_level[key] = component
+    all_components, component_by_side_level = _rib_components_by_side_level(
+        source_vertices, source_faces, np,
+    )
 
     audit_index = {
         (int(endpoint["source_actuator_index"]), str(endpoint["endpoint"])): endpoint
@@ -535,7 +554,7 @@ def propose_rib_registration(
             "myosim_archive_sha256": next(iter(source_hashes)),
         },
         "ribcage_connected_component_count": len(all_components),
-        "topology_resolved_rib_component_count": len(rib_components),
+        "topology_resolved_rib_component_count": len(component_by_side_level),
         "bodyparts_rib_member_count": len(fit_receipts),
         "named_enthesis_count": len(endpoint_metrics),
         "named_enthesis_gate_pass_count": sum(item["passed_12mm_gate"] for item in endpoint_metrics),

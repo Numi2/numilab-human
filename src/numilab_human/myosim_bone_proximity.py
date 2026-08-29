@@ -420,7 +420,11 @@ def registration_worklist(
             continue
         reason = str(tendon.get("admission_reason"))
         source_class = str(audit.get("classification"))
-        if reason in {
+        if reason == "source_thorax_non_rib_component_endpoint":
+            disposition = "source_thorax_non_rib_component_endpoint"
+        elif reason == "source_model_non_bone_endpoint":
+            disposition = "source_model_non_bone_endpoint"
+        elif reason in {
             "surface_distance_exceeds_gate",
             "semantic_enthesis_representative_distance_exceeds_gate",
         }:
@@ -531,6 +535,11 @@ def registration_worklist(
             },
             {
                 "step": 5,
+                "disposition": "source_thorax_non_rib_component_endpoint",
+                "action": "bind to a named costal-cartilage, sternum, or fascia mechanics component after exact tissue classification",
+            },
+            {
+                "step": 6,
                 "disposition": "source_model_non_bone_endpoint",
                 "action": "classify aponeurosis, fascia, or other body-owned soft-tissue attachment before any surface mechanics",
             },

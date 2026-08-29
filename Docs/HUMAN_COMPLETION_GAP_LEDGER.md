@@ -13,7 +13,7 @@ completion gate is still open; **open** means the end-state owner is absent.
 | Source foundation | BodyParts3D 4.0 plus active MyoSim 416-route body; Rajagopal and public MoBL-ARMS retained as comparative imports | partial | one source-faithful lower/upper mechanics composition is not qualified; authenticated bimanual upper source and exact non-cylinder wrap families remain separate | pinned bilateral source composition, exact wraps, mass/inertia/joint/path parity, and license receipts |
 | Skeleton and articulation | 157 Core bodies, 51 joint equalities, 184 pose-bound BodyParts3D bone meshes; lower-limb source-mesh and 40-boundary gates plus T1-T12, costovertebral, and sacroiliac source-geometry continuity | partial | several source bones share one mechanics body; no independent lesser-toe articulation; Mortensen neck merge is not active | complete named segment/DoF matrix with multi-pose source parity and loaded joint validation |
 | Muscle actuation | all 416 current-pose routes, wraps, activation, compliant fibre/tendon equilibrium, `J^T`, persistent Metal stepping | partial | inferred compliant architecture and bounded recruitment are not full OpenSim-equivalent dynamic fibre/tendon state or held-out force validation | source curve/path/moment-arm parity plus held-out force-length-velocity and dynamic state tests |
-| Tendon-to-bone transfer | torso/axial-registered `NHTENDON3` covers all 832 endpoints with 620 distributed envelopes and 212 exact point laws; 18 of the envelopes use route-private exact named-bone sites with default-pose reference calibration and no added articulation | partial | ordinary single-bone distance-registration candidates are closed; four lumped-toe spreads, 11 conditioning failures, 24 missing surfaces, 20 unnamed multi-bone endpoints, and 153 soft-tissue/aponeurotic classifications remain explicitly fail-closed | exact semantic ownership or source-derived mechanics surfaces for the remaining bone candidates, followed by calibrated tissue ownership for non-bone endpoints |
+| Tendon-to-bone transfer | source-component-qualified `NHTENDON3` covers all 832 endpoints with 628 distributed envelopes and 204 exact point laws; 18 envelopes use route-private exact named-bone sites and eight additional abdominal termini use pinned thorax-component ownership | partial | two EO3 rib-registration candidates, four lumped-toe spreads, 11 conditioning failures, 24 missing surfaces, eight anterior thorax non-rib termini, and 155 source-model non-bone termini remain explicitly fail-closed | close only reviewed bone candidates under unchanged gates, then add calibrated cartilage/fascia/aponeurosis ownership for non-bone endpoints |
 | Tendon and fascia continuum | six-region pectoral Matter FEM with transactional NHTENDON2/3 loads | partial | generated pectoral volume and 10% load share are assumptions; no whole-body tendon/fascia continuum or two-way bone-muscle coupling | registered regional meshes, calibrated nonlinear material receipts, two-way load coupling, convergence, replay, and held-out deformation |
 | Ligaments, cartilage, and menisci | no production owning solver | open | joint constraint and visual proximity are not tissue mechanics | named geometry, nonlinear ligament laws, compliant cartilage/meniscus contact, calibration, and joint-level validation |
 | Anatomical collision and contact | ten MyoSim foot witnesses and source plane run on Metal | partial | no BodyParts3D collider registration, collision exclusions, calibrated friction/compliance, or whole-body anatomical contact | conservative registered proxies, material receipts, deterministic replay, and held-out support/contact outcomes |
@@ -29,38 +29,42 @@ The current compiler retains one law for every origin and insertion:
 
 | Disposition | Value |
 | --- | ---: |
-| connected BodyParts3D four-node surface envelope | 602 |
+| connected BodyParts3D four-node surface envelope | 610 |
 | route-private migrated BodyParts3D four-node envelope | 18 |
-| exact source-site point law | 212 |
+| exact source-site point law | 204 |
 | maximum endpoint migration | `17.2616479 mm` |
 
-The 212 point laws are not one homogeneous bug. Current fail-closed reasons are:
+The 204 point laws are not one homogeneous bug. Current fail-closed reasons are:
 
 | Reason | Count | Correct next action |
 | --- | ---: | --- |
 | toe semantic representative exceeds 12 mm, source endpoint is bone-adjacent | 4 | retain the exact toe compound and resolve the terminal identity/geometry without independent articulation or gap patches |
-| distance exceeds 12 mm and source endpoint is not bone-adjacent | 153 | classify aponeurosis/fascia/soft-tissue ownership; never warp a bone toward the site |
+| exact thorax topology resolves a rib, but registered BodyParts3D distance exceeds 12 mm | 2 | review EO3 bilateral rib registration; admit only if the existing distance and force/moment gates pass |
+| source endpoint is explicitly non-bone in the pinned source model | 155 | classify aponeurosis/fascia/soft-tissue ownership; never warp a bone toward the site |
+| exact thorax topology resolves an anterior non-rib component | 8 | add costal-cartilage/sternum/fascia mechanics; do not redirect the endpoint to a nearby rib |
 | conditioning still fails after topology-aware exact-surface search | 11 | retain point law; consider a source-derived mechanics surface without relaxing amplification |
 | body has no registered bone surface | 24 | classify soft-tissue/aponeurosis endpoints separately; add bone geometry only when anatomically correct |
-| multiple members without unique semantic identity | 20 | retain point law until the pinned source names one member or a reviewed correspondence exists |
 
-The ordinary single-bone distance-registration backlog is now zero. The four
-toe rows remain a semantic compound problem, not permission to add independent
-toe articulation or move a neighboring bone under the endpoint.
+The former 20-member semantic ambiguity is zero. Exact pinned-source topology
+classifies it as 10 rib, eight anterior non-rib, and two explicit non-bone
+termini. Eight rib termini now pass; bilateral EO3 remain the only resulting
+bone-registration candidates. The four toe rows remain a semantic compound
+problem, not permission to add independent articulation or move a neighboring
+bone under the endpoint.
 
 ## Execution order
 
 The upper-limb, lower-limb, thoracic, rib, and pelvis source-mesh solvers close
-every ordinary single-bone distance failure without relaxing the ordinary
-12 mm gate. The axial pass preserves 60 previously admitted envelopes and
-recovers 56 point laws: 20 thoracic, 34 rib, and two iliacus endpoints.
+the prior ordinary single-bone distance failures without relaxing the 12 mm
+gate. The abdominal component pass then resolves every remaining multi-member
+identity and admits eight more exact rib envelopes under unchanged gates.
 
-1. Resolve the 20 multi-member identities and 11 conditioned patches using
-   reviewed source semantics or source-derived mechanics surfaces. Classify the
-   24 missing-surface and 153 non-bone rows as bone, fascia, aponeurosis, or
-   other soft tissue before admitting them. Keep the four lesser-toe spreads on
-   the existing bilateral rigid compounds until exact terminal identity exists.
-2. Add costal cartilage, intervertebral discs, named ligaments, registered
+1. Review bilateral EO3 registration and the 11 conditioned patches without
+   relaxing distance, amplification, force, or moment gates. Classify the 24
+   missing-surface and 155 source-model non-bone rows before admitting them.
+   Keep the four lesser-toe spreads on the existing rigid compounds.
+2. Add costal cartilage and fascia ownership for the eight exact anterior
+   thorax non-rib termini, then intervertebral discs, named ligaments, registered
    anatomical colliders, and calibrated support contact, then
    close assistance-free balance before training gait.
 3. Generalize the pectoral downstream-consumer transaction into whole-body
