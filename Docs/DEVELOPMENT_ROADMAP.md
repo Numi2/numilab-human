@@ -1,577 +1,846 @@
-# Numi Human development roadmap
+# Numi Human frontier execution roadmap
 
-Status: evidence-led plan, 2026-08-29
+Status: state-of-the-art-first execution specification, 2026-08-29
 
-Reviewed workspace snapshot:
+This roadmap is organized by permanent architecture, scientific dependencies,
+and evidence convergence. It has no calendar phases, MVP ladder, or temporary
+product tier. The complete target system is fixed now; every unblocked
+workstream runs in parallel, and every accepted increment must inhabit the
+permanent system it is intended to become.
 
-- Numi Human: `main` at `0feea7d637c1a698c89984155f0a7098f0350e3f`
-  (`origin/main` matched at review time);
-- Numi runtime: MetalRobo `coupled` at
+Reviewed evidence snapshot:
+
+- Numi Human committed baseline: `main` at
+  `85f422833a8ec965f3c3748a326f78fb39b4f57c`;
+- Numi runtime reviewed by the preceding audit: MetalRobo `coupled` at
   `6d03b7a267e2743bf9cb51362ce18764ac1408a7`;
-- local importer/compiler suite: `88 passed` with
+- importer/compiler suite at that snapshot: `88 passed` with
   `PYTHONPATH=src /Users/home/.pyenv/versions/3.10.12/bin/python3 -m pytest -q tests`;
-- `numi doctor`: Apple Silicon, Metal tools, native trainer, rollout runtime,
-  robot catalog, and MLX learner reported ready.
+- a live `numi context` recheck confirmed Numi Lab `0.4.0`, the current Human
+  workspace, and clean runtime `coupled@6d03b7a`; a parallel `numi doctor`
+  reported the robot-catalog self-check `Killed: 9`, catalog `incompatible`,
+  and overall `action required`. A confirmatory call then failed to complete
+  within 90 seconds. Current aggregate readiness is therefore unhealthy and
+  its failure path is not yet bounded.
 
-This document is a plan, not new physical qualification. The review inspected
-the live repositories and retained evidence but did not rerun a long Metal
-qualification. The [completion gap ledger](HUMAN_COMPLETION_GAP_LEDGER.md)
-remains the current claim boundary and must be updated when executable evidence
-changes.
+This document defines ambition and execution; it is not new physical
+qualification. The [completion gap ledger](HUMAN_COMPLETION_GAP_LEDGER.md) is
+the claim boundary until superseded by executable evidence on an exact stack.
 
-## Executive decision
+## Operating law
 
-The shortest credible path is:
+“Best from start” means:
+
+1. lock the final ownership, data, coupling, action, state, failure, and
+   evidence contracts before adding more incompatible demonstrations;
+2. implement thin vertical slices only on those final contracts—limited
+   coverage is acceptable, disposable physics is not;
+3. activate source, mechanics, contact, tissue, control, data, validation,
+   rendering, and Apple-GPU work simultaneously;
+4. prioritize by dependency fan-out, scientific risk, irreversibility, and
+   evidence leverage—not by dates or release optics;
+5. allow competing algorithms behind permanent interfaces and promote them by
+   reproduced evidence, rather than freezing an unproven method; and
+6. keep claims narrower than ambition: owning live code plus executable
+   evidence determines what is implemented, not the roadmap text.
+
+Ultra-high urgency comes from maximum safe concurrency, short proof loops,
+stable interfaces, and immediate integration. It does not authorize hidden
+assistance, fake materials, one-way coupling called coupled physics, alternate
+host physics, unlicensed data, or performance claims without measurement.
+
+## State-of-the-art mission
+
+Numi Human targets an anatomically traceable, personalized, neuromuscular and
+multiphysics computational human whose articulation, muscles and tendons,
+anatomical contact, deformable tissues, sensing, control, appearance, and
+uncertainty execute through one Apple-native transactional architecture and are
+qualified against independent physical evidence.
+
+The final Human must support:
+
+- a whole-human source graph spanning skeleton, joints, muscles, tendons,
+  aponeuroses, fascia, ligaments, cartilage, menisci, discs, skin,
+  subcutaneous tissue, organs, vessels, and nerves, with an explicit mechanics
+  and evidence status for every represented structure;
+- source-faithful multibody and musculotendon dynamics with semantic anatomical
+  identities, exact coordinate transforms, routes, wraps, activation,
+  compliant fibre/tendon state, passive force, fatigue and energetics state,
+  and extensible cervical, hand, foot, craniofacial, and respiratory anatomy;
+- whole-human collision topology, continuous collision on every pair whose
+  compiled swept-motion bound admits tunnelling, distributed pressure contact,
+  full articulated coupling, friction, impact, self-contact, and contact with
+  deformable anatomy;
+- a multiresolution whole-human continuum in which active sparse solve domains
+  refine the anatomy without changing the coupling law or creating disconnected
+  tissue “islands”;
+- conservative two-way exchange among articulation, muscles, contact, tissues,
+  and external loads with every force owned exactly once;
+- hierarchical neural control and state estimation through the full semantic
+  stimulation surface, with reflex, model-based, learned, and NumiBrain-driven
+  controllers interchangeable behind one contract;
+- device-resident proprioception, tactile/pressure, RGB-D, event, physiological,
+  and task observations, plus a mechanics-consistent physical exterior and a
+  separately owned presentation surface;
+- subject-specific identification, population distributions, uncertainty,
+  sensitivity, identifiability, and held-out generalization; and
+- deterministic replay, transactional rollback, scientific receipts, and
+  same-stack Apple-GPU performance evidence.
+
+The versioned `HumanPack.target-coverage` matrix fixes the completion scope. A
+compiled run may deactivate expensive fields that are irrelevant to its task,
+but the architecture must support every row and whole-Human completion requires
+every cell to reach integrated qualification; absence may not be redefined as a
+smaller “declared” Human.
+
+| Fixed coverage domain | Mandatory target |
+| --- | --- |
+| Skeletal topology | Complete axial and appendicular skeleton; cervical/hyoid/craniofacial system; articulated hands, intrinsic fingers, feet, and intrinsic toes; source-defined constraints and collision topology |
+| Neuromuscular system | All source-composed muscles and motor compartments with semantic stimulation IDs, routes/wraps, activation, fibre/tendon/aponeurosis state, entheses, fatigue, energetics, and volumetric active-muscle ownership |
+| Load-bearing connective anatomy | Tendons, aponeuroses, fascia, ligaments, cartilage, menisci, intervertebral discs, joint capsules, and their rigid/deformable contact and fluid-support fields |
+| Exterior and systemic anatomy | Physical skin, fat, fascia, organs, vessels, and nerves registered in the common topology/field graph, with mechanics, boundary, sensor, and validation status explicit |
+| Biological sensing | Spindle, Golgi-tendon, joint, plantar/cutaneous, vestibular, visual, physiological, delay, noise, adaptation, and history programs separated from privileged simulator truth |
+| Capability distribution | Equilibrium, recovery, locomotion, running, turning, manipulation, carrying, sit/stand, terrain/contact interaction, and declared physiological or intervention tasks across subject and parameter distributions |
+| Personalization and evidence | Subject atlas, population priors/posteriors, identifiability, UQ, held-out physical data, competitive comparisons, and exact Apple execution evidence |
+
+The leaf set is fixed by the content-addressed union of every stable structure,
+actuator, route, tissue label, material domain, sensor, physiological
+compartment, collision pair, and capability named by the pinned source
+registers plus the mandatory rows above. New sources may add or supersede
+leaves; they may not delete, merge away, or downgrade an existing target. Each
+leaf records required representation/fidelity, owning equations, interfaces,
+source/license, oracle, observable, tolerance, qualification distribution, and
+evidence status. `unknown` is an honest blocked value; `not applicable` requires
+a reviewed physical rationale. Until the machine-readable
+`HumanPack.target-coverage.v1` materializes this exact union, architecture
+convergence is blocked—the prose categories cannot be used to shrink it.
+
+This is a frontier research target, not a clinical-validity claim. Clinical or
+safety-critical claims require a declared context of use and their own risk-
+informed validation; they are never inherited from model detail or visual
+quality.
+
+## Current verified baseline
+
+| Layer | Current owning evidence | Open boundary |
+| --- | --- | --- |
+| Source and provenance | Pinned BodyParts3D, MyoSim, Mortensen, Rajagopal, MoBL-ARMS, and Z-Anatomy records with hashes and redistribution rules | Field ownership is not yet unified in a permanent multi-source Human representation; some sources and motions are restricted or unresolved |
+| Native embodiment | `NHRIGID2` 157-body/128-DoF articulation; `NHMYO2` 416 routes, 1,815 sites, 143 wraps, joint equalities, and ten foot witnesses | Held-out source parity, high-velocity dynamics, complete topology, broad collision, and systemic physiological state remain open |
+| Tendon transfer | `NHTENDON3` preserves all 832 endpoints as 628 distributed envelopes and 204 exact point laws; standalone Metal transfer/replay evidence exists | The latest 628/204 payload lacks complete persistent-stand, borrowed-consumer, rollback, and no-direct-torque requalification on one exact current stack |
+| Persistent dynamics | Metal owns bounded activation, current-pose routes, gravity/dynamics, support, publication, and replay | Retained stand evidence spans only 12.8 ms, has normalized residual RMS `12.5546`, and reports `balanced=false` |
+| Contact | Ten source foot witnesses exercise a deterministic support path | No authoritative whole-human collision topology, full sparse articulated contact operator, distributed pressure field, or task-wide contact qualification exists |
+| Deformable anatomy | Six pectoral regions drive a 326-node Matter FEM demonstration with replay and rollback | Geometry and 10% load share are assumptions; assembly crosses a host-vector/shared-buffer/separate-commit boundary; coupling is one-way and is not production tissue mechanics |
+| Control | Source-muscle part coactivation and a lower-body action contract exist | No promoted assistance-free equilibrium, recovery, locomotion, manipulation, or full hierarchical Human controller exists |
+| Anatomy and appearance | 184 registered BodyParts3D bone meshes, source route presentation, torso layers, and multi-angle reviews exist | Render surfaces do not own mechanics; physical skin/fat/fascia, systemic tissue mechanics, organs, vessels, and nerves are not complete |
+| Validation | Source receipts, FP64/Metal comparisons, conservation checks, rollback, replay, and visual evidence are retained | No full-stack held-out subject/activity validation, blinded internal-load prediction, population UQ, or current-stack competitive benchmark exists |
+
+The current point laws remain evidence of honest source preservation, not a
+surface-coverage failure to conceal: 155 are source non-bone termini, eight are
+anterior non-rib sites, 24 lack a registered correct bone surface, 11 fail
+conditioning, four are compound toe cases, and two bilateral EO3 cases remain
+distance-gated. Visual proximity must never silently replace those mechanics.
+
+## Final architecture lock
+
+The architecture below is permanent. Algorithms and discretizations may
+compete inside it; ownership and scientific semantics may not drift silently.
+Changing an interface requires an architecture decision record, ABI/schema
+version, migration, golden-fixture update, and integrated regression evidence.
+
+### 1. Multi-source Human representation
+
+`HumanPack` is the locked immutable umbrella-manifest architecture. Its initial
+schema must reference, rather than discard, the current `NHRIGID2`, `NHMYO2`,
+`NHTENDON3`, and `NHBONES1`, plus versioned contact, tissue, sensor, material,
+physiology, uncertainty, and target-coverage payloads.
+
+Every scalar, field, topology element, and transform carries:
+
+- a stable semantic anatomical ID and source-local ID;
+- source URL/revision/hash, license, allowed use, and derivation lineage;
+- units, frame, laterality, subject/population, and uncertainty;
+- owning source or explicit composition rule;
+- compiler/schema version and dependency hashes; and
+- mechanics, presentation, calibration, validation, and qualification status.
+
+MyoSim is the current executable source profile, not the universal schema.
+Rajagopal, Mortensen, MoBL, atlas, imaging, and new subject sources enter a
+field-level composition graph behind stable semantic IDs. A source bake-off can
+change an owning field without forcing policy, sensor, contact, or tissue ABI
+redesign. Conflicts fail closed and produce review receipts; they are never
+resolved by file order.
+
+The MyoSim adapter remains permanent-compatible, but no MyoSim field is
+permanent authority merely because it runs today. Any source-owner change
+updates Human, world, task, sensor, and policy compatibility fingerprints and
+rejects stale compiled runs or policies even when the ABI shape is unchanged.
+
+The action surface is therefore not globally frozen at 416. Every current
+actuator remains individually addressable, while each compiled composition
+publishes a fingerprinted semantic actuator table that can add cervical, hand,
+foot, respiratory, or other anatomy without changing the runtime protocol.
+
+### 2. Compiled artifact graph
 
 ```text
-live truth and reproducibility
-        |
-        v
-dynamic/source parity
-        |
-        v
-registered anatomical contact
-        |
-        v
-assistance-free balance
-        |
-        +--------------------+
-        |                    |
-        v                    v
-closed-loop gait       two-way regional tissue
-        |                    |
-        +----------+---------+
-                   v
-       whole-body tasks and load-bearing tissues
-                   |
-                   v
-       physical exterior, personalization, validation
+source records + licenses + transforms + uncertainty
+                         |
+                         v
+                  immutable HumanPack
+                         |
+                         v
+           Human compiler and Core lowering
+                         |
+                         v
+ RobotPack + ScenePack + SensorPack + RealityPack
+ + TaskPack + PolicyPack
+ + optional TeacherPack + RunProfile
+                         |
+                         v
+                    CompiledRun
+                         |
+                         v
+     EvidenceRecord + replay + performance trace
 ```
 
-Do not put gait training, whole-body FEM, organs, or photoreal skin on the
-critical path before contact and balance. Numi Human already has unusually
-strong source, force-path, transaction, and anatomy-registration foundations;
-its central product gap is that the latest composition is not end-to-end
-requalified and the current stand remains `balanced=false` over only a bounded
-12.8 ms horizon.
+`HumanPack` is a source/embodiment aggregate lowered into the existing Numi
+pack owners; it is not a parallel Human-only runtime path. All hot-loop indices
+and layouts are compiled. Python owns source acquisition, registration,
+uncertainty records, and offline compilation; Core C++ owns validation,
+lowering, FP64 oracles, ABI checks, and deterministic index plans; Metal owns
+persistent simulation state and live execution; Swift owns bounded submission,
+waits, reset, and artifact lifecycle; MLX owns batch learning and publishes
+immutable policy or parameter packs.
 
-Surface-envelope percentage is not a product KPI. Of the current 204 point
-laws, 155 are explicitly non-bone in the source model, eight are anterior
-non-rib sites, and 24 lack an anatomically correct registered bone surface.
-Keeping those endpoints fail-closed is better than forcing artificial bone
-attachments to reach 100% coverage.
+### 3. One accepted-step transaction
 
-## Product north star and boundary
+One Human control step is one candidate transaction on one caller-owned or
+borrowed Metal command-buffer timeline. The checkpoint covers:
 
-The assumed product is a research-grade, Apple-native neuromusculoskeletal
-digital Human that can:
+- rigid `q/v`, constraints, and articulated caches;
+- excitation, activation, fibre, tendon, fatigue, and energetic state;
+- contact manifolds, pressure patches, impulses, warm starts, and events;
+- deformable position/velocity, pressure, internal variables, active fibre,
+  fluid/thermal/electrical fields defined by the permanent schema, per-run
+  activation masks, and topology state;
+- sensor histories, estimator/controller hidden state, task state, and RNG.
 
-1. reproduce a pinned source model and every transform, parameter, and license;
-2. execute muscles, articulated dynamics, contact, sensing, and selected
-   deformable regions transactionally on Apple Metal;
-3. stand, recover, walk, and perform bounded whole-body tasks without hidden
-   root assistance or direct-joint-torque shortcuts;
-4. replay deterministically and report numerical, physical, memory, throughput,
-   and visual evidence from the actual runtime; and
-5. support progressively calibrated regional tissues and subject variation
-   without claiming clinical validity outside held-out evidence.
+Every consumer may encode only. It may not commit, wait, retain, replace, or
+read back the borrowed objects. Acceptance publishes all physical, sensor,
+controller, task, and RNG state atomically; rejection restores that accepted
+state. An append-only attempt counter, typed failure/rejection ledger, and
+diagnostic telemetry advance outside rollback so failure evidence is never
+erased. No subsystem may publish a locally successful partial step.
 
-It is not yet a clinical twin, injury predictor, complete organ model, finished
-skin avatar, or biological theory of neural control. If the primary product is
-instead an entertainment avatar, exterior and rendering work can move earlier
-after Stand v2. If it is a clinical decision tool, context-of-use, subject data,
-uncertainty, and validation must move ahead of general gait and appearance.
+The causal program is explicit: reset/checkpoint → pre-step sensing and history
+→ estimator/inference/delay → semantic stimulation → coupled physical candidate
+→ post-step sensing → acceptance or rollback → publication. Every stage is
+transactional, but causal sensor/controller transitions are not falsely treated
+as nonlinear physical unknowns.
 
-## What exists today
+The implementation may be partitioned, but its mathematical authority is one
+generalized coupled acceptance system: residual equations plus equality,
+complementarity, cone, variational-inequality, impact, and discrete topology-
+event conditions over the physical candidate variables and the accepted
+actuation. Articulated, muscle/tendon, continuum, contact-history, and physical
+physiology variables exchange energy-conjugate, equal-and-opposite quantities
+and converge under one acceptance test; partitioned components are not
+independently authoritative simulators.
 
-| Layer | Current owning evidence | Boundary still open |
+### 4. Single force, residual, and power authority ledger
+
+Every accepted step has a formulation-neutral ledger covering inertia and
+bias, gravity, externally applied loads, line/reduced/continuum active muscle,
+passive tissue and damping, pressure/field forces, equalities and joint limits,
+rigid and primal/barrier contact, and all interface reactions. Each contribution
+declares whether it enters as generalized force, internal stress/residual,
+constraint multiplier, impulse, barrier/variational term, or state work.
+
+When a distributed tissue region replaces a source-route `J^T` share, that
+share is removed from the line-actuator owner; tissue reaction is never added
+on top. A canonical fidelity-selection map assigns every anatomical load region
+to exactly one of line route, reduced continuum, or full continuum for each
+compiled run, with conservative activation/fibre/tendon/passive-state transfer
+between representations. Direct joint torque, root wrench, pose drive, and
+hidden stabilization are diagnostics only and exactly zero in promoted
+behavior.
+
+Every owner reports source, frame, application point/distribution, resultant,
+moment, residual share, impulse where applicable, power/work, stored/dissipated
+energy, and replacement/fidelity mask. Residual, force, momentum, work, and
+energy closure are transaction acceptance criteria, not post-hoc plots.
+
+### 5. Authoritative contact and collision
+
+The final contact contract requires full articulated coupling, including every
+off-diagonal interaction among contacts sharing a body or articulation. The
+initial authoritative Metal candidate uses the sparse Delassus operator
+`W = J M^-1 J^T`: MetalWorld streams articulated response columns into a
+Metal-suitable layout on the borrowed timeline and device kernels consume the
+full operator without CPU readback, a second queue, independent commit, or
+wait. Matrix-free KKT, SAP, or other backends may compete only if they preserve
+the same coupling, friction, transaction, and certificate semantics and win a
+reproduced comparison.
+
+The common contact semantic interface includes:
+
+- deterministic broad phase, narrow phase, exclusions, and continuous
+  collision detection where tunnelling changes physical outcomes;
+- fingerprinted material-pair laws for dry circular-Coulomb/maximum-dissipation,
+  torsional/rolling, compliant, lubricated/wet, adhesive, barrier, cartilage,
+  skin, and other admitted contact, with impact, sliding, separation, and
+  history/warm-start semantics;
+- anatomical pressure patches and centre-of-pressure outputs rather than point
+  witnesses as the production surface;
+- rigid/deformable and deformable/deformable contact through the same force and
+  transaction ledger; and
+- solver-appropriate certificates selected from symmetry/PSD, natural
+  residual, cone, complementarity, barrier feasibility, penetration, energy,
+  force, and moment checks.
+
+Rigid dry contact may realize the interface through Delassus/cone or equivalent
+mixed KKT methods; deformable and mixed contact may use Matter's primal IPC or
+another qualified variational backend. They share geometry IDs, friction and
+material-law identities, impact semantics, force/power accounting, failure
+types, transaction, and cross-formulation oracle cases. Cone/complementarity
+certificates are not blindly imposed on a primal barrier, lubricated, or
+adhesive formulation.
+
+Point witnesses remain an exact diagnostic path. No controller eligible for
+promotion is tuned around them as its authoritative product contact.
+
+### 6. Multiresolution whole-human continuum
+
+The final tissue system is one whole-human continuum architecture with active
+sparse solve domains, not a collection of unrelated demonstrations. All
+anatomy is registered in a common topology/field graph. Resolution and physics
+activate by task, error estimator, contact, load path, and evidence need while
+the interface, force law, state transaction, and conservation rules remain
+unchanged.
+
+Matter is the permanent coupled-continuum owner; its present algorithm is not
+automatically the promoted backend. FEM, MPM, rods, shells, embedded/mortar or
+Nitsche interfaces, domain decomposition, reduced bases, and learned reductions
+may compete inside that owner; none may become a downstream sidecar with a
+different transaction or force authority.
+
+The permanent continuum semantics include:
+
+- nonlinear mixed displacement-pressure formulations for near-incompressible
+  tissue;
+- anisotropic hyperelastic and viscoelastic solids, shells, rods, fibres,
+  ligaments, tendons, cartilage, menisci, fascia, skin, and fat;
+- active-fibre stress and consistent coupling to source activation;
+- biphasic/poroelastic state where fluid support is physically material;
+- thermomechanical and electrophysiological fields supported by the permanent
+  schema with explicit per-run activation masks in the same transaction;
+- nonlinear acceptance, determinant protection, constrained pressure and
+  interface coupling, negative-curvature/failure handling, and convergence/
+  error certificates; and
+- deterministic, capacity-preflighted topology change for use cases that
+  require cutting, puncture, separation, or deactivation.
+
+Matrix-free Newton/Krylov block solves with pressure Schur complements,
+bounded preconditioning, and merit backtracking are the initial implicit-FEM
+candidate—not a ban on MPM, explicit, variational, direct, or alternative
+implicit backends that satisfy the permanent semantics and benchmark better.
+
+Every reduced-order or learned tissue model derives from a fingerprinted
+full-order model and carries error certificates over frozen held-out, boundary,
+out-of-distribution, and adversarial state/load envelopes. Every promoted
+behavior is rerun on authoritative full-order physics over its qualification
+distribution. Capacity overflow, estimator failure, or loss of validity rejects
+the candidate and emits a typed growth/refinement request; it never silently
+truncates the anatomy or reallocates inside a borrowed submission.
+
+Growth occurs only at a completed-step boundary: allocate or recompile, update
+the allocation fingerprint, conservatively prolong/restrict accepted state and
+all history fields, validate interface traction/velocity and stored energy, then
+deterministically retry. The failed attempt remains in the append-only ledger.
+
+Adaptive regional refinement is the production execution strategy. It may
+limit active high-resolution coverage in a run, but it preserves the continuous
+constitutive and interface semantics, conservative prolongation/restriction,
+traction/velocity continuity, history transfer, error estimates, and replay
+across discretization changes. It may not create a one-way side simulation,
+use placeholder load fractions, or bypass global two-way coupling. The pectoral
+demonstration is evidence for inputs and rollback only; it does not define this
+API.
+
+### 7. Neural control, learning, and identification
+
+The permanent control contract exposes the semantic stimulation table and a
+physiology-rich observation schema. Controllers compose:
+
+- fast proprioceptive/reflex and safety responses;
+- device-resident state estimation and contact phase;
+- reusable posture, recovery, locomotion, manipulation, respiration, and
+  interaction skills; and
+- task, intent, adaptation, and NumiBrain channels with explicit validity state.
+
+Synergies and latent actions are replaceable encoders onto the full stimulation
+surface, never a loss of actuator identity. Reflex, MPC/optimal-control,
+imitation, reinforcement, world-model, and hybrid methods compete behind the
+same ABI. Metal owns live inference. MLX owns batch learning and publishes
+fingerprinted policies; no training framework owns authoritative physics.
+
+Residuals, tangents, parameter sensitivities, and JVP/VJP boundaries are part
+of the compiled offline-identification contract. The hard-contact production
+step need not pretend to be globally smooth: differentiable subsystems,
+smoothed offline oracles, adjoints, ensembles, and derivative-free methods can
+all propose parameter or policy packs, which are promoted only on the
+authoritative runtime.
+
+Forward tangents and discrete adjoints are checked against directional
+derivatives. Implicit differentiation acts on the converged residual; it may
+not silently backpropagate through an arbitrary iteration count and call that a
+physical gradient.
+
+### 8. Sensing, physical exterior, and presentation
+
+Mechanics geometry and presentation geometry have separate owners and hashes.
+The physical exterior supports skin, fat, fascia, contact pressure, sliding,
+volume, and self-contact under explicit activation masks. The presentation layer may add hair,
+materials, subsurface appearance, and render-only detail, but never acquires
+mechanical authority by proximity.
+
+Metal produces muscle-spindle, Golgi-tendon, joint-receptor, plantar/cutaneous,
+vestibular, visual, activation/fibre/tendon, contact-pressure, tactile, RGB-D,
+segmentation, motion, event, physiological, and task features without per-step
+host restaging. Sensor delays, noise, adaptation, histories, and failure modes
+are compiled state; privileged simulator truth is a separate diagnostic schema.
+Deployable policy sensors have authored cadence, timestamp, exposure, latency,
+held-frame, validity, reset, and typed failure semantics in `SensorPack`; they
+may not silently drop. Only the optional presentation inspector may drop frames
+rather than block physics, using bounded GPU buffers. Actual runtime frames from
+multiple angles are part of qualification, not a substitute for it.
+
+### 9. Personalization, uncertainty, and evidence
+
+Subject definitions are immutable, fingerprinted distributions—not a nominal
+body called universal. A versioned `SubjectPack` separates prior/posterior
+geometry and parameters from mutable online-estimator state. Scaling recomputes
+mass, inertia, joint programs, route geometry, strength, contact, material
+fields, and solver constraints under explicit physical constraints and
+uncertainty. Calibration and validation data are disjoint by subject and
+activity. Identifiability, sensitivity, posterior uncertainty, and out-of-
+distribution status accompany every personalized result.
+
+Kinematics, GRF/pressure, joint moments, muscle activation/EMG, energetics,
+internal loads, tissue stress/strain, deformation, and visual accuracy remain
+separate evidence categories. Success in one never silently qualifies another.
+
+## Non-negotiable production laws
+
+1. There is one Apple-native authoritative physics path.
+2. There is one atomic accepted-step transaction.
+3. Every force and energy contribution has exactly one owner.
+4. Tissue coupling is conservative and two-way in any tissue-mechanics claim.
+5. Stable semantic anatomical IDs survive source and topology composition.
+6. All current 416 actuators remain visible; added anatomy extends rather than
+   redesigns the action protocol.
+7. No render surface, proximity weight, or tube-shaped visual owns mechanics.
+8. No promoted behavior uses a hidden root wrench, pose drive, or direct torque.
+9. A surrogate, teacher, CUDA stack, or external simulator may propose or
+   compare; it never publishes authoritative Human state.
+10. A provisional material/contact parameter is quarantined from promoted
+    controller tuning and physical claims.
+11. No command-buffer consumer commits, waits, retains, replaces, or performs
+    per-step CPU readback.
+12. Reduced precision, fusion, Metal 4 features, and layout changes are adopted
+    only after same-workload counters and physical outcomes show no regression.
+13. Build, liveness, image, reward, and diagnostic force transfer are never
+    promoted into physical evidence of a different category.
+14. High-throughput training may use only an authoritative model or a
+    fingerprinted reduction with measured error over frozen held-out, boundary,
+    OOD, and adversarial envelopes; all promotion outcomes rerun on authority.
+15. Counter-based randomness and replay results are invariant to batch/chunk
+    size, environment ordering, active-set scheduling, kernel fusion, and other
+    semantically irrelevant dispatch changes.
+
+## Permanent parallel workstreams
+
+Every workstream below is active immediately. A dependency can block a claim
+or a merge into the authoritative stack; it cannot justify leaving unrelated
+research, data, compiler, geometry, controller, or validation work idle.
+Acceptance requires every lane to have a named owner, active/blocked status,
+exact dependency, current artifact, next evidence-producing action, and
+integration target in the machine-readable execution registry. Until that
+registry exists, this coordination gate is explicitly blocked. When a lane is
+blocked, its available capacity moves to the highest-fan-out upstream dependency
+rather than becoming idle.
+
+### A. Source graph, anatomy, provenance, and licensing
+
+- **End state:** one field-level Human composition graph covering every fixed
+  target-coverage cell, with semantic IDs, uncertainty, and license-clean build
+  and training profiles.
+- **Current proof:** pinned source records, extensive import/registration
+  receipts, 184 bone meshes, 157 bodies, 416 routes, and 832 preserved termini.
+- **Active frontier:** resolve target-catalog ownership ambiguity; encode the
+  `HumanPack` schema; register complete feet, hands, neck/hyoid, craniofacial,
+  joint-tissue, skin, organ, vessel, and nerve topology; quarantine restricted
+  sources by derivation lineage.
+- **Convergence proof:** round-trip source parity, stable IDs across source
+  profiles, transform/units tests, conflict rejection, license policy tests,
+  and reviewed multi-angle registration.
+
+### B. Articulation, musculotendon, and physiology
+
+- **End state:** full source-composed articulated dynamics and musculotendon
+  state over the declared Human topology, including wraps, constraints, passive
+  state, fatigue, energetics, and extensible physiology fields.
+- **Current proof:** `NHRIGID2`/`NHMYO2`, FP64 references, Metal route evaluation,
+  joint equalities, persistent activation/fibre/tendon state, and bounded replay.
+- **Active frontier:** freeze multi-pose/multi-velocity/high-load corpora and
+  tolerances; complete source wrap/constraint matrices; requalify the latest
+  `NHTENDON3`; expose tangents and parameter sensitivities; modularize only
+  behind byte-exact fixtures.
+- **Convergence proof:** source-oracle and FP64 parity, timestep refinement,
+  conservation, constraint residuals, failure envelopes, replay, and no-direct-
+  torque identity over held-out states.
+
+### C. Anatomical collision and contact
+
+- **End state:** collision topology for every fixed target-coverage cell,
+  distributed anatomical pressure fields, self-contact, compiled swept-risk
+  CCD, and full articulated/deformable contact authority.
+- **Current proof:** deterministic ten-witness support and exact contact
+  diagnostics.
+- **Active frontier:** complete foot and whole-human contact registrations;
+  compile material/pair/exclusion topology; implement streamed articulated
+  response columns and full `W`; qualify circular friction and pressure patches
+  on rigid and deformable anatomy.
+- **Convergence proof:** analytical coupled-contact oracles, static/sliding/
+  rolling/impact/separation cases, pressure/CoP, complementarity/cone/energy
+  certificates, CCD stress cases, timestep refinement, and replay.
+
+### D. Multiresolution deformable and multiphysics anatomy
+
+- **End state:** a whole-human field graph with conservative two-way active
+  domains for muscle, tendon, fascia, ligament, cartilage, meniscus, disc,
+  skin/fat, organ, vessel, and nerve mechanics at evidence-appropriate fidelity.
+- **Current proof:** pectoral meshes, Matter FEM execution, load input, replay,
+  rollback, and retained demonstration boundaries.
+- **Active frontier:** implement the final device-resident coupling ABI; replace
+  rather than add the corresponding `J^T` share; build manufactured and FEBio
+  comparison cases; qualify fascia, Achilles/plantar, knee, spine, skin, and
+  organ substrate cases concurrently on the shared schema. These cases qualify
+  the shared substrate only; continuum completion requires every fixed target-
+  coverage cell to pass.
+- **Convergence proof:** constitutive and patch tests, mesh/timestep/nonlinear
+  convergence, minimum Jacobian, pressure constraint, force/work/energy closure,
+  reaction consistency, rollback, held-out deformation/load, and measured cost.
+
+### E. Control, learning, state estimation, and NumiBrain coupling
+
+- **End state:** a transparent, robust, adaptive hierarchy controlling the full
+  semantic stimulation surface across equilibrium, recovery, locomotion,
+  manipulation, interaction, and physiological tasks.
+- **Current proof:** part coactivation, source-muscle bounds, and a preliminary
+  lower-body action contract.
+- **Active frontier:** freeze the extensible observation/action/task schemas;
+  compile spindle, Golgi-tendon, joint, vestibular, visual, tactile, delay, and
+  noise programs; run reflex, optimal-control, imitation, RL, synergy, and
+  hybrid bake-offs; establish device inference and MLX publication; define the
+  NumiBrain sensor/intent boundary; train candidates against fingerprinted
+  authoritative or certified-reduction physics.
+- **Convergence proof:** assistance-free outcomes over preregistered task and
+  perturbation distributions, authoritative contact/tissue replay, physiological
+  metrics, policy fingerprints, generalization, ablations, and failure analysis.
+
+### F. Data, personalization, system identification, and UQ
+
+- **End state:** traceable multi-subject data, parameter distributions, offline
+  differentiable/ensemble identification, and uncertainty-aware predictions.
+- **Current proof:** source locks and component-level numerical comparisons.
+- **Active frontier:** build the dataset/license/split registry; freeze held-out
+  subjects and activities before tuning; ingest motion, GRF, pressure, EMG,
+  internal-load, imaging, and material data; implement sensitivity,
+  identifiability, and posterior checks.
+- **Convergence proof:** calibration/validation separation, recovered synthetic
+  parameters, held-out subjects/tasks, uncertainty calibration, robustness to
+  parameter distributions, and blinded internal-load predictions.
+
+### G. Sensing, physical exterior, interaction, and rendering
+
+- **End state:** mechanics-consistent skin/contact/sensors plus a presentation
+  layer that passes a fixed `VisualEnvelope` from exact live Human state. Its
+  rows cover every target-coverage leaf; source/subject surface and landmark
+  error, mechanics-to-render displacement, silhouette/depth/normal/material
+  error, self-contact and occlusion, temporal continuity/replay, authored sensor
+  cadence, multi-angle blinded review, and device cost each have a source,
+  metric, tolerance, and qualification distribution. Any `unknown` tolerance
+  blocks a whole-Human or visual-SOTA claim.
+- **Current proof:** registered bone and soft-tissue visuals, source routes,
+  torso layers, and multi-angle capture.
+- **Active frontier:** compile physical skin/fat/fascia surfaces and tactile/
+  pressure sensors; define RGB-D/event/proprioceptive schemas; make rendering a
+  nonblocking device sidecar; populate every `VisualEnvelope` cell and improve
+  it without changing mechanics ownership.
+- **Convergence proof:** sensor oracle tests, zero-readback live execution,
+  mechanics/render registration, self/contact behavior, temporal stability,
+  original-resolution multi-angle runtime review, and GPU cost.
+
+### H. Apple GPU runtime, scaling, and performance
+
+- **End state:** collision, coupled physics, sensing, inference, randomness,
+  rollback, and rendering remain device-resident on one transactional timeline
+  and meet a fixed, versioned `PerformanceEnvelope` matrix. Its mandatory rows
+  are single-Human interactive authority, complete full-fidelity qualification,
+  population learning, policy/sensor inference, and nonblocking presentation.
+  Every row fixes Apple
+  device/SKU and OS, Human/task/tissue composition, fidelity, timestep/horizon,
+  environment count, latency/throughput target, retained/peak memory ceiling,
+  thermal window, failure budget, replay mode, and physical-equivalence gate.
+  Interactive authority targets real-time factor at least `1.0` with p99 step
+  latency no greater than its authored control period; every row forbids swap
+  and untyped failure and must be Pareto-nondominated by reproduced same-device
+  comparators in accepted physical steps/s, steps/J, and memory. Any unresolved
+  cell blocks architecture convergence rather than weakening the target.
+- **Current proof:** persistent Metal state, same-command-buffer tendon transfer,
+  replay, rollback, and native Apple tooling.
+- **Active frontier:** encode active sparse lists and consumer-oriented layouts;
+  use environment-major physics, feature-major inference, and AoSoA/SIMD32 where
+  measured; define static/dynamic/transient heaps and capacity classes; profile
+  exact stack baselines; populate every fixed `PerformanceEnvelope` row;
+  evaluate schedule-driven ABA, sparse response columns, fusion, precision, and
+  Metal 4 paths.
+- **Convergence proof:** same-revision/device/workload traces and counters,
+  throughput, latency distribution, retained/peak memory, swap and thermals,
+  failed steps, replay, and unchanged physical outcomes.
+
+### I. Compiler, evidence system, validation, and claims
+
+- **End state:** every compiled capability has an immutable evidence record and
+  the repository continuously distinguishes source, implementation, numerics,
+  transaction, physical outcome, generalization, performance, and visual proof.
+  An append-only run/selection ledger retains failures, rejected attempts, and
+  every physically valid candidate; promotion creates a new selection record
+  and never overwrites competing evidence.
+- **Current proof:** extensive reports, hashes, manifests, media transcripts,
+  gap ledger, and 88 importer/compiler tests.
+- **Active frontier:** replace the stale runtime pin with a generated live
+  contract; isolate and type the robot-catalog `Killed: 9` failure; bound both
+  catalog and Git audit inspection for iCloud checkouts; create the machine-
+  readable capability/evidence registry; preserve golden artifacts; split the
+  large compiler and test file behind ABI fixtures; implement the competitive
+  decision register and integrated qualification runner.
+- **Convergence proof:** exact lineage resolution, fail-closed stale evidence,
+  ABI migrations, deterministic replay, injected failures, full-stack
+  non-regression, and claims generated only from qualifying records.
+
+### J. Systemic physiology and neural conduction
+
+- **End state:** circulation/hemodynamics and perfusion, cardiac drive,
+  respiratory mechanics and gas exchange, metabolism and energetic substrates,
+  thermoregulation, fluid balance, electrophysiology, and peripheral neural
+  conduction are registered to the same anatomy and evolve through explicit
+  multi-rate fields/compartments on the accepted-step timeline.
+- **Current proof:** local activation, fibre/tendon, fatigue/energetic concepts,
+  and transaction fields provide partial interfaces only; no systemic owner is
+  qualified today.
+- **Active frontier:** freeze compartment/network/field schemas and units;
+  identify source models and subject parameters; couple perfusion to active
+  tissue, ventilation to thoracic mechanics, metabolic/thermal state to muscle,
+  and conduction/delay to biological sensors and stimulation; define stable
+  subcycling and rollback semantics.
+- **Convergence proof:** mass, species, charge, momentum, and energy balance;
+  manufactured and independent-oracle cases; multi-rate refinement; stable
+  reaction coupling; held-out pressure/flow/gas/temperature/conduction
+  observables; uncertainty; rollback; and exact-stack Apple cost.
+
+## Critical dependency graph
+
+```text
+source graph + license policy + semantic IDs
+          |              |               |
+          v              v               v
+ articulation/muscle   contact       continuum/material
+          |              |               |
+          +--------------+---------------+
+                         |
+                  systemic physiology
+                         v
+          one authoritative StepTransaction
+                 |                 |
+                 v                 v
+        sensors/state estimate   controller/policy
+                 +--------+--------+
+                          v
+               Human capability outcomes
+                          |
+                          v
+      held-out validation + SOTA comparison + Apple trace
+```
+
+Dependencies govern acceptance:
+
+- source IDs, frames, ownership, and license policy are required before an
+  artifact can enter the authoritative stack;
+- held-out splits and acceptance metrics are required before calibration or
+  controller tuning can qualify a result;
+- full force ownership, two-way reaction, and energy closure are required
+  before a tissue-mechanics claim;
+- authoritative contact is required before equilibrium, locomotion,
+  manipulation, or recovery claims, but controller experiments run in parallel;
+- exact integrated stack execution is required before performance claims;
+- a reproduced external comparator and declared metric are required before
+  “state of the art” is used for that capability; and
+- a declared context of use, risk analysis, and corresponding validation are
+  required before a clinical or safety-critical claim.
+
+## Overlapping convergence states
+
+These are evidence states, not periods. Workstreams can occupy different
+states simultaneously and all unblocked work continues.
+
+| Convergence state | Required evidence |
+| --- | --- |
+| Architecture convergence | Final owners, schemas, source composition, semantic IDs, ABIs, transaction, force ledger, failure semantics, license policy, and evidence schema are executable and versioned |
+| Subsystem convergence | Each permanent solver passes analytical/FP64/independent-oracle, convergence, replay, rollback, conservation, and failure-envelope tests |
+| Coupled-physics convergence | Articulation, muscles, contact, tissue reaction, physiology, sensing, and control execute in one accepted-step transaction with no unowned or duplicated force |
+| Human-capability convergence | Equilibrium, recovery, locomotion, manipulation, interaction, and personalization pass preregistered outcome distributions with assistance and shortcuts absent |
+| Frontier qualification | Held-out physical validation, uncertainty, reproduced competitive comparisons, exact-stack Apple counters/memory, runtime visuals, and integrated non-regression pass together |
+
+## Maximum-concurrency execution frontier
+
+The execution queue is continuously replenished. Each lane remains owned; when
+capacity opens or a lane blocks, select the ready upstream item with the
+greatest downstream fan-out and scientific risk.
+
+| Lane | Unblocked frontier now | Evidence-producing result |
 | --- | --- | --- |
-| Source and provenance | Pinned BodyParts3D, MyoSim, Mortensen, Rajagopal, MoBL-ARMS, and Z-Anatomy records with hashes and explicit redistribution rules | Some catalog models and motion assets have non-commercial or unresolved redistribution terms |
-| Offline compiler | Python imports, classifies, registers, and compiles immutable native payloads; it is not in the live simulation loop | `model.py` is 13,310 lines, `cli.py` is 1,807 lines, and most tests are concentrated in one file |
-| Native model | `NHRIGID2` 157-body/128-DoF articulation, `NHMYO2` 416 muscle routes, 1,815 sites, 143 wraps, joint equalities, and ten foot witnesses | Full held-out source parity, high-velocity behavior, complete dynamic constraints, and broad collision remain open |
-| Tendon transfer | `NHTENDON3` retains all 832 endpoints: 628 distributed envelopes and 204 exact point laws; standalone Metal force/moment and replay evidence exists | The latest 628/204 payload has not been qualified through the complete persistent stand, borrowed consumer, rejection rollback, and no-direct-torque path |
-| Persistent dynamics | Metal owns activation, current-pose routes, gravity/dynamics, support, state publication, and bounded replay | Current retained stand is 12.8 ms, reports residual RMS `12.5546`, and is not balanced |
-| Regional tissue | Six pectoral regions drive a 326-node Matter FEM demonstration with replay and rollback | Geometry and 10% load share are assumptions; load assembly is not yet the reusable device-resident production owner; coupling is one-way |
-| Control | Bounded source-muscle part coactivation and a lower-body walking action contract exist | No assistance-free posture controller, deployed Human task/policy, perturbation recovery, or held-out gait |
-| Anatomy and appearance | 184 registered BodyParts3D bone meshes, source muscle/tendon presentation, torso layers, and four-angle review | Exterior is not physically skinned; muscle surfaces are presentation; organs, vessels, skin, and most tissues have no mechanics |
-| Validation | Source provenance, FP64/Metal comparisons, force/moment conservation, rollback, replay, and visual evidence are retained | No subject calibration, population model, blinded internal-load prediction, or same-workload qualification of the future complete stack |
-
-The exact evidence behind these rows is in
-[Human Stand v1](HUMAN_STAND_V1.md),
-[the tendon transaction](HUMAN_TENDON_STEP_TRANSACTION.md),
-[the abdominal endpoint record](ABDOMINAL_SOURCE_COMPONENT_ENTHESES_V1.md),
-[the pectoral fascia record](PECTORALIS_FASCIA_V1.md), and the
-[gap ledger](HUMAN_COMPLETION_GAP_LEDGER.md).
-
-## Architecture to preserve
-
-| Owner | Responsibility | Must not own |
-| --- | --- | --- |
-| `numilab-human` Python | Fetch and fingerprint sources; parse; register; classify; generate review receipts and immutable payloads | Per-step simulation, hidden material inference, or runtime control |
-| Core C++ | Compile and validate the Human model; own FP64 references, source lowering, fixed indices, and native ABI checks | Per-environment host stepping or untracked source substitutions |
-| Metal | Persistent articulated state, muscles, contact, selected tissue kernels, sensing, inference, deterministic reductions, and rendering | Per-step host readback or an alternate Python physics path |
-| Matter | Calibrated deformable regions composed through the Human transaction | Reapplying a muscle load already present through `J^T` |
-| Swift/Numi scheduler | Bounded rollout submission, waits, timeouts, reset/publication, and artifact lifecycle | Physics, string lookup in the hot loop, or unbounded retained rollout copies |
-| MLX | Batch learning and system identification from compact published rollouts | Owning simulation state, contact, or rollout scheduling |
-
-Every accepted control step remains a transaction: successful state publishes;
-failure restores the prior accepted state. A downstream tissue consumer may
-encode against borrowed Metal objects only. It may not independently commit,
-wait, retain, or replace the enclosing command buffer.
-
-## Strategic choices
-
-### Keep MyoSim canonical through Walk v1
-
-The README identifies MyoSim `myofullbody` as the active mechanics owner, while
-`config/numi-targets.v1.json` still describes a Rajagopal plus MoBL-ARMS target.
-Resolve that ambiguity now:
-
-- keep the pinned MyoSim 416-route body as the production foundation through
-  Stand v2 and Walk v1;
-- use Rajagopal/OpenSim as a comparative numerical and biomechanical oracle;
-- keep Mortensen neck as an explicit registered extension; and
-- admit MoBL-ARMS only as a research profile until exact bilateral composition,
-  wrap parity, and commercial rights are resolved.
-
-Changing the canonical skeleton while contact and balance are still open would
-reset transforms, control, validation, and tissue attachments simultaneously.
-
-### Preserve the 416-action physical contract
-
-Policy implementations may use synergies, reflexes, latent actions, or a
-hierarchy, but the compiled task-to-runtime contract should retain the identity
-and bound of every source actuator. A reduced controller is a mapping onto that
-surface, not a replacement that erases muscle provenance.
-
-### Use regional deformable islands
-
-Do not attempt a monolithic whole-body FEM. Use articulated dynamics for the
-whole Human, distributed pressure contact for real-time feet, and selected
-deformable regions where stress, strain, compliance, or load redistribution is
-the actual question. Each region needs its own geometry, material, convergence,
-coupling, and held-out validation receipt.
-
-### Keep training physics and authority distinct
-
-Smooth or simplified contact can be useful for teacher optimization and policy
-training. Final selection must run on the authoritative Numi contact and tissue
-path. A policy that succeeds only under training contact is not promoted.
-
-## Milestone roadmap
-
-Durations are planning ranges, not commitments. They assume one to two core
-physics/runtime engineers, part-time biomechanics/anatomy support, and regular
-access to the Apple M4 Pro evidence machine. Parallel tracks are intentional.
-
-### M0 — Stabilize live truth and publish Baseline 0.1
-
-Indicative duration: 1–2 weeks. This blocks every other milestone.
-
-Deliverables:
-
-1. Replace the stale tracked MetalRobo pin (`2aab522`) with a generated runtime
-   contract tied to the exact live source and artifact fingerprints, and make
-   the target catalog agree that MyoSim is the current production owner.
-2. Replace the unbounded broad `git status --porcelain` audit with targeted Git
-   plumbing, a timeout, and a revision-only fallback appropriate to iCloud
-   File Provider checkouts.
-3. Add a machine-readable Human capability/evidence registry. Every row records
-   Human revision, runtime revision, source locks, payload ABI/hashes, device,
-   command, duration, evidence type, and `current` versus `historical` status.
-4. Rebuild and run the latest 628/204 `NHTENDON3` payload through the complete
-   persistent stand transaction on the exact reviewed stack.
-5. Preserve golden payloads, manifests, decoder fixtures, and replay results
-   before modularizing the compiler.
-6. Define artifact retention classes for the current 2.6 GB ignored `Build/`
-   tree and tracked evidence media. Do not delete valid evidence merely because
-   it is generated.
-7. Tag the first reproducible baseline and document the supported Python/test
-   entrypoint; the shell default Python currently lacks pytest.
-
-Exit gate:
-
-- the current Human/runtime pair, sources, and all payload hashes resolve from
-  one registry entry;
-- the latest persistent run proves FP64 parity, all 832 transfers, force/moment
-  conservation, same-command-buffer consumer execution, rejection rollback,
-  no-direct-torque identity, and byte-identical replay;
-- the local 88-test suite and bounded native smoke pass; and
-- no current document silently presents an older payload or runtime as the
-  latest end-to-end qualification.
-
-### M1 — Dynamic and source parity
-
-Indicative duration: 4–6 weeks after M0.
-
-Deliverables:
-
-1. Freeze a held-out pose/velocity corpus spanning lower limbs, spine,
-   shoulders, elbows, wrists, hands, and support-relevant joint limits.
-2. Compare source transforms, mass/inertia, joint programs, route length,
-   moment arm/Jacobian, activation state, compliant muscle/tendon state, passive
-   force, and generalized force against FP64 and source oracles.
-3. Finish and qualify persistent high-velocity bias, equality, limit, and
-   passive-preload behavior across multiple timesteps. Do not infer correctness
-   from the source-default pose alone.
-4. Add exact wrap families only where the canonical source requires them.
-   Rajagopal/MoBL features do not enter the production model without their own
-   parity corpus.
-5. Split source parsing, payload formats, registration, tendon compilation,
-   tissue compilation, and audit code behind the golden ABI fixtures from M0.
-
-Exit gate:
-
-- numerical tolerances are frozen before the final runs, not fitted after
-  observing errors;
-- every corpus case reports CPU/Metal errors and constraint residuals;
-- timestep refinement and replay do not expose state-ordering or random-stream
-  changes; and
-- no refactor changes a golden payload or manifest without an explicit ABI
-  version and migration test.
-
-### M2 — Registered contact and joint constraints
-
-Indicative duration: 4–8 weeks after M1.
-
-Deliverables:
-
-1. Complete reviewed, provenance-pinned registrations for `calcn_r`, `toes_r`,
-   `calcn_l`, and `toes_l` using the existing receipt workflow.
-2. Author conservative collision proxies, contact pair exclusions, material
-   identities, plane/terrain registration, and deterministic broad/narrow phase
-   ordering.
-3. Replace point-witness-only product contact with distributed foot pressure
-   fields while retaining an exact reference path.
-4. Calibrate friction, compliance, damping, and regularization against declared
-   measurements or literature. Keep measured values separate from solver
-   stabilization parameters.
-5. Add the minimum whole-body collision and joint-limit set required for stance,
-   falls, and perturbations; do not infer collision from render geometry.
-
-Exit gate:
-
-- foot registration passes multi-angle landmark and source-frame review;
-- contact passes static load, sliding, rolling, impact, separation, pair
-  exclusion, and timestep-refinement tests;
-- total force, moment, centre of pressure, penetration, and energy behavior are
-  reported for CPU reference and Metal; and
-- a deterministic reset produces byte-identical authoritative contact replay.
-
-### M3 — Human Stand v2
-
-Indicative duration: 4–8 weeks after M2.
-
-Deliverables:
-
-1. Implement a transparent deterministic posture baseline before learning:
-   centre-of-mass/centre-of-pressure feedback, task-space stabilization, and/or
-   a documented reflex layer mapped only to muscle excitation.
-2. Remove root assistance after initialization and keep it exactly zero during
-   the qualified horizon.
-3. Add push, support-surface, pose, and parameter perturbation suites with
-   deterministic seeds and explicit fall/step criteria.
-4. Publish device observations needed by future controllers without per-step
-   readback: body state, contact/pressure, tendon state, and bounded task state.
-
-Exit gate:
-
-- an engineering target of at least 10 seconds of assistance-free stance is
-  frozen before tuning;
-- the model remains within declared support, posture, constraint, and contact
-  limits and recovers from a preregistered perturbation suite;
-- no direct joint torque or hidden pose drive enters the policy path;
-- deterministic reset/replay, rollback, FP64 spot checks, memory, throughput,
-  and GPU-counter evidence pass on the exact device; and
-- four-angle runtime frames are inspected at original resolution.
-
-Stand v2 is the first release that should be described as standing.
-
-### D1 — Data and validation foundation
-
-Indicative duration: starts in M0 and runs in parallel through all milestones.
-
-Deliverables:
-
-1. Create a dataset registry with source revision, subject/activity coverage,
-   coordinate convention, measurement modality, license, allowed use, split,
-   transformations, and derived-artifact lineage.
-2. Use AddBiomechanics CC-BY data for broad motion/GRF generalization and
-   separately licensed local/OpenCap captures for task-specific checks.
-3. Adopt ISB joint-coordinate reporting and retain source coordinates alongside
-   any standardized view.
-4. Build train/calibration/validation/test splits by subject and activity.
-   Freeze the held-out split before controller or material tuning.
-5. Reserve the instrumented Grand Challenge knee-load trials as a blinded
-   future gate; do not use their released targets for calibration of the trial
-   designated as blind.
-6. Add uncertainty and sensitivity reporting for source scale, mass, strength,
-   contact, and material parameters.
-
-Exit gate:
-
-- every metric can be traced to a source, transform, split, and license;
-- internal-load, motion, GRF, EMG, and material tests remain separate evidence
-  categories; and
-- a result on one subject or one activity is not presented as population
-  validation.
-
-### M4 — Human Walk v1
-
-Indicative duration: 8–12 weeks after M3, with D1 already active.
-
-Deliverables:
-
-1. Compile a fingerprinted Human task, observation, action, contact, and reset
-   contract. The action surface remains all 416 bounded source excitations.
-2. Start from the deterministic Stand v2 controller and add a hierarchy:
-   phase/foot-placement intent, reflex or synergy layer, and a small learned
-   residual. Do not begin with an unconstrained monolithic gait policy.
-3. Use OpenSim Moco, SCONE, Kinesis, or MuscleMimic as offline method/teacher
-   references where licensing permits. They never bypass Numi physics.
-4. Train in stages: weight shift, single step, repeated stepping, commanded
-   speed/direction, terrain variation, and perturbation recovery.
-5. Keep MLX at the batch-learning boundary and publish exact fingerprinted
-   policy packs; Metal owns live inference and physics.
-6. Retain every physically valid candidate and select production only from
-   held-out authoritative-contact outcomes.
-
-Exit gate:
-
-- distance, duration, falls, speed tracking, step timing, GRF, centre of
-  pressure, joint kinematics, activation, effort/metabolic proxy, and recovery
-  are reported over preregistered held-out subjects/parameter sets and tasks;
-- root assistance and direct torque remain absent;
-- training-contact success is reproduced on authoritative contact;
-- policy, world, observation, action, task, and source fingerprints match; and
-- resets, replay, throughput, peak/retained memory, and GPU traces are retained.
-
-### T1 — Production two-way regional tissue
-
-Indicative duration: 6–10 weeks, parallel with M3/M4 after the M1 transaction
-and M2 contact foundations are stable.
-
-Deliverables:
-
-1. Extract the pectoral Matter integration from the visual probe into a reusable
-   Human runtime owner.
-2. Assemble nodal loads on device through the borrowed consumer; remove the
-   host-vector/shared-buffer/separate-commit demonstration boundary.
-3. Return deformable reaction to the articulation by replacing the
-   corresponding portion of source `J^T`, never by adding a second copy.
-4. Calibrate one region with registered geometry and nonlinear material data.
-   Use pectoral fascia to productionize the API, then choose plantar
-   fascia/Achilles as the first contact-relevant island.
-5. Compare patch tests, constitutive response, and selected regional cases with
-   FEBio or another independent reference.
-
-Exit gate:
-
-- material source and parameter-fit receipt, mesh/timestep/nonlinear-solver
-  convergence, energy and load balance, minimum Jacobian, replay, rollback,
-  and held-out deformation all pass;
-- rigid plus tissue generalized force does not double count the source load;
-  and
-- the measured cost and memory of the coupled region are reported on the same
-  device and workload as the rigid baseline.
-
-### T2 — Load-bearing joint tissues
-
-Indicative duration: 10–16 weeks per joint family after T1.
-
-Recommended order:
-
-1. knee ligaments, cartilage, and menisci, because instrumented internal-load
-   data provides a credible held-out target;
-2. ankle/foot cartilage, plantar fascia, and Achilles interaction, because it
-   directly affects contact and gait;
-3. intervertebral discs and spinal ligaments; then
-4. costal cartilage and thoracoabdominal fascia for the eight current anterior
-   non-rib endpoints.
-
-Each region is a separate milestone. A visually plausible tissue never closes
-a mechanical row without calibrated material, contact, convergence, and
-held-out response.
-
-### M5 — Whole-body tasks and source extensions
-
-Indicative duration: 8–12 weeks after Walk v1; can overlap T2.
-
-Deliverables:
-
-- integrate and parity-qualify the Mortensen cervical/hyoid extension;
-- resolve exact wrap and anchor requirements for any upper-extremity source;
-- keep non-commercial MoBL-ARMS in an explicit research profile;
-- add reaching, carrying, sit-to-stand, turning, and recovery tasks while
-  preserving lower-body balance; and
-- add independent fingers/toes only when a task and source justify their new
-  articulation, contact, muscles, and validation cost.
-
-Exit gate: each task has held-out physical outcomes, authoritative contact,
-deterministic resets, policy fingerprints, replay, runtime frames, and no
-regression of Stand v2 or Walk v1.
-
-### X1 — Physical exterior, sensing, and selected organs
-
-Indicative duration: 8–16 weeks per scoped layer after M3/T1.
-
-Separate these products:
-
-- a high-quality skinned presentation layer for interaction and rendering;
-- a physical skin/fat/fascia shell with volume control, sliding, self-contact,
-  and calibrated mechanics; and
-- organ/vessel models added only for a declared use case.
-
-The skinned render may ship earlier, but must remain labeled as presentation.
-Do not convert BodyParts3D proximity weights, tube-shaped solids, or attractive
-meshes into physical ownership without a solver and validation receipt.
-
-### V1 — Personalization and credibility
-
-Indicative duration: continuous research; 12+ weeks for the first bounded
-subject-specific study.
-
-Deliverables:
-
-- subject scaling with preserved mass, inertia, joint, route, contact, and
-  tissue constraints;
-- parameter priors and population distributions, not one nominal body called
-  universal;
-- calibration/validation separation and uncertainty propagation;
-- preregistered blinded predictions for selected internal loads; and
-- a risk-informed credibility report following FDA CM&S and ASME V&V guidance
-  if a medical context of use is proposed.
-
-No clinical claim is made merely because a subject mesh fits, a simulation is
-stable, or a benchmark error is small.
-
-## Research adoption matrix
-
-| Source or method | Recommended use | Production boundary |
-| --- | --- | --- |
-| [OpenSim Moco](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1008493) | Offline optimal-control oracle, trajectory seed, inverse problem, and parameter study | Not the live runtime; validate every converted joint, path, wrap, muscle, and contact law |
-| [MyoSim](https://github.com/MyoHub/myo_sim) / MyoSuite | Current source model and control-task comparator | A muscle-actuated multibody model, not whole-body tissue or clinical anatomy |
-| [MuscleMimic](https://github.com/amathislab/musclemimic) and its [2026 paper](https://arxiv.org/abs/2603.25544) | Closest 416-muscle method comparator; retargeting and imitation architecture; possible research teacher | Training targets NVIDIA/Linux; code/model and motion/checkpoint licenses are separate |
-| [Kinesis](https://github.com/amathislab/Kinesis) and [SCONE](https://github.com/tgeijten/scone-core) | Hierarchical imitation, optimization, reflex, and curriculum ideas | Transfer methods, not unverified checkpoints or a substitute physics path |
-| [AddBiomechanics](https://addbiomechanics.org/download_data.html) | Broad CC-BY motion, force-plate, inverse-dynamics, and subject generalization data | Preserve per-dataset attribution and quality metadata; GPL software does not enter a proprietary runtime by accident |
-| [OpenCap validation](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011462) | Accessible capture and an independently published kinematic/kinetic comparison | Markerless estimates are not an internal-force gold standard; hosted-service terms are distinct from code |
-| [Grand Challenge knee loads](https://pmc.ncbi.nlm.nih.gov/articles/PMC4067494/) | Blinded medial/lateral knee-contact validation | Keep designated targets held out until predictions are frozen |
-| [FEBio](https://github.com/febiosoftware/FEBio) | MIT-licensed source oracle for nonlinear tissue, contact, material, and verification cases | Offline/reference role; binary/dependency terms and constitutive assumptions still require review |
-| [SOFA](https://github.com/sofa-framework/sofa) | LGPL medical-FEM comparison and rapid prototype reference | Its acceleration ecosystem is not a Metal production path; integration must respect LGPL boundaries |
-| [IPC Toolkit](https://ipctk.xyz/) and [Drake hydroelastic contact](https://drake.mit.edu/doxygen_cxx/group__hydroelastic__user__guide.html) | Barrier/CCD/friction and pressure-field contact design references | A pressure contact model is not automatically a converged tissue continuum |
-| [ISB coordinate recommendations](https://pubmed.ncbi.nlm.nih.gov/11934426/) | Standard reporting frames and reproducible kinematic comparisons | Retain the original source frame and exact transform alongside the standardized view |
-| [FDA CM&S guidance](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/assessing-credibility-computational-modeling-and-simulation-medical-device-submissions) / [ASME V&V](https://www.asme.org/codes-standards/publications-information/verification-validation-uncertainty) | Risk-informed credibility, verification, validation, and uncertainty planning | Relevant to a declared decision/context of use; not a certification inherited by using the checklist |
-| [Apple Metal profiling](https://developer.apple.com/documentation/xcode/analyzing-apple-gpu-performance-using-counter-statistics) and [MLX unified memory](https://github.com/ml-explore/mlx/blob/main/docs/src/usage/unified_memory.rst) | Device counters, traces, memory accounting, and Apple-native batch learning | Unified memory does not make duplicate state free; performance requires same-device measurements |
-
-External frameworks are reference implementations, not architecture templates.
-CUDA/JAX/Warp research can teach algorithms, but the production Human remains a
-native Metal transaction with FP64 and independent physical oracles.
-
-## License profiles
-
-Maintain two explicit build/training profiles:
-
-### Free core
-
-- MyoSim and compatible Apache-licensed code/model records;
-- BodyParts3D with CC-BY attribution;
-- locally owned or production-cleared motion and measurement data;
-- AddBiomechanics records whose per-dataset terms are verified; and
-- no model, policy, or derivative whose training lineage is unknown.
-
-### Research-only overlays
-
-- MoBL-ARMS non-commercial source;
-- AMASS/SMPL-derived motions;
-- MuscleMimic or Kinesis checkpoints trained on restricted motion;
-- Z-Anatomy CC-BY-SA derivatives isolated with share-alike compliance; and
-- any atlas/model with unresolved redistribution or commercial terms.
-
-MuscleMimic's repository is Apache-2.0, but its official retargeted dataset card
-states non-commercial use, no redistribution, and no commercial use of models
-trained on that data. Do not let the code license launder the motion, body, or
-checkpoint license. This section is an engineering license boundary, not legal
-advice.
-
-## Evidence ladder for every milestone
+| Live truth | Generate the Human/runtime/source/artifact registry; remove the stale tracked runtime pin; isolate the robot-catalog `Killed: 9`; type and bound catalog/Git audit failure | One exact stack resolves from a single immutable record; readiness fails quickly and explicitly; old evidence becomes mechanically historical |
+| Permanent contracts | Encode `HumanPack`, semantic action/observation tables, force-owner masks, tissue/contact/sensor schemas, transaction checkpoint, and failure ABI | Golden schema/ABI fixtures plus migration and rejection tests |
+| Current-stack qualification | Rebuild latest 628/204 `NHTENDON3` and execute persistent stand, borrowed consumer, injected rejection, rollback, no-direct-torque identity, and replay | Honest end-to-end baseline on the exact reviewed Human/runtime pair |
+| Mechanics | Freeze multi-pose/multi-velocity/high-load corpus; complete wrap, constraint, passive, tangent, and sensitivity coverage | FP64/source parity and refinement envelope over the declared model |
+| Contact | Complete foot and whole-human collision registration while implementing full sparse `W`, circular friction, CCD, and pressure patches | Coupled-contact certificates and pressure/CoP evidence |
+| Continuum | Implement final same-buffer two-way coupling and competing nonlinear backends; qualify substrate cases and then every fixed target-coverage cell | Force/work/energy closure, held-out deformation, complete coverage, and no double counting |
+| Control | Freeze extensible schemas; run controller bake-offs and physics-fingerprinted learning continuously | Assistance-free candidate policies evaluated only on authoritative physics |
+| Data/UQ | Lock dataset lineage and held-outs; build system-ID, sensitivity, uncertainty, and blinded-evaluation harnesses | Claim-specific validation envelopes and parameter distributions |
+| Systemic physiology | Freeze circulation, respiration, metabolic/thermal, electrophysiology, and neural-conduction schemas; implement conservative multi-rate oracle cases | Registered field/compartment state with mass/species/charge/energy balance and rollback |
+| Apple runtime | Capture exact baseline; implement active sparse schedules, heap lifetimes, response columns, and measured layout/precision candidates | Same-workload throughput/memory/counter improvements with physical equivalence |
+| Sensing/visual | Compile mechanics-owned exterior/sensors and a nonblocking render sidecar | Live sensor parity and multi-angle frames from the same accepted state |
+| Maintainability | Split `model.py`, `cli.py`, and concentrated tests only behind golden outputs; define artifact retention classes | Smaller ownership units with byte-exact artifacts and no evidence loss |
+
+No lane waits for “standing” or “walking” to be declared before beginning. A
+behavior candidate simply cannot be promoted until its required authoritative
+mechanics and held-out evidence converge.
+
+## State-of-the-art decision register
+
+“State of the art” is a measured competitive requirement. Maintain a generated
+register with these fields:
+
+| Required field | Meaning |
+| --- | --- |
+| Domain and capability | Exact claim being compared, never “the Human” in aggregate |
+| Primary source | Paper/repository/version/date and exact method configuration |
+| Benchmark and split | Inputs, subjects, tasks, hardware, license, train/calibration/held-out split |
+| Metric and acceptance | Units, direction, uncertainty, preregistered tolerance or target |
+| Reproduction status | Unread, inspected, reproduced externally, ported, or reproduced in Numi |
+| Measured Numi delta | Same metric and declared comparability limitations |
+| Decision | Adopt, adapt, retain as oracle, reject, or unresolved |
+| Permanent owner | Numi interface and artifact that owns any adopted method |
+| Evidence and retest trigger | Artifact path plus source/runtime/benchmark changes that invalidate it |
+
+Initial candidate register seeds are all `unreproduced`. They are research
+assignments, not adopted methods or SOTA claims, until every required register
+field above is populated with an exact source revision, artifact, benchmark,
+Numi delta, and retest trigger.
+
+| Domain | Candidate frontier and assigned role | Maturity | Boundary before decision |
+| --- | --- | --- | --- |
+| Full-body muscle embodiment | [MyoFullBody models](https://github.com/amathislab/musclemimic_models) and the 2026 [MuscleMimic preprint](https://arxiv.org/abs/2603.25544) as source/method comparators; [MS-Emulator](https://arxiv.org/abs/2603.29332) as a control-solution diversity and actuator-scale paper comparator | Unreproduced; MS-Emulator is paper-only and reports code as forthcoming | Kinematic agreement does not establish physiological activation; similar external motion can hide different internal solutions. JAX applies to the MuscleMimic training path; MS-Emulator reports MJWarp/RTX hardware. Code, data, body, and checkpoint licenses remain separate |
+| Optimal control and identification | [OpenSim Moco](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1008493) as direct-collocation oracle; [OpenSimAD](https://github.com/antoinefalisse/opensimAD) and [Nimble](https://nimblephysics.org/docs/intro.html) as derivative/identification comparators | Unreproduced | Moco is sensitive to discontinuities; OpenSimAD omits some constraints and SimmSplines; Nimble is beta and cautions against rigid-contact gradients for complex trajectory optimization. Every proposed pack is rerun on authoritative Numi physics |
+| Contact | [MuJoCo stable computation docs](https://mujoco.readthedocs.io/en/stable/computation/index.html) for convex soft contact; [Drake SAP](https://drake.mit.edu/doxygen_cxx/group__mbp__discrete.html) and [hydroelastic pressure](https://drake.mit.edu/doxygen_cxx/group__hydroelastic__user__guide.html); [Chrono NSC](https://api.projectchrono.org/collisions.html) for nonsmooth complementarity; [IPC](https://ipc-sim.github.io/) for robust deformable collision | Unreproduced | MuJoCo does not promise exact maximum dissipation; hydroelastic pressure is not deformation and numerical modulus is not tissue modulus; robust collision alone proves neither biological fidelity nor Apple performance |
+| Deformable tissue and GPU layout | [FEBio](https://pmc.ncbi.nlm.nih.gov/articles/PMC3705975/) and [SOFA](https://github.com/sofa-framework/sofa) as constitutive/nonlinear/multiphysics oracles; [NVIDIA Warp FEM](https://nvidia.github.io/warp/v1.15/api_reference/warp_fem.html) as GPU layout and active-domain comparator | Unreproduced | Agreement requires matched mesh, laws, loads, convergence, and held-out experiments. Warp is a CUDA comparator, not a production dependency or evidence of tissue fidelity |
+| Neuromuscular control and sensing | [MuscleMimic](https://github.com/amathislab/musclemimic), [Kinesis](https://github.com/amathislab/Kinesis), [DEP-RL](https://arxiv.org/abs/2206.00484), [DynSyn](https://proceedings.mlr.press/v235/he24o.html), peer-reviewed [Explore-to-Learn](https://ojs.aaai.org/index.php/AAAI/article/view/39876), [LocoMuJoCo](https://github.com/robfiras/loco-mujoco), and [SMS-Human](https://arxiv.org/abs/2506.00071) as method/evaluation candidates | Unreproduced; SMS-Human is paper-only unless a code artifact is registered | No benchmark proves a universal controller; learned synergies may not erase source actuators, privileged truth may not replace biological sensing, and imitation may not replace physiological evaluation |
+| Active continuum muscle | Peer-reviewed [active-stress/active-strain comparison](https://pmc.ncbi.nlm.nih.gov/articles/PMC12017808/) and the [FEBio active-muscle model](https://febiosoftware.github.io/febio-feature-manual/features/solid_material_muscle_material/) as constitutive candidates | Unreproduced | Published cases are scoped rather than whole-human qualification. Volumetric muscle replaces a line-actuator share only with identified parameters, convergence, conservation, and held-out deformation/force evidence |
+| Systemic physiology | [CellML](https://www.cellml.org/) and the [Physiome Model Repository](https://models.physiomeproject.org/) as equation/source records; [SimVascular](https://github.com/SimVascular/SimVascular) as a cardiovascular flow oracle candidate | Unreproduced | Component equations do not establish a coupled whole-human physiology; units, compartments, boundary conditions, subject parameters, multi-rate conservation, licensing, and held-out observables must match before adoption |
+| Data and validation | [MM-EvalKit](https://github.com/amathislab/mm-evalkit) as an implementation/metric template; [AddBiomechanics](https://pmc.ncbi.nlm.nih.gov/articles/PMC11948690/), [OpenCap validation](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011462), and the [blinded knee-load challenge](https://pmc.ncbi.nlm.nih.gov/articles/PMC4067494/) as data/validation candidates | Unreproduced in the Numi stack | MM-EvalKit is not an independently validated standard. Motion/GRF data do not directly measure every inferred joint/internal load, and calibration data never count as validation |
+| Credibility and UQ | [ASME V&V/UQ](https://www.asme.org/codes-standards/publications-information/verification-validation-uncertainty) and [FDA CM&S guidance](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/assessing-credibility-computational-modeling-and-simulation-medical-device-submissions) as evidence-structure references | Inspected conceptually; not a Numi qualification | FDA provides official, nonbinding recommendations for medical-device submissions and is only a credibility-structure reference here unless that context of use is declared; a checklist confers neither validation nor approval |
+| Apple and throughput execution | [Metal machine-learning passes](https://developer.apple.com/documentation/metal/machine-learning-passes), [Apple GPU counters](https://developer.apple.com/documentation/xcode/analyzing-apple-gpu-performance-using-counter-statistics), and [MLX](https://github.com/ml-explore/mlx) for the native path; [MJWarp](https://github.com/google-deepmind/mujoco_warp) as NVIDIA throughput comparator | Current Numi Metal execution is partly proven; Metal 4 ML passes, MLX-to-policy export/parity, and MJWarp comparison are unreproduced | Metal 4 ML passes consume packaged Core ML networks, so MLX-trained policy export and numerical parity require evidence; unified memory is not proof of zero copies; MJWarp is not production authority |
+
+No external stack becomes the Numi Human runtime. It is a source, comparator,
+teacher, or independent oracle with an explicit license and evidence role.
+
+## License-clean foundation
+
+The permanent artifact graph supports the same ABI and solver semantics across
+separately fingerprinted content profiles; it does not assume that different
+source sets are mechanically identical:
+
+- **free foundation:** compatible MyoSim/MyoFullBody source records, BodyParts3D
+  with attribution, production-cleared measurements and motions, verified
+  AddBiomechanics records, and policies with complete permissible lineage;
+- **restricted research overlays:** MoBL-ARMS non-commercial material,
+  AMASS/SMPL-derived motions, restricted retargeted datasets or checkpoints,
+  and Z-Anatomy share-alike derivatives, with policy and publication rules
+  enforced from their exact lineage;
+- **quarantine/reference only:** any atlas, model, motion, body, checkpoint, or
+  derivative with unresolved rights. These may be fingerprinted for review but
+  cannot compile into a runnable or distributable profile.
+
+The code license, model license, motion license, body-model license, checkpoint
+license, and derived-policy license are separate fields. A permissive repository
+license never launders restricted training data. This is an engineering policy,
+not legal advice.
+
+## Capability and evidence gates
+
+Every capability and integrated composition carries all applicable rows:
 
 | Evidence class | Required proof |
 | --- | --- |
-| Provenance | Exact source URL/revision/hash, license, transforms, generated artifact hash, Human/runtime revisions |
-| Implementation | Owning live code path and ABI; no presentation asset standing in for mechanics |
-| Numerics | Analytical/FP64 comparison, residuals, constraint errors, timestep and solver convergence, failure behavior |
-| Transaction | Accepted publication, injected rejection, rollback, completed-step count, deterministic replay |
-| Physical outcome | Task-specific quantities such as support, GRF/CoP, distance, recovery, stress/strain, internal load, or deformation |
-| Generalization | Held-out subject/activity/material/perturbation split and uncertainty/sensitivity |
-| Performance | Same revision, artifact, device, workload, counters/trace, throughput, retained/peak memory, failed steps |
-| Visual | Actual runtime frames from multiple angles at original resolution, with mechanics overlays separated from clean presentation |
+| Provenance and license | Exact source revision/hash, rights, transforms, derivation, uncertainty, Human/runtime/artifact fingerprints |
+| Permanent implementation | Lowest owning live code path and final interface; no diagnostic, visual, one-way, or alternate host path standing in |
+| Numerics | Analytical/manufactured/FP64/independent-oracle comparison, residuals, constraint errors, refinement, and failure envelope |
+| Transaction and conservation | Acceptance, injected rejection, physical/controller rollback, advancing append-only failure ledger, completed-step/attempt counts, deterministic replay, residual/force/momentum/work/energy closure |
+| Physical outcome | Claim-specific support, GRF/pressure, movement, recovery, activation, internal load, stress/strain, deformation, or physiology |
+| Generalization and UQ | Frozen held-out subjects/tasks/materials/perturbations, sensitivity, identifiability, calibrated uncertainty, OOD status |
+| Competitive frontier | Reproduced comparator on a declared benchmark, measured Numi delta, caveats, and retest trigger |
+| Apple performance | Exact revision/artifact/device/workload, trace/counters, thermal state, latency/throughput, retained/peak memory, failures, physical equivalence |
+| Visual/anatomical | Actual accepted-state runtime frames from multiple angles at original resolution, with mechanics and presentation ownership visible |
+| Integrated non-regression | Exact compiled composition passes all dependent subsystem and capability gates together |
 
-A build, test pass, attractive image, liveness check, reward, or force-transfer
-counter cannot substitute for a physical outcome in another row.
-
-## First 30-day backlog
-
-Ordered list:
-
-1. Generate the live runtime/evidence registry and eliminate the stale contract.
-2. Bound the audit's Git inspection and make timeout/failure typed.
-3. Rebuild and end-to-end qualify the latest `NHTENDON3` composition.
-4. Mark every retained report `current`, `historical`, or `component-only` from
-   the registry rather than prose convention.
-5. Freeze golden payload/decoder/replay fixtures and create Baseline 0.1.
-6. Split the compiler only behind those fixtures; preserve unrelated generated
-   artifacts and ABI bytes.
-7. Freeze the multi-pose/multi-velocity source-parity corpus and tolerances.
-8. Complete the four reviewed foot registration receipts.
-9. Write the contact calibration and validation protocol before choosing final
-   friction/compliance values.
-10. Capture a same-workload baseline for step time, throughput, allocations,
-    retained/peak memory, and Apple GPU counters.
-11. Specify Stand v2 observations, muscle action contract, perturbations, fall
-    criteria, and held-out cases before controller tuning.
-12. Build the dataset/license/split registry and quarantine restricted motion
-    and checkpoints from the free core.
-
-Review bilateral EO3 and the 11 ill-conditioned attachment candidates only if
-the unchanged gates pass. Do not let those localized improvements displace M0,
-contact, or balance.
-
-## Release map
-
-| Release | Meaning |
-| --- | --- |
-| Baseline 0.1 | Exact live source/runtime/artifact registry and latest-stack end-to-end requalification |
-| Stand 0.2 | Registered contact, seconds-long assistance-free balance, perturbation recovery, replay, and device qualification |
-| Walk 0.3 | Fingerprinted closed-loop muscle policy with authoritative-contact held-out gait evidence |
-| Coupled 0.4 | Reusable two-way regional tissue owner plus at least one calibrated contact-relevant tissue island |
-| Whole-body 0.5 | Loaded upper/lower whole-body tasks and selected load-bearing joint tissues without regression |
-| Research 1.0 | Reproducible movement/tissue releases, population/uncertainty support, held-out validation, and published evidence boundaries |
-
-"1.0" means a credible, extensible research platform. It does not mean every
-human tissue is solved or that clinical use is qualified.
+Failed runs and physically valid non-selected candidates are retained as
+addressable evidence. Selection is an immutable decision record over those run
+IDs; it never rewrites, deletes, or relabels the underlying outcomes.
 
 ## Main risks and controls
 
 | Risk | Control |
 | --- | --- |
-| Evidence lineage drifts faster than code | Generated registry, tags, current/historical status, exact hashes, fail-closed docs |
-| Competing source models silently mix | One canonical owner per field; explicit comparative profiles and transform receipts |
-| License contamination reaches a policy | Dataset/checkpoint lineage, free-core/research profiles, quarantine by default |
-| Contact is tuned to make control easy | Calibration protocol and authoritative evaluation contact frozen before training |
-| Tissue force is double counted | Replace the matching `J^T` share and prove generalized-force/energy balance |
-| Refactoring changes binary semantics | Golden ABI payloads, decoder migrations, manifest/replay fixtures before module splits |
-| Unified memory hides duplication | Lifetime accounting, borrowed buffers, retained/peak measurement, GPU traces |
-| A visually impressive layer outruns evidence | Gap ledger and evidence ladder govern public claims |
+| Ambition becomes prose rather than physics | Only permanent owning code plus executable evidence advances capability status |
+| Maximum concurrency creates incompatible systems | Final schemas, semantic IDs, transaction, force ledger, golden ABIs, and continuous coupled integration |
+| An early source model hardens into a dead end | Field-level multi-source composition behind permanent semantic interfaces |
+| Limited tissue coverage becomes a permanent island model | One global continuum/coupling architecture; coverage is data, not a new solver path |
+| Contact is tuned to make a policy succeed | Calibration protocol and authoritative contact; teacher physics cannot qualify behavior |
+| Tissue reaction double counts muscle force | Replacement masks plus force/work/energy closure in the acceptance transaction |
+| Restricted data contaminates a product policy | Per-artifact lineage, fail-closed profiles, and mechanically enforced quarantine |
+| Refactoring or ABI drift destroys evidence | Golden bytes, migrations, decoder fixtures, replay, and exact dependency hashes |
+| Unified memory hides duplication or stalls | Explicit heap lifetimes, capacity classes, counters, traces, and retained/peak accounting |
+| Visual quality outruns mechanics | Separate geometry owners and evidence categories; multi-angle live inspection plus physical tests |
+| “SOTA” becomes unmeasured branding | Generated decision register, reproduced comparator, declared metric, measured delta, and retest trigger |
 
-## Definition of done
+## Definition of accepted progress
 
-A roadmap item is done only when all three are true:
+A capability or integrated composition is accepted only when:
 
-1. the lowest owning layer contains the live implementation;
+1. it uses the permanent owner, semantic schema, ABI, transaction, and force
+   authority defined here;
 2. the exact compiled artifact executes through the intended Apple-native path
-   with revision, device, transaction, replay, memory, and performance evidence;
-   and
-3. the milestone's physical result passes its preregistered held-out gate.
+   with complete provenance and license lineage;
+3. numerical, failure, rollback, replay, conservation, and dependent subsystem
+   evidence pass;
+4. its claimed physical outcome passes preregistered held-out and uncertainty
+   gates without hidden assistance or alternate authority;
+5. its competitive claim, if any, includes a reproduced comparator and measured
+   delta; and
+6. performance and visual claims come from the exact integrated stack.
 
-Anything else is a useful source, compiler feature, diagnostic, experiment, or
-candidate—and should be retained and labeled as exactly that.
+Anything else remains a valuable source, oracle, compiler feature, diagnostic,
+experiment, or candidate. It is retained, labeled precisely, and used to drive
+the frontier—but it is never presented as the completed Human.
