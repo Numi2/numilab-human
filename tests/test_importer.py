@@ -50,6 +50,7 @@ from numilab_human.model import (
     bodyparts_geometry_preflight,
     bodyparts_foot_registration_template,
     bodyparts_lower_body_attachment_worklist,
+    bodyparts_pectoralis_fascia_payload,
     bodyparts_right_calcaneal_tendon_continuity_preview,
     bodyparts_nerve_annotation,
     bodyparts_right_lower_leg_anatomy_preview,
@@ -810,6 +811,35 @@ class ImporterTests(unittest.TestCase):
             )
             for surface in pectoralis
         ), 4)
+
+    def test_pectoralis_fascia_payload_is_bilateral_positive_and_explicitly_generated(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            first = Path(temporary) / "first"
+            second = Path(temporary) / "second"
+            manifest = bodyparts_pectoralis_fascia_payload(
+                ROOT / "sources", ROOT / "build/myosim-fullbody", first,
+            )
+            replay = bodyparts_pectoralis_fascia_payload(
+                ROOT / "sources", ROOT / "build/myosim-fullbody", second,
+            )
+            payload = (first / manifest["payload"]["file"]).read_bytes()
+        self.assertEqual(payload[:8], b"NHFASC1\0")
+        self.assertEqual(manifest["payload"]["sha256"], replay["payload"]["sha256"])
+        self.assertEqual(manifest["payload"]["region_count"], 6)
+        self.assertGreater(manifest["payload"]["node_count"], 250)
+        self.assertLess(manifest["payload"]["node_count"], 1000)
+        self.assertGreater(manifest["payload"]["tetrahedron_count"], 350)
+        self.assertLess(manifest["payload"]["tetrahedron_count"], 2000)
+        self.assertEqual(
+            manifest["source"]["geometry_status"],
+            "generated_bounded_thin_solid_mechanics_fallback_from_exact_anterior_pectoralis_major_source_vertex_envelope",
+        )
+        self.assertEqual(manifest["mechanics"]["thickness_m"], 0.0006)
+        self.assertGreater(manifest["mechanics"]["total_rest_volume_m3"], 0.0)
+        regions = manifest["mechanics"]["regions"]
+        self.assertEqual([region["source_actuator_index"] for region in regions], [220, 218, 219, 283, 281, 282])
+        self.assertTrue(all(region["fixed_node_count"] >= 6 for region in regions))
+        self.assertTrue(all(region["load_node_count"] >= 6 for region in regions))
 
     def test_visual_skeleton_extension_preserves_the_validated_fit_set(self) -> None:
         fit_anchors = [

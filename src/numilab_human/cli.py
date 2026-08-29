@@ -26,6 +26,7 @@ from .model import (
     bodyparts_myosim_torso_anatomy_visual_payload,
     bodyparts_myosim_skinned_shell_visual_payload,
     bodyparts_myosim_right_posterior_chain_visual_payload,
+    bodyparts_pectoralis_fascia_payload,
     bodyparts_myosim_attachment_surface_registration_candidate,
     bodyparts_myosim_registration_candidate,
     bodyparts_nerve_annotation,
@@ -767,6 +768,16 @@ def numi_human_tendon_envelope_payload(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def numi_human_pectoralis_fascia_payload(arguments: argparse.Namespace) -> int:
+    manifest = bodyparts_pectoralis_fascia_payload(
+        arguments.sources.resolve(), arguments.artifact.resolve(),
+        arguments.output.resolve(), arguments.thickness, arguments.load_fraction,
+    )
+    print(f"wrote {arguments.output.resolve() / manifest['payload']['file']}")
+    print(f"wrote {arguments.output.resolve() / 'bodyparts3d-pectoralis-fascia.manifest.json'}")
+    return 0
+
+
 def numi_human_achilles_receipt(arguments: argparse.Namespace) -> int:
     receipt = numi_human_achilles_surface_receipt(
         arguments.sources.resolve(), arguments.registration.resolve(),
@@ -988,6 +999,25 @@ def parser() -> argparse.ArgumentParser:
         help="maximum sampled sum of nodal force magnitudes for a unit terminal force (default: 4.0)",
     )
     tendon_envelope_parser.set_defaults(handler=numi_human_tendon_envelope_payload)
+    pectoralis_fascia_parser = commands.add_parser(
+        "numi-human-pectoralis-fascia-payload",
+        help="compile an explicit source-derived pectoral-fascia thin-solid FEM fallback",
+    )
+    pectoralis_fascia_parser.add_argument("--sources", type=Path, required=True)
+    pectoralis_fascia_parser.add_argument(
+        "--artifact", type=Path, required=True,
+        help="compiled MyoSim full-body artifact directory from myosim-build",
+    )
+    pectoralis_fascia_parser.add_argument("--output", type=Path, required=True)
+    pectoralis_fascia_parser.add_argument(
+        "--thickness", type=float, default=0.0006,
+        help="generated sheet thickness in metres (default: 0.0006)",
+    )
+    pectoralis_fascia_parser.add_argument(
+        "--load-fraction", type=float, default=0.10,
+        help="bounded share of named pectoralis terminal force applied to fascia (default: 0.10)",
+    )
+    pectoralis_fascia_parser.set_defaults(handler=numi_human_pectoralis_fascia_payload)
     achilles_receipt_parser = commands.add_parser(
         "numi-human-achilles-surface-receipt",
         help="register six bilateral Achilles route insertions to exact BodyParts3D calcaneus triangles",

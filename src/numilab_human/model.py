@@ -10278,6 +10278,301 @@ def _bodyparts_obj_triangles(
     return vertices, triangles
 
 
+_NUMI_HUMAN_PECTORAL_FASCIA_MAGIC = b"NHFASC1\0"
+_NUMI_HUMAN_PECTORAL_FASCIA_ABI = 1
+_NUMI_HUMAN_PECTORAL_FASCIA_MEMBERS = (
+    ("FJ1446", "abdominal part of right pectoralis major", "PECM3"),
+    ("FJ1447", "clavicular part of right pectoralis major", "PECM1"),
+    ("FJ1464", "sternocostal part of right pectoralis major", "PECM2"),
+    ("FJ1446M", "abdominal part of left pectoralis major", "PECM3_l"),
+    ("FJ1447M", "clavicular part of left pectoralis major", "PECM1_l"),
+    ("FJ1464M", "sternocostal part of left pectoralis major", "PECM2_l"),
+)
+
+
+def _signed_tetrahedron_volume(
+    points: list[tuple[float, float, float]], tetrahedron: tuple[int, int, int, int],
+) -> float:
+    a, b, c, d = (points[index] for index in tetrahedron)
+    ab = tuple(b[index] - a[index] for index in range(3))
+    ac = tuple(c[index] - a[index] for index in range(3))
+    ad = tuple(d[index] - a[index] for index in range(3))
+    cross = (
+        ab[1] * ac[2] - ab[2] * ac[1],
+        ab[2] * ac[0] - ab[0] * ac[2],
+        ab[0] * ac[1] - ab[1] * ac[0],
+    )
+    return sum(cross[index] * ad[index] for index in range(3)) / 6.0
+
+
+def bodyparts_pectoralis_fascia_payload(
+    sources: Path,
+    myosim_artifact: Path,
+    output: Path,
+    thickness_m: float = 0.0006,
+    muscle_load_fraction: float = 0.10,
+) -> dict[str, Any]:
+    """Compile a bounded, explicit pectoral-fascia FEM fallback.
+
+    BodyParts3D 4.0 has no separate pectoral-fascia member.  We therefore keep
+    only the anterior-facing sheet of each exact pectoralis-major OBJ and
+    extrude that source topology posteriorly by a declared thickness.  This is
+    a mechanics input with generated connectivity, not source-authored fascia
+    geometry and not a clinical segmentation.
+    """
+    if not math.isfinite(thickness_m) or not 0.0002 <= thickness_m <= 0.0012:
+        raise ImportError("pectoralis fascia thickness must be in [0.2, 1.2] mm")
+    if not math.isfinite(muscle_load_fraction) or not 0.0 < muscle_load_fraction <= 0.25:
+        raise ImportError("pectoralis fascia muscle-load fraction must be in (0, 0.25]")
+    sources = sources.resolve()
+    myosim_artifact = myosim_artifact.resolve()
+    myosim_manifest_path = myosim_artifact / "myosim-fullbody-reference.manifest.json"
+    myosim_manifest = read_json(myosim_manifest_path)
+    muscles = myosim_manifest.get("muscles")
+    if not isinstance(muscles, list):
+        raise ImportError("MyoSim full-body manifest has no muscle table")
+    actuator_by_name = {
+        row.get("name"): row.get("source_actuator_index")
+        for row in muscles if isinstance(row, dict)
+    }
+    stable_id_by_member = {
+        row["member_id"]: stable_id
+        for stable_id, row in enumerate(_bodyparts_myosim_surface_specifications(), start=1)
+    }
+    archive_path = sources / "isa_BP3D_4.0_obj_99.zip"
+    if not archive_path.is_file():
+        raise ImportError("BodyParts3D is-a OBJ archive is unavailable")
+
+    nodes: list[tuple[float, float, float]] = []
+    node_source_indices: list[int] = []
+    node_regions: list[int] = []
+    node_flags: list[int] = []
+    tetrahedra: list[tuple[int, int, int, int, int]] = []
+    regions: list[dict[str, Any]] = []
+    source_members: list[dict[str, Any]] = []
+    for region_index, (member_id, source_name, muscle_name) in enumerate(
+        _NUMI_HUMAN_PECTORAL_FASCIA_MEMBERS
+    ):
+        actuator = actuator_by_name.get(muscle_name)
+        if not isinstance(actuator, int) or isinstance(actuator, bool):
+            raise ImportError(f"pectoralis fascia route is absent from MyoSim: {muscle_name}")
+        stable_id = stable_id_by_member.get(member_id)
+        if not isinstance(stable_id, int):
+            raise ImportError(f"pectoralis fascia surface is absent from the native surface map: {member_id}")
+        _, member, obj = _bodyparts_obj_member(sources, "is_a", member_id)
+        vertices_mm, source_triangles = _bodyparts_obj_triangles(obj, member)
+        centroid_y = sorted(
+            sum(vertices_mm[index][1] for index in triangle) / 3.0
+            for triangle in source_triangles
+        )
+        anterior_limit_mm = centroid_y[int(0.45 * (len(centroid_y) - 1))]
+        selected_triangles: list[tuple[int, int, int]] = []
+        for triangle in source_triangles:
+            a, b, c = (vertices_mm[index] for index in triangle)
+            ab = tuple(b[index] - a[index] for index in range(3))
+            ac = tuple(c[index] - a[index] for index in range(3))
+            normal = (
+                ab[1] * ac[2] - ab[2] * ac[1],
+                ab[2] * ac[0] - ab[0] * ac[2],
+                ab[0] * ac[1] - ab[1] * ac[0],
+            )
+            magnitude = math.sqrt(sum(value * value for value in normal))
+            projected_double_area = abs(ab[0] * ac[2] - ab[2] * ac[0])
+            if (
+                sum(point[1] for point in (a, b, c)) / 3.0 <= anterior_limit_mm
+                and magnitude > 1.0e-9
+                and abs(normal[1]) / magnitude >= 0.35
+                and projected_double_area >= 0.02
+            ):
+                selected_triangles.append(triangle)
+        used_source_vertices = sorted({index for triangle in selected_triangles for index in triangle})
+        if len(used_source_vertices) < 32 or len(selected_triangles) < 32:
+            raise ImportError(f"pectoralis fascia {member_id} has insufficient anterior source topology")
+        # The exact source surface remains the high-resolution presentation
+        # geometry.  A bounded mechanics mesh uses the x-z convex envelope of
+        # that anterior selection so interactive implicit solves do not carry
+        # tens of thousands of high-aspect-ratio source triangles.  Every
+        # mechanics vertex is still one exact source vertex.
+        projected: dict[tuple[float, float], int] = {}
+        for source_index in used_source_vertices:
+            point = vertices_mm[source_index]
+            key = (point[0], point[2])
+            previous = projected.get(key)
+            if previous is None or point[1] < vertices_mm[previous][1]:
+                projected[key] = source_index
+        ordered = sorted(projected)
+        def cross(
+            origin: tuple[float, float], first: tuple[float, float], second: tuple[float, float],
+        ) -> float:
+            return ((first[0] - origin[0]) * (second[1] - origin[1]) -
+                    (first[1] - origin[1]) * (second[0] - origin[0]))
+        lower: list[tuple[float, float]] = []
+        for point in ordered:
+            while len(lower) >= 2 and cross(lower[-2], lower[-1], point) <= 0.0:
+                lower.pop()
+            lower.append(point)
+        upper: list[tuple[float, float]] = []
+        for point in reversed(ordered):
+            while len(upper) >= 2 and cross(upper[-2], upper[-1], point) <= 0.0:
+                upper.pop()
+            upper.append(point)
+        hull_keys = lower[:-1] + upper[:-1]
+        hull_source_vertices = [projected[key] for key in hull_keys]
+        hull_set = set(hull_source_vertices)
+        mean_x = sum(key[0] for key in hull_keys) / len(hull_keys)
+        mean_z = sum(key[1] for key in hull_keys) / len(hull_keys)
+        interior_candidates = [index for index in used_source_vertices if index not in hull_set]
+        if len(hull_source_vertices) < 8 or not interior_candidates:
+            raise ImportError(f"pectoralis fascia {member_id} has no bounded mechanics envelope")
+        centre_source_vertex = min(
+            interior_candidates,
+            key=lambda index: ((vertices_mm[index][0] - mean_x) ** 2 +
+                               (vertices_mm[index][2] - mean_z) ** 2),
+        )
+        mechanics_source_vertices = [*hull_source_vertices, centre_source_vertex]
+        mechanics_triangles = [
+            (len(hull_source_vertices), index, (index + 1) % len(hull_source_vertices))
+            for index in range(len(hull_source_vertices))
+        ]
+        first_node = len(nodes)
+        source_points_m = [
+            tuple(coordinate * 0.001 for coordinate in vertices_mm[index])
+            for index in mechanics_source_vertices
+        ]
+        ranked_x = sorted(range(len(source_points_m)), key=lambda index: abs(source_points_m[index][0]))
+        band_count = max(3, math.ceil(0.20 * len(source_points_m)))
+        fixed_indices = set(ranked_x[:band_count])
+        load_indices = set(ranked_x[-band_count:])
+        region_flags: list[int] = []
+        for local, (source_index, point) in enumerate(zip(
+            mechanics_source_vertices, source_points_m, strict=True
+        )):
+            flags = (1 if local in fixed_indices else 0) | (2 if local in load_indices else 0)
+            region_flags.append(flags)
+            nodes.append(point)
+            node_source_indices.append(source_index)
+            node_regions.append(region_index)
+            node_flags.append(flags)
+        layer_width = len(source_points_m)
+        for source_index, point, flags in zip(
+            mechanics_source_vertices, source_points_m, region_flags, strict=True
+        ):
+            nodes.append((point[0], point[1] + thickness_m, point[2]))
+            node_source_indices.append(source_index)
+            node_regions.append(region_index)
+            node_flags.append(flags)
+        first_tetrahedron = len(tetrahedra)
+        for local_triangle in mechanics_triangles:
+            a, b, c = (first_node + index for index in local_triangle)
+            aa, bb, cc = a + layer_width, b + layer_width, c + layer_width
+            for candidate in ((a, b, c, aa), (b, bb, c, aa), (c, bb, cc, aa)):
+                volume = _signed_tetrahedron_volume(nodes, candidate)
+                if abs(volume) <= 1.0e-15:
+                    continue
+                oriented = candidate if volume > 0.0 else (candidate[1], candidate[0], candidate[2], candidate[3])
+                tetrahedra.append((*oriented, region_index))
+        region_tetrahedron_count = len(tetrahedra) - first_tetrahedron
+        fixed_count = 2 * sum(bool(flags & 1) for flags in region_flags)
+        load_count = 2 * sum(bool(flags & 2) for flags in region_flags)
+        if fixed_count < 6 or load_count < 6 or region_tetrahedron_count < 18:
+            raise ImportError(f"pectoralis fascia {member_id} has incomplete anchor/load/FEM coverage")
+        regions.append({
+            "member_id": member_id,
+            "source_name": source_name,
+            "myosim_muscle": muscle_name,
+            "source_actuator_index": actuator,
+            "soft_tissue_stable_id": stable_id,
+            "first_node": first_node,
+            "node_count": 2 * layer_width,
+            "first_tetrahedron": first_tetrahedron,
+            "tetrahedron_count": region_tetrahedron_count,
+            "fixed_node_count": fixed_count,
+            "load_node_count": load_count,
+            "anterior_centroid_limit_source_mm": anterior_limit_mm,
+        })
+        source_members.append({
+            "member_id": member_id,
+            "source_name": source_name,
+            "member": member,
+            "obj_sha256": hashlib.sha256(obj).hexdigest(),
+            "source_vertex_count": len(vertices_mm),
+            "source_triangle_count": len(source_triangles),
+            "anterior_source_vertex_count": len(used_source_vertices),
+            "mechanics_source_vertex_count": layer_width,
+            "mechanics_convex_hull_vertex_count": len(hull_source_vertices),
+            "selected_source_triangle_count": len(selected_triangles),
+        })
+
+    nodal_mass = [0.0] * len(nodes)
+    total_volume = 0.0
+    density_kg_m3 = 1000.0
+    for a, b, c, d, _ in tetrahedra:
+        volume = _signed_tetrahedron_volume(nodes, (a, b, c, d))
+        if not math.isfinite(volume) or volume <= 0.0:
+            raise ImportError("pectoralis fascia payload contains a non-positive tetrahedron")
+        total_volume += volume
+        share = density_kg_m3 * volume / 4.0
+        for node in (a, b, c, d):
+            nodal_mass[node] += share
+
+    header = struct.pack(
+        "<8s4I2f2I32s32s",
+        _NUMI_HUMAN_PECTORAL_FASCIA_MAGIC,
+        _NUMI_HUMAN_PECTORAL_FASCIA_ABI,
+        len(regions), len(nodes), len(tetrahedra),
+        thickness_m, muscle_load_fraction, 0, 0,
+        bytes.fromhex(sha256(archive_path)), bytes.fromhex(sha256(myosim_manifest_path)),
+    )
+    region_payload = b"".join(struct.pack(
+        "<8s6I",
+        region["member_id"].encode("ascii").ljust(8, b"\0"),
+        region["source_actuator_index"], region["first_node"], region["node_count"],
+        region["first_tetrahedron"], region["tetrahedron_count"],
+        region["soft_tissue_stable_id"],
+    ) for region in regions)
+    node_payload = b"".join(struct.pack(
+        "<4f4I", *point, nodal_mass[index], node_flags[index], node_regions[index],
+        node_source_indices[index], 0,
+    ) for index, point in enumerate(nodes))
+    tetrahedron_payload = b"".join(struct.pack("<5I", *tetrahedron) for tetrahedron in tetrahedra)
+    payload = header + region_payload + node_payload + tetrahedron_payload
+    output = output.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    payload_path = output / "bodyparts3d-pectoralis-fascia.nhfascia"
+    payload_path.write_bytes(payload)
+    manifest = {
+        "schema": "numi.human.pectoralis-fascia-mechanics-payload.v1",
+        "payload": {
+            "file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
+            "magic": "NHFASC1", "payload_abi": _NUMI_HUMAN_PECTORAL_FASCIA_ABI,
+            "region_count": len(regions), "node_count": len(nodes),
+            "tetrahedron_count": len(tetrahedra),
+        },
+        "source": {
+            "bodyparts3d_archive": {"file": archive_path.name, "sha256": sha256(archive_path), "license": "CC-BY-4.0"},
+            "myosim_manifest": {"file": myosim_manifest_path.name, "sha256": sha256(myosim_manifest_path)},
+            "members": source_members,
+            "geometry_status": "generated_bounded_thin_solid_mechanics_fallback_from_exact_anterior_pectoralis_major_source_vertex_envelope",
+        },
+        "mechanics": {
+            "thickness_m": thickness_m, "density_kg_m3": density_kg_m3,
+            "total_rest_volume_m3": total_volume, "total_mass_kg": density_kg_m3 * total_volume,
+            "muscle_terminal_load_fraction": muscle_load_fraction,
+            "fixed_node_flag": 1, "muscle_load_node_flag": 2,
+            "regions": regions,
+            "constitutive_model": "human_pectoralis_fascia_goh_uniaxial_v1",
+        },
+        "literature": {
+            "material": {"doi": "10.1016/j.jmbbm.2025.107283", "scope": "human pectoralis-major fascia uniaxial mean fit; female surgical and cadaver cohort"},
+            "thickness": {"doi": "10.1007/s00276-016-1747-8", "mean_m": 0.000612, "selected_m": thickness_m},
+        },
+        "runtime_binding": "The six named MyoSim pectoralis terminal loads may contribute only the declared fraction to flagged fascia nodes. MyoSim J^T remains the sole rigid generalized-force authority.",
+        "evidence_boundary": "No BodyParts3D pectoral-fascia mesh exists. The mechanics envelope retains exact selected source vertices, while its convex fill, posterior thickness, tetrahedral connectivity, anchor bands, and fascia load share are generated research assumptions. The high-resolution source muscle surfaces remain presentation geometry. This is not a clinical segmentation, biaxial calibration, or validated two-way fascia-muscle-bone solve.",
+    }
+    write_json(output / "bodyparts3d-pectoralis-fascia.manifest.json", manifest)
+    return manifest
+
+
 def _bodyparts_glb(
     vertices_mm: list[tuple[float, float, float]],
     triangles: list[tuple[int, int, int]],
