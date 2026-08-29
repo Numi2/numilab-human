@@ -1,5 +1,24 @@
 # NumiLab Human visual progress
 
+## EO3 source mechanics surfaces versus BodyParts rib 9 — 2026-08-29
+
+<p align="center">
+  <img src="media/numi-human-eo3-source-surface-v2-2048/rib9-comparison/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-front.png" width="24%" alt="EO3 source mechanics patches and BodyParts rib 9, front" />
+  <img src="media/numi-human-eo3-source-surface-v2-2048/rib9-comparison/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-oblique.png" width="24%" alt="EO3 source mechanics patches and BodyParts rib 9, oblique" />
+  <img src="media/numi-human-eo3-source-surface-v2-2048/rib9-comparison/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-side.png" width="24%" alt="EO3 source mechanics patches and BodyParts rib 9, side" />
+  <img src="media/numi-human-eo3-source-surface-v2-2048/rib9-comparison/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-rear.png" width="24%" alt="EO3 source mechanics patches and BodyParts rib 9, rear" />
+</p>
+
+These deliberately isolated M4 Pro diagnostics compare bilateral EO3 cyan
+routes/tan exact-source force-transfer patches against only the two grey
+registered BodyParts3D rib-9 meshes. The four views expose the 30.9 mm
+common-frame disagreement instead of hiding it. Moving a whole rib to close
+that gap would break already-passing posterior entheses and costovertebral
+placement, so the mechanics payload retains the exact source patch with zero
+bone or endpoint migration. This is not a realistic presentation render or a
+deformable cartilage claim. See the
+[EO3 source-surface record](EO3_SOURCE_COMPONENT_FORCE_TRANSFER_V2.md).
+
 ## Source-component abdominal rib entheses — 2026-08-29
 
 <p align="center">
@@ -12,11 +31,11 @@
 The tan fans are eight admitted four-node BodyParts3D rib load envelopes for
 bilateral EO1, EO5, EO6, and IO5 termini. Direct inspection of all four 2048 px
 Apple-M4-Pro views finds the fans on the intended inferior rib surfaces with
-coherent bilateral cyan source routes. The payload executes 628 envelopes and
-204 point laws with byte-identical Metal replay.
+coherent bilateral cyan source routes. That v1 snapshot executes 628 envelopes
+and 204 point laws with byte-identical Metal replay.
 
-This view deliberately excludes the two EO3 registration candidates and the
-eight exact anterior non-rib termini. Cyan is a source route centreline, not a
+This historical v1 view deliberately excludes the then-unresolved two EO3
+registration candidates and the eight exact anterior non-rib termini. Cyan is a source route centreline, not a
 deformable tendon surface; the opposite route end can still be point-owned.
 See the [source-component record](ABDOMINAL_SOURCE_COMPONENT_ENTHESES_V1.md).
 

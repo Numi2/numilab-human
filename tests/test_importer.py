@@ -184,6 +184,18 @@ class ImporterTests(unittest.TestCase):
         source_sha = "34" * 32
         records = []
         pairs = []
+        rib_components = {
+            ("EO1", "r"): 4,
+            ("EO1", "l"): 15,
+            ("EO3", "r"): 13,
+            ("EO3", "l"): 9,
+            ("EO5", "r"): 16,
+            ("EO5", "l"): 17,
+            ("EO6", "r"): 18,
+            ("EO6", "l"): 19,
+            ("IO5", "r"): 16,
+            ("IO5", "l"): 17,
+        }
         for pair_index, (base, ordinal) in enumerate((
             ("rect_abd", 1), ("EO1", 1), ("EO2", 0), ("EO3", 0),
             ("EO4", 0), ("EO5", 0), ("EO6", 0), ("IO4", 0),
@@ -217,12 +229,17 @@ class ImporterTests(unittest.TestCase):
                     "endpoint_migration_m": 0.0,
                 }
                 if disposition == _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION:
+                    component_index = rib_components[(base, side)]
                     record.update({
                         "side": "right" if side == "r" else "left",
                         "thoracic_level": level,
-                        "source_component_index": pair_index * 2 + (side == "l"),
+                        "source_component_index": component_index,
                         "source_triangle_index": pair_index,
                         "source_component_vertex_index_sha256": "56" * 32,
+                        "source_mechanics_surface_id": f"MYSRC{component_index:02d}",
+                        "source_mechanics_surface_policy": (
+                            "fallback_only_after_bodyparts_member_rejection"
+                        ),
                     })
                 records.append(record)
             pairs.append({"muscle_base": base, "passed": True})
@@ -231,6 +248,32 @@ class ImporterTests(unittest.TestCase):
             _NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION: 8,
             _NUMI_HUMAN_SOURCE_COMPONENT_NON_BONE_DISPOSITION: 2,
         }
+        vertices = [
+            [0.0, 0.0, 0.0],
+            [0.001, 0.0, 0.0],
+            [0.0, 0.001, 0.0],
+            [0.0, 0.0, 0.001],
+        ]
+        triangles = [[0, 1, 2], [0, 3, 1], [0, 2, 3], [1, 3, 2]]
+        surface_content_sha = hashlib.sha256(json.dumps(
+            {"triangles": triangles, "vertices_core_m": vertices},
+            sort_keys=True, separators=(",", ":"),
+        ).encode("utf-8")).hexdigest()
+        source_surfaces = [
+            {
+                "source_component_index": component_index,
+                "source_component_vertex_index_sha256": "56" * 32,
+                "source_vertex_count": len(vertices),
+                "source_triangle_count": len(triangles),
+                "vertices_core_m": vertices,
+                "triangles": triangles,
+                "surface_content_sha256": surface_content_sha,
+                "mechanics_role": (
+                    "exact_pinned_source_surface_fallback_after_bodyparts_rejection"
+                ),
+            }
+            for component_index in sorted(set(rib_components.values()))
+        ]
         receipt = {
             "schema": _NUMI_HUMAN_SOURCE_COMPONENT_ENTHESIS_SCHEMA,
             "status": "candidate_passed_exact_component_identity_and_bilateral_gates",
@@ -242,6 +285,8 @@ class ImporterTests(unittest.TestCase):
             "source_mesh_name": "torso_geom_13_ribcage_s",
             "source_connected_component_count": 36,
             "source_rib_component_count": 24,
+            "source_component_surface_count": len(source_surfaces),
+            "source_component_surfaces": source_surfaces,
             "disposition_counts": counts,
             "bilateral_pairs": pairs,
             "endpoint_records": records,
@@ -261,6 +306,12 @@ class ImporterTests(unittest.TestCase):
             _numi_human_source_component_enthesis_receipt(
                 drifted, member_bodies, source_sha,
             )
+        surface_drifted = json.loads(json.dumps(receipt))
+        surface_drifted["source_component_surfaces"][0]["vertices_core_m"][0][0] = 0.1
+        with self.assertRaises(HumanImportError):
+            _numi_human_source_component_enthesis_receipt(
+                surface_drifted, member_bodies, source_sha,
+            )
 
     def test_rib_topology_decomposition_is_deterministic_and_disconnected(self) -> None:
         vertices = [[0.0, 0.0, 0.0] for _ in range(8)]
@@ -278,7 +329,7 @@ class ImporterTests(unittest.TestCase):
         audit_endpoints = []
         tendon_endpoints = []
         fixtures = (
-            (0, "registered_bone_distributed_envelope", "admitted", "source_model_bone_adjacent"),
+            (0, "registered_source_surface_distributed_envelope", "admitted", "source_model_bone_adjacent"),
             (5, "registered_bone_migrated_distributed_envelope", "admitted", "source_model_bone_adjacent"),
             (1, "source_site_point", "surface_distance_exceeds_gate", "source_model_bone_adjacent"),
             (2, "source_site_point", "surface_distance_exceeds_gate", "source_model_not_bone_adjacent"),

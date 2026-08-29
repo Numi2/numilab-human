@@ -3937,13 +3937,16 @@ def _numi_human_source_component_enthesis_receipt(
         or receipt.get("source_mesh_name") != "torso_geom_13_ribcage_s"
         or receipt.get("source_connected_component_count") != 36
         or receipt.get("source_rib_component_count") != 24
+        or receipt.get("source_component_surface_count") != 8
     ):
         raise ImportError("Numi Human source-component enthesis receipt is invalid")
     records = receipt.get("endpoint_records")
     pairs = receipt.get("bilateral_pairs")
+    source_surfaces = receipt.get("source_component_surfaces")
     if (
         not isinstance(records, list) or len(records) != 20
         or not isinstance(pairs, list) or len(pairs) != 10
+        or not isinstance(source_surfaces, list) or len(source_surfaces) != 8
         or any(not isinstance(pair, dict) or pair.get("passed") is not True for pair in pairs)
     ):
         raise ImportError("Numi Human source-component enthesis receipt is incomplete")
@@ -3959,6 +3962,47 @@ def _numi_human_source_component_enthesis_receipt(
         for side_members in _NUMI_HUMAN_RIB_ENTHESIS_MEMBER_IDS.values()
         for member in side_members.values()
     }
+    source_surface_by_component: dict[int, dict[str, Any]] = {}
+    for surface in source_surfaces:
+        if not isinstance(surface, dict):
+            raise ImportError("Numi Human source-component surface is malformed")
+        component_index = surface.get("source_component_index")
+        vertices = surface.get("vertices_core_m")
+        triangles = surface.get("triangles")
+        signature = surface.get("source_component_vertex_index_sha256")
+        content_sha = surface.get("surface_content_sha256")
+        if (
+            not isinstance(component_index, int)
+            or component_index in source_surface_by_component
+            or not isinstance(vertices, list) or len(vertices) < 4
+            or not isinstance(triangles, list) or len(triangles) < 4
+            or surface.get("source_vertex_count") != len(vertices)
+            or surface.get("source_triangle_count") != len(triangles)
+            or not isinstance(signature, str)
+            or re.fullmatch(r"[0-9a-f]{64}", signature) is None
+            or not isinstance(content_sha, str)
+            or re.fullmatch(r"[0-9a-f]{64}", content_sha) is None
+            or surface.get("mechanics_role")
+            != "exact_pinned_source_surface_fallback_after_bodyparts_rejection"
+            or any(
+                not isinstance(vertex, list) or len(vertex) != 3
+                or any(not isinstance(value, (int, float)) or not math.isfinite(value) for value in vertex)
+                for vertex in vertices
+            )
+            or any(
+                not isinstance(triangle, list) or len(triangle) != 3
+                or any(not isinstance(index, int) or not 0 <= index < len(vertices) for index in triangle)
+                for triangle in triangles
+            )
+        ):
+            raise ImportError("Numi Human source-component surface identity is invalid")
+        encoded = json.dumps(
+            {"triangles": triangles, "vertices_core_m": vertices},
+            sort_keys=True, separators=(",", ":"),
+        ).encode("utf-8")
+        if hashlib.sha256(encoded).hexdigest() != content_sha:
+            raise ImportError("Numi Human source-component surface content drifted")
+        source_surface_by_component[component_index] = surface
     for record in records:
         if not isinstance(record, dict):
             raise ImportError("Numi Human source-component enthesis record is malformed")
@@ -4003,6 +4047,14 @@ def _numi_human_source_component_enthesis_receipt(
                 or not re.fullmatch(
                     r"[0-9a-f]{64}", record["source_component_vertex_index_sha256"]
                 )
+                or record.get("source_mechanics_surface_id")
+                != f"MYSRC{record['source_component_index']:02d}"
+                or record.get("source_mechanics_surface_policy")
+                != "fallback_only_after_bodyparts_member_rejection"
+                or record["source_component_index"] not in source_surface_by_component
+                or source_surface_by_component[record["source_component_index"]].get(
+                    "source_component_vertex_index_sha256"
+                ) != record["source_component_vertex_index_sha256"]
             ):
                 raise ImportError(
                     "Numi Human source-component rib ownership is invalid"
@@ -7747,10 +7799,17 @@ def numi_human_tendon_attachment_envelope_payload(
             surfaces_by_member[member_id] = surface
     source_component_members: dict[tuple[str, int], tuple[str, ...]] = {}
     source_component_point_reasons: dict[tuple[str, int], str] = {}
+    source_component_fallback_surfaces: dict[
+        tuple[str, int], dict[str, Any]
+    ] = {}
     source_component_receipt = bone_descriptor.get(
         "source_component_enthesis_registration"
     )
     if source_component_receipt is not None:
+        source_surfaces = {
+            int(surface["source_component_index"]): surface
+            for surface in source_component_receipt["source_component_surfaces"]
+        }
         for record in source_component_receipt["endpoint_records"]:
             key = (str(record["muscle"]), int(record["endpoint_ordinal"]))
             if key in _NUMI_HUMAN_SEMANTIC_ENTHESIS_MEMBERS:
@@ -7759,6 +7818,21 @@ def numi_human_tendon_attachment_envelope_payload(
                 )
             if record["disposition"] == _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION:
                 source_component_members[key] = tuple(record["bone_member_ids"])
+                component_index = int(record["source_component_index"])
+                source_surface = source_surfaces[component_index]
+                source_component_fallback_surfaces[key] = {
+                    "body_index": 20,
+                    "stable_id": 0x80000000 | (component_index + 1),
+                    "member_id": str(record["source_mechanics_surface_id"]),
+                    "vertices": source_surface["vertices_core_m"],
+                    "triangles": [
+                        tuple(triangle) for triangle in source_surface["triangles"]
+                    ],
+                    "source_component_index": component_index,
+                    "source_surface_content_sha256": source_surface[
+                        "surface_content_sha256"
+                    ],
+                }
             else:
                 source_component_point_reasons[key] = str(record["disposition"])
     endpoint_payload: list[bytes] = []
@@ -7771,6 +7845,7 @@ def numi_human_tendon_attachment_envelope_payload(
     semantic_limb_enthesis_count = 0
     semantic_axial_enthesis_count = 0
     source_component_enthesis_count = 0
+    source_component_mechanics_surface_enthesis_count = 0
     compass_vertex_envelope_count = 0
     topology_aware_exact_surface_envelope_count = 0
     for muscle_index, (record, muscle_metadata) in enumerate(zip(muscles, metadata, strict=True)):
@@ -7826,6 +7901,61 @@ def numi_human_tendon_attachment_envelope_payload(
                         semantic_kind,
                         migrate_endpoint,
                     )
+                    if (
+                        envelope is None
+                        and not migrate_endpoint
+                        and semantic_key in source_component_fallback_surfaces
+                        and reason in {
+                            "surface_distance_exceeds_gate",
+                            "surface_patch_has_fewer_than_four_exact_surface_points",
+                            "surface_patch_conditioning_failed_after_topology_aware_exact_surface_points",
+                        }
+                    ):
+                        bodyparts_rejection_reason = reason
+                        source_surface = source_component_fallback_surfaces[
+                            semantic_key
+                        ]
+                        envelope, source_reason = _numi_human_tendon_surface_envelope(
+                            source_point, source_surface,
+                            maximum_surface_distance_m,
+                            maximum_patch_radius_m,
+                            maximum_force_amplification,
+                        )
+                        reason = source_reason
+                        if envelope is not None:
+                            reason = "admitted_exact_pinned_source_component_surface"
+                            envelope["surface_kind"] = (
+                                "exact_pinned_source_component_mechanics_fallback"
+                            )
+                            envelope["bodyparts_rejection_reason"] = (
+                                bodyparts_rejection_reason
+                            )
+                            envelope["semantic_enthesis_map"] = {
+                                "kind": (
+                                    "source_topology_mechanics_surface_after_"
+                                    "bodyparts_rejection"
+                                ),
+                                "bone_member_ids": list(semantic_members),
+                                "source_mechanics_surface_id": source_surface[
+                                    "member_id"
+                                ],
+                                "source_component_index": source_surface[
+                                    "source_component_index"
+                                ],
+                                "source_surface_content_sha256": source_surface[
+                                    "source_surface_content_sha256"
+                                ],
+                                "node_bone_member_ids": [
+                                    source_surface["member_id"]
+                                ] * 4,
+                                "node_bone_stable_ids": [
+                                    source_surface["stable_id"]
+                                ] * 4,
+                                "source_endpoint_migration_m": 0.0,
+                                "bodyparts_rejection_reason": (
+                                    bodyparts_rejection_reason
+                                ),
+                            }
             elif semantic_key in source_component_point_reasons:
                 reason = source_component_point_reasons[semantic_key]
             elif not surfaces:
@@ -7880,6 +8010,10 @@ def numi_human_tendon_attachment_envelope_payload(
                     if semantic_key in source_component_members:
                         semantic_axial_enthesis_count += 1
                         source_component_enthesis_count += 1
+                        if envelope.get("surface_kind") == (
+                            "exact_pinned_source_component_mechanics_fallback"
+                        ):
+                            source_component_mechanics_surface_enthesis_count += 1
                     elif semantic_key in _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS:
                         semantic_toe_enthesis_count += 1
                     elif semantic_key in _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS:
@@ -7911,6 +8045,11 @@ def numi_human_tendon_attachment_envelope_payload(
                     surface_manifest["semantic_enthesis_map"] = envelope[
                         "semantic_enthesis_map"
                     ]
+                if "surface_kind" in envelope:
+                    surface_manifest["surface_kind"] = envelope["surface_kind"]
+                    surface_manifest["bodyparts_rejection_reason"] = envelope[
+                        "bodyparts_rejection_reason"
+                    ]
             resolved_point = (
                 envelope["resolved_local_point_m"]
                 if envelope is not None and migrate_endpoint else source_point
@@ -7937,6 +8076,9 @@ def numi_human_tendon_attachment_envelope_payload(
                 "attachment_mode": (
                     "registered_bone_migrated_distributed_envelope"
                     if mode == _NUMI_HUMAN_TENDON_MIGRATED_ENVELOPE else
+                    "registered_source_surface_distributed_envelope"
+                    if envelope is not None and envelope.get("surface_kind") ==
+                    "exact_pinned_source_component_mechanics_fallback" else
                     "registered_bone_distributed_envelope"
                     if envelope is not None else "source_site_point"
                 ),
@@ -7985,7 +8127,8 @@ def numi_human_tendon_attachment_envelope_payload(
             "method": (
                 "single_named_NHBONES1_member_exact_nearest_triangle_connected_surface_patch_"
                 "with_deterministic_topology_aware_exact_triangle_quadrature_fallback_"
-                "or_explicit_same_body_semantic_member_map_minimum_L2_wrench_distribution"
+                "or_explicit_same_body_semantic_member_map_minimum_L2_wrench_distribution_"
+                "or_exact_pinned_source_component_surface_only_after_BodyParts_rejection"
             ),
             "maximum_surface_distance_m": maximum_surface_distance_m,
             **({
@@ -8060,7 +8203,10 @@ def numi_human_tendon_attachment_envelope_payload(
             "muscle_count": muscle_count,
             "mechanical_endpoint_count": len(endpoint_payload),
             "expected_endpoint_count": 2 * muscle_count,
-            "registered_bone_distributed_envelope_count": admitted_count,
+            "distributed_surface_envelope_count": admitted_count,
+            "registered_bone_distributed_envelope_count": (
+                admitted_count - source_component_mechanics_surface_enthesis_count
+            ),
             "registered_bone_migrated_distributed_envelope_count": sum(
                 item["attachment_mode"] == "registered_bone_migrated_distributed_envelope"
                 for item in endpoint_manifest
@@ -8069,6 +8215,9 @@ def numi_human_tendon_attachment_envelope_payload(
             "semantic_limb_enthesis_envelope_count": semantic_limb_enthesis_count,
             "semantic_axial_enthesis_envelope_count": semantic_axial_enthesis_count,
             "source_component_enthesis_envelope_count": source_component_enthesis_count,
+            "source_component_mechanics_surface_enthesis_envelope_count": (
+                source_component_mechanics_surface_enthesis_count
+            ),
             "compass_vertex_envelope_count": compass_vertex_envelope_count,
             "topology_aware_exact_surface_envelope_count": topology_aware_exact_surface_envelope_count,
             "source_site_point_fallback_count": point_count,
@@ -8085,11 +8234,11 @@ def numi_human_tendon_attachment_envelope_payload(
             (
                 "replace only each admitted one-to-one named rigid-foot endpoint with a route-private exact bone-surface site; "
                 "retain every other authored endpoint and the source force law; on Apple Metal distribute the resolved route's exact "
-                "terminal force across four same-body registered bone nodes, conserve resultant force and moment, and derive the "
+                "terminal force across four same-body registered attachment-surface nodes, conserve resultant force and moment, and derive the "
                 "generalized contribution only through articulated point Jacobians"
             ) if migrate_semantic_rigid_foot_endpoints else (
                 "retain each authored MyoSim route endpoint and force law; on Apple Metal distribute its exact terminal force "
-                "across four same-body source-registered bone nodes with precompiled 3x3 maps, conserve resultant force and moment, and derive any "
+                "across four same-body source-registered attachment-surface nodes with precompiled 3x3 maps, conserve resultant force and moment, and derive any "
                 "generalized contribution only through articulated point Jacobians"
             )
         ),
@@ -8107,6 +8256,9 @@ def numi_human_tendon_attachment_envelope_payload(
             "topology-aware fallback uses exact points on the selected source triangle or vertices in its connected surface; "
             "it is a force-transfer discretization and does not warp, refine, or relabel anatomy. The four-node "
             "EDL/FDL map distributes one lumped source law; it does not claim four independently actuated toe muscles. "
+            "The bilateral EO3 fallback is an exact pinned MyoSim thorax-component mechanics surface admitted only after "
+            "the named BodyParts3D rib failed the unchanged distance gate. It is not a BodyParts3D bone, does not move a "
+            "rib or endpoint, and is not a deformable cartilage or enthesis material law. "
             "The bilateral hip/tibia/fibula/rigid-foot member assignments resolve only which exact source bone on an already-owned "
             "rigid body receives the unchanged endpoint wrench. The thoracic assignments likewise resolve only explicit "
             "MyoSim Tn/Rn/QL-12 labels to exact same-body BodyParts3D vertebrae or ribs. These mappings are not "

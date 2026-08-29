@@ -88,11 +88,15 @@ force-transfer and byte-identical replay on Apple M4 Pro. See the
 The follow-on abdominal component pass resolves the former 20 ambiguous torso
 termini from the exact connected component of the pinned MyoSim thorax mesh:
 10 are rib-owned, eight are anterior non-rib, and two are explicitly non-bone.
-Eight of the rib termini pass the unchanged surface and force-transfer gates,
-raising `NHTENDON3` to 628 distributed envelopes and 204 point laws. Bilateral
-EO3 remain honest registration candidates; the anterior sites remain reserved
-for cartilage/fascia mechanics. See the
-[abdominal source-component entheses record](Docs/ABDOMINAL_SOURCE_COMPONENT_ENTHESES_V1.md).
+Eight of the rib termini pass on registered BodyParts3D ribs. Moving either
+rib 9 toward EO3 would break already-passing rib entheses and costovertebral
+continuity, so bilateral EO3 instead use exact pinned MyoSim rib-component
+surfaces after the BodyParts members fail the unchanged 12 mm gate. This raises
+`NHTENDON3` to 630 distributed surface envelopes—628 BodyParts bone and two
+pinned source-rib surfaces—plus 202 point laws, with no endpoint or bone
+migration. The anterior sites remain reserved for cartilage/fascia mechanics.
+See the [EO3 force-transfer record](Docs/EO3_SOURCE_COMPONENT_FORCE_TRANSFER_V2.md)
+and preceding [abdominal source-component record](Docs/ABDOMINAL_SOURCE_COMPONENT_ENTHESES_V1.md).
 
 <p align="center">
   <img src="Docs/media/numi-human-abdominal-source-component-entheses-v1-2048/admitted-rib-entheses/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-front.png" width="24%" alt="Abdominal rib entheses, front" />
@@ -205,10 +209,11 @@ The promoted `NHTENDON3` artifact gives all 832 origin/insertion endpoints a
 fail-closed tendon-to-bone law without silently moving an authored route site.
 After source-coherent anatomy, semantic same-body ownership, topology-aware
 exact-surface search, upper/lower-limb registration, and torso/axial
-registration plus exact abdominal source-component ownership, 628 endpoints
-admit distributed BodyParts3D four-node surface envelopes and 204 remain
-explicit body-owned source-point laws (75.48% surface
-coverage). Eighteen of those envelopes are the reviewed route-private
+registration plus exact abdominal source-component ownership, 630 endpoints
+admit distributed four-node surface envelopes: 628 on registered BodyParts3D
+bones and bilateral EO3 on exact pinned MyoSim rib-component mechanics
+surfaces. Another 202 remain explicit body-owned source-point laws (75.72%
+surface coverage). Eighteen of the BodyParts envelopes are the reviewed route-private
 foot/hallux terminals with deterministic reference calibration; maximum
 endpoint migration remains `17.262 mm`.
 
@@ -216,9 +221,13 @@ The owning Metal route kernel publishes its exact wrapped terminal directions,
 and a second Metal pass distributes those forces while conserving their
 resultant and source-point moment. On Apple M4 Pro, the current exact paired
 payload passes all 832 transfers with a maximum `0.000244141 N` force residual,
-`0.000008126 N m` moment residual, and byte-identical replay. The standing
-controller still reports `balanced=false`; this is force-path/runtime evidence,
-not stable-standing qualification. See the
+`0.000008126 N m` moment residual, and byte-identical replay. The complete
+128-step persistent transaction executes 106,496 terminal transfers, verifies
+same-command-buffer borrowing, injected-rejection rollback, no direct rigid
+state effect, assistance removal, and bitwise replay. The standing controller
+still reports `balanced=false`; this is force-path/runtime evidence, not
+stable-standing qualification. See the
+[EO3 source-component record](Docs/EO3_SOURCE_COMPONENT_FORCE_TRANSFER_V2.md),
 [abdominal component record](Docs/ABDOMINAL_SOURCE_COMPONENT_ENTHESES_V1.md),
 [torso/axial record](Docs/TORSO_AXIAL_SOURCE_REGISTRATION_V1.md),
 [lower-limb record](Docs/LOWER_LIMB_SOURCE_REGISTRATION_V2.md), and historical

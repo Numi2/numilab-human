@@ -53,6 +53,16 @@ def _component_signature(component: list[int]) -> str:
     return hashlib.sha256(encoded).hexdigest()
 
 
+def _surface_content_sha256(
+    vertices: list[list[float]], triangles: list[list[int]],
+) -> str:
+    encoded = json.dumps(
+        {"triangles": triangles, "vertices_core_m": vertices},
+        sort_keys=True, separators=(",", ":"),
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
 def propose_abdominal_enthesis_registration(
     *, sources: Path, registration_path: Path, source_audit_path: Path,
     worklist_path: Path, tendon_manifest_path: Path,
@@ -288,6 +298,58 @@ def propose_abdominal_enthesis_registration(
             f"abdominal enthesis source topology classification drifted: {counts}"
         )
 
+    # Preserve the exact pinned source-component surfaces referenced by the
+    # rib-owned endpoints. BodyParts3D remains the first geometry authority,
+    # but a route may use this source mechanics surface if the corresponding
+    # BodyParts3D bone ends outside the unchanged 12 mm gate. This is a
+    # provenance-bound fallback surface, not permission to move the endpoint
+    # or relabel a non-rib component as bone.
+    referenced_component_indices = sorted({
+        int(record["source_component_index"])
+        for record in records
+        if record["disposition"] == RIB_DISPOSITION
+    })
+    component_surfaces = []
+    for component_index in referenced_component_indices:
+        component = all_components[component_index]
+        remap = {source_index: local for local, source_index in enumerate(component)}
+        component_set = set(component)
+        triangles = [
+            [remap[int(index)] for index in face]
+            for face in source_faces
+            if all(int(index) in component_set for index in face)
+        ]
+        vertices = [
+            [float(value) for value in source_vertices[source_index]]
+            for source_index in component
+        ]
+        if len(vertices) < 4 or len(triangles) < 4:
+            raise RuntimeError("abdominal enthesis source component surface is incomplete")
+        component_surfaces.append({
+            "source_component_index": component_index,
+            "source_component_vertex_index_sha256": _component_signature(component),
+            "source_vertex_count": len(vertices),
+            "source_triangle_count": len(triangles),
+            "vertices_core_m": vertices,
+            "triangles": triangles,
+            "surface_content_sha256": _surface_content_sha256(vertices, triangles),
+            "mechanics_role": "exact_pinned_source_surface_fallback_after_bodyparts_rejection",
+        })
+    surface_indices = {
+        surface["source_component_index"] for surface in component_surfaces
+    }
+    for record in records:
+        if record["disposition"] == RIB_DISPOSITION:
+            component_index = int(record["source_component_index"])
+            if component_index not in surface_indices:
+                raise RuntimeError("abdominal enthesis source fallback surface is absent")
+            record["source_mechanics_surface_id"] = (
+                f"MYSRC{component_index:02d}"
+            )
+            record["source_mechanics_surface_policy"] = (
+                "fallback_only_after_bodyparts_member_rejection"
+            )
+
     output = json.loads(json.dumps(registration))
     output["abdominal_source_component_enthesis_registration"] = {
         "schema": SCHEMA,
@@ -314,6 +376,8 @@ def propose_abdominal_enthesis_registration(
         "source_mesh_name": str(ribcage["mesh_name"]),
         "source_connected_component_count": len(all_components),
         "source_rib_component_count": len(components_by_side_level),
+        "source_component_surface_count": len(component_surfaces),
+        "source_component_surfaces": component_surfaces,
         "endpoint_count": len(records),
         "disposition_counts": counts,
         "bilateral_pair_count": len(bilateral_pairs),

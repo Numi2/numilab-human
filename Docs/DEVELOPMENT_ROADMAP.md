@@ -10,8 +10,8 @@ permanent system it is intended to become.
 
 Reviewed evidence snapshot:
 
-- Numi Human committed baseline: `main` at
-  `85f422833a8ec965f3c3748a326f78fb39b4f57c`;
+- Numi Human committed baseline before the EO3 increment: `main` at
+  `fda3dc5e9ae108d841bd0d300079653e6f201217`;
 - Numi runtime reviewed by the preceding audit: MetalRobo `coupled` at
   `6d03b7a267e2743bf9cb51362ce18764ac1408a7`;
 - importer/compiler suite at that snapshot: `88 passed` with
@@ -22,6 +22,10 @@ Reviewed evidence snapshot:
   and overall `action required`. A confirmatory call then failed to complete
   within 90 seconds. Current aggregate readiness is therefore unhealthy and
   its failure path is not yet bounded.
+- the later EO3 qualification promoted MetalRobo `coupled` to
+  `864a65c916c1d52318e263469f673d3336d696b6` and passed the exact 630/202
+  payload through standalone transfer and a 128-step persistent transaction;
+  this does not supersede the unresolved aggregate `numi doctor` health issue.
 
 This document defines ambition and execution; it is not new physical
 qualification. The [completion gap ledger](HUMAN_COMPLETION_GAP_LEDGER.md) is
@@ -126,7 +130,7 @@ quality.
 | --- | --- | --- |
 | Source and provenance | Pinned BodyParts3D, MyoSim, Mortensen, Rajagopal, MoBL-ARMS, and Z-Anatomy records with hashes and redistribution rules | Field ownership is not yet unified in a permanent multi-source Human representation; some sources and motions are restricted or unresolved |
 | Native embodiment | `NHRIGID2` 157-body/128-DoF articulation; `NHMYO2` 416 routes, 1,815 sites, 143 wraps, joint equalities, and ten foot witnesses | Held-out source parity, high-velocity dynamics, complete topology, broad collision, and systemic physiological state remain open |
-| Tendon transfer | `NHTENDON3` preserves all 832 endpoints as 628 distributed envelopes and 204 exact point laws; standalone Metal transfer/replay evidence exists | The latest 628/204 payload lacks complete persistent-stand, borrowed-consumer, rollback, and no-direct-torque requalification on one exact current stack |
+| Tendon transfer | `NHTENDON3` preserves all 832 endpoints as 630 distributed surface envelopes—628 registered BodyParts bone and two exact pinned MyoSim rib-component surfaces—and 202 exact point laws; runtime `864a65c` passes standalone Metal transfer plus 128 persistent steps, 106,496 transfers, borrowed consumption, rejection rollback, no-direct-torque identity, and bitwise replay | This is a terminal force-transfer discretization, not a deformable tendon/enthesis/cartilage continuum; the full stand remains `balanced=false` |
 | Persistent dynamics | Metal owns bounded activation, current-pose routes, gravity/dynamics, support, publication, and replay | Retained stand evidence spans only 12.8 ms, has normalized residual RMS `12.5546`, and reports `balanced=false` |
 | Contact | Ten source foot witnesses exercise a deterministic support path | No authoritative whole-human collision topology, full sparse articulated contact operator, distributed pressure field, or task-wide contact qualification exists |
 | Deformable anatomy | Six pectoral regions drive a 326-node Matter FEM demonstration with replay and rollback | Geometry and 10% load share are assumptions; assembly crosses a host-vector/shared-buffer/separate-commit boundary; coupling is one-way and is not production tissue mechanics |
@@ -137,8 +141,10 @@ quality.
 The current point laws remain evidence of honest source preservation, not a
 surface-coverage failure to conceal: 155 are source non-bone termini, eight are
 anterior non-rib sites, 24 lack a registered correct bone surface, 11 fail
-conditioning, four are compound toe cases, and two bilateral EO3 cases remain
-distance-gated. Visual proximity must never silently replace those mechanics.
+conditioning, and four are compound toe cases. Bilateral EO3 now use exact
+pinned source-rib surface envelopes only after their BodyParts members reject
+under unchanged gates. Visual proximity must never silently replace those
+mechanics.
 
 ## Final architecture lock
 
@@ -713,7 +719,7 @@ greatest downstream fan-out and scientific risk.
 | --- | --- | --- |
 | Live truth | Generate the Human/runtime/source/artifact registry; remove the stale tracked runtime pin; isolate the robot-catalog `Killed: 9`; type and bound catalog/Git audit failure | One exact stack resolves from a single immutable record; readiness fails quickly and explicitly; old evidence becomes mechanically historical |
 | Permanent contracts | Encode `HumanPack`, semantic action/observation tables, force-owner masks, tissue/contact/sensor schemas, transaction checkpoint, and failure ABI | Golden schema/ABI fixtures plus migration and rejection tests |
-| Current-stack qualification | Rebuild latest 628/204 `NHTENDON3` and execute persistent stand, borrowed consumer, injected rejection, rollback, no-direct-torque identity, and replay | Honest end-to-end baseline on the exact reviewed Human/runtime pair |
+| Current-stack qualification | Register and freeze the qualified 630/202 `NHTENDON3`, Human/runtime revisions, payload hashes, 128-step persistent transaction, rejection probe, replay, and diagnostic visuals; rerun after any dependency change | Honest end-to-end baseline resolves from the capability/evidence registry rather than prose |
 | Mechanics | Freeze multi-pose/multi-velocity/high-load corpus; complete wrap, constraint, passive, tangent, and sensitivity coverage | FP64/source parity and refinement envelope over the declared model |
 | Contact | Complete foot and whole-human collision registration while implementing full sparse `W`, circular friction, CCD, and pressure patches | Coupled-contact certificates and pressure/CoP evidence |
 | Continuum | Implement final same-buffer two-way coupling and competing nonlinear backends; qualify substrate cases and then every fixed target-coverage cell | Force/work/energy closure, held-out deformation, complete coverage, and no double counting |
