@@ -3958,6 +3958,107 @@ def bodyparts_myosim_attachment_surface_registration_candidate(
             "median_distance_before_m": initial_median,
             "median_distance_after_m": final_median,
         })
+
+    # Compact wrist and distal digit bodies often have no muscle site on the
+    # bone itself. Leaving those meshes in the torso-fitted common frame puts
+    # otherwise valid carpals, thumbs, and distal phalanges 7--16 cm away from
+    # their articulated hand. Use a same-side, same-class body whose
+    # attachment refinement succeeded to transfer only its centroid offset in
+    # the target inertial-body frame. The exact source mesh, scale, and
+    # orientation are preserved; only the unsupported translation is inferred.
+    # This is deliberately narrower than a global nearest-body fallback.
+    hand_centroid_donors = {
+        "scaphoid_r": "lunate_r", "triquetrum_r": "lunate_r",
+        "pisiform_r": "lunate_r", "trapezium_r": "capitate_r",
+        "trapezoid_r": "capitate_r", "hamate_r": "capitate_r",
+        "proximal_thumb_r": "2proxph_r", "distal_thumb_r": "distph2_r",
+        "distph3_r": "distph2_r", "distph4_r": "distph2_r",
+        "distph5_r": "distph2_r",
+        "scaphoid_l": "lunate_l", "triquetrum_l": "lunate_l",
+        "pisiform_l": "lunate_l", "trapezium_l": "capitate_l",
+        "trapezoid_l": "capitate_l", "hamate_l": "capitate_l",
+        "proximal_thumb_l": "2proxph_l", "distal_thumb_l": "distph2_l",
+        "distph3_l": "distph2_l", "distph4_l": "distph2_l",
+        "distph5_l": "distph2_l",
+    }
+    anchors_by_name = {
+        body_anchors[0]["target"]["name"]: body_anchors
+        for body_anchors in anchors_by_body.values()
+    }
+    summary_by_name = {record["myosim_body"]: record for record in summary}
+    for target_name, donor_name in hand_centroid_donors.items():
+        target_anchors = anchors_by_name.get(target_name)
+        donor_anchors = anchors_by_name.get(donor_name)
+        if not target_anchors or not donor_anchors:
+            raise ImportError(
+                f"BodyParts3D hand centroid fallback is missing {target_name} or {donor_name}"
+            )
+        target_diagnostics = target_anchors[0]["registration"][
+            "attachment_surface_refinement"
+        ]
+        donor_diagnostics = donor_anchors[0]["registration"][
+            "attachment_surface_refinement"
+        ]
+        if target_diagnostics["applied"]:
+            continue
+        if not donor_diagnostics["applied"]:
+            raise ImportError(
+                f"BodyParts3D hand centroid donor {donor_name} was not attachment-refined"
+            )
+        donor = donor_anchors[0]
+        donor_target = donor["target"]
+        donor_registration = donor["registration"]
+        donor_rotation = _myosim_matrix_from_quaternion_xyzw(
+            donor_target["default_inertial_quaternion_world_xyzw"]
+        )
+        donor_world_offset = _myosim_subtract(
+            donor_registration["default_pose_vertex_centroid_world_m"],
+            donor_target["default_com_position_world_m"],
+        )
+        donor_local_offset = _myosim_matrix_vector(
+            _matrix_transpose(donor_rotation), donor_world_offset
+        )
+        target = target_anchors[0]["target"]
+        target_rotation = _myosim_matrix_from_quaternion_xyzw(
+            target["default_inertial_quaternion_world_xyzw"]
+        )
+        desired_world_centroid = _myosim_add(
+            target["default_com_position_world_m"],
+            _myosim_matrix_vector(target_rotation, donor_local_offset),
+        )
+        current_world_centroid = target_anchors[0]["registration"][
+            "default_pose_vertex_centroid_world_m"
+        ]
+        world_delta = _myosim_subtract(
+            desired_world_centroid, current_world_centroid
+        )
+        local_delta = _myosim_matrix_vector(
+            _matrix_transpose(target_rotation), world_delta
+        )
+        for anchor in target_anchors:
+            registration = anchor["registration"]
+            local_matrix = registration["source_obj_mm_to_core_inertial_body_m"]
+            for axis in range(3):
+                local_matrix[axis][3] += local_delta[axis]
+            registration["default_pose_vertex_centroid_world_m"] = _myosim_add(
+                registration["default_pose_vertex_centroid_world_m"], world_delta
+            )
+            registration["status"] = (
+                "inferred_visual_kinematic_neighbor_centroid_fallback"
+            )
+            registration["kinematic_neighbor_centroid_fallback"] = {
+                "method": (
+                    "same_side_same_class_attachment_refined_body_local_centroid_offset"
+                ),
+                "donor_myosim_body": donor_name,
+                "donor_core_body_index": donor_target["core_body_index"],
+                "translation_delta_core_body_m": local_delta,
+                "applied": True,
+            }
+        summary_by_name[target_name]["kinematic_neighbor_centroid_fallback"] = {
+            "donor_myosim_body": donor_name,
+            "applied": True,
+        }
     candidate["schema"] = "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2"
     candidate["status"] = "inferred_attachment_surface_visual_registration_not_admitted_to_collision_or_physics"
     candidate["attachment_surface_refinement"] = {
