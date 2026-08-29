@@ -6,13 +6,15 @@
 without changing any authored MyoSim/OpenSim endpoint. The exact source muscle
 route still determines path length, wrapping, activation-dependent force, and
 the terminal force direction. An admitted attachment distributes that force to
-four connected vertices of one named BodyParts3D bone member while preserving
-the source-point resultant force and moment.
+four source-registered BodyParts3D bone-surface nodes while preserving the
+source-point resultant force and moment. Normally those vertices belong to one
+named member. The only multi-member exception is the explicit EDL/FDL semantic
+map across the four named lesser-toe distal phalanges.
 
 The production compile currently covers all 832 origin/insertion endpoints:
 
-- 295 simulation-inferred, distributed BodyParts3D bone-surface envelopes;
-- 537 explicit MyoSim source-site point laws;
+- 304 simulation-inferred, distributed BodyParts3D bone-surface envelopes;
+- 528 explicit MyoSim source-site point laws;
 - zero endpoint migration;
 - zero direct joint-torque records.
 
@@ -33,7 +35,8 @@ stack without a new cross-source registration problem.
 The compiler therefore admits an inferred surface only when all of these are
 true:
 
-1. the endpoint body owns exactly one registered `NHBONES1` member;
+1. the endpoint body owns exactly one registered `NHBONES1` member, except for
+   the named lesser-toe EDL/FDL maps described below;
 2. the exact endpoint-to-triangle distance is at most 12 mm;
 3. four nodes are reachable on one connected mesh patch within 12 mm;
 4. the precomputed distribution conserves unit force within `2e-6` and unit
@@ -42,10 +45,13 @@ true:
    terminal force.
 
 Bodies with several bones, absent bone geometry, distant surfaces, or an
-ill-conditioned patch fail closed to a source-site point law. The current
-rejection counts are 198 multi-member bodies, 24 bodies without a registered
-bone surface, 242 distance failures, 45 conditioning failures, and 28 patches
-with fewer than four reachable vertices.
+ill-conditioned patch fail closed to a source-site point law. The only
+multi-member records admitted are eight bilateral EDL/FDL insertions whose four
+lesser-toe distal phalanges are enumerated in
+[the toe-enthesis receipt](TOE_ENTHESIS_V5.md). The current rejection counts are
+190 unmapped multi-member bodies, 24 bodies without a registered bone surface,
+236 distance failures, 50 conditioning failures, and 28 patches with fewer
+than four reachable vertices.
 
 ## Force-transfer law
 
@@ -81,34 +87,33 @@ The payload contains 832 endpoint records and one 288-byte envelope record for
 each admitted endpoint. Every endpoint record retains its exact source local
 point. The native decoder accepts legacy `NHTENDON1`, but the v2 Metal packer
 rejects triangle-migrated programs and accepts only source points or distributed
-envelopes. The owning Numi Lab runtime revision is
-`86c24d8a024fbb0ea314a376f0f1e112d52b7e9e` on `coupled`.
+envelopes. The owning Numi Lab runtime code revision used for the current
+qualification is `45fede450ba889b8feb1df0a8330db3c31706497` on `coupled`.
 
 ## Reproduce
 
 ```bash
 numi human numi-human-tendon-envelope-payload \
   --artifact Build/myosim-fullbody \
-  --bone-artifact Build/bodyparts3d-myosim-major-bones-v2 \
-  --output Build/numi-human-tendon-v2
+  --bone-artifact Build/bodyparts3d-myosim-major-bones-v4 \
+  --output Build/numi-human-tendon-v5
 
 /path/to/metalrobo_numilab_human_myosim_reference_probe \
   Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid \
   Build/myosim-fullbody/myosim-fullbody-muscle-reference.nhmyo \
-  Build/numi-human-tendon-v2/numi-human-tendon-attachments.nhtendon \
+  Build/numi-human-tendon-v5/numi-human-tendon-attachments.nhtendon \
   --metal
 ```
 
 The qualified probe evaluates all 416 routes and 832 endpoints. The Mac mini
-Apple M4 Pro result transferred all 832 endpoints, including 295 envelopes, with
-maximum Metal residuals of `6.824e-5 N`, `3.007e-6 Nm`, and `7.935e-4` in the
-generalized-force correction. CPU/Metal nodal-force disagreement was
-`1.069e-4 N`. Two independent process executions produced byte-identical
-transcripts with SHA-256
-`2741b30eb4761cceea66332c589b2c6a91086116c745ad40817464adb83fefc2`;
-each execution also completed its own byte-identical in-process Metal replay.
-The retained [reference transcripts](media/numi-human-tendon-attachment-v2-2048/reference/)
-make device and counters inspectable.
+Apple M4 Pro result transferred all 832 endpoints, including 304 envelopes,
+with maximum Metal residuals of `1.25827195006e-4 N`,
+`2.82619680547e-6 N m`, and `6.103515625e-4` in the generalized-force
+correction. CPU/Metal nodal-force disagreement was `8.82795095549e-5 N`, and
+the in-process Metal replay was byte-identical. The retained
+[current qualification](TOE_ENTHESIS_V5.md) and historical
+[v2 reference transcripts](media/numi-human-tendon-attachment-v2-2048/reference/)
+make the device, input generations, and counters inspectable.
 
 ## Four-angle anatomy inspection
 

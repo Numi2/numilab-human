@@ -12,15 +12,18 @@ is no per-step CPU dynamics loop.
 - `NHRIGID2`: one 157-body, 128-DoF floating FunctionBased articulation;
 - `NHMYO2`: 416 MyoSim muscle-tendon routes, source active/passive/velocity
   curves, and one appended positive compliant-architecture record per muscle;
-- `NHTENDON2`: 832 explicit bone-owned route endpoints, comprising 296
-  four-node surface envelopes and 536 exact source-point fallbacks;
+- `NHTENDON2`: 832 explicit body-owned route endpoints, comprising 304
+  four-node surface envelopes and 528 exact source-point fallbacks;
 - `NHCNT1`: ten source-authored calcaneus/toe plane witnesses; and
 - BodyParts3D 4.0 bone and optional named muscle surfaces for visual review.
 
 Every production endpoint preserves its source OpenSim/MyoSim attachment
-location. An admitted four-node envelope distributes the endpoint load over a
-connected patch on the owning BodyParts3D bone; otherwise the exact source
-point remains the explicit fallback. The rejected six-endpoint Achilles
+location. An admitted four-node envelope normally distributes the endpoint
+load over a connected patch on one owning BodyParts3D bone. The exact toe
+semantic exception distributes one lumped EDL/FDL wrench over the four named
+lesser-toe distal phalanges on their shared rigid body; hallux routes stay
+one-to-one. Otherwise the exact source point remains the explicit fallback.
+The rejected six-endpoint Achilles
 triangle candidate remains rejected because its cross-source registration
 moved sites by about 49.9 mm. A visible surface touching a bone is not
 substituted for the authoritative mechanical point.
@@ -74,7 +77,7 @@ are admitted, but stable standing is not.
 numi human stand \
   Build/myosim-fullbody \
   Build/bodyparts3d-myosim-major-bones-v4/bodyparts3d-myosim-major-bones.nhbones \
-  Build/numi-human-tendon-v4/numi-human-tendon-attachments.nhtendon \
+  Build/numi-human-tendon-v5/numi-human-tendon-attachments.nhtendon \
   Build/myosim-fullbody/myosim-fullbody-support-contact.nhcnt \
   Build/numi-human-stand-v1 \
   --steps 64 --timestep 0.0001 --dimension 640
@@ -91,16 +94,16 @@ than silently running without per-step terminal loads.
 ## Final M4 Pro qualification
 
 Runtime `45fede450ba889b8feb1df0a8330db3c31706497` executed the final v4 bone,
-v6 tissue, and v4 tendon payloads on Apple M4 Pro at 1024 × 1024 with eight
+v7 tissue, and v5 tendon payloads on Apple M4 Pro at 1024 × 1024 with eight
 temporal and eight area-light samples. The 64 assisted and 64
 assistance-removed 100 µs steps produced:
 
 - payload SHA-256 values `969974058f5121bd0ef35689bbdb78b6aa2caba31920fa52193e218ad130efd6`
-  (bones), `c3a2b2ea738e7adaa5ac6e1777a7957262fdda12fe241c53747c9a18f717f833`
-  (tissue), and `47fdd266de1be041c4cfba10b31303477de17bdf5831c811611cf5768f2888b7`
+  (bones), `d3f6f3501c2a48a42677cfe940d7d7001e912cc4c8ea7979d717f6a61aabfa8b`
+  (tissue), and `d563b10db8d27fdbed15d8eb196f8a57c6e6844126f91944b338917582f0aa97`
   (tendon);
 
-- 106,496 accepted tendon transfers: 37,888 four-node envelopes and 68,608
+- 106,496 accepted tendon transfers: 38,912 four-node envelopes and 67,584
   exact source-point fallbacks;
 - maximum force/moment conservation residuals of `1.72633488546e-4 N` and
   `2.44306352215e-6 N m`;
@@ -113,7 +116,9 @@ assistance-removed 100 µs steps produced:
 
 This is a 12.8 ms transaction and render qualification, not a seconds-long
 standing result. The [exact transcript](media/numi-human-distal-continuity-v4/qualification.transcript.txt)
-retains the device, counters, residuals, and boundary string.
+is retained as the prior distal-chain baseline; the current
+[toe-enthesis transcript](media/numi-human-toe-enthesis-v5-2048/qualification.transcript.txt)
+owns the v7/v5 device, counters, residuals, and boundary string.
 
 ## Visual review
 

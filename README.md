@@ -34,10 +34,11 @@ derivatives; all other raw or derived source artifacts remain local. See
 
 ## Visual progress
 
-The current lead is the reviewed 1024 px, 128-step M4 Pro gallery with clean
-route-hidden anatomy, corrected bilateral hand chains, and a focused left-foot
-inspection. Separate 2048 px mechanical-anatomy diagnostics still expose the
-unchanged OpenSim/MyoSim route and four-node `NHTENDON2` transfer footprint.
+The current lead combines the reviewed 1024 px, 128-step M4 Pro gallery with a
+new 2048 px left-toe enthesis inspection. The clean views show corrected
+bilateral hand chains and toe surfaces; the mechanical-anatomy diagnostics
+expose the unchanged OpenSim/MyoSim route and four-node `NHTENDON2` transfer
+footprint across the exact lesser-toe distal phalanges.
 Neither set is a photorealistic skin render: the clean gallery reviews source
 surface continuity, while the diagnostic proves that force terminates on the
 actual transfer program rather than a floating decorative tendon. See
@@ -66,10 +67,10 @@ weld, force-transfer law, or photorealistic anatomy.
 
 `NHTENDON2` now gives all 832 origin/insertion endpoints a fail-closed
 tendon-to-bone law without moving an authored route site. The current distal
-registration admits 296 connected four-node BodyParts3D bone-surface envelopes
-under strict distance and force-conditioning gates; the other 536 endpoints
-remain explicit source
-point laws. The owning Metal route kernel publishes its exact wrapped terminal
+registration admits 304 four-node BodyParts3D bone-surface envelopes; eight are
+the exact bilateral EDL/FDL lesser-toe and EHL/FHL hallux semantic maps. The
+other 528 endpoints remain explicit source-point laws. The owning Metal route
+kernel publishes its exact wrapped terminal
 directions, and a second Metal pass distributes those forces while conserving
 their resultant and source-point moment. The final Apple M4 Pro replay
 transferred all 832 endpoints on each of 128 accepted steps (106,496 transfers)
@@ -135,11 +136,12 @@ The hand registration now preserves exact BodyParts3D common-frame chain
 displacements when an unsupported thumb or distal phalanx follows a
 site-refined parent. Measured transformed mesh gaps are 0.5/0.3 mm for the
 right thumb joints, 0.4/0.1 mm for the left, and 0.3--0.7 mm at the corrected
-distal finger joints. The focused left-foot review found no left-only detached
-mesh or pathological dynamic divergence. It also exposes the real current
-boundary: the mechanical source has one articulated `toes` body per side, so
-the individual BodyParts3D toe bones are coherent anatomical visuals rather
-than independent toe actuators. See the [current visual review](Docs/VISUAL_PROGRESS.md#distal-chain-continuity-and-final-m4-pro-replay--2026-08-29).
+distal finger joints. The toe review confirmed five coherent bone chains, then
+corrected the real defect: one lumped EDL/FDL route had been presented as one
+digit instead of four lesser-toe slips. The mechanical source still has one
+articulated `toes` body per side, so the individual BodyParts3D toe bones are
+not independent toe actuators. See the [toe enthesis record](Docs/TOE_ENTHESIS_V5.md)
+and [current visual review](Docs/VISUAL_PROGRESS.md#left-toe-enthesis-identity-and-force-transfer--2026-08-29).
 
 ### Shared-tendon, source-body attachment review
 

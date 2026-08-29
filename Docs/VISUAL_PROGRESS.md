@@ -1,5 +1,37 @@
 # NumiLab Human visual progress
 
+## Left toe enthesis identity and force transfer — 2026-08-29
+
+<p align="center">
+  <img src="media/numi-human-toe-enthesis-v5-2048/clean/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-153-front.png" width="24%" alt="Corrected left toe surfaces, front" />
+  <img src="media/numi-human-toe-enthesis-v5-2048/clean/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-153-oblique.png" width="24%" alt="Corrected left toe surfaces, oblique" />
+  <img src="media/numi-human-toe-enthesis-v5-2048/clean/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-153-side.png" width="24%" alt="Corrected left toe surfaces, side" />
+  <img src="media/numi-human-toe-enthesis-v5-2048/clean/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-153-rear.png" width="24%" alt="Corrected left toe surfaces, rear" />
+</p>
+
+The five BodyParts3D toe chains were intact; the defect came from interpreting
+one source EDL/FDL route as one toe even though each muscle surface has four
+lesser-toe slips. The v7 visual payload locks complete distal bands to the
+correct toe frame, while the v5 `NHTENDON2` payload distributes the unchanged
+lumped endpoint wrench across the exact distal phalanges of toes 2--5. Hallux
+EHL/FHL routes remain hallux-only.
+
+<p align="center">
+  <img src="media/numi-human-toe-enthesis-v5-2048/edl/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-source-route-centrelines-tendon-attachment-envelopes-focus-body-153-front.png" width="24%" alt="Left EDL four-toe envelope, front" />
+  <img src="media/numi-human-toe-enthesis-v5-2048/edl/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-source-route-centrelines-tendon-attachment-envelopes-focus-body-153-oblique.png" width="24%" alt="Left EDL four-toe envelope, oblique" />
+  <img src="media/numi-human-toe-enthesis-v5-2048/edl/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-source-route-centrelines-tendon-attachment-envelopes-focus-body-153-side.png" width="24%" alt="Left EDL four-toe envelope, side" />
+  <img src="media/numi-human-toe-enthesis-v5-2048/edl/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-source-route-centrelines-tendon-attachment-envelopes-focus-body-153-rear.png" width="24%" alt="Left EDL four-toe envelope, rear" />
+</p>
+
+The cyan line is the unchanged source route; the warm four-node footprint is
+the live force-transfer envelope. The isolated
+[FDL views](media/numi-human-toe-enthesis-v5-2048/fdl/) check the plantar path
+from the same four angles. The Apple M4 Pro 64+64-step replay executes 304
+distributed envelopes and 528 source-point fallbacks per step, with bitwise
+replay and zero endpoint migration. See the concise
+[toe enthesis record](TOE_ENTHESIS_V5.md) for identities, counters, and the
+remaining one-rigid-toes-body boundary.
+
 ## Distal-chain continuity and final M4 Pro replay — 2026-08-29
 
 <p align="center">

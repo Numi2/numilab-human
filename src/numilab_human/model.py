@@ -3447,6 +3447,30 @@ _BODYPARTS_MYOSIM_TOE_EXTENSIONS = tuple(
 )
 
 
+# Rajagopal/MyoSim authors one EDL and one FDL route per side even though each
+# anatomical muscle terminates as four lesser-toe slips.  Keep that source
+# route and its single force law authoritative, but make the missing semantic
+# correspondence explicit: its terminal wrench is distributed over the exact
+# BodyParts3D distal phalanges of toes 2..5.  Hallux routes remain one-to-one.
+# Every member on one side shares the same articulated MyoSim toes body, so the
+# distribution changes neither the source endpoint nor the rigid-body wrench.
+_NUMI_HUMAN_TOE_ENTHESIS_MEMBERS = {
+    ("edl_r", 1): ("FJ3189", "FJ3190", "FJ3191", "FJ3195"),
+    ("fdl_r", 1): ("FJ3189", "FJ3190", "FJ3191", "FJ3195"),
+    ("ehl_r", 1): ("FJ3192",),
+    ("fhl_r", 1): ("FJ3192",),
+    ("edl_l", 1): ("FJ3179", "FJ3180", "FJ3181", "FJ3185"),
+    ("fdl_l", 1): ("FJ3179", "FJ3180", "FJ3181", "FJ3185"),
+    ("ehl_l", 1): ("FJ3182",),
+    ("fhl_l", 1): ("FJ3182",),
+}
+_NUMI_HUMAN_TOE_ENTHESIS_MAXIMUM_SPREAD_M = 0.040
+_NUMI_HUMAN_TOE_VISUAL_LOCK_RADIUS_M = 0.008
+_NUMI_HUMAN_TOE_VISUAL_FEATHER_RADIUS_M = 0.018
+_NUMI_HUMAN_TOE_VISUAL_DISTAL_LOCK_FRACTION = 0.20
+_NUMI_HUMAN_TOE_VISUAL_DISTAL_FEATHER_FRACTION = 0.45
+
+
 _BODYPARTS_MYOSIM_AXIAL_EXTENSIONS = tuple(
     _bodyparts_visual_only_bone(body, name, member)
     for body, name, member in (
@@ -4652,6 +4676,8 @@ def _bodyparts_secondary_attachment_weight_lock(
     primary_weights: list[float],
     secondary_bone_vertices_world_m: list[list[float]],
     secondary_bone_triangles: list[tuple[int, int, int]] | None = None,
+    lock_radius_m: float = 0.003,
+    feather_radius_m: float = 0.015,
 ) -> tuple[list[float], dict[str, Any]]:
     """Lock a source tendon insertion to its named source bone mesh.
 
@@ -4671,8 +4697,11 @@ def _bodyparts_secondary_attachment_weight_lock(
         raise ImportError("BodyParts3D tendon attachment lock has inconsistent source vertices")
     if not secondary_bone_vertices_world_m:
         raise ImportError("BodyParts3D tendon attachment lock has no secondary bone vertices")
-    lock_radius_m = 0.003
-    feather_radius_m = 0.015
+    if (
+        not math.isfinite(lock_radius_m) or not math.isfinite(feather_radius_m)
+        or lock_radius_m <= 0.0 or feather_radius_m <= lock_radius_m
+    ):
+        raise ImportError("BodyParts3D tendon attachment lock radii are invalid")
     cell_size_m = feather_radius_m
     grid: dict[tuple[int, int, int], list[list[float]]] = {}
     for vertex in secondary_bone_vertices_world_m:
@@ -5878,6 +5907,126 @@ def _numi_human_tendon_surface_envelope(
     return (best[1], "admitted") if best is not None else (None, "surface_patch_conditioning_failed")
 
 
+def _numi_human_semantic_enthesis_envelope(
+    source_point: list[float], surfaces: list[dict[str, Any]],
+    member_ids: tuple[str, ...], maximum_surface_distance_m: float,
+    maximum_patch_radius_m: float, maximum_force_amplification: float,
+) -> tuple[dict[str, Any] | None, str]:
+    """Resolve an explicit same-body anatomical enthesis correspondence.
+
+    A one-member correspondence uses the ordinary connected surface patch. A
+    four-member correspondence is reserved for the source model's lumped
+    EDL/FDL route: one exact closest point is selected on each named distal
+    phalanx and the minimum-norm maps preserve the authored route endpoint's
+    force and moment. This does not create four muscles or move that endpoint.
+    """
+    if not member_ids or len(surfaces) != len(member_ids):
+        return None, "semantic_enthesis_map_member_missing"
+    if tuple(surface.get("member_id") for surface in surfaces) != member_ids:
+        return None, "semantic_enthesis_map_member_order_drifted"
+    body_indices = {surface.get("body_index") for surface in surfaces}
+    if len(body_indices) != 1 or not all(isinstance(value, int) for value in body_indices):
+        return None, "semantic_enthesis_map_crosses_rigid_bodies"
+    if len(surfaces) == 1:
+        envelope, reason = _numi_human_tendon_surface_envelope(
+            source_point, surfaces[0], maximum_surface_distance_m,
+            maximum_patch_radius_m, maximum_force_amplification,
+        )
+        if envelope is None:
+            return None, reason
+        envelope["semantic_enthesis_map"] = {
+            "kind": "single_named_distal_phalanx",
+            "bone_member_ids": list(member_ids),
+            "node_bone_member_ids": [member_ids[0]] * 4,
+            "node_bone_stable_ids": [surfaces[0]["stable_id"]] * 4,
+            "source_endpoint_migration_m": 0.0,
+        }
+        return envelope, "admitted_semantic_single_enthesis_map"
+    if len(surfaces) != 4:
+        return None, "semantic_enthesis_map_requires_one_or_four_members"
+
+    nearest_records: list[dict[str, Any]] = []
+    for surface in surfaces:
+        nearest: tuple[float, int, list[float], list[float]] | None = None
+        vertices = surface.get("vertices")
+        triangles = surface.get("triangles")
+        if not isinstance(vertices, list) or not isinstance(triangles, list):
+            return None, "semantic_enthesis_map_surface_is_malformed"
+        for triangle_index, triangle_indices in enumerate(triangles):
+            triangle = [vertices[index] for index in triangle_indices]
+            closest, barycentric = _tendon_closest_point_on_triangle(
+                source_point, triangle,
+            )
+            squared = sum(
+                (closest[axis] - source_point[axis]) ** 2 for axis in range(3)
+            )
+            if nearest is None or squared < nearest[0]:
+                nearest = (squared, triangle_index, closest, barycentric)
+        if nearest is None:
+            return None, "semantic_enthesis_map_has_no_surface_triangle"
+        squared, triangle_index, closest, barycentric = nearest
+        nearest_records.append({
+            "surface": surface,
+            "distance_m": math.sqrt(squared),
+            "source_triangle_index": triangle_index,
+            "local_point_m": closest,
+            "barycentric": barycentric,
+        })
+    representative = min(nearest_records, key=lambda record: record["distance_m"])
+    if representative["distance_m"] > maximum_surface_distance_m:
+        return None, "semantic_enthesis_representative_distance_exceeds_gate"
+    nodes = [record["local_point_m"] for record in nearest_records]
+    spread = max(
+        math.sqrt(sum((node[axis] - source_point[axis]) ** 2 for axis in range(3)))
+        for node in nodes
+    )
+    if spread > _NUMI_HUMAN_TOE_ENTHESIS_MAXIMUM_SPREAD_M:
+        return None, "semantic_enthesis_spread_exceeds_gate"
+    mapped = _tendon_envelope_force_maps(source_point, nodes, spread)
+    if mapped is None:
+        return None, "semantic_enthesis_force_map_is_singular"
+    maps, metrics = mapped
+    if (
+        metrics["force_residual"] > 2.0e-6
+        or metrics["moment_residual_m"] > 2.0e-8
+        or metrics["sampled_total_force_amplification"] > maximum_force_amplification
+    ):
+        return None, "semantic_enthesis_force_map_conditioning_failed"
+    representative_surface = representative["surface"]
+    return {
+        "body_index": representative_surface["body_index"],
+        # NHTENDON2 retains one compact stable identity. The complete ordered
+        # multi-bone identity stays in the manifest and each node position is
+        # already expressed in the shared toes-body local frame.
+        "bone_stable_id": representative_surface["stable_id"],
+        "bone_member_id": representative_surface["member_id"],
+        "source_triangle_index": representative["source_triangle_index"],
+        "nearest_barycentric": representative["barycentric"],
+        "nearest_local_point_m": representative["local_point_m"],
+        "node_vertex_indices": [],
+        "node_local_points_m": nodes,
+        "force_maps": maps,
+        "surface_distance_m": representative["distance_m"],
+        "patch_radius_m": spread,
+        **metrics,
+        "semantic_enthesis_map": {
+            "kind": "lumped_digitorum_route_to_four_lesser_toe_distal_phalanges",
+            "bone_member_ids": list(member_ids),
+            "node_bone_member_ids": list(member_ids),
+            "node_bone_stable_ids": [
+                record["surface"]["stable_id"] for record in nearest_records
+            ],
+            "node_surface_distances_from_source_point_m": [
+                record["distance_m"] for record in nearest_records
+            ],
+            "maximum_semantic_spread_m": _NUMI_HUMAN_TOE_ENTHESIS_MAXIMUM_SPREAD_M,
+            "source_endpoint_migration_m": 0.0,
+            "source_force_law_count": 1,
+            "inferred_independent_toe_actuator_count": 0,
+        },
+    }, "admitted_semantic_multi_enthesis_map"
+
+
 def numi_human_tendon_attachment_envelope_payload(
     myosim_artifact: Path, bone_artifact: Path, output: Path,
     maximum_surface_distance_m: float = 0.012,
@@ -5887,10 +6036,13 @@ def numi_human_tendon_attachment_envelope_payload(
     """Compile fail-closed source-point-preserving BodyParts3D enthesis laws.
 
     Automatic admission is deliberately limited to a body with exactly one
-    registered NHBONES1 member.  Multi-bone bodies, absent geometry, distant
-    surfaces, and ill-conditioned patches remain explicit source-site point
-    laws.  No authored MyoSim site, route, path length, or force parameter is
-    changed by this compiler.
+    registered NHBONES1 member. The only multi-member exception is the exact
+    source-pinned toe enthesis table above: hallux routes remain one-to-one,
+    while a lumped EDL/FDL terminal wrench spans the four named lesser-toe
+    distal phalanges on the same rigid body. Every other multi-bone body,
+    absent geometry, distant surface, or ill-conditioned patch remains an
+    explicit source-site point law. No authored MyoSim site, route, path
+    length, or force parameter is changed by this compiler.
     """
     for value, label in (
         (maximum_surface_distance_m, "maximum surface distance"),
@@ -5956,15 +6108,21 @@ def numi_human_tendon_attachment_envelope_payload(
     surfaces_by_body, bone_descriptor, _ = _numi_human_bone_envelope_surfaces(
         bone_artifact, source_sha,
     )
+    surfaces_by_member: dict[str, dict[str, Any]] = {}
     for body_index, surfaces in surfaces_by_body.items():
         for surface in surfaces:
             surface["body_index"] = body_index
+            member_id = surface.get("member_id")
+            if not isinstance(member_id, str) or member_id in surfaces_by_member:
+                raise ImportError("Numi Human tendon envelope bone-member identity is invalid")
+            surfaces_by_member[member_id] = surface
     endpoint_payload: list[bytes] = []
     envelope_payload: list[bytes] = []
     endpoint_manifest: list[dict[str, Any]] = []
     rejection_counts: Counter[str] = Counter()
     admitted_distances: list[float] = []
     admitted_amplifications: list[float] = []
+    semantic_enthesis_count = 0
     for muscle_index, (record, muscle_metadata) in enumerate(zip(muscles, metadata, strict=True)):
         route_offset, count = record[1], record[2]
         name = muscle_metadata.get("name") if isinstance(muscle_metadata, dict) else None
@@ -5982,7 +6140,24 @@ def numi_human_tendon_attachment_envelope_payload(
                 raise ImportError(f"Numi Human tendon envelope route {name} has an invalid source endpoint")
             surfaces = surfaces_by_body.get(body_index, [])
             envelope: dict[str, Any] | None = None
-            if not surfaces:
+            semantic_members = _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS.get(
+                (name, endpoint_ordinal)
+            )
+            if semantic_members is not None:
+                semantic_surfaces = [
+                    surfaces_by_member.get(member_id) for member_id in semantic_members
+                ]
+                if any(surface is None for surface in semantic_surfaces):
+                    reason = "semantic_enthesis_map_member_missing"
+                elif any(surface["body_index"] != body_index for surface in semantic_surfaces):
+                    reason = "semantic_enthesis_map_body_mismatch"
+                else:
+                    envelope, reason = _numi_human_semantic_enthesis_envelope(
+                        source_point, semantic_surfaces, semantic_members,
+                        maximum_surface_distance_m, maximum_patch_radius_m,
+                        maximum_force_amplification,
+                    )
+            elif not surfaces:
                 reason = "body_has_no_registered_bone_surface"
             elif len(surfaces) != 1:
                 reason = "body_has_multiple_bone_members_without_semantic_enthesis_map"
@@ -6023,6 +6198,8 @@ def numi_human_tendon_attachment_envelope_payload(
                 ))
                 admitted_distances.append(envelope["surface_distance_m"])
                 admitted_amplifications.append(envelope["sampled_total_force_amplification"])
+                if "semantic_enthesis_map" in envelope:
+                    semantic_enthesis_count += 1
                 surface_manifest = {
                     key: envelope[key] for key in (
                         "bone_member_id", "bone_stable_id", "source_triangle_index",
@@ -6032,6 +6209,10 @@ def numi_human_tendon_attachment_envelope_payload(
                         "sampled_total_force_amplification",
                     )
                 }
+                if "semantic_enthesis_map" in envelope:
+                    surface_manifest["semantic_enthesis_map"] = envelope[
+                        "semantic_enthesis_map"
+                    ]
             endpoint_payload.append(struct.pack(
                 "<8I8f", muscle_index, endpoint_ordinal, route_node_index, site_index,
                 body_index, mode, envelope_index, stable_id,
@@ -6080,11 +6261,25 @@ def numi_human_tendon_attachment_envelope_payload(
             "bodyparts3d_bone_payload": bone_descriptor,
         },
         "admission": {
-            "method": "single_named_NHBONES1_member_exact_nearest_triangle_connected_surface_patch_minimum_L2_wrench_distribution",
+            "method": (
+                "single_named_NHBONES1_member_exact_nearest_triangle_connected_surface_patch_"
+                "or_explicit_toe_enthesis_map_minimum_L2_wrench_distribution"
+            ),
             "maximum_surface_distance_m": maximum_surface_distance_m,
             "maximum_patch_radius_m": maximum_patch_radius_m,
             "maximum_sampled_total_force_amplification": maximum_force_amplification,
             "multiple_bone_members_fail_closed": True,
+            "multiple_bone_exception": (
+                "only the exact source-pinned EDL/FDL four-lesser-toe and EHL/FHL hallux "
+                "semantic maps are admitted; all other multi-bone bodies fail closed"
+            ),
+            "toe_semantic_enthesis_map": {
+                f"{muscle}:{endpoint}": list(members)
+                for (muscle, endpoint), members in sorted(
+                    _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS.items()
+                )
+            },
+            "maximum_toe_semantic_spread_m": _NUMI_HUMAN_TOE_ENTHESIS_MAXIMUM_SPREAD_M,
             "source_endpoint_migration_m": 0.0,
             "rejection_counts": dict(sorted(rejection_counts.items())),
         },
@@ -6093,6 +6288,7 @@ def numi_human_tendon_attachment_envelope_payload(
             "mechanical_endpoint_count": len(endpoint_payload),
             "expected_endpoint_count": 2 * muscle_count,
             "registered_bone_distributed_envelope_count": admitted_count,
+            "semantic_toe_enthesis_envelope_count": semantic_enthesis_count,
             "source_site_point_fallback_count": point_count,
             "surface_coverage_fraction": admitted_count / len(endpoint_payload),
             "maximum_endpoint_migration_m": 0.0,
@@ -6102,14 +6298,15 @@ def numi_human_tendon_attachment_envelope_payload(
         "endpoints": endpoint_manifest,
         "runtime_contract": (
             "retain each authored MyoSim route endpoint and force law; on Apple Metal distribute its exact terminal force "
-            "across four same-bone nodes with precompiled 3x3 maps, conserve resultant force and moment, and derive any "
+            "across four same-body source-registered bone nodes with precompiled 3x3 maps, conserve resultant force and moment, and derive any "
             "generalized contribution only through articulated point Jacobians"
         ),
         "status": "complete_endpoint_coverage_with_inferred_surface_envelopes_and_explicit_point_fallbacks",
         "evidence_boundary": (
             "Admitted envelopes are simulation-inferred from the source-pinned BodyParts3D/MyoSim registration and strict "
             "distance/conditioning gates. They are not source-authored enthesis coordinates, a deformable tendon continuum, "
-            "a clinical attachment certificate, or permission to migrate an OpenSim/MyoSim route endpoint."
+            "a clinical attachment certificate, or permission to migrate an OpenSim/MyoSim route endpoint. The four-node "
+            "EDL/FDL map distributes one lumped source law; it does not claim four independently actuated toe muscles."
         ),
     }
     write_json(output / "numi-human-tendon-attachments.manifest.json", manifest_value)
@@ -6379,6 +6576,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
     if not isinstance(registration_anchors, list):
         raise ImportError("BodyParts3D full-body tissue payload has no visual-skeleton anchors")
     secondary_bone_sources: dict[str, dict[str, Any]] = {}
+    body_bone_sources: dict[str, list[dict[str, Any]]] = defaultdict(list)
     body_local_registrations: dict[str, tuple[list[float], list[float], float]] = {}
     for anchor in registration_anchors:
         if not isinstance(anchor, dict):
@@ -6392,6 +6590,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                 not isinstance(hierarchy, str):
             raise ImportError("BodyParts3D full-body tissue payload has an invalid visual-skeleton anchor identity")
         secondary_bone_sources.setdefault(target_name, source_record)
+        body_bone_sources[target_name].append(source_record)
         registration_record = anchor.get("registration")
         if not isinstance(registration_record, dict):
             raise ImportError("BodyParts3D full-body tissue payload has no source-bone local registration")
@@ -6542,6 +6741,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         ]
 
         attachment_weight_lock: dict[str, Any] | None = None
+        toe_enthesis_weight_lock: dict[str, Any] | None = None
         stored_vertices_m = [[coordinate * 0.001 for coordinate in vertex] for vertex in vertices_mm]
         stored_normals = normals
         if layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON:
@@ -6734,6 +6934,155 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                     "matched_route_count": len(matched_routes),
                 }
 
+            # The lower-body source has one EDL/FDL route for four anatomical
+            # slips. Route-node proximity alone therefore leaves the distal
+            # BodyParts3D slips partially following calcaneus/tibia and can
+            # make one terminal branch appear attached to the adjacent toe.
+            # Lock only source vertices close to the explicitly named distal
+            # phalanges into the toes-body frame. This changes presentation
+            # weights, not the MyoSim path or force law; the matching
+            # NHTENDON2 semantic envelope below preserves the exact source
+            # endpoint wrench across the same named bones.
+            semantic_members = (
+                _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS.get((source_muscles[0], 1))
+                if len(source_muscles) == 1 else None
+            )
+            if semantic_members is not None:
+                if secondary_name not in {"toes_r", "toes_l"} or secondary_name not in binding_names:
+                    raise ImportError(
+                        f"BodyParts3D toe enthesis surface {member_id} does not terminate on a toes body"
+                    )
+                sources_by_member = {
+                    record.get("member_id"): record
+                    for record in body_bone_sources.get(secondary_name, [])
+                }
+                if any(member not in sources_by_member for member in semantic_members):
+                    raise ImportError(
+                        f"BodyParts3D toe enthesis surface {member_id} is missing a named distal phalanx"
+                    )
+                secondary_binding_index = binding_names.index(secondary_name)
+                secondary_target = binding_targets[secondary_binding_index]
+                secondary_local_pose = binding_local_poses[secondary_binding_index]
+                secondary_position = _myosim_vector(
+                    secondary_target.get("default_com_position_world_m"),
+                    f"BodyParts3D {member_id} toe enthesis position",
+                )
+                secondary_quaternion = list(
+                    secondary_target.get("default_inertial_quaternion_world_xyzw", [])
+                )
+                tissue_in_secondary_world = _bodyparts_source_mm_to_body_world(
+                    vertices_mm, secondary_position, secondary_quaternion,
+                    *secondary_local_pose,
+                )
+                enthesis_vertices_world: list[list[float]] = []
+                enthesis_triangles: list[tuple[int, int, int]] = []
+                for semantic_member in semantic_members:
+                    source_record = sources_by_member[semantic_member]
+                    _, bone_member, bone_obj = _bodyparts_obj_member(
+                        sources, source_record["hierarchy"], semantic_member,
+                    )
+                    bone_vertices_mm, bone_triangles = _bodyparts_obj_triangles(
+                        bone_obj, bone_member,
+                    )
+                    bone_vertices_world = _bodyparts_source_mm_to_body_world(
+                        bone_vertices_mm, secondary_position, secondary_quaternion,
+                        *secondary_local_pose,
+                    )
+                    first_bone_vertex = len(enthesis_vertices_world)
+                    enthesis_vertices_world.extend(bone_vertices_world)
+                    enthesis_triangles.extend(
+                        tuple(first_bone_vertex + index for index in triangle)
+                        for triangle in bone_triangles
+                    )
+                distal_attenuation, toe_enthesis_weight_lock = \
+                    _bodyparts_secondary_attachment_weight_lock(
+                        tissue_in_secondary_world,
+                        [1.0] * len(tissue_in_secondary_world),
+                        enthesis_vertices_world,
+                        enthesis_triangles,
+                        _NUMI_HUMAN_TOE_VISUAL_LOCK_RADIUS_M,
+                        _NUMI_HUMAN_TOE_VISUAL_FEATHER_RADIUS_M,
+                    )
+                source_longitudinal_mm = [vertex[1] for vertex in vertices_mm]
+                source_longitudinal_minimum_mm = min(source_longitudinal_mm)
+                source_longitudinal_extent_mm = (
+                    max(source_longitudinal_mm) - source_longitudinal_minimum_mm
+                )
+                if source_longitudinal_extent_mm <= 1.0e-6:
+                    raise ImportError(
+                        f"BodyParts3D toe enthesis surface {member_id} has no longitudinal extent"
+                    )
+                longitudinal_lock_mm = source_longitudinal_minimum_mm + (
+                    _NUMI_HUMAN_TOE_VISUAL_DISTAL_LOCK_FRACTION
+                    * source_longitudinal_extent_mm
+                )
+                longitudinal_feather_mm = source_longitudinal_minimum_mm + (
+                    _NUMI_HUMAN_TOE_VISUAL_DISTAL_FEATHER_FRACTION
+                    * source_longitudinal_extent_mm
+                )
+                longitudinal_locked = 0
+                longitudinal_feathered = 0
+                for vertex_index, source_y_mm in enumerate(source_longitudinal_mm):
+                    if source_y_mm <= longitudinal_lock_mm:
+                        longitudinal_attenuation = 0.0
+                        longitudinal_locked += 1
+                    elif source_y_mm < longitudinal_feather_mm:
+                        longitudinal_attenuation = (
+                            (source_y_mm - longitudinal_lock_mm)
+                            / (longitudinal_feather_mm - longitudinal_lock_mm)
+                        )
+                        longitudinal_feathered += 1
+                    else:
+                        longitudinal_attenuation = 1.0
+                    distal_attenuation[vertex_index] = min(
+                        distal_attenuation[vertex_index], longitudinal_attenuation,
+                    )
+                toe_binding_index = binding_names.index(secondary_name)
+                for weights, attenuation in zip(
+                    vertex_weights, distal_attenuation, strict=True,
+                ):
+                    for binding_index in range(len(weights)):
+                        if binding_index != toe_binding_index:
+                            weights[binding_index] *= attenuation
+                    weights[toe_binding_index] = (
+                        1.0 - attenuation + attenuation * weights[toe_binding_index]
+                    )
+                    if abs(sum(weights) - 1.0) > 1.0e-6:
+                        raise ImportError(
+                            f"BodyParts3D toe enthesis surface {member_id} has non-unit locked weights"
+                        )
+                toe_enthesis_weight_lock.update({
+                    "method": (
+                        "exact_source_triangle_proximity_to_semantically_named_"
+                        "distal_phalanx_union_plus_source_longitudinal_terminal_band"
+                    ),
+                    "myosim_muscle": source_muscles[0],
+                    "secondary_body": secondary_name,
+                    "distal_phalanx_member_ids": list(semantic_members),
+                    "source_endpoint_migration_m": 0.0,
+                    "source_longitudinal_band": {
+                        "axis": "BodyParts3D source Y; decreasing is distal for these exact bilateral surfaces",
+                        "distal_lock_fraction": _NUMI_HUMAN_TOE_VISUAL_DISTAL_LOCK_FRACTION,
+                        "distal_feather_fraction": _NUMI_HUMAN_TOE_VISUAL_DISTAL_FEATHER_FRACTION,
+                        "lock_boundary_mm": longitudinal_lock_mm,
+                        "feather_boundary_mm": longitudinal_feather_mm,
+                        "locked_vertex_count": longitudinal_locked,
+                        "feathered_vertex_count": longitudinal_feathered,
+                        "combined_locked_vertex_count": sum(
+                            attenuation <= 1.0e-8 for attenuation in distal_attenuation
+                        ),
+                        "combined_feathered_vertex_count": sum(
+                            1.0e-8 < attenuation < 1.0 - 1.0e-8
+                            for attenuation in distal_attenuation
+                        ),
+                    },
+                    "boundary": (
+                        "This locks only the visual BodyParts3D terminal slip to its named "
+                        "toe-bone frame. It does not alter the authored MyoSim route, create "
+                        "independent toe actuators, or establish clinical enthesis geometry."
+                    ),
+                })
+
         first_binding = len(bindings_payload)
         for target, transform in zip(
             binding_targets,
@@ -6805,6 +7154,8 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             provenance[-1]["route_binding"] = route_binding_diagnostics
         if attachment_weight_lock is not None:
             provenance[-1]["secondary_attachment_weight_lock"] = attachment_weight_lock
+        if toe_enthesis_weight_lock is not None:
+            provenance[-1]["toe_enthesis_weight_lock"] = toe_enthesis_weight_lock
         if source_component_selection is not None:
             provenance[-1]["source_component_selection"] = source_component_selection
         if layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE:

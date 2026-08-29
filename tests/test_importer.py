@@ -17,6 +17,7 @@ from numilab_human.model import (
     _BODYPARTS_MYOSIM_THORACIC_FOOT_EXTENSIONS,
     _BODYPARTS_MYOSIM_TOE_EXTENSIONS,
     _BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS,
+    _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS,
     _bodyparts_secondary_attachment_weight_lock,
     _bodyparts_project_tendon_attachment_band,
     _bodyparts_drop_interior_tendon_cap_triangles,
@@ -35,6 +36,7 @@ from numilab_human.model import (
     _fit_myosim_compliant_architecture,
     _myosim_pack_dof_record,
     _myosim_muscle_payload_architecture,
+    _numi_human_semantic_enthesis_envelope,
     ImportError as HumanImportError,
     bodyparts_foot_collider_preflight,
     bodyparts_foot_registration_receipt_template,
@@ -108,6 +110,56 @@ class ImporterTests(unittest.TestCase):
             surfaces["right extensor digitorum"],
             ["EDC2", "EDC3", "EDC4", "EDC5"],
         )
+
+    def test_lumped_digitorum_route_maps_to_all_four_lesser_toes(self) -> None:
+        self.assertEqual(
+            _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS[("edl_l", 1)],
+            ("FJ3179", "FJ3180", "FJ3181", "FJ3185"),
+        )
+        self.assertEqual(
+            _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS[("ehl_l", 1)],
+            ("FJ3182",),
+        )
+        source_point = [0.004021, 0.028069, 0.008354]
+        expected_nodes = [
+            [-0.00031, 0.02665, 0.01907],
+            [0.00176, 0.02910, 0.00823],
+            [-0.00044, 0.02453, -0.00688],
+            [-0.00350, 0.02299, -0.02466],
+        ]
+        surfaces = []
+        member_ids = ("FJ1", "FJ2", "FJ3", "FJ4")
+        for stable_id, (member_id, node) in enumerate(
+            zip(member_ids, expected_nodes, strict=True), start=1,
+        ):
+            surfaces.append({
+                "member_id": member_id,
+                "body_index": 7,
+                "stable_id": stable_id,
+                "vertices": [
+                    node,
+                    [node[0] + 0.001, node[1], node[2]],
+                    [node[0], node[1] + 0.001, node[2] + 0.0002],
+                ],
+                "triangles": [(0, 1, 2)],
+            })
+        envelope, reason = _numi_human_semantic_enthesis_envelope(
+            source_point, surfaces, member_ids, 0.012, 0.012, 4.0,
+        )
+        self.assertEqual(reason, "admitted_semantic_multi_enthesis_map")
+        self.assertIsNotNone(envelope)
+        assert envelope is not None
+        self.assertEqual(
+            envelope["semantic_enthesis_map"]["node_bone_stable_ids"],
+            [1, 2, 3, 4],
+        )
+        self.assertEqual(
+            envelope["semantic_enthesis_map"]["inferred_independent_toe_actuator_count"],
+            0,
+        )
+        self.assertLess(envelope["force_residual"], 2.0e-6)
+        self.assertLess(envelope["moment_residual_m"], 2.0e-8)
+        self.assertLess(envelope["sampled_total_force_amplification"], 4.0)
 
     def test_nhmyo2_fits_positive_compliant_architecture_and_reads_legacy(self) -> None:
         gain = [0.906929, 1.07277, 102.673, 1.0, 0.0, 2.0, 10.0, 2.41059, 1.4, 0.0]
