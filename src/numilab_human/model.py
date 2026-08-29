@@ -3447,6 +3447,18 @@ _BODYPARTS_MYOSIM_TOE_EXTENSIONS = tuple(
 )
 
 
+# A separate hallux joint is not required to preserve the visible three-bone
+# chain or its tendon insertion. Each side is one exact BodyParts3D compound
+# carried by the existing MyoSim toes body. Compilation below rejects a
+# missing member, a one-toe identity shift, a split Core owner, a mismatched
+# local transform, or a disconnected source chain.
+_NUMI_HUMAN_HALLUX_RIGID_COMPOUNDS = {
+    "toes_r": ("FJ3351", "FJ3310", "FJ3192"),
+    "toes_l": ("FJ3241", "FJ3329", "FJ3182"),
+}
+_NUMI_HUMAN_HALLUX_RIGID_COMPOUND_MAXIMUM_GAP_M = 0.001
+
+
 # Rajagopal/MyoSim authors one EDL and one FDL route per side even though each
 # anatomical muscle terminates as four lesser-toe slips.  Keep that source
 # route and its single force law authoritative, but make the missing semantic
@@ -4319,6 +4331,12 @@ def bodyparts_myosim_bone_visual_payload(
     indices_payload: list[int] = []
     records_payload: list[bytes] = []
     provenance_anchors: list[dict[str, Any]] = []
+    hallux_member_ids = frozenset(
+        member
+        for members in _NUMI_HUMAN_HALLUX_RIGID_COMPOUNDS.values()
+        for member in members
+    )
+    hallux_geometry: dict[str, dict[str, Any]] = {}
     for stable_id, (specification, anchor) in enumerate(zip(_BODYPARTS_MYOSIM_BONE_ANCHORS, anchors, strict=True), start=1):
         if not isinstance(anchor, dict):
             raise ImportError("BodyParts3D visual payload has an invalid anchor")
@@ -4342,6 +4360,23 @@ def bodyparts_myosim_bone_visual_payload(
             registration_record.get("source_obj_mm_to_core_inertial_body_m"),
             f"BodyParts3D visual payload {specification['member_id']} local transform",
         )
+        if specification["member_id"] in hallux_member_ids:
+            if specification["member_id"] in hallux_geometry:
+                raise ImportError("BodyParts3D hallux rigid compound duplicates a source member")
+            rotation = _myosim_matrix_from_quaternion_xyzw(quaternion)
+            hallux_geometry[specification["member_id"]] = {
+                "myosim_body": specification["myosim_body"],
+                "core_body_index": core_body_index,
+                "local_pose": (*translation, *quaternion, scale),
+                "vertices_core_body_m": [
+                    _myosim_add(translation, [
+                        scale * value for value in _myosim_matrix_vector(
+                            rotation, [coordinate * 0.001 for coordinate in vertex],
+                        )
+                    ])
+                    for vertex in vertices_mm
+                ],
+            }
         normals = _bodyparts_vertex_normals(vertices_mm, triangles, member)
         first_vertex = len(vertices_payload)
         first_index = len(indices_payload)
@@ -4359,6 +4394,57 @@ def bodyparts_myosim_bone_visual_payload(
             "member_id": specification["member_id"], "member_sha256": source_record["member_sha256"],
             "core_body_index": core_body_index, "myosim_body": specification["myosim_body"],
             "vertex_count": len(vertices_mm), "triangle_count": len(triangles),
+        })
+    hallux_rigid_compounds: list[dict[str, Any]] = []
+    for myosim_body, member_ids in _NUMI_HUMAN_HALLUX_RIGID_COMPOUNDS.items():
+        records = [hallux_geometry.get(member_id) for member_id in member_ids]
+        if any(record is None for record in records):
+            raise ImportError(
+                f"BodyParts3D {myosim_body} hallux rigid compound is incomplete"
+            )
+        typed_records = [record for record in records if record is not None]
+        core_body_indices = {record["core_body_index"] for record in typed_records}
+        if (
+            {record["myosim_body"] for record in typed_records} != {myosim_body}
+            or len(core_body_indices) != 1
+        ):
+            raise ImportError(
+                f"BodyParts3D {myosim_body} hallux rigid compound has split body ownership"
+            )
+        reference_pose = typed_records[0]["local_pose"]
+        if any(
+            any(abs(value - reference) > 1.0e-9 for value, reference in zip(
+                record["local_pose"], reference_pose, strict=True,
+            ))
+            for record in typed_records[1:]
+        ):
+            raise ImportError(
+                f"BodyParts3D {myosim_body} hallux rigid compound has inconsistent local transforms"
+            )
+        adjacent_surface_gaps_m = [
+            min(
+                math.dist(first, second)
+                for first in typed_records[index]["vertices_core_body_m"]
+                for second in typed_records[index + 1]["vertices_core_body_m"]
+            )
+            for index in range(len(typed_records) - 1)
+        ]
+        maximum_gap_m = max(adjacent_surface_gaps_m)
+        if maximum_gap_m > _NUMI_HUMAN_HALLUX_RIGID_COMPOUND_MAXIMUM_GAP_M:
+            raise ImportError(
+                f"BodyParts3D {myosim_body} hallux rigid compound source chain is disconnected"
+            )
+        hallux_rigid_compounds.append({
+            "myosim_body": myosim_body,
+            "core_body_index": next(iter(core_body_indices)),
+            "source_member_ids": list(member_ids),
+            "adjacent_surface_gaps_m": adjacent_surface_gaps_m,
+            "maximum_adjacent_surface_gap_m": maximum_gap_m,
+            "maximum_allowed_adjacent_surface_gap_m": (
+                _NUMI_HUMAN_HALLUX_RIGID_COMPOUND_MAXIMUM_GAP_M
+            ),
+            "independent_articulation_count": 0,
+            "binding": "one shared existing MyoSim toes rigid-body transform",
         })
     if len(vertices_payload) > 0xFFFFFFFF or len(indices_payload) > 0xFFFFFFFF:
         raise ImportError("BodyParts3D visual payload exceeds the uint32 native renderer capacity")
@@ -4391,6 +4477,7 @@ def bodyparts_myosim_bone_visual_payload(
             "anchors": provenance_anchors,
         },
         "runtime_binding": "one source-local bone instance per Core articulated inertial body; local translation, rotation, and uniform scale are carried in the native payload",
+        "hallux_rigid_compounds": hallux_rigid_compounds,
         "status": "native_visual_binding_input_not_collision_or_physics",
         "evidence_boundary": "The payload contains triangle surfaces for a provisional bone visual only. It does not create colliders, skinning weights, soft-tissue mechanics, muscle attachments, or a medical registration claim.",
     }
@@ -6977,6 +7064,25 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                 secondary_binding_index = binding_names.index(secondary_name)
                 secondary_target = binding_targets[secondary_binding_index]
                 secondary_local_pose = binding_local_poses[secondary_binding_index]
+                hallux_rigid_compound: dict[str, Any] | None = None
+                if len(semantic_members) == 1:
+                    rigid_members = _NUMI_HUMAN_HALLUX_RIGID_COMPOUNDS.get(secondary_name)
+                    if (
+                        rigid_members is None
+                        or semantic_members != (rigid_members[-1],)
+                        or any(member not in sources_by_member for member in rigid_members)
+                    ):
+                        raise ImportError(
+                            f"BodyParts3D hallucis surface {member_id} escapes its single-body hallux compound"
+                        )
+                    hallux_rigid_compound = {
+                        "myosim_body": secondary_name,
+                        "core_body_index": secondary_target["core_body_index"],
+                        "source_member_ids": list(rigid_members),
+                        "distal_enthesis_member_id": rigid_members[-1],
+                        "independent_articulation_count": 0,
+                        "binding": "bone chain and terminal visual patch share one existing toes-body transform",
+                    }
                 secondary_position = _myosim_vector(
                     secondary_target.get("default_com_position_world_m"),
                     f"BodyParts3D {member_id} toe enthesis position",
@@ -7144,6 +7250,10 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                 if visual_enthesis_registration is not None:
                     toe_enthesis_weight_lock["visual_enthesis_registration"] = (
                         visual_enthesis_registration
+                    )
+                if hallux_rigid_compound is not None:
+                    toe_enthesis_weight_lock["hallux_rigid_compound"] = (
+                        hallux_rigid_compound
                     )
 
         first_binding = len(bindings_payload)

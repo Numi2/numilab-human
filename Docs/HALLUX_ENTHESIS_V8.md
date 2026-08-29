@@ -38,6 +38,20 @@ This visual correction changes neither a MyoSim site nor an endpoint force.
 The manifest records the source gap, retained topology, projection, and zero
 source-endpoint migration.
 
+## Single-body hallux compound
+
+No additional toe articulation is used. Compilation now treats each source
+hallux as one compound on the existing toes body:
+
+- right `toes_r` / Core body 139: `FJ3351` → `FJ3310` → `FJ3192`;
+- left `toes_l` / Core body 153: `FJ3241` → `FJ3329` → `FJ3182`.
+
+The compiler requires the three members, one shared Core owner, one identical
+local transform, and the correct distal enthesis identity. It also checks the
+exact transformed source surfaces: maximum adjacent gaps are 0.727 mm right
+and 0.629 mm left, below the 1 mm gate. A missing member, split transform, or
+one-toe identity shift now fails compilation instead of reaching the renderer.
+
 ## Apple M4 Pro validation
 
 Runtime code `45fede450ba889b8feb1df0a8330db3c31706497` decoded and rendered the
@@ -65,10 +79,21 @@ persistent transaction remains the force-transfer qualification. The retained
 [checksums](media/numi-human-hallux-enthesis-v8-2048/checksums.sha256) make the
 device and inputs inspectable.
 
+The same payload bytes were recompiled with the compound gate and rerendered
+bilaterally after 64 bounded EHL+FHL activation steps. Each side evaluated
+26,624 source-force records in 128 Metal transactions before the 2048 px
+front/oblique/side/rear review. The maximum mixed-unit generalized-coordinate
+change was `3.02e-3`; each hallux chain and terminal patch remained on its one
+shared toes-body transform. This is a posed visual continuity check, not a
+persistent standing or gait result.
+
 ## Boundary
 
-MyoSim still exposes one `toes` rigid body per side. EHL/FHL are active
-muscle-tendon routes with bone-surface force transfer, but this build does not
-have an independently articulated big-toe MTP/IP chain, a deformable tendon
-continuum, calibrated enthesis stress, stable standing, gait validation, or a
-photorealistic exterior.
+This correction intentionally uses the one existing `toes` rigid body per
+side. The first metatarsal, proximal hallux phalanx, distal hallux phalanx, and
+EHL/FHL terminal patch form a fail-closed co-rigid compound, so independent
+hallux articulation is neither introduced nor required to fix the visual
+defect. The source chain gaps are below 0.8 mm and remain invariant under the
+shared transform. This does not claim internal MTP/IP motion, a deformable
+tendon continuum, calibrated enthesis stress, stable standing, gait
+validation, or a photorealistic exterior.

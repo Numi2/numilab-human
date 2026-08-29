@@ -18,6 +18,7 @@ from numilab_human.model import (
     _BODYPARTS_MYOSIM_TOE_EXTENSIONS,
     _BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS,
     _NUMI_HUMAN_HALLUX_DOMINANT_SOURCE_SURFACE_MEMBERS,
+    _NUMI_HUMAN_HALLUX_RIGID_COMPOUNDS,
     _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS,
     _bodyparts_secondary_attachment_weight_lock,
     _bodyparts_project_tendon_attachment_band,
@@ -179,6 +180,22 @@ class ImporterTests(unittest.TestCase):
             _NUMI_HUMAN_HALLUX_DOMINANT_SOURCE_SURFACE_MEMBERS,
             {"FJ1408", "FJ1408M", "FJ1415", "FJ1415M"},
         )
+        self.assertEqual(
+            _NUMI_HUMAN_HALLUX_RIGID_COMPOUNDS,
+            {
+                "toes_r": ("FJ3351", "FJ3310", "FJ3192"),
+                "toes_l": ("FJ3241", "FJ3329", "FJ3182"),
+            },
+        )
+        extension_by_member = {
+            anchor["member_id"]: anchor["myosim_body"]
+            for anchor in _BODYPARTS_MYOSIM_TOE_EXTENSIONS
+        }
+        for body, members in _NUMI_HUMAN_HALLUX_RIGID_COMPOUNDS.items():
+            self.assertEqual(
+                [extension_by_member[member] for member in members],
+                [body, body, body],
+            )
 
     def test_nhmyo2_fits_positive_compliant_architecture_and_reads_legacy(self) -> None:
         gain = [0.906929, 1.07277, 102.673, 1.0, 0.0, 2.0, 10.0, 2.41059, 1.4, 0.0]

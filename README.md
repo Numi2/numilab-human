@@ -71,6 +71,11 @@ FHL already reaches its named hallux bone; the 7.4 mm EHL source display gap is
 closed by feathering only its terminal visual band onto exact `FJ3182`/`FJ3192`
 triangles. This is explicitly visual registration; the MyoSim sites and v5
 force-transfer law remain unchanged. See the [hallux v8 record](Docs/HALLUX_ENTHESIS_V8.md).
+The three hallux bones and terminal patch deliberately share the existing
+`toes_l`/`toes_r` rigid transform; no independent toe joint is needed for this
+continuity repair, and compilation fails if that compound is split or shifted
+to an adjacent toe. Exact maximum inter-bone source gaps are 0.727 mm right and
+0.629 mm left.
 
 `NHTENDON2` now gives all 832 origin/insertion endpoints a fail-closed
 tendon-to-bone law without moving an authored route site. The current distal
