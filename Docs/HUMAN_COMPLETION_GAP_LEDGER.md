@@ -13,7 +13,7 @@ completion gate is still open; **open** means the end-state owner is absent.
 | Source foundation | BodyParts3D 4.0 plus active MyoSim 416-route body; Rajagopal and public MoBL-ARMS retained as comparative imports | partial | one source-faithful lower/upper mechanics composition is not qualified; authenticated bimanual upper source and exact non-cylinder wrap families remain separate | pinned bilateral source composition, exact wraps, mass/inertia/joint/path parity, and license receipts |
 | Skeleton and articulation | 157 Core bodies, 51 joint equalities, 184 pose-bound BodyParts3D bone meshes, coherent limb/axial continuity gates | partial | several source bones share one mechanics body; no independent lesser-toe articulation; Mortensen neck merge is not active | named segment/DoF matrix with rest-pose, range, hierarchy, and multi-pose anatomical validation |
 | Muscle actuation | all 416 current-pose routes, wraps, activation, compliant fibre/tendon equilibrium, `J^T`, persistent Metal stepping | partial | inferred compliant architecture and bounded recruitment are not full OpenSim-equivalent dynamic fibre/tendon state or held-out force validation | source curve/path/moment-arm parity plus held-out force-length-velocity and dynamic state tests |
-| Tendon-to-bone transfer | v10 covers all 832 endpoints with 282 distributed envelopes and 550 exact point laws; zero endpoint migration | partial | 411 distance failures, 52 conditioning failures, 39 undersized patches, 24 bodies without bone surface, four toe-distance failures, and 20 unnamed multi-bone abdominal endpoints | calibrated source-to-source registration receipts and exact per-endpoint disposition without relaxed global thresholds |
+| Tendon-to-bone transfer | v11 covers all 832 endpoints with 364 distributed envelopes and 468 exact point laws; 82 topology-only failures recovered with zero endpoint migration | partial | 411 distance failures, nine residual conditioning failures, 24 bodies without bone surface, four toe-distance failures, and 20 unnamed multi-bone endpoints | calibrated source-to-source registration receipts and exact per-endpoint disposition without relaxed global thresholds |
 | Tendon and fascia continuum | six-region pectoral Matter FEM with transactional NHTENDON2 loads | partial | generated pectoral volume and 10% load share are assumptions; no whole-body tendon/fascia continuum or two-way bone-muscle coupling | registered regional meshes, calibrated nonlinear material receipts, two-way load coupling, convergence, replay, and held-out deformation |
 | Ligaments, cartilage, and menisci | no production owning solver | open | joint constraint and visual proximity are not tissue mechanics | named geometry, nonlinear ligament laws, compliant cartilage/meniscus contact, calibration, and joint-level validation |
 | Anatomical collision and contact | ten MyoSim foot witnesses and source plane run on Metal | partial | no BodyParts3D collider registration, collision exclusions, calibrated friction/compliance, or whole-body anatomical contact | conservative registered proxies, material receipts, deterministic replay, and held-out support/contact outcomes |
@@ -25,26 +25,29 @@ completion gate is still open; **open** means the end-state owner is absent.
 
 ## Current endpoint disposition
 
-The v10 compiler retains one law for every origin and insertion:
+The v11 compiler retains one law for every origin and insertion:
 
 | Disposition | Count |
 | --- | ---: |
-| connected BodyParts3D four-node surface envelope | 282 |
-| exact source-site point law | 550 |
+| connected BodyParts3D four-node surface envelope | 364 |
+| exact source-site point law | 468 |
 | endpoint migration | 0 |
 
-The 550 point laws are not one homogeneous bug. Current fail-closed reasons are:
+The 468 point laws are not one homogeneous bug. Current fail-closed reasons are:
 
 | Reason | Count | Correct next action |
 | --- | ---: | --- |
 | surface distance exceeds 12 mm | 411 | calibrated regional source-to-source registration, then rerun unchanged gates |
-| surface patch conditioning failed | 52 | topology-aware patch construction or a denser mechanics surface; keep amplification gate |
-| patch has fewer than four vertices | 39 | conservative mesh refinement tied to the exact source triangle |
+| conditioning still fails after topology-aware exact-surface search | 9 | retain point law; consider a source-derived mechanics surface without relaxing amplification |
 | body has no registered bone surface | 24 | classify soft-tissue/aponeurosis endpoints separately; add bone geometry only when anatomically correct |
 | multiple members without unique semantic identity | 20 | retain point law until the pinned source names one member or a reviewed correspondence exists |
 | semantic toe representative exceeds distance gate | 4 | improve foot registration; do not move the authored hallux/digitorum sites |
 
 ## Execution order
+
+The v11 topology-aware exact-surface solver closed 82 of the previous 91
+conditioning/sparse-topology failures without changing the global thresholds.
+It is complete for that admissible subset; the nine residuals remain explicit.
 
 1. Build a calibrated, provenance-pinned regional mechanics-to-anatomy
    registration field for the direct named correspondences now rejected by

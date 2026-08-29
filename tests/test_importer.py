@@ -59,6 +59,7 @@ from numilab_human.model import (
     myosim_part_control_catalog,
     myosim_part_control_plan,
     _numi_human_semantic_enthesis_envelope,
+    _numi_human_tendon_surface_envelope,
     ImportError as HumanImportError,
     bodyparts_foot_collider_preflight,
     bodyparts_foot_registration_receipt_template,
@@ -146,6 +147,43 @@ def _write_part_control_fixture(directory: Path) -> Path:
 
 
 class ImporterTests(unittest.TestCase):
+    def test_topology_aware_tendon_patch_uses_exact_seed_triangle_points(self) -> None:
+        surface = {
+            "body_index": 1,
+            "stable_id": 7,
+            "member_id": "FJ3360",
+            "vertices": [
+                [-0.008, -0.006, 0.0],
+                [0.008, -0.006, 0.0],
+                [0.0, 0.009, 0.0],
+            ],
+            "triangles": [(0, 1, 2)],
+        }
+        source_point = [0.0, 0.0, 0.002]
+        envelope, reason = _numi_human_tendon_surface_envelope(
+            source_point, surface, 0.012, 0.012, 4.0,
+        )
+        self.assertEqual(reason, "admitted_topology_aware_exact_surface_patch")
+        self.assertIsNotNone(envelope)
+        assert envelope is not None
+        self.assertEqual(
+            envelope["surface_patch_method"],
+            "connected_geodesic_topology_aware_exact_surface_points",
+        )
+        self.assertEqual(envelope["node_vertex_indices"], [])
+        self.assertEqual(len(envelope["node_surface_sources"]), 4)
+        self.assertLessEqual(envelope["surface_distance_m"], 0.012)
+        self.assertLessEqual(envelope["patch_radius_m"], 0.012 + 1.0e-12)
+        self.assertLessEqual(envelope["sampled_total_force_amplification"], 4.0)
+        self.assertLessEqual(envelope["force_residual"], 2.0e-6)
+        self.assertLessEqual(envelope["moment_residual_m"], 2.0e-8)
+
+        repeated, repeated_reason = _numi_human_tendon_surface_envelope(
+            source_point, surface, 0.012, 0.012, 4.0,
+        )
+        self.assertEqual(repeated_reason, reason)
+        self.assertEqual(repeated, envelope)
+
     def test_part_control_catalog_uses_exact_source_route_incidence(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             artifact = _write_part_control_fixture(Path(temporary))

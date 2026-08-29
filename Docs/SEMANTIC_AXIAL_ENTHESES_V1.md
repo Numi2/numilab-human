@@ -25,6 +25,13 @@ at T2--T4 and ten bilateral rib endpoints at ribs 4--6. The remaining 64
 declared thoracic correspondences remain point-owned because their current
 BodyParts3D/MyoSim rest-frame distance or patch conditioning fails.
 
+The subsequent topology-aware exact-surface compiler admits two additional
+`LTpT_T5` insertions that already passed the distance and semantic-identity
+gates but lacked a conditioned vertex-only quartet. It does not change the
+v1 semantic map or its original qualification baseline. Current aggregate
+coverage and evidence are recorded in
+[topology-aware exact-surface entheses v1](TOPOLOGY_AWARE_ENTHESES_V1.md).
+
 | Metric | Before | After |
 | --- | ---: | ---: |
 | distributed surface envelopes | 266 | 282 |

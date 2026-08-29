@@ -12,7 +12,7 @@ import xml.etree.ElementTree as ET
 import zipfile
 from collections import Counter, defaultdict, deque
 from dataclasses import dataclass
-from itertools import permutations, product
+from itertools import combinations, permutations, product
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -6967,7 +6967,11 @@ def _numi_human_tendon_surface_envelope(
         triangle = [vertices[index] for index in triangle_indices]
         closest, barycentric = _tendon_closest_point_on_triangle(source_point, triangle)
         squared = sum((closest[axis] - source_point[axis]) ** 2 for axis in range(3))
-        if nearest is None or squared < nearest[0]:
+        tolerance = max(1.0e-18, 1.0e-12 * max(squared, nearest[0] if nearest is not None else 0.0))
+        if (
+            nearest is None or squared < nearest[0] - tolerance
+            or (abs(squared - nearest[0]) <= tolerance and triangle_index < nearest[1])
+        ):
             nearest = (squared, triangle_index, closest, barycentric)
     if nearest is None:
         return None, "no_surface_triangle"
@@ -7023,9 +7027,50 @@ def _numi_human_tendon_surface_envelope(
                 geodesic[neighbour] = candidate
                 heapq.heappush(queue, (candidate, neighbour))
     candidates = [index for index, distance in enumerate(geodesic) if math.isfinite(distance)]
-    if len(candidates) < 4:
-        return None, "surface_patch_has_fewer_than_four_vertices"
     best: tuple[float, dict[str, Any]] | None = None
+
+    def consider_patch(
+        nodes: list[list[float]], node_vertex_indices: list[int],
+        method: str, node_surface_sources: list[dict[str, Any]] | None = None,
+    ) -> None:
+        nonlocal best
+        patch_radius = max(math.sqrt(sum(
+            (node[axis] - closest_point[axis]) ** 2 for axis in range(3)
+        )) for node in nodes)
+        if patch_radius > maximum_patch_radius_m + 1.0e-12:
+            return
+        mapped = _tendon_envelope_force_maps(source_point, nodes, patch_radius)
+        if mapped is None:
+            return
+        maps, metrics = mapped
+        amplification = metrics["sampled_total_force_amplification"]
+        if (
+            metrics["force_residual"] > 2.0e-6
+            or metrics["moment_residual_m"] > 2.0e-8
+            or amplification > maximum_force_amplification
+        ):
+            return
+        score = amplification + 0.05 * metrics["l2_force_amplification"]
+        record = {
+            "body_index": surface["body_index"],
+            "bone_stable_id": surface["stable_id"],
+            "bone_member_id": surface["member_id"],
+            "source_triangle_index": source_triangle_index,
+            "nearest_barycentric": barycentric,
+            "nearest_local_point_m": closest_point,
+            "node_vertex_indices": node_vertex_indices,
+            "node_local_points_m": nodes,
+            "surface_patch_method": method,
+            "force_maps": maps,
+            "surface_distance_m": surface_distance,
+            "patch_radius_m": patch_radius,
+            **metrics,
+        }
+        if node_surface_sources is not None:
+            record["node_surface_sources"] = node_surface_sources
+        if best is None or score < best[0]:
+            best = (score, record)
+
     radii = sorted(set(min(maximum_patch_radius_m, value) for value in (0.006, 0.009, 0.012, 0.016)))
     for radius in radii:
         if radius < 0.003:
@@ -7062,38 +7107,141 @@ def _numi_human_tendon_surface_envelope(
             if not valid:
                 continue
             nodes = [vertices[index] for index in selected]
-            patch_radius = max(math.sqrt(sum(
-                (node[axis] - closest_point[axis]) ** 2 for axis in range(3)
-            )) for node in nodes)
-            mapped = _tendon_envelope_force_maps(source_point, nodes, patch_radius)
-            if mapped is None:
-                continue
-            maps, metrics = mapped
-            amplification = metrics["sampled_total_force_amplification"]
-            if (
-                metrics["force_residual"] > 2.0e-6
-                or metrics["moment_residual_m"] > 2.0e-8
-                or amplification > maximum_force_amplification
-            ):
-                continue
-            score = amplification + 0.05 * metrics["l2_force_amplification"]
-            record = {
-                "body_index": surface["body_index"],
-                "bone_stable_id": surface["stable_id"],
-                "bone_member_id": surface["member_id"],
+            consider_patch(
+                nodes, selected, "connected_geodesic_compass_vertices",
+            )
+
+    # Some source meshes are locally coarse or terminate at a small bone tip,
+    # so a valid surface neighborhood can contain fewer than four mesh
+    # vertices or fail the compass heuristic.  Build a bounded deterministic
+    # quadrature pool without changing the surface: virtual candidates are
+    # exact barycentric points on the already-selected source triangle and all
+    # other candidates are vertices in its connected geodesic neighborhood.
+    # NHTENDON2 consumes positions and maps, not vertex indices, so this is an
+    # offline force-transfer discretization rather than geometry mutation.
+    topology_candidate_count = 0
+    if best is None:
+        topology_candidates: list[dict[str, Any]] = []
+
+        def add_topology_candidate(
+            point: list[float], source: dict[str, Any], vertex_index: int | None = None,
+        ) -> None:
+            radius = math.sqrt(sum(
+                (point[axis] - closest_point[axis]) ** 2 for axis in range(3)
+            ))
+            if radius > maximum_patch_radius_m + 1.0e-12:
+                return
+            if any(sum(
+                (point[axis] - candidate["point"][axis]) ** 2 for axis in range(3)
+            ) <= 1.0e-18 for candidate in topology_candidates):
+                return
+            topology_candidates.append({
+                "point": list(point),
+                "source": source,
+                "vertex_index": vertex_index,
+            })
+
+        add_topology_candidate(
+            closest_point,
+            {
+                "kind": "seed_triangle_barycentric",
                 "source_triangle_index": source_triangle_index,
-                "nearest_barycentric": barycentric,
-                "nearest_local_point_m": closest_point,
-                "node_vertex_indices": selected,
-                "node_local_points_m": nodes,
-                "force_maps": maps,
-                "surface_distance_m": surface_distance,
-                "patch_radius_m": patch_radius,
-                **metrics,
-            }
-            if best is None or score < best[0]:
-                best = (score, record)
-    return (best[1], "admitted") if best is not None else (None, "surface_patch_conditioning_failed")
+                "barycentric": barycentric,
+            },
+        )
+        seed_values = [a, b, c]
+        for local_vertex, vertex_index in enumerate(seed_triangle):
+            vertex = vertices[vertex_index]
+            delta = [vertex[axis] - closest_point[axis] for axis in range(3)]
+            length = math.sqrt(sum(value * value for value in delta))
+            if length <= 1.0e-12:
+                continue
+            fraction = min(1.0, 0.82 * maximum_patch_radius_m / length)
+            weights = [(1.0 - fraction) * value for value in barycentric]
+            weights[local_vertex] += fraction
+            point = [
+                sum(weights[index] * seed_values[index][axis] for index in range(3))
+                for axis in range(3)
+            ]
+            add_topology_candidate(
+                point,
+                {
+                    "kind": "seed_triangle_barycentric",
+                    "source_triangle_index": source_triangle_index,
+                    "barycentric": weights,
+                },
+                vertex_index if fraction == 1.0 else None,
+            )
+        fixed_barycentric = (
+            (1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0),
+            (0.5, 0.5, 0.0), (0.0, 0.5, 0.5), (0.5, 0.0, 0.5),
+        )
+        for weights in fixed_barycentric:
+            point = [
+                sum(weights[index] * seed_values[index][axis] for index in range(3))
+                for axis in range(3)
+            ]
+            add_topology_candidate(
+                point,
+                {
+                    "kind": "seed_triangle_barycentric",
+                    "source_triangle_index": source_triangle_index,
+                    "barycentric": list(weights),
+                },
+            )
+
+        eligible_vertices = [
+            index for index in candidates
+            if geodesic[index] <= maximum_patch_radius_m
+        ]
+        directional_vertices: list[int] = []
+        for direction_index in range(8):
+            angle = 0.25 * math.pi * direction_index
+            direction = (math.cos(angle), math.sin(angle))
+            ranked = []
+            for index in eligible_vertices:
+                delta = [vertices[index][axis] - closest_point[axis] for axis in range(3)]
+                x = sum(delta[axis] * tangent0[axis] for axis in range(3))
+                y = sum(delta[axis] * tangent1[axis] for axis in range(3))
+                ranked.append((x * direction[0] + y * direction[1], -geodesic[index], -index, index))
+            if ranked:
+                directional_vertices.append(max(ranked)[3])
+        directional_vertices.extend(sorted(
+            eligible_vertices,
+            key=lambda index: (-geodesic[index], index),
+        )[:2])
+        for index in directional_vertices:
+            add_topology_candidate(
+                vertices[index], {"kind": "connected_bone_vertex", "vertex_index": index}, index,
+            )
+
+        # Cap the fallback at 14 points (1001 four-point combinations).  The
+        # order above is stable and favors the nearest triangle before broader
+        # connected-surface extrema.
+        topology_candidates = topology_candidates[:14]
+        topology_candidate_count = len(topology_candidates)
+        for selected_candidates in combinations(topology_candidates, 4):
+            nodes = [candidate["point"] for candidate in selected_candidates]
+            vertex_indices = [candidate["vertex_index"] for candidate in selected_candidates]
+            consider_patch(
+                nodes,
+                [int(index) for index in vertex_indices]
+                if all(index is not None for index in vertex_indices) else [],
+                "connected_geodesic_topology_aware_exact_surface_points",
+                [candidate["source"] for candidate in selected_candidates],
+            )
+    if best is not None:
+        reason = (
+            "admitted_topology_aware_exact_surface_patch"
+            if best[1]["surface_patch_method"] == "connected_geodesic_topology_aware_exact_surface_points"
+            else "admitted"
+        )
+        return best[1], reason
+    return None, (
+        "surface_patch_has_fewer_than_four_exact_surface_points"
+        if topology_candidate_count < 4
+        else "surface_patch_conditioning_failed_after_topology_aware_exact_surface_points"
+    )
 
 
 def _numi_human_semantic_enthesis_envelope(
@@ -7150,7 +7298,11 @@ def _numi_human_semantic_enthesis_envelope(
             squared = sum(
                 (closest[axis] - source_point[axis]) ** 2 for axis in range(3)
             )
-            if nearest is None or squared < nearest[0]:
+            tolerance = max(1.0e-18, 1.0e-12 * max(squared, nearest[0] if nearest is not None else 0.0))
+            if (
+                nearest is None or squared < nearest[0] - tolerance
+                or (abs(squared - nearest[0]) <= tolerance and triangle_index < nearest[1])
+            ):
                 nearest = (squared, triangle_index, closest, barycentric)
         if nearest is None:
             return None, "semantic_enthesis_map_has_no_surface_triangle"
@@ -7317,6 +7469,8 @@ def numi_human_tendon_attachment_envelope_payload(
     semantic_toe_enthesis_count = 0
     semantic_limb_enthesis_count = 0
     semantic_axial_enthesis_count = 0
+    compass_vertex_envelope_count = 0
+    topology_aware_exact_surface_envelope_count = 0
     for muscle_index, (record, muscle_metadata) in enumerate(zip(muscles, metadata, strict=True)):
         route_offset, count = record[1], record[2]
         name = muscle_metadata.get("name") if isinstance(muscle_metadata, dict) else None
@@ -7396,6 +7550,10 @@ def numi_human_tendon_attachment_envelope_payload(
                 ))
                 admitted_distances.append(envelope["surface_distance_m"])
                 admitted_amplifications.append(envelope["sampled_total_force_amplification"])
+                if envelope.get("surface_patch_method") == "connected_geodesic_compass_vertices":
+                    compass_vertex_envelope_count += 1
+                elif envelope.get("surface_patch_method") == "connected_geodesic_topology_aware_exact_surface_points":
+                    topology_aware_exact_surface_envelope_count += 1
                 if "semantic_enthesis_map" in envelope:
                     if semantic_key in _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS:
                         semantic_toe_enthesis_count += 1
@@ -7416,6 +7574,14 @@ def numi_human_tendon_attachment_envelope_payload(
                         "sampled_total_force_amplification",
                     )
                 }
+                if "surface_patch_method" in envelope:
+                    surface_manifest["surface_patch_method"] = envelope[
+                        "surface_patch_method"
+                    ]
+                if "node_surface_sources" in envelope:
+                    surface_manifest["node_surface_sources"] = envelope[
+                        "node_surface_sources"
+                    ]
                 if "semantic_enthesis_map" in envelope:
                     surface_manifest["semantic_enthesis_map"] = envelope[
                         "semantic_enthesis_map"
@@ -7470,6 +7636,7 @@ def numi_human_tendon_attachment_envelope_payload(
         "admission": {
             "method": (
                 "single_named_NHBONES1_member_exact_nearest_triangle_connected_surface_patch_"
+                "with_deterministic_topology_aware_exact_triangle_quadrature_fallback_"
                 "or_explicit_same_body_semantic_member_map_minimum_L2_wrench_distribution"
             ),
             "maximum_surface_distance_m": maximum_surface_distance_m,
@@ -7521,6 +7688,8 @@ def numi_human_tendon_attachment_envelope_payload(
             "semantic_toe_enthesis_envelope_count": semantic_toe_enthesis_count,
             "semantic_limb_enthesis_envelope_count": semantic_limb_enthesis_count,
             "semantic_axial_enthesis_envelope_count": semantic_axial_enthesis_count,
+            "compass_vertex_envelope_count": compass_vertex_envelope_count,
+            "topology_aware_exact_surface_envelope_count": topology_aware_exact_surface_envelope_count,
             "source_site_point_fallback_count": point_count,
             "surface_coverage_fraction": admitted_count / len(endpoint_payload),
             "maximum_endpoint_migration_m": 0.0,
@@ -7538,6 +7707,8 @@ def numi_human_tendon_attachment_envelope_payload(
             "Admitted envelopes are simulation-inferred from the source-pinned BodyParts3D/MyoSim registration and strict "
             "distance/conditioning gates. They are not source-authored enthesis coordinates, a deformable tendon continuum, "
             "a clinical attachment certificate, or permission to migrate an OpenSim/MyoSim route endpoint. The four-node "
+            "topology-aware fallback uses exact points on the selected source triangle or vertices in its connected surface; "
+            "it is a force-transfer discretization and does not warp, refine, or relabel anatomy. The four-node "
             "EDL/FDL map distributes one lumped source law; it does not claim four independently actuated toe muscles. "
             "The bilateral hip/tibia/fibula member assignments resolve only which exact source bone on an already-owned "
             "rigid body receives the unchanged endpoint wrench. The thoracic assignments likewise resolve only explicit "

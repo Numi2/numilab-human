@@ -1,5 +1,28 @@
 # NumiLab Human visual progress
 
+## Topology-aware exact-surface entheses — 2026-08-29
+
+<p align="center">
+  <img src="media/numi-human-topology-aware-entheses-v1-2048/right-upper-arm-diagnostic-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-41-oblique.png" width="24%" alt="Topology-aware upper-arm transfer patches" />
+  <img src="media/numi-human-topology-aware-entheses-v1-2048/right-femur-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-131-front.png" width="24%" alt="Topology-aware femoral transfer patches" />
+  <img src="media/numi-human-topology-aware-entheses-v1-2048/right-shank-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-136-front.png" width="24%" alt="Topology-aware shank transfer patches, front" />
+  <img src="media/numi-human-topology-aware-entheses-v1-2048/right-shank-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-136-rear.png" width="24%" alt="Topology-aware shank transfer patches, rear" />
+</p>
+
+A deterministic exact-triangle/connected-surface quadrature recovers 82 of 91
+previous sparse or ill-conditioned patches without changing bone identity,
+route sites, distance limits, or force amplification. Distributed coverage is
+now 364/832 with 468 explicit point laws. The M4 Pro executes 26,624 endpoint
+transfers with same-command-buffer consumption, rollback, and bitwise replay.
+
+The 12 four-angle frames were inspected directly. Warm patches lie on the
+named humerus, femur, tibia, and fibula surfaces, while some cyan routes still
+expose an opposite endpoint that belongs to the separate distance/semantic
+fallback backlog. These are mechanics diagnostics rather than realistic
+muscle/skin presentation. See the
+[topology-aware enthesis record](TOPOLOGY_AWARE_ENTHESES_V1.md) and the
+[completion gap ledger](HUMAN_COMPLETION_GAP_LEDGER.md).
+
 ## Source-named thoracic vertebra and rib entheses — 2026-08-29
 
 <p align="center">
