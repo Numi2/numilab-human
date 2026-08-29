@@ -43,9 +43,9 @@ derivatives; all other raw or derived source artifacts remain local. See
 
 ## Visual progress
 
-The current lead adds 40 bilateral, force-conserving hip/tibia/fibula surface
-entheses for major lower-limb routes and validates their actual transfer
-footprints at 2048 px on Apple M4 Pro. The coherent elbows, wrists, hands,
+The current lead adds 16 force-conserving thoracic-vertebra/rib envelopes on
+top of the 40 bilateral hip/tibia/fibula surface entheses and validates their
+actual transfer footprints at 2048 px on Apple M4 Pro. The coherent elbows, wrists, hands,
 fingers, knees, feet, and all five toe chains remain unchanged. The source meshes
 retain one BodyParts3D rest arrangement per limb while the existing MyoSim
 articulation is preserved; fail-closed gates cover 82 declared limb
@@ -61,7 +61,9 @@ Neither set is a photorealistic skin render: the clean gallery reviews source
 surface continuity, while the diagnostic proves that force terminates on the
 actual transfer program rather than a floating decorative tendon. See
 [visual progress](Docs/VISUAL_PROGRESS.md) and the
-[semantic-limb enthesis record](Docs/SEMANTIC_LIMB_ENTHESES_V1.md).
+[semantic axial enthesis record](Docs/SEMANTIC_AXIAL_ENTHESES_V1.md). The
+[completion gap ledger](Docs/HUMAN_COMPLETION_GAP_LEDGER.md) keeps mechanics,
+materials, contact, control, and validation gaps independently visible.
 
 The exposed source anatomy is used to inspect muscles and tendons against
 named bones. The BodyParts3D exterior remains a static source mesh only: it
@@ -113,14 +115,15 @@ to an adjacent toe. Exact maximum inter-bone source gaps are 0.727 mm right and
 
 `NHTENDON2` gives all 832 origin/insertion endpoints a fail-closed
 tendon-to-bone law without moving an authored route site. After restoring the
-source-coherent limb anatomy and resolving exact same-body hip/tibia/fibula
-ownership, 266 endpoints admit distributed BodyParts3D bone-surface envelopes
-and 566 remain explicit body-owned source-point laws (31.97% surface coverage).
+source-coherent anatomy and resolving exact same-body hip/tibia/fibula plus
+source-named thoracic vertebra/rib ownership, 282 endpoints admit distributed
+BodyParts3D bone-surface envelopes and 550 remain explicit body-owned
+source-point laws (33.89% surface coverage).
 The owning Metal route kernel publishes its exact
 wrapped terminal directions, and a second Metal pass distributes those forces
 while conserving their resultant and source-point moment. The coherent-body
 Apple M4 Pro replay transferred all endpoints through 16 assisted and 16
-assistance-removed steps (26,624 transfers), with 8,512 envelope and 18,112
+assistance-removed steps (26,624 transfers), with 9,024 envelope and 17,600
 point transfers, maximum residuals of `6.824e-5 N` and `1.863e-6 N m`,
 rollback preservation, and bitwise replay. The remaining fallback count stays
 visible: the older

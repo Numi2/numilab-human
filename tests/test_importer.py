@@ -33,6 +33,7 @@ from numilab_human.model import (
     _NUMI_HUMAN_TOE_RIGID_CHAINS,
     _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS,
     _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS,
+    _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS,
     _NUMI_HUMAN_SEMANTIC_ENTHESIS_MEMBERS,
     _bodyparts_primary_bone_attachment_weights,
     _bodyparts_bounded_vertex_gap,
@@ -287,7 +288,8 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(
             len(_NUMI_HUMAN_SEMANTIC_ENTHESIS_MEMBERS),
             len(_NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS)
-            + len(_NUMI_HUMAN_TOE_ENTHESIS_MEMBERS),
+            + len(_NUMI_HUMAN_TOE_ENTHESIS_MEMBERS)
+            + len(_NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS),
         )
         self.assertEqual(
             _numi_human_semantic_enthesis_kind(("addlong_r", 0), 1),
@@ -296,6 +298,59 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(
             _numi_human_semantic_enthesis_kind(("bflh_r", 1), 1),
             "single_named_tibia_or_fibula_member",
+        )
+
+    def test_source_named_thoracic_routes_select_exact_vertebrae_and_ribs(self) -> None:
+        self.assertEqual(len(_NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS), 80)
+        self.assertFalse(
+            set(_NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS)
+            & (
+                set(_NUMI_HUMAN_TOE_ENTHESIS_MEMBERS)
+                | set(_NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS)
+            )
+        )
+        anchors_by_member = {
+            anchor["member_id"]: anchor
+            for anchor in _BODYPARTS_MYOSIM_BONE_ANCHORS
+        }
+        for members in _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS.values():
+            self.assertEqual(len(members), 1)
+            self.assertEqual(
+                anchors_by_member[members[0]]["myosim_body"],
+                "torso",
+            )
+        self.assertEqual(
+            _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS[("LTpT_T1_r", 1)],
+            ("FJ3158",),
+        )
+        self.assertEqual(
+            _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS[("LTpT_T12_l", 1)],
+            ("FJ3156",),
+        )
+        self.assertEqual(
+            _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS[("IL_R5_r", 1)],
+            ("FJ3342",),
+        )
+        self.assertEqual(
+            _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS[("LTpT_R11_l", 1)],
+            ("FJ3226",),
+        )
+        self.assertEqual(
+            _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS[("QL_mid_L2-12.1_l", 1)],
+            ("FJ3227",),
+        )
+        self.assertEqual(
+            _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS[("QL_ant_I.2-T12_r", 1)],
+            ("FJ3156",),
+        )
+        self.assertNotIn(("EO1_r", 1), _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS)
+        self.assertEqual(
+            _numi_human_semantic_enthesis_kind(("LTpT_T4_r", 1), 1),
+            "single_named_thoracic_vertebra_member",
+        )
+        self.assertEqual(
+            _numi_human_semantic_enthesis_kind(("IL_R6_l", 1), 1),
+            "single_named_lateralized_rib_member",
         )
 
     def test_hallux_routes_and_visual_source_sheets_remain_one_to_one(self) -> None:

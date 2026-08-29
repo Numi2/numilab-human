@@ -3770,9 +3770,83 @@ _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS = {
         )
     },
 }
+
+
+# MyoSim's torso collapses the thoracic cage into one rigid body, while its
+# source route identifiers retain the exact thoracic vertebra or rib level.
+# BodyParts3D keeps those bones as separate named members on that same body.
+# Resolve only identities that are explicit in both pinned sources: ``Tn`` is
+# thoracic vertebra n, ``Rn`` is the same-side rib n, QL ``12.1``--``12.3``
+# labels terminate on the same-side twelfth rib, and QL ``T12`` terminates on
+# the twelfth thoracic vertebra. Abdominal-wall routes such as EO/IO do not
+# name a unique bony member and remain point-owned.
+_NUMI_HUMAN_THORACIC_VERTEBRA_ENTHESIS_MEMBER_IDS = {
+    1: "FJ3158", 2: "FJ3160", 3: "FJ3163", 4: "FJ3166",
+    5: "FJ3169", 6: "FJ3171", 7: "FJ3173", 8: "FJ3174",
+    9: "FJ3175", 10: "FJ3154", 11: "FJ3155", 12: "FJ3156",
+}
+_NUMI_HUMAN_RIB_ENTHESIS_MEMBER_IDS = {
+    "r": {
+        1: "FJ3334", 2: "FJ3336", 3: "FJ3338", 4: "FJ3340",
+        5: "FJ3342", 6: "FJ3344", 7: "FJ3346", 8: "FJ3347",
+        9: "FJ3348", 10: "FJ3330", 11: "FJ3331", 12: "FJ3332",
+    },
+    "l": {
+        1: "FJ3228", 2: "FJ3229", 3: "FJ3230", 4: "FJ3231",
+        5: "FJ3232", 6: "FJ3233", 7: "FJ3234", 8: "FJ3235",
+        9: "FJ3236", 10: "FJ3225", 11: "FJ3226", 12: "FJ3227",
+    },
+}
+_NUMI_HUMAN_TWELFTH_RIB_ENTHESIS_ENDPOINTS = {
+    "QL_ant_I.2-12.1": {"r": 1, "l": 1},
+    "QL_ant_I.3-12.1": {"r": 1, "l": 1},
+    "QL_ant_I.3-12.2": {"r": 1, "l": 1},
+    "QL_ant_I.3-12.3": {"r": 1, "l": 1},
+    # The mirrored source lists one L2-to-12.1 route in reverse endpoint
+    # order; keep the compiled endpoint ordinal rather than normalizing it.
+    "QL_mid_L2-12.1": {"r": 0, "l": 1},
+    "QL_mid_L3-12.1": {"r": 0, "l": 0},
+    "QL_mid_L3-12.2": {"r": 0, "l": 0},
+    "QL_mid_L3-12.3": {"r": 0, "l": 0},
+    "QL_mid_L4-12.3": {"r": 0, "l": 0},
+}
+_NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS = {
+    **{
+        (f"LTpT_T{level}_{side}", 1): (member_id,)
+        for level, member_id in (
+            _NUMI_HUMAN_THORACIC_VERTEBRA_ENTHESIS_MEMBER_IDS.items()
+        )
+        for side in ("r", "l")
+    },
+    **{
+        (f"{family}_R{level}_{side}", 1): (
+            _NUMI_HUMAN_RIB_ENTHESIS_MEMBER_IDS[side][level],
+        )
+        for family, levels in (("IL", range(5, 13)), ("LTpT", range(4, 13)))
+        for level in levels
+        for side in ("r", "l")
+    },
+    **{
+        (f"{base}_{side}", endpoints[side]): (
+            _NUMI_HUMAN_RIB_ENTHESIS_MEMBER_IDS[side][12],
+        )
+        for base, endpoints in (
+            _NUMI_HUMAN_TWELFTH_RIB_ENTHESIS_ENDPOINTS.items()
+        )
+        for side in ("r", "l")
+    },
+    **{
+        (f"{base}_{side}", 1): (
+            _NUMI_HUMAN_THORACIC_VERTEBRA_ENTHESIS_MEMBER_IDS[12],
+        )
+        for base in ("QL_ant_I.2-T12", "QL_ant_I.3-T12")
+        for side in ("r", "l")
+    },
+}
 _NUMI_HUMAN_SEMANTIC_ENTHESIS_MEMBERS = {
     **_NUMI_HUMAN_TOE_ENTHESIS_MEMBERS,
     **_NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS,
+    **_NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS,
 }
 
 
@@ -3790,6 +3864,13 @@ def _numi_human_semantic_enthesis_kind(
             "single_named_bilateral_hip_member"
             if member in {"FJ3152", "FJ3288"}
             else "single_named_tibia_or_fibula_member"
+        )
+    if key in _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS:
+        member = _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS[key][0]
+        return (
+            "single_named_thoracic_vertebra_member"
+            if member in _NUMI_HUMAN_THORACIC_VERTEBRA_ENTHESIS_MEMBER_IDS.values()
+            else "single_named_lateralized_rib_member"
         )
     raise ImportError(f"Numi Human semantic enthesis key is not declared: {key}")
 
@@ -7147,8 +7228,9 @@ def numi_human_tendon_attachment_envelope_payload(
     Automatic admission is deliberately limited to a body with exactly one
     registered NHBONES1 member. Multi-member exceptions require an exact
     source-pinned semantic table: hallux routes remain one-to-one, a lumped
-    EDL/FDL terminal wrench spans four named lesser-toe distal phalanges, and
-    bilateral hip/tibia/fibula routes select one declared same-body member.
+    EDL/FDL terminal wrench spans four named lesser-toe distal phalanges,
+    bilateral hip/tibia/fibula routes select one declared same-body member,
+    and source-named thoracic routes select their exact vertebra or rib.
     Every other multi-bone body, absent geometry, distant surface, or
     ill-conditioned patch remains an explicit source-site point law. No
     authored MyoSim site, route, path length, or force parameter is changed by
@@ -7234,6 +7316,7 @@ def numi_human_tendon_attachment_envelope_payload(
     admitted_amplifications: list[float] = []
     semantic_toe_enthesis_count = 0
     semantic_limb_enthesis_count = 0
+    semantic_axial_enthesis_count = 0
     for muscle_index, (record, muscle_metadata) in enumerate(zip(muscles, metadata, strict=True)):
         route_offset, count = record[1], record[2]
         name = muscle_metadata.get("name") if isinstance(muscle_metadata, dict) else None
@@ -7318,6 +7401,8 @@ def numi_human_tendon_attachment_envelope_payload(
                         semantic_toe_enthesis_count += 1
                     elif semantic_key in _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS:
                         semantic_limb_enthesis_count += 1
+                    elif semantic_key in _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS:
+                        semantic_axial_enthesis_count += 1
                     else:
                         raise ImportError(
                             f"Numi Human admitted undeclared semantic enthesis {semantic_key}"
@@ -7392,8 +7477,9 @@ def numi_human_tendon_attachment_envelope_payload(
             "maximum_sampled_total_force_amplification": maximum_force_amplification,
             "multiple_bone_members_fail_closed": True,
             "multiple_bone_exception": (
-                "only exact source-pinned toe maps and declared bilateral hip/tibia/fibula "
-                "route-member maps are admitted; all other multi-bone bodies fail closed"
+                "only exact source-pinned toe maps, declared bilateral hip/tibia/fibula "
+                "route-member maps, and source-named thoracic vertebra/rib maps are admitted; "
+                "all other multi-bone bodies fail closed"
             ),
             "toe_semantic_enthesis_map": {
                 f"{muscle}:{endpoint}": list(members)
@@ -7412,6 +7498,17 @@ def numi_human_tendon_attachment_envelope_payload(
                     _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS.items()
                 )
             },
+            "axial_semantic_enthesis_map": {
+                f"{muscle}:{endpoint}": {
+                    "bone_member_ids": list(members),
+                    "kind": _numi_human_semantic_enthesis_kind(
+                        (muscle, endpoint), len(members),
+                    ),
+                }
+                for (muscle, endpoint), members in sorted(
+                    _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS.items()
+                )
+            },
             "maximum_toe_semantic_spread_m": _NUMI_HUMAN_TOE_ENTHESIS_MAXIMUM_SPREAD_M,
             "source_endpoint_migration_m": 0.0,
             "rejection_counts": dict(sorted(rejection_counts.items())),
@@ -7423,6 +7520,7 @@ def numi_human_tendon_attachment_envelope_payload(
             "registered_bone_distributed_envelope_count": admitted_count,
             "semantic_toe_enthesis_envelope_count": semantic_toe_enthesis_count,
             "semantic_limb_enthesis_envelope_count": semantic_limb_enthesis_count,
+            "semantic_axial_enthesis_envelope_count": semantic_axial_enthesis_count,
             "source_site_point_fallback_count": point_count,
             "surface_coverage_fraction": admitted_count / len(endpoint_payload),
             "maximum_endpoint_migration_m": 0.0,
@@ -7442,7 +7540,9 @@ def numi_human_tendon_attachment_envelope_payload(
             "a clinical attachment certificate, or permission to migrate an OpenSim/MyoSim route endpoint. The four-node "
             "EDL/FDL map distributes one lumped source law; it does not claim four independently actuated toe muscles. "
             "The bilateral hip/tibia/fibula member assignments resolve only which exact source bone on an already-owned "
-            "rigid body receives the unchanged endpoint wrench; they are not source-authored or clinical enthesis areas."
+            "rigid body receives the unchanged endpoint wrench. The thoracic assignments likewise resolve only explicit "
+            "MyoSim Tn/Rn/QL-12 labels to exact same-body BodyParts3D vertebrae or ribs. These mappings are not "
+            "source-authored or clinical enthesis areas."
         ),
     }
     write_json(output / "numi-human-tendon-attachments.manifest.json", manifest_value)

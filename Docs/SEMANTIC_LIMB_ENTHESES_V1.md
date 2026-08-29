@@ -41,6 +41,10 @@ remaining 50 declared limb correspondences stay point-owned because their
 distance or patch-conditioning gate fails. No threshold was relaxed to raise
 the headline count.
 
+The subsequent [source-named thoracic increment](SEMANTIC_AXIAL_ENTHESES_V1.md)
+raises current distributed coverage to 282 and reduces point laws to 550. The
+266/566 values in this record remain the semantic-limb baseline.
+
 ## Apple M4 Pro qualification
 
 The 512 px whole-body smoke ran the existing assisted and assistance-removed

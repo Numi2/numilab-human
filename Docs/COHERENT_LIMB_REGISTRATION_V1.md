@@ -96,8 +96,10 @@ registration or calibrated enthesis model is available.
 
 The subsequent [semantic same-body limb enthesis increment](SEMANTIC_LIMB_ENTHESES_V1.md)
 resolves exact hip/tibia/fibula member ownership without moving any endpoint,
-raising current distributed coverage to 266 and reducing point fallbacks to
-566. The 226/606 figures above remain the coherent-registration baseline.
+raising its distributed-coverage baseline to 266 and reducing point fallbacks
+to 566. The later [source-named thoracic increment](SEMANTIC_AXIAL_ENTHESES_V1.md)
+raises current coverage to 282/832 with 550 point laws. The 226/606 figures
+above remain the coherent-registration baseline.
 
 The red muscle/tendon sheets in these frames are exact BodyParts3D
 presentation surfaces with sparse kinematic route-body bindings. They are not

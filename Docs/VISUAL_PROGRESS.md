@@ -1,5 +1,22 @@
 # NumiLab Human visual progress
 
+## Source-named thoracic vertebra and rib entheses — 2026-08-29
+
+<p align="center">
+  <img src="media/numi-human-semantic-axial-entheses-v1-2048/right-thorax/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-front.png" width="24%" alt="Right thoracic routes and transfer footprints, front" />
+  <img src="media/numi-human-semantic-axial-entheses-v1-2048/right-thorax/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-oblique.png" width="24%" alt="Right thoracic routes and transfer footprints, oblique" />
+  <img src="media/numi-human-semantic-axial-entheses-v1-2048/right-thorax/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-side.png" width="24%" alt="Right thoracic routes and transfer footprints, side" />
+  <img src="media/numi-human-semantic-axial-entheses-v1-2048/right-thorax/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-rear.png" width="24%" alt="Right thoracic routes and transfer footprints, rear" />
+</p>
+
+Eighty exact MyoSim `Tn`, `Rn`, and quadratus-lumborum `12`/`T12` identities now
+select their same-body BodyParts3D vertebra or lateralized rib. Sixteen pass
+the unchanged geometry and force gates, raising distributed coverage to
+282/832 and leaving 550 exact point laws. The M4 Pro transaction completes
+26,624 transfers with bitwise replay and rollback. See the
+[semantic axial record](SEMANTIC_AXIAL_ENTHESES_V1.md) and the live
+[completion gap ledger](HUMAN_COMPLETION_GAP_LEDGER.md).
+
 ## Semantic hip, tibia, and fibula entheses — 2026-08-29
 
 <p align="center">
