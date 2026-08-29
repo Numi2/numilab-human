@@ -3947,10 +3947,14 @@ _NUMI_HUMAN_AXIAL_CONTINUITY_MAXIMUM_GAP_M = 0.008
 # Default-pose source-surface transitions spanning the shoulder, elbow, and
 # wrist rigid-body boundaries.  The glenohumeral gates are deliberately tight
 # because the transformed BodyParts3D humeral heads already sit in their
-# glenoids.  The acromioclavicular and wrist gates admit normal joint space in
-# a bone-only source while rejecting the 16--30 mm gaps found in the 2026-08-29
-# multi-angle audit.  These remain visual proximity gates, not cartilage or
-# contact certificates.
+# glenoids.  The acromioclavicular and radial-carpal gates admit normal joint
+# space in a bone-only source while rejecting the 16--30 mm gaps found in the
+# 2026-08-29 multi-angle audit. The ulna does not directly contact the
+# triquetrum: the TFCC/articular disc and meniscus homologue occupy that named
+# ulnocarpal interval, and the pinned MyoSim source meshes measure 9.371 mm
+# bilaterally. Its 12 mm gate is therefore source-calibrated rather than a
+# relaxed radial-carpal threshold. These remain visual proximity gates, not
+# cartilage, TFCC, ligament, or contact certificates.
 _NUMI_HUMAN_UPPER_LIMB_CONTINUITY_TRANSITIONS = (
     ("right_clavicle_to_scapula", "FJ3362", "FJ3384", 0.012),
     ("right_scapula_to_humerus", "FJ3384", "FJ3368", 0.008),
@@ -3958,14 +3962,14 @@ _NUMI_HUMAN_UPPER_LIMB_CONTINUITY_TRANSITIONS = (
     ("right_humerus_to_radius", "FJ3368", "FJ3349", 0.006),
     ("right_radius_to_scaphoid", "FJ3349", "FJ3383", 0.007),
     ("right_radius_to_lunate", "FJ3349", "FJ3374", 0.007),
-    ("right_ulna_to_triquetrum", "FJ3391", "FJ3390", 0.007),
+    ("right_ulna_to_triquetrum", "FJ3391", "FJ3390", 0.012),
     ("left_clavicle_to_scapula", "FJ3237", "FJ3279", 0.012),
     ("left_scapula_to_humerus", "FJ3279", "FJ3262", 0.008),
     ("left_humerus_to_ulna", "FJ3262", "FJ3286", 0.006),
     ("left_humerus_to_radius", "FJ3262", "FJ3277", 0.006),
     ("left_radius_to_scaphoid", "FJ3277", "FJ3278", 0.007),
     ("left_radius_to_lunate", "FJ3277", "FJ3268", 0.007),
-    ("left_ulna_to_triquetrum", "FJ3286", "FJ3285", 0.007),
+    ("left_ulna_to_triquetrum", "FJ3286", "FJ3285", 0.012),
 )
 
 
@@ -7215,10 +7219,13 @@ def _numi_human_tendon_surface_envelope(
                 vertices[index], {"kind": "connected_bone_vertex", "vertex_index": index}, index,
             )
 
-        # Cap the fallback at 14 points (1001 four-point combinations).  The
-        # order above is stable and favors the nearest triangle before broader
-        # connected-surface extrema.
-        topology_candidates = topology_candidates[:14]
+        # Retain the complete deterministic eight-direction surface stencil
+        # plus its two geodesic extrema. The former 14-point cap truncated the
+        # last directions and could lose an already-admitted enthesis after a
+        # proper rigid source-bone registration. Eighteen candidates bound the
+        # search to 3060 four-point combinations while preserving all exact
+        # surface/force gates.
+        topology_candidates = topology_candidates[:18]
         topology_candidate_count = len(topology_candidates)
         for selected_candidates in combinations(topology_candidates, 4):
             nodes = [candidate["point"] for candidate in selected_candidates]

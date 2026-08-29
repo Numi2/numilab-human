@@ -1,5 +1,29 @@
 # NumiLab Human visual progress
 
+## Bilateral source-mesh upper limbs and hands — 2026-08-29
+
+<p align="center">
+  <img src="media/numi-human-upper-limb-source-mesh-registration-v1-2048/right-hand-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-57-oblique.png" width="24%" alt="Source-mesh registered right hand" />
+  <img src="media/numi-human-upper-limb-source-mesh-registration-v1-2048/left-hand-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-107-side.png" width="24%" alt="Source-mesh registered left hand" />
+  <img src="media/numi-human-upper-limb-source-mesh-registration-v1-2048/right-elbow-wrist-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-43-front.png" width="24%" alt="Source-mesh registered right elbow and wrist" />
+  <img src="media/numi-human-upper-limb-source-mesh-registration-v1-2048/left-elbow-wrist-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-93-oblique.png" width="24%" alt="Source-mesh registered left elbow and wrist" />
+</p>
+
+Sixty bilateral humerus-to-finger BodyParts3D bones now use proper rigid fits to
+the pinned compiled MyoSim bone meshes. All 166 intended endpoint-distance
+gates, 45 prior-envelope preservation gates, and 52 default-pose continuity
+gates pass without moving a source site or adding finger articulation. The
+paired compiler raises distributed transfer coverage to 526/832; 306 exact
+point laws remain.
+
+All 16 hand/elbow/wrist frames were inspected directly at 2048 px. The five
+digit rays remain with each carpal block, radius and ulna remain continuous at
+the elbow and wrist, and rendered transfer fans terminate on their owning
+bones. The scapulae fail closed for a later landmark-constrained solve, and
+seven intended distal endpoints remain point laws because their patch
+conditioning fails. See the
+[source-mesh registration record](UPPER_LIMB_SOURCE_MESH_REGISTRATION_V1.md).
+
 ## Topology-aware exact-surface entheses — 2026-08-29
 
 <p align="center">

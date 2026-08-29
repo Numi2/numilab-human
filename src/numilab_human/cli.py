@@ -340,6 +340,41 @@ def bodyparts_registration_worklist(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def myosim_upper_limb_registration(arguments: argparse.Namespace) -> int:
+    exporter = arguments.python.expanduser().absolute()
+    if not exporter.is_file() or not os.access(exporter, os.X_OK):
+        raise ImportError(f"MyoSim upper-limb registration Python is unavailable: {exporter}")
+    output = arguments.output.resolve()
+    environment = dict(os.environ)
+    source_path = str(REPOSITORY_ROOT / "src")
+    environment["PYTHONPATH"] = source_path + (
+        os.pathsep + environment["PYTHONPATH"] if environment.get("PYTHONPATH") else ""
+    )
+    command = [
+        str(exporter), "-m", "numilab_human.upper_limb_registration",
+        "--sources", str(arguments.sources.resolve()),
+        "--registration", str(arguments.registration.resolve()),
+        "--source-audit", str(arguments.source_audit.resolve()),
+        "--worklist", str(arguments.worklist.resolve()),
+        "--tendon-manifest", str(arguments.tendon_manifest.resolve()),
+        "--output", str(output),
+    ]
+    completed = subprocess.run(command, capture_output=True, text=True, check=False, env=environment)
+    if completed.returncode != 0:
+        detail = completed.stderr.strip() or completed.stdout.strip() or "no registration output"
+        raise ImportError(f"MyoSim upper-limb registration failed: {detail}")
+    candidate = read_json(output)
+    receipt = candidate.get("upper_limb_source_mesh_registration")
+    if (
+        candidate.get("schema") != "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2"
+        or not isinstance(receipt, dict)
+        or receipt.get("schema") != "numi.human.bodyparts3d-myosim-upper-limb-source-mesh-registration.v1"
+    ):
+        raise ImportError("MyoSim upper-limb registration wrote an unsupported schema")
+    print(f"wrote {output}")
+    return 0
+
+
 def myosim_probe(arguments: argparse.Namespace) -> int:
     artifact = arguments.artifact.resolve()
     manifest = read_json(artifact / "myosim-fullbody-reference.manifest.json")
@@ -976,6 +1011,21 @@ def parser() -> argparse.ArgumentParser:
     registration_worklist_parser.add_argument("--tendon-manifest", type=Path, required=True)
     registration_worklist_parser.add_argument("--output", type=Path, required=True)
     registration_worklist_parser.set_defaults(handler=bodyparts_registration_worklist)
+    upper_limb_registration_parser = commands.add_parser(
+        "myosim-upper-limb-registration",
+        help="propose bilateral source-mesh-constrained BodyParts3D humerus-to-finger registration",
+    )
+    upper_limb_registration_parser.add_argument("--sources", type=Path, required=True)
+    upper_limb_registration_parser.add_argument("--registration", type=Path, required=True)
+    upper_limb_registration_parser.add_argument("--source-audit", type=Path, required=True)
+    upper_limb_registration_parser.add_argument("--worklist", type=Path, required=True)
+    upper_limb_registration_parser.add_argument("--tendon-manifest", type=Path, required=True)
+    upper_limb_registration_parser.add_argument("--output", type=Path, required=True)
+    upper_limb_registration_parser.add_argument(
+        "--python", type=Path, default=Path(sys.executable),
+        help="Python environment with the pinned myo-sim checkout, NumPy, and MuJoCo installed",
+    )
+    upper_limb_registration_parser.set_defaults(handler=myosim_upper_limb_registration)
     myosim_probe_parser = commands.add_parser(
         "myosim-probe",
         help="run the native Core full-body muscle-reference probe against a compiled MyoSim artifact",

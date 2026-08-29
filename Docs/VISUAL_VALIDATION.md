@@ -1,8 +1,27 @@
 # Visual validation
 
+## Bilateral upper-limb source-mesh registration — 2026-08-29
+
+The current [16-frame upper-limb review](UPPER_LIMB_SOURCE_MESH_REGISTRATION_V1.md#direct-visual-review)
+loads the exact paired final `NHBONES1`/`NHTENDON2` hashes and isolates both
+hands plus both elbow-to-wrist chains in front, oblique, side, and rear cameras
+at 2048 px. Direct review confirms five coherent digit rays per hand, continuous
+carpal/forearm and elbow chains, and terminal transfer fans on the named bone
+surfaces. It also retains the unfavorable views where routes are occluded
+instead of selecting only presentation-friendly cameras.
+
+The Apple M4 Pro runs all 416 MyoSim paths during each selected 16-step capture.
+The hand captures select 31 source routes and render 57 right/60 left envelope
+records; the elbow/wrist captures select 17 routes and render 32 envelopes per
+side. The independent Metal reference and 64-step standing smoke transfer all
+832 endpoints with bitwise replay. These observations validate the rendered
+default pose and executable force-transfer pairing, not subject-specific
+registration, skin realism, deformable tendon, cartilage/TFCC contact, or
+stable standing; the standing report remains `balanced=false`.
+
 ## Tendon attachment v2 — 2026-08-28
 
-The current [four-angle tendon attachment review](VISUAL_PROGRESS.md#tendon-attachment-v2--2026-08-28)
+The earlier [four-angle tendon attachment review](VISUAL_PROGRESS.md#tendon-attachment-v2--2026-08-28)
 replaces the detached-looking calf close-up as the mechanical attachment lead.
 It loads `NHTENDON2` and renders its actual four-node transfer envelopes on the
 exact paired `NHBONES1` surfaces; no source endpoint is visually migrated and

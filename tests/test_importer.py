@@ -1118,6 +1118,14 @@ class ImporterTests(unittest.TestCase):
             self.assertIn(f"{side}_radius_to_scaphoid", names)
             self.assertIn(f"{side}_radius_to_lunate", names)
             self.assertIn(f"{side}_ulna_to_triquetrum", names)
+        gates = {
+            name: maximum
+            for name, _, _, maximum in _NUMI_HUMAN_UPPER_LIMB_CONTINUITY_TRANSITIONS
+        }
+        self.assertEqual(gates["right_radius_to_lunate"], 0.007)
+        self.assertEqual(gates["left_radius_to_scaphoid"], 0.007)
+        self.assertEqual(gates["right_ulna_to_triquetrum"], 0.012)
+        self.assertEqual(gates["left_ulna_to_triquetrum"], 0.012)
         self.assertEqual(
             _NUMI_HUMAN_UPPER_LIMB_COHERENT_ROOTS,
             {"r": "humerus_r", "l": "humerus_l"},

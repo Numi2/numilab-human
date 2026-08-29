@@ -43,34 +43,33 @@ derivatives; all other raw or derived source artifacts remain local. See
 
 ## Visual progress
 
-The current lead recovers 82 endpoints that were already close to the correct
-bone but rejected by sparse or ill-conditioned source topology. A deterministic
-exact-surface quadrature raises distributed tendon-to-bone coverage from
-282/832 to 364/832 without moving any authored endpoint or relaxing the 12 mm
-and force-amplification gates. Its actual transfer footprints were inspected
-from four angles at 2048 px on Apple M4 Pro. The coherent elbows, wrists, hands,
-fingers, knees, feet, and all five toe chains remain unchanged. The source meshes
-retain one BodyParts3D rest arrangement per limb while the existing MyoSim
-articulation is preserved; fail-closed gates cover 82 declared limb
-transitions. The pectoralis compiler also
-locks only the exact BodyParts3D humeral insertion band to the arm and keeps
-the broad abdominal/sternocostal origin on its thoracoabdominal route body;
-the inferior-origin gate rejects any residual humerus ownership. The clean
-views also show corrected hand chains and big-toe insertion surfaces, while
-the mechanical-anatomy diagnostics expose the unchanged MyoSim EHL/FHL route
-and four-node `NHTENDON2` transfer footprint on the exact distal hallux
-phalanx.
-Neither set is a photorealistic skin render: the clean gallery reviews source
-surface continuity, while the diagnostic proves that force terminates on the
-actual transfer program rather than a floating decorative tendon. See
-[visual progress](Docs/VISUAL_PROGRESS.md) and the
-[topology-aware enthesis record](Docs/TOPOLOGY_AWARE_ENTHESES_V1.md). The
-[completion gap ledger](Docs/HUMAN_COMPLETION_GAP_LEDGER.md) keeps mechanics,
-materials, contact, control, and validation gaps independently visible.
-The follow-on [source-bone proximity audit](Docs/SOURCE_BONE_PROXIMITY_V1.md)
-separates 256 genuine cross-source registration candidates from 159 routes
-that are not bone-adjacent even in MyoSim. This prevents false sacral entheses
-and focuses the next solve on 176 bilateral upper-limb and hand targets.
+The current lead rigidly registers 60 bilateral humerus-to-finger BodyParts3D
+bones to pinned compiled MyoSim source meshes while preserving every authored
+route site and the existing articulation. All 166 intended endpoint-distance
+gates, 45 prior-envelope preservation gates, and 52 shoulder/elbow/wrist/hand
+continuity gates pass. Recompiling the exact pair raises distributed
+tendon-to-bone coverage from 364/832 to 526/832 with zero endpoint migration,
+no prior loss, and unchanged 12 mm and force-amplification thresholds. The
+result ran through native Metal force/replay gates and 16 four-angle 2048 px
+inspection frames on Apple M4 Pro. See the
+[upper-limb source-mesh registration](Docs/UPPER_LIMB_SOURCE_MESH_REGISTRATION_V1.md),
+[visual progress](Docs/VISUAL_PROGRESS.md), and the
+[completion gap ledger](Docs/HUMAN_COMPLETION_GAP_LEDGER.md).
+
+<p align="center">
+  <img src="Docs/media/numi-human-upper-limb-source-mesh-registration-v1-2048/right-hand-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-57-oblique.png" width="24%" alt="Registered right hand and transfer routes" />
+  <img src="Docs/media/numi-human-upper-limb-source-mesh-registration-v1-2048/left-hand-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-107-side.png" width="24%" alt="Registered left hand and transfer routes" />
+  <img src="Docs/media/numi-human-upper-limb-source-mesh-registration-v1-2048/right-elbow-wrist-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-43-front.png" width="24%" alt="Registered right elbow and wrist" />
+  <img src="Docs/media/numi-human-upper-limb-source-mesh-registration-v1-2048/left-elbow-wrist-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-93-oblique.png" width="24%" alt="Registered left elbow and wrist" />
+</p>
+
+The ten scapular candidates remain fail-closed because a proper rigid fit
+cannot place every site within 12 mm. Seven intended distal targets also remain
+exact point laws because their four-node patches fail conditioning. The
+[source-bone proximity audit](Docs/SOURCE_BONE_PROXIMITY_V1.md) still prevents
+159 non-bone-adjacent routes from pulling anatomy toward fascia or aponeurosis.
+These diagnostics are not a photorealistic skin render or a deformable tendon
+continuum.
 
 The exposed source anatomy is used to inspect muscles and tendons against
 named bones. The BodyParts3D exterior remains a static source mesh only: it
@@ -121,23 +120,20 @@ to an adjacent toe. Exact maximum inter-bone source gaps are 0.727 mm right and
 0.629 mm left.
 
 `NHTENDON2` gives all 832 origin/insertion endpoints a fail-closed
-tendon-to-bone law without moving an authored route site. After restoring the
-source-coherent anatomy and resolving exact same-body hip/tibia/fibula plus
-source-named thoracic vertebra/rib ownership, then resolving sparse source
-topology without changing anatomy, 364 endpoints admit distributed
-BodyParts3D bone-surface envelopes and 468 remain explicit body-owned
-source-point laws (43.75% surface coverage).
+tendon-to-bone law without moving an authored route site. After source-coherent
+anatomy, semantic same-body ownership, topology-aware exact-surface search, and
+the bilateral source-mesh upper-limb registration, 526 endpoints admit
+distributed BodyParts3D bone-surface envelopes and 306 remain explicit
+body-owned source-point laws (63.22% surface coverage).
 The owning Metal route kernel publishes its exact
 wrapped terminal directions, and a second Metal pass distributes those forces
-while conserving their resultant and source-point moment. The coherent-body
-Apple M4 Pro replay transferred all endpoints through 16 assisted and 16
-assistance-removed steps (26,624 transfers), with 11,648 envelope and 14,976
-point transfers, maximum residuals of `1.9601e-4 N` and `1.8631e-6 N m`,
-rollback preservation, and bitwise replay. The remaining fallback count stays
-visible: the older
-independent mesh translations had hidden real BodyParts3D-to-MyoSim
-registration disagreement. See the
-[topology-aware exact-surface record](Docs/TOPOLOGY_AWARE_ENTHESES_V1.md).
+while conserving their resultant and source-point moment. The final Apple M4
+Pro smoke executes 32 assisted plus 32 zero-root-wrench steps: 53,248 terminal
+transfers, including 33,664 envelope and 19,584 point transfers, with maximum
+residuals of `1.25827e-4 N` and `1.86306e-6 N m` and bitwise replay. The
+standing controller still reports `balanced=false`; this is force-path/runtime
+evidence, not stable-standing qualification. See the
+[upper-limb registration record](Docs/UPPER_LIMB_SOURCE_MESH_REGISTRATION_V1.md).
 
 The first inferred bilateral Achilles surface candidate was deliberately not
 admitted: its current cross-source registration would move the six terminal
@@ -153,7 +149,8 @@ and the legacy [point/triangle analysis](Docs/TENDON_FORCE_TRANSFER.md).
   <img src="Docs/media/numi-human-tendon-step-transaction-v3-2048/anconeus/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-42-rear.png" width="24%" alt="Numi Human persistent anconeus tendon load transaction, rear" />
 </p>
 
-This Mac-mini run executes eight assisted and eight zero-root-wrench 100 us
+The earlier focused transaction capture above executes eight assisted and eight
+zero-root-wrench 100 us
 steps while Apple Metal reevaluates all 416 routes. It validates 13,312
 terminal loads, including 4,720 four-node envelopes, and preserves bitwise
 `q`/`v` identity against the output-only no-tendon path. The borrowed consumer,

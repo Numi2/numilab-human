@@ -2,7 +2,8 @@
 
 ## Decision closed
 
-The 468 current point fallbacks are not all BodyParts3D registration defects.
+At the time of this audit, the 468 point fallbacks were not all BodyParts3D
+registration defects.
 Before fitting another anatomy deformation, the importer now asks whether each
 authored terminal site is within the unchanged 12 mm gate of a mesh attached
 to the same body in the pinned MyoSim source model itself.
@@ -66,7 +67,12 @@ non-bone endpoints.
 
 ## Efficient next gate
 
-The next registration solve is restricted to the 176 bilateral upper-limb and
+The follow-on [upper-limb source-mesh registration](UPPER_LIMB_SOURCE_MESH_REGISTRATION_V1.md)
+has now admitted 159 of the 166 non-scapular targets and retained seven as
+conditioning-failed point laws. The ten scapular targets remain explicitly
+deferred. The audit partition below is preserved as the input rationale.
+
+The audited next registration solve was restricted to the 176 bilateral upper-limb and
 hand candidates. MyoSim's own Apache-2.0 bone meshes provide the mechanics-
 aligned correspondence authority; BodyParts3D remains the rendered anatomy.
 Promotion still requires:

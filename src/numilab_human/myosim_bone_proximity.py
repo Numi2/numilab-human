@@ -185,7 +185,9 @@ def _compiled_meshes_by_body(model: Any, mujoco: Any, np: Any) -> dict[int, list
         )
         rotation = _wxyz_rotation_matrix(model.geom_quat[geom_id], np)
         position = np.asarray(model.geom_pos[geom_id], dtype=float)
-        vertices = vertices @ rotation.T + position
+        # ``einsum`` avoids a NumPy 2.2/MuJoCo strided-view matmul warning
+        # observed on otherwise finite compiled mesh arrays.
+        vertices = np.einsum("ki,ji->kj", vertices, rotation) + position
         faces = np.asarray(
             model.mesh_face[face_address : face_address + face_count], dtype=int
         )
