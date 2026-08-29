@@ -94,16 +94,19 @@ and the fixed solve budget was 20 FGMRES iterations. Both the stand and fascia
 replayed bitwise; injected tendon and fascia rejection paths preserved their
 accepted states. The [exact transcript](media/numi-human-pectoralis-fascia-v1-2048/capture.transcript.txt),
 [mechanics manifest](media/numi-human-pectoralis-fascia-v1-2048/pectoralis-fascia.manifest.json),
-[axial continuity manifest](media/numi-human-pectoralis-fascia-v1-2048/axial-continuity.manifest.json),
+[body continuity manifest](media/numi-human-pectoralis-fascia-v1-2048/body-continuity.manifest.json),
 and [checksums](media/numi-human-pectoralis-fascia-v1-2048/checksums.sha256)
 are retained beside the frames.
 
-These are mechanics-shell inspection views. The six opaque red source muscle
-surfaces are intentionally hidden because a 0.6 mm coincident shell cannot be
-layered by the reference renderer without depth occlusion; no fake outward
-display offset is added. The faceted pale surface is therefore the actual
-326-node mechanics discretization, not a high-resolution anatomy or beauty
-render.
+The rendered fascia now uses the exact 15,971-vertex, 20,992-triangle
+BodyParts3D pectoralis presentation surfaces. Their displacement is mapped
+from the 326-node owning FEM mechanics mesh using four-nearest interpolation:
+13,501 supported vertices deform, the largest applied map distance is
+59.625 mm, and distant vertices remain at the exact undeformed source
+position. The 30 mm full-response and 60 mm fade bounds prevent the coarse
+regional tetrahedralization from dragging unrelated source anatomy. This is
+high-resolution presentation of a lower-resolution mechanics solution, not a
+claim that all 15,971 vertices own independent FEM state.
 
 ## Axial defect audit
 

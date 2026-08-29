@@ -21,6 +21,15 @@ from numilab_human.model import (
     _NUMI_HUMAN_HALLUX_RIGID_COMPOUNDS,
     _NUMI_HUMAN_AXIAL_CONTINUITY_TRANSITIONS,
     _NUMI_HUMAN_AXIAL_CONTINUITY_MAXIMUM_GAP_M,
+    _NUMI_HUMAN_UPPER_LIMB_CONTINUITY_TRANSITIONS,
+    _NUMI_HUMAN_UPPER_LIMB_COHERENT_ROOTS,
+    _NUMI_HUMAN_HAND_CONTINUITY_TRANSITIONS,
+    _NUMI_HUMAN_HAND_CONTINUITY_MAXIMUM_GAP_M,
+    _NUMI_HUMAN_KNEE_CONTINUITY_TRANSITIONS,
+    _NUMI_HUMAN_KNEE_CONTINUITY_MAXIMUM_GAP_M,
+    _NUMI_HUMAN_LOWER_LIMB_COHERENT_ROOTS,
+    _NUMI_HUMAN_FOOT_CONTINUITY_TRANSITIONS,
+    _NUMI_HUMAN_FOOT_CONTINUITY_MAXIMUM_GAP_M,
     _NUMI_HUMAN_TOE_RIGID_CHAINS,
     _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS,
     _bodyparts_primary_bone_attachment_weights,
@@ -897,6 +906,66 @@ class ImporterTests(unittest.TestCase):
         with self.assertRaisesRegex(HumanImportError, "axial continuity gate"):
             _bodyparts_bounded_vertex_gap(
                 [[0.0, 0.0, 0.0]], [[0.009, 0.0, 0.0]], 0.008, "fixture",
+            )
+
+    def test_upper_limb_continuity_uses_bilateral_shared_rigid_groups(self) -> None:
+        self.assertEqual(len(_NUMI_HUMAN_UPPER_LIMB_CONTINUITY_TRANSITIONS), 14)
+        names = [
+            name for name, _, _, _ in _NUMI_HUMAN_UPPER_LIMB_CONTINUITY_TRANSITIONS
+        ]
+        for side in ("right", "left"):
+            self.assertIn(f"{side}_scapula_to_humerus", names)
+            self.assertIn(f"{side}_humerus_to_ulna", names)
+            self.assertIn(f"{side}_humerus_to_radius", names)
+            self.assertIn(f"{side}_radius_to_scaphoid", names)
+            self.assertIn(f"{side}_radius_to_lunate", names)
+            self.assertIn(f"{side}_ulna_to_triquetrum", names)
+        self.assertEqual(
+            _NUMI_HUMAN_UPPER_LIMB_COHERENT_ROOTS,
+            {"r": "humerus_r", "l": "humerus_l"},
+        )
+        with self.assertRaisesRegex(HumanImportError, "upper-limb continuity gate"):
+            _bodyparts_bounded_vertex_gap(
+                [[0.0, 0.0, 0.0]], [[0.011, 0.0, 0.0]], 0.010,
+                "fixture", "upper-limb continuity",
+            )
+
+    def test_hand_and_knee_continuity_gates_are_bilateral_and_fail_closed(self) -> None:
+        self.assertEqual(len(_NUMI_HUMAN_HAND_CONTINUITY_TRANSITIONS), 38)
+        self.assertEqual(_NUMI_HUMAN_HAND_CONTINUITY_MAXIMUM_GAP_M, 0.004)
+        self.assertEqual(len(_NUMI_HUMAN_KNEE_CONTINUITY_TRANSITIONS), 4)
+        self.assertEqual(_NUMI_HUMAN_KNEE_CONTINUITY_MAXIMUM_GAP_M, 0.004)
+        names = [name for name, _, _ in _NUMI_HUMAN_HAND_CONTINUITY_TRANSITIONS]
+        self.assertIn("right_index_middle_to_distal", names)
+        self.assertIn("left_little_middle_to_distal", names)
+        knee_names = [name for name, _, _ in _NUMI_HUMAN_KNEE_CONTINUITY_TRANSITIONS]
+        self.assertEqual(
+            knee_names,
+            [
+                "right_femur_to_tibia", "right_femur_to_patella",
+                "left_femur_to_tibia", "left_femur_to_patella",
+            ],
+        )
+        with self.assertRaisesRegex(HumanImportError, "hand continuity gate"):
+            _bodyparts_bounded_vertex_gap(
+                [[0.0, 0.0, 0.0]], [[0.005, 0.0, 0.0]], 0.004,
+                "fixture", "hand continuity",
+            )
+
+    def test_foot_continuity_uses_bilateral_coherent_lower_limb_roots(self) -> None:
+        self.assertEqual(
+            _NUMI_HUMAN_LOWER_LIMB_COHERENT_ROOTS,
+            {"r": "femur_r", "l": "femur_l"},
+        )
+        self.assertEqual(len(_NUMI_HUMAN_FOOT_CONTINUITY_TRANSITIONS), 26)
+        self.assertEqual(_NUMI_HUMAN_FOOT_CONTINUITY_MAXIMUM_GAP_M, 0.004)
+        names = [name for name, _, _ in _NUMI_HUMAN_FOOT_CONTINUITY_TRANSITIONS]
+        self.assertIn("right_tibia_to_talus", names)
+        self.assertIn("left_cuboid_to_fifth_metatarsal", names)
+        with self.assertRaisesRegex(HumanImportError, "foot continuity gate"):
+            _bodyparts_bounded_vertex_gap(
+                [[0.0, 0.0, 0.0]], [[0.0041, 0.0, 0.0]], 0.004,
+                "fixture", "foot continuity",
             )
 
     def test_bodyparts_similarity_fit_keeps_proper_axes_and_positive_scale(self) -> None:

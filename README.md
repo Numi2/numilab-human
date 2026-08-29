@@ -29,11 +29,12 @@ no-direct-torque identity, bitwise replay, and four-angle visual review. See
 [per-step tendon transaction](Docs/HUMAN_TENDON_STEP_TRANSACTION.md).
 
 The next completed regional layer is deformable pectoralis fascia: six named
-MyoSim/NHTENDON2 loads drive a 326-node Matter FEM shell with a human uniaxial
-GOH mean fit, deterministic replay, and rejection rollback. Its geometry,
-anchors, and 10% load share are explicitly bounded fallbacks because
-BodyParts3D has no pectoral-fascia mesh. See
-[deformable pectoralis fascia v1](docs/PECTORALIS_FASCIA_V1.md).
+MyoSim/NHTENDON2 loads drive a 326-node Matter FEM solid with a human uniaxial
+GOH mean fit, deterministic replay, and rejection rollback. The resulting
+bounded displacement is presented on the exact 15,971-vertex BodyParts3D
+pectoralis surfaces. Its mechanics geometry, anchors, and 10% load share are
+explicit fallbacks because BodyParts3D has no pectoral-fascia mesh. See
+[deformable pectoralis fascia v1](Docs/PECTORALIS_FASCIA_V1.md).
 
 The importer preserves upstream records locally. The tracked MyoSim,
 BodyParts3D, and explicitly marked Z-Anatomy validation media are attributed
@@ -42,8 +43,11 @@ derivatives; all other raw or derived source artifacts remain local. See
 
 ## Visual progress
 
-The current lead combines the reviewed 1024 px, 128-step M4 Pro gallery with
-2048 px hallux and pectoralis-origin inspections. The pectoralis compiler now
+The current lead is a bilateral 2048 px M4 Pro inspection of coherent elbows,
+wrists, hands, fingers, knees, feet, and all five toe chains. The source meshes
+retain one BodyParts3D rest arrangement per limb while the existing MyoSim
+articulation is preserved; fail-closed gates cover 82 declared limb
+transitions. The pectoralis compiler also
 locks only the exact BodyParts3D humeral insertion band to the arm and keeps
 the broad abdominal/sternocostal origin on its thoracoabdominal route body;
 the inferior-origin gate rejects any residual humerus ownership. The clean
@@ -55,7 +59,7 @@ Neither set is a photorealistic skin render: the clean gallery reviews source
 surface continuity, while the diagnostic proves that force terminates on the
 actual transfer program rather than a floating decorative tendon. See
 [visual progress](Docs/VISUAL_PROGRESS.md) and the
-[pectoralis-origin record](Docs/PECTORALIS_ORIGIN_V1.md).
+[coherent-limb record](Docs/COHERENT_LIMB_REGISTRATION_V1.md).
 
 The exposed source anatomy is used to inspect muscles and tendons against
 named bones. The BodyParts3D exterior remains a static source mesh only: it
@@ -105,17 +109,19 @@ continuity repair, and compilation fails if that compound is split or shifted
 to an adjacent toe. Exact maximum inter-bone source gaps are 0.727 mm right and
 0.629 mm left.
 
-`NHTENDON2` now gives all 832 origin/insertion endpoints a fail-closed
-tendon-to-bone law without moving an authored route site. The current distal
-registration admits 304 four-node BodyParts3D bone-surface envelopes; eight are
-the exact bilateral EDL/FDL lesser-toe and EHL/FHL hallux semantic maps. The
-other 528 endpoints remain explicit source-point laws. The owning Metal route
-kernel publishes its exact wrapped terminal
-directions, and a second Metal pass distributes those forces while conserving
-their resultant and source-point moment. The final Apple M4 Pro replay
-transferred all 832 endpoints on each of 128 accepted steps (106,496 transfers)
-with maximum residuals of `1.726e-4 N` and `2.443e-6 Nm`, a maximum
-generalized-force correction of `7.324e-4`, and byte-identical replay.
+`NHTENDON2` gives all 832 origin/insertion endpoints a fail-closed
+tendon-to-bone law without moving an authored route site. After restoring the
+source-coherent limb anatomy, 226 endpoints admit distributed BodyParts3D
+bone-surface envelopes and 606 remain explicit body-owned source-point laws
+(27.16% surface coverage). The owning Metal route kernel publishes its exact
+wrapped terminal directions, and a second Metal pass distributes those forces
+while conserving their resultant and source-point moment. The coherent-body
+Apple M4 Pro replay transferred all endpoints on each of 16 accepted steps
+(13,312 transfers), with 3,616 envelope and 9,696 point transfers, maximum
+residuals of `6.824e-5 N` and `1.910e-6 N m`, rollback preservation, and
+bitwise replay. The lower envelope count is kept visible: the older
+independent mesh translations had hidden real BodyParts3D-to-MyoSim
+registration disagreement.
 
 The first inferred bilateral Achilles surface candidate was deliberately not
 admitted: its current cross-source registration would move the six terminal

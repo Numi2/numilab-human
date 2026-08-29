@@ -3776,6 +3776,123 @@ _NUMI_HUMAN_AXIAL_CONTINUITY_TRANSITIONS = (
 _NUMI_HUMAN_AXIAL_CONTINUITY_MAXIMUM_GAP_M = 0.008
 
 
+# Default-pose source-surface transitions spanning the shoulder, elbow, and
+# wrist rigid-body boundaries.  The glenohumeral gates are deliberately tight
+# because the transformed BodyParts3D humeral heads already sit in their
+# glenoids.  The acromioclavicular and wrist gates admit normal joint space in
+# a bone-only source while rejecting the 16--30 mm gaps found in the 2026-08-29
+# multi-angle audit.  These remain visual proximity gates, not cartilage or
+# contact certificates.
+_NUMI_HUMAN_UPPER_LIMB_CONTINUITY_TRANSITIONS = (
+    ("right_clavicle_to_scapula", "FJ3362", "FJ3384", 0.012),
+    ("right_scapula_to_humerus", "FJ3384", "FJ3368", 0.008),
+    ("right_humerus_to_ulna", "FJ3368", "FJ3391", 0.006),
+    ("right_humerus_to_radius", "FJ3368", "FJ3349", 0.006),
+    ("right_radius_to_scaphoid", "FJ3349", "FJ3383", 0.007),
+    ("right_radius_to_lunate", "FJ3349", "FJ3374", 0.007),
+    ("right_ulna_to_triquetrum", "FJ3391", "FJ3390", 0.007),
+    ("left_clavicle_to_scapula", "FJ3237", "FJ3279", 0.012),
+    ("left_scapula_to_humerus", "FJ3279", "FJ3262", 0.008),
+    ("left_humerus_to_ulna", "FJ3262", "FJ3286", 0.006),
+    ("left_humerus_to_radius", "FJ3262", "FJ3277", 0.006),
+    ("left_radius_to_scaphoid", "FJ3277", "FJ3278", 0.007),
+    ("left_radius_to_lunate", "FJ3277", "FJ3268", 0.007),
+    ("left_ulna_to_triquetrum", "FJ3286", "FJ3285", 0.007),
+)
+
+
+# Every distal upper-limb source mesh is restored to its exact BodyParts3D
+# rest-frame displacement from the already-site-refined humerus on that side.
+# Unlike independently tuned gap patches, this preserves the complete source
+# arrangement through the elbow, wrist, metacarpals, and phalanges while the
+# existing MyoSim bodies retain their authored independent articulation.
+_NUMI_HUMAN_UPPER_LIMB_COHERENT_ROOTS = {"r": "humerus_r", "l": "humerus_l"}
+
+
+_NUMI_HUMAN_HAND_CONTINUITY_TRANSITIONS = (
+    ("right_trapezium_to_first_metacarpal", "FJ3388", "FJ3350"),
+    ("right_trapezoid_to_second_metacarpal", "FJ3389", "FJ3352"),
+    ("right_capitate_to_third_metacarpal", "FJ3361", "FJ3354"),
+    ("right_hamate_to_fourth_metacarpal", "FJ3367", "FJ3356"),
+    ("right_hamate_to_fifth_metacarpal", "FJ3367", "FJ3358"),
+    ("right_first_metacarpal_to_thumb_proximal", "FJ3350", "FJ3327"),
+    ("right_thumb_proximal_to_distal", "FJ3327", "FJ3198"),
+    ("right_second_metacarpal_to_index_proximal", "FJ3352", "FJ3322"),
+    ("right_index_proximal_to_middle", "FJ3322", "FJ3303"),
+    ("right_index_middle_to_distal", "FJ3303", "FJ3193"),
+    ("right_third_metacarpal_to_middle_proximal", "FJ3354", "FJ3325"),
+    ("right_middle_proximal_to_middle", "FJ3325", "FJ3306"),
+    ("right_middle_middle_to_distal", "FJ3306", "FJ3196"),
+    ("right_fourth_metacarpal_to_ring_proximal", "FJ3356", "FJ3326"),
+    ("right_ring_proximal_to_middle", "FJ3326", "FJ3292"),
+    ("right_ring_middle_to_distal", "FJ3292", "FJ3197"),
+    ("right_fifth_metacarpal_to_little_proximal", "FJ3358", "FJ3323"),
+    ("right_little_proximal_to_middle", "FJ3323", "FJ3304"),
+    ("right_little_middle_to_distal", "FJ3304", "FJ3194"),
+    ("left_trapezium_to_first_metacarpal", "FJ3283", "FJ3240"),
+    ("left_trapezoid_to_second_metacarpal", "FJ3284", "FJ3243"),
+    ("left_capitate_to_third_metacarpal", "FJ3257", "FJ3246"),
+    ("left_hamate_to_fourth_metacarpal", "FJ3261", "FJ3249"),
+    ("left_hamate_to_fifth_metacarpal", "FJ3261", "FJ3252"),
+    ("left_first_metacarpal_to_thumb_proximal", "FJ3240", "FJ3318"),
+    ("left_thumb_proximal_to_distal", "FJ3318", "FJ3188"),
+    ("left_second_metacarpal_to_index_proximal", "FJ3243", "FJ3313"),
+    ("left_index_proximal_to_middle", "FJ3313", "FJ3296"),
+    ("left_index_middle_to_distal", "FJ3296", "FJ3183"),
+    ("left_third_metacarpal_to_middle_proximal", "FJ3246", "FJ3316"),
+    ("left_middle_proximal_to_middle", "FJ3316", "FJ3299"),
+    ("left_middle_middle_to_distal", "FJ3299", "FJ3186"),
+    ("left_fourth_metacarpal_to_ring_proximal", "FJ3249", "FJ3317"),
+    ("left_ring_proximal_to_middle", "FJ3317", "FJ3291"),
+    ("left_ring_middle_to_distal", "FJ3291", "FJ3187"),
+    ("left_fifth_metacarpal_to_little_proximal", "FJ3252", "FJ3314"),
+    ("left_little_proximal_to_middle", "FJ3314", "FJ3297"),
+    ("left_little_middle_to_distal", "FJ3297", "FJ3184"),
+)
+_NUMI_HUMAN_HAND_CONTINUITY_MAXIMUM_GAP_M = 0.004
+
+
+_NUMI_HUMAN_KNEE_CONTINUITY_TRANSITIONS = (
+    ("right_femur_to_tibia", "FJ3365", "FJ3387"),
+    ("right_femur_to_patella", "FJ3365", "FJ3381"),
+    ("left_femur_to_tibia", "FJ3259", "FJ3282"),
+    ("left_femur_to_patella", "FJ3259", "FJ3275"),
+)
+_NUMI_HUMAN_KNEE_CONTINUITY_MAXIMUM_GAP_M = 0.004
+
+
+_NUMI_HUMAN_LOWER_LIMB_COHERENT_ROOTS = {"r": "femur_r", "l": "femur_l"}
+_NUMI_HUMAN_FOOT_CONTINUITY_TRANSITIONS = (
+    ("right_tibia_to_talus", "FJ3387", "FJ3385"),
+    ("right_fibula_to_talus", "FJ3366", "FJ3385"),
+    ("right_talus_to_calcaneus", "FJ3385", "FJ3360"),
+    ("right_talus_to_navicular", "FJ3385", "FJ3308"),
+    ("right_calcaneus_to_cuboid", "FJ3360", "FJ3364"),
+    ("right_navicular_to_medial_cuneiform", "FJ3308", "FJ3377"),
+    ("right_navicular_to_intermediate_cuneiform", "FJ3308", "FJ3370"),
+    ("right_navicular_to_lateral_cuneiform", "FJ3308", "FJ3373"),
+    ("right_medial_cuneiform_to_first_metatarsal", "FJ3377", "FJ3351"),
+    ("right_intermediate_cuneiform_to_second_metatarsal", "FJ3370", "FJ3353"),
+    ("right_lateral_cuneiform_to_third_metatarsal", "FJ3373", "FJ3355"),
+    ("right_cuboid_to_fourth_metatarsal", "FJ3364", "FJ3357"),
+    ("right_cuboid_to_fifth_metatarsal", "FJ3364", "FJ3359"),
+    ("left_tibia_to_talus", "FJ3282", "FJ3280"),
+    ("left_fibula_to_talus", "FJ3260", "FJ3280"),
+    ("left_talus_to_calcaneus", "FJ3280", "FJ3256"),
+    ("left_talus_to_navicular", "FJ3280", "FJ3307"),
+    ("left_calcaneus_to_cuboid", "FJ3256", "FJ3258"),
+    ("left_navicular_to_medial_cuneiform", "FJ3307", "FJ3271"),
+    ("left_navicular_to_intermediate_cuneiform", "FJ3307", "FJ3264"),
+    ("left_navicular_to_lateral_cuneiform", "FJ3307", "FJ3267"),
+    ("left_medial_cuneiform_to_first_metatarsal", "FJ3271", "FJ3241"),
+    ("left_intermediate_cuneiform_to_second_metatarsal", "FJ3264", "FJ3244"),
+    ("left_lateral_cuneiform_to_third_metatarsal", "FJ3267", "FJ3247"),
+    ("left_cuboid_to_fourth_metatarsal", "FJ3258", "FJ3250"),
+    ("left_cuboid_to_fifth_metatarsal", "FJ3258", "FJ3253"),
+)
+_NUMI_HUMAN_FOOT_CONTINUITY_MAXIMUM_GAP_M = 0.004
+
+
 _BODYPARTS_MYOSIM_BONE_ANCHORS = (
     _BODYPARTS_MYOSIM_FIT_BONE_ANCHORS
     + _BODYPARTS_MYOSIM_MAJOR_BONE_EXTENSIONS
@@ -4467,6 +4584,172 @@ def bodyparts_myosim_attachment_surface_registration_candidate(
             "donor_myosim_bodies": list(axial_donor_names),
             "applied": True,
         }
+
+    # Restore the distal upper limbs to one coherent BodyParts3D rest frame.
+    # Per-body site refinement is useful for mechanics correspondence, but it
+    # translated neighbouring visual bones by different amounts and created
+    # visible elbow, wrist, metacarpal, and phalanx breaks.  Keep the refined
+    # humerus as the side's proximal mechanics anchor, then place every distal
+    # body at its exact pre-refinement source-centroid displacement from that
+    # humerus.  This is a rest-registration correction: all authored MyoSim
+    # joints and the existing hand topology remain unchanged; no independent
+    # digit articulation is introduced.
+    wrist_hand_target_names = {
+        side: {
+            specification["myosim_body"]
+            for specification in _BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS
+            if specification["myosim_body"].endswith(f"_{side}")
+        } | {f"triquetrum_{side}"}
+        for side in ("r", "l")
+    }
+    for side, root_name in _NUMI_HUMAN_UPPER_LIMB_COHERENT_ROOTS.items():
+        forearm_names = {f"radius_{side}", f"ulna_{side}"}
+        hand_names = wrist_hand_target_names[side]
+        all_names = forearm_names | hand_names
+        required_names = all_names | {root_name}
+        if any(
+            name not in anchors_by_name or name not in common_frame_centroid_by_name
+            for name in required_names
+        ):
+            missing = sorted(
+                name for name in required_names
+                if name not in anchors_by_name or name not in common_frame_centroid_by_name
+            )
+            raise ImportError(
+                f"BodyParts3D coherent upper-limb correction is missing {', '.join(missing)}"
+            )
+        root_world_centroid = anchors_by_name[root_name][0]["registration"][
+            "default_pose_vertex_centroid_world_m"
+        ]
+        for target_name in sorted(all_names):
+            target_anchors = anchors_by_name[target_name]
+            desired_world_centroid = _myosim_add(
+                root_world_centroid,
+                _myosim_subtract(
+                    common_frame_centroid_by_name[target_name],
+                    common_frame_centroid_by_name[root_name],
+                ),
+            )
+            applied_world_delta = _myosim_subtract(
+                desired_world_centroid,
+                target_anchors[0]["registration"][
+                    "default_pose_vertex_centroid_world_m"
+                ],
+            )
+            target_rotation = _myosim_matrix_from_quaternion_xyzw(
+                target_anchors[0]["target"]["default_inertial_quaternion_world_xyzw"]
+            )
+            local_delta = _myosim_matrix_vector(
+                _matrix_transpose(target_rotation), applied_world_delta
+            )
+            receipt = {
+                "method": "exact_bodyparts3d_common_rest_frame_displacement_from_refined_humerus",
+                "side": "right" if side == "r" else "left",
+                "root_myosim_body": root_name,
+                "translation_delta_world_m": applied_world_delta,
+                "translation_delta_core_body_m": local_delta,
+                "preserved_group": "complete humerus-to-distal-phalanx BodyParts3D rest arrangement",
+                "independent_articulation_count": 0,
+                "existing_myosim_articulation_preserved": True,
+                "applied": True,
+            }
+            for anchor in target_anchors:
+                registration = anchor["registration"]
+                local_matrix = registration["source_obj_mm_to_core_inertial_body_m"]
+                for axis in range(3):
+                    local_matrix[axis][3] += local_delta[axis]
+                registration["default_pose_vertex_centroid_world_m"] = _myosim_add(
+                    registration["default_pose_vertex_centroid_world_m"],
+                    applied_world_delta,
+                )
+                registration["status"] = (
+                    "inferred_visual_upper_limb_chain_translation_fallback"
+                )
+                registration["upper_limb_chain_translation_fallback"] = receipt
+            summary_by_name[target_name]["upper_limb_chain_translation_fallback"] = {
+                "side": receipt["side"],
+                "root_myosim_body": root_name,
+                "independent_articulation_count": 0,
+                "existing_myosim_articulation_preserved": True,
+                "applied": True,
+            }
+
+    # Apply the same source-coherent rest registration to each lower limb.
+    # The femur remains the site-refined mechanics anchor; patella, paired
+    # tibia/fibula, hindfoot, midfoot, metatarsals, and toes recover their exact
+    # BodyParts3D displacement from it. Existing knee, ankle, subtalar, and MTP
+    # articulation remains owned by MyoSim.
+    for side, root_name in _NUMI_HUMAN_LOWER_LIMB_COHERENT_ROOTS.items():
+        distal_names = {
+            f"patella_{side}", f"tibia_{side}", f"talus_{side}",
+            f"calcn_{side}", f"toes_{side}",
+        }
+        required_names = distal_names | {root_name}
+        if any(
+            name not in anchors_by_name or name not in common_frame_centroid_by_name
+            for name in required_names
+        ):
+            missing = sorted(
+                name for name in required_names
+                if name not in anchors_by_name or name not in common_frame_centroid_by_name
+            )
+            raise ImportError(
+                f"BodyParts3D coherent lower-limb correction is missing {', '.join(missing)}"
+            )
+        root_world_centroid = anchors_by_name[root_name][0]["registration"][
+            "default_pose_vertex_centroid_world_m"
+        ]
+        for target_name in sorted(distal_names):
+            target_anchors = anchors_by_name[target_name]
+            desired_world_centroid = _myosim_add(
+                root_world_centroid,
+                _myosim_subtract(
+                    common_frame_centroid_by_name[target_name],
+                    common_frame_centroid_by_name[root_name],
+                ),
+            )
+            applied_world_delta = _myosim_subtract(
+                desired_world_centroid,
+                target_anchors[0]["registration"][
+                    "default_pose_vertex_centroid_world_m"
+                ],
+            )
+            target_rotation = _myosim_matrix_from_quaternion_xyzw(
+                target_anchors[0]["target"]["default_inertial_quaternion_world_xyzw"]
+            )
+            local_delta = _myosim_matrix_vector(
+                _matrix_transpose(target_rotation), applied_world_delta
+            )
+            receipt = {
+                "method": "exact_bodyparts3d_common_rest_frame_displacement_from_refined_femur",
+                "side": "right" if side == "r" else "left",
+                "root_myosim_body": root_name,
+                "translation_delta_world_m": applied_world_delta,
+                "translation_delta_core_body_m": local_delta,
+                "preserved_group": "complete femur-to-distal-toe BodyParts3D rest arrangement",
+                "independent_articulation_count": 0,
+                "existing_myosim_articulation_preserved": True,
+                "applied": True,
+            }
+            for anchor in target_anchors:
+                registration = anchor["registration"]
+                local_matrix = registration["source_obj_mm_to_core_inertial_body_m"]
+                for axis in range(3):
+                    local_matrix[axis][3] += local_delta[axis]
+                registration["default_pose_vertex_centroid_world_m"] = _myosim_add(
+                    registration["default_pose_vertex_centroid_world_m"],
+                    applied_world_delta,
+                )
+                registration["status"] = (
+                    "inferred_visual_lower_limb_coherent_rest_registration"
+                )
+                registration["lower_limb_coherent_rest_registration"] = receipt
+            summary_by_name[target_name]["lower_limb_coherent_rest_registration"] = {
+                "side": receipt["side"],
+                "root_myosim_body": root_name,
+                "existing_myosim_articulation_preserved": True,
+                "applied": True,
+            }
     candidate["schema"] = "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2"
     candidate["status"] = "inferred_attachment_surface_visual_registration_not_admitted_to_collision_or_physics"
     candidate["attachment_surface_refinement"] = {
@@ -4611,7 +4894,7 @@ def _bodyparts_visual_local_pose(matrix: Any, context: str) -> tuple[list[float]
 
 def _bodyparts_bounded_vertex_gap(
     first: list[list[float]], second: list[list[float]], maximum_gap_m: float,
-    context: str,
+    context: str, gate_name: str = "axial continuity",
 ) -> float:
     """Return an exact vertex witness within a fail-closed distance gate.
 
@@ -4642,7 +4925,7 @@ def _bodyparts_bounded_vertex_gap(
                     best_squared = squared
     if not math.isfinite(best_squared) or best_squared > maximum_squared:
         raise ImportError(
-            f"{context} exceeds the {maximum_gap_m * 1000.0:.1f} mm axial continuity gate"
+            f"{context} exceeds the {maximum_gap_m * 1000.0:.1f} mm {gate_name} gate"
         )
     return math.sqrt(best_squared)
 
@@ -4701,6 +4984,27 @@ def bodyparts_myosim_bone_visual_payload(
         for member in (first, second)
     )
     axial_world_vertices: dict[str, list[list[float]]] = {}
+    upper_limb_member_ids = frozenset(
+        member
+        for _, first, second, _ in _NUMI_HUMAN_UPPER_LIMB_CONTINUITY_TRANSITIONS
+        for member in (first, second)
+    )
+    hand_member_ids = frozenset(
+        member
+        for _, first, second in _NUMI_HUMAN_HAND_CONTINUITY_TRANSITIONS
+        for member in (first, second)
+    )
+    knee_member_ids = frozenset(
+        member
+        for _, first, second in _NUMI_HUMAN_KNEE_CONTINUITY_TRANSITIONS
+        for member in (first, second)
+    )
+    foot_member_ids = frozenset(
+        member
+        for _, first, second in _NUMI_HUMAN_FOOT_CONTINUITY_TRANSITIONS
+        for member in (first, second)
+    )
+    upper_limb_world_vertices: dict[str, list[list[float]]] = {}
     for stable_id, (specification, anchor) in enumerate(zip(_BODYPARTS_MYOSIM_BONE_ANCHORS, anchors, strict=True), start=1):
         if not isinstance(anchor, dict):
             raise ImportError("BodyParts3D visual payload has an invalid anchor")
@@ -4725,7 +5029,14 @@ def bodyparts_myosim_bone_visual_payload(
             f"BodyParts3D visual payload {specification['member_id']} local transform",
         )
         source_member_id = specification["member_id"]
-        if source_member_id in toe_member_ids or source_member_id in axial_member_ids:
+        if (
+            source_member_id in toe_member_ids
+            or source_member_id in axial_member_ids
+            or source_member_id in upper_limb_member_ids
+            or source_member_id in hand_member_ids
+            or source_member_id in knee_member_ids
+            or source_member_id in foot_member_ids
+        ):
             rotation = _myosim_matrix_from_quaternion_xyzw(quaternion)
             local_vertices = [
                 _myosim_add(translation, [
@@ -4752,6 +5063,24 @@ def bodyparts_myosim_bone_visual_payload(
             )
             body_position = target_record["default_com_position_world_m"]
             axial_world_vertices[source_member_id] = [
+                _myosim_add(
+                    body_position, _myosim_matrix_vector(body_rotation, point)
+                )
+                for point in local_vertices
+            ]
+        if (
+            source_member_id in upper_limb_member_ids
+            or source_member_id in hand_member_ids
+            or source_member_id in knee_member_ids
+            or source_member_id in foot_member_ids
+        ):
+            if source_member_id in upper_limb_world_vertices:
+                raise ImportError("BodyParts3D upper-limb continuity duplicates a source member")
+            body_rotation = _myosim_matrix_from_quaternion_xyzw(
+                target_record["default_inertial_quaternion_world_xyzw"]
+            )
+            body_position = target_record["default_com_position_world_m"]
+            upper_limb_world_vertices[source_member_id] = [
                 _myosim_add(
                     body_position, _myosim_matrix_vector(body_rotation, point)
                 )
@@ -4790,6 +5119,79 @@ def bodyparts_myosim_bone_visual_payload(
             "source_member_ids": [first_member_id, second_member_id],
             "minimum_vertex_gap_m": gap_m,
             "maximum_allowed_gap_m": _NUMI_HUMAN_AXIAL_CONTINUITY_MAXIMUM_GAP_M,
+            "status": "bounded_default_pose_visual_continuity_witness",
+        })
+    upper_limb_transitions: list[dict[str, Any]] = []
+    for (
+        name, first_member_id, second_member_id, maximum_gap_m
+    ) in _NUMI_HUMAN_UPPER_LIMB_CONTINUITY_TRANSITIONS:
+        first = upper_limb_world_vertices.get(first_member_id)
+        second = upper_limb_world_vertices.get(second_member_id)
+        if first is None or second is None:
+            raise ImportError(
+                f"BodyParts3D upper-limb continuity transition {name} is incomplete"
+            )
+        gap_m = _bodyparts_bounded_vertex_gap(
+            first, second, maximum_gap_m,
+            f"BodyParts3D upper-limb continuity transition {name}",
+            "upper-limb continuity",
+        )
+        upper_limb_transitions.append({
+            "name": name,
+            "source_member_ids": [first_member_id, second_member_id],
+            "minimum_vertex_gap_m": gap_m,
+            "maximum_allowed_gap_m": maximum_gap_m,
+            "status": "bounded_default_pose_visual_continuity_witness",
+        })
+    hand_transitions: list[dict[str, Any]] = []
+    for name, first_member_id, second_member_id in _NUMI_HUMAN_HAND_CONTINUITY_TRANSITIONS:
+        first = upper_limb_world_vertices.get(first_member_id)
+        second = upper_limb_world_vertices.get(second_member_id)
+        if first is None or second is None:
+            raise ImportError(f"BodyParts3D hand continuity transition {name} is incomplete")
+        gap_m = _bodyparts_bounded_vertex_gap(
+            first, second, _NUMI_HUMAN_HAND_CONTINUITY_MAXIMUM_GAP_M,
+            f"BodyParts3D hand continuity transition {name}", "hand continuity",
+        )
+        hand_transitions.append({
+            "name": name,
+            "source_member_ids": [first_member_id, second_member_id],
+            "minimum_vertex_gap_m": gap_m,
+            "maximum_allowed_gap_m": _NUMI_HUMAN_HAND_CONTINUITY_MAXIMUM_GAP_M,
+            "status": "bounded_default_pose_visual_continuity_witness",
+        })
+    knee_transitions: list[dict[str, Any]] = []
+    for name, first_member_id, second_member_id in _NUMI_HUMAN_KNEE_CONTINUITY_TRANSITIONS:
+        first = upper_limb_world_vertices.get(first_member_id)
+        second = upper_limb_world_vertices.get(second_member_id)
+        if first is None or second is None:
+            raise ImportError(f"BodyParts3D knee continuity transition {name} is incomplete")
+        gap_m = _bodyparts_bounded_vertex_gap(
+            first, second, _NUMI_HUMAN_KNEE_CONTINUITY_MAXIMUM_GAP_M,
+            f"BodyParts3D knee continuity transition {name}", "knee continuity",
+        )
+        knee_transitions.append({
+            "name": name,
+            "source_member_ids": [first_member_id, second_member_id],
+            "minimum_vertex_gap_m": gap_m,
+            "maximum_allowed_gap_m": _NUMI_HUMAN_KNEE_CONTINUITY_MAXIMUM_GAP_M,
+            "status": "bounded_default_pose_visual_continuity_witness",
+        })
+    foot_transitions: list[dict[str, Any]] = []
+    for name, first_member_id, second_member_id in _NUMI_HUMAN_FOOT_CONTINUITY_TRANSITIONS:
+        first = upper_limb_world_vertices.get(first_member_id)
+        second = upper_limb_world_vertices.get(second_member_id)
+        if first is None or second is None:
+            raise ImportError(f"BodyParts3D foot continuity transition {name} is incomplete")
+        gap_m = _bodyparts_bounded_vertex_gap(
+            first, second, _NUMI_HUMAN_FOOT_CONTINUITY_MAXIMUM_GAP_M,
+            f"BodyParts3D foot continuity transition {name}", "foot continuity",
+        )
+        foot_transitions.append({
+            "name": name,
+            "source_member_ids": [first_member_id, second_member_id],
+            "minimum_vertex_gap_m": gap_m,
+            "maximum_allowed_gap_m": _NUMI_HUMAN_FOOT_CONTINUITY_MAXIMUM_GAP_M,
             "status": "bounded_default_pose_visual_continuity_witness",
         })
     toe_rigid_compounds: list[dict[str, Any]] = []
@@ -4891,6 +5293,60 @@ def bodyparts_myosim_bone_visual_payload(
             "evidence_boundary": (
                 "Default-pose transformed source-vertex proximity catches gross visual separation; "
                 "it is not an intervertebral-disc, cartilage, ligament, contact, or clinical certificate."
+            ),
+        },
+        "upper_limb_continuity": {
+            "transitions": upper_limb_transitions,
+            "maximum_transition_gap_m": max(
+                record["minimum_vertex_gap_m"] for record in upper_limb_transitions
+            ),
+            "independent_articulation_count": 0,
+            "group_correction": (
+                "exact BodyParts3D common-rest centroid displacement from each side's "
+                "site-refined humerus; existing MyoSim articulations are preserved"
+            ),
+            "evidence_boundary": (
+                "Default-pose transformed source-vertex proximity catches gross shoulder, "
+                "elbow, and wrist separation. It does not establish cartilage, ligament, "
+                "tendon material, contact, load transfer, or clinical registration."
+            ),
+        },
+        "hand_digit_continuity": {
+            "transitions": hand_transitions,
+            "maximum_transition_gap_m": max(
+                record["minimum_vertex_gap_m"] for record in hand_transitions
+            ),
+            "maximum_allowed_gap_m": _NUMI_HUMAN_HAND_CONTINUITY_MAXIMUM_GAP_M,
+            "existing_myosim_articulation_preserved": True,
+            "evidence_boundary": (
+                "Default-pose source-vertex proximity verifies carpal-to-metacarpal and "
+                "metacarpal-to-distal-phalanx visual continuity. It is not cartilage, "
+                "ligament, contact, tendon-material, or clinical evidence."
+            ),
+        },
+        "knee_continuity": {
+            "transitions": knee_transitions,
+            "maximum_transition_gap_m": max(
+                record["minimum_vertex_gap_m"] for record in knee_transitions
+            ),
+            "maximum_allowed_gap_m": _NUMI_HUMAN_KNEE_CONTINUITY_MAXIMUM_GAP_M,
+            "evidence_boundary": (
+                "Default-pose femur/tibia and femur/patella surface proximity catches gross "
+                "visual separation. It does not qualify meniscus, cartilage, ligament, "
+                "patellofemoral contact, or dynamic knee loading."
+            ),
+        },
+        "foot_continuity": {
+            "transitions": foot_transitions,
+            "maximum_transition_gap_m": max(
+                record["minimum_vertex_gap_m"] for record in foot_transitions
+            ),
+            "maximum_allowed_gap_m": _NUMI_HUMAN_FOOT_CONTINUITY_MAXIMUM_GAP_M,
+            "existing_myosim_articulation_preserved": True,
+            "evidence_boundary": (
+                "Default-pose source-vertex proximity verifies ankle mortise, hindfoot, "
+                "midfoot, and tarsometatarsal visual continuity. It is not cartilage, "
+                "ligament, plantar fascia, contact, or clinical evidence."
             ),
         },
         "status": "native_visual_binding_input_not_collision_or_physics",

@@ -3,11 +3,11 @@
     "evidence_boundary": "Default-pose transformed source-vertex proximity catches gross visual separation; it is not an intervertebral-disc, cartilage, ligament, contact, or clinical certificate.",
     "independent_articulation_count": 0,
     "maximum_allowed_gap_m": 0.008,
-    "maximum_transition_gap_m": 0.00583653774172068,
+    "maximum_transition_gap_m": 0.005836537741721035,
     "transitions": [
       {
         "maximum_allowed_gap_m": 0.008,
-        "minimum_vertex_gap_m": 0.000428179628655472,
+        "minimum_vertex_gap_m": 0.00042817962865522753,
         "name": "occiput_to_atlas",
         "source_member_ids": [
           "FJ3309",
@@ -17,7 +17,7 @@
       },
       {
         "maximum_allowed_gap_m": 0.008,
-        "minimum_vertex_gap_m": 0.00583653774172068,
+        "minimum_vertex_gap_m": 0.005836537741721035,
         "name": "cervical7_to_thoracic1",
         "source_member_ids": [
           "FJ3172",
@@ -27,7 +27,7 @@
       },
       {
         "maximum_allowed_gap_m": 0.008,
-        "minimum_vertex_gap_m": 0.00023389896519932727,
+        "minimum_vertex_gap_m": 0.0002338989651993278,
         "name": "thoracic12_to_lumbar1",
         "source_member_ids": [
           "FJ3156",
@@ -37,7 +37,7 @@
       },
       {
         "maximum_allowed_gap_m": 0.008,
-        "minimum_vertex_gap_m": 0.00026370524935063783,
+        "minimum_vertex_gap_m": 0.00026370524935062845,
         "name": "lumbar1_to_lumbar2",
         "source_member_ids": [
           "FJ3157",
@@ -47,7 +47,7 @@
       },
       {
         "maximum_allowed_gap_m": 0.008,
-        "minimum_vertex_gap_m": 0.0002927031902857225,
+        "minimum_vertex_gap_m": 0.00029270319028571444,
         "name": "lumbar2_to_lumbar3",
         "source_member_ids": [
           "FJ3159",
@@ -57,7 +57,7 @@
       },
       {
         "maximum_allowed_gap_m": 0.008,
-        "minimum_vertex_gap_m": 0.00024394681694231706,
+        "minimum_vertex_gap_m": 0.0002439468169423198,
         "name": "lumbar3_to_lumbar4",
         "source_member_ids": [
           "FJ3162",
@@ -67,7 +67,7 @@
       },
       {
         "maximum_allowed_gap_m": 0.008,
-        "minimum_vertex_gap_m": 0.00015449711658158932,
+        "minimum_vertex_gap_m": 0.00015449711658159553,
         "name": "lumbar4_to_lumbar5",
         "source_member_ids": [
           "FJ3165",
@@ -77,7 +77,7 @@
       },
       {
         "maximum_allowed_gap_m": 0.008,
-        "minimum_vertex_gap_m": 0.0003758863413246484,
+        "minimum_vertex_gap_m": 0.0003758863413244962,
         "name": "lumbar5_to_sacrum",
         "source_member_ids": [
           "FJ3168",
@@ -87,7 +87,7 @@
       },
       {
         "maximum_allowed_gap_m": 0.008,
-        "minimum_vertex_gap_m": 0.0006317256401942603,
+        "minimum_vertex_gap_m": 0.0006317256401942525,
         "name": "sacrum_to_right_hip",
         "source_member_ids": [
           "FJ3393",
@@ -97,7 +97,7 @@
       },
       {
         "maximum_allowed_gap_m": 0.008,
-        "minimum_vertex_gap_m": 0.0004882890810292152,
+        "minimum_vertex_gap_m": 0.0004882890810291871,
         "name": "sacrum_to_left_hip",
         "source_member_ids": [
           "FJ3393",
@@ -108,18 +108,286 @@
     ]
   },
   "evidence_boundary": "The payload contains triangle surfaces for a provisional bone visual only. It does not create colliders, skinning weights, soft-tissue mechanics, muscle attachments, or a medical registration claim.",
+  "foot_continuity": {
+    "evidence_boundary": "Default-pose source-vertex proximity verifies ankle mortise, hindfoot, midfoot, and tarsometatarsal visual continuity. It is not cartilage, ligament, plantar fascia, contact, or clinical evidence.",
+    "existing_myosim_articulation_preserved": true,
+    "maximum_allowed_gap_m": 0.004,
+    "maximum_transition_gap_m": 0.003234389129194244,
+    "transitions": [
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0008093289075193904,
+        "name": "right_tibia_to_talus",
+        "source_member_ids": [
+          "FJ3387",
+          "FJ3385"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.003234389129194244,
+        "name": "right_fibula_to_talus",
+        "source_member_ids": [
+          "FJ3366",
+          "FJ3385"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0006157228437603606,
+        "name": "right_talus_to_calcaneus",
+        "source_member_ids": [
+          "FJ3385",
+          "FJ3360"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0005303608360706976,
+        "name": "right_talus_to_navicular",
+        "source_member_ids": [
+          "FJ3385",
+          "FJ3308"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0006029262534912746,
+        "name": "right_calcaneus_to_cuboid",
+        "source_member_ids": [
+          "FJ3360",
+          "FJ3364"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0007636059242292436,
+        "name": "right_navicular_to_medial_cuneiform",
+        "source_member_ids": [
+          "FJ3308",
+          "FJ3377"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.000436484477833691,
+        "name": "right_navicular_to_intermediate_cuneiform",
+        "source_member_ids": [
+          "FJ3308",
+          "FJ3370"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0007517657348959591,
+        "name": "right_navicular_to_lateral_cuneiform",
+        "source_member_ids": [
+          "FJ3308",
+          "FJ3373"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.00030683572304546095,
+        "name": "right_medial_cuneiform_to_first_metatarsal",
+        "source_member_ids": [
+          "FJ3377",
+          "FJ3351"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.00046084090971301793,
+        "name": "right_intermediate_cuneiform_to_second_metatarsal",
+        "source_member_ids": [
+          "FJ3370",
+          "FJ3353"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0008935976449173951,
+        "name": "right_lateral_cuneiform_to_third_metatarsal",
+        "source_member_ids": [
+          "FJ3373",
+          "FJ3355"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.00027797112827735354,
+        "name": "right_cuboid_to_fourth_metatarsal",
+        "source_member_ids": [
+          "FJ3364",
+          "FJ3357"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0007547225587355411,
+        "name": "right_cuboid_to_fifth_metatarsal",
+        "source_member_ids": [
+          "FJ3364",
+          "FJ3359"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0009552833561113871,
+        "name": "left_tibia_to_talus",
+        "source_member_ids": [
+          "FJ3282",
+          "FJ3280"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0032269630842636896,
+        "name": "left_fibula_to_talus",
+        "source_member_ids": [
+          "FJ3260",
+          "FJ3280"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0003053878351475419,
+        "name": "left_talus_to_calcaneus",
+        "source_member_ids": [
+          "FJ3280",
+          "FJ3256"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0011735218038726846,
+        "name": "left_talus_to_navicular",
+        "source_member_ids": [
+          "FJ3280",
+          "FJ3307"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0005035266195475325,
+        "name": "left_calcaneus_to_cuboid",
+        "source_member_ids": [
+          "FJ3256",
+          "FJ3258"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0007042539218121809,
+        "name": "left_navicular_to_medial_cuneiform",
+        "source_member_ids": [
+          "FJ3307",
+          "FJ3271"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0005247679787818612,
+        "name": "left_navicular_to_intermediate_cuneiform",
+        "source_member_ids": [
+          "FJ3307",
+          "FJ3264"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.001024287582053483,
+        "name": "left_navicular_to_lateral_cuneiform",
+        "source_member_ids": [
+          "FJ3307",
+          "FJ3267"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 8.686520143400441e-05,
+        "name": "left_medial_cuneiform_to_first_metatarsal",
+        "source_member_ids": [
+          "FJ3271",
+          "FJ3241"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.000479852546112733,
+        "name": "left_intermediate_cuneiform_to_second_metatarsal",
+        "source_member_ids": [
+          "FJ3264",
+          "FJ3244"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.00045395048999493043,
+        "name": "left_lateral_cuneiform_to_third_metatarsal",
+        "source_member_ids": [
+          "FJ3267",
+          "FJ3247"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0005143174507494238,
+        "name": "left_cuboid_to_fourth_metatarsal",
+        "source_member_ids": [
+          "FJ3258",
+          "FJ3250"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0004615610813481723,
+        "name": "left_cuboid_to_fifth_metatarsal",
+        "source_member_ids": [
+          "FJ3258",
+          "FJ3253"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      }
+    ]
+  },
   "hallux_rigid_compounds": [
     {
       "adjacent_surface_gaps_m": [
-        0.0007272075973619957,
-        0.0004548792600885242
+        0.0007272075973620101,
+        0.0004548792600885104
       ],
       "binding": "one shared existing MyoSim toes rigid-body transform",
       "core_body_index": 139,
       "digit": 1,
       "distal_phalanx_member_id": "FJ3192",
       "independent_articulation_count": 0,
-      "maximum_adjacent_surface_gap_m": 0.0007272075973619957,
+      "maximum_adjacent_surface_gap_m": 0.0007272075973620101,
       "maximum_allowed_adjacent_surface_gap_m": 0.001,
       "myosim_body": "toes_r",
       "source_member_ids": [
@@ -130,15 +398,15 @@
     },
     {
       "adjacent_surface_gaps_m": [
-        0.0006286672566110262,
-        0.0004997806438461511
+        0.0006286672566110511,
+        0.0004997806438461521
       ],
       "binding": "one shared existing MyoSim toes rigid-body transform",
       "core_body_index": 153,
       "digit": 1,
       "distal_phalanx_member_id": "FJ3182",
       "independent_articulation_count": 0,
-      "maximum_adjacent_surface_gap_m": 0.0006286672566110262,
+      "maximum_adjacent_surface_gap_m": 0.0006286672566110511,
       "maximum_allowed_adjacent_surface_gap_m": 0.001,
       "myosim_body": "toes_l",
       "source_member_ids": [
@@ -148,6 +416,441 @@
       ]
     }
   ],
+  "hand_digit_continuity": {
+    "evidence_boundary": "Default-pose source-vertex proximity verifies carpal-to-metacarpal and metacarpal-to-distal-phalanx visual continuity. It is not cartilage, ligament, contact, tendon-material, or clinical evidence.",
+    "existing_myosim_articulation_preserved": true,
+    "maximum_allowed_gap_m": 0.004,
+    "maximum_transition_gap_m": 0.0012302499337261436,
+    "transitions": [
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0003072156772538082,
+        "name": "right_trapezium_to_first_metacarpal",
+        "source_member_ids": [
+          "FJ3388",
+          "FJ3350"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0010735708283443777,
+        "name": "right_trapezoid_to_second_metacarpal",
+        "source_member_ids": [
+          "FJ3389",
+          "FJ3352"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0006155226153149066,
+        "name": "right_capitate_to_third_metacarpal",
+        "source_member_ids": [
+          "FJ3361",
+          "FJ3354"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0009546965784223322,
+        "name": "right_hamate_to_fourth_metacarpal",
+        "source_member_ids": [
+          "FJ3367",
+          "FJ3356"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0005590871205354135,
+        "name": "right_hamate_to_fifth_metacarpal",
+        "source_member_ids": [
+          "FJ3367",
+          "FJ3358"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0004830757475805297,
+        "name": "right_first_metacarpal_to_thumb_proximal",
+        "source_member_ids": [
+          "FJ3350",
+          "FJ3327"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0003057132858001845,
+        "name": "right_thumb_proximal_to_distal",
+        "source_member_ids": [
+          "FJ3327",
+          "FJ3198"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.00026572103557972185,
+        "name": "right_second_metacarpal_to_index_proximal",
+        "source_member_ids": [
+          "FJ3352",
+          "FJ3322"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0005389052796468091,
+        "name": "right_index_proximal_to_middle",
+        "source_member_ids": [
+          "FJ3322",
+          "FJ3303"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.00046861287094756145,
+        "name": "right_index_middle_to_distal",
+        "source_member_ids": [
+          "FJ3303",
+          "FJ3193"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0008994774119359965,
+        "name": "right_third_metacarpal_to_middle_proximal",
+        "source_member_ids": [
+          "FJ3354",
+          "FJ3325"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0005264254979089774,
+        "name": "right_middle_proximal_to_middle",
+        "source_member_ids": [
+          "FJ3325",
+          "FJ3306"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0006512715777074357,
+        "name": "right_middle_middle_to_distal",
+        "source_member_ids": [
+          "FJ3306",
+          "FJ3196"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0010746129612760704,
+        "name": "right_fourth_metacarpal_to_ring_proximal",
+        "source_member_ids": [
+          "FJ3356",
+          "FJ3326"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.000728628306164298,
+        "name": "right_ring_proximal_to_middle",
+        "source_member_ids": [
+          "FJ3326",
+          "FJ3292"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0002721389751276526,
+        "name": "right_ring_middle_to_distal",
+        "source_member_ids": [
+          "FJ3292",
+          "FJ3197"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0005704067261335192,
+        "name": "right_fifth_metacarpal_to_little_proximal",
+        "source_member_ids": [
+          "FJ3358",
+          "FJ3323"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.00047086933229147294,
+        "name": "right_little_proximal_to_middle",
+        "source_member_ids": [
+          "FJ3323",
+          "FJ3304"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0004341541596016944,
+        "name": "right_little_middle_to_distal",
+        "source_member_ids": [
+          "FJ3304",
+          "FJ3194"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.00015190887410596816,
+        "name": "left_trapezium_to_first_metacarpal",
+        "source_member_ids": [
+          "FJ3283",
+          "FJ3240"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0011319210056977458,
+        "name": "left_trapezoid_to_second_metacarpal",
+        "source_member_ids": [
+          "FJ3284",
+          "FJ3243"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.001036328963029994,
+        "name": "left_capitate_to_third_metacarpal",
+        "source_member_ids": [
+          "FJ3257",
+          "FJ3246"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0012302499337261436,
+        "name": "left_hamate_to_fourth_metacarpal",
+        "source_member_ids": [
+          "FJ3261",
+          "FJ3249"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.00018795932736160873,
+        "name": "left_hamate_to_fifth_metacarpal",
+        "source_member_ids": [
+          "FJ3261",
+          "FJ3252"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0004145447618224237,
+        "name": "left_first_metacarpal_to_thumb_proximal",
+        "source_member_ids": [
+          "FJ3240",
+          "FJ3318"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.00012945745239260713,
+        "name": "left_thumb_proximal_to_distal",
+        "source_member_ids": [
+          "FJ3318",
+          "FJ3188"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0008451839993575164,
+        "name": "left_second_metacarpal_to_index_proximal",
+        "source_member_ids": [
+          "FJ3243",
+          "FJ3313"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0005651989255536528,
+        "name": "left_index_proximal_to_middle",
+        "source_member_ids": [
+          "FJ3313",
+          "FJ3296"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.00036203821895041457,
+        "name": "left_index_middle_to_distal",
+        "source_member_ids": [
+          "FJ3296",
+          "FJ3183"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0003094088326401356,
+        "name": "left_third_metacarpal_to_middle_proximal",
+        "source_member_ids": [
+          "FJ3246",
+          "FJ3316"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0003480228360896255,
+        "name": "left_middle_proximal_to_middle",
+        "source_member_ids": [
+          "FJ3316",
+          "FJ3299"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0002941051186043461,
+        "name": "left_middle_middle_to_distal",
+        "source_member_ids": [
+          "FJ3299",
+          "FJ3186"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0006090582479808616,
+        "name": "left_fourth_metacarpal_to_ring_proximal",
+        "source_member_ids": [
+          "FJ3249",
+          "FJ3317"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0002591892497047725,
+        "name": "left_ring_proximal_to_middle",
+        "source_member_ids": [
+          "FJ3317",
+          "FJ3291"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0004184195689033615,
+        "name": "left_ring_middle_to_distal",
+        "source_member_ids": [
+          "FJ3291",
+          "FJ3187"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.000664899710529698,
+        "name": "left_fifth_metacarpal_to_little_proximal",
+        "source_member_ids": [
+          "FJ3252",
+          "FJ3314"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0005651656925854697,
+        "name": "left_little_proximal_to_middle",
+        "source_member_ids": [
+          "FJ3314",
+          "FJ3297"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0004033328003622293,
+        "name": "left_little_middle_to_distal",
+        "source_member_ids": [
+          "FJ3297",
+          "FJ3184"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      }
+    ]
+  },
+  "knee_continuity": {
+    "evidence_boundary": "Default-pose femur/tibia and femur/patella surface proximity catches gross visual separation. It does not qualify meniscus, cartilage, ligament, patellofemoral contact, or dynamic knee loading.",
+    "maximum_allowed_gap_m": 0.004,
+    "maximum_transition_gap_m": 0.0015869153769147216,
+    "transitions": [
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0006433321256949127,
+        "name": "right_femur_to_tibia",
+        "source_member_ids": [
+          "FJ3365",
+          "FJ3387"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0015869153769147216,
+        "name": "right_femur_to_patella",
+        "source_member_ids": [
+          "FJ3365",
+          "FJ3381"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0012216743680640101,
+        "name": "left_femur_to_tibia",
+        "source_member_ids": [
+          "FJ3259",
+          "FJ3282"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.004,
+        "minimum_vertex_gap_m": 0.0010760005479443133,
+        "name": "left_femur_to_patella",
+        "source_member_ids": [
+          "FJ3259",
+          "FJ3275"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      }
+    ]
+  },
   "payload": {
     "bone_count": 184,
     "bytes": 11511380,
@@ -155,8 +858,8 @@
     "index_count": 1370928,
     "magic": "NHBONES1",
     "payload_abi": 2,
-    "registration_fingerprint32": "e29e4171",
-    "sha256": "f45e36c5920c2acfafe04e05ac3f4d88c90fc4c54df5579cffa9d1fbe6c9ec10",
+    "registration_fingerprint32": "8654891b",
+    "sha256": "0efe0a20ba31cc838b4e76ad14fe89492227869256ae797551350ada339ef7ab",
     "vertex_count": 250721
   },
   "runtime_binding": "one source-local bone instance per Core articulated inertial body; local translation, rotation, and uniform scale are carried in the native payload",
@@ -1654,23 +2357,23 @@
     },
     "myosim_source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
     "registration": {
-      "file": "axial-continuity-v1.registration.json",
-      "sha256": "e29e4171b83de245042396893cbff457262b88a267f220790dfc9e953d912508"
+      "file": "coherent-body-v4.registration.json",
+      "sha256": "8654891b9a40ecdbe77b09181a89b7c80822d15913cd94e083190be87fe10251"
     }
   },
   "status": "native_visual_binding_input_not_collision_or_physics",
   "toe_rigid_compounds": [
     {
       "adjacent_surface_gaps_m": [
-        0.0007272075973619957,
-        0.0004548792600885242
+        0.0007272075973620101,
+        0.0004548792600885104
       ],
       "binding": "one shared existing MyoSim toes rigid-body transform",
       "core_body_index": 139,
       "digit": 1,
       "distal_phalanx_member_id": "FJ3192",
       "independent_articulation_count": 0,
-      "maximum_adjacent_surface_gap_m": 0.0007272075973619957,
+      "maximum_adjacent_surface_gap_m": 0.0007272075973620101,
       "maximum_allowed_adjacent_surface_gap_m": 0.001,
       "myosim_body": "toes_r",
       "source_member_ids": [
@@ -1681,16 +2384,16 @@
     },
     {
       "adjacent_surface_gaps_m": [
-        0.00047007410746448464,
+        0.000470074107464465,
         0.0003380925339722879,
-        0.0005476612997626403
+        0.0005476612997626729
       ],
       "binding": "one shared existing MyoSim toes rigid-body transform",
       "core_body_index": 139,
       "digit": 2,
       "distal_phalanx_member_id": "FJ3189",
       "independent_articulation_count": 0,
-      "maximum_adjacent_surface_gap_m": 0.0005476612997626403,
+      "maximum_adjacent_surface_gap_m": 0.0005476612997626729,
       "maximum_allowed_adjacent_surface_gap_m": 0.001,
       "myosim_body": "toes_r",
       "source_member_ids": [
@@ -1702,16 +2405,16 @@
     },
     {
       "adjacent_surface_gaps_m": [
-        0.0002402585647907365,
-        0.0004894739208615942,
-        0.00043119067556739843
+        0.00024025856479074214,
+        0.0004894739208615732,
+        0.0004311906755673451
       ],
       "binding": "one shared existing MyoSim toes rigid-body transform",
       "core_body_index": 139,
       "digit": 3,
       "distal_phalanx_member_id": "FJ3190",
       "independent_articulation_count": 0,
-      "maximum_adjacent_surface_gap_m": 0.0004894739208615942,
+      "maximum_adjacent_surface_gap_m": 0.0004894739208615732,
       "maximum_allowed_adjacent_surface_gap_m": 0.001,
       "myosim_body": "toes_r",
       "source_member_ids": [
@@ -1723,16 +2426,16 @@
     },
     {
       "adjacent_surface_gaps_m": [
-        0.00019465639929110685,
-        0.00024238042596807236,
-        0.0002564538928402119
+        0.0001946563992911023,
+        0.00024238042596807886,
+        0.00025645389284021525
       ],
       "binding": "one shared existing MyoSim toes rigid-body transform",
       "core_body_index": 139,
       "digit": 4,
       "distal_phalanx_member_id": "FJ3191",
       "independent_articulation_count": 0,
-      "maximum_adjacent_surface_gap_m": 0.0002564538928402119,
+      "maximum_adjacent_surface_gap_m": 0.00025645389284021525,
       "maximum_allowed_adjacent_surface_gap_m": 0.001,
       "myosim_body": "toes_r",
       "source_member_ids": [
@@ -1744,16 +2447,16 @@
     },
     {
       "adjacent_surface_gaps_m": [
-        0.0003235616499622806,
-        0.0003510758569118449,
-        0.0004977946000360354
+        0.00032356164996225826,
+        0.0003510758569118338,
+        0.0004977946000360483
       ],
       "binding": "one shared existing MyoSim toes rigid-body transform",
       "core_body_index": 139,
       "digit": 5,
       "distal_phalanx_member_id": "FJ3195",
       "independent_articulation_count": 0,
-      "maximum_adjacent_surface_gap_m": 0.0004977946000360354,
+      "maximum_adjacent_surface_gap_m": 0.0004977946000360483,
       "maximum_allowed_adjacent_surface_gap_m": 0.001,
       "myosim_body": "toes_r",
       "source_member_ids": [
@@ -1765,15 +2468,15 @@
     },
     {
       "adjacent_surface_gaps_m": [
-        0.0006286672566110262,
-        0.0004997806438461511
+        0.0006286672566110511,
+        0.0004997806438461521
       ],
       "binding": "one shared existing MyoSim toes rigid-body transform",
       "core_body_index": 153,
       "digit": 1,
       "distal_phalanx_member_id": "FJ3182",
       "independent_articulation_count": 0,
-      "maximum_adjacent_surface_gap_m": 0.0006286672566110262,
+      "maximum_adjacent_surface_gap_m": 0.0006286672566110511,
       "maximum_allowed_adjacent_surface_gap_m": 0.001,
       "myosim_body": "toes_l",
       "source_member_ids": [
@@ -1784,16 +2487,16 @@
     },
     {
       "adjacent_surface_gaps_m": [
-        0.00015855155044947614,
-        0.00014528006312399355,
-        0.0002582249364603123
+        0.00015855155044947248,
+        0.00014528006312401043,
+        0.00025822493646030864
       ],
       "binding": "one shared existing MyoSim toes rigid-body transform",
       "core_body_index": 153,
       "digit": 2,
       "distal_phalanx_member_id": "FJ3179",
       "independent_articulation_count": 0,
-      "maximum_adjacent_surface_gap_m": 0.0002582249364603123,
+      "maximum_adjacent_surface_gap_m": 0.00025822493646030864,
       "maximum_allowed_adjacent_surface_gap_m": 0.001,
       "myosim_body": "toes_l",
       "source_member_ids": [
@@ -1805,7 +2508,7 @@
     },
     {
       "adjacent_surface_gaps_m": [
-        0.00039123610417342455,
+        0.00039123610417340443,
         0.0004960990946666367,
         0.00034322474780586757
       ],
@@ -1826,16 +2529,16 @@
     },
     {
       "adjacent_surface_gaps_m": [
-        0.00044141094332561493,
-        0.0002197669989922948,
-        0.00035620132888838934
+        0.00044141094332562144,
+        0.00021976699899228436,
+        0.00035620132888843103
       ],
       "binding": "one shared existing MyoSim toes rigid-body transform",
       "core_body_index": 153,
       "digit": 4,
       "distal_phalanx_member_id": "FJ3181",
       "independent_articulation_count": 0,
-      "maximum_adjacent_surface_gap_m": 0.00044141094332561493,
+      "maximum_adjacent_surface_gap_m": 0.00044141094332562144,
       "maximum_allowed_adjacent_surface_gap_m": 0.001,
       "myosim_body": "toes_l",
       "source_member_ids": [
@@ -1847,8 +2550,8 @@
     },
     {
       "adjacent_surface_gaps_m": [
-        0.0003896060743986374,
-        0.00041774247417826336,
+        0.0003896060743986351,
+        0.0004177424741782733,
         0.00028985982732261835
       ],
       "binding": "one shared existing MyoSim toes rigid-body transform",
@@ -1856,7 +2559,7 @@
       "digit": 5,
       "distal_phalanx_member_id": "FJ3185",
       "independent_articulation_count": 0,
-      "maximum_adjacent_surface_gap_m": 0.00041774247417826336,
+      "maximum_adjacent_surface_gap_m": 0.0004177424741782733,
       "maximum_allowed_adjacent_surface_gap_m": 0.001,
       "myosim_body": "toes_l",
       "source_member_ids": [
@@ -1866,5 +2569,153 @@
         "FJ3185"
       ]
     }
-  ]
+  ],
+  "upper_limb_continuity": {
+    "evidence_boundary": "Default-pose transformed source-vertex proximity catches gross shoulder, elbow, and wrist separation. It does not establish cartilage, ligament, tendon material, contact, load transfer, or clinical registration.",
+    "group_correction": "exact BodyParts3D common-rest centroid displacement from each side's site-refined humerus; existing MyoSim articulations are preserved",
+    "independent_articulation_count": 0,
+    "maximum_transition_gap_m": 0.009680625155290692,
+    "transitions": [
+      {
+        "maximum_allowed_gap_m": 0.012,
+        "minimum_vertex_gap_m": 0.009680625155290692,
+        "name": "right_clavicle_to_scapula",
+        "source_member_ids": [
+          "FJ3362",
+          "FJ3384"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.008,
+        "minimum_vertex_gap_m": 0.0001995123215389347,
+        "name": "right_scapula_to_humerus",
+        "source_member_ids": [
+          "FJ3384",
+          "FJ3368"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.006,
+        "minimum_vertex_gap_m": 0.001063595828765805,
+        "name": "right_humerus_to_ulna",
+        "source_member_ids": [
+          "FJ3368",
+          "FJ3391"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.006,
+        "minimum_vertex_gap_m": 0.004607444146848504,
+        "name": "right_humerus_to_radius",
+        "source_member_ids": [
+          "FJ3368",
+          "FJ3349"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.007,
+        "minimum_vertex_gap_m": 0.001347622612270813,
+        "name": "right_radius_to_scaphoid",
+        "source_member_ids": [
+          "FJ3349",
+          "FJ3383"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.007,
+        "minimum_vertex_gap_m": 0.004846039878485189,
+        "name": "right_radius_to_lunate",
+        "source_member_ids": [
+          "FJ3349",
+          "FJ3374"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.007,
+        "minimum_vertex_gap_m": 0.005884171455873103,
+        "name": "right_ulna_to_triquetrum",
+        "source_member_ids": [
+          "FJ3391",
+          "FJ3390"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.012,
+        "minimum_vertex_gap_m": 0.008386266588081634,
+        "name": "left_clavicle_to_scapula",
+        "source_member_ids": [
+          "FJ3237",
+          "FJ3279"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.008,
+        "minimum_vertex_gap_m": 0.00019379788442551782,
+        "name": "left_scapula_to_humerus",
+        "source_member_ids": [
+          "FJ3279",
+          "FJ3262"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.006,
+        "minimum_vertex_gap_m": 0.0005207623651068168,
+        "name": "left_humerus_to_ulna",
+        "source_member_ids": [
+          "FJ3262",
+          "FJ3286"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.006,
+        "minimum_vertex_gap_m": 0.004494400520435281,
+        "name": "left_humerus_to_radius",
+        "source_member_ids": [
+          "FJ3262",
+          "FJ3277"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.007,
+        "minimum_vertex_gap_m": 0.0012194222818558479,
+        "name": "left_radius_to_scaphoid",
+        "source_member_ids": [
+          "FJ3277",
+          "FJ3278"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.007,
+        "minimum_vertex_gap_m": 0.005217208051864864,
+        "name": "left_radius_to_lunate",
+        "source_member_ids": [
+          "FJ3277",
+          "FJ3268"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.007,
+        "minimum_vertex_gap_m": 0.005918885993979668,
+        "name": "left_ulna_to_triquetrum",
+        "source_member_ids": [
+          "FJ3286",
+          "FJ3285"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      }
+    ]
+  }
 }

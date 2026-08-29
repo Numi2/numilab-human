@@ -1,5 +1,30 @@
 # NumiLab Human visual progress
 
+## Coherent arms, hands, knees, feet, and toes — 2026-08-29
+
+<p align="center">
+  <img src="media/numi-human-coherent-limbs-v1-2048/right-arm/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-focus-body-57-oblique.png" width="24%" alt="Coherent right elbow, wrist, hand, and fingers" />
+  <img src="media/numi-human-coherent-limbs-v1-2048/left-arm/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-focus-body-107-front.png" width="24%" alt="Coherent left elbow, wrist, hand, and fingers" />
+  <img src="media/numi-human-coherent-limbs-v1-2048/right-leg/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-136-side.png" width="24%" alt="Coherent right knee, ankle, foot bones, and five toes" />
+  <img src="media/numi-human-coherent-limbs-v1-2048/left-leg/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-150-oblique.png" width="24%" alt="Coherent left knee, ankle, foot bones, and five toes" />
+</p>
+
+The reported limb defects shared one cause: neighbouring BodyParts3D bones had
+been translated independently during attachment-site refinement. Distal upper
+and lower limbs now preserve their exact common-rest displacements from the
+site-refined humerus or femur, without adding joints or independently
+articulating the hallux. Compiler gates cover 14 shoulder/elbow/wrist, 38 hand
+and finger, 4 knee, and 26 ankle-to-metatarsal transitions. The largest hand,
+knee, and foot gaps are 1.230, 1.587, and 3.234 mm respectively. Both main
+knee-flexion coordinates enforce `[0, 2.0944] rad`; four-angle inspection
+places the patellae anteriorly and shows five connected toe chains per foot.
+
+The rebuilt force-transfer payload preserves all 832 source endpoints, but
+only 226 currently admit literal surface envelopes; 606 remain explicit point
+fallbacks. See the [coherent-limb record](COHERENT_LIMB_REGISTRATION_V1.md)
+for all eight bilateral four-angle sets, exact manifests, mechanics counters,
+and evidence boundaries.
+
 ## Deformable pectoralis fascia and axial continuity — 2026-08-29
 
 <p align="center">
@@ -13,8 +38,10 @@ The six BodyParts3D-derived pectoral regions now own a 326-node/471-tetrahedron
 Matter FEM solve driven from the published torso-side NHTENDON2 loads. The
 Apple M4 Pro run applied 14.496 N, displaced at most 4.705 mm over 8 steps,
 retained minimum `J = 0.723`, replayed bitwise, and verified rejection
-rollback. The mechanics-only shell is intentionally shown without the
-coincident opaque muscle surface or a fake render offset.
+rollback. The exact 15,971-vertex/20,992-triangle pectoralis anatomy is now
+the visible surface; 13,501 locally supported vertices receive a bounded
+four-nearest displacement map from the owning FEM mesh, with no fake outward
+display offset.
 
 That review also caught a 16.768 mm L4/L5 visual registration break. A bounded
 two-neighbour translation fallback closes it to 0.154 mm without adding a
