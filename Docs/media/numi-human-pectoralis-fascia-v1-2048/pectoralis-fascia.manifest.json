@@ -1,0 +1,208 @@
+{
+  "evidence_boundary": "No BodyParts3D pectoral-fascia mesh exists. The mechanics envelope retains exact selected source vertices, while its convex fill, posterior thickness, tetrahedral connectivity, anchor bands, and fascia load share are generated research assumptions. The high-resolution source muscle surfaces remain presentation geometry. This is not a clinical segmentation, biaxial calibration, or validated two-way fascia-muscle-bone solve.",
+  "literature": {
+    "material": {
+      "doi": "10.1016/j.jmbbm.2025.107283",
+      "scope": "human pectoralis-major fascia uniaxial mean fit; female surgical and cadaver cohort"
+    },
+    "thickness": {
+      "doi": "10.1007/s00276-016-1747-8",
+      "mean_m": 0.000612,
+      "selected_m": 0.0006
+    }
+  },
+  "mechanics": {
+    "constitutive_model": "human_pectoralis_fascia_goh_uniaxial_v1",
+    "density_kg_m3": 1000.0,
+    "fixed_node_flag": 1,
+    "muscle_load_node_flag": 2,
+    "muscle_terminal_load_fraction": 0.1,
+    "regions": [
+      {
+        "anterior_centroid_limit_source_mm": -187.90933333333336,
+        "first_node": 0,
+        "first_tetrahedron": 0,
+        "fixed_node_count": 8,
+        "load_node_count": 8,
+        "member_id": "FJ1446",
+        "myosim_muscle": "PECM3",
+        "node_count": 38,
+        "soft_tissue_stable_id": 69,
+        "source_actuator_index": 220,
+        "source_name": "abdominal part of right pectoralis major",
+        "tetrahedron_count": 54
+      },
+      {
+        "anterior_centroid_limit_source_mm": -118.12,
+        "first_node": 38,
+        "first_tetrahedron": 54,
+        "fixed_node_count": 8,
+        "load_node_count": 8,
+        "member_id": "FJ1447",
+        "myosim_muscle": "PECM1",
+        "node_count": 38,
+        "soft_tissue_stable_id": 71,
+        "source_actuator_index": 218,
+        "source_name": "clavicular part of right pectoralis major",
+        "tetrahedron_count": 54
+      },
+      {
+        "anterior_centroid_limit_source_mm": -180.05066666666667,
+        "first_node": 76,
+        "first_tetrahedron": 108,
+        "fixed_node_count": 18,
+        "load_node_count": 18,
+        "member_id": "FJ1464",
+        "myosim_muscle": "PECM2",
+        "node_count": 86,
+        "soft_tissue_stable_id": 73,
+        "source_actuator_index": 219,
+        "source_name": "sternocostal part of right pectoralis major",
+        "tetrahedron_count": 126
+      },
+      {
+        "anterior_centroid_limit_source_mm": -187.90933333333336,
+        "first_node": 162,
+        "first_tetrahedron": 234,
+        "fixed_node_count": 8,
+        "load_node_count": 8,
+        "member_id": "FJ1446M",
+        "myosim_muscle": "PECM3_l",
+        "node_count": 38,
+        "soft_tissue_stable_id": 70,
+        "source_actuator_index": 283,
+        "source_name": "abdominal part of left pectoralis major",
+        "tetrahedron_count": 54
+      },
+      {
+        "anterior_centroid_limit_source_mm": -118.12,
+        "first_node": 200,
+        "first_tetrahedron": 288,
+        "fixed_node_count": 8,
+        "load_node_count": 8,
+        "member_id": "FJ1447M",
+        "myosim_muscle": "PECM1_l",
+        "node_count": 38,
+        "soft_tissue_stable_id": 72,
+        "source_actuator_index": 281,
+        "source_name": "clavicular part of left pectoralis major",
+        "tetrahedron_count": 54
+      },
+      {
+        "anterior_centroid_limit_source_mm": -180.05066666666667,
+        "first_node": 238,
+        "first_tetrahedron": 342,
+        "fixed_node_count": 18,
+        "load_node_count": 18,
+        "member_id": "FJ1464M",
+        "myosim_muscle": "PECM2_l",
+        "node_count": 88,
+        "soft_tissue_stable_id": 74,
+        "source_actuator_index": 282,
+        "source_name": "sternocostal part of left pectoralis major",
+        "tetrahedron_count": 129
+      }
+    ],
+    "thickness_m": 0.0006,
+    "total_mass_kg": 0.022857380236259668,
+    "total_rest_volume_m3": 2.285738023625967e-05
+  },
+  "payload": {
+    "bytes": 20148,
+    "file": "bodyparts3d-pectoralis-fascia.nhfascia",
+    "magic": "NHFASC1",
+    "node_count": 326,
+    "payload_abi": 1,
+    "region_count": 6,
+    "sha256": "897bc5bbb69df9ad2d508741f902a27757748112e65b7cd13defb844ca611c5f",
+    "tetrahedron_count": 471
+  },
+  "runtime_binding": "The six named MyoSim pectoralis terminal loads may contribute only the declared fraction to flagged fascia nodes. MyoSim J^T remains the sole rigid generalized-force authority.",
+  "schema": "numi.human.pectoralis-fascia-mechanics-payload.v1",
+  "source": {
+    "bodyparts3d_archive": {
+      "file": "isa_BP3D_4.0_obj_99.zip",
+      "license": "CC-BY-4.0",
+      "sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e"
+    },
+    "geometry_status": "generated_bounded_thin_solid_mechanics_fallback_from_exact_anterior_pectoralis_major_source_vertex_envelope",
+    "members": [
+      {
+        "anterior_source_vertex_count": 454,
+        "mechanics_convex_hull_vertex_count": 18,
+        "mechanics_source_vertex_count": 19,
+        "member": "isa_BP3D_4.0_obj_99/FJ1446.obj",
+        "member_id": "FJ1446",
+        "obj_sha256": "7a0d77a63b06d4212998bec86f84853287c3a21696ec7afc92c7767c987a726d",
+        "selected_source_triangle_count": 635,
+        "source_name": "abdominal part of right pectoralis major",
+        "source_triangle_count": 1536,
+        "source_vertex_count": 1019
+      },
+      {
+        "anterior_source_vertex_count": 621,
+        "mechanics_convex_hull_vertex_count": 18,
+        "mechanics_source_vertex_count": 19,
+        "member": "isa_BP3D_4.0_obj_99/FJ1447.obj",
+        "member_id": "FJ1447",
+        "obj_sha256": "e239a63adf99dfc094ece7efcd91ec7cd9ac802e9d7581141b311a7842fbbbe6",
+        "selected_source_triangle_count": 717,
+        "source_name": "clavicular part of right pectoralis major",
+        "source_triangle_count": 1846,
+        "source_vertex_count": 1492
+      },
+      {
+        "anterior_source_vertex_count": 2225,
+        "mechanics_convex_hull_vertex_count": 42,
+        "mechanics_source_vertex_count": 43,
+        "member": "isa_BP3D_4.0_obj_99/FJ1464.obj",
+        "member_id": "FJ1464",
+        "obj_sha256": "f446df845d19385cdbd5b86457c8690981cbc914f8f9595b50bdc4a44505aab7",
+        "selected_source_triangle_count": 2873,
+        "source_name": "sternocostal part of right pectoralis major",
+        "source_triangle_count": 7114,
+        "source_vertex_count": 5480
+      },
+      {
+        "anterior_source_vertex_count": 455,
+        "mechanics_convex_hull_vertex_count": 18,
+        "mechanics_source_vertex_count": 19,
+        "member": "isa_BP3D_4.0_obj_99/FJ1446M.obj",
+        "member_id": "FJ1446M",
+        "obj_sha256": "3f9dbd5c3f6fdf043454f251d69ea96547dca4bc1efbf7bffd85315fc1a9fd34",
+        "selected_source_triangle_count": 635,
+        "source_name": "abdominal part of left pectoralis major",
+        "source_triangle_count": 1536,
+        "source_vertex_count": 1019
+      },
+      {
+        "anterior_source_vertex_count": 618,
+        "mechanics_convex_hull_vertex_count": 18,
+        "mechanics_source_vertex_count": 19,
+        "member": "isa_BP3D_4.0_obj_99/FJ1447M.obj",
+        "member_id": "FJ1447M",
+        "obj_sha256": "aab8ea03eed46a79b3f765ef539df785deb333e5079c21f8c7bec14444768a18",
+        "selected_source_triangle_count": 715,
+        "source_name": "clavicular part of left pectoralis major",
+        "source_triangle_count": 1846,
+        "source_vertex_count": 1495
+      },
+      {
+        "anterior_source_vertex_count": 2228,
+        "mechanics_convex_hull_vertex_count": 43,
+        "mechanics_source_vertex_count": 44,
+        "member": "isa_BP3D_4.0_obj_99/FJ1464M.obj",
+        "member_id": "FJ1464M",
+        "obj_sha256": "a2ffa047e9cff27df3ed7cb5f305491ce921f236cfe60ee90334cc5fead271c3",
+        "selected_source_triangle_count": 2874,
+        "source_name": "sternocostal part of left pectoralis major",
+        "source_triangle_count": 7114,
+        "source_vertex_count": 5466
+      }
+    ],
+    "myosim_manifest": {
+      "file": "myosim-fullbody-reference.manifest.json",
+      "sha256": "3e2ae4bc06ff0c3f97b2c699c00af0e3ec711d502562a0122f22d0691a35cb23"
+    }
+  }
+}

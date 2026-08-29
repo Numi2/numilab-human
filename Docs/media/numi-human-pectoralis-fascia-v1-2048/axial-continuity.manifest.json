@@ -1,0 +1,1870 @@
+{
+  "axial_continuity": {
+    "evidence_boundary": "Default-pose transformed source-vertex proximity catches gross visual separation; it is not an intervertebral-disc, cartilage, ligament, contact, or clinical certificate.",
+    "independent_articulation_count": 0,
+    "maximum_allowed_gap_m": 0.008,
+    "maximum_transition_gap_m": 0.00583653774172068,
+    "transitions": [
+      {
+        "maximum_allowed_gap_m": 0.008,
+        "minimum_vertex_gap_m": 0.000428179628655472,
+        "name": "occiput_to_atlas",
+        "source_member_ids": [
+          "FJ3309",
+          "FJ3176"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.008,
+        "minimum_vertex_gap_m": 0.00583653774172068,
+        "name": "cervical7_to_thoracic1",
+        "source_member_ids": [
+          "FJ3172",
+          "FJ3158"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.008,
+        "minimum_vertex_gap_m": 0.00023389896519932727,
+        "name": "thoracic12_to_lumbar1",
+        "source_member_ids": [
+          "FJ3156",
+          "FJ3157"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.008,
+        "minimum_vertex_gap_m": 0.00026370524935063783,
+        "name": "lumbar1_to_lumbar2",
+        "source_member_ids": [
+          "FJ3157",
+          "FJ3159"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.008,
+        "minimum_vertex_gap_m": 0.0002927031902857225,
+        "name": "lumbar2_to_lumbar3",
+        "source_member_ids": [
+          "FJ3159",
+          "FJ3162"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.008,
+        "minimum_vertex_gap_m": 0.00024394681694231706,
+        "name": "lumbar3_to_lumbar4",
+        "source_member_ids": [
+          "FJ3162",
+          "FJ3165"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.008,
+        "minimum_vertex_gap_m": 0.00015449711658158932,
+        "name": "lumbar4_to_lumbar5",
+        "source_member_ids": [
+          "FJ3165",
+          "FJ3168"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.008,
+        "minimum_vertex_gap_m": 0.0003758863413246484,
+        "name": "lumbar5_to_sacrum",
+        "source_member_ids": [
+          "FJ3168",
+          "FJ3393"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.008,
+        "minimum_vertex_gap_m": 0.0006317256401942603,
+        "name": "sacrum_to_right_hip",
+        "source_member_ids": [
+          "FJ3393",
+          "FJ3152"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      },
+      {
+        "maximum_allowed_gap_m": 0.008,
+        "minimum_vertex_gap_m": 0.0004882890810292152,
+        "name": "sacrum_to_left_hip",
+        "source_member_ids": [
+          "FJ3393",
+          "FJ3288"
+        ],
+        "status": "bounded_default_pose_visual_continuity_witness"
+      }
+    ]
+  },
+  "evidence_boundary": "The payload contains triangle surfaces for a provisional bone visual only. It does not create colliders, skinning weights, soft-tissue mechanics, muscle attachments, or a medical registration claim.",
+  "hallux_rigid_compounds": [
+    {
+      "adjacent_surface_gaps_m": [
+        0.0007272075973619957,
+        0.0004548792600885242
+      ],
+      "binding": "one shared existing MyoSim toes rigid-body transform",
+      "core_body_index": 139,
+      "digit": 1,
+      "distal_phalanx_member_id": "FJ3192",
+      "independent_articulation_count": 0,
+      "maximum_adjacent_surface_gap_m": 0.0007272075973619957,
+      "maximum_allowed_adjacent_surface_gap_m": 0.001,
+      "myosim_body": "toes_r",
+      "source_member_ids": [
+        "FJ3351",
+        "FJ3310",
+        "FJ3192"
+      ]
+    },
+    {
+      "adjacent_surface_gaps_m": [
+        0.0006286672566110262,
+        0.0004997806438461511
+      ],
+      "binding": "one shared existing MyoSim toes rigid-body transform",
+      "core_body_index": 153,
+      "digit": 1,
+      "distal_phalanx_member_id": "FJ3182",
+      "independent_articulation_count": 0,
+      "maximum_adjacent_surface_gap_m": 0.0006286672566110262,
+      "maximum_allowed_adjacent_surface_gap_m": 0.001,
+      "myosim_body": "toes_l",
+      "source_member_ids": [
+        "FJ3241",
+        "FJ3329",
+        "FJ3182"
+      ]
+    }
+  ],
+  "payload": {
+    "bone_count": 184,
+    "bytes": 11511380,
+    "file": "bodyparts3d-myosim-major-bones.nhbones",
+    "index_count": 1370928,
+    "magic": "NHBONES1",
+    "payload_abi": 2,
+    "registration_fingerprint32": "e29e4171",
+    "sha256": "f45e36c5920c2acfafe04e05ac3f4d88c90fc4c54df5579cffa9d1fbe6c9ec10",
+    "vertex_count": 250721
+  },
+  "runtime_binding": "one source-local bone instance per Core articulated inertial body; local translation, rotation, and uniform scale are carried in the native payload",
+  "schema": "numi.human.bodyparts3d-myosim-major-bone-visual-payload.v1",
+  "source": {
+    "anchors": [
+      {
+        "core_body_index": 1,
+        "member_id": "FJ3393",
+        "member_sha256": "cd04cc9f78d758ba34e92896914f647d22d257b9e7e51b97764670f694033489",
+        "myosim_body": "sacrum",
+        "triangle_count": 9922,
+        "vertex_count": 5293
+      },
+      {
+        "core_body_index": 131,
+        "member_id": "FJ3365",
+        "member_sha256": "5eff0f92905dd45bd0e79b1de0144dc15988c73c683468163255ba1452d58037",
+        "myosim_body": "femur_r",
+        "triangle_count": 3102,
+        "vertex_count": 1574
+      },
+      {
+        "core_body_index": 145,
+        "member_id": "FJ3259",
+        "member_sha256": "d291cc3619c32c68edb9d29e0b755634c2cb85e3db89f0d0b63a316f879ef86d",
+        "myosim_body": "femur_l",
+        "triangle_count": 3204,
+        "vertex_count": 1623
+      },
+      {
+        "core_body_index": 136,
+        "member_id": "FJ3387",
+        "member_sha256": "01879d7310938e82eecc02e1115332497e94085ff5cc1fa8eeee47ad1f5d3578",
+        "myosim_body": "tibia_r",
+        "triangle_count": 1664,
+        "vertex_count": 857
+      },
+      {
+        "core_body_index": 150,
+        "member_id": "FJ3282",
+        "member_sha256": "40e55d7d28f060be61815603ee5eb1c0ba4c2e93af6fed6b5db7ca88d4ed82ef",
+        "myosim_body": "tibia_l",
+        "triangle_count": 1692,
+        "vertex_count": 880
+      },
+      {
+        "core_body_index": 138,
+        "member_id": "FJ3360",
+        "member_sha256": "b53e7970e822e997e1b05f94f42514d07a3f98edcc63ec7dd7219354ce1d8176",
+        "myosim_body": "calcn_r",
+        "triangle_count": 1262,
+        "vertex_count": 739
+      },
+      {
+        "core_body_index": 152,
+        "member_id": "FJ3256",
+        "member_sha256": "5424e3e394e233213071fbf46f178ed9123da4763d6b64125f32e7b8af1803d8",
+        "myosim_body": "calcn_l",
+        "triangle_count": 1288,
+        "vertex_count": 719
+      },
+      {
+        "core_body_index": 29,
+        "member_id": "FJ3362",
+        "member_sha256": "9a111cac8351e79dd1315aea90108fe56f78e4bf0159473e6ad727ba91b60e6d",
+        "myosim_body": "clavicle_r",
+        "triangle_count": 1146,
+        "vertex_count": 583
+      },
+      {
+        "core_body_index": 79,
+        "member_id": "FJ3237",
+        "member_sha256": "2491009d53eaed99ccb2a802b29402eec715eb8d207fb819fad67b0720195cf2",
+        "myosim_body": "clavicle_l",
+        "triangle_count": 1176,
+        "vertex_count": 602
+      },
+      {
+        "core_body_index": 34,
+        "member_id": "FJ3384",
+        "member_sha256": "1641b04e55f9d75bdd6f1f4f07ea596e5dea0a8cb6b348bff47281b8a0bc6e5d",
+        "myosim_body": "scapula_r",
+        "triangle_count": 26172,
+        "vertex_count": 13118
+      },
+      {
+        "core_body_index": 84,
+        "member_id": "FJ3279",
+        "member_sha256": "e63a5675c6cdbe942322305920241b4a63762d7a65879572400f444fa3d42739",
+        "myosim_body": "scapula_l",
+        "triangle_count": 28106,
+        "vertex_count": 14068
+      },
+      {
+        "core_body_index": 41,
+        "member_id": "FJ3368",
+        "member_sha256": "85f5445a11ecb029b027db0b9b34933982836d442b19ff531d1ca35a3bc3a237",
+        "myosim_body": "humerus_r",
+        "triangle_count": 3784,
+        "vertex_count": 2233
+      },
+      {
+        "core_body_index": 91,
+        "member_id": "FJ3262",
+        "member_sha256": "4a07066d7c7f17dfeb61797dc31c529d0d6fd3fda8136912ebd8a92ccc1ac6fc",
+        "myosim_body": "humerus_l",
+        "triangle_count": 3844,
+        "vertex_count": 2073
+      },
+      {
+        "core_body_index": 42,
+        "member_id": "FJ3391",
+        "member_sha256": "0aad73148e036c980ab24dfa675fcc1f109e5c60d82c12f3696420cf93cb4a98",
+        "myosim_body": "ulna_r",
+        "triangle_count": 834,
+        "vertex_count": 500
+      },
+      {
+        "core_body_index": 92,
+        "member_id": "FJ3286",
+        "member_sha256": "0e3c48a4b664ffc37ef11eb4754c6c7f4adc8fd1d3e54d1286307432c7d04bfc",
+        "myosim_body": "ulna_l",
+        "triangle_count": 824,
+        "vertex_count": 496
+      },
+      {
+        "core_body_index": 43,
+        "member_id": "FJ3349",
+        "member_sha256": "0f824e639b13ea02959734a0d9bd8d7ca67d0b51f531a138d769e1d3b22e0c98",
+        "myosim_body": "radius_r",
+        "triangle_count": 672,
+        "vertex_count": 388
+      },
+      {
+        "core_body_index": 93,
+        "member_id": "FJ3277",
+        "member_sha256": "c41a7de7eddf5b91543fb22cf34c7dcad50241ffe1faae6ae22e1be30ca9390a",
+        "myosim_body": "radius_l",
+        "triangle_count": 632,
+        "vertex_count": 368
+      },
+      {
+        "core_body_index": 128,
+        "member_id": "FJ3152",
+        "member_sha256": "99de26e5435a8397b6f39b44ada75319d5e8fa1433e1ea38fdd8de9e079ed9a9",
+        "myosim_body": "pelvis",
+        "triangle_count": 2374,
+        "vertex_count": 1282
+      },
+      {
+        "core_body_index": 128,
+        "member_id": "FJ3288",
+        "member_sha256": "bfc8b489fee0945cd1d387cf64bd3691af8e033fa72f9fccae45cfd55ac88694",
+        "myosim_body": "pelvis",
+        "triangle_count": 2332,
+        "vertex_count": 1257
+      },
+      {
+        "core_body_index": 136,
+        "member_id": "FJ3366",
+        "member_sha256": "d03fee02cf8eefad1ecfcb9246e3f43ad3c4615c21ce08dc5e2b6901c6395a86",
+        "myosim_body": "tibia_r",
+        "triangle_count": 1142,
+        "vertex_count": 593
+      },
+      {
+        "core_body_index": 150,
+        "member_id": "FJ3260",
+        "member_sha256": "b5fbb694e1d881033ec8318b97c41e9d9bedc89a8df9845573b1aac528829331",
+        "myosim_body": "tibia_l",
+        "triangle_count": 1124,
+        "vertex_count": 577
+      },
+      {
+        "core_body_index": 137,
+        "member_id": "FJ3385",
+        "member_sha256": "8b35f0132c1a05b64f26746fdd0496a2495280cd0c2ac90dbf637fd74f79f54f",
+        "myosim_body": "talus_r",
+        "triangle_count": 1380,
+        "vertex_count": 812
+      },
+      {
+        "core_body_index": 151,
+        "member_id": "FJ3280",
+        "member_sha256": "56b40cfe8944df25ebed250dbcc80794ee5435e6ab667edddabf4324553bdb3c",
+        "myosim_body": "talus_l",
+        "triangle_count": 1356,
+        "vertex_count": 776
+      },
+      {
+        "core_body_index": 142,
+        "member_id": "FJ3381",
+        "member_sha256": "b513b8cb6b37e3eb4211fd35a4469efdf79de37887a0af8c582efc836a6f6307",
+        "myosim_body": "patella_r",
+        "triangle_count": 306,
+        "vertex_count": 178
+      },
+      {
+        "core_body_index": 156,
+        "member_id": "FJ3275",
+        "member_sha256": "768362d04f0f91cea9a28f4aeae9d9f63f3c82450b68d185fa4afefe75d75cc1",
+        "myosim_body": "patella_l",
+        "triangle_count": 310,
+        "vertex_count": 180
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3178",
+        "member_sha256": "ec90f03f2ce1edebc8793a9e9973229b198d6367eb5eab1dff6e238110e94d9d",
+        "myosim_body": "torso",
+        "triangle_count": 4646,
+        "vertex_count": 3691
+      },
+      {
+        "core_body_index": 23,
+        "member_id": "FJ3380",
+        "member_sha256": "b6874589f3ddcbeae7153c2d499c23d0083eb18e95d139759529c901384758c8",
+        "myosim_body": "head",
+        "triangle_count": 13002,
+        "vertex_count": 8028
+      },
+      {
+        "core_body_index": 23,
+        "member_id": "FJ3274",
+        "member_sha256": "45ab8d9b21c1854c9ea744137560020004e694eba3217a0a3fa0876d02207f65",
+        "myosim_body": "head",
+        "triangle_count": 13210,
+        "vertex_count": 8367
+      },
+      {
+        "core_body_index": 23,
+        "member_id": "FJ3386",
+        "member_sha256": "b008c86a55b1e7743a56060b4d9cb8f8abcac71d83810f66fc50847181b7fa75",
+        "myosim_body": "head",
+        "triangle_count": 4928,
+        "vertex_count": 3102
+      },
+      {
+        "core_body_index": 23,
+        "member_id": "FJ3281",
+        "member_sha256": "0dd858a59e8f4f004871f55411f4048bd6a69e4ec55cf6daa08ae34a5dbd974a",
+        "myosim_body": "head",
+        "triangle_count": 4936,
+        "vertex_count": 3013
+      },
+      {
+        "core_body_index": 23,
+        "member_id": "FJ3200",
+        "member_sha256": "48583dbbeab8ae243aa4c266b44ca5b26b9c4e1e79976819cfdf5dcb59ec5772",
+        "myosim_body": "head",
+        "triangle_count": 14510,
+        "vertex_count": 8472
+      },
+      {
+        "core_body_index": 23,
+        "member_id": "FJ3309",
+        "member_sha256": "c0262a08591e48504c8a53302525377e0c4ad1c165456475f3bb80aab6202d44",
+        "myosim_body": "head",
+        "triangle_count": 12450,
+        "vertex_count": 6995
+      },
+      {
+        "core_body_index": 23,
+        "member_id": "FJ3394",
+        "member_sha256": "127f537eb70e6ad4b036a535550ab7a681ce06dbdc1efda85956d910c54d6285",
+        "myosim_body": "head",
+        "triangle_count": 8154,
+        "vertex_count": 4957
+      },
+      {
+        "core_body_index": 23,
+        "member_id": "FJ3289",
+        "member_sha256": "c38102c34660e2b767a7b95a341380bf4a52c754c6235fcd322be5c7b8cb1745",
+        "myosim_body": "head",
+        "triangle_count": 5576,
+        "vertex_count": 2845
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3334",
+        "member_sha256": "3831c5c578d45fc491e7e72417cc436e04a1a3a1916138e51528ad0b0b212a54",
+        "myosim_body": "torso",
+        "triangle_count": 3276,
+        "vertex_count": 1642
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3336",
+        "member_sha256": "57084a626a91aa88782f2e836c75450cd90bf19717dfd3f31602b4c674b70c0c",
+        "myosim_body": "torso",
+        "triangle_count": 5594,
+        "vertex_count": 2861
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3338",
+        "member_sha256": "b239419743f7320b8b1d4f4d96ab41c1ff7fccdc921fa3a99c700a9d6dbd2a6c",
+        "myosim_body": "torso",
+        "triangle_count": 7254,
+        "vertex_count": 3634
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3340",
+        "member_sha256": "ffca17251de4f457c4952e9d913070eb7a6f767493925ac3d8c3c744941b5dbd",
+        "myosim_body": "torso",
+        "triangle_count": 8832,
+        "vertex_count": 4435
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3342",
+        "member_sha256": "b2d1f3bc9478c51524628f4e79524290add55800ae85b06ff657f17f4c0c6f1f",
+        "myosim_body": "torso",
+        "triangle_count": 9710,
+        "vertex_count": 4910
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3344",
+        "member_sha256": "5e45ea5a527d3b7df56c508213020265ed1c8a0d9a99f31454b92059f4f1a95f",
+        "myosim_body": "torso",
+        "triangle_count": 10246,
+        "vertex_count": 5168
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3346",
+        "member_sha256": "86cc62c1a0a754f2e01a30b5d7179c745f3c2404ef4031ae43568667c4041996",
+        "myosim_body": "torso",
+        "triangle_count": 10032,
+        "vertex_count": 5058
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3347",
+        "member_sha256": "388e8f3dd5c308fe1454daed2aa3a2fced280d4ec60f97b547b476ca6b0da930",
+        "myosim_body": "torso",
+        "triangle_count": 8336,
+        "vertex_count": 4199
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3348",
+        "member_sha256": "4ef4af4eb8a7ea76479b2d4a1b2973c7d950f6e3aa5593eca4377258222bdaf6",
+        "myosim_body": "torso",
+        "triangle_count": 7576,
+        "vertex_count": 3808
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3330",
+        "member_sha256": "9e62a17a2ea9dc16797beec97bd0925c9692c2a4764391cbc1e289b0120e7aa4",
+        "myosim_body": "torso",
+        "triangle_count": 6820,
+        "vertex_count": 3415
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3331",
+        "member_sha256": "1fdce776ea65919bf9aa418ec91c872b3eb835daca57dc69a7caa40bb02707d7",
+        "myosim_body": "torso",
+        "triangle_count": 4866,
+        "vertex_count": 2437
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3332",
+        "member_sha256": "50dd4dac4ebb45fa245d700f7ceac89edd7503cb4caab154b644b0a808da2ecc",
+        "myosim_body": "torso",
+        "triangle_count": 2818,
+        "vertex_count": 1412
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3228",
+        "member_sha256": "803a7134c1e69f640b87f9c6c4a846c869379446e771a1a7c9d18914c331a603",
+        "myosim_body": "torso",
+        "triangle_count": 3276,
+        "vertex_count": 1641
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3229",
+        "member_sha256": "631b4f63625fa6cc89ad83961b2156abe5878d1baf4a8cb2b2acbaa06bc97f58",
+        "myosim_body": "torso",
+        "triangle_count": 5594,
+        "vertex_count": 2862
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3230",
+        "member_sha256": "8c097e93d79c610bed49d6c027d25c8439447c20bfb94fa64009b9c4db4d8f5b",
+        "myosim_body": "torso",
+        "triangle_count": 7254,
+        "vertex_count": 3637
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3231",
+        "member_sha256": "c1259fcdaf463bdecfc0868a3acc964edd4901ab03eb539b28e40462671be1fb",
+        "myosim_body": "torso",
+        "triangle_count": 8850,
+        "vertex_count": 4445
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3232",
+        "member_sha256": "c40bbcd5c2b98bb94161819a2cf824296289ce68eb62b37f3b175af4aadfd351",
+        "myosim_body": "torso",
+        "triangle_count": 9710,
+        "vertex_count": 4912
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3233",
+        "member_sha256": "8160b28fd649aadd705a05cc3e6e9cfd7035c44d8258b5a50977ec89fe8e7414",
+        "myosim_body": "torso",
+        "triangle_count": 10264,
+        "vertex_count": 5172
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3234",
+        "member_sha256": "372c650b2b7bc3f6767aa50a0f5b7e5dac6a15a17aeea5f5017166ba5d328757",
+        "myosim_body": "torso",
+        "triangle_count": 10032,
+        "vertex_count": 5054
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3235",
+        "member_sha256": "7d9525200958a9545391a2e135649580282108d77f7ae88a34003a56f48f4c8b",
+        "myosim_body": "torso",
+        "triangle_count": 8336,
+        "vertex_count": 4211
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3236",
+        "member_sha256": "ec09e201beaaa70c24a41eedcef4671118b453361f827be02fb73fc361208db8",
+        "myosim_body": "torso",
+        "triangle_count": 7576,
+        "vertex_count": 3805
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3225",
+        "member_sha256": "40680b5a3556b5984a5006e01649ff20cb4c88d9d3a7fef79cbad0648a972d54",
+        "myosim_body": "torso",
+        "triangle_count": 6826,
+        "vertex_count": 3419
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3226",
+        "member_sha256": "24a27d42732af55ad1e7142179f2dd4f906de78b701fbe5c459d8884a026f250",
+        "myosim_body": "torso",
+        "triangle_count": 4866,
+        "vertex_count": 2435
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3227",
+        "member_sha256": "3b7e5d6673a1be5bc14d72a4ea659d361b143f3fda5bca3ec758c176daba16c5",
+        "myosim_body": "torso",
+        "triangle_count": 2818,
+        "vertex_count": 1411
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3308",
+        "member_sha256": "0e08f1570755a9675e2556013eda861f00f31fe7ae2139e24584129dfe78d2c2",
+        "myosim_body": "toes_r",
+        "triangle_count": 716,
+        "vertex_count": 455
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3377",
+        "member_sha256": "7ae757be0a8a55129816045c2e92b32576e2c96fe3b047f7841807092b5bf8f4",
+        "myosim_body": "toes_r",
+        "triangle_count": 952,
+        "vertex_count": 615
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3370",
+        "member_sha256": "3501e34aec7f81bd12b237c9bdccf2c8185d05895637427a92b210edc8423c33",
+        "myosim_body": "toes_r",
+        "triangle_count": 450,
+        "vertex_count": 288
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3373",
+        "member_sha256": "628c8da7294f477a1c8c50d6445159bbff0ecda91d35dde48f780eec9eb9657c",
+        "myosim_body": "toes_r",
+        "triangle_count": 626,
+        "vertex_count": 395
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3364",
+        "member_sha256": "d5ac55e9aa466b0e14d8d7760f7ef2a6edb0d95cfea56205557f647c451a8079",
+        "myosim_body": "toes_r",
+        "triangle_count": 932,
+        "vertex_count": 543
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3307",
+        "member_sha256": "a9608a209e96492213275d1592554855a6acbf0d3a5ec8b05fb5fadfceb5df6c",
+        "myosim_body": "toes_l",
+        "triangle_count": 744,
+        "vertex_count": 459
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3271",
+        "member_sha256": "0924246c1693b45623469428ccc7dd86688078edbf7d3e43471f3b8d37e3644d",
+        "myosim_body": "toes_l",
+        "triangle_count": 996,
+        "vertex_count": 582
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3264",
+        "member_sha256": "6770594a46c236c3585febbea87f2e19ce4e27e83def3f37d2a653888c7e60dc",
+        "myosim_body": "toes_l",
+        "triangle_count": 466,
+        "vertex_count": 305
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3267",
+        "member_sha256": "60757ac856520feaac072a47e77d7fffb98571d099838a9c628ccad8fba28bbc",
+        "myosim_body": "toes_l",
+        "triangle_count": 680,
+        "vertex_count": 405
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3258",
+        "member_sha256": "1d9269949005e15c6a39fc30cbe5499468e99c074d5ccf48e1032c8689e12664",
+        "myosim_body": "toes_l",
+        "triangle_count": 886,
+        "vertex_count": 494
+      },
+      {
+        "core_body_index": 26,
+        "member_id": "FJ3176",
+        "member_sha256": "8ac9ee6d7631edc066a322af278ed508eab4d9c0919e9a77657ead17c14c8a79",
+        "myosim_body": "cervical_spine",
+        "triangle_count": 2094,
+        "vertex_count": 1433
+      },
+      {
+        "core_body_index": 26,
+        "member_id": "FJ3177",
+        "member_sha256": "ae446bbf47561c5ff2a2c0a03bfb158ba2581477ae5078ac89cc95b92637adab",
+        "myosim_body": "cervical_spine",
+        "triangle_count": 2288,
+        "vertex_count": 1540
+      },
+      {
+        "core_body_index": 48,
+        "member_id": "FJ3390",
+        "member_sha256": "aa1d02ab7a2b7e2d87125a43fc92f497d9d35323de3d1a8b25185dbb7dd5cc09",
+        "myosim_body": "triquetrum_r",
+        "triangle_count": 170,
+        "vertex_count": 139
+      },
+      {
+        "core_body_index": 98,
+        "member_id": "FJ3285",
+        "member_sha256": "3561c1648197f5c2f44c577e2b54c1fbf76b36bbcab207f8b67286ba134cea2c",
+        "myosim_body": "triquetrum_l",
+        "triangle_count": 304,
+        "vertex_count": 180
+      },
+      {
+        "core_body_index": 46,
+        "member_id": "FJ3383",
+        "member_sha256": "e96e60d6c03b0581caa5733e3ab65aca6dc3671a476d78f123dcd48ecbee0050",
+        "myosim_body": "scaphoid_r",
+        "triangle_count": 322,
+        "vertex_count": 195
+      },
+      {
+        "core_body_index": 45,
+        "member_id": "FJ3374",
+        "member_sha256": "82da5ab98cc4f4e311eba2ee20b811bfa392a05d65d9f8c4ed0b9c7fd62880a1",
+        "myosim_body": "lunate_r",
+        "triangle_count": 332,
+        "vertex_count": 196
+      },
+      {
+        "core_body_index": 47,
+        "member_id": "FJ3382",
+        "member_sha256": "c5b1ce6020acc6e1feff8f44a3f0b5ec717e3cb3218701fbe86644975d981684",
+        "myosim_body": "pisiform_r",
+        "triangle_count": 190,
+        "vertex_count": 110
+      },
+      {
+        "core_body_index": 49,
+        "member_id": "FJ3361",
+        "member_sha256": "982098ff86ccc18075bd4ecf422c4bca732f4d691d249c8f381bac574287c59b",
+        "myosim_body": "capitate_r",
+        "triangle_count": 428,
+        "vertex_count": 256
+      },
+      {
+        "core_body_index": 50,
+        "member_id": "FJ3388",
+        "member_sha256": "3b2475587f9ca59d43cb48c7275999f795f97f8b0ed6c68d5b37ff582382d81f",
+        "myosim_body": "trapezium_r",
+        "triangle_count": 434,
+        "vertex_count": 277
+      },
+      {
+        "core_body_index": 55,
+        "member_id": "FJ3389",
+        "member_sha256": "6823c47b6593463e65b85861e51026b06b76e0196dde1e8fae8b902a32f2a0e8",
+        "myosim_body": "trapezoid_r",
+        "triangle_count": 360,
+        "vertex_count": 271
+      },
+      {
+        "core_body_index": 56,
+        "member_id": "FJ3367",
+        "member_sha256": "9c27cf5b75dd149f2469403af7ad68263e1eff29307864ae10481ac647262eba",
+        "myosim_body": "hamate_r",
+        "triangle_count": 522,
+        "vertex_count": 335
+      },
+      {
+        "core_body_index": 96,
+        "member_id": "FJ3278",
+        "member_sha256": "5389b07855a3273ac4646092eaf667466eb3f00cf5f78ed90993e82200f550ab",
+        "myosim_body": "scaphoid_l",
+        "triangle_count": 312,
+        "vertex_count": 176
+      },
+      {
+        "core_body_index": 95,
+        "member_id": "FJ3268",
+        "member_sha256": "3d4a712f4ee30883f8967d15e8ac70e707d524213814bc7e2fbd51a123619b83",
+        "myosim_body": "lunate_l",
+        "triangle_count": 314,
+        "vertex_count": 187
+      },
+      {
+        "core_body_index": 97,
+        "member_id": "FJ3276",
+        "member_sha256": "6162726ac4bcb29a9ba8489570650ba8a323576b03423fb16b27bcd1e55c0658",
+        "myosim_body": "pisiform_l",
+        "triangle_count": 210,
+        "vertex_count": 116
+      },
+      {
+        "core_body_index": 99,
+        "member_id": "FJ3257",
+        "member_sha256": "d229f9418122099af72721ebeee60b15b68604f3da3532c0625909dc2ac9520c",
+        "myosim_body": "capitate_l",
+        "triangle_count": 402,
+        "vertex_count": 237
+      },
+      {
+        "core_body_index": 100,
+        "member_id": "FJ3283",
+        "member_sha256": "50006736c04d10ad0af5c94054c9cf64eac6e55fb0cdde25eefcad1170492f93",
+        "myosim_body": "trapezium_l",
+        "triangle_count": 356,
+        "vertex_count": 226
+      },
+      {
+        "core_body_index": 105,
+        "member_id": "FJ3284",
+        "member_sha256": "e4378dd24f9206c580457f09b75cc05a36f0a1b4049fc2c2ce57da51a2ebd7c5",
+        "myosim_body": "trapezoid_l",
+        "triangle_count": 398,
+        "vertex_count": 279
+      },
+      {
+        "core_body_index": 106,
+        "member_id": "FJ3261",
+        "member_sha256": "665e0be6779b9bc398e0947eaf190cc4d942e030a05d1a4cfe3ce4270bf8ddbf",
+        "myosim_body": "hamate_l",
+        "triangle_count": 452,
+        "vertex_count": 280
+      },
+      {
+        "core_body_index": 52,
+        "member_id": "FJ3350",
+        "member_sha256": "92ef27746cf2c5b317b88558b42e171128f980ea16414ca6e3647d19d1594382",
+        "myosim_body": "firstmc_r",
+        "triangle_count": 566,
+        "vertex_count": 307
+      },
+      {
+        "core_body_index": 57,
+        "member_id": "FJ3352",
+        "member_sha256": "6d4e9874925f542124ced9e041f340de5b9c8f872d6ad7e2d483e9d0ab159980",
+        "myosim_body": "secondmc_r",
+        "triangle_count": 748,
+        "vertex_count": 418
+      },
+      {
+        "core_body_index": 62,
+        "member_id": "FJ3354",
+        "member_sha256": "98a26b8f08e6cd3578706a65d83c2e1e432d7a206202294cd525aa287b75072b",
+        "myosim_body": "thirdmc_r",
+        "triangle_count": 702,
+        "vertex_count": 404
+      },
+      {
+        "core_body_index": 67,
+        "member_id": "FJ3356",
+        "member_sha256": "3bb88e2a98ce1cb0ab8af411397e5edc5777546c394b25d4d4ee585493ee3718",
+        "myosim_body": "fourthmc_r",
+        "triangle_count": 536,
+        "vertex_count": 340
+      },
+      {
+        "core_body_index": 72,
+        "member_id": "FJ3358",
+        "member_sha256": "23d26888c325fd6a2de2688e948de72057afaf383db13875445fe597bd2a8bfd",
+        "myosim_body": "fifthmc_r",
+        "triangle_count": 506,
+        "vertex_count": 279
+      },
+      {
+        "core_body_index": 53,
+        "member_id": "FJ3327",
+        "member_sha256": "84d3df498603c91935ae8edfc341c17ad3e46b910249a98e1e3edd4ccf309e71",
+        "myosim_body": "proximal_thumb_r",
+        "triangle_count": 318,
+        "vertex_count": 197
+      },
+      {
+        "core_body_index": 54,
+        "member_id": "FJ3198",
+        "member_sha256": "bfae0f42c3cffa63b93403bf6fe1b446dcf0f8fc3e1f8994544ac256830a7b3e",
+        "myosim_body": "distal_thumb_r",
+        "triangle_count": 240,
+        "vertex_count": 187
+      },
+      {
+        "core_body_index": 59,
+        "member_id": "FJ3322",
+        "member_sha256": "03cb38d378f7eb94046e45a6fcc214c48b1081b6a35c37a491bde356cb948764",
+        "myosim_body": "2proxph_r",
+        "triangle_count": 386,
+        "vertex_count": 226
+      },
+      {
+        "core_body_index": 60,
+        "member_id": "FJ3303",
+        "member_sha256": "af5955d21314bf58ed06fc28f28467e56ce366b658372b37a5e21936ed9f2c8b",
+        "myosim_body": "midph2_r",
+        "triangle_count": 264,
+        "vertex_count": 190
+      },
+      {
+        "core_body_index": 61,
+        "member_id": "FJ3193",
+        "member_sha256": "00d90373136e996def72c45bb2de42630f7533014b622d36bbf56c4121355e4b",
+        "myosim_body": "distph2_r",
+        "triangle_count": 210,
+        "vertex_count": 188
+      },
+      {
+        "core_body_index": 64,
+        "member_id": "FJ3325",
+        "member_sha256": "ea76430375e036eea61a11c3edcbece711496563e5f2d35e6bee7f1a1cb49569",
+        "myosim_body": "3proxph_r",
+        "triangle_count": 458,
+        "vertex_count": 271
+      },
+      {
+        "core_body_index": 65,
+        "member_id": "FJ3306",
+        "member_sha256": "60a6197d8d7dedcb1039f82613c3c9e968109a9588b89a767ba6a44202f7c830",
+        "myosim_body": "midph3_r",
+        "triangle_count": 342,
+        "vertex_count": 227
+      },
+      {
+        "core_body_index": 66,
+        "member_id": "FJ3196",
+        "member_sha256": "901e109df6e4a98b88dae7cdddda416c4cdd91e58093f1dc51d80ccc7c4e9b34",
+        "myosim_body": "distph3_r",
+        "triangle_count": 174,
+        "vertex_count": 143
+      },
+      {
+        "core_body_index": 69,
+        "member_id": "FJ3326",
+        "member_sha256": "5bb35c193650c9e390ad18d2e9ca834c19ab32d478a12446380d8cd50b9b0ca2",
+        "myosim_body": "4proxph_r",
+        "triangle_count": 376,
+        "vertex_count": 209
+      },
+      {
+        "core_body_index": 70,
+        "member_id": "FJ3292",
+        "member_sha256": "11af3f3453af291b20b0f4a9002c3e0906535acdc0004bd175876ddeecb9a094",
+        "myosim_body": "midph4_r",
+        "triangle_count": 316,
+        "vertex_count": 219
+      },
+      {
+        "core_body_index": 71,
+        "member_id": "FJ3197",
+        "member_sha256": "4fece0e70293449e99a1b27a0d40c9d4fedd548ff0471fa7c783e5d973cbfba3",
+        "myosim_body": "distph4_r",
+        "triangle_count": 112,
+        "vertex_count": 114
+      },
+      {
+        "core_body_index": 74,
+        "member_id": "FJ3323",
+        "member_sha256": "c3aaebcb7e86e3610f6d7a6896b33a60d7f544f924bdf0c4b639f8dae8c62e55",
+        "myosim_body": "5proxph_r",
+        "triangle_count": 314,
+        "vertex_count": 187
+      },
+      {
+        "core_body_index": 75,
+        "member_id": "FJ3304",
+        "member_sha256": "4cd1972167a669afb93f288cf994101bb32083b95efbfc1696b1781560586ca0",
+        "myosim_body": "midph5_r",
+        "triangle_count": 208,
+        "vertex_count": 169
+      },
+      {
+        "core_body_index": 76,
+        "member_id": "FJ3194",
+        "member_sha256": "0edc751d14c5260c93fcde78f868ce49521eec95085a613417a96ddfd6a8965d",
+        "myosim_body": "distph5_r",
+        "triangle_count": 188,
+        "vertex_count": 140
+      },
+      {
+        "core_body_index": 102,
+        "member_id": "FJ3240",
+        "member_sha256": "f512f1433a67003297c3ca0fca775c94372313cf3c3de28774a1cd7556e08362",
+        "myosim_body": "firstmc_l",
+        "triangle_count": 578,
+        "vertex_count": 304
+      },
+      {
+        "core_body_index": 107,
+        "member_id": "FJ3243",
+        "member_sha256": "728fb5278b0e3d2ac9fb0af78ade721c5cb8764144e318a85f07ff9cdb9d7f7d",
+        "myosim_body": "secondmc_l",
+        "triangle_count": 774,
+        "vertex_count": 420
+      },
+      {
+        "core_body_index": 112,
+        "member_id": "FJ3246",
+        "member_sha256": "fa86f28ff85a3a1e3ac6872a05912deece4d3f8489e08ea4d21b432db304938b",
+        "myosim_body": "thirdmc_l",
+        "triangle_count": 708,
+        "vertex_count": 392
+      },
+      {
+        "core_body_index": 117,
+        "member_id": "FJ3249",
+        "member_sha256": "c5f7a10a04542437ff52fde75f81c5b0b2cba6a4a68c56b829c9e0de2fe1b72f",
+        "myosim_body": "fourthmc_l",
+        "triangle_count": 528,
+        "vertex_count": 316
+      },
+      {
+        "core_body_index": 122,
+        "member_id": "FJ3252",
+        "member_sha256": "ca8db2999ff2d7a14a61e9cbeb83a01011a3557df844ff1c47bb7ac3eaeccdb8",
+        "myosim_body": "fifthmc_l",
+        "triangle_count": 500,
+        "vertex_count": 282
+      },
+      {
+        "core_body_index": 103,
+        "member_id": "FJ3318",
+        "member_sha256": "3b327f7169609c03540967f7f8ceba810afda27a427cb5f16ea6641ef429837a",
+        "myosim_body": "proximal_thumb_l",
+        "triangle_count": 346,
+        "vertex_count": 202
+      },
+      {
+        "core_body_index": 104,
+        "member_id": "FJ3188",
+        "member_sha256": "cafb49c4af872d990b2cd7a3ea279e088ea596cea25ee2fdce16b8ebbb04d37c",
+        "myosim_body": "distal_thumb_l",
+        "triangle_count": 270,
+        "vertex_count": 189
+      },
+      {
+        "core_body_index": 109,
+        "member_id": "FJ3313",
+        "member_sha256": "3eb71ace606cc3271523e30a405c061290d9da661b59310a682c9d50d9c0ddf1",
+        "myosim_body": "2proxph_l",
+        "triangle_count": 392,
+        "vertex_count": 222
+      },
+      {
+        "core_body_index": 110,
+        "member_id": "FJ3296",
+        "member_sha256": "a2f1986d020da3ec013aeefb14b11223b18ab4181f0e7f2e56d54faee672e34f",
+        "myosim_body": "midph2_l",
+        "triangle_count": 306,
+        "vertex_count": 188
+      },
+      {
+        "core_body_index": 111,
+        "member_id": "FJ3183",
+        "member_sha256": "53cd2e02023923e93f7651aed2b7b198fdaa9e0c8c8e83167b7ba371a2467396",
+        "myosim_body": "distph2_l",
+        "triangle_count": 328,
+        "vertex_count": 204
+      },
+      {
+        "core_body_index": 114,
+        "member_id": "FJ3316",
+        "member_sha256": "5dccce5f8ff2f9152fb6b758b8cdd0bcf9fd73cc01a78464a965f69e90994bb6",
+        "myosim_body": "3proxph_l",
+        "triangle_count": 460,
+        "vertex_count": 264
+      },
+      {
+        "core_body_index": 115,
+        "member_id": "FJ3299",
+        "member_sha256": "f0404230992ffcf77f1d3834c6015305abe10c2c40a84e2e920a21d9cc0743f2",
+        "myosim_body": "midph3_l",
+        "triangle_count": 384,
+        "vertex_count": 229
+      },
+      {
+        "core_body_index": 116,
+        "member_id": "FJ3186",
+        "member_sha256": "52a6da87eb85141fbfc47457b45704fbb360a64d30a9fe13b44edbfcdfcc7a8a",
+        "myosim_body": "distph3_l",
+        "triangle_count": 266,
+        "vertex_count": 173
+      },
+      {
+        "core_body_index": 119,
+        "member_id": "FJ3317",
+        "member_sha256": "099ccb27cdafeb169ffeb8bc73804910f30a6cefccf830d4dbfa6855bfebf46c",
+        "myosim_body": "4proxph_l",
+        "triangle_count": 376,
+        "vertex_count": 205
+      },
+      {
+        "core_body_index": 120,
+        "member_id": "FJ3291",
+        "member_sha256": "5c352c5c4329997419f731995176a2e293c749bc4896de37e6feb9d8b122cfac",
+        "myosim_body": "midph4_l",
+        "triangle_count": 340,
+        "vertex_count": 216
+      },
+      {
+        "core_body_index": 121,
+        "member_id": "FJ3187",
+        "member_sha256": "30fde420c59b5e151de258f9c358c4cc1463de8b85c60e7c4b0a4d7ff573b9ad",
+        "myosim_body": "distph4_l",
+        "triangle_count": 196,
+        "vertex_count": 140
+      },
+      {
+        "core_body_index": 124,
+        "member_id": "FJ3314",
+        "member_sha256": "8b824d96eed3bc1325665fa99592d58ebd43346b436154fefae6a3c2a98753af",
+        "myosim_body": "5proxph_l",
+        "triangle_count": 274,
+        "vertex_count": 164
+      },
+      {
+        "core_body_index": 125,
+        "member_id": "FJ3297",
+        "member_sha256": "536be862531dc82ab85bc0f7a49f1492574a39d613db552a1dc98b535e2c83f5",
+        "myosim_body": "midph5_l",
+        "triangle_count": 254,
+        "vertex_count": 192
+      },
+      {
+        "core_body_index": 126,
+        "member_id": "FJ3184",
+        "member_sha256": "56799202f865a5f250cf43da0619baebccde1dae3ee6cd3295e8e8171b4b6158",
+        "myosim_body": "distph5_l",
+        "triangle_count": 198,
+        "vertex_count": 154
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3351",
+        "member_sha256": "b70e565ec8ad8c09264ae66159415ca4f0cf639598812aac6fcf7b761c3758d3",
+        "myosim_body": "toes_r",
+        "triangle_count": 1122,
+        "vertex_count": 602
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3353",
+        "member_sha256": "f6c034b6b18aee623f510ee40e4171346c084e8bdd092354d634c87fc9af6acf",
+        "myosim_body": "toes_r",
+        "triangle_count": 752,
+        "vertex_count": 515
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3355",
+        "member_sha256": "90b28dbcd11e3d3a6f253adb1ddaa33f30040a08c71bb3a86242372ea9b6170e",
+        "myosim_body": "toes_r",
+        "triangle_count": 700,
+        "vertex_count": 423
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3357",
+        "member_sha256": "a5fd57a36b7525de383809bbbb37ff6a56a08ed0fb25af1684085418cc6e8202",
+        "myosim_body": "toes_r",
+        "triangle_count": 674,
+        "vertex_count": 397
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3359",
+        "member_sha256": "cc75b866a2d5ac0317eb3a1d64cef41a65231fab975613d108a4fcdcbc2c58b1",
+        "myosim_body": "toes_r",
+        "triangle_count": 794,
+        "vertex_count": 436
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3310",
+        "member_sha256": "bb72eb8ed4cedf8ad2ab9a0ee2de9c80232ab6bd0e8840259beb59b8bac3bd07",
+        "myosim_body": "toes_r",
+        "triangle_count": 486,
+        "vertex_count": 281
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3192",
+        "member_sha256": "aa15fa88eb0a4643efca0763a8088091f970ae510003dcc78c63e9a3dece5b03",
+        "myosim_body": "toes_r",
+        "triangle_count": 440,
+        "vertex_count": 289
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3319",
+        "member_sha256": "f8f7d8f026953233fd9412b80ba897fdd329a48108cbfd11578b56dcf9edcc1e",
+        "myosim_body": "toes_r",
+        "triangle_count": 414,
+        "vertex_count": 236
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3300",
+        "member_sha256": "505ff6d5185c0cec018be5a18206a2ccbcc8822f09b9282b9ad2586716d3a3d9",
+        "myosim_body": "toes_r",
+        "triangle_count": 264,
+        "vertex_count": 192
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3189",
+        "member_sha256": "82657ea63694cff41a774da0ad28110e80ea4951e0ddaafcb2e2646275a22702",
+        "myosim_body": "toes_r",
+        "triangle_count": 200,
+        "vertex_count": 170
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3320",
+        "member_sha256": "49b6fc5fe03ba23422e852d1fcd419b94bafbdf69fd20552eca0620e1ed62e6e",
+        "myosim_body": "toes_r",
+        "triangle_count": 422,
+        "vertex_count": 276
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3301",
+        "member_sha256": "1da31f6465a4767ab9dc18df433e5e0df0da4e9578d2864b02e5a71e785b5d8c",
+        "myosim_body": "toes_r",
+        "triangle_count": 292,
+        "vertex_count": 190
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3190",
+        "member_sha256": "b31499b63bc1798909b2c8cec77b7ebbb422cf2e0f715381601aa7c136b32aa9",
+        "myosim_body": "toes_r",
+        "triangle_count": 260,
+        "vertex_count": 162
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3321",
+        "member_sha256": "87949e88d498df13a376db05c0b094bae55ade09d5dec4ebd1557a5022d4f8ea",
+        "myosim_body": "toes_r",
+        "triangle_count": 438,
+        "vertex_count": 254
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3302",
+        "member_sha256": "dd69a8df55e8ff34f55fe2b906507aac2659be0d2784833b6a0c2046258929e3",
+        "myosim_body": "toes_r",
+        "triangle_count": 350,
+        "vertex_count": 220
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3191",
+        "member_sha256": "24a38431aa67546c25d938f7c5a572fb1206ffcf6bb6a14281c0322fc3d03bac",
+        "myosim_body": "toes_r",
+        "triangle_count": 244,
+        "vertex_count": 144
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3324",
+        "member_sha256": "deeabcf2bf83d7b9f77acf1c1634650805d467188f05505a6898aa3cbbdcea2b",
+        "myosim_body": "toes_r",
+        "triangle_count": 406,
+        "vertex_count": 238
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3305",
+        "member_sha256": "e1a4698c0de159b1851711084ddb96ccaf85022d941f305d670789444d6395bf",
+        "myosim_body": "toes_r",
+        "triangle_count": 136,
+        "vertex_count": 102
+      },
+      {
+        "core_body_index": 139,
+        "member_id": "FJ3195",
+        "member_sha256": "8053dcba2724d596cd66546934df05d04e5019b3b95ed6ec46795dff1b9abfde",
+        "myosim_body": "toes_r",
+        "triangle_count": 210,
+        "vertex_count": 178
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3241",
+        "member_sha256": "1bb41c84fddb65d6394a55c1f534102794942541212702008a6316f93ba08e16",
+        "myosim_body": "toes_l",
+        "triangle_count": 1172,
+        "vertex_count": 614
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3244",
+        "member_sha256": "4992101f55b96d8fe47abca6e441c902ba1e60429ee41576a1d3a9fc17e4f22a",
+        "myosim_body": "toes_l",
+        "triangle_count": 774,
+        "vertex_count": 487
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3247",
+        "member_sha256": "84d0c310fd1448e753ac7ed2bda2d62d9dfb8fbe78f749111aaae3a7281ac5cc",
+        "myosim_body": "toes_l",
+        "triangle_count": 742,
+        "vertex_count": 429
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3250",
+        "member_sha256": "e1656035430f9bf5c5b5bb3de96fabfd18e3d78c6e47c39a403a47bd80dfa61b",
+        "myosim_body": "toes_l",
+        "triangle_count": 772,
+        "vertex_count": 437
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3253",
+        "member_sha256": "29642383bc5c2d96f7025b2da0b8139f5b71d5d0e1470622745fd9b606575010",
+        "myosim_body": "toes_l",
+        "triangle_count": 864,
+        "vertex_count": 447
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3329",
+        "member_sha256": "3b6770f4dd2bfc54fea30468a90eafd63c21aea8381688ce0912f85502f86f25",
+        "myosim_body": "toes_l",
+        "triangle_count": 516,
+        "vertex_count": 318
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3182",
+        "member_sha256": "aa0a98125fc8e3cfafa4eb1a4a00df9f21b7eefbd6d66327561a70be6f15c5d9",
+        "myosim_body": "toes_l",
+        "triangle_count": 378,
+        "vertex_count": 256
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3328",
+        "member_sha256": "fd7064f417423cb6224e68867b0f3c5fd46c165a76fba035199e4db235d0616b",
+        "myosim_body": "toes_l",
+        "triangle_count": 380,
+        "vertex_count": 233
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3293",
+        "member_sha256": "72afe21185eed25dbab98a1bb7cb28e64012f672bfb3a76d81fdbf5b531f4958",
+        "myosim_body": "toes_l",
+        "triangle_count": 324,
+        "vertex_count": 197
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3179",
+        "member_sha256": "99c76669f09d0758cd2baadbba001728458615370705ef255b933f184689941b",
+        "myosim_body": "toes_l",
+        "triangle_count": 240,
+        "vertex_count": 169
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3311",
+        "member_sha256": "4787599e0e9fefaa45c40736f38ccacc8ec7e7e867cde692c5ea4f775e97364b",
+        "myosim_body": "toes_l",
+        "triangle_count": 408,
+        "vertex_count": 248
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3294",
+        "member_sha256": "036f7e9bca027b8b7e6075976249ba90178a9639591878a1b5954d0f7d237c17",
+        "myosim_body": "toes_l",
+        "triangle_count": 294,
+        "vertex_count": 185
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3180",
+        "member_sha256": "4b3b06a548ec2cf7eec686f9314dc0fb10fd7a72afc216b88d0b2bf857bb7bf1",
+        "myosim_body": "toes_l",
+        "triangle_count": 336,
+        "vertex_count": 188
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3312",
+        "member_sha256": "32b171c096dfe9993503b4f14e58d5b2996dadf73352efc506c04d1098370a5b",
+        "myosim_body": "toes_l",
+        "triangle_count": 438,
+        "vertex_count": 255
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3295",
+        "member_sha256": "cffbba99a2d64e833cac9545d91dc21092b2d7ecef35dd276a80ff7d35157239",
+        "myosim_body": "toes_l",
+        "triangle_count": 284,
+        "vertex_count": 183
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3181",
+        "member_sha256": "71e7e83288bde730b7f2c04b3150de2d27236f0ed8e9db6a88704f6c1b9c9721",
+        "myosim_body": "toes_l",
+        "triangle_count": 226,
+        "vertex_count": 146
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3315",
+        "member_sha256": "4488ac24e66f25118feb375fbdf19e6e123595cbd26c726c3df1604bec59c7f8",
+        "myosim_body": "toes_l",
+        "triangle_count": 396,
+        "vertex_count": 231
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3298",
+        "member_sha256": "140d41e53c49bbbaea54972b738b215d3c3ef6bb9c5284f9f7e0516a25e2f68c",
+        "myosim_body": "toes_l",
+        "triangle_count": 226,
+        "vertex_count": 143
+      },
+      {
+        "core_body_index": 153,
+        "member_id": "FJ3185",
+        "member_sha256": "5978ed3c7d728bc03a558c5fe2a7db6fd272d02dc6ed67a1fbb21ce1693d659f",
+        "myosim_body": "toes_l",
+        "triangle_count": 220,
+        "vertex_count": 160
+      },
+      {
+        "core_body_index": 19,
+        "member_id": "FJ3157",
+        "member_sha256": "67940f16382935851ebeb7a86c926dbf922070f390c438fdbbb56f7b7fb76057",
+        "myosim_body": "lumbar1",
+        "triangle_count": 2972,
+        "vertex_count": 1682
+      },
+      {
+        "core_body_index": 16,
+        "member_id": "FJ3159",
+        "member_sha256": "5e6301d2020ba73167e71c274848ddcbec0f7936d9f26a78f2de8ffa82f095c7",
+        "myosim_body": "lumbar2",
+        "triangle_count": 3214,
+        "vertex_count": 1875
+      },
+      {
+        "core_body_index": 13,
+        "member_id": "FJ3162",
+        "member_sha256": "aa58bbebf75e858d5258926b3f85ef6bc27f765464e87bfc828baf24156bf155",
+        "myosim_body": "lumbar3",
+        "triangle_count": 3272,
+        "vertex_count": 1849
+      },
+      {
+        "core_body_index": 10,
+        "member_id": "FJ3165",
+        "member_sha256": "2b02ea3874d39295b15a7de2a2b2dd1367cf5a00a5ba5f87519f2a7064b2286f",
+        "myosim_body": "lumbar4",
+        "triangle_count": 3512,
+        "vertex_count": 1968
+      },
+      {
+        "core_body_index": 4,
+        "member_id": "FJ3168",
+        "member_sha256": "0b8d0317800abd7c7cb66473cfa23bcecf2b2a8060a4434f32eb9f6ea93c1cc4",
+        "myosim_body": "lumbar5",
+        "triangle_count": 3892,
+        "vertex_count": 2115
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3158",
+        "member_sha256": "aa69c48def3434d6a3e1c56fc78af45f01545931fde5422af17d5f98ce9ed8a3",
+        "myosim_body": "torso",
+        "triangle_count": 1700,
+        "vertex_count": 1078
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3160",
+        "member_sha256": "20c1322be138314f42bbd1be3e69f3f6b590bbca7a8a3cd3414476f207721300",
+        "myosim_body": "torso",
+        "triangle_count": 1938,
+        "vertex_count": 1161
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3163",
+        "member_sha256": "3080ed603c54120fa5201816d77695354c81ea57275c599e68543bfb6ecb89c1",
+        "myosim_body": "torso",
+        "triangle_count": 2038,
+        "vertex_count": 1175
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3166",
+        "member_sha256": "cbd60a450a8b2f3ee90ccc655f79a63b090d8a3abf5e6849cf288a7b2d4207f2",
+        "myosim_body": "torso",
+        "triangle_count": 2066,
+        "vertex_count": 1210
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3169",
+        "member_sha256": "20c3b1dfed3a2ac5e631838ae924379672dac2047186711cfaa819b9a1db6e5b",
+        "myosim_body": "torso",
+        "triangle_count": 2280,
+        "vertex_count": 1321
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3171",
+        "member_sha256": "ebee2a07751de0aa0b33974eea0a9228fed9980f740c619776003d5a38c370c5",
+        "myosim_body": "torso",
+        "triangle_count": 2248,
+        "vertex_count": 1353
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3173",
+        "member_sha256": "3b66eb6444bc7b6ced9e32eacf2518861531b1296eff0e24db41a85bfdbaff66",
+        "myosim_body": "torso",
+        "triangle_count": 2574,
+        "vertex_count": 1478
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3174",
+        "member_sha256": "531253894a89d60c78a5235bfba826e0c30c21003267258fe1fca244d9090c1a",
+        "myosim_body": "torso",
+        "triangle_count": 2424,
+        "vertex_count": 1392
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3175",
+        "member_sha256": "34bd592e9f0282eea561a680697beeac655584ca9e4db9232b013535c57e7e61",
+        "myosim_body": "torso",
+        "triangle_count": 2586,
+        "vertex_count": 1443
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3154",
+        "member_sha256": "abf073c0206696c3baa5cb389831b28a6ce2c6770091065e834b8e4ef50676b1",
+        "myosim_body": "torso",
+        "triangle_count": 2790,
+        "vertex_count": 1584
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3155",
+        "member_sha256": "1f9c9f6dfcd5585e09abc2cf9a8f54ba1c33df399c6d4dad1a92301d85cd88b3",
+        "myosim_body": "torso",
+        "triangle_count": 2674,
+        "vertex_count": 1593
+      },
+      {
+        "core_body_index": 20,
+        "member_id": "FJ3156",
+        "member_sha256": "ffeebd0dead6ed95395e35c0843888b079acf67543e2820437e99978c69642a0",
+        "myosim_body": "torso",
+        "triangle_count": 2772,
+        "vertex_count": 1593
+      },
+      {
+        "core_body_index": 26,
+        "member_id": "FJ3161",
+        "member_sha256": "8f0de55a4feef85c256501a8afff7bb5aa3f77f4681af4c91801da87b54db103",
+        "myosim_body": "cervical_spine",
+        "triangle_count": 2030,
+        "vertex_count": 1323
+      },
+      {
+        "core_body_index": 26,
+        "member_id": "FJ3164",
+        "member_sha256": "a883dd5929817f87eb366a32ca9d82463fd0db40286c49b8adc9e9d1a8cecc34",
+        "myosim_body": "cervical_spine",
+        "triangle_count": 2410,
+        "vertex_count": 1469
+      },
+      {
+        "core_body_index": 26,
+        "member_id": "FJ3167",
+        "member_sha256": "b2485c3707b04f1fd455ee4d3a7b69670ec9c85d4ef9a54463e5c6089f1a69a7",
+        "myosim_body": "cervical_spine",
+        "triangle_count": 2196,
+        "vertex_count": 1539
+      },
+      {
+        "core_body_index": 26,
+        "member_id": "FJ3170",
+        "member_sha256": "ac100888f7e271851c138e8d41a52168070e4fe5c63e8876a4bcfba08f3b59aa",
+        "myosim_body": "cervical_spine",
+        "triangle_count": 2374,
+        "vertex_count": 1498
+      },
+      {
+        "core_body_index": 26,
+        "member_id": "FJ3172",
+        "member_sha256": "43bc0a1f9b3adffd5f45256b61f75affa15b56c85b387fa733b59de310216104",
+        "myosim_body": "cervical_spine",
+        "triangle_count": 1820,
+        "vertex_count": 1324
+      }
+    ],
+    "bodyparts": {
+      "archives": [
+        {
+          "file": "isa_BP3D_4.0_obj_99.zip",
+          "hierarchy": "is_a",
+          "sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e"
+        },
+        {
+          "file": "partof_BP3D_4.0_obj_99.zip",
+          "hierarchy": "part_of",
+          "sha256": "9fbc713fffeee924a5a657d9813d84d7eb957bded63adb854931dd5e3eb61c97"
+        }
+      ],
+      "id": "bodyparts3d_4",
+      "version": "4.0"
+    },
+    "myosim_source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "registration": {
+      "file": "axial-continuity-v1.registration.json",
+      "sha256": "e29e4171b83de245042396893cbff457262b88a267f220790dfc9e953d912508"
+    }
+  },
+  "status": "native_visual_binding_input_not_collision_or_physics",
+  "toe_rigid_compounds": [
+    {
+      "adjacent_surface_gaps_m": [
+        0.0007272075973619957,
+        0.0004548792600885242
+      ],
+      "binding": "one shared existing MyoSim toes rigid-body transform",
+      "core_body_index": 139,
+      "digit": 1,
+      "distal_phalanx_member_id": "FJ3192",
+      "independent_articulation_count": 0,
+      "maximum_adjacent_surface_gap_m": 0.0007272075973619957,
+      "maximum_allowed_adjacent_surface_gap_m": 0.001,
+      "myosim_body": "toes_r",
+      "source_member_ids": [
+        "FJ3351",
+        "FJ3310",
+        "FJ3192"
+      ]
+    },
+    {
+      "adjacent_surface_gaps_m": [
+        0.00047007410746448464,
+        0.0003380925339722879,
+        0.0005476612997626403
+      ],
+      "binding": "one shared existing MyoSim toes rigid-body transform",
+      "core_body_index": 139,
+      "digit": 2,
+      "distal_phalanx_member_id": "FJ3189",
+      "independent_articulation_count": 0,
+      "maximum_adjacent_surface_gap_m": 0.0005476612997626403,
+      "maximum_allowed_adjacent_surface_gap_m": 0.001,
+      "myosim_body": "toes_r",
+      "source_member_ids": [
+        "FJ3353",
+        "FJ3319",
+        "FJ3300",
+        "FJ3189"
+      ]
+    },
+    {
+      "adjacent_surface_gaps_m": [
+        0.0002402585647907365,
+        0.0004894739208615942,
+        0.00043119067556739843
+      ],
+      "binding": "one shared existing MyoSim toes rigid-body transform",
+      "core_body_index": 139,
+      "digit": 3,
+      "distal_phalanx_member_id": "FJ3190",
+      "independent_articulation_count": 0,
+      "maximum_adjacent_surface_gap_m": 0.0004894739208615942,
+      "maximum_allowed_adjacent_surface_gap_m": 0.001,
+      "myosim_body": "toes_r",
+      "source_member_ids": [
+        "FJ3355",
+        "FJ3320",
+        "FJ3301",
+        "FJ3190"
+      ]
+    },
+    {
+      "adjacent_surface_gaps_m": [
+        0.00019465639929110685,
+        0.00024238042596807236,
+        0.0002564538928402119
+      ],
+      "binding": "one shared existing MyoSim toes rigid-body transform",
+      "core_body_index": 139,
+      "digit": 4,
+      "distal_phalanx_member_id": "FJ3191",
+      "independent_articulation_count": 0,
+      "maximum_adjacent_surface_gap_m": 0.0002564538928402119,
+      "maximum_allowed_adjacent_surface_gap_m": 0.001,
+      "myosim_body": "toes_r",
+      "source_member_ids": [
+        "FJ3357",
+        "FJ3321",
+        "FJ3302",
+        "FJ3191"
+      ]
+    },
+    {
+      "adjacent_surface_gaps_m": [
+        0.0003235616499622806,
+        0.0003510758569118449,
+        0.0004977946000360354
+      ],
+      "binding": "one shared existing MyoSim toes rigid-body transform",
+      "core_body_index": 139,
+      "digit": 5,
+      "distal_phalanx_member_id": "FJ3195",
+      "independent_articulation_count": 0,
+      "maximum_adjacent_surface_gap_m": 0.0004977946000360354,
+      "maximum_allowed_adjacent_surface_gap_m": 0.001,
+      "myosim_body": "toes_r",
+      "source_member_ids": [
+        "FJ3359",
+        "FJ3324",
+        "FJ3305",
+        "FJ3195"
+      ]
+    },
+    {
+      "adjacent_surface_gaps_m": [
+        0.0006286672566110262,
+        0.0004997806438461511
+      ],
+      "binding": "one shared existing MyoSim toes rigid-body transform",
+      "core_body_index": 153,
+      "digit": 1,
+      "distal_phalanx_member_id": "FJ3182",
+      "independent_articulation_count": 0,
+      "maximum_adjacent_surface_gap_m": 0.0006286672566110262,
+      "maximum_allowed_adjacent_surface_gap_m": 0.001,
+      "myosim_body": "toes_l",
+      "source_member_ids": [
+        "FJ3241",
+        "FJ3329",
+        "FJ3182"
+      ]
+    },
+    {
+      "adjacent_surface_gaps_m": [
+        0.00015855155044947614,
+        0.00014528006312399355,
+        0.0002582249364603123
+      ],
+      "binding": "one shared existing MyoSim toes rigid-body transform",
+      "core_body_index": 153,
+      "digit": 2,
+      "distal_phalanx_member_id": "FJ3179",
+      "independent_articulation_count": 0,
+      "maximum_adjacent_surface_gap_m": 0.0002582249364603123,
+      "maximum_allowed_adjacent_surface_gap_m": 0.001,
+      "myosim_body": "toes_l",
+      "source_member_ids": [
+        "FJ3244",
+        "FJ3328",
+        "FJ3293",
+        "FJ3179"
+      ]
+    },
+    {
+      "adjacent_surface_gaps_m": [
+        0.00039123610417342455,
+        0.0004960990946666367,
+        0.00034322474780586757
+      ],
+      "binding": "one shared existing MyoSim toes rigid-body transform",
+      "core_body_index": 153,
+      "digit": 3,
+      "distal_phalanx_member_id": "FJ3180",
+      "independent_articulation_count": 0,
+      "maximum_adjacent_surface_gap_m": 0.0004960990946666367,
+      "maximum_allowed_adjacent_surface_gap_m": 0.001,
+      "myosim_body": "toes_l",
+      "source_member_ids": [
+        "FJ3247",
+        "FJ3311",
+        "FJ3294",
+        "FJ3180"
+      ]
+    },
+    {
+      "adjacent_surface_gaps_m": [
+        0.00044141094332561493,
+        0.0002197669989922948,
+        0.00035620132888838934
+      ],
+      "binding": "one shared existing MyoSim toes rigid-body transform",
+      "core_body_index": 153,
+      "digit": 4,
+      "distal_phalanx_member_id": "FJ3181",
+      "independent_articulation_count": 0,
+      "maximum_adjacent_surface_gap_m": 0.00044141094332561493,
+      "maximum_allowed_adjacent_surface_gap_m": 0.001,
+      "myosim_body": "toes_l",
+      "source_member_ids": [
+        "FJ3250",
+        "FJ3312",
+        "FJ3295",
+        "FJ3181"
+      ]
+    },
+    {
+      "adjacent_surface_gaps_m": [
+        0.0003896060743986374,
+        0.00041774247417826336,
+        0.00028985982732261835
+      ],
+      "binding": "one shared existing MyoSim toes rigid-body transform",
+      "core_body_index": 153,
+      "digit": 5,
+      "distal_phalanx_member_id": "FJ3185",
+      "independent_articulation_count": 0,
+      "maximum_adjacent_surface_gap_m": 0.00041774247417826336,
+      "maximum_allowed_adjacent_surface_gap_m": 0.001,
+      "myosim_body": "toes_l",
+      "source_member_ids": [
+        "FJ3253",
+        "FJ3315",
+        "FJ3298",
+        "FJ3185"
+      ]
+    }
+  ]
+}

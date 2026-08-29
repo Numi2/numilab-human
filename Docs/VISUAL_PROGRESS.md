@@ -1,5 +1,28 @@
 # NumiLab Human visual progress
 
+## Deformable pectoralis fascia and axial continuity — 2026-08-29
+
+<p align="center">
+  <img src="media/numi-human-pectoralis-fascia-v1-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-focus-body-25-front.png" width="24%" alt="Deformable pectoralis fascia, front" />
+  <img src="media/numi-human-pectoralis-fascia-v1-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-focus-body-25-oblique.png" width="24%" alt="Deformable pectoralis fascia, oblique" />
+  <img src="media/numi-human-pectoralis-fascia-v1-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-focus-body-25-side.png" width="24%" alt="Deformable pectoralis fascia, side" />
+  <img src="media/numi-human-pectoralis-fascia-v1-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-focus-body-25-rear.png" width="24%" alt="Deformable pectoralis fascia, rear" />
+</p>
+
+The six BodyParts3D-derived pectoral regions now own a 326-node/471-tetrahedron
+Matter FEM solve driven from the published torso-side NHTENDON2 loads. The
+Apple M4 Pro run applied 14.496 N, displaced at most 4.705 mm over 8 steps,
+retained minimum `J = 0.723`, replayed bitwise, and verified rejection
+rollback. The mechanics-only shell is intentionally shown without the
+coincident opaque muscle surface or a fake render offset.
+
+That review also caught a 16.768 mm L4/L5 visual registration break. A bounded
+two-neighbour translation fallback closes it to 0.154 mm without adding a
+joint, and a new compiler gate checks ten occiput-to-hip transitions. The
+largest corrected transformed source-vertex gap is 5.837 mm at C7/T1. See the
+[fascia mechanics and axial audit](PECTORALIS_FASCIA_V1.md) for the exact
+transcript, material assumptions, certificates, and limitations.
+
 ## Pectoralis origin ownership — 2026-08-29
 
 <p align="center">

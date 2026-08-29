@@ -76,8 +76,52 @@ The local Apple M4 smoke produced:
 - 20 FGMRES iterations at the fixed budget;
 - bitwise deterministic replay and verified rejection rollback.
 
-Apple M4 Pro four-angle images and the exact transcript are retained with the
-final qualification media once generated on `ssh macmini`.
+## Apple M4 Pro qualification
+
+<p align="center">
+  <img src="media/numi-human-pectoralis-fascia-v1-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-focus-body-25-front.png" width="24%" alt="Load-driven pectoralis fascia mechanics, front" />
+  <img src="media/numi-human-pectoralis-fascia-v1-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-focus-body-25-oblique.png" width="24%" alt="Load-driven pectoralis fascia mechanics, oblique" />
+  <img src="media/numi-human-pectoralis-fascia-v1-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-focus-body-25-side.png" width="24%" alt="Load-driven pectoralis fascia mechanics, side" />
+  <img src="media/numi-human-pectoralis-fascia-v1-2048/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-focus-body-25-rear.png" width="24%" alt="Load-driven pectoralis fascia mechanics, rear" />
+</p>
+
+The final sensor-reference capture ran on Apple M4 Pro at 2048 px from four
+angles. All 416 source paths were evaluated for 16 stand steps while the six
+pectoralis activations received the bounded increment. It published 13,312
+NHTENDON2 endpoint transfers, admitted 14.496 N to the fascia, and advanced 8
+Matter steps. Maximum nodal displacement was 4.705 mm, minimum `J` was 0.723,
+and the fixed solve budget was 20 FGMRES iterations. Both the stand and fascia
+replayed bitwise; injected tendon and fascia rejection paths preserved their
+accepted states. The [exact transcript](media/numi-human-pectoralis-fascia-v1-2048/capture.transcript.txt),
+[mechanics manifest](media/numi-human-pectoralis-fascia-v1-2048/pectoralis-fascia.manifest.json),
+[axial continuity manifest](media/numi-human-pectoralis-fascia-v1-2048/axial-continuity.manifest.json),
+and [checksums](media/numi-human-pectoralis-fascia-v1-2048/checksums.sha256)
+are retained beside the frames.
+
+These are mechanics-shell inspection views. The six opaque red source muscle
+surfaces are intentionally hidden because a 0.6 mm coincident shell cannot be
+layered by the reference renderer without depth occlusion; no fake outward
+display offset is added. The faceted pale surface is therefore the actual
+326-node mechanics discretization, not a high-resolution anatomy or beauty
+render.
+
+## Axial defect audit
+
+The same four-angle review exposed a real L4/L5 registration defect. L4 had an
+accepted attachment translation while unsupported L5 remained in the common
+frame, leaving a 16.768 mm source-surface break. L5 now receives the mean
+world-space translation of its immediate L4 and sacrum neighbours. This adds
+no independent articulation and preserves the exact L5 mesh, owner, rotation,
+scale, and source sites. The corrected L4/L5 gap is 0.154 mm and L5/sacrum is
+0.376 mm.
+
+The payload compiler now fails closed on ten transformed axial transitions
+from occiput to bilateral hips. The corrected maximum is 5.837 mm at C7/T1,
+below the explicit 8 mm gross-separation gate; occiput/atlas is 0.428 mm and
+sacrum/hip is 0.488--0.632 mm. This clears gross skull-neck-spine-hip visual
+separation. It does not fill normal joint spaces or claim intervertebral-disc,
+cartilage, ligament, contact, or clinical mechanics; those missing soft-tissue
+layers should be implemented as such rather than hidden by moving bones.
 
 ## Scientific limitations
 

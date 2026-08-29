@@ -3755,6 +3755,27 @@ _BODYPARTS_MYOSIM_AXIAL_EXTENSIONS = tuple(
 )
 
 
+# These are the source-mesh transitions that cross a MyoSim rigid-body
+# boundary in the axial skeleton.  Vertebrae carried by one common body cannot
+# separate under articulation, while these boundaries can be pulled apart by
+# an otherwise useful per-body attachment refinement.  Keep the gate at 8 mm:
+# it admits an intervertebral joint space, but rejects the 16.8 mm L4/L5 visual
+# discontinuity found during the pectoral-fascia multi-angle review.
+_NUMI_HUMAN_AXIAL_CONTINUITY_TRANSITIONS = (
+    ("occiput_to_atlas", "FJ3309", "FJ3176"),
+    ("cervical7_to_thoracic1", "FJ3172", "FJ3158"),
+    ("thoracic12_to_lumbar1", "FJ3156", "FJ3157"),
+    ("lumbar1_to_lumbar2", "FJ3157", "FJ3159"),
+    ("lumbar2_to_lumbar3", "FJ3159", "FJ3162"),
+    ("lumbar3_to_lumbar4", "FJ3162", "FJ3165"),
+    ("lumbar4_to_lumbar5", "FJ3165", "FJ3168"),
+    ("lumbar5_to_sacrum", "FJ3168", "FJ3393"),
+    ("sacrum_to_right_hip", "FJ3393", "FJ3152"),
+    ("sacrum_to_left_hip", "FJ3393", "FJ3288"),
+)
+_NUMI_HUMAN_AXIAL_CONTINUITY_MAXIMUM_GAP_M = 0.008
+
+
 _BODYPARTS_MYOSIM_BONE_ANCHORS = (
     _BODYPARTS_MYOSIM_FIT_BONE_ANCHORS
     + _BODYPARTS_MYOSIM_MAJOR_BONE_EXTENSIONS
@@ -4378,6 +4399,74 @@ def bodyparts_myosim_attachment_surface_registration_candidate(
             "donor_myosim_body": donor_name,
             "applied": True,
         }
+
+    # L5 has valid source sites, but their unconstrained translation does not
+    # improve the attachment residual and is therefore (correctly) rejected
+    # above.  Leaving it at the original common-frame position after both L4
+    # and the sacrum have accepted refinements opens a 16.8 mm visual break.
+    # Translate L5 by the mean *world-space* correction of those two immediate
+    # anatomical neighbours.  This preserves the exact L5 mesh, orientation,
+    # scale, Core owner, and source sites; it adds no joint or articulation.
+    # The payload compiler below independently rejects the result unless every
+    # cross-body axial surface transition is within the bounded 8 mm gate.
+    axial_target_name = "lumbar5"
+    axial_donor_names = ("lumbar4", "sacrum")
+    axial_target_anchors = anchors_by_name.get(axial_target_name)
+    axial_donor_anchors = [anchors_by_name.get(name) for name in axial_donor_names]
+    if not axial_target_anchors or any(not anchors for anchors in axial_donor_anchors):
+        raise ImportError("BodyParts3D axial fallback is missing L5, L4, or sacrum")
+    axial_target_diagnostics = axial_target_anchors[0]["registration"][
+        "attachment_surface_refinement"
+    ]
+    if not axial_target_diagnostics["applied"]:
+        donor_world_deltas: list[list[float]] = []
+        donor_body_indices: list[int] = []
+        for donor_anchors in axial_donor_anchors:
+            assert donor_anchors is not None
+            donor = donor_anchors[0]
+            diagnostics = donor["registration"]["attachment_surface_refinement"]
+            if not diagnostics["applied"]:
+                raise ImportError("BodyParts3D axial fallback donor was not geometrically anchored")
+            donor_rotation = _myosim_matrix_from_quaternion_xyzw(
+                donor["target"]["default_inertial_quaternion_world_xyzw"]
+            )
+            donor_world_deltas.append(_myosim_matrix_vector(
+                donor_rotation, diagnostics["translation_delta_core_body_m"]
+            ))
+            donor_body_indices.append(donor["target"]["core_body_index"])
+        world_delta = [
+            sum(delta[axis] for delta in donor_world_deltas) / len(donor_world_deltas)
+            for axis in range(3)
+        ]
+        target_rotation = _myosim_matrix_from_quaternion_xyzw(
+            axial_target_anchors[0]["target"]["default_inertial_quaternion_world_xyzw"]
+        )
+        local_delta = _myosim_matrix_vector(
+            _matrix_transpose(target_rotation), world_delta
+        )
+        receipt = {
+            "method": "mean_world_translation_of_immediate_axial_neighbors",
+            "donor_myosim_bodies": list(axial_donor_names),
+            "donor_core_body_indices": donor_body_indices,
+            "translation_delta_world_m": world_delta,
+            "translation_delta_core_body_m": local_delta,
+            "independent_articulation_count": 0,
+            "applied": True,
+        }
+        for anchor in axial_target_anchors:
+            registration = anchor["registration"]
+            local_matrix = registration["source_obj_mm_to_core_inertial_body_m"]
+            for axis in range(3):
+                local_matrix[axis][3] += local_delta[axis]
+            registration["default_pose_vertex_centroid_world_m"] = _myosim_add(
+                registration["default_pose_vertex_centroid_world_m"], world_delta
+            )
+            registration["status"] = "inferred_visual_axial_neighbor_translation_fallback"
+            registration["axial_neighbor_translation_fallback"] = receipt
+        summary_by_name[axial_target_name]["axial_neighbor_translation_fallback"] = {
+            "donor_myosim_bodies": list(axial_donor_names),
+            "applied": True,
+        }
     candidate["schema"] = "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2"
     candidate["status"] = "inferred_attachment_surface_visual_registration_not_admitted_to_collision_or_physics"
     candidate["attachment_surface_refinement"] = {
@@ -4520,6 +4609,44 @@ def _bodyparts_visual_local_pose(matrix: Any, context: str) -> tuple[list[float]
     return [row[3] for row in rows[:3]], quaternion, scale_m_per_mm / 0.001
 
 
+def _bodyparts_bounded_vertex_gap(
+    first: list[list[float]], second: list[list[float]], maximum_gap_m: float,
+    context: str,
+) -> float:
+    """Return an exact vertex witness within a fail-closed distance gate.
+
+    A regular grid avoids the quadratic scan across the larger sacrum/hip
+    meshes.  Searching the 27 neighbouring cells is complete for the stated
+    gate: any point closer than one cell width must be in one of those cells.
+    This is a visual source-surface continuity witness, not a cartilage/contact
+    or signed-distance certificate.
+    """
+    if not first or not second or not math.isfinite(maximum_gap_m) or maximum_gap_m <= 0.0:
+        raise ImportError(f"{context} has no bounded source vertices")
+    inverse_cell = 1.0 / maximum_gap_m
+    buckets: dict[tuple[int, int, int], list[list[float]]] = defaultdict(list)
+    for point in second:
+        buckets[tuple(math.floor(value * inverse_cell) for value in point)].append(point)
+    maximum_squared = maximum_gap_m * maximum_gap_m
+    best_squared = math.inf
+    for point in first:
+        cell = tuple(math.floor(value * inverse_cell) for value in point)
+        for offset in product((-1, 0, 1), repeat=3):
+            for candidate in buckets.get(tuple(
+                cell[axis] + offset[axis] for axis in range(3)
+            ), ()):
+                squared = sum(
+                    (point[axis] - candidate[axis]) ** 2 for axis in range(3)
+                )
+                if squared < best_squared:
+                    best_squared = squared
+    if not math.isfinite(best_squared) or best_squared > maximum_squared:
+        raise ImportError(
+            f"{context} exceeds the {maximum_gap_m * 1000.0:.1f} mm axial continuity gate"
+        )
+    return math.sqrt(best_squared)
+
+
 def bodyparts_myosim_bone_visual_payload(
     sources: Path, anatomy: dict[str, Any], registration_path: Path, output: Path,
 ) -> dict[str, Any]:
@@ -4568,6 +4695,12 @@ def bodyparts_myosim_bone_visual_payload(
         for member in chain
     )
     toe_geometry: dict[str, dict[str, Any]] = {}
+    axial_member_ids = frozenset(
+        member
+        for _, first, second in _NUMI_HUMAN_AXIAL_CONTINUITY_TRANSITIONS
+        for member in (first, second)
+    )
+    axial_world_vertices: dict[str, list[list[float]]] = {}
     for stable_id, (specification, anchor) in enumerate(zip(_BODYPARTS_MYOSIM_BONE_ANCHORS, anchors, strict=True), start=1):
         if not isinstance(anchor, dict):
             raise ImportError("BodyParts3D visual payload has an invalid anchor")
@@ -4591,23 +4724,39 @@ def bodyparts_myosim_bone_visual_payload(
             registration_record.get("source_obj_mm_to_core_inertial_body_m"),
             f"BodyParts3D visual payload {specification['member_id']} local transform",
         )
-        if specification["member_id"] in toe_member_ids:
-            if specification["member_id"] in toe_geometry:
-                raise ImportError("BodyParts3D toe rigid chain duplicates a source member")
+        source_member_id = specification["member_id"]
+        if source_member_id in toe_member_ids or source_member_id in axial_member_ids:
             rotation = _myosim_matrix_from_quaternion_xyzw(quaternion)
-            toe_geometry[specification["member_id"]] = {
+            local_vertices = [
+                _myosim_add(translation, [
+                    scale * value for value in _myosim_matrix_vector(
+                        rotation, [coordinate * 0.001 for coordinate in vertex],
+                    )
+                ])
+                for vertex in vertices_mm
+            ]
+        if source_member_id in toe_member_ids:
+            if source_member_id in toe_geometry:
+                raise ImportError("BodyParts3D toe rigid chain duplicates a source member")
+            toe_geometry[source_member_id] = {
                 "myosim_body": specification["myosim_body"],
                 "core_body_index": core_body_index,
                 "local_pose": (*translation, *quaternion, scale),
-                "vertices_core_body_m": [
-                    _myosim_add(translation, [
-                        scale * value for value in _myosim_matrix_vector(
-                            rotation, [coordinate * 0.001 for coordinate in vertex],
-                        )
-                    ])
-                    for vertex in vertices_mm
-                ],
+                "vertices_core_body_m": local_vertices,
             }
+        if source_member_id in axial_member_ids:
+            if source_member_id in axial_world_vertices:
+                raise ImportError("BodyParts3D axial continuity duplicates a source member")
+            body_rotation = _myosim_matrix_from_quaternion_xyzw(
+                target_record["default_inertial_quaternion_world_xyzw"]
+            )
+            body_position = target_record["default_com_position_world_m"]
+            axial_world_vertices[source_member_id] = [
+                _myosim_add(
+                    body_position, _myosim_matrix_vector(body_rotation, point)
+                )
+                for point in local_vertices
+            ]
         normals = _bodyparts_vertex_normals(vertices_mm, triangles, member)
         first_vertex = len(vertices_payload)
         first_index = len(indices_payload)
@@ -4625,6 +4774,23 @@ def bodyparts_myosim_bone_visual_payload(
             "member_id": specification["member_id"], "member_sha256": source_record["member_sha256"],
             "core_body_index": core_body_index, "myosim_body": specification["myosim_body"],
             "vertex_count": len(vertices_mm), "triangle_count": len(triangles),
+        })
+    axial_transitions: list[dict[str, Any]] = []
+    for name, first_member_id, second_member_id in _NUMI_HUMAN_AXIAL_CONTINUITY_TRANSITIONS:
+        first = axial_world_vertices.get(first_member_id)
+        second = axial_world_vertices.get(second_member_id)
+        if first is None or second is None:
+            raise ImportError(f"BodyParts3D axial continuity transition {name} is incomplete")
+        gap_m = _bodyparts_bounded_vertex_gap(
+            first, second, _NUMI_HUMAN_AXIAL_CONTINUITY_MAXIMUM_GAP_M,
+            f"BodyParts3D axial continuity transition {name}",
+        )
+        axial_transitions.append({
+            "name": name,
+            "source_member_ids": [first_member_id, second_member_id],
+            "minimum_vertex_gap_m": gap_m,
+            "maximum_allowed_gap_m": _NUMI_HUMAN_AXIAL_CONTINUITY_MAXIMUM_GAP_M,
+            "status": "bounded_default_pose_visual_continuity_witness",
         })
     toe_rigid_compounds: list[dict[str, Any]] = []
     for myosim_body, chains in _NUMI_HUMAN_TOE_RIGID_CHAINS.items():
@@ -4715,6 +4881,18 @@ def bodyparts_myosim_bone_visual_payload(
         "hallux_rigid_compounds": [
             record for record in toe_rigid_compounds if record["digit"] == 1
         ],
+        "axial_continuity": {
+            "transitions": axial_transitions,
+            "maximum_transition_gap_m": max(
+                record["minimum_vertex_gap_m"] for record in axial_transitions
+            ),
+            "maximum_allowed_gap_m": _NUMI_HUMAN_AXIAL_CONTINUITY_MAXIMUM_GAP_M,
+            "independent_articulation_count": 0,
+            "evidence_boundary": (
+                "Default-pose transformed source-vertex proximity catches gross visual separation; "
+                "it is not an intervertebral-disc, cartilage, ligament, contact, or clinical certificate."
+            ),
+        },
         "status": "native_visual_binding_input_not_collision_or_physics",
         "evidence_boundary": "The payload contains triangle surfaces for a provisional bone visual only. It does not create colliders, skinning weights, soft-tissue mechanics, muscle attachments, or a medical registration claim.",
     }

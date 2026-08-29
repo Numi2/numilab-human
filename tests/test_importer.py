@@ -19,9 +19,12 @@ from numilab_human.model import (
     _BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS,
     _NUMI_HUMAN_HALLUX_DOMINANT_SOURCE_SURFACE_MEMBERS,
     _NUMI_HUMAN_HALLUX_RIGID_COMPOUNDS,
+    _NUMI_HUMAN_AXIAL_CONTINUITY_TRANSITIONS,
+    _NUMI_HUMAN_AXIAL_CONTINUITY_MAXIMUM_GAP_M,
     _NUMI_HUMAN_TOE_RIGID_CHAINS,
     _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS,
     _bodyparts_primary_bone_attachment_weights,
+    _bodyparts_bounded_vertex_gap,
     _bodyparts_secondary_attachment_weight_lock,
     _bodyparts_project_tendon_attachment_band,
     _bodyparts_drop_interior_tendon_cap_triangles,
@@ -872,6 +875,29 @@ class ImporterTests(unittest.TestCase):
             len({anchor["member_id"] for anchor in _BODYPARTS_MYOSIM_BONE_ANCHORS}),
             len(_BODYPARTS_MYOSIM_BONE_ANCHORS),
         )
+
+    def test_axial_continuity_gate_covers_neck_spine_and_bilateral_hips(self) -> None:
+        self.assertEqual(_NUMI_HUMAN_AXIAL_CONTINUITY_MAXIMUM_GAP_M, 0.008)
+        self.assertEqual(
+            [name for name, _, _ in _NUMI_HUMAN_AXIAL_CONTINUITY_TRANSITIONS],
+            [
+                "occiput_to_atlas", "cervical7_to_thoracic1",
+                "thoracic12_to_lumbar1", "lumbar1_to_lumbar2",
+                "lumbar2_to_lumbar3", "lumbar3_to_lumbar4",
+                "lumbar4_to_lumbar5", "lumbar5_to_sacrum",
+                "sacrum_to_right_hip", "sacrum_to_left_hip",
+            ],
+        )
+        self.assertAlmostEqual(
+            _bodyparts_bounded_vertex_gap(
+                [[0.0, 0.0, 0.0]], [[0.003, 0.004, 0.0]], 0.008, "fixture",
+            ),
+            0.005,
+        )
+        with self.assertRaisesRegex(HumanImportError, "axial continuity gate"):
+            _bodyparts_bounded_vertex_gap(
+                [[0.0, 0.0, 0.0]], [[0.009, 0.0, 0.0]], 0.008, "fixture",
+            )
 
     def test_bodyparts_similarity_fit_keeps_proper_axes_and_positive_scale(self) -> None:
         source = [
