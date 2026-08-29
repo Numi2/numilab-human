@@ -10,7 +10,7 @@ the native Human execution path.
 | --- | --- | --- |
 | Active full-body mechanics | MyoSim `myofullbody` | 103 source bodies, 416 muscles, native Core reference |
 | Cervical/hyoid mechanics | Mortensen 2018 | complete 72-muscle OpenSim 3 source IR; merge registration remains explicit |
-| Anatomy/visual layers | BodyParts3D 4.0 | named geometry/hierarchy; 184 source bone meshes are pose-bound for native visual inspection |
+| Anatomy/visual layers | BodyParts3D 4.0 | named geometry/hierarchy; 185 source bone meshes are pose-bound for native visual inspection |
 | Regional fascia mechanics | BodyParts3D + human pectoralis-fascia literature + Matter | six same-command-buffer load-driven pectoral regions; explicit generated NHFASC2 fallback, not a source segmentation |
 | Detailed calf visual supplement | Z-Anatomy | four right-calf surfaces plus the matching calcaneus overlay; CC-BY-SA geometry rigidly bound to the existing BodyParts3D/MyoSim `calcn_r` body |
 | Comparative lower-body mechanics | RajagopalLaiUhlrich2023 | retained source-faithful bounded Metal path |
@@ -65,6 +65,14 @@ bilateral four-angle 2048 px shoulder inspection on Apple M4 Pro. See the
 [rigid-foot ownership and entheses](Docs/RIGID_FOOT_OWNERSHIP_V1.md),
 [visual progress](Docs/VISUAL_PROGRESS.md), and the
 [completion gap ledger](Docs/HUMAN_COMPLETION_GAP_LEDGER.md).
+
+The shoulder-girdle placement audit also found that the clavicles were not the
+misregistered bones: the exact BodyParts3D manubrium was missing and the
+sternum body had inherited a 53.079 mm soft-tissue site translation. The
+source-owned correction restores the sternum common frame, adds the manubrium
+to the existing torso body, leaves both clavicles untouched, and passes
+0.106--1.726 mm neutral continuity gates in four native M4 Pro views. See
+[source-owned sternal girdle completion](Docs/STERNAL_GIRDLE_SOURCE_REGISTRATION_V1.md).
 
 The current lower-limb pass rigidly registers bilateral femur, tibia/fibula,
 talus, rigid foot, and patella anatomy to the pinned compiled MyoSim meshes.

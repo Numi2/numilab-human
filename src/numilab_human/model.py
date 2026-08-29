@@ -3479,6 +3479,9 @@ _BODYPARTS_MYOSIM_MAJOR_BONE_EXTENSIONS = (
     {"myosim_body": "patella_r", "bodyparts_name": "right patella", "hierarchy": "is_a", "member_id": "FJ3381", "registration_anchor": False},
     {"myosim_body": "patella_l", "bodyparts_name": "left patella", "hierarchy": "is_a", "member_id": "FJ3275", "registration_anchor": False},
     {"myosim_body": "torso", "bodyparts_name": "body of sternum", "hierarchy": "is_a", "member_id": "FJ3178", "registration_anchor": False},
+    # The manubrium is the source-owned medial clavicular interface. Omitting
+    # it makes correctly placed clavicles appear to float above the sternum.
+    {"myosim_body": "torso", "bodyparts_name": "manubrium", "hierarchy": "is_a", "member_id": "FJ3290", "registration_anchor": False},
 )
 
 

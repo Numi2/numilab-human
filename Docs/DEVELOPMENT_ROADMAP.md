@@ -135,7 +135,7 @@ quality.
 | Contact | Ten source foot witnesses exercise a deterministic support path | No authoritative whole-human collision topology, full sparse articulated contact operator, distributed pressure field, or task-wide contact qualification exists |
 | Deformable anatomy | Six pectoral regions drive a 326-node Matter FEM demonstration with replay and rollback; non-conflicting anterior-thorax component 1 has a connected 13,459-node / 43,014-tetrahedron `NHTHRC1` input with 0.154% volume error and seven tendon maps | Pectoral geometry and 10% load share remain assumptions and one-way; `NHTHRC1` has no admitted material or production force ownership, while component 17 remains excluded due overlapping left-rib ownership |
 | Control | Source-muscle part coactivation and a lower-body action contract exist | No promoted assistance-free equilibrium, recovery, locomotion, manipulation, or full hierarchical Human controller exists |
-| Anatomy and appearance | 184 registered BodyParts3D bone meshes, source route presentation, torso layers, and multi-angle reviews exist | Render surfaces do not own mechanics; physical skin/fat/fascia, systemic tissue mechanics, organs, vessels, and nerves are not complete |
+| Anatomy and appearance | 185 registered BodyParts3D bone meshes, source route presentation, torso layers, and multi-angle reviews exist | Render surfaces do not own mechanics; physical skin/fat/fascia, systemic tissue mechanics, organs, vessels, and nerves are not complete |
 | Validation | Source receipts, FP64/Metal comparisons, conservation checks, rollback, replay, and visual evidence are retained | No full-stack held-out subject/activity validation, blinded internal-load prediction, population UQ, or current-stack competitive benchmark exists |
 
 The current point laws remain evidence of honest source preservation, not a
@@ -483,7 +483,7 @@ rather than becoming idle.
   target-coverage cell, with semantic IDs, uncertainty, and license-clean build
   and training profiles.
 - **Current proof:** pinned source records, extensive import/registration
-  receipts, 184 bone meshes, 157 bodies, 416 routes, and 832 preserved termini.
+  receipts, 185 bone meshes, 157 bodies, 416 routes, and 832 preserved termini.
 - **Active frontier:** resolve target-catalog ownership ambiguity; encode the
   `HumanPack` schema; register complete feet, hands, neck/hyoid, craniofacial,
   joint-tissue, skin, organ, vessel, and nerve topology; quarantine restricted

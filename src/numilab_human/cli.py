@@ -66,6 +66,10 @@ from .rib_registration import SCHEMA as RIB_REGISTRATION_SCHEMA
 from .abdominal_enthesis_registration import (
     SCHEMA as ABDOMINAL_ENTHESIS_REGISTRATION_SCHEMA,
 )
+from .sternal_girdle_registration import (
+    SCHEMA as STERNAL_GIRDLE_REGISTRATION_SCHEMA,
+    register_sternal_girdle,
+)
 from .myosim_bone_proximity import (
     AUDIT_SCHEMA as MYOSIM_SOURCE_BONE_PROXIMITY_SCHEMA,
     WORKLIST_SCHEMA as BODYPARTS_REGISTRATION_WORKLIST_SCHEMA,
@@ -408,6 +412,23 @@ def myosim_upper_limb_pose_audit(arguments: argparse.Namespace) -> int:
         "numi.human.bodyparts3d-myosim-upper-limb-multi-pose-audit.v1"
     ):
         raise ImportError("MyoSim upper-limb pose audit wrote an unsupported schema")
+    print(f"wrote {output}")
+    return 0
+
+
+def myosim_sternal_girdle_registration(arguments: argparse.Namespace) -> int:
+    output = arguments.output.resolve()
+    try:
+        result = register_sternal_girdle(
+            sources=arguments.sources.resolve(),
+            registration_path=arguments.registration.resolve(),
+        )
+    except (OSError, ValueError, RuntimeError) as error:
+        raise ImportError(str(error)) from error
+    receipt = result.get("sternal_girdle_source_registration")
+    if not isinstance(receipt, dict) or receipt.get("schema") != STERNAL_GIRDLE_REGISTRATION_SCHEMA:
+        raise ImportError("MyoSim sternal-girdle registration wrote an unsupported schema")
+    write_json(output, result)
     print(f"wrote {output}")
     return 0
 
@@ -1284,6 +1305,16 @@ def parser() -> argparse.ArgumentParser:
         help="Python environment with the pinned myo-sim checkout, NumPy, and MuJoCo installed",
     )
     upper_limb_pose_audit_parser.set_defaults(handler=myosim_upper_limb_pose_audit)
+    sternal_girdle_registration_parser = commands.add_parser(
+        "myosim-sternal-girdle-registration",
+        help="restore exact manubrium and common-frame sternum/clavicle continuity",
+    )
+    sternal_girdle_registration_parser.add_argument("--sources", type=Path, required=True)
+    sternal_girdle_registration_parser.add_argument("--registration", type=Path, required=True)
+    sternal_girdle_registration_parser.add_argument("--output", type=Path, required=True)
+    sternal_girdle_registration_parser.set_defaults(
+        handler=myosim_sternal_girdle_registration
+    )
     lower_limb_registration_parser = commands.add_parser(
         "myosim-lower-limb-registration",
         help="preserve qualified registration while assigning tarsals/metatarsals to Rajagopal's rigid foot",

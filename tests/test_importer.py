@@ -131,6 +131,13 @@ from numilab_human.thoracic_registration import (
 from numilab_human.rib_registration import (
     _components as rib_mesh_components,
 )
+from numilab_human.sternal_girdle_registration import (
+    CLAVICLE_MEMBER_IDS,
+    MANUBRIOSTERNAL_MAXIMUM_GAP_M,
+    MANUBRIUM_MEMBER_ID,
+    STERNOCLAVICULAR_MAXIMUM_GAP_M,
+    STERNUM_BODY_MEMBER_ID,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -1401,7 +1408,7 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(len(_BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS), 52)
         self.assertEqual(len(_BODYPARTS_MYOSIM_TOE_EXTENSIONS), 38)
         self.assertEqual(len(_BODYPARTS_MYOSIM_AXIAL_EXTENSIONS), 22)
-        self.assertEqual(len(_BODYPARTS_MYOSIM_BONE_ANCHORS), 184)
+        self.assertEqual(len(_BODYPARTS_MYOSIM_BONE_ANCHORS), 185)
         baseline_extension = {
                 ("right hip bone", "pelvis"), ("left hip bone", "pelvis"),
                 ("right fibula", "tibia_r"), ("left fibula", "tibia_l"),
@@ -1416,6 +1423,18 @@ class ImporterTests(unittest.TestCase):
             len({anchor["member_id"] for anchor in _BODYPARTS_MYOSIM_BONE_ANCHORS}),
             len(_BODYPARTS_MYOSIM_BONE_ANCHORS),
         )
+
+    def test_sternal_girdle_contract_uses_exact_source_bones_without_new_joint(self) -> None:
+        by_member = {
+            anchor["member_id"]: anchor for anchor in _BODYPARTS_MYOSIM_BONE_ANCHORS
+        }
+        self.assertEqual(by_member[MANUBRIUM_MEMBER_ID]["bodyparts_name"], "manubrium")
+        self.assertEqual(by_member[MANUBRIUM_MEMBER_ID]["myosim_body"], "torso")
+        self.assertFalse(by_member[MANUBRIUM_MEMBER_ID]["registration_anchor"])
+        self.assertEqual(by_member[STERNUM_BODY_MEMBER_ID]["myosim_body"], "torso")
+        self.assertEqual(CLAVICLE_MEMBER_IDS, {"right": "FJ3362", "left": "FJ3237"})
+        self.assertEqual(MANUBRIOSTERNAL_MAXIMUM_GAP_M, 0.002)
+        self.assertEqual(STERNOCLAVICULAR_MAXIMUM_GAP_M, 0.004)
 
     def test_axial_continuity_gate_covers_neck_spine_and_bilateral_hips(self) -> None:
         self.assertEqual(_NUMI_HUMAN_AXIAL_CONTINUITY_MAXIMUM_GAP_M, 0.008)
