@@ -35,10 +35,10 @@ derivatives; all other raw or derived source artifacts remain local. See
 ## Visual progress
 
 The current lead combines the reviewed 1024 px, 128-step M4 Pro gallery with a
-new 2048 px left-toe enthesis inspection. The clean views show corrected
-bilateral hand chains and toe surfaces; the mechanical-anatomy diagnostics
-expose the unchanged OpenSim/MyoSim route and four-node `NHTENDON2` transfer
-footprint across the exact lesser-toe distal phalanges.
+new bilateral 2048 px hallux inspection. The clean views show corrected hand
+chains and big-toe insertion surfaces; the mechanical-anatomy diagnostics
+expose the unchanged MyoSim EHL/FHL route and four-node `NHTENDON2` transfer
+footprint on the exact distal hallux phalanx.
 Neither set is a photorealistic skin render: the clean gallery reviews source
 surface continuity, while the diagnostic proves that force terminates on the
 actual transfer program rather than a floating decorative tendon. See
@@ -64,6 +64,13 @@ the named calcaneus, projected to its exact triangles with a 0.35 mm exterior
 display offset. This makes the bone
 insertion continuous in the render, but does not create a tendon continuum,
 weld, force-transfer law, or photorealistic anatomy.
+
+The bilateral BodyParts3D EHL/FHL surfaces now receive the same strict source
+topology treatment: only each dominant exact connected sheet is retained.
+FHL already reaches its named hallux bone; the 7.4 mm EHL source display gap is
+closed by feathering only its terminal visual band onto exact `FJ3182`/`FJ3192`
+triangles. This is explicitly visual registration; the MyoSim sites and v5
+force-transfer law remain unchanged. See the [hallux v8 record](Docs/HALLUX_ENTHESIS_V8.md).
 
 `NHTENDON2` now gives all 832 origin/insertion endpoints a fail-closed
 tendon-to-bone law without moving an authored route site. The current distal
@@ -136,12 +143,14 @@ The hand registration now preserves exact BodyParts3D common-frame chain
 displacements when an unsupported thumb or distal phalanx follows a
 site-refined parent. Measured transformed mesh gaps are 0.5/0.3 mm for the
 right thumb joints, 0.4/0.1 mm for the left, and 0.3--0.7 mm at the corrected
-distal finger joints. The toe review confirmed five coherent bone chains, then
-corrected the real defect: one lumped EDL/FDL route had been presented as one
-digit instead of four lesser-toe slips. The mechanical source still has one
+distal finger joints. The toe review confirmed five coherent bone chains. Its
+first pass corrected a lesser-toe ambiguity; the reported defect was then
+correctly isolated to the hallux and repaired by the v8 EHL/FHL visual
+registration. The mechanical source still has one
 articulated `toes` body per side, so the individual BodyParts3D toe bones are
-not independent toe actuators. See the [toe enthesis record](Docs/TOE_ENTHESIS_V5.md)
-and [current visual review](Docs/VISUAL_PROGRESS.md#left-toe-enthesis-identity-and-force-transfer--2026-08-29).
+not independent toe actuators. See the [hallux record](Docs/HALLUX_ENTHESIS_V8.md),
+the historical [lesser-toe record](Docs/TOE_ENTHESIS_V5.md), and the
+[current visual review](Docs/VISUAL_PROGRESS.md#hallux-insertion-continuity--2026-08-29).
 
 ### Shared-tendon, source-body attachment review
 

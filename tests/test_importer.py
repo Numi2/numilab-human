@@ -17,6 +17,7 @@ from numilab_human.model import (
     _BODYPARTS_MYOSIM_THORACIC_FOOT_EXTENSIONS,
     _BODYPARTS_MYOSIM_TOE_EXTENSIONS,
     _BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS,
+    _NUMI_HUMAN_HALLUX_DOMINANT_SOURCE_SURFACE_MEMBERS,
     _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS,
     _bodyparts_secondary_attachment_weight_lock,
     _bodyparts_project_tendon_attachment_band,
@@ -160,6 +161,24 @@ class ImporterTests(unittest.TestCase):
         self.assertLess(envelope["force_residual"], 2.0e-6)
         self.assertLess(envelope["moment_residual_m"], 2.0e-8)
         self.assertLess(envelope["sampled_total_force_amplification"], 4.0)
+
+    def test_hallux_routes_and_visual_source_sheets_remain_one_to_one(self) -> None:
+        self.assertEqual(
+            {
+                key: _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS[key]
+                for key in (("ehl_r", 1), ("fhl_r", 1), ("ehl_l", 1), ("fhl_l", 1))
+            },
+            {
+                ("ehl_r", 1): ("FJ3192",),
+                ("fhl_r", 1): ("FJ3192",),
+                ("ehl_l", 1): ("FJ3182",),
+                ("fhl_l", 1): ("FJ3182",),
+            },
+        )
+        self.assertEqual(
+            _NUMI_HUMAN_HALLUX_DOMINANT_SOURCE_SURFACE_MEMBERS,
+            {"FJ1408", "FJ1408M", "FJ1415", "FJ1415M"},
+        )
 
     def test_nhmyo2_fits_positive_compliant_architecture_and_reads_legacy(self) -> None:
         gain = [0.906929, 1.07277, 102.673, 1.0, 0.0, 2.0, 10.0, 2.41059, 1.4, 0.0]

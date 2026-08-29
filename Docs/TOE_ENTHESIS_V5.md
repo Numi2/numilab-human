@@ -2,12 +2,13 @@
 
 ## Outcome
 
-The reported left-foot defect was a tendon identity problem, not a missing or
-duplicated bone. BodyParts3D contains five correctly ordered toe chains on each
-side; the largest adjacent source-mesh gap is below 0.8 mm. The biomechanical
-source instead provides one EDL and one FDL route per side for four anatomical
-lesser-toe slips. Treating that representative route as one digit made the
-terminal surface read one toe off.
+This first investigation corrected a real lesser-toe presentation ambiguity,
+but it did not identify the defect the user reported: that defect was the
+hallux. BodyParts3D contains five correctly ordered toe chains on each side;
+the largest adjacent source-mesh gap is below 0.8 mm. The biomechanical source
+provides one EDL and one FDL route per side for four anatomical lesser-toe
+slips. Treating that representative route as one digit had made its terminal
+surface read one toe off.
 
 The v5 compiler now preserves the one source route and force law while adding
 an explicit semantic enthesis map:
@@ -39,6 +40,11 @@ angular extra-slip silhouette. On the left, the combined locked/feathered
 counts are 876/664 for EDL, 213/73 for EHL, 628/425 for FDL, and 245/114 for
 FHL. This changes visual kinematic ownership only; the mechanical change is
 the separate source-point-preserving `NHTENDON2` envelope.
+
+These v7 counts are retained as the historical lesser-toe record. The later
+[hallux v8 correction](HALLUX_ENTHESIS_V8.md) filters disconnected EHL/FHL
+source shards and closes the EHL display seam against the exact big-toe distal
+phalanx without changing v5 mechanics.
 
 ## Apple M4 Pro qualification
 

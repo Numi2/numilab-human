@@ -1,5 +1,37 @@
 # NumiLab Human visual progress
 
+## Hallux insertion continuity — 2026-08-29
+
+<p align="center">
+  <img src="media/numi-human-hallux-enthesis-v8-2048/clean-left/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-153-front.png" width="24%" alt="Corrected left hallux, front" />
+  <img src="media/numi-human-hallux-enthesis-v8-2048/clean-left/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-153-oblique.png" width="24%" alt="Corrected left hallux, oblique" />
+  <img src="media/numi-human-hallux-enthesis-v8-2048/clean-left/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-153-side.png" width="24%" alt="Corrected left hallux, side" />
+  <img src="media/numi-human-hallux-enthesis-v8-2048/clean-left/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-153-rear.png" width="24%" alt="Corrected left hallux, rear" />
+</p>
+
+The reported defect was the big toe. The v8 visual payload preserves the exact
+bilateral EHL/FHL BodyParts3D source sheets, removes their disconnected export
+shards, and registers the EHL terminal display band to the named distal hallux
+surface (`FJ3182` left, `FJ3192` right). FHL already reaches those surfaces to
+within 2 micrometres and receives no projection. The unchanged v5 mechanics
+still transfer each hallux route through its four-node envelope with zero
+source-endpoint migration.
+
+<p align="center">
+  <img src="media/numi-human-hallux-enthesis-v8-2048/ehl-left/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-source-route-centrelines-tendon-attachment-envelopes-focus-body-153-front.png" width="24%" alt="Left EHL hallux route and envelope, front" />
+  <img src="media/numi-human-hallux-enthesis-v8-2048/ehl-left/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-source-route-centrelines-tendon-attachment-envelopes-focus-body-153-oblique.png" width="24%" alt="Left EHL hallux route and envelope, oblique" />
+  <img src="media/numi-human-hallux-enthesis-v8-2048/ehl-left/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-source-route-centrelines-tendon-attachment-envelopes-focus-body-153-side.png" width="24%" alt="Left EHL hallux route and envelope, side" />
+  <img src="media/numi-human-hallux-enthesis-v8-2048/ehl-left/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-source-route-centrelines-tendon-attachment-envelopes-focus-body-153-rear.png" width="24%" alt="Left EHL hallux route and envelope, rear" />
+</p>
+
+The cyan line is the source EHL route; the warm fan and footprint are its
+actual four-node transfer envelope; red is the corrected source surface. The
+[FHL diagnostic](media/numi-human-hallux-enthesis-v8-2048/fhl-left/) checks the
+plantar insertion, and the [right clean views](media/numi-human-hallux-enthesis-v8-2048/clean-right/)
+check bilateral symmetry. See the [hallux v8 record](HALLUX_ENTHESIS_V8.md) for
+topology counts, hashes, and boundaries. The lesser-toe section below remains
+useful historical evidence, but it was not the reported hallux defect.
+
 ## Left toe enthesis identity and force transfer — 2026-08-29
 
 <p align="center">

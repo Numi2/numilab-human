@@ -3469,6 +3469,16 @@ _NUMI_HUMAN_TOE_VISUAL_LOCK_RADIUS_M = 0.008
 _NUMI_HUMAN_TOE_VISUAL_FEATHER_RADIUS_M = 0.018
 _NUMI_HUMAN_TOE_VISUAL_DISTAL_LOCK_FRACTION = 0.20
 _NUMI_HUMAN_TOE_VISUAL_DISTAL_FEATHER_FRACTION = 0.45
+# These four BodyParts3D hallucis members contain one complete anatomical
+# sheet plus 45--85 disconnected export shards.  The shards have no route or
+# bone correspondence and stretch into false digital fragments after sparse
+# three-body posing.  Retain the dominant exact source sheet, as is already
+# done for the compound calcaneal-tendon members.
+_NUMI_HUMAN_HALLUX_DOMINANT_SOURCE_SURFACE_MEMBERS = frozenset({
+    "FJ1408", "FJ1408M", "FJ1415", "FJ1415M",
+})
+_NUMI_HUMAN_HALLUX_VISUAL_ENTHESIS_MINIMUM_GAP_M = 0.001
+_NUMI_HUMAN_HALLUX_VISUAL_ENTHESIS_INSET_M = 0.00035
 
 
 _BODYPARTS_MYOSIM_AXIAL_EXTENSIONS = tuple(
@@ -6634,11 +6644,15 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         if layer is None:
             raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has an invalid layer")
         source_component_selection: dict[str, Any] | None = None
-        if layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON:
-            # The named tendon OBJ member is a compound source mesh.  Its
-            # dominant sheet is the only connected anatomical surface; the
-            # small disconnected source shards make a bone insertion look
-            # detached.  Preserve that exact sheet, not a remeshed repair.
+        if (
+            layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON
+            or member_id in _NUMI_HUMAN_HALLUX_DOMINANT_SOURCE_SURFACE_MEMBERS
+        ):
+            # These named OBJ members are compound source meshes. Their
+            # dominant sheet is the only complete connected anatomical
+            # surface; small disconnected export shards become floating or
+            # stretched fragments after articulated posing. Preserve the
+            # exact dominant sheet, not a remeshed repair.
             vertices_mm, triangles, source_component_selection = \
                 _bodyparts_largest_connected_surface_component(vertices_mm, triangles, member)
         normals = _bodyparts_vertex_normals(vertices_mm, triangles, member)
@@ -6994,7 +7008,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                         tuple(first_bone_vertex + index for index in triangle)
                         for triangle in bone_triangles
                     )
-                distal_attenuation, toe_enthesis_weight_lock = \
+                proximity_attenuation, toe_enthesis_weight_lock = \
                     _bodyparts_secondary_attachment_weight_lock(
                         tissue_in_secondary_world,
                         [1.0] * len(tissue_in_secondary_world),
@@ -7003,6 +7017,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                         _NUMI_HUMAN_TOE_VISUAL_LOCK_RADIUS_M,
                         _NUMI_HUMAN_TOE_VISUAL_FEATHER_RADIUS_M,
                     )
+                distal_attenuation = list(proximity_attenuation)
                 source_longitudinal_mm = [vertex[1] for vertex in vertices_mm]
                 source_longitudinal_minimum_mm = min(source_longitudinal_mm)
                 source_longitudinal_extent_mm = (
@@ -7051,6 +7066,50 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                         raise ImportError(
                             f"BodyParts3D toe enthesis surface {member_id} has non-unit locked weights"
                         )
+                visual_enthesis_registration: dict[str, Any] | None = None
+                if len(semantic_members) == 1:
+                    source_gap_m = toe_enthesis_weight_lock["nearest_vertex_distance_m"]
+                    if source_gap_m > _NUMI_HUMAN_HALLUX_VISUAL_ENTHESIS_MINIMUM_GAP_M:
+                        projected_world, projection = _bodyparts_project_tendon_attachment_band(
+                            tissue_in_secondary_world,
+                            proximity_attenuation,
+                            enthesis_vertices_world,
+                            enthesis_triangles,
+                            _NUMI_HUMAN_HALLUX_VISUAL_ENTHESIS_INSET_M,
+                        )
+                        stored_vertices_m = _bodyparts_world_to_body_stored_m(
+                            projected_world,
+                            secondary_position,
+                            secondary_quaternion,
+                            *secondary_local_pose,
+                            f"BodyParts3D hallucis {member_id} visual enthesis registration",
+                        )
+                        stored_normals = _bodyparts_vertex_normals(
+                            [
+                                [coordinate * 1000.0 for coordinate in vertex]
+                                for vertex in stored_vertices_m
+                            ],
+                            triangles,
+                            member,
+                        )
+                        visual_enthesis_registration = {
+                            "status": "source_gap_closed_against_exact_named_distal_phalanx",
+                            "source_gap_m": source_gap_m,
+                            "minimum_gap_requiring_projection_m": (
+                                _NUMI_HUMAN_HALLUX_VISUAL_ENTHESIS_MINIMUM_GAP_M
+                            ),
+                            "projection": projection,
+                            "source_endpoint_migration_m": 0.0,
+                        }
+                    else:
+                        visual_enthesis_registration = {
+                            "status": "exact_source_surface_already_contacts_named_distal_phalanx",
+                            "source_gap_m": source_gap_m,
+                            "minimum_gap_requiring_projection_m": (
+                                _NUMI_HUMAN_HALLUX_VISUAL_ENTHESIS_MINIMUM_GAP_M
+                            ),
+                            "source_endpoint_migration_m": 0.0,
+                        }
                 toe_enthesis_weight_lock.update({
                     "method": (
                         "exact_source_triangle_proximity_to_semantically_named_"
@@ -7082,6 +7141,10 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                         "independent toe actuators, or establish clinical enthesis geometry."
                     ),
                 })
+                if visual_enthesis_registration is not None:
+                    toe_enthesis_weight_lock["visual_enthesis_registration"] = (
+                        visual_enthesis_registration
+                    )
 
         first_binding = len(bindings_payload)
         for target, transform in zip(
@@ -7690,11 +7753,12 @@ def _bodyparts_largest_connected_surface_component(
 ) -> tuple[list[list[float]], list[tuple[int, int, int]], dict[str, Any]]:
     """Retain one source mesh's dominant connected anatomical sheet.
 
-    Some BodyParts3D tendon OBJ members include numerous disconnected sliver
-    components alongside their main sheet. They read as floating collagen
-    shards once the tendon is inspected against a bone. This selector keeps
-    the largest source-connected sheet without moving, filling, welding, or
-    remeshing it; provenance retains the discarded source-component count.
+    Some BodyParts3D tendon and hallucis OBJ members include numerous
+    disconnected sliver components alongside their main sheet. They read as
+    floating or stretched tissue shards once posed against a bone. This
+    selector keeps the largest source-connected sheet without moving, filling,
+    welding, or remeshing it; provenance retains the discarded source-component
+    count.
     """
     if not vertices_mm or not triangles:
         raise ImportError(f"BodyParts3D {member} connected-surface selection has empty source geometry")
@@ -7751,7 +7815,7 @@ def _bodyparts_largest_connected_surface_component(
         "discarded_component_count": len(component_triangle_indices) - 1,
         "boundary": (
             "exact dominant edge-connected source sheet; disconnected or point-touching source sliver components are not "
-            "presented as anatomical tendon geometry"
+            "presented as anatomical tissue geometry"
         ),
     }
 
