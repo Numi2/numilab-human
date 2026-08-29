@@ -3,8 +3,9 @@
 This stage does not infer attachment sites from the BodyParts3D geometry.  It
 joins the exact source-audit triangle back to the connected component of the
 pinned MyoSim thorax mesh, then reuses the already-gated rib-component to
-BodyParts3D member correspondence.  Non-rib and source-non-bone endpoints stay
-point-owned for future cartilage/fascia mechanics.
+BodyParts3D member correspondence.  Exact anterior non-rib surfaces remain a
+separately typed composite attachment boundary; source-non-bone endpoints stay
+point-owned for future fascia/aponeurosis mechanics.
 """
 
 from __future__ import annotations
@@ -28,7 +29,7 @@ from .rib_registration import _rib_components_by_side_level
 from .upper_limb_registration import _body_frame_to_core
 
 
-SCHEMA = "numi.human.myosim-abdominal-source-component-enthesis.v1"
+SCHEMA = "numi.human.myosim-abdominal-source-component-enthesis.v2"
 REGISTRATION_SCHEMA = "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2"
 TENDON_SCHEMAS = {
     "numi.human.tendon-attachment-envelope-payload.v2",
@@ -298,16 +299,14 @@ def propose_abdominal_enthesis_registration(
             f"abdominal enthesis source topology classification drifted: {counts}"
         )
 
-    # Preserve the exact pinned source-component surfaces referenced by the
-    # rib-owned endpoints. BodyParts3D remains the first geometry authority,
-    # but a route may use this source mechanics surface if the corresponding
-    # BodyParts3D bone ends outside the unchanged 12 mm gate. This is a
-    # provenance-bound fallback surface, not permission to move the endpoint
-    # or relabel a non-rib component as bone.
+    # Preserve every exact pinned thorax component referenced by a bone-adjacent
+    # endpoint. BodyParts3D remains the first geometry authority for a named
+    # rib. An anterior non-rib route instead retains its exact source composite
+    # surface without relabelling it as bone, cartilage, sternum, or fascia.
     referenced_component_indices = sorted({
         int(record["source_component_index"])
         for record in records
-        if record["disposition"] == RIB_DISPOSITION
+        if record["disposition"] in {RIB_DISPOSITION, NON_RIB_DISPOSITION}
     })
     component_surfaces = []
     for component_index in referenced_component_indices:
@@ -325,6 +324,19 @@ def propose_abdominal_enthesis_registration(
         ]
         if len(vertices) < 4 or len(triangles) < 4:
             raise RuntimeError("abdominal enthesis source component surface is incomplete")
+        component_dispositions = sorted({
+            record["disposition"] for record in records
+            if record.get("source_component_index") == component_index
+        })
+        mechanics_roles = []
+        if RIB_DISPOSITION in component_dispositions:
+            mechanics_roles.append(
+                "exact_pinned_source_surface_fallback_after_bodyparts_rejection"
+            )
+        if NON_RIB_DISPOSITION in component_dispositions:
+            mechanics_roles.append(
+                "exact_pinned_source_anterior_thorax_composite_attachment_surface"
+            )
         component_surfaces.append({
             "source_component_index": component_index,
             "source_component_vertex_index_sha256": _component_signature(component),
@@ -333,22 +345,31 @@ def propose_abdominal_enthesis_registration(
             "vertices_core_m": vertices,
             "triangles": triangles,
             "surface_content_sha256": _surface_content_sha256(vertices, triangles),
-            "mechanics_role": "exact_pinned_source_surface_fallback_after_bodyparts_rejection",
+            "source_component_dispositions": component_dispositions,
+            "mechanics_roles": sorted(mechanics_roles),
         })
     surface_indices = {
         surface["source_component_index"] for surface in component_surfaces
     }
     for record in records:
-        if record["disposition"] == RIB_DISPOSITION:
+        if record["disposition"] in {RIB_DISPOSITION, NON_RIB_DISPOSITION}:
             component_index = int(record["source_component_index"])
             if component_index not in surface_indices:
                 raise RuntimeError("abdominal enthesis source fallback surface is absent")
             record["source_mechanics_surface_id"] = (
                 f"MYSRC{component_index:02d}"
             )
-            record["source_mechanics_surface_policy"] = (
-                "fallback_only_after_bodyparts_member_rejection"
-            )
+            if record["disposition"] == RIB_DISPOSITION:
+                record["source_mechanics_surface_policy"] = (
+                    "fallback_only_after_bodyparts_member_rejection"
+                )
+            else:
+                record["source_mechanics_surface_policy"] = (
+                    "direct_exact_source_anterior_thorax_composite_attachment"
+                )
+                record["mechanics_tissue_classification"] = (
+                    "unresolved_anterior_thorax_composite_not_bone_or_material_identity"
+                )
 
     output = json.loads(json.dumps(registration))
     output["abdominal_source_component_enthesis_registration"] = {
@@ -389,8 +410,10 @@ def propose_abdominal_enthesis_registration(
             "This receipt resolves exact endpoint ownership from the pinned MyoSim "
             "thorax triangle and connected component. Rib components may select an "
             "existing BodyParts3D rib member; anterior non-rib and source-non-bone "
-            "components remain point-owned pending cartilage/fascia mechanics. It "
-            "moves no source site and adds no articulation."
+            "components retain a separately typed exact source composite attachment "
+            "surface without claiming bone, cartilage, sternum, fascia, or a material "
+            "identity. Source-non-bone termini remain point-owned. This receipt moves "
+            "no source site and adds no articulation."
         ),
     }
     return output

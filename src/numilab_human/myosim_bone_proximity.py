@@ -416,6 +416,7 @@ def registration_worklist(
             "registered_bone_distributed_envelope",
             "registered_bone_migrated_distributed_envelope",
             "registered_source_surface_distributed_envelope",
+            "registered_source_composite_surface_distributed_envelope",
         }:
             disposition_counts["already_surface_admitted"] += 1
             continue

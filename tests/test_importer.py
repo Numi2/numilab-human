@@ -196,6 +196,16 @@ class ImporterTests(unittest.TestCase):
             ("IO5", "r"): 16,
             ("IO5", "l"): 17,
         }
+        non_rib_components = {
+            ("rect_abd", "r"): 1,
+            ("rect_abd", "l"): 1,
+            ("EO2", "r"): 1,
+            ("EO2", "l"): 1,
+            ("EO4", "r"): 1,
+            ("EO4", "l"): 17,
+            ("IO4", "r"): 1,
+            ("IO4", "l"): 1,
+        }
         for pair_index, (base, ordinal) in enumerate((
             ("rect_abd", 1), ("EO1", 1), ("EO2", 0), ("EO3", 0),
             ("EO4", 0), ("EO5", 0), ("EO6", 0), ("IO4", 0),
@@ -241,6 +251,20 @@ class ImporterTests(unittest.TestCase):
                             "fallback_only_after_bodyparts_member_rejection"
                         ),
                     })
+                elif disposition == _NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION:
+                    component_index = non_rib_components[(base, side)]
+                    record.update({
+                        "source_component_index": component_index,
+                        "source_triangle_index": pair_index,
+                        "source_component_vertex_index_sha256": "56" * 32,
+                        "source_mechanics_surface_id": f"MYSRC{component_index:02d}",
+                        "source_mechanics_surface_policy": (
+                            "direct_exact_source_anterior_thorax_composite_attachment"
+                        ),
+                        "mechanics_tissue_classification": (
+                            "unresolved_anterior_thorax_composite_not_bone_or_material_identity"
+                        ),
+                    })
                 records.append(record)
             pairs.append({"muscle_base": base, "passed": True})
         counts = {
@@ -259,8 +283,27 @@ class ImporterTests(unittest.TestCase):
             {"triangles": triangles, "vertices_core_m": vertices},
             sort_keys=True, separators=(",", ":"),
         ).encode("utf-8")).hexdigest()
-        source_surfaces = [
-            {
+        component_dispositions = {
+            component_index: sorted({
+                record["disposition"] for record in records
+                if record.get("source_component_index") == component_index
+            })
+            for component_index in sorted({
+                *rib_components.values(), *non_rib_components.values(),
+            })
+        }
+        source_surfaces = []
+        for component_index, dispositions in component_dispositions.items():
+            mechanics_roles = []
+            if _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION in dispositions:
+                mechanics_roles.append(
+                    "exact_pinned_source_surface_fallback_after_bodyparts_rejection"
+                )
+            if _NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION in dispositions:
+                mechanics_roles.append(
+                    "exact_pinned_source_anterior_thorax_composite_attachment_surface"
+                )
+            source_surfaces.append({
                 "source_component_index": component_index,
                 "source_component_vertex_index_sha256": "56" * 32,
                 "source_vertex_count": len(vertices),
@@ -268,12 +311,9 @@ class ImporterTests(unittest.TestCase):
                 "vertices_core_m": vertices,
                 "triangles": triangles,
                 "surface_content_sha256": surface_content_sha,
-                "mechanics_role": (
-                    "exact_pinned_source_surface_fallback_after_bodyparts_rejection"
-                ),
-            }
-            for component_index in sorted(set(rib_components.values()))
-        ]
+                "source_component_dispositions": dispositions,
+                "mechanics_roles": sorted(mechanics_roles),
+            })
         receipt = {
             "schema": _NUMI_HUMAN_SOURCE_COMPONENT_ENTHESIS_SCHEMA,
             "status": "candidate_passed_exact_component_identity_and_bilateral_gates",
@@ -329,7 +369,7 @@ class ImporterTests(unittest.TestCase):
         audit_endpoints = []
         tendon_endpoints = []
         fixtures = (
-            (0, "registered_source_surface_distributed_envelope", "admitted", "source_model_bone_adjacent"),
+            (0, "registered_source_composite_surface_distributed_envelope", "admitted", "source_model_bone_adjacent"),
             (5, "registered_bone_migrated_distributed_envelope", "admitted", "source_model_bone_adjacent"),
             (1, "source_site_point", "surface_distance_exceeds_gate", "source_model_bone_adjacent"),
             (2, "source_site_point", "surface_distance_exceeds_gate", "source_model_not_bone_adjacent"),

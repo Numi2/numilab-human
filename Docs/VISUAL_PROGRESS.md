@@ -1,5 +1,23 @@
 # NumiLab Human visual progress
 
+## Anterior-thorax composite attachment surfaces — 2026-08-30
+
+<p align="center">
+  <img src="media/numi-human-anterior-thorax-composite-v3-2048/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-front.png" width="24%" alt="Anterior thorax composite attachments, front" />
+  <img src="media/numi-human-anterior-thorax-composite-v3-2048/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-oblique.png" width="24%" alt="Anterior thorax composite attachments, oblique" />
+  <img src="media/numi-human-anterior-thorax-composite-v3-2048/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-side.png" width="24%" alt="Anterior thorax composite attachments, side" />
+  <img src="media/numi-human-anterior-thorax-composite-v3-2048/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-rear.png" width="24%" alt="Anterior thorax composite attachments, rear" />
+</p>
+
+These deliberately isolated M4 Pro diagnostics show eight cyan abdominal
+routes terminating in eight tan force-transfer patches. Grey geometry is only
+the BodyParts3D sternum and ribs 5--12; the exact source composite geometry is
+not yet rendered or deformable. Patches in the costal-margin/aponeurosis space
+must therefore not be judged as floating bone attachments or shown as a
+realistic Human render. The four views verify route-to-patch continuity and
+bilateral placement while keeping the missing tissue owner visible. See the
+[anterior-thorax composite record](ANTERIOR_THORAX_COMPOSITE_FORCE_TRANSFER_V3.md).
+
 ## EO3 source mechanics surfaces versus BodyParts rib 9 — 2026-08-29
 
 <p align="center">

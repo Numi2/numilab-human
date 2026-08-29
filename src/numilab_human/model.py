@@ -3883,7 +3883,7 @@ _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS = {
     },
 }
 _NUMI_HUMAN_SOURCE_COMPONENT_ENTHESIS_SCHEMA = (
-    "numi.human.myosim-abdominal-source-component-enthesis.v1"
+    "numi.human.myosim-abdominal-source-component-enthesis.v2"
 )
 _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION = (
     "source_topology_resolved_rib_member"
@@ -3937,7 +3937,7 @@ def _numi_human_source_component_enthesis_receipt(
         or receipt.get("source_mesh_name") != "torso_geom_13_ribcage_s"
         or receipt.get("source_connected_component_count") != 36
         or receipt.get("source_rib_component_count") != 24
-        or receipt.get("source_component_surface_count") != 8
+        or receipt.get("source_component_surface_count") != 9
     ):
         raise ImportError("Numi Human source-component enthesis receipt is invalid")
     records = receipt.get("endpoint_records")
@@ -3946,7 +3946,7 @@ def _numi_human_source_component_enthesis_receipt(
     if (
         not isinstance(records, list) or len(records) != 20
         or not isinstance(pairs, list) or len(pairs) != 10
-        or not isinstance(source_surfaces, list) or len(source_surfaces) != 8
+        or not isinstance(source_surfaces, list) or len(source_surfaces) != 9
         or any(not isinstance(pair, dict) or pair.get("passed") is not True for pair in pairs)
     ):
         raise ImportError("Numi Human source-component enthesis receipt is incomplete")
@@ -3971,6 +3971,8 @@ def _numi_human_source_component_enthesis_receipt(
         triangles = surface.get("triangles")
         signature = surface.get("source_component_vertex_index_sha256")
         content_sha = surface.get("surface_content_sha256")
+        dispositions = surface.get("source_component_dispositions")
+        mechanics_roles = surface.get("mechanics_roles")
         if (
             not isinstance(component_index, int)
             or component_index in source_surface_by_component
@@ -3982,8 +3984,18 @@ def _numi_human_source_component_enthesis_receipt(
             or re.fullmatch(r"[0-9a-f]{64}", signature) is None
             or not isinstance(content_sha, str)
             or re.fullmatch(r"[0-9a-f]{64}", content_sha) is None
-            or surface.get("mechanics_role")
-            != "exact_pinned_source_surface_fallback_after_bodyparts_rejection"
+            or not isinstance(dispositions, list) or not dispositions
+            or any(disposition not in {
+                _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION,
+                _NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION,
+            } for disposition in dispositions)
+            or dispositions != sorted(set(dispositions))
+            or not isinstance(mechanics_roles, list) or not mechanics_roles
+            or any(role not in {
+                "exact_pinned_source_surface_fallback_after_bodyparts_rejection",
+                "exact_pinned_source_anterior_thorax_composite_attachment_surface",
+            } for role in mechanics_roles)
+            or mechanics_roles != sorted(set(mechanics_roles))
             or any(
                 not isinstance(vertex, list) or len(vertex) != 3
                 or any(not isinstance(value, (int, float)) or not math.isfinite(value) for value in vertex)
@@ -4059,16 +4071,77 @@ def _numi_human_source_component_enthesis_receipt(
                 raise ImportError(
                     "Numi Human source-component rib ownership is invalid"
                 )
+            if (
+                "exact_pinned_source_surface_fallback_after_bodyparts_rejection"
+                not in source_surface_by_component[record["source_component_index"]][
+                    "mechanics_roles"
+                ]
+            ):
+                raise ImportError(
+                    "Numi Human source-component rib fallback role is absent"
+                )
+        elif disposition == _NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION:
+            component_index = record.get("source_component_index")
+            if (
+                not isinstance(component_index, int)
+                or members
+                or record.get("source_mechanics_surface_id")
+                != f"MYSRC{component_index:02d}"
+                or record.get("source_mechanics_surface_policy")
+                != "direct_exact_source_anterior_thorax_composite_attachment"
+                or record.get("mechanics_tissue_classification")
+                != "unresolved_anterior_thorax_composite_not_bone_or_material_identity"
+                or component_index not in source_surface_by_component
+                or source_surface_by_component[component_index].get(
+                    "source_component_vertex_index_sha256"
+                ) != record.get("source_component_vertex_index_sha256")
+                or (
+                    "exact_pinned_source_anterior_thorax_composite_attachment_surface"
+                    not in source_surface_by_component[component_index]["mechanics_roles"]
+                )
+            ):
+                raise ImportError(
+                    "Numi Human anterior-thorax composite surface ownership is invalid"
+                )
         elif (
             members or record.get("side") is not None
             or record.get("thoracic_level") is not None
+            or record.get("source_mechanics_surface_id") is not None
+            or record.get("source_mechanics_surface_policy") is not None
         ):
-            raise ImportError("Numi Human non-rib source-component endpoint names a bone")
+            raise ImportError("Numi Human source-non-bone endpoint names a mechanics surface")
     expected_counts = {
         _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION: 10,
         _NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION: 8,
         _NUMI_HUMAN_SOURCE_COMPONENT_NON_BONE_DISPOSITION: 2,
     }
+    expected_surface_dispositions: dict[int, set[str]] = defaultdict(set)
+    for record in records:
+        if record["disposition"] in {
+            _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION,
+            _NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION,
+        }:
+            expected_surface_dispositions[record["source_component_index"]].add(
+                record["disposition"]
+            )
+    if set(source_surface_by_component) != set(expected_surface_dispositions):
+        raise ImportError("Numi Human source-component surface coverage drifted")
+    for component_index, dispositions in expected_surface_dispositions.items():
+        expected_roles = []
+        if _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION in dispositions:
+            expected_roles.append(
+                "exact_pinned_source_surface_fallback_after_bodyparts_rejection"
+            )
+        if _NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION in dispositions:
+            expected_roles.append(
+                "exact_pinned_source_anterior_thorax_composite_attachment_surface"
+            )
+        surface = source_surface_by_component[component_index]
+        if (
+            surface["source_component_dispositions"] != sorted(dispositions)
+            or surface["mechanics_roles"] != sorted(expected_roles)
+        ):
+            raise ImportError("Numi Human source-component surface role drifted")
     if (
         keys != set(_NUMI_HUMAN_SOURCE_COMPONENT_EXPECTED_RECORDS)
         or dict(counts) != expected_counts
@@ -7802,6 +7875,9 @@ def numi_human_tendon_attachment_envelope_payload(
     source_component_fallback_surfaces: dict[
         tuple[str, int], dict[str, Any]
     ] = {}
+    source_component_composite_surfaces: dict[
+        tuple[str, int], dict[str, Any]
+    ] = {}
     source_component_receipt = bone_descriptor.get(
         "source_component_enthesis_registration"
     )
@@ -7816,11 +7892,13 @@ def numi_human_tendon_attachment_envelope_payload(
                 raise ImportError(
                     f"Numi Human source-component enthesis duplicates semantic map {key}"
                 )
-            if record["disposition"] == _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION:
-                source_component_members[key] = tuple(record["bone_member_ids"])
+            if record["disposition"] in {
+                _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION,
+                _NUMI_HUMAN_SOURCE_COMPONENT_NON_RIB_DISPOSITION,
+            }:
                 component_index = int(record["source_component_index"])
                 source_surface = source_surfaces[component_index]
-                source_component_fallback_surfaces[key] = {
+                compiled_surface = {
                     "body_index": 20,
                     "stable_id": 0x80000000 | (component_index + 1),
                     "member_id": str(record["source_mechanics_surface_id"]),
@@ -7833,6 +7911,11 @@ def numi_human_tendon_attachment_envelope_payload(
                         "surface_content_sha256"
                     ],
                 }
+                if record["disposition"] == _NUMI_HUMAN_SOURCE_COMPONENT_RIB_DISPOSITION:
+                    source_component_members[key] = tuple(record["bone_member_ids"])
+                    source_component_fallback_surfaces[key] = compiled_surface
+                else:
+                    source_component_composite_surfaces[key] = compiled_surface
             else:
                 source_component_point_reasons[key] = str(record["disposition"])
     endpoint_payload: list[bytes] = []
@@ -7846,6 +7929,7 @@ def numi_human_tendon_attachment_envelope_payload(
     semantic_axial_enthesis_count = 0
     source_component_enthesis_count = 0
     source_component_mechanics_surface_enthesis_count = 0
+    source_component_anterior_thorax_composite_enthesis_count = 0
     compass_vertex_envelope_count = 0
     topology_aware_exact_surface_envelope_count = 0
     for muscle_index, (record, muscle_metadata) in enumerate(zip(muscles, metadata, strict=True)):
@@ -7956,6 +8040,36 @@ def numi_human_tendon_attachment_envelope_payload(
                                     bodyparts_rejection_reason
                                 ),
                             }
+            elif semantic_key in source_component_composite_surfaces:
+                source_surface = source_component_composite_surfaces[semantic_key]
+                envelope, reason = _numi_human_tendon_surface_envelope(
+                    source_point, source_surface,
+                    maximum_surface_distance_m,
+                    maximum_patch_radius_m,
+                    maximum_force_amplification,
+                )
+                if envelope is not None:
+                    reason = "admitted_exact_pinned_anterior_thorax_composite_surface"
+                    envelope["surface_kind"] = (
+                        "exact_pinned_source_anterior_thorax_composite_surface"
+                    )
+                    envelope["semantic_enthesis_map"] = {
+                        "kind": "source_topology_anterior_thorax_composite_attachment",
+                        "bone_member_ids": [],
+                        "mechanics_tissue_classification": (
+                            "unresolved_anterior_thorax_composite_not_bone_or_material_identity"
+                        ),
+                        "source_mechanics_surface_id": source_surface["member_id"],
+                        "source_component_index": source_surface[
+                            "source_component_index"
+                        ],
+                        "source_surface_content_sha256": source_surface[
+                            "source_surface_content_sha256"
+                        ],
+                        "node_bone_member_ids": [source_surface["member_id"]] * 4,
+                        "node_bone_stable_ids": [source_surface["stable_id"]] * 4,
+                        "source_endpoint_migration_m": 0.0,
+                    }
             elif semantic_key in source_component_point_reasons:
                 reason = source_component_point_reasons[semantic_key]
             elif not surfaces:
@@ -8014,6 +8128,11 @@ def numi_human_tendon_attachment_envelope_payload(
                             "exact_pinned_source_component_mechanics_fallback"
                         ):
                             source_component_mechanics_surface_enthesis_count += 1
+                    elif semantic_key in source_component_composite_surfaces:
+                        semantic_axial_enthesis_count += 1
+                        source_component_enthesis_count += 1
+                        source_component_mechanics_surface_enthesis_count += 1
+                        source_component_anterior_thorax_composite_enthesis_count += 1
                     elif semantic_key in _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS:
                         semantic_toe_enthesis_count += 1
                     elif semantic_key in _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS:
@@ -8047,9 +8166,10 @@ def numi_human_tendon_attachment_envelope_payload(
                     ]
                 if "surface_kind" in envelope:
                     surface_manifest["surface_kind"] = envelope["surface_kind"]
-                    surface_manifest["bodyparts_rejection_reason"] = envelope[
-                        "bodyparts_rejection_reason"
-                    ]
+                    if "bodyparts_rejection_reason" in envelope:
+                        surface_manifest["bodyparts_rejection_reason"] = envelope[
+                            "bodyparts_rejection_reason"
+                        ]
             resolved_point = (
                 envelope["resolved_local_point_m"]
                 if envelope is not None and migrate_endpoint else source_point
@@ -8079,6 +8199,9 @@ def numi_human_tendon_attachment_envelope_payload(
                     "registered_source_surface_distributed_envelope"
                     if envelope is not None and envelope.get("surface_kind") ==
                     "exact_pinned_source_component_mechanics_fallback" else
+                    "registered_source_composite_surface_distributed_envelope"
+                    if envelope is not None and envelope.get("surface_kind") ==
+                    "exact_pinned_source_anterior_thorax_composite_surface" else
                     "registered_bone_distributed_envelope"
                     if envelope is not None else "source_site_point"
                 ),
@@ -8128,7 +8251,8 @@ def numi_human_tendon_attachment_envelope_payload(
                 "single_named_NHBONES1_member_exact_nearest_triangle_connected_surface_patch_"
                 "with_deterministic_topology_aware_exact_triangle_quadrature_fallback_"
                 "or_explicit_same_body_semantic_member_map_minimum_L2_wrench_distribution_"
-                "or_exact_pinned_source_component_surface_only_after_BodyParts_rejection"
+                "or_exact_pinned_source_component_surface_after_BodyParts_rejection_"
+                "or_separately_typed_exact_anterior_thorax_composite_surface"
             ),
             "maximum_surface_distance_m": maximum_surface_distance_m,
             **({
@@ -8146,7 +8270,7 @@ def numi_human_tendon_attachment_envelope_payload(
             "multiple_bone_exception": (
                 "only exact source-pinned toe maps, declared bilateral hip/tibia/fibula/rigid-foot "
                 "route-member maps, source-named thoracic maps, and a validated pinned-source "
-                "component receipt are admitted; "
+                "component receipt with separately typed rib and anterior-thorax composite surfaces are admitted; "
                 "all other multi-bone bodies fail closed"
             ),
             "toe_semantic_enthesis_map": {
@@ -8186,6 +8310,22 @@ def numi_human_tendon_attachment_envelope_payload(
                     source_component_members.items()
                 )
             },
+            "source_component_anterior_thorax_composite_map": {
+                f"{muscle}:{endpoint}": {
+                    "source_mechanics_surface_id": surface["member_id"],
+                    "source_component_index": surface["source_component_index"],
+                    "source_surface_content_sha256": surface[
+                        "source_surface_content_sha256"
+                    ],
+                    "kind": "source_topology_anterior_thorax_composite_attachment",
+                    "mechanics_tissue_classification": (
+                        "unresolved_anterior_thorax_composite_not_bone_or_material_identity"
+                    ),
+                }
+                for (muscle, endpoint), surface in sorted(
+                    source_component_composite_surfaces.items()
+                )
+            },
             "source_component_point_dispositions": {
                 f"{muscle}:{endpoint}": reason
                 for (muscle, endpoint), reason in sorted(
@@ -8217,6 +8357,9 @@ def numi_human_tendon_attachment_envelope_payload(
             "source_component_enthesis_envelope_count": source_component_enthesis_count,
             "source_component_mechanics_surface_enthesis_envelope_count": (
                 source_component_mechanics_surface_enthesis_count
+            ),
+            "source_component_anterior_thorax_composite_enthesis_envelope_count": (
+                source_component_anterior_thorax_composite_enthesis_count
             ),
             "compass_vertex_envelope_count": compass_vertex_envelope_count,
             "topology_aware_exact_surface_envelope_count": topology_aware_exact_surface_envelope_count,
@@ -8259,6 +8402,9 @@ def numi_human_tendon_attachment_envelope_payload(
             "The bilateral EO3 fallback is an exact pinned MyoSim thorax-component mechanics surface admitted only after "
             "the named BodyParts3D rib failed the unchanged distance gate. It is not a BodyParts3D bone, does not move a "
             "rib or endpoint, and is not a deformable cartilage or enthesis material law. "
+            "The eight anterior-thorax composite envelopes preserve exact pinned source components under the same "
+            "distance, patch, amplification, force, and moment gates. They are intentionally not relabelled as bone, "
+            "costal cartilage, sternum, fascia, or a deformable material until a registered tissue owner exists. "
             "The bilateral hip/tibia/fibula/rigid-foot member assignments resolve only which exact source bone on an already-owned "
             "rigid body receives the unchanged endpoint wrench. The thoracic assignments likewise resolve only explicit "
             "MyoSim Tn/Rn/QL-12 labels to exact same-body BodyParts3D vertebrae or ribs. These mappings are not "

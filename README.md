@@ -92,10 +92,14 @@ Eight of the rib termini pass on registered BodyParts3D ribs. Moving either
 rib 9 toward EO3 would break already-passing rib entheses and costovertebral
 continuity, so bilateral EO3 instead use exact pinned MyoSim rib-component
 surfaces after the BodyParts members fail the unchanged 12 mm gate. This raises
-`NHTENDON3` to 630 distributed surface envelopes—628 BodyParts bone and two
-pinned source-rib surfaces—plus 202 point laws, with no endpoint or bone
-migration. The anterior sites remain reserved for cartilage/fascia mechanics.
-See the [EO3 force-transfer record](Docs/EO3_SOURCE_COMPONENT_FORCE_TRANSFER_V2.md)
+`NHTENDON3` initially reached 630 distributed surface envelopes—628 BodyParts
+bone and two pinned source-rib surfaces. The next pass admits the eight exact
+anterior-thorax components as separately typed composite attachment surfaces,
+raising coverage to 638 envelopes plus 194 point laws with no endpoint or bone
+migration. They are not relabelled as bone, cartilage, sternum, or fascia and
+remain the boundary for future deformable tissue mechanics. See the
+[anterior-thorax record](Docs/ANTERIOR_THORAX_COMPOSITE_FORCE_TRANSFER_V3.md),
+[EO3 force-transfer record](Docs/EO3_SOURCE_COMPONENT_FORCE_TRANSFER_V2.md),
 and preceding [abdominal source-component record](Docs/ABDOMINAL_SOURCE_COMPONENT_ENTHESES_V1.md).
 
 <p align="center">
@@ -209,11 +213,12 @@ The promoted `NHTENDON3` artifact gives all 832 origin/insertion endpoints a
 fail-closed tendon-to-bone law without silently moving an authored route site.
 After source-coherent anatomy, semantic same-body ownership, topology-aware
 exact-surface search, upper/lower-limb registration, and torso/axial
-registration plus exact abdominal source-component ownership, 630 endpoints
+registration plus exact abdominal source-component ownership, 638 endpoints
 admit distributed four-node surface envelopes: 628 on registered BodyParts3D
-bones and bilateral EO3 on exact pinned MyoSim rib-component mechanics
-surfaces. Another 202 remain explicit body-owned source-point laws (75.72%
-surface coverage). Eighteen of the BodyParts envelopes are the reviewed route-private
+bones, bilateral EO3 on exact pinned MyoSim rib-component mechanics surfaces,
+and eight on separately typed anterior-thorax composite source surfaces.
+Another 194 remain explicit body-owned source-point laws (76.68% surface
+coverage). Eighteen of the BodyParts envelopes are the reviewed route-private
 foot/hallux terminals with deterministic reference calibration; maximum
 endpoint migration remains `17.262 mm`.
 
@@ -228,6 +233,7 @@ state effect, assistance removal, and bitwise replay. The standing controller
 still reports `balanced=false`; this is force-path/runtime evidence, not
 stable-standing qualification. See the
 [EO3 source-component record](Docs/EO3_SOURCE_COMPONENT_FORCE_TRANSFER_V2.md),
+[anterior-thorax composite record](Docs/ANTERIOR_THORAX_COMPOSITE_FORCE_TRANSFER_V3.md),
 [abdominal component record](Docs/ABDOMINAL_SOURCE_COMPONENT_ENTHESES_V1.md),
 [torso/axial record](Docs/TORSO_AXIAL_SOURCE_REGISTRATION_V1.md),
 [lower-limb record](Docs/LOWER_LIMB_SOURCE_REGISTRATION_V2.md), and historical
