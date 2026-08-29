@@ -19,7 +19,7 @@ the native Human execution path.
 The current standing milestone is native and persistent: `numi human stand`
 executes current-pose force from all 416 routes, activation, 157-body gravity
 dynamics, ten authored foot witnesses, an assisted phase, and a zero-root-wrench
-phase on Apple Metal. `NHTENDON2` now also produces and validates all 832
+phase on Apple Metal. `NHTENDON2/3` now also produces and validates all 832
 terminal-to-bone load records inside every accepted step, with rollback-safe
 same-command-buffer exposure for a downstream deformable consumer. The live
 Metal solve retains source passive DoF damping, uses bounded
@@ -59,6 +59,21 @@ bilateral four-angle 2048 px shoulder inspection on Apple M4 Pro. See the
 [rigid-foot ownership and entheses](Docs/RIGID_FOOT_OWNERSHIP_V1.md),
 [visual progress](Docs/VISUAL_PROGRESS.md), and the
 [completion gap ledger](Docs/HUMAN_COMPLETION_GAP_LEDGER.md).
+
+The qualified `NHTENDON3` foot mode keeps every BodyParts3D bone at that exact
+rest pose and migrates only 18 unambiguous route-private hallux/rigid-foot
+terminals to their named surfaces. Reference calibration preserves the source
+force state at the compiled pose; Apple M4 Pro CPU/Metal parity, byte-identical
+replay, and bilateral four-angle 2048 px inspection pass. EDL/FDL remain
+explicit lumped lesser-toe laws rather than being misrepresented as four
+independent actuators. See [fixed-bone foot entheses](Docs/FIXED_BONE_FOOT_ENTHESES_V1.md).
+
+<p align="center">
+  <img src="Docs/media/numi-human-fixed-bone-foot-entheses-v1-2048/right/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-139-front.png" width="24%" alt="Right fixed-bone hallux and foot entheses, front" />
+  <img src="Docs/media/numi-human-fixed-bone-foot-entheses-v1-2048/right/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-139-oblique.png" width="24%" alt="Right fixed-bone hallux and foot entheses, oblique" />
+  <img src="Docs/media/numi-human-fixed-bone-foot-entheses-v1-2048/left/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-153-front.png" width="24%" alt="Left fixed-bone hallux and foot entheses, front" />
+  <img src="Docs/media/numi-human-fixed-bone-foot-entheses-v1-2048/left/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-153-oblique.png" width="24%" alt="Left fixed-bone hallux and foot entheses, oblique" />
+</p>
 
 <p align="center">
   <img src="Docs/media/numi-human-upper-limb-source-mesh-registration-v1-2048/right-hand-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-57-oblique.png" width="24%" alt="Registered right hand and transfer routes" />
@@ -101,7 +116,7 @@ by an exact source muscle route. `numi human control ... <part-name>` then
 resolves that name to the source actuator rows and adds a capped activation
 increment over the compiled full-body posture. The persistent Apple Metal
 operator reevaluates all 416 routes and publishes all 832 terminal loads inside
-each accepted/rollback-safe `NHTENDON2` transaction. A matched zero-increment
+each accepted/rollback-safe `NHTENDON2/3` transaction. A matched zero-increment
 run proves that the selected input changes state. The same fail-closed compiler
 validates all ten bilateral toe chains and their exact hallux versus lesser-toe
 terminal identities. See [transactional part control v2](Docs/PART_CONTROL_V2.md).
@@ -129,8 +144,10 @@ The bilateral BodyParts3D EHL/FHL surfaces now receive the same strict source
 topology treatment: only each dominant exact connected sheet is retained.
 FHL already reaches its named hallux bone; the 7.4 mm EHL source display gap is
 closed by feathering only its terminal visual band onto exact `FJ3182`/`FJ3192`
-triangles. This is explicitly visual registration; the MyoSim sites and v5
-force-transfer law remain unchanged. See the [hallux v8 record](Docs/HALLUX_ENTHESIS_V8.md).
+triangles. That v8 surface operation remains visual-only and leaves the default
+`NHTENDON2` source sites unchanged; the opt-in `NHTENDON3` fixed-bone mode now
+provides the corresponding mechanical EHL/FHL endpoint correction. See the
+[hallux v8 record](Docs/HALLUX_ENTHESIS_V8.md).
 The three hallux bones and terminal patch deliberately share the existing
 `toes_l`/`toes_r` rigid transform; no independent toe joint is needed for this
 continuity repair, and compilation fails if that compound is split or shifted
@@ -154,11 +171,20 @@ evidence, not stable-standing qualification. See the
 [upper-limb registration record](Docs/UPPER_LIMB_SOURCE_MESH_REGISTRATION_V1.md)
 and [rigid-foot record](Docs/RIGID_FOOT_OWNERSHIP_V1.md).
 
-The first inferred bilateral Achilles surface candidate was deliberately not
-admitted: its current cross-source registration would move the six terminal
-sites by about 49 mm, changing default muscle force by as much as 181 N. The
-source point attachments therefore remain authoritative until the anatomical
-registration improves. See [tendon attachment v2](Docs/TENDON_ATTACHMENT_V2.md)
+The opt-in, qualified `NHTENDON3` fixed-bone foot mode promotes 14 existing
+foot/hallux point laws plus four existing rigid-foot envelopes to 18 exact
+route-private bone-surface terminals. Its complete payload is 554 envelopes
+and 278 point laws. Maximum endpoint migration is `11.983 mm`; deterministic
+reference calibration reduces default-pose source-oracle errors to
+`2.556e-8 m` and `4.894e-4 N`. The changed source-versus-resolved generalized
+force is retained as the intended moment-arm correction. See the
+[fixed-bone foot record](Docs/FIXED_BONE_FOOT_ENTHESES_V1.md).
+
+The earlier whole-calcaneus transform experiment remains rejected: it would
+have moved Achilles terminals by about 49 mm and changed default muscle force
+by as much as 181 N. `NHTENDON3` instead moves only the private terminal sites
+by at most 11.983 mm while leaving the bone transform fixed and recalibrating
+the reference fibre/tendon state. See [tendon attachment v2](Docs/TENDON_ATTACHMENT_V2.md)
 and the legacy [point/triangle analysis](Docs/TENDON_FORCE_TRANSFER.md).
 
 <p align="center">

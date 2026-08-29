@@ -1,5 +1,10 @@
 # NumiLab Human tendon attachment v2
 
+> `NHTENDON2` remains the default source-point-preserving program documented
+> here. The qualified, opt-in `NHTENDON3` foot mode adds 18 route-private exact
+> named-bone terminals while keeping all bone transforms fixed; see
+> [fixed-bone foot entheses v1](FIXED_BONE_FOOT_ENTHESES_V1.md).
+
 ## Outcome
 
 `NHTENDON2` adds a mechanically executed tendon-to-bone surface transfer law

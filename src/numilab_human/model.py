@@ -2051,6 +2051,12 @@ _NUMI_HUMAN_TENDON_TRIANGLE = 1
 _NUMI_HUMAN_TENDON_ENVELOPE_MAGIC = b"NHTEND2\0"
 _NUMI_HUMAN_TENDON_ENVELOPE_ABI = 2
 _NUMI_HUMAN_TENDON_ENVELOPE = 2
+# NHTENDON3 retains the exact NHTENDON2 force-envelope layout, but explicitly
+# admits a route-private endpoint at the named bone surface.  The last binding
+# float carries the migration magnitude; NHTENDON2 keeps that field zero.
+_NUMI_HUMAN_TENDON_MIGRATED_ENVELOPE_MAGIC = b"NHTEND3\0"
+_NUMI_HUMAN_TENDON_MIGRATED_ENVELOPE_ABI = 3
+_NUMI_HUMAN_TENDON_MIGRATED_ENVELOPE = 3
 _MR_MOTION_STATIC = 0
 _MR_ROOT_FLOATING = 1
 _MR_JOINT_PRISMATIC = 1
@@ -3880,6 +3886,14 @@ _NUMI_HUMAN_SEMANTIC_ENTHESIS_MEMBERS = {
     **_NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS,
     **_NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS,
 }
+_NUMI_HUMAN_RIGID_FOOT_MIGRATABLE_ENTHESES = frozenset({
+    key for key, members in _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS.items()
+    if len(members) == 1
+}) | frozenset({
+    (f"{base}_{side}", endpoint)
+    for side in ("r", "l")
+    for (base, endpoint) in _NUMI_HUMAN_RIGID_FOOT_ENTHESIS_MEMBER_CLASS
+})
 
 
 def _numi_human_semantic_enthesis_kind(
@@ -7009,6 +7023,7 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
 def _numi_human_tendon_surface_envelope(
     source_point: list[float], surface: dict[str, Any], maximum_distance_m: float,
     maximum_patch_radius_m: float, maximum_force_amplification: float,
+    migrate_endpoint_to_surface: bool = False,
 ) -> tuple[dict[str, Any] | None, str]:
     vertices: list[list[float]] = surface["vertices"]
     triangles: list[tuple[int, int, int]] = surface["triangles"]
@@ -7089,7 +7104,8 @@ def _numi_human_tendon_surface_envelope(
         )) for node in nodes)
         if patch_radius > maximum_patch_radius_m + 1.0e-12:
             return
-        mapped = _tendon_envelope_force_maps(source_point, nodes, patch_radius)
+        force_application_point = closest_point if migrate_endpoint_to_surface else source_point
+        mapped = _tendon_envelope_force_maps(force_application_point, nodes, patch_radius)
         if mapped is None:
             return
         maps, metrics = mapped
@@ -7108,6 +7124,7 @@ def _numi_human_tendon_surface_envelope(
             "source_triangle_index": source_triangle_index,
             "nearest_barycentric": barycentric,
             "nearest_local_point_m": closest_point,
+            "resolved_local_point_m": force_application_point,
             "node_vertex_indices": node_vertex_indices,
             "node_local_points_m": nodes,
             "surface_patch_method": method,
@@ -7302,6 +7319,7 @@ def _numi_human_semantic_enthesis_envelope(
     member_ids: tuple[str, ...], maximum_surface_distance_m: float,
     maximum_patch_radius_m: float, maximum_force_amplification: float,
     semantic_kind: str | None = None,
+    migrate_endpoint_to_surface: bool = False,
 ) -> tuple[dict[str, Any] | None, str]:
     """Resolve an explicit same-body anatomical enthesis correspondence.
 
@@ -7322,6 +7340,7 @@ def _numi_human_semantic_enthesis_envelope(
         envelope, reason = _numi_human_tendon_surface_envelope(
             source_point, surfaces[0], maximum_surface_distance_m,
             maximum_patch_radius_m, maximum_force_amplification,
+            migrate_endpoint_to_surface,
         )
         if envelope is None:
             return None, reason
@@ -7330,7 +7349,9 @@ def _numi_human_semantic_enthesis_envelope(
             "bone_member_ids": list(member_ids),
             "node_bone_member_ids": [member_ids[0]] * 4,
             "node_bone_stable_ids": [surfaces[0]["stable_id"]] * 4,
-            "source_endpoint_migration_m": 0.0,
+            "source_endpoint_migration_m": (
+                envelope["surface_distance_m"] if migrate_endpoint_to_surface else 0.0
+            ),
         }
         return envelope, "admitted_semantic_single_enthesis_map"
     if len(surfaces) != 4:
@@ -7427,8 +7448,9 @@ def numi_human_tendon_attachment_envelope_payload(
     maximum_surface_distance_m: float = 0.012,
     maximum_patch_radius_m: float = 0.012,
     maximum_force_amplification: float = 4.0,
+    migrate_semantic_rigid_foot_endpoints: bool = False,
 ) -> dict[str, Any]:
-    """Compile fail-closed source-point-preserving BodyParts3D enthesis laws.
+    """Compile fail-closed BodyParts3D enthesis force-transfer laws.
 
     Automatic admission is deliberately limited to a body with exactly one
     registered NHBONES1 member. Multi-member exceptions require an exact
@@ -7439,7 +7461,9 @@ def numi_human_tendon_attachment_envelope_payload(
     Every other multi-bone body, absent geometry, distant surface, or
     ill-conditioned patch remains an explicit source-site point law. No
     authored MyoSim site, route, path length, or force parameter is changed by
-    this compiler.
+    the default compiler.  The explicit rigid-foot migration option emits
+    NHTENDON3 and moves only 18 route-private, one-to-one named endpoints onto
+    their exact registered surface; lumped EDL/FDL endpoints remain fixed.
     """
     for value, label in (
         (maximum_surface_distance_m, "maximum surface distance"),
@@ -7542,6 +7566,10 @@ def numi_human_tendon_attachment_envelope_payload(
             surfaces = surfaces_by_body.get(body_index, [])
             envelope: dict[str, Any] | None = None
             semantic_key = (name, endpoint_ordinal)
+            migrate_endpoint = (
+                migrate_semantic_rigid_foot_endpoints
+                and semantic_key in _NUMI_HUMAN_RIGID_FOOT_MIGRATABLE_ENTHESES
+            )
             semantic_members = _NUMI_HUMAN_SEMANTIC_ENTHESIS_MEMBERS.get(
                 semantic_key
             )
@@ -7561,6 +7589,7 @@ def numi_human_tendon_attachment_envelope_payload(
                         _numi_human_semantic_enthesis_kind(
                             semantic_key, len(semantic_members),
                         ),
+                        migrate_endpoint,
                     )
             elif not surfaces:
                 reason = "body_has_no_registered_bone_surface"
@@ -7579,7 +7608,10 @@ def numi_human_tendon_attachment_envelope_payload(
                 metrics = (0.0, 0.0, 0.0, 0.0)
                 surface_manifest = None
             else:
-                mode = _NUMI_HUMAN_TENDON_ENVELOPE
+                mode = (
+                    _NUMI_HUMAN_TENDON_MIGRATED_ENVELOPE
+                    if migrate_endpoint else _NUMI_HUMAN_TENDON_ENVELOPE
+                )
                 envelope_index = len(envelope_payload)
                 stable_id = envelope["bone_stable_id"]
                 metrics = (
@@ -7639,10 +7671,18 @@ def numi_human_tendon_attachment_envelope_payload(
                     surface_manifest["semantic_enthesis_map"] = envelope[
                         "semantic_enthesis_map"
                     ]
+            resolved_point = (
+                envelope["resolved_local_point_m"]
+                if envelope is not None and migrate_endpoint else source_point
+            )
+            endpoint_migration = (
+                envelope["surface_distance_m"]
+                if envelope is not None and migrate_endpoint else 0.0
+            )
             endpoint_payload.append(struct.pack(
                 "<8I8f", muscle_index, endpoint_ordinal, route_node_index, site_index,
                 body_index, mode, envelope_index, stable_id,
-                *source_point, *metrics, 0.0,
+                *resolved_point, *metrics, endpoint_migration,
             ))
             endpoint_manifest.append({
                 "muscle": name,
@@ -7652,15 +7692,30 @@ def numi_human_tendon_attachment_envelope_payload(
                 "source_site_index": site_index,
                 "body_index": body_index,
                 "source_local_point_m": source_point,
-                "attachment_mode": "registered_bone_distributed_envelope" if envelope is not None else "source_site_point",
+                "resolved_local_point_m": resolved_point,
+                "endpoint_migration_m": endpoint_migration,
+                "attachment_mode": (
+                    "registered_bone_migrated_distributed_envelope"
+                    if mode == _NUMI_HUMAN_TENDON_MIGRATED_ENVELOPE else
+                    "registered_bone_distributed_envelope"
+                    if envelope is not None else "source_site_point"
+                ),
                 "admission_reason": reason,
                 "surface": surface_manifest,
             })
     if len(endpoint_payload) != 2 * muscle_count:
         raise ImportError("Numi Human tendon envelope endpoint coverage is incomplete")
+    payload_magic = (
+        _NUMI_HUMAN_TENDON_MIGRATED_ENVELOPE_MAGIC
+        if migrate_semantic_rigid_foot_endpoints else _NUMI_HUMAN_TENDON_ENVELOPE_MAGIC
+    )
+    payload_abi = (
+        _NUMI_HUMAN_TENDON_MIGRATED_ENVELOPE_ABI
+        if migrate_semantic_rigid_foot_endpoints else _NUMI_HUMAN_TENDON_ENVELOPE_ABI
+    )
     header = struct.pack(
-        "<8s10I32s32s32s", _NUMI_HUMAN_TENDON_ENVELOPE_MAGIC,
-        _NUMI_HUMAN_TENDON_ENVELOPE_ABI, body_count, muscle_count, site_count,
+        "<8s10I32s32s32s", payload_magic,
+        payload_abi, body_count, muscle_count, site_count,
         len(endpoint_payload), len(envelope_payload), bone_descriptor["bone_count"],
         int(bone_descriptor["registration_fingerprint32"], 16), 0, 0,
         bytes.fromhex(source_sha), bytes.fromhex(muscle_sha), bytes.fromhex(bone_descriptor["sha256"]),
@@ -7675,10 +7730,10 @@ def numi_human_tendon_attachment_envelope_payload(
     admitted_count = len(envelope_payload)
     point_count = len(endpoint_payload) - admitted_count
     manifest_value = {
-        "schema": "numi.human.tendon-attachment-envelope-payload.v2",
+        "schema": f"numi.human.tendon-attachment-envelope-payload.v{payload_abi}",
         "payload": {
             "file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
-            "magic": "NHTENDON2", "payload_abi": _NUMI_HUMAN_TENDON_ENVELOPE_ABI,
+            "magic": f"NHTENDON{payload_abi}", "payload_abi": payload_abi,
         },
         "source": {
             "myosim_manifest": {"file": manifest_path.name, "sha256": sha256(manifest_path)},
@@ -7695,6 +7750,11 @@ def numi_human_tendon_attachment_envelope_payload(
             "maximum_surface_distance_m": maximum_surface_distance_m,
             "maximum_patch_radius_m": maximum_patch_radius_m,
             "maximum_sampled_total_force_amplification": maximum_force_amplification,
+            "route_private_surface_migration": migrate_semantic_rigid_foot_endpoints,
+            "migratable_scope": sorted(
+                f"{muscle}:{endpoint}"
+                for muscle, endpoint in _NUMI_HUMAN_RIGID_FOOT_MIGRATABLE_ENTHESES
+            ) if migrate_semantic_rigid_foot_endpoints else [],
             "multiple_bone_members_fail_closed": True,
             "multiple_bone_exception": (
                 "only exact source-pinned toe maps, declared bilateral hip/tibia/fibula/rigid-foot "
@@ -7730,7 +7790,10 @@ def numi_human_tendon_attachment_envelope_payload(
                 )
             },
             "maximum_toe_semantic_spread_m": _NUMI_HUMAN_TOE_ENTHESIS_MAXIMUM_SPREAD_M,
-            "source_endpoint_migration_m": 0.0,
+            "source_endpoint_migration_m": max(
+                (item["endpoint_migration_m"] for item in endpoint_manifest),
+                default=0.0,
+            ),
             "rejection_counts": dict(sorted(rejection_counts.items())),
         },
         "coverage": {
@@ -7738,6 +7801,10 @@ def numi_human_tendon_attachment_envelope_payload(
             "mechanical_endpoint_count": len(endpoint_payload),
             "expected_endpoint_count": 2 * muscle_count,
             "registered_bone_distributed_envelope_count": admitted_count,
+            "registered_bone_migrated_distributed_envelope_count": sum(
+                item["attachment_mode"] == "registered_bone_migrated_distributed_envelope"
+                for item in endpoint_manifest
+            ),
             "semantic_toe_enthesis_envelope_count": semantic_toe_enthesis_count,
             "semantic_limb_enthesis_envelope_count": semantic_limb_enthesis_count,
             "semantic_axial_enthesis_envelope_count": semantic_axial_enthesis_count,
@@ -7745,21 +7812,37 @@ def numi_human_tendon_attachment_envelope_payload(
             "topology_aware_exact_surface_envelope_count": topology_aware_exact_surface_envelope_count,
             "source_site_point_fallback_count": point_count,
             "surface_coverage_fraction": admitted_count / len(endpoint_payload),
-            "maximum_endpoint_migration_m": 0.0,
+            "maximum_endpoint_migration_m": max(
+                (item["endpoint_migration_m"] for item in endpoint_manifest),
+                default=0.0,
+            ),
             "maximum_admitted_surface_distance_m": max(admitted_distances, default=0.0),
             "maximum_admitted_sampled_total_force_amplification": max(admitted_amplifications, default=0.0),
         },
         "endpoints": endpoint_manifest,
         "runtime_contract": (
-            "retain each authored MyoSim route endpoint and force law; on Apple Metal distribute its exact terminal force "
-            "across four same-body source-registered bone nodes with precompiled 3x3 maps, conserve resultant force and moment, and derive any "
-            "generalized contribution only through articulated point Jacobians"
+            (
+                "replace only each admitted one-to-one named rigid-foot endpoint with a route-private exact bone-surface site; "
+                "retain every other authored endpoint and the source force law; on Apple Metal distribute the resolved route's exact "
+                "terminal force across four same-body registered bone nodes, conserve resultant force and moment, and derive the "
+                "generalized contribution only through articulated point Jacobians"
+            ) if migrate_semantic_rigid_foot_endpoints else (
+                "retain each authored MyoSim route endpoint and force law; on Apple Metal distribute its exact terminal force "
+                "across four same-body source-registered bone nodes with precompiled 3x3 maps, conserve resultant force and moment, and derive any "
+                "generalized contribution only through articulated point Jacobians"
+            )
         ),
         "status": "complete_endpoint_coverage_with_inferred_surface_envelopes_and_explicit_point_fallbacks",
         "evidence_boundary": (
+            (
+                "NHTENDON3 changes only the explicitly listed, one-to-one rigid-foot/hallux route endpoints to exact points on the "
+                "fixed registered BodyParts3D bones. It does not move a bone, create toe articulation, split the lumped EDL/FDL laws, "
+                "or constitute clinical validation. Native path, force, replay, and visual review are required before mechanical admission. "
+            ) if migrate_semantic_rigid_foot_endpoints else ""
+        ) + (
             "Admitted envelopes are simulation-inferred from the source-pinned BodyParts3D/MyoSim registration and strict "
             "distance/conditioning gates. They are not source-authored enthesis coordinates, a deformable tendon continuum, "
-            "a clinical attachment certificate, or permission to migrate an OpenSim/MyoSim route endpoint. The four-node "
+            "a clinical attachment certificate. The four-node "
             "topology-aware fallback uses exact points on the selected source triangle or vertices in its connected surface; "
             "it is a force-transfer discretization and does not warp, refine, or relabel anatomy. The four-node "
             "EDL/FDL map distributes one lumped source law; it does not claim four independently actuated toe muscles. "

@@ -865,6 +865,7 @@ def numi_human_tendon_envelope_payload(arguments: argparse.Namespace) -> int:
         arguments.artifact.resolve(), arguments.bone_artifact.resolve(),
         arguments.output.resolve(), arguments.maximum_surface_distance,
         arguments.maximum_patch_radius, arguments.maximum_force_amplification,
+        arguments.migrate_semantic_rigid_foot_endpoints,
     )
     print(f"wrote {arguments.output.resolve() / manifest['payload']['file']}")
     print(f"wrote {arguments.output.resolve() / 'numi-human-tendon-attachments.manifest.json'}")
@@ -1136,6 +1137,13 @@ def parser() -> argparse.ArgumentParser:
         help="directory containing the exact paired NHBONES1 payload and manifest",
     )
     tendon_envelope_parser.add_argument("--output", type=Path, required=True)
+    tendon_envelope_parser.add_argument(
+        "--migrate-semantic-rigid-foot-endpoints", action="store_true",
+        help=(
+            "emit NHTENDON3 with the 18 one-to-one named rigid-foot/hallux endpoints "
+            "migrated to exact registered bone surfaces; EDL/FDL remain source points"
+        ),
+    )
     tendon_envelope_parser.add_argument(
         "--maximum-surface-distance", type=float, default=0.012,
         help="maximum exact source-point to registered bone-surface distance in metres (default: 0.012)",

@@ -12,7 +12,7 @@ repository_root=$(CDPATH= cd -- "$command_directory/../.." && pwd -P)
 # Resolve a source body to the exact MyoSim actuator rows whose compiled routes
 # cross it, then add the requested activation to those rows over the compiled
 # full-body posture baseline. The native Apple Metal runtime evaluates all 416
-# routes and publishes all NHTENDON2 endpoint loads transactionally. Python
+# routes and publishes all NHTENDON2/3 endpoint loads transactionally. Python
 # performs only this launch-time provenance lookup; it is replaced by exec and
 # never participates in stepping or force evaluation.
 if [ "${1:-}" = "control-list" ]; then
@@ -31,11 +31,11 @@ fi
 
 if [ "${1:-}" = "control" ]; then
     if [ "${2:-}" = "--help" ] || [ "${2:-}" = "-h" ]; then
-        printf '%s\n' "usage: numi human control <NHEQ1-artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <bodyparts3d-myosim-soft-tissue.nhtissue> <NHTENDON2-attachments.nhtendon> <output-directory> <part-name> [--activation <increment-0..0.2>] [--steps <1..64>] [--timestep <1e-6..1e-3>] [--dimension <512..2048>] [--mechanics-overlay]"
+        printf '%s\n' "usage: numi human control <NHEQ1-artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <bodyparts3d-myosim-soft-tissue.nhtissue> <NHTENDON2-or-NHTENDON3-attachments.nhtendon> <output-directory> <part-name> [--activation <increment-0..0.2>] [--steps <1..64>] [--timestep <1e-6..1e-3>] [--dimension <512..2048>] [--mechanics-overlay]"
         exit 0
     fi
     if [ "$#" -lt 7 ]; then
-        printf '%s\n' "usage: numi human control <NHEQ1-artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <bodyparts3d-myosim-soft-tissue.nhtissue> <NHTENDON2-attachments.nhtendon> <output-directory> <part-name> [--activation <increment-0..0.2>] [--steps <1..64>] [--timestep <1e-6..1e-3>] [--dimension <512..2048>] [--mechanics-overlay]" >&2
+        printf '%s\n' "usage: numi human control <NHEQ1-artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <bodyparts3d-myosim-soft-tissue.nhtissue> <NHTENDON2-or-NHTENDON3-attachments.nhtendon> <output-directory> <part-name> [--activation <increment-0..0.2>] [--steps <1..64>] [--timestep <1e-6..1e-3>] [--dimension <512..2048>] [--mechanics-overlay]" >&2
         exit 2
     fi
     artifact_directory=$2
@@ -152,11 +152,11 @@ fi
 # Four native camera frames and a bitwise replay are mandatory evidence.
 if [ "${1:-}" = "stand" ]; then
     if [ "${2:-}" = "--help" ] || [ "${2:-}" = "-h" ]; then
-        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..64>] [--timestep <1e-6..1e-3>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay]"
+        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-or-NHTENDON3-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..64>] [--timestep <1e-6..1e-3>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay]"
         exit 0
     fi
     if [ "$#" -lt 6 ]; then
-        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..64>] [--timestep <1e-6..1e-3>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay]" >&2
+        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-or-NHTENDON3-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..64>] [--timestep <1e-6..1e-3>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay]" >&2
         exit 2
     fi
     artifact_directory=$2
@@ -241,7 +241,7 @@ if [ "${1:-}" = "stand" ]; then
 fi
 
 # Canonical Numi-owned Human probe. NHRIGID2/NHMYO1 remain source payloads,
-# while NHTENDON1/2 supplies complete route endpoint ownership and NHTENDON2
+# while NHTENDON1/2/3 supplies complete route endpoint ownership and NHTENDON2/3
 # adds admitted surface envelopes. The native probe resolves the terminal-load
 # program while retaining the existing single J^T rigid-force projection.
 if [ "${1:-}" = "tendon-probe" ] || [ "${1:-}" = "probe" ]; then

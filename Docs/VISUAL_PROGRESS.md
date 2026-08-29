@@ -1313,3 +1313,31 @@ device-side MyoSim `J^T` projection; no contact or locomotion is claimed here.
 This ordering keeps the Human more realistic by retaining source mechanics and
 by refusing to turn a visually plausible mesh into an uncalibrated physical
 body.
+
+## Fixed-bone foot and hallux entheses — 2026-08-29
+
+The foot correction now uses `NHTENDON3`: 18 bilateral, one-to-one terminal
+routes receive private sites on exact named BodyParts3D bone triangles while
+all bone registrations and the collective toe articulation remain unchanged.
+This supersedes the earlier visual-only hallux terminal feathering as the
+mechanical route endpoint for EHL/FHL. The renderer still exposes the route and
+four-node transfer law rather than inventing a photoreal tendon surface.
+
+All right/left front, oblique, side, and rear 2048 px frames were inspected.
+The cyan EHL/FHL routes terminate on the correct distal hallux rather than a
+neighbouring toe; Achilles, peroneal, and tibial insertions terminate on their
+named calcaneus, metatarsal, or navicular. Each frame contains nonzero bone,
+route, and envelope pixels. No toe is translated, rotated, duplicated, or
+independently articulated.
+
+The Apple M4 Pro native gate passes with 416 muscles, 832 endpoints, 554
+envelopes, 278 point laws, and byte-identical Metal tendon replay. Maximum
+endpoint migration is `11.9825406 mm`; reference calibration restores the
+source default-pose path/force comparison to `2.556e-8 m` and `4.894e-4 N`.
+The candidate remains a diagnostic mechanical-anatomy view, and its one-step
+control transaction reports `compiled_stand_balanced=false`.
+
+See [the fixed-bone foot record](FIXED_BONE_FOOT_ENTHESES_V1.md), the
+[right transcript](media/numi-human-fixed-bone-foot-entheses-v1-2048/right/capture.transcript.txt),
+the [left transcript](media/numi-human-fixed-bone-foot-entheses-v1-2048/left/capture.transcript.txt),
+and the [checksum set](media/numi-human-fixed-bone-foot-entheses-v1-2048/checksums.sha256).

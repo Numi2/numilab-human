@@ -775,6 +775,44 @@ class ImporterTests(unittest.TestCase):
                     moment = [moment[axis] + contribution[axis] for axis in range(3)]
                 self.assertLess(sum(value * value for value in moment) ** 0.5, 2.0e-7)
 
+    def test_numi_human_tendon3_migrates_only_named_route_private_foot_endpoint(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            artifact = self._minimal_myosim_tendon_artifact(directory / "artifact")
+            myosim_manifest_path = artifact / "myosim-fullbody-reference.manifest.json"
+            myosim_manifest = read_json(myosim_manifest_path)
+            myosim_manifest["muscles"][0]["name"] = "ehl_l"
+            myosim_manifest_path.write_text(json.dumps(myosim_manifest), encoding="utf-8")
+            bones = self._minimal_bodyparts_bone_artifact(directory / "bones")
+            bone_manifest_path = bones / "bodyparts3d-myosim-major-bones.manifest.json"
+            bone_manifest = read_json(bone_manifest_path)
+            bone_manifest["source"]["anchors"][1]["member_id"] = "FJ3182"
+            bone_manifest_path.write_text(json.dumps(bone_manifest), encoding="utf-8")
+
+            manifest = numi_human_tendon_attachment_envelope_payload(
+                artifact, bones, directory / "output",
+                migrate_semantic_rigid_foot_endpoints=True,
+            )
+            self.assertEqual(manifest["payload"]["magic"], "NHTENDON3")
+            self.assertEqual(manifest["payload"]["payload_abi"], 3)
+            self.assertEqual(
+                manifest["coverage"]["registered_bone_migrated_distributed_envelope_count"],
+                1,
+            )
+            self.assertAlmostEqual(
+                manifest["coverage"]["maximum_endpoint_migration_m"], 0.001,
+                places=6,
+            )
+            payload = (directory / "output" / manifest["payload"]["file"]).read_bytes()
+            header = struct.unpack_from("<8s10I32s32s32s", payload)
+            self.assertEqual((header[0], header[1]), (b"NHTEND3\0", 3))
+            origin = struct.unpack_from("<8I8f", payload, 144)
+            insertion = struct.unpack_from("<8I8f", payload, 208)
+            self.assertEqual(origin[5], 0)
+            self.assertEqual(insertion[5], 3)
+            self.assertEqual(tuple(round(value, 6) for value in insertion[8:11]), (0.4, 0.5, 0.599))
+            self.assertAlmostEqual(insertion[15], 0.001, places=6)
+
     def test_skin_bone_envelope_distance_is_zero_inside_and_metric_outside(self) -> None:
         self.assertEqual(
             _bodyparts_skin_bbox_distance_squared(
