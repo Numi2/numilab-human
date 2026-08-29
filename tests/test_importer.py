@@ -117,6 +117,12 @@ from numilab_human.lower_limb_registration import (
     RIGID_FOOT_MEMBERS,
     propose_lower_limb_registration,
 )
+from numilab_human.thoracic_registration import (
+    ENDPOINT_MAXIMUM_DISTANCE_M as THORACIC_ENDPOINT_MAXIMUM_DISTANCE_M,
+)
+from numilab_human.rib_registration import (
+    _components as rib_mesh_components,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -167,12 +173,24 @@ def _write_part_control_fixture(directory: Path) -> Path:
 
 
 class ImporterTests(unittest.TestCase):
+    def test_rib_topology_decomposition_is_deterministic_and_disconnected(self) -> None:
+        vertices = [[0.0, 0.0, 0.0] for _ in range(8)]
+        faces = [
+            (0, 1, 2), (0, 2, 3),
+            (4, 5, 6), (4, 6, 7),
+        ]
+        self.assertEqual(
+            rib_mesh_components(vertices, faces),
+            [[0, 1, 2, 3], [4, 5, 6, 7]],
+        )
+
     def test_registration_worklist_separates_registration_from_non_bone_sites(self) -> None:
         archive_sha = "12" * 32
         audit_endpoints = []
         tendon_endpoints = []
         fixtures = (
             (0, "registered_bone_distributed_envelope", "admitted", "source_model_bone_adjacent"),
+            (5, "registered_bone_migrated_distributed_envelope", "admitted", "source_model_bone_adjacent"),
             (1, "source_site_point", "surface_distance_exceeds_gate", "source_model_bone_adjacent"),
             (2, "source_site_point", "surface_distance_exceeds_gate", "source_model_not_bone_adjacent"),
             (3, "source_site_point", "surface_patch_conditioning_failed_after_topology_aware_exact_surface_points", "source_model_bone_adjacent"),
@@ -206,18 +224,18 @@ class ImporterTests(unittest.TestCase):
             "endpoints": audit_endpoints,
         }
         tendon = {
-            "schema": "numi.human.tendon-attachment-envelope-payload.v2",
+            "schema": "numi.human.tendon-attachment-envelope-payload.v3",
             "source": {"myosim_archive_sha256": archive_sha},
             "endpoints": tendon_endpoints,
         }
         worklist = registration_worklist(audit, tendon)
-        self.assertEqual(worklist["summary"]["endpoint_count"], 5)
-        self.assertEqual(worklist["summary"]["already_surface_admitted_count"], 1)
+        self.assertEqual(worklist["summary"]["endpoint_count"], 6)
+        self.assertEqual(worklist["summary"]["already_surface_admitted_count"], 2)
         self.assertEqual(worklist["summary"]["point_fallback_count"], 4)
         self.assertEqual(
             worklist["summary"]["disposition_counts"],
             {
-                "already_surface_admitted": 1,
+                "already_surface_admitted": 2,
                 "bodyparts_registration_candidate": 1,
                 "semantic_bone_member_resolution_needed": 1,
                 "source_model_non_bone_endpoint": 1,
@@ -1171,6 +1189,12 @@ class ImporterTests(unittest.TestCase):
             [name for name, _, _ in _NUMI_HUMAN_AXIAL_CONTINUITY_TRANSITIONS],
             [
                 "occiput_to_atlas", "cervical7_to_thoracic1",
+                "thoracic1_to_thoracic2", "thoracic2_to_thoracic3",
+                "thoracic3_to_thoracic4", "thoracic4_to_thoracic5",
+                "thoracic5_to_thoracic6", "thoracic6_to_thoracic7",
+                "thoracic7_to_thoracic8", "thoracic8_to_thoracic9",
+                "thoracic9_to_thoracic10", "thoracic10_to_thoracic11",
+                "thoracic11_to_thoracic12",
                 "thoracic12_to_lumbar1", "lumbar1_to_lumbar2",
                 "lumbar2_to_lumbar3", "lumbar3_to_lumbar4",
                 "lumbar4_to_lumbar5", "lumbar5_to_sacrum",
@@ -1187,6 +1211,7 @@ class ImporterTests(unittest.TestCase):
             _bodyparts_bounded_vertex_gap(
                 [[0.0, 0.0, 0.0]], [[0.009, 0.0, 0.0]], 0.008, "fixture",
             )
+        self.assertEqual(THORACIC_ENDPOINT_MAXIMUM_DISTANCE_M, 0.012)
 
     def test_upper_limb_continuity_uses_bilateral_shared_rigid_groups(self) -> None:
         self.assertEqual(len(_NUMI_HUMAN_UPPER_LIMB_CONTINUITY_TRANSITIONS), 14)

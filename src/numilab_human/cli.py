@@ -59,6 +59,9 @@ from .model import (
 )
 from .zanatomy import build_zanatomy_calf_visual_supplement_payload
 from .lower_limb_registration import propose_lower_limb_registration
+from .thoracic_registration import SCHEMA as THORACIC_REGISTRATION_SCHEMA
+from .pelvis_registration import SCHEMA as PELVIS_REGISTRATION_SCHEMA
+from .rib_registration import SCHEMA as RIB_REGISTRATION_SCHEMA
 from .myosim_bone_proximity import (
     AUDIT_SCHEMA as MYOSIM_SOURCE_BONE_PROXIMITY_SCHEMA,
     WORKLIST_SCHEMA as BODYPARTS_REGISTRATION_WORKLIST_SCHEMA,
@@ -449,6 +452,108 @@ def myosim_lower_limb_source_registration(arguments: argparse.Namespace) -> int:
         != "numi.human.bodyparts3d-myosim-lower-limb-source-mesh-registration.v2"
     ):
         raise ImportError("MyoSim lower-limb source registration wrote an unsupported schema")
+    print(f"wrote {output}")
+    return 0
+
+
+def myosim_thoracic_registration(arguments: argparse.Namespace) -> int:
+    exporter = arguments.python.expanduser().absolute()
+    if not exporter.is_file() or not os.access(exporter, os.X_OK):
+        raise ImportError(f"MyoSim thoracic registration Python is unavailable: {exporter}")
+    output = arguments.output.resolve()
+    environment = dict(os.environ)
+    source_path = str(REPOSITORY_ROOT / "src")
+    environment["PYTHONPATH"] = source_path + (
+        os.pathsep + environment["PYTHONPATH"] if environment.get("PYTHONPATH") else ""
+    )
+    command = [
+        str(exporter), "-m", "numilab_human.thoracic_registration",
+        "--sources", str(arguments.sources.resolve()),
+        "--registration", str(arguments.registration.resolve()),
+        "--source-audit", str(arguments.source_audit.resolve()),
+        "--tendon-manifest", str(arguments.tendon_manifest.resolve()),
+        "--output", str(output),
+    ]
+    completed = subprocess.run(command, capture_output=True, text=True, check=False, env=environment)
+    if completed.returncode != 0:
+        detail = completed.stderr.strip() or completed.stdout.strip() or "no registration output"
+        raise ImportError(f"MyoSim thoracic registration failed: {detail}")
+    candidate = read_json(output)
+    receipt = candidate.get("thoracic_source_mesh_registration")
+    if (
+        candidate.get("schema") != "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2"
+        or not isinstance(receipt, dict)
+        or receipt.get("schema") != THORACIC_REGISTRATION_SCHEMA
+    ):
+        raise ImportError("MyoSim thoracic registration wrote an unsupported schema")
+    print(f"wrote {output}")
+    return 0
+
+
+def myosim_pelvis_registration(arguments: argparse.Namespace) -> int:
+    exporter = arguments.python.expanduser().absolute()
+    if not exporter.is_file() or not os.access(exporter, os.X_OK):
+        raise ImportError(f"MyoSim pelvis registration Python is unavailable: {exporter}")
+    output = arguments.output.resolve()
+    environment = dict(os.environ)
+    source_path = str(REPOSITORY_ROOT / "src")
+    environment["PYTHONPATH"] = source_path + (
+        os.pathsep + environment["PYTHONPATH"] if environment.get("PYTHONPATH") else ""
+    )
+    command = [
+        str(exporter), "-m", "numilab_human.pelvis_registration",
+        "--sources", str(arguments.sources.resolve()),
+        "--registration", str(arguments.registration.resolve()),
+        "--source-audit", str(arguments.source_audit.resolve()),
+        "--tendon-manifest", str(arguments.tendon_manifest.resolve()),
+        "--output", str(output),
+    ]
+    completed = subprocess.run(command, capture_output=True, text=True, check=False, env=environment)
+    if completed.returncode != 0:
+        detail = completed.stderr.strip() or completed.stdout.strip() or "no registration output"
+        raise ImportError(f"MyoSim pelvis registration failed: {detail}")
+    candidate = read_json(output)
+    receipt = candidate.get("pelvis_source_mesh_registration")
+    if (
+        candidate.get("schema") != "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2"
+        or not isinstance(receipt, dict)
+        or receipt.get("schema") != PELVIS_REGISTRATION_SCHEMA
+    ):
+        raise ImportError("MyoSim pelvis registration wrote an unsupported schema")
+    print(f"wrote {output}")
+    return 0
+
+
+def myosim_rib_registration(arguments: argparse.Namespace) -> int:
+    exporter = arguments.python.expanduser().absolute()
+    if not exporter.is_file() or not os.access(exporter, os.X_OK):
+        raise ImportError(f"MyoSim rib registration Python is unavailable: {exporter}")
+    output = arguments.output.resolve()
+    environment = dict(os.environ)
+    source_path = str(REPOSITORY_ROOT / "src")
+    environment["PYTHONPATH"] = source_path + (
+        os.pathsep + environment["PYTHONPATH"] if environment.get("PYTHONPATH") else ""
+    )
+    command = [
+        str(exporter), "-m", "numilab_human.rib_registration",
+        "--sources", str(arguments.sources.resolve()),
+        "--registration", str(arguments.registration.resolve()),
+        "--source-audit", str(arguments.source_audit.resolve()),
+        "--tendon-manifest", str(arguments.tendon_manifest.resolve()),
+        "--output", str(output),
+    ]
+    completed = subprocess.run(command, capture_output=True, text=True, check=False, env=environment)
+    if completed.returncode != 0:
+        detail = completed.stderr.strip() or completed.stdout.strip() or "no registration output"
+        raise ImportError(f"MyoSim rib registration failed: {detail}")
+    candidate = read_json(output)
+    receipt = candidate.get("rib_source_component_registration")
+    if (
+        candidate.get("schema") != "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2"
+        or not isinstance(receipt, dict)
+        or receipt.get("schema") != RIB_REGISTRATION_SCHEMA
+    ):
+        raise ImportError("MyoSim rib registration wrote an unsupported schema")
     print(f"wrote {output}")
     return 0
 
@@ -1141,6 +1246,48 @@ def parser() -> argparse.ArgumentParser:
     lower_limb_source_registration_parser.set_defaults(
         handler=myosim_lower_limb_source_registration
     )
+    thoracic_registration_parser = commands.add_parser(
+        "myosim-thoracic-registration",
+        help="propose exact T1-T12 source-mesh registration with enthesis and continuity gates",
+    )
+    thoracic_registration_parser.add_argument("--sources", type=Path, required=True)
+    thoracic_registration_parser.add_argument("--registration", type=Path, required=True)
+    thoracic_registration_parser.add_argument("--source-audit", type=Path, required=True)
+    thoracic_registration_parser.add_argument("--tendon-manifest", type=Path, required=True)
+    thoracic_registration_parser.add_argument("--output", type=Path, required=True)
+    thoracic_registration_parser.add_argument(
+        "--python", type=Path, default=Path(sys.executable),
+        help="Python environment with the pinned myo-sim checkout, NumPy, and MuJoCo installed",
+    )
+    thoracic_registration_parser.set_defaults(handler=myosim_thoracic_registration)
+    pelvis_registration_parser = commands.add_parser(
+        "myosim-pelvis-registration",
+        help="propose paired source-mesh hip registration with enthesis and sacroiliac gates",
+    )
+    pelvis_registration_parser.add_argument("--sources", type=Path, required=True)
+    pelvis_registration_parser.add_argument("--registration", type=Path, required=True)
+    pelvis_registration_parser.add_argument("--source-audit", type=Path, required=True)
+    pelvis_registration_parser.add_argument("--tendon-manifest", type=Path, required=True)
+    pelvis_registration_parser.add_argument("--output", type=Path, required=True)
+    pelvis_registration_parser.add_argument(
+        "--python", type=Path, default=Path(sys.executable),
+        help="Python environment with the pinned myo-sim checkout, NumPy, and MuJoCo installed",
+    )
+    pelvis_registration_parser.set_defaults(handler=myosim_pelvis_registration)
+    rib_registration_parser = commands.add_parser(
+        "myosim-rib-registration",
+        help="propose topology-resolved bilateral T1-T12 rib placement and enthesis recovery",
+    )
+    rib_registration_parser.add_argument("--sources", type=Path, required=True)
+    rib_registration_parser.add_argument("--registration", type=Path, required=True)
+    rib_registration_parser.add_argument("--source-audit", type=Path, required=True)
+    rib_registration_parser.add_argument("--tendon-manifest", type=Path, required=True)
+    rib_registration_parser.add_argument("--output", type=Path, required=True)
+    rib_registration_parser.add_argument(
+        "--python", type=Path, default=Path(sys.executable),
+        help="Python environment with the pinned myo-sim checkout, NumPy, and MuJoCo installed",
+    )
+    rib_registration_parser.set_defaults(handler=myosim_rib_registration)
     myosim_probe_parser = commands.add_parser(
         "myosim-probe",
         help="run the native Core full-body muscle-reference probe against a compiled MyoSim artifact",

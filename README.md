@@ -71,6 +71,24 @@ Neutral and 0.75 rad flexed four-angle review passes on both sides. See the
 [lower-limb source registration](Docs/LOWER_LIMB_SOURCE_REGISTRATION_V2.md)
 and the preceding [fixed-bone foot entheses](Docs/FIXED_BONE_FOOT_ENTHESES_V1.md).
 
+The torso/axial pass now registers all 12 thoracic vertebrae, 24
+topology-resolved ribs, and both hip bones to their corresponding pinned
+MyoSim source meshes. All 116 named regional endpoint gates pass, all 13
+thoracic-chain checks pass, and the rib and pelvis bilateral/continuity gates
+remain bounded without new joints or authored endpoint movement. Recompiling
+the exact pair closes all 56 ordinary single-bone distance failures and raises
+the promoted `NHTENDON3` payload to 620 distributed surface envelopes plus 212
+explicit source-site point laws. The full payload passes native Metal
+force-transfer and byte-identical replay on Apple M4 Pro. See the
+[torso and axial source registration](Docs/TORSO_AXIAL_SOURCE_REGISTRATION_V1.md).
+
+<p align="center">
+  <img src="Docs/media/numi-human-torso-axial-source-registration-v1-2048/torso-clean/myosim-fullbody-articulated-bodyparts-bones-focus-body-20-front.png" width="24%" alt="Registered rib cage and thoracic spine, front" />
+  <img src="Docs/media/numi-human-torso-axial-source-registration-v1-2048/torso-clean/myosim-fullbody-articulated-bodyparts-bones-focus-body-20-oblique.png" width="24%" alt="Registered rib cage and thoracic spine, oblique" />
+  <img src="Docs/media/numi-human-torso-axial-source-registration-v1-2048/torso-entheses/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-rear.png" width="24%" alt="Registered rib and vertebral entheses, rear" />
+  <img src="Docs/media/numi-human-torso-axial-source-registration-v1-2048/pelvis-entheses-correct/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-128-oblique.png" width="24%" alt="Registered pelvis and iliacus entheses, oblique" />
+</p>
+
 <p align="center">
   <img src="Docs/media/numi-human-lower-limb-source-registration-v2-2048/neutral/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-136-oblique.png" width="24%" alt="Registered right lower limb, neutral oblique" />
   <img src="Docs/media/numi-human-lower-limb-source-registration-v2-2048/neutral/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-150-side.png" width="24%" alt="Registered left lower limb, neutral side" />
@@ -164,31 +182,26 @@ continuity repair, and compilation fails if that compound is split or shifted
 to an adjacent toe. Exact maximum inter-bone source gaps are 0.727 mm right and
 0.629 mm left.
 
-`NHTENDON2` gives all 832 origin/insertion endpoints a fail-closed
-tendon-to-bone law without moving an authored route site. After source-coherent
-anatomy, semantic same-body ownership, topology-aware exact-surface search,
-bilateral upper-limb source-mesh registration, and rigid-foot ownership, 540
-endpoints admit distributed BodyParts3D bone-surface envelopes and 292 remain
-explicit body-owned source-point laws (64.90% surface coverage).
-The owning Metal route kernel publishes its exact
-wrapped terminal directions, and a second Metal pass distributes those forces
-while conserving their resultant and source-point moment. The current Apple M4
-Pro smoke executes 32 assisted plus 32 zero-root-wrench steps: 53,248 terminal
-transfers, including 34,560 envelope and 18,688 point transfers, with bitwise
-replay. The
-standing controller still reports `balanced=false`; this is force-path/runtime
-evidence, not stable-standing qualification. See the
-[upper-limb registration record](Docs/UPPER_LIMB_SOURCE_MESH_REGISTRATION_V1.md)
-and [rigid-foot record](Docs/RIGID_FOOT_OWNERSHIP_V1.md).
+The promoted `NHTENDON3` artifact gives all 832 origin/insertion endpoints a
+fail-closed tendon-to-bone law without silently moving an authored route site.
+After source-coherent anatomy, semantic same-body ownership, topology-aware
+exact-surface search, upper/lower-limb registration, and torso/axial
+registration, 620 endpoints admit distributed BodyParts3D four-node surface
+envelopes and 212 remain explicit body-owned source-point laws (74.52% surface
+coverage). Eighteen of those envelopes are the reviewed route-private
+foot/hallux terminals with deterministic reference calibration; maximum
+endpoint migration remains `17.262 mm`.
 
-The opt-in `NHTENDON3` foot mode promotes 14 foot/hallux point laws plus four
-rigid-foot envelopes to 18 exact route-private bone-surface terminals. After
-the lower-limb source-mesh registration, its complete payload is 558 envelopes
-and 274 point laws. Maximum endpoint migration is `17.262 mm`; deterministic
-reference calibration reduces default-pose source-oracle errors to
-`2.556e-8 m` and `4.894e-4 N`. The changed source-versus-resolved generalized
-[lower-limb source registration](Docs/LOWER_LIMB_SOURCE_REGISTRATION_V2.md)
-and the historical [fixed-bone foot record](Docs/FIXED_BONE_FOOT_ENTHESES_V1.md).
+The owning Metal route kernel publishes its exact wrapped terminal directions,
+and a second Metal pass distributes those forces while conserving their
+resultant and source-point moment. On Apple M4 Pro, the current exact paired
+payload passes all 832 transfers with a maximum `0.000244141 N` force residual,
+`0.000008126 N m` moment residual, and byte-identical replay. The standing
+controller still reports `balanced=false`; this is force-path/runtime evidence,
+not stable-standing qualification. See the
+[torso/axial record](Docs/TORSO_AXIAL_SOURCE_REGISTRATION_V1.md),
+[lower-limb record](Docs/LOWER_LIMB_SOURCE_REGISTRATION_V2.md), and historical
+[fixed-bone foot record](Docs/FIXED_BONE_FOOT_ENTHESES_V1.md).
 
 The earlier whole-calcaneus transform experiment remains rejected: it would
 have moved Achilles terminals by about 49 mm and changed default muscle force

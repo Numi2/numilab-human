@@ -151,7 +151,11 @@ def _icp_candidate(
     }
 
 
-def _fit_candidates(moving_vertices: Any, target_vertices: Any, np: Any) -> list[dict[str, Any]]:
+def _fit_candidates(
+    moving_vertices: Any, target_vertices: Any, np: Any, maximum_results: int = 4,
+) -> list[dict[str, Any]]:
+    if maximum_results <= 0:
+        raise RuntimeError("registration fit candidate count must be positive")
     moving_sample = _sample(moving_vertices, 400, np)
     target_sample = _sample(target_vertices, 400, np)
     moving_addresses = np.arange(len(moving_sample))
@@ -215,7 +219,7 @@ def _fit_candidates(moving_vertices: Any, target_vertices: Any, np: Any) -> list
         float(value["training_metrics"]["mean_m"]),
         str(value["start"]),
     ))
-    return results[:4]
+    return results[:maximum_results]
 
 
 def _surface_split_metrics(

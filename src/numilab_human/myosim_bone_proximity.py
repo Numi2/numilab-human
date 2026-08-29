@@ -23,6 +23,10 @@ from .myosim_export import export_fullbody
 AUDIT_SCHEMA = "numi.human.myosim-source-bone-proximity.v1"
 WORKLIST_SCHEMA = "numi.human.bodyparts-registration-worklist.v1"
 TENDON_SCHEMA = "numi.human.tendon-attachment-envelope-payload.v2"
+TENDON_SCHEMAS = {
+    TENDON_SCHEMA,
+    "numi.human.tendon-attachment-envelope-payload.v3",
+}
 
 
 def _sha256(path: Path) -> str:
@@ -367,8 +371,8 @@ def registration_worklist(
 ) -> dict[str, Any]:
     if source_audit.get("schema") != AUDIT_SCHEMA:
         raise ValueError("registration worklist requires a MyoSim source-bone proximity v1 audit")
-    if tendon_manifest.get("schema") != TENDON_SCHEMA:
-        raise ValueError("registration worklist requires an NHTENDON2 attachment-envelope v2 manifest")
+    if tendon_manifest.get("schema") not in TENDON_SCHEMAS:
+        raise ValueError("registration worklist requires an NHTENDON2 or NHTENDON3 manifest")
     audit_source = source_audit.get("source")
     tendon_source = tendon_manifest.get("source")
     if not isinstance(audit_source, dict) or not isinstance(tendon_source, dict):
@@ -408,7 +412,10 @@ def registration_worklist(
         audit = audit_index[key]
         if str(tendon["muscle"]) != str(audit["muscle"]):
             raise ValueError(f"source/tendon muscle name mismatch for endpoint {key}")
-        if tendon.get("attachment_mode") == "registered_bone_distributed_envelope":
+        if tendon.get("attachment_mode") in {
+            "registered_bone_distributed_envelope",
+            "registered_bone_migrated_distributed_envelope",
+        }:
             disposition_counts["already_surface_admitted"] += 1
             continue
         reason = str(tendon.get("admission_reason"))

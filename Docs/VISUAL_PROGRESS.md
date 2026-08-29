@@ -1,5 +1,27 @@
 # NumiLab Human visual progress
 
+## Source-registered rib cage, thoracic spine, and pelvis — 2026-08-29
+
+<p align="center">
+  <img src="media/numi-human-torso-axial-source-registration-v1-2048/torso-clean/myosim-fullbody-articulated-bodyparts-bones-focus-body-20-front.png" width="24%" alt="Registered rib cage and thoracic spine, front" />
+  <img src="media/numi-human-torso-axial-source-registration-v1-2048/torso-clean/myosim-fullbody-articulated-bodyparts-bones-focus-body-20-oblique.png" width="24%" alt="Registered rib cage and thoracic spine, oblique" />
+  <img src="media/numi-human-torso-axial-source-registration-v1-2048/torso-entheses/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-20-rear.png" width="24%" alt="Registered rib and vertebral entheses, rear" />
+  <img src="media/numi-human-torso-axial-source-registration-v1-2048/pelvis-entheses-correct/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-128-oblique.png" width="24%" alt="Registered pelvis and iliacus entheses, oblique" />
+</p>
+
+All 12 thoracic vertebrae, 24 topology-resolved ribs, and both hip bones now
+use proper-rigid fits to their corresponding pinned MyoSim source geometry.
+The four-angle 2048 px review shows ordered bilateral ribs, a continuous
+thoracic chain, bounded costovertebral placement, coherent ilia/sacrum, and
+surface envelopes on their named bone. The promoted payload contains 620
+distributed endpoint envelopes and 212 explicit point laws, passes all 832
+transfers on Apple M4 Pro, and replays byte-identically.
+
+The anterior rib-to-sternum openings expose absent costal cartilage in the
+bone-only layer; they are not hidden by moving the ribs away from their source
+correspondence. See the [torso/axial registration record](TORSO_AXIAL_SOURCE_REGISTRATION_V1.md)
+for all 12 angles, checksums, measured gates, and evidence limits.
+
 ## Source-constrained scapular attachments — 2026-08-29
 
 <p align="center">
