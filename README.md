@@ -67,6 +67,10 @@ actual transfer program rather than a floating decorative tendon. See
 [topology-aware enthesis record](Docs/TOPOLOGY_AWARE_ENTHESES_V1.md). The
 [completion gap ledger](Docs/HUMAN_COMPLETION_GAP_LEDGER.md) keeps mechanics,
 materials, contact, control, and validation gaps independently visible.
+The follow-on [source-bone proximity audit](Docs/SOURCE_BONE_PROXIMITY_V1.md)
+separates 256 genuine cross-source registration candidates from 159 routes
+that are not bone-adjacent even in MyoSim. This prevents false sacral entheses
+and focuses the next solve on 176 bilateral upper-limb and hand targets.
 
 The exposed source anatomy is used to inspect muscles and tendons against
 named bones. The BodyParts3D exterior remains a static source mesh only: it

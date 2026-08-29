@@ -154,11 +154,14 @@ duplicating 75 MB in Git.
 This increment proves a deterministic exact-surface quadrature and its live
 single-law force transfer. It is not a deformable tendon continuum,
 fibrocartilage model, bone-stress solve, clinical enthesis map, or proof that
-every cyan route visually terminates on anatomy. The next high-yield gate is a
-provenance-pinned regional MyoSim-to-BodyParts3D registration receipt for the
-411 distance failures. A coherent regularized registration may propose that
-correspondence, but semantic bone ownership and the unchanged mechanical gates
-must still admit each endpoint separately.
+every cyan route visually terminates on anatomy. The
+[source-bone proximity audit](SOURCE_BONE_PROXIMITY_V1.md) now separates the
+distance backlog into 256 genuine BodyParts3D registration candidates and 159
+sites that are already non-bone-adjacent in the mechanics source. The first
+bounded target is the 176 bilateral upper-limb and hand candidates. A coherent
+regularized registration may propose that correspondence, but semantic bone
+ownership and the unchanged mechanical gates must still admit each endpoint
+separately.
 
 For that next gate, [Coherent Point Drift](https://arxiv.org/abs/0905.2635)
 is a useful primary reference for a coherently regularized non-rigid

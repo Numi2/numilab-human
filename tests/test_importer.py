@@ -97,6 +97,10 @@ from numilab_human.zanatomy import (
     _stored_source_from_world,
     _world_from_stored_source,
 )
+from numilab_human.myosim_bone_proximity import (
+    AUDIT_SCHEMA as MYOSIM_SOURCE_BONE_PROXIMITY_SCHEMA,
+    registration_worklist,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -147,6 +151,68 @@ def _write_part_control_fixture(directory: Path) -> Path:
 
 
 class ImporterTests(unittest.TestCase):
+    def test_registration_worklist_separates_registration_from_non_bone_sites(self) -> None:
+        archive_sha = "12" * 32
+        audit_endpoints = []
+        tendon_endpoints = []
+        fixtures = (
+            (0, "registered_bone_distributed_envelope", "admitted", "source_model_bone_adjacent"),
+            (1, "source_site_point", "surface_distance_exceeds_gate", "source_model_bone_adjacent"),
+            (2, "source_site_point", "surface_distance_exceeds_gate", "source_model_not_bone_adjacent"),
+            (3, "source_site_point", "surface_patch_conditioning_failed_after_topology_aware_exact_surface_points", "source_model_bone_adjacent"),
+            (4, "source_site_point", "body_has_multiple_bone_members_without_semantic_enthesis_map", "source_model_bone_adjacent"),
+        )
+        for index, attachment_mode, reason, source_class in fixtures:
+            audit_endpoints.append({
+                "source_actuator_index": index,
+                "muscle": f"fixture_{index}",
+                "endpoint": "origin",
+                "source_site_id": 100 + index,
+                "source_body_id": 10 + index,
+                "source_body_name": f"body_{index}",
+                "route_node_index": 0,
+                "classification": source_class,
+                "nearest_source_bone_mesh": {"distance_m": 0.001 if source_class == "source_model_bone_adjacent" else 0.04},
+            })
+            tendon_endpoints.append({
+                "muscle_index": index,
+                "muscle": f"fixture_{index}",
+                "endpoint": "origin",
+                "source_site_index": 100 + index,
+                "body_index": 10 + index,
+                "route_node_index": 0,
+                "attachment_mode": attachment_mode,
+                "admission_reason": reason,
+            })
+        audit = {
+            "schema": MYOSIM_SOURCE_BONE_PROXIMITY_SCHEMA,
+            "source": {"archive_sha256": archive_sha},
+            "endpoints": audit_endpoints,
+        }
+        tendon = {
+            "schema": "numi.human.tendon-attachment-envelope-payload.v2",
+            "source": {"myosim_archive_sha256": archive_sha},
+            "endpoints": tendon_endpoints,
+        }
+        worklist = registration_worklist(audit, tendon)
+        self.assertEqual(worklist["summary"]["endpoint_count"], 5)
+        self.assertEqual(worklist["summary"]["already_surface_admitted_count"], 1)
+        self.assertEqual(worklist["summary"]["point_fallback_count"], 4)
+        self.assertEqual(
+            worklist["summary"]["disposition_counts"],
+            {
+                "already_surface_admitted": 1,
+                "bodyparts_registration_candidate": 1,
+                "semantic_bone_member_resolution_needed": 1,
+                "source_model_non_bone_endpoint": 1,
+                "surface_patch_conditioning_backlog": 1,
+            },
+        )
+        self.assertIn(
+            "must not be repaired by warping a bone",
+            worklist["evidence_boundary"],
+        )
+
     def test_topology_aware_tendon_patch_uses_exact_seed_triangle_points(self) -> None:
         surface = {
             "body_index": 1,

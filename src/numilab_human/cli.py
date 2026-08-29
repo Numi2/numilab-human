@@ -58,6 +58,11 @@ from .model import (
     write_json,
 )
 from .zanatomy import build_zanatomy_calf_visual_supplement_payload
+from .myosim_bone_proximity import (
+    AUDIT_SCHEMA as MYOSIM_SOURCE_BONE_PROXIMITY_SCHEMA,
+    WORKLIST_SCHEMA as BODYPARTS_REGISTRATION_WORKLIST_SCHEMA,
+    registration_worklist,
+)
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
@@ -283,6 +288,55 @@ def myosim_build(arguments: argparse.Namespace) -> int:
     print(f"wrote {support}")
     print(f"wrote {equalities}")
     print(f"wrote {output / 'myosim-fullbody-reference.manifest.json'}")
+    return 0
+
+
+def myosim_source_bone_proximity(arguments: argparse.Namespace) -> int:
+    source_dir = arguments.sources.resolve()
+    # Keep MuJoCo and MyoSim isolated in their pinned source environment.
+    # Resolving a venv interpreter symlink would discard that environment.
+    exporter = arguments.python.expanduser().absolute()
+    if not exporter.is_file() or not os.access(exporter, os.X_OK):
+        raise ImportError(f"MyoSim audit Python is unavailable: {exporter}")
+    output = arguments.output.resolve()
+    environment = dict(os.environ)
+    source_path = str(REPOSITORY_ROOT / "src")
+    environment["PYTHONPATH"] = source_path + (
+        os.pathsep + environment["PYTHONPATH"] if environment.get("PYTHONPATH") else ""
+    )
+    command = [
+        str(exporter), "-m", "numilab_human.myosim_bone_proximity",
+        "--sources", str(source_dir), "--output", str(output),
+        "--maximum-distance", repr(arguments.maximum_distance),
+    ]
+    completed = subprocess.run(command, capture_output=True, text=True, check=False, env=environment)
+    if completed.returncode != 0:
+        detail = completed.stderr.strip() or completed.stdout.strip() or "no audit output"
+        raise ImportError(f"MyoSim source-bone proximity audit failed: {detail}")
+    audit = read_json(output)
+    if audit.get("schema") != MYOSIM_SOURCE_BONE_PROXIMITY_SCHEMA:
+        raise ImportError("MyoSim source-bone proximity audit wrote an unsupported schema")
+    print(f"wrote {output}")
+    return 0
+
+
+def bodyparts_registration_worklist(arguments: argparse.Namespace) -> int:
+    source_audit_path = arguments.source_audit.resolve()
+    tendon_manifest_path = arguments.tendon_manifest.resolve()
+    output = arguments.output.resolve()
+    try:
+        result = registration_worklist(
+            read_json(source_audit_path),
+            read_json(tendon_manifest_path),
+            source_audit_file=source_audit_path,
+            tendon_manifest_file=tendon_manifest_path,
+        )
+    except ValueError as error:
+        raise ImportError(str(error)) from error
+    if result.get("schema") != BODYPARTS_REGISTRATION_WORKLIST_SCHEMA:
+        raise ImportError("BodyParts3D registration worklist has an unsupported schema")
+    write_json(output, result)
+    print(f"wrote {output}")
     return 0
 
 
@@ -899,6 +953,29 @@ def parser() -> argparse.ArgumentParser:
         help="Python environment with the pinned myo-sim checkout and mujoco installed",
     )
     myosim_build_parser.set_defaults(handler=myosim_build)
+    myosim_source_bone_parser = commands.add_parser(
+        "myosim-source-bone-proximity",
+        help="audit terminal MyoSim sites against exact same-body compiled source bone meshes",
+    )
+    myosim_source_bone_parser.add_argument("--sources", type=Path, required=True)
+    myosim_source_bone_parser.add_argument("--output", type=Path, required=True)
+    myosim_source_bone_parser.add_argument(
+        "--python", type=Path, default=Path(sys.executable),
+        help="Python environment with the pinned myo-sim checkout and mujoco installed",
+    )
+    myosim_source_bone_parser.add_argument(
+        "--maximum-distance", type=float, default=0.012,
+        help="maximum exact source-site to same-body source-mesh distance in metres (default: 0.012)",
+    )
+    myosim_source_bone_parser.set_defaults(handler=myosim_source_bone_proximity)
+    registration_worklist_parser = commands.add_parser(
+        "bodyparts-registration-worklist",
+        help="separate true BodyParts3D registration candidates from source-model non-bone endpoints",
+    )
+    registration_worklist_parser.add_argument("--source-audit", type=Path, required=True)
+    registration_worklist_parser.add_argument("--tendon-manifest", type=Path, required=True)
+    registration_worklist_parser.add_argument("--output", type=Path, required=True)
+    registration_worklist_parser.set_defaults(handler=bodyparts_registration_worklist)
     myosim_probe_parser = commands.add_parser(
         "myosim-probe",
         help="run the native Core full-body muscle-reference probe against a compiled MyoSim artifact",
