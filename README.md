@@ -20,9 +20,11 @@ executes current-pose force from all 416 routes, activation, 157-body gravity
 dynamics, ten authored foot witnesses, an assisted phase, and a zero-root-wrench
 phase on Apple Metal. `NHTENDON2` now also produces and validates all 832
 terminal-to-bone load records inside every accepted step, with rollback-safe
-same-command-buffer exposure for a downstream deformable consumer. It requires
-one-step FP64 parity, no-direct-torque identity, bitwise replay, and four-angle
-visual review. See [Human Stand v1](Docs/HUMAN_STAND_V1.md) and the
+same-command-buffer exposure for a downstream deformable consumer. The live
+Metal solve retains source passive DoF damping, uses bounded
+acceleration-weighted recruitment, and requires one-step FP64 parity,
+no-direct-torque identity, bitwise replay, and four-angle visual review. See
+[Human Stand v1](Docs/HUMAN_STAND_V1.md) and the
 [per-step tendon transaction](Docs/HUMAN_TENDON_STEP_TRANSACTION.md).
 
 The importer preserves upstream records locally. The tracked MyoSim,
@@ -32,13 +34,14 @@ derivatives; all other raw or derived source artifacts remain local. See
 
 ## Visual progress
 
-The detached-looking tendon close-ups remain withdrawn. Their replacement is
-a reviewed 2048 px mechanical-anatomy diagnostic: exact BodyParts3D muscle and
-bone surfaces, the unchanged OpenSim/MyoSim route, and the four-node
-`NHTENDON2` transfer footprint are shown together from four cameras. These are
-not photorealistic skin renders; they are deliberately exposed evidence that a
-route terminates on the actual force-transfer nodes rather than on a floating
-decorative tendon. See [visual progress](Docs/VISUAL_PROGRESS.md).
+The current lead is the reviewed 1024 px, 128-step M4 Pro gallery with clean
+route-hidden anatomy, corrected bilateral hand chains, and a focused left-foot
+inspection. Separate 2048 px mechanical-anatomy diagnostics still expose the
+unchanged OpenSim/MyoSim route and four-node `NHTENDON2` transfer footprint.
+Neither set is a photorealistic skin render: the clean gallery reviews source
+surface continuity, while the diagnostic proves that force terminates on the
+actual transfer program rather than a floating decorative tendon. See
+[visual progress](Docs/VISUAL_PROGRESS.md).
 
 The exposed source anatomy is used to inspect muscles and tendons against
 named bones. The BodyParts3D exterior remains a static source mesh only: it
@@ -62,14 +65,16 @@ insertion continuous in the render, but does not create a tendon continuum,
 weld, force-transfer law, or photorealistic anatomy.
 
 `NHTENDON2` now gives all 832 origin/insertion endpoints a fail-closed
-tendon-to-bone law without moving an authored route site. It admits 295
-connected four-node BodyParts3D bone-surface envelopes under strict distance
-and force-conditioning gates; the other 537 endpoints remain explicit source
+tendon-to-bone law without moving an authored route site. The current distal
+registration admits 296 connected four-node BodyParts3D bone-surface envelopes
+under strict distance and force-conditioning gates; the other 536 endpoints
+remain explicit source
 point laws. The owning Metal route kernel publishes its exact wrapped terminal
 directions, and a second Metal pass distributes those forces while conserving
-their resultant and source-point moment. The Apple M4 Pro probe transferred all
-832 endpoints with maximum residuals of `6.824e-5 N` and `3.007e-6 Nm`, a
-maximum generalized-force correction of `7.935e-4`, and byte-identical replay.
+their resultant and source-point moment. The final Apple M4 Pro replay
+transferred all 832 endpoints on each of 128 accepted steps (106,496 transfers)
+with maximum residuals of `1.726e-4 N` and `2.443e-6 Nm`, a maximum
+generalized-force correction of `7.324e-4`, and byte-identical replay.
 
 The first inferred bilateral Achilles surface candidate was deliberately not
 admitted: its current cross-source registration would move the six terminal
@@ -118,11 +123,23 @@ oblique/rear failures.
 
 ### Muscle-driven full-body anatomy
 
-The 2K gallery captures are historical diagnostics, not the active anatomy
-presentation. The current four-angle source check evaluates all 416 MyoSim
-paths before a bounded 100 µs update and renders the named bones and soft
-tissues at 512 px with the exact-reference renderer. It is a kinematic
-anatomy/force-path inspection, not a deformable tissue or tendon result.
+The active four-angle source check evaluates all 416 MyoSim paths throughout a
+64-step assisted phase followed by 64 steps with root assistance removed, then
+renders the named bones and soft tissues at 1024 px on Apple M4 Pro. `NHTISS4`
+retains every named route body for shared digital surfaces and stores up to
+four sparse route-proximity influences per vertex. This fixes the old
+middle-finger-only binding failure but remains kinematic presentation data,
+not a deformable tissue or tendon result.
+
+The hand registration now preserves exact BodyParts3D common-frame chain
+displacements when an unsupported thumb or distal phalanx follows a
+site-refined parent. Measured transformed mesh gaps are 0.5/0.3 mm for the
+right thumb joints, 0.4/0.1 mm for the left, and 0.3--0.7 mm at the corrected
+distal finger joints. The focused left-foot review found no left-only detached
+mesh or pathological dynamic divergence. It also exposes the real current
+boundary: the mechanical source has one articulated `toes` body per side, so
+the individual BodyParts3D toe bones are coherent anatomical visuals rather
+than independent toe actuators. See the [current visual review](Docs/VISUAL_PROGRESS.md#distal-chain-continuity-and-final-m4-pro-replay--2026-08-29).
 
 ### Shared-tendon, source-body attachment review
 

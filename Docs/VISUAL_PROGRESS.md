@@ -1,5 +1,58 @@
 # NumiLab Human visual progress
 
+## Distal-chain continuity and final M4 Pro replay — 2026-08-29
+
+<p align="center">
+  <img src="media/numi-human-distal-continuity-v4/fullbody/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-front.png" width="24%" alt="Final muscle-driven Human front" />
+  <img src="media/numi-human-distal-continuity-v4/fullbody/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-oblique.png" width="24%" alt="Final muscle-driven Human oblique" />
+  <img src="media/numi-human-distal-continuity-v4/fullbody/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-side.png" width="24%" alt="Final muscle-driven Human side" />
+  <img src="media/numi-human-distal-continuity-v4/fullbody/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-rear.png" width="24%" alt="Final muscle-driven Human rear" />
+</p>
+
+Human `37fab88` and runtime
+`45fede450ba889b8feb1df0a8330db3c31706497` close the reported floating-hand
+defect without moving an authored muscle site. Attachment-refined parent bones
+remain authoritative; unsupported thumb and distal-finger meshes inherit the
+exact displacement to their parent from the coherent BodyParts3D common frame.
+The resulting transformed mesh gaps are 0.5/0.3 mm at the right thumb,
+0.4/0.1 mm at the left thumb, and 0.3--0.7 mm at the corrected distal finger
+joints. Compact unsupported carpals retain the narrower same-side body-local
+fallback. All exact source triangles, scale, and orientation are preserved.
+
+<p align="center">
+  <img src="media/numi-human-distal-continuity-v4/right-hand/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-57-side.png" width="24%" alt="Corrected right hand side" />
+  <img src="media/numi-human-distal-continuity-v4/left-hand/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-107-oblique.png" width="24%" alt="Corrected left hand oblique" />
+  <img src="media/numi-human-distal-continuity-v4/left-foot/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-153-oblique.png" width="24%" alt="Final left foot oblique" />
+  <img src="media/numi-human-distal-continuity-v4/left-foot/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-focus-body-153-side.png" width="24%" alt="Final left foot side" />
+</p>
+
+The final Apple M4 Pro run uses the v4 bone, v6 `NHTISS4`, and v4
+`NHTENDON2` payloads. Sixty-four assisted and 64 assistance-removed steps at
+100 µs reevaluate all 416 routes and apply 106,496 endpoint transfers. The
+maximum force/moment residuals are `1.72633488546e-4 N` and
+`2.44306352215e-6 N m`; one-step q/v parity errors are
+`3.90537220115e-8` and `3.90584484736e-4`; replay is bitwise. The complete
+[qualification transcript](media/numi-human-distal-continuity-v4/qualification.transcript.txt)
+owns those counters.
+
+The left-foot report was checked from front, oblique, side, and rear at the
+same final state. Its bone chain is continuous, and the largest left/right
+ankle/subtalar/MTP difference is `8.65e-4 rad`; there is no pathological
+left-only motion in this bounded replay. The visible distal red strands are
+exact BodyParts3D muscle surfaces with `NHTISS4` kinematic bindings. They are
+not a deformable tendon continuum. MyoSim provides one articulated `toes`
+segment per side, so the individual source toe bones cannot yet move
+independently. Likewise, 296 endpoint records have admitted four-node surface
+envelopes while 536 retain exact body-owned source-point transfer. That is a
+real tendon force-transfer law, but only the admitted envelopes are literal
+surface-distributed enthesis candidates.
+
+The compiler reports `balanced=false`; this 12.8 ms device transaction is not
+static balance, gait, photorealistic skin, independently driven fingers/toes,
+or clinical anatomy. The purpose of these clean views is to show the corrected
+source geometry without the cyan diagnostic overlay while keeping that
+boundary explicit.
+
 ## Per-step tendon-load transaction — 2026-08-28
 
 <p align="center">

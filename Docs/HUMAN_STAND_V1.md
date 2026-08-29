@@ -12,8 +12,8 @@ is no per-step CPU dynamics loop.
 - `NHRIGID2`: one 157-body, 128-DoF floating FunctionBased articulation;
 - `NHMYO2`: 416 MyoSim muscle-tendon routes, source active/passive/velocity
   curves, and one appended positive compliant-architecture record per muscle;
-- `NHTENDON2`: 832 explicit bone-owned route endpoints, comprising 295
-  four-node surface envelopes and 537 exact source-point fallbacks;
+- `NHTENDON2`: 832 explicit bone-owned route endpoints, comprising 296
+  four-node surface envelopes and 536 exact source-point fallbacks;
 - `NHCNT1`: ten source-authored calcaneus/toe plane witnesses; and
 - BodyParts3D 4.0 bone and optional named muscle surfaces for visual review.
 
@@ -37,8 +37,9 @@ Each device step runs, in order:
    conservation validation and an optional same-command-buffer deformable
    consumer boundary;
 5. explicit activation advancement;
-6. 157-body spatial-Jacobian mass assembly, gravity/gyroscopic/body-damping
-   bias, Cholesky forward dynamics, and symplectic state integration; and
+6. 157-body spatial-Jacobian mass assembly, gravity/gyroscopic bias, source
+   passive DoF damping through a backward-Euler solve, Cholesky forward
+   dynamics, and symplectic state integration; and
 7. Coulomb plane support at the ten exact foot witnesses.
 
 The distributed terminal loads are output-only with respect to the rigid-body
@@ -50,27 +51,30 @@ must gate physical writes on the accepted stand status.
 
 The standing posture compiler runs before the horizon. It solves a bounded
 nonnegative activation vector against the source gravity target using the
-actual per-muscle Metal force rows. This is compilation, not a host control
-loop. Optional assistance is a world force/torque spring on the floating root;
-it never writes joint torques. The canonical qualification follows an assisted
-phase with an equal-length phase whose root assistance is exactly zero.
+actual per-muscle Metal force rows and acceleration-weighted residuals. This is
+compilation, not a host control loop. Optional assistance is a world
+force/torque spring on the floating root; it never writes joint torques. The
+canonical qualification follows an assisted phase with an equal-length phase
+whose root assistance is exactly zero.
 
 NHMYO2 includes the source passive curve in the live fiber/tendon equilibrium;
 it is no longer removed as a standing-only bias. The standing posture compiler
 also subtracts this measured passive generalized-force row before recruiting
-activation. The current source-default pose is nevertheless not a calibrated
-whole-body equilibrium: the 2026-08-28 M4 Pro probe reports normalized static
-recruitment residual RMS `14.7176` and maximum generalized acceleration
-`42969.6` in a one-step supported diagnostic. Consequently NHMYO2 tendon
-mechanics and deterministic execution are admitted, but stable standing is not.
+activation. Source passive DoF damping is preserved in both the FP64 reference
+and Metal paths rather than being replaced by a hidden pose drive. The current
+source-default pose is nevertheless not a calibrated whole-body equilibrium:
+the 2026-08-29 M4 Pro replay reports normalized static recruitment residual RMS
+`12.5546`, `compiled_stand_balanced=false`, and a bounded device horizon of
+only 12.8 ms. Consequently NHMYO2 tendon mechanics and deterministic execution
+are admitted, but stable standing is not.
 
 ## Run
 
 ```sh
 numi human stand \
   Build/myosim-fullbody \
-  Build/bodyparts3d-myosim-major-bones-v2/bodyparts3d-myosim-major-bones.nhbones \
-  Build/numi-human-tendon-v2/numi-human-tendon-attachments.nhtendon \
+  Build/bodyparts3d-myosim-major-bones-v4/bodyparts3d-myosim-major-bones.nhbones \
+  Build/numi-human-tendon-v4/numi-human-tendon-attachments.nhtendon \
   Build/myosim-fullbody/myosim-fullbody-support-contact.nhcnt \
   Build/numi-human-stand-v1 \
   --steps 64 --timestep 0.0001 --dimension 640
@@ -84,29 +88,72 @@ bitwise replay of final q, v, stand status, terminal-load records, and
 generalized-correction diagnostics. The stand path rejects NHTENDON1 rather
 than silently running without per-step terminal loads.
 
+## Final M4 Pro qualification
+
+Runtime `45fede450ba889b8feb1df0a8330db3c31706497` executed the final v4 bone,
+v6 tissue, and v4 tendon payloads on Apple M4 Pro at 1024 × 1024 with eight
+temporal and eight area-light samples. The 64 assisted and 64
+assistance-removed 100 µs steps produced:
+
+- payload SHA-256 values `969974058f5121bd0ef35689bbdb78b6aa2caba31920fa52193e218ad130efd6`
+  (bones), `c3a2b2ea738e7adaa5ac6e1777a7957262fdda12fe241c53747c9a18f717f833`
+  (tissue), and `47fdd266de1be041c4cfba10b31303477de17bdf5831c811611cf5768f2888b7`
+  (tendon);
+
+- 106,496 accepted tendon transfers: 37,888 four-node envelopes and 68,608
+  exact source-point fallbacks;
+- maximum force/moment conservation residuals of `1.72633488546e-4 N` and
+  `2.44306352215e-6 N m`;
+- maximum generalized correction `7.32421875e-4`;
+- one-step FP64 parity errors `3.90537220115e-8` in q and
+  `3.90584484736e-4` in v;
+- maximum joint-equality position/velocity errors `4.93483355513e-7` and
+  `4.93483385071e-3`; and
+- bitwise deterministic replay.
+
+This is a 12.8 ms transaction and render qualification, not a seconds-long
+standing result. The [exact transcript](media/numi-human-distal-continuity-v4/qualification.transcript.txt)
+retains the device, counters, residuals, and boundary string.
+
 ## Visual review
 
-The checked 640 px qualification frames are:
+The checked 1024 px final frames are:
 
 | View | Evidence |
 | --- | --- |
-| Front | [front](media/numi-human-stand-v1/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-source-route-centrelines-front.png) |
-| Oblique | [oblique](media/numi-human-stand-v1/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-source-route-centrelines-oblique.png) |
-| Side | [side](media/numi-human-stand-v1/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-source-route-centrelines-side.png) |
-| Rear | [rear](media/numi-human-stand-v1/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-source-route-centrelines-rear.png) |
+| Front | [front](media/numi-human-distal-continuity-v4/fullbody/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-front.png) |
+| Oblique | [oblique](media/numi-human-distal-continuity-v4/fullbody/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-oblique.png) |
+| Side | [side](media/numi-human-distal-continuity-v4/fullbody/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-side.png) |
+| Rear | [rear](media/numi-human-distal-continuity-v4/fullbody/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-source-support-contact-rear.png) |
 
 All four frames were inspected at their original resolution. They contain the
 complete head-to-feet source anatomy with no camera crop. Red surfaces are the
-150 imported BodyParts3D muscle meshes. Cyan paths are the 416 current-pose
-OpenSim/MyoSim force-route centrelines; they are a diagnostic of the mechanical
-path, not a claim that a resolved tendon surface was imported. Mechanical
-attachment is owned by each named bone endpoint and its route Jacobian, which
-transfers the route tension into force and moment on that rigid body.
+150 imported BodyParts3D muscle meshes. Route lines are deliberately hidden in
+this clean anatomy view; focused diagnostics expose them separately.
+Mechanical attachment is owned by each named bone endpoint and its route
+Jacobian, which transfers route tension into force and moment on that rigid
+body.
+
+The corrected hand registration preserves the exact BodyParts3D common-frame
+displacement along unsupported thumb and distal-finger chains after their
+parent is attachment-refined. The transformed right-thumb gaps are 0.5 and
+0.3 mm, the left-thumb gaps are 0.4 and 0.1 mm, and the corrected third-to-fifth
+distal finger gaps are 0.3--0.7 mm. The previous floating thumb fragments are
+absent in the retained bilateral close-ups.
+
+The [focused left-foot views](media/numi-human-distal-continuity-v4/left-foot/)
+show a continuous bone chain and bilateral source tendon surfaces. Final
+left/right ankle, subtalar, and MTP angles differ by at most `8.65e-4 rad`, so
+the bounded replay does not exhibit a pathological left-only divergence. The
+source mechanics still has only one articulated `toes` segment per foot;
+individual BodyParts3D toe bones and distal red surfaces are kinematic anatomy,
+not independently actuated toes or deformable tendons.
 
 The original standing capture metrics remain in
 [qualification.txt](media/numi-human-stand-v1/qualification.txt). The current
-per-step transaction, rollback, replay, and four-angle evidence is recorded in
-[HUMAN_TENDON_STEP_TRANSACTION.md](HUMAN_TENDON_STEP_TRANSACTION.md).
+per-step transaction design is recorded in
+[HUMAN_TENDON_STEP_TRANSACTION.md](HUMAN_TENDON_STEP_TRANSACTION.md); the final
+device evidence is the transcript linked above.
 
 ## Historical NHMYO1 evidence and current limit
 
