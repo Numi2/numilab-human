@@ -58,6 +58,7 @@ from .model import (
     write_json,
 )
 from .zanatomy import build_zanatomy_calf_visual_supplement_payload
+from .lower_limb_registration import propose_lower_limb_registration
 from .myosim_bone_proximity import (
     AUDIT_SCHEMA as MYOSIM_SOURCE_BONE_PROXIMITY_SCHEMA,
     WORKLIST_SCHEMA as BODYPARTS_REGISTRATION_WORKLIST_SCHEMA,
@@ -371,6 +372,20 @@ def myosim_upper_limb_registration(arguments: argparse.Namespace) -> int:
         or receipt.get("schema") != "numi.human.bodyparts3d-myosim-upper-limb-source-mesh-registration.v1"
     ):
         raise ImportError("MyoSim upper-limb registration wrote an unsupported schema")
+    print(f"wrote {output}")
+    return 0
+
+
+def myosim_lower_limb_registration(arguments: argparse.Namespace) -> int:
+    output = arguments.output.resolve()
+    try:
+        result = propose_lower_limb_registration(
+            registration_path=arguments.registration.resolve(),
+            rigid_foot_base_path=arguments.rigid_foot_base.resolve(),
+        )
+    except ValueError as error:
+        raise ImportError(str(error)) from error
+    write_json(output, result)
     print(f"wrote {output}")
     return 0
 
@@ -1026,6 +1041,14 @@ def parser() -> argparse.ArgumentParser:
         help="Python environment with the pinned myo-sim checkout, NumPy, and MuJoCo installed",
     )
     upper_limb_registration_parser.set_defaults(handler=myosim_upper_limb_registration)
+    lower_limb_registration_parser = commands.add_parser(
+        "myosim-lower-limb-registration",
+        help="preserve qualified registration while assigning tarsals/metatarsals to Rajagopal's rigid foot",
+    )
+    lower_limb_registration_parser.add_argument("--registration", type=Path, required=True)
+    lower_limb_registration_parser.add_argument("--rigid-foot-base", type=Path, required=True)
+    lower_limb_registration_parser.add_argument("--output", type=Path, required=True)
+    lower_limb_registration_parser.set_defaults(handler=myosim_lower_limb_registration)
     myosim_probe_parser = commands.add_parser(
         "myosim-probe",
         help="run the native Core full-body muscle-reference probe against a compiled MyoSim artifact",

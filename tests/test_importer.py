@@ -107,6 +107,10 @@ from numilab_human.upper_limb_registration import (
     SCAPULAR_REFINEMENT_MAXIMUM_TRANSLATION_M,
     _refine_scapular_endpoint_translation,
 )
+from numilab_human.lower_limb_registration import (
+    RIGID_FOOT_MEMBERS,
+    propose_lower_limb_registration,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -374,7 +378,7 @@ class ImporterTests(unittest.TestCase):
         self.assertLess(envelope["sampled_total_force_amplification"], 4.0)
 
     def test_multi_member_limb_routes_select_exact_same_body_bones(self) -> None:
-        self.assertEqual(len(_NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS), 90)
+        self.assertEqual(len(_NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS), 104)
         self.assertFalse(
             set(_NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS)
             & set(_NUMI_HUMAN_TOE_ENTHESIS_MEMBERS)
@@ -396,6 +400,18 @@ class ImporterTests(unittest.TestCase):
             ("FJ3282",),
         )
         self.assertEqual(
+            _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS[("gasmed_r", 1)],
+            ("FJ3360",),
+        )
+        self.assertEqual(
+            _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS[("perbrev_l", 1)],
+            ("FJ3253",),
+        )
+        self.assertEqual(
+            _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS[("tibpost_r", 1)],
+            ("FJ3308",),
+        )
+        self.assertEqual(
             len(_NUMI_HUMAN_SEMANTIC_ENTHESIS_MEMBERS),
             len(_NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS)
             + len(_NUMI_HUMAN_TOE_ENTHESIS_MEMBERS)
@@ -408,6 +424,10 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(
             _numi_human_semantic_enthesis_kind(("bflh_r", 1), 1),
             "single_named_tibia_or_fibula_member",
+        )
+        self.assertEqual(
+            _numi_human_semantic_enthesis_kind(("perlong_l", 1), 1),
+            "single_named_rigid_foot_enthesis_member",
         )
 
     def test_source_named_thoracic_routes_select_exact_vertebrae_and_ribs(self) -> None:
@@ -483,8 +503,8 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(
             _NUMI_HUMAN_HALLUX_RIGID_COMPOUNDS,
             {
-                "toes_r": ("FJ3351", "FJ3310", "FJ3192"),
-                "toes_l": ("FJ3241", "FJ3329", "FJ3182"),
+                "toes_r": ("FJ3310", "FJ3192"),
+                "toes_l": ("FJ3329", "FJ3182"),
             },
         )
         extension_by_member = {
@@ -494,18 +514,20 @@ class ImporterTests(unittest.TestCase):
         for body, members in _NUMI_HUMAN_HALLUX_RIGID_COMPOUNDS.items():
             self.assertEqual(
                 [extension_by_member[member] for member in members],
-                [body, body, body],
+                [body, body],
             )
         self.assertEqual(
             [len(chains) for chains in _NUMI_HUMAN_TOE_RIGID_CHAINS.values()],
             [5, 5],
         )
         for body, chains in _NUMI_HUMAN_TOE_RIGID_CHAINS.items():
-            self.assertEqual([len(chain) for chain in chains], [3, 4, 4, 4, 4])
+            self.assertEqual([len(chain) for chain in chains], [2, 3, 3, 3, 3])
             self.assertEqual(
                 [extension_by_member[member] for chain in chains for member in chain],
-                [body] * 19,
+                [body] * 14,
             )
+        self.assertEqual(extension_by_member["FJ3351"], "calcn_r")
+        self.assertEqual(extension_by_member["FJ3241"], "calcn_l")
         self.assertEqual(
             tuple(chain[-1] for chain in _NUMI_HUMAN_TOE_RIGID_CHAINS["toes_l"][1:]),
             _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS[("edl_l", 1)],
@@ -1222,16 +1244,92 @@ class ImporterTests(unittest.TestCase):
             _NUMI_HUMAN_LOWER_LIMB_COHERENT_ROOTS,
             {"r": "femur_r", "l": "femur_l"},
         )
-        self.assertEqual(len(_NUMI_HUMAN_FOOT_CONTINUITY_TRANSITIONS), 26)
+        self.assertEqual(len(_NUMI_HUMAN_FOOT_CONTINUITY_TRANSITIONS), 36)
         self.assertEqual(_NUMI_HUMAN_FOOT_CONTINUITY_MAXIMUM_GAP_M, 0.004)
         names = [name for name, _, _ in _NUMI_HUMAN_FOOT_CONTINUITY_TRANSITIONS]
         self.assertIn("right_tibia_to_talus", names)
         self.assertIn("left_cuboid_to_fifth_metatarsal", names)
+        self.assertIn("right_first_metatarsal_to_hallux", names)
+        self.assertIn("left_fifth_metatarsal_to_fifth_toe", names)
         with self.assertRaisesRegex(HumanImportError, "foot continuity gate"):
             _bodyparts_bounded_vertex_gap(
                 [[0.0, 0.0, 0.0]], [[0.0041, 0.0, 0.0]], 0.004,
                 "fixture", "foot continuity",
             )
+
+    def test_rigid_foot_reparent_preserves_world_pose_and_adds_no_joint(self) -> None:
+        source = {
+            "bodyparts": {"archive_sha256": "11" * 32},
+            "myosim": {"source": {"archive_sha256": "22" * 32}},
+        }
+        prior_anchors = []
+        base_anchors = []
+        for ordinal, (member, new_body) in enumerate(sorted(RIGID_FOOT_MEMBERS.items())):
+            side = new_body[-1]
+            source_record = {
+                "archive": "bodyparts.zip", "archive_sha256": "33" * 32,
+                "concept_id": f"FMA{ordinal}", "hierarchy": "is_a",
+                "member": f"archive/{member}.obj", "member_id": member,
+                "member_sha256": f"{ordinal + 1:064x}", "name": member,
+                "triangle_count": 1, "vertex_count": 3,
+                "vertex_centroid_mm": [0.0, 0.0, 0.0],
+            }
+            old_target = {
+                "name": f"toes_{side}", "source_body_id": 10 + ordinal,
+                "core_body_index": 20 + ordinal,
+                "default_com_position_world_m": [1.0, 2.0, 3.0],
+                "default_inertial_quaternion_world_xyzw": [0.0, 0.0, 0.0, 1.0],
+            }
+            new_target = {
+                **old_target, "name": new_body,
+                "source_body_id": 100 + ordinal, "core_body_index": 200 + ordinal,
+                "default_com_position_world_m": [4.0, 6.0, 8.0],
+            }
+            registration = {
+                "source_obj_mm_to_core_inertial_body_m": [
+                    [0.001, 0.0, 0.0, 0.5], [0.0, 0.001, 0.0, 0.25],
+                    [0.0, 0.0, 0.001, -0.5], [0.0, 0.0, 0.0, 1.0],
+                ],
+                "default_pose_vertex_centroid_world_m": [1.5, 2.25, 2.5],
+            }
+            prior_anchors.append({
+                "source": source_record, "target": old_target,
+                "registration": registration,
+            })
+            base_anchors.append({
+                "source": dict(source_record), "target": new_target,
+                "registration": registration,
+            })
+        prior = {
+            "schema": "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2",
+            "source": source, "anchors": prior_anchors,
+        }
+        base = {**prior, "anchors": base_anchors}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            prior_path, base_path = root / "prior.json", root / "base.json"
+            prior_path.write_text(json.dumps(prior), encoding="utf-8")
+            base_path.write_text(json.dumps(base), encoding="utf-8")
+            result = propose_lower_limb_registration(
+                registration_path=prior_path, rigid_foot_base_path=base_path,
+            )
+        self.assertEqual(
+            result["lower_limb_source_mesh_registration"]["rebound_member_count"], 20,
+        )
+        self.assertEqual(
+            result["lower_limb_source_mesh_registration"]["new_joint_count"], 0,
+        )
+        anchor = result["anchors"][0]
+        self.assertEqual(anchor["target"]["name"], RIGID_FOOT_MEMBERS[anchor["source"]["member_id"]])
+        matrix = anchor["registration"]["source_obj_mm_to_core_inertial_body_m"]
+        self.assertEqual(
+            [matrix[index][3] + anchor["target"]["default_com_position_world_m"][index] for index in range(3)],
+            [1.5, 2.25, 2.5],
+        )
+        self.assertEqual(
+            anchor["registration"]["rigid_foot_reparent"]["default_world_pose_delta_m"],
+            0.0,
+        )
 
     def test_bodyparts_similarity_fit_keeps_proper_axes_and_positive_scale(self) -> None:
         source = [

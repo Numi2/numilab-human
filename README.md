@@ -47,13 +47,16 @@ The current lead rigidly registers 62 bilateral scapula-to-finger BodyParts3D
 bones to pinned compiled MyoSim source meshes while preserving every authored
 route site and the existing articulation. All 176 intended endpoint-distance
 gates, 57 prior-envelope preservation gates, and 52 shoulder/elbow/wrist/hand
-continuity gates pass. Recompiling the exact pair raises distributed
-tendon-to-bone coverage from 364/832 to 536/832 with zero endpoint migration,
+continuity gates pass. The rigid-foot ownership pass then keeps tarsals and
+metatarsals on Rajagopal's `calcn` segments while the phalanges retain the two
+collective toe bodies. Recompiling the exact pair raises distributed
+tendon-to-bone coverage from 364/832 to 540/832 with zero endpoint migration,
 no prior loss, and unchanged 12 mm and force-amplification thresholds. Each
 scapula uses one bounded proper-rigid transform, not endpoint edits or separate
 attachment patches. The result ran through native Metal force/replay gates and
 bilateral four-angle 2048 px shoulder inspection on Apple M4 Pro. See the
 [upper-limb source-mesh registration](Docs/UPPER_LIMB_SOURCE_MESH_REGISTRATION_V1.md),
+[rigid-foot ownership and entheses](Docs/RIGID_FOOT_OWNERSHIP_V1.md),
 [visual progress](Docs/VISUAL_PROGRESS.md), and the
 [completion gap ledger](Docs/HUMAN_COMPLETION_GAP_LEDGER.md).
 
@@ -62,6 +65,13 @@ bilateral four-angle 2048 px shoulder inspection on Apple M4 Pro. See the
   <img src="Docs/media/numi-human-upper-limb-source-mesh-registration-v1-2048/left-hand-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-107-side.png" width="24%" alt="Registered left hand and transfer routes" />
   <img src="Docs/media/numi-human-upper-limb-source-mesh-registration-v1-2048/right-elbow-wrist-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-43-front.png" width="24%" alt="Registered right elbow and wrist" />
   <img src="Docs/media/numi-human-upper-limb-source-mesh-registration-v1-2048/left-elbow-wrist-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-93-oblique.png" width="24%" alt="Registered left elbow and wrist" />
+</p>
+
+<p align="center">
+  <img src="Docs/media/numi-human-rigid-foot-ownership-v1-2048/right/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-138-front.png" width="24%" alt="Right rigid-foot ownership and transfer routes" />
+  <img src="Docs/media/numi-human-rigid-foot-ownership-v1-2048/right/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-138-oblique.png" width="24%" alt="Right first-metatarsal and navicular transfers" />
+  <img src="Docs/media/numi-human-rigid-foot-ownership-v1-2048/left/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-152-front.png" width="24%" alt="Left rigid-foot ownership and transfer routes" />
+  <img src="Docs/media/numi-human-rigid-foot-ownership-v1-2048/left/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-152-oblique.png" width="24%" alt="Left first-metatarsal and navicular transfers" />
 </p>
 
 <p align="center">
@@ -129,19 +139,20 @@ to an adjacent toe. Exact maximum inter-bone source gaps are 0.727 mm right and
 
 `NHTENDON2` gives all 832 origin/insertion endpoints a fail-closed
 tendon-to-bone law without moving an authored route site. After source-coherent
-anatomy, semantic same-body ownership, topology-aware exact-surface search, and
-the bilateral source-mesh upper-limb registration, 536 endpoints admit
-distributed BodyParts3D bone-surface envelopes and 296 remain explicit
-body-owned source-point laws (64.42% surface coverage).
+anatomy, semantic same-body ownership, topology-aware exact-surface search,
+bilateral upper-limb source-mesh registration, and rigid-foot ownership, 540
+endpoints admit distributed BodyParts3D bone-surface envelopes and 292 remain
+explicit body-owned source-point laws (64.90% surface coverage).
 The owning Metal route kernel publishes its exact
 wrapped terminal directions, and a second Metal pass distributes those forces
-while conserving their resultant and source-point moment. The final Apple M4
-Pro smoke executes 64 assisted plus 64 zero-root-wrench steps: 106,496 terminal
-transfers, including 68,608 envelope and 37,888 point transfers, with maximum
-residuals of `1.29475e-4 N` and `1.90921e-6 N m` and bitwise replay. The
+while conserving their resultant and source-point moment. The current Apple M4
+Pro smoke executes 32 assisted plus 32 zero-root-wrench steps: 53,248 terminal
+transfers, including 34,560 envelope and 18,688 point transfers, with bitwise
+replay. The
 standing controller still reports `balanced=false`; this is force-path/runtime
 evidence, not stable-standing qualification. See the
-[upper-limb registration record](Docs/UPPER_LIMB_SOURCE_MESH_REGISTRATION_V1.md).
+[upper-limb registration record](Docs/UPPER_LIMB_SOURCE_MESH_REGISTRATION_V1.md)
+and [rigid-foot record](Docs/RIGID_FOOT_OWNERSHIP_V1.md).
 
 The first inferred bilateral Achilles surface candidate was deliberately not
 admitted: its current cross-source registration would move the six terminal

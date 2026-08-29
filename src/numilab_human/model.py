@@ -3524,19 +3524,19 @@ _BODYPARTS_MYOSIM_THORACIC_FOOT_EXTENSIONS = tuple(
         ("torso", "left tenth rib", "FJ3225"),
         ("torso", "left eleventh rib", "FJ3226"),
         ("torso", "left twelfth rib", "FJ3227"),
-        # MyoSim's toes bodies provide the available articulated foot parent;
-        # bind the remaining source tarsals to that side rather than pretending
-        # the lower-body source contains their individual rigid joints.
-        ("toes_r", "navicular bone of right foot", "FJ3308"),
-        ("toes_r", "right medial cuneiform bone", "FJ3377"),
-        ("toes_r", "right intermediate cuneiform bone", "FJ3370"),
-        ("toes_r", "right lateral cuneiform bone", "FJ3373"),
-        ("toes_r", "right cuboid bone", "FJ3364"),
-        ("toes_l", "navicular bone of left foot", "FJ3307"),
-        ("toes_l", "left medial cuneiform bone", "FJ3271"),
-        ("toes_l", "left intermediate cuneiform bone", "FJ3264"),
-        ("toes_l", "left lateral cuneiform bone", "FJ3267"),
-        ("toes_l", "left cuboid bone", "FJ3258"),
+        # Rajagopal's ``calcn`` segment is the rigid foot, not the calcaneus
+        # alone. Its MTP joint separates that segment from the collective toe
+        # segment, so the midfoot must not spuriously follow toe flexion.
+        ("calcn_r", "navicular bone of right foot", "FJ3308"),
+        ("calcn_r", "right medial cuneiform bone", "FJ3377"),
+        ("calcn_r", "right intermediate cuneiform bone", "FJ3370"),
+        ("calcn_r", "right lateral cuneiform bone", "FJ3373"),
+        ("calcn_r", "right cuboid bone", "FJ3364"),
+        ("calcn_l", "navicular bone of left foot", "FJ3307"),
+        ("calcn_l", "left medial cuneiform bone", "FJ3271"),
+        ("calcn_l", "left intermediate cuneiform bone", "FJ3264"),
+        ("calcn_l", "left lateral cuneiform bone", "FJ3267"),
+        ("calcn_l", "left cuboid bone", "FJ3258"),
     )
 )
 
@@ -3617,14 +3617,14 @@ _BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS = tuple(
 _BODYPARTS_MYOSIM_TOE_EXTENSIONS = tuple(
     _bodyparts_visual_only_bone(body, name, member)
     for body, name, member in (
-        # MyoSim supplies one articulated toes segment per side, rather than
-        # individual toe joints.  These source meshes therefore share that
-        # corresponding side's live parent body.
-        ("toes_r", "right first metatarsal bone", "FJ3351"),
-        ("toes_r", "right second metatarsal bone", "FJ3353"),
-        ("toes_r", "right third metatarsal bone", "FJ3355"),
-        ("toes_r", "right fourth metatarsal bone", "FJ3357"),
-        ("toes_r", "right fifth metatarsal bone", "FJ3359"),
+        # Metatarsals stay on the rigid foot across the one authored MTP joint.
+        # All five phalangeal chains share the collective toes body; no
+        # independent digital articulation is introduced.
+        ("calcn_r", "right first metatarsal bone", "FJ3351"),
+        ("calcn_r", "right second metatarsal bone", "FJ3353"),
+        ("calcn_r", "right third metatarsal bone", "FJ3355"),
+        ("calcn_r", "right fourth metatarsal bone", "FJ3357"),
+        ("calcn_r", "right fifth metatarsal bone", "FJ3359"),
         ("toes_r", "proximal phalanx of right big toe", "FJ3310"),
         ("toes_r", "distal phalanx of right big toe", "FJ3192"),
         ("toes_r", "proximal phalanx of right second toe", "FJ3319"),
@@ -3639,11 +3639,11 @@ _BODYPARTS_MYOSIM_TOE_EXTENSIONS = tuple(
         ("toes_r", "proximal phalanx of right little toe", "FJ3324"),
         ("toes_r", "middle phalanx of right little toe", "FJ3305"),
         ("toes_r", "distal phalanx of right little toe", "FJ3195"),
-        ("toes_l", "left first metatarsal bone", "FJ3241"),
-        ("toes_l", "left second metatarsal bone", "FJ3244"),
-        ("toes_l", "left third metatarsal bone", "FJ3247"),
-        ("toes_l", "left fourth metatarsal bone", "FJ3250"),
-        ("toes_l", "left fifth metatarsal bone", "FJ3253"),
+        ("calcn_l", "left first metatarsal bone", "FJ3241"),
+        ("calcn_l", "left second metatarsal bone", "FJ3244"),
+        ("calcn_l", "left third metatarsal bone", "FJ3247"),
+        ("calcn_l", "left fourth metatarsal bone", "FJ3250"),
+        ("calcn_l", "left fifth metatarsal bone", "FJ3253"),
         ("toes_l", "proximal phalanx of left big toe", "FJ3329"),
         ("toes_l", "distal phalanx of left big toe", "FJ3182"),
         ("toes_l", "proximal phalanx of left second toe", "FJ3328"),
@@ -3663,24 +3663,25 @@ _BODYPARTS_MYOSIM_TOE_EXTENSIONS = tuple(
 
 
 # Separate digital joints are not required to preserve the visible source toe
-# chains and their insertions. Ten exact BodyParts3D compounds, five per side,
-# are carried by the two existing MyoSim toes bodies. Compilation below rejects a
-# missing member, a one-toe identity shift, a split Core owner, a mismatched
-# local transform, or a disconnected source chain.
+# chains and their insertions. Ten exact BodyParts3D phalangeal compounds, five
+# per side, are carried by the two existing MyoSim toes bodies. Metatarsals stay
+# on the rigid foot. Compilation rejects a missing member, a one-toe identity
+# shift, a split phalangeal owner, a mismatched local transform, or a
+# disconnected source chain.
 _NUMI_HUMAN_TOE_RIGID_CHAINS = {
     "toes_r": (
-        ("FJ3351", "FJ3310", "FJ3192"),
-        ("FJ3353", "FJ3319", "FJ3300", "FJ3189"),
-        ("FJ3355", "FJ3320", "FJ3301", "FJ3190"),
-        ("FJ3357", "FJ3321", "FJ3302", "FJ3191"),
-        ("FJ3359", "FJ3324", "FJ3305", "FJ3195"),
+        ("FJ3310", "FJ3192"),
+        ("FJ3319", "FJ3300", "FJ3189"),
+        ("FJ3320", "FJ3301", "FJ3190"),
+        ("FJ3321", "FJ3302", "FJ3191"),
+        ("FJ3324", "FJ3305", "FJ3195"),
     ),
     "toes_l": (
-        ("FJ3241", "FJ3329", "FJ3182"),
-        ("FJ3244", "FJ3328", "FJ3293", "FJ3179"),
-        ("FJ3247", "FJ3311", "FJ3294", "FJ3180"),
-        ("FJ3250", "FJ3312", "FJ3295", "FJ3181"),
-        ("FJ3253", "FJ3315", "FJ3298", "FJ3185"),
+        ("FJ3329", "FJ3182"),
+        ("FJ3328", "FJ3293", "FJ3179"),
+        ("FJ3311", "FJ3294", "FJ3180"),
+        ("FJ3312", "FJ3295", "FJ3181"),
+        ("FJ3315", "FJ3298", "FJ3185"),
     ),
 }
 _NUMI_HUMAN_HALLUX_RIGID_COMPOUNDS = {
@@ -3751,6 +3752,28 @@ _NUMI_HUMAN_SHANK_ENTHESIS_MEMBER_CLASS = {
     ("vaslat", 1): "tibia",
     ("vasmed", 1): "tibia",
 }
+_NUMI_HUMAN_RIGID_FOOT_ENTHESIS_MEMBER_IDS = {
+    "r": {
+        "calcaneus": "FJ3360", "navicular": "FJ3308",
+        "first_metatarsal": "FJ3351", "fifth_metatarsal": "FJ3359",
+    },
+    "l": {
+        "calcaneus": "FJ3256", "navicular": "FJ3307",
+        "first_metatarsal": "FJ3241", "fifth_metatarsal": "FJ3253",
+    },
+}
+_NUMI_HUMAN_RIGID_FOOT_ENTHESIS_MEMBER_CLASS = {
+    # Triceps surae joins the calcaneal tuberosity through the Achilles tendon.
+    ("gaslat", 1): "calcaneus",
+    ("gasmed", 1): "calcaneus",
+    ("soleus", 1): "calcaneus",
+    # The source mechanics lumps the rigid foot into ``calcn``; retain exact
+    # anatomical insertion identity within that body.
+    ("perbrev", 1): "fifth_metatarsal",
+    ("perlong", 1): "first_metatarsal",
+    ("tibant", 1): "first_metatarsal",
+    ("tibpost", 1): "navicular",
+}
 _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS = {
     **{
         (f"{base}_{side}", 0): (member_id,)
@@ -3767,6 +3790,15 @@ _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS = {
         )
         for (base, endpoint), member_class in (
             _NUMI_HUMAN_SHANK_ENTHESIS_MEMBER_CLASS.items()
+        )
+    },
+    **{
+        (f"{base}_{side}", endpoint): (
+            _NUMI_HUMAN_RIGID_FOOT_ENTHESIS_MEMBER_IDS[side][member_class],
+        )
+        for side in ("r", "l")
+        for (base, endpoint), member_class in (
+            _NUMI_HUMAN_RIGID_FOOT_ENTHESIS_MEMBER_CLASS.items()
         )
     },
 }
@@ -3860,11 +3892,15 @@ def _numi_human_semantic_enthesis_kind(
         )
     if key in _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS:
         member = _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS[key][0]
-        return (
-            "single_named_bilateral_hip_member"
-            if member in {"FJ3152", "FJ3288"}
-            else "single_named_tibia_or_fibula_member"
-        )
+        if member in {"FJ3152", "FJ3288"}:
+            return "single_named_bilateral_hip_member"
+        if member in {
+            value
+            for members in _NUMI_HUMAN_RIGID_FOOT_ENTHESIS_MEMBER_IDS.values()
+            for value in members.values()
+        }:
+            return "single_named_rigid_foot_enthesis_member"
+        return "single_named_tibia_or_fibula_member"
     if key in _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS:
         member = _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS[key][0]
         return (
@@ -4048,6 +4084,11 @@ _NUMI_HUMAN_FOOT_CONTINUITY_TRANSITIONS = (
     ("right_lateral_cuneiform_to_third_metatarsal", "FJ3373", "FJ3355"),
     ("right_cuboid_to_fourth_metatarsal", "FJ3364", "FJ3357"),
     ("right_cuboid_to_fifth_metatarsal", "FJ3364", "FJ3359"),
+    ("right_first_metatarsal_to_hallux", "FJ3351", "FJ3310"),
+    ("right_second_metatarsal_to_second_toe", "FJ3353", "FJ3319"),
+    ("right_third_metatarsal_to_third_toe", "FJ3355", "FJ3320"),
+    ("right_fourth_metatarsal_to_fourth_toe", "FJ3357", "FJ3321"),
+    ("right_fifth_metatarsal_to_fifth_toe", "FJ3359", "FJ3324"),
     ("left_tibia_to_talus", "FJ3282", "FJ3280"),
     ("left_fibula_to_talus", "FJ3260", "FJ3280"),
     ("left_talus_to_calcaneus", "FJ3280", "FJ3256"),
@@ -4061,6 +4102,11 @@ _NUMI_HUMAN_FOOT_CONTINUITY_TRANSITIONS = (
     ("left_lateral_cuneiform_to_third_metatarsal", "FJ3267", "FJ3247"),
     ("left_cuboid_to_fourth_metatarsal", "FJ3258", "FJ3250"),
     ("left_cuboid_to_fifth_metatarsal", "FJ3258", "FJ3253"),
+    ("left_first_metatarsal_to_hallux", "FJ3241", "FJ3329"),
+    ("left_second_metatarsal_to_second_toe", "FJ3244", "FJ3328"),
+    ("left_third_metatarsal_to_third_toe", "FJ3247", "FJ3311"),
+    ("left_fourth_metatarsal_to_fourth_toe", "FJ3250", "FJ3312"),
+    ("left_fifth_metatarsal_to_fifth_toe", "FJ3253", "FJ3315"),
 )
 _NUMI_HUMAN_FOOT_CONTINUITY_MAXIMUM_GAP_M = 0.004
 
@@ -7388,7 +7434,7 @@ def numi_human_tendon_attachment_envelope_payload(
     registered NHBONES1 member. Multi-member exceptions require an exact
     source-pinned semantic table: hallux routes remain one-to-one, a lumped
     EDL/FDL terminal wrench spans four named lesser-toe distal phalanges,
-    bilateral hip/tibia/fibula routes select one declared same-body member,
+    bilateral hip/tibia/fibula and rigid-foot routes select one declared same-body member,
     and source-named thoracic routes select their exact vertebra or rib.
     Every other multi-bone body, absent geometry, distant surface, or
     ill-conditioned patch remains an explicit source-site point law. No
@@ -7651,7 +7697,7 @@ def numi_human_tendon_attachment_envelope_payload(
             "maximum_sampled_total_force_amplification": maximum_force_amplification,
             "multiple_bone_members_fail_closed": True,
             "multiple_bone_exception": (
-                "only exact source-pinned toe maps, declared bilateral hip/tibia/fibula "
+                "only exact source-pinned toe maps, declared bilateral hip/tibia/fibula/rigid-foot "
                 "route-member maps, and source-named thoracic vertebra/rib maps are admitted; "
                 "all other multi-bone bodies fail closed"
             ),
@@ -7717,7 +7763,7 @@ def numi_human_tendon_attachment_envelope_payload(
             "topology-aware fallback uses exact points on the selected source triangle or vertices in its connected surface; "
             "it is a force-transfer discretization and does not warp, refine, or relabel anatomy. The four-node "
             "EDL/FDL map distributes one lumped source law; it does not claim four independently actuated toe muscles. "
-            "The bilateral hip/tibia/fibula member assignments resolve only which exact source bone on an already-owned "
+            "The bilateral hip/tibia/fibula/rigid-foot member assignments resolve only which exact source bone on an already-owned "
             "rigid body receives the unchanged endpoint wrench. The thoracic assignments likewise resolve only explicit "
             "MyoSim Tn/Rn/QL-12 labels to exact same-body BodyParts3D vertebrae or ribs. These mappings are not "
             "source-authored or clinical enthesis areas."

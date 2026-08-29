@@ -18,13 +18,14 @@ right and 7.827 mm left, while the complete rigid refinements remain 7.520 and
 8.958 mm from their source-surface ICP fits. The left glenohumeral interval is
 the tightest continuity witness at 7.908/8.000 mm.
 
-The exact paired compiler now emits 536 distributed envelopes and 296 point
-laws with zero endpoint migration. Apple M4 Pro executes 106,496 terminal
-transfers over the 64-step assisted plus 64-step unassisted smoke with bitwise
-replay. All eight driven 2048 px shoulder frames were inspected directly. The
-warm fans stay on their owning shoulder surfaces; cyan remains an exact source
-route-centreline diagnostic, not a rendered tendon continuum. See the
-[source-mesh registration record](UPPER_LIMB_SOURCE_MESH_REGISTRATION_V1.md).
+The exact paired compiler now emits 540 distributed envelopes and 292 point
+laws with zero endpoint migration. The current Apple M4 Pro smoke executes
+53,248 terminal transfers over 32 assisted plus 32 unassisted steps with
+bitwise replay. All eight driven shoulder frames and eight rigid-foot frames
+were inspected directly at 2048 px. The warm fans stay on their owning bone
+surfaces; cyan remains an exact source route-centreline diagnostic, not a
+rendered tendon continuum. See the [upper-limb registration record](UPPER_LIMB_SOURCE_MESH_REGISTRATION_V1.md)
+and [rigid-foot ownership record](RIGID_FOOT_OWNERSHIP_V1.md).
 
 ## Bilateral source-mesh upper limbs and hands — 2026-08-29
 
