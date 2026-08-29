@@ -21,6 +21,7 @@ from numilab_human.model import (
     _NUMI_HUMAN_HALLUX_RIGID_COMPOUNDS,
     _NUMI_HUMAN_TOE_RIGID_CHAINS,
     _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS,
+    _bodyparts_primary_bone_attachment_weights,
     _bodyparts_secondary_attachment_weight_lock,
     _bodyparts_project_tendon_attachment_band,
     _bodyparts_drop_interior_tendon_cap_triangles,
@@ -630,6 +631,21 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(evidence["feathered_vertex_count"], 1)
         self.assertEqual(evidence["nearest_vertex_distance_m"], 0.0)
 
+    def test_primary_bone_attachment_band_keeps_broad_origin_on_secondary_body(self) -> None:
+        weights, evidence = _bodyparts_primary_bone_attachment_weights(
+            [[0.0, 0.0, 0.0], [0.030, 0.0, 0.0], [0.080, 0.0, 0.0]],
+            [[0.0, 0.0, 0.0]],
+            0.005,
+            0.060,
+        )
+        self.assertEqual(weights[0], 1.0)
+        self.assertGreater(weights[1], 0.0)
+        self.assertLess(weights[1], 1.0)
+        self.assertEqual(weights[2], 0.0)
+        self.assertEqual(evidence["primary_locked_vertex_count"], 1)
+        self.assertEqual(evidence["primary_feathered_vertex_count"], 1)
+        self.assertEqual(evidence["secondary_owned_vertex_count"], 1)
+
     def test_tendon_attachment_weight_lock_uses_bone_surface_not_only_vertices(self) -> None:
         weights, evidence = _bodyparts_secondary_attachment_weight_lock(
             [[0.01, 0.01, 0.0]], [0.8],
@@ -775,6 +791,25 @@ class ImporterTests(unittest.TestCase):
             ],
         )
         self.assertTrue(all(surface.get("layer", "muscle") == "muscle" for surface in selected.values()))
+        pectoralis = [
+            surface for surface in surfaces
+            if "pectoralis major" in surface["source_name"]
+        ]
+        self.assertEqual(len(pectoralis), 6)
+        self.assertTrue(all(
+            {
+                "method": "primary_source_bone_attachment_band",
+                "lock_radius_m": 0.005,
+                "feather_radius_m": 0.060,
+            }.items() <= surface.get("visual_binding", {}).items()
+            for surface in pectoralis
+        ))
+        self.assertEqual(sum(
+            surface["visual_binding"].get(
+                "require_inferior_secondary_ownership", False
+            )
+            for surface in pectoralis
+        ), 4)
 
     def test_visual_skeleton_extension_preserves_the_validated_fit_set(self) -> None:
         fit_anchors = [

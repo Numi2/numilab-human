@@ -77,6 +77,11 @@ bitwise identical. All four views were inspected for route coverage and source
 surface continuity. The angular cyan paths remain source-route diagnostics,
 not claims of anatomical tendon surface shape.
 
+The mechanics and selection result remain current, but this gallery predates
+the corrected pectoralis visual binding. Use the
+[pectoralis-origin v1 views](PECTORALIS_ORIGIN_V1.md) when judging the lower
+chest surface during humerus motion.
+
 ## Boundary
 
 The compiler still reports `balanced=false` with a large acceleration

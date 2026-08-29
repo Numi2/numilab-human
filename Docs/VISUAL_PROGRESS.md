@@ -1,5 +1,25 @@
 # NumiLab Human visual progress
 
+## Pectoralis origin ownership — 2026-08-29
+
+<p align="center">
+  <img src="media/numi-human-pectoralis-origin-v1-2048/myofascial-context/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-25-front.png" width="24%" alt="Corrected pectoralis origin, front" />
+  <img src="media/numi-human-pectoralis-origin-v1-2048/myofascial-context/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-25-oblique.png" width="24%" alt="Corrected pectoralis origin, oblique" />
+  <img src="media/numi-human-pectoralis-origin-v1-2048/myofascial-context/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-25-side.png" width="24%" alt="Corrected pectoralis origin, side" />
+  <img src="media/numi-human-pectoralis-origin-v1-2048/myofascial-context/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-focus-body-25-rear.png" width="24%" alt="Corrected pectoralis origin, rear" />
+</p>
+
+The six exact BodyParts3D pectoralis-major surfaces now use the named humerus
+source mesh to isolate their narrow insertion band. Everything outside its
+5--60 mm lock/feather zone remains owned by the matching chest or clavicle
+route body. A compile-time gate proves zero humerus weight throughout the
+lowest source-world-Z decile of all four abdominal and sternocostal parts.
+Apple M4 Pro front, oblique, side, and rear review shows the lower origin
+seated against the bilateral external-oblique context rather than following
+the arm as a floating flap. The [pectoralis-origin record](PECTORALIS_ORIGIN_V1.md)
+contains counts, mechanics replay, hashes, and the explicit visual-only
+boundary; it is not a fascia/material or clinical attachment solve.
+
 ## Transactional body-part control — 2026-08-29
 
 <p align="center">

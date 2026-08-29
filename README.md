@@ -34,15 +34,20 @@ derivatives; all other raw or derived source artifacts remain local. See
 
 ## Visual progress
 
-The current lead combines the reviewed 1024 px, 128-step M4 Pro gallery with a
-new bilateral 2048 px hallux inspection. The clean views show corrected hand
-chains and big-toe insertion surfaces; the mechanical-anatomy diagnostics
-expose the unchanged MyoSim EHL/FHL route and four-node `NHTENDON2` transfer
-footprint on the exact distal hallux phalanx.
+The current lead combines the reviewed 1024 px, 128-step M4 Pro gallery with
+2048 px hallux and pectoralis-origin inspections. The pectoralis compiler now
+locks only the exact BodyParts3D humeral insertion band to the arm and keeps
+the broad abdominal/sternocostal origin on its thoracoabdominal route body;
+the inferior-origin gate rejects any residual humerus ownership. The clean
+views also show corrected hand chains and big-toe insertion surfaces, while
+the mechanical-anatomy diagnostics expose the unchanged MyoSim EHL/FHL route
+and four-node `NHTENDON2` transfer footprint on the exact distal hallux
+phalanx.
 Neither set is a photorealistic skin render: the clean gallery reviews source
 surface continuity, while the diagnostic proves that force terminates on the
 actual transfer program rather than a floating decorative tendon. See
-[visual progress](Docs/VISUAL_PROGRESS.md).
+[visual progress](Docs/VISUAL_PROGRESS.md) and the
+[pectoralis-origin record](Docs/PECTORALIS_ORIGIN_V1.md).
 
 The exposed source anatomy is used to inspect muscles and tendons against
 named bones. The BodyParts3D exterior remains a static source mesh only: it

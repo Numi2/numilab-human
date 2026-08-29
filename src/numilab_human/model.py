@@ -5165,6 +5165,59 @@ def _bodyparts_secondary_attachment_weight_lock(
     }
 
 
+def _bodyparts_primary_bone_attachment_weights(
+    tissue_vertices_world_m: list[list[float]],
+    primary_bone_vertices_world_m: list[list[float]],
+    lock_radius_m: float,
+    feather_radius_m: float,
+) -> tuple[list[float], dict[str, Any]]:
+    """Bind only a source-mesh-proximate insertion band to a primary body.
+
+    Broad fan-shaped muscles such as pectoralis major cannot use a projection
+    along the two body centres: that gives their wide thoracic origin partial
+    humerus ownership and lifts the inferior edge as the shoulder moves.  The
+    exact BodyParts3D humerus surface instead identifies the narrow insertion
+    band.  Everything outside its feather radius remains on the authored
+    secondary route body.
+
+    This is visual kinematic binding only.  It does not change a MyoSim route,
+    endpoint, force, or tendon transaction.
+    """
+    secondary_attenuation, evidence = _bodyparts_secondary_attachment_weight_lock(
+        tissue_vertices_world_m,
+        [1.0] * len(tissue_vertices_world_m),
+        primary_bone_vertices_world_m,
+        None,
+        lock_radius_m,
+        feather_radius_m,
+    )
+    primary_weights = [1.0 - value for value in secondary_attenuation]
+    thoracic_owner_count = sum(weight <= 1.0e-8 for weight in primary_weights)
+    if thoracic_owner_count == 0:
+        raise ImportError(
+            "BodyParts3D primary attachment band leaves no secondary-body-owned surface"
+        )
+    evidence.update({
+        "method": (
+            "exact BodyParts3D primary-bone source-vertex proximity insertion "
+            "lock with secondary-body origin ownership"
+        ),
+        "primary_locked_vertex_count": sum(
+            weight >= 1.0 - 1.0e-8 for weight in primary_weights
+        ),
+        "primary_feathered_vertex_count": sum(
+            1.0e-8 < weight < 1.0 - 1.0e-8 for weight in primary_weights
+        ),
+        "secondary_owned_vertex_count": thoracic_owner_count,
+        "boundary": (
+            "This changes only BodyParts3D visual blend weights at a named "
+            "source-bone insertion; it is not a muscle material solve, a "
+            "topological weld, force transfer, or clinical attachment map."
+        ),
+    })
+    return primary_weights, evidence
+
+
 def _bodyparts_source_mm_to_body_world(
     vertices_mm: list[list[float]], body_position_world_m: list[float], body_quaternion_xyzw: list[float],
     local_translation_m: list[float], local_quaternion_xyzw: list[float], local_uniform_scale: float,
@@ -7079,6 +7132,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         ]
 
         attachment_weight_lock: dict[str, Any] | None = None
+        primary_attachment_weight_lock: dict[str, Any] | None = None
         toe_enthesis_weight_lock: dict[str, Any] | None = None
         stored_vertices_m = [[coordinate * 0.001 for coordinate in vertex] for vertex in vertices_mm]
         stored_normals = normals
@@ -7194,7 +7248,135 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                 "contributing_source_surface_members": sorted(binding["member_id"] for binding in contributor_bindings),
             })
         else:
-            if len(binding_names) == 2 and len(route_pairs) == 1:
+            visual_binding = specification.get("visual_binding")
+            if visual_binding is not None and not isinstance(visual_binding, dict):
+                raise ImportError(
+                    f"BodyParts3D full-body tissue surface {member_id} has an invalid visual binding"
+                )
+            if visual_binding is not None:
+                if (
+                    visual_binding.get("method") !=
+                        "primary_source_bone_attachment_band"
+                    or len(binding_names) != 2
+                    or len(route_pairs) != 1
+                ):
+                    raise ImportError(
+                        f"BodyParts3D full-body tissue surface {member_id} has an unsupported visual binding"
+                    )
+                lock_radius_m = visual_binding.get("lock_radius_m")
+                feather_radius_m = visual_binding.get("feather_radius_m")
+                if (
+                    not isinstance(lock_radius_m, (int, float))
+                    or isinstance(lock_radius_m, bool)
+                    or not isinstance(feather_radius_m, (int, float))
+                    or isinstance(feather_radius_m, bool)
+                ):
+                    raise ImportError(
+                        f"BodyParts3D full-body tissue surface {member_id} has invalid attachment-band radii"
+                    )
+                primary_bone_source = secondary_bone_sources.get(primary_name)
+                if not isinstance(primary_bone_source, dict):
+                    raise ImportError(
+                        f"BodyParts3D full-body tissue surface {member_id} has no named primary-bone source mesh"
+                    )
+                primary_bone_member_id = primary_bone_source.get("member_id")
+                primary_bone_hierarchy = primary_bone_source.get("hierarchy")
+                if not isinstance(primary_bone_member_id, str) or not isinstance(
+                    primary_bone_hierarchy, str
+                ):
+                    raise ImportError(
+                        f"BodyParts3D full-body tissue surface {member_id} has an invalid primary-bone source mesh"
+                    )
+                _, primary_bone_member, primary_bone_obj = _bodyparts_obj_member(
+                    sources, primary_bone_hierarchy, primary_bone_member_id,
+                )
+                primary_bone_vertices_mm, _ = _bodyparts_obj_triangles(
+                    primary_bone_obj, primary_bone_member,
+                )
+                primary_bone_vertices_world_m = [
+                    [
+                        sum(
+                            global_matrix[row][column] * vertex[column]
+                            for column in range(3)
+                        ) + global_matrix[row][3]
+                        for row in range(3)
+                    ]
+                    for vertex in primary_bone_vertices_mm
+                ]
+                primary_weights, primary_attachment_weight_lock = (
+                    _bodyparts_primary_bone_attachment_weights(
+                        global_vertices,
+                        primary_bone_vertices_world_m,
+                        float(lock_radius_m),
+                        float(feather_radius_m),
+                    )
+                )
+                require_inferior_secondary_ownership = visual_binding.get(
+                    "require_inferior_secondary_ownership", False
+                )
+                if not isinstance(require_inferior_secondary_ownership, bool):
+                    raise ImportError(
+                        f"BodyParts3D full-body tissue surface {member_id} has an invalid inferior-origin gate"
+                    )
+                if require_inferior_secondary_ownership:
+                    vertical_values = sorted(vertex[2] for vertex in global_vertices)
+                    inferior_threshold_m = vertical_values[
+                        max(0, len(vertical_values) // 10 - 1)
+                    ]
+                    inferior_indices = [
+                        index for index, vertex in enumerate(global_vertices)
+                        if vertex[2] <= inferior_threshold_m
+                    ]
+                    inferior_maximum_primary_weight = max(
+                        primary_weights[index] for index in inferior_indices
+                    )
+                    if inferior_maximum_primary_weight > 1.0e-8:
+                        raise ImportError(
+                            f"BodyParts3D pectoralis surface {member_id} leaves its inferior origin on the humerus"
+                        )
+                    primary_attachment_weight_lock.update({
+                        "inferior_origin_gate": "lowest_source_world_z_decile_is_secondary_body_owned",
+                        "inferior_origin_vertex_count": len(inferior_indices),
+                        "inferior_origin_threshold_m": inferior_threshold_m,
+                        "inferior_origin_maximum_primary_weight": (
+                            inferior_maximum_primary_weight
+                        ),
+                    })
+                vertex_weights = [
+                    [primary_weight, 1.0 - primary_weight]
+                    for primary_weight in primary_weights
+                ]
+                primary_attachment_weight_lock.update({
+                    "primary_body": primary_name,
+                    "secondary_body": secondary_name,
+                    "primary_bone_member_id": primary_bone_member_id,
+                    "primary_bone_member": primary_bone_member,
+                    "primary_bone_member_sha256": hashlib.sha256(
+                        primary_bone_obj
+                    ).hexdigest(),
+                    "source_endpoint_migration_m": 0.0,
+                })
+                route_binding_diagnostics = {
+                    "method": "primary_source_bone_attachment_band",
+                    "binding_body_count": 2,
+                    "maximum_vertex_influences": 2,
+                    "primary_locked_vertex_count": (
+                        primary_attachment_weight_lock[
+                            "primary_locked_vertex_count"
+                        ]
+                    ),
+                    "primary_feathered_vertex_count": (
+                        primary_attachment_weight_lock[
+                            "primary_feathered_vertex_count"
+                        ]
+                    ),
+                    "secondary_owned_vertex_count": (
+                        primary_attachment_weight_lock[
+                            "secondary_owned_vertex_count"
+                        ]
+                    ),
+                }
+            elif len(binding_names) == 2 and len(route_pairs) == 1:
                 vertex_weights = [
                     [primary_weight, 1.0 - primary_weight]
                     for primary_weight in base_primary_weights
@@ -7584,6 +7766,10 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             provenance[-1]["route_binding"] = route_binding_diagnostics
         if attachment_weight_lock is not None:
             provenance[-1]["secondary_attachment_weight_lock"] = attachment_weight_lock
+        if primary_attachment_weight_lock is not None:
+            provenance[-1]["primary_attachment_weight_lock"] = (
+                primary_attachment_weight_lock
+            )
         if toe_enthesis_weight_lock is not None:
             provenance[-1]["toe_enthesis_weight_lock"] = toe_enthesis_weight_lock
         if source_component_selection is not None:
