@@ -1,5 +1,27 @@
 # NumiLab Human visual progress
 
+## Semantic hip, tibia, and fibula entheses — 2026-08-29
+
+<p align="center">
+  <img src="media/numi-human-semantic-limb-entheses-v1-2048/right-hip/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-128-oblique.png" width="24%" alt="Right hip route and transfer footprints" />
+  <img src="media/numi-human-semantic-limb-entheses-v1-2048/right-hip/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-128-rear.png" width="24%" alt="Right posterior hip route and transfer footprints" />
+  <img src="media/numi-human-semantic-limb-entheses-v1-2048/right-shank/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-136-front.png" width="24%" alt="Right fibular-head and tibial-plateau transfer footprints" />
+  <img src="media/numi-human-semantic-limb-entheses-v1-2048/right-shank/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-136-rear.png" width="24%" alt="Right posterior shank route and transfer footprints" />
+</p>
+
+An exact bilateral route-member table now resolves 90 previously ambiguous
+endpoints on the multi-member pelvis and shank rigid bodies. Forty pass the
+unchanged distance, connected-patch, force-amplification, and wrench gates:
+30 bilateral hip and 10 tibia/fibula envelopes across 36 unique muscles. This
+raises distributed coverage from 226/832 to 266/832 with zero endpoint
+migration; the other 566 endpoints remain explicit point laws.
+
+The M4 Pro whole-body smoke completes 26,624 per-step transfers across the
+assisted and assistance-removed phases with bitwise replay and rollback. Cyan
+is an exact source route and each warm fan/footprint is its executable
+four-node transfer law. See the [semantic-limb enthesis record](SEMANTIC_LIMB_ENTHESES_V1.md)
+for all angles, counters, mappings, and limitations.
+
 ## Coherent arms, hands, knees, feet, and toes — 2026-08-29
 
 <p align="center">
@@ -19,9 +41,10 @@ knee, and foot gaps are 1.230, 1.587, and 3.234 mm respectively. Both main
 knee-flexion coordinates enforce `[0, 2.0944] rad`; four-angle inspection
 places the patellae anteriorly and shows five connected toe chains per foot.
 
-The rebuilt force-transfer payload preserves all 832 source endpoints, but
-only 226 currently admit literal surface envelopes; 606 remain explicit point
-fallbacks. See the [coherent-limb record](COHERENT_LIMB_REGISTRATION_V1.md)
+The rebuilt force-transfer payload preserves all 832 source endpoints. The
+subsequent semantic-limb increment raises literal surface admission to 266;
+566 remain explicit point fallbacks. See the
+[coherent-limb record](COHERENT_LIMB_REGISTRATION_V1.md)
 for all eight bilateral four-angle sets, exact manifests, mechanics counters,
 and evidence boundaries.
 

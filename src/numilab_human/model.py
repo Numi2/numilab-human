@@ -3707,6 +3707,93 @@ _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS = {
     ("fhl_l", 1): ("FJ3182",),
 }
 _NUMI_HUMAN_TOE_ENTHESIS_MAXIMUM_SPREAD_M = 0.040
+
+
+# The source mechanics owns a single pelvis rigid body carrying both exact
+# BodyParts3D hip members, and one shank body per side carrying exact tibia and
+# fibula members.  Refusing every endpoint on those multi-member bodies leaves
+# major hip and knee/ankle actuators as point-only laws even when the route
+# name, endpoint ordinal, laterality, and source geometry agree.  These tables
+# make only that missing member identity explicit. They never move a MyoSim
+# endpoint and remain subject to the ordinary 12 mm distance, connected-patch,
+# force-amplification, and wrench-conservation gates.
+_NUMI_HUMAN_PELVIS_ENTHESIS_BASE_NAMES = (
+    "addbrev", "addlong", "addmagDist", "addmagIsch", "addmagMid",
+    "addmagProx", "bflh", "glmax1", "glmax2", "glmax3", "glmed1",
+    "glmed2", "glmed3", "glmin1", "glmin2", "glmin3", "grac",
+    "iliacus", "piri", "psoas", "recfem", "sart", "semimem",
+    "semiten", "tfl",
+)
+_NUMI_HUMAN_SHANK_ENTHESIS_MEMBER_CLASS = {
+    # Fibular head/shaft endpoints.
+    ("bflh", 1): "fibula",
+    ("bfsh", 1): "fibula",
+    ("edl", 0): "fibula",
+    ("ehl", 0): "fibula",
+    ("fhl", 0): "fibula",
+    ("perbrev", 0): "fibula",
+    ("perlong", 0): "fibula",
+    # Tibial plateau, tuberosity, pes anserinus, and shaft endpoints. The
+    # source model lumps multi-area soleus/tibialis-posterior origins into one
+    # point; the exact authored point is nearer the named tibia member and is
+    # retained unchanged.
+    ("fdl", 0): "tibia",
+    ("grac", 1): "tibia",
+    ("recfem", 1): "tibia",
+    ("sart", 1): "tibia",
+    ("semimem", 1): "tibia",
+    ("semiten", 1): "tibia",
+    ("soleus", 0): "tibia",
+    ("tfl", 1): "tibia",
+    ("tibant", 0): "tibia",
+    ("tibpost", 0): "tibia",
+    ("vasint", 1): "tibia",
+    ("vaslat", 1): "tibia",
+    ("vasmed", 1): "tibia",
+}
+_NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS = {
+    **{
+        (f"{base}_{side}", 0): (member_id,)
+        for side, member_id in (("r", "FJ3152"), ("l", "FJ3288"))
+        for base in _NUMI_HUMAN_PELVIS_ENTHESIS_BASE_NAMES
+    },
+    **{
+        (f"{base}_{side}", endpoint): (
+            member_ids[member_class],
+        )
+        for side, member_ids in (
+            ("r", {"tibia": "FJ3387", "fibula": "FJ3366"}),
+            ("l", {"tibia": "FJ3282", "fibula": "FJ3260"}),
+        )
+        for (base, endpoint), member_class in (
+            _NUMI_HUMAN_SHANK_ENTHESIS_MEMBER_CLASS.items()
+        )
+    },
+}
+_NUMI_HUMAN_SEMANTIC_ENTHESIS_MEMBERS = {
+    **_NUMI_HUMAN_TOE_ENTHESIS_MEMBERS,
+    **_NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS,
+}
+
+
+def _numi_human_semantic_enthesis_kind(
+    key: tuple[str, int], member_count: int,
+) -> str:
+    if key in _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS:
+        return (
+            "lumped_digitorum_route_to_four_lesser_toe_distal_phalanges"
+            if member_count == 4 else "single_named_distal_phalanx"
+        )
+    if key in _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS:
+        member = _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS[key][0]
+        return (
+            "single_named_bilateral_hip_member"
+            if member in {"FJ3152", "FJ3288"}
+            else "single_named_tibia_or_fibula_member"
+        )
+    raise ImportError(f"Numi Human semantic enthesis key is not declared: {key}")
+
+
 _NUMI_HUMAN_TOE_VISUAL_LOCK_RADIUS_M = 0.008
 _NUMI_HUMAN_TOE_VISUAL_FEATHER_RADIUS_M = 0.018
 _NUMI_HUMAN_TOE_VISUAL_DISTAL_LOCK_FRACTION = 0.20
@@ -6932,6 +7019,7 @@ def _numi_human_semantic_enthesis_envelope(
     source_point: list[float], surfaces: list[dict[str, Any]],
     member_ids: tuple[str, ...], maximum_surface_distance_m: float,
     maximum_patch_radius_m: float, maximum_force_amplification: float,
+    semantic_kind: str | None = None,
 ) -> tuple[dict[str, Any] | None, str]:
     """Resolve an explicit same-body anatomical enthesis correspondence.
 
@@ -6956,7 +7044,7 @@ def _numi_human_semantic_enthesis_envelope(
         if envelope is None:
             return None, reason
         envelope["semantic_enthesis_map"] = {
-            "kind": "single_named_distal_phalanx",
+            "kind": semantic_kind or "single_named_enthesis_member",
             "bone_member_ids": list(member_ids),
             "node_bone_member_ids": [member_ids[0]] * 4,
             "node_bone_stable_ids": [surfaces[0]["stable_id"]] * 4,
@@ -7057,13 +7145,14 @@ def numi_human_tendon_attachment_envelope_payload(
     """Compile fail-closed source-point-preserving BodyParts3D enthesis laws.
 
     Automatic admission is deliberately limited to a body with exactly one
-    registered NHBONES1 member. The only multi-member exception is the exact
-    source-pinned toe enthesis table above: hallux routes remain one-to-one,
-    while a lumped EDL/FDL terminal wrench spans the four named lesser-toe
-    distal phalanges on the same rigid body. Every other multi-bone body,
-    absent geometry, distant surface, or ill-conditioned patch remains an
-    explicit source-site point law. No authored MyoSim site, route, path
-    length, or force parameter is changed by this compiler.
+    registered NHBONES1 member. Multi-member exceptions require an exact
+    source-pinned semantic table: hallux routes remain one-to-one, a lumped
+    EDL/FDL terminal wrench spans four named lesser-toe distal phalanges, and
+    bilateral hip/tibia/fibula routes select one declared same-body member.
+    Every other multi-bone body, absent geometry, distant surface, or
+    ill-conditioned patch remains an explicit source-site point law. No
+    authored MyoSim site, route, path length, or force parameter is changed by
+    this compiler.
     """
     for value, label in (
         (maximum_surface_distance_m, "maximum surface distance"),
@@ -7143,7 +7232,8 @@ def numi_human_tendon_attachment_envelope_payload(
     rejection_counts: Counter[str] = Counter()
     admitted_distances: list[float] = []
     admitted_amplifications: list[float] = []
-    semantic_enthesis_count = 0
+    semantic_toe_enthesis_count = 0
+    semantic_limb_enthesis_count = 0
     for muscle_index, (record, muscle_metadata) in enumerate(zip(muscles, metadata, strict=True)):
         route_offset, count = record[1], record[2]
         name = muscle_metadata.get("name") if isinstance(muscle_metadata, dict) else None
@@ -7161,8 +7251,9 @@ def numi_human_tendon_attachment_envelope_payload(
                 raise ImportError(f"Numi Human tendon envelope route {name} has an invalid source endpoint")
             surfaces = surfaces_by_body.get(body_index, [])
             envelope: dict[str, Any] | None = None
-            semantic_members = _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS.get(
-                (name, endpoint_ordinal)
+            semantic_key = (name, endpoint_ordinal)
+            semantic_members = _NUMI_HUMAN_SEMANTIC_ENTHESIS_MEMBERS.get(
+                semantic_key
             )
             if semantic_members is not None:
                 semantic_surfaces = [
@@ -7177,6 +7268,9 @@ def numi_human_tendon_attachment_envelope_payload(
                         source_point, semantic_surfaces, semantic_members,
                         maximum_surface_distance_m, maximum_patch_radius_m,
                         maximum_force_amplification,
+                        _numi_human_semantic_enthesis_kind(
+                            semantic_key, len(semantic_members),
+                        ),
                     )
             elif not surfaces:
                 reason = "body_has_no_registered_bone_surface"
@@ -7220,7 +7314,14 @@ def numi_human_tendon_attachment_envelope_payload(
                 admitted_distances.append(envelope["surface_distance_m"])
                 admitted_amplifications.append(envelope["sampled_total_force_amplification"])
                 if "semantic_enthesis_map" in envelope:
-                    semantic_enthesis_count += 1
+                    if semantic_key in _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS:
+                        semantic_toe_enthesis_count += 1
+                    elif semantic_key in _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS:
+                        semantic_limb_enthesis_count += 1
+                    else:
+                        raise ImportError(
+                            f"Numi Human admitted undeclared semantic enthesis {semantic_key}"
+                        )
                 surface_manifest = {
                     key: envelope[key] for key in (
                         "bone_member_id", "bone_stable_id", "source_triangle_index",
@@ -7284,20 +7385,31 @@ def numi_human_tendon_attachment_envelope_payload(
         "admission": {
             "method": (
                 "single_named_NHBONES1_member_exact_nearest_triangle_connected_surface_patch_"
-                "or_explicit_toe_enthesis_map_minimum_L2_wrench_distribution"
+                "or_explicit_same_body_semantic_member_map_minimum_L2_wrench_distribution"
             ),
             "maximum_surface_distance_m": maximum_surface_distance_m,
             "maximum_patch_radius_m": maximum_patch_radius_m,
             "maximum_sampled_total_force_amplification": maximum_force_amplification,
             "multiple_bone_members_fail_closed": True,
             "multiple_bone_exception": (
-                "only the exact source-pinned EDL/FDL four-lesser-toe and EHL/FHL hallux "
-                "semantic maps are admitted; all other multi-bone bodies fail closed"
+                "only exact source-pinned toe maps and declared bilateral hip/tibia/fibula "
+                "route-member maps are admitted; all other multi-bone bodies fail closed"
             ),
             "toe_semantic_enthesis_map": {
                 f"{muscle}:{endpoint}": list(members)
                 for (muscle, endpoint), members in sorted(
                     _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS.items()
+                )
+            },
+            "limb_semantic_enthesis_map": {
+                f"{muscle}:{endpoint}": {
+                    "bone_member_ids": list(members),
+                    "kind": _numi_human_semantic_enthesis_kind(
+                        (muscle, endpoint), len(members),
+                    ),
+                }
+                for (muscle, endpoint), members in sorted(
+                    _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS.items()
                 )
             },
             "maximum_toe_semantic_spread_m": _NUMI_HUMAN_TOE_ENTHESIS_MAXIMUM_SPREAD_M,
@@ -7309,7 +7421,8 @@ def numi_human_tendon_attachment_envelope_payload(
             "mechanical_endpoint_count": len(endpoint_payload),
             "expected_endpoint_count": 2 * muscle_count,
             "registered_bone_distributed_envelope_count": admitted_count,
-            "semantic_toe_enthesis_envelope_count": semantic_enthesis_count,
+            "semantic_toe_enthesis_envelope_count": semantic_toe_enthesis_count,
+            "semantic_limb_enthesis_envelope_count": semantic_limb_enthesis_count,
             "source_site_point_fallback_count": point_count,
             "surface_coverage_fraction": admitted_count / len(endpoint_payload),
             "maximum_endpoint_migration_m": 0.0,
@@ -7327,7 +7440,9 @@ def numi_human_tendon_attachment_envelope_payload(
             "Admitted envelopes are simulation-inferred from the source-pinned BodyParts3D/MyoSim registration and strict "
             "distance/conditioning gates. They are not source-authored enthesis coordinates, a deformable tendon continuum, "
             "a clinical attachment certificate, or permission to migrate an OpenSim/MyoSim route endpoint. The four-node "
-            "EDL/FDL map distributes one lumped source law; it does not claim four independently actuated toe muscles."
+            "EDL/FDL map distributes one lumped source law; it does not claim four independently actuated toe muscles. "
+            "The bilateral hip/tibia/fibula member assignments resolve only which exact source bone on an already-owned "
+            "rigid body receives the unchanged endpoint wrench; they are not source-authored or clinical enthesis areas."
         ),
     }
     write_json(output / "numi-human-tendon-attachments.manifest.json", manifest_value)

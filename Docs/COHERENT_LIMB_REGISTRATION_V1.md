@@ -94,6 +94,11 @@ entheses. Snapping their sites to prettier geometry would change muscle
 mechanics, so those cases remain explicit until a superior source-compatible
 registration or calibrated enthesis model is available.
 
+The subsequent [semantic same-body limb enthesis increment](SEMANTIC_LIMB_ENTHESES_V1.md)
+resolves exact hip/tibia/fibula member ownership without moving any endpoint,
+raising current distributed coverage to 266 and reducing point fallbacks to
+566. The 226/606 figures above remain the coherent-registration baseline.
+
 The red muscle/tendon sheets in these frames are exact BodyParts3D
 presentation surfaces with sparse kinematic route-body bindings. They are not
 FEM tendon material, cartilage contact, ligament mechanics, skin, or clinical

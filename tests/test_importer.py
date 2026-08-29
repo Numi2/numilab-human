@@ -32,6 +32,8 @@ from numilab_human.model import (
     _NUMI_HUMAN_FOOT_CONTINUITY_MAXIMUM_GAP_M,
     _NUMI_HUMAN_TOE_RIGID_CHAINS,
     _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS,
+    _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS,
+    _NUMI_HUMAN_SEMANTIC_ENTHESIS_MEMBERS,
     _bodyparts_primary_bone_attachment_weights,
     _bodyparts_bounded_vertex_gap,
     _bodyparts_secondary_attachment_weight_lock,
@@ -50,6 +52,7 @@ from numilab_human.model import (
     _bodyparts_myosim_surface_specifications,
     _bodyparts_similarity_fit,
     _fit_myosim_compliant_architecture,
+    _numi_human_semantic_enthesis_kind,
     _myosim_pack_dof_record,
     _myosim_muscle_payload_architecture,
     myosim_part_control_catalog,
@@ -258,6 +261,42 @@ class ImporterTests(unittest.TestCase):
         self.assertLess(envelope["force_residual"], 2.0e-6)
         self.assertLess(envelope["moment_residual_m"], 2.0e-8)
         self.assertLess(envelope["sampled_total_force_amplification"], 4.0)
+
+    def test_multi_member_limb_routes_select_exact_same_body_bones(self) -> None:
+        self.assertEqual(len(_NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS), 90)
+        self.assertFalse(
+            set(_NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS)
+            & set(_NUMI_HUMAN_TOE_ENTHESIS_MEMBERS)
+        )
+        self.assertEqual(
+            _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS[("addlong_r", 0)],
+            ("FJ3152",),
+        )
+        self.assertEqual(
+            _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS[("addlong_l", 0)],
+            ("FJ3288",),
+        )
+        self.assertEqual(
+            _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS[("bflh_r", 1)],
+            ("FJ3366",),
+        )
+        self.assertEqual(
+            _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS[("vaslat_l", 1)],
+            ("FJ3282",),
+        )
+        self.assertEqual(
+            len(_NUMI_HUMAN_SEMANTIC_ENTHESIS_MEMBERS),
+            len(_NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS)
+            + len(_NUMI_HUMAN_TOE_ENTHESIS_MEMBERS),
+        )
+        self.assertEqual(
+            _numi_human_semantic_enthesis_kind(("addlong_r", 0), 1),
+            "single_named_bilateral_hip_member",
+        )
+        self.assertEqual(
+            _numi_human_semantic_enthesis_kind(("bflh_r", 1), 1),
+            "single_named_tibia_or_fibula_member",
+        )
 
     def test_hallux_routes_and_visual_source_sheets_remain_one_to_one(self) -> None:
         self.assertEqual(
