@@ -43,15 +43,16 @@ derivatives; all other raw or derived source artifacts remain local. See
 
 ## Visual progress
 
-The current lead rigidly registers 60 bilateral humerus-to-finger BodyParts3D
+The current lead rigidly registers 62 bilateral scapula-to-finger BodyParts3D
 bones to pinned compiled MyoSim source meshes while preserving every authored
-route site and the existing articulation. All 166 intended endpoint-distance
-gates, 45 prior-envelope preservation gates, and 52 shoulder/elbow/wrist/hand
+route site and the existing articulation. All 176 intended endpoint-distance
+gates, 57 prior-envelope preservation gates, and 52 shoulder/elbow/wrist/hand
 continuity gates pass. Recompiling the exact pair raises distributed
-tendon-to-bone coverage from 364/832 to 526/832 with zero endpoint migration,
-no prior loss, and unchanged 12 mm and force-amplification thresholds. The
-result ran through native Metal force/replay gates and 16 four-angle 2048 px
-inspection frames on Apple M4 Pro. See the
+tendon-to-bone coverage from 364/832 to 536/832 with zero endpoint migration,
+no prior loss, and unchanged 12 mm and force-amplification thresholds. Each
+scapula uses one bounded proper-rigid transform, not endpoint edits or separate
+attachment patches. The result ran through native Metal force/replay gates and
+bilateral four-angle 2048 px shoulder inspection on Apple M4 Pro. See the
 [upper-limb source-mesh registration](Docs/UPPER_LIMB_SOURCE_MESH_REGISTRATION_V1.md),
 [visual progress](Docs/VISUAL_PROGRESS.md), and the
 [completion gap ledger](Docs/HUMAN_COMPLETION_GAP_LEDGER.md).
@@ -63,13 +64,20 @@ inspection frames on Apple M4 Pro. See the
   <img src="Docs/media/numi-human-upper-limb-source-mesh-registration-v1-2048/left-elbow-wrist-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-93-oblique.png" width="24%" alt="Registered left elbow and wrist" />
 </p>
 
-The ten scapular candidates remain fail-closed because a proper rigid fit
-cannot place every site within 12 mm. Seven intended distal targets also remain
-exact point laws because their four-node patches fail conditioning. The
+<p align="center">
+  <img src="Docs/media/numi-human-scapular-attachments-v1-2048/right/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-34-front.png" width="24%" alt="Driven right scapular attachments, front" />
+  <img src="Docs/media/numi-human-scapular-attachments-v1-2048/right/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-34-rear.png" width="24%" alt="Driven right scapular attachments, rear" />
+  <img src="Docs/media/numi-human-scapular-attachments-v1-2048/left/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-84-front.png" width="24%" alt="Driven left scapular attachments, front" />
+  <img src="Docs/media/numi-human-scapular-attachments-v1-2048/left/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-84-rear.png" width="24%" alt="Driven left scapular attachments, rear" />
+</p>
+
+Seven intended distal targets remain exact point laws because their four-node
+patches fail conditioning. The
 [source-bone proximity audit](Docs/SOURCE_BONE_PROXIMITY_V1.md) still prevents
 159 non-bone-adjacent routes from pulling anatomy toward fascia or aponeurosis.
-These diagnostics are not a photorealistic skin render or a deformable tendon
-continuum.
+The cyan curves are current-pose source route centrelines; the warm four-node
+fans are executable force-transfer laws. Neither is a photorealistic tendon
+surface or a deformable tendon continuum.
 
 The exposed source anatomy is used to inspect muscles and tendons against
 named bones. The BodyParts3D exterior remains a static source mesh only: it
@@ -122,15 +130,15 @@ to an adjacent toe. Exact maximum inter-bone source gaps are 0.727 mm right and
 `NHTENDON2` gives all 832 origin/insertion endpoints a fail-closed
 tendon-to-bone law without moving an authored route site. After source-coherent
 anatomy, semantic same-body ownership, topology-aware exact-surface search, and
-the bilateral source-mesh upper-limb registration, 526 endpoints admit
-distributed BodyParts3D bone-surface envelopes and 306 remain explicit
-body-owned source-point laws (63.22% surface coverage).
+the bilateral source-mesh upper-limb registration, 536 endpoints admit
+distributed BodyParts3D bone-surface envelopes and 296 remain explicit
+body-owned source-point laws (64.42% surface coverage).
 The owning Metal route kernel publishes its exact
 wrapped terminal directions, and a second Metal pass distributes those forces
 while conserving their resultant and source-point moment. The final Apple M4
-Pro smoke executes 32 assisted plus 32 zero-root-wrench steps: 53,248 terminal
-transfers, including 33,664 envelope and 19,584 point transfers, with maximum
-residuals of `1.25827e-4 N` and `1.86306e-6 N m` and bitwise replay. The
+Pro smoke executes 64 assisted plus 64 zero-root-wrench steps: 106,496 terminal
+transfers, including 68,608 envelope and 37,888 point transfers, with maximum
+residuals of `1.29475e-4 N` and `1.90921e-6 N m` and bitwise replay. The
 standing controller still reports `balanced=false`; this is force-path/runtime
 evidence, not stable-standing qualification. See the
 [upper-limb registration record](Docs/UPPER_LIMB_SOURCE_MESH_REGISTRATION_V1.md).

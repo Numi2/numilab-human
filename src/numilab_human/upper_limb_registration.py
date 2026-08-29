@@ -31,6 +31,12 @@ from .myosim_export import export_fullbody
 SCHEMA = "numi.human.bodyparts3d-myosim-upper-limb-source-mesh-registration.v1"
 REGISTRATION_SCHEMA = "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2"
 TENDON_SCHEMA = "numi.human.tendon-attachment-envelope-payload.v2"
+SCAPULAR_ENDPOINT_MAXIMUM_DISTANCE_M = 0.012
+SCAPULAR_REFINEMENT_MAXIMUM_TRANSLATION_M = 0.010
+SCAPULAR_HELD_OUT_P90_MAXIMUM_M = 0.015
+SCAPULAR_REFINEMENT_STEPS_M = (
+    0.008, 0.004, 0.002, 0.001, 0.0005, 0.00025, 0.000125, 0.0000625,
+)
 
 
 def _sha256(path: Path) -> str:
@@ -212,6 +218,161 @@ def _fit_candidates(moving_vertices: Any, target_vertices: Any, np: Any) -> list
     return results[:4]
 
 
+def _surface_split_metrics(
+    moving_vertices: Any,
+    target_vertices: Any,
+    rotation: Any,
+    translation: Any,
+    np: Any,
+) -> tuple[dict[str, float], dict[str, float], int, int]:
+    """Re-evaluate the deterministic training/held-out split after refinement."""
+    moving_sample = _sample(moving_vertices, 400, np)
+    target_sample = _sample(target_vertices, 400, np)
+    moving_addresses = np.arange(len(moving_sample))
+    target_addresses = np.arange(len(target_sample))
+    moving_training = moving_sample[moving_addresses % 5 != 0]
+    target_training = target_sample[target_addresses % 5 != 0]
+    moving_held_out = moving_sample[moving_addresses % 5 == 0]
+    target_held_out = target_sample[target_addresses % 5 == 0]
+    transformed = np.einsum("ki,ji->kj", moving_sample, rotation) + translation
+    training_transformed = (
+        np.einsum("ki,ji->kj", moving_training, rotation) + translation
+    )
+    held_transformed = (
+        np.einsum("ki,ji->kj", moving_held_out, rotation) + translation
+    )
+    forward = _nearest(held_transformed, target_sample, np)[1]
+    reverse = _nearest(target_held_out, transformed, np)[1]
+    held_distances = np.sqrt(np.concatenate((forward, reverse)))
+    return (
+        _symmetric_metrics(training_transformed, target_training, np),
+        {
+            "mean_m": float(np.mean(held_distances)),
+            "median_m": float(np.median(held_distances)),
+            "p90_m": float(np.quantile(held_distances, 0.90)),
+            "maximum_m": float(np.max(held_distances)),
+        },
+        len(moving_training) + len(target_training),
+        len(moving_held_out) + len(target_held_out),
+    )
+
+
+def _endpoint_surface_distances(
+    endpoint_points: Any,
+    moving_vertices: Any,
+    triangles: Any,
+    rotation: Any,
+    translation: Any,
+    np: Any,
+) -> Any:
+    transformed = np.einsum("ki,ji->kj", moving_vertices, rotation) + translation
+    surface_triangles = transformed[triangles]
+    return np.asarray([
+        math.sqrt(float(np.min(
+            _point_triangle_distances_squared(point, surface_triangles, np)
+        )))
+        for point in endpoint_points
+    ])
+
+
+def _refine_scapular_endpoint_translation(
+    moving_vertices: Any,
+    triangles: Any,
+    target_vertices: Any,
+    endpoint_points: Any,
+    fit: dict[str, Any],
+    np: Any,
+) -> dict[str, Any]:
+    """Bound one proper rigid fit using distributed scapular attachment landmarks.
+
+    MyoSim endpoint sites remain fixed.  Only one coherent translation is added
+    to the complete BodyParts3D scapula, and both source-surface fidelity and
+    the unchanged endpoint distance gate remain explicit admission criteria.
+    """
+    if not len(endpoint_points):
+        raise RuntimeError("scapular endpoint refinement requires source landmarks")
+    refined = dict(fit)
+    rotation = np.asarray(fit["rotation"], dtype=float).copy()
+    initial_translation = np.asarray(fit["translation"], dtype=float).copy()
+    translation = initial_translation.copy()
+
+    def objective(candidate: Any) -> tuple[float, float, float]:
+        distances = _endpoint_surface_distances(
+            endpoint_points, moving_vertices, triangles,
+            rotation, candidate, np,
+        )
+        return (
+            float(np.max(distances)),
+            float(np.sum(distances * distances)),
+            float(np.sum(distances)),
+        )
+
+    initial_objective = objective(translation)
+    accepted_steps = 0
+    evaluation_count = 1
+    for step in SCAPULAR_REFINEMENT_STEPS_M:
+        while True:
+            best_objective = objective(translation)
+            evaluation_count += 1
+            best_translation = translation
+            for axis in range(3):
+                for sign in (-1.0, 1.0):
+                    candidate = translation.copy()
+                    candidate[axis] += sign * step
+                    if (
+                        float(np.linalg.norm(candidate - initial_translation))
+                        > SCAPULAR_REFINEMENT_MAXIMUM_TRANSLATION_M + 1.0e-12
+                    ):
+                        continue
+                    candidate_objective = objective(candidate)
+                    evaluation_count += 1
+                    if candidate_objective < best_objective:
+                        best_objective = candidate_objective
+                        best_translation = candidate
+            if bool(np.array_equal(best_translation, translation)):
+                break
+            translation = best_translation
+            accepted_steps += 1
+
+    final_distances = _endpoint_surface_distances(
+        endpoint_points, moving_vertices, triangles,
+        rotation, translation, np,
+    )
+    training, held_out, training_count, held_out_count = _surface_split_metrics(
+        moving_vertices, target_vertices, rotation, translation, np
+    )
+    delta = translation - initial_translation
+    refined.update({
+        "translation": translation,
+        "training_metrics": training,
+        "held_out_metrics": held_out,
+        "training_vertex_count": training_count,
+        "held_out_vertex_count": held_out_count,
+        "endpoint_landmark_refinement": {
+            "method": "bounded_coordinate_descent_translation_of_complete_scapula",
+            "initial_maximum_endpoint_distance_m": initial_objective[0],
+            "final_maximum_endpoint_distance_m": float(np.max(final_distances)),
+            "translation_delta_core_m": [float(value) for value in delta],
+            "translation_delta_norm_m": float(np.linalg.norm(delta)),
+            "maximum_translation_m": SCAPULAR_REFINEMENT_MAXIMUM_TRANSLATION_M,
+            "held_out_surface_p90_m": held_out["p90_m"],
+            "maximum_held_out_surface_p90_m": SCAPULAR_HELD_OUT_P90_MAXIMUM_M,
+            "accepted_coordinate_steps": accepted_steps,
+            "objective_evaluation_count": evaluation_count,
+            "endpoint_gate_passed": bool(np.all(
+                final_distances <= SCAPULAR_ENDPOINT_MAXIMUM_DISTANCE_M
+            )),
+            "source_surface_gate_passed": (
+                held_out["p90_m"] <= SCAPULAR_HELD_OUT_P90_MAXIMUM_M
+            ),
+        },
+    })
+    refined["source_fidelity_gate_passed"] = bool(
+        refined["endpoint_landmark_refinement"]["source_surface_gate_passed"]
+    )
+    return refined
+
+
 def _transform_points(points: Any, fit: dict[str, Any], np: Any) -> Any:
     return np.einsum("ki,ji->kj", points, fit["rotation"]) + fit["translation"]
 
@@ -232,6 +393,11 @@ def _core_to_world(points: Any, target: dict[str, Any], np: Any) -> Any:
 def _world_delta_to_core(delta: Any, target: dict[str, Any], np: Any) -> Any:
     rotation = _rotation_xyzw(target["default_inertial_quaternion_world_xyzw"], np)
     return np.einsum("i,ij->j", delta, rotation)
+
+
+def _core_delta_to_world(delta: Any, target: dict[str, Any], np: Any) -> Any:
+    rotation = _rotation_xyzw(target["default_inertial_quaternion_world_xyzw"], np)
+    return np.einsum("i,ji->j", delta, rotation)
 
 
 def _minimum_gap(first: Any, second: Any, np: Any) -> tuple[float, Any, Any]:
@@ -310,7 +476,7 @@ def propose_upper_limb_registration(
 
     all_upper_names = _upper_names("r") | _upper_names("l")
     candidate_names = all_upper_names - {"clavicle_r", "clavicle_l"}
-    selected_names = candidate_names - {"scapula_r", "scapula_l"}
+    selected_names = candidate_names
     body_records: dict[str, dict[str, Any]] = {}
     for name in sorted(all_upper_names):
         anchors = anchors_by_name.get(name)
@@ -404,6 +570,15 @@ def propose_upper_limb_registration(
                 np.asarray([endpoint["source_site_position_body_m"]], dtype=float),
                 record["source_body"], np,
             )[0])
+        record["registration_endpoint_points"] = np.asarray(endpoint_points)
+        if name in {"scapula_r", "scapula_l"}:
+            record["fit_candidates"] = [
+                _refine_scapular_endpoint_translation(
+                    record["vertices"], record["triangles"],
+                    record["source_vertices"], np.asarray(endpoint_points), fit, np,
+                )
+                for fit in record["fit_candidates"]
+            ]
         for fit in record["fit_candidates"]:
             transformed = _transform_points(record["vertices"], fit, np)
             triangles = transformed[record["triangles"]]
@@ -456,44 +631,7 @@ def propose_upper_limb_registration(
                 result["admitted"] for result in prior_results
             )
 
-    deferred_pairs = []
-    for right_name, left_name in (("scapula_r", "scapula_l"),):
-        right_fits = body_records[right_name]["fit_candidates"]
-        left_fits = body_records[left_name]["fit_candidates"]
-        qualifying_right = [
-            fit for fit in right_fits
-            if fit["registration_candidate_endpoint_gate_passed"]
-            and fit["prior_admitted_endpoint_gate_passed"]
-        ]
-        qualifying_left = [
-            fit for fit in left_fits
-            if fit["registration_candidate_endpoint_gate_passed"]
-            and fit["prior_admitted_endpoint_gate_passed"]
-        ]
-        if qualifying_right or qualifying_left:
-            raise RuntimeError(
-                "upper-limb scapular rigid-fit disposition changed; explicit landmark review is required"
-            )
-        right_items = items_by_body.get(right_name, [])
-        left_items = items_by_body.get(left_name, [])
-        deferred_pairs.append({
-            "right_body": right_name,
-            "left_body": left_name,
-            "registration_candidate_endpoint_count": len(right_items) + len(left_items),
-            "right_best_maximum_endpoint_distance_m": min(
-                float(fit["maximum_registration_candidate_endpoint_distance_m"])
-                for fit in right_fits
-            ),
-            "left_best_maximum_endpoint_distance_m": min(
-                float(fit["maximum_registration_candidate_endpoint_distance_m"])
-                for fit in left_fits
-            ),
-            "disposition": "deferred_landmark_constrained_scapular_registration",
-            "reason": (
-                "no proper rigid source-mesh fit preserves every prior envelope and places every "
-                "source-bone-adjacent endpoint within 12 mm"
-            ),
-        })
+    deferred_pairs: list[dict[str, Any]] = []
 
     plane_samples = []
     for name in sorted(selected_names):
@@ -525,6 +663,8 @@ def propose_upper_limb_registration(
                     and left_fit["registration_candidate_endpoint_gate_passed"]
                     and right_fit["prior_admitted_endpoint_gate_passed"]
                     and left_fit["prior_admitted_endpoint_gate_passed"]
+                    and right_fit.get("source_fidelity_gate_passed", True)
+                    and left_fit.get("source_fidelity_gate_passed", True)
                 ):
                     continue
                 right_sample = _sample(_transform_points(right["vertices"], right_fit, np), 240, np)
@@ -580,6 +720,64 @@ def propose_upper_limb_registration(
             world_deltas[name], body_records[name]["target"], np
         )
         return _core_to_world(transformed, body_records[name]["target"], np)
+
+    # The endpoint landmarks and the glenohumeral/clavicular interfaces constrain
+    # one complete scapular rigid transform.  Resolve any remaining default-pose
+    # interval by translating only the scapula, while retaining the same 10 mm
+    # bound relative to the source-surface ICP result.
+    for side in ("r", "l"):
+        label_prefix = "right" if side == "r" else "left"
+        scapula_name = f"scapula_{side}"
+        target = body_records[scapula_name]["target"]
+        refinement = chosen[scapula_name]["endpoint_landmark_refinement"]
+        endpoint_delta_core = np.asarray(
+            refinement["translation_delta_core_m"], dtype=float
+        )
+        shoulder_transitions = [
+            record for record in human_model._NUMI_HUMAN_UPPER_LIMB_CONTINUITY_TRANSITIONS
+            if record[0] in {
+                f"{label_prefix}_clavicle_to_scapula",
+                f"{label_prefix}_scapula_to_humerus",
+            }
+        ]
+        for _ in range(32):
+            measured = []
+            for transition_name, first_member, second_member, gate in shoulder_transitions:
+                gap, first_point, second_point = _minimum_gap(
+                    world_vertices(first_member), world_vertices(second_member), np
+                )
+                measured.append((
+                    gap / gate, transition_name, gap, gate,
+                    first_member, first_point, second_point,
+                ))
+            ratio, _, gap, gate, first_member, first_point, second_point = max(
+                measured, key=lambda value: value[:2]
+            )
+            if ratio <= 1.0:
+                break
+            if first_member == body_records[scapula_name]["anchors"][0]["source"]["member_id"]:
+                direction = second_point - first_point
+            else:
+                direction = first_point - second_point
+            correction = direction * ((gap - 0.95 * gate) / gap)
+            proposed_world_delta = world_deltas[scapula_name] + correction
+            proposed_local_delta = _world_delta_to_core(
+                proposed_world_delta, target, np
+            )
+            combined_delta = endpoint_delta_core + proposed_local_delta
+            combined_norm = float(np.linalg.norm(combined_delta))
+            if combined_norm > SCAPULAR_REFINEMENT_MAXIMUM_TRANSLATION_M:
+                combined_delta *= SCAPULAR_REFINEMENT_MAXIMUM_TRANSLATION_M / combined_norm
+                proposed_local_delta = combined_delta - endpoint_delta_core
+                proposed_world_delta = _core_delta_to_world(
+                    proposed_local_delta, target, np
+                )
+            if bool(np.allclose(
+                proposed_world_delta, world_deltas[scapula_name],
+                rtol=0.0, atol=1.0e-12,
+            )):
+                break
+            world_deltas[scapula_name] = proposed_world_delta
 
     # Named source registration can expose real joint-space differences
     # between subjects. Apply only coherent translations: radius alone at the
@@ -657,6 +855,59 @@ def propose_upper_limb_registration(
         transformed += _world_delta_to_core(
             world_deltas[name], record["target"], np
         )
+        if name in {"scapula_r", "scapula_l"}:
+            local_delta = _world_delta_to_core(
+                world_deltas[name], record["target"], np
+            )
+            training, held_out, training_count, held_out_count = _surface_split_metrics(
+                record["vertices"], record["source_vertices"],
+                chosen[name]["rotation"], chosen[name]["translation"] + local_delta, np,
+            )
+            refinement = chosen[name]["endpoint_landmark_refinement"]
+            combined_delta = np.asarray(
+                refinement["translation_delta_core_m"], dtype=float
+            ) + local_delta
+            final_distances = _endpoint_surface_distances(
+                record["registration_endpoint_points"], record["vertices"],
+                record["triangles"], chosen[name]["rotation"],
+                chosen[name]["translation"] + local_delta, np,
+            )
+            refinement.update({
+                "continuity_translation_world_m": [
+                    float(value) for value in world_deltas[name]
+                ],
+                "final_total_translation_delta_core_m": [
+                    float(value) for value in combined_delta
+                ],
+                "final_total_translation_delta_norm_m": float(
+                    np.linalg.norm(combined_delta)
+                ),
+                "final_maximum_endpoint_distance_m": float(
+                    np.max(final_distances)
+                ),
+                "endpoint_gate_passed": bool(np.all(
+                    final_distances <= SCAPULAR_ENDPOINT_MAXIMUM_DISTANCE_M
+                )),
+                "held_out_surface_p90_m": held_out["p90_m"],
+                "source_surface_gate_passed": (
+                    held_out["p90_m"] <= SCAPULAR_HELD_OUT_P90_MAXIMUM_M
+                ),
+            })
+            chosen[name].update({
+                "training_metrics": training,
+                "held_out_metrics": held_out,
+                "training_vertex_count": training_count,
+                "held_out_vertex_count": held_out_count,
+            })
+            if (
+                refinement["final_total_translation_delta_norm_m"]
+                > SCAPULAR_REFINEMENT_MAXIMUM_TRANSLATION_M + 1.0e-12
+                or not refinement["endpoint_gate_passed"]
+                or not refinement["source_surface_gate_passed"]
+            ):
+                raise RuntimeError(
+                    f"upper-limb scapular source-fidelity gate failed for {name}"
+                )
         source_anchor = record["anchors"][0]["source"]
         surface = {
             "body_index": int(record["target"]["core_body_index"]),
@@ -747,7 +998,9 @@ def propose_upper_limb_registration(
         local_delta = _world_delta_to_core(world_deltas[name], target, np)
         cosine = max(-1.0, min(1.0, (float(np.trace(fit["rotation"])) - 1.0) * 0.5))
         receipt = {
-            "method": "bilaterally_selected_pca_seeded_trimmed_symmetric_rigid_icp_to_compiled_myosim_bone_mesh",
+            "method": (
+                "bilaterally_selected_pca_seeded_trimmed_symmetric_rigid_icp_to_compiled_myosim_bone_mesh"
+            ),
             "source_body_id": int(target["source_body_id"]),
             "selected_start": fit["start"],
             "iterations": int(fit["iterations"]),
@@ -762,6 +1015,8 @@ def propose_upper_limb_registration(
             "training_vertex_count": int(fit["training_vertex_count"]),
             "held_out_vertex_count": int(fit["held_out_vertex_count"]),
         }
+        if "endpoint_landmark_refinement" in fit:
+            receipt["endpoint_landmark_refinement"] = fit["endpoint_landmark_refinement"]
         for anchor in output_anchors_by_name[name]:
             matrix = np.asarray(
                 anchor["registration"]["source_obj_mm_to_core_inertial_body_m"], dtype=float

@@ -1,5 +1,31 @@
 # NumiLab Human visual progress
 
+## Source-constrained scapular attachments — 2026-08-29
+
+<p align="center">
+  <img src="media/numi-human-scapular-attachments-v1-2048/right/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-34-front.png" width="24%" alt="Right scapular attachments, front" />
+  <img src="media/numi-human-scapular-attachments-v1-2048/right/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-34-rear.png" width="24%" alt="Right scapular attachments, rear" />
+  <img src="media/numi-human-scapular-attachments-v1-2048/left/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-84-front.png" width="24%" alt="Left scapular attachments, front" />
+  <img src="media/numi-human-scapular-attachments-v1-2048/left/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-84-rear.png" width="24%" alt="Left scapular attachments, rear" />
+</p>
+
+Ten source-bone-adjacent shoulder endpoints now use connected four-node
+BodyParts3D scapular envelopes: bilateral posterior-deltoid origins, teres
+minor/major insertions, and coracobrachialis/short-head biceps origins. One
+proper rigid transform moves each complete scapula; no source endpoint or
+individual attachment is repositioned. Worst endpoint distances are 6.636 mm
+right and 7.827 mm left, while the complete rigid refinements remain 7.520 and
+8.958 mm from their source-surface ICP fits. The left glenohumeral interval is
+the tightest continuity witness at 7.908/8.000 mm.
+
+The exact paired compiler now emits 536 distributed envelopes and 296 point
+laws with zero endpoint migration. Apple M4 Pro executes 106,496 terminal
+transfers over the 64-step assisted plus 64-step unassisted smoke with bitwise
+replay. All eight driven 2048 px shoulder frames were inspected directly. The
+warm fans stay on their owning shoulder surfaces; cyan remains an exact source
+route-centreline diagnostic, not a rendered tendon continuum. See the
+[source-mesh registration record](UPPER_LIMB_SOURCE_MESH_REGISTRATION_V1.md).
+
 ## Bilateral source-mesh upper limbs and hands — 2026-08-29
 
 <p align="center">
@@ -9,19 +35,18 @@
   <img src="media/numi-human-upper-limb-source-mesh-registration-v1-2048/left-elbow-wrist-2048/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-93-oblique.png" width="24%" alt="Source-mesh registered left elbow and wrist" />
 </p>
 
-Sixty bilateral humerus-to-finger BodyParts3D bones now use proper rigid fits to
+Sixty bilateral humerus-to-finger BodyParts3D bones use proper rigid fits to
 the pinned compiled MyoSim bone meshes. All 166 intended endpoint-distance
 gates, 45 prior-envelope preservation gates, and 52 default-pose continuity
 gates pass without moving a source site or adding finger articulation. The
-paired compiler raises distributed transfer coverage to 526/832; 306 exact
-point laws remain.
+subsequent scapular increment raises distributed transfer coverage to 536/832;
+296 exact point laws remain.
 
 All 16 hand/elbow/wrist frames were inspected directly at 2048 px. The five
 digit rays remain with each carpal block, radius and ulna remain continuous at
 the elbow and wrist, and rendered transfer fans terminate on their owning
-bones. The scapulae fail closed for a later landmark-constrained solve, and
-seven intended distal endpoints remain point laws because their patch
-conditioning fails. See the
+bones. The scapulae now pass the source-constrained solve above; seven intended
+distal endpoints remain point laws because their patch conditioning fails. See the
 [source-mesh registration record](UPPER_LIMB_SOURCE_MESH_REGISTRATION_V1.md).
 
 ## Topology-aware exact-surface entheses — 2026-08-29

@@ -101,6 +101,12 @@ from numilab_human.myosim_bone_proximity import (
     AUDIT_SCHEMA as MYOSIM_SOURCE_BONE_PROXIMITY_SCHEMA,
     registration_worklist,
 )
+from numilab_human.upper_limb_registration import (
+    SCAPULAR_ENDPOINT_MAXIMUM_DISTANCE_M,
+    SCAPULAR_HELD_OUT_P90_MAXIMUM_M,
+    SCAPULAR_REFINEMENT_MAXIMUM_TRANSLATION_M,
+    _refine_scapular_endpoint_translation,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -1135,6 +1141,59 @@ class ImporterTests(unittest.TestCase):
                 [[0.0, 0.0, 0.0]], [[0.011, 0.0, 0.0]], 0.010,
                 "fixture", "upper-limb continuity",
             )
+
+    def test_scapular_endpoint_refinement_moves_one_bounded_rigid_surface(self) -> None:
+        try:
+            import numpy as np
+        except ImportError:
+            self.skipTest("scapular source registration requires the optional MyoSim environment")
+
+        vertices = np.asarray([
+            [x * 0.01, y * 0.01, 0.0]
+            for y in range(5)
+            for x in range(5)
+        ])
+        triangles = []
+        for y in range(4):
+            for x in range(4):
+                base = y * 5 + x
+                triangles.extend(((base, base + 1, base + 5),
+                                  (base + 1, base + 6, base + 5)))
+        endpoints = np.asarray([
+            [0.005, 0.005, 0.016],
+            [0.020, 0.020, 0.016],
+            [0.035, 0.035, 0.016],
+        ])
+        fit = {
+            "rotation": np.eye(3),
+            "translation": np.zeros(3),
+            "iterations": 1,
+            "start": "fixture",
+        }
+        refined = _refine_scapular_endpoint_translation(
+            vertices, np.asarray(triangles), vertices, endpoints, fit, np,
+        )
+        receipt = refined["endpoint_landmark_refinement"]
+        self.assertLessEqual(
+            receipt["translation_delta_norm_m"],
+            SCAPULAR_REFINEMENT_MAXIMUM_TRANSLATION_M + 1.0e-12,
+        )
+        self.assertLessEqual(
+            receipt["final_maximum_endpoint_distance_m"],
+            SCAPULAR_ENDPOINT_MAXIMUM_DISTANCE_M,
+        )
+        self.assertLess(
+            receipt["final_maximum_endpoint_distance_m"],
+            receipt["initial_maximum_endpoint_distance_m"],
+        )
+        self.assertLessEqual(
+            receipt["held_out_surface_p90_m"],
+            SCAPULAR_HELD_OUT_P90_MAXIMUM_M,
+        )
+        self.assertTrue(receipt["endpoint_gate_passed"])
+        self.assertTrue(receipt["source_surface_gate_passed"])
+        self.assertAlmostEqual(float(np.linalg.det(refined["rotation"])), 1.0)
+        self.assertTrue(np.array_equal(fit["translation"], np.zeros(3)))
 
     def test_hand_and_knee_continuity_gates_are_bilateral_and_fail_closed(self) -> None:
         self.assertEqual(len(_NUMI_HUMAN_HAND_CONTINUITY_TRANSITIONS), 38)
