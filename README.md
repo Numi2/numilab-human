@@ -41,6 +41,9 @@ BodyParts3D, and explicitly marked Z-Anatomy validation media are attributed
 derivatives; all other raw or derived source artifacts remain local. See
 [third-party notices](THIRD_PARTY_NOTICES.md).
 
+The evidence-gated development sequence is in the
+[Numi Human development roadmap](Docs/DEVELOPMENT_ROADMAP.md).
+
 ## Visual progress
 
 The current lead rigidly registers 62 bilateral scapula-to-finger BodyParts3D
