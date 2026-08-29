@@ -60,13 +60,22 @@ bilateral four-angle 2048 px shoulder inspection on Apple M4 Pro. See the
 [visual progress](Docs/VISUAL_PROGRESS.md), and the
 [completion gap ledger](Docs/HUMAN_COMPLETION_GAP_LEDGER.md).
 
-The qualified `NHTENDON3` foot mode keeps every BodyParts3D bone at that exact
-rest pose and migrates only 18 unambiguous route-private hallux/rigid-foot
-terminals to their named surfaces. Reference calibration preserves the source
-force state at the compiled pose; Apple M4 Pro CPU/Metal parity, byte-identical
-replay, and bilateral four-angle 2048 px inspection pass. EDL/FDL remain
-explicit lumped lesser-toe laws rather than being misrepresented as four
-independent actuators. See [fixed-bone foot entheses](Docs/FIXED_BONE_FOOT_ENTHESES_V1.md).
+The current lower-limb pass rigidly registers bilateral femur, tibia/fibula,
+talus, rigid foot, and patella anatomy to the pinned compiled MyoSim meshes.
+It rejects the tempting 179 degree patella flip, keeps all 40 knee-to-toe
+continuity gaps below 3.876 mm, and preserves the complete five-toe compound
+without adding articulation. The paired `NHTENDON3` artifact executes all 18
+named foot/hallux surface terminals and all 832 endpoint laws on Apple M4 Pro.
+Neutral and 0.75 rad flexed four-angle review passes on both sides. See the
+[lower-limb source registration](Docs/LOWER_LIMB_SOURCE_REGISTRATION_V2.md)
+and the preceding [fixed-bone foot entheses](Docs/FIXED_BONE_FOOT_ENTHESES_V1.md).
+
+<p align="center">
+  <img src="Docs/media/numi-human-lower-limb-source-registration-v2-2048/neutral/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-136-oblique.png" width="24%" alt="Registered right lower limb, neutral oblique" />
+  <img src="Docs/media/numi-human-lower-limb-source-registration-v2-2048/neutral/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-150-side.png" width="24%" alt="Registered left lower limb, neutral side" />
+  <img src="Docs/media/numi-human-lower-limb-source-registration-v2-2048/flexed/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-posed-focus-body-136-side.png" width="24%" alt="Registered right knee at 0.75 rad flexion" />
+  <img src="Docs/media/numi-human-lower-limb-source-registration-v2-2048/flexed/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-posed-focus-body-150-oblique.png" width="24%" alt="Registered left knee at 0.75 rad flexion" />
+</p>
 
 <p align="center">
   <img src="Docs/media/numi-human-fixed-bone-foot-entheses-v1-2048/right/myosim-fullbody-articulated-bodyparts-bones-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-139-front.png" width="24%" alt="Right fixed-bone hallux and foot entheses, front" />
@@ -171,14 +180,14 @@ evidence, not stable-standing qualification. See the
 [upper-limb registration record](Docs/UPPER_LIMB_SOURCE_MESH_REGISTRATION_V1.md)
 and [rigid-foot record](Docs/RIGID_FOOT_OWNERSHIP_V1.md).
 
-The opt-in, qualified `NHTENDON3` fixed-bone foot mode promotes 14 existing
-foot/hallux point laws plus four existing rigid-foot envelopes to 18 exact
-route-private bone-surface terminals. Its complete payload is 554 envelopes
-and 278 point laws. Maximum endpoint migration is `11.983 mm`; deterministic
+The opt-in `NHTENDON3` foot mode promotes 14 foot/hallux point laws plus four
+rigid-foot envelopes to 18 exact route-private bone-surface terminals. After
+the lower-limb source-mesh registration, its complete payload is 558 envelopes
+and 274 point laws. Maximum endpoint migration is `17.262 mm`; deterministic
 reference calibration reduces default-pose source-oracle errors to
 `2.556e-8 m` and `4.894e-4 N`. The changed source-versus-resolved generalized
-force is retained as the intended moment-arm correction. See the
-[fixed-bone foot record](Docs/FIXED_BONE_FOOT_ENTHESES_V1.md).
+[lower-limb source registration](Docs/LOWER_LIMB_SOURCE_REGISTRATION_V2.md)
+and the historical [fixed-bone foot record](Docs/FIXED_BONE_FOOT_ENTHESES_V1.md).
 
 The earlier whole-calcaneus transform experiment remains rejected: it would
 have moved Achilles terminals by about 49 mm and changed default muscle force

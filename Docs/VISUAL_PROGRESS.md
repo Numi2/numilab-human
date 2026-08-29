@@ -138,6 +138,31 @@ subsequent semantic-limb increment raises literal surface admission to 266;
 for all eight bilateral four-angle sets, exact manifests, mechanics counters,
 and evidence boundaries.
 
+## Lower-limb source meshes, connected toes, and flexion — 2026-08-29
+
+<p align="center">
+  <img src="media/numi-human-lower-limb-source-registration-v2-2048/neutral/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-136-oblique.png" width="24%" alt="Source-registered right knee and foot, neutral oblique" />
+  <img src="media/numi-human-lower-limb-source-registration-v2-2048/neutral/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-150-side.png" width="24%" alt="Source-registered left knee and foot, neutral side" />
+  <img src="media/numi-human-lower-limb-source-registration-v2-2048/flexed/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-posed-focus-body-136-side.png" width="24%" alt="Source-registered right knee at 0.75 rad flexion" />
+  <img src="media/numi-human-lower-limb-source-registration-v2-2048/flexed/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-posed-focus-body-150-oblique.png" width="24%" alt="Source-registered left knee at 0.75 rad flexion" />
+</p>
+
+Ten bilateral femur-to-patella/tibia and ankle/rigid-foot segments now receive
+one proper-rigid correction selected against pinned compiled MyoSim meshes.
+The patella selector rejects near-symmetric 179 degree flips. Each complete
+toe compound inherits the foot correction plus one bounded 6.5 mm distal
+registration refinement, with no digit split or new joint. All 40 knee-to-toe
+continuity gaps remain below 3.876 mm.
+
+The paired NHTENDON3 program executes all 832 endpoint laws, including all 18
+named foot/hallux surface migrations, on Apple M4 Pro. Neutral frames include
+the force-transfer envelopes; flexed frames apply a bounded source coordinate
+override and exact NHEQ1 dependent-coordinate projection. The latter is
+multi-pose kinematic evidence, not loaded-contact or gait evidence. See the
+[lower-limb source-registration record](LOWER_LIMB_SOURCE_REGISTRATION_V2.md),
+[capture transcript](media/numi-human-lower-limb-source-registration-v2-2048/capture.transcript.txt),
+and [checksums](media/numi-human-lower-limb-source-registration-v2-2048/checksums.sha256).
+
 ## Deformable pectoralis fascia and axial continuity — 2026-08-29
 
 <p align="center">

@@ -1,0 +1,37 @@
+device=Apple M4 Pro
+runtime_commit=7ebd89c2575da093895f9c77f0e8339ff08dffab
+frame_dimension=2048
+cameras=front,oblique,side,rear
+
+neutral_right_focus_body=136
+neutral_left_focus_body=150
+neutral_program=NHBONES1+NHTENDON3+selected source route centrelines and attachment envelopes
+
+flex_right_q_index=106
+flex_left_q_index=120
+flex_coordinate_value_rad=0.75
+flex_joint_equality_records=51
+flex_maximum_equality_projection=0.452992
+flex_program=NHBONES1+NHMYO2 source route centrelines+NHEQ1 kinematic projection
+flex_boundary=explicit kinematic source coordinate override; not dynamics or loaded contact validation
+
+NHBONES1_sha256=a71f4f279271d9beb7cd16e94ad26b1d0c1aa58a7b54d0bab8b7d9d0a9e48859
+NHTENDON3_sha256=1ed8afe267d5b1b772740c3ba77404f941d51daf5cf470d74682639230482cc7
+NHMYO2_sha256=9a988f19a6fd8e533cd0f2bf3192cb8535fb008ccd394ffbf1a4432d3db76a05
+
+reference_probe=PASS
+compiler_registration_replay_byte_identical=true
+compiler_NHBONES1_replay_byte_identical=true
+compiler_NHTENDON3_replay_byte_identical=true
+tendon_endpoints=832
+tendon_envelope_bindings=558
+tendon_point_bindings=274
+tendon_migrated_envelope_bindings=18
+tendon_max_endpoint_migration_m=0.0172616485506
+tendon_max_reference_path_delta_m=0.0105485618734
+tendon_max_architecture_scale_change=0.0490799673216
+metal_tendon_max_nodal_force_parity_error_n=0.000119713749541
+metal_tendon_max_force_residual_n=0.000244140625
+metal_tendon_max_moment_residual_nm=0.00000812571124698
+metal_tendon_replay_byte_identical=true
+equilibrium_balanced=false

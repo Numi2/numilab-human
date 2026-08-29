@@ -7449,6 +7449,7 @@ def numi_human_tendon_attachment_envelope_payload(
     maximum_patch_radius_m: float = 0.012,
     maximum_force_amplification: float = 4.0,
     migrate_semantic_rigid_foot_endpoints: bool = False,
+    maximum_migrated_endpoint_distance_m: float = 0.025,
 ) -> dict[str, Any]:
     """Compile fail-closed BodyParts3D enthesis force-transfer laws.
 
@@ -7469,6 +7470,7 @@ def numi_human_tendon_attachment_envelope_payload(
         (maximum_surface_distance_m, "maximum surface distance"),
         (maximum_patch_radius_m, "maximum patch radius"),
         (maximum_force_amplification, "maximum force amplification"),
+        (maximum_migrated_endpoint_distance_m, "maximum migrated endpoint distance"),
     ):
         if not math.isfinite(value) or value <= 0.0:
             raise ImportError(f"Numi Human tendon envelope {label} must be finite and positive")
@@ -7582,9 +7584,13 @@ def numi_human_tendon_attachment_envelope_payload(
                 elif any(surface["body_index"] != body_index for surface in semantic_surfaces):
                     reason = "semantic_enthesis_map_body_mismatch"
                 else:
+                    semantic_maximum_distance = (
+                        maximum_migrated_endpoint_distance_m
+                        if migrate_endpoint else maximum_surface_distance_m
+                    )
                     envelope, reason = _numi_human_semantic_enthesis_envelope(
                         source_point, semantic_surfaces, semantic_members,
-                        maximum_surface_distance_m, maximum_patch_radius_m,
+                        semantic_maximum_distance, maximum_patch_radius_m,
                         maximum_force_amplification,
                         _numi_human_semantic_enthesis_kind(
                             semantic_key, len(semantic_members),
@@ -7748,6 +7754,10 @@ def numi_human_tendon_attachment_envelope_payload(
                 "or_explicit_same_body_semantic_member_map_minimum_L2_wrench_distribution"
             ),
             "maximum_surface_distance_m": maximum_surface_distance_m,
+            **({
+                "maximum_migrated_endpoint_distance_m":
+                    maximum_migrated_endpoint_distance_m,
+            } if migrate_semantic_rigid_foot_endpoints else {}),
             "maximum_patch_radius_m": maximum_patch_radius_m,
             "maximum_sampled_total_force_amplification": maximum_force_amplification,
             "route_private_surface_migration": migrate_semantic_rigid_foot_endpoints,

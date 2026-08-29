@@ -737,6 +737,9 @@ class ImporterTests(unittest.TestCase):
                 manifest["coverage"]["registered_bone_distributed_envelope_count"], 2,
             )
             self.assertEqual(manifest["coverage"]["maximum_endpoint_migration_m"], 0.0)
+            self.assertNotIn(
+                "maximum_migrated_endpoint_distance_m", manifest["admission"],
+            )
             payload = (directory / "output" / manifest["payload"]["file"]).read_bytes()
             header = struct.unpack_from("<8s10I32s32s32s", payload)
             self.assertEqual((header[0], header[1], header[5], header[6]), (b"NHTEND2\0", 2, 2, 2))
@@ -795,6 +798,13 @@ class ImporterTests(unittest.TestCase):
             )
             self.assertEqual(manifest["payload"]["magic"], "NHTENDON3")
             self.assertEqual(manifest["payload"]["payload_abi"], 3)
+            self.assertEqual(
+                manifest["admission"]["maximum_surface_distance_m"], 0.012,
+            )
+            self.assertEqual(
+                manifest["admission"]["maximum_migrated_endpoint_distance_m"],
+                0.025,
+            )
             self.assertEqual(
                 manifest["coverage"]["registered_bone_migrated_distributed_envelope_count"],
                 1,

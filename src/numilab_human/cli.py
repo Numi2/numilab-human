@@ -390,6 +390,40 @@ def myosim_lower_limb_registration(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def myosim_lower_limb_source_registration(arguments: argparse.Namespace) -> int:
+    exporter = arguments.python.expanduser().absolute()
+    if not exporter.is_file() or not os.access(exporter, os.X_OK):
+        raise ImportError(f"MyoSim lower-limb registration Python is unavailable: {exporter}")
+    output = arguments.output.resolve()
+    environment = dict(os.environ)
+    source_path = str(REPOSITORY_ROOT / "src")
+    environment["PYTHONPATH"] = source_path + (
+        os.pathsep + environment["PYTHONPATH"] if environment.get("PYTHONPATH") else ""
+    )
+    command = [
+        str(exporter), "-m", "numilab_human.lower_limb_source_registration",
+        "--sources", str(arguments.sources.resolve()),
+        "--registration", str(arguments.registration.resolve()),
+        "--tendon-manifest", str(arguments.tendon_manifest.resolve()),
+        "--output", str(output),
+    ]
+    completed = subprocess.run(command, capture_output=True, text=True, check=False, env=environment)
+    if completed.returncode != 0:
+        detail = completed.stderr.strip() or completed.stdout.strip() or "no registration output"
+        raise ImportError(f"MyoSim lower-limb source registration failed: {detail}")
+    candidate = read_json(output)
+    receipt = candidate.get("lower_limb_source_mesh_registration")
+    if (
+        candidate.get("schema") != "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2"
+        or not isinstance(receipt, dict)
+        or receipt.get("schema")
+        != "numi.human.bodyparts3d-myosim-lower-limb-source-mesh-registration.v2"
+    ):
+        raise ImportError("MyoSim lower-limb source registration wrote an unsupported schema")
+    print(f"wrote {output}")
+    return 0
+
+
 def myosim_probe(arguments: argparse.Namespace) -> int:
     artifact = arguments.artifact.resolve()
     manifest = read_json(artifact / "myosim-fullbody-reference.manifest.json")
@@ -866,6 +900,7 @@ def numi_human_tendon_envelope_payload(arguments: argparse.Namespace) -> int:
         arguments.output.resolve(), arguments.maximum_surface_distance,
         arguments.maximum_patch_radius, arguments.maximum_force_amplification,
         arguments.migrate_semantic_rigid_foot_endpoints,
+        arguments.maximum_migrated_endpoint_distance,
     )
     print(f"wrote {arguments.output.resolve() / manifest['payload']['file']}")
     print(f"wrote {arguments.output.resolve() / 'numi-human-tendon-attachments.manifest.json'}")
@@ -1050,6 +1085,21 @@ def parser() -> argparse.ArgumentParser:
     lower_limb_registration_parser.add_argument("--rigid-foot-base", type=Path, required=True)
     lower_limb_registration_parser.add_argument("--output", type=Path, required=True)
     lower_limb_registration_parser.set_defaults(handler=myosim_lower_limb_registration)
+    lower_limb_source_registration_parser = commands.add_parser(
+        "myosim-lower-limb-source-mesh-registration",
+        help="propose bilateral source-mesh-constrained BodyParts3D lower-limb registration",
+    )
+    lower_limb_source_registration_parser.add_argument("--sources", type=Path, required=True)
+    lower_limb_source_registration_parser.add_argument("--registration", type=Path, required=True)
+    lower_limb_source_registration_parser.add_argument("--tendon-manifest", type=Path, required=True)
+    lower_limb_source_registration_parser.add_argument("--output", type=Path, required=True)
+    lower_limb_source_registration_parser.add_argument(
+        "--python", type=Path, default=Path(sys.executable),
+        help="Python environment with the pinned myo-sim checkout, NumPy, and MuJoCo installed",
+    )
+    lower_limb_source_registration_parser.set_defaults(
+        handler=myosim_lower_limb_source_registration
+    )
     myosim_probe_parser = commands.add_parser(
         "myosim-probe",
         help="run the native Core full-body muscle-reference probe against a compiled MyoSim artifact",
@@ -1147,6 +1197,14 @@ def parser() -> argparse.ArgumentParser:
     tendon_envelope_parser.add_argument(
         "--maximum-surface-distance", type=float, default=0.012,
         help="maximum exact source-point to registered bone-surface distance in metres (default: 0.012)",
+    )
+    tendon_envelope_parser.add_argument(
+        "--maximum-migrated-endpoint-distance", type=float, default=0.025,
+        help=(
+            "maximum source-site to named-bone distance for only the 18 explicit "
+            "NHTENDON3 migrations (default: 0.025); ordinary admission remains at "
+            "--maximum-surface-distance"
+        ),
     )
     tendon_envelope_parser.add_argument(
         "--maximum-patch-radius", type=float, default=0.012,
