@@ -10,7 +10,9 @@ command_directory=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
 repository_root=$(CDPATH= cd -- "$command_directory/../.." && pwd -P)
 
 # Resolve a source body to the exact MyoSim actuator rows whose compiled routes
-# cross it, then hand those rows to the native Apple Metal visual probe. Python
+# cross it, then add the requested activation to those rows over the compiled
+# full-body posture baseline. The native Apple Metal runtime evaluates all 416
+# routes and publishes all NHTENDON2 endpoint loads transactionally. Python
 # performs only this launch-time provenance lookup; it is replaced by exec and
 # never participates in stepping or force evaluation.
 if [ "${1:-}" = "control-list" ]; then
@@ -29,11 +31,11 @@ fi
 
 if [ "${1:-}" = "control" ]; then
     if [ "${2:-}" = "--help" ] || [ "${2:-}" = "-h" ]; then
-        printf '%s\n' "usage: numi human control <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <bodyparts3d-myosim-soft-tissue.nhtissue> <NHTENDON2-attachments.nhtendon> <output-directory> <part-name> [--activation <0..0.2>] [--steps <1..64>] [--timestep <1e-6..1e-3>] [--dimension <512..2048>] [--mechanics-overlay]"
+        printf '%s\n' "usage: numi human control <NHEQ1-artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <bodyparts3d-myosim-soft-tissue.nhtissue> <NHTENDON2-attachments.nhtendon> <output-directory> <part-name> [--activation <increment-0..0.2>] [--steps <1..64>] [--timestep <1e-6..1e-3>] [--dimension <512..2048>] [--mechanics-overlay]"
         exit 0
     fi
     if [ "$#" -lt 7 ]; then
-        printf '%s\n' "usage: numi human control <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <bodyparts3d-myosim-soft-tissue.nhtissue> <NHTENDON2-attachments.nhtendon> <output-directory> <part-name> [--activation <0..0.2>] [--steps <1..64>] [--timestep <1e-6..1e-3>] [--dimension <512..2048>] [--mechanics-overlay]" >&2
+        printf '%s\n' "usage: numi human control <NHEQ1-artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <bodyparts3d-myosim-soft-tissue.nhtissue> <NHTENDON2-attachments.nhtendon> <output-directory> <part-name> [--activation <increment-0..0.2>] [--steps <1..64>] [--timestep <1e-6..1e-3>] [--dimension <512..2048>] [--mechanics-overlay]" >&2
         exit 2
     fi
     artifact_directory=$2
@@ -123,9 +125,12 @@ if [ "${1:-}" = "control" ]; then
         "$bone_payload" "$output_directory" \
         --soft-tissue-payload "$soft_tissue_payload" \
         --tendon-payload "$tendon_payload" \
+        --support-contact-payload "$artifact_directory/myosim-fullbody-support-contact.nhcnt" \
+        --joint-equality-payload "$artifact_directory/myosim-fullbody-joint-equalities.nheq" \
         --muscle-step-seconds "$timestep" \
         --muscle-step-count "$steps" \
         --muscle-activation "$activation" \
+        --selected-tendon-control \
         --focus-body-index "$focus_body_index" \
         --dimension "$dimension"
     if [ "$mechanics_overlay" = true ]; then

@@ -1110,6 +1110,17 @@ class ImporterTests(unittest.TestCase):
             "Build NumiLab Human artifacts; run source-derived body-part controls, native full-body references, persistent muscle-driven standing, and four-angle visual validation.\n",
         )
 
+    def test_numi_workspace_part_control_uses_transactional_tendon_runtime(self) -> None:
+        command = (ROOT / ".numi/commands/human").read_text(encoding="utf-8")
+        control = command.split(
+            'if [ "${1:-}" = "control" ]; then', 1,
+        )[1].split("# Canonical Numi Human v1 standing transaction", 1)[0]
+        self.assertIn("--selected-tendon-control", control)
+        self.assertIn("--support-contact-payload", control)
+        self.assertIn("--joint-equality-payload", control)
+        self.assertIn("--tendon-payload", control)
+        self.assertIn("--activated-source-muscle-index", control)
+
     def test_numi_workspace_native_visual_command_rejects_missing_paths_before_python(self) -> None:
         command = ROOT / ".numi/commands/human"
         result = run(

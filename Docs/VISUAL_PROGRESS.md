@@ -1,22 +1,25 @@
 # NumiLab Human visual progress
 
-## Source-derived body-part control — 2026-08-29
+## Transactional body-part control — 2026-08-29
 
 <p align="center">
-  <img src="media/numi-human-part-control-v1-2048/toes_l/front.png" width="24%" alt="Left toe selective muscle control, front" />
-  <img src="media/numi-human-part-control-v1-2048/toes_l/oblique.png" width="24%" alt="Left toe selective muscle control, oblique" />
-  <img src="media/numi-human-part-control-v1-2048/toes_l/side.png" width="24%" alt="Left toe selective muscle control, side" />
-  <img src="media/numi-human-part-control-v1-2048/toes_l/rear.png" width="24%" alt="Left toe selective muscle control, rear" />
+  <img src="media/numi-human-part-control-v2-transactional-2048/toes_l/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-153-front.png" width="24%" alt="Transactional left-toe control, front" />
+  <img src="media/numi-human-part-control-v2-transactional-2048/toes_l/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-153-oblique.png" width="24%" alt="Transactional left-toe control, oblique" />
+  <img src="media/numi-human-part-control-v2-transactional-2048/toes_l/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-153-side.png" width="24%" alt="Transactional left-toe control, side" />
+  <img src="media/numi-human-part-control-v2-transactional-2048/toes_l/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-source-route-centrelines-tendon-attachment-envelopes-focus-body-153-rear.png" width="24%" alt="Transactional left-toe control, rear" />
 </p>
 
 The exact source-route catalog now makes every route-controllable Core body a
 named diagnostic target. The left-toes check resolves only EDL, EHL, FDL, and
 FHL, while the compiler verifies all five co-rigid toe chains on both sides
 and rejects a hallux/lesser-toe identity shift. A second four-angle left
-humerus run validates the same selection path outside the foot. Both ran at
-2048 px on Apple M4 Pro; see the [part-control record](PART_CONTROL_V1.md) and
-retained transcripts. This is bounded source-muscle coactivation, not learned
-movement control or independent toe articulation.
+humerus run validates the same selection path outside the foot. Both now run
+through the accepted/rollback-safe per-step `NHTENDON2` transaction, publish
+13,312 endpoint loads over 16 steps, compare against a matched zero-increment
+baseline, and replay bitwise on Apple M4 Pro. See the
+[transactional part-control record](PART_CONTROL_V2.md). This is bounded
+source-muscle coactivation and tendon force-transfer evidence, not learned
+movement control, deformable tissue, or independent toe articulation.
 
 ## Hallux insertion continuity — 2026-08-29
 

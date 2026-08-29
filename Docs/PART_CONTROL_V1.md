@@ -15,10 +15,10 @@ muscles. For example, `toes_l` resolves exactly to actuator rows 384--387:
 incident routes. Unknown names and drifted payload hashes fail before launch.
 
 ```sh
-numi human control-list Build/myosim-fullbody
+numi human control-list Build/nheq1
 
 numi human control \
-  Build/myosim-fullbody \
+  Build/nheq1 \
   Build/bodyparts3d-myosim-major-bones/bodyparts3d-myosim-major-bones.nhbones \
   Build/bodyparts3d-myosim-fullbody-muscle-surfaces/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue \
   Build/numi-human-tendon-v5/numi-human-tendon-attachments.nhtendon \
@@ -26,10 +26,10 @@ numi human control \
   --activation 0.2 --steps 16 --mechanics-overlay
 ```
 
-The command caps diagnostic activation at 0.2. Python performs only the
-source-identity lookup at launch; `exec` replaces it with the native visual
-probe, so stepping, force evaluation, dynamics, and rendering remain in the
-Core/Metal path.
+The command caps the diagnostic activation increment at 0.2. Python performs
+only the source-identity lookup at launch; `exec` replaces it with the native
+visual probe, so stepping, force evaluation, dynamics, and rendering remain in
+the Core/Metal path.
 
 ## Bilateral toe topology gate
 
@@ -80,9 +80,9 @@ Selecting all muscles incident to one body can include antagonists. It is the
 exact, inspectable actuator-selection foundation on which body-part-specific
 controllers can be developed without corrupting source anatomy.
 
-These focused captures report `tendon_step_transaction=none`: they load and
-draw the `NHTENDON2` attachment program but do not publish it to the borrowed
-per-step deformable consumer. The existing persistent `numi human stand` path
-remains the qualified tendon force-transfer law. Moving arbitrary selected
-part activation through that same accepted/rollback-safe transaction is a
-separate control-runtime gate and is not implied by these images.
+These historical v1 captures report `tendon_step_transaction=none`: they load
+and draw the `NHTENDON2` attachment program but do not publish it to the
+borrowed per-step consumer. That control-runtime limitation is superseded by
+[part control v2](PART_CONTROL_V2.md), which carries selected activation through
+the accepted/rollback-safe NHTENDON2 transaction. The images above remain v1
+selection and toe-topology evidence only.
