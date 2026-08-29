@@ -3826,6 +3826,17 @@ def bodyparts_myosim_attachment_surface_registration_candidate(
             raise ImportError("BodyParts3D attachment registration has an invalid body index")
         anchors_by_body[body_index].append(anchor)
 
+    # Retain the coherent BodyParts3D common-frame centroid relationships
+    # before any per-body attachment refinement. They provide an anatomical
+    # chain constraint for unsupported distal segments (especially thumbs)
+    # after a neighbouring bone has been anchored by exact source sites.
+    common_frame_centroid_by_name = {
+        body_anchors[0]["target"]["name"]: list(
+            body_anchors[0]["registration"]["default_pose_vertex_centroid_world_m"]
+        )
+        for body_anchors in anchors_by_body.values()
+    }
+
     summary: list[dict[str, Any]] = []
     for body_index, body_anchors in sorted(anchors_by_body.items()):
         target = body_anchors[0]["target"]
@@ -3968,25 +3979,35 @@ def bodyparts_myosim_attachment_surface_registration_candidate(
     # orientation are preserved; only the unsupported translation is inferred.
     # This is deliberately narrower than a global nearest-body fallback.
     hand_centroid_donors = {
-        "scaphoid_r": "lunate_r", "triquetrum_r": "lunate_r",
-        "pisiform_r": "lunate_r", "trapezium_r": "capitate_r",
-        "trapezoid_r": "capitate_r", "hamate_r": "capitate_r",
-        "proximal_thumb_r": "2proxph_r", "distal_thumb_r": "distph2_r",
-        "distph3_r": "distph2_r", "distph4_r": "distph2_r",
-        "distph5_r": "distph2_r",
-        "scaphoid_l": "lunate_l", "triquetrum_l": "lunate_l",
-        "pisiform_l": "lunate_l", "trapezium_l": "capitate_l",
-        "trapezoid_l": "capitate_l", "hamate_l": "capitate_l",
-        "proximal_thumb_l": "2proxph_l", "distal_thumb_l": "distph2_l",
-        "distph3_l": "distph2_l", "distph4_l": "distph2_l",
-        "distph5_l": "distph2_l",
+        "scaphoid_r": ("lunate_r", "body_local_centroid_offset"),
+        "triquetrum_r": ("lunate_r", "body_local_centroid_offset"),
+        "pisiform_r": ("lunate_r", "body_local_centroid_offset"),
+        "trapezium_r": ("capitate_r", "body_local_centroid_offset"),
+        "trapezoid_r": ("capitate_r", "body_local_centroid_offset"),
+        "hamate_r": ("capitate_r", "body_local_centroid_offset"),
+        "proximal_thumb_r": ("firstmc_r", "source_chain_displacement"),
+        "distal_thumb_r": ("proximal_thumb_r", "source_chain_displacement"),
+        "distph3_r": ("midph3_r", "source_chain_displacement"),
+        "distph4_r": ("midph4_r", "source_chain_displacement"),
+        "distph5_r": ("midph5_r", "source_chain_displacement"),
+        "scaphoid_l": ("lunate_l", "body_local_centroid_offset"),
+        "triquetrum_l": ("lunate_l", "body_local_centroid_offset"),
+        "pisiform_l": ("lunate_l", "body_local_centroid_offset"),
+        "trapezium_l": ("capitate_l", "body_local_centroid_offset"),
+        "trapezoid_l": ("capitate_l", "body_local_centroid_offset"),
+        "hamate_l": ("capitate_l", "body_local_centroid_offset"),
+        "proximal_thumb_l": ("firstmc_l", "source_chain_displacement"),
+        "distal_thumb_l": ("proximal_thumb_l", "source_chain_displacement"),
+        "distph3_l": ("midph3_l", "source_chain_displacement"),
+        "distph4_l": ("midph4_l", "source_chain_displacement"),
+        "distph5_l": ("midph5_l", "source_chain_displacement"),
     }
     anchors_by_name = {
         body_anchors[0]["target"]["name"]: body_anchors
         for body_anchors in anchors_by_body.values()
     }
     summary_by_name = {record["myosim_body"]: record for record in summary}
-    for target_name, donor_name in hand_centroid_donors.items():
+    for target_name, (donor_name, fallback_method) in hand_centroid_donors.items():
         target_anchors = anchors_by_name.get(target_name)
         donor_anchors = anchors_by_name.get(donor_name)
         if not target_anchors or not donor_anchors:
@@ -4001,31 +4022,55 @@ def bodyparts_myosim_attachment_surface_registration_candidate(
         ]
         if target_diagnostics["applied"]:
             continue
-        if not donor_diagnostics["applied"]:
+        donor_fallback = donor_anchors[0]["registration"].get(
+            "kinematic_neighbor_centroid_fallback"
+        )
+        donor_supported = donor_diagnostics["applied"] or (
+            fallback_method == "source_chain_displacement"
+            and isinstance(donor_fallback, dict)
+            and donor_fallback.get("applied") is True
+        )
+        if not donor_supported:
             raise ImportError(
-                f"BodyParts3D hand centroid donor {donor_name} was not attachment-refined"
+                f"BodyParts3D hand centroid donor {donor_name} was not geometrically anchored"
             )
         donor = donor_anchors[0]
         donor_target = donor["target"]
         donor_registration = donor["registration"]
-        donor_rotation = _myosim_matrix_from_quaternion_xyzw(
-            donor_target["default_inertial_quaternion_world_xyzw"]
-        )
-        donor_world_offset = _myosim_subtract(
-            donor_registration["default_pose_vertex_centroid_world_m"],
-            donor_target["default_com_position_world_m"],
-        )
-        donor_local_offset = _myosim_matrix_vector(
-            _matrix_transpose(donor_rotation), donor_world_offset
-        )
         target = target_anchors[0]["target"]
         target_rotation = _myosim_matrix_from_quaternion_xyzw(
             target["default_inertial_quaternion_world_xyzw"]
         )
-        desired_world_centroid = _myosim_add(
-            target["default_com_position_world_m"],
-            _myosim_matrix_vector(target_rotation, donor_local_offset),
-        )
+        if fallback_method == "source_chain_displacement":
+            desired_world_centroid = _myosim_add(
+                donor_registration["default_pose_vertex_centroid_world_m"],
+                _myosim_subtract(
+                    common_frame_centroid_by_name[target_name],
+                    common_frame_centroid_by_name[donor_name],
+                ),
+            )
+            method_description = (
+                "same_side_attachment_refined_parent_plus_exact_"
+                "bodyparts3d_common_frame_chain_displacement"
+            )
+        else:
+            donor_rotation = _myosim_matrix_from_quaternion_xyzw(
+                donor_target["default_inertial_quaternion_world_xyzw"]
+            )
+            donor_world_offset = _myosim_subtract(
+                donor_registration["default_pose_vertex_centroid_world_m"],
+                donor_target["default_com_position_world_m"],
+            )
+            donor_local_offset = _myosim_matrix_vector(
+                _matrix_transpose(donor_rotation), donor_world_offset
+            )
+            desired_world_centroid = _myosim_add(
+                target["default_com_position_world_m"],
+                _myosim_matrix_vector(target_rotation, donor_local_offset),
+            )
+            method_description = (
+                "same_side_same_class_attachment_refined_body_local_centroid_offset"
+            )
         current_world_centroid = target_anchors[0]["registration"][
             "default_pose_vertex_centroid_world_m"
         ]
@@ -4047,9 +4092,7 @@ def bodyparts_myosim_attachment_surface_registration_candidate(
                 "inferred_visual_kinematic_neighbor_centroid_fallback"
             )
             registration["kinematic_neighbor_centroid_fallback"] = {
-                "method": (
-                    "same_side_same_class_attachment_refined_body_local_centroid_offset"
-                ),
+                "method": method_description,
                 "donor_myosim_body": donor_name,
                 "donor_core_body_index": donor_target["core_body_index"],
                 "translation_delta_core_body_m": local_delta,
