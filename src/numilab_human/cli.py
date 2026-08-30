@@ -27,6 +27,7 @@ from .model import (
     bodyparts_myosim_skinned_shell_visual_payload,
     bodyparts_myosim_right_posterior_chain_visual_payload,
     bodyparts_pectoralis_fascia_payload,
+    bodyparts_costal_cartilage_payload,
     anterior_thorax_composite_payload,
     bodyparts_myosim_attachment_surface_registration_candidate,
     bodyparts_myosim_registration_candidate,
@@ -1123,6 +1124,16 @@ def numi_human_pectoralis_fascia_payload(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def numi_human_costal_cartilage_payload(arguments: argparse.Namespace) -> int:
+    manifest = bodyparts_costal_cartilage_payload(
+        arguments.sources.resolve(), arguments.output.resolve(),
+        arguments.maximum_volume_error, arguments.attachment_distance,
+    )
+    print(f"wrote {arguments.output.resolve() / manifest['payload']['file']}")
+    print(f"wrote {arguments.output.resolve() / 'bodyparts3d-costal-cartilage.manifest.json'}")
+    return 0
+
+
 def numi_human_anterior_thorax_payload(arguments: argparse.Namespace) -> int:
     manifest = anterior_thorax_composite_payload(
         arguments.registration.resolve(), arguments.tendon_artifact.resolve(),
@@ -1542,6 +1553,21 @@ def parser() -> argparse.ArgumentParser:
         help="bounded share of named pectoralis terminal force applied to fascia (default: 0.10)",
     )
     pectoralis_fascia_parser.set_defaults(handler=numi_human_pectoralis_fascia_payload)
+    costal_cartilage_parser = commands.add_parser(
+        "numi-human-costal-cartilage-payload",
+        help="compile fourteen exact BodyParts3D costal-cartilage shells into deterministic FEM volumes",
+    )
+    costal_cartilage_parser.add_argument("--sources", type=Path, required=True)
+    costal_cartilage_parser.add_argument("--output", type=Path, required=True)
+    costal_cartilage_parser.add_argument(
+        "--maximum-volume-error", type=float, default=0.03,
+        help="maximum voxel-to-exact closed-surface relative volume error (default: 0.03)",
+    )
+    costal_cartilage_parser.add_argument(
+        "--attachment-distance", type=float, default=0.004,
+        help="exact source-vertex distance for named rib/sternal attachment bands in metres (default: 0.004)",
+    )
+    costal_cartilage_parser.set_defaults(handler=numi_human_costal_cartilage_payload)
     anterior_thorax_parser = commands.add_parser(
         "numi-human-anterior-thorax-continuum-payload",
         help="compile exact pinned anterior-thorax closed surfaces into a deterministic FEM volume",

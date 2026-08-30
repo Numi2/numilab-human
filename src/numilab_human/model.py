@@ -12012,6 +12012,30 @@ _NUMI_HUMAN_ANTERIOR_THORAX_MAGIC = b"NHTHRC1\0"
 _NUMI_HUMAN_ANTERIOR_THORAX_ABI = 1
 _NUMI_HUMAN_ANTERIOR_THORAX_COMPONENT_SPACING_M = {1: 0.0025}
 
+_NUMI_HUMAN_COSTAL_CARTILAGE_MAGIC = b"NHCART1\0"
+_NUMI_HUMAN_COSTAL_CARTILAGE_ABI = 1
+_NUMI_HUMAN_COSTAL_CARTILAGE_DENSITY_KG_M3 = 1100.0
+_NUMI_HUMAN_COSTAL_CARTILAGE_MEMBERS = (
+    ("FJ3239", "left first costal cartilage", "l", 1, "FJ3228", 0.0025),
+    ("FJ3242", "left second costal cartilage", "l", 2, "FJ3229", 0.0025),
+    ("FJ3245", "left third costal cartilage", "l", 3, "FJ3230", 0.0020),
+    ("FJ3248", "left fourth costal cartilage", "l", 4, "FJ3231", 0.0025),
+    ("FJ3251", "left fifth costal cartilage", "l", 5, "FJ3232", 0.0025),
+    ("FJ3254", "left sixth costal cartilage", "l", 6, "FJ3233", 0.0020),
+    ("FJ3255", "left seventh costal cartilage", "l", 7, "FJ3234", 0.0025),
+    ("FJ3333", "right first costal cartilage", "r", 1, "FJ3334", 0.0025),
+    ("FJ3335", "right second costal cartilage", "r", 2, "FJ3336", 0.0025),
+    ("FJ3337", "right third costal cartilage", "r", 3, "FJ3338", 0.0020),
+    ("FJ3339", "right fourth costal cartilage", "r", 4, "FJ3340", 0.0025),
+    ("FJ3341", "right fifth costal cartilage", "r", 5, "FJ3342", 0.0025),
+    ("FJ3343", "right sixth costal cartilage", "r", 6, "FJ3344", 0.0020),
+    # The right seventh source shell is connected only at the coarser exact
+    # atlas sampling.  A finer grid splits its narrow native bridge, so this
+    # member deliberately uses 3 mm while retaining the same volume gate.
+    ("FJ3345", "right seventh costal cartilage", "r", 7, "FJ3346", 0.0030),
+)
+_NUMI_HUMAN_STERNAL_ATTACHMENT_MEMBERS = ("FJ3290", "FJ3178")
+
 
 def _closed_surface_volume(
     vertices: list[tuple[float, float, float]],
@@ -12151,6 +12175,347 @@ def _nearest_four_node_map(
         tuple(weights),
         error,
     )
+
+
+def _point_cloud_radius_membership(
+    points: list[tuple[float, float, float]],
+    target: list[tuple[float, float, float]],
+    radius_m: float,
+) -> tuple[list[bool], float]:
+    """Return bounded source-vertex proximity without an optional KD-tree.
+
+    This is an attachment-band classifier, not a replacement for cartilage
+    contact distance.  The grid makes the exact 4 mm source-vertex query cheap
+    enough for the provenance compiler while retaining deterministic ordering.
+    """
+    if not target or not math.isfinite(radius_m) or radius_m <= 0.0:
+        raise ImportError("costal-cartilage attachment query is invalid")
+    buckets: dict[tuple[int, int, int], list[tuple[float, float, float]]] = {}
+    for point in target:
+        key = tuple(math.floor(value / radius_m) for value in point)
+        buckets.setdefault(key, []).append(point)
+    radius_squared = radius_m * radius_m
+    flags: list[bool] = []
+    minimum_distance_squared = math.inf
+    for point in points:
+        key = tuple(math.floor(value / radius_m) for value in point)
+        nearest = math.inf
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                for dz in (-1, 0, 1):
+                    for candidate in buckets.get(
+                        (key[0] + dx, key[1] + dy, key[2] + dz), ()
+                    ):
+                        squared = sum(
+                            (point[axis] - candidate[axis]) ** 2
+                            for axis in range(3)
+                        )
+                        nearest = min(nearest, squared)
+        flags.append(nearest <= radius_squared)
+        minimum_distance_squared = min(minimum_distance_squared, nearest)
+    return flags, math.sqrt(minimum_distance_squared)
+
+
+def bodyparts_costal_cartilage_payload(
+    sources: Path,
+    output: Path,
+    maximum_volume_error_fraction: float = 0.03,
+    attachment_distance_m: float = 0.004,
+) -> dict[str, Any]:
+    """Compile fourteen exact BodyParts3D costal-cartilage shells to FEM.
+
+    The exact source shells own geometry.  Deterministic voxel tetrahedra and
+    source-bone proximity bands are mechanics derivations.  The payload does
+    not take production force ownership until a runtime binds both bands to
+    their named articulated rib/sternal bodies and returns equal-and-opposite
+    accepted reactions.
+    """
+    if (
+        not math.isfinite(maximum_volume_error_fraction)
+        or not 0.0 < maximum_volume_error_fraction <= 0.05
+    ):
+        raise ImportError("costal-cartilage maximum volume error must be in (0, 0.05]")
+    if (
+        not math.isfinite(attachment_distance_m)
+        or not 0.002 <= attachment_distance_m <= 0.006
+    ):
+        raise ImportError("costal-cartilage attachment distance must be in [2, 6] mm")
+    sources = sources.resolve()
+    archive_path = sources / "partof_BP3D_4.0_obj_99.zip"
+    if not archive_path.is_file():
+        raise ImportError("BodyParts3D part-of OBJ archive is unavailable")
+
+    def source_vertices(member_id: str) -> tuple[
+        list[tuple[float, float, float]], int, str, str
+    ]:
+        _, member, obj = _bodyparts_obj_member(sources, "is_a", member_id)
+        vertices_mm, triangles = _bodyparts_obj_triangles(obj, member)
+        return (
+            [tuple(value * 0.001 for value in point) for point in vertices_mm],
+            len(triangles), member, hashlib.sha256(obj).hexdigest(),
+        )
+
+    sternum_vertices: list[tuple[float, float, float]] = []
+    sternal_sources: list[dict[str, Any]] = []
+    for member_id in _NUMI_HUMAN_STERNAL_ATTACHMENT_MEMBERS:
+        vertices, triangle_count, member, digest = source_vertices(member_id)
+        sternum_vertices.extend(vertices)
+        sternal_sources.append({
+            "member_id": member_id,
+            "member": member,
+            "obj_sha256": digest,
+            "vertex_count": len(vertices),
+            "triangle_count": triangle_count,
+        })
+
+    cube_corners = (
+        (0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0),
+        (0, 0, 1), (1, 0, 1), (0, 1, 1), (1, 1, 1),
+    )
+    cube_tetrahedra = (
+        (0, 1, 3, 7), (0, 3, 2, 7), (0, 2, 6, 7),
+        (0, 6, 4, 7), (0, 4, 5, 7), (0, 5, 1, 7),
+    )
+    nodes: list[tuple[float, float, float]] = []
+    node_flags: list[int] = []
+    node_regions: list[int] = []
+    tetrahedra: list[tuple[int, int, int, int, int]] = []
+    regions: list[dict[str, Any]] = []
+    source_members: list[dict[str, Any]] = []
+    all_rib_sources: list[dict[str, Any]] = []
+
+    for region_index, (
+        member_id, source_name, side, rib_level, rib_member_id, spacing_m,
+    ) in enumerate(_NUMI_HUMAN_COSTAL_CARTILAGE_MEMBERS):
+        _, member, obj = _bodyparts_obj_member(sources, "part_of", member_id)
+        vertices_mm, source_triangles = _bodyparts_obj_triangles(obj, member)
+        vertices = [
+            tuple(value * 0.001 for value in point) for point in vertices_mm
+        ]
+        exact_volume = _closed_surface_volume(vertices, source_triangles)
+        if not math.isfinite(exact_volume) or exact_volume <= 0.0:
+            raise ImportError(f"costal-cartilage {member_id} source volume is invalid")
+        cells, origin, _ = _voxel_cells_inside_closed_surface(
+            vertices, source_triangles, spacing_m,
+        )
+        if _voxel_cell_component_count(cells) != 1:
+            raise ImportError(f"costal-cartilage {member_id} voxel volume is disconnected")
+        voxel_volume = len(cells) * spacing_m ** 3
+        volume_error = abs(voxel_volume - exact_volume) / exact_volume
+        if volume_error > maximum_volume_error_fraction:
+            raise ImportError(
+                f"costal-cartilage {member_id} volume error {volume_error:.6f} "
+                f"exceeds {maximum_volume_error_fraction:.6f}"
+            )
+
+        rib_vertices, rib_triangle_count, rib_member, rib_digest = (
+            source_vertices(rib_member_id)
+        )
+        all_rib_sources.append({
+            "member_id": rib_member_id,
+            "member": rib_member,
+            "obj_sha256": rib_digest,
+            "vertex_count": len(rib_vertices),
+            "triangle_count": rib_triangle_count,
+        })
+        first_node = len(nodes)
+        grid_to_node: dict[tuple[int, int, int], int] = {}
+        local_points: list[tuple[float, float, float]] = []
+        for cell in sorted(cells):
+            for corner in cube_corners:
+                grid = tuple(cell[axis] + corner[axis] for axis in range(3))
+                if grid not in grid_to_node:
+                    grid_to_node[grid] = first_node + len(local_points)
+                    local_points.append(tuple(
+                        origin[axis] + grid[axis] * spacing_m
+                        for axis in range(3)
+                    ))
+        rib_flags, rib_minimum = _point_cloud_radius_membership(
+            local_points, rib_vertices, attachment_distance_m,
+        )
+        sternal_flags, sternal_minimum = _point_cloud_radius_membership(
+            local_points, sternum_vertices, attachment_distance_m,
+        )
+        if any(rib and sternum for rib, sternum in zip(
+            rib_flags, sternal_flags, strict=True
+        )):
+            raise ImportError(f"costal-cartilage {member_id} attachment bands overlap")
+        rib_count = sum(rib_flags)
+        sternal_count = sum(sternal_flags)
+        if rib_count < 16 or sternal_count < 16:
+            raise ImportError(f"costal-cartilage {member_id} attachment coverage is incomplete")
+        nodes.extend(local_points)
+        node_flags.extend(
+            (1 if sternum else 0) | (2 if rib else 0)
+            for rib, sternum in zip(rib_flags, sternal_flags, strict=True)
+        )
+        node_regions.extend([region_index] * len(local_points))
+        first_tetrahedron = len(tetrahedra)
+        for cell in sorted(cells):
+            corners = [
+                grid_to_node[tuple(cell[axis] + corner[axis] for axis in range(3))]
+                for corner in cube_corners
+            ]
+            for local_tetrahedron in cube_tetrahedra:
+                candidate = tuple(corners[index] for index in local_tetrahedron)
+                volume = _signed_tetrahedron_volume(nodes, candidate)
+                if abs(volume) <= 1.0e-15:
+                    raise ImportError(f"costal-cartilage {member_id} tetrahedron is degenerate")
+                if volume < 0.0:
+                    candidate = (
+                        candidate[1], candidate[0], candidate[2], candidate[3]
+                    )
+                tetrahedra.append((*candidate, region_index))
+        regions.append({
+            "member_id": member_id,
+            "source_name": source_name,
+            "side": side,
+            "rib_level": rib_level,
+            "rib_member_id": rib_member_id,
+            "sternal_member_ids": list(_NUMI_HUMAN_STERNAL_ATTACHMENT_MEMBERS),
+            "first_node": first_node,
+            "node_count": len(local_points),
+            "first_tetrahedron": first_tetrahedron,
+            "tetrahedron_count": len(tetrahedra) - first_tetrahedron,
+            "sternal_attachment_node_count": sternal_count,
+            "rib_attachment_node_count": rib_count,
+            "source_vertex_count": len(vertices),
+            "source_triangle_count": len(source_triangles),
+            "voxel_spacing_m": spacing_m,
+            "exact_closed_surface_volume_m3": exact_volume,
+            "voxel_volume_m3": voxel_volume,
+            "relative_volume_error": volume_error,
+            "minimum_rib_source_vertex_distance_m": rib_minimum,
+            "minimum_sternal_source_vertex_distance_m": sternal_minimum,
+        })
+        source_members.append({
+            "member_id": member_id,
+            "source_name": source_name,
+            "member": member,
+            "obj_sha256": hashlib.sha256(obj).hexdigest(),
+            "source_vertex_count": len(vertices),
+            "source_triangle_count": len(source_triangles),
+        })
+
+    nodal_mass = [0.0] * len(nodes)
+    total_volume = 0.0
+    for first, second, third, fourth, _ in tetrahedra:
+        volume = _signed_tetrahedron_volume(
+            nodes, (first, second, third, fourth)
+        )
+        if not math.isfinite(volume) or volume <= 0.0:
+            raise ImportError("costal-cartilage payload has non-positive volume")
+        total_volume += volume
+        share = _NUMI_HUMAN_COSTAL_CARTILAGE_DENSITY_KG_M3 * volume / 4.0
+        for node in (first, second, third, fourth):
+            nodal_mass[node] += share
+    if any(not math.isfinite(value) or value <= 0.0 for value in nodal_mass):
+        raise ImportError("costal-cartilage payload has invalid nodal mass")
+
+    attachment_node_count = sum(bool(flags & 3) for flags in node_flags)
+    header = struct.pack(
+        "<8s6I2f32s",
+        _NUMI_HUMAN_COSTAL_CARTILAGE_MAGIC,
+        _NUMI_HUMAN_COSTAL_CARTILAGE_ABI,
+        len(regions), len(nodes), len(tetrahedra), attachment_node_count, 0,
+        _NUMI_HUMAN_COSTAL_CARTILAGE_DENSITY_KG_M3,
+        attachment_distance_m,
+        bytes.fromhex(sha256(archive_path)),
+    )
+    region_payload = b"".join(struct.pack(
+        "<8s10I4f",
+        region["member_id"].encode("ascii").ljust(8, b"\0"),
+        0 if region["side"] == "l" else 1,
+        region["rib_level"], region["first_node"], region["node_count"],
+        region["first_tetrahedron"], region["tetrahedron_count"],
+        region["sternal_attachment_node_count"],
+        region["rib_attachment_node_count"],
+        region["source_vertex_count"], region["source_triangle_count"],
+        region["exact_closed_surface_volume_m3"],
+        region["voxel_volume_m3"], region["voxel_spacing_m"],
+        region["relative_volume_error"],
+    ) for region in regions)
+    node_payload = b"".join(struct.pack(
+        "<4f3I", *point, nodal_mass[index], node_flags[index],
+        node_regions[index], 0,
+    ) for index, point in enumerate(nodes))
+    tetrahedron_payload = b"".join(
+        struct.pack("<5I", *tetrahedron) for tetrahedron in tetrahedra
+    )
+    payload = header + region_payload + node_payload + tetrahedron_payload
+    output = output.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    payload_path = output / "bodyparts3d-costal-cartilage.nhcartilage"
+    payload_path.write_bytes(payload)
+    manifest = {
+        "schema": "numi.human.costal-cartilage-mechanics-payload.v1",
+        "payload": {
+            "file": payload_path.name,
+            "sha256": sha256(payload_path),
+            "bytes": len(payload),
+            "magic": "NHCART1",
+            "payload_abi": _NUMI_HUMAN_COSTAL_CARTILAGE_ABI,
+            "region_count": len(regions),
+            "node_count": len(nodes),
+            "tetrahedron_count": len(tetrahedra),
+            "attachment_node_count": attachment_node_count,
+        },
+        "source": {
+            "bodyparts3d_archive": {
+                "file": archive_path.name,
+                "sha256": sha256(archive_path),
+                "license": "CC-BY-4.0",
+            },
+            "cartilage_members": source_members,
+            "rib_members": all_rib_sources,
+            "sternal_members": sternal_sources,
+            "geometry_status": "exact_fourteen_named_bodyparts3d_closed_costal_cartilage_surfaces_with_generated_voxel_tetrahedra",
+        },
+        "mechanics": {
+            "density_kg_m3": _NUMI_HUMAN_COSTAL_CARTILAGE_DENSITY_KG_M3,
+            "total_rest_volume_m3": total_volume,
+            "total_mass_kg": (
+                _NUMI_HUMAN_COSTAL_CARTILAGE_DENSITY_KG_M3 * total_volume
+            ),
+            "maximum_volume_error_fraction": maximum_volume_error_fraction,
+            "attachment_distance_m": attachment_distance_m,
+            "sternal_attachment_node_flag": 1,
+            "rib_attachment_node_flag": 2,
+            "regions": regions,
+            "constitutive_model": "human_costal_cartilage_pseudoelastic_neohookean_v1",
+            "material_parameter_receipt": {
+                "effective_young_modulus_pa": 22_000_000.0,
+                "poisson_ratio_assumption": 0.45,
+                "scope": "population_mean_whole_segment_pseudoelastic_starting_point_not_subject_specific_or_rate_calibrated",
+            },
+        },
+        "literature": {
+            "effective_segment_modulus": {
+                "doi": "10.1080/15389588.2010.517254",
+                "mean_pa": 22_000_000.0,
+                "standard_deviation_pa": 13_600_000.0,
+                "range_pa": [4_800_000.0, 49_000_000.0],
+            },
+            "anisotropy_and_age_boundary": {
+                "doi": "10.1038/s41598-021-93176-x",
+                "compression_mean_pa": 32_900_000.0,
+                "scope": "human_cadaver_unconfined_compression_and_indentation_anisotropy_age_dependence",
+            },
+        },
+        "force_ownership": {
+            "production_owner_fraction": 0.0,
+            "qualification_probe_owner_fraction": 1.0,
+            "duplicate_rigid_and_cartilage_force_allowed": False,
+            "state": "nonowning_until_both_named_attachment_bands_bind_to_articulated_bodies_and_equal_opposite_reactions_join_the_accepted_transaction",
+        },
+        "status": "compiled_exact_source_cartilage_volume_nonowning_until_articulated_two_way_runtime_gate",
+        "evidence_boundary": (
+            "Fourteen exact BodyParts3D costal-cartilage shells, named rib/sternal attachment bands, positive FEM volume, and a literature-traceable population-mean material starting point are compiled. "
+            "Voxel connectivity, density, near-incompressibility, and homogeneous material behavior are mechanics assumptions. This is not calcification/perichondrium resolution, subject calibration, rate validation, production two-way thorax coupling, injury prediction, or clinical validation."
+        ),
+    }
+    write_json(output / "bodyparts3d-costal-cartilage.manifest.json", manifest)
+    return manifest
 
 
 def anterior_thorax_composite_payload(

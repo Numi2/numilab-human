@@ -75,6 +75,7 @@ from numilab_human.model import (
     bodyparts_foot_registration_template,
     bodyparts_lower_body_attachment_worklist,
     bodyparts_pectoralis_fascia_payload,
+    bodyparts_costal_cartilage_payload,
     anterior_thorax_composite_payload,
     bodyparts_right_calcaneal_tendon_continuity_preview,
     bodyparts_nerve_annotation,
@@ -1347,6 +1348,44 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual([region["source_actuator_index"] for region in regions], [220, 218, 219, 283, 281, 282])
         self.assertTrue(all(region["fixed_node_count"] >= 6 for region in regions))
         self.assertTrue(all(region["load_node_count"] >= 6 for region in regions))
+
+    def test_costal_cartilage_payload_preserves_exact_bilateral_source_and_positive_volume(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            first = Path(temporary) / "first"
+            second = Path(temporary) / "second"
+            manifest = bodyparts_costal_cartilage_payload(
+                ROOT / "sources", first,
+            )
+            replay = bodyparts_costal_cartilage_payload(
+                ROOT / "sources", second,
+            )
+            payload = (first / manifest["payload"]["file"]).read_bytes()
+        self.assertEqual(payload[:8], b"NHCART1\0")
+        self.assertEqual(manifest["payload"]["sha256"], replay["payload"]["sha256"])
+        self.assertEqual(manifest["payload"]["region_count"], 14)
+        self.assertEqual(manifest["payload"]["node_count"], 13_516)
+        self.assertEqual(manifest["payload"]["tetrahedron_count"], 46_278)
+        self.assertEqual(manifest["payload"]["attachment_node_count"], 2_871)
+        self.assertEqual(manifest["source"]["bodyparts3d_archive"]["license"], "CC-BY-4.0")
+        self.assertEqual(len(manifest["source"]["cartilage_members"]), 14)
+        self.assertEqual(len(manifest["source"]["rib_members"]), 14)
+        regions = manifest["mechanics"]["regions"]
+        self.assertEqual(
+            [(region["side"], region["rib_level"]) for region in regions],
+            [("l", level) for level in range(1, 8)] +
+            [("r", level) for level in range(1, 8)],
+        )
+        self.assertTrue(all(
+            region["sternal_attachment_node_count"] >= 16 and
+            region["rib_attachment_node_count"] >= 16 and
+            region["relative_volume_error"] <= 0.03
+            for region in regions
+        ))
+        self.assertGreater(manifest["mechanics"]["total_rest_volume_m3"], 0.0)
+        self.assertGreater(manifest["mechanics"]["total_mass_kg"], 0.0)
+        self.assertEqual(
+            manifest["force_ownership"]["production_owner_fraction"], 0.0,
+        )
 
     def test_anterior_thorax_continuum_is_connected_converged_and_nonduplicating(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

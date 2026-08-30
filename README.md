@@ -63,6 +63,12 @@ endpoints on Apple M4 Pro with byte-identical replay. See the
 [visual progress](Docs/VISUAL_PROGRESS.md), and the
 [completion gap ledger](Docs/HUMAN_COMPLETION_GAP_LEDGER.md).
 
+The first exact cartilage mechanics slice now compiles all fourteen named
+BodyParts3D costal cartilages into 13,516-node / 46,278-tetrahedron FEM and
+executes bilateral load, reaction, rollback, and bitwise replay gates on Apple
+M4 Pro. Production force ownership remains zero until the bands bind to the
+live ribs and sternum. See [costal-cartilage mechanics v1](Docs/COSTAL_CARTILAGE_MECHANICS_V1.md).
+
 The shoulder-girdle placement audit also found that the clavicles were not the
 misregistered bones: the exact BodyParts3D manubrium was missing and the
 sternum body had inherited a 53.079 mm soft-tissue site translation. The
@@ -786,7 +792,7 @@ numi human core-reference --sources Sources --output Build/rajagopal-core-refere
 | OpenSim muscle paths and Hill-type parameters | active muscle–tendon specification | 80 Rajagopal Millard elements accept an explicit control stream or a fail-closed, complete ordered native-task excitation surface, then update activation on device for the fixed tree or source-default mobile root in the synthetic source-contact probe; OpenSim equivalence remains open |
 | BodyParts3D bones and muscles | named geometry attached to semantic anatomy | visual/anatomical geometry, not a new independent physical source |
 | BodyParts3D skin, organs, vessels, nerves | deformable/anatomical geometry candidates | no material constants or volumetric meshes are supplied upstream |
-| tendons, ligaments, cartilage | nonlinear tensile / compliant-contact candidates | only OpenSim tendon parameters are active-source data; all other constitutive data needs a cited calibration |
+| tendons, ligaments, cartilage | nonlinear tensile / compliant-contact candidates | OpenSim tendon parameters are active-source data; fourteen exact costal cartilages now execute a cited population-mean FEM starting law, but production thorax coupling, articular cartilage, ligaments, menisci, and calibration remain open |
 
 See [the architecture](Docs/ARCHITECTURE.md), [import procedure](Docs/IMPORT.md),
 [bounded execution evidence](Docs/EXECUTION_EVIDENCE.md),
