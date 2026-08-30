@@ -99,6 +99,22 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _orientation_preserving_connectivity(
+    indices: tuple[int, ...], *, reflected: bool
+) -> tuple[int, ...]:
+    """Reverse an element's parity after a spatial reflection.
+
+    A sagittal reflection changes the sign of tetrahedron volume and triangle
+    normals.  Swapping the first two indices restores the source element's
+    orientation without changing its topology or attachment membership.
+    """
+    if not reflected:
+        return indices
+    if len(indices) not in {3, 4}:
+        raise ValueError("orientation correction requires tri3 or tet4 connectivity")
+    return (indices[1], indices[0], *indices[2:])
+
+
 def _vector(text: str | None, label: str) -> tuple[float, float, float]:
     if text is None:
         raise ValueError(f"Open Knee(s) {label} is absent")
@@ -738,13 +754,19 @@ def compile_payload(
         if region.element_type != "tet4":
             continue
         for element in region.elements:
+            oriented = _orientation_preserving_connectivity(
+                element, reflected=sagittal_mirror_x is not None
+            )
             payload.extend(TETRAHEDRON_STRUCT.pack(
-                *(global_node_index[identifier] for identifier in element)
+                *(global_node_index[identifier] for identifier in oriented)
             ))
     for name in surfaces_order:
         for face in source.surfaces[name].faces:
+            oriented = _orientation_preserving_connectivity(
+                face, reflected=sagittal_mirror_x is not None
+            )
             payload.extend(FACE_STRUCT.pack(
-                *(global_node_index[identifier] for identifier in face)
+                *(global_node_index[identifier] for identifier in oriented)
             ))
     for name in node_sets_order:
         for identifier in source.node_sets[name]:
@@ -827,6 +849,10 @@ def compile_payload(
                 "reflection_scope": (
                     "none" if side == "left"
                     else "one_world_sagittal_mirror_of_the_qualified_left_specimen"
+                ),
+                "connectivity_parity_correction": (
+                    "none" if side == "left"
+                    else "swap_first_two_indices_of_each_tet4_and_tri3"
                 ),
                 "extra_joint": False,
             },

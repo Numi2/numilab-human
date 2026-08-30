@@ -50,7 +50,13 @@ an independently segmented right subject.
 Payload SHA-256 values are:
 
 - left: `1078198d02b9f0902a528799bbe2dd08ed1faeb701d3ab537b0dc59f065f8e2a`
-- mirrored right: `ba4a86da89dbad228bf4f16dfb114c461532fd40b9180e6c844764af5b2ec077`
+- mirrored right: `d58897a6143cff485443427bd9f5d13d1691586939339c6ebbd342cb340d84a6`
+
+The mirrored payload reverses the connectivity parity of each `tet4` and
+`tri3` after reflecting its node positions. This preserves positive volume and
+surface orientation while leaving source topology and attachment membership
+unchanged. The original right payload omitted that parity correction and is
+retired because its reflected tetrahedra were inverted.
 
 ## Build
 

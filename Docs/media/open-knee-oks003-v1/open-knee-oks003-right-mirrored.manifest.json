@@ -131,7 +131,7 @@
     "bytes": 34356600,
     "file": "open-knee-oks003-right-mirrored.nhknee",
     "magic": "NHKNEE1",
-    "sha256": "ba4a86da89dbad228bf4f16dfb114c461532fd40b9180e6c844764af5b2ec077"
+    "sha256": "d58897a6143cff485443427bd9f5d13d1691586939339c6ebbd342cb340d84a6"
   },
   "registration": {
     "FMO_to_mechanics_origin_initial_translation_femur_body_m": [
@@ -156,6 +156,7 @@
     },
     "gates": {
       "anisotropic_warp": false,
+      "connectivity_parity_correction": "swap_first_two_indices_of_each_tet4_and_tri3",
       "extra_joint": false,
       "held_out_p90_maximum_m": 0.02,
       "proper_rotation_determinant": 1.0000000000000002,

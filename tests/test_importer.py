@@ -10,6 +10,7 @@ from pathlib import Path
 from subprocess import run
 
 from numilab_human.open_knee import compile_payload as compile_open_knee_payload
+from numilab_human.open_knee import _orientation_preserving_connectivity
 from numilab_human.open_knee import parse_source as parse_open_knee_source
 
 from numilab_human.model import (
@@ -3106,6 +3107,22 @@ class ImporterTests(unittest.TestCase):
                 output=Path("absent"),
                 side="middle",
             )
+
+    def test_open_knee_reflection_preserves_element_orientation(self) -> None:
+        self.assertEqual(
+            _orientation_preserving_connectivity((1, 2, 3, 4), reflected=False),
+            (1, 2, 3, 4),
+        )
+        self.assertEqual(
+            _orientation_preserving_connectivity((1, 2, 3, 4), reflected=True),
+            (2, 1, 3, 4),
+        )
+        self.assertEqual(
+            _orientation_preserving_connectivity((5, 6, 7), reflected=True),
+            (6, 5, 7),
+        )
+        with self.assertRaisesRegex(ValueError, "tri3 or tet4"):
+            _orientation_preserving_connectivity((1, 2), reflected=True)
 
 
 if __name__ == "__main__":
