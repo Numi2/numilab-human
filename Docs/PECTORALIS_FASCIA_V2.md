@@ -54,11 +54,15 @@ pre-dynamics and post-commit phases without committing or waiting. Consumer
 rejection cancels the pending Matter transaction before the Human command
 buffer is abandoned.
 
-MyoSim `J^T` remains the only rigid generalized-force owner. The fascia path
-is deliberately configured with production force ownership equal to zero;
-adding the same endpoint share to both FEM and rigid dynamics is forbidden.
-Two-way production ownership requires replacing the matching `J^T` share and
-returning accepted anchor reactions.
+Transfer-only NHTENDON execution retains MyoSim `J^T` as the rigid-force
+owner. The two-phase Numi Matter adapter now implements the stricter
+production path: before Human dynamics it applies the equal-and-opposite
+load-side force to FEM, advances bone-following fixed nodes, removes the exact
+declared anchor-endpoint `J^T` share, and projects the solved fixed-node
+reactions back through the owning body Jacobian. Post-validation then commits
+or rolls back the matching Matter transaction. The load-side source `J^T`
+term is retained as the body's action/reaction partner; the anchor-side term
+is replaced, never duplicated.
 
 ## Apple M4 Pro evidence
 
@@ -88,13 +92,25 @@ transaction and large-deformation stress certificate, not the visual or
 physiological reference. The one-step smoke above is the bounded presentation
 reference until rib/skin contact and a denser conforming envelope are added.
 
+The first two-way Apple M4 Pro smoke used the cumulative 185-bone sternal
+girdle registration and NHTENDON3. One 0.1 ms step transferred all 832
+endpoints (638 distributed envelopes and 194 source-point fallbacks), admitted
+15.104 N across the six fascia regions, and produced 0.778 N summed fixed-node
+reaction magnitude (0.327 N maximum at one node). The bilateral resultant was
+0.0247 N. Replacing the 10% anchor share changed Human state relative to the
+same source-`J^T` transaction by `1.38e-8` maximum q and `1.38e-4` maximum v;
+maximum fascia displacement was 0.139 mm and minimum `J` was 0.99105. Human
+and FEM replay remained bitwise, and injected downstream rejection restored
+the exact pre-transaction FEM state.
+
 ## Evidence boundary
 
 The GOH constants remain a mean uniaxial fit from published human
 pectoralis-major fascia data. Thickness, near-incompressibility, medial
 fixation, traction band, and the 10% load share are declared assumptions.
-Current evidence establishes executable Apple-native one-way regional load
-transfer, accepted-state deformation, rollback, replay, and exact presentation
-topology. It does not establish calibrated two-way muscle-fascia-bone force
-redistribution, contact with ribs or skin, whole-body fascia, or clinical
-validity.
+Current evidence establishes executable Apple-native regional two-way force
+replacement, bone-following kinematic anchors, fixed-node reaction return,
+accepted-state deformation, rollback, replay, and exact presentation topology.
+It does not establish calibrated physiological load sharing, contact with ribs
+or skin, a dense conforming pectoral volume, whole-body fascia, long-horizon
+stability, or clinical validity.

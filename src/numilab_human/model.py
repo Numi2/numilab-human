@@ -12866,8 +12866,8 @@ def bodyparts_pectoralis_fascia_payload(
             "material": {"doi": "10.1016/j.jmbbm.2025.107283", "scope": "human pectoralis-major fascia uniaxial mean fit; female surgical and cadaver cohort"},
             "thickness": {"doi": "10.1007/s00276-016-1747-8", "mean_m": 0.000612, "selected_m": thickness_m},
         },
-        "runtime_binding": "The six named MyoSim pectoralis terminal loads may contribute only the declared fraction to flagged fascia nodes. MyoSim J^T remains the sole rigid generalized-force authority.",
-        "evidence_boundary": "No BodyParts3D pectoral-fascia mesh exists. The mechanics envelope retains exact selected source vertices, while its convex fill, posterior thickness, tetrahedral connectivity, anchor bands, and fascia load share are generated research assumptions. The high-resolution source muscle surfaces remain presentation geometry. This is not a clinical segmentation, biaxial calibration, or validated two-way fascia-muscle-bone solve.",
+        "runtime_binding": "The six named MyoSim pectoralis terminal loads may contribute only the declared fraction to flagged fascia nodes. Transfer-only execution retains MyoSim J^T. A two-phase Numi Matter consumer may replace, never duplicate, that exact anchor-endpoint J^T fraction with accepted fixed-node continuum reactions projected through the owning body Jacobian.",
+        "evidence_boundary": "No BodyParts3D pectoral-fascia mesh exists. The mechanics envelope retains exact selected source vertices, while its convex fill, posterior thickness, tetrahedral connectivity, anchor bands, and fascia load share are generated research assumptions. The high-resolution source muscle surfaces remain presentation geometry. This is not a clinical segmentation, biaxial calibration, or physiologically validated fascia-muscle-bone solve.",
     }
     write_json(output / "bodyparts3d-pectoralis-fascia.manifest.json", manifest)
     return manifest
