@@ -30,13 +30,28 @@ from .myosim_export import export_fullbody
 
 SCHEMA = "numi.human.bodyparts3d-myosim-upper-limb-source-mesh-registration.v1"
 REGISTRATION_SCHEMA = "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2"
-TENDON_SCHEMA = "numi.human.tendon-attachment-envelope-payload.v2"
+TENDON_SCHEMAS = {
+    "numi.human.tendon-attachment-envelope-payload.v2",
+    "numi.human.tendon-attachment-envelope-payload.v3",
+}
 SCAPULAR_ENDPOINT_MAXIMUM_DISTANCE_M = 0.012
 SCAPULAR_REFINEMENT_MAXIMUM_TRANSLATION_M = 0.010
 SCAPULAR_HELD_OUT_P90_MAXIMUM_M = 0.015
 SCAPULAR_REFINEMENT_STEPS_M = (
     0.008, 0.004, 0.002, 0.001, 0.0005, 0.00025, 0.000125, 0.0000625,
 )
+UPPER_LIMB_UNIFORM_SCALE_BOUNDS = {
+    "humerus_r": (0.93, 1.07),
+    "humerus_l": (0.93, 1.07),
+    "radius_r": (0.95, 1.05),
+    "radius_l": (0.95, 1.05),
+    "ulna_r": (0.95, 1.05),
+    "ulna_l": (0.95, 1.05),
+}
+HUMERAL_HEAD_SELECTION_RADIUS_M = 0.040
+HUMERAL_HEAD_CENTER_MAXIMUM_RESIDUAL_M = 0.003
+HUMERAL_HEAD_RADIUS_MAXIMUM_RESIDUAL_M = 0.004
+HUMERAL_HEAD_MECHANICS_CENTER_MAXIMUM_RESIDUAL_M = 0.005
 
 
 def _sha256(path: Path) -> str:
@@ -116,12 +131,54 @@ def _proper_rigid_fit(source: Any, target: Any, np: Any) -> tuple[Any, Any]:
     return rotation, translation
 
 
+def _proper_similarity_fit(
+    source: Any,
+    target: Any,
+    minimum_scale: float,
+    maximum_scale: float,
+    np: Any,
+) -> tuple[Any, Any, float]:
+    """Return one bounded proper isotropic similarity fit.
+
+    Segment-specific uniform scale is the same anthropometric operation used
+    when an anatomical geometry atlas is matched to a mechanics subject.  It
+    preserves shape and handedness; reflections and anisotropic bone warps are
+    deliberately unavailable.
+    """
+    rotation, _ = _proper_rigid_fit(source, target, np)
+    source_mean = np.mean(source, axis=0)
+    target_mean = np.mean(target, axis=0)
+    centered_source = source - source_mean
+    centered_target = target - target_mean
+    denominator = float(np.sum(centered_source * centered_source))
+    if not denominator > 0.0:
+        raise RuntimeError("upper-limb registration similarity fit is degenerate")
+    scale = float(np.sum(
+        np.einsum("ki,ji->kj", centered_source, rotation) * centered_target
+    ) / denominator)
+    scale = max(minimum_scale, min(maximum_scale, scale))
+    translation = target_mean - scale * rotation @ source_mean
+    if (
+        not math.isfinite(scale)
+        or not bool(np.all(np.isfinite(translation)))
+        or not minimum_scale <= scale <= maximum_scale
+    ):
+        raise RuntimeError("upper-limb registration similarity fit became non-finite")
+    return rotation, translation, scale
+
+
 def _icp_candidate(
-    moving: Any, target: Any, initial_rotation: Any, initial_translation: Any, np: Any,
+    moving: Any,
+    target: Any,
+    initial_rotation: Any,
+    initial_translation: Any,
+    scale_bounds: tuple[float, float],
+    np: Any,
 ) -> dict[str, Any]:
     rotation = initial_rotation.copy()
     translation = initial_translation.copy()
     current = np.einsum("ki,ji->kj", moving, rotation) + translation
+    scale = 1.0
     iterations = 0
     for iterations in range(1, 41):
         forward_indices, forward_squared = _nearest(current, target, np)
@@ -134,28 +191,57 @@ def _icp_candidate(
         fit_target = np.concatenate((target[forward_indices[forward_mask]], target[reverse_mask]))
         if len(fit_source) < 12:
             raise RuntimeError("upper-limb registration ICP retained fewer than 12 pairs")
-        incremental_rotation, incremental_translation = _proper_rigid_fit(
-            fit_source, fit_target, np
+        incremental_rotation, incremental_translation, incremental_scale = (
+            _proper_similarity_fit(
+                fit_source,
+                fit_target,
+                scale_bounds[0] / scale,
+                scale_bounds[1] / scale,
+                np,
+            )
         )
-        current = np.einsum("ki,ji->kj", current, incremental_rotation) + incremental_translation
+        current = incremental_scale * np.einsum(
+            "ki,ji->kj", current, incremental_rotation
+        ) + incremental_translation
         rotation = incremental_rotation @ rotation
-        translation = incremental_rotation @ translation + incremental_translation
+        translation = (
+            incremental_scale * incremental_rotation @ translation
+            + incremental_translation
+        )
+        scale *= incremental_scale
         cosine = max(-1.0, min(1.0, (float(np.trace(incremental_rotation)) - 1.0) * 0.5))
-        if float(np.linalg.norm(incremental_translation)) <= 2.0e-7 and math.acos(cosine) <= 2.0e-6:
+        if (
+            float(np.linalg.norm(incremental_translation)) <= 2.0e-7
+            and math.acos(cosine) <= 2.0e-6
+            and abs(incremental_scale - 1.0) <= 2.0e-7
+        ):
             break
     return {
         "rotation": rotation,
         "translation": translation,
+        "uniform_scale": scale,
         "iterations": iterations,
         "training_metrics": _symmetric_metrics(current, target, np),
     }
 
 
 def _fit_candidates(
-    moving_vertices: Any, target_vertices: Any, np: Any, maximum_results: int = 4,
+    moving_vertices: Any,
+    target_vertices: Any,
+    np: Any,
+    maximum_results: int = 4,
+    scale_bounds: tuple[float, float] = (1.0, 1.0),
 ) -> list[dict[str, Any]]:
     if maximum_results <= 0:
         raise RuntimeError("registration fit candidate count must be positive")
+    if (
+        len(scale_bounds) != 2
+        or not all(math.isfinite(value) and value > 0.0 for value in scale_bounds)
+        or scale_bounds[0] > 1.0
+        or scale_bounds[1] < 1.0
+        or scale_bounds[0] > scale_bounds[1]
+    ):
+        raise RuntimeError("registration similarity scale bounds are invalid")
     moving_sample = _sample(moving_vertices, 400, np)
     target_sample = _sample(target_vertices, 400, np)
     moving_addresses = np.arange(len(moving_sample))
@@ -191,12 +277,17 @@ def _fit_candidates(
     results = []
     for start_name, start_rotation, start_translation in starts:
         result = _icp_candidate(
-            moving_training, target_training, start_rotation, start_translation, np
+            moving_training,
+            target_training,
+            start_rotation,
+            start_translation,
+            scale_bounds,
+            np,
         )
-        transformed = np.einsum(
+        transformed = result["uniform_scale"] * np.einsum(
             "ki,ji->kj", moving_sample, result["rotation"]
         ) + result["translation"]
-        held_transformed = np.einsum(
+        held_transformed = result["uniform_scale"] * np.einsum(
             "ki,ji->kj", moving_held_out, result["rotation"]
         ) + result["translation"]
         forward = _nearest(held_transformed, target_sample, np)[1]
@@ -228,6 +319,7 @@ def _surface_split_metrics(
     rotation: Any,
     translation: Any,
     np: Any,
+    uniform_scale: float = 1.0,
 ) -> tuple[dict[str, float], dict[str, float], int, int]:
     """Re-evaluate the deterministic training/held-out split after refinement."""
     moving_sample = _sample(moving_vertices, 400, np)
@@ -238,12 +330,18 @@ def _surface_split_metrics(
     target_training = target_sample[target_addresses % 5 != 0]
     moving_held_out = moving_sample[moving_addresses % 5 == 0]
     target_held_out = target_sample[target_addresses % 5 == 0]
-    transformed = np.einsum("ki,ji->kj", moving_sample, rotation) + translation
+    transformed = uniform_scale * np.einsum(
+        "ki,ji->kj", moving_sample, rotation
+    ) + translation
     training_transformed = (
-        np.einsum("ki,ji->kj", moving_training, rotation) + translation
+        uniform_scale * np.einsum(
+            "ki,ji->kj", moving_training, rotation
+        ) + translation
     )
     held_transformed = (
-        np.einsum("ki,ji->kj", moving_held_out, rotation) + translation
+        uniform_scale * np.einsum(
+            "ki,ji->kj", moving_held_out, rotation
+        ) + translation
     )
     forward = _nearest(held_transformed, target_sample, np)[1]
     reverse = _nearest(target_held_out, transformed, np)[1]
@@ -343,7 +441,8 @@ def _refine_scapular_endpoint_translation(
         rotation, translation, np,
     )
     training, held_out, training_count, held_out_count = _surface_split_metrics(
-        moving_vertices, target_vertices, rotation, translation, np
+        moving_vertices, target_vertices, rotation, translation, np,
+        float(fit.get("uniform_scale", 1.0)),
     )
     delta = translation - initial_translation
     refined.update({
@@ -378,7 +477,101 @@ def _refine_scapular_endpoint_translation(
 
 
 def _transform_points(points: Any, fit: dict[str, Any], np: Any) -> Any:
-    return np.einsum("ki,ji->kj", points, fit["rotation"]) + fit["translation"]
+    return float(fit.get("uniform_scale", 1.0)) * np.einsum(
+        "ki,ji->kj", points, fit["rotation"]
+    ) + fit["translation"]
+
+
+def _robust_joint_centered_articular_sphere(
+    points: Any,
+    mechanics_center: Any,
+    selection_radius_m: float,
+    np: Any,
+) -> tuple[Any, float, int]:
+    """Fit a proximal ball-joint articular shell near its mechanics axis."""
+    selected = points[
+        np.linalg.norm(points - mechanics_center, axis=1)
+        <= selection_radius_m
+    ]
+    if len(selected) < 32:
+        raise RuntimeError(
+            "anatomical registration has insufficient proximal articular surface"
+        )
+    for _ in range(3):
+        design = np.column_stack((2.0 * selected, np.ones(len(selected))))
+        target = np.sum(selected * selected, axis=1)
+        solution, _, rank, _ = np.linalg.lstsq(design, target, rcond=None)
+        if int(rank) != 4:
+            raise RuntimeError("proximal articular sphere fit is degenerate")
+        center = solution[:3]
+        radius_squared = float(solution[3] + np.dot(center, center))
+        if not radius_squared > 0.0:
+            raise RuntimeError("proximal articular sphere radius is invalid")
+        radius = math.sqrt(radius_squared)
+        residuals = np.abs(np.linalg.norm(selected - center, axis=1) - radius)
+        selected = selected[
+            residuals <= float(np.quantile(residuals, 0.75))
+        ]
+    if (
+        len(selected) < 24
+        or not bool(np.all(np.isfinite(center)))
+        or not math.isfinite(radius)
+    ):
+        raise RuntimeError("proximal articular sphere fit is non-finite")
+    return center, radius, len(selected)
+
+
+def _humeral_head_articular_metrics(
+    body_record: dict[str, Any], fit: dict[str, Any], np: Any,
+) -> dict[str, Any]:
+    mechanics_center = _body_frame_to_core(
+        np.zeros((1, 3)), body_record["source_body"], np
+    )[0]
+    source_center, source_radius, source_count = (
+        _robust_joint_centered_articular_sphere(
+        body_record["source_vertices"], mechanics_center,
+        HUMERAL_HEAD_SELECTION_RADIUS_M, np,
+    ))
+    candidate_center, candidate_radius, candidate_count = (
+        _robust_joint_centered_articular_sphere(
+        _transform_points(body_record["vertices"], fit, np),
+        mechanics_center,
+        HUMERAL_HEAD_SELECTION_RADIUS_M,
+        np,
+    ))
+    center_residual = float(np.linalg.norm(candidate_center - source_center))
+    radius_residual = abs(candidate_radius - source_radius)
+    source_mechanics_residual = float(
+        np.linalg.norm(source_center - mechanics_center)
+    )
+    candidate_mechanics_residual = float(
+        np.linalg.norm(candidate_center - mechanics_center)
+    )
+    passed = bool(
+        center_residual <= HUMERAL_HEAD_CENTER_MAXIMUM_RESIDUAL_M
+        and radius_residual <= HUMERAL_HEAD_RADIUS_MAXIMUM_RESIDUAL_M
+        and source_mechanics_residual
+            <= HUMERAL_HEAD_MECHANICS_CENTER_MAXIMUM_RESIDUAL_M
+        and candidate_mechanics_residual
+            <= HUMERAL_HEAD_MECHANICS_CENTER_MAXIMUM_RESIDUAL_M
+    )
+    return {
+        "method": "robust_proximal_articular_sphere_against_pinned_mobl_derived_mechanics_mesh",
+        "source_surface_vertex_count": source_count,
+        "candidate_surface_vertex_count": candidate_count,
+        "source_radius_m": source_radius,
+        "candidate_radius_m": candidate_radius,
+        "radius_residual_m": radius_residual,
+        "maximum_radius_residual_m": HUMERAL_HEAD_RADIUS_MAXIMUM_RESIDUAL_M,
+        "center_residual_m": center_residual,
+        "maximum_center_residual_m": HUMERAL_HEAD_CENTER_MAXIMUM_RESIDUAL_M,
+        "source_center_to_mechanics_axis_m": source_mechanics_residual,
+        "candidate_center_to_mechanics_axis_m": candidate_mechanics_residual,
+        "maximum_center_to_mechanics_axis_m": (
+            HUMERAL_HEAD_MECHANICS_CENTER_MAXIMUM_RESIDUAL_M
+        ),
+        "passed": passed,
+    }
 
 
 def _body_frame_to_core(points: Any, body: dict[str, Any], np: Any) -> Any:
@@ -453,8 +646,10 @@ def propose_upper_limb_registration(
         raise RuntimeError("upper-limb registration requires a BodyParts3D/MyoSim v2 registration")
     if source_audit.get("schema") != AUDIT_SCHEMA or worklist.get("schema") != WORKLIST_SCHEMA:
         raise RuntimeError("upper-limb registration requires source-bone audit/worklist v1 inputs")
-    if tendon_manifest.get("schema") != TENDON_SCHEMA:
-        raise RuntimeError("upper-limb registration requires an NHTENDON2 envelope v2 manifest")
+    if tendon_manifest.get("schema") not in TENDON_SCHEMAS:
+        raise RuntimeError(
+            "upper-limb registration requires an NHTENDON2 or NHTENDON3 manifest"
+        )
     source_hashes = {
         source_audit.get("source", {}).get("archive_sha256"),
         worklist.get("source", {}).get("myosim_archive_sha256"),
@@ -528,8 +723,16 @@ def propose_upper_limb_registration(
         }
         if name in candidate_names:
             record["fit_candidates"] = _fit_candidates(
-                record["vertices"], source_vertices_core, np
+                record["vertices"], source_vertices_core, np,
+                scale_bounds=UPPER_LIMB_UNIFORM_SCALE_BOUNDS.get(
+                    name, (1.0, 1.0)
+                ),
             )
+            if name in {"humerus_r", "humerus_l"}:
+                for fit in record["fit_candidates"]:
+                    fit["humeral_head_articular_gate"] = (
+                        _humeral_head_articular_metrics(record, fit, np)
+                    )
         body_records[name] = record
 
     audit_endpoints = {
@@ -669,6 +872,12 @@ def propose_upper_limb_registration(
                     and left_fit["prior_admitted_endpoint_gate_passed"]
                     and right_fit.get("source_fidelity_gate_passed", True)
                     and left_fit.get("source_fidelity_gate_passed", True)
+                    and right_fit.get(
+                        "humeral_head_articular_gate", {"passed": True}
+                    )["passed"]
+                    and left_fit.get(
+                        "humeral_head_articular_gate", {"passed": True}
+                    )["passed"]
                 ):
                     continue
                 right_sample = _sample(_transform_points(right["vertices"], right_fit, np), 240, np)
@@ -1003,13 +1212,17 @@ def propose_upper_limb_registration(
         cosine = max(-1.0, min(1.0, (float(np.trace(fit["rotation"])) - 1.0) * 0.5))
         receipt = {
             "method": (
-                "bilaterally_selected_pca_seeded_trimmed_symmetric_rigid_icp_to_compiled_myosim_bone_mesh"
+                "bilaterally_selected_pca_seeded_trimmed_symmetric_bounded_similarity_icp_to_compiled_myosim_bone_mesh"
             ),
             "source_body_id": int(target["source_body_id"]),
             "selected_start": fit["start"],
             "iterations": int(fit["iterations"]),
             "proper_rotation_determinant": float(np.linalg.det(fit["rotation"])),
             "rotation_angle_rad": math.acos(cosine),
+            "uniform_scale": float(fit.get("uniform_scale", 1.0)),
+            "uniform_scale_bounds": list(
+                UPPER_LIMB_UNIFORM_SCALE_BOUNDS.get(name, (1.0, 1.0))
+            ),
             "rigid_translation_core_m": [float(value) for value in fit["translation"]],
             "continuity_regularization_translation_world_m": [
                 float(value) for value in world_deltas[name]
@@ -1021,12 +1234,22 @@ def propose_upper_limb_registration(
         }
         if "endpoint_landmark_refinement" in fit:
             receipt["endpoint_landmark_refinement"] = fit["endpoint_landmark_refinement"]
+        if "humeral_head_articular_gate" in fit:
+            receipt["humeral_head_articular_gate"] = fit[
+                "humeral_head_articular_gate"
+            ]
         for anchor in output_anchors_by_name[name]:
             matrix = np.asarray(
                 anchor["registration"]["source_obj_mm_to_core_inertial_body_m"], dtype=float
             )
-            matrix[:3, :3] = fit["rotation"] @ matrix[:3, :3]
-            matrix[:3, 3] = fit["rotation"] @ matrix[:3, 3] + fit["translation"] + local_delta
+            uniform_scale = float(fit.get("uniform_scale", 1.0))
+            matrix[:3, :3] = (
+                uniform_scale * fit["rotation"] @ matrix[:3, :3]
+            )
+            matrix[:3, 3] = (
+                uniform_scale * fit["rotation"] @ matrix[:3, 3]
+                + fit["translation"] + local_delta
+            )
             anchor["registration"]["source_obj_mm_to_core_inertial_body_m"] = [
                 [float(value) for value in row] for row in matrix
             ]
@@ -1041,7 +1264,7 @@ def propose_upper_limb_registration(
                 float(value) for value in centroid_world
             ]
             anchor["registration"]["status"] = (
-                "provisional_upper_limb_source_mesh_rigid_registration"
+                "provisional_upper_limb_source_mesh_bounded_similarity_registration"
             )
             anchor["registration"]["upper_limb_source_mesh_registration"] = receipt
         body_receipts.append({"myosim_body": name, **receipt})
@@ -1084,8 +1307,9 @@ def propose_upper_limb_registration(
     }
     output["status"] = "provisional_visual_registration_not_admitted_to_collision_or_physics"
     output["evidence_boundary"] = (
-        "This candidate rigidly registers exact BodyParts3D upper-limb bones to pinned compiled MyoSim bone "
-        "meshes with bilateral and default-pose continuity gates. It does not move MyoSim sites, admit tendon "
+        "This candidate registers exact BodyParts3D upper-limb bones to pinned compiled MyoSim bone "
+        "meshes with bounded per-segment anthropometric uniform scale, bilateral, articular, and default-pose "
+        "continuity gates. It does not move MyoSim sites, admit tendon "
         "surface mechanics, create cartilage/TFCC contact, or establish clinical registration."
     )
     return output

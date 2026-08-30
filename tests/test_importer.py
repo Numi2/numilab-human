@@ -113,7 +113,9 @@ from numilab_human.upper_limb_registration import (
     SCAPULAR_ENDPOINT_MAXIMUM_DISTANCE_M,
     SCAPULAR_HELD_OUT_P90_MAXIMUM_M,
     SCAPULAR_REFINEMENT_MAXIMUM_TRANSLATION_M,
+    _proper_similarity_fit,
     _refine_scapular_endpoint_translation,
+    _robust_joint_centered_articular_sphere,
 )
 from numilab_human.upper_limb_pose_audit import (
     BILATERAL_GAP_PARITY_MAXIMUM_M,
@@ -1571,6 +1573,60 @@ class ImporterTests(unittest.TestCase):
         self.assertTrue(receipt["source_surface_gate_passed"])
         self.assertAlmostEqual(float(np.linalg.det(refined["rotation"])), 1.0)
         self.assertTrue(np.array_equal(fit["translation"], np.zeros(3)))
+
+    def test_joint_registration_similarity_is_proper_uniform_and_bounded(self) -> None:
+        try:
+            import numpy as np
+        except ImportError:
+            self.skipTest("joint registration tests require numpy")
+
+        source = np.asarray([
+            [-1.0, -0.3, 0.2], [1.0, -0.2, -0.1],
+            [-0.4, 1.2, 0.3], [0.3, 0.1, 1.4],
+        ])
+        angle = 0.18
+        expected_rotation = np.asarray([
+            [np.cos(angle), -np.sin(angle), 0.0],
+            [np.sin(angle), np.cos(angle), 0.0],
+            [0.0, 0.0, 1.0],
+        ])
+        expected_scale = 1.04
+        expected_translation = np.asarray([0.02, -0.01, 0.03])
+        target = expected_scale * np.einsum(
+            "ki,ji->kj", source, expected_rotation
+        ) + expected_translation
+        rotation, translation, scale = _proper_similarity_fit(
+            source, target, 0.95, 1.05, np
+        )
+        self.assertAlmostEqual(float(np.linalg.det(rotation)), 1.0, places=12)
+        self.assertAlmostEqual(scale, expected_scale, places=12)
+        self.assertTrue(np.allclose(rotation, expected_rotation, atol=1.0e-12))
+        self.assertTrue(np.allclose(translation, expected_translation, atol=1.0e-12))
+
+    def test_joint_centered_articular_sphere_recovers_robust_center(self) -> None:
+        try:
+            import numpy as np
+        except ImportError:
+            self.skipTest("joint registration tests require numpy")
+
+        expected_center = np.asarray([0.002, -0.001, 0.003])
+        radius = 0.024
+        points = []
+        for polar in np.linspace(0.25, 1.35, 12):
+            for azimuth in np.linspace(-np.pi, np.pi, 16, endpoint=False):
+                direction = np.asarray([
+                    np.sin(polar) * np.cos(azimuth),
+                    np.sin(polar) * np.sin(azimuth),
+                    np.cos(polar),
+                ])
+                points.append(expected_center + radius * direction)
+        points.extend(([0.038, 0.0, 0.0], [-0.038, 0.0, 0.0]))
+        center, fitted_radius, retained = _robust_joint_centered_articular_sphere(
+            np.asarray(points), np.zeros(3), 0.040, np
+        )
+        self.assertGreaterEqual(retained, 24)
+        self.assertTrue(np.allclose(center, expected_center, atol=1.0e-8))
+        self.assertAlmostEqual(fitted_radius, radius, places=8)
 
     def test_hand_and_knee_continuity_gates_are_bilateral_and_fail_closed(self) -> None:
         self.assertEqual(len(_NUMI_HUMAN_HAND_CONTINUITY_TRANSITIONS), 38)

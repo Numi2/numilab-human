@@ -1,9 +1,10 @@
 """Register BodyParts3D lower-limb groups to pinned MyoSim bone meshes.
 
-BodyParts3D remains the emitted anatomy.  Each mechanics segment receives one
-proper rigid correction; the collective toe compound inherits the rigid-foot
-correction instead of receiving an independent fit.  No joint, route site,
-force parameter, or mesh vertex is edited.
+BodyParts3D remains the emitted anatomy.  Long-bone segments receive one
+bounded proper anthropometric similarity correction; short bones remain rigid,
+and the collective toe compound inherits the rigid-foot correction instead of
+receiving an independent fit.  No joint, route site, force parameter, or mesh
+vertex is edited.
 """
 
 from __future__ import annotations
@@ -26,8 +27,10 @@ from .upper_limb_registration import (
     _endpoint_surface_distances,
     _fit_candidates,
     _minimum_gap,
+    _robust_joint_centered_articular_sphere,
     _rotation_xyzw,
     _sample,
+    _surface_split_metrics,
     _symmetric_metrics,
     _transform_points,
 )
@@ -40,17 +43,28 @@ TENDON_SCHEMAS = {
     "numi.human.tendon-attachment-envelope-payload.v3",
 }
 
-# Rigid surface-fit gates acknowledge population/atlas shape differences while
-# rejecting reflections, wild flips, and corrections large enough to hide a
-# source mismatch.
+# Surface-fit gates acknowledge population/atlas shape differences while
+# rejecting reflections, anisotropic warps, wild flips, and corrections large
+# enough to hide a source mismatch.  Only long bones may receive bounded
+# isotropic anthropometric scale; foot and patellar geometry remains rigid.
 _BODY_GATES = {
-    "femur": {"held_out_p90_m": 0.015, "rotation_rad": 0.35, "translation_m": 0.025},
-    "tibia": {"held_out_p90_m": 0.015, "rotation_rad": 0.25, "translation_m": 0.030},
-    "talus": {"held_out_p90_m": 0.012, "rotation_rad": 0.70, "translation_m": 0.040},
-    "calcn": {"held_out_p90_m": 0.015, "rotation_rad": 0.70, "translation_m": 0.040},
-    "patella": {"held_out_p90_m": 0.012, "rotation_rad": 0.80, "translation_m": 0.080},
+    "femur": {"held_out_p90_m": 0.015, "rotation_rad": 0.35, "translation_m": 0.025,
+              "minimum_scale": 0.93, "maximum_scale": 1.07},
+    "tibia": {"held_out_p90_m": 0.015, "rotation_rad": 0.25, "translation_m": 0.030,
+              "minimum_scale": 0.93, "maximum_scale": 1.07},
+    "talus": {"held_out_p90_m": 0.012, "rotation_rad": 0.70, "translation_m": 0.040,
+              "minimum_scale": 1.0, "maximum_scale": 1.0},
+    "calcn": {"held_out_p90_m": 0.015, "rotation_rad": 0.70, "translation_m": 0.040,
+              "minimum_scale": 1.0, "maximum_scale": 1.0},
+    "patella": {"held_out_p90_m": 0.012, "rotation_rad": 0.80, "translation_m": 0.080,
+                "minimum_scale": 1.0, "maximum_scale": 1.0},
 }
 _BILATERAL_SYMMETRY_MEAN_MAXIMUM_M = 0.012
+_FEMORAL_HEAD_SELECTION_RADIUS_M = 0.040
+_FEMORAL_HEAD_CENTER_MAXIMUM_RESIDUAL_M = 0.003
+_FEMORAL_HEAD_RADIUS_MAXIMUM_RESIDUAL_M = 0.004
+_FEMORAL_HEAD_MECHANICS_CENTER_MAXIMUM_RESIDUAL_M = 0.005
+_FEMORAL_HEAD_REFINEMENT_MAXIMUM_TRANSLATION_M = 0.006
 _TOE_COMPOUND_ENTHESIS_TRANSLATION_MAXIMUM_M = 0.0065
 _TOE_COMPOUND_ENTHESIS_DISTANCE_MAXIMUM_M = 0.020
 
@@ -77,12 +91,121 @@ def _fit_angle(rotation: Any, np: Any) -> float:
 
 def _fit_passes(name: str, fit: dict[str, Any], np: Any) -> bool:
     gate = _BODY_GATES[_body_family(name)]
+    scale = float(fit.get("uniform_scale", 1.0))
     return bool(
         float(np.linalg.det(fit["rotation"])) > 0.999999
         and float(fit["held_out_metrics"]["p90_m"]) <= gate["held_out_p90_m"]
         and _fit_angle(fit["rotation"], np) <= gate["rotation_rad"] + 1.0e-12
         and float(np.linalg.norm(fit["translation"])) <= gate["translation_m"] + 1.0e-12
+        and gate["minimum_scale"] - 1.0e-12 <= scale
+        and scale <= gate["maximum_scale"] + 1.0e-12
+        and fit.get("femoral_head_articular_gate", {"passed": True})["passed"]
     )
+
+
+def _femoral_head_articular_metrics(
+    body_record: dict[str, Any], fit: dict[str, Any], np: Any,
+) -> dict[str, Any]:
+    """Gate the emitted femoral head against the mechanics hip center."""
+    mechanics_center = _body_frame_to_core(
+        np.zeros((1, 3)), body_record["source_body"], np
+    )[0]
+    source_center, source_radius, source_count = (
+        _robust_joint_centered_articular_sphere(
+            body_record["source_vertices"], mechanics_center,
+            _FEMORAL_HEAD_SELECTION_RADIUS_M, np,
+        )
+    )
+    candidate_center, candidate_radius, candidate_count = (
+        _robust_joint_centered_articular_sphere(
+            _transform_points(body_record["vertices"], fit, np),
+            mechanics_center,
+            _FEMORAL_HEAD_SELECTION_RADIUS_M,
+            np,
+        )
+    )
+    center_residual = float(np.linalg.norm(candidate_center - source_center))
+    radius_residual = abs(candidate_radius - source_radius)
+    source_axis_residual = float(np.linalg.norm(source_center - mechanics_center))
+    candidate_axis_residual = float(
+        np.linalg.norm(candidate_center - mechanics_center)
+    )
+    passed = bool(
+        center_residual <= _FEMORAL_HEAD_CENTER_MAXIMUM_RESIDUAL_M
+        and radius_residual <= _FEMORAL_HEAD_RADIUS_MAXIMUM_RESIDUAL_M
+        and source_axis_residual <= _FEMORAL_HEAD_MECHANICS_CENTER_MAXIMUM_RESIDUAL_M
+        and candidate_axis_residual <= _FEMORAL_HEAD_MECHANICS_CENTER_MAXIMUM_RESIDUAL_M
+    )
+    return {
+        "method": "robust_proximal_articular_sphere_against_pinned_rajagopal_mechanics_mesh",
+        "source_surface_vertex_count": source_count,
+        "candidate_surface_vertex_count": candidate_count,
+        "source_radius_m": source_radius,
+        "candidate_radius_m": candidate_radius,
+        "source_center_core_m": [float(value) for value in source_center],
+        "candidate_center_core_m": [float(value) for value in candidate_center],
+        "radius_residual_m": radius_residual,
+        "maximum_radius_residual_m": _FEMORAL_HEAD_RADIUS_MAXIMUM_RESIDUAL_M,
+        "center_residual_m": center_residual,
+        "maximum_center_residual_m": _FEMORAL_HEAD_CENTER_MAXIMUM_RESIDUAL_M,
+        "source_center_to_mechanics_axis_m": source_axis_residual,
+        "candidate_center_to_mechanics_axis_m": candidate_axis_residual,
+        "maximum_center_to_mechanics_axis_m": (
+            _FEMORAL_HEAD_MECHANICS_CENTER_MAXIMUM_RESIDUAL_M
+        ),
+        "passed": passed,
+    }
+
+
+def _refine_femoral_head_center(
+    body_record: dict[str, Any], fit: dict[str, Any], np: Any,
+) -> dict[str, Any]:
+    """Center the hip articular shell without changing rotation or scale."""
+    refined = dict(fit)
+    refined["translation"] = fit["translation"].copy()
+    initial = _femoral_head_articular_metrics(body_record, refined, np)
+    total_delta = np.zeros(3)
+    final = initial
+    for _ in range(3):
+        if final["passed"]:
+            break
+        delta = (
+            np.asarray(final["source_center_core_m"], dtype=float)
+            - np.asarray(final["candidate_center_core_m"], dtype=float)
+        )
+        proposed_total = total_delta + delta
+        if float(np.linalg.norm(proposed_total)) > (
+            _FEMORAL_HEAD_REFINEMENT_MAXIMUM_TRANSLATION_M + 1.0e-12
+        ):
+            break
+        total_delta = proposed_total
+        refined["translation"] = refined["translation"] + delta
+        final = _femoral_head_articular_metrics(body_record, refined, np)
+    (
+        refined["training_metrics"],
+        refined["held_out_metrics"],
+        refined["training_vertex_count"],
+        refined["held_out_vertex_count"],
+    ) = _surface_split_metrics(
+        body_record["vertices"],
+        body_record["source_vertices"],
+        refined["rotation"],
+        refined["translation"],
+        np,
+        float(refined.get("uniform_scale", 1.0)),
+    )
+    refined["femoral_head_articular_gate"] = final
+    refined["femoral_head_center_refinement"] = {
+        "method": "bounded_translation_to_pinned_mechanics_articular_center",
+        "initial_center_residual_m": initial["center_residual_m"],
+        "final_center_residual_m": final["center_residual_m"],
+        "translation_delta_core_m": [float(value) for value in total_delta],
+        "translation_delta_norm_m": float(np.linalg.norm(total_delta)),
+        "maximum_translation_m": _FEMORAL_HEAD_REFINEMENT_MAXIMUM_TRANSLATION_M,
+        "rotation_changed": False,
+        "uniform_scale_changed": False,
+    }
+    return refined
 
 
 def _transfer_fit_between_default_frames(
@@ -138,6 +261,9 @@ def propose_lower_limb_source_registration(
         raise RuntimeError("lower-limb source registration requires registration candidate v2")
     if tendon_manifest.get("schema") not in TENDON_SCHEMAS:
         raise RuntimeError("lower-limb source registration requires NHTENDON2 or NHTENDON3")
+    input_has_lower_registration = isinstance(
+        registration.get("lower_limb_source_mesh_registration"), dict
+    )
     tendon_endpoints = tendon_manifest.get("endpoints")
     if not isinstance(tendon_endpoints, list) or not all(
         isinstance(endpoint, dict) for endpoint in tendon_endpoints
@@ -220,11 +346,21 @@ def propose_lower_limb_source_registration(
             "triangles": np.concatenate(triangles),
             "member_vertices": member_vertices,
             "source_vertices": source_vertices_core,
-            "fit_candidates": (
-                _fit_candidates(np.concatenate(vertices), source_vertices_core, np)
-                if name in selected_names else []
-            ),
+            "fit_candidates": [],
         }
+        if name in selected_names:
+            gate = _BODY_GATES[_body_family(name)]
+            body_records[name]["fit_candidates"] = _fit_candidates(
+                body_records[name]["vertices"],
+                source_vertices_core,
+                np,
+                scale_bounds=(gate["minimum_scale"], gate["maximum_scale"]),
+            )
+            if name in {"femur_r", "femur_l"}:
+                body_records[name]["fit_candidates"] = [
+                    _refine_femoral_head_center(body_records[name], fit, np)
+                    for fit in body_records[name]["fit_candidates"]
+                ]
 
     plane_samples = []
     for family in _BODY_GATES:
@@ -279,6 +415,10 @@ def propose_lower_limb_source_registration(
                         float(np.linalg.norm(right_fit["translation"]))
                         + float(np.linalg.norm(left_fit["translation"]))
                     )
+                    + 0.003 * (
+                        abs(float(right_fit.get("uniform_scale", 1.0)) - 1.0)
+                        + abs(float(left_fit.get("uniform_scale", 1.0)) - 1.0)
+                    )
                 )
                 candidate = (
                     objective, str(right_fit["start"]), str(left_fit["start"]),
@@ -287,8 +427,23 @@ def propose_lower_limb_source_registration(
                 if best is None or candidate[:3] < best[:3]:
                     best = candidate
         if best is None:
+            def candidate_diagnostics(name: str, record: dict[str, Any]) -> str:
+                summaries = []
+                for fit in record["fit_candidates"]:
+                    articular = fit.get("femoral_head_articular_gate", {})
+                    summaries.append(
+                        f"{fit['start']}:p90={fit['held_out_metrics']['p90_m']:.6f},"
+                        f"scale={fit.get('uniform_scale', 1.0):.6f},"
+                        f"translation={float(np.linalg.norm(fit['translation'])):.6f},"
+                        f"head_center={articular.get('center_residual_m', 0.0):.6f},"
+                        f"head_axis={articular.get('candidate_center_to_mechanics_axis_m', 0.0):.6f},"
+                        f"passes={_fit_passes(name, fit, np)}"
+                    )
+                return ";".join(summaries)
             raise RuntimeError(
-                f"lower-limb source registration could not pair {right_name}/{left_name} within gates"
+                f"lower-limb source registration could not pair {right_name}/{left_name} within gates; "
+                f"right=[{candidate_diagnostics(right_name, right)}]; "
+                f"left=[{candidate_diagnostics(left_name, left)}]"
             )
         _, _, _, right_fit, left_fit, symmetry = best
         chosen[right_name] = right_fit
@@ -314,6 +469,7 @@ def propose_lower_limb_source_registration(
         chosen[toe_name] = {
             "rotation": toe_rotation,
             "translation": toe_translation,
+            "uniform_scale": 1.0,
             "start": "inherited_rigid_foot_default_world_transform",
             "iterations": 0,
             "training_metrics": {},
@@ -369,28 +525,29 @@ def propose_lower_limb_source_registration(
 
         _, initial_distances = enthesis_objective(np.zeros(3))
         delta = np.zeros(3)
-        for step in (0.002, 0.001, 0.0005, 0.00025, 0.0001, 0.00005, 0.000025):
-            while True:
-                best_objective, _ = enthesis_objective(delta)
-                best_delta = delta
-                # Restrict the refinement to the shared distal/proximal toe
-                # axis.  Lateral/dorsal drift can reduce point distance while
-                # tearing the hallux or lesser-toe joint surfaces apart.
-                for axis in (2,):
-                    for sign in (-1.0, 1.0):
-                        candidate = delta.copy()
-                        candidate[axis] += sign * step
-                        if float(np.linalg.norm(candidate)) > (
-                            _TOE_COMPOUND_ENTHESIS_TRANSLATION_MAXIMUM_M + 1.0e-12
-                        ):
-                            continue
-                        candidate_objective, _ = enthesis_objective(candidate)
-                        if candidate_objective < best_objective:
-                            best_objective = candidate_objective
-                            best_delta = candidate
-                if bool(np.array_equal(best_delta, delta)):
-                    break
-                delta = best_delta
+        if not input_has_lower_registration:
+            for step in (0.002, 0.001, 0.0005, 0.00025, 0.0001, 0.00005, 0.000025):
+                while True:
+                    best_objective, _ = enthesis_objective(delta)
+                    best_delta = delta
+                    # Restrict the refinement to the shared distal/proximal toe
+                    # axis.  Lateral/dorsal drift can reduce point distance while
+                    # tearing the hallux or lesser-toe joint surfaces apart.
+                    for axis in (2,):
+                        for sign in (-1.0, 1.0):
+                            candidate = delta.copy()
+                            candidate[axis] += sign * step
+                            if float(np.linalg.norm(candidate)) > (
+                                _TOE_COMPOUND_ENTHESIS_TRANSLATION_MAXIMUM_M + 1.0e-12
+                            ):
+                                continue
+                            candidate_objective, _ = enthesis_objective(candidate)
+                            if candidate_objective < best_objective:
+                                best_objective = candidate_objective
+                                best_delta = candidate
+                    if bool(np.array_equal(best_delta, delta)):
+                        break
+                    delta = best_delta
         _, final_distances = enthesis_objective(delta)
         if float(np.max(final_distances)) > _TOE_COMPOUND_ENTHESIS_DISTANCE_MAXIMUM_M:
             raise RuntimeError(
@@ -398,7 +555,11 @@ def propose_lower_limb_source_registration(
             )
         chosen[toe_name]["translation"] = chosen[toe_name]["translation"] + delta
         chosen[toe_name]["toe_compound_enthesis_refinement"] = {
-            "method": "bounded_complete_toe_compound_translation",
+            "method": (
+                "preserved_prior_complete_toe_compound_translation"
+                if input_has_lower_registration else
+                "bounded_complete_toe_compound_translation"
+            ),
             "initial_route_surface_distances_m": [float(value) for value in initial_distances],
             "final_route_surface_distances_m": [float(value) for value in final_distances],
             "translation_delta_core_m": [float(value) for value in delta],
@@ -456,13 +617,20 @@ def propose_lower_limb_source_registration(
             "method": (
                 "inherited_complete_rigid_foot_default_world_transform"
                 if inherited else
-                "bilaterally_selected_pca_seeded_trimmed_symmetric_rigid_icp_to_compiled_myosim_segment_mesh"
+                "bilaterally_selected_pca_seeded_trimmed_symmetric_bounded_similarity_icp_to_compiled_myosim_segment_mesh"
             ),
             "source_body_id": int(body_records[name]["target"]["source_body_id"]),
             "selected_start": fit["start"],
             "iterations": int(fit["iterations"]),
             "proper_rotation_determinant": float(np.linalg.det(fit["rotation"])),
             "rotation_angle_rad": _fit_angle(fit["rotation"], np),
+            "uniform_scale": float(fit.get("uniform_scale", 1.0)),
+            "uniform_scale_bounds": (
+                [1.0, 1.0] if inherited else [
+                    _BODY_GATES[_body_family(name)]["minimum_scale"],
+                    _BODY_GATES[_body_family(name)]["maximum_scale"],
+                ]
+            ),
             "rigid_translation_core_m": [float(value) for value in fit["translation"]],
             "training_metrics": fit["training_metrics"],
             "held_out_metrics": fit["held_out_metrics"],
@@ -476,13 +644,24 @@ def propose_lower_limb_source_registration(
             receipt["toe_compound_enthesis_refinement"] = fit[
                 "toe_compound_enthesis_refinement"
             ]
+        if "femoral_head_articular_gate" in fit:
+            receipt["femoral_head_articular_gate"] = fit[
+                "femoral_head_articular_gate"
+            ]
+            receipt["femoral_head_center_refinement"] = fit[
+                "femoral_head_center_refinement"
+            ]
         for anchor in output_anchors_by_name[name]:
             matrix = np.asarray(
                 anchor["registration"]["source_obj_mm_to_core_inertial_body_m"],
                 dtype=float,
             )
-            matrix[:3, :3] = fit["rotation"] @ matrix[:3, :3]
-            matrix[:3, 3] = fit["rotation"] @ matrix[:3, 3] + fit["translation"]
+            uniform_scale = float(fit.get("uniform_scale", 1.0))
+            matrix[:3, :3] = uniform_scale * fit["rotation"] @ matrix[:3, :3]
+            matrix[:3, 3] = (
+                uniform_scale * fit["rotation"] @ matrix[:3, 3]
+                + fit["translation"]
+            )
             anchor["registration"]["source_obj_mm_to_core_inertial_body_m"] = [
                 [float(value) for value in row] for row in matrix
             ]
@@ -495,7 +674,7 @@ def propose_lower_limb_source_registration(
                 float(value) for value in centroid_world
             ]
             anchor["registration"]["status"] = (
-                "provisional_lower_limb_source_mesh_rigid_registration"
+                "provisional_lower_limb_source_mesh_bounded_similarity_registration"
             )
             anchor["registration"]["lower_limb_source_mesh_registration"] = receipt
         body_receipts.append({"myosim_body": name, **receipt})
@@ -526,7 +705,7 @@ def propose_lower_limb_source_registration(
     }
     output["status"] = "provisional_visual_registration_not_admitted_to_collision_or_physics"
     output["evidence_boundary"] = (
-        "This candidate applies one proper rigid source-surface correction per lower-limb mechanics segment. "
+        "This candidate applies one bounded proper isotropic source-surface correction per lower-limb mechanics segment; only femur and tibia permit anthropometric scale. "
         "The complete toe compound inherits the rigid-foot correction and retains the existing MTP articulation. "
         "It does not move a MyoSim route site, add a joint, calibrate cartilage/contact, or establish clinical registration."
     )

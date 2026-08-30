@@ -48,18 +48,15 @@ The evidence-gated development sequence is in the
 
 ## Visual progress
 
-The current lead rigidly registers 62 bilateral scapula-to-finger BodyParts3D
-bones to pinned compiled MyoSim source meshes while preserving every authored
-route site and the existing articulation. All 176 intended endpoint-distance
-gates, 57 prior-envelope preservation gates, and 52 shoulder/elbow/wrist/hand
-continuity gates pass. The rigid-foot ownership pass then keeps tarsals and
-metatarsals on Rajagopal's `calcn` segments while the phalanges retain the two
-collective toe bodies. Recompiling the exact pair raises distributed
-tendon-to-bone coverage from 364/832 to 540/832 with zero endpoint migration,
-no prior loss, and unchanged 12 mm and force-amplification thresholds. Each
-scapula uses one bounded proper-rigid transform, not endpoint edits or separate
-attachment patches. The result ran through native Metal force/replay gates and
-bilateral four-angle 2048 px shoulder inspection on Apple M4 Pro. See the
+The current articular-placement pass replaces misleading nearest-surface-only
+acceptance with bounded proper uniform similarity fits plus explicit joint-head
+and mechanics-axis gates. Bilateral humeral-head residuals are 1.081--1.289 mm
+and bilateral femoral-head residuals are 1.202--1.288 mm. Six upper-limb source
+poses pass 312 continuity and 156 bilateral-parity checks; both knees flex
+forward, and each rigid foot retains five rays with the hallux medial and no
+new toe joint. The paired `NHTENDON3` runtime executes 416 muscles and all 832
+endpoints on Apple M4 Pro with byte-identical replay. See the
+[articular placement record](Docs/ARTICULAR_PLACEMENT_V1.md),
 [upper-limb source-mesh registration](Docs/UPPER_LIMB_SOURCE_MESH_REGISTRATION_V1.md),
 [upper-limb multi-pose continuity](Docs/UPPER_LIMB_MULTI_POSE_REGISTRATION_V2.md),
 [rigid-foot ownership and entheses](Docs/RIGID_FOOT_OWNERSHIP_V1.md),
@@ -74,13 +71,13 @@ to the existing torso body, leaves both clavicles untouched, and passes
 0.106--1.726 mm neutral continuity gates in four native M4 Pro views. See
 [source-owned sternal girdle completion](Docs/STERNAL_GIRDLE_SOURCE_REGISTRATION_V1.md).
 
-The current lower-limb pass rigidly registers bilateral femur, tibia/fibula,
-talus, rigid foot, and patella anatomy to the pinned compiled MyoSim meshes.
-It rejects the tempting 179 degree patella flip, keeps all 40 knee-to-toe
+The lower-limb pass registers bilateral femur and tibia with bounded
+anthropometric scale while talus, rigid foot, and patella remain unscaled. It
+rejects the tempting 179 degree patella flip, keeps all 40 knee-to-toe
 continuity gaps below 3.876 mm, and preserves the complete five-toe compound
-without adding articulation. The paired `NHTENDON3` artifact executes all 18
-named foot/hallux surface terminals and all 832 endpoint laws on Apple M4 Pro.
-Neutral and 0.75 rad flexed four-angle review passes on both sides. See the
+without adding articulation. All 18 named foot/hallux migrations and all 832
+endpoint laws execute on Apple M4 Pro. Neutral and 0.75 rad flexed four-angle
+review passes on both sides. See the
 [lower-limb source registration](Docs/LOWER_LIMB_SOURCE_REGISTRATION_V2.md)
 and the preceding [fixed-bone foot entheses](Docs/FIXED_BONE_FOOT_ENTHESES_V1.md).
 
