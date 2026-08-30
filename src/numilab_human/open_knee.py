@@ -64,20 +64,20 @@ REGION_KIND = {
     "PTL": 5, "QAT": 5,
 }
 
-VISUAL_BODY = {
-    "FMB": "femur_l", "FMC": "femur_l",
-    "TBB": "tibia_l", "FBB": "tibia_l",
-    "TBC-L": "tibia_l", "TBC-M": "tibia_l",
-    "MNS-L": "tibia_l", "MNS-M": "tibia_l",
-    "PTB": "patella_l", "PTC": "patella_l",
-    "ACL": "femur_l", "PCL": "femur_l",
-    "MCL": "femur_l", "LCL": "femur_l",
-    "PTL": "patella_l", "QAT": "patella_l",
+VISUAL_BODY_ROLE = {
+    "FMB": "femur", "FMC": "femur",
+    "TBB": "tibia", "FBB": "tibia",
+    "TBC-L": "tibia", "TBC-M": "tibia",
+    "MNS-L": "tibia", "MNS-M": "tibia",
+    "PTB": "patella", "PTC": "patella",
+    "ACL": "femur", "PCL": "femur",
+    "MCL": "femur", "LCL": "femur",
+    "PTL": "patella", "QAT": "patella",
 }
 
-RIGID_COUNTERPART_BODY = {
-    "FMB": "femur_l", "TBB": "tibia_l", "FBB": "tibia_l",
-    "PTB": "patella_l",
+RIGID_COUNTERPART_ROLE = {
+    "FMB": "femur", "TBB": "tibia", "FBB": "tibia",
+    "PTB": "patella",
 }
 
 REGION_STRUCT = struct.Struct("<16s8I")
@@ -431,7 +431,14 @@ def _fixed_name(value: str, width: int) -> bytes:
 
 def compile_payload(
     *, sources: Path, open_knee: Path, registration_path: Path, output: Path,
+    side: str = "left",
 ) -> dict[str, Any]:
+    if side not in {"left", "right"}:
+        raise ValueError("Open Knee(s) payload side must be left or right")
+    side_suffix = "l" if side == "left" else "r"
+
+    def body_name(role: str) -> str:
+        return f"{role}_{side_suffix}"
     try:
         import mujoco
         import numpy as np
@@ -449,15 +456,25 @@ def compile_payload(
     targets: dict[str, dict[str, Any]] = {}
     for anchor in registration.get("anchors", []):
         name = anchor.get("target", {}).get("name")
-        if name in {"femur_l", "tibia_l", "patella_l"}:
+        if name in {
+            "femur_r", "tibia_r", "patella_r",
+            "femur_l", "tibia_l", "patella_l",
+        }:
             target = anchor["target"]
             if name in targets and targets[name] != target:
                 raise RuntimeError(f"Open Knee(s) target frame drifted for {name}")
             targets[name] = target
-    if set(targets) != {"femur_l", "tibia_l", "patella_l"}:
-        raise RuntimeError("Open Knee(s) live left-knee body frames are incomplete")
-    if {int(targets[name]["core_body_index"]) for name in targets} != {145, 150, 156}:
-        raise RuntimeError("Open Knee(s) pinned left-knee body indices drifted")
+    expected_indices = {
+        "femur_r": 131, "tibia_r": 136, "patella_r": 142,
+        "femur_l": 145, "tibia_l": 150, "patella_l": 156,
+    }
+    if set(targets) != set(expected_indices):
+        raise RuntimeError("Open Knee(s) live bilateral knee body frames are incomplete")
+    if any(
+        int(targets[name]["core_body_index"]) != index
+        for name, index in expected_indices.items()
+    ):
+        raise RuntimeError("Open Knee(s) pinned bilateral knee body indices drifted")
 
     exported = export_fullbody(sources)
     source_bodies = {body["name"]: body for body in exported["bodies"]}
@@ -533,6 +550,37 @@ def compile_payload(
     femur_body_world_position = np.asarray(
         femur_body["default_body_position_world_m"], dtype=float
     )
+    sagittal_mirror_x = None
+    bilateral_frame_symmetry_maximum_m = 0.0
+    if side == "right":
+        left_femur_position = np.asarray(
+            source_bodies["femur_l"]["default_body_position_world_m"], dtype=float
+        )
+        right_femur_position = np.asarray(
+            source_bodies["femur_r"]["default_body_position_world_m"], dtype=float
+        )
+        sagittal_mirror_x = 0.5 * (
+            left_femur_position[0] + right_femur_position[0]
+        )
+        for role in ("femur", "tibia", "patella"):
+            left = np.asarray(
+                source_bodies[f"{role}_l"]["default_body_position_world_m"],
+                dtype=float,
+            )
+            right = np.asarray(
+                source_bodies[f"{role}_r"]["default_body_position_world_m"],
+                dtype=float,
+            )
+            mirrored = left.copy()
+            mirrored[0] = 2.0 * sagittal_mirror_x - mirrored[0]
+            bilateral_frame_symmetry_maximum_m = max(
+                bilateral_frame_symmetry_maximum_m,
+                float(np.linalg.norm(mirrored - right)),
+            )
+        if bilateral_frame_symmetry_maximum_m > 0.0005:
+            raise RuntimeError(
+                "Open Knee(s) right-knee mirror exceeds bilateral frame symmetry gate"
+            )
 
     ordered_names = list(EXPECTED_REGIONS)
     region_index = {name: index for index, name in enumerate(ordered_names)}
@@ -552,7 +600,11 @@ def compile_payload(
         world = np.einsum(
             "ki,ji->kj", femur_body_local, femur_body_world_rotation
         ) + femur_body_world_position
-        visual = _world_to_core(world, targets[VISUAL_BODY[name]], np)
+        if sagittal_mirror_x is not None:
+            world = world.copy()
+            world[:, 0] = 2.0 * sagittal_mirror_x - world[:, 0]
+        visual_body_name = body_name(VISUAL_BODY_ROLE[name])
+        visual = _world_to_core(world, targets[visual_body_name], np)
         region_node_world[name] = world
         region_node_visual[name] = visual
         for local, identifier in enumerate(region.node_ids):
@@ -564,10 +616,10 @@ def compile_payload(
         if "_@_" not in set_name or not set_name.endswith("_TiesNodes"):
             continue
         owner_name, counterpart = set_name.removesuffix("_TiesNodes").split("_@_", 1)
-        body_name = RIGID_COUNTERPART_BODY.get(counterpart)
-        if body_name is None or owner_name in RIGID_COUNTERPART_BODY:
+        counterpart_role = RIGID_COUNTERPART_ROLE.get(counterpart)
+        if counterpart_role is None or owner_name in RIGID_COUNTERPART_ROLE:
             continue
-        target = targets[body_name]
+        target = targets[body_name(counterpart_role)]
         target_body = int(target["core_body_index"])
         owner = source.regions.get(owner_name)
         if owner is None:
@@ -622,7 +674,7 @@ def compile_payload(
         tet_count = len(region.elements) if region.element_type == "tet4" else 0
         region_records.append(REGION_STRUCT.pack(
             _fixed_name(name, 16), REGION_KIND[name],
-            int(targets[VISUAL_BODY[name]]["core_body_index"]),
+            int(targets[body_name(VISUAL_BODY_ROLE[name])]["core_body_index"]),
             first_node, len(region.node_ids), first_tet, tet_count,
             first_surface, len(surfaces_by_region[name]),
         ))
@@ -652,9 +704,11 @@ def compile_payload(
         anchor_body = INVALID_INDEX
         if "_@_" in name and name.endswith("_TiesNodes"):
             counterpart = name.removesuffix("_TiesNodes").split("_@_", 1)[1]
-            body_name = RIGID_COUNTERPART_BODY.get(counterpart)
-            if body_name is not None and owner not in RIGID_COUNTERPART_BODY:
-                anchor_body = int(targets[body_name]["core_body_index"])
+            counterpart_role = RIGID_COUNTERPART_ROLE.get(counterpart)
+            if counterpart_role is not None and owner not in RIGID_COUNTERPART_ROLE:
+                anchor_body = int(
+                    targets[body_name(counterpart_role)]["core_body_index"]
+                )
         node_set_records.append(NODE_SET_STRUCT.pack(
             _fixed_name(name, 48), region_index[owner], first_membership,
             len(source.node_sets[name]), anchor_body, 0,
@@ -702,10 +756,14 @@ def compile_payload(
     payload[:header_bytes] = HEADER_STRUCT.pack(
         MAGIC, ABI, header_bytes, len(ordered_names), node_count, first_tet,
         len(surfaces_order), first_face, len(node_sets_order), first_membership,
-        len(surface_pair_records), 0, 0, hashes,
+        len(surface_pair_records), 1 if side == "right" else 0, 0, hashes,
     )
     output.mkdir(parents=True, exist_ok=True)
-    payload_path = output / "open-knee-oks003-left.nhknee"
+    payload_stem = (
+        "open-knee-oks003-left" if side == "left"
+        else "open-knee-oks003-right-mirrored"
+    )
+    payload_path = output / f"{payload_stem}.nhknee"
     payload_path.write_bytes(payload)
 
     attachment_counts = defaultdict(int)
@@ -713,7 +771,11 @@ def compile_payload(
         attachment_counts[body] += 1
     manifest = {
         "schema": SCHEMA,
-        "status": "exact_source_payload_registered_to_live_left_knee_candidate",
+        "status": (
+            "exact_source_payload_registered_to_live_left_knee_candidate"
+            if side == "left"
+            else "exact_left_source_topology_mirrored_to_live_right_knee_candidate"
+        ),
         "source": {
             "dataset": "Open Knee(s) oks003",
             "doi": "10.18735/b0zv-n395",
@@ -723,7 +785,14 @@ def compile_payload(
                         "height_m": 1.73, "mass_kg": 68.0, "bmi": 22.8},
         },
         "registration": {
-            "method": "FMO_to_live_knee_origin_Xf_to_flexion_axis_Zf_to_proximal_axis_uniform_condylar_width_scale",
+            "method": (
+                "FMO_to_live_left_knee_origin_Xf_to_flexion_axis_Zf_to_proximal_axis_uniform_condylar_width_scale"
+                if side == "left"
+                else "qualified_left_world_registration_then_sagittal_mirror_into_live_right_knee_frames"
+            ),
+            "output_side": side,
+            "sagittal_mirror_world_x_m": sagittal_mirror_x,
+            "bilateral_frame_symmetry_maximum_m": bilateral_frame_symmetry_maximum_m,
             "source_axes": {name: list(source.landmarks[name]) for name in (
                 "Xf_axis", "Yf_axis", "Zf_axis"
             )},
@@ -754,13 +823,19 @@ def compile_payload(
                 "proper_rotation_determinant": float(np.linalg.det(rotation)),
                 "uniform_scale_minimum": 0.90, "uniform_scale_maximum": 1.10,
                 "held_out_p90_maximum_m": 0.020,
-                "reflection": False, "anisotropic_warp": False,
+                "reflection": side == "right", "anisotropic_warp": False,
+                "reflection_scope": (
+                    "none" if side == "left"
+                    else "one_world_sagittal_mirror_of_the_qualified_left_specimen"
+                ),
                 "extra_joint": False,
             },
         },
         "runtime_binding": {
-            name: {"core_body_index": int(targets[name]["core_body_index"])}
-            for name in sorted(targets)
+            body_name(role): {
+                "core_body_index": int(targets[body_name(role)]["core_body_index"])
+            }
+            for role in ("femur", "patella", "tibia")
         },
         "topology": {
             "region_count": len(ordered_names),
@@ -776,7 +851,7 @@ def compile_payload(
             },
             "regions": [
                 {"name": name, "kind": REGION_KIND[name],
-                 "visual_body": VISUAL_BODY[name],
+                 "visual_body": body_name(VISUAL_BODY_ROLE[name]),
                  "nodes": len(source.regions[name].node_ids),
                  "element_type": source.regions[name].element_type,
                  "elements": len(source.regions[name].elements),
@@ -795,13 +870,14 @@ def compile_payload(
             "bytes": len(payload), "sha256": _sha256(payload_path),
         },
         "evidence_boundary": (
-            "This is an exact specimen-source geometry, topology, material, attachment, "
-            "and contact payload with a bounded anatomical registration to the live left "
-            "MyoSim knee. It is not subject-matched to BodyParts3D/MyoSim, not yet a "
-            "coarsened Apple FEM solve, and not yet admitted as production contact."
+            "This preserves exact oks003 specimen geometry, topology, material, attachment, "
+            "and contact data. The left output has a bounded anatomical registration; the "
+            "right output is its explicitly labelled sagittal mirror in the measured live "
+            "bilateral frames, not an independently segmented right specimen. Neither is "
+            "subject-matched, a coarsened Apple FEM solve, or admitted production contact."
         ),
     }
-    manifest_path = output / "open-knee-oks003-left.manifest.json"
+    manifest_path = output / f"{payload_stem}.manifest.json"
     manifest_path.write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
@@ -814,12 +890,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--open-knee", type=Path, required=True)
     parser.add_argument("--registration", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--side", choices=("left", "right"), default="left")
     arguments = parser.parse_args(argv)
     compile_payload(
         sources=arguments.sources.resolve(),
         open_knee=arguments.open_knee.resolve(),
         registration_path=arguments.registration.resolve(),
         output=arguments.output.resolve(),
+        side=arguments.side,
     )
     return 0
 

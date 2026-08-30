@@ -1,0 +1,4638 @@
+{
+  "bilateral_gap_parity_maximum_m": 0.002,
+  "bilateral_parity_evaluation_count": 156,
+  "continuity_evaluation_count": 312,
+  "continuity_transition_count_per_pose": 52,
+  "default_frame_maximum_allowed_residual_m": 1e-09,
+  "default_frame_maximum_centroid_residual_m": 1.4660015799381906e-14,
+  "evidence_boundary": "Rigid BodyParts3D bones were replayed through pinned MyoSim kinematics and exact polynomial joint equality projection. Passing proves body ownership, default frame identity, bounded posed surface continuity, and bilateral gap parity for this pose suite. It is not cartilage/contact, ligament constraint, loaded dynamics, clinical registration, or a deformable tendon solve.",
+  "inputs": {
+    "myosim_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "registration": {
+      "file": "fullbody-articular-v3.registration.json",
+      "sha256": "ebb7adf5a7777f3f811d771ebce7d61a6c578132572dc514910c765d7a31611e"
+    }
+  },
+  "joint_equality_count": 51,
+  "joint_equality_maximum_correction": 0.4752,
+  "pose_count": 6,
+  "posed_continuity_allowance_m": 0.001,
+  "poses": [
+    {
+      "bilateral_gap_parity": [
+        {
+          "absolute_gap_difference_m": 0.00034371380110278366,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "capitate_to_third_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 1.835256831961697e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "clavicle_to_scapula"
+        },
+        {
+          "absolute_gap_difference_m": 0.0009836712523031944,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "fifth_metacarpal_to_little_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 0.00018777862578280577,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "first_metacarpal_to_thumb_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 3.65873598702737e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "fourth_metacarpal_to_ring_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 2.6601362984768448e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "hamate_to_fifth_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0005097215460219439,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "hamate_to_fourth_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 0.00020729291745822737,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "humerus_to_radius"
+        },
+        {
+          "absolute_gap_difference_m": 0.0009235858425915354,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "humerus_to_ulna"
+        },
+        {
+          "absolute_gap_difference_m": 8.885846198101679e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "index_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0007957689391981664,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "index_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 5.096300383242608e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "little_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 0.000831666267250326,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "little_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 0.0001301320562830648,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "middle_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 6.208178214887997e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "middle_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 0.0009133710856732606,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "radius_to_lunate"
+        },
+        {
+          "absolute_gap_difference_m": 0.00085996597451184,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "radius_to_scaphoid"
+        },
+        {
+          "absolute_gap_difference_m": 0.00022488605659630483,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "ring_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 0.00033134911406593,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "ring_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 8.453421837692921e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "scapula_to_humerus"
+        },
+        {
+          "absolute_gap_difference_m": 0.0001624068616209361,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "second_metacarpal_to_index_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 9.188761066737083e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "third_metacarpal_to_middle_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 2.1874831238632194e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "thumb_proximal_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 4.3953200067842885e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "trapezium_to_first_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0001703590171775692,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "trapezoid_to_second_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 6.418476861114186e-17,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "ulna_to_triquetrum"
+        }
+      ],
+      "continuity": [
+        {
+          "minimum_vertex_gap_m": 0.00031607525291223204,
+          "name": "right_clavicle_to_scapula",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3362",
+            "FJ3384"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00042079703836361647,
+          "name": "right_scapula_to_humerus",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.009000000000000001,
+          "rest_maximum_allowed_gap_m": 0.008,
+          "source_member_ids": [
+            "FJ3384",
+            "FJ3368"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0008228766692838685,
+          "name": "right_humerus_to_ulna",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3368",
+            "FJ3391"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.000548807732977063,
+          "name": "right_humerus_to_radius",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3368",
+            "FJ3349"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0030869057839362467,
+          "name": "right_radius_to_scaphoid",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3349",
+            "FJ3383"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.003954430537155287,
+          "name": "right_radius_to_lunate",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3349",
+            "FJ3374"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.011040000000000003,
+          "name": "right_ulna_to_triquetrum",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3391",
+            "FJ3390"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.000334427821231849,
+          "name": "left_clavicle_to_scapula",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3237",
+            "FJ3279"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00033626281998668726,
+          "name": "left_scapula_to_humerus",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.009000000000000001,
+          "rest_maximum_allowed_gap_m": 0.008,
+          "source_member_ids": [
+            "FJ3279",
+            "FJ3262"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0017464625118754039,
+          "name": "left_humerus_to_ulna",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3262",
+            "FJ3286"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003415148155188356,
+          "name": "left_humerus_to_radius",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3262",
+            "FJ3277"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0022269398094244067,
+          "name": "left_radius_to_scaphoid",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3277",
+            "FJ3278"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0030410594514820267,
+          "name": "left_radius_to_lunate",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3277",
+            "FJ3268"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.011039999999999939,
+          "name": "left_ulna_to_triquetrum",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3286",
+            "FJ3285"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0004277222104545496,
+          "name": "right_trapezium_to_first_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3388",
+            "FJ3350"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00032243766777254767,
+          "name": "right_trapezoid_to_second_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3389",
+            "FJ3352"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0005170640344055601,
+          "name": "right_capitate_to_third_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3361",
+            "FJ3354"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0008692019823666865,
+          "name": "right_hamate_to_fourth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3367",
+            "FJ3356"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003887606109068144,
+          "name": "right_hamate_to_fifth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3367",
+            "FJ3358"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00046495667515889514,
+          "name": "right_first_metacarpal_to_thumb_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3350",
+            "FJ3327"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00017318915416799976,
+          "name": "right_thumb_proximal_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3327",
+            "FJ3198"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0005096707974687783,
+          "name": "right_second_metacarpal_to_index_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3352",
+            "FJ3322"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0011416628484428276,
+          "name": "right_index_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3322",
+            "FJ3303"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00025188843219061785,
+          "name": "right_index_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3303",
+            "FJ3193"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00016535530725301028,
+          "name": "right_third_metacarpal_to_middle_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3354",
+            "FJ3325"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00023879867102034668,
+          "name": "right_middle_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3325",
+            "FJ3306"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00030808289871272283,
+          "name": "right_middle_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3306",
+            "FJ3196"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003623861245782365,
+          "name": "right_fourth_metacarpal_to_ring_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3356",
+            "FJ3326"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00030507454233290386,
+          "name": "right_ring_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3326",
+            "FJ3292"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.000683397271492416,
+          "name": "right_ring_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3292",
+            "FJ3197"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0001042613474800914,
+          "name": "right_fifth_metacarpal_to_little_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3358",
+            "FJ3323"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0011264955421482908,
+          "name": "right_little_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3323",
+            "FJ3304"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00038585074729060535,
+          "name": "right_little_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3304",
+            "FJ3194"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003837690103867067,
+          "name": "left_trapezium_to_first_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3283",
+            "FJ3240"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00015207865059497846,
+          "name": "left_trapezoid_to_second_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3284",
+            "FJ3243"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00017335023330277644,
+          "name": "left_capitate_to_third_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3257",
+            "FJ3246"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00035948043634474253,
+          "name": "left_hamate_to_fourth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3261",
+            "FJ3249"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00036215924792204593,
+          "name": "left_hamate_to_fifth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3261",
+            "FJ3252"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00027717804937608937,
+          "name": "left_first_metacarpal_to_thumb_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3240",
+            "FJ3318"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00019506398540663196,
+          "name": "left_thumb_proximal_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3318",
+            "FJ3188"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00034726393584784225,
+          "name": "left_second_metacarpal_to_index_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3243",
+            "FJ3313"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003458939092446612,
+          "name": "left_index_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3313",
+            "FJ3296"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00034074689417163464,
+          "name": "left_index_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3296",
+            "FJ3183"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0002572429179203811,
+          "name": "left_third_metacarpal_to_middle_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3246",
+            "FJ3316"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0001767168888714667,
+          "name": "left_middle_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3316",
+            "FJ3299"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00017795084242965803,
+          "name": "left_middle_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3299",
+            "FJ3186"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003989734844485102,
+          "name": "left_fourth_metacarpal_to_ring_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3249",
+            "FJ3317"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0006364236563988338,
+          "name": "left_ring_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3317",
+            "FJ3291"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00045851121489611115,
+          "name": "left_ring_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3291",
+            "FJ3187"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0010879325997832858,
+          "name": "left_fifth_metacarpal_to_little_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3252",
+            "FJ3314"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00029482927489796483,
+          "name": "left_little_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3314",
+            "FJ3297"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00033488774345817926,
+          "name": "left_little_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3297",
+            "FJ3184"
+          ]
+        }
+      ],
+      "joint_equality_count": 51,
+      "joint_equality_maximum_correction": 0.0524192,
+      "name": "neutral",
+      "source_q_overrides": []
+    },
+    {
+      "bilateral_gap_parity": [
+        {
+          "absolute_gap_difference_m": 0.00034371380110291485,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "capitate_to_third_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0009071676715265032,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "clavicle_to_scapula"
+        },
+        {
+          "absolute_gap_difference_m": 0.000983671252303226,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "fifth_metacarpal_to_little_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 0.00018777862578287972,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "first_metacarpal_to_thumb_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 3.6587359870351326e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "fourth_metacarpal_to_ring_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 2.6601362984660028e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "hamate_to_fifth_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0005097215460221181,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "hamate_to_fourth_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 0.00020729291745812925,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "humerus_to_radius"
+        },
+        {
+          "absolute_gap_difference_m": 0.0009235858425915231,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "humerus_to_ulna"
+        },
+        {
+          "absolute_gap_difference_m": 8.885846198115324e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "index_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0007957689391980716,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "index_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 5.096300383242462e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "little_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0008316662672503472,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "little_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 0.00013013205628338668,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "middle_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 6.20817821488241e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "middle_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 0.0009133710856731475,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "radius_to_lunate"
+        },
+        {
+          "absolute_gap_difference_m": 0.000859965974511709,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "radius_to_scaphoid"
+        },
+        {
+          "absolute_gap_difference_m": 0.00022488605659641824,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "ring_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 0.00033134911406593404,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "ring_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 9.630704516319915e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "scapula_to_humerus"
+        },
+        {
+          "absolute_gap_difference_m": 0.000162406861620823,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "second_metacarpal_to_index_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 9.188761066722983e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "third_metacarpal_to_middle_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 2.187483123853562e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "thumb_proximal_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 4.395320006786896e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "trapezium_to_first_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0001703590171775958,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "trapezoid_to_second_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 1.1275702593849246e-16,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "ulna_to_triquetrum"
+        }
+      ],
+      "continuity": [
+        {
+          "minimum_vertex_gap_m": 0.004217417243071278,
+          "name": "right_clavicle_to_scapula",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3362",
+            "FJ3384"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0002697664032598721,
+          "name": "right_scapula_to_humerus",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.009000000000000001,
+          "rest_maximum_allowed_gap_m": 0.008,
+          "source_member_ids": [
+            "FJ3384",
+            "FJ3368"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0008228766692838756,
+          "name": "right_humerus_to_ulna",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3368",
+            "FJ3391"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0005488077329769965,
+          "name": "right_humerus_to_radius",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3368",
+            "FJ3349"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0030869057839361027,
+          "name": "right_radius_to_scaphoid",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3349",
+            "FJ3383"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00395443053715523,
+          "name": "right_radius_to_lunate",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3349",
+            "FJ3374"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.01103999999999994,
+          "name": "right_ulna_to_triquetrum",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3391",
+            "FJ3390"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.005124584914597781,
+          "name": "left_clavicle_to_scapula",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3237",
+            "FJ3279"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00036607344842307126,
+          "name": "left_scapula_to_humerus",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.009000000000000001,
+          "rest_maximum_allowed_gap_m": 0.008,
+          "source_member_ids": [
+            "FJ3279",
+            "FJ3262"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0017464625118753987,
+          "name": "left_humerus_to_ulna",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3262",
+            "FJ3286"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00034151481551886724,
+          "name": "left_humerus_to_radius",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3262",
+            "FJ3277"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0022269398094243937,
+          "name": "left_radius_to_scaphoid",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3277",
+            "FJ3278"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0030410594514820827,
+          "name": "left_radius_to_lunate",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3277",
+            "FJ3268"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.011040000000000053,
+          "name": "left_ulna_to_triquetrum",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3286",
+            "FJ3285"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0004277222104545807,
+          "name": "right_trapezium_to_first_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3388",
+            "FJ3350"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00032243766777254653,
+          "name": "right_trapezoid_to_second_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3389",
+            "FJ3352"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0005170640344056206,
+          "name": "right_capitate_to_third_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3361",
+            "FJ3354"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0008692019823667012,
+          "name": "right_hamate_to_fourth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3367",
+            "FJ3356"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003887606109068148,
+          "name": "right_hamate_to_fifth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3367",
+            "FJ3358"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0004649566751589387,
+          "name": "right_first_metacarpal_to_thumb_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3350",
+            "FJ3327"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0001731891541680465,
+          "name": "right_thumb_proximal_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3327",
+            "FJ3198"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.000509670797468778,
+          "name": "right_second_metacarpal_to_index_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3352",
+            "FJ3322"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0011416628484428328,
+          "name": "right_index_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3322",
+            "FJ3303"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00025188843219050953,
+          "name": "right_index_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3303",
+            "FJ3193"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00016535530725312434,
+          "name": "right_third_metacarpal_to_middle_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3354",
+            "FJ3325"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00023879867102028063,
+          "name": "right_middle_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3325",
+            "FJ3306"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00030808289871283077,
+          "name": "right_middle_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3306",
+            "FJ3196"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003623861245783109,
+          "name": "right_fourth_metacarpal_to_ring_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3356",
+            "FJ3326"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003050745423329796,
+          "name": "right_ring_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3326",
+            "FJ3292"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0006833972714924699,
+          "name": "right_ring_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3292",
+            "FJ3197"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00010426134748004858,
+          "name": "right_fifth_metacarpal_to_little_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3358",
+            "FJ3323"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0011264955421484023,
+          "name": "right_little_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3323",
+            "FJ3304"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003858507472905949,
+          "name": "right_little_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3304",
+            "FJ3194"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00038376901038671173,
+          "name": "left_trapezium_to_first_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3283",
+            "FJ3240"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00015207865059495073,
+          "name": "left_trapezoid_to_second_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3284",
+            "FJ3243"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0001733502333027058,
+          "name": "left_capitate_to_third_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3257",
+            "FJ3246"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003594804363445831,
+          "name": "left_hamate_to_fourth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3261",
+            "FJ3249"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003621592479221548,
+          "name": "left_hamate_to_fifth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3261",
+            "FJ3252"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.000277178049376059,
+          "name": "left_first_metacarpal_to_thumb_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3240",
+            "FJ3318"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0001950639854065821,
+          "name": "left_thumb_proximal_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3318",
+            "FJ3188"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.000347263935847955,
+          "name": "left_second_metacarpal_to_index_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3243",
+            "FJ3313"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00034589390924476125,
+          "name": "left_index_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3313",
+            "FJ3296"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00034074689417166277,
+          "name": "left_index_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3296",
+            "FJ3183"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0002572429179203542,
+          "name": "left_third_metacarpal_to_middle_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3246",
+            "FJ3316"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00017671688887145652,
+          "name": "left_middle_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3316",
+            "FJ3299"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0001779508424294441,
+          "name": "left_middle_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3299",
+            "FJ3186"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00039897348444866223,
+          "name": "left_fourth_metacarpal_to_ring_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3249",
+            "FJ3317"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0006364236563989136,
+          "name": "left_ring_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3317",
+            "FJ3291"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0004585112148960516,
+          "name": "left_ring_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3291",
+            "FJ3187"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0010879325997832747,
+          "name": "left_fifth_metacarpal_to_little_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3252",
+            "FJ3314"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0002948292748980551,
+          "name": "left_little_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3314",
+            "FJ3297"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00033488774345817027,
+          "name": "left_little_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3297",
+            "FJ3184"
+          ]
+        }
+      ],
+      "joint_equality_count": 51,
+      "joint_equality_maximum_correction": 0.4752,
+      "name": "bilateral_shoulder_elevation",
+      "source_q_overrides": [
+        {
+          "q_index": 36,
+          "value": 1.2
+        },
+        {
+          "q_index": 74,
+          "value": 1.2
+        }
+      ]
+    },
+    {
+      "bilateral_gap_parity": [
+        {
+          "absolute_gap_difference_m": 0.0003437138011029078,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "capitate_to_third_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 1.835256831961697e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "clavicle_to_scapula"
+        },
+        {
+          "absolute_gap_difference_m": 0.0009836712523031551,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "fifth_metacarpal_to_little_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 0.00018777862578278398,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "first_metacarpal_to_thumb_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 3.658735987034932e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "fourth_metacarpal_to_ring_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 2.660136298492506e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "hamate_to_fifth_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0005097215460219461,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "hamate_to_fourth_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 0.00012009931123294027,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "humerus_to_radius"
+        },
+        {
+          "absolute_gap_difference_m": 0.0007560119946680931,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "humerus_to_ulna"
+        },
+        {
+          "absolute_gap_difference_m": 8.885846198117248e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "index_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 0.000795768939198089,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "index_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 5.096300383235463e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "little_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0008316662672504201,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "little_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 0.0001301320562831519,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "middle_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 6.208178214891081e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "middle_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 0.0009133710856731357,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "radius_to_lunate"
+        },
+        {
+          "absolute_gap_difference_m": 0.0008599659745116019,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "radius_to_scaphoid"
+        },
+        {
+          "absolute_gap_difference_m": 0.000224886056596466,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "ring_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0003313491140660053,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "ring_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 8.453421837692921e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "scapula_to_humerus"
+        },
+        {
+          "absolute_gap_difference_m": 0.00016240686162085716,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "second_metacarpal_to_index_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 9.188761066736005e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "third_metacarpal_to_middle_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 2.187483123870901e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "thumb_proximal_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 4.395320006777973e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "trapezium_to_first_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 0.00017035901717776155,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "trapezoid_to_second_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 3.642919299551295e-17,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "ulna_to_triquetrum"
+        }
+      ],
+      "continuity": [
+        {
+          "minimum_vertex_gap_m": 0.00031607525291223204,
+          "name": "right_clavicle_to_scapula",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3362",
+            "FJ3384"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00042079703836361647,
+          "name": "right_scapula_to_humerus",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.009000000000000001,
+          "rest_maximum_allowed_gap_m": 0.008,
+          "source_member_ids": [
+            "FJ3384",
+            "FJ3368"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0030889122517276375,
+          "name": "right_humerus_to_ulna",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3368",
+            "FJ3391"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0009777455384900663,
+          "name": "right_humerus_to_radius",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3368",
+            "FJ3349"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0030869057839360992,
+          "name": "right_radius_to_scaphoid",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3349",
+            "FJ3383"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.003954430537155205,
+          "name": "right_radius_to_lunate",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3349",
+            "FJ3374"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.011039999999999925,
+          "name": "right_ulna_to_triquetrum",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3391",
+            "FJ3390"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.000334427821231849,
+          "name": "left_clavicle_to_scapula",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3237",
+            "FJ3279"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00033626281998668726,
+          "name": "left_scapula_to_humerus",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.009000000000000001,
+          "rest_maximum_allowed_gap_m": 0.008,
+          "source_member_ids": [
+            "FJ3279",
+            "FJ3262"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0023329002570595444,
+          "name": "left_humerus_to_ulna",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3262",
+            "FJ3286"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.000857646227257126,
+          "name": "left_humerus_to_radius",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3262",
+            "FJ3277"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0022269398094244973,
+          "name": "left_radius_to_scaphoid",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3277",
+            "FJ3278"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.003041059451482069,
+          "name": "left_radius_to_lunate",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3277",
+            "FJ3268"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.011039999999999961,
+          "name": "left_ulna_to_triquetrum",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3286",
+            "FJ3285"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0004277222104544861,
+          "name": "right_trapezium_to_first_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3388",
+            "FJ3350"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003224376677726914,
+          "name": "right_trapezoid_to_second_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3389",
+            "FJ3352"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0005170640344056103,
+          "name": "right_capitate_to_third_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3361",
+            "FJ3354"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0008692019823666863,
+          "name": "right_hamate_to_fourth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3367",
+            "FJ3356"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00038876061090693765,
+          "name": "right_hamate_to_fifth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3367",
+            "FJ3358"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0004649566751589044,
+          "name": "right_first_metacarpal_to_thumb_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3350",
+            "FJ3327"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00017318915416790888,
+          "name": "right_thumb_proximal_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3327",
+            "FJ3198"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0005096707974686848,
+          "name": "right_second_metacarpal_to_index_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3352",
+            "FJ3322"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0011416628484428699,
+          "name": "right_index_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3322",
+            "FJ3303"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00025188843219053507,
+          "name": "right_index_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3303",
+            "FJ3193"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00016535530725304352,
+          "name": "right_third_metacarpal_to_middle_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3354",
+            "FJ3325"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00023879867102053064,
+          "name": "right_middle_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3325",
+            "FJ3306"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00030808289871280025,
+          "name": "right_middle_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3306",
+            "FJ3196"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003623861245782036,
+          "name": "right_fourth_metacarpal_to_ring_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3356",
+            "FJ3326"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003050745423328047,
+          "name": "right_ring_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3326",
+            "FJ3292"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.000683397271492463,
+          "name": "right_ring_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3292",
+            "FJ3197"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00010426134748009892,
+          "name": "right_fifth_metacarpal_to_little_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3358",
+            "FJ3323"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0011264955421484313,
+          "name": "right_little_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3323",
+            "FJ3304"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003858507472905616,
+          "name": "right_little_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3304",
+            "FJ3194"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00038376901038670637,
+          "name": "left_trapezium_to_first_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3283",
+            "FJ3240"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00015207865059492983,
+          "name": "left_trapezoid_to_second_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3284",
+            "FJ3243"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0001733502333027025,
+          "name": "left_capitate_to_third_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3257",
+            "FJ3246"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003594804363447402,
+          "name": "left_hamate_to_fourth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3261",
+            "FJ3249"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003621592479220126,
+          "name": "left_hamate_to_fifth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3261",
+            "FJ3252"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00027717804937612043,
+          "name": "left_first_metacarpal_to_thumb_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3240",
+            "FJ3318"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0001950639854066179,
+          "name": "left_thumb_proximal_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3318",
+            "FJ3188"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003472639358478276,
+          "name": "left_second_metacarpal_to_index_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3243",
+            "FJ3313"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00034589390924478087,
+          "name": "left_index_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3313",
+            "FJ3296"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00034074689417170755,
+          "name": "left_index_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3296",
+            "FJ3183"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00025724291792040356,
+          "name": "left_third_metacarpal_to_middle_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3246",
+            "FJ3316"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00017671688887161983,
+          "name": "left_middle_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3316",
+            "FJ3299"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00017795084242964835,
+          "name": "left_middle_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3299",
+            "FJ3186"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00039897348444855295,
+          "name": "left_fourth_metacarpal_to_ring_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3249",
+            "FJ3317"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00063642365639881,
+          "name": "left_ring_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3317",
+            "FJ3291"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00045851121489599704,
+          "name": "left_ring_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3291",
+            "FJ3187"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.001087932599783254,
+          "name": "left_fifth_metacarpal_to_little_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3252",
+            "FJ3314"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00029482927489801123,
+          "name": "left_little_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3314",
+            "FJ3297"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00033488774345820697,
+          "name": "left_little_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3297",
+            "FJ3184"
+          ]
+        }
+      ],
+      "joint_equality_count": 51,
+      "joint_equality_maximum_correction": 0.0524192,
+      "name": "bilateral_elbow_flexion",
+      "source_q_overrides": [
+        {
+          "q_index": 39,
+          "value": 1.4
+        },
+        {
+          "q_index": 77,
+          "value": 1.4
+        }
+      ]
+    },
+    {
+      "bilateral_gap_parity": [
+        {
+          "absolute_gap_difference_m": 0.00034371380110281337,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "capitate_to_third_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 1.835256831961697e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "clavicle_to_scapula"
+        },
+        {
+          "absolute_gap_difference_m": 0.000983671252303271,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "fifth_metacarpal_to_little_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0001877786257827815,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "first_metacarpal_to_thumb_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 3.6587359870231305e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "fourth_metacarpal_to_ring_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 2.660136298482179e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "hamate_to_fifth_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0005097215460219502,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "hamate_to_fourth_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0005729936592653265,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "humerus_to_radius"
+        },
+        {
+          "absolute_gap_difference_m": 0.0009235858425915354,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "humerus_to_ulna"
+        },
+        {
+          "absolute_gap_difference_m": 8.885846198122469e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "index_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0007957689391981225,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "index_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 5.096300383245682e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "little_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0008316662672504171,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "little_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 0.0001301320562831371,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "middle_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 6.208178214890547e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "middle_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 0.0009133710856731774,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "radius_to_lunate"
+        },
+        {
+          "absolute_gap_difference_m": 0.0008599659745116704,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "radius_to_scaphoid"
+        },
+        {
+          "absolute_gap_difference_m": 0.00022488605659631047,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "ring_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0003313491140659501,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "ring_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 8.453421837692921e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "scapula_to_humerus"
+        },
+        {
+          "absolute_gap_difference_m": 0.00016240686162086746,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "second_metacarpal_to_index_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 9.188761066737712e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "third_metacarpal_to_middle_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 2.1874831238745656e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "thumb_proximal_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 4.395320006784527e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "trapezium_to_first_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 0.00017035901717762133,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "trapezoid_to_second_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0006507333377421716,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "ulna_to_triquetrum"
+        }
+      ],
+      "continuity": [
+        {
+          "minimum_vertex_gap_m": 0.00031607525291223204,
+          "name": "right_clavicle_to_scapula",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3362",
+            "FJ3384"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00042079703836361647,
+          "name": "right_scapula_to_humerus",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.009000000000000001,
+          "rest_maximum_allowed_gap_m": 0.008,
+          "source_member_ids": [
+            "FJ3384",
+            "FJ3368"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0008228766692838685,
+          "name": "right_humerus_to_ulna",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3368",
+            "FJ3391"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0010572606213013367,
+          "name": "right_humerus_to_radius",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3368",
+            "FJ3349"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.003086905783936182,
+          "name": "right_radius_to_scaphoid",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3349",
+            "FJ3383"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.003954430537155249,
+          "name": "right_radius_to_lunate",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3349",
+            "FJ3374"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.008031936303702485,
+          "name": "right_ulna_to_triquetrum",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3391",
+            "FJ3390"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.000334427821231849,
+          "name": "left_clavicle_to_scapula",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3237",
+            "FJ3279"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00033626281998668726,
+          "name": "left_scapula_to_humerus",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.009000000000000001,
+          "rest_maximum_allowed_gap_m": 0.008,
+          "source_member_ids": [
+            "FJ3279",
+            "FJ3262"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0017464625118754039,
+          "name": "left_humerus_to_ulna",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3262",
+            "FJ3286"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0004842669620360103,
+          "name": "left_humerus_to_radius",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3262",
+            "FJ3277"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0022269398094245116,
+          "name": "left_radius_to_scaphoid",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3277",
+            "FJ3278"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.003041059451482072,
+          "name": "left_radius_to_lunate",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3277",
+            "FJ3268"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.008682669641444657,
+          "name": "left_ulna_to_triquetrum",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3286",
+            "FJ3285"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00042772221045452144,
+          "name": "right_trapezium_to_first_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3388",
+            "FJ3350"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00032243766777259505,
+          "name": "right_trapezoid_to_second_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3389",
+            "FJ3352"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0005170640344055242,
+          "name": "right_capitate_to_third_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3361",
+            "FJ3354"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0008692019823667044,
+          "name": "right_hamate_to_fourth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3367",
+            "FJ3356"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00038876061090683243,
+          "name": "right_hamate_to_fifth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3367",
+            "FJ3358"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00046495667515892127,
+          "name": "right_first_metacarpal_to_thumb_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3350",
+            "FJ3327"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00017318915416787833,
+          "name": "right_thumb_proximal_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3327",
+            "FJ3198"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.000509670797468697,
+          "name": "right_second_metacarpal_to_index_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3352",
+            "FJ3322"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0011416628484428577,
+          "name": "right_index_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3322",
+            "FJ3303"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0002518884321904419,
+          "name": "right_index_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3303",
+            "FJ3193"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00016535530725301316,
+          "name": "right_third_metacarpal_to_middle_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3354",
+            "FJ3325"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00023879867102035343,
+          "name": "right_middle_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3325",
+            "FJ3306"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00030808289871277,
+          "name": "right_middle_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3306",
+            "FJ3196"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003623861245782867,
+          "name": "right_fourth_metacarpal_to_ring_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3356",
+            "FJ3326"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003050745423329605,
+          "name": "right_ring_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3326",
+            "FJ3292"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0006833972714924261,
+          "name": "right_ring_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3292",
+            "FJ3197"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00010426134747999562,
+          "name": "right_fifth_metacarpal_to_little_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3358",
+            "FJ3323"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0011264955421484107,
+          "name": "right_little_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3323",
+            "FJ3304"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.000385850747290582,
+          "name": "right_little_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3304",
+            "FJ3194"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00038376901038667617,
+          "name": "left_trapezium_to_first_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3283",
+            "FJ3240"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00015207865059497372,
+          "name": "left_trapezoid_to_second_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3284",
+            "FJ3243"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0001733502333027109,
+          "name": "left_capitate_to_third_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3257",
+            "FJ3246"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00035948043634475413,
+          "name": "left_hamate_to_fourth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3261",
+            "FJ3249"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00036215924792201064,
+          "name": "left_hamate_to_fifth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3261",
+            "FJ3252"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0002771780493761398,
+          "name": "left_first_metacarpal_to_thumb_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3240",
+            "FJ3318"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.000195063985406624,
+          "name": "left_thumb_proximal_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3318",
+            "FJ3188"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00034726393584782957,
+          "name": "left_second_metacarpal_to_index_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3243",
+            "FJ3313"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003458939092447353,
+          "name": "left_index_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3313",
+            "FJ3296"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00034074689417166657,
+          "name": "left_index_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3296",
+            "FJ3183"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0002572429179203903,
+          "name": "left_third_metacarpal_to_middle_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3246",
+            "FJ3316"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00017671688887144796,
+          "name": "left_middle_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3316",
+            "FJ3299"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0001779508424296329,
+          "name": "left_middle_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3299",
+            "FJ3186"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.000398973484448518,
+          "name": "left_fourth_metacarpal_to_ring_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3249",
+            "FJ3317"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0006364236563989106,
+          "name": "left_ring_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3317",
+            "FJ3291"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0004585112148961156,
+          "name": "left_ring_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3291",
+            "FJ3187"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0010879325997832665,
+          "name": "left_fifth_metacarpal_to_little_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3252",
+            "FJ3314"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00029482927489799367,
+          "name": "left_little_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3314",
+            "FJ3297"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00033488774345812516,
+          "name": "left_little_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3297",
+            "FJ3184"
+          ]
+        }
+      ],
+      "joint_equality_count": 51,
+      "joint_equality_maximum_correction": 0.0524192,
+      "name": "bilateral_forearm_pronation",
+      "source_q_overrides": [
+        {
+          "q_index": 40,
+          "value": 1.2
+        },
+        {
+          "q_index": 78,
+          "value": 1.2
+        }
+      ]
+    },
+    {
+      "bilateral_gap_parity": [
+        {
+          "absolute_gap_difference_m": 0.00034371380110275146,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "capitate_to_third_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 1.835256831961697e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "clavicle_to_scapula"
+        },
+        {
+          "absolute_gap_difference_m": 0.000983671252303171,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "fifth_metacarpal_to_little_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 0.00018777862578284648,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "first_metacarpal_to_thumb_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 3.6587359870341135e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "fourth_metacarpal_to_ring_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 2.6601362984824447e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "hamate_to_fifth_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 0.000509721546021858,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "hamate_to_fourth_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 0.00020729291745822737,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "humerus_to_radius"
+        },
+        {
+          "absolute_gap_difference_m": 0.0009235858425915354,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "humerus_to_ulna"
+        },
+        {
+          "absolute_gap_difference_m": 8.885846198109968e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "index_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0007957689391980694,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "index_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 5.096300383243427e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "little_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0008316662672504249,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "little_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 0.00013013205628318225,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "middle_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 6.208178214883229e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "middle_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 0.0012671199932508359,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "radius_to_lunate"
+        },
+        {
+          "absolute_gap_difference_m": 0.0007118483251477494,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "radius_to_scaphoid"
+        },
+        {
+          "absolute_gap_difference_m": 0.00022488605659641797,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "ring_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 0.000331349114065982,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "ring_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 8.453421837692921e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "scapula_to_humerus"
+        },
+        {
+          "absolute_gap_difference_m": 0.00016240686162081368,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "second_metacarpal_to_index_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 9.188761066742437e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "third_metacarpal_to_middle_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 2.1874831238646424e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "thumb_proximal_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 4.3953200067830146e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "trapezium_to_first_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 0.00017035901717760244,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "trapezoid_to_second_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 2.5032656930558048e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "ulna_to_triquetrum"
+        }
+      ],
+      "continuity": [
+        {
+          "minimum_vertex_gap_m": 0.00031607525291223204,
+          "name": "right_clavicle_to_scapula",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3362",
+            "FJ3384"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00042079703836361647,
+          "name": "right_scapula_to_humerus",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.009000000000000001,
+          "rest_maximum_allowed_gap_m": 0.008,
+          "source_member_ids": [
+            "FJ3384",
+            "FJ3368"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0008228766692838685,
+          "name": "right_humerus_to_ulna",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3368",
+            "FJ3391"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.000548807732977063,
+          "name": "right_humerus_to_radius",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3368",
+            "FJ3349"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.002423509554754034,
+          "name": "right_radius_to_scaphoid",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3349",
+            "FJ3383"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.004797228023717396,
+          "name": "right_radius_to_lunate",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3349",
+            "FJ3374"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.01257088421551525,
+          "name": "right_ulna_to_triquetrum",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3391",
+            "FJ3390"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.000334427821231849,
+          "name": "left_clavicle_to_scapula",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3237",
+            "FJ3279"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00033626281998668726,
+          "name": "left_scapula_to_humerus",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.009000000000000001,
+          "rest_maximum_allowed_gap_m": 0.008,
+          "source_member_ids": [
+            "FJ3279",
+            "FJ3262"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0017464625118754039,
+          "name": "left_humerus_to_ulna",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3262",
+            "FJ3286"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003415148155188356,
+          "name": "left_humerus_to_radius",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3262",
+            "FJ3277"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0017116612296062845,
+          "name": "left_radius_to_scaphoid",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3277",
+            "FJ3278"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00353010803046656,
+          "name": "left_radius_to_lunate",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3277",
+            "FJ3268"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.012595916872445809,
+          "name": "left_ulna_to_triquetrum",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3286",
+            "FJ3285"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00042772221045449705,
+          "name": "right_trapezium_to_first_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3388",
+            "FJ3350"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00032243766777257125,
+          "name": "right_trapezoid_to_second_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3389",
+            "FJ3352"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0005170640344055503,
+          "name": "right_capitate_to_third_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3361",
+            "FJ3354"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0008692019823666187,
+          "name": "right_hamate_to_fourth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3367",
+            "FJ3356"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00038876061090685157,
+          "name": "right_hamate_to_fifth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3367",
+            "FJ3358"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00046495667515891563,
+          "name": "right_first_metacarpal_to_thumb_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3350",
+            "FJ3327"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00017318915416792324,
+          "name": "right_thumb_proximal_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3327",
+            "FJ3198"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0005096707974686863,
+          "name": "right_second_metacarpal_to_index_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3352",
+            "FJ3322"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.001141662848442798,
+          "name": "right_index_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3322",
+            "FJ3303"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00025188843219052493,
+          "name": "right_index_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3303",
+            "FJ3193"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00016535530725299524,
+          "name": "right_third_metacarpal_to_middle_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3354",
+            "FJ3325"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00023879867102032687,
+          "name": "right_middle_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3325",
+            "FJ3306"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00030808289871284264,
+          "name": "right_middle_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3306",
+            "FJ3196"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003623861245782264,
+          "name": "right_fourth_metacarpal_to_ring_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3356",
+            "FJ3326"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003050745423328668,
+          "name": "right_ring_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3326",
+            "FJ3292"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0006833972714925226,
+          "name": "right_ring_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3292",
+            "FJ3197"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00010426134748005548,
+          "name": "right_fifth_metacarpal_to_little_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3358",
+            "FJ3323"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.001126495542148453,
+          "name": "right_little_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3323",
+            "FJ3304"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00038585074729055276,
+          "name": "right_little_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3304",
+            "FJ3194"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003837690103866669,
+          "name": "left_trapezium_to_first_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3283",
+            "FJ3240"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0001520786505949688,
+          "name": "left_trapezoid_to_second_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3284",
+            "FJ3243"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00017335023330279883,
+          "name": "left_capitate_to_third_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3257",
+            "FJ3246"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00035948043634476064,
+          "name": "left_hamate_to_fourth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3261",
+            "FJ3249"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003621592479220271,
+          "name": "left_hamate_to_fifth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3261",
+            "FJ3252"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00027717804937606915,
+          "name": "left_first_metacarpal_to_thumb_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3240",
+            "FJ3318"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00019506398540656967,
+          "name": "left_thumb_proximal_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3318",
+            "FJ3188"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003472639358478726,
+          "name": "left_second_metacarpal_to_index_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3243",
+            "FJ3313"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003458939092447287,
+          "name": "left_index_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3313",
+            "FJ3296"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003407468941716246,
+          "name": "left_index_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3296",
+            "FJ3183"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0002572429179204196,
+          "name": "left_third_metacarpal_to_middle_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3246",
+            "FJ3316"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00017671688887149458,
+          "name": "left_middle_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3316",
+            "FJ3299"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0001779508424296604,
+          "name": "left_middle_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3299",
+            "FJ3186"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00039897348444856753,
+          "name": "left_fourth_metacarpal_to_ring_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3249",
+            "FJ3317"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0006364236563988488,
+          "name": "left_ring_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3317",
+            "FJ3291"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0004585112148961046,
+          "name": "left_ring_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3291",
+            "FJ3187"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0010879325997832263,
+          "name": "left_fifth_metacarpal_to_little_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3252",
+            "FJ3314"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0002948292748980281,
+          "name": "left_little_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3314",
+            "FJ3297"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003348877434581185,
+          "name": "left_little_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3297",
+            "FJ3184"
+          ]
+        }
+      ],
+      "joint_equality_count": 51,
+      "joint_equality_maximum_correction": 0.0524192,
+      "name": "bilateral_wrist_deviation_flexion",
+      "source_q_overrides": [
+        {
+          "q_index": 41,
+          "value": 0.25
+        },
+        {
+          "q_index": 42,
+          "value": 0.6
+        },
+        {
+          "q_index": 79,
+          "value": 0.25
+        },
+        {
+          "q_index": 80,
+          "value": 0.6
+        }
+      ]
+    },
+    {
+      "bilateral_gap_parity": [
+        {
+          "absolute_gap_difference_m": 0.00034371380110278366,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "capitate_to_third_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 1.835256831961697e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "clavicle_to_scapula"
+        },
+        {
+          "absolute_gap_difference_m": 0.0007613225207130729,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "fifth_metacarpal_to_little_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 0.00013347975150104828,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "first_metacarpal_to_thumb_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 0.00023290688447318497,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "fourth_metacarpal_to_ring_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 2.6601362984768448e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "hamate_to_fifth_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0005097215460219439,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "hamate_to_fourth_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 0.00020729291745822737,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "humerus_to_radius"
+        },
+        {
+          "absolute_gap_difference_m": 0.0009235858425915354,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "humerus_to_ulna"
+        },
+        {
+          "absolute_gap_difference_m": 0.0003016704340250012,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "index_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0003921308722706928,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "index_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 0.0002883298878236788,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "little_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 0.000260919410726723,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "little_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 9.482139794881155e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "middle_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0001823018298809432,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "middle_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 0.0009133710856732606,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "radius_to_lunate"
+        },
+        {
+          "absolute_gap_difference_m": 0.00085996597451184,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "radius_to_scaphoid"
+        },
+        {
+          "absolute_gap_difference_m": 1.5218641565359868e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "ring_middle_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 0.00011872300759986363,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "ring_proximal_to_middle"
+        },
+        {
+          "absolute_gap_difference_m": 8.453421837692921e-05,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "scapula_to_humerus"
+        },
+        {
+          "absolute_gap_difference_m": 0.00016800687855240146,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "second_metacarpal_to_index_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0004011832481184188,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "third_metacarpal_to_middle_proximal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0004174330456086999,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "thumb_proximal_to_distal"
+        },
+        {
+          "absolute_gap_difference_m": 0.00012943148457963906,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "trapezium_to_first_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 0.0001703590171775692,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "trapezoid_to_second_metacarpal"
+        },
+        {
+          "absolute_gap_difference_m": 6.418476861114186e-17,
+          "maximum_allowed_difference_m": 0.002,
+          "passed": true,
+          "transition": "ulna_to_triquetrum"
+        }
+      ],
+      "continuity": [
+        {
+          "minimum_vertex_gap_m": 0.00031607525291223204,
+          "name": "right_clavicle_to_scapula",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3362",
+            "FJ3384"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00042079703836361647,
+          "name": "right_scapula_to_humerus",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.009000000000000001,
+          "rest_maximum_allowed_gap_m": 0.008,
+          "source_member_ids": [
+            "FJ3384",
+            "FJ3368"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0008228766692838685,
+          "name": "right_humerus_to_ulna",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3368",
+            "FJ3391"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.000548807732977063,
+          "name": "right_humerus_to_radius",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3368",
+            "FJ3349"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0030869057839362467,
+          "name": "right_radius_to_scaphoid",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3349",
+            "FJ3383"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.003954430537155287,
+          "name": "right_radius_to_lunate",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3349",
+            "FJ3374"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.011040000000000003,
+          "name": "right_ulna_to_triquetrum",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3391",
+            "FJ3390"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.000334427821231849,
+          "name": "left_clavicle_to_scapula",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3237",
+            "FJ3279"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00033626281998668726,
+          "name": "left_scapula_to_humerus",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.009000000000000001,
+          "rest_maximum_allowed_gap_m": 0.008,
+          "source_member_ids": [
+            "FJ3279",
+            "FJ3262"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0017464625118754039,
+          "name": "left_humerus_to_ulna",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3262",
+            "FJ3286"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003415148155188356,
+          "name": "left_humerus_to_radius",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.007,
+          "rest_maximum_allowed_gap_m": 0.006,
+          "source_member_ids": [
+            "FJ3262",
+            "FJ3277"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0022269398094244067,
+          "name": "left_radius_to_scaphoid",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3277",
+            "FJ3278"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0030410594514820267,
+          "name": "left_radius_to_lunate",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.008,
+          "rest_maximum_allowed_gap_m": 0.007,
+          "source_member_ids": [
+            "FJ3277",
+            "FJ3268"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.011039999999999939,
+          "name": "left_ulna_to_triquetrum",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.013000000000000001,
+          "rest_maximum_allowed_gap_m": 0.012,
+          "source_member_ids": [
+            "FJ3286",
+            "FJ3285"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0005265750793272491,
+          "name": "right_trapezium_to_first_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3388",
+            "FJ3350"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00032243766777254767,
+          "name": "right_trapezoid_to_second_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3389",
+            "FJ3352"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0005170640344055601,
+          "name": "right_capitate_to_third_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3361",
+            "FJ3354"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0008692019823666865,
+          "name": "right_hamate_to_fourth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3367",
+            "FJ3356"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003887606109068144,
+          "name": "right_hamate_to_fifth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3367",
+            "FJ3358"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0007401546267947105,
+          "name": "right_first_metacarpal_to_thumb_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3350",
+            "FJ3327"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00016647127388470283,
+          "name": "right_thumb_proximal_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3327",
+            "FJ3198"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.000181931723883845,
+          "name": "right_second_metacarpal_to_index_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3352",
+            "FJ3322"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0005862750836076044,
+          "name": "right_index_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3322",
+            "FJ3303"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0004697290460044233,
+          "name": "right_index_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3303",
+            "FJ3193"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0002005108482015867,
+          "name": "right_third_metacarpal_to_middle_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3354",
+            "FJ3325"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003582350287524677,
+          "name": "right_middle_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3325",
+            "FJ3306"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00022556043923222254,
+          "name": "right_middle_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3306",
+            "FJ3196"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00045366515336051744,
+          "name": "right_fourth_metacarpal_to_ring_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3356",
+            "FJ3326"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00017895040576822497,
+          "name": "right_ring_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3326",
+            "FJ3292"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00042074489316134493,
+          "name": "right_ring_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3292",
+            "FJ3197"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 6.319037122355584e-05,
+          "name": "right_fifth_metacarpal_to_little_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3358",
+            "FJ3323"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00027156619560179084,
+          "name": "right_little_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3323",
+            "FJ3304"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00011634306004235224,
+          "name": "right_little_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3304",
+            "FJ3194"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0006560065639068882,
+          "name": "left_trapezium_to_first_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3283",
+            "FJ3240"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00015207865059497846,
+          "name": "left_trapezoid_to_second_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3284",
+            "FJ3243"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00017335023330277644,
+          "name": "left_capitate_to_third_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3257",
+            "FJ3246"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00035948043634474253,
+          "name": "left_hamate_to_fourth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3261",
+            "FJ3249"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00036215924792204593,
+          "name": "left_hamate_to_fifth_metacarpal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3261",
+            "FJ3252"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0006066748752936622,
+          "name": "left_first_metacarpal_to_thumb_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3240",
+            "FJ3318"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0005839043194934028,
+          "name": "left_thumb_proximal_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3318",
+            "FJ3188"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00034993860243624645,
+          "name": "left_second_metacarpal_to_index_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3243",
+            "FJ3313"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00019414421133691156,
+          "name": "left_index_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3313",
+            "FJ3296"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00016805861197942212,
+          "name": "left_index_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3296",
+            "FJ3183"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0006016940963200055,
+          "name": "left_third_metacarpal_to_middle_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3246",
+            "FJ3316"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0005405368586334109,
+          "name": "left_middle_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3316",
+            "FJ3299"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0003203818371810341,
+          "name": "left_middle_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3299",
+            "FJ3186"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0006865720378337024,
+          "name": "left_fourth_metacarpal_to_ring_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3249",
+            "FJ3317"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0002976734133680886,
+          "name": "left_ring_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3317",
+            "FJ3291"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00040552625159598506,
+          "name": "left_ring_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3291",
+            "FJ3187"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0008245128919366287,
+          "name": "left_fifth_metacarpal_to_little_proximal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3252",
+            "FJ3314"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.0005324856063285138,
+          "name": "left_little_proximal_to_middle",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3314",
+            "FJ3297"
+          ]
+        },
+        {
+          "minimum_vertex_gap_m": 0.00040467294786603107,
+          "name": "left_little_middle_to_distal",
+          "passed": true,
+          "posed_maximum_allowed_gap_m": 0.005,
+          "rest_maximum_allowed_gap_m": 0.004,
+          "source_member_ids": [
+            "FJ3297",
+            "FJ3184"
+          ]
+        }
+      ],
+      "joint_equality_count": 51,
+      "joint_equality_maximum_correction": 0.0524192,
+      "name": "bilateral_functional_fist",
+      "source_q_overrides": [
+        {
+          "q_index": 43,
+          "value": -0.4
+        },
+        {
+          "q_index": 45,
+          "value": -0.5
+        },
+        {
+          "q_index": 46,
+          "value": -0.7
+        },
+        {
+          "q_index": 47,
+          "value": 1.0
+        },
+        {
+          "q_index": 49,
+          "value": 1.0
+        },
+        {
+          "q_index": 50,
+          "value": 0.7
+        },
+        {
+          "q_index": 51,
+          "value": 1.0
+        },
+        {
+          "q_index": 53,
+          "value": 1.0
+        },
+        {
+          "q_index": 54,
+          "value": 0.7
+        },
+        {
+          "q_index": 55,
+          "value": 1.0
+        },
+        {
+          "q_index": 57,
+          "value": 1.0
+        },
+        {
+          "q_index": 58,
+          "value": 0.7
+        },
+        {
+          "q_index": 59,
+          "value": 1.0
+        },
+        {
+          "q_index": 61,
+          "value": 1.0
+        },
+        {
+          "q_index": 62,
+          "value": 0.7
+        },
+        {
+          "q_index": 81,
+          "value": -0.4
+        },
+        {
+          "q_index": 83,
+          "value": -0.5
+        },
+        {
+          "q_index": 84,
+          "value": -0.7
+        },
+        {
+          "q_index": 85,
+          "value": 1.0
+        },
+        {
+          "q_index": 87,
+          "value": 1.0
+        },
+        {
+          "q_index": 88,
+          "value": 0.7
+        },
+        {
+          "q_index": 89,
+          "value": 1.0
+        },
+        {
+          "q_index": 91,
+          "value": 1.0
+        },
+        {
+          "q_index": 92,
+          "value": 0.7
+        },
+        {
+          "q_index": 93,
+          "value": 1.0
+        },
+        {
+          "q_index": 95,
+          "value": 1.0
+        },
+        {
+          "q_index": 96,
+          "value": 0.7
+        },
+        {
+          "q_index": 97,
+          "value": 1.0
+        },
+        {
+          "q_index": 99,
+          "value": 1.0
+        },
+        {
+          "q_index": 100,
+          "value": 0.7
+        }
+      ]
+    }
+  ],
+  "schema": "numi.human.bodyparts3d-myosim-upper-limb-multi-pose-audit.v1",
+  "source_body_count": 64,
+  "source_member_count": 64,
+  "status": "passed_source_owned_bilateral_upper_limb_multi_pose_continuity",
+  "worst_bilateral_gap_parity": {
+    "absolute_gap_difference_m": 0.0012671199932508359,
+    "maximum_allowed_difference_m": 0.002,
+    "passed": true,
+    "pose": "bilateral_wrist_deviation_flexion",
+    "transition": "radius_to_lunate"
+  },
+  "worst_continuity": {
+    "minimum_vertex_gap_m": 0.012595916872445809,
+    "name": "left_ulna_to_triquetrum",
+    "passed": true,
+    "pose": "bilateral_wrist_deviation_flexion",
+    "posed_maximum_allowed_gap_m": 0.013000000000000001,
+    "rest_maximum_allowed_gap_m": 0.012,
+    "source_member_ids": [
+      "FJ3286",
+      "FJ3285"
+    ]
+  }
+}

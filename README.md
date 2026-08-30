@@ -58,7 +58,7 @@ new toe joint. The paired `NHTENDON3` runtime executes 416 muscles and all 832
 endpoints on Apple M4 Pro with byte-identical replay. See the
 [articular placement record](Docs/ARTICULAR_PLACEMENT_V1.md),
 [upper-limb source-mesh registration](Docs/UPPER_LIMB_SOURCE_MESH_REGISTRATION_V1.md),
-[upper-limb multi-pose continuity](Docs/UPPER_LIMB_MULTI_POSE_REGISTRATION_V2.md),
+[upper-limb articular registration](Docs/UPPER_LIMB_ARTICULAR_REGISTRATION_V3.md),
 [rigid-foot ownership and entheses](Docs/RIGID_FOOT_OWNERSHIP_V1.md),
 [visual progress](Docs/VISUAL_PROGRESS.md), and the
 [completion gap ledger](Docs/HUMAN_COMPLETION_GAP_LEDGER.md).
@@ -149,10 +149,9 @@ and preceding [abdominal source-component record](Docs/ABDOMINAL_SOURCE_COMPONEN
 </p>
 
 <p align="center">
-  <img src="Docs/media/numi-human-upper-limb-multi-pose-v2-2048/shoulder/right-rear.png" width="24%" alt="Right shoulder elevation, source-geometry framing" />
-  <img src="Docs/media/numi-human-upper-limb-multi-pose-v2-2048/elbow/left-oblique.png" width="24%" alt="Left elbow flexion, source-geometry framing" />
-  <img src="Docs/media/numi-human-upper-limb-multi-pose-v2-2048/wrist/right-oblique.png" width="24%" alt="Right wrist deviation and flexion" />
-  <img src="Docs/media/numi-human-upper-limb-multi-pose-v2-2048/fist/left-rear.png" width="24%" alt="Left functional fist" />
+  <img src="Docs/media/numi-human-upper-articular-v3/shoulder/myosim-fullbody-articulated-bodyparts-bones-posed-focus-body-41-rear.png" width="32%" alt="Corrected right shoulder elevation with seated humeral head" />
+  <img src="Docs/media/numi-human-upper-articular-v3/elbow/myosim-fullbody-articulated-bodyparts-bones-posed-focus-body-42-oblique.png" width="32%" alt="Corrected right elbow flexion" />
+  <img src="Docs/media/numi-human-upper-articular-v3/wrist/myosim-fullbody-articulated-bodyparts-bones-posed-focus-body-43-oblique.png" width="32%" alt="Corrected right wrist deviation and flexion" />
 </p>
 
 <p align="center">

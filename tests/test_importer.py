@@ -9,6 +9,7 @@ import zipfile
 from pathlib import Path
 from subprocess import run
 
+from numilab_human.open_knee import compile_payload as compile_open_knee_payload
 from numilab_human.open_knee import parse_source as parse_open_knee_source
 
 from numilab_human.model import (
@@ -3095,6 +3096,16 @@ class ImporterTests(unittest.TestCase):
             [("A_To_B", "A_All_Faces", "B_All_Faces")],
         )
         self.assertEqual(source.materials["A"]["c1"], 2.54)
+
+    def test_open_knee_compiler_rejects_unknown_side_before_source_work(self) -> None:
+        with self.assertRaisesRegex(ValueError, "side must be left or right"):
+            compile_open_knee_payload(
+                sources=Path("absent"),
+                open_knee=Path("absent"),
+                registration_path=Path("absent"),
+                output=Path("absent"),
+                side="middle",
+            )
 
 
 if __name__ == "__main__":

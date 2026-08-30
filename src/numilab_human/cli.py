@@ -499,6 +499,7 @@ def open_knee_payload(arguments: argparse.Namespace) -> int:
         "--open-knee", str(arguments.open_knee.resolve()),
         "--registration", str(arguments.registration.resolve()),
         "--output", str(output),
+        "--side", arguments.side,
     ]
     completed = subprocess.run(
         command, capture_output=True, text=True, check=False, env=environment
@@ -506,11 +507,15 @@ def open_knee_payload(arguments: argparse.Namespace) -> int:
     if completed.returncode != 0:
         detail = completed.stderr.strip() or completed.stdout.strip() or "no compiler output"
         raise ImportError(f"Open Knee(s) payload compilation failed: {detail}")
-    manifest = read_json(output / "open-knee-oks003-left.manifest.json")
+    stem = (
+        "open-knee-oks003-left" if arguments.side == "left"
+        else "open-knee-oks003-right-mirrored"
+    )
+    manifest = read_json(output / f"{stem}.manifest.json")
     if manifest.get("schema") != OPEN_KNEE_SCHEMA:
         raise ImportError("Open Knee(s) compiler wrote an unsupported manifest")
-    print(f"wrote {output / 'open-knee-oks003-left.nhknee'}")
-    print(f"wrote {output / 'open-knee-oks003-left.manifest.json'}")
+    print(f"wrote {output / f'{stem}.nhknee'}")
+    print(f"wrote {output / f'{stem}.manifest.json'}")
     return 0
 
 
@@ -1383,12 +1388,13 @@ def parser() -> argparse.ArgumentParser:
     )
     open_knee_parser = commands.add_parser(
         "open-knee-oks003-payload",
-        help="compile exact Open Knee(s) oks003 tissues against the live left-knee frames",
+        help="compile exact Open Knee(s) oks003 tissues for a live knee side",
     )
     open_knee_parser.add_argument("--sources", type=Path, required=True)
     open_knee_parser.add_argument("--open-knee", type=Path, required=True)
     open_knee_parser.add_argument("--registration", type=Path, required=True)
     open_knee_parser.add_argument("--output", type=Path, required=True)
+    open_knee_parser.add_argument("--side", choices=("left", "right"), default="left")
     open_knee_parser.add_argument(
         "--python", type=Path, default=Path(sys.executable),
         help="Python environment with pinned MyoSim, NumPy, and MuJoCo",

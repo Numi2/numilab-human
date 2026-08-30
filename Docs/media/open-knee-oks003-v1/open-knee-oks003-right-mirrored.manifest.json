@@ -129,9 +129,9 @@
   "payload": {
     "abi": 1,
     "bytes": 34356600,
-    "file": "open-knee-oks003-left.nhknee",
+    "file": "open-knee-oks003-right-mirrored.nhknee",
     "magic": "NHKNEE1",
-    "sha256": "1078198d02b9f0902a528799bbe2dd08ed1faeb701d3ab537b0dc59f065f8e2a"
+    "sha256": "ba4a86da89dbad228bf4f16dfb114c461532fd40b9180e6c844764af5b2ec077"
   },
   "registration": {
     "FMO_to_mechanics_origin_initial_translation_femur_body_m": [
@@ -139,7 +139,7 @@
       -0.4045933008962837,
       0.0012387183302053847
     ],
-    "bilateral_frame_symmetry_maximum_m": 0.0,
+    "bilateral_frame_symmetry_maximum_m": 0.00012372114455814608,
     "bounded_surface_translation_refinement_femur_body_m": [
       0.012219814289661072,
       0.003981078753851397,
@@ -159,13 +159,13 @@
       "extra_joint": false,
       "held_out_p90_maximum_m": 0.02,
       "proper_rotation_determinant": 1.0000000000000002,
-      "reflection": false,
-      "reflection_scope": "none",
+      "reflection": true,
+      "reflection_scope": "one_world_sagittal_mirror_of_the_qualified_left_specimen",
       "uniform_scale_maximum": 1.1,
       "uniform_scale_minimum": 0.9
     },
-    "method": "FMO_to_live_left_knee_origin_Xf_to_flexion_axis_Zf_to_proximal_axis_uniform_condylar_width_scale",
-    "output_side": "left",
+    "method": "qualified_left_world_registration_then_sagittal_mirror_into_live_right_knee_frames",
+    "output_side": "right",
     "proper_rotation_source_to_femur_body": [
       [
         -0.14851039289333826,
@@ -183,7 +183,7 @@
         0.0
       ]
     ],
-    "sagittal_mirror_world_x_m": null,
+    "sagittal_mirror_world_x_m": -0.025044814081973222,
     "source_axes": {
       "Xf_axis": [
         0.9889108468842679,
@@ -231,14 +231,14 @@
     "uniform_scale": 0.9842157677410563
   },
   "runtime_binding": {
-    "femur_l": {
-      "core_body_index": 145
+    "femur_r": {
+      "core_body_index": 131
     },
-    "patella_l": {
-      "core_body_index": 156
+    "patella_r": {
+      "core_body_index": 142
     },
-    "tibia_l": {
-      "core_body_index": 150
+    "tibia_r": {
+      "core_body_index": 136
     }
   },
   "schema": "numi.human.open-knee-oks003-payload.v1",
@@ -269,7 +269,7 @@
       "side": "left"
     }
   },
-  "status": "exact_source_payload_registered_to_live_left_knee_candidate",
+  "status": "exact_left_source_topology_mirrored_to_live_right_knee_candidate",
   "topology": {
     "node_count": 248236,
     "node_set_count": 42,
@@ -327,7 +327,7 @@
         "kind": 5,
         "name": "QAT",
         "nodes": 14963,
-        "visual_body": "patella_l"
+        "visual_body": "patella_r"
       },
       {
         "all_surface_faces": 25578,
@@ -336,7 +336,7 @@
         "kind": 2,
         "name": "TBC-L",
         "nodes": 40669,
-        "visual_body": "tibia_l"
+        "visual_body": "tibia_r"
       },
       {
         "all_surface_faces": 4698,
@@ -345,7 +345,7 @@
         "kind": 4,
         "name": "PCL",
         "nodes": 3714,
-        "visual_body": "femur_l"
+        "visual_body": "femur_r"
       },
       {
         "all_surface_faces": 21756,
@@ -354,7 +354,7 @@
         "kind": 2,
         "name": "PTC",
         "nodes": 26121,
-        "visual_body": "patella_l"
+        "visual_body": "patella_r"
       },
       {
         "all_surface_faces": 17280,
@@ -363,7 +363,7 @@
         "kind": 1,
         "name": "PTB",
         "nodes": 8642,
-        "visual_body": "patella_l"
+        "visual_body": "patella_r"
       },
       {
         "all_surface_faces": 13500,
@@ -372,7 +372,7 @@
         "kind": 4,
         "name": "ACL",
         "nodes": 15792,
-        "visual_body": "femur_l"
+        "visual_body": "femur_r"
       },
       {
         "all_surface_faces": 7584,
@@ -381,7 +381,7 @@
         "kind": 1,
         "name": "FBB",
         "nodes": 3794,
-        "visual_body": "tibia_l"
+        "visual_body": "tibia_r"
       },
       {
         "all_surface_faces": 19440,
@@ -390,7 +390,7 @@
         "kind": 4,
         "name": "MCL",
         "nodes": 15693,
-        "visual_body": "femur_l"
+        "visual_body": "femur_r"
       },
       {
         "all_surface_faces": 12600,
@@ -399,7 +399,7 @@
         "kind": 5,
         "name": "PTL",
         "nodes": 9280,
-        "visual_body": "patella_l"
+        "visual_body": "patella_r"
       },
       {
         "all_surface_faces": 12448,
@@ -408,7 +408,7 @@
         "kind": 3,
         "name": "MNS-L",
         "nodes": 10901,
-        "visual_body": "tibia_l"
+        "visual_body": "tibia_r"
       },
       {
         "all_surface_faces": 11664,
@@ -417,7 +417,7 @@
         "kind": 3,
         "name": "MNS-M",
         "nodes": 11706,
-        "visual_body": "tibia_l"
+        "visual_body": "tibia_r"
       },
       {
         "all_surface_faces": 4638,
@@ -426,7 +426,7 @@
         "kind": 4,
         "name": "LCL",
         "nodes": 2960,
-        "visual_body": "femur_l"
+        "visual_body": "femur_r"
       },
       {
         "all_surface_faces": 20580,
@@ -435,7 +435,7 @@
         "kind": 2,
         "name": "TBC-M",
         "nodes": 18060,
-        "visual_body": "tibia_l"
+        "visual_body": "tibia_r"
       },
       {
         "all_surface_faces": 41796,
@@ -444,7 +444,7 @@
         "kind": 1,
         "name": "TBB",
         "nodes": 20900,
-        "visual_body": "tibia_l"
+        "visual_body": "tibia_r"
       },
       {
         "all_surface_faces": 40338,
@@ -453,7 +453,7 @@
         "kind": 1,
         "name": "FMB",
         "nodes": 20171,
-        "visual_body": "femur_l"
+        "visual_body": "femur_r"
       },
       {
         "all_surface_faces": 40824,
@@ -462,13 +462,13 @@
         "kind": 2,
         "name": "FMC",
         "nodes": 24870,
-        "visual_body": "femur_l"
+        "visual_body": "femur_r"
       }
     ],
     "rigid_attachment_node_count_by_body": {
-      "145": 11350,
-      "150": 12161,
-      "156": 5394
+      "131": 11350,
+      "136": 12161,
+      "142": 5394
     },
     "surface_count": 88,
     "surface_face_count": 729068,

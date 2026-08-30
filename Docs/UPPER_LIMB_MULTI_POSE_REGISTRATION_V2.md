@@ -1,5 +1,12 @@
 # Upper-limb multi-pose registration v2
 
+> **Superseded and rejected for visual placement.** Direct review found that
+> this artifact predated the humeral-head articular-center gate and admitted
+> visibly separated shoulder/elbow/wrist views.  Use
+> [upper-limb articular registration v3](UPPER_LIMB_ARTICULAR_REGISTRATION_V3.md)
+> for current placement and evidence.  The material below is retained only as
+> a record of the failed v2 gate.
+
 ## Outcome
 
 The bilateral BodyParts3D shoulder-to-finger geometry now has an executable,
