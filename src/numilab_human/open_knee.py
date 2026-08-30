@@ -1,0 +1,828 @@
+"""Compile the exact Open Knee(s) oks003 knee into a mechanics-ready payload.
+
+Open Knee(s) remains the anatomical/tissue authority. MyoSim supplies only the
+live body frames and joint axis used to place the specimen in Numi Human. The
+compiler admits one proper uniform scale, one anatomically constructed proper
+rotation, and one knee-origin translation; it never performs an anisotropic
+warp or an unconstrained nearest-surface flip.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import math
+import struct
+import xml.etree.ElementTree as ET
+from collections import defaultdict
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any
+
+from .myosim_bone_proximity import _compiled_meshes_by_body
+from .myosim_export import export_fullbody
+from .upper_limb_registration import _rotation_xyzw
+
+
+SCHEMA = "numi.human.open-knee-oks003-payload.v1"
+MAGIC = b"NHKNEE1\0"
+ABI = 1
+INVALID_INDEX = 0xFFFFFFFF
+
+EXPECTED_HASHES = {
+    "Geometry.feb": "3642bd368bbc867569f181fa76129f746470e807e3977585d3803f092dd11262",
+    "ModelProperties.xml": "0ac446ce098b9a09505992eb4f4419c7b944cd57a4afbf6392b137f4806603c1",
+    "FeBio_custom.feb": "00b6efb53ad7e7330296cbb9569d358d48ed60819e22732e6149db6fb98a158a",
+    "license.txt": "d72918838b4adf30979d2a26c23837f0ca05185ba799a3a4fe1fe1b4c05b20b8",
+}
+
+EXPECTED_REGIONS = {
+    "QAT": (14963, "tet4", 69410),
+    "TBC-L": (40669, "tet4", 200079),
+    "PCL": (3714, "tet4", 14379),
+    "PTC": (26121, "tet4", 121105),
+    "PTB": (8642, "tri3", 17280),
+    "ACL": (15792, "tet4", 72552),
+    "FBB": (3794, "tri3", 7584),
+    "MCL": (15693, "tet4", 62712),
+    "PTL": (9280, "tet4", 35616),
+    "MNS-L": (10901, "tet4", 44953),
+    "MNS-M": (11706, "tet4", 51009),
+    "LCL": (2960, "tet4", 9773),
+    "TBC-M": (18060, "tet4", 75627),
+    "TBB": (20900, "tri3", 41796),
+    "FMB": (20171, "tri3", 40338),
+    "FMC": (24870, "tet4", 87072),
+}
+
+REGION_KIND = {
+    "FMB": 1, "TBB": 1, "FBB": 1, "PTB": 1,
+    "FMC": 2, "TBC-L": 2, "TBC-M": 2, "PTC": 2,
+    "MNS-L": 3, "MNS-M": 3,
+    "ACL": 4, "PCL": 4, "MCL": 4, "LCL": 4,
+    "PTL": 5, "QAT": 5,
+}
+
+VISUAL_BODY = {
+    "FMB": "femur_l", "FMC": "femur_l",
+    "TBB": "tibia_l", "FBB": "tibia_l",
+    "TBC-L": "tibia_l", "TBC-M": "tibia_l",
+    "MNS-L": "tibia_l", "MNS-M": "tibia_l",
+    "PTB": "patella_l", "PTC": "patella_l",
+    "ACL": "femur_l", "PCL": "femur_l",
+    "MCL": "femur_l", "LCL": "femur_l",
+    "PTL": "patella_l", "QAT": "patella_l",
+}
+
+RIGID_COUNTERPART_BODY = {
+    "FMB": "femur_l", "TBB": "tibia_l", "FBB": "tibia_l",
+    "PTB": "patella_l",
+}
+
+REGION_STRUCT = struct.Struct("<16s8I")
+SURFACE_STRUCT = struct.Struct("<48s5I")
+NODE_SET_STRUCT = struct.Struct("<48s5I")
+SURFACE_PAIR_STRUCT = struct.Struct("<48sII")
+NODE_STRUCT = struct.Struct("<3fI3fI3fI")
+TETRAHEDRON_STRUCT = struct.Struct("<4I")
+FACE_STRUCT = struct.Struct("<3I")
+MEMBERSHIP_STRUCT = struct.Struct("<I")
+HEADER_STRUCT = struct.Struct("<8s12I96s")
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def _vector(text: str | None, label: str) -> tuple[float, float, float]:
+    if text is None:
+        raise ValueError(f"Open Knee(s) {label} is absent")
+    values = tuple(float(value.strip()) for value in text.replace(" ", "").split(","))
+    if len(values) != 3 or not all(math.isfinite(value) for value in values):
+        raise ValueError(f"Open Knee(s) {label} is not a finite 3-vector")
+    return values
+
+
+@dataclass
+class Region:
+    name: str
+    node_ids: list[int] = field(default_factory=list)
+    nodes_mm: list[tuple[float, float, float]] = field(default_factory=list)
+    element_type: str = ""
+    elements: list[tuple[int, ...]] = field(default_factory=list)
+
+
+@dataclass
+class Surface:
+    name: str
+    faces: list[tuple[int, int, int]] = field(default_factory=list)
+
+
+@dataclass
+class Source:
+    regions: dict[str, Region]
+    node_sets: dict[str, list[int]]
+    surfaces: dict[str, Surface]
+    surface_pairs: list[tuple[str, str, str]]
+    landmarks: dict[str, tuple[float, float, float] | int]
+    materials: dict[str, dict[str, float | str]]
+
+
+def _parse_model_properties(path: Path) -> tuple[
+    dict[str, tuple[float, float, float] | int],
+    dict[str, dict[str, float | str]],
+]:
+    root = ET.parse(path).getroot()
+    landmarks_element = root.find("Landmarks")
+    if landmarks_element is None:
+        raise ValueError("Open Knee(s) ModelProperties has no Landmarks")
+    landmarks: dict[str, tuple[float, float, float] | int] = {}
+    for child in landmarks_element:
+        if child.text is None:
+            continue
+        compact = child.text.strip()
+        if "," in compact:
+            landmarks[child.tag] = _vector(compact, child.tag)
+        else:
+            landmarks[child.tag] = int(compact)
+    required = {"FMO", "Xf_axis", "Yf_axis", "Zf_axis", "TBO", "PTO"}
+    if not required.issubset(landmarks):
+        raise ValueError("Open Knee(s) anatomical coordinate landmarks are incomplete")
+    materials: dict[str, dict[str, float | str]] = {}
+    material_root = root.find("Material")
+    if material_root is None:
+        raise ValueError("Open Knee(s) ModelProperties has no Material table")
+    for element in material_root.findall("material"):
+        name = element.attrib.get("name")
+        kind = element.attrib.get("type")
+        if not name or not kind or name in materials:
+            raise ValueError("Open Knee(s) material identity is invalid")
+        values: dict[str, float | str] = {"type": kind}
+        for child in element:
+            text = (child.text or "").strip()
+            try:
+                values[child.tag] = float(text)
+            except ValueError:
+                values[child.tag] = text
+        materials[name] = values
+    return landmarks, materials
+
+
+def parse_source(directory: Path, *, enforce_exact: bool = True) -> Source:
+    directory = directory.resolve()
+    if enforce_exact:
+        for name, expected in EXPECTED_HASHES.items():
+            path = directory / name
+            if not path.is_file() or _sha256(path) != expected:
+                raise ValueError(f"Open Knee(s) oks003 source identity drifted for {name}")
+        license_text = (directory / "license.txt").read_text(
+            encoding="utf-8", errors="strict"
+        )
+        if "Creative Commons Attribution 4.0 International" not in license_text:
+            raise ValueError("Open Knee(s) CC BY 4.0 license text is absent")
+    landmarks, materials = _parse_model_properties(directory / "ModelProperties.xml")
+    regions: dict[str, Region] = {}
+    node_sets: dict[str, list[int]] = {}
+    surfaces: dict[str, Surface] = {}
+    surface_pairs: list[tuple[str, str, str]] = []
+    current_nodes: Region | None = None
+    current_elements: Region | None = None
+    current_node_set: list[int] | None = None
+    current_surface: Surface | None = None
+    pair_name: str | None = None
+    pair_master: str | None = None
+    pair_slave: str | None = None
+    geometry = directory / "Geometry.feb"
+    for event, element in ET.iterparse(geometry, events=("start", "end")):
+        tag = element.tag
+        if event == "start":
+            if tag == "Nodes":
+                name = element.attrib.get("name", "")
+                if not name or name in regions:
+                    raise ValueError("Open Knee(s) node-region identity is invalid")
+                current_nodes = regions.setdefault(name, Region(name))
+            elif tag == "Elements":
+                name = element.attrib.get("name", "")
+                current_elements = regions.get(name)
+                if current_elements is None or current_elements.element_type:
+                    raise ValueError(f"Open Knee(s) element region {name} is invalid")
+                current_elements.element_type = element.attrib.get("type", "")
+            elif tag == "NodeSet":
+                name = element.attrib.get("name", "")
+                if not name or name in node_sets:
+                    raise ValueError("Open Knee(s) node-set identity is invalid")
+                current_node_set = node_sets.setdefault(name, [])
+            elif tag == "Surface":
+                name = element.attrib.get("name", "")
+                if not name or name in surfaces:
+                    raise ValueError("Open Knee(s) surface identity is invalid")
+                current_surface = surfaces.setdefault(name, Surface(name))
+            elif tag == "SurfacePair":
+                pair_name = element.attrib.get("name", "")
+                pair_master = None
+                pair_slave = None
+            continue
+        if tag == "node":
+            identifier = int(element.attrib["id"])
+            if current_nodes is not None:
+                current_nodes.node_ids.append(identifier)
+                current_nodes.nodes_mm.append(_vector(element.text, "geometry node"))
+            elif current_node_set is not None:
+                current_node_set.append(identifier)
+        elif tag == "elem" and current_elements is not None:
+            values = tuple(int(value.strip()) for value in (element.text or "").split(","))
+            current_elements.elements.append(values)
+        elif tag == "tri3" and current_surface is not None:
+            values = tuple(int(value.strip()) for value in (element.text or "").split(","))
+            if len(values) != 3:
+                raise ValueError(f"Open Knee(s) surface {current_surface.name} is not tri3")
+            current_surface.faces.append(values)
+        elif tag == "master" and pair_name is not None:
+            pair_master = element.attrib.get("surface")
+        elif tag == "slave" and pair_name is not None:
+            pair_slave = element.attrib.get("surface")
+        elif tag == "Nodes":
+            current_nodes = None
+        elif tag == "Elements":
+            current_elements = None
+        elif tag == "NodeSet":
+            current_node_set = None
+        elif tag == "Surface":
+            current_surface = None
+        elif tag == "SurfacePair":
+            if not pair_name or not pair_master or not pair_slave:
+                raise ValueError("Open Knee(s) surface pair is incomplete")
+            surface_pairs.append((pair_name, pair_master, pair_slave))
+            pair_name = None
+        element.clear()
+    all_node_ids: set[int] = set()
+    node_owner: dict[int, str] = {}
+    for name, region in regions.items():
+        if len(region.node_ids) != len(region.nodes_mm):
+            raise ValueError(f"Open Knee(s) region {name} node table is incomplete")
+        for identifier in region.node_ids:
+            if identifier in all_node_ids:
+                raise ValueError(f"Open Knee(s) duplicate global node {identifier}")
+            all_node_ids.add(identifier)
+            node_owner[identifier] = name
+        expected_width = 4 if region.element_type == "tet4" else 3
+        if any(len(values) != expected_width for values in region.elements):
+            raise ValueError(f"Open Knee(s) region {name} element width drifted")
+        if any(node_owner.get(node) not in {None, name} for values in region.elements for node in values):
+            raise ValueError(f"Open Knee(s) region {name} element crosses node ownership")
+    # Node ownership is complete only after every Nodes block has been seen.
+    for name, region in regions.items():
+        if any(node_owner.get(node) != name for values in region.elements for node in values):
+            raise ValueError(f"Open Knee(s) region {name} element references foreign nodes")
+    for name, members in node_sets.items():
+        if len(members) != len(set(members)) or any(node not in all_node_ids for node in members):
+            raise ValueError(f"Open Knee(s) node set {name} is invalid")
+    for name, surface in surfaces.items():
+        if any(node not in all_node_ids for face in surface.faces for node in face):
+            raise ValueError(f"Open Knee(s) surface {name} references an invalid node")
+    if any(master not in surfaces or slave not in surfaces for _, master, slave in surface_pairs):
+        raise ValueError("Open Knee(s) surface-pair reference is invalid")
+    if enforce_exact:
+        if set(regions) != set(EXPECTED_REGIONS):
+            raise ValueError("Open Knee(s) exact region identity set drifted")
+        for name, (nodes, kind, elements) in EXPECTED_REGIONS.items():
+            region = regions[name]
+            if (len(region.nodes_mm), region.element_type, len(region.elements)) != (
+                nodes, kind, elements
+            ):
+                raise ValueError(f"Open Knee(s) exact region counts drifted for {name}")
+        if len(node_sets) != 42 or len(surfaces) != 88 or len(surface_pairs) != 19:
+            raise ValueError("Open Knee(s) exact attachment/contact topology drifted")
+    return Source(regions, node_sets, surfaces, surface_pairs, landmarks, materials)
+
+
+def _unit(vector: Any, np: Any) -> Any:
+    result = np.asarray(vector, dtype=float)
+    length = float(np.linalg.norm(result))
+    if result.shape != (3,) or not math.isfinite(length) or length <= 1.0e-12:
+        raise RuntimeError("Open Knee(s) registration encountered a degenerate axis")
+    return result / length
+
+
+def _quantile_width(points: Any, axis: Any, np: Any) -> float:
+    projection = np.asarray(points, dtype=float) @ _unit(axis, np)
+    return float(np.quantile(projection, 0.98) - np.quantile(projection, 0.02))
+
+
+def _sample(points: Any, maximum: int, np: Any) -> Any:
+    points = np.asarray(points, dtype=float)
+    if len(points) <= maximum:
+        return points.copy()
+    return points[np.linspace(0, len(points) - 1, maximum, dtype=int)]
+
+
+def _nearest_metrics(first: Any, second: Any, np: Any) -> dict[str, float]:
+    first = _sample(first, 400, np)
+    second = _sample(second, 400, np)
+    distances: list[Any] = []
+    for source, target in ((first, second), (second, first)):
+        values = []
+        for address in range(0, len(source), 64):
+            block = source[address : address + 64]
+            squared = np.sum((block[:, None, :] - target[None, :, :]) ** 2, axis=2)
+            values.append(np.min(squared, axis=1))
+        distances.append(np.sqrt(np.concatenate(values)))
+    combined = np.concatenate(distances)
+    return {
+        "mean_m": float(np.mean(combined)),
+        "median_m": float(np.median(combined)),
+        "p90_m": float(np.quantile(combined, 0.90)),
+        "maximum_m": float(np.max(combined)),
+    }
+
+
+def _nearest_indices(source: Any, target: Any, np: Any) -> tuple[Any, Any]:
+    indices = []
+    squared_distances = []
+    for address in range(0, len(source), 64):
+        block = source[address : address + 64]
+        squared = np.sum((block[:, None, :] - target[None, :, :]) ** 2, axis=2)
+        nearest = np.argmin(squared, axis=1)
+        indices.append(nearest)
+        squared_distances.append(squared[np.arange(len(nearest)), nearest])
+    return np.concatenate(indices), np.concatenate(squared_distances)
+
+
+def _bounded_translation_refinement(
+    moving: Any, target: Any, maximum_translation_m: float, np: Any,
+) -> tuple[Any, int, dict[str, float]]:
+    """Fit only a robust translation while reserving every fifth point.
+
+    FMO is a documented distal-posterior landmark, whereas the MyoSim body
+    origin is a mechanics joint frame. Their offset is not assumed to be zero.
+    Rotation, scale, and all relative source tissue geometry remain unchanged.
+    """
+    moving_sample = _sample(moving, 400, np)
+    target_sample = _sample(target, 400, np)
+    moving_addresses = np.arange(len(moving_sample))
+    target_addresses = np.arange(len(target_sample))
+    moving_training = moving_sample[moving_addresses % 5 != 0].copy()
+    target_training = target_sample[target_addresses % 5 != 0]
+    total = np.zeros(3)
+    iterations = 0
+    for iterations in range(1, 31):
+        forward_indices, forward_squared = _nearest_indices(
+            moving_training, target_training, np
+        )
+        reverse_indices, reverse_squared = _nearest_indices(
+            target_training, moving_training, np
+        )
+        residuals = np.concatenate((
+            target_training[forward_indices] - moving_training,
+            target_training - moving_training[reverse_indices],
+        ))
+        distances = np.sqrt(np.concatenate((forward_squared, reverse_squared)))
+        retained = residuals[distances <= float(np.quantile(distances, 0.80))]
+        if len(retained) < 24:
+            raise RuntimeError("Open Knee(s) translation refinement retained too few pairs")
+        delta = np.median(retained, axis=0)
+        proposed = total + delta
+        length = float(np.linalg.norm(proposed))
+        if length > maximum_translation_m:
+            proposed *= maximum_translation_m / length
+            delta = proposed - total
+        total = proposed
+        moving_training += delta
+        if float(np.linalg.norm(delta)) <= 1.0e-7:
+            break
+    transformed = moving_sample + total
+    moving_held = transformed[moving_addresses % 5 == 0]
+    target_held = target_sample[target_addresses % 5 == 0]
+    forward = _nearest_indices(moving_held, target_sample, np)[1]
+    reverse = _nearest_indices(target_held, transformed, np)[1]
+    distances = np.sqrt(np.concatenate((forward, reverse)))
+    metrics = {
+        "mean_m": float(np.mean(distances)),
+        "median_m": float(np.median(distances)),
+        "p90_m": float(np.quantile(distances, 0.90)),
+        "maximum_m": float(np.max(distances)),
+    }
+    return total, iterations, metrics
+
+
+def _world_to_core(points: Any, target: dict[str, Any], np: Any) -> Any:
+    rotation = _rotation_xyzw(target["default_inertial_quaternion_world_xyzw"], np)
+    position = np.asarray(target["default_com_position_world_m"], dtype=float)
+    return np.einsum("ki,ij->kj", np.asarray(points, dtype=float) - position, rotation)
+
+
+def _core_to_world(points: Any, target: dict[str, Any], np: Any) -> Any:
+    rotation = _rotation_xyzw(target["default_inertial_quaternion_world_xyzw"], np)
+    position = np.asarray(target["default_com_position_world_m"], dtype=float)
+    return np.einsum("ki,ji->kj", np.asarray(points, dtype=float), rotation) + position
+
+
+def _fixed_name(value: str, width: int) -> bytes:
+    encoded = value.encode("ascii")
+    if not encoded or len(encoded) >= width:
+        raise RuntimeError(f"Open Knee(s) payload name is invalid: {value}")
+    return encoded + b"\0" * (width - len(encoded))
+
+
+def compile_payload(
+    *, sources: Path, open_knee: Path, registration_path: Path, output: Path,
+) -> dict[str, Any]:
+    try:
+        import mujoco
+        import numpy as np
+        from myo_sim.build.compose import build_model
+    except ImportError as error:  # pragma: no cover - source environment only
+        raise RuntimeError(
+            "Open Knee(s) compilation requires the pinned MyoSim/MuJoCo environment"
+        ) from error
+    source = parse_source(open_knee, enforce_exact=True)
+    registration = json.loads(registration_path.read_text(encoding="utf-8"))
+    if registration.get("schema") != (
+        "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2"
+    ):
+        raise RuntimeError("Open Knee(s) compilation requires registration candidate v2")
+    targets: dict[str, dict[str, Any]] = {}
+    for anchor in registration.get("anchors", []):
+        name = anchor.get("target", {}).get("name")
+        if name in {"femur_l", "tibia_l", "patella_l"}:
+            target = anchor["target"]
+            if name in targets and targets[name] != target:
+                raise RuntimeError(f"Open Knee(s) target frame drifted for {name}")
+            targets[name] = target
+    if set(targets) != {"femur_l", "tibia_l", "patella_l"}:
+        raise RuntimeError("Open Knee(s) live left-knee body frames are incomplete")
+    if {int(targets[name]["core_body_index"]) for name in targets} != {145, 150, 156}:
+        raise RuntimeError("Open Knee(s) pinned left-knee body indices drifted")
+
+    exported = export_fullbody(sources)
+    source_bodies = {body["name"]: body for body in exported["bodies"]}
+    femur_body = source_bodies["femur_l"]
+    model = build_model("myofullbody")
+    meshes = _compiled_meshes_by_body(model, mujoco, np)
+    femur_meshes = meshes.get(int(femur_body["id"]), [])
+    if not femur_meshes:
+        raise RuntimeError("Open Knee(s) registration has no MyoSim femur mesh")
+    myosim_femur_body = np.concatenate([
+        np.asarray(mesh["vertices"], dtype=float) for mesh in femur_meshes
+    ])
+    knee_origin_body = np.asarray([-4.6e-07, -0.404425, 0.00126526], dtype=float)
+    knee_axis_body = _unit([3.98373e-10, 0.0707131, -0.997497], np)
+    proximal_body = _unit([0.0, 1.0, 0.0], np)
+    knee_axis_body = _unit(
+        knee_axis_body - proximal_body * float(knee_axis_body @ proximal_body), np
+    )
+    anterior_body = _unit(np.cross(proximal_body, knee_axis_body), np)
+    target_basis = np.column_stack((knee_axis_body, anterior_body, proximal_body))
+    xf = _unit(source.landmarks["Xf_axis"], np)
+    yf = _unit(source.landmarks["Yf_axis"], np)
+    zf = _unit(source.landmarks["Zf_axis"], np)
+    source_basis = np.column_stack((xf, yf, zf))
+    if abs(float(np.linalg.det(source_basis)) - 1.0) > 2.0e-5:
+        raise RuntimeError("Open Knee(s) femoral anatomical basis is not proper orthonormal")
+    rotation = target_basis @ source_basis.T
+    if abs(float(np.linalg.det(rotation)) - 1.0) > 2.0e-5:
+        raise RuntimeError("Open Knee(s) registration rotation is not proper")
+    fmo_m = 0.001 * np.asarray(source.landmarks["FMO"], dtype=float)
+    source_fmb_m = 0.001 * np.asarray(source.regions["FMB"].nodes_mm, dtype=float)
+    source_distal = source_fmb_m[
+        ((source_fmb_m - fmo_m) @ zf >= -0.040)
+        & ((source_fmb_m - fmo_m) @ zf <= 0.035)
+    ]
+    target_distal = myosim_femur_body[
+        ((myosim_femur_body - knee_origin_body) @ proximal_body >= -0.040)
+        & ((myosim_femur_body - knee_origin_body) @ proximal_body <= 0.065)
+    ]
+    if min(len(source_distal), len(target_distal)) < 40:
+        raise RuntimeError("Open Knee(s) distal-femur width samples are incomplete")
+    source_width = _quantile_width(source_distal, xf, np)
+    target_width = _quantile_width(target_distal, knee_axis_body, np)
+    uniform_scale = target_width / source_width
+    if not 0.90 <= uniform_scale <= 1.10:
+        raise RuntimeError("Open Knee(s) uniform anthropometric scale left its 0.90-1.10 gate")
+    translation = knee_origin_body - uniform_scale * rotation @ fmo_m
+    transformed_fmb_body = (
+        uniform_scale * np.einsum("ki,ji->kj", source_fmb_m, rotation)
+        + translation
+    )
+    transformed_distal = transformed_fmb_body[
+        ((transformed_fmb_body - knee_origin_body) @ proximal_body >= -0.040)
+        & ((transformed_fmb_body - knee_origin_body) @ proximal_body <= 0.065)
+    ]
+    refinement, refinement_iterations, femur_metrics = (
+        _bounded_translation_refinement(
+            transformed_distal, target_distal, 0.035, np
+        )
+    )
+    translation += refinement
+    transformed_fmb_body += refinement
+    if femur_metrics["p90_m"] > 0.020:
+        raise RuntimeError(
+            "Open Knee(s) held-out distal-femur placement exceeded 20 mm: "
+            f"scale={uniform_scale:.9f} source_width={source_width:.9f} "
+            f"target_width={target_width:.9f} refinement={refinement.tolist()} "
+            f"metrics={femur_metrics}"
+        )
+    femur_body_world_rotation = _rotation_xyzw(
+        femur_body["default_body_quaternion_world_xyzw"], np
+    )
+    femur_body_world_position = np.asarray(
+        femur_body["default_body_position_world_m"], dtype=float
+    )
+
+    ordered_names = list(EXPECTED_REGIONS)
+    region_index = {name: index for index, name in enumerate(ordered_names)}
+    global_node_index: dict[int, int] = {}
+    region_node_world: dict[str, Any] = {}
+    region_node_visual: dict[str, Any] = {}
+    node_anchor_body: dict[int, int] = {}
+    node_anchor_local: dict[int, tuple[float, float, float]] = {}
+    node_count = 0
+    for name in ordered_names:
+        region = source.regions[name]
+        source_m = 0.001 * np.asarray(region.nodes_mm, dtype=float)
+        femur_body_local = (
+            uniform_scale * np.einsum("ki,ji->kj", source_m, rotation)
+            + translation
+        )
+        world = np.einsum(
+            "ki,ji->kj", femur_body_local, femur_body_world_rotation
+        ) + femur_body_world_position
+        visual = _world_to_core(world, targets[VISUAL_BODY[name]], np)
+        region_node_world[name] = world
+        region_node_visual[name] = visual
+        for local, identifier in enumerate(region.node_ids):
+            global_node_index[identifier] = node_count + local
+        node_count += len(region.node_ids)
+
+    node_sets_order = sorted(source.node_sets)
+    for set_name in node_sets_order:
+        if "_@_" not in set_name or not set_name.endswith("_TiesNodes"):
+            continue
+        owner_name, counterpart = set_name.removesuffix("_TiesNodes").split("_@_", 1)
+        body_name = RIGID_COUNTERPART_BODY.get(counterpart)
+        if body_name is None or owner_name in RIGID_COUNTERPART_BODY:
+            continue
+        target = targets[body_name]
+        target_body = int(target["core_body_index"])
+        owner = source.regions.get(owner_name)
+        if owner is None:
+            raise RuntimeError(f"Open Knee(s) anchor owner {owner_name} is absent")
+        owner_ids = {identifier: index for index, identifier in enumerate(owner.node_ids)}
+        for identifier in source.node_sets[set_name]:
+            local = owner_ids.get(identifier)
+            if local is None:
+                raise RuntimeError(f"Open Knee(s) rigid tie {set_name} crosses region ownership")
+            global_index = global_node_index[identifier]
+            previous = node_anchor_body.get(global_index)
+            if previous is not None and previous != target_body:
+                raise RuntimeError("Open Knee(s) node has conflicting rigid attachment owners")
+            node_anchor_body[global_index] = target_body
+            local_point = _world_to_core(
+                region_node_world[owner_name][local : local + 1], target, np
+            )[0]
+            node_anchor_local[global_index] = tuple(float(value) for value in local_point)
+
+    surfaces_by_region: dict[str, list[str]] = defaultdict(list)
+    for name in source.surfaces:
+        owner = name.split("_", 1)[0]
+        if owner not in source.regions:
+            raise RuntimeError(f"Open Knee(s) surface owner is unknown: {name}")
+        surfaces_by_region[owner].append(name)
+    # RegionDisk owns a contiguous surface range. Keep that physical layout in
+    # the same source-authoritative region order as the region table; a global
+    # alphabetical sort would make first_surface address another structure.
+    for names in surfaces_by_region.values():
+        names.sort()
+    surfaces_order = [
+        surface_name
+        for region_name in ordered_names
+        for surface_name in surfaces_by_region[region_name]
+    ]
+    if len(surfaces_order) != len(source.surfaces):
+        raise RuntimeError("Open Knee(s) surface partition is incomplete")
+    surface_index = {name: index for index, name in enumerate(surfaces_order)}
+    surface_pair_records = []
+    for name, master, slave in source.surface_pairs:
+        surface_pair_records.append((name, surface_index[master], surface_index[slave]))
+
+    payload = bytearray()
+    header_bytes = HEADER_STRUCT.size
+    payload.extend(b"\0" * header_bytes)
+    first_node = 0
+    first_tet = 0
+    first_surface = 0
+    region_records = []
+    for name in ordered_names:
+        region = source.regions[name]
+        tet_count = len(region.elements) if region.element_type == "tet4" else 0
+        region_records.append(REGION_STRUCT.pack(
+            _fixed_name(name, 16), REGION_KIND[name],
+            int(targets[VISUAL_BODY[name]]["core_body_index"]),
+            first_node, len(region.node_ids), first_tet, tet_count,
+            first_surface, len(surfaces_by_region[name]),
+        ))
+        first_node += len(region.node_ids)
+        first_tet += tet_count
+        first_surface += len(surfaces_by_region[name])
+    for record in region_records:
+        payload.extend(record)
+
+    first_face = 0
+    surface_records = []
+    for name in surfaces_order:
+        surface = source.surfaces[name]
+        owner = name.split("_", 1)[0]
+        surface_records.append(SURFACE_STRUCT.pack(
+            _fixed_name(name, 48), region_index[owner], first_face,
+            len(surface.faces), 1 if name.endswith("_All_Faces") else 0, 0,
+        ))
+        first_face += len(surface.faces)
+    for record in surface_records:
+        payload.extend(record)
+
+    first_membership = 0
+    node_set_records = []
+    for name in node_sets_order:
+        owner = name.split("_", 1)[0]
+        anchor_body = INVALID_INDEX
+        if "_@_" in name and name.endswith("_TiesNodes"):
+            counterpart = name.removesuffix("_TiesNodes").split("_@_", 1)[1]
+            body_name = RIGID_COUNTERPART_BODY.get(counterpart)
+            if body_name is not None and owner not in RIGID_COUNTERPART_BODY:
+                anchor_body = int(targets[body_name]["core_body_index"])
+        node_set_records.append(NODE_SET_STRUCT.pack(
+            _fixed_name(name, 48), region_index[owner], first_membership,
+            len(source.node_sets[name]), anchor_body, 0,
+        ))
+        first_membership += len(source.node_sets[name])
+    for record in node_set_records:
+        payload.extend(record)
+    for name, master, slave in surface_pair_records:
+        payload.extend(SURFACE_PAIR_STRUCT.pack(_fixed_name(name, 48), master, slave))
+
+    node_index = 0
+    for name in ordered_names:
+        world = region_node_world[name]
+        visual = region_node_visual[name]
+        for local in range(len(world)):
+            anchor_body = node_anchor_body.get(node_index, INVALID_INDEX)
+            anchor_local = node_anchor_local.get(node_index, (0.0, 0.0, 0.0))
+            flags = 1 if anchor_body != INVALID_INDEX else 0
+            payload.extend(NODE_STRUCT.pack(
+                *(float(value) for value in world[local]), anchor_body,
+                *(float(value) for value in visual[local]), 0,
+                *anchor_local, flags,
+            ))
+            node_index += 1
+    for name in ordered_names:
+        region = source.regions[name]
+        if region.element_type != "tet4":
+            continue
+        for element in region.elements:
+            payload.extend(TETRAHEDRON_STRUCT.pack(
+                *(global_node_index[identifier] for identifier in element)
+            ))
+    for name in surfaces_order:
+        for face in source.surfaces[name].faces:
+            payload.extend(FACE_STRUCT.pack(
+                *(global_node_index[identifier] for identifier in face)
+            ))
+    for name in node_sets_order:
+        for identifier in source.node_sets[name]:
+            payload.extend(MEMBERSHIP_STRUCT.pack(global_node_index[identifier]))
+
+    hashes = b"".join(bytes.fromhex(EXPECTED_HASHES[name]) for name in (
+        "Geometry.feb", "ModelProperties.xml", "license.txt"
+    ))
+    payload[:header_bytes] = HEADER_STRUCT.pack(
+        MAGIC, ABI, header_bytes, len(ordered_names), node_count, first_tet,
+        len(surfaces_order), first_face, len(node_sets_order), first_membership,
+        len(surface_pair_records), 0, 0, hashes,
+    )
+    output.mkdir(parents=True, exist_ok=True)
+    payload_path = output / "open-knee-oks003-left.nhknee"
+    payload_path.write_bytes(payload)
+
+    attachment_counts = defaultdict(int)
+    for body in node_anchor_body.values():
+        attachment_counts[body] += 1
+    manifest = {
+        "schema": SCHEMA,
+        "status": "exact_source_payload_registered_to_live_left_knee_candidate",
+        "source": {
+            "dataset": "Open Knee(s) oks003",
+            "doi": "10.18735/b0zv-n395",
+            "license": "CC BY 4.0",
+            "files": {name: {"sha256": digest} for name, digest in EXPECTED_HASHES.items()},
+            "subject": {"side": "left", "sex": "female", "age_years": 25,
+                        "height_m": 1.73, "mass_kg": 68.0, "bmi": 22.8},
+        },
+        "registration": {
+            "method": "FMO_to_live_knee_origin_Xf_to_flexion_axis_Zf_to_proximal_axis_uniform_condylar_width_scale",
+            "source_axes": {name: list(source.landmarks[name]) for name in (
+                "Xf_axis", "Yf_axis", "Zf_axis"
+            )},
+            "source_origin_mm": list(source.landmarks["FMO"]),
+            "target_knee_origin_femur_body_m": [float(value) for value in knee_origin_body],
+            "target_flexion_axis_femur_body": [float(value) for value in knee_axis_body],
+            "target_proximal_axis_femur_body": [float(value) for value in proximal_body],
+            "proper_rotation_source_to_femur_body": rotation.tolist(),
+            "translation_femur_body_m": [float(value) for value in translation],
+            "FMO_to_mechanics_origin_initial_translation_femur_body_m": [
+                float(value) for value in (
+                    knee_origin_body - uniform_scale * rotation @ fmo_m
+                )
+            ],
+            "bounded_surface_translation_refinement_femur_body_m": [
+                float(value) for value in refinement
+            ],
+            "bounded_surface_translation_refinement_norm_m": float(
+                np.linalg.norm(refinement)
+            ),
+            "bounded_surface_translation_refinement_maximum_m": 0.035,
+            "bounded_surface_translation_refinement_iterations": refinement_iterations,
+            "uniform_scale": uniform_scale,
+            "source_condylar_width_m": source_width,
+            "target_condylar_width_m": target_width,
+            "distal_femur_surface_metrics": femur_metrics,
+            "gates": {
+                "proper_rotation_determinant": float(np.linalg.det(rotation)),
+                "uniform_scale_minimum": 0.90, "uniform_scale_maximum": 1.10,
+                "held_out_p90_maximum_m": 0.020,
+                "reflection": False, "anisotropic_warp": False,
+                "extra_joint": False,
+            },
+        },
+        "runtime_binding": {
+            name: {"core_body_index": int(targets[name]["core_body_index"])}
+            for name in sorted(targets)
+        },
+        "topology": {
+            "region_count": len(ordered_names),
+            "node_count": node_count,
+            "tetrahedron_count": first_tet,
+            "surface_count": len(surfaces_order),
+            "surface_face_count": first_face,
+            "node_set_count": len(node_sets_order),
+            "node_set_membership_count": first_membership,
+            "surface_pair_count": len(surface_pair_records),
+            "rigid_attachment_node_count_by_body": {
+                str(body): count for body, count in sorted(attachment_counts.items())
+            },
+            "regions": [
+                {"name": name, "kind": REGION_KIND[name],
+                 "visual_body": VISUAL_BODY[name],
+                 "nodes": len(source.regions[name].node_ids),
+                 "element_type": source.regions[name].element_type,
+                 "elements": len(source.regions[name].elements),
+                 "all_surface_faces": len(source.surfaces[f"{name}_All_Faces"].faces)}
+                for name in ordered_names
+            ],
+            "node_sets": {name: len(source.node_sets[name]) for name in node_sets_order},
+            "surface_pairs": [
+                {"name": name, "master": master, "slave": slave}
+                for name, master, slave in source.surface_pairs
+            ],
+        },
+        "materials": source.materials,
+        "payload": {
+            "file": payload_path.name, "magic": "NHKNEE1", "abi": ABI,
+            "bytes": len(payload), "sha256": _sha256(payload_path),
+        },
+        "evidence_boundary": (
+            "This is an exact specimen-source geometry, topology, material, attachment, "
+            "and contact payload with a bounded anatomical registration to the live left "
+            "MyoSim knee. It is not subject-matched to BodyParts3D/MyoSim, not yet a "
+            "coarsened Apple FEM solve, and not yet admitted as production contact."
+        ),
+    }
+    manifest_path = output / "open-knee-oks003-left.manifest.json"
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    return manifest
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--sources", type=Path, required=True)
+    parser.add_argument("--open-knee", type=Path, required=True)
+    parser.add_argument("--registration", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    arguments = parser.parse_args(argv)
+    compile_payload(
+        sources=arguments.sources.resolve(),
+        open_knee=arguments.open_knee.resolve(),
+        registration_path=arguments.registration.resolve(),
+        output=arguments.output.resolve(),
+    )
+    return 0
+
+
+if __name__ == "__main__":  # pragma: no cover
+    raise SystemExit(main())

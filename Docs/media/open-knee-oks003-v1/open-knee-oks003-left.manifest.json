@@ -1,0 +1,571 @@
+{
+  "evidence_boundary": "This is an exact specimen-source geometry, topology, material, attachment, and contact payload with a bounded anatomical registration to the live left MyoSim knee. It is not subject-matched to BodyParts3D/MyoSim, not yet a coarsened Apple FEM solve, and not yet admitted as production contact.",
+  "materials": {
+    "ACL": {
+      "c1": 1.95,
+      "c2": 0.0,
+      "c3": 0.0139,
+      "c4": 116.22,
+      "c5": 535.039,
+      "density": 1e-09,
+      "initial_stretch": 1.016,
+      "k": 146.41,
+      "lam_max": 1.046,
+      "type": "trans iso Mooney-Rivlin"
+    },
+    "FMC": {
+      "c1": 2.54,
+      "c2": 0.0,
+      "density": 1e-09,
+      "k": 100.0,
+      "type": "Mooney-Rivlin"
+    },
+    "LCL": {
+      "c1": 1.44,
+      "c2": 0.0,
+      "c3": 0.57,
+      "c4": 48.0,
+      "c5": 467.1,
+      "density": 1e-09,
+      "initial_stretch": 1.027,
+      "k": 793.65,
+      "lam_max": 1.063,
+      "type": "trans iso Mooney-Rivlin"
+    },
+    "MCL": {
+      "c1": 1.44,
+      "c2": 0.0,
+      "c3": 0.57,
+      "c4": 48.0,
+      "c5": 467.1,
+      "density": 1e-09,
+      "initial_stretch": 1.034,
+      "k": 793.65,
+      "lam_max": 1.063,
+      "type": "trans iso Mooney-Rivlin"
+    },
+    "MNS-L": {
+      "c1": 4.61,
+      "c2": 0.0,
+      "c3": 0.1197,
+      "c4": 150.0,
+      "c5": 400.0,
+      "density": 1e-09,
+      "initial_stretch": "None",
+      "k": 92.16,
+      "lam_max": 1.019,
+      "type": "trans iso Mooney-Rivlin"
+    },
+    "MNS-M": {
+      "c1": 4.61,
+      "c2": 0.0,
+      "c3": 0.1197,
+      "c4": 150.0,
+      "c5": 400.0,
+      "density": 1e-09,
+      "initial_stretch": "None",
+      "k": 92.16,
+      "lam_max": 1.019,
+      "type": "trans iso Mooney-Rivlin"
+    },
+    "PCL": {
+      "c1": 3.25,
+      "c2": 0.0,
+      "c3": 0.1196,
+      "c4": 87.178,
+      "c5": 431.063,
+      "density": 1e-09,
+      "initial_stretch": 1.0,
+      "k": 243.9,
+      "lam_max": 1.035,
+      "type": "trans iso Mooney-Rivlin"
+    },
+    "PTC": {
+      "c1": 2.54,
+      "c2": 0.0,
+      "density": 1e-09,
+      "k": 100.0,
+      "type": "Mooney-Rivlin"
+    },
+    "PTL": {
+      "c1": 2.75,
+      "c2": 0.0,
+      "c3": 0.065,
+      "c4": 115.89,
+      "c5": 777.56,
+      "density": 1e-09,
+      "initial_stretch": 1.0,
+      "k": 206.61,
+      "lam_max": 1.042,
+      "type": "trans iso Mooney-Rivlin"
+    },
+    "QAT": {
+      "c1": 2.75,
+      "c2": 0.0,
+      "c3": 0.065,
+      "c4": 115.89,
+      "c5": 777.56,
+      "density": 1e-09,
+      "initial_stretch": 1.0,
+      "k": 206.61,
+      "lam_max": 1.042,
+      "type": "trans iso Mooney-Rivlin"
+    },
+    "TBC-L": {
+      "c1": 2.54,
+      "c2": 0.0,
+      "density": 1e-09,
+      "k": 100.0,
+      "type": "Mooney-Rivlin"
+    },
+    "TBC-M": {
+      "c1": 2.54,
+      "c2": 0.0,
+      "density": 1e-09,
+      "k": 100.0,
+      "type": "Mooney-Rivlin"
+    }
+  },
+  "payload": {
+    "abi": 1,
+    "bytes": 34356600,
+    "file": "open-knee-oks003-left.nhknee",
+    "magic": "NHKNEE1",
+    "sha256": "1078198d02b9f0902a528799bbe2dd08ed1faeb701d3ab537b0dc59f065f8e2a"
+  },
+  "registration": {
+    "FMO_to_mechanics_origin_initial_translation_femur_body_m": [
+      -0.0066895554287442725,
+      -0.4045933008962837,
+      0.0012387183302053847
+    ],
+    "bounded_surface_translation_refinement_femur_body_m": [
+      0.012219814289661072,
+      0.003981078753851397,
+      -0.0005300326869985151
+    ],
+    "bounded_surface_translation_refinement_iterations": 13,
+    "bounded_surface_translation_refinement_maximum_m": 0.035,
+    "bounded_surface_translation_refinement_norm_m": 0.012862883967736738,
+    "distal_femur_surface_metrics": {
+      "maximum_m": 0.042390525282178064,
+      "mean_m": 0.009150514519020842,
+      "median_m": 0.006785956617097986,
+      "p90_m": 0.0189508436097816
+    },
+    "gates": {
+      "anisotropic_warp": false,
+      "extra_joint": false,
+      "held_out_p90_maximum_m": 0.02,
+      "proper_rotation_determinant": 1.0000000000000002,
+      "reflection": false,
+      "uniform_scale_maximum": 1.1,
+      "uniform_scale_minimum": 0.9
+    },
+    "method": "FMO_to_live_knee_origin_Xf_to_flexion_axis_Zf_to_proximal_axis_uniform_condylar_width_scale",
+    "proper_rotation_source_to_femur_body": [
+      [
+        -0.14851039289333826,
+        -0.9889108469435789,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ],
+      [
+        -0.9889108469435789,
+        0.14851039289333826,
+        0.0
+      ]
+    ],
+    "source_axes": {
+      "Xf_axis": [
+        0.9889108468842679,
+        -0.1485103932882822,
+        0.0
+      ],
+      "Yf_axis": [
+        0.1485103932882822,
+        0.9889108468842679,
+        -0.0
+      ],
+      "Zf_axis": [
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    "source_condylar_width_m": 0.07226716070809897,
+    "source_origin_mm": [
+      -1.036,
+      -6.717,
+      0.171
+    ],
+    "target_condylar_width_m": 0.07112647905878793,
+    "target_flexion_axis_femur_body": [
+      3.993726296921194e-10,
+      0.0,
+      -1.0
+    ],
+    "target_knee_origin_femur_body_m": [
+      -4.6e-07,
+      -0.404425,
+      0.00126526
+    ],
+    "target_proximal_axis_femur_body": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "translation_femur_body_m": [
+      0.005530258860916799,
+      -0.4006122221424323,
+      0.0007086856432068696
+    ],
+    "uniform_scale": 0.9842157677410563
+  },
+  "runtime_binding": {
+    "femur_l": {
+      "core_body_index": 145
+    },
+    "patella_l": {
+      "core_body_index": 156
+    },
+    "tibia_l": {
+      "core_body_index": 150
+    }
+  },
+  "schema": "numi.human.open-knee-oks003-payload.v1",
+  "source": {
+    "dataset": "Open Knee(s) oks003",
+    "doi": "10.18735/b0zv-n395",
+    "files": {
+      "FeBio_custom.feb": {
+        "sha256": "00b6efb53ad7e7330296cbb9569d358d48ed60819e22732e6149db6fb98a158a"
+      },
+      "Geometry.feb": {
+        "sha256": "3642bd368bbc867569f181fa76129f746470e807e3977585d3803f092dd11262"
+      },
+      "ModelProperties.xml": {
+        "sha256": "0ac446ce098b9a09505992eb4f4419c7b944cd57a4afbf6392b137f4806603c1"
+      },
+      "license.txt": {
+        "sha256": "d72918838b4adf30979d2a26c23837f0ca05185ba799a3a4fe1fe1b4c05b20b8"
+      }
+    },
+    "license": "CC BY 4.0",
+    "subject": {
+      "age_years": 25,
+      "bmi": 22.8,
+      "height_m": 1.73,
+      "mass_kg": 68.0,
+      "sex": "female",
+      "side": "left"
+    }
+  },
+  "status": "exact_source_payload_registered_to_live_left_knee_candidate",
+  "topology": {
+    "node_count": 248236,
+    "node_set_count": 42,
+    "node_set_membership_count": 43260,
+    "node_sets": {
+      "ACL_@_FMB_TiesNodes": 682,
+      "ACL_@_TBB_TiesNodes": 524,
+      "FBB_@_LCL_TiesNodes": 10,
+      "FMB_@_ACL_ContactNodes": 913,
+      "FMB_@_ACL_TiesNodes": 120,
+      "FMB_@_FMC_TiesNodes": 4016,
+      "FMB_@_LCL_TiesNodes": 11,
+      "FMB_@_MCL_TiesNodes": 139,
+      "FMB_@_PCL_ContactNodes": 430,
+      "FMB_@_PCL_TiesNodes": 108,
+      "FMC_@_FMB_TiesNodes": 9517,
+      "LCL_@_FBB_TiesNodes": 20,
+      "LCL_@_FMB_TiesNodes": 25,
+      "MCL_@_FMB_TiesNodes": 808,
+      "MCL_@_MNS-M_TiesNodes": 402,
+      "MCL_@_TBB_TiesNodes": 69,
+      "MNS-L_@_TBB_TiesNodes": 136,
+      "MNS-M_@_MCL_TiesNodes": 252,
+      "MNS-M_@_PCL_ContactNodes": 139,
+      "MNS-M_@_TBB_TiesNodes": 124,
+      "PCL_@_FMB_TiesNodes": 318,
+      "PCL_@_MNS-M_ContactNodes": 118,
+      "PCL_@_TBB_TiesNodes": 30,
+      "PTB_@_PTC_TiesNodes": 2315,
+      "PTB_@_PTL_TiesNodes": 497,
+      "PTB_@_QAT_TiesNodes": 617,
+      "PTC_@_PTB_TiesNodes": 4592,
+      "PTL_@_PTB_TiesNodes": 424,
+      "PTL_@_TBB_TiesNodes": 553,
+      "QAT_@_PTB_TiesNodes": 378,
+      "TBB_@_ACL_ContactNodes": 428,
+      "TBB_@_ACL_TiesNodes": 133,
+      "TBB_@_MCL_TiesNodes": 21,
+      "TBB_@_MNS-L_TiesNodes": 62,
+      "TBB_@_MNS-M_TiesNodes": 63,
+      "TBB_@_PCL_ContactNodes": 351,
+      "TBB_@_PCL_TiesNodes": 21,
+      "TBB_@_PTL_TiesNodes": 571,
+      "TBB_@_TBC-L_TiesNodes": 991,
+      "TBB_@_TBC-M_TiesNodes": 1627,
+      "TBC-L_@_TBB_TiesNodes": 5709,
+      "TBC-M_@_TBB_TiesNodes": 4996
+    },
+    "region_count": 16,
+    "regions": [
+      {
+        "all_surface_faces": 12300,
+        "element_type": "tet4",
+        "elements": 69410,
+        "kind": 5,
+        "name": "QAT",
+        "nodes": 14963,
+        "visual_body": "patella_l"
+      },
+      {
+        "all_surface_faces": 25578,
+        "element_type": "tet4",
+        "elements": 200079,
+        "kind": 2,
+        "name": "TBC-L",
+        "nodes": 40669,
+        "visual_body": "tibia_l"
+      },
+      {
+        "all_surface_faces": 4698,
+        "element_type": "tet4",
+        "elements": 14379,
+        "kind": 4,
+        "name": "PCL",
+        "nodes": 3714,
+        "visual_body": "femur_l"
+      },
+      {
+        "all_surface_faces": 21756,
+        "element_type": "tet4",
+        "elements": 121105,
+        "kind": 2,
+        "name": "PTC",
+        "nodes": 26121,
+        "visual_body": "patella_l"
+      },
+      {
+        "all_surface_faces": 17280,
+        "element_type": "tri3",
+        "elements": 17280,
+        "kind": 1,
+        "name": "PTB",
+        "nodes": 8642,
+        "visual_body": "patella_l"
+      },
+      {
+        "all_surface_faces": 13500,
+        "element_type": "tet4",
+        "elements": 72552,
+        "kind": 4,
+        "name": "ACL",
+        "nodes": 15792,
+        "visual_body": "femur_l"
+      },
+      {
+        "all_surface_faces": 7584,
+        "element_type": "tri3",
+        "elements": 7584,
+        "kind": 1,
+        "name": "FBB",
+        "nodes": 3794,
+        "visual_body": "tibia_l"
+      },
+      {
+        "all_surface_faces": 19440,
+        "element_type": "tet4",
+        "elements": 62712,
+        "kind": 4,
+        "name": "MCL",
+        "nodes": 15693,
+        "visual_body": "femur_l"
+      },
+      {
+        "all_surface_faces": 12600,
+        "element_type": "tet4",
+        "elements": 35616,
+        "kind": 5,
+        "name": "PTL",
+        "nodes": 9280,
+        "visual_body": "patella_l"
+      },
+      {
+        "all_surface_faces": 12448,
+        "element_type": "tet4",
+        "elements": 44953,
+        "kind": 3,
+        "name": "MNS-L",
+        "nodes": 10901,
+        "visual_body": "tibia_l"
+      },
+      {
+        "all_surface_faces": 11664,
+        "element_type": "tet4",
+        "elements": 51009,
+        "kind": 3,
+        "name": "MNS-M",
+        "nodes": 11706,
+        "visual_body": "tibia_l"
+      },
+      {
+        "all_surface_faces": 4638,
+        "element_type": "tet4",
+        "elements": 9773,
+        "kind": 4,
+        "name": "LCL",
+        "nodes": 2960,
+        "visual_body": "femur_l"
+      },
+      {
+        "all_surface_faces": 20580,
+        "element_type": "tet4",
+        "elements": 75627,
+        "kind": 2,
+        "name": "TBC-M",
+        "nodes": 18060,
+        "visual_body": "tibia_l"
+      },
+      {
+        "all_surface_faces": 41796,
+        "element_type": "tri3",
+        "elements": 41796,
+        "kind": 1,
+        "name": "TBB",
+        "nodes": 20900,
+        "visual_body": "tibia_l"
+      },
+      {
+        "all_surface_faces": 40338,
+        "element_type": "tri3",
+        "elements": 40338,
+        "kind": 1,
+        "name": "FMB",
+        "nodes": 20171,
+        "visual_body": "femur_l"
+      },
+      {
+        "all_surface_faces": 40824,
+        "element_type": "tet4",
+        "elements": 87072,
+        "kind": 2,
+        "name": "FMC",
+        "nodes": 24870,
+        "visual_body": "femur_l"
+      }
+    ],
+    "rigid_attachment_node_count_by_body": {
+      "145": 11350,
+      "150": 12161,
+      "156": 5394
+    },
+    "surface_count": 88,
+    "surface_face_count": 729068,
+    "surface_pair_count": 19,
+    "surface_pairs": [
+      {
+        "master": "QAT_@_FMB_ContactFaces",
+        "name": "QAT_To_FMB",
+        "slave": "FMB_@_QAT_ContactFaces"
+      },
+      {
+        "master": "QAT_@_FMC_ContactFaces",
+        "name": "QAT_To_FMC",
+        "slave": "FMC_@_QAT_ContactFaces"
+      },
+      {
+        "master": "TBC-L_@_FMC_ContactFaces",
+        "name": "TBC-L_To_FMC",
+        "slave": "FMC_@_TBC-L_ContactFaces"
+      },
+      {
+        "master": "TBC-L_@_MNS-L_ContactFaces",
+        "name": "TBC-L_To_MNS-L",
+        "slave": "MNS-L_@_TBC-L_ContactFaces"
+      },
+      {
+        "master": "PCL_@_TBB_ContactFaces",
+        "name": "PCL_To_TBB",
+        "slave": "TBB_@_PCL_ContactFaces"
+      },
+      {
+        "master": "PCL_@_FMB_ContactFaces",
+        "name": "PCL_To_FMB",
+        "slave": "FMB_@_PCL_ContactFaces"
+      },
+      {
+        "master": "PCL_@_MNS-M_ContactFaces",
+        "name": "PCL_To_MNS-M",
+        "slave": "MNS-M_@_PCL_ContactFaces"
+      },
+      {
+        "master": "PCL_@_ACL_ContactFaces",
+        "name": "PCL_To_ACL",
+        "slave": "ACL_@_PCL_ContactFaces"
+      },
+      {
+        "master": "PTC_@_FMC_ContactFaces",
+        "name": "PTC_To_FMC",
+        "slave": "FMC_@_PTC_ContactFaces"
+      },
+      {
+        "master": "ACL_@_TBB_ContactFaces",
+        "name": "ACL_To_TBB",
+        "slave": "TBB_@_ACL_ContactFaces"
+      },
+      {
+        "master": "ACL_@_FMB_ContactFaces",
+        "name": "ACL_To_FMB",
+        "slave": "FMB_@_ACL_ContactFaces"
+      },
+      {
+        "master": "MCL_@_TBB_ContactFaces",
+        "name": "MCL_To_TBB",
+        "slave": "TBB_@_MCL_ContactFaces"
+      },
+      {
+        "master": "MCL_@_FMB_ContactFaces",
+        "name": "MCL_To_FMB",
+        "slave": "FMB_@_MCL_ContactFaces"
+      },
+      {
+        "master": "MCL_@_MNS-M_TiesFaces",
+        "name": "MCL_To_MNS-M",
+        "slave": "MNS-M_@_MCL_TiesFaces"
+      },
+      {
+        "master": "MNS-L_@_FMC_ContactFaces",
+        "name": "MNS-L_To_FMC",
+        "slave": "FMC_@_MNS-L_ContactFaces"
+      },
+      {
+        "master": "MNS-M_@_TBC-M_ContactFaces",
+        "name": "MNS-M_To_TBC-M",
+        "slave": "TBC-M_@_MNS-M_ContactFaces"
+      },
+      {
+        "master": "MNS-M_@_FMC_ContactFaces",
+        "name": "MNS-M_To_FMC",
+        "slave": "FMC_@_MNS-M_ContactFaces"
+      },
+      {
+        "master": "LCL_@_FMB_ContactFaces",
+        "name": "LCL_To_FMB",
+        "slave": "FMB_@_LCL_ContactFaces"
+      },
+      {
+        "master": "TBC-M_@_FMC_ContactFaces",
+        "name": "TBC-M_To_FMC",
+        "slave": "FMC_@_TBC-M_ContactFaces"
+      }
+    ],
+    "tetrahedron_count": 844287
+  }
+}

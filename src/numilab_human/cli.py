@@ -61,6 +61,7 @@ from .model import (
 )
 from .zanatomy import build_zanatomy_calf_visual_supplement_payload
 from .lower_limb_registration import propose_lower_limb_registration
+from .open_knee import SCHEMA as OPEN_KNEE_SCHEMA
 from .thoracic_registration import SCHEMA as THORACIC_REGISTRATION_SCHEMA
 from .pelvis_registration import SCHEMA as PELVIS_REGISTRATION_SCHEMA
 from .rib_registration import SCHEMA as RIB_REGISTRATION_SCHEMA
@@ -479,6 +480,37 @@ def myosim_lower_limb_source_registration(arguments: argparse.Namespace) -> int:
     ):
         raise ImportError("MyoSim lower-limb source registration wrote an unsupported schema")
     print(f"wrote {output}")
+    return 0
+
+
+def open_knee_payload(arguments: argparse.Namespace) -> int:
+    compiler = arguments.python.expanduser().absolute()
+    if not compiler.is_file() or not os.access(compiler, os.X_OK):
+        raise ImportError(f"Open Knee(s) compiler Python is unavailable: {compiler}")
+    output = arguments.output.resolve()
+    environment = dict(os.environ)
+    source_path = str(REPOSITORY_ROOT / "src")
+    environment["PYTHONPATH"] = source_path + (
+        os.pathsep + environment["PYTHONPATH"] if environment.get("PYTHONPATH") else ""
+    )
+    command = [
+        str(compiler), "-m", "numilab_human.open_knee",
+        "--sources", str(arguments.sources.resolve()),
+        "--open-knee", str(arguments.open_knee.resolve()),
+        "--registration", str(arguments.registration.resolve()),
+        "--output", str(output),
+    ]
+    completed = subprocess.run(
+        command, capture_output=True, text=True, check=False, env=environment
+    )
+    if completed.returncode != 0:
+        detail = completed.stderr.strip() or completed.stdout.strip() or "no compiler output"
+        raise ImportError(f"Open Knee(s) payload compilation failed: {detail}")
+    manifest = read_json(output / "open-knee-oks003-left.manifest.json")
+    if manifest.get("schema") != OPEN_KNEE_SCHEMA:
+        raise ImportError("Open Knee(s) compiler wrote an unsupported manifest")
+    print(f"wrote {output / 'open-knee-oks003-left.nhknee'}")
+    print(f"wrote {output / 'open-knee-oks003-left.manifest.json'}")
     return 0
 
 
@@ -1349,6 +1381,19 @@ def parser() -> argparse.ArgumentParser:
     lower_limb_source_registration_parser.set_defaults(
         handler=myosim_lower_limb_source_registration
     )
+    open_knee_parser = commands.add_parser(
+        "open-knee-oks003-payload",
+        help="compile exact Open Knee(s) oks003 tissues against the live left-knee frames",
+    )
+    open_knee_parser.add_argument("--sources", type=Path, required=True)
+    open_knee_parser.add_argument("--open-knee", type=Path, required=True)
+    open_knee_parser.add_argument("--registration", type=Path, required=True)
+    open_knee_parser.add_argument("--output", type=Path, required=True)
+    open_knee_parser.add_argument(
+        "--python", type=Path, default=Path(sys.executable),
+        help="Python environment with pinned MyoSim, NumPy, and MuJoCo",
+    )
+    open_knee_parser.set_defaults(handler=open_knee_payload)
     thoracic_registration_parser = commands.add_parser(
         "myosim-thoracic-registration",
         help="propose exact T1-T12 source-mesh registration with enthesis and continuity gates",

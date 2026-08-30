@@ -9,6 +9,8 @@ import zipfile
 from pathlib import Path
 from subprocess import run
 
+from numilab_human.open_knee import parse_source as parse_open_knee_source
+
 from numilab_human.model import (
     _BODYPARTS_MYOSIM_AXIAL_EXTENSIONS,
     _BODYPARTS_MYOSIM_BONE_ANCHORS,
@@ -3056,6 +3058,43 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(artifact["status"], "ready_for_import_public_mirror")
         self.assertEqual(upper["source_model"]["id"], "upper_fixture")
         self.assertEqual(upper["skeleton"]["status"], "compatible")
+
+    def test_open_knee_parser_preserves_named_topology_and_contact(self) -> None:
+        properties = """<?xml version="1.0"?>
+<ModelProperties><Material><material name="A" type="Mooney-Rivlin">
+<c1>2.54</c1><k>100</k></material></Material><Landmarks>
+<FMO>0,0,0</FMO><TBO>0,0,-1</TBO><PTO>0,1,0</PTO>
+<Xf_axis>1,0,0</Xf_axis><Yf_axis>0,1,0</Yf_axis><Zf_axis>0,0,1</Zf_axis>
+</Landmarks></ModelProperties>"""
+        geometry = """<?xml version="1.0"?>
+<febio_spec><Geometry>
+<Nodes name="A"><node id="1">0,0,0</node><node id="2">1,0,0</node>
+<node id="3">0,1,0</node><node id="4">0,0,1</node></Nodes>
+<Elements name="A" type="tet4"><elem id="1">1,2,3,4</elem></Elements>
+<Nodes name="B"><node id="5">0,0,0</node><node id="6">1,0,0</node>
+<node id="7">0,1,0</node></Nodes>
+<Elements name="B" type="tri3"><elem id="2">5,6,7</elem></Elements>
+<NodeSet name="A_@_B_TiesNodes"><node id="1"/><node id="2"/></NodeSet>
+<Surface name="A_All_Faces"><tri3 id="1">1,2,3</tri3></Surface>
+<Surface name="B_All_Faces"><tri3 id="2">5,6,7</tri3></Surface>
+<SurfacePair name="A_To_B"><master surface="A_All_Faces"/>
+<slave surface="B_All_Faces"/></SurfacePair>
+</Geometry></febio_spec>"""
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            (directory / "ModelProperties.xml").write_text(properties, encoding="utf-8")
+            (directory / "Geometry.feb").write_text(geometry, encoding="utf-8")
+            source = parse_open_knee_source(directory, enforce_exact=False)
+        self.assertEqual(set(source.regions), {"A", "B"})
+        self.assertEqual(source.regions["A"].element_type, "tet4")
+        self.assertEqual(source.regions["A"].elements, [(1, 2, 3, 4)])
+        self.assertEqual(source.node_sets["A_@_B_TiesNodes"], [1, 2])
+        self.assertEqual(source.surfaces["A_All_Faces"].faces, [(1, 2, 3)])
+        self.assertEqual(
+            source.surface_pairs,
+            [("A_To_B", "A_All_Faces", "B_All_Faces")],
+        )
+        self.assertEqual(source.materials["A"]["c1"], 2.54)
 
 
 if __name__ == "__main__":
