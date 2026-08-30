@@ -52,6 +52,11 @@ HUMERAL_HEAD_SELECTION_RADIUS_M = 0.040
 HUMERAL_HEAD_CENTER_MAXIMUM_RESIDUAL_M = 0.003
 HUMERAL_HEAD_RADIUS_MAXIMUM_RESIDUAL_M = 0.004
 HUMERAL_HEAD_MECHANICS_CENTER_MAXIMUM_RESIDUAL_M = 0.005
+INTERFACE_PATCH_FRACTION = 0.02
+INTERFACE_PATCH_MINIMUM_VERTEX_COUNT = 12
+INTERFACE_PATCH_MAXIMUM_VERTEX_COUNT = 128
+INTERFACE_PATCH_QUANTILE = 0.90
+INTERFACE_PATCH_GATE_MULTIPLIER = 1.25
 
 
 def _sha256(path: Path) -> str:
@@ -603,6 +608,54 @@ def _minimum_gap(first: Any, second: Any, np: Any) -> tuple[float, Any, Any]:
     return math.sqrt(float(squared[ordinal])), first[ordinal], second[int(indices[ordinal])]
 
 
+def _interface_patch_metrics(first: Any, second: Any, np: Any) -> dict[str, Any]:
+    """Measure a small, bidirectional joint-interface patch, not one vertex.
+
+    The lowest two percent of point-to-surface distances on each bone form a
+    deterministic proxy for the opposed articular neighborhood.  The 90th
+    percentile of each neighborhood prevents an isolated spur or accidental
+    crossing from admitting an otherwise displaced bone.  The metric does not
+    assert cartilage contact; anatomically real spaces such as the ulnocarpal
+    interval retain their transition-specific allowance.
+    """
+    first_points = np.asarray(first, dtype=float)
+    second_points = np.asarray(second, dtype=float)
+    if (
+        first_points.ndim != 2 or first_points.shape[1:] != (3,)
+        or second_points.ndim != 2 or second_points.shape[1:] != (3,)
+        or len(first_points) == 0 or len(second_points) == 0
+        or not bool(np.all(np.isfinite(first_points)))
+        or not bool(np.all(np.isfinite(second_points)))
+    ):
+        raise RuntimeError("upper-limb interface patch received invalid vertices")
+
+    def one_direction(source: Any, target: Any) -> tuple[float, int]:
+        _, squared = _nearest(source, target, np)
+        count = max(
+            INTERFACE_PATCH_MINIMUM_VERTEX_COUNT,
+            min(
+                INTERFACE_PATCH_MAXIMUM_VERTEX_COUNT,
+                int(round(INTERFACE_PATCH_FRACTION * len(source))),
+            ),
+        )
+        count = min(count, len(source))
+        selected = np.partition(squared, count - 1)[:count]
+        distance = math.sqrt(float(np.quantile(selected, INTERFACE_PATCH_QUANTILE)))
+        return distance, count
+
+    first_to_second, first_count = one_direction(first_points, second_points)
+    second_to_first, second_count = one_direction(second_points, first_points)
+    return {
+        "bidirectional_p90_m": max(first_to_second, second_to_first),
+        "first_to_second_p90_m": first_to_second,
+        "second_to_first_p90_m": second_to_first,
+        "fraction": INTERFACE_PATCH_FRACTION,
+        "quantile": INTERFACE_PATCH_QUANTILE,
+        "first_vertex_count": first_count,
+        "second_vertex_count": second_count,
+    }
+
+
 def _upper_names(side: str) -> set[str]:
     return {
         f"clavicle_{side}", f"scapula_{side}", f"humerus_{side}",
@@ -1037,23 +1090,41 @@ def propose_upper_limb_registration(
 
     continuity = []
     for name, first_member, second_member, gate in human_model._NUMI_HUMAN_UPPER_LIMB_CONTINUITY_TRANSITIONS:
-        gap, _, _ = _minimum_gap(world_vertices(first_member), world_vertices(second_member), np)
+        first_vertices = world_vertices(first_member)
+        second_vertices = world_vertices(second_member)
+        gap, _, _ = _minimum_gap(first_vertices, second_vertices, np)
+        patch = _interface_patch_metrics(first_vertices, second_vertices, np)
+        patch_gate = INTERFACE_PATCH_GATE_MULTIPLIER * gate
         continuity.append({
             "name": name,
             "source_member_ids": [first_member, second_member],
             "minimum_vertex_gap_m": gap,
             "maximum_allowed_gap_m": gate,
-            "passed": gap <= gate + 1.0e-12,
+            "interface_patch": patch,
+            "maximum_allowed_interface_patch_p90_m": patch_gate,
+            "passed": (
+                gap <= gate + 1.0e-12
+                and patch["bidirectional_p90_m"] <= patch_gate + 1.0e-12
+            ),
         })
     for name, first_member, second_member in human_model._NUMI_HUMAN_HAND_CONTINUITY_TRANSITIONS:
-        gap, _, _ = _minimum_gap(world_vertices(first_member), world_vertices(second_member), np)
+        first_vertices = world_vertices(first_member)
+        second_vertices = world_vertices(second_member)
+        gap, _, _ = _minimum_gap(first_vertices, second_vertices, np)
+        patch = _interface_patch_metrics(first_vertices, second_vertices, np)
         gate = human_model._NUMI_HUMAN_HAND_CONTINUITY_MAXIMUM_GAP_M
+        patch_gate = INTERFACE_PATCH_GATE_MULTIPLIER * gate
         continuity.append({
             "name": name,
             "source_member_ids": [first_member, second_member],
             "minimum_vertex_gap_m": gap,
             "maximum_allowed_gap_m": gate,
-            "passed": gap <= gate + 1.0e-12,
+            "interface_patch": patch,
+            "maximum_allowed_interface_patch_p90_m": patch_gate,
+            "passed": (
+                gap <= gate + 1.0e-12
+                and patch["bidirectional_p90_m"] <= patch_gate + 1.0e-12
+            ),
         })
     failed_continuity = [record["name"] for record in continuity if not record["passed"]]
     if failed_continuity:

@@ -116,9 +116,11 @@ from numilab_human.myosim_bone_proximity import (
     registration_worklist,
 )
 from numilab_human.upper_limb_registration import (
+    INTERFACE_PATCH_GATE_MULTIPLIER,
     SCAPULAR_ENDPOINT_MAXIMUM_DISTANCE_M,
     SCAPULAR_HELD_OUT_P90_MAXIMUM_M,
     SCAPULAR_REFINEMENT_MAXIMUM_TRANSLATION_M,
+    _interface_patch_metrics,
     _proper_similarity_fit,
     _refine_scapular_endpoint_translation,
     _robust_joint_centered_articular_sphere,
@@ -1545,6 +1547,7 @@ class ImporterTests(unittest.TestCase):
     def test_upper_limb_pose_audit_covers_bilateral_functional_motion(self) -> None:
         self.assertEqual(POSE_CONTINUITY_ALLOWANCE_M, 0.001)
         self.assertEqual(BILATERAL_GAP_PARITY_MAXIMUM_M, 0.002)
+        self.assertEqual(INTERFACE_PATCH_GATE_MULTIPLIER, 1.25)
         self.assertEqual(len(_continuity_transitions()), 52)
         self.assertEqual(
             [name for name, _ in POSE_SUITE],
@@ -1564,6 +1567,37 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(len(fist), 30)
         self.assertEqual(fist[47], fist[85])
         self.assertEqual(fist[62], fist[100])
+
+    def test_upper_limb_interface_patch_rejects_isolated_near_vertex(self) -> None:
+        try:
+            import numpy as np
+        except ImportError:
+            self.skipTest("upper-limb interface patch test requires numpy")
+        first = np.column_stack((
+            np.linspace(0.0, 0.099, 100),
+            np.zeros(100),
+            np.zeros(100),
+        ))
+        second = first + np.asarray([0.0, 0.020, 0.0])
+        second[0] = first[0] + np.asarray([0.0, 0.0001, 0.0])
+        patch = _interface_patch_metrics(first, second, np)
+        self.assertEqual(patch["first_vertex_count"], 12)
+        self.assertEqual(patch["second_vertex_count"], 12)
+        self.assertGreater(patch["bidirectional_p90_m"], 0.015)
+
+    def test_upper_limb_interface_patch_is_bidirectional(self) -> None:
+        try:
+            import numpy as np
+        except ImportError:
+            self.skipTest("upper-limb interface patch test requires numpy")
+        first = np.asarray([[float(index), 0.0, 0.0] for index in range(20)])
+        second = first + np.asarray([0.0, 0.003, 0.0])
+        forward = _interface_patch_metrics(first, second, np)
+        reverse = _interface_patch_metrics(second, first, np)
+        self.assertAlmostEqual(forward["bidirectional_p90_m"], 0.003)
+        self.assertEqual(
+            forward["bidirectional_p90_m"], reverse["bidirectional_p90_m"]
+        )
 
     def test_scapular_endpoint_refinement_moves_one_bounded_rigid_surface(self) -> None:
         try:

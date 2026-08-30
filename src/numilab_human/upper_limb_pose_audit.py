@@ -19,8 +19,10 @@ from typing import Any
 from . import model as human_model
 from .myosim_export import export_fullbody
 from .upper_limb_registration import (
+    INTERFACE_PATCH_GATE_MULTIPLIER,
     REGISTRATION_SCHEMA,
     SCHEMA as UPPER_REGISTRATION_SCHEMA,
+    _interface_patch_metrics,
     _minimum_gap,
     _rotation_xyzw,
     _upper_names,
@@ -174,14 +176,18 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
         )
         if matrix.shape != (4, 4) or not bool(np.all(np.isfinite(matrix))):
             raise RuntimeError(f"upper-limb pose audit has an invalid registration for {name}")
-        core_vertices = np.asarray(raw_vertices, dtype=float) @ matrix[:3, :3].T + matrix[:3, 3]
+        core_vertices = np.einsum(
+            "ki,ji->kj", np.asarray(raw_vertices, dtype=float), matrix[:3, :3]
+        ) + matrix[:3, 3]
         inertial_position = np.asarray(source_body["inertial_position_body_m"], dtype=float)
         inertial_rotation = _rotation_xyzw(
             source_body["inertial_quaternion_body_xyzw"], np
         )
         # _body_frame_to_core is (body - inertial_position) @ rotation.
         # This exact inverse returns admitted anatomy to the source body frame.
-        body_vertices = core_vertices @ inertial_rotation.T + inertial_position
+        body_vertices = np.einsum(
+            "ki,ji->kj", core_vertices, inertial_rotation
+        ) + inertial_position
         local_vertices[source["member_id"]] = (source_body_id, body_vertices)
 
     missing = sorted(expected_names - anchors_by_name.keys())
@@ -214,7 +220,9 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
         mujoco.mj_forward(model, data)
         world_vertices = {
             member_id: (
-                vertices @ data.xmat[body_id].reshape(3, 3).T + data.xpos[body_id]
+                np.einsum(
+                    "ki,ji->kj", vertices, data.xmat[body_id].reshape(3, 3)
+                ) + data.xpos[body_id]
             )
             for member_id, (body_id, vertices) in local_vertices.items()
         }
@@ -234,17 +242,26 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
         continuity = []
         by_name: dict[str, dict[str, Any]] = {}
         for transition_name, first_member, second_member, rest_gate in transitions:
+            first_vertices = world_vertices[first_member]
+            second_vertices = world_vertices[second_member]
             gap, _, _ = _minimum_gap(
-                world_vertices[first_member], world_vertices[second_member], np
+                first_vertices, second_vertices, np
             )
+            patch = _interface_patch_metrics(first_vertices, second_vertices, np)
             posed_gate = rest_gate + POSE_CONTINUITY_ALLOWANCE_M
+            posed_patch_gate = INTERFACE_PATCH_GATE_MULTIPLIER * posed_gate
             record = {
                 "name": transition_name,
                 "source_member_ids": [first_member, second_member],
                 "minimum_vertex_gap_m": gap,
                 "rest_maximum_allowed_gap_m": rest_gate,
                 "posed_maximum_allowed_gap_m": posed_gate,
-                "passed": gap <= posed_gate + 1.0e-12,
+                "interface_patch": patch,
+                "posed_maximum_allowed_interface_patch_p90_m": posed_patch_gate,
+                "passed": (
+                    gap <= posed_gate + 1.0e-12
+                    and patch["bidirectional_p90_m"] <= posed_patch_gate + 1.0e-12
+                ),
             }
             continuity.append(record)
             by_name[transition_name] = record
@@ -262,11 +279,19 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
                 by_name[right_name]["minimum_vertex_gap_m"]
                 - by_name[left_name]["minimum_vertex_gap_m"]
             )
+            patch_difference = abs(
+                by_name[right_name]["interface_patch"]["bidirectional_p90_m"]
+                - by_name[left_name]["interface_patch"]["bidirectional_p90_m"]
+            )
             record = {
                 "transition": suffix,
                 "absolute_gap_difference_m": difference,
+                "absolute_interface_patch_p90_difference_m": patch_difference,
                 "maximum_allowed_difference_m": BILATERAL_GAP_PARITY_MAXIMUM_M,
-                "passed": difference <= BILATERAL_GAP_PARITY_MAXIMUM_M + 1.0e-12,
+                "passed": (
+                    difference <= BILATERAL_GAP_PARITY_MAXIMUM_M + 1.0e-12
+                    and patch_difference <= BILATERAL_GAP_PARITY_MAXIMUM_M + 1.0e-12
+                ),
             }
             parity.append(record)
             all_parity.append({"pose": pose_name, **record})
@@ -307,10 +332,23 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
         all_continuity,
         key=lambda item: item["minimum_vertex_gap_m"] - item["rest_maximum_allowed_gap_m"],
     )
-    worst_parity = max(all_parity, key=lambda item: item["absolute_gap_difference_m"])
+    worst_interface_patch = max(
+        all_continuity,
+        key=lambda item: (
+            item["interface_patch"]["bidirectional_p90_m"]
+            / item["posed_maximum_allowed_interface_patch_p90_m"]
+        ),
+    )
+    worst_parity = max(
+        all_parity,
+        key=lambda item: max(
+            item["absolute_gap_difference_m"],
+            item["absolute_interface_patch_p90_difference_m"],
+        ),
+    )
     return {
         "schema": SCHEMA,
-        "status": "passed_source_owned_bilateral_upper_limb_multi_pose_continuity",
+        "status": "passed_source_owned_bilateral_upper_limb_multi_pose_interface_patches",
         "inputs": {
             "registration": {
                 "file": registration_path.name,
@@ -331,14 +369,17 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
         "default_frame_maximum_centroid_residual_m": default_frame_maximum_residual,
         "default_frame_maximum_allowed_residual_m": DEFAULT_FRAME_RESIDUAL_MAXIMUM_M,
         "posed_continuity_allowance_m": POSE_CONTINUITY_ALLOWANCE_M,
+        "interface_patch_gate_multiplier": INTERFACE_PATCH_GATE_MULTIPLIER,
         "bilateral_gap_parity_maximum_m": BILATERAL_GAP_PARITY_MAXIMUM_M,
         "worst_continuity": worst_continuity,
+        "worst_interface_patch": worst_interface_patch,
         "worst_bilateral_gap_parity": worst_parity,
         "poses": pose_receipts,
         "evidence_boundary": (
             "Rigid BodyParts3D bones were replayed through pinned MyoSim kinematics and exact "
             "polynomial joint equality projection. Passing proves body ownership, default frame "
-            "identity, bounded posed surface continuity, and bilateral gap parity for this pose "
+            "identity, bounded one-vertex and robust bidirectional interface-patch continuity, "
+            "and bilateral parity for this pose "
             "suite. It is not cartilage/contact, ligament constraint, loaded dynamics, clinical "
             "registration, or a deformable tendon solve."
         ),

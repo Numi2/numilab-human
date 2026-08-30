@@ -55,11 +55,22 @@ Apple M4 Pro.  They use exact NHEQ1 dependent-coordinate projection.
 
 The six-pose audit covers neutral, bilateral shoulder elevation, elbow
 flexion, forearm pronation, wrist deviation/flexion, and a functional fist.
-The default-frame reconstruction residual is `1.466e-14 m`.  The worst posed
-bone interval remains the left ulna-to-triquetrum interval at 12.596 mm.  That
-interval represents the ulnocarpal space where TFCC/cartilage/ligament
-geometry is still absent; moving the bones into direct contact would be an
-anatomical error.  The machine-readable receipt is
+The default-frame reconstruction residual is `1.466e-14 m`.
+
+The audit no longer accepts a transition because one isolated vertex happens
+to be close. Each of the 312 posed transitions must now pass both the original
+minimum-gap bound and a bidirectional interface-patch bound: the lowest 2% of
+point-to-surface distances on each bone (12--128 vertices per side) are reduced
+with a p90 statistic, then gated at 1.25 times the transition's posed
+anatomical allowance. Bilateral parity applies to both metrics. A synthetic
+single-near-vertex regression fails the patch gate.
+
+The worst minimum interval remains the left ulna-to-triquetrum interval at
+12.596 / 13.000 mm. The worst robust patch is the right
+ulna-to-triquetrum interval during wrist deviation/flexion at
+15.136 / 16.250 mm. That interval represents the ulnocarpal space where
+TFCC/cartilage/ligament geometry is still absent; moving the bones into direct
+contact would be an anatomical error. The machine-readable receipt is
 [`upper-limb-articular-v3.audit.json`](media/numi-human-upper-articular-v3/upper-limb-articular-v3.audit.json).
 
 ## Reproduction
@@ -84,5 +95,6 @@ numilab-human myosim-upper-limb-pose-audit \
 ## Evidence boundary
 
 V3 validates articular placement and kinematic continuity of the registered
-bone surfaces.  It does not yet qualify loaded cartilage contact, TFCC,
+bone surfaces with both minimum-gap and robust interface-patch gates. It does
+not yet qualify loaded cartilage contact, TFCC,
 ligament restraint, deformable tendon/fascia, collision, or clinical use.

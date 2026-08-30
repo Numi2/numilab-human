@@ -52,7 +52,8 @@ The current articular-placement pass replaces misleading nearest-surface-only
 acceptance with bounded proper uniform similarity fits plus explicit joint-head
 and mechanics-axis gates. Bilateral humeral-head residuals are 1.081--1.289 mm
 and bilateral femoral-head residuals are 1.202--1.288 mm. Six upper-limb source
-poses pass 312 continuity and 156 bilateral-parity checks; both knees flex
+poses pass 312 minimum-gap plus bidirectional interface-patch checks and 156
+bilateral-parity checks; both knees flex
 forward, and each rigid foot retains five rays with the hallux medial and no
 new toe joint. The paired `NHTENDON3` runtime executes 416 muscles and all 832
 endpoints on Apple M4 Pro with byte-identical replay. See the
