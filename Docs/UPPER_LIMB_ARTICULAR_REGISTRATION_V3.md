@@ -29,29 +29,45 @@ and 5 mm mechanics-axis gates.
 
 ## Direct M4 Pro review
 
-These bone-only frames were rendered from the complete 185-surface payload on
-Apple M4 Pro.  They use exact NHEQ1 dependent-coordinate projection.
+The original broad bone-only frames were rendered from the complete
+185-surface payload on Apple M4 Pro and use exact NHEQ1 dependent-coordinate
+projection. They are useful whole-limb context, but torso/pelvis occlusion and
+full-long-bone camera centering make them weak close-joint evidence. The
+replacement views target the exact posed mechanics anchor, render only
+adjacent bones, and reject parent/child anchor disagreement above 0.2 mm.
 
 ### Shoulder elevation, q36 = 1.2 rad
 
 <p align="center">
-  <img src="media/numi-human-upper-articular-v3/shoulder/myosim-fullbody-articulated-bodyparts-bones-posed-focus-body-41-rear.png" width="48%" alt="Corrected right shoulder elevation, rear" />
-  <img src="media/numi-human-upper-articular-v3/shoulder/myosim-fullbody-articulated-bodyparts-bones-posed-focus-body-41-oblique.png" width="48%" alt="Corrected right shoulder elevation, oblique" />
+  <img src="media/numi-human-upper-joint-focus-v1/shoulder/myosim-fullbody-articulated-bodyparts-bones-posed-focus-joint-child-body-41-rear.png" width="48%" alt="Right shoulder elevation at the posed mechanics anchor, rear" />
+  <img src="media/numi-human-upper-joint-focus-v1/shoulder/myosim-fullbody-articulated-bodyparts-bones-posed-focus-joint-child-body-41-oblique.png" width="48%" alt="Right shoulder elevation at the posed mechanics anchor, oblique" />
 </p>
 
 ### Elbow flexion, q39 = 1.4 rad
 
 <p align="center">
-  <img src="media/numi-human-upper-articular-v3/elbow/myosim-fullbody-articulated-bodyparts-bones-posed-focus-body-42-oblique.png" width="48%" alt="Corrected right elbow flexion, oblique" />
-  <img src="media/numi-human-upper-articular-v3/elbow/myosim-fullbody-articulated-bodyparts-bones-posed-focus-body-42-rear.png" width="48%" alt="Corrected right elbow flexion, rear" />
+  <img src="media/numi-human-upper-joint-focus-v1/elbow/myosim-fullbody-articulated-bodyparts-bones-posed-focus-joint-child-body-42-oblique.png" width="48%" alt="Right elbow flexion at the posed mechanics anchor, oblique" />
+  <img src="media/numi-human-upper-joint-focus-v1/elbow/myosim-fullbody-articulated-bodyparts-bones-posed-focus-joint-child-body-42-side.png" width="48%" alt="Right elbow flexion at the posed mechanics anchor, side" />
 </p>
 
 ### Wrist deviation and flexion, q41 = 0.25 and q42 = 0.6 rad
 
 <p align="center">
-  <img src="media/numi-human-upper-articular-v3/wrist/myosim-fullbody-articulated-bodyparts-bones-posed-focus-body-43-oblique.png" width="48%" alt="Corrected right wrist deviation and flexion, oblique" />
-  <img src="media/numi-human-upper-articular-v3/wrist/myosim-fullbody-articulated-bodyparts-bones-posed-focus-body-43-front.png" width="48%" alt="Corrected right wrist deviation and flexion, front" />
+  <img src="media/numi-human-upper-joint-focus-v1/wrist/myosim-fullbody-articulated-bodyparts-bones-posed-focus-joint-child-body-45-oblique.png" width="48%" alt="Right wrist deviation and flexion at the posed mechanics anchor, oblique" />
+  <img src="media/numi-human-upper-joint-focus-v1/wrist/myosim-fullbody-articulated-bodyparts-bones-posed-focus-joint-child-body-45-side.png" width="48%" alt="Right wrist deviation and flexion at the posed mechanics anchor, side" />
 </p>
+
+### Neutral hand and functional fist
+
+<p align="center">
+  <img src="media/numi-human-upper-joint-focus-v1/hand-neutral/myosim-fullbody-articulated-bodyparts-bones-focus-joint-child-body-62-side.png" width="48%" alt="Neutral right hand with all five source-owned rays" />
+  <img src="media/numi-human-upper-joint-focus-v1/hand-fist/myosim-fullbody-articulated-bodyparts-bones-posed-focus-joint-child-body-62-oblique.png" width="48%" alt="Right hand in the bounded functional-fist pose" />
+</p>
+
+The shoulder, elbow, wrist, neutral-hand, and functional-fist mechanics-anchor
+residuals are at most 0.000121 mm. Each run retains four native frames, a pack,
+a visual manifest, and its M4 Pro transcript under
+[`numi-human-upper-joint-focus-v1`](media/numi-human-upper-joint-focus-v1/).
 
 The six-pose audit covers neutral, bilateral shoulder elevation, elbow
 flexion, forearm pronation, wrist deviation/flexion, and a functional fist.

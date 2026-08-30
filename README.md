@@ -157,9 +157,10 @@ and preceding [abdominal source-component record](Docs/ABDOMINAL_SOURCE_COMPONEN
 </p>
 
 <p align="center">
-  <img src="Docs/media/numi-human-upper-articular-v3/shoulder/myosim-fullbody-articulated-bodyparts-bones-posed-focus-body-41-rear.png" width="32%" alt="Corrected right shoulder elevation with seated humeral head" />
-  <img src="Docs/media/numi-human-upper-articular-v3/elbow/myosim-fullbody-articulated-bodyparts-bones-posed-focus-body-42-oblique.png" width="32%" alt="Corrected right elbow flexion" />
-  <img src="Docs/media/numi-human-upper-articular-v3/wrist/myosim-fullbody-articulated-bodyparts-bones-posed-focus-body-43-oblique.png" width="32%" alt="Corrected right wrist deviation and flexion" />
+  <img src="Docs/media/numi-human-upper-joint-focus-v1/shoulder/myosim-fullbody-articulated-bodyparts-bones-posed-focus-joint-child-body-41-rear.png" width="24%" alt="Right shoulder elevation at the posed mechanics anchor" />
+  <img src="Docs/media/numi-human-upper-joint-focus-v1/elbow/myosim-fullbody-articulated-bodyparts-bones-posed-focus-joint-child-body-42-oblique.png" width="24%" alt="Right elbow flexion at the posed mechanics anchor" />
+  <img src="Docs/media/numi-human-upper-joint-focus-v1/wrist/myosim-fullbody-articulated-bodyparts-bones-posed-focus-joint-child-body-45-oblique.png" width="24%" alt="Right wrist deviation and flexion at the posed mechanics anchor" />
+  <img src="Docs/media/numi-human-upper-joint-focus-v1/hand-neutral/myosim-fullbody-articulated-bodyparts-bones-focus-joint-child-body-62-side.png" width="24%" alt="Neutral right hand with all five source-owned rays" />
 </p>
 
 <p align="center">
