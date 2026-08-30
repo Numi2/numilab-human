@@ -10,6 +10,7 @@ from pathlib import Path
 from subprocess import run
 
 from numilab_human.open_knee import compile_payload as compile_open_knee_payload
+from numilab_human.open_knee import _anatomical_femoral_basis
 from numilab_human.open_knee import _orientation_preserving_connectivity
 from numilab_human.open_knee import parse_source as parse_open_knee_source
 
@@ -3123,6 +3124,27 @@ class ImporterTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(ValueError, "tri3 or tet4"):
             _orientation_preserving_connectivity((1, 2), reflected=True)
+
+    def test_open_knee_femoral_basis_resolves_anterior_axis_sign(self) -> None:
+        try:
+            import numpy as np
+        except ImportError:
+            self.skipTest("Open Knee(s) basis test requires numpy")
+        # This proper body-to-world rotation is the idealized form of the
+        # pinned femur frame: +body X is Human anterior (-world Y), +body Y is
+        # proximal (+world Z), and +body Z is subject right (-world X).
+        body_to_world = np.asarray([
+            [0.0, 0.0, -1.0],
+            [-1.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0],
+        ])
+        axis, anterior, basis, alignment = _anatomical_femoral_basis(
+            [0.0, 0.0, -1.0], [0.0, 1.0, 0.0], body_to_world, np
+        )
+        np.testing.assert_allclose(axis, [0.0, 0.0, 1.0])
+        np.testing.assert_allclose(anterior, [1.0, 0.0, 0.0])
+        self.assertAlmostEqual(float(np.linalg.det(basis)), 1.0)
+        self.assertAlmostEqual(alignment, 1.0)
 
 
 if __name__ == "__main__":

@@ -325,8 +325,60 @@ def _unit(vector: Any, np: Any) -> Any:
     return result / length
 
 
+def _dot3(values: Any, axis: Any, np: Any) -> Any:
+    """Three-component dot product without the platform BLAS matmul path."""
+    points = np.asarray(values, dtype=float)
+    direction = np.asarray(axis, dtype=float)
+    if points.shape[-1:] != (3,) or direction.shape != (3,):
+        raise RuntimeError("Open Knee(s) dot product received an invalid shape")
+    return (
+        points[..., 0] * direction[0]
+        + points[..., 1] * direction[1]
+        + points[..., 2] * direction[2]
+    )
+
+
+def _anatomical_femoral_basis(
+    knee_axis_line_body: Any,
+    proximal_body: Any,
+    femur_body_world_rotation: Any,
+    np: Any,
+) -> tuple[Any, Any, Any, float]:
+    """Resolve the flexion-axis sign from the Human's anterior direction.
+
+    A flexion axis is an unoriented line.  Using its arbitrary source sign to
+    build the remaining femoral basis admits two proper rotations separated by
+    180 degrees about the long axis.  The rejected choice placed the patella
+    posteriorly and swapped the medial/lateral condyles while still passing a
+    symmetric distal-femur surface fit.  BodyParts3D and the native Human
+    cameras establish anterior as negative world Y, so choose the unique
+    proper basis whose anterior axis points there.
+    """
+    proximal = _unit(proximal_body, np)
+    axis = _unit(knee_axis_line_body, np)
+    axis = _unit(axis - proximal * float(_dot3(axis, proximal, np)), np)
+    world_rotation = np.asarray(femur_body_world_rotation, dtype=float)
+    if world_rotation.shape != (3, 3) or not bool(np.all(np.isfinite(world_rotation))):
+        raise RuntimeError("Open Knee(s) femur world rotation is invalid")
+    human_anterior_world = np.asarray([0.0, -1.0, 0.0], dtype=float)
+    candidates = []
+    for signed_axis in (axis, -axis):
+        anterior = _unit(np.cross(proximal, signed_axis), np)
+        basis = np.column_stack((signed_axis, anterior, proximal))
+        determinant = float(np.linalg.det(basis))
+        if abs(determinant - 1.0) > 2.0e-5:
+            raise RuntimeError("Open Knee(s) target femoral basis is not proper")
+        world_anterior = np.einsum("ij,j->i", world_rotation, anterior)
+        alignment = float(_dot3(world_anterior, human_anterior_world, np))
+        candidates.append((alignment, signed_axis, anterior, basis))
+    alignment, signed_axis, anterior, basis = max(candidates, key=lambda item: item[0])
+    if alignment < 0.999:
+        raise RuntimeError("Open Knee(s) cannot resolve an anatomically anterior femoral basis")
+    return signed_axis, anterior, basis, alignment
+
+
 def _quantile_width(points: Any, axis: Any, np: Any) -> float:
-    projection = np.asarray(points, dtype=float) @ _unit(axis, np)
+    projection = _dot3(points, _unit(axis, np), np)
     return float(np.quantile(projection, 0.98) - np.quantile(projection, 0.02))
 
 
@@ -503,32 +555,41 @@ def compile_payload(
     myosim_femur_body = np.concatenate([
         np.asarray(mesh["vertices"], dtype=float) for mesh in femur_meshes
     ])
-    knee_origin_body = np.asarray([-4.6e-07, -0.404425, 0.00126526], dtype=float)
-    knee_axis_body = _unit([3.98373e-10, 0.0707131, -0.997497], np)
-    proximal_body = _unit([0.0, 1.0, 0.0], np)
-    knee_axis_body = _unit(
-        knee_axis_body - proximal_body * float(knee_axis_body @ proximal_body), np
+    femur_body_world_rotation = _rotation_xyzw(
+        femur_body["default_body_quaternion_world_xyzw"], np
     )
-    anterior_body = _unit(np.cross(proximal_body, knee_axis_body), np)
-    target_basis = np.column_stack((knee_axis_body, anterior_body, proximal_body))
+    femur_body_world_position = np.asarray(
+        femur_body["default_body_position_world_m"], dtype=float
+    )
+    knee_origin_body = np.asarray([-4.6e-07, -0.404425, 0.00126526], dtype=float)
+    knee_axis_line_body = _unit([3.98373e-10, 0.0707131, -0.997497], np)
+    proximal_body = _unit([0.0, 1.0, 0.0], np)
+    knee_axis_body, anterior_body, target_basis, anterior_alignment = (
+        _anatomical_femoral_basis(
+            knee_axis_line_body,
+            proximal_body,
+            femur_body_world_rotation,
+            np,
+        )
+    )
     xf = _unit(source.landmarks["Xf_axis"], np)
     yf = _unit(source.landmarks["Yf_axis"], np)
     zf = _unit(source.landmarks["Zf_axis"], np)
     source_basis = np.column_stack((xf, yf, zf))
     if abs(float(np.linalg.det(source_basis)) - 1.0) > 2.0e-5:
         raise RuntimeError("Open Knee(s) femoral anatomical basis is not proper orthonormal")
-    rotation = target_basis @ source_basis.T
+    rotation = np.einsum("ij,kj->ik", target_basis, source_basis)
     if abs(float(np.linalg.det(rotation)) - 1.0) > 2.0e-5:
         raise RuntimeError("Open Knee(s) registration rotation is not proper")
     fmo_m = 0.001 * np.asarray(source.landmarks["FMO"], dtype=float)
     source_fmb_m = 0.001 * np.asarray(source.regions["FMB"].nodes_mm, dtype=float)
     source_distal = source_fmb_m[
-        ((source_fmb_m - fmo_m) @ zf >= -0.040)
-        & ((source_fmb_m - fmo_m) @ zf <= 0.035)
+        (_dot3(source_fmb_m - fmo_m, zf, np) >= -0.040)
+        & (_dot3(source_fmb_m - fmo_m, zf, np) <= 0.035)
     ]
     target_distal = myosim_femur_body[
-        ((myosim_femur_body - knee_origin_body) @ proximal_body >= -0.040)
-        & ((myosim_femur_body - knee_origin_body) @ proximal_body <= 0.065)
+        (_dot3(myosim_femur_body - knee_origin_body, proximal_body, np) >= -0.040)
+        & (_dot3(myosim_femur_body - knee_origin_body, proximal_body, np) <= 0.065)
     ]
     if min(len(source_distal), len(target_distal)) < 40:
         raise RuntimeError("Open Knee(s) distal-femur width samples are incomplete")
@@ -537,14 +598,16 @@ def compile_payload(
     uniform_scale = target_width / source_width
     if not 0.90 <= uniform_scale <= 1.10:
         raise RuntimeError("Open Knee(s) uniform anthropometric scale left its 0.90-1.10 gate")
-    translation = knee_origin_body - uniform_scale * rotation @ fmo_m
+    translation = knee_origin_body - uniform_scale * np.einsum(
+        "ij,j->i", rotation, fmo_m
+    )
     transformed_fmb_body = (
         uniform_scale * np.einsum("ki,ji->kj", source_fmb_m, rotation)
         + translation
     )
     transformed_distal = transformed_fmb_body[
-        ((transformed_fmb_body - knee_origin_body) @ proximal_body >= -0.040)
-        & ((transformed_fmb_body - knee_origin_body) @ proximal_body <= 0.065)
+        (_dot3(transformed_fmb_body - knee_origin_body, proximal_body, np) >= -0.040)
+        & (_dot3(transformed_fmb_body - knee_origin_body, proximal_body, np) <= 0.065)
     ]
     refinement, refinement_iterations, femur_metrics = (
         _bounded_translation_refinement(
@@ -560,12 +623,6 @@ def compile_payload(
             f"target_width={target_width:.9f} refinement={refinement.tolist()} "
             f"metrics={femur_metrics}"
         )
-    femur_body_world_rotation = _rotation_xyzw(
-        femur_body["default_body_quaternion_world_xyzw"], np
-    )
-    femur_body_world_position = np.asarray(
-        femur_body["default_body_position_world_m"], dtype=float
-    )
     sagittal_mirror_x = None
     bilateral_frame_symmetry_maximum_m = 0.0
     if side == "right":
@@ -626,6 +683,37 @@ def compile_payload(
         for local, identifier in enumerate(region.node_ids):
             global_node_index[identifier] = node_count + local
         node_count += len(region.node_ids)
+
+    human_anterior_world = np.asarray([0.0, -1.0, 0.0], dtype=float)
+    output_lateral_world = np.asarray(
+        [1.0, 0.0, 0.0] if side == "left" else [-1.0, 0.0, 0.0],
+        dtype=float,
+    )
+    knee_origin_world = np.einsum(
+        "ij,j->i", femur_body_world_rotation, knee_origin_body
+    ) + femur_body_world_position
+    if sagittal_mirror_x is not None:
+        knee_origin_world = knee_origin_world.copy()
+        knee_origin_world[0] = 2.0 * sagittal_mirror_x - knee_origin_world[0]
+    patella_anterior_offset_m = float(_dot3(
+        np.mean(region_node_world["PTB"], axis=0) - knee_origin_world,
+        human_anterior_world,
+        np,
+    ))
+    fibula_lateral_offset_m = float(_dot3(
+        np.mean(region_node_world["FBB"], axis=0)
+        - np.mean(region_node_world["TBB"], axis=0),
+        output_lateral_world,
+        np,
+    ))
+    if patella_anterior_offset_m < 0.025:
+        raise RuntimeError(
+            "Open Knee(s) anatomical orientation gate placed the patella posteriorly"
+        )
+    if fibula_lateral_offset_m < 0.020:
+        raise RuntimeError(
+            "Open Knee(s) anatomical orientation gate placed the fibula medially"
+        )
 
     node_sets_order = sorted(source.node_sets)
     for set_name in node_sets_order:
@@ -821,12 +909,19 @@ def compile_payload(
             "source_origin_mm": list(source.landmarks["FMO"]),
             "target_knee_origin_femur_body_m": [float(value) for value in knee_origin_body],
             "target_flexion_axis_femur_body": [float(value) for value in knee_axis_body],
+            "target_anterior_axis_femur_body": [float(value) for value in anterior_body],
             "target_proximal_axis_femur_body": [float(value) for value in proximal_body],
+            "target_anterior_world": [0.0, -1.0, 0.0],
+            "target_anterior_alignment": anterior_alignment,
+            "patella_anterior_offset_m": patella_anterior_offset_m,
+            "fibula_lateral_offset_m": fibula_lateral_offset_m,
             "proper_rotation_source_to_femur_body": rotation.tolist(),
             "translation_femur_body_m": [float(value) for value in translation],
             "FMO_to_mechanics_origin_initial_translation_femur_body_m": [
                 float(value) for value in (
-                    knee_origin_body - uniform_scale * rotation @ fmo_m
+                    knee_origin_body - uniform_scale * np.einsum(
+                        "ij,j->i", rotation, fmo_m
+                    )
                 )
             ],
             "bounded_surface_translation_refinement_femur_body_m": [
@@ -843,6 +938,9 @@ def compile_payload(
             "distal_femur_surface_metrics": femur_metrics,
             "gates": {
                 "proper_rotation_determinant": float(np.linalg.det(rotation)),
+                "anterior_alignment_minimum": 0.999,
+                "patella_anterior_offset_minimum_m": 0.025,
+                "fibula_lateral_offset_minimum_m": 0.020,
                 "uniform_scale_minimum": 0.90, "uniform_scale_maximum": 1.10,
                 "held_out_p90_maximum_m": 0.020,
                 "reflection": side == "right", "anisotropic_warp": False,

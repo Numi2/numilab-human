@@ -77,7 +77,7 @@ to the existing torso body, leaves both clavicles untouched, and passes
 0.106--1.726 mm neutral continuity gates in four native M4 Pro views. See
 [source-owned sternal girdle completion](Docs/STERNAL_GIRDLE_SOURCE_REGISTRATION_V1.md).
 
-The lower-limb pass registers bilateral femur and tibia with bounded
+The BodyParts3D lower-limb pass registers bilateral femur and tibia with bounded
 anthropometric scale while talus, rigid foot, and patella remain unscaled. It
 rejects the tempting 179 degree patella flip, keeps all 40 knee-to-toe
 continuity gaps below 3.876 mm, and preserves the complete five-toe compound
@@ -86,6 +86,13 @@ endpoint laws execute on Apple M4 Pro. Neutral and 0.75 rad flexed four-angle
 review passes on both sides. See the
 [lower-limb source registration](Docs/LOWER_LIMB_SOURCE_REGISTRATION_V2.md)
 and the preceding [fixed-bone foot entheses](Docs/FIXED_BONE_FOOT_ENTHESES_V1.md).
+
+The separate exact Open Knee(s) specimen now resolves the otherwise ambiguous
+femoral-axis sign against Human anterior and rejects any payload with a
+posterior patella or medial fibula. Corrected bilateral geometry, four-angle
+M4 Pro frames, and accepted ligament/patellar-tendon FEM receipts are recorded
+in [Open Knee(s) OKS003 v2](Docs/OPEN_KNEE_OKS003_V2.md); the reversed v1
+manifests remain explicitly rejected evidence.
 
 The torso/axial pass now registers all 12 thoracic vertebrae, 24
 topology-resolved ribs, and both hip bones to their corresponding pinned
@@ -135,10 +142,10 @@ and preceding [abdominal source-component record](Docs/ABDOMINAL_SOURCE_COMPONEN
 </p>
 
 <p align="center">
-  <img src="Docs/media/numi-human-lower-limb-source-registration-v2-2048/neutral/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-136-oblique.png" width="24%" alt="Registered right lower limb, neutral oblique" />
-  <img src="Docs/media/numi-human-lower-limb-source-registration-v2-2048/neutral/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-150-side.png" width="24%" alt="Registered left lower limb, neutral side" />
-  <img src="Docs/media/numi-human-lower-limb-source-registration-v2-2048/flexed/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-posed-focus-body-136-side.png" width="24%" alt="Registered right knee at 0.75 rad flexion" />
-  <img src="Docs/media/numi-human-lower-limb-source-registration-v2-2048/flexed/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-posed-focus-body-150-oblique.png" width="24%" alt="Registered left knee at 0.75 rad flexion" />
+  <img src="Docs/media/open-knee-oks003-v2/right/myosim-fullbody-articulated-bodyparts-bones-open-knee-oks003-right-mirrored-accepted-tissue-fem-focus-body-136-front.png" width="24%" alt="Anatomically oriented mirrored right knee, anterior view" />
+  <img src="Docs/media/open-knee-oks003-v2/right/myosim-fullbody-articulated-bodyparts-bones-open-knee-oks003-right-mirrored-accepted-tissue-fem-focus-body-136-oblique.png" width="24%" alt="Anatomically oriented mirrored right knee, oblique view" />
+  <img src="Docs/media/open-knee-oks003-v2/left/myosim-fullbody-articulated-bodyparts-bones-open-knee-oks003-left-accepted-tissue-fem-focus-body-150-front.png" width="24%" alt="Exact left knee with anterior patella and extensor mechanism" />
+  <img src="Docs/media/open-knee-oks003-v2/left/myosim-fullbody-articulated-bodyparts-bones-open-knee-oks003-left-accepted-tissue-fem-focus-body-150-oblique.png" width="24%" alt="Exact left knee with lateral fibula, oblique view" />
 </p>
 
 <p align="center">
