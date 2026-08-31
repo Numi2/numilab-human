@@ -1592,9 +1592,9 @@ class ImporterTests(unittest.TestCase):
                 ROOT / "sources", ROOT / "build/myosim-fullbody", second,
             )
             payload = (first / manifest["payload"]["file"]).read_bytes()
-        self.assertEqual(payload[:8], b"NHFASC2\0")
+        self.assertEqual(payload[:8], b"NHFASC3\0")
         self.assertEqual(manifest["payload"]["sha256"], replay["payload"]["sha256"])
-        self.assertEqual(manifest["payload"]["region_count"], 6)
+        self.assertEqual(manifest["payload"]["region_count"], 12)
         self.assertGreater(manifest["payload"]["node_count"], 250)
         self.assertLess(manifest["payload"]["node_count"], 1000)
         self.assertGreater(manifest["payload"]["tetrahedron_count"], 350)
@@ -1605,14 +1605,27 @@ class ImporterTests(unittest.TestCase):
         )
         self.assertEqual(
             manifest["source"]["geometry_status"],
-            "generated_bounded_thin_solid_mechanics_fallback_from_exact_anterior_pectoralis_major_source_vertex_envelope",
+            "six_exact_bodyparts3d_pectoral_envelopes_plus_six_pinned_myosim_latissimus_path_lattice_strips",
         )
         self.assertEqual(manifest["mechanics"]["thickness_m"], 0.0006)
+        self.assertEqual(
+            manifest["mechanics"]["thoracolumbar_thickness_m"], 0.00175,
+        )
         self.assertGreater(manifest["mechanics"]["total_rest_volume_m3"], 0.0)
         regions = manifest["mechanics"]["regions"]
-        self.assertEqual([region["source_actuator_index"] for region in regions], [220, 218, 219, 283, 281, 282])
-        self.assertTrue(all(region["fixed_node_count"] >= 6 for region in regions))
-        self.assertTrue(all(region["load_node_count"] >= 6 for region in regions))
+        self.assertEqual(
+            [region["source_actuator_index"] for region in regions],
+            [220, 218, 219, 283, 281, 282, 221, 222, 223, 284, 285, 286],
+        )
+        self.assertTrue(all(region["fixed_node_count"] >= 4 for region in regions))
+        self.assertTrue(all(region["load_node_count"] >= 4 for region in regions))
+        posterior = regions[6:]
+        self.assertTrue(all(
+            region["source_geometry_kind"] == "myosim_route_local_aponeurosis_strip"
+            and len(region["source_site_indices"]) == 3
+            and len(region["source_local_centres_m"]) == 3
+            for region in posterior
+        ))
 
     def test_costal_cartilage_payload_preserves_exact_bilateral_source_and_positive_volume(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

@@ -11,7 +11,7 @@ the native Human execution path.
 | Active full-body mechanics | MyoSim `myofullbody` | 103 source bodies, 416 muscles, native Core reference |
 | Cervical/hyoid mechanics | Mortensen 2018 | complete 72-muscle OpenSim 3 source IR; merge registration remains explicit |
 | Anatomy/visual layers | BodyParts3D 4.0 | named geometry/hierarchy; 185 source bone meshes are pose-bound for native visual inspection |
-| Regional fascia mechanics | BodyParts3D + human pectoralis-fascia literature + Matter | six same-command-buffer load-driven pectoral regions; explicit generated NHFASC2 fallback, not a source segmentation |
+| Regional fascia mechanics | BodyParts3D + MyoSim + human fascia literature + Matter | 12 same-command-buffer pectoral/latissimus-aponeurosis regions in NHFASC3; explicit generated fallback, not a source segmentation |
 | Detailed calf visual supplement | Z-Anatomy | four right-calf surfaces plus the matching calcaneus overlay; CC-BY-SA geometry rigidly bound to the existing BodyParts3D/MyoSim `calcn_r` body |
 | Comparative lower-body mechanics | RajagopalLaiUhlrich2023 | retained source-faithful bounded Metal path |
 | Comparative upper extremities | MoBL-ARMS | authenticated bimanual import or pinned public unimanual 4.1 source variant |
@@ -28,15 +28,14 @@ no-direct-torque identity, bitwise replay, and four-angle visual review. See
 [Human Stand v1](Docs/HUMAN_STAND_V1.md) and the
 [per-step tendon transaction](Docs/HUMAN_TENDON_STEP_TRANSACTION.md).
 
-The next completed regional layer is deformable pectoralis fascia: six named
-MyoSim/NHTENDON2 loads drive a 326-node Matter FEM solid in the owning Human
-command buffer with a human uniaxial GOH mean fit, deterministic replay, and
-rejection rollback. `NHFASC2` carries the exact compiler-selected anterior
-BodyParts3D presentation topology (6,601 referenced vertices and 8,449
-triangles), so the renderer no longer guesses a fascia sheet from the entire
-closed pectoralis muscle volume. Its mechanics geometry, anchors, and 10% load
-share remain explicit fallbacks because BodyParts3D has no pectoral-fascia
-segmentation. See [deformable pectoralis fascia v2](Docs/PECTORALIS_FASCIA_V2.md).
+The current regional layer is `NHFASC3`: six exact-source pectoral regions plus
+six P4/P5/P6-derived latissimus-aponeurosis regions execute two-way force
+replacement, fixed-node reaction return, bitwise replay, and rejection
+rollback in the owning Human command buffer. The 866-node / 1,623-tetrahedron
+payload keeps MyoSim as the sole full-body `J^T` authority. Posterior geometry
+and its reduced isotropic law are explicit fallbacks because BodyParts3D has no
+separate latissimus/TLF segmentation and Matter has no per-tetrahedron fibre
+frame. See [thoracic myofascia mechanics v3](Docs/THORACIC_MYOFASCIA_V3.md).
 
 The importer preserves upstream records locally. The tracked MyoSim,
 BodyParts3D, and explicitly marked Z-Anatomy validation media are attributed

@@ -1389,6 +1389,23 @@ reserve the dense mass-factor scratch space. The 128-DoF dense mass solve and
 forward-dynamics stage remain the CPU FP64 reference owner after the
 device-side MyoSim `J^T` projection; no contact or locomotion is claimed here.
 
+## Thoracic myofascia v3 — 2026-09-01
+
+<p align="center">
+  <img src="media/numi-human-thoracic-myofascia-v3-1024/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-focus-body-25-front.png" width="24%" alt="Thoracic myofascia, front" />
+  <img src="media/numi-human-thoracic-myofascia-v3-1024/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-focus-body-25-oblique.png" width="24%" alt="Thoracic myofascia, oblique" />
+  <img src="media/numi-human-thoracic-myofascia-v3-1024/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-focus-body-25-side.png" width="24%" alt="Thoracic myofascia, side" />
+  <img src="media/numi-human-thoracic-myofascia-v3-1024/myosim-fullbody-articulated-bodyparts-bones-source-soft-tissues-muscle-driven-selected-actuators-source-support-contact-focus-body-25-rear.png" width="24%" alt="Thoracic myofascia, rear" />
+</p>
+
+The six bilateral latissimus P4/P5/P6 source lattices now drive subdivided
+thin-solid aponeurosis regions alongside the six pectoral regions. The M4 Pro
+0.1 ms reference transferred 10.579 N, returned 1.757 N fixed-node reaction
+L1, retained `J = 0.996633`, and passed bitwise replay plus exact rollback.
+Four-angle review found bilateral posterior coverage without inversion,
+tearing, or side swap. These beige surfaces are mechanics-debug geometry, not
+skin or clinical segmentation. See [the v3 record](THORACIC_MYOFASCIA_V3.md).
+
 ## Remaining visual/mechanical steps
 
 1. Resolve the remaining C1/C2 and triquetrum source-geometry gaps, then review

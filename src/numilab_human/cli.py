@@ -1660,7 +1660,7 @@ def parser() -> argparse.ArgumentParser:
     tendon_envelope_parser.set_defaults(handler=numi_human_tendon_envelope_payload)
     pectoralis_fascia_parser = commands.add_parser(
         "numi-human-pectoralis-fascia-payload",
-        help="compile an explicit source-derived pectoral-fascia thin-solid FEM fallback",
+        help="compile source-derived pectoral and latissimus-aponeurosis thin-solid FEM regions",
     )
     pectoralis_fascia_parser.add_argument("--sources", type=Path, required=True)
     pectoralis_fascia_parser.add_argument(
@@ -1674,7 +1674,7 @@ def parser() -> argparse.ArgumentParser:
     )
     pectoralis_fascia_parser.add_argument(
         "--load-fraction", type=float, default=0.10,
-        help="bounded share of named pectoralis terminal force applied to fascia (default: 0.10)",
+        help="bounded share of named pectoralis/latissimus terminal force applied to fascia (default: 0.10)",
     )
     pectoralis_fascia_parser.set_defaults(handler=numi_human_pectoralis_fascia_payload)
     costal_cartilage_parser = commands.add_parser(
