@@ -1,0 +1,430 @@
+{
+  "bilateral_validation": {
+    "endpoint_residual_xyz_mm": {
+      "insertion": [
+        0.8147644637267035,
+        1.2231485163265745,
+        0.17746672869907343
+      ],
+      "origin": [
+        1.7981952251464293,
+        1.6350246110898183,
+        0.9031669571073735
+      ]
+    },
+    "maximum_allowed_mm": 5.0,
+    "maximum_residual_mm": 1.7981952251464293,
+    "method": "source_rest_frame_x_reflection_endpoint_surface_parity",
+    "passed": true
+  },
+  "evidence_boundary": "Exact pinned BodyParts3D surfaces and registered bone identities; endpoint clusters, fibre direction, and force capacity are explicit inference/sensitivity. Pisiform registrations retain their documented upper-limb-chain fallback. This artifact does not prove live Hill-type actuation, neutral-pose equilibrium, or subject-specific anatomy.",
+  "force_capacity_sensitivity": {
+    "boundary": "sensitivity analysis only; ADM-specific maximum force was not measured",
+    "maximum_isometric_force_n": {
+      "high": 61.050000000000004,
+      "low": 22.200000000000003,
+      "nominal": 29.748000000000005
+    },
+    "sources": [
+      "https://doi.org/10.1152/japplphysiol.00296.2024",
+      "https://doi.org/10.1113/expphysiol.2009.048967"
+    ],
+    "specific_tension_n_cm2": {
+      "high_in_vivo_study": 55.0,
+      "low": 20.0,
+      "recommended_systematic_review": 26.8
+    }
+  },
+  "hands": [
+    {
+      "endpoint_cluster_overlap_count": 0,
+      "insertion": {
+        "bone": {
+          "member": "isa_BP3D_4.0_obj_99/FJ3323.obj",
+          "member_id": "FJ3323",
+          "member_sha256": "c3aaebcb7e86e3610f6d7a6896b33a60d7f544f924bdf0c4b639f8dae8c62e55",
+          "triangle_count": 314,
+          "vertex_count": 187
+        },
+        "bone_surface_point_source_mm": [
+          -223.73850205718662,
+          -144.19399779699677,
+          730.5934897119726
+        ],
+        "cluster": {
+          "bone_surface_centroid_source_mm": [
+            -223.73850205718662,
+            -144.19399779699677,
+            730.5934897119726
+          ],
+          "muscle_cluster_centroid_source_mm": [
+            -223.7406875,
+            -144.19324999999998,
+            730.5936250000002
+          ],
+          "muscle_vertex_count": 625,
+          "selected_vertex_count": 16,
+          "selected_vertex_indices": [
+            181,
+            479,
+            480,
+            177,
+            468,
+            469,
+            470,
+            182,
+            481,
+            482,
+            483,
+            216,
+            542,
+            543,
+            544,
+            545
+          ],
+          "selection_method": "closest_2_5_percent_muscle_vertices_to_exact_bone_triangle_surface_minimum_8",
+          "surface_distance_mm": {
+            "maximum": 0.008763577625702592,
+            "median": 0.006216192552234677,
+            "minimum": 0.0016461188705399524
+          }
+        },
+        "point_core_inertial_body_m": [
+          -0.006732457607028786,
+          -0.00750764411257987,
+          -0.005265775608541412
+        ],
+        "registration_attachment_surface_refinement": {
+          "accepted_site_count_after": 15,
+          "accepted_site_count_before": 15,
+          "applied": true,
+          "maximum_correspondence_distance_m": 0.12,
+          "maximum_iterations": 8,
+          "median_distance_after_m": 0.0034787258819458594,
+          "median_distance_before_m": 0.10075543223293815,
+          "method": "iterative_nearest_bodyparts3d_body_surface_union_to_exact_myosim_site_translation_only",
+          "p90_distance_after_m": 0.007233165717509986,
+          "p90_distance_before_m": 0.1102533612106688,
+          "source_member_count": 1,
+          "source_member_ids": [
+            "FJ3323"
+          ],
+          "source_site_count": 15,
+          "translation_delta_core_body_m": [
+            -0.09818789424750125,
+            -0.022143472710113396,
+            -0.03222143667133714
+          ]
+        },
+        "registration_has_chain_fallback": true,
+        "registration_status": "provisional_upper_limb_source_mesh_bounded_similarity_registration",
+        "target_core_body_index": 74,
+        "target_core_body_name": "5proxph_r"
+      },
+      "muscle": {
+        "member": "isa_BP3D_4.0_obj_99/FJ1466.obj",
+        "member_id": "FJ1466",
+        "member_sha256": "f43244169de921a1209484246543bec594bc3b282c647eaf6249f2320f10bfc0",
+        "triangle_count": 508,
+        "vertex_count": 625
+      },
+      "origin": {
+        "bone": {
+          "member": "isa_BP3D_4.0_obj_99/FJ3382.obj",
+          "member_id": "FJ3382",
+          "member_sha256": "c5b1ce6020acc6e1feff8f44a3f0b5ec717e3cb3218701fbe86644975d981684",
+          "triangle_count": 190,
+          "vertex_count": 110
+        },
+        "bone_surface_point_source_mm": [
+          -234.9146385813932,
+          -134.94829787777255,
+          792.2504409612048
+        ],
+        "cluster": {
+          "bone_surface_centroid_source_mm": [
+            -234.9146385813932,
+            -134.94829787777255,
+            792.2504409612048
+          ],
+          "muscle_cluster_centroid_source_mm": [
+            -234.88218750000001,
+            -134.97275,
+            792.2316875
+          ],
+          "muscle_vertex_count": 625,
+          "selected_vertex_count": 16,
+          "selected_vertex_indices": [
+            17,
+            278,
+            279,
+            3,
+            252,
+            6,
+            38,
+            313,
+            10,
+            263,
+            264,
+            265,
+            41,
+            318,
+            319,
+            320
+          ],
+          "selection_method": "closest_2_5_percent_muscle_vertices_to_exact_bone_triangle_surface_minimum_8",
+          "surface_distance_mm": {
+            "maximum": 0.13087750308165413,
+            "median": 0.07533239522354798,
+            "minimum": 0.005659368806903386
+          }
+        },
+        "point_core_inertial_body_m": [
+          -0.0007562313307187818,
+          -0.0017800496300985902,
+          -0.0005745688563615348
+        ],
+        "registration_attachment_surface_refinement": {
+          "accepted_site_count_after": 1,
+          "accepted_site_count_before": 1,
+          "applied": false,
+          "maximum_correspondence_distance_m": 0.12,
+          "maximum_iterations": 8,
+          "median_distance_after_m": 0.08726595338826225,
+          "median_distance_before_m": 0.08726595338826225,
+          "method": "iterative_nearest_bodyparts3d_body_surface_union_to_exact_myosim_site_translation_only",
+          "p90_distance_after_m": 0.08726595338826225,
+          "p90_distance_before_m": 0.08726595338826225,
+          "source_member_count": 1,
+          "source_member_ids": [
+            "FJ3382"
+          ],
+          "source_site_count": 1,
+          "translation_delta_core_body_m": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "registration_has_chain_fallback": true,
+        "registration_status": "provisional_upper_limb_source_mesh_bounded_similarity_registration",
+        "target_core_body_index": 47,
+        "target_core_body_name": "pisiform_r"
+      },
+      "side": "right",
+      "source_endpoint_separation_mm": 63.31193719397538
+    },
+    {
+      "endpoint_cluster_overlap_count": 0,
+      "insertion": {
+        "bone": {
+          "member": "isa_BP3D_4.0_obj_99/FJ3314.obj",
+          "member_id": "FJ3314",
+          "member_sha256": "8b824d96eed3bc1325665fa99592d58ebd43346b436154fefae6a3c2a98753af",
+          "triangle_count": 274,
+          "vertex_count": 164
+        },
+        "bone_surface_point_source_mm": [
+          224.55326652091333,
+          -145.41714631332334,
+          730.4160229832735
+        ],
+        "cluster": {
+          "bone_surface_centroid_source_mm": [
+            224.55326652091333,
+            -145.41714631332334,
+            730.4160229832735
+          ],
+          "muscle_cluster_centroid_source_mm": [
+            224.56143750000007,
+            -145.40849999999995,
+            730.414875
+          ],
+          "muscle_vertex_count": 620,
+          "selected_vertex_count": 16,
+          "selected_vertex_indices": [
+            167,
+            433,
+            434,
+            170,
+            437,
+            438,
+            439,
+            220,
+            548,
+            549,
+            172,
+            442,
+            443,
+            444,
+            201,
+            497
+          ],
+          "selection_method": "closest_2_5_percent_muscle_vertices_to_exact_bone_triangle_surface_minimum_8",
+          "surface_distance_mm": {
+            "maximum": 0.030235720808523613,
+            "median": 0.020637138404726727,
+            "minimum": 0.0028680620299889586
+          }
+        },
+        "point_core_inertial_body_m": [
+          -0.007478656796352179,
+          -0.006186671698533486,
+          0.005492744606513639
+        ],
+        "registration_attachment_surface_refinement": {
+          "accepted_site_count_after": 15,
+          "accepted_site_count_before": 15,
+          "applied": true,
+          "maximum_correspondence_distance_m": 0.12,
+          "maximum_iterations": 8,
+          "median_distance_after_m": 0.004015939377822656,
+          "median_distance_before_m": 0.10102800417794298,
+          "method": "iterative_nearest_bodyparts3d_body_surface_union_to_exact_myosim_site_translation_only",
+          "p90_distance_after_m": 0.007790528715734345,
+          "p90_distance_before_m": 0.11049235684600452,
+          "source_member_count": 1,
+          "source_member_ids": [
+            "FJ3314"
+          ],
+          "source_site_count": 15,
+          "translation_delta_core_body_m": [
+            -0.09843905813162374,
+            -0.021456752096892347,
+            0.033116010131230854
+          ]
+        },
+        "registration_has_chain_fallback": true,
+        "registration_status": "provisional_upper_limb_source_mesh_bounded_similarity_registration",
+        "target_core_body_index": 124,
+        "target_core_body_name": "5proxph_l"
+      },
+      "muscle": {
+        "member": "isa_BP3D_4.0_obj_99/FJ1466M.obj",
+        "member_id": "FJ1466M",
+        "member_sha256": "c863e99b725f694e708b560b9bf848ce4249bc512dd4d0284a79de20402f0c5f",
+        "triangle_count": 508,
+        "vertex_count": 620
+      },
+      "origin": {
+        "bone": {
+          "member": "isa_BP3D_4.0_obj_99/FJ3276.obj",
+          "member_id": "FJ3276",
+          "member_sha256": "6162726ac4bcb29a9ba8489570650ba8a323576b03423fb16b27bcd1e55c0658",
+          "triangle_count": 210,
+          "vertex_count": 116
+        },
+        "bone_surface_point_source_mm": [
+          233.11644335624678,
+          -133.31327326668273,
+          793.1536079183122
+        ],
+        "cluster": {
+          "bone_surface_centroid_source_mm": [
+            233.11644335624678,
+            -133.31327326668273,
+            793.1536079183122
+          ],
+          "muscle_cluster_centroid_source_mm": [
+            233.08462499999996,
+            -133.323875,
+            793.1513124999999
+          ],
+          "muscle_vertex_count": 620,
+          "selected_vertex_count": 16,
+          "selected_vertex_indices": [
+            6,
+            17,
+            278,
+            279,
+            40,
+            315,
+            316,
+            41,
+            317,
+            318,
+            319,
+            46,
+            327,
+            328,
+            329,
+            45
+          ],
+          "selection_method": "closest_2_5_percent_muscle_vertices_to_exact_bone_triangle_surface_minimum_8",
+          "surface_distance_mm": {
+            "maximum": 0.0632038700374563,
+            "median": 0.05529636951280767,
+            "minimum": 0.005301740010930032
+          }
+        },
+        "point_core_inertial_body_m": [
+          0.0016971843838979872,
+          0.005010437965875303,
+          -0.0014809935066320001
+        ],
+        "registration_attachment_surface_refinement": {
+          "accepted_site_count_after": 1,
+          "accepted_site_count_before": 1,
+          "applied": false,
+          "maximum_correspondence_distance_m": 0.12,
+          "maximum_iterations": 8,
+          "median_distance_after_m": 0.08753144318080745,
+          "median_distance_before_m": 0.08753144318080745,
+          "method": "iterative_nearest_bodyparts3d_body_surface_union_to_exact_myosim_site_translation_only",
+          "p90_distance_after_m": 0.08753144318080745,
+          "p90_distance_before_m": 0.08753144318080745,
+          "source_member_count": 1,
+          "source_member_ids": [
+            "FJ3276"
+          ],
+          "source_site_count": 1,
+          "translation_delta_core_body_m": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "registration_has_chain_fallback": true,
+        "registration_status": "provisional_upper_limb_source_mesh_bounded_similarity_registration",
+        "target_core_body_index": 97,
+        "target_core_body_name": "pisiform_l"
+      },
+      "side": "left",
+      "source_endpoint_separation_mm": 64.45574820558804
+    }
+  ],
+  "insertion_branch_sensitivity": {
+    "boundary": "population variation; this BodyParts3D individual is not assigned an unobserved branch",
+    "default_v1_bone_fraction": 1.0,
+    "observed_extensor_expansion_fraction_range": [
+      0.0,
+      0.5
+    ],
+    "optional_extensor_expansion_fraction": 0.31,
+    "source": "https://pubmed.ncbi.nlm.nih.gov/11901393/"
+  },
+  "literature_parameters": {
+    "belly_length_mm": 84.0,
+    "external_insertion_tendon_length_mm": 11.0,
+    "muscle_mass_g": 11.0,
+    "optimal_fibre_length_mm": 96.0,
+    "pennation_angle_degrees": 0.0,
+    "physiological_cross_sectional_area_mm2": 111.0,
+    "source": "https://doi.org/10.1111/joa.12877",
+    "specimen_boundary": "one fresh-frozen 60-year-old male hand; not population calibration"
+  },
+  "runtime_payload": {
+    "abi": "NHADM1",
+    "bytes": 180,
+    "file": "bodyparts-adm-inference.nhadm",
+    "sha256": "12e8c2daf5ae2e9a0ea037ce8022b739a854eaf034d04684b8282533656d4c31"
+  },
+  "schema": "numi.human.bodyparts3d-abductor-digiti-minimi-inference.v1",
+  "source": {
+    "archive": "isa_BP3D_4.0_obj_99.zip",
+    "archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+    "license": "CC BY 4.0",
+    "name": "BodyParts3D",
+    "version": "4.0"
+  }
+}

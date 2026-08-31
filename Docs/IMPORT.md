@@ -119,6 +119,19 @@ numi human myosim-native-muscle-bone-visuals \
   --muscle-step-seconds 0.001 --dimension 2048
 ```
 
+Compile the nonvisual bilateral BodyParts3D ADM endpoint/capacity witness:
+
+```bash
+numilab-human bodyparts-adm-build \
+  --sources Sources \
+  --registration Docs/media/numi-human-lower-joint-focus-v1/receipts/registration.v3.json \
+  --output Build/bodyparts-adm-inference.v1.json \
+  --payload-output Build/bodyparts-adm-inference.nhadm
+```
+
+This is an inference/sensitivity artifact, not automatic admission into the
+live muscle set. See `Docs/BODYPARTS_ADM_INFERENCE_V1.md`.
+
 The native probe validates 416 full-body muscle-tendon elements and their
 source route geometry at the source default pose. `--metal` additionally
 validates the entire 157-body / 128-DoF pose and analytic point-Jacobian stream

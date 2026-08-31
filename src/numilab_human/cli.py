@@ -68,6 +68,7 @@ from .rib_registration import SCHEMA as RIB_REGISTRATION_SCHEMA
 from .abdominal_enthesis_registration import (
     SCHEMA as ABDOMINAL_ENTHESIS_REGISTRATION_SCHEMA,
 )
+from .bodyparts_adm import build as build_bodyparts_adm
 from .sternal_girdle_registration import (
     SCHEMA as STERNAL_GIRDLE_REGISTRATION_SCHEMA,
     register_sternal_girdle,
@@ -305,6 +306,22 @@ def myosim_build(arguments: argparse.Namespace) -> int:
     print(f"wrote {equalities}")
     print(f"wrote {extensor_hood}")
     print(f"wrote {output / 'myosim-fullbody-reference.manifest.json'}")
+    return 0
+
+
+def bodyparts_adm_build(arguments: argparse.Namespace) -> int:
+    artifact = build_bodyparts_adm(
+        arguments.sources, arguments.registration, arguments.output,
+        arguments.payload_output,
+    )
+    if arguments.payload_output is not None:
+        print(f"wrote {arguments.payload_output.resolve()}")
+    print(
+        f"wrote {arguments.output.resolve()} "
+        f"hands={len(artifact['hands'])} "
+        f"bilateral_maximum_residual_mm="
+        f"{artifact['bilateral_validation']['maximum_residual_mm']:.12g}"
+    )
     return 0
 
 
@@ -1335,6 +1352,18 @@ def parser() -> argparse.ArgumentParser:
         help="Python environment with the pinned myo-sim checkout and mujoco installed",
     )
     myosim_build_parser.set_defaults(handler=myosim_build)
+    adm_parser = commands.add_parser(
+        "bodyparts-adm-build",
+        help="infer and validate bilateral abductor-digiti-minimi endpoints from exact source surfaces",
+    )
+    adm_parser.add_argument("--sources", type=Path, required=True)
+    adm_parser.add_argument("--registration", type=Path, required=True)
+    adm_parser.add_argument("--output", type=Path, required=True)
+    adm_parser.add_argument(
+        "--payload-output", type=Path,
+        help="optional native NHADM1 endpoint/capacity payload for runtime feasibility probes",
+    )
+    adm_parser.set_defaults(handler=bodyparts_adm_build)
     myosim_source_bone_parser = commands.add_parser(
         "myosim-source-bone-proximity",
         help="audit terminal MyoSim sites against exact same-body compiled source bone meshes",
