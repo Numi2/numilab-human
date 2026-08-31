@@ -418,6 +418,35 @@ def myosim_upper_limb_pose_audit(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def myosim_lower_limb_pose_audit(arguments: argparse.Namespace) -> int:
+    auditor = arguments.python.expanduser().absolute()
+    if not auditor.is_file() or not os.access(auditor, os.X_OK):
+        raise ImportError(f"MyoSim lower-limb pose-audit Python is unavailable: {auditor}")
+    output = arguments.output.resolve()
+    environment = dict(os.environ)
+    source_path = str(REPOSITORY_ROOT / "src")
+    environment["PYTHONPATH"] = source_path + (
+        os.pathsep + environment["PYTHONPATH"] if environment.get("PYTHONPATH") else ""
+    )
+    command = [
+        str(auditor), "-m", "numilab_human.lower_limb_pose_audit",
+        "--sources", str(arguments.sources.resolve()),
+        "--registration", str(arguments.registration.resolve()),
+        "--output", str(output),
+    ]
+    completed = subprocess.run(command, capture_output=True, text=True, check=False, env=environment)
+    if completed.returncode != 0:
+        detail = completed.stderr.strip() or completed.stdout.strip() or "no pose-audit output"
+        raise ImportError(f"MyoSim lower-limb pose audit failed: {detail}")
+    receipt = read_json(output)
+    if receipt.get("schema") != (
+        "numi.human.bodyparts3d-myosim-lower-limb-multi-pose-audit.v1"
+    ):
+        raise ImportError("MyoSim lower-limb pose audit wrote an unsupported schema")
+    print(f"wrote {output}")
+    return 0
+
+
 def myosim_sternal_girdle_registration(arguments: argparse.Namespace) -> int:
     output = arguments.output.resolve()
     try:
@@ -476,7 +505,7 @@ def myosim_lower_limb_source_registration(arguments: argparse.Namespace) -> int:
         candidate.get("schema") != "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2"
         or not isinstance(receipt, dict)
         or receipt.get("schema")
-        != "numi.human.bodyparts3d-myosim-lower-limb-source-mesh-registration.v2"
+        != "numi.human.bodyparts3d-myosim-lower-limb-source-mesh-registration.v3"
     ):
         raise ImportError("MyoSim lower-limb source registration wrote an unsupported schema")
     print(f"wrote {output}")
@@ -1353,6 +1382,18 @@ def parser() -> argparse.ArgumentParser:
         help="Python environment with the pinned myo-sim checkout, NumPy, and MuJoCo installed",
     )
     upper_limb_pose_audit_parser.set_defaults(handler=myosim_upper_limb_pose_audit)
+    lower_limb_pose_audit_parser = commands.add_parser(
+        "myosim-lower-limb-pose-audit",
+        help="prove bilateral hip-to-toe registration across bounded source poses",
+    )
+    lower_limb_pose_audit_parser.add_argument("--sources", type=Path, required=True)
+    lower_limb_pose_audit_parser.add_argument("--registration", type=Path, required=True)
+    lower_limb_pose_audit_parser.add_argument("--output", type=Path, required=True)
+    lower_limb_pose_audit_parser.add_argument(
+        "--python", type=Path, default=Path(sys.executable),
+        help="Python environment with the pinned myo-sim checkout, NumPy, and MuJoCo installed",
+    )
+    lower_limb_pose_audit_parser.set_defaults(handler=myosim_lower_limb_pose_audit)
     sternal_girdle_registration_parser = commands.add_parser(
         "myosim-sternal-girdle-registration",
         help="restore exact manubrium and common-frame sternum/clavicle continuity",

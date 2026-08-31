@@ -135,6 +135,14 @@ from numilab_human.lower_limb_registration import (
     RIGID_FOOT_MEMBERS,
     propose_lower_limb_registration,
 )
+from numilab_human.lower_limb_pose_audit import (
+    BILATERAL_GAP_PARITY_MAXIMUM_M as LOWER_BILATERAL_GAP_PARITY_MAXIMUM_M,
+    MECHANICS_REFERENCE_INTERFACE_ALLOWANCE_M,
+    POSE_CONTINUITY_ALLOWANCE_M as LOWER_POSE_CONTINUITY_ALLOWANCE_M,
+    POSE_SUITE as LOWER_POSE_SUITE,
+    RIGID_TOE_COMPOUND_REFERENCE_ALLOWANCE_M,
+    _continuity_transitions as lower_continuity_transitions,
+)
 from numilab_human.thoracic_registration import (
     ENDPOINT_MAXIMUM_DISTANCE_M as THORACIC_ENDPOINT_MAXIMUM_DISTANCE_M,
 )
@@ -1584,6 +1592,33 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(patch["first_vertex_count"], 12)
         self.assertEqual(patch["second_vertex_count"], 12)
         self.assertGreater(patch["bidirectional_p90_m"], 0.015)
+
+    def test_lower_limb_pose_audit_covers_bilateral_functional_motion(self) -> None:
+        self.assertEqual(LOWER_POSE_CONTINUITY_ALLOWANCE_M, 0.001)
+        self.assertEqual(LOWER_BILATERAL_GAP_PARITY_MAXIMUM_M, 0.004)
+        self.assertEqual(MECHANICS_REFERENCE_INTERFACE_ALLOWANCE_M, 0.003)
+        self.assertEqual(RIGID_TOE_COMPOUND_REFERENCE_ALLOWANCE_M, 0.0035)
+        self.assertEqual(len(lower_continuity_transitions()), 40)
+        self.assertEqual(
+            [name for name, _ in LOWER_POSE_SUITE],
+            [
+                "neutral",
+                "bilateral_hip_flexion",
+                "bilateral_knee_flexion",
+                "bilateral_ankle_dorsiflexion",
+                "bilateral_subtalar_rotation",
+                "bilateral_mtp_flexion",
+                "bilateral_functional_crouch",
+            ],
+        )
+        for name, overrides in LOWER_POSE_SUITE:
+            indices = [index for index, _ in overrides]
+            self.assertEqual(len(indices), len(set(indices)), name)
+        crouch = dict(LOWER_POSE_SUITE[-1][1])
+        self.assertEqual(crouch[101], crouch[115])
+        self.assertEqual(crouch[106], crouch[120])
+        self.assertEqual(crouch[109], crouch[123])
+        self.assertEqual(crouch[111], crouch[125])
 
     def test_upper_limb_interface_patch_is_bidirectional(self) -> None:
         try:

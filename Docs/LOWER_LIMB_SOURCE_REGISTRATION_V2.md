@@ -1,5 +1,8 @@
 # Lower-limb source-mesh registration v2
 
+> Historical baseline. The robust bidirectional interface and seven-pose
+> replacement is [lower-limb registration v3](LOWER_LIMB_SOURCE_REGISTRATION_V3.md).
+
 ## Outcome
 
 This increment corrects the reported femur, patella, tibia/fibula, ankle,

@@ -49,17 +49,18 @@ The evidence-gated development sequence is in the
 ## Visual progress
 
 The current articular-placement pass replaces misleading nearest-surface-only
-acceptance with bounded proper uniform similarity fits plus explicit joint-head
-and mechanics-axis gates. Bilateral humeral-head residuals are 1.081--1.289 mm
-and bilateral femoral-head residuals are 1.202--1.288 mm. Six upper-limb source
-poses pass 312 minimum-gap plus bidirectional interface-patch checks and 156
-bilateral-parity checks; both knees flex
-forward, and each rigid foot retains five rays with the hallux medial and no
-new toe joint. The paired `NHTENDON3` runtime executes 416 muscles and all 832
-endpoints on Apple M4 Pro with byte-identical replay. See the
+acceptance with bounded proper uniform similarity fits plus explicit joint-head,
+mechanics-axis, and bidirectional interface-patch gates. Bilateral humeral-head
+residuals are 1.081--1.289 mm and bilateral femoral-head residuals are
+1.202--1.288 mm. Six upper-limb poses pass 312 interface plus 156 parity checks;
+seven lower-limb poses pass 280 interface plus 140 parity checks. Both knees
+flex forward, and each rigid foot retains five rays with the hallux medial and
+no new toe joint. The paired `NHTENDON3` runtime executes 416 muscles and all
+832 endpoints on Apple M4 Pro with byte-identical replay. See the
 [articular placement record](Docs/ARTICULAR_PLACEMENT_V1.md),
 [upper-limb source-mesh registration](Docs/UPPER_LIMB_SOURCE_MESH_REGISTRATION_V1.md),
 [upper-limb articular registration](Docs/UPPER_LIMB_ARTICULAR_REGISTRATION_V3.md),
+[lower-limb robust registration](Docs/LOWER_LIMB_SOURCE_REGISTRATION_V3.md),
 [rigid-foot ownership and entheses](Docs/RIGID_FOOT_OWNERSHIP_V1.md),
 [visual progress](Docs/VISUAL_PROGRESS.md), and the
 [completion gap ledger](Docs/HUMAN_COMPLETION_GAP_LEDGER.md).
@@ -80,12 +81,13 @@ to the existing torso body, leaves both clavicles untouched, and passes
 
 The BodyParts3D lower-limb pass registers bilateral femur and tibia with bounded
 anthropometric scale while talus, rigid foot, and patella remain unscaled. It
-rejects the tempting 179 degree patella flip, keeps all 40 knee-to-toe
-continuity gaps below 3.876 mm, and preserves the complete five-toe compound
-without adding articulation. All 18 named foot/hallux migrations and all 832
-endpoint laws execute on Apple M4 Pro. Neutral and 0.75 rad flexed four-angle
-review passes on both sides. See the
-[lower-limb source registration](Docs/LOWER_LIMB_SOURCE_REGISTRATION_V2.md)
+rejects the tempting 179 degree patella flip, passes robust minimum-gap and
+interface-patch gates for all 40 knee-to-toe transitions, and preserves the
+complete five-toe compound without adding articulation. Seven source poses,
+280 interface checks, 140 bilateral checks, and 11 four-angle M4 Pro packs pass.
+All 18 named foot/hallux migrations and all 832 endpoint laws execute on Apple
+M4 Pro. See the
+[lower-limb robust registration](Docs/LOWER_LIMB_SOURCE_REGISTRATION_V3.md)
 and the preceding [fixed-bone foot entheses](Docs/FIXED_BONE_FOOT_ENTHESES_V1.md).
 
 The separate exact Open Knee(s) specimen now resolves the otherwise ambiguous
@@ -161,6 +163,13 @@ and preceding [abdominal source-component record](Docs/ABDOMINAL_SOURCE_COMPONEN
   <img src="Docs/media/numi-human-upper-joint-focus-v1/elbow/myosim-fullbody-articulated-bodyparts-bones-posed-focus-joint-child-body-42-oblique.png" width="24%" alt="Right elbow flexion at the posed mechanics anchor" />
   <img src="Docs/media/numi-human-upper-joint-focus-v1/wrist/myosim-fullbody-articulated-bodyparts-bones-posed-focus-joint-child-body-45-oblique.png" width="24%" alt="Right wrist deviation and flexion at the posed mechanics anchor" />
   <img src="Docs/media/numi-human-upper-joint-focus-v1/hand-neutral/myosim-fullbody-articulated-bodyparts-bones-focus-joint-child-body-62-side.png" width="24%" alt="Neutral right hand with all five source-owned rays" />
+</p>
+
+<p align="center">
+  <img src="Docs/media/numi-human-lower-joint-focus-v1/hip-right/myosim-fullbody-articulated-bodyparts-bones-posed-focus-joint-child-body-131-oblique.png" width="24%" alt="Right hip flexion at the posed mechanics anchor" />
+  <img src="Docs/media/numi-human-lower-joint-focus-v1/knee-left/myosim-fullbody-articulated-bodyparts-bones-posed-focus-joint-child-body-150-side.png" width="24%" alt="Left knee flexion with coherent femur, patella, tibia, and fibula" />
+  <img src="Docs/media/numi-human-lower-joint-focus-v1/ankle-right/myosim-fullbody-articulated-bodyparts-bones-posed-focus-joint-child-body-137-oblique.png" width="24%" alt="Right ankle dorsiflexion at the posed mechanics anchor" />
+  <img src="Docs/media/numi-human-lower-joint-focus-v1/toes-left-posed/myosim-fullbody-articulated-bodyparts-bones-posed-focus-joint-child-body-153-front.png" width="24%" alt="Left five-ray rigid toe compound under MTP flexion" />
 </p>
 
 <p align="center">
@@ -262,7 +271,7 @@ stable-standing qualification. See the
 [anterior-thorax composite record](Docs/ANTERIOR_THORAX_COMPOSITE_FORCE_TRANSFER_V3.md),
 [abdominal component record](Docs/ABDOMINAL_SOURCE_COMPONENT_ENTHESES_V1.md),
 [torso/axial record](Docs/TORSO_AXIAL_SOURCE_REGISTRATION_V1.md),
-[lower-limb record](Docs/LOWER_LIMB_SOURCE_REGISTRATION_V2.md), and historical
+[lower-limb record](Docs/LOWER_LIMB_SOURCE_REGISTRATION_V3.md), and historical
 [fixed-bone foot record](Docs/FIXED_BONE_FOOT_ENTHESES_V1.md).
 
 The earlier whole-calcaneus transform experiment remains rejected: it would

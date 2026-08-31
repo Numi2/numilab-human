@@ -627,7 +627,7 @@ def _interface_patch_metrics(first: Any, second: Any, np: Any) -> dict[str, Any]
         or not bool(np.all(np.isfinite(first_points)))
         or not bool(np.all(np.isfinite(second_points)))
     ):
-        raise RuntimeError("upper-limb interface patch received invalid vertices")
+        raise RuntimeError("joint-interface patch received invalid vertices")
 
     def one_direction(source: Any, target: Any) -> tuple[float, int]:
         _, squared = _nearest(source, target, np)

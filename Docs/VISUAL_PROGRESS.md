@@ -217,30 +217,28 @@ subsequent semantic-limb increment raises literal surface admission to 266;
 for all eight bilateral four-angle sets, exact manifests, mechanics counters,
 and evidence boundaries.
 
-## Lower-limb source meshes, connected toes, and flexion — 2026-08-29
+## Lower-limb robust interfaces and mechanics-anchor poses — 2026-08-31
 
 <p align="center">
-  <img src="media/numi-human-lower-limb-source-registration-v2-2048/neutral/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-136-oblique.png" width="24%" alt="Source-registered right knee and foot, neutral oblique" />
-  <img src="media/numi-human-lower-limb-source-registration-v2-2048/neutral/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-tendon-attachment-envelopes-focus-body-150-side.png" width="24%" alt="Source-registered left knee and foot, neutral side" />
-  <img src="media/numi-human-lower-limb-source-registration-v2-2048/flexed/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-posed-focus-body-136-side.png" width="24%" alt="Source-registered right knee at 0.75 rad flexion" />
-  <img src="media/numi-human-lower-limb-source-registration-v2-2048/flexed/myosim-fullbody-articulated-bodyparts-bones-source-route-centrelines-posed-focus-body-150-oblique.png" width="24%" alt="Source-registered left knee at 0.75 rad flexion" />
+  <img src="media/numi-human-lower-joint-focus-v1/hip-left/myosim-fullbody-articulated-bodyparts-bones-posed-focus-joint-child-body-145-oblique.png" width="24%" alt="Left hip flexion at the posed mechanics anchor" />
+  <img src="media/numi-human-lower-joint-focus-v1/knee-right/myosim-fullbody-articulated-bodyparts-bones-posed-focus-joint-child-body-136-side.png" width="24%" alt="Right knee flexion with coherent anterior patella" />
+  <img src="media/numi-human-lower-joint-focus-v1/ankle-left/myosim-fullbody-articulated-bodyparts-bones-posed-focus-joint-child-body-151-oblique.png" width="24%" alt="Left ankle dorsiflexion at the mechanics anchor" />
+  <img src="media/numi-human-lower-joint-focus-v1/toes-right-posed/myosim-fullbody-articulated-bodyparts-bones-posed-focus-joint-child-body-139-front.png" width="24%" alt="Right rigid five-ray toe compound under MTP flexion" />
 </p>
 
-Ten bilateral femur-to-patella/tibia and ankle/rigid-foot segments now receive
-one proper-rigid correction selected against pinned compiled MyoSim meshes.
-The patella selector rejects near-symmetric 179 degree flips. Each complete
-toe compound inherits the foot correction plus one bounded 6.5 mm distal
-registration refinement, with no digit split or new joint. All 40 knee-to-toe
-continuity gaps remain below 3.876 mm.
+The v3 compiler adds a lowest-2% bidirectional interface-patch p90 gate to all
+40 neutral knee-to-toe transitions. It needs only two 0.5 mm shared rigid-group
+translations and adds no joint or independently articulated toe. Seven source
+poses pass 280 same-pose mechanics-relative interface checks and 140 bilateral
+checks after exact projection of all 51 dependent-coordinate equalities.
 
-The paired NHTENDON3 program executes all 832 endpoint laws, including all 18
-named foot/hallux surface migrations, on Apple M4 Pro. Neutral frames include
-the force-transfer envelopes; flexed frames apply a bounded source coordinate
-override and exact NHEQ1 dependent-coordinate projection. The latter is
-multi-pose kinematic evidence, not loaded-contact or gait evidence. See the
-[lower-limb source-registration record](LOWER_LIMB_SOURCE_REGISTRATION_V2.md),
-[capture transcript](media/numi-human-lower-limb-source-registration-v2-2048/capture.transcript.txt),
-and [checksums](media/numi-human-lower-limb-source-registration-v2-2048/checksums.sha256).
+Eleven M4 Pro packs cover bilateral hips, knees, ankles, neutral and posed toe
+compounds, plus the right hindfoot from four angles. Every mechanics-anchor
+residual is below `6.15e-8 m`. The paired NHTENDON3 program reproduces
+byte-for-byte and executes all 832 endpoint laws, including all 18 named
+foot/hallux migrations. See the
+[v3 lower-limb record](LOWER_LIMB_SOURCE_REGISTRATION_V3.md) and
+[machine-readable evidence](media/numi-human-lower-joint-focus-v1/receipts/).
 
 ## Deformable pectoralis fascia and axial continuity — 2026-08-29
 

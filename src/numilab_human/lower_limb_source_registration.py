@@ -22,10 +22,12 @@ from . import model as human_model
 from .myosim_bone_proximity import _compiled_meshes_by_body
 from .myosim_export import export_fullbody
 from .upper_limb_registration import (
+    INTERFACE_PATCH_GATE_MULTIPLIER,
     _body_frame_to_core,
     _core_to_world,
     _endpoint_surface_distances,
     _fit_candidates,
+    _interface_patch_metrics,
     _minimum_gap,
     _robust_joint_centered_articular_sphere,
     _rotation_xyzw,
@@ -33,10 +35,11 @@ from .upper_limb_registration import (
     _surface_split_metrics,
     _symmetric_metrics,
     _transform_points,
+    _world_delta_to_core,
 )
 
 
-SCHEMA = "numi.human.bodyparts3d-myosim-lower-limb-source-mesh-registration.v2"
+SCHEMA = "numi.human.bodyparts3d-myosim-lower-limb-source-mesh-registration.v3"
 REGISTRATION_SCHEMA = "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2"
 TENDON_SCHEMAS = {
     "numi.human.tendon-attachment-envelope-payload.v2",
@@ -67,6 +70,10 @@ _FEMORAL_HEAD_MECHANICS_CENTER_MAXIMUM_RESIDUAL_M = 0.005
 _FEMORAL_HEAD_REFINEMENT_MAXIMUM_TRANSLATION_M = 0.006
 _TOE_COMPOUND_ENTHESIS_TRANSLATION_MAXIMUM_M = 0.0065
 _TOE_COMPOUND_ENTHESIS_DISTANCE_MAXIMUM_M = 0.020
+_INTERFACE_TRANSLATION_REFINEMENT_MAXIMUM_M = 0.0015
+_INTERFACE_TRANSLATION_REFINEMENT_STEPS_M = (
+    0.0005, 0.00025, 0.000125, 0.0000625, 0.00003125,
+)
 
 
 def _sha256(path: Path) -> str:
@@ -578,31 +585,240 @@ def propose_lower_limb_source_registration(
         points = _transform_points(record["member_vertices"][member_id], chosen[name], np)
         return _core_to_world(points, record["target"], np)
 
-    continuity = []
-    transitions = list(human_model._NUMI_HUMAN_KNEE_CONTINUITY_TRANSITIONS) + [
-        (name, first, second)
+    transitions = [
+        (
+            name,
+            first,
+            second,
+            human_model._NUMI_HUMAN_KNEE_CONTINUITY_MAXIMUM_GAP_M,
+        )
+        for name, first, second in human_model._NUMI_HUMAN_KNEE_CONTINUITY_TRANSITIONS
+    ] + [
+        (
+            name,
+            first,
+            second,
+            human_model._NUMI_HUMAN_FOOT_CONTINUITY_MAXIMUM_GAP_M,
+        )
         for name, first, second in human_model._NUMI_HUMAN_FOOT_CONTINUITY_TRANSITIONS
     ]
-    for name, first_member, second_member in transitions:
-        gap, _, _ = _minimum_gap(
-            world_vertices(first_member), world_vertices(second_member), np
+
+    def transition_metrics(
+        transition: tuple[str, str, str, float],
+        moved_names: set[str] | None = None,
+        world_delta: Any | None = None,
+    ) -> dict[str, Any]:
+        name, first_member, second_member, gate = transition
+        first_vertices = world_vertices(first_member)
+        second_vertices = world_vertices(second_member)
+        if moved_names and world_delta is not None:
+            if anchors_by_member[first_member]["target"]["name"] in moved_names:
+                first_vertices = first_vertices + world_delta
+            if anchors_by_member[second_member]["target"]["name"] in moved_names:
+                second_vertices = second_vertices + world_delta
+        gap, _, _ = _minimum_gap(first_vertices, second_vertices, np)
+        patch = _interface_patch_metrics(first_vertices, second_vertices, np)
+        patch_gate = INTERFACE_PATCH_GATE_MULTIPLIER * gate
+        return {
+            "name": name,
+            "source_member_ids": [first_member, second_member],
+            "minimum_vertex_gap_m": gap,
+            "maximum_allowed_gap_m": gate,
+            "interface_patch": patch,
+            "maximum_allowed_interface_patch_p90_m": patch_gate,
+            "passed": (
+                gap <= gate + 1.0e-12
+                and patch["bidirectional_p90_m"] <= patch_gate + 1.0e-12
+            ),
+        }
+
+    def refine_group_translation(label: str, moved_names: set[str]) -> dict[str, Any] | None:
+        relevant = [
+            transition
+            for transition in transitions
+            if (
+                anchors_by_member[transition[1]]["target"]["name"] in moved_names
+            ) != (
+                anchors_by_member[transition[2]]["target"]["name"] in moved_names
+            )
+        ]
+        if not relevant:
+            raise RuntimeError(
+                f"lower-limb interface refinement {label} has no boundary transitions"
+            )
+
+        def objective(delta: Any) -> tuple[tuple[float, float, float], list[dict[str, Any]]]:
+            measured = [
+                transition_metrics(transition, moved_names, delta)
+                for transition in relevant
+            ]
+            normalized = [
+                max(
+                    item["minimum_vertex_gap_m"] / item["maximum_allowed_gap_m"],
+                    item["interface_patch"]["bidirectional_p90_m"]
+                    / item["maximum_allowed_interface_patch_p90_m"],
+                )
+                for item in measured
+            ]
+            return (
+                (max(normalized), sum(normalized), float(np.linalg.norm(delta))),
+                measured,
+            )
+
+        delta = np.zeros(3)
+        initial_objective, initial_metrics = objective(delta)
+        if initial_objective[0] <= 1.0 + 1.0e-12:
+            return None
+        for step in _INTERFACE_TRANSLATION_REFINEMENT_STEPS_M:
+            while True:
+                best_objective, _ = objective(delta)
+                best_delta = delta
+                for axis in range(3):
+                    for sign in (-1.0, 1.0):
+                        candidate = delta.copy()
+                        candidate[axis] += sign * step
+                        if float(np.linalg.norm(candidate)) > (
+                            _INTERFACE_TRANSLATION_REFINEMENT_MAXIMUM_M + 1.0e-12
+                        ):
+                            continue
+                        candidate_objective, _ = objective(candidate)
+                        if candidate_objective < best_objective:
+                            best_objective = candidate_objective
+                            best_delta = candidate
+                if bool(np.array_equal(best_delta, delta)):
+                    break
+                delta = best_delta
+                if best_objective[0] <= 1.0 + 1.0e-12:
+                    break
+            reached_objective, _ = objective(delta)
+            if reached_objective[0] <= 1.0 + 1.0e-12:
+                break
+        final_objective, final_metrics = objective(delta)
+        if final_objective[0] > 1.0 + 1.0e-12:
+            return None
+        for body_name in moved_names:
+            chosen[body_name]["translation"] = (
+                chosen[body_name]["translation"]
+                + _world_delta_to_core(delta, body_records[body_name]["target"], np)
+            )
+        return {
+            "label": label,
+            "body_names": sorted(moved_names),
+            "method": "bounded_shared_world_translation_minimizing_robust_boundary_interface_error",
+            "translation_world_m": [float(value) for value in delta],
+            "translation_norm_m": float(np.linalg.norm(delta)),
+            "maximum_translation_m": _INTERFACE_TRANSLATION_REFINEMENT_MAXIMUM_M,
+            "initial_maximum_normalized_interface_error": initial_objective[0],
+            "final_maximum_normalized_interface_error": final_objective[0],
+            "initial_boundary_metrics": initial_metrics,
+            "final_boundary_metrics": final_metrics,
+            "new_joint_count": 0,
+        }
+
+    interface_translation_refinements = []
+    for label, names in (
+        ("right_ankle_complete_foot", {"talus_r", "calcn_r", "toes_r"}),
+        ("left_ankle_complete_foot", {"talus_l", "calcn_l", "toes_l"}),
+        ("right_complete_toe_compound", {"toes_r"}),
+        ("left_complete_toe_compound", {"toes_l"}),
+    ):
+        refinement = refine_group_translation(label, names)
+        if refinement is not None:
+            interface_translation_refinements.append(refinement)
+
+    refined_fit_names = {
+        name
+        for refinement in interface_translation_refinements
+        for name in refinement["body_names"]
+        if name in selected_names
+    }
+    for name in refined_fit_names:
+        fit = chosen[name]
+        (
+            fit["training_metrics"],
+            fit["held_out_metrics"],
+            fit["training_vertex_count"],
+            fit["held_out_vertex_count"],
+        ) = _surface_split_metrics(
+            body_records[name]["vertices"],
+            body_records[name]["source_vertices"],
+            fit["rotation"],
+            fit["translation"],
+            np,
+            float(fit.get("uniform_scale", 1.0)),
         )
-        gate = (
-            human_model._NUMI_HUMAN_KNEE_CONTINUITY_MAXIMUM_GAP_M
-            if name.startswith(("right_femur", "left_femur"))
-            else human_model._NUMI_HUMAN_FOOT_CONTINUITY_MAXIMUM_GAP_M
+        if not _fit_passes(name, fit, np):
+            raise RuntimeError(
+                f"lower-limb interface refinement invalidated the source fit for {name}"
+            )
+
+    for side in ("r", "l"):
+        toe_name = f"toes_{side}"
+        endpoint_points = np.asarray([
+            endpoint["source_local_point_m"]
+            for endpoint in tendon_endpoints
+            if endpoint.get("body_index")
+            == int(body_records[toe_name]["target"]["core_body_index"])
+            and endpoint.get("endpoint") == "insertion"
+            and endpoint.get("muscle") in {f"ehl_{side}", f"fhl_{side}"}
+        ], dtype=float)
+        hallux_member = human_model._NUMI_HUMAN_TOE_ENTHESIS_MEMBERS[
+            (f"ehl_{side}", 1)
+        ][0]
+        hallux_anchor = anchors_by_member[hallux_member]
+        _, hallux_record, hallux_obj = human_model._bodyparts_obj_member(
+            sources, hallux_anchor["source"]["hierarchy"], hallux_member
         )
+        _, hallux_triangles = human_model._bodyparts_obj_triangles(
+            hallux_obj, hallux_record
+        )
+        hallux_vertices = _transform_points(
+            body_records[toe_name]["member_vertices"][hallux_member],
+            chosen[toe_name], np,
+        )
+        distances = _endpoint_surface_distances(
+            endpoint_points, hallux_vertices,
+            np.asarray(hallux_triangles, dtype=int), np.eye(3), np.zeros(3), np,
+        )
+        if float(np.max(distances)) > _TOE_COMPOUND_ENTHESIS_DISTANCE_MAXIMUM_M:
+            raise RuntimeError(
+                f"lower-limb interface refinement broke hallux route calibration for {toe_name}"
+            )
+        chosen[toe_name]["toe_compound_enthesis_refinement"][
+            "post_interface_refinement_route_surface_distances_m"
+        ] = [float(value) for value in distances]
+
+    continuity = []
+    for transition in transitions:
+        name, first_member, second_member, gate = transition
+        first_vertices = world_vertices(first_member)
+        second_vertices = world_vertices(second_member)
+        gap, _, _ = _minimum_gap(first_vertices, second_vertices, np)
+        patch = _interface_patch_metrics(first_vertices, second_vertices, np)
+        patch_gate = INTERFACE_PATCH_GATE_MULTIPLIER * gate
         continuity.append({
             "name": name,
             "source_member_ids": [first_member, second_member],
             "minimum_vertex_gap_m": gap,
             "maximum_allowed_gap_m": gate,
-            "passed": gap <= gate + 1.0e-12,
+            "interface_patch": patch,
+            "maximum_allowed_interface_patch_p90_m": patch_gate,
+            "passed": (
+                gap <= gate + 1.0e-12
+                and patch["bidirectional_p90_m"] <= patch_gate + 1.0e-12
+            ),
         })
-    failed = [record["name"] for record in continuity if not record["passed"]]
+    failed = [record for record in continuity if not record["passed"]]
     if failed:
         raise RuntimeError(
-            "lower-limb source registration violates continuity: " + ", ".join(failed)
+            "lower-limb source registration violates continuity: "
+            + ", ".join(
+                f"{record['name']}"
+                f"(minimum={record['minimum_vertex_gap_m']:.6f},"
+                f"patch_p90={record['interface_patch']['bidirectional_p90_m']:.6f},"
+                f"allowed_patch_p90={record['maximum_allowed_interface_patch_p90_m']:.6f})"
+                for record in failed
+            )
         )
 
     output = json.loads(json.dumps(registration))
@@ -694,6 +910,10 @@ def propose_lower_limb_source_registration(
         "bilateral_pairs": bilateral_receipts,
         "continuity": continuity,
         "maximum_continuity_gap_m": max(record["minimum_vertex_gap_m"] for record in continuity),
+        "maximum_interface_patch_p90_m": max(
+            record["interface_patch"]["bidirectional_p90_m"] for record in continuity
+        ),
+        "interface_translation_refinements": interface_translation_refinements,
         "new_joint_count": 0,
         "endpoint_migration_m": 0.0,
         "promotion_requirement": (
