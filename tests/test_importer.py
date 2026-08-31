@@ -65,6 +65,8 @@ from numilab_human.model import (
     _bodyparts_myosim_surface_specifications,
     _bodyparts_similarity_fit,
     _fit_myosim_compliant_architecture,
+    _myosim_passive_force_length,
+    _numi_static_compliant_force,
     _numi_human_semantic_enthesis_kind,
     _myosim_pack_dof_record,
     _myosim_extensor_hood_artifact,
@@ -903,8 +905,41 @@ class ImporterTests(unittest.TestCase):
             gain[1] - gain[0]
         )
         self.assertGreater(optimal_fiber / source_optimal_fiber, 1.2)
-        self.assertGreater(tendon_slack / length_range[0], 0.8)
-        self.assertLess(normalized_rmse, 0.11)
+        self.assertGreater(tendon_slack / length_range[0], 0.75)
+        self.assertLess(normalized_rmse, 0.15)
+
+    def test_nhmyo2_fifth_interosseous_fit_preserves_passive_oracle(self) -> None:
+        # Exact float32 UI_UB5 parameters. The active-only fitter reported a
+        # superficially acceptable 4.99% NRMSE while producing 2.2306 N at
+        # activation zero where the source passive law produces 0.0746 N.
+        length_range = [0.09102260321378708, 0.09768450260162354]
+        gain = [
+            0.75, 1.0499999523162842, 47.900001525878906, 200.0, 0.5,
+            1.600000023841858, 1.5, 1.2999999523162842,
+            1.2000000476837158, 0.0,
+        ]
+        acceleration_scale = 34.30057907104492
+        oracle_length = 0.09690025448799133
+        optimal_fiber, tendon_slack, normalized_rmse = (
+            _fit_myosim_compliant_architecture(
+                length_range, acceleration_scale, gain, list(gain),
+                oracle_length,
+            )
+        )
+        source_optimal = (length_range[1] - length_range[0]) / (
+            gain[1] - gain[0]
+        )
+        source_normalized = gain[0] + (
+            oracle_length - length_range[0]
+        ) / source_optimal
+        source_passive = gain[2] * _myosim_passive_force_length(
+            source_normalized, gain[5], gain[7]
+        )
+        fitted_passive = gain[2] * _numi_static_compliant_force(
+            oracle_length, 0.0, optimal_fiber, tendon_slack, gain, list(gain)
+        )
+        self.assertLess(normalized_rmse, 0.09)
+        self.assertLess(abs(fitted_passive - source_passive), 0.2)
 
     def _minimal_myosim_tendon_artifact(self, directory: Path) -> Path:
         directory.mkdir(parents=True)

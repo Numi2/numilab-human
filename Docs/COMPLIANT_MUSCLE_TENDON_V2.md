@@ -25,17 +25,32 @@ over a wider domain. A deterministic 21-by-21 pass classifies each source
 surface. Fits above five percent NRMSE receive a 41-by-41 global search and
 three local 21-by-21 refinements; already-good fits use two local 11-by-11
 refinements. This keeps narrow hand, calf, and axial minima on the exhaustive
-path without charging that cost to all 416 muscles. On Apple M4 Pro the final
-adaptive source build took `8:01`, versus `13:46` for the all-exhaustive
-baseline.
+path without charging that cost to all 416 muscles.
 
-The resulting 416 records have mean NRMSE `0.06569`, median `0.02247`, and
-maximum `0.56737`; 122, 88, 42, and 2 records remain above 5, 10, 20, and 50
-percent respectively. The fifth lumbricals improve from `0.65814` to
-`0.10156`, medial gastrocnemius from `0.48960` to `0.04772`, and lateral
-gastrocnemius from `0.47833` to `0.04958`. Remaining poor fits are retained as
-explicit flags, not hidden by per-muscle hand tuning. These are source-surface
-fits, not anatomical measurements of fiber or tendon length.
+The first adaptive objective sampled activations `0.1`, `0.5`, and `1.0`.
+That was insufficient: large active forces could hide a false force at rest.
+The passive-aware objective now also samples activation zero and weights that
+channel by `1024`. This is a mechanical gate rather than a visual heuristic:
+force present with no activation enters every subsequent equilibrium solve.
+The manifest records the source and fitted passive force at the source pose
+for every muscle, plus aggregate absolute-error statistics.
+
+On Apple M4 Pro the passive-aware 416-muscle source build took `16:28`. Its
+weighted fit NRMSE is mean `0.09582`, median `0.04276`, and maximum `0.58500`.
+Those values are not directly comparable to the former active-only NRMSE
+because the objective changed. The directly comparable passive-oracle error
+improves from mean `3.5242 N`, p95 `15.4167 N`, and maximum `137.6033 N` to
+mean `0.81787 N`, p95 `4.44320 N`, and maximum `29.38435 N`. Counts above
+`0.1`, `1`, and `10 N` fall from `142/82/34` to `100/54/8`.
+
+For the fifth interosseous `UI_UB5`, the former architecture predicted
+`2.2306 N` at activation zero against a source value of `0.07459 N`; the new
+fit predicts `0.21346 N`. The fifth lumbrical, radial interosseous, and fifth
+superficial flexor fits reproduce their zero source passive force to numerical
+precision. The soleus worst-case error falls from `137.60 N` to `25.43 N`.
+Remaining errors are retained as explicit flags, not hidden by per-muscle hand
+tuning. These are source-surface fits, not anatomical measurements of fiber
+length, tendon slack length, or pennation.
 
 ## Runtime law
 
@@ -64,11 +79,15 @@ loads, maximum force residual was `3.74e-05 N` and maximum moment residual was
 This qualifies the numerical muscle/tendon transaction and explicit
 tendon-to-bone load transfer. It does not qualify anatomical pennation,
 subject-specific slack lengths, enthesis material failure, a deformable tendon
-continuum, stable standing, or gait. With the 2026-08-31 adaptive artifact, the
+continuum, stable standing, or gait. With the passive-aware artifact, the
 runtime whole-body unilateral-support audit remains a failed equilibrium gate,
-but improves from `3.79966` to `2.93227` normalized residual RMS and from
-`147.46` to `62.30 rad/s2` maximum generalized acceleration. The fifth
-lumbrical's default passive force falls from `17.4896 N` to `0.01567 N`.
-The next mechanics task is source-resolved fifth-ray and wrist force sharing,
-followed by the remaining hand, shoulder, and lower-body residual families;
-not a force clamp or another render-only correction.
+but improves from the prior adaptive artifact's `2.93227` to `2.58813`
+normalized residual RMS and from `62.30` to `30.59 rad/s2` maximum generalized
+acceleration. Bilateral fifth-MCP abduction falls from `62.30/60.34` to
+`1.76/1.25 rad/s2`; no coordinate exceeds `100 rad/s2`, five exceed
+`10 rad/s2`, and 52 exceed `1 rad/s2`. Body weight closes to `2.26e-9`
+relative error and replay is bitwise.
+
+The next mechanics task is source-resolved bilateral wrist and third-MCP force
+sharing, followed by the remaining shoulder and lower-body residual families;
+not a force clamp, invented rest torque, or render-only correction.

@@ -2029,6 +2029,7 @@ _MYOSIM_MUSCLE_REFERENCE_MAGIC = b"NHMYO2\0\0"
 _MYOSIM_MUSCLE_REFERENCE_ABI = 2
 _MYOSIM_MUSCLE_ARCHITECTURE_FORMAT = "<8f"
 _MYOSIM_MUSCLE_ARCHITECTURE_BYTES = struct.calcsize(_MYOSIM_MUSCLE_ARCHITECTURE_FORMAT)
+_MYOSIM_PASSIVE_FIT_WEIGHT = 1024.0
 # Source-authored full-body foot support witnesses.  These are compiled
 # MuJoCo capsule/ellipsoid surface points against MyoSim's own ground plane,
 # not BodyParts3D collision proxies.
@@ -2441,7 +2442,10 @@ def _fit_myosim_compliant_architecture(
             continue
         active = _myosim_active_force_length(normalized_length, gain[4], gain[5])
         passive = _myosim_passive_force_length(normalized_length, bias[5], bias[7])
-        for activation in (0.1, 0.5, 1.0):
+        # Activation zero is a separate mechanical gate, not an extrapolation
+        # from active samples. Without it a low aggregate NRMSE can still hide
+        # orders-of-magnitude false passive preload at the source pose.
+        for activation in (0.0, 0.1, 0.5, 1.0):
             target = activation * active + (passive_force / maximum_force) * passive
             samples.append((path_length, activation, max(0.0, target)))
     if not samples:
@@ -2455,14 +2459,21 @@ def _fit_myosim_compliant_architecture(
     def score(optimal_fiber: float, tendon_slack: float) -> float:
         squared_error = 0.0
         squared_target = 0.0
+        total_weight = 0.0
         for path_length, activation, target in samples:
             predicted = _numi_static_compliant_force(
                 path_length, activation, optimal_fiber, tendon_slack, gain, bias
             )
-            squared_error += (predicted - target) ** 2
-            squared_target += target * target
-        return math.sqrt(squared_error / len(samples)) / max(
-            1.0e-6, math.sqrt(squared_target / len(samples))
+            # A passive-only mismatch is mechanically present at rest and
+            # cannot be diluted by the much larger active-force samples.
+            # Weight that channel explicitly while retaining every active
+            # operating-length target in the same objective.
+            weight = _MYOSIM_PASSIVE_FIT_WEIGHT if activation == 0.0 else 1.0
+            squared_error += weight * (predicted - target) ** 2
+            squared_target += weight * target * target
+            total_weight += weight
+        return math.sqrt(squared_error / total_weight) / max(
+            1.0e-6, math.sqrt(squared_target / total_weight)
         )
 
     # The former 17x17 search stopped at 0.75 times the shortest path.  That
@@ -3527,6 +3538,35 @@ def myosim_fullbody_reference_artifacts(
                 float(muscle.get("oracle_length_m")),
             )
         )
+        source_optimal_length = (
+            float(length_range[1]) - float(length_range[0])
+        ) / max(1.0e-12, float(gain[1]) - float(gain[0]))
+        oracle_normalized_length = float(gain[0]) + (
+            float(muscle.get("oracle_length_m")) - float(length_range[0])
+        ) / source_optimal_length
+        maximum_force = float(gain[2]) if float(gain[2]) >= 0.0 else (
+            float(gain[3]) / max(
+                1.0e-12, float(muscle.get("acceleration_scale"))
+            )
+        )
+        passive_force_scale = float(bias[2]) if float(bias[2]) >= 0.0 else (
+            float(bias[3]) / max(
+                1.0e-12, float(muscle.get("acceleration_scale"))
+            )
+        )
+        source_passive_oracle_force = passive_force_scale * (
+            _myosim_passive_force_length(
+                oracle_normalized_length, float(bias[5]), float(bias[7])
+            )
+        )
+        fitted_passive_oracle_force = maximum_force * (
+            _numi_static_compliant_force(
+                float(muscle.get("oracle_length_m")), 0.0,
+                optimal_fiber_length, tendon_slack_length,
+                [float(value) for value in gain],
+                [float(value) for value in bias],
+            )
+        )
         architecture_records.append(struct.pack(
             _MYOSIM_MUSCLE_ARCHITECTURE_FORMAT,
             optimal_fiber_length,
@@ -3547,6 +3587,13 @@ def myosim_fullbody_reference_artifacts(
                 "tendon_slack_length_m": tendon_slack_length,
                 "pennation_angle_rad": 0.0,
                 "fit_normalized_rmse": fit_normalized_rmse,
+                "fit_objective": "passive_weighted_nrmse_v2",
+                "passive_sample_weight": _MYOSIM_PASSIVE_FIT_WEIGHT,
+                "source_passive_oracle_force_n": source_passive_oracle_force,
+                "fitted_passive_oracle_force_n": fitted_passive_oracle_force,
+                "passive_oracle_absolute_error_n": abs(
+                    fitted_passive_oracle_force - source_passive_oracle_force
+                ),
             },
         })
     muscle_header = struct.pack(
@@ -3688,6 +3735,10 @@ def myosim_fullbody_reference_artifacts(
     if len(support_payload) != expected_support_bytes:
         raise ImportError("internal MyoSim support-contact payload ABI size mismatch")
 
+    passive_oracle_errors = sorted(
+        record["compliant_architecture"]["passive_oracle_absolute_error_n"]
+        for record in muscle_manifest
+    )
     manifest = {
         "schema": "numi.human.myosim-fullbody-reference.v1",
         "source": source,
@@ -3770,9 +3821,25 @@ def myosim_fullbody_reference_artifacts(
             "tendon_curviness": 0.5,
             "normalized_fiber_damping": 0.1,
             "pennation_angle_rad": 0.0,
+            "fit_objective": "passive_weighted_nrmse_v2",
+            "passive_sample_weight": _MYOSIM_PASSIVE_FIT_WEIGHT,
             "fit_normalized_rmse": {
                 "maximum": max(record["compliant_architecture"]["fit_normalized_rmse"] for record in muscle_manifest),
                 "mean": sum(record["compliant_architecture"]["fit_normalized_rmse"] for record in muscle_manifest) / len(muscle_manifest),
+            },
+            "passive_oracle_absolute_error_n": {
+                "mean": sum(passive_oracle_errors) / len(passive_oracle_errors),
+                "median": (
+                    passive_oracle_errors[len(passive_oracle_errors) // 2 - 1]
+                    + passive_oracle_errors[len(passive_oracle_errors) // 2]
+                ) / 2.0,
+                "p95": passive_oracle_errors[
+                    int(0.95 * (len(passive_oracle_errors) - 1))
+                ],
+                "maximum": passive_oracle_errors[-1],
+                "above_0_1_n": sum(error > 0.1 for error in passive_oracle_errors),
+                "above_1_n": sum(error > 1.0 for error in passive_oracle_errors),
+                "above_10_n": sum(error > 10.0 for error in passive_oracle_errors),
             },
             "boundary": (
                 "MyoSim does not identify pennation or elastic tendon architecture. L0/LT are bounded offline "
