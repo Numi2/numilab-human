@@ -2037,6 +2037,15 @@ _MYOSIM_SUPPORT_CONTACT_ABI = 1
 _MYOSIM_JOINT_EQUALITY_MAGIC = b"NHEQ1\0\0\0"
 _MYOSIM_JOINT_EQUALITY_ABI = 1
 _MYOSIM_JOINT_EQUALITY_RECORD_BYTES = 96
+# Source-posed fifth-ray extensor-hood graph.  The payload keeps exact MyoSim
+# site/body identities and local COM-frame coordinates separate from the
+# literature-derived collagen topology and material assumptions.
+_MYOSIM_EXTENSOR_HOOD_MAGIC = b"NHHOOD1\0"
+_MYOSIM_EXTENSOR_HOOD_ABI = 1
+_MYOSIM_EXTENSOR_HOOD_HAND_RECORD_BYTES = 24
+_MYOSIM_EXTENSOR_HOOD_NODE_RECORD_BYTES = 32
+_MYOSIM_EXTENSOR_HOOD_ELEMENT_RECORD_BYTES = 28
+_MYOSIM_EXTENSOR_HOOD_INPUT_RECORD_BYTES = 36
 # Canonical Numi Human endpoint program.  The compact eight-byte magic is the
 # binary spelling of the public ``NHTENDON1`` payload name.
 _NUMI_HUMAN_TENDON_MAGIC = b"NHTEND1\0"
@@ -2635,9 +2644,281 @@ def _myosim_pack_dof_record(
     )
 
 
+def _myosim_extensor_hood_artifact(
+    *,
+    bodies: list[dict[str, Any]],
+    sites: list[dict[str, Any]],
+    muscles: list[dict[str, Any]],
+    source_body_to_core: dict[int, int],
+    source_hash: str,
+) -> tuple[dict[str, Any], bytes]:
+    """Compile bilateral fifth-ray source sites into an explicit hood graph.
+
+    MyoSim authors the extrinsic and intrinsic muscle routes but not a
+    segmented extensor expansion.  Consequently node initializers and muscle
+    bindings below are exact source records, while graph connectivity, bundle
+    areas, moduli, and prestrain are marked as literature topology inference.
+    Keeping those two evidence classes in separate fields prevents the
+    inferred sheet from being mistaken for source-authored anatomy.
+    """
+    body_by_id = {entry.get("id"): entry for entry in bodies if isinstance(entry, dict)}
+    site_by_name = {
+        entry.get("name"): entry for entry in sites
+        if isinstance(entry, dict) and isinstance(entry.get("name"), str)
+    }
+    muscle_by_name = {
+        entry.get("name"): entry for entry in muscles
+        if isinstance(entry, dict) and isinstance(entry.get("name"), str)
+    }
+    if len(body_by_id) != len(bodies) or len(site_by_name) != len(sites):
+        raise ImportError("MyoSim extensor hood requires unique source bodies and sites")
+    if len(muscle_by_name) != len(muscles):
+        raise ImportError("MyoSim extensor hood requires unique source muscles")
+
+    # Every graph node starts at an exact named MyoSim route site.  Only the
+    # first three remain body-bound in the static network; the other points
+    # become free sheet junctions initialized from their source pose.
+    node_specs = (
+        ("middle_phalanx_attachment", "EDC5-P8_{side}", True),
+        ("distal_phalanx_attachment", "EDC5-P9_{side}", True),
+        ("sagittal_band_capsule_anchor", "EDC5-P4_{side}", True),
+        ("edc_input", "EDC5-P6_{side}", False),
+        ("radial_interosseous_input", "RI5-P3_{side}", False),
+        ("ulnar_interosseous_input", "UI_UB5-P4_{side}", False),
+        ("lumbrical_input", "LU_RB5-P4_{side}", False),
+        ("medial_band_junction", "EDC5-P7_{side}", False),
+        ("radial_lateral_band", "LU_RB5-P5_{side}", False),
+        ("ulnar_lateral_band", "UI_UB5-P5_{side}", False),
+        ("terminal_tendon_junction", "EDM-P8_{side}", False),
+        ("edm_input", "EDM-P7_{side}", False),
+    )
+    # node A, node B, semantic bundle, E [MPa], A [mm^2], rest scale
+    element_specs = (
+        (3, 7, "edc_medial_input", 110.0, 1.0, 0.99),
+        (11, 7, "edm_medial_input", 110.0, 0.6, 0.99),
+        (7, 0, "medial_band_attachment", 110.0, 1.0, 0.99),
+        (4, 8, "radial_interosseous_lateral_band", 100.0, 0.6, 0.99),
+        (6, 8, "lumbrical_lateral_band", 100.0, 0.6, 0.99),
+        (5, 9, "ulnar_interosseous_lateral_band", 100.0, 0.6, 0.99),
+        (8, 10, "radial_lateral_to_terminal", 100.0, 0.6, 0.99),
+        (9, 10, "ulnar_lateral_to_terminal", 100.0, 0.6, 0.99),
+        (10, 1, "terminal_tendon_attachment", 100.0, 0.8, 0.99),
+        (2, 7, "sagittal_band_anchor", 90.0, 0.3, 0.99),
+        (7, 8, "radial_intercrossing_fibre", 90.0, 0.01, 0.95),
+        (7, 9, "ulnar_intercrossing_fibre", 90.0, 0.01, 0.95),
+        (8, 9, "transverse_intercrossing_fibre", 90.0, 0.01, 0.95),
+        (7, 10, "central_intercrossing_fibre", 90.0, 0.01, 0.95),
+    )
+    # graph node, source muscle, exact target source site.  The immediately
+    # preceding route site supplies the proximal force direction at runtime.
+    input_specs = (
+        (3, "EDC5", "EDC5-P6_{side}"),
+        (11, "EDM", "EDM-P7_{side}"),
+        (4, "RI5", "RI5-P3_{side}"),
+        (6, "LU_RB5", "LU_RB5-P4_{side}"),
+        (5, "UI_UB5", "UI_UB5-P4_{side}"),
+    )
+
+    hand_records: list[bytes] = []
+    node_records: list[bytes] = []
+    element_records: list[bytes] = []
+    input_records: list[bytes] = []
+    hand_manifest: list[dict[str, Any]] = []
+    bilateral_signature: tuple[Any, ...] | None = None
+    for hand_index, side in enumerate(("r", "l")):
+        node_offset = len(node_records)
+        element_offset = len(element_records)
+        input_offset = len(input_records)
+        node_manifest: list[dict[str, Any]] = []
+        for role_code, (role, site_pattern, fixed) in enumerate(node_specs):
+            site_name = site_pattern.format(side=side)
+            site = site_by_name.get(site_name)
+            if site is None:
+                raise ImportError(f"MyoSim extensor hood source site is absent: {site_name}")
+            site_id = site.get("id")
+            body_id = site.get("body")
+            body = body_by_id.get(body_id)
+            core_body = source_body_to_core.get(body_id)
+            if not isinstance(site_id, int) or body is None or core_body is None:
+                raise ImportError(f"MyoSim extensor hood site {site_name} has unresolved identity")
+            body_name = body.get("name")
+            if not isinstance(body_name, str) or not body_name.endswith(f"_{side}"):
+                raise ImportError(f"MyoSim extensor hood site {site_name} crossed body laterality")
+            local = _myosim_body_local_from_body_frame(
+                body,
+                _myosim_vector(site.get("position_body_m"), f"MyoSim hood site {site_name}"),
+                f"MyoSim hood site {site_name}",
+            )
+            flags = 2 | (1 if fixed else 0)  # exact source initializer; optional fixed binding
+            node_records.append(struct.pack(
+                "<5I3f", site_id, int(body_id), int(core_body), flags, role_code, *local
+            ))
+            node_manifest.append({
+                "index": role_code,
+                "role": role,
+                "fixed_to_source_body": fixed,
+                "source_site_id": site_id,
+                "source_site_name": site_name,
+                "source_body_id": body_id,
+                "source_body_name": body_name,
+                "core_body_index": core_body,
+                "position_local_com_m": local,
+                "position_provenance": "exact_compiled_myosim_site",
+                "network_role_provenance": "literature_topology_inference",
+            })
+        element_manifest: list[dict[str, Any]] = []
+        for bundle_code, (a, b, bundle, modulus_mpa, area_mm2, rest_scale) in enumerate(element_specs):
+            element_records.append(struct.pack(
+                "<4I3f", node_offset + a, node_offset + b, bundle_code, 1,
+                rest_scale, modulus_mpa * 1.0e6, area_mm2 * 1.0e-6,
+            ))
+            element_manifest.append({
+                "index": bundle_code,
+                "node_a": a,
+                "node_b": b,
+                "bundle": bundle,
+                "young_modulus_pa": modulus_mpa * 1.0e6,
+                "area_m2": area_mm2 * 1.0e-6,
+                "rest_length_scale_from_source_pose": rest_scale,
+                "provenance": "literature_topology_inference",
+            })
+        input_manifest: list[dict[str, Any]] = []
+        for input_index, (node, base_muscle_name, target_pattern) in enumerate(input_specs):
+            muscle_name = base_muscle_name if side == "r" else f"{base_muscle_name}_l"
+            muscle = muscle_by_name.get(muscle_name)
+            if muscle is None:
+                raise ImportError(f"MyoSim extensor hood source muscle is absent: {muscle_name}")
+            target_site = site_by_name[target_pattern.format(side=side)]
+            route = muscle.get("route")
+            if not isinstance(route, list):
+                raise ImportError(f"MyoSim extensor hood muscle {muscle_name} has no route")
+            route_site_ids = [
+                item.get("source_id") for item in route
+                if isinstance(item, dict) and item.get("kind") == "site"
+            ]
+            try:
+                route_index = route_site_ids.index(target_site.get("id"))
+            except ValueError as error:
+                raise ImportError(
+                    f"MyoSim extensor hood muscle {muscle_name} misses target site"
+                ) from error
+            if route_index == 0:
+                raise ImportError(f"MyoSim extensor hood muscle {muscle_name} has no proximal direction site")
+            proximal_site_id = route_site_ids[route_index - 1]
+            proximal_site = next(
+                (entry for entry in sites if entry.get("id") == proximal_site_id), None
+            )
+            if proximal_site is None:
+                raise ImportError(f"MyoSim extensor hood muscle {muscle_name} has unresolved proximal site")
+            proximal_body_id = proximal_site.get("body")
+            proximal_body = body_by_id.get(proximal_body_id)
+            proximal_core_body = source_body_to_core.get(proximal_body_id)
+            if proximal_body is None or proximal_core_body is None:
+                raise ImportError(f"MyoSim extensor hood muscle {muscle_name} has unresolved proximal body")
+            proximal_local = _myosim_body_local_from_body_frame(
+                proximal_body,
+                _myosim_vector(
+                    proximal_site.get("position_body_m"),
+                    f"MyoSim hood proximal site {proximal_site_id}",
+                ),
+                f"MyoSim hood proximal site {proximal_site_id}",
+            )
+            oracle_force = abs(_finite_scalar(
+                muscle.get("oracle_force_n_at_activation_0_5"),
+                f"MyoSim hood muscle {muscle_name} oracle force",
+            ))
+            muscle_id = muscle.get("id")
+            if not isinstance(muscle_id, int):
+                raise ImportError(f"MyoSim extensor hood muscle {muscle_name} has no source id")
+            input_records.append(struct.pack(
+                "<5I4f", node_offset + node, muscle_id, int(proximal_site_id),
+                int(proximal_core_body), 1, *proximal_local, oracle_force,
+            ))
+            input_manifest.append({
+                "index": input_index,
+                "node": node,
+                "source_muscle_id": muscle_id,
+                "source_muscle_name": muscle_name,
+                "target_source_site_id": target_site.get("id"),
+                "proximal_source_site_id": proximal_site_id,
+                "proximal_source_site_name": proximal_site.get("name"),
+                "proximal_core_body_index": proximal_core_body,
+                "proximal_position_local_com_m": proximal_local,
+                "source_oracle_force_n_at_activation_0_5": oracle_force,
+                "binding_provenance": "exact_compiled_myosim_route",
+            })
+        signature = (
+            tuple((entry[0], entry[1], entry[2]) for entry in element_specs),
+            tuple((entry[0], entry[1]) for entry in input_specs),
+            tuple(entry[0] for entry in node_specs),
+        )
+        if bilateral_signature is None:
+            bilateral_signature = signature
+        elif signature != bilateral_signature:
+            raise ImportError("MyoSim extensor hood bilateral topology drifted")
+        hand_records.append(struct.pack(
+            "<6I", node_offset, len(node_specs), element_offset, len(element_specs),
+            input_offset, len(input_specs),
+        ))
+        hand_manifest.append({
+            "hand_index": hand_index,
+            "side": "right" if side == "r" else "left",
+            "node_offset": node_offset,
+            "element_offset": element_offset,
+            "input_offset": input_offset,
+            "nodes": node_manifest,
+            "elements": element_manifest,
+            "muscle_inputs": input_manifest,
+        })
+
+    header = struct.pack(
+        "<8s9I32s", _MYOSIM_EXTENSOR_HOOD_MAGIC, _MYOSIM_EXTENSOR_HOOD_ABI,
+        len(hand_records), len(node_records), len(element_records), len(input_records),
+        _MYOSIM_EXTENSOR_HOOD_HAND_RECORD_BYTES,
+        _MYOSIM_EXTENSOR_HOOD_NODE_RECORD_BYTES,
+        _MYOSIM_EXTENSOR_HOOD_ELEMENT_RECORD_BYTES,
+        _MYOSIM_EXTENSOR_HOOD_INPUT_RECORD_BYTES,
+        bytes.fromhex(source_hash),
+    )
+    payload = b"".join([
+        header, *hand_records, *node_records, *element_records, *input_records,
+    ])
+    expected_bytes = (
+        struct.calcsize("<8s9I32s")
+        + len(hand_records) * _MYOSIM_EXTENSOR_HOOD_HAND_RECORD_BYTES
+        + len(node_records) * _MYOSIM_EXTENSOR_HOOD_NODE_RECORD_BYTES
+        + len(element_records) * _MYOSIM_EXTENSOR_HOOD_ELEMENT_RECORD_BYTES
+        + len(input_records) * _MYOSIM_EXTENSOR_HOOD_INPUT_RECORD_BYTES
+    )
+    if len(payload) != expected_bytes:
+        raise ImportError("internal MyoSim extensor hood payload ABI size mismatch")
+    return ({
+        "schema": "numi.human.myosim-extensor-hood.v1",
+        "scope": "bilateral fifth-ray source-default extensor expansion",
+        "source_archive_sha256": source_hash,
+        "hands": hand_manifest,
+        "counts": {
+            "hands": len(hand_records),
+            "nodes": len(node_records),
+            "elements": len(element_records),
+            "muscle_inputs": len(input_records),
+        },
+        "mechanics": {
+            "law": "unilateral axial tension T=(EA/L0)*max(L-L0,0)",
+            "material_basis": "published extensor-hood fibre-network ranges",
+            "primary_reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12271525/",
+        },
+        "evidence_boundary": (
+            "MyoSim site, body, muscle, route, and source-default force fields are exact compiled "
+            "source records. Extensor-expansion connectivity, free-node roles, moduli, areas, and "
+            "rest scales are literature-constrained inference because MyoSim does not segment the hood."
+        ),
+    }, payload)
+
+
 def myosim_fullbody_reference_artifacts(
     exported: dict[str, Any],
-) -> tuple[dict[str, Any], bytes, bytes, bytes, bytes]:
+) -> tuple[dict[str, Any], bytes, bytes, bytes, bytes, bytes]:
     """Lower MyoSim's compiled full body into Core rigid and muscle payloads.
 
     The source uses a MuJoCo free root and several multiple-joint bodies.  A
@@ -3210,6 +3491,13 @@ def myosim_fullbody_reference_artifacts(
     )
     if len(muscle_payload) != expected_muscle_bytes:
         raise ImportError("internal MyoSim muscle payload ABI size mismatch")
+    extensor_hood_manifest, extensor_hood_payload = _myosim_extensor_hood_artifact(
+        bodies=bodies,
+        sites=sites,
+        muscles=muscles,
+        source_body_to_core=source_body_to_core,
+        source_hash=source_hash,
+    )
     support_source = exported.get("support_contact")
     if not isinstance(support_source, dict):
         raise ImportError("MyoSim export has no authored support-contact records")
@@ -3359,6 +3647,12 @@ def myosim_fullbody_reference_artifacts(
                 "sha256": hashlib.sha256(equality_payload).hexdigest(),
                 "payload_abi": _MYOSIM_JOINT_EQUALITY_ABI,
             },
+            "extensor_hood": {
+                "file": "myosim-fullbody-extensor-hood.nhhood",
+                "bytes": len(extensor_hood_payload),
+                "sha256": hashlib.sha256(extensor_hood_payload).hexdigest(),
+                "payload_abi": _MYOSIM_EXTENSOR_HOOD_ABI,
+            },
         },
         "joint_equalities": {
             "count": len(equality_manifest),
@@ -3413,6 +3707,7 @@ def myosim_fullbody_reference_artifacts(
             ),
         },
         "muscles": muscle_manifest,
+        "extensor_hood": extensor_hood_manifest,
         "runtime_requirement": (
             "Load both payloads with metalrobo_numilab_human_myosim_reference_probe. "
             "The native CPU reference preserves MuJoCo site/sphere/cylinder route geometry and "
@@ -3424,7 +3719,10 @@ def myosim_fullbody_reference_artifacts(
             "mechanics, Mortensen neck registration, and a complete device-resident rollout remain separate deliverables."
         ),
     }
-    return manifest, rigid_payload, muscle_payload, support_payload, equality_payload
+    return (
+        manifest, rigid_payload, muscle_payload, support_payload,
+        equality_payload, extensor_hood_payload,
+    )
 
 
 # The fitted landmarks remain deliberately conservative: a source mesh vertex

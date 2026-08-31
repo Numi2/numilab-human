@@ -67,6 +67,7 @@ from numilab_human.model import (
     _fit_myosim_compliant_architecture,
     _numi_human_semantic_enthesis_kind,
     _myosim_pack_dof_record,
+    _myosim_extensor_hood_artifact,
     _myosim_muscle_payload_architecture,
     myosim_part_control_catalog,
     myosim_part_control_plan,
@@ -541,6 +542,97 @@ class ImporterTests(unittest.TestCase):
         self.assertAlmostEqual(damping, 0.25)
         self.assertAlmostEqual(armature, 0.0001)
         self.assertEqual(frictionloss, 0.0)
+
+    def test_extensor_hood_compiler_preserves_source_bindings_and_fails_closed(self) -> None:
+        bodies = []
+        sites = []
+        muscles = []
+        site_ids: dict[str, int] = {}
+        next_site_id = 100
+        node_names = (
+            "EDC5-P4", "EDC5-P6", "EDC5-P7", "EDC5-P8", "EDC5-P9",
+            "EDM-P7", "EDM-P8", "RI5-P3", "LU_RB5-P4", "LU_RB5-P5",
+            "UI_UB5-P4", "UI_UB5-P5",
+        )
+        route_pairs = {
+            "EDC5": ("EDC5-P5", "EDC5-P6"),
+            "EDM": ("EDM-P6", "EDM-P7"),
+            "RI5": ("RI5-P2", "RI5-P3"),
+            "LU_RB5": ("LU_RB5-P3", "LU_RB5-P4"),
+            "UI_UB5": ("UI_UB5-P3", "UI_UB5-P4"),
+        }
+        for side_index, side in enumerate(("r", "l")):
+            body_id = side_index + 1
+            bodies.append({
+                "id": body_id,
+                "name": f"fifth_ray_{side}",
+                "inertial_position_body_m": [0.001, -0.002, 0.003],
+                "inertial_quaternion_body_xyzw": [0.0, 0.0, 0.0, 1.0],
+            })
+            required = set(node_names)
+            for proximal, target in route_pairs.values():
+                required.update((proximal, target))
+            for ordinal, base_name in enumerate(sorted(required)):
+                name = f"{base_name}_{side}"
+                site_ids[name] = next_site_id
+                sites.append({
+                    "id": next_site_id,
+                    "name": name,
+                    "body": body_id,
+                    "position_body_m": [
+                        0.001 * (ordinal + 1),
+                        0.004 * (ordinal + 1),
+                        (-0.001 if side == "r" else 0.001) * ordinal,
+                    ],
+                })
+                next_site_id += 1
+            for muscle_offset, (base_name, (proximal, target)) in enumerate(route_pairs.items()):
+                muscle_name = base_name if side == "r" else f"{base_name}_l"
+                muscles.append({
+                    "id": side_index * len(route_pairs) + muscle_offset,
+                    "name": muscle_name,
+                    "oracle_force_n_at_activation_0_5": -(3.0 + muscle_offset),
+                    "route": [
+                        {"kind": "site", "source_id": site_ids[f"{proximal}_{side}"]},
+                        {"kind": "site", "source_id": site_ids[f"{target}_{side}"]},
+                    ],
+                })
+        source_hash = "42" * 32
+        manifest, payload = _myosim_extensor_hood_artifact(
+            bodies=bodies,
+            sites=sites,
+            muscles=muscles,
+            source_body_to_core={1: 17, 2: 31},
+            source_hash=source_hash,
+        )
+        replay_manifest, replay_payload = _myosim_extensor_hood_artifact(
+            bodies=bodies,
+            sites=sites,
+            muscles=muscles,
+            source_body_to_core={1: 17, 2: 31},
+            source_hash=source_hash,
+        )
+        self.assertEqual(manifest, replay_manifest)
+        self.assertEqual(payload, replay_payload)
+        self.assertEqual(manifest["counts"], {
+            "hands": 2, "nodes": 24, "elements": 28, "muscle_inputs": 10,
+        })
+        header = struct.unpack_from("<8s9I32s", payload)
+        self.assertEqual(header[:10], (b"NHHOOD1\0", 1, 2, 24, 28, 10, 24, 32, 28, 36))
+        self.assertEqual(header[10].hex(), source_hash)
+        self.assertEqual(
+            [entry["source_muscle_name"] for entry in manifest["hands"][1]["muscle_inputs"]],
+            ["EDC5_l", "EDM_l", "RI5_l", "LU_RB5_l", "UI_UB5_l"],
+        )
+        drifted_sites = [entry for entry in sites if entry["name"] != "EDC5-P9_l"]
+        with self.assertRaisesRegex(HumanImportError, "source site is absent"):
+            _myosim_extensor_hood_artifact(
+                bodies=bodies,
+                sites=drifted_sites,
+                muscles=muscles,
+                source_body_to_core={1: 17, 2: 31},
+                source_hash=source_hash,
+            )
 
     def test_shared_digital_surfaces_cover_all_four_authored_routes(self) -> None:
         surfaces = {
