@@ -624,6 +624,10 @@ class ImporterTests(unittest.TestCase):
             [entry["source_muscle_name"] for entry in manifest["hands"][1]["muscle_inputs"]],
             ["EDC5_l", "EDM_l", "RI5_l", "LU_RB5_l", "UI_UB5_l"],
         )
+        self.assertEqual(
+            [entry["target_route_node_index"] for entry in manifest["hands"][0]["muscle_inputs"]],
+            [1, 1, 1, 1, 1],
+        )
         drifted_sites = [entry for entry in sites if entry["name"] != "EDC5-P9_l"]
         with self.assertRaisesRegex(HumanImportError, "source site is absent"):
             _myosim_extensor_hood_artifact(

@@ -2804,6 +2804,16 @@ def _myosim_extensor_hood_artifact(
                 ) from error
             if route_index == 0:
                 raise ImportError(f"MyoSim extensor hood muscle {muscle_name} has no proximal direction site")
+            target_route_node_index = next(
+                (
+                    index for index, item in enumerate(route)
+                    if isinstance(item, dict) and item.get("kind") == "site"
+                    and item.get("source_id") == target_site.get("id")
+                ),
+                None,
+            )
+            if not isinstance(target_route_node_index, int) or target_route_node_index > 0x00FFFFFF:
+                raise ImportError(f"MyoSim extensor hood muscle {muscle_name} has invalid cut ordinal")
             proximal_site_id = route_site_ids[route_index - 1]
             proximal_site = next(
                 (entry for entry in sites if entry.get("id") == proximal_site_id), None
@@ -2832,7 +2842,8 @@ def _myosim_extensor_hood_artifact(
                 raise ImportError(f"MyoSim extensor hood muscle {muscle_name} has no source id")
             input_records.append(struct.pack(
                 "<5I4f", node_offset + node, muscle_id, int(proximal_site_id),
-                int(proximal_core_body), 1, *proximal_local, oracle_force,
+                int(proximal_core_body), 1 | (target_route_node_index << 8),
+                *proximal_local, oracle_force,
             ))
             input_manifest.append({
                 "index": input_index,
@@ -2840,6 +2851,7 @@ def _myosim_extensor_hood_artifact(
                 "source_muscle_id": muscle_id,
                 "source_muscle_name": muscle_name,
                 "target_source_site_id": target_site.get("id"),
+                "target_route_node_index": target_route_node_index,
                 "proximal_source_site_id": proximal_site_id,
                 "proximal_source_site_name": proximal_site.get("name"),
                 "proximal_core_body_index": proximal_core_body,

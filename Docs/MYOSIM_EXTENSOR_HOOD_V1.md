@@ -10,8 +10,8 @@ MCP equilibrium residual without adding an opaque joint spring.
 
 Each node preserves an exact compiled MyoSim site ID, site name, source body,
 Core body index, and COM-frame position. Each of the five inputs per hand also
-preserves the exact MyoSim muscle ID and the preceding route site used to
-recover its proximal force direction. The compiler fails closed if a required
+preserves the exact MyoSim muscle ID, route-cut ordinal, and preceding route
+site used to recover its proximal force direction. The compiler fails closed if a required
 site, muscle, route predecessor, body binding, or bilateral topology is absent.
 
 MyoSim does not segment the extensor expansion. The medial and lateral bands,
