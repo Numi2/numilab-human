@@ -880,6 +880,32 @@ class ImporterTests(unittest.TestCase):
             (416, 32),
         )
 
+    def test_nhmyo2_refines_short_intrinsic_hand_muscle_fit(self) -> None:
+        # Exact float32 parameters exported for MyoSim LU_RB5.  The former
+        # search pinned L0 and LT to its upper bounds with NRMSE 0.658135.
+        length_range = [0.09701420366764069, 0.10041700303554535]
+        gain = [
+            0.75, 1.0499999523162842, 47.900001525878906, 200.0, 0.5,
+            1.600000023841858, 1.5, 1.2999999523162842,
+            1.2000000476837158, 0.0,
+        ]
+        expected = _fit_myosim_compliant_architecture(
+            length_range, 38.30755615234375, gain, list(gain),
+            0.09756173193454742,
+        )
+        replay = _fit_myosim_compliant_architecture(
+            length_range, 38.30755615234375, gain, list(gain),
+            0.09756173193454742,
+        )
+        self.assertEqual(replay, expected)
+        optimal_fiber, tendon_slack, normalized_rmse = expected
+        source_optimal_fiber = (length_range[1] - length_range[0]) / (
+            gain[1] - gain[0]
+        )
+        self.assertGreater(optimal_fiber / source_optimal_fiber, 1.2)
+        self.assertGreater(tendon_slack / length_range[0], 0.8)
+        self.assertLess(normalized_rmse, 0.11)
+
     def _minimal_myosim_tendon_artifact(self, directory: Path) -> Path:
         directory.mkdir(parents=True)
         source_sha = "11" * 32

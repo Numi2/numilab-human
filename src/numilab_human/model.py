@@ -2451,28 +2451,90 @@ def _fit_myosim_compliant_architecture(
     minimum_operating_path = min(
         value for value in length_range if math.isfinite(value) and value > 1.0e-6
     )
-    for fiber_index in range(17):
-        optimal_fiber = source_optimal_length * (
-            0.35 + 1.30 * fiber_index / 16.0
+
+    def score(optimal_fiber: float, tendon_slack: float) -> float:
+        squared_error = 0.0
+        squared_target = 0.0
+        for path_length, activation, target in samples:
+            predicted = _numi_static_compliant_force(
+                path_length, activation, optimal_fiber, tendon_slack, gain, bias
+            )
+            squared_error += (predicted - target) ** 2
+            squared_target += target * target
+        return math.sqrt(squared_error / len(samples)) / max(
+            1.0e-6, math.sqrt(squared_target / len(samples))
         )
-        for tendon_index in range(17):
-            tendon_slack = minimum_operating_path * (
-                0.005 + 0.745 * tendon_index / 16.0
-            )
-            squared_error = 0.0
-            squared_target = 0.0
-            for path_length, activation, target in samples:
-                predicted = _numi_static_compliant_force(
-                    path_length, activation, optimal_fiber, tendon_slack, gain, bias
+
+    # The former 17x17 search stopped at 0.75 times the shortest path.  That
+    # box excluded valid compliant fits for short intrinsic hand muscles; the
+    # fifth lumbrical consequently landed on both bounds and acquired a large
+    # artificial passive preload.  Search dimensionless ratios over a wider
+    # positive domain, then deterministically refine the winning cell.  The
+    # bounds remain below one full operating path for tendon slack and do not
+    # claim that either inferred length is an anatomical measurement.
+    fiber_limits = (0.10, 2.50)
+    tendon_limits = (0.001, 0.98)
+    def search_grid(
+        fiber_window: tuple[float, float], tendon_window: tuple[float, float],
+        grid_intervals: int,
+    ) -> tuple[tuple[float, float, float, float, float], float, float]:
+        fiber_step = (fiber_window[1] - fiber_window[0]) / grid_intervals
+        tendon_step = (tendon_window[1] - tendon_window[0]) / grid_intervals
+        stage_best: tuple[float, float, float, float, float] | None = None
+        for fiber_index in range(grid_intervals + 1):
+            fiber_ratio = fiber_window[0] + fiber_step * fiber_index
+            optimal_fiber = source_optimal_length * fiber_ratio
+            for tendon_index in range(grid_intervals + 1):
+                tendon_ratio = tendon_window[0] + tendon_step * tendon_index
+                tendon_slack = minimum_operating_path * tendon_ratio
+                normalized_rmse = score(optimal_fiber, tendon_slack)
+                candidate = (
+                    normalized_rmse, fiber_ratio, tendon_ratio,
+                    optimal_fiber, tendon_slack,
                 )
-                squared_error += (predicted - target) ** 2
-                squared_target += target * target
-            normalized_rmse = math.sqrt(squared_error / len(samples)) / max(
-                1.0e-6, math.sqrt(squared_target / len(samples))
-            )
-            if best is None or normalized_rmse < best[2]:
-                best = (optimal_fiber, tendon_slack, normalized_rmse)
-    if best is None or not all(math.isfinite(value) and value > 0.0 for value in best):
+                if stage_best is None or candidate[:3] < stage_best[:3]:
+                    stage_best = candidate
+        if stage_best is None:
+            raise ImportError("MyoSim muscle compliant architecture fit failed")
+        return stage_best, fiber_step, tendon_step
+
+    # Start every muscle with a cheap 21x21 global classification.  Smooth,
+    # already well-represented surfaces receive two local 11x11 refinements.
+    # Only a coarse NRMSE above five percent pays for the 41x41 global search
+    # and three local 21x21 refinements needed to resolve narrow basins.  This
+    # keeps the difficult hand, calf, and axial muscles on the exhaustive path
+    # while avoiding that cost for the majority of the 416-source-muscle set.
+    stage_best, fiber_step, tendon_step = search_grid(
+        fiber_limits, tendon_limits, 20
+    )
+    if stage_best[0] > 0.05:
+        stage_best, fiber_step, tendon_step = search_grid(
+            fiber_limits, tendon_limits, 40
+        )
+        refinement_schedule = (20, 20, 20)
+    else:
+        refinement_schedule = (10, 10)
+    for grid_intervals in refinement_schedule:
+        _, fiber_ratio, tendon_ratio, _, _ = stage_best
+        fiber_window = (
+            max(fiber_limits[0], fiber_ratio - fiber_step),
+            min(fiber_limits[1], fiber_ratio + fiber_step),
+        )
+        tendon_window = (
+            max(tendon_limits[0], tendon_ratio - tendon_step),
+            min(tendon_limits[1], tendon_ratio + tendon_step),
+        )
+        stage_best, fiber_step, tendon_step = search_grid(
+            fiber_window, tendon_window, grid_intervals
+        )
+    normalized_rmse, _, _, optimal_fiber, tendon_slack = stage_best
+    best = (optimal_fiber, tendon_slack, normalized_rmse)
+    if (
+        best is None
+        or not math.isfinite(best[0]) or best[0] <= 0.0
+        or not math.isfinite(best[1]) or best[1] <= 0.0
+        or not math.isfinite(best[2]) or best[2] < 0.0
+    ):
         raise ImportError("MyoSim muscle compliant architecture fit failed")
     return best
 
