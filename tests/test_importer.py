@@ -22,6 +22,7 @@ from numilab_human.model import (
     _BODYPARTS_MYOSIM_THORACIC_FOOT_EXTENSIONS,
     _BODYPARTS_MYOSIM_TOE_EXTENSIONS,
     _BODYPARTS_MYOSIM_WRIST_HAND_EXTENSIONS,
+    _MR_JOINT_FIXED,
     _NUMI_HUMAN_HALLUX_DOMINANT_SOURCE_SURFACE_MEMBERS,
     _NUMI_HUMAN_HALLUX_RIGID_COMPOUNDS,
     _NUMI_HUMAN_AXIAL_CONTINUITY_TRANSITIONS,
@@ -39,6 +40,7 @@ from numilab_human.model import (
     _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS,
     _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS,
     _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS,
+    _NUMI_HUMAN_FIXED_METACARPAL_CLUSTER_ENTHESES,
     _NUMI_HUMAN_SEMANTIC_ENTHESIS_MEMBERS,
     _NUMI_HUMAN_RIB_ENTHESIS_MEMBER_IDS,
     _NUMI_HUMAN_SOURCE_COMPONENT_ENTHESIS_SCHEMA,
@@ -74,6 +76,7 @@ from numilab_human.model import (
     myosim_part_control_catalog,
     myosim_part_control_plan,
     _numi_human_semantic_enthesis_envelope,
+    _numi_human_reframe_fixed_cluster_surface,
     _numi_human_tendon_surface_envelope,
     ImportError as HumanImportError,
     bodyparts_foot_collider_preflight,
@@ -533,6 +536,58 @@ class ImporterTests(unittest.TestCase):
         )
         self.assertEqual(repeated_reason, reason)
         self.assertEqual(repeated, envelope)
+
+    def test_fifth_interosseous_surface_reframes_only_across_fixed_siblings(self) -> None:
+        self.assertEqual(
+            _NUMI_HUMAN_FIXED_METACARPAL_CLUSTER_ENTHESES,
+            {("UI_UB5", 0): "FJ3358", ("UI_UB5_l", 0): "FJ3252"},
+        )
+        identity = [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+        context = {
+            "body_names": [f"body_{index}" for index in range(21)],
+            "relationships": {
+                10: {"parent_body_index": 3, "joint_type": _MR_JOINT_FIXED,
+                     "joint_nq": 0, "joint_nv": 0},
+                20: {"parent_body_index": 3, "joint_type": _MR_JOINT_FIXED,
+                     "joint_nq": 0, "joint_nv": 0},
+            },
+            "poses": {
+                10: {"name": "thirdmc_r", "position_world_m": [0.0, 0.0, 0.0],
+                     "rotation_world": identity},
+                20: {"name": "fifthmc_r", "position_world_m": [0.1, 0.0, 0.0],
+                     "rotation_world": identity},
+            },
+        }
+        surface = {
+            "body_index": 20, "stable_id": 9, "member_id": "FJ3358",
+            "vertices": [
+                [-0.004, -0.004, 0.0], [0.004, -0.004, 0.0],
+                [0.004, 0.004, 0.0], [-0.004, 0.004, 0.0],
+            ],
+            "triangles": [(0, 1, 2), (0, 2, 3)],
+        }
+        reframed = _numi_human_reframe_fixed_cluster_surface(
+            surface, 10, context,
+        )
+        self.assertEqual(reframed["body_index"], 10)
+        self.assertEqual(reframed["_surface_owner_body_index"], 20)
+        self.assertEqual(reframed["_fixed_parent_body_index"], 3)
+        self.assertAlmostEqual(reframed["vertices"][0][0], 0.096)
+        envelope, reason = _numi_human_tendon_surface_envelope(
+            [0.1, 0.0, 0.001], reframed, 0.012, 0.012, 4.0,
+        )
+        self.assertEqual(reason, "admitted_topology_aware_exact_surface_patch")
+        self.assertIsNotNone(envelope)
+        drifted = {
+            **context,
+            "relationships": {
+                key: dict(value)
+                for key, value in context["relationships"].items()
+            },
+        }
+        drifted["relationships"][20]["joint_nq"] = 1
+        with self.assertRaisesRegex(HumanImportError, "fixed siblings"):
+            _numi_human_reframe_fixed_cluster_surface(surface, 10, drifted)
 
     def test_part_control_catalog_uses_exact_source_route_incidence(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

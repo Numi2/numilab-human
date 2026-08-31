@@ -4252,6 +4252,20 @@ _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS = {
 }
 
 
+# MyoSuite identifies UI-UB as the palmar/ulnar interosseous.  Its fifth-ray
+# route is authored with P1 on the third-metacarpal kinematic carrier even
+# though the exact point lies on the fifth metacarpal (P2 is also fifth-MC
+# owned).  In the source tree both metacarpals are zero-DoF fixed siblings of
+# the capitate, so their relative transform is invariant.  Reframe only the
+# named fifth-MC BodyParts3D surface into the unchanged P1 carrier frame; do
+# not reparent the route site, change J^T, move the endpoint, or generalize this
+# inference to other cross-body candidates.
+_NUMI_HUMAN_FIXED_METACARPAL_CLUSTER_ENTHESES = {
+    ("UI_UB5", 0): "FJ3358",
+    ("UI_UB5_l", 0): "FJ3252",
+}
+
+
 # MyoSim's torso collapses the thoracic cage into one rigid body, while its
 # source route identifiers retain the exact thoracic vertebra or rib level.
 # BodyParts3D keeps those bones as separate named members on that same body.
@@ -7769,6 +7783,168 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
     }, payload_path
 
 
+def _numi_human_fixed_cluster_context(
+    artifact: Path, manifest: dict[str, Any], rigid_descriptor: dict[str, Any],
+) -> dict[str, Any]:
+    """Decode the exact fixed-body relationships needed by cross-frame surfaces."""
+    filename = rigid_descriptor.get("file")
+    expected_sha = rigid_descriptor.get("sha256")
+    expected_bytes = rigid_descriptor.get("bytes")
+    if (
+        not isinstance(filename, str)
+        or not isinstance(expected_sha, str)
+        or re.fullmatch(r"[0-9a-f]{64}", expected_sha) is None
+        or not isinstance(expected_bytes, int) or expected_bytes <= 0
+    ):
+        raise ImportError("Numi Human fixed-cluster rigid descriptor is invalid")
+    rigid_path = artifact / filename
+    if (
+        not rigid_path.is_file() or rigid_path.stat().st_size != expected_bytes
+        or sha256(rigid_path) != expected_sha
+    ):
+        raise ImportError("Numi Human fixed-cluster rigid payload is missing or drifted")
+    raw = rigid_path.read_bytes()
+    header_size = struct.calcsize("<8s10I32s")
+    if len(raw) < header_size + 96 + 48:
+        raise ImportError("Numi Human fixed-cluster rigid payload is truncated")
+    (
+        magic, abi, _engine_abi, source_body_count, body_count, joint_count,
+        _nq, _nv, reserved0, virtual_count, reserved1, embedded_source,
+    ) = struct.unpack_from("<8s10I32s", raw)
+    source = manifest.get("source")
+    source_sha = source.get("archive_sha256") if isinstance(source, dict) else None
+    core_tree = manifest.get("core_tree")
+    body_order = core_tree.get("body_order") if isinstance(core_tree, dict) else None
+    source_records = (
+        core_tree.get("source_body_records") if isinstance(core_tree, dict) else None
+    )
+    if (
+        magic != _MYOSIM_CORE_REFERENCE_MAGIC
+        or abi != _MYOSIM_CORE_REFERENCE_ABI
+        or not isinstance(source_sha, str) or embedded_source.hex() != source_sha
+        or reserved0 != 0 or reserved1 != 0
+        or not isinstance(body_order, list) or len(body_order) != body_count
+        or not isinstance(source_records, list) or len(source_records) != source_body_count
+        or core_tree.get("engine_body_count") != body_count
+        or core_tree.get("joint_count") != joint_count
+        or core_tree.get("zero_inertia_serial_transform_carrier_count") != virtual_count
+    ):
+        raise ImportError("Numi Human fixed-cluster rigid identity is invalid")
+    body_offset = header_size + 96 + 48
+    joint_offset = body_offset + 160 * body_count
+    if joint_offset + 144 * joint_count > len(raw):
+        raise ImportError("Numi Human fixed-cluster rigid tables are truncated")
+    relationships: dict[int, dict[str, int]] = {}
+    for body_index in range(body_count):
+        _, parent_body, inbound_joint, _ = struct.unpack_from(
+            "<4I", raw, body_offset + 160 * body_index,
+        )
+        if inbound_joint >= joint_count:
+            # The floating articulation root has no inbound joint.  It cannot
+            # participate in a fixed-sibling surface map and is omitted.
+            continue
+        (
+            joint_parent, joint_child, joint_type, joint_reserved,
+            _q_offset, joint_nq, _v_offset, joint_nv,
+        ) = struct.unpack_from("<8I", raw, joint_offset + 144 * inbound_joint)
+        if (
+            joint_parent != parent_body or joint_child != body_index
+            or joint_reserved != 0
+        ):
+            raise ImportError("Numi Human fixed-cluster body/joint topology drifted")
+        relationships[body_index] = {
+            "parent_body_index": parent_body,
+            "joint_type": joint_type,
+            "joint_nq": joint_nq,
+            "joint_nv": joint_nv,
+        }
+    poses: dict[int, dict[str, Any]] = {}
+    for record in source_records:
+        if not isinstance(record, dict):
+            raise ImportError("Numi Human fixed-cluster source pose is malformed")
+        body_index = record.get("core_body_index")
+        name = record.get("name")
+        position = record.get("default_com_position_world_m")
+        quaternion = record.get("default_inertial_quaternion_world_xyzw")
+        if (
+            not isinstance(body_index, int) or not 0 <= body_index < body_count
+            or body_index in poses or body_order[body_index] != name
+            or not isinstance(name, str)
+        ):
+            raise ImportError("Numi Human fixed-cluster source pose identity drifted")
+        poses[body_index] = {
+            "name": name,
+            "position_world_m": _myosim_vector(
+                position, f"Numi Human fixed-cluster {name} position",
+            ),
+            "rotation_world": _myosim_matrix_from_quaternion_xyzw(
+                list(quaternion) if isinstance(quaternion, list) else [],
+            ),
+        }
+    return {
+        "body_names": list(body_order),
+        "relationships": relationships,
+        "poses": poses,
+        "rigid_payload_sha256": expected_sha,
+    }
+
+
+def _numi_human_reframe_fixed_cluster_surface(
+    surface: dict[str, Any], carrier_body_index: int,
+    context: dict[str, Any],
+) -> dict[str, Any]:
+    """Express an exact fixed-sibling surface in the route carrier frame."""
+    owner_body_index = surface.get("body_index")
+    relationships = context.get("relationships")
+    poses = context.get("poses")
+    body_names = context.get("body_names")
+    if (
+        not isinstance(owner_body_index, int)
+        or not isinstance(relationships, dict) or not isinstance(poses, dict)
+        or not isinstance(body_names, list)
+        or carrier_body_index not in relationships
+        or owner_body_index not in relationships
+        or carrier_body_index not in poses or owner_body_index not in poses
+    ):
+        raise ImportError("Numi Human fixed-cluster surface body is unresolved")
+    carrier_relationship = relationships[carrier_body_index]
+    owner_relationship = relationships[owner_body_index]
+    if (
+        carrier_relationship["parent_body_index"]
+        != owner_relationship["parent_body_index"]
+        or carrier_relationship["joint_type"] != _MR_JOINT_FIXED
+        or owner_relationship["joint_type"] != _MR_JOINT_FIXED
+        or carrier_relationship["joint_nq"] != 0
+        or carrier_relationship["joint_nv"] != 0
+        or owner_relationship["joint_nq"] != 0
+        or owner_relationship["joint_nv"] != 0
+    ):
+        raise ImportError(
+            "Numi Human cross-body enthesis requires fixed siblings with no DoFs"
+        )
+    carrier_pose = poses[carrier_body_index]
+    owner_pose = poses[owner_body_index]
+    carrier_rotation_transpose = _matrix_transpose(carrier_pose["rotation_world"])
+    reframed_vertices = []
+    for vertex in surface["vertices"]:
+        owner_rotated = _myosim_matrix_vector(owner_pose["rotation_world"], vertex)
+        world = _myosim_add(owner_pose["position_world_m"], owner_rotated)
+        reframed_vertices.append(_myosim_matrix_vector(
+            carrier_rotation_transpose,
+            _myosim_subtract(world, carrier_pose["position_world_m"]),
+        ))
+    reframed = dict(surface)
+    reframed["body_index"] = carrier_body_index
+    reframed["vertices"] = reframed_vertices
+    reframed["_surface_owner_body_index"] = owner_body_index
+    reframed["_surface_owner_body_name"] = body_names[owner_body_index]
+    reframed["_endpoint_carrier_body_name"] = body_names[carrier_body_index]
+    reframed["_fixed_parent_body_index"] = carrier_relationship[
+        "parent_body_index"
+    ]
+    return reframed
+
+
 def _numi_human_tendon_surface_envelope_connected(
     source_point: list[float], surface: dict[str, Any], maximum_distance_m: float,
     maximum_patch_radius_m: float, maximum_force_amplification: float,
@@ -8331,7 +8507,9 @@ def numi_human_tendon_attachment_envelope_payload(
     source-pinned semantic table: hallux routes remain one-to-one, a lumped
     EDL/FDL terminal wrench spans four named lesser-toe distal phalanges,
     bilateral hip/tibia/fibula and rigid-foot routes select one declared same-body member,
-    and source-named thoracic routes select their exact vertebra or rib.
+    source-named thoracic routes select their exact vertebra or rib, and the
+    bilateral fifth palmar interosseous origins select a fifth-metacarpal
+    surface whose invariant fixed-sibling transform is proven from NHRIGID.
     Every other multi-bone body, absent geometry, distant surface, or
     ill-conditioned patch remains an explicit source-site point law. No
     authored MyoSim site, route, path length, or force parameter is changed by
@@ -8401,6 +8579,19 @@ def numi_human_tendon_attachment_envelope_payload(
     metadata = manifest.get("muscles")
     if not isinstance(metadata, list) or len(metadata) != muscle_count:
         raise ImportError("Numi Human tendon envelope muscle identity table is incomplete")
+    fixed_cluster_context: dict[str, Any] | None = None
+    if any(
+        isinstance(record, dict)
+        and any(
+            (record.get("name"), endpoint) in
+            _NUMI_HUMAN_FIXED_METACARPAL_CLUSTER_ENTHESES
+            for endpoint in (0, 1)
+        )
+        for record in metadata
+    ):
+        fixed_cluster_context = _numi_human_fixed_cluster_context(
+            artifact, manifest, rigid_descriptor,
+        )
     surfaces_by_body, bone_descriptor, _ = _numi_human_bone_envelope_surfaces(
         bone_artifact, source_sha,
     )
@@ -8475,6 +8666,7 @@ def numi_human_tendon_attachment_envelope_payload(
     compass_vertex_envelope_count = 0
     topology_aware_exact_surface_envelope_count = 0
     disconnected_component_recovery_count = 0
+    fixed_metacarpal_cluster_enthesis_count = 0
     for muscle_index, (record, muscle_metadata) in enumerate(zip(muscles, metadata, strict=True)):
         route_offset, count = record[1], record[2]
         name = muscle_metadata.get("name") if isinstance(muscle_metadata, dict) else None
@@ -8501,7 +8693,57 @@ def numi_human_tendon_attachment_envelope_payload(
                 _NUMI_HUMAN_SEMANTIC_ENTHESIS_MEMBERS.get(semantic_key)
                 or source_component_members.get(semantic_key)
             )
-            if semantic_members is not None:
+            fixed_cluster_member = (
+                _NUMI_HUMAN_FIXED_METACARPAL_CLUSTER_ENTHESES.get(semantic_key)
+            )
+            if fixed_cluster_member is not None:
+                owner_surface = surfaces_by_member.get(fixed_cluster_member)
+                if owner_surface is None:
+                    reason = "fixed_cluster_enthesis_member_missing"
+                elif fixed_cluster_context is None:
+                    reason = "fixed_cluster_rigid_context_missing"
+                else:
+                    reframed_surface = _numi_human_reframe_fixed_cluster_surface(
+                        owner_surface, body_index, fixed_cluster_context,
+                    )
+                    envelope, reason = _numi_human_tendon_surface_envelope(
+                        source_point, reframed_surface,
+                        maximum_surface_distance_m, maximum_patch_radius_m,
+                        maximum_force_amplification,
+                    )
+                    if envelope is not None:
+                        reason = "admitted_fixed_metacarpal_cluster_surface"
+                        envelope["surface_kind"] = (
+                            "registered_bone_fixed_cluster_cross_frame_surface"
+                        )
+                        envelope["semantic_enthesis_map"] = {
+                            "kind": "palmar_interosseous_fifth_metacarpal_origin",
+                            "bone_member_ids": [fixed_cluster_member],
+                            "node_bone_member_ids": [fixed_cluster_member] * 4,
+                            "node_bone_stable_ids": [
+                                owner_surface["stable_id"]
+                            ] * 4,
+                            "source_carrier_body_index": body_index,
+                            "source_carrier_body_name": reframed_surface[
+                                "_endpoint_carrier_body_name"
+                            ],
+                            "surface_owner_body_index": owner_surface[
+                                "body_index"
+                            ],
+                            "surface_owner_body_name": reframed_surface[
+                                "_surface_owner_body_name"
+                            ],
+                            "fixed_parent_body_index": reframed_surface[
+                                "_fixed_parent_body_index"
+                            ],
+                            "fixed_relative_transform": True,
+                            "source_route_site_body_unchanged": True,
+                            "source_endpoint_migration_m": 0.0,
+                            "rigid_payload_sha256": fixed_cluster_context[
+                                "rigid_payload_sha256"
+                            ],
+                        }
+            elif semantic_members is not None:
                 semantic_surfaces = [
                     surfaces_by_member.get(member_id) for member_id in semantic_members
                 ]
@@ -8684,6 +8926,10 @@ def numi_human_tendon_attachment_envelope_payload(
                         semantic_limb_enthesis_count += 1
                     elif semantic_key in _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS:
                         semantic_axial_enthesis_count += 1
+                    elif semantic_key in (
+                        _NUMI_HUMAN_FIXED_METACARPAL_CLUSTER_ENTHESES
+                    ):
+                        fixed_metacarpal_cluster_enthesis_count += 1
                     else:
                         raise ImportError(
                             f"Numi Human admitted undeclared semantic enthesis {semantic_key}"
@@ -8800,6 +9046,7 @@ def numi_human_tendon_attachment_envelope_payload(
                 "single_named_NHBONES1_member_exact_nearest_triangle_connected_surface_patch_"
                 "with_deterministic_topology_aware_exact_triangle_quadrature_fallback_"
                 "or_explicit_same_body_semantic_member_map_minimum_L2_wrench_distribution_"
+                "or_explicit_fixed_metacarpal_cluster_cross_frame_surface_"
                 "or_exact_pinned_source_component_surface_after_BodyParts_rejection_"
                 "or_separately_typed_exact_anterior_thorax_composite_surface"
             ),
@@ -8818,7 +9065,8 @@ def numi_human_tendon_attachment_envelope_payload(
             "multiple_bone_members_fail_closed": True,
             "multiple_bone_exception": (
                 "only exact source-pinned toe maps, declared bilateral hip/tibia/fibula/rigid-foot "
-                "route-member maps, source-named thoracic maps, and a validated pinned-source "
+                "route-member maps, source-named thoracic maps, the declared fixed-sibling "
+                "fifth-metacarpal map, and a validated pinned-source "
                 "component receipt with separately typed rib and anterior-thorax composite surfaces are admitted; "
                 "all other multi-bone bodies fail closed"
             ),
@@ -8848,6 +9096,16 @@ def numi_human_tendon_attachment_envelope_payload(
                 }
                 for (muscle, endpoint), members in sorted(
                     _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS.items()
+                )
+            },
+            "fixed_metacarpal_cluster_enthesis_map": {
+                f"{muscle}:{endpoint}": {
+                    "bone_member_id": member,
+                    "kind": "palmar_interosseous_fifth_metacarpal_origin",
+                    "source_route_site_body_unchanged": True,
+                }
+                for (muscle, endpoint), member in sorted(
+                    _NUMI_HUMAN_FIXED_METACARPAL_CLUSTER_ENTHESES.items()
                 )
             },
             "source_component_enthesis_map": {
@@ -8903,6 +9161,9 @@ def numi_human_tendon_attachment_envelope_payload(
             "semantic_toe_enthesis_envelope_count": semantic_toe_enthesis_count,
             "semantic_limb_enthesis_envelope_count": semantic_limb_enthesis_count,
             "semantic_axial_enthesis_envelope_count": semantic_axial_enthesis_count,
+            "fixed_metacarpal_cluster_enthesis_envelope_count": (
+                fixed_metacarpal_cluster_enthesis_count
+            ),
             "source_component_enthesis_envelope_count": source_component_enthesis_count,
             "source_component_mechanics_surface_enthesis_envelope_count": (
                 source_component_mechanics_surface_enthesis_count
@@ -8927,11 +9188,11 @@ def numi_human_tendon_attachment_envelope_payload(
             (
                 "replace only each admitted one-to-one named rigid-foot endpoint with a route-private exact bone-surface site; "
                 "retain every other authored endpoint and the source force law; on Apple Metal distribute the resolved route's exact "
-                "terminal force across four same-body registered attachment-surface nodes, conserve resultant force and moment, and derive the "
+                "terminal force across four source-carrier-frame registered attachment-surface nodes, conserve resultant force and moment, and derive the "
                 "generalized contribution only through articulated point Jacobians"
             ) if migrate_semantic_rigid_foot_endpoints else (
                 "retain each authored MyoSim route endpoint and force law; on Apple Metal distribute its exact terminal force "
-                "across four same-body source-registered attachment-surface nodes with precompiled 3x3 maps, conserve resultant force and moment, and derive any "
+                "across four source-carrier-frame registered attachment-surface nodes with precompiled 3x3 maps, conserve resultant force and moment, and derive any "
                 "generalized contribution only through articulated point Jacobians"
             )
         ),
@@ -8949,6 +9210,10 @@ def numi_human_tendon_attachment_envelope_payload(
             "topology-aware fallback uses exact points on the selected source triangle or vertices in its connected surface; "
             "it is a force-transfer discretization and does not warp, refine, or relabel anatomy. The four-node "
             "EDL/FDL map distributes one lumped source law; it does not claim four independently actuated toe muscles. "
+            "The bilateral UI_UB5 origin map uses exact fifth-metacarpal surfaces expressed in the unchanged "
+            "third-metacarpal route-site frames only after NHRIGID proves both bodies are zero-DoF fixed siblings. "
+            "It neither reparents the route nor changes path length, J^T, or force parameters, and must fail if future "
+            "source mechanics add relative carpometacarpal motion. "
             "The bilateral EO3 fallback is an exact pinned MyoSim thorax-component mechanics surface admitted only after "
             "the named BodyParts3D rib failed the unchanged distance gate. It is not a BodyParts3D bone, does not move a "
             "rib or endpoint, and is not a deformable cartilage or enthesis material law. "

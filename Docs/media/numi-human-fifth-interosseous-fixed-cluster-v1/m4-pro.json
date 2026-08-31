@@ -1,0 +1,101 @@
+{
+  "schema": "numilab-human.fifth-interosseous-fixed-cluster-enthesis.v1",
+  "status": "pass",
+  "source_parent_revision": "a41a265",
+  "runtime_revision": "365476db1e17fa77960fa7f34b1af1bb1c5b13a0",
+  "runtime_source_content": "five owning runtime files in the Mac mini qualification checkout matched runtime_revision byte-for-byte and both probes were newer than those sources",
+  "device": "Apple M4 Pro",
+  "metal_api_validation": true,
+  "source_model": {
+    "repository": "https://github.com/MyoHub/myo_sim",
+    "revision": "33c89c2bde282553dde3f526768eb3bdcfaa7649",
+    "archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "rigid_payload_sha256": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44"
+  },
+  "payload": {
+    "sha256": "a594194f510eb4aa990a8767f868f999a10b4fedb745c8665368a231ed39b555",
+    "manifest_sha256": "4eff28fc096290539c949e7340693286b499261e7304c239137b3e07cc1c00c8",
+    "deterministic_regeneration": "byte_identical",
+    "endpoints": 832,
+    "distributed_envelopes": 641,
+    "registered_bodyparts_bone_envelopes": 631,
+    "point_laws": 191,
+    "surface_coverage_fraction": 0.7704326923076923,
+    "fixed_metacarpal_cluster_envelopes": 2
+  },
+  "bindings": [
+    {
+      "muscle": "UI_UB5",
+      "muscle_index": 272,
+      "endpoint": "origin",
+      "source_carrier_body_index": 62,
+      "source_carrier_body_name": "thirdmc_r",
+      "surface_owner_body_index": 72,
+      "surface_owner_body_name": "fifthmc_r",
+      "fixed_parent_body_index": 49,
+      "bone_member_id": "FJ3358",
+      "bone_stable_id": 92,
+      "source_triangle_index": 200,
+      "surface_distance_m": 0.0010485380172474059,
+      "patch_radius_m": 0.005044143249712281,
+      "sampled_total_force_amplification": 1.1301717791733583,
+      "force_residual": 1.5515838457795457e-17,
+      "moment_residual_m": 2.1169724165680503e-19,
+      "endpoint_migration_m": 0.0
+    },
+    {
+      "muscle": "UI_UB5_l",
+      "muscle_index": 335,
+      "endpoint": "origin",
+      "source_carrier_body_index": 112,
+      "source_carrier_body_name": "thirdmc_l",
+      "surface_owner_body_index": 122,
+      "surface_owner_body_name": "fifthmc_l",
+      "fixed_parent_body_index": 99,
+      "bone_member_id": "FJ3252",
+      "bone_stable_id": 111,
+      "source_triangle_index": 224,
+      "surface_distance_m": 0.0022509255811808313,
+      "patch_radius_m": 0.010803302327185902,
+      "sampled_total_force_amplification": 1.2203671410999863,
+      "force_residual": 2.244842103603442e-16,
+      "moment_residual_m": 1.0054477319618197e-18,
+      "endpoint_migration_m": 0.0
+    }
+  ],
+  "reference_transfer": {
+    "probe_sha256": "7ca22e6681b93d3f7fbcabadd729f2bab6e481d12958d4c275dbeff66aed166a",
+    "metal_transfers": 832,
+    "metal_envelope_transfers": 641,
+    "maximum_nodal_parity_error_n": 0.00012992202528,
+    "maximum_force_residual_n": 0.000246158830123,
+    "maximum_moment_residual_nm": 7.17526108929e-06,
+    "maximum_generalized_correction": 0.000732421875,
+    "replay_byte_identical": true
+  },
+  "selected_bilateral_transaction": {
+    "probe_sha256": "dc0420f0a673f40eeac5ce3451a76329c798dfc53ef14a7b6b14d14afc101f80",
+    "selected_source_muscles": [272, 335],
+    "step_seconds": 0.0001,
+    "steps": 2,
+    "activation_increment": 0.2,
+    "endpoint_transfers": 1664,
+    "envelope_transfers": 1282,
+    "point_fallbacks": 382,
+    "maximum_force_residual_n": 0.00012674901518,
+    "maximum_moment_residual_nm": 1.23634742977e-06,
+    "maximum_generalized_correction": 0.0003662109375,
+    "borrowed_consumer": "same_command_buffer_exact_snapshot",
+    "rigid_state_effect": "transfer_only_bitwise_identical_no_direct_joint_torque",
+    "continuum_max_q_delta_from_source_JT": 0.0,
+    "continuum_max_v_delta_from_source_JT": 0.0,
+    "rollback": "consumer_rejection_preserved_result",
+    "replay": "bitwise"
+  },
+  "limitations": [
+    "fixed-sibling ownership is valid only while third and fifth metacarpals have no relative DoF",
+    "source-route JT remains the sole rigid-force authority",
+    "surface envelopes are reduced force-transfer laws rather than deformable tendon material",
+    "the selected transaction is not a static-equilibrium or clinical-validation certificate"
+  ]
+}

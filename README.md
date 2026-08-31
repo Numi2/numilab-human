@@ -114,15 +114,19 @@ termini from the exact connected component of the pinned MyoSim thorax mesh:
 Eight of the rib termini pass on registered BodyParts3D ribs. Moving either
 rib 9 toward EO3 would break already-passing rib entheses and costovertebral
 continuity, so bilateral EO3 instead use exact pinned MyoSim rib-component
-surfaces after the BodyParts members fail the unchanged 12 mm gate. This raises
+surfaces after the BodyParts members fail the unchanged 12 mm gate.
 `NHTENDON3` initially reached 630 distributed surface envelopes—628 BodyParts
 bone and two pinned source-rib surfaces. The next pass admits the eight exact
 anterior-thorax components as separately typed composite attachment surfaces,
 raising coverage to 638 envelopes plus 194 point laws with no endpoint or bone
 migration. A connected-component-aware exact-surface retry then recovers the
 left `FDP5` distal-phalanx insertion from a detached scan fragment without
-relaxing any gate, giving 639 envelopes plus 193 point laws. These surfaces are
-not relabelled as bone, cartilage, sternum, or fascia and
+relaxing any gate, giving 639 envelopes plus 193 point laws. Bilateral
+fifth-palmar-interosseous origins then resolve to their exact fifth metacarpals.
+Each route carrier and surface owner is a zero-DoF fixed sibling of the same
+capitate, so the surface is expressed in the unchanged route frame without
+reparenting or changing `J^T`. This gives 641 envelopes plus 191 point laws.
+These surfaces are not relabelled as bone, cartilage, sternum, or fascia and
 remain the boundary for future deformable tissue mechanics. The
 non-conflicting component 1 now also has a deterministic connected,
 volume-converged `NHTHRC1` tetrahedral payload and seven exact tendon support
@@ -240,8 +244,9 @@ closed by feathering only its terminal visual band onto exact `FJ3182`/`FJ3192`
 triangles. That v8 surface operation remains visual-only and leaves the default
 `NHTENDON2` source sites unchanged; the opt-in `NHTENDON3` fixed-bone mode now
 provides the corresponding mechanical EHL/FHL endpoint correction. See the
-[hallux v8 record](Docs/HALLUX_ENTHESIS_V8.md), and
-[left FDP5 recovery](Docs/HAND_ENTHESIS_COMPONENT_RECOVERY_V1.md).
+[hallux v8 record](Docs/HALLUX_ENTHESIS_V8.md),
+[left FDP5 recovery](Docs/HAND_ENTHESIS_COMPONENT_RECOVERY_V1.md), and
+[fifth interosseous origin record](Docs/FIFTH_INTEROSSEOUS_FIXED_CLUSTER_ENTHESIS_V1.md).
 The three hallux bones and terminal patch deliberately share the existing
 `toes_l`/`toes_r` rigid transform; no independent toe joint is needed for this
 continuity repair, and compilation fails if that compound is split or shifted
@@ -252,11 +257,12 @@ The promoted `NHTENDON3` artifact gives all 832 origin/insertion endpoints a
 fail-closed tendon-to-bone law without silently moving an authored route site.
 After source-coherent anatomy, semantic same-body ownership, topology-aware
 exact-surface search, upper/lower-limb registration, and torso/axial
-registration plus exact abdominal source-component ownership, 639 endpoints
-admit distributed four-node surface envelopes: 629 on registered BodyParts3D
-bones, bilateral EO3 on exact pinned MyoSim rib-component mechanics surfaces,
+registration plus exact abdominal source-component and fixed-metacarpal
+ownership, 641 endpoints admit distributed four-node surface envelopes: 631
+on registered BodyParts3D bones, bilateral EO3 on exact pinned MyoSim
+rib-component mechanics surfaces,
 and eight on separately typed anterior-thorax composite source surfaces.
-Another 193 remain explicit body-owned source-point laws (76.80% surface
+Another 191 remain explicit body-owned source-point laws (77.04% surface
 coverage). Eighteen of the BodyParts envelopes are the reviewed route-private
 foot/hallux terminals with deterministic reference calibration; maximum
 endpoint migration remains `17.262 mm`.
@@ -264,8 +270,8 @@ endpoint migration remains `17.262 mm`.
 The owning Metal route kernel publishes its exact wrapped terminal directions,
 and a second Metal pass distributes those forces while conserving their
 resultant and source-point moment. On Apple M4 Pro, the current exact paired
-payload passes all 832 transfers with a maximum `0.000244141 N` force residual,
-`0.000008126 N m` moment residual, and byte-identical replay. The complete
+payload passes all 832 transfers with a maximum `0.000246159 N` force residual,
+`0.000007175 N m` moment residual, and byte-identical replay. The complete
 128-step persistent transaction executes 106,496 terminal transfers, verifies
 same-command-buffer borrowing, injected-rejection rollback, no direct rigid
 state effect, assistance removal, and bitwise replay. The standing controller

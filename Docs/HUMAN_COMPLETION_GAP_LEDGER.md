@@ -13,7 +13,7 @@ completion gate is still open; **open** means the end-state owner is absent.
 | Source foundation | BodyParts3D 4.0 plus active MyoSim 416-route body; Rajagopal and public MoBL-ARMS retained as comparative imports | partial | one source-faithful lower/upper mechanics composition is not qualified; authenticated bimanual upper source and exact non-cylinder wrap families remain separate | pinned bilateral source composition, exact wraps, mass/inertia/joint/path parity, and license receipts |
 | Skeleton and articulation | 157 Core bodies, 51 joint equalities, 185 pose-bound BodyParts3D bone meshes; source-owned manubrium/sternum/clavicle continuity, lower-limb source-mesh and 40-boundary gates plus T1-T12, costovertebral, and sacroiliac source-geometry continuity | partial | several source bones share one mechanics body; no independent lesser-toe articulation; Mortensen neck merge is not active | complete named segment/DoF matrix with multi-pose source parity and loaded joint validation |
 | Muscle actuation | all 416 current-pose routes, wraps, activation, compliant fibre/tendon equilibrium, `J^T`, persistent Metal stepping | partial | inferred compliant architecture and bounded recruitment are not full OpenSim-equivalent dynamic fibre/tendon state or held-out force validation | source curve/path/moment-arm parity plus held-out force-length-velocity and dynamic state tests |
-| Tendon-to-bone and terminal-surface transfer | source-component-qualified `NHTENDON3` covers all 832 endpoints with 639 distributed surface envelopes and 193 exact point laws; 629 envelopes terminate on registered BodyParts3D bone, bilateral EO3 use exact source-rib fallback surfaces, and eight abdominal routes use separately typed exact anterior-thorax composite surfaces | partial | four lumped-toe spreads, eight conditioning failures, 24 missing surfaces, 155 sites beyond the surface-distance gate, and two explicit source-model non-bone termini remain fail-closed; the ten source surfaces are force-transfer boundaries, not deformable tissue | retain the source surfaces until superior common-frame tissue owners pass preservation gates; add calibrated cartilage/fascia/aponeurosis volume, material, contact, and two-way force ownership |
+| Tendon-to-bone and terminal-surface transfer | source-component-qualified `NHTENDON3` covers all 832 endpoints with 641 distributed surface envelopes and 191 exact point laws; 631 envelopes terminate on registered BodyParts3D bone, including bilateral fifth-palmar-interosseous origins proven across fixed metacarpal siblings; bilateral EO3 use exact source-rib fallback surfaces and eight abdominal routes use separately typed exact anterior-thorax composite surfaces | partial | four lumped-toe spreads, eight conditioning failures, 24 missing surfaces, 153 sites beyond the surface-distance gate, and two explicit source-model non-bone termini remain fail-closed; the ten source surfaces are force-transfer boundaries, not deformable tissue | retain the source surfaces until superior common-frame tissue owners pass preservation gates; add calibrated cartilage/fascia/aponeurosis volume, material, contact, and two-way force ownership |
 | Tendon and fascia continuum | six-region pectoral Matter FEM with transactional NHTENDON2/3 loads | partial | generated pectoral volume and 10% load share are assumptions; no whole-body tendon/fascia continuum or two-way bone-muscle coupling | registered regional meshes, calibrated nonlinear material receipts, two-way load coupling, convergence, replay, and held-out deformation |
 | Ligaments, cartilage, and menisci | exact bilateral BodyParts3D ribs 1--7 costal-cartilage FEM: 14 regions, 13,516 nodes, 46,278 positive tetrahedra, source-classified rib/sternal bands, cited pseudo-elastic starting law, M4 Pro deformation/reaction/rollback/bitwise-replay gate | partial | production owner fraction is zero pending live rib/sternum binding; material is homogeneous population-mean; articular cartilage, menisci, joint ligaments, and compliant joint contact remain absent | live non-duplicated thorax coupling and held-out costal deformation, then named joint geometry, nonlinear ligament laws, compliant cartilage/meniscus contact, calibration, and joint-level validation |
 | Anatomical collision and contact | ten MyoSim foot witnesses and source plane run on Metal | partial | no BodyParts3D collider registration, collision exclusions, calibrated friction/compliance, or whole-body anatomical contact | conservative registered proxies, material receipts, deterministic replay, and held-out support/contact outcomes |
@@ -29,19 +29,19 @@ The current compiler retains one law for every origin and insertion:
 
 | Disposition | Value |
 | --- | ---: |
-| connected BodyParts3D four-node surface envelope | 611 |
+| connected BodyParts3D four-node surface envelope | 613 |
 | route-private migrated BodyParts3D four-node envelope | 18 |
 | exact pinned MyoSim rib-component four-node envelope | 2 |
 | exact pinned anterior-thorax composite four-node envelope | 8 |
-| exact source-site point law | 193 |
+| exact source-site point law | 191 |
 | maximum endpoint migration | `17.2616479 mm` |
 
-The 193 point laws are not one homogeneous bug. Current fail-closed reasons are:
+The 191 point laws are not one homogeneous bug. Current fail-closed reasons are:
 
 | Reason | Count | Correct next action |
 | --- | ---: | --- |
 | toe semantic representative exceeds 12 mm, source endpoint is bone-adjacent | 4 | retain the exact toe compound and resolve the terminal identity/geometry without independent articulation or gap patches |
-| nearest registered surface exceeds the unchanged distance gate | 155 | resolve source/common-frame ownership; never warp a bone toward the site or relax the gate globally |
+| nearest registered surface exceeds the unchanged distance gate | 153 | resolve source/common-frame ownership; never warp a bone toward the site or relax the gate globally |
 | conditioning still fails after topology-aware exact-surface search | 8 | retain point law; consider a source-derived mechanics surface without relaxing amplification |
 | body has no registered bone surface | 24 | classify soft-tissue/aponeurosis endpoints separately; add bone geometry only when anatomically correct |
 | source endpoint is explicitly non-bone in the pinned source model | 2 | classify aponeurosis/fascia/soft-tissue ownership; never relabel it as bone |
