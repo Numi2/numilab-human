@@ -119,7 +119,10 @@ surfaces after the BodyParts members fail the unchanged 12 mm gate. This raises
 bone and two pinned source-rib surfaces. The next pass admits the eight exact
 anterior-thorax components as separately typed composite attachment surfaces,
 raising coverage to 638 envelopes plus 194 point laws with no endpoint or bone
-migration. They are not relabelled as bone, cartilage, sternum, or fascia and
+migration. A connected-component-aware exact-surface retry then recovers the
+left `FDP5` distal-phalanx insertion from a detached scan fragment without
+relaxing any gate, giving 639 envelopes plus 193 point laws. These surfaces are
+not relabelled as bone, cartilage, sternum, or fascia and
 remain the boundary for future deformable tissue mechanics. The
 non-conflicting component 1 now also has a deterministic connected,
 volume-converged `NHTHRC1` tetrahedral payload and seven exact tendon support
@@ -237,7 +240,8 @@ closed by feathering only its terminal visual band onto exact `FJ3182`/`FJ3192`
 triangles. That v8 surface operation remains visual-only and leaves the default
 `NHTENDON2` source sites unchanged; the opt-in `NHTENDON3` fixed-bone mode now
 provides the corresponding mechanical EHL/FHL endpoint correction. See the
-[hallux v8 record](Docs/HALLUX_ENTHESIS_V8.md).
+[hallux v8 record](Docs/HALLUX_ENTHESIS_V8.md), and
+[left FDP5 recovery](Docs/HAND_ENTHESIS_COMPONENT_RECOVERY_V1.md).
 The three hallux bones and terminal patch deliberately share the existing
 `toes_l`/`toes_r` rigid transform; no independent toe joint is needed for this
 continuity repair, and compilation fails if that compound is split or shifted
@@ -248,11 +252,11 @@ The promoted `NHTENDON3` artifact gives all 832 origin/insertion endpoints a
 fail-closed tendon-to-bone law without silently moving an authored route site.
 After source-coherent anatomy, semantic same-body ownership, topology-aware
 exact-surface search, upper/lower-limb registration, and torso/axial
-registration plus exact abdominal source-component ownership, 638 endpoints
-admit distributed four-node surface envelopes: 628 on registered BodyParts3D
+registration plus exact abdominal source-component ownership, 639 endpoints
+admit distributed four-node surface envelopes: 629 on registered BodyParts3D
 bones, bilateral EO3 on exact pinned MyoSim rib-component mechanics surfaces,
 and eight on separately typed anterior-thorax composite source surfaces.
-Another 194 remain explicit body-owned source-point laws (76.68% surface
+Another 193 remain explicit body-owned source-point laws (76.80% surface
 coverage). Eighteen of the BodyParts envelopes are the reviewed route-private
 foot/hallux terminals with deterministic reference calibration; maximum
 endpoint migration remains `17.262 mm`.

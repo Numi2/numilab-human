@@ -7769,7 +7769,7 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
     }, payload_path
 
 
-def _numi_human_tendon_surface_envelope(
+def _numi_human_tendon_surface_envelope_connected(
     source_point: list[float], surface: dict[str, Any], maximum_distance_m: float,
     maximum_patch_radius_m: float, maximum_force_amplification: float,
     migrate_endpoint_to_surface: bool = False,
@@ -7790,6 +7790,12 @@ def _numi_human_tendon_surface_envelope(
     if nearest is None:
         return None, "no_surface_triangle"
     squared_distance, source_triangle_index, closest_point, barycentric = nearest
+    source_triangle_indices = surface.get("_source_triangle_indices")
+    source_triangle_manifest_index = (
+        int(source_triangle_indices[source_triangle_index])
+        if isinstance(source_triangle_indices, list)
+        else source_triangle_index
+    )
     surface_distance = math.sqrt(squared_distance)
     if surface_distance > maximum_distance_m:
         return None, "surface_distance_exceeds_gate"
@@ -7870,7 +7876,7 @@ def _numi_human_tendon_surface_envelope(
             "body_index": surface["body_index"],
             "bone_stable_id": surface["stable_id"],
             "bone_member_id": surface["member_id"],
-            "source_triangle_index": source_triangle_index,
+            "source_triangle_index": source_triangle_manifest_index,
             "nearest_barycentric": barycentric,
             "nearest_local_point_m": closest_point,
             "resolved_local_point_m": force_application_point,
@@ -7961,7 +7967,7 @@ def _numi_human_tendon_surface_envelope(
             closest_point,
             {
                 "kind": "seed_triangle_barycentric",
-                "source_triangle_index": source_triangle_index,
+                "source_triangle_index": source_triangle_manifest_index,
                 "barycentric": barycentric,
             },
         )
@@ -7983,7 +7989,7 @@ def _numi_human_tendon_surface_envelope(
                 point,
                 {
                     "kind": "seed_triangle_barycentric",
-                    "source_triangle_index": source_triangle_index,
+                    "source_triangle_index": source_triangle_manifest_index,
                     "barycentric": weights,
                 },
                 vertex_index if fraction == 1.0 else None,
@@ -8001,7 +8007,7 @@ def _numi_human_tendon_surface_envelope(
                 point,
                 {
                     "kind": "seed_triangle_barycentric",
-                    "source_triangle_index": source_triangle_index,
+                    "source_triangle_index": source_triangle_manifest_index,
                     "barycentric": list(weights),
                 },
             )
@@ -8085,6 +8091,100 @@ def _numi_human_tendon_surface_envelope(
         if topology_candidate_count < 4
         else "surface_patch_conditioning_failed_after_topology_aware_exact_surface_points"
     )
+
+
+def _numi_human_tendon_surface_envelope(
+    source_point: list[float], surface: dict[str, Any], maximum_distance_m: float,
+    maximum_patch_radius_m: float, maximum_force_amplification: float,
+    migrate_endpoint_to_surface: bool = False,
+) -> tuple[dict[str, Any] | None, str]:
+    """Resolve the nearest admissible connected attachment surface.
+
+    BodyParts3D members can retain small disconnected scan fragments. The
+    nearest fragment is still tried first, but an unconditioned fragment must
+    not hide a nearby connected component of the same named bone that passes
+    the unchanged distance, radius, force, moment, and amplification gates.
+    """
+    envelope, nearest_reason = _numi_human_tendon_surface_envelope_connected(
+        source_point, surface, maximum_distance_m, maximum_patch_radius_m,
+        maximum_force_amplification, migrate_endpoint_to_surface,
+    )
+    retry_reasons = {
+        "surface_patch_has_fewer_than_four_exact_surface_points",
+        "surface_patch_conditioning_failed_after_topology_aware_exact_surface_points",
+    }
+    triangles: list[tuple[int, int, int]] = surface["triangles"]
+    if envelope is not None or nearest_reason not in retry_reasons or len(triangles) < 2:
+        return envelope, nearest_reason
+
+    triangles_by_vertex: dict[int, list[int]] = defaultdict(list)
+    for triangle_index, triangle in enumerate(triangles):
+        for vertex_index in triangle:
+            triangles_by_vertex[vertex_index].append(triangle_index)
+    visited: set[int] = set()
+    components: list[list[int]] = []
+    for first_triangle in range(len(triangles)):
+        if first_triangle in visited:
+            continue
+        visited.add(first_triangle)
+        pending = [first_triangle]
+        component: list[int] = []
+        while pending:
+            triangle_index = pending.pop()
+            component.append(triangle_index)
+            for vertex_index in triangles[triangle_index]:
+                for neighbour in triangles_by_vertex[vertex_index]:
+                    if neighbour not in visited:
+                        visited.add(neighbour)
+                        pending.append(neighbour)
+        components.append(sorted(component))
+    if len(components) < 2:
+        return None, nearest_reason
+
+    vertices: list[list[float]] = surface["vertices"]
+    ranked_components: list[tuple[float, int, list[int]]] = []
+    for component in components:
+        minimum_squared_distance = math.inf
+        for triangle_index in component:
+            triangle = [vertices[index] for index in triangles[triangle_index]]
+            closest, _ = _tendon_closest_point_on_triangle(source_point, triangle)
+            minimum_squared_distance = min(minimum_squared_distance, sum(
+                (closest[axis] - source_point[axis]) ** 2 for axis in range(3)
+            ))
+        ranked_components.append(
+            (minimum_squared_distance, component[0], component)
+        )
+
+    inherited_indices = surface.get("_source_triangle_indices")
+    for squared_distance, _, component in sorted(ranked_components):
+        if math.sqrt(squared_distance) > maximum_distance_m:
+            break
+        component_surface = dict(surface)
+        component_surface["triangles"] = [
+            triangles[index] for index in component
+        ]
+        component_surface["_source_triangle_indices"] = [
+            int(inherited_indices[index])
+            if isinstance(inherited_indices, list) else index
+            for index in component
+        ]
+        candidate, candidate_reason = (
+            _numi_human_tendon_surface_envelope_connected(
+                source_point, component_surface, maximum_distance_m,
+                maximum_patch_radius_m, maximum_force_amplification,
+                migrate_endpoint_to_surface,
+            )
+        )
+        if candidate is None:
+            continue
+        candidate["surface_component_search"] = {
+            "component_count": len(components),
+            "nearest_component_rejection_reason": nearest_reason,
+            "selected_component_minimum_distance_m": math.sqrt(squared_distance),
+            "selected_component_triangle_count": len(component),
+        }
+        return candidate, candidate_reason
+    return None, nearest_reason
 
 
 def _numi_human_semantic_enthesis_envelope(
@@ -8374,6 +8474,7 @@ def numi_human_tendon_attachment_envelope_payload(
     source_component_anterior_thorax_composite_enthesis_count = 0
     compass_vertex_envelope_count = 0
     topology_aware_exact_surface_envelope_count = 0
+    disconnected_component_recovery_count = 0
     for muscle_index, (record, muscle_metadata) in enumerate(zip(muscles, metadata, strict=True)):
         route_offset, count = record[1], record[2]
         name = muscle_metadata.get("name") if isinstance(muscle_metadata, dict) else None
@@ -8562,6 +8663,8 @@ def numi_human_tendon_attachment_envelope_payload(
                     compass_vertex_envelope_count += 1
                 elif envelope.get("surface_patch_method") == "connected_geodesic_topology_aware_exact_surface_points":
                     topology_aware_exact_surface_envelope_count += 1
+                if "surface_component_search" in envelope:
+                    disconnected_component_recovery_count += 1
                 if "semantic_enthesis_map" in envelope:
                     if semantic_key in source_component_members:
                         semantic_axial_enthesis_count += 1
@@ -8601,6 +8704,10 @@ def numi_human_tendon_attachment_envelope_payload(
                 if "node_surface_sources" in envelope:
                     surface_manifest["node_surface_sources"] = envelope[
                         "node_surface_sources"
+                    ]
+                if "surface_component_search" in envelope:
+                    surface_manifest["surface_component_search"] = envelope[
+                        "surface_component_search"
                     ]
                 if "semantic_enthesis_map" in envelope:
                     surface_manifest["semantic_enthesis_map"] = envelope[
@@ -8805,6 +8912,7 @@ def numi_human_tendon_attachment_envelope_payload(
             ),
             "compass_vertex_envelope_count": compass_vertex_envelope_count,
             "topology_aware_exact_surface_envelope_count": topology_aware_exact_surface_envelope_count,
+            "disconnected_component_recovery_count": disconnected_component_recovery_count,
             "source_site_point_fallback_count": point_count,
             "surface_coverage_fraction": admitted_count / len(endpoint_payload),
             "maximum_endpoint_migration_m": max(

@@ -496,6 +496,44 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(repeated_reason, reason)
         self.assertEqual(repeated, envelope)
 
+    def test_tendon_patch_rejects_nearest_disconnected_scan_fragment(self) -> None:
+        surface = {
+            "body_index": 1,
+            "stable_id": 7,
+            "member_id": "FJ3184",
+            "vertices": [
+                [-0.0002, -0.0002, 0.002],
+                [0.0002, -0.0002, 0.002],
+                [0.0, 0.0002, 0.002],
+                [-0.008, -0.006, 0.0],
+                [0.008, -0.006, 0.0],
+                [0.0, 0.009, 0.0],
+            ],
+            "triangles": [(0, 1, 2), (3, 4, 5)],
+        }
+        source_point = [0.0, 0.0, 0.003]
+        envelope, reason = _numi_human_tendon_surface_envelope(
+            source_point, surface, 0.012, 0.012, 4.0,
+        )
+        self.assertEqual(reason, "admitted_topology_aware_exact_surface_patch")
+        self.assertIsNotNone(envelope)
+        assert envelope is not None
+        self.assertEqual(envelope["source_triangle_index"], 1)
+        self.assertEqual(envelope["surface_component_search"], {
+            "component_count": 2,
+            "nearest_component_rejection_reason": (
+                "surface_patch_conditioning_failed_after_topology_aware_exact_surface_points"
+            ),
+            "selected_component_minimum_distance_m": 0.003,
+            "selected_component_triangle_count": 1,
+        })
+        self.assertLessEqual(envelope["sampled_total_force_amplification"], 4.0)
+        repeated, repeated_reason = _numi_human_tendon_surface_envelope(
+            source_point, surface, 0.012, 0.012, 4.0,
+        )
+        self.assertEqual(repeated_reason, reason)
+        self.assertEqual(repeated, envelope)
+
     def test_part_control_catalog_uses_exact_source_route_incidence(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             artifact = _write_part_control_fixture(Path(temporary))
