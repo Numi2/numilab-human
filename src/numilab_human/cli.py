@@ -1660,7 +1660,7 @@ def parser() -> argparse.ArgumentParser:
     tendon_envelope_parser.set_defaults(handler=numi_human_tendon_envelope_payload)
     pectoralis_fascia_parser = commands.add_parser(
         "numi-human-pectoralis-fascia-payload",
-        help="compile source-derived pectoral and latissimus-aponeurosis thin-solid FEM regions",
+        help="compile source-derived thoracoabdominal myofascial thin-solid FEM regions",
     )
     pectoralis_fascia_parser.add_argument("--sources", type=Path, required=True)
     pectoralis_fascia_parser.add_argument(

@@ -12808,8 +12808,8 @@ def _bodyparts_obj_triangles(
     return vertices, triangles
 
 
-_NUMI_HUMAN_PECTORAL_FASCIA_MAGIC = b"NHFASC3\0"
-_NUMI_HUMAN_PECTORAL_FASCIA_ABI = 3
+_NUMI_HUMAN_PECTORAL_FASCIA_MAGIC = b"NHFASC4\0"
+_NUMI_HUMAN_PECTORAL_FASCIA_ABI = 4
 _NUMI_HUMAN_FASCIA_ROUTE_BODY_BIT = 1 << 31
 _NUMI_HUMAN_PECTORAL_FASCIA_MEMBERS = (
     ("FJ1446", "abdominal part of right pectoralis major", "PECM3"),
@@ -12826,6 +12826,24 @@ _NUMI_HUMAN_THORACOLUMBAR_FASCIA_MUSCLES = (
     ("LAT1L", "left superior latissimus aponeurosis", "LAT1_l"),
     ("LAT2L", "left middle latissimus aponeurosis", "LAT2_l"),
     ("LAT3L", "left inferior latissimus aponeurosis", "LAT3_l"),
+)
+_NUMI_HUMAN_EXTERNAL_OBLIQUE_MUSCLES = (
+    ("EO1R", "right superior external-oblique attachment sheet", "EO1_r"),
+    ("EO2R", "right upper-middle external-oblique attachment sheet", "EO2_r"),
+    ("EO3R", "right lower-middle external-oblique attachment sheet", "EO3_r"),
+    ("EO4R", "right inferior external-oblique attachment sheet", "EO4_r"),
+    ("EO1L", "left superior external-oblique attachment sheet", "EO1_l"),
+    ("EO2L", "left upper-middle external-oblique attachment sheet", "EO2_l"),
+    ("EO3L", "left lower-middle external-oblique attachment sheet", "EO3_l"),
+    ("EO4L", "left inferior external-oblique attachment sheet", "EO4_l"),
+)
+_NUMI_HUMAN_INTERNAL_OBLIQUE_MUSCLES = (
+    ("IO1R", "right inferior internal-oblique attachment sheet", "IO1_r"),
+    ("IO2R", "right middle internal-oblique attachment sheet", "IO2_r"),
+    ("IO3R", "right superior internal-oblique attachment sheet", "IO3_r"),
+    ("IO1L", "left inferior internal-oblique attachment sheet", "IO1_l"),
+    ("IO2L", "left middle internal-oblique attachment sheet", "IO2_l"),
+    ("IO3L", "left superior internal-oblique attachment sheet", "IO3_l"),
 )
 
 
@@ -13887,15 +13905,17 @@ def bodyparts_pectoralis_fascia_payload(
     thickness_m: float = 0.0006,
     muscle_load_fraction: float = 0.10,
 ) -> dict[str, Any]:
-    """Compile bounded pectoral and latissimus-aponeurosis FEM regions.
+    """Compile bounded thoracic and abdominal myofascial FEM regions.
 
     BodyParts3D 4.0 has no separate pectoral-fascia member.  We therefore keep
     only the anterior-facing sheet of each exact pectoralis-major OBJ and
     extrude that source topology posteriorly by a declared thickness.  This is
     a mechanics input with generated connectivity, not source-authored fascia
     geometry and not a clinical segmentation.  The six posterior regions are
-    generated only from the pinned LAT1--3 P4/P5/P6 source-site lattice; no
-    point is projected to a convenient bone or inferred from a render.
+    generated only from the pinned LAT1--3 P4/P5/P6 source-site lattice.  The
+    external- and internal-oblique attachment sheets use the bilateral
+    Abdomen-body terminal lattices authored by MyoSim.  No attachment point is
+    projected to a convenient bone or inferred from a render.
     """
     if not math.isfinite(thickness_m) or not 0.0002 <= thickness_m <= 0.0012:
         raise ImportError("pectoralis fascia thickness must be in [0.2, 1.2] mm")
@@ -13971,6 +13991,22 @@ def bodyparts_pectoralis_fascia_payload(
     archive_path = sources / "isa_BP3D_4.0_obj_99.zip"
     if not archive_path.is_file():
         raise ImportError("BodyParts3D is-a OBJ archive is unavailable")
+    abdominal_surface_members: list[dict[str, Any]] = []
+    for member_id, source_name in (
+        ("FJ1452", "right external oblique"),
+        ("FJ1452M", "left external oblique"),
+    ):
+        _, member, obj = _bodyparts_obj_member(sources, "is_a", member_id)
+        vertices_mm, triangles = _bodyparts_obj_triangles(obj, member)
+        abdominal_surface_members.append({
+            "member_id": member_id,
+            "source_name": source_name,
+            "member": member,
+            "obj_sha256": hashlib.sha256(obj).hexdigest(),
+            "source_vertex_count": len(vertices_mm),
+            "source_triangle_count": len(triangles),
+            "mechanics_role": "exact_anatomical_presentation_reference_not_slip_segmentation",
+        })
 
     nodes: list[tuple[float, float, float]] = []
     node_source_indices: list[int] = []
@@ -14321,10 +14357,165 @@ def bodyparts_pectoralis_fascia_payload(
                 "anterior_centroid_limit_source_mm": None,
             })
 
+    # The remaining fourteen Abdomen-body tendon terminals form two coherent
+    # bilateral lattices rather than fourteen independent point attachments.
+    # Each terminal owns one non-overlapping y-cell bounded by midlines to its
+    # neighbours.  A conservative transverse half-width is derived from that
+    # cell height, and the source x coordinate separates the superficial EO
+    # and deeper IO sheets.  The outer y boundaries use the same half-spacing
+    # extrapolation rule as the latissimus lattice above.
+    abdominal_tables = (
+        ("external_oblique", _NUMI_HUMAN_EXTERNAL_OBLIQUE_MUSCLES, 0.0045),
+        ("internal_oblique", _NUMI_HUMAN_INTERNAL_OBLIQUE_MUSCLES, 0.0060),
+    )
+    abdominal_region_start = len(regions)
+    for tissue_class, table, tissue_thickness_m in abdominal_tables:
+        for side_names in (
+            tuple(row[2] for row in table if row[2].endswith("_r")),
+            tuple(row[2] for row in table if row[2].endswith("_l")),
+        ):
+            centres: list[tuple[float, float, float]] = []
+            site_indices: list[int] = []
+            route_bodies: list[int] = []
+            for muscle_name in side_names:
+                metadata = metadata_by_name.get(muscle_name)
+                actuator = actuator_by_name.get(muscle_name)
+                if (
+                    not isinstance(metadata, dict) or not isinstance(actuator, int)
+                    or actuator >= len(myosim_muscle_records)
+                ):
+                    raise ImportError(f"abdominal wall route is absent: {muscle_name}")
+                record = myosim_muscle_records[actuator]
+                route_offset, count = record[1], record[2]
+                route = myosim_routes[route_offset:route_offset + count]
+                terminal_nodes = [node for node in route if node[0] == _MYOSIM_ROUTE_SITE]
+                if len(terminal_nodes) != 2:
+                    raise ImportError(f"abdominal wall route is not two-terminal: {muscle_name}")
+                candidates: list[tuple[int, tuple[float, float, float], int]] = []
+                for node in terminal_nodes:
+                    if node[1] >= len(myosim_sites):
+                        raise ImportError(f"abdominal wall route site escapes payload: {muscle_name}")
+                    site = myosim_sites[node[1]]
+                    if site[0] == 7:
+                        candidates.append((site[0], tuple(float(value) for value in site[1:]), int(node[1])))
+                if len(candidates) != 1:
+                    raise ImportError(f"abdominal wall route lacks one Abdomen terminal: {muscle_name}")
+                route_body, centre, site_index = candidates[0]
+                if not all(math.isfinite(value) for value in centre):
+                    raise ImportError(f"abdominal wall terminal is non-finite: {muscle_name}")
+                route_bodies.append(route_body)
+                centres.append(centre)
+                site_indices.append(site_index)
+            if len(set(route_bodies)) != 1 or route_bodies[0] != 7:
+                raise ImportError("abdominal wall lattice drifted from the Abdomen body")
+            order = sorted(range(len(centres)), key=lambda index: centres[index][1], reverse=True)
+            ordered_centres = [centres[index] for index in order]
+            ordered_sites = [site_indices[index] for index in order]
+            ordered_names = [side_names[index] for index in order]
+            for station, (centre, site_index, muscle_name) in enumerate(zip(
+                ordered_centres, ordered_sites, ordered_names, strict=True
+            )):
+                previous = ordered_centres[max(0, station - 1)]
+                following = ordered_centres[min(len(ordered_centres) - 1, station + 1)]
+                if station == 0:
+                    upper_y = centre[1] + 0.5 * (centre[1] - following[1])
+                else:
+                    upper_y = 0.5 * (previous[1] + centre[1])
+                if station + 1 == len(ordered_centres):
+                    lower_y = centre[1] + 0.5 * (centre[1] - previous[1])
+                else:
+                    lower_y = 0.5 * (centre[1] + following[1])
+                cell_height = upper_y - lower_y
+                if not 0.005 <= cell_height <= 0.060:
+                    raise ImportError(f"abdominal wall lattice cell is implausible: {muscle_name}")
+                transverse_half_width = min(0.018, max(0.008, 0.5 * cell_height))
+                longitudinal_subdivisions = 3
+                transverse_subdivisions = 2
+                front: list[tuple[float, float, float]] = []
+                for longitudinal in range(longitudinal_subdivisions + 1):
+                    y = upper_y + (lower_y - upper_y) * longitudinal / longitudinal_subdivisions
+                    for across in range(transverse_subdivisions + 1):
+                        z = centre[2] + transverse_half_width * (2.0 * across / transverse_subdivisions - 1.0)
+                        front.append((centre[0] - 0.5 * tissue_thickness_m, y, z))
+                back = [
+                    (point[0] + tissue_thickness_m, point[1], point[2])
+                    for point in front
+                ]
+                mechanics_triangles: list[tuple[int, int, int]] = []
+                row_width = transverse_subdivisions + 1
+                for longitudinal in range(longitudinal_subdivisions):
+                    for across in range(transverse_subdivisions):
+                        a = longitudinal * row_width + across
+                        b = a + 1
+                        c = a + row_width
+                        d = c + 1
+                        mechanics_triangles.extend(((a, b, c), (b, d, c)))
+                region_index = len(regions)
+                first_node = len(nodes)
+                layer_width = len(front)
+                for points in (front, back):
+                    for local, point in enumerate(points):
+                        longitudinal = local // row_width
+                        flags = (
+                            (2 if longitudinal == 0 else 0)
+                            | (1 if longitudinal == longitudinal_subdivisions else 0)
+                        )
+                        nodes.append(point)
+                        node_source_indices.append(site_index)
+                        node_regions.append(region_index)
+                        node_flags.append(flags)
+                presentation_triangles.extend(
+                    (region_index, *triangle) for triangle in mechanics_triangles
+                )
+                first_tetrahedron = len(tetrahedra)
+                for a, b, c in mechanics_triangles:
+                    aa, bb, cc = a + layer_width, b + layer_width, c + layer_width
+                    for candidate in (
+                        (first_node + a, first_node + b, first_node + c, first_node + aa),
+                        (first_node + b, first_node + bb, first_node + c, first_node + aa),
+                        (first_node + c, first_node + bb, first_node + cc, first_node + aa),
+                    ):
+                        volume = _signed_tetrahedron_volume(nodes, candidate)
+                        if abs(volume) <= 1.0e-15:
+                            raise ImportError(f"abdominal wall tetrahedron is degenerate: {muscle_name}")
+                        oriented = candidate if volume > 0.0 else (
+                            candidate[1], candidate[0], candidate[2], candidate[3]
+                        )
+                        tetrahedra.append((*oriented, region_index))
+                member_id, source_name, expected_name = next(
+                    row for row in table if row[2] == muscle_name
+                )
+                if expected_name != muscle_name:
+                    raise AssertionError("abdominal wall muscle table drifted")
+                regions.append({
+                    "member_id": member_id,
+                    "source_name": source_name,
+                    "myosim_muscle": muscle_name,
+                    "source_actuator_index": actuator_by_name[muscle_name],
+                    "soft_tissue_stable_id": _NUMI_HUMAN_FASCIA_ROUTE_BODY_BIT | 7,
+                    "source_geometry_kind": "myosim_abdomen_terminal_lattice_sheet",
+                    "tissue_class": tissue_class,
+                    "source_body_index": 7,
+                    "source_site_indices": [site_index],
+                    "source_local_centres_m": [centre],
+                    "lattice_y_bounds_m": [lower_y, upper_y],
+                    "transverse_half_width_m": transverse_half_width,
+                    "tissue_thickness_m": tissue_thickness_m,
+                    "first_node": first_node,
+                    "node_count": 2 * layer_width,
+                    "first_tetrahedron": first_tetrahedron,
+                    "tetrahedron_count": len(tetrahedra) - first_tetrahedron,
+                    "fixed_node_count": 2 * row_width,
+                    "load_node_count": 2 * row_width,
+                    "anterior_centroid_limit_source_mm": None,
+                })
+
     nodal_mass = [0.0] * len(nodes)
     total_volume = 0.0
     pectoral_volume = 0.0
     thoracolumbar_volume = 0.0
+    external_oblique_volume = 0.0
+    internal_oblique_volume = 0.0
     density_kg_m3 = 1000.0
     for a, b, c, d, region_index in tetrahedra:
         volume = _signed_tetrahedron_volume(nodes, (a, b, c, d))
@@ -14333,8 +14524,12 @@ def bodyparts_pectoralis_fascia_payload(
         total_volume += volume
         if region_index < len(_NUMI_HUMAN_PECTORAL_FASCIA_MEMBERS):
             pectoral_volume += volume
-        else:
+        elif region_index < abdominal_region_start:
             thoracolumbar_volume += volume
+        elif region_index < abdominal_region_start + len(_NUMI_HUMAN_EXTERNAL_OBLIQUE_MUSCLES):
+            external_oblique_volume += volume
+        else:
+            internal_oblique_volume += volume
         share = density_kg_m3 * volume / 4.0
         for node in (a, b, c, d):
             nodal_mass[node] += share
@@ -14368,10 +14563,10 @@ def bodyparts_pectoralis_fascia_payload(
     payload_path = output / "bodyparts3d-pectoralis-fascia.nhfascia"
     payload_path.write_bytes(payload)
     manifest = {
-        "schema": "numi.human.thoracic-myofascia-mechanics-payload.v2",
+        "schema": "numi.human.thoracoabdominal-myofascia-mechanics-payload.v3",
         "payload": {
             "file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
-            "magic": "NHFASC3", "payload_abi": _NUMI_HUMAN_PECTORAL_FASCIA_ABI,
+            "magic": "NHFASC4", "payload_abi": _NUMI_HUMAN_PECTORAL_FASCIA_ABI,
             "region_count": len(regions), "node_count": len(nodes),
             "tetrahedron_count": len(tetrahedra),
             "exact_anterior_presentation_triangle_count": len(presentation_triangles),
@@ -14380,6 +14575,7 @@ def bodyparts_pectoralis_fascia_payload(
             "bodyparts3d_archive": {"file": archive_path.name, "sha256": sha256(archive_path), "license": "CC-BY-4.0"},
             "myosim_manifest": {"file": myosim_manifest_path.name, "sha256": sha256(myosim_manifest_path)},
             "members": source_members,
+            "abdominal_exact_surface_references": abdominal_surface_members,
             "route_aponeuroses": [
                 {
                     "member_id": region["member_id"],
@@ -14390,9 +14586,27 @@ def bodyparts_pectoralis_fascia_payload(
                     "source_local_centres_m": region["source_local_centres_m"],
                     "geometry_status": "source_path_lattice_with_midline_strip_boundaries_and_outer_half_spacing_extrapolation",
                 }
-                for region in regions[len(_NUMI_HUMAN_PECTORAL_FASCIA_MEMBERS):]
+                for region in regions[
+                    len(_NUMI_HUMAN_PECTORAL_FASCIA_MEMBERS):abdominal_region_start
+                ]
             ],
-            "geometry_status": "six_exact_bodyparts3d_pectoral_envelopes_plus_six_pinned_myosim_latissimus_path_lattice_strips",
+            "route_abdominal_wall": [
+                {
+                    "member_id": region["member_id"],
+                    "source_name": region["source_name"],
+                    "myosim_muscle": region["myosim_muscle"],
+                    "tissue_class": region["tissue_class"],
+                    "source_body_index": region["source_body_index"],
+                    "source_site_indices": region["source_site_indices"],
+                    "source_local_centres_m": region["source_local_centres_m"],
+                    "lattice_y_bounds_m": region["lattice_y_bounds_m"],
+                    "transverse_half_width_m": region["transverse_half_width_m"],
+                    "tissue_thickness_m": region["tissue_thickness_m"],
+                    "geometry_status": "source_terminal_lattice_cell_with_midline_y_boundaries_and_declared_transverse_width",
+                }
+                for region in regions[abdominal_region_start:]
+            ],
+            "geometry_status": "six_exact_bodyparts3d_pectoral_envelopes_plus_six_pinned_myosim_latissimus_strips_plus_fourteen_pinned_myosim_abdominal_wall_terminal_lattice_sheets",
         },
         "mechanics": {
             "thickness_m": thickness_m,
@@ -14401,12 +14615,16 @@ def bodyparts_pectoralis_fascia_payload(
             "total_rest_volume_m3": total_volume, "total_mass_kg": density_kg_m3 * total_volume,
             "pectoral_rest_volume_m3": pectoral_volume,
             "thoracolumbar_rest_volume_m3": thoracolumbar_volume,
+            "external_oblique_rest_volume_m3": external_oblique_volume,
+            "internal_oblique_rest_volume_m3": internal_oblique_volume,
             "muscle_terminal_load_fraction": muscle_load_fraction,
             "fixed_node_flag": 1, "muscle_load_node_flag": 2,
             "regions": regions,
             "constitutive_models": {
                 "pectoral_regions": "human_pectoralis_fascia_goh_uniaxial_v1",
                 "latissimus_aponeurosis_regions": "human_thoracolumbar_fascia_effective_isotropic_v1",
+                "external_oblique_regions": "human_anterior_abdominal_wall_composite_effective_v1",
+                "internal_oblique_regions": "human_anterior_abdominal_wall_composite_effective_v1",
             },
         },
         "literature": {
@@ -14426,9 +14644,23 @@ def bodyparts_pectoralis_fascia_payload(
                 "mean_elastic_modulus_pa": 150900000.0,
                 "scope": "posterior human thoracolumbar fascia tensile tests",
             },
+            "abdominal_architecture": {
+                "pmcid": "PMC3017737",
+                "scope": "human layered external-oblique/internal-oblique/transversus architecture and fibre directions",
+            },
+            "abdominal_morphology": {
+                "pmid": "15698694",
+                "scope": "human cadaver regional external/internal oblique thickness and fascicle orientation",
+            },
+            "abdominal_thickness": {
+                "pmcid": "PMC12276042",
+                "external_oblique_selected_m": 0.0045,
+                "internal_oblique_selected_m": 0.0060,
+                "scope": "healthy ultrasound cohort means used as population proxies",
+            },
         },
-        "runtime_binding": "The twelve named MyoSim pectoralis and latissimus terminal loads may contribute only the declared fraction to flagged fascia nodes. Transfer-only execution retains MyoSim J^T. A two-phase Numi Matter consumer may replace, never duplicate, that exact chest-anchor J^T fraction with accepted fixed-node continuum reactions projected through the owning body Jacobian.",
-        "evidence_boundary": "BodyParts3D has no separate pectoral-fascia or latissimus/thoracolumbar-fascia member in the pinned English part tables. Pectoral mechanics retains exact selected source vertices. Posterior strips retain exact MyoSim P4/P5/P6 centres and use a published healthy mean thickness, while strip width, outer extrapolation, interpolated subdivision, tetrahedral connectivity, anchor/load bands, isotropic effective law, and 10% load share are generated research assumptions. This is not a clinical segmentation, subject-specific attachment map, biaxial calibration, or physiologically validated whole-body fascia solve.",
+        "runtime_binding": "The twenty-six named MyoSim pectoralis, latissimus, external-oblique, and internal-oblique terminal loads may contribute only the declared fraction to flagged continuum nodes. Transfer-only execution retains MyoSim J^T. A two-phase Numi Matter consumer may replace, never duplicate, that exact source-terminal J^T fraction with accepted fixed-node continuum reactions projected through the owning body Jacobian.",
+        "evidence_boundary": "BodyParts3D has no separate pectoral-fascia, latissimus/thoracolumbar-fascia, or internal-oblique member in the pinned English part tables. Pectoral mechanics retains exact selected source vertices; exact bilateral BodyParts3D external-oblique surfaces remain anatomical presentation references because they do not segment the four MyoSim slips. Posterior strips retain exact MyoSim P4/P5/P6 centres. Abdominal sheets retain every exact Abdomen-body terminal and non-overlapping source-lattice y cell. Transverse width, outer extrapolation, interpolated subdivision, tetrahedral connectivity, anchor/load bands, population thicknesses, isotropic effective law, and 10% load share are generated research assumptions. Transversus abdominis is not yet actuated by the source model. This is not a clinical segmentation, subject-specific attachment map, biaxial calibration, or physiologically validated whole-body myofascia solve.",
     }
     write_json(output / "bodyparts3d-pectoralis-fascia.manifest.json", manifest)
     return manifest

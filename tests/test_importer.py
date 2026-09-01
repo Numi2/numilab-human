@@ -1592,20 +1592,20 @@ class ImporterTests(unittest.TestCase):
                 ROOT / "sources", ROOT / "build/myosim-fullbody", second,
             )
             payload = (first / manifest["payload"]["file"]).read_bytes()
-        self.assertEqual(payload[:8], b"NHFASC3\0")
+        self.assertEqual(payload[:8], b"NHFASC4\0")
         self.assertEqual(manifest["payload"]["sha256"], replay["payload"]["sha256"])
-        self.assertEqual(manifest["payload"]["region_count"], 12)
-        self.assertGreater(manifest["payload"]["node_count"], 250)
-        self.assertLess(manifest["payload"]["node_count"], 1000)
-        self.assertGreater(manifest["payload"]["tetrahedron_count"], 350)
-        self.assertLess(manifest["payload"]["tetrahedron_count"], 2000)
+        self.assertEqual(manifest["payload"]["region_count"], 26)
+        self.assertGreater(manifest["payload"]["node_count"], 1_000)
+        self.assertLess(manifest["payload"]["node_count"], 1_500)
+        self.assertGreater(manifest["payload"]["tetrahedron_count"], 850)
+        self.assertLess(manifest["payload"]["tetrahedron_count"], 2_500)
         self.assertGreater(
             manifest["payload"]["exact_anterior_presentation_triangle_count"],
             5_000,
         )
         self.assertEqual(
             manifest["source"]["geometry_status"],
-            "six_exact_bodyparts3d_pectoral_envelopes_plus_six_pinned_myosim_latissimus_path_lattice_strips",
+            "six_exact_bodyparts3d_pectoral_envelopes_plus_six_pinned_myosim_latissimus_strips_plus_fourteen_pinned_myosim_abdominal_wall_terminal_lattice_sheets",
         )
         self.assertEqual(manifest["mechanics"]["thickness_m"], 0.0006)
         self.assertEqual(
@@ -1615,17 +1615,80 @@ class ImporterTests(unittest.TestCase):
         regions = manifest["mechanics"]["regions"]
         self.assertEqual(
             [region["source_actuator_index"] for region in regions],
-            [220, 218, 219, 283, 281, 282, 221, 222, 223, 284, 285, 286],
+            [
+                220, 218, 219, 283, 281, 282,
+                221, 222, 223, 284, 285, 286,
+                186, 187, 188, 189, 198, 199, 200, 201,
+                194, 193, 192, 206, 205, 204,
+            ],
         )
         self.assertTrue(all(region["fixed_node_count"] >= 4 for region in regions))
         self.assertTrue(all(region["load_node_count"] >= 4 for region in regions))
-        posterior = regions[6:]
+        posterior = regions[6:12]
         self.assertTrue(all(
             region["source_geometry_kind"] == "myosim_route_local_aponeurosis_strip"
             and len(region["source_site_indices"]) == 3
             and len(region["source_local_centres_m"]) == 3
             for region in posterior
         ))
+        abdominal = regions[12:]
+        self.assertEqual(len(abdominal), 14)
+        self.assertEqual(
+            [region["tissue_class"] for region in abdominal],
+            ["external_oblique"] * 8 + ["internal_oblique"] * 6,
+        )
+        self.assertTrue(all(
+            region["source_geometry_kind"] == "myosim_abdomen_terminal_lattice_sheet"
+            and region["source_body_index"] == 7
+            and len(region["source_site_indices"]) == 1
+            and len(region["source_local_centres_m"]) == 1
+            and region["lattice_y_bounds_m"][0] < region["lattice_y_bounds_m"][1]
+            and 0.008 <= region["transverse_half_width_m"] <= 0.018
+            for region in abdominal
+        ))
+        self.assertEqual(
+            [surface["member_id"] for surface in
+             manifest["source"]["abdominal_exact_surface_references"]],
+            ["FJ1452", "FJ1452M"],
+        )
+        expected_abdomen_terminals = {
+            (0.0065502, 0.0627431, 0.03089),
+            (0.00723321, 0.0329565, 0.03646),
+            (0.00677141, 0.0129967, 0.04163),
+            (0.00695134, -0.00599564, 0.04033),
+            (0.0065502, 0.0627431, -0.03089),
+            (0.00723321, 0.0329565, -0.03646),
+            (0.00677141, 0.0129967, -0.04163),
+            (0.00695134, -0.00599564, -0.04033),
+            (0.00338096, 0.0293052, 0.04188),
+            (0.00068053, -0.0115304, 0.05139),
+            (0.00306951, -0.0406576, 0.04538),
+            (0.00338096, 0.0293052, -0.04188),
+            (0.00068053, -0.0115304, -0.05139),
+            (0.00306951, -0.0406576, -0.04538),
+        }
+        self.assertEqual(
+            {
+                tuple(round(value, 8) for value in region["source_local_centres_m"][0])
+                for region in abdominal
+            },
+            expected_abdomen_terminals,
+        )
+        for first, second in ((abdominal[0:4], abdominal[4:8]),
+                              (abdominal[8:11], abdominal[11:14])):
+            for right, left in zip(first, second, strict=True):
+                right_point = right["source_local_centres_m"][0]
+                left_point = left["source_local_centres_m"][0]
+                self.assertAlmostEqual(right_point[0], left_point[0], places=7)
+                self.assertAlmostEqual(right_point[1], left_point[1], places=7)
+                self.assertAlmostEqual(right_point[2], -left_point[2], places=7)
+            for side in (first, second):
+                for upper, lower in zip(side, side[1:]):
+                    self.assertAlmostEqual(
+                        upper["lattice_y_bounds_m"][0],
+                        lower["lattice_y_bounds_m"][1],
+                        places=7,
+                    )
 
     def test_costal_cartilage_payload_preserves_exact_bilateral_source_and_positive_volume(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
