@@ -25,9 +25,9 @@ from .myosim_export import export_fullbody
 from .upper_limb_registration import _rotation_xyzw
 
 
-SCHEMA = "numi.human.open-knee-oks003-payload.v1"
+SCHEMA = "numi.human.open-knee-oks003-payload.v2"
 MAGIC = b"NHKNEE1\0"
-ABI = 1
+ABI = 2
 INVALID_INDEX = 0xFFFFFFFF
 
 EXPECTED_HASHES = {
@@ -80,7 +80,7 @@ RIGID_COUNTERPART_ROLE = {
     "PTB": "patella",
 }
 
-REGION_STRUCT = struct.Struct("<16s8I")
+REGION_STRUCT = struct.Struct("<16s8I11fI")
 SURFACE_STRUCT = struct.Struct("<48s5I")
 NODE_SET_STRUCT = struct.Struct("<48s5I")
 SURFACE_PAIR_STRUCT = struct.Struct("<48sII")
@@ -88,7 +88,10 @@ NODE_STRUCT = struct.Struct("<3fI3fI3fI")
 TETRAHEDRON_STRUCT = struct.Struct("<4I")
 FACE_STRUCT = struct.Struct("<3I")
 MEMBERSHIP_STRUCT = struct.Struct("<I")
-HEADER_STRUCT = struct.Struct("<8s12I96s")
+HEADER_STRUCT = struct.Struct("<8s12I128s")
+
+MATERIAL_HAS_HOMOGENEOUS_FIBER = 1 << 0
+MATERIAL_HAS_ISOCHORIC_IN_SITU_STRETCH = 1 << 1
 
 
 def _sha256(path: Path) -> str:
@@ -147,6 +150,31 @@ class Source:
     surface_pairs: list[tuple[str, str, str]]
     landmarks: dict[str, tuple[float, float, float] | int]
     materials: dict[str, dict[str, float | str]]
+    fiber_directions: dict[str, tuple[float, float, float]]
+
+
+def _parse_febio_fiber_directions(
+    path: Path,
+) -> dict[str, tuple[float, float, float]]:
+    """Read source-authored homogeneous fibre axes from the solved FEBio deck."""
+    root = ET.parse(path).getroot()
+    material_root = root.find("Material")
+    if material_root is None:
+        raise ValueError("Open Knee(s) FeBio deck has no Material table")
+    directions: dict[str, tuple[float, float, float]] = {}
+    for material in material_root.findall("material"):
+        name = material.attrib.get("name", "")
+        fiber = material.find("fiber")
+        if fiber is None:
+            continue
+        if fiber.attrib.get("type") != "vector" or name in directions:
+            raise ValueError(f"Open Knee(s) material {name} fibre identity is invalid")
+        direction = _vector(fiber.text, f"{name} fibre")
+        length = math.sqrt(sum(value * value for value in direction))
+        if not 0.999 <= length <= 1.001:
+            raise ValueError(f"Open Knee(s) material {name} fibre is not unit length")
+        directions[name] = tuple(value / length for value in direction)
+    return directions
 
 
 def _parse_model_properties(path: Path) -> tuple[
@@ -202,6 +230,9 @@ def parse_source(directory: Path, *, enforce_exact: bool = True) -> Source:
         if "Creative Commons Attribution 4.0 International" not in license_text:
             raise ValueError("Open Knee(s) CC BY 4.0 license text is absent")
     landmarks, materials = _parse_model_properties(directory / "ModelProperties.xml")
+    fiber_directions = _parse_febio_fiber_directions(
+        directory / "FeBio_custom.feb"
+    )
     regions: dict[str, Region] = {}
     node_sets: dict[str, list[int]] = {}
     surfaces: dict[str, Surface] = {}
@@ -314,7 +345,10 @@ def parse_source(directory: Path, *, enforce_exact: bool = True) -> Source:
                 raise ValueError(f"Open Knee(s) exact region counts drifted for {name}")
         if len(node_sets) != 42 or len(surfaces) != 88 or len(surface_pairs) != 19:
             raise ValueError("Open Knee(s) exact attachment/contact topology drifted")
-    return Source(regions, node_sets, surfaces, surface_pairs, landmarks, materials)
+    return Source(
+        regions, node_sets, surfaces, surface_pairs, landmarks, materials,
+        fiber_directions,
+    )
 
 
 def _unit(vector: Any, np: Any) -> Any:
@@ -516,6 +550,11 @@ def compile_payload(
             "Open Knee(s) compilation requires the pinned MyoSim/MuJoCo environment"
         ) from error
     source = parse_source(open_knee, enforce_exact=True)
+    expected_fiber_regions = {"ACL", "PCL", "MCL", "LCL", "PTL", "QAT"}
+    if set(source.fiber_directions) != expected_fiber_regions:
+        raise RuntimeError(
+            "Open Knee(s) homogeneous ligament/tendon fibre table drifted"
+        )
     registration = json.loads(registration_path.read_text(encoding="utf-8"))
     if registration.get("schema") != (
         "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2"
@@ -776,11 +815,49 @@ def compile_payload(
     for name in ordered_names:
         region = source.regions[name]
         tet_count = len(region.elements) if region.element_type == "tet4" else 0
+        material = source.materials.get(name, {})
+        material_flags = 0
+        c1 = c2 = c3 = c4 = c5 = lam_max = bulk = initial_stretch = 0.0
+        fiber_world = (0.0, 0.0, 0.0)
+        if name in source.fiber_directions:
+            required = {"c1", "c2", "c3", "c4", "c5", "lam_max", "k", "initial_stretch"}
+            if not required.issubset(material):
+                raise RuntimeError(
+                    f"Open Knee(s) source material {name} is incomplete"
+                )
+            c1, c2, c3, c4, c5, lam_max, bulk, initial_stretch = (
+                float(material[key]) for key in
+                ("c1", "c2", "c3", "c4", "c5", "lam_max", "k", "initial_stretch")
+            )
+            if not (
+                c1 > 0.0 and c2 >= 0.0 and c3 > 0.0 and c4 > 0.0 and
+                c5 > 0.0 and lam_max > 1.0 and bulk > 0.0 and
+                initial_stretch >= 1.0
+            ):
+                raise RuntimeError(
+                    f"Open Knee(s) source material {name} left its physical gate"
+                )
+            source_fiber = np.asarray(source.fiber_directions[name], dtype=float)
+            fiber_body = np.einsum("ij,j->i", rotation, source_fiber)
+            fiber_world_array = np.einsum(
+                "ij,j->i", femur_body_world_rotation, fiber_body
+            )
+            if sagittal_mirror_x is not None:
+                fiber_world_array = fiber_world_array.copy()
+                fiber_world_array[0] *= -1.0
+            fiber_world_array = _unit(fiber_world_array, np)
+            fiber_world = tuple(float(value) for value in fiber_world_array)
+            material_flags = (
+                MATERIAL_HAS_HOMOGENEOUS_FIBER |
+                MATERIAL_HAS_ISOCHORIC_IN_SITU_STRETCH
+            )
         region_records.append(REGION_STRUCT.pack(
             _fixed_name(name, 16), REGION_KIND[name],
             int(targets[body_name(VISUAL_BODY_ROLE[name])]["core_body_index"]),
             first_node, len(region.node_ids), first_tet, tet_count,
             first_surface, len(surfaces_by_region[name]),
+            c1, c2, c3, c4, c5, lam_max, bulk, initial_stretch,
+            *fiber_world, material_flags,
         ))
         first_node += len(region.node_ids)
         first_tet += tet_count
@@ -861,7 +938,7 @@ def compile_payload(
             payload.extend(MEMBERSHIP_STRUCT.pack(global_node_index[identifier]))
 
     hashes = b"".join(bytes.fromhex(EXPECTED_HASHES[name]) for name in (
-        "Geometry.feb", "ModelProperties.xml", "license.txt"
+        "Geometry.feb", "ModelProperties.xml", "FeBio_custom.feb", "license.txt"
     ))
     payload[:header_bytes] = HEADER_STRUCT.pack(
         MAGIC, ABI, header_bytes, len(ordered_names), node_count, first_tet,
@@ -989,6 +1066,15 @@ def compile_payload(
             ],
         },
         "materials": source.materials,
+        "homogeneous_fiber_directions": {
+            name: {
+                "source": list(source.fiber_directions[name]),
+                "registered_world": list(struct.unpack(
+                    "<3f", region_records[region_index[name]][80:92]
+                )),
+            }
+            for name in sorted(source.fiber_directions)
+        },
         "payload": {
             "file": payload_path.name, "magic": "NHKNEE1", "abi": ABI,
             "bytes": len(payload), "sha256": _sha256(payload_path),

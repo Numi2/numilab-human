@@ -12,6 +12,7 @@ from subprocess import run
 from numilab_human.open_knee import compile_payload as compile_open_knee_payload
 from numilab_human.open_knee import _anatomical_femoral_basis
 from numilab_human.open_knee import _orientation_preserving_connectivity
+from numilab_human.open_knee import _parse_febio_fiber_directions
 from numilab_human.open_knee import parse_source as parse_open_knee_source
 
 from numilab_human.model import (
@@ -3491,10 +3492,14 @@ class ImporterTests(unittest.TestCase):
 <SurfacePair name="A_To_B"><master surface="A_All_Faces"/>
 <slave surface="B_All_Faces"/></SurfacePair>
 </Geometry></febio_spec>"""
+        febio = """<?xml version="1.0"?>
+<febio_spec><Material><material name="A" type="uncoupled prestrain elastic">
+<fiber type="vector">1,0,0</fiber></material></Material></febio_spec>"""
         with tempfile.TemporaryDirectory() as temporary:
             directory = Path(temporary)
             (directory / "ModelProperties.xml").write_text(properties, encoding="utf-8")
             (directory / "Geometry.feb").write_text(geometry, encoding="utf-8")
+            (directory / "FeBio_custom.feb").write_text(febio, encoding="utf-8")
             source = parse_open_knee_source(directory, enforce_exact=False)
         self.assertEqual(set(source.regions), {"A", "B"})
         self.assertEqual(source.regions["A"].element_type, "tet4")
@@ -3506,6 +3511,7 @@ class ImporterTests(unittest.TestCase):
             [("A_To_B", "A_All_Faces", "B_All_Faces")],
         )
         self.assertEqual(source.materials["A"]["c1"], 2.54)
+        self.assertEqual(source.fiber_directions["A"], (1.0, 0.0, 0.0))
 
     def test_open_knee_compiler_rejects_unknown_side_before_source_work(self) -> None:
         with self.assertRaisesRegex(ValueError, "side must be left or right"):
@@ -3532,6 +3538,17 @@ class ImporterTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(ValueError, "tri3 or tet4"):
             _orientation_preserving_connectivity((1, 2), reflected=True)
+
+    def test_open_knee_exact_fiber_directions_are_source_authored_and_unit(self) -> None:
+        directions = _parse_febio_fiber_directions(
+            Path(__file__).resolve().parents[1]
+            / "Sources/open-knee-oks003/FeBio_custom.feb"
+        )
+        self.assertEqual(set(directions), {"ACL", "PCL", "MCL", "LCL", "PTL", "QAT"})
+        self.assertAlmostEqual(directions["ACL"][0], -0.1012763293512546)
+        self.assertAlmostEqual(directions["PTL"][2], 0.8719620275711987)
+        for direction in directions.values():
+            self.assertAlmostEqual(sum(value * value for value in direction), 1.0)
 
     def test_open_knee_femoral_basis_resolves_anterior_axis_sign(self) -> None:
         try:
