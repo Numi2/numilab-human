@@ -128,6 +128,13 @@ four-node patches fail conditioning: bilateral `TRImed` origins, left `FDP5`
 insertion, and right `RI4`, `LU_RB4`, `UI_UB4`, and `RI5` origins. These are
 not repaired by relaxing distance, force-amplification, or wrench gates.
 
+That list records the v1 registration snapshot. The later
+[bilateral triceps medialis enthesis pass](TRICEPS_MEDIALIS_ENTHESIS_V1.md)
+admits the right origin through the ordinary exact-surface topology search and
+the left origin through counterpart-seeded projection onto its own exact
+BodyParts3D humerus. It does not relax any conditioning gate or move either
+source endpoint.
+
 The ten scapular gains are bilateral posterior-deltoid origins, teres-minor and
 teres-major insertions, and coracobrachialis and short-head-biceps origins.
 Their distributed placement around the scapular spine/acromial region, lateral

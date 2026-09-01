@@ -4281,6 +4281,25 @@ _NUMI_HUMAN_FIXED_METACARPAL_CLUSTER_ENTHESES = {
 }
 
 
+# The pinned MyoSim TRImed origins are exact local-frame mirrors, and
+# BodyParts3D provides separately scanned right/left humeri. The ordinary
+# connected-surface search admits the right origin but the independently
+# sampled left mesh has no four-point combination in its generic candidate
+# stencil that satisfies the unchanged conditioning gates. Seed the left
+# search only from the already-admitted homologous right patch, reflect it in
+# the exact source-local axis, and project each node back onto the exact left
+# BodyParts3D surface. This preserves the authored left endpoint and force law;
+# it is not a mirrored substitute for the left geometry.
+_NUMI_HUMAN_BILATERAL_COUNTERPART_ENTHESES = {
+    ("TRImed_l", 0): {
+        "counterpart": ("TRImed", 0),
+        "member_id": "FJ3262",
+        "counterpart_member_id": "FJ3368",
+        "local_reflection": (1.0, 1.0, -1.0),
+    },
+}
+
+
 # MyoSim's torso collapses the thoracic cage into one rigid body, while its
 # source route identifiers retain the exact thoracic vertebra or rib level.
 # BodyParts3D keeps those bones as separate named members on that same body.
@@ -8378,6 +8397,181 @@ def _numi_human_tendon_surface_envelope(
     return None, nearest_reason
 
 
+def _numi_human_bilateral_counterpart_surface_envelope(
+    source_point: list[float], surface: dict[str, Any],
+    counterpart_source_point: list[float], counterpart_envelope: dict[str, Any],
+    local_reflection: tuple[float, float, float],
+    maximum_distance_m: float, maximum_patch_radius_m: float,
+    maximum_force_amplification: float,
+) -> tuple[dict[str, Any] | None, str]:
+    """Project an admitted mirrored patch onto the exact counterpart surface.
+
+    This is intentionally narrower than the generic topology search. It is
+    available only to explicitly declared bilateral source endpoints whose
+    local points are exact reflections and whose named BodyParts3D members are
+    checked by the caller. Every returned node is an exact barycentric point
+    on the target surface; no source endpoint, bone, or force law is moved.
+    """
+    if (
+        len(source_point) != 3 or len(counterpart_source_point) != 3
+        or len(local_reflection) != 3
+        or any(abs(abs(value) - 1.0) > 1.0e-12 for value in local_reflection)
+    ):
+        return None, "bilateral_counterpart_definition_is_malformed"
+    reflected_source = [
+        local_reflection[axis] * counterpart_source_point[axis]
+        for axis in range(3)
+    ]
+    if max(abs(source_point[axis] - reflected_source[axis]) for axis in range(3)) > 1.0e-9:
+        return None, "bilateral_counterpart_source_point_mismatch"
+    counterpart_nodes = counterpart_envelope.get("node_local_points_m")
+    vertices = surface.get("vertices")
+    triangles = surface.get("triangles")
+    if (
+        not isinstance(counterpart_nodes, list) or len(counterpart_nodes) != 4
+        or not isinstance(vertices, list) or not isinstance(triangles, list)
+        or not triangles
+    ):
+        return None, "bilateral_counterpart_surface_or_patch_is_malformed"
+
+    source_triangle_indices = surface.get("_source_triangle_indices")
+
+    def nearest_surface_point(
+        point: list[float],
+    ) -> tuple[float, int, list[float], list[float]] | None:
+        nearest: tuple[float, int, list[float], list[float]] | None = None
+        for triangle_index, triangle_indices in enumerate(triangles):
+            triangle = [vertices[index] for index in triangle_indices]
+            closest, barycentric = _tendon_closest_point_on_triangle(point, triangle)
+            squared = sum(
+                (closest[axis] - point[axis]) ** 2 for axis in range(3)
+            )
+            tolerance = max(
+                1.0e-18,
+                1.0e-12 * max(
+                    squared, nearest[0] if nearest is not None else 0.0,
+                ),
+            )
+            if (
+                nearest is None or squared < nearest[0] - tolerance
+                or (
+                    abs(squared - nearest[0]) <= tolerance
+                    and triangle_index < nearest[1]
+                )
+            ):
+                nearest = (squared, triangle_index, closest, barycentric)
+        return nearest
+
+    source_nearest = nearest_surface_point(source_point)
+    if source_nearest is None:
+        return None, "bilateral_counterpart_surface_has_no_triangle"
+    source_squared, source_triangle_index, closest_point, source_barycentric = (
+        source_nearest
+    )
+    surface_distance = math.sqrt(source_squared)
+    if surface_distance > maximum_distance_m:
+        return None, "bilateral_counterpart_surface_distance_exceeds_gate"
+    source_triangle_manifest_index = (
+        int(source_triangle_indices[source_triangle_index])
+        if isinstance(source_triangle_indices, list) else source_triangle_index
+    )
+
+    reflected_nodes = [[
+        local_reflection[axis] * float(node[axis]) for axis in range(3)
+    ] for node in counterpart_nodes]
+    best: tuple[float, dict[str, Any]] | None = None
+    # A one-per-mille inward seed handles independent scan sampling at the
+    # 12 mm boundary without changing that boundary. Larger deterministic
+    # factors remain available if the projected exact points land just beyond
+    # it; the conditioning score still selects the strongest admitted patch.
+    for scale in (1.0, 0.999, 0.998, 0.995, 0.99, 0.98, 0.95):
+        nodes: list[list[float]] = []
+        node_sources: list[dict[str, Any]] = []
+        maximum_projection_distance = 0.0
+        valid = True
+        for reflected in reflected_nodes:
+            target = [
+                closest_point[axis] + scale * (
+                    reflected[axis] - closest_point[axis]
+                )
+                for axis in range(3)
+            ]
+            projected = nearest_surface_point(target)
+            if projected is None:
+                valid = False
+                break
+            squared, triangle_index, node, barycentric = projected
+            nodes.append(node)
+            maximum_projection_distance = max(
+                maximum_projection_distance, math.sqrt(squared),
+            )
+            node_sources.append({
+                "kind": "bilateral_counterpart_projected_triangle_barycentric",
+                "source_triangle_index": (
+                    int(source_triangle_indices[triangle_index])
+                    if isinstance(source_triangle_indices, list)
+                    else triangle_index
+                ),
+                "barycentric": barycentric,
+            })
+        if not valid or any(
+            sum((nodes[left][axis] - nodes[right][axis]) ** 2 for axis in range(3))
+            <= 1.0e-18
+            for left in range(4) for right in range(left)
+        ):
+            continue
+        patch_radius = max(math.sqrt(sum(
+            (node[axis] - closest_point[axis]) ** 2 for axis in range(3)
+        )) for node in nodes)
+        if patch_radius > maximum_patch_radius_m + 1.0e-12:
+            continue
+        mapped = _tendon_envelope_force_maps(
+            source_point, nodes, patch_radius,
+        )
+        if mapped is None:
+            continue
+        maps, metrics = mapped
+        if (
+            metrics["force_residual"] > 2.0e-6
+            or metrics["moment_residual_m"] > 2.0e-8
+            or metrics["sampled_total_force_amplification"]
+                > maximum_force_amplification
+        ):
+            continue
+        score = (
+            metrics["sampled_total_force_amplification"]
+            + 0.05 * metrics["l2_force_amplification"]
+        )
+        record = {
+            "body_index": surface["body_index"],
+            "bone_stable_id": surface["stable_id"],
+            "bone_member_id": surface["member_id"],
+            "source_triangle_index": source_triangle_manifest_index,
+            "nearest_barycentric": source_barycentric,
+            "nearest_local_point_m": closest_point,
+            "resolved_local_point_m": source_point,
+            "node_vertex_indices": [],
+            "node_local_points_m": nodes,
+            "node_surface_sources": node_sources,
+            "surface_patch_method": (
+                "bilateral_counterpart_projected_exact_surface_points"
+            ),
+            "bilateral_counterpart_projection_scale": scale,
+            "bilateral_counterpart_maximum_projection_distance_m": (
+                maximum_projection_distance
+            ),
+            "force_maps": maps,
+            "surface_distance_m": surface_distance,
+            "patch_radius_m": patch_radius,
+            **metrics,
+        }
+        if best is None or score < best[0]:
+            best = (score, record)
+    if best is None:
+        return None, "bilateral_counterpart_projected_patch_failed_unchanged_gates"
+    return best[1], "admitted_bilateral_counterpart_projected_exact_surface_patch"
+
+
 def _numi_human_semantic_enthesis_envelope(
     source_point: list[float], surfaces: list[dict[str, Any]],
     member_ids: tuple[str, ...], maximum_surface_distance_m: float,
@@ -8682,6 +8876,10 @@ def numi_human_tendon_attachment_envelope_payload(
     topology_aware_exact_surface_envelope_count = 0
     disconnected_component_recovery_count = 0
     fixed_metacarpal_cluster_enthesis_count = 0
+    bilateral_counterpart_enthesis_count = 0
+    admitted_endpoint_envelopes: dict[
+        tuple[str, int], dict[str, Any]
+    ] = {}
     for muscle_index, (record, muscle_metadata) in enumerate(zip(muscles, metadata, strict=True)):
         route_offset, count = record[1], record[2]
         name = muscle_metadata.get("name") if isinstance(muscle_metadata, dict) else None
@@ -8881,6 +9079,67 @@ def numi_human_tendon_attachment_envelope_payload(
                     source_point, surfaces[0], maximum_surface_distance_m,
                     maximum_patch_radius_m, maximum_force_amplification,
                 )
+            counterpart_spec = _NUMI_HUMAN_BILATERAL_COUNTERPART_ENTHESES.get(
+                semantic_key
+            )
+            if (
+                envelope is None
+                and counterpart_spec is not None
+                and reason in {
+                    "surface_patch_has_fewer_than_four_exact_surface_points",
+                    "surface_patch_conditioning_failed_after_topology_aware_exact_surface_points",
+                }
+            ):
+                counterpart_key = tuple(counterpart_spec["counterpart"])
+                counterpart = admitted_endpoint_envelopes.get(counterpart_key)
+                if len(surfaces) != 1:
+                    reason = "bilateral_counterpart_target_surface_is_ambiguous"
+                elif surfaces[0].get("member_id") != counterpart_spec["member_id"]:
+                    reason = "bilateral_counterpart_target_member_drifted"
+                elif counterpart is None:
+                    reason = "bilateral_counterpart_endpoint_is_not_admitted"
+                elif counterpart["envelope"].get("bone_member_id") != (
+                    counterpart_spec["counterpart_member_id"]
+                ):
+                    reason = "bilateral_counterpart_source_member_drifted"
+                else:
+                    envelope, reason = (
+                        _numi_human_bilateral_counterpart_surface_envelope(
+                            source_point, surfaces[0],
+                            counterpart["source_point"],
+                            counterpart["envelope"],
+                            counterpart_spec["local_reflection"],
+                            maximum_surface_distance_m,
+                            maximum_patch_radius_m,
+                            maximum_force_amplification,
+                        )
+                    )
+                    if envelope is not None:
+                        envelope["surface_kind"] = (
+                            "registered_bone_bilateral_counterpart_projected_surface"
+                        )
+                        envelope["semantic_enthesis_map"] = {
+                            "kind": (
+                                "bilateral_homologous_exact_surface_projection"
+                            ),
+                            "bone_member_ids": [counterpart_spec["member_id"]],
+                            "node_bone_member_ids": [
+                                counterpart_spec["member_id"]
+                            ] * 4,
+                            "node_bone_stable_ids": [
+                                surfaces[0]["stable_id"]
+                            ] * 4,
+                            "counterpart_muscle": counterpart_key[0],
+                            "counterpart_endpoint_ordinal": counterpart_key[1],
+                            "counterpart_bone_member_id": (
+                                counterpart_spec["counterpart_member_id"]
+                            ),
+                            "local_reflection": list(
+                                counterpart_spec["local_reflection"]
+                            ),
+                            "source_endpoint_migration_m": 0.0,
+                            "target_nodes_projected_to_exact_surface": True,
+                        }
             if envelope is None:
                 rejection_counts[reason] += 1
                 mode = _NUMI_HUMAN_TENDON_POINT
@@ -8945,6 +9204,11 @@ def numi_human_tendon_attachment_envelope_payload(
                         _NUMI_HUMAN_FIXED_METACARPAL_CLUSTER_ENTHESES
                     ):
                         fixed_metacarpal_cluster_enthesis_count += 1
+                    elif semantic_key in (
+                        _NUMI_HUMAN_BILATERAL_COUNTERPART_ENTHESES
+                    ):
+                        semantic_limb_enthesis_count += 1
+                        bilateral_counterpart_enthesis_count += 1
                     else:
                         raise ImportError(
                             f"Numi Human admitted undeclared semantic enthesis {semantic_key}"
@@ -8980,6 +9244,16 @@ def numi_human_tendon_attachment_envelope_payload(
                         surface_manifest["bodyparts_rejection_reason"] = envelope[
                             "bodyparts_rejection_reason"
                         ]
+                for key in (
+                    "bilateral_counterpart_projection_scale",
+                    "bilateral_counterpart_maximum_projection_distance_m",
+                ):
+                    if key in envelope:
+                        surface_manifest[key] = envelope[key]
+                admitted_endpoint_envelopes[semantic_key] = {
+                    "source_point": source_point,
+                    "envelope": envelope,
+                }
             resolved_point = (
                 envelope["resolved_local_point_m"]
                 if envelope is not None and migrate_endpoint else source_point
@@ -9062,6 +9336,7 @@ def numi_human_tendon_attachment_envelope_payload(
                 "with_deterministic_topology_aware_exact_triangle_quadrature_fallback_"
                 "or_explicit_same_body_semantic_member_map_minimum_L2_wrench_distribution_"
                 "or_explicit_fixed_metacarpal_cluster_cross_frame_surface_"
+                "or_explicit_bilateral_counterpart_projected_exact_surface_patch_"
                 "or_exact_pinned_source_component_surface_after_BodyParts_rejection_"
                 "or_separately_typed_exact_anterior_thorax_composite_surface"
             ),
@@ -9081,7 +9356,8 @@ def numi_human_tendon_attachment_envelope_payload(
             "multiple_bone_exception": (
                 "only exact source-pinned toe maps, declared bilateral hip/tibia/fibula/rigid-foot "
                 "route-member maps, source-named thoracic maps, the declared fixed-sibling "
-                "fifth-metacarpal map, and a validated pinned-source "
+                "fifth-metacarpal map, the declared homologous bilateral surface projection, "
+                "and a validated pinned-source "
                 "component receipt with separately typed rib and anterior-thorax composite surfaces are admitted; "
                 "all other multi-bone bodies fail closed"
             ),
@@ -9121,6 +9397,24 @@ def numi_human_tendon_attachment_envelope_payload(
                 }
                 for (muscle, endpoint), member in sorted(
                     _NUMI_HUMAN_FIXED_METACARPAL_CLUSTER_ENTHESES.items()
+                )
+            },
+            "bilateral_counterpart_enthesis_map": {
+                f"{muscle}:{endpoint}": {
+                    "counterpart": (
+                        f"{specification['counterpart'][0]}:"
+                        f"{specification['counterpart'][1]}"
+                    ),
+                    "bone_member_id": specification["member_id"],
+                    "counterpart_bone_member_id": specification[
+                        "counterpart_member_id"
+                    ],
+                    "local_reflection": list(specification["local_reflection"]),
+                    "kind": "bilateral_homologous_exact_surface_projection",
+                    "source_route_site_unchanged": True,
+                }
+                for (muscle, endpoint), specification in sorted(
+                    _NUMI_HUMAN_BILATERAL_COUNTERPART_ENTHESES.items()
                 )
             },
             "source_component_enthesis_map": {
@@ -9179,6 +9473,9 @@ def numi_human_tendon_attachment_envelope_payload(
             "fixed_metacarpal_cluster_enthesis_envelope_count": (
                 fixed_metacarpal_cluster_enthesis_count
             ),
+            "bilateral_counterpart_enthesis_envelope_count": (
+                bilateral_counterpart_enthesis_count
+            ),
             "source_component_enthesis_envelope_count": source_component_enthesis_count,
             "source_component_mechanics_surface_enthesis_envelope_count": (
                 source_component_mechanics_surface_enthesis_count
@@ -9229,6 +9526,11 @@ def numi_human_tendon_attachment_envelope_payload(
             "third-metacarpal route-site frames only after NHRIGID proves both bodies are zero-DoF fixed siblings. "
             "It neither reparents the route nor changes path length, J^T, or force parameters, and must fail if future "
             "source mechanics add relative carpometacarpal motion. "
+            "The left TRImed origin uses the admitted mirrored right-source patch only as a deterministic seed: "
+            "every reflected node is projected back onto the separately scanned exact left BodyParts3D humerus, "
+            "the authored left endpoint remains fixed, and all ordinary distance, radius, force, moment, and "
+            "amplification gates remain unchanged. This is bilateral source correspondence, not subject-specific "
+            "or clinical enthesis registration. "
             "The bilateral EO3 fallback is an exact pinned MyoSim thorax-component mechanics surface admitted only after "
             "the named BodyParts3D rib failed the unchanged distance gate. It is not a BodyParts3D bone, does not move a "
             "rib or endpoint, and is not a deformable cartilage or enthesis material law. "

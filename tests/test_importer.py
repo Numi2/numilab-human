@@ -42,6 +42,7 @@ from numilab_human.model import (
     _NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS,
     _NUMI_HUMAN_AXIAL_ENTHESIS_MEMBERS,
     _NUMI_HUMAN_FIXED_METACARPAL_CLUSTER_ENTHESES,
+    _NUMI_HUMAN_BILATERAL_COUNTERPART_ENTHESES,
     _NUMI_HUMAN_SEMANTIC_ENTHESIS_MEMBERS,
     _NUMI_HUMAN_RIB_ENTHESIS_MEMBER_IDS,
     _NUMI_HUMAN_SOURCE_COMPONENT_ENTHESIS_SCHEMA,
@@ -77,6 +78,7 @@ from numilab_human.model import (
     myosim_part_control_catalog,
     myosim_part_control_plan,
     _numi_human_semantic_enthesis_envelope,
+    _numi_human_bilateral_counterpart_surface_envelope,
     _numi_human_reframe_fixed_cluster_surface,
     _numi_human_tendon_surface_envelope,
     ImportError as HumanImportError,
@@ -499,6 +501,70 @@ class ImporterTests(unittest.TestCase):
         )
         self.assertEqual(repeated_reason, reason)
         self.assertEqual(repeated, envelope)
+
+    def test_bilateral_counterpart_patch_projects_to_exact_target_surface(self) -> None:
+        self.assertEqual(
+            _NUMI_HUMAN_BILATERAL_COUNTERPART_ENTHESES,
+            {
+                ("TRImed_l", 0): {
+                    "counterpart": ("TRImed", 0),
+                    "member_id": "FJ3262",
+                    "counterpart_member_id": "FJ3368",
+                    "local_reflection": (1.0, 1.0, -1.0),
+                },
+            },
+        )
+        surface = {
+            "body_index": 9,
+            "stable_id": 13,
+            "member_id": "FJ3262",
+            "vertices": [
+                [-0.008, -0.008, 0.0],
+                [0.008, -0.008, 0.0],
+                [0.008, 0.008, 0.0],
+                [-0.008, 0.008, 0.0],
+            ],
+            "triangles": [(0, 1, 2), (0, 2, 3)],
+        }
+        source_point = [0.0, 0.0, 0.002]
+        counterpart_source_point = [0.0, 0.0, -0.002]
+        counterpart = {
+            "node_local_points_m": [list(point) for point in surface["vertices"]],
+        }
+        envelope, reason = _numi_human_bilateral_counterpart_surface_envelope(
+            source_point, surface, counterpart_source_point, counterpart,
+            (1.0, 1.0, -1.0), 0.012, 0.012, 4.0,
+        )
+        self.assertEqual(
+            reason,
+            "admitted_bilateral_counterpart_projected_exact_surface_patch",
+        )
+        self.assertIsNotNone(envelope)
+        assert envelope is not None
+        self.assertEqual(envelope["bone_member_id"], "FJ3262")
+        self.assertEqual(envelope["resolved_local_point_m"], source_point)
+        self.assertEqual(
+            envelope["surface_patch_method"],
+            "bilateral_counterpart_projected_exact_surface_points",
+        )
+        self.assertEqual(len(envelope["node_surface_sources"]), 4)
+        self.assertLessEqual(envelope["patch_radius_m"], 0.012)
+        self.assertLessEqual(
+            envelope["sampled_total_force_amplification"], 4.0,
+        )
+        self.assertLessEqual(envelope["force_residual"], 2.0e-6)
+        self.assertLessEqual(envelope["moment_residual_m"], 2.0e-8)
+
+        rejected, rejected_reason = (
+            _numi_human_bilateral_counterpart_surface_envelope(
+                [0.001, 0.0, 0.002], surface, counterpart_source_point,
+                counterpart, (1.0, 1.0, -1.0), 0.012, 0.012, 4.0,
+            )
+        )
+        self.assertIsNone(rejected)
+        self.assertEqual(
+            rejected_reason, "bilateral_counterpart_source_point_mismatch",
+        )
 
     def test_tendon_patch_rejects_nearest_disconnected_scan_fragment(self) -> None:
         surface = {

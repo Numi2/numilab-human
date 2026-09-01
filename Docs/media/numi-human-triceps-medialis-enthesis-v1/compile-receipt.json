@@ -1,0 +1,88 @@
+{
+  "schema": "numilab.human.triceps-medialis-enthesis-compile.v1",
+  "source_base_revision": "48bb878cdc40b87e01f9a1f07fbcda1d04f0d771",
+  "source_model": "pinned_MyoSim_full_body",
+  "result": "passed",
+  "anatomy": {
+    "right_muscle": "TRImed",
+    "right_muscle_index": 227,
+    "right_origin_body_index": 41,
+    "right_origin_bone_member_id": "FJ3368",
+    "right_origin_bone_stable_id": 12,
+    "left_muscle": "TRImed_l",
+    "left_muscle_index": 290,
+    "left_origin_body_index": 91,
+    "left_origin_bone_member_id": "FJ3262",
+    "left_origin_bone_stable_id": 13,
+    "local_reflection": [1.0, 1.0, -1.0],
+    "source_points_are_exact_reflections": true
+  },
+  "method": {
+    "name": "bilateral_homologous_exact_surface_projection",
+    "counterpart_is_seed_only": true,
+    "target_nodes_projected_to_exact_left_surface": true,
+    "source_route_site_unchanged": true,
+    "projection_scale": 0.999,
+    "maximum_projection_distance_m": 0.0003593159843811873,
+    "unchanged_maximum_surface_distance_m": 0.012,
+    "unchanged_patch_radius_range_m": [0.004, 0.012],
+    "unchanged_maximum_sampled_total_force_amplification": 4.0
+  },
+  "left_origin": {
+    "attachment_mode": "registered_bone_distributed_envelope",
+    "admission_reason": "admitted_bilateral_counterpart_projected_exact_surface_patch",
+    "endpoint_migration_m": 0.0,
+    "surface_distance_m": 0.0063765123353056565,
+    "patch_radius_m": 0.01199760061757941,
+    "sampled_total_force_amplification": 3.4521108765816155,
+    "l2_force_amplification": 1.9444176432413562,
+    "force_residual": 1.6059904674447437e-15,
+    "moment_residual_m": 1.24885784005667e-17,
+    "node_count": 4,
+    "all_nodes_have_exact_triangle_barycentric_provenance": true
+  },
+  "right_origin": {
+    "attachment_mode": "registered_bone_distributed_envelope",
+    "endpoint_migration_m": 0.0,
+    "surface_distance_m": 0.006727559920385511,
+    "patch_radius_m": 0.011988322300035919,
+    "sampled_total_force_amplification": 3.61313810946556,
+    "force_residual": 1.0781889047992172e-15,
+    "moment_residual_m": 1.532373164474829e-17,
+    "node_count": 4
+  },
+  "coverage": {
+    "mechanical_endpoint_count": 832,
+    "distributed_surface_envelope_count": 642,
+    "source_site_point_fallback_count": 190,
+    "registered_bone_distributed_envelope_count": 632,
+    "bilateral_counterpart_enthesis_envelope_count": 1,
+    "conditioning_failure_count": 7
+  },
+  "tests": {
+    "command": "PYTHONPATH=src python3 -m unittest tests.test_importer",
+    "run": 107,
+    "passed": 101,
+    "skipped": 6,
+    "failed": 0,
+    "source_point_mismatch_negative_control": "passed"
+  },
+  "artifacts": {
+    "model_py_sha256": "b7a1698bea1c8609ea285019a9613f63971c6be6c6c9033e9a424c59faa6bcca",
+    "test_importer_py_sha256": "e3e9920f96cf684ff507d6982543130173c6e9d6512700dfecfee95f06ad6de4",
+    "nhtendon3_sha256": "72ca0ec4ef53f647784a89f761e78495d4997c7d72cfe6a1d9eedb24dd97feaa",
+    "nhtendon3_bytes": 238288,
+    "tendon_manifest_sha256": "87373b8cfafbb3401d581e72df7ba8a9cfb94371b44d1036c58c20063476cbac",
+    "pack_manifest_sha256": "914aaaf75e216521a04808741600884ed14cd301f876d2b4c39d7cb82c334ca1"
+  },
+  "gates": {
+    "exact_bilateral_source_identity": "passed",
+    "exact_target_bodyparts3d_surface": "passed",
+    "zero_endpoint_migration": "passed",
+    "unchanged_geometric_and_wrench_gates": "passed",
+    "deterministic_recompile": "passed",
+    "source_point_mismatch_rejection": "passed",
+    "full_importer_test_suite": "passed"
+  },
+  "boundary": "Compile-time bilateral triceps medialis exact-surface enthesis admission; not runtime force transfer, deformable tendon, passive elbow tissue, articular contact, or clinical validation."
+}
