@@ -1669,6 +1669,10 @@ class ImporterTests(unittest.TestCase):
             )
             payload = (first / manifest["payload"]["file"]).read_bytes()
         self.assertEqual(payload[:8], b"NHFASC4\0")
+        self.assertEqual(
+            manifest["schema"],
+            "numi.human.thoracoabdominal-myofascia-mechanics-payload.v4",
+        )
         self.assertEqual(manifest["payload"]["sha256"], replay["payload"]["sha256"])
         self.assertEqual(manifest["payload"]["region_count"], 26)
         self.assertGreater(manifest["payload"]["node_count"], 1_000)
@@ -1688,6 +1692,34 @@ class ImporterTests(unittest.TestCase):
             manifest["mechanics"]["thoracolumbar_thickness_m"], 0.00175,
         )
         self.assertGreater(manifest["mechanics"]["total_rest_volume_m3"], 0.0)
+        constitutive = manifest["mechanics"]["constitutive_models"]
+        self.assertEqual(
+            constitutive["all_regions"],
+            "human_myofascia_regional_transverse_isotropic_v1",
+        )
+        self.assertEqual(constitutive["directional_region_count"], 26)
+        self.assertEqual(constitutive["material_object_count"], 12)
+        self.assertEqual(
+            constitutive["object_region_indices"],
+            [
+                [0], [1], [2], [3], [4], [5],
+                [6, 7, 8], [9, 10, 11],
+                [12, 13, 14, 15], [16, 17, 18, 19],
+                [20, 21, 22], [23, 24, 25],
+            ],
+        )
+        self.assertEqual(
+            constitutive["fibre_axis"],
+            "sign_consistent_normalized_mean_of_exact_two_terminal_source_routes_within_one_anatomical_class_and_body_side_in_compiled_reference_pose",
+        )
+        self.assertEqual(
+            constitutive["external_oblique"]["effective_axial_modulus_pa"],
+            41000.0,
+        )
+        self.assertEqual(
+            constitutive["internal_oblique"]["effective_axial_modulus_pa"],
+            53000.0,
+        )
         regions = manifest["mechanics"]["regions"]
         self.assertEqual(
             [region["source_actuator_index"] for region in regions],

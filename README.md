@@ -11,7 +11,7 @@ the native Human execution path.
 | Active full-body mechanics | MyoSim `myofullbody` | 103 source bodies, 416 muscles, native Core reference |
 | Cervical/hyoid mechanics | Mortensen 2018 | complete 72-muscle OpenSim 3 source IR; merge registration remains explicit |
 | Anatomy/visual layers | BodyParts3D 4.0 | named geometry/hierarchy; 185 source bone meshes are pose-bound for native visual inspection |
-| Regional fascia mechanics | BodyParts3D + MyoSim + human fascia literature + Matter | 26 same-command-buffer pectoral, latissimus-aponeurosis, external-oblique, and internal-oblique regions in `NHFASC4`; generated mechanics envelopes remain explicit fallbacks, not source segmentations |
+| Regional fascia mechanics | BodyParts3D + MyoSim + human fascia literature + Matter | 26 same-command-buffer routes in 12 bilateral/class transversely isotropic Matter objects; generated mechanics envelopes remain explicit fallbacks, not source segmentations |
 | Detailed calf visual supplement | Z-Anatomy | four right-calf surfaces plus the matching calcaneus overlay; CC-BY-SA geometry rigidly bound to the existing BodyParts3D/MyoSim `calcn_r` body |
 | Comparative lower-body mechanics | RajagopalLaiUhlrich2023 | retained source-faithful bounded Metal path |
 | Comparative upper extremities | MoBL-ARMS | authenticated bimanual import or pinned public unimanual 4.1 source variant |
@@ -35,8 +35,11 @@ fixed-node reaction return on every accepted step, bitwise replay, and
 rejection rollback in the owning Human command buffer. The 1,202-node /
 2,127-tetrahedron payload owns all fourteen body-7 abdominal terminals while
 keeping the source route as the full-body force authority. Exact BodyParts3D
-external-oblique surfaces remain the visual owner; generated regional sheets,
-the isotropic law, and the 10% share remain bounded mechanics assumptions. See
+external-oblique surfaces remain the visual owner. The live law now follows
+exact terminal-route architecture through six individual pectoral and six
+bilateral/class material frames; generated regional sheets, homogeneous group
+frames, the uncalibrated matrix/fibre split, and the 10% share remain bounded
+mechanics assumptions. See
 [thoracoabdominal myofascia mechanics v4](Docs/THORACOABDOMINAL_MYOFASCIA_V4.md).
 
 The importer preserves upstream records locally. The tracked MyoSim,

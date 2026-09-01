@@ -32,11 +32,18 @@ segmented surface is available. This avoids presenting inferred FEM cells as
 medical anatomy.
 
 Human abdominal architecture and regional fibre direction are supported by
-PMCID `PMC3017737` and PMID `15698694`; the population thickness proxy is from
-PMCID `PMC12276042`. The current Matter law is still an effective isotropic
-10%-ownership reduction. It is not subject-specific anisotropy, a clinical
-segmentation, or validated physiological load sharing. Transversus abdominis
-is not actuated because it is absent from the source MyoSim actuator set.
+PMCID `PMC3017737` and PMID `15698694`; population thickness is from PMCID
+`PMC12276042`. Layer-specific human uniaxial medians from PMCID `PMC10604332`
+anchor external-oblique and internal-oblique axial stiffness. The live Matter
+law is now transversely isotropic: all 26 exact terminal routes are validated,
+then six pectoral objects remain independent while right/left TLF, EO, and IO
+routes share only a same-class, same-side direction, for 12 material objects.
+The grouped axis is a polarity-invariant mean because fibre direction has no
+mechanical sign. This is architecture-directed mechanics, not a spatial
+histology field, independently calibrated matrix/fibre split, subject-specific
+anisotropy, clinical segmentation, or validated physiological load sharing.
+Transversus abdominis is not actuated because it is absent from the source
+MyoSim actuator set.
 
 ## Deterministic payload
 
@@ -55,27 +62,33 @@ every tetrahedron has positive rest volume.
 
 ## Apple M4 Pro qualification
 
-The current-revision four-step selected-oblique run used 10 microsecond coupled
+The directional four-step selected-oblique run used 10 microsecond coupled
 substeps, all 416 MyoSim routes, NHTENDON3, NHEQ1, source foot support, and the
-Numi Matter same-command-buffer adapter. Runtime revision `a06d182` registers
+Numi Matter same-command-buffer adapter. Runtime base revision `a06d182`
+plus the source-hashed directional increment registers
 the machine-readable receipt and inspected frames in
 `docs/media/numi-human-thoracoabdominal-myofascia-live-v1`. It reported:
 
 - 3,328 tendon endpoint transfers, including 2,568 distributed envelopes and
   760 explicit point fallbacks;
 - 70.606 N admitted force across the 26 regions;
-- 11.036 N maximum and 3.700 N minimum per-step fixed-node reaction L1 across
+- 11.044 N final and 3.663 N minimum per-step fixed-node reaction L1 across
   all four audited steps;
-- 0.0752 mm maximum continuum displacement and minimum `J = 0.997698`;
-- 3 FGMRES iterations in the accepted final state;
+- 0.0629 mm maximum continuum displacement and minimum `J = 0.997936`;
+- 5 total FGMRES iterations across the accepted four-step state;
+- exact terminal-axis alignment above 0.999999, sheet alignment above 0.533,
+  and worst grouped-axis/source-route alignment of 0.9656;
 - nonzero Human-state change relative to source `J^T` ownership;
 - bitwise replay and verified downstream-rejection rollback; and
 - Apple M4 Pro ownership for both Metal muscle transfer and Matter FEM.
 
-The matching one-step run reported 70.593 N admitted force, 3.859 N fixed-node
-reaction L1, minimum `J = 0.999075`, bitwise replay, and rollback. Current
+The matching one-step run reported 70.593 N admitted force, 3.790 N fixed-node
+reaction L1, minimum `J = 0.982711`, two FGMRES iterations, bitwise replay,
+and rollback. Existing loader and ownership
 negative controls reject both the older `NHFASC3` payload and a fascia horizon
 that differs from its owning Human transaction before execution.
+The receipt, one/four-step transcripts, negative-control transcripts, and four
+inspected frames are tracked together in the runtime evidence directory.
 
 At 100 microseconds the coarse internal-oblique sheet inverted on the second
 step. The qualified runtime boundary is therefore 10 microsecond substepping;

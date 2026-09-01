@@ -14880,7 +14880,7 @@ def bodyparts_pectoralis_fascia_payload(
     payload_path = output / "bodyparts3d-pectoralis-fascia.nhfascia"
     payload_path.write_bytes(payload)
     manifest = {
-        "schema": "numi.human.thoracoabdominal-myofascia-mechanics-payload.v3",
+        "schema": "numi.human.thoracoabdominal-myofascia-mechanics-payload.v4",
         "payload": {
             "file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
             "magic": "NHFASC4", "payload_abi": _NUMI_HUMAN_PECTORAL_FASCIA_ABI,
@@ -14938,10 +14938,36 @@ def bodyparts_pectoralis_fascia_payload(
             "fixed_node_flag": 1, "muscle_load_node_flag": 2,
             "regions": regions,
             "constitutive_models": {
-                "pectoral_regions": "human_pectoralis_fascia_goh_uniaxial_v1",
-                "latissimus_aponeurosis_regions": "human_thoracolumbar_fascia_effective_isotropic_v1",
-                "external_oblique_regions": "human_anterior_abdominal_wall_composite_effective_v1",
-                "internal_oblique_regions": "human_anterior_abdominal_wall_composite_effective_v1",
+                "all_regions": "human_myofascia_regional_transverse_isotropic_v1",
+                "directional_region_count": len(regions),
+                "material_object_count": 12,
+                "object_region_indices": [
+                    [0], [1], [2], [3], [4], [5],
+                    [6, 7, 8], [9, 10, 11],
+                    [12, 13, 14, 15], [16, 17, 18, 19],
+                    [20, 21, 22], [23, 24, 25],
+                ],
+                "fibre_axis": "sign_consistent_normalized_mean_of_exact_two_terminal_source_routes_within_one_anatomical_class_and_body_side_in_compiled_reference_pose",
+                "pectoral": {
+                    "matrix_shear_pa": 1840.0, "bulk_pa": 500000.0,
+                    "fibre_k1_pa": 10000.0, "fibre_k2": 2.36,
+                    "basis": "published_mean_uniaxial_GOH_fit",
+                },
+                "latissimus_aponeurosis": {
+                    "effective_axial_modulus_pa": 15090000.0,
+                    "matrix_fraction": 0.25, "fibre_fraction": 0.75,
+                    "basis": "ten_percent_of_human_mean_tensile_modulus_with_explicit_directional_split",
+                },
+                "external_oblique": {
+                    "effective_axial_modulus_pa": 41000.0,
+                    "matrix_fraction": 0.25, "fibre_fraction": 0.75,
+                    "basis": "ten_percent_of_human_uniaxial_median_modulus_with_explicit_directional_split",
+                },
+                "internal_oblique": {
+                    "effective_axial_modulus_pa": 53000.0,
+                    "matrix_fraction": 0.25, "fibre_fraction": 0.75,
+                    "basis": "ten_percent_of_human_uniaxial_median_modulus_with_explicit_directional_split",
+                },
             },
         },
         "literature": {
@@ -14969,6 +14995,12 @@ def bodyparts_pectoralis_fascia_payload(
                 "pmid": "15698694",
                 "scope": "human cadaver regional external/internal oblique thickness and fascicle orientation",
             },
+            "abdominal_material": {
+                "pmcid": "PMC10604332",
+                "external_oblique_median_elastic_modulus_pa": 410000.0,
+                "internal_oblique_median_elastic_modulus_pa": 530000.0,
+                "scope": "human uniaxial layer-specific median elastic moduli used as axial population anchors",
+            },
             "abdominal_thickness": {
                 "pmcid": "PMC12276042",
                 "external_oblique_selected_m": 0.0045,
@@ -14976,8 +15008,8 @@ def bodyparts_pectoralis_fascia_payload(
                 "scope": "healthy ultrasound cohort means used as population proxies",
             },
         },
-        "runtime_binding": "The twenty-six named MyoSim pectoralis, latissimus, external-oblique, and internal-oblique terminal loads may contribute only the declared fraction to flagged continuum nodes. Transfer-only execution retains MyoSim J^T. A two-phase Numi Matter consumer may replace, never duplicate, that exact source-terminal J^T fraction with accepted fixed-node continuum reactions projected through the owning body Jacobian.",
-        "evidence_boundary": "BodyParts3D has no separate pectoral-fascia, latissimus/thoracolumbar-fascia, or internal-oblique member in the pinned English part tables. Pectoral mechanics retains exact selected source vertices; exact bilateral BodyParts3D external-oblique surfaces remain anatomical presentation references because they do not segment the four MyoSim slips. Posterior strips retain exact MyoSim P4/P5/P6 centres. Abdominal sheets retain every exact Abdomen-body terminal and non-overlapping source-lattice y cell. Transverse width, outer extrapolation, interpolated subdivision, tetrahedral connectivity, anchor/load bands, population thicknesses, isotropic effective law, and 10% load share are generated research assumptions. Transversus abdominis is not yet actuated by the source model. This is not a clinical segmentation, subject-specific attachment map, biaxial calibration, or physiologically validated whole-body myofascia solve.",
+        "runtime_binding": "The twenty-six named MyoSim pectoralis, latissimus, external-oblique, and internal-oblique terminal loads may contribute only the declared fraction to flagged continuum nodes. Transfer-only execution retains MyoSim J^T. A two-phase Numi Matter consumer may replace, never duplicate, that exact source-terminal J^T fraction with accepted fixed-node continuum reactions projected through the owning body Jacobian. The live runtime keeps six pectoral material objects separate and combines only contiguous same-side routes within each of thoracolumbar fascia, external oblique, and internal oblique, producing twelve material objects. Each homogeneous object axis is the sign-consistent normalized mean of its member routes' exact two-terminal directions in the compiled reference pose; every individual route remains independently loaded and validated.",
+        "evidence_boundary": "BodyParts3D has no separate pectoral-fascia, latissimus/thoracolumbar-fascia, or internal-oblique member in the pinned English part tables. Pectoral mechanics retains exact selected source vertices; exact bilateral BodyParts3D external-oblique surfaces remain anatomical presentation references because they do not segment the four MyoSim slips. Posterior strips retain exact MyoSim P4/P5/P6 centres. Abdominal sheets retain every exact Abdomen-body terminal and non-overlapping source-lattice y cell. Transverse width, outer extrapolation, interpolated subdivision, tetrahedral connectivity, anchor/load bands, population thicknesses, homogeneous bilateral class-level route-axis frames, the 25/75 matrix-fibre split, exponential curvature, and 10% load share are generated research assumptions. Transversus abdominis is not yet actuated by the source model. This is architecture-directed mechanics, not per-tetrahedron histology, biaxial or subject-specific calibration, failure prediction, clinical segmentation, or physiologically validated whole-body myofascia.",
     }
     write_json(output / "bodyparts3d-pectoralis-fascia.manifest.json", manifest)
     return manifest
