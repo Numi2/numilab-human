@@ -55,20 +55,27 @@ every tetrahedron has positive rest volume.
 
 ## Apple M4 Pro qualification
 
-The four-step selected-oblique run used 10 microsecond coupled substeps, all
-416 MyoSim routes, NHTENDON3, NHEQ1, source foot support, and the Numi Matter
-same-command-buffer adapter. It reported:
+The current-revision four-step selected-oblique run used 10 microsecond coupled
+substeps, all 416 MyoSim routes, NHTENDON3, NHEQ1, source foot support, and the
+Numi Matter same-command-buffer adapter. Runtime revision `a06d182` registers
+the machine-readable receipt and inspected frames in
+`docs/media/numi-human-thoracoabdominal-myofascia-live-v1`. It reported:
 
-- 3,328 tendon endpoint transfers, including 2,552 distributed envelopes and
-  776 explicit point fallbacks;
-- 74.968 N admitted force across the 26 regions;
+- 3,328 tendon endpoint transfers, including 2,568 distributed envelopes and
+  760 explicit point fallbacks;
+- 70.606 N admitted force across the 26 regions;
 - 11.036 N maximum and 3.700 N minimum per-step fixed-node reaction L1 across
   all four audited steps;
-- 0.0757 mm maximum continuum displacement and minimum `J = 0.997695`;
+- 0.0752 mm maximum continuum displacement and minimum `J = 0.997698`;
 - 3 FGMRES iterations in the accepted final state;
 - nonzero Human-state change relative to source `J^T` ownership;
 - bitwise replay and verified downstream-rejection rollback; and
 - Apple M4 Pro ownership for both Metal muscle transfer and Matter FEM.
+
+The matching one-step run reported 70.593 N admitted force, 3.859 N fixed-node
+reaction L1, minimum `J = 0.999075`, bitwise replay, and rollback. Current
+negative controls reject both the older `NHFASC3` payload and a fascia horizon
+that differs from its owning Human transaction before execution.
 
 At 100 microseconds the coarse internal-oblique sheet inverted on the second
 step. The qualified runtime boundary is therefore 10 microsecond substepping;

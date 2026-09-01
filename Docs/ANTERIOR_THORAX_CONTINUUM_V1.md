@@ -102,8 +102,11 @@ reaction L1, `0.025625 mm` displacement, and `Jmin = 0.995378`.
 ## Evidence boundary
 
 This closes a bounded two-way mechanics path for seven existing exact
-attachment surfaces. It does not classify component 1 as one biological
-tissue, close the fourteen body-7 abdominal point endpoints, model breathing,
-resolve abdominal-layer sliding/contact, calibrate a subject, or provide
-clinical validation. The generated fixation band, connectivity corridors,
-isotropic material reduction, and 10% share remain explicit assumptions.
+attachment surfaces. This v1 slice does not classify component 1 as one
+biological tissue, model breathing, resolve abdominal-layer sliding/contact,
+calibrate a subject, or provide clinical validation. The generated fixation
+band, connectivity corridors, isotropic material reduction, and 10% share
+remain explicit assumptions. The later `NHFASC4` owner closes the fourteen
+body-7 abdominal terminal transactions at the same bounded evidence level; it
+does not retroactively turn those terminals into bone or make this anterior-
+thorax composite a validated tissue segmentation.
