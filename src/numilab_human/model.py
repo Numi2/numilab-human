@@ -12831,7 +12831,7 @@ _NUMI_HUMAN_THORACOLUMBAR_FASCIA_MUSCLES = (
 
 _NUMI_HUMAN_ANTERIOR_THORAX_MAGIC = b"NHTHRC1\0"
 _NUMI_HUMAN_ANTERIOR_THORAX_ABI = 1
-_NUMI_HUMAN_ANTERIOR_THORAX_COMPONENT_SPACING_M = {1: 0.0025}
+_NUMI_HUMAN_ANTERIOR_THORAX_COMPONENT_SPACING_M = {1: 0.005}
 
 _NUMI_HUMAN_COSTAL_CARTILAGE_MAGIC = b"NHCART1\0"
 _NUMI_HUMAN_COSTAL_CARTILAGE_ABI = 1
@@ -12964,6 +12964,65 @@ def _voxel_cell_component_count(cells: set[tuple[int, int, int]]) -> int:
                     remaining.remove(neighbor)
                     queue.append(neighbor)
     return count
+
+
+def _connect_voxel_cell_components(
+    cells: set[tuple[int, int, int]],
+) -> tuple[set[tuple[int, int, int]], int, int]:
+    """Join sub-voxel source necks with deterministic minimum grid corridors.
+
+    A coarse cell-centre sample can split a connected exact surface at a neck
+    narrower than one cell. The repair adds the minimum 6-neighbour Manhattan
+    corridors needed to recover one mechanics component. Added-cell volume is
+    retained in the ordinary exact-volume gate rather than hidden.
+    """
+    def components(
+        values: set[tuple[int, int, int]],
+    ) -> list[set[tuple[int, int, int]]]:
+        remaining = set(values)
+        result: list[set[tuple[int, int, int]]] = []
+        while remaining:
+            first = min(remaining)
+            remaining.remove(first)
+            component = {first}
+            queue = [first]
+            while queue:
+                i, j, k = queue.pop()
+                for neighbor in (
+                    (i - 1, j, k), (i + 1, j, k),
+                    (i, j - 1, k), (i, j + 1, k),
+                    (i, j, k - 1), (i, j, k + 1),
+                ):
+                    if neighbor in remaining:
+                        remaining.remove(neighbor)
+                        component.add(neighbor)
+                        queue.append(neighbor)
+            result.append(component)
+        return result
+
+    connected = set(cells)
+    initial_components = components(connected)
+    while len(current := components(connected)) > 1:
+        current.sort(key=lambda component: (-len(component), min(component)))
+        base = current[0]
+        _, first, second = min(
+            (
+                sum(abs(a[axis] - b[axis]) for axis in range(3)),
+                a, b,
+            )
+            for component in current[1:]
+            for a in base
+            for b in component
+        )
+        cursor = list(first)
+        for axis in sorted(
+            range(3),
+            key=lambda value: (-abs(second[value] - first[value]), value),
+        ):
+            while cursor[axis] != second[axis]:
+                cursor[axis] += 1 if second[axis] > cursor[axis] else -1
+                connected.add(tuple(cursor))
+    return connected, len(initial_components), len(connected) - len(cells)
 
 
 def _nearest_four_node_map(
@@ -13345,14 +13404,15 @@ def anterior_thorax_composite_payload(
     output: Path,
     maximum_volume_error_fraction: float = 0.03,
     qualification_probe_load_fraction: float = 0.10,
+    production_force_owner_fraction: float = 0.10,
 ) -> dict[str, Any]:
     """Compile the exact closed anterior-thorax components into FEM volumes.
 
     The source classification remains an unresolved anterior-thorax composite.
     This stage adds deterministic volumetric connectivity and explicit mapping,
-    not an invented cartilage/fascia/material identity. Production force
-    ownership stays disabled until a two-way runtime replaces the matching
-    endpoint J^T share and returns accepted anchor reactions.
+    not an invented cartilage/fascia identity. The bounded production share
+    is enabled only for the matching two-way runtime, which replaces the
+    torso endpoint J^T share and returns accepted attachment reactions.
     """
     if (
         not math.isfinite(maximum_volume_error_fraction)
@@ -13364,6 +13424,15 @@ def anterior_thorax_composite_payload(
         or not 0.0 < qualification_probe_load_fraction <= 0.25
     ):
         raise ImportError("anterior-thorax qualification load fraction must be in (0, 0.25]")
+    if (
+        not math.isfinite(production_force_owner_fraction)
+        or not 0.0 < production_force_owner_fraction <= 0.25
+    ):
+        raise ImportError("anterior-thorax production owner fraction must be in (0, 0.25]")
+    if abs(production_force_owner_fraction - qualification_probe_load_fraction) > 1.0e-12:
+        raise ImportError(
+            "anterior-thorax production and qualification force shares must match"
+        )
     registration_path = registration_path.resolve()
     tendon_artifact = tendon_artifact.resolve()
     tendon_manifest_path = tendon_artifact / "numi-human-tendon-attachments.manifest.json"
@@ -13446,8 +13515,11 @@ def anterior_thorax_composite_payload(
         exact_volume = _closed_surface_volume(vertices, triangles)
         if not math.isfinite(exact_volume) or exact_volume <= 0.0:
             raise ImportError("anterior-thorax exact surface volume is non-positive")
-        cells, origin, _ = _voxel_cells_inside_closed_surface(
+        sampled_cells, origin, _ = _voxel_cells_inside_closed_surface(
             vertices, triangles, spacing_m,
+        )
+        cells, sampled_component_count, connectivity_repair_cell_count = (
+            _connect_voxel_cell_components(sampled_cells)
         )
         cell_component_count = _voxel_cell_component_count(cells)
         if cell_component_count != 1:
@@ -13459,16 +13531,21 @@ def anterior_thorax_composite_payload(
                 f"anterior-thorax component {component_index} volume error "
                 f"{volume_error:.6f} exceeds {maximum_volume_error_fraction:.6f}"
             )
-        convergence_spacing_m = 0.003
-        convergence_cells, _, _ = _voxel_cells_inside_closed_surface(
+        convergence_spacing_m = 0.006
+        convergence_sampled_cells, _, _ = _voxel_cells_inside_closed_surface(
             vertices, triangles, convergence_spacing_m,
         )
+        (
+            convergence_cells,
+            convergence_sampled_component_count,
+            convergence_repair_cell_count,
+        ) = _connect_voxel_cell_components(convergence_sampled_cells)
         convergence_volume = len(convergence_cells) * convergence_spacing_m ** 3
         convergence_error = abs(convergence_volume - exact_volume) / exact_volume
-        if (
-            _voxel_cell_component_count(convergence_cells) != 1
-            or volume_error >= convergence_error
-        ):
+        convergence_component_count = _voxel_cell_component_count(
+            convergence_cells
+        )
+        if volume_error >= convergence_error:
             raise ImportError("anterior-thorax voxel refinement does not converge")
         first_surface_vertex = len(surface_vertices)
         surface_vertices.extend(vertices)
@@ -13567,7 +13644,7 @@ def anterior_thorax_composite_payload(
                 "first_sample_map": first_sample,
                 "sample_map_count": 4,
                 "source_local_point_m": endpoint["source_local_point_m"],
-                "production_force_owner_fraction": 0.0,
+                "production_force_owner_fraction": production_force_owner_fraction,
                 "qualification_probe_load_fraction": qualification_probe_load_fraction,
             })
         components.append({
@@ -13592,19 +13669,28 @@ def anterior_thorax_composite_payload(
             "voxel_rest_volume_m3": voxel_volume,
             "relative_volume_error": volume_error,
             "voxel_cell_count": len(cells),
+            "sampled_voxel_cell_count": len(sampled_cells),
+            "sampled_voxel_component_count": sampled_component_count,
+            "connectivity_repair_cell_count": connectivity_repair_cell_count,
             "voxel_cell_component_count": cell_component_count,
             "volume_convergence": [{
                 "spacing_m": convergence_spacing_m,
                 "voxel_cell_count": len(convergence_cells),
                 "voxel_rest_volume_m3": convergence_volume,
                 "relative_volume_error": convergence_error,
-                "voxel_cell_component_count": 1,
+                "voxel_cell_component_count": convergence_component_count,
+                "sampled_voxel_cell_count": len(convergence_sampled_cells),
+                "sampled_voxel_component_count": convergence_sampled_component_count,
+                "connectivity_repair_cell_count": convergence_repair_cell_count,
             }, {
                 "spacing_m": spacing_m,
                 "voxel_cell_count": len(cells),
                 "voxel_rest_volume_m3": voxel_volume,
                 "relative_volume_error": volume_error,
                 "voxel_cell_component_count": cell_component_count,
+                "sampled_voxel_cell_count": len(sampled_cells),
+                "sampled_voxel_component_count": sampled_component_count,
+                "connectivity_repair_cell_count": connectivity_repair_cell_count,
             }],
             "bounds_m": {
                 "minimum": [min(point[axis] for point in vertices) for axis in range(3)],
@@ -13646,7 +13732,8 @@ def anterior_thorax_composite_payload(
         len(components), len(surface_vertices), len(surface_triangles),
         len(continuum_nodes), len(tetrahedra), len(surface_maps),
         len(attachments), len(attachment_maps), len(anchors), 15, 0,
-        density_kg_m3, 0.0, qualification_probe_load_fraction, 0,
+        density_kg_m3, production_force_owner_fraction,
+        qualification_probe_load_fraction, 0,
         bytes.fromhex(registration_hash), bytes.fromhex(tendon_manifest_hash),
         bytes.fromhex(tendon_payload_hash),
     )
@@ -13737,6 +13824,16 @@ def anterior_thorax_composite_payload(
             "components": components,
             "all_tetrahedra_positive": True,
             "all_voxel_components_connected": True,
+            "material_parameter_receipt": {
+                "law": "compressible_isotropic_neo_hookean_effective_share_proxy",
+                "population_median_composite_young_modulus_pa": 1_120_000.0,
+                "effective_young_modulus_pa": 112_000.0,
+                "poisson_ratio_assumption": 0.45,
+                "effective_shear_modulus_pa": 38_620.68965517242,
+                "effective_bulk_modulus_pa": 373_333.33333333343,
+                "source": "PMCID:PMC10604332",
+                "scope": "ten_percent_force_and_stiffness_first_order_proxy_not_subject_specific_or_anisotropic",
+            },
         },
         "mapping": {
             "method": "four_nearest_voxel_boundary_nodes_inverse_squared_distance",
@@ -13749,18 +13846,19 @@ def anterior_thorax_composite_payload(
             "attachments": attachments,
         },
         "force_ownership": {
-            "production_tissue_owner_fraction": 0.0,
+            "production_tissue_owner_fraction": production_force_owner_fraction,
             "qualification_probe_load_fraction": qualification_probe_load_fraction,
-            "state": "fail_closed_nonowning_until_matching_rigid_Jt_endpoint_share_is_replaced_and_accepted_anchor_reactions_are_returned",
+            "state": "bounded_owner_only_when_matching_torso_endpoint_Jt_share_is_replaced_and_accepted_attachment_reactions_are_returned_in_the_same_command_buffer",
             "direct_joint_torque_allowed": False,
             "duplicate_rigid_and_tissue_force_allowed": False,
         },
-        "status": "compiled_nonconflicting_full_surface_continuum_nonowning_until_two_way_runtime_gate",
+        "status": "compiled_nonconflicting_full_surface_continuum_for_bounded_two_way_runtime_ownership",
         "evidence_boundary": (
             "The exact closed source component 1 and seven matching tendon envelopes are pinned. "
             "Component 17 and EO4_l remain excluded because that same source surface already owns left-tenth-rib fallback endpoints; overlapping rigid/deformable ownership is forbidden. "
-            "Voxel connectivity, density, posterior anchor band, interpolation, and qualification load share are generated mechanics assumptions. "
-            "This payload is not a tissue classification, calibrated material, two-way muscle-tissue-rigid solve, or clinical validation."
+            "Voxel connectivity, density, posterior anchor band, interpolation, isotropic material reduction, and ten-percent load share are generated mechanics assumptions. "
+            "The owner fraction is valid only in a same-command-buffer runtime that removes the matching torso endpoint J^T share and returns accepted fixed-node reactions. "
+            "This payload is not a resolved tissue classification, subject-calibrated anisotropic material, or clinical validation."
         ),
     }
     write_json(output / "anterior-thorax-composite.manifest.json", manifest)

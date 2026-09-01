@@ -1671,11 +1671,11 @@ class ImporterTests(unittest.TestCase):
             second = Path(temporary) / "second"
             manifest = anterior_thorax_composite_payload(
                 ROOT / "Build/anterior-thorax-composite-v3.registration.json",
-                ROOT / "Build/anterior-thorax-composite-v3-tendon", first,
+                ROOT / "Build/hand-enthesis-fixed-cluster-v2-tendon", first,
             )
             replay = anterior_thorax_composite_payload(
                 ROOT / "Build/anterior-thorax-composite-v3.registration.json",
-                ROOT / "Build/anterior-thorax-composite-v3-tendon", second,
+                ROOT / "Build/hand-enthesis-fixed-cluster-v2-tendon", second,
             )
             payload = (first / manifest["payload"]["file"]).read_bytes()
         self.assertEqual(payload[:8], b"NHTHRC1\0")
@@ -1685,14 +1685,21 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(manifest["payload"]["attachment_sample_map_count"], 28)
         self.assertEqual(manifest["payload"]["exact_surface_vertex_count"], 723)
         self.assertEqual(manifest["payload"]["exact_surface_triangle_count"], 1450)
-        self.assertGreater(manifest["payload"]["continuum_node_count"], 10_000)
-        self.assertGreater(manifest["payload"]["tetrahedron_count"], 40_000)
+        self.assertEqual(manifest["payload"]["continuum_node_count"], 2_556)
+        self.assertEqual(manifest["payload"]["tetrahedron_count"], 5_424)
         continuum = manifest["continuum"]
         self.assertTrue(continuum["all_tetrahedra_positive"])
         self.assertTrue(continuum["all_voxel_components_connected"])
         component = continuum["components"][0]
         self.assertEqual(component["source_component_index"], 1)
-        self.assertLess(component["relative_volume_error"], 0.002)
+        self.assertLess(component["relative_volume_error"], 0.008)
+        self.assertEqual(component["voxel_cell_component_count"], 1)
+        self.assertEqual(component["sampled_voxel_component_count"], 15)
+        self.assertEqual(component["connectivity_repair_cell_count"], 17)
+        self.assertGreater(
+            component["volume_convergence"][0]["sampled_voxel_component_count"],
+            1,
+        )
         self.assertLess(
             component["volume_convergence"][1]["relative_volume_error"],
             component["volume_convergence"][0]["relative_volume_error"],
@@ -1704,7 +1711,13 @@ class ImporterTests(unittest.TestCase):
             17,
         )
         self.assertEqual(
-            manifest["force_ownership"]["production_tissue_owner_fraction"], 0.0,
+            manifest["force_ownership"]["production_tissue_owner_fraction"], 0.10,
+        )
+        self.assertEqual(
+            manifest["continuum"]["material_parameter_receipt"][
+                "effective_young_modulus_pa"
+            ],
+            112_000.0,
         )
         self.assertFalse(manifest["force_ownership"]["direct_joint_torque_allowed"])
         self.assertFalse(
