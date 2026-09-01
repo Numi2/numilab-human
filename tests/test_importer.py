@@ -645,18 +645,23 @@ class ImporterTests(unittest.TestCase):
         muscles = []
         site_ids: dict[str, int] = {}
         next_site_id = 100
-        node_names = (
-            "EDC5-P4", "EDC5-P6", "EDC5-P7", "EDC5-P8", "EDC5-P9",
-            "EDM-P7", "EDM-P8", "RI5-P3", "LU_RB5-P4", "LU_RB5-P5",
-            "UI_UB5-P4", "UI_UB5-P5",
-        )
-        route_pairs = {
-            "EDC5": ("EDC5-P5", "EDC5-P6"),
-            "EDM": ("EDM-P6", "EDM-P7"),
-            "RI5": ("RI5-P2", "RI5-P3"),
-            "LU_RB5": ("LU_RB5-P3", "LU_RB5-P4"),
-            "UI_UB5": ("UI_UB5-P3", "UI_UB5-P4"),
-        }
+        node_names = set()
+        route_pairs = {}
+        for digit in range(2, 6):
+            node_names.update((
+                f"EDC{digit}-P4", f"EDC{digit}-P6", f"EDC{digit}-P7",
+                f"EDC{digit}-P8", f"EDC{digit}-P9", f"RI{digit}-P3",
+                f"LU_RB{digit}-P4", f"LU_RB{digit}-P5",
+                f"UI_UB{digit}-P4", f"UI_UB{digit}-P5",
+            ))
+            route_pairs.update({
+                f"EDC{digit}": (f"EDC{digit}-P5", f"EDC{digit}-P6"),
+                f"RI{digit}": (f"RI{digit}-P2", f"RI{digit}-P3"),
+                f"LU_RB{digit}": (f"LU_RB{digit}-P3", f"LU_RB{digit}-P4"),
+                f"UI_UB{digit}": (f"UI_UB{digit}-P3", f"UI_UB{digit}-P4"),
+            })
+        node_names.update(("EDM-P7", "EDM-P8"))
+        route_pairs["EDM"] = ("EDM-P6", "EDM-P7")
         for side_index, side in enumerate(("r", "l")):
             body_id = side_index + 1
             bodies.append({
@@ -711,18 +716,22 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(manifest, replay_manifest)
         self.assertEqual(payload, replay_payload)
         self.assertEqual(manifest["counts"], {
-            "hands": 2, "nodes": 24, "elements": 28, "muscle_inputs": 10,
+            "rays": 8, "nodes": 84, "elements": 100, "muscle_inputs": 34,
         })
         header = struct.unpack_from("<8s9I32s", payload)
-        self.assertEqual(header[:10], (b"NHHOOD1\0", 1, 2, 24, 28, 10, 24, 32, 28, 36))
+        self.assertEqual(header[:10], (b"NHHOOD2\0", 2, 8, 84, 100, 34, 32, 32, 28, 36))
         self.assertEqual(header[10].hex(), source_hash)
         self.assertEqual(
-            [entry["source_muscle_name"] for entry in manifest["hands"][1]["muscle_inputs"]],
+            [entry["source_muscle_name"] for entry in manifest["rays"][7]["muscle_inputs"]],
             ["EDC5_l", "EDM_l", "RI5_l", "LU_RB5_l", "UI_UB5_l"],
         )
         self.assertEqual(
-            [entry["target_route_node_index"] for entry in manifest["hands"][0]["muscle_inputs"]],
-            [1, 1, 1, 1, 1],
+            [entry["source_muscle_name"] for entry in manifest["rays"][0]["muscle_inputs"]],
+            ["EDC2", "RI2", "LU_RB2", "UI_UB2"],
+        )
+        self.assertEqual(
+            [entry["target_route_node_index"] for entry in manifest["rays"][0]["muscle_inputs"]],
+            [1, 1, 1, 1],
         )
         drifted_sites = [entry for entry in sites if entry["name"] != "EDC5-P9_l"]
         with self.assertRaisesRegex(HumanImportError, "source site is absent"):

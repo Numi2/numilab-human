@@ -2038,12 +2038,13 @@ _MYOSIM_SUPPORT_CONTACT_ABI = 1
 _MYOSIM_JOINT_EQUALITY_MAGIC = b"NHEQ1\0\0\0"
 _MYOSIM_JOINT_EQUALITY_ABI = 1
 _MYOSIM_JOINT_EQUALITY_RECORD_BYTES = 96
-# Source-posed fifth-ray extensor-hood graph.  The payload keeps exact MyoSim
+# Source-posed non-thumb extensor-hood graphs.  The payload keeps exact MyoSim
 # site/body identities and local COM-frame coordinates separate from the
-# literature-derived collagen topology and material assumptions.
-_MYOSIM_EXTENSOR_HOOD_MAGIC = b"NHHOOD1\0"
-_MYOSIM_EXTENSOR_HOOD_ABI = 1
-_MYOSIM_EXTENSOR_HOOD_HAND_RECORD_BYTES = 24
+# literature-derived collagen topology and material assumptions.  NHHOOD2
+# replaces NHHOOD1's ambiguous hand record with an explicit side/digit ray.
+_MYOSIM_EXTENSOR_HOOD_MAGIC = b"NHHOOD2\0"
+_MYOSIM_EXTENSOR_HOOD_ABI = 2
+_MYOSIM_EXTENSOR_HOOD_RAY_RECORD_BYTES = 32
 _MYOSIM_EXTENSOR_HOOD_NODE_RECORD_BYTES = 32
 _MYOSIM_EXTENSOR_HOOD_ELEMENT_RECORD_BYTES = 28
 _MYOSIM_EXTENSOR_HOOD_INPUT_RECORD_BYTES = 36
@@ -2725,7 +2726,7 @@ def _myosim_extensor_hood_artifact(
     source_body_to_core: dict[int, int],
     source_hash: str,
 ) -> tuple[dict[str, Any], bytes]:
-    """Compile bilateral fifth-ray source sites into an explicit hood graph.
+    """Compile bilateral non-thumb source sites into explicit hood graphs.
 
     MyoSim authors the extrinsic and intrinsic muscle routes but not a
     segmented extensor expansion.  Consequently node initializers and muscle
@@ -2748,57 +2749,69 @@ def _myosim_extensor_hood_artifact(
     if len(muscle_by_name) != len(muscles):
         raise ImportError("MyoSim extensor hood requires unique source muscles")
 
-    # Every graph node starts at an exact named MyoSim route site.  Only the
-    # first three remain body-bound in the static network; the other points
-    # become free sheet junctions initialized from their source pose.
-    node_specs = (
-        ("middle_phalanx_attachment", "EDC5-P8_{side}", True),
-        ("distal_phalanx_attachment", "EDC5-P9_{side}", True),
-        ("sagittal_band_capsule_anchor", "EDC5-P4_{side}", True),
-        ("edc_input", "EDC5-P6_{side}", False),
-        ("radial_interosseous_input", "RI5-P3_{side}", False),
-        ("ulnar_interosseous_input", "UI_UB5-P4_{side}", False),
-        ("lumbrical_input", "LU_RB5-P4_{side}", False),
-        ("medial_band_junction", "EDC5-P7_{side}", False),
-        ("radial_lateral_band", "LU_RB5-P5_{side}", False),
-        ("ulnar_lateral_band", "UI_UB5-P5_{side}", False),
-        ("terminal_tendon_junction", "EDM-P8_{side}", False),
-        ("edm_input", "EDM-P7_{side}", False),
-    )
-    # node A, node B, semantic bundle, E [MPa], A [mm^2], rest scale
-    element_specs = (
+    # Shared non-thumb topology.  Every graph node starts at an exact named
+    # MyoSim route site.  Nodes 0..2 remain body-bound; the remainder are free
+    # sheet junctions initialized from their source pose.  The fifth ray adds
+    # the anatomically specific extensor digiti minimi branch; rays 2..4 join
+    # their lateral bands at EDC-P8 instead of inventing an EDM continuation.
+    common_element_specs = (
         (3, 7, "edc_medial_input", 110.0, 1.0, 0.99),
-        (11, 7, "edm_medial_input", 110.0, 0.6, 0.99),
         (7, 0, "medial_band_attachment", 110.0, 1.0, 0.99),
         (4, 8, "radial_interosseous_lateral_band", 100.0, 0.6, 0.99),
         (6, 8, "lumbrical_lateral_band", 100.0, 0.6, 0.99),
         (5, 9, "ulnar_interosseous_lateral_band", 100.0, 0.6, 0.99),
-        (8, 10, "radial_lateral_to_terminal", 100.0, 0.6, 0.99),
-        (9, 10, "ulnar_lateral_to_terminal", 100.0, 0.6, 0.99),
-        (10, 1, "terminal_tendon_attachment", 100.0, 0.8, 0.99),
         (2, 7, "sagittal_band_anchor", 90.0, 0.3, 0.99),
         (7, 8, "radial_intercrossing_fibre", 90.0, 0.01, 0.95),
         (7, 9, "ulnar_intercrossing_fibre", 90.0, 0.01, 0.95),
         (8, 9, "transverse_intercrossing_fibre", 90.0, 0.01, 0.95),
-        (7, 10, "central_intercrossing_fibre", 90.0, 0.01, 0.95),
-    )
-    # graph node, source muscle, exact target source site.  The immediately
-    # preceding route site supplies the proximal force direction at runtime.
-    input_specs = (
-        (3, "EDC5", "EDC5-P6_{side}"),
-        (11, "EDM", "EDM-P7_{side}"),
-        (4, "RI5", "RI5-P3_{side}"),
-        (6, "LU_RB5", "LU_RB5-P4_{side}"),
-        (5, "UI_UB5", "UI_UB5-P4_{side}"),
     )
 
-    hand_records: list[bytes] = []
+    ray_records: list[bytes] = []
     node_records: list[bytes] = []
     element_records: list[bytes] = []
     input_records: list[bytes] = []
-    hand_manifest: list[dict[str, Any]] = []
-    bilateral_signature: tuple[Any, ...] | None = None
-    for hand_index, side in enumerate(("r", "l")):
+    ray_manifest: list[dict[str, Any]] = []
+    bilateral_signatures: dict[int, tuple[Any, ...]] = {}
+    for side_code, side, digit in (
+        (side_code, side, digit)
+        for side_code, side in enumerate(("r", "l"))
+        for digit in range(2, 6)
+    ):
+        node_specs = [
+            ("middle_phalanx_attachment", f"EDC{digit}-P8_{{side}}", True),
+            ("distal_phalanx_attachment", f"EDC{digit}-P9_{{side}}", True),
+            ("sagittal_band_capsule_anchor", f"EDC{digit}-P4_{{side}}", True),
+            ("edc_input", f"EDC{digit}-P6_{{side}}", False),
+            ("radial_interosseous_input", f"RI{digit}-P3_{{side}}", False),
+            ("ulnar_interosseous_input", f"UI_UB{digit}-P4_{{side}}", False),
+            ("lumbrical_input", f"LU_RB{digit}-P4_{{side}}", False),
+            ("medial_band_junction", f"EDC{digit}-P7_{{side}}", False),
+            ("radial_lateral_band", f"LU_RB{digit}-P5_{{side}}", False),
+            ("ulnar_lateral_band", f"UI_UB{digit}-P5_{{side}}", False),
+        ]
+        element_specs = list(common_element_specs)
+        terminal_node = 0
+        if digit == 5:
+            node_specs.extend([
+                ("terminal_tendon_junction", "EDM-P8_{side}", False),
+                ("edm_input", "EDM-P7_{side}", False),
+            ])
+            terminal_node = 10
+            element_specs.insert(1, (11, 7, "edm_medial_input", 110.0, 0.6, 0.99))
+            element_specs.append((7, 10, "central_intercrossing_fibre", 90.0, 0.01, 0.95))
+        element_specs.extend([
+            (8, terminal_node, "radial_lateral_to_terminal", 100.0, 0.6, 0.99),
+            (9, terminal_node, "ulnar_lateral_to_terminal", 100.0, 0.6, 0.99),
+            (terminal_node, 1, "terminal_tendon_attachment", 100.0, 0.8, 0.99),
+        ])
+        input_specs = [
+            (3, f"EDC{digit}", f"EDC{digit}-P6_{{side}}"),
+            (4, f"RI{digit}", f"RI{digit}-P3_{{side}}"),
+            (6, f"LU_RB{digit}", f"LU_RB{digit}-P4_{{side}}"),
+            (5, f"UI_UB{digit}", f"UI_UB{digit}-P4_{{side}}"),
+        ]
+        if digit == 5:
+            input_specs.insert(1, (11, "EDM", "EDM-P7_{side}"))
         node_offset = len(node_records)
         element_offset = len(element_records)
         input_offset = len(input_records)
@@ -2937,17 +2950,19 @@ def _myosim_extensor_hood_artifact(
             tuple((entry[0], entry[1]) for entry in input_specs),
             tuple(entry[0] for entry in node_specs),
         )
-        if bilateral_signature is None:
-            bilateral_signature = signature
-        elif signature != bilateral_signature:
-            raise ImportError("MyoSim extensor hood bilateral topology drifted")
-        hand_records.append(struct.pack(
-            "<6I", node_offset, len(node_specs), element_offset, len(element_specs),
-            input_offset, len(input_specs),
+        if digit not in bilateral_signatures:
+            bilateral_signatures[digit] = signature
+        elif signature != bilateral_signatures[digit]:
+            raise ImportError(f"MyoSim extensor hood digit {digit} bilateral topology drifted")
+        ray_records.append(struct.pack(
+            "<8I", node_offset, len(node_specs), element_offset, len(element_specs),
+            input_offset, len(input_specs), side_code, digit,
         ))
-        hand_manifest.append({
-            "hand_index": hand_index,
+        ray_manifest.append({
+            "ray_index": len(ray_manifest),
             "side": "right" if side == "r" else "left",
+            "side_code": side_code,
+            "digit": digit,
             "node_offset": node_offset,
             "element_offset": element_offset,
             "input_offset": input_offset,
@@ -2958,19 +2973,19 @@ def _myosim_extensor_hood_artifact(
 
     header = struct.pack(
         "<8s9I32s", _MYOSIM_EXTENSOR_HOOD_MAGIC, _MYOSIM_EXTENSOR_HOOD_ABI,
-        len(hand_records), len(node_records), len(element_records), len(input_records),
-        _MYOSIM_EXTENSOR_HOOD_HAND_RECORD_BYTES,
+        len(ray_records), len(node_records), len(element_records), len(input_records),
+        _MYOSIM_EXTENSOR_HOOD_RAY_RECORD_BYTES,
         _MYOSIM_EXTENSOR_HOOD_NODE_RECORD_BYTES,
         _MYOSIM_EXTENSOR_HOOD_ELEMENT_RECORD_BYTES,
         _MYOSIM_EXTENSOR_HOOD_INPUT_RECORD_BYTES,
         bytes.fromhex(source_hash),
     )
     payload = b"".join([
-        header, *hand_records, *node_records, *element_records, *input_records,
+        header, *ray_records, *node_records, *element_records, *input_records,
     ])
     expected_bytes = (
         struct.calcsize("<8s9I32s")
-        + len(hand_records) * _MYOSIM_EXTENSOR_HOOD_HAND_RECORD_BYTES
+        + len(ray_records) * _MYOSIM_EXTENSOR_HOOD_RAY_RECORD_BYTES
         + len(node_records) * _MYOSIM_EXTENSOR_HOOD_NODE_RECORD_BYTES
         + len(element_records) * _MYOSIM_EXTENSOR_HOOD_ELEMENT_RECORD_BYTES
         + len(input_records) * _MYOSIM_EXTENSOR_HOOD_INPUT_RECORD_BYTES
@@ -2978,12 +2993,12 @@ def _myosim_extensor_hood_artifact(
     if len(payload) != expected_bytes:
         raise ImportError("internal MyoSim extensor hood payload ABI size mismatch")
     return ({
-        "schema": "numi.human.myosim-extensor-hood.v1",
-        "scope": "bilateral fifth-ray source-default extensor expansion",
+        "schema": "numi.human.myosim-extensor-hood.v2",
+        "scope": "bilateral digits 2-5 source-default extensor expansions",
         "source_archive_sha256": source_hash,
-        "hands": hand_manifest,
+        "rays": ray_manifest,
         "counts": {
-            "hands": len(hand_records),
+            "rays": len(ray_records),
             "nodes": len(node_records),
             "elements": len(element_records),
             "muscle_inputs": len(input_records),
