@@ -10,6 +10,12 @@ The Swift bridge and Gate C capture tool expose the same path.
 admission and joint transactions over 0.8 ms per integrated test. It does not
 establish sustained standing, walking or anatomical tissue fidelity.
 
+The later [candidate and support correction](NUMANX_PREDICTOR_CLOSURE.md)
+supersedes this revision's physical candidate relationship. The older
+candidate omitted free Human acceleration before the subsequent Stand step;
+these package/transaction results must not be interpreted as proof of that
+relationship. The corrected stack has its own retained regression evidence.
+
 ## Exact tested stack
 
 The tests ran through `ssh macmini` on Apple M4 Pro, 24 GiB, macOS 26.6 build

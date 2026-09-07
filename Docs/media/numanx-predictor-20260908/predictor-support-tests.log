@@ -1,0 +1,60 @@
+UpdateCTestConfiguration  from :/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Parse Config file:/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Test project /Users/n/MetalRobo-human-completion-build-20260907
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 58
+    Start 58: numanx.integration.fullbody_bridge_prepared_root
+
+58: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_fullbody_bridge_probe
+58: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+58: Test timeout computed to be: 180
+58: mrnx_matter_status code=10 object=0 index=4294967295 fgmres=3 contacts=0 diagnostics=[0.00628072722,0,0,0]
+58: mrnx_human_status code=0 index=4294967295 contacts=0 iterations=12 contact_accel=[0,0,0,8260.17578] factor_assist=[0.0141590917,9.85555363,0,0]
+58: accepted token did not bind the proved Human/Matter state
+58: SUPPORT total_velocity=-1 delta_velocity=-0.25 tangent=2.4 negative_force_derivative=2.39998 fd_error=1.90735e-05
+1/2 Test #58: numanx.integration.fullbody_bridge_prepared_root ...***Failed    2.38 sec
+mrnx_matter_status code=10 object=0 index=4294967295 fgmres=3 contacts=0 diagnostics=[0.00628072722,0,0,0]
+mrnx_human_status code=0 index=4294967295 contacts=0 iterations=12 contact_accel=[0,0,0,8260.17578] factor_assist=[0.0141590917,9.85555363,0,0]
+accepted token did not bind the proved Human/Matter state
+SUPPORT total_velocity=-1 delta_velocity=-0.25 tangent=2.4 negative_force_derivative=2.39998 fd_error=1.90735e-05
+
+test 59
+    Start 59: numanx.integration.fullbody_authored_world
+
+59: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_fullbody_bridge_probe "--authored-world"
+59: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+59: Test timeout computed to be: 180
+59: mrnx_matter_status code=10 object=0 index=4294967295 fgmres=3 contacts=0 diagnostics=[0.00628153095,0,0,0]
+59: mrnx_human_status code=0 index=4294967295 contacts=0 iterations=12 contact_accel=[0,0,0,8260.17578] factor_assist=[0.0141590917,9.85555363,0,0]
+59: accepted token did not bind the proved Human/Matter state
+59: SUPPORT total_velocity=-1 delta_velocity=-0.25 tangent=2.4 negative_force_derivative=2.39998 fd_error=1.90735e-05
+59: numanx_authored_world_admission=pass negative_cases=12 objects=3 attachments=12
+2/2 Test #59: numanx.integration.fullbody_authored_world .........***Failed    1.90 sec
+mrnx_matter_status code=10 object=0 index=4294967295 fgmres=3 contacts=0 diagnostics=[0.00628153095,0,0,0]
+mrnx_human_status code=0 index=4294967295 contacts=0 iterations=12 contact_accel=[0,0,0,8260.17578] factor_assist=[0.0141590917,9.85555363,0,0]
+accepted token did not bind the proved Human/Matter state
+SUPPORT total_velocity=-1 delta_velocity=-0.25 tangent=2.4 negative_force_derivative=2.39998 fd_error=1.90735e-05
+numanx_authored_world_admission=pass negative_cases=12 objects=3 attachments=12
+
+
+0% tests passed, 2 tests failed out of 2
+
+Label Time Summary:
+fullbody    =   4.28 sec*proc (2 tests)
+human       =   4.28 sec*proc (2 tests)
+matter      =   4.28 sec*proc (2 tests)
+metal       =   4.28 sec*proc (2 tests)
+numanx      =   4.28 sec*proc (2 tests)
+physics     =   4.28 sec*proc (2 tests)
+
+Total Test time (real) =   4.28 sec
+
+The following tests FAILED:
+	 58 - numanx.integration.fullbody_bridge_prepared_root (Failed) fullbody human matter metal numanx physics
+	 59 - numanx.integration.fullbody_authored_world (Failed) fullbody human matter metal numanx physics
+Errors while running CTest

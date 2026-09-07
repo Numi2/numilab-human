@@ -53,6 +53,12 @@ transaction. Both legacy and authored worlds pass publication and exact retry
 on macmini; the integrated cases cover only 0.8 ms, and standing/gait remain
 unqualified.
 
+The [candidate and support correction](Docs/NUMANX_PREDICTOR_CLOSURE.md)
+now makes Matter use the same free Human motion as Stand, fixes the support
+Newton term, and preserves one accepted history through each solve. Nine
+native regressions and both Brain integration cases pass on macmini. Source
+joint equalities and sustained standing/walking remain open.
+
 The importer preserves upstream records locally. The tracked MyoSim,
 BodyParts3D, and explicitly marked Z-Anatomy validation media are attributed
 derivatives; all other raw or derived source artifacts remain local. See

@@ -1,0 +1,85 @@
+UpdateCTestConfiguration  from :/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Parse Config file:/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Test project /Users/n/MetalRobo-human-completion-build-20260907
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 54
+    Start 54: numanx.integration.human_matter_exact_candidate
+
+54: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_human_matter_candidate_probe "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib"
+54: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+54: Test timeout computed to be: 180
+54: PREDICTOR source_acceleration_dv=0.00980994 q_closure=0 v_closure=0
+54: PASS device="Apple M4 Pro" dofs=160 q=161 exact_candidate=generic_analytic nonlinear_fd=passed malformed=fail_closed alias=fail_closed point_world=materialized body_only=accepted A0=frozen
+1/4 Test #54: numanx.integration.human_matter_exact_candidate ....   Passed    1.37 sec
+test 55
+    Start 55: numanx.integration.human_matter_adapter
+
+55: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_human_matter_adapter_probe
+55: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+55: Test timeout computed to be: 180
+55: numanx_human_matter_adapter_probe=pass
+55: matter_runtime=real_attached
+55: control_step=37_nonzero_and_mismatch_rejected
+55: callback_operations=all_four_exact_host_gated
+55: reaction_consumption=exactly_once
+55: heap_alias=distinct_object_overlap_rejected
+55: cross_slot_authority=lease_and_physical_alias_rejected
+55: first_command_abort=runtime_cancel_and_slot_reuse
+55: command_buffer_address_reuse=admitted_by_live_apply
+55: prepared_accept=canonical_token_fnv_reserved_zero
+55: prepared_reject=human_matter_byte_restore
+55: physical_reject=zero_gate_exact_code_and_restore
+55: final_abort_retry=pass
+55: replay_and_prior_token_stability=pass
+55: terminal_pending=no_touch_quarantine
+55: slot_reuse=resolved_generation_only
+55: owner_adapter_matter=integrated_force_reject
+2/4 Test #55: numanx.integration.human_matter_adapter ............   Passed    4.12 sec
+test 58
+    Start 58: numanx.integration.fullbody_bridge_prepared_root
+
+58: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_fullbody_bridge_probe
+58: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+58: Test timeout computed to be: 180
+58: accepted token did not bind the proved Human/Matter state
+3/4 Test #58: numanx.integration.fullbody_bridge_prepared_root ...***Failed    2.31 sec
+accepted token did not bind the proved Human/Matter state
+
+test 59
+    Start 59: numanx.integration.fullbody_authored_world
+
+59: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_fullbody_bridge_probe "--authored-world"
+59: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+59: Test timeout computed to be: 180
+59: accepted token did not bind the proved Human/Matter state
+59: numanx_authored_world_admission=pass negative_cases=12 objects=3 attachments=12
+4/4 Test #59: numanx.integration.fullbody_authored_world .........***Failed    1.98 sec
+accepted token did not bind the proved Human/Matter state
+numanx_authored_world_admission=pass negative_cases=12 objects=3 attachments=12
+
+
+The following tests passed:
+	numanx.integration.human_matter_exact_candidate
+	numanx.integration.human_matter_adapter
+
+50% tests passed, 2 tests failed out of 4
+
+Label Time Summary:
+fullbody    =   4.29 sec*proc (2 tests)
+human       =   9.79 sec*proc (4 tests)
+matter      =   4.29 sec*proc (2 tests)
+metal       =   9.79 sec*proc (4 tests)
+numanx      =   9.79 sec*proc (4 tests)
+physics     =   9.79 sec*proc (4 tests)
+
+Total Test time (real) =   9.79 sec
+
+The following tests FAILED:
+	 58 - numanx.integration.fullbody_bridge_prepared_root (Failed) fullbody human matter metal numanx physics
+	 59 - numanx.integration.fullbody_authored_world (Failed) fullbody human matter metal numanx physics
+Errors while running CTest

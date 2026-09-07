@@ -1,0 +1,38 @@
+UpdateCTestConfiguration  from :/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Parse Config file:/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Test project /Users/n/MetalRobo-human-completion-build-20260907
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 12
+    Start 12: matter.physics.mixed_mpm_fem
+
+12: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe "--mixed"
+12: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+12: Test timeout computed to be: 180
+12: {"schema":"numi.matter.physics-probe.v3","representation":"mixed_mpm_fem","fgmres_iterations":2,"completed_microsteps":4,"minimum_J":1}
+1/2 Test #12: matter.physics.mixed_mpm_fem .............   Passed    0.80 sec
+test 13
+    Start 13: matter.physics.monolithic_multiphysics
+
+13: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe "--multiphysics"
+13: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+13: Test timeout computed to be: 180
+13: {"schema":"numi.matter.physics-probe.v2","representation":"monolithic_multiphysics","temperature_min":300,"temperature_max":354.956,"electric_max":1,"activation_max":0.0427246,"kkt_residual":3.00321e-05,"relative_correction":0,"volume_residual":2.07567e-07,"pressure_residual":4.15134e-07,"transport_residual":1.93967e-06}
+2/2 Test #13: matter.physics.monolithic_multiphysics ...   Passed    0.08 sec
+
+The following tests passed:
+	matter.physics.mixed_mpm_fem
+	matter.physics.monolithic_multiphysics
+
+100% tests passed out of 2
+
+Label Time Summary:
+matter     =   0.88 sec*proc (2 tests)
+metal      =   0.88 sec*proc (2 tests)
+physics    =   0.88 sec*proc (2 tests)
+
+Total Test time (real) =   0.88 sec

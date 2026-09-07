@@ -1,0 +1,142 @@
+UpdateCTestConfiguration  from :/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Parse Config file:/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Test project /Users/n/MetalRobo-human-completion-build-20260907
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 52
+    Start 52: numanx.integration.human_matter_owner_transaction
+
+52: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_human_matter_owner_probe "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib"
+52: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+52: Test timeout computed to be: 180
+52: PASS device=Apple M4 Pro dofs=160 q=161 factor=A0_M_armature_hD_byte_exact reaction=prestand_once accept=physical_prepared_quarantined reject=restored replay=byte_identical duplicate_consume=fail_closed
+1/7 Test #52: numanx.integration.human_matter_owner_transaction ....   Passed    1.01 sec
+test 53
+    Start 53: numanx.integration.human_matter_owner_v4
+
+53: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_human_matter_v4_probe "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib"
+53: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+53: Test timeout computed to be: 180
+53: PASS device="Apple M4 Pro" abi=4 control_step=37 dofs=160 q=161 proposal=mutation_free proposal_completion=pre_post_abort_reentry_drop preflight_ack=bound apply=matter_then_human accept=quarantined_then_published human_io=post_physical_bound_delayed_publish physical_reject=zero_gate_exact_code physical_plus_force=physical_precedence prepared_force_reject=exact_code brain_reject=zero_gate_exact_code invalid_brain_witness=brain_reject_exact_code token_mismatch=zero_gate_exact_code reject=byte_restored stale_ack=fail_closed malformed_release=terminal_no_touch root_published=stamped replay=byte_identical
+2/7 Test #53: numanx.integration.human_matter_owner_v4 .............   Passed    2.00 sec
+test 54
+    Start 54: numanx.integration.human_matter_exact_candidate
+
+54: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_human_matter_candidate_probe "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib"
+54: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+54: Test timeout computed to be: 180
+54: PREDICTOR source_acceleration_dv=0.00980994 q_closure=0 v_closure=0 legacy_q_mismatch=9.89437e-06
+54: PASS device="Apple M4 Pro" dofs=160 q=161 exact_candidate=generic_analytic nonlinear_fd=passed malformed=fail_closed alias=fail_closed point_world=materialized body_only=accepted A0=frozen
+3/7 Test #54: numanx.integration.human_matter_exact_candidate ......   Passed    0.75 sec
+test 55
+    Start 55: numanx.integration.human_matter_adapter
+
+55: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_human_matter_adapter_probe
+55: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+55: Test timeout computed to be: 180
+55: numanx_human_matter_adapter_probe=pass
+55: matter_runtime=real_attached
+55: control_step=37_nonzero_and_mismatch_rejected
+55: callback_operations=all_four_exact_host_gated
+55: reaction_consumption=exactly_once
+55: heap_alias=distinct_object_overlap_rejected
+55: cross_slot_authority=lease_and_physical_alias_rejected
+55: first_command_abort=runtime_cancel_and_slot_reuse
+55: command_buffer_address_reuse=admitted_by_live_apply
+55: prepared_accept=canonical_token_fnv_reserved_zero
+55: prepared_reject=human_matter_byte_restore
+55: physical_reject=zero_gate_exact_code_and_restore
+55: final_abort_retry=pass
+55: replay_and_prior_token_stability=pass
+55: terminal_pending=no_touch_quarantine
+55: slot_reuse=resolved_generation_only
+55: owner_adapter_matter=integrated_force_reject
+4/7 Test #55: numanx.integration.human_matter_adapter ..............   Passed    4.07 sec
+test 57
+    Start 57: numanx.integration.human_matter_attachment_runtime
+Could not find executable /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_matter_attachment_runtime_probe
+Looked in the following places:
+/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_matter_attachment_runtime_probe
+/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_matter_attachment_runtime_probe
+/Users/n/MetalRobo-human-completion-build-20260907/bin/Release/metalrobo_numanx_matter_attachment_runtime_probe
+/Users/n/MetalRobo-human-completion-build-20260907/bin/Release/metalrobo_numanx_matter_attachment_runtime_probe
+/Users/n/MetalRobo-human-completion-build-20260907/bin/Debug/metalrobo_numanx_matter_attachment_runtime_probe
+/Users/n/MetalRobo-human-completion-build-20260907/bin/Debug/metalrobo_numanx_matter_attachment_runtime_probe
+/Users/n/MetalRobo-human-completion-build-20260907/bin/MinSizeRel/metalrobo_numanx_matter_attachment_runtime_probe
+/Users/n/MetalRobo-human-completion-build-20260907/bin/MinSizeRel/metalrobo_numanx_matter_attachment_runtime_probe
+/Users/n/MetalRobo-human-completion-build-20260907/bin/RelWithDebInfo/metalrobo_numanx_matter_attachment_runtime_probe
+/Users/n/MetalRobo-human-completion-build-20260907/bin/RelWithDebInfo/metalrobo_numanx_matter_attachment_runtime_probe
+/Users/n/MetalRobo-human-completion-build-20260907/bin/Deployment/metalrobo_numanx_matter_attachment_runtime_probe
+/Users/n/MetalRobo-human-completion-build-20260907/bin/Deployment/metalrobo_numanx_matter_attachment_runtime_probe
+/Users/n/MetalRobo-human-completion-build-20260907/bin/Development/metalrobo_numanx_matter_attachment_runtime_probe
+/Users/n/MetalRobo-human-completion-build-20260907/bin/Development/metalrobo_numanx_matter_attachment_runtime_probe
+Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_matter_attachment_runtime_probe
+Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_matter_attachment_runtime_probe
+Users/n/MetalRobo-human-completion-build-20260907/bin/Release/metalrobo_numanx_matter_attachment_runtime_probe
+Users/n/MetalRobo-human-completion-build-20260907/bin/Release/metalrobo_numanx_matter_attachment_runtime_probe
+Users/n/MetalRobo-human-completion-build-20260907/bin/Debug/metalrobo_numanx_matter_attachment_runtime_probe
+Users/n/MetalRobo-human-completion-build-20260907/bin/Debug/metalrobo_numanx_matter_attachment_runtime_probe
+Users/n/MetalRobo-human-completion-build-20260907/bin/MinSizeRel/metalrobo_numanx_matter_attachment_runtime_probe
+Users/n/MetalRobo-human-completion-build-20260907/bin/MinSizeRel/metalrobo_numanx_matter_attachment_runtime_probe
+Users/n/MetalRobo-human-completion-build-20260907/bin/RelWithDebInfo/metalrobo_numanx_matter_attachment_runtime_probe
+Users/n/MetalRobo-human-completion-build-20260907/bin/RelWithDebInfo/metalrobo_numanx_matter_attachment_runtime_probe
+Users/n/MetalRobo-human-completion-build-20260907/bin/Deployment/metalrobo_numanx_matter_attachment_runtime_probe
+Users/n/MetalRobo-human-completion-build-20260907/bin/Deployment/metalrobo_numanx_matter_attachment_runtime_probe
+Users/n/MetalRobo-human-completion-build-20260907/bin/Development/metalrobo_numanx_matter_attachment_runtime_probe
+Users/n/MetalRobo-human-completion-build-20260907/bin/Development/metalrobo_numanx_matter_attachment_runtime_probe
+
+57: Test command: 
+57: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+Unable to find executable: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_matter_attachment_runtime_probe
+5/7 Test #57: numanx.integration.human_matter_attachment_runtime ...***Not Run   0.00 sec
+test 58
+    Start 58: numanx.integration.fullbody_bridge_prepared_root
+
+58: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_fullbody_bridge_probe
+58: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+58: Test timeout computed to be: 180
+58: mrnx_matter_status code=0 object=4294967295 index=4294967295 fgmres=3 contacts=0 diagnostics=[1,0,0,0]
+58: mrnx_human_status code=0 index=4294967295 contacts=0 iterations=12 contact_accel=[0,0,0,8260.2373] factor_assist=[0.0141590917,9.85555363,0,0]
+58: SUPPORT total_velocity=-1 delta_velocity=-0.25 tangent=2.4 negative_force_derivative=2.39998 fd_error=1.90735e-05
+58: numanx_fullbody_bridge_probe=pass bodies=157 nq=129 nv=128 muscles=416 motor_wait=ordered physical=prepared sensor=unpublished timeout=quarantined
+6/7 Test #58: numanx.integration.fullbody_bridge_prepared_root .....   Passed    2.23 sec
+test 59
+    Start 59: numanx.integration.fullbody_authored_world
+
+59: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_fullbody_bridge_probe "--authored-world"
+59: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+59: Test timeout computed to be: 180
+59: mrnx_matter_status code=0 object=4294967295 index=4294967295 fgmres=3 contacts=0 diagnostics=[0.999998629,0,0,0]
+59: mrnx_human_status code=0 index=4294967295 contacts=0 iterations=12 contact_accel=[0,0,0,8260.2373] factor_assist=[0.0141590917,9.85555363,0,0]
+59: SUPPORT total_velocity=-1 delta_velocity=-0.25 tangent=2.4 negative_force_derivative=2.39998 fd_error=1.90735e-05
+59: numanx_authored_world_admission=pass negative_cases=12 objects=3 attachments=12
+59: numanx_fullbody_bridge_probe=pass bodies=157 nq=129 nv=128 muscles=416 motor_wait=ordered physical=prepared sensor=unpublished timeout=quarantined
+7/7 Test #59: numanx.integration.fullbody_authored_world ...........   Passed    1.91 sec
+
+The following tests passed:
+	numanx.integration.human_matter_owner_transaction
+	numanx.integration.human_matter_owner_v4
+	numanx.integration.human_matter_exact_candidate
+	numanx.integration.human_matter_adapter
+	numanx.integration.fullbody_bridge_prepared_root
+	numanx.integration.fullbody_authored_world
+
+86% tests passed, 1 tests failed out of 7
+
+Label Time Summary:
+fullbody    =   4.14 sec*proc (2 tests)
+human       =  11.97 sec*proc (7 tests)
+matter      =   4.14 sec*proc (2 tests)
+metal       =  11.97 sec*proc (7 tests)
+numanx      =  11.97 sec*proc (7 tests)
+physics     =  11.97 sec*proc (7 tests)
+
+Total Test time (real) =  11.97 sec
+
+The following tests FAILED:
+	 57 - numanx.integration.human_matter_attachment_runtime (Not Run) human metal numanx physics
+Errors while running CTest
