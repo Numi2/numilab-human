@@ -2035,9 +2035,6 @@ _MYOSIM_PASSIVE_FIT_WEIGHT = 1024.0
 # not BodyParts3D collision proxies.
 _MYOSIM_SUPPORT_CONTACT_MAGIC = b"NHCNT1\0\0"
 _MYOSIM_SUPPORT_CONTACT_ABI = 1
-_MYOSIM_JOINT_EQUALITY_MAGIC = b"NHEQ1\0\0\0"
-_MYOSIM_JOINT_EQUALITY_ABI = 1
-_MYOSIM_JOINT_EQUALITY_RECORD_BYTES = 96
 # Source-posed non-thumb extensor-hood graphs.  The payload keeps exact MyoSim
 # site/body identities and local COM-frame coordinates separate from the
 # literature-derived collagen topology and material assumptions.  NHHOOD2
@@ -3016,9 +3013,154 @@ def _myosim_extensor_hood_artifact(
     }, payload)
 
 
+def _myosim_joint_equality_artifacts(
+    source: dict[str, Any], model: dict[str, Any],
+    joint_equalities: list[dict[str, Any]],
+    source_joint_to_core: dict[int, dict[str, Any]], nq: int, nv: int,
+    *, legacy_projection: bool = False,
+) -> tuple[list[dict[str, Any]], bytes, int]:
+    """Preserve legacy rows or compile pinned source compliance with NHEQ2.
+
+    Policy 1 is the MuJoCo 3.12.0 frozen scalar acceleration law. Its regularizer
+    uses the compiled source DoF inverse weights, not an inferred mass diagonal.
+    """
+    source_hash = source["archive_sha256"]
+    policy = model.get("joint_equality_solver")
+    abi, record_bytes, policy_id, flags = 1, 96, 0, 0
+    if policy is not None:
+        if (
+            not isinstance(policy, dict)
+            or policy.get("schema") != "numi.human.mujoco-scalar-equality-solver.v1"
+            or source.get("mujoco_version") != "3.12.0"
+            or policy.get("mujoco_version") != "3.12.0"
+            or policy.get("integrator") != "Euler"
+            or type(policy.get("refsafe")) is not bool
+            or policy.get("diagexact") is not False
+        ):
+            raise ImportError("NHEQ2 requires pinned MuJoCo 3.12.0 scalar equality solver metadata")
+        if not legacy_projection:
+            abi, record_bytes, policy_id = 2, 112, 1
+            flags = int(policy["refsafe"])
+    elif any(isinstance(row, dict) and (
+        "dependent_dof_invweight0" in row or "master_dof_invweight0" in row
+    ) for row in joint_equalities):
+        raise ImportError("MyoSim equality inverse weights require NHEQ2 solver metadata")
+    equality_records: list[bytes] = []
+    equality_manifest: list[dict[str, Any]] = []
+    for equality in joint_equalities:
+        if not isinstance(equality, dict):
+            raise ImportError("MyoSim joint equality record is malformed")
+        source_dependent = equality.get("dependent_joint")
+        source_master = equality.get("master_joint")
+        dependent = source_joint_to_core.get(source_dependent)
+        master = source_joint_to_core.get(source_master) if source_master != -1 else None
+        if dependent is None or (source_master != -1 and master is None):
+            raise ImportError("MyoSim joint equality has an unresolved Core coordinate")
+        coefficients = equality.get("polycoef")
+        solref = equality.get("solref")
+        solimp = equality.get("solimp")
+        if not isinstance(coefficients, list) or len(coefficients) != 5:
+            raise ImportError("MyoSim joint equality polynomial is malformed")
+        if not isinstance(solref, list) or len(solref) != 2:
+            raise ImportError("MyoSim joint equality solref is malformed")
+        if not isinstance(solimp, list) or len(solimp) != 5:
+            raise ImportError("MyoSim joint equality solimp is malformed")
+        dependent_q = int(dependent["core_q_index"])
+        dependent_v = int(dependent["core_v_index"])
+        master_q = 0xFFFFFFFF if master is None else int(master["core_q_index"])
+        master_v = 0xFFFFFFFF if master is None else int(master["core_v_index"])
+        references_and_coefficients0 = [
+            _finite_scalar(equality.get("dependent_reference"), "MyoSim equality dependent reference"),
+            _finite_scalar(equality.get("master_reference"), "MyoSim equality master reference"),
+            *[_finite_scalar(value, "MyoSim equality coefficient") for value in coefficients[:2]],
+        ]
+        coefficients1 = [
+            *[_finite_scalar(value, "MyoSim equality coefficient") for value in coefficients[2:]],
+            0.0,
+        ]
+        equality_records.append(struct.pack(
+            "<4I20f",
+            dependent_q, dependent_v, master_q, master_v,
+            *references_and_coefficients0,
+            *coefficients1,
+            *[_finite_scalar(value, "MyoSim equality solref") for value in solref], 0.0, 0.0,
+            *[_finite_scalar(value, "MyoSim equality solimp") for value in solimp[:4]],
+            _finite_scalar(solimp[4], "MyoSim equality solimp"), 0.0, 0.0, 0.0,
+        ))
+        inverse_weights: dict[str, float] = {}
+        if abi == 2:
+            for key in ("dependent_dof_invweight0", "master_dof_invweight0"):
+                weight = _finite_scalar(equality.get(key), f"MyoSim equality {key}")
+                if weight < 0.0 or (key == "master_dof_invweight0" and master is None and weight != 0.0):
+                    raise ImportError(f"MyoSim equality {key} is invalid")
+                try:
+                    packed_weight = struct.pack("<f", weight)
+                except (OverflowError, struct.error) as error:
+                    raise ImportError(f"MyoSim equality {key} is not representable in FP32") from error
+                if weight != 0.0 and struct.unpack("<f", packed_weight)[0] < 1.1754943508222875e-38:
+                    raise ImportError(f"MyoSim equality {key} is not a normal FP32 value")
+                inverse_weights[key] = weight
+            if sum(inverse_weights.values()) <= 0.0:
+                raise ImportError("MyoSim equality has zero source inverse weight")
+            equality_records[-1] += struct.pack("<4f", *inverse_weights.values(), 0.0, 0.0)
+        equality_manifest.append({
+            **inverse_weights,
+            "source_equality_id": equality.get("id"),
+            "name": equality.get("name"),
+            "dependent_source_joint": source_dependent,
+            "dependent_name": dependent["source_name"],
+            "dependent_core_q": dependent_q,
+            "dependent_core_v": dependent_v,
+            "master_source_joint": source_master,
+            "master_name": None if master is None else master["source_name"],
+            "master_core_q": None if master is None else master_q,
+            "master_core_v": None if master is None else master_v,
+            "dependent_reference": references_and_coefficients0[0],
+            "master_reference": references_and_coefficients0[1],
+            "polycoef": [float(value) for value in coefficients],
+            "solref": [float(value) for value in solref],
+            "solimp": [float(value) for value in solimp],
+        })
+    if len(equality_records) != len(joint_equalities):
+        raise ImportError("MyoSim joint equality lowering is incomplete")
+    equality_header = struct.pack(
+        "<8s10I32s",
+        b"NHEQ2\0\0\0" if abi == 2 else b"NHEQ1\0\0\0", abi,
+        nq, nv, len(equality_records), record_bytes,
+        len(joint_equalities), policy_id, flags, 0, 0, bytes.fromhex(source_hash),
+    )
+    equality_payload = b"".join([equality_header, *equality_records])
+    if len(equality_payload) != 80 + record_bytes * len(equality_records):
+        raise ImportError("internal MyoSim joint equality payload ABI size mismatch")
+    return equality_manifest, equality_payload, abi
+
+
+def _myosim_joint_equality_bundle(
+    source: dict[str, Any], model: dict[str, Any],
+    joint_equalities: list[dict[str, Any]],
+    source_joint_to_core: dict[int, dict[str, Any]], nq: int, nv: int,
+) -> tuple[list[dict[str, Any]], bytes, bytes | None]:
+    """Compile explicit legacy projection and source-compliance artifacts.
+
+    NHEQ2 is never reinterpreted by a legacy runtime. The source importer emits
+    a separate NHEQ1 program for those existing projection tools and retains
+    the source compliance program under its own filename and typed descriptor.
+    """
+    rows, payload, abi = _myosim_joint_equality_artifacts(
+        source, model, joint_equalities, source_joint_to_core, nq, nv
+    )
+    if abi == 1:
+        return rows, payload, None
+    _, legacy, _ = _myosim_joint_equality_artifacts(
+        source, model, joint_equalities, source_joint_to_core, nq, nv,
+        legacy_projection=True,
+    )
+    return rows, legacy, payload
+
+
 def myosim_fullbody_reference_artifacts(
     exported: dict[str, Any],
-) -> tuple[dict[str, Any], bytes, bytes, bytes, bytes, bytes]:
+) -> tuple[dict[str, Any], bytes, bytes, bytes, bytes, bytes, bytes | None]:
     """Lower MyoSim's compiled full body into Core rigid and muscle payloads.
 
     The source uses a MuJoCo free root and several multiple-joint bodies.  A
@@ -3301,76 +3443,9 @@ def myosim_fullbody_reference_artifacts(
     source_joint_to_core = {
         int(record["source_joint_id"]): record for record in source_joint_map
     }
-    equality_records: list[bytes] = []
-    equality_manifest: list[dict[str, Any]] = []
-    for equality in joint_equalities:
-        if not isinstance(equality, dict):
-            raise ImportError("MyoSim joint equality record is malformed")
-        source_dependent = equality.get("dependent_joint")
-        source_master = equality.get("master_joint")
-        dependent = source_joint_to_core.get(source_dependent)
-        master = source_joint_to_core.get(source_master) if source_master != -1 else None
-        if dependent is None or (source_master != -1 and master is None):
-            raise ImportError("MyoSim joint equality has an unresolved Core coordinate")
-        coefficients = equality.get("polycoef")
-        solref = equality.get("solref")
-        solimp = equality.get("solimp")
-        if not isinstance(coefficients, list) or len(coefficients) != 5:
-            raise ImportError("MyoSim joint equality polynomial is malformed")
-        if not isinstance(solref, list) or len(solref) != 2:
-            raise ImportError("MyoSim joint equality solref is malformed")
-        if not isinstance(solimp, list) or len(solimp) != 5:
-            raise ImportError("MyoSim joint equality solimp is malformed")
-        dependent_q = int(dependent["core_q_index"])
-        dependent_v = int(dependent["core_v_index"])
-        master_q = 0xFFFFFFFF if master is None else int(master["core_q_index"])
-        master_v = 0xFFFFFFFF if master is None else int(master["core_v_index"])
-        references_and_coefficients0 = [
-            _finite_scalar(equality.get("dependent_reference"), "MyoSim equality dependent reference"),
-            _finite_scalar(equality.get("master_reference"), "MyoSim equality master reference"),
-            *[_finite_scalar(value, "MyoSim equality coefficient") for value in coefficients[:2]],
-        ]
-        coefficients1 = [
-            *[_finite_scalar(value, "MyoSim equality coefficient") for value in coefficients[2:]],
-            0.0,
-        ]
-        equality_records.append(struct.pack(
-            "<4I20f",
-            dependent_q, dependent_v, master_q, master_v,
-            *references_and_coefficients0,
-            *coefficients1,
-            *[_finite_scalar(value, "MyoSim equality solref") for value in solref], 0.0, 0.0,
-            *[_finite_scalar(value, "MyoSim equality solimp") for value in solimp[:4]],
-            _finite_scalar(solimp[4], "MyoSim equality solimp"), 0.0, 0.0, 0.0,
-        ))
-        equality_manifest.append({
-            "source_equality_id": equality.get("id"),
-            "name": equality.get("name"),
-            "dependent_source_joint": source_dependent,
-            "dependent_name": dependent["source_name"],
-            "dependent_core_q": dependent_q,
-            "dependent_core_v": dependent_v,
-            "master_source_joint": source_master,
-            "master_name": None if master is None else master["source_name"],
-            "master_core_q": None if master is None else master_q,
-            "master_core_v": None if master is None else master_v,
-            "dependent_reference": references_and_coefficients0[0],
-            "master_reference": references_and_coefficients0[1],
-            "polycoef": [float(value) for value in coefficients],
-            "solref": [float(value) for value in solref],
-            "solimp": [float(value) for value in solimp],
-        })
-    if len(equality_records) != len(joint_equalities):
-        raise ImportError("MyoSim joint equality lowering is incomplete")
-    equality_header = struct.pack(
-        "<8s10I32s",
-        _MYOSIM_JOINT_EQUALITY_MAGIC, _MYOSIM_JOINT_EQUALITY_ABI,
-        nq, nv, len(equality_records), _MYOSIM_JOINT_EQUALITY_RECORD_BYTES,
-        len(joint_equalities), 0, 0, 0, 0, bytes.fromhex(source_hash),
+    equality_manifest, equality_payload, equality_compliance_payload = _myosim_joint_equality_bundle(
+        source, model, joint_equalities, source_joint_to_core, nq, nv
     )
-    equality_payload = b"".join([equality_header, *equality_records])
-    if len(equality_payload) != 80 + _MYOSIM_JOINT_EQUALITY_RECORD_BYTES * len(equality_records):
-        raise ImportError("internal MyoSim joint equality payload ABI size mismatch")
     world_gravity = _myosim_vector(model.get("gravity_m_s2"), "MyoSim gravity")
     timestep = _finite_scalar(model.get("timestep_seconds"), "MyoSim timestep")
     if timestep <= 0.0:
@@ -3785,8 +3860,20 @@ def myosim_fullbody_reference_artifacts(
                 "file": "myosim-fullbody-joint-equalities.nheq",
                 "bytes": len(equality_payload),
                 "sha256": hashlib.sha256(equality_payload).hexdigest(),
-                "payload_abi": _MYOSIM_JOINT_EQUALITY_ABI,
+                "payload_abi": 1,
+                "runtime_policy": "legacy_hard_position_projection",
             },
+            **({"joint_equalities_source_compliance": {
+                "schema": "numi.human.joint-equality-source-compliance-payload.v1",
+                "file": "myosim-fullbody-joint-equalities-source-compliance.nheq",
+                "bytes": len(equality_compliance_payload),
+                "sha256": hashlib.sha256(equality_compliance_payload).hexdigest(),
+                "payload_abi": 2,
+                "record_bytes": 112,
+                "policy_id": 1,
+                "runtime_policy": "mujoco_3_12_scalar_frozen_acceleration",
+                "solver": model["joint_equality_solver"],
+            }} if equality_compliance_payload is not None else {}),
             "extensor_hood": {
                 "file": "myosim-fullbody-extensor-hood.nhhood",
                 "bytes": len(extensor_hood_payload),
@@ -3797,9 +3884,11 @@ def myosim_fullbody_reference_artifacts(
         "joint_equalities": {
             "count": len(equality_manifest),
             "records": equality_manifest,
+            "solver": model.get("joint_equality_solver"),
             "semantics": (
-                "Exact active MuJoCo scalar joint equalities. Each dependent coordinate is a "
-                "quartic polynomial of its optional master about the source qpos0 references."
+                "Active MuJoCo scalar joint equality residuals retain the quartic polynomial "
+                "about source qpos0 references. NHEQ2 also retains source compliance and inverse "
+                "weights for the frozen acceleration law; residuals are not a hard position snap."
             ),
         },
         "support_contact": {
@@ -3878,6 +3967,7 @@ def myosim_fullbody_reference_artifacts(
     return (
         manifest, rigid_payload, muscle_payload, support_payload,
         equality_payload, extensor_hood_payload,
+        equality_compliance_payload,
     )
 
 

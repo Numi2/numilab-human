@@ -285,7 +285,7 @@ def myosim_build(arguments: argparse.Namespace) -> int:
         exported = read_json(exported_path)
     (
         manifest, rigid_payload, muscle_payload, support_payload,
-        equality_payload, extensor_hood_payload,
+        equality_payload, extensor_hood_payload, equality_compliance_payload,
     ) = myosim_fullbody_reference_artifacts(exported)
     output = arguments.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
@@ -298,12 +298,17 @@ def myosim_build(arguments: argparse.Namespace) -> int:
     muscle.write_bytes(muscle_payload)
     support.write_bytes(support_payload)
     equalities.write_bytes(equality_payload)
+    if equality_compliance_payload is not None:
+        compliance = output / manifest["payloads"]["joint_equalities_source_compliance"]["file"]
+        compliance.write_bytes(equality_compliance_payload)
     extensor_hood.write_bytes(extensor_hood_payload)
     write_json(output / "myosim-fullbody-reference.manifest.json", manifest)
     print(f"wrote {rigid}")
     print(f"wrote {muscle}")
     print(f"wrote {support}")
     print(f"wrote {equalities}")
+    if equality_compliance_payload is not None:
+        print(f"wrote {compliance}")
     print(f"wrote {extensor_hood}")
     print(f"wrote {output / 'myosim-fullbody-reference.manifest.json'}")
     return 0
@@ -2015,6 +2020,17 @@ def parser() -> argparse.ArgumentParser:
     qualification.add_argument("--steps", type=int, nargs="+", default=[4, 16, 64])
     qualification.add_argument("--timeout-seconds", type=float, default=300.0)
     qualification.set_defaults(handler=qualify)
+    from .target_coverage import add_arguments as add_target_coverage_arguments
+    coverage = commands.add_parser(
+        "target-coverage",
+        help="materialize the immutable cumulative Human target union and explicit source gaps",
+    )
+    add_target_coverage_arguments(coverage)
+    from .behavior_qualification import add_arguments as add_behavior_qualification_arguments
+    behavior = commands.add_parser(
+        "behavior-qualify", help="evaluate complete native standing, recovery and walking evidence",
+    )
+    add_behavior_qualification_arguments(behavior)
     return result
 
 

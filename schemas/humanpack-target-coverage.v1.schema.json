@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HumanPack.target-coverage.v1",
+  "description": "Immutable cumulative source target inventory. This schema cannot grant physical qualification. Hashes use UTF-8 JSON with sorted keys, compact separators, no ASCII escaping, and no non-finite numbers; the identity field itself is omitted when hashing its record.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "compiler", "source_lock_sha256", "previous_manifest_sha256", "manifest_sha256", "obligations", "source_records", "registers", "register_history", "leaves", "counts", "scope_status", "integrated_qualification", "evidence_boundary"],
+  "properties": {
+    "schema": {"const": "HumanPack.target-coverage.v1"},
+    "compiler": {"const": "numilab-human.target-coverage.1"},
+    "source_lock_sha256": {"$ref": "#/$defs/sha256"},
+    "previous_manifest_sha256": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sha256"}]},
+    "manifest_sha256": {"$ref": "#/$defs/sha256"},
+    "obligations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_representation", "required_fidelity", "owning_equations", "interfaces", "oracle", "observable", "tolerance", "qualification_distribution", "evidence_status", "qualification_requirement"],
+      "properties": {
+        "required_representation": {"const": "source-traceable representation in the common Human topology and field graph"},
+        "required_fidelity": {"const": "unknown"},
+        "owning_equations": {"const": "unknown"},
+        "interfaces": {"const": "unknown"},
+        "oracle": {"const": "unknown"},
+        "observable": {"const": "unknown"},
+        "tolerance": {"const": "unknown"},
+        "qualification_distribution": {"const": "unknown"},
+        "evidence_status": {"const": "unknown"},
+        "qualification_requirement": {"const": "integrated qualification on the exact compiled stack"}
+      }
+    },
+    "source_records": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/source"}},
+    "registers": {"type": "array", "items": {"$ref": "#/$defs/register"}},
+    "register_history": {"type": "array", "items": {"$ref": "#/$defs/register"}},
+    "leaves": {"type": "array", "minItems": 80, "items": {"$ref": "#/$defs/leaf"}},
+    "counts": {
+      "type": "object", "additionalProperties": false,
+      "required": ["leaves", "mandatory_leaves", "by_kind", "unresolved_current_registers"],
+      "properties": {
+        "leaves": {"type": "integer", "minimum": 80},
+        "mandatory_leaves": {"const": 80},
+        "by_kind": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 1}},
+        "unresolved_current_registers": {"type": "integer", "minimum": 0}
+      }
+    },
+    "scope_status": {"enum": ["blocked", "source_union_materialized"]},
+    "integrated_qualification": {"const": "unknown"},
+    "evidence_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["record_sha256", "source_id", "metadata", "source_url", "license", "allowed_use"],
+      "properties": {
+        "record_sha256": {"$ref": "#/$defs/sha256"},
+        "source_id": {"type": "string", "minLength": 1},
+        "metadata": {"type": "object"},
+        "source_url": {"type": "string", "minLength": 1},
+        "license": {"type": "string", "minLength": 1},
+        "allowed_use": {"type": "string", "minLength": 1}
+      }
+    },
+    "register": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_record_sha256", "path", "expected_sha256", "actual_sha256", "status", "declaration_count"],
+      "properties": {
+        "source_record_sha256": {"$ref": "#/$defs/sha256"},
+        "path": {"type": "string", "minLength": 1},
+        "expected_sha256": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sha256"}]},
+        "actual_sha256": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sha256"}]},
+        "status": {"enum": ["materialized", "missing", "unpinned", "not_supplied", "unavailable_source_inventory", "incomplete_composed_inventory", "invalid_source_xml", "retained_source_not_in_current_lock"]},
+        "declaration_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "leaf": {
+      "type": "object", "additionalProperties": false,
+      "required": ["leaf_sha256", "semantic_id", "source_local_id", "name", "kind", "domain", "source_record_sha256", "declaration_sha256", "obligations_sha256", "evidence_status"],
+      "properties": {
+        "leaf_sha256": {"$ref": "#/$defs/sha256"},
+        "semantic_id": {"type": "string", "minLength": 1},
+        "source_local_id": {"type": "string", "minLength": 1},
+        "name": {"type": "string"},
+        "kind": {"type": "string", "minLength": 1},
+        "domain": {"type": "string", "minLength": 1},
+        "source_record_sha256": {"$ref": "#/$defs/sha256"},
+        "declaration_sha256": {"$ref": "#/$defs/sha256"},
+        "obligations_sha256": {"$ref": "#/$defs/sha256"},
+        "evidence_status": {"const": "unknown"}
+      }
+    }
+  }
+}

@@ -56,8 +56,14 @@ unqualified.
 The [candidate and support correction](Docs/NUMANX_PREDICTOR_CLOSURE.md)
 now makes Matter use the same free Human motion as Stand, fixes the support
 Newton term, and preserves one accepted history through each solve. Nine
-native regressions and both Brain integration cases pass on macmini. Source
-joint equalities and sustained standing/walking remain open.
+native regressions and both Brain integration cases pass on macmini.
+
+The [source-compliant joint equality integration](Docs/HUMAN_SOURCE_EQUALITIES.md)
+adds all 51 pinned source rows to the coupled solve through NHEQ2 and NumanX v4,
+with an independent source oracle and Metal factor/operator checks. The
+`target-coverage` compiler retains the cumulative source target union, and
+`behavior-qualify` checks the frozen standing/recovery/walking evidence contract.
+Sustained behavior and the complete anatomical composition remain open.
 
 The importer preserves upstream records locally. The tracked MyoSim,
 BodyParts3D, and explicitly marked Z-Anatomy validation media are attributed

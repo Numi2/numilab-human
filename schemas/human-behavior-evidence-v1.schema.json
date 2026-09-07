@@ -1,0 +1,738 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:numi:human:behavior-evidence:v1",
+  "title": "Numi Human frozen behavior evidence v1",
+  "description": "Structural wire schema. The evaluator also enforces cross-record identity, native artifact bytes, complete populations, accepted-root continuity, horizons, and task gates. This schema alone does not qualify a run.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/protocol"
+    },
+    {
+      "$ref": "#/$defs/stack"
+    },
+    {
+      "$ref": "#/$defs/bundle"
+    },
+    {
+      "$ref": "#/$defs/header"
+    },
+    {
+      "$ref": "#/$defs/span"
+    },
+    {
+      "$ref": "#/$defs/footer"
+    },
+    {
+      "$ref": "#/$defs/lowering"
+    }
+  ],
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "bytes"
+      ]
+    },
+    "trialArtifact": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/artifact"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "trial_id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "trial_id"
+          ]
+        }
+      ]
+    },
+    "impulse": {
+      "type": "object",
+      "properties": {
+        "body_semantic_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "frame": {
+          "const": "world"
+        },
+        "at_step": {
+          "const": 0
+        },
+        "point_m": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "linear_impulse_ns": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        }
+      },
+      "required": [
+        "body_semantic_id",
+        "frame",
+        "at_step",
+        "point_m",
+        "linear_impulse_ns"
+      ],
+      "additionalProperties": false
+    },
+    "case": {
+      "type": "object",
+      "properties": {
+        "trial_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "task": {
+          "enum": [
+            "standing",
+            "recovery",
+            "walking"
+          ]
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reset_state_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "target_speed_mps": {
+          "enum": [
+            null,
+            0.5,
+            1.0,
+            1.5
+          ]
+        },
+        "impulse": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/impulse"
+            }
+          ]
+        }
+      },
+      "required": [
+        "trial_id",
+        "task",
+        "seed",
+        "reset_state_sha256",
+        "target_speed_mps",
+        "impulse"
+      ]
+    },
+    "criteria": {
+      "type": "object",
+      "properties": {
+        "minimum_root_height_m": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maximum_trunk_tilt_rad": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maximum_planar_speed_mps": {
+          "type": "number",
+          "minimum": 0
+        },
+        "forbidden_contact_semantic_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "root_body_semantic_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "trunk_body_semantic_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "world_reference_origin_m": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number"
+          }
+        },
+        "world_up_axis": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number"
+          }
+        },
+        "world_forward_axis": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number"
+          }
+        },
+        "trunk_up_axis_body": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number"
+          }
+        },
+        "velocity_observable": {
+          "enum": [
+            "body_com_linear_velocity",
+            "whole_human_com_linear_velocity"
+          ]
+        },
+        "velocity_body_semantic_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "minimum_root_height_m",
+        "maximum_trunk_tilt_rad",
+        "forbidden_contact_semantic_ids",
+        "root_body_semantic_id",
+        "trunk_body_semantic_id",
+        "world_reference_origin_m",
+        "world_up_axis",
+        "world_forward_axis",
+        "trunk_up_axis_body",
+        "velocity_observable",
+        "velocity_body_semantic_id"
+      ]
+    },
+    "protocol": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "numi.human.behavior-protocol.v1"
+        },
+        "metric_contract": {
+          "const": "accepted-root-task-reduction.v1"
+        },
+        "step_ns": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "recovery_hold_ns": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5000000000
+        },
+        "task_pack_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "task_criteria": {
+          "type": "object",
+          "properties": {
+            "standing": {
+              "$ref": "#/$defs/criteria"
+            },
+            "recovery": {
+              "$ref": "#/$defs/criteria"
+            },
+            "walking": {
+              "$ref": "#/$defs/criteria"
+            }
+          },
+          "required": [
+            "standing",
+            "recovery",
+            "walking"
+          ]
+        },
+        "cases": {
+          "type": "array",
+          "minItems": 420,
+          "maxItems": 420,
+          "items": {
+            "$ref": "#/$defs/case"
+          }
+        }
+      },
+      "required": [
+        "schema",
+        "metric_contract",
+        "step_ns",
+        "recovery_hold_ns",
+        "task_pack_sha256",
+        "task_criteria",
+        "cases"
+      ]
+    },
+    "stack": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "numi.human.behavior-stack.v1"
+        },
+        "source_state": {
+          "const": "clean"
+        },
+        "backend": {
+          "const": "Apple Metal"
+        },
+        "device": {
+          "type": "string",
+          "pattern": "^Apple .+"
+        },
+        "os_build": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revisions": {
+          "type": "object",
+          "properties": {
+            "human": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "native": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "brain": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            }
+          },
+          "required": [
+            "human",
+            "native",
+            "brain"
+          ]
+        },
+        "artifacts": {
+          "type": "object",
+          "required": [
+            "human_pack",
+            "compiled_run",
+            "task_pack",
+            "policy_pack",
+            "native_library",
+            "human_metallib",
+            "matter_metallib",
+            "brain_metallib",
+            "runner",
+            "qualifier",
+            "metric_program",
+            "accepted_root_proof_schema",
+            "task_lowering_receipt"
+          ],
+          "additionalProperties": {
+            "$ref": "#/$defs/artifact"
+          }
+        }
+      },
+      "required": [
+        "schema",
+        "source_state",
+        "backend",
+        "device",
+        "os_build",
+        "revisions",
+        "artifacts"
+      ]
+    },
+    "bundle": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "numi.human.behavior-bundle.v1"
+        },
+        "protocol_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "stack_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "trials": {
+          "type": "array",
+          "minItems": 420,
+          "maxItems": 420,
+          "items": {
+            "$ref": "#/$defs/trialArtifact"
+          }
+        }
+      },
+      "required": [
+        "schema",
+        "protocol_sha256",
+        "stack_sha256",
+        "trials"
+      ]
+    },
+    "header": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/case"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "schema": {
+              "const": "numi.human.behavior-trial.v1"
+            },
+            "protocol_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "stack_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "device": {
+              "type": "string",
+              "minLength": 1
+            },
+            "metric_contract": {
+              "const": "accepted-root-task-reduction.v1"
+            },
+            "execution_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "initial_root_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "initial_posture_valid": {
+              "type": "boolean"
+            },
+            "initial_settled": {
+              "type": "boolean"
+            },
+            "step_ns": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "os_build": {
+              "type": "string",
+              "minLength": 1
+            },
+            "metric_program_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "accepted_root_proof_schema_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "task_lowering_receipt_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "schema",
+            "protocol_sha256",
+            "stack_sha256",
+            "device",
+            "metric_contract",
+            "execution_id",
+            "initial_root_sha256",
+            "initial_posture_valid",
+            "initial_settled",
+            "step_ns",
+            "os_build",
+            "metric_program_sha256",
+            "accepted_root_proof_schema_sha256",
+            "task_lowering_receipt_sha256"
+          ]
+        }
+      ]
+    },
+    "span": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "accepted_span"
+        },
+        "first_step": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "last_step": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "start_ns": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end_ns": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "accepted_steps": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "start_root_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "end_root_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "attempt_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "rejected_attempt_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "audit": {
+          "type": "object",
+          "properties": {
+            "root_assistance_steps": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "direct_torque_steps": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "kinematic_override_steps": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "unregistered_force_steps": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "source_constraint_omission_steps": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "unaccepted_publications": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "nonfinite_steps": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "unexpected_reset_steps": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "root_assistance_steps",
+            "direct_torque_steps",
+            "kinematic_override_steps",
+            "unregistered_force_steps",
+            "source_constraint_omission_steps",
+            "unaccepted_publications",
+            "nonfinite_steps",
+            "unexpected_reset_steps"
+          ]
+        },
+        "posture_violation_steps": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "settled_steps": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "settled_suffix_steps": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "speed_squared_error_sum_m2_per_s2": {
+          "type": "number",
+          "minimum": 0
+        },
+        "metric_sample_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "audit_covered_root_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "audit_covered_attempt_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "speed_error_sample_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        }
+      },
+      "required": [
+        "kind",
+        "first_step",
+        "last_step",
+        "start_ns",
+        "end_ns",
+        "accepted_steps",
+        "start_root_sha256",
+        "end_root_sha256",
+        "attempt_count",
+        "rejected_attempt_count",
+        "audit",
+        "posture_violation_steps",
+        "settled_steps",
+        "settled_suffix_steps",
+        "speed_squared_error_sum_m2_per_s2",
+        "metric_sample_count",
+        "audit_covered_root_count",
+        "audit_covered_attempt_count",
+        "speed_error_sample_count"
+      ]
+    },
+    "footer": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "completed"
+        },
+        "accepted_steps": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "final_root_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "exit_code": {
+          "const": 0
+        }
+      },
+      "required": [
+        "kind",
+        "accepted_steps",
+        "final_root_sha256",
+        "exit_code"
+      ]
+    },
+    "lowering": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "numi.human.behavior-task-lowering.v1"
+        },
+        "metric_contract": {
+          "const": "accepted-root-task-reduction.v1"
+        },
+        "protocol_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "native_revision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "step_ns": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "task_criteria": {
+          "type": "object",
+          "properties": {
+            "standing": {
+              "$ref": "#/$defs/criteria"
+            },
+            "recovery": {
+              "$ref": "#/$defs/criteria"
+            },
+            "walking": {
+              "$ref": "#/$defs/criteria"
+            }
+          },
+          "required": [
+            "standing",
+            "recovery",
+            "walking"
+          ]
+        },
+        "artifacts": {
+          "type": "object",
+          "required": [
+            "human_pack",
+            "compiled_run",
+            "task_pack",
+            "native_library",
+            "human_metallib",
+            "matter_metallib",
+            "brain_metallib",
+            "metric_program",
+            "accepted_root_proof_schema"
+          ],
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      },
+      "required": [
+        "schema",
+        "metric_contract",
+        "protocol_sha256",
+        "native_revision",
+        "step_ns",
+        "task_criteria",
+        "artifacts"
+      ]
+    }
+  }
+}

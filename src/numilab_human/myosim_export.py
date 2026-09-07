@@ -53,6 +53,69 @@ def _matrix_columns(value: object, np: object) -> object:
     return matrix.reshape(3, 3)
 
 
+def _source_site(model: object, mujoco: object, index: int) -> dict[str, object]:
+    return {
+        "id": index,
+        "name": mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_SITE, index),
+        "body": int(model.site_bodyid[index]),
+        "position_body_m": [float(value) for value in model.site_pos[index]],
+    }
+
+
+def _source_wrap_geometry(model: object, mujoco: object, index: int) -> dict[str, object]:
+    geom_type = int(model.geom_type[index])
+    if geom_type not in {
+        int(mujoco.mjtGeom.mjGEOM_SPHERE), int(mujoco.mjtGeom.mjGEOM_CYLINDER),
+    }:
+        raise RuntimeError(f"wrap geometry {index} has unsupported MuJoCo geometry type {geom_type}")
+    return {
+        "id": index,
+        "name": mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_GEOM, index),
+        "body": int(model.geom_bodyid[index]),
+        "type": geom_type,
+        "position_body_m": [float(value) for value in model.geom_pos[index]],
+        "quaternion_body_xyzw": _mujoco_quaternion_to_xyzw(model.geom_quat[index]),
+        "radius_m": float(model.geom_size[index, 0]),
+    }
+
+
+def _nonmuscle_tendon_inventory(
+    model: object, data: object, mujoco: object,
+    routes: dict[int, list[dict[str, object]]], muscle_tendons: set[int],
+) -> list[dict[str, object]]:
+    """Retain compiled source tendons without adding them to native mechanics.
+
+    Route dependencies stay inside these inventory records. The muscle runtime's
+    site/wrap tables and force-application authority therefore stay unchanged.
+    Parameter names and values are the pinned MuJoCo compiler's own fields,
+    including zero stiffness/damping; inventory does not invent a ligament law.
+    """
+    records = []
+    for tendon in range(model.ntendon):
+        if tendon in muscle_tendons:
+            continue
+        route = routes[tendon]
+        site_ids = {int(node["source_id"]) for node in route if node["kind"] == "site"}
+        site_ids.update(int(node["side_site_source_id"]) for node in route
+                        if int(node["side_site_source_id"]) >= 0)
+        geom_ids = {int(node["source_id"]) for node in route if node["kind"] != "site"}
+        parameters = {}
+        for field in sorted(name for name in dir(model) if name.startswith("tendon_")):
+            value = getattr(model, field)[tendon]
+            parameters[field] = value.tolist() if hasattr(value, "tolist") else value
+        records.append({
+            "id": tendon,
+            "name": mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_TENDON, tendon),
+            "native_mechanics_status": "not_lowered",
+            "route": route,
+            "sites": [_source_site(model, mujoco, index) for index in sorted(site_ids)],
+            "wrap_geometries": [_source_wrap_geometry(model, mujoco, index) for index in sorted(geom_ids)],
+            "compiled_mujoco_parameters": parameters,
+            "oracle_length_m": float(data.ten_length[tendon]),
+        })
+    return records
+
+
 def _support_point_on_geometry(
     *,
     geom_type: int,
@@ -111,6 +174,12 @@ def export_fullbody(sources: Path) -> dict[str, object]:
         raise RuntimeError(f"MyoSim source archive is absent: {archive}")
 
     model = build_model("myofullbody")
+    if mujoco.__version__ != "3.12.0":
+        raise RuntimeError("NHEQ2 export requires pinned MuJoCo 3.12.0")
+    if int(model.opt.integrator) != int(mujoco.mjtIntegrator.mjINT_EULER):
+        raise RuntimeError("NHEQ2 policy 1 requires the source Euler integrator")
+    if int(model.opt.enableflags) & int(mujoco.mjtEnableBit.mjENBL_DIAGEXACT):
+        raise RuntimeError("NHEQ2 source inverse weights do not represent diagexact mode")
     data = mujoco.MjData(model)
     data.qpos[:] = model.qpos0
     data.qvel[:] = 0.0
@@ -178,6 +247,12 @@ def export_fullbody(sources: Path) -> dict[str, object]:
             "master_joint": master,
             "dependent_reference": float(model.qpos0[dependent_q]),
             "master_reference": float(model.qpos0[master_q]) if master_q >= 0 else 0.0,
+            "dependent_dof_invweight0": float(
+                model.dof_invweight0[int(model.jnt_dofadr[dependent])]
+            ),
+            "master_dof_invweight0": float(
+                model.dof_invweight0[int(model.jnt_dofadr[master])]
+            ) if master >= 0 else 0.0,
             "polycoef": [float(value) for value in model.eq_data[index, :5]],
             "solref": [float(value) for value in model.eq_solref[index]],
             "solimp": [float(value) for value in model.eq_solimp[index]],
@@ -338,8 +413,8 @@ def export_fullbody(sources: Path) -> dict[str, object]:
         int(mujoco.mjtWrap.mjWRAP_SPHERE): "sphere",
         int(mujoco.mjtWrap.mjWRAP_CYLINDER): "cylinder",
     }
-    for actuator in muscle_actuators:
-        tendon = int(model.actuator_trnid[actuator, 0])
+    muscle_tendons = {int(model.actuator_trnid[actuator, 0]) for actuator in muscle_actuators}
+    for tendon in range(model.ntendon):
         address = int(model.tendon_adr[tendon])
         count = int(model.tendon_num[tendon])
         route: list[dict[str, object]] = []
@@ -351,10 +426,11 @@ def export_fullbody(sources: Path) -> dict[str, object]:
                 raise RuntimeError(
                     f"tendon {tendon} has unsupported source wrap type {source_type}"
                 )
-            if kind == "site":
-                required_sites.add(object_id)
-            else:
-                required_geoms.add(object_id)
+            if tendon in muscle_tendons:
+                if kind == "site":
+                    required_sites.add(object_id)
+                else:
+                    required_geoms.add(object_id)
             route.append(
                 {
                     "kind": kind,
@@ -371,36 +447,15 @@ def export_fullbody(sources: Path) -> dict[str, object]:
                 raise RuntimeError(f"tendon {tendon} has a non-site-bounded wrap")
         for node in route:
             side_id = int(node["side_site_source_id"])
-            if side_id >= 0:
+            if side_id >= 0 and tendon in muscle_tendons:
                 required_sites.add(side_id)
         routes[tendon] = route
 
     sites = {
-        index: {
-            "id": index,
-            "name": mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_SITE, index),
-            "body": int(model.site_bodyid[index]),
-            "position_body_m": [float(value) for value in model.site_pos[index]],
-        }
+        index: _source_site(model, mujoco, index)
         for index in sorted(required_sites)
     }
-    geoms = {}
-    for index in sorted(required_geoms):
-        geom_type = int(model.geom_type[index])
-        if geom_type not in {
-            int(mujoco.mjtGeom.mjGEOM_SPHERE),
-            int(mujoco.mjtGeom.mjGEOM_CYLINDER),
-        }:
-            raise RuntimeError(f"wrap geometry {index} has unsupported MuJoCo geometry type {geom_type}")
-        geoms[index] = {
-            "id": index,
-            "name": mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_GEOM, index),
-            "body": int(model.geom_bodyid[index]),
-            "type": geom_type,
-            "position_body_m": [float(value) for value in model.geom_pos[index]],
-            "quaternion_body_xyzw": _mujoco_quaternion_to_xyzw(model.geom_quat[index]),
-            "radius_m": float(model.geom_size[index, 0]),
-        }
+    geoms = {index: _source_wrap_geometry(model, mujoco, index) for index in sorted(required_geoms)}
 
     muscles = []
     for actuator in muscle_actuators:
@@ -446,6 +501,15 @@ def export_fullbody(sources: Path) -> dict[str, object]:
             "gravity_m_s2": [float(value) for value in model.opt.gravity],
             "timestep_seconds": float(model.opt.timestep),
             "default_qpos": [float(value) for value in model.qpos0],
+            "joint_equality_solver": {
+                "schema": "numi.human.mujoco-scalar-equality-solver.v1",
+                "mujoco_version": "3.12.0",
+                "integrator": "Euler",
+                "refsafe": not bool(
+                    int(model.opt.disableflags) & int(mujoco.mjtDisableBit.mjDSBL_REFSAFE)
+                ),
+                "diagexact": False,
+            },
         },
         "support_contact": {
             "ground": {
@@ -463,6 +527,7 @@ def export_fullbody(sources: Path) -> dict[str, object]:
         "sites": list(sites.values()),
         "wrap_geometries": list(geoms.values()),
         "muscles": muscles,
+        "nonmuscle_tendons": _nonmuscle_tendon_inventory(model, data, mujoco, routes, muscle_tendons),
     }
 
 
