@@ -2003,6 +2003,18 @@ def parser() -> argparse.ArgumentParser:
     layers_parser.add_argument("--sources", type=Path, required=True)
     layers_parser.add_argument("--output", type=Path, required=True)
     layers_parser.set_defaults(handler=visual_layers)
+    from .qualification import qualify
+    qualification = commands.add_parser(
+        "numi-human-myofascia-qualify",
+        help="run bounded native Metal horizons with hashed replay and failure receipts",
+    )
+    qualification.add_argument("--runtime-root", type=Path, required=True)
+    qualification.add_argument("--runtime-build", type=Path, required=True)
+    qualification.add_argument("--input", type=Path, required=True)
+    qualification.add_argument("--output", type=Path, required=True)
+    qualification.add_argument("--steps", type=int, nargs="+", default=[4, 16, 64])
+    qualification.add_argument("--timeout-seconds", type=float, default=300.0)
+    qualification.set_defaults(handler=qualify)
     return result
 
 

@@ -1,0 +1,146 @@
+{
+  "schema": "numi.human.myofascia-horizon-qualification.v1",
+  "runtime_revision": "3561113777afddbbf2e37965afaddad983772282",
+  "runtime_worktree_status": "",
+  "runtime_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "build_cache": {
+    "path": "/Users/n/MetalRobo-human-completion-build-20260907/CMakeCache.txt",
+    "sha256": "6f300e298638666334e74b9bd7859ad9d3c42d9732763eeeacc773a43de34aff",
+    "bytes": 27670
+  },
+  "artifacts": {
+    "rigid": {
+      "path": "/Users/n/human-completion-20260907/input/myosim-fullbody-core-reference.nhrigid",
+      "sha256": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44",
+      "bytes": 60324
+    },
+    "muscle": {
+      "path": "/Users/n/human-completion-20260907/input/myosim-fullbody-muscle-reference.nhmyo",
+      "sha256": "9a988f19a6fd8e533cd0f2bf3192cb8535fb008ccd394ffbf1a4432d3db76a05",
+      "bytes": 149372
+    },
+    "bone": {
+      "path": "/Users/n/human-completion-20260907/input/bodyparts3d-myosim-major-bones.nhbones",
+      "sha256": "f9132393dfb259a80e2b2084ac5ff15f2bf988f7e073f7a961a7ddcfb9febc3c",
+      "bytes": 11576692
+    },
+    "soft-tissue": {
+      "path": "/Users/n/human-completion-20260907/input/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+      "sha256": "ed0c932fd09434bcee45248453e9b2ba0108f1582793fe8cb9eb43c97e377494",
+      "bytes": 31926552
+    },
+    "tendon": {
+      "path": "/Users/n/human-completion-20260907/input/numi-human-tendon-attachments.nhtendon",
+      "sha256": "72ca0ec4ef53f647784a89f761e78495d4997c7d72cfe6a1d9eedb24dd97feaa",
+      "bytes": 238288
+    },
+    "joint-equality": {
+      "path": "/Users/n/human-completion-20260907/input/myosim-fullbody-joint-equalities.nheq",
+      "sha256": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a",
+      "bytes": 4976
+    },
+    "support-contact": {
+      "path": "/Users/n/human-completion-20260907/input/myosim-fullbody-support-contact.nhcnt",
+      "sha256": "4d54f8155cd83baaee7af536099824ac0da61e5d5e77544b42c6e5ce1b48c907",
+      "bytes": 564
+    },
+    "pectoralis-fascia": {
+      "path": "/Users/n/human-completion-20260907/input/bodyparts3d-pectoralis-fascia.nhfascia",
+      "sha256": "a39916cc3207f8557f47f70dff660ab7f39d98f1279db3354993dd22f8fd3760",
+      "bytes": 225956
+    },
+    "binary": {
+      "path": "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numilab_human_myosim_visual_probe",
+      "sha256": "d6bf4d33a153ba4e29a40031157de172426d5ab21ebb78710019b72e91ba7e19",
+      "bytes": 842024
+    },
+    "matter_metallib": {
+      "path": "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib",
+      "sha256": "6fbcbec4d12552632e90a112d93fed369f97c4bbd47e50337e3ec11145cace1a",
+      "bytes": 2208342
+    },
+    "library:libmetalrobo.dylib": {
+      "path": "/Users/n/MetalRobo-human-completion-build-20260907/lib/libmetalrobo.dylib",
+      "sha256": "0967f66d771c11696173f49279421e2a870115111fc8ccb05cd51f6a637cde2a",
+      "bytes": 5972096
+    }
+  },
+  "qualifier": {
+    "path": "/Users/n/numilab-human-completion-20260907/src/numilab_human/qualification.py",
+    "sha256": "691ace0a4e5de2d24726c0de0851c520e997634c23dec3759cf67cd294c2a36b",
+    "bytes": 9628
+  },
+  "requested_steps": [
+    8
+  ],
+  "step_seconds": 1e-05,
+  "activation_increment": 0.02,
+  "selected_source_muscles": [
+    186,
+    198
+  ],
+  "runs": [
+    {
+      "steps": 8,
+      "simulated_seconds": 8e-05,
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numilab_human_myosim_visual_probe",
+        "/Users/n/human-completion-20260907/input/myosim-fullbody-core-reference.nhrigid",
+        "/Users/n/human-completion-20260907/input/myosim-fullbody-muscle-reference.nhmyo",
+        "/Users/n/human-completion-20260907/input/bodyparts3d-myosim-major-bones.nhbones",
+        "/Users/n/human-completion-20260907/horizon-eight/steps-8",
+        "--soft-tissue-payload",
+        "/Users/n/human-completion-20260907/input/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+        "--tendon-payload",
+        "/Users/n/human-completion-20260907/input/numi-human-tendon-attachments.nhtendon",
+        "--joint-equality-payload",
+        "/Users/n/human-completion-20260907/input/myosim-fullbody-joint-equalities.nheq",
+        "--support-contact-payload",
+        "/Users/n/human-completion-20260907/input/myosim-fullbody-support-contact.nhcnt",
+        "--pectoralis-fascia-payload",
+        "/Users/n/human-completion-20260907/input/bodyparts3d-pectoralis-fascia.nhfascia",
+        "--muscle-step-seconds",
+        "0.00001",
+        "--muscle-step-count",
+        "8",
+        "--pectoralis-fascia-step-count",
+        "8",
+        "--muscle-activation",
+        "0.02",
+        "--selected-tendon-control",
+        "--activated-source-muscle-index",
+        "186",
+        "--activated-source-muscle-index",
+        "198",
+        "--dimension",
+        "512",
+        "--camera-index",
+        "0"
+      ],
+      "status": "failed",
+      "wall_seconds": 47.86673875013366,
+      "exit_code": 1,
+      "metrics": {},
+      "failures": [
+        "native_summary_missing_or_duplicated"
+      ],
+      "stdout": {
+        "path": "/Users/n/human-completion-20260907/horizon-eight/steps-8.stdout.txt",
+        "sha256": "26e881901b60bfee4837ffaf0618080827e11458d88d1c13289f3e0a019552cd",
+        "bytes": 305
+      },
+      "stderr": {
+        "path": "/Users/n/human-completion-20260907/horizon-eight/steps-8.stderr.txt",
+        "sha256": "5ef317fde2d69854be359e0cb8aaca143c91da1a9e44f87ad18d28745625808f",
+        "bytes": 1192
+      },
+      "frames": [],
+      "peak_resident_bytes": 307658752,
+      "retained_native_bytes": null
+    }
+  ],
+  "boundary": "Bounded coupled transaction and replay evidence only; not sustained trunk loading, stable standing, anatomical/material calibration, or GPU kernel profiling.",
+  "status": "failed"
+}

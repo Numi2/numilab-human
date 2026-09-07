@@ -41,6 +41,9 @@ bilateral/class material frames; generated regional sheets, homogeneous group
 frames, the uncalibrated matrix/fibre split, and the 10% share remain bounded
 mechanics assumptions. See
 [thoracoabdominal myofascia mechanics v4](Docs/THORACOABDOMINAL_MYOFASCIA_V4.md).
+The [Mac mini horizon qualification](Docs/MYOFASCIA_HORIZON_QUALIFICATION.md)
+reproduces four accepted steps and exposes a contact-certification failure at
+eight and sixteen steps; sustained loading remains open.
 
 The importer preserves upstream records locally. The tracked MyoSim,
 BodyParts3D, and explicitly marked Z-Anatomy validation media are attributed
