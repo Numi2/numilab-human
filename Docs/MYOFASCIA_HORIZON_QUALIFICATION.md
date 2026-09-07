@@ -1,6 +1,10 @@
 # Myofascia horizon qualification
 
-The current Human/Matter stack passes four 10-microsecond steps, but fails
+This is the retained **pre-fix baseline**. The subsequent
+[CCD and accepted-state rollback qualification](MYOFASCIA_CCD_AND_ROLLBACK.md)
+passes four, eight, sixteen, and 64 steps on an updated runtime.
+
+The baseline Human/Matter stack passes four 10-microsecond steps, but fails
 both eight and sixteen steps in a fresh Apple M4 Pro build. This is an open
 contact-certification boundary, not sustained tissue or standing validation.
 

@@ -1,0 +1,47 @@
+{
+  "schema": "numi.human.native-regression-receipt.v1",
+  "runtime_revision": "63daf986c45be89236cf5523876330bba8f0a5fc",
+  "runtime_worktree_status": "",
+  "command": [
+    "ctest",
+    "-V",
+    "-R",
+    "^metalrobo_(matter_ccd|human_reconcile)_probe$"
+  ],
+  "artifacts": [
+    {
+      "path": "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_ccd_probe",
+      "sha256": "f7873e001039f93bb4b9b5f9af6791dcdb8f31e357d9417d460f88afe85ac3d0",
+      "bytes": 71320
+    },
+    {
+      "path": "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_human_reconcile_probe",
+      "sha256": "4943f31b373e24d2774c95138ae87a02e4bd9ff64dcd965e2277f25b50b4c62a",
+      "bytes": 69696
+    },
+    {
+      "path": "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib",
+      "sha256": "011b943ab2d6826eaae417dd3799dc5fc5f6ce23a7c55edb10c8ee4dbc700009",
+      "bytes": 2361531
+    },
+    {
+      "path": "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib",
+      "sha256": "b46771b2a3b1c3624b6f45cfb5e09400454271a66633b03adbd167dd161f3e78",
+      "bytes": 4457776
+    },
+    {
+      "path": "/Users/n/MetalRobo-human-completion-build-20260907/lib/libmetalrobo.dylib",
+      "sha256": "426ec5fe05640f5a8a24740e2df3263b7b0cb51518a062979a7e23e4d7884ad1",
+      "bytes": 6178320
+    },
+    {
+      "path": "/Users/n/human-completion-20260907/native-regressions-feature-axis.txt",
+      "sha256": "2b4e4a5d1436005dce51153a93d4e311478f96a285b6497be2b825fb8acf9c05",
+      "bytes": 9581
+    }
+  ],
+  "ccd_cases": 60,
+  "reconciliation_cases": 12,
+  "status": "passed",
+  "boundary": "Direct production GPU kernels with analytic collision cases and FP64 separating-plane witnesses; not full-body or material qualification."
+}

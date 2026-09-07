@@ -41,9 +41,11 @@ bilateral/class material frames; generated regional sheets, homogeneous group
 frames, the uncalibrated matrix/fibre split, and the 10% share remain bounded
 mechanics assumptions. See
 [thoracoabdominal myofascia mechanics v4](Docs/THORACOABDOMINAL_MYOFASCIA_V4.md).
-The [Mac mini horizon qualification](Docs/MYOFASCIA_HORIZON_QUALIFICATION.md)
-reproduces four accepted steps and exposes a contact-certification failure at
-eight and sixteen steps; sustained loading remains open.
+The [Mac mini CCD and rollback qualification](Docs/MYOFASCIA_CCD_AND_ROLLBACK.md)
+now passes four, eight, sixteen, and 64 steps with bitwise replay and accepted
+reaction audits. The captured contact-certification failure is fixed, and
+rejected Human steps restore physical state. The longest run represents only
+0.64 ms; sustained loading, balance, and interactive performance remain open.
 
 The importer preserves upstream records locally. The tracked MyoSim,
 BodyParts3D, and explicitly marked Z-Anatomy validation media are attributed
