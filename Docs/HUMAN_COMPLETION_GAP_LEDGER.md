@@ -20,6 +20,7 @@ completion gate is still open; **open** means the end-state owner is absent.
 | Skin and exterior | exact BodyParts3D outer source sheet retained as static reference | open | no physical skin weights, material, self-contact, muscle sliding, or deformation qualification | articulated skin/fat/fascia coupling with contact, volume control, visual and mechanical validation |
 | Organs, vessels, and nerves | selected exact BodyParts3D torso surfaces are pose-bound visual layers | open | no organ FEM/MPM, vessel tube mechanics, fluid coupling, or neural mechanics | named volumetric/tubular models, calibrated materials/boundaries, conservation, contact, and replay evidence |
 | Balance, control, and gait | transactional part coactivation and compiled standing transaction | partial | `balanced=false`; no closed-loop posture controller, deployable walking task, learned policy, or held-out gait | assistance-free stable standing, perturbation recovery, registered foot contact, deterministic resets, and held-out gait metrics |
+| Joint Brain–Human–Matter runtime | authored compiled Matter packages load through native v3 and the Swift root runner; legacy and three-object/twelve-attachment cases publish eight roots and replay a rejected candidate on M4 Pro | partial | source joint equalities, anatomical package lowering, mass/active-force replacement and standing control are not integrated; 0.8 ms of accepted time is not sustained behavior | complete source-bound HumanPack/CompiledRun, constrained coupled physics, accepted-only sensing/control and frozen standing/walking qualification |
 | Apple runtime qualification | M4 Pro executes all routes, tendon transfers, rollback, and bitwise replay | partial | no same-workload performance qualification for the complete future tissue/contact/control stack | exact revision/artifact fingerprints, counters/traces, memory accounting, throughput, replay, and physical outcomes |
 | Scientific validation | source provenance and simulation limitations are explicit | partial | no subject calibration, population variability, or clinical validation | benchmark protocol with held-out anatomical and mechanical data; claims limited to measured scope |
 
@@ -60,6 +61,12 @@ rows remain a semantic compound problem, not permission to add independent
 articulation or move a neighboring bone under the endpoint.
 
 ## Execution order
+
+The [authored-world joint-runtime qualification](NUMANX_AUTHORED_WORLD_QUALIFICATION.md)
+removes the mandatory one-tet fixture from the NumanX constructor. It preserves
+joint publication and rejects active-fibre additions without source-force
+replacement. Its twelve-node fixture does not lower or qualify the regional
+NHFASC4 anatomy and does not close the standing/gait row.
 
 The [2026-09-07 CCD and rollback qualification](MYOFASCIA_CCD_AND_ROLLBACK.md)
 closes the captured contact-certification blocker and passes 4/8/16/64 steps

@@ -1,0 +1,88 @@
+[0/1] Planning build
+Test Suite 'Selected tests' started at 2026-09-08 00:00:28.967.
+Test Suite 'NumiBrainPackageTests.xctest' started at 2026-09-08 00:00:28.972.
+Test Suite 'BrainFoundationPolicyPackageTests' started at 2026-09-08 00:00:28.972.
+Test Case '-[NumiBrainCoreTests.BrainFoundationPolicyPackageTests testBinaryAUROCIsRecomputedFromRankedLabeledObservations]' started.
+Test Case '-[NumiBrainCoreTests.BrainFoundationPolicyPackageTests testBinaryAUROCIsRecomputedFromRankedLabeledObservations]' passed (0.002 seconds).
+Test Case '-[NumiBrainCoreTests.BrainFoundationPolicyPackageTests testCandidateMayBeStructurallyValidWithoutPassingGateC]' started.
+Test Case '-[NumiBrainCoreTests.BrainFoundationPolicyPackageTests testCandidateMayBeStructurallyValidWithoutPassingGateC]' passed (1.301 seconds).
+Test Case '-[NumiBrainCoreTests.BrainFoundationPolicyPackageTests testCompleteEvidenceManifestRoundTripsAndRestoresPublication]' started.
+Test Case '-[NumiBrainCoreTests.BrainFoundationPolicyPackageTests testCompleteEvidenceManifestRoundTripsAndRestoresPublication]' passed (0.758 seconds).
+Test Case '-[NumiBrainCoreTests.BrainFoundationPolicyPackageTests testEvidenceVerifierRejectsOverlapAndForeignMetricSamples]' started.
+Test Case '-[NumiBrainCoreTests.BrainFoundationPolicyPackageTests testEvidenceVerifierRejectsOverlapAndForeignMetricSamples]' passed (1.344 seconds).
+Test Case '-[NumiBrainCoreTests.BrainFoundationPolicyPackageTests testEvidenceVerifierStreamsHashesProvesSplitsAndRecomputesMetrics]' started.
+Test Case '-[NumiBrainCoreTests.BrainFoundationPolicyPackageTests testEvidenceVerifierStreamsHashesProvesSplitsAndRecomputesMetrics]' passed (0.321 seconds).
+Test Case '-[NumiBrainCoreTests.BrainFoundationPolicyPackageTests testNumanXRootTranscriptDerivesCountsAndBindsEveryMetricSample]' started.
+Test Case '-[NumiBrainCoreTests.BrainFoundationPolicyPackageTests testNumanXRootTranscriptDerivesCountsAndBindsEveryMetricSample]' passed (0.165 seconds).
+Test Case '-[NumiBrainCoreTests.BrainFoundationPolicyPackageTests testPackageRejectsSeedTamperingAndSplitAlias]' started.
+Test Case '-[NumiBrainCoreTests.BrainFoundationPolicyPackageTests testPackageRejectsSeedTamperingAndSplitAlias]' passed (0.920 seconds).
+Test Suite 'BrainFoundationPolicyPackageTests' passed at 2026-09-08 00:00:33.784.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 4.811 (4.811) seconds
+Test Suite 'BrainPreparedGPURecoveryTests' started at 2026-09-08 00:00:33.784.
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testByteExactCodableRoundTripAndNativeRootValidation]' started.
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testByteExactCodableRoundTripAndNativeRootValidation]' passed (0.001 seconds).
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testCommitDecisionIsIdempotentAndIrreversible]' started.
+/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainCore/Runtime/BrainPreparedGPUStore.swift:45: error: -[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testCommitDecisionIsIdempotentAndIrreversible] : failed: caught error: "scheduler transaction error: prepared store requires existing nonsymlink directories"
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testCommitDecisionIsIdempotentAndIrreversible]' failed (0.293 seconds).
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testConflictingCandidateForSameRootCannotOverwritePrepare]' started.
+/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainCore/Runtime/BrainPreparedGPUStore.swift:45: error: -[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testConflictingCandidateForSameRootCannotOverwritePrepare] : failed: caught error: "scheduler transaction error: prepared store requires existing nonsymlink directories"
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testConflictingCandidateForSameRootCannotOverwritePrepare]' failed (0.001 seconds).
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testCorruptJournalHeaderAndSizeBudgetAreRejected]' started.
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testCorruptJournalHeaderAndSizeBudgetAreRejected]' passed (0.000 seconds).
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testEmptyJournalPreservesBaseMemoryExactly]' started.
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testEmptyJournalPreservesBaseMemoryExactly]' passed (0.000 seconds).
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testEveryImageSectionChangesCryptographicIdentity]' started.
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testEveryImageSectionChangesCryptographicIdentity]' passed (0.000 seconds).
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testJournalMaterializationCopiesPayloadNotRecordIdentifier]' started.
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testJournalMaterializationCopiesPayloadNotRecordIdentifier]' passed (0.000 seconds).
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testMaterializationPreservesMultipleNonoverlappingWritesAndUntouchedBytes]' started.
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testMaterializationPreservesMultipleNonoverlappingWritesAndUntouchedBytes]' passed (0.000 seconds).
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testOutOfBoundsAndStaleJournalAreRejected]' started.
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testOutOfBoundsAndStaleJournalAreRejected]' passed (0.000 seconds).
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testOverlappingJournalWritesAreRejected]' started.
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testOverlappingJournalWritesAreRejected]' passed (0.000 seconds).
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testPersistIsIdempotentAndUndecidedIsNotAnAbort]' started.
+/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainCore/Runtime/BrainPreparedGPUStore.swift:45: error: -[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testPersistIsIdempotentAndUndecidedIsNotAnAbort] : failed: caught error: "scheduler transaction error: prepared store requires existing nonsymlink directories"
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testPersistIsIdempotentAndUndecidedIsNotAnAbort]' failed (0.000 seconds).
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testSecondWriterAndSymlinkStoreAreRejected]' started.
+/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainCore/Runtime/BrainPreparedGPUStore.swift:45: error: -[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testSecondWriterAndSymlinkStoreAreRejected] : failed: caught error: "scheduler transaction error: prepared store requires existing nonsymlink directories"
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testSecondWriterAndSymlinkStoreAreRejected]' failed (0.001 seconds).
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testTruncatedImageCannotBeRecovered]' started.
+/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainCore/Runtime/BrainPreparedGPUStore.swift:45: error: -[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testTruncatedImageCannotBeRecovered] : failed: caught error: "scheduler transaction error: prepared store requires existing nonsymlink directories"
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testTruncatedImageCannotBeRecovered]' failed (0.001 seconds).
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testUnappliedJournalRemainsSeparateFromBaseMemory]' started.
+Test Case '-[NumiBrainCoreTests.BrainPreparedGPURecoveryTests testUnappliedJournalRemainsSeparateFromBaseMemory]' passed (0.000 seconds).
+Test Suite 'BrainPreparedGPURecoveryTests' failed at 2026-09-08 00:00:34.082.
+	 Executed 14 tests, with 5 failures (5 unexpected) in 0.298 (0.298) seconds
+Test Suite 'MetalNumanXBridgeV1EndToEndTests' started at 2026-09-08 00:00:34.082.
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testAuthoredMatterDescriptorRejectsMissingIdentity]' started.
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testAuthoredMatterDescriptorRejectsMissingIdentity]' passed (0.000 seconds).
+Test Suite 'MetalNumanXBridgeV1EndToEndTests' passed at 2026-09-08 00:00:34.082.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'WatchdogLifecycleProtocolTests' started at 2026-09-08 00:00:34.082.
+Test Case '-[NumiBrainQualificationTests.WatchdogLifecycleProtocolTests testCompletionRequiresExactCurrentlyObservedHeartbeat]' started.
+Test Case '-[NumiBrainQualificationTests.WatchdogLifecycleProtocolTests testCompletionRequiresExactCurrentlyObservedHeartbeat]' passed (0.000 seconds).
+Test Case '-[NumiBrainQualificationTests.WatchdogLifecycleProtocolTests testCreateOnlyLifecycleTransportIsExactlyIdempotent]' started.
+/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainQualification/QualificationFileIO.swift:41: error: -[NumiBrainQualificationTests.WatchdogLifecycleProtocolTests testCreateOnlyLifecycleTransportIsExactlyIdempotent] : failed: caught error: "systemCall("open directory component", 20)"
+Test Case '-[NumiBrainQualificationTests.WatchdogLifecycleProtocolTests testCreateOnlyLifecycleTransportIsExactlyIdempotent]' failed (0.003 seconds).
+Test Case '-[NumiBrainQualificationTests.WatchdogLifecycleProtocolTests testMalformedLifecycleDecodeFailsClosed]' started.
+Test Case '-[NumiBrainQualificationTests.WatchdogLifecycleProtocolTests testMalformedLifecycleDecodeFailsClosed]' passed (0.000 seconds).
+Test Case '-[NumiBrainQualificationTests.WatchdogLifecycleProtocolTests testOwnerLifecycleRequiresArmAndIdleSettledCompletion]' started.
+/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainQualification/QualificationFileIO.swift:41: error: -[NumiBrainQualificationTests.WatchdogLifecycleProtocolTests testOwnerLifecycleRequiresArmAndIdleSettledCompletion] : failed: caught error: "systemCall("open directory component", 20)"
+Test Case '-[NumiBrainQualificationTests.WatchdogLifecycleProtocolTests testOwnerLifecycleRequiresArmAndIdleSettledCompletion]' failed (0.000 seconds).
+Test Case '-[NumiBrainQualificationTests.WatchdogLifecycleProtocolTests testReadyMustMatchArmAndOriginalDeadline]' started.
+Test Case '-[NumiBrainQualificationTests.WatchdogLifecycleProtocolTests testReadyMustMatchArmAndOriginalDeadline]' passed (0.000 seconds).
+Test Case '-[NumiBrainQualificationTests.WatchdogLifecycleProtocolTests testRestartedSupervisorCannotResetStartupDeadline]' started.
+Test Case '-[NumiBrainQualificationTests.WatchdogLifecycleProtocolTests testRestartedSupervisorCannotResetStartupDeadline]' passed (0.000 seconds).
+Test Case '-[NumiBrainQualificationTests.WatchdogLifecycleProtocolTests testStopAlwaysOutranksReadinessAndCompletion]' started.
+Test Case '-[NumiBrainQualificationTests.WatchdogLifecycleProtocolTests testStopAlwaysOutranksReadinessAndCompletion]' passed (0.000 seconds).
+Test Suite 'WatchdogLifecycleProtocolTests' failed at 2026-09-08 00:00:34.086.
+	 Executed 7 tests, with 2 failures (2 unexpected) in 0.004 (0.004) seconds
+Test Suite 'NumiBrainPackageTests.xctest' failed at 2026-09-08 00:00:34.086.
+	 Executed 29 tests, with 7 failures (7 unexpected) in 5.113 (5.114) seconds
+Test Suite 'Selected tests' failed at 2026-09-08 00:00:34.086.
+	 Executed 29 tests, with 7 failures (7 unexpected) in 5.113 (5.119) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

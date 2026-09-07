@@ -47,6 +47,12 @@ reaction audits. The captured contact-certification failure is fixed, and
 rejected Human steps restore physical state. The longest run represents only
 0.64 ms; sustained loading, balance, and interactive performance remain open.
 
+The [NumanX authored-world qualification](Docs/NUMANX_AUTHORED_WORLD_QUALIFICATION.md)
+now loads compiled Matter packages through the permanent Brain–Human joint
+transaction. Both legacy and authored worlds pass publication and exact retry
+on macmini; the integrated cases cover only 0.8 ms, and standing/gait remain
+unqualified.
+
 The importer preserves upstream records locally. The tracked MyoSim,
 BodyParts3D, and explicitly marked Z-Anatomy validation media are attributed
 derivatives; all other raw or derived source artifacts remain local. See

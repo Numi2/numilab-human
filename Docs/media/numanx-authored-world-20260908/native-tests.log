@@ -1,0 +1,65 @@
+UpdateCTestConfiguration  from :/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Parse Config file:/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Test project /Users/n/MetalRobo-human-completion-build-20260907
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 58
+    Start 58: numanx.integration.fullbody_bridge_prepared_root
+
+58: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_fullbody_bridge_probe
+58: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+58: Test timeout computed to be: 180
+58: mrnx runtime v2 create failed: NHCNT1 is not the matching full-body support-contact payload
+58: numanx_fullbody_bridge_probe=pass bodies=157 nq=129 nv=128 muscles=416 motor_wait=ordered physical=prepared sensor=unpublished timeout=quarantined
+1/2 Test #58: numanx.integration.fullbody_bridge_prepared_root ...   Passed    7.83 sec
+test 59
+    Start 59: numanx.integration.fullbody_authored_world
+
+59: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_fullbody_bridge_probe "--authored-world"
+59: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+59: Test timeout computed to be: 180
+59: mrnx runtime v2 create failed: NHCNT1 is not the matching full-body support-contact payload
+59: mrnx runtime v3 create failed: authored Matter world targets a different Human source
+59: mrnx authored world=18208085834334166281 expected=18208085834334166280 physics=18208085834334166281 env=1 rate=0 flags=265 nv=160 nq=161 attachments=12 proxies=0 dt=0.00200000009 expected_dt=0.00200000009 gravity=0,0,-9.81000042 human=0,0,-9.81000042
+59: mrnx runtime v3 create failed: authored Matter package identity or joint-runtime contract mismatch
+59: mrnx runtime v3 create failed: invalid authored-world configuration v3
+59: mrnx runtime v3 create failed: authored Matter package validation failed: cannot open matter package: /nonexistent-numanx-world.nmatterpack
+59: mrnx authored world=18208085834334166281 expected=18208085834334166281 physics=18208085834334166281 env=1 rate=0 flags=265 nv=160 nq=161 attachments=12 proxies=0 dt=0.00200000009 expected_dt=0.0020010001 gravity=0,0,-9.81000042 human=0,0,-9.81000042
+59: mrnx runtime v3 create failed: authored Matter package identity or joint-runtime contract mismatch
+59: mrnx authored world=12552748512133824825 expected=12552748512133824825 physics=12552748512133824825 env=1 rate=0 flags=265 nv=160 nq=161 attachments=12 proxies=0 dt=0.00200000009 expected_dt=0.00200000009 gravity=0,0,-8.81000042 human=0,0,-9.81000042
+59: mrnx runtime v3 create failed: authored Matter package identity or joint-runtime contract mismatch
+59: mrnx authored world=11766988387312533425 expected=11766988387312533425 physics=11766988387312533425 env=1 rate=0 flags=265 nv=160 nq=161 attachments=12 proxies=0 dt=0.00200000009 expected_dt=0.00200000009 gravity=0,0,-9.81000042 human=0,0,-9.81000042
+59: mrnx runtime v3 create failed: authored Matter attachment does not match initial Human frame
+59: mrnx authored world=6218020722061242384 expected=6218020722061242384 physics=6218020722061242384 env=1 rate=0 flags=265 nv=160 nq=161 attachments=12 proxies=0 dt=0.00200000009 expected_dt=0.00200000009 gravity=0,0,-9.81000042 human=0,0,-9.81000042
+59: mrnx runtime v3 create failed: authored Matter attachment escapes Human body table
+59: mrnx authored world=11077890025770886045 expected=11077890025770886045 physics=11077890025770886045 env=1 rate=0 flags=265 nv=160 nq=161 attachments=12 proxies=0 dt=0.00200000009 expected_dt=0.00200000009 gravity=0,0,-9.81000042 human=0,0,-9.81000042
+59: mrnx runtime v3 create failed: authored Matter attachment velocity disagrees with Human
+59: mrnx authored world=5795073314215899776 expected=5795073314215899776 physics=5795073314215899776 env=1 rate=0 flags=264 nv=160 nq=161 attachments=12 proxies=0 dt=0.00200000009 expected_dt=0.00200000009 gravity=0,0,-9.81000042 human=0,0,-9.81000042
+59: mrnx runtime v3 create failed: authored Matter package identity or joint-runtime contract mismatch
+59: mrnx authored world=1425092118435859127 expected=1425092118435859127 physics=1425092118435859127 env=1 rate=0 flags=265 nv=160 nq=161 attachments=12 proxies=0 dt=0.00200000009 expected_dt=0.00200000009 gravity=0,0,-9.81000042 human=0,0,-9.81000042
+59: mrnx runtime v3 create failed: active Matter fibre requires a muscle-force replacement map
+59: mrnx runtime v3 create failed: authored Matter package validation failed: invalid or unsupported matter package header
+59: mrnx authored world=18208085834334166281 expected=18208085834334166281 physics=18208085834334166281 env=1 rate=0 flags=265 nv=160 nq=161 attachments=12 proxies=0 dt=0.00200000009 expected_dt=0.00200000009 gravity=0,0,-9.81000042 human=0,0,-9.81000042
+59: numanx_authored_world_admission=pass negative_cases=12 objects=3 attachments=12
+59: numanx_fullbody_bridge_probe=pass bodies=157 nq=129 nv=128 muscles=416 motor_wait=ordered physical=prepared sensor=unpublished timeout=quarantined
+2/2 Test #59: numanx.integration.fullbody_authored_world .........   Passed    1.89 sec
+
+The following tests passed:
+	numanx.integration.fullbody_bridge_prepared_root
+	numanx.integration.fullbody_authored_world
+
+100% tests passed out of 2
+
+Label Time Summary:
+fullbody    =   9.72 sec*proc (2 tests)
+human       =   9.72 sec*proc (2 tests)
+matter      =   9.72 sec*proc (2 tests)
+metal       =   9.72 sec*proc (2 tests)
+numanx      =   9.72 sec*proc (2 tests)
+physics     =   9.72 sec*proc (2 tests)
+
+Total Test time (real) =   9.72 sec
