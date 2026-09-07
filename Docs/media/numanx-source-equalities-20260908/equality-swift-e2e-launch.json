@@ -1,0 +1,30 @@
+{
+  "command": [
+    "swift",
+    "test",
+    "--skip-build",
+    "--filter",
+    "testRealFullBodyBrainProposalApplyAndJointPublication|testAuthoredMatterBrainProposalApplyAndJointPublication"
+  ],
+  "cwd": "/Users/n/numi-brain-human-completion-20260907",
+  "environment": {
+    "NUMANX_METALROBO_LIBRARY": "/Users/n/MetalRobo-human-completion-build-20260907/lib/libmetalrobo.dylib",
+    "NUMANX_FULLBODY_RIGID": "/Users/n/human-completion-20260907/input/myosim-fullbody-core-reference.nhrigid",
+    "NUMANX_FULLBODY_MUSCLE": "/Users/n/human-completion-20260907/input/myosim-fullbody-muscle-reference.nhmyo",
+    "NUMANX_FULLBODY_CONTACT": "/Users/n/human-completion-20260907/input/myosim-fullbody-support-contact.nhcnt",
+    "NUMANX_METALROBO_METALLIB": "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib",
+    "NUMANX_MATTER_METALLIB": "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib",
+    "NUMANX_FULLBODY_VISUAL_PACK": "/Users/n/NumiHumanCurrent/anterior-thorax-smoke/myosim-fullbody-articulated-markers-muscle-driven-selected-actuators-source-support-contact.mrvpack",
+    "NUMANX_FULLBODY_VISION_PROFILE": "/Users/n/Numan-X-neuron-v1/assets/numanx-head-vision-profile.v1.json",
+    "NUMANX_MATTER_MATERIAL": "/Users/n/MetalRobo-human-completion-20260907/matter/materials/silicone.nmatter",
+    "NUMANX_MATTER_WORLD_PACKAGE": "/Users/n/human-completion-20260907/authored-world-fixture/authored-100us.nmatterpack",
+    "NUMANX_HUMAN_SOURCE_FP": "aef317857bfd43c3",
+    "NUMANX_MATTER_WORLD_FP": "1e27de49d70dff41",
+    "NUMANX_JOINT_EQUALITIES": "/Users/n/human-completion-20260907/input/myosim-fullbody-joint-equalities-source-compliance.nheq",
+    "NUMANX_JOINT_EQUALITY_FP": "19041185bf97c95d",
+    "MTL_DEBUG_LAYER": "1",
+    "MRNX_PHYSICAL_DIAGNOSTICS": "1"
+  },
+  "elapsed_seconds": 40.063648542,
+  "returncode": 0
+}

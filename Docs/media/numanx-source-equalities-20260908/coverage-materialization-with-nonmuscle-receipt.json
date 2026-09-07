@@ -1,0 +1,153 @@
+{
+  "counts": {
+    "leaves": 27801,
+    "mandatory_leaves": 80,
+    "unresolved_current_registers": 3
+  },
+  "created_utc": "2026-09-07T23:33:02.256388+00:00",
+  "every_leaf_evidence_status": "unknown",
+  "files": [
+    {
+      "bytes": 24741,
+      "path": "src/numilab_human/myosim_export.py",
+      "sha256": "17d193ff225853e978036c20080d51dc94c346183044f84e655644d565d6cd24"
+    },
+    {
+      "bytes": 38680,
+      "path": "src/numilab_human/target_coverage.py",
+      "sha256": "7d4ace18fcf474294f4bf67a58bf63326062959f250eb423258ccff49a49df51"
+    },
+    {
+      "bytes": 835389,
+      "path": "src/numilab_human/model.py",
+      "sha256": "d3b243a5235937d1d60870d97495f1e4a45a67b8bb6a7c13b5a14dbfb359215b"
+    },
+    {
+      "bytes": 15391,
+      "path": "tests/test_target_coverage.py",
+      "sha256": "15898190345fa724275556b23e8865b6474c8abdb3790f0d6721de55b03d49f3"
+    },
+    {
+      "bytes": 2474,
+      "path": "tests/test_myosim_source_inventory.py",
+      "sha256": "bbdee41a92dc21bf9c6a365f965bd96b6e9666ce8f162949d040bb0ceea6f642"
+    },
+    {
+      "bytes": 5198,
+      "path": "schemas/humanpack-target-coverage.v1.schema.json",
+      "sha256": "f73ee2782512346bf6d558a852fba842d8e77ba19d648d5792be16ea418b2867"
+    },
+    {
+      "bytes": 5361,
+      "path": "sources.lock.json",
+      "sha256": "03d20d46bfb47b67fb251182758eebbc8f1bbe2f38ce51881dc4c2694774fdee"
+    },
+    {
+      "bytes": 1171268,
+      "path": "Build/target-coverage-20260908/myosim-export-with-nonmuscle-tendons.json",
+      "sha256": "22330f2c7d32c872e1ddae4bba85a58c4bc1f683a0cb485dd6ffb4d8ff0062af"
+    },
+    {
+      "bytes": 6302,
+      "path": "Build/target-coverage-20260908/materialize_nonmuscle_receipt.py",
+      "sha256": "d7c74697731b23d5c1448fe610e4382fdcccc23ec10756245ec4b48ff2f627d8"
+    }
+  ],
+  "focused_tests": {
+    "coverage_methods_passed": 13,
+    "integration_test_path": "tests/test_myosim_source_inventory.py",
+    "mujoco_version": "3.12.0",
+    "nonmuscle_tamper_cases_passed": 8,
+    "pinned_source_integration_methods_passed": 1,
+    "runner": "unittest",
+    "source_interpreter": ".venv-myosim/bin/python"
+  },
+  "fresh_lowering_identity": {
+    "artifacts": {
+      "equality_compliance_payload": {
+        "bytes": 5792,
+        "exact_reference_match": true,
+        "reference": {
+          "bytes": 5792,
+          "path": "Build/completion-20260908/constraint-oracle/myosim-fullbody-joint-equalities-source-compliance.nheq",
+          "sha256": "12db05fddb492e77e7fd461fad566d3e1e75390f2cb6f77f26568254a6cb4477"
+        },
+        "sha256": "12db05fddb492e77e7fd461fad566d3e1e75390f2cb6f77f26568254a6cb4477"
+      },
+      "equality_payload": {
+        "bytes": 4976,
+        "exact_reference_match": true,
+        "reference": {
+          "bytes": 4976,
+          "path": "Build/completion-20260908/constraint-oracle/myosim-fullbody-joint-equalities.nheq",
+          "sha256": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a"
+        },
+        "sha256": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a"
+      },
+      "rigid_payload": {
+        "bytes": 60324,
+        "exact_reference_match": true,
+        "reference": {
+          "bytes": 60324,
+          "path": "Build/completion-20260908/constraint-oracle/myosim-fullbody-core-reference.nhrigid",
+          "sha256": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44"
+        },
+        "sha256": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44"
+      }
+    },
+    "scope": "actual lowerer through rigid and equality prefix; no muscle fitting or GPU work",
+    "seconds": 0.021311750169843435,
+    "source_equality_count": 51
+  },
+  "host": "macOS-26.6-arm64-arm-64bit-Mach-O",
+  "integrated_qualification": "unknown",
+  "manifest": {
+    "bytes": 19805964,
+    "canonical_json_sha256": "8df108b343af8622e2fa04392b39620fdcc05ce6ccc34807406430b5999fa501",
+    "manifest_sha256": "6c23e517d7e3e2d906aa474955d8ce8e225f5c50e7f172eaa9a51da2bbd04d37",
+    "path": "Build/target-coverage-20260908/HumanPack.target-coverage.with-nonmuscle-tendons.v1.json",
+    "sha256": "a318cf344ac8ac8b38f0beb9bf708fb7b6878141558e5b5b75969e24432b5739"
+  },
+  "new_source_inventory": {
+    "native_mechanics_status": "not_lowered",
+    "nonmuscle_tendons": 8,
+    "route_elements": 24,
+    "sites": 24,
+    "wrap_geometries": 8
+  },
+  "previous_manifest": {
+    "bytes": 19734916,
+    "canonical_json_sha256": "ef59968d3f0dbc40495d699d8c4e416547af23f15e7ae28a04a2d92fc491d3fd",
+    "manifest_sha256": "5e0ba338320d26766beb1d600ede0fcefaa28b6f9042f0419d6529f8fbf91eb5",
+    "path": "Build/target-coverage-20260908/HumanPack.target-coverage.v1.json",
+    "sha256": "2a36f206c4fec357bb0eac49405ea5b5b5eb013539fcd458c6470ebd18a810b9"
+  },
+  "python": "3.14.6",
+  "repeat_byte_identical": true,
+  "repeat_seconds": 4.664997832849622,
+  "retention": {
+    "exact_previous_leaf_records_retained": 27737,
+    "new_leaves": 64,
+    "previous_leaves": 27737,
+    "removed_leaves": 0
+  },
+  "schema": "numi.human.target-coverage-materialization-receipt.v1",
+  "scope_status": "blocked",
+  "unresolved_registers": [
+    {
+      "path": "source_inventory",
+      "source_id": "mobl_arms_upper_extremity",
+      "status": "unavailable_source_inventory"
+    },
+    {
+      "path": "myosim/myo_sim-33c89c2b.tar.gz#/myo_sim/models/legacy/elbow/myoelbow_1dof6muscles_1dofSoftexo_sim2.xml",
+      "source_id": "myosim_fullbody",
+      "status": "invalid_source_xml"
+    },
+    {
+      "path": "source_inventory",
+      "source_id": "zanatomy_right_calf_visual_supplement",
+      "status": "unavailable_source_inventory"
+    }
+  ]
+}

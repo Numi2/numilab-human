@@ -1,0 +1,45 @@
+Test project /Users/n/MetalRobo-human-completion-build-20260907
+      Start 12: matter.physics.mixed_mpm_fem
+ 1/10 Test #12: matter.physics.mixed_mpm_fem .........................   Passed    1.18 sec
+      Start 13: matter.physics.monolithic_multiphysics
+ 2/10 Test #13: matter.physics.monolithic_multiphysics ...............   Passed    0.12 sec
+      Start 52: numanx.integration.human_matter_owner_transaction
+ 3/10 Test #52: numanx.integration.human_matter_owner_transaction ....Subprocess aborted***Exception:   0.40 sec
+2026-09-08 01:30:55.614 metalrobo_numanx_human_matter_owner_probe[35081:6019188] Metal API Validation Enabled
+-[MTLDebugComputeCommandEncoder setThreadgroupMemoryLength:atIndex:]:799: failed assertion `length(4) must be a multiple of 16 bytes.'
+
+      Start 53: numanx.integration.human_matter_owner_v4
+ 4/10 Test #53: numanx.integration.human_matter_owner_v4 .............   Passed    2.01 sec
+      Start 54: numanx.integration.human_matter_exact_candidate
+ 5/10 Test #54: numanx.integration.human_matter_exact_candidate ......   Passed    0.81 sec
+      Start 55: numanx.integration.human_matter_adapter
+ 6/10 Test #55: numanx.integration.human_matter_adapter ..............***Failed    0.74 sec
+2026-09-08 01:30:58.822 metalrobo_numanx_human_matter_adapter_probe[35085:6019237] Metal API Validation Enabled
+numanx_human_matter_adapter_probe=fail
+reason=bounded apply allocation did not reproduce completed-CB Objective-C address reuse
+
+      Start 57: numanx.integration.human_matter_attachment_runtime
+ 7/10 Test #57: numanx.integration.human_matter_attachment_runtime ...   Passed    0.46 sec
+      Start 58: numanx.integration.fullbody_bridge_prepared_root
+ 8/10 Test #58: numanx.integration.fullbody_bridge_prepared_root .....   Passed    2.31 sec
+      Start 59: numanx.integration.fullbody_authored_world
+ 9/10 Test #59: numanx.integration.fullbody_authored_world ...........   Passed    1.97 sec
+      Start 95: numanx.physics.human_source_equality
+10/10 Test #95: numanx.physics.human_source_equality .................   Passed    0.02 sec
+
+80% tests passed, 2 tests failed out of 10
+
+Label Time Summary:
+fullbody    =   4.27 sec*proc (2 tests)
+human       =   8.71 sec*proc (8 tests)
+matter      =   5.60 sec*proc (5 tests)
+metal       =  10.02 sec*proc (10 tests)
+numanx      =   8.71 sec*proc (8 tests)
+physics     =  10.02 sec*proc (10 tests)
+
+Total Test time (real) =  10.02 sec
+
+The following tests FAILED:
+	 52 - numanx.integration.human_matter_owner_transaction (Subprocess aborted) human metal numanx physics
+	 55 - numanx.integration.human_matter_adapter (Failed)  human metal numanx physics
+Errors while running CTest

@@ -1,0 +1,20 @@
+[0/1] Planning build
+error: Process '/Applications/Xcode-26.6.0.app/Contents/Developer/usr/bin/xctest -XCTest NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests/testAuthoredMatterBrainProposalApplyAndJointPublication,NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests/testRealFullBodyBrainProposalApplyAndJointPublication /Users/n/numi-brain-human-completion-20260907/.build/arm64-apple-macosx/debug/NumiBrainPackageTests.xctest' exited with unexpected signal code 6
+Test Suite 'Selected tests' started at 2026-09-08 01:27:08.016.
+Test Suite 'NumiBrainPackageTests.xctest' started at 2026-09-08 01:27:08.021.
+Test Suite 'MetalNumanXBridgeV1EndToEndTests' started at 2026-09-08 01:27:08.021.
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testAuthoredMatterBrainProposalApplyAndJointPublication]' started.
+2026-09-08 01:27:08.048 xctest[32795:6013596] Metal API Validation Enabled
+mrnx_matter_status code=0 object=4294967295 index=4294967295 fgmres=3 contacts=0 diagnostics=[1.00001025,0,0,0]
+mrnx_human_status code=0 index=4294967295 contacts=0 iterations=12 contact_accel=[0,0,0,818.260193] factor_assist=[0.0102690682,9.85555363,0,0]
+mrnx_matter_status code=0 object=4294967295 index=4294967295 fgmres=2 contacts=0 diagnostics=[0.999998391,0,0,0]
+mrnx_human_status code=0 index=4294967295 contacts=0 iterations=12 contact_accel=[0,0,0,448.827332] factor_assist=[0.0102690682,9.85555363,0,0]
+mrnx_matter_status code=0 object=4294967295 index=4294967295 fgmres=2 contacts=0 diagnostics=[1.00001049,0,0,0]
+mrnx_human_status code=0 index=4294967295 contacts=0 iterations=12 contact_accel=[0,0,0,433.22876] factor_assist=[0.0102690682,9.85555363,0,0]
+mrnx_matter_status code=0 object=4294967295 index=4294967295 fgmres=2 contacts=0 diagnostics=[0.999998391,0,0,0]
+mrnx_human_status code=0 index=4294967295 contacts=0 iterations=12 contact_accel=[0,0,0,418.181366] factor_assist=[0.0102690682,9.85555363,0,0]
+validateComputeFunctionArguments:1065: failed assertion `Compute Function(mr_numanx_human_matter_propose_prepared): argument brainWitnesses[0] from Buffer(1) with offset(0) and length(96) has space for 96 bytes, but argument has a length(128).'
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

@@ -1,0 +1,28 @@
+{
+  "schema": "numi.human.nheq2-fp64-oracle.v1",
+  "scope": "CPU row semantics and algebra only; no native or physical outcome proof",
+  "mujoco_version": "3.12.0",
+  "payload_sha256": "12db05fddb492e77e7fd461fad566d3e1e75390f2cb6f77f26568254a6cb4477",
+  "canonical_fp32_inputs_promoted_to_mujoco_fp64": true,
+  "cases": 4,
+  "rows_per_case": 51,
+  "source_row_max_absolute_errors": {
+    "position": 2.220446049250313e-16,
+    "jacobian": 4.440892098500626e-16,
+    "reference_acceleration": 4.547473508864641e-13,
+    "regularizer": 1.734723475976807e-18
+  },
+  "initial_max_position_defect": 0.05241920053958893,
+  "eliminated_vs_full_kkt_max_velocity_error": 4.812990284097651e-14,
+  "eliminated_vs_full_kkt_max_dual_error": 7.803827029029264e-14,
+  "primal_residual_inf": 3.190399333607985e-13,
+  "dual_residual_inf": 1.0842021724855044e-19,
+  "operator_central_difference_relative_error": 2.9900608017027436e-12,
+  "J_rank": 51,
+  "reduced_nullity": 77,
+  "R_min": 0.00039998683006323046,
+  "R_max": 0.030979064694220543,
+  "source_urls": [
+    "https://github.com/google-deepmind/mujoco/blob/3.12.0/src/engine/engine_core_constraint.c"
+  ]
+}
