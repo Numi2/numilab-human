@@ -1,0 +1,111 @@
+{
+  "schema": "numi.human.costal-idle-receipt.v1",
+  "date": "2026-09-08",
+  "native_commit": "1ca086546e81b00251bed0d4eeef48e8e9ecca92",
+  "brain_commit": "30f138fa17378fce788701edb5c7d834ee3c7c69",
+  "qualification": {
+    "bounded_costal_callback_deadline": true,
+    "exact_retry": true,
+    "timeout_cause_established": false,
+    "prepared_anatomical_tissue": false,
+    "sustained_loading": false,
+    "standing": false,
+    "walking": false,
+    "calibration": false,
+    "performance": false,
+    "full_release": false
+  },
+  "measurements": {
+    "attempted_roots": 9,
+    "accepted_roots": 8,
+    "accepted_seconds": 8e-05,
+    "root_timestep_microseconds": 10,
+    "retry": "bitwise",
+    "physical_failed_candidates": 0,
+    "numivivo_jobs_detected": 0
+  },
+  "elapsed_seconds": 277.3926608748734,
+  "sampled_process_footprint": {
+    "early_current": "1.2G",
+    "early_peak": "1.5G",
+    "intermediate_current": "1.2G",
+    "intermediate_peak": "1.6G",
+    "late_current": "9.0G",
+    "late_peak": "9.3G",
+    "units": "macOS sample display strings; process footprint includes driver and test allocations, not native retained-byte accounting"
+  },
+  "scope": "NHLIM1/NHEQ2 costal ownership at source-default initial state and NHCNT1 support. 46,278 tetrahedra, 2,871 attachments, 8 accepted roots at 10 us. The unchanged 60-second per-callback test deadline passes with no observed NumiVivo jobs; historical timeout cause, prepared NHCNT2 tissue state and sustained/calibrated mechanics are not qualified.",
+  "sampling_note": "Automatic samples in the executed runner missed XCTest because it has its own process group. Three manual samples of the verified XCTest child are retained. Future run_costal.py uses descendant ownership; run_costal.executed.py retains the exact executed runner.",
+  "artifacts": [
+    {
+      "path": "costal-idle-clean-launch.json",
+      "bytes": 4323,
+      "sha256": "62f1906dc34e80bffac18d6cc0f5f372b8954d68f805fb3fd925173f3b1091c1"
+    },
+    {
+      "path": "costal-idle-clean-sample-late.txt.gz",
+      "bytes": 38731,
+      "sha256": "26bb1285cf22ff164e22b879ed26902a465109c1ba6f4503ea05d11eef8bcc33"
+    },
+    {
+      "path": "costal-idle-clean-sample-live.txt.gz",
+      "bytes": 38756,
+      "sha256": "e283ca54c73e5b22768045deb12d401174a591b77f30ec1c56e953e07ef15151"
+    },
+    {
+      "path": "costal-idle-clean-sample-progress.txt.gz",
+      "bytes": 39001,
+      "sha256": "d08c162a56acc15ca71a95da1d63afcd01c6a030f8a13ba9b606dba39739f4c2"
+    },
+    {
+      "path": "costal-idle-clean-workload.json",
+      "bytes": 10415,
+      "sha256": "18f599968cfa757dc35d90527d1b7d60c3ebf6969d05bcf357a192240ee731d2"
+    },
+    {
+      "path": "costal-idle-clean.log.gz",
+      "bytes": 2188,
+      "sha256": "6787f4e50970fa0e78cce9c7266b94134ac0edc674a5f4429427af7b9b151cdf"
+    },
+    {
+      "path": "costal-request.json",
+      "bytes": 2360,
+      "sha256": "39768796735c6257c03254f7f267f9fdf120f2d07f5394446dcb8aa3e9380095"
+    },
+    {
+      "path": "run_costal.executed.py",
+      "bytes": 3420,
+      "sha256": "1863331542df1eee14145849084ddc65acced57eb32ad1f63709849802f45dbb"
+    },
+    {
+      "path": "run_costal.py",
+      "bytes": 3968,
+      "sha256": "f4fbe550901c4f4a59f2c508954753b62ebe58c087e5ff19baa5668c64c6a868"
+    },
+    {
+      "path": "sample-command.log.gz",
+      "bytes": 178,
+      "sha256": "87051025db173c20b98bb03448c085adb55cf1d49c02a71ca6d02c7cc169b2a5"
+    },
+    {
+      "path": "sample-late-command.log.gz",
+      "bytes": 178,
+      "sha256": "4b7c9833bf03baf408c6e670b01f52d1e057e632bdd06c242e72530f206001e4"
+    },
+    {
+      "path": "sample-progress-command.log.gz",
+      "bytes": 180,
+      "sha256": "8ccee6d4da4196ff7f254ce163ca63bb830b74b5f02fe8580b76194d6e38a41a"
+    },
+    {
+      "path": "test_verify_receipt.py",
+      "bytes": 1210,
+      "sha256": "abe91c00812716a7ad0d5caf863358ebc69897af0f434636d8dd05ead92827d7"
+    },
+    {
+      "path": "verify_receipt.py",
+      "bytes": 3329,
+      "sha256": "67b98dd971089998ce4a7798fc2ae0fc05cebf7c98278647b0b4bf0302b7dc91"
+    }
+  ]
+}

@@ -106,3 +106,11 @@ activation/force response, dropout and bitwise replay pass. Early settling is
 essentially unchanged (right ankle velocity about 0.169 rad/s at 0.4 ms).
 Loaded source-compliant equilibrium, registered tissue, calibrated feedback and
 sustained behavior remain open; inhibition was not weakened.
+
+The subsequent [costal idle-host qualification](COSTAL_IDLE_REQUALIFICATION_20260908.md)
+passes eight accepted 10-microsecond roots and exact rejection/retry under the
+unchanged 60-second callback deadline. No NumiVivo job was observed during the
+277-second runner. This closes the current source-default costal fixture's bounded
+deadline gate; it does not establish the historical timeout cause or qualify
+prepared NHCNT2 tissue loading. A sampled 9.3G process peak leaves memory and
+performance investigation open.

@@ -895,3 +895,9 @@ patellar cartilage candidate. Prestress equilibrium and whole-joint tissue
 calibration remain unqualified.
 
 The [registered costal mass-ownership update](Docs/COSTAL_TISSUE_OWNERSHIP_20260908.md) adds common-frame binding, cooked rigid/tissue mass partition and native v5 admission. The [neuromusculoskeletal release matrix](Docs/NEUROMUSCULOSKELETAL_RELEASE_MATRIX.md) records the remaining completion gates.
+
+The [latest costal callback qualification](Docs/COSTAL_IDLE_REQUALIFICATION_20260908.md)
+passes the unchanged deadline and exact rejection/retry for eight accepted roots
+with no observed NumiVivo workload. This covers 80 microseconds at the source
+initial pose. Prepared anatomical tissue loading and performance remain open;
+the late process sample reports a 9.3G peak.
