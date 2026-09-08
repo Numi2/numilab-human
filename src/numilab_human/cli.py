@@ -290,6 +290,12 @@ def myosim_build(arguments: argparse.Namespace) -> int:
     from .support_primitives import compile_support_primitives
     primitive_manifest, primitive_payload = compile_support_primitives(exported, manifest)
     manifest["payloads"]["support_primitives"] = primitive_manifest
+    limit_artifact = None
+    if "joint_limit_solver" in exported.get("model", {}):
+        from .joint_limits import compile_joint_limits
+        limit_manifest, limit_payload = compile_joint_limits(exported, manifest)
+        manifest["payloads"]["joint_limits_source_compliance"] = limit_manifest
+        limit_artifact = (limit_manifest["file"], limit_payload)
     output = arguments.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     rigid = output / manifest["payloads"]["rigid"]["file"]
@@ -301,6 +307,8 @@ def myosim_build(arguments: argparse.Namespace) -> int:
     muscle.write_bytes(muscle_payload)
     support.write_bytes(support_payload)
     (output / primitive_manifest["file"]).write_bytes(primitive_payload)
+    if limit_artifact is not None:
+        (output / limit_artifact[0]).write_bytes(limit_artifact[1])
     equalities.write_bytes(equality_payload)
     if equality_compliance_payload is not None:
         compliance = output / manifest["payloads"]["joint_equalities_source_compliance"]["file"]
@@ -311,6 +319,8 @@ def myosim_build(arguments: argparse.Namespace) -> int:
     print(f"wrote {muscle}")
     print(f"wrote {support}")
     print(f"wrote {output / primitive_manifest['file']}")
+    if limit_artifact is not None:
+        print(f"wrote {output / limit_artifact[0]}")
     print(f"wrote {equalities}")
     if equality_compliance_payload is not None:
         print(f"wrote {compliance}")

@@ -219,6 +219,10 @@ def export_fullbody(sources: Path) -> dict[str, object]:
                 "axis_body": [float(value) for value in model.jnt_axis[index]],
                 "range": [float(value) for value in model.jnt_range[index]],
                 "limited": bool(model.jnt_limited[index]),
+                "limit_margin": float(model.jnt_margin[index]),
+                "limit_solref": [float(value) for value in model.jnt_solref[index]],
+                "limit_solimp": [float(value) for value in model.jnt_solimp[index]],
+                "limit_dof_invweight0": float(model.dof_invweight0[int(model.jnt_dofadr[index])]),
                 "armature": float(model.dof_armature[int(model.jnt_dofadr[index])]),
                 "damping": float(model.dof_damping[int(model.jnt_dofadr[index])]),
                 "frictionloss": float(model.dof_frictionloss[int(model.jnt_dofadr[index])]),
@@ -537,6 +541,18 @@ def export_fullbody(sources: Path) -> dict[str, object]:
                     int(model.opt.disableflags) & int(mujoco.mjtDisableBit.mjDSBL_REFSAFE)
                 ),
                 "diagexact": False,
+            },
+            "joint_limit_solver": {
+                "schema": "numi.human.mujoco-scalar-limit-solver.v1",
+                "mujoco_version": "3.12.0",
+                "integrator": "Euler",
+                "refsafe": not bool(
+                    int(model.opt.disableflags) & int(mujoco.mjtDisableBit.mjDSBL_REFSAFE)
+                ),
+                "diagexact": False,
+                "enabled": not bool(
+                    int(model.opt.disableflags) & int(mujoco.mjtDisableBit.mjDSBL_LIMIT)
+                ),
             },
         },
         "support_contact": {
