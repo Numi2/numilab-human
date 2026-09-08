@@ -1,0 +1,235 @@
+{
+  "schema": "numi.human.support-stance-evidence.v1",
+  "native_revision": "fab76fe9e0445893ef7a81bc2ddf0a2fd2f3cd58",
+  "native_branch": "coupled",
+  "brain_runtime_revision": "2415704ec61a692ad89be18d4f2869792431526d",
+  "device": "Apple M4 Pro",
+  "host": "macmini",
+  "date": "2026-09-08",
+  "native_source_clean": true,
+  "source_profile": {
+    "schema": "numi.human.source-support-stance.v1",
+    "source": {
+      "archive": "myo_sim-33c89c2b.tar.gz",
+      "archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+      "id": "myosim_fullbody",
+      "license": "Apache-2.0",
+      "mujoco_version": "3.12.0",
+      "repository": "https://github.com/MyoHub/myo_sim",
+      "revision": "33c89c2bde282553dde3f526768eb3bdcfaa7649"
+    },
+    "source_manifest_sha256": "2cea81e64a3c8da63731ae67c40ddc39aa61d9c4d0436000e806d25005e5b6d8",
+    "payloads": {
+      "joint_equalities": {
+        "bytes": 4976,
+        "file": "myosim-fullbody-joint-equalities.nheq",
+        "payload_abi": 1,
+        "sha256": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a"
+      },
+      "muscles": {
+        "bytes": 149372,
+        "file": "myosim-fullbody-muscle-reference.nhmyo",
+        "payload_abi": 2,
+        "sha256": "9a988f19a6fd8e533cd0f2bf3192cb8535fb008ccd394ffbf1a4432d3db76a05"
+      },
+      "rigid": {
+        "bytes": 60324,
+        "file": "myosim-fullbody-core-reference.nhrigid",
+        "payload_abi": 1,
+        "sha256": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44"
+      },
+      "support_contact": {
+        "bytes": 564,
+        "file": "myosim-fullbody-support-contact.nhcnt",
+        "payload_abi": 1,
+        "sha256": "4d54f8155cd83baaee7af536099824ac0da61e5d5e77544b42c6e5ce1b48c907"
+      },
+      "bones": {
+        "file": "bodyparts3d-myosim-major-bones.nhbones",
+        "sha256": "f9132393dfb259a80e2b2084ac5ff15f2bf988f7e073f7a961a7ddcfb9febc3c",
+        "bytes": 11576692
+      }
+    },
+    "coordinates": [
+      {
+        "source_name": "floating_root_translation_z",
+        "dof_index": 2,
+        "q_index": 2,
+        "maximum_displacement": 0.02,
+        "unit": "m"
+      },
+      {
+        "source_name": "ankle_angle_r",
+        "dof_index": 108,
+        "q_index": 109,
+        "maximum_displacement": 0.1,
+        "unit": "rad"
+      },
+      {
+        "source_name": "subtalar_angle_r",
+        "dof_index": 109,
+        "q_index": 110,
+        "maximum_displacement": 0.1,
+        "unit": "rad"
+      },
+      {
+        "source_name": "mtp_angle_r",
+        "dof_index": 110,
+        "q_index": 111,
+        "maximum_displacement": 0.1,
+        "unit": "rad"
+      },
+      {
+        "source_name": "ankle_angle_l",
+        "dof_index": 122,
+        "q_index": 123,
+        "maximum_displacement": 0.1,
+        "unit": "rad"
+      },
+      {
+        "source_name": "subtalar_angle_l",
+        "dof_index": 123,
+        "q_index": 124,
+        "maximum_displacement": 0.1,
+        "unit": "rad"
+      },
+      {
+        "source_name": "mtp_angle_l",
+        "dof_index": 124,
+        "q_index": 125,
+        "maximum_displacement": 0.1,
+        "unit": "rad"
+      }
+    ],
+    "active_contacts": [
+      {
+        "source_name": "bofoot_col2_l",
+        "witness_index": 2
+      },
+      {
+        "source_name": "bofoot_col2_r",
+        "witness_index": 3
+      },
+      {
+        "source_name": "foot_col1_l",
+        "witness_index": 4
+      },
+      {
+        "source_name": "foot_col1_r",
+        "witness_index": 5
+      },
+      {
+        "source_name": "foot_col3_l",
+        "witness_index": 6
+      },
+      {
+        "source_name": "foot_col3_r",
+        "witness_index": 7
+      }
+    ],
+    "activation_limit": 1.0,
+    "boundary": "Explicit offline initial placement and static gravity-wrench certificate. Joint bounds are search bounds, not measured anatomical calibration. No runtime root assistance, tissue registration, internal balance, standing or walking qualification."
+  },
+  "native_static_certificate": "qualified-certificate/receipt.json",
+  "source_oracle": "source-oracle.json",
+  "qualified_native_horizons": "qualified-native.json",
+  "source_archive_files_verified": 57,
+  "validation": {
+    "python_tests": 185,
+    "python_skips": 7,
+    "native_ctest_tests": 2,
+    "tangent_mutation_expected_exit": 1,
+    "source_drift_preflight_expected_exit": 2
+  },
+  "qualification": {
+    "witness_geometry": true,
+    "static_gravity_wrench": true,
+    "source_witness_oracle": true,
+    "full_primitive_geometry": false,
+    "internal_equilibrium": false,
+    "source_compliant_sustained_behavior": false,
+    "standing": false,
+    "walking": false,
+    "experimental_calibration": false,
+    "performance": false,
+    "full_release": false
+  },
+  "costal": {
+    "qualified": false,
+    "attempts_this_increment": 0,
+    "prior_failures": "../support-geometry-20260908/costal-retry.log",
+    "blocking_condition": "A separate NumiVivo cohort continued on macmini; no exclusive heavy-coupled requalification window was available. Earlier 60-second callback timeouts remain unexplained."
+  },
+  "exploration": {
+    "native_128_steps": "Rejected by the existing 64-step probe limit; retained in native.json.",
+    "full_activation": "Improved static recruitment does not resolve dynamic joint limits; all full-capacity logs retained.",
+    "passive_coordinates": "Separate static certificate with sourced fallback tissue rows; not applied by the native standing horizon.",
+    "source_oracle_root_frame": "Initial comparison used COM as body origin; corrected source conversion uses body_ipos/body_iquat. Rejected output retained.",
+    "primitive_contact": "Source capsule penetration of 1.639 micrometres fails the one-micrometre bound, while native point-witness gaps pass."
+  },
+  "boundary": "Native bounded witness placement and gravity-wrench evidence only. No complete primitive contact, internal equilibrium, source-compliant sustained dynamics, standing, walking, independent calibration, or full Human release qualification.",
+  "files": {
+    "analytic.log": "594c2a0ddc6b13490bd88f146744989116ebd5df4fd93f7aa3a8b0141457edf7",
+    "build.log": "088b887024833d7f0281e669d6aa98c15e1acc2bcecc133eb2b2cab2191e37dc",
+    "ctest-final.log": "2ba247407bb40ce5970424894e414687da8f87723661e7c19989b31a89e1623f",
+    "final-certificate/qualifier.py": "8eaca1eb7d63d89f649e4b1640b9e235f84a70ea880c712c0b91e0ddbc0a6684",
+    "final-certificate/receipt.json": "b9cb3868c7d9838cc1be309f3da06eca4a5e805f70b2ec26fde4bcfb598bd64c",
+    "final-certificate/runtime.patch": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final-certificate/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final-certificate/stdout.log": "995a8d6580878c73ad11996194bc57bec08499df7d8d7798146c4f542a07b8b4",
+    "full-capacity-1-0.0001-workload.txt": "6332b3baa88b83f3d57c81a2dcab49a730e44f7610aa6be3773e15290b6aa9a5",
+    "full-capacity-1-0.0001.log": "6bc68f72212dece6a183a7f43fd170df775adc2dfa6d97edc887a8575690a391",
+    "full-capacity-16-0.0001-workload.txt": "25f8c97b487248b28aa58937f2ee9b6d522d0f476940dd23b5ff03208bfb09f2",
+    "full-capacity-16-0.0001.log": "bb6c2baaf0b2c7d76cf6215d75b33f0ed6dc39d753f14d02b3876ef2df0e57c8",
+    "full-capacity-32-0.00005-workload.txt": "ff5da95f0fccf72c7a5ba85b4e36c17dcee22e819782c820a4076760fc597535",
+    "full-capacity-32-0.00005.log": "05ac6176bb4915d4c3751446581dd35e3259a5d82a2c3d02204d23a7e0e19f82",
+    "full-capacity-64-0.000025-workload.txt": "e9db547d6c55dca9e543d0631d535f32165fd0cf73d22dbe63f1373e7f4e17d3",
+    "full-capacity-64-0.000025.log": "55e042461db2797afb5e539f094d778c7a0a87c885369fb61e5a6aadb9a1a0fa",
+    "full-capacity-64-0.0001-workload.txt": "6dc27f9e117b0d98215a84d7a6a9d0f1441cb3ada37e7e2ee301a49834bd8f3c",
+    "full-capacity-64-0.0001.log": "206e1444fcebd1619ab681e90a2df1527935abfb5b002aa53dbc913ce0c92def",
+    "full-capacity.json": "bb8454d4935199bb319525cff15280256b3f6a970d240da67eaee67485eb4b02",
+    "geometry.log": "8224d7649e04734aa004d6f50409e856353d4ca77326cd49235ae5cc6443eba9",
+    "human-python-final.log": "2cac646e5f029864a6bd0be3d99b8640288de0de8240a4d6c0e567113a1e7e88",
+    "human-python.log": "65f106f37eb4a96abd81c2c75a149942aea9dd2b56aedc5d5d62314bbec6d714",
+    "native-1-0.0001-workload.txt": "79403c3e538e76774d48f4bf5bd117e029d51cc534af8a0eb67694a9b538fbe6",
+    "native-1-0.0001.log": "666dec7b89a34d7415b2c7f667d6beed07d4630c44b04b5a22a39861fed946e2",
+    "native-128-0.00005-workload.txt": "7885ec0ff0be7888795fbdaff0c6f913102f3f383e7682e1d223a486572f7f71",
+    "native-128-0.00005.log": "ef4480e52453d098454baaa1b838649e7eece14a530d4ce4be23a5c7572c990b",
+    "native-64-0.0001-workload.txt": "737227131fbeec8ac2c28b0a4e0e54f9f9cce0280487436420d95a7dcc4418d9",
+    "native-64-0.0001.log": "b39b2a17d812b188f80d8b258fe90eb49cc6dc158bafee69cf215dcec08fd017",
+    "native-commit.patch.gz": "bffb8865389fdd36ace653c091efc6b0c6e5cd422a5644b8019e0b7272684330",
+    "native.json": "fc13bd372a3c4243fd84103337a09680be4abe3a6c6c96db6180f05a2459cfc7",
+    "oracle-install.log": "f0a71a5810f565135a32a8c261f19b53d371a0603b85bbd23e2d885c60981cd0",
+    "qualified-certificate/qualifier.py": "9edfeb7362cfde0d9d8240595ffb39602847f0d2d5cef0e6f3a75fe4da64716a",
+    "qualified-certificate/receipt.json": "a5009a0451e7d26351ef2b6ee36c40a04861cd6cfffea06c2a7d7b9e89463e54",
+    "qualified-certificate/runtime.patch": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "qualified-certificate/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "qualified-certificate/stdout.log": "995a8d6580878c73ad11996194bc57bec08499df7d8d7798146c4f542a07b8b4",
+    "qualified-native-1-0.0001-workload.txt": "3b2f82541f4813bfc7710bc64e5608ab1a105ab8e8dcf90aa8cad7b8c70b1216",
+    "qualified-native-1-0.0001.log": "55267bf962aa4dfb79903995d2be04695ff5fa5e47c319ab524e5c37444a22c3",
+    "qualified-native-64-0.0001-workload.txt": "0504f02e9a5b8a8c66f1e9d1d9c0eb16b59f027280e3b65a0b89e8aa7b3024fd",
+    "qualified-native-64-0.0001.log": "53797b83ea1d67f1cfb872f8f8377f907299b9e82feb9e05261f9e97dba0688f",
+    "qualified-native.json": "ada5dc61cc700c641b3839f858c37afb4e918705bff8a38db16c655ceab29f0f",
+    "qualify_native.py": "80cf30e7f8c05da2f47abd55246a74104c30a4668102fed928f042473e7ad578",
+    "run_full_capacity.py": "ac81f97efd11d5fc2589b0a1732f08e47c577e7d2d3d1da9e65fc97f0b2a5adb",
+    "run_geometry.py": "6d9ef77f267c21de7ae81e2f97cce65d97951cb3281d466af44b8e6866986c05",
+    "run_native_stance.py": "05fbbbfb4b0a3119b45fa427f194411f5df166aaeb042e0a7627956e3a75a4f6",
+    "run_stance.py": "2eb97995fa44b9ada67c62db551458444df78b45254805f4df8870c308f521cb",
+    "source-drift-negative.log": "c0aff00b27a9904dd084d91bd5207a3e9e1bef92490caa3ca02bd0036e4095fa",
+    "source-manifest.json": "2cea81e64a3c8da63731ae67c40ddc39aa61d9c4d0436000e806d25005e5b6d8",
+    "source-oracle-root-frame-rejected.json": "f7d602a99de4cb01be1254613c57bbe67b762dd3b7f31ebece27cf4238bc6ae0",
+    "source-oracle.json": "30a1c8b1a2b914597f0dd7424cf185d37fdddcaa79fba53bda9fa06025dd140c",
+    "source-oracle.log": "200f095153c2337ba585ffe4ec210849af19732ec68103235a0826ca195beeb1",
+    "stance-6.4ms-front.png": "437afcfe8ec050754f038d1ff62e12b6bae784925bf8950f7975e2da0956de85",
+    "stance-launch.json": "b67d726e8f73fa26d3e20c50ee3de0ca1b9b91eb5bb9f333531949579e76a358",
+    "stance-passive.log": "fc16a61f29c0817c3db8808544c0386dd44185abe88475044e31bbdd72dab364",
+    "stance.log": "995a8d6580878c73ad11996194bc57bec08499df7d8d7798146c4f542a07b8b4",
+    "tangent-mutant-build.log": "8a6c017e3a72aa8bd61f08aaf4aa2ce8ca3552ff547273d453b1a2a89e001aed",
+    "tangent-mutant.log": "28c95b4831502279d18c349e760c97a74c1713b25af8782a0a922641602ad365",
+    "tangent-restore-build.log": "8a6c017e3a72aa8bd61f08aaf4aa2ce8ca3552ff547273d453b1a2a89e001aed",
+    "tangent-restored.log": "594c2a0ddc6b13490bd88f146744989116ebd5df4fd93f7aa3a8b0141457edf7",
+    "test-build.log": "e883c3920ff5bb35f8211df2bcecd49c885a0e03066e69167e2d010d8aff2b36",
+    "verify_source_geometry.py": "9212e5d8805438d13a07484fdfaab354ba11b7d817de63e536a99165898c1821",
+    "verify_support_stance.py": "908b0f7c6e72801c8e532a76a1a3ae527b64864ec97a0283b5a63e1dd57968af"
+  }
+}

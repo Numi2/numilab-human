@@ -2,6 +2,12 @@
 
 The current release target remains the [neuromusculoskeletal release matrix](NEUROMUSCULOSKELETAL_RELEASE_MATRIX.md). Standing and walking require the same published anatomical, tissue, controller and native runtime stack. This plan resolves the next physical dependency and specifies the remaining executable gates.
 
+The [subsequent source stance increment](SUPPORT_STANCE_20260908.md) closes the
+NHCNT1 witness gravity wrench with bounded native initial placement. Internal
+equilibrium remains false. Independent source checking also finds a 1.639-micrometre
+capsule penetration, so current-pose primitive contact must precede full standing
+admission. The numerical results below retain the earlier `c1db46d` baseline.
+
 ## Implemented: geometrically admissible recruitment
 
 The legacy standing baseline started with a 14.0669 mm foot penetration. A one-step diagnosis separated the source ground alignment, joint-equality projection and muscle recruitment. The first two left minimum gaps of approximately 0.012 and 0.107 micrometres. Recruitment then changed right-ankle coordinate 109 from zero to -0.1221731 rad without respecting the ground. Its static support compiler also assigned force to separated witnesses because the support interface contained a direction but no plane.
@@ -24,7 +30,7 @@ validation enabled; readiness authority and decision-shadow checks are unchanged
 
 | Work | Permanent owner and implementation | Completion evidence |
 |---|---|---|
-| Load-balanced anatomical stance | Extend native offline posture/recruitment compilation to solve the source-bounded stance with joint rows, limits, passive tissue/prestress, fibre equilibrium and unilateral ground contact together. Root placement must be an explicit compiled initial condition shared with tissue registration. Carry pose, muscle state, contact state, source fingerprints and units into the existing Human/CompiledRun admission. | Nonpenetrating support geometry; zero force across a gap; whole-body support wrench balances gravity; bounded generalized acceleration and fibre residuals; matched FP64/native state and force parity. Reject an infeasible stance instead of returning a qualification certificate. |
+| Load-balanced anatomical stance | Bounded native placement and the witness gravity wrench now pass. Complete current-pose source primitive contact and internal recruitment with joint rows, limits, passive tissue/prestress and fibre equilibrium. Share the identical root/pose initial condition with tissue registration and existing Human/CompiledRun admission. | Witness geometry and gravity-wrench evidence are retained in the stance increment; full primitive geometry, bounded internal acceleration/fibre residuals and registered FP64/native force parity remain required. |
 | Source-compliant loaded integration | Use the existing NumanX v5/Core/Matter owner for NHEQ2 and registered tissue loading. Diagnose equality/contact/fibre residuals in the same accepted transaction. The legacy NHEQ1 visual solver remains a diagnostic comparator. | Source and timestep convergence, registered mesh convergence for loaded tissue, conservative force/moment transfer, no duplicated mass or active force, rollback/retry and replay. A source-compliant coupled result must be measured directly. |
 | Standing and recovery controller | Lower source-semantic posture/support observations and muscle commands through the existing SensorPack/PolicyPack and Brain controller. Keep neural learning and controller state causal to accepted physical time. Tune stance feedback only after the initial mechanical state is admitted. | Assistance-free sustained balance, controlled nonzero perturbations and recovery, actuator bounds, observable force/kinematic response, observation dropout and emergency-stop behavior. Preserve joint-risk inhibition and rejected-state isolation. |
 | Native behavior telemetry | Implement the frozen reductions in the owning native accepted-root publication path: source-bound root/trunk state, support/contact, ground-relative height and tilt, forward/lateral speed, falls, assistance and termination. Retain every attempted root and its disposition. | Replayable metric reductions agree with an independent trace check; failed/rejected futures never advance physical time or publish observations; missing, duplicated and truncated trials are rejected. Terminal probe q/v is insufficient. |
@@ -34,7 +40,7 @@ validation enabled; readiness authority and decision-shadow checks are unchanged
 
 Data acquisition/calibration, source completion, metric implementation and profiling can progress independently of the stance solve. Controller behavior and release promotion remain gated on the physical and evidence prerequisites above. Regional tissue work, including unresolved LCL prestress and loaded cartilage/meniscus contact, remains open in the release matrix.
 
-## Current measured boundary
+## Retained geometry-only baseline (`c1db46d`)
 
 The corrected one-step maximum generalized velocity change is 0.1581752, compared with 210.3526 in the matched baseline. This maximum mixes linear and angular coordinates and is not a speed in metres per second. Minimum native support gap on that first step is approximately 0.093 micrometres. Neither result is a balance certificate.
 

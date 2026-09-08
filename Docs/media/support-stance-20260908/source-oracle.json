@@ -1,0 +1,153 @@
+{
+  "schema": "numi.human.source-stance-oracle.v1",
+  "engine": "MuJoCo",
+  "version": "3.12.0",
+  "numpy_version": "2.4.6",
+  "archive_source_files_verified": 57,
+  "source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+  "input_state_sha256": "6bc68f72212dece6a183a7f43fd170df775adc2dfa6d97edc887a8575690a391",
+  "coordinates": "native accepted initializer converted to source qpos; no source dynamics stepping",
+  "source_model_counts": {
+    "nq": 129,
+    "nv": 128,
+    "muscles": 416
+  },
+  "world_force_residual_n": [
+    0.0,
+    0.0,
+    2.8382946425153932e-05
+  ],
+  "world_moment_residual_nm": [
+    -3.5958988462425623e-06,
+    1.877724371368572e-05,
+    0.0
+  ],
+  "minimum_witness_gap_m": -5.609783246263156e-08,
+  "minimum_primitive_gap_m": -1.6390672246541227e-06,
+  "contacts": [
+    {
+      "witness_index": 0,
+      "source_name": "bofoot_col1_l",
+      "point_world_m": [
+        0.10076174015143724,
+        0.0279808145995019,
+        0.0027727563629864165
+      ],
+      "witness_gap_m": 0.0027727563629864165,
+      "primitive_gap_m": 0.0027713715608782274,
+      "normal_force_n": 0.0
+    },
+    {
+      "witness_index": 1,
+      "source_name": "bofoot_col1_r",
+      "point_world_m": [
+        -0.15064745347828476,
+        0.02778103082758767,
+        0.0027719134856611684
+      ],
+      "witness_gap_m": 0.0027719134856611684,
+      "primitive_gap_m": 0.0027705357931217638,
+      "normal_force_n": 0.0
+    },
+    {
+      "witness_index": 2,
+      "source_name": "bofoot_col2_l",
+      "point_world_m": [
+        0.09274302912934418,
+        0.04811788810420624,
+        -5.609783246263156e-08
+      ],
+      "witness_gap_m": -5.609783246263156e-08,
+      "primitive_gap_m": -1.6390672246541227e-06,
+      "normal_force_n": 162.424741939
+    },
+    {
+      "witness_index": 3,
+      "source_name": "bofoot_col2_r",
+      "point_world_m": [
+        -0.14266077469203736,
+        0.047930950040290736,
+        -4.452206832372685e-08
+      ],
+      "witness_gap_m": -4.452206832372685e-08,
+      "primitive_gap_m": -1.6185913231173132e-06,
+      "normal_force_n": 10.5089441165
+    },
+    {
+      "witness_index": 4,
+      "source_name": "foot_col1_l",
+      "point_world_m": [
+        0.04879351751468295,
+        0.20361785106383984,
+        -5.5676693977435576e-08
+      ],
+      "witness_gap_m": -5.5676693977435576e-08,
+      "primitive_gap_m": -1.501650890640971e-06,
+      "normal_force_n": 171.158689954
+    },
+    {
+      "witness_index": 5,
+      "source_name": "foot_col1_r",
+      "point_world_m": [
+        -0.09895958746896932,
+        0.2035000512042031,
+        -4.586498225656044e-08
+      ],
+      "witness_gap_m": -4.586498225656044e-08,
+      "primitive_gap_m": -1.4925370864331267e-06,
+      "normal_force_n": 241.469440144
+    },
+    {
+      "witness_index": 6,
+      "source_name": "foot_col3_l",
+      "point_world_m": [
+        0.06879347930412419,
+        0.2036569695225472,
+        -5.536756846058477e-08
+      ],
+      "witness_gap_m": -5.536756846058477e-08,
+      "primitive_gap_m": -1.503021390011211e-06,
+      "normal_force_n": 116.17901478
+    },
+    {
+      "witness_index": 7,
+      "source_name": "foot_col3_r",
+      "point_world_m": [
+        -0.11895958565638334,
+        0.2035072945624638,
+        -4.479107327398646e-08
+      ],
+      "witness_gap_m": -4.479107327398646e-08,
+      "primitive_gap_m": -1.4925534114057504e-06,
+      "normal_force_n": 251.123644276
+    },
+    {
+      "witness_index": 8,
+      "source_name": "foot_col4_l",
+      "point_world_m": [
+        0.05898990090335993,
+        0.10322317028762502,
+        0.0030537688536952275
+      ],
+      "witness_gap_m": 0.0030537688536952275,
+      "primitive_gap_m": 0.0030421912493251227,
+      "normal_force_n": 0.0
+    },
+    {
+      "witness_index": 9,
+      "source_name": "foot_col4_r",
+      "point_world_m": [
+        -0.10899596239923066,
+        0.10308925643441573,
+        0.003054009860358059
+      ],
+      "witness_gap_m": 0.003054009860358059,
+      "primitive_gap_m": 0.0030424277999560254,
+      "normal_force_n": 0.0
+    }
+  ],
+  "boundary": "Independent pinned source kinematics and external wrench check at the FP32 native initial pose; not material calibration or dynamic contact qualification.",
+  "witness_geometry_within_native_tolerance": true,
+  "primitive_geometry_within_native_tolerance": false,
+  "external_wrench_within_1e_minus3": true
+}

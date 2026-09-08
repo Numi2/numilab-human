@@ -1,0 +1,123 @@
+{
+  "schema": "numi.human.source-support-stance.v1",
+  "source": {
+    "archive": "myo_sim-33c89c2b.tar.gz",
+    "archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "id": "myosim_fullbody",
+    "license": "Apache-2.0",
+    "mujoco_version": "3.12.0",
+    "repository": "https://github.com/MyoHub/myo_sim",
+    "revision": "33c89c2bde282553dde3f526768eb3bdcfaa7649"
+  },
+  "source_manifest_sha256": "2cea81e64a3c8da63731ae67c40ddc39aa61d9c4d0436000e806d25005e5b6d8",
+  "payloads": {
+    "joint_equalities": {
+      "bytes": 4976,
+      "file": "myosim-fullbody-joint-equalities.nheq",
+      "payload_abi": 1,
+      "sha256": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a"
+    },
+    "muscles": {
+      "bytes": 149372,
+      "file": "myosim-fullbody-muscle-reference.nhmyo",
+      "payload_abi": 2,
+      "sha256": "9a988f19a6fd8e533cd0f2bf3192cb8535fb008ccd394ffbf1a4432d3db76a05"
+    },
+    "rigid": {
+      "bytes": 60324,
+      "file": "myosim-fullbody-core-reference.nhrigid",
+      "payload_abi": 1,
+      "sha256": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44"
+    },
+    "support_contact": {
+      "bytes": 564,
+      "file": "myosim-fullbody-support-contact.nhcnt",
+      "payload_abi": 1,
+      "sha256": "4d54f8155cd83baaee7af536099824ac0da61e5d5e77544b42c6e5ce1b48c907"
+    },
+    "bones": {
+      "file": "bodyparts3d-myosim-major-bones.nhbones",
+      "sha256": "f9132393dfb259a80e2b2084ac5ff15f2bf988f7e073f7a961a7ddcfb9febc3c",
+      "bytes": 11576692
+    }
+  },
+  "coordinates": [
+    {
+      "source_name": "floating_root_translation_z",
+      "dof_index": 2,
+      "q_index": 2,
+      "maximum_displacement": 0.02,
+      "unit": "m"
+    },
+    {
+      "source_name": "ankle_angle_r",
+      "dof_index": 108,
+      "q_index": 109,
+      "maximum_displacement": 0.1,
+      "unit": "rad"
+    },
+    {
+      "source_name": "subtalar_angle_r",
+      "dof_index": 109,
+      "q_index": 110,
+      "maximum_displacement": 0.1,
+      "unit": "rad"
+    },
+    {
+      "source_name": "mtp_angle_r",
+      "dof_index": 110,
+      "q_index": 111,
+      "maximum_displacement": 0.1,
+      "unit": "rad"
+    },
+    {
+      "source_name": "ankle_angle_l",
+      "dof_index": 122,
+      "q_index": 123,
+      "maximum_displacement": 0.1,
+      "unit": "rad"
+    },
+    {
+      "source_name": "subtalar_angle_l",
+      "dof_index": 123,
+      "q_index": 124,
+      "maximum_displacement": 0.1,
+      "unit": "rad"
+    },
+    {
+      "source_name": "mtp_angle_l",
+      "dof_index": 124,
+      "q_index": 125,
+      "maximum_displacement": 0.1,
+      "unit": "rad"
+    }
+  ],
+  "active_contacts": [
+    {
+      "source_name": "bofoot_col2_l",
+      "witness_index": 2
+    },
+    {
+      "source_name": "bofoot_col2_r",
+      "witness_index": 3
+    },
+    {
+      "source_name": "foot_col1_l",
+      "witness_index": 4
+    },
+    {
+      "source_name": "foot_col1_r",
+      "witness_index": 5
+    },
+    {
+      "source_name": "foot_col3_l",
+      "witness_index": 6
+    },
+    {
+      "source_name": "foot_col3_r",
+      "witness_index": 7
+    }
+  ],
+  "activation_limit": 1.0,
+  "boundary": "Explicit offline initial placement and static gravity-wrench certificate. Joint bounds are search bounds, not measured anatomical calibration. No runtime root assistance, tissue registration, internal balance, standing or walking qualification."
+}

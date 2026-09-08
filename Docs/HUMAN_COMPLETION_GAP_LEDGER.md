@@ -137,7 +137,10 @@ fraction is promoted by this update.
 The [standing/walking plan and support evidence](STANDING_WALKING_COMPLETION_PLAN_20260908.md)
 identify and repair a 14 mm penetration introduced by offline ankle recruitment.
 The native compiler now enforces authored-plane geometry and zero support force
-across a gap. The revised static posture remains `balanced=false`, with only two
-loaded witnesses and a 776.836 N maximum root-force residual. This closes the
-initial geometry defect; it does not close standing, walking or source-compliant
-loaded tissue qualification.
+across a gap. That first corrected posture retained only two loaded witnesses
+and a 776.836 N maximum root-force residual. The subsequent
+[source stance compiler](SUPPORT_STANCE_20260908.md) fits six loaded witnesses
+and closes the gravity wrench to a 1.8292e-6 maximum root residual. Internal
+equilibrium remains false; source capsule geometry, dynamic joint/contact
+constraints, standing, walking and source-compliant loaded tissue qualification
+remain open.

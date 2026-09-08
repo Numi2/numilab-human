@@ -2045,6 +2045,9 @@ def parser() -> argparse.ArgumentParser:
     from .locomotor import add_arguments as add_locomotor_arguments
     locomotor = commands.add_parser("locomotor-program", help="author a source-bound Brain spindle and periodic muscle controller candidate")
     add_locomotor_arguments(locomotor)
+    from .support_stance import add_arguments as add_support_stance_arguments
+    stance = commands.add_parser("support-stance", help="compile a source-bound native stance and verify its static gravity wrench")
+    add_support_stance_arguments(stance)
     return result
 
 

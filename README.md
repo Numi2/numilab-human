@@ -34,6 +34,11 @@ Brain/Metal. It fixes initialized-fibre activation continuation and tendon senso
 units. Bounded native activation/force response and replay pass; sustained
 standing and walking remain open.
 
+The [source support stance](Docs/SUPPORT_STANCE_20260908.md) now balances the
+static gravity wrench on six native foot witnesses and provides a reproducible
+`support-stance` command. Independent source kinematics checks that wrench;
+complete capsule contact, internal equilibrium and sustained behavior remain open.
+
 The current regional layer is `NHFASC4`: six exact-source pectoral, six
 P4/P5/P6-derived latissimus-aponeurosis, eight external-oblique, and six
 internal-oblique regions execute nonduplicated force-share replacement,

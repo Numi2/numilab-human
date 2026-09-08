@@ -74,5 +74,7 @@ units. Its short physical horizons leave the sustained behavior gate open.
 
 The [standing/walking completion plan](STANDING_WALKING_COMPLETION_PLAN_20260908.md)
 repairs recruitment-induced ground penetration and unsupported static reactions.
-The current anatomically constrained posture still has an unbalanced support
-wrench; source-compliant sustained behavior and the full 420-trial gate remain open.
+The [source stance increment](SUPPORT_STANCE_20260908.md) closes the retained
+point-witness gravity wrench. Complete source capsule contact, internal muscle
+equilibrium, source-compliant sustained behavior and the full 420-trial gate
+remain open.

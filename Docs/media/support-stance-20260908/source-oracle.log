@@ -1,0 +1,31 @@
+{
+  "schema": "numi.human.source-stance-oracle.v1",
+  "engine": "MuJoCo",
+  "version": "3.12.0",
+  "numpy_version": "2.4.6",
+  "archive_source_files_verified": 57,
+  "source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+  "input_state_sha256": "6bc68f72212dece6a183a7f43fd170df775adc2dfa6d97edc887a8575690a391",
+  "coordinates": "native accepted initializer converted to source qpos; no source dynamics stepping",
+  "source_model_counts": {
+    "nq": 129,
+    "nv": 128,
+    "muscles": 416
+  },
+  "world_force_residual_n": [
+    0.0,
+    0.0,
+    2.8382946425153932e-05
+  ],
+  "world_moment_residual_nm": [
+    -3.5958988462425623e-06,
+    1.877724371368572e-05,
+    0.0
+  ],
+  "minimum_witness_gap_m": -5.609783246263156e-08,
+  "minimum_primitive_gap_m": -1.6390672246541227e-06,
+  "boundary": "Independent pinned source kinematics and external wrench check at the FP32 native initial pose; not material calibration or dynamic contact qualification.",
+  "witness_geometry_within_native_tolerance": true,
+  "primitive_geometry_within_native_tolerance": false,
+  "external_wrench_within_1e_minus3": true
+}
