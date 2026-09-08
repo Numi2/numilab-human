@@ -1,0 +1,117 @@
+[0/1] Planning build
+Building for production...
+[0/31] Write sources
+[6/31] Write swift-version-3CD7052B146186F2.txt
+[8/28] Compiling NumiBrainCore AcceptedConsequenceDynamics.swift
+[9/34] Compiling NumiBrainPolicyCLI main.swift
+[9/34] Write Objects.LinkFileList
+[10/34] Linking numi-brain-policy
+[12/34] Compiling NumiBrainConnectomeCLI main.swift
+[12/34] Write Objects.LinkFileList
+[14/34] Compiling NumiBrainGateDCLI main.swift
+[14/34] Write Objects.LinkFileList
+[16/34] Compiling NumiBrainSchedulerCLI main.swift
+[16/34] Write Objects.LinkFileList
+[17/34] Linking numi-brain-connectome
+[18/34] Linking numi-brain-gate-d
+[19/34] Linking numi-brain-scheduler
+[21/34] Compiling NumiBrainCoreTests BrainAllGatesVerifierTests.swift
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainCoreTests/BrainSafetyAdmissionTests.swift:63:22: warning: 'resetAfterVerifiedRecovery(baseBrainGeneration:controlStepIdentifier:transactionFingerprint:)' is deprecated: Scalar identities are not verified recovery. Reconstruct admission with the joint recovery owner; this legacy reset fails closed. [#DeprecatedDeclaration]
+61 |   func testScalarRecoveryCannotResetContinuity() async throws {
+62 |     let c = try controller()
+63 |     do { try await c.resetAfterVerifiedRecovery(baseBrainGeneration: 1, controlStepIdentifier: 1, transactionFingerprint: 1); XCTFail("unverified reset") } catch {}
+   |                      `- warning: 'resetAfterVerifiedRecovery(baseBrainGeneration:controlStepIdentifier:transactionFingerprint:)' is deprecated: Scalar identities are not verified recovery. Reconstruct admission with the joint recovery owner; this legacy reset fails closed. [#DeprecatedDeclaration]
+64 |   }
+65 |   func testRejectedInitialRootCannotAdvanceItsUnpublishedState() async throws {
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+[22/34] Compiling NumiBrainMetal MetalNumanXGateCCapture.swift
+[23/38] Compiling NumiBrainNumanXInteropCLI main.swift
+[23/38] Write Objects.LinkFileList
+[25/38] Compiling NumiBrainDispatchCLI main.swift
+[25/38] Write Objects.LinkFileList
+[26/38] Linking numi-brain-numanx-interop
+[27/38] Linking numi-brain-dispatch
+[29/38] Compiling NumiBrainTissueCLI main.swift
+[29/38] Write Objects.LinkFileList
+[30/38] Linking numi-brain-tissue
+[32/38] Compiling NumiBrainMLX MLXBrainLearner.swift
+[33/41] Compiling NumiBrainExperimentCLI main.swift
+[33/41] Write Objects.LinkFileList
+[35/41] Compiling NumiBrainGateCCLI main.swift
+[35/41] Write Objects.LinkFileList
+[36/41] Linking numi-brain-experiment
+[37/41] Linking numi-brain-gate-c
+[39/41] Compiling NumiBrainMetalTests ConnectomeBodyContractTests.swift
+[40/42] Compiling NumiBrainPackageTests runner.swift
+[40/42] Write Objects.LinkFileList
+[41/42] Linking NumiBrainPackageTests
+Build complete! (125.21s)
+Test Suite 'Selected tests' started at 2026-09-08 07:18:29.561.
+Test Suite 'NumiBrainPackageTests.xctest' started at 2026-09-08 07:18:29.566.
+Test Suite 'ConnectomeBodyContractTests' started at 2026-09-08 07:18:29.566.
+Test Case '-[NumiBrainMetalTests.ConnectomeBodyContractTests testAbsentJointStateRetainsLogicalZeroAndOnlyBindablePadding]' started.
+Test Case '-[NumiBrainMetalTests.ConnectomeBodyContractTests testAbsentJointStateRetainsLogicalZeroAndOnlyBindablePadding]' passed (0.003 seconds).
+Test Case '-[NumiBrainMetalTests.ConnectomeBodyContractTests testEmptyBodyAndDisconnectedMultiBodyStillFail]' started.
+Test Case '-[NumiBrainMetalTests.ConnectomeBodyContractTests testEmptyBodyAndDisconnectedMultiBodyStillFail]' passed (0.000 seconds).
+Test Case '-[NumiBrainMetalTests.ConnectomeBodyContractTests testInnateMindContainsNoInventedJointOrMuscleBeliefs]' started.
+Test Case '-[NumiBrainMetalTests.ConnectomeBodyContractTests testInnateMindContainsNoInventedJointOrMuscleBeliefs]' passed (0.040 seconds).
+Test Case '-[NumiBrainMetalTests.ConnectomeBodyContractTests testNegativeLogicalArenaCountCannotBeDecodedAsEmpty]' started.
+Test Case '-[NumiBrainMetalTests.ConnectomeBodyContractTests testNegativeLogicalArenaCountCannotBeDecodedAsEmpty]' passed (0.000 seconds).
+Test Case '-[NumiBrainMetalTests.ConnectomeBodyContractTests testSameShapeForeignBodyCannotOwnConnectomeCandidate]' started.
+Test Case '-[NumiBrainMetalTests.ConnectomeBodyContractTests testSameShapeForeignBodyCannotOwnConnectomeCandidate]' passed (0.001 seconds).
+Test Case '-[NumiBrainMetalTests.ConnectomeBodyContractTests testSingletonBodyCompilesAndRoundTripsWithoutFabricatedJoints]' started.
+Test Case '-[NumiBrainMetalTests.ConnectomeBodyContractTests testSingletonBodyCompilesAndRoundTripsWithoutFabricatedJoints]' passed (0.005 seconds).
+Test Suite 'ConnectomeBodyContractTests' passed at 2026-09-08 07:18:29.616.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.049 (0.049) seconds
+Test Suite 'ConnectomeDecoderForkTests' started at 2026-09-08 07:18:29.616.
+Test Case '-[NumiBrainMetalTests.ConnectomeDecoderForkTests testBoundsAndResearchIdentityCannotBeWeakenedByDecoding]' started.
+Test Case '-[NumiBrainMetalTests.ConnectomeDecoderForkTests testBoundsAndResearchIdentityCannotBeWeakenedByDecoding]' passed (0.004 seconds).
+Test Case '-[NumiBrainMetalTests.ConnectomeDecoderForkTests testDecoderForkPreservesAllMutableBytesAndCounters]' started.
+Test Case '-[NumiBrainMetalTests.ConnectomeDecoderForkTests testDecoderForkPreservesAllMutableBytesAndCounters]' passed (0.002 seconds).
+Test Case '-[NumiBrainMetalTests.ConnectomeDecoderForkTests testNeuralOperatorChangesAreNotDecoderForks]' started.
+Test Case '-[NumiBrainMetalTests.ConnectomeDecoderForkTests testNeuralOperatorChangesAreNotDecoderForks]' passed (0.002 seconds).
+Test Case '-[NumiBrainMetalTests.ConnectomeDecoderForkTests testOppositeProbesRequireTheSameCompleteInitialSnapshots]' started.
+Test Case '-[NumiBrainMetalTests.ConnectomeDecoderForkTests testOppositeProbesRequireTheSameCompleteInitialSnapshots]' passed (0.004 seconds).
+Test Case '-[NumiBrainMetalTests.ConnectomeDecoderForkTests testSameVisibleStateWithDifferentMemoryCannotBePaired]' started.
+Test Case '-[NumiBrainMetalTests.ConnectomeDecoderForkTests testSameVisibleStateWithDifferentMemoryCannotBePaired]' passed (0.002 seconds).
+Test Case '-[NumiBrainMetalTests.ConnectomeDecoderForkTests testUnchangedControllerForeignPublicationAndWrongPhysicalIdentityFail]' started.
+Test Case '-[NumiBrainMetalTests.ConnectomeDecoderForkTests testUnchangedControllerForeignPublicationAndWrongPhysicalIdentityFail]' passed (0.001 seconds).
+Test Suite 'ConnectomeDecoderForkTests' passed at 2026-09-08 07:18:29.631.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.015 (0.015) seconds
+Test Suite 'MetalConnectomeRootTests' started at 2026-09-08 07:18:29.631.
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testCompleteCheckpointRestorationPreservesNeuralStateExactly]' started.
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testCompleteCheckpointRestorationPreservesNeuralStateExactly]' passed (3.753 seconds).
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testDecoderForkRestoresIndependentCompleteMindWithoutChangingParent]' started.
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testDecoderForkRestoresIndependentCompleteMindWithoutChangingParent]' passed (8.463 seconds).
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testDistinctActuatorBodiesShareOnlyTheGraph]' started.
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testDistinctActuatorBodiesShareOnlyTheGraph]' passed (2.549 seconds).
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testFullReleasedGraphUsesTheNormalMetalController]' started.
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainMetalTests/MetalConnectomeRootTests.swift:165: -[NumiBrainMetalTests.MetalConnectomeRootTests testFullReleasedGraphUsesTheNormalMetalController] : Test skipped - full release pack is not configured
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testFullReleasedGraphUsesTheNormalMetalController]' skipped (0.001 seconds).
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testNormalFactoryPublishesNeuralStateAndAbortDoesNotAdvanceIt]' started.
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testNormalFactoryPublishesNeuralStateAndAbortDoesNotAdvanceIt]' passed (2.435 seconds).
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testSharedGraphKeepsMindsIndependentAndAsyncMatchesSync]' started.
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testSharedGraphKeepsMindsIndependentAndAsyncMatchesSync]' passed (3.719 seconds).
+Test Suite 'MetalConnectomeRootTests' passed at 2026-09-08 07:18:50.549.
+	 Executed 6 tests, with 1 test skipped and 0 failures (0 unexpected) in 20.918 (20.919) seconds
+Test Suite 'MetalMuscleLocomotorKernelTests' started at 2026-09-08 07:18:50.549.
+Test Case '-[NumiBrainMetalTests.MetalMuscleLocomotorKernelTests testCheckpointPreservesAndAuthenticatesControllerIdentity]' started.
+Test Case '-[NumiBrainMetalTests.MetalMuscleLocomotorKernelTests testCheckpointPreservesAndAuthenticatesControllerIdentity]' passed (0.000 seconds).
+Test Case '-[NumiBrainMetalTests.MetalMuscleLocomotorKernelTests testSpindleFeedbackAlternationBoundsAndMissingEvidence]' started.
+Test Case '-[NumiBrainMetalTests.MetalMuscleLocomotorKernelTests testSpindleFeedbackAlternationBoundsAndMissingEvidence]' passed (0.006 seconds).
+Test Suite 'MetalMuscleLocomotorKernelTests' passed at 2026-09-08 07:18:50.555.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.006 (0.006) seconds
+Test Suite 'MuscleLocomotorProgramTests' started at 2026-09-08 07:18:50.555.
+Test Case '-[NumiBrainCoreTests.MuscleLocomotorProgramTests testProgramBindsEveryChannelSourceAndMode]' started.
+Test Case '-[NumiBrainCoreTests.MuscleLocomotorProgramTests testProgramBindsEveryChannelSourceAndMode]' passed (0.007 seconds).
+Test Suite 'MuscleLocomotorProgramTests' passed at 2026-09-08 07:18:50.563.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.007 (0.007) seconds
+Test Suite 'NumiBrainPackageTests.xctest' passed at 2026-09-08 07:18:50.563.
+	 Executed 21 tests, with 1 test skipped and 0 failures (0 unexpected) in 20.995 (20.996) seconds
+Test Suite 'Selected tests' passed at 2026-09-08 07:18:50.563.
+	 Executed 21 tests, with 1 test skipped and 0 failures (0 unexpected) in 20.995 (21.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

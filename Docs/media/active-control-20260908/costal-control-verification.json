@@ -1,0 +1,667 @@
+{
+  "format": "numi-costal-muscle-control-verification-v1",
+  "promotable": false,
+  "checks": {
+    "four_accepted_roots_per_run": true,
+    "exact_motor_and_sensor_replay": true,
+    "unavailable_proprioception_zero_output": true,
+    "emergency_stop_zero_output": true,
+    "initialized_activation_advances": true,
+    "source_force_response_resolved_at_this_horizon": false,
+    "kinesthetic_values_differ": false
+  },
+  "timestep_microseconds": 10,
+  "physical_time_microseconds_per_run": 40,
+  "physical_force_response_qualified": false,
+  "boundary": "bounded activation recruitment; force/kinematic response is reported separately; no sustained standing, recovery or walking",
+  "runs": {
+    "active": [
+      {
+        "step": 1,
+        "action_sha256": "24203f058586a286ec7e2f04f42c38129cd7460d7e0e3aca7d4091dfe1f4db01",
+        "excitation_max": 0,
+        "descending_max": 0,
+        "motor_inhibition": 0,
+        "protective_interrupt_mask": 0,
+        "settled_activation_max": null,
+        "settled_tendon_tension_max_N": null,
+        "sensor_hashes": {
+          "1": [
+            "5084d3b3290e75f4a61b669085629bf70f0ab8e6a8d3764bc7f867ece62d0b85",
+            "f3cc103136423a57975750907ebc1d367e2985ac6338976d4d5a439f50323f4a"
+          ],
+          "2": [
+            "0136a0f385c9627b3eb81cc6f09ee15d6fff9f4617299aabbb3d945f4c57f746",
+            "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+          ],
+          "3": [
+            "4fccc0292a90b1ece8d59ba2ae539356cce61bdce20122636b779c2ae5a0e010",
+            "2c34ce1df23b838c5abf2a7f6437cca3d3067ed509ff25f11df6b11b582b51eb"
+          ],
+          "4": [
+            "246191946b1cd6caaf96e828b1c9f8683e24bc81d27a424e148178b9af85e47d",
+            "755ba9519eb08efb2d4c68ccfee9d69ceb372301b3a701ad6a3ac309ba37edb6"
+          ],
+          "5": [
+            "84b27f4f56589bb6c1af94bd512de9dd642f0c1efc584ed1a6bf63a63b788568",
+            "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+          ],
+          "8": [
+            "766f37c96fd26152b18ea67f13e4d2dd505dcfcbb671cfb944a4064f6c03ed4d",
+            "755ba9519eb08efb2d4c68ccfee9d69ceb372301b3a701ad6a3ac309ba37edb6"
+          ],
+          "9": [
+            "d1cdca5511c5ab9695c8c27e0cf2cad69816474ed8a4fbe1216323b7317a1c68",
+            "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560"
+          ]
+        }
+      },
+      {
+        "step": 2,
+        "action_sha256": "a3f06a4b8c5b8d47c88276171536dc1d0d406bedf223c7bc259a81eae9d3400a",
+        "excitation_max": 0.013493109,
+        "descending_max": 0.013493109,
+        "motor_inhibition": 0,
+        "protective_interrupt_mask": 0,
+        "settled_activation_max": 0.0,
+        "settled_tendon_tension_max_N": 434.4876708984375,
+        "sensor_hashes": {
+          "1": [
+            "8e37abca4f7440fa461e9c760d6555bcd899e812e7bd1858fdd980684047fbf7",
+            "a735420ac62132f0891bb1755395bfe2ca92c7e672ac073b2d6db65e7afe727a"
+          ],
+          "2": [
+            "82ebcb9b7a3a5ed61c02ded0ba69bea703aa46bacd9b9c6254d5e1290331abeb",
+            "cdf7d638131f1701b603526a833124aa27f0e948bd417297e93fa7d5b1fc10bc"
+          ],
+          "3": [
+            "eedd53ffee5ade4a46b03bf7cfb86130874af32a7d7729685d86cbaaadb1dce9",
+            "bd586d41ab6536554327abc222757421f673e3a8f84b0367150fcffb4e4e6459"
+          ],
+          "4": [
+            "d8f3cf3a4295aad12018b434371a40afc878089cf6b1b35f6f90569e9f4779ac",
+            "157fbd98f4b91f956cb6f81bb01fb62136c60a873a47b1d356c7b38323c7131c"
+          ],
+          "5": [
+            "3e6abf85e0bb8c1c23e94a85af3ca7f2bbfd9a4eab7ed980935029bb613223d3",
+            "f060d5712596683f6c99ccd99f266aa90677baba1e063c389511ad6ce1675c44"
+          ],
+          "8": [
+            "892dca88fe7677286a15c74635b38a76da5179033b16923eafbf86253b4dfd31",
+            "a9aced0ba18a007e57ad31bbe558e14932df4cad9f625561db1fc44dfb36d7b8"
+          ],
+          "9": [
+            "e98bb227c1662472ec905fe88ae95cee70a663b3e4a9e46717da486675680e38",
+            "c2c7bdcfc57938cd391666ccedfbc06c3c3cf481b99a9e13de5410ebe9d3603d"
+          ]
+        }
+      },
+      {
+        "step": 3,
+        "action_sha256": "9390a411cae607f310384f940d6e721c0ba0552400bf468363130b1df80b7e90",
+        "excitation_max": 0.013411341,
+        "descending_max": 0.013411341,
+        "motor_inhibition": 0,
+        "protective_interrupt_mask": 0,
+        "settled_activation_max": 2.6986217562807724e-05,
+        "settled_tendon_tension_max_N": 434.4876708984375,
+        "sensor_hashes": {
+          "1": [
+            "2e346cea2cc77e8f9c9a20d0a29d720a6e63b32fd34480bb7d564b7e200fab8a",
+            "a735420ac62132f0891bb1755395bfe2ca92c7e672ac073b2d6db65e7afe727a"
+          ],
+          "2": [
+            "e0bdcb631b6fb5e37bab8c3ea615aa80828e4adb19d5674f0042634d4931ec38",
+            "a153a0f4cebea70be9a7f4bdf10358bd888994d9f0ac7e015e10b3ed862bf8f8"
+          ],
+          "3": [
+            "9490149d56a5d8ae61cb2af75ccaa56e22ce92f91df99d68a04980876c3baf64",
+            "bd586d41ab6536554327abc222757421f673e3a8f84b0367150fcffb4e4e6459"
+          ],
+          "4": [
+            "80bf287c4036bfc9f90153dd51a9ed505005f6462353e60c6f0ef206a2e6047d",
+            "157fbd98f4b91f956cb6f81bb01fb62136c60a873a47b1d356c7b38323c7131c"
+          ],
+          "5": [
+            "56776e24632e2566e746309bcf820dbab7be71a5752441185ca576991c178ba3",
+            "f060d5712596683f6c99ccd99f266aa90677baba1e063c389511ad6ce1675c44"
+          ],
+          "8": [
+            "1533b9ea4bab924125c747bbdf43607af1424aea643cb4d452935c9bee6ed264",
+            "a9aced0ba18a007e57ad31bbe558e14932df4cad9f625561db1fc44dfb36d7b8"
+          ],
+          "9": [
+            "383dcefa95c3176a2981e7d28438ba1b4efd9e3ccd07b598e39c6df053d98ef2",
+            "c2c7bdcfc57938cd391666ccedfbc06c3c3cf481b99a9e13de5410ebe9d3603d"
+          ]
+        }
+      },
+      {
+        "step": 4,
+        "action_sha256": "f49173879a17056acf1f6de6cc6d9792ec86f300f5cf531879dc80d3c2f8d004",
+        "excitation_max": 0.013320053,
+        "descending_max": 0.013320053,
+        "motor_inhibition": 0,
+        "protective_interrupt_mask": 0,
+        "settled_activation_max": 5.375185719458386e-05,
+        "settled_tendon_tension_max_N": 434.4876708984375,
+        "sensor_hashes": {
+          "1": [
+            "8e37abca4f7440fa461e9c760d6555bcd899e812e7bd1858fdd980684047fbf7",
+            "a735420ac62132f0891bb1755395bfe2ca92c7e672ac073b2d6db65e7afe727a"
+          ],
+          "2": [
+            "df8b9d944ffb5750f18531ad70d5c12cff7695b13ee3f89bc17f9a0ca1222503",
+            "a153a0f4cebea70be9a7f4bdf10358bd888994d9f0ac7e015e10b3ed862bf8f8"
+          ],
+          "3": [
+            "8204f657e8fc220ea7bde05ea6b15b393b1123b78f3141e62fe8a7498ffa7ff4",
+            "bd586d41ab6536554327abc222757421f673e3a8f84b0367150fcffb4e4e6459"
+          ],
+          "4": [
+            "30c2a9d8e7bac2335a6c1e98c4d229775705548c2420b1f82536ed96ab95a157",
+            "157fbd98f4b91f956cb6f81bb01fb62136c60a873a47b1d356c7b38323c7131c"
+          ],
+          "5": [
+            "88141df2c1df6abe32a6bccc313ee2c276ead980407d7d7562fcb1f352cb18ca",
+            "f060d5712596683f6c99ccd99f266aa90677baba1e063c389511ad6ce1675c44"
+          ],
+          "8": [
+            "9fcd9abf0ae604e1f5c39bd59b6001393b022556120f48a2c8b88935637236c1",
+            "a9aced0ba18a007e57ad31bbe558e14932df4cad9f625561db1fc44dfb36d7b8"
+          ],
+          "9": [
+            "e5cf75e6383b005e091cd26e1b481150ae960d8dbbc12bbfec2cfdf46a23647e",
+            "c2c7bdcfc57938cd391666ccedfbc06c3c3cf481b99a9e13de5410ebe9d3603d"
+          ]
+        }
+      }
+    ],
+    "replay": [
+      {
+        "step": 1,
+        "action_sha256": "24203f058586a286ec7e2f04f42c38129cd7460d7e0e3aca7d4091dfe1f4db01",
+        "excitation_max": 0,
+        "descending_max": 0,
+        "motor_inhibition": 0,
+        "protective_interrupt_mask": 0,
+        "settled_activation_max": null,
+        "settled_tendon_tension_max_N": null,
+        "sensor_hashes": {
+          "1": [
+            "5084d3b3290e75f4a61b669085629bf70f0ab8e6a8d3764bc7f867ece62d0b85",
+            "f3cc103136423a57975750907ebc1d367e2985ac6338976d4d5a439f50323f4a"
+          ],
+          "2": [
+            "0136a0f385c9627b3eb81cc6f09ee15d6fff9f4617299aabbb3d945f4c57f746",
+            "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+          ],
+          "3": [
+            "4fccc0292a90b1ece8d59ba2ae539356cce61bdce20122636b779c2ae5a0e010",
+            "2c34ce1df23b838c5abf2a7f6437cca3d3067ed509ff25f11df6b11b582b51eb"
+          ],
+          "4": [
+            "246191946b1cd6caaf96e828b1c9f8683e24bc81d27a424e148178b9af85e47d",
+            "755ba9519eb08efb2d4c68ccfee9d69ceb372301b3a701ad6a3ac309ba37edb6"
+          ],
+          "5": [
+            "84b27f4f56589bb6c1af94bd512de9dd642f0c1efc584ed1a6bf63a63b788568",
+            "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+          ],
+          "8": [
+            "766f37c96fd26152b18ea67f13e4d2dd505dcfcbb671cfb944a4064f6c03ed4d",
+            "755ba9519eb08efb2d4c68ccfee9d69ceb372301b3a701ad6a3ac309ba37edb6"
+          ],
+          "9": [
+            "d1cdca5511c5ab9695c8c27e0cf2cad69816474ed8a4fbe1216323b7317a1c68",
+            "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560"
+          ]
+        }
+      },
+      {
+        "step": 2,
+        "action_sha256": "a3f06a4b8c5b8d47c88276171536dc1d0d406bedf223c7bc259a81eae9d3400a",
+        "excitation_max": 0.013493109,
+        "descending_max": 0.013493109,
+        "motor_inhibition": 0,
+        "protective_interrupt_mask": 0,
+        "settled_activation_max": 0.0,
+        "settled_tendon_tension_max_N": 434.4876708984375,
+        "sensor_hashes": {
+          "1": [
+            "8e37abca4f7440fa461e9c760d6555bcd899e812e7bd1858fdd980684047fbf7",
+            "a735420ac62132f0891bb1755395bfe2ca92c7e672ac073b2d6db65e7afe727a"
+          ],
+          "2": [
+            "82ebcb9b7a3a5ed61c02ded0ba69bea703aa46bacd9b9c6254d5e1290331abeb",
+            "cdf7d638131f1701b603526a833124aa27f0e948bd417297e93fa7d5b1fc10bc"
+          ],
+          "3": [
+            "eedd53ffee5ade4a46b03bf7cfb86130874af32a7d7729685d86cbaaadb1dce9",
+            "bd586d41ab6536554327abc222757421f673e3a8f84b0367150fcffb4e4e6459"
+          ],
+          "4": [
+            "d8f3cf3a4295aad12018b434371a40afc878089cf6b1b35f6f90569e9f4779ac",
+            "157fbd98f4b91f956cb6f81bb01fb62136c60a873a47b1d356c7b38323c7131c"
+          ],
+          "5": [
+            "3e6abf85e0bb8c1c23e94a85af3ca7f2bbfd9a4eab7ed980935029bb613223d3",
+            "f060d5712596683f6c99ccd99f266aa90677baba1e063c389511ad6ce1675c44"
+          ],
+          "8": [
+            "892dca88fe7677286a15c74635b38a76da5179033b16923eafbf86253b4dfd31",
+            "a9aced0ba18a007e57ad31bbe558e14932df4cad9f625561db1fc44dfb36d7b8"
+          ],
+          "9": [
+            "e98bb227c1662472ec905fe88ae95cee70a663b3e4a9e46717da486675680e38",
+            "c2c7bdcfc57938cd391666ccedfbc06c3c3cf481b99a9e13de5410ebe9d3603d"
+          ]
+        }
+      },
+      {
+        "step": 3,
+        "action_sha256": "9390a411cae607f310384f940d6e721c0ba0552400bf468363130b1df80b7e90",
+        "excitation_max": 0.013411341,
+        "descending_max": 0.013411341,
+        "motor_inhibition": 0,
+        "protective_interrupt_mask": 0,
+        "settled_activation_max": 2.6986217562807724e-05,
+        "settled_tendon_tension_max_N": 434.4876708984375,
+        "sensor_hashes": {
+          "1": [
+            "2e346cea2cc77e8f9c9a20d0a29d720a6e63b32fd34480bb7d564b7e200fab8a",
+            "a735420ac62132f0891bb1755395bfe2ca92c7e672ac073b2d6db65e7afe727a"
+          ],
+          "2": [
+            "e0bdcb631b6fb5e37bab8c3ea615aa80828e4adb19d5674f0042634d4931ec38",
+            "a153a0f4cebea70be9a7f4bdf10358bd888994d9f0ac7e015e10b3ed862bf8f8"
+          ],
+          "3": [
+            "9490149d56a5d8ae61cb2af75ccaa56e22ce92f91df99d68a04980876c3baf64",
+            "bd586d41ab6536554327abc222757421f673e3a8f84b0367150fcffb4e4e6459"
+          ],
+          "4": [
+            "80bf287c4036bfc9f90153dd51a9ed505005f6462353e60c6f0ef206a2e6047d",
+            "157fbd98f4b91f956cb6f81bb01fb62136c60a873a47b1d356c7b38323c7131c"
+          ],
+          "5": [
+            "56776e24632e2566e746309bcf820dbab7be71a5752441185ca576991c178ba3",
+            "f060d5712596683f6c99ccd99f266aa90677baba1e063c389511ad6ce1675c44"
+          ],
+          "8": [
+            "1533b9ea4bab924125c747bbdf43607af1424aea643cb4d452935c9bee6ed264",
+            "a9aced0ba18a007e57ad31bbe558e14932df4cad9f625561db1fc44dfb36d7b8"
+          ],
+          "9": [
+            "383dcefa95c3176a2981e7d28438ba1b4efd9e3ccd07b598e39c6df053d98ef2",
+            "c2c7bdcfc57938cd391666ccedfbc06c3c3cf481b99a9e13de5410ebe9d3603d"
+          ]
+        }
+      },
+      {
+        "step": 4,
+        "action_sha256": "f49173879a17056acf1f6de6cc6d9792ec86f300f5cf531879dc80d3c2f8d004",
+        "excitation_max": 0.013320053,
+        "descending_max": 0.013320053,
+        "motor_inhibition": 0,
+        "protective_interrupt_mask": 0,
+        "settled_activation_max": 5.375185719458386e-05,
+        "settled_tendon_tension_max_N": 434.4876708984375,
+        "sensor_hashes": {
+          "1": [
+            "8e37abca4f7440fa461e9c760d6555bcd899e812e7bd1858fdd980684047fbf7",
+            "a735420ac62132f0891bb1755395bfe2ca92c7e672ac073b2d6db65e7afe727a"
+          ],
+          "2": [
+            "df8b9d944ffb5750f18531ad70d5c12cff7695b13ee3f89bc17f9a0ca1222503",
+            "a153a0f4cebea70be9a7f4bdf10358bd888994d9f0ac7e015e10b3ed862bf8f8"
+          ],
+          "3": [
+            "8204f657e8fc220ea7bde05ea6b15b393b1123b78f3141e62fe8a7498ffa7ff4",
+            "bd586d41ab6536554327abc222757421f673e3a8f84b0367150fcffb4e4e6459"
+          ],
+          "4": [
+            "30c2a9d8e7bac2335a6c1e98c4d229775705548c2420b1f82536ed96ab95a157",
+            "157fbd98f4b91f956cb6f81bb01fb62136c60a873a47b1d356c7b38323c7131c"
+          ],
+          "5": [
+            "88141df2c1df6abe32a6bccc313ee2c276ead980407d7d7562fcb1f352cb18ca",
+            "f060d5712596683f6c99ccd99f266aa90677baba1e063c389511ad6ce1675c44"
+          ],
+          "8": [
+            "9fcd9abf0ae604e1f5c39bd59b6001393b022556120f48a2c8b88935637236c1",
+            "a9aced0ba18a007e57ad31bbe558e14932df4cad9f625561db1fc44dfb36d7b8"
+          ],
+          "9": [
+            "e5cf75e6383b005e091cd26e1b481150ae960d8dbbc12bbfec2cfdf46a23647e",
+            "c2c7bdcfc57938cd391666ccedfbc06c3c3cf481b99a9e13de5410ebe9d3603d"
+          ]
+        }
+      }
+    ],
+    "unavailable": [
+      {
+        "step": 1,
+        "action_sha256": "24203f058586a286ec7e2f04f42c38129cd7460d7e0e3aca7d4091dfe1f4db01",
+        "excitation_max": 0,
+        "descending_max": 0,
+        "motor_inhibition": 0,
+        "protective_interrupt_mask": 0,
+        "settled_activation_max": null,
+        "settled_tendon_tension_max_N": null,
+        "sensor_hashes": {
+          "1": [
+            "5084d3b3290e75f4a61b669085629bf70f0ab8e6a8d3764bc7f867ece62d0b85",
+            "f3cc103136423a57975750907ebc1d367e2985ac6338976d4d5a439f50323f4a"
+          ],
+          "2": [
+            "0136a0f385c9627b3eb81cc6f09ee15d6fff9f4617299aabbb3d945f4c57f746",
+            "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+          ],
+          "3": [
+            "4fccc0292a90b1ece8d59ba2ae539356cce61bdce20122636b779c2ae5a0e010",
+            "2c34ce1df23b838c5abf2a7f6437cca3d3067ed509ff25f11df6b11b582b51eb"
+          ],
+          "4": [
+            "246191946b1cd6caaf96e828b1c9f8683e24bc81d27a424e148178b9af85e47d",
+            "755ba9519eb08efb2d4c68ccfee9d69ceb372301b3a701ad6a3ac309ba37edb6"
+          ],
+          "5": [
+            "84b27f4f56589bb6c1af94bd512de9dd642f0c1efc584ed1a6bf63a63b788568",
+            "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+          ],
+          "8": [
+            "766f37c96fd26152b18ea67f13e4d2dd505dcfcbb671cfb944a4064f6c03ed4d",
+            "755ba9519eb08efb2d4c68ccfee9d69ceb372301b3a701ad6a3ac309ba37edb6"
+          ],
+          "9": [
+            "d1cdca5511c5ab9695c8c27e0cf2cad69816474ed8a4fbe1216323b7317a1c68",
+            "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560"
+          ]
+        }
+      },
+      {
+        "step": 2,
+        "action_sha256": "2880069d31e9ba3aa2a48fbc2fa6031ea3c6f88f00b43c13a021307b58a47308",
+        "excitation_max": 0,
+        "descending_max": 0,
+        "motor_inhibition": 0,
+        "protective_interrupt_mask": 0,
+        "settled_activation_max": null,
+        "settled_tendon_tension_max_N": null,
+        "sensor_hashes": {
+          "1": [
+            "8e37abca4f7440fa461e9c760d6555bcd899e812e7bd1858fdd980684047fbf7",
+            "f3cc103136423a57975750907ebc1d367e2985ac6338976d4d5a439f50323f4a"
+          ],
+          "2": [
+            "82ebcb9b7a3a5ed61c02ded0ba69bea703aa46bacd9b9c6254d5e1290331abeb",
+            "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+          ],
+          "3": [
+            "eedd53ffee5ade4a46b03bf7cfb86130874af32a7d7729685d86cbaaadb1dce9",
+            "2c34ce1df23b838c5abf2a7f6437cca3d3067ed509ff25f11df6b11b582b51eb"
+          ],
+          "4": [
+            "d8f3cf3a4295aad12018b434371a40afc878089cf6b1b35f6f90569e9f4779ac",
+            "755ba9519eb08efb2d4c68ccfee9d69ceb372301b3a701ad6a3ac309ba37edb6"
+          ],
+          "5": [
+            "3e6abf85e0bb8c1c23e94a85af3ca7f2bbfd9a4eab7ed980935029bb613223d3",
+            "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+          ],
+          "8": [
+            "892dca88fe7677286a15c74635b38a76da5179033b16923eafbf86253b4dfd31",
+            "755ba9519eb08efb2d4c68ccfee9d69ceb372301b3a701ad6a3ac309ba37edb6"
+          ],
+          "9": [
+            "e98bb227c1662472ec905fe88ae95cee70a663b3e4a9e46717da486675680e38",
+            "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560"
+          ]
+        }
+      },
+      {
+        "step": 3,
+        "action_sha256": "0caaba237d9c06422748fe5cc7d0e165c7f938e8a129be8b43a854c5c07524e3",
+        "excitation_max": 0,
+        "descending_max": 0,
+        "motor_inhibition": 0,
+        "protective_interrupt_mask": 0,
+        "settled_activation_max": null,
+        "settled_tendon_tension_max_N": null,
+        "sensor_hashes": {
+          "1": [
+            "2e346cea2cc77e8f9c9a20d0a29d720a6e63b32fd34480bb7d564b7e200fab8a",
+            "f3cc103136423a57975750907ebc1d367e2985ac6338976d4d5a439f50323f4a"
+          ],
+          "2": [
+            "e0bdcb631b6fb5e37bab8c3ea615aa80828e4adb19d5674f0042634d4931ec38",
+            "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+          ],
+          "3": [
+            "9490149d56a5d8ae61cb2af75ccaa56e22ce92f91df99d68a04980876c3baf64",
+            "2c34ce1df23b838c5abf2a7f6437cca3d3067ed509ff25f11df6b11b582b51eb"
+          ],
+          "4": [
+            "225b3a26f353bb7bfb7e2ab342baee17867342b6dee6a0bc43660e294eb7da0a",
+            "755ba9519eb08efb2d4c68ccfee9d69ceb372301b3a701ad6a3ac309ba37edb6"
+          ],
+          "5": [
+            "56776e24632e2566e746309bcf820dbab7be71a5752441185ca576991c178ba3",
+            "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+          ],
+          "8": [
+            "e297b4fba8836352ef1ea60fb874f701682113c61a73fe8219498fb0018531ff",
+            "755ba9519eb08efb2d4c68ccfee9d69ceb372301b3a701ad6a3ac309ba37edb6"
+          ],
+          "9": [
+            "383dcefa95c3176a2981e7d28438ba1b4efd9e3ccd07b598e39c6df053d98ef2",
+            "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560"
+          ]
+        }
+      },
+      {
+        "step": 4,
+        "action_sha256": "1bb5fdcb4db43245ff64f307736ed08e68f7b7e263b92677d2e401cc765b0e91",
+        "excitation_max": 0,
+        "descending_max": 0,
+        "motor_inhibition": 0,
+        "protective_interrupt_mask": 0,
+        "settled_activation_max": null,
+        "settled_tendon_tension_max_N": null,
+        "sensor_hashes": {
+          "1": [
+            "8e37abca4f7440fa461e9c760d6555bcd899e812e7bd1858fdd980684047fbf7",
+            "f3cc103136423a57975750907ebc1d367e2985ac6338976d4d5a439f50323f4a"
+          ],
+          "2": [
+            "df8b9d944ffb5750f18531ad70d5c12cff7695b13ee3f89bc17f9a0ca1222503",
+            "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+          ],
+          "3": [
+            "8204f657e8fc220ea7bde05ea6b15b393b1123b78f3141e62fe8a7498ffa7ff4",
+            "2c34ce1df23b838c5abf2a7f6437cca3d3067ed509ff25f11df6b11b582b51eb"
+          ],
+          "4": [
+            "ca0122cab6ed2e292ee485531bb1b2634a86a2c35b4e81acf3fd4428a69543e6",
+            "755ba9519eb08efb2d4c68ccfee9d69ceb372301b3a701ad6a3ac309ba37edb6"
+          ],
+          "5": [
+            "88141df2c1df6abe32a6bccc313ee2c276ead980407d7d7562fcb1f352cb18ca",
+            "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+          ],
+          "8": [
+            "8aa7b29183dd3af3d1630c80a869c9ae035a04eb17384a316711dbbb05504f1c",
+            "755ba9519eb08efb2d4c68ccfee9d69ceb372301b3a701ad6a3ac309ba37edb6"
+          ],
+          "9": [
+            "e5cf75e6383b005e091cd26e1b481150ae960d8dbbc12bbfec2cfdf46a23647e",
+            "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560"
+          ]
+        }
+      }
+    ],
+    "emergency": [
+      {
+        "step": 1,
+        "action_sha256": "a793577aa655dde8b62e5225435b18268eadaab478ed6fc721c66ebe3564beef",
+        "excitation_max": 0,
+        "descending_max": 0,
+        "motor_inhibition": 1,
+        "protective_interrupt_mask": 11,
+        "settled_activation_max": null,
+        "settled_tendon_tension_max_N": null,
+        "sensor_hashes": {
+          "1": [
+            "5084d3b3290e75f4a61b669085629bf70f0ab8e6a8d3764bc7f867ece62d0b85",
+            "f3cc103136423a57975750907ebc1d367e2985ac6338976d4d5a439f50323f4a"
+          ],
+          "2": [
+            "0136a0f385c9627b3eb81cc6f09ee15d6fff9f4617299aabbb3d945f4c57f746",
+            "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+          ],
+          "3": [
+            "4fccc0292a90b1ece8d59ba2ae539356cce61bdce20122636b779c2ae5a0e010",
+            "2c34ce1df23b838c5abf2a7f6437cca3d3067ed509ff25f11df6b11b582b51eb"
+          ],
+          "4": [
+            "246191946b1cd6caaf96e828b1c9f8683e24bc81d27a424e148178b9af85e47d",
+            "755ba9519eb08efb2d4c68ccfee9d69ceb372301b3a701ad6a3ac309ba37edb6"
+          ],
+          "5": [
+            "84b27f4f56589bb6c1af94bd512de9dd642f0c1efc584ed1a6bf63a63b788568",
+            "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+          ],
+          "8": [
+            "766f37c96fd26152b18ea67f13e4d2dd505dcfcbb671cfb944a4064f6c03ed4d",
+            "755ba9519eb08efb2d4c68ccfee9d69ceb372301b3a701ad6a3ac309ba37edb6"
+          ],
+          "9": [
+            "d1cdca5511c5ab9695c8c27e0cf2cad69816474ed8a4fbe1216323b7317a1c68",
+            "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560"
+          ]
+        }
+      },
+      {
+        "step": 2,
+        "action_sha256": "91a83fe0d5f140edf3fff12b2df6f567cc32cf2683fdb6e792854482192bb07a",
+        "excitation_max": 0,
+        "descending_max": 0.013493109,
+        "motor_inhibition": 1,
+        "protective_interrupt_mask": 11,
+        "settled_activation_max": 0.0,
+        "settled_tendon_tension_max_N": 434.4876708984375,
+        "sensor_hashes": {
+          "1": [
+            "8e37abca4f7440fa461e9c760d6555bcd899e812e7bd1858fdd980684047fbf7",
+            "a735420ac62132f0891bb1755395bfe2ca92c7e672ac073b2d6db65e7afe727a"
+          ],
+          "2": [
+            "82ebcb9b7a3a5ed61c02ded0ba69bea703aa46bacd9b9c6254d5e1290331abeb",
+            "cdf7d638131f1701b603526a833124aa27f0e948bd417297e93fa7d5b1fc10bc"
+          ],
+          "3": [
+            "eedd53ffee5ade4a46b03bf7cfb86130874af32a7d7729685d86cbaaadb1dce9",
+            "bd586d41ab6536554327abc222757421f673e3a8f84b0367150fcffb4e4e6459"
+          ],
+          "4": [
+            "d8f3cf3a4295aad12018b434371a40afc878089cf6b1b35f6f90569e9f4779ac",
+            "157fbd98f4b91f956cb6f81bb01fb62136c60a873a47b1d356c7b38323c7131c"
+          ],
+          "5": [
+            "3e6abf85e0bb8c1c23e94a85af3ca7f2bbfd9a4eab7ed980935029bb613223d3",
+            "f060d5712596683f6c99ccd99f266aa90677baba1e063c389511ad6ce1675c44"
+          ],
+          "8": [
+            "892dca88fe7677286a15c74635b38a76da5179033b16923eafbf86253b4dfd31",
+            "a9aced0ba18a007e57ad31bbe558e14932df4cad9f625561db1fc44dfb36d7b8"
+          ],
+          "9": [
+            "e98bb227c1662472ec905fe88ae95cee70a663b3e4a9e46717da486675680e38",
+            "c2c7bdcfc57938cd391666ccedfbc06c3c3cf481b99a9e13de5410ebe9d3603d"
+          ]
+        }
+      },
+      {
+        "step": 3,
+        "action_sha256": "7f9d18fb1d5605c62257f15b34d3ac12b5c1f173cbe6b7e63c90f659059c41cf",
+        "excitation_max": 0,
+        "descending_max": 0.013411341,
+        "motor_inhibition": 1,
+        "protective_interrupt_mask": 11,
+        "settled_activation_max": 0.0,
+        "settled_tendon_tension_max_N": 434.4876708984375,
+        "sensor_hashes": {
+          "1": [
+            "2e346cea2cc77e8f9c9a20d0a29d720a6e63b32fd34480bb7d564b7e200fab8a",
+            "a735420ac62132f0891bb1755395bfe2ca92c7e672ac073b2d6db65e7afe727a"
+          ],
+          "2": [
+            "e0bdcb631b6fb5e37bab8c3ea615aa80828e4adb19d5674f0042634d4931ec38",
+            "a153a0f4cebea70be9a7f4bdf10358bd888994d9f0ac7e015e10b3ed862bf8f8"
+          ],
+          "3": [
+            "9490149d56a5d8ae61cb2af75ccaa56e22ce92f91df99d68a04980876c3baf64",
+            "bd586d41ab6536554327abc222757421f673e3a8f84b0367150fcffb4e4e6459"
+          ],
+          "4": [
+            "225b3a26f353bb7bfb7e2ab342baee17867342b6dee6a0bc43660e294eb7da0a",
+            "157fbd98f4b91f956cb6f81bb01fb62136c60a873a47b1d356c7b38323c7131c"
+          ],
+          "5": [
+            "56776e24632e2566e746309bcf820dbab7be71a5752441185ca576991c178ba3",
+            "f060d5712596683f6c99ccd99f266aa90677baba1e063c389511ad6ce1675c44"
+          ],
+          "8": [
+            "e297b4fba8836352ef1ea60fb874f701682113c61a73fe8219498fb0018531ff",
+            "a9aced0ba18a007e57ad31bbe558e14932df4cad9f625561db1fc44dfb36d7b8"
+          ],
+          "9": [
+            "383dcefa95c3176a2981e7d28438ba1b4efd9e3ccd07b598e39c6df053d98ef2",
+            "c2c7bdcfc57938cd391666ccedfbc06c3c3cf481b99a9e13de5410ebe9d3603d"
+          ]
+        }
+      },
+      {
+        "step": 4,
+        "action_sha256": "e7f4d2c625ba79c3eef7bbea1418dc1d0bc228d97c01245668f61c9f082ce1fd",
+        "excitation_max": 0,
+        "descending_max": 0.013320053,
+        "motor_inhibition": 1,
+        "protective_interrupt_mask": 11,
+        "settled_activation_max": 0.0,
+        "settled_tendon_tension_max_N": 434.4876708984375,
+        "sensor_hashes": {
+          "1": [
+            "8e37abca4f7440fa461e9c760d6555bcd899e812e7bd1858fdd980684047fbf7",
+            "a735420ac62132f0891bb1755395bfe2ca92c7e672ac073b2d6db65e7afe727a"
+          ],
+          "2": [
+            "df8b9d944ffb5750f18531ad70d5c12cff7695b13ee3f89bc17f9a0ca1222503",
+            "a153a0f4cebea70be9a7f4bdf10358bd888994d9f0ac7e015e10b3ed862bf8f8"
+          ],
+          "3": [
+            "8204f657e8fc220ea7bde05ea6b15b393b1123b78f3141e62fe8a7498ffa7ff4",
+            "bd586d41ab6536554327abc222757421f673e3a8f84b0367150fcffb4e4e6459"
+          ],
+          "4": [
+            "ca0122cab6ed2e292ee485531bb1b2634a86a2c35b4e81acf3fd4428a69543e6",
+            "157fbd98f4b91f956cb6f81bb01fb62136c60a873a47b1d356c7b38323c7131c"
+          ],
+          "5": [
+            "88141df2c1df6abe32a6bccc313ee2c276ead980407d7d7562fcb1f352cb18ca",
+            "f060d5712596683f6c99ccd99f266aa90677baba1e063c389511ad6ce1675c44"
+          ],
+          "8": [
+            "8aa7b29183dd3af3d1630c80a869c9ae035a04eb17384a316711dbbb05504f1c",
+            "a9aced0ba18a007e57ad31bbe558e14932df4cad9f625561db1fc44dfb36d7b8"
+          ],
+          "9": [
+            "e5cf75e6383b005e091cd26e1b481150ae960d8dbbc12bbfec2cfdf46a23647e",
+            "c2c7bdcfc57938cd391666ccedfbc06c3c3cf481b99a9e13de5410ebe9d3603d"
+          ]
+        }
+      }
+    ]
+  }
+}

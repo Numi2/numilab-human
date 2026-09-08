@@ -1,0 +1,96 @@
+[0/1] Planning build
+Building for production...
+[0/32] Copying MuscleLocomotor.metal
+[1/31] Write sources
+[4/31] Copying DecisionState.metal
+[5/31] Write sources
+[6/31] Write swift-version-3CD7052B146186F2.txt
+[8/35] Compiling RealModule AlgebraicField.swift
+[9/36] Compiling ComplexModule Complex+AdditiveArithmetic.swift
+[10/37] Compiling Numerics Numerics.swift
+[11/38] Compiling NumiBrainConnectomeTestSupport ConnectomeTestFixture.swift
+[12/38] Compiling NumiBrainValidation AnalyticPhysicalReferences.swift
+[13/38] Compiling NumiBrainQualification PerformanceAttemptLedger.swift
+[14/41] Compiling NumiBrainWatchdogCLI main.swift
+[15/41] Compiling NumiBrainQualificationCLI main.swift
+[16/41] Compiling NumiBrainValidationTests ConvergenceAndReferenceTests.swift
+[17/41] Compiling NumiBrainQualificationTests PerformanceAttemptLedgerTests.swift
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainQualificationTests/QualificationDeclarationTests.swift:23:29: warning: 'promotionReady' is deprecated: A declaration cannot prove promotion. Use declaredPromotionReady for inspection, and gate-specific verified receipts for admission. [#DeprecatedDeclaration]
+21 |     let manifest = try NumanXQualificationManifest(sourceRevision: "test", entries: entries)
+22 |     XCTAssertTrue(manifest.declaredPromotionReady)
+23 |     XCTAssertFalse(manifest.promotionReady)
+   |                             `- warning: 'promotionReady' is deprecated: A declaration cannot prove promotion. Use declaredPromotionReady for inspection, and gate-specific verified receipts for admission. [#DeprecatedDeclaration]
+24 |   }
+25 | 
+
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainQualificationTests/QualificationDeclarationTests.swift:31:29: warning: 'promotionReady' is deprecated: A declaration cannot prove promotion. Use declaredPromotionReady for inspection, and gate-specific verified receipts for admission. [#DeprecatedDeclaration]
+29 |     XCTAssertThrowsError(try manifest.validate())
+30 |     XCTAssertFalse(manifest.declaredPromotionReady)
+31 |     XCTAssertFalse(manifest.promotionReady)
+   |                             `- warning: 'promotionReady' is deprecated: A declaration cannot prove promotion. Use declaredPromotionReady for inspection, and gate-specific verified receipts for admission. [#DeprecatedDeclaration]
+32 |   }
+33 | 
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+[18/43] Compiling NumiBrainGateFCLI main.swift
+[19/42] Compiling NumiBrainGateECLI main.swift
+[20/41] Compiling MLX ArrayAt.swift
+[21/41] Compiling NumiBrainCore AcceptedConsequenceDynamics.swift
+[22/45] Compiling NumiBrainPolicyCLI main.swift
+[23/46] Compiling NumiBrainGateDCLI main.swift
+[24/47] Compiling NumiBrainSchedulerCLI main.swift
+[24/47] Write Objects.LinkFileList
+[27/47] Compiling NumiBrainConnectomeCLI main.swift
+[27/47] Linking numi-brain-policy
+[28/47] Write Objects.LinkFileList
+[30/47] Linking numi-brain-scheduler
+[31/47] Linking numi-brain-gate-d
+[32/47] Linking numi-brain-connectome
+[34/47] Compiling NumiBrainCoreTests BrainAllGatesVerifierTests.swift
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainCoreTests/BrainSafetyAdmissionTests.swift:63:22: warning: 'resetAfterVerifiedRecovery(baseBrainGeneration:controlStepIdentifier:transactionFingerprint:)' is deprecated: Scalar identities are not verified recovery. Reconstruct admission with the joint recovery owner; this legacy reset fails closed. [#DeprecatedDeclaration]
+61 |   func testScalarRecoveryCannotResetContinuity() async throws {
+62 |     let c = try controller()
+63 |     do { try await c.resetAfterVerifiedRecovery(baseBrainGeneration: 1, controlStepIdentifier: 1, transactionFingerprint: 1); XCTFail("unverified reset") } catch {}
+   |                      `- warning: 'resetAfterVerifiedRecovery(baseBrainGeneration:controlStepIdentifier:transactionFingerprint:)' is deprecated: Scalar identities are not verified recovery. Reconstruct admission with the joint recovery owner; this legacy reset fails closed. [#DeprecatedDeclaration]
+64 |   }
+65 |   func testRejectedInitialRootCannotAdvanceItsUnpublishedState() async throws {
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+[35/47] Compiling NumiBrainMetal MetalNumanXGateCCapture.swift
+[36/51] Compiling NumiBrainNumanXInteropCLI main.swift
+[36/51] Write Objects.LinkFileList
+[38/51] Compiling NumiBrainDispatchCLI main.swift
+[38/51] Write Objects.LinkFileList
+[39/51] Linking numi-brain-numanx-interop
+[40/51] Linking numi-brain-dispatch
+[42/51] Compiling NumiBrainTissueCLI main.swift
+[42/51] Write Objects.LinkFileList
+[43/51] Linking numi-brain-tissue
+[45/51] Compiling NumiBrainMLX MLXBrainLearner.swift
+[46/54] Compiling NumiBrainExperimentCLI main.swift
+[46/54] Write Objects.LinkFileList
+[48/54] Compiling NumiBrainGateCCLI main.swift
+[48/54] Write Objects.LinkFileList
+[49/54] Linking numi-brain-experiment
+[50/54] Linking numi-brain-gate-c
+[52/54] Compiling NumiBrainMetalTests MLXCausalLearningTests.swift
+[53/55] Compiling NumiBrainPackageTests runner.swift
+[53/55] Write Objects.LinkFileList
+[54/55] Linking NumiBrainPackageTests
+Build complete! (128.27s)
+Test Suite 'Selected tests' started at 2026-09-08 06:39:59.602.
+Test Suite 'NumiBrainPackageTests.xctest' started at 2026-09-08 06:39:59.608.
+Test Suite 'MuscleLocomotorProgramTests' started at 2026-09-08 06:39:59.608.
+Test Case '-[NumiBrainCoreTests.MuscleLocomotorProgramTests testProgramBindsEveryChannelSourceAndMode]' started.
+/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainCore/Species/NumanXFullBodyTransportTemplate.swift:412: error: -[NumiBrainCoreTests.MuscleLocomotorProgramTests testProgramBindsEveryChannelSourceAndMode] : failed: caught error: "invalid module descriptor: NumanX full-body joint kinesthesia must cover native rows 6 through 127"
+Test Case '-[NumiBrainCoreTests.MuscleLocomotorProgramTests testProgramBindsEveryChannelSourceAndMode]' failed (0.633 seconds).
+Test Suite 'MuscleLocomotorProgramTests' failed at 2026-09-08 06:40:00.241.
+	 Executed 1 test, with 1 failure (1 unexpected) in 0.633 (0.633) seconds
+Test Suite 'NumiBrainPackageTests.xctest' failed at 2026-09-08 06:40:00.241.
+	 Executed 1 test, with 1 failure (1 unexpected) in 0.633 (0.633) seconds
+Test Suite 'Selected tests' failed at 2026-09-08 06:40:00.241.
+	 Executed 1 test, with 1 failure (1 unexpected) in 0.633 (0.639) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

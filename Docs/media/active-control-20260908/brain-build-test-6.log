@@ -1,0 +1,103 @@
+[0/1] Planning build
+Building for production...
+[0/16] Write sources
+[1/16] Write swift-version-3CD7052B146186F2.txt
+[3/20] Compiling RealModule AlgebraicField.swift
+[4/21] Compiling ComplexModule Complex+AdditiveArithmetic.swift
+[5/22] Compiling Numerics Numerics.swift
+[6/23] Compiling NumiBrainConnectomeTestSupport ConnectomeTestFixture.swift
+[7/23] Compiling NumiBrainValidation AnalyticPhysicalReferences.swift
+[8/23] Compiling NumiBrainQualification PerformanceAttemptLedger.swift
+[9/30] Compiling NumiBrainGateFCLI main.swift
+[10/29] Compiling NumiBrainGateECLI main.swift
+[11/28] Compiling NumiBrainQualificationCLI main.swift
+[12/27] Compiling NumiBrainWatchdogCLI main.swift
+[13/26] Compiling NumiBrainValidationTests ConvergenceAndReferenceTests.swift
+[14/26] Compiling NumiBrainQualificationTests PerformanceAttemptLedgerTests.swift
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainQualificationTests/QualificationDeclarationTests.swift:23:29: warning: 'promotionReady' is deprecated: A declaration cannot prove promotion. Use declaredPromotionReady for inspection, and gate-specific verified receipts for admission. [#DeprecatedDeclaration]
+21 |     let manifest = try NumanXQualificationManifest(sourceRevision: "test", entries: entries)
+22 |     XCTAssertTrue(manifest.declaredPromotionReady)
+23 |     XCTAssertFalse(manifest.promotionReady)
+   |                             `- warning: 'promotionReady' is deprecated: A declaration cannot prove promotion. Use declaredPromotionReady for inspection, and gate-specific verified receipts for admission. [#DeprecatedDeclaration]
+24 |   }
+25 | 
+
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainQualificationTests/QualificationDeclarationTests.swift:31:29: warning: 'promotionReady' is deprecated: A declaration cannot prove promotion. Use declaredPromotionReady for inspection, and gate-specific verified receipts for admission. [#DeprecatedDeclaration]
+29 |     XCTAssertThrowsError(try manifest.validate())
+30 |     XCTAssertFalse(manifest.declaredPromotionReady)
+31 |     XCTAssertFalse(manifest.promotionReady)
+   |                             `- warning: 'promotionReady' is deprecated: A declaration cannot prove promotion. Use declaredPromotionReady for inspection, and gate-specific verified receipts for admission. [#DeprecatedDeclaration]
+32 |   }
+33 | 
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+[15/26] Compiling MLX ArrayAt.swift
+[16/26] Compiling NumiBrainCore AcceptedConsequenceDynamics.swift
+[17/32] Compiling NumiBrainPolicyCLI main.swift
+[18/31] Compiling NumiBrainConnectomeCLI main.swift
+[19/30] Compiling NumiBrainGateDCLI main.swift
+[20/29] Compiling NumiBrainSchedulerCLI main.swift
+[21/28] Compiling NumiBrainCoreTests BrainAllGatesVerifierTests.swift
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainCoreTests/BrainSafetyAdmissionTests.swift:63:22: warning: 'resetAfterVerifiedRecovery(baseBrainGeneration:controlStepIdentifier:transactionFingerprint:)' is deprecated: Scalar identities are not verified recovery. Reconstruct admission with the joint recovery owner; this legacy reset fails closed. [#DeprecatedDeclaration]
+61 |   func testScalarRecoveryCannotResetContinuity() async throws {
+62 |     let c = try controller()
+63 |     do { try await c.resetAfterVerifiedRecovery(baseBrainGeneration: 1, controlStepIdentifier: 1, transactionFingerprint: 1); XCTFail("unverified reset") } catch {}
+   |                      `- warning: 'resetAfterVerifiedRecovery(baseBrainGeneration:controlStepIdentifier:transactionFingerprint:)' is deprecated: Scalar identities are not verified recovery. Reconstruct admission with the joint recovery owner; this legacy reset fails closed. [#DeprecatedDeclaration]
+64 |   }
+65 |   func testRejectedInitialRootCannotAdvanceItsUnpublishedState() async throws {
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+[22/28] Compiling NumiBrainMetal MetalNumanXGateCCapture.swift
+[23/32] Compiling NumiBrainNumanXInteropCLI main.swift
+[24/31] Compiling NumiBrainDispatchCLI main.swift
+[25/30] Compiling NumiBrainTissueCLI main.swift
+[26/29] Compiling NumiBrainMLX MLXBrainLearner.swift
+[27/32] Compiling NumiBrainExperimentCLI main.swift
+[28/31] Compiling NumiBrainGateCCLI main.swift
+[29/30] Compiling NumiBrainMetalTests MLXCausalLearningTests.swift
+[30/32] Compiling NumiBrainPackageTests runner.swift
+[30/32] Write Objects.LinkFileList
+[31/32] Linking NumiBrainPackageTests
+Build complete! (126.12s)
+Test Suite 'Selected tests' started at 2026-09-08 07:11:57.545.
+Test Suite 'NumiBrainPackageTests.xctest' started at 2026-09-08 07:11:57.551.
+Test Suite 'MetalConnectomeRootTests' started at 2026-09-08 07:11:57.551.
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testCompleteCheckpointRestorationPreservesNeuralStateExactly]' started.
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testCompleteCheckpointRestorationPreservesNeuralStateExactly]' passed (4.216 seconds).
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testDistinctActuatorBodiesShareOnlyTheGraph]' started.
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testDistinctActuatorBodiesShareOnlyTheGraph]' passed (2.840 seconds).
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testFullReleasedGraphUsesTheNormalMetalController]' started.
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainMetalTests/MetalConnectomeRootTests.swift:142: -[NumiBrainMetalTests.MetalConnectomeRootTests testFullReleasedGraphUsesTheNormalMetalController] : Test skipped - full release pack is not configured
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testFullReleasedGraphUsesTheNormalMetalController]' skipped (0.001 seconds).
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testNormalFactoryPublishesNeuralStateAndAbortDoesNotAdvanceIt]' started.
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testNormalFactoryPublishesNeuralStateAndAbortDoesNotAdvanceIt]' passed (2.718 seconds).
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testSharedGraphKeepsMindsIndependentAndAsyncMatchesSync]' started.
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testSharedGraphKeepsMindsIndependentAndAsyncMatchesSync]' passed (4.173 seconds).
+Test Suite 'MetalConnectomeRootTests' passed at 2026-09-08 07:12:11.499.
+	 Executed 5 tests, with 1 test skipped and 0 failures (0 unexpected) in 13.947 (13.948) seconds
+Test Suite 'MetalMuscleLocomotorKernelTests' started at 2026-09-08 07:12:11.499.
+Test Case '-[NumiBrainMetalTests.MetalMuscleLocomotorKernelTests testCheckpointPreservesAndAuthenticatesControllerIdentity]' started.
+Test Case '-[NumiBrainMetalTests.MetalMuscleLocomotorKernelTests testCheckpointPreservesAndAuthenticatesControllerIdentity]' passed (0.001 seconds).
+Test Case '-[NumiBrainMetalTests.MetalMuscleLocomotorKernelTests testSpindleFeedbackAlternationBoundsAndMissingEvidence]' started.
+Test Case '-[NumiBrainMetalTests.MetalMuscleLocomotorKernelTests testSpindleFeedbackAlternationBoundsAndMissingEvidence]' passed (0.005 seconds).
+Test Suite 'MetalMuscleLocomotorKernelTests' passed at 2026-09-08 07:12:11.504.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.005 (0.005) seconds
+Test Suite 'MetalNumanXBridgeV1EndToEndTests' started at 2026-09-08 07:12:11.504.
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testActiveMuscleLocomotorAcceptedRoots]' started.
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainMetalTests/MetalNumanXBridgeV1EndToEndTests.swift:2984: -[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testActiveMuscleLocomotorAcceptedRoots] : Test skipped - real NumanX bridge paths are not configured
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testActiveMuscleLocomotorAcceptedRoots]' skipped (0.000 seconds).
+Test Suite 'MetalNumanXBridgeV1EndToEndTests' passed at 2026-09-08 07:12:11.505.
+	 Executed 1 test, with 1 test skipped and 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'MuscleLocomotorProgramTests' started at 2026-09-08 07:12:11.505.
+Test Case '-[NumiBrainCoreTests.MuscleLocomotorProgramTests testProgramBindsEveryChannelSourceAndMode]' started.
+Test Case '-[NumiBrainCoreTests.MuscleLocomotorProgramTests testProgramBindsEveryChannelSourceAndMode]' passed (0.008 seconds).
+Test Suite 'MuscleLocomotorProgramTests' passed at 2026-09-08 07:12:11.512.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.008 (0.008) seconds
+Test Suite 'NumiBrainPackageTests.xctest' passed at 2026-09-08 07:12:11.512.
+	 Executed 9 tests, with 2 tests skipped and 0 failures (0 unexpected) in 13.961 (13.961) seconds
+Test Suite 'Selected tests' passed at 2026-09-08 07:12:11.513.
+	 Executed 9 tests, with 2 tests skipped and 0 failures (0 unexpected) in 13.961 (13.967) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

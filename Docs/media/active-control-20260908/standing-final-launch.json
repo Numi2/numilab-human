@@ -1,0 +1,28 @@
+{
+  "command": [
+    "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numilab_human_myosim_visual_probe",
+    "/Users/n/human-completion-20260907/input/myosim-fullbody-core-reference.nhrigid",
+    "/Users/n/human-completion-20260907/input/myosim-fullbody-muscle-reference.nhmyo",
+    "/Users/n/human-completion-20260907/input/bodyparts3d-myosim-major-bones.nhbones",
+    "/Users/n/numi-human-active-locomotion-20260908/standing-final",
+    "--muscle-step-seconds",
+    "0.0001",
+    "--muscle-step-count",
+    "8",
+    "--persistent-metal-stand",
+    "--stand-deterministic-replay",
+    "--support-contact-payload",
+    "/Users/n/human-completion-20260907/input/myosim-fullbody-support-contact.nhcnt",
+    "--tendon-payload",
+    "/Users/n/human-completion-20260907/input/numi-human-tendon-attachments.nhtendon",
+    "--joint-equality-payload",
+    "/Users/n/human-completion-20260907/input/myosim-fullbody-joint-equalities.nheq",
+    "--dimension",
+    "512"
+  ],
+  "returncode": 0,
+  "elapsed_seconds": 14.246466166000001,
+  "native_revision": "03514adb29e2dd97d81bbb3f0bd5ab7e8d30e171",
+  "binary_sha256": "36c7eba57f74cef49d0e04ab1966b470cd28bc903b9eb9da3b151376e6ea56c4",
+  "boundary": "legacy NHEQ1 native recruitment baseline; not Brain or costal standing qualification"
+}

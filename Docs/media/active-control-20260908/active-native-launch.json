@@ -1,0 +1,39 @@
+{
+  "command": [
+    "swift",
+    "test",
+    "-c",
+    "release",
+    "--skip-build",
+    "--filter",
+    "testActiveMuscleLocomotorAcceptedRoots"
+  ],
+  "environment": {
+    "NUMANX_METALROBO_LIBRARY": "/Users/n/MetalRobo-human-completion-build-20260907/lib/libmetalrobo.dylib",
+    "NUMANX_FULLBODY_RIGID": "/Users/n/human-completion-20260907/input/myosim-fullbody-core-reference.nhrigid",
+    "NUMANX_FULLBODY_MUSCLE": "/Users/n/human-completion-20260907/input/myosim-fullbody-muscle-reference.nhmyo",
+    "NUMANX_FULLBODY_CONTACT": "/Users/n/human-completion-20260907/input/myosim-fullbody-support-contact.nhcnt",
+    "NUMANX_METALROBO_METALLIB": "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib",
+    "NUMANX_MATTER_METALLIB": "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib",
+    "NUMANX_FULLBODY_VISUAL_PACK": "/Users/n/NumiHumanCurrent/anterior-thorax-smoke/myosim-fullbody-articulated-markers-muscle-driven-selected-actuators-source-support-contact.mrvpack",
+    "NUMANX_FULLBODY_VISION_PROFILE": "/Users/n/Numan-X-neuron-v1/assets/numanx-head-vision-profile.v1.json",
+    "NUMANX_MATTER_MATERIAL": "/Users/n/MetalRobo-human-completion-20260907/matter/materials/silicone.nmatter",
+    "MTL_DEBUG_LAYER": "1",
+    "NUMANX_GATE_B_EVIDENCE": "1"
+  },
+  "elapsed_seconds": 24.822742625,
+  "returncode": 0,
+  "source_revision": "2415704ec61a692ad89be18d4f2869792431526d",
+  "source_status": "",
+  "artifact_sha256": {
+    "NUMANX_METALROBO_LIBRARY": "c7cf01a001fe72c549ba313cc7833a0679a1995264de58afbb55eeb561b68ea5",
+    "NUMANX_FULLBODY_RIGID": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44",
+    "NUMANX_FULLBODY_MUSCLE": "9a988f19a6fd8e533cd0f2bf3192cb8535fb008ccd394ffbf1a4432d3db76a05",
+    "NUMANX_FULLBODY_CONTACT": "4d54f8155cd83baaee7af536099824ac0da61e5d5e77544b42c6e5ce1b48c907",
+    "NUMANX_METALROBO_METALLIB": "ee224f3907bbce2202384d598475cd7f5a5d4518ab8a5c8034aff1724cd6df91",
+    "NUMANX_MATTER_METALLIB": "a23a45d2387c91bfcfaa034f4a54e4c491142f2cfc94fab0ae1a38bc6180a074",
+    "NUMANX_FULLBODY_VISUAL_PACK": "b8ab7cd8deead1e2af3137a727eaad74cd7e4238d77d9116d774bbf304936e37",
+    "NUMANX_FULLBODY_VISION_PROFILE": "166220533c6c78695f6e55412f2e832eaaa4ec94ddf791b476111dc323c652a6",
+    "NUMANX_MATTER_MATERIAL": "d3094476cefa1a28ca8b5f35b28e2586d5a44ce63f268e57e96812de32de4a5f"
+  }
+}

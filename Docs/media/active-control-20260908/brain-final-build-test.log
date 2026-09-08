@@ -1,0 +1,48 @@
+[0/1] Planning build
+Building for production...
+[0/18] Copying MuscleLocomotor.metal
+[1/18] Write sources
+[3/18] Write swift-version-3CD7052B146186F2.txt
+[5/8] Compiling NumiBrainGateCCLI main.swift
+[5/9] Write Objects.LinkFileList
+[6/9] Linking numi-brain-gate-c
+[8/9] Compiling NumiBrainMetalTests MLXCausalLearningTests.swift
+[8/10] Write Objects.LinkFileList
+[9/10] Linking NumiBrainPackageTests
+Build complete! (21.98s)
+Test Suite 'Selected tests' started at 2026-09-08 07:13:10.065.
+Test Suite 'NumiBrainPackageTests.xctest' started at 2026-09-08 07:13:10.072.
+Test Suite 'MetalConnectomeRootTests' started at 2026-09-08 07:13:10.072.
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testCompleteCheckpointRestorationPreservesNeuralStateExactly]' started.
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testCompleteCheckpointRestorationPreservesNeuralStateExactly]' passed (4.203 seconds).
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testDistinctActuatorBodiesShareOnlyTheGraph]' started.
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testDistinctActuatorBodiesShareOnlyTheGraph]' passed (2.842 seconds).
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testFullReleasedGraphUsesTheNormalMetalController]' started.
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainMetalTests/MetalConnectomeRootTests.swift:142: -[NumiBrainMetalTests.MetalConnectomeRootTests testFullReleasedGraphUsesTheNormalMetalController] : Test skipped - full release pack is not configured
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testFullReleasedGraphUsesTheNormalMetalController]' skipped (0.001 seconds).
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testNormalFactoryPublishesNeuralStateAndAbortDoesNotAdvanceIt]' started.
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testNormalFactoryPublishesNeuralStateAndAbortDoesNotAdvanceIt]' passed (2.717 seconds).
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testSharedGraphKeepsMindsIndependentAndAsyncMatchesSync]' started.
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testSharedGraphKeepsMindsIndependentAndAsyncMatchesSync]' passed (4.161 seconds).
+Test Suite 'MetalConnectomeRootTests' passed at 2026-09-08 07:13:23.994.
+	 Executed 5 tests, with 1 test skipped and 0 failures (0 unexpected) in 13.922 (13.923) seconds
+Test Suite 'MetalMuscleLocomotorKernelTests' started at 2026-09-08 07:13:23.994.
+Test Case '-[NumiBrainMetalTests.MetalMuscleLocomotorKernelTests testCheckpointPreservesAndAuthenticatesControllerIdentity]' started.
+Test Case '-[NumiBrainMetalTests.MetalMuscleLocomotorKernelTests testCheckpointPreservesAndAuthenticatesControllerIdentity]' passed (0.001 seconds).
+Test Case '-[NumiBrainMetalTests.MetalMuscleLocomotorKernelTests testSpindleFeedbackAlternationBoundsAndMissingEvidence]' started.
+Test Case '-[NumiBrainMetalTests.MetalMuscleLocomotorKernelTests testSpindleFeedbackAlternationBoundsAndMissingEvidence]' passed (0.052 seconds).
+Test Suite 'MetalMuscleLocomotorKernelTests' passed at 2026-09-08 07:13:24.047.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.053 (0.053) seconds
+Test Suite 'MuscleLocomotorProgramTests' started at 2026-09-08 07:13:24.047.
+Test Case '-[NumiBrainCoreTests.MuscleLocomotorProgramTests testProgramBindsEveryChannelSourceAndMode]' started.
+Test Case '-[NumiBrainCoreTests.MuscleLocomotorProgramTests testProgramBindsEveryChannelSourceAndMode]' passed (0.008 seconds).
+Test Suite 'MuscleLocomotorProgramTests' passed at 2026-09-08 07:13:24.055.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.008 (0.008) seconds
+Test Suite 'NumiBrainPackageTests.xctest' passed at 2026-09-08 07:13:24.055.
+	 Executed 8 tests, with 1 test skipped and 0 failures (0 unexpected) in 13.983 (13.984) seconds
+Test Suite 'Selected tests' passed at 2026-09-08 07:13:24.055.
+	 Executed 8 tests, with 1 test skipped and 0 failures (0 unexpected) in 13.983 (13.990) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

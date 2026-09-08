@@ -1,0 +1,47 @@
+[0/1] Planning build
+Building for production...
+[0/17] Copying DecisionState.metal
+[1/17] Write sources
+[2/17] Write swift-version-3CD7052B146186F2.txt
+[4/5] Compiling NumiBrainMetalTests MLXCausalLearningTests.swift
+[5/7] Compiling NumiBrainPackageTests runner.swift
+[5/7] Write Objects.LinkFileList
+[6/7] Linking NumiBrainPackageTests
+Build complete! (22.34s)
+Test Suite 'Selected tests' started at 2026-09-08 06:58:17.731.
+Test Suite 'NumiBrainPackageTests.xctest' started at 2026-09-08 06:58:17.737.
+Test Suite 'MetalConnectomeRootTests' started at 2026-09-08 06:58:17.737.
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testCompleteCheckpointRestorationPreservesNeuralStateExactly]' started.
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testCompleteCheckpointRestorationPreservesNeuralStateExactly]' passed (4.517 seconds).
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testDistinctActuatorBodiesShareOnlyTheGraph]' started.
+/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainCore/Motor/ProtectiveMotorAdapter.swift:102: error: -[NumiBrainMetalTests.MetalConnectomeRootTests testDistinctActuatorBodiesShareOnlyTheGraph] : failed: caught error: "scheduler transaction error: runtime-foundation protective profile requires at least six muscle identifiers"
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testDistinctActuatorBodiesShareOnlyTheGraph]' failed (0.627 seconds).
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testFullReleasedGraphUsesTheNormalMetalController]' started.
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainMetalTests/MetalConnectomeRootTests.swift:141: -[NumiBrainMetalTests.MetalConnectomeRootTests testFullReleasedGraphUsesTheNormalMetalController] : Test skipped - full release pack is not configured
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testFullReleasedGraphUsesTheNormalMetalController]' skipped (0.001 seconds).
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testNormalFactoryPublishesNeuralStateAndAbortDoesNotAdvanceIt]' started.
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testNormalFactoryPublishesNeuralStateAndAbortDoesNotAdvanceIt]' passed (2.723 seconds).
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testSharedGraphKeepsMindsIndependentAndAsyncMatchesSync]' started.
+Test Case '-[NumiBrainMetalTests.MetalConnectomeRootTests testSharedGraphKeepsMindsIndependentAndAsyncMatchesSync]' passed (4.167 seconds).
+Test Suite 'MetalConnectomeRootTests' failed at 2026-09-08 06:58:29.773.
+	 Executed 5 tests, with 1 test skipped and 1 failure (1 unexpected) in 12.035 (12.036) seconds
+Test Suite 'MetalMuscleLocomotorKernelTests' started at 2026-09-08 06:58:29.773.
+Test Case '-[NumiBrainMetalTests.MetalMuscleLocomotorKernelTests testCheckpointPreservesAndAuthenticatesControllerIdentity]' started.
+Test Case '-[NumiBrainMetalTests.MetalMuscleLocomotorKernelTests testCheckpointPreservesAndAuthenticatesControllerIdentity]' passed (0.001 seconds).
+Test Case '-[NumiBrainMetalTests.MetalMuscleLocomotorKernelTests testSpindleFeedbackAlternationBoundsAndMissingEvidence]' started.
+Test Case '-[NumiBrainMetalTests.MetalMuscleLocomotorKernelTests testSpindleFeedbackAlternationBoundsAndMissingEvidence]' passed (0.005 seconds).
+Test Suite 'MetalMuscleLocomotorKernelTests' passed at 2026-09-08 06:58:29.779.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.005 (0.006) seconds
+Test Suite 'MuscleLocomotorProgramTests' started at 2026-09-08 06:58:29.779.
+Test Case '-[NumiBrainCoreTests.MuscleLocomotorProgramTests testProgramBindsEveryChannelSourceAndMode]' started.
+Test Case '-[NumiBrainCoreTests.MuscleLocomotorProgramTests testProgramBindsEveryChannelSourceAndMode]' passed (0.008 seconds).
+Test Suite 'MuscleLocomotorProgramTests' passed at 2026-09-08 06:58:29.786.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.008 (0.008) seconds
+Test Suite 'NumiBrainPackageTests.xctest' failed at 2026-09-08 06:58:29.786.
+	 Executed 8 tests, with 1 test skipped and 1 failure (1 unexpected) in 12.048 (12.049) seconds
+Test Suite 'Selected tests' failed at 2026-09-08 06:58:29.786.
+	 Executed 8 tests, with 1 test skipped and 1 failure (1 unexpected) in 12.048 (12.055) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

@@ -28,6 +28,12 @@ no-direct-torque identity, bitwise replay, and four-angle visual review. See
 [Human Stand v1](Docs/HUMAN_STAND_V1.md) and the
 [per-step tendon transaction](Docs/HUMAN_TENDON_STEP_TRANSACTION.md).
 
+The [active muscle control increment](Docs/ACTIVE_MUSCLE_CONTROL_20260908.md)
+adds source-bound tonic spindle feedback and explicit periodic recruitment in
+Brain/Metal. It fixes initialized-fibre activation continuation and tendon sensor
+units. Bounded native activation/force response and replay pass; sustained
+standing and walking remain open.
+
 The current regional layer is `NHFASC4`: six exact-source pectoral, six
 P4/P5/P6-derived latissimus-aponeurosis, eight external-oblique, and six
 internal-oblique regions execute nonduplicated force-share replacement,

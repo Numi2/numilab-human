@@ -1,0 +1,56 @@
+[0/1] Planning build
+Building for production...
+[0/20] Write sources
+[4/20] Write swift-version-3CD7052B146186F2.txt
+[6/14] Compiling NumiBrainCoreTests BrainAllGatesVerifierTests.swift
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainCoreTests/BrainSafetyAdmissionTests.swift:63:22: warning: 'resetAfterVerifiedRecovery(baseBrainGeneration:controlStepIdentifier:transactionFingerprint:)' is deprecated: Scalar identities are not verified recovery. Reconstruct admission with the joint recovery owner; this legacy reset fails closed. [#DeprecatedDeclaration]
+61 |   func testScalarRecoveryCannotResetContinuity() async throws {
+62 |     let c = try controller()
+63 |     do { try await c.resetAfterVerifiedRecovery(baseBrainGeneration: 1, controlStepIdentifier: 1, transactionFingerprint: 1); XCTFail("unverified reset") } catch {}
+   |                      `- warning: 'resetAfterVerifiedRecovery(baseBrainGeneration:controlStepIdentifier:transactionFingerprint:)' is deprecated: Scalar identities are not verified recovery. Reconstruct admission with the joint recovery owner; this legacy reset fails closed. [#DeprecatedDeclaration]
+64 |   }
+65 |   func testRejectedInitialRootCannotAdvanceItsUnpublishedState() async throws {
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+[7/14] Compiling NumiBrainMetal MetalNumanXGateCCapture.swift
+[8/23] Compiling NumiBrainNumanXInteropCLI main.swift
+[8/23] Write Objects.LinkFileList
+[10/23] Compiling NumiBrainDispatchCLI main.swift
+[10/23] Write Objects.LinkFileList
+[11/23] Linking numi-brain-numanx-interop
+[13/23] Compiling NumiBrainTissueCLI main.swift
+[13/23] Write Objects.LinkFileList
+[14/23] Linking numi-brain-dispatch
+[15/23] Linking numi-brain-tissue
+[17/23] Compiling NumiBrainMLX MLXBrainLearner.swift
+[18/26] Compiling NumiBrainExperimentCLI main.swift
+[18/26] Write Objects.LinkFileList
+[20/26] Compiling NumiBrainGateCCLI main.swift
+[20/26] Write Objects.LinkFileList
+[21/26] Linking numi-brain-experiment
+[22/26] Linking numi-brain-gate-c
+[24/26] Compiling NumiBrainMetalTests MLXCausalLearningTests.swift
+[25/27] Compiling NumiBrainPackageTests runner.swift
+[25/27] Write Objects.LinkFileList
+[26/27] Linking NumiBrainPackageTests
+Build complete! (82.00s)
+Test Suite 'Selected tests' started at 2026-09-08 06:43:24.451.
+Test Suite 'NumiBrainPackageTests.xctest' started at 2026-09-08 06:43:24.457.
+Test Suite 'MetalMuscleLocomotorKernelTests' started at 2026-09-08 06:43:24.457.
+Test Case '-[NumiBrainMetalTests.MetalMuscleLocomotorKernelTests testSpindleFeedbackAlternationBoundsAndMissingEvidence]' started.
+Test Case '-[NumiBrainMetalTests.MetalMuscleLocomotorKernelTests testSpindleFeedbackAlternationBoundsAndMissingEvidence]' passed (0.435 seconds).
+Test Suite 'MetalMuscleLocomotorKernelTests' passed at 2026-09-08 06:43:24.892.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.435 (0.435) seconds
+Test Suite 'MuscleLocomotorProgramTests' started at 2026-09-08 06:43:24.892.
+Test Case '-[NumiBrainCoreTests.MuscleLocomotorProgramTests testProgramBindsEveryChannelSourceAndMode]' started.
+Test Case '-[NumiBrainCoreTests.MuscleLocomotorProgramTests testProgramBindsEveryChannelSourceAndMode]' passed (0.009 seconds).
+Test Suite 'MuscleLocomotorProgramTests' passed at 2026-09-08 06:43:24.900.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.009 (0.009) seconds
+Test Suite 'NumiBrainPackageTests.xctest' passed at 2026-09-08 06:43:24.900.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.443 (0.443) seconds
+Test Suite 'Selected tests' passed at 2026-09-08 06:43:24.900.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.443 (0.449) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

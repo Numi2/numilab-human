@@ -1,0 +1,83 @@
+numi-brain-gate-c: locomotor research capture cannot train, inherit qualification or combine goals
+usage: numi-brain-gate-c <capture|capture-train> \
+  --library PATH --rigid PATH --muscle PATH --contacts PATH \
+  --visual-pack PATH --vision-profile PATH \
+  --metalrobo-metallib PATH --matter-metallib PATH \
+  --artifact-dir DIR --run-id ID --source-revision REV \
+  --dataset-id ID --dataset-revision REV --episode N --seed N --roots N \
+  --task-fp HEX --scene-fp HEX --object-fp HEX --embodiment-fp HEX   [--timestep-microseconds N]
+
+World input: --material PATH selects the legacy fixture, or provide
+--matter-world PATH --human-source-fp HEX --matter-world-fp HEX to load
+an existing cooked Matter package through native configuration v3.
+Add --joint-equalities PATH --joint-equality-fp HEX for source-bound NHEQ2
+through native configuration v4. The equality key is FNV-1a64 of its bytes;
+--human-source-fp remains the base NHRIGID/NHMYO/NHCNT world-admission key.
+Unsupported native v4 fails without an unconstrained fallback.
+Add --costal-cartilage PATH --costal-binding PATH --costal-binding-fp HEX
+for mass-conserving costal v5 admission. This requires the rebased package
+and source equalities; the binding key is FNV-1a64 of NHTBIND1 bytes.
+Package or source-constraint loading does not qualify anatomy or standing.
+
+capture-train additionally requires --learning-rate FLOAT and at least
+three roots. It emits one deterministic, immutable, non-promotable MLX
+successor candidate tied to the capture run. --head-posture-weight enables
+accepted 100-root body-23 response supervision with
+--goal head-posture-lift-v1. Delayed-support learning is fail-closed until
+constrained Human/Matter contact authority is available.
+The full-body Gate C default is 100 microseconds. Larger explicitly named
+timesteps remain diagnostic inputs rather than qualified defaults.
+--head-posture-calibration-sha may name one verified exploratory response
+evaluation to calibrate the plant-gradient sign; it is training-only,
+requires --head-posture-weight, and its absolute paired response must clear
+the evaluation's predeclared physical-resolution threshold.
+
+usage: numi-brain-gate-c verify --artifact-dir DIR --run-sha SHA256
+usage: numi-brain-gate-c verify-candidate \
+  --artifact-dir DIR --candidate-sha SHA256
+
+create-long-horizon-protocol and verify-long-horizon-protocol freeze and
+verify one candidate, axis, fixed cohort schedule, physical coordinates,
+and support thresholds before authoritative outcomes are captured.
+
+evaluate-long-horizon and verify-long-horizon recompute the exact
+identity-free sensor/action, complete committed-memory, terminal owner,
+and support relations for every predeclared cohort.
+
+compare-support-replay and verify-support-replay retain and recompute the
+semantic replay relation between two independently executed evaluations.
+
+evaluate-latency and verify-latency retain and recompute Metal-feedback
+p99 for at least 100 authoritative roots captured with --candidate-sha and
+a predeclared --maximum-inference-latency-microseconds budget.
+
+evaluate-ood and verify-ood retain and recompute the predeclared AUROC,
+supervision-or-reject recall, and unsafe-accept metrics from at least 20
+authoritative roots in each predeclared class.
+
+evaluate-hard-safety and verify-hard-safety retain and recompute exact
+same-root protective bypass and safety-violation metrics from at least 20
+authoritative emergency-stop challenges, including a rejected root.
+
+evaluate-few-shot and verify-few-shot bind one measured parent-to-successor
+update to disjoint pre/post adaptation and retained-prior physical cohorts.
+
+evaluate-support is retained for artifact compatibility but fails closed
+while Human/Matter ABI v1 uses unconstrained A0 dynamics. Diagnostic
+support captures remain non-promotable negative evidence.
+
+evaluate-head-posture and verify-head-posture retain and recompute a
+matched parent/candidate head-relative lift response on body 23. Training
+and evaluation scenes must be disjoint and each run requires 100 roots.
+
+describe-body accepts the same native asset/world arguments and prints
+the admitted model, sensory profile and muscle payload identities.
+
+capture also accepts --muscle-locomotor-program PATH for a source-bound
+research spindle/periodic controller. It retains muscle-locomotor-research.json
+and exact motor/root artifacts, disables synthetic bootstrap observations,
+and cannot inherit Gate C qualification or train an unrelated policy.
+
+The capture output is retained authoritative root data, but is always
+marked non-promotable. Gate C promotion requires separately frozen,
+disjoint partitions and complete metric evidence.
