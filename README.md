@@ -12,7 +12,10 @@ adds all 122 scalar limits to Matter/NumanX v6, with source-law and bounded
 transaction checks. The [coupled offline stance](Docs/COUPLED_EQUILIBRIUM_20260908.md)
 now passes internal FP64 equilibrium at residual **0.00814** against **0.05**,
 with bitwise replay and independent source mass, gravity and reaction checks.
-Loaded tissue integration and sustained standing/walking remain open.
+[Prepared-state v7 admission](Docs/PREPARED_STATE_ADMISSION_20260908.md) now carries
+that pose and all muscle states through the joint runtime with curved contact
+and a small authored FEM fixture. Eight accepted roots over 0.8 ms replay exactly;
+registered anatomical tissue, loaded equilibrium and sustained behavior remain open.
 
 The earlier [offline joint-stop repair](Docs/OFFLINE_LIMIT_REACTIONS_20260908.md)
 solves mass-coupled source-limit reactions and uses their derivative during
