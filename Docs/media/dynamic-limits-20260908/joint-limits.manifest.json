@@ -1,0 +1,877 @@
+{
+  "schema": "numi.human.joint-limit-source-compliance-payload.v1",
+  "file": "myosim-fullbody-joint-limits.nhlim",
+  "payload_abi": 1,
+  "record_bytes": 80,
+  "joint_count": 122,
+  "maximum_row_count": 244,
+  "bytes": 9840,
+  "sha256": "c583611fcedc326a32c6f69504a65e675c8e0adc987c6db622ca0d95a02438d3",
+  "policy_id": 1,
+  "solver": {
+    "diagexact": false,
+    "enabled": true,
+    "integrator": "Euler",
+    "mujoco_version": "3.12.0",
+    "refsafe": true,
+    "schema": "numi.human.mujoco-scalar-limit-solver.v1"
+  },
+  "joints": [
+    {
+      "source_joint_id": 1,
+      "source_name": "flex_extension",
+      "core_q_index": 7,
+      "core_v_index": 6,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 2,
+      "source_name": "lat_bending",
+      "core_q_index": 8,
+      "core_v_index": 7,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 3,
+      "source_name": "axial_rotation",
+      "core_q_index": 9,
+      "core_v_index": 8,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 4,
+      "source_name": "Abs_t1",
+      "core_q_index": 10,
+      "core_v_index": 9,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 5,
+      "source_name": "Abs_t2",
+      "core_q_index": 11,
+      "core_v_index": 10,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 6,
+      "source_name": "Abs_r3",
+      "core_q_index": 12,
+      "core_v_index": 11,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 7,
+      "source_name": "L4_L5_FE",
+      "core_q_index": 13,
+      "core_v_index": 12,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 8,
+      "source_name": "L4_L5_LB",
+      "core_q_index": 14,
+      "core_v_index": 13,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 9,
+      "source_name": "L4_L5_AR",
+      "core_q_index": 15,
+      "core_v_index": 14,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 10,
+      "source_name": "L3_L4_FE",
+      "core_q_index": 16,
+      "core_v_index": 15,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 11,
+      "source_name": "L3_L4_LB",
+      "core_q_index": 17,
+      "core_v_index": 16,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 12,
+      "source_name": "L3_L4_AR",
+      "core_q_index": 18,
+      "core_v_index": 17,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 13,
+      "source_name": "L2_L3_FE",
+      "core_q_index": 19,
+      "core_v_index": 18,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 14,
+      "source_name": "L2_L3_LB",
+      "core_q_index": 20,
+      "core_v_index": 19,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 15,
+      "source_name": "L2_L3_AR",
+      "core_q_index": 21,
+      "core_v_index": 20,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 16,
+      "source_name": "L1_L2_FE",
+      "core_q_index": 22,
+      "core_v_index": 21,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 17,
+      "source_name": "L1_L2_LB",
+      "core_q_index": 23,
+      "core_v_index": 22,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 18,
+      "source_name": "L1_L2_AR",
+      "core_q_index": 24,
+      "core_v_index": 23,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 19,
+      "source_name": "sternoclavicular_r2_r",
+      "core_q_index": 25,
+      "core_v_index": 24,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 20,
+      "source_name": "sternoclavicular_r3_r",
+      "core_q_index": 26,
+      "core_v_index": 25,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 21,
+      "source_name": "unrotscap_r3_r",
+      "core_q_index": 27,
+      "core_v_index": 26,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 22,
+      "source_name": "unrotscap_r2_r",
+      "core_q_index": 28,
+      "core_v_index": 27,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 23,
+      "source_name": "acromioclavicular_r2_r",
+      "core_q_index": 29,
+      "core_v_index": 28,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 24,
+      "source_name": "acromioclavicular_r3_r",
+      "core_q_index": 30,
+      "core_v_index": 29,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 25,
+      "source_name": "acromioclavicular_r1_r",
+      "core_q_index": 31,
+      "core_v_index": 30,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 26,
+      "source_name": "unrothum_r1_r",
+      "core_q_index": 32,
+      "core_v_index": 31,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 27,
+      "source_name": "unrothum_r3_r",
+      "core_q_index": 33,
+      "core_v_index": 32,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 28,
+      "source_name": "unrothum_r2_r",
+      "core_q_index": 34,
+      "core_v_index": 33,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 29,
+      "source_name": "elv_angle_r",
+      "core_q_index": 35,
+      "core_v_index": 34,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 30,
+      "source_name": "shoulder_elv_r",
+      "core_q_index": 36,
+      "core_v_index": 35,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 31,
+      "source_name": "shoulder1_r2_r",
+      "core_q_index": 37,
+      "core_v_index": 36,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 32,
+      "source_name": "shoulder_rot_r",
+      "core_q_index": 38,
+      "core_v_index": 37,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 33,
+      "source_name": "elbow_flexion_r",
+      "core_q_index": 39,
+      "core_v_index": 38,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 34,
+      "source_name": "pro_sup_r",
+      "core_q_index": 40,
+      "core_v_index": 39,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 35,
+      "source_name": "deviation_r",
+      "core_q_index": 41,
+      "core_v_index": 40,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 36,
+      "source_name": "flexion_r",
+      "core_q_index": 42,
+      "core_v_index": 41,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 37,
+      "source_name": "cmc_flexion",
+      "core_q_index": 43,
+      "core_v_index": 42,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 38,
+      "source_name": "cmc_abduction",
+      "core_q_index": 44,
+      "core_v_index": 43,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 39,
+      "source_name": "mp_flexion_r",
+      "core_q_index": 45,
+      "core_v_index": 44,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 40,
+      "source_name": "ip_flexion_r",
+      "core_q_index": 46,
+      "core_v_index": 45,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 41,
+      "source_name": "mcp2_flexion_r",
+      "core_q_index": 47,
+      "core_v_index": 46,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 42,
+      "source_name": "mcp2_abduction_r",
+      "core_q_index": 48,
+      "core_v_index": 47,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 43,
+      "source_name": "pm2_flexion_r",
+      "core_q_index": 49,
+      "core_v_index": 48,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 44,
+      "source_name": "md2_flexion_r",
+      "core_q_index": 50,
+      "core_v_index": 49,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 45,
+      "source_name": "mcp3_flexion_r",
+      "core_q_index": 51,
+      "core_v_index": 50,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 46,
+      "source_name": "mcp3_abduction_r",
+      "core_q_index": 52,
+      "core_v_index": 51,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 47,
+      "source_name": "pm3_flexion_r",
+      "core_q_index": 53,
+      "core_v_index": 52,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 48,
+      "source_name": "md3_flexion",
+      "core_q_index": 54,
+      "core_v_index": 53,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 49,
+      "source_name": "mcp4_flexion_r",
+      "core_q_index": 55,
+      "core_v_index": 54,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 50,
+      "source_name": "mcp4_abduction_r",
+      "core_q_index": 56,
+      "core_v_index": 55,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 51,
+      "source_name": "pm4_flexion",
+      "core_q_index": 57,
+      "core_v_index": 56,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 52,
+      "source_name": "md4_flexion_r",
+      "core_q_index": 58,
+      "core_v_index": 57,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 53,
+      "source_name": "mcp5_flexion_r",
+      "core_q_index": 59,
+      "core_v_index": 58,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 54,
+      "source_name": "mcp5_abduction_r",
+      "core_q_index": 60,
+      "core_v_index": 59,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 55,
+      "source_name": "pm5_flexion_r",
+      "core_q_index": 61,
+      "core_v_index": 60,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 56,
+      "source_name": "md5_flexion_r",
+      "core_q_index": 62,
+      "core_v_index": 61,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 57,
+      "source_name": "sternoclavicular_r2_l",
+      "core_q_index": 63,
+      "core_v_index": 62,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 58,
+      "source_name": "sternoclavicular_r3_l",
+      "core_q_index": 64,
+      "core_v_index": 63,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 59,
+      "source_name": "unrotscap_r3_l",
+      "core_q_index": 65,
+      "core_v_index": 64,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 60,
+      "source_name": "unrotscap_r2_l",
+      "core_q_index": 66,
+      "core_v_index": 65,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 61,
+      "source_name": "acromioclavicular_r2_l",
+      "core_q_index": 67,
+      "core_v_index": 66,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 62,
+      "source_name": "acromioclavicular_r3_l",
+      "core_q_index": 68,
+      "core_v_index": 67,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 63,
+      "source_name": "acromioclavicular_r1_l",
+      "core_q_index": 69,
+      "core_v_index": 68,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 64,
+      "source_name": "unrothum_r1_l",
+      "core_q_index": 70,
+      "core_v_index": 69,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 65,
+      "source_name": "unrothum_r3_l",
+      "core_q_index": 71,
+      "core_v_index": 70,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 66,
+      "source_name": "unrothum_r2_l",
+      "core_q_index": 72,
+      "core_v_index": 71,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 67,
+      "source_name": "elv_angle_l",
+      "core_q_index": 73,
+      "core_v_index": 72,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 68,
+      "source_name": "shoulder_elv_l",
+      "core_q_index": 74,
+      "core_v_index": 73,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 69,
+      "source_name": "shoulder1_r2_l",
+      "core_q_index": 75,
+      "core_v_index": 74,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 70,
+      "source_name": "shoulder_rot_l",
+      "core_q_index": 76,
+      "core_v_index": 75,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 71,
+      "source_name": "elbow_flexion_l",
+      "core_q_index": 77,
+      "core_v_index": 76,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 72,
+      "source_name": "pro_sup_l",
+      "core_q_index": 78,
+      "core_v_index": 77,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 73,
+      "source_name": "deviation_l",
+      "core_q_index": 79,
+      "core_v_index": 78,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 74,
+      "source_name": "flexion_l",
+      "core_q_index": 80,
+      "core_v_index": 79,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 75,
+      "source_name": "cmc_flexion_l",
+      "core_q_index": 81,
+      "core_v_index": 80,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 76,
+      "source_name": "cmc_abduction_l",
+      "core_q_index": 82,
+      "core_v_index": 81,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 77,
+      "source_name": "mp_flexion_l",
+      "core_q_index": 83,
+      "core_v_index": 82,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 78,
+      "source_name": "ip_flexion_l",
+      "core_q_index": 84,
+      "core_v_index": 83,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 79,
+      "source_name": "mcp2_flexion_l",
+      "core_q_index": 85,
+      "core_v_index": 84,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 80,
+      "source_name": "mcp2_abduction_l",
+      "core_q_index": 86,
+      "core_v_index": 85,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 81,
+      "source_name": "pm2_flexion_l",
+      "core_q_index": 87,
+      "core_v_index": 86,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 82,
+      "source_name": "md2_flexion_l",
+      "core_q_index": 88,
+      "core_v_index": 87,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 83,
+      "source_name": "mcp3_flexion_l",
+      "core_q_index": 89,
+      "core_v_index": 88,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 84,
+      "source_name": "mcp3_abduction_l",
+      "core_q_index": 90,
+      "core_v_index": 89,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 85,
+      "source_name": "pm3_flexion_l",
+      "core_q_index": 91,
+      "core_v_index": 90,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 86,
+      "source_name": "md3_flexion_l",
+      "core_q_index": 92,
+      "core_v_index": 91,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 87,
+      "source_name": "mcp4_flexion_l",
+      "core_q_index": 93,
+      "core_v_index": 92,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 88,
+      "source_name": "mcp4_abduction_l",
+      "core_q_index": 94,
+      "core_v_index": 93,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 89,
+      "source_name": "pm4_flexion_l",
+      "core_q_index": 95,
+      "core_v_index": 94,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 90,
+      "source_name": "md4_flexion_l",
+      "core_q_index": 96,
+      "core_v_index": 95,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 91,
+      "source_name": "mcp5_flexion_l",
+      "core_q_index": 97,
+      "core_v_index": 96,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 92,
+      "source_name": "mcp5_abduction_l",
+      "core_q_index": 98,
+      "core_v_index": 97,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 93,
+      "source_name": "pm5_flexion_l",
+      "core_q_index": 99,
+      "core_v_index": 98,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 94,
+      "source_name": "md5_flexion_l",
+      "core_q_index": 100,
+      "core_v_index": 99,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 95,
+      "source_name": "hip_flexion_r",
+      "core_q_index": 101,
+      "core_v_index": 100,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 96,
+      "source_name": "hip_adduction_r",
+      "core_q_index": 102,
+      "core_v_index": 101,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 97,
+      "source_name": "hip_rotation_r",
+      "core_q_index": 103,
+      "core_v_index": 102,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 98,
+      "source_name": "knee_angle_translation2_r",
+      "core_q_index": 104,
+      "core_v_index": 103,
+      "legacy_core_limit_status": "retained_in_manifest_not_enforced_at_source_default"
+    },
+    {
+      "source_joint_id": 99,
+      "source_name": "knee_angle_translation1_r",
+      "core_q_index": 105,
+      "core_v_index": 104,
+      "legacy_core_limit_status": "retained_in_manifest_not_enforced_at_source_default"
+    },
+    {
+      "source_joint_id": 100,
+      "source_name": "knee_angle_r",
+      "core_q_index": 106,
+      "core_v_index": 105,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 101,
+      "source_name": "knee_angle_rotation2_r",
+      "core_q_index": 107,
+      "core_v_index": 106,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 102,
+      "source_name": "knee_angle_rotation3_r",
+      "core_q_index": 108,
+      "core_v_index": 107,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 103,
+      "source_name": "ankle_angle_r",
+      "core_q_index": 109,
+      "core_v_index": 108,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 104,
+      "source_name": "subtalar_angle_r",
+      "core_q_index": 110,
+      "core_v_index": 109,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 105,
+      "source_name": "mtp_angle_r",
+      "core_q_index": 111,
+      "core_v_index": 110,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 106,
+      "source_name": "knee_angle_beta_translation2_r",
+      "core_q_index": 112,
+      "core_v_index": 111,
+      "legacy_core_limit_status": "retained_in_manifest_not_enforced_at_source_default"
+    },
+    {
+      "source_joint_id": 107,
+      "source_name": "knee_angle_beta_translation1_r",
+      "core_q_index": 113,
+      "core_v_index": 112,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 108,
+      "source_name": "knee_angle_beta_rotation1_r",
+      "core_q_index": 114,
+      "core_v_index": 113,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 109,
+      "source_name": "hip_flexion_l",
+      "core_q_index": 115,
+      "core_v_index": 114,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 110,
+      "source_name": "hip_adduction_l",
+      "core_q_index": 116,
+      "core_v_index": 115,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 111,
+      "source_name": "hip_rotation_l",
+      "core_q_index": 117,
+      "core_v_index": 116,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 112,
+      "source_name": "knee_angle_translation2_l",
+      "core_q_index": 118,
+      "core_v_index": 117,
+      "legacy_core_limit_status": "retained_in_manifest_not_enforced_at_source_default"
+    },
+    {
+      "source_joint_id": 113,
+      "source_name": "knee_angle_translation1_l",
+      "core_q_index": 119,
+      "core_v_index": 118,
+      "legacy_core_limit_status": "retained_in_manifest_not_enforced_at_source_default"
+    },
+    {
+      "source_joint_id": 114,
+      "source_name": "knee_angle_l",
+      "core_q_index": 120,
+      "core_v_index": 119,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 115,
+      "source_name": "knee_angle_rotation2_l",
+      "core_q_index": 121,
+      "core_v_index": 120,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 116,
+      "source_name": "knee_angle_rotation3_l",
+      "core_q_index": 122,
+      "core_v_index": 121,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 117,
+      "source_name": "ankle_angle_l",
+      "core_q_index": 123,
+      "core_v_index": 122,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 118,
+      "source_name": "subtalar_angle_l",
+      "core_q_index": 124,
+      "core_v_index": 123,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 119,
+      "source_name": "mtp_angle_l",
+      "core_q_index": 125,
+      "core_v_index": 124,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 120,
+      "source_name": "knee_angle_beta_translation2_l",
+      "core_q_index": 126,
+      "core_v_index": 125,
+      "legacy_core_limit_status": "retained_in_manifest_not_enforced_at_source_default"
+    },
+    {
+      "source_joint_id": 121,
+      "source_name": "knee_angle_beta_translation1_l",
+      "core_q_index": 127,
+      "core_v_index": 126,
+      "legacy_core_limit_status": "enforced"
+    },
+    {
+      "source_joint_id": 122,
+      "source_name": "knee_angle_beta_rotation1_l",
+      "core_q_index": 128,
+      "core_v_index": 127,
+      "legacy_core_limit_status": "enforced"
+    }
+  ],
+  "source_manifest_sha256": "2cea81e64a3c8da63731ae67c40ddc39aa61d9c4d0436000e806d25005e5b6d8",
+  "source_export_sha256": "35e90b5625efbb8ad9cab936c29238c0e1760a3821e52e9ffbc96198879b45af"
+}

@@ -1,0 +1,102 @@
+Start testing: Sep 08 17:42 CEST
+----------------------------------------------------------
+2/101 Testing: numi_human_static_support
+2/101 Test: numi_human_static_support
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numi_human_static_support_test"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907
+"numi_human_static_support" start time: Sep 08 17:42 CEST
+Output:
+----------------------------------------------------------
+numi_human_static_support_test=passed coupled_limit_reactions=passed dependent_acceleration=passed analytic_weight_n=24.525 replay=exact penetration=rejected airborne_force_n=0
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"numi_human_static_support" end time: Sep 08 17:42 CEST
+"numi_human_static_support" time elapsed: 00:00:00
+----------------------------------------------------------
+
+50/101 Testing: numanx.integration.human_motor_sensor_transaction
+50/101 Test: numanx.integration.human_motor_sensor_transaction
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_human_io_probe" "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907
+"numanx.integration.human_motor_sensor_transaction" start time: Sep 08 17:42 CEST
+Output:
+----------------------------------------------------------
+2026-09-08 17:42:30.958 metalrobo_numanx_human_io_probe[52528:6212887] Metal API Validation Enabled
+numanx_human_io_probe passed: device=Apple M4 Pro generation=4001 payload_bytes=160 validity_bytes=16 replay=byte-identical motor_gate=success_and_liveness_failure publication=reserved_one_shot terminal=quarantined
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"numanx.integration.human_motor_sensor_transaction" end time: Sep 08 17:42 CEST
+"numanx.integration.human_motor_sensor_transaction" time elapsed: 00:00:00
+----------------------------------------------------------
+
+96/101 Testing: numanx.physics.human_source_equality
+96/101 Test: numanx.physics.human_source_equality
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_human_equality_probe"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907
+"numanx.physics.human_source_equality" start time: Sep 08 17:42 CEST
+Output:
+----------------------------------------------------------
+2026-09-08 17:42:30.987 metalrobo_numanx_human_equality_probe[52529:6212892] Metal API Validation Enabled
+rows=4 environments=2 trials=3 prepare_scaled_error=1.48421e-07 residual_relative_error=2.03189e-07 action_relative_error=2.92104e-08 finite_difference_relative_error=0.000259531 initial_position_defect=0.03 factor_relative_error=2.08931e-07 inverse_relative_error=1.39431e-07 inverse_residual=3.23572e-05 source_factor=immutable invalid_pivots=rejected replay=byte_identical
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"numanx.physics.human_source_equality" end time: Sep 08 17:42 CEST
+"numanx.physics.human_source_equality" time elapsed: 00:00:00
+----------------------------------------------------------
+
+97/101 Testing: numanx.physics.human_source_limits
+97/101 Test: numanx.physics.human_source_limits
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_human_limit_probe" "/Users/n/MetalRobo-human-completion-20260907/tests/fixtures/numanx_human_limit_mujoco312.json"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907
+"numanx.physics.human_source_limits" start time: Sep 08 17:42 CEST
+Output:
+----------------------------------------------------------
+2026-09-08 17:42:31.009 metalrobo_numanx_human_limit_probe[52530:6212896] Metal API Validation Enabled
+limit_case=lower candidates=7 passed=1
+limit_case=upper candidates=7 passed=1
+limit_case=inactive candidates=5 passed=1
+limit_case=exact_lower_margin candidates=5 passed=1
+limit_case=exact_upper_margin candidates=5 passed=1
+limit_case=inside_margin candidates=7 passed=1
+limit_case=direct candidates=7 passed=1
+limit_case=refsafe candidates=7 passed=1
+limit_case=refsafe_off candidates=7 passed=1
+limit_case=both_sides candidates=9 passed=1
+limit_case=constant_impedance candidates=7 passed=1
+limit_case=zero_width candidates=7 passed=1
+limit_case=linear_impedance candidates=7 passed=1
+limit_case=clamped_impedance candidates=7 passed=1
+limit_case=zero_stiffness candidates=7 passed=1
+{"status":"passed","candidates":101,"finite_differences":79,"maximum_scaled_error":0.000717528,"runtime_transaction_qualified":false}
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"numanx.physics.human_source_limits" end time: Sep 08 17:42 CEST
+"numanx.physics.human_source_limits" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Sep 08 17:42 CEST
+
+human =   0.08 sec*proc
+
+matter =   0.05 sec*proc
+
+mechanics =   0.01 sec*proc
+
+metal =   0.08 sec*proc
+
+numanx =   0.08 sec*proc
+
+numi-human =   0.01 sec*proc
+
+physics =   0.08 sec*proc
+
+support =   0.01 sec*proc
+

@@ -1,0 +1,60 @@
+{
+  "source_state": {
+    "native": {
+      "revision": "349f8b573dfa02bd9f6af7921b72b47416c671da",
+      "status": ""
+    },
+    "brain": {
+      "revision": "a885ff2868199c2ee2d6c61069668d56963fe90f",
+      "status": ""
+    }
+  },
+  "binaries": {
+    "native_library": {
+      "path": "/Users/n/MetalRobo-human-completion-build-20260907/lib/libmetalrobo.dylib",
+      "bytes": 6291376,
+      "sha256": "fa1b3408ca75c7ce1f30f39f9511b6faff00b60a627ab4bfac0eb6a23068d830"
+    },
+    "matter_metallib": {
+      "path": "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib",
+      "bytes": 2462552,
+      "sha256": "fc7b1ea12568dc7655f44b5f0e8b111fb531290d1e6eec63577dad8984b3b7b6"
+    },
+    "metalrobo_metallib": {
+      "path": "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib",
+      "bytes": 4461088,
+      "sha256": "b6db0de2c31b908b8f404fffa8cee93a95d9a6788997d3e18f7d1658e063a827"
+    },
+    "source_limit_probe": {
+      "path": "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_human_limit_probe",
+      "bytes": 74336,
+      "sha256": "a037ba1c313cdd377cdbbf2b74613a1fa57871aec169c3a748630aa1274bf4ad"
+    },
+    "brain_tests": {
+      "path": "/Users/n/numi-brain-human-completion-20260907/.build/arm64-apple-macosx/release/NumiBrainPackageTests.xctest/Contents/MacOS/NumiBrainPackageTests",
+      "bytes": 49098840,
+      "sha256": "932fe276704b766644d14f5d8ee7d9d694e6d748dfe9ae2754a8237bf27103a2"
+    },
+    "mlx_metallib": {
+      "path": "/Users/n/numi-brain-human-completion-20260907/.build/arm64-apple-macosx/release/NumiBrainPackageTests.xctest/Contents/MacOS/mlx.metallib",
+      "bytes": 2866529,
+      "sha256": "b1dbd4b3d8ea3e377843805786377b16942f57cdf8a591e506725d1cf0e0161f"
+    },
+    "package_resolved": {
+      "path": "/Users/n/numi-brain-human-completion-20260907/Package.resolved",
+      "bytes": 660,
+      "sha256": "bfec70453f92011be015a2eab3f0913fef66ddc53c5296148c131fe2e7a7fdc2"
+    }
+  },
+  "hardware": {
+    "chip": "Apple M4 Pro",
+    "memory_bytes": "25769803776",
+    "os": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6\nBuildVersion:\t\t25G72",
+    "xcode": "Xcode 26.6\nBuild version 17F113",
+    "swift": "Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)\nTarget: arm64-apple-macosx26.0"
+  },
+  "competing_workloads": [
+    "51195   0.0       50:13 /opt/homebrew/Cellar/python@3.13/3.13.14_1/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python /Users/n/numivivo-ensemble-evidence-20260908/continuation-source-5/Tools/Benchmarks/continue_ensemble.py run --parent /Users/n/numivivo-ensemble-evidence-20260908/nvt-64 --parent-qualification /Users/n/numivivo-ensemble-evidence-20260908/nvt-64-qualification.json --binary /Users/n/numivivo-frontier-evidence-20260908/binaries-8/numivivo --out /Users/n/numivivo-ensemble-evidence-20260908/nvt-fine-210ps",
+    "52809   6.1       01:10 /Users/n/numivivo-frontier-evidence-20260908/binaries-8/numivivo md-run /Users/n/numivivo-ensemble-evidence-20260908/nvt-fine-210ps/run-07-water-orthogonal-smooth/system.json --config /Users/n/numivivo-ensemble-evidence-20260908/nvt-fine-210ps/run-07-water-orthogonal-smooth/configuration.json --restore /Users/n/numivivo-ensemble-evidence-20260908/nvt-fine-210ps/run-07-water-orthogonal-smooth/chunk-008/checkpoint.json --steps 20000 --sample-every 100 --observables-every 100 --max-samples 1000 --checkpoint /Users/n/numivivo-ensemble-evidence-20260908/nvt-fine-210ps/run-07-water-orthogonal-smooth/chunk-009/checkpoint.json --output /Users/n/numivivo-ensemble-evidence-20260908/nvt-fine-210ps/run-07-water-orthogonal-smooth/chunk-009/report.json"
+  ]
+}

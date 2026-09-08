@@ -1,0 +1,45 @@
+[0/1] Planning build
+Building for production...
+[0/17] Write sources
+[2/17] Write swift-version-3CD7052B146186F2.txt
+[4/10] Compiling NumiBrainMetal MetalNumanXGateCCapture.swift
+[5/20] Compiling NumiBrainNumanXInteropCLI main.swift
+[5/20] Write Objects.LinkFileList
+[7/20] Compiling NumiBrainDispatchCLI main.swift
+[7/20] Write Objects.LinkFileList
+[8/20] Linking numi-brain-numanx-interop
+[10/20] Compiling NumiBrainTissueCLI main.swift
+[10/20] Write Objects.LinkFileList
+[11/20] Linking numi-brain-dispatch
+[12/20] Linking numi-brain-tissue
+[14/20] Compiling NumiBrainMLX MLXBrainLearner.swift
+[15/23] Compiling NumiBrainExperimentCLI main.swift
+[15/23] Write Objects.LinkFileList
+[17/23] Compiling NumiBrainGateCCLI main.swift
+[17/23] Write Objects.LinkFileList
+[18/23] Linking numi-brain-experiment
+[19/23] Linking numi-brain-gate-c
+[21/23] Compiling NumiBrainMetalTests ConnectomeBodyContractTests.swift
+[22/24] Compiling NumiBrainPackageTests runner.swift
+[22/24] Write Objects.LinkFileList
+[23/24] Linking NumiBrainPackageTests
+Build complete! (86.29s)
+Test Suite 'Selected tests' started at 2026-09-08 17:27:03.171.
+Test Suite 'NumiBrainPackageTests.xctest' started at 2026-09-08 17:27:03.177.
+Test Suite 'MetalNumanXBridgeV1EndToEndTests' started at 2026-09-08 17:27:03.177.
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testCostalOwnershipRequiresConstrainedWorldAndV5Layout]' started.
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testCostalOwnershipRequiresConstrainedWorldAndV5Layout]' passed (0.001 seconds).
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testSourceJointEqualitiesDescriptorAndConfigurationV4Layout]' started.
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testSourceJointEqualitiesDescriptorAndConfigurationV4Layout]' passed (0.000 seconds).
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testSourceJointLimitsRequireSourceOwnerAndV6Layout]' started.
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testSourceJointLimitsRequireSourceOwnerAndV6Layout]' passed (0.000 seconds).
+Test Suite 'MetalNumanXBridgeV1EndToEndTests' passed at 2026-09-08 17:27:03.178.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'NumiBrainPackageTests.xctest' passed at 2026-09-08 17:27:03.178.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'Selected tests' passed at 2026-09-08 17:27:03.178.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.001 (0.007) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

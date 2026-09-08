@@ -1,0 +1,65 @@
+{
+  "command": [
+    "swift",
+    "test",
+    "-c",
+    "release",
+    "--skip-build",
+    "--filter",
+    "testAuthoredMatterBrainProposalApplyAndJointPublication"
+  ],
+  "cwd": "/Users/n/numi-brain-human-completion-20260907",
+  "environment": {
+    "NUMANX_METALROBO_LIBRARY": "/Users/n/MetalRobo-human-completion-build-20260907/lib/libmetalrobo.dylib",
+    "NUMANX_FULLBODY_RIGID": "/Users/n/human-completion-20260907/input/myosim-fullbody-core-reference.nhrigid",
+    "NUMANX_FULLBODY_MUSCLE": "/Users/n/human-completion-20260907/input/myosim-fullbody-muscle-reference.nhmyo",
+    "NUMANX_FULLBODY_CONTACT": "/Users/n/human-completion-20260907/input/myosim-fullbody-support-contact.nhcnt",
+    "NUMANX_METALROBO_METALLIB": "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib",
+    "NUMANX_MATTER_METALLIB": "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib",
+    "NUMANX_FULLBODY_VISUAL_PACK": "/Users/n/NumiHumanCurrent/anterior-thorax-smoke/myosim-fullbody-articulated-markers-muscle-driven-selected-actuators-source-support-contact.mrvpack",
+    "NUMANX_FULLBODY_VISION_PROFILE": "/Users/n/Numan-X-neuron-v1/assets/numanx-head-vision-profile.v1.json",
+    "NUMANX_MATTER_MATERIAL": "/Users/n/MetalRobo-human-completion-20260907/matter/materials/silicone.nmatter",
+    "NUMANX_MATTER_WORLD_PACKAGE": "/Users/n/numi-human-tissue-ownership-20260908/costal-rebased.nmatterpack",
+    "NUMANX_HUMAN_SOURCE_FP": "aef317857bfd43c3",
+    "NUMANX_MATTER_WORLD_FP": "cc354c5cf1bcb81c",
+    "NUMANX_JOINT_EQUALITIES": "/Users/n/human-completion-20260907/input/myosim-fullbody-joint-equalities-source-compliance.nheq",
+    "NUMANX_JOINT_EQUALITY_FP": "19041185bf97c95d",
+    "NUMANX_COSTAL_CARTILAGE": "/Users/n/numi-human-tissue-ownership-20260908/bodyparts3d-costal-cartilage.nhcartilage",
+    "NUMANX_COSTAL_BINDING": "/Users/n/numi-human-tissue-ownership-20260908/costal-tissue.nhtbind",
+    "NUMANX_COSTAL_BINDING_FP": "170108efb187f65d",
+    "NUMANX_CONSTRAINED_HUMAN_SOURCE_FP": "eb95ddf54073dd73",
+    "NUMANX_GATE_B_EVIDENCE": "1",
+    "MTL_DEBUG_LAYER": "1",
+    "MRNX_RUNTIME_DIAGNOSTICS": "1",
+    "NUMANX_JOINT_LIMITS": "/Users/n/human-dynamic-limits-20260908/myosim-fullbody-joint-limits.nhlim",
+    "NUMANX_JOINT_LIMIT_FP": "601a251a6473fdd9"
+  },
+  "source_state": {
+    "native": {
+      "revision": "117aa90b5c28a5448d845cbde45f3de85c481cb2",
+      "status": " M CMakeLists.txt\n M include/metalrobo/mrnx_bridge_v1.h\n M matter/CMakeLists.txt\n M matter/include/numi/matter/matter.hpp\n M matter/src/matter_kernels.metal\n M matter/src/metal/human_equality.metalinc\n M matter/src/runtime.mm\n M src/metal/NumanXRuntimeV1.mm\n?? apps/numanx_human_limit_probe.mm\n?? matter/include/numi/matter/human_limits_gpu.h\n?? matter/src/metal/human_limits.metalinc\n"
+    },
+    "brain": {
+      "revision": "2415704ec61a692ad89be18d4f2869792431526d",
+      "status": " M Sources/NumiBrainMetal/MetalNumanXBridgeV1.swift\n M Sources/NumiBrainMetalBridgeABI/include/NumiBrainMetalBridgeABI.h\n M Tests/NumiBrainMetalTests/MetalNumanXBridgeV1EndToEndTests.swift\n"
+    }
+  },
+  "artifact_sha256": {
+    "NUMANX_METALROBO_LIBRARY": "d8c3737bee60b3657d0c8b7408d84991d87da1467de1847f188a2de348fa1886",
+    "NUMANX_FULLBODY_RIGID": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44",
+    "NUMANX_FULLBODY_MUSCLE": "9a988f19a6fd8e533cd0f2bf3192cb8535fb008ccd394ffbf1a4432d3db76a05",
+    "NUMANX_FULLBODY_CONTACT": "4d54f8155cd83baaee7af536099824ac0da61e5d5e77544b42c6e5ce1b48c907",
+    "NUMANX_METALROBO_METALLIB": "b6db0de2c31b908b8f404fffa8cee93a95d9a6788997d3e18f7d1658e063a827",
+    "NUMANX_MATTER_METALLIB": "fc7b1ea12568dc7655f44b5f0e8b111fb531290d1e6eec63577dad8984b3b7b6",
+    "NUMANX_FULLBODY_VISUAL_PACK": "b8ab7cd8deead1e2af3137a727eaad74cd7e4238d77d9116d774bbf304936e37",
+    "NUMANX_FULLBODY_VISION_PROFILE": "166220533c6c78695f6e55412f2e832eaaa4ec94ddf791b476111dc323c652a6",
+    "NUMANX_MATTER_MATERIAL": "d3094476cefa1a28ca8b5f35b28e2586d5a44ce63f268e57e96812de32de4a5f",
+    "NUMANX_MATTER_WORLD_PACKAGE": "9e94441c93e58b4420da8afb9418b3261450f0c2472cd7fca919e3e85c758f0a",
+    "NUMANX_JOINT_EQUALITIES": "12db05fddb492e77e7fd461fad566d3e1e75390f2cb6f77f26568254a6cb4477",
+    "NUMANX_COSTAL_CARTILAGE": "f5c58b4ddf8a97f631fd21aa7c861bbfa57bc8f863ff20a04165be4db0b5e5cc",
+    "NUMANX_COSTAL_BINDING": "36213b5a3f183445807b0a37c449c6f7755a6ee27c62347fb9a2224990cfab08",
+    "NUMANX_JOINT_LIMITS": "c583611fcedc326a32c6f69504a65e675c8e0adc987c6db622ca0d95a02438d3"
+  },
+  "returncode": 1,
+  "elapsed_seconds": 43.22348774969578
+}

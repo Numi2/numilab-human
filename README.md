@@ -7,8 +7,10 @@ evaluation, force scatter, and forward dynamics. There is no Python process in
 the native Human execution path.
 
 [Current-pose foot contact](Docs/CURVED_SUPPORT_20260908.md) now covers the source
-capsules and heel ellipsoids. Internal equilibrium, dynamic limits and sustained
-standing/walking remain open.
+capsules and heel ellipsoids. The [source dynamic-limit integration](Docs/SOURCE_DYNAMIC_LIMITS_20260908.md)
+adds all 122 scalar limits to Matter/NumanX v6, with source-law and bounded
+transaction checks. Internal equilibrium, loaded stance integration and
+sustained standing/walking remain open.
 
 The [offline joint-stop repair](Docs/OFFLINE_LIMIT_REACTIONS_20260908.md) now
 solves mass-coupled source-limit reactions and uses their derivative during

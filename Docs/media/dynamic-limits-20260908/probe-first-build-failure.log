@@ -1,0 +1,20 @@
+[0/1] Re-running CMake...
+-- MetalRobo Python tests disabled: no interpreter with NumPy and SciPy
+-- Configuring done (0.1s)
+-- Generating done (0.1s)
+-- Build files have been written to: /Users/n/MetalRobo-human-completion-build-20260907
+[1/4] Generating shaders/NumiMatter.metallib
+[2/4] Building OBJCXX object CMakeFiles/metalrobo_numanx_human_limit_probe.dir/apps/numanx_human_limit_probe.mm.o
+FAILED: [code=1] CMakeFiles/metalrobo_numanx_human_limit_probe.dir/apps/numanx_human_limit_probe.mm.o 
+/usr/bin/clang++ -DNUMI_MATTER_METALLIB=\"/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib\" -I/Users/n/MetalRobo-human-completion-20260907/matter/include -F/Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks -x objective-c++ -O3 -DNDEBUG -std=c++23 -arch arm64 -fPIE -fobjc-arc -Wall -Wextra -Wpedantic -Werror -MD -MT CMakeFiles/metalrobo_numanx_human_limit_probe.dir/apps/numanx_human_limit_probe.mm.o -MF CMakeFiles/metalrobo_numanx_human_limit_probe.dir/apps/numanx_human_limit_probe.mm.o.d -o CMakeFiles/metalrobo_numanx_human_limit_probe.dir/apps/numanx_human_limit_probe.mm.o -c /Users/n/MetalRobo-human-completion-20260907/apps/numanx_human_limit_probe.mm
+/Users/n/MetalRobo-human-completion-20260907/apps/numanx_human_limit_probe.mm:117:60: error: use of undeclared identifier 'NM_STATUS_OK'
+  117 |         require(data<NMMatterStatusGPU>(status)[e].code == NM_STATUS_OK, "limit GPU status failed");
+      |                                                            ^~~~~~~~~~~~
+/Users/n/MetalRobo-human-completion-20260907/apps/numanx_human_limit_probe.mm:172:56: error: use of undeclared identifier 'NM_STATUS_OK'
+  172 |     require(data<NMMatterStatusGPU>(status)[0].code != NM_STATUS_OK, "nonfinite source pose admitted");
+      |                                                        ^~~~~~~~~~~~
+/Users/n/MetalRobo-human-completion-20260907/apps/numanx_human_limit_probe.mm:173:92: error: use of undeclared identifier 'NM_STATUS_OK'
+  173 |     for (unsigned e = 1; e < envs; ++e) require(data<NMMatterStatusGPU>(status)[e].code == NM_STATUS_OK, "failure leaked to another environment");
+      |                                                                                            ^~~~~~~~~~~~
+3 errors generated.
+ninja: build stopped: subcommand failed.

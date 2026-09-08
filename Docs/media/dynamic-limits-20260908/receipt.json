@@ -1,0 +1,329 @@
+{
+  "schema": "numi.human.source-limit-receipt.v1",
+  "date": "2026-09-08",
+  "native_commit": "349f8b573dfa02bd9f6af7921b72b47416c671da",
+  "native_parent": "117aa90b5c28a5448d845cbde45f3de85c481cb2",
+  "native_branch": "coupled",
+  "brain_commit": "a885ff2868199c2ee2d6c61069668d56963fe90f",
+  "human_compiler_commit": "59e434ad0052e8f688b3ea9117cfd441006811da",
+  "source_export_sha256": "35e90b5625efbb8ad9cab936c29238c0e1760a3821e52e9ffbc96198879b45af",
+  "source_manifest_sha256": "2cea81e64a3c8da63731ae67c40ddc39aa61d9c4d0436000e806d25005e5b6d8",
+  "source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+  "source_scope": {
+    "scalar_limited_joints": 122,
+    "maximum_unilateral_rows": 244,
+    "legacy_omitted_knee_translations": 6,
+    "equalities": 51,
+    "bodies": 157,
+    "dofs": 128,
+    "muscles": 416,
+    "oracle": "MuJoCo 3.12.0"
+  },
+  "payload": {
+    "file": "myosim-fullbody-joint-limits.nhlim",
+    "bytes": 9840,
+    "sha256": "c583611fcedc326a32c6f69504a65e675c8e0adc987c6db622ca0d95a02438d3",
+    "fnv1a64": "601a251a6473fdd9"
+  },
+  "qualification": {
+    "source_limit_inventory": true,
+    "metal_source_unilateral_law": true,
+    "metal_current_tangent": true,
+    "metal_spd_envelope_preconditioner": true,
+    "source_limit_anatomy": true,
+    "v6_small_authored_transaction": true,
+    "malformed_native_program_rejection": true,
+    "physical_token_replay": true,
+    "prepared_pose_loaded_limits": false,
+    "internal_equilibrium": false,
+    "dynamic_contact": false,
+    "standing": false,
+    "walking": false,
+    "costal_requalification": false,
+    "calibration": false,
+    "performance": false,
+    "full_release": false
+  },
+  "tests": {
+    "source_cases": 15,
+    "source_candidates": 101,
+    "finite_differences": 79,
+    "native_ctest": {
+      "passed": 4,
+      "failed": 0
+    },
+    "native_admission_mutations": 8,
+    "brain_selected": {
+      "run": 13,
+      "skipped": 1,
+      "failed": 0
+    },
+    "brain_native_end_to_end": {
+      "run_per_replay": 2,
+      "skipped": 0,
+      "failed": 0,
+      "repeats": 2
+    },
+    "human_suite": {
+      "run": 201,
+      "skipped": 7,
+      "failed": 0
+    },
+    "human_focused_joint_tests": 19,
+    "independent_payload_mutations": 13
+  },
+  "runtime_scope": {
+    "accepted_roots_per_run": 8,
+    "step_seconds": 0.0001,
+    "accepted_seconds_per_run": 0.0008,
+    "world": "three small pelvis-attached FEM samples",
+    "attachments": 12,
+    "support": "legacy NHCNT1 witnesses",
+    "active_standing_or_gait_controller": false,
+    "force_tangent_claim": "source-compliant scalar law; full loaded stance not measured",
+    "attempted_roots_per_run": 9,
+    "rejection_accepted_generation": 4
+  },
+  "numerics": {
+    "physical_row": "negative impulse = min(0, (J deltaV - bDelta) / R)",
+    "operator": "current unilateral active derivative",
+    "preconditioner": "SPD envelope of all q0-admitted sides",
+    "source_scaled_tolerance": 0.0005,
+    "near_release_additional_bound": "4 * FP32 epsilon * sum((abs(J deltaV)+abs(bDelta))/R)",
+    "finite_difference_condition": "skip only ill-conditioned differences or candidates too close to a kink; direct source checks remain mandatory",
+    "maximum_recorded_scaled_error": 0.000717528,
+    "extreme_refsafe_off_impulse_error_Ns": 0.000717528,
+    "hard_q_or_v_projection": false,
+    "production_convergence_threshold_changed": false
+  },
+  "costal_attempt": {
+    "disposition": "interrupted_competing_workload",
+    "returncode": 1,
+    "elapsed_seconds": 43.22348774969578,
+    "native_callback_deadline_seconds": 60,
+    "signal": "SIGTERM sent to owned xctest PID 51922",
+    "competing_process": "PID 51835 numivivo md-run, nvt-fine-210ps/run-06-water-orthogonal-smooth/chunk-016",
+    "reason": "The earlier benchmark-only process filter missed md-run. Broader inspection found active GPU work, so the owned attempt was stopped.",
+    "prior_timeout_count": 2,
+    "timeout_cause_established": false
+  },
+  "retained_failures": [
+    "native-first-build.log",
+    "probe-first-build-failure.log",
+    "source-parity-cancellation-failure.log",
+    "costal-first.log"
+  ],
+  "hardware": {
+    "chip": "Apple M4 Pro",
+    "memory_bytes": "25769803776",
+    "os": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6\nBuildVersion:\t\t25G72",
+    "xcode": "Xcode 26.6\nBuild version 17F113",
+    "swift": "Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)\nTarget: arm64-apple-macosx26.0"
+  },
+  "binaries": {
+    "native_library": {
+      "path": "/Users/n/MetalRobo-human-completion-build-20260907/lib/libmetalrobo.dylib",
+      "bytes": 6291376,
+      "sha256": "fa1b3408ca75c7ce1f30f39f9511b6faff00b60a627ab4bfac0eb6a23068d830"
+    },
+    "matter_metallib": {
+      "path": "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib",
+      "bytes": 2462552,
+      "sha256": "fc7b1ea12568dc7655f44b5f0e8b111fb531290d1e6eec63577dad8984b3b7b6"
+    },
+    "metalrobo_metallib": {
+      "path": "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib",
+      "bytes": 4461088,
+      "sha256": "b6db0de2c31b908b8f404fffa8cee93a95d9a6788997d3e18f7d1658e063a827"
+    },
+    "source_limit_probe": {
+      "path": "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_human_limit_probe",
+      "bytes": 74336,
+      "sha256": "a037ba1c313cdd377cdbbf2b74613a1fa57871aec169c3a748630aa1274bf4ad"
+    },
+    "brain_tests": {
+      "path": "/Users/n/numi-brain-human-completion-20260907/.build/arm64-apple-macosx/release/NumiBrainPackageTests.xctest/Contents/MacOS/NumiBrainPackageTests",
+      "bytes": 49098840,
+      "sha256": "932fe276704b766644d14f5d8ee7d9d694e6d748dfe9ae2754a8237bf27103a2"
+    },
+    "mlx_metallib": {
+      "path": "/Users/n/numi-brain-human-completion-20260907/.build/arm64-apple-macosx/release/NumiBrainPackageTests.xctest/Contents/MacOS/mlx.metallib",
+      "bytes": 2866529,
+      "sha256": "b1dbd4b3d8ea3e377843805786377b16942f57cdf8a591e506725d1cf0e0161f"
+    },
+    "package_resolved": {
+      "path": "/Users/n/numi-brain-human-completion-20260907/Package.resolved",
+      "bytes": 660,
+      "sha256": "bfec70453f92011be015a2eab3f0913fef66ddc53c5296148c131fe2e7a7fdc2"
+    }
+  },
+  "next_gates": [
+    "Admit the identical recruited stance with NHEQ2/NHLIM1, curved NHCNT2 support and registered tissue in v6.",
+    "Converge internal recruitment and loaded contact/fibre state; qualify source/timestep/mesh behavior.",
+    "Implement accepted-root behavioral metrics and qualify sustained causal standing/recovery/walking.",
+    "Diagnose the unchanged costal callback deadline in a controlled workload window.",
+    "Complete independent material calibration and exact-stack release/performance evidence."
+  ],
+  "artifacts": [
+    {
+      "path": "brain-anatomy-build.log",
+      "bytes": 5309,
+      "sha256": "4bd309938e852ffafadd6a97c0a58ee768b483d06ad45a8896d376c401173549"
+    },
+    {
+      "path": "brain-clean-build-tests.log",
+      "bytes": 8577,
+      "sha256": "b604a951551fea5999c00421c1e9924c57d9eba92003d4226b6795bd5241228b"
+    },
+    {
+      "path": "brain-initial-build.log",
+      "bytes": 2739,
+      "sha256": "3ffa3c4e84c05a8666b84614bee2ddf10e2da4fd1c5f0a0b96e2ac8ab2c2bc11"
+    },
+    {
+      "path": "costal-first-launch.json",
+      "bytes": 4620,
+      "sha256": "4c630f4bcc64f5eaf8f1b850a73b3a1515cd7805048804a8dab38f41c178eb3b"
+    },
+    {
+      "path": "costal-first.log",
+      "bytes": 874,
+      "sha256": "7e098b3b9dc6a3767d273d2ad07bbfaef9cdddeef9ec0b06062de3cd3a39c6f5"
+    },
+    {
+      "path": "human-full-tests.log",
+      "bytes": 1097,
+      "sha256": "a56db74634571308994dc3d0dee0d02ff11227dfdeb2fb835e09a2b4f5b5ad4d"
+    },
+    {
+      "path": "human-joint-tests.log",
+      "bytes": 2966,
+      "sha256": "a7e84180630654e26d9036321a86d246c48decc13bd6ca9ff6d33310ed296779"
+    },
+    {
+      "path": "joint-limits.manifest.json",
+      "bytes": 22855,
+      "sha256": "616ff6bdb538d6d650e80b96d79a7e61f2203b6eca21e7ffaff6285483f5bc50"
+    },
+    {
+      "path": "mujoco-limit-oracle.json",
+      "bytes": 54379,
+      "sha256": "9345e1bcb723958c6247a6d816e59c17a36cadd94e355cdb1f8804455c519b21"
+    },
+    {
+      "path": "myosim-fullbody-joint-limits.nhlim",
+      "bytes": 9840,
+      "sha256": "c583611fcedc326a32c6f69504a65e675c8e0adc987c6db622ca0d95a02438d3"
+    },
+    {
+      "path": "native-build.log",
+      "bytes": 1824,
+      "sha256": "75957949642dff78b32c7aa809f56e5dc476d00900f22200f2283cd92d29211e"
+    },
+    {
+      "path": "native-clean-build.log",
+      "bytes": 22,
+      "sha256": "8c35b1682f73592d30612d7b0fabdb384fcfff35cb5a076cb48b85b1368aa794"
+    },
+    {
+      "path": "native-clean-ctest-details.log",
+      "bytes": 5224,
+      "sha256": "5dcdec2dee4603e536b22df792b810bb14c1cc350133ebcb75f264263e8cb20c"
+    },
+    {
+      "path": "native-clean-tests.log",
+      "bytes": 1043,
+      "sha256": "79981b786ed87a367eb791ce0cd7e6a0ef5b9d7fe3ab8e78c0549f103696d533"
+    },
+    {
+      "path": "native-first-build.log",
+      "bytes": 294,
+      "sha256": "b854ee3ae7df3c3aeedb69acf36429f471abc3ed92c2c4ab4ed0a23420517d77"
+    },
+    {
+      "path": "native-shader-build.log",
+      "bytes": 239,
+      "sha256": "eccecd6390d42d2276b668ee3cfd40bedb0d2aa078cf38b650085a37f9d62c80"
+    },
+    {
+      "path": "probe-first-build-failure.log",
+      "bytes": 2395,
+      "sha256": "bd6301b604acd17bc8f9042052b67715208b33cd4d32bb6e4b5f6618814af5e5"
+    },
+    {
+      "path": "qualification-metadata.json",
+      "bytes": 3719,
+      "sha256": "6ca202ffc75f33d2e23b2a2ea96b7d3934f673ca9ab1841f08ff4e150c768b3f"
+    },
+    {
+      "path": "source-export.json.gz",
+      "bytes": 94980,
+      "sha256": "a732073a38404f179f9b9cddb7a312cff46ef0c010e70a0a1ff8beff4ebfed4a"
+    },
+    {
+      "path": "source-manifest.json.gz",
+      "bytes": 32539,
+      "sha256": "157793d5278af659f66ceaf4224a2189cfe0106ad16c0dfd1ee38ddf7f9ec388"
+    },
+    {
+      "path": "source-parity-cancellation-failure.log",
+      "bytes": 536,
+      "sha256": "f0cb713db809851b4b1c6c746c887cf0eab4aac72ef8c55f6b4a996d4d63996e"
+    },
+    {
+      "path": "source-parity-final.log",
+      "bytes": 923,
+      "sha256": "f8d328b6cff1b0f69389610df04a3d1f0970344bedba6322ad02cc77e1b3c326"
+    },
+    {
+      "path": "test_verify_receipt.py",
+      "bytes": 949,
+      "sha256": "e1671c3d3fcfc20db6cde4b7278b80ea9aabd066897e0bd15ed3b63e25ff9c14"
+    },
+    {
+      "path": "transaction-anatomy-launch.json",
+      "bytes": 4390,
+      "sha256": "57c6c3b7d82703f3a633eb5a9ee08381e63962ff727ce533dd7dd96f765bb8e7"
+    },
+    {
+      "path": "transaction-anatomy.log",
+      "bytes": 15287,
+      "sha256": "9e296b16e061484a78c367788065f7f01547e439ef7bdac691f5dab14d8121b9"
+    },
+    {
+      "path": "transaction-clean-launch.json",
+      "bytes": 3606,
+      "sha256": "3561fe27c59e45fc85f7b40e9b8f1164ccda2c06018eaf5dbb6999d4939bef13"
+    },
+    {
+      "path": "transaction-clean.log",
+      "bytes": 15287,
+      "sha256": "9eeaded9d8dc1add26e0d3b9d3754815bce040a14b5b6c4611f1b19b8c35f71e"
+    },
+    {
+      "path": "transaction-first-launch.json",
+      "bytes": 4140,
+      "sha256": "bea2c9dbfe72eebc20ecb161bf39e671de95663503a0d353ade29de70a52dc06"
+    },
+    {
+      "path": "transaction-first.log",
+      "bytes": 12281,
+      "sha256": "c9a7f178c522af7d37657d39beb9ff88a75148a26c9e1bad6914d11fe1c0ca4a"
+    },
+    {
+      "path": "transaction-replay-launch.json",
+      "bytes": 3607,
+      "sha256": "46ab8fe1cf129626c85a5744f2f9fe8e970afdb7ef33c8774bf447b402bcec88"
+    },
+    {
+      "path": "transaction-replay.log",
+      "bytes": 15287,
+      "sha256": "d65da25aa56893270431d885e909240b68d598e2de177d1f36413917f084fe35"
+    },
+    {
+      "path": "verify_receipt.py",
+      "bytes": 5977,
+      "sha256": "9de4adcdd2814938695b43d44c54f10254ad90db9b357023718a329a66826a27"
+    }
+  ]
+}

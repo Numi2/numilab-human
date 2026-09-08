@@ -1,0 +1,75 @@
+[0/1] Planning build
+Building for production...
+[0/21] Write sources
+[5/21] Write swift-version-3CD7052B146186F2.txt
+[7/18] Compiling NumiBrainCore AcceptedConsequenceDynamics.swift
+[8/33] Compiling NumiBrainPolicyCLI main.swift
+[8/33] Write Objects.LinkFileList
+[10/33] Compiling NumiBrainConnectomeCLI main.swift
+[10/33] Write Objects.LinkFileList
+[11/33] Linking numi-brain-policy
+[13/33] Compiling NumiBrainGateDCLI main.swift
+[13/33] Write Objects.LinkFileList
+[15/33] Compiling NumiBrainSchedulerCLI main.swift
+[15/33] Write Objects.LinkFileList
+[16/33] Linking numi-brain-connectome
+[17/33] Linking numi-brain-gate-d
+[18/33] Linking numi-brain-scheduler
+[20/33] Compiling NumiBrainCoreTests BrainAllGatesVerifierTests.swift
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainCoreTests/BrainSafetyAdmissionTests.swift:63:22: warning: 'resetAfterVerifiedRecovery(baseBrainGeneration:controlStepIdentifier:transactionFingerprint:)' is deprecated: Scalar identities are not verified recovery. Reconstruct admission with the joint recovery owner; this legacy reset fails closed. [#DeprecatedDeclaration]
+61 |   func testScalarRecoveryCannotResetContinuity() async throws {
+62 |     let c = try controller()
+63 |     do { try await c.resetAfterVerifiedRecovery(baseBrainGeneration: 1, controlStepIdentifier: 1, transactionFingerprint: 1); XCTFail("unverified reset") } catch {}
+   |                      `- warning: 'resetAfterVerifiedRecovery(baseBrainGeneration:controlStepIdentifier:transactionFingerprint:)' is deprecated: Scalar identities are not verified recovery. Reconstruct admission with the joint recovery owner; this legacy reset fails closed. [#DeprecatedDeclaration]
+64 |   }
+65 |   func testRejectedInitialRootCannotAdvanceItsUnpublishedState() async throws {
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+[21/33] Compiling NumiBrainMetal MetalNumanXGateCCapture.swift
+[22/37] Compiling NumiBrainNumanXInteropCLI main.swift
+[22/37] Write Objects.LinkFileList
+[24/37] Compiling NumiBrainDispatchCLI main.swift
+[24/37] Write Objects.LinkFileList
+[25/37] Linking numi-brain-numanx-interop
+[27/37] Compiling NumiBrainTissueCLI main.swift
+[27/37] Write Objects.LinkFileList
+[28/37] Linking numi-brain-dispatch
+[29/37] Linking numi-brain-tissue
+[31/37] Compiling NumiBrainMLX MLXBrainLearner.swift
+[32/40] Compiling NumiBrainExperimentCLI main.swift
+[32/40] Write Objects.LinkFileList
+[34/40] Compiling NumiBrainGateCCLI main.swift
+[34/40] Write Objects.LinkFileList
+[35/40] Linking numi-brain-experiment
+[36/40] Linking numi-brain-gate-c
+[38/40] Compiling NumiBrainMetalTests ConnectomeBodyContractTests.swift
+[39/41] Compiling NumiBrainPackageTests runner.swift
+[39/41] Write Objects.LinkFileList
+[40/41] Linking NumiBrainPackageTests
+Build complete! (127.82s)
+Test Suite 'Selected tests' started at 2026-09-08 17:37:41.082.
+Test Suite 'NumiBrainPackageTests.xctest' started at 2026-09-08 17:37:41.087.
+Test Suite 'MetalNumanXBridgeV1EndToEndTests' started at 2026-09-08 17:37:41.087.
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testCostalOwnershipRequiresConstrainedWorldAndV5Layout]' started.
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testCostalOwnershipRequiresConstrainedWorldAndV5Layout]' passed (0.000 seconds).
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testSourceJointEqualitiesDescriptorAndConfigurationV4Layout]' started.
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testSourceJointEqualitiesDescriptorAndConfigurationV4Layout]' passed (0.000 seconds).
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testSourceJointLimitsRequireSourceOwnerAndV6Layout]' started.
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testSourceJointLimitsRequireSourceOwnerAndV6Layout]' passed (0.000 seconds).
+Test Suite 'MetalNumanXBridgeV1EndToEndTests' passed at 2026-09-08 17:37:41.088.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'SourceCompliantJointTopologyTests' started at 2026-09-08 17:37:41.088.
+Test Case '-[NumiBrainCoreTests.SourceCompliantJointTopologyTests testLegacyEncodingAndDecodeRetainStrictBounds]' started.
+Test Case '-[NumiBrainCoreTests.SourceCompliantJointTopologyTests testLegacyEncodingAndDecodeRetainStrictBounds]' passed (0.000 seconds).
+Test Case '-[NumiBrainCoreTests.SourceCompliantJointTopologyTests testOnlyExplicitSourceComplianceAdmitsResetOutsideRange]' started.
+Test Case '-[NumiBrainCoreTests.SourceCompliantJointTopologyTests testOnlyExplicitSourceComplianceAdmitsResetOutsideRange]' passed (0.000 seconds).
+Test Suite 'SourceCompliantJointTopologyTests' passed at 2026-09-08 17:37:41.089.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'NumiBrainPackageTests.xctest' passed at 2026-09-08 17:37:41.089.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'Selected tests' passed at 2026-09-08 17:37:41.089.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.001 (0.007) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

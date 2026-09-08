@@ -15,7 +15,16 @@ at native `117aa90` replaces coordinatewise cancellation with a mass-coupled
 reaction solve, includes equality-dependent stops, and differentiates that solve
 during recruitment. The normalized residual is 1.5546 at 240 sweeps and 0.591493
 at 1,024, versus the required 0.05. Source-range and reaction audits pass; dynamic
-source compliance and the other acceptance gates below remain open.
+source compliance and the other acceptance gates below were still open in that
+offline increment.
+
+The subsequent [dynamic source-limit integration](SOURCE_DYNAMIC_LIMITS_20260908.md)
+implements all 122 scalar limits in the NumanX v6/Matter residual and tangent.
+Independent source and Metal checks, complete anatomy transport, malformed
+payload rejection and bounded joint transactions pass. The identical recruited
+stance with NHCNT2 contact and registered tissue still requires loaded
+qualification. A costal retry was interrupted after discovering a concurrent
+NumiVivo `md-run` job; the prior callback timeout remains unresolved.
 
 ## Implemented: geometrically admissible recruitment
 
@@ -40,7 +49,7 @@ validation enabled; readiness authority and decision-shadow checks are unchanged
 | Work | Permanent owner and implementation | Completion evidence |
 |---|---|---|
 | Load-balanced anatomical stance | Bounded native placement and the witness gravity wrench now pass. Current-pose primitive queries now pass. Complete internal recruitment with consistent joint/contact reactions, passive tissue/prestress and fibre equilibrium. Share the identical root/pose initial condition with tissue registration and existing Human/CompiledRun admission. | Witness geometry and gravity-wrench evidence are retained in the stance increment; initial full primitive geometry now passes; bounded internal acceleration/fibre residuals, dynamic joint/contact complementarity and registered FP64/native force parity remain required. |
-| Source-compliant loaded integration | Use the existing NumanX v5/Core/Matter owner for NHEQ2 and registered tissue loading. Diagnose equality/contact/fibre residuals in the same accepted transaction. The legacy NHEQ1 visual solver remains a diagnostic comparator. | Source and timestep convergence, registered mesh convergence for loaded tissue, conservative force/moment transfer, no duplicated mass or active force, rollback/retry and replay. A source-compliant coupled result must be measured directly. |
+| Source-compliant loaded integration | NumanX v6/Core/Matter now admits NHEQ2/NHLIM1 and optional registered tissue. Admit the identical recruited stance and curved NHCNT2 support, then diagnose limit/equality/contact/fibre residuals in that accepted transaction. The legacy NHEQ1 visual solver remains a diagnostic comparator. | Scalar source-law and small joint-transaction checks pass. Prepared-pose source/timestep convergence, registered mesh convergence under load, conservative force/moment transfer, no duplicated mass or active force, rollback/retry and replay remain required. |
 | Standing and recovery controller | Lower source-semantic posture/support observations and muscle commands through the existing SensorPack/PolicyPack and Brain controller. Keep neural learning and controller state causal to accepted physical time. Tune stance feedback only after the initial mechanical state is admitted. | Assistance-free sustained balance, controlled nonzero perturbations and recovery, actuator bounds, observable force/kinematic response, observation dropout and emergency-stop behavior. Preserve joint-risk inhibition and rejected-state isolation. |
 | Native behavior telemetry | Implement the frozen reductions in the owning native accepted-root publication path: source-bound root/trunk state, support/contact, ground-relative height and tilt, forward/lateral speed, falls, assistance and termination. Retain every attempted root and its disposition. | Replayable metric reductions agree with an independent trace check; failed/rejected futures never advance physical time or publish observations; missing, duplicated and truncated trials are rejected. Terminal probe q/v is insufficient. |
 | Standing qualification | Bind one exact source/task/controller/runtime stack to the existing behavior evaluator. Freeze task thresholds from source observations and measurement uncertainty before tuning or selection. | All 20 distinct 60-second standing trials pass. At least 95 of 100 distinct five-second recovery trials pass with the prescribed nonzero impulses and hold conditions. |
