@@ -1,0 +1,72 @@
+diff --git a/matter/src/runtime.mm b/matter/src/runtime.mm
+index f3a1b05..d5f54f2 100644
+--- a/matter/src/runtime.mm
++++ b/matter/src/runtime.mm
+@@ -16,6 +16,8 @@
+ #include <bit>
+ #include <cmath>
+ #include <cstddef>
++#include <cstdio>
++#include <cstdlib>
+ #include <cstdint>
+ #include <cstring>
+ #include <dlfcn.h>
+@@ -3446,6 +3448,31 @@ void settleApplication(
+             if (groupCount == 0u) {
+                 return;
+             }
++            id<MTLCounterSampleBuffer> profileSamples = nil;
++            const bool profileRequested = std::getenv("NUMI_MATTER_PROFILE_BROADPHASE") != nullptr &&
++                (std::strcmp(name, "nm_contact_sort_surface_primitives") == 0 ||
++                 std::strcmp(name, "nm_contact_build_deformable_candidates") == 0);
++            if (profileRequested && [state.device supportsCounterSampling:MTLCounterSamplingPointAtStageBoundary]) {
++                for (id<MTLCounterSet> counter in state.device.counterSets) {
++                    if (![counter.name isEqualToString:MTLCommonCounterSetTimestamp]) continue;
++                    MTLCounterSampleBufferDescriptor* descriptor = [MTLCounterSampleBufferDescriptor new];
++                    descriptor.counterSet = counter;
++                    descriptor.storageMode = MTLStorageModeShared;
++                    descriptor.sampleCount = 2;
++                    NSError* error = nil;
++                    profileSamples = [state.device newCounterSampleBufferWithDescriptor:descriptor error:&error];
++                    break;
++                }
++            }
++            if (profileSamples != nil) {
++                [encoder endEncoding];
++                MTLComputePassDescriptor* pass = [MTLComputePassDescriptor computePassDescriptor];
++                pass.sampleBufferAttachments[0].sampleBuffer = profileSamples;
++                pass.sampleBufferAttachments[0].startOfEncoderSampleIndex = 0;
++                pass.sampleBufferAttachments[0].endOfEncoderSampleIndex = 1;
++                encoder = [commandBuffer computeCommandEncoderWithDescriptor:pass];
++                encoder.label = [NSString stringWithUTF8String:name];
++            }
+             ++diagnostics.simdgroupDispatchCount;
+             diagnostics.requestedThreadgroupCount +=
+                 static_cast<std::uint64_t>(groupCount);
+@@ -3453,6 +3480,26 @@ void settleApplication(
+             bind();
+             [encoder dispatchThreadgroups:MTLSizeMake(groupCount, 1u, 1u)
+                 threadsPerThreadgroup:MTLSizeMake(32u, 1u, 1u)];
++            if (profileSamples != nil) {
++                [encoder endEncoding];
++                const std::string profileName(name);
++                [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> completed) {
++                    NSData* data = [profileSamples resolveCounterRange:NSMakeRange(0, 2)];
++                    if (completed.status == MTLCommandBufferStatusCompleted && data.length == 2 * sizeof(MTLCounterResultTimestamp)) {
++                        const auto* values = static_cast<const MTLCounterResultTimestamp*>(data.bytes);
++                        std::fprintf(stderr, "nm_kernel_profile name=%s start=%llu end=%llu seconds=%.9f\n",
++                            profileName.c_str(), (unsigned long long)values[0].timestamp,
++                            (unsigned long long)values[1].timestamp,
++                            double(values[1].timestamp - values[0].timestamp) * 1e-9);
++                    } else {
++                        std::fprintf(stderr, "nm_kernel_profile name=%s unavailable\n", profileName.c_str());
++                    }
++                }];
++                encoder = [commandBuffer computeCommandEncoder];
++                encoder.label = @"Numi Matter after profiled broadphase";
++            } else if (profileRequested) {
++                std::fprintf(stderr, "nm_kernel_profile name=%s unsupported\n", name);
++            }
+         };
+         const auto dispatchIndirect = [&](
+             const char* name,

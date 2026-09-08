@@ -2,44 +2,41 @@
 
 The current release target remains the [neuromusculoskeletal release matrix](NEUROMUSCULOSKELETAL_RELEASE_MATRIX.md). Standing and walking require the same published anatomical, tissue, controller and native runtime stack. This plan resolves the next physical dependency and specifies the remaining executable gates.
 
-The [current-pose support increment](CURVED_SUPPORT_20260908.md) implements all
-eight source capsules and two heel ellipsoids in the shared native/Metal query.
-Initial primitive geometry and gravity wrench pass the independent source check.
-After 6.4 ms, ground penetration and joint-limit violations remain; internal
-equilibrium, registered v5 tissue acceptance, sustained behavior and the costal
-timeout are still open. The numerical results below retain the earlier
-`c1db46d` baseline; the linked current receipt carries revision `329d54b`.
+The immediate critical path is **correct loaded contact, practical coupled GPU
+execution, and source-compliant anatomical equilibrium**. Controller selection
+and long behavior trials depend on those physical prerequisites. Small replay
+transactions remain regression evidence rather than standing outcomes.
 
-The subsequent [offline source-stop repair](OFFLINE_LIMIT_REACTIONS_20260908.md)
-at native `117aa90` replaces coordinatewise cancellation with a mass-coupled
-reaction solve, includes equality-dependent stops, and differentiates that solve
-during recruitment. The normalized residual is 1.5546 at 240 sweeps and 0.591493
-at 1,024, versus the required 0.05. Source-range and reaction audits pass; dynamic
-source compliance and the other acceptance gates below were still open in that
-offline increment.
+The [costal contact-search repair](COSTAL_BVH_20260908.md), native `2ca77bb`,
+reduces the unchanged validation-enabled costal runner from 277.393 to 29.047
+seconds. Seven native tests and the costal transaction pass. A bounds hierarchy
+replaces the measured exhaustive pair scan while preserving candidate order,
+and exact-prefix overflow now fails closed. The loaded-support diagnostic still
+fails: a cold-history 97 kg body receives only 1.222% of the required support
+impulse despite numerical convergence. Repair that contact formulation before
+tuning stance gains; accepted contact history must serve as a numerical initial
+guess rather than determine the physical force law.
 
-The subsequent [dynamic source-limit integration](SOURCE_DYNAMIC_LIMITS_20260908.md)
-implements all 122 scalar limits in the NumanX v6/Matter residual and tangent.
-Independent source and Metal checks, complete anatomy transport, malformed
-payload rejection and bounded joint transactions pass. The identical recruited
-stance with NHCNT2 contact and registered tissue still requires loaded
-qualification. A costal retry was interrupted after discovering a concurrent
-NumiVivo `md-run` job; the prior callback timeout remains unresolved.
+The [offline equilibrium](COUPLED_EQUILIBRIUM_20260908.md) passes its unchanged
+FP64 internal balance gate at 0.00814 using ideal equalities and source stops.
+[Prepared-state admission](PREPARED_STATE_ADMISSION_20260908.md) transports the
+identical FP32 pose and muscle state into v7 with NHCNT2/NHEQ2/NHLIM1 and a small
+FEM fixture. [Prepared recruitment](PREPARED_RECRUITMENT_20260908.md) reaches the
+Brain motor path, but its four-root comparison establishes no settling
+improvement. These do not establish loaded compliant joint/fibre/contact
+balance or registration of anatomical tissue at the prepared state.
 
-The subsequent [coupled offline compiler](COUPLED_EQUILIBRIUM_20260908.md)
-passes the unchanged internal balance gate at 0.00814, with a clean native
-commit, bitwise replay, source mass/gravity parity and complete source reaction
-audits. Its explicit 48-update posture budget closes FP64 offline recruitment.
-Prepared-state admission into the source-compliant loaded runtime is now the
-next gate; the current v6 constructor still uses source q/v and zero activation.
+The next implementation must close the contact invariant and then demonstrate
+longer stable physical time on the same anatomical stack. Profile remaining GPU
+cost where measured; preserve source compliance, source stops, tissue mass,
+conservative transfer, causal control and rejected-state isolation. Batch fixes
+and their physical evidence into cohesive changes. Retain the complete behavior,
+calibration and regional anatomy requirements below.
 
-The subsequent [v7 prepared-state admission](PREPARED_STATE_ADMISSION_20260908.md)
-loads the identical FP32 pose/activation/fibre state with NHCNT2/NHEQ2/NHLIM1 and
-a three-sample authored FEM fixture. Eight accepted roots and complete state
-replay pass. The 18 physical support rows now map correctly to all ten source
-foot receptors. At 0.8 ms the source primitive gap is -1.9017 micrometres, beyond
-the one-micrometre admission check, and motion persists. Source-compliant loaded
-equilibrium and anatomical tissue integration remain the next physical gates.
+Historical increments remain available in the [curved-support report](CURVED_SUPPORT_20260908.md),
+[offline limit-reaction report](OFFLINE_LIMIT_REACTIONS_20260908.md),
+[dynamic source-limit report](SOURCE_DYNAMIC_LIMITS_20260908.md), and
+[costal deadline report](COSTAL_IDLE_REQUALIFICATION_20260908.md).
 
 ## Implemented: geometrically admissible recruitment
 
@@ -83,14 +80,13 @@ The corrected static compiler finds only two loaded witnesses, total normal load
 
 Full standing, recovery, walking, independent calibration and the neuromusculoskeletal release remain unqualified.
 
-The corrected IO regression passes with Metal API validation enabled. The
-source-compliant costal end-to-end regression did not settle its first physical
-callback within the unchanged 60-second deadline on either of two attempts.
-Both failures are retained; a separate NumiVivo benchmark was present on the
-host, but contention has not been established as the cause. Current costal
-transaction requalification is therefore false. The earlier published pass
-remains historical evidence for its own artifacts. Resolve this deadline under
-a controlled workload before promoting the revised coupled stack.
+At the earlier support-geometry revision, the IO regression passed with Metal
+API validation enabled, but the source-compliant costal regression twice missed
+the 60-second callback deadline. A separate NumiVivo benchmark was present;
+contention was not established as the cause. Those failed attempts remain
+historical evidence. The subsequent idle-host run passed the bounded deadline,
+and the current BVH repair makes the same costal transaction substantially
+faster. Prepared anatomical loading and sustained behavior remain unqualified.
 
 Local validation uses the declared Python >=3.11 requirement: Python 3.14.6 ran
 178 tests with seven skips and no failures. An initial run with unsupported
