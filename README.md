@@ -50,6 +50,11 @@ Brain/Metal. It fixes initialized-fibre activation continuation and tendon senso
 units. Bounded native activation/force response and replay pass; sustained
 standing and walking remain open.
 
+The [prepared recruitment increment](Docs/PREPARED_RECRUITMENT_20260908.md)
+preserves the exact per-muscle initial excitation, including 1.0, through
+source-bound Brain authoring. Native activation/force response, dropout and exact
+replay pass; the matched 0.4 ms traces do not establish improved settling.
+
 The [source support stance](Docs/SUPPORT_STANCE_20260908.md) now balances the
 static gravity wrench on six native foot witnesses and provides a reproducible
 `support-stance` command. Independent source kinematics checks that wrench;

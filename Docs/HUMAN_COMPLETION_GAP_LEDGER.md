@@ -158,3 +158,11 @@ the identical FP32 stance with curved support and the small authored FEM fixture
 Complete eight-root state replay passes after fixing 18-row contact sensing.
 The terminal one-micrometre geometry check fails at -1.9017 micrometres; loaded
 equilibrium, registered anatomical tissue and sustained behavior remain open.
+
+The [prepared recruitment comparison](PREPARED_RECRUITMENT_20260908.md) now
+preserves the exact per-muscle tonic proposal through the existing Brain motor
+path, including the inclusive excitation endpoint. Four-root native comparison,
+activation/force response, dropout and bitwise replay pass. Early settling is
+essentially unchanged (right ankle velocity about 0.169 rad/s at 0.4 ms).
+Loaded source-compliant equilibrium, registered tissue, calibrated feedback and
+sustained behavior remain open; inhibition was not weakened.

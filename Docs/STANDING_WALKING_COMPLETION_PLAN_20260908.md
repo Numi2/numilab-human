@@ -98,3 +98,11 @@ Python 3.10 failed 21 behavior-qualification tests at `hashlib.file_digest`; the
 runner error is retained and no compatibility requirement was changed.
 
 ![Native source skeleton after 6.4 ms of unassisted integration; this view does not certify balance.](media/support-geometry-20260908/standing-6.4ms-front.png)
+
+The [prepared recruitment comparison](PREPARED_RECRUITMENT_20260908.md) now
+preserves the exact per-muscle tonic proposal through the existing Brain motor
+path, including the inclusive excitation endpoint. Four-root native comparison,
+activation/force response, dropout and bitwise replay pass. Early settling is
+essentially unchanged (right ankle velocity about 0.169 rad/s at 0.4 ms).
+Loaded source-compliant equilibrium, registered tissue, calibrated feedback and
+sustained behavior remain open; inhibition was not weakened.
