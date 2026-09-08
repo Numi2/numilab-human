@@ -6,6 +6,10 @@ muscle-tendon actuators); the Core owns the articulated state, muscle route
 evaluation, force scatter, and forward dynamics. There is no Python process in
 the native Human execution path.
 
+[Current-pose foot contact](Docs/CURVED_SUPPORT_20260908.md) now covers the source
+capsules and heel ellipsoids. Internal equilibrium, dynamic limits and sustained
+standing/walking remain open.
+
 | Role | Source | Status |
 | --- | --- | --- |
 | Active full-body mechanics | MyoSim `myofullbody` | 103 source bodies, 416 muscles, native Core reference |

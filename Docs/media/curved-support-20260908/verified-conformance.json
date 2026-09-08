@@ -1,0 +1,51 @@
+{
+  "native_revision": "329d54b9e0b303bb377c04e2a2eef7272d3ba4f1",
+  "native_worktree": "",
+  "boundary": "Concurrent NumiVivo workload; conformance only, no timing/performance qualification.",
+  "runs": [
+    {
+      "name": "verified-ctest",
+      "command": [
+        "/opt/homebrew/bin/ctest",
+        "--test-dir",
+        "/Users/n/MetalRobo-human-completion-build-20260907",
+        "-R",
+        "numi_human_static_support|human_motor_sensor_transaction",
+        "--output-on-failure"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.492299625
+    },
+    {
+      "name": "verified-articulated-gpu",
+      "command": [
+        "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_articulated_operator_gpu_probe"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.434652375
+    },
+    {
+      "name": "verified-matter-gpu",
+      "command": [
+        "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_fullbody_bridge_probe",
+        "--support-only"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.3821983750000001
+    }
+  ],
+  "artifacts": {
+    "/Users/n/MetalRobo-human-completion-build-20260907/lib/libmetalrobo.dylib": {
+      "bytes": 6272240,
+      "sha256": "d1384775e2d3413c70c2ca528e0acc3d1345120d43f9919f4f1f629e39f109d5"
+    },
+    "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib": {
+      "bytes": 4461088,
+      "sha256": "b6db0de2c31b908b8f404fffa8cee93a95d9a6788997d3e18f7d1658e063a827"
+    },
+    "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib": {
+      "bytes": 2427387,
+      "sha256": "4ae92028bbba486f8f4f73187bb733e7a2c17553912fd949d1cb3764fae179a3"
+    }
+  }
+}

@@ -2,11 +2,13 @@
 
 The current release target remains the [neuromusculoskeletal release matrix](NEUROMUSCULOSKELETAL_RELEASE_MATRIX.md). Standing and walking require the same published anatomical, tissue, controller and native runtime stack. This plan resolves the next physical dependency and specifies the remaining executable gates.
 
-The [subsequent source stance increment](SUPPORT_STANCE_20260908.md) closes the
-NHCNT1 witness gravity wrench with bounded native initial placement. Internal
-equilibrium remains false. Independent source checking also finds a 1.639-micrometre
-capsule penetration, so current-pose primitive contact must precede full standing
-admission. The numerical results below retain the earlier `c1db46d` baseline.
+The [current-pose support increment](CURVED_SUPPORT_20260908.md) implements all
+eight source capsules and two heel ellipsoids in the shared native/Metal query.
+Initial primitive geometry and gravity wrench pass the independent source check.
+After 6.4 ms, ground penetration and joint-limit violations remain; internal
+equilibrium, registered v5 tissue acceptance, sustained behavior and the costal
+timeout are still open. The numerical results below retain the earlier
+`c1db46d` baseline; the linked current receipt carries revision `329d54b`.
 
 ## Implemented: geometrically admissible recruitment
 
@@ -30,7 +32,7 @@ validation enabled; readiness authority and decision-shadow checks are unchanged
 
 | Work | Permanent owner and implementation | Completion evidence |
 |---|---|---|
-| Load-balanced anatomical stance | Bounded native placement and the witness gravity wrench now pass. Complete current-pose source primitive contact and internal recruitment with joint rows, limits, passive tissue/prestress and fibre equilibrium. Share the identical root/pose initial condition with tissue registration and existing Human/CompiledRun admission. | Witness geometry and gravity-wrench evidence are retained in the stance increment; full primitive geometry, bounded internal acceleration/fibre residuals and registered FP64/native force parity remain required. |
+| Load-balanced anatomical stance | Bounded native placement and the witness gravity wrench now pass. Current-pose primitive queries now pass. Complete internal recruitment with consistent joint/contact reactions, passive tissue/prestress and fibre equilibrium. Share the identical root/pose initial condition with tissue registration and existing Human/CompiledRun admission. | Witness geometry and gravity-wrench evidence are retained in the stance increment; initial full primitive geometry now passes; bounded internal acceleration/fibre residuals, dynamic joint/contact complementarity and registered FP64/native force parity remain required. |
 | Source-compliant loaded integration | Use the existing NumanX v5/Core/Matter owner for NHEQ2 and registered tissue loading. Diagnose equality/contact/fibre residuals in the same accepted transaction. The legacy NHEQ1 visual solver remains a diagnostic comparator. | Source and timestep convergence, registered mesh convergence for loaded tissue, conservative force/moment transfer, no duplicated mass or active force, rollback/retry and replay. A source-compliant coupled result must be measured directly. |
 | Standing and recovery controller | Lower source-semantic posture/support observations and muscle commands through the existing SensorPack/PolicyPack and Brain controller. Keep neural learning and controller state causal to accepted physical time. Tune stance feedback only after the initial mechanical state is admitted. | Assistance-free sustained balance, controlled nonzero perturbations and recovery, actuator bounds, observable force/kinematic response, observation dropout and emergency-stop behavior. Preserve joint-risk inhibition and rejected-state isolation. |
 | Native behavior telemetry | Implement the frozen reductions in the owning native accepted-root publication path: source-bound root/trunk state, support/contact, ground-relative height and tilt, forward/lateral speed, falls, assistance and termination. Retain every attempted root and its disposition. | Replayable metric reductions agree with an independent trace check; failed/rejected futures never advance physical time or publish observations; missing, duplicated and truncated trials are rejected. Terminal probe q/v is insufficient. |

@@ -339,8 +339,36 @@ def export_fullbody(sources: Path) -> dict[str, object]:
         support_local = inertia_rotation.T @ (
             support_world - np.asarray(data.xipos[body], dtype=float)
         )
+        primitive = None
+        if geom_type in {sphere_type, capsule_type}:
+            half_axis = rotation[:, 2] * (float(size[1]) if geom_type == capsule_type else 0.0)
+            endpoints_world = [center - half_axis, center + half_axis]
+            primitive = {
+                "kind": "capsule" if geom_type == capsule_type else "sphere",
+                "radius_m": float(size[0]),
+                "endpoints_local_com_m": [
+                    [float(x) for x in inertia_rotation.T @ (p - data.xipos[body])]
+                    for p in endpoints_world
+                ],
+                "endpoint_plane_gaps_m": [
+                    float(np.dot(p - ground_point, ground_normal) - size[0])
+                    for p in endpoints_world
+                ],
+            }
+        if geom_type == ellipsoid_type:
+            local_rotation = inertia_rotation.T @ rotation
+            quat = np.empty(4)
+            mujoco.mju_mat2Quat(quat, local_rotation.ravel())
+            local_center = inertia_rotation.T @ (center-data.xipos[body])
+            gap = float(np.dot(support_world-ground_point,ground_normal))
+            primitive = {"kind": "ellipsoid", "radius_m": 0.0,
+                         "endpoints_local_com_m": [[float(x) for x in local_center]] * 2,
+                         "endpoint_plane_gaps_m": [gap,gap],
+                         "radii_m": [float(x) for x in size],
+                         "orientation_xyzw": [float(quat[i]) for i in (1,2,3,0)]}
         support_geometries.append(
             {
+                "primitive": primitive,
                 "id": index,
                 "name": name,
                 "body": body,

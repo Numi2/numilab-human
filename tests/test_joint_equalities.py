@@ -114,8 +114,11 @@ class JointEqualityPayloadTests(unittest.TestCase):
             with patch("numilab_human.cli.subprocess.run", side_effect=fake_export), patch(
                 "numilab_human.cli.myosim_fullbody_reference_artifacts",
                 return_value=(manifest, b"rigid", b"muscle", b"support", legacy, b"hood", compliant),
-            ), contextlib.redirect_stdout(io.StringIO()):
+            ), patch("numilab_human.support_primitives.compile_support_primitives",
+                     return_value=({"file": "fixture-primitives.nhcnt"}, b"primitives")), \
+                    contextlib.redirect_stdout(io.StringIO()):
                 self.assertEqual(myosim_build(args), 0)
+            self.assertEqual((args.output / "fixture-primitives.nhcnt").read_bytes(), b"primitives")
             self.assertEqual((args.output / names["joint_equalities"]).read_bytes(), legacy)
             self.assertEqual((args.output / names["joint_equalities_source_compliance"]).read_bytes(), compliant)
             written = json.loads((args.output / "myosim-fullbody-reference.manifest.json").read_text())

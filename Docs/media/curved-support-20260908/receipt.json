@@ -1,0 +1,249 @@
+{
+  "schema": "numi.human.curved-support-evidence.v1",
+  "date": "2026-09-08",
+  "host": "macmini",
+  "device": "Apple M4 Pro",
+  "native_revision": "329d54b9e0b303bb377c04e2a2eef7272d3ba4f1",
+  "native_branch": "coupled",
+  "native_source_clean": true,
+  "profile": {
+    "path": "config/myosim-support-stance.v2.json",
+    "sha256": "7b680ba4cfad0e448147d949426a35ff151a28e83bc23fa98035b0083bc4b87a"
+  },
+  "qualification": {
+    "source_primitive_geometry_at_initialization": true,
+    "static_gravity_wrench": true,
+    "native_surface_query_parity": true,
+    "matter_surface_kkt_and_rollback": true,
+    "native_6_4ms_replay": true,
+    "internal_equilibrium": false,
+    "dynamic_contact": false,
+    "dynamic_joint_limits": false,
+    "v5_anatomical_acceptance": false,
+    "costal_requalification": false,
+    "standing": false,
+    "walking": false,
+    "calibration": false,
+    "performance": false,
+    "full_release": false
+  },
+  "static_support": {
+    "support_contacts": "18",
+    "active_support_contacts": "6",
+    "total_support_force_n": "952.864475213",
+    "expected_weight_n": "952.864477038",
+    "max_root_force_residual": "1.82520363978e-06",
+    "internal_normalized_residual_rms": "12.3141964708",
+    "internal_balanced": "false"
+  },
+  "source_oracle": {
+    "minimum_full_primitive_gap_m": 1.591156063504573e-08,
+    "maximum_lowering_error_m": 3.4100296475436664e-09,
+    "force_residual_n": [
+      0.0,
+      0.0,
+      2.8387046540956362e-05
+    ],
+    "moment_residual_nm": [
+      -1.6796991531009553e-06,
+      1.8093014496400883e-05,
+      0.0
+    ],
+    "source_files_verified": 57
+  },
+  "dynamic_source_failure": {
+    "minimum_full_primitive_gap_m": -8.659657511727453e-05,
+    "worst_joint_limit": {
+      "joint": "knee_angle_l",
+      "violation": 0.003400059649720788
+    },
+    "horizon_seconds": 0.0064
+  },
+  "retained_rejected_checks": [
+    "conformance.json",
+    "source-oracle-before-label.json",
+    "dynamic-source-oracle.json",
+    "source-build.log"
+  ],
+  "costal": {
+    "attempts_this_increment": 0,
+    "qualified": false,
+    "prior_timeout_evidence": "../support-geometry-20260908/costal-retry.log",
+    "reason": "Long costal requalification waits for a dedicated GPU window. The previous callback timeouts remain unexplained."
+  },
+  "boundary": "Current-pose source support geometry and bounded native/Metal conformance. No whole-body equilibrium, dynamic nonpenetration, joint-limit, sustained behavior, calibration or production claim.",
+  "files": {
+    "articulated-gpu-final.log": {
+      "bytes": 1351,
+      "sha256": "c63f37b95d9e2f590f9b6f3f679566017a61571bdbb46796bcc59065c41d7ae4"
+    },
+    "articulated-gpu.log": {
+      "bytes": 270,
+      "sha256": "dd99797d25493e8e48be06efe69c8b2ba78ed6afeb8e2ab7bfea62360445c43d"
+    },
+    "certificate-before-label.log": {
+      "bytes": 38168,
+      "sha256": "cdd454f9d4902517e6fd807f9b6d968c13c582e5b0d932907a1105bdf83c3599"
+    },
+    "certificate-command.json": {
+      "bytes": 1237,
+      "sha256": "d28d789cd0dca64b2fa9a9de8c7239ff0709e30887b17c2376987c3faa31089c"
+    },
+    "certificate-final-result.json": {
+      "bytes": 52,
+      "sha256": "65b4e28aaed55ef45fdb4b16cfa3c25ca4283267cf1dbb54333389a9d22c3dfe"
+    },
+    "certificate-final.log": {
+      "bytes": 38931,
+      "sha256": "3a1dd043c863f9f140f956a21f8263771df6c0c311a2fccd41497e187584ed45"
+    },
+    "certificate-result.json": {
+      "bytes": 46,
+      "sha256": "680ae1d6dae475c546983195295204cf4e657469efda920ad2318963dd50e67c"
+    },
+    "certificate.log": {
+      "bytes": 38168,
+      "sha256": "cdd454f9d4902517e6fd807f9b6d968c13c582e5b0d932907a1105bdf83c3599"
+    },
+    "conformance-final.json": {
+      "bytes": 486,
+      "sha256": "37c4fd82033bcbe348f828e7a82a0198beb66aa2eeb8a7d2a62fe9208c30af46"
+    },
+    "conformance.json": {
+      "bytes": 682,
+      "sha256": "5f4eeb438c4afb7aa0b233f75ea41f9733bfd6df2b233039939867a7497d358a"
+    },
+    "cpu.log": {
+      "bytes": 116,
+      "sha256": "594c2a0ddc6b13490bd88f146744989116ebd5df4fd93f7aa3a8b0141457edf7"
+    },
+    "dynamic-source-oracle.json": {
+      "bytes": 12347,
+      "sha256": "b3b18e272f6d8ddf49d3fe1541312b690a7aed3ffae6d38ca421186177158a89"
+    },
+    "dynamic-source-oracle.log": {
+      "bytes": 5199,
+      "sha256": "584d0d8775b28975bf4fbddaab47cdd68b021c71827b3d471b2095a15448e94e"
+    },
+    "human-curved-build-20260908.log": {
+      "bytes": 13453,
+      "sha256": "0dd35f5df6f4873f05e7fb5354e564f584642b4933b62016bb764102a58e374b"
+    },
+    "human-curved-final-build-20260908.log": {
+      "bytes": 924,
+      "sha256": "8cc5b56d67a15f85c27768f6c05a2087e71a8c5815812d1fdc4695085fd020e4"
+    },
+    "human-curved-probes-build-20260908.log": {
+      "bytes": 612,
+      "sha256": "b1a3fa9be055ead509f602bbb307c4483128a6c0b31fa72f416636335c972d86"
+    },
+    "matter-gpu-final.log": {
+      "bytes": 552,
+      "sha256": "a117a983ec09847b4c9181a2bc963d9ef183a0bd1e4b2dcbcd38fc3b27e4c406"
+    },
+    "matter-gpu.log": {
+      "bytes": 91,
+      "sha256": "de9269814555e3364ddcc21dbdcdec44646bec4bb73f55eaa40e3762c7d5df16"
+    },
+    "myosim-fullbody-support-primitives.nhcnt": {
+      "bytes": 1044,
+      "sha256": "c7712daf79cd8a589a6d23942a4df84a7da928e5911455ce19078f9b24daaaf4"
+    },
+    "myosim-support-stance.v2.json": {
+      "bytes": 6082,
+      "sha256": "7b680ba4cfad0e448147d949426a35ff151a28e83bc23fa98035b0083bc4b87a"
+    },
+    "native-64-steps.json": {
+      "bytes": 1846,
+      "sha256": "f59b8af11b72953f6d0c136a5bd04b9b6cacadd7d64575552f699613c1294bb5"
+    },
+    "native-64-steps.log": {
+      "bytes": 20435,
+      "sha256": "cedd892da614216eecff85dfa96044a7d135663536a6b5e67e36fa0b83304cd0"
+    },
+    "native-commit.patch.gz": {
+      "bytes": 16889,
+      "sha256": "a2e8cc8eadeb92ae2c66623e0c90fbff7962e1b96b95d5a29a2a52085e2855b5"
+    },
+    "native-one-step.json": {
+      "bytes": 1685,
+      "sha256": "5db5febce10fb4c214541d8b90d4fe1606bc3d89489b0ebd87faa426967bbe4b"
+    },
+    "native-one-step.log": {
+      "bytes": 20572,
+      "sha256": "6309bf6608635f67ed29d18da471efd062cb7f4cf2bfd931bef00735787dee3c"
+    },
+    "python-tests-verified.log": {
+      "bytes": 1087,
+      "sha256": "286402e34e52a26f63976454e0f6cda09f572c85a7816cc64f632f30355014cb"
+    },
+    "qualified-certificate/qualifier.py": {
+      "bytes": 8617,
+      "sha256": "a116ab954d4c7171dfb6126fd7a13d524f8a1513b4aba5e73be4dd16ddafbfc8"
+    },
+    "qualified-certificate/runtime.patch": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "qualified-certificate/stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "qualified-certificate/stdout.log": {
+      "bytes": 38931,
+      "sha256": "3a1dd043c863f9f140f956a21f8263771df6c0c311a2fccd41497e187584ed45"
+    },
+    "source-build.log": {
+      "bytes": 66,
+      "sha256": "82725476329659c87cc4da19535a1a12f0288c4c9f328608e0d6642e6c59abe8"
+    },
+    "source-export.json.gz": {
+      "bytes": 93554,
+      "sha256": "0d2bbd1aeb226b5d17f4982fef72297a3c595a055a229460356572982433abb8"
+    },
+    "source-export.log": {
+      "bytes": 56,
+      "sha256": "6a73469b9cc69f5147afeb1cd3aeafbd3dceeffabc0e6c5d9eb93e11a6734503"
+    },
+    "source-oracle-before-label.json": {
+      "bytes": 6964,
+      "sha256": "e817fda136d9aded7803684be96b81eced3118e9fbf4c696e790c77a0cf81d14"
+    },
+    "source-oracle.json": {
+      "bytes": 6982,
+      "sha256": "f170c318d0f74edfcbe616f3d296f1b88d2ff79d7cabb2923398b9988152aa82"
+    },
+    "support-primitives.manifest.json": {
+      "bytes": 2693,
+      "sha256": "26c61e6a3b9f846fbfbb38c457e1c3e7c95d48e08dc97041144bfe8ff9082354"
+    },
+    "verified-articulated-gpu.log": {
+      "bytes": 1922,
+      "sha256": "7fe8baf390387d6a005226d158c587732c28aaa8a413fbab747347ba2ea290bb"
+    },
+    "verified-conformance.json": {
+      "bytes": 1715,
+      "sha256": "f5b7b4b5493feca41cb9507bf68b36367f2ae56faec35845d1c5d051ab0f3b94"
+    },
+    "verified-ctest.log": {
+      "bytes": 719,
+      "sha256": "ffb1a4e0f3009502a8172298c7d6151850d8a12516ca5b3d8e9b48d88f4def15"
+    },
+    "verified-matter-gpu.log": {
+      "bytes": 552,
+      "sha256": "4eebdad06768441291fff0ead44a07e4ebf2fd17d974ef743092b553ea71175c"
+    },
+    "verify_curved_support.py": {
+      "bytes": 3667,
+      "sha256": "6c883e43965ca05454d811c81860370fdd929f2d8c942cd198daf226c28e55a6"
+    },
+    "verify_source_curved.py": {
+      "bytes": 7458,
+      "sha256": "28fb935cf0ca4bfa149ce824ec73d6b4fbd4cad5a0a38565eae5d64271e54833"
+    },
+    "qualified-certificate/receipt.json": {
+      "bytes": 55957,
+      "sha256": "ab45734d4ace3073434126247f001569ac114e228c573b1f1fa2994f5d8a480a"
+    }
+  }
+}
