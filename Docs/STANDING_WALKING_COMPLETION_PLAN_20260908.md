@@ -10,6 +10,13 @@ equilibrium, registered v5 tissue acceptance, sustained behavior and the costal
 timeout are still open. The numerical results below retain the earlier
 `c1db46d` baseline; the linked current receipt carries revision `329d54b`.
 
+The subsequent [offline source-stop repair](OFFLINE_LIMIT_REACTIONS_20260908.md)
+at native `117aa90` replaces coordinatewise cancellation with a mass-coupled
+reaction solve, includes equality-dependent stops, and differentiates that solve
+during recruitment. The normalized residual is 1.5546 at 240 sweeps and 0.591493
+at 1,024, versus the required 0.05. Source-range and reaction audits pass; dynamic
+source compliance and the other acceptance gates below remain open.
+
 ## Implemented: geometrically admissible recruitment
 
 The legacy standing baseline started with a 14.0669 mm foot penetration. A one-step diagnosis separated the source ground alignment, joint-equality projection and muscle recruitment. The first two left minimum gaps of approximately 0.012 and 0.107 micrometres. Recruitment then changed right-ankle coordinate 109 from zero to -0.1221731 rad without respecting the ground. Its static support compiler also assigned force to separated witnesses because the support interface contained a direction but no plane.

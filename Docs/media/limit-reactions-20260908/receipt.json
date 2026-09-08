@@ -1,0 +1,367 @@
+{
+  "schema": "numi.human.offline-limit-reaction-receipt.v1",
+  "date": "2026-09-08",
+  "native_commit": "117aa90b5c28a5448d845cbde45f3de85c481cb2",
+  "native_parent": "329d54b9e0b303bb377c04e2a2eef7272d3ba4f1",
+  "native_branch": "coupled",
+  "human_source_and_profile_commit": "207274005beaefdcf96aaaa2c9cf7cb3339d2180",
+  "balance_threshold": 0.05,
+  "previous_same_budget_normalized_residual_rms": 12.3141964708,
+  "metrics": [
+    {
+      "activation_sweeps": 240,
+      "normalized_residual_rms": 1.5545995326,
+      "active_position_limits": 29,
+      "native_physical_kkt": 7.25916177201e-13,
+      "root_force_residual": 1.86595900686e-06,
+      "root_acceleration_residual": 3.6255321595,
+      "total_support_force_n": 952.864475172,
+      "balanced": false,
+      "replay": "bitwise"
+    },
+    {
+      "activation_sweeps": 1024,
+      "normalized_residual_rms": 0.591493287723,
+      "active_position_limits": 28,
+      "native_physical_kkt": 7.3777999233e-13,
+      "root_force_residual": 1.86210661468e-06,
+      "root_acceleration_residual": 1.63848116808,
+      "total_support_force_n": 952.864475176,
+      "balanced": false,
+      "replay": "bitwise"
+    }
+  ],
+  "qualification": {
+    "offline_joint_limit_complementarity": true,
+    "offline_equality_acceleration_and_reactions": true,
+    "initial_source_primitive_geometry": true,
+    "static_gravity_wrench": true,
+    "internal_equilibrium": false,
+    "dynamic_limits": false,
+    "dynamic_contact": false,
+    "v5_tissue_acceptance": false,
+    "standing": false,
+    "walking": false,
+    "costal_requalification": false,
+    "calibration": false,
+    "performance": false,
+    "full_release": false
+  },
+  "native_tests": {
+    "ctest_passed": 2,
+    "ctest_failed": 0,
+    "analytic_reaction_regressions": true,
+    "existing_G1_limit_probe": true,
+    "record": "final-native-tests.log"
+  },
+  "independent_audits": {
+    "source_limited_coordinates": 122,
+    "source_equalities": 51,
+    "audit_mutation_tests": 8,
+    "oracle": "MuJoCo 3.12.0",
+    "source_files_checked": 57,
+    "source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975"
+  },
+  "numerics": {
+    "cone_solver": "existing native QualityContactSolver",
+    "default_solver_kkt_tolerance": 1e-11,
+    "unit_diagonal_regularization": 1e-12,
+    "separate_physical_kkt_tolerance": 1e-08,
+    "position_roundoff_tolerance": 1e-07,
+    "source_compliance_claim": false
+  },
+  "retained_failures": [
+    {
+      "record": "candidate-result.json",
+      "reason": "First full-model reaction attempt failed; detailed duplicate/scaling diagnosis is retained in following debug logs."
+    },
+    {
+      "record": "debug-stderr.log",
+      "reason": "Overstrict trial tolerance with duplicated source rows stalled near floating-point accuracy."
+    },
+    {
+      "record": "default-tolerance-stderr.log",
+      "reason": "Default owning tolerance still failed with duplicated rows and unscaled passive preload."
+    },
+    {
+      "record": "unique-stderr.log",
+      "reason": "Removing duplicate inequalities alone was insufficient; homogeneous force scaling resolved the remaining numerical failure."
+    },
+    {
+      "record": "recruit-test.log",
+      "reason": "First analytic recruitment fixture had insufficient muscle force capacity for its requested load."
+    },
+    {
+      "record": "recruit-debug.log",
+      "reason": "Activation regularization left a small expected force residual; final fixture verifies the analytic target within its declared regularized bound."
+    }
+  ],
+  "costal": {
+    "attempts_this_increment": 0,
+    "unresolved": true,
+    "workload_record": "macmini-workload.log",
+    "cause_established": false,
+    "prior_timeout_record": "../support-geometry-20260908/costal-retry.log"
+  },
+  "remaining": [
+    "Converge internal recruitment and static contact reactions to the declared balance bound.",
+    "Author source-compliant dynamic scalar limits in the existing NumanX v5/Matter coupled residual, tangent and rollback.",
+    "Admit the identical prepared pose with registered anatomical tissue and nonduplicated mass/force ownership.",
+    "Implement accepted-root metrics and qualify causal sustained standing/recovery/walking.",
+    "Diagnose the costal callback timeout under a controlled workload; retain the unchanged 60-second deadline.",
+    "Finish held-out material calibration and exact-stack release/performance gates."
+  ],
+  "boundary": "Offline C++ compilation and independent initial-pose checks. Metal dynamics were not changed or promoted. Source-compliant dynamic limits, internal equilibrium and sustained behavior remain unresolved.",
+  "artifacts": [
+    {
+      "path": "admission-build-test.log",
+      "bytes": 1139,
+      "sha256": "b0f1f54bc6bc5a63d8fc5faf9f8aec19e6db1b24d7a5772e6692e2886e988b62"
+    },
+    {
+      "path": "admission-result.json",
+      "bytes": 56,
+      "sha256": "4a2d8b8102d6a8db44d20855ea20e2a97b839ac2c496f75809cf48a0f76823c1"
+    },
+    {
+      "path": "admission-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "admission-stdout.log",
+      "bytes": 52672,
+      "sha256": "791366f48059ee25623c6f356be52fc0b97d3cfa472973f3504f0dd35dc15d73"
+    },
+    {
+      "path": "build.log",
+      "bytes": 560,
+      "sha256": "088b887024833d7f0281e669d6aa98c15e1acc2bcecc133eb2b2cab2191e37dc"
+    },
+    {
+      "path": "candidate-command.json",
+      "bytes": 1255,
+      "sha256": "581a15449897f4cbdf466843007a48b1a8ffc9665c2c6ea0bd82edb22d6d8526"
+    },
+    {
+      "path": "candidate-result.json",
+      "bytes": 63,
+      "sha256": "2b627a66dfa5cdee41d8fff0952828965abd9b5eccbd9f9f0f3dc5ecb71fa71e"
+    },
+    {
+      "path": "candidate-stderr.log",
+      "bytes": 231,
+      "sha256": "0439c1a4848fe67f0d672b24cd7f5d64e1ab171c8f1fa185a58e3bc52536afb5"
+    },
+    {
+      "path": "candidate-stdout.log",
+      "bytes": 892,
+      "sha256": "0a3b57f8e8085cd478a9f65167f0ec1cad2b5a0451608a82d0fa1d9d19a370dd"
+    },
+    {
+      "path": "debug-build.log",
+      "bytes": 229,
+      "sha256": "c9fd64ae1e0249e2f4a799cd238da637a943aa42d1e559632b0549c1687bc444"
+    },
+    {
+      "path": "debug-stderr.log",
+      "bytes": 388,
+      "sha256": "f111556526a248adacf4e1151823d29bbfef3eee18540c6ec964761dabf23d25"
+    },
+    {
+      "path": "debug-stdout.log",
+      "bytes": 892,
+      "sha256": "0a3b57f8e8085cd478a9f65167f0ec1cad2b5a0451608a82d0fa1d9d19a370dd"
+    },
+    {
+      "path": "default-tolerance-result.json",
+      "bytes": 57,
+      "sha256": "2a74efb8ec57b9d603dcb4e87c7f48a59cfca43cb15660c220e108065c8d99d1"
+    },
+    {
+      "path": "default-tolerance-stderr.log",
+      "bytes": 388,
+      "sha256": "e36bbb088278150e22f7c7e0af1dd55cb1c23a2cba69bc1bd50989191be790a0"
+    },
+    {
+      "path": "default-tolerance-stdout.log",
+      "bytes": 892,
+      "sha256": "0a3b57f8e8085cd478a9f65167f0ec1cad2b5a0451608a82d0fa1d9d19a370dd"
+    },
+    {
+      "path": "final-native-tests.log",
+      "bytes": 1410,
+      "sha256": "c13141ef0ec3eda414886c01502cd2c503a4c107d3b4e270e5b8112b62626b20"
+    },
+    {
+      "path": "macmini-workload.log",
+      "bytes": 320,
+      "sha256": "be16891d05dce99548231edcc17c88fad8d4e834155dc277c8ce3fc105ecbd29"
+    },
+    {
+      "path": "native.patch.gz",
+      "bytes": 9316,
+      "sha256": "c2a96f6bb90d3c07193b0d51ff49a0261f6819f1fa60b2ecc80d6a96b136fc64"
+    },
+    {
+      "path": "qualification.json",
+      "bytes": 3162,
+      "sha256": "3bfe75899f8bc2e7e4d6a0d75b7568661e3ba09a2c49bd3e193bd605a9c1868f"
+    },
+    {
+      "path": "qualified-1024-command.json",
+      "bytes": 1294,
+      "sha256": "4bd2a5b95b2f63fb87c74a57237550cd2425d8307c6f887a662116db5e37c02c"
+    },
+    {
+      "path": "qualified-1024-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "qualified-1024-stdout.log",
+      "bytes": 52437,
+      "sha256": "acdb2dd252915574c6578b8a867f65838fd327479276f97ab400131364005a26"
+    },
+    {
+      "path": "qualified-240-command.json",
+      "bytes": 1292,
+      "sha256": "1908d790ac2d7a8b1f9309b639abd13785572073a59fd8479ededcd4de0307a0"
+    },
+    {
+      "path": "qualified-240-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "qualified-240-stdout.log",
+      "bytes": 52672,
+      "sha256": "791366f48059ee25623c6f356be52fc0b97d3cfa472973f3504f0dd35dc15d73"
+    },
+    {
+      "path": "qualify_native.py",
+      "bytes": 2818,
+      "sha256": "829e27ece58aa7bdff04198323831edf59ac1e5e7862ace57474648bc3b8a85f"
+    },
+    {
+      "path": "reaction-audit-1024.json",
+      "bytes": 984,
+      "sha256": "504d4be41b381bd5e9352b564d04bd2d8898ce4ba84a3114c792722701cfe113"
+    },
+    {
+      "path": "reaction-audit-240.json",
+      "bytes": 984,
+      "sha256": "2965ef733c6bb6e115a9281431adc59e1b995403ffdf94d69b41705836bc2e07"
+    },
+    {
+      "path": "recruit-debug.log",
+      "bytes": 382,
+      "sha256": "6c0a5b799c22634135c5b3277a1605ab4e5aa10322a08b880a2cd4611a1adae3"
+    },
+    {
+      "path": "recruit-test-2.log",
+      "bytes": 837,
+      "sha256": "4c00eac01edd30bdd3119147973c2e57c21d72bc089b08ebfdcdd253e5a751f7"
+    },
+    {
+      "path": "recruit-test.log",
+      "bytes": 1066,
+      "sha256": "8e7f7c68b1eb5b4a7e9d688174f9de803969d90ff8009314ec5c077d4e474a4f"
+    },
+    {
+      "path": "scaled-result.json",
+      "bytes": 57,
+      "sha256": "16c53dfa0657368c599e2b5de7303f6e68370f376dd5fc4ecafe0567b811fb16"
+    },
+    {
+      "path": "scaled-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "scaled-stdout.log",
+      "bytes": 38673,
+      "sha256": "a29fe6c7130b42b9084f4e096e493b07ee832199f36c8864253eff47e3208e30"
+    },
+    {
+      "path": "scaled-test.log",
+      "bytes": 809,
+      "sha256": "0ee8e1e68796f4bcb30e7388c2e5c6d72d4b7ab0c75c0a3c8d2d8deca331f988"
+    },
+    {
+      "path": "source-oracle-1024.json",
+      "bytes": 6983,
+      "sha256": "0501e1b329697b6ba1286e40963c623dbbcad72327fa27c909de9976ecb92910"
+    },
+    {
+      "path": "source-oracle-240.json",
+      "bytes": 6981,
+      "sha256": "f5bf9456c8783d594dae1fa66daab8ee7804d9acd27338298f8a5c350994006a"
+    },
+    {
+      "path": "sweeps-1024-command.json",
+      "bytes": 1303,
+      "sha256": "0e71c8452fb63757b21557a0c2ec38a5f8d56c3cb1873ee08423e18f6bf70720"
+    },
+    {
+      "path": "sweeps-1024-result.json",
+      "bytes": 56,
+      "sha256": "1329e5d60acf3d188285b1bff35d075c9604244e4140f40faa410dd3eee46806"
+    },
+    {
+      "path": "sweeps-1024-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "sweeps-1024-stdout.log",
+      "bytes": 52437,
+      "sha256": "acdb2dd252915574c6578b8a867f65838fd327479276f97ab400131364005a26"
+    },
+    {
+      "path": "test.log",
+      "bytes": 580,
+      "sha256": "000392242b12bcc828e0236aaed3952177656146fc2528526436bd76c88f0aad"
+    },
+    {
+      "path": "test_verify_reactions.py",
+      "bytes": 2519,
+      "sha256": "1a3e5523d4196e20e9799699194fcc82e34341d2d644d9ab2947eb69e8383990"
+    },
+    {
+      "path": "unique-result.json",
+      "bytes": 57,
+      "sha256": "73fded7923f432683609ecee62ccd146dc7e4c3d52b8b83d220a168c87ec28d4"
+    },
+    {
+      "path": "unique-stderr.log",
+      "bytes": 545,
+      "sha256": "ecd23a1746413288ad240d859caf086071a96ee96e6be6146411f03e8cfad1de"
+    },
+    {
+      "path": "unique-stdout.log",
+      "bytes": 892,
+      "sha256": "0a3b57f8e8085cd478a9f65167f0ec1cad2b5a0451608a82d0fa1d9d19a370dd"
+    },
+    {
+      "path": "unique-test.log",
+      "bytes": 941,
+      "sha256": "61de66a54a121f9c90fbd2e8e0c65af879db1c5ad00046ad2b969b569e540e13"
+    },
+    {
+      "path": "verifier-tests.log",
+      "bytes": 106,
+      "sha256": "60bb849356ffbc091f601e17fc6ae0b2eb5e26d734d433da020c6e775efbf97f"
+    },
+    {
+      "path": "verify_reactions.py",
+      "bytes": 7585,
+      "sha256": "c1c90f0b3998203424f0eac60cadbe6e2d9c1879e86007994ed6796a8b425827"
+    },
+    {
+      "path": "verify_receipt.py",
+      "bytes": 2735,
+      "sha256": "408294c1c179487ea1c3bede6f4f21ee842aef9fce15e6e98daad633bf016cbe"
+    }
+  ]
+}

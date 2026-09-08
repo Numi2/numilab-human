@@ -1,0 +1,24 @@
+[1/5] Building CXX object CMakeFiles/metalrobo_numi_human_static_support_test.dir/tests/numi_human_static_support_test.cpp.o
+[2/5] Building CXX object CMakeFiles/metalrobo.dir/src/core/NumiHumanMuscleEquilibrium.cpp.o
+[3/5] Linking CXX shared library lib/libmetalrobo.dylib
+[4/5] Linking CXX executable bin/metalrobo_numi_human_static_support_test
+[5/5] Linking OBJCXX executable bin/metalrobo_numilab_human_myosim_visual_probe
+Test project /Users/n/MetalRobo-human-completion-build-20260907
+    Start  2: numi_human_static_support
+1/2 Test  #2: numi_human_static_support ...........................   Passed    0.66 sec
+    Start 50: numanx.integration.human_motor_sensor_transaction
+2/2 Test #50: numanx.integration.human_motor_sensor_transaction ...   Passed    0.06 sec
+
+100% tests passed out of 2
+
+Label Time Summary:
+human         =   0.06 sec*proc (1 test)
+mechanics     =   0.66 sec*proc (1 test)
+metal         =   0.06 sec*proc (1 test)
+numanx        =   0.06 sec*proc (1 test)
+numi-human    =   0.66 sec*proc (1 test)
+physics       =   0.06 sec*proc (1 test)
+support       =   0.66 sec*proc (1 test)
+
+Total Test time (real) =   0.72 sec
+articulated_joint_limits=cpu_fp64 rows=2 lower=1 upper=1 penetration=0.002 coupling=0.08939411299 max_impulse=0.09622076726 kkt=1.110223025e-16 factor_residual=1.627385613e-16 full_g1_rows=29 predictive=pass q_clamp=none replay=bitwise transaction=pass status=ok

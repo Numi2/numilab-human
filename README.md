@@ -10,6 +10,11 @@ the native Human execution path.
 capsules and heel ellipsoids. Internal equilibrium, dynamic limits and sustained
 standing/walking remain open.
 
+The [offline joint-stop repair](Docs/OFFLINE_LIMIT_REACTIONS_20260908.md) now
+solves mass-coupled source-limit reactions and uses their derivative during
+recruitment. The internal residual falls from 12.31 to 1.55 at the same budget,
+and to 0.5915 at 1,024 sweeps; the balance threshold remains 0.05.
+
 | Role | Source | Status |
 | --- | --- | --- |
 | Active full-body mechanics | MyoSim `myofullbody` | 103 source bodies, 416 muscles, native Core reference |
@@ -41,7 +46,7 @@ standing and walking remain open.
 The [source support stance](Docs/SUPPORT_STANCE_20260908.md) now balances the
 static gravity wrench on six native foot witnesses and provides a reproducible
 `support-stance` command. Independent source kinematics checks that wrench;
-complete capsule contact, internal equilibrium and sustained behavior remain open.
+dynamic contact, internal equilibrium and sustained behavior remain open.
 
 The current regional layer is `NHFASC4`: six exact-source pectoral, six
 P4/P5/P6-derived latissimus-aponeurosis, eight external-oblique, and six
