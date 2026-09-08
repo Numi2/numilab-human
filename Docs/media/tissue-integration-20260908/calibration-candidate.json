@@ -1,0 +1,705 @@
+{
+  "anatomical_target": {
+    "binding": "same donor and named patellar cartilage; plug location is not a whole-region material assignment",
+    "donor": "oks003",
+    "production_force_owner_fraction": 0,
+    "source_region": "PTC",
+    "specimen_side": "left"
+  },
+  "article_doi": "10.1016/j.jmbbm.2020.104025",
+  "assumptions": {
+    "density_kg_m3": 1000,
+    "diameter_m": 0.005,
+    "homogeneous_isotropic": true,
+    "lateral_boundary": "zero traction",
+    "platen_friction": 0,
+    "poisson_ratio": 0.45,
+    "zero_stress_reference": "unknown; protocol contact configuration is a preloaded proxy"
+  },
+  "dataset_doi": "10.18735/WTJZ-N328",
+  "donor": "oks003",
+  "fit": {
+    "bulk_modulus_Pa": 679029.9490946771,
+    "coefficient_status": "conditional apparent coefficient; not independently identified intrinsic material",
+    "held_out": {
+      "force_nrmse_relative_to_measured_rms": 0.059594190472349706,
+      "force_rmse_N": 0.03128126996402946,
+      "maximum_absolute_force_error_N": 0.04905796084055081,
+      "observations": 3,
+      "signed_force_errors_N": [
+        -0.004876595728939226,
+        -0.02247418171927401,
+        -0.04905796084055081
+      ]
+    },
+    "lame_lambda_Pa": 632200.2974329753,
+    "mu_Pa": 70244.4774925528,
+    "objective": "unweighted squared force error over six training finite-hold points",
+    "training": {
+      "force_nrmse_relative_to_measured_rms": 0.07367435062933224,
+      "force_rmse_N": 0.036641696972110095,
+      "maximum_absolute_force_error_N": 0.05227392729970237,
+      "observations": 6,
+      "signed_force_errors_N": [
+        -0.002857823069108978,
+        -0.028549696341746256,
+        -0.05227392729970237,
+        0.03817722956387279,
+        0.045626849401770975,
+        0.030992865457009633
+      ]
+    }
+  },
+  "importer_sha256": "3afb40949c30b5f3a2daca921730a6326644749a08c6ed7a36b9a8fe1af59d1b",
+  "license": "CC-BY-4.0",
+  "native_material": {
+    "compiled": false,
+    "file": "oks003-patella-finite-hold-unqualified.nmatter",
+    "sha256": "9bf3dbb8ae4123ab981dead611fd003affccb0d8583a32af288fd8413e561040",
+    "solver_validated": false
+  },
+  "not_qualified": [
+    "equilibrium",
+    "native specimen boundary-value response",
+    "other loading modes",
+    "whole patellar cartilage",
+    "preload-consistent stress-free parameter identification",
+    "other donors or locations",
+    "costal cartilage",
+    "ligaments/tendons",
+    "right-knee mirror",
+    "whole-human mechanics"
+  ],
+  "physical_plug": "oks003-PTC-MCXX-01",
+  "preprocessing": {
+    "averaging": "trapezoidal physical-time average of last 300 s of final 690 s hold block",
+    "equilibrium_assumed": false,
+    "filtering": "none",
+    "force_baseline": "instrument zero; no subtraction of 10 gf preload",
+    "gf_to_N": 0.00980665,
+    "mm_to_m": 0.001,
+    "nominal_strain_gate": "5,10,15 percent within 0.003 absolute strain",
+    "raw_units": {
+      "force": "gf",
+      "position": "mm",
+      "time": "s"
+    },
+    "reference": "post-preconditioning protocol Move Absolute position plus its declared 0.300 mm offset; checked against Find Contact and settled Wait positions"
+  },
+  "qualified": false,
+  "report_sha256": "a3f95d6e99e8a63ddb8a8f4fb10855a7607d81dba84cdc98acefbded922a9065",
+  "samples": {
+    "oks003-PTC-MCXX-01-01": {
+      "block_row_counts": [
+        250,
+        750500,
+        150500,
+        25750,
+        351000,
+        4500,
+        4500,
+        319500,
+        1263750,
+        319500,
+        4500,
+        4500,
+        6000,
+        250,
+        739750,
+        150500,
+        25750,
+        351000,
+        3000,
+        25500,
+        102,
+        102,
+        8,
+        2000,
+        25500,
+        102,
+        102,
+        8,
+        2000,
+        25500,
+        102,
+        102,
+        8,
+        6250
+      ],
+      "height_m": 0.002696,
+      "points": [
+        {
+          "compression_strain": 0.05007418397626303,
+          "final_hold_block": 22,
+          "final_hold_force_N": [
+            [
+              0.0,
+              0.23585082490515
+            ],
+            [
+              100.0,
+              0.2260237084266
+            ],
+            [
+              200.0,
+              0.21619659194805
+            ],
+            [
+              300.0,
+              0.221110145284
+            ],
+            [
+              400.0,
+              0.21619659194805
+            ],
+            [
+              500.0,
+              0.21619659194805
+            ],
+            [
+              600.0,
+              0.21128302880545
+            ],
+            [
+              690.1996,
+              0.2063694754695
+            ]
+          ],
+          "final_hold_fractional_force_drop": 0.13830001957008078,
+          "final_hold_rows": 8,
+          "final_window_s": 300.0,
+          "force_N": 0.21316952468478068,
+          "hold_elapsed_s": 1800.6984,
+          "nominal_stress_Pa": 10856.634742442448,
+          "ramp_block": 18
+        },
+        {
+          "compression_strain": 0.10014836795252606,
+          "final_hold_block": 27,
+          "final_hold_force_N": [
+            [
+              0.0,
+              0.5159236788671
+            ],
+            [
+              100.0,
+              0.51101012553115
+            ],
+            [
+              200.0,
+              0.49626944591000005
+            ],
+            [
+              300.0,
+              0.48644232943145
+            ],
+            [
+              400.0,
+              0.4815287760955
+            ],
+            [
+              500.0,
+              0.4717016498103
+            ],
+            [
+              600.0,
+              0.46678809647435
+            ],
+            [
+              690.1996,
+              0.4717016498103
+            ]
+          ],
+          "final_hold_fractional_force_drop": 0.0936687493546099,
+          "final_hold_rows": 8,
+          "final_window_s": 300.0,
+          "force_N": 0.47211080922394816,
+          "hold_elapsed_s": 1800.6984,
+          "nominal_stress_Pa": 24044.406072033962,
+          "ramp_block": 23
+        },
+        {
+          "compression_strain": 0.1502225519287838,
+          "final_hold_block": 32,
+          "final_hold_force_N": [
+            [
+              0.0,
+              0.82547789207135
+            ],
+            [
+              100.0,
+              0.8156507755928
+            ],
+            [
+              200.0,
+              0.7910829794931
+            ],
+            [
+              300.0,
+              0.7910829794931
+            ],
+            [
+              400.0,
+              0.7665151833934
+            ],
+            [
+              500.0,
+              0.7616016300574501
+            ],
+            [
+              600.0,
+              0.7517745135789
+            ],
+            [
+              690.1996,
+              0.7468609504363
+            ]
+          ],
+          "final_hold_fractional_force_drop": 0.10381363045813585,
+          "final_hold_rows": 8,
+          "final_window_s": 300.0,
+          "force_N": 0.7572892045881523,
+          "hold_elapsed_s": 1800.7984000000001,
+          "nominal_stress_Pa": 38568.4224833069,
+          "ramp_block": 28
+        }
+      ],
+      "reference_force_N": 0.0980665,
+      "reference_position_mm": 84.28999999999999,
+      "role": "training"
+    },
+    "oks003-PTC-MCXX-01-03": {
+      "block_row_counts": [
+        250,
+        976500,
+        150500,
+        25750,
+        350750,
+        4500,
+        4500,
+        318000,
+        1263750,
+        318000,
+        4500,
+        4500,
+        6000,
+        250,
+        765000,
+        150500,
+        25750,
+        351000,
+        3000,
+        25500,
+        102,
+        102,
+        8,
+        1750,
+        25250,
+        102,
+        102,
+        8,
+        2000,
+        25250,
+        102,
+        102,
+        8,
+        5750
+      ],
+      "height_m": 0.0026760000000000004,
+      "points": [
+        {
+          "compression_strain": 0.05007473841554305,
+          "final_hold_block": 22,
+          "final_hold_force_N": [
+            [
+              0.0,
+              0.1816176673892
+            ],
+            [
+              100.0,
+              0.17670908602479998
+            ],
+            [
+              200.0,
+              0.17670908602479998
+            ],
+            [
+              300.0,
+              0.19143483992465002
+            ],
+            [
+              400.0,
+              0.1816176673892
+            ],
+            [
+              500.0,
+              0.16689191348935
+            ],
+            [
+              600.0,
+              0.17180049485375
+            ],
+            [
+              690.1996,
+              0.17180049485375
+            ]
+          ],
+          "final_hold_fractional_force_drop": 0.057031185302808915,
+          "final_hold_rows": 8,
+          "final_window_s": 300.0,
+          "force_N": 0.17213691918422155,
+          "hold_elapsed_s": 1800.7984000000001,
+          "nominal_stress_Pa": 8766.861304569271,
+          "ramp_block": 18
+        },
+        {
+          "compression_strain": 0.10014947683109408,
+          "final_hold_block": 27,
+          "final_hold_force_N": [
+            [
+              0.0,
+              0.4319555327199
+            ],
+            [
+              100.0,
+              0.42704695135549997
+            ],
+            [
+              200.0,
+              0.42213836999110005
+            ],
+            [
+              300.0,
+              0.41722977882005
+            ],
+            [
+              400.0,
+              0.4025040249202
+            ],
+            [
+              500.0,
+              0.4025040249202
+            ],
+            [
+              600.0,
+              0.39268685238475
+            ],
+            [
+              690.1996,
+              0.39268685238475
+            ]
+          ],
+          "final_hold_fractional_force_drop": 0.09867997201830568,
+          "final_hold_rows": 8,
+          "final_window_s": 300.0,
+          "force_N": 0.3979397189924766,
+          "hold_elapsed_s": 1800.6984,
+          "nominal_stress_Pa": 20266.90346568078,
+          "ramp_block": 23
+        },
+        {
+          "compression_strain": 0.15022421524663715,
+          "final_hold_block": 32,
+          "final_hold_force_N": [
+            [
+              0.0,
+              0.72647067936345
+            ],
+            [
+              100.0,
+              0.71174491565695
+            ],
+            [
+              200.0,
+              0.70683633429255
+            ],
+            [
+              300.0,
+              0.6970191617571
+            ],
+            [
+              400.0,
+              0.68720198922165
+            ],
+            [
+              500.0,
+              0.6773848166862
+            ],
+            [
+              600.0,
+              0.66756764415075
+            ],
+            [
+              690.1996,
+              0.66265906278635
+            ]
+          ],
+          "final_hold_fractional_force_drop": 0.09467154535119138,
+          "final_hold_rows": 8,
+          "final_window_s": 300.0,
+          "force_N": 0.6740316358034074,
+          "hold_elapsed_s": 1800.6984,
+          "nominal_stress_Pa": 34328.1493242971,
+          "ramp_block": 28
+        }
+      ],
+      "reference_force_N": 0.0980665,
+      "reference_position_mm": 44.7855,
+      "role": "training"
+    },
+    "oks003-PTC-MCXX-01-05": {
+      "block_row_counts": [
+        250,
+        777500,
+        150500,
+        25750,
+        351000,
+        4500,
+        4500,
+        319500,
+        1263750,
+        319500,
+        4500,
+        4500,
+        6000,
+        250,
+        887500,
+        150500,
+        25750,
+        351250,
+        3000,
+        25250,
+        102,
+        102,
+        8,
+        2000,
+        25250,
+        102,
+        102,
+        8,
+        2000,
+        25500,
+        102,
+        102,
+        8,
+        6250
+      ],
+      "height_m": 0.0026942857142857146,
+      "points": [
+        {
+          "compression_strain": 0.04992046659597131,
+          "final_hold_block": 22,
+          "final_hold_force_N": [
+            [
+              0.0,
+              0.24567794138370003
+            ],
+            [
+              100.0,
+              0.24076438804775
+            ],
+            [
+              200.0,
+              0.2260237084266
+            ],
+            [
+              300.0,
+              0.2309372715692
+            ],
+            [
+              400.0,
+              0.21128302880545
+            ],
+            [
+              500.0,
+              0.21619659194805
+            ],
+            [
+              600.0,
+              0.21619659194805
+            ],
+            [
+              690.1996,
+              0.21128302880545
+            ]
+          ],
+          "final_hold_fractional_force_drop": 0.16034181108717932,
+          "final_hold_rows": 8,
+          "final_window_s": 300.0,
+          "force_N": 0.2145099418862694,
+          "hold_elapsed_s": 1800.6984,
+          "nominal_stress_Pa": 10924.901629937594,
+          "ramp_block": 18
+        },
+        {
+          "compression_strain": 0.09984093319194526,
+          "final_hold_block": 27,
+          "final_hold_force_N": [
+            [
+              0.0,
+              0.5011830090526
+            ],
+            [
+              100.0,
+              0.49626944591000005
+            ],
+            [
+              200.0,
+              0.49135589257405
+            ],
+            [
+              300.0,
+              0.48644232943145
+            ],
+            [
+              400.0,
+              0.46678809647435
+            ],
+            [
+              500.0,
+              0.46678809647435
+            ],
+            [
+              600.0,
+              0.46187453333175
+            ],
+            [
+              690.1996,
+              0.46187453333175
+            ]
+          ],
+          "final_hold_fractional_force_drop": 0.08462110783268287,
+          "final_hold_rows": 8,
+          "final_window_s": 300.0,
+          "force_N": 0.46452329362755135,
+          "hold_elapsed_s": 1800.6984,
+          "nominal_stress_Pa": 23657.977075888874,
+          "ramp_block": 23
+        },
+        {
+          "compression_strain": 0.1497613997879113,
+          "final_hold_block": 32,
+          "final_hold_force_N": [
+            [
+              0.0,
+              0.8009100959716501
+            ],
+            [
+              100.0,
+              0.7959965426357001
+            ],
+            [
+              200.0,
+              0.78125586301455
+            ],
+            [
+              300.0,
+              0.7616016300574501
+            ],
+            [
+              400.0,
+              0.7616016300574501
+            ],
+            [
+              500.0,
+              0.75668806691485
+            ],
+            [
+              600.0,
+              0.74194739710035
+            ],
+            [
+              690.1996,
+              0.7468609504363
+            ]
+          ],
+          "final_hold_fractional_force_drop": 0.07192001963522485,
+          "final_hold_rows": 8,
+          "final_window_s": 300.0,
+          "force_N": 0.751517391256078,
+          "hold_elapsed_s": 1800.7984000000001,
+          "nominal_stress_Pa": 38274.46644413783,
+          "ramp_block": 28
+        }
+      ],
+      "reference_force_N": 0.0980665,
+      "reference_position_mm": 51.826499999999996,
+      "role": "held_out"
+    }
+  },
+  "schema": "HumanPack.tissue-calibration-candidate.v1",
+  "scope": "three unconfined compression repeats of one patellar cartilage plug",
+  "source_bundle_sha256": "24bbacf723c2f92fc6a7e8e06ff12033bb61591b63bde100afaac05919f18b41",
+  "sources": [
+    {
+      "bytes": 141475308,
+      "file": "oks003-PTC-MCXX-01-01.txt",
+      "sha256": "3f869e726f8c24daa3bb01f7a0c90dd3e7e38cc4c02362b6ebc2978c53c8cc1d",
+      "url": "http://archive.simtk.org/oks/tissue/oks003/cartilage/Mach1/oks003-PTC-MCXX-01-01/data.txt"
+    },
+    {
+      "bytes": 450,
+      "file": "oks003-PTC-MCXX-01-01_2017-11-13-111131-0000.xml",
+      "sha256": "fad28920477c25958fa59cab8f5c0ce2ac03af168a8cd23c262b0986efe02625",
+      "url": "http://archive.simtk.org/oks/tissue/oks003/cartilage/OTMS/oks003-PTC-MCXX-01-01/oks003-PTC-MCXX-01-01_2017-11-13-111131-0000.xml"
+    },
+    {
+      "bytes": 148870403,
+      "file": "oks003-PTC-MCXX-01-03.txt",
+      "sha256": "26cbb0dd2c5674ca43fe658c8de0324f018a6de609c9426f84918fc134435a12",
+      "url": "http://archive.simtk.org/oks/tissue/oks003/cartilage/Mach1/oks003-PTC-MCXX-01-03/data.txt"
+    },
+    {
+      "bytes": 447,
+      "file": "oks003-PTC-MCXX-01-03_2017-11-14-093725-0000.xml",
+      "sha256": "63122801f1fd2e19a47d68f186b08fa0f1f7d1d51dc14ede7e5b4569120c4151",
+      "url": "http://archive.simtk.org/oks/tissue/oks003/cartilage/OTMS/oks003-PTC-MCXX-01-03/oks003-PTC-MCXX-01-03_2017-11-14-093725-0000.xml"
+    },
+    {
+      "bytes": 147256514,
+      "file": "oks003-PTC-MCXX-01-05.txt",
+      "sha256": "d29e1be495b5ba418460256cc1ab2af64b72db56822a547ee8c7dd51cc77ec45",
+      "url": "http://archive.simtk.org/oks/tissue/oks003/cartilage/Mach1/oks003-PTC-MCXX-01-05/data.txt"
+    },
+    {
+      "bytes": 473,
+      "file": "oks003-PTC-MCXX-01-05_2017-11-15-105543-0000.xml",
+      "sha256": "0c3d51a1e753af3bf13f8d5ce4a23c22f98a6ebebc3cabef94297ddbd3f13624",
+      "url": "http://archive.simtk.org/oks/tissue/oks003/cartilage/OTMS/oks003-PTC-MCXX-01-05/oks003-PTC-MCXX-01-05_2017-11-15-105543-0000.xml"
+    },
+    {
+      "bytes": 9175,
+      "file": "cartilage-readme.txt",
+      "sha256": "fdfcd3875e83cc16b102998c500c2626e5c033c688bb3c2c5fa6e70b02f95fe7",
+      "url": "http://archive.simtk.org/oks/tissue/oks003/cartilage/readme.txt"
+    },
+    {
+      "bytes": 236,
+      "file": "cartilage-license.txt",
+      "sha256": "1abf0c1bbc0a81de9322026d27551e431aed6d9bed2d25b6ad70edc3eb377006",
+      "url": "http://archive.simtk.org/oks/tissue/oks003/cartilage/license.txt"
+    }
+  ],
+  "split": {
+    "frozen_before_fit": true,
+    "held_out": [
+      "oks003-PTC-MCXX-01-05"
+    ],
+    "population_holdout": false,
+    "training": [
+      "oks003-PTC-MCXX-01-01",
+      "oks003-PTC-MCXX-01-03"
+    ],
+    "unit": "test day within the same physical plug"
+  },
+  "status": "unqualified_finite_hold_candidate",
+  "unidentifiable": [
+    "stress-free reference geometry/prestress",
+    "Poisson ratio/bulk modulus",
+    "density",
+    "anisotropy/fibres",
+    "permeability/poroelasticity",
+    "physical viscosity/relaxation spectrum",
+    "platen friction"
+  ]
+}

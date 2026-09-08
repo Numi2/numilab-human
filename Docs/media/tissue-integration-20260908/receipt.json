@@ -1,0 +1,117 @@
+{
+  "artifacts": {
+    "calibration-candidate.json": "4663464c233a4b1c24e3d83968df1207d366bb42347e082758335b38de63f5fc",
+    "cartilage-candidate-compile.log": "64b37c529c8a5835c2d7f441c3b16dbe25cdceedf8ff62e96a85849e945ecd6a",
+    "cartilage-license.txt": "1abf0c1bbc0a81de9322026d27551e431aed6d9bed2d25b6ad70edc3eb377006",
+    "compiler-ctest.log": "fb1452c284c7e15d1b650c7e291b6d3c6a430ed265fe30d3be34515d70fef5b4",
+    "costal-v2.log": "732897ce5164d43e79dedd632bf096a9bed8f444cea52c5cb067de58c83923f6",
+    "febio-source.json": "a3562285515b318b2df3542afa8aa1a7772634f081b9b096afd5a8c52ef6acfe",
+    "fiber-check-final.log": "17291161404cd9fc96d74fe816dac38ef0b9d732d564832fbd851b951ddd002b",
+    "human-tests.log": "3f0d7011f92441f4a272fa2c1f84b2c0926caa6f4fc6f724eb4f473f179a55e3",
+    "knee-material-delta.json": "c584571defa130835a6afbf201b1ffda6453d262995e5844d7e27e0422b21d7b",
+    "lcl-source-prestress.log": "a5f19fce33fba5d2a944b4c609eeda77d1cb0e7f8364fd6f24b4fc8cdca68515",
+    "oks003-patella-finite-hold-unqualified.nmatter": "9bf3dbb8ae4123ab981dead611fd003affccb0d8583a32af288fd8413e561040",
+    "payload-negative-tests.json": "21572109121043df64f77e6fe14b3b5c2682456ba0de709223d5c481e21d1a44",
+    "pcl-source-law.log": "63a787545e73618098baa4771089e9f2073e07e571d29561557aec4f41ace14a",
+    "regression-ctest.log": "58dc4e9f1db1b47bd2adc2626929766879e6060e3629ed46a74193a5fea3d26a",
+    "source-fiber-compile.log": "e95467084b879691dfe77a391ad2fb7393640b27a139da876f322439a061306e"
+  },
+  "calibration": {
+    "blinded_validation": false,
+    "held_out": {
+      "force_nrmse_relative_to_measured_rms": 0.059594190472349706,
+      "force_rmse_N": 0.03128126996402946,
+      "maximum_absolute_force_error_N": 0.04905796084055081,
+      "observations": 3,
+      "signed_force_errors_N": [
+        -0.004876595728939226,
+        -0.02247418171927401,
+        -0.04905796084055081
+      ]
+    },
+    "mu_Pa": 70244.4774925528,
+    "population_holdout": false,
+    "qualified": false,
+    "report_sha256": "a3f95d6e99e8a63ddb8a8f4fb10855a7607d81dba84cdc98acefbded922a9065"
+  },
+  "date": "2026-09-08",
+  "device": "Apple M4 Pro",
+  "gates": {
+    "calibrated_cartilage_production_owner_fraction": 0,
+    "costal_live_rib_articulation": "absent_source_torso_aggregation",
+    "costal_prescribed_displacement_replay_rollback": "passed",
+    "lcl_source_prestress": "failed_first_stage_linear_solve",
+    "pcl_prescribed_displacement_replay_rollback": "passed",
+    "registered_tissue_rigid_mass_partition": "not_implemented",
+    "source_fiber_production_owner_fraction": 0,
+    "whole_joint_calibration": "unqualified"
+  },
+  "host": "macmini",
+  "human_parent_commit": "d91307349a5adf9c4074dc19c9027f74b44b6873",
+  "human_source_sha256": {
+    "src/numilab_human/cli.py": "24dc1ef32b2542d17662b6ddbd8eee02f444156b44ee0598b9fbab0a15ee3834",
+    "src/numilab_human/model.py": "b094a68963cea708b1e3c75e10b21de55cbd58831ae82b4c2d9b1c134bc17133",
+    "src/numilab_human/open_knee.py": "3c77c3da8c211e1798a786bc07ab0b1b17a4f8d1d49cc730cd269fb16baa036a",
+    "src/numilab_human/tissue_calibration.py": "3afb40949c30b5f3a2daca921730a6326644749a08c6ed7a36b9a8fe1af59d1b"
+  },
+  "knee": {
+    "abi": 3,
+    "bytes": 34357400,
+    "cartilage_materials": [
+      {
+        "K_MPa": 100.0,
+        "body": 150,
+        "c1_MPa": 2.5399999618530273,
+        "c2_MPa": 0.0,
+        "flags": 4,
+        "name": "TBC-L"
+      },
+      {
+        "K_MPa": 100.0,
+        "body": 156,
+        "c1_MPa": 2.5399999618530273,
+        "c2_MPa": 0.0,
+        "flags": 4,
+        "name": "PTC"
+      },
+      {
+        "K_MPa": 100.0,
+        "body": 150,
+        "c1_MPa": 2.5399999618530273,
+        "c2_MPa": 0.0,
+        "flags": 4,
+        "name": "TBC-M"
+      },
+      {
+        "K_MPa": 100.0,
+        "body": 145,
+        "c1_MPa": 2.5399999618530273,
+        "c2_MPa": 0.0,
+        "flags": 4,
+        "name": "FMC"
+      }
+    ],
+    "geometry_topology_attachments_byte_identical": true,
+    "payload_sha256": "2e38201528de25911ea496164602ea7e823cd9c2e3c94efa550ee52689324ae5",
+    "previous_abi": 2,
+    "previous_payload_sha256": "c5116b2cff086dae43e71a282ca5a15088b682875af4f0c0c1beb563fa255b4e"
+  },
+  "metal_api_validation": true,
+  "native_branch": "coupled",
+  "native_commit": "ccc52f7e08cca44a82c95a78d7c5e6e2383402a4",
+  "native_repository": "Numi2/numi-lab",
+  "readiness": {
+    "isolated_macmini_native_build_and_tests": "passed",
+    "shared_local_numi_doctor": "unhealthy_robot_catalog_killed"
+  },
+  "schema": "numi.human.tissue-integration-evidence.v1",
+  "status": "material_and_bounded_tissue_transactions_verified_calibration_candidate_only",
+  "tests": {
+    "fiber_scalar_metal_checks": 3060,
+    "human_passed": 160,
+    "human_skipped": 7,
+    "human_total": 167,
+    "native_compiler_checks_passed": 2,
+    "native_selected_regressions_passed": 12
+  }
+}

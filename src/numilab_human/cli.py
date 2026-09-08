@@ -2031,6 +2031,12 @@ def parser() -> argparse.ArgumentParser:
         "behavior-qualify", help="evaluate complete native standing, recovery and walking evidence",
     )
     add_behavior_qualification_arguments(behavior)
+    from .tissue_calibration import add_arguments as add_tissue_calibration_arguments
+    tissue_calibration = commands.add_parser(
+        "tissue-calibration",
+        help="import pinned oks003 raw cartilage repeats and fit an unqualified finite-hold candidate",
+    )
+    add_tissue_calibration_arguments(tissue_calibration)
     return result
 
 

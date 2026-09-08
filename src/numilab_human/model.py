@@ -13787,10 +13787,25 @@ def bodyparts_costal_cartilage_payload(
             "sternal_attachment_node_flag": 1,
             "rib_attachment_node_flag": 2,
             "regions": regions,
-            "constitutive_model": "human_costal_cartilage_pseudoelastic_neohookean_v1",
+            "constitutive_model": "human_costal_cartilage_pseudoelastic_neohookean_v2",
             "material_parameter_receipt": {
+                "schema": "numi.human.costal-cartilage-material-parameters.v2",
+                "native_material_name": "human_costal_cartilage_pseudoelastic_v2",
+                "parameterization": "lame_mu_lambda",
+                "energy": "0.5*mu*(I1-3-2*log(J))+0.5*lambda*log(J)^2",
                 "effective_young_modulus_pa": 22_000_000.0,
                 "poisson_ratio_assumption": 0.45,
+                "shear_modulus_pa": 22_000_000.0 / (2.0 * (1.0 + 0.45)),
+                "lame_lambda_pa": (
+                    22_000_000.0 * 0.45 /
+                    ((1.0 + 0.45) * (1.0 - 2.0 * 0.45))
+                ),
+                "physical_bulk_modulus_pa": (
+                    22_000_000.0 / (3.0 * (1.0 - 2.0 * 0.45))
+                ),
+                "physical_bulk_definition": "lambda+2*mu/3",
+                "numerical_viscosity_pa_s": 25.0,
+                "supersedes_constitutive_model": "human_costal_cartilage_pseudoelastic_neohookean_v1",
                 "scope": "population_mean_whole_segment_pseudoelastic_starting_point_not_subject_specific_or_rate_calibrated",
             },
         },

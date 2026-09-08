@@ -853,3 +853,10 @@ See [the architecture](Docs/ARCHITECTURE.md), [import procedure](Docs/IMPORT.md)
 [source-static visual validation](Docs/VISUAL_VALIDATION.md), and
 [third-party notices](THIRD_PARTY_NOTICES.md) before building or publishing
 derived data.
+
+
+The [8 September tissue integration and calibration update](Docs/TISSUE_INTEGRATION_CALIBRATION_20260908.md)
+preserves source cartilage material parameters in NHKNEE1 ABI3, verifies the
+source ligament fibre law on Metal, and provides a reproducible raw-data
+patellar cartilage candidate. Prestress equilibrium and whole-joint tissue
+calibration remain unqualified.

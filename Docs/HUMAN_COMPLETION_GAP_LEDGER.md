@@ -117,3 +117,15 @@ identity and admits eight more exact rib envelopes under unchanged gates.
    composition, then train and evaluate closed-loop standing and walking.
 
 Every increment must update this ledger using current executable evidence.
+
+## Anatomical tissue/material update, 8 September 2026
+
+[Anatomical tissue integration and calibration](TISSUE_INTEGRATION_CALIBRATION_20260908.md)
+adds source cartilage material records to NHKNEE1 ABI3, the source
+exponential-linear fibre law with FP64/Metal checks, the corrected costal
+Lamé parameterization, and a pinned raw-data finite-hold patellar candidate.
+PCL and costal prescribed-displacement transactions pass replay/rollback;
+LCL prestress still rejects its first solve. The calibration result predicts
+one withheld test day of the same plug and remains unqualified for intrinsic
+material or whole-joint deployment. No completion status or production force
+fraction is promoted by this update.

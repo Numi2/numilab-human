@@ -1833,6 +1833,25 @@ class ImporterTests(unittest.TestCase):
         self.assertGreater(manifest["mechanics"]["total_rest_volume_m3"], 0.0)
         self.assertGreater(manifest["mechanics"]["total_mass_kg"], 0.0)
         self.assertEqual(
+            manifest["mechanics"]["constitutive_model"],
+            "human_costal_cartilage_pseudoelastic_neohookean_v2",
+        )
+        receipt = manifest["mechanics"]["material_parameter_receipt"]
+        self.assertEqual(
+            receipt["schema"], "numi.human.costal-cartilage-material-parameters.v2",
+        )
+        self.assertEqual(receipt["parameterization"], "lame_mu_lambda")
+        mu = receipt["shear_modulus_pa"]
+        lam = receipt["lame_lambda_pa"]
+        self.assertAlmostEqual(
+            receipt["physical_bulk_modulus_pa"], lam + 2.0 * mu / 3.0, places=6,
+        )
+        self.assertNotEqual(lam, receipt["physical_bulk_modulus_pa"])
+        self.assertAlmostEqual(mu * (3.0 * lam + 2.0 * mu) / (lam + mu), 22_000_000.0, places=6)
+        self.assertAlmostEqual(lam / (2.0 * (lam + mu)), 0.45, places=12)
+        self.assertEqual(receipt["numerical_viscosity_pa_s"], 25.0)
+        self.assertIn("not_subject_specific_or_rate_calibrated", receipt["scope"])
+        self.assertEqual(
             manifest["force_ownership"]["production_owner_fraction"], 0.0,
         )
 

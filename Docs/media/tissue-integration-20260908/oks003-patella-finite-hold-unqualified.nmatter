@@ -1,0 +1,27 @@
+// UNQUALIFIED finite-hold same-plug candidate; not a native calibration certificate.
+// Source bundle SHA256: 24bbacf723c2f92fc6a7e8e06ff12033bb61591b63bde100afaac05919f18b41
+// CC BY 4.0; Chokhandre and Erdemir; dataset 10.18735/WTJZ-N328.
+// Fit: oks003-PTC-MCXX-01-01, oks003-PTC-MCXX-01-03. Held out: oks003-PTC-MCXX-01-05.
+// Assumed nu=0.45 and density=1000; loaded 10gf proxy reference, not stress free.
+// No relaxation/permeability identification; see calibration-candidate.json.
+material oks003_patella_finite_hold_unqualified {
+    parameter density : kg/m^3 = 1000 in [900, 1300];
+    parameter mu : Pa = 70244.477492552804 in [1, 1e8];
+    parameter lambda : Pa = 632200.29743297538 in [1, 1e9];
+    model neo_hookean;
+    energy = neo_hookean(mu, lambda);
+    valid = J() - 0.5;
+    supports fem;
+    interface {
+        static_friction = 0.0;
+        dynamic_friction = 0.0;
+        restitution = 0.0;
+        adhesion = 0.0;
+    }
+    limits {
+        minimum_J = 0.5;
+        maximum_J = 1.75;
+        maximum_stress = 1e8;
+        maximum_energy_density = 5e7;
+    }
+}

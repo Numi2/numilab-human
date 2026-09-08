@@ -25,9 +25,9 @@ from .myosim_export import export_fullbody
 from .upper_limb_registration import _rotation_xyzw
 
 
-SCHEMA = "numi.human.open-knee-oks003-payload.v2"
+SCHEMA = "numi.human.open-knee-oks003-payload.v3"
 MAGIC = b"NHKNEE1\0"
-ABI = 2
+ABI = 3
 INVALID_INDEX = 0xFFFFFFFF
 
 EXPECTED_HASHES = {
@@ -92,6 +92,20 @@ HEADER_STRUCT = struct.Struct("<8s12I128s")
 
 MATERIAL_HAS_HOMOGENEOUS_FIBER = 1 << 0
 MATERIAL_HAS_ISOCHORIC_IN_SITU_STRETCH = 1 << 1
+MATERIAL_HAS_ISOTROPIC_MOONEY_RIVLIN = 1 << 2
+
+
+def _cartilage_material_values(name: str, material: dict) -> tuple[float, float, float]:
+    """Admit the pinned source solid law; never substitute a calibration fit."""
+    if name not in ("FMC", "PTC", "TBC-L", "TBC-M") or material.get("type") != "Mooney-Rivlin":
+        raise RuntimeError("Open Knee cartilage requires its source Mooney-Rivlin material")
+    try:
+        values = tuple(float(material[key]) for key in ("c1", "c2", "k"))
+    except (KeyError, TypeError, ValueError) as error:
+        raise RuntimeError("Open Knee cartilage source material is incomplete") from error
+    if not all(math.isfinite(v) for v in values) or not (values[0] > 0 and values[1] >= 0 and values[2] > 0):
+        raise RuntimeError("Open Knee cartilage source material left its physical gate")
+    return values
 
 
 def _sha256(path: Path) -> str:
@@ -819,6 +833,9 @@ def compile_payload(
         material_flags = 0
         c1 = c2 = c3 = c4 = c5 = lam_max = bulk = initial_stretch = 0.0
         fiber_world = (0.0, 0.0, 0.0)
+        if REGION_KIND[name] == 2:
+            c1, c2, bulk = _cartilage_material_values(name, material)
+            material_flags = MATERIAL_HAS_ISOTROPIC_MOONEY_RIVLIN
         if name in source.fiber_directions:
             required = {"c1", "c2", "c3", "c4", "c5", "lam_max", "k", "initial_stretch"}
             if not required.issubset(material):
