@@ -2037,6 +2037,11 @@ def parser() -> argparse.ArgumentParser:
         help="import pinned oks003 raw cartilage repeats and fit an unqualified finite-hold candidate",
     )
     add_tissue_calibration_arguments(tissue_calibration)
+    from .costal_binding import add_arguments as add_costal_binding_arguments
+    costal_binding = commands.add_parser(
+        "costal-binding", help="bind costal tissue to a pinned common Human frame for native mass partition",
+    )
+    add_costal_binding_arguments(costal_binding)
     return result
 
 

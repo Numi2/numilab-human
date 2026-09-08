@@ -2620,7 +2620,7 @@ class ImporterTests(unittest.TestCase):
         result = run([command, "--numi-describe"], capture_output=True, text=True, check=True)
         self.assertEqual(
             result.stdout,
-            "Build NumiLab Human artifacts; run source-derived body-part controls, native full-body references, persistent muscle-driven standing, and four-angle visual validation.\n",
+            "Build source-locked Human anatomy and tissue artifacts; fit experimental cartilage repeat candidates; run native body-part controls, standing references, and visual validation.\n",
         )
 
     def test_numi_workspace_part_control_uses_transactional_tendon_runtime(self) -> None:

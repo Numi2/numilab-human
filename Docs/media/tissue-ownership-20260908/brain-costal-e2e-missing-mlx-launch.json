@@ -1,0 +1,52 @@
+{
+  "command": [
+    "swift",
+    "test",
+    "-c",
+    "release",
+    "--skip-build",
+    "--filter",
+    "testAuthoredMatterBrainProposalApplyAndJointPublication"
+  ],
+  "cwd": "/Users/n/numi-brain-human-completion-20260907",
+  "environment": {
+    "NUMANX_METALROBO_LIBRARY": "/Users/n/MetalRobo-human-completion-build-20260907/lib/libmetalrobo.dylib",
+    "NUMANX_FULLBODY_RIGID": "/Users/n/human-completion-20260907/input/myosim-fullbody-core-reference.nhrigid",
+    "NUMANX_FULLBODY_MUSCLE": "/Users/n/human-completion-20260907/input/myosim-fullbody-muscle-reference.nhmyo",
+    "NUMANX_FULLBODY_CONTACT": "/Users/n/human-completion-20260907/input/myosim-fullbody-support-contact.nhcnt",
+    "NUMANX_METALROBO_METALLIB": "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib",
+    "NUMANX_MATTER_METALLIB": "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib",
+    "NUMANX_FULLBODY_VISUAL_PACK": "/Users/n/NumiHumanCurrent/anterior-thorax-smoke/myosim-fullbody-articulated-markers-muscle-driven-selected-actuators-source-support-contact.mrvpack",
+    "NUMANX_FULLBODY_VISION_PROFILE": "/Users/n/Numan-X-neuron-v1/assets/numanx-head-vision-profile.v1.json",
+    "NUMANX_MATTER_MATERIAL": "/Users/n/MetalRobo-human-completion-20260907/matter/materials/silicone.nmatter",
+    "NUMANX_MATTER_WORLD_PACKAGE": "/Users/n/numi-human-tissue-ownership-20260908/costal-rebased.nmatterpack",
+    "NUMANX_HUMAN_SOURCE_FP": "aef317857bfd43c3",
+    "NUMANX_MATTER_WORLD_FP": "cc354c5cf1bcb81c",
+    "NUMANX_JOINT_EQUALITIES": "/Users/n/human-completion-20260907/input/myosim-fullbody-joint-equalities-source-compliance.nheq",
+    "NUMANX_JOINT_EQUALITY_FP": "19041185bf97c95d",
+    "NUMANX_COSTAL_CARTILAGE": "/Users/n/numi-human-tissue-ownership-20260908/bodyparts3d-costal-cartilage.nhcartilage",
+    "NUMANX_COSTAL_BINDING": "/Users/n/numi-human-tissue-ownership-20260908/costal-tissue.nhtbind",
+    "NUMANX_COSTAL_BINDING_FP": "170108efb187f65d",
+    "NUMANX_CONSTRAINED_HUMAN_SOURCE_FP": "4b26cde26f8a228a",
+    "NUMANX_GATE_B_EVIDENCE": "1",
+    "MTL_DEBUG_LAYER": "1",
+    "MRNX_RUNTIME_DIAGNOSTICS": "1"
+  },
+  "elapsed_seconds": 167.006791166,
+  "returncode": 1,
+  "artifact_sha256": {
+    "NUMANX_METALROBO_LIBRARY": "c7cf01a001fe72c549ba313cc7833a0679a1995264de58afbb55eeb561b68ea5",
+    "NUMANX_FULLBODY_RIGID": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44",
+    "NUMANX_FULLBODY_MUSCLE": "9a988f19a6fd8e533cd0f2bf3192cb8535fb008ccd394ffbf1a4432d3db76a05",
+    "NUMANX_FULLBODY_CONTACT": "4d54f8155cd83baaee7af536099824ac0da61e5d5e77544b42c6e5ce1b48c907",
+    "NUMANX_METALROBO_METALLIB": "559884c1b2ca12ac0a7e3c96d85c71fddd107d7e8cee0195eb764c875c6c3799",
+    "NUMANX_MATTER_METALLIB": "a23a45d2387c91bfcfaa034f4a54e4c491142f2cfc94fab0ae1a38bc6180a074",
+    "NUMANX_FULLBODY_VISUAL_PACK": "b8ab7cd8deead1e2af3137a727eaad74cd7e4238d77d9116d774bbf304936e37",
+    "NUMANX_FULLBODY_VISION_PROFILE": "166220533c6c78695f6e55412f2e832eaaa4ec94ddf791b476111dc323c652a6",
+    "NUMANX_MATTER_MATERIAL": "d3094476cefa1a28ca8b5f35b28e2586d5a44ce63f268e57e96812de32de4a5f",
+    "NUMANX_MATTER_WORLD_PACKAGE": "9e94441c93e58b4420da8afb9418b3261450f0c2472cd7fca919e3e85c758f0a",
+    "NUMANX_JOINT_EQUALITIES": "12db05fddb492e77e7fd461fad566d3e1e75390f2cb6f77f26568254a6cb4477",
+    "NUMANX_COSTAL_CARTILAGE": "f5c58b4ddf8a97f631fd21aa7c861bbfa57bc8f863ff20a04165be4db0b5e5cc",
+    "NUMANX_COSTAL_BINDING": "36213b5a3f183445807b0a37c449c6f7755a6ee27c62347fb9a2224990cfab08"
+  }
+}

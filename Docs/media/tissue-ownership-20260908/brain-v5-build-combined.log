@@ -1,0 +1,70 @@
+[0/1] Planning build
+Building for production...
+[0/27] Write swift-version-3CD7052B146186F2.txt
+[1/23] Compiling NumiBrainConnectomeABI NumiBrainConnectomeAudit.cpp
+[2/23] Compiling NumiBrainConnectomeABI NumiBrainConnectomeABI.cpp
+[4/24] Compiling NumiBrainCore AcceptedConsequenceDynamics.swift
+[5/26] Compiling NumiBrainCoreTests BrainAllGatesVerifierTests.swift
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainCoreTests/BrainSafetyAdmissionTests.swift:63:22: warning: 'resetAfterVerifiedRecovery(baseBrainGeneration:controlStepIdentifier:transactionFingerprint:)' is deprecated: Scalar identities are not verified recovery. Reconstruct admission with the joint recovery owner; this legacy reset fails closed. [#DeprecatedDeclaration]
+61 |   func testScalarRecoveryCannotResetContinuity() async throws {
+62 |     let c = try controller()
+63 |     do { try await c.resetAfterVerifiedRecovery(baseBrainGeneration: 1, controlStepIdentifier: 1, transactionFingerprint: 1); XCTFail("unverified reset") } catch {}
+   |                      `- warning: 'resetAfterVerifiedRecovery(baseBrainGeneration:controlStepIdentifier:transactionFingerprint:)' is deprecated: Scalar identities are not verified recovery. Reconstruct admission with the joint recovery owner; this legacy reset fails closed. [#DeprecatedDeclaration]
+64 |   }
+65 |   func testRejectedInitialRootCannotAdvanceItsUnpublishedState() async throws {
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+[6/27] Compiling NumiBrainSchedulerCLI main.swift
+[7/28] Compiling NumiBrainPolicyCLI main.swift
+[8/29] Compiling NumiBrainGateDCLI main.swift
+[9/30] Compiling NumiBrainConnectomeCLI main.swift
+[9/30] Write Objects.LinkFileList
+[11/30] Linking numi-brain-scheduler
+[12/30] Linking numi-brain-policy
+[13/30] Write Objects.LinkFileList
+[15/30] Linking numi-brain-gate-d
+[16/30] Linking numi-brain-connectome
+[18/30] Compiling NumiBrainMetal MetalNumanXGateCCapture.swift
+[19/32] Compiling NumiBrainNumanXInteropCLI main.swift
+[20/33] Compiling NumiBrainTissueCLI main.swift
+[21/34] Compiling NumiBrainDispatchCLI main.swift
+[21/34] Write Objects.LinkFileList
+[23/34] Linking numi-brain-tissue
+[24/34] Linking numi-brain-numanx-interop
+[25/34] Write Objects.LinkFileList
+[26/34] Linking numi-brain-dispatch
+[28/34] Compiling NumiBrainMLX MLXBrainLearner.swift
+[29/36] Compiling NumiBrainGateCCLI main.swift
+[30/37] Compiling NumiBrainExperimentCLI main.swift
+[30/37] Write Objects.LinkFileList
+[32/37] Linking numi-brain-gate-c
+[33/37] Linking numi-brain-experiment
+[35/37] Compiling NumiBrainMetalTests MLXCausalLearningTests.swift
+[36/38] Compiling NumiBrainPackageTests runner.swift
+[36/38] Write Objects.LinkFileList
+[37/38] Linking NumiBrainPackageTests
+Build complete! (126.67s)
+Test Suite 'Selected tests' started at 2026-09-08 05:53:21.269.
+Test Suite 'NumiBrainPackageTests.xctest' started at 2026-09-08 05:53:21.275.
+Test Suite 'ConnectomeConnectivityAuditTests' started at 2026-09-08 05:53:21.275.
+Test Case '-[NumiBrainCoreTests.ConnectomeConnectivityAuditTests testDisabledSensorAndReadoutCannotPassPreflight]' started.
+Test Case '-[NumiBrainCoreTests.ConnectomeConnectivityAuditTests testDisabledSensorAndReadoutCannotPassPreflight]' passed (0.001 seconds).
+Test Case '-[NumiBrainCoreTests.ConnectomeConnectivityAuditTests testNativeDistancesAndJSONRoundTrip]' started.
+Test Case '-[NumiBrainCoreTests.ConnectomeConnectivityAuditTests testNativeDistancesAndJSONRoundTrip]' passed (0.000 seconds).
+Test Case '-[NumiBrainCoreTests.ConnectomeConnectivityAuditTests testScratchBudgetRejectedBeforeTraversal]' started.
+Test Case '-[NumiBrainCoreTests.ConnectomeConnectivityAuditTests testScratchBudgetRejectedBeforeTraversal]' passed (0.000 seconds).
+Test Suite 'ConnectomeConnectivityAuditTests' passed at 2026-09-08 05:53:21.277.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'MetalNumanXBridgeV1EndToEndTests' started at 2026-09-08 05:53:21.277.
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testCostalOwnershipRequiresConstrainedWorldAndV5Layout]' started.
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testCostalOwnershipRequiresConstrainedWorldAndV5Layout]' passed (0.000 seconds).
+Test Suite 'MetalNumanXBridgeV1EndToEndTests' passed at 2026-09-08 05:53:21.277.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'NumiBrainPackageTests.xctest' passed at 2026-09-08 05:53:21.277.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.001 (0.002) seconds
+Test Suite 'Selected tests' passed at 2026-09-08 05:53:21.277.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.001 (0.008) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

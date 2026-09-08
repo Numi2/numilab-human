@@ -1,0 +1,145 @@
+{
+  "inputs": {
+    "cartilage_manifest_sha256": "e63dc0ecd51c4a0b257bdf9b8572ced380258b03aa4c41ca0f6cb2c1979ff282",
+    "cartilage_sha256": "f5c58b4ddf8a97f631fd21aa7c861bbfa57bc8f863ff20a04165be4db0b5e5cc",
+    "human_manifest_sha256": "2cea81e64a3c8da63731ae67c40ddc39aa61d9c4d0436000e806d25005e5b6d8",
+    "registration_sha256": "ebb7adf5a7777f3f811d771ebce7d61a6c578132572dc514910c765d7a31611e",
+    "rigid_sha256": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44"
+  },
+  "mass_ownership": {
+    "donor_assumption": "costal_volume_is_included_in_source_gross_torso_inertia",
+    "frame_rebase_required": true,
+    "measure": "final_native_cooked_lumped_FEM_nodes",
+    "native_partition_required": true
+  },
+  "payload": {
+    "bytes": 424,
+    "file": "costal-tissue.nhtbind",
+    "sha256": "36213b5a3f183445807b0a37c449c6f7755a6ee27c62347fb9a2224990cfab08"
+  },
+  "qualification": {
+    "accepted_root_integration": false,
+    "production_owner_fraction": 0.0,
+    "rib_sternum_relative_articulation": false,
+    "tissue_calibration": false
+  },
+  "regions": [
+    {
+      "donor_body": 20,
+      "member_id": "FJ3239",
+      "rib_body": 20,
+      "sternal_body": 20
+    },
+    {
+      "donor_body": 20,
+      "member_id": "FJ3242",
+      "rib_body": 20,
+      "sternal_body": 20
+    },
+    {
+      "donor_body": 20,
+      "member_id": "FJ3245",
+      "rib_body": 20,
+      "sternal_body": 20
+    },
+    {
+      "donor_body": 20,
+      "member_id": "FJ3248",
+      "rib_body": 20,
+      "sternal_body": 20
+    },
+    {
+      "donor_body": 20,
+      "member_id": "FJ3251",
+      "rib_body": 20,
+      "sternal_body": 20
+    },
+    {
+      "donor_body": 20,
+      "member_id": "FJ3254",
+      "rib_body": 20,
+      "sternal_body": 20
+    },
+    {
+      "donor_body": 20,
+      "member_id": "FJ3255",
+      "rib_body": 20,
+      "sternal_body": 20
+    },
+    {
+      "donor_body": 20,
+      "member_id": "FJ3333",
+      "rib_body": 20,
+      "sternal_body": 20
+    },
+    {
+      "donor_body": 20,
+      "member_id": "FJ3335",
+      "rib_body": 20,
+      "sternal_body": 20
+    },
+    {
+      "donor_body": 20,
+      "member_id": "FJ3337",
+      "rib_body": 20,
+      "sternal_body": 20
+    },
+    {
+      "donor_body": 20,
+      "member_id": "FJ3339",
+      "rib_body": 20,
+      "sternal_body": 20
+    },
+    {
+      "donor_body": 20,
+      "member_id": "FJ3341",
+      "rib_body": 20,
+      "sternal_body": 20
+    },
+    {
+      "donor_body": 20,
+      "member_id": "FJ3343",
+      "rib_body": 20,
+      "sternal_body": 20
+    },
+    {
+      "donor_body": 20,
+      "member_id": "FJ3345",
+      "rib_body": 20,
+      "sternal_body": 20
+    }
+  ],
+  "registration": {
+    "atlas_m_to_world_m": [
+      [
+        1.0076111869732587,
+        0.0,
+        0.0,
+        -0.02486208348842422
+      ],
+      [
+        0.0,
+        1.0076111869732587,
+        0.0,
+        0.24627952500546432
+      ],
+      [
+        0.0,
+        0.0,
+        1.0076111869732587,
+        0.12388234159326472
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "historical_rigid_sha256": "91faa4f471653ec859f47af696e89b59a99f19decb0bb77b8bbd02d5725335b8",
+    "method": "one_common_similarity_no_independent_endpoint_fits",
+    "source_body_pose_continuity_checked": true,
+    "status": "source_bound_reference_candidate_not_anatomical_accuracy_validation"
+  },
+  "schema": "HumanPack.costal-tissue-binding.v1"
+}

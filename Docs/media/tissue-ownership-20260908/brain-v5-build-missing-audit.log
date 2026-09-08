@@ -1,0 +1,37 @@
+[0/1] Planning build
+Building for production...
+[0/38] Write swift-version-3CD7052B146186F2.txt
+[1/39] Copying DecisionState.metal
+[1/38] Copying ConnectomeRate.metal
+[1/38] Copying ConnectomeDecoder.metal
+[1/35] Write sources
+[12/34] Compiling NumiBrainConnectomeABI NumiBrainConnectomeAudit.cpp
+[13/34] Compiling NumiBrainConnectomeABI NumiBrainConnectomeABI.cpp
+[15/35] Compiling NumiBrainCore AcceptedConsequenceDynamics.swift
+<module-includes>:1:9: note: in file included from <module-includes>:1:
+1 | #import "/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainConnectomeABI/include/NumiBrainConnectomeABI.h"
+  |         `- note: in file included from <module-includes>:1:
+2 | 
+
+/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainConnectomeABI/include/NumiBrainConnectomeABI.h:69:1: warning: umbrella header for module 'NumiBrainConnectomeABI' does not include header 'NumiBrainConnectomeAudit.h'
+67 | #endif
+68 | #endif
+69 | 
+   | `- warning: umbrella header for module 'NumiBrainConnectomeABI' does not include header 'NumiBrainConnectomeAudit.h'
+
+/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainCore/Connectome/ConnectomeConnectivityAudit.swift:40:19: error: cannot find 'NBConnectomeAuditSummary' in scope
+38 |       throw ConnectomeError.invalid("connectivity audit graph identity or memory budget is invalid")
+39 |     }
+40 |     var summary = NBConnectomeAuditSummary()
+   |                   `- error: cannot find 'NBConnectomeAuditSummary' in scope
+41 |     var inputs = Array(repeating: UInt32.max, count: binding.inputs.count)
+42 |     var readouts = Array(repeating: UInt32.max, count: binding.readouts.count)
+
+/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainCore/Connectome/ConnectomeConnectivityAudit.swift:50:17: error: cannot find 'nb_connectome_audit' in scope
+48 |             readouts.withUnsafeMutableBufferPointer { outs in
+49 |               channels.withUnsafeMutableBufferPointer { ch in
+50 |                 nb_connectome_audit(bytes.baseAddress, bytes.count, UInt64(bytes.count),
+   |                 `- error: cannot find 'nb_connectome_audit' in scope
+51 |                   UInt64(maximumScratchBytes), projected.baseAddress, UInt32(projected.count),
+52 |                   selected.baseAddress, UInt32(selected.count), binding.channelCount,
+error: fatalError

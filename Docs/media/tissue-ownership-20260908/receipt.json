@@ -1,0 +1,193 @@
+{
+  "schema": "HumanPack.costal-tissue-ownership-evidence.v1",
+  "date": "2026-09-08",
+  "native_revision": "80b0d4758094f3b8d0cf9aba9e43c03e9089f45c",
+  "brain_revision": "30d1d75ddca575dac2e5a9a202d6434d3d0057c0",
+  "brain_costal_test_revision": "241b34619dca1486927b4d36c9376cb39080d26c",
+  "brain_publication_source_equivalence": {
+    "changed_paths": [
+      ".github/workflows/connectome-body-source.yml",
+      "tools/body-source-publication.patch"
+    ],
+    "executable_sources_tests_and_package_unchanged": true
+  },
+  "human_parent_revision": "00a79342a30db0ba6a07b4744de95fb242b6cb0f",
+  "human_source_sha256": {
+    "src/numilab_human/costal_binding.py": "a61fd9d0625d5abb7a1337a50d381123284b2354568a30ae223ef53e33cd18d3",
+    "src/numilab_human/cli.py": "7b630e31c43f676c2359c1d410d528e52e4e2c583f013af4e59f36ffde6ffcd9",
+    "tests/test_costal_binding.py": "854f6163d6ea37f146dc389795055259610b0c42df0c3ec4d17f61c37b280a6f",
+    "tests/test_importer.py": "90d386c444fc03cba8f5f4321d7f5017aba4ee1c78edf50de8cae596804bec30"
+  },
+  "device": {
+    "name": "Apple M4 Pro",
+    "memory_GiB": 24,
+    "macOS": "26.6 (25G72)",
+    "Xcode": "26.6 (17F113)",
+    "Swift": "6.3.3"
+  },
+  "python": {
+    "version": "3.11.7",
+    "command": "PYTHONPATH=src python3 -m pytest -q tests",
+    "passed": 169,
+    "skipped": 7,
+    "subtests_passed": 111,
+    "elapsed_seconds": 22.98,
+    "costal_binding_tests": 9,
+    "cli_rebuild_byte_identical": true
+  },
+  "native": {
+    "mass_rigid_twist_cases": 64,
+    "mass_negative_cases": 11,
+    "maximum_relative_invariant_error": 3.83045e-08,
+    "rotating_floating_root_rebase": true,
+    "binding_negative_cases": 7,
+    "runtime_negative_cases": 4,
+    "selected_regressions_passed": 5,
+    "c11_header_syntax": true,
+    "cpp20_header_syntax": true,
+    "mass_compilation": {
+      "schema": "numi.human.tissue-mass-compilation.v1",
+      "status": "compiled_requires_v5_runtime_admission",
+      "matter_world_fingerprint": 14714751319579342876,
+      "cooked_nodes": 13516,
+      "cooked_tetrahedra": 46278,
+      "attachments": 2871,
+      "maximum_attachment_rest_error_m": 6.9849196981941475e-09,
+      "rebase_pose_cases": 8,
+      "rebase_points_per_pose": 628,
+      "maximum_rebase_point_error_m": 1.4901161193847656e-08,
+      "maximum_rebase_velocity_error_m_s": 2.5126661862273636e-09,
+      "maximum_rebase_jacobian_error": 1.4901161193847656e-08,
+      "metal_executed": true,
+      "metal_device": "Apple M4 Pro",
+      "metal_replay_cases": 8,
+      "maximum_metal_point_error_m": 8.346059579000809e-07,
+      "maximum_metal_jacobian_error": 8.576687617889434e-07,
+      "maximum_metal_donor_mass_matrix_scaled_error": 1.4901161193847656e-08,
+      "whole_body_dynamic_mass_matrix_qualified": false,
+      "negative_admission_cases": 7,
+      "partitions": [
+        {
+          "donor_body": 20,
+          "node_count": 13516,
+          "source_mass_kg": 18.618999481201172,
+          "tissue_mass_kg": 0.11369939548001184,
+          "remaining_mass_kg": 18.505300521850586,
+          "remaining_com_offset_m": [
+            -0.0009059299489636092,
+            0.000246364545024006,
+            -1.2788207962166013e-06
+          ],
+          "tissue_first_moment_kg_m": [
+            0.016764505562213643,
+            -0.004559049836151393,
+            2.3664962589849076e-05
+          ],
+          "tissue_second_moment_kg_m2": [
+            0.0025145953175275257,
+            -0.0007694260625602709,
+            3.844012702502203e-06,
+            -0.0007694260625602709,
+            0.0005821226432534532,
+            -2.4609597611588893e-06,
+            3.844012702502257e-06,
+            -2.4609597611588893e-06,
+            0.00033250063537652196
+          ],
+          "packed_moment_relative_error": 4.047620509907532e-08
+        }
+      ],
+      "production_owner_fraction": 0,
+      "rib_sternum_articulation_qualified": false
+    }
+  },
+  "brain_regressions": {
+    "costal_v5_layout_tests_passed": 1,
+    "connectome_audit_tests_passed": 3,
+    "legacy_joint_publication_tests_passed": 2,
+    "legacy_elapsed_seconds": 49.41353745799999
+  },
+  "joint_runtime": {
+    "abi": 5,
+    "human_runtime_fingerprint": "4b26cde26f8a228a",
+    "accepted_roots": 8,
+    "attempted_physical_roots": 9,
+    "committed_physical_time_us": 80,
+    "step_us": 10,
+    "rollback_retry_bit_identical": true,
+    "stale_root_rejected": true,
+    "sensor_modalities": 7,
+    "maximum_observed_motor_excitation": 0.0,
+    "deterministic_MLX_update": true,
+    "policy_head_interventions": 28,
+    "retained_byte_limit": 2147483648,
+    "physical_completion_timeout_seconds": 60,
+    "launch_elapsed_seconds": 283.363684958,
+    "performance_qualified": false
+  },
+  "failed_attempts": [
+    {
+      "artifact": "costal-runtime.log",
+      "stage": "prepared-root fixture",
+      "reason": "10-second test hardware wait expired",
+      "resolution": "60-second fixture hardware deadline; physical timestep and solver tolerances unchanged"
+    },
+    {
+      "artifact": "brain-costal-e2e-missing-mlx.log",
+      "stage": "MLX learner after four accepted roots",
+      "reason": "release MLX shader resource missing",
+      "resolution": "existing pinned-dependency Metal build script run for release"
+    },
+    {
+      "artifact": "brain-v5-build-missing-audit.log",
+      "stage": "updated upstream Brain source build",
+      "reason": "SwiftPM umbrella omitted public connectome audit declarations",
+      "resolution": "export audit header through canonical umbrella"
+    }
+  ],
+  "qualification": {
+    "registered_passive_costal_transaction": true,
+    "production_force_owner_fraction": 0,
+    "experimental_costal_calibration": false,
+    "independent_rib_sternum_articulation": false,
+    "loaded_thorax_convergence": false,
+    "whole_body_dynamic_mass_matrix": false,
+    "active_motor_control": false,
+    "standing_recovery_walking": false,
+    "full_neuromusculoskeletal_release": false
+  },
+  "open_dependencies": [
+    "source thorax articulation and volumetric donor correspondence",
+    "experimental costal and independent specimen calibration",
+    "source prestress equilibrium and anatomical contact",
+    "loaded time-step/mesh convergence",
+    "sustained control, native accepted-root behaviour metrics and 420-trial gate",
+    "five PerformanceEnvelope qualifications"
+  ],
+  "artifact_sha256": {
+    "brain-costal-e2e-before-upstream-launch.json": "741012d77bd8981633973b20c7957398d312c8c66d465a70bae1928687be1932",
+    "brain-costal-e2e-before-upstream.log": "a66119772deedadc5cfdb9c49f981d2d7daf5a48c9c3b574fa7b451f3cfabab7",
+    "brain-costal-e2e-launch.json": "80b3cd90086deac48698c4f66cc41c77a29b2bee916033f59c8194d53cf70c01",
+    "brain-costal-e2e-missing-mlx-launch.json": "c509b19dc65ca6f5c5a48873ad3872b1a3d2fc81a279c1a9f50713d7bd2d6c65",
+    "brain-costal-e2e-missing-mlx.log": "11b194e6b346874bc5cf26048df78ee41a51a551e80c92d09d731bc9a7c04f6b",
+    "brain-costal-e2e.log": "de3af1def90a48aa91747ddf3a41300c2044384dab0613458e07d5fdc7b6f9d3",
+    "brain-legacy-e2e-launch.json": "b717fdbe212d66bdcc4b517526854145756150f12f1a2807b9cc58a95a644d16",
+    "brain-legacy-e2e.log": "9e8c1dea384fa4b4884da2961a9c7e7e5660de0d86e5192591f2107e2b3987fe",
+    "brain-v5-build-combined.log": "3ea3dd78ae3037fdbab703848657d3954fd3cc8a43004447496153cc59b6af9d",
+    "brain-v5-build-final.log": "16834839da955abeb133eecb41d4b539b8c48a041f6850f89427dce8ab5ba465",
+    "brain-v5-build-missing-audit.log": "2b7c536d5c2eedaea99bb4f445e0321307e7566a73238470a44b27d2bf2e3585",
+    "costal-runtime-60s.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "costal-runtime-60s.log": "47fee6fb3a1ef87e0082647fcd2399659fca907f4e18da8f2a28ca655ceb745e",
+    "costal-runtime-60s.stderr": "ffda619efef28c9f5c829b2da1711344702962053f8acf259bb481a824ba2d64",
+    "costal-runtime.log": "d1dc8b159f07028970a448f68809d70e22aee034afdc9cd7e923e3570525ced6",
+    "costal-runtime.stderr": "7b0e3e1e76a2a0eb6110509c2bcd7a8421ba02e432d81a66f176f30c76482073",
+    "costal-tissue-binding.json": "bb2e59aa4a254573804be8c1e6a31b73db594a3f376642c2fe224bb15e4dfcb3",
+    "costal-tissue.nhtbind": "36213b5a3f183445807b0a37c449c6f7755a6ee27c62347fb9a2224990cfab08",
+    "mass-compilation-metal-final.json": "e6e05fcd931948436049afd613f8034b809b3737742f2f535f964b79547c2e83",
+    "mass-compilation-metal-final.stderr": "e9e767271789a2eec5bba45e113435a258cd4d8648131544376d973bfac20a1b",
+    "mlx-release-build.log": "8734d222933b12caa2dbb2e41da6220c283848b9429be1b0a7e4543b029dc954",
+    "native-regressions.log": "914fca53ebc941a4d285277e29e9219d3492d65cecdffb851eaf686cf9f27261",
+    "run_brain_costal.py": "d251cdcc0b561da201f4004d525f57c48df19c90fb71fc11b4c32cbe77f0a4e7",
+    "run_brain_legacy.py": "fc2c88c9d7c1e2899f2c54900fbc29c5f51c1118df5935289fb88cbe07eb5381"
+  }
+}

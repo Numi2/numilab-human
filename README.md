@@ -860,3 +860,5 @@ preserves source cartilage material parameters in NHKNEE1 ABI3, verifies the
 source ligament fibre law on Metal, and provides a reproducible raw-data
 patellar cartilage candidate. Prestress equilibrium and whole-joint tissue
 calibration remain unqualified.
+
+The [registered costal mass-ownership update](Docs/COSTAL_TISSUE_OWNERSHIP_20260908.md) adds common-frame binding, cooked rigid/tissue mass partition and native v5 admission. The [neuromusculoskeletal release matrix](Docs/NEUROMUSCULOSKELETAL_RELEASE_MATRIX.md) records the remaining completion gates.
