@@ -1,0 +1,127 @@
+{
+  "schema": "numi.human.coupled-equilibrium-receipt.v1",
+  "date": "2026-09-08",
+  "native_commit": "dcbe11f89d08f22ca920b51be3401b88fbd113fc",
+  "human_parent_commit": "d01770aafc5d4687229578a577802b843bd888b8",
+  "source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+  "certificate_sha256": "44844c166a704b5c49cb3c7b96c6e3f929b8e572fc157d9c0f6c3fba06c8c6e2",
+  "qualification": {
+    "fp32_equilibrium": false,
+    "prepared_pose_loaded_limits": false,
+    "registered_tissue": false,
+    "standing": false,
+    "walking": false,
+    "calibration": false,
+    "costal_timeout_resolved": false,
+    "performance": false,
+    "full_release": false,
+    "offline_fp64_equilibrium": true
+  },
+  "scope": "Clean offline native FP64 stance preparation with NHEQ1 ideal equalities and source hard-stop reactions. No loaded compliant/tissue or sustained behavior promotion.",
+  "measurements": {
+    "internal_normalized_residual_rms": 0.00814168920372,
+    "balance_tolerance": 0.05,
+    "activation_sweeps": 1024,
+    "accepted_pose_steps": 48,
+    "accepted_coupled_pose_steps": 7,
+    "rejected_constraint_candidates": 28,
+    "rejected_support_manifold_pose_candidates": 185,
+    "loaded_source_stops": 24,
+    "replay": "bitwise",
+    "native_tests_passed": 4,
+    "evidence_tests_passed": 7
+  },
+  "dependencies": [
+    {
+      "path": "Docs/media/curved-support-20260908/verify_source_curved.py",
+      "sha256": "28fb935cf0ca4bfa149ce824ec73d6b4fbd4cad5a0a38565eae5d64271e54833"
+    },
+    {
+      "path": "Docs/media/curved-support-20260908/myosim-fullbody-support-primitives.nhcnt",
+      "sha256": "c7712daf79cd8a589a6d23942a4df84a7da928e5911455ce19078f9b24daaaf4"
+    },
+    {
+      "path": "Docs/media/limit-reactions-20260908/verify_reactions.py",
+      "sha256": "c1c90f0b3998203424f0eac60cadbe6e2d9c1879e86007994ed6796a8b425827"
+    },
+    {
+      "path": "Docs/media/support-stance-20260908/source-manifest.json",
+      "sha256": "2cea81e64a3c8da63731ae67c40ddc39aa61d9c4d0436000e806d25005e5b6d8"
+    },
+    {
+      "path": "config/myosim-support-stance.v2.json",
+      "sha256": "7b680ba4cfad0e448147d949426a35ff151a28e83bc23fa98035b0083bc4b87a"
+    },
+    {
+      "path": "src/numilab_human/support_stance.py",
+      "sha256": "a116ab954d4c7171dfb6126fd7a13d524f8a1513b4aba5e73be4dd16ddafbfc8"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "clean-completion.json",
+      "bytes": 5258,
+      "sha256": "ef38ab14d97b25b95a208e51bad177c52e961a51ac4fb264bbd5f68b228aaa4a"
+    },
+    {
+      "path": "clean-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "clean-stdout.log.gz",
+      "bytes": 29799,
+      "sha256": "26c6550fba752a3a2042751a949849266107e54370d6dffebcf5b84e45fc666e"
+    },
+    {
+      "path": "exploration.json.gz",
+      "bytes": 249198,
+      "sha256": "2ea82b8f54bd8f13ae7bd0cf23e44c72c7b17830a765909d57cfc3bb1a2d724c"
+    },
+    {
+      "path": "native-clean-test-details.log",
+      "bytes": 5091,
+      "sha256": "8807ddd41fc08bc4977078acf6658edaf73add236c663b921279c36367829b5e"
+    },
+    {
+      "path": "native-clean-tests.log",
+      "bytes": 1043,
+      "sha256": "79981b786ed87a367eb791ce0cd7e6a0ef5b9d7fe3ab8e78c0549f103696d533"
+    },
+    {
+      "path": "reaction-audit.json",
+      "bytes": 985,
+      "sha256": "e8785763ff8f98e37defb83217b50cbd19579c1e6ad1b096fe3e9b58e0116c88"
+    },
+    {
+      "path": "run_certificate.py",
+      "bytes": 2408,
+      "sha256": "b72a21d5667ea8d9aa30d24374d252de3b68a82836a614b7c5872c43af189aec"
+    },
+    {
+      "path": "source-mass.geometry.json",
+      "bytes": 7945,
+      "sha256": "40ba3b454f71da14f46e5d0f57e263921372006dc96e0c0e616d02014b84a348"
+    },
+    {
+      "path": "source-mass.json",
+      "bytes": 14286,
+      "sha256": "fd40fb832906340ad51ac35869149315e320fdb0558d933aa22367d079e9cc0e"
+    },
+    {
+      "path": "test_verify_receipt.py",
+      "bytes": 3109,
+      "sha256": "f8fc137f0e05d4028796327ba22f5886774944e1947e95b760a7e240280b6981"
+    },
+    {
+      "path": "verify_receipt.py",
+      "bytes": 8288,
+      "sha256": "fc60ea68ee97bc9ff2b6ffc702e509c78a8dd6350afbfa1baedabff74bddc562"
+    },
+    {
+      "path": "verify_source_mass.py",
+      "bytes": 5473,
+      "sha256": "e601e6f1303753ae3e48cab3f3d10907554e4f675875fcb6a84a3f318c8e9ffa"
+    }
+  ]
+}

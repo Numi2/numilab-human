@@ -9,10 +9,12 @@ the native Human execution path.
 [Current-pose foot contact](Docs/CURVED_SUPPORT_20260908.md) now covers the source
 capsules and heel ellipsoids. The [source dynamic-limit integration](Docs/SOURCE_DYNAMIC_LIMITS_20260908.md)
 adds all 122 scalar limits to Matter/NumanX v6, with source-law and bounded
-transaction checks. Internal equilibrium, loaded stance integration and
-sustained standing/walking remain open.
+transaction checks. The [coupled offline stance](Docs/COUPLED_EQUILIBRIUM_20260908.md)
+now passes internal FP64 equilibrium at residual **0.00814** against **0.05**,
+with bitwise replay and independent source mass, gravity and reaction checks.
+Loaded tissue integration and sustained standing/walking remain open.
 
-The [offline joint-stop repair](Docs/OFFLINE_LIMIT_REACTIONS_20260908.md) now
+The earlier [offline joint-stop repair](Docs/OFFLINE_LIMIT_REACTIONS_20260908.md)
 solves mass-coupled source-limit reactions and uses their derivative during
 recruitment. The internal residual falls from 12.31 to 1.55 at the same budget,
 and to 0.5915 at 1,024 sweeps; the balance threshold remains 0.05.
@@ -48,7 +50,8 @@ standing and walking remain open.
 The [source support stance](Docs/SUPPORT_STANCE_20260908.md) now balances the
 static gravity wrench on six native foot witnesses and provides a reproducible
 `support-stance` command. Independent source kinematics checks that wrench;
-dynamic contact, internal equilibrium and sustained behavior remain open.
+dynamic contact and sustained behavior remain open; the later coupled offline
+compiler closes the bounded FP64 internal-equilibrium gate.
 
 The current regional layer is `NHFASC4`: six exact-source pectoral, six
 P4/P5/P6-derived latissimus-aponeurosis, eight external-oblique, and six

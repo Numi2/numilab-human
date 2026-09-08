@@ -26,6 +26,13 @@ stance with NHCNT2 contact and registered tissue still requires loaded
 qualification. A costal retry was interrupted after discovering a concurrent
 NumiVivo `md-run` job; the prior callback timeout remains unresolved.
 
+The subsequent [coupled offline compiler](COUPLED_EQUILIBRIUM_20260908.md)
+passes the unchanged internal balance gate at 0.00814, with a clean native
+commit, bitwise replay, source mass/gravity parity and complete source reaction
+audits. Its explicit 48-update posture budget closes FP64 offline recruitment.
+Prepared-state admission into the source-compliant loaded runtime is now the
+next gate; the current v6 constructor still uses source q/v and zero activation.
+
 ## Implemented: geometrically admissible recruitment
 
 The legacy standing baseline started with a 14.0669 mm foot penetration. A one-step diagnosis separated the source ground alignment, joint-equality projection and muscle recruitment. The first two left minimum gaps of approximately 0.012 and 0.107 micrometres. Recruitment then changed right-ankle coordinate 109 from zero to -0.1221731 rad without respecting the ground. Its static support compiler also assigned force to separated witnesses because the support interface contained a direction but no plane.
@@ -48,7 +55,7 @@ validation enabled; readiness authority and decision-shadow checks are unchanged
 
 | Work | Permanent owner and implementation | Completion evidence |
 |---|---|---|
-| Load-balanced anatomical stance | Bounded native placement and the witness gravity wrench now pass. Current-pose primitive queries now pass. Complete internal recruitment with consistent joint/contact reactions, passive tissue/prestress and fibre equilibrium. Share the identical root/pose initial condition with tissue registration and existing Human/CompiledRun admission. | Witness geometry and gravity-wrench evidence are retained in the stance increment; initial full primitive geometry now passes; bounded internal acceleration/fibre residuals, dynamic joint/contact complementarity and registered FP64/native force parity remain required. |
+| Load-balanced anatomical stance | Bounded native placement and the witness gravity wrench now pass. Current-pose primitive queries now pass. FP64 internal recruitment with ideal equalities and source-stop reactions now passes. Establish source-compliant loaded joint/contact response, passive tissue/prestress and fibre equilibrium. Share the identical root/pose initial condition with tissue registration and existing Human/CompiledRun admission. | Witness geometry and gravity-wrench evidence are retained in the stance increment; initial full primitive geometry now passes; bounded internal acceleration/fibre residuals, dynamic joint/contact complementarity and registered FP64/native force parity remain required. |
 | Source-compliant loaded integration | NumanX v6/Core/Matter now admits NHEQ2/NHLIM1 and optional registered tissue. Admit the identical recruited stance and curved NHCNT2 support, then diagnose limit/equality/contact/fibre residuals in that accepted transaction. The legacy NHEQ1 visual solver remains a diagnostic comparator. | Scalar source-law and small joint-transaction checks pass. Prepared-pose source/timestep convergence, registered mesh convergence under load, conservative force/moment transfer, no duplicated mass or active force, rollback/retry and replay remain required. |
 | Standing and recovery controller | Lower source-semantic posture/support observations and muscle commands through the existing SensorPack/PolicyPack and Brain controller. Keep neural learning and controller state causal to accepted physical time. Tune stance feedback only after the initial mechanical state is admitted. | Assistance-free sustained balance, controlled nonzero perturbations and recovery, actuator bounds, observable force/kinematic response, observation dropout and emergency-stop behavior. Preserve joint-risk inhibition and rejected-state isolation. |
 | Native behavior telemetry | Implement the frozen reductions in the owning native accepted-root publication path: source-bound root/trunk state, support/contact, ground-relative height and tilt, forward/lateral speed, falls, assistance and termination. Retain every attempted root and its disposition. | Replayable metric reductions agree with an independent trace check; failed/rejected futures never advance physical time or publish observations; missing, duplicated and truncated trials are rejected. Terminal probe q/v is insufficient. |
