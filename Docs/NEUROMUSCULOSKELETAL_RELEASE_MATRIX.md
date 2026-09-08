@@ -71,3 +71,8 @@ as completed work for this target.
 The [active muscle increment](ACTIVE_MUSCLE_CONTROL_20260908.md) adds explicit
 Brain/Metal recruitment and repairs native activation continuation and sensor
 units. Its short physical horizons leave the sustained behavior gate open.
+
+The [standing/walking completion plan](STANDING_WALKING_COMPLETION_PLAN_20260908.md)
+repairs recruitment-induced ground penetration and unsupported static reactions.
+The current anatomically constrained posture still has an unbalanced support
+wrench; source-compliant sustained behavior and the full 420-trial gate remain open.

@@ -131,3 +131,13 @@ LCL prestress still rejects its first solve. The calibration result predicts
 one withheld test day of the same plug and remains unqualified for intrinsic
 material or whole-joint deployment. No completion status or production force
 fraction is promoted by this update.
+
+### Standing initialization correction, 8 September 2026
+
+The [standing/walking plan and support evidence](STANDING_WALKING_COMPLETION_PLAN_20260908.md)
+identify and repair a 14 mm penetration introduced by offline ankle recruitment.
+The native compiler now enforces authored-plane geometry and zero support force
+across a gap. The revised static posture remains `balanced=false`, with only two
+loaded witnesses and a 776.836 N maximum root-force residual. This closes the
+initial geometry defect; it does not close standing, walking or source-compliant
+loaded tissue qualification.

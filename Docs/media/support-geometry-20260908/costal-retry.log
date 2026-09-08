@@ -1,0 +1,19 @@
+[0/1] Planning build
+Test Suite 'Selected tests' started at 2026-09-08 13:46:38.542.
+Test Suite 'NumiBrainPackageTests.xctest' started at 2026-09-08 13:46:38.548.
+Test Suite 'MetalNumanXBridgeV1EndToEndTests' started at 2026-09-08 13:46:38.548.
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testAuthoredMatterBrainProposalApplyAndJointPublication]' started.
+2026-09-08 13:46:38.580 xctest[46916:6156565] Metal API Validation Enabled
+mrnx authored world=14714751319579342876 expected=14714751319579342876 physics=14714751319579342876 env=1 rate=0 flags=265 nv=160 nq=161 attachments=2871 proxies=0 dt=9.99999975e-06 expected_dt=9.99999975e-06 gravity=0,0,-9.81000042 human=0,0,-9.81000042
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainMetalTests/MetalNumanXBridgeV1EndToEndTests.swift:2671: error: -[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testAuthoredMatterBrainProposalApplyAndJointPublication] : failed: caught error: "transaction error: NumanX callback did not settle before timeout"
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testAuthoredMatterBrainProposalApplyAndJointPublication]' failed (60.357 seconds).
+Test Suite 'MetalNumanXBridgeV1EndToEndTests' failed at 2026-09-08 13:47:38.905.
+	 Executed 1 test, with 1 failure (1 unexpected) in 60.357 (60.357) seconds
+Test Suite 'NumiBrainPackageTests.xctest' failed at 2026-09-08 13:47:38.905.
+	 Executed 1 test, with 1 failure (1 unexpected) in 60.357 (60.357) seconds
+Test Suite 'Selected tests' failed at 2026-09-08 13:47:38.905.
+	 Executed 1 test, with 1 failure (1 unexpected) in 60.357 (60.363) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

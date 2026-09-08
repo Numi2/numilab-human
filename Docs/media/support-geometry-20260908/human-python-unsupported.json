@@ -1,0 +1,20 @@
+{
+  "command": [
+    "/Users/home/.pyenv/versions/3.10.12/bin/python3",
+    "-m",
+    "pytest",
+    "-q",
+    "tests"
+  ],
+  "environment": {
+    "PYTHONPATH": "src"
+  },
+  "returncode": 1,
+  "passed": 156,
+  "failed": 21,
+  "skipped": 1,
+  "elapsed_seconds": 27.48,
+  "failure": "AttributeError: module hashlib has no attribute file_digest",
+  "location": "src/numilab_human/behavior_qualification.py:141",
+  "disposition": "Runner used unsupported Python 3.10; pyproject.toml requires >=3.11. No source change is needed."
+}

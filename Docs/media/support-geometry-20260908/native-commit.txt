@@ -1,0 +1,15 @@
+commit c1db46d9ab9d951aa82e3ada42bb1208892cfe55
+Author:     numi2 <numit22@gmail.com>
+AuthorDate: Tue Sep 8 13:43:54 2026 +0200
+Commit:     numi2 <numit22@gmail.com>
+CommitDate: Tue Sep 8 13:43:54 2026 +0200
+
+    Enforce Human support geometry and valid motor-gate bindings
+
+ CMakeLists.txt                                   |  15 ++
+ apps/numilab_human_myosim_visual_probe.mm        |  80 +++++++-
+ include/metalrobo/NumiHumanMuscleEquilibrium.hpp |  11 +
+ src/core/NumiHumanMuscleEquilibrium.cpp          |  73 +++++--
+ src/metal/MetalNumanXHumanIO.mm                  |  25 ++-
+ tests/numi_human_static_support_test.cpp         | 245 +++++++++++++++++++++++
+ 6 files changed, 415 insertions(+), 34 deletions(-)
