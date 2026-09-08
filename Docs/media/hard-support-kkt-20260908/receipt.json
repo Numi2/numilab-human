@@ -1,0 +1,121 @@
+{
+  "schema": "numi-human-hard-support-evidence-v1",
+  "created_utc": "2026-09-08T21:07:27.306945+00:00",
+  "status": "bounded_pass",
+  "full_human_complete": false,
+  "native": {
+    "repository": "https://github.com/Numi2/numi-lab",
+    "publication_branch": "coupled",
+    "revision": "3c15621c33238dc1ec5e51d1ddde265d99d8b95f",
+    "tree": "bbf12fbb0c640a2ed7700a0aa2548b473ca797c8",
+    "worktree_clean": true
+  },
+  "host": {
+    "ssh_alias": "macmini",
+    "cpu": "Apple M4 Pro",
+    "metal_api_validation": true,
+    "full_shader_validation": "rejected_before_execution_not_passed"
+  },
+  "checks": {
+    "native_regressions": 9,
+    "loaded_cases_per_run": 11,
+    "environments_per_case": 3,
+    "consecutive_loaded_runs": 10,
+    "q_v_history_replay": "bytewise",
+    "undersized_internal_arena": "rejected_before_execution",
+    "impulse_tolerance_Ns": 2e-06,
+    "velocity_tolerance_m_s": 2e-07,
+    "prepared_runner_seconds": 31.78097033314407,
+    "costal_runner_seconds": 28.32815683307126,
+    "prepared_roots_per_scenario": 4,
+    "prepared_root_seconds": 0.0001,
+    "costal_roots": 8,
+    "costal_root_seconds": 1e-05
+  },
+  "artifacts": {
+    "/Users/n/MetalRobo-human-completion-build-20260907/lib/libmetalrobo.dylib": {
+      "sha256": "a7522b6d3a20d05a5b9b5ba1e29b89b11880e57621a9ef0e4039ecb0f64e08f5",
+      "bytes": 6330608
+    },
+    "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib": {
+      "sha256": "5967ffde6f20f2d4283161ba54711b145caf6c8a1873c72f097976e3dd9a4586",
+      "bytes": 2553369
+    },
+    "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib": {
+      "sha256": "be39dfec98e19acb0b56115396d04b30d7fa70281ab1782e53df4b682c61150d",
+      "bytes": 4467076
+    },
+    "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe": {
+      "sha256": "62d963865c956857656a98463c352243cbcb5d3b40b6a9376bf8d11e36da66d4",
+      "bytes": 463008
+    },
+    "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_fullbody_bridge_probe": {
+      "sha256": "349498f5e0b369b338e993904df607feeea327ace80e041aabf681ccf5a856ae",
+      "bytes": 201320
+    }
+  },
+  "files": {
+    "native-regression.log": {
+      "sha256": "0f0fe3c644c86eb64f0ad070dab441ebcc051e861bc27fb22198ca85083b9aae",
+      "bytes": 1625,
+      "disposition": "qualification"
+    },
+    "loaded-replay.log": {
+      "sha256": "1c962acb824a69d8d7846277016fc10be49b18bb9efb25a69c80d7f587e0f878",
+      "bytes": 1552,
+      "disposition": "qualification"
+    },
+    "loaded-runtime.log": {
+      "sha256": "1a48fccd90141dc3333f8ba16b9e521a172452513727d406bed18011c574f814",
+      "bytes": 98387,
+      "disposition": "qualification"
+    },
+    "prepared.log": {
+      "sha256": "80b2d45c85c64f569497b51fd727c3a1c80eced249d5545a4f8be152fd4ad173",
+      "bytes": 158046,
+      "disposition": "qualification"
+    },
+    "prepared-launch.json": {
+      "sha256": "a261f8a5cde45ef65e449b686a9d9b7da90a75e23b640a3bd553830d68f2d9b8",
+      "bytes": 4291,
+      "disposition": "qualification"
+    },
+    "costal.log": {
+      "sha256": "c61c8d8152343ef7784d039bafa16050b47843b4f812ece54e0152ab25324e1d",
+      "bytes": 12244,
+      "disposition": "qualification"
+    },
+    "costal-launch.json": {
+      "sha256": "4394b39f0c28f43f6b67c721da906c67251fd9282b4428e9afc064470537f319",
+      "bytes": 4323,
+      "disposition": "qualification"
+    },
+    "costal-workload.json": {
+      "sha256": "1ca58f213f469bad8614e8dff7c4d59da8cd44d8cad800d7c48c6acdd0b984fb",
+      "bytes": 1060,
+      "disposition": "qualification"
+    },
+    "failed-jacobian-trace.log": {
+      "sha256": "5bbcebb384bf3884888873cbc8df4e5395d6c58367ad2ec5677489d83e9b14fe",
+      "bytes": 5110,
+      "disposition": "retained_failure"
+    },
+    "rejected-shader-validation.log": {
+      "sha256": "4c049e3eb72d252642060474dc0f5632779911d9e4abbc68e81434668911d958",
+      "bytes": 380,
+      "disposition": "retained_failure"
+    },
+    "forensic-jacobian.json": {
+      "sha256": "abde287e1ffe4a450c9cc5ab13f330e1f368d4bc19f9714b5ebd7aa081fe0b95",
+      "bytes": 1091,
+      "disposition": "retained_failure"
+    }
+  },
+  "limits": [
+    "Analytic free predictor supplied before generic pre-ABA hook.",
+    "Fixed remote tetrahedron does not qualify anatomically loaded tissue.",
+    "Prepared Human uses small admitted FEM fixture.",
+    "Four-root Human transport and 80 microseconds of costal physics are not sustained standing or walking.",
+    "Source-compliant joint/fibre/tissue equilibrium and independent calibration remain open."
+  ]
+}

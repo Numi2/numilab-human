@@ -1,0 +1,60 @@
+2026-09-08 22:53:42.263 metalrobo_matter_physics_probe[59800:6279571] Metal API Validation Enabled
+SUPPORT_RUN name=cold_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_LOAD name=cold_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=2 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_REPLAY name=cold_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=weight_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=2 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_LOAD name=weight_seed_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=weight_seed_97kg environment=1 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=weight_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_REPLAY name=weight_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=double_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=1 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=2 point=0,6.98492e-14,0 gap=6.98492e-14 impulse=0.0951571
+SUPPORT_LOAD name=double_seed_97kg environment=0 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=double_seed_97kg environment=1 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_LOAD name=double_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,7.60882e-10,0 gap=7.60882e-14
+SUPPORT_REPLAY name=double_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=redundant_six_cold success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,3.49246e-14,0 gap=3.49246e-14 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_LOAD name=redundant_six_cold environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,3.79412e-10,0 gap=3.79412e-14
+SUPPORT_LOAD name=redundant_six_cold environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_cold environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_REPLAY name=redundant_six_cold q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=redundant_six_double success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,-1.16415e-14,0 gap=-1.16415e-14 impulse=0.0163881
+SUPPORT_LOAD name=redundant_six_double environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-9.74253e-11,0 gap=-9.74253e-15
+SUPPORT_REPLAY_ROW row=0 first=0.0158595 second=0.0158595
+SUPPORT_REPLAY_ROW row=1 first=0.0158595 second=0.0158595
+SUPPORT_REPLAY_ROW row=2 first=0.0158595 second=0.0158595
+SUPPORT_REPLAY_ROW row=3 first=0.0158595 second=0.0158595
+SUPPORT_REPLAY_ROW row=4 first=0.0158595 second=0.0158595
+SUPPORT_REPLAY_ROW row=5 first=0.0158595 second=0.0158595
+SUPPORT_REPLAY_ROW row=6 first=0.0158595 second=0.0158595
+SUPPORT_REPLAY_ROW row=7 first=0.0158595 second=0.0158595
+SUPPORT_REPLAY_ROW row=8 first=0.0158595 second=0.0158595
+SUPPORT_REPLAY_ROW row=9 first=0.0158595 second=0.0158595
+SUPPORT_REPLAY_ROW row=10 first=0.0158595 second=0.0158595
+SUPPORT_REPLAY_ROW row=11 first=0.0158595 second=0.0158595
+SUPPORT_REPLAY_ROW row=12 first=0.0163881 second=0.0158595
+SUPPORT_REPLAY_ROW row=13 first=0.0163881 second=0.0158595
+SUPPORT_REPLAY_ROW row=14 first=0.0132162 second=0.0158595
+SUPPORT_REPLAY_ROW row=15 first=0.0163881 second=0.0158595
+SUPPORT_REPLAY_ROW row=16 first=0.0163881 second=0.0158595
+SUPPORT_REPLAY_ROW row=17 first=0.0163881 second=0.0158595
+SUPPORT_REPLAY name=redundant_six_double q_error=0 v_error=0 normal_error=0.00264325
+matter_physics_probe: support replay changed physical state or impulses

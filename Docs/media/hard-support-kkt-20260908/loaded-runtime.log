@@ -1,0 +1,1072 @@
+Start testing: Sep 08 23:04 CEST
+----------------------------------------------------------
+38/106 Testing: matter.physics.human_support_loaded
+38/106 Test: matter.physics.human_support_loaded
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe" "--human-support-loaded"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907
+"matter.physics.human_support_loaded" start time: Sep 08 23:04 CEST
+Output:
+----------------------------------------------------------
+2026-09-08 23:04:37.995 metalrobo_matter_physics_probe[60230:6282562] Metal API Validation Enabled
+SUPPORT_RUN name=cold_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_LOAD name=cold_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=2 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_REPLAY name=cold_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=weight_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=2 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_LOAD name=weight_seed_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=weight_seed_97kg environment=1 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=weight_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_REPLAY name=weight_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=double_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=1 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=2 point=0,6.98492e-14,0 gap=6.98492e-14 impulse=0.0951571
+SUPPORT_LOAD name=double_seed_97kg environment=0 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=double_seed_97kg environment=1 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_LOAD name=double_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,7.60882e-10,0 gap=7.60882e-14
+SUPPORT_REPLAY name=double_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_CAPACITY_REJECTION message=failed to encode MetalWorld substep graph
+SUPPORT_RUN name=redundant_six_cold success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,3.49246e-14,0 gap=3.49246e-14 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_LOAD name=redundant_six_cold environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,3.79412e-10,0 gap=3.79412e-14
+SUPPORT_LOAD name=redundant_six_cold environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_cold environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_REPLAY name=redundant_six_cold q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=redundant_six_double success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,-1.16415e-14,0 gap=-1.16415e-14 impulse=0.0158595
+SUPPORT_LOAD name=redundant_six_double environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-9.74253e-11,0 gap=-9.74253e-15
+SUPPORT_REPLAY name=redundant_six_double q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=cold_1kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_LOAD name=cold_1kg environment=0 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_1kg environment=1 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_1kg environment=2 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_REPLAY name=cold_1kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=half_timestep success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0475785
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0475785
+SUPPORT_GEOMETRY env=2 point=0,-7.85803e-14,0 gap=-7.85803e-14 impulse=0.0475783
+SUPPORT_LOAD name=half_timestep environment=0 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+SUPPORT_LOAD name=half_timestep environment=1 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+SUPPORT_LOAD name=half_timestep environment=2 lambda=0.0475783 expected=0.0475785 tangent=0,0 velocity=0,-1.52691e-09,0 gap=-7.63454e-14
+SUPPORT_REPLAY name=half_timestep q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=airborne_double_seed success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0.0099999,0 gap=0.0099999 impulse=0
+SUPPORT_GEOMETRY env=1 point=0,0.0099999,0 gap=0.0099999 impulse=0
+SUPPORT_GEOMETRY env=2 point=0,0.0099999,0 gap=0.0099999 impulse=-7.17903e-09
+SUPPORT_LOAD name=airborne_double_seed environment=0 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_LOAD name=airborne_double_seed environment=1 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_LOAD name=airborne_double_seed environment=2 lambda=-7.17903e-09 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_REPLAY name=airborne_double_seed q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sticking success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=-2.91038e-15,3.49246e-14,-5.82077e-15 gap=3.49246e-14 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=2.18279e-14,1.16415e-14,4.36557e-14 gap=1.16415e-14 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=1.89175e-14,-1.04774e-13,3.7835e-14 gap=-1.04774e-13 impulse=0.0951569
+SUPPORT_LOAD name=sticking environment=0 lambda=0.095157 expected=0.095157 tangent=-0.0097,-0.0194 velocity=-4.76837e-11,3.79412e-10,-9.53674e-11 gap=3.79412e-14
+SUPPORT_LOAD name=sticking environment=1 lambda=0.095157 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=2.08616e-10,1.88677e-10,4.17232e-10 gap=1.88677e-14
+SUPPORT_LOAD name=sticking environment=2 lambda=0.0951569 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=1.78814e-10,-9.55732e-10,3.57628e-10 gap=-9.55732e-14
+SUPPORT_REPLAY name=sticking q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sliding success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=9.97806e-06,1.39698e-13,1.99561e-05 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=1 point=9.97806e-06,0,1.99561e-05 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+SUPPORT_LOAD name=sliding environment=0 lambda=0.0951571 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,1.42845e-09,0.199561 gap=1.42845e-13
+SUPPORT_LOAD name=sliding environment=1 lambda=0.095157 expected=0.095157 tangent=-0.0212778,-0.0425555 velocity=0.0997806,-2.05787e-12,0.199561 gap=-2.05787e-16
+SUPPORT_LOAD name=sliding environment=2 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+SUPPORT_REPLAY name=sliding q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sliding_warm success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+SUPPORT_GEOMETRY env=1 point=9.97806e-06,2.44472e-13,1.99561e-05 gap=2.44472e-13 impulse=0.0951572
+SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.91038e-13,1.99561e-05 gap=2.91038e-13 impulse=0.0951573
+SUPPORT_LOAD name=sliding_warm environment=0 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+SUPPORT_LOAD name=sliding_warm environment=1 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.4775e-09,0.199561 gap=2.4775e-13
+SUPPORT_LOAD name=sliding_warm environment=2 lambda=0.0951573 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,3.0497e-09,0.199561 gap=3.0497e-13
+SUPPORT_REPLAY name=sliding_warm q_error=0 v_error=0 normal_error=0
+Human support loaded runtime: 11 cases x 3 environments passed; replay exact
+<end of output>
+Test time =   2.68 sec
+----------------------------------------------------------
+Test Passed.
+"matter.physics.human_support_loaded" end time: Sep 08 23:04 CEST
+"matter.physics.human_support_loaded" time elapsed: 00:00:02
+----------------------------------------------------------
+
+38/106 Testing: matter.physics.human_support_loaded
+38/106 Test: matter.physics.human_support_loaded
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe" "--human-support-loaded"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907
+"matter.physics.human_support_loaded" start time: Sep 08 23:04 CEST
+Output:
+----------------------------------------------------------
+2026-09-08 23:04:40.671 metalrobo_matter_physics_probe[60238:6282601] Metal API Validation Enabled
+SUPPORT_RUN name=cold_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_LOAD name=cold_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=2 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_REPLAY name=cold_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=weight_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=2 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_LOAD name=weight_seed_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=weight_seed_97kg environment=1 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=weight_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_REPLAY name=weight_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=double_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=1 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=2 point=0,6.98492e-14,0 gap=6.98492e-14 impulse=0.0951571
+SUPPORT_LOAD name=double_seed_97kg environment=0 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=double_seed_97kg environment=1 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_LOAD name=double_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,7.60882e-10,0 gap=7.60882e-14
+SUPPORT_REPLAY name=double_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_CAPACITY_REJECTION message=failed to encode MetalWorld substep graph
+SUPPORT_RUN name=redundant_six_cold success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,3.49246e-14,0 gap=3.49246e-14 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_LOAD name=redundant_six_cold environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,3.79412e-10,0 gap=3.79412e-14
+SUPPORT_LOAD name=redundant_six_cold environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_cold environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_REPLAY name=redundant_six_cold q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=redundant_six_double success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,-1.16415e-14,0 gap=-1.16415e-14 impulse=0.0158595
+SUPPORT_LOAD name=redundant_six_double environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-9.74253e-11,0 gap=-9.74253e-15
+SUPPORT_REPLAY name=redundant_six_double q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=cold_1kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_LOAD name=cold_1kg environment=0 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_1kg environment=1 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_1kg environment=2 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_REPLAY name=cold_1kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=half_timestep success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0475785
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0475785
+SUPPORT_GEOMETRY env=2 point=0,-7.85803e-14,0 gap=-7.85803e-14 impulse=0.0475783
+SUPPORT_LOAD name=half_timestep environment=0 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+SUPPORT_LOAD name=half_timestep environment=1 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+SUPPORT_LOAD name=half_timestep environment=2 lambda=0.0475783 expected=0.0475785 tangent=0,0 velocity=0,-1.52691e-09,0 gap=-7.63454e-14
+SUPPORT_REPLAY name=half_timestep q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=airborne_double_seed success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0.0099999,0 gap=0.0099999 impulse=0
+SUPPORT_GEOMETRY env=1 point=0,0.0099999,0 gap=0.0099999 impulse=0
+SUPPORT_GEOMETRY env=2 point=0,0.0099999,0 gap=0.0099999 impulse=-7.17903e-09
+SUPPORT_LOAD name=airborne_double_seed environment=0 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_LOAD name=airborne_double_seed environment=1 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_LOAD name=airborne_double_seed environment=2 lambda=-7.17903e-09 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_REPLAY name=airborne_double_seed q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sticking success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=-2.91038e-15,3.49246e-14,-5.82077e-15 gap=3.49246e-14 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=2.18279e-14,1.16415e-14,4.36557e-14 gap=1.16415e-14 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=1.89175e-14,-1.04774e-13,3.7835e-14 gap=-1.04774e-13 impulse=0.0951569
+SUPPORT_LOAD name=sticking environment=0 lambda=0.095157 expected=0.095157 tangent=-0.0097,-0.0194 velocity=-4.76837e-11,3.79412e-10,-9.53674e-11 gap=3.79412e-14
+SUPPORT_LOAD name=sticking environment=1 lambda=0.095157 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=2.08616e-10,1.88677e-10,4.17232e-10 gap=1.88677e-14
+SUPPORT_LOAD name=sticking environment=2 lambda=0.0951569 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=1.78814e-10,-9.55732e-10,3.57628e-10 gap=-9.55732e-14
+SUPPORT_REPLAY name=sticking q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sliding success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=9.97806e-06,1.39698e-13,1.99561e-05 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=1 point=9.97806e-06,0,1.99561e-05 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+SUPPORT_LOAD name=sliding environment=0 lambda=0.0951571 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,1.42845e-09,0.199561 gap=1.42845e-13
+SUPPORT_LOAD name=sliding environment=1 lambda=0.095157 expected=0.095157 tangent=-0.0212778,-0.0425555 velocity=0.0997806,-2.05787e-12,0.199561 gap=-2.05787e-16
+SUPPORT_LOAD name=sliding environment=2 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+SUPPORT_REPLAY name=sliding q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sliding_warm success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+SUPPORT_GEOMETRY env=1 point=9.97806e-06,2.44472e-13,1.99561e-05 gap=2.44472e-13 impulse=0.0951572
+SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.91038e-13,1.99561e-05 gap=2.91038e-13 impulse=0.0951573
+SUPPORT_LOAD name=sliding_warm environment=0 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+SUPPORT_LOAD name=sliding_warm environment=1 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.4775e-09,0.199561 gap=2.4775e-13
+SUPPORT_LOAD name=sliding_warm environment=2 lambda=0.0951573 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,3.0497e-09,0.199561 gap=3.0497e-13
+SUPPORT_REPLAY name=sliding_warm q_error=0 v_error=0 normal_error=0
+Human support loaded runtime: 11 cases x 3 environments passed; replay exact
+<end of output>
+Test time =   2.66 sec
+----------------------------------------------------------
+Test Passed.
+"matter.physics.human_support_loaded" end time: Sep 08 23:04 CEST
+"matter.physics.human_support_loaded" time elapsed: 00:00:02
+----------------------------------------------------------
+
+38/106 Testing: matter.physics.human_support_loaded
+38/106 Test: matter.physics.human_support_loaded
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe" "--human-support-loaded"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907
+"matter.physics.human_support_loaded" start time: Sep 08 23:04 CEST
+Output:
+----------------------------------------------------------
+2026-09-08 23:04:43.335 metalrobo_matter_physics_probe[60239:6282605] Metal API Validation Enabled
+SUPPORT_RUN name=cold_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_LOAD name=cold_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=2 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_REPLAY name=cold_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=weight_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=2 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_LOAD name=weight_seed_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=weight_seed_97kg environment=1 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=weight_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_REPLAY name=weight_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=double_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=1 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=2 point=0,6.98492e-14,0 gap=6.98492e-14 impulse=0.0951571
+SUPPORT_LOAD name=double_seed_97kg environment=0 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=double_seed_97kg environment=1 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_LOAD name=double_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,7.60882e-10,0 gap=7.60882e-14
+SUPPORT_REPLAY name=double_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_CAPACITY_REJECTION message=failed to encode MetalWorld substep graph
+SUPPORT_RUN name=redundant_six_cold success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,3.49246e-14,0 gap=3.49246e-14 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_LOAD name=redundant_six_cold environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,3.79412e-10,0 gap=3.79412e-14
+SUPPORT_LOAD name=redundant_six_cold environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_cold environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_REPLAY name=redundant_six_cold q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=redundant_six_double success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,-1.16415e-14,0 gap=-1.16415e-14 impulse=0.0158595
+SUPPORT_LOAD name=redundant_six_double environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-9.74253e-11,0 gap=-9.74253e-15
+SUPPORT_REPLAY name=redundant_six_double q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=cold_1kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_LOAD name=cold_1kg environment=0 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_1kg environment=1 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_1kg environment=2 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_REPLAY name=cold_1kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=half_timestep success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0475785
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0475785
+SUPPORT_GEOMETRY env=2 point=0,-7.85803e-14,0 gap=-7.85803e-14 impulse=0.0475783
+SUPPORT_LOAD name=half_timestep environment=0 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+SUPPORT_LOAD name=half_timestep environment=1 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+SUPPORT_LOAD name=half_timestep environment=2 lambda=0.0475783 expected=0.0475785 tangent=0,0 velocity=0,-1.52691e-09,0 gap=-7.63454e-14
+SUPPORT_REPLAY name=half_timestep q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=airborne_double_seed success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0.0099999,0 gap=0.0099999 impulse=0
+SUPPORT_GEOMETRY env=1 point=0,0.0099999,0 gap=0.0099999 impulse=0
+SUPPORT_GEOMETRY env=2 point=0,0.0099999,0 gap=0.0099999 impulse=-7.17903e-09
+SUPPORT_LOAD name=airborne_double_seed environment=0 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_LOAD name=airborne_double_seed environment=1 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_LOAD name=airborne_double_seed environment=2 lambda=-7.17903e-09 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_REPLAY name=airborne_double_seed q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sticking success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=-2.91038e-15,3.49246e-14,-5.82077e-15 gap=3.49246e-14 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=2.18279e-14,1.16415e-14,4.36557e-14 gap=1.16415e-14 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=1.89175e-14,-1.04774e-13,3.7835e-14 gap=-1.04774e-13 impulse=0.0951569
+SUPPORT_LOAD name=sticking environment=0 lambda=0.095157 expected=0.095157 tangent=-0.0097,-0.0194 velocity=-4.76837e-11,3.79412e-10,-9.53674e-11 gap=3.79412e-14
+SUPPORT_LOAD name=sticking environment=1 lambda=0.095157 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=2.08616e-10,1.88677e-10,4.17232e-10 gap=1.88677e-14
+SUPPORT_LOAD name=sticking environment=2 lambda=0.0951569 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=1.78814e-10,-9.55732e-10,3.57628e-10 gap=-9.55732e-14
+SUPPORT_REPLAY name=sticking q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sliding success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=9.97806e-06,1.39698e-13,1.99561e-05 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=1 point=9.97806e-06,0,1.99561e-05 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+SUPPORT_LOAD name=sliding environment=0 lambda=0.0951571 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,1.42845e-09,0.199561 gap=1.42845e-13
+SUPPORT_LOAD name=sliding environment=1 lambda=0.095157 expected=0.095157 tangent=-0.0212778,-0.0425555 velocity=0.0997806,-2.05787e-12,0.199561 gap=-2.05787e-16
+SUPPORT_LOAD name=sliding environment=2 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+SUPPORT_REPLAY name=sliding q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sliding_warm success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+SUPPORT_GEOMETRY env=1 point=9.97806e-06,2.44472e-13,1.99561e-05 gap=2.44472e-13 impulse=0.0951572
+SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.91038e-13,1.99561e-05 gap=2.91038e-13 impulse=0.0951573
+SUPPORT_LOAD name=sliding_warm environment=0 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+SUPPORT_LOAD name=sliding_warm environment=1 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.4775e-09,0.199561 gap=2.4775e-13
+SUPPORT_LOAD name=sliding_warm environment=2 lambda=0.0951573 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,3.0497e-09,0.199561 gap=3.0497e-13
+SUPPORT_REPLAY name=sliding_warm q_error=0 v_error=0 normal_error=0
+Human support loaded runtime: 11 cases x 3 environments passed; replay exact
+<end of output>
+Test time =   2.65 sec
+----------------------------------------------------------
+Test Passed.
+"matter.physics.human_support_loaded" end time: Sep 08 23:04 CEST
+"matter.physics.human_support_loaded" time elapsed: 00:00:02
+----------------------------------------------------------
+
+38/106 Testing: matter.physics.human_support_loaded
+38/106 Test: matter.physics.human_support_loaded
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe" "--human-support-loaded"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907
+"matter.physics.human_support_loaded" start time: Sep 08 23:04 CEST
+Output:
+----------------------------------------------------------
+2026-09-08 23:04:45.986 metalrobo_matter_physics_probe[60240:6282619] Metal API Validation Enabled
+SUPPORT_RUN name=cold_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_LOAD name=cold_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=2 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_REPLAY name=cold_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=weight_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=2 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_LOAD name=weight_seed_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=weight_seed_97kg environment=1 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=weight_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_REPLAY name=weight_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=double_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=1 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=2 point=0,6.98492e-14,0 gap=6.98492e-14 impulse=0.0951571
+SUPPORT_LOAD name=double_seed_97kg environment=0 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=double_seed_97kg environment=1 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_LOAD name=double_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,7.60882e-10,0 gap=7.60882e-14
+SUPPORT_REPLAY name=double_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_CAPACITY_REJECTION message=failed to encode MetalWorld substep graph
+SUPPORT_RUN name=redundant_six_cold success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,3.49246e-14,0 gap=3.49246e-14 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_LOAD name=redundant_six_cold environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,3.79412e-10,0 gap=3.79412e-14
+SUPPORT_LOAD name=redundant_six_cold environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_cold environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_REPLAY name=redundant_six_cold q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=redundant_six_double success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,-1.16415e-14,0 gap=-1.16415e-14 impulse=0.0158595
+SUPPORT_LOAD name=redundant_six_double environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-9.74253e-11,0 gap=-9.74253e-15
+SUPPORT_REPLAY name=redundant_six_double q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=cold_1kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_LOAD name=cold_1kg environment=0 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_1kg environment=1 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_1kg environment=2 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_REPLAY name=cold_1kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=half_timestep success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0475785
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0475785
+SUPPORT_GEOMETRY env=2 point=0,-7.85803e-14,0 gap=-7.85803e-14 impulse=0.0475783
+SUPPORT_LOAD name=half_timestep environment=0 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+SUPPORT_LOAD name=half_timestep environment=1 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+SUPPORT_LOAD name=half_timestep environment=2 lambda=0.0475783 expected=0.0475785 tangent=0,0 velocity=0,-1.52691e-09,0 gap=-7.63454e-14
+SUPPORT_REPLAY name=half_timestep q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=airborne_double_seed success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0.0099999,0 gap=0.0099999 impulse=0
+SUPPORT_GEOMETRY env=1 point=0,0.0099999,0 gap=0.0099999 impulse=0
+SUPPORT_GEOMETRY env=2 point=0,0.0099999,0 gap=0.0099999 impulse=-7.17903e-09
+SUPPORT_LOAD name=airborne_double_seed environment=0 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_LOAD name=airborne_double_seed environment=1 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_LOAD name=airborne_double_seed environment=2 lambda=-7.17903e-09 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_REPLAY name=airborne_double_seed q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sticking success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=-2.91038e-15,3.49246e-14,-5.82077e-15 gap=3.49246e-14 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=2.18279e-14,1.16415e-14,4.36557e-14 gap=1.16415e-14 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=1.89175e-14,-1.04774e-13,3.7835e-14 gap=-1.04774e-13 impulse=0.0951569
+SUPPORT_LOAD name=sticking environment=0 lambda=0.095157 expected=0.095157 tangent=-0.0097,-0.0194 velocity=-4.76837e-11,3.79412e-10,-9.53674e-11 gap=3.79412e-14
+SUPPORT_LOAD name=sticking environment=1 lambda=0.095157 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=2.08616e-10,1.88677e-10,4.17232e-10 gap=1.88677e-14
+SUPPORT_LOAD name=sticking environment=2 lambda=0.0951569 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=1.78814e-10,-9.55732e-10,3.57628e-10 gap=-9.55732e-14
+SUPPORT_REPLAY name=sticking q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sliding success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=9.97806e-06,1.39698e-13,1.99561e-05 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=1 point=9.97806e-06,0,1.99561e-05 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+SUPPORT_LOAD name=sliding environment=0 lambda=0.0951571 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,1.42845e-09,0.199561 gap=1.42845e-13
+SUPPORT_LOAD name=sliding environment=1 lambda=0.095157 expected=0.095157 tangent=-0.0212778,-0.0425555 velocity=0.0997806,-2.05787e-12,0.199561 gap=-2.05787e-16
+SUPPORT_LOAD name=sliding environment=2 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+SUPPORT_REPLAY name=sliding q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sliding_warm success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+SUPPORT_GEOMETRY env=1 point=9.97806e-06,2.44472e-13,1.99561e-05 gap=2.44472e-13 impulse=0.0951572
+SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.91038e-13,1.99561e-05 gap=2.91038e-13 impulse=0.0951573
+SUPPORT_LOAD name=sliding_warm environment=0 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+SUPPORT_LOAD name=sliding_warm environment=1 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.4775e-09,0.199561 gap=2.4775e-13
+SUPPORT_LOAD name=sliding_warm environment=2 lambda=0.0951573 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,3.0497e-09,0.199561 gap=3.0497e-13
+SUPPORT_REPLAY name=sliding_warm q_error=0 v_error=0 normal_error=0
+Human support loaded runtime: 11 cases x 3 environments passed; replay exact
+<end of output>
+Test time =   2.65 sec
+----------------------------------------------------------
+Test Passed.
+"matter.physics.human_support_loaded" end time: Sep 08 23:04 CEST
+"matter.physics.human_support_loaded" time elapsed: 00:00:02
+----------------------------------------------------------
+
+38/106 Testing: matter.physics.human_support_loaded
+38/106 Test: matter.physics.human_support_loaded
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe" "--human-support-loaded"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907
+"matter.physics.human_support_loaded" start time: Sep 08 23:04 CEST
+Output:
+----------------------------------------------------------
+2026-09-08 23:04:48.640 metalrobo_matter_physics_probe[60241:6282626] Metal API Validation Enabled
+SUPPORT_RUN name=cold_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_LOAD name=cold_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=2 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_REPLAY name=cold_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=weight_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=2 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_LOAD name=weight_seed_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=weight_seed_97kg environment=1 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=weight_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_REPLAY name=weight_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=double_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=1 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=2 point=0,6.98492e-14,0 gap=6.98492e-14 impulse=0.0951571
+SUPPORT_LOAD name=double_seed_97kg environment=0 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=double_seed_97kg environment=1 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_LOAD name=double_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,7.60882e-10,0 gap=7.60882e-14
+SUPPORT_REPLAY name=double_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_CAPACITY_REJECTION message=failed to encode MetalWorld substep graph
+SUPPORT_RUN name=redundant_six_cold success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,3.49246e-14,0 gap=3.49246e-14 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_LOAD name=redundant_six_cold environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,3.79412e-10,0 gap=3.79412e-14
+SUPPORT_LOAD name=redundant_six_cold environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_cold environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_REPLAY name=redundant_six_cold q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=redundant_six_double success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,-1.16415e-14,0 gap=-1.16415e-14 impulse=0.0158595
+SUPPORT_LOAD name=redundant_six_double environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-9.74253e-11,0 gap=-9.74253e-15
+SUPPORT_REPLAY name=redundant_six_double q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=cold_1kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_LOAD name=cold_1kg environment=0 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_1kg environment=1 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_1kg environment=2 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_REPLAY name=cold_1kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=half_timestep success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0475785
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0475785
+SUPPORT_GEOMETRY env=2 point=0,-7.85803e-14,0 gap=-7.85803e-14 impulse=0.0475783
+SUPPORT_LOAD name=half_timestep environment=0 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+SUPPORT_LOAD name=half_timestep environment=1 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+SUPPORT_LOAD name=half_timestep environment=2 lambda=0.0475783 expected=0.0475785 tangent=0,0 velocity=0,-1.52691e-09,0 gap=-7.63454e-14
+SUPPORT_REPLAY name=half_timestep q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=airborne_double_seed success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0.0099999,0 gap=0.0099999 impulse=0
+SUPPORT_GEOMETRY env=1 point=0,0.0099999,0 gap=0.0099999 impulse=0
+SUPPORT_GEOMETRY env=2 point=0,0.0099999,0 gap=0.0099999 impulse=-7.17903e-09
+SUPPORT_LOAD name=airborne_double_seed environment=0 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_LOAD name=airborne_double_seed environment=1 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_LOAD name=airborne_double_seed environment=2 lambda=-7.17903e-09 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_REPLAY name=airborne_double_seed q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sticking success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=-2.91038e-15,3.49246e-14,-5.82077e-15 gap=3.49246e-14 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=2.18279e-14,1.16415e-14,4.36557e-14 gap=1.16415e-14 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=1.89175e-14,-1.04774e-13,3.7835e-14 gap=-1.04774e-13 impulse=0.0951569
+SUPPORT_LOAD name=sticking environment=0 lambda=0.095157 expected=0.095157 tangent=-0.0097,-0.0194 velocity=-4.76837e-11,3.79412e-10,-9.53674e-11 gap=3.79412e-14
+SUPPORT_LOAD name=sticking environment=1 lambda=0.095157 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=2.08616e-10,1.88677e-10,4.17232e-10 gap=1.88677e-14
+SUPPORT_LOAD name=sticking environment=2 lambda=0.0951569 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=1.78814e-10,-9.55732e-10,3.57628e-10 gap=-9.55732e-14
+SUPPORT_REPLAY name=sticking q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sliding success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=9.97806e-06,1.39698e-13,1.99561e-05 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=1 point=9.97806e-06,0,1.99561e-05 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+SUPPORT_LOAD name=sliding environment=0 lambda=0.0951571 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,1.42845e-09,0.199561 gap=1.42845e-13
+SUPPORT_LOAD name=sliding environment=1 lambda=0.095157 expected=0.095157 tangent=-0.0212778,-0.0425555 velocity=0.0997806,-2.05787e-12,0.199561 gap=-2.05787e-16
+SUPPORT_LOAD name=sliding environment=2 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+SUPPORT_REPLAY name=sliding q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sliding_warm success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+SUPPORT_GEOMETRY env=1 point=9.97806e-06,2.44472e-13,1.99561e-05 gap=2.44472e-13 impulse=0.0951572
+SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.91038e-13,1.99561e-05 gap=2.91038e-13 impulse=0.0951573
+SUPPORT_LOAD name=sliding_warm environment=0 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+SUPPORT_LOAD name=sliding_warm environment=1 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.4775e-09,0.199561 gap=2.4775e-13
+SUPPORT_LOAD name=sliding_warm environment=2 lambda=0.0951573 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,3.0497e-09,0.199561 gap=3.0497e-13
+SUPPORT_REPLAY name=sliding_warm q_error=0 v_error=0 normal_error=0
+Human support loaded runtime: 11 cases x 3 environments passed; replay exact
+<end of output>
+Test time =   2.67 sec
+----------------------------------------------------------
+Test Passed.
+"matter.physics.human_support_loaded" end time: Sep 08 23:04 CEST
+"matter.physics.human_support_loaded" time elapsed: 00:00:02
+----------------------------------------------------------
+
+38/106 Testing: matter.physics.human_support_loaded
+38/106 Test: matter.physics.human_support_loaded
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe" "--human-support-loaded"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907
+"matter.physics.human_support_loaded" start time: Sep 08 23:04 CEST
+Output:
+----------------------------------------------------------
+2026-09-08 23:04:51.310 metalrobo_matter_physics_probe[60242:6282632] Metal API Validation Enabled
+SUPPORT_RUN name=cold_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_LOAD name=cold_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=2 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_REPLAY name=cold_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=weight_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=2 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_LOAD name=weight_seed_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=weight_seed_97kg environment=1 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=weight_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_REPLAY name=weight_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=double_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=1 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=2 point=0,6.98492e-14,0 gap=6.98492e-14 impulse=0.0951571
+SUPPORT_LOAD name=double_seed_97kg environment=0 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=double_seed_97kg environment=1 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_LOAD name=double_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,7.60882e-10,0 gap=7.60882e-14
+SUPPORT_REPLAY name=double_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_CAPACITY_REJECTION message=failed to encode MetalWorld substep graph
+SUPPORT_RUN name=redundant_six_cold success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,3.49246e-14,0 gap=3.49246e-14 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_LOAD name=redundant_six_cold environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,3.79412e-10,0 gap=3.79412e-14
+SUPPORT_LOAD name=redundant_six_cold environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_cold environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_REPLAY name=redundant_six_cold q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=redundant_six_double success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,-1.16415e-14,0 gap=-1.16415e-14 impulse=0.0158595
+SUPPORT_LOAD name=redundant_six_double environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-9.74253e-11,0 gap=-9.74253e-15
+SUPPORT_REPLAY name=redundant_six_double q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=cold_1kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_LOAD name=cold_1kg environment=0 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_1kg environment=1 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_1kg environment=2 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_REPLAY name=cold_1kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=half_timestep success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0475785
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0475785
+SUPPORT_GEOMETRY env=2 point=0,-7.85803e-14,0 gap=-7.85803e-14 impulse=0.0475783
+SUPPORT_LOAD name=half_timestep environment=0 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+SUPPORT_LOAD name=half_timestep environment=1 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+SUPPORT_LOAD name=half_timestep environment=2 lambda=0.0475783 expected=0.0475785 tangent=0,0 velocity=0,-1.52691e-09,0 gap=-7.63454e-14
+SUPPORT_REPLAY name=half_timestep q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=airborne_double_seed success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0.0099999,0 gap=0.0099999 impulse=0
+SUPPORT_GEOMETRY env=1 point=0,0.0099999,0 gap=0.0099999 impulse=0
+SUPPORT_GEOMETRY env=2 point=0,0.0099999,0 gap=0.0099999 impulse=-7.17903e-09
+SUPPORT_LOAD name=airborne_double_seed environment=0 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_LOAD name=airborne_double_seed environment=1 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_LOAD name=airborne_double_seed environment=2 lambda=-7.17903e-09 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_REPLAY name=airborne_double_seed q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sticking success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=-2.91038e-15,3.49246e-14,-5.82077e-15 gap=3.49246e-14 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=2.18279e-14,1.16415e-14,4.36557e-14 gap=1.16415e-14 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=1.89175e-14,-1.04774e-13,3.7835e-14 gap=-1.04774e-13 impulse=0.0951569
+SUPPORT_LOAD name=sticking environment=0 lambda=0.095157 expected=0.095157 tangent=-0.0097,-0.0194 velocity=-4.76837e-11,3.79412e-10,-9.53674e-11 gap=3.79412e-14
+SUPPORT_LOAD name=sticking environment=1 lambda=0.095157 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=2.08616e-10,1.88677e-10,4.17232e-10 gap=1.88677e-14
+SUPPORT_LOAD name=sticking environment=2 lambda=0.0951569 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=1.78814e-10,-9.55732e-10,3.57628e-10 gap=-9.55732e-14
+SUPPORT_REPLAY name=sticking q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sliding success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=9.97806e-06,1.39698e-13,1.99561e-05 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=1 point=9.97806e-06,0,1.99561e-05 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+SUPPORT_LOAD name=sliding environment=0 lambda=0.0951571 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,1.42845e-09,0.199561 gap=1.42845e-13
+SUPPORT_LOAD name=sliding environment=1 lambda=0.095157 expected=0.095157 tangent=-0.0212778,-0.0425555 velocity=0.0997806,-2.05787e-12,0.199561 gap=-2.05787e-16
+SUPPORT_LOAD name=sliding environment=2 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+SUPPORT_REPLAY name=sliding q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sliding_warm success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+SUPPORT_GEOMETRY env=1 point=9.97806e-06,2.44472e-13,1.99561e-05 gap=2.44472e-13 impulse=0.0951572
+SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.91038e-13,1.99561e-05 gap=2.91038e-13 impulse=0.0951573
+SUPPORT_LOAD name=sliding_warm environment=0 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+SUPPORT_LOAD name=sliding_warm environment=1 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.4775e-09,0.199561 gap=2.4775e-13
+SUPPORT_LOAD name=sliding_warm environment=2 lambda=0.0951573 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,3.0497e-09,0.199561 gap=3.0497e-13
+SUPPORT_REPLAY name=sliding_warm q_error=0 v_error=0 normal_error=0
+Human support loaded runtime: 11 cases x 3 environments passed; replay exact
+<end of output>
+Test time =   2.68 sec
+----------------------------------------------------------
+Test Passed.
+"matter.physics.human_support_loaded" end time: Sep 08 23:04 CEST
+"matter.physics.human_support_loaded" time elapsed: 00:00:02
+----------------------------------------------------------
+
+38/106 Testing: matter.physics.human_support_loaded
+38/106 Test: matter.physics.human_support_loaded
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe" "--human-support-loaded"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907
+"matter.physics.human_support_loaded" start time: Sep 08 23:04 CEST
+Output:
+----------------------------------------------------------
+2026-09-08 23:04:53.985 metalrobo_matter_physics_probe[60243:6282636] Metal API Validation Enabled
+SUPPORT_RUN name=cold_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_LOAD name=cold_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=2 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_REPLAY name=cold_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=weight_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=2 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_LOAD name=weight_seed_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=weight_seed_97kg environment=1 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=weight_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_REPLAY name=weight_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=double_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=1 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=2 point=0,6.98492e-14,0 gap=6.98492e-14 impulse=0.0951571
+SUPPORT_LOAD name=double_seed_97kg environment=0 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=double_seed_97kg environment=1 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_LOAD name=double_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,7.60882e-10,0 gap=7.60882e-14
+SUPPORT_REPLAY name=double_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_CAPACITY_REJECTION message=failed to encode MetalWorld substep graph
+SUPPORT_RUN name=redundant_six_cold success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,3.49246e-14,0 gap=3.49246e-14 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_LOAD name=redundant_six_cold environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,3.79412e-10,0 gap=3.79412e-14
+SUPPORT_LOAD name=redundant_six_cold environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_cold environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_REPLAY name=redundant_six_cold q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=redundant_six_double success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,-1.16415e-14,0 gap=-1.16415e-14 impulse=0.0158595
+SUPPORT_LOAD name=redundant_six_double environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-9.74253e-11,0 gap=-9.74253e-15
+SUPPORT_REPLAY name=redundant_six_double q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=cold_1kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_LOAD name=cold_1kg environment=0 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_1kg environment=1 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_1kg environment=2 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_REPLAY name=cold_1kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=half_timestep success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0475785
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0475785
+SUPPORT_GEOMETRY env=2 point=0,-7.85803e-14,0 gap=-7.85803e-14 impulse=0.0475783
+SUPPORT_LOAD name=half_timestep environment=0 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+SUPPORT_LOAD name=half_timestep environment=1 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+SUPPORT_LOAD name=half_timestep environment=2 lambda=0.0475783 expected=0.0475785 tangent=0,0 velocity=0,-1.52691e-09,0 gap=-7.63454e-14
+SUPPORT_REPLAY name=half_timestep q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=airborne_double_seed success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0.0099999,0 gap=0.0099999 impulse=0
+SUPPORT_GEOMETRY env=1 point=0,0.0099999,0 gap=0.0099999 impulse=0
+SUPPORT_GEOMETRY env=2 point=0,0.0099999,0 gap=0.0099999 impulse=-7.17903e-09
+SUPPORT_LOAD name=airborne_double_seed environment=0 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_LOAD name=airborne_double_seed environment=1 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_LOAD name=airborne_double_seed environment=2 lambda=-7.17903e-09 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_REPLAY name=airborne_double_seed q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sticking success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=-2.91038e-15,3.49246e-14,-5.82077e-15 gap=3.49246e-14 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=2.18279e-14,1.16415e-14,4.36557e-14 gap=1.16415e-14 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=1.89175e-14,-1.04774e-13,3.7835e-14 gap=-1.04774e-13 impulse=0.0951569
+SUPPORT_LOAD name=sticking environment=0 lambda=0.095157 expected=0.095157 tangent=-0.0097,-0.0194 velocity=-4.76837e-11,3.79412e-10,-9.53674e-11 gap=3.79412e-14
+SUPPORT_LOAD name=sticking environment=1 lambda=0.095157 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=2.08616e-10,1.88677e-10,4.17232e-10 gap=1.88677e-14
+SUPPORT_LOAD name=sticking environment=2 lambda=0.0951569 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=1.78814e-10,-9.55732e-10,3.57628e-10 gap=-9.55732e-14
+SUPPORT_REPLAY name=sticking q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sliding success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=9.97806e-06,1.39698e-13,1.99561e-05 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=1 point=9.97806e-06,0,1.99561e-05 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+SUPPORT_LOAD name=sliding environment=0 lambda=0.0951571 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,1.42845e-09,0.199561 gap=1.42845e-13
+SUPPORT_LOAD name=sliding environment=1 lambda=0.095157 expected=0.095157 tangent=-0.0212778,-0.0425555 velocity=0.0997806,-2.05787e-12,0.199561 gap=-2.05787e-16
+SUPPORT_LOAD name=sliding environment=2 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+SUPPORT_REPLAY name=sliding q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sliding_warm success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+SUPPORT_GEOMETRY env=1 point=9.97806e-06,2.44472e-13,1.99561e-05 gap=2.44472e-13 impulse=0.0951572
+SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.91038e-13,1.99561e-05 gap=2.91038e-13 impulse=0.0951573
+SUPPORT_LOAD name=sliding_warm environment=0 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+SUPPORT_LOAD name=sliding_warm environment=1 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.4775e-09,0.199561 gap=2.4775e-13
+SUPPORT_LOAD name=sliding_warm environment=2 lambda=0.0951573 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,3.0497e-09,0.199561 gap=3.0497e-13
+SUPPORT_REPLAY name=sliding_warm q_error=0 v_error=0 normal_error=0
+Human support loaded runtime: 11 cases x 3 environments passed; replay exact
+<end of output>
+Test time =   2.65 sec
+----------------------------------------------------------
+Test Passed.
+"matter.physics.human_support_loaded" end time: Sep 08 23:04 CEST
+"matter.physics.human_support_loaded" time elapsed: 00:00:02
+----------------------------------------------------------
+
+38/106 Testing: matter.physics.human_support_loaded
+38/106 Test: matter.physics.human_support_loaded
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe" "--human-support-loaded"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907
+"matter.physics.human_support_loaded" start time: Sep 08 23:04 CEST
+Output:
+----------------------------------------------------------
+2026-09-08 23:04:56.637 metalrobo_matter_physics_probe[60244:6282644] Metal API Validation Enabled
+SUPPORT_RUN name=cold_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_LOAD name=cold_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=2 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_REPLAY name=cold_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=weight_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=2 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_LOAD name=weight_seed_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=weight_seed_97kg environment=1 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=weight_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_REPLAY name=weight_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=double_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=1 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=2 point=0,6.98492e-14,0 gap=6.98492e-14 impulse=0.0951571
+SUPPORT_LOAD name=double_seed_97kg environment=0 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=double_seed_97kg environment=1 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_LOAD name=double_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,7.60882e-10,0 gap=7.60882e-14
+SUPPORT_REPLAY name=double_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_CAPACITY_REJECTION message=failed to encode MetalWorld substep graph
+SUPPORT_RUN name=redundant_six_cold success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,3.49246e-14,0 gap=3.49246e-14 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_LOAD name=redundant_six_cold environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,3.79412e-10,0 gap=3.79412e-14
+SUPPORT_LOAD name=redundant_six_cold environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_cold environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_REPLAY name=redundant_six_cold q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=redundant_six_double success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,-1.16415e-14,0 gap=-1.16415e-14 impulse=0.0158595
+SUPPORT_LOAD name=redundant_six_double environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-9.74253e-11,0 gap=-9.74253e-15
+SUPPORT_REPLAY name=redundant_six_double q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=cold_1kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_LOAD name=cold_1kg environment=0 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_1kg environment=1 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_1kg environment=2 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_REPLAY name=cold_1kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=half_timestep success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0475785
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0475785
+SUPPORT_GEOMETRY env=2 point=0,-7.85803e-14,0 gap=-7.85803e-14 impulse=0.0475783
+SUPPORT_LOAD name=half_timestep environment=0 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+SUPPORT_LOAD name=half_timestep environment=1 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+SUPPORT_LOAD name=half_timestep environment=2 lambda=0.0475783 expected=0.0475785 tangent=0,0 velocity=0,-1.52691e-09,0 gap=-7.63454e-14
+SUPPORT_REPLAY name=half_timestep q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=airborne_double_seed success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0.0099999,0 gap=0.0099999 impulse=0
+SUPPORT_GEOMETRY env=1 point=0,0.0099999,0 gap=0.0099999 impulse=0
+SUPPORT_GEOMETRY env=2 point=0,0.0099999,0 gap=0.0099999 impulse=-7.17903e-09
+SUPPORT_LOAD name=airborne_double_seed environment=0 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_LOAD name=airborne_double_seed environment=1 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_LOAD name=airborne_double_seed environment=2 lambda=-7.17903e-09 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_REPLAY name=airborne_double_seed q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sticking success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=-2.91038e-15,3.49246e-14,-5.82077e-15 gap=3.49246e-14 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=2.18279e-14,1.16415e-14,4.36557e-14 gap=1.16415e-14 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=1.89175e-14,-1.04774e-13,3.7835e-14 gap=-1.04774e-13 impulse=0.0951569
+SUPPORT_LOAD name=sticking environment=0 lambda=0.095157 expected=0.095157 tangent=-0.0097,-0.0194 velocity=-4.76837e-11,3.79412e-10,-9.53674e-11 gap=3.79412e-14
+SUPPORT_LOAD name=sticking environment=1 lambda=0.095157 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=2.08616e-10,1.88677e-10,4.17232e-10 gap=1.88677e-14
+SUPPORT_LOAD name=sticking environment=2 lambda=0.0951569 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=1.78814e-10,-9.55732e-10,3.57628e-10 gap=-9.55732e-14
+SUPPORT_REPLAY name=sticking q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sliding success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=9.97806e-06,1.39698e-13,1.99561e-05 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=1 point=9.97806e-06,0,1.99561e-05 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+SUPPORT_LOAD name=sliding environment=0 lambda=0.0951571 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,1.42845e-09,0.199561 gap=1.42845e-13
+SUPPORT_LOAD name=sliding environment=1 lambda=0.095157 expected=0.095157 tangent=-0.0212778,-0.0425555 velocity=0.0997806,-2.05787e-12,0.199561 gap=-2.05787e-16
+SUPPORT_LOAD name=sliding environment=2 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+SUPPORT_REPLAY name=sliding q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sliding_warm success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+SUPPORT_GEOMETRY env=1 point=9.97806e-06,2.44472e-13,1.99561e-05 gap=2.44472e-13 impulse=0.0951572
+SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.91038e-13,1.99561e-05 gap=2.91038e-13 impulse=0.0951573
+SUPPORT_LOAD name=sliding_warm environment=0 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+SUPPORT_LOAD name=sliding_warm environment=1 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.4775e-09,0.199561 gap=2.4775e-13
+SUPPORT_LOAD name=sliding_warm environment=2 lambda=0.0951573 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,3.0497e-09,0.199561 gap=3.0497e-13
+SUPPORT_REPLAY name=sliding_warm q_error=0 v_error=0 normal_error=0
+Human support loaded runtime: 11 cases x 3 environments passed; replay exact
+<end of output>
+Test time =   2.68 sec
+----------------------------------------------------------
+Test Passed.
+"matter.physics.human_support_loaded" end time: Sep 08 23:04 CEST
+"matter.physics.human_support_loaded" time elapsed: 00:00:02
+----------------------------------------------------------
+
+38/106 Testing: matter.physics.human_support_loaded
+38/106 Test: matter.physics.human_support_loaded
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe" "--human-support-loaded"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907
+"matter.physics.human_support_loaded" start time: Sep 08 23:04 CEST
+Output:
+----------------------------------------------------------
+2026-09-08 23:04:59.314 metalrobo_matter_physics_probe[60253:6282681] Metal API Validation Enabled
+SUPPORT_RUN name=cold_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_LOAD name=cold_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=2 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_REPLAY name=cold_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=weight_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=2 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_LOAD name=weight_seed_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=weight_seed_97kg environment=1 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=weight_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_REPLAY name=weight_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=double_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=1 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=2 point=0,6.98492e-14,0 gap=6.98492e-14 impulse=0.0951571
+SUPPORT_LOAD name=double_seed_97kg environment=0 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=double_seed_97kg environment=1 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_LOAD name=double_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,7.60882e-10,0 gap=7.60882e-14
+SUPPORT_REPLAY name=double_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_CAPACITY_REJECTION message=failed to encode MetalWorld substep graph
+SUPPORT_RUN name=redundant_six_cold success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,3.49246e-14,0 gap=3.49246e-14 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_LOAD name=redundant_six_cold environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,3.79412e-10,0 gap=3.79412e-14
+SUPPORT_LOAD name=redundant_six_cold environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_cold environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_REPLAY name=redundant_six_cold q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=redundant_six_double success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,-1.16415e-14,0 gap=-1.16415e-14 impulse=0.0158595
+SUPPORT_LOAD name=redundant_six_double environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-9.74253e-11,0 gap=-9.74253e-15
+SUPPORT_REPLAY name=redundant_six_double q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=cold_1kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_LOAD name=cold_1kg environment=0 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_1kg environment=1 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_1kg environment=2 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_REPLAY name=cold_1kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=half_timestep success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0475785
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0475785
+SUPPORT_GEOMETRY env=2 point=0,-7.85803e-14,0 gap=-7.85803e-14 impulse=0.0475783
+SUPPORT_LOAD name=half_timestep environment=0 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+SUPPORT_LOAD name=half_timestep environment=1 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+SUPPORT_LOAD name=half_timestep environment=2 lambda=0.0475783 expected=0.0475785 tangent=0,0 velocity=0,-1.52691e-09,0 gap=-7.63454e-14
+SUPPORT_REPLAY name=half_timestep q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=airborne_double_seed success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0.0099999,0 gap=0.0099999 impulse=0
+SUPPORT_GEOMETRY env=1 point=0,0.0099999,0 gap=0.0099999 impulse=0
+SUPPORT_GEOMETRY env=2 point=0,0.0099999,0 gap=0.0099999 impulse=-7.17903e-09
+SUPPORT_LOAD name=airborne_double_seed environment=0 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_LOAD name=airborne_double_seed environment=1 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_LOAD name=airborne_double_seed environment=2 lambda=-7.17903e-09 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_REPLAY name=airborne_double_seed q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sticking success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=-2.91038e-15,3.49246e-14,-5.82077e-15 gap=3.49246e-14 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=2.18279e-14,1.16415e-14,4.36557e-14 gap=1.16415e-14 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=1.89175e-14,-1.04774e-13,3.7835e-14 gap=-1.04774e-13 impulse=0.0951569
+SUPPORT_LOAD name=sticking environment=0 lambda=0.095157 expected=0.095157 tangent=-0.0097,-0.0194 velocity=-4.76837e-11,3.79412e-10,-9.53674e-11 gap=3.79412e-14
+SUPPORT_LOAD name=sticking environment=1 lambda=0.095157 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=2.08616e-10,1.88677e-10,4.17232e-10 gap=1.88677e-14
+SUPPORT_LOAD name=sticking environment=2 lambda=0.0951569 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=1.78814e-10,-9.55732e-10,3.57628e-10 gap=-9.55732e-14
+SUPPORT_REPLAY name=sticking q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sliding success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=9.97806e-06,1.39698e-13,1.99561e-05 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=1 point=9.97806e-06,0,1.99561e-05 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+SUPPORT_LOAD name=sliding environment=0 lambda=0.0951571 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,1.42845e-09,0.199561 gap=1.42845e-13
+SUPPORT_LOAD name=sliding environment=1 lambda=0.095157 expected=0.095157 tangent=-0.0212778,-0.0425555 velocity=0.0997806,-2.05787e-12,0.199561 gap=-2.05787e-16
+SUPPORT_LOAD name=sliding environment=2 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+SUPPORT_REPLAY name=sliding q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sliding_warm success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+SUPPORT_GEOMETRY env=1 point=9.97806e-06,2.44472e-13,1.99561e-05 gap=2.44472e-13 impulse=0.0951572
+SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.91038e-13,1.99561e-05 gap=2.91038e-13 impulse=0.0951573
+SUPPORT_LOAD name=sliding_warm environment=0 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+SUPPORT_LOAD name=sliding_warm environment=1 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.4775e-09,0.199561 gap=2.4775e-13
+SUPPORT_LOAD name=sliding_warm environment=2 lambda=0.0951573 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,3.0497e-09,0.199561 gap=3.0497e-13
+SUPPORT_REPLAY name=sliding_warm q_error=0 v_error=0 normal_error=0
+Human support loaded runtime: 11 cases x 3 environments passed; replay exact
+<end of output>
+Test time =   2.64 sec
+----------------------------------------------------------
+Test Passed.
+"matter.physics.human_support_loaded" end time: Sep 08 23:05 CEST
+"matter.physics.human_support_loaded" time elapsed: 00:00:02
+----------------------------------------------------------
+
+38/106 Testing: matter.physics.human_support_loaded
+38/106 Test: matter.physics.human_support_loaded
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe" "--human-support-loaded"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907
+"matter.physics.human_support_loaded" start time: Sep 08 23:05 CEST
+Output:
+----------------------------------------------------------
+2026-09-08 23:05:01.953 metalrobo_matter_physics_probe[60254:6282691] Metal API Validation Enabled
+SUPPORT_RUN name=cold_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_LOAD name=cold_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=2 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_REPLAY name=cold_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=weight_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=2 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_LOAD name=weight_seed_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=weight_seed_97kg environment=1 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=weight_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_REPLAY name=weight_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=double_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=1 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=2 point=0,6.98492e-14,0 gap=6.98492e-14 impulse=0.0951571
+SUPPORT_LOAD name=double_seed_97kg environment=0 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=double_seed_97kg environment=1 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_LOAD name=double_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,7.60882e-10,0 gap=7.60882e-14
+SUPPORT_REPLAY name=double_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_CAPACITY_REJECTION message=failed to encode MetalWorld substep graph
+SUPPORT_RUN name=redundant_six_cold success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,3.49246e-14,0 gap=3.49246e-14 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_LOAD name=redundant_six_cold environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,3.79412e-10,0 gap=3.79412e-14
+SUPPORT_LOAD name=redundant_six_cold environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_cold environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_REPLAY name=redundant_six_cold q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=redundant_six_double success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+SUPPORT_GEOMETRY env=2 point=0,-1.16415e-14,0 gap=-1.16415e-14 impulse=0.0158595
+SUPPORT_LOAD name=redundant_six_double environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=redundant_six_double environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-9.74253e-11,0 gap=-9.74253e-15
+SUPPORT_REPLAY name=redundant_six_double q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=cold_1kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.000981
+SUPPORT_LOAD name=cold_1kg environment=0 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_1kg environment=1 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_1kg environment=2 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_REPLAY name=cold_1kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=half_timestep success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0475785
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0475785
+SUPPORT_GEOMETRY env=2 point=0,-7.85803e-14,0 gap=-7.85803e-14 impulse=0.0475783
+SUPPORT_LOAD name=half_timestep environment=0 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+SUPPORT_LOAD name=half_timestep environment=1 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+SUPPORT_LOAD name=half_timestep environment=2 lambda=0.0475783 expected=0.0475785 tangent=0,0 velocity=0,-1.52691e-09,0 gap=-7.63454e-14
+SUPPORT_REPLAY name=half_timestep q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=airborne_double_seed success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0.0099999,0 gap=0.0099999 impulse=0
+SUPPORT_GEOMETRY env=1 point=0,0.0099999,0 gap=0.0099999 impulse=0
+SUPPORT_GEOMETRY env=2 point=0,0.0099999,0 gap=0.0099999 impulse=-7.17903e-09
+SUPPORT_LOAD name=airborne_double_seed environment=0 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_LOAD name=airborne_double_seed environment=1 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_LOAD name=airborne_double_seed environment=2 lambda=-7.17903e-09 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+SUPPORT_REPLAY name=airborne_double_seed q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sticking success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=-2.91038e-15,3.49246e-14,-5.82077e-15 gap=3.49246e-14 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=2.18279e-14,1.16415e-14,4.36557e-14 gap=1.16415e-14 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=1.89175e-14,-1.04774e-13,3.7835e-14 gap=-1.04774e-13 impulse=0.0951569
+SUPPORT_LOAD name=sticking environment=0 lambda=0.095157 expected=0.095157 tangent=-0.0097,-0.0194 velocity=-4.76837e-11,3.79412e-10,-9.53674e-11 gap=3.79412e-14
+SUPPORT_LOAD name=sticking environment=1 lambda=0.095157 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=2.08616e-10,1.88677e-10,4.17232e-10 gap=1.88677e-14
+SUPPORT_LOAD name=sticking environment=2 lambda=0.0951569 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=1.78814e-10,-9.55732e-10,3.57628e-10 gap=-9.55732e-14
+SUPPORT_REPLAY name=sticking q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sliding success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=9.97806e-06,1.39698e-13,1.99561e-05 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=1 point=9.97806e-06,0,1.99561e-05 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+SUPPORT_LOAD name=sliding environment=0 lambda=0.0951571 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,1.42845e-09,0.199561 gap=1.42845e-13
+SUPPORT_LOAD name=sliding environment=1 lambda=0.095157 expected=0.095157 tangent=-0.0212778,-0.0425555 velocity=0.0997806,-2.05787e-12,0.199561 gap=-2.05787e-16
+SUPPORT_LOAD name=sliding environment=2 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+SUPPORT_REPLAY name=sliding q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=sliding_warm success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+SUPPORT_GEOMETRY env=1 point=9.97806e-06,2.44472e-13,1.99561e-05 gap=2.44472e-13 impulse=0.0951572
+SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.91038e-13,1.99561e-05 gap=2.91038e-13 impulse=0.0951573
+SUPPORT_LOAD name=sliding_warm environment=0 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+SUPPORT_LOAD name=sliding_warm environment=1 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.4775e-09,0.199561 gap=2.4775e-13
+SUPPORT_LOAD name=sliding_warm environment=2 lambda=0.0951573 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,3.0497e-09,0.199561 gap=3.0497e-13
+SUPPORT_REPLAY name=sliding_warm q_error=0 v_error=0 normal_error=0
+Human support loaded runtime: 11 cases x 3 environments passed; replay exact
+<end of output>
+Test time =   2.65 sec
+----------------------------------------------------------
+Test Passed.
+"matter.physics.human_support_loaded" end time: Sep 08 23:05 CEST
+"matter.physics.human_support_loaded" time elapsed: 00:00:02
+----------------------------------------------------------
+
+End testing: Sep 08 23:05 CEST
+
+human =   2.65 sec*proc
+
+matter =   2.65 sec*proc
+
+metal =   2.65 sec*proc
+
+physics =   2.65 sec*proc
+

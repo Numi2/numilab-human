@@ -1,0 +1,30 @@
+Test project /Users/n/MetalRobo-human-completion-build-20260907
+    Start  9: metalrobo_matter_surface_bvh_probe
+1/9 Test  #9: metalrobo_matter_surface_bvh_probe ...................   Passed    0.18 sec
+    Start 10: metalrobo_matter_ccd_probe
+2/9 Test #10: metalrobo_matter_ccd_probe ...........................   Passed    0.02 sec
+    Start 16: matter.physics.mixed_mpm_fem
+3/9 Test #16: matter.physics.mixed_mpm_fem .........................   Passed    1.11 sec
+    Start 19: matter.physics.cohesive_mutation
+4/9 Test #19: matter.physics.cohesive_mutation .....................   Passed    1.23 sec
+    Start 24: matter.runtime.production_transaction_rollback
+5/9 Test #24: matter.runtime.production_transaction_rollback .......   Passed    0.09 sec
+    Start 37: matter.physics.shared_rigid_coupled_contact
+6/9 Test #37: matter.physics.shared_rigid_coupled_contact ..........   Passed    0.71 sec
+    Start 38: matter.physics.human_support_loaded
+7/9 Test #38: matter.physics.human_support_loaded ..................   Passed    2.66 sec
+    Start 39: matter.physics.human_support_linearization
+8/9 Test #39: matter.physics.human_support_linearization ...........   Passed    0.79 sec
+    Start 63: numanx.integration.human_matter_attachment_runtime
+9/9 Test #63: numanx.integration.human_matter_attachment_runtime ...   Passed    0.14 sec
+
+100% tests passed out of 9
+
+Label Time Summary:
+human      =   3.59 sec*proc (3 tests)
+matter     =   6.58 sec*proc (6 tests)
+metal      =   6.72 sec*proc (7 tests)
+numanx     =   0.14 sec*proc (1 test)
+physics    =   6.72 sec*proc (7 tests)
+
+Total Test time (real) =   6.93 sec

@@ -1,0 +1,33 @@
+{
+  "disposition": "retained_pre_fix_failure",
+  "instrumented_uncommitted_native_base": "2ca77bbcb0b7976b1706f3a9c8e5b0274fc08a75",
+  "binary_trace_sha256": "7996e94b914c5d62d3a46025779decb846e5fd2b9037325b7de88665aa1fa931",
+  "retained_remote_trace": "/Users/n/human-costal-bvh-20260908/hard-support-trace2-1.bin",
+  "case": "redundant_six_double",
+  "nonlinear_iteration": 0,
+  "stage": "assembled_residual_before_first_linear_solve",
+  "environment_count": 3,
+  "support_point_count": 6,
+  "solver_generalized_capacity": 40,
+  "jacobian_differences": [
+    {
+      "float_index": 1721,
+      "environment": 2,
+      "support_point": 2,
+      "axis": 1,
+      "dof": 1,
+      "first": 0.0,
+      "replay": 1.0
+    },
+    {
+      "float_index": 2122,
+      "environment": 2,
+      "support_point": 5,
+      "axis": 2,
+      "dof": 2,
+      "first": 0.0,
+      "replay": 1.0
+    }
+  ],
+  "interpretation": "Both entries are translation columns of a floating rigid body and must equal one. Final repair includes support in advertised point capacity and validates internal scratch bounds."
+}

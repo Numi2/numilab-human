@@ -11,11 +11,14 @@ The [costal contact-search repair](COSTAL_BVH_20260908.md), native `2ca77bb`,
 reduces the unchanged validation-enabled costal runner from 277.393 to 29.047
 seconds. Seven native tests and the costal transaction pass. A bounds hierarchy
 replaces the measured exhaustive pair scan while preserving candidate order,
-and exact-prefix overflow now fails closed. The loaded-support diagnostic still
-fails: a cold-history 97 kg body receives only 1.222% of the required support
-impulse despite numerical convergence. Repair that contact formulation before
-tuning stance gains; accepted contact history must serve as a numerical initial
-guess rather than determine the physical force law.
+and exact-prefix overflow now fails closed. The subsequent
+[coupled support repair](HARD_SUPPORT_KKT_20260908.md), native `3c15621`, replaces
+the history-dependent penalty with independent contact impulses. Eleven loaded
+cases in three environments pass analytic weight/friction and bytewise replay;
+the generic query boundary rejects undersized internal arenas. The old 1.222%
+cold-start support result remains retained failed evidence. Prepared Human and
+costal transactions pass on the new revision; anatomical loaded equilibrium
+and sustained behavior remain unqualified.
 
 The [offline equilibrium](COUPLED_EQUILIBRIUM_20260908.md) passes its unchanged
 FP64 internal balance gate at 0.00814 using ideal equalities and source stops.
@@ -26,8 +29,9 @@ Brain motor path, but its four-root comparison establishes no settling
 improvement. These do not establish loaded compliant joint/fibre/contact
 balance or registration of anatomical tissue at the prepared state.
 
-The next implementation must close the contact invariant and then demonstrate
-longer stable physical time on the same anatomical stack. Profile remaining GPU
+The next implementation must establish source-compliant anatomical settling
+with the corrected contact law, then demonstrate longer stable physical time
+on the same anatomical stack. Profile remaining GPU
 cost where measured; preserve source compliance, source stops, tissue mass,
 conservative transfer, causal control and rejected-state isolation. Batch fixes
 and their physical evidence into cohesive changes. Retain the complete behavior,

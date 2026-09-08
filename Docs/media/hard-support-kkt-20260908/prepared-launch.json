@@ -1,0 +1,70 @@
+{
+  "command": [
+    "swift",
+    "test",
+    "-c",
+    "release",
+    "--skip-build",
+    "--filter",
+    "testPreparedRecruitmentAcceptedRoots"
+  ],
+  "cwd": "/Users/n/numi-brain-human-completion-20260907",
+  "environment": {
+    "NUMANX_METALROBO_LIBRARY": "/Users/n/MetalRobo-human-completion-build-20260907/lib/libmetalrobo.dylib",
+    "NUMANX_FULLBODY_RIGID": "/Users/n/human-completion-20260907/input/myosim-fullbody-core-reference.nhrigid",
+    "NUMANX_FULLBODY_MUSCLE": "/Users/n/human-completion-20260907/input/myosim-fullbody-muscle-reference.nhmyo",
+    "NUMANX_FULLBODY_CONTACT": "/Users/n/human-capsule-20260908/input/myosim-fullbody-support-primitives.nhcnt",
+    "NUMANX_METALROBO_METALLIB": "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib",
+    "NUMANX_MATTER_METALLIB": "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib",
+    "NUMANX_FULLBODY_VISUAL_PACK": "/Users/n/NumiHumanCurrent/anterior-thorax-smoke/myosim-fullbody-articulated-markers-muscle-driven-selected-actuators-source-support-contact.mrvpack",
+    "NUMANX_FULLBODY_VISION_PROFILE": "/Users/n/Numan-X-neuron-v1/assets/numanx-head-vision-profile.v1.json",
+    "NUMANX_MATTER_MATERIAL": "/Users/n/MetalRobo-human-completion-20260907/matter/materials/silicone.nmatter",
+    "NUMANX_MATTER_WORLD_PACKAGE": "/Users/n/human-prepared-state-20260908/fixture/prepared-100us.nmatterpack",
+    "NUMANX_HUMAN_SOURCE_FP": "f0943712c830fe4e",
+    "NUMANX_MATTER_WORLD_FP": "f6af73b84e7a7b11",
+    "NUMANX_JOINT_EQUALITIES": "/Users/n/human-completion-20260907/input/myosim-fullbody-joint-equalities-source-compliance.nheq",
+    "NUMANX_JOINT_EQUALITY_FP": "19041185bf97c95d",
+    "MTL_DEBUG_LAYER": "1",
+    "MRNX_PHYSICAL_DIAGNOSTICS": "1",
+    "NUMANX_JOINT_LIMITS": "/Users/n/human-dynamic-limits-20260908/myosim-fullbody-joint-limits.nhlim",
+    "NUMANX_JOINT_LIMIT_FP": "601a251a6473fdd9",
+    "MRNX_RUNTIME_DIAGNOSTICS": "1",
+    "NUMANX_GATE_B_EVIDENCE": "1",
+    "NUMANX_INITIAL_STATE": "/Users/n/human-prepared-state-20260908/fixture/prepared.nhinit",
+    "NUMANX_INITIAL_STATE_FP": "1f8a4f17decf2e03",
+    "NUMANX_PREPARED_RECRUITMENT": "/Users/n/human-prepared-recruitment-20260908/prepared-program.json"
+  },
+  "source_state": {
+    "native": {
+      "revision": "3c15621c33238dc1ec5e51d1ddde265d99d8b95f",
+      "status": ""
+    },
+    "brain": {
+      "revision": "30f138fa17378fce788701edb5c7d834ee3c7c69",
+      "status": ""
+    }
+  },
+  "competing_workloads": "",
+  "artifact_sha256": {
+    "NUMANX_METALROBO_LIBRARY": "a7522b6d3a20d05a5b9b5ba1e29b89b11880e57621a9ef0e4039ecb0f64e08f5",
+    "NUMANX_FULLBODY_RIGID": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44",
+    "NUMANX_FULLBODY_MUSCLE": "9a988f19a6fd8e533cd0f2bf3192cb8535fb008ccd394ffbf1a4432d3db76a05",
+    "NUMANX_FULLBODY_CONTACT": "c7712daf79cd8a589a6d23942a4df84a7da928e5911455ce19078f9b24daaaf4",
+    "NUMANX_METALROBO_METALLIB": "be39dfec98e19acb0b56115396d04b30d7fa70281ab1782e53df4b682c61150d",
+    "NUMANX_MATTER_METALLIB": "5967ffde6f20f2d4283161ba54711b145caf6c8a1873c72f097976e3dd9a4586",
+    "NUMANX_FULLBODY_VISUAL_PACK": "b8ab7cd8deead1e2af3137a727eaad74cd7e4238d77d9116d774bbf304936e37",
+    "NUMANX_FULLBODY_VISION_PROFILE": "166220533c6c78695f6e55412f2e832eaaa4ec94ddf791b476111dc323c652a6",
+    "NUMANX_MATTER_MATERIAL": "d3094476cefa1a28ca8b5f35b28e2586d5a44ce63f268e57e96812de32de4a5f",
+    "NUMANX_MATTER_WORLD_PACKAGE": "e10a53064f755f491c12d8516b7cb32fa3bbedc34ecdb87c4724adfd0d536ae6",
+    "NUMANX_JOINT_EQUALITIES": "12db05fddb492e77e7fd461fad566d3e1e75390f2cb6f77f26568254a6cb4477",
+    "NUMANX_JOINT_LIMITS": "c583611fcedc326a32c6f69504a65e675c8e0adc987c6db622ca0d95a02438d3",
+    "NUMANX_INITIAL_STATE": "f12f7bb5573934632c633b86d9b11a9812c63c17efa94452d82ef6673e1a1702",
+    "NUMANX_PREPARED_RECRUITMENT": "88434465f99615001768b4c37bb56f1040cfdec097fce07fb41b8e981bc28d6a"
+  },
+  "brain_test_binary_sha256": "2b4f55fc0de0bce67ce186abe04d60c89080e162441bde52f51d1b79a392fb68",
+  "brain_test_binary_bytes": 49175832,
+  "authoring_revision": "f71d98c6464fd136e905cf232b20afd08f53aa28",
+  "runner_sha256": "6cf36bae6cd8eb1a89199d12787febbd03ad70fb9c9fcd23080a6e25960f7cf0",
+  "returncode": 0,
+  "elapsed_seconds": 31.78097033314407
+}
