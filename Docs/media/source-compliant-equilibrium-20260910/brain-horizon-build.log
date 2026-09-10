@@ -1,0 +1,13 @@
+[0/1] Planning build
+Building for production...
+[0/16] Write sources
+[1/16] Write swift-version-3CD7052B146186F2.txt
+[3/4] Compiling NumiBrainMetalTests ConnectomeBodyContractTests.swift
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainMetalTests/MetalNumanXBridgeV1EndToEndTests.swift:122:62: error: cannot convert value of type 'Int' to expected argument type 'UInt64'
+ 120 |     func run(_ controller: MuscleLocomotorProgram?, unavailable: Bool = false) throws -> AcceptedScenario {
+ 121 |       try runAcceptedScenario(paths: paths, contactPath: paths.contacts, compiled: compiled,
+ 122 |         publication: publication, device: device, rootCount: rootCount, timestepMicroseconds: 100,
+     |                                                              `- error: cannot convert value of type 'Int' to expected argument type 'UInt64'
+ 123 |         muscleLocomotor: controller, sensorIntervention: unavailable ? .ablated(.proprioception) : nil,
+ 124 |         authoredWorld: world)
+error: fatalError

@@ -1,0 +1,42 @@
+[0/1] Planning build
+Building for production...
+[0/24] Write sources
+[2/24] Write swift-version-3CD7052B146186F2.txt
+[3/24] Compiling NumiBrainNumiLabBridgeABI NumiBrainNumiLabBridgeABI.c
+[5/17] Compiling NumiBrainMetal MetalNumanXGateCCapture.swift
+[6/21] Compiling NumiBrainNumanXInteropCLI main.swift
+[6/21] Write Objects.LinkFileList
+[8/21] Compiling NumiBrainDispatchCLI main.swift
+[8/21] Write Objects.LinkFileList
+[9/21] Linking numi-brain-numanx-interop
+[11/21] Compiling NumiBrainTissueCLI main.swift
+[11/21] Write Objects.LinkFileList
+[12/21] Linking numi-brain-dispatch
+[13/21] Linking numi-brain-tissue
+[15/21] Compiling NumiBrainMLX MLXBrainLearner.swift
+[16/24] Compiling NumiBrainExperimentCLI main.swift
+[16/24] Write Objects.LinkFileList
+[18/24] Compiling NumiBrainGateCCLI main.swift
+[18/24] Write Objects.LinkFileList
+[19/24] Linking numi-brain-experiment
+[20/24] Linking numi-brain-gate-c
+[22/24] Compiling NumiBrainMetalTests ConnectomeBodyContractTests.swift
+[23/25] Compiling NumiBrainPackageTests runner.swift
+[23/25] Write Objects.LinkFileList
+[24/25] Linking NumiBrainPackageTests
+Build complete! (90.51s)
+Test Suite 'Selected tests' started at 2026-09-10 22:46:45.124.
+Test Suite 'NumiBrainPackageTests.xctest' started at 2026-09-10 22:46:45.130.
+Test Suite 'MetalNumanXBridgeV1EndToEndTests' started at 2026-09-10 22:46:45.130.
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testAuthoredMatterDescriptorRejectsMissingIdentity]' started.
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testAuthoredMatterDescriptorRejectsMissingIdentity]' passed (0.001 seconds).
+Test Suite 'MetalNumanXBridgeV1EndToEndTests' passed at 2026-09-10 22:46:45.130.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'NumiBrainPackageTests.xctest' passed at 2026-09-10 22:46:45.130.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'Selected tests' passed at 2026-09-10 22:46:45.130.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.001 (0.007) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

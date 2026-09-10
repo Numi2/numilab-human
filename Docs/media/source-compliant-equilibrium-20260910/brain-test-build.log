@@ -1,0 +1,245 @@
+[0/1] Planning build
+Building for production...
+[0/181] Compiling fp_quantized_nax.cpp
+[0/181] Compiling gather.cpp
+[2/181] Compiling gather_front.cpp
+[2/181] Compiling quantized.cpp
+[4/181] Compiling quantized_nax.cpp
+[5/181] Write swift-version-3CD7052B146186F2.txt
+[6/181] Compiling utils.cpp
+[7/182] Compiling unary.cpp
+[9/183] Compiling RealModule AlgebraicField.swift
+[9/183] Compiling ternary.cpp
+[10/185] Compiling sort.cpp
+[12/186] Compiling ComplexModule Complex+AdditiveArithmetic.swift
+[13/186] Compiling NumiBrainConnectomeTestSupport ConnectomeTestFixture.swift
+[14/187] Compiling Numerics Numerics.swift
+[14/187] Compiling compile.cpp
+[15/187] Compiling softmax.cpp
+[16/187] Compiling slicing.cpp
+[17/187] Compiling scan.cpp
+[18/187] Compiling resident.cpp
+[19/187] Compiling scaled_dot_product_attention.cpp
+[20/187] Compiling rope.cpp
+[21/187] Compiling primitives.cpp
+[22/187] Compiling reduce.cpp
+[24/187] Compiling NumiBrainQualification PerformanceAttemptLedger.swift
+[25/187] Compiling NumiBrainValidation AnalyticPhysicalReferences.swift
+[25/188] Compiling quantized.cpp
+[26/189] Compiling metal.cpp
+[27/190] Compiling normalization.cpp
+[29/191] Compiling NumiBrainWatchdogCLI main.swift
+[29/191] Compiling export.cpp
+[31/193] Compiling NumiBrainQualificationCLI main.swift
+[32/194] Compiling NumiBrainGateFCLI main.swift
+[32/194] Write Objects.LinkFileList
+[35/194] Compiling NumiBrainGateECLI main.swift
+[35/194] Linking numi-brain-watchdog
+[36/194] Write Objects.LinkFileList
+[38/194] Linking numi-brain-qualify
+[40/194] Compiling NumiBrainValidationTests ConvergenceAndReferenceTests.swift
+[40/194] Linking numi-brain-gate-f
+[41/194] Linking numi-brain-gate-e
+[42/194] Compiling matmul.cpp
+[44/194] Compiling NumiBrainQualificationTests PerformanceAttemptLedgerTests.swift
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainQualificationTests/QualificationDeclarationTests.swift:23:29: warning: 'promotionReady' is deprecated: A declaration cannot prove promotion. Use declaredPromotionReady for inspection, and gate-specific verified receipts for admission. [#DeprecatedDeclaration]
+21 |     let manifest = try NumanXQualificationManifest(sourceRevision: "test", entries: entries)
+22 |     XCTAssertTrue(manifest.declaredPromotionReady)
+23 |     XCTAssertFalse(manifest.promotionReady)
+   |                             `- warning: 'promotionReady' is deprecated: A declaration cannot prove promotion. Use declaredPromotionReady for inspection, and gate-specific verified receipts for admission. [#DeprecatedDeclaration]
+24 |   }
+25 | 
+
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainQualificationTests/QualificationDeclarationTests.swift:31:29: warning: 'promotionReady' is deprecated: A declaration cannot prove promotion. Use declaredPromotionReady for inspection, and gate-specific verified receipts for admission. [#DeprecatedDeclaration]
+29 |     XCTAssertThrowsError(try manifest.validate())
+30 |     XCTAssertFalse(manifest.declaredPromotionReady)
+31 |     XCTAssertFalse(manifest.promotionReady)
+   |                             `- warning: 'promotionReady' is deprecated: A declaration cannot prove promotion. Use declaredPromotionReady for inspection, and gate-specific verified receipts for admission. [#DeprecatedDeclaration]
+32 |   }
+33 | 
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+[44/194] Compiling logsumexp.cpp
+[45/194] Compiling hadamard.cpp
+[46/194] Compiling indexing.cpp
+[47/194] Compiling fence.cpp
+[48/194] Compiling event.cpp
+[49/194] Compiling jit_kernels.cpp
+[50/194] Compiling eval.cpp
+[51/194] Compiling distributed.cpp
+[52/194] Compiling device_info.cpp
+[53/194] Compiling copy.cpp
+[54/194] Compiling device.cpp
+[55/194] Compiling conv.cpp
+[56/194] Compiling fft.cpp
+[57/194] Compiling custom_kernel.cpp
+[58/194] Compiling binary.cpp
+[59/194] Compiling compiled.cpp
+[60/194] Compiling slicing.cpp
+[61/194] Compiling allocator.cpp
+[62/194] Compiling threefry.cpp
+[63/194] Compiling no_cuda.cpp
+[64/194] Compiling primitives.cpp
+[65/194] Compiling copy.cpp
+[66/194] Compiling svd.cpp
+[67/194] Compiling softmax.cpp
+[68/194] Compiling select.cpp
+[69/194] Compiling unary.cpp
+[70/194] Compiling qrf.cpp
+[71/194] Compiling quantized.cpp
+[72/194] Compiling sort.cpp
+[73/194] Compiling scan.cpp
+[74/194] Compiling primitives.cpp
+[75/194] Compiling reduce.cpp
+[76/194] Compiling jit_compiler.cpp
+[77/194] Compiling masked_mm.cpp
+[78/194] Compiling matmul.cpp
+[79/194] Compiling logsumexp.cpp
+[80/194] Compiling luf.cpp
+[81/194] Compiling inverse.cpp
+[82/194] Compiling cblas.cpp
+[83/194] Compiling hadamard.cpp
+[84/194] Compiling bnns.cpp
+[85/194] Compiling encoder.cpp
+[86/194] Compiling eval.cpp
+[87/194] Compiling eigh.cpp
+[88/194] Compiling distributed.cpp
+[89/194] Compiling device_info.cpp
+[90/194] Compiling eig.cpp
+[91/194] Compiling fft.cpp
+[92/194] Compiling cholesky.cpp
+[93/194] Compiling arg_reduce.cpp
+[94/194] Compiling conv.cpp
+[95/194] Compiling slicing.cpp
+[96/194] Compiling utils.cpp
+[97/194] Compiling reduce.cpp
+[98/194] Compiling load.cpp
+[99/194] Compiling common.cpp
+[100/194] Compiling compiled.cpp
+[101/194] Compiling broadcasting.cpp
+[102/194] Compiling utils.cpp
+[103/194] Compiling unary_ops.cpp
+[104/194] Compiling unary.cpp
+[105/194] Compiling ternary_ops.cpp
+[106/194] Compiling ternary.cpp
+[107/194] Compiling steel_gemm_splitk_nax.cpp
+[108/194] Compiling steel_gemm_splitk.cpp
+[109/194] Compiling steel_gemm_segmented.cpp
+[110/194] Compiling steel_gemm_masked.cpp
+[111/194] Compiling steel_gemm_gather_nax.cpp
+[112/194] Compiling steel_gemm_gather.cpp
+[113/194] Compiling steel_gemm_fused_nax.cpp
+[114/194] Compiling steel_gemm_fused.cpp
+[115/194] Compiling steel_conv_general.cpp
+[116/194] Compiling steel_conv_3d.cpp
+[117/194] Compiling steel_conv.cpp
+[118/194] Compiling steel_attention_nax.cpp
+[119/194] Compiling steel_attention.cpp
+[120/194] Compiling sort.cpp
+[121/194] Compiling softmax.cpp
+[122/194] Compiling scatter_axis.cpp
+[123/194] Compiling scatter.cpp
+[124/194] Compiling scan.cpp
+[125/194] Compiling reduce_utils.cpp
+[126/194] Compiling reduce.cpp
+[127/194] Compiling quantized_utils.cpp
+[128/194] Compiling masked_scatter.cpp
+[129/194] Compiling logsumexp.cpp
+[130/194] Compiling hadamard.cpp
+[131/194] Compiling gemv_masked.cpp
+[132/194] Compiling gemm_nax.cpp
+[133/194] Compiling gemm.cpp
+[134/194] Compiling gather_axis.cpp
+[135/194] Compiling fp_quantized.cpp
+[136/194] Compiling fft.cpp
+[137/194] Compiling copy.cpp
+[138/194] Compiling conv.cpp
+[139/194] Compiling compiled_preamble.cpp
+[140/194] Compiling binary_two.cpp
+[141/194] Compiling binary_ops.cpp
+[142/194] Compiling binary.cpp
+[143/194] Compiling arange.cpp
+[144/194] Compiling array.cpp
+[145/194] Compiling version.cpp
+[146/194] Compiling compiled_conditional.cpp
+[147/194] Compiling vector.cpp
+[148/194] Compiling transforms_impl.cpp
+[149/194] Compiling transforms.cpp
+[150/194] Compiling string.cpp
+[151/194] Compiling stream.cpp
+[152/194] Compiling random.cpp
+[153/194] Compiling copy.cpp
+[154/194] Compiling metal.cpp
+[155/194] Compiling ops.cpp
+[156/194] Compiling memory.cpp
+[157/194] Compiling map.cpp
+[158/194] Compiling linalg.cpp
+[159/194] Compiling io_types.cpp
+[160/194] Compiling io.cpp
+[161/194] Compiling fft.cpp
+[162/194] Compiling error.cpp
+[163/194] Compiling fast.cpp
+[164/194] Compiling export.cpp
+[165/194] Compiling cuda.cpp
+[166/194] Compiling device.cpp
+[167/194] Compiling compile.cpp
+[168/194] Compiling Cmlx.m
+[169/194] Compiling closure.cpp
+[170/194] Compiling array.cpp
+[171/194] Compiling indexing.cpp
+[172/194] Compiling binary.cpp
+[174/195] Compiling NumiBrainCore AcceptedConsequenceDynamics.swift
+[175/200] Compiling NumiBrainPolicyCLI main.swift
+[176/201] Compiling NumiBrainGateDCLI main.swift
+[176/201] Write Objects.LinkFileList
+[179/201] Compiling NumiBrainConnectomeCLI main.swift
+[180/201] Compiling NumiBrainSchedulerCLI main.swift
+[180/201] Write Objects.LinkFileList
+[182/201] Linking numi-brain-policy
+[183/201] Linking numi-brain-gate-d
+[184/201] Linking numi-brain-connectome
+[185/201] Linking numi-brain-scheduler
+[187/201] Compiling MLX ArrayAt.swift
+[188/201] Compiling NumiBrainCoreTests BrainAllGatesVerifierTests.swift
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainCoreTests/BrainSafetyAdmissionTests.swift:63:22: warning: 'resetAfterVerifiedRecovery(baseBrainGeneration:controlStepIdentifier:transactionFingerprint:)' is deprecated: Scalar identities are not verified recovery. Reconstruct admission with the joint recovery owner; this legacy reset fails closed. [#DeprecatedDeclaration]
+61 |   func testScalarRecoveryCannotResetContinuity() async throws {
+62 |     let c = try controller()
+63 |     do { try await c.resetAfterVerifiedRecovery(baseBrainGeneration: 1, controlStepIdentifier: 1, transactionFingerprint: 1); XCTFail("unverified reset") } catch {}
+   |                      `- warning: 'resetAfterVerifiedRecovery(baseBrainGeneration:controlStepIdentifier:transactionFingerprint:)' is deprecated: Scalar identities are not verified recovery. Reconstruct admission with the joint recovery owner; this legacy reset fails closed. [#DeprecatedDeclaration]
+64 |   }
+65 |   func testRejectedInitialRootCannotAdvanceItsUnpublishedState() async throws {
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+[189/201] Compiling NumiBrainMetal MetalNumanXGateCCapture.swift
+[190/205] Compiling NumiBrainNumanXInteropCLI main.swift
+[190/205] Write Objects.LinkFileList
+[192/205] Compiling NumiBrainDispatchCLI main.swift
+[192/205] Write Objects.LinkFileList
+[193/205] Linking numi-brain-numanx-interop
+[194/205] Linking numi-brain-dispatch
+[196/205] Compiling NumiBrainTissueCLI main.swift
+[196/205] Write Objects.LinkFileList
+[197/205] Linking numi-brain-tissue
+[199/205] Compiling NumiBrainMLX MLXBrainLearner.swift
+[200/208] Compiling NumiBrainExperimentCLI main.swift
+[200/208] Write Objects.LinkFileList
+[202/208] Compiling NumiBrainGateCCLI main.swift
+[202/208] Write Objects.LinkFileList
+[203/208] Linking numi-brain-experiment
+[204/208] Linking numi-brain-gate-c
+[206/208] Compiling NumiBrainMetalTests ConnectomeBodyContractTests.swift
+[207/209] Compiling NumiBrainPackageTests runner.swift
+[207/209] Write Objects.LinkFileList
+[208/209] Linking NumiBrainPackageTests
+Build complete! (151.02s)
+warning: No matching test cases were run
+Test Suite 'Selected tests' started at 2026-09-10 22:39:58.549.
+Test Suite 'NumiBrainPackageTests.xctest' started at 2026-09-10 22:39:58.554.
+Test Suite 'NumiBrainPackageTests.xctest' passed at 2026-09-10 22:39:58.554.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-09-10 22:39:58.555.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.006) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

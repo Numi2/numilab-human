@@ -1,0 +1,71 @@
+{
+  "schema": "numi.human.initial-buffer-comparison.v1",
+  "native_source": "598d2b14d95ec7bef4f12492b89c3e3a54cb057c + initial-buffer-trace.patch",
+  "brain_source": "901ca7600c6f814600d844d5dfce7cb8d924bcc0 + physical-trace-assertions.patch",
+  "maximum_first_root_difference": {
+    "muscle_force": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "bias": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "free_velocity": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "initial_q": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "coupled_force": [
+      0.0,
+      0.0,
+      0.0,
+      1691.152077447686
+    ],
+    "coupled_velocity": [
+      0.0,
+      0.0,
+      0.0,
+      0.0770370811
+    ]
+  },
+  "horizon": {
+    "scenarios": 4,
+    "accepted_roots_per_scenario": 64,
+    "seconds_per_scenario": 0.0064,
+    "replay": "bitwise",
+    "dropout_matches_zero": false,
+    "first_dropout_difference": {
+      "root": 1,
+      "kind": "qv",
+      "index": 238,
+      "maximum_absolute_difference": 0.07703708112239838
+    },
+    "maximum_delivered_excitation": 0.23018711805343628,
+    "terminal_activation_difference": 0.04986739158630371,
+    "terminal_applied_force_difference": 7.91351318359375,
+    "recruited": {
+      "right_ankle_velocity_rad_s": 0.010797400027513504,
+      "root_linear_speed_m_s": 0.034781531664111416,
+      "maximum_root_linear_speed_m_s": 0.034781531664111416
+    },
+    "zero": {
+      "right_ankle_velocity_rad_s": -0.0013869393151253462,
+      "root_linear_speed_m_s": 0.047202762669758015,
+      "maximum_root_linear_speed_m_s": 0.047202762669758015
+    }
+  },
+  "qualification": false,
+  "boundary": "Source initial pose, force, bias and free velocity agree; coupled force/velocity differ. Cause inside the coupled solve is unresolved."
+}

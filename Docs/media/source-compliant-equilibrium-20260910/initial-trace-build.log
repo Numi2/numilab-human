@@ -1,0 +1,11 @@
+[1/2] Building OBJCXX object CMakeFiles/metalrobo.dir/src/metal/MetalArticulatedOperator.mm.o
+FAILED: [code=1] CMakeFiles/metalrobo.dir/src/metal/MetalArticulatedOperator.mm.o 
+/usr/bin/clang++ -DMETALROBO_BUILDING_LIBRARY=1 -DMETALROBO_DEFAULT_METALLIB=\"/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib\" -DMETALROBO_NEURON_METALLIB=\"/Users/n/MetalRobo-human-completion-build-20260907/shaders/NumiNeuron.metallib\" -Dmetalrobo_EXPORTS -I/Users/n/MetalRobo-human-completion-20260907/include -I/Users/n/MetalRobo-human-completion-20260907/matter/include -I/Users/n/MetalRobo-human-completion-20260907/src -I/Users/n/MetalRobo-human-completion-build-20260907/generated -F/Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks -isystem /Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include/libxml2 -x objective-c++ -O3 -DNDEBUG -std=c++23 -arch arm64 -fPIC -fobjc-arc -Wall -Wextra -Wpedantic -MD -MT CMakeFiles/metalrobo.dir/src/metal/MetalArticulatedOperator.mm.o -MF CMakeFiles/metalrobo.dir/src/metal/MetalArticulatedOperator.mm.o.d -o CMakeFiles/metalrobo.dir/src/metal/MetalArticulatedOperator.mm.o -c /Users/n/MetalRobo-human-completion-20260907/src/metal/MetalArticulatedOperator.mm
+/Users/n/MetalRobo-human-completion-20260907/src/metal/MetalArticulatedOperator.mm:9431:60: error: no member named 'dofCount' in 'MRNumanXHumanMatterDispatchGPU'
+ 9431 |                         const auto nv = completionDispatch.dofCount;
+      |                                         ~~~~~~~~~~~~~~~~~~ ^
+/Users/n/MetalRobo-human-completion-20260907/src/metal/MetalArticulatedOperator.mm:9436:87: error: no member named 'qCoordinateCount' in 'MRNumanXHumanMatterDispatchGPU'
+ 9436 |                         emitTrace("initial_q", snapshot + 3u * nv, completionDispatch.qCoordinateCount);
+      |                                                                    ~~~~~~~~~~~~~~~~~~ ^
+2 errors generated.
+ninja: build stopped: subcommand failed.

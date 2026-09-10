@@ -2,8 +2,8 @@
 
 The current release target remains the [neuromusculoskeletal release matrix](NEUROMUSCULOSKELETAL_RELEASE_MATRIX.md). Standing and walking require the same published anatomical, tissue, controller and native runtime stack. This plan resolves the next physical dependency and specifies the remaining executable gates.
 
-The immediate critical path is **correct loaded contact, practical coupled GPU
-execution, and source-compliant anatomical equilibrium**. Controller selection
+The immediate critical path is **reproducible loaded native motion, practical coupled GPU
+execution, and anatomical tissue registration at the prepared equilibrium**. Controller selection
 and long behavior trials depend on those physical prerequisites. Small replay
 transactions remain regression evidence rather than standing outcomes.
 
@@ -29,8 +29,20 @@ Brain motor path, but its four-root comparison establishes no settling
 improvement. These do not establish loaded compliant joint/fibre/contact
 balance or registration of anatomical tissue at the prepared state.
 
-The next implementation must establish source-compliant anatomical settling
-with the corrected contact law, then demonstrate longer stable physical time
+The [source-compliant equilibrium compiler](SOURCE_COMPLIANT_EQUILIBRIUM_20260910.md),
+native `598d2b1`, now passes full FP64 stationary balance and fixed FP32
+pose/recruitment balance with source equalities, stops and curved support.
+Independent source mass/gravity/geometry and three native regressions pass.
+Four-root physical replay/dropout passes. The longer 6.4 ms cohort replays the
+recruited trajectory but fails independent dropout/zero kinematic equality,
+which the original command-only dropout assertion missed. Static preparation
+is closed; sustained balance and deterministic longer scenario resets remain open.
+
+First-root snapshots now show identical initial pose, muscle force, bias and
+free velocity; the discrepancy first appears after Matter reaction is applied.
+The strengthened Brain test rejects it. The next implementation must repair that
+coupled-solve discrepancy,
+then establish source-compliant anatomical settling and longer stable physical time
 on the same anatomical stack. Profile remaining GPU
 cost where measured; preserve source compliance, source stops, tissue mass,
 conservative transfer, causal control and rejected-state isolation. Batch fixes
@@ -64,8 +76,8 @@ validation enabled; readiness authority and decision-shadow checks are unchanged
 
 | Work | Permanent owner and implementation | Completion evidence |
 |---|---|---|
-| Load-balanced anatomical stance | Bounded native placement and the witness gravity wrench now pass. Current-pose primitive queries now pass. FP64 internal recruitment with ideal equalities and source-stop reactions now passes. Establish source-compliant loaded joint/contact response, passive tissue/prestress and fibre equilibrium. Share the identical root/pose initial condition with tissue registration and existing Human/CompiledRun admission. | Witness geometry and gravity-wrench evidence are retained in the stance increment; initial full primitive geometry now passes; bounded internal acceleration/fibre residuals, dynamic joint/contact complementarity and registered FP64/native force parity remain required. |
-| Source-compliant loaded integration | NumanX v7/Core/Matter now admits the exact prepared pose and muscle state with NHEQ2/NHLIM1/NHCNT2. The small FEM fixture passes bounded joint replay. Diagnose and settle limit/equality/contact/fibre residuals, then compile the registered tissue at that identical state. The legacy NHEQ1 visual solver remains a diagnostic comparator. | Scalar source-law and small joint-transaction checks pass. Prepared-pose source/timestep convergence, registered mesh convergence under load, conservative force/moment transfer, no duplicated mass or active force, rollback/retry and replay remain required. |
+| Load-balanced anatomical stance | Bounded native placement and the witness gravity wrench now pass. Current-pose primitive queries now pass. Full FP64 source-compliant equilibrium and fixed FP32 pose/recruitment balance now pass. Establish reproducible loaded dynamic joint/contact/fibre response and passive tissue/prestress. Share the identical root/pose initial condition with tissue registration and existing Human/CompiledRun admission. | Witness geometry and gravity-wrench evidence are retained in the stance increment; initial full primitive geometry now passes; bounded internal acceleration/fibre residuals, dynamic joint/contact complementarity and registered FP64/native force parity remain required. |
+| Source-compliant loaded integration | NumanX v7/Core/Matter now admits the exact prepared pose and muscle state with NHEQ2/NHLIM1/NHCNT2. The small FEM fixture passes bounded joint replay. Repair the longer dropout/zero state discrepancy; diagnose and settle dynamic limit/equality/contact/fibre residuals, then compile registered tissue at that identical state. The legacy NHEQ1 visual solver remains a diagnostic comparator. | Scalar source-law and small joint-transaction checks pass. Prepared-pose source/timestep convergence, registered mesh convergence under load, conservative force/moment transfer, no duplicated mass or active force, rollback/retry and replay remain required. |
 | Standing and recovery controller | Lower source-semantic posture/support observations and muscle commands through the existing SensorPack/PolicyPack and Brain controller. Keep neural learning and controller state causal to accepted physical time. Tune stance feedback only after the initial mechanical state is admitted. | Assistance-free sustained balance, controlled nonzero perturbations and recovery, actuator bounds, observable force/kinematic response, observation dropout and emergency-stop behavior. Preserve joint-risk inhibition and rejected-state isolation. |
 | Native behavior telemetry | Implement the frozen reductions in the owning native accepted-root publication path: source-bound root/trunk state, support/contact, ground-relative height and tilt, forward/lateral speed, falls, assistance and termination. Retain every attempted root and its disposition. | Replayable metric reductions agree with an independent trace check; failed/rejected futures never advance physical time or publish observations; missing, duplicated and truncated trials are rejected. Terminal probe q/v is insufficient. |
 | Standing qualification | Bind one exact source/task/controller/runtime stack to the existing behavior evaluator. Freeze task thresholds from source observations and measurement uncertainty before tuning or selection. | All 20 distinct 60-second standing trials pass. At least 95 of 100 distinct five-second recovery trials pass with the prescribed nonzero impulses and hold conditions. |

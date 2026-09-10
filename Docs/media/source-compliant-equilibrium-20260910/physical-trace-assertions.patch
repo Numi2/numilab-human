@@ -1,0 +1,41 @@
+diff --git a/Tests/NumiBrainMetalTests/MetalNumanXBridgeV1EndToEndTests.swift b/Tests/NumiBrainMetalTests/MetalNumanXBridgeV1EndToEndTests.swift
+index fbcfb5a..3aefcde 100644
+--- a/Tests/NumiBrainMetalTests/MetalNumanXBridgeV1EndToEndTests.swift
++++ b/Tests/NumiBrainMetalTests/MetalNumanXBridgeV1EndToEndTests.swift
+@@ -134,12 +134,16 @@ final class MetalNumanXBridgeV1EndToEndTests: XCTestCase {
+           return bytes.base64EncodedString()
+         }
+         let proprioception = try XCTUnwrap(frame[.proprioception])
+-        let activation = stride(from: 1, to: proprioception.count, by: 10).map { proprioception[$0] }
+-        let force = stride(from: 6, to: proprioception.count, by: 10).map { proprioception[$0] }
++        // Feature 6 is signed applied force; feature 7 is positive tendon
++        // tension. Retain the fibre/path fields to locate physical drift.
++        let muscleFields = [("activation", 1), ("fiber_length", 2), ("fiber_velocity", 3),
++                            ("path_length", 4), ("path_velocity", 5), ("applied_force", 6),
++                            ("tendon_tension", 7), ("fiber_residual", 9)].map { name, feature in
++          (name, stride(from: feature, to: proprioception.count, by: 10).map { proprioception[$0] })
++        }
+         // Separate bounded records preserve state, command and force bytes atomically.
+-        for (kind, values) in [("qv", q + v), ("motor", scenario.motorExcitationsByGeneration[index]),
+-                               ("activation", activation), ("tendon_force", force)] {
+-          let object: [String: Any] = ["schema": "numi.human.prepared-recruitment-trace.v1", "scenario": label,
++        for (kind, values) in [("qv", q + v), ("motor", scenario.motorExcitationsByGeneration[index])] + muscleFields {
++          let object: [String: Any] = ["schema": "numi.human.prepared-recruitment-trace.v2", "scenario": label,
+             "root": index + 1, "elapsed_microseconds": (index + 1) * 100, "kind": kind,
+             "fp32_le_base64": packed(values)]
+           let data = try JSONSerialization.data(withJSONObject: object, options: [.sortedKeys])
+@@ -165,6 +169,14 @@ final class MetalNumanXBridgeV1EndToEndTests: XCTestCase {
+     XCTAssertTrue(active.motorExcitationsByGeneration.flatMap { $0 }.allSatisfy { $0.isFinite && (0...1).contains($0) })
+     XCTAssertTrue(unavailable.motorExcitationsByGeneration.flatMap { $0 }.allSatisfy { $0 == 0 })
+     XCTAssertTrue(zero.motorExcitationsByGeneration.flatMap { $0 }.allSatisfy { $0 == 0 })
++    for modality in [SensoryModality.kinesthesia, .vestibular, .proprioception, .touch] {
++      XCTAssertEqual(active.sensorValuesByGeneration[0][modality], zero.sensorValuesByGeneration[0][modality],
++        "identical initial state and zero first command must reproduce physical state")
++      for index in 0..<Int(rootCount) {
++        XCTAssertEqual(zero.sensorValuesByGeneration[index][modality], unavailable.sensorValuesByGeneration[index][modality],
++          "zero-command physical state must survive receptor ablation at root \(index + 1)")
++      }
++    }
+     func muscleFeature(_ scenario: AcceptedScenario, _ feature: Int) throws -> [Float] {
+       stride(from: feature, to: 4160, by: 10).map { scenario.finalSensorValuesByModality[.proprioception]![$0] }
+     }

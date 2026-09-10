@@ -1,0 +1,76 @@
+[0/1] Planning build
+Building for production...
+[0/16] Write sources
+[1/16] Write swift-version-3CD7052B146186F2.txt
+[3/20] Compiling RealModule AlgebraicField.swift
+[4/21] Compiling ComplexModule Complex+AdditiveArithmetic.swift
+[5/22] Compiling Numerics Numerics.swift
+[6/23] Compiling NumiBrainConnectomeTestSupport ConnectomeTestFixture.swift
+[7/23] Compiling NumiBrainValidation AnalyticPhysicalReferences.swift
+[8/24] Compiling NumiBrainQualification PerformanceAttemptLedger.swift
+[9/26] Compiling NumiBrainWatchdogCLI main.swift
+[10/26] Compiling NumiBrainValidationTests ConvergenceAndReferenceTests.swift
+[11/26] Compiling NumiBrainQualificationCLI main.swift
+[12/27] Compiling NumiBrainQualificationTests PerformanceAttemptLedgerTests.swift
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainQualificationTests/QualificationDeclarationTests.swift:23:29: warning: 'promotionReady' is deprecated: A declaration cannot prove promotion. Use declaredPromotionReady for inspection, and gate-specific verified receipts for admission. [#DeprecatedDeclaration]
+21 |     let manifest = try NumanXQualificationManifest(sourceRevision: "test", entries: entries)
+22 |     XCTAssertTrue(manifest.declaredPromotionReady)
+23 |     XCTAssertFalse(manifest.promotionReady)
+   |                             `- warning: 'promotionReady' is deprecated: A declaration cannot prove promotion. Use declaredPromotionReady for inspection, and gate-specific verified receipts for admission. [#DeprecatedDeclaration]
+24 |   }
+25 | 
+
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainQualificationTests/QualificationDeclarationTests.swift:31:29: warning: 'promotionReady' is deprecated: A declaration cannot prove promotion. Use declaredPromotionReady for inspection, and gate-specific verified receipts for admission. [#DeprecatedDeclaration]
+29 |     XCTAssertThrowsError(try manifest.validate())
+30 |     XCTAssertFalse(manifest.declaredPromotionReady)
+31 |     XCTAssertFalse(manifest.promotionReady)
+   |                             `- warning: 'promotionReady' is deprecated: A declaration cannot prove promotion. Use declaredPromotionReady for inspection, and gate-specific verified receipts for admission. [#DeprecatedDeclaration]
+32 |   }
+33 | 
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+[13/28] Compiling NumiBrainGateFCLI main.swift
+[14/27] Compiling NumiBrainGateECLI main.swift
+[15/26] Compiling MLX ArrayAt.swift
+[16/26] Compiling NumiBrainCore AcceptedConsequenceDynamics.swift
+[17/30] Compiling NumiBrainPolicyCLI main.swift
+[18/30] Compiling NumiBrainGateDCLI main.swift
+[19/30] Compiling NumiBrainSchedulerCLI main.swift
+[20/29] Compiling NumiBrainConnectomeCLI main.swift
+[21/28] Compiling NumiBrainCoreTests BrainAllGatesVerifierTests.swift
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainCoreTests/BrainSafetyAdmissionTests.swift:63:22: warning: 'resetAfterVerifiedRecovery(baseBrainGeneration:controlStepIdentifier:transactionFingerprint:)' is deprecated: Scalar identities are not verified recovery. Reconstruct admission with the joint recovery owner; this legacy reset fails closed. [#DeprecatedDeclaration]
+61 |   func testScalarRecoveryCannotResetContinuity() async throws {
+62 |     let c = try controller()
+63 |     do { try await c.resetAfterVerifiedRecovery(baseBrainGeneration: 1, controlStepIdentifier: 1, transactionFingerprint: 1); XCTFail("unverified reset") } catch {}
+   |                      `- warning: 'resetAfterVerifiedRecovery(baseBrainGeneration:controlStepIdentifier:transactionFingerprint:)' is deprecated: Scalar identities are not verified recovery. Reconstruct admission with the joint recovery owner; this legacy reset fails closed. [#DeprecatedDeclaration]
+64 |   }
+65 |   func testRejectedInitialRootCannotAdvanceItsUnpublishedState() async throws {
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+[22/28] Compiling NumiBrainMetal MetalNumanXGateCCapture.swift
+[23/32] Compiling NumiBrainNumanXInteropCLI main.swift
+[24/31] Compiling NumiBrainDispatchCLI main.swift
+[25/30] Compiling NumiBrainTissueCLI main.swift
+[26/29] Compiling NumiBrainMLX MLXBrainLearner.swift
+[27/32] Compiling NumiBrainExperimentCLI main.swift
+[28/31] Compiling NumiBrainGateCCLI main.swift
+[29/30] Compiling NumiBrainMetalTests ConnectomeBodyContractTests.swift
+[30/32] Compiling NumiBrainPackageTests runner.swift
+[30/32] Write Objects.LinkFileList
+[31/32] Linking NumiBrainPackageTests
+Build complete! (133.58s)
+Test Suite 'Selected tests' started at 2026-09-10 23:14:36.661.
+Test Suite 'NumiBrainPackageTests.xctest' started at 2026-09-10 23:14:36.668.
+Test Suite 'MetalNumanXBridgeV1EndToEndTests' started at 2026-09-10 23:14:36.668.
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testAuthoredMatterDescriptorRejectsMissingIdentity]' started.
+Test Case '-[NumiBrainMetalTests.MetalNumanXBridgeV1EndToEndTests testAuthoredMatterDescriptorRejectsMissingIdentity]' passed (0.001 seconds).
+Test Suite 'MetalNumanXBridgeV1EndToEndTests' passed at 2026-09-10 23:14:36.668.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'NumiBrainPackageTests.xctest' passed at 2026-09-10 23:14:36.668.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'Selected tests' passed at 2026-09-10 23:14:36.668.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.001 (0.007) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

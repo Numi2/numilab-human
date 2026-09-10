@@ -1,0 +1,62 @@
+{
+  "command": [
+    "/Users/n/numi-brain-human-completion-20260907/.build/release/numi-brain-gate-c",
+    "describe-body",
+    "--timestep-microseconds",
+    "100",
+    "--library",
+    "/Users/n/MetalRobo-human-completion-build-20260907/lib/libmetalrobo.dylib",
+    "--rigid",
+    "/Users/n/human-completion-20260907/input/myosim-fullbody-core-reference.nhrigid",
+    "--muscle",
+    "/Users/n/human-completion-20260907/input/myosim-fullbody-muscle-reference.nhmyo",
+    "--contacts",
+    "/Users/n/human-capsule-20260908/input/myosim-fullbody-support-primitives.nhcnt",
+    "--metalrobo-metallib",
+    "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib",
+    "--matter-metallib",
+    "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib",
+    "--visual-pack",
+    "/Users/n/NumiHumanCurrent/anterior-thorax-smoke/myosim-fullbody-articulated-markers-muscle-driven-selected-actuators-source-support-contact.mrvpack",
+    "--vision-profile",
+    "/Users/n/Numan-X-neuron-v1/assets/numanx-head-vision-profile.v1.json",
+    "--matter-world",
+    "/Users/n/human-compliant-equilibrium-20260910/fixture/prepared-100us.nmatterpack",
+    "--human-source-fp",
+    "f0943712c830fe4e",
+    "--matter-world-fp",
+    "48f0db28149fd925",
+    "--joint-equalities",
+    "/Users/n/human-completion-20260907/input/myosim-fullbody-joint-equalities-source-compliance.nheq",
+    "--joint-equality-fp",
+    "19041185bf97c95d",
+    "--joint-limits",
+    "/Users/n/human-dynamic-limits-20260908/myosim-fullbody-joint-limits.nhlim",
+    "--joint-limit-fp",
+    "601a251a6473fdd9",
+    "--initial-state",
+    "/Users/n/human-compliant-equilibrium-20260910/fixture/prepared.nhinit",
+    "--initial-state-fp",
+    "8ba8834eabd1dae3"
+  ],
+  "cwd": "/Users/n/numi-brain-human-completion-20260907",
+  "environment": {},
+  "source_state": {
+    "native": {
+      "revision": "3c15621c33238dc1ec5e51d1ddde265d99d8b95f",
+      "status": " M CMakeLists.txt\n M apps/numanx_human_equality_probe.mm\n M apps/numanx_human_limit_probe.mm\n M apps/numilab_human_myosim_visual_probe.mm\n M src/core/NumiHumanMuscleEquilibrium.cpp\n M tests/numi_human_static_support_test.cpp\n?? include/metalrobo/NumiHumanCompliantEquilibrium.hpp\n"
+    },
+    "brain": {
+      "revision": "30f138fa17378fce788701edb5c7d834ee3c7c69",
+      "status": ""
+    }
+  },
+  "competing_workloads": "",
+  "artifact_sha256": {},
+  "brain_test_binary_sha256": "be59c273316e4ee8df338021f94df30cb10bf71285e4faea4dd9e02b334cc042",
+  "brain_test_binary_bytes": 44209744,
+  "authoring_revision": "113a82682db9a234aa85aa225a8b89283f7c52e3",
+  "runner_sha256": "d00abd824ed57e6e0cbc52ff5680adda6e89eafb17c9c321cfdfc7542c0f03d2",
+  "returncode": 0,
+  "elapsed_seconds": 11.84942291630432
+}

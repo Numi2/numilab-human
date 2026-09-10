@@ -1,0 +1,79 @@
+[0/1] Planning build
+Building for production...
+[0/229] Write sources
+[1/229] Compiling _NumericsShims _NumericsShims.c
+[2/229] Write sources
+[3/229] Copying MuscleLocomotor.metal
+[4/229] Write sources
+[27/229] Write swift-version-3CD7052B146186F2.txt
+[28/229] Write sources
+[29/230] Compiling NumiBrainABI NumiBrainABI.cpp
+[30/238] Compiling NumiBrainConnectomeABI NumiBrainConnectomeAudit.cpp
+[31/238] Compiling NumiBrainNumiLabBridgeABI NumiBrainNumiLabBridgeABI.c
+[33/240] Compiling RealModule AlgebraicField.swift
+[33/240] Write sources
+[35/240] Compiling version.cpp
+[36/240] Compiling NumiBrainConnectomeABI NumiBrainConnectomeABI.cpp
+[38/241] Compiling ComplexModule Complex+AdditiveArithmetic.swift
+[38/241] Compiling utils.cpp
+[40/242] Compiling Numerics Numerics.swift
+[40/242] Compiling format.cc
+[41/244] Compiling scheduler.cpp
+[42/244] Compiling random.cpp
+[44/244] Compiling NumiBrainConnectomeTestSupport ConnectomeTestFixture.swift
+[44/244] Compiling transforms.cpp
+[45/244] Compiling linalg.cpp
+[46/244] Compiling no_gguf.cpp
+[47/244] Compiling safetensors.cpp
+[49/244] Compiling NumiBrainValidation AnalyticPhysicalReferences.swift
+[49/244] Compiling load.cpp
+[51/244] Compiling NumiBrainQualification PerformanceAttemptLedger.swift
+[51/247] Compiling graph_utils.cpp
+[52/248] Compiling primitives.cpp
+[53/249] Compiling fft.cpp
+[55/250] Compiling NumiBrainQualificationCLI main.swift
+[56/251] Compiling NumiBrainGateFCLI main.swift
+[56/253] Compiling fast.cpp
+[58/254] Compiling NumiBrainWatchdogCLI main.swift
+[58/254] Write Objects.LinkFileList
+[61/254] Compiling NumiBrainGateECLI main.swift
+[61/255] Linking numi-brain-qualify
+[62/255] Write Objects.LinkFileList
+[64/255] Linking numi-brain-watchdog
+[65/255] Linking numi-brain-gate-f
+[66/255] Linking numi-brain-gate-e
+[67/255] Compiling ops.cpp
+[68/255] Compiling dtype_utils.cpp
+[69/255] Compiling dtype.cpp
+[70/255] Compiling utils.cpp
+[71/255] Compiling einsum.cpp
+[72/255] Compiling no_ring.cpp
+[73/255] Compiling primitives.cpp
+[74/255] Compiling ops.cpp
+[75/255] Compiling no_nccl.cpp
+[76/255] Compiling no_mpi.cpp
+[77/255] Compiling no_jaccl.cpp
+[78/255] Compiling device.cpp
+[79/255] Compiling distributed.cpp
+[81/255] Compiling NumiBrainValidationTests ConvergenceAndReferenceTests.swift
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainValidationTests/ConvergenceAndReferenceTests.swift:2:18: error: module 'NumiBrainValidation' was not compiled for testing [#ModuleNotTestable]
+  1 | import XCTest
+  2 | @testable import NumiBrainValidation
+    |                  `- error: module 'NumiBrainValidation' was not compiled for testing [#ModuleNotTestable]
+  3 | 
+  4 | final class ConvergenceAndReferenceTests: XCTestCase {
+
+[#ModuleNotTestable]: <https://docs.swift.org/compiler/documentation/diagnostics/module-not-testable>
+[81/255] Compiling utils.cpp
+[81/255] Compiling compile.cpp
+[82/255] Compiling NumiBrainQualificationTests PerformanceAttemptLedgerTests.swift
+/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainQualificationTests/PerformanceAttemptLedgerTests.swift:3:18: error: module 'NumiBrainQualification' was not compiled for testing [#ModuleNotTestable]
+  1 | import Foundation
+  2 | import XCTest
+  3 | @testable import NumiBrainQualification
+    |                  `- error: module 'NumiBrainQualification' was not compiled for testing [#ModuleNotTestable]
+  4 | 
+  5 | final class PerformanceAttemptLedgerTests: XCTestCase {
+
+[#ModuleNotTestable]: <https://docs.swift.org/compiler/documentation/diagnostics/module-not-testable>
+[82/255] Compiling export.cpp
