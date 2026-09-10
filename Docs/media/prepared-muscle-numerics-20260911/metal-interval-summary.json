@@ -1,0 +1,20 @@
+{
+  "schema": "numi.human.metal-interval-diagnostic.v1",
+  "nominal_capture_seconds": 2,
+  "gpu_interval_rows": 4558,
+  "owned_active_compute_rows": 497,
+  "owned_active_compute_union_ns": 2071080135,
+  "candidate_group_rows": 9,
+  "candidate_group_union_ns": 617261377,
+  "longest_candidate_group_ns": 80628209,
+  "application_encoding_union_ns": 54340291,
+  "graphics_compiler_interval_count": 0,
+  "shader_profiler_interval_count": 0,
+  "export_sha256": {
+    "metal-gpu-intervals": "368d7af36c20a08354aa6692fd13e7813ee0af7e94958c7a295295fd6f334012",
+    "metal-application-intervals": "74391d7c292edb035a2d8da0f97eaeeb9230fe0a45cf6906a0a6044577a9928b",
+    "graphics-compiler-activity-intervals": "680d6f3f164d5577a12f9ae620a515b99826c272c6dae282223c5295cfa32c4b",
+    "metal-shader-profiler-intervals": "2fe005e8397113467d61288da325cf5591769de873032bdc5b08fd08f12b0027"
+  },
+  "boundary": "Attached two-second sample during a validation-enabled bounded cohort. Interval unions avoid double-counting overlapping rows. Candidate groups combine prepare, FK/Jacobians, materialization, witnesses and contact; this does not isolate one shader or qualify performance. Raw trace remains on the Mac mini; the environment-bearing TOC is not published."
+}

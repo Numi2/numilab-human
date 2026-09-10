@@ -1,0 +1,19 @@
+{
+  "command": [
+    "xcrun",
+    "xctrace",
+    "record",
+    "--template",
+    "Metal System Trace",
+    "--attach",
+    "26574",
+    "--time-limit",
+    "2s",
+    "--no-prompt",
+    "--output",
+    "/Users/n/human-prepared-paths-20260911/metal-2s.trace"
+  ],
+  "returncode": 0,
+  "elapsed_seconds": 11.086305874865502,
+  "boundary": "Two-second attached diagnostic during horizon-wrapped-fiber; this perturbs timing and is not a performance qualification."
+}

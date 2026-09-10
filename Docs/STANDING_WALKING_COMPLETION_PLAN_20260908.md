@@ -41,12 +41,23 @@ pass. The retained failure locates the first difference before the linear solve:
 matching candidate contact points and Jacobians were combined with an absent
 initial-body buffer. The adapter now supplies a separate immutable GPU pose view.
 
-Static preparation and this bounded reproducibility gate are closed. The next
-physical work is prepared wrist-route/fibre parity, source-compliant anatomical
-settling and tissue registration at the same pose. Practical coupled execution
-also remains critical: 256 roots representing 6.4 ms per scenario take about
+The [prepared muscle numerical repairs](PREPARED_MUSCLE_NUMERICS_20260911.md),
+native `8aa3ad1`, close the two inside-wrap outliers, same-path fibre arithmetic
+and the hidden ten-microsecond timestep floor. Fixed-state checks at 1, 5, 10
+and 100 microseconds, independent source paths, ten native checks and the
+64-root coupled comparison pass. Full source-path force differences remain
+0.780 N at 100 microseconds and 4.844 N at one microsecond, so source-force and
+geometry consistency and timestep convergence are the next mechanical gate.
+
+Static preparation and bounded reproducibility are closed. Source-compliant
+anatomical settling and tissue registration must use the identical prepared
+pose and consistent forces. Practical coupled execution also remains critical: 256 roots representing 6.4 ms per scenario take about
 445 seconds with validation enabled. Preserve source compliance, source stops,
 tissue mass, conservative transfer, causal control and rejected-state isolation.
+The attached Metal trace identifies candidate-kinematics groups for further
+measurement. Resolve individual shader costs, then inspect repeated FK/Jacobian
+work within an unchanged candidate while preserving candidate-generation and
+rollback boundaries. Disabling API validation leaves the large cost in place.
 The complete behavior, calibration and regional anatomy requirements remain below.
 
 Historical increments remain available in the [curved-support report](CURVED_SUPPORT_20260908.md),
