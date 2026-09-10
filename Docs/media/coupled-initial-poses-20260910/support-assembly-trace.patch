@@ -1,0 +1,77 @@
+diff --git a/matter/src/runtime.mm b/matter/src/runtime.mm
+index bd6e243..da679b8 100644
+--- a/matter/src/runtime.mm
++++ b/matter/src/runtime.mm
+@@ -20,6 +20,10 @@
+ #include <cstring>
+ #include <dlfcn.h>
+ #include <filesystem>
++#include <cstdio>
++#include <cstdlib>
++#include <iomanip>
++#include <sstream>
+ #include <limits>
+ #include <memory>
+ #include <mutex>
+@@ -4766,6 +4770,7 @@ void settleApplication(
+             // the primal barrier gradient before the fused FGMRES solve. The
+             // callback only encodes into the borrowed command buffer; it
+             // never commits, waits, or opens another queue.
++            std::uint32_t initialSupportTraceAssembly = 0u;
+             const auto encodeCoupledPrimalContact = [&] (
+                 const bool certify,
+                 id<MTLBuffer> histories,
+@@ -5214,6 +5219,53 @@ void settleApplication(
+                     [encoder setBuffer:state.femResidual offset:0u atIndex:13u];
+                     [encoder setBuffer:buffer(request.rigid.v) offset:0u atIndex:14u];
+                 });
++                if (request.controlStep == 1u &&
++                    humanSupportTotal != 0u && std::getenv("MRNX_PHYSICAL_BUFFER_TRACE") != nullptr) {
++                    const std::uint32_t traceAssembly = initialSupportTraceAssembly++;
++                    [encoder endEncoding];
++                    const auto traceCount = static_cast<std::uint32_t>(humanSupportTotal);
++                    const auto traceNv = coupledArticulatedNv;
++                    const auto traceStride = state.dispatch.rigidGeneralizedCapacity;
++                    const auto sampleBytes = traceCount * sizeof(NMContactSampleGPU);
++                    const auto jacobianBytes = traceCount * 3u * traceStride * sizeof(float);
++                    __strong id<MTLBuffer> samples = [state.device newBufferWithLength:sampleBytes options:MTLResourceStorageModeShared];
++                    __strong id<MTLBuffer> jacobians = [state.device newBufferWithLength:jacobianBytes options:MTLResourceStorageModeShared];
++                    id<MTLBlitCommandEncoder> trace = [commandBuffer blitCommandEncoder];
++                    if (samples == nil || jacobians == nil || trace == nil) {
++                        diagnostics.message = "failed to allocate initial support diagnostic snapshot";
++                        return false;
++                    }
++                    [trace copyFromBuffer:state.humanSupportSamples sourceOffset:0u toBuffer:samples destinationOffset:0u size:sampleBytes];
++                    [trace copyFromBuffer:state.humanSupportPointJacobians sourceOffset:0u toBuffer:jacobians destinationOffset:0u size:jacobianBytes];
++                    [trace endEncoding];
++                    [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> completed) {
++                        if (completed.status != MTLCommandBufferStatusCompleted) return;
++                        const auto* sample = static_cast<const NMContactSampleGPU*>(samples.contents);
++                        const auto* jacobian = static_cast<const float*>(jacobians.contents);
++                        for (std::uint32_t row = 0; row < traceCount; ++row) {
++                            const auto* j = jacobian + row * 3u * traceStride;
++                            std::uint64_t hash = 14695981039346656037ull;
++                            for (unsigned axis = 0; axis < 3u; ++axis) {
++                                for (std::uint32_t d = 0; d < traceNv; ++d) {
++                                    std::uint32_t word; std::memcpy(&word, j + axis * traceStride + d, sizeof(word));
++                                    for (unsigned b = 0; b < 4u; ++b) { hash ^= (word >> (8u * b)) & 255u; hash *= 1099511628211ull; }
++                                }
++                            }
++                            const auto& p = sample[row].pointAndSeparation;
++                            std::ostringstream line; line << std::setprecision(9)
++                                << "mrnx_initial_support={\"assembly\":" << traceAssembly << ",\"row\":" << row << ",\"jacobian_hash\":\"" << std::hex << hash << std::dec
++                                << "\",\"root_diagonal\":[" << j[0] << ',' << j[traceStride + 1u] << ',' << j[2u * traceStride + 2u]
++                                << "],\"point_gap\":[" << p.x << ',' << p.y << ',' << p.z << ',' << p.w
++                                << "],\"impulse\":[" << sample[row].impulseAndNormal.x << ',' << sample[row].impulseAndNormal.y << ','
++                                << sample[row].impulseAndNormal.z << ',' << sample[row].impulseAndNormal.w
++                                << "],\"normal_constraint\":" << sample[row].admissionVelocityAndNormal.w
++                                << ",\"flags\":" << sample[row].identity.w << "}\n";
++                            const auto text = line.str(); std::fwrite(text.data(), 1u, text.size(), stderr);
++                        }
++                    }];
++                    encoder = [commandBuffer computeCommandEncoder];
++                    if (encoder == nil) { diagnostics.message = "failed to resume initial support diagnostic"; return false; }
++                }
+                 dispatchThreads("nm_contact_accumulate_fem_residual", femNodeTotal, [&] {
+                     setDispatch();
+                     [encoder setBuffer:state.contactNodeIncidence offset:0u atIndex:1u];

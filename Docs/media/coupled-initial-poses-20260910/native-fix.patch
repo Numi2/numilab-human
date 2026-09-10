@@ -1,0 +1,360 @@
+commit baca930c27dda11dfd6e0afd57f696955c054d48
+Author:     numi2 <numit22@gmail.com>
+AuthorDate: Thu Sep 10 23:56:04 2026 +0200
+Commit:     numi2 <numit22@gmail.com>
+CommitDate: Thu Sep 10 23:56:04 2026 +0200
+
+    Bind Human support recovery to immutable initial GPU poses
+
+diff --git a/apps/matter_physics_probe.mm b/apps/matter_physics_probe.mm
+index 60b3ff1..6693383 100644
+--- a/apps/matter_physics_probe.mm
++++ b/apps/matter_physics_probe.mm
+@@ -3446,6 +3446,42 @@ void runHumanSupportLoaded() {
+             };
+             auto init = matter.initialize(compiled.world, runtimeConfiguration);
+             require(init.encoded, "support initialize: "+init.message);
++            if (c.rows == 6u && c.seed == 0.0f) {
++                auto supportOnlySource = source;
++                supportOnlySource.rigidProxies.clear();
++                const auto supportOnlyWorld = numi::matter::compileWorld(supportOnlySource, options);
++                require(supportOnlyWorld.succeeded(), "support-only fixture compilation failed");
++                numi::matter::Runtime supportOnly;
++                require(supportOnly.initialize(supportOnlyWorld.world, runtimeConfiguration).encoded,
++                    "support-only fixture initialization failed");
++                id<MTLDevice> device = ((__bridge id<MTLBuffer>)matter.statusBuffer()).device;
++                id<MTLCommandQueue> queue = [device newCommandQueue];
++                id<MTLCommandBuffer> command = [queue commandBuffer];
++                numi::matter::EncodeRequest invalid;
++                invalid.commandBuffer = (__bridge void*)command;
++                invalid.physicsSubsteps = 1u;
++                invalid.rigid.currentBodyCount = 2u;
++                invalid.rigid.currentBodyStride = 2u;
++                auto denied = supportOnly.encode(invalid);
++                require(!denied.encoded && denied.message ==
++                    "Human support requires an initial body pose arena",
++                    "support admitted missing initial body arena: " + denied.message);
++                id<MTLBuffer> shortBodies = [device newBufferWithLength:
++                    environments * 2u * sizeof(MRBodyStateGPU) - 1u
++                    options:MTLResourceStorageModePrivate];
++                invalid.rigid.currentBodies = (__bridge void*)shortBodies;
++                denied = supportOnly.encode(invalid);
++                require(!denied.encoded && denied.message ==
++                    "Human support initial body arena has wrong device provenance or byte capacity",
++                    "support admitted short initial body arena: " + denied.message);
++                invalid.humanSupportInitialBodies = (__bridge void*)shortBodies;
++                invalid.rigid.currentBodies = nullptr;
++                denied = supportOnly.encode(invalid);
++                require(!denied.encoded && denied.message ==
++                    "Human support initial body arena has wrong device provenance or byte capacity",
++                    "support admitted short explicit initial pose arena: " + denied.message);
++                std::cout << "support_initial_bodies_missing_and_short_rejected=1\n";
++            }
+             require(matter.coupledCandidatePointCapacity() >= c.rows,
+                 "Human support queries exceed advertised candidate capacity");
+             auto checkpoint = matter.snapshot();
+diff --git a/apps/numanx_human_matter_adapter_probe.mm b/apps/numanx_human_matter_adapter_probe.mm
+index 33ecf5a..6282362 100644
+--- a/apps/numanx_human_matter_adapter_probe.mm
++++ b/apps/numanx_human_matter_adapter_probe.mm
+@@ -2681,9 +2681,12 @@ int main() {
+                 matter, queue, arenas, accepted,
+                 ApplyMode::accept, true);
+             const auto acceptedToken = acceptedApply.token;
+-            require(accepted.applyReusedPhysicalCommandBufferAddress,
+-                "bounded apply allocation did not reproduce completed-CB "
+-                "Objective-C address reuse");
++            // Wrapper address reuse is an allocator observation, not a
++            // portable precondition for the transaction/rollback checks below.
++            // Keep its absence explicit instead of aborting those checks or
++            // claiming that a pointer-reuse case ran when it did not.
++            const bool observedAddressReuse =
++                accepted.applyReusedPhysicalCommandBufferAddress;
+ 
+             auto rejected = prepareTransaction(
+                 adapter, matter, queue, arenas, exact, 3u, 38u, true);
+@@ -2786,7 +2789,8 @@ int main() {
+                 << "heap_alias=distinct_object_overlap_rejected\n"
+                 << "cross_slot_authority=lease_and_physical_alias_rejected\n"
+                 << "first_command_abort=runtime_cancel_and_slot_reuse\n"
+-                << "command_buffer_address_reuse=admitted_by_live_apply\n"
++                << "command_buffer_address_reuse="
++                << (observedAddressReuse ? "admitted_by_live_apply" : "not_observed") << "\n"
+                 << "prepared_accept=canonical_token_fnv_reserved_zero\n"
+                 << "prepared_reject=human_matter_byte_restore\n"
+                 << "physical_reject=zero_gate_exact_code_and_restore\n"
+diff --git a/docs/NUMERICS.md b/docs/NUMERICS.md
+index 81a3f3b..585de5b 100644
+--- a/docs/NUMERICS.md
++++ b/docs/NUMERICS.md
+@@ -596,3 +596,41 @@ and replay. The equality Metal probe directly compares stationary source forces
+ with the compiler, and the limit probe compares against its independent pinned
+ MuJoCo linearization after removing damping and free-predictor terms. The latter
+ explicitly accounts for FP64 oracle versus FP32 payload inverse-weight storage.
++
++
++## Human support initial-pose ownership (2026-09-10)
++
++Human support recovery evaluates the authored target gap from the root's
++initial body poses, separately from each Newton candidate. The Human adapter
++materializes its existing COM pose records into a private, slot-owned GPU view
++on the same command buffer before Matter. This view is overwritten in full at
++every root, including prefix records outside the articulation. Its capacity
++uses checked arithmetic and counts against the adapter's retained-byte budget.
++It is derived scratch, not accepted state or another kinematics/dynamics owner.
++
++`EncodeRequest::humanSupportInitialBodies` supplies this pose-only view with
++`rigid.currentBodyCount/currentBodyStride` indexing. Generic MetalWorld callers
++continue to use `rigid.currentBodies` when the explicit view is absent. The
++explicit view is consumed only by support's initial-gap calculation; it cannot
++supply generic proxy dynamics or post-commit reconciliation. Matter rejects
++missing initial poses, insufficient body coverage, a wrong device and truncated
++byte capacity before encoding support. Candidate poses retain their independent
++arena and cannot overwrite the recovery reference during nonlinear iterations.
++
++Previously the Human adapter supplied null current bodies. Support rows did
++not require them, and the support kernel indexed Matter's dummy buffer as body
++records. A repeated 64-root comparison exposed scenario-dependent contact
++recovery despite identical initial q, free predictor, support points and
++Jacobians. The first differing normal constraint was 17.9370499 versus
++395.966522 before the first linear solve. The repair changes input ownership;
++the contact law, stabilization fraction, solver tolerance and Brain inhibition
++remain unchanged. The loaded-support regression now includes support-only
++missing/short implicit and short explicit initial-pose rejection.
++
++The adapter probe always exercises ACCEPT/REJECT, stale generations, rollback,
++retained authority and publication. Its bounded Objective-C allocation loop
++separately reports `command_buffer_address_reuse=not_observed` if the allocator
++does not reproduce an address. That is partial address-reuse coverage, never a
++claimed pointer-reuse pass. Ten native checks and the prepared four-root cohort
++pass on the repaired boundary; longer dynamics and anatomical standing remain
++separate qualification gates.
+diff --git a/matter/include/numi/matter/matter.hpp b/matter/include/numi/matter/matter.hpp
+index 92d9e36..ae5c447 100644
+--- a/matter/include/numi/matter/matter.hpp
++++ b/matter/include/numi/matter/matter.hpp
+@@ -722,6 +722,12 @@ struct EncodeRequest {
+     // node. It enters the same implicit mechanical residual as gravity and
+     // constitutive force. Callers retain ownership; w is ignored. A non-null
+     // field must cover exactly environmentCount * femNodeCount records.
++    // Optional pose-only MRBodyStateGPU view at the start of this root.
++    // Human support recovery reads position/orientation only, with
++    // rigid.currentBodyCount/currentBodyStride indexing. Keep it immutable
++    // throughout candidate evaluation. Null uses rigid.currentBodies.
++    // This view never supplies generic rigid proxy dynamics or reconciliation.
++    void* humanSupportInitialBodies = nullptr;
+     // Accepted source velocity, distinct from rigid.v's free predictor. Used
+     // read-only during the same borrowed Human root when NHEQ2 is configured.
+     void* humanEqualitySourceVelocity = nullptr;
+diff --git a/matter/src/runtime.mm b/matter/src/runtime.mm
+index bd6e243..4a10673 100644
+--- a/matter/src/runtime.mm
++++ b/matter/src/runtime.mm
+@@ -2789,6 +2789,9 @@ void settleApplication(
+                 candidate->requiredCandidateBodyCount = std::max(
+                     candidate->requiredCandidateBodyCount,
+                     support.identity.x + 1u);
++                candidate->requiredCurrentBodyCount = std::max(
++                    candidate->requiredCurrentBodyCount,
++                    support.identity.x + 1u);
+             }
+         }
+ 
+@@ -2958,6 +2961,43 @@ void settleApplication(
+                 "body-backed matter proxies require the current body arena";
+             return diagnostics;
+         }
++        void* supportInitialBodyArena = request.humanSupportInitialBodies != nullptr
++            ? request.humanSupportInitialBodies : request.rigid.currentBodies;
++        if (state.humanSupportDispatch.contactCount != 0u &&
++            supportInitialBodyArena == nullptr) {
++            diagnostics.message = "Human support requires an initial body pose arena";
++            return diagnostics;
++        }
++        if (state.humanSupportDispatch.contactCount != 0u) {
++            id<MTLBuffer> bodies = (__bridge id<MTLBuffer>)supportInitialBodyArena;
++            const std::uint64_t elements =
++                static_cast<std::uint64_t>(state.dispatch.environmentCount) *
++                request.rigid.currentBodyStride;
++            if (bodies.device == nil ||
++                bodies.device.registryID != state.device.registryID ||
++                bodies.gpuAddress == 0u ||
++                elements > static_cast<std::uint64_t>(bodies.length) /
++                    sizeof(MRBodyStateGPU)) {
++                diagnostics.message =
++                    "Human support initial body arena has wrong device provenance or byte capacity";
++                return diagnostics;
++            }
++        }
++        if (state.requiresCurrentBodies) {
++            id<MTLBuffer> bodies = (__bridge id<MTLBuffer>)request.rigid.currentBodies;
++            const std::uint64_t elements =
++                static_cast<std::uint64_t>(state.dispatch.environmentCount) *
++                request.rigid.currentBodyStride;
++            if (bodies.device == nil ||
++                bodies.device.registryID != state.device.registryID ||
++                bodies.gpuAddress == 0u ||
++                elements > static_cast<std::uint64_t>(bodies.length) /
++                    sizeof(MRBodyStateGPU)) {
++                diagnostics.message =
++                    "current body arena has wrong device provenance or byte capacity";
++                return diagnostics;
++            }
++        }
+         if (request.phase == EncodePhase::preDynamics &&
+             state.requiresBodyWrenches &&
+             request.rigid.bodyWrenches == nullptr) {
+@@ -2974,7 +3014,7 @@ void settleApplication(
+              request.rigid.qStride > state.dispatch.rigidQCapacity ||
+              request.rigid.vStride >
+                  state.dispatch.rigidGeneralizedCapacity ||
+-             (state.dispatch.femHumanAttachmentCount != 0u &&
++             (state.requiredCandidateBodyCount != 0u &&
+               (request.rigid.currentBodyCount <
+                    state.requiredCandidateBodyCount ||
+                request.rigid.currentBodyStride <
+@@ -5209,7 +5249,7 @@ void settleApplication(
+                     [encoder setBuffer:state.humanSupportConsequencesCandidate
+                                  offset:0u atIndex:9u];
+                     [encoder setBuffer:state.statuses offset:0u atIndex:10u];
+-                    [encoder setBuffer:currentBodies offset:0u atIndex:11u];
++                    [encoder setBuffer:buffer(supportInitialBodyArena) offset:0u atIndex:11u];
+                     [encoder setBuffer:state.humanSupportLinearizations offset:0u atIndex:12u];
+                     [encoder setBuffer:state.femResidual offset:0u atIndex:13u];
+                     [encoder setBuffer:buffer(request.rigid.v) offset:0u atIndex:14u];
+diff --git a/src/metal/MetalNumanXHumanMatter.mm b/src/metal/MetalNumanXHumanMatter.mm
+index 9f08e29..b20cda3 100644
+--- a/src/metal/MetalNumanXHumanMatter.mm
++++ b/src/metal/MetalNumanXHumanMatter.mm
+@@ -185,6 +185,9 @@
+     __strong id<MTLBuffer> matterOutcomes = nil;
+     // Exact 128-byte ABI4 result written by Matter on the later apply CB.
+     __strong id<MTLBuffer> matterApplyOutcomes = nil;
++    // Derived pose-only view for support recovery; rebuilt on the owner CB.
++    // This is scratch, never accepted state or a body dynamics authority.
++    __strong id<MTLBuffer> supportInitialBodies = nil;
+     __strong id<MTLBuffer> worldStatuses = nil;
+     __strong id<MTLBuffer> physicalDiagnostics = nil;
+     bool physicalDiagnosticsEncoded = false;
+@@ -243,6 +246,7 @@ explicit MetalNumanXHumanMatterState(
+     __strong id<MTLDevice> device = nil;
+     __strong id<MTLLibrary> library = nil;
+     __strong id<MTLComputePipelineState> prepareWorldStatusPipeline = nil;
++    __strong id<MTLComputePipelineState> materializeSupportBodiesPipeline = nil;
+     __strong id<MTLComputePipelineState> mapHumanStatusPipeline = nil;
+     __strong id<MTLComputePipelineState> captureOutcomePipeline = nil;
+     __strong id<MTLComputePipelineState> preparedTokenPipeline = nil;
+@@ -957,6 +961,53 @@ void dispatchEnvironments(
+     return true;
+ }
+ 
++// Adapt the owner's already-evaluated COM poses to Matter's body-record
++// layout on the same GPU timeline. Candidate kinematics uses a separate arena,
++// so Newton/line-search evaluations cannot change the recovery reference.
++[[nodiscard]] bool encodeSupportInitialBodies(
++    State& state, Slot& slot, const MetalNumanXHumanMatterPass& pass
++) noexcept {
++    std::uint64_t bodyEnd = 0u, elements = 0u, bytes = 0u, retained = 0u;
++    if (!checkedAdd(pass.articulationFirstBody, pass.bodyCount, bodyEnd) ||
++        bodyEnd > std::numeric_limits<std::uint32_t>::max() ||
++        pass.bodyCount == 0u || pass.bodyPoseStride < pass.bodyCount ||
++        pass.bodyPoseStride > std::numeric_limits<std::uint32_t>::max() ||
++        !checkedMultiply(pass.environmentCount, bodyEnd, elements) ||
++        elements > std::numeric_limits<std::uint32_t>::max() ||
++        !checkedMultiply(elements, sizeof(MRBodyStateGPU), bytes) ||
++        bytes == 0u || bytes > std::numeric_limits<NSUInteger>::max()) return false;
++    if (slot.supportInitialBodies == nil || slot.supportInitialBodies.length < bytes) {
++        const std::uint64_t previous = slot.supportInitialBodies.length;
++        if (!checkedAdd(state.retainedBytes - previous, bytes, retained) ||
++            retained > state.config.maximumRetainedBytes) return false;
++        id<MTLBuffer> bodies = [state.device newBufferWithLength:bytes
++            options:MTLResourceStorageModePrivate];
++        if (bodies == nil) return false;
++        bodies.label = @"NumanX Human support initial poses";
++        slot.supportInitialBodies = bodies;
++        state.retainedBytes = retained;
++    }
++    __unsafe_unretained id<MTLCommandBuffer> commandBuffer =
++        (__bridge id<MTLCommandBuffer>)pass.commandBuffer;
++    id<MTLComputeCommandEncoder> encoder = [commandBuffer computeCommandEncoder];
++    if (encoder == nil) return false;
++    const std::array<std::uint32_t, 4u> layout = {
++        static_cast<std::uint32_t>(pass.environmentCount),
++        static_cast<std::uint32_t>(pass.bodyPoseStride),
++        pass.articulationFirstBody, static_cast<std::uint32_t>(bodyEnd)};
++    encoder.label = @"NumanX Human support initial body materialization";
++    [encoder setComputePipelineState:state.materializeSupportBodiesPipeline];
++    [encoder setBytes:layout.data() length:sizeof(layout) atIndex:0u];
++    [encoder setBuffer:(__bridge id<MTLBuffer>)pass.bodyPoses offset:0u atIndex:1u];
++    [encoder setBuffer:slot.supportInitialBodies offset:0u atIndex:2u];
++    const NSUInteger width = std::min<NSUInteger>(64u,
++        state.materializeSupportBodiesPipeline.maxTotalThreadsPerThreadgroup);
++    [encoder dispatchThreads:MTLSizeMake(elements, 1u, 1u)
++        threadsPerThreadgroup:MTLSizeMake(width, 1u, 1u)];
++    [encoder endEncoding];
++    return true;
++}
++
+ [[nodiscard]] bool encodeMapHumanStatus(
+     State& state,
+     Slot& slot,
+@@ -2296,6 +2347,7 @@ void maybeReleaseLifetimeHold(State& state) noexcept {
+     request.humanEqualitySourceVelocity = pass.v;
+     request.humanEqualitySourceEffectiveTangentFactor = pass.sourceEffectiveTangentFactor;
+     request.rigid.currentBodies = nullptr;
++    request.humanSupportInitialBodies = (__bridge void*)slot.supportInitialBodies;
+     const std::uint64_t bodyEnd =
+         static_cast<std::uint64_t>(pass.articulationFirstBody) +
+         pass.bodyCount;
+@@ -2438,6 +2490,10 @@ void cancelSlot(State& state, Slot& slot) noexcept {
+     if (!validatePass(
+             state, slot, pass,
+             MetalNumanXHumanMatterPhase::preDynamics, true)) return false;
++    if (!encodeSupportInitialBodies(state, slot, pass)) {
++        cancelSlot(state, slot);
++        return false;
++    }
+     Frame frame;
+     frame.state = &state;
+     frame.slot = &slot;
+@@ -3790,7 +3846,9 @@ void abortPreparedApplyCallback(
+                 newComputePipelineStateWithFunction:function error:&error];
+             return destination != nil;
+         };
+-        if (!pipeline(@"numanx_human_matter_prepare_world_status",
++        if (!pipeline(@"numanx_human_matter_materialize_support_bodies",
++                      state.materializeSupportBodiesPipeline) ||
++            !pipeline(@"numanx_human_matter_prepare_world_status",
+                       state.prepareWorldStatusPipeline) ||
+             !pipeline(@"numanx_human_matter_map_human_status",
+                       state.mapHumanStatusPipeline) ||
+diff --git a/src/metal/NumanXHumanMatter.metal b/src/metal/NumanXHumanMatter.metal
+index bd0aa4a..cc03b82 100644
+--- a/src/metal/NumanXHumanMatter.metal
++++ b/src/metal/NumanXHumanMatter.metal
+@@ -280,3 +280,25 @@ kernel void numanx_human_matter_write_prepared_token(
+     }
+     *token = accepted;
+ }
++
++// Pose-only scratch for Human support's initial-gap recovery. The owner has
++// completed FK before this dispatch. Every record is written, including any
++// prefix outside the articulation; no candidate or accepted arena is aliased.
++kernel void numanx_human_matter_materialize_support_bodies(
++    constant uint4& layout [[buffer(0)]],
++    device const MRArticulatedBodyPoseGPU* poses [[buffer(1)]],
++    device MRBodyStateGPU* bodies [[buffer(2)]],
++    uint index [[thread_position_in_grid]]
++) {
++    const uint environment = index / layout.w;
++    const uint body = index % layout.w;
++    if (environment >= layout.x) return;
++    MRBodyStateGPU state = {};
++    if (body >= layout.z) {
++        const MRArticulatedBodyPoseGPU pose =
++            poses[environment * layout.y + body - layout.z];
++        state.position = pose.position;
++        state.orientation = pose.orientation;
++    }
++    bodies[index] = state;
++}

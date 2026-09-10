@@ -1,0 +1,46 @@
+Test project /Users/n/MetalRobo-human-completion-build-20260907
+    Start 38: matter.physics.human_support_loaded
+1/2 Test #38: matter.physics.human_support_loaded ..........***Failed   31.68 sec
+2026-09-10 23:51:47.079 metalrobo_matter_physics_probe[24755:6881704] Metal API Validation Enabled
+SUPPORT_RUN name=cold_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=2 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_LOAD name=cold_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=cold_97kg environment=2 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_REPLAY name=cold_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=weight_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+SUPPORT_GEOMETRY env=1 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=2 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_LOAD name=weight_seed_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+SUPPORT_LOAD name=weight_seed_97kg environment=1 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=weight_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_REPLAY name=weight_seed_97kg q_error=0 v_error=0 normal_error=0
+SUPPORT_RUN name=double_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+SUPPORT_GEOMETRY env=0 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+SUPPORT_GEOMETRY env=1 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+SUPPORT_GEOMETRY env=2 point=0,6.98492e-14,0 gap=6.98492e-14 impulse=0.0951571
+SUPPORT_LOAD name=double_seed_97kg environment=0 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+SUPPORT_LOAD name=double_seed_97kg environment=1 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+SUPPORT_LOAD name=double_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,7.60882e-10,0 gap=7.60882e-14
+SUPPORT_REPLAY name=double_seed_97kg q_error=0 v_error=0 normal_error=0
+matter_physics_probe: support admitted missing initial body arena: body-backed matter proxies require the current body arena
+
+    Start 39: matter.physics.human_support_linearization
+2/2 Test #39: matter.physics.human_support_linearization ...   Passed    0.03 sec
+
+50% tests passed, 1 tests failed out of 2
+
+Label Time Summary:
+human      =  31.72 sec*proc (2 tests)
+matter     =  31.72 sec*proc (2 tests)
+metal      =  31.72 sec*proc (2 tests)
+physics    =  31.72 sec*proc (2 tests)
+
+Total Test time (real) =  31.72 sec
+
+The following tests FAILED:
+	 38 - matter.physics.human_support_loaded (Failed)      human matter metal physics
+Errors while running CTest

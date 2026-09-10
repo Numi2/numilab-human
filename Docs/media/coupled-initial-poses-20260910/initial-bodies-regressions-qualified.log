@@ -1,0 +1,253 @@
+UpdateCTestConfiguration  from :/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Parse Config file:/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Test project /Users/n/MetalRobo-human-completion-build-20260907
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 4
+      Start   4: numi_human_static_support
+
+4: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numi_human_static_support_test
+4: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+4: Test timeout computed to be: 1500
+4: numi_human_static_support_test=passed source_compliant_preparation=passed compliant_recruitment=passed coupled_recruitment=passed recruitment_bounds=passed coupled_posture=passed coupled_limit_reactions=passed dependent_acceleration=passed analytic_weight_n=24.525 replay=exact penetration=rejected airborne_force_n=0
+ 1/10 Test   #4: numi_human_static_support ............................   Passed    0.01 sec
+test 38
+      Start  38: matter.physics.human_support_loaded
+
+38: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe "--human-support-loaded"
+38: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+38: Environment variables: 
+38:  MTL_DEBUG_LAYER=1
+38: Test timeout computed to be: 120
+38: 2026-09-10 23:55:36.682 metalrobo_matter_physics_probe[25111:6883640] Metal API Validation Enabled
+38: SUPPORT_RUN name=cold_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+38: SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+38: SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.095157
+38: SUPPORT_GEOMETRY env=2 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+38: SUPPORT_LOAD name=cold_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+38: SUPPORT_LOAD name=cold_97kg environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+38: SUPPORT_LOAD name=cold_97kg environment=2 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+38: SUPPORT_REPLAY name=cold_97kg q_error=0 v_error=0 normal_error=0
+38: SUPPORT_RUN name=weight_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+38: SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.095157
+38: SUPPORT_GEOMETRY env=1 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+38: SUPPORT_GEOMETRY env=2 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+38: SUPPORT_LOAD name=weight_seed_97kg environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+38: SUPPORT_LOAD name=weight_seed_97kg environment=1 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+38: SUPPORT_LOAD name=weight_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+38: SUPPORT_REPLAY name=weight_seed_97kg q_error=0 v_error=0 normal_error=0
+38: SUPPORT_RUN name=double_seed_97kg success=1 status=0 diagnostic=1,0,0,0 message=
+38: SUPPORT_GEOMETRY env=0 point=0,-3.25963e-13,0 gap=-3.25963e-13 impulse=0.0951567
+38: SUPPORT_GEOMETRY env=1 point=0,1.39698e-13,0 gap=1.39698e-13 impulse=0.0951571
+38: SUPPORT_GEOMETRY env=2 point=0,6.98492e-14,0 gap=6.98492e-14 impulse=0.0951571
+38: SUPPORT_LOAD name=double_seed_97kg environment=0 lambda=0.0951567 expected=0.095157 tangent=0,0 velocity=0,-3.14918e-09,0 gap=-3.14918e-13
+38: SUPPORT_LOAD name=double_seed_97kg environment=1 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,1.42845e-09,0 gap=1.42845e-13
+38: SUPPORT_LOAD name=double_seed_97kg environment=2 lambda=0.0951571 expected=0.095157 tangent=0,0 velocity=0,7.60882e-10,0 gap=7.60882e-14
+38: SUPPORT_REPLAY name=double_seed_97kg q_error=0 v_error=0 normal_error=0
+38: support_initial_bodies_missing_and_short_rejected=1
+38: SUPPORT_CAPACITY_REJECTION message=failed to encode MetalWorld substep graph
+38: SUPPORT_RUN name=redundant_six_cold success=1 status=0 diagnostic=1,0,0,0 message=
+38: SUPPORT_GEOMETRY env=0 point=0,3.49246e-14,0 gap=3.49246e-14 impulse=0.0158595
+38: SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+38: SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.0158595
+38: SUPPORT_LOAD name=redundant_six_cold environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,3.79412e-10,0 gap=3.79412e-14
+38: SUPPORT_LOAD name=redundant_six_cold environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+38: SUPPORT_LOAD name=redundant_six_cold environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+38: SUPPORT_REPLAY name=redundant_six_cold q_error=0 v_error=0 normal_error=0
+38: SUPPORT_RUN name=redundant_six_double success=1 status=0 diagnostic=1,0,0,0 message=
+38: SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0158595
+38: SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0158595
+38: SUPPORT_GEOMETRY env=2 point=0,-1.16415e-14,0 gap=-1.16415e-14 impulse=0.0158595
+38: SUPPORT_LOAD name=redundant_six_double environment=0 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+38: SUPPORT_LOAD name=redundant_six_double environment=1 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+38: SUPPORT_LOAD name=redundant_six_double environment=2 lambda=0.095157 expected=0.095157 tangent=0,0 velocity=0,-9.74253e-11,0 gap=-9.74253e-15
+38: SUPPORT_REPLAY name=redundant_six_double q_error=0 v_error=0 normal_error=0
+38: SUPPORT_RUN name=cold_1kg success=1 status=0 diagnostic=1,0,0,0 message=
+38: SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.000981
+38: SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.000981
+38: SUPPORT_GEOMETRY env=2 point=0,0,0 gap=0 impulse=0.000981
+38: SUPPORT_LOAD name=cold_1kg environment=0 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+38: SUPPORT_LOAD name=cold_1kg environment=1 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+38: SUPPORT_LOAD name=cold_1kg environment=2 lambda=0.000981 expected=0.000981 tangent=0,0 velocity=0,-2.05787e-12,0 gap=-2.05787e-16
+38: SUPPORT_REPLAY name=cold_1kg q_error=0 v_error=0 normal_error=0
+38: SUPPORT_RUN name=half_timestep success=1 status=0 diagnostic=1,0,0,0 message=
+38: SUPPORT_GEOMETRY env=0 point=0,0,0 gap=0 impulse=0.0475785
+38: SUPPORT_GEOMETRY env=1 point=0,0,0 gap=0 impulse=0.0475785
+38: SUPPORT_GEOMETRY env=2 point=0,-7.85803e-14,0 gap=-7.85803e-14 impulse=0.0475783
+38: SUPPORT_LOAD name=half_timestep environment=0 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+38: SUPPORT_LOAD name=half_timestep environment=1 lambda=0.0475785 expected=0.0475785 tangent=0,0 velocity=0,-1.02894e-12,0 gap=-5.14469e-17
+38: SUPPORT_LOAD name=half_timestep environment=2 lambda=0.0475783 expected=0.0475785 tangent=0,0 velocity=0,-1.52691e-09,0 gap=-7.63454e-14
+38: SUPPORT_REPLAY name=half_timestep q_error=0 v_error=0 normal_error=0
+38: SUPPORT_RUN name=airborne_double_seed success=1 status=0 diagnostic=1,0,0,0 message=
+38: SUPPORT_GEOMETRY env=0 point=0,0.0099999,0 gap=0.0099999 impulse=0
+38: SUPPORT_GEOMETRY env=1 point=0,0.0099999,0 gap=0.0099999 impulse=0
+38: SUPPORT_GEOMETRY env=2 point=0,0.0099999,0 gap=0.0099999 impulse=-7.17903e-09
+38: SUPPORT_LOAD name=airborne_double_seed environment=0 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+38: SUPPORT_LOAD name=airborne_double_seed environment=1 lambda=0 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+38: SUPPORT_LOAD name=airborne_double_seed environment=2 lambda=-7.17903e-09 expected=0 tangent=0,0 velocity=0,-0.000981,0 gap=0.0099999
+38: SUPPORT_REPLAY name=airborne_double_seed q_error=0 v_error=0 normal_error=0
+38: SUPPORT_RUN name=sticking success=1 status=0 diagnostic=1,0,0,0 message=
+38: SUPPORT_GEOMETRY env=0 point=-2.91038e-15,3.49246e-14,-5.82077e-15 gap=3.49246e-14 impulse=0.095157
+38: SUPPORT_GEOMETRY env=1 point=2.18279e-14,1.16415e-14,4.36557e-14 gap=1.16415e-14 impulse=0.095157
+38: SUPPORT_GEOMETRY env=2 point=1.89175e-14,-1.04774e-13,3.7835e-14 gap=-1.04774e-13 impulse=0.0951569
+38: SUPPORT_LOAD name=sticking environment=0 lambda=0.095157 expected=0.095157 tangent=-0.0097,-0.0194 velocity=-4.76837e-11,3.79412e-10,-9.53674e-11 gap=3.79412e-14
+38: SUPPORT_LOAD name=sticking environment=1 lambda=0.095157 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=2.08616e-10,1.88677e-10,4.17232e-10 gap=1.88677e-14
+38: SUPPORT_LOAD name=sticking environment=2 lambda=0.0951569 expected=0.095157 tangent=-0.00969998,-0.0194 velocity=1.78814e-10,-9.55732e-10,3.57628e-10 gap=-9.55732e-14
+38: SUPPORT_REPLAY name=sticking q_error=0 v_error=0 normal_error=0
+38: SUPPORT_RUN name=sliding success=1 status=0 diagnostic=1,0,0,0 message=
+38: SUPPORT_GEOMETRY env=0 point=9.97806e-06,1.39698e-13,1.99561e-05 gap=1.39698e-13 impulse=0.0951571
+38: SUPPORT_GEOMETRY env=1 point=9.97806e-06,0,1.99561e-05 gap=0 impulse=0.095157
+38: SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+38: SUPPORT_LOAD name=sliding environment=0 lambda=0.0951571 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,1.42845e-09,0.199561 gap=1.42845e-13
+38: SUPPORT_LOAD name=sliding environment=1 lambda=0.095157 expected=0.095157 tangent=-0.0212778,-0.0425555 velocity=0.0997806,-2.05787e-12,0.199561 gap=-2.05787e-16
+38: SUPPORT_LOAD name=sliding environment=2 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+38: SUPPORT_REPLAY name=sliding q_error=0 v_error=0 normal_error=0
+38: SUPPORT_RUN name=sliding_warm success=1 status=0 diagnostic=1,0,0,0 message=
+38: SUPPORT_GEOMETRY env=0 point=9.97806e-06,2.32831e-13,1.99561e-05 gap=2.32831e-13 impulse=0.0951572
+38: SUPPORT_GEOMETRY env=1 point=9.97806e-06,2.44472e-13,1.99561e-05 gap=2.44472e-13 impulse=0.0951572
+38: SUPPORT_GEOMETRY env=2 point=9.97806e-06,2.91038e-13,1.99561e-05 gap=2.91038e-13 impulse=0.0951573
+38: SUPPORT_LOAD name=sliding_warm environment=0 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.38213e-09,0.199561 gap=2.38213e-13
+38: SUPPORT_LOAD name=sliding_warm environment=1 lambda=0.0951572 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,2.4775e-09,0.199561 gap=2.4775e-13
+38: SUPPORT_LOAD name=sliding_warm environment=2 lambda=0.0951573 expected=0.095157 tangent=-0.0212778,-0.0425556 velocity=0.0997806,3.0497e-09,0.199561 gap=3.0497e-13
+38: SUPPORT_REPLAY name=sliding_warm q_error=0 v_error=0 normal_error=0
+38: Human support loaded runtime: 11 cases x 3 environments passed; replay exact
+ 2/10 Test  #38: matter.physics.human_support_loaded ..................   Passed    2.95 sec
+test 39
+      Start  39: matter.physics.human_support_linearization
+
+39: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_fullbody_bridge_probe "--support-only"
+39: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+39: Environment variables: 
+39:  MTL_DEBUG_LAYER=1
+39: Test timeout computed to be: 120
+39: 2026-09-10 23:55:39.637 metalrobo_numanx_fullbody_bridge_probe[25127:6883734] Metal API Validation Enabled
+39: SUPPORT shape=0 total_velocity=-1 delta_velocity=-0.25 dual_fd_error=3.38554e-05
+39: SUPPORT shape=1 total_velocity=-1 delta_velocity=-0.25 dual_fd_error=3.38554e-05
+39: SUPPORT shape=2 total_velocity=-1 delta_velocity=-0.25 dual_fd_error=3.38554e-05
+39: numanx_support_surface_probe=pass shapes=point,sphere,ellipsoid rollback=exact
+ 3/10 Test  #39: matter.physics.human_support_linearization ...........   Passed    0.04 sec
+test 58
+      Start  58: numanx.integration.human_matter_owner_transaction
+
+58: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_human_matter_owner_probe "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib"
+58: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+58: Test timeout computed to be: 180
+58: 2026-09-10 23:55:39.665 metalrobo_numanx_human_matter_owner_probe[25128:6883739] Metal API Validation Enabled
+58: PASS device=Apple M4 Pro dofs=160 q=161 factor=A0_M_armature_hD_byte_exact reaction=prestand_once accept=physical_prepared_quarantined reject=restored replay=byte_identical duplicate_consume=fail_closed
+ 4/10 Test  #58: numanx.integration.human_matter_owner_transaction ....   Passed    0.33 sec
+test 59
+      Start  59: numanx.integration.human_matter_owner_v4
+
+59: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_human_matter_v4_probe "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib"
+59: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+59: Test timeout computed to be: 180
+59: 2026-09-10 23:55:39.998 metalrobo_numanx_human_matter_v4_probe[25129:6883743] Metal API Validation Enabled
+59: PASS device="Apple M4 Pro" abi=4 control_step=37 dofs=160 q=161 proposal=mutation_free proposal_completion=pre_post_abort_reentry_drop preflight_ack=bound apply=matter_then_human accept=quarantined_then_published human_io=post_physical_bound_delayed_publish physical_reject=zero_gate_exact_code physical_plus_force=physical_precedence prepared_force_reject=exact_code brain_reject=zero_gate_exact_code invalid_brain_witness=brain_reject_exact_code token_mismatch=zero_gate_exact_code reject=byte_restored stale_ack=fail_closed malformed_release=terminal_no_touch root_published=stamped replay=byte_identical
+ 5/10 Test  #59: numanx.integration.human_matter_owner_v4 .............   Passed    1.75 sec
+test 60
+      Start  60: numanx.integration.human_matter_exact_candidate
+
+60: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_human_matter_candidate_probe "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib"
+60: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+60: Test timeout computed to be: 180
+60: 2026-09-10 23:55:41.749 metalrobo_numanx_human_matter_candidate_probe[25130:6883751] Metal API Validation Enabled
+60: PREDICTOR source_acceleration_dv=0.00980994 q_closure=0 v_closure=0 legacy_q_mismatch=9.89437e-06
+60: PASS device="Apple M4 Pro" dofs=160 q=161 exact_candidate=generic_analytic nonlinear_fd=passed malformed=fail_closed alias=fail_closed point_world=materialized body_only=accepted A0=frozen
+ 6/10 Test  #60: numanx.integration.human_matter_exact_candidate ......   Passed    0.47 sec
+test 61
+      Start  61: numanx.integration.human_matter_adapter
+
+61: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_human_matter_adapter_probe
+61: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+61: Test timeout computed to be: 180
+61: 2026-09-10 23:55:42.645 metalrobo_numanx_human_matter_adapter_probe[25131:6883757] Metal API Validation Enabled
+61: numanx_human_matter_adapter_probe=pass
+61: matter_runtime=real_attached
+61: control_step=37_nonzero_and_mismatch_rejected
+61: callback_operations=all_four_exact_host_gated
+61: reaction_consumption=exactly_once
+61: heap_alias=distinct_object_overlap_rejected
+61: cross_slot_authority=lease_and_physical_alias_rejected
+61: first_command_abort=runtime_cancel_and_slot_reuse
+61: command_buffer_address_reuse=not_observed
+61: prepared_accept=canonical_token_fnv_reserved_zero
+61: prepared_reject=human_matter_byte_restore
+61: physical_reject=zero_gate_exact_code_and_restore
+61: final_abort_retry=pass
+61: replay_and_prior_token_stability=pass
+61: terminal_pending=no_touch_quarantine
+61: slot_reuse=resolved_generation_only
+61: owner_adapter_matter=integrated_force_reject
+ 7/10 Test  #61: numanx.integration.human_matter_adapter ..............   Passed    4.43 sec
+test 63
+      Start  63: numanx.integration.human_matter_attachment_runtime
+
+63: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_matter_attachment_runtime_probe
+63: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+63: Test timeout computed to be: 180
+63: 2026-09-10 23:55:46.645 metalrobo_numanx_matter_attachment_runtime_probe[25132:6883776] Metal API Validation Enabled
+63: NumanX Matter attachment runtime probe passed on Apple M4 Pro: zero-count identity, exact moving point kinematics, fail-closed malformed input, separate raw reactions, J/J^T virtual work, rollback masking, accepted Runtime Newton/certification/publish, and byte replay
+ 8/10 Test  #63: numanx.integration.human_matter_attachment_runtime ...   Passed    0.13 sec
+test 101
+      Start 101: numanx.physics.human_source_equality
+
+101: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_human_equality_probe
+101: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+101: Test timeout computed to be: 45
+101: 2026-09-10 23:55:46.777 metalrobo_numanx_human_equality_probe[25133:6883780] Metal API Validation Enabled
+101: rows=4 environments=2 trials=4 prepare_scaled_error=1.48421e-07 residual_relative_error=2.03189e-07 action_relative_error=2.92104e-08 finite_difference_relative_error=0.000259531 initial_position_defect=0.03 factor_relative_error=2.08931e-07 inverse_relative_error=1.39431e-07 inverse_residual=3.23572e-05 static_force_scaled_error=1.71261e-07 source_factor=immutable invalid_pivots=rejected replay=byte_identical
+ 9/10 Test #101: numanx.physics.human_source_equality .................   Passed    0.03 sec
+test 102
+      Start 102: numanx.physics.human_source_limits
+
+102: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_human_limit_probe "/Users/n/MetalRobo-human-completion-20260907/tests/fixtures/numanx_human_limit_mujoco312.json"
+102: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+102: Test timeout computed to be: 45
+102: 2026-09-10 23:55:46.804 metalrobo_numanx_human_limit_probe[25134:6883784] Metal API Validation Enabled
+102: limit_case=lower candidates=7 passed=1
+102: limit_case=upper candidates=7 passed=1
+102: limit_case=inactive candidates=5 passed=1
+102: limit_case=exact_lower_margin candidates=5 passed=1
+102: limit_case=exact_upper_margin candidates=5 passed=1
+102: limit_case=inside_margin candidates=7 passed=1
+102: limit_case=direct candidates=7 passed=1
+102: limit_case=refsafe candidates=7 passed=1
+102: limit_case=refsafe_off candidates=7 passed=1
+102: limit_case=both_sides candidates=9 passed=1
+102: limit_case=constant_impedance candidates=7 passed=1
+102: limit_case=zero_width candidates=7 passed=1
+102: limit_case=linear_impedance candidates=7 passed=1
+102: limit_case=clamped_impedance candidates=7 passed=1
+102: limit_case=zero_stiffness candidates=7 passed=1
+102: {"status":"passed","candidates":101,"finite_differences":79,"maximum_scaled_error":0.000717528,"runtime_transaction_qualified":false}
+10/10 Test #102: numanx.physics.human_source_limits ...................   Passed    0.04 sec
+
+The following tests passed:
+	numi_human_static_support
+	matter.physics.human_support_loaded
+	matter.physics.human_support_linearization
+	numanx.integration.human_matter_owner_transaction
+	numanx.integration.human_matter_owner_v4
+	numanx.integration.human_matter_exact_candidate
+	numanx.integration.human_matter_adapter
+	numanx.integration.human_matter_attachment_runtime
+	numanx.physics.human_source_equality
+	numanx.physics.human_source_limits
+
+100% tests passed out of 10
+
+Label Time Summary:
+human         =  10.16 sec*proc (9 tests)
+matter        =   3.05 sec*proc (4 tests)
+mechanics     =   0.01 sec*proc (1 test)
+metal         =  10.16 sec*proc (9 tests)
+numanx        =   7.18 sec*proc (7 tests)
+numi-human    =   0.01 sec*proc (1 test)
+physics       =  10.16 sec*proc (9 tests)
+support       =   0.01 sec*proc (1 test)
+
+Total Test time (real) =  10.17 sec

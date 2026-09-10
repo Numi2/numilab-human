@@ -178,6 +178,11 @@ performance investigation open.
 The [source-compliant preparation](SOURCE_COMPLIANT_EQUILIBRIUM_20260910.md)
 closes offline stationary source-law balance, including fixed FP32 pose and
 recruitment with solved support sharing. Four-root physical replay/dropout
-passes. The 6.4 ms cohort retains an independently detected dropout/zero motion
-discrepancy despite the original Swift test returning success. Longer reset
-reproducibility, held stance, registered tissue and calibration remain open.
+passes. The initial 6.4 ms cohort retains an independently detected dropout/zero
+motion discrepancy despite the original Swift test returning success. The
+[initial-pose repair](COUPLED_INITIAL_POSES_20260910.md), native `baca930`, supplies
+the missing support recovery reference and passes the strengthened 64-root
+cohort: 256 accepted roots, bitwise replay and dropout/zero physical equality.
+Ten native checks pass; allocator address reuse was not observed and remains
+partial coverage. Held stance, wrist-route/fibre parity, registered tissue,
+calibration and practical execution cost remain open.

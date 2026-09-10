@@ -1,0 +1,38 @@
+{
+  "schema": "numi.human.coupled-initial-poses.v1",
+  "revisions": {
+    "native": "baca930c27dda11dfd6e0afd57f696955c054d48",
+    "brain": "c7db5de294760be12a0ec76bc557819b69e0ef6e"
+  },
+  "qualification": {
+    "support_initial_pose_ownership": true,
+    "six_point_four_ms_replay_and_dropout": true,
+    "allocator_address_reuse_observed": false,
+    "standing": false,
+    "walking": false,
+    "registered_anatomical_tissue": false,
+    "experimental_calibration": false
+  },
+  "trace_auditor_sha256": "86606e03347e6cbf1616fd960e517a07ab8b5e3c9d7cd0e9a4ce682e93467796",
+  "retained_failures": {
+    "horizon-support-trace.log.gz": "First-root contact recovery and dropout/zero physics differ before repair. Native 9897bf8 plus retained contact-assembly diagnostic patch.",
+    "initial-bodies-support-tests.log": "An initial negative test used a fixture with a generic body proxy and encountered its earlier missing-body guard. Corrected to a support-only fixture.",
+    "initial-bodies-regressions.log": "Nine checks passed; the adapter probe aborted because its allocation loop did not observe Objective-C address reuse. Corrected to report the unobserved case explicitly and complete functional checks."
+  },
+  "artifacts": {
+    "horizon-initial-bodies-launch.json": "480e7e512e392dd3af59fbb3f4fbedc29c04470335cd82da6a8091e9639f72ef",
+    "horizon-initial-bodies.log.gz": "5f1ec7bd9da8d652945bc74402f53c6ff294290b9a26c27a82b65db6fa964f38",
+    "horizon-support-trace-launch.json": "0c842740b3655f35e6856541463fc93182824ace40a93b843e8e98d45abfd7bb",
+    "horizon-support-trace.log.gz": "3cfacba068437305c5e412886e70a6d56cdd12990050b66aa82f50ddfb82ebe0",
+    "initial-bodies-build.log": "a838f0e66ebfad6646425fc855d23eecc3c0869fddacecf927b6cd7233121bde",
+    "initial-bodies-regression-build.log": "283ee319113382cd28983ac2bad6c3079ae25ea61098a2eb4e0bba2e0a6ba8bb",
+    "initial-bodies-regressions-qualified.log": "09c363d59409ab4dbc876575aad6162e5b961b631eec2ccd8c61f09f2828db54",
+    "initial-bodies-regressions.log": "541a6a67da75e4e13652ea6e51d6a67626bcc2c58256a7ece3e9aa3f102f5390",
+    "initial-bodies-support-tests.log": "02c5278a406c0d536e8d5f8a8746d47c6092e2e0e29d0fe445a6ee5a56dece56",
+    "initial-bodies4-launch.json": "7259c5d8fa1404834b12e595aa4e81cc28bed85dc06aed175e0d2c48777da8b7",
+    "initial-bodies4.log.gz": "99785e2224de7c7ea6b036103f657994b3a16f23a9d603dbff223cbd1a72aab2",
+    "native-fix.patch": "c5c758f63f4f54eb47b69dc5b6e72b7a229f6b79dbe5ddba2ebfc2527050661f",
+    "support-assembly-trace.patch": "39db48f53c887ba342d9e1575d71f7c2fef3421d47fd2b17cc6907b73253e561",
+    "verify_receipt.py": "70228a75571795f63ea48cec0d74dbcbda4914057b444a7134918caa237d8abf"
+  }
+}
