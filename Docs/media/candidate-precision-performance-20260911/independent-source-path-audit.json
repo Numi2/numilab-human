@@ -1,0 +1,4302 @@
+{
+  "schema": "numi.human.source-compliant-independent-audit.v1",
+  "mujoco_version": "3.12.0",
+  "source_files_verified": 57,
+  "source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+  "certificate_sha256": "b0a1cab8fa3b5c5644ce124880b8c2ebef680ad6a17e1b66d3d3ebed5ed812bb",
+  "maximum_relative_mass_action_error": 6.097833261806347e-11,
+  "maximum_relative_gravity_error": 9.249518572474828e-07,
+  "maximum_support_lowering_error_m": 3.417619770518243e-09,
+  "minimum_support_gap_m": -3.9818918766421074e-08,
+  "force_residual_n": [
+    0.0,
+    0.0,
+    0.0001231059244446442
+  ],
+  "moment_residual_nm": [
+    2.3101320323348773e-06,
+    2.3909576579939085e-05,
+    0.0
+  ],
+  "contacts": [
+    {
+      "row": 0,
+      "gap_m": 0.0019260811630205828,
+      "force_n": 0,
+      "lowering_error_m": 1.114450476347173e-09
+    },
+    {
+      "row": 1,
+      "gap_m": 0.0017936918938380349,
+      "force_n": 0,
+      "lowering_error_m": 4.98722462632939e-10
+    },
+    {
+      "row": 2,
+      "gap_m": 0.0018369696206045616,
+      "force_n": 0,
+      "lowering_error_m": 4.986210333512986e-10
+    },
+    {
+      "row": 3,
+      "gap_m": 0.0020014963128664534,
+      "force_n": 0,
+      "lowering_error_m": 1.1121581711126538e-09
+    },
+    {
+      "row": 4,
+      "gap_m": 0.0007147815186456866,
+      "force_n": 0,
+      "lowering_error_m": 9.124767469392836e-10
+    },
+    {
+      "row": 5,
+      "gap_m": -3.9818918766421074e-08,
+      "force_n": 71.38126215435432,
+      "lowering_error_m": 1.401595336320005e-09
+    },
+    {
+      "row": 6,
+      "gap_m": -2.7549133880394594e-08,
+      "force_n": 126.58831357524413,
+      "lowering_error_m": 1.4042771945277366e-09
+    },
+    {
+      "row": 7,
+      "gap_m": 0.000709534928393412,
+      "force_n": 0,
+      "lowering_error_m": 9.133758679946702e-10
+    },
+    {
+      "row": 8,
+      "gap_m": -3.956955646824967e-08,
+      "force_n": 0,
+      "lowering_error_m": 3.417619770518243e-09
+    },
+    {
+      "row": 9,
+      "gap_m": 0.0025377198028484864,
+      "force_n": 0,
+      "lowering_error_m": 2.4466609571671682e-09
+    },
+    {
+      "row": 10,
+      "gap_m": -2.998684679386687e-08,
+      "force_n": 6.615695152652597e-05,
+      "lowering_error_m": 3.4170684892753656e-09
+    },
+    {
+      "row": 11,
+      "gap_m": 0.002519067316735655,
+      "force_n": 0,
+      "lowering_error_m": 2.4442128043755673e-09
+    },
+    {
+      "row": 12,
+      "gap_m": -3.9093545314144995e-08,
+      "force_n": 411.11905174044665,
+      "lowering_error_m": 8.683422730859647e-10
+    },
+    {
+      "row": 13,
+      "gap_m": 0.0019994085357633896,
+      "force_n": 0,
+      "lowering_error_m": 1.9820139141035753e-09
+    },
+    {
+      "row": 14,
+      "gap_m": -2.876225011980149e-08,
+      "force_n": 343.7758763054813,
+      "lowering_error_m": 8.682925420333554e-10
+    },
+    {
+      "row": 15,
+      "gap_m": 0.0019847167572756112,
+      "force_n": 0,
+      "lowering_error_m": 1.9858939770411865e-09
+    },
+    {
+      "row": 16,
+      "gap_m": 0.003296023090488792,
+      "force_n": 0,
+      "lowering_error_m": 2.079623209749748e-09
+    },
+    {
+      "row": 17,
+      "gap_m": 0.0032849082109820613,
+      "force_n": 0,
+      "lowering_error_m": 2.078334046529129e-09
+    }
+  ],
+  "boundary": "Independent source FK, mass and gravity; source scalar force conformance is qualified separately; no dynamics stepping or experimental calibration.",
+  "passed": true,
+  "initial_muscle_path_diagnostic": {
+    "trace_sha256": "39a8bca1da367de645c294a5053a9cb95ab03a6e6b23a0c736729294fc989aa2",
+    "maximum_length_error_m": 3.15906893422202e-07,
+    "maximum_path_speed_m_s": 0.0,
+    "maximum_normalized_fiber_residual": 2.000888343900442e-07,
+    "rows": [
+      {
+        "index": 0,
+        "name": "Ps_L1_VB_r",
+        "source_length_m": 0.25568870484061595,
+        "native_length_m": 0.2556886374950409,
+        "absolute_length_error_m": 6.734557506105077e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.715856615460478e-12,
+        "native_normalized_fiber_residual": 9.21344706257543e-13
+      },
+      {
+        "index": 1,
+        "name": "Ps_L1_TP_r",
+        "source_length_m": 0.25248031874202587,
+        "native_length_m": 0.2524802088737488,
+        "absolute_length_error_m": 1.09868277087255e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0003333843778818846,
+        "native_normalized_fiber_residual": 1.520675141364336e-07
+      },
+      {
+        "index": 2,
+        "name": "Ps_L1_L2_IVD_r",
+        "source_length_m": 0.23445195160375912,
+        "native_length_m": 0.2344518005847931,
+        "absolute_length_error_m": 1.510189660269834e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -5.215263984559293e-13,
+        "native_normalized_fiber_residual": 1.0617112793315578e-13
+      },
+      {
+        "index": 3,
+        "name": "Ps_L2_TP_r",
+        "source_length_m": 0.2217405478941213,
+        "native_length_m": 0.22174060344696045,
+        "absolute_length_error_m": 5.555283916214293e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.00022821041056886315,
+        "native_normalized_fiber_residual": 2.4738255888223648e-08
+      },
+      {
+        "index": 4,
+        "name": "Ps_L2_L3_IVD_r",
+        "source_length_m": 0.20306628921310377,
+        "native_length_m": 0.20306628942489624,
+        "absolute_length_error_m": 2.1179247244873523e-10,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 4.734374306281097e-05,
+        "native_normalized_fiber_residual": 1.539592631161213e-08
+      },
+      {
+        "index": 5,
+        "name": "Ps_L3_TP_r",
+        "source_length_m": 0.19354888405350978,
+        "native_length_m": 0.19354887306690216,
+        "absolute_length_error_m": 1.0986607623664213e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -6.702294194838032e-05,
+        "native_normalized_fiber_residual": -2.8023350751027465e-08
+      },
+      {
+        "index": 6,
+        "name": "Ps_L3_L4_IVD_r",
+        "source_length_m": 0.17238480377149856,
+        "native_length_m": 0.17238487303256989,
+        "absolute_length_error_m": 6.926107132265713e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.000618642836343497,
+        "native_normalized_fiber_residual": 1.7345882952213287e-08
+      },
+      {
+        "index": 7,
+        "name": "Ps_L4_TP_r",
+        "source_length_m": 0.1660226896523033,
+        "native_length_m": 0.16602273285388947,
+        "absolute_length_error_m": 4.3201586169550055e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.0004059346974827349,
+        "native_normalized_fiber_residual": 5.820766091346741e-11
+      },
+      {
+        "index": 8,
+        "name": "Ps_L4_L5_IVD_r",
+        "source_length_m": 0.14104095730114274,
+        "native_length_m": 0.14104098081588745,
+        "absolute_length_error_m": 2.351474470696502e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 4.281901055946946e-05,
+        "native_normalized_fiber_residual": 1.669104676693678e-08
+      },
+      {
+        "index": 9,
+        "name": "Ps_L5_TP_r",
+        "source_length_m": 0.14363917155453493,
+        "native_length_m": 0.1436392217874527,
+        "absolute_length_error_m": 5.023291776984351e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 8.12887228676118e-05,
+        "native_normalized_fiber_residual": -7.275957614183426e-12
+      },
+      {
+        "index": 10,
+        "name": "Ps_L5_VB_r",
+        "source_length_m": 0.12539802901070812,
+        "native_length_m": 0.12539802491664886,
+        "absolute_length_error_m": 4.094059258274996e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.4171320117384312e-06,
+        "native_normalized_fiber_residual": 1.0231815394945443e-12
+      },
+      {
+        "index": 11,
+        "name": "Ps_L1_VB_l",
+        "source_length_m": 0.25586925870513266,
+        "native_length_m": 0.25586915016174316,
+        "absolute_length_error_m": 1.0854338949872755e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.1625924290110945e-13,
+        "native_normalized_fiber_residual": 2.882641838447032e-14
+      },
+      {
+        "index": 12,
+        "name": "Ps_L1_TP_l",
+        "source_length_m": 0.25265850462306255,
+        "native_length_m": 0.2526584267616272,
+        "absolute_length_error_m": 7.786143535470913e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.000224419534788467,
+        "native_normalized_fiber_residual": 2.9103830456733704e-11
+      },
+      {
+        "index": 13,
+        "name": "Ps_L1_L2_IVD_l",
+        "source_length_m": 0.23462325011982746,
+        "native_length_m": 0.23462308943271637,
+        "absolute_length_error_m": 1.6068711108929712e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.4020700793020433e-12,
+        "native_normalized_fiber_residual": 4.890078684864629e-13
+      },
+      {
+        "index": 14,
+        "name": "Ps_L2_TP_l",
+        "source_length_m": 0.22189398229367824,
+        "native_length_m": 0.22189393639564514,
+        "absolute_length_error_m": 4.589803309640317e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.00024057953851297498,
+        "native_normalized_fiber_residual": -1.9863364286720753e-08
+      },
+      {
+        "index": 15,
+        "name": "Ps_L2_L3_IVD_l",
+        "source_length_m": 0.20321478074736432,
+        "native_length_m": 0.20321479439735413,
+        "absolute_length_error_m": 1.3649989805131213e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 9.898485586745664e-05,
+        "native_normalized_fiber_residual": -3.761670086532831e-09
+      },
+      {
+        "index": 16,
+        "name": "Ps_L3_TP_l",
+        "source_length_m": 0.19368353447551195,
+        "native_length_m": 0.19368353486061096,
+        "absolute_length_error_m": 3.8509900823768817e-10,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 4.6086370275588706e-05,
+        "native_normalized_fiber_residual": 3.669629222713411e-08
+      },
+      {
+        "index": 17,
+        "name": "Ps_L3_L4_IVD_l",
+        "source_length_m": 0.17250040641725106,
+        "native_length_m": 0.1725004017353058,
+        "absolute_length_error_m": 4.681945275919475e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.00010460201883688569,
+        "native_normalized_fiber_residual": 7.275957614183426e-12
+      },
+      {
+        "index": 18,
+        "name": "Ps_L4_TP_l",
+        "source_length_m": 0.16612215780740075,
+        "native_length_m": 0.1661221832036972,
+        "absolute_length_error_m": 2.539629645470498e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.0002301612839801237,
+        "native_normalized_fiber_residual": 1.051812432706356e-07
+      },
+      {
+        "index": 19,
+        "name": "Ps_L4_L5_IVD_l",
+        "source_length_m": 0.1411173122255406,
+        "native_length_m": 0.14111727476119995,
+        "absolute_length_error_m": 3.746434065754478e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -8.2557657151483e-05,
+        "native_normalized_fiber_residual": 7.275957614183426e-12
+      },
+      {
+        "index": 20,
+        "name": "Ps_L5_TP_l",
+        "source_length_m": 0.14370729665554283,
+        "native_length_m": 0.14370734989643097,
+        "absolute_length_error_m": 5.3240888142624954e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 8.053927740547806e-05,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 21,
+        "name": "Ps_L5_VB_l",
+        "source_length_m": 0.1254421532845022,
+        "native_length_m": 0.12544216215610504,
+        "absolute_length_error_m": 8.871602841242776e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.27817372433492e-06,
+        "native_normalized_fiber_residual": -1.1368683772161603e-12
+      },
+      {
+        "index": 22,
+        "name": "rect_abd_r",
+        "source_length_m": 0.38341526091946954,
+        "native_length_m": 0.38341498374938965,
+        "absolute_length_error_m": 2.771700798875898e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0026604358572512865,
+        "native_normalized_fiber_residual": 7.171183824539185e-08
+      },
+      {
+        "index": 23,
+        "name": "rect_abd_l",
+        "source_length_m": 0.38333022712141657,
+        "native_length_m": 0.38332998752593994,
+        "absolute_length_error_m": 2.3959547662544267e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.00233501847833395,
+        "native_normalized_fiber_residual": -6.158370524644852e-08
+      },
+      {
+        "index": 24,
+        "name": "IL_L1_r",
+        "source_length_m": 0.15716806184492557,
+        "native_length_m": 0.15716791152954102,
+        "absolute_length_error_m": 1.5031538455612115e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.5192870452883653e-05,
+        "native_normalized_fiber_residual": -2.9800503398291767e-08
+      },
+      {
+        "index": 25,
+        "name": "IL_L2_r",
+        "source_length_m": 0.109523894294649,
+        "native_length_m": 0.10952383279800415,
+        "absolute_length_error_m": 6.149664484589312e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.0070947357453406e-05,
+        "native_normalized_fiber_residual": -2.980414137709886e-08
+      },
+      {
+        "index": 26,
+        "name": "IL_L3_r",
+        "source_length_m": 0.07188973587818603,
+        "native_length_m": 0.07188978046178818,
+        "absolute_length_error_m": 4.4583602143433154e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.00011401425581425428,
+        "native_normalized_fiber_residual": -7.152993930503726e-08
+      },
+      {
+        "index": 27,
+        "name": "IL_L4_r",
+        "source_length_m": 0.04931628585953479,
+        "native_length_m": 0.04931628704071045,
+        "absolute_length_error_m": 1.1811756572832621e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.3727684745390434e-05,
+        "native_normalized_fiber_residual": 8.896859071683139e-08
+      },
+      {
+        "index": 28,
+        "name": "IL_L1_l",
+        "source_length_m": 0.15731240878941852,
+        "native_length_m": 0.15731236338615417,
+        "absolute_length_error_m": 4.540326434265829e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -7.1000899879436474e-06,
+        "native_normalized_fiber_residual": -1.8189894035458565e-12
+      },
+      {
+        "index": 29,
+        "name": "IL_L2_l",
+        "source_length_m": 0.1096654937096119,
+        "native_length_m": 0.10966545343399048,
+        "absolute_length_error_m": 4.0275621421281826e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.4487070075119846e-05,
+        "native_normalized_fiber_residual": 2.980414137709886e-08
+      },
+      {
+        "index": 30,
+        "name": "IL_L3_l",
+        "source_length_m": 0.07203114114009831,
+        "native_length_m": 0.07203114777803421,
+        "absolute_length_error_m": 6.637935895392744e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.4510061848559417e-05,
+        "native_normalized_fiber_residual": 1.8189894035458565e-12
+      },
+      {
+        "index": 31,
+        "name": "IL_L4_l",
+        "source_length_m": 0.049420978277952866,
+        "native_length_m": 0.04942092299461365,
+        "absolute_length_error_m": 5.528333921894779e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0004781270690727979,
+        "native_normalized_fiber_residual": -2.153683453798294e-08
+      },
+      {
+        "index": 32,
+        "name": "IL_R5_r",
+        "source_length_m": 0.3560318543860958,
+        "native_length_m": 0.356031596660614,
+        "absolute_length_error_m": 2.577254817892616e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 3.0635674119067202e-12,
+        "native_normalized_fiber_residual": -8.734804871589341e-13
+      },
+      {
+        "index": 33,
+        "name": "IL_R6_r",
+        "source_length_m": 0.3157228377253603,
+        "native_length_m": 0.31572264432907104,
+        "absolute_length_error_m": 1.9339628926084984e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.5204027233327597e-12,
+        "native_normalized_fiber_residual": -8.218348419332389e-13
+      },
+      {
+        "index": 34,
+        "name": "IL_R7_r",
+        "source_length_m": 0.28962236833899824,
+        "native_length_m": 0.28962212800979614,
+        "absolute_length_error_m": 2.403292020947134e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.10300570668187e-05,
+        "native_normalized_fiber_residual": 9.094947017729282e-13
+      },
+      {
+        "index": 35,
+        "name": "IL_R8_r",
+        "source_length_m": 0.25430263451814106,
+        "native_length_m": 0.2543025016784668,
+        "absolute_length_error_m": 1.3283967426058751e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.598888769120289e-12,
+        "native_normalized_fiber_residual": 9.423690126852957e-13
+      },
+      {
+        "index": 36,
+        "name": "IL_R9_r",
+        "source_length_m": 0.21864658488871225,
+        "native_length_m": 0.2186463326215744,
+        "absolute_length_error_m": 2.5226713784576305e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.533746429154605e-12,
+        "native_normalized_fiber_residual": 1.4111664311047822e-12
+      },
+      {
+        "index": 37,
+        "name": "IL_R10_r",
+        "source_length_m": 0.18419320869213537,
+        "native_length_m": 0.18419292569160461,
+        "absolute_length_error_m": 2.8300053075969167e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.16379670257838e-12,
+        "native_normalized_fiber_residual": -1.1086395473522415e-12
+      },
+      {
+        "index": 38,
+        "name": "IL_R11_r",
+        "source_length_m": 0.15306979090359457,
+        "native_length_m": 0.1530696451663971,
+        "absolute_length_error_m": 1.457371974766808e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.4167209072546427e-12,
+        "native_normalized_fiber_residual": 6.882934435077648e-13
+      },
+      {
+        "index": 39,
+        "name": "IL_R12_r",
+        "source_length_m": 0.1171423624339582,
+        "native_length_m": 0.11714211851358414,
+        "absolute_length_error_m": 2.439203740656204e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.6373416294665488e-12,
+        "native_normalized_fiber_residual": 9.535264288221268e-13
+      },
+      {
+        "index": 40,
+        "name": "IL_R5_l",
+        "source_length_m": 0.35619464090950126,
+        "native_length_m": 0.3561943471431732,
+        "absolute_length_error_m": 2.937663280411229e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -5.076766372742736e-13,
+        "native_normalized_fiber_residual": 1.4474811865609893e-13
+      },
+      {
+        "index": 41,
+        "name": "IL_R6_l",
+        "source_length_m": 0.3158999732200947,
+        "native_length_m": 0.3158997595310211,
+        "absolute_length_error_m": 2.136890736026409e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 3.748453804297558e-12,
+        "native_normalized_fiber_residual": -1.2222689223587158e-12
+      },
+      {
+        "index": 42,
+        "name": "IL_R7_l",
+        "source_length_m": 0.28981243263420237,
+        "native_length_m": 0.289812296628952,
+        "absolute_length_error_m": 1.360052503396325e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -6.848942120996071e-06,
+        "native_normalized_fiber_residual": 1.8189894035458565e-12
+      },
+      {
+        "index": 43,
+        "name": "IL_R8_l",
+        "source_length_m": 0.25450937726215234,
+        "native_length_m": 0.25450918078422546,
+        "absolute_length_error_m": 1.964779268726069e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.0036136378492886e-12,
+        "native_normalized_fiber_residual": -7.26519484763738e-13
+      },
+      {
+        "index": 44,
+        "name": "IL_R9_l",
+        "source_length_m": 0.2188576237000837,
+        "native_length_m": 0.21885742247104645,
+        "absolute_length_error_m": 2.012290372388481e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.642925371083461e-12,
+        "native_normalized_fiber_residual": 1.4547661035882453e-12
+      },
+      {
+        "index": 45,
+        "name": "IL_R10_l",
+        "source_length_m": 0.1844117120963529,
+        "native_length_m": 0.18441151082515717,
+        "absolute_length_error_m": 2.012711957377622e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.0830320935093525e-12,
+        "native_normalized_fiber_residual": 1.579617621601248e-12
+      },
+      {
+        "index": 46,
+        "name": "IL_R11_l",
+        "source_length_m": 0.15329735480219406,
+        "native_length_m": 0.15329723060131073,
+        "absolute_length_error_m": 1.2420088332798507e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -9.158006384485384e-13,
+        "native_normalized_fiber_residual": 4.4492854496189227e-13
+      },
+      {
+        "index": 47,
+        "name": "IL_R12_l",
+        "source_length_m": 0.11738165006831486,
+        "native_length_m": 0.11738134920597076,
+        "absolute_length_error_m": 3.008623440936553e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.0969612804917483e-12,
+        "native_normalized_fiber_residual": 6.388291046328931e-13
+      },
+      {
+        "index": 48,
+        "name": "LTpT_T1_r",
+        "source_length_m": 0.32305388433874044,
+        "native_length_m": 0.3230537474155426,
+        "absolute_length_error_m": 1.3692319783542573e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.699408469197806e-06,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 49,
+        "name": "LTpT_T2_r",
+        "source_length_m": 0.3379148475844541,
+        "native_length_m": 0.33791470527648926,
+        "absolute_length_error_m": 1.423079648565917e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -7.153982267693593e-13,
+        "native_normalized_fiber_residual": 4.732346242306007e-13
+      },
+      {
+        "index": 50,
+        "name": "LTpT_T3_r",
+        "source_length_m": 0.3410520971605086,
+        "native_length_m": 0.3410519063472748,
+        "absolute_length_error_m": 1.9081323382463822e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -8.473402886011172e-06,
+        "native_normalized_fiber_residual": 6.366462912410498e-12
+      },
+      {
+        "index": 51,
+        "name": "LTpT_T4_r",
+        "source_length_m": 0.3426039947233813,
+        "native_length_m": 0.34260380268096924,
+        "absolute_length_error_m": 1.920424120838149e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -6.988633231230779e-06,
+        "native_normalized_fiber_residual": 9.094947017729282e-13
+      },
+      {
+        "index": 52,
+        "name": "LTpT_T5_r",
+        "source_length_m": 0.32357481431890794,
+        "native_length_m": 0.32357460260391235,
+        "absolute_length_error_m": 2.117149955904729e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.000376406911527738,
+        "native_normalized_fiber_residual": 7.275957614183426e-12
+      },
+      {
+        "index": 53,
+        "name": "LTpT_T6_r",
+        "source_length_m": 0.321295144789449,
+        "native_length_m": 0.321294903755188,
+        "absolute_length_error_m": 2.410342609948657e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.344301835988105e-12,
+        "native_normalized_fiber_residual": -1.3365782005475557e-12
+      },
+      {
+        "index": 54,
+        "name": "LTpT_T7_r",
+        "source_length_m": 0.3217483720804583,
+        "native_length_m": 0.3217482268810272,
+        "absolute_length_error_m": 1.4519943108970423e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.491253301035613e-05,
+        "native_normalized_fiber_residual": 9.094947017729282e-13
+      },
+      {
+        "index": 55,
+        "name": "LTpT_T8_r",
+        "source_length_m": 0.303976933545012,
+        "native_length_m": 0.30397677421569824,
+        "absolute_length_error_m": 1.593293137425178e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.1852498109653506e-12,
+        "native_normalized_fiber_residual": -1.0568826629836492e-12
+      },
+      {
+        "index": 56,
+        "name": "LTpT_T9_r",
+        "source_length_m": 0.31401015196658993,
+        "native_length_m": 0.31400996446609497,
+        "absolute_length_error_m": 1.8750049496363275e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.7943302484345622e-05,
+        "native_normalized_fiber_residual": -8.109418558888137e-08
+      },
+      {
+        "index": 57,
+        "name": "LTpT_T10_r",
+        "source_length_m": 0.2854583585166218,
+        "native_length_m": 0.28545811772346497,
+        "absolute_length_error_m": 2.4079315685821e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.000549304997548461,
+        "native_normalized_fiber_residual": 4.685716703534126e-09
+      },
+      {
+        "index": 58,
+        "name": "LTpT_T11_r",
+        "source_length_m": 0.2476263014343418,
+        "native_length_m": 0.24762603640556335,
+        "absolute_length_error_m": 2.6502877845113737e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0007213384378701448,
+        "native_normalized_fiber_residual": -7.159542292356491e-09
+      },
+      {
+        "index": 59,
+        "name": "LTpT_T12_r",
+        "source_length_m": 0.19624649646745956,
+        "native_length_m": 0.19624632596969604,
+        "absolute_length_error_m": 1.7049776351862889e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 9.537680974863738e-13,
+        "native_normalized_fiber_residual": -5.060125495698342e-13
+      },
+      {
+        "index": 60,
+        "name": "LTpT_R4_r",
+        "source_length_m": 0.33936176558825254,
+        "native_length_m": 0.3393615782260895,
+        "absolute_length_error_m": 1.873621630621436e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -5.613582743535517e-06,
+        "native_normalized_fiber_residual": 1.1738211469491944e-07
+      },
+      {
+        "index": 61,
+        "name": "LTpT_R5_r",
+        "source_length_m": 0.3180386517104679,
+        "native_length_m": 0.3180384635925293,
+        "absolute_length_error_m": 1.8811793861539527e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.2937201972818002e-05,
+        "native_normalized_fiber_residual": 2.7284841053187847e-12
+      },
+      {
+        "index": 62,
+        "name": "LTpT_R6_r",
+        "source_length_m": 0.3185778843122973,
+        "native_length_m": 0.3185776174068451,
+        "absolute_length_error_m": 2.6690545218421846e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.4048461707716342e-05,
+        "native_normalized_fiber_residual": 5.4569682106375694e-12
+      },
+      {
+        "index": 63,
+        "name": "LTpT_R7_r",
+        "source_length_m": 0.32206677198637645,
+        "native_length_m": 0.32206645607948303,
+        "absolute_length_error_m": 3.15906893422202e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.3977007003850304e-05,
+        "native_normalized_fiber_residual": 1.8189894035458565e-12
+      },
+      {
+        "index": 64,
+        "name": "LTpT_R8_r",
+        "source_length_m": 0.30434163621649424,
+        "native_length_m": 0.3043414354324341,
+        "absolute_length_error_m": 2.0078406015588968e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.289577059855219e-05,
+        "native_normalized_fiber_residual": 3.637978807091713e-12
+      },
+      {
+        "index": 65,
+        "name": "LTpT_R9_r",
+        "source_length_m": 0.30187721520937566,
+        "native_length_m": 0.3018769919872284,
+        "absolute_length_error_m": 2.2322214726644418e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0016540306387469172,
+        "native_normalized_fiber_residual": -8.94651748239994e-08
+      },
+      {
+        "index": 66,
+        "name": "LTpT_R10_r",
+        "source_length_m": 0.27493052151735264,
+        "native_length_m": 0.27493032813072205,
+        "absolute_length_error_m": 1.9338663059809136e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0015444448217749596,
+        "native_normalized_fiber_residual": -8.940696716308594e-08
+      },
+      {
+        "index": 67,
+        "name": "LTpT_R11_r",
+        "source_length_m": 0.23718760381706822,
+        "native_length_m": 0.23718738555908203,
+        "absolute_length_error_m": 2.1825798618424486e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0006284585688263178,
+        "native_normalized_fiber_residual": -2.9103830456733704e-11
+      },
+      {
+        "index": 68,
+        "name": "LTpT_R12_r",
+        "source_length_m": 0.18647888646402486,
+        "native_length_m": 0.1864786446094513,
+        "absolute_length_error_m": 2.4185457356273865e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.7705207919503927e-12,
+        "native_normalized_fiber_residual": 2.481864106590459e-12
+      },
+      {
+        "index": 69,
+        "name": "LTpT_T1_l",
+        "source_length_m": 0.3230538843387404,
+        "native_length_m": 0.323053777217865,
+        "absolute_length_error_m": 1.0712087539221926e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.214902679043007e-06,
+        "native_normalized_fiber_residual": 2.3646862246096134e-11
+      },
+      {
+        "index": 70,
+        "name": "LTpT_T2_l",
+        "source_length_m": 0.33791783745212234,
+        "native_length_m": 0.337917685508728,
+        "absolute_length_error_m": 1.5194339431090498e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.740163679642137e-05,
+        "native_normalized_fiber_residual": 2.7284841053187847e-12
+      },
+      {
+        "index": 71,
+        "name": "LTpT_T3_l",
+        "source_length_m": 0.34105688810969387,
+        "native_length_m": 0.3410566449165344,
+        "absolute_length_error_m": 2.431931594437664e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.0335609658795875e-05,
+        "native_normalized_fiber_residual": -4.423782229423523e-09
+      },
+      {
+        "index": 72,
+        "name": "LTpT_T4_l",
+        "source_length_m": 0.34261200960138816,
+        "native_length_m": 0.3426118791103363,
+        "absolute_length_error_m": 1.304910518529212e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -4.419285687617958e-06,
+        "native_normalized_fiber_residual": 3.637978807091713e-12
+      },
+      {
+        "index": 73,
+        "name": "LTpT_T5_l",
+        "source_length_m": 0.32358322138904316,
+        "native_length_m": 0.32358303666114807,
+        "absolute_length_error_m": 1.847278950917186e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0003346169542055577,
+        "native_normalized_fiber_residual": -2.981687430292368e-08
+      },
+      {
+        "index": 74,
+        "name": "LTpT_T6_l",
+        "source_length_m": 0.32130752847437893,
+        "native_length_m": 0.32130733132362366,
+        "absolute_length_error_m": 1.9715075527670933e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 3.37699920111012e-12,
+        "native_normalized_fiber_residual": -1.925359394486237e-12
+      },
+      {
+        "index": 75,
+        "name": "LTpT_T7_l",
+        "source_length_m": 0.32176708814790866,
+        "native_length_m": 0.3217669427394867,
+        "absolute_length_error_m": 1.4540842196986148e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.89941233152058e-05,
+        "native_normalized_fiber_residual": -2.7284841053187847e-12
+      },
+      {
+        "index": 76,
+        "name": "LTpT_T8_l",
+        "source_length_m": 0.30399708979497153,
+        "native_length_m": 0.30399686098098755,
+        "absolute_length_error_m": 2.2881398398233443e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.780664153795298e-12,
+        "native_normalized_fiber_residual": -1.3448510968044891e-12
+      },
+      {
+        "index": 77,
+        "name": "LTpT_T9_l",
+        "source_length_m": 0.31403521018022884,
+        "native_length_m": 0.314035028219223,
+        "absolute_length_error_m": 1.8196100581846508e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.273358379374258e-05,
+        "native_normalized_fiber_residual": 3.2676325645297766e-08
+      },
+      {
+        "index": 78,
+        "name": "LTpT_T10_l",
+        "source_length_m": 0.28550881340635353,
+        "native_length_m": 0.2855086326599121,
+        "absolute_length_error_m": 1.8074644142496155e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.00040323278517462313,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 79,
+        "name": "LTpT_T11_l",
+        "source_length_m": 0.247714216434424,
+        "native_length_m": 0.24771398305892944,
+        "absolute_length_error_m": 2.3337549456825535e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0006203481461852789,
+        "native_normalized_fiber_residual": 3.2698153518140316e-08
+      },
+      {
+        "index": 80,
+        "name": "LTpT_T12_l",
+        "source_length_m": 0.19624649646745956,
+        "native_length_m": 0.19624632596969604,
+        "absolute_length_error_m": 1.7049776351862889e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 9.537680974863738e-13,
+        "native_normalized_fiber_residual": -5.060125495698342e-13
+      },
+      {
+        "index": 81,
+        "name": "LTpT_R4_l",
+        "source_length_m": 0.3393767717026363,
+        "native_length_m": 0.3393765389919281,
+        "absolute_length_error_m": 2.3271070820340967e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -7.174304755608318e-06,
+        "native_normalized_fiber_residual": 1.862917997641489e-08
+      },
+      {
+        "index": 82,
+        "name": "LTpT_R5_l",
+        "source_length_m": 0.3180559970832216,
+        "native_length_m": 0.3180558681488037,
+        "absolute_length_error_m": 1.2893441786454574e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -8.53548408485949e-06,
+        "native_normalized_fiber_residual": -8.941015039454214e-08
+      },
+      {
+        "index": 83,
+        "name": "LTpT_R6_l",
+        "source_length_m": 0.31859776038365334,
+        "native_length_m": 0.31859755516052246,
+        "absolute_length_error_m": 2.0522313087800725e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.1360129064996727e-05,
+        "native_normalized_fiber_residual": -3.637978807091713e-12
+      },
+      {
+        "index": 84,
+        "name": "LTpT_R7_l",
+        "source_length_m": 0.32209451610761575,
+        "native_length_m": 0.32209429144859314,
+        "absolute_length_error_m": 2.2465902260737636e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.7225307601620443e-05,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 85,
+        "name": "LTpT_R8_l",
+        "source_length_m": 0.30437917216135646,
+        "native_length_m": 0.3043789267539978,
+        "absolute_length_error_m": 2.454073586566352e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.850674900400918e-05,
+        "native_normalized_fiber_residual": -1.8189894035458565e-12
+      },
+      {
+        "index": 86,
+        "name": "LTpT_R9_l",
+        "source_length_m": 0.30192727729634583,
+        "native_length_m": 0.3019270896911621,
+        "absolute_length_error_m": 1.8760518372129553e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0014613567618653178,
+        "native_normalized_fiber_residual": -5.820766091346741e-11
+      },
+      {
+        "index": 87,
+        "name": "LTpT_R10_l",
+        "source_length_m": 0.2750055880225236,
+        "native_length_m": 0.27500540018081665,
+        "absolute_length_error_m": 1.878417069667293e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0014632861129939556,
+        "native_normalized_fiber_residual": -9.69739630818367e-08
+      },
+      {
+        "index": 88,
+        "name": "LTpT_R11_l",
+        "source_length_m": 0.23730442635018711,
+        "native_length_m": 0.2373042106628418,
+        "absolute_length_error_m": 2.1568734531740574e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0006323534762486815,
+        "native_normalized_fiber_residual": 4.46452759206295e-08
+      },
+      {
+        "index": 89,
+        "name": "LTpT_R12_l",
+        "source_length_m": 0.1866122043029011,
+        "native_length_m": 0.18661203980445862,
+        "absolute_length_error_m": 1.6449844247867773e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -8.904563826746259e-13,
+        "native_normalized_fiber_residual": 7.976809859346068e-13
+      },
+      {
+        "index": 90,
+        "name": "LTpL_L5_r",
+        "source_length_m": 0.04232311651945195,
+        "native_length_m": 0.042323142290115356,
+        "absolute_length_error_m": 2.5770663408808403e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.00018256060138810426,
+        "native_normalized_fiber_residual": -1.1731754057109356e-07
+      },
+      {
+        "index": 91,
+        "name": "LTpL_L4_r",
+        "source_length_m": 0.07376549502487344,
+        "native_length_m": 0.07376555353403091,
+        "absolute_length_error_m": 5.850915747729335e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.0005241850158199668,
+        "native_normalized_fiber_residual": -1.2220698408782482e-07
+      },
+      {
+        "index": 92,
+        "name": "LTpL_L3_r",
+        "source_length_m": 0.1001216066795963,
+        "native_length_m": 0.10012166947126389,
+        "absolute_length_error_m": 6.279166758771382e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.0005215839482843876,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 93,
+        "name": "LTpL_L2_r",
+        "source_length_m": 0.12854236065987193,
+        "native_length_m": 0.12854227423667908,
+        "absolute_length_error_m": 8.64231928521253e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0007564908592030406,
+        "native_normalized_fiber_residual": -8.943607099354267e-08
+      },
+      {
+        "index": 94,
+        "name": "LTpL_L1_r",
+        "source_length_m": 0.15918624844898083,
+        "native_length_m": 0.15918612480163574,
+        "absolute_length_error_m": 1.236473450849651e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0010675964877009392,
+        "native_normalized_fiber_residual": 5.820766091346741e-11
+      },
+      {
+        "index": 95,
+        "name": "LTpL_L5_l",
+        "source_length_m": 0.04236474783174525,
+        "native_length_m": 0.04236479103565216,
+        "absolute_length_error_m": 4.320390691037179e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.00034679716918617487,
+        "native_normalized_fiber_residual": -3.748573362827301e-08
+      },
+      {
+        "index": 96,
+        "name": "LTpL_L4_l",
+        "source_length_m": 0.07383676111000247,
+        "native_length_m": 0.07383681833744049,
+        "absolute_length_error_m": 5.722743802449859e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.0005352217121981084,
+        "native_normalized_fiber_residual": 6.318441592156887e-08
+      },
+      {
+        "index": 97,
+        "name": "LTpL_L3_l",
+        "source_length_m": 0.10022093717357439,
+        "native_length_m": 0.10022103041410446,
+        "absolute_length_error_m": 9.324053007464528e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.0007781318272463977,
+        "native_normalized_fiber_residual": 3.521563485264778e-08
+      },
+      {
+        "index": 98,
+        "name": "LTpL_L2_l",
+        "source_length_m": 0.12866644072582442,
+        "native_length_m": 0.1286664456129074,
+        "absolute_length_error_m": 4.88708298829188e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 5.286534724291414e-05,
+        "native_normalized_fiber_residual": -7.450944394804537e-08
+      },
+      {
+        "index": 99,
+        "name": "LTpL_L1_l",
+        "source_length_m": 0.15933326738687953,
+        "native_length_m": 0.15933318436145782,
+        "absolute_length_error_m": 8.302542170435245e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0006666869157925248,
+        "native_normalized_fiber_residual": 3.486638888716698e-08
+      },
+      {
+        "index": 100,
+        "name": "QL_post_I.1-L3_r",
+        "source_length_m": 0.06428424698500725,
+        "native_length_m": 0.0642842948436737,
+        "absolute_length_error_m": 4.78586664603986e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.0004365313216112554,
+        "native_normalized_fiber_residual": 1.0419171303510666e-08
+      },
+      {
+        "index": 101,
+        "name": "QL_post_I.2-L4_r",
+        "source_length_m": 0.037198402666466804,
+        "native_length_m": 0.037198394536972046,
+        "absolute_length_error_m": 8.129494757924682e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 5.455938977515229e-13,
+        "native_normalized_fiber_residual": -8.596800029660179e-13
+      },
+      {
+        "index": 102,
+        "name": "QL_post_I.2-L3_r",
+        "source_length_m": 0.05833346063648125,
+        "native_length_m": 0.05833343043923378,
+        "absolute_length_error_m": 3.01972474733847e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 6.366125075013551e-13,
+        "native_normalized_fiber_residual": -7.195502874091098e-13
+      },
+      {
+        "index": 103,
+        "name": "QL_post_I.2-L2_r",
+        "source_length_m": 0.08428072372470301,
+        "native_length_m": 0.08428071439266205,
+        "absolute_length_error_m": 9.332040959431076e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.3407779988483526e-05,
+        "native_normalized_fiber_residual": 2.980414137709886e-08
+      },
+      {
+        "index": 104,
+        "name": "QL_post_I.3-L1_r",
+        "source_length_m": 0.11644267325269722,
+        "native_length_m": 0.11644253134727478,
+        "absolute_length_error_m": 1.4190542244052473e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 3.459808123589675e-13,
+        "native_normalized_fiber_residual": -2.5724873078079857e-13
+      },
+      {
+        "index": 105,
+        "name": "QL_post_I.3-L2_r",
+        "source_length_m": 0.08464333142552898,
+        "native_length_m": 0.08464337885379791,
+        "absolute_length_error_m": 4.742826893722185e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 6.477359420387074e-05,
+        "native_normalized_fiber_residual": 1.0913936421275139e-11
+      },
+      {
+        "index": 106,
+        "name": "QL_post_I.3-L3_r",
+        "source_length_m": 0.06053305317881129,
+        "native_length_m": 0.0605330690741539,
+        "absolute_length_error_m": 1.5895342611593755e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 4.2819607187993824e-05,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 107,
+        "name": "QL_post_I.1-L3_l",
+        "source_length_m": 0.0644491981358631,
+        "native_length_m": 0.0644492506980896,
+        "absolute_length_error_m": 5.256222650185105e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.0004750870866701007,
+        "native_normalized_fiber_residual": -2.764863893389702e-09
+      },
+      {
+        "index": 108,
+        "name": "QL_post_I.2-L4_l",
+        "source_length_m": 0.037357700531771,
+        "native_length_m": 0.0373576357960701,
+        "absolute_length_error_m": 6.473570090398395e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0005960538401268423,
+        "native_normalized_fiber_residual": -9.12696123123169e-08
+      },
+      {
+        "index": 109,
+        "name": "QL_post_I.2-L3_l",
+        "source_length_m": 0.058526761278114195,
+        "native_length_m": 0.05852673575282097,
+        "absolute_length_error_m": 2.5525293226302814e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 7.744045747541672e-13,
+        "native_normalized_fiber_residual": -8.752938695025247e-13
+      },
+      {
+        "index": 110,
+        "name": "QL_post_I.2-L2_l",
+        "source_length_m": 0.08449443650153307,
+        "native_length_m": 0.08449442684650421,
+        "absolute_length_error_m": 9.65502885974523e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.1209780495846644e-05,
+        "native_normalized_fiber_residual": -2.980414137709886e-08
+      },
+      {
+        "index": 111,
+        "name": "QL_post_I.3-L1_l",
+        "source_length_m": 0.11670495601429559,
+        "native_length_m": 0.11670483648777008,
+        "absolute_length_error_m": 1.195265255105049e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -5.645478659208059e-13,
+        "native_normalized_fiber_residual": 4.1976093282693194e-13
+      },
+      {
+        "index": 112,
+        "name": "QL_post_I.3-L2_l",
+        "source_length_m": 0.08488709439632033,
+        "native_length_m": 0.08488714694976807,
+        "absolute_length_error_m": 5.2553447732472947e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.00046646507689729333,
+        "native_normalized_fiber_residual": -4.7264620661735535e-08
+      },
+      {
+        "index": 113,
+        "name": "QL_post_I.3-L3_l",
+        "source_length_m": 0.06074830734963016,
+        "native_length_m": 0.06074833124876022,
+        "absolute_length_error_m": 2.3899130063842478e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 7.613495836267248e-05,
+        "native_normalized_fiber_residual": -7.275957614183426e-12
+      },
+      {
+        "index": 114,
+        "name": "QL_mid_L3-12.3_r",
+        "source_length_m": 0.07437002593558173,
+        "native_length_m": 0.07436979562044144,
+        "absolute_length_error_m": 2.3031514029270284e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -8.253980922745541e-05,
+        "native_normalized_fiber_residual": -7.275957614183426e-12
+      },
+      {
+        "index": 115,
+        "name": "QL_mid_L3-12.2_r",
+        "source_length_m": 0.07886179965490744,
+        "native_length_m": 0.0788615494966507,
+        "absolute_length_error_m": 2.501582567482341e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -7.110491123847595e-13,
+        "native_normalized_fiber_residual": 1.3491821321178626e-13
+      },
+      {
+        "index": 116,
+        "name": "QL_mid_L3-12.1_r",
+        "source_length_m": 0.0858409244558954,
+        "native_length_m": 0.08584069460630417,
+        "absolute_length_error_m": 2.298495912350651e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0012807791354134679,
+        "native_normalized_fiber_residual": -2.3283064365386963e-10
+      },
+      {
+        "index": 117,
+        "name": "QL_mid_L2-12.1_r",
+        "source_length_m": 0.05552723672854566,
+        "native_length_m": 0.055526960641145706,
+        "absolute_length_error_m": 2.7608739995577114e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -4.8040878027677536e-05,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 118,
+        "name": "QL_mid_L4-12.3_r",
+        "source_length_m": 0.09919881432378476,
+        "native_length_m": 0.09919865429401398,
+        "absolute_length_error_m": 1.6002977078211078e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -5.536759202159902e-13,
+        "native_normalized_fiber_residual": 5.764966954334427e-13
+      },
+      {
+        "index": 119,
+        "name": "QL_mid_L3-12.3_l",
+        "source_length_m": 0.0744034512603084,
+        "native_length_m": 0.07440326362848282,
+        "absolute_length_error_m": 1.87631825576684e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0003450986696407199,
+        "native_normalized_fiber_residual": 1.7869751900434494e-08
+      },
+      {
+        "index": 120,
+        "name": "QL_mid_L3-12.2_l",
+        "source_length_m": 0.07889320240091004,
+        "native_length_m": 0.07889300584793091,
+        "absolute_length_error_m": 1.9655297912868352e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.001872953143902123,
+        "native_normalized_fiber_residual": 6.199115887284279e-09
+      },
+      {
+        "index": 121,
+        "name": "QL_mid_L3-12.1_l",
+        "source_length_m": 0.08586936567408988,
+        "native_length_m": 0.08586915582418442,
+        "absolute_length_error_m": 2.0984990546646376e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0014492161571979523,
+        "native_normalized_fiber_residual": 1.5832483768463135e-08
+      },
+      {
+        "index": 122,
+        "name": "QL_mid_L2-12.1_l",
+        "source_length_m": 0.05553767340331145,
+        "native_length_m": 0.05553741380572319,
+        "absolute_length_error_m": 2.595975882591084e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -5.353671440389007e-05,
+        "native_normalized_fiber_residual": -2.981687430292368e-08
+      },
+      {
+        "index": 123,
+        "name": "QL_mid_L4-12.3_l",
+        "source_length_m": 0.09924961204723556,
+        "native_length_m": 0.09924943000078201,
+        "absolute_length_error_m": 1.8204645355068827e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.00033760344376787543,
+        "native_normalized_fiber_residual": 8.943607099354267e-08
+      },
+      {
+        "index": 124,
+        "name": "QL_ant_I.2-T12_r",
+        "source_length_m": 0.14219434942837753,
+        "native_length_m": 0.14219409227371216,
+        "absolute_length_error_m": 2.57154665367354e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.102415192894308e-13,
+        "native_normalized_fiber_residual": -1.0203297218626742e-13
+      },
+      {
+        "index": 125,
+        "name": "QL_ant_I.3-T12_r",
+        "source_length_m": 0.14059385922864545,
+        "native_length_m": 0.14059367775917053,
+        "absolute_length_error_m": 1.8146947491914922e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 9.938185257379883e-13,
+        "native_normalized_fiber_residual": -5.146539119350868e-13
+      },
+      {
+        "index": 126,
+        "name": "QL_ant_I.2-12.1_r",
+        "source_length_m": 0.13584271914690552,
+        "native_length_m": 0.13584241271018982,
+        "absolute_length_error_m": 3.0643671569685615e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -8.410354660967623e-13,
+        "native_normalized_fiber_residual": 4.851013254286718e-13
+      },
+      {
+        "index": 127,
+        "name": "QL_ant_I.3-12.1_r",
+        "source_length_m": 0.13420752568542083,
+        "native_length_m": 0.13420727849006653,
+        "absolute_length_error_m": 2.471953542970695e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.5111877678039565e-12,
+        "native_normalized_fiber_residual": 8.014590510349584e-13
+      },
+      {
+        "index": 128,
+        "name": "QL_ant_I.3-12.2_r",
+        "source_length_m": 0.12630340815158536,
+        "native_length_m": 0.12630318105220795,
+        "absolute_length_error_m": 2.2709937741449693e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.1977556533399047e-12,
+        "native_normalized_fiber_residual": -6.882296924200226e-13
+      },
+      {
+        "index": 129,
+        "name": "QL_ant_I.3-12.3_r",
+        "source_length_m": 0.11821942676141359,
+        "native_length_m": 0.11821922659873962,
+        "absolute_length_error_m": 2.0016267396338883e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.5713888523727348e-12,
+        "native_normalized_fiber_residual": -1.0263675759986102e-12
+      },
+      {
+        "index": 130,
+        "name": "QL_ant_I.2-T12_l",
+        "source_length_m": 0.14242414728024674,
+        "native_length_m": 0.14242389798164368,
+        "absolute_length_error_m": 2.4929860306666107e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.3289152764328627e-12,
+        "native_normalized_fiber_residual": 6.449400475477818e-13
+      },
+      {
+        "index": 131,
+        "name": "QL_ant_I.3-T12_l",
+        "source_length_m": 0.14086312725912345,
+        "native_length_m": 0.14086294174194336,
+        "absolute_length_error_m": 1.8551718009018892e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.8402315261900615e-12,
+        "native_normalized_fiber_residual": -9.529731604535074e-13
+      },
+      {
+        "index": 132,
+        "name": "QL_ant_I.2-12.1_l",
+        "source_length_m": 0.13607738150701154,
+        "native_length_m": 0.1360771656036377,
+        "absolute_length_error_m": 2.1590337384580494e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -4.3277455729316683e-13,
+        "native_normalized_fiber_residual": 2.4962028429519056e-13
+      },
+      {
+        "index": 133,
+        "name": "QL_ant_I.3-12.1_l",
+        "source_length_m": 0.13447891017127758,
+        "native_length_m": 0.13447876274585724,
+        "absolute_length_error_m": 1.4742542034373862e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -4.685270183976686e-13,
+        "native_normalized_fiber_residual": 2.484834983173395e-13
+      },
+      {
+        "index": 134,
+        "name": "QL_ant_I.3-12.2_l",
+        "source_length_m": 0.12657637825118082,
+        "native_length_m": 0.12657615542411804,
+        "absolute_length_error_m": 2.2282706277354514e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.9140307828263703e-12,
+        "native_normalized_fiber_residual": -1.0998009144017051e-12
+      },
+      {
+        "index": 135,
+        "name": "QL_ant_I.3-12.3_l",
+        "source_length_m": 0.11849446662047584,
+        "native_length_m": 0.11849427968263626,
+        "absolute_length_error_m": 1.8693783958301236e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.1085090014190686e-13,
+        "native_normalized_fiber_residual": 2.0303522047220718e-13
+      },
+      {
+        "index": 136,
+        "name": "MF_m1s_r",
+        "source_length_m": 0.057358562489984596,
+        "native_length_m": 0.057358518242836,
+        "absolute_length_error_m": 4.42471485978535e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -4.6300974645419046e-05,
+        "native_normalized_fiber_residual": -2.9802322387695312e-08
+      },
+      {
+        "index": 137,
+        "name": "MF_m1t.1_r",
+        "source_length_m": 0.08333876853276045,
+        "native_length_m": 0.08333861082792282,
+        "absolute_length_error_m": 1.5770483763333232e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.6757580566240105e-13,
+        "native_normalized_fiber_residual": 1.8765432187751313e-13
+      },
+      {
+        "index": 138,
+        "name": "MF_m1t.2_r",
+        "source_length_m": 0.10446230595957377,
+        "native_length_m": 0.10446218401193619,
+        "absolute_length_error_m": 1.2194763758521798e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.5027240519646656e-12,
+        "native_normalized_fiber_residual": 1.2579177066304736e-12
+      },
+      {
+        "index": 139,
+        "name": "MF_m1t.3_r",
+        "source_length_m": 0.11395238302371337,
+        "native_length_m": 0.11395231634378433,
+        "absolute_length_error_m": 6.667992903663933e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 4.1770200579632766e-13,
+        "native_normalized_fiber_residual": -3.0486247207250905e-13
+      },
+      {
+        "index": 140,
+        "name": "MF_m2s_r",
+        "source_length_m": 0.054277339893069654,
+        "native_length_m": 0.05427727475762367,
+        "absolute_length_error_m": 6.513544598130139e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -9.216229955200106e-05,
+        "native_normalized_fiber_residual": 2.9103830456733704e-11
+      },
+      {
+        "index": 141,
+        "name": "MF_m2t.1_r",
+        "source_length_m": 0.07099387642505978,
+        "native_length_m": 0.07099393755197525,
+        "absolute_length_error_m": 6.11269154737748e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.00017335846496280283,
+        "native_normalized_fiber_residual": 9.094947017729282e-12
+      },
+      {
+        "index": 142,
+        "name": "MF_m2t.2_r",
+        "source_length_m": 0.08979534506039473,
+        "native_length_m": 0.08979541808366776,
+        "absolute_length_error_m": 7.302327302560752e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.0006446907646022737,
+        "native_normalized_fiber_residual": 4.802132025361061e-08
+      },
+      {
+        "index": 143,
+        "name": "MF_m2t.3_r",
+        "source_length_m": 0.10181617740854117,
+        "native_length_m": 0.10181618481874466,
+        "absolute_length_error_m": 7.4102034924861115e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 7.777543942211196e-05,
+        "native_normalized_fiber_residual": -8.725328370928764e-08
+      },
+      {
+        "index": 144,
+        "name": "MF_m3s_r",
+        "source_length_m": 0.04842800681569457,
+        "native_length_m": 0.04842806234955788,
+        "absolute_length_error_m": 5.553386330653387e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.00046463526086881757,
+        "native_normalized_fiber_residual": -1.664739102125168e-08
+      },
+      {
+        "index": 145,
+        "name": "MF_m3t.1_r",
+        "source_length_m": 0.11745266059053625,
+        "native_length_m": 0.1174527257680893,
+        "absolute_length_error_m": 6.517755304913386e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.0005554920644499362,
+        "native_normalized_fiber_residual": 1.6970443539321423e-07
+      },
+      {
+        "index": 146,
+        "name": "MF_m3t.2_r",
+        "source_length_m": 0.09733749332753752,
+        "native_length_m": 0.0973374992609024,
+        "absolute_length_error_m": 5.9333648827486485e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 4.389448804431595e-05,
+        "native_normalized_fiber_residual": 5.843503458891064e-08
+      },
+      {
+        "index": 147,
+        "name": "MF_m3t.3_r",
+        "source_length_m": 0.09733749332753752,
+        "native_length_m": 0.0973374992609024,
+        "absolute_length_error_m": 5.9333648827486485e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 4.84520057852933e-07,
+        "native_normalized_fiber_residual": 1.8474111129762605e-13
+      },
+      {
+        "index": 148,
+        "name": "MF_m4s_r",
+        "source_length_m": 0.05354366643260281,
+        "native_length_m": 0.05354360118508339,
+        "absolute_length_error_m": 6.524751942210694e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 6.715383593170268e-14,
+        "native_normalized_fiber_residual": -1.743714561305322e-14
+      },
+      {
+        "index": 149,
+        "name": "MF_m4t.1_r",
+        "source_length_m": 0.06631139740166929,
+        "native_length_m": 0.06631144136190414,
+        "absolute_length_error_m": 4.3960234855089375e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.00032382880453951657,
+        "native_normalized_fiber_residual": -2.9103830456733704e-11
+      },
+      {
+        "index": 150,
+        "name": "MF_m4t.2_r",
+        "source_length_m": 0.08898073725303286,
+        "native_length_m": 0.08898068964481354,
+        "absolute_length_error_m": 4.760821932514592e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.00041359479655511677,
+        "native_normalized_fiber_residual": -3.0617229640483856e-08
+      },
+      {
+        "index": 151,
+        "name": "MF_m4t.3_r",
+        "source_length_m": 0.10286933030674802,
+        "native_length_m": 0.10286935418844223,
+        "absolute_length_error_m": 2.388169420552977e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 3.7088777844473952e-06,
+        "native_normalized_fiber_residual": -5.276751835481264e-08
+      },
+      {
+        "index": 152,
+        "name": "MF_m5s_r",
+        "source_length_m": 0.021123294179250258,
+        "native_length_m": 0.021123284474015236,
+        "absolute_length_error_m": 9.70523502188958e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0001190269977087155,
+        "native_normalized_fiber_residual": -7.297785487025976e-09
+      },
+      {
+        "index": 153,
+        "name": "MF_m5t.1_r",
+        "source_length_m": 0.09214528712963574,
+        "native_length_m": 0.09214534610509872,
+        "absolute_length_error_m": 5.8975462985388916e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 7.1964695962378755e-06,
+        "native_normalized_fiber_residual": -4.4705302570946515e-08
+      },
+      {
+        "index": 154,
+        "name": "MF_m5t.2_r",
+        "source_length_m": 0.0688763615072572,
+        "native_length_m": 0.06887632608413696,
+        "absolute_length_error_m": 3.542312024262806e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.00026813315344043076,
+        "native_normalized_fiber_residual": 2.9831426218152046e-08
+      },
+      {
+        "index": 155,
+        "name": "MF_m5t.3_r",
+        "source_length_m": 0.04936191798700054,
+        "native_length_m": 0.04936189204454422,
+        "absolute_length_error_m": 2.5942456322036733e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.00017070051399059594,
+        "native_normalized_fiber_residual": 5.820766091346741e-11
+      },
+      {
+        "index": 156,
+        "name": "MF_m1.laminar_r",
+        "source_length_m": 0.03718501002202769,
+        "native_length_m": 0.037184953689575195,
+        "absolute_length_error_m": 5.633245249436758e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.7354368810063026e-13,
+        "native_normalized_fiber_residual": 3.647144977518557e-13
+      },
+      {
+        "index": 157,
+        "name": "MF_m2.laminar_r",
+        "source_length_m": 0.03198755959501016,
+        "native_length_m": 0.031987544149160385,
+        "absolute_length_error_m": 1.5445849772810494e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.00011552629439393058,
+        "native_normalized_fiber_residual": -4.1211023926734924e-08
+      },
+      {
+        "index": 158,
+        "name": "MF_m3.laminar_r",
+        "source_length_m": 0.03108755249628435,
+        "native_length_m": 0.031087538227438927,
+        "absolute_length_error_m": 1.4268845424658672e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -5.22601764380709e-13,
+        "native_normalized_fiber_residual": 1.5822085395328367e-12
+      },
+      {
+        "index": 159,
+        "name": "MF_m4.laminar_r",
+        "source_length_m": 0.033883107803532396,
+        "native_length_m": 0.033883050084114075,
+        "absolute_length_error_m": 5.771941832127814e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 4.638101968462705e-13,
+        "native_normalized_fiber_residual": -3.449602257489526e-13
+      },
+      {
+        "index": 160,
+        "name": "MF_m5.laminar_r",
+        "source_length_m": 0.03039262928299835,
+        "native_length_m": 0.03039272129535675,
+        "absolute_length_error_m": 9.201235839917388e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.0006892234669066966,
+        "native_normalized_fiber_residual": 4.4819898903369904e-08
+      },
+      {
+        "index": 161,
+        "name": "MF_m1s_l",
+        "source_length_m": 0.057370566989821827,
+        "native_length_m": 0.05737047269940376,
+        "absolute_length_error_m": 9.429041806369165e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -9.777649393072352e-05,
+        "native_normalized_fiber_residual": 1.4551915228366852e-11
+      },
+      {
+        "index": 162,
+        "name": "MF_m1t.1_l",
+        "source_length_m": 0.0833546181242347,
+        "native_length_m": 0.08335449546575546,
+        "absolute_length_error_m": 1.2265847923464968e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.3767265322553457e-12,
+        "native_normalized_fiber_residual": -1.5416824717881528e-12
+      },
+      {
+        "index": 163,
+        "name": "MF_m1t.2_l",
+        "source_length_m": 0.10452284873367086,
+        "native_length_m": 0.10452265292406082,
+        "absolute_length_error_m": 1.9580961004017627e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -9.224826848577838e-13,
+        "native_normalized_fiber_residual": 7.722025059317406e-13
+      },
+      {
+        "index": 164,
+        "name": "MF_m1t.3_l",
+        "source_length_m": 0.11406332601492747,
+        "native_length_m": 0.11406318843364716,
+        "absolute_length_error_m": 1.3758128031282624e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0012098087463527918,
+        "native_normalized_fiber_residual": 3.434251993894577e-09
+      },
+      {
+        "index": 165,
+        "name": "MF_m2s_l",
+        "source_length_m": 0.05428897831443289,
+        "native_length_m": 0.054288946092128754,
+        "absolute_length_error_m": 3.222230413740812e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.1777623147579686e-13,
+        "native_normalized_fiber_residual": -2.3060497738799923e-13
+      },
+      {
+        "index": 166,
+        "name": "MF_m2t.1_l",
+        "source_length_m": 0.07105598436494755,
+        "native_length_m": 0.07105598598718643,
+        "absolute_length_error_m": 1.6222388848907698e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -9.64348600973608e-06,
+        "native_normalized_fiber_residual": -2.754745764832478e-09
+      },
+      {
+        "index": 167,
+        "name": "MF_m2t.2_l",
+        "source_length_m": 0.08988435271203324,
+        "native_length_m": 0.08988437056541443,
+        "absolute_length_error_m": 1.785338119009161e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.00015749265730846673,
+        "native_normalized_fiber_residual": 5.5020791478455067e-08
+      },
+      {
+        "index": 168,
+        "name": "MF_m2t.3_l",
+        "source_length_m": 0.10188948209060027,
+        "native_length_m": 0.10188951343297958,
+        "absolute_length_error_m": 3.134237931690098e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.00022259428806137294,
+        "native_normalized_fiber_residual": 1.0477378964424133e-08
+      },
+      {
+        "index": 169,
+        "name": "MF_m3s_l",
+        "source_length_m": 0.04847954360981059,
+        "native_length_m": 0.0484795942902565,
+        "absolute_length_error_m": 5.068044590939014e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.0004264461458660662,
+        "native_normalized_fiber_residual": 2.112938091158867e-08
+      },
+      {
+        "index": 170,
+        "name": "MF_m3t.1_l",
+        "source_length_m": 0.11747491825671617,
+        "native_length_m": 0.1174749806523323,
+        "absolute_length_error_m": 6.239561613219369e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.0004836105217691511,
+        "native_normalized_fiber_residual": -4.470348358154297e-08
+      },
+      {
+        "index": 171,
+        "name": "MF_m3t.2_l",
+        "source_length_m": 0.09737142043928042,
+        "native_length_m": 0.09737148135900497,
+        "absolute_length_error_m": 6.091972455657402e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.0005171978264115751,
+        "native_normalized_fiber_residual": 2.000888343900442e-07
+      },
+      {
+        "index": 172,
+        "name": "MF_m3t.3_l",
+        "source_length_m": 0.09737142043928042,
+        "native_length_m": 0.09737148135900497,
+        "absolute_length_error_m": 6.091972455657402e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.0005971719510853291,
+        "native_normalized_fiber_residual": -5.080073606222868e-08
+      },
+      {
+        "index": 173,
+        "name": "MF_m4s_l",
+        "source_length_m": 0.053568445771762896,
+        "native_length_m": 0.05356847494840622,
+        "absolute_length_error_m": 2.917664332358072e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 3.9480837585870177e-05,
+        "native_normalized_fiber_residual": -5.4569682106375694e-12
+      },
+      {
+        "index": 174,
+        "name": "MF_m4t.1_l",
+        "source_length_m": 0.06633286246563871,
+        "native_length_m": 0.06633290648460388,
+        "absolute_length_error_m": 4.401896516736947e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.00031756373937241733,
+        "native_normalized_fiber_residual": 8.809729479253292e-08
+      },
+      {
+        "index": 175,
+        "name": "MF_m4t.2_l",
+        "source_length_m": 0.08899834862684,
+        "native_length_m": 0.08899830281734467,
+        "absolute_length_error_m": 4.580949533594669e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.00039288809057325125,
+        "native_normalized_fiber_residual": -1.023290678858757e-07
+      },
+      {
+        "index": 176,
+        "name": "MF_m4t.3_l",
+        "source_length_m": 0.1028835680716516,
+        "native_length_m": 0.10288358479738235,
+        "absolute_length_error_m": 1.672573075872652e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.250545094284462e-06,
+        "native_normalized_fiber_residual": -2.0463630789890885e-12
+      },
+      {
+        "index": 177,
+        "name": "MF_m5s_l",
+        "source_length_m": 0.021143820670162294,
+        "native_length_m": 0.021143745630979538,
+        "absolute_length_error_m": 7.503918275642008e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0007465283269993961,
+        "native_normalized_fiber_residual": -1.0128132998943329e-08
+      },
+      {
+        "index": 178,
+        "name": "MF_m5t.1_l",
+        "source_length_m": 0.092154223912964,
+        "native_length_m": 0.09215427190065384,
+        "absolute_length_error_m": 4.7987689835715663e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 5.885001883143559e-06,
+        "native_normalized_fiber_residual": -7.450762495864183e-08
+      },
+      {
+        "index": 179,
+        "name": "MF_m5t.2_l",
+        "source_length_m": 0.06888702022940353,
+        "native_length_m": 0.06888707727193832,
+        "absolute_length_error_m": 5.704253479288379e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.00041180558037012815,
+        "native_normalized_fiber_residual": 2.735760062932968e-08
+      },
+      {
+        "index": 180,
+        "name": "MF_m5t.3_l",
+        "source_length_m": 0.049373844234713034,
+        "native_length_m": 0.04937383905053139,
+        "absolute_length_error_m": 5.1841816464670565e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -4.445155354915187e-05,
+        "native_normalized_fiber_residual": 1.7062120605260134e-08
+      },
+      {
+        "index": 181,
+        "name": "MF_m1.laminar_l",
+        "source_length_m": 0.03719344432310396,
+        "native_length_m": 0.03719320520758629,
+        "absolute_length_error_m": 2.391155176709181e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.001978757092729211,
+        "native_normalized_fiber_residual": -2.7008354663848877e-08
+      },
+      {
+        "index": 182,
+        "name": "MF_m2.laminar_l",
+        "source_length_m": 0.031998553279318276,
+        "native_length_m": 0.03199858218431473,
+        "absolute_length_error_m": 2.8904996451917242e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.00021466618636623025,
+        "native_normalized_fiber_residual": 5.820766091346741e-11
+      },
+      {
+        "index": 183,
+        "name": "MF_m3.laminar_l",
+        "source_length_m": 0.031097585451890307,
+        "native_length_m": 0.031097611412405968,
+        "absolute_length_error_m": 2.596051566078339e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.147557395597687e-05,
+        "native_normalized_fiber_residual": 3.637978807091713e-12
+      },
+      {
+        "index": 184,
+        "name": "MF_m4.laminar_l",
+        "source_length_m": 0.033932825441408604,
+        "native_length_m": 0.03393279016017914,
+        "absolute_length_error_m": 3.528122946572232e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.8440854583374328e-13,
+        "native_normalized_fiber_residual": 1.3715440729759193e-13
+      },
+      {
+        "index": 185,
+        "name": "MF_m5.laminar_l",
+        "source_length_m": 0.030413133613291104,
+        "native_length_m": 0.03041321039199829,
+        "absolute_length_error_m": 7.67787071871695e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.0005724791553802788,
+        "native_normalized_fiber_residual": -1.501757651567459e-08
+      },
+      {
+        "index": 186,
+        "name": "EO1_r",
+        "source_length_m": 0.10874138281682907,
+        "native_length_m": 0.10874123126268387,
+        "absolute_length_error_m": 1.5155414520573451e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0007962256786413491,
+        "native_normalized_fiber_residual": 1.1641532182693481e-10
+      },
+      {
+        "index": 187,
+        "name": "EO2_r",
+        "source_length_m": 0.10835738948621763,
+        "native_length_m": 0.10835731029510498,
+        "absolute_length_error_m": 7.919111265353163e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -5.994886578264413e-06,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 188,
+        "name": "EO3_r",
+        "source_length_m": 0.09950833128273891,
+        "native_length_m": 0.09950822591781616,
+        "absolute_length_error_m": 1.0536492274504372e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.0053909744664469e-12,
+        "native_normalized_fiber_residual": 9.205923783700554e-13
+      },
+      {
+        "index": 189,
+        "name": "EO4_r",
+        "source_length_m": 0.09903877977551,
+        "native_length_m": 0.09903863072395325,
+        "absolute_length_error_m": 1.4905155674982407e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -9.959568976827815e-13,
+        "native_normalized_fiber_residual": 8.918528350727872e-13
+      },
+      {
+        "index": 190,
+        "name": "EO5_r",
+        "source_length_m": 0.11434016727408308,
+        "native_length_m": 0.11433986574411392,
+        "absolute_length_error_m": 3.015299691599971e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -5.513865731186784e-13,
+        "native_normalized_fiber_residual": 4.1010397118165787e-13
+      },
+      {
+        "index": 191,
+        "name": "EO6_r",
+        "source_length_m": 0.09906775380026844,
+        "native_length_m": 0.09906750172376633,
+        "absolute_length_error_m": 2.520765021163385e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.150267861243977e-13,
+        "native_normalized_fiber_residual": 2.148983031455276e-13
+      },
+      {
+        "index": 192,
+        "name": "IO1_r",
+        "source_length_m": 0.09748795682026509,
+        "native_length_m": 0.0974879264831543,
+        "absolute_length_error_m": 3.033711079569734e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.2659238078378127e-13,
+        "native_normalized_fiber_residual": -1.6022395270352124e-13
+      },
+      {
+        "index": 193,
+        "name": "IO2_r",
+        "source_length_m": 0.10069268123613424,
+        "native_length_m": 0.10069265961647034,
+        "absolute_length_error_m": 2.1619663906347064e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.871508397423895e-06,
+        "native_normalized_fiber_residual": 9.094947017729282e-13
+      },
+      {
+        "index": 194,
+        "name": "IO3_r",
+        "source_length_m": 0.1206181149741648,
+        "native_length_m": 0.12061808258295059,
+        "absolute_length_error_m": 3.239121421083624e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.489009031909518e-05,
+        "native_normalized_fiber_residual": 1.8189894035458565e-12
+      },
+      {
+        "index": 195,
+        "name": "IO4_r",
+        "source_length_m": 0.11749236367039934,
+        "native_length_m": 0.11749215424060822,
+        "absolute_length_error_m": 2.0942979112037463e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -8.066237933235243e-05,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 196,
+        "name": "IO5_r",
+        "source_length_m": 0.09564883284396353,
+        "native_length_m": 0.0956486314535141,
+        "absolute_length_error_m": 2.0139044942801831e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -8.405571861658245e-05,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 197,
+        "name": "IO6_r",
+        "source_length_m": 0.09139348073540789,
+        "native_length_m": 0.09139329195022583,
+        "absolute_length_error_m": 1.8878518205645012e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0016040530754253268,
+        "native_normalized_fiber_residual": 8.381903171539307e-09
+      },
+      {
+        "index": 198,
+        "name": "EO1_l",
+        "source_length_m": 0.10872843298692118,
+        "native_length_m": 0.10872828215360641,
+        "absolute_length_error_m": 1.5083331476872797e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0007646303856745362,
+        "native_normalized_fiber_residual": -1.0011717677116394e-08
+      },
+      {
+        "index": 199,
+        "name": "EO2_l",
+        "source_length_m": 0.10838404840353713,
+        "native_length_m": 0.108383908867836,
+        "absolute_length_error_m": 1.3953570113245384e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.627015444682911e-05,
+        "native_normalized_fiber_residual": -9.094947017729282e-13
+      },
+      {
+        "index": 200,
+        "name": "EO3_l",
+        "source_length_m": 0.09956240196065608,
+        "native_length_m": 0.09956230968236923,
+        "absolute_length_error_m": 9.227828684510442e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.00035105657298117876,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 201,
+        "name": "EO4_l",
+        "source_length_m": 0.09911281125164953,
+        "native_length_m": 0.09911269694566727,
+        "absolute_length_error_m": 1.1430598226280786e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 5.68947558336752e-13,
+        "native_normalized_fiber_residual": -5.094773344524461e-13
+      },
+      {
+        "index": 202,
+        "name": "EO5_l",
+        "source_length_m": 0.11480320808128325,
+        "native_length_m": 0.1148030012845993,
+        "absolute_length_error_m": 2.0679668394363304e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.8624333845973506e-12,
+        "native_normalized_fiber_residual": 1.3852193047128591e-12
+      },
+      {
+        "index": 203,
+        "name": "EO6_l",
+        "source_length_m": 0.09947692253119865,
+        "native_length_m": 0.09947662055492401,
+        "absolute_length_error_m": 3.0197627463868226e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.623916496065747e-12,
+        "native_normalized_fiber_residual": -1.1077689330077356e-12
+      },
+      {
+        "index": 204,
+        "name": "IO1_l",
+        "source_length_m": 0.09757483170817528,
+        "native_length_m": 0.09757478535175323,
+        "absolute_length_error_m": 4.635642204819934e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.4165388697098824e-12,
+        "native_normalized_fiber_residual": -1.7928681542850322e-12
+      },
+      {
+        "index": 205,
+        "name": "IO2_l",
+        "source_length_m": 0.10083514798936208,
+        "native_length_m": 0.10083511471748352,
+        "absolute_length_error_m": 3.3271878557838974e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -6.8880640355928335e-06,
+        "native_normalized_fiber_residual": -2.7284841053187847e-12
+      },
+      {
+        "index": 206,
+        "name": "IO3_l",
+        "source_length_m": 0.1208060505325449,
+        "native_length_m": 0.12080596387386322,
+        "absolute_length_error_m": 8.665868167501145e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.00010156057396670803,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 207,
+        "name": "IO4_l",
+        "source_length_m": 0.11792880003954348,
+        "native_length_m": 0.11792862415313721,
+        "absolute_length_error_m": 1.7588640627286267e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -5.919166505918838e-05,
+        "native_normalized_fiber_residual": -3.637978807091713e-12
+      },
+      {
+        "index": 208,
+        "name": "IO5_l",
+        "source_length_m": 0.09600550124944168,
+        "native_length_m": 0.09600529819726944,
+        "absolute_length_error_m": 2.030521722429235e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.4782383216810357e-12,
+        "native_normalized_fiber_residual": 1.361915137956804e-12
+      },
+      {
+        "index": 209,
+        "name": "IO6_l",
+        "source_length_m": 0.09166051475346294,
+        "native_length_m": 0.09166029840707779,
+        "absolute_length_error_m": 2.1634638515399818e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0018196755554527044,
+        "native_normalized_fiber_residual": -2.9802322387695312e-08
+      },
+      {
+        "index": 210,
+        "name": "DELT1",
+        "source_length_m": 0.2089497694768775,
+        "native_length_m": 0.20894968509674072,
+        "absolute_length_error_m": 8.438013676670408e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.548789987282362e-05,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 211,
+        "name": "DELT2",
+        "source_length_m": 0.2106219061210579,
+        "native_length_m": 0.21062184870243073,
+        "absolute_length_error_m": 5.741862718622315e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.0837648915185127e-05,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 212,
+        "name": "DELT3",
+        "source_length_m": 0.1557167172564093,
+        "native_length_m": 0.155716672539711,
+        "absolute_length_error_m": 4.4716698288649326e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.6523588783456944e-05,
+        "native_normalized_fiber_residual": 4.342473403085023e-08
+      },
+      {
+        "index": 213,
+        "name": "SUPSP",
+        "source_length_m": 0.11947008588311978,
+        "native_length_m": 0.11947011947631836,
+        "absolute_length_error_m": 3.359319858398102e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 6.508626393042505e-05,
+        "native_normalized_fiber_residual": 2.2351741790771484e-08
+      },
+      {
+        "index": 214,
+        "name": "INFSP",
+        "source_length_m": 0.10473486731824302,
+        "native_length_m": 0.10473489761352539,
+        "absolute_length_error_m": 3.029528236608847e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 9.989216778194532e-06,
+        "native_normalized_fiber_residual": 9.094947017729282e-13
+      },
+      {
+        "index": 215,
+        "name": "SUBSC",
+        "source_length_m": 0.10748467601265188,
+        "native_length_m": 0.10748471319675446,
+        "absolute_length_error_m": 3.718410257480542e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.112753034249181e-05,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 216,
+        "name": "TMIN",
+        "source_length_m": 0.12789191556146298,
+        "native_length_m": 0.1278919279575348,
+        "absolute_length_error_m": 1.2396071807918574e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 3.971721889683977e-05,
+        "native_normalized_fiber_residual": 1.8189894035458565e-12
+      },
+      {
+        "index": 217,
+        "name": "TMAJ",
+        "source_length_m": 0.1553107627872841,
+        "native_length_m": 0.15531080961227417,
+        "absolute_length_error_m": 4.682499007979679e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.2693919416051358e-05,
+        "native_normalized_fiber_residual": -9.094947017729282e-13
+      },
+      {
+        "index": 218,
+        "name": "PECM1",
+        "source_length_m": 0.15281594388679184,
+        "native_length_m": 0.15281592309474945,
+        "absolute_length_error_m": 2.07920423933583e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -6.53958777547814e-05,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 219,
+        "name": "PECM2",
+        "source_length_m": 0.16108072057473827,
+        "native_length_m": 0.1610807478427887,
+        "absolute_length_error_m": 2.7268050428741475e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 8.176675309057302e-11,
+        "native_normalized_fiber_residual": -1.9020202080000104e-13
+      },
+      {
+        "index": 220,
+        "name": "PECM3",
+        "source_length_m": 0.16960027395249858,
+        "native_length_m": 0.16960032284259796,
+        "absolute_length_error_m": 4.889009938557898e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.0459981492072501e-10,
+        "native_normalized_fiber_residual": -8.945968965612394e-13
+      },
+      {
+        "index": 221,
+        "name": "LAT1",
+        "source_length_m": 0.2591863633713203,
+        "native_length_m": 0.25918635725975037,
+        "absolute_length_error_m": 6.111569916811277e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 4.506788605501688e-12,
+        "native_normalized_fiber_residual": -4.114491299750389e-12
+      },
+      {
+        "index": 222,
+        "name": "LAT2",
+        "source_length_m": 0.3169613388857744,
+        "native_length_m": 0.3169613480567932,
+        "absolute_length_error_m": 9.171018833242783e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 9.74309841694776e-06,
+        "native_normalized_fiber_residual": -1.3642420526593924e-12
+      },
+      {
+        "index": 223,
+        "name": "LAT3",
+        "source_length_m": 0.3374732551773284,
+        "native_length_m": 0.3374732434749603,
+        "absolute_length_error_m": 1.1702368074573144e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.320372192998743e-12,
+        "native_normalized_fiber_residual": 1.6476935918094404e-12
+      },
+      {
+        "index": 224,
+        "name": "CORB",
+        "source_length_m": 0.14741799795537125,
+        "native_length_m": 0.14741796255111694,
+        "absolute_length_error_m": 3.540425430603733e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.3012965231355986e-12,
+        "native_normalized_fiber_residual": -8.814356579692206e-13
+      },
+      {
+        "index": 225,
+        "name": "TRIlong",
+        "source_length_m": 0.2910529086089759,
+        "native_length_m": 0.2910528779029846,
+        "absolute_length_error_m": 3.070599130516882e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.542342421654742e-12,
+        "native_normalized_fiber_residual": 1.4193901045830848e-12
+      },
+      {
+        "index": 226,
+        "name": "TRIlat",
+        "source_length_m": 0.1698662727394747,
+        "native_length_m": 0.16986623406410217,
+        "absolute_length_error_m": 3.867537251567299e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.6950190203933744e-06,
+        "native_normalized_fiber_residual": -9.094947017729282e-13
+      },
+      {
+        "index": 227,
+        "name": "TRImed",
+        "source_length_m": 0.15749407622043407,
+        "native_length_m": 0.15749403834342957,
+        "absolute_length_error_m": 3.787700450508247e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.589332098068553e-06,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 228,
+        "name": "ANC",
+        "source_length_m": 0.02286678779991017,
+        "native_length_m": 0.02286677248775959,
+        "absolute_length_error_m": 1.5312150578733474e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.9436868064512964e-06,
+        "native_normalized_fiber_residual": 2.7284841053187847e-12
+      },
+      {
+        "index": 229,
+        "name": "SUP",
+        "source_length_m": 0.0629510708794541,
+        "native_length_m": 0.06295105814933777,
+        "absolute_length_error_m": 1.2730116336068242e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.920102588177542e-06,
+        "native_normalized_fiber_residual": 2.7284841053187847e-12
+      },
+      {
+        "index": 230,
+        "name": "BIClong",
+        "source_length_m": 0.427296758379836,
+        "native_length_m": 0.4272966682910919,
+        "absolute_length_error_m": 9.008874407578915e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.2030556717945728e-05,
+        "native_normalized_fiber_residual": -9.094947017729282e-13
+      },
+      {
+        "index": 231,
+        "name": "BICshort",
+        "source_length_m": 0.3474418032459779,
+        "native_length_m": 0.3474416732788086,
+        "absolute_length_error_m": 1.2996716930446794e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -5.3827636792291855e-12,
+        "native_normalized_fiber_residual": 3.3014363812200465e-12
+      },
+      {
+        "index": 232,
+        "name": "BRA",
+        "source_length_m": 0.14216103636817684,
+        "native_length_m": 0.14216092228889465,
+        "absolute_length_error_m": 1.1407928218742924e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.5504749171668664e-05,
+        "native_normalized_fiber_residual": -4.0981831261888146e-08
+      },
+      {
+        "index": 233,
+        "name": "BRD",
+        "source_length_m": 0.3298300639630738,
+        "native_length_m": 0.3298299014568329,
+        "absolute_length_error_m": 1.6250624090830001e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.056376226595603e-05,
+        "native_normalized_fiber_residual": -1.8189894035458565e-12
+      },
+      {
+        "index": 234,
+        "name": "ECRL",
+        "source_length_m": 0.32799496471306855,
+        "native_length_m": 0.3279950022697449,
+        "absolute_length_error_m": 3.7556676324435045e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 5.842418318025011e-07,
+        "native_normalized_fiber_residual": -2.4442670110147446e-12
+      },
+      {
+        "index": 235,
+        "name": "ECRB",
+        "source_length_m": 0.28245768710936003,
+        "native_length_m": 0.2824576497077942,
+        "absolute_length_error_m": 3.740156584441934e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -5.796182449557818e-07,
+        "native_normalized_fiber_residual": -5.115907697472721e-13
+      },
+      {
+        "index": 236,
+        "name": "ECU",
+        "source_length_m": 0.29531897963253484,
+        "native_length_m": 0.29531896114349365,
+        "absolute_length_error_m": 1.848904118695316e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -4.5022744643574697e-07,
+        "native_normalized_fiber_residual": -1.9895196601282805e-12
+      },
+      {
+        "index": 237,
+        "name": "FCR",
+        "source_length_m": 0.310017685904044,
+        "native_length_m": 0.3100176453590393,
+        "absolute_length_error_m": 4.054500468697597e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.918534962896956e-06,
+        "native_normalized_fiber_residual": 2.2737367544323206e-13
+      },
+      {
+        "index": 238,
+        "name": "FCU",
+        "source_length_m": 0.3133840556168318,
+        "native_length_m": 0.313384085893631,
+        "absolute_length_error_m": 3.027679917888548e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 8.968498264039226e-07,
+        "native_normalized_fiber_residual": -2.8421709430404007e-13
+      },
+      {
+        "index": 239,
+        "name": "PL",
+        "source_length_m": 0.33563714076181106,
+        "native_length_m": 0.33563709259033203,
+        "absolute_length_error_m": 4.817147902791419e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.9698464913963107e-06,
+        "native_normalized_fiber_residual": -2.238039087387733e-09
+      },
+      {
+        "index": 240,
+        "name": "PT",
+        "source_length_m": 0.1561766537330797,
+        "native_length_m": 0.15617656707763672,
+        "absolute_length_error_m": 8.665544298791517e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.99733198719332e-06,
+        "native_normalized_fiber_residual": 1.4905253920005634e-08
+      },
+      {
+        "index": 241,
+        "name": "PQ",
+        "source_length_m": 0.03212321469095578,
+        "native_length_m": 0.03212324157357216,
+        "absolute_length_error_m": 2.6882616376011637e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 4.055374665767886e-05,
+        "native_normalized_fiber_residual": -3.550667315721512e-09
+      },
+      {
+        "index": 242,
+        "name": "FDS5",
+        "source_length_m": 0.4061315019661717,
+        "native_length_m": 0.4061316251754761,
+        "absolute_length_error_m": 1.232093043701532e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.4615695363318082e-05,
+        "native_normalized_fiber_residual": 2.2737367544323206e-12
+      },
+      {
+        "index": 243,
+        "name": "FDS4",
+        "source_length_m": 0.4088399743523621,
+        "native_length_m": 0.4088399410247803,
+        "absolute_length_error_m": 3.332758180540907e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 4.024676425462559e-12,
+        "native_normalized_fiber_residual": -1.9209928786567687e-12
+      },
+      {
+        "index": 244,
+        "name": "FDS3",
+        "source_length_m": 0.37183567611736895,
+        "native_length_m": 0.3718356490135193,
+        "absolute_length_error_m": 2.710384966464474e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.6814265908424164e-12,
+        "native_normalized_fiber_residual": 7.512447695173785e-13
+      },
+      {
+        "index": 245,
+        "name": "FDS2",
+        "source_length_m": 0.3725975250406008,
+        "native_length_m": 0.3725975453853607,
+        "absolute_length_error_m": 2.0344759932289236e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.4760205210850863e-11,
+        "native_normalized_fiber_residual": -1.8952114183568014e-13
+      },
+      {
+        "index": 246,
+        "name": "FDP5",
+        "source_length_m": 0.37904765874409824,
+        "native_length_m": 0.3790476620197296,
+        "absolute_length_error_m": 3.275631377253063e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.5436941086809384e-07,
+        "native_normalized_fiber_residual": -3.738023224286735e-10
+      },
+      {
+        "index": 247,
+        "name": "FDP4",
+        "source_length_m": 0.40118845948046716,
+        "native_length_m": 0.4011884033679962,
+        "absolute_length_error_m": 5.611247094750027e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.412288949926733e-06,
+        "native_normalized_fiber_residual": -1.0231815394945443e-12
+      },
+      {
+        "index": 248,
+        "name": "FDP3",
+        "source_length_m": 0.3868407094930265,
+        "native_length_m": 0.3868407607078552,
+        "absolute_length_error_m": 5.121482871128791e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.63469690050988e-06,
+        "native_normalized_fiber_residual": -1.0231815394945443e-12
+      },
+      {
+        "index": 249,
+        "name": "FDP2",
+        "source_length_m": 0.3875892601077904,
+        "native_length_m": 0.3875891864299774,
+        "absolute_length_error_m": 7.367781296174769e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -6.559670850947441e-07,
+        "native_normalized_fiber_residual": 1.1937117960769683e-12
+      },
+      {
+        "index": 250,
+        "name": "EDC5",
+        "source_length_m": 0.39918064121689756,
+        "native_length_m": 0.39918065071105957,
+        "absolute_length_error_m": 9.494162012124718e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.0576047770882724e-06,
+        "native_normalized_fiber_residual": 9.094947017729282e-13
+      },
+      {
+        "index": 251,
+        "name": "EDC4",
+        "source_length_m": 0.4152434663698444,
+        "native_length_m": 0.41524338722229004,
+        "absolute_length_error_m": 7.914755434379472e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -5.009821052226471e-06,
+        "native_normalized_fiber_residual": -2.2737367544323206e-12
+      },
+      {
+        "index": 252,
+        "name": "EDC3",
+        "source_length_m": 0.41877974122327044,
+        "native_length_m": 0.4187796413898468,
+        "absolute_length_error_m": 9.983342363906189e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -4.763284323416883e-06,
+        "native_normalized_fiber_residual": -1.1184511095052585e-09
+      },
+      {
+        "index": 253,
+        "name": "EDC2",
+        "source_length_m": 0.4167421559771525,
+        "native_length_m": 0.41674208641052246,
+        "absolute_length_error_m": 6.956663001211894e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.1688125545770163e-06,
+        "native_normalized_fiber_residual": 1.0231815394945443e-12
+      },
+      {
+        "index": 254,
+        "name": "EDM",
+        "source_length_m": 0.39426473285829927,
+        "native_length_m": 0.39426472783088684,
+        "absolute_length_error_m": 5.027412430802514e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.206315403123881e-07,
+        "native_normalized_fiber_residual": 3.915090474038152e-12
+      },
+      {
+        "index": 255,
+        "name": "EIP",
+        "source_length_m": 0.258402677044036,
+        "native_length_m": 0.25840261578559875,
+        "absolute_length_error_m": 6.12584372672309e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.8335601857397705e-06,
+        "native_normalized_fiber_residual": 1.1200427252333611e-09
+      },
+      {
+        "index": 256,
+        "name": "EPL",
+        "source_length_m": 0.27819161243928986,
+        "native_length_m": 0.27819162607192993,
+        "absolute_length_error_m": 1.363264007236964e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 5.440757604446844e-07,
+        "native_normalized_fiber_residual": -1.6058265828178264e-12
+      },
+      {
+        "index": 257,
+        "name": "EPB",
+        "source_length_m": 0.16856500122189227,
+        "native_length_m": 0.16856521368026733,
+        "absolute_length_error_m": 2.1245837505956544e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 8.371411968255416e-05,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 258,
+        "name": "FPL",
+        "source_length_m": 0.2649875383156005,
+        "native_length_m": 0.26498767733573914,
+        "absolute_length_error_m": 1.390201386231027e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 9.260751276940482e-09,
+        "native_normalized_fiber_residual": 1.1151080059335072e-12
+      },
+      {
+        "index": 259,
+        "name": "APL",
+        "source_length_m": 0.19833275519807145,
+        "native_length_m": 0.19833292067050934,
+        "absolute_length_error_m": 1.6547243789077903e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 6.579615728696808e-06,
+        "native_normalized_fiber_residual": 2.7284841053187847e-12
+      },
+      {
+        "index": 260,
+        "name": "OP",
+        "source_length_m": 0.04631748185007445,
+        "native_length_m": 0.04631752893328667,
+        "absolute_length_error_m": 4.708321221791323e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 0.00022964499657973647,
+        "native_normalized_fiber_residual": 5.820766091346741e-11
+      },
+      {
+        "index": 261,
+        "name": "RI2",
+        "source_length_m": 0.0401337713806856,
+        "native_length_m": 0.040133751928806305,
+        "absolute_length_error_m": 1.9451879294807295e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.357118677760034e-13,
+        "native_normalized_fiber_residual": 5.97035116657596e-13
+      },
+      {
+        "index": 262,
+        "name": "LU_RB2",
+        "source_length_m": 0.0963156575778477,
+        "native_length_m": 0.09631554782390594,
+        "absolute_length_error_m": 1.0975394175438691e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.0206515537250493e-12,
+        "native_normalized_fiber_residual": -3.077898179382199e-12
+      },
+      {
+        "index": 263,
+        "name": "UI_UB2",
+        "source_length_m": 0.09836608326731754,
+        "native_length_m": 0.09836603701114655,
+        "absolute_length_error_m": 4.625617099074386e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -8.046068273870333e-07,
+        "native_normalized_fiber_residual": 7.958078640513122e-13
+      },
+      {
+        "index": 264,
+        "name": "RI3",
+        "source_length_m": 0.04801431847839355,
+        "native_length_m": 0.0480143204331398,
+        "absolute_length_error_m": 1.9547462537516935e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 6.774148464394614e-10,
+        "native_normalized_fiber_residual": -1.2290168882600483e-12
+      },
+      {
+        "index": 265,
+        "name": "LU_RB3",
+        "source_length_m": 0.0920376634192272,
+        "native_length_m": 0.09203767031431198,
+        "absolute_length_error_m": 6.895084780911276e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.740963185587919e-11,
+        "native_normalized_fiber_residual": -1.583486813894197e-12
+      },
+      {
+        "index": 266,
+        "name": "UI_UB3",
+        "source_length_m": 0.09312499762725056,
+        "native_length_m": 0.09312502294778824,
+        "absolute_length_error_m": 2.532053768045106e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 6.944160872990324e-07,
+        "native_normalized_fiber_residual": -9.094947017729282e-13
+      },
+      {
+        "index": 267,
+        "name": "RI4",
+        "source_length_m": 0.055672957809962634,
+        "native_length_m": 0.05567295104265213,
+        "absolute_length_error_m": 6.767310503641433e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 6.915187823405833e-13,
+        "native_normalized_fiber_residual": -1.3920954233109795e-12
+      },
+      {
+        "index": 268,
+        "name": "LU_RB4",
+        "source_length_m": 0.07649764611058803,
+        "native_length_m": 0.07649765908718109,
+        "absolute_length_error_m": 1.2976593063984687e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 3.3830335155471403e-07,
+        "native_normalized_fiber_residual": 2.1600499167107046e-12
+      },
+      {
+        "index": 269,
+        "name": "UI_UB4",
+        "source_length_m": 0.0793320704864555,
+        "native_length_m": 0.07933207601308823,
+        "absolute_length_error_m": 5.5266327209091415e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 3.893936764143291e-07,
+        "native_normalized_fiber_residual": -3.3530227483424824e-09
+      },
+      {
+        "index": 270,
+        "name": "RI5",
+        "source_length_m": 0.04017739195942488,
+        "native_length_m": 0.040177516639232635,
+        "absolute_length_error_m": 1.2467980775587861e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.936246801255038e-06,
+        "native_normalized_fiber_residual": 7.275957614183426e-12
+      },
+      {
+        "index": 271,
+        "name": "LU_RB5",
+        "source_length_m": 0.09699879636178829,
+        "native_length_m": 0.0969989225268364,
+        "absolute_length_error_m": 1.2616504810325502e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 3.3417641134292353e-06,
+        "native_normalized_fiber_residual": -4.1000021155923605e-09
+      },
+      {
+        "index": 272,
+        "name": "UI_UB5",
+        "source_length_m": 0.09637540769587069,
+        "native_length_m": 0.09637553989887238,
+        "absolute_length_error_m": 1.3220300168481636e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.8850367925770115e-06,
+        "native_normalized_fiber_residual": -3.637978807091713e-12
+      },
+      {
+        "index": 273,
+        "name": "DELT1_l",
+        "source_length_m": 0.20894948600936664,
+        "native_length_m": 0.2089495062828064,
+        "absolute_length_error_m": 2.0273439760298828e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.6915865899136406e-06,
+        "native_normalized_fiber_residual": -4.547473508864641e-13
+      },
+      {
+        "index": 274,
+        "name": "DELT2_l",
+        "source_length_m": 0.2106202015382489,
+        "native_length_m": 0.21062016487121582,
+        "absolute_length_error_m": 3.666703307647623e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -7.283248578460189e-06,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 275,
+        "name": "DELT3_l",
+        "source_length_m": 0.1557113846968571,
+        "native_length_m": 0.1557113379240036,
+        "absolute_length_error_m": 4.677285350696003e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.9076134776696563e-05,
+        "native_normalized_fiber_residual": 1.8189894035458565e-12
+      },
+      {
+        "index": 276,
+        "name": "SUPSP_l",
+        "source_length_m": 0.11947094336242123,
+        "native_length_m": 0.11947086453437805,
+        "absolute_length_error_m": 7.882804317627112e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.00021504881442524493,
+        "native_normalized_fiber_residual": -1.4901161193847656e-08
+      },
+      {
+        "index": 277,
+        "name": "INFSP_l",
+        "source_length_m": 0.10472268442424523,
+        "native_length_m": 0.10472266376018524,
+        "absolute_length_error_m": 2.0664059990904704e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 7.690350092848242e-13,
+        "native_normalized_fiber_residual": -7.518296423793258e-13
+      },
+      {
+        "index": 278,
+        "name": "SUBSC_l",
+        "source_length_m": 0.10749439421819382,
+        "native_length_m": 0.10749441385269165,
+        "absolute_length_error_m": 1.9634497833154185e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 7.042086053843377e-06,
+        "native_normalized_fiber_residual": 1.8189894035458565e-12
+      },
+      {
+        "index": 279,
+        "name": "TMIN_l",
+        "source_length_m": 0.1278824392209716,
+        "native_length_m": 0.1278824657201767,
+        "absolute_length_error_m": 2.6499205107999302e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 7.074950553942472e-05,
+        "native_normalized_fiber_residual": -3.637978807091713e-12
+      },
+      {
+        "index": 280,
+        "name": "TMAJ_l",
+        "source_length_m": 0.155315193242405,
+        "native_length_m": 0.15531519055366516,
+        "absolute_length_error_m": 2.6887398418828923e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.1702182973749586e-06,
+        "native_normalized_fiber_residual": 1.490286649641348e-08
+      },
+      {
+        "index": 281,
+        "name": "PECM1_l",
+        "source_length_m": 0.15282706950272074,
+        "native_length_m": 0.15282711386680603,
+        "absolute_length_error_m": 4.436408529429059e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 7.556081982329488e-05,
+        "native_normalized_fiber_residual": 1.4690158423036337e-08
+      },
+      {
+        "index": 282,
+        "name": "PECM2_l",
+        "source_length_m": 0.1610931465954711,
+        "native_length_m": 0.16109314560890198,
+        "absolute_length_error_m": 9.865691319443926e-10,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.3601817155234341e-12,
+        "native_normalized_fiber_residual": -1.0593916152309979e-12
+      },
+      {
+        "index": 283,
+        "name": "PECM3_l",
+        "source_length_m": 0.16960617401234196,
+        "native_length_m": 0.16960608959197998,
+        "absolute_length_error_m": 8.442036197875424e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.651450890442386e-12,
+        "native_normalized_fiber_residual": 2.2682370304921706e-12
+      },
+      {
+        "index": 284,
+        "name": "LAT1_l",
+        "source_length_m": 0.2591912895113563,
+        "native_length_m": 0.25919124484062195,
+        "absolute_length_error_m": 4.467073433378488e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 4.506875341675487e-12,
+        "native_normalized_fiber_residual": -4.114570663349415e-12
+      },
+      {
+        "index": 285,
+        "name": "LAT2_l",
+        "source_length_m": 0.31696727815657694,
+        "native_length_m": 0.31696709990501404,
+        "absolute_length_error_m": 1.7825156289896782e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.00012771124602295458,
+        "native_normalized_fiber_residual": -5.384208634495735e-10
+      },
+      {
+        "index": 286,
+        "name": "LAT3_l",
+        "source_length_m": 0.3374758752852216,
+        "native_length_m": 0.3374757170677185,
+        "absolute_length_error_m": 1.5821750309896743e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.9991751309955674e-12,
+        "native_normalized_fiber_residual": -1.419611823927358e-12
+      },
+      {
+        "index": 287,
+        "name": "CORB_l",
+        "source_length_m": 0.14741880664171536,
+        "native_length_m": 0.1474187970161438,
+        "absolute_length_error_m": 9.62557156203303e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.7780545915821455e-12,
+        "native_normalized_fiber_residual": -6.810250605636392e-13
+      },
+      {
+        "index": 288,
+        "name": "TRIlong_l",
+        "source_length_m": 0.2910269925685679,
+        "native_length_m": 0.2910269796848297,
+        "absolute_length_error_m": 1.288373818741917e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.1062843269813456e-12,
+        "native_normalized_fiber_residual": 1.7342390544461406e-12
+      },
+      {
+        "index": 289,
+        "name": "TRIlat_l",
+        "source_length_m": 0.1698662727394748,
+        "native_length_m": 0.16986623406410217,
+        "absolute_length_error_m": 3.867537262669529e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.4542075607314473e-06,
+        "native_normalized_fiber_residual": -3.410605131648481e-12
+      },
+      {
+        "index": 290,
+        "name": "TRImed_l",
+        "source_length_m": 0.15749407622043443,
+        "native_length_m": 0.15749403834342957,
+        "absolute_length_error_m": 3.787700486590495e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.7226083147979807e-06,
+        "native_normalized_fiber_residual": 7.453309081029147e-09
+      },
+      {
+        "index": 291,
+        "name": "ANC_l",
+        "source_length_m": 0.0228667877999102,
+        "native_length_m": 0.02286674827337265,
+        "absolute_length_error_m": 3.952653754996094e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -9.32552484300686e-06,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 292,
+        "name": "SUP_l",
+        "source_length_m": 0.06293179723135046,
+        "native_length_m": 0.06293176114559174,
+        "absolute_length_error_m": 3.608575872837694e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -7.695192834944464e-06,
+        "native_normalized_fiber_residual": 3.637978807091713e-12
+      },
+      {
+        "index": 293,
+        "name": "BIClong_l",
+        "source_length_m": 0.4272916640212843,
+        "native_length_m": 0.4272915720939636,
+        "absolute_length_error_m": 9.192732070006926e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.2647508810914587e-05,
+        "native_normalized_fiber_residual": -9.094947017729282e-13
+      },
+      {
+        "index": 294,
+        "name": "BICshort_l",
+        "source_length_m": 0.34743434373922266,
+        "native_length_m": 0.34743425250053406,
+        "absolute_length_error_m": 9.12386886042782e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 4.172021669107684e-12,
+        "native_normalized_fiber_residual": -2.5588459302838817e-12
+      },
+      {
+        "index": 295,
+        "name": "BRA_l",
+        "source_length_m": 0.1421610363681769,
+        "native_length_m": 0.14216098189353943,
+        "absolute_length_error_m": 5.447463746754977e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -7.798797014402226e-06,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 296,
+        "name": "BRD_l",
+        "source_length_m": 0.32982786802347636,
+        "native_length_m": 0.32982784509658813,
+        "absolute_length_error_m": 2.2926888221252995e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -5.4362403716368135e-06,
+        "native_normalized_fiber_residual": -1.8189894035458565e-12
+      },
+      {
+        "index": 297,
+        "name": "ECRL_l",
+        "source_length_m": 0.3264123844774473,
+        "native_length_m": 0.32641229033470154,
+        "absolute_length_error_m": 9.41427457656907e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.8505302250559907e-06,
+        "native_normalized_fiber_residual": 5.9117155615240335e-12
+      },
+      {
+        "index": 298,
+        "name": "ECRB_l",
+        "source_length_m": 0.2803932280812897,
+        "native_length_m": 0.280393123626709,
+        "absolute_length_error_m": 1.0445458070718061e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.5314798000886096e-13,
+        "native_normalized_fiber_residual": -2.2279964331795021e-13
+      },
+      {
+        "index": 299,
+        "name": "ECU_l",
+        "source_length_m": 0.2944398858353361,
+        "native_length_m": 0.2944398522377014,
+        "absolute_length_error_m": 3.359763467436494e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -6.297622121564928e-07,
+        "native_normalized_fiber_residual": -8.526512829121202e-13
+      },
+      {
+        "index": 300,
+        "name": "FCR_l",
+        "source_length_m": 0.3124418723952144,
+        "native_length_m": 0.31244179606437683,
+        "absolute_length_error_m": 7.63308375950622e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.843658648998826e-06,
+        "native_normalized_fiber_residual": 2.2353106032824144e-09
+      },
+      {
+        "index": 301,
+        "name": "FCU_l",
+        "source_length_m": 0.3157675677220487,
+        "native_length_m": 0.31576764583587646,
+        "absolute_length_error_m": 7.811382773947884e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.5743136120581767e-06,
+        "native_normalized_fiber_residual": 4.547473508864641e-13
+      },
+      {
+        "index": 302,
+        "name": "PL_l",
+        "source_length_m": 0.3388996206859622,
+        "native_length_m": 0.3388995826244354,
+        "absolute_length_error_m": 3.8061526763666365e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.556024583100225e-06,
+        "native_normalized_fiber_residual": 3.296918293926865e-12
+      },
+      {
+        "index": 303,
+        "name": "PT_l",
+        "source_length_m": 0.1562056520145965,
+        "native_length_m": 0.15620562434196472,
+        "absolute_length_error_m": 2.7672631769393163e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.3133402489984292e-06,
+        "native_normalized_fiber_residual": 4.547473508864641e-13
+      },
+      {
+        "index": 304,
+        "name": "PQ_l",
+        "source_length_m": 0.03213938098171214,
+        "native_length_m": 0.03213939815759659,
+        "absolute_length_error_m": 1.7175884450826295e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.4979271984193474e-05,
+        "native_normalized_fiber_residual": 5.3551048040390015e-09
+      },
+      {
+        "index": 305,
+        "name": "FDS5_l",
+        "source_length_m": 0.4080044759602148,
+        "native_length_m": 0.40800461173057556,
+        "absolute_length_error_m": 1.3577036078737947e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.7378812117385678e-05,
+        "native_normalized_fiber_residual": 1.8189894035458565e-12
+      },
+      {
+        "index": 306,
+        "name": "FDS4_l",
+        "source_length_m": 0.4106430940471906,
+        "native_length_m": 0.410643070936203,
+        "absolute_length_error_m": 2.3110987623642387e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.0850645468934994e-12,
+        "native_normalized_fiber_residual": 5.179053800402622e-13
+      },
+      {
+        "index": 307,
+        "name": "FDS3_l",
+        "source_length_m": 0.3735886722989565,
+        "native_length_m": 0.3735886514186859,
+        "absolute_length_error_m": 2.088027056812436e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.943270627220329e-12,
+        "native_normalized_fiber_residual": -1.3150241529383266e-12
+      },
+      {
+        "index": 308,
+        "name": "FDS2_l",
+        "source_length_m": 0.37426098224583254,
+        "native_length_m": 0.37426096200942993,
+        "absolute_length_error_m": 2.023640260917503e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 5.08522130654443e-12,
+        "native_normalized_fiber_residual": -2.2690304496419955e-12
+      },
+      {
+        "index": 309,
+        "name": "FDP5_l",
+        "source_length_m": 0.3804327512886863,
+        "native_length_m": 0.3804328143596649,
+        "absolute_length_error_m": 6.307097860647204e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.6405202813984943e-06,
+        "native_normalized_fiber_residual": 7.958078640513122e-13
+      },
+      {
+        "index": 310,
+        "name": "FDP4_l",
+        "source_length_m": 0.4026011427382054,
+        "native_length_m": 0.4026011824607849,
+        "absolute_length_error_m": 3.972257950346503e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.757763695626636e-06,
+        "native_normalized_fiber_residual": -2.9558577807620168e-12
+      },
+      {
+        "index": 311,
+        "name": "FDP3_l",
+        "source_length_m": 0.38820771438171797,
+        "native_length_m": 0.38820767402648926,
+        "absolute_length_error_m": 4.035522871426167e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.924719526869012e-06,
+        "native_normalized_fiber_residual": 2.9558577807620168e-12
+      },
+      {
+        "index": 312,
+        "name": "FDP2_l",
+        "source_length_m": 0.38892013853669893,
+        "native_length_m": 0.3889201879501343,
+        "absolute_length_error_m": 4.941343534348164e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.2930461696102356e-10,
+        "native_normalized_fiber_residual": 1.6572784811152985e-12
+      },
+      {
+        "index": 313,
+        "name": "EDC5_l",
+        "source_length_m": 0.39768089475080787,
+        "native_length_m": 0.39768096804618835,
+        "absolute_length_error_m": 7.329538048717055e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 3.538015562298824e-06,
+        "native_normalized_fiber_residual": -3.765308065339923e-10
+      },
+      {
+        "index": 314,
+        "name": "EDC4_l",
+        "source_length_m": 0.4128286246754702,
+        "native_length_m": 0.412828654050827,
+        "absolute_length_error_m": 2.937535681368786e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.7790414403862087e-06,
+        "native_normalized_fiber_residual": 6.336279056995409e-09
+      },
+      {
+        "index": 315,
+        "name": "EDC3_l",
+        "source_length_m": 0.4162771691782121,
+        "native_length_m": 0.41627711057662964,
+        "absolute_length_error_m": 5.860158247550373e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.352225348862703e-06,
+        "native_normalized_fiber_residual": -2.9558577807620168e-12
+      },
+      {
+        "index": 316,
+        "name": "EDC2_l",
+        "source_length_m": 0.4143341666370009,
+        "native_length_m": 0.41433411836624146,
+        "absolute_length_error_m": 4.8270759445134814e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.7183518821184407e-06,
+        "native_normalized_fiber_residual": -1.3642420526593924e-12
+      },
+      {
+        "index": 317,
+        "name": "EDM_l",
+        "source_length_m": 0.3930061234286366,
+        "native_length_m": 0.39300620555877686,
+        "absolute_length_error_m": 8.213014024427423e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.7447091522626579e-06,
+        "native_normalized_fiber_residual": 4.805690423381748e-08
+      },
+      {
+        "index": 318,
+        "name": "EIP_l",
+        "source_length_m": 0.2566577348983934,
+        "native_length_m": 0.2566576898097992,
+        "absolute_length_error_m": 4.5088594191611264e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.139216121577192e-06,
+        "native_normalized_fiber_residual": 3.410605131648481e-13
+      },
+      {
+        "index": 319,
+        "name": "EPL_l",
+        "source_length_m": 0.27615628806740694,
+        "native_length_m": 0.27615630626678467,
+        "absolute_length_error_m": 1.8199377727068367e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.6524857073818566e-06,
+        "native_normalized_fiber_residual": 2.2737367544323206e-13
+      },
+      {
+        "index": 320,
+        "name": "EPB_l",
+        "source_length_m": 0.16811292878748163,
+        "native_length_m": 0.16811302304267883,
+        "absolute_length_error_m": 9.425519720274167e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 3.9852820918895304e-05,
+        "native_normalized_fiber_residual": 1.8189894035458565e-12
+      },
+      {
+        "index": 321,
+        "name": "FPL_l",
+        "source_length_m": 0.2662756303875978,
+        "native_length_m": 0.26627567410469055,
+        "absolute_length_error_m": 4.3717092779171907e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 9.124969668761196e-10,
+        "native_normalized_fiber_residual": 1.1369238883673916e-12
+      },
+      {
+        "index": 322,
+        "name": "APL_l",
+        "source_length_m": 0.19874254449034648,
+        "native_length_m": 0.1987425535917282,
+        "absolute_length_error_m": 9.101381731602132e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 4.82207781260513e-07,
+        "native_normalized_fiber_residual": 1.7053025658242404e-12
+      },
+      {
+        "index": 323,
+        "name": "OP_l",
+        "source_length_m": 0.04637665908081845,
+        "native_length_m": 0.04637662693858147,
+        "absolute_length_error_m": 3.214223698311258e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.00014527048915624619,
+        "native_normalized_fiber_residual": 2.9103830456733704e-11
+      },
+      {
+        "index": 324,
+        "name": "RI2_l",
+        "source_length_m": 0.04013219455958829,
+        "native_length_m": 0.04013223201036453,
+        "absolute_length_error_m": 3.7450776244063455e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.3975042634228885e-07,
+        "native_normalized_fiber_residual": 5.684341886080802e-14
+      },
+      {
+        "index": 325,
+        "name": "LU_RB2_l",
+        "source_length_m": 0.09631588320952741,
+        "native_length_m": 0.09631595015525818,
+        "absolute_length_error_m": 6.69457307644894e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.609210625337255e-10,
+        "native_normalized_fiber_residual": -4.198585923376186e-12
+      },
+      {
+        "index": 326,
+        "name": "UI_UB2_l",
+        "source_length_m": 0.09836556386125848,
+        "native_length_m": 0.09836558997631073,
+        "absolute_length_error_m": 2.6115052245700987e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 8.929542522073675e-11,
+        "native_normalized_fiber_residual": -9.279521595573215e-13
+      },
+      {
+        "index": 327,
+        "name": "RI3_l",
+        "source_length_m": 0.04801534640163331,
+        "native_length_m": 0.04801538959145546,
+        "absolute_length_error_m": 4.318982214923661e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.7975519028823328e-07,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 328,
+        "name": "LU_RB3_l",
+        "source_length_m": 0.09203816292389062,
+        "native_length_m": 0.09203819185495377,
+        "absolute_length_error_m": 2.8931063142390023e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 8.902658237275318e-07,
+        "native_normalized_fiber_residual": 1.7053025658242404e-12
+      },
+      {
+        "index": 329,
+        "name": "UI_UB3_l",
+        "source_length_m": 0.09312602753673258,
+        "native_length_m": 0.09312605112791061,
+        "absolute_length_error_m": 2.3591178038850913e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 9.135356435763242e-07,
+        "native_normalized_fiber_residual": -2.5011104298755527e-12
+      },
+      {
+        "index": 330,
+        "name": "RI4_l",
+        "source_length_m": 0.05567524911665063,
+        "native_length_m": 0.055675290524959564,
+        "absolute_length_error_m": 4.140830893450964e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.4938716930146256e-08,
+        "native_normalized_fiber_residual": -7.176481631177012e-13
+      },
+      {
+        "index": 331,
+        "name": "LU_RB4_l",
+        "source_length_m": 0.07649821620486717,
+        "native_length_m": 0.07649821043014526,
+        "absolute_length_error_m": 5.774721908990976e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.5768449657116435e-07,
+        "native_normalized_fiber_residual": 1.1368683772161603e-12
+      },
+      {
+        "index": 332,
+        "name": "UI_UB4_l",
+        "source_length_m": 0.07932873993327276,
+        "native_length_m": 0.0793287381529808,
+        "absolute_length_error_m": 1.7802919555220953e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.1227630380972187e-07,
+        "native_normalized_fiber_residual": 7.451262717950158e-09
+      },
+      {
+        "index": 333,
+        "name": "RI5_l",
+        "source_length_m": 0.0401577453913061,
+        "native_length_m": 0.04015779867768288,
+        "absolute_length_error_m": 5.328637677631809e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.2737724546241225e-06,
+        "native_normalized_fiber_residual": -1.8189894035458565e-12
+      },
+      {
+        "index": 334,
+        "name": "LU_RB5_l",
+        "source_length_m": 0.0969634345737625,
+        "native_length_m": 0.09696352481842041,
+        "absolute_length_error_m": 9.024465791318548e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.415110429865308e-06,
+        "native_normalized_fiber_residual": 2.7284841053187847e-12
+      },
+      {
+        "index": 335,
+        "name": "UI_UB5_l",
+        "source_length_m": 0.09641040987084479,
+        "native_length_m": 0.09641046822071075,
+        "absolute_length_error_m": 5.834986596675584e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.2692991049334523e-06,
+        "native_normalized_fiber_residual": 1.8254468159284443e-08
+      },
+      {
+        "index": 336,
+        "name": "addbrev_r",
+        "source_length_m": 0.14066761441729353,
+        "native_length_m": 0.14066755771636963,
+        "absolute_length_error_m": 5.6700923900532274e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.7806203686632216e-05,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 337,
+        "name": "addlong_r",
+        "source_length_m": 0.24462151130098353,
+        "native_length_m": 0.2446213811635971,
+        "absolute_length_error_m": 1.3013738642264627e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.118940781452693e-05,
+        "native_normalized_fiber_residual": 1.3969838619232178e-09
+      },
+      {
+        "index": 338,
+        "name": "addmagDist_r",
+        "source_length_m": 0.22257357677530132,
+        "native_length_m": 0.22257348895072937,
+        "absolute_length_error_m": 8.782457194822513e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.376432894379832e-05,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 339,
+        "name": "addmagIsch_r",
+        "source_length_m": 0.33991529450246166,
+        "native_length_m": 0.3399151861667633,
+        "absolute_length_error_m": 1.0833569835666523e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.0101626685354859e-05,
+        "native_normalized_fiber_residual": 2.9803231882397085e-08
+      },
+      {
+        "index": 340,
+        "name": "addmagMid_r",
+        "source_length_m": 0.14327303050813975,
+        "native_length_m": 0.14327289164066315,
+        "absolute_length_error_m": 1.3886747660118992e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -4.222820280119777e-05,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 341,
+        "name": "addmagProx_r",
+        "source_length_m": 0.11521105303234747,
+        "native_length_m": 0.11521101742982864,
+        "absolute_length_error_m": 3.560251882195331e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.0873366591113154e-05,
+        "native_normalized_fiber_residual": 9.094947017729282e-13
+      },
+      {
+        "index": 342,
+        "name": "bflh_r",
+        "source_length_m": 0.4127102926899345,
+        "native_length_m": 0.41271013021469116,
+        "absolute_length_error_m": 1.6247524331491903e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.6512330782217366e-12,
+        "native_normalized_fiber_residual": 8.211161243130982e-13
+      },
+      {
+        "index": 343,
+        "name": "bfsh_r",
+        "source_length_m": 0.23738404112283507,
+        "native_length_m": 0.23738400638103485,
+        "absolute_length_error_m": 3.4741800214455054e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -9.63203092396725e-06,
+        "native_normalized_fiber_residual": 2.7284841053187847e-12
+      },
+      {
+        "index": 344,
+        "name": "edl_r",
+        "source_length_m": 0.43698254498600186,
+        "native_length_m": 0.43698254227638245,
+        "absolute_length_error_m": 2.709619417728959e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 3.191433677329769e-07,
+        "native_normalized_fiber_residual": 2.4726887204451486e-12
+      },
+      {
+        "index": 345,
+        "name": "ehl_r",
+        "source_length_m": 0.40419451467457945,
+        "native_length_m": 0.40419450402259827,
+        "absolute_length_error_m": 1.0651981185993975e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.713576921247295e-06,
+        "native_normalized_fiber_residual": -2.980300450872164e-08
+      },
+      {
+        "index": 346,
+        "name": "fdl_r",
+        "source_length_m": 0.4238051264843309,
+        "native_length_m": 0.4238051176071167,
+        "absolute_length_error_m": 8.877214185964988e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.0703540687682107e-07,
+        "native_normalized_fiber_residual": -3.922195901395753e-12
+      },
+      {
+        "index": 347,
+        "name": "fhl_r",
+        "source_length_m": 0.4046924197655271,
+        "native_length_m": 0.4046924412250519,
+        "absolute_length_error_m": 2.145952476828583e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.0705833801694098e-06,
+        "native_normalized_fiber_residual": 7.16227077646181e-12
+      },
+      {
+        "index": 348,
+        "name": "gaslat_r",
+        "source_length_m": 0.45007850106585723,
+        "native_length_m": 0.4500785171985626,
+        "absolute_length_error_m": 1.613270539380096e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.2058343656917714e-07,
+        "native_normalized_fiber_residual": -3.431921413721284e-12
+      },
+      {
+        "index": 349,
+        "name": "gasmed_r",
+        "source_length_m": 0.46170299179322893,
+        "native_length_m": 0.46170300245285034,
+        "absolute_length_error_m": 1.0659621407782538e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.942987802929565e-07,
+        "native_normalized_fiber_residual": -6.252776074688882e-12
+      },
+      {
+        "index": 350,
+        "name": "glmax1_r",
+        "source_length_m": 0.18832100349258726,
+        "native_length_m": 0.18832086026668549,
+        "absolute_length_error_m": 1.432259017775106e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.2811072994954884e-05,
+        "native_normalized_fiber_residual": 1.8189894035458565e-12
+      },
+      {
+        "index": 351,
+        "name": "glmax2_r",
+        "source_length_m": 0.21551848013314384,
+        "native_length_m": 0.21551837027072906,
+        "absolute_length_error_m": 1.0986241477661807e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.7674756236374378e-05,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 352,
+        "name": "glmax3_r",
+        "source_length_m": 0.21599899378657278,
+        "native_length_m": 0.21599888801574707,
+        "absolute_length_error_m": 1.0577082570906171e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -0.0001217968892888166,
+        "native_normalized_fiber_residual": 7.275957614183426e-12
+      },
+      {
+        "index": 353,
+        "name": "glmed1_r",
+        "source_length_m": 0.12284008658110124,
+        "native_length_m": 0.12283997982740402,
+        "absolute_length_error_m": 1.0675369721546701e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.2104246454546228e-05,
+        "native_normalized_fiber_residual": 1.8189894035458565e-12
+      },
+      {
+        "index": 354,
+        "name": "glmed2_r",
+        "source_length_m": 0.1296029069439279,
+        "native_length_m": 0.12960277497768402,
+        "absolute_length_error_m": 1.3196624387701306e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.5481347872992046e-05,
+        "native_normalized_fiber_residual": 1.8189894035458565e-12
+      },
+      {
+        "index": 355,
+        "name": "glmed3_r",
+        "source_length_m": 0.1057660370737195,
+        "native_length_m": 0.1057659313082695,
+        "absolute_length_error_m": 1.0576544999529869e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.4293426829681266e-05,
+        "native_normalized_fiber_residual": -1.8189894035458565e-12
+      },
+      {
+        "index": 356,
+        "name": "glmin1_r",
+        "source_length_m": 0.08310114167569066,
+        "native_length_m": 0.08310102671384811,
+        "absolute_length_error_m": 1.1496184254555786e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -6.458349525928497e-05,
+        "native_normalized_fiber_residual": 1.4551915228366852e-11
+      },
+      {
+        "index": 357,
+        "name": "glmin2_r",
+        "source_length_m": 0.08316331197535132,
+        "native_length_m": 0.08316320925951004,
+        "absolute_length_error_m": 1.0271584127696798e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.504758205963299e-05,
+        "native_normalized_fiber_residual": 7.275957614183426e-12
+      },
+      {
+        "index": 358,
+        "name": "glmin3_r",
+        "source_length_m": 0.08690755939431237,
+        "native_length_m": 0.08690748363733292,
+        "absolute_length_error_m": 7.575697945350068e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.0134049918851815e-05,
+        "native_normalized_fiber_residual": 3.637978807091713e-12
+      },
+      {
+        "index": 359,
+        "name": "grac_r",
+        "source_length_m": 0.43722985995289776,
+        "native_length_m": 0.4372297525405884,
+        "absolute_length_error_m": 1.0741230938027257e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -7.730926881777123e-06,
+        "native_normalized_fiber_residual": -2.5011104298755527e-12
+      },
+      {
+        "index": 360,
+        "name": "iliacus_r",
+        "source_length_m": 0.20842497788926648,
+        "native_length_m": 0.2084248661994934,
+        "absolute_length_error_m": 1.1168977306907912e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.7909966118168086e-05,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 361,
+        "name": "perbrev_r",
+        "source_length_m": 0.19573956535228837,
+        "native_length_m": 0.19573958218097687,
+        "absolute_length_error_m": 1.6828688498282673e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 8.05303216111497e-07,
+        "native_normalized_fiber_residual": 3.069544618483633e-12
+      },
+      {
+        "index": 362,
+        "name": "perlong_r",
+        "source_length_m": 0.38605731103057156,
+        "native_length_m": 0.3860573172569275,
+        "absolute_length_error_m": 6.226355930838423e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.7486129877397616e-07,
+        "native_normalized_fiber_residual": 4.191259961316973e-08
+      },
+      {
+        "index": 363,
+        "name": "piri_r",
+        "source_length_m": 0.13377296342784728,
+        "native_length_m": 0.13377290964126587,
+        "absolute_length_error_m": 5.378658141097503e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.748513790924335e-06,
+        "native_normalized_fiber_residual": -1.3642420526593924e-12
+      },
+      {
+        "index": 364,
+        "name": "psoas_r",
+        "source_length_m": 0.22759572260676858,
+        "native_length_m": 0.22759564220905304,
+        "absolute_length_error_m": 8.039771554058106e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.33956091303844e-05,
+        "native_normalized_fiber_residual": 2.7284841053187847e-12
+      },
+      {
+        "index": 365,
+        "name": "recfem_r",
+        "source_length_m": 0.5111127989113924,
+        "native_length_m": 0.511112630367279,
+        "absolute_length_error_m": 1.6854411333255825e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.1073961761430837e-05,
+        "native_normalized_fiber_residual": 1.490434442530386e-08
+      },
+      {
+        "index": 366,
+        "name": "sart_r",
+        "source_length_m": 0.584334336352075,
+        "native_length_m": 0.5843341946601868,
+        "absolute_length_error_m": 1.416918882224394e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.587062797625549e-05,
+        "native_normalized_fiber_residual": 1.3642420526593924e-12
+      },
+      {
+        "index": 367,
+        "name": "semimem_r",
+        "source_length_m": 0.41112952199231745,
+        "native_length_m": 0.411129355430603,
+        "absolute_length_error_m": 1.6656171442086531e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -6.269107628853465e-12,
+        "native_normalized_fiber_residual": 3.148360044891163e-12
+      },
+      {
+        "index": 368,
+        "name": "semiten_r",
+        "source_length_m": 0.4535763995300515,
+        "native_length_m": 0.4535762667655945,
+        "absolute_length_error_m": 1.3276445703924722e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.5445837056613527e-06,
+        "native_normalized_fiber_residual": -2.2737367544323206e-12
+      },
+      {
+        "index": 369,
+        "name": "soleus_r",
+        "source_length_m": 0.3234892308836268,
+        "native_length_m": 0.323489248752594,
+        "absolute_length_error_m": 1.786896719480069e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 3.515956450428348e-07,
+        "native_normalized_fiber_residual": 1.2505552149377763e-12
+      },
+      {
+        "index": 370,
+        "name": "tfl_r",
+        "source_length_m": 0.5475202597888664,
+        "native_length_m": 0.5475201606750488,
+        "absolute_length_error_m": 9.911381759764026e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -7.856272645767604e-07,
+        "native_normalized_fiber_residual": 1.9610979506978765e-12
+      },
+      {
+        "index": 371,
+        "name": "tibant_r",
+        "source_length_m": 0.3052089871155125,
+        "native_length_m": 0.3052089810371399,
+        "absolute_length_error_m": 6.078372583040448e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -9.732129910844378e-07,
+        "native_normalized_fiber_residual": -2.5011104298755527e-12
+      },
+      {
+        "index": 372,
+        "name": "tibpost_r",
+        "source_length_m": 0.31996771192558404,
+        "native_length_m": 0.31996774673461914,
+        "absolute_length_error_m": 3.480903509878175e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.2871714716311544e-06,
+        "native_normalized_fiber_residual": 3.865352482534945e-12
+      },
+      {
+        "index": 373,
+        "name": "vasint_r",
+        "source_length_m": 0.2814059696452801,
+        "native_length_m": 0.2814059555530548,
+        "absolute_length_error_m": 1.4092225275597059e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -7.675648853490424e-13,
+        "native_normalized_fiber_residual": 4.436506229662379e-13
+      },
+      {
+        "index": 374,
+        "name": "vaslat_r",
+        "source_length_m": 0.2949525041862073,
+        "native_length_m": 0.29495251178741455,
+        "absolute_length_error_m": 7.601207274721133e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 8.934636342404489e-13,
+        "native_normalized_fiber_residual": -5.176469604524503e-13
+      },
+      {
+        "index": 375,
+        "name": "vasmed_r",
+        "source_length_m": 0.26950248788054293,
+        "native_length_m": 0.26950252056121826,
+        "absolute_length_error_m": 3.2680675332574793e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.6017729637395348e-11,
+        "native_normalized_fiber_residual": -1.5439177714071661e-12
+      },
+      {
+        "index": 376,
+        "name": "addbrev_l",
+        "source_length_m": 0.14092126559046753,
+        "native_length_m": 0.14092126488685608,
+        "absolute_length_error_m": 7.036114468839116e-10,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.289093799845432e-06,
+        "native_normalized_fiber_residual": -3.115019353572279e-11
+      },
+      {
+        "index": 377,
+        "name": "addlong_l",
+        "source_length_m": 0.24489786772310018,
+        "native_length_m": 0.24489790201187134,
+        "absolute_length_error_m": 3.42887711557438e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.749489112829906e-06,
+        "native_normalized_fiber_residual": -2.2737367544323206e-12
+      },
+      {
+        "index": 378,
+        "name": "addmagDist_l",
+        "source_length_m": 0.22276955690140002,
+        "native_length_m": 0.2227695733308792,
+        "absolute_length_error_m": 1.642947919378024e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 5.2017448979313485e-06,
+        "native_normalized_fiber_residual": 1.5916157281026244e-12
+      },
+      {
+        "index": 379,
+        "name": "addmagIsch_l",
+        "source_length_m": 0.34003372794874426,
+        "native_length_m": 0.34003376960754395,
+        "absolute_length_error_m": 4.1658799687649406e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 3.724100679391995e-06,
+        "native_normalized_fiber_residual": 4.547473508864641e-13
+      },
+      {
+        "index": 380,
+        "name": "addmagMid_l",
+        "source_length_m": 0.14355243819878577,
+        "native_length_m": 0.1435524821281433,
+        "absolute_length_error_m": 4.392935754049532e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.847740168159362e-05,
+        "native_normalized_fiber_residual": 9.094947017729282e-13
+      },
+      {
+        "index": 381,
+        "name": "addmagProx_l",
+        "source_length_m": 0.1154535811724627,
+        "native_length_m": 0.1154535710811615,
+        "absolute_length_error_m": 1.0091301197445723e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.71362284568022e-06,
+        "native_normalized_fiber_residual": -1.3642420526593924e-12
+      },
+      {
+        "index": 382,
+        "name": "bflh_l",
+        "source_length_m": 0.41276765495012613,
+        "native_length_m": 0.41276755928993225,
+        "absolute_length_error_m": 9.566019387730051e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.915829792714912e-14,
+        "native_normalized_fiber_residual": 9.526933617541068e-15
+      },
+      {
+        "index": 383,
+        "name": "bfsh_l",
+        "source_length_m": 0.23737420853705654,
+        "native_length_m": 0.23737403750419617,
+        "absolute_length_error_m": 1.7103286037434273e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -5.619275543722324e-05,
+        "native_normalized_fiber_residual": 7.275957614183426e-12
+      },
+      {
+        "index": 384,
+        "name": "edl_l",
+        "source_length_m": 0.4370475855474587,
+        "native_length_m": 0.43704771995544434,
+        "absolute_length_error_m": 1.3440798563024714e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 6.929093160579214e-06,
+        "native_normalized_fiber_residual": 5.4569682106375694e-12
+      },
+      {
+        "index": 385,
+        "name": "ehl_l",
+        "source_length_m": 0.40417377107607816,
+        "native_length_m": 0.40417391061782837,
+        "absolute_length_error_m": 1.3954175021035908e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 8.480462383886334e-06,
+        "native_normalized_fiber_residual": -1.490207068854943e-08
+      },
+      {
+        "index": 386,
+        "name": "fdl_l",
+        "source_length_m": 0.423701230070894,
+        "native_length_m": 0.42370134592056274,
+        "absolute_length_error_m": 1.1584966874700342e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 4.254677605786128e-06,
+        "native_normalized_fiber_residual": -5.4569682106375694e-12
+      },
+      {
+        "index": 387,
+        "name": "fhl_l",
+        "source_length_m": 0.40460800051976586,
+        "native_length_m": 0.40460819005966187,
+        "absolute_length_error_m": 1.8953989600056786e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 8.875687854015268e-06,
+        "native_normalized_fiber_residual": 2.7284841053187847e-12
+      },
+      {
+        "index": 388,
+        "name": "gaslat_l",
+        "source_length_m": 0.4500740268754561,
+        "native_length_m": 0.45007404685020447,
+        "absolute_length_error_m": 1.9974748355355842e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 8.096120041045651e-07,
+        "native_normalized_fiber_residual": -6.0254023992456496e-12
+      },
+      {
+        "index": 389,
+        "name": "gasmed_l",
+        "source_length_m": 0.4617172261653768,
+        "native_length_m": 0.46171724796295166,
+        "absolute_length_error_m": 2.1797574856208257e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.3938348502051667e-06,
+        "native_normalized_fiber_residual": -5.9117155615240335e-12
+      },
+      {
+        "index": 390,
+        "name": "glmax1_l",
+        "source_length_m": 0.18824343103912422,
+        "native_length_m": 0.18824347853660583,
+        "absolute_length_error_m": 4.7497481614477977e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.4933573266873168e-09,
+        "native_normalized_fiber_residual": 1.1999290450148692e-12
+      },
+      {
+        "index": 391,
+        "name": "glmax2_l",
+        "source_length_m": 0.21546037331779413,
+        "native_length_m": 0.2154603749513626,
+        "absolute_length_error_m": 1.6335684749346768e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.2816823868888605e-07,
+        "native_normalized_fiber_residual": 2.7000623958883807e-13
+      },
+      {
+        "index": 392,
+        "name": "glmax3_l",
+        "source_length_m": 0.2161645972337375,
+        "native_length_m": 0.21616461873054504,
+        "absolute_length_error_m": 2.1496807556253827e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.4049313651630655e-05,
+        "native_normalized_fiber_residual": -9.094947017729282e-13
+      },
+      {
+        "index": 393,
+        "name": "glmed1_l",
+        "source_length_m": 0.12260683814091773,
+        "native_length_m": 0.12260688841342926,
+        "absolute_length_error_m": 5.027251152867063e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.1311354683130048e-05,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 394,
+        "name": "glmed2_l",
+        "source_length_m": 0.12942250520139872,
+        "native_length_m": 0.12942254543304443,
+        "absolute_length_error_m": 4.023164570932103e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 4.577699655783363e-06,
+        "native_normalized_fiber_residual": -1.3642420526593924e-12
+      },
+      {
+        "index": 395,
+        "name": "glmed3_l",
+        "source_length_m": 0.10565264078885883,
+        "native_length_m": 0.10565266013145447,
+        "absolute_length_error_m": 1.9342595636295812e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.3993895865714876e-06,
+        "native_normalized_fiber_residual": 1.1368683772161603e-12
+      },
+      {
+        "index": 396,
+        "name": "glmin1_l",
+        "source_length_m": 0.08288865528251915,
+        "native_length_m": 0.08288869261741638,
+        "absolute_length_error_m": 3.733489722934635e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.2004194761393592e-05,
+        "native_normalized_fiber_residual": 3.637978807091713e-12
+      },
+      {
+        "index": 397,
+        "name": "glmin2_l",
+        "source_length_m": 0.08296236661069917,
+        "native_length_m": 0.08296236395835876,
+        "absolute_length_error_m": 2.6523404028644393e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -3.320868984246772e-07,
+        "native_normalized_fiber_residual": -1.4779288903810084e-12
+      },
+      {
+        "index": 398,
+        "name": "glmin3_l",
+        "source_length_m": 0.08674441271610303,
+        "native_length_m": 0.08674445003271103,
+        "absolute_length_error_m": 3.7316607998105766e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.0145256055693608e-05,
+        "native_normalized_fiber_residual": 1.8189894035458565e-12
+      },
+      {
+        "index": 399,
+        "name": "grac_l",
+        "source_length_m": 0.4374655883776632,
+        "native_length_m": 0.43746548891067505,
+        "absolute_length_error_m": 9.946698814600197e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -7.4614927143557e-06,
+        "native_normalized_fiber_residual": -1.3642420526593924e-12
+      },
+      {
+        "index": 400,
+        "name": "iliacus_l",
+        "source_length_m": 0.20842927789733634,
+        "native_length_m": 0.2084292769432068,
+        "absolute_length_error_m": 9.541295531434457e-10,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 3.0180609655872104e-07,
+        "native_normalized_fiber_residual": 2.4726887204451486e-12
+      },
+      {
+        "index": 401,
+        "name": "perbrev_l",
+        "source_length_m": 0.19589447112542682,
+        "native_length_m": 0.19589455425739288,
+        "absolute_length_error_m": 8.313196606102302e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 3.591525000956608e-06,
+        "native_normalized_fiber_residual": 4.889761839876883e-08
+      },
+      {
+        "index": 402,
+        "name": "perlong_l",
+        "source_length_m": 0.38620518806482707,
+        "native_length_m": 0.3862052857875824,
+        "absolute_length_error_m": 9.772275533226349e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 3.659544518086477e-06,
+        "native_normalized_fiber_residual": -5.867514119017869e-08
+      },
+      {
+        "index": 403,
+        "name": "piri_l",
+        "source_length_m": 0.1336897336715673,
+        "native_length_m": 0.1336897611618042,
+        "absolute_length_error_m": 2.7490236892413478e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 2.20325682676048e-06,
+        "native_normalized_fiber_residual": -6.821210263296962e-13
+      },
+      {
+        "index": 404,
+        "name": "psoas_l",
+        "source_length_m": 0.2276373898379656,
+        "native_length_m": 0.2276373952627182,
+        "absolute_length_error_m": 5.424752591576265e-09,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 3.2661557725077728e-06,
+        "native_normalized_fiber_residual": 2.7284841053187847e-12
+      },
+      {
+        "index": 405,
+        "name": "recfem_l",
+        "source_length_m": 0.5110621755674198,
+        "native_length_m": 0.5110620260238647,
+        "absolute_length_error_m": 1.4954355509466666e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.6875963410711847e-05,
+        "native_normalized_fiber_residual": 2.980550561915152e-08
+      },
+      {
+        "index": 406,
+        "name": "sart_l",
+        "source_length_m": 0.5842744868166075,
+        "native_length_m": 0.5842743515968323,
+        "absolute_length_error_m": 1.3521977526576023e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.638858338992577e-05,
+        "native_normalized_fiber_residual": 3.183231456205249e-12
+      },
+      {
+        "index": 407,
+        "name": "semimem_l",
+        "source_length_m": 0.41115277622225865,
+        "native_length_m": 0.4111526608467102,
+        "absolute_length_error_m": 1.1537554844842646e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 3.738120652862359e-13,
+        "native_normalized_fiber_residual": -1.877292673526862e-13
+      },
+      {
+        "index": 408,
+        "name": "semiten_l",
+        "source_length_m": 0.45363936752779177,
+        "native_length_m": 0.45363926887512207,
+        "absolute_length_error_m": 9.865266969999453e-08,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -2.6188984065811383e-06,
+        "native_normalized_fiber_residual": 7.958078640513122e-13
+      },
+      {
+        "index": 409,
+        "name": "soleus_l",
+        "source_length_m": 0.32349944536289965,
+        "native_length_m": 0.3234995901584625,
+        "absolute_length_error_m": 1.4479556287305684e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 6.399060112016741e-06,
+        "native_normalized_fiber_residual": -3.637978807091713e-12
+      },
+      {
+        "index": 410,
+        "name": "tfl_l",
+        "source_length_m": 0.5472863067780824,
+        "native_length_m": 0.5472861528396606,
+        "absolute_length_error_m": 1.5393842178745842e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -1.3384085377765587e-06,
+        "native_normalized_fiber_residual": -9.663381206337363e-13
+      },
+      {
+        "index": 411,
+        "name": "tibant_l",
+        "source_length_m": 0.30512300797702235,
+        "native_length_m": 0.30512312054634094,
+        "absolute_length_error_m": 1.1256931858882879e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 5.495808181876782e-06,
+        "native_normalized_fiber_residual": -3.637978807091713e-12
+      },
+      {
+        "index": 412,
+        "name": "tibpost_l",
+        "source_length_m": 0.3198770843124457,
+        "native_length_m": 0.3198772370815277,
+        "absolute_length_error_m": 1.5276908199579609e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 6.570627647306537e-06,
+        "native_normalized_fiber_residual": 0.0
+      },
+      {
+        "index": 413,
+        "name": "vasint_l",
+        "source_length_m": 0.281396803186866,
+        "native_length_m": 0.28139662742614746,
+        "absolute_length_error_m": 1.7576071853486752e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": -4.5245582454278566e-12,
+        "native_normalized_fiber_residual": 2.615183460411008e-12
+      },
+      {
+        "index": 414,
+        "name": "vaslat_l",
+        "source_length_m": 0.2949426104723522,
+        "native_length_m": 0.2949424684047699,
+        "absolute_length_error_m": 1.4206758230939087e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.4025992823782363e-12,
+        "native_normalized_fiber_residual": -8.126254660498211e-13
+      },
+      {
+        "index": 415,
+        "name": "vasmed_l",
+        "source_length_m": 0.2694929652110919,
+        "native_length_m": 0.26949283480644226,
+        "absolute_length_error_m": 1.3040464963420817e-07,
+        "native_path_velocity_m_s": 0.0,
+        "native_fiber_velocity_m_s": 1.815714137202995e-12,
+        "native_normalized_fiber_residual": -1.5081672889716291e-12
+      }
+    ],
+    "boundary": "Same FP32 initial pose; source/native path comparison and native fibre diagnostics, no calibrated compliant-force equivalence claim."
+  }
+}

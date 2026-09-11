@@ -49,15 +49,29 @@ and 100 microseconds, independent source paths, ten native checks and the
 0.780 N at 100 microseconds and 4.844 N at one microsecond, so source-force and
 geometry consistency and timestep convergence are the next mechanical gate.
 
+The [candidate precision/performance increment](CANDIDATE_PRECISION_PERFORMANCE_20260911.md),
+native `ee17f46` and Brain `370337d`, reduces median candidate FK/Jacobian cost
+from 18.073 to 1.395 ms while preserving the matched physical traces. The final
+256-root cohort takes 152.513 seconds with API validation, exact replay and
+dropout/zero equality. Root-relative geometry reduces the maximum prepared
+source-force difference to 0.385 N at 100 microseconds. Equal-duration 100/50-µs
+trajectories replay, but 25 µs fails at root 9 under the unchanged nonlinear
+gate, including with doubled Newton iterations. Candidate snapshots show
+119-nm root-height steps and smaller requested corrections. The immediate
+mechanical blocker is candidate/accepted-state precision and contact residual
+consistency; a longer or more heavily iterated run does not resolve it.
+
 Static preparation and bounded reproducibility are closed. Source-compliant
 anatomical settling and tissue registration must use the identical prepared
-pose and consistent forces. Practical coupled execution also remains critical: 256 roots representing 6.4 ms per scenario take about
-445 seconds with validation enabled. Preserve source compliance, source stops,
+pose and consistent forces. Practical coupled execution also remains critical:
+256 roots representing 6.4 ms per scenario still take about 153 seconds with
+validation enabled. Preserve source compliance, source stops,
 tissue mass, conservative transfer, causal control and rejected-state isolation.
-The attached Metal trace identifies candidate-kinematics groups for further
-measurement. Resolve individual shader costs, then inspect repeated FK/Jacobian
-work within an unchanged candidate while preserving candidate-generation and
-rollback boundaries. Disabling API validation leaves the large cost in place.
+Individual candidate stage timestamps and the dispatch-local ancestry mask now
+close the first measured kernel optimization. Further execution work must use
+the remaining stage costs and preserve candidate-generation and rollback
+boundaries. Qualify the five performance workloads after the physical precision
+gate; this bounded speedup does not close the performance envelope.
 The complete behavior, calibration and regional anatomy requirements remain below.
 
 Historical increments remain available in the [curved-support report](CURVED_SUPPORT_20260908.md),

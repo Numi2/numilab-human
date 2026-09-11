@@ -1,0 +1,85 @@
+{
+  "command": [
+    "swift",
+    "test",
+    "-c",
+    "release",
+    "--skip-build",
+    "--filter",
+    "testPreparedNativeTimestepTrajectory"
+  ],
+  "cwd": "/Users/n/numi-brain-human-completion-20260907",
+  "environment": {
+    "NUMANX_METALROBO_LIBRARY": "/Users/n/MetalRobo-human-completion-build-20260907/lib/libmetalrobo.dylib",
+    "NUMANX_FULLBODY_RIGID": "/Users/n/human-completion-20260907/input/myosim-fullbody-core-reference.nhrigid",
+    "NUMANX_FULLBODY_MUSCLE": "/Users/n/human-completion-20260907/input/myosim-fullbody-muscle-reference.nhmyo",
+    "NUMANX_FULLBODY_CONTACT": "/Users/n/human-capsule-20260908/input/myosim-fullbody-support-primitives.nhcnt",
+    "NUMANX_METALROBO_METALLIB": "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib",
+    "NUMANX_MATTER_METALLIB": "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib",
+    "NUMANX_FULLBODY_VISUAL_PACK": "/Users/n/NumiHumanCurrent/anterior-thorax-smoke/myosim-fullbody-articulated-markers-muscle-driven-selected-actuators-source-support-contact.mrvpack",
+    "NUMANX_FULLBODY_VISION_PROFILE": "/Users/n/Numan-X-neuron-v1/assets/numanx-head-vision-profile.v1.json",
+    "NUMANX_MATTER_MATERIAL": "/Users/n/MetalRobo-human-completion-20260907/matter/materials/silicone.nmatter",
+    "NUMANX_MATTER_WORLD_PACKAGE": "/Users/n/human-force-perf-20260911/fixture-exact-50us/prepared-50us.nmatterpack",
+    "NUMANX_HUMAN_SOURCE_FP": "f0943712c830fe4e",
+    "NUMANX_MATTER_WORLD_FP": "20d5e655759731a5",
+    "NUMANX_JOINT_EQUALITIES": "/Users/n/human-completion-20260907/input/myosim-fullbody-joint-equalities-source-compliance.nheq",
+    "NUMANX_JOINT_EQUALITY_FP": "19041185bf97c95d",
+    "MTL_DEBUG_LAYER": "1",
+    "MRNX_PHYSICAL_DIAGNOSTICS": "1",
+    "NUMANX_JOINT_LIMITS": "/Users/n/human-dynamic-limits-20260908/myosim-fullbody-joint-limits.nhlim",
+    "NUMANX_JOINT_LIMIT_FP": "601a251a6473fdd9",
+    "MRNX_RUNTIME_DIAGNOSTICS": "1",
+    "NUMANX_GATE_B_EVIDENCE": "1",
+    "NUMANX_INITIAL_STATE": "/Users/n/human-force-perf-20260911/fixture-exact-50us/prepared.nhinit",
+    "NUMANX_INITIAL_STATE_FP": "7d9c33afd2beda45",
+    "NUMANX_PREPARED_RECRUITMENT": "/Users/n/human-compliant-equilibrium-20260910/prepared-program.json",
+    "MRNX_PHYSICAL_BUFFER_TRACE": "1",
+    "NUMANX_PREPARED_TIMESTEP_US": "50",
+    "NUMANX_PREPARED_DURATION_US": "1600",
+    "MRNX_CANDIDATE_GPU_TIMING": "0"
+  },
+  "source_state": {
+    "native": {
+      "revision": "ee17f4669f4d6b0955e74ce6faf04033c4575a82",
+      "status": ""
+    },
+    "brain": {
+      "revision": "370337dc69e03e9479d2465bda10c23e69b3aa14",
+      "status": ""
+    }
+  },
+  "source_sha256": {
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_fullbody_bridge_probe.mm": "8cbcb5c735523473d0fa8b15290d403db3b55d8476c9c500a6c85ae4a716ed3b",
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numilab_human_myosim_reference_probe.cpp": "5fbdd8817c2687efd3e567190ad59cb09851769cd36a77ce15f5c35cdfa9e3e5",
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/MetalArticulatedOperator.hpp": "c39e09113260094fd3bee2e82fd0ffddedde13f9d102a27798eeca2573f49bf7",
+    "/Users/n/MetalRobo-human-completion-20260907/matter/src/metal/fgmres.metalinc": "050e7cf55b2036863883f9d3b0bec283a215a6568caa984fff93de96fef91089",
+    "/Users/n/MetalRobo-human-completion-20260907/matter/src/runtime.mm": "38e96111c0a27582dbc2a135b5a4f8a771d69d3e451a576505e0fb9455dbbe3c",
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/ArticulatedOperator.metal": "9a55003bd5a45fd6d194c32fad86807f9e217c162489759b2d3781f50576589c",
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/MetalArticulatedOperator.mm": "4af6cfd12e53b2f50259842071ab7bd61e90243aadba34e28dc28e1bac131427",
+    "/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainMetalTests/MetalNumanXBridgeV1EndToEndTests.swift": "109e2cb57c8b28adf70c771dc635fdaa1f44ba52e1582d7dc6b26c965571adec"
+  },
+  "competing_workloads": "",
+  "artifact_sha256": {
+    "NUMANX_METALROBO_LIBRARY": "1d76cb0e7ef596b9bb0db74dcd32f5dc0798c175989c7e26afaf0e9e68ad9d53",
+    "NUMANX_FULLBODY_RIGID": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44",
+    "NUMANX_FULLBODY_MUSCLE": "9a988f19a6fd8e533cd0f2bf3192cb8535fb008ccd394ffbf1a4432d3db76a05",
+    "NUMANX_FULLBODY_CONTACT": "c7712daf79cd8a589a6d23942a4df84a7da928e5911455ce19078f9b24daaaf4",
+    "NUMANX_METALROBO_METALLIB": "0e69369d1306305d119958b65ab33682374d6a537453b99254e35c792d018ca1",
+    "NUMANX_MATTER_METALLIB": "fb9c25640ab36db78e0cb75710e1461c1b0a6081c8ec7be91682a916899b00e6",
+    "NUMANX_FULLBODY_VISUAL_PACK": "b8ab7cd8deead1e2af3137a727eaad74cd7e4238d77d9116d774bbf304936e37",
+    "NUMANX_FULLBODY_VISION_PROFILE": "166220533c6c78695f6e55412f2e832eaaa4ec94ddf791b476111dc323c652a6",
+    "NUMANX_MATTER_MATERIAL": "d3094476cefa1a28ca8b5f35b28e2586d5a44ce63f268e57e96812de32de4a5f",
+    "NUMANX_MATTER_WORLD_PACKAGE": "64c969a7afc8b5dd9991a57e318289561a1bb8eb643294bccba34a551b744110",
+    "NUMANX_JOINT_EQUALITIES": "12db05fddb492e77e7fd461fad566d3e1e75390f2cb6f77f26568254a6cb4477",
+    "NUMANX_JOINT_LIMITS": "c583611fcedc326a32c6f69504a65e675c8e0adc987c6db622ca0d95a02438d3",
+    "NUMANX_INITIAL_STATE": "39084956c91bc8314cc3580b50ff36f8354c05d01f3139694117f5e7cebe4423",
+    "NUMANX_PREPARED_RECRUITMENT": "3ea132b5af69f95693afb852c3a3567f1ece8b29637016f215ad6b564181fec1"
+  },
+  "brain_test_binary_sha256": "fbb28c84b2a8c55dc26dbe7e74cf2ffcb3d4be49a6c7637bb218fef1248e3ac5",
+  "brain_test_binary_bytes": 49283528,
+  "authoring_revision": "113a82682db9a234aa85aa225a8b89283f7c52e3",
+  "runner_sha256": "333ce485a0721ec40f6ad9f80bb9984746eda2b2b3ba455bf85920298dd52186",
+  "runner_timeout_seconds": 300,
+  "returncode": 0,
+  "elapsed_seconds": 40.38371299998835
+}

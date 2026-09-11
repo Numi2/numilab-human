@@ -1,0 +1,497 @@
+{
+  "exception": {
+    "codes": "0x0000000000000001, 0x000000010d9c3554",
+    "rawCodes": [
+      1,
+      4523308372
+    ],
+    "type": "EXC_BREAKPOINT",
+    "signal": "SIGTRAP"
+  },
+  "termination": {
+    "flags": 0,
+    "code": 5,
+    "namespace": "SIGNAL",
+    "indicator": "Trace/BPT trap: 5",
+    "byProc": "exc handler",
+    "byPid": 34484
+  },
+  "asi": null,
+  "faultingThread": 0,
+  "frames": [
+    {
+      "imageOffset": 17331540,
+      "sourceFile": "/<compiler-generated>",
+      "symbol": "Swift runtime failure: arithmetic overflow",
+      "imageIndex": 25,
+      "symbolLocation": 0,
+      "inline": true
+    },
+    {
+      "symbol": "closure #1 in MetalNumanXBridgeV1EndToEndTests.bootstrapSensorPacket(device:compiled:transaction:observationsAvailable:)",
+      "inline": true,
+      "imageIndex": 25,
+      "imageOffset": 17331540,
+      "symbolLocation": 12,
+      "sourceLine": 3487,
+      "sourceFile": "MetalNumanXBridgeV1EndToEndTests.swift"
+    },
+    {
+      "imageOffset": 17331540,
+      "sourceFile": "/<compiler-generated>",
+      "symbol": "specialized Collection.map<A, B>(_:)",
+      "imageIndex": 25,
+      "symbolLocation": 16,
+      "inline": true
+    },
+    {
+      "imageOffset": 17331540,
+      "sourceLine": 3462,
+      "sourceFile": "MetalNumanXBridgeV1EndToEndTests.swift",
+      "symbol": "specialized MetalNumanXBridgeV1EndToEndTests.bootstrapSensorPacket(device:compiled:transaction:observationsAvailable:)",
+      "imageIndex": 25,
+      "symbolLocation": 1344
+    },
+    {
+      "imageOffset": 17133604,
+      "sourceFile": "/<compiler-generated>",
+      "symbol": "MetalNumanXBridgeV1EndToEndTests.bootstrapSensorPacket(device:compiled:transaction:observationsAvailable:)",
+      "imageIndex": 25,
+      "symbolLocation": 20,
+      "inline": true
+    },
+    {
+      "imageOffset": 17133604,
+      "sourceLine": 2520,
+      "sourceFile": "MetalNumanXBridgeV1EndToEndTests.swift",
+      "symbol": "MetalNumanXBridgeV1EndToEndTests.runAcceptedScenario(paths:contactPath:compiled:publication:device:rootCount:timestepMicroseconds:externalGoal:muscleLocomotor:sensorIntervention:developmentalCapabilityCodes:developmentalIntentFingerprintXor:activeSensingCommandScale:authoredWorld:)",
+      "imageIndex": 25,
+      "symbolLocation": 2440
+    },
+    {
+      "symbol": "run #1 () in MetalNumanXBridgeV1EndToEndTests.testPreparedNativeTimestepTrajectory()",
+      "inline": true,
+      "imageIndex": 25,
+      "imageOffset": 17151372,
+      "symbolLocation": 104,
+      "sourceLine": 213,
+      "sourceFile": "MetalNumanXBridgeV1EndToEndTests.swift"
+    },
+    {
+      "imageOffset": 17151372,
+      "sourceLine": 217,
+      "sourceFile": "MetalNumanXBridgeV1EndToEndTests.swift",
+      "symbol": "MetalNumanXBridgeV1EndToEndTests.testPreparedNativeTimestepTrajectory()",
+      "imageIndex": 25,
+      "symbolLocation": 1768
+    },
+    {
+      "imageOffset": 17235984,
+      "symbol": "@objc MetalNumanXBridgeV1EndToEndTests.testActiveMuscleLocomotorAcceptedRoots()",
+      "symbolLocation": 44,
+      "imageIndex": 25
+    },
+    {
+      "imageOffset": 386612,
+      "symbol": "__invoking___",
+      "symbolLocation": 148,
+      "imageIndex": 30
+    },
+    {
+      "imageOffset": 386240,
+      "symbol": "-[NSInvocation invoke]",
+      "symbolLocation": 424,
+      "imageIndex": 30
+    },
+    {
+      "imageOffset": 128220,
+      "symbol": "+[XCTFailableInvocation invokeErrorConventionInvocation:completion:]",
+      "symbolLocation": 92,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 128120,
+      "symbol": "__90+[XCTFailableInvocation invokeInvocation:withTestMethodConvention:lastObservedErrorIssue:]_block_invoke",
+      "symbolLocation": 28,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 126384,
+      "symbol": "__81+[XCTFailableInvocation invokeWithAsynchronousWait:lastObservedErrorIssue:block:]_block_invoke",
+      "symbolLocation": 364,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 62668,
+      "symbol": "__49+[XCTSwiftErrorObservation observeErrorsInBlock:]_block_invoke",
+      "symbolLocation": 36,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 623860,
+      "symbol": "static XCTSwiftErrorObservation._observeErrors(in:)",
+      "symbolLocation": 336,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 624016,
+      "symbol": "@objc static XCTSwiftErrorObservation._observeErrors(in:)",
+      "symbolLocation": 60,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 62404,
+      "symbol": "+[XCTSwiftErrorObservation observeErrorsInBlock:]",
+      "symbolLocation": 208,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 125764,
+      "symbol": "+[XCTFailableInvocation invokeWithAsynchronousWait:lastObservedErrorIssue:block:]",
+      "symbolLocation": 224,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 127588,
+      "symbol": "+[XCTFailableInvocation invokeInvocation:withTestMethodConvention:lastObservedErrorIssue:]",
+      "symbolLocation": 176,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 129008,
+      "symbol": "+[XCTFailableInvocation invokeInvocation:lastObservedErrorIssue:]",
+      "symbolLocation": 72,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 290800,
+      "symbol": "-[XCTestCase invokeTestMethod:]",
+      "symbolLocation": 64,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 293928,
+      "symbol": "__24-[XCTestCase invokeTest]_block_invoke_4",
+      "symbolLocation": 56,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 480276,
+      "symbol": "-[XCTMemoryChecker _assertInvalidObjectsDeallocatedAfterScope:]",
+      "symbolLocation": 84,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 307944,
+      "symbol": "-[XCTestCase assertInvalidObjectsDeallocatedAfterScope:]",
+      "symbolLocation": 92,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 293232,
+      "symbol": "__24-[XCTestCase invokeTest]_block_invoke.112",
+      "symbolLocation": 696,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 318884,
+      "symbol": "-[XCTestCase(XCTIssueHandling) _caughtUnhandledDeveloperExceptionPermittingControlFlowInterruptions:caughtInterruptionException:whileExecutingBlock:]",
+      "symbolLocation": 168,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 291516,
+      "symbol": "-[XCTestCase invokeTest]",
+      "symbolLocation": 640,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 299660,
+      "symbol": "__26-[XCTestCase performTest:]_block_invoke.170",
+      "symbolLocation": 36,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 318884,
+      "symbol": "-[XCTestCase(XCTIssueHandling) _caughtUnhandledDeveloperExceptionPermittingControlFlowInterruptions:caughtInterruptionException:whileExecutingBlock:]",
+      "symbolLocation": 168,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 298108,
+      "symbol": "__26-[XCTestCase performTest:]_block_invoke.155",
+      "symbolLocation": 552,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 49516,
+      "symbol": "+[XCTContext _runInChildOfContext:forTestCase:markAsReportingBase:block:]",
+      "symbolLocation": 172,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 49244,
+      "symbol": "+[XCTContext runInContextForTestCase:markAsReportingBase:block:]",
+      "symbolLocation": 100,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 296716,
+      "symbol": "-[XCTestCase performTest:]",
+      "symbolLocation": 308,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 277588,
+      "symbol": "-[XCTest runTest]",
+      "symbolLocation": 48,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 346436,
+      "symbol": "-[XCTestSuite runTestBasedOnRepetitionPolicy:testRun:]",
+      "symbolLocation": 64,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 345928,
+      "symbol": "__27-[XCTestSuite performTest:]_block_invoke",
+      "symbolLocation": 184,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 343264,
+      "symbol": "__59-[XCTestSuite _performProtectedSectionForTest:testSection:]_block_invoke",
+      "symbolLocation": 48,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 49516,
+      "symbol": "+[XCTContext _runInChildOfContext:forTestCase:markAsReportingBase:block:]",
+      "symbolLocation": 172,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 49244,
+      "symbol": "+[XCTContext runInContextForTestCase:markAsReportingBase:block:]",
+      "symbolLocation": 100,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 343120,
+      "symbol": "-[XCTestSuite _performProtectedSectionForTest:testSection:]",
+      "symbolLocation": 168,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 344520,
+      "symbol": "-[XCTestSuite performTest:]",
+      "symbolLocation": 236,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 277588,
+      "symbol": "-[XCTest runTest]",
+      "symbolLocation": 48,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 346436,
+      "symbol": "-[XCTestSuite runTestBasedOnRepetitionPolicy:testRun:]",
+      "symbolLocation": 64,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 345928,
+      "symbol": "__27-[XCTestSuite performTest:]_block_invoke",
+      "symbolLocation": 184,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 343264,
+      "symbol": "__59-[XCTestSuite _performProtectedSectionForTest:testSection:]_block_invoke",
+      "symbolLocation": 48,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 49516,
+      "symbol": "+[XCTContext _runInChildOfContext:forTestCase:markAsReportingBase:block:]",
+      "symbolLocation": 172,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 49244,
+      "symbol": "+[XCTContext runInContextForTestCase:markAsReportingBase:block:]",
+      "symbolLocation": 100,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 343120,
+      "symbol": "-[XCTestSuite _performProtectedSectionForTest:testSection:]",
+      "symbolLocation": 168,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 344520,
+      "symbol": "-[XCTestSuite performTest:]",
+      "symbolLocation": 236,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 277588,
+      "symbol": "-[XCTest runTest]",
+      "symbolLocation": 48,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 346436,
+      "symbol": "-[XCTestSuite runTestBasedOnRepetitionPolicy:testRun:]",
+      "symbolLocation": 64,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 345928,
+      "symbol": "__27-[XCTestSuite performTest:]_block_invoke",
+      "symbolLocation": 184,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 343264,
+      "symbol": "__59-[XCTestSuite _performProtectedSectionForTest:testSection:]_block_invoke",
+      "symbolLocation": 48,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 49516,
+      "symbol": "+[XCTContext _runInChildOfContext:forTestCase:markAsReportingBase:block:]",
+      "symbolLocation": 172,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 49244,
+      "symbol": "+[XCTContext runInContextForTestCase:markAsReportingBase:block:]",
+      "symbolLocation": 100,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 343120,
+      "symbol": "-[XCTestSuite _performProtectedSectionForTest:testSection:]",
+      "symbolLocation": 168,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 344520,
+      "symbol": "-[XCTestSuite performTest:]",
+      "symbolLocation": 236,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 277588,
+      "symbol": "-[XCTest runTest]",
+      "symbolLocation": 48,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 467264,
+      "symbol": "__89-[XCTTestRunSession executeTestsWithIdentifiers:skippingTestsWithIdentifiers:completion:]_block_invoke",
+      "symbolLocation": 100,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 49516,
+      "symbol": "+[XCTContext _runInChildOfContext:forTestCase:markAsReportingBase:block:]",
+      "symbolLocation": 172,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 49244,
+      "symbol": "+[XCTContext runInContextForTestCase:markAsReportingBase:block:]",
+      "symbolLocation": 100,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 466920,
+      "symbol": "-[XCTTestRunSession executeTestsWithIdentifiers:skippingTestsWithIdentifiers:completion:]",
+      "symbolLocation": 340,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 423844,
+      "symbol": "__72-[XCTExecutionWorker enqueueTestIdentifiersToRun:testIdentifiersToSkip:]_block_invoke_2",
+      "symbolLocation": 156,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 428036,
+      "symbol": "__XCTAsyncEnumerateWithWaiter_block_invoke",
+      "symbolLocation": 244,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 428472,
+      "symbol": "__XCTAsyncEnumerate_block_invoke.117",
+      "symbolLocation": 64,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 423424,
+      "symbol": "XCTAsyncEnumerateWithWaiter",
+      "symbolLocation": 568,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 422776,
+      "symbol": "__72-[XCTExecutionWorker enqueueTestIdentifiersToRun:testIdentifiersToSkip:]_block_invoke",
+      "symbolLocation": 148,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 424168,
+      "symbol": "-[XCTExecutionWorker runWithError:]",
+      "symbolLocation": 84,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 415240,
+      "symbol": "__25-[XCTestDriver _runTests]_block_invoke.400",
+      "symbolLocation": 56,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 509616,
+      "symbol": "-[XCTestObservationCenter _observeTestExecutionForTestBundle:inBlock:]",
+      "symbolLocation": 104,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 413664,
+      "symbol": "-[XCTestDriver _runTests]",
+      "symbolLocation": 1192,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 421880,
+      "symbol": "_XCTestMain",
+      "symbolLocation": 96,
+      "imageIndex": 2
+    },
+    {
+      "imageOffset": 7748,
+      "symbol": "static xctest.main()",
+      "symbolLocation": 284,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 7912,
+      "symbol": "main",
+      "symbolLocation": 12,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 132324,
+      "symbol": "start",
+      "symbolLocation": 6992,
+      "imageIndex": 31
+    }
+  ]
+}

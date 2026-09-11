@@ -188,4 +188,15 @@ partial coverage. The [muscle numerical repairs](PREPARED_MUSCLE_NUMERICS_202609
 native `8aa3ad1`, also pass prepared paths, same-path fibre force, authored
 1/5/10/100-microsecond updates and current-stack 64-root replay/dropout. Full
 source-path force/geometry consistency and timestep convergence, held stance,
-registered tissue, calibration and practical execution cost remain open.
+registered tissue and calibration remain open. The subsequent
+[candidate precision/performance increment](CANDIDATE_PRECISION_PERFORMANCE_20260911.md),
+native `ee17f46` / Brain `370337d`, reduces matched candidate FK/Jacobian time
+from 18.073 to 1.395 ms and the current 256-root cohort to 152.513 seconds.
+Replay/dropout and ten native regressions pass. Source-path error improves to
+0.326 µm against native FP64 (0.316 µm against independent MuJoCo), but full
+source-force differences remain 0.385 N at 100 µs and 3.290 N at 1 µs.
+Exact-state 100/50-µs trajectories replay over 1.6 ms; 25 µs fails at root 9,
+including with doubled Newton iterations. The retained contact residual and
+candidate-coordinate snapshots make precision/geometry consistency the next
+mechanical blocker. Practical execution cost and the full performance envelope
+remain open despite the measured bounded speedup.

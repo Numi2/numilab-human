@@ -1,0 +1,424 @@
+{
+  "schema": "numi.human.candidate-precision-performance.v1",
+  "native_revision": "ee17f4669f4d6b0955e74ce6faf04033c4575a82",
+  "brain_revision": "370337dc69e03e9479d2465bda10c23e69b3aa14",
+  "numerics_auditor_sha256": "408cd0ff05ffc3ffe5d63a58a5d9a18540fdd75573de1ba71f03ad02d138d3c6",
+  "dependencies": {
+    "prepared-muscle-numerics-20260911/verify_receipt.py": "408cd0ff05ffc3ffe5d63a58a5d9a18540fdd75573de1ba71f03ad02d138d3c6",
+    "source-compliant-equilibrium-20260910/verify_receipt.py": "86606e03347e6cbf1616fd960e517a07ab8b5e3c9d7cd0e9a4ce682e93467796",
+    "prepared-muscle-numerics-20260911/horizon-wrapped-fiber.log.gz": "af4698e650ae1a16840e1c5c33cbf5eadf3e8fa5117cce307f791d0831578bce",
+    "prepared-muscle-numerics-20260911/muscle.nhmyo.gz": "58bc943b36bdb2db05504f36f3c11436e6fb088e5e996c1300f3de1daa107f40",
+    "prepared-muscle-numerics-20260911/prepared.nhinit": "e7597abe656c5a4b9231f087edd19e6937e123bbb4583f6421f60da625f63238"
+  },
+  "qualification": {
+    "bounded_candidate_speedup": true,
+    "improved_static_geometry": true,
+    "bounded_coupled_replay": true,
+    "timestep_convergence": false,
+    "full_source_force_convergence": false,
+    "registered_anatomical_tissue": false,
+    "experimental_calibration": false,
+    "standing_walking": false,
+    "performance_envelope": false,
+    "full_release": false
+  },
+  "artifacts": {
+    "ancestry-build.log.gz": "a0fb67e9ec06b8efe050425e0a0c4df0d81105a640d0fe7c5c2ea9bc4ba9cd20",
+    "ancestry.patch.gz": "2416adebb849850149588c6bd78bd53e3c018ea2279f2b66184ed0a2a13c3c15",
+    "audit-build.log.gz": "3ba2f68c89097eedb56dd00bfe88682b7317f79b2a8c11642cd0d5383d4a3f22",
+    "brain-epoch-build.log.gz": "d169f2806843d88f83486a8ba22ca07c078bd5414ab37cfb380afd36ad0f76e7",
+    "brain-native-clock-build.log.gz": "384605bcb4b6420e72ab7968c6ed0247d32073b201b0d9673f8a24e203b4623c",
+    "brain-refinement-build.log.gz": "844cd0fa853ffcfff548e315d7fc6c0b184bd1c36e982ef4c0b6d249455eec8c",
+    "brain-streaming-build.log.gz": "2c6777a0468ba0ff010f3f017789348ca1178de7ab21de7f97008a78fa98316c",
+    "diagnostic-100us-launch.json": "cbd88fd53cb456efac53475db88c18aca34f77a49bb55b6f6f6b67f759d025b6",
+    "diagnostic-100us.log.gz": "18dd902cff215a4efb1d8a5708221ba94d18265a431108c43c4a69a28dfd6919",
+    "diagnostic-build.log.gz": "0bb7da9e5c7d56cd66ce53a2c3501cda05841cc962155373b2d800a88c98dd2f",
+    "fixture-100us/prepared-100us.nmatterpack.gz": "bfe679320bba19cbf894e60265355bd35ada29f9b01643be153fbc17afb8245b",
+    "fixture-100us/prepared.json": "7643a38b2cf777634ca68dd8730b082437c5c417856c7bf5bda58fa6d8961de3",
+    "fixture-100us/prepared.nhinit": "136136ba4336f7d341ee50cc82ba6f379c2af04a8cb486400c7a81d63362419e",
+    "fixture-100us-launch.json": "563e4ee333c47ea52162ade08ff1dd48e28e9627b679e65c9b2ba8211557962b",
+    "fixture-100us.log.gz": "53e6edd90480665dd194c4db9f7a70c4907dce92f2ac03812a9c3fc9c5149e05",
+    "fixture-exact-100us/prepared-100us.nmatterpack.gz": "bfe679320bba19cbf894e60265355bd35ada29f9b01643be153fbc17afb8245b",
+    "fixture-exact-100us/prepared.json": "e8a31fd8c7f62cc451cb648f11c6c26f00b107ab8bd693cd6c604ae2f685c87e",
+    "fixture-exact-100us/prepared.nhinit": "e7597abe656c5a4b9231f087edd19e6937e123bbb4583f6421f60da625f63238",
+    "fixture-exact-100us-launch.json": "6d131be6c243c825460ed3e95d7b2cd076414e6c8e0c0e2829ece66723f9498f",
+    "fixture-exact-100us.log.gz": "53e6edd90480665dd194c4db9f7a70c4907dce92f2ac03812a9c3fc9c5149e05",
+    "fixture-exact-25us/prepared-25us.nmatterpack.gz": "af3f60df067321aae596aeaea4e4a710875b31eb1bf9f46cf41e55415e717b4c",
+    "fixture-exact-25us/prepared.json": "549e54e429ae945b5a6c597f56a6d4ac10b72bdd5cddab48c0d3fcfa62441fba",
+    "fixture-exact-25us/prepared.nhinit": "a4bf21f6eb0acbe487cd06925caf147a85ab5a41bc51a1e0d2bea6dd2a6c0e5f",
+    "fixture-exact-25us-iterations32/prepared-25us.nmatterpack.gz": "69ddc2b7d287ce0103bd0af2c42948ea7314b97a647aabbdb50a7ed9d5db0807",
+    "fixture-exact-25us-iterations32/prepared.json": "038de288e501b9e75fca7d94d36c70364ecb3e8874c5002d673316b67f77d1bc",
+    "fixture-exact-25us-iterations32/prepared.nhinit": "9415c42d9ab51f10f1ab640adaea500ed40a115a508e19065a0bd6d08fc9cbb0",
+    "fixture-exact-25us-iterations32-launch.json": "8b37aa795b2a92ecb23d7f8f117a6b8107c15eba093ee84e3ce6f210b43c915d",
+    "fixture-exact-25us-iterations32.log.gz": "53e6edd90480665dd194c4db9f7a70c4907dce92f2ac03812a9c3fc9c5149e05",
+    "fixture-exact-25us-launch.json": "97ed4591631bad82e758b645b86d5814589d87705a836c20eeacce8409c09aae",
+    "fixture-exact-25us.log.gz": "53e6edd90480665dd194c4db9f7a70c4907dce92f2ac03812a9c3fc9c5149e05",
+    "fixture-exact-50us/prepared-50us.nmatterpack.gz": "66635f1bab2c5c24f6e1c63d51075501fefbb189a7dc0e3386b83dd05c89a0cf",
+    "fixture-exact-50us/prepared.json": "f86c44bb943b3a8590092d1ddca2cb8b34583fb0be2afc851bec3bbd16cab3a4",
+    "fixture-exact-50us/prepared.nhinit": "39084956c91bc8314cc3580b50ff36f8354c05d01f3139694117f5e7cebe4423",
+    "fixture-exact-50us-launch.json": "c5355ab12c3121e645f7d90ab42878c915be94d0e24e336de0757c2a2b8434cf",
+    "fixture-exact-50us.log.gz": "53e6edd90480665dd194c4db9f7a70c4907dce92f2ac03812a9c3fc9c5149e05",
+    "grouped-position-100us-launch.json": "41a2504c219492aa0d8fdb8b7073315f2ed6fe1bcd1516c910d9c0db5f92cd5a",
+    "grouped-position-100us.log.gz": "83e2dfe71569db68fec52f30328929823a237ca54c90ba620fd682997c23703d",
+    "grouped-position-build.log.gz": "3ba2f68c89097eedb56dd00bfe88682b7317f79b2a8c11642cd0d5383d4a3f22",
+    "horizon-final-relative64-launch.json": "f073fec73f20d5b6bd8712f52aa0439c844b2110446ca1cbdf42f592d09b4d72",
+    "horizon-final-relative64.log.gz": "9b8915ba30a3155909a8a6b8ca3e2627a4e5ef6c7ed43b6ec83ccec674394278",
+    "horizon-performance64-launch.json": "2195fad16d8f5ca8a8398aa1695c825a1d7ac0bf68a66dbd579aeb947ae141da",
+    "horizon-performance64.log.gz": "616c1607021de9d693ab9c6a2bf3ea429c167fa830ca5e4bf2126afa38b97ba1",
+    "horizon-published64-launch.json": "26c96d7ff17056fc82b37f79a1c294df6ccdbb1ae266f1d0c84c74fa896fdc7e",
+    "horizon-published64.log.gz": "87a5a8dee4f82f68d3b1677f5b506dc0b6f558413cac4ab952784b993953b61d",
+    "independent-source-path-audit.json": "a90ca97dd55251a1f3ee0309c95f0544e5335b7a7850fda0acc74fdecf4e13fb",
+    "initial-import-build.log.gz": "e78fdc5fbdb006059c1d84de7b8d229b3b3adc724da1486dc864fffa910046c8",
+    "iteration-probe-build.log.gz": "7a7ee74f465e713975f4e72534f4cda6eb323268d881458dd8ae4291099c346a",
+    "lazy-arena-build.log.gz": "69c136c72fa93e73a845b7df71709fb043c7de3b335f7ca88a69a68654e6377a",
+    "make_fixtures.py": "2be746cf3f0a2f49caf14b17cc4ed506fc935683638c07e651dd754347340d14",
+    "native-final-regressions.log.gz": "f2316fec42b608d9c0332da39056c31c9e7ff33a65fd9c6737fba3b1723cf909",
+    "native-published-regressions.log.gz": "125e54f7ac036849f221cdc8c18445c16d973a33c97a527275426c6e96b7e124",
+    "native-rebuild.log.gz": "c14343a2784e65036eb4af59d7b5a4ebdcd31328b46a627baf12a515d6ad0b73",
+    "operator-context-final.log.gz": "66f1dc2088eeffd3efe848e2680b36c650db6ba35917f3efacceca6da33e1569",
+    "operator-context-lazy.log.gz": "e78040c9d81b089001194f20d2c369b27110082629e3c2f47d0472bfb7f9d764",
+    "operator-final-completion.json": "0c0360d7fbcb1258a96069aa099625647b9587b0df096baa86348a65ac51ae90",
+    "operator-gpu-final.log.gz": "7891c9e2954d9f041ef69ef5a87a421b0e1054e47fbbe8d04f22750dc3931306",
+    "operator-host-final.log.gz": "af87bff7182c3c1f4a92fdaa0db095a6ecfc273dd8f9ce84f6e732eeb6f306db",
+    "operator-host.log.gz": "61ff71d0ab97e9e89956418d968b62e73499151813317229b43f68ca03a32dcb",
+    "performance-build.log.gz": "3ba2f68c89097eedb56dd00bfe88682b7317f79b2a8c11642cd0d5383d4a3f22",
+    "performance-tests.log.gz": "c844982e291528e42e108c58f55c4ec9593474047711f118279351ccf1f2feab",
+    "performance.patch.gz": "efdca3efc3b6985c7542809b9f0bc2b2f62c856011fe406c56e60f82e0fb611b",
+    "published-100us-launch.json": "d6b0600e75b0bd5ccebcbfe7ab8c2aed458f5ba82ffdaa435883184d3de53c5a",
+    "published-100us.log.gz": "a50a01e3b3ad516583a8d0dc551bba2c7e813349e736248d0d15354cd4538eeb",
+    "published-1us-launch.json": "71185886fede7171c56e8a60a557af6bc1d2bab0850153d07018b6dabcf18319",
+    "published-1us.log.gz": "275c7e45ef6e759e9c4ee45b8e6a379b9fabe9b3f6e318137ca21dfc27ef4223",
+    "published4-launch.json": "4be73f08df3dabd01f449d633dc3141f58ac0e229d39099f932cd8dca4e76fbf",
+    "published4.log.gz": "efa0a6fc5c4cf372077576e4cbf85fb653df803efa36ef53cd9a46848d1e9962",
+    "refine-100us-launch.json": "774200ffb3654e42c96039c17b52b034d09fcf23e47831f9b331cb6ed1943575",
+    "refine-100us-published-launch.json": "a813571f8e5187b710f09ce5ccaf42428c71e9ca6537ab79c6a25ae35bbde36c",
+    "refine-100us-published.log.gz": "953a47e64b0b687c4acfb431c77d74f5dfc3b09c9bf5491882b4f3c229743ea5",
+    "refine-100us.log.gz": "61f536b406bf039454af1e745e81c039d8d1610cd1d4a3424dca4afb5b7bb6f4",
+    "refine-25us-components-launch.json": "d85c14ca7e50e3956191e455b7af865c81d39934c40cb14401d7f662ce32f05d",
+    "refine-25us-components.log.gz": "ee464dd9078cfe61cea57c7db7098a133792c520aa521f2035e0f9f074521bcb",
+    "refine-25us-iterate-trace-launch.json": "74bff881d6978a36c85f7d172e476898c927873e0ac3d7bc955b284310cf99c9",
+    "refine-25us-iterate-trace.log.gz": "1c2f07436e2fa5c8ee68b8f8c51038e7665c629cf16e093e1e0c3f0c85ec3f25",
+    "refine-25us-iterations32-launch.json": "78a2f54c900e2af60398514a80d684329a9ffc9b25903570f183ad611acd3542",
+    "refine-25us-iterations32.log.gz": "0008ebfae9bbe60b0466848c4c7224c3106b9522e8382f39a732ced5e75a7778",
+    "refine-25us-native-launch.json": "cae288bfd458de35926e2226191304b78580ff202b25595dd033acecd5a7cf8a",
+    "refine-25us-native.log.gz": "c66707094929e6fed69900e214a1373b3a05ac2bb90f9c16e54a16f0781f29b3",
+    "refine-25us-published-launch.json": "678956c3b1f49421f60554e8e401986cf1c67c63de9806f6d94cdad03abe3806",
+    "refine-25us-published.log.gz": "e1377b67b6cc7db3a1f6a1cb5c43010f9bb95d3a763ab3a9680d7cbecfde73f6",
+    "refine-50us-crash-stack.json": "19f5b2bcc29186c8e7f54b15bade11857e509b07528e54174ce5aca934ed4a92",
+    "refine-50us-epoch-launch.json": "0a3b7d94cd70cdc1f41b93d7d33d1df7ff69140813de5f8396bf933e59cd9d2e",
+    "refine-50us-epoch.log.gz": "b74e837ff4c6599b8a66cdc8c4a73b75f29b806e151940073f1b49f2511c8125",
+    "refine-50us-launch.json": "2c5bb9c09ba541fd50f069c77145b7a85806c2ea71c60e2a84e9fc07df6776ea",
+    "refine-50us-native-launch.json": "cacdc0c4166e24d3fafe5d550dbc036d5bef05a31bacf36288a9586ce28fe1ae",
+    "refine-50us-native.log.gz": "af810e8219c08a25cdcbbd0484e3cd6d0b371184b2958737f4143ba44ab9e7e1",
+    "refine-50us-published-launch.json": "334118f49e5f568d91592e452cc27e984bb9fc25cf244d2a57f2525820938fa3",
+    "refine-50us-published.log.gz": "ae6ed12a904f0bd80426851f5d82b7342de81d565f583cfb71d1959431600f3f",
+    "refine-50us.log.gz": "0904e9c218d4bd611674323ba3101c85842951e3f268465c067947444a9a9dce",
+    "refinement-published-sequence.json": "ecf1daeae6ceae71cda7957d3830249dd497b0a210209cb16ab5ed2d767b5ac0",
+    "residual-components-build.log.gz": "8784ba79a4ceef37d3dbe7a3a44a0822ddd81aed4f3be59e4523cf0437ae3e37",
+    "root-relative-100us-launch.json": "f5c543662d096f28bda6e011d9e7bdd403b6e9dd3e6bbf313c066a477e31ebff",
+    "root-relative-100us.log.gz": "8b79eb589748bcc16a956671641d9fc485d94ac386d5656de1cfd22f62567f07",
+    "root-relative-1us-launch.json": "5f5397abc19b50c1409117fe3210bbe47e188daba812cff470cfbfa5ceecb88b",
+    "root-relative-1us.log.gz": "0bb8ab480b829723c40746b0a5057bc59219f20c60bd74a584531bef87fde19c",
+    "root-relative-build.log.gz": "3ba2f68c89097eedb56dd00bfe88682b7317f79b2a8c11642cd0d5383d4a3f22",
+    "root-relative-tests.log.gz": "92fb79bfcf2b6e39819d7c13a8baa2626f9893b859f6d6780b3ed472dfe25ee4",
+    "root-relative4-launch.json": "c5c7e111131cf6c156431c85a0f302de77f3f1c188417102188dca52a12426f6",
+    "root-relative4.log.gz": "5c49c46e0ba933c75ef2809515fee0f77ae2423989f48e87119590297f7f3163",
+    "run_probe.py": "5890e802cb4f22820525da1baf59fa319dca9aefa3d61c4bf78d79d220f3ff21",
+    "run_transaction.py": "333ce485a0721ec40f6ad9f80bb9984746eda2b2b3ba455bf85920298dd52186",
+    "sources/brain/Tests/NumiBrainMetalTests/MetalNumanXBridgeV1EndToEndTests.swift.gz": "64985d44275e6e8ad6c5aa097895cfca2d7e505602da30ad9ed9e712e82a9c2d",
+    "sources/native/apps/numanx_fullbody_bridge_probe.mm.gz": "6ad161c21b7fa6149b748687ec307f908b80e034ccf8e8a09e2e51f317600044",
+    "sources/native/apps/numilab_human_myosim_reference_probe.cpp.gz": "3ef175cb585036626bd8925c0f50a87d7d4480676612b9363a65efb13c57897f",
+    "sources/native/docs/NUMERICS.md.gz": "b69750061f3b9cc0222656b82e638fdfdca76fe09790fa6df872b08fae89064b",
+    "sources/native/include/metalrobo/MetalArticulatedOperator.hpp.gz": "773d8a2b79c271d1d75c445fe274e5890e0d17b48cefeeebaaa96850c4ca9297",
+    "sources/native/matter/src/metal/fgmres.metalinc.gz": "dc826bfc43b1709551ab00627607f891ce84b2ccc16b6ee8fb500267fd45c29f",
+    "sources/native/matter/src/runtime.mm.gz": "c6ec3247bdd03e6d90f6bee10b6f9a7361c618fd289946585735774c54881073",
+    "sources/native/src/metal/ArticulatedOperator.metal.gz": "b596ca75bbab6ef261df4da414f641beecc29a0b9f6745a52dba3d35e8d646dc",
+    "sources/native/src/metal/MetalArticulatedOperator.mm.gz": "e421c4cd5a77d625553e4f7b1e4dd9aab0f66c90addd58743cd11f63919d8ca0",
+    "support-trace-build.log.gz": "cbf38e7f348cfe64ce953c4976599e06f1b9938c7ec7f5facc850269ad3bef32",
+    "timing-ancestry4-launch.json": "71ff39bef6391e9bd5228f3b97f4177447ba0298c904769023b767814b9e87b8",
+    "timing-ancestry4.log.gz": "5668b377e5f34c26961990087795a03c599efbe9c8ebedb91f7364fa4c435a40",
+    "timing-baseline4-launch.json": "7769ecd4bbc9117ea1769e9f877630d9e39e2397481edac03dc50154595ff7ab",
+    "timing-baseline4.log.gz": "4c26756be87e66b0e5c14a7e280d73b90efb1865a25b78569302d1ea59ed29fb",
+    "timing-width2564-launch.json": "8d4adb789998bf201290c6bd0bfcf35ba81a13c9849624781f104427a45af0dd",
+    "timing-width2564.log.gz": "ee84ba3848464e96c0b463677d4b7244dc93efcfe5fbf1b2add4e83a584ecf8c",
+    "verify_receipt.py": "3ca7e398a731ec7be0cc4722c09f1934424053c52b68a86eab4bafb3e0aabfad",
+    "width256-build.log.gz": "1f490419c35430ff6e291c828a28b8255498da94fc2223793af8e1c3e73657f9"
+  },
+  "measurements": {
+    "timing": {
+      "timing-baseline4": {
+        "query_count": 512,
+        "median_prepare_ns": 134875.0,
+        "median_kinematics_ns": 18073354.5,
+        "median_materialize_ns": 68000.0,
+        "elapsed_seconds": 30.952621791977435
+      },
+      "timing-width2564": {
+        "query_count": 512,
+        "median_prepare_ns": 134479.5,
+        "median_kinematics_ns": 3467813.0,
+        "median_materialize_ns": 67937.5,
+        "elapsed_seconds": 14.895656042266637
+      },
+      "timing-ancestry4": {
+        "query_count": 512,
+        "median_prepare_ns": 134459.0,
+        "median_kinematics_ns": 1395104.0,
+        "median_materialize_ns": 67854.0,
+        "elapsed_seconds": 13.721006041858345
+      }
+    },
+    "source": {
+      "root-relative-100us": {
+        "maximum_path_error_m": 3.264740705555269e-07,
+        "maximum_source_force_error_n": 0.3852042117767809,
+        "maximum_normalized_source_force_error": 0.007363112725801898
+      },
+      "root-relative-1us": {
+        "maximum_path_error_m": 3.264740705555269e-07,
+        "maximum_source_force_error_n": 3.2901152769853184,
+        "maximum_normalized_source_force_error": 0.040309116623484166
+      },
+      "published-100us": {
+        "maximum_path_error_m": 3.264740705555269e-07,
+        "maximum_source_force_error_n": 0.3852042117767809,
+        "maximum_normalized_source_force_error": 0.007363112725801898
+      },
+      "published-1us": {
+        "maximum_path_error_m": 3.264740705555269e-07,
+        "maximum_source_force_error_n": 3.2901152769853184,
+        "maximum_normalized_source_force_error": 0.040309116623484166
+      }
+    },
+    "refinement": {
+      "refine-100us": {
+        "completed": true,
+        "accepted_roots": 16,
+        "duration_microseconds": 1600,
+        "terminal_root_position_m": [
+          -0.05000186711549759,
+          0.16250282526016235,
+          1.9449578523635864
+        ],
+        "terminal_root_velocity_m_s": [
+          -0.00234428234398365,
+          0.0022654314525425434,
+          -0.00024287294945679605
+        ],
+        "terminal_root_speed_m_s": 0.003269071220401957
+      },
+      "refine-50us-native": {
+        "completed": true,
+        "accepted_roots": 32,
+        "duration_microseconds": 1600,
+        "terminal_root_position_m": [
+          -0.050000157207250595,
+          0.16250115633010864,
+          1.9449576139450073
+        ],
+        "terminal_root_velocity_m_s": [
+          0.0034854430705308914,
+          0.00150931382086128,
+          0.0003812728973571211
+        ],
+        "terminal_root_speed_m_s": 0.003817291006723718
+      },
+      "refine-25us-components": {
+        "completed": false,
+        "accepted_roots": 8,
+        "duration_microseconds": 200,
+        "terminal_root_position_m": [
+          -0.049999773502349854,
+          0.16249962151050568,
+          1.9449574947357178
+        ],
+        "terminal_root_velocity_m_s": [
+          -0.001977037638425827,
+          0.0021112181711941957,
+          0.0013522310182452202
+        ],
+        "terminal_root_speed_m_s": 0.003192874679162563
+      },
+      "refine-25us-iterations32": {
+        "completed": false,
+        "accepted_roots": 8,
+        "duration_microseconds": 200,
+        "terminal_root_position_m": [
+          -0.049999773502349854,
+          0.16249962151050568,
+          1.9449574947357178
+        ],
+        "terminal_root_velocity_m_s": [
+          -0.001977037638425827,
+          0.0021112181711941957,
+          0.0013522310182452202
+        ],
+        "terminal_root_speed_m_s": 0.003192874679162563
+      },
+      "refine-25us-iterate-trace": {
+        "completed": false,
+        "accepted_roots": 8,
+        "duration_microseconds": 200,
+        "terminal_root_position_m": [
+          -0.049999773502349854,
+          0.16249962151050568,
+          1.9449574947357178
+        ],
+        "terminal_root_velocity_m_s": [
+          -0.001977037638425827,
+          0.0021112181711941957,
+          0.0013522310182452202
+        ],
+        "terminal_root_speed_m_s": 0.003192874679162563
+      },
+      "refine-100us-published": {
+        "completed": true,
+        "accepted_roots": 16,
+        "duration_microseconds": 1600,
+        "terminal_root_position_m": [
+          -0.05000186711549759,
+          0.16250282526016235,
+          1.9449578523635864
+        ],
+        "terminal_root_velocity_m_s": [
+          -0.00234428234398365,
+          0.0022654314525425434,
+          -0.00024287294945679605
+        ],
+        "terminal_root_speed_m_s": 0.003269071220401957
+      },
+      "refine-50us-published": {
+        "completed": true,
+        "accepted_roots": 32,
+        "duration_microseconds": 1600,
+        "terminal_root_position_m": [
+          -0.050000157207250595,
+          0.16250115633010864,
+          1.9449576139450073
+        ],
+        "terminal_root_velocity_m_s": [
+          0.0034854430705308914,
+          0.00150931382086128,
+          0.0003812728973571211
+        ],
+        "terminal_root_speed_m_s": 0.003817291006723718
+      },
+      "refine-25us-published": {
+        "completed": false,
+        "accepted_roots": 8,
+        "duration_microseconds": 200,
+        "terminal_root_position_m": [
+          -0.049999773502349854,
+          0.16249962151050568,
+          1.9449574947357178
+        ],
+        "terminal_root_velocity_m_s": [
+          -0.001977037638425827,
+          0.0021112181711941957,
+          0.0013522310182452202
+        ],
+        "terminal_root_speed_m_s": 0.003192874679162563
+      }
+    },
+    "coupled": {
+      "scenarios": 4,
+      "accepted_roots_per_scenario": 64,
+      "seconds_per_scenario": 0.0064,
+      "replay": "bitwise",
+      "dropout_matches_zero": true,
+      "first_dropout_difference": null,
+      "maximum_delivered_excitation": 0.2301870584487915,
+      "terminal_activation_difference": 0.04986739158630371,
+      "terminal_applied_force_difference": 7.95709228515625,
+      "recruited": {
+        "right_ankle_velocity_rad_s": 0.011837114579975605,
+        "root_linear_speed_m_s": 0.03197626701489825,
+        "maximum_root_linear_speed_m_s": 0.03440608128323019
+      },
+      "zero": {
+        "right_ankle_velocity_rad_s": 0.04065582528710365,
+        "root_linear_speed_m_s": 0.040403257072044556,
+        "maximum_root_linear_speed_m_s": 0.04228667247053946
+      }
+    },
+    "coupled_elapsed_seconds": 152.51333354227245,
+    "contact_failure": {
+      "iterations": 17,
+      "support_residual_norm": 0.008712247856006106,
+      "worst_contact_row": 5,
+      "worst_contact_residual": [
+        0.0004785112978424877,
+        0.0009019440622068942,
+        0.00807642936706543
+      ],
+      "observed_root_z_spacing_m": 1.1920928955078125e-07,
+      "root_vertical_steps": [
+        {
+          "stored_root_z_change_m": 0.0,
+          "requested_root_z_change_m": 5.631710955640301e-08
+        },
+        {
+          "stored_root_z_change_m": 0.0,
+          "requested_root_z_change_m": -2.4844222934916618e-08
+        },
+        {
+          "stored_root_z_change_m": 0.0,
+          "requested_root_z_change_m": -1.8248894775751978e-09
+        },
+        {
+          "stored_root_z_change_m": 0.0,
+          "requested_root_z_change_m": -1.0988929716404527e-09
+        },
+        {
+          "stored_root_z_change_m": 0.0,
+          "requested_root_z_change_m": 2.433127083349973e-08
+        },
+        {
+          "stored_root_z_change_m": 1.1920928955078125e-07,
+          "requested_root_z_change_m": 1.371105608996004e-08
+        },
+        {
+          "stored_root_z_change_m": -1.1920928955078125e-07,
+          "requested_root_z_change_m": -9.0834399452433e-08
+        },
+        {
+          "stored_root_z_change_m": 0.0,
+          "requested_root_z_change_m": 5.257166922092438e-08
+        },
+        {
+          "stored_root_z_change_m": 0.0,
+          "requested_root_z_change_m": 1.6554300964344294e-08
+        },
+        {
+          "stored_root_z_change_m": 1.1920928955078125e-07,
+          "requested_root_z_change_m": 2.1383898274507376e-08
+        },
+        {
+          "stored_root_z_change_m": -1.1920928955078125e-07,
+          "requested_root_z_change_m": -1.3123115058988334e-08
+        },
+        {
+          "stored_root_z_change_m": 0.0,
+          "requested_root_z_change_m": -5.938551621511579e-08
+        },
+        {
+          "stored_root_z_change_m": 0.0,
+          "requested_root_z_change_m": 3.45277541782707e-08
+        },
+        {
+          "stored_root_z_change_m": 0.0,
+          "requested_root_z_change_m": 2.157447743229568e-08
+        },
+        {
+          "stored_root_z_change_m": 1.1920928955078125e-07,
+          "requested_root_z_change_m": 1.2419011909514666e-08
+        },
+        {
+          "stored_root_z_change_m": -1.1920928955078125e-07,
+          "requested_root_z_change_m": -1.1275371070951224e-08
+        }
+      ]
+    },
+    "independent_source_path_error_m": 3.15906893422202e-07
+  }
+}
