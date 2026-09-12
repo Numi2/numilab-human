@@ -672,8 +672,11 @@ rather than becoming idle.
   wall source](CARDIAC_WALL_ANATOMY_20260912.md) now imports 1,470,083 tetrahedra,
   regional labels and fibre fields with matching boundary node identities.
   Thirty-one boundary-edge defects and authored numerical closure faces remain
-  explicit. Per-element native material fields, physical ports and calibration
-  remain unqualified.
+  explicit. [Native per-element material frames and source passive laws](CARDIAC_MATERIAL_FIELD_20260912.md)
+  now pass FP64/Metal force/tangent and bounded synthetic transaction checks.
+  Source-bound basis conversion, shared-node regional material/density assembly,
+  physical ports and calibration remain unqualified. A coordinate-preserving
+  node split cannot resolve the ventricular geometry gate.
   The other 17 aggregates have no anatomy registration, and the 18-region template
   retains 276 unresolved parameters.
 - **Active frontier:** admit a matching anatomical wall/lumen mesh and physical

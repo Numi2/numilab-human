@@ -1,0 +1,31 @@
+UpdateCTestConfiguration  from :/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Parse Config file:/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Test project /Users/n/MetalRobo-human-completion-build-20260907
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 104
+    Start 104: matter.compiler.cardiac_material_source
+
+104: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-cardiac-material-check "/Users/n/MetalRobo-human-completion-20260907/matter/materials/rodero2021_ventricular_guccione_passive.nmatter" "/Users/n/MetalRobo-human-completion-20260907/matter/materials/rodero2021_nonventricular_neo_hookean_passive.nmatter"
+104: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+104: Test timeout computed to be: 120
+104: {"status":"pass","physical_steps":0,"metal_executed":false,"states":95,"scalar_comparisons":1710,"maximum_energy_error":1.5181268990236151e-13,"maximum_stress_error":6.9446835133226751e-15,"maximum_tangent_error":1.653436493828989e-15,"maximum_stress_fd_error":4.0744518870140228e-08,"maximum_tangent_fd_error":5.8175475712787898e-10,"maximum_covariance_error":2.2204460492503131e-13,"density_sentinel_rejected":true,"mixed_source_equivalent":false,"subject_calibrated":false}
+1/1 Test #104: matter.compiler.cardiac_material_source ...   Passed    0.52 sec
+
+The following tests passed:
+	matter.compiler.cardiac_material_source
+
+100% tests passed out of 1
+
+Label Time Summary:
+cardiac     =   0.52 sec*proc (1 test)
+compiler    =   0.52 sec*proc (1 test)
+human       =   0.52 sec*proc (1 test)
+material    =   0.52 sec*proc (1 test)
+matter      =   0.52 sec*proc (1 test)
+
+Total Test time (real) =   0.53 sec

@@ -26,6 +26,10 @@ storage does not acquire absolute blood volumes from CVSim21.
 with 1,470,083 tetrahedra, regional labels, fibre/sheet fields and matching
 boundary indices. Its source defects and numerical closure faces remain explicit;
 anatomical mechanics and calibration are still unqualified.
+The [native material-field increment](Docs/CARDIAC_MATERIAL_FIELD_20260912.md)
+adds per-tetrahedron material frames and source cardiac passive laws, with
+Mac mini force/tangent, replay and transaction checks. Source density, regional
+assembly, anatomical wall admission and subject calibration remain open.
 
 [Current-pose foot contact](Docs/CURVED_SUPPORT_20260908.md) now covers the source
 capsules and heel ellipsoids. The [source dynamic-limit integration](Docs/SOURCE_DYNAMIC_LIMITS_20260908.md)

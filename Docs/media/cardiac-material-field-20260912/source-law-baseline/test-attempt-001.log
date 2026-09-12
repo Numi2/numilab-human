@@ -1,0 +1,34 @@
+UpdateCTestConfiguration  from :/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Parse Config file:/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Test project /Users/n/MetalRobo-human-completion-build-20260907
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 104
+    Start 104: matter.compiler.cardiac_material_source
+
+104: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-cardiac-material-check "/Users/n/MetalRobo-human-completion-20260907/matter/materials/rodero2021_ventricular_guccione_passive.nmatter" "/Users/n/MetalRobo-human-completion-20260907/matter/materials/rodero2021_nonventricular_neo_hookean_passive.nmatter"
+104: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+104: Test timeout computed to be: 120
+104: cardiac material check failed: source law violates superposed spatial-rotation covariance
+1/1 Test #104: matter.compiler.cardiac_material_source ...***Failed    0.55 sec
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+cardiac     =   0.55 sec*proc (1 test)
+compiler    =   0.55 sec*proc (1 test)
+human       =   0.55 sec*proc (1 test)
+material    =   0.55 sec*proc (1 test)
+matter      =   0.55 sec*proc (1 test)
+
+Total Test time (real) =   0.55 sec
+
+The following tests FAILED:
+	104 - matter.compiler.cardiac_material_source (Failed)  cardiac compiler human material matter
+Errors while running CTest
+Output from these tests are in: /Users/n/MetalRobo-human-completion-build-20260907/Testing/Temporary/LastTest.log
+Use "--rerun-failed --output-on-failure" to re-run the failed cases verbosely.

@@ -103,6 +103,25 @@ reject changed source semantics, missing buffer records, altered bytes and a
 false mechanics promotion. Its result is geometry evidence only.
 See [evidence](media/cardiac-wall-anatomy-20260912/qualification.json).
 
+### Coordinate-preserving node separation does not resolve the source defects
+
+The [independent tetrahedral-star audit](media/cardiac-material-field-20260912/source-defects/REPORT.md)
+tests the finest coincident-node separation that preserves every existing shared
+tetrahedral face. Nineteen added node identities reduce the 31 edge defects and
+47 bad vertex links to two and four. The remaining LV and exterior edges have
+explicit shared-face paths proving that further node separation must break an
+existing tissue-face connection. All source coordinates, cells, labels and
+per-label volumes remain unchanged in this scratch experiment.
+
+The RV candidate becomes an abstract closed boundary, but eight exact forbidden
+face-contact pairs remain in its geometry. Across the 29 abstractly resolved
+edges, 116 such pairs remain. Node separation therefore does not establish an
+embedded cavity and also releases the original shared-node mechanical constraints.
+No repaired mesh was admitted. The RV tissue-volume discrepancy remains unresolved;
+neither adjacent valve-layer labels nor the supplied ventricular coordinate field
+identifies the missing 2.415755 mL. Commands, hashes, exact witnesses and the retained
+failed script attempt are preserved with the audit.
+
 ## Mechanics and calibration ownership
 
 The [source mechanics supplement](https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1008851.s004&type=supplementary)

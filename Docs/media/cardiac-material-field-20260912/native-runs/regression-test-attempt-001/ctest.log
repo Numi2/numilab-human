@@ -1,0 +1,56 @@
+Test project /Users/n/MetalRobo-human-completion-build-20260907
+      Start  12: matter.numi_human.tendon_fem_transaction
+ 1/19 Test  #12: matter.numi_human.tendon_fem_transaction ...........   Passed    0.90 sec
+      Start  13: matter.runtime.snapshot_archive
+ 2/19 Test  #13: matter.runtime.snapshot_archive ....................   Passed    0.31 sec
+      Start  16: matter.physics.mixed_mpm_fem
+ 3/19 Test  #16: matter.physics.mixed_mpm_fem .......................   Passed    0.76 sec
+      Start  17: matter.physics.monolithic_multiphysics
+ 4/19 Test  #17: matter.physics.monolithic_multiphysics .............   Passed    0.08 sec
+      Start  18: matter.physics.topology_mutation
+ 5/19 Test  #18: matter.physics.topology_mutation ...................   Passed    0.04 sec
+      Start  19: matter.physics.cohesive_mutation
+ 6/19 Test  #19: matter.physics.cohesive_mutation ...................   Passed    0.47 sec
+      Start  20: matter.physics.small_scale_topology_conservation
+ 7/19 Test  #20: matter.physics.small_scale_topology_conservation ...   Passed    0.04 sec
+      Start  21: matter.physics.puncture_mutation
+ 8/19 Test  #21: matter.physics.puncture_mutation ...................   Passed    0.34 sec
+      Start  22: matter.runtime.topology_rollback
+ 9/19 Test  #22: matter.runtime.topology_rollback ...................   Passed    0.04 sec
+      Start  23: matter.physics.learned_polyconvex_icnn
+10/19 Test  #23: matter.physics.learned_polyconvex_icnn .............   Passed    0.13 sec
+      Start  24: matter.runtime.production_transaction_rollback
+11/19 Test  #24: matter.runtime.production_transaction_rollback .....   Passed    0.04 sec
+      Start  25: matter.physics.stateful_mpm
+12/19 Test  #25: matter.physics.stateful_mpm ........................   Passed    1.92 sec
+      Start  26: matter.physics.stateful_fem
+13/19 Test  #26: matter.physics.stateful_fem ........................   Passed    0.84 sec
+      Start 106: matter.compiler.stateful_roundtrip
+14/19 Test #106: matter.compiler.stateful_roundtrip .................   Passed    0.33 sec
+      Start 107: matter.compiler.source_fiber
+15/19 Test #107: matter.compiler.source_fiber .......................   Passed    0.34 sec
+      Start 108: matter.metal.source_fiber
+16/19 Test #108: matter.metal.source_fiber ..........................   Passed    0.16 sec
+      Start 109: matter.compiler.vascular
+17/19 Test #109: matter.compiler.vascular ...........................   Passed    0.38 sec
+      Start 115: matter.metal.cardiac_transaction
+18/19 Test #115: matter.metal.cardiac_transaction ...................   Passed    0.33 sec
+      Start 118: matter.metal.vascular_cavity
+19/19 Test #118: matter.metal.vascular_cavity .......................   Passed   10.59 sec
+
+100% tests passed out of 19
+
+Label Time Summary:
+cavity        =  10.59 sec*proc (1 test)
+checkpoint    =   0.31 sec*proc (1 test)
+compiler      =   0.70 sec*proc (2 tests)
+human         =  11.80 sec*proc (5 tests)
+material      =   0.50 sec*proc (2 tests)
+matter        =  18.04 sec*proc (19 tests)
+metal         =  16.53 sec*proc (14 tests)
+numi-human    =   0.90 sec*proc (1 test)
+physics       =   5.60 sec*proc (12 tests)
+stateful      =   0.33 sec*proc (1 test)
+vascular      =  11.30 sec*proc (3 tests)
+
+Total Test time (real) =  18.05 sec

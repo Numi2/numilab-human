@@ -1,0 +1,438 @@
+{
+  "schema": "numilab-human.cardiac-material-field-qualification.v1",
+  "status": "pass_bounded_native_constitutive_and_transaction",
+  "native": {
+    "repository": "https://github.com/Numi2/numi-lab",
+    "branch": "coupled",
+    "revision": "29a4d3ec81f2e265c0a709400559e16185ef13a1",
+    "base_revision": "f73b07133d09ceb9ed7ff94d48d5863157f2527b",
+    "published_source_blobs_match_qualified_bytes": true,
+    "source_files": {
+      "include/metalrobo/MatterSnapshotArchive.hpp": {
+        "sha256": "9ba44cdf6825cd2a33b4402f81674a5231394ee7061c89dd53f8e1c13a43babb",
+        "bytes": 1762
+      },
+      "matter/CMakeLists.txt": {
+        "sha256": "e669406c2ce576742c9ff190eef9ccfa043633571c02d4a847afaa38d0f0b03e",
+        "bytes": 17723
+      },
+      "matter/include/numi/matter/matter.hpp": {
+        "sha256": "bb367b2ddd8451b2e1c1530feb0ca6f43f42835e00c7ea367354f12e552d3580",
+        "bytes": 66251
+      },
+      "matter/include/numi/matter/shared.h": {
+        "sha256": "819984d572a0d7927b3b8cca7286be2dcb4c9ec69079219cdc22ba9e0bc8257c",
+        "bytes": 44124
+      },
+      "matter/src/accepted_state_proof_gpu.hpp": {
+        "sha256": "0bbd9c5f03cb6601c10ea88e51c6a7fa0d1f5f7faed703bfb6f5a9c7036bc121",
+        "bytes": 4387
+      },
+      "matter/src/compiler_impl.cpp": {
+        "sha256": "0a42bc0a889cb3312f6252cda60e49ad3a2851172a8e7abc715106d809e441c3",
+        "bytes": 108832
+      },
+      "matter/src/metal/fem.metalinc": {
+        "sha256": "49c23ea27713f3e24e87bdc1b208a8142ba657e0b29af9d331f907bbead08c42",
+        "bytes": 89468
+      },
+      "matter/src/package_impl.cpp": {
+        "sha256": "761799d2d5ac4673b625d43d78061d7ab7c95e225ab1107b28abb2f61b7ab4ab",
+        "bytes": 38641
+      },
+      "matter/src/runtime.mm": {
+        "sha256": "fc178166cbd32e2060eb5f8d7eb22efdcd9cd339c0b9041144409945f12b83b9",
+        "bytes": 647238
+      },
+      "matter/src/validation_impl.cpp": {
+        "sha256": "529aa25d4450eac7ce787cea448936cfbfd3d68de4d6d61f452fd6a4c4470496",
+        "bytes": 84123
+      },
+      "matter/materials/rodero2021_nonventricular_neo_hookean_passive.nmatter": {
+        "sha256": "8cc7f3e1936e4303a011b40ff287431a99be861a51a11e82913d630371825b00",
+        "bytes": 1351
+      },
+      "matter/materials/rodero2021_ventricular_guccione_passive.nmatter": {
+        "sha256": "dd37136f93104ffe058ec334153707d4610be4b3ca6f95938ebee0a7d5799db4",
+        "bytes": 2412
+      },
+      "matter/tools/cardiac_material_check.cpp": {
+        "sha256": "4ce63b1e5a34b9c0fbd852e207365f9a08f7b9ee912e90341fb7a7a1afe7b0c4",
+        "bytes": 15368
+      },
+      "matter/tools/cardiac_material_reference.hpp": {
+        "sha256": "3d2ecdb04f07a89c8d59e8527c5ae3bc440f909e9f5c540c3765b181756df800",
+        "bytes": 5926
+      },
+      "matter/tools/fem_material_frame_check.mm": {
+        "sha256": "ae022be6f79c8cc84edb990fcfa2f8059893d7e2a28e883eb6d612a1b4afed54",
+        "bytes": 32439
+      },
+      "matter/tools/fem_material_frame_compiler_check.cpp": {
+        "sha256": "f61abc28d9139624512f4dea2ef09065ca6cd62db0dc79d0cef9bb7217b6afae",
+        "bytes": 7876
+      }
+    },
+    "binaries": {
+      "matter/numi-matter-cardiac-material-check": {
+        "sha256": "513453c7180221afbdb0fa008cffd87c9ca1a81a591f6bb25953047f942e3f64",
+        "bytes": 478688
+      },
+      "matter/numi-matter-fem-material-frame-compiler-check": {
+        "sha256": "04ac7356c1bef0df8313c131095c087b603de7cacc2f567fb22b74abadac0162",
+        "bytes": 575200
+      },
+      "matter/numi-matter-fem-material-frame-check": {
+        "sha256": "2ac64990d8d5be5c9345e728e33f09dbd0b18d936398842ddb7c085487989bb4",
+        "bytes": 1156120
+      },
+      "matter/shaders/NumiMatter.metallib": {
+        "sha256": "c2fee2c35f21073ae41fa65b141e09cd8375ff96d2e850a2a2bfbf2739c3fab3",
+        "bytes": 2776166
+      },
+      "bin/metalrobo_matter_physics_probe": {
+        "sha256": "2b4cbde47bec71d902e465d3e2891d22ccaef0b7a00f7d1de301ed4e816a725b",
+        "bytes": 486096
+      },
+      "bin/metalrobo_matter_snapshot_archive_probe": {
+        "sha256": "9c2facce4aa7c740ae26094a85d7d22b797582a36c3fe01374fdb6ec44802f8f",
+        "bytes": 65336
+      },
+      "bin/metalrobo_numilab_human_tendon_fem_load_probe": {
+        "sha256": "04581c9813e40ea360e6b8ef44539ba0510b52619b9243264bb693cb4e1be79e",
+        "bytes": 94464
+      },
+      "matter/numi-matter-stateful-check": {
+        "sha256": "ca16ead06d26c9b5f1a5ca26c1d45c7ccda9615414bad5b63c9a8c7ac7712f1e",
+        "bytes": 550312
+      },
+      "matter/numi-matter-vascular-cavity-check": {
+        "sha256": "fcc00da3c8a57084d4b39631fb65fd86c44b9aea137e5bc2597205c64ec97155",
+        "bytes": 1128720
+      },
+      "matter/numi-matter-vascular-compiler-check": {
+        "sha256": "590f6cb7639354119a11b796da4eba1df359891748fc1d1bb703aa7bf8f13923",
+        "bytes": 648464
+      },
+      "matter/numi-matter-fiber-check": {
+        "sha256": "ebc497954e2542ac48ed6152f0fb4a042cd416fe3cfe1fbe0d9207470ced81ab",
+        "bytes": 211880
+      },
+      "matter/numi-matter-cardiac-transaction-check": {
+        "sha256": "5e714189c04ad60677d71b5cce40b1f385de1c916400576e60cfb0fec707bbd9",
+        "bytes": 90504
+      }
+    },
+    "host": {
+      "hardware": "Mac16,11",
+      "cpu": "Apple M4 Pro",
+      "memory_bytes": 25769803776,
+      "os": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6\nBuildVersion:\t\t25G72"
+    },
+    "abi": 30,
+    "package_version": 15,
+    "snapshot_archive_version": 8,
+    "accepted_proof_manifest_version": 8
+  },
+  "human_source_revision": "ae6aaa97afd6c139969025a83aa04644856667e5",
+  "qualification": {
+    "distinct_ctest_checks": 22,
+    "passed": 22,
+    "failed": 0,
+    "skipped": 0,
+    "tests": [
+      "matter.compiler.cardiac_material_source",
+      "matter.compiler.fem_material_frame",
+      "matter.metal.fem_material_frame",
+      "matter.numi_human.tendon_fem_transaction",
+      "matter.runtime.snapshot_archive",
+      "matter.physics.mixed_mpm_fem",
+      "matter.physics.monolithic_multiphysics",
+      "matter.physics.topology_mutation",
+      "matter.physics.cohesive_mutation",
+      "matter.physics.small_scale_topology_conservation",
+      "matter.physics.puncture_mutation",
+      "matter.runtime.topology_rollback",
+      "matter.physics.learned_polyconvex_icnn",
+      "matter.runtime.production_transaction_rollback",
+      "matter.physics.stateful_mpm",
+      "matter.physics.stateful_fem",
+      "matter.compiler.stateful_roundtrip",
+      "matter.compiler.source_fiber",
+      "matter.metal.source_fiber",
+      "matter.compiler.vascular",
+      "matter.metal.cardiac_transaction",
+      "matter.metal.vascular_cavity"
+    ],
+    "source_law": {
+      "status": "pass",
+      "physical_steps": 0,
+      "metal_executed": false,
+      "states": 95,
+      "scalar_comparisons": 1710,
+      "maximum_energy_error": 1.518126899023615e-13,
+      "maximum_stress_error": 6.944683513322675e-15,
+      "maximum_tangent_error": 1.653436493828989e-15,
+      "maximum_stress_fd_error": 4.074451887014023e-08,
+      "maximum_tangent_fd_error": 5.81754757127879e-10,
+      "maximum_covariance_error": 2.220446049250313e-13,
+      "density_sentinel_rejected": true,
+      "mixed_source_equivalent": false,
+      "subject_calibrated": false
+    },
+    "metal_metrics": {
+      "abi": 30.0,
+      "source_frame_force_error": 9.034896997394507e-07,
+      "source_frame_tangent_error": 2.408871360461713e-07,
+      "source_frame_fd_error": 0.0018985037968984153,
+      "identity_error": 0.0,
+      "anisotropic_angular_consequence": 0.005751563826288382,
+      "synthetic_state_rate_force_error": 5.480877547577665e-08,
+      "synthetic_state_rate_tangent_error": 2.603901668232025e-06,
+      "synthetic_state_rate_fd_error": 1.3026630216087603e-06,
+      "mixed_active_force_error": 1.0115523359873733e-07,
+      "mixed_active_tangent_error": 1.9138180633217196e-07,
+      "mixed_active_fd_error": 0.00014447508831119007,
+      "framed_icnn_force_error": 2.5056373622279655e-07,
+      "framed_icnn_tangent_error": 4.224286745608487e-08,
+      "framed_icnn_fd_error": 0.0011090525313200306,
+      "framed_icnn_world_fibre_force_error": 2.0910758320286181e-07,
+      "framed_icnn_world_fibre_tangent_error": 5.4983434590826474e-08,
+      "framed_icnn_angular_consequence": 0.8702782410206166,
+      "accepted_steps": 16.0,
+      "environments": 2.0,
+      "motion_m": 4.395736311293541e-05
+    },
+    "synthetic_fixture": {
+      "nodes": 5,
+      "tetrahedra": 2,
+      "shared_face": true,
+      "distinct_material_frames": 2,
+      "environments": 2,
+      "accepted_steps_per_environment": 16,
+      "step_seconds": 0.0001,
+      "duration_seconds_per_environment": 0.0016,
+      "density_kg_m3": 1000,
+      "density_is_test_only": true,
+      "motion_m": 4.395736311293541e-05,
+      "replay_nodes_fields_material_and_tetrahedra": "bitwise",
+      "rollback_rejected_environment_nodes_material_and_tetrahedra": "bitwise",
+      "reset_nodes_and_tetrahedra": "bitwise",
+      "nodal_mass": "bitwise_unchanged",
+      "snapshot_tamper_controls": 9
+    },
+    "direct_oracle_relative_gate": 0.0003,
+    "direct_fd_relative_gate": 0.003,
+    "cpu_reference_physical_steps": 0,
+    "unused_fused_helper_executed": false,
+    "trained_material_qualified": false
+  },
+  "evidence_boundaries": {
+    "source_passive_energy_reproduced": true,
+    "native_per_element_frame_infrastructure": true,
+    "imported_source_frame_conversion_implemented": false,
+    "shared_node_regional_material_assembly": false,
+    "source_density_supplied": false,
+    "anatomical_wall_qualified": false,
+    "native_source_anatomy_physical_steps": 0,
+    "active_cardiac_source_reproduced": false,
+    "subject_calibrated": false,
+    "blood_mechanical_mass_partition": false,
+    "whole_body_standing_or_walking": false,
+    "performance_qualified": false
+  },
+  "retained_failures": [
+    {
+      "paths": [
+        "source-law-baseline/test-attempt-001.log",
+        "source-law-baseline/test-attempt-002.log"
+      ],
+      "reason": "Near-zero rotated energy cancellation at stiffest source c; changed test comparison to explicit 1000 Pa normalization, retained normalized gate and source equations."
+    },
+    {
+      "paths": [
+        "native-runs/build-attempt-001/build.log"
+      ],
+      "reason": "Requested nonexistent numi_matter target; corrected to numi_matter_runtime before qualification."
+    },
+    {
+      "paths": [
+        "source-defects/split-contacts-attempt001.log",
+        "source-defects/audit_split_contacts-attempt001.py"
+      ],
+      "reason": "Source audit script syntax failure; exact attempted bytes and corrected execution retained."
+    }
+  ],
+  "review_repairs": [
+    "Frame snapshot checks moved outside generation-dependent incidence rebuild.",
+    "Complete immutable element record pinned to prevent frame rebinding through changed nodes/rest/material.",
+    "Immutable generation and adaptive representation changes rejected."
+  ],
+  "commands": {
+    "build_new": [
+      "cmake",
+      "--build",
+      "/Users/n/MetalRobo-human-completion-build-20260907",
+      "--target",
+      "numi-matter-cardiac-material-check",
+      "numi-matter-fem-material-frame-compiler-check",
+      "numi-matter-fem-material-frame-check",
+      "-j",
+      "2"
+    ],
+    "build_regressions": [
+      "cmake",
+      "--build",
+      "/Users/n/MetalRobo-human-completion-build-20260907",
+      "--target",
+      "metalrobo_matter_physics_probe",
+      "metalrobo_matter_snapshot_archive_probe",
+      "metalrobo_numilab_human_tendon_fem_load_probe",
+      "numi-matter-stateful-check",
+      "numi-matter-vascular-cavity-check",
+      "numi-matter-vascular-compiler-check",
+      "numi-matter-fiber-check",
+      "numi-matter-cardiac-transaction-check",
+      "-j",
+      "2"
+    ],
+    "focused_tests": [
+      "ctest",
+      "--test-dir",
+      "/Users/n/MetalRobo-human-completion-build-20260907",
+      "-R",
+      "^matter\\.(compiler\\.(cardiac_material_source|fem_material_frame)|metal\\.fem_material_frame)$",
+      "--output-on-failure",
+      "-V"
+    ],
+    "all_recorded_checks": [
+      "ctest",
+      "--test-dir",
+      "/Users/n/MetalRobo-human-completion-build-20260907",
+      "-R",
+      "^(matter\\.compiler\\.cardiac_material_source|matter\\.compiler\\.fem_material_frame|matter\\.metal\\.fem_material_frame|matter\\.numi_human\\.tendon_fem_transaction|matter\\.runtime\\.snapshot_archive|matter\\.physics\\.mixed_mpm_fem|matter\\.physics\\.monolithic_multiphysics|matter\\.physics\\.topology_mutation|matter\\.physics\\.cohesive_mutation|matter\\.physics\\.small_scale_topology_conservation|matter\\.physics\\.puncture_mutation|matter\\.runtime\\.topology_rollback|matter\\.physics\\.learned_polyconvex_icnn|matter\\.runtime\\.production_transaction_rollback|matter\\.physics\\.stateful_mpm|matter\\.physics\\.stateful_fem|matter\\.compiler\\.stateful_roundtrip|matter\\.compiler\\.source_fiber|matter\\.metal\\.source_fiber|matter\\.compiler\\.vascular|matter\\.metal\\.cardiac_transaction|matter\\.metal\\.vascular_cavity)$",
+      "--output-on-failure",
+      "-j",
+      "1"
+    ],
+    "reproduction_note": "Build the test executables first. Preliminary build logs are retained attempts, not separate qualification. The 22 checks ran as the recorded 3-test and 19-test groups; the expanded driver reran alone after its final test-only addition."
+  },
+  "artifacts": {
+    "native-runs/build-attempt-001/build.log": {
+      "sha256": "89cf5e202830d3e66ac9ee2e2cc75c49791de1431980efe9a88c5b68b3c85bf2",
+      "bytes": 73
+    },
+    "native-runs/build-attempt-002/build.log": {
+      "sha256": "31767dd1a2fbb882db8a727732e1d282d94bc3d21f45221bef62445d68cf0315",
+      "bytes": 1702
+    },
+    "native-runs/build-attempt-003/build.log": {
+      "sha256": "f60d1a20320cdf48fc09696b5343fcb22b9f8a7b7887d47a27800dbdb6cfa692",
+      "bytes": 819
+    },
+    "native-runs/build-attempt-004/build.log": {
+      "sha256": "10b36f0b7436554bf8e6abf9952dfdacec789a0b442af278549279d11d4bdcf5",
+      "bytes": 197
+    },
+    "native-runs/qualified-files.json": {
+      "sha256": "630d1950baeb7985662c92ebece1020f17d26f3f583df8a5a4392439a2e25f5f",
+      "bytes": 5628
+    },
+    "native-runs/regression-build-attempt-001/build.log": {
+      "sha256": "d49f2ebd2d996ea681b20cabb00e6ac1c7cdb2f431a71925a7dc04719b23ca2d",
+      "bytes": 1999
+    },
+    "native-runs/regression-test-attempt-001/ctest.log": {
+      "sha256": "5e2ffe39013c58d5e7ab2f160b75a952607dd0a5ea463821c7d3451b076effbb",
+      "bytes": 3305
+    },
+    "native-runs/test-attempt-001/ctest.log": {
+      "sha256": "052fc1671095a9e888b4eff8de8eb318aa28353745e84f0dec9b150d6f9e2e71",
+      "bytes": 6315
+    },
+    "native-runs/test-attempt-002/ctest.log": {
+      "sha256": "5c583a67f42af02559981137cae52478cd42efefdcfe15a283fab45d10e5c9b2",
+      "bytes": 2480
+    },
+    "source-defects/REPORT.md": {
+      "sha256": "0034166362f3156d7d49356be26a56a4113fbe3deef229bc211981ac4ecfc7ff",
+      "bytes": 8411
+    },
+    "source-defects/asset-manifest.json": {
+      "sha256": "7eb93af573b328c77f3960f3f9fb40e337356d64fa6fa3ff59e258d1959b0dee",
+      "bytes": 28180
+    },
+    "source-defects/audit_defects.py": {
+      "sha256": "d5c0fe021905290d0c8c030371963593a42fe2957bc8df48137400559a8849ab",
+      "bytes": 14443
+    },
+    "source-defects/audit_split_contacts-attempt001.py": {
+      "sha256": "5de1fc3433ca0706b3aacc1bafb459bdcb2e43d243f7bedb7e7116f9de07ceb7",
+      "bytes": 6066
+    },
+    "source-defects/audit_split_contacts.py": {
+      "sha256": "82e2bf2e54692e0c9e35f047ff7008959b2649b758df548b7163e5e04c048e97",
+      "bytes": 6071
+    },
+    "source-defects/boundary-audit.json": {
+      "sha256": "ffea96141ab67089f71ed04de8adf4f7132a59e74192edb17eaf8c3555475d32",
+      "bytes": 157818
+    },
+    "source-defects/ct-simulation_output.csv": {
+      "sha256": "3f59ea2e6388aa370efe9046ecd5b4fd8bee87037aa904f45a80356f3932edcd",
+      "bytes": 4028
+    },
+    "source-defects/evidence-index.json": {
+      "sha256": "a141b2455f1aaa31f9defd4deddd79744f05c7997d520a50033b051eade482a2",
+      "bytes": 2272
+    },
+    "source-defects/execution.json": {
+      "sha256": "360a6d26d334a2389e15a4119cf14b7127ffe83c8dd8cb79632f04d267a963e8",
+      "bytes": 6282
+    },
+    "source-defects/report.json": {
+      "sha256": "accc056f506072a4157a5c983a4970c831ac99202ea6b98114263c8a6f31e74c",
+      "bytes": 135832
+    },
+    "source-defects/run.log": {
+      "sha256": "7c90b8da8a169da6b95c3cd5f1de54d177eb81a807955bdcd4a5680b817e9f82",
+      "bytes": 569
+    },
+    "source-defects/split-contacts-attempt001.log": {
+      "sha256": "bf2f2592542efd2e4ff911c0d09891d3352ce8cdb7388121bd69cf30568c93e1",
+      "bytes": 390
+    },
+    "source-defects/split-contacts.json": {
+      "sha256": "ae006f56114810608866928762a778276d3f1271b414db86c1e2ccc3fb52ba89",
+      "bytes": 199711
+    },
+    "source-defects/split-contacts.log": {
+      "sha256": "fe5609dde675aba4599d69cbb628dadd105138fa50f54da0578e8015ec792922",
+      "bytes": 150
+    },
+    "source-law-baseline/build-attempt-001.log": {
+      "sha256": "876c3427370a29357d239a7199ae2575b065c52c31b0ad9f0fa67826a629afb7",
+      "bytes": 428
+    },
+    "source-law-baseline/build-attempt-002.log": {
+      "sha256": "f05276cfbb275817fdcbad5d2ce7879b554202557b5838cff7acc22148470ead",
+      "bytes": 189
+    },
+    "source-law-baseline/build-attempt-003.log": {
+      "sha256": "f05276cfbb275817fdcbad5d2ce7879b554202557b5838cff7acc22148470ead",
+      "bytes": 189
+    },
+    "source-law-baseline/test-attempt-001.log": {
+      "sha256": "15f249ff41802be0f18f094cf10cfac3a7df01b9e0e262ce0f77e30d35e0af4c",
+      "bytes": 1809
+    },
+    "source-law-baseline/test-attempt-002.log": {
+      "sha256": "014182e67833cc1429e3bcf768e5597a3ae3d9375c218aa249471eed30024011",
+      "bytes": 1951
+    },
+    "source-law-baseline/test-attempt-003.log": {
+      "sha256": "f1cbcf8a8582dec178a890a5225c262acdcbd5fe9142edcfd3c57e46118475d2",
+      "bytes": 1907
+    }
+  }
+}

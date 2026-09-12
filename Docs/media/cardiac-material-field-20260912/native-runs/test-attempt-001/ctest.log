@@ -1,0 +1,71 @@
+UpdateCTestConfiguration  from :/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Parse Config file:/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Test project /Users/n/MetalRobo-human-completion-build-20260907
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 104
+    Start 104: matter.compiler.cardiac_material_source
+
+104: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-cardiac-material-check "/Users/n/MetalRobo-human-completion-20260907/matter/materials/rodero2021_ventricular_guccione_passive.nmatter" "/Users/n/MetalRobo-human-completion-20260907/matter/materials/rodero2021_nonventricular_neo_hookean_passive.nmatter"
+104: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+104: Test timeout computed to be: 120
+104: {"status":"pass","physical_steps":0,"metal_executed":false,"states":95,"scalar_comparisons":1710,"maximum_energy_error":1.5181268990236151e-13,"maximum_stress_error":6.9446835133226751e-15,"maximum_tangent_error":1.653436493828989e-15,"maximum_stress_fd_error":4.0744518870140228e-08,"maximum_tangent_fd_error":5.8175475712787898e-10,"maximum_covariance_error":2.2204460492503131e-13,"density_sentinel_rejected":true,"mixed_source_equivalent":false,"subject_calibrated":false}
+1/3 Test #104: matter.compiler.cardiac_material_source ...   Passed    0.54 sec
+test 105
+    Start 105: matter.compiler.fem_material_frame
+
+105: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-fem-material-frame-compiler-check
+105: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+105: Test timeout computed to be: 60
+105: denied_source=missing identity diagnostic=material-local FEM frames require exact tetrahedron count and nonzero source identity; 
+105: denied_source=identity without frames diagnostic=material-local FEM frames require exact tetrahedron count and nonzero source identity; 
+105: denied_source=count mismatch diagnostic=material-local FEM frames require exact tetrahedron count and nonzero source identity; 
+105: denied_source=zero quaternion diagnostic=material-local FEM frame rotation must be finite and unit length; 
+105: denied_source=nonunit quaternion diagnostic=material-local FEM frame rotation must be finite and unit length; 
+105: denied_source=NaN quaternion diagnostic=material-local FEM frame rotation must be finite and unit length; 
+105: denied_source=infinite quaternion diagnostic=material-local FEM frame rotation must be finite and unit length; 
+105: denied_source=non-FEM representation diagnostic=material-local FEM frames require exact tetrahedron count and nonzero source identity; 
+105: denied_source=adaptive frame object diagnostic=material-local FEM frames require an immutable world until field transfer is supported; 
+105: denied_source=mutable frame object diagnostic=material-local FEM frames require an immutable world until field transfer is supported; 
+105: denied_source=authored mutation command diagnostic=material-local FEM frames require an immutable world until field transfer is supported; 
+105: denied_source=adaptive neighboring object diagnostic=material-local FEM frames require an immutable world until field transfer is supported; 
+105: denied_source=mutable neighboring object diagnostic=material-local FEM frames require an immutable world until field transfer is supported; 
+105: denied_cooked=nonunit frame diagnostic=FEM tetrahedron 0: material frame is nonunit or noncanonical for its owning object
+105: denied_cooked=NaN frame diagnostic=FEM tetrahedron 0: material frame is nonunit or noncanonical for its owning object
+105: denied_cooked=identity without flag diagnostic=continuum object 0: material frame identity or representation is invalid
+105: denied_cooked=flag without identity diagnostic=continuum object 0: material frame identity or representation is invalid
+105: denied_cooked=invented legacy frame diagnostic=FEM tetrahedron 0: material frame is nonunit or noncanonical for its owning object
+105: denied_cooked=cooked adaptive world diagnostic=Matter dispatch feature flags disagree with cooked programs
+105: PASS fem_material_frame_compiler checks=34 physical_steps=0 abi=30
+2/3 Test #105: matter.compiler.fem_material_frame ........   Passed    0.35 sec
+test 117
+    Start 117: matter.metal.fem_material_frame
+
+117: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-fem-material-frame-check "/Users/n/MetalRobo-human-completion-20260907/matter/materials/rodero2021_ventricular_guccione_passive.nmatter"
+117: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+117: Test timeout computed to be: 180
+117: frame_device=Apple M4 Pro abi=30
+117: source_frame_force_error=9.0348969973945068e-07 source_frame_tangent_error=2.4088713604617131e-07 source_frame_fd_error=0.0018985037968984153 identity_error=0 anisotropic_angular_consequence=0.0057515638262883818 synthetic_state_rate_force_error=5.4808775475776649e-08 synthetic_state_rate_tangent_error=2.6039016682320251e-06 synthetic_state_rate_fd_error=1.3026630216087603e-06 mixed_active_force_error=1.0115523359873733e-07 mixed_active_tangent_error=1.9138180633217196e-07 mixed_active_fd_error=0.00014447508831119007 mixed_source_equivalent=false
+117: accepted_steps=16 environments=2 motion_m=4.395736311293541e-05 replay=bitwise rollback=isolated reset=bitwise frame_snapshot_tamper=denied immutable_cell_rebinding=denied mass=unchanged
+117: fem_material_frame_check=pass anatomical_wall_qualified=false source_density_supplied=false active_cardiac_source_reproduced=false
+3/3 Test #117: matter.metal.fem_material_frame ...........   Passed   14.13 sec
+
+The following tests passed:
+	matter.compiler.cardiac_material_source
+	matter.compiler.fem_material_frame
+	matter.metal.fem_material_frame
+
+100% tests passed out of 3
+
+Label Time Summary:
+cardiac     =   0.54 sec*proc (1 test)
+compiler    =   0.54 sec*proc (1 test)
+human       =  15.01 sec*proc (3 tests)
+material    =  15.01 sec*proc (3 tests)
+matter      =  15.01 sec*proc (3 tests)
+
+Total Test time (real) =  15.02 sec

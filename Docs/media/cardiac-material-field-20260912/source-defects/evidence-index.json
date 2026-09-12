@@ -1,0 +1,25 @@
+{
+  "asset_manifest_note": "This is the exact existing remote asset manifest audited by these scripts; it differs from the later import manifest in cardiac-wall-anatomy evidence. Input buffer/source pins are retained verbatim, not rebound to the later manifest.",
+  "files": {
+    "REPORT.md": "0034166362f3156d7d49356be26a56a4113fbe3deef229bc211981ac4ecfc7ff",
+    "asset-manifest.json": "7eb93af573b328c77f3960f3f9fb40e337356d64fa6fa3ff59e258d1959b0dee",
+    "audit_defects.py": "d5c0fe021905290d0c8c030371963593a42fe2957bc8df48137400559a8849ab",
+    "audit_split_contacts-attempt001.py": "5de1fc3433ca0706b3aacc1bafb459bdcb2e43d243f7bedb7e7116f9de07ceb7",
+    "audit_split_contacts.py": "82e2bf2e54692e0c9e35f047ff7008959b2649b758df548b7163e5e04c048e97",
+    "boundary-audit.json": "ffea96141ab67089f71ed04de8adf4f7132a59e74192edb17eaf8c3555475d32",
+    "ct-simulation_output.csv": "3f59ea2e6388aa370efe9046ecd5b4fd8bee87037aa904f45a80356f3932edcd",
+    "execution.json": "360a6d26d334a2389e15a4119cf14b7127ffe83c8dd8cb79632f04d267a963e8",
+    "report.json": "accc056f506072a4157a5c983a4970c831ac99202ea6b98114263c8a6f31e74c",
+    "run.log": "7c90b8da8a169da6b95c3cd5f1de54d177eb81a807955bdcd4a5680b817e9f82",
+    "split-contacts-attempt001.log": "bf2f2592542efd2e4ff911c0d09891d3352ce8cdb7388121bd69cf30568c93e1",
+    "split-contacts.json": "ae006f56114810608866928762a778276d3f1271b414db86c1e2ccc3fb52ba89",
+    "split-contacts.log": "fe5609dde675aba4599d69cbb628dadd105138fa50f54da0578e8015ec792922"
+  },
+  "frozen_execution_owner_aliases": {
+    "Build/cardiac-wall-anatomy-20260912/atrial-audit/rodero-boundary/report.json": "boundary-audit.json",
+    "Build/cardiac-wall-anatomy-20260912/source-candidates/ct-simulation_output.csv": "ct-simulation_output.csv"
+  },
+  "reproduce": "Run audit_defects.py and audit_split_contacts.py with --help. Provide an existing asset whose manifest and buffers match asset-manifest.json. Use boundary-audit.json and ct-simulation_output.csv here; exact predicate owner is pinned in the contact script. Both scripts perform offline geometry checks, not physical stepping.",
+  "schema": "NumiHuman.Rodero18SourceDefectEvidenceIndex.v1",
+  "scope": "exact copies of frozen offline source-defect audit; no admitted repaired mesh"
+}

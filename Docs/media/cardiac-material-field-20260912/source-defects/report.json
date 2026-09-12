@@ -1,0 +1,6399 @@
+{
+  "asset_manifest_sha256": "7eb93af573b328c77f3960f3f9fb40e337356d64fa6fa3ff59e258d1959b0dee",
+  "boundary_audit_sha256": "ffea96141ab67089f71ed04de8adf4f7132a59e74192edb17eaf8c3555475d32",
+  "command": [
+    "/Users/n/human-cardiac-material-field-20260912/source-defects/audit_defects.py",
+    "--asset",
+    "/Users/n/human-cardiac-wall-anatomy-20260912/asset",
+    "--boundary-audit",
+    "/Users/n/human-cardiac-wall-anatomy-20260912/atrial-audit/rodero-boundary/report.json",
+    "--source-csv",
+    "/Users/n/human-cardiac-material-field-20260912/source-defects/ct-simulation_output.csv",
+    "--output",
+    "/Users/n/human-cardiac-material-field-20260912/source-defects/report.json"
+  ],
+  "edge_link_reports": [
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "11635": {
+              "cells": [
+                194329,
+                965498,
+                874892,
+                877240,
+                90757,
+                932235,
+                56207,
+                567184
+              ],
+              "shared_faces": [
+                [
+                  11635,
+                  45890,
+                  126710
+                ],
+                [
+                  11635,
+                  116753,
+                  126710
+                ],
+                [
+                  11635,
+                  126710,
+                  154692
+                ],
+                [
+                  11635,
+                  126710,
+                  205975
+                ],
+                [
+                  11635,
+                  155291,
+                  205975
+                ],
+                [
+                  11634,
+                  11635,
+                  155291
+                ],
+                [
+                  11635,
+                  155291,
+                  155292
+                ]
+              ]
+            },
+            "126709": null
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            194329
+          ],
+          "end_nodes": [
+            45890,
+            126710
+          ],
+          "endpoint_star_components": {
+            "11635": [
+              0
+            ],
+            "126709": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "126710": 1,
+            "45890": 1
+          },
+          "link_nodes": [
+            45890,
+            126710
+          ],
+          "source_label_counts": {
+            "3": 1
+          }
+        },
+        {
+          "cells": [
+            567184
+          ],
+          "end_nodes": [
+            155291,
+            155292
+          ],
+          "endpoint_star_components": {
+            "11635": [
+              0
+            ],
+            "126709": [
+              1
+            ]
+          },
+          "link_degrees": {
+            "155291": 1,
+            "155292": 1
+          },
+          "link_nodes": [
+            155291,
+            155292
+          ],
+          "source_label_counts": {
+            "4": 1
+          }
+        }
+      ],
+      "incident_cell_count": 2,
+      "link_component_count": 2,
+      "source_edge": [
+        11635,
+        126709
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "170947": null,
+            "26256": {
+              "cells": [
+                65176,
+                695418,
+                566560,
+                910927,
+                1185922,
+                488182,
+                1309400
+              ],
+              "shared_faces": [
+                [
+                  26256,
+                  26257,
+                  170947
+                ],
+                [
+                  26256,
+                  26257,
+                  164091
+                ],
+                [
+                  26255,
+                  26256,
+                  164091
+                ],
+                [
+                  26256,
+                  140585,
+                  164091
+                ],
+                [
+                  26256,
+                  164091,
+                  166036
+                ],
+                [
+                  26256,
+                  164090,
+                  166036
+                ]
+              ]
+            }
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            65176,
+            643008,
+            695418
+          ],
+          "end_nodes": [
+            164091,
+            293209
+          ],
+          "endpoint_star_components": {
+            "170947": [
+              0
+            ],
+            "26256": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "164091": 1,
+            "26257": 2,
+            "293209": 1,
+            "93340": 2
+          },
+          "link_nodes": [
+            26257,
+            93340,
+            164091,
+            293209
+          ],
+          "source_label_counts": {
+            "1": 3
+          }
+        },
+        {
+          "cells": [
+            1309400
+          ],
+          "end_nodes": [
+            164090,
+            166036
+          ],
+          "endpoint_star_components": {
+            "170947": [
+              1
+            ],
+            "26256": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "164090": 1,
+            "166036": 1
+          },
+          "link_nodes": [
+            164090,
+            166036
+          ],
+          "source_label_counts": {
+            "2": 1
+          }
+        }
+      ],
+      "incident_cell_count": 4,
+      "link_component_count": 2,
+      "source_edge": [
+        26256,
+        170947
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "122128": null,
+            "36861": {
+              "cells": [
+                166832,
+                472392,
+                1085941,
+                9863,
+                1145825,
+                868273,
+                562598,
+                910751
+              ],
+              "shared_faces": [
+                [
+                  28725,
+                  36861,
+                  205354
+                ],
+                [
+                  36859,
+                  36861,
+                  205354
+                ],
+                [
+                  30793,
+                  36859,
+                  36861
+                ],
+                [
+                  30793,
+                  36860,
+                  36861
+                ],
+                [
+                  36860,
+                  36861,
+                  224607
+                ],
+                [
+                  36861,
+                  224607,
+                  253217
+                ],
+                [
+                  36861,
+                  251285,
+                  253217
+                ]
+              ]
+            }
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            166832,
+            505130,
+            762128
+          ],
+          "end_nodes": [
+            60984,
+            261545
+          ],
+          "endpoint_star_components": {
+            "122128": [
+              0
+            ],
+            "36861": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "205354": 2,
+            "261545": 1,
+            "28725": 2,
+            "60984": 1
+          },
+          "link_nodes": [
+            28725,
+            60984,
+            205354,
+            261545
+          ],
+          "source_label_counts": {
+            "5": 3
+          }
+        },
+        {
+          "cells": [
+            910751
+          ],
+          "end_nodes": [
+            251285,
+            253217
+          ],
+          "endpoint_star_components": {
+            "122128": [
+              1
+            ],
+            "36861": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "251285": 1,
+            "253217": 1
+          },
+          "link_nodes": [
+            251285,
+            253217
+          ],
+          "source_label_counts": {
+            "3": 1
+          }
+        }
+      ],
+      "incident_cell_count": 4,
+      "link_component_count": 2,
+      "source_edge": [
+        36861,
+        122128
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "147833": {
+              "cells": [
+                165587,
+                1254411,
+                703201,
+                760517,
+                457835,
+                206245,
+                411048
+              ],
+              "shared_faces": [
+                [
+                  46421,
+                  147833,
+                  261056
+                ],
+                [
+                  117453,
+                  147833,
+                  261056
+                ],
+                [
+                  117452,
+                  117453,
+                  147833
+                ],
+                [
+                  117451,
+                  117453,
+                  147833
+                ],
+                [
+                  117451,
+                  147833,
+                  275489
+                ],
+                [
+                  147833,
+                  264353,
+                  275489
+                ]
+              ]
+            },
+            "46421": null
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            165587,
+            1005447,
+            1254411
+          ],
+          "end_nodes": [
+            117453,
+            293805
+          ],
+          "endpoint_star_components": {
+            "147833": [
+              0
+            ],
+            "46421": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "117453": 1,
+            "136215": 2,
+            "261056": 2,
+            "293805": 1
+          },
+          "link_nodes": [
+            117453,
+            136215,
+            261056,
+            293805
+          ],
+          "source_label_counts": {
+            "3": 3
+          }
+        },
+        {
+          "cells": [
+            411048
+          ],
+          "end_nodes": [
+            264353,
+            275489
+          ],
+          "endpoint_star_components": {
+            "147833": [
+              0
+            ],
+            "46421": [
+              1
+            ]
+          },
+          "link_degrees": {
+            "264353": 1,
+            "275489": 1
+          },
+          "link_nodes": [
+            264353,
+            275489
+          ],
+          "source_label_counts": {
+            "4": 1
+          }
+        }
+      ],
+      "incident_cell_count": 4,
+      "link_component_count": 2,
+      "source_edge": [
+        46421,
+        147833
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "275489": null,
+            "46421": null
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            1187754
+          ],
+          "end_nodes": [
+            46422,
+            117453
+          ],
+          "endpoint_star_components": {
+            "275489": [
+              1
+            ],
+            "46421": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "117453": 1,
+            "46422": 1
+          },
+          "link_nodes": [
+            46422,
+            117453
+          ],
+          "source_label_counts": {
+            "3": 1
+          }
+        },
+        {
+          "cells": [
+            411048,
+            830056
+          ],
+          "end_nodes": [
+            147833,
+            264784
+          ],
+          "endpoint_star_components": {
+            "275489": [
+              0
+            ],
+            "46421": [
+              1
+            ]
+          },
+          "link_degrees": {
+            "147833": 1,
+            "264353": 2,
+            "264784": 1
+          },
+          "link_nodes": [
+            147833,
+            264353,
+            264784
+          ],
+          "source_label_counts": {
+            "4": 2
+          }
+        }
+      ],
+      "incident_cell_count": 3,
+      "link_component_count": 2,
+      "source_edge": [
+        46421,
+        275489
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "48317": null,
+            "48320": {
+              "cells": [
+                13250,
+                962710,
+                259604,
+                890653,
+                1098700,
+                1293374,
+                396442
+              ],
+              "shared_faces": [
+                [
+                  48318,
+                  48319,
+                  48320
+                ],
+                [
+                  48319,
+                  48320,
+                  120982
+                ],
+                [
+                  48319,
+                  48320,
+                  190510
+                ],
+                [
+                  48320,
+                  190510,
+                  289532
+                ],
+                [
+                  48320,
+                  120124,
+                  289532
+                ],
+                [
+                  48320,
+                  120127,
+                  289532
+                ]
+              ]
+            }
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            13250,
+            313302,
+            655415
+          ],
+          "end_nodes": [
+            48319,
+            273747
+          ],
+          "endpoint_star_components": {
+            "48317": [
+              0
+            ],
+            "48320": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "239385": 2,
+            "273747": 1,
+            "48318": 2,
+            "48319": 1
+          },
+          "link_nodes": [
+            48318,
+            48319,
+            239385,
+            273747
+          ],
+          "source_label_counts": {
+            "3": 3
+          }
+        },
+        {
+          "cells": [
+            396442
+          ],
+          "end_nodes": [
+            120127,
+            289532
+          ],
+          "endpoint_star_components": {
+            "48317": [
+              1
+            ],
+            "48320": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "120127": 1,
+            "289532": 1
+          },
+          "link_nodes": [
+            120127,
+            289532
+          ],
+          "source_label_counts": {
+            "4": 1
+          }
+        }
+      ],
+      "incident_cell_count": 4,
+      "link_component_count": 2,
+      "source_edge": [
+        48317,
+        48320
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "289532": {
+              "cells": [
+                1048811,
+                670142,
+                282827,
+                955383,
+                890653,
+                1098700,
+                1293374,
+                396442
+              ],
+              "shared_faces": [
+                [
+                  48318,
+                  48319,
+                  289532
+                ],
+                [
+                  48319,
+                  280596,
+                  289532
+                ],
+                [
+                  48319,
+                  181427,
+                  289532
+                ],
+                [
+                  48319,
+                  190510,
+                  289532
+                ],
+                [
+                  48320,
+                  190510,
+                  289532
+                ],
+                [
+                  48320,
+                  120124,
+                  289532
+                ],
+                [
+                  48320,
+                  120127,
+                  289532
+                ]
+              ]
+            },
+            "48317": null
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            1048811,
+            1190216
+          ],
+          "end_nodes": [
+            48319,
+            277175
+          ],
+          "endpoint_star_components": {
+            "289532": [
+              0
+            ],
+            "48317": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "277175": 1,
+            "48318": 2,
+            "48319": 1
+          },
+          "link_nodes": [
+            48318,
+            48319,
+            277175
+          ],
+          "source_label_counts": {
+            "3": 2
+          }
+        },
+        {
+          "cells": [
+            396442
+          ],
+          "end_nodes": [
+            48320,
+            120127
+          ],
+          "endpoint_star_components": {
+            "289532": [
+              0
+            ],
+            "48317": [
+              1
+            ]
+          },
+          "link_degrees": {
+            "120127": 1,
+            "48320": 1
+          },
+          "link_nodes": [
+            48320,
+            120127
+          ],
+          "source_label_counts": {
+            "4": 1
+          }
+        }
+      ],
+      "incident_cell_count": 3,
+      "link_component_count": 2,
+      "source_edge": [
+        48317,
+        289532
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "223853": null,
+            "59341": {
+              "cells": [
+                190600,
+                107319,
+                500275,
+                1339465,
+                627263,
+                1108891,
+                1315072
+              ],
+              "shared_faces": [
+                [
+                  59339,
+                  59341,
+                  201949
+                ],
+                [
+                  59338,
+                  59341,
+                  201949
+                ],
+                [
+                  59341,
+                  201949,
+                  241865
+                ],
+                [
+                  59341,
+                  202469,
+                  241865
+                ],
+                [
+                  8893,
+                  59341,
+                  202469
+                ],
+                [
+                  59341,
+                  120061,
+                  202469
+                ]
+              ]
+            }
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            190600,
+            592656,
+            665632
+          ],
+          "end_nodes": [
+            73899,
+            201949
+          ],
+          "endpoint_star_components": {
+            "223853": [
+              0
+            ],
+            "59341": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "201949": 1,
+            "59339": 2,
+            "59340": 2,
+            "73899": 1
+          },
+          "link_nodes": [
+            59339,
+            59340,
+            73899,
+            201949
+          ],
+          "source_label_counts": {
+            "3": 3
+          }
+        },
+        {
+          "cells": [
+            1315072
+          ],
+          "end_nodes": [
+            120061,
+            202469
+          ],
+          "endpoint_star_components": {
+            "223853": [
+              1
+            ],
+            "59341": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "120061": 1,
+            "202469": 1
+          },
+          "link_nodes": [
+            120061,
+            202469
+          ],
+          "source_label_counts": {
+            "4": 1
+          }
+        }
+      ],
+      "incident_cell_count": 4,
+      "link_component_count": 2,
+      "source_edge": [
+        59341,
+        223853
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "223623": {
+              "cells": [
+                291483,
+                734641,
+                993532,
+                569531,
+                1169121,
+                421770,
+                455600
+              ],
+              "shared_faces": [
+                [
+                  4346,
+                  99026,
+                  223623
+                ],
+                [
+                  63854,
+                  99026,
+                  223623
+                ],
+                [
+                  63855,
+                  99026,
+                  223623
+                ],
+                [
+                  99026,
+                  223623,
+                  259671
+                ],
+                [
+                  223623,
+                  259671,
+                  284676
+                ],
+                [
+                  223623,
+                  284676,
+                  293153
+                ]
+              ]
+            },
+            "61325": null
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            291483,
+            378926,
+            1382852
+          ],
+          "end_nodes": [
+            99026,
+            230431
+          ],
+          "endpoint_star_components": {
+            "223623": [
+              0
+            ],
+            "61325": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "19633": 2,
+            "230431": 1,
+            "4346": 2,
+            "99026": 1
+          },
+          "link_nodes": [
+            4346,
+            19633,
+            99026,
+            230431
+          ],
+          "source_label_counts": {
+            "4": 3
+          }
+        },
+        {
+          "cells": [
+            455600
+          ],
+          "end_nodes": [
+            284676,
+            293153
+          ],
+          "endpoint_star_components": {
+            "223623": [
+              0
+            ],
+            "61325": [
+              1
+            ]
+          },
+          "link_degrees": {
+            "284676": 1,
+            "293153": 1
+          },
+          "link_nodes": [
+            284676,
+            293153
+          ],
+          "source_label_counts": {
+            "3": 1
+          }
+        }
+      ],
+      "incident_cell_count": 4,
+      "link_component_count": 2,
+      "source_edge": [
+        61325,
+        223623
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "128283": {
+              "cells": [
+                805903,
+                1212500,
+                382359,
+                372220,
+                622961,
+                614594,
+                1417903,
+                1184418
+              ],
+              "shared_faces": [
+                [
+                  7794,
+                  72422,
+                  128283
+                ],
+                [
+                  7794,
+                  128283,
+                  263863
+                ],
+                [
+                  128283,
+                  167988,
+                  263863
+                ],
+                [
+                  128283,
+                  189765,
+                  263863
+                ],
+                [
+                  128280,
+                  128283,
+                  263863
+                ],
+                [
+                  128280,
+                  128283,
+                  237180
+                ],
+                [
+                  128281,
+                  128283,
+                  237180
+                ]
+              ]
+            },
+            "72422": null
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            805903,
+            1212500
+          ],
+          "end_nodes": [
+            72423,
+            263863
+          ],
+          "endpoint_star_components": {
+            "128283": [
+              0
+            ],
+            "72422": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "263863": 1,
+            "72423": 1,
+            "7794": 2
+          },
+          "link_nodes": [
+            7794,
+            72423,
+            263863
+          ],
+          "source_label_counts": {
+            "4": 2
+          }
+        },
+        {
+          "cells": [
+            1184418
+          ],
+          "end_nodes": [
+            128281,
+            237180
+          ],
+          "endpoint_star_components": {
+            "128283": [
+              0
+            ],
+            "72422": [
+              1
+            ]
+          },
+          "link_degrees": {
+            "128281": 1,
+            "237180": 1
+          },
+          "link_nodes": [
+            128281,
+            237180
+          ],
+          "source_label_counts": {
+            "3": 1
+          }
+        }
+      ],
+      "incident_cell_count": 3,
+      "link_component_count": 2,
+      "source_edge": [
+        72422,
+        128283
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "237180": {
+              "cells": [
+                1184418,
+                1417903,
+                614594,
+                906316,
+                1378703,
+                460113,
+                360173
+              ],
+              "shared_faces": [
+                [
+                  128281,
+                  128283,
+                  237180
+                ],
+                [
+                  128280,
+                  128283,
+                  237180
+                ],
+                [
+                  128280,
+                  237180,
+                  263863
+                ],
+                [
+                  172590,
+                  237180,
+                  263863
+                ],
+                [
+                  133266,
+                  237180,
+                  263863
+                ],
+                [
+                  135043,
+                  237180,
+                  263863
+                ]
+              ]
+            },
+            "72422": null
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            1184418
+          ],
+          "end_nodes": [
+            128281,
+            128283
+          ],
+          "endpoint_star_components": {
+            "237180": [
+              0
+            ],
+            "72422": [
+              1
+            ]
+          },
+          "link_degrees": {
+            "128281": 1,
+            "128283": 1
+          },
+          "link_nodes": [
+            128281,
+            128283
+          ],
+          "source_label_counts": {
+            "3": 1
+          }
+        },
+        {
+          "cells": [
+            360173,
+            910355
+          ],
+          "end_nodes": [
+            263863,
+            279504
+          ],
+          "endpoint_star_components": {
+            "237180": [
+              0
+            ],
+            "72422": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "135043": 2,
+            "263863": 1,
+            "279504": 1
+          },
+          "link_nodes": [
+            135043,
+            263863,
+            279504
+          ],
+          "source_label_counts": {
+            "4": 2
+          }
+        }
+      ],
+      "incident_cell_count": 3,
+      "link_component_count": 2,
+      "source_edge": [
+        72422,
+        237180
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "286750": null,
+            "90824": {
+              "cells": [
+                1198812,
+                1001512,
+                880022,
+                994348,
+                591803,
+                1448921,
+                708565,
+                261512
+              ],
+              "shared_faces": [
+                [
+                  21941,
+                  90824,
+                  90825
+                ],
+                [
+                  21941,
+                  90824,
+                  234785
+                ],
+                [
+                  90824,
+                  234785,
+                  272857
+                ],
+                [
+                  90824,
+                  272856,
+                  272857
+                ],
+                [
+                  90824,
+                  219719,
+                  272857
+                ],
+                [
+                  90824,
+                  219719,
+                  286236
+                ],
+                [
+                  90824,
+                  206477,
+                  286236
+                ]
+              ]
+            }
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            1198812
+          ],
+          "end_nodes": [
+            21941,
+            90825
+          ],
+          "endpoint_star_components": {
+            "286750": [
+              1
+            ],
+            "90824": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "21941": 1,
+            "90825": 1
+          },
+          "link_nodes": [
+            21941,
+            90825
+          ],
+          "source_label_counts": {
+            "3": 1
+          }
+        },
+        {
+          "cells": [
+            261512,
+            914608,
+            1000599,
+            1033694
+          ],
+          "end_nodes": [
+            160967,
+            272857
+          ],
+          "endpoint_star_components": {
+            "286750": [
+              0
+            ],
+            "90824": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "160967": 1,
+            "206477": 2,
+            "210829": 2,
+            "272857": 1,
+            "286236": 2
+          },
+          "link_nodes": [
+            160967,
+            206477,
+            210829,
+            272857,
+            286236
+          ],
+          "source_label_counts": {
+            "5": 4
+          }
+        }
+      ],
+      "incident_cell_count": 5,
+      "link_component_count": 2,
+      "source_edge": [
+        90824,
+        286750
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "117453": {
+              "cells": [
+                332442,
+                37824,
+                760517,
+                703201,
+                1254411,
+                1032812,
+                613671,
+                234288,
+                597659
+              ],
+              "shared_faces": [
+                [
+                  33846,
+                  117451,
+                  117453
+                ],
+                [
+                  117451,
+                  117452,
+                  117453
+                ],
+                [
+                  117452,
+                  117453,
+                  147833
+                ],
+                [
+                  117453,
+                  147833,
+                  261056
+                ],
+                [
+                  46421,
+                  117453,
+                  261056
+                ],
+                [
+                  46419,
+                  117453,
+                  261056
+                ],
+                [
+                  46419,
+                  117453,
+                  279742
+                ],
+                [
+                  46422,
+                  117453,
+                  279742
+                ]
+              ]
+            },
+            "275489": null
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            332442,
+            457835,
+            825301
+          ],
+          "end_nodes": [
+            65984,
+            147833
+          ],
+          "endpoint_star_components": {
+            "117453": [
+              0
+            ],
+            "275489": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "117451": 2,
+            "147833": 1,
+            "33846": 2,
+            "65984": 1
+          },
+          "link_nodes": [
+            33846,
+            65984,
+            117451,
+            147833
+          ],
+          "source_label_counts": {
+            "4": 3
+          }
+        },
+        {
+          "cells": [
+            597659,
+            1187754
+          ],
+          "end_nodes": [
+            46421,
+            279742
+          ],
+          "endpoint_star_components": {
+            "117453": [
+              0
+            ],
+            "275489": [
+              1
+            ]
+          },
+          "link_degrees": {
+            "279742": 1,
+            "46421": 1,
+            "46422": 2
+          },
+          "link_nodes": [
+            46421,
+            46422,
+            279742
+          ],
+          "source_label_counts": {
+            "3": 2
+          }
+        }
+      ],
+      "incident_cell_count": 5,
+      "link_component_count": 2,
+      "source_edge": [
+        117453,
+        275489
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "125958": {
+              "cells": [
+                41563,
+                1174723,
+                995243,
+                1174683,
+                762637,
+                1002137,
+                1308092
+              ],
+              "shared_faces": [
+                [
+                  12422,
+                  87469,
+                  125958
+                ],
+                [
+                  87469,
+                  125958,
+                  238875
+                ],
+                [
+                  125958,
+                  206315,
+                  238875
+                ],
+                [
+                  92651,
+                  125958,
+                  238875
+                ],
+                [
+                  92651,
+                  125958,
+                  155291
+                ],
+                [
+                  125958,
+                  155291,
+                  155292
+                ]
+              ]
+            },
+            "125959": null
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            41563,
+            470701,
+            612379,
+            1357778
+          ],
+          "end_nodes": [
+            238875,
+            242061
+          ],
+          "endpoint_star_components": {
+            "125958": [
+              0
+            ],
+            "125959": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "12422": 2,
+            "238875": 1,
+            "242061": 1,
+            "242320": 2,
+            "87469": 2
+          },
+          "link_nodes": [
+            12422,
+            87469,
+            238875,
+            242061,
+            242320
+          ],
+          "source_label_counts": {
+            "3": 4
+          }
+        },
+        {
+          "cells": [
+            1308092
+          ],
+          "end_nodes": [
+            155291,
+            155292
+          ],
+          "endpoint_star_components": {
+            "125958": [
+              0
+            ],
+            "125959": [
+              1
+            ]
+          },
+          "link_degrees": {
+            "155291": 1,
+            "155292": 1
+          },
+          "link_nodes": [
+            155291,
+            155292
+          ],
+          "source_label_counts": {
+            "4": 1
+          }
+        }
+      ],
+      "incident_cell_count": 5,
+      "link_component_count": 2,
+      "source_edge": [
+        125958,
+        125959
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "125959": null,
+            "155291": {
+              "cells": [
+                126744,
+                1061895,
+                139902,
+                1376855,
+                762637,
+                1002137,
+                1308092
+              ],
+              "shared_faces": [
+                [
+                  12422,
+                  155291,
+                  238875
+                ],
+                [
+                  155291,
+                  238875,
+                  247632
+                ],
+                [
+                  155291,
+                  235450,
+                  238875
+                ],
+                [
+                  92651,
+                  155291,
+                  238875
+                ],
+                [
+                  92651,
+                  125958,
+                  155291
+                ],
+                [
+                  125958,
+                  155291,
+                  155292
+                ]
+              ]
+            }
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            126744,
+            724004
+          ],
+          "end_nodes": [
+            126709,
+            238875
+          ],
+          "endpoint_star_components": {
+            "125959": [
+              0
+            ],
+            "155291": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "12422": 2,
+            "126709": 1,
+            "238875": 1
+          },
+          "link_nodes": [
+            12422,
+            126709,
+            238875
+          ],
+          "source_label_counts": {
+            "3": 2
+          }
+        },
+        {
+          "cells": [
+            1308092
+          ],
+          "end_nodes": [
+            125958,
+            155292
+          ],
+          "endpoint_star_components": {
+            "125959": [
+              1
+            ],
+            "155291": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "125958": 1,
+            "155292": 1
+          },
+          "link_nodes": [
+            125958,
+            155292
+          ],
+          "source_label_counts": {
+            "4": 1
+          }
+        }
+      ],
+      "incident_cell_count": 3,
+      "link_component_count": 2,
+      "source_edge": [
+        125959,
+        155291
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "126709": null,
+            "155291": {
+              "cells": [
+                567184,
+                56207,
+                300142,
+                1258489,
+                1376855,
+                139902,
+                1061895,
+                126744,
+                724004
+              ],
+              "shared_faces": [
+                [
+                  11635,
+                  155291,
+                  155292
+                ],
+                [
+                  11634,
+                  155291,
+                  155292
+                ],
+                [
+                  11634,
+                  92651,
+                  155291
+                ],
+                [
+                  92651,
+                  155291,
+                  235450
+                ],
+                [
+                  155291,
+                  235450,
+                  238875
+                ],
+                [
+                  155291,
+                  238875,
+                  247632
+                ],
+                [
+                  12422,
+                  155291,
+                  238875
+                ],
+                [
+                  12422,
+                  125959,
+                  155291
+                ]
+              ]
+            }
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            567184
+          ],
+          "end_nodes": [
+            11635,
+            155292
+          ],
+          "endpoint_star_components": {
+            "126709": [
+              1
+            ],
+            "155291": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "11635": 1,
+            "155292": 1
+          },
+          "link_nodes": [
+            11635,
+            155292
+          ],
+          "source_label_counts": {
+            "4": 1
+          }
+        },
+        {
+          "cells": [
+            724004,
+            731664
+          ],
+          "end_nodes": [
+            125959,
+            126710
+          ],
+          "endpoint_star_components": {
+            "126709": [
+              0
+            ],
+            "155291": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "12422": 2,
+            "125959": 1,
+            "126710": 1
+          },
+          "link_nodes": [
+            12422,
+            125959,
+            126710
+          ],
+          "source_label_counts": {
+            "3": 2
+          }
+        }
+      ],
+      "incident_cell_count": 3,
+      "link_component_count": 2,
+      "source_edge": [
+        126709,
+        155291
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "131663": {
+              "cells": [
+                896330,
+                44188,
+                494226,
+                910265,
+                982023,
+                768796,
+                462514
+              ],
+              "shared_faces": [
+                [
+                  76414,
+                  131663,
+                  131664
+                ],
+                [
+                  29512,
+                  76414,
+                  131663
+                ],
+                [
+                  76414,
+                  131663,
+                  236936
+                ],
+                [
+                  81859,
+                  131663,
+                  236936
+                ],
+                [
+                  81859,
+                  131663,
+                  225490
+                ],
+                [
+                  81859,
+                  131663,
+                  281752
+                ]
+              ]
+            },
+            "280055": {
+              "cells": [
+                896330,
+                615749,
+                263911,
+                224713,
+                375686,
+                760664,
+                462514
+              ],
+              "shared_faces": [
+                [
+                  76414,
+                  131664,
+                  280055
+                ],
+                [
+                  76414,
+                  94798,
+                  280055
+                ],
+                [
+                  76414,
+                  81857,
+                  280055
+                ],
+                [
+                  81857,
+                  81859,
+                  280055
+                ],
+                [
+                  81859,
+                  186999,
+                  280055
+                ],
+                [
+                  81859,
+                  280055,
+                  281752
+                ]
+              ]
+            }
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": true
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            896330,
+            1089313
+          ],
+          "end_nodes": [
+            76414,
+            234046
+          ],
+          "endpoint_star_components": {
+            "131663": [
+              0
+            ],
+            "280055": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "131664": 2,
+            "234046": 1,
+            "76414": 1
+          },
+          "link_nodes": [
+            76414,
+            131664,
+            234046
+          ],
+          "source_label_counts": {
+            "10": 2
+          }
+        },
+        {
+          "cells": [
+            462514
+          ],
+          "end_nodes": [
+            81859,
+            281752
+          ],
+          "endpoint_star_components": {
+            "131663": [
+              0
+            ],
+            "280055": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "281752": 1,
+            "81859": 1
+          },
+          "link_nodes": [
+            81859,
+            281752
+          ],
+          "source_label_counts": {
+            "6": 1
+          }
+        }
+      ],
+      "incident_cell_count": 3,
+      "link_component_count": 2,
+      "source_edge": [
+        131663,
+        280055
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "155446": {
+              "cells": [
+                584512,
+                1233163,
+                56279,
+                176472,
+                372001,
+                743827
+              ],
+              "shared_faces": [
+                [
+                  155446,
+                  155448,
+                  162770
+                ],
+                [
+                  56551,
+                  155446,
+                  155448
+                ],
+                [
+                  155446,
+                  155447,
+                  155448
+                ],
+                [
+                  155446,
+                  155447,
+                  265599
+                ],
+                [
+                  155446,
+                  254644,
+                  265599
+                ]
+              ]
+            },
+            "222388": null
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            584512,
+            614817,
+            667620,
+            1461633
+          ],
+          "end_nodes": [
+            13164,
+            155448
+          ],
+          "endpoint_star_components": {
+            "155446": [
+              0
+            ],
+            "222388": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "13164": 1,
+            "140124": 2,
+            "155448": 1,
+            "162770": 2,
+            "191584": 2
+          },
+          "link_nodes": [
+            13164,
+            140124,
+            155448,
+            162770,
+            191584
+          ],
+          "source_label_counts": {
+            "10": 4
+          }
+        },
+        {
+          "cells": [
+            743827
+          ],
+          "end_nodes": [
+            254644,
+            265599
+          ],
+          "endpoint_star_components": {
+            "155446": [
+              0
+            ],
+            "222388": [
+              1
+            ]
+          },
+          "link_degrees": {
+            "254644": 1,
+            "265599": 1
+          },
+          "link_nodes": [
+            254644,
+            265599
+          ],
+          "source_label_counts": {
+            "6": 1
+          }
+        }
+      ],
+      "incident_cell_count": 5,
+      "link_component_count": 2,
+      "source_edge": [
+        155446,
+        222388
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "164090": {
+              "cells": [
+                1309400,
+                488182,
+                79297,
+                61100,
+                338744,
+                1276274,
+                1192441
+              ],
+              "shared_faces": [
+                [
+                  26256,
+                  164090,
+                  166036
+                ],
+                [
+                  164090,
+                  164091,
+                  166036
+                ],
+                [
+                  140585,
+                  164090,
+                  164091
+                ],
+                [
+                  15925,
+                  164090,
+                  164091
+                ],
+                [
+                  15926,
+                  164090,
+                  164091
+                ],
+                [
+                  164090,
+                  164091,
+                  210896
+                ]
+              ]
+            },
+            "170947": null
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            1309400
+          ],
+          "end_nodes": [
+            26256,
+            166036
+          ],
+          "endpoint_star_components": {
+            "164090": [
+              0
+            ],
+            "170947": [
+              1
+            ]
+          },
+          "link_degrees": {
+            "166036": 1,
+            "26256": 1
+          },
+          "link_nodes": [
+            26256,
+            166036
+          ],
+          "source_label_counts": {
+            "2": 1
+          }
+        },
+        {
+          "cells": [
+            1192441
+          ],
+          "end_nodes": [
+            164091,
+            210896
+          ],
+          "endpoint_star_components": {
+            "164090": [
+              0
+            ],
+            "170947": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "164091": 1,
+            "210896": 1
+          },
+          "link_nodes": [
+            164091,
+            210896
+          ],
+          "source_label_counts": {
+            "1": 1
+          }
+        }
+      ],
+      "incident_cell_count": 2,
+      "link_component_count": 2,
+      "source_edge": [
+        164090,
+        170947
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "181428": {
+              "cells": [
+                422156,
+                281184,
+                71933,
+                612629,
+                1222995,
+                714456,
+                482302
+              ],
+              "shared_faces": [
+                [
+                  108828,
+                  181426,
+                  181428
+                ],
+                [
+                  35205,
+                  181426,
+                  181428
+                ],
+                [
+                  181426,
+                  181427,
+                  181428
+                ],
+                [
+                  43617,
+                  181426,
+                  181428
+                ],
+                [
+                  181426,
+                  181428,
+                  215047
+                ],
+                [
+                  181428,
+                  215047,
+                  281591
+                ]
+              ]
+            },
+            "291094": null
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            422156,
+            772566,
+            1072953
+          ],
+          "end_nodes": [
+            181426,
+            294290
+          ],
+          "endpoint_star_components": {
+            "181428": [
+              0
+            ],
+            "291094": [
+              1
+            ]
+          },
+          "link_degrees": {
+            "108828": 2,
+            "181426": 1,
+            "294290": 1,
+            "65274": 2
+          },
+          "link_nodes": [
+            65274,
+            108828,
+            181426,
+            294290
+          ],
+          "source_label_counts": {
+            "4": 3
+          }
+        },
+        {
+          "cells": [
+            482302,
+            1060456
+          ],
+          "end_nodes": [
+            215050,
+            281591
+          ],
+          "endpoint_star_components": {
+            "181428": [
+              0
+            ],
+            "291094": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "215047": 2,
+            "215050": 1,
+            "281591": 1
+          },
+          "link_nodes": [
+            215047,
+            215050,
+            281591
+          ],
+          "source_label_counts": {
+            "3": 2
+          }
+        }
+      ],
+      "incident_cell_count": 5,
+      "link_component_count": 2,
+      "source_edge": [
+        181428,
+        291094
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "189126": {
+              "cells": [
+                122517,
+                411228,
+                649993,
+                1456865,
+                628447,
+                147411,
+                412596
+              ],
+              "shared_faces": [
+                [
+                  5302,
+                  189126,
+                  215223
+                ],
+                [
+                  5302,
+                  5304,
+                  189126
+                ],
+                [
+                  5302,
+                  145936,
+                  189126
+                ],
+                [
+                  5302,
+                  189126,
+                  189127
+                ],
+                [
+                  177858,
+                  189126,
+                  189127
+                ],
+                [
+                  177858,
+                  189126,
+                  252062
+                ]
+              ]
+            },
+            "235754": null
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            122517
+          ],
+          "end_nodes": [
+            5302,
+            215223
+          ],
+          "endpoint_star_components": {
+            "189126": [
+              0
+            ],
+            "235754": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "215223": 1,
+            "5302": 1
+          },
+          "link_nodes": [
+            5302,
+            215223
+          ],
+          "source_label_counts": {
+            "2": 1
+          }
+        },
+        {
+          "cells": [
+            412596,
+            769830,
+            1351345
+          ],
+          "end_nodes": [
+            177858,
+            295866
+          ],
+          "endpoint_star_components": {
+            "189126": [
+              0
+            ],
+            "235754": [
+              1
+            ]
+          },
+          "link_degrees": {
+            "177858": 1,
+            "252062": 2,
+            "295866": 1,
+            "89161": 2
+          },
+          "link_nodes": [
+            89161,
+            177858,
+            252062,
+            295866
+          ],
+          "source_label_counts": {
+            "1": 3
+          }
+        }
+      ],
+      "incident_cell_count": 4,
+      "link_component_count": 2,
+      "source_edge": [
+        189126,
+        235754
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "194623": {
+              "cells": [
+                679124,
+                1032607,
+                347955,
+                1270165,
+                715051,
+                1023174,
+                1036422,
+                231210
+              ],
+              "shared_faces": [
+                [
+                  194623,
+                  196531,
+                  222142
+                ],
+                [
+                  16784,
+                  194623,
+                  196531
+                ],
+                [
+                  16784,
+                  194623,
+                  196532
+                ],
+                [
+                  16784,
+                  194623,
+                  266676
+                ],
+                [
+                  12541,
+                  16784,
+                  194623
+                ],
+                [
+                  16784,
+                  49694,
+                  194623
+                ],
+                [
+                  49692,
+                  49694,
+                  194623
+                ]
+              ]
+            },
+            "222142": {
+              "cells": [
+                679124,
+                1032607,
+                106452,
+                923875,
+                1313128,
+                1175704,
+                1296695,
+                1268037,
+                231210
+              ],
+              "shared_faces": [
+                [
+                  194623,
+                  196531,
+                  222142
+                ],
+                [
+                  16784,
+                  196531,
+                  222142
+                ],
+                [
+                  16784,
+                  222141,
+                  222142
+                ],
+                [
+                  49692,
+                  222141,
+                  222142
+                ],
+                [
+                  49692,
+                  222142,
+                  300414
+                ],
+                [
+                  49692,
+                  222142,
+                  231035
+                ],
+                [
+                  49692,
+                  222142,
+                  271150
+                ],
+                [
+                  49692,
+                  49694,
+                  222142
+                ]
+              ]
+            }
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": true
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            679124,
+            1032607
+          ],
+          "end_nodes": [
+            16784,
+            294970
+          ],
+          "endpoint_star_components": {
+            "194623": [
+              0
+            ],
+            "222142": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "16784": 1,
+            "196531": 2,
+            "294970": 1
+          },
+          "link_nodes": [
+            16784,
+            196531,
+            294970
+          ],
+          "source_label_counts": {
+            "1": 2
+          }
+        },
+        {
+          "cells": [
+            231210,
+            1039476
+          ],
+          "end_nodes": [
+            49692,
+            288939
+          ],
+          "endpoint_star_components": {
+            "194623": [
+              0
+            ],
+            "222142": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "288939": 1,
+            "49692": 1,
+            "49694": 2
+          },
+          "link_nodes": [
+            49692,
+            49694,
+            288939
+          ],
+          "source_label_counts": {
+            "1": 2
+          }
+        }
+      ],
+      "incident_cell_count": 4,
+      "link_component_count": 2,
+      "source_edge": [
+        194623,
+        222142
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "194623": {
+              "cells": [
+                462172,
+                493515,
+                216371,
+                1103843,
+                1211946,
+                143711,
+                101663,
+                1059338,
+                908086
+              ],
+              "shared_faces": [
+                [
+                  194623,
+                  200473,
+                  294970
+                ],
+                [
+                  194623,
+                  200473,
+                  249948
+                ],
+                [
+                  194623,
+                  239460,
+                  249948
+                ],
+                [
+                  194623,
+                  249948,
+                  266676
+                ],
+                [
+                  2905,
+                  194623,
+                  249948
+                ],
+                [
+                  2905,
+                  194623,
+                  217511
+                ],
+                [
+                  93666,
+                  194623,
+                  217511
+                ],
+                [
+                  194623,
+                  217511,
+                  288939
+                ]
+              ]
+            },
+            "294970": null
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            462172,
+            493515,
+            679124
+          ],
+          "end_nodes": [
+            222142,
+            249948
+          ],
+          "endpoint_star_components": {
+            "194623": [
+              0
+            ],
+            "294970": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "196531": 2,
+            "200473": 2,
+            "222142": 1,
+            "249948": 1
+          },
+          "link_nodes": [
+            196531,
+            200473,
+            222142,
+            249948
+          ],
+          "source_label_counts": {
+            "1": 3
+          }
+        },
+        {
+          "cells": [
+            908086
+          ],
+          "end_nodes": [
+            217511,
+            288939
+          ],
+          "endpoint_star_components": {
+            "194623": [
+              0
+            ],
+            "294970": [
+              1
+            ]
+          },
+          "link_degrees": {
+            "217511": 1,
+            "288939": 1
+          },
+          "link_nodes": [
+            217511,
+            288939
+          ],
+          "source_label_counts": {
+            "1": 1
+          }
+        }
+      ],
+      "incident_cell_count": 4,
+      "link_component_count": 2,
+      "source_edge": [
+        194623,
+        294970
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "202469": {
+              "cells": [
+                1315072,
+                1108891,
+                627263,
+                275971,
+                1268112,
+                464871,
+                576528
+              ],
+              "shared_faces": [
+                [
+                  59341,
+                  120061,
+                  202469
+                ],
+                [
+                  8893,
+                  59341,
+                  202469
+                ],
+                [
+                  8893,
+                  202469,
+                  241865
+                ],
+                [
+                  202469,
+                  241864,
+                  241865
+                ],
+                [
+                  201949,
+                  202469,
+                  241864
+                ],
+                [
+                  201949,
+                  202469,
+                  207533
+                ]
+              ]
+            },
+            "223853": null
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            1315072
+          ],
+          "end_nodes": [
+            59341,
+            120061
+          ],
+          "endpoint_star_components": {
+            "202469": [
+              0
+            ],
+            "223853": [
+              1
+            ]
+          },
+          "link_degrees": {
+            "120061": 1,
+            "59341": 1
+          },
+          "link_nodes": [
+            59341,
+            120061
+          ],
+          "source_label_counts": {
+            "4": 1
+          }
+        },
+        {
+          "cells": [
+            576528,
+            607688,
+            671268
+          ],
+          "end_nodes": [
+            201949,
+            223852
+          ],
+          "endpoint_star_components": {
+            "202469": [
+              0
+            ],
+            "223853": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "201949": 1,
+            "202468": 2,
+            "207533": 2,
+            "223852": 1
+          },
+          "link_nodes": [
+            201949,
+            202468,
+            207533,
+            223852
+          ],
+          "source_label_counts": {
+            "3": 3
+          }
+        }
+      ],
+      "incident_cell_count": 4,
+      "link_component_count": 2,
+      "source_edge": [
+        202469,
+        223853
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "218256": {
+              "cells": [
+                1039552,
+                892907,
+                408586,
+                1253976,
+                476038,
+                258565,
+                153069
+              ],
+              "shared_faces": [
+                [
+                  65986,
+                  155292,
+                  218256
+                ],
+                [
+                  65986,
+                  203465,
+                  218256
+                ],
+                [
+                  65986,
+                  188778,
+                  218256
+                ],
+                [
+                  65986,
+                  218256,
+                  255064
+                ],
+                [
+                  218256,
+                  242060,
+                  255064
+                ],
+                [
+                  218256,
+                  242061,
+                  255064
+                ]
+              ]
+            },
+            "242061": null
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            1039552
+          ],
+          "end_nodes": [
+            65986,
+            155292
+          ],
+          "endpoint_star_components": {
+            "218256": [
+              0
+            ],
+            "242061": [
+              1
+            ]
+          },
+          "link_degrees": {
+            "155292": 1,
+            "65986": 1
+          },
+          "link_nodes": [
+            65986,
+            155292
+          ],
+          "source_label_counts": {
+            "4": 1
+          }
+        },
+        {
+          "cells": [
+            153069,
+            258565,
+            1112210,
+            1448631
+          ],
+          "end_nodes": [
+            125958,
+            242060
+          ],
+          "endpoint_star_components": {
+            "218256": [
+              0
+            ],
+            "242061": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "125958": 1,
+            "203464": 2,
+            "242060": 1,
+            "246892": 2,
+            "255064": 2
+          },
+          "link_nodes": [
+            125958,
+            203464,
+            242060,
+            246892,
+            255064
+          ],
+          "source_label_counts": {
+            "3": 4
+          }
+        }
+      ],
+      "incident_cell_count": 5,
+      "link_component_count": 2,
+      "source_edge": [
+        218256,
+        242061
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "222142": {
+              "cells": [
+                471130,
+                347027,
+                1369165,
+                106452,
+                923875,
+                1313128,
+                1175704,
+                1296695,
+                1268037,
+                943322
+              ],
+              "shared_faces": [
+                [
+                  7519,
+                  222142,
+                  294970
+                ],
+                [
+                  7519,
+                  196531,
+                  222142
+                ],
+                [
+                  196531,
+                  222141,
+                  222142
+                ],
+                [
+                  16784,
+                  222141,
+                  222142
+                ],
+                [
+                  49692,
+                  222141,
+                  222142
+                ],
+                [
+                  49692,
+                  222142,
+                  300414
+                ],
+                [
+                  49692,
+                  222142,
+                  231035
+                ],
+                [
+                  49692,
+                  222142,
+                  271150
+                ],
+                [
+                  49694,
+                  222142,
+                  271150
+                ]
+              ]
+            },
+            "288939": null
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            471130
+          ],
+          "end_nodes": [
+            7519,
+            294970
+          ],
+          "endpoint_star_components": {
+            "222142": [
+              0
+            ],
+            "288939": [
+              1
+            ]
+          },
+          "link_degrees": {
+            "294970": 1,
+            "7519": 1
+          },
+          "link_nodes": [
+            7519,
+            294970
+          ],
+          "source_label_counts": {
+            "1": 1
+          }
+        },
+        {
+          "cells": [
+            943322,
+            1039476
+          ],
+          "end_nodes": [
+            194623,
+            271150
+          ],
+          "endpoint_star_components": {
+            "222142": [
+              0
+            ],
+            "288939": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "194623": 1,
+            "271150": 1,
+            "49694": 2
+          },
+          "link_nodes": [
+            49694,
+            194623,
+            271150
+          ],
+          "source_label_counts": {
+            "1": 2
+          }
+        }
+      ],
+      "incident_cell_count": 3,
+      "link_component_count": 2,
+      "source_edge": [
+        222142,
+        288939
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "230431": {
+              "cells": [
+                1209192,
+                1286242,
+                1387613,
+                1013644,
+                232191,
+                1440529,
+                490084,
+                519844
+              ],
+              "shared_faces": [
+                [
+                  19631,
+                  212805,
+                  230431
+                ],
+                [
+                  19631,
+                  19633,
+                  230431
+                ],
+                [
+                  19631,
+                  108828,
+                  230431
+                ],
+                [
+                  108828,
+                  230431,
+                  281591
+                ],
+                [
+                  181426,
+                  230431,
+                  281591
+                ],
+                [
+                  43616,
+                  230431,
+                  281591
+                ],
+                [
+                  72724,
+                  230431,
+                  281591
+                ]
+              ]
+            },
+            "287509": null
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            1209192
+          ],
+          "end_nodes": [
+            19631,
+            212805
+          ],
+          "endpoint_star_components": {
+            "230431": [
+              0
+            ],
+            "287509": [
+              1
+            ]
+          },
+          "link_degrees": {
+            "19631": 1,
+            "212805": 1
+          },
+          "link_nodes": [
+            19631,
+            212805
+          ],
+          "source_label_counts": {
+            "4": 1
+          }
+        },
+        {
+          "cells": [
+            519844,
+            1064872
+          ],
+          "end_nodes": [
+            223623,
+            281591
+          ],
+          "endpoint_star_components": {
+            "230431": [
+              0
+            ],
+            "287509": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "223623": 1,
+            "281591": 1,
+            "72724": 2
+          },
+          "link_nodes": [
+            72724,
+            223623,
+            281591
+          ],
+          "source_label_counts": {
+            "3": 2
+          }
+        }
+      ],
+      "incident_cell_count": 3,
+      "link_component_count": 2,
+      "source_edge": [
+        230431,
+        287509
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "233168": {
+              "cells": [
+                1392800,
+                1228633,
+                765772,
+                640084,
+                567561,
+                1140573,
+                825459,
+                203130,
+                1130881
+              ],
+              "shared_faces": [
+                [
+                  7834,
+                  233168,
+                  278808
+                ],
+                [
+                  7832,
+                  233168,
+                  278808
+                ],
+                [
+                  7832,
+                  197194,
+                  233168
+                ],
+                [
+                  185374,
+                  197194,
+                  233168
+                ],
+                [
+                  106865,
+                  185374,
+                  233168
+                ],
+                [
+                  106863,
+                  106865,
+                  233168
+                ],
+                [
+                  106863,
+                  233168,
+                  233599
+                ],
+                [
+                  233168,
+                  233599,
+                  274596
+                ]
+              ]
+            },
+            "268664": null
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            1392800
+          ],
+          "end_nodes": [
+            7834,
+            278808
+          ],
+          "endpoint_star_components": {
+            "233168": [
+              0
+            ],
+            "268664": [
+              1
+            ]
+          },
+          "link_degrees": {
+            "278808": 1,
+            "7834": 1
+          },
+          "link_nodes": [
+            7834,
+            278808
+          ],
+          "source_label_counts": {
+            "3": 1
+          }
+        },
+        {
+          "cells": [
+            1130881,
+            1247392,
+            1466826
+          ],
+          "end_nodes": [
+            197194,
+            274596
+          ],
+          "endpoint_star_components": {
+            "233168": [
+              0
+            ],
+            "268664": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "131419": 2,
+            "197194": 1,
+            "233599": 2,
+            "274596": 1
+          },
+          "link_nodes": [
+            131419,
+            197194,
+            233599,
+            274596
+          ],
+          "source_label_counts": {
+            "4": 3
+          }
+        }
+      ],
+      "incident_cell_count": 4,
+      "link_component_count": 2,
+      "source_edge": [
+        233168,
+        268664
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "268664": null,
+            "278808": {
+              "cells": [
+                1392800,
+                1228633,
+                765772,
+                232892,
+                763041,
+                995512,
+                973722,
+                219170
+              ],
+              "shared_faces": [
+                [
+                  7834,
+                  233168,
+                  278808
+                ],
+                [
+                  7832,
+                  233168,
+                  278808
+                ],
+                [
+                  7832,
+                  197194,
+                  278808
+                ],
+                [
+                  12691,
+                  197194,
+                  278808
+                ],
+                [
+                  197194,
+                  264325,
+                  278808
+                ],
+                [
+                  15670,
+                  264325,
+                  278808
+                ],
+                [
+                  15670,
+                  95733,
+                  278808
+                ]
+              ]
+            }
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            1392800
+          ],
+          "end_nodes": [
+            7834,
+            233168
+          ],
+          "endpoint_star_components": {
+            "268664": [
+              1
+            ],
+            "278808": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "233168": 1,
+            "7834": 1
+          },
+          "link_nodes": [
+            7834,
+            233168
+          ],
+          "source_label_counts": {
+            "3": 1
+          }
+        },
+        {
+          "cells": [
+            219170,
+            1304309
+          ],
+          "end_nodes": [
+            95733,
+            197194
+          ],
+          "endpoint_star_components": {
+            "268664": [
+              0
+            ],
+            "278808": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "15670": 2,
+            "197194": 1,
+            "95733": 1
+          },
+          "link_nodes": [
+            15670,
+            95733,
+            197194
+          ],
+          "source_label_counts": {
+            "4": 2
+          }
+        }
+      ],
+      "incident_cell_count": 3,
+      "link_component_count": 2,
+      "source_edge": [
+        268664,
+        278808
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "281591": {
+              "cells": [
+                387591,
+                1013644,
+                232191,
+                1440529,
+                760267,
+                714456,
+                482302,
+                415365
+              ],
+              "shared_faces": [
+                [
+                  19631,
+                  108828,
+                  281591
+                ],
+                [
+                  108828,
+                  230431,
+                  281591
+                ],
+                [
+                  181426,
+                  230431,
+                  281591
+                ],
+                [
+                  43616,
+                  181426,
+                  281591
+                ],
+                [
+                  181426,
+                  215047,
+                  281591
+                ],
+                [
+                  181428,
+                  215047,
+                  281591
+                ],
+                [
+                  215047,
+                  281591,
+                  291094
+                ]
+              ]
+            },
+            "291094": null
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            387591,
+            1259713
+          ],
+          "end_nodes": [
+            19631,
+            181426
+          ],
+          "endpoint_star_components": {
+            "281591": [
+              0
+            ],
+            "291094": [
+              1
+            ]
+          },
+          "link_degrees": {
+            "108828": 2,
+            "181426": 1,
+            "19631": 1
+          },
+          "link_nodes": [
+            19631,
+            108828,
+            181426
+          ],
+          "source_label_counts": {
+            "4": 2
+          }
+        },
+        {
+          "cells": [
+            415365,
+            482302
+          ],
+          "end_nodes": [
+            181428,
+            215048
+          ],
+          "endpoint_star_components": {
+            "281591": [
+              0
+            ],
+            "291094": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "181428": 1,
+            "215047": 2,
+            "215048": 1
+          },
+          "link_nodes": [
+            181428,
+            215047,
+            215048
+          ],
+          "source_label_counts": {
+            "3": 2
+          }
+        }
+      ],
+      "incident_cell_count": 4,
+      "link_component_count": 2,
+      "source_edge": [
+        281591,
+        291094
+      ]
+    },
+    {
+      "exact_positive_angle_overlap_cell_pairs": [],
+      "fan_relations": [
+        {
+          "endpoint_continuity_paths": {
+            "288939": null,
+            "294970": null
+          },
+          "fans": [
+            0,
+            1
+          ],
+          "same_edge_after_maximal_split": false
+        }
+      ],
+      "fans": [
+        {
+          "cells": [
+            471130
+          ],
+          "end_nodes": [
+            7519,
+            222142
+          ],
+          "endpoint_star_components": {
+            "288939": [
+              1
+            ],
+            "294970": [
+              0
+            ]
+          },
+          "link_degrees": {
+            "222142": 1,
+            "7519": 1
+          },
+          "link_nodes": [
+            7519,
+            222142
+          ],
+          "source_label_counts": {
+            "1": 1
+          }
+        },
+        {
+          "cells": [
+            908086
+          ],
+          "end_nodes": [
+            194623,
+            217511
+          ],
+          "endpoint_star_components": {
+            "288939": [
+              0
+            ],
+            "294970": [
+              1
+            ]
+          },
+          "link_degrees": {
+            "194623": 1,
+            "217511": 1
+          },
+          "link_nodes": [
+            194623,
+            217511
+          ],
+          "source_label_counts": {
+            "1": 1
+          }
+        }
+      ],
+      "incident_cell_count": 2,
+      "link_component_count": 2,
+      "source_edge": [
+        288939,
+        294970
+      ]
+    }
+  ],
+  "elapsed_seconds": 6.239466666709632,
+  "host": "Mac.domain_not_set.invalid",
+  "input_buffers": {
+    "boundary.u32le": {
+      "bytes": 2764368,
+      "role": "outward material boundary; all source cap faces retained",
+      "sha256": "821ad6dedb5f32cce78314d704e35f03726188d9d56978ebb23646e4690b3c60",
+      "shape": [
+        230364,
+        3
+      ]
+    },
+    "boundary_components.u32le": {
+      "bytes": 921456,
+      "role": "deterministic boundary component ID",
+      "sha256": "8e07999b113bd619fe8f0cf0fc5435730fb962ed13bead55e18c9f759352ba0a",
+      "shape": [
+        230364
+      ]
+    },
+    "boundary_owners.u32le": {
+      "bytes": 921456,
+      "role": "original source tetrahedron index",
+      "sha256": "7c3f0bf847d4d5c1aa0badc5ff83345c0165cd3aab516d8576b55474d5495392",
+      "shape": [
+        230364
+      ]
+    },
+    "labels.u32le": {
+      "bytes": 5880332,
+      "role": "unmodified regional source IDs",
+      "sha256": "304d0d9d9a99d51be4367529e9598815361018a446ed047923c85b96786b569a",
+      "shape": [
+        1470083
+      ]
+    },
+    "nodes.f64le": {
+      "bytes": 7223160,
+      "role": "metres; original source node order",
+      "sha256": "4c8e6e7d9adfa5180ba0730c99222044c6a1aa51901823cf0b4dd861ae732716",
+      "shape": [
+        300965,
+        3
+      ]
+    },
+    "tetrahedra.u32le": {
+      "bytes": 23521328,
+      "role": "positive orientation; original source cell order",
+      "sha256": "3f571c7815f0fd2e1f9d2735046d3bb7677a1a011215fca6737c6310b5b29066",
+      "shape": [
+        1470083,
+        4
+      ]
+    },
+    "uvc_v.f64le": {
+      "bytes": 2407720,
+      "role": "unmodified source coordinate including -10 sentinel",
+      "sha256": "5d8d8a19e39717cd1369eefa924db62623bdc600479169b80be95c667773baa7",
+      "shape": [
+        300965
+      ]
+    }
+  },
+  "maximal_face_preserving_split": {
+    "boundary_components": [
+      {
+        "closed_oriented_vertex_manifold": false,
+        "edge_count": 47948,
+        "edge_defect_count": 1,
+        "euler": 3,
+        "face_count": 31966,
+        "first_boundary_face": 0,
+        "node_count": 15985,
+        "source_boundary_components": [
+          0
+        ],
+        "vertex_link_defect_count": 2
+      },
+      {
+        "closed_oriented_vertex_manifold": true,
+        "edge_count": 27798,
+        "edge_defect_count": 0,
+        "euler": 2,
+        "face_count": 18532,
+        "first_boundary_face": 14,
+        "node_count": 9268,
+        "source_boundary_components": [
+          1
+        ],
+        "vertex_link_defect_count": 0
+      },
+      {
+        "closed_oriented_vertex_manifold": false,
+        "edge_count": 172163,
+        "edge_defect_count": 1,
+        "euler": -1,
+        "face_count": 114776,
+        "first_boundary_face": 27,
+        "node_count": 57386,
+        "source_boundary_components": [
+          2
+        ],
+        "vertex_link_defect_count": 2
+      },
+      {
+        "closed_oriented_vertex_manifold": true,
+        "edge_count": 63759,
+        "edge_defect_count": 0,
+        "euler": 2,
+        "face_count": 42506,
+        "first_boundary_face": 40,
+        "node_count": 21255,
+        "source_boundary_components": [
+          3
+        ],
+        "vertex_link_defect_count": 0
+      },
+      {
+        "closed_oriented_vertex_manifold": true,
+        "edge_count": 33780,
+        "edge_defect_count": 0,
+        "euler": 2,
+        "face_count": 22520,
+        "first_boundary_face": 52,
+        "node_count": 11262,
+        "source_boundary_components": [
+          4
+        ],
+        "vertex_link_defect_count": 0
+      },
+      {
+        "closed_oriented_vertex_manifold": true,
+        "edge_count": 96,
+        "edge_defect_count": 0,
+        "euler": 2,
+        "face_count": 64,
+        "first_boundary_face": 8172,
+        "node_count": 34,
+        "source_boundary_components": [
+          5
+        ],
+        "vertex_link_defect_count": 0
+      }
+    ],
+    "boundary_faces_added_or_removed": false,
+    "cloned_node_count": 19,
+    "edge_defect_count": 2,
+    "edge_defects": [
+      {
+        "faces": [
+          18889,
+          53821,
+          184163,
+          184164
+        ],
+        "nodes": [
+          194623,
+          222142
+        ]
+      },
+      {
+        "faces": [
+          80913,
+          86469,
+          133308,
+          133309
+        ],
+        "nodes": [
+          131663,
+          280055
+        ]
+      }
+    ],
+    "embeddedness_checked": false,
+    "every_cell_geometry_label_frame_and_volume_identical": true,
+    "existing_shared_faces_preserved_by_construction": true,
+    "native_cavity_admitted": false,
+    "source_node_count": 300965,
+    "vertex_link_defect_count": 4,
+    "vertex_link_defects": [
+      {
+        "link_components": 1,
+        "node": 222142,
+        "noncycle_degrees": {
+          "194623": 4
+        },
+        "source_boundary_components": [
+          0
+        ]
+      },
+      {
+        "link_components": 1,
+        "node": 194623,
+        "noncycle_degrees": {
+          "222142": 4
+        },
+        "source_boundary_components": [
+          0
+        ]
+      },
+      {
+        "link_components": 1,
+        "node": 131663,
+        "noncycle_degrees": {
+          "280055": 4
+        },
+        "source_boundary_components": [
+          2
+        ]
+      },
+      {
+        "link_components": 1,
+        "node": 280055,
+        "noncycle_degrees": {
+          "131663": 4
+        },
+        "source_boundary_components": [
+          2
+        ]
+      }
+    ]
+  },
+  "original_boundary_edge_defects": 31,
+  "original_boundary_vertex_link_defects": 47,
+  "physical_stepping": false,
+  "python": "3.13.14 (main, Jun 10 2026, 12:24:04) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "qualification": "offline_source_topology_analysis_only",
+  "schema": "NumiHuman.Rodero18SourceDefectAudit.v1",
+  "script_sha256": "d5c0fe021905290d0c8c030371963593a42fe2957bc8df48137400559a8849ab",
+  "source_archive_sha256": "b50919a711dc3914cc0a4dd9cabc19679a9f36be9ac6eb26a23ca6799f501720",
+  "source_config_sha256": "23c931fef53edced85e0e0a36c73d8490dddb87db6bd988482a2cdfc5a1442cc",
+  "source_geometry_changed": false,
+  "source_volume_comparison": {
+    "adjacent_label_diagnostics": {
+      "RV_plus_both_valve_layers": {
+        "difference_from_source_RV_mL": 0.6365260959797041,
+        "geometry_volume_mL": 48.07718450867971,
+        "interpretation": "diagnostic only; artificial valve tissue is not source RV myocardium",
+        "source_labels": [
+          2,
+          8,
+          10
+        ]
+      },
+      "RV_plus_pulmonary_layer": {
+        "difference_from_source_RV_mL": -1.3587313452218481,
+        "geometry_volume_mL": 46.081927067478155,
+        "interpretation": "diagnostic only; artificial valve tissue is not source RV myocardium",
+        "source_labels": [
+          2,
+          10
+        ]
+      },
+      "RV_plus_tricuspid_layer": {
+        "difference_from_source_RV_mL": -0.42049756152831463,
+        "geometry_volume_mL": 47.02016085117169,
+        "interpretation": "diagnostic only; artificial valve tissue is not source RV myocardium",
+        "source_labels": [
+          2,
+          8
+        ]
+      },
+      "RV_tissue_only": {
+        "difference_from_source_RV_mL": -2.415755002729867,
+        "geometry_volume_mL": 45.024903409970136,
+        "interpretation": "diagnostic only; artificial valve tissue is not source RV myocardium",
+        "source_labels": [
+          2
+        ]
+      }
+    },
+    "comparisons": {
+      "LV": {
+        "difference_mL": 1.802735596356797e-07,
+        "exact_volume_denominator_hex": "0x180000000000000000000000000000000000000000000000000000000",
+        "exact_volume_numerator_hex": "0x89eaf0cbb91382f30b016c955ffcb628f41104df6000000000000",
+        "geometry_volume_mL": 87.68573554497355,
+        "relative_difference": 2.055905203804143e-09,
+        "source_csv_volume_mL": 87.6857353647,
+        "source_label": 1
+      },
+      "RV": {
+        "difference_mL": -2.415755002729867,
+        "exact_volume_denominator_hex": "0x180000000000000000000000000000000000000000000000000000000",
+        "exact_volume_numerator_hex": "0x46d16bb4214d16b83ebe502f226b6970589a5be036eec00000000",
+        "geometry_volume_mL": 45.024903409970136,
+        "relative_difference": -0.05092161625824236,
+        "source_csv_volume_mL": 47.4406584127,
+        "source_label": 2
+      }
+    },
+    "node_identity_split_can_change_source_label_volume": false,
+    "regional_tetrahedron_counts": {
+      "1": 722773,
+      "2": 374761,
+      "3": 113895,
+      "4": 126129,
+      "5": 47068,
+      "6": 17914,
+      "7": 10038,
+      "8": 16586,
+      "9": 9668,
+      "10": 8293,
+      "11": 1328,
+      "12": 1273,
+      "13": 496,
+      "14": 1050,
+      "15": 1674,
+      "16": 2962,
+      "17": 4855,
+      "18": 1396,
+      "19": 1432,
+      "20": 510,
+      "21": 1253,
+      "22": 1559,
+      "23": 1384,
+      "24": 1786
+    },
+    "regional_volume_mL": {
+      "1": 87.68573554497355,
+      "10": 1.0570236575080139,
+      "11": 0.16752736811871843,
+      "12": 0.1553851456550805,
+      "13": 0.05457647031189365,
+      "14": 0.12872614020935116,
+      "15": 0.20460900885771974,
+      "16": 0.37030042542973796,
+      "17": 0.6185643394379136,
+      "18": 0.16361046712238195,
+      "19": 0.16292314250449058,
+      "2": 45.024903409970136,
+      "20": 0.053182120799798685,
+      "21": 0.12530099503826986,
+      "22": 0.16728991243608174,
+      "23": 0.15612632289264408,
+      "24": 0.1996189751728334,
+      "3": 14.292694936620169,
+      "4": 15.791204164313857,
+      "5": 5.926781237878514,
+      "6": 2.1204265871570622,
+      "7": 1.1665409919730656,
+      "8": 1.9952574412015565,
+      "9": 1.1495374959312525
+    },
+    "rv_discrepancy_resolved": false,
+    "source_csv_case18": {
+      "AT1090_LV": "29.841",
+      "AT_LV": "71.9895",
+      "EDV_LV": "92.87",
+      "EDV_RV": "119.108",
+      "EF1_LV": "26.1053084957",
+      "EF1_RV": "18.8677502771",
+      "EF_RV": "44.6401585116",
+      "ESP_RV": "40.631",
+      "ESV_LV": "38.778",
+      "ESV_RV": "65.938",
+      "ET_LV": "75",
+      "ET_RV": "79",
+      "Mesh_ID": "18",
+      "Myo_vol_LV": "87.6857353647",
+      "Myo_vol_RV": "47.4406584127",
+      "PeakP_LV": "120.415",
+      "PeakP_RV": "35.524",
+      "QRS_LV": "73.9895",
+      "SV_LV": "54.092",
+      "SV_RV": "53.17",
+      "V1_LV": "68.626",
+      "V1_RV": "96.635",
+      "dPdtmax_LV": "2.689",
+      "dPdtmax_RV": "1.025",
+      "dPdtmin_LV": "-1.823",
+      "dPdtmin_RV": "-0.498",
+      "tpeak_LV": "95",
+      "tpeak_RV": "79",
+      "tsys_LV": "137",
+      "tsys_RV": "123"
+    },
+    "source_csv_sha256": "3f59ea2e6388aa370efe9046ecd5b4fd8bee87037aa904f45a80356f3932edcd",
+    "uvc_v_by_label": {
+      "1": {
+        "counts": {
+          "-1": 722773
+        },
+        "volume_mL": {
+          "-1": 87.68573554497355
+        }
+      },
+      "10": {
+        "counts": {
+          "-10": 7024,
+          "-10,1": 1249,
+          "1": 20
+        },
+        "volume_mL": {
+          "-10": 0.9204415505870763,
+          "-10,1": 0.13534550394020572,
+          "1": 0.0012366029807316828
+        }
+      },
+      "11": {
+        "counts": {
+          "-10": 1328
+        },
+        "volume_mL": {
+          "-10": 0.16752736811871843
+        }
+      },
+      "12": {
+        "counts": {
+          "-10": 1273
+        },
+        "volume_mL": {
+          "-10": 0.1553851456550805
+        }
+      },
+      "13": {
+        "counts": {
+          "-10": 496
+        },
+        "volume_mL": {
+          "-10": 0.05457647031189365
+        }
+      },
+      "14": {
+        "counts": {
+          "-10": 1050
+        },
+        "volume_mL": {
+          "-10": 0.12872614020935116
+        }
+      },
+      "15": {
+        "counts": {
+          "-10": 1674
+        },
+        "volume_mL": {
+          "-10": 0.20460900885771974
+        }
+      },
+      "16": {
+        "counts": {
+          "-10": 2962
+        },
+        "volume_mL": {
+          "-10": 0.37030042542973796
+        }
+      },
+      "17": {
+        "counts": {
+          "-10": 4855
+        },
+        "volume_mL": {
+          "-10": 0.6185643394379136
+        }
+      },
+      "18": {
+        "counts": {
+          "-10": 1396
+        },
+        "volume_mL": {
+          "-10": 0.16361046712238195
+        }
+      },
+      "19": {
+        "counts": {
+          "-10": 1432
+        },
+        "volume_mL": {
+          "-10": 0.16292314250449058
+        }
+      },
+      "2": {
+        "counts": {
+          "-1": 88,
+          "-1,1": 12214,
+          "1": 362459
+        },
+        "volume_mL": {
+          "-1": 0.0053737152700730475,
+          "-1,1": 1.3356596962201643,
+          "1": 43.6838699984799
+        }
+      },
+      "20": {
+        "counts": {
+          "-10": 510
+        },
+        "volume_mL": {
+          "-10": 0.053182120799798685
+        }
+      },
+      "21": {
+        "counts": {
+          "-10": 1253
+        },
+        "volume_mL": {
+          "-10": 0.12530099503826986
+        }
+      },
+      "22": {
+        "counts": {
+          "-10": 1559
+        },
+        "volume_mL": {
+          "-10": 0.16728991243608174
+        }
+      },
+      "23": {
+        "counts": {
+          "-10": 1384
+        },
+        "volume_mL": {
+          "-10": 0.15612632289264408
+        }
+      },
+      "24": {
+        "counts": {
+          "-10": 1786
+        },
+        "volume_mL": {
+          "-10": 0.1996189751728334
+        }
+      },
+      "3": {
+        "counts": {
+          "-1": 87,
+          "-10": 105970,
+          "-10,-1": 7838
+        },
+        "volume_mL": {
+          "-1": 0.005287987450419013,
+          "-10": 13.42998452930937,
+          "-10,-1": 0.8574224198603787
+        }
+      },
+      "4": {
+        "counts": {
+          "-1": 5,
+          "-1,1": 12,
+          "-10": 113126,
+          "-10,-1": 1130,
+          "-10,-1,1": 91,
+          "-10,1": 11697,
+          "1": 68
+        },
+        "volume_mL": {
+          "-1": 0.00031775892253909716,
+          "-1,1": 0.000936324794726055,
+          "-10": 14.39319677422243,
+          "-10,-1": 0.13630116977579151,
+          "-10,-1,1": 0.010616666376025269,
+          "-10,1": 1.245484557014464,
+          "1": 0.0043509132078808415
+        }
+      },
+      "5": {
+        "counts": {
+          "-1": 38,
+          "-1,1": 75,
+          "-10": 40236,
+          "-10,-1": 3404,
+          "-10,-1,1": 159,
+          "-10,1": 3149,
+          "1": 7
+        },
+        "volume_mL": {
+          "-1": 0.002344701041776333,
+          "-1,1": 0.0058105377921225795,
+          "-10": 5.145409577336259,
+          "-10,-1": 0.37554088108750877,
+          "-10,-1,1": 0.016986710232627333,
+          "-10,1": 0.3802395189257098,
+          "1": 0.00044931146251104187
+        }
+      },
+      "6": {
+        "counts": {
+          "-1": 1,
+          "-1,1": 1,
+          "-10": 14865,
+          "-10,-1": 56,
+          "-10,-1,1": 23,
+          "-10,1": 2924,
+          "1": 44
+        },
+        "volume_mL": {
+          "-1": 5.2733371086736336e-05,
+          "-1,1": 4.666325677983062e-05,
+          "-10": 1.7881016672976993,
+          "-10,-1": 0.005914493796905944,
+          "-10,-1,1": 0.0025753935203692707,
+          "-10,1": 0.3206317130191125,
+          "1": 0.0031039228951088614
+        }
+      },
+      "7": {
+        "counts": {
+          "-1": 29,
+          "-10": 8556,
+          "-10,-1": 1453
+        },
+        "volume_mL": {
+          "-1": 0.0020135976878123394,
+          "-10": 1.006674269092777,
+          "-10,-1": 0.15785312519247627
+        }
+      },
+      "8": {
+        "counts": {
+          "-10": 14797,
+          "-10,1": 1768,
+          "1": 21
+        },
+        "volume_mL": {
+          "-10": 1.8056267452602013,
+          "-10,1": 0.18847485826781948,
+          "1": 0.0011558376735355982
+        }
+      },
+      "9": {
+        "counts": {
+          "-1": 34,
+          "-10": 7915,
+          "-10,-1": 1719
+        },
+        "volume_mL": {
+          "-1": 0.0020421247146260187,
+          "-10": 0.9621055989240427,
+          "-10,-1": 0.18538977229258394
+        }
+      }
+    }
+  },
+  "vertex_star_reports": [
+    {
+      "components": [
+        {
+          "node_identity": 11635,
+          "source_cells": [
+            2964,
+            56207,
+            90757,
+            128816,
+            194329,
+            234085,
+            404332,
+            406419,
+            567184,
+            703679,
+            705928,
+            874892,
+            877240,
+            913065,
+            932235,
+            965498,
+            1001396,
+            1207091,
+            1377190,
+            1420762
+          ],
+          "source_label_counts": {
+            "3": 3,
+            "4": 17
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 20,
+      "source_node": 11635
+    },
+    {
+      "components": [
+        {
+          "node_identity": 26256,
+          "source_cells": [
+            6886,
+            65176,
+            100045,
+            488182,
+            566560,
+            600195,
+            643008,
+            695418,
+            801238,
+            884499,
+            910927,
+            1060828,
+            1175703,
+            1185922,
+            1309400,
+            1349861
+          ],
+          "source_label_counts": {
+            "1": 9,
+            "2": 7
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 16,
+      "source_node": 26256
+    },
+    {
+      "components": [
+        {
+          "node_identity": 36861,
+          "source_cells": [
+            9863,
+            109120,
+            155149,
+            166832,
+            243170,
+            260861,
+            357831,
+            472392,
+            505130,
+            562598,
+            670431,
+            762128,
+            800943,
+            849507,
+            868273,
+            874416,
+            910751,
+            1085941,
+            1145825,
+            1242725,
+            1418809
+          ],
+          "source_label_counts": {
+            "3": 11,
+            "5": 10
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 21,
+      "source_node": 36861
+    },
+    {
+      "components": [
+        {
+          "node_identity": 46421,
+          "source_cells": [
+            12684,
+            165587,
+            256107,
+            426278,
+            717076,
+            770558,
+            866689,
+            1005447,
+            1032812,
+            1037291,
+            1155943,
+            1187754,
+            1254411
+          ],
+          "source_label_counts": {
+            "3": 13
+          }
+        },
+        {
+          "node_identity": 300965,
+          "source_cells": [
+            411048,
+            830056
+          ],
+          "source_label_counts": {
+            "4": 2
+          }
+        }
+      ],
+      "face_connected_star_components": 2,
+      "incident_tetrahedra": 15,
+      "source_node": 46421
+    },
+    {
+      "components": [
+        {
+          "node_identity": 48317,
+          "source_cells": [
+            13250,
+            247203,
+            313302,
+            370922,
+            595334,
+            640956,
+            655415,
+            678255,
+            693056,
+            698056,
+            1048811,
+            1058709,
+            1121623,
+            1190216,
+            1310211,
+            1401155
+          ],
+          "source_label_counts": {
+            "3": 16
+          }
+        },
+        {
+          "node_identity": 300966,
+          "source_cells": [
+            396442
+          ],
+          "source_label_counts": {
+            "4": 1
+          }
+        }
+      ],
+      "face_connected_star_components": 2,
+      "incident_tetrahedra": 17,
+      "source_node": 48317
+    },
+    {
+      "components": [
+        {
+          "node_identity": 48320,
+          "source_cells": [
+            13250,
+            138625,
+            259604,
+            297128,
+            313302,
+            396442,
+            445310,
+            655415,
+            668636,
+            750876,
+            890653,
+            935619,
+            962710,
+            1021698,
+            1098700,
+            1123079,
+            1162607,
+            1293374
+          ],
+          "source_label_counts": {
+            "3": 7,
+            "4": 11
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 18,
+      "source_node": 48320
+    },
+    {
+      "components": [
+        {
+          "node_identity": 59341,
+          "source_cells": [
+            16618,
+            85976,
+            107319,
+            190600,
+            432607,
+            465931,
+            500275,
+            531281,
+            533022,
+            555244,
+            583609,
+            592656,
+            614015,
+            627263,
+            665632,
+            790763,
+            986254,
+            1033903,
+            1077168,
+            1108891,
+            1188964,
+            1315072,
+            1339465
+          ],
+          "source_label_counts": {
+            "3": 8,
+            "4": 15
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 23,
+      "source_node": 59341
+    },
+    {
+      "components": [
+        {
+          "node_identity": 61325,
+          "source_cells": [
+            17248,
+            291483,
+            378926,
+            632203,
+            645465,
+            787655,
+            800658,
+            816742,
+            837767,
+            886540,
+            1382852
+          ],
+          "source_label_counts": {
+            "4": 11
+          }
+        },
+        {
+          "node_identity": 300967,
+          "source_cells": [
+            455600
+          ],
+          "source_label_counts": {
+            "3": 1
+          }
+        }
+      ],
+      "face_connected_star_components": 2,
+      "incident_tetrahedra": 12,
+      "source_node": 61325
+    },
+    {
+      "components": [
+        {
+          "node_identity": 72422,
+          "source_cells": [
+            20865,
+            222349,
+            303218,
+            360173,
+            526787,
+            591130,
+            805903,
+            910355,
+            1117827,
+            1212500,
+            1375740
+          ],
+          "source_label_counts": {
+            "4": 11
+          }
+        },
+        {
+          "node_identity": 300968,
+          "source_cells": [
+            1184418
+          ],
+          "source_label_counts": {
+            "3": 1
+          }
+        }
+      ],
+      "face_connected_star_components": 2,
+      "incident_tetrahedra": 12,
+      "source_node": 72422
+    },
+    {
+      "components": [
+        {
+          "node_identity": 90824,
+          "source_cells": [
+            27295,
+            59363,
+            95151,
+            261512,
+            357751,
+            382418,
+            560751,
+            591803,
+            708565,
+            861184,
+            880022,
+            914608,
+            948211,
+            977283,
+            994348,
+            1000599,
+            1001512,
+            1017267,
+            1032868,
+            1033694,
+            1198812,
+            1240466,
+            1242504,
+            1393322,
+            1411514,
+            1448921
+          ],
+          "source_label_counts": {
+            "3": 12,
+            "5": 14
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 26,
+      "source_node": 90824
+    },
+    {
+      "components": [
+        {
+          "node_identity": 117453,
+          "source_cells": [
+            37824,
+            223388,
+            234288,
+            260758,
+            332442,
+            349413,
+            457835,
+            462091,
+            597659,
+            613671,
+            703201,
+            760517,
+            825301,
+            866689,
+            1009194,
+            1032812,
+            1186090,
+            1187754,
+            1254411,
+            1351992,
+            1370328
+          ],
+          "source_label_counts": {
+            "3": 11,
+            "4": 10
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 21,
+      "source_node": 117453
+    },
+    {
+      "components": [
+        {
+          "node_identity": 122128,
+          "source_cells": [
+            39860,
+            166832,
+            505130,
+            680321,
+            762128,
+            798586,
+            1055844,
+            1197012,
+            1219261,
+            1393595,
+            1421684
+          ],
+          "source_label_counts": {
+            "5": 11
+          }
+        },
+        {
+          "node_identity": 300969,
+          "source_cells": [
+            910751
+          ],
+          "source_label_counts": {
+            "3": 1
+          }
+        }
+      ],
+      "face_connected_star_components": 2,
+      "incident_tetrahedra": 12,
+      "source_node": 122128
+    },
+    {
+      "components": [
+        {
+          "node_identity": 125958,
+          "source_cells": [
+            41563,
+            88555,
+            138747,
+            219554,
+            375834,
+            470701,
+            512457,
+            575934,
+            612379,
+            762637,
+            865436,
+            919845,
+            995243,
+            1002137,
+            1010385,
+            1112210,
+            1171312,
+            1174683,
+            1174723,
+            1308092,
+            1357778,
+            1368916,
+            1446849
+          ],
+          "source_label_counts": {
+            "3": 12,
+            "4": 11
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 23,
+      "source_node": 125958
+    },
+    {
+      "components": [
+        {
+          "node_identity": 125959,
+          "source_cells": [
+            41563,
+            126744,
+            141498,
+            141784,
+            470701,
+            567913,
+            612379,
+            713299,
+            724004,
+            879211,
+            1102176,
+            1357778
+          ],
+          "source_label_counts": {
+            "3": 12
+          }
+        },
+        {
+          "node_identity": 300970,
+          "source_cells": [
+            1308092
+          ],
+          "source_label_counts": {
+            "4": 1
+          }
+        }
+      ],
+      "face_connected_star_components": 2,
+      "incident_tetrahedra": 13,
+      "source_node": 125959
+    },
+    {
+      "components": [
+        {
+          "node_identity": 126709,
+          "source_cells": [
+            41906,
+            194329,
+            403887,
+            416144,
+            425858,
+            583345,
+            649892,
+            713299,
+            724004,
+            731664,
+            879211,
+            1389931,
+            1453648
+          ],
+          "source_label_counts": {
+            "3": 13
+          }
+        },
+        {
+          "node_identity": 300971,
+          "source_cells": [
+            567184
+          ],
+          "source_label_counts": {
+            "4": 1
+          }
+        }
+      ],
+      "face_connected_star_components": 2,
+      "incident_tetrahedra": 14,
+      "source_node": 126709
+    },
+    {
+      "components": [
+        {
+          "node_identity": 128283,
+          "source_cells": [
+            42617,
+            63382,
+            102231,
+            105224,
+            131138,
+            372220,
+            382359,
+            614594,
+            622961,
+            805903,
+            827878,
+            995147,
+            1085919,
+            1181748,
+            1184418,
+            1212500,
+            1417903,
+            1441375
+          ],
+          "source_label_counts": {
+            "3": 13,
+            "4": 5
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 18,
+      "source_node": 128283
+    },
+    {
+      "components": [
+        {
+          "node_identity": 131663,
+          "source_cells": [
+            44188,
+            417437,
+            429405,
+            462514,
+            466826,
+            494226,
+            508140,
+            568297,
+            573909,
+            602745,
+            612966,
+            768796,
+            896330,
+            910265,
+            982023,
+            1089313,
+            1161905,
+            1229918,
+            1237794
+          ],
+          "source_label_counts": {
+            "10": 6,
+            "2": 9,
+            "6": 4
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 19,
+      "source_node": 131663
+    },
+    {
+      "components": [
+        {
+          "node_identity": 147833,
+          "source_cells": [
+            52199,
+            99501,
+            165587,
+            206245,
+            328497,
+            411048,
+            457835,
+            555373,
+            703201,
+            744802,
+            760517,
+            954392,
+            980198,
+            1005447,
+            1026448,
+            1114726,
+            1149712,
+            1194238,
+            1254411,
+            1343469
+          ],
+          "source_label_counts": {
+            "3": 12,
+            "4": 8
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 20,
+      "source_node": 147833
+    },
+    {
+      "components": [
+        {
+          "node_identity": 155291,
+          "source_cells": [
+            56207,
+            90757,
+            126744,
+            139902,
+            173177,
+            300142,
+            411863,
+            567184,
+            724004,
+            731664,
+            762637,
+            904675,
+            932235,
+            1002137,
+            1061895,
+            1258489,
+            1308092,
+            1332680,
+            1376855
+          ],
+          "source_label_counts": {
+            "3": 5,
+            "4": 14
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 19,
+      "source_node": 155291
+    },
+    {
+      "components": [
+        {
+          "node_identity": 155446,
+          "source_cells": [
+            56279,
+            113070,
+            116177,
+            176472,
+            187893,
+            260612,
+            296329,
+            372001,
+            576433,
+            584512,
+            614817,
+            667620,
+            743827,
+            830256,
+            936228,
+            989614,
+            1100482,
+            1185974,
+            1233163,
+            1461633
+          ],
+          "source_label_counts": {
+            "10": 6,
+            "2": 6,
+            "6": 8
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 20,
+      "source_node": 155446
+    },
+    {
+      "components": [
+        {
+          "node_identity": 164090,
+          "source_cells": [
+            61100,
+            79297,
+            85211,
+            338744,
+            354547,
+            488182,
+            520661,
+            564882,
+            763162,
+            1043647,
+            1192441,
+            1227143,
+            1276274,
+            1309400,
+            1433945
+          ],
+          "source_label_counts": {
+            "1": 2,
+            "2": 13
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 15,
+      "source_node": 164090
+    },
+    {
+      "components": [
+        {
+          "node_identity": 170947,
+          "source_cells": [
+            65176,
+            268309,
+            621159,
+            643008,
+            685249,
+            695418,
+            802000,
+            925923,
+            936979,
+            1192441,
+            1194366,
+            1324775
+          ],
+          "source_label_counts": {
+            "1": 12
+          }
+        },
+        {
+          "node_identity": 300972,
+          "source_cells": [
+            1309400
+          ],
+          "source_label_counts": {
+            "2": 1
+          }
+        }
+      ],
+      "face_connected_star_components": 2,
+      "incident_tetrahedra": 13,
+      "source_node": 170947
+    },
+    {
+      "components": [
+        {
+          "node_identity": 181428,
+          "source_cells": [
+            71933,
+            227143,
+            281184,
+            422156,
+            445692,
+            482302,
+            612629,
+            615640,
+            624120,
+            714456,
+            763871,
+            772566,
+            941491,
+            1007082,
+            1060456,
+            1072953,
+            1105676,
+            1222995,
+            1272056,
+            1300691
+          ],
+          "source_label_counts": {
+            "3": 8,
+            "4": 12
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 20,
+      "source_node": 181428
+    },
+    {
+      "components": [
+        {
+          "node_identity": 189126,
+          "source_cells": [
+            77256,
+            122517,
+            147411,
+            168597,
+            411228,
+            412596,
+            459647,
+            478874,
+            551905,
+            628447,
+            649993,
+            653199,
+            660781,
+            769830,
+            842556,
+            908786,
+            1046569,
+            1092666,
+            1351345,
+            1429884,
+            1456865,
+            1469825
+          ],
+          "source_label_counts": {
+            "1": 11,
+            "2": 11
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 22,
+      "source_node": 189126
+    },
+    {
+      "components": [
+        {
+          "node_identity": 194623,
+          "source_cells": [
+            81336,
+            101663,
+            143711,
+            216371,
+            231210,
+            277670,
+            286663,
+            347955,
+            462172,
+            493515,
+            671479,
+            679124,
+            705357,
+            715051,
+            908086,
+            1023174,
+            1032607,
+            1036422,
+            1039476,
+            1059338,
+            1099701,
+            1103843,
+            1211946,
+            1270165,
+            1448709
+          ],
+          "source_label_counts": {
+            "1": 25
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 25,
+      "source_node": 194623
+    },
+    {
+      "components": [
+        {
+          "node_identity": 202469,
+          "source_cells": [
+            87719,
+            242737,
+            275971,
+            324452,
+            346338,
+            464871,
+            576528,
+            607688,
+            627263,
+            647176,
+            671268,
+            726243,
+            1070817,
+            1108891,
+            1253083,
+            1268112,
+            1277698,
+            1315072,
+            1339465,
+            1413437,
+            1467969
+          ],
+          "source_label_counts": {
+            "3": 6,
+            "4": 15
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 21,
+      "source_node": 202469
+    },
+    {
+      "components": [
+        {
+          "node_identity": 218256,
+          "source_cells": [
+            102389,
+            153069,
+            226224,
+            258565,
+            408586,
+            476038,
+            512457,
+            575934,
+            581742,
+            892907,
+            952655,
+            1016149,
+            1039552,
+            1039835,
+            1065321,
+            1112210,
+            1193627,
+            1253976,
+            1407795,
+            1448631
+          ],
+          "source_label_counts": {
+            "3": 6,
+            "4": 14
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 20,
+      "source_node": 218256
+    },
+    {
+      "components": [
+        {
+          "node_identity": 222142,
+          "source_cells": [
+            106452,
+            143148,
+            231210,
+            347027,
+            471130,
+            679124,
+            923875,
+            943322,
+            1032607,
+            1039476,
+            1175704,
+            1268037,
+            1296695,
+            1313128,
+            1369165,
+            1389750
+          ],
+          "source_label_counts": {
+            "1": 16
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 16,
+      "source_node": 222142
+    },
+    {
+      "components": [
+        {
+          "node_identity": 222388,
+          "source_cells": [
+            106739,
+            397970,
+            454848,
+            584512,
+            603343,
+            614817,
+            667620,
+            762127,
+            859383,
+            1202113,
+            1427983,
+            1461633
+          ],
+          "source_label_counts": {
+            "10": 12
+          }
+        },
+        {
+          "node_identity": 300973,
+          "source_cells": [
+            743827
+          ],
+          "source_label_counts": {
+            "6": 1
+          }
+        }
+      ],
+      "face_connected_star_components": 2,
+      "incident_tetrahedra": 13,
+      "source_node": 222388
+    },
+    {
+      "components": [
+        {
+          "node_identity": 223623,
+          "source_cells": [
+            108067,
+            115900,
+            174229,
+            291483,
+            303157,
+            378926,
+            421770,
+            435127,
+            455600,
+            477642,
+            565775,
+            569531,
+            574782,
+            722936,
+            734641,
+            829210,
+            993532,
+            1020241,
+            1064872,
+            1169121,
+            1313792,
+            1353375,
+            1382852
+          ],
+          "source_label_counts": {
+            "3": 12,
+            "4": 11
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 23,
+      "source_node": 223623
+    },
+    {
+      "components": [
+        {
+          "node_identity": 223853,
+          "source_cells": [
+            108289,
+            190600,
+            221014,
+            335552,
+            518016,
+            574276,
+            576528,
+            592656,
+            607688,
+            665632,
+            671268,
+            702078,
+            757214,
+            1027752
+          ],
+          "source_label_counts": {
+            "3": 14
+          }
+        },
+        {
+          "node_identity": 300974,
+          "source_cells": [
+            1315072
+          ],
+          "source_label_counts": {
+            "4": 1
+          }
+        }
+      ],
+      "face_connected_star_components": 2,
+      "incident_tetrahedra": 15,
+      "source_node": 223853
+    },
+    {
+      "components": [
+        {
+          "node_identity": 230431,
+          "source_cells": [
+            115900,
+            232191,
+            303157,
+            378926,
+            490084,
+            519844,
+            558997,
+            574782,
+            746896,
+            886540,
+            1013644,
+            1064872,
+            1067786,
+            1099893,
+            1209192,
+            1286242,
+            1313792,
+            1387613,
+            1440529
+          ],
+          "source_label_counts": {
+            "3": 7,
+            "4": 12
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 19,
+      "source_node": 230431
+    },
+    {
+      "components": [
+        {
+          "node_identity": 233168,
+          "source_cells": [
+            119308,
+            203130,
+            400274,
+            567561,
+            640084,
+            765772,
+            825459,
+            1130881,
+            1140573,
+            1148123,
+            1172923,
+            1227894,
+            1228633,
+            1247392,
+            1250866,
+            1266603,
+            1392800,
+            1466826
+          ],
+          "source_label_counts": {
+            "3": 11,
+            "4": 7
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 18,
+      "source_node": 233168
+    },
+    {
+      "components": [
+        {
+          "node_identity": 235754,
+          "source_cells": [
+            122517
+          ],
+          "source_label_counts": {
+            "2": 1
+          }
+        },
+        {
+          "node_identity": 300975,
+          "source_cells": [
+            248101,
+            333283,
+            377093,
+            412596,
+            483481,
+            715885,
+            760125,
+            769830,
+            893000,
+            1124759,
+            1172201,
+            1351345,
+            1427673
+          ],
+          "source_label_counts": {
+            "1": 13
+          }
+        }
+      ],
+      "face_connected_star_components": 2,
+      "incident_tetrahedra": 14,
+      "source_node": 235754
+    },
+    {
+      "components": [
+        {
+          "node_identity": 237180,
+          "source_cells": [
+            124420,
+            141530,
+            360173,
+            376224,
+            460113,
+            614594,
+            768473,
+            878704,
+            906316,
+            910355,
+            958247,
+            960687,
+            1184418,
+            1268297,
+            1347786,
+            1378703,
+            1417903
+          ],
+          "source_label_counts": {
+            "3": 12,
+            "4": 5
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 17,
+      "source_node": 237180
+    },
+    {
+      "components": [
+        {
+          "node_identity": 242061,
+          "source_cells": [
+            131242,
+            141784,
+            153069,
+            219554,
+            258565,
+            470701,
+            835663,
+            837869,
+            919845,
+            965810,
+            1112210,
+            1448631,
+            1453399
+          ],
+          "source_label_counts": {
+            "3": 13
+          }
+        },
+        {
+          "node_identity": 300976,
+          "source_cells": [
+            1039552
+          ],
+          "source_label_counts": {
+            "4": 1
+          }
+        }
+      ],
+      "face_connected_star_components": 2,
+      "incident_tetrahedra": 14,
+      "source_node": 242061
+    },
+    {
+      "components": [
+        {
+          "node_identity": 268664,
+          "source_cells": [
+            184424,
+            219170,
+            301948,
+            338652,
+            451988,
+            873453,
+            915828,
+            1018967,
+            1130881,
+            1167169,
+            1247392,
+            1304309,
+            1400680,
+            1466826
+          ],
+          "source_label_counts": {
+            "4": 14
+          }
+        },
+        {
+          "node_identity": 300977,
+          "source_cells": [
+            1392800
+          ],
+          "source_label_counts": {
+            "3": 1
+          }
+        }
+      ],
+      "face_connected_star_components": 2,
+      "incident_tetrahedra": 15,
+      "source_node": 268664
+    },
+    {
+      "components": [
+        {
+          "node_identity": 275489,
+          "source_cells": [
+            206245,
+            332442,
+            411048,
+            436981,
+            457835,
+            632116,
+            782370,
+            825301,
+            830056,
+            928038,
+            970418,
+            1262773,
+            1281417,
+            1402658
+          ],
+          "source_label_counts": {
+            "4": 14
+          }
+        },
+        {
+          "node_identity": 300978,
+          "source_cells": [
+            597659,
+            1187754
+          ],
+          "source_label_counts": {
+            "3": 2
+          }
+        }
+      ],
+      "face_connected_star_components": 2,
+      "incident_tetrahedra": 16,
+      "source_node": 275489
+    },
+    {
+      "components": [
+        {
+          "node_identity": 278808,
+          "source_cells": [
+            219170,
+            232892,
+            277324,
+            329588,
+            763041,
+            765772,
+            894106,
+            917058,
+            973722,
+            995512,
+            1216553,
+            1228633,
+            1238391,
+            1262708,
+            1271089,
+            1304309,
+            1328018,
+            1392800
+          ],
+          "source_label_counts": {
+            "3": 13,
+            "4": 5
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 18,
+      "source_node": 278808
+    },
+    {
+      "components": [
+        {
+          "node_identity": 280055,
+          "source_cells": [
+            224713,
+            263911,
+            375686,
+            401029,
+            462514,
+            470221,
+            615749,
+            627020,
+            760664,
+            787357,
+            896330,
+            1089313,
+            1204074,
+            1326972
+          ],
+          "source_label_counts": {
+            "10": 9,
+            "2": 2,
+            "6": 3
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 14,
+      "source_node": 280055
+    },
+    {
+      "components": [
+        {
+          "node_identity": 281591,
+          "source_cells": [
+            232191,
+            266904,
+            387591,
+            415365,
+            482302,
+            490084,
+            519844,
+            614743,
+            714456,
+            760267,
+            1013644,
+            1080888,
+            1111538,
+            1169707,
+            1259713,
+            1282507,
+            1440529
+          ],
+          "source_label_counts": {
+            "3": 13,
+            "4": 4
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 17,
+      "source_node": 281591
+    },
+    {
+      "components": [
+        {
+          "node_identity": 286750,
+          "source_cells": [
+            261512,
+            396609,
+            421787,
+            517831,
+            643304,
+            914608,
+            1000599,
+            1033694,
+            1086529,
+            1162528,
+            1235939,
+            1380504,
+            1394171,
+            1445988
+          ],
+          "source_label_counts": {
+            "5": 14
+          }
+        },
+        {
+          "node_identity": 300979,
+          "source_cells": [
+            1198812
+          ],
+          "source_label_counts": {
+            "3": 1
+          }
+        }
+      ],
+      "face_connected_star_components": 2,
+      "incident_tetrahedra": 15,
+      "source_node": 286750
+    },
+    {
+      "components": [
+        {
+          "node_identity": 287509,
+          "source_cells": [
+            266904,
+            519844,
+            527851,
+            565775,
+            722936,
+            1064872,
+            1239381
+          ],
+          "source_label_counts": {
+            "3": 7
+          }
+        },
+        {
+          "node_identity": 300980,
+          "source_cells": [
+            1209192
+          ],
+          "source_label_counts": {
+            "4": 1
+          }
+        }
+      ],
+      "face_connected_star_components": 2,
+      "incident_tetrahedra": 8,
+      "source_node": 287509
+    },
+    {
+      "components": [
+        {
+          "node_identity": 288939,
+          "source_cells": [
+            277670,
+            558155,
+            908086,
+            943322,
+            1039476,
+            1059338
+          ],
+          "source_label_counts": {
+            "1": 6
+          }
+        },
+        {
+          "node_identity": 300981,
+          "source_cells": [
+            471130
+          ],
+          "source_label_counts": {
+            "1": 1
+          }
+        }
+      ],
+      "face_connected_star_components": 2,
+      "incident_tetrahedra": 7,
+      "source_node": 288939
+    },
+    {
+      "components": [
+        {
+          "node_identity": 289532,
+          "source_cells": [
+            282827,
+            294401,
+            350733,
+            396442,
+            548857,
+            670142,
+            890653,
+            951568,
+            955383,
+            1048811,
+            1098700,
+            1190216,
+            1196463,
+            1255712,
+            1293374,
+            1294018,
+            1398811,
+            1445781,
+            1459690
+          ],
+          "source_label_counts": {
+            "3": 5,
+            "4": 14
+          }
+        }
+      ],
+      "face_connected_star_components": 1,
+      "incident_tetrahedra": 19,
+      "source_node": 289532
+    },
+    {
+      "components": [
+        {
+          "node_identity": 291094,
+          "source_cells": [
+            297343,
+            415365,
+            482302,
+            1060456
+          ],
+          "source_label_counts": {
+            "3": 4
+          }
+        },
+        {
+          "node_identity": 300982,
+          "source_cells": [
+            387591,
+            422156,
+            510838,
+            548881,
+            759728,
+            772566,
+            923174,
+            1072953,
+            1151683,
+            1259713
+          ],
+          "source_label_counts": {
+            "4": 10
+          }
+        }
+      ],
+      "face_connected_star_components": 2,
+      "incident_tetrahedra": 14,
+      "source_node": 291094
+    },
+    {
+      "components": [
+        {
+          "node_identity": 294970,
+          "source_cells": [
+            347027,
+            462172,
+            471130,
+            493515,
+            656209,
+            679124,
+            860340,
+            1348599
+          ],
+          "source_label_counts": {
+            "1": 5,
+            "9": 3
+          }
+        },
+        {
+          "node_identity": 300983,
+          "source_cells": [
+            908086
+          ],
+          "source_label_counts": {
+            "1": 1
+          }
+        }
+      ],
+      "face_connected_star_components": 2,
+      "incident_tetrahedra": 9,
+      "source_node": 294970
+    }
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "artifacts": {
+    "REPORT.md": "0034166362f3156d7d49356be26a56a4113fbe3deef229bc211981ac4ecfc7ff",
+    "audit_defects.py": "d5c0fe021905290d0c8c030371963593a42fe2957bc8df48137400559a8849ab",
+    "audit_split_contacts-attempt001.py": "5de1fc3433ca0706b3aacc1bafb459bdcb2e43d243f7bedb7e7116f9de07ceb7",
+    "audit_split_contacts.py": "82e2bf2e54692e0c9e35f047ff7008959b2649b758df548b7163e5e04c048e97",
+    "report.json": "accc056f506072a4157a5c983a4970c831ac99202ea6b98114263c8a6f31e74c",
+    "run.log": "7c90b8da8a169da6b95c3cd5f1de54d177eb81a807955bdcd4a5680b817e9f82",
+    "split-contacts-attempt001.log": "bf2f2592542efd2e4ff911c0d09891d3352ce8cdb7388121bd69cf30568c93e1",
+    "split-contacts.json": "ae006f56114810608866928762a778276d3f1271b414db86c1e2ccc3fb52ba89",
+    "split-contacts.log": "fe5609dde675aba4599d69cbb628dadd105138fa50f54da0578e8015ec792922"
+  },
+  "asset_manifest_sha256": "7eb93af573b328c77f3960f3f9fb40e337356d64fa6fa3ff59e258d1959b0dee",
+  "asset_path": "/Users/n/human-cardiac-wall-anatomy-20260912/asset",
+  "claim": {
+    "biological_calibration": false,
+    "full_boundary_node_identity_repair_possible": false,
+    "maximal_split_embedded": false,
+    "rv_csv_discrepancy_resolved": false
+  },
+  "competing_native_gpu_or_build_processes_at_start": false,
+  "failed_attempts": [
+    {
+      "failure": "syntax error before execution; corrected missing bracket",
+      "log": "split-contacts-attempt001.log",
+      "returncode": 1,
+      "script": "audit_split_contacts-attempt001.py"
+    }
+  ],
+  "host": "macmini",
+  "human_commit": "ae6aaa97afd6c139969025a83aa04644856667e5",
+  "input_buffers": {
+    "boundary.u32le": {
+      "bytes": 2764368,
+      "role": "outward material boundary; all source cap faces retained",
+      "sha256": "821ad6dedb5f32cce78314d704e35f03726188d9d56978ebb23646e4690b3c60",
+      "shape": [
+        230364,
+        3
+      ]
+    },
+    "boundary_components.u32le": {
+      "bytes": 921456,
+      "role": "deterministic boundary component ID",
+      "sha256": "8e07999b113bd619fe8f0cf0fc5435730fb962ed13bead55e18c9f759352ba0a",
+      "shape": [
+        230364
+      ]
+    },
+    "boundary_owners.u32le": {
+      "bytes": 921456,
+      "role": "original source tetrahedron index",
+      "sha256": "7c3f0bf847d4d5c1aa0badc5ff83345c0165cd3aab516d8576b55474d5495392",
+      "shape": [
+        230364
+      ]
+    },
+    "labels.u32le": {
+      "bytes": 5880332,
+      "role": "unmodified regional source IDs",
+      "sha256": "304d0d9d9a99d51be4367529e9598815361018a446ed047923c85b96786b569a",
+      "shape": [
+        1470083
+      ]
+    },
+    "nodes.f64le": {
+      "bytes": 7223160,
+      "role": "metres; original source node order",
+      "sha256": "4c8e6e7d9adfa5180ba0730c99222044c6a1aa51901823cf0b4dd861ae732716",
+      "shape": [
+        300965,
+        3
+      ]
+    },
+    "tetrahedra.u32le": {
+      "bytes": 23521328,
+      "role": "positive orientation; original source cell order",
+      "sha256": "3f571c7815f0fd2e1f9d2735046d3bb7677a1a011215fca6737c6310b5b29066",
+      "shape": [
+        1470083,
+        4
+      ]
+    },
+    "uvc_v.f64le": {
+      "bytes": 2407720,
+      "role": "unmodified source coordinate including -10 sentinel",
+      "sha256": "5d8d8a19e39717cd1369eefa924db62623bdc600479169b80be95c667773baa7",
+      "shape": [
+        300965
+      ]
+    }
+  },
+  "native_build_or_gpu_execution": false,
+  "native_head_read_only": "f73b07133d09ceb9ed7ff94d48d5863157f2527b",
+  "native_worktree_clean_at_start": true,
+  "owners": {
+    "Build/cardiac-wall-anatomy-20260912/atrial-audit/rodero-boundary/report.json": "ffea96141ab67089f71ed04de8adf4f7132a59e74192edb17eaf8c3555475d32",
+    "Build/cardiac-wall-anatomy-20260912/source-candidates/ct-simulation_output.csv": "3f59ea2e6388aa370efe9046ecd5b4fd8bee87037aa904f45a80356f3932edcd",
+    "Build/cardiac-wall-anatomy-20260912/source-candidates/rodero-2021-s1.pdf": "08777693dcfd5cfaac676c3e015761d62b68706af21577e678f89808a0c979ba",
+    "Build/cardiac-wall-anatomy-20260912/source-candidates/rodero-2021-s1.txt": "b6902302c0aba3abac86dfe11f354b9ab7e45b606dee5cb2deeba838448007a4",
+    "config/cardiac-wall-rodero18.v1.json": "23c931fef53edced85e0e0a36c73d8490dddb87db6bd988482a2cdfc5a1442cc",
+    "src/numilab_human/cardiac_cavity_intersections.py": "8b138882161c78312cb9b5aa46f49795092eb9b67ed9f705dc354787cb0a635b",
+    "src/numilab_human/cardiac_wall_source.py": "73e7df99e684454538691285b4537ae9102e261715dd87c6d50020f044b0bfcf"
+  },
+  "physical_stepping": false,
+  "production_edits": false,
+  "python_executable": "/Users/n/human-cardiac-partition-20260912/venv/bin/python",
+  "runs": [
+    {
+      "command": [
+        "/Users/n/human-cardiac-partition-20260912/venv/bin/python",
+        "/Users/n/human-cardiac-material-field-20260912/source-defects/audit_defects.py",
+        "--asset",
+        "/Users/n/human-cardiac-wall-anatomy-20260912/asset",
+        "--boundary-audit",
+        "/Users/n/human-cardiac-wall-anatomy-20260912/atrial-audit/rodero-boundary/report.json",
+        "--source-csv",
+        "/Users/n/human-cardiac-material-field-20260912/source-defects/ct-simulation_output.csv",
+        "--output",
+        "/Users/n/human-cardiac-material-field-20260912/source-defects/report.json"
+      ],
+      "elapsed_seconds": 6.239466666709632,
+      "log": "run.log",
+      "result": "report.json",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/n/human-cardiac-partition-20260912/venv/bin/python",
+        "/Users/n/human-cardiac-material-field-20260912/source-defects/audit_split_contacts.py",
+        "--asset",
+        "/Users/n/human-cardiac-wall-anatomy-20260912/asset",
+        "--report",
+        "/Users/n/human-cardiac-material-field-20260912/source-defects/report.json",
+        "--owners-root",
+        "/Users/n/human-cardiac-partition-20260912/qualification-001",
+        "--output",
+        "/Users/n/human-cardiac-material-field-20260912/source-defects/split-contacts.json"
+      ],
+      "elapsed_seconds": 0.23638574965298176,
+      "log": "split-contacts.log",
+      "result": "split-contacts.json",
+      "returncode": 0
+    }
+  ],
+  "schema": "NumiHuman.Rodero18SourceDefectExecution.v1",
+  "source_geometry_changed": false,
+  "status": "audit_complete_source_admission_blocked"
+}
