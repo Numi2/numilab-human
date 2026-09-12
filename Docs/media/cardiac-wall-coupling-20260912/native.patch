@@ -1,0 +1,2138 @@
+diff --git a/docs/HUMAN_VASCULAR_CAVITY.md b/docs/HUMAN_VASCULAR_CAVITY.md
+new file mode 100644
+index 0000000..d2dfcab
+--- /dev/null
++++ b/docs/HUMAN_VASCULAR_CAVITY.md
+@@ -0,0 +1,97 @@
++# Deforming vascular cavities
++
++Matter can bind one absolute-volume hydraulic compartment to the closed inner
++boundary of an immutable FEM wall. The compartment pressure becomes an
++independent unknown in the existing Newton–FGMRES system. The same accepted
++transaction owns wall motion, hydraulic volume, pressure, flow, transported
++amounts, and exact physical time.
++
++## Equations and units
++
++For each bound compartment, the ordinary conservative volume row remains
++`V - V_accepted + dt * sum(signed Q) = 0`. An additional pressure row enforces
++`V - V_boundary(x) = 0`. Connections use the independent absolute pressure in
++Pa; volume is in m³, flow in m³/s, and transported amount in mol. Bound
++compartments have no additional compliance, reference-volume offset, or
++elastance waveform: these would duplicate the wall response.
++
++The oriented triangular boundary defines its signed volume. A fixed accepted
++vertex supplies the evaluation origin. Wall force is `(p - p_external) * G`,
++where `G = (grad V(x_accepted) + 4 grad V((x_accepted+x)/2) + grad V(x))/6`.
++Volume is cubic in the positions, so this discrete gradient satisfies
++`G · (x-x_accepted) = V(x)-V(x_accepted)` in exact arithmetic. This is an
++interface work identity; it does not remove the time-integration error or
++dissipation of the rest of the model.
++
++The matrix-free operator differentiates both pressure and geometry, including
++the curvature of this discrete gradient. FEM directions are velocity
++increments, so their geometric direction is `dt * delta_velocity`. Existing
++Human attachment lifting and transpose scattering apply once to the wall
++force and its derivative. All borrowed external FEM loads are retained in a
++derived force buffer. The geometry constraint participates in line search and
++final residual certification.
++
++A bound wall uses every hydraulic microtick. Compilation sets its immutable
++scheduler base, active, and requested exponents to the world maximum; package
++and snapshot admission check that invariant. A separate mechanical stepping
++loop is unnecessary.
++
++Immutable worlds without mutation commands skip topology transactions and
++mass rebuilding. Their cooked nodal masses and inverse masses remain exact;
++mutable worlds and explicit mutation requests retain the existing validation
++and transaction path.
++
++## Authoring and admission
++
++Use `WorldSource::vascular.cavities` with
++`VascularPressureLaw::deformingCavity`. Each `VascularCavitySource` identifies
++one compartment, one FEM object, initial absolute pressure, pressure scale,
++normalized geometry tolerance, source and mechanical identities, and stable
++oriented `materialWall` faces using object-local node indices. The public
++example is `matter/tools/vascular_cavity_fixture.hpp`.
++
++The compiler requires:
++
++- Exactly one binding for each deforming compartment, using absolute volume.
++- Real exposed tetrahedral faces, oriented from the lumen into the wall.
++- A connected, closed, consistently oriented vertex-manifold surface with
++  positive enclosed volume and unique owned faces.
++- An initial hydraulic volume matching the actual cooked geometry within both
++  the declared tolerance and an independent FP32 relative bound.
++- Immutable, nonadaptive FEM ownership and finite representable pressure and
++  transmural pressure.
++
++An outer solid boundary cannot be relabeled as a hollow lumen: the required
++orientation and positive enclosed volume reject that construction. Artificial
++partition interfaces are rejected. Provenance identities bind the authored
++inputs but do not prove anatomical correctness, embeddedness, or calibration.
++
++ABI 29 and package 14 serialize the boundary tables, incidence, and appended
++pressure rows. Snapshot 7 and accepted-state proof manifest 7 cover the new
++state layout. Reset, checkpoint, replay, and rollback use the same vascular
++state arena. Snapshot restore also rejects inconsistent hydraulic volume and
++FEM cavity geometry; signed pressure remains valid when finite.
++
++## Qualification and remaining anatomy work
++
++`numi-matter-vascular-cavity-check` exercises a synthetic hollow shell with a
++real absent central cell: 64 nodes, 156 tetrahedra, 12 inner faces, eight free
++inner nodes, and 56 fixed exterior nodes. Its direct Metal-kernel checks and
++accepted-step checks separate operator correctness, pressure work,
++conservation, wall deformation, and transaction behavior. The fully fixed wall
++is a control. The source fixture declares its material constants and carries
++no anatomical calibration claim.
++
++This contract is currently available through native C++ WorldSource authoring.
++Human physiology JSON v1–v3 remain their existing lumped-network formats.
++Anatomical use still requires an admitted wall mesh, a consistent cavity/wall
++registration, physical port/valve boundary ownership, and measured material
++and loading calibration. The previous RA/RV cavity partition alternatives do
++not select an anatomical wall or define a physical septum.
++
++Hydraulic volume and transported moles are not three-dimensional blood mass,
++inertia, or momentum. The implementation does not add blood mass to the FEM
++wall or subtract it from an anatomical rigid donor. That requires explicit
++source mass inclusion, conservative donor accounting, and spatial mass and
++momentum transfer. This increment does not qualify whole-heart mechanics,
++standing, walking, or biological accuracy.
+diff --git a/include/metalrobo/MatterSnapshotArchive.hpp b/include/metalrobo/MatterSnapshotArchive.hpp
+index e8eee3d..e9cf1fa 100644
+--- a/include/metalrobo/MatterSnapshotArchive.hpp
++++ b/include/metalrobo/MatterSnapshotArchive.hpp
+@@ -8,7 +8,7 @@
+ 
+ namespace metalrobo {
+ 
+-constexpr std::uint32_t kMatterSnapshotArchiveVersion = 6u;
++constexpr std::uint32_t kMatterSnapshotArchiveVersion = 7u;
+ 
+ enum class MatterSnapshotArchiveStatus : std::uint32_t {
+     success = 0u,
+diff --git a/matter/CMakeLists.txt b/matter/CMakeLists.txt
+index bd7aad1..63b49e3 100644
+--- a/matter/CMakeLists.txt
++++ b/matter/CMakeLists.txt
+@@ -300,3 +300,15 @@ if(APPLE)
+         set_tests_properties(matter.metal.cardiac_source PROPERTIES LABELS "matter;metal;human;vascular" TIMEOUT 120)
+     endif()
+ endif()
++
++if(APPLE)
++    add_executable(numi-matter-vascular-cavity-check tools/vascular_cavity_check.mm)
++    target_link_libraries(numi-matter-vascular-cavity-check PRIVATE numi_matter_runtime "${FOUNDATION_FRAMEWORK}" "${METAL_FRAMEWORK}")
++    target_include_directories(numi-matter-vascular-cavity-check PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../include")
++    target_compile_definitions(numi-matter-vascular-cavity-check PRIVATE NUMI_MATTER_METALLIB="${NUMI_MATTER_METALLIB}")
++    target_compile_options(numi-matter-vascular-cavity-check PRIVATE -fobjc-arc -Wall -Wextra -Wpedantic -Werror)
++    if(BUILD_TESTING)
++        add_test(NAME matter.metal.vascular_cavity COMMAND numi-matter-vascular-cavity-check)
++        set_tests_properties(matter.metal.vascular_cavity PROPERTIES LABELS "matter;metal;human;vascular;cavity" TIMEOUT 120)
++    endif()
++endif()
+diff --git a/matter/include/numi/matter/matter.hpp b/matter/include/numi/matter/matter.hpp
+index 2935a2b..dade6f7 100644
+--- a/matter/include/numi/matter/matter.hpp
++++ b/matter/include/numi/matter/matter.hpp
+@@ -465,7 +465,7 @@ struct VascularSpeciesSource {
+     double amountResidualTolerance = 0.0;
+ };
+ enum class VascularStorageKind : std::uint32_t { absoluteVolume = 0u, storageDisplacement = 1u };
+-enum class VascularPressureLaw : std::uint32_t { linearCompliance = 0u, ventricularElastance = 1u, atrialElastance = 2u, atanCompliance = 3u, cosinePulseElastance = 4u };
++enum class VascularPressureLaw : std::uint32_t { linearCompliance = 0u, ventricularElastance = 1u, atrialElastance = 2u, atanCompliance = 3u, cosinePulseElastance = 4u, deformingCavity = 5u };
+ enum class VascularFlowLaw : std::uint32_t { resistanceInertance = 0u, oneWayOrifice = 1u, oneWayResistance = 2u, starlingResistance = 3u };
+ struct VascularCompartmentSource {
+     std::uint32_t stableIdentifier = 0u;
+@@ -530,6 +530,29 @@ struct VascularExchangeSource {
+     double permeabilitySurface = 0.0; // m3/s, strictly positive
+     double partitionCoefficient = 0.0; // c_blood - c_tissue / K
+ };
++// Source provenance is retained verbatim; the cooked package independently
++// fingerprints the exact FEM geometry, material, incidence and these identities.
++// This contract supplies hydraulic wall work, not blood mechanical mass.
++enum class VascularCavityFaceRole : std::uint32_t {
++    unspecified = 0u, materialWall = 1u, artificialPartitionInterface = 2u
++};
++struct VascularCavityFaceSource {
++    std::uint32_t stableIdentifier = 0u;
++    std::array<std::uint32_t, 3> nodes{}; // object-local real boundary FEM nodes
++    VascularCavityFaceRole role = VascularCavityFaceRole::unspecified;
++};
++struct VascularCavitySource {
++    std::uint32_t stableIdentifier = 0u;
++    std::uint32_t compartment = 0u; // stable compartment identifier
++    std::uint32_t objectIndex = NM_INVALID_INDEX;
++    double initialPressure = 0.0; // absolute Pa; wall uses p - externalPressure
++    double pressureScale = 0.0; // Pa, pressure unknown scale
++    double geometryResidualTolerance = 0.0; // (V - V_cavity) / volumeScale
++    std::array<std::uint64_t, 4> sourceIdentity{};
++    std::array<std::uint64_t, 4> mechanicalIdentity{};
++    std::vector<VascularCavityFaceSource> faces;
++};
++
+ struct VascularNetworkSource {
+     // Whole source payload and upstream graph SHA256 bytes as four u64 words.
+     // They are exact provenance, never host pointers or runtime state.
+@@ -541,6 +564,7 @@ struct VascularNetworkSource {
+     std::vector<VascularConnectionSource> connections;
+     std::vector<VascularTissueSource> tissues;
+     std::vector<VascularExchangeSource> exchanges;
++    std::vector<VascularCavitySource> cavities;
+ };
+ 
+ struct WorldSource {
+@@ -612,6 +636,11 @@ struct CookedVascular {
+     std::vector<NMVascularExchangeGPU> exchanges;
+     std::vector<NMVascularTissueBindingGPU> tissueBindings;
+     std::vector<NMVascularUnknownGPU> unknowns;
++    std::vector<NMVascularCavityGPU> cavities;
++    std::vector<NMVascularCavityFaceGPU> cavityFaces;
++    std::vector<std::uint32_t> compartmentCavity; // cavity index or invalid
++    std::vector<std::uint32_t> cavityNodeIncidence; // face indices, node-major
++    std::vector<NMVascularRangeGPU> cavityNodeRanges; // global FEM node order
+     std::vector<std::uint32_t> connectionIncidence;
+     std::vector<NMVascularRangeGPU> connectionRanges;
+     std::vector<std::uint32_t> bloodExchangeIncidence;
+diff --git a/matter/include/numi/matter/shared.h b/matter/include/numi/matter/shared.h
+index 20c0232..661b964 100644
+--- a/matter/include/numi/matter/shared.h
++++ b/matter/include/numi/matter/shared.h
+@@ -39,7 +39,7 @@ typedef struct NM_ALIGN16 nm_int4 {
+ } nm_int4;
+ #endif
+ 
+-#define NM_MATTER_ABI_VERSION 28u
++#define NM_MATTER_ABI_VERSION 29u
+ #define NM_INVALID_INDEX 0xffffffffu
+ #define NM_EXPRESSION_STACK_CAPACITY 96u
+ #define NM_MPM_STENCIL_WIDTH 27u
+@@ -392,7 +392,21 @@ typedef struct NM_ALIGN16 NMVascularLayoutGPU {
+     nm_uint4 ranges; // exchanges, tissue bindings, unknown count, flags (zero)
+     nm_uint4 offsets; // volume/storage, flow, blood amount, tissue amount base indices
+     nm_uint4 clock; // x: signed binary time quantum exponent, y/z/w reserved zero
++    nm_uint4 cavities; // cavity count, face count, pressure unknown base, reserved zero
+ } NMVascularLayoutGPU;
++// A material-wall cavity is an explicit pressure-volume constraint. Its
++// boundary is cavity-outward (opposite the adjacent material's outward face).
++typedef struct NM_ALIGN16 NMVascularCavityGPU {
++    nm_uint4 identity; // stable id, compartment index, FEM object, pressure row
++    nm_uint4 faces; // first face, count, reserved zero, reserved zero
++    nm_u64 sourceIdentity[4]; // authored cavity geometry SHA256 provenance
++    nm_u64 mechanicalIdentity[4]; // authored wall-mechanics SHA256 provenance
++} NMVascularCavityGPU;
++typedef struct NM_ALIGN16 NMVascularCavityFaceGPU {
++    nm_uint4 nodes; // global FEM nodes xyz, reserved zero
++    nm_uint4 identity; // cavity index, stable face id, materialWall (1), zero
++} NMVascularCavityFaceGPU;
++
+ typedef struct NM_ALIGN16 NMVascularClockGPU {
+     nm_u64 low; // elapsed accepted ticks, unsigned 128-bit low/high words
+     nm_u64 high;
+@@ -1179,6 +1193,9 @@ static_assert(sizeof(NMContinuumObjectGPU) % 16 == 0);
+ static_assert(sizeof(NMMPMGridGPU) == 80);
+ static_assert(sizeof(NMMPMBlockGPU) == 32);
+ static_assert(sizeof(NMParticleStateGPU) % 16 == 0);
++static_assert(sizeof(NMVascularLayoutGPU) == 80);
++static_assert(sizeof(NMVascularCavityGPU) == 96);
++static_assert(sizeof(NMVascularCavityFaceGPU) == 32);
+ static_assert(sizeof(NMFEMHumanAttachmentGPU) == 32);
+ static_assert(alignof(NMFEMHumanAttachmentGPU) == 16);
+ static_assert(sizeof(NMFEMNodeStateGPU) % 16 == 0);
+diff --git a/matter/src/accepted_state_proof_gpu.hpp b/matter/src/accepted_state_proof_gpu.hpp
+index a398ec3..c38d37b 100644
+--- a/matter/src/accepted_state_proof_gpu.hpp
++++ b/matter/src/accepted_state_proof_gpu.hpp
+@@ -5,7 +5,7 @@
+ namespace numi::matter::detail {
+ 
+ inline constexpr std::uint32_t kAcceptedStateProofSchemaVersion = 3u;
+-inline constexpr std::uint32_t kAcceptedStateProofManifestVersion = 6u;
++inline constexpr std::uint32_t kAcceptedStateProofManifestVersion = 7u;
+ inline constexpr std::uint32_t kAcceptedStateProofChunkBytes = 1024u;
+ inline constexpr std::uint32_t kAcceptedStateProofTargetHuman = 0u;
+ inline constexpr std::uint32_t kAcceptedStateProofTargetMatter = 1u;
+diff --git a/matter/src/fingerprint_impl.cpp b/matter/src/fingerprint_impl.cpp
+index c673707..2165a63 100644
+--- a/matter/src/fingerprint_impl.cpp
++++ b/matter/src/fingerprint_impl.cpp
+@@ -66,6 +66,11 @@ enum class FingerprintSection : std::uint32_t {
+     vascularTissueExchangeIncidence,
+     vascularTissueExchangeRanges,
+     vascularNames,
++    vascularCavities,
++    vascularCavityFaces,
++    vascularCompartmentCavity,
++    vascularCavityNodeIncidence,
++    vascularCavityNodeRanges,
+ };
+ 
+ template <typename T>
+@@ -222,6 +227,16 @@ std::uint64_t compiledWorldFingerprint(
+         std::span<const std::uint32_t>(world.vascular.tissueExchangeIncidence));
+     hashSection(fingerprint, FingerprintSection::vascularTissueExchangeRanges,
+         std::span<const NMVascularRangeGPU>(world.vascular.tissueExchangeRanges));
++    hashSection(fingerprint, FingerprintSection::vascularCavities,
++        std::span<const NMVascularCavityGPU>(world.vascular.cavities));
++    hashSection(fingerprint, FingerprintSection::vascularCavityFaces,
++        std::span<const NMVascularCavityFaceGPU>(world.vascular.cavityFaces));
++    hashSection(fingerprint, FingerprintSection::vascularCompartmentCavity,
++        std::span<const std::uint32_t>(world.vascular.compartmentCavity));
++    hashSection(fingerprint, FingerprintSection::vascularCavityNodeIncidence,
++        std::span<const std::uint32_t>(world.vascular.cavityNodeIncidence));
++    hashSection(fingerprint, FingerprintSection::vascularCavityNodeRanges,
++        std::span<const NMVascularRangeGPU>(world.vascular.cavityNodeRanges));
+     hashSection(fingerprint, FingerprintSection::vascularNames,
+         std::span<const std::uint8_t>(world.vascular.names));
+     return fingerprint == 0u ? 1u : fingerprint;
+diff --git a/matter/src/metal/vascular.metalinc b/matter/src/metal/vascular.metalinc
+index dbccca7..e022ab1 100644
+--- a/matter/src/metal/vascular.metalinc
++++ b/matter/src/metal/vascular.metalinc
+@@ -33,6 +33,24 @@ inline float2 vascularPressureTangent(const NMVascularCompartmentGPU node, float
+ inline float vascularPressure(const NMVascularCompartmentGPU node, float volume, float elastance) {
+     return vascularPressureTangent(node, volume, elastance).x;
+ }
++// Return absolute pressure and its physical directional derivative. A
++// deforming cavity has an independent pressure row, never lumped compliance.
++inline float2 vascularNodePressure(uint nodeIndex, uint stateBase, uint coefficientBase,
++    uint directionBase, bool derivative, float trialAlpha,
++    device const NMVascularUnknownGPU* unknowns,
++    device const NMVascularCompartmentGPU* compartments,
++    device const NMVascularCavityGPU* cavities, device const uint* compartmentCavity,
++    device const float4* candidate, device const float4* direction,
++    device const float* elastance) {
++    const bool cavity = compartments[nodeIndex].identity.w == 5u;
++    const uint row = cavity ? cavities[compartmentCavity[nodeIndex]].identity.w : nodeIndex;
++    const float dv = derivative || trialAlpha != 0.0f ?
++        direction[directionBase + row].x * unknowns[row].initialAndScaling.y : 0.0f;
++    const float value = vascularPhysical(candidate, unknowns, stateBase, row) + trialAlpha * dv;
++    if (cavity) return float2(value, derivative ? dv : 0.0f);
++    const float2 pressure = vascularPressureTangent(compartments[nodeIndex], value, elastance[coefficientBase + nodeIndex]);
++    return float2(pressure.x, derivative ? pressure.y * dv : 0.0f);
++}
+ inline float vascularDrivingPressure(const NMVascularConnectionGPU edge, float pa, float pb) {
+     return pa - (edge.identity.w == 3u ? max(pb, edge.physical.w) : pb);
+ }
+@@ -46,6 +64,7 @@ inline float vascularOpenDiagonal(const NMVascularConnectionGPU edge, float q) {
+ inline bool vascularPositiveVariable(const NMVascularLayoutGPU graph, uint row,
+     device const NMVascularCompartmentGPU* compartments,
+     device const NMVascularConnectionGPU* connections) {
++    if (row >= graph.cavities.z) return false;
+     return row < graph.offsets.y ? compartments[row].identity.z == 0u :
+         (row < graph.offsets.z ? connections[row - graph.offsets.y].identity.w != 0u : true);
+ }
+@@ -117,7 +136,7 @@ kernel void nm_vascular_prepare_elastance(
+     const NMVascularCompartmentGPU node = compartments[global % graph.counts.x];
+     float value = 1.0f;
+     if (node.identity.w == 0u || node.identity.w == 3u) value = 1.0f / node.compliance.z;
+-    else {
++    else if (node.identity.w != 5u) {
+         const float phase = float(vascularClockPhaseRemainder(clock[environment], node.periodTicks, node.periodMultiplier)) /
+             float(node.periodTicks) - node.waveform.y;
+         const float start = node.elastance.z;
+@@ -239,6 +258,145 @@ kernel void nm_vascular_rollback(
+     }
+ }
+ 
++// A closed cavity has a cubic signed volume. All evaluations use one fixed
++// accepted vertex as origin, avoiding translation-dependent cancellation.
++inline float2 vascularCavityVolume(const NMVascularCavityGPU cavity,
++    device const NMVascularCavityFaceGPU* faces,
++    device const NMFEMNodeStateGPU* accepted,
++    device const NMFEMNodeStateGPU* candidate,
++    device const float4* direction, uint nodeBase, float dt,
++    bool derivative, float trialAlpha) {
++    const float3 origin = accepted[nodeBase + faces[cavity.faces.x].nodes.x].positionAndMass.xyz;
++    float2 sum = float2(0.0f), compensation = float2(0.0f);
++    for (uint slot = 0u; slot < cavity.faces.y; ++slot) {
++        const uint3 n = faces[cavity.faces.x + slot].nodes.xyz + nodeBase;
++        float3 a = candidate[n.x].positionAndMass.xyz - origin;
++        float3 b = candidate[n.y].positionAndMass.xyz - origin;
++        float3 c = candidate[n.z].positionAndMass.xyz - origin;
++        const bool needsDirection = derivative || trialAlpha != 0.0f;
++        const float3 da = needsDirection ? dt * direction[n.x].xyz : float3(0.0f);
++        const float3 db = needsDirection ? dt * direction[n.y].xyz : float3(0.0f);
++        const float3 dc = needsDirection ? dt * direction[n.z].xyz : float3(0.0f);
++        a += trialAlpha * da; b += trialAlpha * db; c += trialAlpha * dc;
++        const float v = dot(a, cross(b, c)) / 6.0f;
++        const float dv = derivative ?
++            (dot(da, cross(b, c)) + dot(a, cross(db, c) + cross(b, dc))) / 6.0f : 0.0f;
++        const float2 y = float2(v, dv) - compensation;
++        const float2 next = sum + y;
++        compensation = (next - sum) - y;
++        sum = next;
++    }
++    return sum.x > 0.0f && all(isfinite(sum)) ? sum : float2(INFINITY);
++}
++
++inline float3 vascularCavityGradient(float3 b, float3 c) { return cross(b, c) / 6.0f; }
++inline float3 vascularCavityGradientDirection(float3 b, float3 c, float3 db, float3 dc) {
++    return (cross(db, c) + cross(b, dc)) / 6.0f;
++}
++// Cyclically rotate the face so its differentiated node is first.
++inline uint3 vascularCavityRotate(uint3 n, uint node) {
++    return n.x == node ? n : (n.y == node ? n.yzx : n.zxy);
++}
++inline float3 vascularCavityNodeForce(uint node, uint nodeBase, uint stateBase,
++    const NMVascularLayoutGPU graph, float dt, bool derivative,
++    device const NMVascularUnknownGPU* unknowns,
++    device const NMVascularCompartmentGPU* compartments,
++    device const NMVascularCavityGPU* cavities,
++    device const NMVascularCavityFaceGPU* faces,
++    device const uint* incidence, device const NMVascularRangeGPU* ranges,
++    device const NMFEMNodeStateGPU* accepted, device const NMFEMNodeStateGPU* candidate,
++    device const float4* vascularState, device const float4* direction, uint directionBase) {
++    float3 result = float3(0.0f);
++    const NMVascularRangeGPU range = ranges[node];
++    for (uint slot = 0u; slot < range.count; ++slot) {
++        const NMVascularCavityFaceGPU face = faces[incidence[range.first + slot]];
++        const NMVascularCavityGPU cavity = cavities[face.identity.x];
++        const uint3 n = vascularCavityRotate(face.nodes.xyz, node) + nodeBase;
++        const float3 origin = accepted[nodeBase + faces[cavity.faces.x].nodes.x].positionAndMass.xyz;
++        const float3 b0 = accepted[n.y].positionAndMass.xyz - origin;
++        const float3 c0 = accepted[n.z].positionAndMass.xyz - origin;
++        const float3 b1 = candidate[n.y].positionAndMass.xyz - origin;
++        const float3 c1 = candidate[n.z].positionAndMass.xyz - origin;
++        const float3 bm = 0.5f * (b0 + b1), cm = 0.5f * (c0 + c1);
++        const float3 g = (vascularCavityGradient(b0, c0) +
++            4.0f * vascularCavityGradient(bm, cm) + vascularCavityGradient(b1, c1)) / 6.0f;
++        const uint row = cavity.identity.w;
++        const float p = vascularPhysical(vascularState, unknowns, stateBase, row) -
++            compartments[cavity.identity.y].compliance.w;
++        if (derivative) {
++            const float3 db = dt * direction[n.y].xyz, dc = dt * direction[n.z].xyz;
++            const float3 dg = (2.0f * vascularCavityGradientDirection(bm, cm, db, dc) +
++                vascularCavityGradientDirection(b1, c1, db, dc)) / 6.0f;
++            const float dp = direction[directionBase + row].x * unknowns[row].initialAndScaling.y;
++            result += dp * g + p * dg;
++        } else result += p * g;
++    }
++    return result;
++}
++
++kernel void nm_vascular_cavity_forces(
++    constant NMMatterDispatchGPU& dispatch [[buffer(0)]],
++    constant NMVascularLayoutGPU& graph [[buffer(1)]],
++    constant NMMicrostepGPU& microstep [[buffer(2)]],
++    device const NMVascularUnknownGPU* unknowns [[buffer(3)]],
++    device const NMVascularCompartmentGPU* compartments [[buffer(4)]],
++    device const NMVascularCavityGPU* cavities [[buffer(5)]],
++    device const NMVascularCavityFaceGPU* faces [[buffer(6)]],
++    device const uint* incidence [[buffer(7)]],
++    device const NMVascularRangeGPU* ranges [[buffer(8)]],
++    device const NMFEMNodeStateGPU* accepted [[buffer(9)]],
++    device const NMFEMNodeStateGPU* candidate [[buffer(10)]],
++    device const float4* vascularState [[buffer(11)]],
++    device const float4* borrowed [[buffer(12)]],
++    constant uint& hasBorrowed [[buffer(13)]],
++    device float4* merged [[buffer(14)]],
++    device NMMatterStatusGPU* statuses [[buffer(15)]],
++    uint global [[thread_position_in_grid]]) {
++    if (global >= dispatch.environmentCount * dispatch.femNodeCount) return;
++    const uint environment = global / dispatch.femNodeCount;
++    const uint nodeBase = environment * dispatch.femNodeCount;
++    float3 force = hasBorrowed != 0u ? borrowed[global].xyz : float3(0.0f);
++    if (environmentHealthy(statuses, environment))
++        force += vascularCavityNodeForce(global - nodeBase, nodeBase, environment * graph.ranges.z,
++            graph, microstep.time.x, false, unknowns, compartments, cavities, faces, incidence, ranges,
++            accepted, candidate, vascularState, vascularState, 0u);
++    merged[global] = float4(force, 0.0f);
++    if (!all(isfinite(force))) recordFailure(statuses[environment], NM_STATUS_NONLINEAR_SOLVER_FAILURE,
++        NM_INVALID_INDEX, global - nodeBase, float4(force, 0.0f));
++}
++kernel void nm_vascular_cavity_operator(
++    constant NMMatterDispatchGPU& dispatch [[buffer(0)]],
++    constant NMVascularLayoutGPU& graph [[buffer(1)]],
++    constant NMMicrostepGPU& microstep [[buffer(2)]],
++    device const NMVascularUnknownGPU* unknowns [[buffer(3)]],
++    device const NMVascularCompartmentGPU* compartments [[buffer(4)]],
++    device const NMVascularCavityGPU* cavities [[buffer(5)]],
++    device const NMVascularCavityFaceGPU* faces [[buffer(6)]],
++    device const uint* incidence [[buffer(7)]],
++    device const NMVascularRangeGPU* ranges [[buffer(8)]],
++    device const NMFEMNodeStateGPU* accepted [[buffer(9)]],
++    device const NMFEMNodeStateGPU* candidate [[buffer(10)]],
++    device const float4* vascularState [[buffer(11)]],
++    device const float4* direction [[buffer(12)]],
++    device float4* output [[buffer(13)]],
++    device const NMFGMRESStateGPU* states [[buffer(14)]],
++    device NMMatterStatusGPU* statuses [[buffer(15)]],
++    constant NMFGMRESLayoutGPU& layout [[buffer(30)]],
++    uint global [[thread_position_in_grid]]) {
++    if (global >= dispatch.environmentCount * dispatch.femNodeCount) return;
++    const uint environment = global / dispatch.femNodeCount;
++    if (!environmentHealthy(statuses, environment) || states[environment].diagnostics.z > 0.5f) return;
++    const NMFEMNodeStateGPU node = candidate[global];
++    if ((node.restAndFixed.w > 0.5f && node.restAndFixed.w < 1.5f) || !(node.positionAndMass.w > 0.0f)) return;
++    const uint nodeBase = environment * dispatch.femNodeCount, stateBase = environment * graph.ranges.z;
++    const float3 tangent = -microstep.time.x * vascularCavityNodeForce(global - nodeBase,
++        nodeBase, stateBase, graph, microstep.time.x, true, unknowns, compartments, cavities,
++        faces, incidence, ranges, accepted, candidate, vascularState, direction, layout.vascularBase + stateBase);
++    output[global].xyz += tangent;
++    if (!all(isfinite(tangent))) recordFailure(statuses[environment], NM_STATUS_NONLINEAR_SOLVER_FAILURE,
++        NM_INVALID_INDEX, global - nodeBase, float4(tangent, 0.0f));
++}
++
+ // Primal valve working set, private to one microtick. 0 is free, 1 is a
+ // newly constrained affine row, 2 has completed a constrained free-variable
+ // solve. A pending zero-flow row must get that solve before pressure release.
+@@ -252,6 +410,8 @@ kernel void nm_vascular_begin_working_set(
+     device const float4* candidate [[buffer(6)]],
+     device const float* elastance [[buffer(7)]],
+     device uint* workingSet [[buffer(8)]],
++    device const NMVascularCavityGPU* cavities [[buffer(9)]],
++    device const uint* compartmentCavity [[buffer(10)]],
+     uint global [[thread_position_in_grid]]) {
+     if (global >= dispatch.environmentCount * graph.ranges.z) return;
+     const uint environment = global / graph.ranges.z;
+@@ -264,8 +424,8 @@ kernel void nm_vascular_begin_working_set(
+     const uint eb = environment * graph.counts.x;
+     const float q = vascularPhysical(candidate, unknowns, base, local);
+     const float dp = vascularDrivingPressure(edge,
+-        vascularPressure(compartments[edge.identity.y], vascularPhysical(candidate, unknowns, base, edge.identity.y), elastance[eb + edge.identity.y]),
+-        vascularPressure(compartments[edge.identity.z], vascularPhysical(candidate, unknowns, base, edge.identity.z), elastance[eb + edge.identity.z]));
++        vascularNodePressure(edge.identity.y, base, eb, 0u, false, 0.0f, unknowns, compartments, cavities, compartmentCavity, candidate, candidate, elastance).x,
++        vascularNodePressure(edge.identity.z, base, eb, 0u, false, 0.0f, unknowns, compartments, cavities, compartmentCavity, candidate, candidate, elastance).x);
+     if (workingSet[global] == 2u && q == 0.0f && dp > 0.0f) workingSet[global] = 0u;
+     const float closed = q * unknowns[local].initialAndScaling.z / unknowns[local].initialAndScaling.y;
+     if (workingSet[global] == 0u && closed <= vascularOpenEquation(edge, q, dp)) workingSet[global] = 1u;
+@@ -298,7 +458,10 @@ inline float2 vascularEquation(
+     device const NMVascularRangeGPU* tissueExchangeRanges,
+     device const float4* accepted, device const float4* candidate,
+     device const float4* direction, device const float* elastance,
+-    device const uint* workingSet, bool useWorkingSet) {
++    device const uint* workingSet, bool useWorkingSet,
++    device const NMVascularCavityGPU* cavities, device const NMVascularCavityFaceGPU* cavityFaces,
++    device const uint* compartmentCavity, device const NMFEMNodeStateGPU* femCandidate,
++    device const NMFEMNodeStateGPU* femAccepted, uint nodeBase, float femTrialAlpha) {
+     const float scale = unknowns[local].initialAndScaling.y;
+     const float value = vascularPhysical(candidate, unknowns, stateBase, local);
+     const float delta = derivative ? direction[directionBase + local].x * scale : 0.0f;
+@@ -322,16 +485,14 @@ inline float2 vascularEquation(
+         const uint a = edge.identity.y;
+         const uint b = edge.identity.z;
+         const uint coefficientBase = (stateBase / graph.ranges.z) * graph.counts.x;
+-        const float2 pa = vascularPressureTangent(compartments[a],
+-            vascularPhysical(candidate, unknowns, stateBase, a), elastance[coefficientBase + a]);
+-        const float2 pb = vascularPressureTangent(compartments[b],
+-            vascularPhysical(candidate, unknowns, stateBase, b), elastance[coefficientBase + b]);
++        const float2 pa = vascularNodePressure(a, stateBase, coefficientBase, directionBase, derivative, 0.0f,
++            unknowns, compartments, cavities, compartmentCavity, candidate, direction, elastance);
++        const float2 pb = vascularNodePressure(b, stateBase, coefficientBase, directionBase, derivative, 0.0f,
++            unknowns, compartments, cavities, compartmentCavity, candidate, direction, elastance);
+         const float dp = vascularDrivingPressure(edge, pa.x, pb.x);
+         // At the Starling floor tie use the fixed downstream-pressure branch.
+         const float downstreamDerivative = edge.identity.w == 3u && pb.x <= edge.physical.w ? 0.0f : pb.y;
+-        const float dPressure = derivative ?
+-            direction[directionBase + a].x * unknowns[a].initialAndScaling.y * pa.y -
+-            direction[directionBase + b].x * unknowns[b].initialAndScaling.y * downstreamDerivative : 0.0f;
++        const float dPressure = derivative ? pa.y - downstreamDerivative : 0.0f;
+         if (edge.identity.w != 0u) {
+             const float flowPressure = unknowns[local].initialAndScaling.z / scale;
+             const float closed = value * flowPressure;
+@@ -345,7 +506,7 @@ inline float2 vascularEquation(
+                 edge.physical.x * value - dp;
+             tangent = (edge.physical.y / dt + edge.physical.x) * delta - dPressure;
+         }
+-    } else {
++    } else if (local < graph.cavities.z) {
+         const bool blood = local < graph.offsets.w;
+         const uint amount = local - (blood ? graph.offsets.z : graph.offsets.w);
+         const uint reservoir = amount / graph.counts.z;
+@@ -399,6 +560,15 @@ inline float2 vascularEquation(
+             }
+         }
+     }
++    if (local >= graph.cavities.z) {
++        const NMVascularCavityGPU cavity = cavities[local - graph.cavities.z];
++        const uint volumeRow = cavity.identity.y;
++        const float2 geometry = vascularCavityVolume(cavity, cavityFaces, femAccepted, femCandidate,
++            direction, nodeBase, dt, derivative, femTrialAlpha);
++        equation = vascularPhysical(candidate, unknowns, stateBase, volumeRow) - geometry.x;
++        tangent = derivative ? direction[directionBase + volumeRow].x *
++            unknowns[volumeRow].initialAndScaling.y - geometry.y : 0.0f;
++    }
+     return float2(equation, tangent) / unknowns[local].initialAndScaling.z;
+ }
+ 
+@@ -428,13 +598,19 @@ inline float2 vascularEquation(
+     device const float* elastance [[buffer(20)]], \
+     device const uint* workingSet [[buffer(21)]], \
+     constant uint& useWorkingSet [[buffer(22)]], \
++    device const NMVascularCavityGPU* cavities [[buffer(23)]], \
++    device const NMVascularCavityFaceGPU* cavityFaces [[buffer(24)]], \
++    device const uint* compartmentCavity [[buffer(25)]], \
++    device const NMFEMNodeStateGPU* femCandidate [[buffer(26)]], \
++    device const NMFEMNodeStateGPU* femAccepted [[buffer(27)]], \
+     constant NMFGMRESLayoutGPU& layout [[buffer(30)]], \
+     uint global [[thread_position_in_grid]]
+ #define NM_VASCULAR_EVALUATE(derivative) vascularEquation(graph, microstep.time.x, local, \
+     environment * graph.ranges.z, layout.vascularBase + environment * graph.ranges.z, \
+     derivative, unknowns, compartments, connections, tissues, exchanges, \
+     connectionIncidence, connectionRanges, bloodExchangeIncidence, bloodExchangeRanges, \
+-    tissueExchangeIncidence, tissueExchangeRanges, accepted, candidate, direction, elastance, workingSet, useWorkingSet != 0u)
++    tissueExchangeIncidence, tissueExchangeRanges, accepted, candidate, direction, elastance, workingSet, useWorkingSet != 0u, \
++    cavities, cavityFaces, compartmentCavity, femCandidate, femAccepted, environment * dispatch.femNodeCount, 0.0f)
+ 
+ kernel void nm_vascular_residual(NM_VASCULAR_EQUATION_ARGUMENTS) {
+     if (global >= dispatch.environmentCount * graph.ranges.z) return;
+@@ -497,6 +673,8 @@ kernel void nm_vascular_precondition(
+     device const NMVascularCompartmentGPU* compartments [[buffer(18)]],
+     device const float* elastance [[buffer(19)]],
+     device const uint* workingSet [[buffer(20)]],
++    device const NMVascularCavityGPU* cavities [[buffer(21)]],
++    device const uint* compartmentCavity [[buffer(22)]],
+     constant NMFGMRESLayoutGPU& layout [[buffer(30)]],
+     uint global [[thread_position_in_grid]]) {
+     if (global >= dispatch.environmentCount * graph.ranges.z) return;
+@@ -512,8 +690,8 @@ kernel void nm_vascular_precondition(
+             const uint coefficientBase = environment * graph.counts.x;
+             const uint a = edge.identity.y, b = edge.identity.z;
+             const float dp = vascularDrivingPressure(edge,
+-                vascularPressure(compartments[a], vascularPhysical(candidate, unknowns, stateBase, a), elastance[coefficientBase + a]),
+-                vascularPressure(compartments[b], vascularPhysical(candidate, unknowns, stateBase, b), elastance[coefficientBase + b]));
++                vascularNodePressure(a, stateBase, coefficientBase, 0u, false, 0.0f, unknowns, compartments, cavities, compartmentCavity, candidate, candidate, elastance).x,
++                vascularNodePressure(b, stateBase, coefficientBase, 0u, false, 0.0f, unknowns, compartments, cavities, compartmentCavity, candidate, candidate, elastance).x);
+             const float q = vascularPhysical(candidate, unknowns, stateBase, local);
+             const float flowPressure = unknowns[local].initialAndScaling.z /
+                 unknowns[local].initialAndScaling.y;
+@@ -530,7 +708,7 @@ kernel void nm_vascular_precondition(
+                 vascularOpenDiagonal(edge, q);
+             diagonal *= physicalDiagonal > 0.0f ? physicalDiagonal : flowPressure;
+         } else diagonal *= edge.physical.x + edge.physical.y / microstep.time.x;
+-    } else if (local >= graph.offsets.z) {
++    } else if (local >= graph.offsets.z && local < graph.cavities.z) {
+         const bool blood = local < graph.offsets.w;
+         const uint amount = local - (blood ? graph.offsets.z : graph.offsets.w);
+         const uint reservoir = amount / graph.counts.z;
+@@ -561,6 +739,9 @@ kernel void nm_vascular_precondition(
+         }
+         diagonal *= 1.0f + microstep.time.x * rate;
+     }
++    // Geometry/pressure is a saddle-point row with a zero true diagonal.
++    // Unit normalized scaling is only a preconditioner, not an invented law.
++    if (local >= graph.cavities.z) diagonal = 1.0f;
+     if (!isfinite(diagonal) || !(diagonal > 0.0f)) {
+         preconditioned[row] = float4(0.0f);
+         recordFailure(statuses[environment], NM_STATUS_NONLINEAR_SOLVER_FAILURE,
+@@ -586,6 +767,8 @@ kernel void nm_vascular_resolve_working_set(
+     device const NMVascularUnknownGPU* unknowns [[buffer(8)]],
+     device const NMVascularCompartmentGPU* compartments [[buffer(9)]],
+     device const float* elastance [[buffer(10)]],
++    device const NMVascularCavityGPU* cavities [[buffer(11)]],
++    device const uint* compartmentCavity [[buffer(12)]],
+     constant NMFGMRESLayoutGPU& layout [[buffer(30)]],
+     uint lane [[thread_index_in_threadgroup]],
+     uint environment [[threadgroup_position_in_grid]]) {
+@@ -609,17 +792,14 @@ kernel void nm_vascular_resolve_working_set(
+                 const uint a = connections[edge].identity.y, b = connections[edge].identity.z;
+                 const uint base = environment * graph.ranges.z;
+                 const uint eb = environment * graph.counts.x;
+-                const float va = vascularPhysical(candidate, unknowns, base, a);
+-                const float vb = vascularPhysical(candidate, unknowns, base, b);
+-                const float dva = solution[layout.vascularBase + base + a].x * unknowns[a].initialAndScaling.y;
+-                const float dvb = solution[layout.vascularBase + base + b].x * unknowns[b].initialAndScaling.y;
++                const uint db = layout.vascularBase + base;
+                 const float dp = vascularDrivingPressure(connections[edge],
+-                    vascularPressure(compartments[a], va, elastance[eb + a]),
+-                    vascularPressure(compartments[b], vb, elastance[eb + b]));
++                    vascularNodePressure(a, base, eb, db, false, 0.0f, unknowns, compartments, cavities, compartmentCavity, candidate, solution, elastance).x,
++                    vascularNodePressure(b, base, eb, db, false, 0.0f, unknowns, compartments, cavities, compartmentCavity, candidate, solution, elastance).x);
+                 const float nextDP = vascularDrivingPressure(connections[edge],
+-                    vascularPressure(compartments[a], va + dva, elastance[eb + a]),
+-                    vascularPressure(compartments[b], vb + dvb, elastance[eb + b]));
+-                if (q == 0.0f && isfinite(dp) && isfinite(nextDP) && isfinite(dva) && isfinite(dvb) &&
++                    vascularNodePressure(a, base, eb, db, false, 1.0f, unknowns, compartments, cavities, compartmentCavity, candidate, solution, elastance).x,
++                    vascularNodePressure(b, base, eb, db, false, 1.0f, unknowns, compartments, cavities, compartmentCavity, candidate, solution, elastance).x);
++                if (q == 0.0f && isfinite(dp) && isfinite(nextDP) &&
+                     dp > 0.0f && nextDP > 0.0f) {
+                     workingSet[row] = 0u;
+                     activated = true;
+@@ -696,6 +876,11 @@ kernel void nm_vascular_limit_line_search(
+     device const float* elastance [[buffer(22)]],
+     device float4* trial [[buffer(23)]],
+     constant NMMixedSolverGPU& solver [[buffer(24)]],
++    device const NMVascularCavityGPU* cavities [[buffer(25)]],
++    device const NMVascularCavityFaceGPU* cavityFaces [[buffer(26)]],
++    device const uint* compartmentCavity [[buffer(27)]],
++    device const NMFEMNodeStateGPU* femCandidate [[buffer(28)]],
++    device const NMFEMNodeStateGPU* femAccepted [[buffer(29)]],
+     constant NMFGMRESLayoutGPU& layout [[buffer(30)]],
+     uint lane [[thread_index_in_threadgroup]],
+     uint environment [[threadgroup_position_in_grid]]) {
+@@ -742,7 +927,8 @@ kernel void nm_vascular_limit_line_search(
+                 directionBase, false, unknowns, compartments, connections, tissues,
+                 exchanges, connectionIncidence, connectionRanges, bloodExchangeIncidence,
+                 bloodExchangeRanges, tissueExchangeIncidence, tissueExchangeRanges,
+-                accepted, candidate, solution, elastance, workingSet, false).x;
++                accepted, candidate, solution, elastance, workingSet, false, cavities, cavityFaces,
++                compartmentCavity, femCandidate, femAccepted, environment * dispatch.femNodeCount, 0.0f).x;
+             initialMerit += value * value;
+         }
+         initialMerit = simd_sum(initialMerit);
+@@ -766,7 +952,8 @@ kernel void nm_vascular_limit_line_search(
+                     directionBase, false, unknowns, compartments, connections, tissues,
+                     exchanges, connectionIncidence, connectionRanges, bloodExchangeIncidence,
+                     bloodExchangeRanges, tissueExchangeIncidence, tissueExchangeRanges,
+-                    accepted, trial, solution, elastance, workingSet, false).x;
++                    accepted, trial, solution, elastance, workingSet, false, cavities, cavityFaces,
++                    compartmentCavity, femCandidate, femAccepted, environment * dispatch.femNodeCount, alpha).x;
+                 admissible = admissible && isfinite(value) &&
+                     vascularAdmissible(graph, local, trial[base + local].x, compartments, connections, unknowns);
+                 certified = certified && abs(value) <= unknowns[local].initialAndScaling.w;
+diff --git a/matter/src/package_impl.cpp b/matter/src/package_impl.cpp
+index 8d14b00..12e8ce3 100644
+--- a/matter/src/package_impl.cpp
++++ b/matter/src/package_impl.cpp
+@@ -22,7 +22,7 @@ inline constexpr std::array<char, 16> kMagic{
+     'N', 'U', 'M', 'I', 'M', 'A', 'T', 'T',
+     'E', 'R', 'P', 'K', 'G', '\0', '\0', '\0',
+ };
+-inline constexpr std::uint32_t kPackageVersion = 13u;
++inline constexpr std::uint32_t kPackageVersion = 14u;
+ inline constexpr std::uint32_t kEndianMarker = 0x01020304u;
+ 
+ enum class Section : std::uint32_t {
+@@ -84,6 +84,11 @@ enum class Section : std::uint32_t {
+     vascularTissueExchangeIncidence,
+     vascularTissueExchangeRanges,
+     vascularNames,
++    vascularCavities,
++    vascularCavityFaces,
++    vascularCompartmentCavity,
++    vascularCavityNodeIncidence,
++    vascularCavityNodeRanges,
+     generatedMetal,
+ };
+ 
+@@ -385,6 +390,16 @@ bool writePackage(
+             std::span<const std::uint32_t>(world.vascular.tissueExchangeIncidence)) &&
+         writeSection(stream, Section::vascularTissueExchangeRanges,
+             std::span<const NMVascularRangeGPU>(world.vascular.tissueExchangeRanges)) &&
++        writeSection(stream, Section::vascularCavities,
++            std::span<const NMVascularCavityGPU>(world.vascular.cavities)) &&
++        writeSection(stream, Section::vascularCavityFaces,
++            std::span<const NMVascularCavityFaceGPU>(world.vascular.cavityFaces)) &&
++        writeSection(stream, Section::vascularCompartmentCavity,
++            std::span<const std::uint32_t>(world.vascular.compartmentCavity)) &&
++        writeSection(stream, Section::vascularCavityNodeIncidence,
++            std::span<const std::uint32_t>(world.vascular.cavityNodeIncidence)) &&
++        writeSection(stream, Section::vascularCavityNodeRanges,
++            std::span<const NMVascularRangeGPU>(world.vascular.cavityNodeRanges)) &&
+         writeSection(stream, Section::vascularNames,
+             std::span<const std::uint8_t>(world.vascular.names)) &&
+         writeStringSection(stream, Section::generatedMetal, compiled.generatedMetal);
+@@ -585,6 +600,16 @@ bool readPackage(
+             decoded = decodeVector(stream, section, candidate.vascular.tissueExchangeIncidence, error); break;
+         case Section::vascularTissueExchangeRanges:
+             decoded = decodeVector(stream, section, candidate.vascular.tissueExchangeRanges, error); break;
++        case Section::vascularCavities:
++            decoded = decodeVector(stream, section, candidate.vascular.cavities, error); break;
++        case Section::vascularCavityFaces:
++            decoded = decodeVector(stream, section, candidate.vascular.cavityFaces, error); break;
++        case Section::vascularCompartmentCavity:
++            decoded = decodeVector(stream, section, candidate.vascular.compartmentCavity, error); break;
++        case Section::vascularCavityNodeIncidence:
++            decoded = decodeVector(stream, section, candidate.vascular.cavityNodeIncidence, error); break;
++        case Section::vascularCavityNodeRanges:
++            decoded = decodeVector(stream, section, candidate.vascular.cavityNodeRanges, error); break;
+         case Section::vascularNames:
+             decoded = decodeVector(stream, section, candidate.vascular.names, error); break;
+         case Section::generatedMetal: {
+diff --git a/matter/src/runtime.mm b/matter/src/runtime.mm
+index 2e9f6e8..05af17c 100644
+--- a/matter/src/runtime.mm
++++ b/matter/src/runtime.mm
+@@ -512,6 +512,12 @@
+     NMMatterDispatchGPU dispatch{};
+     NMFGMRESLayoutGPU fgmresLayout{};
+     CookedVascular vascularValue{};
++    id<MTLBuffer> vascularCavities = nil;
++    id<MTLBuffer> vascularCavityFaces = nil;
++    id<MTLBuffer> vascularCompartmentCavity = nil;
++    id<MTLBuffer> vascularCavityNodeIncidence = nil;
++    id<MTLBuffer> vascularCavityNodeRanges = nil;
++    id<MTLBuffer> vascularCavityMergedExternal = nil;
+     id<MTLBuffer> vascularUnknowns = nil;
+     id<MTLBuffer> vascularCompartments = nil;
+     id<MTLBuffer> vascularConnections = nil;
+@@ -733,6 +739,7 @@ void settleApplication(
+     bool requiresSceneBodies = false;
+     bool requiresRodNodes = false;
+     bool hasAdaptive = false;
++    bool hasMutableFEMTopology = false;
+     std::vector<NMRigidProxyGPU> rigidProxyLayout;
+     std::vector<std::uint32_t> sutureProxyIndices;
+     std::vector<std::uint32_t> sutureProxyEdges;
+@@ -1021,6 +1028,12 @@ void settleApplication(
+         candidate->dispatch = world.dispatch;
+         candidate->vascularValue = world.vascular;
+         candidate->objectLayout = world.objects;
++        candidate->hasMutableFEMTopology = std::any_of(
++            world.objects.begin(), world.objects.end(),
++            [](const NMContinuumObjectGPU& object) {
++                return object.representation == NM_REPRESENTATION_FEM &&
++                    (object.flags & NM_OBJECT_MUTABLE_TOPOLOGY) != 0u;
++            });
+         candidate->capacityLayout = world.fem.capacities;
+         if (world.fem.nodeIncidence.size() >
+                 std::numeric_limits<std::uint32_t>::max() ||
+@@ -1490,6 +1503,8 @@ void settleApplication(
+             "nm_vascular_rollback",
+             "nm_vascular_residual",
+             "nm_vascular_operator",
++            "nm_vascular_cavity_forces",
++            "nm_vascular_cavity_operator",
+             "nm_vascular_precondition",
+             "nm_vascular_begin_working_set",
+             "nm_vascular_resolve_working_set",
+@@ -1663,6 +1678,25 @@ void settleApplication(
+         candidate->dispatchBuffer = uploads.one(
+             std::span<const NMMatterDispatchGPU>(&candidate->dispatch, 1u),
+             valid, candidate->residentBytes);
++        candidate->vascularCavities = uploads.one(
++            std::span<const NMVascularCavityGPU>(world.vascular.cavities),
++            valid, candidate->residentBytes);
++        candidate->vascularCavityFaces = uploads.one(
++            std::span<const NMVascularCavityFaceGPU>(world.vascular.cavityFaces),
++            valid, candidate->residentBytes);
++        candidate->vascularCompartmentCavity = uploads.one(
++            std::span<const std::uint32_t>(world.vascular.compartmentCavity),
++            valid, candidate->residentBytes);
++        candidate->vascularCavityNodeIncidence = uploads.one(
++            std::span<const std::uint32_t>(world.vascular.cavityNodeIncidence),
++            valid, candidate->residentBytes);
++        candidate->vascularCavityNodeRanges = uploads.one(
++            std::span<const NMVascularRangeGPU>(world.vascular.cavityNodeRanges),
++            valid, candidate->residentBytes);
++        candidate->vascularCavityMergedExternal = privateScratch<nm_float4>(
++            candidate->device, world.vascular.cavities.empty() ? 0u :
++                environments * world.dispatch.femNodeCount,
++            valid, candidate->residentBytes);
+         candidate->vascularUnknowns = uploads.one(
+             std::span<const NMVascularUnknownGPU>(world.vascular.unknowns),
+             valid, candidate->residentBytes);
+@@ -3335,6 +3369,11 @@ void settleApplication(
+             diagnostics.message = "borrowed FEM external-force Metal buffer is undersized";
+             return diagnostics;
+         }
++        const bool hasVascularCavities = state.vascularValue.layout.cavities.x != 0u;
++        id<MTLBuffer> femMechanicalForces = hasVascularCavities
++            ? state.vascularCavityMergedExternal : femExternalForces;
++        const std::uint32_t hasFEMMechanicalForces =
++            hasVascularCavities || hasFEMExternalForces ? 1u : 0u;
+         id<MTLBuffer> femKinematicTargets =
+             request.femKinematicTargets == nullptr
+                 ? state.dummy
+@@ -4605,6 +4644,12 @@ void settleApplication(
+ 
+         const std::uint32_t microtickCount =
+             1u << state.dispatch.maximumRateExponent;
++        // Immutable FEM worlds retain their cooked nodal masses and incidence.
++        // Explicit commands still enter the transaction owner for validation;
++        // their presence must never be hidden by the capability fast path.
++        const bool hasFEMTopologyWork = state.hasMutableFEMTopology ||
++            request.mutationCommandCount != 0u ||
++            state.dispatch.mutationCommandCount != 0u;
+         id<MTLBuffer> borrowedMutations = request.mutationCommands == nullptr
+             ? state.dummy
+             : (__bridge id<MTLBuffer>)request.mutationCommands;
+@@ -4686,6 +4731,34 @@ void settleApplication(
+                     [encoder setBuffer:state.vascularElastance offset:0u atIndex:20u];
+                     [encoder setBuffer:state.vascularWorkingSet offset:0u atIndex:21u];
+                     [encoder setBytes:&useWorkingSet length:sizeof(useWorkingSet) atIndex:22u];
++                    [encoder setBuffer:state.vascularCavities offset:0u atIndex:23u];
++                    [encoder setBuffer:state.vascularCavityFaces offset:0u atIndex:24u];
++                    [encoder setBuffer:state.vascularCompartmentCavity offset:0u atIndex:25u];
++                    [encoder setBuffer:state.femCandidate offset:0u atIndex:26u];
++                    [encoder setBuffer:state.femAccepted offset:0u atIndex:27u];
++                });
++            };
++            // Reassemble hydraulic wall work with borrowed loads at the same
++            // candidate used by the mechanical residual and final certificate.
++            const auto encodeCavityForces = [&]() {
++                if (!hasVascularCavities) return;
++                dispatchThreads("nm_vascular_cavity_forces", femNodeTotal, [&] {
++                    setDispatch();
++                    [encoder setBytes:&state.vascularValue.layout length:sizeof(state.vascularValue.layout) atIndex:1u];
++                    [encoder setBytes:&micro length:sizeof(micro) atIndex:2u];
++                    [encoder setBuffer:state.vascularUnknowns offset:0u atIndex:3u];
++                    [encoder setBuffer:state.vascularCompartments offset:0u atIndex:4u];
++                    [encoder setBuffer:state.vascularCavities offset:0u atIndex:5u];
++                    [encoder setBuffer:state.vascularCavityFaces offset:0u atIndex:6u];
++                    [encoder setBuffer:state.vascularCavityNodeIncidence offset:0u atIndex:7u];
++                    [encoder setBuffer:state.vascularCavityNodeRanges offset:0u atIndex:8u];
++                    [encoder setBuffer:state.femAccepted offset:0u atIndex:9u];
++                    [encoder setBuffer:state.femCandidate offset:0u atIndex:10u];
++                    [encoder setBuffer:state.vascularCandidate offset:0u atIndex:11u];
++                    [encoder setBuffer:femExternalForces offset:0u atIndex:12u];
++                    [encoder setBytes:&hasFEMExternalForces length:sizeof(hasFEMExternalForces) atIndex:13u];
++                    [encoder setBuffer:state.vascularCavityMergedExternal offset:0u atIndex:14u];
++                    [encoder setBuffer:state.statuses offset:0u atIndex:15u];
+                 });
+             };
+             // Opt-in, bounded copies at a single requested root preserve the
+@@ -4832,7 +4905,7 @@ void settleApplication(
+                 });
+             };
+ 
+-            if (firstPrePass && microtick == 0u) {
++            if (hasFEMTopologyWork && firstPrePass && microtick == 0u) {
+                 dispatchThreads("nm_topology_detect_puncture", objectTotal, [&] {
+                     setDispatch();
+                     [encoder setBytes:&request.controlStep
+@@ -5679,6 +5752,8 @@ void settleApplication(
+                 [encoder setBuffer:state.vascularCandidate offset:0u atIndex:6u];
+                 [encoder setBuffer:state.vascularElastance offset:0u atIndex:7u];
+                 [encoder setBuffer:state.vascularWorkingSet offset:0u atIndex:8u];
++                [encoder setBuffer:state.vascularCavities offset:0u atIndex:9u];
++                [encoder setBuffer:state.vascularCompartmentCavity offset:0u atIndex:10u];
+             });
+             if (!encodeFEMHumanAttachmentKinematics()) {
+                 ownership->preDynamicsOpen = false;
+@@ -5760,6 +5835,7 @@ void settleApplication(
+                 [encoder setBuffer:state.learnedLayers offset:0u atIndex:17u];
+                 [encoder setBuffer:state.learnedWeightsCandidate offset:0u atIndex:18u];
+             });
++            encodeCavityForces();
+             dispatchThreads("nm_fem_build_mechanical_residual", femNodeTotal, [&] {
+                 const std::uint32_t preserveSolution = 0u;
+                 setDispatch();
+@@ -5784,9 +5860,9 @@ void settleApplication(
+                 [encoder setBuffer:state.femFieldsCandidate offset:0u atIndex:19u];
+                 [encoder setBytes:&preserveSolution
+                            length:sizeof(preserveSolution) atIndex:20u];
+-                [encoder setBuffer:femExternalForces offset:0u atIndex:21u];
+-                [encoder setBytes:&hasFEMExternalForces
+-                           length:sizeof(hasFEMExternalForces) atIndex:22u];
++                [encoder setBuffer:femMechanicalForces offset:0u atIndex:21u];
++                [encoder setBytes:&hasFEMMechanicalForces
++                           length:sizeof(hasFEMMechanicalForces) atIndex:22u];
+                 [encoder setBuffer:state.femConstraintReactions
+                             offset:0u atIndex:23u];
+             });
+@@ -6297,6 +6373,8 @@ void settleApplication(
+                     [encoder setBuffer:state.vascularCompartments offset:0u atIndex:18u];
+                 [encoder setBuffer:state.vascularElastance offset:0u atIndex:19u];
+                     [encoder setBuffer:state.vascularWorkingSet offset:0u atIndex:20u];
++                    [encoder setBuffer:state.vascularCavities offset:0u atIndex:21u];
++                    [encoder setBuffer:state.vascularCompartmentCavity offset:0u atIndex:22u];
+             });
+                 dispatchThreads("nm_fgmres_precondition_free_rigid",
+                     rigidGeneralizedTotal, [&] {
+@@ -6374,6 +6452,28 @@ void settleApplication(
+                     [encoder setBuffer:state.coupledPointJacobians
+                                  offset:0u atIndex:15u];
+                 });
++                // Include cavity traction before attachment capture, so the
++                // existing scatter applies its single work-conjugate J^T.
++                if (hasVascularCavities) {
++                    dispatchThreads("nm_vascular_cavity_operator", femNodeTotal, [&] {
++                        setDispatch();
++                        [encoder setBytes:&state.vascularValue.layout length:sizeof(state.vascularValue.layout) atIndex:1u];
++                        [encoder setBytes:&operatorMicro length:sizeof(operatorMicro) atIndex:2u];
++                        [encoder setBuffer:state.vascularUnknowns offset:0u atIndex:3u];
++                        [encoder setBuffer:state.vascularCompartments offset:0u atIndex:4u];
++                        [encoder setBuffer:state.vascularCavities offset:0u atIndex:5u];
++                        [encoder setBuffer:state.vascularCavityFaces offset:0u atIndex:6u];
++                        [encoder setBuffer:state.vascularCavityNodeIncidence offset:0u atIndex:7u];
++                        [encoder setBuffer:state.vascularCavityNodeRanges offset:0u atIndex:8u];
++                        [encoder setBuffer:state.femAccepted offset:0u atIndex:9u];
++                        [encoder setBuffer:state.femCandidate offset:0u atIndex:10u];
++                        [encoder setBuffer:state.vascularCandidate offset:0u atIndex:11u];
++                        [encoder setBuffer:state.fgmresPreconditionedBasis offset:columnOffset atIndex:12u];
++                        [encoder setBuffer:state.femOperatorValue offset:0u atIndex:13u];
++                        [encoder setBuffer:state.fgmresStates offset:0u atIndex:14u];
++                        [encoder setBuffer:state.statuses offset:0u atIndex:15u];
++                    });
++                }
+                 dispatchThreads(
+                     "nm_fem_human_attachment_capture_operator",
+                     femHumanAttachmentTotal,
+@@ -6824,6 +6924,8 @@ void settleApplication(
+                 [encoder setBuffer:state.vascularUnknowns offset:0u atIndex:8u];
+                 [encoder setBuffer:state.vascularCompartments offset:0u atIndex:9u];
+                 [encoder setBuffer:state.vascularElastance offset:0u atIndex:10u];
++                [encoder setBuffer:state.vascularCavities offset:0u atIndex:11u];
++                [encoder setBuffer:state.vascularCompartmentCavity offset:0u atIndex:12u];
+             });
+             dispatchGroups32("nm_fgmres_measure_correction", environments, [&] {
+                 setDispatch();
+@@ -6990,6 +7092,11 @@ void settleApplication(
+                 [encoder setBuffer:state.vascularElastance offset:0u atIndex:22u];
+                 [encoder setBuffer:state.vascularLineSearchTrial offset:0u atIndex:23u];
+                 [encoder setBuffer:state.mixedSolver offset:0u atIndex:24u];
++                [encoder setBuffer:state.vascularCavities offset:0u atIndex:25u];
++                [encoder setBuffer:state.vascularCavityFaces offset:0u atIndex:26u];
++                [encoder setBuffer:state.vascularCompartmentCavity offset:0u atIndex:27u];
++                [encoder setBuffer:state.femCandidate offset:0u atIndex:28u];
++                [encoder setBuffer:state.femAccepted offset:0u atIndex:29u];
+             });
+             if (!encodeVascularTrace("line_search")) {
+                 ownership->preDynamicsOpen = false;
+@@ -7079,7 +7186,7 @@ void settleApplication(
+             // nonlinear transaction. Apply it to candidate topology/state,
+             // then let the following Newton iteration rebuild contact and the
+             // KKT operator. No intermediate commit is permitted.
+-            if (nonlinearIteration <
++            if (hasFEMTopologyWork && nonlinearIteration <
+                 state.mixedSolverValue.executionBudgets.y) {
+                 dispatchThreads("nm_topology_detect_puncture", objectTotal, [&] {
+                     setDispatch();
+@@ -7213,6 +7320,7 @@ void settleApplication(
+                 [encoder setBuffer:state.learnedLayers offset:0u atIndex:17u];
+                 [encoder setBuffer:state.learnedWeightsCandidate offset:0u atIndex:18u];
+             });
++            encodeCavityForces();
+             dispatchThreads("nm_fem_build_mechanical_residual", femNodeTotal, [&] {
+                 const std::uint32_t preserveSolution = 1u;
+                 setDispatch();
+@@ -7237,9 +7345,9 @@ void settleApplication(
+                 [encoder setBuffer:state.femFieldsCandidate offset:0u atIndex:19u];
+                 [encoder setBytes:&preserveSolution
+                            length:sizeof(preserveSolution) atIndex:20u];
+-                [encoder setBuffer:femExternalForces offset:0u atIndex:21u];
+-                [encoder setBytes:&hasFEMExternalForces
+-                           length:sizeof(hasFEMExternalForces) atIndex:22u];
++                [encoder setBuffer:femMechanicalForces offset:0u atIndex:21u];
++                [encoder setBytes:&hasFEMMechanicalForces
++                           length:sizeof(hasFEMMechanicalForces) atIndex:22u];
+                 [encoder setBuffer:state.femConstraintReactions
+                             offset:0u atIndex:23u];
+             });
+@@ -8178,6 +8286,12 @@ void settleApplication(
+             state.femMaterialStateCheckpoint,
+             state.femFieldsAccepted,
+             state.femFieldsCheckpoint,
++            state.vascularCavities,
++            state.vascularCavityFaces,
++            state.vascularCompartmentCavity,
++            state.vascularCavityNodeIncidence,
++            state.vascularCavityNodeRanges,
++            state.vascularCavityMergedExternal,
+             state.vascularUnknowns,
+             state.vascularCompartments,
+             state.vascularConnections,
+@@ -8957,6 +9071,12 @@ void settleApplication(
+             state.femNodeRangesCheckpoint,
+             state.femFieldsAccepted,
+             state.femFieldsCheckpoint,
++            state.vascularCavities,
++            state.vascularCavityFaces,
++            state.vascularCompartmentCavity,
++            state.vascularCavityNodeIncidence,
++            state.vascularCavityNodeRanges,
++            state.vascularCavityMergedExternal,
+             state.vascularUnknowns,
+             state.vascularCompartments,
+             state.vascularConnections,
+@@ -10982,10 +11102,19 @@ void settleApplication(
+                 !(physical > 0.0f)) ||
+             (row >= offsets.y && row < offsets.z &&
+                 state.vascularValue.connections[row - offsets.y].identity.w != 0u && physical < 0.0f) ||
+-            (row >= offsets.z && physical < 0.0f)) {
++            (row >= offsets.z && row < state.vascularValue.layout.cavities.z && physical < 0.0f)) {
+             diagnostics.message = "Matter snapshot vascular state is inadmissible";
+             return diagnostics;
+         }
++        if (row >= state.vascularValue.layout.cavities.z) {
++            const auto& cavity = state.vascularValue.cavities[
++                row - state.vascularValue.layout.cavities.z];
++            if (!std::isfinite(physical -
++                    state.vascularValue.compartments[cavity.identity.y].compliance.w)) {
++                diagnostics.message = "Matter snapshot transmural cavity pressure overflows";
++                return diagnostics;
++            }
++        }
+         if (row < offsets.y && state.vascularValue.compartments[row].identity.w == 3u) {
+             const auto node = state.vascularValue.compartments[row];
+             const float displacement = physical - node.compliance.x;
+@@ -11060,6 +11189,51 @@ void settleApplication(
+         return diagnostics;
+     }
+ 
++    // A snapshot restores one coupled physical state. Pressure is signed,
++    // but wall geometry, hydraulic volume and scheduler cadence cannot diverge.
++    for (std::uint32_t environment = 0u; environment < state.dispatch.environmentCount; ++environment) {
++        for (const auto& cavity : state.vascularValue.cavities) {
++            const auto& scheduler = snapshot.schedulers[
++                environment * state.dispatch.objectCount + cavity.identity.z];
++            const auto& adaptive = snapshot.adaptive[
++                environment * state.dispatch.objectCount + cavity.identity.z];
++            const auto exponent = state.dispatch.maximumRateExponent;
++            if (scheduler.baseExponent != exponent || scheduler.activeExponent != exponent ||
++                scheduler.requestedExponent != exponent || !std::isfinite(scheduler.numerical.w) ||
++                !(scheduler.numerical.w > 0.0f) ||
++                adaptive.activeRepresentation != NM_REPRESENTATION_FEM) {
++                diagnostics.message = "Matter snapshot cavity wall changed hydraulic microtick ownership";
++                return diagnostics;
++            }
++            const auto nodeBase = static_cast<std::size_t>(environment) * state.dispatch.femNodeCount;
++            const auto& origin = snapshot.femNodes[nodeBase +
++                state.vascularValue.cavityFaces[cavity.faces.x].nodes.x].positionAndMass;
++            const auto point = [&](std::uint32_t node) {
++                const auto& p = snapshot.femNodes[nodeBase + node].positionAndMass;
++                return std::array<double, 3>{double(p.x) - origin.x, double(p.y) - origin.y, double(p.z) - origin.z};
++            };
++            double geometry = 0.0;
++            for (std::uint32_t index = 0u; index < cavity.faces.y; ++index) {
++                const auto& face = state.vascularValue.cavityFaces[cavity.faces.x + index];
++                const auto a = point(face.nodes.x), b = point(face.nodes.y), c = point(face.nodes.z);
++                geometry += (a[0] * (b[1] * c[2] - b[2] * c[1]) +
++                    a[1] * (b[2] * c[0] - b[0] * c[2]) +
++                    a[2] * (b[0] * c[1] - b[1] * c[0])) / 6.0;
++            }
++            const auto volumeRow = cavity.identity.y;
++            const auto stateBase = static_cast<std::size_t>(environment) * state.vascularValue.layout.ranges.z;
++            const float volume = snapshot.vascularState[stateBase + volumeRow].x *
++                state.vascularValue.unknowns[volumeRow].initialAndScaling.y;
++            const auto scaling = state.vascularValue.unknowns[cavity.identity.w].initialAndScaling;
++            const double tolerance = double(scaling.z) * scaling.w +
++                64.0 * std::numeric_limits<float>::epsilon() * std::max(std::abs(geometry), double(volume));
++            if (!(geometry > 0.0) || !std::isfinite(geometry) || std::abs(geometry - volume) > tolerance) {
++                diagnostics.message = "Matter snapshot cavity geometry and hydraulic volume disagree";
++                return diagnostics;
++            }
++        }
++    }
++
+     std::vector<std::uint32_t> restoredFEMIncidence;
+     std::vector<NMIncidenceRangeGPU> restoredFEMRanges;
+     if (rebuildTopologyIncidence) {
+diff --git a/matter/src/vascular_impl.cpp b/matter/src/vascular_impl.cpp
+index 2f7599e..eb4458f 100644
+--- a/matter/src/vascular_impl.cpp
++++ b/matter/src/vascular_impl.cpp
+@@ -69,8 +69,12 @@ bool rationalPeriod(const VascularCompartmentSource& source, int exponent,
+     return numerator>0 && numerator<=maximumNumerator && multiplier>0;
+ }
+ bool validCompartment(const NMVascularCompartmentGPU& x, const NMVascularUnknownGPU& u) {
+-    if(x.identity.z>1 || x.identity.w>4 || !finite4(x.compliance) || !finite4(x.elastance) ||
++    if(x.identity.z>1 || x.identity.w>5 || !finite4(x.compliance) || !finite4(x.elastance) ||
+        !finite4(x.waveform) || !finite4(x.pressureParameters))return false;
++    if(x.identity.w==5) return x.identity.z==0 && positive(u.initialAndScaling.x) &&
++        x.compliance.x==0 && x.compliance.y==0 && x.compliance.z==0 &&
++        zero4(x.elastance) && zero4(x.waveform) && zero4(x.pressureParameters) &&
++        x.periodTicks==0 && x.periodMultiplier==0;
+     if(x.identity.z==0 && (!positive(x.compliance.x) || !positive(u.initialAndScaling.x)))return false;
+     if(x.pressureParameters.y!=0 || x.pressureParameters.z!=0 || x.pressureParameters.w!=0)return false;
+     if(x.identity.w==0 || x.identity.w==3) {
+@@ -119,30 +123,180 @@ bool validConnection(const NMVascularConnectionGPU& x, const NMVascularUnknownGP
+     return finite(ratio*ratio);
+ }
+ bool allZero(const NMVascularIdentityGPU& x) { for (unsigned i=0;i<4;++i) if (x.content[i]||x.source[i]||x.authored[i]) return false; return true; }
++// Direct material-boundary embedding: no geometry-dependent tolerance weld,
++// artificial caps, source-volume offsets, or additional fluid mechanical mass.
++using CavityPoint = std::array<long double,3>;
++using CavityFaceKey = std::array<std::uint32_t,3>;
++CavityPoint cavitySubtract(const CavityPoint& a,const CavityPoint& b) {
++    return {a[0]-b[0],a[1]-b[1],a[2]-b[2]};
++}
++CavityPoint cavityCross(const CavityPoint& a,const CavityPoint& b) {
++    return {a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]};
++}
++long double cavityDot(const CavityPoint& a,const CavityPoint& b) {
++    return a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
++}
++CavityFaceKey cavityKey(CavityFaceKey key) {std::sort(key.begin(),key.end());return key;}
++bool validateCavities(const CompiledWorld& world,std::string* error) {
++    const auto& c=world.vascular;
++    const auto fail=[&](const char* reason){if(error&&error->empty())*error=std::string("vascular cavity: ")+reason;return false;};
++    const auto B=c.cavities.size(),C=c.compartments.size();
++    if(B==0) {
++        if(!c.cavityFaces.empty()||!c.cavityNodeIncidence.empty()||!c.cavityNodeRanges.empty())return fail("unowned cavity arrays");
++        for(std::size_t i=0;i<C;++i)if(c.compartmentCavity[i]!=NM_INVALID_INDEX||c.compartments[i].identity.w==5)return fail("unbound deforming compartment");
++        return true;
++    }
++    if(c.cavityFaces.size()>std::numeric_limits<std::uint32_t>::max()/3u)return fail("face incidence arena overflow");
++    const auto point=[&](std::uint32_t node)->CavityPoint {
++        const auto& p=world.fem.nodes[node].positionAndMass;
++        return {p.x,p.y,p.z};
++    };
++    std::vector<std::uint32_t> owners(C,NM_INVALID_INDEX);
++    std::vector<std::vector<std::uint32_t>> nodeFaces(world.fem.nodes.size());
++    std::map<std::uint32_t,std::map<CavityFaceKey,std::vector<std::uint32_t>>> objectFaces;
++    std::set<CavityFaceKey> ownedFaces;
++    std::size_t nextFace=0;
++    for(std::size_t i=0;i<B;++i) {
++        const auto& cavity=c.cavities[i];const auto compartment=cavity.identity.y,objectIndex=cavity.identity.z;
++        if(!cavity.identity.x||(i&&cavity.identity.x<=c.cavities[i-1].identity.x)||
++           compartment>=C||objectIndex>=world.objects.size()||owners[compartment]!=NM_INVALID_INDEX||
++           c.compartments[compartment].identity.w!=5||cavity.identity.w!=c.layout.cavities.z+i||
++           cavity.faces.x!=nextFace||cavity.faces.y<4||cavity.faces.z||cavity.faces.w||
++           cavity.faces.y>c.cavityFaces.size()-nextFace)return fail("invalid identity, face range or pressure ownership");
++        bool source=false,mechanics=false;
++        for(unsigned j=0;j<4;++j){source|=cavity.sourceIdentity[j]!=0;mechanics|=cavity.mechanicalIdentity[j]!=0;}
++        if(!source||!mechanics)return fail("missing geometry or mechanical provenance");
++        const auto& object=world.objects[objectIndex];
++        if(object.representation!=NM_REPRESENTATION_FEM||
++           (object.flags&(NM_OBJECT_ADAPTIVE|NM_OBJECT_MUTABLE_TOPOLOGY))||
++           std::uint64_t(object.stateOffset)+object.stateCount>world.fem.nodes.size()||
++           std::uint64_t(object.elementOffset)+object.elementCount>world.fem.tetrahedra.size())
++            return fail("boundary requires an immutable nonadaptive real FEM object");
++        if(object.schedulerIndex>=world.schedulers.size())return fail("cavity wall scheduler is absent");
++        const auto& scheduler=world.schedulers[object.schedulerIndex];
++        const auto exponent=world.dispatch.maximumRateExponent;
++        if(object.solver.x!=exponent||object.solver.y!=exponent||
++           scheduler.baseExponent!=exponent||scheduler.activeExponent!=exponent||scheduler.requestedExponent!=exponent)
++            return fail("wall and hydraulic microtick rates disagree");
++        if(!objectFaces.contains(objectIndex)) {
++            auto& boundary=objectFaces[objectIndex];
++            for(std::uint32_t k=0;k<object.elementCount;++k) {
++                const auto& tet=world.fem.tetrahedra[object.elementOffset+k];
++                if((tet.identity.w&NM_OBJECT_ACTIVE)==0)continue;
++                const std::array<std::uint32_t,4> nodes{tet.nodes.x,tet.nodes.y,tet.nodes.z,tet.nodes.w};
++                for(auto node:nodes)if(node<object.stateOffset||std::uint64_t(node)>=std::uint64_t(object.stateOffset)+object.stateCount)
++                    return fail("wall tetrahedron escapes its object");
++                for(unsigned opposite=0;opposite<4;++opposite) {
++                    CavityFaceKey key{};unsigned slot=0;
++                    for(unsigned j=0;j<4;++j)if(j!=opposite)key[slot++]=nodes[j];
++                    boundary[cavityKey(key)].push_back(nodes[opposite]);
++                }
++            }
++        }
++        const auto& boundary=objectFaces.at(objectIndex);
++        std::map<std::array<std::uint32_t,2>,std::vector<std::pair<std::uint32_t,int>>> edges;
++        std::map<std::uint32_t,std::vector<std::array<std::uint32_t,2>>> vertexLinks;
++        std::vector<std::vector<std::uint32_t>> adjacent(cavity.faces.y);
++        long double volume=0;CavityPoint origin{};
++        for(std::uint32_t j=0;j<cavity.faces.y;++j) {
++            const auto faceIndex=std::uint32_t(nextFace+j);const auto& face=c.cavityFaces[faceIndex];
++            const std::array<std::uint32_t,3> nodes{face.nodes.x,face.nodes.y,face.nodes.z};
++            if(face.nodes.w||face.identity.x!=i||!face.identity.y||
++               (j&&face.identity.y<=c.cavityFaces[faceIndex-1].identity.y)||
++               face.identity.z!=std::uint32_t(VascularCavityFaceRole::materialWall)||face.identity.w)
++                return fail("invalid face identity or nonmaterial interface role");
++            for(auto node:nodes)if(node<object.stateOffset||std::uint64_t(node)>=std::uint64_t(object.stateOffset)+object.stateCount)
++                return fail("cavity face escapes wall FEM node ownership");
++            const auto key=cavityKey(nodes);const auto found=boundary.find(key);
++            if(nodes[0]==nodes[1]||nodes[1]==nodes[2]||nodes[2]==nodes[0]||!ownedFaces.insert(key).second||
++               found==boundary.end()||found->second.size()!=1)return fail("duplicate face or face is not an exposed material boundary");
++            const auto a=point(nodes[0]),b=point(nodes[1]),d=point(nodes[2]);
++            const auto normal=cavityCross(cavitySubtract(b,a),cavitySubtract(d,a));
++            const auto side=cavityDot(normal,cavitySubtract(point(found->second.front()),a));
++            if(!std::isfinite(side)||!(side>0))return fail("degenerate or outer-wall face; cavity normal must point into material");
++            if(j==0)origin=a;
++            volume+=cavityDot(cavitySubtract(a,origin),cavityCross(cavitySubtract(b,origin),cavitySubtract(d,origin)))/6;
++            for(unsigned k=0;k<3;++k) {
++                const auto n=nodes[k],m=nodes[(k+1)%3];
++                const std::array<std::uint32_t,2> edge{std::min(n,m),std::max(n,m)};
++                edges[edge].push_back({j,n<m?1:-1});
++                vertexLinks[n].push_back({nodes[(k+1)%3],nodes[(k+2)%3]});
++                nodeFaces[n].push_back(faceIndex);
++            }
++        }
++        for(const auto& [edge,incidence]:edges) {
++            (void)edge;
++            if(incidence.size()!=2||incidence[0].second+incidence[1].second!=0)return fail("boundary is open, nonmanifold or inconsistently oriented");
++            adjacent[incidence[0].first].push_back(incidence[1].first);
++            adjacent[incidence[1].first].push_back(incidence[0].first);
++        }
++        const auto connected=[](const auto& graph,std::uint32_t start) {
++            std::set<std::uint32_t> seen;std::vector<std::uint32_t> pending{start};
++            while(!pending.empty()) {const auto n=pending.back();pending.pop_back();if(!seen.insert(n).second)continue;
++                for(auto other:graph.at(n))pending.push_back(other);}
++            return seen.size()==graph.size();
++        };
++        if(!connected(adjacent,0u))return fail("cavity boundary has disconnected components");
++        for(const auto& [node,links]:vertexLinks) {
++            (void)node;std::map<std::uint32_t,std::vector<std::uint32_t>> graph;
++            for(const auto& link:links){graph[link[0]].push_back(link[1]);graph[link[1]].push_back(link[0]);}
++            for(const auto& [vertex,neighbours]:graph){(void)vertex;if(neighbours.size()!=2)return fail("cavity vertex link is not a manifold cycle");}
++            if(!connected(graph,graph.begin()->first))return fail("cavity vertex link has pinched components");
++        }
++        const auto pressure=c.unknowns[cavity.identity.w].initialAndScaling;
++        const auto volumeRow=c.unknowns[compartment].initialAndScaling;
++        const float restoredPressure=(pressure.x/pressure.y)*pressure.y;
++        if(!std::isfinite(restoredPressure)||!finite(double(restoredPressure)-c.compartments[compartment].compliance.w))
++            return fail("initial absolute or transmural pressure is not representable");
++        const float initialVolume=(volumeRow.x/volumeRow.y)*volumeRow.y;
++        const long double discrepancy=std::abs(volume-static_cast<long double>(initialVolume));
++        if(!std::isfinite(volume)||!(volume>0)||!std::isfinite(initialVolume)||!(initialVolume>0)||
++           pressure.z!=volumeRow.y||
++           discrepancy>static_cast<long double>(pressure.w)*pressure.z||
++           discrepancy>64*std::numeric_limits<float>::epsilon()*volume)
++            return fail("initial absolute volume does not match the cooked enclosed cavity without offsets");
++        owners[compartment]=std::uint32_t(i);nextFace+=cavity.faces.y;
++    }
++    if(nextFace!=c.cavityFaces.size()||owners!=c.compartmentCavity)return fail("unowned faces or forged compartment-to-cavity mapping");
++    for(std::size_t i=0;i<C;++i)if((owners[i]!=NM_INVALID_INDEX)!=(c.compartments[i].identity.w==5))return fail("deforming compartment has missing cavity geometry");
++    if(c.cavityNodeRanges.size()!=nodeFaces.size())return fail("cavity node incidence coverage mismatch");
++    std::size_t next=0;
++    for(std::size_t i=0;i<nodeFaces.size();++i) {
++        const auto& range=c.cavityNodeRanges[i];
++        if(range.first!=next||range.count!=nodeFaces[i].size()||range.reserved0||range.reserved1||
++           range.count>c.cavityNodeIncidence.size()-next)return fail("invalid cavity node incidence range");
++        for(auto face:nodeFaces[i])if(c.cavityNodeIncidence[next++]!=face)return fail("cavity node incidence is not canonical");
++    }
++    return next==c.cavityNodeIncidence.size()||fail("unowned cavity node incidence");
++}
++
+ }
+ 
+ bool compileVascular(const WorldSource& source, CompiledWorld& world, std::vector<Diagnostic>& diagnostics) {
+     const auto& v=source.vascular; auto& c=world.vascular; c={};
+     const auto fail=[&](std::string message){diagnostics.push_back({Diagnostic::Severity::error,0u,0u,"vascular: "+message});return false;};
+-    const std::uint64_t C=v.compartments.size(),E=v.connections.size(),S=v.species.size(),T=v.tissues.size(),X=v.exchanges.size();
++    const std::uint64_t C=v.compartments.size(),E=v.connections.size(),S=v.species.size(),T=v.tissues.size(),X=v.exchanges.size(),B=v.cavities.size();
+     if (C==0) {
+-        if (E||S||T||X || std::any_of(v.contentIdentity.begin(),v.contentIdentity.end(),[](auto x){return x!=0;}) || std::any_of(v.sourceIdentity.begin(),v.sourceIdentity.end(),[](auto x){return x!=0;}) || std::any_of(v.authoredIdentity.begin(),v.authoredIdentity.end(),[](auto x){return x!=0;})) return fail("empty network has dangling authored data");
++        if (E||S||T||X||B || std::any_of(v.contentIdentity.begin(),v.contentIdentity.end(),[](auto x){return x!=0;}) || std::any_of(v.sourceIdentity.begin(),v.sourceIdentity.end(),[](auto x){return x!=0;}) || std::any_of(v.authoredIdentity.begin(),v.authoredIdentity.end(),[](auto x){return x!=0;})) return fail("empty network has dangling authored data");
+         return true;
+     }
+     for (const auto& object : source.objects)
+         if (object.mutationPolicy.enabled || !object.mutationCommands.empty())
+             return fail("vascular V1 does not support topology mutation or binding remapping");
+     const auto limit=std::numeric_limits<std::uint32_t>::max();
+-    if (C>limit || E>limit/2u || S>limit || T>limit || X>limit || C+E>limit || C+T>limit || (S && C+T>(limit-C-E)/S)) return fail("network exceeds 32-bit arena capacity");
+-    const std::uint64_t N=C+E+(C+T)*S;
++    if (C>limit || E>limit/2u || S>limit || T>limit || X>limit || B>limit || C+E>limit || C+T>limit || (S && C+T>(limit-C-E)/S)) return fail("network exceeds 32-bit arena capacity");
++    const std::uint64_t pressureBase=C+E+(C+T)*S;
++    const std::uint64_t N=pressureBase+B;
+     if (N>limit || source.environmentCount==0 || N>limit/(std::uint64_t(source.environmentCount)*(NM_MIXED_FGMRES_RESTART+1u))) return fail("network exceeds GPU Krylov address capacity");
+-    if (!validIds(v.compartments)||!validIds(v.connections)||!validIds(v.species)||!validIds(v.tissues)||!validIds(v.exchanges)) return fail("stable identifiers must be nonzero and unique within each record kind");
++    if (!validIds(v.compartments)||!validIds(v.connections)||!validIds(v.species)||!validIds(v.tissues)||!validIds(v.exchanges)||!validIds(v.cavities)) return fail("stable identifiers must be nonzero and unique within each record kind");
+     if(!positive(source.frameTimestep))return fail("base timestep is not positive finite representable Float32");
+     const int exponent=clockExponent(float(source.frameTimestep));
+     c.layout.clock={std::bit_cast<std::uint32_t>(std::int32_t(exponent)),0u,0u,0u};
+     c.layout.counts={std::uint32_t(C),std::uint32_t(E),std::uint32_t(S),std::uint32_t(T)};
+     c.layout.offsets={0u,std::uint32_t(C),std::uint32_t(C+E),std::uint32_t(C+E+C*S)};
+     c.layout.ranges={std::uint32_t(X),0u,std::uint32_t(N),0u};
++    c.layout.cavities={std::uint32_t(B),0u,std::uint32_t(pressureBase),0u};
++    c.compartmentCavity.assign(C,NM_INVALID_INDEX);
+     for (unsigned i=0;i<4;++i) {c.identity.content[i]=v.contentIdentity[i];c.identity.source[i]=v.sourceIdentity[i];c.identity.authored[i]=v.authoredIdentity[i];}
+     if (std::all_of(v.contentIdentity.begin(),v.contentIdentity.end(),[](auto x){return x==0;})) return fail("source payload identity is missing");
+     const auto addName=[&](const std::string& name,std::uint32_t& offset) {
+@@ -204,6 +358,55 @@ bool compileVascular(const WorldSource& source, CompiledWorld& world, std::vecto
+         if (!ci.contains(x.compartment)||!ti.contains(x.tissue)||!si.contains(x.species)||!positive(x.permeabilitySurface)||!positive(x.partitionCoefficient)) return fail("invalid exchange endpoint, species, permeability or partition coefficient");
+         const auto a=ci[x.compartment],b=ti[x.tissue],s=si[x.species];c.exchanges.push_back({{x.stableIdentifier,a,b,s},f4(x.permeabilitySurface,x.partitionCoefficient)});bloodX[a*S+s].push_back(row);tissueX[b*S+s].push_back(row);
+     }
++    for(auto index:order(v.cavities)) {
++        const auto& x=v.cavities[index];
++        if(!ci.contains(x.compartment) || x.objectIndex>=world.objects.size() ||
++           x.objectIndex>=source.objects.size() || !finite(x.initialPressure) ||
++           !positive(x.pressureScale) || !finite(x.initialPressure/x.pressureScale) ||
++           !tolerance(x.geometryResidualTolerance) || !validIds(x.faces) || x.faces.empty())
++            return fail("invalid cavity pressure, scale, identity, object or face IDs");
++        const auto compartment=ci[x.compartment], cavity=std::uint32_t(c.cavities.size());
++        if(c.compartmentCavity[compartment]!=NM_INVALID_INDEX ||
++           c.compartments[compartment].identity.w!=std::uint32_t(VascularPressureLaw::deformingCavity))
++            return fail("cavity pressure must replace exactly one compartment constitutive law");
++        if(source.objects[x.objectIndex].adaptive || source.objects[x.objectIndex].automaticRepresentation)
++            return fail("cavity boundary requires immutable nonadaptive FEM representation");
++        if(x.faces.size()>limit-c.cavityFaces.size())return fail("cavity face arena overflow");
++        auto& object=world.objects[x.objectIndex];
++        // Geometry and hydraulic continuity share one microtick. This is a
++        // cooked scheduling invariant, never a runtime host stepping loop.
++        if(object.schedulerIndex>=world.schedulers.size())return fail("cavity wall scheduler is absent");
++        const auto exponent=world.dispatch.maximumRateExponent;
++        object.solver.x=exponent;
++        auto& scheduler=world.schedulers[object.schedulerIndex];
++        scheduler.baseExponent=exponent;scheduler.activeExponent=exponent;scheduler.requestedExponent=exponent;
++        NMVascularCavityGPU cavityGPU{};
++        cavityGPU.identity={x.stableIdentifier,compartment,x.objectIndex,std::uint32_t(pressureBase+cavity)};
++        cavityGPU.faces={std::uint32_t(c.cavityFaces.size()),std::uint32_t(x.faces.size()),0u,0u};
++        for(unsigned k=0;k<4;++k){cavityGPU.sourceIdentity[k]=x.sourceIdentity[k];cavityGPU.mechanicalIdentity[k]=x.mechanicalIdentity[k];}
++        for(auto faceIndex:order(x.faces)) {
++            const auto& face=x.faces[faceIndex];
++            if(face.role!=VascularCavityFaceRole::materialWall ||
++               std::any_of(face.nodes.begin(),face.nodes.end(),[&](auto n){return n>=object.stateCount;}))
++                return fail("cavity face must bind material-wall FEM nodes; artificial interfaces are unsupported");
++            c.cavityFaces.push_back({{object.stateOffset+face.nodes[0],object.stateOffset+face.nodes[1],object.stateOffset+face.nodes[2],0u},
++                {cavity,face.stableIdentifier,std::uint32_t(face.role),0u}});
++        }
++        c.compartmentCavity[compartment]=cavity;
++        c.unknowns[pressureBase+cavity]={f4(x.initialPressure,x.pressureScale,
++            c.unknowns[compartment].initialAndScaling.y,x.geometryResidualTolerance)};
++        c.cavities.push_back(cavityGPU);
++    }
++    c.layout.cavities.y=std::uint32_t(c.cavityFaces.size());
++    if(B) {
++        std::vector<std::vector<std::uint32_t>> nodeFaces(world.fem.nodes.size());
++        for(std::uint32_t i=0;i<c.cavityFaces.size();++i) {
++            const auto& n=c.cavityFaces[i].nodes;
++            if(n.x>=nodeFaces.size()||n.y>=nodeFaces.size()||n.z>=nodeFaces.size())return fail("cavity node outside FEM arena");
++            nodeFaces[n.x].push_back(i);nodeFaces[n.y].push_back(i);nodeFaces[n.z].push_back(i);
++        }
++        incidence(nodeFaces,c.cavityNodeIncidence,c.cavityNodeRanges);
++    }
+     c.layout.ranges.y=std::uint32_t(c.tissueBindings.size());
+     incidence(edges,c.connectionIncidence,c.connectionRanges);incidence(bloodX,c.bloodExchangeIncidence,c.bloodExchangeRanges);incidence(tissueX,c.tissueExchangeIncidence,c.tissueExchangeRanges);
+     std::string error;if (!validateVascularLayout(world,&error)) return fail(error);return true;
+@@ -211,12 +414,14 @@ bool compileVascular(const WorldSource& source, CompiledWorld& world, std::vecto
+ 
+ bool validateVascularLayout(const CompiledWorld& world,std::string* error) {
+     const auto& c=world.vascular;const auto fail=[&](std::string_view s){if(error&&error->empty())*error="vascular: "+std::string(s);return false;};
+-    const std::uint64_t C=c.compartments.size(),E=c.connections.size(),S=c.species.size(),T=c.tissues.size(),X=c.exchanges.size();
++    const std::uint64_t C=c.compartments.size(),E=c.connections.size(),S=c.species.size(),T=c.tissues.size(),X=c.exchanges.size(),B=c.cavities.size();
+     const auto limit=std::numeric_limits<std::uint32_t>::max();
+-    if (C>limit||E>limit/2u||S>limit||T>limit||X>limit||C+E>limit||C+T>limit||(S && C+T>(limit-C-E)/S))return fail("cooked count overflow");
+-    const auto N=C+E+(C+T)*S;
+-    if (c.layout.counts.x!=C||c.layout.counts.y!=E||c.layout.counts.z!=S||c.layout.counts.w!=T||c.layout.ranges.x!=X||c.layout.ranges.y!=c.tissueBindings.size()||c.layout.ranges.z!=N||c.layout.ranges.w!=0||c.layout.offsets.x!=0||c.layout.offsets.y!=C||c.layout.offsets.z!=C+E||c.layout.offsets.w!=C+E+C*S||c.unknowns.size()!=N) return fail("layout counts or unknown offsets disagree");
+-    if (C==0) return (c.layout.clock.x==0&&c.layout.clock.y==0&&c.layout.clock.z==0&&c.layout.clock.w==0&&E==0&&S==0&&T==0&&X==0&&c.names.empty()&&c.tissueBindings.empty()&&c.connectionIncidence.empty()&&c.connectionRanges.empty()&&c.bloodExchangeIncidence.empty()&&c.bloodExchangeRanges.empty()&&c.tissueExchangeIncidence.empty()&&c.tissueExchangeRanges.empty()&&allZero(c.identity))||fail("empty network has dangling state");
++    if (C>limit||E>limit/2u||S>limit||T>limit||X>limit||B>limit||C+E>limit||C+T>limit||(S && C+T>(limit-C-E)/S))return fail("cooked count overflow");
++    const auto pressureBase=C+E+(C+T)*S;
++    const auto N=pressureBase+B;
++    if(N>limit)return fail("cooked cavity pressure capacity overflow");
++    if (c.layout.counts.x!=C||c.layout.counts.y!=E||c.layout.counts.z!=S||c.layout.counts.w!=T||c.layout.ranges.x!=X||c.layout.ranges.y!=c.tissueBindings.size()||c.layout.ranges.z!=N||c.layout.ranges.w!=0||c.layout.offsets.x!=0||c.layout.offsets.y!=C||c.layout.offsets.z!=C+E||c.layout.offsets.w!=C+E+C*S||c.unknowns.size()!=N||c.layout.cavities.x!=B||c.layout.cavities.y!=c.cavityFaces.size()||c.layout.cavities.z!=pressureBase||c.layout.cavities.w||c.compartmentCavity.size()!=C) return fail("layout counts or unknown offsets disagree");
++    if (C==0) return (c.layout.clock.x==0&&c.layout.clock.y==0&&c.layout.clock.z==0&&c.layout.clock.w==0&&E==0&&S==0&&T==0&&X==0&&B==0&&c.cavityFaces.empty()&&c.compartmentCavity.empty()&&c.cavityNodeIncidence.empty()&&c.cavityNodeRanges.empty()&&c.names.empty()&&c.tissueBindings.empty()&&c.connectionIncidence.empty()&&c.connectionRanges.empty()&&c.bloodExchangeIncidence.empty()&&c.bloodExchangeRanges.empty()&&c.tissueExchangeIncidence.empty()&&c.tissueExchangeRanges.empty()&&allZero(c.identity))||fail("empty network has dangling state");
+     if(!positive(world.dispatch.gravityAndTimestep.w))return fail("cooked base timestep is invalid");
+     if(c.layout.clock.x!=std::bit_cast<std::uint32_t>(std::int32_t(clockExponent(world.dispatch.gravityAndTimestep.w)))||c.layout.clock.y||c.layout.clock.z||c.layout.clock.w)return fail("clock quantum is not canonical for the cooked timestep");
+     if (world.dispatch.environmentCount==0 || N>limit/(std::uint64_t(world.dispatch.environmentCount)*(NM_MIXED_FGMRES_RESTART+1u)))return fail("Krylov address overflow");
+@@ -231,7 +436,7 @@ bool validateVascularLayout(const CompiledWorld& world,std::string* error) {
+         if(offset!=nextName||offset>=c.names.size())return false;const auto begin=c.names.begin()+offset;const auto end=std::find(begin,c.names.end(),0);if(end==c.names.end())return false;
+         const std::string value(begin,end);if(!utf8(value))return false;nextName=std::size_t(end-c.names.begin())+1;if(result)*result=value;return true;
+     };
+-    for (std::size_t i=0;i<N;++i) {const auto v=c.unknowns[i].initialAndScaling;if(!finite4(v)||!positive(v.y)||!positive(v.z)||!tolerance(v.w)||!finite(double(v.x)/v.y))return fail("invalid normalized unknown");if((i<C && c.compartments[i].identity.z==0 && !(v.x>0))||(i>=C+E&&v.x<0))return fail("negative amount or nonpositive volume");if((i<C||i>=C+E)&&v.y!=v.z)return fail("conservation row has inconsistent physical scale");}
++    for (std::size_t i=0;i<N;++i) {const auto v=c.unknowns[i].initialAndScaling;if(!finite4(v)||!positive(v.y)||!positive(v.z)||!tolerance(v.w)||!finite(double(v.x)/v.y))return fail("invalid normalized unknown");if((i<C && c.compartments[i].identity.z==0 && !(v.x>0))||(i>=C+E&&i<pressureBase&&v.x<0))return fail("negative amount or nonpositive volume");if((i<C||(i>=C+E&&i<pressureBase))&&v.y!=v.z)return fail("conservation row has inconsistent physical scale");}
+     std::set<std::string> speciesNames;
+     for(std::size_t i=0;i<S;++i) {const auto& s=c.species[i];std::string text;
+         if(!s.identity.x||(i&&s.identity.x<=c.species[i-1].identity.x)||s.identity.z||s.identity.w||!name(s.identity.y,&text)||!speciesNames.insert(text).second||!finite4(s.scaling)||!positive(s.scaling.x)||!tolerance(s.scaling.y)||s.scaling.z!=0||s.scaling.w!=0)return fail("invalid species identity or scale");
+@@ -268,6 +473,7 @@ bool validateVascularLayout(const CompiledWorld& world,std::string* error) {
+         bloodX[x.identity.y*S+x.identity.w].push_back(i);tissueX[x.identity.z*S+x.identity.w].push_back(i);}
+     const auto sameIncidence=[&](const auto& expected,const auto& values,const auto& ranges){if(ranges.size()!=expected.size())return false;std::size_t next=0;for(std::size_t i=0;i<expected.size();++i){const auto& r=ranges[i];if(r.first!=next||r.count!=expected[i].size()||r.reserved0||r.reserved1||r.count>values.size()-next)return false;for(std::size_t j=0;j<r.count;++j)if(values[next+j]!=expected[i][j])return false;next+=r.count;}return next==values.size();};
+     if(!sameIncidence(edges,c.connectionIncidence,c.connectionRanges)||!sameIncidence(bloodX,c.bloodExchangeIncidence,c.bloodExchangeRanges)||!sameIncidence(tissueX,c.tissueExchangeIncidence,c.tissueExchangeRanges))return fail("incidence is missing, duplicated or out of canonical order");
++    if(!validateCavities(world,error))return false;
+     return true;
+ }
+ } // namespace numi::matter::detail
+diff --git a/matter/tools/cardiac_transaction_check.mm b/matter/tools/cardiac_transaction_check.mm
+index 7f13f51..0b83e9f 100644
+--- a/matter/tools/cardiac_transaction_check.mm
++++ b/matter/tools/cardiac_transaction_check.mm
+@@ -122,7 +122,7 @@ void sharedAlpha(id<MTLDevice> device,id<MTLCommandQueue> queue,id<MTLLibrary> l
+ void deferredDirection(id<MTLDevice> device,id<MTLCommandQueue> queue,id<MTLLibrary> library) {
+     NMMatterDispatchGPU dispatch{};dispatch.environmentCount=2;dispatch.femNodeCount=1;dispatch.rigidGeneralizedCapacity=1;dispatch.mpmActiveNodeCapacity=1;
+     NMFGMRESLayoutGPU layout{};layout.supportContactCount=1;layout.supportBase=8;layout.vascularBase=10;layout.vascularUnknownCount=3;layout.unknownCount=16;
+-    NMVascularLayoutGPU graph{};graph.counts={2,1,0,0};graph.ranges.z=3;graph.offsets={0,2,3,3};
++    NMVascularLayoutGPU graph{};graph.counts={2,1,0,0};graph.ranges.z=3;graph.offsets={0,2,3,3};graph.cavities.z=3; // ABI 29: empty pressure block follows all hydraulic rows.
+     NMVascularConnectionGPU edge{};edge.identity={1,0,1,1};
+     std::vector<nm_float4> before(16,nm_float4{.125f,.25f,.5f,1.f});before[12].x=-.5f;before[15].x=.1f;
+     auto solution=buffer(device,before),candidate=buffer(device,std::vector<nm_float4>{{1,0,0,0},{1,0,0,0},{.2,0,0,0},{1,0,0,0},{1,0,0,0},{.2,0,0,0}});
+@@ -130,10 +130,12 @@ void deferredDirection(id<MTLDevice> device,id<MTLCommandQueue> queue,id<MTLLibr
+     std::vector<NMVascularUnknownGPU> unknowns(3);for(auto& u:unknowns)u.initialAndScaling={0,1,1,1e-5f};
+     auto scaling=buffer(device,unknowns),nodes=buffer(device,std::vector<NMVascularCompartmentGPU>(2));
+     auto coefficients=buffer(device,std::vector<float>(4,1));
++    auto cavities=buffer(device,std::vector<NMVascularCavityGPU>(1)),cavityMap=buffer(device,std::vector<std::uint32_t>(2,NM_INVALID_INDEX));
+     auto cb=[queue commandBuffer];auto e=[cb computeCommandEncoder];
+     [e setComputePipelineState:pipeline(device,library,@"numi_matter_metal::nm_vascular_resolve_working_set")];
+     [e setBytes:&dispatch length:sizeof(dispatch) atIndex:0];[e setBytes:&graph length:sizeof(graph) atIndex:1];[e setBytes:&layout length:sizeof(layout) atIndex:30];
+     [e setBuffer:edges offset:0 atIndex:2];[e setBuffer:candidate offset:0 atIndex:3];[e setBuffer:solution offset:0 atIndex:4];[e setBuffer:masks offset:0 atIndex:5];[e setBuffer:changed offset:0 atIndex:6];[e setBuffer:statuses offset:0 atIndex:7];[e setBuffer:scaling offset:0 atIndex:8];[e setBuffer:nodes offset:0 atIndex:9];[e setBuffer:coefficients offset:0 atIndex:10];
++    [e setBuffer:cavities offset:0 atIndex:11];[e setBuffer:cavityMap offset:0 atIndex:12];
+     [e dispatchThreadgroups:MTLSizeMake(2,1,1) threadsPerThreadgroup:MTLSizeMake(32,1,1)];[e endEncoding];complete(cb);
+     const auto* out=static_cast<const nm_float4*>(solution.contents);const auto* flags=static_cast<const std::uint32_t*>(changed.contents);
+     require(flags[0]==1&&flags[1]==0,"valve working-set deferral contaminated another environment");
+@@ -147,11 +149,12 @@ void deferredDirection(id<MTLDevice> device,id<MTLCommandQueue> queue,id<MTLLibr
+ void pendingZeroRelease(id<MTLDevice> device,id<MTLCommandQueue> queue,id<MTLLibrary> library) {
+     NMMatterDispatchGPU dispatch{};dispatch.environmentCount=3;
+     NMFGMRESLayoutGPU layout{};layout.vascularUnknownCount=3;layout.unknownCount=9;
+-    NMVascularLayoutGPU graph{};graph.counts={2,1,0,0};graph.ranges.z=3;graph.offsets={0,2,3,3};
++    NMVascularLayoutGPU graph{};graph.counts={2,1,0,0};graph.ranges.z=3;graph.offsets={0,2,3,3};graph.cavities.z=3; // ABI 29: empty pressure block follows all hydraulic rows.
+     NMVascularConnectionGPU edge{};edge.identity={1,0,1,1};
+     std::vector<NMVascularUnknownGPU> unknowns(3);for(auto& u:unknowns)u.initialAndScaling={0,1,1,1e-5f};
+     auto scaling=buffer(device,unknowns),nodes=buffer(device,std::vector<NMVascularCompartmentGPU>(2));
+     auto coefficients=buffer(device,std::vector<float>(6,1));
++    auto cavities=buffer(device,std::vector<NMVascularCavityGPU>(1)),cavityMap=buffer(device,std::vector<std::uint32_t>(2,NM_INVALID_INDEX));
+     auto candidate=buffer(device,std::vector<nm_float4>{{2,0,0,0},{1,0,0,0},{0,0,0,0},{2,0,0,0},{1,0,0,0},{0,0,0,0},{1,0,0,0},{2,0,0,0},{0,0,0,0}});
+     std::vector<nm_float4> directions(9);directions[5].x=-.5f;
+     auto solution=buffer(device,directions),edges=buffer(device,std::vector<NMVascularConnectionGPU>{edge});
+@@ -161,6 +164,7 @@ void pendingZeroRelease(id<MTLDevice> device,id<MTLCommandQueue> queue,id<MTLLib
+     [e setComputePipelineState:pipeline(device,library,@"numi_matter_metal::nm_vascular_resolve_working_set")];
+     [e setBytes:&dispatch length:sizeof(dispatch) atIndex:0];[e setBytes:&graph length:sizeof(graph) atIndex:1];[e setBytes:&layout length:sizeof(layout) atIndex:30];
+     [e setBuffer:edges offset:0 atIndex:2];[e setBuffer:candidate offset:0 atIndex:3];[e setBuffer:solution offset:0 atIndex:4];[e setBuffer:masks offset:0 atIndex:5];[e setBuffer:changed offset:0 atIndex:6];[e setBuffer:statuses offset:0 atIndex:7];[e setBuffer:scaling offset:0 atIndex:8];[e setBuffer:nodes offset:0 atIndex:9];[e setBuffer:coefficients offset:0 atIndex:10];
++    [e setBuffer:cavities offset:0 atIndex:11];[e setBuffer:cavityMap offset:0 atIndex:12];
+     [e dispatchThreadgroups:MTLSizeMake(3,1,1) threadsPerThreadgroup:MTLSizeMake(32,1,1)];[e endEncoding];complete(cb);
+     const auto* mask=static_cast<const std::uint32_t*>(masks.contents);const auto* flags=static_cast<const std::uint32_t*>(changed.contents);
+     require(mask[2]==0&&flags[0]==1,"pending zero-flow valve trapped after empty positive-pressure free solve");
+@@ -174,7 +178,7 @@ EquationResult equations(id<MTLDevice> device,id<MTLCommandQueue> queue,id<MTLLi
+     const std::vector<NMVascularCompartmentGPU>& nodes,NMVascularConnectionGPU edge,
+     const std::vector<nm_float4>& candidate,const std::vector<nm_float4>& direction) {
+     NMMatterDispatchGPU dispatch{};dispatch.environmentCount=candidate.size()/3;
+-    NMVascularLayoutGPU graph{};graph.counts={2,1,0,0};graph.ranges.z=3;graph.offsets={0,2,3,3};
++    NMVascularLayoutGPU graph{};graph.counts={2,1,0,0};graph.ranges.z=3;graph.offsets={0,2,3,3};graph.cavities.z=3; // ABI 29: empty pressure block follows all hydraulic rows.
+     NMFGMRESLayoutGPU layout{};layout.vascularUnknownCount=3;layout.unknownCount=candidate.size();
+     NMMicrostepGPU micro{};micro.time.x=.01f;const unsigned unmasked=0;
+     std::vector<NMVascularUnknownGPU> unknowns(3);for(auto& u:unknowns)u.initialAndScaling={0,1,1,1e-5f};
+@@ -186,13 +190,20 @@ EquationResult equations(id<MTLDevice> device,id<MTLCommandQueue> queue,id<MTLLi
+     auto states=buffer(device,std::vector<NMFGMRESStateGPU>(dispatch.environmentCount)),statuses=buffer(device,std::vector<NMMatterStatusGPU>(dispatch.environmentCount));
+     auto coefficients=buffer(device,std::vector<float>(dispatch.environmentCount*2,1));
+     auto masks=buffer(device,std::vector<unsigned>(candidate.size()));
++    // Non-cavity fixtures still bind every production argument with a valid
++    // buffer; the empty cavity range prevents these dummy records being read.
++    auto cavities=buffer(device,std::vector<NMVascularCavityGPU>(1)),faces=buffer(device,std::vector<NMVascularCavityFaceGPU>(1));
++    auto cavityMap=buffer(device,std::vector<std::uint32_t>(2,NM_INVALID_INDEX));
++    auto femCandidate=buffer(device,std::vector<NMFEMNodeStateGPU>(1)),femAccepted=buffer(device,std::vector<NMFEMNodeStateGPU>(1));
+     auto cb=[queue commandBuffer];auto e=[cb computeCommandEncoder];
+     for(unsigned derivative=0;derivative<2;++derivative) {
+         [e setComputePipelineState:pipeline(device,library,derivative?@"numi_matter_metal::nm_vascular_operator":@"numi_matter_metal::nm_vascular_residual")];
+         [e setBytes:&dispatch length:sizeof(dispatch) atIndex:0];[e setBytes:&graph length:sizeof(graph) atIndex:1];[e setBytes:&micro length:sizeof(micro) atIndex:2];
+         const std::array<id<MTLBuffer>,19> bindings={scaling,nodeBuffer,edges,tissues,exchanges,indices,ranges,indices,dummyRanges,indices,dummyRanges,values,values,directions,derivative?tangent:residual,states,statuses,coefficients,masks};
+         for(unsigned i=0;i<bindings.size();++i)[e setBuffer:bindings[i] offset:0 atIndex:i+3];
+-        [e setBytes:&unmasked length:sizeof(unmasked) atIndex:22];[e setBytes:&layout length:sizeof(layout) atIndex:30];
++        [e setBytes:&unmasked length:sizeof(unmasked) atIndex:22];
++        [e setBuffer:cavities offset:0 atIndex:23];[e setBuffer:faces offset:0 atIndex:24];[e setBuffer:cavityMap offset:0 atIndex:25];
++        [e setBuffer:femCandidate offset:0 atIndex:26];[e setBuffer:femAccepted offset:0 atIndex:27];[e setBytes:&layout length:sizeof(layout) atIndex:30];
+         [e dispatchThreads:MTLSizeMake(candidate.size(),1,1) threadsPerThreadgroup:MTLSizeMake(32,1,1)];
+         [e memoryBarrierWithScope:MTLBarrierScopeBuffers];
+     }
+diff --git a/matter/tools/vascular_cavity_check.mm b/matter/tools/vascular_cavity_check.mm
+new file mode 100644
+index 0000000..dc0ea77
+--- /dev/null
++++ b/matter/tools/vascular_cavity_check.mm
+@@ -0,0 +1,419 @@
++#import <Foundation/Foundation.h>
++#import <Metal/Metal.h>
++#include "numi/matter/matter.hpp"
++#include "metalrobo/engine_types.h"
++#include "vascular_cavity_fixture.hpp"
++#include <algorithm>
++#include <bit>
++#include <cmath>
++#include <cstring>
++#include <iomanip>
++#include <iostream>
++#include <limits>
++#include <stdexcept>
++#include <sstream>
++
++using namespace numi::matter;
++namespace fixture=vascular_cavity_fixture;
++namespace {
++void need(bool okay,const std::string& why){if(!okay)throw std::runtime_error(why);}
++template<class T> bool same(const std::vector<T>& a,const std::vector<T>& b){return a.size()==b.size()&&(a.empty()||std::memcmp(a.data(),b.data(),a.size()*sizeof(T))==0);}
++template<class T> void paired(const std::vector<T>& a,const char* name){need(a.size()%2==0,std::string(name)+" pair arity");const auto n=a.size()/2;need(!n||std::memcmp(a.data(),a.data()+n,n*sizeof(T))==0,std::string(name)+" paired environments differ");}
++template<class T> void unchangedEnvironment(const std::vector<T>& a,const std::vector<T>& b,unsigned env,const char* name){
++    need(a.size()==b.size()&&a.size()%2==0,std::string(name)+" snapshot arity");const auto n=a.size()/2;
++    need(!n||std::memcmp(a.data()+env*n,b.data()+env*n,n*sizeof(T))==0,std::string(name)+" rejected/reset state differs");
++}
++bool samePhysical(const RuntimeStateSnapshot& a,const RuntimeStateSnapshot& b){
++    return same(a.femNodes,b.femNodes)&&same(a.femFields,b.femFields)&&same(a.vascularState,b.vascularState)&&same(a.vascularClock,b.vascularClock);
++}
++std::vector<fixture::Vec> positions(const RuntimeStateSnapshot& s,unsigned env,unsigned nodes){
++    need(s.femNodes.size()==2*nodes,"accepted FEM node coverage");std::vector<fixture::Vec> x(nodes);
++    for(unsigned i=0;i<nodes;++i){const auto& p=s.femNodes[env*nodes+i].positionAndMass;x[i]={p.x,p.y,p.z};}
++    return x;
++}
++struct Run {
++    CompiledWorld world;Runtime runtime;
++    id<MTLDevice> device;id<MTLCommandQueue> queue;id<MTLBuffer> statuses;
++    explicit Run(const WorldSource& source){
++        auto compiled=compileWorld(source,{.maximumRateExponent=0});std::string message;
++        for(const auto& d:compiled.diagnostics)if(d.severity==Diagnostic::Severity::error)message+=d.message+"; ";
++        need(compiled.succeeded(),"hollow-cavity compile: "+message);
++        const auto path=std::filesystem::temp_directory_path()/(std::string("numi-hollow-cavity-")+[[NSUUID UUID] UUIDString].UTF8String+".nmatterpack");
++        need(writePackage(compiled,path,&message),"package write: "+message);
++        const bool loaded=readPackage(path,world,nullptr,&message);std::error_code removal;std::filesystem::remove(path,removal);
++        need(loaded&&!removal&&world.fingerprint==compiled.world.fingerprint,"package roundtrip: "+message);
++        double mass=0;for(const auto& node:world.fem.nodes)mass+=node.positionAndMass.w;
++        need(std::abs(mass-.026)<1e-8,"hydraulic lumen added mechanical mass to the hollow tissue shell");
++        device=MTLCreateSystemDefaultDevice();need(device!=nil,"Metal device unavailable");
++        need([[device name] rangeOfString:@"Apple"].location!=NSNotFound&&[[device name] rangeOfString:@"Paravirtual"].location==NSNotFound,"physical Apple Metal required");
++        queue=[device newCommandQueue];statuses=[device newBufferWithLength:2*sizeof(MRMetalWorldStatusGPU) options:MTLResourceStorageModeShared];
++        RuntimeConfiguration config;config.metallib=NUMI_MATTER_METALLIB;config.environmentCount=2;
++        config.captureEvents=false;config.captureDiagnostics=true;config.adaptiveTransfer=false;
++        const auto result=runtime.initialize(world,config);need(result.encoded,result.message);
++        std::cout<<"cavity_device="<<[device name].UTF8String<<" abi="<<NM_MATTER_ABI_VERSION<<" world_fingerprint="<<world.fingerprint<<'\n';
++    }
++    RuntimeStateSnapshot state(){auto out=runtime.snapshot();need(out.available,out.message);return out;}
++    void restore(const RuntimeStateSnapshot& snapshot){const auto result=runtime.restore(snapshot);need(result.encoded,"restore: "+result.message);}
++    void step(unsigned index,int reject=-1,int reset=-1){
++        auto* incoming=static_cast<MRMetalWorldStatusGPU*>(statuses.contents);
++        for(unsigned env=0;env<2;++env){incoming[env]={};incoming[env].environment=env;}
++        auto command=[queue commandBuffer];need(command!=nil,"command buffer unavailable");
++        EncodeRequest request;request.commandBuffer=(__bridge void*)command;request.environmentStatuses=(__bridge void*)statuses;
++        request.controlStep=index;request.physicsSubsteps=1;request.timestepSeconds=runtime.timestepSeconds();request.runAdaptiveTransfer=false;
++        id<MTLBuffer> resets=nil,failure=nil;
++        if(reset>=0){std::vector<std::uint32_t> mask((index+1u)*2u);mask[index*2u+unsigned(reset)]=1;
++            resets=[device newBufferWithBytes:mask.data() length:mask.size()*sizeof(std::uint32_t) options:MTLResourceStorageModeShared];
++            request.resetMasks=(__bridge void*)resets;request.resetMaskStepStride=2;}
++        request.phase=EncodePhase::preDynamics;auto result=runtime.encode(request);need(result.encoded,"preDynamics: "+result.message);
++        if(reject>=0){MRMetalWorldStatusGPU denied{};denied.code=MR_STEP_DID_NOT_CONVERGE;denied.environment=unsigned(reject);
++            failure=[device newBufferWithBytes:&denied length:sizeof(denied) options:MTLResourceStorageModeShared];
++            auto blit=[command blitCommandEncoder];[blit copyFromBuffer:failure sourceOffset:0 toBuffer:statuses destinationOffset:unsigned(reject)*sizeof(denied) size:sizeof(denied)];[blit endEncoding];}
++        request.phase=EncodePhase::postCommit;result=runtime.encode(request);need(result.encoded,"postCommit: "+result.message);
++        [command commit];[command waitUntilCompleted];need(command.status==MTLCommandBufferStatusCompleted,"Metal command failed");
++        const auto after=state();need(after.statuses.size()==2,"environment status coverage");
++        for(unsigned env=0;env<2;++env)if(int(env)!=reject)need(after.statuses[env].code==NM_STATUS_SUCCESS,
++            "cavity step="+std::to_string(index)+" env="+std::to_string(env)+" status="+std::to_string(after.statuses[env].code)+
++            " residual="+std::to_string(after.statuses[env].diagnostics.z));
++        if(reject>=0)need(after.statuses[unsigned(reject)].code!=NM_STATUS_SUCCESS,"injected transaction rejection was lost");
++        (void)failure;(void)resets;
++    }
++    double physical(const RuntimeStateSnapshot& s,unsigned row,unsigned env=0)const{
++        need(row<world.vascular.unknowns.size()&&s.vascularState.size()==2*world.vascular.unknowns.size(),"vascular unknown arity");
++        const double value=double(s.vascularState[env*world.vascular.unknowns.size()+row].x)*world.vascular.unknowns[row].initialAndScaling.y;
++        need(std::isfinite(value),"nonfinite physical vascular coordinate");return value;
++    }
++};
++struct Metrics {double geometry=0,blood=0,tracer=0,balance=0,flow=0,work=0,motion=0,flowMaximum=0;};
++template<class T> id<MTLBuffer> gpuBuffer(id<MTLDevice> device,const std::vector<T>& values){
++    need(!values.empty(),"empty direct operator input");
++    return [device newBufferWithBytes:values.data() length:values.size()*sizeof(T) options:MTLResourceStorageModeShared];
++}
++id<MTLComputePipelineState> pipeline(id<MTLDevice> device,id<MTLLibrary> library,NSString* name){
++    NSError* error=nil;auto function=[library newFunctionWithName:name];need(function!=nil,"production cavity kernel missing");
++    auto result=[device newComputePipelineStateWithFunction:function error:&error];need(result!=nil,"cavity pipeline creation failed");return result;
++}
++void completed(id<MTLCommandBuffer> command){[command commit];[command waitUntilCompleted];need(command.status==MTLCommandBufferStatusCompleted,"direct cavity operator failed");}
++void productionOperators(Run& run){
++    // Independent manufactured states; the production force and tangent
++    // kernels are called directly, and never replaced by the FP64 oracle.
++    const auto shell=fixture::hollowShell();const auto& w=run.world;const unsigned nodes=w.dispatch.femNodeCount;
++    need(nodes==64&&w.dispatch.environmentCount==2,"operator fixture layout differs");
++    NSError* error=nil;auto library=[run.device newLibraryWithURL:[NSURL fileURLWithPath:[NSString stringWithUTF8String:NUMI_MATTER_METALLIB]] error:&error];
++    need(library!=nil,"metallib unavailable for production operator checks");
++    const auto forcePipeline=pipeline(run.device,library,@"numi_matter_metal::nm_vascular_cavity_forces");
++    const auto operatorPipeline=pipeline(run.device,library,@"numi_matter_metal::nm_vascular_cavity_operator");
++    NMMicrostepGPU micro{};micro.time={float(run.runtime.timestepSeconds()),float(1./run.runtime.timestepSeconds()),0,0};
++    micro.flags=NM_MICROSTEP_FGMRES_OPERATOR;
++    NMFGMRESLayoutGPU layout{};layout.vascularUnknownCount=unsigned(w.vascular.unknowns.size());
++    layout.vascularBase=4*nodes;layout.unknownCount=layout.vascularBase+2*layout.vascularUnknownCount;
++    auto accepted=run.state().femNodes,candidate=accepted;
++    std::vector<nm_float4> vascular=run.state().vascularState,direction(layout.unknownCount),borrowed(2*nodes);
++    auto compartments=w.vascular.compartments;compartments[0].compliance.w=20;
++    for(unsigned env=0;env<2;++env){
++        vascular[env*layout.vascularUnknownCount+w.vascular.layout.cavities.z].x=env==0?1.2f:2.4f;
++        direction[layout.vascularBase+env*layout.vascularUnknownCount+w.vascular.layout.cavities.z].x=env==0?.2f:-.3f;
++        for(unsigned i=0;i<nodes;++i)borrowed[env*nodes+i]={.0003f,-.0002f,.0001f,0};
++        for(unsigned i=0;i<shell.innerNodes.size();++i){const unsigned n=env*nodes+shell.innerNodes[i];
++            candidate[n].positionAndMass.x+=float(.0001*std::sin(double(i)+.3));
++            candidate[n].positionAndMass.y+=float(.0002*std::cos(double(i)+.2));
++            candidate[n].positionAndMass.z+=float(.0001*std::sin(2*double(i)+.1));
++            direction[n]={float(.08*std::cos(double(i)+.2)),float(.06*std::sin(double(i)+.4)),float(.07*std::cos(2*double(i)+.1)),0};
++        }
++    }
++    const auto unknownBuffer=gpuBuffer(run.device,w.vascular.unknowns),cavityBuffer=gpuBuffer(run.device,w.vascular.cavities),faceBuffer=gpuBuffer(run.device,w.vascular.cavityFaces);
++    const auto incidenceBuffer=gpuBuffer(run.device,w.vascular.cavityNodeIncidence),rangeBuffer=gpuBuffer(run.device,w.vascular.cavityNodeRanges);
++    auto acceptedBuffer=gpuBuffer(run.device,accepted);
++    auto encodeCommon=[&](id<MTLComputeCommandEncoder> encoder,id<MTLBuffer> compartmentBuffer,id<MTLBuffer> candidateBuffer,id<MTLBuffer> vascularBuffer){
++        [encoder setBytes:&w.dispatch length:sizeof(w.dispatch) atIndex:0];[encoder setBytes:&w.vascular.layout length:sizeof(w.vascular.layout) atIndex:1];
++        [encoder setBytes:&micro length:sizeof(micro) atIndex:2];[encoder setBuffer:unknownBuffer offset:0 atIndex:3];[encoder setBuffer:compartmentBuffer offset:0 atIndex:4];
++        [encoder setBuffer:cavityBuffer offset:0 atIndex:5];[encoder setBuffer:faceBuffer offset:0 atIndex:6];[encoder setBuffer:incidenceBuffer offset:0 atIndex:7];
++        [encoder setBuffer:rangeBuffer offset:0 atIndex:8];[encoder setBuffer:acceptedBuffer offset:0 atIndex:9];[encoder setBuffer:candidateBuffer offset:0 atIndex:10];[encoder setBuffer:vascularBuffer offset:0 atIndex:11];
++    };
++    auto forces=[&](const std::vector<NMFEMNodeStateGPU>& positions,const std::vector<nm_float4>& states,
++                    const std::vector<NMVascularCompartmentGPU>& pressureData,bool hasBorrowed){
++        const auto cb=[run.queue commandBuffer];auto encoder=[cb computeCommandEncoder];[encoder setComputePipelineState:forcePipeline];
++        const auto c=gpuBuffer(run.device,positions),v=gpuBuffer(run.device,states),p=gpuBuffer(run.device,pressureData),b=gpuBuffer(run.device,borrowed);
++        const auto output=gpuBuffer(run.device,std::vector<nm_float4>(2*nodes,nm_float4{111,222,333,0}));
++        const auto status=gpuBuffer(run.device,std::vector<NMMatterStatusGPU>(2));const std::uint32_t include=hasBorrowed?1:0;
++        encodeCommon(encoder,p,c,v);[encoder setBuffer:b offset:0 atIndex:12];[encoder setBytes:&include length:sizeof(include) atIndex:13];
++        [encoder setBuffer:output offset:0 atIndex:14];[encoder setBuffer:status offset:0 atIndex:15];
++        [encoder dispatchThreads:MTLSizeMake(2*nodes,1,1) threadsPerThreadgroup:MTLSizeMake(32,1,1)];[encoder endEncoding];completed(cb);
++        for(unsigned env=0;env<2;++env)need(static_cast<NMMatterStatusGPU*>(status.contents)[env].code==NM_STATUS_SUCCESS,"manufactured cavity force state rejected");
++        const auto* values=static_cast<nm_float4*>(output.contents);return std::vector<nm_float4>(values,values+2*nodes);
++    };
++    auto apply=[&](const std::vector<NMFEMNodeStateGPU>& positions,const std::vector<NMFGMRESStateGPU>& solverStates){
++        const auto cb=[run.queue commandBuffer];auto encoder=[cb computeCommandEncoder];[encoder setComputePipelineState:operatorPipeline];
++        const auto c=gpuBuffer(run.device,positions),v=gpuBuffer(run.device,vascular),p=gpuBuffer(run.device,compartments),d=gpuBuffer(run.device,direction);
++        const auto initial=std::vector<nm_float4>(2*nodes,nm_float4{.0001f,-.0002f,.0003f,0});
++        const auto output=gpuBuffer(run.device,initial),solver=gpuBuffer(run.device,solverStates),status=gpuBuffer(run.device,std::vector<NMMatterStatusGPU>(2));
++        encodeCommon(encoder,p,c,v);[encoder setBytes:&layout length:sizeof(layout) atIndex:30];[encoder setBuffer:d offset:0 atIndex:12];
++        [encoder setBuffer:output offset:0 atIndex:13];[encoder setBuffer:solver offset:0 atIndex:14];[encoder setBuffer:status offset:0 atIndex:15];
++        [encoder dispatchThreads:MTLSizeMake(2*nodes,1,1) threadsPerThreadgroup:MTLSizeMake(32,1,1)];[encoder endEncoding];completed(cb);
++        for(unsigned env=0;env<2;++env)need(static_cast<NMMatterStatusGPU*>(status.contents)[env].code==NM_STATUS_SUCCESS,"manufactured cavity tangent state rejected");
++        const auto* values=static_cast<nm_float4*>(output.contents);return std::vector<nm_float4>(values,values+2*nodes);
++    };
++    const auto raw=forces(candidate,vascular,compartments,false),merged=forces(candidate,vascular,compartments,true);
++    double forceError=0,forceScale=0,workError=0;
++    for(unsigned env=0;env<2;++env){
++        std::vector<fixture::Vec> a(nodes),b(nodes);for(unsigned i=0;i<nodes;++i){const auto& p=accepted[env*nodes+i].positionAndMass;const auto& q=candidate[env*nodes+i].positionAndMass;a[i]={p.x,p.y,p.z};b[i]={q.x,q.y,q.z};}
++        const auto dg=fixture::discreteGradient(a,b,shell.lumenFaces);
++        const unsigned row=w.vascular.layout.cavities.z;
++        const double pressure=double(vascular[env*layout.vascularUnknownCount+row].x)*w.vascular.unknowns[row].initialAndScaling.y-compartments[0].compliance.w;
++        double work=0;
++        for(unsigned i=0;i<nodes;++i){const unsigned global=env*nodes+i;const fixture::Vec f{raw[global].x,raw[global].y,raw[global].z};
++            const fixture::Vec external{borrowed[global].x,borrowed[global].y,borrowed[global].z},both{merged[global].x,merged[global].y,merged[global].z};
++            for(unsigned j=0;j<3;++j){need(std::isfinite(f[j])&&std::isfinite(both[j]),"nonfinite production force");forceError=std::max(forceError,std::abs(f[j]-pressure*dg[i][j]));forceScale=std::max(forceScale,std::abs(pressure*dg[i][j]));need(std::abs(both[j]-f[j]-external[j])<1e-8,"borrowed external force was dropped or double counted");}
++            work+=fixture::dot(f,fixture::subtract(b[i],a[i]));
++        }
++        const double expected=pressure*(fixture::volume(b,shell.lumenFaces)-fixture::volume(a,shell.lumenFaces));
++        workError=std::max(workError,std::abs(work-expected)/std::max(1e-18,std::abs(expected)));
++    }
++    need(forceError/forceScale<3e-6&&workError<1e-5,"production force does not match independent volume/work oracle");
++    auto shiftedCompartment=compartments;shiftedCompartment[0].compliance.w+=1024;
++    auto shiftedPressure=vascular;for(unsigned env=0;env<2;++env)shiftedPressure[env*layout.vascularUnknownCount+w.vascular.layout.cavities.z].x+=1024/w.vascular.unknowns[w.vascular.layout.cavities.z].initialAndScaling.y;
++    const auto shifted=forces(candidate,shiftedPressure,shiftedCompartment,false);
++    for(unsigned i=0;i<raw.size();++i)need(std::max({std::abs(raw[i].x-shifted[i].x),std::abs(raw[i].y-shifted[i].y),std::abs(raw[i].z-shifted[i].z)})<forceScale*3e-6,"wall force uses absolute rather than transmural pressure");
++    constexpr double epsilon=1./32.;auto plus=candidate,minus=candidate;auto vp=vascular,vm=vascular;
++    for(unsigned i=0;i<2*nodes;++i){
++        plus[i].positionAndMass.x+=float(epsilon*micro.time.x*direction[i].x);minus[i].positionAndMass.x-=float(epsilon*micro.time.x*direction[i].x);
++        plus[i].positionAndMass.y+=float(epsilon*micro.time.x*direction[i].y);minus[i].positionAndMass.y-=float(epsilon*micro.time.x*direction[i].y);
++        plus[i].positionAndMass.z+=float(epsilon*micro.time.x*direction[i].z);minus[i].positionAndMass.z-=float(epsilon*micro.time.x*direction[i].z);
++    }
++    for(unsigned env=0;env<2;++env){const unsigned i=env*layout.vascularUnknownCount+w.vascular.layout.cavities.z;const auto d=direction[layout.vascularBase+i].x;vp[i].x+=float(epsilon*d);vm[i].x-=float(epsilon*d);}
++    const auto fp=forces(plus,vp,compartments,false),fm=forces(minus,vm,compartments,false),tangent=apply(candidate,std::vector<NMFGMRESStateGPU>(2));
++    const nm_float4 baseline{.0001f,-.0002f,.0003f,0};double tangentError=0,tangentScale=0;
++    for(unsigned i=0;i<2*nodes;++i){const fixture::Vec fd{-(fp[i].x-fm[i].x)*micro.time.x/(2*epsilon),-(fp[i].y-fm[i].y)*micro.time.x/(2*epsilon),-(fp[i].z-fm[i].z)*micro.time.x/(2*epsilon)};
++        const fixture::Vec actual{double(tangent[i].x)-baseline.x,double(tangent[i].y)-baseline.y,double(tangent[i].z)-baseline.z};
++        for(unsigned j=0;j<3;++j){need(std::isfinite(actual[j]),"nonfinite production cavity Jv");tangentError=std::max(tangentError,std::abs(actual[j]-fd[j]));tangentScale=std::max(tangentScale,std::abs(fd[j]));}}
++    need(tangentScale>1e-9&&tangentError/tangentScale<3e-3,"production cavity Jv disagrees with finite differences");
++    // Translate both configurations, including the origin used by production.
++    // Recompute the FP64 oracle from the actual translated FP32 coordinates;
++    // this separates world-origin dependence from coordinate rounding.
++    auto translatedAccepted=accepted,translatedCandidate=candidate;
++    for(unsigned i=0;i<2*nodes;++i){
++        translatedAccepted[i].positionAndMass.x+=.25f;translatedCandidate[i].positionAndMass.x+=.25f;
++        translatedAccepted[i].positionAndMass.y+=.125f;translatedCandidate[i].positionAndMass.y+=.125f;
++        translatedAccepted[i].positionAndMass.z-=.5f;translatedCandidate[i].positionAndMass.z-=.5f;
++    }
++    acceptedBuffer=gpuBuffer(run.device,translatedAccepted);
++    const auto translatedForce=forces(translatedCandidate,vascular,compartments,false);
++    double translatedForceError=0,translatedWorkError=0;
++    for(unsigned env=0;env<2;++env){
++        std::vector<fixture::Vec> a(nodes),b(nodes);for(unsigned i=0;i<nodes;++i){
++            const auto& pa=translatedAccepted[env*nodes+i].positionAndMass;const auto& pb=translatedCandidate[env*nodes+i].positionAndMass;
++            a[i]={pa.x,pa.y,pa.z};b[i]={pb.x,pb.y,pb.z};}
++        const auto dg=fixture::discreteGradient(a,b,shell.lumenFaces);const auto row=w.vascular.layout.cavities.z;
++        const double pressure=double(vascular[env*layout.vascularUnknownCount+row].x)*w.vascular.unknowns[row].initialAndScaling.y-compartments[0].compliance.w;
++        double work=0;for(unsigned i=0;i<nodes;++i){const auto& value=translatedForce[env*nodes+i];const fixture::Vec f{value.x,value.y,value.z};
++            for(unsigned j=0;j<3;++j)translatedForceError=std::max(translatedForceError,std::abs(f[j]-pressure*dg[i][j]));
++            work+=fixture::dot(f,fixture::subtract(b[i],a[i]));}
++        const double expected=pressure*(fixture::volume(b,shell.lumenFaces)-fixture::volume(a,shell.lumenFaces));
++        translatedWorkError=std::max(translatedWorkError,std::abs(work-expected)/std::max(1e-18,std::abs(expected)));
++    }
++    need(translatedForceError/forceScale<5e-6&&translatedWorkError<2e-5,"translated production force/work disagrees with closed-surface oracle");
++    acceptedBuffer=gpuBuffer(run.device,accepted);
++
++    // Exercise the actual volume/flow/transport residual and lifted Jacobian,
++    // including the independent signed pressure row and FEM velocity entries.
++    const auto residualPipeline=pipeline(run.device,library,@"numi_matter_metal::nm_vascular_residual");
++    const auto vascularOperatorPipeline=pipeline(run.device,library,@"numi_matter_metal::nm_vascular_operator");
++    const auto preparePipeline=pipeline(run.device,library,@"numi_matter_metal::nm_vascular_prepare_elastance");
++    auto padded=[&]<class T>(const std::vector<T>& values){return gpuBuffer(run.device,values.empty()?std::vector<T>(1):values);};
++    const auto connectionBuffer=padded(w.vascular.connections),tissueBuffer=padded(w.vascular.tissues),exchangeBuffer=padded(w.vascular.exchanges);
++    const auto connectionsIncidence=padded(w.vascular.connectionIncidence),connectionsRanges=padded(w.vascular.connectionRanges);
++    const auto bloodIncidence=padded(w.vascular.bloodExchangeIncidence),bloodRanges=padded(w.vascular.bloodExchangeRanges);
++    const auto tissueIncidence=padded(w.vascular.tissueExchangeIncidence),tissueRanges=padded(w.vascular.tissueExchangeRanges);
++    const auto mapping=padded(w.vascular.compartmentCavity),vascularAccepted=gpuBuffer(run.device,run.state().vascularState);
++    auto coupledV=vascular,coupledDirection=direction;
++    const unsigned pressureRow=w.vascular.layout.cavities.z,flowRow=w.vascular.layout.offsets.y,amountRow=w.vascular.layout.offsets.z;
++    for(unsigned env=0;env<2;++env){const unsigned base=env*layout.vascularUnknownCount;
++        coupledV[base+flowRow].x=.5f;coupledV[base+amountRow].x=.2f;coupledV[base+amountRow+1].x=1.8f;
++        coupledV[base+pressureRow].x=env==0?1.2f:-1.3f;
++        coupledDirection[layout.vascularBase+base].x=.003f;coupledDirection[layout.vascularBase+base+1].x=-.002f;
++        coupledDirection[layout.vascularBase+base+flowRow].x=.07f;
++        coupledDirection[layout.vascularBase+base+amountRow].x=.02f;coupledDirection[layout.vascularBase+base+amountRow+1].x=-.03f;
++    }
++    auto equation=[&](const std::vector<NMFEMNodeStateGPU>& fem,const std::vector<nm_float4>& states,
++                      const std::vector<nm_float4>& lifted,bool derivative){
++        auto command=[run.queue commandBuffer];auto encoder=[command computeCommandEncoder];
++        const auto p=gpuBuffer(run.device,compartments),v=gpuBuffer(run.device,states),d=gpuBuffer(run.device,lifted),f=gpuBuffer(run.device,fem);
++        const auto out=gpuBuffer(run.device,std::vector<nm_float4>(layout.unknownCount,nm_float4{17,18,19,20}));
++        const auto solver=gpuBuffer(run.device,std::vector<NMFGMRESStateGPU>(2)),status=gpuBuffer(run.device,std::vector<NMMatterStatusGPU>(2));
++        const auto elastance=gpuBuffer(run.device,std::vector<float>(4)),working=gpuBuffer(run.device,std::vector<std::uint32_t>(2*layout.vascularUnknownCount));
++        const std::uint32_t useWorking=0;
++        const auto clock=gpuBuffer(run.device,run.state().vascularClock);
++        [encoder setComputePipelineState:preparePipeline];
++        [encoder setBytes:&w.dispatch length:sizeof(w.dispatch) atIndex:0];[encoder setBytes:&w.vascular.layout length:sizeof(w.vascular.layout) atIndex:1];
++        [encoder setBuffer:p offset:0 atIndex:2];[encoder setBuffer:clock offset:0 atIndex:3];[encoder setBuffer:elastance offset:0 atIndex:4];[encoder setBuffer:status offset:0 atIndex:5];
++        [encoder dispatchThreads:MTLSizeMake(2*w.vascular.layout.counts.x,1,1) threadsPerThreadgroup:MTLSizeMake(32,1,1)];[encoder endEncoding];
++        encoder=[command computeCommandEncoder];[encoder setComputePipelineState:derivative?vascularOperatorPipeline:residualPipeline];
++        [encoder setBytes:&w.dispatch length:sizeof(w.dispatch) atIndex:0];[encoder setBytes:&w.vascular.layout length:sizeof(w.vascular.layout) atIndex:1];
++        [encoder setBytes:&micro length:sizeof(micro) atIndex:2];[encoder setBuffer:unknownBuffer offset:0 atIndex:3];[encoder setBuffer:p offset:0 atIndex:4];
++        [encoder setBuffer:connectionBuffer offset:0 atIndex:5];[encoder setBuffer:tissueBuffer offset:0 atIndex:6];[encoder setBuffer:exchangeBuffer offset:0 atIndex:7];
++        [encoder setBuffer:connectionsIncidence offset:0 atIndex:8];[encoder setBuffer:connectionsRanges offset:0 atIndex:9];
++        [encoder setBuffer:bloodIncidence offset:0 atIndex:10];[encoder setBuffer:bloodRanges offset:0 atIndex:11];
++        [encoder setBuffer:tissueIncidence offset:0 atIndex:12];[encoder setBuffer:tissueRanges offset:0 atIndex:13];
++        [encoder setBuffer:vascularAccepted offset:0 atIndex:14];[encoder setBuffer:v offset:0 atIndex:15];[encoder setBuffer:d offset:0 atIndex:16];
++        [encoder setBuffer:out offset:0 atIndex:17];[encoder setBuffer:solver offset:0 atIndex:18];[encoder setBuffer:status offset:0 atIndex:19];
++        [encoder setBuffer:elastance offset:0 atIndex:20];[encoder setBuffer:working offset:0 atIndex:21];[encoder setBytes:&useWorking length:sizeof(useWorking) atIndex:22];
++        [encoder setBuffer:cavityBuffer offset:0 atIndex:23];[encoder setBuffer:faceBuffer offset:0 atIndex:24];[encoder setBuffer:mapping offset:0 atIndex:25];
++        [encoder setBuffer:f offset:0 atIndex:26];[encoder setBuffer:acceptedBuffer offset:0 atIndex:27];[encoder setBytes:&layout length:sizeof(layout) atIndex:30];
++        [encoder dispatchThreads:MTLSizeMake(2*layout.vascularUnknownCount,1,1) threadsPerThreadgroup:MTLSizeMake(32,1,1)];[encoder endEncoding];completed(command);
++        for(unsigned env=0;env<2;++env)need(static_cast<NMMatterStatusGPU*>(status.contents)[env].code==NM_STATUS_SUCCESS,"signed-pressure manufactured vascular equation rejected");
++        const auto* values=static_cast<nm_float4*>(out.contents);
++        for(unsigned i=0;i<layout.vascularBase;++i)need(values[i].x==17&&values[i].y==18&&values[i].z==19&&values[i].w==20,"vascular equation overwrote unrelated FEM row");
++        std::vector<nm_float4> result(values+layout.vascularBase,values+layout.unknownCount);
++        for(const auto& value:result)need(std::isfinite(value.x)&&value.y==0&&value.z==0&&value.w==0,"nonfinite or malformed vascular equation output");
++        return result;
++    };
++    const auto residual=equation(candidate,coupledV,coupledDirection,false),jacobian=equation(candidate,coupledV,coupledDirection,true);
++    auto coupledPlus=coupledV,coupledMinus=coupledV;
++    for(unsigned i=0;i<coupledV.size();++i){const auto delta=coupledDirection[layout.vascularBase+i].x;coupledPlus[i].x+=float(epsilon*delta);coupledMinus[i].x-=float(epsilon*delta);}
++    const auto residualPlus=equation(plus,coupledPlus,coupledDirection,false),residualMinus=equation(minus,coupledMinus,coupledDirection,false);
++    double equationFD=0,geometryAnalytic=0,flowAnalytic=0;
++    for(unsigned i=0;i<jacobian.size();++i){const double fd=-(double(residualPlus[i].x)-residualMinus[i].x)/(2*epsilon);
++        const double error=std::abs(jacobian[i].x-fd);equationFD=std::max(equationFD,error/std::max(1e-3,std::abs(fd)));
++        need(error<5e-6+3e-3*std::abs(fd),"coupled production vascular Jv disagrees with rowwise finite differences row="+std::to_string(i));}
++    for(unsigned env=0;env<2;++env){const unsigned base=env*layout.vascularUnknownCount;
++        std::vector<fixture::Vec> x(nodes);for(unsigned i=0;i<nodes;++i){const auto& point=candidate[env*nodes+i].positionAndMass;x[i]={point.x,point.y,point.z};}
++        const auto gradient=fixture::gradient(x,shell.lumenFaces);double geometryDirection=0;
++        for(unsigned i=0;i<nodes;++i){const auto& d=coupledDirection[env*nodes+i];geometryDirection+=fixture::dot(gradient[i],{double(micro.time.x)*d.x,double(micro.time.x)*d.y,double(micro.time.x)*d.z});}
++        auto physical=[&](unsigned row){return double(coupledV[base+row].x)*w.vascular.unknowns[row].initialAndScaling.y;};
++        auto delta=[&](unsigned row){return double(coupledDirection[layout.vascularBase+base+row].x)*w.vascular.unknowns[row].initialAndScaling.y;};
++        const double geometryR=(physical(0)-fixture::volume(x,shell.lumenFaces))/w.vascular.unknowns[pressureRow].initialAndScaling.z;
++        const double geometryJ=(delta(0)-geometryDirection)/w.vascular.unknowns[pressureRow].initialAndScaling.z;
++        need(std::abs(double(residual[base+pressureRow].x)+geometryR)<2e-6,"production cavity geometry residual differs from FP64 closed volume");
++        geometryAnalytic=std::max(geometryAnalytic,std::abs(jacobian[base+pressureRow].x-geometryJ));
++        need(geometryAnalytic<2e-6&&std::abs(geometryDirection)>1e-11,"cavity geometry Jv omitted manufactured wall velocity");
++        const auto& c=compartments[1].compliance;const double sourcePressure=c.w+c.y+(physical(1)-c.x)/c.z;
++        const double flowR=(w.vascular.connections[0].physical.x*physical(flowRow)-sourcePressure+physical(pressureRow))/w.vascular.unknowns[flowRow].initialAndScaling.z;
++        const double flowJ=(w.vascular.connections[0].physical.x*delta(flowRow)-delta(1)/c.z+delta(pressureRow))/w.vascular.unknowns[flowRow].initialAndScaling.z;
++        flowAnalytic=std::max(flowAnalytic,std::abs(jacobian[base+flowRow].x-flowJ));
++        need(std::abs(double(residual[base+flowRow].x)+flowR)<2e-6&&flowAnalytic<2e-6,"flow pressure-law residual/Jv did not use independent signed pressure");
++    }
++    // A pure independent pressure direction changes flow, never geometry.
++    std::vector<nm_float4> pressureOnly(layout.unknownCount);for(unsigned env=0;env<2;++env)pressureOnly[layout.vascularBase+env*layout.vascularUnknownCount+pressureRow].x=1;
++    const auto pressureJv=equation(candidate,coupledV,pressureOnly,true);
++    for(unsigned env=0;env<2;++env){const auto base=env*layout.vascularUnknownCount;
++        need(pressureJv[base+pressureRow].x==0&&std::abs(pressureJv[base+flowRow].x-w.vascular.unknowns[pressureRow].initialAndScaling.y/w.vascular.unknowns[flowRow].initialAndScaling.z)<1e-7,
++             "independent cavity pressure leaked into geometric volume equation or failed to drive flow");}
++    std::cout<<"cavity_coupled_equations=pass signed_pressure=pass geometry_residual_fp64=pass geometry_jv_absolute_error="<<geometryAnalytic
++             <<" flow_pressure_jv_absolute_error="<<flowAnalytic<<" rowwise_jv_fd_relative_max="<<equationFD
++             <<" translated_force_relative_error="<<translatedForceError/forceScale<<" translated_work_relative_error="<<translatedWorkError<<'\n';
++    auto staticNode=candidate;const auto inactiveNode=shell.innerNodes[0];staticNode[inactiveNode].velocityAndInverseMass.w=0;staticNode[inactiveNode].restAndFixed.w=1;
++    std::vector<NMFGMRESStateGPU> converged(2);converged[1].diagnostics.z=1;const auto skipped=apply(staticNode,converged);
++    need(std::memcmp(&skipped[inactiveNode],&baseline,sizeof(baseline))==0,"static wall tangent row was modified");
++    for(unsigned i=nodes;i<2*nodes;++i)need(std::memcmp(&skipped[i],&baseline,sizeof(baseline))==0,"converged environment tangent row was modified");
++    std::cout<<"cavity_production_operators=pass force_fp64_relative_max="<<forceError/forceScale<<" pressure_work_relative_max="<<workError
++             <<" jv_finite_difference_relative_max="<<tangentError/tangentScale<<" external_load_merge=pass pressure_gauge_invariance=pass static_and_converged_rows=unchanged\n";
++}
++void inspectStep(const Run& run,const RuntimeStateSnapshot& first,const RuntimeStateSnapshot& before,
++                 const RuntimeStateSnapshot& after,const fixture::Shell& shell,Metrics& metrics){
++    const auto& layout=run.world.vascular.layout;
++    const unsigned pressureRow=layout.cavities.z;
++    need(run.world.vascular.unknowns.size()==6,"expected two volumes,flow,two amounts,one wall pressure");
++    paired(after.femNodes,"FEM state");paired(after.femFields,"FEM fields");paired(after.vascularState,"vascular state");paired(after.vascularClock,"clock");
++    const double dt=run.runtime.timestepSeconds();
++    const auto exponent=std::bit_cast<std::int32_t>(layout.clock.x);
++    const auto ticks=static_cast<std::uint64_t>(std::ldexp(dt,-exponent));
++    for(unsigned env=0;env<2;++env){
++        const auto& previousClock=before.vascularClock[env];const auto& currentClock=after.vascularClock[env];
++        const std::uint64_t expectedLow=previousClock.low+ticks;
++        need(currentClock.low==expectedLow&&currentClock.high==previousClock.high+(expectedLow<previousClock.low?1u:0u),"accepted cavity clock did not advance exactly");
++        auto x=positions(after,env,unsigned(shell.object.femNodes.size()));
++        const auto old=positions(before,env,unsigned(shell.object.femNodes.size()));
++        const auto origin=positions(first,env,unsigned(shell.object.femNodes.size()));
++        for(unsigned i=0;i<x.size();++i)for(unsigned j=0;j<3;++j)need(std::isfinite(x[i][j]),"nonfinite FEM state");
++        for(unsigned i=0;i<x.size();++i){const unsigned global=env*unsigned(x.size())+i;
++            if(after.femNodes[global].positionAndMass.w!=first.femNodes[global].positionAndMass.w){
++                std::ostringstream diagnostic;diagnostic<<std::setprecision(17)<<"cavity pressure changed mechanical nodal mass env="<<env<<" node="<<i
++                    <<" initial="<<first.femNodes[global].positionAndMass.w<<" previous="<<before.femNodes[global].positionAndMass.w<<" current="<<after.femNodes[global].positionAndMass.w
++                    <<" initial_bits="<<std::hex<<std::bit_cast<std::uint32_t>(first.femNodes[global].positionAndMass.w)<<" current_bits="<<std::bit_cast<std::uint32_t>(after.femNodes[global].positionAndMass.w)<<std::dec
++                    <<" initial_inverse_mass="<<first.femNodes[global].velocityAndInverseMass.w<<" current_inverse_mass="<<after.femNodes[global].velocityAndInverseMass.w
++                    <<" initial_fixed="<<first.femNodes[global].restAndFixed.w<<" current_fixed="<<after.femNodes[global].restAndFixed.w<<" status="<<after.statuses[env].code;
++                need(false,diagnostic.str());}}
++
++        for(const auto i:shell.object.femFixedNodes)need(x[i]==origin[i],"fixed outer wall moved");
++        for(const auto i:shell.innerNodes)metrics.motion=std::max(metrics.motion,std::sqrt(fixture::dot(fixture::subtract(x[i],origin[i]),fixture::subtract(x[i],origin[i]))));
++        const double geometricVolume=fixture::volume(x,shell.lumenFaces);
++        const double lumen=run.physical(after,0,env),reservoir=run.physical(after,1,env),q=run.physical(after,layout.offsets.y,env);
++        const double m0=run.physical(after,layout.offsets.z,env),m1=run.physical(after,layout.offsets.z+1,env);
++        need(lumen>0&&reservoir>0&&geometricVolume>0&&m0>=0&&m1>=0,"nonpositive volume or negative tracer");
++        const double initialVolume=run.physical(first,0,env)+run.physical(first,1,env);
++        const double initialTracer=run.physical(first,layout.offsets.z,env)+run.physical(first,layout.offsets.z+1,env);
++        metrics.geometry=std::max(metrics.geometry,std::abs(lumen-geometricVolume)/run.world.vascular.unknowns[0].initialAndScaling.y);
++        metrics.blood=std::max(metrics.blood,std::abs(lumen+reservoir-initialVolume)/initialVolume);
++        metrics.tracer=std::max(metrics.tracer,std::abs(m0+m1-initialTracer)/initialTracer);
++        metrics.balance=std::max(metrics.balance,std::abs(lumen-run.physical(before,0,env)-dt*q)/run.world.vascular.unknowns[0].initialAndScaling.y);
++        const auto& c=run.world.vascular.compartments[1].compliance;
++        const double reservoirPressure=c.w+c.y+(reservoir-c.x)/c.z;
++        const double pressure=run.physical(after,pressureRow,env);
++        const double resistance=run.world.vascular.connections[0].physical.x;
++        metrics.flow=std::max(metrics.flow,std::abs(resistance*q-(reservoirPressure-pressure))/run.world.vascular.unknowns[layout.offsets.y].initialAndScaling.z);
++        metrics.flowMaximum=std::max(metrics.flowMaximum,std::abs(q));
++        const auto dg=fixture::discreteGradient(old,x,shell.lumenFaces);double work=0;
++        const double transmural=pressure-run.world.vascular.compartments[0].compliance.w;
++        for(unsigned i=0;i<x.size();++i)work+=transmural*fixture::dot(dg[i],fixture::subtract(x[i],old[i]));
++        const double pressureWork=transmural*(geometricVolume-fixture::volume(old,shell.lumenFaces));
++        metrics.work=std::max(metrics.work,std::abs(work-pressureWork)/std::max(1e-18,std::abs(pressureWork)));
++    }
++    need(metrics.geometry<2e-5,"cavity volume and accepted FEM geometry diverged");
++    need(metrics.blood<1e-4&&metrics.tracer<1e-4,"closed blood/tracer conservation failed");
++    need(metrics.balance<2e-5&&metrics.flow<2e-5,"accepted hydraulic residual disagrees with FP64 balance");
++    need(metrics.work<2e-8,"independent discrete wall-work oracle failed");
++}
++void geometryOracle(){
++    const auto shell=fixture::hollowShell();const auto& old=shell.object.femNodes;auto next=old;
++    double tissueVolume=0;for(const auto& tet:shell.object.tetrahedra){const auto& t=tet.nodes;
++        const double v=fixture::dot(fixture::subtract(old[t[1]],old[t[0]]),fixture::cross(fixture::subtract(old[t[2]],old[t[0]]),fixture::subtract(old[t[3]],old[t[0]])))/6.;
++        need(v>0,"nonpositive shell tetrahedron");tissueVolume+=v;}
++    need(std::abs(tissueVolume-26e-6)<1e-18&&std::abs(fixture::volume(old,shell.lumenFaces)-1e-6)<1e-19,"shell and lumen overlap or volume differs");
++    for(unsigned i=0;i<shell.innerNodes.size();++i){auto& x=next[shell.innerNodes[i]];x[0]+=1e-4*std::sin(double(i)+.3);x[1]+=2e-4*std::cos(double(i)+.2);x[2]+=1e-4*std::sin(2*double(i)+.1);}
++    const auto dg=fixture::discreteGradient(old,next,shell.lumenFaces);double work=0;fixture::Vec force{};
++    for(unsigned i=0;i<old.size();++i){work+=fixture::dot(dg[i],fixture::subtract(next[i],old[i]));force=fixture::add(force,dg[i]);}
++    const double change=fixture::volume(next,shell.lumenFaces)-fixture::volume(old,shell.lumenFaces);
++    need(std::abs(work-change)<1e-20&&std::sqrt(fixture::dot(force,force))<1e-18,"closed surface work/force geometry oracle failed");
++    std::cout<<"cavity_geometry_oracle=pass tissue_tets=156 outer_fixed_nodes=56 lumen_free_nodes=8 lumen_faces=12 tissue_volume_m3="<<tissueVolume<<" lumen_volume_m3="<<fixture::volume(old,shell.lumenFaces)<<" pressure_work_error_m3="<<std::abs(work-change)<<'\n';
++}
++void movingWall(){
++    constexpr unsigned steps=32;const auto shell=fixture::hollowShell();Run run(fixture::world());
++    productionOperators(run);
++    const auto first=run.state();auto signedPressure=first;
++    signedPressure.vascularState[run.world.vascular.layout.cavities.z].x=-1;
++    run.restore(signedPressure);const auto signedRestored=run.state();
++    need(signedRestored.vascularState[run.world.vascular.layout.cavities.z].x==-1&&same(first.femNodes,signedRestored.femNodes),"finite negative cavity pressure restore was rejected or changed geometry");
++    run.restore(first);auto before=first;RuntimeStateSnapshot oneStep;Metrics metrics;
++    for(unsigned i=0;i<steps;++i){run.step(i);auto after=run.state();inspectStep(run,first,before,after,shell,metrics);if(i==0)oneStep=after;before=std::move(after);}
++    const auto evolved=before;
++    need(metrics.motion>1e-8&&metrics.flowMaximum>1e-10,"moving-wall response not exercised");
++    need(run.physical(evolved,run.world.vascular.layout.offsets.z)>0,"flow did not transport tracer into moving cavity");
++    run.restore(first);for(unsigned i=0;i<steps;++i)run.step(i);
++    need(samePhysical(evolved,run.state()),"full FEM/vascular snapshot replay differs");
++    const auto accepted=run.state();run.step(steps,1);const auto rejected=run.state();
++    unchangedEnvironment(accepted.femNodes,rejected.femNodes,1,"FEM");unchangedEnvironment(accepted.femFields,rejected.femFields,1,"FEM fields");
++    unchangedEnvironment(accepted.vascularState,rejected.vascularState,1,"vascular pressure/volume/amounts");unchangedEnvironment(accepted.vascularClock,rejected.vascularClock,1,"vascular clock");
++    need(std::memcmp(&accepted.vascularClock[0],&rejected.vascularClock[0],sizeof(NMVascularClockGPU))!=0,"accepted peer clock stalled");
++    auto corrupt=accepted;corrupt.vascularState[run.world.vascular.layout.cavities.z].x=std::numeric_limits<float>::quiet_NaN();
++    const auto denied=run.runtime.restore(corrupt);need(!denied.encoded&&samePhysical(rejected,run.state()),"invalid cavity pressure restore changed accepted state");
++    corrupt=accepted;corrupt.vascularState[0].x+=.01f;
++    const auto geometryDenied=run.runtime.restore(corrupt);need(!geometryDenied.encoded&&samePhysical(rejected,run.state()),"inconsistent positive cavity volume/FEM geometry restore was accepted");
++    corrupt=accepted;need(!corrupt.schedulers.empty(),"cavity scheduler snapshot absent");++corrupt.schedulers[0].activeExponent;
++    const auto schedulerDenied=run.runtime.restore(corrupt);need(!schedulerDenied.encoded&&samePhysical(rejected,run.state()),"cavity scheduler drift restore was accepted");
++    corrupt=accepted;corrupt.schedulers[0].numerical.w=std::numeric_limits<float>::infinity();
++    const auto nonfiniteSchedulerDenied=run.runtime.restore(corrupt);need(!nonfiniteSchedulerDenied.encoded&&samePhysical(rejected,run.state()),"nonfinite cavity scheduler enable restore was accepted");
++    run.step(steps+1,-1,1);const auto reset=run.state();
++    unchangedEnvironment(oneStep.femNodes,reset.femNodes,1,"reset FEM");unchangedEnvironment(oneStep.femFields,reset.femFields,1,"reset FEM fields");
++    unchangedEnvironment(oneStep.vascularState,reset.vascularState,1,"reset vascular");unchangedEnvironment(oneStep.vascularClock,reset.vascularClock,1,"reset clock");
++    Run fixed(fixture::world(true));const auto fixedFirst=fixed.state();fixed.step(0);const auto fixedState=fixed.state();
++    const double fixedFlow=std::abs(fixed.physical(fixedState,fixed.world.vascular.layout.offsets.y));
++    need(fixedFlow<1e-10&&fixedFlow<metrics.flowMaximum*.01,"fixed-wall control did not suppress cavity inflow");
++    need(positions(fixedState,0,64)==positions(fixedFirst,0,64),"fixed-wall control geometry moved");
++    std::cout<<"cavity_moving_wall=pass accepted_steps="<<steps<<" environments=2 max_displacement_m="<<metrics.motion<<" max_flow_m3_per_s="<<metrics.flowMaximum
++             <<" fixed_wall_flow_m3_per_s="<<fixedFlow<<" normalized_geometry_residual="<<metrics.geometry<<" normalized_volume_balance="<<metrics.balance
++             <<" normalized_flow_residual="<<metrics.flow<<" relative_blood_conservation="<<metrics.blood<<" relative_tracer_conservation="<<metrics.tracer
++             <<" fp64_work_identity_relative_error="<<metrics.work<<" clock=exact replay=bitwise isolated_rollback=pass reset=bitwise signed_pressure_restore=accepted invalid_pressure_restore=denied geometry_restore=denied scheduler_restore=denied"
++             <<" qualification=synthetic_moving_wall_interface blood_mechanical_mass=absent biological_calibration=unqualified\n";
++}
++} // namespace
++int main(){@autoreleasepool{try{std::cout<<std::setprecision(17);geometryOracle();movingWall();return 0;}
++catch(const std::exception& error){std::cerr<<"cavity_check=failed reason="<<error.what()<<'\n';return 1;}}}
+diff --git a/matter/tools/vascular_cavity_fixture.hpp b/matter/tools/vascular_cavity_fixture.hpp
+new file mode 100644
+index 0000000..c3b6fda
+--- /dev/null
++++ b/matter/tools/vascular_cavity_fixture.hpp
+@@ -0,0 +1,116 @@
++#pragma once
++#include "numi/matter/matter.hpp"
++#include <algorithm>
++#include <array>
++#include <cmath>
++#include <map>
++#include <stdexcept>
++#include <vector>
++
++// Synthetic hollow tissue shell. The central cell is deliberately absent:
++// cavity blood volume never overlaps the FEM tissue volume.
++namespace vascular_cavity_fixture {
++using Vec=std::array<double,3>;
++using Face=std::array<std::uint32_t,3>;
++inline Vec add(Vec a,const Vec& b){for(unsigned i=0;i<3;++i)a[i]+=b[i];return a;}
++inline Vec subtract(Vec a,const Vec& b){for(unsigned i=0;i<3;++i)a[i]-=b[i];return a;}
++inline Vec scaled(Vec a,double s){for(double& v:a)v*=s;return a;}
++inline double dot(const Vec& a,const Vec& b){return a[0]*b[0]+a[1]*b[1]+a[2]*b[2];}
++inline Vec cross(const Vec& a,const Vec& b){return {a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]};}
++inline std::uint32_t node(unsigned x,unsigned y,unsigned z){return x+4u*y+16u*z;}
++struct Shell {
++    numi::matter::ObjectSource object;
++    std::vector<Face> lumenFaces;
++    std::vector<std::uint32_t> innerNodes;
++};
++inline Shell hollowShell(bool pinInner=false) {
++    using namespace numi::matter;
++    Shell shell;
++    auto& object=shell.object;
++    object.name="synthetic:hollow_tissue_shell";object.representation=Representation::fem;
++    object.characteristicLength=.01;object.deformableContact=false;object.mixedFEM=false;
++    for(unsigned z=0;z<4;++z)for(unsigned y=0;y<4;++y)for(unsigned x=0;x<4;++x){
++        object.femNodes.push_back({(double(x)-1.5)*.01,(double(y)-1.5)*.01,(double(z)-1.5)*.01});
++        if(x==0||y==0||z==0||x==3||y==3||z==3||pinInner)object.femFixedNodes.push_back(node(x,y,z));
++        if(x>0&&x<3&&y>0&&y<3&&z>0&&z<3)shell.innerNodes.push_back(node(x,y,z));
++    }
++    for(unsigned z=0;z<3;++z)for(unsigned y=0;y<3;++y)for(unsigned x=0;x<3;++x){
++        if(x==1&&y==1&&z==1)continue;
++        std::array<unsigned,3> axes{0,1,2};
++        do {
++            std::array<unsigned,3> corner{x,y,z};
++            std::array<std::uint32_t,4> tet{node(x,y,z),0,0,node(x+1,y+1,z+1)};
++            ++corner[axes[0]];tet[1]=node(corner[0],corner[1],corner[2]);
++            ++corner[axes[1]];tet[2]=node(corner[0],corner[1],corner[2]);
++            const auto a=subtract(object.femNodes[tet[1]],object.femNodes[tet[0]]);
++            const auto b=subtract(object.femNodes[tet[2]],object.femNodes[tet[0]]);
++            const auto c=subtract(object.femNodes[tet[3]],object.femNodes[tet[0]]);
++            if(dot(a,cross(b,c))<0)std::swap(tet[1],tet[2]);
++            object.tetrahedra.push_back({tet});
++        } while(std::next_permutation(axes.begin(),axes.end()));
++    }
++    struct Occurrence {unsigned count=0;Face oriented{};};
++    std::map<Face,Occurrence> boundary;
++    for(const auto& tet:object.tetrahedra){const auto& t=tet.nodes;
++        for(const Face face:std::array<Face,4>{{{t[1],t[2],t[3]},{t[0],t[3],t[2]},{t[0],t[1],t[3]},{t[0],t[2],t[1]}}}){
++            auto key=face;std::sort(key.begin(),key.end());auto& entry=boundary[key];++entry.count;entry.oriented=face;
++        }
++    }
++    for(const auto& [key,entry]:boundary)if(entry.count==1){
++        const bool inner=std::all_of(key.begin(),key.end(),[&](auto i){return std::find(shell.innerNodes.begin(),shell.innerNodes.end(),i)!=shell.innerNodes.end();});
++        if(inner){auto face=entry.oriented;std::swap(face[1],face[2]);shell.lumenFaces.push_back(face);}
++    }
++    if(shell.lumenFaces.size()!=12||shell.innerNodes.size()!=8||object.tetrahedra.size()!=156)
++        throw std::runtime_error("hollow shell generator topology differs");
++    return shell;
++}
++inline double volume(const std::vector<Vec>& x,const std::vector<Face>& faces){
++    double value=0;for(const auto& f:faces)value+=dot(x[f[0]],cross(x[f[1]],x[f[2]]))/6.;return value;
++}
++inline std::vector<Vec> gradient(const std::vector<Vec>& x,const std::vector<Face>& faces){
++    std::vector<Vec> result(x.size());
++    for(const auto& f:faces)for(unsigned i=0;i<3;++i)result[f[i]]=add(result[f[i]],scaled(cross(x[f[(i+1)%3]],x[f[(i+2)%3]]),1./6));
++    return result;
++}
++inline std::vector<Vec> discreteGradient(const std::vector<Vec>& old,const std::vector<Vec>& next,const std::vector<Face>& faces){
++    std::vector<Vec> mid(old.size());for(unsigned i=0;i<old.size();++i)mid[i]=scaled(add(old[i],next[i]),.5);
++    auto a=gradient(old,faces),b=gradient(mid,faces),c=gradient(next,faces);
++    for(unsigned i=0;i<a.size();++i)a[i]=scaled(add(add(a[i],scaled(b[i],4)),c[i]),1./6);
++    return a;
++}
++inline numi::matter::WorldSource world(bool pinInner=false,double dt=.001){
++    using namespace numi::matter;
++    WorldSource s;s.environmentCount=2;s.frameTimestep=dt;s.gravity={0,0,0};
++    s.mixedSolver.relativeResidual=1e-7;s.mixedSolver.newtonIterations=12;s.mixedSolver.fgmresIterations=64;
++    const auto material=parseMatter(R"(material hollow_shell_fixture {
++      parameter density : kg/m^3 = 1000 in [500,1500];
++      parameter mu : Pa = 1000 in [1,100000];
++      parameter lambda : Pa = 10000 in [1,1000000];
++      model neo_hookean; energy = neo_hookean(mu,lambda); valid = J() - 0.1;
++      supports fem;
++      interface {static_friction=0;dynamic_friction=0;restitution=0;adhesion=0;}
++      limits {minimum_J=0.1;maximum_J=10;maximum_stress=1e9;maximum_energy_density=1e9;}
++    })");
++    if(!material.succeeded())throw std::runtime_error("synthetic hollow shell material parse failed");
++    s.materials.push_back(material.material);auto shell=hollowShell(pinInner);s.objects.push_back(shell.object);
++    auto& n=s.vascular;
++    // Explicit synthetic identities; all exact fixture data are also covered
++    // by normal compiled-world fingerprints. No source-calibration claim.
++    n.contentIdentity={0x686f6c6c6f772d63ULL,0x61766974792d7631ULL,0,1};
++    n.species.push_back({1,"synthetic:tracer",1e-6,1e-5});
++    VascularCompartmentSource cavity;cavity.stableIdentifier=11;cavity.anatomicalIdentifier="synthetic:hollow_lumen";
++    cavity.initialVolume=volume(shell.object.femNodes,shell.lumenFaces);cavity.volumeScale=1e-6;cavity.volumeResidualTolerance=1e-5;
++    cavity.initialSpeciesAmounts={0};cavity.pressureLaw=VascularPressureLaw::deformingCavity;
++    n.compartments.push_back(cavity);
++    VascularCompartmentSource reservoir;reservoir.stableIdentifier=12;reservoir.anatomicalIdentifier="synthetic:linear_reservoir";
++    reservoir.referenceVolume=4e-6;reservoir.initialVolume=4e-6;reservoir.referencePressure=100;reservoir.compliance=1e-8;
++    reservoir.volumeScale=1e-6;reservoir.volumeResidualTolerance=1e-5;reservoir.initialSpeciesAmounts={2e-6};n.compartments.push_back(reservoir);
++    VascularConnectionSource edge;edge.stableIdentifier=21;edge.fromCompartment=12;edge.toCompartment=11;
++    edge.resistance=1e9;edge.flowScale=1e-7;edge.pressureScale=100;edge.flowResidualTolerance=1e-5;n.connections.push_back(edge);
++    VascularCavitySource boundary;boundary.stableIdentifier=31;boundary.compartment=11;boundary.objectIndex=0;
++    boundary.initialPressure=0;boundary.pressureScale=100;boundary.geometryResidualTolerance=1e-5;
++    boundary.sourceIdentity={0x73796e7468657469ULL,0x632d636176697479ULL,0,1};boundary.mechanicalIdentity={0x686f6c6c6f772d66ULL,0x656d2d7368656c6cULL,0,1};
++    for(unsigned i=0;i<shell.lumenFaces.size();++i)boundary.faces.push_back({100+i,shell.lumenFaces[i],VascularCavityFaceRole::materialWall});
++    n.cavities.push_back(boundary);return s;
++}
++} // namespace vascular_cavity_fixture
+diff --git a/matter/tools/vascular_compiler_check.cpp b/matter/tools/vascular_compiler_check.cpp
+index ecf6174..744c057 100644
+--- a/matter/tools/vascular_compiler_check.cpp
++++ b/matter/tools/vascular_compiler_check.cpp
+@@ -1,4 +1,5 @@
+ #include "numi/matter/vascular.hpp"
++#include "vascular_cavity_fixture.hpp"
+ #include <algorithm>
+ #include <chrono>
+ #include <cmath>
+@@ -185,6 +186,83 @@ int main() {
+         changed=rational;changed.vascular.compartments[0].pressureLaw=VascularPressureLaw::ventricularElastance;rejected(changed,"legacy pulse accepted unused delay");
+         bad=timed.world;bad.vascular.compartments[1].periodMultiplier=14;rejectedCooked(bad,"noncanonical cooked rational time");
+         bad=bounded.world;bad.vascular.compartments[1].pressureParameters.y=1;rejectedCooked(bad,"unowned atan parameter");
++        // Direct lumen-to-material coupling requires an actual hollow wall;
++        // the independent fixture helper leaves all central-cell tissue absent.
++        const auto cavitySource=vascular_cavity_fixture::world();
++        const auto cavityWorld=compileWorld(cavitySource);
++        require(cavityWorld.succeeded(),"hollow cavity fixture rejected: "+messages(cavityWorld));
++        const auto& cv=cavityWorld.world.vascular;
++        require(cv.layout.cavities.x==1&&cv.layout.cavities.y==12&&cv.layout.cavities.z==5&&
++                cv.unknowns.size()==6&&cv.cavities[0].identity.w==5&&
++                cv.compartmentCavity==std::vector<std::uint32_t>{0,NM_INVALID_INDEX}&&
++                cv.cavityNodeRanges.size()==64&&cv.cavityNodeIncidence.size()==36,
++                "cavity pressure row or deterministic boundary incidence missing");
++        // Even a soft wall whose original CFL rate is coarser must run at
++        // each hydraulic microtick; persistent scheduler drift fails admission.
++        const auto multirate=compileWorld(cavitySource,{.maximumRateExponent=4});
++        require(multirate.succeeded()&&multirate.world.objects[0].solver.x==4&&
++                multirate.world.schedulers[0].baseExponent==4&&multirate.world.schedulers[0].activeExponent==4&&
++                multirate.world.schedulers[0].requestedExponent==4,"cavity wall did not inherit hydraulic microtick");
++        bad=multirate.world;bad.schedulers[0].baseExponent=3;rejectedCooked(bad,"coarse cavity base timestep");
++        bad=multirate.world;bad.schedulers[0].activeExponent=3;rejectedCooked(bad,"coarse cavity active timestep");
++        bad=multirate.world;bad.schedulers[0].requestedExponent=3;rejectedCooked(bad,"coarse cavity requested timestep");
++        bad=multirate.world;bad.objects[0].solver.x=3;rejectedCooked(bad,"coarse cavity reset timestep");
++        changed=cavitySource;std::reverse(changed.vascular.cavities[0].faces.begin(),changed.vascular.cavities[0].faces.end());
++        require(compileWorld(changed).world.fingerprint==cavityWorld.world.fingerprint,"authored face order changed canonical cavity");
++        changed=cavitySource;changed.vascular.cavities[0].initialPressure=-25;
++        require(compileWorld(changed).succeeded(),"signed absolute cavity pressure incorrectly treated as species amount");
++        changed=cavitySource;changed.vascular.cavities.clear();rejected(changed,"unbound deforming compartment");
++        changed=cavitySource;changed.vascular.cavities.push_back(changed.vascular.cavities[0]);changed.vascular.cavities.back().stableIdentifier=32;rejected(changed,"duplicate cavity compartment owner");
++        changed=cavitySource;changed.vascular.cavities[0].compartment=999;rejected(changed,"forged cavity compartment");
++        changed=cavitySource;changed.vascular.cavities[0].objectIndex=999;rejected(changed,"forged cavity object");
++        changed=cavitySource;changed.objects[0].adaptive=true;rejected(changed,"adaptive cavity wall without binding remap");
++        changed=cavitySource;changed.objects[0].automaticRepresentation=true;rejected(changed,"automatic cavity representation");
++        changed=cavitySource;changed.vascular.cavities[0].sourceIdentity={};rejected(changed,"missing cavity geometry provenance");
++        changed=cavitySource;changed.vascular.cavities[0].mechanicalIdentity={};rejected(changed,"missing cavity mechanical provenance");
++        changed=cavitySource;changed.vascular.cavities[0].faces[0].role=VascularCavityFaceRole::artificialPartitionInterface;rejected(changed,"artificial interface posed as wall");
++        changed=cavitySource;changed.vascular.cavities[0].faces[0].role=VascularCavityFaceRole::unspecified;rejected(changed,"missing physical wall role");
++        changed=cavitySource;changed.vascular.cavities[0].faces[0].nodes[0]=999;rejected(changed,"forged wall node");
++        changed=cavitySource;changed.vascular.cavities[0].faces[1].nodes=changed.vascular.cavities[0].faces[0].nodes;rejected(changed,"duplicate wall face");
++        changed=cavitySource;changed.vascular.cavities[0].faces[1].stableIdentifier=changed.vascular.cavities[0].faces[0].stableIdentifier;rejected(changed,"duplicate stable wall face");
++        changed=cavitySource;changed.vascular.cavities[0].faces.pop_back();rejected(changed,"open cavity boundary");
++        changed=cavitySource;for(auto& face:changed.vascular.cavities[0].faces)std::swap(face.nodes[0],face.nodes[1]);rejected(changed,"material outward orientation posed as cavity");
++        changed=cavitySource;changed.vascular.cavities[0].faces[0].nodes={0,1,2};rejected(changed,"non-boundary node triangle");
++        changed=cavitySource;
++        // A filled solid's inward surface is a closed material-facing chain,
++        // but its signed cavity volume is negative: it is not a lumen.
++        changed.objects[0].femNodes={{{0,0,0}},{{.01,0,0}},{{0,.01,0}},{{0,0,.01}}};
++        changed.objects[0].femFixedNodes.clear();changed.objects[0].tetrahedra={{{0,1,2,3}}};
++        changed.vascular.cavities[0].faces={
++            {100,{0,1,2},VascularCavityFaceRole::materialWall},
++            {101,{0,3,1},VascularCavityFaceRole::materialWall},
++            {102,{0,2,3},VascularCavityFaceRole::materialWall},
++            {103,{1,3,2},VascularCavityFaceRole::materialWall}};
++        const auto outerSolid=compileWorld(changed);
++        require(!outerSolid.succeeded()&&messages(outerSolid).find("cooked enclosed cavity")!=std::string::npos,
++                "filled outer solid masquerades as a positive lumen");
++        changed=cavitySource;changed.vascular.cavities[0].initialPressure=3e38;
++        changed.vascular.cavities[0].pressureScale=1e38;changed.vascular.compartments[0].externalPressure=-3e38;
++        rejected(changed,"overflowed transmural pressure");
++        changed=cavitySource;changed.vascular.cavities[0].pressureScale=0;rejected(changed,"missing cavity pressure scale");
++        changed=cavitySource;changed.vascular.cavities[0].geometryResidualTolerance=0;rejected(changed,"missing cavity geometric tolerance");
++        changed=cavitySource;changed.vascular.cavities[0].initialPressure=std::numeric_limits<double>::infinity();rejected(changed,"infinite cavity pressure");
++        changed=cavitySource;changed.vascular.compartments[0].referenceVolume=1e-6;rejected(changed,"invented cavity reference offset");
++        changed=cavitySource;changed.vascular.compartments[0].referencePressure=1;rejected(changed,"duplicate cavity pressure authority");
++        changed=cavitySource;changed.vascular.compartments[0].compliance=1e-8;rejected(changed,"lumped compliance plus resolved wall");
++        changed=cavitySource;changed.vascular.compartments[0].initialVolume*=1.1;changed.vascular.cavities[0].geometryResidualTolerance=1;rejected(changed,"loose tolerance hides fabricated absolute volume");
++        bad=cavityWorld.world;bad.vascular.compartmentCavity[0]=NM_INVALID_INDEX;rejectedCooked(bad,"forged cooked cavity map");
++        bad=cavityWorld.world;bad.vascular.cavities[0].identity.w=4;rejectedCooked(bad,"pressure aliases species");
++        bad=cavityWorld.world;bad.vascular.cavityFaces[0].identity.z=2;rejectedCooked(bad,"cooked artificial wall role");
++        bad=cavityWorld.world;bad.vascular.cavityNodeIncidence[0]=999;rejectedCooked(bad,"forged cavity node incidence");
++        bad=cavityWorld.world;bad.vascular.unknowns[5].initialAndScaling.z*=2;rejectedCooked(bad,"geometry residual scale detached from volume");
++        bad=cavityWorld.world;bad.vascular.cavities[0].faces.w=1;rejectedCooked(bad,"unowned cavity padding");
++        bad=cavityWorld.world;bad.vascular.cavities[0].mechanicalIdentity[0]=0;bad.vascular.cavities[0].mechanicalIdentity[1]=0;bad.vascular.cavities[0].mechanicalIdentity[3]=0;rejectedCooked(bad,"missing cooked mechanical provenance");
++        const auto cavityIdentity=[&](WorldSource change,const char* role){const auto result=compileWorld(change);require(result.succeeded()&&result.world.fingerprint!=cavityWorld.world.fingerprint&&result.world.physicsFingerprint!=cavityWorld.world.physicsFingerprint,std::string("unbound cavity field: ")+role);};
++        changed=cavitySource;changed.vascular.cavities[0].sourceIdentity[2]=7;cavityIdentity(changed,"geometry identity");
++        changed=cavitySource;changed.vascular.cavities[0].mechanicalIdentity[2]=7;cavityIdentity(changed,"mechanical identity");
++        changed=cavitySource;changed.vascular.cavities[0].initialPressure=2;cavityIdentity(changed,"pressure state");
++        changed=cavitySource;changed.vascular.cavities[0].pressureScale*=2;cavityIdentity(changed,"pressure scale");
++        changed=cavitySource;changed.vascular.cavities[0].geometryResidualTolerance*=2;cavityIdentity(changed,"geometry tolerance");
+         const auto stamp=std::chrono::steady_clock::now().time_since_epoch().count();
+         const auto path=std::filesystem::temp_directory_path()/("numi-vascular-compiler-"+std::to_string(stamp)+".nmatterpack");std::string error;
+         require(writePackage(compiled,path,&error),"package write failed: "+error);
+@@ -204,7 +282,14 @@ int main() {
+         require(readPackage(path,decoded,nullptr,&error),"atan package read failed: "+error);
+         require(decoded.fingerprint==bounded.world.fingerprint && decoded.vascular.compartments[1].pressureParameters.x==float(.001),"atan package lost displacement bound");
+         std::filesystem::remove(path);
+-        std::cout<<"vascular_compiler=pass boundary=source_cooking_package_validation_only laws=compliance_atan_rational_elastance_orifice_diode_starling_transport_exchange canonical_order=true semantic_rejection=true provenance_bound=true\n";
++        require(writePackage(cavityWorld,path,&error),"cavity package write failed: "+error);
++        require(readPackage(path,decoded,nullptr,&error),"cavity package read failed: "+error);
++        require(decoded.fingerprint==cavityWorld.world.fingerprint&&decoded.physicsFingerprint==cavityWorld.world.physicsFingerprint&&
++                decoded.vascular.cavityFaces.size()==12&&decoded.vascular.cavities[0].identity.w==5&&
++                decoded.vascular.cavityNodeIncidence==cv.cavityNodeIncidence&&decoded.vascular.compartmentCavity==cv.compartmentCavity,
++                "cavity package changed physical boundary, pressure state or provenance");
++        std::filesystem::remove(path);
++        std::cout<<"vascular_compiler=pass boundary=source_cooking_package_validation_only laws=compliance_atan_rational_elastance_orifice_diode_starling_transport_exchange_deforming_cavity canonical_order=true semantic_rejection=true provenance_bound=true\n";
+         return 0;
+     }catch(const std::exception& e){std::cerr<<"vascular_compiler=fail reason="<<e.what()<<'\n';return 1;}
+ }

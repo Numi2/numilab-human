@@ -1,0 +1,103 @@
+{
+  "schema": "NumiHuman.native-cavity-qualification.v1",
+  "status": "passed",
+  "scope": "synthetic_moving_wall_interface",
+  "biologicalCalibration": "unqualified",
+  "mechanicalBloodMass": "absent",
+  "nativeBaseRevision": "b91fe6832813497ab532e5dbe05ed8c8233e6b1f",
+  "compatibility": {
+    "matterABI": 29,
+    "package": 14,
+    "snapshot": 7,
+    "acceptedProofManifest": 7
+  },
+  "checks": {
+    "matter.numi_human.tendon_fem_transaction": {
+      "status": "Passed",
+      "execution": "regression-attempt-001/execution.json"
+    },
+    "matter.runtime.snapshot_archive": {
+      "status": "Passed",
+      "execution": "regression-attempt-001/execution.json"
+    },
+    "matter.physics.topology_mutation": {
+      "status": "Passed",
+      "execution": "regression-attempt-001/execution.json"
+    },
+    "matter.physics.cohesive_mutation": {
+      "status": "Passed",
+      "execution": "regression-attempt-001/execution.json"
+    },
+    "matter.physics.small_scale_topology_conservation": {
+      "status": "Passed",
+      "execution": "regression-attempt-001/execution.json"
+    },
+    "matter.physics.puncture_mutation": {
+      "status": "Passed",
+      "execution": "regression-attempt-001/execution.json"
+    },
+    "matter.runtime.topology_rollback": {
+      "status": "Passed",
+      "execution": "regression-attempt-001/execution.json"
+    },
+    "matter.runtime.production_transaction_rollback": {
+      "status": "Passed",
+      "execution": "regression-attempt-001/execution.json"
+    },
+    "matter.physics.stateful_fem": {
+      "status": "Passed",
+      "execution": "regression-attempt-001/execution.json"
+    },
+    "matter.compiler.stateful_roundtrip": {
+      "status": "Passed",
+      "execution": "regression-attempt-001/execution.json"
+    },
+    "matter.compiler.vascular": {
+      "status": "Passed",
+      "execution": "regression-attempt-001/execution.json"
+    },
+    "matter.metal.vascular": {
+      "status": "Passed",
+      "execution": "regression-attempt-001/execution.json"
+    },
+    "matter.metal.human_physiology_payload": {
+      "status": "Passed",
+      "execution": "regression-attempt-001/execution.json"
+    },
+    "matter.compiler.human_physiology_admission": {
+      "status": "Passed",
+      "execution": "regression-attempt-001/execution.json"
+    },
+    "matter.metal.cvsim_source": {
+      "status": "Passed",
+      "execution": "regression-attempt-001/execution.json"
+    },
+    "matter.compiler.cvsim_admission": {
+      "status": "Passed",
+      "execution": "regression-attempt-001/execution.json"
+    },
+    "matter.metal.cardiac_source": {
+      "status": "Passed",
+      "execution": "regression-attempt-001/execution.json"
+    },
+    "matter.metal.vascular_cavity": {
+      "status": "Passed",
+      "execution": "regression-attempt-001/execution.json"
+    },
+    "matter.metal.cardiac_transaction": {
+      "status": "Passed",
+      "execution": "regression-attempt-002/execution.json"
+    }
+  },
+  "originalSourceHashesUnchanged": true,
+  "originalSourceCount": 13,
+  "addedFinalFixtureSource": "matter/tools/cardiac_transaction_check.mm",
+  "changedBinaryAfterBroadRun": [
+    "matter/numi-matter-cardiac-transaction-check"
+  ],
+  "targetedRecheck": "regression-attempt-002/execution.json",
+  "gpuQualification": "gpu-attempt-004/execution.json",
+  "failedAttemptsRetained": true,
+  "nativeRevision": "f73b07133d09ceb9ed7ff94d48d5863157f2527b",
+  "allQualifiedSourcesMatchPublishedCommit": true
+}

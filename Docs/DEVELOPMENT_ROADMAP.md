@@ -661,12 +661,21 @@ rather than becoming idle.
   Ten native cycles, timestep refinement and 15 compatibility/transaction checks
   pass. Four cardiac compartments now have exact [atlas cavity references](CARDIAC_CAVITY_REGISTRATION_20260912.md),
   with embedded surfaces, volume moments and native identity-equivalence evidence.
-  The right atrial/ventricular domains intersect in 42 triangle pairs; disjoint
-  physical-volume, body-frame and mechanical mass registration remain blocked.
+  The original right atrial/ventricular domains intersect in 42 triangle pairs;
+  two [exact partition candidates](CARDIAC_CAVITY_PARTITION_20260912.md) now
+  preserve their union with disjoint interiors. Biological interface selection,
+  body-frame and mechanical mass registration remain open.
+  [Native pressure–volume wall coupling](CARDIAC_WALL_COUPLING_20260912.md) now
+  passes direct Metal force/work/Jv checks and a 32-step paired hollow-FEM-wall
+  trajectory with conservation, fixed-wall control, replay, rollback and reset.
+  This establishes the synthetic interface; an anatomical wall and its
+  calibration remain unqualified.
   The other 17 aggregates have no anatomy registration, and the 18-region template
   retains 276 unresolved parameters.
-- **Active frontier:** register the aggregate vascular volumes, establish a
-  nonduplicated blood mass partition and subject parameters; reproduce reflexes
+- **Active frontier:** admit a matching anatomical wall/lumen mesh and physical
+  port boundaries for native pressure–volume coupling; register aggregate
+  vascular volumes, establish a nonduplicated blood mass partition and subject
+  parameters; reproduce reflexes
   and tilt; subdivide, register and calibrate individual-organ perfusion;
   couple perfusion to active
   tissue, ventilation to thoracic mechanics, metabolic/thermal state to muscle,

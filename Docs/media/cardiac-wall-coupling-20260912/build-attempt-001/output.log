@@ -1,0 +1,26 @@
+[0/1] Re-running CMake...
+-- MetalRobo Python tests disabled: no interpreter with NumPy and SciPy
+-- Configuring done (0.3s)
+-- Generating done (0.1s)
+-- Build files have been written to: /Users/n/MetalRobo-human-completion-build-20260907
+[1/13] Building CXX object matter/CMakeFiles/numi_matter_compiler_objects.dir/src/vascular_impl.cpp.o
+[2/13] Linking CXX static library matter/libnumi_matter_compiler.a
+[3/13] Generating shaders/NumiMatter.metallib
+[4/13] Building CXX object matter/CMakeFiles/numi-matter-vascular-compiler-check.dir/tools/vascular_compiler_check.cpp.o
+[5/13] Building OBJCXX object matter/CMakeFiles/numi_matter_runtime_objects.dir/src/human_physiology.mm.o
+[6/13] Building OBJCXX object matter/CMakeFiles/numi_matter_runtime_objects.dir/src/runtime.mm.o
+[7/13] Building CXX object matter/CMakeFiles/numi_matter_runtime_objects.dir/src/metal_world.cpp.o
+[8/13] Building OBJCXX object matter/CMakeFiles/numi_matter_runtime_objects.dir/src/numi_human.mm.o
+[9/13] Linking CXX static library matter/libnumi_matter_runtime.a
+[10/13] Linking CXX executable matter/numi-matter-vascular-compiler-check
+[11/13] Building OBJCXX object matter/CMakeFiles/numi-matter-vascular-cavity-check.dir/tools/vascular_cavity_check.mm.o
+FAILED: [code=1] matter/CMakeFiles/numi-matter-vascular-cavity-check.dir/tools/vascular_cavity_check.mm.o 
+/usr/bin/clang++ -DNUMI_MATTER_METALLIB=\"/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib\" -I/Users/n/MetalRobo-human-completion-20260907/matter/../include -I/Users/n/MetalRobo-human-completion-20260907/matter/include -F/Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks -x objective-c++ -O3 -DNDEBUG -std=c++23 -arch arm64 -fPIE -fobjc-arc -Wall -Wextra -Wpedantic -Werror -MD -MT matter/CMakeFiles/numi-matter-vascular-cavity-check.dir/tools/vascular_cavity_check.mm.o -MF matter/CMakeFiles/numi-matter-vascular-cavity-check.dir/tools/vascular_cavity_check.mm.o.d -o matter/CMakeFiles/numi-matter-vascular-cavity-check.dir/tools/vascular_cavity_check.mm.o -c /Users/n/MetalRobo-human-completion-20260907/matter/tools/vascular_cavity_check.mm
+/Users/n/MetalRobo-human-completion-20260907/matter/tools/vascular_cavity_check.mm:100:49: error: 'newLibraryWithFile:error:' is deprecated: first deprecated in macOS 13.0 - Use -newLibraryWithURL:error: instead [-Werror,-Wdeprecated-declarations]
+  100 |     NSError* error=nil;auto library=[run.device newLibraryWithFile:[NSString stringWithUTF8String:NUMI_MATTER_METALLIB] error:&error];
+      |                                                 ^
+/Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Metal.framework/Headers/MTLDevice.h:765:1: note: 'newLibraryWithFile:error:' has been explicitly marked deprecated here
+  765 | - (nullable id <MTLLibrary>)newLibraryWithFile:(NSString *)filepath error:(__autoreleasing NSError **)error
+      | ^
+1 error generated.
+ninja: build stopped: subcommand failed.
