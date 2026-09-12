@@ -1,0 +1,104 @@
+{
+  "status": "pass",
+  "cases": 16,
+  "rejected_malformed_cases": 15,
+  "physical_steps": 0,
+  "results": [
+    {
+      "case": "valid_two_region",
+      "returncode": 0,
+      "status": "pass",
+      "error": null
+    },
+    {
+      "case": "one_byte_truncated_coordinate",
+      "returncode": 1,
+      "status": "failed",
+      "error": "truncated scalar buffer: nodes.f64le"
+    },
+    {
+      "case": "one_index_truncated_tet",
+      "returncode": 1,
+      "status": "failed",
+      "error": "wrong tetrahedron buffer shape"
+    },
+    {
+      "case": "out_of_range_cell_index",
+      "returncode": 1,
+      "status": "failed",
+      "error": "out-of-range tetrahedron index cell=0"
+    },
+    {
+      "case": "inverted_cell",
+      "returncode": 1,
+      "status": "failed",
+      "error": "nonpositive or nonfinite tetrahedron volume cell=0"
+    },
+    {
+      "case": "wrong_label_length",
+      "returncode": 1,
+      "status": "failed",
+      "error": "label count differs from tetrahedron count"
+    },
+    {
+      "case": "unknown_label",
+      "returncode": 1,
+      "status": "failed",
+      "error": "unknown anatomical region cell=1"
+    },
+    {
+      "case": "missing_fibre_buffer",
+      "returncode": 1,
+      "status": "failed",
+      "error": "missing or nonregular buffer: fibres.f64le"
+    },
+    {
+      "case": "nonfinite_fibre",
+      "returncode": 1,
+      "status": "failed",
+      "error": "nonfinite field: fibres.f64le scalar=0"
+    },
+    {
+      "case": "nonfinite_uvc",
+      "returncode": 1,
+      "status": "failed",
+      "error": "nonfinite field: uvc_rho.f64le scalar=0"
+    },
+    {
+      "case": "short_sheet_buffer",
+      "returncode": 1,
+      "status": "failed",
+      "error": "wrong field length: sheets.f64le"
+    },
+    {
+      "case": "reversed_boundary",
+      "returncode": 1,
+      "status": "failed",
+      "error": "boundary face is not material-outward"
+    },
+    {
+      "case": "interior_as_boundary",
+      "returncode": 1,
+      "status": "failed",
+      "error": "boundary face is interior or duplicated"
+    },
+    {
+      "case": "wrong_owner",
+      "returncode": 1,
+      "status": "failed",
+      "error": "boundary face does not belong to named owner"
+    },
+    {
+      "case": "wrong_component",
+      "returncode": 1,
+      "status": "failed",
+      "error": "boundary component IDs disagree with independent connectivity"
+    },
+    {
+      "case": "duplicate_reversal_provenance",
+      "returncode": 1,
+      "status": "failed",
+      "error": "invalid or repeated source reversal index"
+    }
+  ]
+}

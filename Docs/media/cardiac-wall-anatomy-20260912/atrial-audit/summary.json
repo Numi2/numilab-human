@@ -1,0 +1,481 @@
+{
+  "added_faces": 0,
+  "admission": {
+    "anatomical_calibration": false,
+    "blood_tissue_mass_partition": false,
+    "direct_existing_cavity_to_wall_binding": false,
+    "matched_closed_endocardial_boundary": false,
+    "reason": "Both reference cavity boundaries have exact inside and outside witnesses against the corresponding wall solid and nonzero surface intersections; no identical source vertices or triangles.",
+    "source_wall_tissue_solid_embedded": true
+  },
+  "archive": {
+    "bytes": 64888505,
+    "file": "partof_BP3D_4.0_obj_99.zip",
+    "sha256": "9fbc713fffeee924a5a657d9813d84d7eb957bded63adb854931dd5e3eb61c97"
+  },
+  "artifacts_sha256": {
+    "audit.log": "e2923860a9725063eee5997afc9552dceb8a83fce9e51ca23799b4fe7f95a8a1",
+    "audit_atrial_walls.py": "2d7c31f3e7dccd5f4dfaab2d397cb38d66ec45c7f183acea0823fc180a41b751",
+    "results/atrial-wall-audit.json": "fa808892e814181e5286587c594426079b987d39b58e2573669feca99530bd97"
+  },
+  "broadphase": "exact_integer_AABB_tree_no_tolerance",
+  "coordinate_semantics": "exact rational values of published binary64 metres",
+  "elapsed_seconds": 13.770928541664034,
+  "execution": {
+    "command": "/Users/n/human-cardiac-partition-20260912/venv/bin/python /Users/n/human-cardiac-wall-anatomy-20260912/atrial-audit/audit_atrial_walls.py --root /Users/n/human-cardiac-partition-20260912/qualification-001 --output /Users/n/human-cardiac-wall-anatomy-20260912/atrial-audit/results",
+    "host": "ssh macmini",
+    "initial_process_check": "no matching native GPU or build processes; read-only process inventory before CPU audit",
+    "returncode": 0,
+    "root": "/Users/n/human-cardiac-partition-20260912/qualification-001"
+  },
+  "human_commit": "c4660d4eb33a6aa6bc35cbafb576e2ff7d8d0107",
+  "intersection_owner_algorithm": "exact_binary64_integer_triangle_predicates_and_rational_ray_parity_v1",
+  "owners_sha256": {
+    "src/numilab_human/cardiac_cavity_geometry.py": "f6e98744dad9e23cd3b505efc02e7faa618fccce81d2ee08b07f948ef182fb72",
+    "src/numilab_human/cardiac_cavity_intersections.py": "8b138882161c78312cb9b5aa46f49795092eb9b67ed9f705dc354787cb0a635b",
+    "src/numilab_human/cardiac_partition_certificate.py": "f2da90247eb01475f03840c723d643dc52e6d208368a7b683da08563ddfedd70"
+  },
+  "pairs": [
+    {
+      "aabb_candidate_pairs": 37729,
+      "cavity": "right_atrium",
+      "containment": {
+        "status": "transverse_or_boundary_contacts_require_arrangement"
+      },
+      "count": 3000,
+      "elapsed_seconds": 0.4801103752106428,
+      "exact_shared_triangles": 0,
+      "exact_shared_vertices": 0,
+      "first_ten_intersecting_triangle_pairs": [
+        [
+          0,
+          398
+        ],
+        [
+          0,
+          424
+        ],
+        [
+          1,
+          402
+        ],
+        [
+          1,
+          424
+        ],
+        [
+          1,
+          427
+        ],
+        [
+          2,
+          395
+        ],
+        [
+          2,
+          396
+        ],
+        [
+          2,
+          398
+        ],
+        [
+          2,
+          424
+        ],
+        [
+          2,
+          425
+        ]
+      ],
+      "identical_boundary": false,
+      "intersection_pair_inventory": "results/atrial-wall-audit.json",
+      "overlap_witnesses": [
+        {
+          "cavity_face": 0,
+          "cavity_face_vertex_ids": [
+            0,
+            3,
+            29
+          ],
+          "centroid_location_in_wall": {
+            "attempts": 1,
+            "crossings": 2,
+            "location": "outside",
+            "ray": [
+              1,
+              1,
+              1
+            ]
+          },
+          "centroid_m": [
+            -0.03388046666666667,
+            -0.11032666666666667,
+            1.2243666666666668
+          ],
+          "centroid_m_exact": [
+            [
+              "-0x1a052bb8eb6e79",
+              "0x300000000000000"
+            ],
+            [
+              "-0x1c3e5e5135c44f",
+              "0x100000000000000"
+            ],
+            [
+              "0x1d628240b78035",
+              "0x18000000000000"
+            ]
+          ]
+        },
+        {
+          "cavity_face": 1120,
+          "cavity_face_vertex_ids": [
+            624,
+            626,
+            468
+          ],
+          "centroid_location_in_wall": {
+            "attempts": 1,
+            "crossings": 3,
+            "location": "inside",
+            "ray": [
+              1,
+              1,
+              1
+            ]
+          },
+          "centroid_m": [
+            -0.01223059,
+            -0.142346,
+            1.2570833333333333
+          ],
+          "centroid_m_exact": [
+            [
+              "-0x4b250e017575f9",
+              "0x1800000000000000"
+            ],
+            [
+              "-0x36a92e62131a9",
+              "0x18000000000000"
+            ],
+            [
+              "0x78ae147ae147b",
+              "0x6000000000000"
+            ]
+          ]
+        }
+      ],
+      "wall": "right_atrium_wall"
+    },
+    {
+      "aabb_candidate_pairs": 14063,
+      "cavity": "left_atrium",
+      "containment": {
+        "status": "transverse_or_boundary_contacts_require_arrangement"
+      },
+      "count": 1880,
+      "elapsed_seconds": 0.215657458640635,
+      "exact_shared_triangles": 0,
+      "exact_shared_vertices": 0,
+      "first_ten_intersecting_triangle_pairs": [
+        [
+          1,
+          995
+        ],
+        [
+          1,
+          1257
+        ],
+        [
+          1,
+          1258
+        ],
+        [
+          2,
+          685
+        ],
+        [
+          2,
+          686
+        ],
+        [
+          2,
+          995
+        ],
+        [
+          2,
+          1258
+        ],
+        [
+          4,
+          170
+        ],
+        [
+          4,
+          687
+        ],
+        [
+          4,
+          688
+        ]
+      ],
+      "identical_boundary": false,
+      "intersection_pair_inventory": "results/atrial-wall-audit.json",
+      "overlap_witnesses": [
+        {
+          "cavity_face": 0,
+          "cavity_face_vertex_ids": [
+            5,
+            1,
+            0
+          ],
+          "centroid_location_in_wall": {
+            "attempts": 1,
+            "crossings": 1,
+            "location": "inside",
+            "ray": [
+              1,
+              1,
+              1
+            ]
+          },
+          "centroid_m": [
+            -0.018987200000000003,
+            -0.08895263333333334,
+            1.24381
+          ],
+          "centroid_m_exact": [
+            [
+              "-0x3a54244482e6d1",
+              "0xc00000000000000"
+            ],
+            [
+              "-0xb62ccc587a5c3",
+              "0x80000000000000"
+            ],
+            [
+              "0x1dd9f7f8ca8199",
+              "0x18000000000000"
+            ]
+          ]
+        },
+        {
+          "cavity_face": 66,
+          "cavity_face_vertex_ids": [
+            32,
+            30,
+            27
+          ],
+          "centroid_location_in_wall": {
+            "attempts": 1,
+            "crossings": 0,
+            "location": "outside",
+            "ray": [
+              1,
+              1,
+              1
+            ]
+          },
+          "centroid_m": [
+            -0.0191004,
+            -0.07398636666666666,
+            1.22801
+          ],
+          "centroid_m_exact": [
+            [
+              "-0x138f0e255cb0db",
+              "0x400000000000000"
+            ],
+            [
+              "-0x38d24fc38cb22b",
+              "0x300000000000000"
+            ],
+            [
+              "0x1d78e4b87bdcf1",
+              "0x18000000000000"
+            ]
+          ]
+        }
+      ],
+      "wall": "left_atrium_wall"
+    }
+  ],
+  "physical_stepping": false,
+  "qualification": "offline_source_geometry_only",
+  "schema": "NumiHuman.AtrialWallSourceAudit.v1",
+  "source_coordinates_modified": false,
+  "source_lock_sha256": "03d20d46bfb47b67fb251182758eebbc8f1bbe2f38ce51881dc4c2694774fdee",
+  "surfaces": {
+    "left_atrium": {
+      "boundary_edge_count": 0,
+      "centroid_m": [
+        0.013815570648797232,
+        -0.08847534337315868,
+        1.2393715047592322
+      ],
+      "component_count": 1,
+      "edges": 1596,
+      "embedded_closed_surface": true,
+      "euler": 2,
+      "faces": 1064,
+      "genus": 0,
+      "geometry_sha256": "1c61875d0b3f2fa968d843ee3f4e5a868576dab5af4aae006f2b44805414972b",
+      "identified_vertex_count": 53,
+      "oriented_volume_m3": 5.193679901140525e-05,
+      "raw_boundary_edge_count": 126,
+      "raw_vertex_count": 587,
+      "self_intersection_count": 0,
+      "source": {
+        "archive": "partof_BP3D_4.0_obj_99.zip",
+        "bytes": 65827,
+        "header_comments": [
+          "#",
+          "# The license for this database is specified in the Creative Commons Attribution-Share Alike 2.1 Japan. If you use data from this database, please be sure attribute this database as follows: \"BodyParts3D, (c)  The Database Center for Life Science licensed under CC Attribution-Share Alike 2.1 Japan\".",
+          "# http://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html",
+          "#",
+          "#",
+          "# Compatibility version : 4.0",
+          "# File ID : FJ2425",
+          "# Representation ID : BP9925",
+          "# Build-up logic : FMA 3.0 part_of",
+          "# Concept ID : FMA9465",
+          "# English name : Cavity of left atrium",
+          "# Bounds(mm): (-20.384600,-126.761000,1206.450000)-(48.323700,-70.990500,1268.290000)",
+          "# Volume(cm3): 51.364700",
+          "#"
+        ],
+        "member": "partof_BP3D_4.0_obj_99/FJ2425.obj",
+        "sha256": "223233fef054fb67b81d27881f10a1acce47c9ade147546b6859fa90e4e37dc3"
+      },
+      "vertices": 534
+    },
+    "left_atrium_wall": {
+      "boundary_edge_count": 0,
+      "centroid_m": [
+        0.021381535646193797,
+        -0.09934011571501576,
+        1.2423965463788418
+      ],
+      "component_count": 1,
+      "edges": 11316,
+      "embedded_closed_surface": true,
+      "euler": -6,
+      "faces": 7544,
+      "genus": 4,
+      "geometry_sha256": "7b7e5f54c9068792da625e95516dbf7a16172e9fa932aa91dc12dce08fa9da01",
+      "identified_vertex_count": 518,
+      "oriented_volume_m3": 4.0537637854999656e-05,
+      "raw_boundary_edge_count": 1102,
+      "raw_vertex_count": 4284,
+      "self_intersection_count": 0,
+      "source": {
+        "bytes": 510081,
+        "comments": [
+          "#",
+          "# The license for this database is specified in the Creative Commons Attribution-Share Alike 2.1 Japan. If you use data from this database, please be sure attribute this database as follows: \"BodyParts3D, (c)  The Database Center for Life Science licensed under CC Attribution-Share Alike 2.1 Japan\".",
+          "# http://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html",
+          "#",
+          "#",
+          "# Compatibility version : 4.0",
+          "# File ID : FJ2438",
+          "# Representation ID : BP10221",
+          "# Build-up logic : FMA 3.0 part_of",
+          "# Concept ID : FMA9531",
+          "# English name : Wall of left atrium",
+          "# Bounds(mm): (-22.880100,-151.151000,1199.430100)-(63.239200,-70.170400,1272.400000)",
+          "# Volume(cm3): 40.493400",
+          "#"
+        ],
+        "member": "partof_BP3D_4.0_obj_99/FJ2438.obj",
+        "sha256": "187235f3c3612ef27abde924d01c71579c2946435e64319164f43e5ad008284d"
+      },
+      "vertices": 3766
+    },
+    "right_atrium": {
+      "boundary_edge_count": 0,
+      "centroid_m": [
+        -0.01651146941922787,
+        -0.11706255146848436,
+        1.2334254753747629
+      ],
+      "component_count": 1,
+      "edges": 3366,
+      "embedded_closed_surface": true,
+      "euler": 2,
+      "faces": 2244,
+      "genus": 0,
+      "geometry_sha256": "f4b0ae8faf52a477450032de4e467d37db65deb819fbfa126751619dd8f085fc",
+      "identified_vertex_count": 69,
+      "oriented_volume_m3": 8.45515320178338e-05,
+      "raw_boundary_edge_count": 146,
+      "raw_vertex_count": 1193,
+      "self_intersection_count": 0,
+      "source": {
+        "archive": "partof_BP3D_4.0_obj_99.zip",
+        "bytes": 139100,
+        "header_comments": [
+          "#",
+          "# The license for this database is specified in the Creative Commons Attribution-Share Alike 2.1 Japan. If you use data from this database, please be sure attribute this database as follows: \"BodyParts3D, (c)  The Database Center for Life Science licensed under CC Attribution-Share Alike 2.1 Japan\".",
+          "# http://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html",
+          "#",
+          "#",
+          "# Compatibility version : 4.0",
+          "# File ID : FJ2424",
+          "# Representation ID : BP9906",
+          "# Build-up logic : FMA 3.0 part_of",
+          "# Concept ID : FMA11359",
+          "# English name : Cavity of right atrium",
+          "# Bounds(mm): (-34.203000,-153.569000,1185.260000)-(3.187100,-92.441500,1277.520000)",
+          "# Volume(cm3): 84.265100",
+          "#"
+        ],
+        "member": "partof_BP3D_4.0_obj_99/FJ2424.obj",
+        "sha256": "8bd340059ff697cfe9ce57f2427e8c5a982e248a1d2230d477a4fe094adc2a2a"
+      },
+      "vertices": 1124
+    },
+    "right_atrium_wall": {
+      "boundary_edge_count": 0,
+      "centroid_m": [
+        -0.015697979467562732,
+        -0.12501297960664873,
+        1.2323214344018447
+      ],
+      "component_count": 1,
+      "edges": 26676,
+      "embedded_closed_surface": true,
+      "euler": -2,
+      "faces": 17784,
+      "genus": 2,
+      "geometry_sha256": "1ca7e3c1b8d96cff95054fed2cad201811103660e617b5f1411602b9847f60f3",
+      "identified_vertex_count": 997,
+      "oriented_volume_m3": 2.7625785019521302e-05,
+      "raw_boundary_edge_count": 1826,
+      "raw_vertex_count": 9887,
+      "self_intersection_count": 0,
+      "source": {
+        "bytes": 1211686,
+        "comments": [
+          "#",
+          "# The license for this database is specified in the Creative Commons Attribution-Share Alike 2.1 Japan. If you use data from this database, please be sure attribute this database as follows: \"BodyParts3D, (c)  The Database Center for Life Science licensed under CC Attribution-Share Alike 2.1 Japan\".",
+          "# http://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html",
+          "#",
+          "#",
+          "# Compatibility version : 4.0",
+          "# File ID : FJ2439",
+          "# Representation ID : BP9921",
+          "# Build-up logic : FMA 3.0 part_of",
+          "# Concept ID : FMA9457",
+          "# English name : Wall of right atrium",
+          "# Bounds(mm): (-36.303700,-162.645000,1183.080000)-(6.777900,-96.345000,1279.500000)",
+          "# Volume(cm3): 27.661700",
+          "#"
+        ],
+        "member": "partof_BP3D_4.0_obj_99/FJ2439.obj",
+        "sha256": "e7c21cd1659eced056eb56e28f4fa9019ace451ea6e0333097846177f807bb5a"
+      },
+      "vertices": 8890
+    }
+  }
+}

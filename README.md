@@ -22,6 +22,11 @@ The earlier [Shi–Hose cardiac source](Docs/CARDIAC_SOURCE_REPRODUCTION_2026091
 remains separately available through `numi human-cardiac`; its vascular C·P
 storage does not acquire absolute blood volumes from CVSim21.
 
+`numi human-cardiac-wall` now imports a pinned [CT-derived cardiac wall](Docs/CARDIAC_WALL_ANATOMY_20260912.md)
+with 1,470,083 tetrahedra, regional labels, fibre/sheet fields and matching
+boundary indices. Its source defects and numerical closure faces remain explicit;
+anatomical mechanics and calibration are still unqualified.
+
 [Current-pose foot contact](Docs/CURVED_SUPPORT_20260908.md) now covers the source
 capsules and heel ellipsoids. The [source dynamic-limit integration](Docs/SOURCE_DYNAMIC_LIMITS_20260908.md)
 adds all 122 scalar limits to Matter/NumanX v6, with source-law and bounded

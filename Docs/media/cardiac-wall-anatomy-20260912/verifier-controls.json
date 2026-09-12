@@ -1,0 +1,26 @@
+{
+  "status": "pass",
+  "cases": [
+    {
+      "case": "changed_config",
+      "rejected": true,
+      "error": "cardiac wall source: manifest source identity mismatch"
+    },
+    {
+      "case": "missing_buffer_record",
+      "rejected": true,
+      "error": "cardiac wall source: unexpected/missing asset buffer"
+    },
+    {
+      "case": "changed_buffer",
+      "rejected": true,
+      "error": "cardiac wall source: asset buffer mismatch labels.u32le"
+    },
+    {
+      "case": "promoted_mechanics",
+      "rejected": true,
+      "error": "cardiac wall source: unexpected source promotion"
+    }
+  ],
+  "physical_steps": 0
+}

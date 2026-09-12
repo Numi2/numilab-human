@@ -1,0 +1,111 @@
+{
+  "artifacts_sha256": {
+    "REPORT.md": "8da6e9a534d73d50b6cdd1ad9bd94617e60f154e989bdffd73247f21f517159b",
+    "audit_boundary.py": "72e5551bf4126a328bc6b7aa20f879ebba76d98219078dc830399fd5fd0745b3",
+    "audit_embedded.py": "3508737470eac467fd21cd808bef1faee61431d1db0f4b3006ef8da96c199134",
+    "embeddedness.json": "cf9be98386c30c312fba5d83c442c6f4378fadd0f559e9293fea8a30883e8860",
+    "embeddedness.log": "0e98d169df13133f1b2f711c0b8e5db92090bbe3fa5ae763c0d29e3207c4a646",
+    "report.json": "ffea96141ab67089f71ed04de8adf4f7132a59e74192edb17eaf8c3555475d32",
+    "run.log": "66bbfd0da36a199eb679f645e856c3459de0815ef9906530f3e672590d134478"
+  },
+  "asset_manifest_sha256": "7eb93af573b328c77f3960f3f9fb40e337356d64fa6fa3ff59e258d1959b0dee",
+  "host": "ssh macmini",
+  "input_buffers": {
+    "boundary.u32le": {
+      "bytes": 2764368,
+      "role": "outward material boundary; all source cap faces retained",
+      "sha256": "821ad6dedb5f32cce78314d704e35f03726188d9d56978ebb23646e4690b3c60",
+      "shape": [
+        230364,
+        3
+      ]
+    },
+    "boundary_components.u32le": {
+      "bytes": 921456,
+      "role": "deterministic boundary component ID",
+      "sha256": "8e07999b113bd619fe8f0cf0fc5435730fb962ed13bead55e18c9f759352ba0a",
+      "shape": [
+        230364
+      ]
+    },
+    "boundary_owners.u32le": {
+      "bytes": 921456,
+      "role": "original source tetrahedron index",
+      "sha256": "7c3f0bf847d4d5c1aa0badc5ff83345c0165cd3aab516d8576b55474d5495392",
+      "shape": [
+        230364
+      ]
+    },
+    "labels.u32le": {
+      "bytes": 5880332,
+      "role": "unmodified regional source IDs",
+      "sha256": "304d0d9d9a99d51be4367529e9598815361018a446ed047923c85b96786b569a",
+      "shape": [
+        1470083
+      ]
+    },
+    "nodes.f64le": {
+      "bytes": 7223160,
+      "role": "metres; original source node order",
+      "sha256": "4c8e6e7d9adfa5180ba0730c99222044c6a1aa51901823cf0b4dd861ae732716",
+      "shape": [
+        300965,
+        3
+      ]
+    },
+    "tetrahedra.u32le": {
+      "bytes": 23521328,
+      "role": "positive orientation; original source cell order",
+      "sha256": "3f571c7815f0fd2e1f9d2735046d3bb7677a1a011215fca6737c6310b5b29066",
+      "shape": [
+        1470083,
+        4
+      ]
+    }
+  },
+  "physical_stepping": false,
+  "predicate_owner": {
+    "algorithm": "exact_binary64_integer_triangle_predicates_and_rational_ray_parity_v1",
+    "path": "src/numilab_human/cardiac_cavity_intersections.py",
+    "sha256": "8b138882161c78312cb9b5aa46f49795092eb9b67ed9f705dc354787cb0a635b"
+  },
+  "runs": [
+    {
+      "command": [
+        "/Users/n/human-cardiac-partition-20260912/venv/bin/python",
+        "/Users/n/human-cardiac-wall-anatomy-20260912/atrial-audit/rodero-boundary/audit_boundary.py",
+        "--asset",
+        "/Users/n/human-cardiac-wall-anatomy-20260912/asset",
+        "--output",
+        "/Users/n/human-cardiac-wall-anatomy-20260912/atrial-audit/rodero-boundary/report.json"
+      ],
+      "elapsed_seconds": 3.1088165417313576,
+      "log": "run.log",
+      "result": "report.json",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/n/human-cardiac-partition-20260912/venv/bin/python",
+        "/Users/n/human-cardiac-wall-anatomy-20260912/atrial-audit/rodero-boundary/audit_embedded.py",
+        "--asset",
+        "/Users/n/human-cardiac-wall-anatomy-20260912/asset",
+        "--owners-root",
+        "/Users/n/human-cardiac-partition-20260912/qualification-001",
+        "--topology-report",
+        "/Users/n/human-cardiac-wall-anatomy-20260912/atrial-audit/rodero-boundary/report.json",
+        "--output",
+        "/Users/n/human-cardiac-wall-anatomy-20260912/atrial-audit/rodero-boundary/embeddedness.json"
+      ],
+      "elapsed_seconds": 10.285756167024374,
+      "log": "embeddedness.log",
+      "result": "embeddedness.json",
+      "returncode": 0
+    }
+  ],
+  "schema": "NumiHuman.Rodero18BoundaryAuditExecution.v1",
+  "source_archive_sha256": "b50919a711dc3914cc0a4dd9cabc19679a9f36be9ac6eb26a23ca6799f501720",
+  "source_asset_copied": false,
+  "source_config_sha256": "23c931fef53edced85e0e0a36c73d8490dddb87db6bd988482a2cdfc5a1442cc",
+  "source_geometry_mutated": false
+}

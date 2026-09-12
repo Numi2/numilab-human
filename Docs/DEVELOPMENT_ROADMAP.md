@@ -668,8 +668,12 @@ rather than becoming idle.
   [Native pressure–volume wall coupling](CARDIAC_WALL_COUPLING_20260912.md) now
   passes direct Metal force/work/Jv checks and a 32-step paired hollow-FEM-wall
   trajectory with conservation, fixed-wall control, replay, rollback and reset.
-  This establishes the synthetic interface; an anatomical wall and its
-  calibration remain unqualified.
+  This establishes the synthetic interface. A [pinned CT-derived four-chamber
+  wall source](CARDIAC_WALL_ANATOMY_20260912.md) now imports 1,470,083 tetrahedra,
+  regional labels and fibre fields with matching boundary node identities.
+  Thirty-one boundary-edge defects and authored numerical closure faces remain
+  explicit. Per-element native material fields, physical ports and calibration
+  remain unqualified.
   The other 17 aggregates have no anatomy registration, and the 18-region template
   retains 276 unresolved parameters.
 - **Active frontier:** admit a matching anatomical wall/lumen mesh and physical

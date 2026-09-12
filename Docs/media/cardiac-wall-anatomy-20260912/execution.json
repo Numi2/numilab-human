@@ -1,0 +1,63 @@
+{
+  "schema": "HumanPack.cardiac-wall-source-execution.v1",
+  "human_base_revision": "c4660d4eb33a6aa6bc35cbafb576e2ff7d8d0107",
+  "native_revision": "f73b07133d09ceb9ed7ff94d48d5863157f2527b",
+  "native_worktree": "/Users/n/MetalRobo-human-completion-20260907",
+  "native_worktree_clean_after": true,
+  "execution_root": "ssh macmini:/Users/n/human-cardiac-wall-anatomy-20260912",
+  "device": "Apple M4 Pro",
+  "machine": "Mac16,11",
+  "operating_system": "macOS 26.6 (25G72)",
+  "physical_steps": 0,
+  "compute_owner": "offline authoring and native C++ CPU geometry validation",
+  "heavy_gpu_execution": false,
+  "source_import_runs": [
+    {
+      "attempt": 1,
+      "seconds": 23.46,
+      "peak_rss_bytes": 1117077504,
+      "status": "source_import_pass; superseded semantic config pin handling"
+    },
+    {
+      "attempt": 2,
+      "seconds": 23.27,
+      "peak_rss_bytes": 1076068352,
+      "status": "final source import pass"
+    }
+  ],
+  "all_13_buffers_identical_between_attempts": true,
+  "cpp_check": {
+    "seconds": 1.18,
+    "peak_rss_bytes": 200048640,
+    "status": "pass"
+  },
+  "tests": {
+    "python_local": 10,
+    "python_macmini": 10,
+    "cpp_static_cases": 16,
+    "receipt_tamper_controls": 4
+  },
+  "commands": [
+    "PYTHONPATH=src /opt/homebrew/bin/python3.13 -m numilab_human.cardiac_wall_source --archive 18.tar.gz --output asset-final",
+    "PYTHONPATH=src /opt/homebrew/bin/python3.13 -m unittest discover -s tests -p test_cardiac_wall_source.py -v",
+    "clang++ -std=c++20 -O2 -Wall -Wextra -Werror tools/cardiac_wall_asset_check.cpp -o cardiac-wall-asset-check",
+    "/opt/homebrew/bin/python3.13 tools/qualify_cardiac_wall_source.py --asset asset-final --checker ./cardiac-wall-asset-check --evidence evidence/final-qualification"
+  ],
+  "source_and_test_hashes": {
+    "src/numilab_human/cardiac_wall_source.py": "73e7df99e684454538691285b4537ae9102e261715dd87c6d50020f044b0bfcf",
+    "config/cardiac-wall-rodero18.v1.json": "23c931fef53edced85e0e0a36c73d8490dddb87db6bd988482a2cdfc5a1442cc",
+    "tools/cardiac_wall_asset_check.cpp": "cdcc9a65501f920a093723ed19e144ae3871da0a43b96b04bff3f22e2b200c87",
+    "tools/qualify_cardiac_wall_source.py": "16295fefc68a101520a8f8edf96d80349f6aaa34dbfa55b7de3734c00f787326",
+    "tests/test_cardiac_wall_source.py": "21a892921a4417e19bbe1b4c71b34ffe9f2f068fc4912a30c94089958e0a1084",
+    ".numi/commands/human-cardiac-wall": "94c6b3c66e2193147fbf9315b944b46a338cfc64333addc629a0f591864443f9"
+  },
+  "remaining_gates": [
+    "31 nonmanifold source boundary edges and47 vertex-link defects",
+    "global tetrahedral embedding and remote tetrahedron/lumen exclusion",
+    "native physical port and numerical-closure work ownership",
+    "per-element native material frames and regional material assembly",
+    "unloaded reference, density/inertia, spring supports and valve source law",
+    "source RV myocardial-volume discrepancy",
+    "subject calibration, whole-body registration and mechanical blood mass/momentum"
+  ]
+}

@@ -1,0 +1,540 @@
+{
+  "schema": "HumanPack.cardiac-wall-rodero18-source.v1",
+  "id": "rodero_2021_ct_case18_cardiac_wall",
+  "source": {
+    "record_url": "https://zenodo.org/records/4590294",
+    "api_url": "https://zenodo.org/api/records/4590294",
+    "doi": "10.5281/zenodo.4590294",
+    "version": "1.0.0",
+    "publication_date": "2021-03-15",
+    "title": "Virtual cohort of adult healthy four-chamber heart meshes from CT images",
+    "license": {
+      "id": "CC-BY-4.0",
+      "url": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    "creators": [
+      {
+        "name": "Rodero, Cristobal",
+        "affiliation": "King's College London",
+        "orcid": "0000-0001-7921-7840"
+      },
+      {
+        "name": "Strocchi, Marina",
+        "affiliation": "King's College London",
+        "orcid": "0000-0003-1312-251X"
+      },
+      {
+        "name": "Marciniak, Maciej",
+        "affiliation": "King's College London",
+        "orcid": "0000-0002-4277-7446"
+      },
+      {
+        "name": "Longobardi, Stefano",
+        "affiliation": "King's College London",
+        "orcid": "0000-0002-0111-0047"
+      },
+      {
+        "name": "Whitaker, John",
+        "affiliation": "King's College London"
+      },
+      {
+        "name": "O'Neill, Mark D.",
+        "affiliation": "St Thomas' Hospital",
+        "orcid": "0000-0002-6070-7177"
+      },
+      {
+        "name": "Gillette, Karli",
+        "affiliation": "Medical University of Graz",
+        "orcid": "0000-0002-0420-5375"
+      },
+      {
+        "name": "Augustin, Christoph",
+        "affiliation": "Medical University of Graz",
+        "orcid": "0000-0001-6341-4014"
+      },
+      {
+        "name": "Plank, Gernot",
+        "affiliation": "Medical University of Graz",
+        "orcid": "0000-0002-7380-6908"
+      },
+      {
+        "name": "Vigmond, Edward J.",
+        "affiliation": "LIRYC, University of Bordeaux",
+        "orcid": "0000-0003-1388-3589"
+      },
+      {
+        "name": "Lamata, Pablo",
+        "affiliation": "King's College London",
+        "orcid": "0000-0002-3097-4928"
+      },
+      {
+        "name": "Niederer, Steven A.",
+        "affiliation": "King's College London",
+        "orcid": "0000-0002-4612-6982"
+      }
+    ],
+    "attribution": "Rodero et al. (2021), Virtual cohort of adult healthy four-chamber heart meshes from CT images, version 1.0.0, DOI 10.5281/zenodo.4590294; case 18. Original data CC BY 4.0. Any extracted or converted geometry must identify its changes.",
+    "archive": {
+      "name": "18.tar.gz",
+      "url": "https://zenodo.org/api/records/4590294/files/18.tar.gz/content",
+      "bytes": 53661258,
+      "md5": "004856c5ebb3f150a87147370b348d6c",
+      "sha256": "b50919a711dc3914cc0a4dd9cabc19679a9f36be9ac6eb26a23ca6799f501720"
+    },
+    "member": {
+      "path": "18.vtk",
+      "bytes": 154064076,
+      "sha256": "f0d4f3fc21ea229fa1b334888d374ee606a2915b414fff047764aad44f1c0a41"
+    },
+    "original_length_unit": "mm",
+    "metres_per_source_length_unit": 0.001
+  },
+  "mesh": {
+    "format": "VTK legacy 3.0 ASCII UNSTRUCTURED_GRID",
+    "points": 300965,
+    "cells": 1470083,
+    "cell_type": 10,
+    "nodes_per_cell": 4,
+    "field_roles": {
+      "cell_material_label": "ID",
+      "cell_fibre": "fibres",
+      "cell_sheet": "sheets",
+      "point_transmural_coordinate": "RHO.dat",
+      "point_rotation_coordinate": "PHI.dat",
+      "point_apicobasal_coordinate": "Z.dat",
+      "point_ventricular_coordinate": "V.dat"
+    },
+    "separate_boundary_facets_supplied": false,
+    "boundary_extraction_source": "S1 Text section S1.2: extract volume boundary, separate connected components, merge corresponding endocardia and valve/vein planes.",
+    "admission_requirements": [
+      "finite source coordinates and fields",
+      "all cells linear tetrahedra with valid distinct point indices",
+      "positive oriented tetrahedra after explicit recorded orientation canonicalization",
+      "nonoverlapping wall domain with manifold connected lumen boundaries",
+      "retain source vertex indices for wall-cavity conformity",
+      "retain artificial closure faces and tissue interfaces as distinct roles",
+      "validate ventricular fibre and sheet basis without silently replacing source values",
+      "do not infer absolute physiological cavity volume from unrelated circulation coordinates"
+    ]
+  },
+  "labels": [
+    {
+      "id": 1,
+      "name": "LV myocardium",
+      "role": "myocardium",
+      "anatomical_structure": "left_ventricle",
+      "port_semantics": null,
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 2,
+      "name": "RV myocardium",
+      "role": "myocardium",
+      "anatomical_structure": "right_ventricle",
+      "port_semantics": null,
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 3,
+      "name": "LA myocardium",
+      "role": "myocardium",
+      "anatomical_structure": "left_atrium",
+      "port_semantics": null,
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 4,
+      "name": "RA myocardium",
+      "role": "myocardium",
+      "anatomical_structure": "right_atrium",
+      "port_semantics": null,
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 5,
+      "name": "Aorta",
+      "role": "vessel_wall",
+      "anatomical_structure": "aorta",
+      "port_semantics": null,
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 6,
+      "name": "Pulmonary artery",
+      "role": "vessel_wall",
+      "anatomical_structure": "pulmonary_artery",
+      "port_semantics": null,
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 7,
+      "name": "Mitral valve",
+      "role": "artificial_valve_partition",
+      "anatomical_structure": "mitral_valve",
+      "port_semantics": "left_atrium_to_left_ventricle",
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 8,
+      "name": "Tricuspid valve",
+      "role": "artificial_valve_partition",
+      "anatomical_structure": "tricuspid_valve",
+      "port_semantics": "right_atrium_to_right_ventricle",
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 9,
+      "name": "Aortic valve",
+      "role": "artificial_valve_partition",
+      "anatomical_structure": "aortic_valve",
+      "port_semantics": "left_ventricle_to_aorta",
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 10,
+      "name": "Pulmonary valve",
+      "role": "artificial_valve_partition",
+      "anatomical_structure": "pulmonary_valve",
+      "port_semantics": "right_ventricle_to_pulmonary_artery",
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 11,
+      "name": "LA appendage inlet",
+      "role": "artificial_vessel_closure",
+      "anatomical_structure": "left_atrial_appendage",
+      "port_semantics": "removed_appendage_closure_not_a_vascular_connection",
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 12,
+      "name": "Left superior PV inlet",
+      "role": "artificial_vessel_closure",
+      "anatomical_structure": "left_superior_pulmonary_vein",
+      "port_semantics": "pulmonary_vein_to_left_atrium",
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 13,
+      "name": "Left inferior PV inlet",
+      "role": "artificial_vessel_closure",
+      "anatomical_structure": "left_inferior_pulmonary_vein",
+      "port_semantics": "pulmonary_vein_to_left_atrium",
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 14,
+      "name": "Right inferior PV inlet",
+      "role": "artificial_vessel_closure",
+      "anatomical_structure": "right_inferior_pulmonary_vein",
+      "port_semantics": "pulmonary_vein_to_left_atrium",
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 15,
+      "name": "Right superior PV inlet",
+      "role": "artificial_vessel_closure",
+      "anatomical_structure": "right_superior_pulmonary_vein",
+      "port_semantics": "pulmonary_vein_to_left_atrium",
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 16,
+      "name": "Superior vena cava inlet",
+      "role": "artificial_vessel_closure",
+      "anatomical_structure": "superior_vena_cava",
+      "port_semantics": "systemic_vein_to_right_atrium",
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 17,
+      "name": "Inferior vena cava inlet",
+      "role": "artificial_vessel_closure",
+      "anatomical_structure": "inferior_vena_cava",
+      "port_semantics": "systemic_vein_to_right_atrium",
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 18,
+      "name": "LA appendage border",
+      "role": "truncated_vessel_border",
+      "anatomical_structure": "left_atrial_appendage",
+      "port_semantics": null,
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 19,
+      "name": "Right inferior PV border",
+      "role": "truncated_vessel_border",
+      "anatomical_structure": "right_inferior_pulmonary_vein",
+      "port_semantics": null,
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 20,
+      "name": "Left inferior PV border",
+      "role": "truncated_vessel_border",
+      "anatomical_structure": "left_inferior_pulmonary_vein",
+      "port_semantics": null,
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 21,
+      "name": "Left superior PV border",
+      "role": "truncated_vessel_border",
+      "anatomical_structure": "left_superior_pulmonary_vein",
+      "port_semantics": null,
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 22,
+      "name": "Right superior PV border",
+      "role": "truncated_vessel_border",
+      "anatomical_structure": "right_superior_pulmonary_vein",
+      "port_semantics": null,
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 23,
+      "name": "Superior vena cava border",
+      "role": "truncated_vessel_border",
+      "anatomical_structure": "superior_vena_cava",
+      "port_semantics": null,
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    },
+    {
+      "id": 24,
+      "name": "Inferior vena cava border",
+      "role": "truncated_vessel_border",
+      "anatomical_structure": "inferior_vena_cava",
+      "port_semantics": null,
+      "role_provenance": "source name and ID from S1 Figure B; role and port_semantics are explicit importer interpretations, not a supplied flow boundary condition"
+    }
+  ],
+  "references": {
+    "article": {
+      "title": "Linking statistical shape models and simulated function in the healthy adult human heart",
+      "doi": "10.1371/journal.pcbi.1008851",
+      "url": "https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1008851"
+    },
+    "supplements": [
+      {
+        "id": "S1",
+        "name": "rodero-2021-s1.pdf",
+        "url": "https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1008851.s001&type=supplementary",
+        "bytes": 2497732,
+        "sha256": "08777693dcfd5cfaac676c3e015761d62b68706af21577e678f89808a0c979ba"
+      },
+      {
+        "id": "S4",
+        "name": "rodero-2021-s4.pdf",
+        "url": "https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1008851.s004&type=supplementary",
+        "bytes": 143855,
+        "sha256": "5699feb01b7f91f93fd75e26a9a5043ca6bfb5da1803f010c45c71270992ebc6"
+      }
+    ]
+  },
+  "source_mechanics": {
+    "evidence_role": "published source-model specification, not an executable native material or a subject-specific calibration",
+    "configuration": "CT mesh is loaded ventricular end diastole; source cycle first estimated a stress-free unloaded reference configuration; that state is not in the case18 archive",
+    "passive_ventricular": {
+      "law": "isochoric Guccione with logarithmic volumetric penalty",
+      "energy": "Psi = kappa/2 * (ln J)^2 + a/2 * (exp(Q)-1)",
+      "strain": "Cbar=J^(-2/3)*F^T*F; Ebar=(Cbar-I)/2; Eij=i0 dot Ebar*j0",
+      "Q": "bf*Eff^2 + bt*(Ess^2+Enn^2+2*Esn^2) + 2*bfs*(Efs^2+Efn^2)",
+      "parameters": {
+        "a": {
+          "value": 1.7,
+          "unit": "kPa"
+        },
+        "bf": 8,
+        "bfs": 4,
+        "bt": 3,
+        "kappa": {
+          "value": 1000,
+          "unit": "kPa"
+        }
+      },
+      "source": "S4 equations 3-7, Table B; same literature-derived values across the cohort"
+    },
+    "passive_nonventricular": {
+      "law": "isochoric neo-Hookean with quadratic volumetric penalty",
+      "energy": "Psi = kappa/2*(J-1)^2 + c/2*(tr(Cbar)-3)",
+      "parameters": {
+        "kappa": {
+          "value": 1000,
+          "unit": "kPa"
+        },
+        "c_atria": {
+          "value": 7.45,
+          "unit": "kPa"
+        },
+        "c_veins": {
+          "value": 7.45,
+          "unit": "kPa"
+        },
+        "c_aorta": {
+          "value": 26.66,
+          "unit": "kPa"
+        },
+        "c_pulmonary_artery": {
+          "value": 3.7,
+          "unit": "kPa"
+        },
+        "c_valve_planes": {
+          "value": 1000,
+          "unit": "kPa"
+        }
+      },
+      "source": "S4 equation 8 and Table C; average literature values, stiff valve layers are artificial constraints"
+    },
+    "fibres": {
+      "method": "rule-based, not measured subject microstructure",
+      "ventricular_endo_helix_degrees": 80,
+      "ventricular_epi_helix_degrees": -60,
+      "endo_transverse_degrees": -65,
+      "epi_transverse_degrees": 25,
+      "sheet_sensitivity": "source ventricular law is transversely isotropic; supplied sheets do not establish measured sheet architecture",
+      "source": "S1 section S1.3"
+    },
+    "active_ventricular": {
+      "model": "phenomenological activation-based Tanh Stress",
+      "parameters": {
+        "electromechanical_delay": {
+          "value": 20,
+          "unit": "ms"
+        },
+        "peak_isometric_tension": {
+          "value": 120,
+          "unit": "kPa"
+        },
+        "relaxation_time_constant": {
+          "value": 50,
+          "unit": "ms"
+        },
+        "contraction_time_constant": {
+          "value": 50,
+          "unit": "ms"
+        },
+        "transient_duration": {
+          "value": 550,
+          "unit": "ms"
+        }
+      },
+      "calibration": "all active values hand-tuned; all nonventricular structures passive",
+      "source": "S4 Table D; no silent substitution with prescribed chamber elastance"
+    },
+    "loading": {
+      "initial_pressures": {
+        "lv_endocardial": {
+          "value": 1.6,
+          "unit": "kPa"
+        },
+        "rv_endocardial": {
+          "value": 0.8,
+          "unit": "kPa"
+        },
+        "aortic": {
+          "value": 77,
+          "unit": "mmHg"
+        },
+        "pulmonary_arterial": {
+          "value": 17.4,
+          "unit": "mmHg"
+        }
+      },
+      "preload": "constant atrial pressures",
+      "afterload": "separate three-element systemic and pulmonary Windkessel models",
+      "windkessel": {
+        "systemic_series_resistance": {
+          "value": 0.03,
+          "unit": "mmHg s/mL"
+        },
+        "systemic_parallel_resistance": {
+          "value": 0.63,
+          "unit": "mmHg s/mL"
+        },
+        "systemic_capacitance": {
+          "value": 5.16,
+          "unit": "mL/mmHg"
+        },
+        "pulmonary_series_resistance": {
+          "value": 0.015,
+          "unit": "mmHg s/mL"
+        },
+        "pulmonary_parallel_resistance": {
+          "value": 0.1008,
+          "unit": "mmHg s/mL"
+        },
+        "pulmonary_capacitance": {
+          "value": 21.156,
+          "unit": "mL/mmHg"
+        }
+      },
+      "valve_resistance": {
+        "mitral_forward": {
+          "value": 0.05,
+          "unit": "mmHg s/mL"
+        },
+        "tricuspid_forward": {
+          "value": 0.05,
+          "unit": "mmHg s/mL"
+        },
+        "aortic_forward": {
+          "value": 0,
+          "unit": "mmHg s/mL"
+        },
+        "pulmonary_forward": {
+          "value": 0,
+          "unit": "mmHg s/mL"
+        },
+        "mitral_reverse": {
+          "value": 1000,
+          "unit": "mmHg s/mL"
+        },
+        "tricuspid_reverse": {
+          "value": 1000,
+          "unit": "mmHg s/mL"
+        },
+        "aortic_reverse": {
+          "value": 10000,
+          "unit": "mmHg s/mL"
+        },
+        "pulmonary_reverse": {
+          "value": 10000,
+          "unit": "mmHg s/mL"
+        }
+      },
+      "valve_resistance_note": "S4 prose/table forward values zero for aortic/pulmonary valves were chosen for convergence and healthy-range ejection; large reverse resistances approximate blocked reverse flow. Canonical unit spelling here follows Table F resistance dimensions.",
+      "boundary_conditions": "omnidirectional springs on selected pulmonary vein/vena cava borders; spatially varying normal epicardial Robin support, maximum near apex and zero near base",
+      "source": "S4 Tables E-F and final paragraph; main article methods"
+    },
+    "unresolved_source_inputs": [
+      "case18 stress-free unloaded nodal configuration is not supplied",
+      "density and inertial-mass convention are not specified in the retained main article/S4",
+      "numerical Robin spring stiffness values/spatial function are not supplied in S4",
+      "main article says superior pulmonary vein anchors while S4 says right pulmonary veins; exact anchors require source resolution",
+      "source CARP solver inputs and time-resolved reference trajectory are not in the single-file case18 archive",
+      "source forward valve resistance zero is outside the currently shipped strictly positive resistive-edge admission; do not substitute epsilon silently"
+    ]
+  },
+  "qualification": {
+    "measured_anatomy": "derived from end-diastolic CT of an asymptomatic participant; no cardiac conditions detected on follow-up after acute chest-pain presentation",
+    "constructed_anatomy": [
+      "atrial thickness2mm,RV thickness3.5mm,aortic thickness2mm,PA thickness3.5mm assigned from literature",
+      "left atrial appendage discarded in every case",
+      "valve layers constructed by dilation to approximately2mm thickness",
+      "blood pools,papillary muscles and trabeculae excluded from tetrahedral wall mesh",
+      "vein/valve closure structures support chamber-volume and boundary calculations; they are not functioning measured leaflets"
+    ],
+    "source_output_evidence": "simulation_output.csv reports source simulations, not measured patient pressure-volume calibration; all20 cases shared material/loading parameters; cases09 and10 did not converge",
+    "case18_source_simulation_completed": true,
+    "subject_specific_material_calibration": false,
+    "subject_specific_pressure_volume_calibration": false,
+    "native_source_reproduction_qualified": false,
+    "native_anatomical_coupling_qualified": false,
+    "whole_human_qualified": false,
+    "mass_policy": "blood pools excluded; no blood mass may be added/subtracted from mechanical tissue without an explicit wet-mass attribution owner",
+    "circulation_policy": "coupling this wall to CVSim21 constitutes a new hybrid model; source Rodero outputs do not validate that hybrid"
+  }
+}
