@@ -674,7 +674,9 @@ rather than becoming idle.
   Thirty-one boundary-edge defects and authored numerical closure faces remain
   explicit. [Native per-element material frames and source passive laws](CARDIAC_MATERIAL_FIELD_20260912.md)
   now pass FP64/Metal force/tangent and bounded synthetic transaction checks.
-  Source-bound basis conversion, shared-node regional material/density assembly,
+  [Source-bound basis conversion and native regional material ownership](CARDIAC_REGIONAL_MATERIAL_20260912.md)
+  now supply all 1,470,083 derived frames and shared-node density-volume mass
+  assembly. The actual anatomical material/density map, native wall loading,
   physical ports and calibration remain unqualified. A coordinate-preserving
   node split cannot resolve the ventricular geometry gate.
   The other 17 aggregates have no anatomy registration, and the 18-region template

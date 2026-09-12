@@ -28,8 +28,13 @@ boundary indices. Its source defects and numerical closure faces remain explicit
 anatomical mechanics and calibration are still unqualified.
 The [native material-field increment](Docs/CARDIAC_MATERIAL_FIELD_20260912.md)
 adds per-tetrahedron material frames and source cardiac passive laws, with
-Mac mini force/tangent, replay and transaction checks. Source density, regional
-assembly, anatomical wall admission and subject calibration remain open.
+Mac mini force/tangent, replay and transaction checks.
+The [regional material increment](Docs/CARDIAC_REGIONAL_MATERIAL_20260912.md)
+adds per-cell material ownership with shared-node mass assembly.
+`numi human-cardiac-material-frames` now derives all 1,470,083 source orientation
+frames under an explicit conversion policy, with an independent C++ check.
+Source density, anatomical material assignment, wall admission and subject
+calibration remain open.
 
 [Current-pose foot contact](Docs/CURVED_SUPPORT_20260908.md) now covers the source
 capsules and heel ellipsoids. The [source dynamic-limit integration](Docs/SOURCE_DYNAMIC_LIMITS_20260908.md)

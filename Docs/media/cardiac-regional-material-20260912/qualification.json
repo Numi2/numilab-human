@@ -1,0 +1,764 @@
+{
+  "schema": "numilab-human.cardiac-regional-material-qualification.v1",
+  "status": "pass_bounded_native_regional_material_and_full_source_frame_preparation",
+  "native": {
+    "repository": "https://github.com/Numi2/numi-lab",
+    "branch": "coupled",
+    "revision": "3636bb371ec78c0c1620323d98fcfdeff3fb8d3f",
+    "base_revision": "29a4d3ec81f2e265c0a709400559e16185ef13a1",
+    "published_source_blobs_match_qualified_bytes": true,
+    "source_files": {
+      "include/metalrobo/MatterSnapshotArchive.hpp": {
+        "bytes": 1762,
+        "sha256": "632ff72d8e11d6dee84f45c5ac3202755c656f0b2f1e0f33643d96da4d2e783f"
+      },
+      "matter/CMakeLists.txt": {
+        "bytes": 19172,
+        "sha256": "34ac23fbdd526fc2c64feb37df904520cb7e661903b14d4f417b71c01de3ed86"
+      },
+      "matter/include/numi/matter/matter.hpp": {
+        "bytes": 67269,
+        "sha256": "7ecbeb2d6a8e815dece37b0c4e9cf40b237e5964d455d37fef9af6442b4500ac"
+      },
+      "matter/include/numi/matter/shared.h": {
+        "bytes": 44361,
+        "sha256": "fc3cf7b674c2cf746d579821b36626d8e2228f62ab8031830bbca94e674b7ef0"
+      },
+      "matter/src/accepted_state_proof_gpu.hpp": {
+        "bytes": 4387,
+        "sha256": "46dc377dc9e3f7ce5355f6e998d1c534c4e21b64ae3e3f28981c515a6506e44d"
+      },
+      "matter/src/compiler_impl.cpp": {
+        "bytes": 112611,
+        "sha256": "0a623e9d5f2ef44341d2392bae9137cec4afe8298994fe45a818ca51b9113207"
+      },
+      "matter/src/metal/fem.metalinc": {
+        "bytes": 89478,
+        "sha256": "81e55772b96147bebceff0b96efe84d7f65cad450f0b4ecbfc68ec1cf9ee33ef"
+      },
+      "matter/src/package_impl.cpp": {
+        "bytes": 38641,
+        "sha256": "4544fb10c039685e5d502bb910b88ba7249ecc39a95af336fad4d39f3faa2589"
+      },
+      "matter/src/runtime.mm": {
+        "bytes": 655937,
+        "sha256": "548c7d0047ea497d2be5792d25f610b99735c334be50d7c2b55a199fddb64461"
+      },
+      "matter/src/validation_impl.cpp": {
+        "bytes": 87596,
+        "sha256": "80750014879cad923bd2ae22225782980facb35852041071aaeeb74f03f8bdbd"
+      },
+      "matter/tools/fem_regional_material_check.mm": {
+        "bytes": 56783,
+        "sha256": "861c29f45ac6934264cdd931cdcf8780c78e5f8c06bc1f6ecb7f595aea761ea9"
+      },
+      "matter/materials/rodero2021_ventricular_guccione_passive.nmatter": {
+        "bytes": 2412,
+        "sha256": "dd37136f93104ffe058ec334153707d4610be4b3ca6f95938ebee0a7d5799db4"
+      },
+      "matter/materials/rodero2021_nonventricular_neo_hookean_passive.nmatter": {
+        "bytes": 1351,
+        "sha256": "8cc7f3e1936e4303a011b40ff287431a99be861a51a11e82913d630371825b00"
+      },
+      "matter/tools/cardiac_material_reference.hpp": {
+        "bytes": 5926,
+        "sha256": "3d2ecdb04f07a89c8d59e8527c5ae3bc440f909e9f5c540c3765b181756df800"
+      }
+    },
+    "binaries": {
+      "bin/metalrobo_matter_physics_probe": {
+        "bytes": 485920,
+        "sha256": "ff9caadd85dcceab330d9f592d629eda8b25aae09f5c532c9cfca10da2f6b555"
+      },
+      "bin/metalrobo_matter_snapshot_archive_probe": {
+        "bytes": 65336,
+        "sha256": "f9f513acee9ef47a371a88dbfc89333d912141b218dc771e1ab45d3413b64427"
+      },
+      "bin/metalrobo_numilab_human_tendon_fem_load_probe": {
+        "bytes": 94176,
+        "sha256": "3298d67d685f4264a02f810362320d741c41b02038f4aa8b53c8f95ac10b1357"
+      },
+      "matter/numi-matter-stateful-check": {
+        "bytes": 550216,
+        "sha256": "6ffde47cbf676903e6c846bb83c47d161ebe7f9e4713d595727978b9a9366a12"
+      },
+      "matter/numi-matter-vascular-cavity-check": {
+        "bytes": 1129376,
+        "sha256": "b6ee54b767a47ec405be6997e2f971adcea5c7ffb71bda1b2db29712daab3083"
+      },
+      "matter/numi-matter-vascular-compiler-check": {
+        "bytes": 648624,
+        "sha256": "28ae97236152294ddcba468992263766a15c802f0302dafd24963c996d0151fe"
+      },
+      "matter/numi-matter-fiber-check": {
+        "bytes": 211880,
+        "sha256": "ebc497954e2542ac48ed6152f0fb4a042cd416fe3cfe1fbe0d9207470ced81ab"
+      },
+      "matter/numi-matter-cardiac-transaction-check": {
+        "bytes": 90504,
+        "sha256": "5e714189c04ad60677d71b5cce40b1f385de1c916400576e60cfb0fec707bbd9"
+      },
+      "matter/numi-matter-cardiac-material-check": {
+        "bytes": 478880,
+        "sha256": "20b76c4d3f26749725bd9d16884e1bb99dc4ab5a6caeb25f3c2f6b095556bdcd"
+      },
+      "matter/numi-matter-fem-material-frame-compiler-check": {
+        "bytes": 575344,
+        "sha256": "7e3b4ad4446b3f8018dd5911560c92b2462bb5ca8a88509690d5d90c4d2dcb0c"
+      },
+      "matter/numi-matter-fem-material-frame-check": {
+        "bytes": 1173304,
+        "sha256": "c31368b382a5ab61e2b932ff7c9754f5b57324396281e27521f284fb45688433"
+      },
+      "matter/numi-matter-fem-regional-material-check": {
+        "bytes": 1359800,
+        "sha256": "542f324b523a6010662f85c5e6bb3e5e2972d04b4e0b7e98f38fef1a6b017585"
+      },
+      "matter/shaders/NumiMatter.metallib": {
+        "bytes": 2779702,
+        "sha256": "7f438912bd1dbea736b42e31b46eeb1831af9eb10c6e05675658601d62d49dc6"
+      }
+    },
+    "host": {
+      "model": "Mac16,11",
+      "cpu": "Apple M4 Pro",
+      "memory_bytes": 25769803776,
+      "os": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6\nBuildVersion:\t\t25G72"
+    },
+    "abi": 31,
+    "package_version": 16,
+    "snapshot_archive_version": 9,
+    "accepted_proof_manifest_version": 9
+  },
+  "human_base_revision": "9893769466408174d3beddf519d9d8788b2d7c8b",
+  "human_source_files": {
+    ".numi/commands/human-cardiac-material-frames": {
+      "bytes": 517,
+      "sha256": "8b3c22cffcbd7d3b3b8c658b44bf0e0f14b4063228fa5d44bd1ff85323a2cced"
+    },
+    "Docs/media/cardiac-wall-anatomy-20260912/manifest.json": {
+      "bytes": 28439,
+      "sha256": "e8cb0391623577efc4eac04e5710cf7c9a4757614e09d936f5af3889c37d56f1"
+    },
+    "config/cardiac-wall-rodero18.v1.json": {
+      "bytes": 21879,
+      "sha256": "23c931fef53edced85e0e0a36c73d8490dddb87db6bd988482a2cdfc5a1442cc"
+    },
+    "src/numilab_human/__init__.py": {
+      "bytes": 63,
+      "sha256": "e06e46ca88bde0b4c4a6235c6135dafdb2e75d27633776dba0098698a082cf42"
+    },
+    "src/numilab_human/cardiac_material_frames.py": {
+      "bytes": 19839,
+      "sha256": "b4689ca3144f095d9c5ba505145a9bc342511f5333d394d7fb9f42eb42f1aeb2"
+    },
+    "src/numilab_human/cardiac_wall_source.py": {
+      "bytes": 21418,
+      "sha256": "73e7df99e684454538691285b4537ae9102e261715dd87c6d50020f044b0bfcf"
+    },
+    "src/numilab_human/model.py": {
+      "bytes": 836245,
+      "sha256": "b094a68963cea708b1e3c75e10b21de55cbd58831ae82b4c2d9b1c134bc17133"
+    },
+    "tests/test_cardiac_material_frames.py": {
+      "bytes": 15116,
+      "sha256": "482b065d2f5b538fce7f82a255c43334a67fcb28f167e7383d046942bc3893c1"
+    },
+    "tests/test_cardiac_wall_source.py": {
+      "bytes": 8596,
+      "sha256": "21a892921a4417e19bbe1b4c71b34ffe9f2f068fc4912a30c94089958e0a1084"
+    },
+    "tools/cardiac_material_frame_check.cpp": {
+      "bytes": 6537,
+      "sha256": "8593e1365541bf5a91a1090d619bc48707f5e942cc575182338e559f34b875b7"
+    }
+  },
+  "qualification": {
+    "distinct_native_checks": 25,
+    "passed": 25,
+    "failed": 0,
+    "skipped": 0,
+    "tests": [
+      "matter.numi_human.tendon_fem_transaction",
+      "matter.runtime.snapshot_archive",
+      "matter.physics.mixed_mpm_fem",
+      "matter.physics.monolithic_multiphysics",
+      "matter.physics.topology_mutation",
+      "matter.physics.cohesive_mutation",
+      "matter.physics.small_scale_topology_conservation",
+      "matter.physics.puncture_mutation",
+      "matter.runtime.topology_rollback",
+      "matter.physics.learned_polyconvex_icnn",
+      "matter.runtime.production_transaction_rollback",
+      "matter.physics.stateful_mpm",
+      "matter.physics.stateful_fem",
+      "matter.compiler.stateful_roundtrip",
+      "matter.compiler.source_fiber",
+      "matter.metal.source_fiber",
+      "matter.compiler.vascular",
+      "matter.metal.cardiac_transaction",
+      "matter.metal.vascular_cavity",
+      "matter.compiler.cardiac_material_source",
+      "matter.compiler.fem_material_frame",
+      "matter.metal.fem_material_frame",
+      "matter.compiler.fem_regional_material",
+      "matter.metal.fem_regional_material",
+      "matter.runtime.inverse_identification"
+    ],
+    "native_elapsed_seconds": 56.60524904122576,
+    "compiler_controls": 40,
+    "native_metrics": {
+      "regional_abi": 31.0,
+      "regional_compiler_checks": 40.0,
+      "shared_nodes": 3.0,
+      "element_mass_kg": 0.0013351440827591432,
+      "nodal_mass_kg": 0.00133514404296875,
+      "selected_material_rate_exponent": 5.0,
+      "default_material_rate_exponent": 0.0,
+      "lumped_inertia_relative_error": 2.980232173885762e-08,
+      "regional_source_force_error": 2.378244333367824e-07,
+      "regional_source_tangent_error": 2.0186041035049957e-07,
+      "regional_source_fd_error": 0.0016590304248321397,
+      "homogeneous_fallback_consequence": 0.12038753020895762,
+      "regional_state_force_error": 1.5118860636542636e-07,
+      "regional_state_tangent_error": 2.8712626954622155e-06,
+      "regional_state_fd_error": 2.063140011693837e-05,
+      "heterogeneous_state_stride": 2.0,
+      "regional_icnn_force_error": 2.0409321219456913e-07,
+      "regional_icnn_tangent_error": 1.2069666139688348e-07,
+      "regional_icnn_fd_error": 0.0007475841195788666,
+      "regional_icnn_world_fibre_force_error": 2.2840123702109972e-07,
+      "regional_icnn_world_fibre_tangent_error": 3.0028282438097145e-07,
+      "wrong_fibre_consequence": 1.0359297285902127,
+      "regional_projected_state_absolute_error": 6.6682896149306e-09,
+      "framed": 1.0,
+      "dormant_cohesive_capacity": 1.0,
+      "dormant_puncture_capacity": 1.0
+    },
+    "synthetic_trajectories": [
+      {
+        "case": "source_laws_framed",
+        "accepted_steps_per_environment": 16,
+        "environments": 2,
+        "step_seconds": 0.0001,
+        "duration_seconds_per_environment": 0.0016,
+        "motion_m": 4.6220987611155015e-05,
+        "replay": "bitwise",
+        "rollback": "isolated",
+        "reset": "bitwise",
+        "snapshot_rebinding": "denied",
+        "mass": "unchanged"
+      },
+      {
+        "case": "source_laws_unframed",
+        "accepted_steps_per_environment": 2,
+        "environments": 2,
+        "step_seconds": 0.0001,
+        "duration_seconds_per_environment": 0.0002,
+        "motion_m": 6.359144030389523e-06,
+        "replay": "bitwise",
+        "rollback": "isolated",
+        "reset": "bitwise",
+        "snapshot_rebinding": "denied",
+        "mass": "unchanged"
+      },
+      {
+        "case": "heterogeneous_state_programs",
+        "accepted_steps_per_environment": 2,
+        "environments": 2,
+        "step_seconds": 0.0001,
+        "duration_seconds_per_environment": 0.0002,
+        "motion_m": 8.444882891614651e-06,
+        "replay": "bitwise",
+        "rollback": "isolated",
+        "reset": "bitwise",
+        "snapshot_rebinding": "denied",
+        "mass": "unchanged"
+      }
+    ],
+    "fixture": {
+      "nodes": 5,
+      "tetrahedra": 2,
+      "shared_nodes": 3,
+      "default_interface_material": 0,
+      "selected_materials": [
+        1,
+        2
+      ],
+      "selected_densities_kg_m3": [
+        900,
+        1200
+      ],
+      "density_is_test_only": true
+    },
+    "synthetic_state_programs": {
+      "distinct_state_counts": [
+        1,
+        2
+      ],
+      "per_element_stride": 2,
+      "padding_preserved": true,
+      "projected_state_absolute_error": 6.6682896149306e-09
+    },
+    "negative_and_positive_restore_controls": [
+      "Complete immutable element, node, cohesive, puncture and topology-state records, including nonzero dormant capacity.",
+      "Legacy mutable object0/material1 restores with the correct object-owned incidence.",
+      "Regional rest constraints, nodal mass/inverse, fixed parameter values and scheduler base remain bound in every environment.",
+      "Unrelated identification posterior values restore; retargeted distribution identities reject.",
+      "Initially active cooked cohesive records retain valid own post-step snapshots with mutation disabled."
+    ],
+    "direct_oracle_relative_gate": 0.0003,
+    "direct_fd_relative_gate": 0.003,
+    "human_tests": {
+      "local": 29,
+      "macmini": 29,
+      "focused_converter": 19,
+      "existing_importer": 10
+    },
+    "full_source_frames": {
+      "count": 1470083,
+      "buffer": {
+        "bytes": 47042656,
+        "encoding": "little-endian IEEE754 binary64 Hamilton quaternion x,y,z,w; source cell order",
+        "path": "material-frame-rotations.f64le",
+        "sha256": "8ab7c6f59e56852ecf4210042df766d73d6a18c1dca2b48d30e524601dbf0824",
+        "shape": [
+          1470083,
+          4
+        ]
+      },
+      "source_identity_sha256": "b4799ce922fc22a6730a521bafcb7f843c74ec8b62543c5529ae19b87f1decaa",
+      "source_inputs_unchanged": true,
+      "conversion_elapsed_seconds": 12.18458795780316,
+      "conversion_peak_rss_bytes": 30867456,
+      "independent_cpp_result": {
+        "status": "pass",
+        "cells": 1470083,
+        "native_abi": 31,
+        "maximum_quaternion_norm_error": 4.440892098500626e-16,
+        "maximum_source_basis_error": 8.326672684688674e-16,
+        "maximum_cooked_norm_error": 9.852790583408932e-08,
+        "maximum_cooked_basis_error": 6.391734840294205e-07,
+        "source_identity": "b4799ce922fc22a6730a521bafcb7f843c74ec8b62543c5529ae19b87f1decaa",
+        "physical_steps": 0,
+        "world_cooked": false,
+        "anatomical_mechanics_qualified": false
+      },
+      "cpp_controls_passed": 13,
+      "physical_steps": 0
+    }
+  },
+  "evidence_boundaries": {
+    "native_per_element_material_ownership": true,
+    "canonical_shared_node_mass_assembly": true,
+    "full_source_basis_conversion": true,
+    "source_density_supplied": false,
+    "anatomical_region_material_density_map": false,
+    "anatomical_wall_qualified": false,
+    "native_source_anatomy_physical_steps": 0,
+    "active_cardiac_source_reproduced": false,
+    "subject_calibrated": false,
+    "blood_mechanical_mass_partition": false,
+    "whole_body_standing_or_walking": false,
+    "performance_qualified": false,
+    "trained_material_qualified": false,
+    "unused_fused_helper_executed": false
+  },
+  "retained_failures": [
+    {
+      "path": "source-frames/tests-attempt-001.log",
+      "reason": "Incorrect test overflow expectation: robust hypot of three 1e308 components is finite. Corrected overflowing fixture to 1.7e308 components; no implementation tolerance relaxed."
+    }
+  ],
+  "retained_preliminary_attempts": {
+    "native-runs/test-attempt-001": "2/2 passed before topology restore additions.",
+    "native-runs/final-attempt-001": "25/25 passed before complete event/accounting and scheduler-base binding. Final qualification is final-attempt-002."
+  },
+  "commands": {
+    "native_execution": "native-runs/run_final_qualification_attempt002.py",
+    "source_conversion": "source-frames/execution.json",
+    "independent_cpp": "cpp-evidence/qualification.json"
+  },
+  "artifacts": {
+    "cpp-evidence/build-attempt-001.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cpp-evidence/check_cpp_controls.py": {
+      "bytes": 2043,
+      "sha256": "58b92d1b4a040d63ce634e9c2cdd6afd8dd96ab370329eafc6efd4c04886dbfb"
+    },
+    "cpp-evidence/controls/count-mismatch/fibres.f64le": {
+      "bytes": 24,
+      "sha256": "725c4777db328932b197731b1c986c84913a069a2090deb3667b697624551c8b"
+    },
+    "cpp-evidence/controls/count-mismatch/quaternions.f64le": {
+      "bytes": 32,
+      "sha256": "ae2cc60d29de85c7ed46adf5bb27e89a62bdafc75e3f8822473568055af8b86e"
+    },
+    "cpp-evidence/controls/count-mismatch/sheets.f64le": {
+      "bytes": 24,
+      "sha256": "17550ce418055ff4cd54b803e704300eac4212c3edcef00f92f1e6e506a5b069"
+    },
+    "cpp-evidence/controls/count-mismatch/stderr.log": {
+      "bytes": 58,
+      "sha256": "20f6be63c0d9d797260085c558a736b145e3f9fc2e6a851f767a412dbaa65e28"
+    },
+    "cpp-evidence/controls/count-mismatch/stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cpp-evidence/controls/identity/fibres.f64le": {
+      "bytes": 24,
+      "sha256": "725c4777db328932b197731b1c986c84913a069a2090deb3667b697624551c8b"
+    },
+    "cpp-evidence/controls/identity/quaternions.f64le": {
+      "bytes": 32,
+      "sha256": "ae2cc60d29de85c7ed46adf5bb27e89a62bdafc75e3f8822473568055af8b86e"
+    },
+    "cpp-evidence/controls/identity/sheets.f64le": {
+      "bytes": 24,
+      "sha256": "17550ce418055ff4cd54b803e704300eac4212c3edcef00f92f1e6e506a5b069"
+    },
+    "cpp-evidence/controls/identity/stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cpp-evidence/controls/identity/stdout.log": {
+      "bytes": 334,
+      "sha256": "c5582fb2c4a718a89607be1b5cee7dde25ed25777a83b5506fda5a35a134e0a6"
+    },
+    "cpp-evidence/controls/missing-identity/fibres.f64le": {
+      "bytes": 24,
+      "sha256": "725c4777db328932b197731b1c986c84913a069a2090deb3667b697624551c8b"
+    },
+    "cpp-evidence/controls/missing-identity/quaternions.f64le": {
+      "bytes": 32,
+      "sha256": "ae2cc60d29de85c7ed46adf5bb27e89a62bdafc75e3f8822473568055af8b86e"
+    },
+    "cpp-evidence/controls/missing-identity/sheets.f64le": {
+      "bytes": 24,
+      "sha256": "17550ce418055ff4cd54b803e704300eac4212c3edcef00f92f1e6e506a5b069"
+    },
+    "cpp-evidence/controls/missing-identity/stderr.log": {
+      "bytes": 59,
+      "sha256": "63c2fc5bad747625352717728d232dda890c93513bf8e0ad5a07a5a1258ca572"
+    },
+    "cpp-evidence/controls/missing-identity/stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cpp-evidence/controls/nan-quaternion/fibres.f64le": {
+      "bytes": 24,
+      "sha256": "725c4777db328932b197731b1c986c84913a069a2090deb3667b697624551c8b"
+    },
+    "cpp-evidence/controls/nan-quaternion/quaternions.f64le": {
+      "bytes": 32,
+      "sha256": "92778f75505428f27df94938f8646614e9df85528360793f7b7af8d4abfd0333"
+    },
+    "cpp-evidence/controls/nan-quaternion/sheets.f64le": {
+      "bytes": 24,
+      "sha256": "17550ce418055ff4cd54b803e704300eac4212c3edcef00f92f1e6e506a5b069"
+    },
+    "cpp-evidence/controls/nan-quaternion/stderr.log": {
+      "bytes": 58,
+      "sha256": "1fff8c39ed99a64c1c9dcb8ed6ad1b771a340ff889baab16740e42a990d7b6a7"
+    },
+    "cpp-evidence/controls/nan-quaternion/stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cpp-evidence/controls/nan-source/fibres.f64le": {
+      "bytes": 24,
+      "sha256": "7f51b4a498d3829b89894427f6a15055d947f251ba47b716e6917b2b28e269d8"
+    },
+    "cpp-evidence/controls/nan-source/quaternions.f64le": {
+      "bytes": 32,
+      "sha256": "ae2cc60d29de85c7ed46adf5bb27e89a62bdafc75e3f8822473568055af8b86e"
+    },
+    "cpp-evidence/controls/nan-source/sheets.f64le": {
+      "bytes": 24,
+      "sha256": "17550ce418055ff4cd54b803e704300eac4212c3edcef00f92f1e6e506a5b069"
+    },
+    "cpp-evidence/controls/nan-source/stderr.log": {
+      "bytes": 57,
+      "sha256": "67f9d2b09d0cc28bbce427683b68219d847bd340cdb4267b1e387a220022076a"
+    },
+    "cpp-evidence/controls/nan-source/stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cpp-evidence/controls/negative-zero/fibres.f64le": {
+      "bytes": 24,
+      "sha256": "725c4777db328932b197731b1c986c84913a069a2090deb3667b697624551c8b"
+    },
+    "cpp-evidence/controls/negative-zero/quaternions.f64le": {
+      "bytes": 32,
+      "sha256": "cb88b8d5806907f34d089500444dc5560baf39a2cbbf56f1d600e62ecc6a2102"
+    },
+    "cpp-evidence/controls/negative-zero/sheets.f64le": {
+      "bytes": 24,
+      "sha256": "17550ce418055ff4cd54b803e704300eac4212c3edcef00f92f1e6e506a5b069"
+    },
+    "cpp-evidence/controls/negative-zero/stderr.log": {
+      "bytes": 64,
+      "sha256": "2ce852b61229f09026c651afbbfb0f5f81699e7184ea723d7cb8f8584bf4a8bd"
+    },
+    "cpp-evidence/controls/negative-zero/stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cpp-evidence/controls/noncanonical-sign/fibres.f64le": {
+      "bytes": 24,
+      "sha256": "725c4777db328932b197731b1c986c84913a069a2090deb3667b697624551c8b"
+    },
+    "cpp-evidence/controls/noncanonical-sign/quaternions.f64le": {
+      "bytes": 32,
+      "sha256": "4994160d63aa8527a811947c80c7e0d26783c73d0e63be23418286ee842c9e92"
+    },
+    "cpp-evidence/controls/noncanonical-sign/sheets.f64le": {
+      "bytes": 24,
+      "sha256": "17550ce418055ff4cd54b803e704300eac4212c3edcef00f92f1e6e506a5b069"
+    },
+    "cpp-evidence/controls/noncanonical-sign/stderr.log": {
+      "bytes": 66,
+      "sha256": "bcc1176187a1515ca9f75e2f73d13490c81eda009bd4d0c44304d72a529a23f1"
+    },
+    "cpp-evidence/controls/noncanonical-sign/stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cpp-evidence/controls/nonunit-quaternion/fibres.f64le": {
+      "bytes": 24,
+      "sha256": "725c4777db328932b197731b1c986c84913a069a2090deb3667b697624551c8b"
+    },
+    "cpp-evidence/controls/nonunit-quaternion/quaternions.f64le": {
+      "bytes": 32,
+      "sha256": "d9ece2cd2214f52c55dcd9bca56a900ec79c1343f12df8a60f0298d255896b61"
+    },
+    "cpp-evidence/controls/nonunit-quaternion/sheets.f64le": {
+      "bytes": 24,
+      "sha256": "17550ce418055ff4cd54b803e704300eac4212c3edcef00f92f1e6e506a5b069"
+    },
+    "cpp-evidence/controls/nonunit-quaternion/stderr.log": {
+      "bytes": 89,
+      "sha256": "64b1390cd0ad5edd7f0d82cd181f90a6017e674355aabb80a7a7735c53ad2a68"
+    },
+    "cpp-evidence/controls/nonunit-quaternion/stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cpp-evidence/controls/parallel-axes/fibres.f64le": {
+      "bytes": 24,
+      "sha256": "725c4777db328932b197731b1c986c84913a069a2090deb3667b697624551c8b"
+    },
+    "cpp-evidence/controls/parallel-axes/quaternions.f64le": {
+      "bytes": 32,
+      "sha256": "ae2cc60d29de85c7ed46adf5bb27e89a62bdafc75e3f8822473568055af8b86e"
+    },
+    "cpp-evidence/controls/parallel-axes/sheets.f64le": {
+      "bytes": 24,
+      "sha256": "725c4777db328932b197731b1c986c84913a069a2090deb3667b697624551c8b"
+    },
+    "cpp-evidence/controls/parallel-axes/stderr.log": {
+      "bytes": 65,
+      "sha256": "748b0f12e8e9b4e8b313ae5a25df4a30e607fb39cfbb7f8b381ae2c05038f7f5"
+    },
+    "cpp-evidence/controls/parallel-axes/stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cpp-evidence/controls/quarter-turn/fibres.f64le": {
+      "bytes": 24,
+      "sha256": "17550ce418055ff4cd54b803e704300eac4212c3edcef00f92f1e6e506a5b069"
+    },
+    "cpp-evidence/controls/quarter-turn/quaternions.f64le": {
+      "bytes": 32,
+      "sha256": "548b609045eaaa2cf789952d7919d75eeb05e5623271f6a910e77a2512acfada"
+    },
+    "cpp-evidence/controls/quarter-turn/sheets.f64le": {
+      "bytes": 24,
+      "sha256": "17979bbb7ebf261bfbdd534310401c5c0a6eaebd955c413fbaa338d384ee006d"
+    },
+    "cpp-evidence/controls/quarter-turn/stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cpp-evidence/controls/quarter-turn/stdout.log": {
+      "bytes": 418,
+      "sha256": "82aec1b78f82e19e11db270365afa45fed1107ef634400c9f16e13664a83a559"
+    },
+    "cpp-evidence/controls/raw-nonunit-nonorthogonal/fibres.f64le": {
+      "bytes": 24,
+      "sha256": "8b7c56fea99625837f8515182aaba4584bac228d1cfc14c6c7c032056953c8df"
+    },
+    "cpp-evidence/controls/raw-nonunit-nonorthogonal/quaternions.f64le": {
+      "bytes": 32,
+      "sha256": "ae2cc60d29de85c7ed46adf5bb27e89a62bdafc75e3f8822473568055af8b86e"
+    },
+    "cpp-evidence/controls/raw-nonunit-nonorthogonal/sheets.f64le": {
+      "bytes": 24,
+      "sha256": "d66d4311a85062108197ed7d37b186cba4b9768be8190d91063b02d8061d87a8"
+    },
+    "cpp-evidence/controls/raw-nonunit-nonorthogonal/stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cpp-evidence/controls/raw-nonunit-nonorthogonal/stdout.log": {
+      "bytes": 334,
+      "sha256": "c5582fb2c4a718a89607be1b5cee7dde25ed25777a83b5506fda5a35a134e0a6"
+    },
+    "cpp-evidence/controls/results.json": {
+      "bytes": 8893,
+      "sha256": "4772556d0c732c504c1162d58bf55751bc1c6d38c27f978b9039f06710e61165"
+    },
+    "cpp-evidence/controls/truncated-quaternion/fibres.f64le": {
+      "bytes": 24,
+      "sha256": "725c4777db328932b197731b1c986c84913a069a2090deb3667b697624551c8b"
+    },
+    "cpp-evidence/controls/truncated-quaternion/quaternions.f64le": {
+      "bytes": 24,
+      "sha256": "9d908ecfb6b256def8b49a7c504e6c889c4b0e41fe6ce3e01863dd7b61a20aa0"
+    },
+    "cpp-evidence/controls/truncated-quaternion/sheets.f64le": {
+      "bytes": 24,
+      "sha256": "17550ce418055ff4cd54b803e704300eac4212c3edcef00f92f1e6e506a5b069"
+    },
+    "cpp-evidence/controls/truncated-quaternion/stderr.log": {
+      "bytes": 58,
+      "sha256": "20f6be63c0d9d797260085c558a736b145e3f9fc2e6a851f767a412dbaa65e28"
+    },
+    "cpp-evidence/controls/truncated-quaternion/stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cpp-evidence/controls/wrong-basis/fibres.f64le": {
+      "bytes": 24,
+      "sha256": "725c4777db328932b197731b1c986c84913a069a2090deb3667b697624551c8b"
+    },
+    "cpp-evidence/controls/wrong-basis/quaternions.f64le": {
+      "bytes": 32,
+      "sha256": "548b609045eaaa2cf789952d7919d75eeb05e5623271f6a910e77a2512acfada"
+    },
+    "cpp-evidence/controls/wrong-basis/sheets.f64le": {
+      "bytes": 24,
+      "sha256": "17550ce418055ff4cd54b803e704300eac4212c3edcef00f92f1e6e506a5b069"
+    },
+    "cpp-evidence/controls/wrong-basis/stderr.log": {
+      "bytes": 89,
+      "sha256": "64b1390cd0ad5edd7f0d82cd181f90a6017e674355aabb80a7a7735c53ad2a68"
+    },
+    "cpp-evidence/controls/wrong-basis/stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cpp-evidence/full-source-attempt-001.json": {
+      "bytes": 424,
+      "sha256": "2c0f66e474e60b751629bb3c73c38c0c209885b185d4c29d3e4e4ad7b783ddad"
+    },
+    "cpp-evidence/full-source-attempt-001.time": {
+      "bytes": 777,
+      "sha256": "899741cad5a332e535f21ce6a78905455e136515188f105410ec5df1424c3262"
+    },
+    "cpp-evidence/qualification.json": {
+      "bytes": 2842,
+      "sha256": "52b4a96df9ffcb97d718ff05ecd10807591976deec6fad7eaf0e181a37bc1da4"
+    },
+    "native-runs/build-attempt-001/build.log": {
+      "bytes": 1509,
+      "sha256": "644538e527b2e023ab3ffdf89155ab958f8d79497dfb67f5f7a631af2f950b91"
+    },
+    "native-runs/build-attempt-002/build.log": {
+      "bytes": 1911,
+      "sha256": "5eca6578a63e62a2a6bbd0cee798899a7639fab1dea0b8624be8b93c126a2a40"
+    },
+    "native-runs/build-attempt-003/build.log": {
+      "bytes": 536,
+      "sha256": "be7ff8e9e897e553a1502fe872290227fb23cb6fb78a1288931ddf7a2ebb52f0"
+    },
+    "native-runs/final-attempt-001/build.log": {
+      "bytes": 2935,
+      "sha256": "ac00c2d2d883638a70077cd2f8ddb14e9a9f92496fed70fc75c18d9ffcc89f59"
+    },
+    "native-runs/final-attempt-001/ctest.log": {
+      "bytes": 28045,
+      "sha256": "5ab43b52e8251497d343312a8abadeeba1b34298203684253be5df63407f9d89"
+    },
+    "native-runs/final-attempt-001/ctest.xml": {
+      "bytes": 18202,
+      "sha256": "dcb12a7261186cf03a6d152215c8d2a98ce0cc0b00db372700e2ff3f351dc0aa"
+    },
+    "native-runs/final-attempt-001/execution.json": {
+      "bytes": 10840,
+      "sha256": "e621b039d0d180d59f003550102fab6ede0adae923809cb4465dfa30f5c1ff2b"
+    },
+    "native-runs/final-attempt-002/build.log": {
+      "bytes": 875,
+      "sha256": "d23ecf30e94eb66053bed70a3f7380baa44529bbb60bb2e3f5e6d1b3c44c3d81"
+    },
+    "native-runs/final-attempt-002/ctest.log": {
+      "bytes": 28313,
+      "sha256": "3b4ce71eb181f9b188d7ee65d853d383202ad16280a5c1fd22112be3143c3d81"
+    },
+    "native-runs/final-attempt-002/ctest.xml": {
+      "bytes": 18210,
+      "sha256": "9a03d933194b71d6c8abb58382429d3d6948d603e7498c199f6b7bfcf9896651"
+    },
+    "native-runs/final-attempt-002/execution.json": {
+      "bytes": 10838,
+      "sha256": "cb88a7bf2ea855cfb26ac876bf220d2fd2ebb4e294947976c7910c6e6567d93f"
+    },
+    "native-runs/regression-build-attempt-001/build.log": {
+      "bytes": 2619,
+      "sha256": "9559a4711900185c536362f53b4f4d074de4865fb56606f0e815c0547a0dd7de"
+    },
+    "native-runs/run_final_qualification.py": {
+      "bytes": 4966,
+      "sha256": "37bcb40b846e6dfbe7e8f2477e6244e9258e3dceecbfc8c13a08ac4392ffaa61"
+    },
+    "native-runs/run_final_qualification_attempt002.py": {
+      "bytes": 4966,
+      "sha256": "05e8d8d0f34575cce4f4faf2d74259e1ca82d232adf442cd33a1e9199b27ee5e"
+    },
+    "native-runs/test-attempt-001/ctest.log": {
+      "bytes": 4470,
+      "sha256": "0d8769b7a306a3ebfc89c93fe046142c37ef7bbd9f6ca118a9af68fe92071b91"
+    },
+    "source-frames/REPORT.md": {
+      "bytes": 3032,
+      "sha256": "695c6d6e8a2ddf2d3c3bc626f27ed6514428cee5d1b1b2a5b62c8f36a53b8264"
+    },
+    "source-frames/conversion.log": {
+      "bytes": 345,
+      "sha256": "f1962779602fc9966c283f9bc88cf303e47320094271c78532e92708457e70e6"
+    },
+    "source-frames/execution.json": {
+      "bytes": 6179,
+      "sha256": "03912da1990bd2c7209fc356f4ed02cc1690ab6e92aa92449bdbac9d0c7ea3e3"
+    },
+    "source-frames/macmini-tests-attempt-001.log": {
+      "bytes": 5655,
+      "sha256": "359a69733e749ec2793e3eb76dc353b1d2d130d293029c70499afb382c193de9"
+    },
+    "source-frames/manifest.json": {
+      "bytes": 29932,
+      "sha256": "cc74e1ac10e74c602a57049a4a0ec36a9eab86cad88e4ef138becf59d64d5aeb"
+    },
+    "source-frames/run_full_conversion.py": {
+      "bytes": 3190,
+      "sha256": "592f50a8f3f7b787d6d86ac4f6b2869a7c5909f4783c03ca86d02435155d241d"
+    },
+    "source-frames/source-snapshot.json": {
+      "bytes": 1165,
+      "sha256": "1d79e8a3fa2ba3246080e91fabe7963d640e5d2b8969a00a87a7d9cc65ecdcc1"
+    },
+    "source-frames/tests-attempt-001.log": {
+      "bytes": 4687,
+      "sha256": "fa47770f1eaf42b6261a989ec4247e5d5fe0d7dc87aa33f2a749924ba342f786"
+    },
+    "source-frames/tests-attempt-002.log": {
+      "bytes": 5671,
+      "sha256": "a933145d2e827db85b5e74cb09038df6c4ed551ceedc197dbcddd971df253831"
+    }
+  }
+}

@@ -1,0 +1,38 @@
+test_bad_axes_leave_no_output_or_staging_directory (tests.test_cardiac_material_frames.CardiacMaterialFrameTests.test_bad_axes_leave_no_output_or_staging_directory) ... ok
+test_changed_output_is_not_replaced (tests.test_cardiac_material_frames.CardiacMaterialFrameTests.test_changed_output_is_not_replaced) ... ok
+test_cli_requires_explicit_conversion_policy (tests.test_cardiac_material_frames.CardiacMaterialFrameTests.test_cli_requires_explicit_conversion_policy) ... usage: python -m unittest [-h] --asset ASSET --output OUTPUT
+                          --asset-manifest-sha256 ASSET_MANIFEST_SHA256
+                          --conversion-policy {normalize-fibre-gram-schmidt-sheet-v1}
+python -m unittest: error: the following arguments are required: --conversion-policy
+ok
+test_conversion_policy_edits_do_not_publish_misidentified_output (tests.test_cardiac_material_frames.CardiacMaterialFrameTests.test_conversion_policy_edits_do_not_publish_misidentified_output) ... ok
+test_declared_correction_is_right_handed_and_retains_raw_vectors (tests.test_cardiac_material_frames.CardiacMaterialFrameTests.test_declared_correction_is_right_handed_and_retains_raw_vectors) ... ok
+test_duplicate_and_nonfinite_json_rejected (tests.test_cardiac_material_frames.CardiacMaterialFrameTests.test_duplicate_and_nonfinite_json_rejected) ... ok
+test_finite_nonzero_and_angular_degeneracy_admission (tests.test_cardiac_material_frames.CardiacMaterialFrameTests.test_finite_nonzero_and_angular_degeneracy_admission) ... ok
+test_fixture_streaming_output_is_deterministic_and_input_unchanged (tests.test_cardiac_material_frames.CardiacMaterialFrameTests.test_fixture_streaming_output_is_deterministic_and_input_unchanged) ... ok
+test_manifest_edits_during_conversion_are_detected (tests.test_cardiac_material_frames.CardiacMaterialFrameTests.test_manifest_edits_during_conversion_are_detected) ... ok
+test_manifest_shape_inventory_and_source_contract_forgeries_reject (tests.test_cardiac_material_frames.CardiacMaterialFrameTests.test_manifest_shape_inventory_and_source_contract_forgeries_reject) ... ok
+test_missing_opt_in_and_wrong_manifest_pin_reject_before_output (tests.test_cardiac_material_frames.CardiacMaterialFrameTests.test_missing_opt_in_and_wrong_manifest_pin_reject_before_output) ... ok
+test_public_source_route_rejects_synthetic_manifest_even_with_matching_sha (tests.test_cardiac_material_frames.CardiacMaterialFrameTests.test_public_source_route_rejects_synthetic_manifest_even_with_matching_sha) ... ok
+test_quaternion_pi_rotations_and_sign_ties_are_canonical (tests.test_cardiac_material_frames.CardiacMaterialFrameTests.test_quaternion_pi_rotations_and_sign_ties_are_canonical) ... ok
+test_rotations_preserve_source_order_and_are_native_unit_quaternions (tests.test_cardiac_material_frames.CardiacMaterialFrameTests.test_rotations_preserve_source_order_and_are_native_unit_quaternions) ... ok
+test_source_drift_and_coherent_rehash_do_not_change_source_pin (tests.test_cardiac_material_frames.CardiacMaterialFrameTests.test_source_drift_and_coherent_rehash_do_not_change_source_pin) ... ok
+test_source_edits_after_consumption_are_detected_before_publication (tests.test_cardiac_material_frames.CardiacMaterialFrameTests.test_source_edits_after_consumption_are_detected_before_publication) ... ok
+test_source_pins_match_retained_case18_manifest (tests.test_cardiac_material_frames.CardiacMaterialFrameTests.test_source_pins_match_retained_case18_manifest) ... ok
+test_symlink_inputs_outputs_and_output_inside_asset_reject (tests.test_cardiac_material_frames.CardiacMaterialFrameTests.test_symlink_inputs_outputs_and_output_inside_asset_reject) ... ok
+test_varied_frames_reconstruct_source_directions (tests.test_cardiac_material_frames.CardiacMaterialFrameTests.test_varied_frames_reconstruct_source_directions) ... ok
+test_all_source_semantics_are_hash_pinned (tests.test_cardiac_wall_source.CardiacWallSourceTests.test_all_source_semantics_are_hash_pinned) ... ok
+test_ascii_source_retains_fields_and_only_converts_units (tests.test_cardiac_wall_source.CardiacWallSourceTests.test_ascii_source_retains_fields_and_only_converts_units) ... ok
+test_buffer_endian_and_immutable_output (tests.test_cardiac_wall_source.CardiacWallSourceTests.test_buffer_endian_and_immutable_output) ... ok
+test_duplicate_degenerate_and_overlapping_adjacent_tetrahedra_rejected (tests.test_cardiac_wall_source.CardiacWallSourceTests.test_duplicate_degenerate_and_overlapping_adjacent_tetrahedra_rejected) ... ok
+test_frames_are_measured_without_normalization (tests.test_cardiac_wall_source.CardiacWallSourceTests.test_frames_are_measured_without_normalization) ... ok
+test_hollow_wall_inner_surface_has_negative_material_volume (tests.test_cardiac_wall_source.CardiacWallSourceTests.test_hollow_wall_inner_surface_has_negative_material_volume) ... ok
+test_invalid_vtk_is_rejected_without_silent_repair (tests.test_cardiac_wall_source.CardiacWallSourceTests.test_invalid_vtk_is_rejected_without_silent_repair) ... ok
+test_nonmanifold_touching_solids_are_retained_as_unqualified (tests.test_cardiac_wall_source.CardiacWallSourceTests.test_nonmanifold_touching_solids_are_retained_as_unqualified) ... ok
+test_orientation_permutation_is_reversible_and_geometry_is_conserved (tests.test_cardiac_wall_source.CardiacWallSourceTests.test_orientation_permutation_is_reversible_and_geometry_is_conserved) ... ok
+test_shared_face_is_removed_but_owner_labels_survive (tests.test_cardiac_wall_source.CardiacWallSourceTests.test_shared_face_is_removed_but_owner_labels_survive) ... ok
+
+----------------------------------------------------------------------
+Ran 29 tests in 0.366s
+
+OK

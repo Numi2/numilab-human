@@ -1,0 +1,89 @@
+{
+  "command": [
+    "/Users/n/human-cardiac-partition-20260912/venv/bin/python",
+    "-m",
+    "numilab_human.cardiac_material_frames",
+    "--asset",
+    "/Users/n/human-cardiac-wall-anatomy-20260912/asset-final",
+    "--output",
+    "/Users/n/human-cardiac-material-frame-preparation-20260912/frames",
+    "--asset-manifest-sha256",
+    "e8cb0391623577efc4eac04e5710cf7c9a4757614e09d936f5af3889c37d56f1",
+    "--conversion-policy",
+    "normalize-fibre-gram-schmidt-sheet-v1"
+  ],
+  "cwd": "/Users/n/human-cardiac-material-frame-preparation-20260912/source",
+  "elapsed_seconds": 12.18458795780316,
+  "environment": {
+    "PYTHONPATH": "/Users/n/human-cardiac-material-frame-preparation-20260912/source/src"
+  },
+  "finished_utc": "2026-09-12T10:35:53.443952+00:00",
+  "implementation_unchanged": true,
+  "input_after_sha256": {
+    "boundary.u32le": "821ad6dedb5f32cce78314d704e35f03726188d9d56978ebb23646e4690b3c60",
+    "boundary_components.u32le": "8e07999b113bd619fe8f0cf0fc5435730fb962ed13bead55e18c9f759352ba0a",
+    "boundary_owners.u32le": "7c3f0bf847d4d5c1aa0badc5ff83345c0165cd3aab516d8576b55474d5495392",
+    "fibres.f64le": "5ec6aade89b8a86bd8d3529282565edc77386b9dbe7902b13cf698fb327605e8",
+    "labels.u32le": "304d0d9d9a99d51be4367529e9598815361018a446ed047923c85b96786b569a",
+    "manifest.json": "e8cb0391623577efc4eac04e5710cf7c9a4757614e09d936f5af3889c37d56f1",
+    "nodes.f64le": "4c8e6e7d9adfa5180ba0730c99222044c6a1aa51901823cf0b4dd861ae732716",
+    "sheets.f64le": "8171a504b443a3f8267de1bea7ad02e61862c530c8b3855570df968cd416c523",
+    "source_reversed_cells.u32le": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tetrahedra.u32le": "3f571c7815f0fd2e1f9d2735046d3bb7677a1a011215fca6737c6310b5b29066",
+    "uvc_phi.f64le": "b214751e9ad04c5ca0b11d3271d6077a798f943ef1788665014cefe20ee66682",
+    "uvc_rho.f64le": "7b5615e0d7492505bb65a4a78af9fc5b1a41e7965d3eb7fd5711883b3455374b",
+    "uvc_v.f64le": "5d8d8a19e39717cd1369eefa924db62623bdc600479169b80be95c667773baa7",
+    "uvc_z.f64le": "080789f06648ff82eb323b28d786cf5383c37ceb3cc4fa06c7ec1d5f6086f0e3"
+  },
+  "input_before_sha256": {
+    "boundary.u32le": "821ad6dedb5f32cce78314d704e35f03726188d9d56978ebb23646e4690b3c60",
+    "boundary_components.u32le": "8e07999b113bd619fe8f0cf0fc5435730fb962ed13bead55e18c9f759352ba0a",
+    "boundary_owners.u32le": "7c3f0bf847d4d5c1aa0badc5ff83345c0165cd3aab516d8576b55474d5495392",
+    "fibres.f64le": "5ec6aade89b8a86bd8d3529282565edc77386b9dbe7902b13cf698fb327605e8",
+    "labels.u32le": "304d0d9d9a99d51be4367529e9598815361018a446ed047923c85b96786b569a",
+    "manifest.json": "e8cb0391623577efc4eac04e5710cf7c9a4757614e09d936f5af3889c37d56f1",
+    "nodes.f64le": "4c8e6e7d9adfa5180ba0730c99222044c6a1aa51901823cf0b4dd861ae732716",
+    "sheets.f64le": "8171a504b443a3f8267de1bea7ad02e61862c530c8b3855570df968cd416c523",
+    "source_reversed_cells.u32le": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tetrahedra.u32le": "3f571c7815f0fd2e1f9d2735046d3bb7677a1a011215fca6737c6310b5b29066",
+    "uvc_phi.f64le": "b214751e9ad04c5ca0b11d3271d6077a798f943ef1788665014cefe20ee66682",
+    "uvc_rho.f64le": "7b5615e0d7492505bb65a4a78af9fc5b1a41e7965d3eb7fd5711883b3455374b",
+    "uvc_v.f64le": "5d8d8a19e39717cd1369eefa924db62623bdc600479169b80be95c667773baa7",
+    "uvc_z.f64le": "080789f06648ff82eb323b28d786cf5383c37ceb3cc4fa06c7ec1d5f6086f0e3"
+  },
+  "inputs_unchanged": true,
+  "log_sha256": "f1962779602fc9966c283f9bc88cf303e47320094271c78532e92708457e70e6",
+  "outputs_sha256": {
+    "manifest.json": "cc74e1ac10e74c602a57049a4a0ec36a9eab86cad88e4ef138becf59d64d5aeb",
+    "material-frame-rotations.f64le": "8ab7c6f59e56852ecf4210042df766d73d6a18c1dca2b48d30e524601dbf0824"
+  },
+  "peak_child_rss_bytes": 30867456,
+  "physical_steps": 0,
+  "returncode": 0,
+  "runner_sha256": "592f50a8f3f7b787d6d86ac4f6b2869a7c5909f4783c03ca86d02435155d241d",
+  "schema": "HumanPack.cardiac-material-frame-preparation-execution.v1",
+  "source_after_sha256": {
+    ".numi/commands/human-cardiac-material-frames": "8b3c22cffcbd7d3b3b8c658b44bf0e0f14b4063228fa5d44bd1ff85323a2cced",
+    "Docs/media/cardiac-wall-anatomy-20260912/manifest.json": "e8cb0391623577efc4eac04e5710cf7c9a4757614e09d936f5af3889c37d56f1",
+    "config/cardiac-wall-rodero18.v1.json": "23c931fef53edced85e0e0a36c73d8490dddb87db6bd988482a2cdfc5a1442cc",
+    "src/numilab_human/__init__.py": "e06e46ca88bde0b4c4a6235c6135dafdb2e75d27633776dba0098698a082cf42",
+    "src/numilab_human/cardiac_material_frames.py": "b4689ca3144f095d9c5ba505145a9bc342511f5333d394d7fb9f42eb42f1aeb2",
+    "src/numilab_human/cardiac_wall_source.py": "73e7df99e684454538691285b4537ae9102e261715dd87c6d50020f044b0bfcf",
+    "src/numilab_human/model.py": "b094a68963cea708b1e3c75e10b21de55cbd58831ae82b4c2d9b1c134bc17133",
+    "tests/test_cardiac_material_frames.py": "482b065d2f5b538fce7f82a255c43334a67fcb28f167e7383d046942bc3893c1",
+    "tests/test_cardiac_wall_source.py": "21a892921a4417e19bbe1b4c71b34ffe9f2f068fc4912a30c94089958e0a1084"
+  },
+  "source_before_sha256": {
+    ".numi/commands/human-cardiac-material-frames": "8b3c22cffcbd7d3b3b8c658b44bf0e0f14b4063228fa5d44bd1ff85323a2cced",
+    "Docs/media/cardiac-wall-anatomy-20260912/manifest.json": "e8cb0391623577efc4eac04e5710cf7c9a4757614e09d936f5af3889c37d56f1",
+    "config/cardiac-wall-rodero18.v1.json": "23c931fef53edced85e0e0a36c73d8490dddb87db6bd988482a2cdfc5a1442cc",
+    "src/numilab_human/__init__.py": "e06e46ca88bde0b4c4a6235c6135dafdb2e75d27633776dba0098698a082cf42",
+    "src/numilab_human/cardiac_material_frames.py": "b4689ca3144f095d9c5ba505145a9bc342511f5333d394d7fb9f42eb42f1aeb2",
+    "src/numilab_human/cardiac_wall_source.py": "73e7df99e684454538691285b4537ae9102e261715dd87c6d50020f044b0bfcf",
+    "src/numilab_human/model.py": "b094a68963cea708b1e3c75e10b21de55cbd58831ae82b4c2d9b1c134bc17133",
+    "tests/test_cardiac_material_frames.py": "482b065d2f5b538fce7f82a255c43334a67fcb28f167e7383d046942bc3893c1",
+    "tests/test_cardiac_wall_source.py": "21a892921a4417e19bbe1b4c71b34ffe9f2f068fc4912a30c94089958e0a1084"
+  },
+  "started_utc": "2026-09-12T10:35:41.211774+00:00",
+  "status": "pass"
+}

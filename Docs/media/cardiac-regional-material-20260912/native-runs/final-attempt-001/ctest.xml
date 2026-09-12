@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Darwin-c++"
+	tests="25"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="Mac.domain_not_set.invalid"
+	time="57"
+	timestamp="2026-09-12T12:51:06"
+	>
+	<testcase name="matter.numi_human.tendon_fem_transaction" classname="matter.numi_human.tendon_fem_transaction" time="0.885183" status="run">
+		<properties>
+			<property name="cmake_labels" value="matter;metal;numi-human;physics"/>
+		</properties>
+		<system-out>numi_human_tendon_fem_load=passed device="Apple M4 Pro" encoded_passes=4 max_displacement_m=5.17449e-05 contact_displacement_m=1.98549e-05 contact_samples=1 articular_contact_samples=2 articular_mechanical_samples=1 articular_internal_same_body_samples=1 articular_closed_samples=1 articular_contact_area_m2=0.0001 articular_normal_force_n=0.9999 articular_max_pressure_pa=9999 articular_body_force_l1_n=1.9998 articular_force_residual_n=0 articular_moment_residual_nm=0 articular_stored_energy_j=0.0004999 articular_max_normal_strain=0.009999 articular_max_closure_m=0.0009999 articular_audited_steps=1 articular_trajectory_min_closed_samples=1 articular_trajectory_max_closed_samples=1 rejected_step_excluded_from_history=true articular_contact_generalized_force=0.999908 articular_contact_fem_state_ab=bitwise malformed_contact_rejected=true malformed_articular_contact_rejected=true malformed_articular_reference_normal_rejected=true malformed_articular_adjacency_rejected=true malformed_fem_body_contact_rejected=true m...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="matter.runtime.snapshot_archive" classname="matter.runtime.snapshot_archive" time="0.31562" status="run">
+		<properties>
+			<property name="cmake_labels" value="checkpoint;matter"/>
+		</properties>
+		<system-out>matter_snapshot_archive=ok version=9 content_hash=0x2985f87c45cf81ec payload_bytes=3596 corrupt_payload_rejected=yes
+</system-out>
+	</testcase>
+	<testcase name="matter.physics.mixed_mpm_fem" classname="matter.physics.mixed_mpm_fem" time="0.761627" status="run">
+		<properties>
+			<property name="cmake_labels" value="matter;metal;physics"/>
+		</properties>
+		<system-out>{"schema":"numi.matter.physics-probe.v3","representation":"mixed_mpm_fem","fgmres_iterations":2,"completed_microsteps":4,"minimum_J":1}
+</system-out>
+	</testcase>
+	<testcase name="matter.physics.monolithic_multiphysics" classname="matter.physics.monolithic_multiphysics" time="0.078186" status="run">
+		<properties>
+			<property name="cmake_labels" value="matter;metal;physics"/>
+		</properties>
+		<system-out>{"schema":"numi.matter.physics-probe.v2","representation":"monolithic_multiphysics","temperature_min":300,"temperature_max":354.956,"electric_max":1,"activation_max":0.0427246,"kkt_residual":3.00321e-05,"relative_correction":0,"volume_residual":2.07567e-07,"pressure_residual":4.15134e-07,"transport_residual":1.93967e-06}
+</system-out>
+	</testcase>
+	<testcase name="matter.physics.topology_mutation" classname="matter.physics.topology_mutation" time="0.0443037" status="run">
+		<properties>
+			<property name="cmake_labels" value="matter;metal;physics"/>
+		</properties>
+		<system-out>{"schema":"numi.matter.physics-probe.v2","representation":"topology_mutation","rollback":false,"active_tetrahedra":0,"topology_snapshot_restored":true}
+</system-out>
+	</testcase>
+	<testcase name="matter.physics.cohesive_mutation" classname="matter.physics.cohesive_mutation" time="0.478547" status="run">
+		<properties>
+			<property name="cmake_labels" value="matter;metal;physics"/>
+		</properties>
+		<system-out>{"schema":"numi.matter.physics-probe.v3","representation":"cohesive_separation","active_nodes":8,"active_tetrahedra":2,"separated_faces":1}
+</system-out>
+	</testcase>
+	<testcase name="matter.physics.small_scale_topology_conservation" classname="matter.physics.small_scale_topology_conservation" time="0.046957" status="run">
+		<properties>
+			<property name="cmake_labels" value="matter;metal;physics"/>
+		</properties>
+		<system-out>{"schema":"numi.matter.physics-probe.v3","representation":"small_scale_edge_split","mass_kg":1.46667e-06,"mass_error_kg":1.13687e-13,"momentum_error_kg_mps":5.13538e-14,"active_nodes":5,"active_tetrahedra":2}
+</system-out>
+	</testcase>
+	<testcase name="matter.physics.puncture_mutation" classname="matter.physics.puncture_mutation" time="0.347423" status="run">
+		<properties>
+			<property name="cmake_labels" value="matter;metal;physics"/>
+		</properties>
+		<system-out>{"schema":"numi.matter.physics-probe.v3","representation":"cylindrical_puncture","active_channels":1,"removed_mass":1.46667}
+</system-out>
+	</testcase>
+	<testcase name="matter.runtime.topology_rollback" classname="matter.runtime.topology_rollback" time="0.0418869" status="run">
+		<properties>
+			<property name="cmake_labels" value="matter;metal;physics"/>
+		</properties>
+		<system-out>{"schema":"numi.matter.physics-probe.v2","representation":"topology_mutation","rollback":true,"active_tetrahedra":1,"topology_snapshot_restored":false}
+</system-out>
+	</testcase>
+	<testcase name="matter.physics.learned_polyconvex_icnn" classname="matter.physics.learned_polyconvex_icnn" time="0.0656598" status="run">
+		<properties>
+			<property name="cmake_labels" value="matter;metal;physics"/>
+		</properties>
+		<system-out>{"schema":"numi.matter.physics-probe.v3","representation":"polyconvex_icnn_differential","stress_fp64_error":1.21196e-08,"tangent_fp64_error":7.2945e-08,"minimum_J":1.09587}
+{"schema":"numi.matter.physics-probe.v2","representation":"polyconvex_icnn","weights":5,"revision":1,"minimum_J":1}
+</system-out>
+	</testcase>
+	<testcase name="matter.runtime.production_transaction_rollback" classname="matter.runtime.production_transaction_rollback" time="0.0421676" status="run">
+		<properties>
+			<property name="cmake_labels" value="matter;metal;physics"/>
+		</properties>
+		<system-out>{"schema":"numi.matter.physics-probe.v2","representation":"production_transaction","rollback":true,"active_tetrahedra":1,"learned_revision":0}
+</system-out>
+	</testcase>
+	<testcase name="matter.physics.stateful_mpm" classname="matter.physics.stateful_mpm" time="1.91695" status="run">
+		<properties>
+			<property name="cmake_labels" value="matter;metal;physics"/>
+		</properties>
+		<system-out>{"schema":"numi.matter.stateful-runtime.v1","representation":"mpm","state_stride":2,"maximum_damage":0,"maximum_accumulated_strain":0.00177208,"rollback_exact":true,"mismatched_program_rejected":true,"archive_restore_exact":true,"explicit_restore_exact":true,"continuation_exact":true}
+</system-out>
+	</testcase>
+	<testcase name="matter.physics.stateful_fem" classname="matter.physics.stateful_fem" time="0.837725" status="run">
+		<properties>
+			<property name="cmake_labels" value="matter;metal;physics"/>
+		</properties>
+		<system-out>{"schema":"numi.matter.stateful-runtime.v1","representation":"fem","state_stride":2,"maximum_damage":0,"maximum_accumulated_strain":0.00529575,"rollback_exact":true,"mismatched_program_rejected":true,"archive_restore_exact":true,"explicit_restore_exact":true,"continuation_exact":true}
+</system-out>
+	</testcase>
+	<testcase name="matter.runtime.inverse_identification" classname="matter.runtime.inverse_identification" time="24.7536" status="run">
+		<properties>
+			<property name="cmake_labels" value="matter;metal;physics"/>
+		</properties>
+		<system-out>{"schema":"numi.matter.physics-probe.v1","representation":"inverse_identification","prior_mean":11.9184,"posterior_mean":12.2192}
+</system-out>
+	</testcase>
+	<testcase name="matter.compiler.cardiac_material_source" classname="matter.compiler.cardiac_material_source" time="0.501639" status="run">
+		<properties>
+			<property name="cmake_labels" value="cardiac;compiler;human;material;matter"/>
+		</properties>
+		<system-out>{"status":"pass","physical_steps":0,"metal_executed":false,"states":95,"scalar_comparisons":1710,"maximum_energy_error":1.5181268990236151e-13,"maximum_stress_error":6.9446835133226751e-15,"maximum_tangent_error":1.653436493828989e-15,"maximum_stress_fd_error":4.0744518870140228e-08,"maximum_tangent_fd_error":5.8175475712787898e-10,"maximum_covariance_error":2.2204460492503131e-13,"density_sentinel_rejected":true,"mixed_source_equivalent":false,"subject_calibrated":false}
+</system-out>
+	</testcase>
+	<testcase name="matter.compiler.fem_material_frame" classname="matter.compiler.fem_material_frame" time="0.332655" status="run">
+		<properties>
+			<property name="cmake_labels" value="human;material;matter"/>
+		</properties>
+		<system-out>denied_source=missing identity diagnostic=material-local FEM frames require exact tetrahedron count and nonzero source identity; 
+denied_source=identity without frames diagnostic=material-local FEM frames require exact tetrahedron count and nonzero source identity; 
+denied_source=count mismatch diagnostic=material-local FEM frames require exact tetrahedron count and nonzero source identity; 
+denied_source=zero quaternion diagnostic=material-local FEM frame rotation must be finite and unit length; 
+denied_source=nonunit quaternion diagnostic=material-local FEM frame rotation must be finite and unit length; 
+denied_source=NaN quaternion diagnostic=material-local FEM frame rotation must be finite and unit length; 
+denied_source=infinite quaternion diagnostic=material-local FEM frame rotation must be finite and unit length; 
+denied_source=non-FEM representation diagnostic=material-local FEM frames require exact tetrahedron count and nonzero source identity; 
+denied_source=adaptive frame object diagnostic=authored...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="matter.compiler.stateful_roundtrip" classname="matter.compiler.stateful_roundtrip" time="0.330656" status="run">
+		<properties>
+			<property name="cmake_labels" value="compiler;matter;stateful"/>
+		</properties>
+		<system-out>{"schema":"numi.matter.stateful-compiler.v1","fingerprint":4278298188453229928,"state_stride":2,"particles":2,"tetrahedra":1}
+</system-out>
+	</testcase>
+	<testcase name="matter.compiler.source_fiber" classname="matter.compiler.source_fiber" time="0.356038" status="run">
+		<properties>
+			<property name="cmake_labels" value="human;material;matter"/>
+		</properties>
+		<system-out>tissue=ACL source_fp64=passed
+tissue=PCL source_fp64=passed
+tissue=MCL source_fp64=passed
+tissue=LCL source_fp64=passed
+tissue=PTL source_fp64=passed
+tissue=QAT source_fp64=passed
+fiber_exp_linear=passed continuum_equilibrium=unqualified calibration=not_performed
+</system-out>
+	</testcase>
+	<testcase name="matter.metal.source_fiber" classname="matter.metal.source_fiber" time="0.105914" status="run">
+		<properties>
+			<property name="cmake_labels" value="human;material;matter"/>
+		</properties>
+		<system-out>primitive=ACL metal_scalar_checks=24 maximum_scaled_error=2.68857e-06
+tissue=ACL source_fp64=passed metal_scalar_checks=486 maximum_scaled_error=1.19269e-05
+primitive=PCL metal_scalar_checks=24 maximum_scaled_error=5.18713e-06
+tissue=PCL source_fp64=passed metal_scalar_checks=486 maximum_scaled_error=1.29379e-05
+primitive=MCL metal_scalar_checks=24 maximum_scaled_error=1.01537e-06
+tissue=MCL source_fp64=passed metal_scalar_checks=486 maximum_scaled_error=8.5442e-06
+primitive=LCL metal_scalar_checks=24 maximum_scaled_error=1.01537e-06
+tissue=LCL source_fp64=passed metal_scalar_checks=486 maximum_scaled_error=8.5442e-06
+primitive=PTL metal_scalar_checks=24 maximum_scaled_error=1.60841e-06
+tissue=PTL source_fp64=passed metal_scalar_checks=486 maximum_scaled_error=3.31329e-05
+primitive=QAT metal_scalar_checks=24 maximum_scaled_error=1.60841e-06
+tissue=QAT source_fp64=passed metal_scalar_checks=486 maximum_scaled_error=3.31329e-05
+fiber_exp_linear=passed continuum_equilibrium=unqualified calibration=not_performed
+</system-out>
+	</testcase>
+	<testcase name="matter.compiler.vascular" classname="matter.compiler.vascular" time="0.366025" status="run">
+		<properties>
+			<property name="cmake_labels" value="compiler;human;matter;vascular"/>
+		</properties>
+		<system-out>vascular_compiler=pass boundary=source_cooking_package_validation_only laws=compliance_atan_rational_elastance_orifice_diode_starling_transport_exchange_deforming_cavity canonical_order=true semantic_rejection=true provenance_bound=true
+</system-out>
+	</testcase>
+	<testcase name="matter.metal.cardiac_transaction" classname="matter.metal.cardiac_transaction" time="0.339569" status="run">
+		<properties>
+			<property name="cmake_labels" value="human;matter;metal;vascular"/>
+		</properties>
+		<system-out>cardiac_regional_laws=pass atan_signed_domain=pass asymptotes=denied pressure_tangent_relative_max=2.71103e-06 unilateral_linear=pass starling_reverse_and_floor_ties=pass
+cardiac_waveform=pass phase_cases=10 huge_clock_phase=bitwise rational_6_over_7=exact full_width_modular_multiplier=pass fp64_absolute_max=2.98794e-05
+cardiac_clock_kernel=pass carry=exact overflow=denied environment_isolation=pass
+cardiac_shared_alpha=pass objectless_rigid_support=pass deferral=exact fractional=pass nonvascular_baseline=pass object_baseline=pass
+cardiac_working_set_deferral=pass mechanical_direction=zero all_blocks=pass environment_isolation=pass
+cardiac_pending_zero_release=pass empty_free_solve=released new_bound=retained feasible_bound=retained
+</system-out>
+	</testcase>
+	<testcase name="matter.compiler.fem_regional_material" classname="matter.compiler.fem_regional_material" time="0.587195" status="run">
+		<properties>
+			<property name="cmake_labels" value="human;material;matter"/>
+		</properties>
+		<system-out>regional_abi=31
+regional_compiler_checks=40 shared_nodes=3 element_mass_kg=0.0013351440827591432 nodal_mass_kg=0.00133514404296875 selected_material_rate_exponent=5 default_material_rate_exponent=0 lumped_inertia_relative_error=2.9802321738857619e-08 source_density_supplied=false
+fem_regional_material_compiler_check=pass anatomical_wall_qualified=false
+</system-out>
+	</testcase>
+	<testcase name="matter.metal.fem_regional_material" classname="matter.metal.fem_regional_material" time="7.44381" status="run">
+		<properties>
+			<property name="cmake_labels" value="human;material;matter"/>
+		</properties>
+		<system-out>regional_abi=31
+regional_compiler_checks=40 shared_nodes=3 element_mass_kg=0.0013351440827591432 nodal_mass_kg=0.00133514404296875 selected_material_rate_exponent=5 default_material_rate_exponent=0 lumped_inertia_relative_error=2.9802321738857619e-08 source_density_supplied=false
+regional_device=Apple M4 Pro
+regional_source_force_error=2.378244333367824e-07 regional_source_tangent_error=2.0186041035049957e-07 regional_source_fd_error=0.0016590304248321397 homogeneous_fallback_consequence=0.12038753020895762 regional_state_force_error=1.5118860636542636e-07 regional_state_tangent_error=2.8712626954622155e-06 regional_state_fd_error=2.0631400116938371e-05 heterogeneous_state_stride=2
+regional_icnn_force_error=2.0409321219456913e-07 regional_icnn_tangent_error=1.2069666139688348e-07 regional_icnn_fd_error=0.00074758411957886659 regional_icnn_world_fibre_force_error=2.2840123702109972e-07 regional_icnn_world_fibre_tangent_error=3.0028282438097145e-07 wrong_fibre_consequence=1.0359297285902127 trained_material_qua...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="matter.metal.fem_material_frame" classname="matter.metal.fem_material_frame" time="5.7457" status="run">
+		<properties>
+			<property name="cmake_labels" value="human;material;matter"/>
+		</properties>
+		<system-out>frame_device=Apple M4 Pro abi=31
+source_frame_force_error=9.0348969973945068e-07 source_frame_tangent_error=2.4088713604617131e-07 source_frame_fd_error=0.0018985037968984153 identity_error=0 anisotropic_angular_consequence=0.0057515638262883818 synthetic_state_rate_force_error=5.4808775475776649e-08 synthetic_state_rate_tangent_error=2.6039016682320251e-06 synthetic_state_rate_fd_error=1.3026630216087603e-06 mixed_active_force_error=1.0115523359873733e-07 mixed_active_tangent_error=1.9138180633217196e-07 mixed_active_fd_error=0.00014447508831119007 mixed_source_equivalent=false
+framed_icnn_force_error=2.5056373622279655e-07 framed_icnn_tangent_error=4.2242867456084868e-08 framed_icnn_fd_error=0.0011090525313200306 framed_icnn_world_fibre_force_error=2.0910758320286181e-07 framed_icnn_world_fibre_tangent_error=5.4983434590826474e-08 framed_icnn_angular_consequence=0.87027824102061657 trained_material_qualified=false
+accepted_steps=16 environments=2 motion_m=4.395736311293541e-05 replay=bitwise rollback=isolat...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="matter.metal.vascular_cavity" classname="matter.metal.vascular_cavity" time="10.5743" status="run">
+		<properties>
+			<property name="cmake_labels" value="cavity;human;matter;metal;vascular"/>
+		</properties>
+		<system-out>cavity_geometry_oracle=pass tissue_tets=156 outer_fixed_nodes=56 lumen_free_nodes=8 lumen_faces=12 tissue_volume_m3=2.5999999999999944e-05 lumen_volume_m3=9.9999999999999995e-07 pressure_work_error_m3=6.4520087779136159e-23
+cavity_device=Apple M4 Pro abi=31 world_fingerprint=17355018742552783909
+cavity_coupled_equations=pass signed_pressure=pass geometry_residual_fp64=pass geometry_jv_absolute_error=1.7358028989861163e-10 flow_pressure_jv_absolute_error=1.0583569298727724e-08 rowwise_jv_fd_relative_max=0.00055171439989779253 translated_force_relative_error=9.0374877939921959e-08 translated_work_relative_error=7.7015852163142446e-07
+cavity_production_operators=pass force_fp64_relative_max=8.2342668393235706e-08 pressure_work_relative_max=4.8919826392536154e-07 jv_finite_difference_relative_max=1.8824254381020651e-05 external_load_merge=pass pressure_gauge_invariance=pass static_and_converged_rows=unchanged
+cavity_device=Apple M4 Pro abi=31 world_fingerprint=3624364008697984977
+cavity_moving_wall=pass accepted_...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

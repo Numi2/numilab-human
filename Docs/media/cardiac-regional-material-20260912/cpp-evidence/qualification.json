@@ -1,0 +1,65 @@
+{
+  "schema": "numilab-human.cardiac-source-frame-cpp-qualification.v1",
+  "status": "pass_offline_source_field_admission",
+  "source_file": "tools/cardiac_material_frame_check.cpp",
+  "source_sha256": "8593e1365541bf5a91a1090d619bc48707f5e942cc575182338e559f34b875b7",
+  "binary_path": "/Users/n/human-cardiac-material-frame-preparation-20260912/cardiac_material_frame_check",
+  "binary_sha256": "cdd607df3f4a67f65bc89abdc0b2a8c493b7c95ba9a987c8cb00d2c8830565e4",
+  "build_argv": [
+    "clang++",
+    "-std=c++20",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-Werror",
+    "-I/Users/n/MetalRobo-human-completion-20260907/matter/include",
+    "/Users/n/human-cardiac-material-frame-preparation-20260912/cardiac_material_frame_check.cpp",
+    "-o",
+    "/Users/n/human-cardiac-material-frame-preparation-20260912/cardiac_material_frame_check"
+  ],
+  "run_argv": [
+    "/usr/bin/time",
+    "-l",
+    "/Users/n/human-cardiac-material-frame-preparation-20260912/cardiac_material_frame_check",
+    "/Users/n/human-cardiac-wall-anatomy-20260912/asset-final/fibres.f64le",
+    "/Users/n/human-cardiac-wall-anatomy-20260912/asset-final/sheets.f64le",
+    "/Users/n/human-cardiac-material-frame-preparation-20260912/frames/material-frame-rotations.f64le",
+    "1470083",
+    "b4799ce922fc22a6730a521bafcb7f843c74ec8b62543c5529ae19b87f1decaa"
+  ],
+  "input_sha256": {
+    "/Users/n/human-cardiac-wall-anatomy-20260912/asset-final/fibres.f64le": "5ec6aade89b8a86bd8d3529282565edc77386b9dbe7902b13cf698fb327605e8",
+    "/Users/n/human-cardiac-wall-anatomy-20260912/asset-final/sheets.f64le": "8171a504b443a3f8267de1bea7ad02e61862c530c8b3855570df968cd416c523"
+  },
+  "output_buffer_sha256": "8ab7c6f59e56852ecf4210042df766d73d6a18c1dca2b48d30e524601dbf0824",
+  "output_manifest_sha256": "cc74e1ac10e74c602a57049a4a0ec36a9eab86cad88e4ef138becf59d64d5aeb",
+  "full_source_result": {
+    "status": "pass",
+    "cells": 1470083,
+    "native_abi": 31,
+    "maximum_quaternion_norm_error": 4.440892098500626e-16,
+    "maximum_source_basis_error": 8.326672684688674e-16,
+    "maximum_cooked_norm_error": 9.852790583408932e-08,
+    "maximum_cooked_basis_error": 6.391734840294205e-07,
+    "source_identity": "b4799ce922fc22a6730a521bafcb7f843c74ec8b62543c5529ae19b87f1decaa",
+    "physical_steps": 0,
+    "world_cooked": false,
+    "anatomical_mechanics_qualified": false
+  },
+  "controls": {
+    "passed": 13,
+    "accepted": 3,
+    "rejected": 10,
+    "result": "controls/results.json"
+  },
+  "timing": {
+    "elapsed_seconds": 0.52,
+    "maximum_rss_bytes": 48513024,
+    "swaps": 0
+  },
+  "identity_boundary": "Caller-provided source identity is decoded, not independently authenticated by C++; outer qualification binds source and output hashes.",
+  "world_cooked": false,
+  "physical_steps": 0,
+  "anatomical_mechanics_qualified": false
+}

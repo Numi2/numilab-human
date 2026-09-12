@@ -1,0 +1,177 @@
+{
+  "status": "pass",
+  "cases": [
+    {
+      "case": "identity",
+      "expected_valid": true,
+      "exit_code": 0,
+      "argv": [
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cardiac_material_frame_check",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/identity/fibres.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/identity/sheets.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/identity/quaternions.f64le",
+        "1",
+        "0100000000000000000000000000000000000000000000000000000000000000"
+      ]
+    },
+    {
+      "case": "quarter-turn",
+      "expected_valid": true,
+      "exit_code": 0,
+      "argv": [
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cardiac_material_frame_check",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/quarter-turn/fibres.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/quarter-turn/sheets.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/quarter-turn/quaternions.f64le",
+        "1",
+        "0100000000000000000000000000000000000000000000000000000000000000"
+      ]
+    },
+    {
+      "case": "raw-nonunit-nonorthogonal",
+      "expected_valid": true,
+      "exit_code": 0,
+      "argv": [
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cardiac_material_frame_check",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/raw-nonunit-nonorthogonal/fibres.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/raw-nonunit-nonorthogonal/sheets.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/raw-nonunit-nonorthogonal/quaternions.f64le",
+        "1",
+        "0100000000000000000000000000000000000000000000000000000000000000"
+      ]
+    },
+    {
+      "case": "count-mismatch",
+      "expected_valid": false,
+      "exit_code": 1,
+      "argv": [
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cardiac_material_frame_check",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/count-mismatch/fibres.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/count-mismatch/sheets.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/count-mismatch/quaternions.f64le",
+        "2",
+        "0100000000000000000000000000000000000000000000000000000000000000"
+      ]
+    },
+    {
+      "case": "nonunit-quaternion",
+      "expected_valid": false,
+      "exit_code": 1,
+      "argv": [
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cardiac_material_frame_check",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/nonunit-quaternion/fibres.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/nonunit-quaternion/sheets.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/nonunit-quaternion/quaternions.f64le",
+        "1",
+        "0100000000000000000000000000000000000000000000000000000000000000"
+      ]
+    },
+    {
+      "case": "nan-quaternion",
+      "expected_valid": false,
+      "exit_code": 1,
+      "argv": [
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cardiac_material_frame_check",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/nan-quaternion/fibres.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/nan-quaternion/sheets.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/nan-quaternion/quaternions.f64le",
+        "1",
+        "0100000000000000000000000000000000000000000000000000000000000000"
+      ]
+    },
+    {
+      "case": "noncanonical-sign",
+      "expected_valid": false,
+      "exit_code": 1,
+      "argv": [
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cardiac_material_frame_check",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/noncanonical-sign/fibres.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/noncanonical-sign/sheets.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/noncanonical-sign/quaternions.f64le",
+        "1",
+        "0100000000000000000000000000000000000000000000000000000000000000"
+      ]
+    },
+    {
+      "case": "negative-zero",
+      "expected_valid": false,
+      "exit_code": 1,
+      "argv": [
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cardiac_material_frame_check",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/negative-zero/fibres.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/negative-zero/sheets.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/negative-zero/quaternions.f64le",
+        "1",
+        "0100000000000000000000000000000000000000000000000000000000000000"
+      ]
+    },
+    {
+      "case": "wrong-basis",
+      "expected_valid": false,
+      "exit_code": 1,
+      "argv": [
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cardiac_material_frame_check",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/wrong-basis/fibres.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/wrong-basis/sheets.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/wrong-basis/quaternions.f64le",
+        "1",
+        "0100000000000000000000000000000000000000000000000000000000000000"
+      ]
+    },
+    {
+      "case": "parallel-axes",
+      "expected_valid": false,
+      "exit_code": 1,
+      "argv": [
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cardiac_material_frame_check",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/parallel-axes/fibres.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/parallel-axes/sheets.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/parallel-axes/quaternions.f64le",
+        "1",
+        "0100000000000000000000000000000000000000000000000000000000000000"
+      ]
+    },
+    {
+      "case": "nan-source",
+      "expected_valid": false,
+      "exit_code": 1,
+      "argv": [
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cardiac_material_frame_check",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/nan-source/fibres.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/nan-source/sheets.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/nan-source/quaternions.f64le",
+        "1",
+        "0100000000000000000000000000000000000000000000000000000000000000"
+      ]
+    },
+    {
+      "case": "missing-identity",
+      "expected_valid": false,
+      "exit_code": 1,
+      "argv": [
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cardiac_material_frame_check",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/missing-identity/fibres.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/missing-identity/sheets.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/missing-identity/quaternions.f64le",
+        "1",
+        "0000000000000000000000000000000000000000000000000000000000000000"
+      ]
+    },
+    {
+      "case": "truncated-quaternion",
+      "expected_valid": false,
+      "exit_code": 1,
+      "argv": [
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cardiac_material_frame_check",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/truncated-quaternion/fibres.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/truncated-quaternion/sheets.f64le",
+        "/Users/n/human-cardiac-material-frame-preparation-20260912/cpp-evidence/controls/truncated-quaternion/quaternions.f64le",
+        "1",
+        "0100000000000000000000000000000000000000000000000000000000000000"
+      ]
+    }
+  ],
+  "accepted": 3,
+  "rejected": 10,
+  "physical_steps": 0
+}

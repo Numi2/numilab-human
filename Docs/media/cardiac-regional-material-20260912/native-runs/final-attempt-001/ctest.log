@@ -1,0 +1,319 @@
+UpdateCTestConfiguration  from :/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Parse Config file:/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Test project /Users/n/MetalRobo-human-completion-build-20260907
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 12
+      Start  12: matter.numi_human.tendon_fem_transaction
+
+12: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numilab_human_tendon_fem_load_probe
+12: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+12: Test timeout computed to be: 30
+12: numi_human_tendon_fem_load=passed device="Apple M4 Pro" encoded_passes=4 max_displacement_m=5.17449e-05 contact_displacement_m=1.98549e-05 contact_samples=1 articular_contact_samples=2 articular_mechanical_samples=1 articular_internal_same_body_samples=1 articular_closed_samples=1 articular_contact_area_m2=0.0001 articular_normal_force_n=0.9999 articular_max_pressure_pa=9999 articular_body_force_l1_n=1.9998 articular_force_residual_n=0 articular_moment_residual_nm=0 articular_stored_energy_j=0.0004999 articular_max_normal_strain=0.009999 articular_max_closure_m=0.0009999 articular_audited_steps=1 articular_trajectory_min_closed_samples=1 articular_trajectory_max_closed_samples=1 rejected_step_excluded_from_history=true articular_contact_generalized_force=0.999908 articular_contact_fem_state_ab=bitwise malformed_contact_rejected=true malformed_articular_contact_rejected=true malformed_articular_reference_normal_rejected=true malformed_articular_adjacency_rejected=true malformed_fem_body_contact_rejected=true malformed_routed_band_rejected=true routed_band_compression_gate=zero routed_band_quaternion_gate=fail_closed routed_band_material_gate=fail_closed routed_band_strain_limit=fail_closed fem_body_contact_samples=1 fem_body_contact_closed_samples=1 fem_body_contact_normal_force_n=0.4999 fem_body_contact_force_residual_n=0 fem_body_contact_moment_residual_nm=0 fem_body_contact_max_tangent_glide_m=0.01 passive_routed_band_count=1 passive_routed_band_tension_n=269.981 passive_routed_band_strain=0.0406977 passive_routed_band_energy_j=0.403598 passive_routed_band_force_residual_n=0 passive_routed_band_moment_residual_nm=0 anchor_reaction_l1_n=14.0238 audited_anchor_reaction_min_l1_n=0 audited_anchor_reaction_max_l1_n=14.0238 full_row_generalized_force=257.068 replay=bitwise rollback=verified matter_failure_propagation=verified production_owner_fraction=0.1
+ 1/25 Test  #12: matter.numi_human.tendon_fem_transaction ...........   Passed    0.89 sec
+test 13
+      Start  13: matter.runtime.snapshot_archive
+
+13: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_snapshot_archive_probe "/Users/n/MetalRobo-human-completion-build-20260907/matter-snapshot-archive-probe.bin"
+13: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+13: Test timeout computed to be: 30
+13: matter_snapshot_archive=ok version=9 content_hash=0x2985f87c45cf81ec payload_bytes=3596 corrupt_payload_rejected=yes
+ 2/25 Test  #13: matter.runtime.snapshot_archive ....................   Passed    0.32 sec
+test 16
+      Start  16: matter.physics.mixed_mpm_fem
+
+16: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe "--mixed"
+16: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+16: Test timeout computed to be: 180
+16: {"schema":"numi.matter.physics-probe.v3","representation":"mixed_mpm_fem","fgmres_iterations":2,"completed_microsteps":4,"minimum_J":1}
+ 3/25 Test  #16: matter.physics.mixed_mpm_fem .......................   Passed    0.76 sec
+test 17
+      Start  17: matter.physics.monolithic_multiphysics
+
+17: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe "--multiphysics"
+17: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+17: Test timeout computed to be: 180
+17: {"schema":"numi.matter.physics-probe.v2","representation":"monolithic_multiphysics","temperature_min":300,"temperature_max":354.956,"electric_max":1,"activation_max":0.0427246,"kkt_residual":3.00321e-05,"relative_correction":0,"volume_residual":2.07567e-07,"pressure_residual":4.15134e-07,"transport_residual":1.93967e-06}
+ 4/25 Test  #17: matter.physics.monolithic_multiphysics .............   Passed    0.08 sec
+test 18
+      Start  18: matter.physics.topology_mutation
+
+18: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe "--topology-mutation"
+18: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+18: Test timeout computed to be: 180
+18: {"schema":"numi.matter.physics-probe.v2","representation":"topology_mutation","rollback":false,"active_tetrahedra":0,"topology_snapshot_restored":true}
+ 5/25 Test  #18: matter.physics.topology_mutation ...................   Passed    0.04 sec
+test 19
+      Start  19: matter.physics.cohesive_mutation
+
+19: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe "--cohesive-mutation"
+19: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+19: Test timeout computed to be: 180
+19: {"schema":"numi.matter.physics-probe.v3","representation":"cohesive_separation","active_nodes":8,"active_tetrahedra":2,"separated_faces":1}
+ 6/25 Test  #19: matter.physics.cohesive_mutation ...................   Passed    0.48 sec
+test 20
+      Start  20: matter.physics.small_scale_topology_conservation
+
+20: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe "--small-scale-remesh"
+20: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+20: Test timeout computed to be: 180
+20: {"schema":"numi.matter.physics-probe.v3","representation":"small_scale_edge_split","mass_kg":1.46667e-06,"mass_error_kg":1.13687e-13,"momentum_error_kg_mps":5.13538e-14,"active_nodes":5,"active_tetrahedra":2}
+ 7/25 Test  #20: matter.physics.small_scale_topology_conservation ...   Passed    0.05 sec
+test 21
+      Start  21: matter.physics.puncture_mutation
+
+21: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe "--puncture-mutation"
+21: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+21: Test timeout computed to be: 180
+21: {"schema":"numi.matter.physics-probe.v3","representation":"cylindrical_puncture","active_channels":1,"removed_mass":1.46667}
+ 8/25 Test  #21: matter.physics.puncture_mutation ...................   Passed    0.35 sec
+test 22
+      Start  22: matter.runtime.topology_rollback
+
+22: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe "--topology-rollback"
+22: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+22: Test timeout computed to be: 180
+22: {"schema":"numi.matter.physics-probe.v2","representation":"topology_mutation","rollback":true,"active_tetrahedra":1,"topology_snapshot_restored":false}
+ 9/25 Test  #22: matter.runtime.topology_rollback ...................   Passed    0.04 sec
+test 23
+      Start  23: matter.physics.learned_polyconvex_icnn
+
+23: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe "--learned-material"
+23: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+23: Test timeout computed to be: 180
+23: {"schema":"numi.matter.physics-probe.v3","representation":"polyconvex_icnn_differential","stress_fp64_error":1.21196e-08,"tangent_fp64_error":7.2945e-08,"minimum_J":1.09587}
+23: {"schema":"numi.matter.physics-probe.v2","representation":"polyconvex_icnn","weights":5,"revision":1,"minimum_J":1}
+10/25 Test  #23: matter.physics.learned_polyconvex_icnn .............   Passed    0.07 sec
+test 24
+      Start  24: matter.runtime.production_transaction_rollback
+
+24: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe "--production-rollback"
+24: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+24: Test timeout computed to be: 180
+24: {"schema":"numi.matter.physics-probe.v2","representation":"production_transaction","rollback":true,"active_tetrahedra":1,"learned_revision":0}
+11/25 Test  #24: matter.runtime.production_transaction_rollback .....   Passed    0.04 sec
+test 25
+      Start  25: matter.physics.stateful_mpm
+
+25: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe "--stateful-mpm"
+25: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+25: Test timeout computed to be: 180
+25: {"schema":"numi.matter.stateful-runtime.v1","representation":"mpm","state_stride":2,"maximum_damage":0,"maximum_accumulated_strain":0.00177208,"rollback_exact":true,"mismatched_program_rejected":true,"archive_restore_exact":true,"explicit_restore_exact":true,"continuation_exact":true}
+12/25 Test  #25: matter.physics.stateful_mpm ........................   Passed    1.92 sec
+test 26
+      Start  26: matter.physics.stateful_fem
+
+26: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe "--stateful-fem"
+26: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+26: Test timeout computed to be: 180
+26: {"schema":"numi.matter.stateful-runtime.v1","representation":"fem","state_stride":2,"maximum_damage":0,"maximum_accumulated_strain":0.00529575,"rollback_exact":true,"mismatched_program_rejected":true,"archive_restore_exact":true,"explicit_restore_exact":true,"continuation_exact":true}
+13/25 Test  #26: matter.physics.stateful_fem ........................   Passed    0.84 sec
+test 30
+      Start  30: matter.runtime.inverse_identification
+
+30: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe "--identification"
+30: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+30: Test timeout computed to be: 180
+30: {"schema":"numi.matter.physics-probe.v1","representation":"inverse_identification","prior_mean":11.9184,"posterior_mean":12.2192}
+14/25 Test  #30: matter.runtime.inverse_identification ..............   Passed   24.75 sec
+test 104
+      Start 104: matter.compiler.cardiac_material_source
+
+104: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-cardiac-material-check "/Users/n/MetalRobo-human-completion-20260907/matter/materials/rodero2021_ventricular_guccione_passive.nmatter" "/Users/n/MetalRobo-human-completion-20260907/matter/materials/rodero2021_nonventricular_neo_hookean_passive.nmatter"
+104: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+104: Test timeout computed to be: 120
+104: {"status":"pass","physical_steps":0,"metal_executed":false,"states":95,"scalar_comparisons":1710,"maximum_energy_error":1.5181268990236151e-13,"maximum_stress_error":6.9446835133226751e-15,"maximum_tangent_error":1.653436493828989e-15,"maximum_stress_fd_error":4.0744518870140228e-08,"maximum_tangent_fd_error":5.8175475712787898e-10,"maximum_covariance_error":2.2204460492503131e-13,"density_sentinel_rejected":true,"mixed_source_equivalent":false,"subject_calibrated":false}
+15/25 Test #104: matter.compiler.cardiac_material_source ............   Passed    0.50 sec
+test 105
+      Start 105: matter.compiler.fem_material_frame
+
+105: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-fem-material-frame-compiler-check
+105: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+105: Test timeout computed to be: 60
+105: denied_source=missing identity diagnostic=material-local FEM frames require exact tetrahedron count and nonzero source identity; 
+105: denied_source=identity without frames diagnostic=material-local FEM frames require exact tetrahedron count and nonzero source identity; 
+105: denied_source=count mismatch diagnostic=material-local FEM frames require exact tetrahedron count and nonzero source identity; 
+105: denied_source=zero quaternion diagnostic=material-local FEM frame rotation must be finite and unit length; 
+105: denied_source=nonunit quaternion diagnostic=material-local FEM frame rotation must be finite and unit length; 
+105: denied_source=NaN quaternion diagnostic=material-local FEM frame rotation must be finite and unit length; 
+105: denied_source=infinite quaternion diagnostic=material-local FEM frame rotation must be finite and unit length; 
+105: denied_source=non-FEM representation diagnostic=material-local FEM frames require exact tetrahedron count and nonzero source identity; 
+105: denied_source=adaptive frame object diagnostic=authored FEM material fields require an immutable world until field transfer is supported; 
+105: denied_source=mutable frame object diagnostic=authored FEM material fields require an immutable world until field transfer is supported; 
+105: denied_source=authored mutation command diagnostic=authored FEM material fields require an immutable world until field transfer is supported; 
+105: denied_source=adaptive neighboring object diagnostic=authored FEM material fields require an immutable world until field transfer is supported; 
+105: denied_source=mutable neighboring object diagnostic=authored FEM material fields require an immutable world until field transfer is supported; 
+105: denied_cooked=nonunit frame diagnostic=FEM tetrahedron 0: material frame is nonunit or noncanonical for its owning object
+105: denied_cooked=NaN frame diagnostic=FEM tetrahedron 0: material frame is nonunit or noncanonical for its owning object
+105: denied_cooked=identity without flag diagnostic=continuum object 0: material frame identity or representation is invalid
+105: denied_cooked=flag without identity diagnostic=continuum object 0: material frame identity or representation is invalid
+105: denied_cooked=invented legacy frame diagnostic=FEM tetrahedron 0: material frame is nonunit or noncanonical for its owning object
+105: denied_cooked=cooked adaptive world diagnostic=Matter dispatch feature flags disagree with cooked programs
+105: PASS fem_material_frame_compiler checks=34 physical_steps=0 abi=31
+16/25 Test #105: matter.compiler.fem_material_frame .................   Passed    0.33 sec
+test 106
+      Start 106: matter.compiler.stateful_roundtrip
+
+106: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-stateful-check
+106: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+106: Test timeout computed to be: 60
+106: {"schema":"numi.matter.stateful-compiler.v1","fingerprint":4278298188453229928,"state_stride":2,"particles":2,"tetrahedra":1}
+17/25 Test #106: matter.compiler.stateful_roundtrip .................   Passed    0.33 sec
+test 107
+      Start 107: matter.compiler.source_fiber
+
+107: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-fiber-check "--cpu-only"
+107: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+107: Test timeout computed to be: 60
+107: tissue=ACL source_fp64=passed
+107: tissue=PCL source_fp64=passed
+107: tissue=MCL source_fp64=passed
+107: tissue=LCL source_fp64=passed
+107: tissue=PTL source_fp64=passed
+107: tissue=QAT source_fp64=passed
+107: fiber_exp_linear=passed continuum_equilibrium=unqualified calibration=not_performed
+18/25 Test #107: matter.compiler.source_fiber .......................   Passed    0.36 sec
+test 108
+      Start 108: matter.metal.source_fiber
+
+108: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-fiber-check
+108: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+108: Test timeout computed to be: 60
+108: primitive=ACL metal_scalar_checks=24 maximum_scaled_error=2.68857e-06
+108: tissue=ACL source_fp64=passed metal_scalar_checks=486 maximum_scaled_error=1.19269e-05
+108: primitive=PCL metal_scalar_checks=24 maximum_scaled_error=5.18713e-06
+108: tissue=PCL source_fp64=passed metal_scalar_checks=486 maximum_scaled_error=1.29379e-05
+108: primitive=MCL metal_scalar_checks=24 maximum_scaled_error=1.01537e-06
+108: tissue=MCL source_fp64=passed metal_scalar_checks=486 maximum_scaled_error=8.5442e-06
+108: primitive=LCL metal_scalar_checks=24 maximum_scaled_error=1.01537e-06
+108: tissue=LCL source_fp64=passed metal_scalar_checks=486 maximum_scaled_error=8.5442e-06
+108: primitive=PTL metal_scalar_checks=24 maximum_scaled_error=1.60841e-06
+108: tissue=PTL source_fp64=passed metal_scalar_checks=486 maximum_scaled_error=3.31329e-05
+108: primitive=QAT metal_scalar_checks=24 maximum_scaled_error=1.60841e-06
+108: tissue=QAT source_fp64=passed metal_scalar_checks=486 maximum_scaled_error=3.31329e-05
+108: fiber_exp_linear=passed continuum_equilibrium=unqualified calibration=not_performed
+19/25 Test #108: matter.metal.source_fiber ..........................   Passed    0.11 sec
+test 109
+      Start 109: matter.compiler.vascular
+
+109: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-vascular-compiler-check
+109: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+109: Test timeout computed to be: 60
+109: vascular_compiler=pass boundary=source_cooking_package_validation_only laws=compliance_atan_rational_elastance_orifice_diode_starling_transport_exchange_deforming_cavity canonical_order=true semantic_rejection=true provenance_bound=true
+20/25 Test #109: matter.compiler.vascular ...........................   Passed    0.37 sec
+test 115
+      Start 115: matter.metal.cardiac_transaction
+
+115: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-cardiac-transaction-check
+115: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+115: Test timeout computed to be: 60
+115: cardiac_regional_laws=pass atan_signed_domain=pass asymptotes=denied pressure_tangent_relative_max=2.71103e-06 unilateral_linear=pass starling_reverse_and_floor_ties=pass
+115: cardiac_waveform=pass phase_cases=10 huge_clock_phase=bitwise rational_6_over_7=exact full_width_modular_multiplier=pass fp64_absolute_max=2.98794e-05
+115: cardiac_clock_kernel=pass carry=exact overflow=denied environment_isolation=pass
+115: cardiac_shared_alpha=pass objectless_rigid_support=pass deferral=exact fractional=pass nonvascular_baseline=pass object_baseline=pass
+115: cardiac_working_set_deferral=pass mechanical_direction=zero all_blocks=pass environment_isolation=pass
+115: cardiac_pending_zero_release=pass empty_free_solve=released new_bound=retained feasible_bound=retained
+21/25 Test #115: matter.metal.cardiac_transaction ...................   Passed    0.34 sec
+test 117
+      Start 117: matter.compiler.fem_regional_material
+
+117: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-fem-regional-material-check "/Users/n/MetalRobo-human-completion-20260907/matter/materials/rodero2021_ventricular_guccione_passive.nmatter" "/Users/n/MetalRobo-human-completion-20260907/matter/materials/rodero2021_nonventricular_neo_hookean_passive.nmatter" "--cpu-only"
+117: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+117: Test timeout computed to be: 180
+117: regional_abi=31
+117: regional_compiler_checks=40 shared_nodes=3 element_mass_kg=0.0013351440827591432 nodal_mass_kg=0.00133514404296875 selected_material_rate_exponent=5 default_material_rate_exponent=0 lumped_inertia_relative_error=2.9802321738857619e-08 source_density_supplied=false
+117: fem_regional_material_compiler_check=pass anatomical_wall_qualified=false
+22/25 Test #117: matter.compiler.fem_regional_material ..............   Passed    0.59 sec
+test 118
+      Start 118: matter.metal.fem_regional_material
+
+118: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-fem-regional-material-check "/Users/n/MetalRobo-human-completion-20260907/matter/materials/rodero2021_ventricular_guccione_passive.nmatter" "/Users/n/MetalRobo-human-completion-20260907/matter/materials/rodero2021_nonventricular_neo_hookean_passive.nmatter"
+118: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+118: Test timeout computed to be: 180
+118: regional_abi=31
+118: regional_compiler_checks=40 shared_nodes=3 element_mass_kg=0.0013351440827591432 nodal_mass_kg=0.00133514404296875 selected_material_rate_exponent=5 default_material_rate_exponent=0 lumped_inertia_relative_error=2.9802321738857619e-08 source_density_supplied=false
+118: regional_device=Apple M4 Pro
+118: regional_source_force_error=2.378244333367824e-07 regional_source_tangent_error=2.0186041035049957e-07 regional_source_fd_error=0.0016590304248321397 homogeneous_fallback_consequence=0.12038753020895762 regional_state_force_error=1.5118860636542636e-07 regional_state_tangent_error=2.8712626954622155e-06 regional_state_fd_error=2.0631400116938371e-05 heterogeneous_state_stride=2
+118: regional_icnn_force_error=2.0409321219456913e-07 regional_icnn_tangent_error=1.2069666139688348e-07 regional_icnn_fd_error=0.00074758411957886659 regional_icnn_world_fibre_force_error=2.2840123702109972e-07 regional_icnn_world_fibre_tangent_error=3.0028282438097145e-07 wrong_fibre_consequence=1.0359297285902127 trained_material_qualified=false
+118: regional_projected_state_absolute_error=6.6682896149306004e-09 unowned_padding=preserved
+118: regional_runtime_case=source_laws_framed accepted_steps=16 environments=2 motion_m=4.6220987611155015e-05 replay=bitwise rollback=isolated reset=bitwise snapshot_rebinding=denied mass=unchanged
+118: regional_runtime_case=source_laws_unframed accepted_steps=2 environments=2 motion_m=6.359144030389523e-06 replay=bitwise rollback=isolated reset=bitwise snapshot_rebinding=denied mass=unchanged
+118: regional_runtime_case=heterogeneous_state_programs accepted_steps=2 environments=2 motion_m=8.4448828916146513e-06 replay=bitwise rollback=isolated reset=bitwise snapshot_rebinding=denied mass=unchanged
+118: legacy_restore_object0_material1=pass incidence_owner_mismatch=denied
+118: regional_unframed_unrelated_posterior_values=restored posterior_identity_retarget=denied fixed_parameters=unchanged
+118: fem_regional_material_check=pass anatomical_wall_qualified=false source_density_supplied=false active_cardiac_source_reproduced=false
+23/25 Test #118: matter.metal.fem_regional_material .................   Passed    7.44 sec
+test 119
+      Start 119: matter.metal.fem_material_frame
+
+119: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-fem-material-frame-check "/Users/n/MetalRobo-human-completion-20260907/matter/materials/rodero2021_ventricular_guccione_passive.nmatter"
+119: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+119: Test timeout computed to be: 180
+119: frame_device=Apple M4 Pro abi=31
+119: source_frame_force_error=9.0348969973945068e-07 source_frame_tangent_error=2.4088713604617131e-07 source_frame_fd_error=0.0018985037968984153 identity_error=0 anisotropic_angular_consequence=0.0057515638262883818 synthetic_state_rate_force_error=5.4808775475776649e-08 synthetic_state_rate_tangent_error=2.6039016682320251e-06 synthetic_state_rate_fd_error=1.3026630216087603e-06 mixed_active_force_error=1.0115523359873733e-07 mixed_active_tangent_error=1.9138180633217196e-07 mixed_active_fd_error=0.00014447508831119007 mixed_source_equivalent=false
+119: framed_icnn_force_error=2.5056373622279655e-07 framed_icnn_tangent_error=4.2242867456084868e-08 framed_icnn_fd_error=0.0011090525313200306 framed_icnn_world_fibre_force_error=2.0910758320286181e-07 framed_icnn_world_fibre_tangent_error=5.4983434590826474e-08 framed_icnn_angular_consequence=0.87027824102061657 trained_material_qualified=false
+119: accepted_steps=16 environments=2 motion_m=4.395736311293541e-05 replay=bitwise rollback=isolated reset=bitwise frame_snapshot_tamper=denied immutable_cell_rebinding=denied mass=unchanged
+119: fem_material_frame_check=pass anatomical_wall_qualified=false source_density_supplied=false active_cardiac_source_reproduced=false
+24/25 Test #119: matter.metal.fem_material_frame ....................   Passed    5.75 sec
+test 120
+      Start 120: matter.metal.vascular_cavity
+
+120: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-vascular-cavity-check
+120: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+120: Test timeout computed to be: 120
+120: cavity_geometry_oracle=pass tissue_tets=156 outer_fixed_nodes=56 lumen_free_nodes=8 lumen_faces=12 tissue_volume_m3=2.5999999999999944e-05 lumen_volume_m3=9.9999999999999995e-07 pressure_work_error_m3=6.4520087779136159e-23
+120: cavity_device=Apple M4 Pro abi=31 world_fingerprint=17355018742552783909
+120: cavity_coupled_equations=pass signed_pressure=pass geometry_residual_fp64=pass geometry_jv_absolute_error=1.7358028989861163e-10 flow_pressure_jv_absolute_error=1.0583569298727724e-08 rowwise_jv_fd_relative_max=0.00055171439989779253 translated_force_relative_error=9.0374877939921959e-08 translated_work_relative_error=7.7015852163142446e-07
+120: cavity_production_operators=pass force_fp64_relative_max=8.2342668393235706e-08 pressure_work_relative_max=4.8919826392536154e-07 jv_finite_difference_relative_max=1.8824254381020651e-05 external_load_merge=pass pressure_gauge_invariance=pass static_and_converged_rows=unchanged
+120: cavity_device=Apple M4 Pro abi=31 world_fingerprint=3624364008697984977
+120: cavity_moving_wall=pass accepted_steps=32 environments=2 max_displacement_m=1.7181107034554997e-05 max_flow_m3_per_s=9.745176548399988e-08 fixed_wall_flow_m3_per_s=5.364418092474268e-14 normalized_geometry_residual=1.2147101681521751e-07 normalized_volume_balance=5.8330449745694701e-08 normalized_flow_residual=3.2167537038728421e-07 relative_blood_conservation=1.4305114746093749e-07 relative_tracer_conservation=1.0750954974026153e-07 fp64_work_identity_relative_error=4.3439762779340687e-12 clock=exact replay=bitwise isolated_rollback=pass reset=bitwise signed_pressure_restore=accepted invalid_pressure_restore=denied geometry_restore=denied scheduler_restore=denied qualification=synthetic_moving_wall_interface blood_mechanical_mass=absent biological_calibration=unqualified
+25/25 Test #120: matter.metal.vascular_cavity .......................   Passed   10.57 sec
+
+The following tests passed:
+	matter.numi_human.tendon_fem_transaction
+	matter.runtime.snapshot_archive
+	matter.physics.mixed_mpm_fem
+	matter.physics.monolithic_multiphysics
+	matter.physics.topology_mutation
+	matter.physics.cohesive_mutation
+	matter.physics.small_scale_topology_conservation
+	matter.physics.puncture_mutation
+	matter.runtime.topology_rollback
+	matter.physics.learned_polyconvex_icnn
+	matter.runtime.production_transaction_rollback
+	matter.physics.stateful_mpm
+	matter.physics.stateful_fem
+	matter.runtime.inverse_identification
+	matter.compiler.cardiac_material_source
+	matter.compiler.fem_material_frame
+	matter.compiler.stateful_roundtrip
+	matter.compiler.source_fiber
+	matter.metal.source_fiber
+	matter.compiler.vascular
+	matter.metal.cardiac_transaction
+	matter.compiler.fem_regional_material
+	matter.metal.fem_regional_material
+	matter.metal.fem_material_frame
+	matter.metal.vascular_cavity
+
+100% tests passed out of 25
+
+Label Time Summary:
+cardiac       =   0.50 sec*proc (1 test)
+cavity        =  10.57 sec*proc (1 test)
+checkpoint    =   0.32 sec*proc (1 test)
+compiler      =   1.20 sec*proc (3 tests)
+human         =  26.35 sec*proc (10 tests)
+material      =  15.07 sec*proc (7 tests)
+matter        =  57.30 sec*proc (25 tests)
+metal         =  41.21 sec*proc (15 tests)
+numi-human    =   0.89 sec*proc (1 test)
+physics       =  30.30 sec*proc (13 tests)
+stateful      =   0.33 sec*proc (1 test)
+vascular      =  11.28 sec*proc (3 tests)
+
+Total Test time (real) =  57.31 sec
