@@ -682,7 +682,11 @@ rather than becoming idle.
   That convention does not establish native inertial densities.
   [Separate reference coordinates](FEM_REFERENCE_CONFIGURATION_20260912.md)
   now own native rest operators, volume and mass independently of initial
-  loading. Actual case18 unloaded geometry, complete material/density assignment,
+  loading. [Directional valve resistance](CARDIAC_DIRECTIONAL_VALVE_20260912.md)
+  now admits exact zero forward resistance and finite reverse leakage, with
+  source coefficient pairs and physical branch-crossing/transaction qualification.
+  Exact source switching and anatomical valve/port ownership remain open.
+  Actual case18 unloaded geometry, complete material/density assignment,
   native anatomical wall loading, physical ports and calibration remain
   unqualified. A coordinate-preserving
   node split cannot resolve the ventricular geometry gate.

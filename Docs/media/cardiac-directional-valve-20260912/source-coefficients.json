@@ -1,0 +1,57 @@
+{
+  "schema": "numilab-human.cardiac-directional-valve-coefficients.v1",
+  "source": {
+    "article_doi": "10.1371/journal.pcbi.1008851",
+    "supplement": "S4 page3 TableF and preceding paragraph",
+    "url": "https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1008851.s004&type=supplementary",
+    "sha256": "5699feb01b7f91f93fd75e26a9a5043ca6bfb5da1803f010c45c71270992ebc6",
+    "bytes": 143855,
+    "retained_remote_path": "/Users/n/human-cardiac-source-valve-20260912/pcbi.1008851.s004.pdf"
+  },
+  "parent_config": {
+    "path": "config/cardiac-wall-rodero18.v1.json",
+    "sha256": "23c931fef53edced85e0e0a36c73d8490dddb87db6bd988482a2cdfc5a1442cc"
+  },
+  "unit_convention": {
+    "Pa_per_mmHg_decimal": "133.322387415",
+    "resistance_SI_multiplier_decimal": "133322387.415000000",
+    "interpretation": "Resistance dimensions mmHg*s/mL follow the Windkessel model. Valve rows print mmHg/mL/s; that spelling is retained in the PDF, not used as inverse-time physical units."
+  },
+  "valves": [
+    {
+      "name": "mitral",
+      "forward_mmHg_s_per_mL": "0.05",
+      "reverse_mmHg_s_per_mL": "1000",
+      "forward_Pa_s_per_m3_decimal": "6666119.37075000000",
+      "reverse_Pa_s_per_m3_decimal": "133322387415.000000000"
+    },
+    {
+      "name": "tricuspid",
+      "forward_mmHg_s_per_mL": "0.05",
+      "reverse_mmHg_s_per_mL": "1000",
+      "forward_Pa_s_per_m3_decimal": "6666119.37075000000",
+      "reverse_Pa_s_per_m3_decimal": "133322387415.000000000"
+    },
+    {
+      "name": "aortic",
+      "forward_mmHg_s_per_mL": "0",
+      "reverse_mmHg_s_per_mL": "10000",
+      "forward_Pa_s_per_m3_decimal": "0E-9",
+      "reverse_Pa_s_per_m3_decimal": "1333223874150.000000000"
+    },
+    {
+      "name": "pulmonary",
+      "forward_mmHg_s_per_mL": "0",
+      "reverse_mmHg_s_per_mL": "10000",
+      "forward_Pa_s_per_m3_decimal": "0E-9",
+      "reverse_Pa_s_per_m3_decimal": "1333223874150.000000000"
+    }
+  ],
+  "evidence_scope": {
+    "source_resistance_values": true,
+    "native_switching_formulation": "Explicit piecewise directional passive resistance; supplementary table does not specify the switching equation.",
+    "exact_CARP_switching_reproduction": false,
+    "anatomical_valve_geometry_bound": false,
+    "subject_calibration": false
+  }
+}

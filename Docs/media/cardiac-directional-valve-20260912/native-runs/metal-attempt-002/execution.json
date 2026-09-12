@@ -1,0 +1,268 @@
+{
+  "schema": "numilab-human.directional-valve-targeted-execution.v1",
+  "started_utc": "2026-09-12T20:42:27.430279+00:00",
+  "base_revision": "cb34a4a3e0ba961fc68b3e027fca3b03c0f48706",
+  "host": {
+    "model": "Mac16,11",
+    "cpu": "Apple M4 Pro",
+    "memory_bytes": 25769803776,
+    "os": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6\nBuildVersion:\t\t25G72"
+  },
+  "source_before": {
+    "include/metalrobo/MatterSnapshotArchive.hpp": {
+      "bytes": 1763,
+      "sha256": "c83fd4b413ff2fd84f7daa135bed5695c180d70e336b8f025b0f502c7e14dd9a"
+    },
+    "matter/CMakeLists.txt": {
+      "bytes": 21551,
+      "sha256": "8ccd3038a1623a1e4c7cbf55d5d679cdeba574e57fae7dca6f4dcd81688967a2"
+    },
+    "matter/include/numi/matter/matter.hpp": {
+      "bytes": 68532,
+      "sha256": "d714a4d1c7668e32053c8793c82088ec17cb0eddeaf62f6cd46fccb20094f61a"
+    },
+    "matter/include/numi/matter/shared.h": {
+      "bytes": 44625,
+      "sha256": "07980981380062fb9e42d723bba2bcbc2533378f53668099a023a06178b04aea"
+    },
+    "matter/src/accepted_state_proof_gpu.hpp": {
+      "bytes": 4388,
+      "sha256": "d1527a51b2613c1e0818e83b9e5390f9c36f98cd117ac0b4a6193936ee8a205a"
+    },
+    "matter/src/compiler_impl.cpp": {
+      "bytes": 116675,
+      "sha256": "59e4a62d5a4fb087f96d84e0496fcf1127908cfa51182746cd264d859946d29a"
+    },
+    "matter/src/metal/fem.metalinc": {
+      "bytes": 89478,
+      "sha256": "81e55772b96147bebceff0b96efe84d7f65cad450f0b4ecbfc68ec1cf9ee33ef"
+    },
+    "matter/src/package_impl.cpp": {
+      "bytes": 38641,
+      "sha256": "7ec48b2107122ce00a7395ca10e4cd87d9cbcc9885f4f032065a467d7fddb1bf"
+    },
+    "matter/src/runtime.mm": {
+      "bytes": 658623,
+      "sha256": "cc177fd8ec247675e5a9fa0f9f70b5f9a33e2547819df465916ca56f52fce872"
+    },
+    "matter/src/validation_impl.cpp": {
+      "bytes": 92848,
+      "sha256": "2ccbe9073f9c511829904c4076c74b96afbc89a4d2aa0a65b754d2a5c5d503ea"
+    },
+    "matter/src/fem_reference_geometry.hpp": {
+      "bytes": 5783,
+      "sha256": "7e02dd10832dfd4096e60fb59b4f019789a87896acab4aeb3e35fcbc55cad637"
+    },
+    "matter/src/vascular_impl.cpp": {
+      "bytes": 43553,
+      "sha256": "b8470ba5115b75de1041dc89ec44f4db804e716570af84cc52eda38ca5b97689"
+    },
+    "matter/src/metal/vascular.metalinc": {
+      "bytes": 66242,
+      "sha256": "915e951b2bcbbae3140db55e7d68c56a170106763953ab46c235abaee9403470"
+    },
+    "matter/tools/directional_valve_check.mm": {
+      "bytes": 41756,
+      "sha256": "afabc7dcfe88115afddb732ddfe88fc0a6d33d20bf4a248a6e1d55d3cbb82a3f"
+    },
+    "matter/include/numi/matter/vascular.hpp": {
+      "bytes": 237,
+      "sha256": "149e556aa04bb6de5a15dfaa6fac9d41875b67bc9fab8aac0caf9b3d6b69acb0"
+    },
+    "matter/tools/vascular_fixture.hpp": {
+      "bytes": 1119,
+      "sha256": "17b3fd9a7e1c89a4c5b354b32bd53b7c841fe71120efca892b808e60d861905d"
+    },
+    "matter/tools/vascular_compiler_check.cpp": {
+      "bytes": 32383,
+      "sha256": "3429de684c8b3e261cde6523af792dfecd466d5f959589bed13771d98de231db"
+    },
+    "matter/tools/fem_regional_material_check.mm": {
+      "bytes": 56783,
+      "sha256": "861c29f45ac6934264cdd931cdcf8780c78e5f8c06bc1f6ecb7f595aea761ea9"
+    },
+    "matter/tools/fem_reference_check.mm": {
+      "bytes": 43443,
+      "sha256": "b672149c36a0227b88c0e4e5a705ecbf74cbbef963e9173b949ad2e4e95001f3"
+    },
+    "matter/materials/rodero2021_ventricular_guccione_passive.nmatter": {
+      "bytes": 2412,
+      "sha256": "dd37136f93104ffe058ec334153707d4610be4b3ca6f95938ebee0a7d5799db4"
+    },
+    "matter/materials/rodero2021_nonventricular_neo_hookean_passive.nmatter": {
+      "bytes": 1351,
+      "sha256": "8cc7f3e1936e4303a011b40ff287431a99be861a51a11e82913d630371825b00"
+    },
+    "matter/tools/cardiac_material_reference.hpp": {
+      "bytes": 5926,
+      "sha256": "3d2ecdb04f07a89c8d59e8527c5ae3bc440f909e9f5c540c3765b181756df800"
+    }
+  },
+  "tests": [
+    "matter.metal.directional_valve"
+  ],
+  "runner": {
+    "bytes": 4823,
+    "sha256": "5772f585c59f5fda0b83542ca33e0f10be6cc197d0aee12b7cf28ea86331612b"
+  },
+  "build": {
+    "argv": [
+      "/opt/homebrew/bin/cmake",
+      "--build",
+      "/Users/n/MetalRobo-human-completion-build-20260907",
+      "--target",
+      "numi-matter-directional-valve-check",
+      "-j",
+      "4"
+    ],
+    "cwd": "/Users/n/MetalRobo-human-completion-20260907",
+    "returncode": 0,
+    "elapsed_seconds": 0.01729066576808691,
+    "log": "build.log",
+    "bytes": 22,
+    "sha256": "8c35b1682f73592d30612d7b0fabdb384fcfff35cb5a076cb48b85b1368aa794"
+  },
+  "binaries": {
+    "matter/numi-matter-directional-valve-check": {
+      "bytes": 1155488,
+      "sha256": "bea0b51672ced57ddfad7e692af4b54a4488386967582843897020824525d3d4"
+    },
+    "matter/shaders/NumiMatter.metallib": {
+      "bytes": 2789190,
+      "sha256": "a59cd3135ac96445e2f764eb05b20eff7f3352ec12838df5f94a19d4867b9603"
+    }
+  },
+  "ctest": {
+    "argv": [
+      "/opt/homebrew/bin/ctest",
+      "--test-dir",
+      "/Users/n/MetalRobo-human-completion-build-20260907",
+      "-R",
+      "^(matter\\.metal\\.directional_valve)$",
+      "-j",
+      "1",
+      "-V",
+      "--output-on-failure",
+      "--output-junit",
+      "/Users/n/human-cardiac-source-valve-20260912/metal-attempt-002/ctest.xml"
+    ],
+    "cwd": "/Users/n/MetalRobo-human-completion-20260907",
+    "returncode": 8,
+    "elapsed_seconds": 2.9417862091213465,
+    "log": "ctest.log",
+    "bytes": 6274,
+    "sha256": "d9c414de7e5c8fc8f9645439cd2a855e50bc2f4604fb3d468fcac818a76e47f1"
+  },
+  "ctest_selection": {
+    "names": [
+      "matter.metal.directional_valve"
+    ],
+    "failures": 1,
+    "skipped": 0
+  },
+  "ctest_scope_matches": false,
+  "binaries_after": {
+    "matter/numi-matter-directional-valve-check": {
+      "bytes": 1155488,
+      "sha256": "bea0b51672ced57ddfad7e692af4b54a4488386967582843897020824525d3d4"
+    },
+    "matter/shaders/NumiMatter.metallib": {
+      "bytes": 2789190,
+      "sha256": "a59cd3135ac96445e2f764eb05b20eff7f3352ec12838df5f94a19d4867b9603"
+    }
+  },
+  "binaries_unchanged": true,
+  "source_after": {
+    "include/metalrobo/MatterSnapshotArchive.hpp": {
+      "bytes": 1763,
+      "sha256": "c83fd4b413ff2fd84f7daa135bed5695c180d70e336b8f025b0f502c7e14dd9a"
+    },
+    "matter/CMakeLists.txt": {
+      "bytes": 21551,
+      "sha256": "8ccd3038a1623a1e4c7cbf55d5d679cdeba574e57fae7dca6f4dcd81688967a2"
+    },
+    "matter/include/numi/matter/matter.hpp": {
+      "bytes": 68532,
+      "sha256": "d714a4d1c7668e32053c8793c82088ec17cb0eddeaf62f6cd46fccb20094f61a"
+    },
+    "matter/include/numi/matter/shared.h": {
+      "bytes": 44625,
+      "sha256": "07980981380062fb9e42d723bba2bcbc2533378f53668099a023a06178b04aea"
+    },
+    "matter/src/accepted_state_proof_gpu.hpp": {
+      "bytes": 4388,
+      "sha256": "d1527a51b2613c1e0818e83b9e5390f9c36f98cd117ac0b4a6193936ee8a205a"
+    },
+    "matter/src/compiler_impl.cpp": {
+      "bytes": 116675,
+      "sha256": "59e4a62d5a4fb087f96d84e0496fcf1127908cfa51182746cd264d859946d29a"
+    },
+    "matter/src/metal/fem.metalinc": {
+      "bytes": 89478,
+      "sha256": "81e55772b96147bebceff0b96efe84d7f65cad450f0b4ecbfc68ec1cf9ee33ef"
+    },
+    "matter/src/package_impl.cpp": {
+      "bytes": 38641,
+      "sha256": "7ec48b2107122ce00a7395ca10e4cd87d9cbcc9885f4f032065a467d7fddb1bf"
+    },
+    "matter/src/runtime.mm": {
+      "bytes": 658623,
+      "sha256": "cc177fd8ec247675e5a9fa0f9f70b5f9a33e2547819df465916ca56f52fce872"
+    },
+    "matter/src/validation_impl.cpp": {
+      "bytes": 92848,
+      "sha256": "2ccbe9073f9c511829904c4076c74b96afbc89a4d2aa0a65b754d2a5c5d503ea"
+    },
+    "matter/src/fem_reference_geometry.hpp": {
+      "bytes": 5783,
+      "sha256": "7e02dd10832dfd4096e60fb59b4f019789a87896acab4aeb3e35fcbc55cad637"
+    },
+    "matter/src/vascular_impl.cpp": {
+      "bytes": 43553,
+      "sha256": "b8470ba5115b75de1041dc89ec44f4db804e716570af84cc52eda38ca5b97689"
+    },
+    "matter/src/metal/vascular.metalinc": {
+      "bytes": 66242,
+      "sha256": "915e951b2bcbbae3140db55e7d68c56a170106763953ab46c235abaee9403470"
+    },
+    "matter/tools/directional_valve_check.mm": {
+      "bytes": 41756,
+      "sha256": "afabc7dcfe88115afddb732ddfe88fc0a6d33d20bf4a248a6e1d55d3cbb82a3f"
+    },
+    "matter/include/numi/matter/vascular.hpp": {
+      "bytes": 237,
+      "sha256": "149e556aa04bb6de5a15dfaa6fac9d41875b67bc9fab8aac0caf9b3d6b69acb0"
+    },
+    "matter/tools/vascular_fixture.hpp": {
+      "bytes": 1119,
+      "sha256": "17b3fd9a7e1c89a4c5b354b32bd53b7c841fe71120efca892b808e60d861905d"
+    },
+    "matter/tools/vascular_compiler_check.cpp": {
+      "bytes": 32383,
+      "sha256": "3429de684c8b3e261cde6523af792dfecd466d5f959589bed13771d98de231db"
+    },
+    "matter/tools/fem_regional_material_check.mm": {
+      "bytes": 56783,
+      "sha256": "861c29f45ac6934264cdd931cdcf8780c78e5f8c06bc1f6ecb7f595aea761ea9"
+    },
+    "matter/tools/fem_reference_check.mm": {
+      "bytes": 43443,
+      "sha256": "b672149c36a0227b88c0e4e5a705ecbf74cbbef963e9173b949ad2e4e95001f3"
+    },
+    "matter/materials/rodero2021_ventricular_guccione_passive.nmatter": {
+      "bytes": 2412,
+      "sha256": "dd37136f93104ffe058ec334153707d4610be4b3ca6f95938ebee0a7d5799db4"
+    },
+    "matter/materials/rodero2021_nonventricular_neo_hookean_passive.nmatter": {
+      "bytes": 1351,
+      "sha256": "8cc7f3e1936e4303a011b40ff287431a99be861a51a11e82913d630371825b00"
+    },
+    "matter/tools/cardiac_material_reference.hpp": {
+      "bytes": 5926,
+      "sha256": "3d2ecdb04f07a89c8d59e8527c5ae3bc440f909e9f5c540c3765b181756df800"
+    }
+  },
+  "source_unchanged": true,
+  "finished_utc": "2026-09-12T20:42:30.414519+00:00",
+  "status": "fail"
+}

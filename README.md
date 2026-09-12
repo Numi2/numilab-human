@@ -40,8 +40,11 @@ It preserves 13,638 unresolved closure cells and separates the paper's
 The [reference-configuration increment](Docs/FEM_REFERENCE_CONFIGURATION_20260912.md)
 separates supplied reference coordinates from initial loaded coordinates, so
 reference volume and mass remain fixed during deformation.
-Case18 unloaded data, complete native material/density assignment, wall admission
-and subject calibration remain open.
+The [directional valve increment](Docs/CARDIAC_DIRECTIONAL_VALVE_20260912.md)
+adds exact zero forward resistance and finite reverse leakage to the native
+C++ interface, with source coefficient pairs and physical Mac mini checks.
+Case18 unloaded data, complete native material/density assignment, wall admission,
+source-specific valve switching and subject calibration remain open.
 
 [Current-pose foot contact](Docs/CURVED_SUPPORT_20260908.md) now covers the source
 capsules and heel ellipsoids. The [source dynamic-limit integration](Docs/SOURCE_DYNAMIC_LIMITS_20260908.md)

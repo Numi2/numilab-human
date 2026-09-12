@@ -1,0 +1,43 @@
+{
+  "schema": "numi.directional-core-build.v1",
+  "started_utc": "2026-09-12T20:40:26.620298+00:00",
+  "source_before": {
+    "matter/src/metal/vascular.metalinc": {
+      "sha256": "915e951b2bcbbae3140db55e7d68c56a170106763953ab46c235abaee9403470",
+      "bytes": 66242
+    },
+    "matter/src/runtime.mm": {
+      "sha256": "cc177fd8ec247675e5a9fa0f9f70b5f9a33e2547819df465916ca56f52fce872",
+      "bytes": 658623
+    },
+    "matter/include/numi/matter/shared.h": {
+      "sha256": "07980981380062fb9e42d723bba2bcbc2533378f53668099a023a06178b04aea",
+      "bytes": 44625
+    }
+  },
+  "command": [
+    "/opt/homebrew/bin/cmake",
+    "--build",
+    "/Users/n/MetalRobo-human-completion-build-20260907",
+    "--target",
+    "numi_matter_runtime",
+    "-j2"
+  ],
+  "returncode": 0,
+  "source_after": {
+    "matter/src/metal/vascular.metalinc": {
+      "sha256": "915e951b2bcbbae3140db55e7d68c56a170106763953ab46c235abaee9403470",
+      "bytes": 66242
+    },
+    "matter/src/runtime.mm": {
+      "sha256": "cc177fd8ec247675e5a9fa0f9f70b5f9a33e2547819df465916ca56f52fce872",
+      "bytes": 658623
+    },
+    "matter/include/numi/matter/shared.h": {
+      "sha256": "07980981380062fb9e42d723bba2bcbc2533378f53668099a023a06178b04aea",
+      "bytes": 44625
+    }
+  },
+  "source_unchanged": true,
+  "finished_utc": "2026-09-12T20:40:30.559809+00:00"
+}

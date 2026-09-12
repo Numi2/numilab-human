@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Darwin-c++"
+	tests="1"
+	failures="1"
+	disabled="0"
+	skipped="0"
+	hostname="Mac.domain_not_set.invalid"
+	time="2"
+	timestamp="2026-09-12T22:42:27"
+	>
+	<testcase name="matter.metal.directional_valve" classname="matter.metal.directional_valve" time="2.93511" status="fail">
+		<failure message="Subprocess aborted"/>
+		<properties>
+			<property name="cmake_labels" value="human;matter;vascular"/>
+		</properties>
+		<system-out>-[MTLComputePipelineDescriptorInternal setComputeFunction:withType:]:866: failed assertion `computeFunction must not be nil.'
+directional_abi=33
+directional_compiler=pass checks=40 zero_forward_tree=pass cycles=denied resealed_packages=checked signed_initial_flow=pass positive_underflow=denied SI_Pa_per_mmHg=133.32238741500001 source_Rr10000_cooked=1333223882752
+directional_case=mitral_forward_guess_to_reverse result=pass steps=16 environments=2 fp64_normalized_max=1.3491968247696284e-06 signed_flow_relative_max=1.9032795370078781e-06 conservation_relative_max=4.76837158203125e-07 pressure_normalized_max=5.9056781231400054e-07 replay=bitwise rollback=isolated reset=bitwise signed_restore=pass invalid_restore=denied
+directional_case=mitral_reverse_guess_to_forward result=pass steps=16 environments=2 fp64_normalized_max=1.2534382530714802e-06 signed_flow_relative_max=2.7104701539302243e-05 conservation_relative_max=8.9406967163085938e-08 pressure_normalized_max=7.0289635535978168e-07 replay=bitwise rollback=isolated reset=bitwise signed_restore=pass invalid_restore=denied
+directional_case=aortic_forward_guess_to_reverse result=pass steps=16 environments=2 fp64_normalized_max=7.5150063465711227e-07 signed_flow_relative_max=4.1623518026204589e-06 conservation_relative_max=4.76837158203125e-07 pressure_normalized_max=7.3615443554816016e-07 replay=bitwise rollback=isolated reset=bitwise signed_restore=pass invalid_restore=denied
+directional_case=aortic_reverse_guess_to_forward result=pass steps=16 environments=2 fp64_normalized_max=1.8340657561566331e-06 signed_flow_relative_max=5.3831032504797005e-08 conservation_relative_max=6.9538752237955734e-08 pressure_normalized_max=3.7681251575349961e-07 replay=bitwise rollback=isolated reset=bitwise signed_restore=pass invalid_restore=denied
+directional_case=mitral_zero_to_reverse result=pass steps=16 environments=2 fp64_normalized_max=1.3491968247696284e-06 signed_flow_relative_max=1.9032795370078781e-06 conservation_relative_max=4.76837158203125e-07 pressure_normalized_max=5.9056781231400054e-07 replay=bitwise rollback=isolated reset=bitwise signed_restore=pass invalid_restore=denied
+directional_case=aortic_zero_to_forward result=pass steps=16 environments=2 fp64_normalized_max=1.8340657561566331e-06 signed_flow_relative_max=5.3831032504797005e-08 conservation_relative_max=6.9538752237955734e-08 pressure_normalized_max=3.7681251575349961e-07 replay=bitwise rollback=isolated reset=bitwise signed_restore=pass invalid_restore=denied
+</system-out>
+	</testcase>
+</testsuite>

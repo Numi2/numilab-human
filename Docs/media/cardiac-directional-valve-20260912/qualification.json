@@ -1,0 +1,610 @@
+{
+  "schema": "numilab-human.directional-valve-qualification.v1",
+  "status": "pass_bounded_native_directional_resistance",
+  "native": {
+    "schema": "numilab-human.directional-valve-publication.v1",
+    "repository": "https://github.com/Numi2/numi-lab.git",
+    "branch": "coupled",
+    "prior_revision": "cb34a4a3e0ba961fc68b3e027fca3b03c0f48706",
+    "revision": "6f4a47ae5102235aa5d078947216eb48e488f97c",
+    "verified_remote_revision": "6f4a47ae5102235aa5d078947216eb48e488f97c",
+    "qualified_source_blobs_verified": 22,
+    "qualified_source_blobs_match": true,
+    "transfer_pack_bytes": 176321,
+    "transfer_pack_sha256": "ce794790071841f97d58f827d191ca09f5a83fa2c045e96ff57237c5b7e4e0c4",
+    "nonforce_push": true,
+    "base_revision": "cb34a4a3e0ba961fc68b3e027fca3b03c0f48706",
+    "host": {
+      "model": "Mac16,11",
+      "cpu": "Apple M4 Pro",
+      "memory_bytes": 25769803776,
+      "os": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6\nBuildVersion:\t\t25G72"
+    },
+    "abi": 33,
+    "package_version": 18,
+    "snapshot_archive_version": 11,
+    "accepted_proof_manifest_version": 11,
+    "source_files": {
+      "include/metalrobo/MatterSnapshotArchive.hpp": {
+        "bytes": 1763,
+        "sha256": "c83fd4b413ff2fd84f7daa135bed5695c180d70e336b8f025b0f502c7e14dd9a"
+      },
+      "matter/CMakeLists.txt": {
+        "bytes": 21551,
+        "sha256": "8ccd3038a1623a1e4c7cbf55d5d679cdeba574e57fae7dca6f4dcd81688967a2"
+      },
+      "matter/include/numi/matter/matter.hpp": {
+        "bytes": 68532,
+        "sha256": "d714a4d1c7668e32053c8793c82088ec17cb0eddeaf62f6cd46fccb20094f61a"
+      },
+      "matter/include/numi/matter/shared.h": {
+        "bytes": 44625,
+        "sha256": "07980981380062fb9e42d723bba2bcbc2533378f53668099a023a06178b04aea"
+      },
+      "matter/src/accepted_state_proof_gpu.hpp": {
+        "bytes": 4388,
+        "sha256": "d1527a51b2613c1e0818e83b9e5390f9c36f98cd117ac0b4a6193936ee8a205a"
+      },
+      "matter/src/compiler_impl.cpp": {
+        "bytes": 116675,
+        "sha256": "59e4a62d5a4fb087f96d84e0496fcf1127908cfa51182746cd264d859946d29a"
+      },
+      "matter/src/metal/fem.metalinc": {
+        "bytes": 89478,
+        "sha256": "81e55772b96147bebceff0b96efe84d7f65cad450f0b4ecbfc68ec1cf9ee33ef"
+      },
+      "matter/src/package_impl.cpp": {
+        "bytes": 38641,
+        "sha256": "7ec48b2107122ce00a7395ca10e4cd87d9cbcc9885f4f032065a467d7fddb1bf"
+      },
+      "matter/src/runtime.mm": {
+        "bytes": 658623,
+        "sha256": "cc177fd8ec247675e5a9fa0f9f70b5f9a33e2547819df465916ca56f52fce872"
+      },
+      "matter/src/validation_impl.cpp": {
+        "bytes": 92848,
+        "sha256": "2ccbe9073f9c511829904c4076c74b96afbc89a4d2aa0a65b754d2a5c5d503ea"
+      },
+      "matter/src/fem_reference_geometry.hpp": {
+        "bytes": 5783,
+        "sha256": "7e02dd10832dfd4096e60fb59b4f019789a87896acab4aeb3e35fcbc55cad637"
+      },
+      "matter/src/vascular_impl.cpp": {
+        "bytes": 43553,
+        "sha256": "b8470ba5115b75de1041dc89ec44f4db804e716570af84cc52eda38ca5b97689"
+      },
+      "matter/src/metal/vascular.metalinc": {
+        "bytes": 66242,
+        "sha256": "915e951b2bcbbae3140db55e7d68c56a170106763953ab46c235abaee9403470"
+      },
+      "matter/tools/directional_valve_check.mm": {
+        "bytes": 43200,
+        "sha256": "b6805cc02cf30a0a62084ca9a82ef13db90d6f6401bb492f779c85260c597b1c"
+      },
+      "matter/include/numi/matter/vascular.hpp": {
+        "bytes": 237,
+        "sha256": "149e556aa04bb6de5a15dfaa6fac9d41875b67bc9fab8aac0caf9b3d6b69acb0"
+      },
+      "matter/tools/vascular_fixture.hpp": {
+        "bytes": 1119,
+        "sha256": "17b3fd9a7e1c89a4c5b354b32bd53b7c841fe71120efca892b808e60d861905d"
+      },
+      "matter/tools/vascular_compiler_check.cpp": {
+        "bytes": 32383,
+        "sha256": "3429de684c8b3e261cde6523af792dfecd466d5f959589bed13771d98de231db"
+      },
+      "matter/tools/fem_regional_material_check.mm": {
+        "bytes": 56783,
+        "sha256": "861c29f45ac6934264cdd931cdcf8780c78e5f8c06bc1f6ecb7f595aea761ea9"
+      },
+      "matter/tools/fem_reference_check.mm": {
+        "bytes": 43443,
+        "sha256": "b672149c36a0227b88c0e4e5a705ecbf74cbbef963e9173b949ad2e4e95001f3"
+      },
+      "matter/materials/rodero2021_ventricular_guccione_passive.nmatter": {
+        "bytes": 2412,
+        "sha256": "dd37136f93104ffe058ec334153707d4610be4b3ca6f95938ebee0a7d5799db4"
+      },
+      "matter/materials/rodero2021_nonventricular_neo_hookean_passive.nmatter": {
+        "bytes": 1351,
+        "sha256": "8cc7f3e1936e4303a011b40ff287431a99be861a51a11e82913d630371825b00"
+      },
+      "matter/tools/cardiac_material_reference.hpp": {
+        "bytes": 5926,
+        "sha256": "3d2ecdb04f07a89c8d59e8527c5ae3bc440f909e9f5c540c3765b181756df800"
+      }
+    },
+    "binaries": {
+      "bin/metalrobo_matter_physics_probe": {
+        "bytes": 485920,
+        "sha256": "106b576f62482196a3e6a03d59c275fe80123ede7a6f2a21f207f21405864748"
+      },
+      "bin/metalrobo_matter_snapshot_archive_probe": {
+        "bytes": 65336,
+        "sha256": "eae14b26fe102d3553593be00f34b76010e5c8e9c19a69b5a88acd074aae5491"
+      },
+      "bin/metalrobo_numilab_human_tendon_fem_load_probe": {
+        "bytes": 94176,
+        "sha256": "a7320672564ed40dd651c2507e189c7299f875260d7575817e49bcaeddcdcbce"
+      },
+      "matter/numi-matter-stateful-check": {
+        "bytes": 567272,
+        "sha256": "95a9336057883749f73b1775f9f9f25c3c856465028d57bda34abfa29dcc89d0"
+      },
+      "matter/numi-matter-vascular-cavity-check": {
+        "bytes": 1146528,
+        "sha256": "1da4c075b5c04f0ec0cfd01523cb6e6ab9b9bc36aad37abcc1d2e5e08ac9d524"
+      },
+      "matter/numi-matter-vascular-compiler-check": {
+        "bytes": 665664,
+        "sha256": "2616b0022feae73175070b4104cfb7aa941efa6e0f23c74e4ebd66c29e8be97f"
+      },
+      "matter/numi-matter-fiber-check": {
+        "bytes": 211880,
+        "sha256": "ebc497954e2542ac48ed6152f0fb4a042cd416fe3cfe1fbe0d9207470ced81ab"
+      },
+      "matter/numi-matter-cardiac-transaction-check": {
+        "bytes": 90504,
+        "sha256": "32d46e3ef640963758d0e435778eb755cfe66919cf18219fcde6d98d9b666873"
+      },
+      "matter/numi-matter-cardiac-material-check": {
+        "bytes": 495952,
+        "sha256": "464135580bced33867d46fba3e91cf953b0d08e6b2713d52d8eb7befee5677d7"
+      },
+      "matter/numi-matter-fem-material-frame-compiler-check": {
+        "bytes": 575888,
+        "sha256": "552170a255a671f8e818f243a59fe75a8fff082d20aa298b473388ffb583fe17"
+      },
+      "matter/numi-matter-fem-material-frame-check": {
+        "bytes": 1173960,
+        "sha256": "a2750bd0fe1fa7e7c9fb50483bd615251b371eb594054759ddf6b1f5a448cf8e"
+      },
+      "matter/numi-matter-fem-regional-material-check": {
+        "bytes": 1376968,
+        "sha256": "7e302f91181f99364deed56ed6b7442b31e790dd11551fa700ce9593622b97a9"
+      },
+      "matter/numi-matter-fem-reference-check": {
+        "bytes": 1332768,
+        "sha256": "fa6f7a4cbc4c5bf58d60d0bb86b7762b2b164f9f668a048e14bbf060d710f330"
+      },
+      "matter/numi-matter-directional-valve-check": {
+        "bytes": 1155872,
+        "sha256": "fb7c0e6cacbd520e7787ca9d034aee7412e5a38d0cf39fe26962b47c8bbeeefc"
+      },
+      "matter/shaders/NumiMatter.metallib": {
+        "bytes": 2789190,
+        "sha256": "a59cd3135ac96445e2f764eb05b20eff7f3352ec12838df5f94a19d4867b9603"
+      },
+      "lib/libmetalrobo.dylib": {
+        "bytes": 6595328,
+        "sha256": "4bdd427e6c3d47cf879ab72e5f754e5de2575fdf4b7caf227b255d92f23473e3"
+      }
+    },
+    "source_unchanged": true,
+    "binaries_unchanged": true
+  },
+  "execution": {
+    "path": "native-runs/final-attempt-001/execution.json",
+    "ctest_count": 29,
+    "failures": 0,
+    "skipped": 0,
+    "ctest_elapsed_seconds": 74.84695216687396,
+    "build_elapsed_seconds": 8.558634333312511,
+    "tests": [
+      "matter.numi_human.tendon_fem_transaction",
+      "matter.runtime.snapshot_archive",
+      "matter.physics.mixed_mpm_fem",
+      "matter.physics.monolithic_multiphysics",
+      "matter.physics.topology_mutation",
+      "matter.physics.cohesive_mutation",
+      "matter.physics.small_scale_topology_conservation",
+      "matter.physics.puncture_mutation",
+      "matter.runtime.topology_rollback",
+      "matter.physics.learned_polyconvex_icnn",
+      "matter.runtime.production_transaction_rollback",
+      "matter.physics.stateful_mpm",
+      "matter.physics.stateful_fem",
+      "matter.runtime.inverse_identification",
+      "matter.compiler.cardiac_material_source",
+      "matter.compiler.fem_material_frame",
+      "matter.compiler.stateful_roundtrip",
+      "matter.compiler.source_fiber",
+      "matter.metal.source_fiber",
+      "matter.compiler.vascular",
+      "matter.metal.cardiac_transaction",
+      "matter.compiler.fem_regional_material",
+      "matter.metal.fem_regional_material",
+      "matter.metal.fem_material_frame",
+      "matter.metal.vascular_cavity",
+      "matter.compiler.fem_reference",
+      "matter.metal.fem_reference",
+      "matter.compiler.directional_valve",
+      "matter.metal.directional_valve"
+    ],
+    "directional_cpu_controls": 40,
+    "newton_iterations": 12,
+    "fgmres_iterations": 64,
+    "merit_trials": 8
+  },
+  "source_coefficients": {
+    "record": "source-coefficients.json",
+    "record_hash": {
+      "bytes": 2296,
+      "sha256": "7df327efb4fae2ef9e51c66be21c5bb306225546da374bf0fc73b7161b6a3923"
+    },
+    "exact_decimal_conversion_checked": true,
+    "source_pdf_hash_verified": true,
+    "parent_config_hash_verified": true,
+    "native_cook_uses_binary64_then_FP32": true
+  },
+  "runtime": {
+    "cases": [
+      {
+        "directional_case": "mitral_forward_guess_to_reverse",
+        "result": "pass",
+        "steps": 16,
+        "environments": 2,
+        "fp64_normalized_max": 1.3491968247696284e-06,
+        "signed_flow_relative_max": 1.903279537007878e-06,
+        "conservation_relative_max": 4.76837158203125e-07,
+        "pressure_normalized_max": 5.905678123140005e-07,
+        "replay": "bitwise",
+        "rollback": "isolated",
+        "reset": "bitwise",
+        "signed_restore": "pass",
+        "invalid_restore": "denied"
+      },
+      {
+        "directional_case": "mitral_reverse_guess_to_forward",
+        "result": "pass",
+        "steps": 16,
+        "environments": 2,
+        "fp64_normalized_max": 1.2534382530714802e-06,
+        "signed_flow_relative_max": 2.7104701539302243e-05,
+        "conservation_relative_max": 8.940696716308594e-08,
+        "pressure_normalized_max": 7.028963553597817e-07,
+        "replay": "bitwise",
+        "rollback": "isolated",
+        "reset": "bitwise",
+        "signed_restore": "pass",
+        "invalid_restore": "denied"
+      },
+      {
+        "directional_case": "aortic_forward_guess_to_reverse",
+        "result": "pass",
+        "steps": 16,
+        "environments": 2,
+        "fp64_normalized_max": 7.515006346571123e-07,
+        "signed_flow_relative_max": 4.162351802620459e-06,
+        "conservation_relative_max": 4.76837158203125e-07,
+        "pressure_normalized_max": 7.361544355481602e-07,
+        "replay": "bitwise",
+        "rollback": "isolated",
+        "reset": "bitwise",
+        "signed_restore": "pass",
+        "invalid_restore": "denied"
+      },
+      {
+        "directional_case": "aortic_reverse_guess_to_forward",
+        "result": "pass",
+        "steps": 16,
+        "environments": 2,
+        "fp64_normalized_max": 1.8340657561566331e-06,
+        "signed_flow_relative_max": 5.3831032504797005e-08,
+        "conservation_relative_max": 6.953875223795573e-08,
+        "pressure_normalized_max": 3.768125157534996e-07,
+        "replay": "bitwise",
+        "rollback": "isolated",
+        "reset": "bitwise",
+        "signed_restore": "pass",
+        "invalid_restore": "denied"
+      },
+      {
+        "directional_case": "mitral_zero_to_reverse",
+        "result": "pass",
+        "steps": 16,
+        "environments": 2,
+        "fp64_normalized_max": 1.3491968247696284e-06,
+        "signed_flow_relative_max": 1.903279537007878e-06,
+        "conservation_relative_max": 4.76837158203125e-07,
+        "pressure_normalized_max": 5.905678123140005e-07,
+        "replay": "bitwise",
+        "rollback": "isolated",
+        "reset": "bitwise",
+        "signed_restore": "pass",
+        "invalid_restore": "denied"
+      },
+      {
+        "directional_case": "aortic_zero_to_forward",
+        "result": "pass",
+        "steps": 16,
+        "environments": 2,
+        "fp64_normalized_max": 1.8340657561566331e-06,
+        "signed_flow_relative_max": 5.3831032504797005e-08,
+        "conservation_relative_max": 6.953875223795573e-08,
+        "pressure_normalized_max": 3.768125157534996e-07,
+        "replay": "bitwise",
+        "rollback": "isolated",
+        "reset": "bitwise",
+        "signed_restore": "pass",
+        "invalid_restore": "denied"
+      }
+    ],
+    "maximum_errors": {
+      "fp64_normalized_max": 1.8340657561566331e-06,
+      "signed_flow_relative_max": 2.7104701539302243e-05,
+      "conservation_relative_max": 4.76837158203125e-07,
+      "pressure_normalized_max": 7.361544355481602e-07
+    },
+    "primary_steps_per_case": 16,
+    "environments": 2,
+    "nominal_timestep_seconds": 0.01,
+    "nominal_primary_duration_seconds": 0.16,
+    "additional_checks": [
+      "bitwise replay",
+      "isolated rollback",
+      "bitwise episode reset",
+      "finite signed flow restore",
+      "invalid restore rejected without mutation"
+    ],
+    "reference": "Independent FP64 backward-Euler elimination plus pivoted species/exchange solve using serialized FP32 coefficients."
+  },
+  "direct_equation": {
+    "directional_direct": "pass",
+    "cases": 4,
+    "environments": 2,
+    "residual_Jv_normalized_max": 7.953482398346871e-08,
+    "one_sided_or_interior_FD_max": 0.0005139193235144049,
+    "Q0_reverse_donor": "downstream",
+    "Q0_equal_pressure_tie": "forward",
+    "exact_zero_forward_diagonal": "true"
+  },
+  "shared_breakpoint": {
+    "directional_shared_breakpoint": "pass",
+    "cases": 2,
+    "environments": 2,
+    "edges": 2,
+    "rows": 28,
+    "exact_and_rounded_crossings": "pass",
+    "trial_apply": "bitwise",
+    "common_owner_alpha": "pass",
+    "no_flow_projection": "true"
+  },
+  "legacy_equivalence": {
+    "directional_legacy_equivalence": "pass",
+    "signs": 2,
+    "steps": 16,
+    "normalized_max": 1.1920928955078125e-07
+  },
+  "acceptance_bounds": {
+    "state_normalized": 8e-05,
+    "signed_flow_relative": 0.0003,
+    "signed_flow_reference_magnitude_gate_m3_per_s": 1e-10,
+    "closed_volume_or_species_relative": 3e-05,
+    "pressure_error_per_1000_Pa": 3e-05,
+    "direct_residual_or_Jv_normalized": 2e-05,
+    "finite_difference_normalized": 0.003,
+    "legacy_state_normalized": 3e-05
+  },
+  "retained_physical_attempts": [
+    {
+      "path": "native-runs/metal-attempt-001",
+      "status": "fail",
+      "ctest_returncode": 8,
+      "interpretation": "Physical first stiff forward-to-reverse trajectory rejects at the original eight merit trials."
+    },
+    {
+      "path": "native-runs/metal-attempt-002",
+      "status": "fail",
+      "ctest_returncode": 8,
+      "interpretation": "All six runtime cases pass after core repair, then the direct harness aborts on an unqualified shader name. Independent review also found absent pressure-coefficient preparation."
+    },
+    {
+      "path": "native-runs/metal-attempt-003",
+      "status": "pass",
+      "ctest_returncode": 0,
+      "interpretation": "Complete focused physical test passes after both harness repairs."
+    }
+  ],
+  "retained_cpu_attempts": [
+    "native-runs/cpu-attempt-001",
+    "native-runs/cpu-attempt-002",
+    "native-runs/cpu-attempt-003",
+    "native-runs/cpu-attempt-004"
+  ],
+  "core_build_attempt": "native-runs/core-attempt-001",
+  "evidence_scope": {
+    "Cplusplus_WorldSource_interface": true,
+    "prior_Human_JSON_law_sets_unchanged": true,
+    "source_coefficient_pairs": true,
+    "declared_piecewise_native_switching": true,
+    "exact_CARP_switching_reproduction": false,
+    "anatomical_valve_assignment": false,
+    "anatomical_cardiac_wall_physical_steps": 0,
+    "complete_cardiac_cycle": false,
+    "biological_or_subject_calibration": false,
+    "standing_or_walking_qualification": false
+  },
+  "remaining_gates": [
+    "Physical anatomical pressure ports and quantitative support ownership",
+    "Unloaded/loading reconstruction and reference-basis fibre data",
+    "Exact source valve switching and source activation history",
+    "Nonduplicated spatial blood mass and momentum transfer",
+    "Closure-label material coefficients, native inertial densities and global embedding",
+    "Held-out physiological calibration"
+  ],
+  "artifacts": {
+    "commit-verification.json": {
+      "bytes": 3851,
+      "sha256": "e0224c0eabe000cbfda40046c1666bebe1d936a495d1ec7e317ecda2807a5e03"
+    },
+    "native-runs/core-attempt-001/build.log": {
+      "bytes": 206,
+      "sha256": "463e0ae92b7187a5b9fe9ba1a7547592198ab3fd51368e82de51f8e0a908935c"
+    },
+    "native-runs/core-attempt-001/execution.json": {
+      "bytes": 1343,
+      "sha256": "375e4b9b81aedf476be380f205e4ae5cb6c18d61d588021bbdeb969d704aae03"
+    },
+    "native-runs/cpu-attempt-001/build.execution.json": {
+      "bytes": 2888,
+      "sha256": "244a8225100c147d63de6ddc95641610705ac7abfeb37667bb150156ea8ece90"
+    },
+    "native-runs/cpu-attempt-001/build.log": {
+      "bytes": 1946,
+      "sha256": "07a89b66526e48100d21a0fe2d65d27a12fa2d4145a66be3a87cacbc4aaa07e8"
+    },
+    "native-runs/cpu-attempt-001/tests.execution.json": {
+      "bytes": 3024,
+      "sha256": "7750f094fdb6d43ed9c36b04c0e30b84decdc7a4888255462ca2a0954f873045"
+    },
+    "native-runs/cpu-attempt-001/tests.log": {
+      "bytes": 296,
+      "sha256": "68db15a7ff64031482362ca9553dcc6304ae96171c8fe2654668159187908e56"
+    },
+    "native-runs/cpu-attempt-002/build.execution.json": {
+      "bytes": 2888,
+      "sha256": "0d675b19b671bd23c6f2dd8455aa219553f867318a5f8aa65e2badc5efd2d099"
+    },
+    "native-runs/cpu-attempt-002/build.log": {
+      "bytes": 194,
+      "sha256": "437d0c2d46032d7e0c0ca403a9f156a3734552db79e5242ccbbb3dab4d257d7e"
+    },
+    "native-runs/cpu-attempt-002/tests.execution.json": {
+      "bytes": 3024,
+      "sha256": "5139c3434ab76c037bd68e53ec3ef80307b48d52c0a42dd254bf1f1446afc21a"
+    },
+    "native-runs/cpu-attempt-002/tests.log": {
+      "bytes": 296,
+      "sha256": "68db15a7ff64031482362ca9553dcc6304ae96171c8fe2654668159187908e56"
+    },
+    "native-runs/cpu-attempt-003/build.execution.json": {
+      "bytes": 2889,
+      "sha256": "3dbdd4688567e78dc43959fe576eabc0738d6c4da6e2d410cdce7ff379d433ff"
+    },
+    "native-runs/cpu-attempt-003/build.log": {
+      "bytes": 194,
+      "sha256": "437d0c2d46032d7e0c0ca403a9f156a3734552db79e5242ccbbb3dab4d257d7e"
+    },
+    "native-runs/cpu-attempt-003/tests.execution.json": {
+      "bytes": 3024,
+      "sha256": "41cfe03bf8a5ccc46f3a0abd04a0b1b6cb90106a3ca6cc319fe57b8d30f56b7c"
+    },
+    "native-runs/cpu-attempt-003/tests.log": {
+      "bytes": 296,
+      "sha256": "68db15a7ff64031482362ca9553dcc6304ae96171c8fe2654668159187908e56"
+    },
+    "native-runs/cpu-attempt-004/build.execution.json": {
+      "bytes": 2889,
+      "sha256": "3807ae7c84221a1d1abf54f43d5e279e31a760b50c1f2a246441d6e3a27bd625"
+    },
+    "native-runs/cpu-attempt-004/build.log": {
+      "bytes": 194,
+      "sha256": "437d0c2d46032d7e0c0ca403a9f156a3734552db79e5242ccbbb3dab4d257d7e"
+    },
+    "native-runs/cpu-attempt-004/tests.execution.json": {
+      "bytes": 3024,
+      "sha256": "df91b3fac712849a6c0395e17d069912e2b916af36c4063801d90a11f1f16f2b"
+    },
+    "native-runs/cpu-attempt-004/tests.log": {
+      "bytes": 296,
+      "sha256": "68db15a7ff64031482362ca9553dcc6304ae96171c8fe2654668159187908e56"
+    },
+    "native-runs/final-attempt-001/build.log": {
+      "bytes": 3015,
+      "sha256": "6bf56f019410a79e96ecbbb2bde697d6bdbd1390f00030cb0cd71288299e3958"
+    },
+    "native-runs/final-attempt-001/ctest.log": {
+      "bytes": 37404,
+      "sha256": "6665772efee5646c337c6e8758bc22da33adc33da49c441b7de3652ff4be8992"
+    },
+    "native-runs/final-attempt-001/ctest.xml": {
+      "bytes": 22884,
+      "sha256": "232fe1283db53968414ebdb3a0c44ae25e648c666b4e8fb5a5c72f4c95963b96"
+    },
+    "native-runs/final-attempt-001/execution.json": {
+      "bytes": 18223,
+      "sha256": "49cfe99e0fe8aa65c486629511a40fc60d8ce32679bb860e35923a7a2c85eb7f"
+    },
+    "native-runs/metal-attempt-001/build.log": {
+      "bytes": 22,
+      "sha256": "8c35b1682f73592d30612d7b0fabdb384fcfff35cb5a076cb48b85b1368aa794"
+    },
+    "native-runs/metal-attempt-001/ctest.log": {
+      "bytes": 2045,
+      "sha256": "f9935e45e862449fb6db6ad43a218ace81127ec7c15bc2041e0505d5da08ccba"
+    },
+    "native-runs/metal-attempt-001/ctest.xml": {
+      "bytes": 932,
+      "sha256": "a5d6066f3730a37583f0eab33cca665048e5d446abfbde6a180640b2b8b46498"
+    },
+    "native-runs/metal-attempt-001/execution.json": {
+      "bytes": 9292,
+      "sha256": "862cf3d0f6a29dd60b9843697d940ba5b0a739e271d74e25209d1c7dff6fc224"
+    },
+    "native-runs/metal-attempt-002/build.log": {
+      "bytes": 22,
+      "sha256": "8c35b1682f73592d30612d7b0fabdb384fcfff35cb5a076cb48b85b1368aa794"
+    },
+    "native-runs/metal-attempt-002/ctest.log": {
+      "bytes": 6274,
+      "sha256": "d9c414de7e5c8fc8f9645439cd2a855e50bc2f4604fb3d468fcac818a76e47f1"
+    },
+    "native-runs/metal-attempt-002/ctest.xml": {
+      "bytes": 3032,
+      "sha256": "c9dceadb090f9b46f687e120e8714f170d51dee09947cbc45aa5106040a662f2"
+    },
+    "native-runs/metal-attempt-002/execution.json": {
+      "bytes": 9671,
+      "sha256": "f9cec296abc79a02ac6db928a412005854f7251efcddb255d2670d9ebf723652"
+    },
+    "native-runs/metal-attempt-003/build.log": {
+      "bytes": 22,
+      "sha256": "8c35b1682f73592d30612d7b0fabdb384fcfff35cb5a076cb48b85b1368aa794"
+    },
+    "native-runs/metal-attempt-003/ctest.log": {
+      "bytes": 4196,
+      "sha256": "e829b87582292975cc2f64f441f0ba97f73ca3de5fee470d8c7b63653ecc144d"
+    },
+    "native-runs/metal-attempt-003/ctest.xml": {
+      "bytes": 1593,
+      "sha256": "2453acc25aeec77f06fd8a95065b05f784ace3df95263afdb9b00d4e2d9db386"
+    },
+    "native-runs/metal-attempt-003/execution.json": {
+      "bytes": 9670,
+      "sha256": "d454d7906ffce3412229b3bbd74175c96838e086070a736a794c4ff87260a984"
+    },
+    "native-runs/run_final_qualification.py": {
+      "bytes": 6480,
+      "sha256": "037da7e887a9ecf2596fc051f2b0fdb27ad7b513742564943751293f7f6a30ba"
+    },
+    "native-runs/run_metal_attempt_001.py": {
+      "bytes": 4577,
+      "sha256": "58d6a3c874b5b70ec962c205c46d1d5033797b8333d189d51cbe21226265f2db"
+    },
+    "native-runs/run_metal_attempt_002.py": {
+      "bytes": 4823,
+      "sha256": "5772f585c59f5fda0b83542ca33e0f10be6cc197d0aee12b7cf28ea86331612b"
+    },
+    "native-runs/run_metal_attempt_003.py": {
+      "bytes": 4823,
+      "sha256": "09b13601bd27e0f80ca7d277472cd1a7bb7f6ea501630332c08ba4788b136dd5"
+    },
+    "publication-attempt-001.log": {
+      "bytes": 270,
+      "sha256": "6c228ce1df517a237cd1ce0e1000acdb10b6b145b37fc1fa1c845304c2acba01"
+    },
+    "publication.json": {
+      "bytes": 574,
+      "sha256": "2e62129beaa054d95add3c515c2e6c800630a3755e1a58e712f01f71ddb7c167"
+    },
+    "publication.log": {
+      "bytes": 99,
+      "sha256": "5a63ff88debd4066729d0319684721ea9d2c594452cf5b17d5b31266059ba5b2"
+    },
+    "source-coefficients.json": {
+      "bytes": 2296,
+      "sha256": "7df327efb4fae2ef9e51c66be21c5bb306225546da374bf0fc73b7161b6a3923"
+    }
+  }
+}

@@ -69,11 +69,20 @@ The [cardiac source increment](CARDIAC_SOURCE_REPRODUCTION_20260912.md) adds the
 
 The [cardiac wall source importer](CARDIAC_WALL_ANATOMY_20260912.md) now preserves a CT-derived four-chamber mesh with 1,470,083 tetrahedra, all 24 region labels, fibre/sheet fields and conforming boundary indices. BodyParts3D atrial wall/cavity mismatch is retained as failed geometry evidence. The replacement source has 31 nonmanifold boundary edges and numerical valve/vein closures. The [native material-field increment](CARDIAC_MATERIAL_FIELD_20260912.md) adds per-tetrahedron frames and exact source passive energies with FP64/Metal and synthetic transaction checks at ABI30/package15, snapshot8/proof8. The [regional-material increment](CARDIAC_REGIONAL_MATERIAL_20260912.md) adds exact shared-node mass assembly from per-cell materials at ABI31/package16, snapshot9/proof9. All 1,470,083 source fibre/sheet pairs now have derived, source-bound quaternions checked independently in C++; raw source fields remain unchanged. The [passive-class attribution](CARDIAC_MATERIAL_ATTRIBUTION_20260912.md) now maps 1,456,445 cells and explicitly leaves 13,638 artificial closure cells unresolved. The article supplies a 1050 kg/m³ LV geometric mass-estimation convention, giving an exact-source sum of 92.07002232222225 g; it does not establish native inertial densities. The [reference-configuration increment](FEM_REFERENCE_CONFIGURATION_20260912.md) separates supplied rest coordinates from initial loaded coordinates at ABI32/package17, snapshot10/proof10. It does not recover case18 unloaded anatomy. Complete native material/density assignment, global embedding, physical ports, unloaded/loading data and subject calibration remain open. Coordinate-preserving node separation does not close ventricular embeddedness. The anatomical import still has zero physical steps; the separate two-tetrahedron fixture is not anatomical wall simulation.
 
-Remaining cardiac blockers are not all missing data. The next native engineering gates are:
+The [directional valve increment](CARDIAC_DIRECTIONAL_VALVE_20260912.md) now
+qualifies exact zero forward resistance and finite reverse leakage in the native
+C++ interface at ABI33/package18, snapshot11/proof11. Six paired synthetic
+trajectories, independent residual/Jv and shared-breakpoint controls pass after
+repairing the retained stiff-crossing failure at the original solver limits.
+The supplement provides coefficient pairs, not a complete switching equation;
+exact CARP behavior and anatomical valve assignment remain unqualified.
+
+Remaining cardiac blockers are not all missing data. Their engineering and data
+boundaries are:
 
 | Gate | Addressable engineering | Source or calibration dependency |
 | --- | --- | --- |
-| Source valve law | zero forward resistance and finite reverse resistance as a native constraint; the coefficients are known | anatomical valve/port ownership; an epsilon resistance is a different model |
+| Valve integration | bounded native directional law and coefficient representation now pass; permanent C++ interface is available | exact source switching equation and anatomical valve/port ownership; no anatomical assignment is inferred |
 | Wall ports and supports | conservative pressure work and Jacobians, spatial normal support and artificial-structure ownership | source cap/anchor interpretation and quantitative Robin coefficients |
 | Loading/unloading | qualified reconstruction and reference-basis fibre handling using separate reference/current coordinates | prescribed loads/supports and comparison data; no unloaded case18 mesh is supplied |
 | Source activation | reaction-eikonal timing and source TanhStress history in the accepted native clock | original timing field or a complete reconstruction deck and explicit active-law options |

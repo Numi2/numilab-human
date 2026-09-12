@@ -1,0 +1,48 @@
+UpdateCTestConfiguration  from :/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Parse Config file:/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Test project /Users/n/MetalRobo-human-completion-build-20260907
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 124
+    Start 124: matter.metal.directional_valve
+
+124: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-directional-valve-check
+124: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+124: Test timeout computed to be: 180
+124: -[MTLComputePipelineDescriptorInternal setComputeFunction:withType:]:866: failed assertion `computeFunction must not be nil.'
+124: directional_abi=33
+124: directional_compiler=pass checks=40 zero_forward_tree=pass cycles=denied resealed_packages=checked signed_initial_flow=pass positive_underflow=denied SI_Pa_per_mmHg=133.32238741500001 source_Rr10000_cooked=1333223882752
+124: directional_case=mitral_forward_guess_to_reverse result=pass steps=16 environments=2 fp64_normalized_max=1.3491968247696284e-06 signed_flow_relative_max=1.9032795370078781e-06 conservation_relative_max=4.76837158203125e-07 pressure_normalized_max=5.9056781231400054e-07 replay=bitwise rollback=isolated reset=bitwise signed_restore=pass invalid_restore=denied
+124: directional_case=mitral_reverse_guess_to_forward result=pass steps=16 environments=2 fp64_normalized_max=1.2534382530714802e-06 signed_flow_relative_max=2.7104701539302243e-05 conservation_relative_max=8.9406967163085938e-08 pressure_normalized_max=7.0289635535978168e-07 replay=bitwise rollback=isolated reset=bitwise signed_restore=pass invalid_restore=denied
+124: directional_case=aortic_forward_guess_to_reverse result=pass steps=16 environments=2 fp64_normalized_max=7.5150063465711227e-07 signed_flow_relative_max=4.1623518026204589e-06 conservation_relative_max=4.76837158203125e-07 pressure_normalized_max=7.3615443554816016e-07 replay=bitwise rollback=isolated reset=bitwise signed_restore=pass invalid_restore=denied
+124: directional_case=aortic_reverse_guess_to_forward result=pass steps=16 environments=2 fp64_normalized_max=1.8340657561566331e-06 signed_flow_relative_max=5.3831032504797005e-08 conservation_relative_max=6.9538752237955734e-08 pressure_normalized_max=3.7681251575349961e-07 replay=bitwise rollback=isolated reset=bitwise signed_restore=pass invalid_restore=denied
+124: directional_case=mitral_zero_to_reverse result=pass steps=16 environments=2 fp64_normalized_max=1.3491968247696284e-06 signed_flow_relative_max=1.9032795370078781e-06 conservation_relative_max=4.76837158203125e-07 pressure_normalized_max=5.9056781231400054e-07 replay=bitwise rollback=isolated reset=bitwise signed_restore=pass invalid_restore=denied
+124: directional_case=aortic_zero_to_forward result=pass steps=16 environments=2 fp64_normalized_max=1.8340657561566331e-06 signed_flow_relative_max=5.3831032504797005e-08 conservation_relative_max=6.9538752237955734e-08 pressure_normalized_max=3.7681251575349961e-07 replay=bitwise rollback=isolated reset=bitwise signed_restore=pass invalid_restore=denied
+1/1 Test #124: matter.metal.directional_valve ...Subprocess aborted***Exception:   2.94 sec
+-[MTLComputePipelineDescriptorInternal setComputeFunction:withType:]:866: failed assertion `computeFunction must not be nil.'
+directional_abi=33
+directional_compiler=pass checks=40 zero_forward_tree=pass cycles=denied resealed_packages=checked signed_initial_flow=pass positive_underflow=denied SI_Pa_per_mmHg=133.32238741500001 source_Rr10000_cooked=1333223882752
+directional_case=mitral_forward_guess_to_reverse result=pass steps=16 environments=2 fp64_normalized_max=1.3491968247696284e-06 signed_flow_relative_max=1.9032795370078781e-06 conservation_relative_max=4.76837158203125e-07 pressure_normalized_max=5.9056781231400054e-07 replay=bitwise rollback=isolated reset=bitwise signed_restore=pass invalid_restore=denied
+directional_case=mitral_reverse_guess_to_forward result=pass steps=16 environments=2 fp64_normalized_max=1.2534382530714802e-06 signed_flow_relative_max=2.7104701539302243e-05 conservation_relative_max=8.9406967163085938e-08 pressure_normalized_max=7.0289635535978168e-07 replay=bitwise rollback=isolated reset=bitwise signed_restore=pass invalid_restore=denied
+directional_case=aortic_forward_guess_to_reverse result=pass steps=16 environments=2 fp64_normalized_max=7.5150063465711227e-07 signed_flow_relative_max=4.1623518026204589e-06 conservation_relative_max=4.76837158203125e-07 pressure_normalized_max=7.3615443554816016e-07 replay=bitwise rollback=isolated reset=bitwise signed_restore=pass invalid_restore=denied
+directional_case=aortic_reverse_guess_to_forward result=pass steps=16 environments=2 fp64_normalized_max=1.8340657561566331e-06 signed_flow_relative_max=5.3831032504797005e-08 conservation_relative_max=6.9538752237955734e-08 pressure_normalized_max=3.7681251575349961e-07 replay=bitwise rollback=isolated reset=bitwise signed_restore=pass invalid_restore=denied
+directional_case=mitral_zero_to_reverse result=pass steps=16 environments=2 fp64_normalized_max=1.3491968247696284e-06 signed_flow_relative_max=1.9032795370078781e-06 conservation_relative_max=4.76837158203125e-07 pressure_normalized_max=5.9056781231400054e-07 replay=bitwise rollback=isolated reset=bitwise signed_restore=pass invalid_restore=denied
+directional_case=aortic_zero_to_forward result=pass steps=16 environments=2 fp64_normalized_max=1.8340657561566331e-06 signed_flow_relative_max=5.3831032504797005e-08 conservation_relative_max=6.9538752237955734e-08 pressure_normalized_max=3.7681251575349961e-07 replay=bitwise rollback=isolated reset=bitwise signed_restore=pass invalid_restore=denied
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+human       =   2.94 sec*proc (1 test)
+matter      =   2.94 sec*proc (1 test)
+vascular    =   2.94 sec*proc (1 test)
+
+Total Test time (real) =   2.94 sec
+
+The following tests FAILED:
+	124 - matter.metal.directional_valve (Subprocess aborted) human matter vascular
+Errors while running CTest

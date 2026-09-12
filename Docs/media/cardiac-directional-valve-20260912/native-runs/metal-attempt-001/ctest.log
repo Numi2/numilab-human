@@ -1,0 +1,36 @@
+UpdateCTestConfiguration  from :/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Parse Config file:/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Test project /Users/n/MetalRobo-human-completion-build-20260907
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 124
+    Start 124: matter.metal.directional_valve
+
+124: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-directional-valve-check
+124: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+124: Test timeout computed to be: 180
+124: directional_abi=33
+124: directional_compiler=pass checks=40 zero_forward_tree=pass cycles=denied resealed_packages=checked signed_initial_flow=pass positive_underflow=denied SI_Pa_per_mmHg=133.32238741500001 source_Rr10000_cooked=1333223882752
+124: directional_valve_qualification=failed reason=vascular step 0 environment 0 rejected code=10 object=4294967295 failing_index=4294967295 diagnostics=[0.003906,1.126669,1.431498,8.000000]
+1/1 Test #124: matter.metal.directional_valve ...***Failed    1.31 sec
+directional_abi=33
+directional_compiler=pass checks=40 zero_forward_tree=pass cycles=denied resealed_packages=checked signed_initial_flow=pass positive_underflow=denied SI_Pa_per_mmHg=133.32238741500001 source_Rr10000_cooked=1333223882752
+directional_valve_qualification=failed reason=vascular step 0 environment 0 rejected code=10 object=4294967295 failing_index=4294967295 diagnostics=[0.003906,1.126669,1.431498,8.000000]
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+human       =   1.31 sec*proc (1 test)
+matter      =   1.31 sec*proc (1 test)
+vascular    =   1.31 sec*proc (1 test)
+
+Total Test time (real) =   1.31 sec
+
+The following tests FAILED:
+	124 - matter.metal.directional_valve (Failed)           human matter vascular
+Errors while running CTest
