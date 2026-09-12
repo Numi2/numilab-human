@@ -1,0 +1,98 @@
+{
+  "schema": "numilab-human.native-check-execution.v1",
+  "request": {
+    "command": [
+      "swift",
+      "build",
+      "-c",
+      "release",
+      "--build-tests",
+      "-Xswiftc",
+      "-enable-testing",
+      "-j",
+      "4"
+    ],
+    "cwd": "/Users/n/numi-brain-human-completion-20260907",
+    "environment": {},
+    "repositories": {
+      "brain": "/Users/n/numi-brain-human-completion-20260907"
+    },
+    "sources": [
+      "/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainMetal/Interop/MetalNumanXGateCRootRunner.swift",
+      "/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainMetal/MetalNumanXBehaviorTelemetry.swift",
+      "/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainMetal/MetalNumanXBridgeV1.swift",
+      "/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainMetalTests/MetalNumanXBehaviorTelemetryTests.swift"
+    ],
+    "timeout_seconds": 300,
+    "binaries": []
+  },
+  "request_identity": {
+    "bytes": 829,
+    "sha256": "8d423d59cf10a60696c2f9a91e6030c3150a830129c3242916ebb13fc3f70874"
+  },
+  "runner_identity": {
+    "bytes": 3587,
+    "sha256": "050a8e438d8cba8af1b6eaad9c9b86c17f22077a43bb0f3899e19b51a16a02d6"
+  },
+  "started_utc": "2026-09-12T22:44:01.086037+00:00",
+  "source_before": {
+    "/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainMetal/Interop/MetalNumanXGateCRootRunner.swift": {
+      "bytes": 44039,
+      "sha256": "12b21a348d923d831463c5d224b099cefa80ca5bf975f50bce7271d0f5353ac1"
+    },
+    "/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainMetal/MetalNumanXBehaviorTelemetry.swift": {
+      "bytes": 5123,
+      "sha256": "08a6556021307fec4626c27ccb27dce4406e099896b1c2b0a7c02b6881f6d8b1"
+    },
+    "/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainMetal/MetalNumanXBridgeV1.swift": {
+      "bytes": 98595,
+      "sha256": "59f85956d48054be2dc1ec8399c4a71d4d735de8a3cb176c08704d7b4dbba38c"
+    },
+    "/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainMetalTests/MetalNumanXBehaviorTelemetryTests.swift": {
+      "bytes": 2791,
+      "sha256": "a7ebd892003c836d8943b98ed9434d7ec758e5b97a8f699d6cc0937a4c5dd61c"
+    }
+  },
+  "artifacts_before": {},
+  "git_before": {
+    "brain": {
+      "revision": "370337dc69e03e9479d2465bda10c23e69b3aa14",
+      "status": "M Sources/NumiBrainMetal/Interop/MetalNumanXGateCRootRunner.swift\n M Sources/NumiBrainMetal/MetalNumanXBridgeV1.swift\n?? Sources/NumiBrainMetal/MetalNumanXBehaviorTelemetry.swift\n?? Tests/NumiBrainMetalTests/MetalNumanXBehaviorTelemetryTests.swift"
+    }
+  },
+  "workload_process_inventory": [],
+  "returncode": 0,
+  "elapsed_seconds": 80.69098787521943,
+  "source_after": {
+    "/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainMetal/Interop/MetalNumanXGateCRootRunner.swift": {
+      "bytes": 44039,
+      "sha256": "12b21a348d923d831463c5d224b099cefa80ca5bf975f50bce7271d0f5353ac1"
+    },
+    "/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainMetal/MetalNumanXBehaviorTelemetry.swift": {
+      "bytes": 5123,
+      "sha256": "08a6556021307fec4626c27ccb27dce4406e099896b1c2b0a7c02b6881f6d8b1"
+    },
+    "/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainMetal/MetalNumanXBridgeV1.swift": {
+      "bytes": 98595,
+      "sha256": "59f85956d48054be2dc1ec8399c4a71d4d735de8a3cb176c08704d7b4dbba38c"
+    },
+    "/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainMetalTests/MetalNumanXBehaviorTelemetryTests.swift": {
+      "bytes": 2791,
+      "sha256": "a7ebd892003c836d8943b98ed9434d7ec758e5b97a8f699d6cc0937a4c5dd61c"
+    }
+  },
+  "artifacts_after": {},
+  "git_after": {
+    "brain": {
+      "revision": "370337dc69e03e9479d2465bda10c23e69b3aa14",
+      "status": "M Sources/NumiBrainMetal/Interop/MetalNumanXGateCRootRunner.swift\n M Sources/NumiBrainMetal/MetalNumanXBridgeV1.swift\n?? Sources/NumiBrainMetal/MetalNumanXBehaviorTelemetry.swift\n?? Tests/NumiBrainMetalTests/MetalNumanXBehaviorTelemetryTests.swift"
+    }
+  },
+  "log_identity": {
+    "bytes": 1061,
+    "sha256": "10beafc5adfcbe180388c62ab1ee3f93da0723ca69fdc93ea060aeee53d03668"
+  },
+  "source_unchanged": true,
+  "artifacts_unchanged": true,
+  "status": "pass"
+}

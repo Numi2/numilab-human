@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Source-bound Human metric criteria; not generic TaskPack or trial evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "task",
+    "step_ns",
+    "target_speed_mps",
+    "criteria"
+  ],
+  "properties": {
+    "schema": {
+      "const": "numi.human.behavior-task.v1"
+    },
+    "task": {
+      "enum": [
+        "standing",
+        "recovery",
+        "walking"
+      ]
+    },
+    "step_ns": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9223372036854775807
+    },
+    "target_speed_mps": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "criteria": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minimum_root_height_m",
+        "maximum_trunk_tilt_rad",
+        "maximum_planar_speed_mps",
+        "root_body_semantic_id",
+        "trunk_body_semantic_id",
+        "velocity_body_semantic_id",
+        "world_reference_origin_m",
+        "world_up_axis",
+        "world_forward_axis",
+        "trunk_up_axis_body",
+        "velocity_observable",
+        "forbidden_contact_semantic_ids"
+      ],
+      "properties": {
+        "minimum_root_height_m": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maximum_trunk_tilt_rad": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maximum_planar_speed_mps": {
+          "type": "number",
+          "minimum": 0
+        },
+        "root_body_semantic_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "trunk_body_semantic_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "velocity_body_semantic_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "world_reference_origin_m": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "world_up_axis": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "world_forward_axis": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "trunk_up_axis_body": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "velocity_observable": {
+          "const": "body_com_linear_velocity"
+        },
+        "forbidden_contact_semantic_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "walking"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "target_speed_mps": {
+            "type": "number"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "target_speed_mps": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
+}

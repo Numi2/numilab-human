@@ -1,0 +1,303 @@
+{
+  "schema": "numilab-human.native-check-execution.v1",
+  "request": {
+    "command": [
+      "swift",
+      "test",
+      "-c",
+      "release",
+      "--skip-build",
+      "--filter",
+      "testPreparedNativeTimestepTrajectory"
+    ],
+    "cwd": "/Users/n/numi-brain-human-completion-20260907",
+    "environment": {
+      "NUMANX_METALROBO_LIBRARY": "/Users/n/MetalRobo-human-completion-build-20260907/lib/libmetalrobo.dylib",
+      "NUMANX_FULLBODY_RIGID": "/Users/n/human-completion-20260907/input/myosim-fullbody-core-reference.nhrigid",
+      "NUMANX_FULLBODY_MUSCLE": "/Users/n/human-completion-20260907/input/myosim-fullbody-muscle-reference.nhmyo",
+      "NUMANX_FULLBODY_CONTACT": "/Users/n/human-capsule-20260908/input/myosim-fullbody-support-primitives.nhcnt",
+      "NUMANX_METALROBO_METALLIB": "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib",
+      "NUMANX_MATTER_METALLIB": "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib",
+      "NUMANX_FULLBODY_VISUAL_PACK": "/Users/n/NumiHumanCurrent/anterior-thorax-smoke/myosim-fullbody-articulated-markers-muscle-driven-selected-actuators-source-support-contact.mrvpack",
+      "NUMANX_FULLBODY_VISION_PROFILE": "/Users/n/Numan-X-neuron-v1/assets/numanx-head-vision-profile.v1.json",
+      "NUMANX_MATTER_MATERIAL": "/Users/n/MetalRobo-human-completion-20260907/matter/materials/silicone.nmatter",
+      "NUMANX_MATTER_WORLD_PACKAGE": "/Users/n/human-accepted-precision-20260912/baseline-fixture-25us/prepared-25us.nmatterpack",
+      "NUMANX_HUMAN_SOURCE_FP": "f0943712c830fe4e",
+      "NUMANX_MATTER_WORLD_FP": "8cdbec6c9711613a",
+      "NUMANX_JOINT_EQUALITIES": "/Users/n/human-completion-20260907/input/myosim-fullbody-joint-equalities-source-compliance.nheq",
+      "NUMANX_JOINT_EQUALITY_FP": "19041185bf97c95d",
+      "MTL_DEBUG_LAYER": "1",
+      "MRNX_PHYSICAL_DIAGNOSTICS": "1",
+      "NUMANX_JOINT_LIMITS": "/Users/n/human-dynamic-limits-20260908/myosim-fullbody-joint-limits.nhlim",
+      "NUMANX_JOINT_LIMIT_FP": "601a251a6473fdd9",
+      "MRNX_RUNTIME_DIAGNOSTICS": "1",
+      "NUMANX_GATE_B_EVIDENCE": "1",
+      "NUMANX_INITIAL_STATE": "/Users/n/human-accepted-precision-20260912/baseline-fixture-25us/prepared.nhinit",
+      "NUMANX_INITIAL_STATE_FP": "e5358705e59ae8a0",
+      "NUMANX_PREPARED_RECRUITMENT": "/Users/n/human-compliant-equilibrium-20260910/prepared-program.json",
+      "MRNX_PHYSICAL_BUFFER_TRACE": "1",
+      "NUMANX_PREPARED_TIMESTEP_US": "25",
+      "NUMANX_PREPARED_DURATION_US": "1600",
+      "MRNX_CANDIDATE_GPU_TIMING": "0",
+      "NM_HUMAN_SUPPORT_TRACE_ROOT": "9"
+    },
+    "repositories": {
+      "native": "/Users/n/MetalRobo-human-completion-20260907",
+      "brain": "/Users/n/numi-brain-human-completion-20260907"
+    },
+    "sources": [
+      "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_fullbody_bridge_probe.mm",
+      "/Users/n/MetalRobo-human-completion-20260907/apps/numilab_human_myosim_reference_probe.cpp",
+      "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/MetalArticulatedOperator.hpp",
+      "/Users/n/MetalRobo-human-completion-20260907/matter/src/metal/fgmres.metalinc",
+      "/Users/n/MetalRobo-human-completion-20260907/matter/src/runtime.mm",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/ArticulatedOperator.metal",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/MetalArticulatedOperator.mm",
+      "/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainMetalTests/MetalNumanXBridgeV1EndToEndTests.swift",
+      "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/engine_types.h"
+    ],
+    "timeout_seconds": 300,
+    "binaries": [
+      "/Users/n/numi-brain-human-completion-20260907/.build/release/NumiBrainPackageTests.xctest/Contents/MacOS/NumiBrainPackageTests"
+    ]
+  },
+  "request_identity": {
+    "bytes": 3667,
+    "sha256": "d301367b51ea7da35e5b7a952a94eda426de0f14264017f903a81f03d0549126"
+  },
+  "runner_identity": {
+    "bytes": 3587,
+    "sha256": "050a8e438d8cba8af1b6eaad9c9b86c17f22077a43bb0f3899e19b51a16a02d6"
+  },
+  "started_utc": "2026-09-12T22:04:10.963256+00:00",
+  "source_before": {
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_fullbody_bridge_probe.mm": {
+      "bytes": 88891,
+      "sha256": "0f2c7d671b93d5cd4b36dd25499e19e2d77718f53433bb9617a67d7c594ad63a"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numilab_human_myosim_reference_probe.cpp": {
+      "bytes": 95874,
+      "sha256": "5fbdd8817c2687efd3e567190ad59cb09851769cd36a77ce15f5c35cdfa9e3e5"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/MetalArticulatedOperator.hpp": {
+      "bytes": 85540,
+      "sha256": "c39e09113260094fd3bee2e82fd0ffddedde13f9d102a27798eeca2573f49bf7"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/matter/src/metal/fgmres.metalinc": {
+      "bytes": 173003,
+      "sha256": "7eaf660aad10c1eda20e0b5b3d258cd5021b12ce3245eda331471b994d9c2c17"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/matter/src/runtime.mm": {
+      "bytes": 658623,
+      "sha256": "cc177fd8ec247675e5a9fa0f9f70b5f9a33e2547819df465916ca56f52fce872"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/ArticulatedOperator.metal": {
+      "bytes": 94690,
+      "sha256": "9a55003bd5a45fd6d194c32fad86807f9e217c162489759b2d3781f50576589c"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/MetalArticulatedOperator.mm": {
+      "bytes": 485368,
+      "sha256": "4af6cfd12e53b2f50259842071ab7bd61e90243aadba34e28dc28e1bac131427"
+    },
+    "/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainMetalTests/MetalNumanXBridgeV1EndToEndTests.swift": {
+      "bytes": 153312,
+      "sha256": "109e2cb57c8b28adf70c771dc635fdaa1f44ba52e1582d7dc6b26c965571adec"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/engine_types.h": {
+      "bytes": 62259,
+      "sha256": "f47c52c81287504ef26ad3cb67c65ea765e52cbc6e6554af06ce6b65a7a5e010"
+    }
+  },
+  "artifacts_before": {
+    "/Users/n/MetalRobo-human-completion-20260907/matter/materials/silicone.nmatter": {
+      "bytes": 593,
+      "sha256": "d3094476cefa1a28ca8b5f35b28e2586d5a44ce63f268e57e96812de32de4a5f"
+    },
+    "/Users/n/MetalRobo-human-completion-build-20260907/lib/libmetalrobo.dylib": {
+      "bytes": 6595328,
+      "sha256": "4bdd427e6c3d47cf879ab72e5f754e5de2575fdf4b7caf227b255d92f23473e3"
+    },
+    "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib": {
+      "bytes": 2789190,
+      "sha256": "a59cd3135ac96445e2f764eb05b20eff7f3352ec12838df5f94a19d4867b9603"
+    },
+    "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib": {
+      "bytes": 4474104,
+      "sha256": "0e69369d1306305d119958b65ab33682374d6a537453b99254e35c792d018ca1"
+    },
+    "/Users/n/Numan-X-neuron-v1/assets/numanx-head-vision-profile.v1.json": {
+      "bytes": 698,
+      "sha256": "166220533c6c78695f6e55412f2e832eaaa4ec94ddf791b476111dc323c652a6"
+    },
+    "/Users/n/NumiHumanCurrent/anterior-thorax-smoke/myosim-fullbody-articulated-markers-muscle-driven-selected-actuators-source-support-contact.mrvpack": {
+      "bytes": 1150976,
+      "sha256": "b8ab7cd8deead1e2af3137a727eaad74cd7e4238d77d9116d774bbf304936e37"
+    },
+    "/Users/n/human-accepted-precision-20260912/baseline-fixture-25us/prepared-25us.nmatterpack": {
+      "bytes": 325974,
+      "sha256": "dbafdcb4c83c0b2008729aa8ef16bfc0003d0cd74630a264b7a1dbf9e55ad76a"
+    },
+    "/Users/n/human-accepted-precision-20260912/baseline-fixture-25us/prepared.nhinit": {
+      "bytes": 7780,
+      "sha256": "33fe3078e5320444ecaeb7e7ce832d5631f303b5497c90087e97904f84e580df"
+    },
+    "/Users/n/human-capsule-20260908/input/myosim-fullbody-support-primitives.nhcnt": {
+      "bytes": 1044,
+      "sha256": "c7712daf79cd8a589a6d23942a4df84a7da928e5911455ce19078f9b24daaaf4"
+    },
+    "/Users/n/human-completion-20260907/input/myosim-fullbody-core-reference.nhrigid": {
+      "bytes": 60324,
+      "sha256": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44"
+    },
+    "/Users/n/human-completion-20260907/input/myosim-fullbody-joint-equalities-source-compliance.nheq": {
+      "bytes": 5792,
+      "sha256": "12db05fddb492e77e7fd461fad566d3e1e75390f2cb6f77f26568254a6cb4477"
+    },
+    "/Users/n/human-completion-20260907/input/myosim-fullbody-muscle-reference.nhmyo": {
+      "bytes": 149372,
+      "sha256": "9a988f19a6fd8e533cd0f2bf3192cb8535fb008ccd394ffbf1a4432d3db76a05"
+    },
+    "/Users/n/human-compliant-equilibrium-20260910/prepared-program.json": {
+      "bytes": 108710,
+      "sha256": "3ea132b5af69f95693afb852c3a3567f1ece8b29637016f215ad6b564181fec1"
+    },
+    "/Users/n/human-dynamic-limits-20260908/myosim-fullbody-joint-limits.nhlim": {
+      "bytes": 9840,
+      "sha256": "c583611fcedc326a32c6f69504a65e675c8e0adc987c6db622ca0d95a02438d3"
+    },
+    "/Users/n/numi-brain-human-completion-20260907/.build/release/NumiBrainPackageTests.xctest/Contents/MacOS/NumiBrainPackageTests": {
+      "bytes": 49283528,
+      "sha256": "a15f815f4039cc1a7efce766b37b7ac0bf58b102ea372c0f7cb9cb38f604ae33"
+    }
+  },
+  "git_before": {
+    "native": {
+      "revision": "6f4a47ae5102235aa5d078947216eb48e488f97c",
+      "status": "M apps/numanx_fullbody_bridge_probe.mm"
+    },
+    "brain": {
+      "revision": "370337dc69e03e9479d2465bda10c23e69b3aa14",
+      "status": ""
+    }
+  },
+  "workload_process_inventory": [],
+  "returncode": 1,
+  "elapsed_seconds": 28.242434916086495,
+  "source_after": {
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_fullbody_bridge_probe.mm": {
+      "bytes": 88891,
+      "sha256": "0f2c7d671b93d5cd4b36dd25499e19e2d77718f53433bb9617a67d7c594ad63a"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numilab_human_myosim_reference_probe.cpp": {
+      "bytes": 95874,
+      "sha256": "5fbdd8817c2687efd3e567190ad59cb09851769cd36a77ce15f5c35cdfa9e3e5"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/MetalArticulatedOperator.hpp": {
+      "bytes": 85540,
+      "sha256": "c39e09113260094fd3bee2e82fd0ffddedde13f9d102a27798eeca2573f49bf7"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/matter/src/metal/fgmres.metalinc": {
+      "bytes": 173003,
+      "sha256": "7eaf660aad10c1eda20e0b5b3d258cd5021b12ce3245eda331471b994d9c2c17"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/matter/src/runtime.mm": {
+      "bytes": 658623,
+      "sha256": "cc177fd8ec247675e5a9fa0f9f70b5f9a33e2547819df465916ca56f52fce872"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/ArticulatedOperator.metal": {
+      "bytes": 94690,
+      "sha256": "9a55003bd5a45fd6d194c32fad86807f9e217c162489759b2d3781f50576589c"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/MetalArticulatedOperator.mm": {
+      "bytes": 485368,
+      "sha256": "4af6cfd12e53b2f50259842071ab7bd61e90243aadba34e28dc28e1bac131427"
+    },
+    "/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainMetalTests/MetalNumanXBridgeV1EndToEndTests.swift": {
+      "bytes": 153312,
+      "sha256": "109e2cb57c8b28adf70c771dc635fdaa1f44ba52e1582d7dc6b26c965571adec"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/engine_types.h": {
+      "bytes": 62259,
+      "sha256": "f47c52c81287504ef26ad3cb67c65ea765e52cbc6e6554af06ce6b65a7a5e010"
+    }
+  },
+  "artifacts_after": {
+    "/Users/n/MetalRobo-human-completion-20260907/matter/materials/silicone.nmatter": {
+      "bytes": 593,
+      "sha256": "d3094476cefa1a28ca8b5f35b28e2586d5a44ce63f268e57e96812de32de4a5f"
+    },
+    "/Users/n/MetalRobo-human-completion-build-20260907/lib/libmetalrobo.dylib": {
+      "bytes": 6595328,
+      "sha256": "4bdd427e6c3d47cf879ab72e5f754e5de2575fdf4b7caf227b255d92f23473e3"
+    },
+    "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib": {
+      "bytes": 2789190,
+      "sha256": "a59cd3135ac96445e2f764eb05b20eff7f3352ec12838df5f94a19d4867b9603"
+    },
+    "/Users/n/MetalRobo-human-completion-build-20260907/shaders/MetalRobo.metallib": {
+      "bytes": 4474104,
+      "sha256": "0e69369d1306305d119958b65ab33682374d6a537453b99254e35c792d018ca1"
+    },
+    "/Users/n/Numan-X-neuron-v1/assets/numanx-head-vision-profile.v1.json": {
+      "bytes": 698,
+      "sha256": "166220533c6c78695f6e55412f2e832eaaa4ec94ddf791b476111dc323c652a6"
+    },
+    "/Users/n/NumiHumanCurrent/anterior-thorax-smoke/myosim-fullbody-articulated-markers-muscle-driven-selected-actuators-source-support-contact.mrvpack": {
+      "bytes": 1150976,
+      "sha256": "b8ab7cd8deead1e2af3137a727eaad74cd7e4238d77d9116d774bbf304936e37"
+    },
+    "/Users/n/human-accepted-precision-20260912/baseline-fixture-25us/prepared-25us.nmatterpack": {
+      "bytes": 325974,
+      "sha256": "dbafdcb4c83c0b2008729aa8ef16bfc0003d0cd74630a264b7a1dbf9e55ad76a"
+    },
+    "/Users/n/human-accepted-precision-20260912/baseline-fixture-25us/prepared.nhinit": {
+      "bytes": 7780,
+      "sha256": "33fe3078e5320444ecaeb7e7ce832d5631f303b5497c90087e97904f84e580df"
+    },
+    "/Users/n/human-capsule-20260908/input/myosim-fullbody-support-primitives.nhcnt": {
+      "bytes": 1044,
+      "sha256": "c7712daf79cd8a589a6d23942a4df84a7da928e5911455ce19078f9b24daaaf4"
+    },
+    "/Users/n/human-completion-20260907/input/myosim-fullbody-core-reference.nhrigid": {
+      "bytes": 60324,
+      "sha256": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44"
+    },
+    "/Users/n/human-completion-20260907/input/myosim-fullbody-joint-equalities-source-compliance.nheq": {
+      "bytes": 5792,
+      "sha256": "12db05fddb492e77e7fd461fad566d3e1e75390f2cb6f77f26568254a6cb4477"
+    },
+    "/Users/n/human-completion-20260907/input/myosim-fullbody-muscle-reference.nhmyo": {
+      "bytes": 149372,
+      "sha256": "9a988f19a6fd8e533cd0f2bf3192cb8535fb008ccd394ffbf1a4432d3db76a05"
+    },
+    "/Users/n/human-compliant-equilibrium-20260910/prepared-program.json": {
+      "bytes": 108710,
+      "sha256": "3ea132b5af69f95693afb852c3a3567f1ece8b29637016f215ad6b564181fec1"
+    },
+    "/Users/n/human-dynamic-limits-20260908/myosim-fullbody-joint-limits.nhlim": {
+      "bytes": 9840,
+      "sha256": "c583611fcedc326a32c6f69504a65e675c8e0adc987c6db622ca0d95a02438d3"
+    },
+    "/Users/n/numi-brain-human-completion-20260907/.build/release/NumiBrainPackageTests.xctest/Contents/MacOS/NumiBrainPackageTests": {
+      "bytes": 49283528,
+      "sha256": "a15f815f4039cc1a7efce766b37b7ac0bf58b102ea372c0f7cb9cb38f604ae33"
+    }
+  },
+  "git_after": {
+    "native": {
+      "revision": "6f4a47ae5102235aa5d078947216eb48e488f97c",
+      "status": "M apps/numanx_fullbody_bridge_probe.mm"
+    },
+    "brain": {
+      "revision": "370337dc69e03e9479d2465bda10c23e69b3aa14",
+      "status": ""
+    }
+  },
+  "log_identity": {
+    "bytes": 1578641,
+    "sha256": "5cf5a1640db58a3d268040ef236bcfb23e7d8f6f146e5dc8f63a889f82cef2fc"
+  },
+  "source_unchanged": true,
+  "artifacts_unchanged": true,
+  "status": "fail"
+}

@@ -138,6 +138,10 @@ with an independent source oracle and Metal factor/operator checks. The
 `behavior-qualify` checks the frozen standing/recovery/walking evidence contract.
 Sustained behavior and the complete anatomical composition remain open.
 
+`numi human-behavior-metrics` authors [source-bound native metric criteria](Docs/HUMAN_BEHAVIOR_METRIC_PROGRAM.md).
+The producer measures jointly accepted roots through the existing Brain–Human–Matter
+runner; unavailable contact, audit and reset evidence remains explicit.
+
 `numi human gap-execution` now joins the live completion ledger to named owners,
 acceptance criteria and a dependency graph covering all 95 mandatory targets.
 The [execution registry](Docs/HUMAN_GAP_EXECUTION.md) separates engineering,

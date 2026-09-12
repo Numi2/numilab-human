@@ -1,0 +1,117 @@
+{
+  "schema": "numilab-human.native-check-execution.v1",
+  "request": {
+    "command": [
+      "swift",
+      "test",
+      "-c",
+      "release",
+      "--skip-build",
+      "--filter",
+      "MetalNumanXBehaviorTelemetryTests"
+    ],
+    "cwd": "/Users/n/numi-brain-human-completion-20260907",
+    "environment": {},
+    "repositories": {
+      "brain": "/Users/n/numi-brain-human-completion-20260907"
+    },
+    "sources": [
+      "/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainMetal/Interop/MetalNumanXGateCRootRunner.swift",
+      "/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainMetal/MetalNumanXBehaviorTelemetry.swift",
+      "/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainMetal/MetalNumanXBridgeV1.swift",
+      "/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainMetalTests/MetalNumanXBehaviorTelemetryTests.swift",
+      "/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainMetalTests/MetalNumanXBridgeV1EndToEndTests.swift"
+    ],
+    "timeout_seconds": 300,
+    "binaries": [
+      "/Users/n/numi-brain-human-completion-20260907/.build/release/NumiBrainPackageTests.xctest/Contents/MacOS/NumiBrainPackageTests"
+    ]
+  },
+  "request_identity": {
+    "bytes": 1080,
+    "sha256": "bbb2274dadb19fa98b8fdce0216420319c676953c98524a4b63de58c6522fd2c"
+  },
+  "runner_identity": {
+    "bytes": 3587,
+    "sha256": "050a8e438d8cba8af1b6eaad9c9b86c17f22077a43bb0f3899e19b51a16a02d6"
+  },
+  "started_utc": "2026-09-12T23:06:42.329907+00:00",
+  "source_before": {
+    "/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainMetal/Interop/MetalNumanXGateCRootRunner.swift": {
+      "bytes": 44370,
+      "sha256": "82cca7fb2bc2c83755ddda05483195b2becd95360e45bdf5f9a60578aa19f974"
+    },
+    "/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainMetal/MetalNumanXBehaviorTelemetry.swift": {
+      "bytes": 5599,
+      "sha256": "4b1d2f7dfbd1e66113dc563502582d459383915376eafa1afe1a4902be4aa989"
+    },
+    "/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainMetal/MetalNumanXBridgeV1.swift": {
+      "bytes": 98595,
+      "sha256": "59f85956d48054be2dc1ec8399c4a71d4d735de8a3cb176c08704d7b4dbba38c"
+    },
+    "/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainMetalTests/MetalNumanXBehaviorTelemetryTests.swift": {
+      "bytes": 3518,
+      "sha256": "ebbf20d4141552a0d809ed0a99d660b0d8a0509cd9300ed6f34707823644e2ea"
+    },
+    "/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainMetalTests/MetalNumanXBridgeV1EndToEndTests.swift": {
+      "bytes": 162151,
+      "sha256": "19fa85c456a011d7c4466efb49eb2785187f41a0ae77e24ac1550d2e313d44dd"
+    }
+  },
+  "artifacts_before": {
+    "/Users/n/numi-brain-human-completion-20260907/.build/release/NumiBrainPackageTests.xctest/Contents/MacOS/NumiBrainPackageTests": {
+      "bytes": 49401416,
+      "sha256": "2f3e9e8a3f922bdef1914199aca6398012666fa862436c71805f204d1b55109d"
+    }
+  },
+  "git_before": {
+    "brain": {
+      "revision": "370337dc69e03e9479d2465bda10c23e69b3aa14",
+      "status": "M Sources/NumiBrainMetal/Interop/MetalNumanXGateCRootRunner.swift\n M Sources/NumiBrainMetal/MetalNumanXBridgeV1.swift\n M Tests/NumiBrainMetalTests/MetalNumanXBridgeV1EndToEndTests.swift\n?? Sources/NumiBrainMetal/MetalNumanXBehaviorTelemetry.swift\n?? Tests/NumiBrainMetalTests/MetalNumanXBehaviorTelemetryTests.swift"
+    }
+  },
+  "workload_process_inventory": [],
+  "returncode": 0,
+  "elapsed_seconds": 2.1039690409999996,
+  "source_after": {
+    "/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainMetal/Interop/MetalNumanXGateCRootRunner.swift": {
+      "bytes": 44370,
+      "sha256": "82cca7fb2bc2c83755ddda05483195b2becd95360e45bdf5f9a60578aa19f974"
+    },
+    "/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainMetal/MetalNumanXBehaviorTelemetry.swift": {
+      "bytes": 5599,
+      "sha256": "4b1d2f7dfbd1e66113dc563502582d459383915376eafa1afe1a4902be4aa989"
+    },
+    "/Users/n/numi-brain-human-completion-20260907/Sources/NumiBrainMetal/MetalNumanXBridgeV1.swift": {
+      "bytes": 98595,
+      "sha256": "59f85956d48054be2dc1ec8399c4a71d4d735de8a3cb176c08704d7b4dbba38c"
+    },
+    "/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainMetalTests/MetalNumanXBehaviorTelemetryTests.swift": {
+      "bytes": 3518,
+      "sha256": "ebbf20d4141552a0d809ed0a99d660b0d8a0509cd9300ed6f34707823644e2ea"
+    },
+    "/Users/n/numi-brain-human-completion-20260907/Tests/NumiBrainMetalTests/MetalNumanXBridgeV1EndToEndTests.swift": {
+      "bytes": 162151,
+      "sha256": "19fa85c456a011d7c4466efb49eb2785187f41a0ae77e24ac1550d2e313d44dd"
+    }
+  },
+  "artifacts_after": {
+    "/Users/n/numi-brain-human-completion-20260907/.build/release/NumiBrainPackageTests.xctest/Contents/MacOS/NumiBrainPackageTests": {
+      "bytes": 49401416,
+      "sha256": "2f3e9e8a3f922bdef1914199aca6398012666fa862436c71805f204d1b55109d"
+    }
+  },
+  "git_after": {
+    "brain": {
+      "revision": "370337dc69e03e9479d2465bda10c23e69b3aa14",
+      "status": "M Sources/NumiBrainMetal/Interop/MetalNumanXGateCRootRunner.swift\n M Sources/NumiBrainMetal/MetalNumanXBridgeV1.swift\n M Tests/NumiBrainMetalTests/MetalNumanXBridgeV1EndToEndTests.swift\n?? Sources/NumiBrainMetal/MetalNumanXBehaviorTelemetry.swift\n?? Tests/NumiBrainMetalTests/MetalNumanXBehaviorTelemetryTests.swift"
+    }
+  },
+  "log_identity": {
+    "bytes": 4577,
+    "sha256": "ef6b17c53456d0c1415afa4abafe714aedbd4cc36f739dd50dfe1bc5b30e041e"
+  },
+  "source_unchanged": true,
+  "artifacts_unchanged": true,
+  "status": "pass"
+}

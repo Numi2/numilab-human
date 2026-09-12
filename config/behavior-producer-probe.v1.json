@@ -1,0 +1,39 @@
+{
+  "schema": "numi.human.behavior-task.v1",
+  "task": "standing",
+  "step_ns": 25000,
+  "target_speed_mps": null,
+  "criteria": {
+    "minimum_root_height_m": 0.7,
+    "maximum_trunk_tilt_rad": 0.3,
+    "maximum_planar_speed_mps": 0.1,
+    "root_body_semantic_id": "Full Body",
+    "trunk_body_semantic_id": "torso",
+    "velocity_observable": "body_com_linear_velocity",
+    "velocity_body_semantic_id": "pelvis",
+    "world_reference_origin_m": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "world_up_axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "world_forward_axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "trunk_up_axis_body": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "forbidden_contact_semantic_ids": [
+      "pelvis",
+      "torso"
+    ]
+  }
+}
