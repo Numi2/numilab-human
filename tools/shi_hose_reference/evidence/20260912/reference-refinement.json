@@ -1,0 +1,1080 @@
+{
+  "schema": "NumiHuman.CellML-reference-refinement.v1",
+  "source_revision": "a679cdc2e97429fb5280af8132c119758626c1f2",
+  "scope": "Pairwise numerical refinement, not a rigorous exact-solution error bound or biological calibration",
+  "traces": [
+    {
+      "file": "source-20cycles-1e10.csv",
+      "bytes": 21928552,
+      "sha256": "7615bbead9da16a21c7fb088f4a39a709c2b5abf3b55c6fb949be454418b4c44"
+    },
+    {
+      "file": "source-20cycles-1e12.csv",
+      "bytes": 21927798,
+      "sha256": "b377b658d3a40ba12f5dd431725da2a1747176218d9a94400ff9172f81e9b557"
+    },
+    {
+      "file": "source-20cycles-1e13.csv",
+      "bytes": 21929262,
+      "sha256": "dbf62d8bbc38e1e09df05e709b22b5987da91cf4ff5115db085a29e1918ddd17"
+    }
+  ],
+  "samples": 20001,
+  "coarse_1e10_vs_1e12": {
+    "families": {
+      "chamber_volume_m3": {
+        "name": "rv_volume_m3",
+        "maximum_absolute_difference": 8.719699441661621e-12,
+        "time_at_maximum_seconds": 4.406,
+        "maximum_difference_over_reference_amplitude": 1.7439398883323243e-08,
+        "root_mean_square_difference": 1.907937004852401e-13
+      },
+      "pressure_Pa": {
+        "name": "rv_pressure_Pa",
+        "maximum_absolute_difference": 0.0003567139324331947,
+        "time_at_maximum_seconds": 4.406,
+        "maximum_difference_over_reference_amplitude": 2.0444312683924754e-08,
+        "root_mean_square_difference": 6.488277800260662e-06
+      },
+      "flow_m3_per_s": {
+        "name": "ra_outflow_m3_per_s",
+        "maximum_absolute_difference": 4.883404641661433e-09,
+        "time_at_maximum_seconds": 7.405,
+        "maximum_difference_over_reference_amplitude": 6.8022057444895185e-06,
+        "root_mean_square_difference": 4.1465075084304206e-11
+      },
+      "elastance_Pa_per_m3": {
+        "name": "la_elastance_Pa_per_m3",
+        "maximum_absolute_difference": 0.0,
+        "time_at_maximum_seconds": 0.0,
+        "maximum_difference_over_reference_amplitude": 0.0,
+        "root_mean_square_difference": 0.0
+      }
+    },
+    "columns": [
+      {
+        "name": "time_s",
+        "maximum_absolute_difference": 0.0,
+        "time_at_maximum_seconds": 0.0,
+        "maximum_difference_over_reference_amplitude": 0.0,
+        "root_mean_square_difference": 0.0
+      },
+      {
+        "name": "la_volume_m3",
+        "maximum_absolute_difference": 3.4236033468913393e-12,
+        "time_at_maximum_seconds": 5.425,
+        "maximum_difference_over_reference_amplitude": 3.5301072392013614e-08,
+        "root_mean_square_difference": 8.092793377123692e-14
+      },
+      {
+        "name": "la_pressure_Pa",
+        "maximum_absolute_difference": 6.830088682363566e-05,
+        "time_at_maximum_seconds": 5.425,
+        "maximum_difference_over_reference_amplitude": 3.419729126311998e-08,
+        "root_mean_square_difference": 1.6433394309790306e-06
+      },
+      {
+        "name": "la_outflow_m3_per_s",
+        "maximum_absolute_difference": 6.595369651080877e-10,
+        "time_at_maximum_seconds": 5.425,
+        "maximum_difference_over_reference_amplitude": 6.811394145384588e-07,
+        "root_mean_square_difference": 7.190020574891236e-12
+      },
+      {
+        "name": "lv_volume_m3",
+        "maximum_absolute_difference": 3.679205709896955e-12,
+        "time_at_maximum_seconds": 5.425,
+        "maximum_difference_over_reference_amplitude": 7.35841141979391e-09,
+        "root_mean_square_difference": 1.8615712785781856e-13
+      },
+      {
+        "name": "lv_pressure_Pa",
+        "maximum_absolute_difference": 0.00012760413301293738,
+        "time_at_maximum_seconds": 5.425,
+        "maximum_difference_over_reference_amplitude": 3.2623861564542582e-09,
+        "root_mean_square_difference": 6.204498595500828e-06
+      },
+      {
+        "name": "lv_outflow_m3_per_s",
+        "maximum_absolute_difference": 2.8059718249431546e-09,
+        "time_at_maximum_seconds": 10.305,
+        "maximum_difference_over_reference_amplitude": 9.325206807881847e-07,
+        "root_mean_square_difference": 3.9186886065888795e-11
+      },
+      {
+        "name": "ra_volume_m3",
+        "maximum_absolute_difference": 8.71300346325446e-12,
+        "time_at_maximum_seconds": 4.406,
+        "maximum_difference_over_reference_amplitude": 9.871648266363911e-08,
+        "root_mean_square_difference": 2.001269721388153e-13
+      },
+      {
+        "name": "ra_pressure_Pa",
+        "maximum_absolute_difference": 0.00017382441888003086,
+        "time_at_maximum_seconds": 4.406,
+        "maximum_difference_over_reference_amplitude": 8.885013500277559e-08,
+        "root_mean_square_difference": 4.048026585406011e-06
+      },
+      {
+        "name": "ra_outflow_m3_per_s",
+        "maximum_absolute_difference": 4.883404641661433e-09,
+        "time_at_maximum_seconds": 7.405,
+        "maximum_difference_over_reference_amplitude": 6.8022057444895185e-06,
+        "root_mean_square_difference": 4.1465075084304206e-11
+      },
+      {
+        "name": "rv_volume_m3",
+        "maximum_absolute_difference": 8.719699441661621e-12,
+        "time_at_maximum_seconds": 4.406,
+        "maximum_difference_over_reference_amplitude": 1.7439398883323243e-08,
+        "root_mean_square_difference": 1.907937004852401e-13
+      },
+      {
+        "name": "rv_pressure_Pa",
+        "maximum_absolute_difference": 0.0003567139324331947,
+        "time_at_maximum_seconds": 4.406,
+        "maximum_difference_over_reference_amplitude": 2.0444312683924754e-08,
+        "root_mean_square_difference": 6.488277800260662e-06
+      },
+      {
+        "name": "rv_outflow_m3_per_s",
+        "maximum_absolute_difference": 1.0900271264740997e-10,
+        "time_at_maximum_seconds": 0.308,
+        "maximum_difference_over_reference_amplitude": 4.693517149654077e-08,
+        "root_mean_square_difference": 1.7032324059121627e-12
+      },
+      {
+        "name": "sas_pressure_Pa",
+        "maximum_absolute_difference": 3.562093115760945e-05,
+        "time_at_maximum_seconds": 5.306,
+        "maximum_difference_over_reference_amplitude": 9.134106512624303e-10,
+        "root_mean_square_difference": 8.27315569274809e-06
+      },
+      {
+        "name": "sas_outflow_m3_per_s",
+        "maximum_absolute_difference": 1.4875755195795787e-11,
+        "time_at_maximum_seconds": 3.112,
+        "maximum_difference_over_reference_amplitude": 5.16967189950446e-09,
+        "root_mean_square_difference": 5.117363346420288e-13
+      },
+      {
+        "name": "sat_pressure_Pa",
+        "maximum_absolute_difference": 2.450568717904389e-05,
+        "time_at_maximum_seconds": 3.261,
+        "maximum_difference_over_reference_amplitude": 6.294241827250382e-10,
+        "root_mean_square_difference": 8.218450108298269e-06
+      },
+      {
+        "name": "sat_outflow_m3_per_s",
+        "maximum_absolute_difference": 1.7370509869905904e-13,
+        "time_at_maximum_seconds": 3.2600000000000002,
+        "maximum_difference_over_reference_amplitude": 6.407693503096011e-10,
+        "root_mean_square_difference": 5.616749391799087e-14
+      },
+      {
+        "name": "sar_pressure_Pa",
+        "maximum_absolute_difference": 2.335130557185039e-05,
+        "time_at_maximum_seconds": 3.262,
+        "maximum_difference_over_reference_amplitude": 6.288546226564563e-10,
+        "root_mean_square_difference": 7.849856399619201e-06
+      },
+      {
+        "name": "sar_outflow_m3_per_s",
+        "maximum_absolute_difference": 1.7370509869905904e-13,
+        "time_at_maximum_seconds": 3.2600000000000002,
+        "maximum_difference_over_reference_amplitude": 6.407693503096011e-10,
+        "root_mean_square_difference": 5.616749391799087e-14
+      },
+      {
+        "name": "scp_pressure_Pa",
+        "maximum_absolute_difference": 1.1800631909864023e-05,
+        "time_at_maximum_seconds": 3.2640000000000002,
+        "maximum_difference_over_reference_amplitude": 6.175478618976331e-10,
+        "root_mean_square_difference": 4.213396972486026e-06
+      },
+      {
+        "name": "scp_outflow_m3_per_s",
+        "maximum_absolute_difference": 1.7370509869905904e-13,
+        "time_at_maximum_seconds": 3.2600000000000002,
+        "maximum_difference_over_reference_amplitude": 6.407693503096011e-10,
+        "root_mean_square_difference": 5.616749391799087e-14
+      },
+      {
+        "name": "svn_pressure_Pa",
+        "maximum_absolute_difference": 4.00158978663967e-06,
+        "time_at_maximum_seconds": 19.437,
+        "maximum_difference_over_reference_amplitude": 1.7040237977311667e-09,
+        "root_mean_square_difference": 1.3150936346733659e-06
+      },
+      {
+        "name": "svn_outflow_m3_per_s",
+        "maximum_absolute_difference": 1.7444988318216902e-11,
+        "time_at_maximum_seconds": 4.406,
+        "maximum_difference_over_reference_amplitude": 1.5034924955716104e-07,
+        "root_mean_square_difference": 3.7135018667572925e-13
+      },
+      {
+        "name": "pas_pressure_Pa",
+        "maximum_absolute_difference": 1.1969127626798581e-05,
+        "time_at_maximum_seconds": 19.307000000000002,
+        "maximum_difference_over_reference_amplitude": 8.003912136523958e-10,
+        "root_mean_square_difference": 3.475262972456152e-06
+      },
+      {
+        "name": "pas_outflow_m3_per_s",
+        "maximum_absolute_difference": 6.9983125739782326e-12,
+        "time_at_maximum_seconds": 18.083000000000002,
+        "maximum_difference_over_reference_amplitude": 3.1364526363106136e-09,
+        "root_mean_square_difference": 4.1878513874570507e-13
+      },
+      {
+        "name": "pat_pressure_Pa",
+        "maximum_absolute_difference": 1.0214488611381967e-05,
+        "time_at_maximum_seconds": 19.256,
+        "maximum_difference_over_reference_amplitude": 6.854391714289372e-10,
+        "root_mean_square_difference": 3.4376425333898985e-06
+      },
+      {
+        "name": "pat_outflow_m3_per_s",
+        "maximum_absolute_difference": 4.062516924425996e-13,
+        "time_at_maximum_seconds": 5.442,
+        "maximum_difference_over_reference_amplitude": 1.1542089620127252e-09,
+        "root_mean_square_difference": 7.783261012007129e-14
+      },
+      {
+        "name": "par_pressure_Pa",
+        "maximum_absolute_difference": 9.986150871554855e-06,
+        "time_at_maximum_seconds": 19.262,
+        "maximum_difference_over_reference_amplitude": 6.915663891438073e-10,
+        "root_mean_square_difference": 3.3468704764204076e-06
+      },
+      {
+        "name": "par_outflow_m3_per_s",
+        "maximum_absolute_difference": 4.062516924425996e-13,
+        "time_at_maximum_seconds": 5.442,
+        "maximum_difference_over_reference_amplitude": 1.1542089620127252e-09,
+        "root_mean_square_difference": 7.783261012007129e-14
+      },
+      {
+        "name": "pcp_pressure_Pa",
+        "maximum_absolute_difference": 8.83052507560933e-06,
+        "time_at_maximum_seconds": 19.263,
+        "maximum_difference_over_reference_amplitude": 7.297586536932035e-10,
+        "root_mean_square_difference": 2.8861752416817606e-06
+      },
+      {
+        "name": "pcp_outflow_m3_per_s",
+        "maximum_absolute_difference": 4.062516924425996e-13,
+        "time_at_maximum_seconds": 5.442,
+        "maximum_difference_over_reference_amplitude": 1.1542089620127252e-09,
+        "root_mean_square_difference": 7.783261012007129e-14
+      },
+      {
+        "name": "pvn_pressure_Pa",
+        "maximum_absolute_difference": 1.3356489944271743e-05,
+        "time_at_maximum_seconds": 5.432,
+        "maximum_difference_over_reference_amplitude": 6.711502177269386e-09,
+        "root_mean_square_difference": 1.4174695507588611e-06
+      },
+      {
+        "name": "pvn_outflow_m3_per_s",
+        "maximum_absolute_difference": 8.181744822320799e-10,
+        "time_at_maximum_seconds": 5.425,
+        "maximum_difference_over_reference_amplitude": 1.3685025172783132e-07,
+        "root_mean_square_difference": 1.0276310830892959e-11
+      },
+      {
+        "name": "la_elastance_Pa_per_m3",
+        "maximum_absolute_difference": 0.0,
+        "time_at_maximum_seconds": 0.0,
+        "maximum_difference_over_reference_amplitude": 0.0,
+        "root_mean_square_difference": 0.0
+      },
+      {
+        "name": "lv_elastance_Pa_per_m3",
+        "maximum_absolute_difference": 0.0,
+        "time_at_maximum_seconds": 0.0,
+        "maximum_difference_over_reference_amplitude": 0.0,
+        "root_mean_square_difference": 0.0
+      },
+      {
+        "name": "ra_elastance_Pa_per_m3",
+        "maximum_absolute_difference": 0.0,
+        "time_at_maximum_seconds": 0.0,
+        "maximum_difference_over_reference_amplitude": 0.0,
+        "root_mean_square_difference": 0.0
+      },
+      {
+        "name": "rv_elastance_Pa_per_m3",
+        "maximum_absolute_difference": 0.0,
+        "time_at_maximum_seconds": 0.0,
+        "maximum_difference_over_reference_amplitude": 0.0,
+        "root_mean_square_difference": 0.0
+      },
+      {
+        "name": "native_hydraulic_0",
+        "maximum_absolute_difference": 3.4236033468913393e-12,
+        "time_at_maximum_seconds": 5.425,
+        "maximum_difference_over_reference_amplitude": 3.5301072392013614e-08,
+        "root_mean_square_difference": 8.092793377123692e-14
+      },
+      {
+        "name": "native_hydraulic_1",
+        "maximum_absolute_difference": 3.679205709896955e-12,
+        "time_at_maximum_seconds": 5.425,
+        "maximum_difference_over_reference_amplitude": 7.35841141979391e-09,
+        "root_mean_square_difference": 1.8615712785781856e-13
+      },
+      {
+        "name": "native_hydraulic_2",
+        "maximum_absolute_difference": 2.142612361133705e-14,
+        "time_at_maximum_seconds": 5.306,
+        "maximum_difference_over_reference_amplitude": 9.134106344983313e-10,
+        "root_mean_square_difference": 4.976334253472164e-15
+      },
+      {
+        "name": "native_hydraulic_3",
+        "maximum_absolute_difference": 2.9480522298515333e-13,
+        "time_at_maximum_seconds": 3.261,
+        "maximum_difference_over_reference_amplitude": 6.294241051978976e-10,
+        "root_mean_square_difference": 9.886857270568521e-14
+      },
+      {
+        "name": "native_hydraulic_4",
+        "maximum_absolute_difference": 6.167863528944162e-13,
+        "time_at_maximum_seconds": 19.437,
+        "maximum_difference_over_reference_amplitude": 1.7040236795115061e-09,
+        "root_mean_square_difference": 2.0270240231047666e-13
+      },
+      {
+        "name": "native_hydraulic_5",
+        "maximum_absolute_difference": 8.71300346325446e-12,
+        "time_at_maximum_seconds": 4.406,
+        "maximum_difference_over_reference_amplitude": 9.871648266363911e-08,
+        "root_mean_square_difference": 2.001269721388153e-13
+      },
+      {
+        "name": "native_hydraulic_6",
+        "maximum_absolute_difference": 8.719699441661621e-12,
+        "time_at_maximum_seconds": 4.406,
+        "maximum_difference_over_reference_amplitude": 1.7439398883323243e-08,
+        "root_mean_square_difference": 1.907937004852401e-13
+      },
+      {
+        "name": "native_hydraulic_7",
+        "maximum_absolute_difference": 1.6198819019551218e-14,
+        "time_at_maximum_seconds": 19.307000000000002,
+        "maximum_difference_over_reference_amplitude": 8.003911975945768e-10,
+        "root_mean_square_difference": 4.703363435194893e-15
+      },
+      {
+        "name": "native_hydraulic_8",
+        "maximum_absolute_difference": 2.9184255923367375e-13,
+        "time_at_maximum_seconds": 19.256,
+        "maximum_difference_over_reference_amplitude": 6.854392359699142e-10,
+        "root_mean_square_difference": 9.821835802574759e-14
+      },
+      {
+        "name": "native_hydraulic_9",
+        "maximum_absolute_difference": 2.0587071001935964e-12,
+        "time_at_maximum_seconds": 5.432,
+        "maximum_difference_over_reference_amplitude": 6.711502188745217e-09,
+        "root_mean_square_difference": 2.1848214888336236e-13
+      },
+      {
+        "name": "native_hydraulic_10",
+        "maximum_absolute_difference": 6.595369651080877e-10,
+        "time_at_maximum_seconds": 5.425,
+        "maximum_difference_over_reference_amplitude": 6.811394145384588e-07,
+        "root_mean_square_difference": 7.190020574891236e-12
+      },
+      {
+        "name": "native_hydraulic_11",
+        "maximum_absolute_difference": 2.8059718249431546e-09,
+        "time_at_maximum_seconds": 10.305,
+        "maximum_difference_over_reference_amplitude": 9.325206807881847e-07,
+        "root_mean_square_difference": 3.9186886065888795e-11
+      },
+      {
+        "name": "native_hydraulic_12",
+        "maximum_absolute_difference": 1.4875755195795787e-11,
+        "time_at_maximum_seconds": 3.112,
+        "maximum_difference_over_reference_amplitude": 5.16967189950446e-09,
+        "root_mean_square_difference": 5.117363346420288e-13
+      },
+      {
+        "name": "native_hydraulic_13",
+        "maximum_absolute_difference": 1.7370509869905904e-13,
+        "time_at_maximum_seconds": 3.2600000000000002,
+        "maximum_difference_over_reference_amplitude": 6.407693503096011e-10,
+        "root_mean_square_difference": 5.616749391799087e-14
+      },
+      {
+        "name": "native_hydraulic_14",
+        "maximum_absolute_difference": 1.7444988318216902e-11,
+        "time_at_maximum_seconds": 4.406,
+        "maximum_difference_over_reference_amplitude": 1.5034924955716104e-07,
+        "root_mean_square_difference": 3.7135018667572925e-13
+      },
+      {
+        "name": "native_hydraulic_15",
+        "maximum_absolute_difference": 4.883404641661433e-09,
+        "time_at_maximum_seconds": 7.405,
+        "maximum_difference_over_reference_amplitude": 6.8022057444895185e-06,
+        "root_mean_square_difference": 4.1465075084304206e-11
+      },
+      {
+        "name": "native_hydraulic_16",
+        "maximum_absolute_difference": 1.0900271264740997e-10,
+        "time_at_maximum_seconds": 0.308,
+        "maximum_difference_over_reference_amplitude": 4.693517149654077e-08,
+        "root_mean_square_difference": 1.7032324059121627e-12
+      },
+      {
+        "name": "native_hydraulic_17",
+        "maximum_absolute_difference": 6.9983125739782326e-12,
+        "time_at_maximum_seconds": 18.083000000000002,
+        "maximum_difference_over_reference_amplitude": 3.1364526363106136e-09,
+        "root_mean_square_difference": 4.1878513874570507e-13
+      },
+      {
+        "name": "native_hydraulic_18",
+        "maximum_absolute_difference": 4.062516924425996e-13,
+        "time_at_maximum_seconds": 5.442,
+        "maximum_difference_over_reference_amplitude": 1.1542089620127252e-09,
+        "root_mean_square_difference": 7.783261012007129e-14
+      },
+      {
+        "name": "native_hydraulic_19",
+        "maximum_absolute_difference": 8.181744822320799e-10,
+        "time_at_maximum_seconds": 5.425,
+        "maximum_difference_over_reference_amplitude": 1.3685025172783132e-07,
+        "root_mean_square_difference": 1.0276310830892959e-11
+      }
+    ]
+  },
+  "tight_1e12_vs_1e13": {
+    "families": {
+      "chamber_volume_m3": {
+        "name": "lv_volume_m3",
+        "maximum_absolute_difference": 2.8321575905885035e-13,
+        "time_at_maximum_seconds": 15.425,
+        "maximum_difference_over_reference_amplitude": 5.664315181177007e-10,
+        "root_mean_square_difference": 9.780150960426087e-15
+      },
+      "pressure_Pa": {
+        "name": "lv_pressure_Pa",
+        "maximum_absolute_difference": 9.822636684475583e-06,
+        "time_at_maximum_seconds": 15.425,
+        "maximum_difference_over_reference_amplitude": 2.5113006281750755e-10,
+        "root_mean_square_difference": 2.0227001694461194e-07
+      },
+      "flow_m3_per_s": {
+        "name": "pvn_outflow_m3_per_s",
+        "maximum_absolute_difference": 5.024852533846644e-11,
+        "time_at_maximum_seconds": 15.425,
+        "maximum_difference_over_reference_amplitude": 8.404714997663392e-09,
+        "root_mean_square_difference": 4.774820636577569e-13
+      },
+      "elastance_Pa_per_m3": {
+        "name": "la_elastance_Pa_per_m3",
+        "maximum_absolute_difference": 0.0,
+        "time_at_maximum_seconds": 0.0,
+        "maximum_difference_over_reference_amplitude": 0.0,
+        "root_mean_square_difference": 0.0
+      }
+    },
+    "columns": [
+      {
+        "name": "time_s",
+        "maximum_absolute_difference": 0.0,
+        "time_at_maximum_seconds": 0.0,
+        "maximum_difference_over_reference_amplitude": 0.0,
+        "root_mean_square_difference": 0.0
+      },
+      {
+        "name": "la_volume_m3",
+        "maximum_absolute_difference": 2.210920384488127e-13,
+        "time_at_maximum_seconds": 15.425,
+        "maximum_difference_over_reference_amplitude": 2.2796992711194187e-09,
+        "root_mean_square_difference": 3.0430444482378076e-15
+      },
+      {
+        "name": "la_pressure_Pa",
+        "maximum_absolute_difference": 4.410786232256214e-06,
+        "time_at_maximum_seconds": 15.425,
+        "maximum_difference_over_reference_amplitude": 2.2084184920424295e-09,
+        "root_mean_square_difference": 6.074097626032793e-08
+      },
+      {
+        "name": "la_outflow_m3_per_s",
+        "maximum_absolute_difference": 2.9112060472794715e-11,
+        "time_at_maximum_seconds": 15.425,
+        "maximum_difference_over_reference_amplitude": 3.006559582337143e-08,
+        "root_mean_square_difference": 3.2126889919986883e-13
+      },
+      {
+        "name": "lv_volume_m3",
+        "maximum_absolute_difference": 2.8321575905885035e-13,
+        "time_at_maximum_seconds": 15.425,
+        "maximum_difference_over_reference_amplitude": 5.664315181177007e-10,
+        "root_mean_square_difference": 9.780150960426087e-15
+      },
+      {
+        "name": "lv_pressure_Pa",
+        "maximum_absolute_difference": 9.822636684475583e-06,
+        "time_at_maximum_seconds": 15.425,
+        "maximum_difference_over_reference_amplitude": 2.5113006281750755e-10,
+        "root_mean_square_difference": 2.0227001694461194e-07
+      },
+      {
+        "name": "lv_outflow_m3_per_s",
+        "maximum_absolute_difference": 1.8630981193836886e-11,
+        "time_at_maximum_seconds": 10.305,
+        "maximum_difference_over_reference_amplitude": 6.191714083574764e-09,
+        "root_mean_square_difference": 2.966445991567296e-13
+      },
+      {
+        "name": "ra_volume_m3",
+        "maximum_absolute_difference": 6.281386272666972e-14,
+        "time_at_maximum_seconds": 13.406,
+        "maximum_difference_over_reference_amplitude": 7.116677523479968e-10,
+        "root_mean_square_difference": 1.6726697845471089e-15
+      },
+      {
+        "name": "ra_pressure_Pa",
+        "maximum_absolute_difference": 1.2531365882750833e-06,
+        "time_at_maximum_seconds": 13.406,
+        "maximum_difference_over_reference_amplitude": 6.405392048040571e-10,
+        "root_mean_square_difference": 3.4019324997923475e-08
+      },
+      {
+        "name": "ra_outflow_m3_per_s",
+        "maximum_absolute_difference": 1.2110090301430468e-11,
+        "time_at_maximum_seconds": 13.406,
+        "maximum_difference_over_reference_amplitude": 1.6868421082819117e-08,
+        "root_mean_square_difference": 1.4977704039386012e-13
+      },
+      {
+        "name": "rv_volume_m3",
+        "maximum_absolute_difference": 6.277454684538997e-14,
+        "time_at_maximum_seconds": 13.406,
+        "maximum_difference_over_reference_amplitude": 1.2554909369077993e-10,
+        "root_mean_square_difference": 1.6133575549120946e-15
+      },
+      {
+        "name": "rv_pressure_Pa",
+        "maximum_absolute_difference": 2.568042418715777e-06,
+        "time_at_maximum_seconds": 13.406,
+        "maximum_difference_over_reference_amplitude": 1.4718197810689737e-10,
+        "root_mean_square_difference": 5.351437818355261e-08
+      },
+      {
+        "name": "rv_outflow_m3_per_s",
+        "maximum_absolute_difference": 2.9116448428722144e-12,
+        "time_at_maximum_seconds": 17.073,
+        "maximum_difference_over_reference_amplitude": 1.2537169646343664e-09,
+        "root_mean_square_difference": 2.7293045384074025e-14
+      },
+      {
+        "name": "sas_pressure_Pa",
+        "maximum_absolute_difference": 3.5905213735532016e-07,
+        "time_at_maximum_seconds": 11.096,
+        "maximum_difference_over_reference_amplitude": 9.207003746414142e-12,
+        "root_mean_square_difference": 7.481858268861638e-08
+      },
+      {
+        "name": "sas_outflow_m3_per_s",
+        "maximum_absolute_difference": 2.1788018438051449e-13,
+        "time_at_maximum_seconds": 11.102,
+        "maximum_difference_over_reference_amplitude": 7.571844600995995e-11,
+        "root_mean_square_difference": 6.891952543164525e-15
+      },
+      {
+        "name": "sat_pressure_Pa",
+        "maximum_absolute_difference": 2.3799293558113277e-07,
+        "time_at_maximum_seconds": 11.312,
+        "maximum_difference_over_reference_amplitude": 6.1128058918741635e-12,
+        "root_mean_square_difference": 7.41157236872778e-08
+      },
+      {
+        "name": "sat_outflow_m3_per_s",
+        "maximum_absolute_difference": 1.7027395118884847e-15,
+        "time_at_maximum_seconds": 11.313,
+        "maximum_difference_over_reference_amplitude": 6.281124152086627e-12,
+        "root_mean_square_difference": 5.379427782300052e-16
+      },
+      {
+        "name": "sar_pressure_Pa",
+        "maximum_absolute_difference": 2.261731424368918e-07,
+        "time_at_maximum_seconds": 11.313,
+        "maximum_difference_over_reference_amplitude": 6.090881116027619e-12,
+        "root_mean_square_difference": 7.056826447531483e-08
+      },
+      {
+        "name": "sar_outflow_m3_per_s",
+        "maximum_absolute_difference": 1.7027395118884847e-15,
+        "time_at_maximum_seconds": 11.313,
+        "maximum_difference_over_reference_amplitude": 6.281124152086627e-12,
+        "root_mean_square_difference": 5.379427782300052e-16
+      },
+      {
+        "name": "scp_pressure_Pa",
+        "maximum_absolute_difference": 1.1293923307675868e-07,
+        "time_at_maximum_seconds": 11.313,
+        "maximum_difference_over_reference_amplitude": 5.910309078669784e-12,
+        "root_mean_square_difference": 3.54762973458593e-08
+      },
+      {
+        "name": "scp_outflow_m3_per_s",
+        "maximum_absolute_difference": 1.7027395118884847e-15,
+        "time_at_maximum_seconds": 11.313,
+        "maximum_difference_over_reference_amplitude": 6.281124152086627e-12,
+        "root_mean_square_difference": 5.379427782300052e-16
+      },
+      {
+        "name": "svn_pressure_Pa",
+        "maximum_absolute_difference": 3.0584033083869144e-08,
+        "time_at_maximum_seconds": 17.405,
+        "maximum_difference_over_reference_amplitude": 1.3023803784045729e-11,
+        "root_mean_square_difference": 1.017142891641682e-08
+      },
+      {
+        "name": "svn_outflow_m3_per_s",
+        "maximum_absolute_difference": 1.2571241519553772e-13,
+        "time_at_maximum_seconds": 13.406,
+        "maximum_difference_over_reference_amplitude": 1.0834496956896585e-09,
+        "root_mean_square_difference": 3.1799799914523044e-15
+      },
+      {
+        "name": "pas_pressure_Pa",
+        "maximum_absolute_difference": 3.943932824768126e-07,
+        "time_at_maximum_seconds": 17.073,
+        "maximum_difference_over_reference_amplitude": 2.637359445572212e-11,
+        "root_mean_square_difference": 3.947647865622269e-08
+      },
+      {
+        "name": "pas_outflow_m3_per_s",
+        "maximum_absolute_difference": 2.1942587720771844e-13,
+        "time_at_maximum_seconds": 16.083000000000002,
+        "maximum_difference_over_reference_amplitude": 9.834068766833e-11,
+        "root_mean_square_difference": 8.099369259119633e-15
+      },
+      {
+        "name": "pat_pressure_Pa",
+        "maximum_absolute_difference": 1.5458772395504639e-07,
+        "time_at_maximum_seconds": 16.253,
+        "maximum_difference_over_reference_amplitude": 1.037354736513782e-11,
+        "root_mean_square_difference": 3.867575004850375e-08
+      },
+      {
+        "name": "pat_outflow_m3_per_s",
+        "maximum_absolute_difference": 2.1342113189562473e-14,
+        "time_at_maximum_seconds": 15.441,
+        "maximum_difference_over_reference_amplitude": 6.063546015913126e-11,
+        "root_mean_square_difference": 1.325133265010405e-15
+      },
+      {
+        "name": "par_pressure_Pa",
+        "maximum_absolute_difference": 6.225236575119197e-07,
+        "time_at_maximum_seconds": 15.427,
+        "maximum_difference_over_reference_amplitude": 4.3111349259545136e-11,
+        "root_mean_square_difference": 3.912812030893101e-08
+      },
+      {
+        "name": "par_outflow_m3_per_s",
+        "maximum_absolute_difference": 2.1342113189562473e-14,
+        "time_at_maximum_seconds": 15.441,
+        "maximum_difference_over_reference_amplitude": 6.063546015913126e-11,
+        "root_mean_square_difference": 1.325133265010405e-15
+      },
+      {
+        "name": "pcp_pressure_Pa",
+        "maximum_absolute_difference": 6.671871233265847e-07,
+        "time_at_maximum_seconds": 15.428,
+        "maximum_difference_over_reference_amplitude": 5.513665073270299e-11,
+        "root_mean_square_difference": 3.554529510696865e-08
+      },
+      {
+        "name": "pcp_outflow_m3_per_s",
+        "maximum_absolute_difference": 2.1342113189562473e-14,
+        "time_at_maximum_seconds": 15.441,
+        "maximum_difference_over_reference_amplitude": 6.063546015913126e-11,
+        "root_mean_square_difference": 1.325133265010405e-15
+      },
+      {
+        "name": "pvn_pressure_Pa",
+        "maximum_absolute_difference": 1.0244364148093155e-06,
+        "time_at_maximum_seconds": 15.432,
+        "maximum_difference_over_reference_amplitude": 5.147690191930312e-10,
+        "root_mean_square_difference": 4.7490733395262276e-08
+      },
+      {
+        "name": "pvn_outflow_m3_per_s",
+        "maximum_absolute_difference": 5.024852533846644e-11,
+        "time_at_maximum_seconds": 15.425,
+        "maximum_difference_over_reference_amplitude": 8.404714997663392e-09,
+        "root_mean_square_difference": 4.774820636577569e-13
+      },
+      {
+        "name": "la_elastance_Pa_per_m3",
+        "maximum_absolute_difference": 0.0,
+        "time_at_maximum_seconds": 0.0,
+        "maximum_difference_over_reference_amplitude": 0.0,
+        "root_mean_square_difference": 0.0
+      },
+      {
+        "name": "lv_elastance_Pa_per_m3",
+        "maximum_absolute_difference": 0.0,
+        "time_at_maximum_seconds": 0.0,
+        "maximum_difference_over_reference_amplitude": 0.0,
+        "root_mean_square_difference": 0.0
+      },
+      {
+        "name": "ra_elastance_Pa_per_m3",
+        "maximum_absolute_difference": 0.0,
+        "time_at_maximum_seconds": 0.0,
+        "maximum_difference_over_reference_amplitude": 0.0,
+        "root_mean_square_difference": 0.0
+      },
+      {
+        "name": "rv_elastance_Pa_per_m3",
+        "maximum_absolute_difference": 0.0,
+        "time_at_maximum_seconds": 0.0,
+        "maximum_difference_over_reference_amplitude": 0.0,
+        "root_mean_square_difference": 0.0
+      },
+      {
+        "name": "native_hydraulic_0",
+        "maximum_absolute_difference": 2.210920384488127e-13,
+        "time_at_maximum_seconds": 15.425,
+        "maximum_difference_over_reference_amplitude": 2.2796992711194187e-09,
+        "root_mean_square_difference": 3.0430444482378076e-15
+      },
+      {
+        "name": "native_hydraulic_1",
+        "maximum_absolute_difference": 2.8321575905885035e-13,
+        "time_at_maximum_seconds": 15.425,
+        "maximum_difference_over_reference_amplitude": 5.664315181177007e-10,
+        "root_mean_square_difference": 9.780150960426087e-15
+      },
+      {
+        "name": "native_hydraulic_2",
+        "maximum_absolute_difference": 2.1597053166027072e-16,
+        "time_at_maximum_seconds": 11.096,
+        "maximum_difference_over_reference_amplitude": 9.206974809589815e-12,
+        "root_mean_square_difference": 4.500365584662037e-17
+      },
+      {
+        "name": "native_hydraulic_3",
+        "maximum_absolute_difference": 2.8630526768824716e-15,
+        "time_at_maximum_seconds": 11.312,
+        "maximum_difference_over_reference_amplitude": 6.112762694750219e-12,
+        "root_mean_square_difference": 8.916178562773854e-16
+      },
+      {
+        "name": "native_hydraulic_4",
+        "maximum_absolute_difference": 4.714002625749725e-15,
+        "time_at_maximum_seconds": 17.405,
+        "maximum_difference_over_reference_amplitude": 1.3023589224777544e-11,
+        "root_mean_square_difference": 1.5677766904976525e-15
+      },
+      {
+        "name": "native_hydraulic_5",
+        "maximum_absolute_difference": 6.281386272666972e-14,
+        "time_at_maximum_seconds": 13.406,
+        "maximum_difference_over_reference_amplitude": 7.116677523479968e-10,
+        "root_mean_square_difference": 1.6726697845471089e-15
+      },
+      {
+        "name": "native_hydraulic_6",
+        "maximum_absolute_difference": 6.277454684538997e-14,
+        "time_at_maximum_seconds": 13.406,
+        "maximum_difference_over_reference_amplitude": 1.2554909369077993e-10,
+        "root_mean_square_difference": 1.6133575549120946e-15
+      },
+      {
+        "name": "native_hydraulic_7",
+        "maximum_absolute_difference": 5.337662820417699e-16,
+        "time_at_maximum_seconds": 17.073,
+        "maximum_difference_over_reference_amplitude": 2.6373640769946027e-11,
+        "root_mean_square_difference": 5.342681372588036e-17
+      },
+      {
+        "name": "native_hydraulic_8",
+        "maximum_absolute_difference": 4.416822810271448e-15,
+        "time_at_maximum_seconds": 16.253,
+        "maximum_difference_over_reference_amplitude": 1.0373619462618854e-11,
+        "root_mean_square_difference": 1.105021334616642e-15
+      },
+      {
+        "name": "native_hydraulic_9",
+        "maximum_absolute_difference": 1.5790190335818188e-13,
+        "time_at_maximum_seconds": 15.432,
+        "maximum_difference_over_reference_amplitude": 5.147691820254494e-10,
+        "root_mean_square_difference": 7.320000593503215e-15
+      },
+      {
+        "name": "native_hydraulic_10",
+        "maximum_absolute_difference": 2.9112060472794715e-11,
+        "time_at_maximum_seconds": 15.425,
+        "maximum_difference_over_reference_amplitude": 3.006559582337143e-08,
+        "root_mean_square_difference": 3.2126889919986883e-13
+      },
+      {
+        "name": "native_hydraulic_11",
+        "maximum_absolute_difference": 1.8630981193836886e-11,
+        "time_at_maximum_seconds": 10.305,
+        "maximum_difference_over_reference_amplitude": 6.191714083574764e-09,
+        "root_mean_square_difference": 2.966445991567296e-13
+      },
+      {
+        "name": "native_hydraulic_12",
+        "maximum_absolute_difference": 2.1788018438051449e-13,
+        "time_at_maximum_seconds": 11.102,
+        "maximum_difference_over_reference_amplitude": 7.571844600995995e-11,
+        "root_mean_square_difference": 6.891952543164525e-15
+      },
+      {
+        "name": "native_hydraulic_13",
+        "maximum_absolute_difference": 1.7027395118884847e-15,
+        "time_at_maximum_seconds": 11.313,
+        "maximum_difference_over_reference_amplitude": 6.281124152086627e-12,
+        "root_mean_square_difference": 5.379427782300052e-16
+      },
+      {
+        "name": "native_hydraulic_14",
+        "maximum_absolute_difference": 1.2571241519553772e-13,
+        "time_at_maximum_seconds": 13.406,
+        "maximum_difference_over_reference_amplitude": 1.0834496956896585e-09,
+        "root_mean_square_difference": 3.1799799914523044e-15
+      },
+      {
+        "name": "native_hydraulic_15",
+        "maximum_absolute_difference": 1.2110090301430468e-11,
+        "time_at_maximum_seconds": 13.406,
+        "maximum_difference_over_reference_amplitude": 1.6868421082819117e-08,
+        "root_mean_square_difference": 1.4977704039386012e-13
+      },
+      {
+        "name": "native_hydraulic_16",
+        "maximum_absolute_difference": 2.9116448428722144e-12,
+        "time_at_maximum_seconds": 17.073,
+        "maximum_difference_over_reference_amplitude": 1.2537169646343664e-09,
+        "root_mean_square_difference": 2.7293045384074025e-14
+      },
+      {
+        "name": "native_hydraulic_17",
+        "maximum_absolute_difference": 2.1942587720771844e-13,
+        "time_at_maximum_seconds": 16.083000000000002,
+        "maximum_difference_over_reference_amplitude": 9.834068766833e-11,
+        "root_mean_square_difference": 8.099369259119633e-15
+      },
+      {
+        "name": "native_hydraulic_18",
+        "maximum_absolute_difference": 2.1342113189562473e-14,
+        "time_at_maximum_seconds": 15.441,
+        "maximum_difference_over_reference_amplitude": 6.063546015913126e-11,
+        "root_mean_square_difference": 1.325133265010405e-15
+      },
+      {
+        "name": "native_hydraulic_19",
+        "maximum_absolute_difference": 5.024852533846644e-11,
+        "time_at_maximum_seconds": 15.425,
+        "maximum_difference_over_reference_amplitude": 8.404714997663392e-09,
+        "root_mean_square_difference": 4.774820636577569e-13
+      }
+    ]
+  },
+  "refinement_decreases_pressure_flow_volume_maxima": true,
+  "initial_native_hydraulic_state_SI": [
+    1.9999999999999998e-05,
+    0.0005,
+    8e-06,
+    0.00015999999999999999,
+    0.0,
+    1.9999999999999998e-05,
+    0.0005,
+    5.399999999999999e-06,
+    0.00011399999999999999,
+    0.0,
+    -0.0,
+    -0.0,
+    0.0,
+    0.0,
+    -4.78288916185128e-05,
+    -0.0,
+    0.0015652475842498528,
+    0.0,
+    0.0,
+    -0.005978611452314101
+  ],
+  "final_native_hydraulic_state_SI": [
+    7.859594578379755e-05,
+    0.00013946605394416574,
+    7.2918781604060515e-06,
+    0.00014582195851477973,
+    0.0003555199992998896,
+    5.74146754665403e-05,
+    0.00013465025218126837,
+    5.876793853217595e-06,
+    0.00012404394218532445,
+    0.0002787185006106096,
+    -0.0,
+    -0.0,
+    3.287393611540017e-06,
+    6.902729113556303e-05,
+    0.00010273862085901436,
+    -0.0,
+    -0.0,
+    2.7562221062490903e-06,
+    6.099004153698619e-05,
+    0.000890024067577612
+  ],
+  "final_cycle_observable_ranges": {
+    "la_volume_m3": {
+      "minimum": 5.791645141639673e-05,
+      "maximum": 9.503291855867406e-05
+    },
+    "la_pressure_Pa": {
+      "minimum": 1675.5178906097035,
+      "maximum": 1949.1067252455475
+    },
+    "la_outflow_m3_per_s": {
+      "minimum": -0.0,
+      "maximum": 0.0009682840105043435
+    },
+    "lv_volume_m3": {
+      "minimum": 5.501604817505533e-05,
+      "maximum": 0.00013946605394416574
+    },
+    "lv_pressure_Pa": {
+      "minimum": 1052.7895735287245,
+      "maximum": 16941.446259443135
+    },
+    "lv_outflow_m3_per_s": {
+      "minimum": -0.0,
+      "maximum": 0.0010670720568740082
+    },
+    "ra_volume_m3": {
+      "minimum": 5.5340890420772985e-05,
+      "maximum": 8.816913234093778e-05
+    },
+    "ra_pressure_Pa": {
+      "minimum": 1188.1940453087286,
+      "maximum": 1954.7834811117225
+    },
+    "ra_outflow_m3_per_s": {
+      "minimum": -0.0,
+      "maximum": 0.0007173846882182896
+    },
+    "rv_volume_m3": {
+      "minimum": 5.020182639639279e-05,
+      "maximum": 0.00013465103377699713
+    },
+    "rv_pressure_Pa": {
+      "minimum": 1010.7454733626221,
+      "maximum": 6401.807456467935
+    },
+    "rv_outflow_m3_per_s": {
+      "minimum": -0.0,
+      "maximum": 0.0008364057417507649
+    },
+    "sas_pressure_Pa": {
+      "minimum": 11621.491444603671,
+      "maximum": 16926.59078226902
+    },
+    "sas_outflow_m3_per_s": {
+      "minimum": -5.536626068839901e-06,
+      "maximum": 0.0010306724698458665
+    },
+    "sat_pressure_Pa": {
+      "minimum": 11608.447908066899,
+      "maximum": 16903.463273255707
+    },
+    "sat_outflow_m3_per_s": {
+      "minimum": 6.552899440834983e-05,
+      "maximum": 0.00010260102941275339
+    },
+    "sar_pressure_Pa": {
+      "minimum": 11175.660863928611,
+      "maximum": 16221.292852426266
+    },
+    "sar_outflow_m3_per_s": {
+      "minimum": 6.552899440834983e-05,
+      "maximum": 0.00010260102941275339
+    },
+    "scp_pressure_Pa": {
+      "minimum": 6817.9827357733475,
+      "maximum": 9398.483786865247
+    },
+    "scp_outflow_m3_per_s": {
+      "minimum": 6.552899440834983e-05,
+      "maximum": 0.00010260102941275339
+    },
+    "svn_pressure_Pa": {
+      "minimum": 2282.6961001937375,
+      "maximum": 2345.3315073793306
+    },
+    "svn_outflow_m3_per_s": {
+      "minimum": 3.5052152493164474e-05,
+      "maximum": 0.00011559654898970798
+    },
+    "pas_pressure_Pa": {
+      "minimum": 4196.492950640191,
+      "maximum": 6382.953259114024
+    },
+    "pas_outflow_m3_per_s": {
+      "minimum": -5.9305187195305705e-06,
+      "maximum": 0.0008046979389248379
+    },
+    "pat_pressure_Pa": {
+      "minimum": 4189.554133041099,
+      "maximum": 6366.661044806275
+    },
+    "pat_outflow_m3_per_s": {
+      "minimum": 5.846864724151249e-05,
+      "maximum": 0.00010921029790333555
+    },
+    "par_pressure_Pa": {
+      "minimum": 4119.192133168392,
+      "maximum": 6223.302786573656
+    },
+    "par_outflow_m3_per_s": {
+      "minimum": 5.846864724151249e-05,
+      "maximum": 0.00010921029790333555
+    },
+    "pcp_pressure_Pa": {
+      "minimum": 3730.3683085412595,
+      "maximum": 5497.466247188313
+    },
+    "pcp_outflow_m3_per_s": {
+      "minimum": 5.846864724151249e-05,
+      "maximum": 0.00010921029790333555
+    },
+    "pvn_pressure_Pa": {
+      "minimum": 1685.812891981368,
+      "maximum": 1951.3458535882296
+    },
+    "pvn_outflow_m3_per_s": {
+      "minimum": -0.0007659556375927441,
+      "maximum": 0.0009541211193854931
+    },
+    "la_elastance_Pa_per_m3": {
+      "minimum": 19950000.0,
+      "maximum": 33249999.99997659
+    },
+    "lv_elastance_Pa_per_m3": {
+      "minimum": 13300000.0,
+      "maximum": 332500000.0
+    },
+    "ra_elastance_Pa_per_m3": {
+      "minimum": 19950000.0,
+      "maximum": 33249999.99997659
+    },
+    "rv_elastance_Pa_per_m3": {
+      "minimum": 13300000.0,
+      "maximum": 152950000.0
+    }
+  }
+}

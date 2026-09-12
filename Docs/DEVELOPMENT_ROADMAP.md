@@ -648,11 +648,18 @@ rather than becoming idle.
   blood-volume/flow/species with fixed organ-reservoir exchange now share the
   Matter Newton/FGMRES transaction. Physical M4 Pro conservation, independent
   FP64/refinement, reset/replay/rollback and prepared-state proof checks pass
-  ([12 September receipt](ORGAN_CIRCULATION_INTEGRATION_20260912.md)). Anatomical
-  organ mechanics and physiological calibration remain unqualified; the
-  18-region template retains 276 unresolved parameters.
-- **Active frontier:** pin and reproduce source cardiovascular models and
-  subject parameters; implement chamber drive and valve laws; couple perfusion to active
+  ([12 September receipt](ORGAN_CIRCULATION_INTEGRATION_20260912.md)). The full
+  pinned Shi–Hose four-chamber systemic/pulmonary source loop now adds periodic
+  drive, one-way valves and exact accepted cardiac time. Ten native cycles,
+  equal-duration timestep refinement, independent source-derived FP64 comparison
+  and 13 transaction/compiler checks pass
+  ([cardiac receipt](CARDIAC_SOURCE_REPRODUCTION_20260912.md)). The source's six
+  vascular states are C·P storage, not absolute blood volumes. Anatomical organ
+  mechanics and physiological calibration remain unqualified; the 18-region
+  template retains 276 unresolved parameters.
+- **Active frontier:** source absolute vascular volumes, nonduplicated blood
+  mass partition and subject parameters; register and calibrate organ perfusion;
+  couple perfusion to active
   tissue, ventilation to thoracic mechanics, metabolic/thermal state to muscle,
   and conduction/delay to biological sensors and stimulation; define stable
   subcycling and rollback semantics.

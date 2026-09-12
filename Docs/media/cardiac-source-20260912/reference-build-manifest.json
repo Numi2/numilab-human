@@ -1,0 +1,156 @@
+{
+  "schema": "NumiHuman.CellML-reference-build.v1",
+  "recorded_utc": "2026-09-12T04:58:10.485656+00:00",
+  "source_revision": "a679cdc2e97429fb5280af8132c119758626c1f2",
+  "source_archive": {
+    "file": "shi-hose-a679cdc2e97429fb5280af8132c119758626c1f2.tgz",
+    "url": "https://models.physiomeproject.org/workspace/shi_hose_2009/@@archive/a679cdc2e97429fb5280af8132c119758626c1f2/tgz",
+    "bytes": 60185,
+    "sha256": "91d6b586c0caaa0fd59ec21cef873f1348563af0033210fbadfe84921a52782d"
+  },
+  "license": "CC-BY-3.0",
+  "license_page": {
+    "file": "shi-hose-license.html",
+    "url": "https://models.physiomeproject.org/exposure/c49d416ae3a5132882e6ea7479ba50f5/ModelMain.cellml/license_citation",
+    "bytes": 24975,
+    "sha256": "70600564f67882b2eec88b95ec0f100d07f463bcede178f64b45c6ba6d50c9bc"
+  },
+  "source_header_sha256": "1f847a6642b13667cecf562c861074e4cd1dee7a8a8b9bf8753cd8c8e71c3e5f",
+  "build_command": [
+    "xcrun",
+    "clang++",
+    "-std=c++23",
+    "-O2",
+    "-fno-fast-math",
+    "-ffp-contract=off",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "/Users/home/numilab-human/Build/cardiac-source-20260912/oracle/shi_hose_reference.cpp",
+    "-o",
+    "/Users/home/numilab-human/Build/cardiac-source-20260912/oracle/shi_hose_reference"
+  ],
+  "compiler_version": "Apple clang version 21.0.0 (clang-2100.0.123.102)\nTarget: arm64-apple-darwin25.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "host_architecture": "arm64",
+  "platform": "macOS-26.6-arm64-arm-64bit-Mach-O",
+  "run_commands": [
+    [
+      "/Users/home/numilab-human/Build/cardiac-source-20260912/oracle/shi_hose_reference",
+      "/Users/home/numilab-human/Build/cardiac-source-20260912/oracle/source-20cycles-1e10.csv",
+      "20",
+      ".001",
+      "1e-10"
+    ],
+    [
+      "/Users/home/numilab-human/Build/cardiac-source-20260912/oracle/shi_hose_reference",
+      "/Users/home/numilab-human/Build/cardiac-source-20260912/oracle/source-20cycles-1e12.csv",
+      "20",
+      ".001",
+      "1e-12"
+    ],
+    [
+      "/Users/home/numilab-human/Build/cardiac-source-20260912/oracle/shi_hose_reference",
+      "/Users/home/numilab-human/Build/cardiac-source-20260912/oracle/source-20cycles-1e13.csv",
+      "20",
+      ".001",
+      "1e-13"
+    ]
+  ],
+  "generation_verification": {
+    "schema": "NumiHuman.CellML-generation-check.v1",
+    "status": "pass",
+    "deterministic": true,
+    "changed_import_rejected": true,
+    "native_headers_checked": true,
+    "headers": {
+      "shi_hose_reference_generated.hpp": "1f847a6642b13667cecf562c861074e4cd1dee7a8a8b9bf8753cd8c8e71c3e5f",
+      "shi_hose_observables.hpp": "631a4b5a09446a80eefc94bc6009d820a3b06ecdb88d70eb90b63b18206c0ffa"
+    }
+  },
+  "artifacts": {
+    "shi_hose_reference_generated.hpp": {
+      "sha256": "1f847a6642b13667cecf562c861074e4cd1dee7a8a8b9bf8753cd8c8e71c3e5f",
+      "bytes": 16120
+    },
+    "shi_hose_observables.hpp": {
+      "sha256": "631a4b5a09446a80eefc94bc6009d820a3b06ecdb88d70eb90b63b18206c0ffa",
+      "bytes": 2139
+    },
+    "shi_hose_dopri.hpp": {
+      "sha256": "0ec1129d06835a27b2dc5b7157998177a17eddc119ba8c326d4226a95ecd2942",
+      "bytes": 3989
+    },
+    "shi_hose_reference.cpp": {
+      "sha256": "12793d80c2e08f496e7c883d5ae16b511aef960d6b366ee8b6e6dbb09b4a9f88",
+      "bytes": 3441
+    },
+    "shi_hose_reference": {
+      "sha256": "fd4a53f27fd95a0d31d2be249ad369b20e2ddc39395c9dc7ab8884104e0c68dc",
+      "bytes": 39312
+    },
+    "generate_reference.py": {
+      "sha256": "b2e02c89e701c2e944dd905f32f5998f03a8a1a14f588c3d5eaa63e1e08fd503",
+      "bytes": 10325
+    },
+    "generate_observables.py": {
+      "sha256": "185488f8281130b45ad0be69c547c4751af3bd47410ab914de5c079968d5d64f",
+      "bytes": 3799
+    },
+    "compare_traces.py": {
+      "sha256": "788495cd2dce1571be2863cbd7a5c67e58a1f717edde0c5d47b4af68c8da01ec",
+      "bytes": 4429
+    },
+    "source-lock.json": {
+      "sha256": "f56fc1f285f0fd4cf5e7e4266cd40c1a641a345103e799ae4484e3d7f228dcea",
+      "bytes": 2168
+    },
+    "flattened-source.json": {
+      "sha256": "649d4bac268f085832148171b82eeae1f59a04ef29af34f50cbf52addbf54783",
+      "bytes": 41066
+    },
+    "native-state-mapping.json": {
+      "sha256": "4b6e81456b8000c3d717b0a8f723c3f704fa26e09c04ec2367186c820633d9e2",
+      "bytes": 6284
+    },
+    "reference-refinement.json": {
+      "sha256": "28e75e51b332a3c5c9b8a77ad5df58cdce8ea8da6b7de72607a9c9588b1c05e5",
+      "bytes": 41874
+    },
+    "generation-check.json": {
+      "sha256": "ad5e13e6a7136c3eae31a7e1147cb925f8b4d091c8159e64a20d2b87957f3643",
+      "bytes": 396
+    },
+    "source-20cycles-1e10.csv": {
+      "sha256": "7615bbead9da16a21c7fb088f4a39a709c2b5abf3b55c6fb949be454418b4c44",
+      "bytes": 21928552
+    },
+    "source-20cycles-1e10.json": {
+      "sha256": "05936fd2df0b625e300e3c5ac6d3460f08f0034fa2c594fc4c48e122f4e733ba",
+      "bytes": 732
+    },
+    "source-20cycles-1e12.csv": {
+      "sha256": "b377b658d3a40ba12f5dd431725da2a1747176218d9a94400ff9172f81e9b557",
+      "bytes": 21927798
+    },
+    "source-20cycles-1e12.json": {
+      "sha256": "ae738eb1e20c0e22c19db33573484d54a25d1cc2fd92beb8b679e4309f19a4c2",
+      "bytes": 767
+    },
+    "source-20cycles-1e13.csv": {
+      "sha256": "dbf62d8bbc38e1e09df05e709b22b5987da91cf4ff5115db085a29e1918ddd17",
+      "bytes": 21929262
+    },
+    "source-20cycles-1e13.json": {
+      "sha256": "89fc5cd44b3f9d83c5b2421f8c37b013271e9b934ab6110b977cb6417a9befcc",
+      "bytes": 733
+    }
+  },
+  "scope": "independent CPU FP64 source-model hydraulic reproduction; no Python physical stepping, native equations, GPU execution or biological calibration",
+  "all_source_initial_states_unchanged": true,
+  "pressure_unit_Pa": 133,
+  "source_pi_literal": "3.14159",
+  "ode_states": 14,
+  "native_hydraulic_coordinates": 20,
+  "absolute_vascular_blood_volumes_sourced": false,
+  "native_comparison_performed_by_this_tool": false
+}

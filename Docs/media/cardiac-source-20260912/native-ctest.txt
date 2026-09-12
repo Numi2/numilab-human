@@ -1,0 +1,42 @@
+Test project /Users/n/MetalRobo-human-completion-build-20260907
+      Start  13: matter.runtime.snapshot_archive
+ 1/13 Test  #13: matter.runtime.snapshot_archive ..................   Passed    0.71 sec
+      Start  17: matter.physics.monolithic_multiphysics
+ 2/13 Test  #17: matter.physics.monolithic_multiphysics ...........   Passed    0.47 sec
+      Start  24: matter.runtime.production_transaction_rollback
+ 3/13 Test  #24: matter.runtime.production_transaction_rollback ...   Passed    0.08 sec
+      Start  25: matter.physics.stateful_mpm
+ 4/13 Test  #25: matter.physics.stateful_mpm ......................   Passed    2.44 sec
+      Start  26: matter.physics.stateful_fem
+ 5/13 Test  #26: matter.physics.stateful_fem ......................   Passed    1.96 sec
+      Start  62: numanx.integration.matter_accepted_state_2pc
+ 6/13 Test  #62: numanx.integration.matter_accepted_state_2pc .....   Passed    1.23 sec
+      Start 104: matter.compiler.stateful_roundtrip
+ 7/13 Test #104: matter.compiler.stateful_roundtrip ...............   Passed    0.33 sec
+      Start 107: matter.compiler.vascular
+ 8/13 Test #107: matter.compiler.vascular .........................   Passed    0.01 sec
+      Start 108: matter.metal.vascular
+ 9/13 Test #108: matter.metal.vascular ............................   Passed   16.23 sec
+      Start 109: matter.metal.human_physiology_payload
+10/13 Test #109: matter.metal.human_physiology_payload ............   Passed    1.43 sec
+      Start 110: matter.compiler.human_physiology_admission
+11/13 Test #110: matter.compiler.human_physiology_admission .......   Passed    0.59 sec
+      Start 111: matter.metal.cardiac_transaction
+12/13 Test #111: matter.metal.cardiac_transaction .................   Passed    0.02 sec
+      Start 112: matter.metal.cardiac_source
+13/13 Test #112: matter.metal.cardiac_source ......................   Passed    2.59 sec
+
+100% tests passed out of 13
+
+Label Time Summary:
+checkpoint    =   0.71 sec*proc (1 test)
+compiler      =   0.93 sec*proc (3 tests)
+human         =  22.10 sec*proc (7 tests)
+matter        =  26.86 sec*proc (12 tests)
+metal         =  26.46 sec*proc (9 tests)
+numanx        =   1.23 sec*proc (1 test)
+physics       =   6.19 sec*proc (5 tests)
+stateful      =   0.33 sec*proc (1 test)
+vascular      =  20.87 sec*proc (6 tests)
+
+Total Test time (real) =  28.10 sec

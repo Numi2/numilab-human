@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HumanPack.shi-hose-source-config.v1",
+  "description": "Numerical settings for the exact curated Shi/Hose CellML hydraulic source. Physiological parameters and connections are parsed from the pinned source; arbitrary overrides and species transport without absolute vascular volumes are rejected.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "id", "source_manifest_sha256", "numerical_settings", "species", "tissue_reservoirs", "exchanges"],
+  "properties": {
+    "schema": {"const": "HumanPack.shi-hose-source-config.v1"},
+    "id": {"const": "shi_hose_2009_curated_closed_loop"},
+    "source_manifest_sha256": {"const": "3c1439ede07f5736520856f77a8cef11103e63471fa4ee264b24c8a04a90a39e"},
+    "numerical_settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["volume_scale_m3", "flow_scale_m3_per_s", "pressure_scale_pa", "residual_tolerance"],
+      "properties": {
+        "volume_scale_m3": {"allOf": [{"$ref": "#/$defs/setting"}, {"properties": {"unit": {"const": "m3"}}}]},
+        "flow_scale_m3_per_s": {"allOf": [{"$ref": "#/$defs/setting"}, {"properties": {"unit": {"const": "m3/s"}}}]},
+        "pressure_scale_pa": {"allOf": [{"$ref": "#/$defs/setting"}, {"properties": {"unit": {"const": "Pa"}}}]},
+        "residual_tolerance": {"allOf": [{"$ref": "#/$defs/setting"}, {"properties": {"unit": {"const": "1"}, "value": {"exclusiveMaximum": 1}}}]}
+      }
+    },
+    "species": {"type": "array", "maxItems": 0},
+    "tissue_reservoirs": {"type": "array", "maxItems": 0},
+    "exchanges": {"type": "array", "maxItems": 0}
+  },
+  "$defs": {
+    "setting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "unit", "role"],
+      "properties": {
+        "value": {"type": "number", "exclusiveMinimum": 0},
+        "unit": {"enum": ["m3", "m3/s", "Pa", "1"]},
+        "role": {"const": "numerical_residual_control_not_source_physiological_parameter"}
+      }
+    }
+  }
+}

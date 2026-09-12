@@ -1,0 +1,327 @@
+{
+  "scope": "hydraulic compliance storage, not absolute vascular blood volumes",
+  "rows": [
+    {
+      "index": 0,
+      "name": "LA_volume",
+      "source_variable_index": 23,
+      "kind": "volume",
+      "SI_unit": "m3"
+    },
+    {
+      "index": 1,
+      "name": "LV_volume",
+      "source_variable_index": 31,
+      "kind": "volume",
+      "SI_unit": "m3"
+    },
+    {
+      "index": 2,
+      "name": "SAS_compliance_storage",
+      "source_variable_index": 28,
+      "kind": "compliance_storage",
+      "SI_unit": "m3"
+    },
+    {
+      "index": 3,
+      "name": "SAT_compliance_storage",
+      "source_variable_index": 133,
+      "kind": "compliance_storage",
+      "SI_unit": "m3"
+    },
+    {
+      "index": 4,
+      "name": "SVN_compliance_storage",
+      "source_variable_index": 135,
+      "kind": "compliance_storage",
+      "SI_unit": "m3"
+    },
+    {
+      "index": 5,
+      "name": "RA_volume",
+      "source_variable_index": 111,
+      "kind": "volume",
+      "SI_unit": "m3"
+    },
+    {
+      "index": 6,
+      "name": "RV_volume",
+      "source_variable_index": 113,
+      "kind": "volume",
+      "SI_unit": "m3"
+    },
+    {
+      "index": 7,
+      "name": "PAS_compliance_storage",
+      "source_variable_index": 46,
+      "kind": "compliance_storage",
+      "SI_unit": "m3"
+    },
+    {
+      "index": 8,
+      "name": "PAT_compliance_storage",
+      "source_variable_index": 67,
+      "kind": "compliance_storage",
+      "SI_unit": "m3"
+    },
+    {
+      "index": 9,
+      "name": "PVN_compliance_storage",
+      "source_variable_index": 69,
+      "kind": "compliance_storage",
+      "SI_unit": "m3"
+    },
+    {
+      "index": 10,
+      "name": "mitral",
+      "source_variable_index": 21,
+      "kind": "flow",
+      "SI_unit": "m3/s"
+    },
+    {
+      "index": 11,
+      "name": "aortic",
+      "source_variable_index": 29,
+      "kind": "flow",
+      "SI_unit": "m3/s"
+    },
+    {
+      "index": 12,
+      "name": "sas_to_sat",
+      "source_variable_index": 134,
+      "kind": "flow",
+      "SI_unit": "m3/s"
+    },
+    {
+      "index": 13,
+      "name": "sat_to_svn",
+      "source_variable_index": 131,
+      "kind": "flow",
+      "SI_unit": "m3/s"
+    },
+    {
+      "index": 14,
+      "name": "svn_to_ra",
+      "source_variable_index": 108,
+      "kind": "flow",
+      "SI_unit": "m3/s"
+    },
+    {
+      "index": 15,
+      "name": "tricuspid",
+      "source_variable_index": 109,
+      "kind": "flow",
+      "SI_unit": "m3/s"
+    },
+    {
+      "index": 16,
+      "name": "pulmonary_valve",
+      "source_variable_index": 47,
+      "kind": "flow",
+      "SI_unit": "m3/s"
+    },
+    {
+      "index": 17,
+      "name": "pas_to_pat",
+      "source_variable_index": 68,
+      "kind": "flow",
+      "SI_unit": "m3/s"
+    },
+    {
+      "index": 18,
+      "name": "pat_to_pvn",
+      "source_variable_index": 50,
+      "kind": "flow",
+      "SI_unit": "m3/s"
+    },
+    {
+      "index": 19,
+      "name": "pvn_to_la",
+      "source_variable_index": 20,
+      "kind": "flow",
+      "SI_unit": "m3/s"
+    }
+  ],
+  "observables": [
+    {
+      "name": "la_volume_m3",
+      "index": 23,
+      "scale": 1e-06
+    },
+    {
+      "name": "la_pressure_Pa",
+      "index": 17,
+      "scale": 133.0
+    },
+    {
+      "name": "la_outflow_m3_per_s",
+      "index": 21,
+      "scale": 1e-06
+    },
+    {
+      "name": "lv_volume_m3",
+      "index": 31,
+      "scale": 1e-06
+    },
+    {
+      "name": "lv_pressure_Pa",
+      "index": 19,
+      "scale": 133.0
+    },
+    {
+      "name": "lv_outflow_m3_per_s",
+      "index": 29,
+      "scale": 1e-06
+    },
+    {
+      "name": "ra_volume_m3",
+      "index": 111,
+      "scale": 1e-06
+    },
+    {
+      "name": "ra_pressure_Pa",
+      "index": 106,
+      "scale": 133.0
+    },
+    {
+      "name": "ra_outflow_m3_per_s",
+      "index": 109,
+      "scale": 1e-06
+    },
+    {
+      "name": "rv_volume_m3",
+      "index": 113,
+      "scale": 1e-06
+    },
+    {
+      "name": "rv_pressure_Pa",
+      "index": 107,
+      "scale": 133.0
+    },
+    {
+      "name": "rv_outflow_m3_per_s",
+      "index": 47,
+      "scale": 1e-06
+    },
+    {
+      "name": "sas_pressure_Pa",
+      "index": 28,
+      "scale": 133.0
+    },
+    {
+      "name": "sas_outflow_m3_per_s",
+      "index": 134,
+      "scale": 1e-06
+    },
+    {
+      "name": "sat_pressure_Pa",
+      "index": 133,
+      "scale": 133.0
+    },
+    {
+      "name": "sat_outflow_m3_per_s",
+      "index": 131,
+      "scale": 1e-06
+    },
+    {
+      "name": "sar_pressure_Pa",
+      "index": 129,
+      "scale": 133.0
+    },
+    {
+      "name": "sar_outflow_m3_per_s",
+      "index": 132,
+      "scale": 1e-06
+    },
+    {
+      "name": "scp_pressure_Pa",
+      "index": 130,
+      "scale": 133.0
+    },
+    {
+      "name": "scp_outflow_m3_per_s",
+      "index": 136,
+      "scale": 1e-06
+    },
+    {
+      "name": "svn_pressure_Pa",
+      "index": 135,
+      "scale": 133.0
+    },
+    {
+      "name": "svn_outflow_m3_per_s",
+      "index": 108,
+      "scale": 1e-06
+    },
+    {
+      "name": "pas_pressure_Pa",
+      "index": 46,
+      "scale": 133.0
+    },
+    {
+      "name": "pas_outflow_m3_per_s",
+      "index": 68,
+      "scale": 1e-06
+    },
+    {
+      "name": "pat_pressure_Pa",
+      "index": 67,
+      "scale": 133.0
+    },
+    {
+      "name": "pat_outflow_m3_per_s",
+      "index": 50,
+      "scale": 1e-06
+    },
+    {
+      "name": "par_pressure_Pa",
+      "index": 48,
+      "scale": 133.0
+    },
+    {
+      "name": "par_outflow_m3_per_s",
+      "index": 51,
+      "scale": 1e-06
+    },
+    {
+      "name": "pcp_pressure_Pa",
+      "index": 49,
+      "scale": 133.0
+    },
+    {
+      "name": "pcp_outflow_m3_per_s",
+      "index": 70,
+      "scale": 1e-06
+    },
+    {
+      "name": "pvn_pressure_Pa",
+      "index": 69,
+      "scale": 133.0
+    },
+    {
+      "name": "pvn_outflow_m3_per_s",
+      "index": 20,
+      "scale": 1e-06
+    },
+    {
+      "name": "la_elastance_Pa_per_m3",
+      "index": 0,
+      "scale": 133000000.0
+    },
+    {
+      "name": "lv_elastance_Pa_per_m3",
+      "index": 9,
+      "scale": 133000000.0
+    },
+    {
+      "name": "ra_elastance_Pa_per_m3",
+      "index": 71,
+      "scale": 133000000.0
+    },
+    {
+      "name": "rv_elastance_Pa_per_m3",
+      "index": 79,
+      "scale": 133000000.0
+    }
+  ]
+}

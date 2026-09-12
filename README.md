@@ -6,6 +6,13 @@ muscle-tendon actuators); the Core owns the articulated state, muscle route
 evaluation, force scatter, and forward dynamics. There is no Python process in
 the native Human execution path.
 
+The [cardiac source reproduction](Docs/CARDIAC_SOURCE_REPRODUCTION_20260912.md)
+adds the complete curated Shi–Hose four-chamber systemic/pulmonary circulation
+to the existing Matter solver. `numi human-cardiac` authors its pinned source
+payload. Ten physical Mac mini cycles, timestep refinement and transaction
+checks pass. Absolute vascular blood volumes, calibrated organ perfusion and
+anatomical organ mechanics remain open.
+
 [Current-pose foot contact](Docs/CURVED_SUPPORT_20260908.md) now covers the source
 capsules and heel ellipsoids. The [source dynamic-limit integration](Docs/SOURCE_DYNAMIC_LIMITS_20260908.md)
 adds all 122 scalar limits to Matter/NumanX v6, with source-law and bounded

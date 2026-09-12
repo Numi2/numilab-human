@@ -1,0 +1,1670 @@
+{
+  "revision": "a679cdc2e97429fb5280af8132c119758626c1f2",
+  "license": "CC-BY-3.0",
+  "source_files": {
+    "ModelMain.cellml": "f5dc9dd72c24a66a2c0aa1f1b81bdb24ecccf7a8ae15ac79aa9f005dedbd5a8f",
+    "ModelHeart.cellml": "5e7a66858f92baed090103778bde6886e6c3bede8ba199aaae2f5b6a51483b32",
+    "EAtrium.cellml": "6397d16eb3d0b8611aa9c3583b2dbb9981f8a1308d1525bff985c0a2d18822b4",
+    "EVentricle.cellml": "d55497da832fa8671e2cb544fad1c6010337ce14e8652fb11f895980f2801517",
+    "TempCDa.cellml": "407c52a4a7c8ac68b2fa63f8980d0d6321bd47648b4cdcf0ed2e7daa2324453a",
+    "TempCDv.cellml": "c9d5da0fdb9b5e2a5e4b8519a16579459a95ad22f3c3e0f222ad968bd7fea15b",
+    "ParaHeart.cellml": "71bab9b0ef24577900b405f8e2b6b5280990b234bd28bc3af1cf955e6871b2e7",
+    "ModelPul.cellml": "b074ab527219e43cf7b408abce50e07e0fd0743689b853102e91e22be28047be",
+    "TempR.cellml": "c46f0816039cc8859c7ca585336dc2f777633cc9024dfaf622df33844bf2e7a5",
+    "ParaPul.cellml": "270eaa01a5f60ea59b084ec01843d5dc8270f344b506c7c14d59518dce59f96c",
+    "TempRLC.cellml": "e5fa37b944dd1fff362247540613506146f4ddfae6850b04f668caa9fff0d88f",
+    "TempRC.cellml": "1243e7f0352f391468a0a688f0e6ba475887f640152683bd0b556a05d8ba4e7c",
+    "ModelSys.cellml": "ceb8d9841f1f33dae9afcb326f0a2fdd88f5da0dc22a6ef50faa2ee4d3ce8b34",
+    "ParaSys.cellml": "a2e9b2370cb1a58a5f766cd9ae271d8dd0644832c8ab104d85c1c2c39279d0e1",
+    "Units.cellml": "9b4e92429ce2279cf62e129681d71b0ba209ae52e03bbb3ef909547e7548c4b9"
+  },
+  "instances": [
+    {
+      "file": "EAtrium.cellml",
+      "source_component": "EAtrium",
+      "instance": "LEFTHeart/Ela/EAtrium"
+    },
+    {
+      "file": "EVentricle.cellml",
+      "source_component": "EVentricle",
+      "instance": "LEFTHeart/Elv/EVentricle"
+    },
+    {
+      "file": "TempCDa.cellml",
+      "source_component": "TempCDa",
+      "instance": "LEFTHeart/LA/TempCDa"
+    },
+    {
+      "file": "TempCDv.cellml",
+      "source_component": "TempCDv",
+      "instance": "LEFTHeart/LV/TempCDv"
+    },
+    {
+      "file": "ModelHeart.cellml",
+      "source_component": "LeftHeart",
+      "instance": "LEFTHeart/LeftHeart"
+    },
+    {
+      "file": "ParaHeart.cellml",
+      "source_component": "ParaHeart",
+      "instance": "LEFTHeart/ParaLHeart/ParaHeart"
+    },
+    {
+      "file": "ModelPul.cellml",
+      "source_component": "ModelPul",
+      "instance": "PulLoop/ModelPul"
+    },
+    {
+      "file": "TempR.cellml",
+      "source_component": "TempR",
+      "instance": "PulLoop/Par/TempR"
+    },
+    {
+      "file": "ParaPul.cellml",
+      "source_component": "ParaPul",
+      "instance": "PulLoop/ParaPul/ParaPul"
+    },
+    {
+      "file": "TempRLC.cellml",
+      "source_component": "TempRLC",
+      "instance": "PulLoop/Pas/TempRLC"
+    },
+    {
+      "file": "TempRLC.cellml",
+      "source_component": "TempRLC",
+      "instance": "PulLoop/Pat/TempRLC"
+    },
+    {
+      "file": "TempR.cellml",
+      "source_component": "TempR",
+      "instance": "PulLoop/Pcp/TempR"
+    },
+    {
+      "file": "TempRC.cellml",
+      "source_component": "TempRC",
+      "instance": "PulLoop/Pvn/TempRC"
+    },
+    {
+      "file": "EAtrium.cellml",
+      "source_component": "EAtrium",
+      "instance": "RIGHTHeart/Era/EAtrium"
+    },
+    {
+      "file": "EVentricle.cellml",
+      "source_component": "EVentricle",
+      "instance": "RIGHTHeart/Erv/EVentricle"
+    },
+    {
+      "file": "ParaHeart.cellml",
+      "source_component": "ParaHeart",
+      "instance": "RIGHTHeart/ParaRHeart/ParaHeart"
+    },
+    {
+      "file": "TempCDa.cellml",
+      "source_component": "TempCDa",
+      "instance": "RIGHTHeart/RA/TempCDa"
+    },
+    {
+      "file": "TempCDv.cellml",
+      "source_component": "TempCDv",
+      "instance": "RIGHTHeart/RV/TempCDv"
+    },
+    {
+      "file": "ModelHeart.cellml",
+      "source_component": "RightHeart",
+      "instance": "RIGHTHeart/RightHeart"
+    },
+    {
+      "file": "ModelSys.cellml",
+      "source_component": "ModelSys",
+      "instance": "SysLoop/ModelSys"
+    },
+    {
+      "file": "ParaSys.cellml",
+      "source_component": "ParaSys",
+      "instance": "SysLoop/ParaSys/ParaSys"
+    },
+    {
+      "file": "TempR.cellml",
+      "source_component": "TempR",
+      "instance": "SysLoop/Sar/TempR"
+    },
+    {
+      "file": "TempRLC.cellml",
+      "source_component": "TempRLC",
+      "instance": "SysLoop/Sas/TempRLC"
+    },
+    {
+      "file": "TempRLC.cellml",
+      "source_component": "TempRLC",
+      "instance": "SysLoop/Sat/TempRLC"
+    },
+    {
+      "file": "TempR.cellml",
+      "source_component": "TempR",
+      "instance": "SysLoop/Scp/TempR"
+    },
+    {
+      "file": "TempRC.cellml",
+      "source_component": "TempRC",
+      "instance": "SysLoop/Svn/TempRC"
+    },
+    {
+      "file": "ModelMain.cellml",
+      "source_component": "environment",
+      "instance": "environment"
+    }
+  ],
+  "state_count": 14,
+  "states": [
+    {
+      "index": 0,
+      "canonical_name": "LEFTHeart/LA/TempCDa/V",
+      "aliases": [
+        "LEFTHeart/LA/TempCDa/V"
+      ],
+      "source_initial_value": "20",
+      "unit": "UnitV"
+    },
+    {
+      "index": 1,
+      "canonical_name": "LEFTHeart/LV/TempCDv/Po",
+      "aliases": [
+        "LEFTHeart/LV/TempCDv/Po",
+        "LEFTHeart/LeftHeart/Po",
+        "SysLoop/ModelSys/Pi",
+        "SysLoop/Sas/TempRLC/Pi"
+      ],
+      "source_initial_value": "100.",
+      "unit": "UnitP"
+    },
+    {
+      "index": 2,
+      "canonical_name": "LEFTHeart/LV/TempCDv/V",
+      "aliases": [
+        "LEFTHeart/LV/TempCDv/V"
+      ],
+      "source_initial_value": "500",
+      "unit": "UnitV"
+    },
+    {
+      "index": 3,
+      "canonical_name": "PulLoop/ModelPul/Pi",
+      "aliases": [
+        "PulLoop/ModelPul/Pi",
+        "PulLoop/Pas/TempRLC/Pi",
+        "RIGHTHeart/RV/TempCDv/Po",
+        "RIGHTHeart/RightHeart/Po"
+      ],
+      "source_initial_value": "30.",
+      "unit": "UnitP"
+    },
+    {
+      "index": 4,
+      "canonical_name": "PulLoop/Par/TempR/Qi",
+      "aliases": [
+        "PulLoop/Par/TempR/Qi",
+        "PulLoop/Pat/TempRLC/Qo"
+      ],
+      "source_initial_value": "0.",
+      "unit": "UnitQ"
+    },
+    {
+      "index": 5,
+      "canonical_name": "PulLoop/Pas/TempRLC/Po",
+      "aliases": [
+        "PulLoop/Pas/TempRLC/Po",
+        "PulLoop/Pat/TempRLC/Pi"
+      ],
+      "source_initial_value": "30.",
+      "unit": "UnitP"
+    },
+    {
+      "index": 6,
+      "canonical_name": "PulLoop/Pas/TempRLC/Qo",
+      "aliases": [
+        "PulLoop/Pas/TempRLC/Qo",
+        "PulLoop/Pat/TempRLC/Qi"
+      ],
+      "source_initial_value": "0.",
+      "unit": "UnitQ"
+    },
+    {
+      "index": 7,
+      "canonical_name": "PulLoop/Pcp/TempR/Po",
+      "aliases": [
+        "PulLoop/Pcp/TempR/Po",
+        "PulLoop/Pvn/TempRC/Pi"
+      ],
+      "source_initial_value": "0.",
+      "unit": "UnitP"
+    },
+    {
+      "index": 8,
+      "canonical_name": "RIGHTHeart/RA/TempCDa/V",
+      "aliases": [
+        "RIGHTHeart/RA/TempCDa/V"
+      ],
+      "source_initial_value": "20",
+      "unit": "UnitV"
+    },
+    {
+      "index": 9,
+      "canonical_name": "RIGHTHeart/RV/TempCDv/V",
+      "aliases": [
+        "RIGHTHeart/RV/TempCDv/V"
+      ],
+      "source_initial_value": "500",
+      "unit": "UnitV"
+    },
+    {
+      "index": 10,
+      "canonical_name": "SysLoop/Sar/TempR/Qi",
+      "aliases": [
+        "SysLoop/Sar/TempR/Qi",
+        "SysLoop/Sat/TempRLC/Qo"
+      ],
+      "source_initial_value": "0.",
+      "unit": "UnitQ"
+    },
+    {
+      "index": 11,
+      "canonical_name": "SysLoop/Sas/TempRLC/Po",
+      "aliases": [
+        "SysLoop/Sas/TempRLC/Po",
+        "SysLoop/Sat/TempRLC/Pi"
+      ],
+      "source_initial_value": "100.",
+      "unit": "UnitP"
+    },
+    {
+      "index": 12,
+      "canonical_name": "SysLoop/Sas/TempRLC/Qo",
+      "aliases": [
+        "SysLoop/Sas/TempRLC/Qo",
+        "SysLoop/Sat/TempRLC/Qi"
+      ],
+      "source_initial_value": "0.",
+      "unit": "UnitQ"
+    },
+    {
+      "index": 13,
+      "canonical_name": "SysLoop/Scp/TempR/Po",
+      "aliases": [
+        "SysLoop/Scp/TempR/Po",
+        "SysLoop/Svn/TempRC/Pi"
+      ],
+      "source_initial_value": "0.",
+      "unit": "UnitP"
+    }
+  ],
+  "variables": [
+    {
+      "index": 0,
+      "canonical_name": "LEFTHeart/Ela/EAtrium/E",
+      "aliases": [
+        "LEFTHeart/Ela/EAtrium/E",
+        "LEFTHeart/LA/TempCDa/E"
+      ],
+      "unit": "UnitE",
+      "role": "algebraic"
+    },
+    {
+      "index": 1,
+      "canonical_name": "LEFTHeart/Ela/EAtrium/Emax",
+      "aliases": [
+        "LEFTHeart/Ela/EAtrium/Emax",
+        "LEFTHeart/ParaLHeart/ParaHeart/ElaMax"
+      ],
+      "unit": "UnitE",
+      "role": "constant"
+    },
+    {
+      "index": 2,
+      "canonical_name": "LEFTHeart/Ela/EAtrium/Emin",
+      "aliases": [
+        "LEFTHeart/Ela/EAtrium/Emin",
+        "LEFTHeart/ParaLHeart/ParaHeart/ElaMin"
+      ],
+      "unit": "UnitE",
+      "role": "constant"
+    },
+    {
+      "index": 3,
+      "canonical_name": "LEFTHeart/Ela/EAtrium/T",
+      "aliases": [
+        "LEFTHeart/Ela/EAtrium/T",
+        "LEFTHeart/Elv/EVentricle/T",
+        "LEFTHeart/ParaLHeart/ParaHeart/T"
+      ],
+      "unit": "second",
+      "role": "constant"
+    },
+    {
+      "index": 4,
+      "canonical_name": "LEFTHeart/Ela/EAtrium/Tpwb",
+      "aliases": [
+        "LEFTHeart/Ela/EAtrium/Tpwb",
+        "LEFTHeart/ParaLHeart/ParaHeart/Tpwb"
+      ],
+      "unit": "dimensionless",
+      "role": "constant"
+    },
+    {
+      "index": 5,
+      "canonical_name": "LEFTHeart/Ela/EAtrium/Tpww",
+      "aliases": [
+        "LEFTHeart/Ela/EAtrium/Tpww",
+        "LEFTHeart/ParaLHeart/ParaHeart/Tpww"
+      ],
+      "unit": "dimensionless",
+      "role": "constant"
+    },
+    {
+      "index": 6,
+      "canonical_name": "LEFTHeart/Ela/EAtrium/et",
+      "aliases": [
+        "LEFTHeart/Ela/EAtrium/et"
+      ],
+      "unit": "dimensionless",
+      "role": "algebraic"
+    },
+    {
+      "index": 7,
+      "canonical_name": "LEFTHeart/Ela/EAtrium/mt",
+      "aliases": [
+        "LEFTHeart/Ela/EAtrium/mt"
+      ],
+      "unit": "second",
+      "role": "algebraic"
+    },
+    {
+      "index": 8,
+      "canonical_name": "LEFTHeart/Ela/EAtrium/t",
+      "aliases": [
+        "LEFTHeart/Ela/EAtrium/t",
+        "LEFTHeart/Elv/EVentricle/t",
+        "LEFTHeart/LA/TempCDa/t",
+        "LEFTHeart/LV/TempCDv/t",
+        "LEFTHeart/LeftHeart/t",
+        "PulLoop/ModelPul/t",
+        "PulLoop/Pas/TempRLC/t",
+        "PulLoop/Pat/TempRLC/t",
+        "PulLoop/Pvn/TempRC/t",
+        "RIGHTHeart/Era/EAtrium/t",
+        "RIGHTHeart/Erv/EVentricle/t",
+        "RIGHTHeart/RA/TempCDa/t",
+        "RIGHTHeart/RV/TempCDv/t",
+        "RIGHTHeart/RightHeart/t",
+        "SysLoop/ModelSys/t",
+        "SysLoop/Sas/TempRLC/t",
+        "SysLoop/Sat/TempRLC/t",
+        "SysLoop/Svn/TempRC/t",
+        "environment/t"
+      ],
+      "unit": "second",
+      "role": "time"
+    },
+    {
+      "index": 9,
+      "canonical_name": "LEFTHeart/Elv/EVentricle/E",
+      "aliases": [
+        "LEFTHeart/Elv/EVentricle/E",
+        "LEFTHeart/LV/TempCDv/E"
+      ],
+      "unit": "UnitE",
+      "role": "algebraic"
+    },
+    {
+      "index": 10,
+      "canonical_name": "LEFTHeart/Elv/EVentricle/Emax",
+      "aliases": [
+        "LEFTHeart/Elv/EVentricle/Emax",
+        "LEFTHeart/ParaLHeart/ParaHeart/ElvMax"
+      ],
+      "unit": "UnitE",
+      "role": "constant"
+    },
+    {
+      "index": 11,
+      "canonical_name": "LEFTHeart/Elv/EVentricle/Emin",
+      "aliases": [
+        "LEFTHeart/Elv/EVentricle/Emin",
+        "LEFTHeart/ParaLHeart/ParaHeart/ElvMin"
+      ],
+      "unit": "UnitE",
+      "role": "constant"
+    },
+    {
+      "index": 12,
+      "canonical_name": "LEFTHeart/Elv/EVentricle/Ts1",
+      "aliases": [
+        "LEFTHeart/Elv/EVentricle/Ts1",
+        "LEFTHeart/ParaLHeart/ParaHeart/Ts1"
+      ],
+      "unit": "dimensionless",
+      "role": "constant"
+    },
+    {
+      "index": 13,
+      "canonical_name": "LEFTHeart/Elv/EVentricle/Ts2",
+      "aliases": [
+        "LEFTHeart/Elv/EVentricle/Ts2",
+        "LEFTHeart/ParaLHeart/ParaHeart/Ts2"
+      ],
+      "unit": "dimensionless",
+      "role": "constant"
+    },
+    {
+      "index": 14,
+      "canonical_name": "LEFTHeart/Elv/EVentricle/et",
+      "aliases": [
+        "LEFTHeart/Elv/EVentricle/et"
+      ],
+      "unit": "dimensionless",
+      "role": "algebraic"
+    },
+    {
+      "index": 15,
+      "canonical_name": "LEFTHeart/Elv/EVentricle/mt",
+      "aliases": [
+        "LEFTHeart/Elv/EVentricle/mt"
+      ],
+      "unit": "second",
+      "role": "algebraic"
+    },
+    {
+      "index": 16,
+      "canonical_name": "LEFTHeart/LA/TempCDa/CV",
+      "aliases": [
+        "LEFTHeart/LA/TempCDa/CV",
+        "LEFTHeart/ParaLHeart/ParaHeart/CVmi"
+      ],
+      "unit": "UnitCV",
+      "role": "constant"
+    },
+    {
+      "index": 17,
+      "canonical_name": "LEFTHeart/LA/TempCDa/Pi",
+      "aliases": [
+        "LEFTHeart/LA/TempCDa/Pi",
+        "LEFTHeart/LeftHeart/Pi",
+        "PulLoop/ModelPul/Po",
+        "PulLoop/Pvn/TempRC/Po"
+      ],
+      "unit": "UnitP",
+      "role": "algebraic"
+    },
+    {
+      "index": 18,
+      "canonical_name": "LEFTHeart/LA/TempCDa/Pini",
+      "aliases": [
+        "LEFTHeart/LA/TempCDa/Pini",
+        "LEFTHeart/ParaLHeart/ParaHeart/PlaIni"
+      ],
+      "unit": "UnitP",
+      "role": "constant"
+    },
+    {
+      "index": 19,
+      "canonical_name": "LEFTHeart/LA/TempCDa/Po",
+      "aliases": [
+        "LEFTHeart/LA/TempCDa/Po",
+        "LEFTHeart/LV/TempCDv/Pi"
+      ],
+      "unit": "UnitP",
+      "role": "algebraic"
+    },
+    {
+      "index": 20,
+      "canonical_name": "LEFTHeart/LA/TempCDa/Qi",
+      "aliases": [
+        "LEFTHeart/LA/TempCDa/Qi",
+        "LEFTHeart/LeftHeart/Qi",
+        "PulLoop/ModelPul/Qo",
+        "PulLoop/Pvn/TempRC/Qo"
+      ],
+      "unit": "UnitQ",
+      "role": "algebraic"
+    },
+    {
+      "index": 21,
+      "canonical_name": "LEFTHeart/LA/TempCDa/Qo",
+      "aliases": [
+        "LEFTHeart/LA/TempCDa/Qo",
+        "LEFTHeart/LV/TempCDv/Qi"
+      ],
+      "unit": "UnitQ",
+      "role": "algebraic"
+    },
+    {
+      "index": 22,
+      "canonical_name": "LEFTHeart/LA/TempCDa/Tao",
+      "aliases": [
+        "LEFTHeart/LA/TempCDa/Tao"
+      ],
+      "unit": "dimensionless",
+      "role": "algebraic"
+    },
+    {
+      "index": 23,
+      "canonical_name": "LEFTHeart/LA/TempCDa/V",
+      "aliases": [
+        "LEFTHeart/LA/TempCDa/V"
+      ],
+      "unit": "UnitV",
+      "role": "state"
+    },
+    {
+      "index": 24,
+      "canonical_name": "LEFTHeart/LA/TempCDa/V0",
+      "aliases": [
+        "LEFTHeart/LA/TempCDa/V0",
+        "LEFTHeart/ParaLHeart/ParaHeart/Vla0"
+      ],
+      "unit": "UnitV",
+      "role": "constant"
+    },
+    {
+      "index": 25,
+      "canonical_name": "LEFTHeart/LA/TempCDa/Vini",
+      "aliases": [
+        "LEFTHeart/LA/TempCDa/Vini",
+        "LEFTHeart/ParaLHeart/ParaHeart/VlaIni"
+      ],
+      "unit": "UnitV",
+      "role": "constant"
+    },
+    {
+      "index": 26,
+      "canonical_name": "LEFTHeart/LV/TempCDv/CV",
+      "aliases": [
+        "LEFTHeart/LV/TempCDv/CV",
+        "LEFTHeart/ParaLHeart/ParaHeart/CVao"
+      ],
+      "unit": "UnitCV",
+      "role": "constant"
+    },
+    {
+      "index": 27,
+      "canonical_name": "LEFTHeart/LV/TempCDv/Pini",
+      "aliases": [
+        "LEFTHeart/LV/TempCDv/Pini",
+        "LEFTHeart/ParaLHeart/ParaHeart/PlvIni"
+      ],
+      "unit": "UnitP",
+      "role": "constant"
+    },
+    {
+      "index": 28,
+      "canonical_name": "LEFTHeart/LV/TempCDv/Po",
+      "aliases": [
+        "LEFTHeart/LV/TempCDv/Po",
+        "LEFTHeart/LeftHeart/Po",
+        "SysLoop/ModelSys/Pi",
+        "SysLoop/Sas/TempRLC/Pi"
+      ],
+      "unit": "UnitP",
+      "role": "state"
+    },
+    {
+      "index": 29,
+      "canonical_name": "LEFTHeart/LV/TempCDv/Qo",
+      "aliases": [
+        "LEFTHeart/LV/TempCDv/Qo",
+        "LEFTHeart/LeftHeart/Qo",
+        "SysLoop/ModelSys/Qi",
+        "SysLoop/Sas/TempRLC/Qi"
+      ],
+      "unit": "UnitQ",
+      "role": "algebraic"
+    },
+    {
+      "index": 30,
+      "canonical_name": "LEFTHeart/LV/TempCDv/Tao",
+      "aliases": [
+        "LEFTHeart/LV/TempCDv/Tao"
+      ],
+      "unit": "dimensionless",
+      "role": "algebraic"
+    },
+    {
+      "index": 31,
+      "canonical_name": "LEFTHeart/LV/TempCDv/V",
+      "aliases": [
+        "LEFTHeart/LV/TempCDv/V"
+      ],
+      "unit": "UnitV",
+      "role": "state"
+    },
+    {
+      "index": 32,
+      "canonical_name": "LEFTHeart/LV/TempCDv/V0",
+      "aliases": [
+        "LEFTHeart/LV/TempCDv/V0",
+        "LEFTHeart/ParaLHeart/ParaHeart/Vlv0"
+      ],
+      "unit": "UnitV",
+      "role": "constant"
+    },
+    {
+      "index": 33,
+      "canonical_name": "LEFTHeart/LV/TempCDv/Vini",
+      "aliases": [
+        "LEFTHeart/LV/TempCDv/Vini",
+        "LEFTHeart/ParaLHeart/ParaHeart/VlvIni"
+      ],
+      "unit": "UnitV",
+      "role": "constant"
+    },
+    {
+      "index": 34,
+      "canonical_name": "LEFTHeart/ParaLHeart/ParaHeart/CVpa",
+      "aliases": [
+        "LEFTHeart/ParaLHeart/ParaHeart/CVpa"
+      ],
+      "unit": "UnitCV",
+      "role": "constant"
+    },
+    {
+      "index": 35,
+      "canonical_name": "LEFTHeart/ParaLHeart/ParaHeart/CVti",
+      "aliases": [
+        "LEFTHeart/ParaLHeart/ParaHeart/CVti"
+      ],
+      "unit": "UnitCV",
+      "role": "constant"
+    },
+    {
+      "index": 36,
+      "canonical_name": "LEFTHeart/ParaLHeart/ParaHeart/EraMax",
+      "aliases": [
+        "LEFTHeart/ParaLHeart/ParaHeart/EraMax"
+      ],
+      "unit": "UnitE",
+      "role": "constant"
+    },
+    {
+      "index": 37,
+      "canonical_name": "LEFTHeart/ParaLHeart/ParaHeart/EraMin",
+      "aliases": [
+        "LEFTHeart/ParaLHeart/ParaHeart/EraMin"
+      ],
+      "unit": "UnitE",
+      "role": "constant"
+    },
+    {
+      "index": 38,
+      "canonical_name": "LEFTHeart/ParaLHeart/ParaHeart/ErvMax",
+      "aliases": [
+        "LEFTHeart/ParaLHeart/ParaHeart/ErvMax"
+      ],
+      "unit": "UnitE",
+      "role": "constant"
+    },
+    {
+      "index": 39,
+      "canonical_name": "LEFTHeart/ParaLHeart/ParaHeart/ErvMin",
+      "aliases": [
+        "LEFTHeart/ParaLHeart/ParaHeart/ErvMin"
+      ],
+      "unit": "UnitE",
+      "role": "constant"
+    },
+    {
+      "index": 40,
+      "canonical_name": "LEFTHeart/ParaLHeart/ParaHeart/PraIni",
+      "aliases": [
+        "LEFTHeart/ParaLHeart/ParaHeart/PraIni"
+      ],
+      "unit": "UnitP",
+      "role": "constant"
+    },
+    {
+      "index": 41,
+      "canonical_name": "LEFTHeart/ParaLHeart/ParaHeart/PrvIni",
+      "aliases": [
+        "LEFTHeart/ParaLHeart/ParaHeart/PrvIni"
+      ],
+      "unit": "UnitP",
+      "role": "constant"
+    },
+    {
+      "index": 42,
+      "canonical_name": "LEFTHeart/ParaLHeart/ParaHeart/Vra0",
+      "aliases": [
+        "LEFTHeart/ParaLHeart/ParaHeart/Vra0"
+      ],
+      "unit": "UnitV",
+      "role": "constant"
+    },
+    {
+      "index": 43,
+      "canonical_name": "LEFTHeart/ParaLHeart/ParaHeart/VraIni",
+      "aliases": [
+        "LEFTHeart/ParaLHeart/ParaHeart/VraIni"
+      ],
+      "unit": "UnitV",
+      "role": "constant"
+    },
+    {
+      "index": 44,
+      "canonical_name": "LEFTHeart/ParaLHeart/ParaHeart/Vrv0",
+      "aliases": [
+        "LEFTHeart/ParaLHeart/ParaHeart/Vrv0"
+      ],
+      "unit": "UnitV",
+      "role": "constant"
+    },
+    {
+      "index": 45,
+      "canonical_name": "LEFTHeart/ParaLHeart/ParaHeart/VrvIni",
+      "aliases": [
+        "LEFTHeart/ParaLHeart/ParaHeart/VrvIni"
+      ],
+      "unit": "UnitV",
+      "role": "constant"
+    },
+    {
+      "index": 46,
+      "canonical_name": "PulLoop/ModelPul/Pi",
+      "aliases": [
+        "PulLoop/ModelPul/Pi",
+        "PulLoop/Pas/TempRLC/Pi",
+        "RIGHTHeart/RV/TempCDv/Po",
+        "RIGHTHeart/RightHeart/Po"
+      ],
+      "unit": "UnitP",
+      "role": "state"
+    },
+    {
+      "index": 47,
+      "canonical_name": "PulLoop/ModelPul/Qi",
+      "aliases": [
+        "PulLoop/ModelPul/Qi",
+        "PulLoop/Pas/TempRLC/Qi",
+        "RIGHTHeart/RV/TempCDv/Qo",
+        "RIGHTHeart/RightHeart/Qo"
+      ],
+      "unit": "UnitQ",
+      "role": "algebraic"
+    },
+    {
+      "index": 48,
+      "canonical_name": "PulLoop/Par/TempR/Pi",
+      "aliases": [
+        "PulLoop/Par/TempR/Pi",
+        "PulLoop/Pat/TempRLC/Po"
+      ],
+      "unit": "UnitP",
+      "role": "algebraic"
+    },
+    {
+      "index": 49,
+      "canonical_name": "PulLoop/Par/TempR/Po",
+      "aliases": [
+        "PulLoop/Par/TempR/Po",
+        "PulLoop/Pcp/TempR/Pi"
+      ],
+      "unit": "UnitP",
+      "role": "algebraic"
+    },
+    {
+      "index": 50,
+      "canonical_name": "PulLoop/Par/TempR/Qi",
+      "aliases": [
+        "PulLoop/Par/TempR/Qi",
+        "PulLoop/Pat/TempRLC/Qo"
+      ],
+      "unit": "UnitQ",
+      "role": "state"
+    },
+    {
+      "index": 51,
+      "canonical_name": "PulLoop/Par/TempR/Qo",
+      "aliases": [
+        "PulLoop/Par/TempR/Qo",
+        "PulLoop/Pcp/TempR/Qi"
+      ],
+      "unit": "UnitQ",
+      "role": "algebraic"
+    },
+    {
+      "index": 52,
+      "canonical_name": "PulLoop/Par/TempR/R",
+      "aliases": [
+        "PulLoop/Par/TempR/R",
+        "PulLoop/ParaPul/ParaPul/Rpar"
+      ],
+      "unit": "UnitR",
+      "role": "constant"
+    },
+    {
+      "index": 53,
+      "canonical_name": "PulLoop/ParaPul/ParaPul/Cpas",
+      "aliases": [
+        "PulLoop/ParaPul/ParaPul/Cpas",
+        "PulLoop/Pas/TempRLC/C"
+      ],
+      "unit": "UnitC",
+      "role": "constant"
+    },
+    {
+      "index": 54,
+      "canonical_name": "PulLoop/ParaPul/ParaPul/Cpat",
+      "aliases": [
+        "PulLoop/ParaPul/ParaPul/Cpat",
+        "PulLoop/Pat/TempRLC/C"
+      ],
+      "unit": "UnitC",
+      "role": "constant"
+    },
+    {
+      "index": 55,
+      "canonical_name": "PulLoop/ParaPul/ParaPul/Cpvn",
+      "aliases": [
+        "PulLoop/ParaPul/ParaPul/Cpvn",
+        "PulLoop/Pvn/TempRC/C"
+      ],
+      "unit": "UnitC",
+      "role": "constant"
+    },
+    {
+      "index": 56,
+      "canonical_name": "PulLoop/ParaPul/ParaPul/Lpas",
+      "aliases": [
+        "PulLoop/ParaPul/ParaPul/Lpas",
+        "PulLoop/Pas/TempRLC/L"
+      ],
+      "unit": "UnitL",
+      "role": "constant"
+    },
+    {
+      "index": 57,
+      "canonical_name": "PulLoop/ParaPul/ParaPul/Lpat",
+      "aliases": [
+        "PulLoop/ParaPul/ParaPul/Lpat",
+        "PulLoop/Pat/TempRLC/L"
+      ],
+      "unit": "UnitL",
+      "role": "constant"
+    },
+    {
+      "index": 58,
+      "canonical_name": "PulLoop/ParaPul/ParaPul/P0pas",
+      "aliases": [
+        "PulLoop/ParaPul/ParaPul/P0pas",
+        "PulLoop/Pas/TempRLC/P0"
+      ],
+      "unit": "UnitP",
+      "role": "constant"
+    },
+    {
+      "index": 59,
+      "canonical_name": "PulLoop/ParaPul/ParaPul/P0pat",
+      "aliases": [
+        "PulLoop/ParaPul/ParaPul/P0pat",
+        "PulLoop/Pat/TempRLC/P0"
+      ],
+      "unit": "UnitP",
+      "role": "constant"
+    },
+    {
+      "index": 60,
+      "canonical_name": "PulLoop/ParaPul/ParaPul/P0pvn",
+      "aliases": [
+        "PulLoop/ParaPul/ParaPul/P0pvn",
+        "PulLoop/Pvn/TempRC/P0"
+      ],
+      "unit": "UnitP",
+      "role": "constant"
+    },
+    {
+      "index": 61,
+      "canonical_name": "PulLoop/ParaPul/ParaPul/Q0pas",
+      "aliases": [
+        "PulLoop/ParaPul/ParaPul/Q0pas",
+        "PulLoop/Pas/TempRLC/Q0"
+      ],
+      "unit": "UnitQ",
+      "role": "constant"
+    },
+    {
+      "index": 62,
+      "canonical_name": "PulLoop/ParaPul/ParaPul/Q0pat",
+      "aliases": [
+        "PulLoop/ParaPul/ParaPul/Q0pat",
+        "PulLoop/Pat/TempRLC/Q0"
+      ],
+      "unit": "UnitQ",
+      "role": "constant"
+    },
+    {
+      "index": 63,
+      "canonical_name": "PulLoop/ParaPul/ParaPul/Rpas",
+      "aliases": [
+        "PulLoop/ParaPul/ParaPul/Rpas",
+        "PulLoop/Pas/TempRLC/R"
+      ],
+      "unit": "UnitR",
+      "role": "constant"
+    },
+    {
+      "index": 64,
+      "canonical_name": "PulLoop/ParaPul/ParaPul/Rpat",
+      "aliases": [
+        "PulLoop/ParaPul/ParaPul/Rpat",
+        "PulLoop/Pat/TempRLC/R"
+      ],
+      "unit": "UnitR",
+      "role": "constant"
+    },
+    {
+      "index": 65,
+      "canonical_name": "PulLoop/ParaPul/ParaPul/Rpcp",
+      "aliases": [
+        "PulLoop/ParaPul/ParaPul/Rpcp",
+        "PulLoop/Pcp/TempR/R"
+      ],
+      "unit": "UnitR",
+      "role": "constant"
+    },
+    {
+      "index": 66,
+      "canonical_name": "PulLoop/ParaPul/ParaPul/Rpvn",
+      "aliases": [
+        "PulLoop/ParaPul/ParaPul/Rpvn",
+        "PulLoop/Pvn/TempRC/R"
+      ],
+      "unit": "UnitR",
+      "role": "constant"
+    },
+    {
+      "index": 67,
+      "canonical_name": "PulLoop/Pas/TempRLC/Po",
+      "aliases": [
+        "PulLoop/Pas/TempRLC/Po",
+        "PulLoop/Pat/TempRLC/Pi"
+      ],
+      "unit": "UnitP",
+      "role": "state"
+    },
+    {
+      "index": 68,
+      "canonical_name": "PulLoop/Pas/TempRLC/Qo",
+      "aliases": [
+        "PulLoop/Pas/TempRLC/Qo",
+        "PulLoop/Pat/TempRLC/Qi"
+      ],
+      "unit": "UnitQ",
+      "role": "state"
+    },
+    {
+      "index": 69,
+      "canonical_name": "PulLoop/Pcp/TempR/Po",
+      "aliases": [
+        "PulLoop/Pcp/TempR/Po",
+        "PulLoop/Pvn/TempRC/Pi"
+      ],
+      "unit": "UnitP",
+      "role": "state"
+    },
+    {
+      "index": 70,
+      "canonical_name": "PulLoop/Pcp/TempR/Qo",
+      "aliases": [
+        "PulLoop/Pcp/TempR/Qo",
+        "PulLoop/Pvn/TempRC/Qi"
+      ],
+      "unit": "UnitQ",
+      "role": "algebraic"
+    },
+    {
+      "index": 71,
+      "canonical_name": "RIGHTHeart/Era/EAtrium/E",
+      "aliases": [
+        "RIGHTHeart/Era/EAtrium/E",
+        "RIGHTHeart/RA/TempCDa/E"
+      ],
+      "unit": "UnitE",
+      "role": "algebraic"
+    },
+    {
+      "index": 72,
+      "canonical_name": "RIGHTHeart/Era/EAtrium/Emax",
+      "aliases": [
+        "RIGHTHeart/Era/EAtrium/Emax",
+        "RIGHTHeart/ParaRHeart/ParaHeart/EraMax"
+      ],
+      "unit": "UnitE",
+      "role": "constant"
+    },
+    {
+      "index": 73,
+      "canonical_name": "RIGHTHeart/Era/EAtrium/Emin",
+      "aliases": [
+        "RIGHTHeart/Era/EAtrium/Emin",
+        "RIGHTHeart/ParaRHeart/ParaHeart/EraMin"
+      ],
+      "unit": "UnitE",
+      "role": "constant"
+    },
+    {
+      "index": 74,
+      "canonical_name": "RIGHTHeart/Era/EAtrium/T",
+      "aliases": [
+        "RIGHTHeart/Era/EAtrium/T",
+        "RIGHTHeart/Erv/EVentricle/T",
+        "RIGHTHeart/ParaRHeart/ParaHeart/T"
+      ],
+      "unit": "second",
+      "role": "constant"
+    },
+    {
+      "index": 75,
+      "canonical_name": "RIGHTHeart/Era/EAtrium/Tpwb",
+      "aliases": [
+        "RIGHTHeart/Era/EAtrium/Tpwb",
+        "RIGHTHeart/ParaRHeart/ParaHeart/Tpwb"
+      ],
+      "unit": "dimensionless",
+      "role": "constant"
+    },
+    {
+      "index": 76,
+      "canonical_name": "RIGHTHeart/Era/EAtrium/Tpww",
+      "aliases": [
+        "RIGHTHeart/Era/EAtrium/Tpww",
+        "RIGHTHeart/ParaRHeart/ParaHeart/Tpww"
+      ],
+      "unit": "dimensionless",
+      "role": "constant"
+    },
+    {
+      "index": 77,
+      "canonical_name": "RIGHTHeart/Era/EAtrium/et",
+      "aliases": [
+        "RIGHTHeart/Era/EAtrium/et"
+      ],
+      "unit": "dimensionless",
+      "role": "algebraic"
+    },
+    {
+      "index": 78,
+      "canonical_name": "RIGHTHeart/Era/EAtrium/mt",
+      "aliases": [
+        "RIGHTHeart/Era/EAtrium/mt"
+      ],
+      "unit": "second",
+      "role": "algebraic"
+    },
+    {
+      "index": 79,
+      "canonical_name": "RIGHTHeart/Erv/EVentricle/E",
+      "aliases": [
+        "RIGHTHeart/Erv/EVentricle/E",
+        "RIGHTHeart/RV/TempCDv/E"
+      ],
+      "unit": "UnitE",
+      "role": "algebraic"
+    },
+    {
+      "index": 80,
+      "canonical_name": "RIGHTHeart/Erv/EVentricle/Emax",
+      "aliases": [
+        "RIGHTHeart/Erv/EVentricle/Emax",
+        "RIGHTHeart/ParaRHeart/ParaHeart/ErvMax"
+      ],
+      "unit": "UnitE",
+      "role": "constant"
+    },
+    {
+      "index": 81,
+      "canonical_name": "RIGHTHeart/Erv/EVentricle/Emin",
+      "aliases": [
+        "RIGHTHeart/Erv/EVentricle/Emin",
+        "RIGHTHeart/ParaRHeart/ParaHeart/ErvMin"
+      ],
+      "unit": "UnitE",
+      "role": "constant"
+    },
+    {
+      "index": 82,
+      "canonical_name": "RIGHTHeart/Erv/EVentricle/Ts1",
+      "aliases": [
+        "RIGHTHeart/Erv/EVentricle/Ts1",
+        "RIGHTHeart/ParaRHeart/ParaHeart/Ts1"
+      ],
+      "unit": "dimensionless",
+      "role": "constant"
+    },
+    {
+      "index": 83,
+      "canonical_name": "RIGHTHeart/Erv/EVentricle/Ts2",
+      "aliases": [
+        "RIGHTHeart/Erv/EVentricle/Ts2",
+        "RIGHTHeart/ParaRHeart/ParaHeart/Ts2"
+      ],
+      "unit": "dimensionless",
+      "role": "constant"
+    },
+    {
+      "index": 84,
+      "canonical_name": "RIGHTHeart/Erv/EVentricle/et",
+      "aliases": [
+        "RIGHTHeart/Erv/EVentricle/et"
+      ],
+      "unit": "dimensionless",
+      "role": "algebraic"
+    },
+    {
+      "index": 85,
+      "canonical_name": "RIGHTHeart/Erv/EVentricle/mt",
+      "aliases": [
+        "RIGHTHeart/Erv/EVentricle/mt"
+      ],
+      "unit": "second",
+      "role": "algebraic"
+    },
+    {
+      "index": 86,
+      "canonical_name": "RIGHTHeart/ParaRHeart/ParaHeart/CVao",
+      "aliases": [
+        "RIGHTHeart/ParaRHeart/ParaHeart/CVao"
+      ],
+      "unit": "UnitCV",
+      "role": "constant"
+    },
+    {
+      "index": 87,
+      "canonical_name": "RIGHTHeart/ParaRHeart/ParaHeart/CVmi",
+      "aliases": [
+        "RIGHTHeart/ParaRHeart/ParaHeart/CVmi"
+      ],
+      "unit": "UnitCV",
+      "role": "constant"
+    },
+    {
+      "index": 88,
+      "canonical_name": "RIGHTHeart/ParaRHeart/ParaHeart/CVpa",
+      "aliases": [
+        "RIGHTHeart/ParaRHeart/ParaHeart/CVpa",
+        "RIGHTHeart/RV/TempCDv/CV"
+      ],
+      "unit": "UnitCV",
+      "role": "constant"
+    },
+    {
+      "index": 89,
+      "canonical_name": "RIGHTHeart/ParaRHeart/ParaHeart/CVti",
+      "aliases": [
+        "RIGHTHeart/ParaRHeart/ParaHeart/CVti",
+        "RIGHTHeart/RA/TempCDa/CV"
+      ],
+      "unit": "UnitCV",
+      "role": "constant"
+    },
+    {
+      "index": 90,
+      "canonical_name": "RIGHTHeart/ParaRHeart/ParaHeart/ElaMax",
+      "aliases": [
+        "RIGHTHeart/ParaRHeart/ParaHeart/ElaMax"
+      ],
+      "unit": "UnitE",
+      "role": "constant"
+    },
+    {
+      "index": 91,
+      "canonical_name": "RIGHTHeart/ParaRHeart/ParaHeart/ElaMin",
+      "aliases": [
+        "RIGHTHeart/ParaRHeart/ParaHeart/ElaMin"
+      ],
+      "unit": "UnitE",
+      "role": "constant"
+    },
+    {
+      "index": 92,
+      "canonical_name": "RIGHTHeart/ParaRHeart/ParaHeart/ElvMax",
+      "aliases": [
+        "RIGHTHeart/ParaRHeart/ParaHeart/ElvMax"
+      ],
+      "unit": "UnitE",
+      "role": "constant"
+    },
+    {
+      "index": 93,
+      "canonical_name": "RIGHTHeart/ParaRHeart/ParaHeart/ElvMin",
+      "aliases": [
+        "RIGHTHeart/ParaRHeart/ParaHeart/ElvMin"
+      ],
+      "unit": "UnitE",
+      "role": "constant"
+    },
+    {
+      "index": 94,
+      "canonical_name": "RIGHTHeart/ParaRHeart/ParaHeart/PlaIni",
+      "aliases": [
+        "RIGHTHeart/ParaRHeart/ParaHeart/PlaIni"
+      ],
+      "unit": "UnitP",
+      "role": "constant"
+    },
+    {
+      "index": 95,
+      "canonical_name": "RIGHTHeart/ParaRHeart/ParaHeart/PlvIni",
+      "aliases": [
+        "RIGHTHeart/ParaRHeart/ParaHeart/PlvIni"
+      ],
+      "unit": "UnitP",
+      "role": "constant"
+    },
+    {
+      "index": 96,
+      "canonical_name": "RIGHTHeart/ParaRHeart/ParaHeart/PraIni",
+      "aliases": [
+        "RIGHTHeart/ParaRHeart/ParaHeart/PraIni",
+        "RIGHTHeart/RA/TempCDa/Pini"
+      ],
+      "unit": "UnitP",
+      "role": "constant"
+    },
+    {
+      "index": 97,
+      "canonical_name": "RIGHTHeart/ParaRHeart/ParaHeart/PrvIni",
+      "aliases": [
+        "RIGHTHeart/ParaRHeart/ParaHeart/PrvIni",
+        "RIGHTHeart/RV/TempCDv/Pini"
+      ],
+      "unit": "UnitP",
+      "role": "constant"
+    },
+    {
+      "index": 98,
+      "canonical_name": "RIGHTHeart/ParaRHeart/ParaHeart/Vla0",
+      "aliases": [
+        "RIGHTHeart/ParaRHeart/ParaHeart/Vla0"
+      ],
+      "unit": "UnitV",
+      "role": "constant"
+    },
+    {
+      "index": 99,
+      "canonical_name": "RIGHTHeart/ParaRHeart/ParaHeart/VlaIni",
+      "aliases": [
+        "RIGHTHeart/ParaRHeart/ParaHeart/VlaIni"
+      ],
+      "unit": "UnitV",
+      "role": "constant"
+    },
+    {
+      "index": 100,
+      "canonical_name": "RIGHTHeart/ParaRHeart/ParaHeart/Vlv0",
+      "aliases": [
+        "RIGHTHeart/ParaRHeart/ParaHeart/Vlv0"
+      ],
+      "unit": "UnitV",
+      "role": "constant"
+    },
+    {
+      "index": 101,
+      "canonical_name": "RIGHTHeart/ParaRHeart/ParaHeart/VlvIni",
+      "aliases": [
+        "RIGHTHeart/ParaRHeart/ParaHeart/VlvIni"
+      ],
+      "unit": "UnitV",
+      "role": "constant"
+    },
+    {
+      "index": 102,
+      "canonical_name": "RIGHTHeart/ParaRHeart/ParaHeart/Vra0",
+      "aliases": [
+        "RIGHTHeart/ParaRHeart/ParaHeart/Vra0",
+        "RIGHTHeart/RA/TempCDa/V0"
+      ],
+      "unit": "UnitV",
+      "role": "constant"
+    },
+    {
+      "index": 103,
+      "canonical_name": "RIGHTHeart/ParaRHeart/ParaHeart/VraIni",
+      "aliases": [
+        "RIGHTHeart/ParaRHeart/ParaHeart/VraIni",
+        "RIGHTHeart/RA/TempCDa/Vini"
+      ],
+      "unit": "UnitV",
+      "role": "constant"
+    },
+    {
+      "index": 104,
+      "canonical_name": "RIGHTHeart/ParaRHeart/ParaHeart/Vrv0",
+      "aliases": [
+        "RIGHTHeart/ParaRHeart/ParaHeart/Vrv0",
+        "RIGHTHeart/RV/TempCDv/V0"
+      ],
+      "unit": "UnitV",
+      "role": "constant"
+    },
+    {
+      "index": 105,
+      "canonical_name": "RIGHTHeart/ParaRHeart/ParaHeart/VrvIni",
+      "aliases": [
+        "RIGHTHeart/ParaRHeart/ParaHeart/VrvIni",
+        "RIGHTHeart/RV/TempCDv/Vini"
+      ],
+      "unit": "UnitV",
+      "role": "constant"
+    },
+    {
+      "index": 106,
+      "canonical_name": "RIGHTHeart/RA/TempCDa/Pi",
+      "aliases": [
+        "RIGHTHeart/RA/TempCDa/Pi",
+        "RIGHTHeart/RightHeart/Pi",
+        "SysLoop/ModelSys/Po",
+        "SysLoop/Svn/TempRC/Po"
+      ],
+      "unit": "UnitP",
+      "role": "algebraic"
+    },
+    {
+      "index": 107,
+      "canonical_name": "RIGHTHeart/RA/TempCDa/Po",
+      "aliases": [
+        "RIGHTHeart/RA/TempCDa/Po",
+        "RIGHTHeart/RV/TempCDv/Pi"
+      ],
+      "unit": "UnitP",
+      "role": "algebraic"
+    },
+    {
+      "index": 108,
+      "canonical_name": "RIGHTHeart/RA/TempCDa/Qi",
+      "aliases": [
+        "RIGHTHeart/RA/TempCDa/Qi",
+        "RIGHTHeart/RightHeart/Qi",
+        "SysLoop/ModelSys/Qo",
+        "SysLoop/Svn/TempRC/Qo"
+      ],
+      "unit": "UnitQ",
+      "role": "algebraic"
+    },
+    {
+      "index": 109,
+      "canonical_name": "RIGHTHeart/RA/TempCDa/Qo",
+      "aliases": [
+        "RIGHTHeart/RA/TempCDa/Qo",
+        "RIGHTHeart/RV/TempCDv/Qi"
+      ],
+      "unit": "UnitQ",
+      "role": "algebraic"
+    },
+    {
+      "index": 110,
+      "canonical_name": "RIGHTHeart/RA/TempCDa/Tao",
+      "aliases": [
+        "RIGHTHeart/RA/TempCDa/Tao"
+      ],
+      "unit": "dimensionless",
+      "role": "algebraic"
+    },
+    {
+      "index": 111,
+      "canonical_name": "RIGHTHeart/RA/TempCDa/V",
+      "aliases": [
+        "RIGHTHeart/RA/TempCDa/V"
+      ],
+      "unit": "UnitV",
+      "role": "state"
+    },
+    {
+      "index": 112,
+      "canonical_name": "RIGHTHeart/RV/TempCDv/Tao",
+      "aliases": [
+        "RIGHTHeart/RV/TempCDv/Tao"
+      ],
+      "unit": "dimensionless",
+      "role": "algebraic"
+    },
+    {
+      "index": 113,
+      "canonical_name": "RIGHTHeart/RV/TempCDv/V",
+      "aliases": [
+        "RIGHTHeart/RV/TempCDv/V"
+      ],
+      "unit": "UnitV",
+      "role": "state"
+    },
+    {
+      "index": 114,
+      "canonical_name": "SysLoop/ParaSys/ParaSys/Csas",
+      "aliases": [
+        "SysLoop/ParaSys/ParaSys/Csas",
+        "SysLoop/Sas/TempRLC/C"
+      ],
+      "unit": "UnitC",
+      "role": "constant"
+    },
+    {
+      "index": 115,
+      "canonical_name": "SysLoop/ParaSys/ParaSys/Csat",
+      "aliases": [
+        "SysLoop/ParaSys/ParaSys/Csat",
+        "SysLoop/Sat/TempRLC/C"
+      ],
+      "unit": "UnitC",
+      "role": "constant"
+    },
+    {
+      "index": 116,
+      "canonical_name": "SysLoop/ParaSys/ParaSys/Csvn",
+      "aliases": [
+        "SysLoop/ParaSys/ParaSys/Csvn",
+        "SysLoop/Svn/TempRC/C"
+      ],
+      "unit": "UnitC",
+      "role": "constant"
+    },
+    {
+      "index": 117,
+      "canonical_name": "SysLoop/ParaSys/ParaSys/Lsas",
+      "aliases": [
+        "SysLoop/ParaSys/ParaSys/Lsas",
+        "SysLoop/Sas/TempRLC/L"
+      ],
+      "unit": "UnitL",
+      "role": "constant"
+    },
+    {
+      "index": 118,
+      "canonical_name": "SysLoop/ParaSys/ParaSys/Lsat",
+      "aliases": [
+        "SysLoop/ParaSys/ParaSys/Lsat",
+        "SysLoop/Sat/TempRLC/L"
+      ],
+      "unit": "UnitL",
+      "role": "constant"
+    },
+    {
+      "index": 119,
+      "canonical_name": "SysLoop/ParaSys/ParaSys/P0sas",
+      "aliases": [
+        "SysLoop/ParaSys/ParaSys/P0sas",
+        "SysLoop/Sas/TempRLC/P0"
+      ],
+      "unit": "UnitP",
+      "role": "constant"
+    },
+    {
+      "index": 120,
+      "canonical_name": "SysLoop/ParaSys/ParaSys/P0sat",
+      "aliases": [
+        "SysLoop/ParaSys/ParaSys/P0sat",
+        "SysLoop/Sat/TempRLC/P0"
+      ],
+      "unit": "UnitP",
+      "role": "constant"
+    },
+    {
+      "index": 121,
+      "canonical_name": "SysLoop/ParaSys/ParaSys/P0svn",
+      "aliases": [
+        "SysLoop/ParaSys/ParaSys/P0svn",
+        "SysLoop/Svn/TempRC/P0"
+      ],
+      "unit": "UnitP",
+      "role": "constant"
+    },
+    {
+      "index": 122,
+      "canonical_name": "SysLoop/ParaSys/ParaSys/Q0sas",
+      "aliases": [
+        "SysLoop/ParaSys/ParaSys/Q0sas",
+        "SysLoop/Sas/TempRLC/Q0"
+      ],
+      "unit": "UnitQ",
+      "role": "constant"
+    },
+    {
+      "index": 123,
+      "canonical_name": "SysLoop/ParaSys/ParaSys/Q0sat",
+      "aliases": [
+        "SysLoop/ParaSys/ParaSys/Q0sat",
+        "SysLoop/Sat/TempRLC/Q0"
+      ],
+      "unit": "UnitQ",
+      "role": "constant"
+    },
+    {
+      "index": 124,
+      "canonical_name": "SysLoop/ParaSys/ParaSys/Rsar",
+      "aliases": [
+        "SysLoop/ParaSys/ParaSys/Rsar",
+        "SysLoop/Sar/TempR/R"
+      ],
+      "unit": "UnitR",
+      "role": "constant"
+    },
+    {
+      "index": 125,
+      "canonical_name": "SysLoop/ParaSys/ParaSys/Rsas",
+      "aliases": [
+        "SysLoop/ParaSys/ParaSys/Rsas",
+        "SysLoop/Sas/TempRLC/R"
+      ],
+      "unit": "UnitR",
+      "role": "constant"
+    },
+    {
+      "index": 126,
+      "canonical_name": "SysLoop/ParaSys/ParaSys/Rsat",
+      "aliases": [
+        "SysLoop/ParaSys/ParaSys/Rsat",
+        "SysLoop/Sat/TempRLC/R"
+      ],
+      "unit": "UnitR",
+      "role": "constant"
+    },
+    {
+      "index": 127,
+      "canonical_name": "SysLoop/ParaSys/ParaSys/Rscp",
+      "aliases": [
+        "SysLoop/ParaSys/ParaSys/Rscp",
+        "SysLoop/Scp/TempR/R"
+      ],
+      "unit": "UnitR",
+      "role": "constant"
+    },
+    {
+      "index": 128,
+      "canonical_name": "SysLoop/ParaSys/ParaSys/Rsvn",
+      "aliases": [
+        "SysLoop/ParaSys/ParaSys/Rsvn",
+        "SysLoop/Svn/TempRC/R"
+      ],
+      "unit": "UnitR",
+      "role": "constant"
+    },
+    {
+      "index": 129,
+      "canonical_name": "SysLoop/Sar/TempR/Pi",
+      "aliases": [
+        "SysLoop/Sar/TempR/Pi",
+        "SysLoop/Sat/TempRLC/Po"
+      ],
+      "unit": "UnitP",
+      "role": "algebraic"
+    },
+    {
+      "index": 130,
+      "canonical_name": "SysLoop/Sar/TempR/Po",
+      "aliases": [
+        "SysLoop/Sar/TempR/Po",
+        "SysLoop/Scp/TempR/Pi"
+      ],
+      "unit": "UnitP",
+      "role": "algebraic"
+    },
+    {
+      "index": 131,
+      "canonical_name": "SysLoop/Sar/TempR/Qi",
+      "aliases": [
+        "SysLoop/Sar/TempR/Qi",
+        "SysLoop/Sat/TempRLC/Qo"
+      ],
+      "unit": "UnitQ",
+      "role": "state"
+    },
+    {
+      "index": 132,
+      "canonical_name": "SysLoop/Sar/TempR/Qo",
+      "aliases": [
+        "SysLoop/Sar/TempR/Qo",
+        "SysLoop/Scp/TempR/Qi"
+      ],
+      "unit": "UnitQ",
+      "role": "algebraic"
+    },
+    {
+      "index": 133,
+      "canonical_name": "SysLoop/Sas/TempRLC/Po",
+      "aliases": [
+        "SysLoop/Sas/TempRLC/Po",
+        "SysLoop/Sat/TempRLC/Pi"
+      ],
+      "unit": "UnitP",
+      "role": "state"
+    },
+    {
+      "index": 134,
+      "canonical_name": "SysLoop/Sas/TempRLC/Qo",
+      "aliases": [
+        "SysLoop/Sas/TempRLC/Qo",
+        "SysLoop/Sat/TempRLC/Qi"
+      ],
+      "unit": "UnitQ",
+      "role": "state"
+    },
+    {
+      "index": 135,
+      "canonical_name": "SysLoop/Scp/TempR/Po",
+      "aliases": [
+        "SysLoop/Scp/TempR/Po",
+        "SysLoop/Svn/TempRC/Pi"
+      ],
+      "unit": "UnitP",
+      "role": "state"
+    },
+    {
+      "index": 136,
+      "canonical_name": "SysLoop/Scp/TempR/Qo",
+      "aliases": [
+        "SysLoop/Scp/TempR/Qo",
+        "SysLoop/Svn/TempRC/Qi"
+      ],
+      "unit": "UnitQ",
+      "role": "algebraic"
+    }
+  ],
+  "algebraic_equations": 34,
+  "generated_header_sha256": "1f847a6642b13667cecf562c861074e4cd1dee7a8a8b9bf8753cd8c8e71c3e5f"
+}
