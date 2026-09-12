@@ -13,8 +13,11 @@ circulation with explicit clock and volume-coordinate variants. Physical Mac min
 timestep refinement, ten cycles and transaction checks pass.
 `numi human-circulation-anatomy` now binds four [exact cardiac cavity references](Docs/CARDIAC_CAVITY_REGISTRATION_20260912.md)
 and preserves native hydraulic state bit-for-bit. The atlas right atrial and
-ventricular domains overlap; disjoint-volume admission, body registration,
-mechanical blood-mass partition and physiological calibration remain open.
+ventricular domains overlap. `numi human-circulation-partition` now provides two
+[conservative geometric ownership candidates](Docs/CARDIAC_CAVITY_PARTITION_20260912.md)
+with independently verified disjoint interiors. Anatomical interface selection,
+body registration, mechanical blood-mass partition and physiological calibration
+remain open.
 The earlier [Shi–Hose cardiac source](Docs/CARDIAC_SOURCE_REPRODUCTION_20260912.md)
 remains separately available through `numi human-cardiac`; its vascular C·P
 storage does not acquire absolute blood volumes from CVSim21.

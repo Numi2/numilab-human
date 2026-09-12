@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+if [ "${1:-}" = "--numi-describe" ]; then
+    printf '%s\n' 'Construct and independently audit two conservative cardiac cavity overlap ownership candidates; preserve source-exclusive volume without selecting a biological valve interface or adding mass.'
+    exit 0
+fi
+command_directory=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+repository_root=$(CDPATH= cd -- "$command_directory/../.." && pwd -P)
+export PYTHONPATH="$repository_root/src${PYTHONPATH:+:$PYTHONPATH}"
+exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.cardiac_cavity_partition "$@"
