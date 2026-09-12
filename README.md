@@ -138,6 +138,12 @@ with an independent source oracle and Metal factor/operator checks. The
 `behavior-qualify` checks the frozen standing/recovery/walking evidence contract.
 Sustained behavior and the complete anatomical composition remain open.
 
+`numi human gap-execution` now joins the live completion ledger to named owners,
+acceptance criteria and a dependency graph covering all 95 mandatory targets.
+The [execution registry](Docs/HUMAN_GAP_EXECUTION.md) separates engineering,
+source-data, calibration, validation and performance tasks. It quotes ledger
+statuses without granting readiness or qualification.
+
 The importer preserves upstream records locally. The tracked MyoSim,
 BodyParts3D, and explicitly marked Z-Anatomy validation media are attributed
 derivatives; all other raw or derived source artifacts remain local. See

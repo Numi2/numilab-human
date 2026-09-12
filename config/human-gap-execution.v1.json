@@ -1,0 +1,851 @@
+{
+  "schema": "HumanPack.gap-execution.v1",
+  "ledger": "Docs/HUMAN_COMPLETION_GAP_LEDGER.md",
+  "workstreams": [
+    {
+      "id": "source",
+      "ledger_workstream": "Source foundation",
+      "owner": "Human source compiler and provenance register",
+      "target_ids": [
+        "mandatory:skeletal_topology/axial_skeleton",
+        "mandatory:skeletal_topology/appendicular_skeleton",
+        "mandatory:skeletal_topology/cervical_system",
+        "mandatory:skeletal_topology/hyoid_system",
+        "mandatory:skeletal_topology/craniofacial_system",
+        "mandatory:skeletal_topology/articulated_hands",
+        "mandatory:skeletal_topology/intrinsic_fingers",
+        "mandatory:skeletal_topology/articulated_feet",
+        "mandatory:skeletal_topology/intrinsic_toes",
+        "mandatory:skeletal_topology/source_joint_constraints",
+        "mandatory:skeletal_topology/whole_human_collision_topology",
+        "mandatory:neuromuscular_system/all_source_composed_muscles",
+        "mandatory:neuromuscular_system/semantic_stimulation_ids"
+      ],
+      "tasks": [
+        {
+          "id": "source.acquire",
+          "category": "source_data",
+          "action": "Acquire missing licensed bilateral upper/lower/neck/extremity source records; retain comparative variants.",
+          "acceptance": [
+            "Source IDs, exact hashes, licenses and unavailable registers are explicit; authenticated sources are not replaced by public variants."
+          ],
+          "depends_on": []
+        },
+        {
+          "id": "source.compose",
+          "category": "engineering",
+          "action": "Compile the source-faithful bilateral anatomy union with no fixed 416-action ceiling.",
+          "acceptance": [
+            "Every named segment, DoF, route and exact wrap family has a source mapping; missing mappings remain rejected.",
+            "Independent multi-pose mass, inertia, joint, path and moment-arm parity passes the frozen source-specific protocol."
+          ],
+          "depends_on": [
+            "source.acquire"
+          ]
+        }
+      ],
+      "references": [
+        "Docs/DEVELOPMENT_ROADMAP.md",
+        "Docs/NEUROMUSCULOSKELETAL_RELEASE_MATRIX.md"
+      ]
+    },
+    {
+      "id": "skeleton",
+      "ledger_workstream": "Skeleton and articulation",
+      "owner": "Human anatomy compiler; native rigid/articulated owner",
+      "target_ids": [
+        "mandatory:skeletal_topology/axial_skeleton",
+        "mandatory:skeletal_topology/appendicular_skeleton",
+        "mandatory:skeletal_topology/cervical_system",
+        "mandatory:skeletal_topology/hyoid_system",
+        "mandatory:skeletal_topology/craniofacial_system",
+        "mandatory:skeletal_topology/articulated_hands",
+        "mandatory:skeletal_topology/intrinsic_fingers",
+        "mandatory:skeletal_topology/articulated_feet",
+        "mandatory:skeletal_topology/intrinsic_toes",
+        "mandatory:skeletal_topology/source_joint_constraints",
+        "mandatory:skeletal_topology/whole_human_collision_topology"
+      ],
+      "tasks": [
+        {
+          "id": "skeleton.correspondence",
+          "category": "engineering",
+          "action": "Complete the named segment/DoF matrix, including neck, hands, feet and source compound dispositions.",
+          "acceptance": [
+            "Compound ownership and unsupported independent articulations remain explicit; no neighboring bone is moved to satisfy a terminal."
+          ],
+          "depends_on": [
+            "source.compose"
+          ]
+        },
+        {
+          "id": "skeleton.loaded",
+          "category": "validation",
+          "action": "Qualify multi-pose and loaded source joints.",
+          "acceptance": [
+            "Independent kinematics and reaction comparisons, temporal refinement and loaded replay pass on the exact compiled anatomy."
+          ],
+          "depends_on": [
+            "skeleton.correspondence",
+            "runtime.precision"
+          ]
+        }
+      ],
+      "references": [
+        "Docs/DEVELOPMENT_ROADMAP.md",
+        "Docs/HUMAN_COMPLETION_GAP_LEDGER.md"
+      ]
+    },
+    {
+      "id": "muscle",
+      "ledger_workstream": "Muscle actuation",
+      "owner": "Human musculotendon compiler; native muscle/Matter state owner",
+      "target_ids": [
+        "mandatory:neuromuscular_system/all_source_composed_muscles",
+        "mandatory:neuromuscular_system/motor_compartments",
+        "mandatory:neuromuscular_system/semantic_stimulation_ids",
+        "mandatory:neuromuscular_system/muscle_routes",
+        "mandatory:neuromuscular_system/muscle_wraps",
+        "mandatory:neuromuscular_system/activation",
+        "mandatory:neuromuscular_system/muscle_fibres",
+        "mandatory:neuromuscular_system/compliant_tendons",
+        "mandatory:neuromuscular_system/aponeurosis_state",
+        "mandatory:neuromuscular_system/entheses",
+        "mandatory:neuromuscular_system/fatigue",
+        "mandatory:neuromuscular_system/energetics",
+        "mandatory:neuromuscular_system/volumetric_active_muscle_ownership"
+      ],
+      "tasks": [
+        {
+          "id": "muscle.source_consistency",
+          "category": "engineering",
+          "action": "Resolve source path/force discrepancies and complete exact wrap and compliant dynamic fibre/tendon state.",
+          "acceptance": [
+            "Same-state source force, geometry, moment arm and virtual work agree within frozen independent source gates.",
+            "Activation endpoints, fatigue, energetics and volumetric active ownership are explicit; one persistent owner controls each state."
+          ],
+          "depends_on": [
+            "source.compose",
+            "runtime.precision"
+          ]
+        },
+        {
+          "id": "muscle.heldout",
+          "category": "validation",
+          "action": "Validate dynamic muscle response against held-out force data.",
+          "acceptance": [
+            "Force-length-velocity and activation/fibre/tendon transients pass held-out load cases and common-duration timestep refinement."
+          ],
+          "depends_on": [
+            "muscle.source_consistency",
+            "calibration.acquire"
+          ]
+        }
+      ],
+      "references": [
+        "Docs/PREPARED_MUSCLE_NUMERICS_20260911.md",
+        "Docs/CANDIDATE_PRECISION_PERFORMANCE_20260911.md"
+      ]
+    },
+    {
+      "id": "terminals",
+      "ledger_workstream": "Tendon-to-bone and terminal-surface transfer",
+      "owner": "Human attachment compiler; native endpoint force owner",
+      "target_ids": [
+        "mandatory:neuromuscular_system/entheses",
+        "mandatory:neuromuscular_system/muscle_routes",
+        "mandatory:load_bearing_connective_anatomy/tendons",
+        "mandatory:load_bearing_connective_anatomy/aponeuroses"
+      ],
+      "tasks": [
+        {
+          "id": "terminals.dispositions",
+          "category": "engineering",
+          "action": "Resolve each of the retained 190 point-law dispositions independently.",
+          "acceptance": [
+            "Exact endpoint identities and source surfaces remain bound; the existing distance and amplification gates are unchanged.",
+            "Valid source point laws remain valid dispositions; soft tissue is not reclassified as bone."
+          ],
+          "depends_on": []
+        },
+        {
+          "id": "terminals.regional_transfer",
+          "category": "validation",
+          "action": "Admit superior registered regional owners only after preservation checks.",
+          "acceptance": [
+            "Two-way force and moment transfer, mass ownership, virtual work, rejection/retry and replay pass without duplicated force authority."
+          ],
+          "depends_on": [
+            "terminals.dispositions",
+            "source.compose",
+            "runtime.precision"
+          ]
+        }
+      ],
+      "references": [
+        "Docs/HUMAN_COMPLETION_GAP_LEDGER.md",
+        "Docs/DEVELOPMENT_ROADMAP.md"
+      ]
+    },
+    {
+      "id": "fascia",
+      "ledger_workstream": "Tendon and fascia continuum",
+      "owner": "Human regional tissue compiler; Matter continuum/contact owner",
+      "target_ids": [
+        "mandatory:load_bearing_connective_anatomy/tendons",
+        "mandatory:load_bearing_connective_anatomy/aponeuroses",
+        "mandatory:load_bearing_connective_anatomy/fascia",
+        "mandatory:neuromuscular_system/aponeurosis_state"
+      ],
+      "tasks": [
+        {
+          "id": "fascia.acquire",
+          "category": "source_data",
+          "action": "Acquire registered regional meshes and spatial fibre fields for generated fascia envelopes.",
+          "acceptance": [
+            "Every regional geometry and fibre field has exact source identity and registration; unsupported histology remains unresolved."
+          ],
+          "depends_on": []
+        },
+        {
+          "id": "fascia.coupling",
+          "category": "engineering",
+          "action": "Replace generated sheets with admitted registered tissue and add sliding/contact.",
+          "acceptance": [
+            "Preserve all fourteen body-7 terminals and the nonduplicated force transaction during migration; no calibration is inferred from the existing 10% share."
+          ],
+          "depends_on": [
+            "fascia.acquire",
+            "terminals.regional_transfer",
+            "contact.register"
+          ]
+        },
+        {
+          "id": "fascia.validation",
+          "category": "validation",
+          "action": "Qualify regional fascia and tendon mechanics.",
+          "acceptance": [
+            "Independent biaxial material and held-out deformation comparisons, spatial/temporal refinement and sustained loaded replay pass."
+          ],
+          "depends_on": [
+            "fascia.coupling",
+            "calibration.specimens"
+          ]
+        }
+      ],
+      "references": [
+        "Docs/TISSUE_INTEGRATION_CALIBRATION_20260908.md",
+        "Docs/HUMAN_COMPLETION_GAP_LEDGER.md"
+      ]
+    },
+    {
+      "id": "joint_tissue",
+      "ledger_workstream": "Ligaments, cartilage, and menisci",
+      "owner": "Human source tissue compiler; Matter FEM/contact owner",
+      "target_ids": [
+        "mandatory:load_bearing_connective_anatomy/tendons",
+        "mandatory:load_bearing_connective_anatomy/aponeuroses",
+        "mandatory:load_bearing_connective_anatomy/fascia",
+        "mandatory:load_bearing_connective_anatomy/ligaments",
+        "mandatory:load_bearing_connective_anatomy/cartilage",
+        "mandatory:load_bearing_connective_anatomy/menisci",
+        "mandatory:load_bearing_connective_anatomy/intervertebral_discs",
+        "mandatory:load_bearing_connective_anatomy/joint_capsules",
+        "mandatory:load_bearing_connective_anatomy/rigid_deformable_contact",
+        "mandatory:load_bearing_connective_anatomy/fluid_support_fields"
+      ],
+      "tasks": [
+        {
+          "id": "joint_tissue.prestress",
+          "category": "engineering",
+          "action": "Complete staged Open Knee in-situ prestress and costal loaded initialization.",
+          "acceptance": [
+            "Retained LCL stage-1 failure passes the unchanged nonlinear/material gates; source fibre law is exact or reduced-law error is independently bounded."
+          ],
+          "depends_on": [
+            "runtime.precision"
+          ]
+        },
+        {
+          "id": "joint_tissue.contact",
+          "category": "engineering",
+          "action": "Integrate loaded cartilage/meniscus flexion and nonduplicated live costal coupling; extend to discs, ligaments and capsules.",
+          "acceptance": [
+            "Registered anatomy, named rigid owners and one mass/reaction owner are required for each tissue; QAT volumetric activity is explicit."
+          ],
+          "depends_on": [
+            "joint_tissue.prestress",
+            "contact.register",
+            "muscle.source_consistency"
+          ]
+        },
+        {
+          "id": "joint_tissue.validation",
+          "category": "validation",
+          "action": "Validate sustained joint mechanics with source-specific loading.",
+          "acceptance": [
+            "Refinement, reactions, replay and held-out joint deformation/contact results pass with calibrated parameters."
+          ],
+          "depends_on": [
+            "joint_tissue.contact",
+            "calibration.specimens"
+          ]
+        }
+      ],
+      "references": [
+        "Docs/TISSUE_INTEGRATION_CALIBRATION_20260908.md",
+        "Docs/COSTAL_IDLE_REQUALIFICATION_20260908.md"
+      ]
+    },
+    {
+      "id": "contact",
+      "ledger_workstream": "Anatomical collision and contact",
+      "owner": "Human collider compiler; native authoritative contact owner",
+      "target_ids": [
+        "mandatory:skeletal_topology/whole_human_collision_topology",
+        "mandatory:load_bearing_connective_anatomy/rigid_deformable_contact"
+      ],
+      "tasks": [
+        {
+          "id": "contact.data",
+          "category": "source_data",
+          "action": "Obtain contact registration and friction/compliance measurements for supported anatomical interfaces.",
+          "acceptance": [
+            "Geometry, correspondence, exclusions, material protocol and uncertainty are traceable; proxy geometry alone is not calibrated contact."
+          ],
+          "depends_on": []
+        },
+        {
+          "id": "contact.register",
+          "category": "engineering",
+          "action": "Compile registered anatomical colliders, exclusions, distributed contact and conservative swept-motion bounds.",
+          "acceptance": [
+            "Prescribed crossing cases have no missed crossings; loaded support and contact Jacobian controls pass without relaxed geometry gates."
+          ],
+          "depends_on": [
+            "runtime.precision",
+            "contact.data"
+          ]
+        },
+        {
+          "id": "contact.validation",
+          "category": "validation",
+          "action": "Qualify support/contact mechanics over held-out loads and motions.",
+          "acceptance": [
+            "Pressure/response converge with space/time refinement and measured friction/compliance; deterministic batched reset, replay and rollback pass."
+          ],
+          "depends_on": [
+            "contact.register",
+            "calibration.specimens"
+          ]
+        }
+      ],
+      "references": [
+        "Docs/HARD_SUPPORT_KKT_20260908.md",
+        "Docs/CANDIDATE_PRECISION_PERFORMANCE_20260911.md"
+      ]
+    },
+    {
+      "id": "exterior",
+      "ledger_workstream": "Skin and exterior",
+      "owner": "Human exterior compiler; Matter skin/fat/fascia owner; accepted-state renderer",
+      "target_ids": [
+        "mandatory:exterior_and_systemic_anatomy/physical_skin",
+        "mandatory:exterior_and_systemic_anatomy/fat",
+        "mandatory:exterior_and_systemic_anatomy/fascia",
+        "mandatory:exterior_and_systemic_anatomy/mechanics_status",
+        "mandatory:exterior_and_systemic_anatomy/boundary_status",
+        "mandatory:exterior_and_systemic_anatomy/sensor_status",
+        "mandatory:exterior_and_systemic_anatomy/validation_status"
+      ],
+      "tasks": [
+        {
+          "id": "exterior.data",
+          "category": "source_data",
+          "action": "Obtain physical skin/fat registration, thickness and constitutive observations.",
+          "acceptance": [
+            "Visual atlas sheets remain explicitly separate from supported mechanics and subject calibration."
+          ],
+          "depends_on": []
+        },
+        {
+          "id": "exterior.mechanics",
+          "category": "engineering",
+          "action": "Implement physical skin/fat/fascia deformation, self-contact and muscle sliding.",
+          "acceptance": [
+            "Mass and volume ownership, anatomical registration and accepted-state presentation remain consistent."
+          ],
+          "depends_on": [
+            "exterior.data",
+            "fascia.coupling",
+            "contact.register"
+          ]
+        },
+        {
+          "id": "exterior.validation",
+          "category": "validation",
+          "action": "Compare exterior motion and mechanical response with held-out observations.",
+          "acceptance": [
+            "Deformation/contact refinement and held-out mechanics pass; live visual registration inspection supplements these tests."
+          ],
+          "depends_on": [
+            "exterior.mechanics",
+            "calibration.specimens"
+          ]
+        }
+      ],
+      "references": [
+        "Docs/VISUAL_VALIDATION.md",
+        "Docs/DEVELOPMENT_ROADMAP.md"
+      ]
+    },
+    {
+      "id": "organs",
+      "ledger_workstream": "Organs, vessels, and nerves",
+      "owner": "Human anatomical fields; Matter organ/vessel/neural mechanics owner",
+      "target_ids": [
+        "mandatory:exterior_and_systemic_anatomy/organs",
+        "mandatory:exterior_and_systemic_anatomy/vessels",
+        "mandatory:exterior_and_systemic_anatomy/nerves",
+        "mandatory:exterior_and_systemic_anatomy/common_topology_field_graph",
+        "mandatory:exterior_and_systemic_anatomy/mechanics_status",
+        "mandatory:exterior_and_systemic_anatomy/boundary_status",
+        "mandatory:exterior_and_systemic_anatomy/sensor_status",
+        "mandatory:exterior_and_systemic_anatomy/validation_status"
+      ],
+      "tasks": [
+        {
+          "id": "organs.data",
+          "category": "source_data",
+          "action": "Resolve named volumetric/tubular organ, vessel and neural geometry, material and boundary inputs.",
+          "acceptance": [
+            "Missing registration, closure labels 11-17, inertial density, ventricular embedding and the retained RV discrepancy remain explicit."
+          ],
+          "depends_on": []
+        },
+        {
+          "id": "cardiac.boundaries",
+          "category": "engineering",
+          "action": "Implement conservative wall pressure work/tangents, spatial normal supports and artificial-structure ownership.",
+          "acceptance": [
+            "Independent pressure-work/Jacobian checks, conservation, loaded replay and rollback pass on synthetic controls before anatomical assignment."
+          ],
+          "depends_on": [
+            "runtime.precision"
+          ]
+        },
+        {
+          "id": "cardiac.loading",
+          "category": "engineering",
+          "action": "Reconstruct unloaded states using prescribed loads/supports and reference-basis fibres.",
+          "acceptance": [
+            "Passive inflation, support reactions and independent load-unload/refinement checks pass; supplied reference storage is not an unloaded-anatomy reconstruction."
+          ],
+          "depends_on": [
+            "cardiac.boundaries",
+            "cardiac.source_data"
+          ]
+        },
+        {
+          "id": "organs.mechanics",
+          "category": "engineering",
+          "action": "Integrate calibrated organ FEM/MPM, vessel tubes and neural mechanical fields with registered contact.",
+          "acceptance": [
+            "Named mechanical ownership, source topology, conservation, contact and state history survive the complete accepted transaction."
+          ],
+          "depends_on": [
+            "organs.data",
+            "contact.register",
+            "cardiac.loading"
+          ]
+        },
+        {
+          "id": "organs.validation",
+          "category": "validation",
+          "action": "Qualify regional and integrated organ mechanics.",
+          "acceptance": [
+            "Independent held-out deformation, material and boundary comparisons pass on the exact anatomy, with replay and uncertainty."
+          ],
+          "depends_on": [
+            "organs.mechanics",
+            "calibration.specimens"
+          ]
+        }
+      ],
+      "references": [
+        "Docs/CARDIAC_WALL_COUPLING_20260912.md",
+        "Docs/CARDIAC_WALL_ANATOMY_20260912.md",
+        "Docs/CARDIAC_MATERIAL_ATTRIBUTION_20260912.md",
+        "Docs/FEM_REFERENCE_CONFIGURATION_20260912.md"
+      ]
+    },
+    {
+      "id": "physiology",
+      "ledger_workstream": "Systemic physiology",
+      "owner": "Human physiology authoring; Matter circulation/species/active-state owner",
+      "target_ids": [
+        "mandatory:systemic_physiology/circulation",
+        "mandatory:systemic_physiology/hemodynamics",
+        "mandatory:systemic_physiology/perfusion",
+        "mandatory:systemic_physiology/cardiac_drive",
+        "mandatory:systemic_physiology/respiratory_mechanics",
+        "mandatory:systemic_physiology/gas_exchange",
+        "mandatory:systemic_physiology/metabolism",
+        "mandatory:systemic_physiology/energetic_substrates",
+        "mandatory:systemic_physiology/thermoregulation",
+        "mandatory:systemic_physiology/fluid_balance",
+        "mandatory:systemic_physiology/electrophysiology",
+        "mandatory:systemic_physiology/peripheral_neural_conduction",
+        "mandatory:systemic_physiology/anatomical_compartment_network",
+        "mandatory:systemic_physiology/species_conservation",
+        "mandatory:systemic_physiology/multirate_accepted_step_rollback"
+      ],
+      "tasks": [
+        {
+          "id": "cardiac.source_data",
+          "category": "source_data",
+          "action": "Acquire source support/loading coefficients, activation timing/deck, exact valve switching and anatomical port interpretation.",
+          "acceptance": [
+            "Every absent coefficient and active-law option stays unresolved; alternate datasets are explicit variants, not original-source qualification."
+          ],
+          "depends_on": []
+        },
+        {
+          "id": "cardiac.activation",
+          "category": "engineering",
+          "action": "Integrate reaction-eikonal timing and source active-stress history on the accepted native clock.",
+          "acceptance": [
+            "Independent timing/stress controls, passive-to-active transitions and rejected-step history restoration pass."
+          ],
+          "depends_on": [
+            "cardiac.source_data",
+            "runtime.precision"
+          ]
+        },
+        {
+          "id": "cardiac.valve_ports",
+          "category": "engineering",
+          "action": "Bind the qualified directional valve C++ law to explicit anatomical ports and source switching semantics.",
+          "acceptance": [
+            "Zero forward resistance and signed reverse leakage remain exact; anatomical assignment and source switching are independently verified."
+          ],
+          "depends_on": [
+            "cardiac.source_data",
+            "cardiac.boundaries"
+          ]
+        },
+        {
+          "id": "blood.spatial_owner",
+          "category": "engineering",
+          "action": "Add registered nonduplicated blood mass and momentum ownership distinct from hydraulic volume storage.",
+          "acceptance": [
+            "Zeroth/first/second mass moments and momentum close; rigid/tissue/fluid ownership is counted once and restored atomically."
+          ],
+          "depends_on": [
+            "organs.data",
+            "runtime.precision"
+          ]
+        },
+        {
+          "id": "physiology.systems",
+          "category": "engineering",
+          "action": "Integrate perfusion/exchange, respiratory mechanics, gas, metabolism, thermal/fluid and conduction states through existing owners.",
+          "acceptance": [
+            "Each subsystem has explicit equations, units, clocks and source parameters; species, energy and multirate rollback balances close."
+          ],
+          "depends_on": [
+            "blood.spatial_owner",
+            "cardiac.activation",
+            "cardiac.valve_ports",
+            "cardiac.loading"
+          ]
+        },
+        {
+          "id": "physiology.heldout",
+          "category": "validation",
+          "action": "Validate coupled cardiac cycles and systemic observables.",
+          "acceptance": [
+            "Pressure-volume work, timing, perfusion and systemic responses pass common-time refinement and independently held-out subject data with uncertainty."
+          ],
+          "depends_on": [
+            "physiology.systems",
+            "organs.validation",
+            "calibration.population"
+          ]
+        }
+      ],
+      "references": [
+        "Docs/ORGAN_CIRCULATION_INTEGRATION_20260912.md",
+        "Docs/CARDIAC_SOURCE_REPRODUCTION_20260912.md",
+        "Docs/CVSIM21_REGIONAL_CIRCULATION_20260912.md",
+        "Docs/CARDIAC_DIRECTIONAL_VALVE_20260912.md"
+      ]
+    },
+    {
+      "id": "behavior",
+      "ledger_workstream": "Balance, control, and gait",
+      "owner": "Native TaskPack/SensorPack metrics; Brain/PolicyPack controller",
+      "target_ids": [
+        "mandatory:capability_distribution/equilibrium",
+        "mandatory:capability_distribution/recovery",
+        "mandatory:capability_distribution/locomotion",
+        "mandatory:capability_distribution/running",
+        "mandatory:capability_distribution/turning",
+        "mandatory:capability_distribution/manipulation",
+        "mandatory:capability_distribution/carrying",
+        "mandatory:capability_distribution/sit_stand",
+        "mandatory:capability_distribution/terrain_interaction",
+        "mandatory:capability_distribution/contact_interaction",
+        "mandatory:capability_distribution/physiological_tasks",
+        "mandatory:capability_distribution/intervention_tasks",
+        "mandatory:capability_distribution/subject_distributions",
+        "mandatory:capability_distribution/parameter_distributions"
+      ],
+      "tasks": [
+        {
+          "id": "behavior.telemetry",
+          "category": "engineering",
+          "action": "Lower the frozen behavior TaskPack and produce complete accepted-root native metrics.",
+          "acceptance": [
+            "Every accepted root and every attempted transaction is independently accounted for; rejected candidates alter neither time, outcomes, controller nor sensor history."
+          ],
+          "depends_on": []
+        },
+        {
+          "id": "behavior.standing",
+          "category": "validation",
+          "action": "Qualify a source-muscle feedback standing/recovery baseline before learned gait.",
+          "acceptance": [
+            "Standing: 20 distinct seeds x 60 seconds, all pass. Recovery: 100 frozen nonzero impulses x 5 seconds, at least 95 pass.",
+            "Missing, assisted, duplicate or truncated traces invalidate the bundle; existing frozen posture and support gates remain unchanged."
+          ],
+          "depends_on": [
+            "runtime.prepared",
+            "muscle.source_consistency",
+            "contact.validation",
+            "behavior.telemetry",
+            "runtime.sensing"
+          ]
+        },
+        {
+          "id": "behavior.walking",
+          "category": "validation",
+          "action": "Qualify assistance-free walking against the existing frozen evaluator.",
+          "acceptance": [
+            "At each of 0.5, 1.0 and 1.5 m/s: 100 seeds x 120 seconds, at least 95 pass with speed RMSE <= 0.15 m/s; complete trace validity is mandatory."
+          ],
+          "depends_on": [
+            "behavior.standing"
+          ]
+        },
+        {
+          "id": "behavior.broader_protocols",
+          "category": "source_data",
+          "action": "Freeze observation-backed running, turning, manipulation, carrying, sit-stand, terrain, contact, physiological/intervention and subject-distribution protocols.",
+          "acceptance": [
+            "Protocol populations, failure definitions, observables and acceptance bounds are preregistered before training or result selection."
+          ],
+          "depends_on": []
+        },
+        {
+          "id": "behavior.broader",
+          "category": "validation",
+          "action": "Qualify broader movement and physiological/intervention capability distributions.",
+          "acceptance": [
+            "Every mandatory capability has a complete held-out population assessed by its preregistered protocol on the same supported stack."
+          ],
+          "depends_on": [
+            "behavior.walking",
+            "behavior.broader_protocols",
+            "joint_tissue.validation",
+            "exterior.validation",
+            "physiology.heldout"
+          ]
+        }
+      ],
+      "references": [
+        "Docs/HUMAN_BEHAVIOR_QUALIFICATION.md",
+        "Docs/SOURCE_COMPLIANT_EQUILIBRIUM_20260910.md",
+        "Docs/CANDIDATE_PRECISION_PERFORMANCE_20260911.md"
+      ]
+    },
+    {
+      "id": "runtime",
+      "ledger_workstream": "Joint Brain\u2013Human\u2013Matter runtime",
+      "owner": "Native CompiledRun/Matter transaction; Brain accepted control state",
+      "target_ids": [
+        "mandatory:biological_sensing/muscle_spindle",
+        "mandatory:biological_sensing/golgi_tendon",
+        "mandatory:biological_sensing/joint",
+        "mandatory:biological_sensing/plantar",
+        "mandatory:biological_sensing/cutaneous",
+        "mandatory:biological_sensing/vestibular",
+        "mandatory:biological_sensing/visual",
+        "mandatory:biological_sensing/physiological",
+        "mandatory:biological_sensing/delay",
+        "mandatory:biological_sensing/noise",
+        "mandatory:biological_sensing/adaptation",
+        "mandatory:biological_sensing/history",
+        "mandatory:biological_sensing/separation_from_privileged_truth",
+        "mandatory:systemic_physiology/multirate_accepted_step_rollback"
+      ],
+      "tasks": [
+        {
+          "id": "runtime.precision",
+          "category": "engineering",
+          "action": "Repair candidate/accepted coordinate precision using reference-relative compensated state across geometry, tangents, sensing and restoration.",
+          "acceptance": [
+            "Retained 25-us root-9 failure passes unchanged physical gates; 100/50/25/12.5-us trajectories complete a common duration and establish convergence.",
+            "Package/snapshot/proof identity, reset, rejected-step retry and isolated multi-environment replay cover the complete coordinate state."
+          ],
+          "depends_on": []
+        },
+        {
+          "id": "runtime.prepared",
+          "category": "validation",
+          "action": "Qualify loaded source-compliant prepared equilibrium.",
+          "acceptance": [
+            "Zero-input prepared equilibrium remains stable and replays over the frozen common-duration protocol without compensating controller forces."
+          ],
+          "depends_on": [
+            "runtime.precision",
+            "muscle.source_consistency",
+            "contact.register"
+          ]
+        },
+        {
+          "id": "runtime.sensing",
+          "category": "engineering",
+          "action": "Complete causal proprioceptive, tactile, visual and physiological sensing through accepted state.",
+          "acceptance": [
+            "Source-semantic delay, noise, adaptation/history and privileged-truth separation are explicit; rejected candidates publish no sensor or policy consequences."
+          ],
+          "depends_on": [
+            "runtime.precision",
+            "behavior.telemetry"
+          ]
+        },
+        {
+          "id": "runtime.integrated",
+          "category": "validation",
+          "action": "Qualify the fully compiled source-bound Human/Brain/Matter stack.",
+          "acceptance": [
+            "Anatomical package lowering, single mass/force ownership, constrained coupled mechanics and accepted-only sensing/control pass the full frozen behavior and transaction suite."
+          ],
+          "depends_on": [
+            "behavior.broader",
+            "organs.validation",
+            "fascia.validation"
+          ]
+        }
+      ],
+      "references": [
+        "Docs/PREPARED_STATE_ADMISSION_20260908.md",
+        "Docs/COUPLED_INITIAL_POSES_20260910.md",
+        "Docs/HUMAN_BEHAVIOR_QUALIFICATION.md"
+      ]
+    },
+    {
+      "id": "performance",
+      "ledger_workstream": "Apple runtime qualification",
+      "owner": "Native Apple runtime/profiling; Swift scheduling and MLX learning owner",
+      "target_ids": [
+        "mandatory:personalization_and_evidence/exact_apple_execution_evidence"
+      ],
+      "tasks": [
+        {
+          "id": "performance.baseline",
+          "category": "performance",
+          "action": "Profile bounded work throughout implementation on the physical Mac mini after checking competing jobs.",
+          "acceptance": [
+            "Exact source/artifact/device identity, counters/traces, accepted/rejected steps, memory/swap, thermals, energy and physical equivalence are retained for each measured workload."
+          ],
+          "depends_on": []
+        },
+        {
+          "id": "performance.envelopes",
+          "category": "performance",
+          "action": "Qualify the five roadmap workload envelopes on the final stack.",
+          "acceptance": [
+            "Interactive authority: real-time factor >= 1 and p99 latency within the authored control period.",
+            "Full-fidelity, population learning, policy/sensor inference and presentation workloads retain their frozen capacity/accuracy budgets and no dropped deployable frames."
+          ],
+          "depends_on": [
+            "performance.baseline",
+            "runtime.integrated"
+          ]
+        }
+      ],
+      "references": [
+        "Docs/DEVELOPMENT_ROADMAP.md",
+        "Docs/CANDIDATE_PRECISION_PERFORMANCE_20260911.md"
+      ]
+    },
+    {
+      "id": "science",
+      "ledger_workstream": "Scientific validation",
+      "owner": "Human data/provenance and offline identification; owning native specimen solvers",
+      "target_ids": [
+        "mandatory:personalization_and_evidence/subject_atlas",
+        "mandatory:personalization_and_evidence/population_priors",
+        "mandatory:personalization_and_evidence/population_posteriors",
+        "mandatory:personalization_and_evidence/identifiability",
+        "mandatory:personalization_and_evidence/uncertainty_quantification",
+        "mandatory:personalization_and_evidence/held_out_physical_data",
+        "mandatory:personalization_and_evidence/competitive_comparisons",
+        "mandatory:personalization_and_evidence/exact_apple_execution_evidence"
+      ],
+      "tasks": [
+        {
+          "id": "calibration.acquire",
+          "category": "source_data",
+          "action": "Acquire raw load/response observations, anatomy, subject identifiers and independent held-out data.",
+          "acceptance": [
+            "Dataset lineage, rights, missing fields, specimen/donor/population splits and measurement uncertainty are recorded before fitting."
+          ],
+          "depends_on": []
+        },
+        {
+          "id": "calibration.specimens",
+          "category": "calibration",
+          "action": "Run native boundary-value specimen experiments and identify only supported parameters.",
+          "acceptance": [
+            "Fitting and specimen validation are separate; native held-out responses meet preregistered bounds and parameters are identifiable in the declared loading domain."
+          ],
+          "depends_on": [
+            "calibration.acquire"
+          ]
+        },
+        {
+          "id": "calibration.population",
+          "category": "calibration",
+          "action": "Fit and validate personalization/population inference with propagated uncertainty.",
+          "acceptance": [
+            "Same-plug repeat measurements never qualify other specimens, donors or populations; independent donor validation and posterior predictive tests meet preregistered criteria."
+          ],
+          "depends_on": [
+            "calibration.specimens"
+          ]
+        },
+        {
+          "id": "science.release",
+          "category": "validation",
+          "action": "Verify all target coverage and evidence on one immutable published release stack.",
+          "acceptance": [
+            "Every required source leaf is assigned and every ledger completion gate has independently verified exact-stack evidence.",
+            "No required source/calibration dependency remains unresolved; clean installation and live runtime inspection pass, with claims restricted to measured scope."
+          ],
+          "depends_on": [
+            "runtime.integrated",
+            "performance.envelopes",
+            "calibration.population"
+          ]
+        }
+      ],
+      "references": [
+        "Docs/TISSUE_INTEGRATION_CALIBRATION_20260908.md",
+        "Docs/DEVELOPMENT_ROADMAP.md"
+      ]
+    }
+  ]
+}

@@ -2041,6 +2041,11 @@ def parser() -> argparse.ArgumentParser:
         help="materialize the immutable cumulative Human target union and explicit source gaps",
     )
     add_target_coverage_arguments(coverage)
+    from .gap_execution import add_arguments as add_gap_execution_arguments
+    execution = commands.add_parser(
+        "gap-execution", help="inspect ledger owners, prerequisites and unqualified source target links",
+    )
+    add_gap_execution_arguments(execution)
     from .behavior_qualification import add_arguments as add_behavior_qualification_arguments
     behavior = commands.add_parser(
         "behavior-qualify", help="evaluate complete native standing, recovery and walking evidence",

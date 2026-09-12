@@ -63,6 +63,14 @@ articulation or move a neighboring bone under the endpoint.
 
 ## Execution order
 
+The [execution registry](HUMAN_GAP_EXECUTION.md) makes the completion plan
+machine-readable: 14 workstreams, 46 tasks and all 95 mandatory targets.
+`numi human gap-execution` reads this table as the status authority and reports
+dependencies, owners, acceptance criteria and reference hashes. Engineering
+implementation does not promote a task or close a workstream automatically.
+An optional current target-coverage manifest preserves every unmapped source
+leaf and unresolved source register alongside the mandatory target links.
+
 The [organ/circulation increment](ORGAN_CIRCULATION_INTEGRATION_20260912.md) adds a passive conservative systemic owner and source-bound authoring. Matter ABI26/package11 requires recooking earlier Matter payloads; previous receipts retain their exact historical revisions. Native numerical tests do not close anatomical mechanics, physiological calibration or standing/gait.
 
 The [cardiac source increment](CARDIAC_SOURCE_REPRODUCTION_20260912.md) adds the full pinned four-chamber systemic/pulmonary model to that same owner. The captured valve-closure failure is repaired at the original solver budget; ten cycles and first-order refinement pass. Its historical compatibility is Matter ABI27/package12. Source C·P storage cannot supply absolute vascular volume, species dilution or whole-body blood mass.

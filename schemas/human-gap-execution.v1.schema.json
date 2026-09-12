@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "HumanPack.gap-execution.v1",
+  "title": "Human gap execution metadata",
+  "description": "Offline owner, prerequisite and acceptance metadata. This schema contains no qualification or task-status authority. The compiler additionally checks complete live-ledger and mandatory-target coverage, reference files, global task identity and acyclic dependencies.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "ledger", "workstreams"],
+  "properties": {
+    "schema": {"const": "HumanPack.gap-execution.v1"},
+    "ledger": {"$ref": "#/$defs/text"},
+    "workstreams": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "ledger_workstream", "owner", "target_ids", "tasks", "references"],
+        "properties": {
+          "id": {"$ref": "#/$defs/text"},
+          "ledger_workstream": {"$ref": "#/$defs/text"},
+          "owner": {"$ref": "#/$defs/text"},
+          "target_ids": {"$ref": "#/$defs/nonemptyStrings"},
+          "references": {"$ref": "#/$defs/nonemptyStrings"},
+          "tasks": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "category", "depends_on", "action", "acceptance"],
+              "properties": {
+                "id": {"$ref": "#/$defs/text"},
+                "category": {"enum": ["engineering", "source_data", "calibration", "validation", "performance"]},
+                "depends_on": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+                "action": {"$ref": "#/$defs/text"},
+                "acceptance": {"$ref": "#/$defs/nonemptyStrings"}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "text": {"type": "string", "pattern": "\\S"},
+    "nonemptyStrings": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/text"}}
+  }
+}
