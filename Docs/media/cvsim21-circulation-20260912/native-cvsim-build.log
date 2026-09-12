@@ -1,0 +1,16 @@
+[0/1] Re-running CMake...
+-- MetalRobo Python tests disabled: no interpreter with NumPy and SciPy
+-- Configuring done (0.2s)
+-- Generating done (0.1s)
+-- Build files have been written to: /Users/n/MetalRobo-human-completion-build-20260907
+[1/9] Building OBJCXX object matter/CMakeFiles/numi_matter_runtime_objects.dir/src/human_physiology.mm.o
+[2/9] Building OBJCXX object matter/CMakeFiles/numi-matter-cvsim-check.dir/tools/cvsim_check.mm.o
+FAILED: [code=1] matter/CMakeFiles/numi-matter-cvsim-check.dir/tools/cvsim_check.mm.o 
+/usr/bin/clang++ -DNUMI_MATTER_METALLIB=\"/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib\" -I/Users/n/MetalRobo-human-completion-20260907/matter/../include -I/Users/n/MetalRobo-human-completion-20260907/matter/include -F/Applications/Xcode-26.6.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks -x objective-c++ -O3 -DNDEBUG -std=c++23 -arch arm64 -fPIE -fobjc-arc -Wall -Wextra -Werror -MD -MT matter/CMakeFiles/numi-matter-cvsim-check.dir/tools/cvsim_check.mm.o -MF matter/CMakeFiles/numi-matter-cvsim-check.dir/tools/cvsim_check.mm.o.d -o matter/CMakeFiles/numi-matter-cvsim-check.dir/tools/cvsim_check.mm.o -c /Users/n/MetalRobo-human-completion-20260907/matter/tools/cvsim_check.mm
+/Users/n/MetalRobo-human-completion-20260907/matter/tools/cvsim_check.mm:20:30: error: unused variable 'compartments' [-Werror,-Wunused-const-variable]
+   20 | constexpr unsigned count=45, compartments=21;
+      |                              ^~~~~~~~~~~~
+1 error generated.
+[3/9] Building CXX object matter/CMakeFiles/numi_matter_compiler_objects.dir/src/vascular_impl.cpp.o
+[4/9] Building CXX object matter/CMakeFiles/numi-matter-vascular-compiler-check.dir/tools/vascular_compiler_check.cpp.o
+ninja: build stopped: subcommand failed.

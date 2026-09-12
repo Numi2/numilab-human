@@ -1,0 +1,96 @@
+{
+  "all_identities_unchanged": true,
+  "artifacts": {
+    "cycle-1ms.csv": {
+      "bytes": 1701239,
+      "sha256": "050ab1def9b0af1af901bfb242b2cdf8439e86ecceaaa382d165b5ec6c97b50f"
+    },
+    "cycle-1ms.csv.gz": {
+      "bytes": 678691,
+      "sha256": "afee037d29cf58cac163a8f80b38d96d595db9189ca7f1c0b7227647a7df3b49"
+    },
+    "cycle-1ms.log": {
+      "bytes": 858,
+      "sha256": "46b95a939b1e7cb78127473fe2a81d2af16a6ab46db65e2096ee6672e9af5e9a"
+    }
+  },
+  "command": [
+    "/Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-cvsim-check",
+    "/Users/n/MetalRobo-human-completion-20260907/Build/absolute-blood-20260912/cvsim21.native.v3.json",
+    "/Users/n/cvsim21-reference-20260912/final-execution/continuous-1e-12.csv",
+    "--steps",
+    "858",
+    "--dt",
+    ".001",
+    "--trace",
+    "/Users/n/MetalRobo-human-completion-20260907/Build/absolute-blood-20260912/qualified-native-cohort/cycle-1ms.csv",
+    "--checkpoint",
+    "/Users/n/MetalRobo-human-completion-20260907/Build/absolute-blood-20260912/qualified-native-cohort/cycle-1ms-failure.bin"
+  ],
+  "cwd": "/Users/n/MetalRobo-human-completion-20260907",
+  "environment": {
+    "MTL_DEBUG_LAYER": "1"
+  },
+  "executable_after_sha256": "a37444839549a469089ee8de6989c7808ca3909f63bf8b7a36cd064c81786e00",
+  "executable_sha256": "a37444839549a469089ee8de6989c7808ca3909f63bf8b7a36cd064c81786e00",
+  "exit_code": 0,
+  "native_head": "f5ce0ce563d54314f7226bb56b8f323de8dd69c3",
+  "otool_L": "/Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-cvsim-check:\n\t/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation (compatibility version 300.0.0, current version 5026.5.4)\n\t/System/Library/Frameworks/Metal.framework/Versions/A/Metal (compatibility version 1.0.0, current version 373.2.0)\n\t/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 2100.43.0)\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)\n\t/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation (compatibility version 150.0.0, current version 5026.5.4)\n\t/usr/lib/libobjc.A.dylib (compatibility version 1.0.0, current version 228.0.0)\n",
+  "payload_after_sha256": "eeb6ebc5dad5cb413587038532ac5badc3d3e8aa419cca111604239e7f692818",
+  "payload_sha256": "eeb6ebc5dad5cb413587038532ac5badc3d3e8aa419cca111604239e7f692818",
+  "reference_after_sha256": "1423dbd3ad5c831780ec4462d8e3db8f151934211b36b100d4aea42bb0d43f7e",
+  "reference_sha256": "1423dbd3ad5c831780ec4462d8e3db8f151934211b36b100d4aea42bb0d43f7e",
+  "runtime_after_sha256": {
+    "matter/numi-matter-cvsim-check": "a37444839549a469089ee8de6989c7808ca3909f63bf8b7a36cd064c81786e00",
+    "matter/shaders/NumiMatter.metallib": "f84a1282fd24a9ed34fd06199596af19d49d7b0ea8561c00d8a73f50f348d86b"
+  },
+  "runtime_before_sha256": {
+    "matter/numi-matter-cvsim-check": "a37444839549a469089ee8de6989c7808ca3909f63bf8b7a36cd064c81786e00",
+    "matter/shaders/NumiMatter.metallib": "f84a1282fd24a9ed34fd06199596af19d49d7b0ea8561c00d8a73f50f348d86b"
+  },
+  "schema": "NumiHuman.CVSimNativeExecution.v2",
+  "source_after_sha256": {
+    "matter/CMakeLists.txt": "f2387e57febb6e6c42a98797816ac6cdd437e5087185a5f4a75500908fb1937d",
+    "matter/include/numi/matter/matter.hpp": "224948083144653b170a6e9e3f2d4041957ed89c7aa6972a07bebb9af953dd24",
+    "matter/include/numi/matter/shared.h": "710fa1be693e93ab0ff37257e4758de115b1ba1cab88933bcbcedda833664ae1",
+    "matter/include/numi/matter/vascular.hpp": "149e556aa04bb6de5a15dfaa6fac9d41875b67bc9fab8aac0caf9b3d6b69acb0",
+    "matter/src/compiler_impl.cpp": "b7bf038861d8fdf3b510a7e76619990b3410346ad8bb467776f617a0da03ddfd",
+    "matter/src/fingerprint_impl.cpp": "709e5d3fc824638e9bd9429fc9a0d0233e2084639e10f494f1c5e44258c31678",
+    "matter/src/human_physiology.mm": "2fefc2ab1903aff0e03ddf8eae45c0fe985444cf39dc96c56beb719fa79ca18e",
+    "matter/src/metal/fgmres.metalinc": "7eaf660aad10c1eda20e0b5b3d258cd5021b12ce3245eda331471b994d9c2c17",
+    "matter/src/metal/vascular.metalinc": "10169ff9f7817adb1a0b8d8c32ccb1dd682bac24c8a7a4f856d157ace1276e04",
+    "matter/src/package_impl.cpp": "ec59d4fad477736ccb6bf79185e07f0237fa2772d9210032a66c3cff9e093263",
+    "matter/src/runtime.mm": "c89aa294d9e8c744fc230eec52ecf8b4674ed1b56b9fba99870af18964be27e4",
+    "matter/src/validation_impl.cpp": "b04cfaaee731c53be682a614b49bb10cb39036d257559daf54f0679b9d0c4dcd",
+    "matter/src/vascular_impl.cpp": "ad150b6cf673e00d6649b4b9bc2d0c1e35149b06ba7b30d37dacd412dd96a070",
+    "matter/tools/cardiac_transaction_check.mm": "fd523cc829eedf443d6007241a0e3a0c054da6dc6e636b99c773aa690561e6c2",
+    "matter/tools/cvsim_check.mm": "b812f14c151a02bf745c4670de6f151e6762c6c8c29f4df1542e42f6554a4645",
+    "matter/tools/cvsim_input_check.py": "4f0c685cabd8b8896a28afb3786a0845000488c590779d493dbef2590715cf84",
+    "matter/tools/fixtures/cvsim21-continuous-reference-64ms.csv": "d2c27511484fa378400600ebfa1621787695426cde8cf3b1607e8a14627f0caf",
+    "matter/tools/fixtures/cvsim21-continuous-reference-64ms.manifest.json": "1c00fdfd2d32082a66ca8c466e60821ac848355f62734f4f5bd79202cccafb8d",
+    "matter/tools/fixtures/cvsim21.native.v3.json": "eeb6ebc5dad5cb413587038532ac5badc3d3e8aa419cca111604239e7f692818",
+    "matter/tools/vascular_compiler_check.cpp": "7214f08b2fa12faa7b57f78bbf9dae4901c179931183204991460a0e6fcf385e"
+  },
+  "source_before_sha256": {
+    "matter/CMakeLists.txt": "f2387e57febb6e6c42a98797816ac6cdd437e5087185a5f4a75500908fb1937d",
+    "matter/include/numi/matter/matter.hpp": "224948083144653b170a6e9e3f2d4041957ed89c7aa6972a07bebb9af953dd24",
+    "matter/include/numi/matter/shared.h": "710fa1be693e93ab0ff37257e4758de115b1ba1cab88933bcbcedda833664ae1",
+    "matter/include/numi/matter/vascular.hpp": "149e556aa04bb6de5a15dfaa6fac9d41875b67bc9fab8aac0caf9b3d6b69acb0",
+    "matter/src/compiler_impl.cpp": "b7bf038861d8fdf3b510a7e76619990b3410346ad8bb467776f617a0da03ddfd",
+    "matter/src/fingerprint_impl.cpp": "709e5d3fc824638e9bd9429fc9a0d0233e2084639e10f494f1c5e44258c31678",
+    "matter/src/human_physiology.mm": "2fefc2ab1903aff0e03ddf8eae45c0fe985444cf39dc96c56beb719fa79ca18e",
+    "matter/src/metal/fgmres.metalinc": "7eaf660aad10c1eda20e0b5b3d258cd5021b12ce3245eda331471b994d9c2c17",
+    "matter/src/metal/vascular.metalinc": "10169ff9f7817adb1a0b8d8c32ccb1dd682bac24c8a7a4f856d157ace1276e04",
+    "matter/src/package_impl.cpp": "ec59d4fad477736ccb6bf79185e07f0237fa2772d9210032a66c3cff9e093263",
+    "matter/src/runtime.mm": "c89aa294d9e8c744fc230eec52ecf8b4674ed1b56b9fba99870af18964be27e4",
+    "matter/src/validation_impl.cpp": "b04cfaaee731c53be682a614b49bb10cb39036d257559daf54f0679b9d0c4dcd",
+    "matter/src/vascular_impl.cpp": "ad150b6cf673e00d6649b4b9bc2d0c1e35149b06ba7b30d37dacd412dd96a070",
+    "matter/tools/cardiac_transaction_check.mm": "fd523cc829eedf443d6007241a0e3a0c054da6dc6e636b99c773aa690561e6c2",
+    "matter/tools/cvsim_check.mm": "b812f14c151a02bf745c4670de6f151e6762c6c8c29f4df1542e42f6554a4645",
+    "matter/tools/cvsim_input_check.py": "4f0c685cabd8b8896a28afb3786a0845000488c590779d493dbef2590715cf84",
+    "matter/tools/fixtures/cvsim21-continuous-reference-64ms.csv": "d2c27511484fa378400600ebfa1621787695426cde8cf3b1607e8a14627f0caf",
+    "matter/tools/fixtures/cvsim21-continuous-reference-64ms.manifest.json": "1c00fdfd2d32082a66ca8c466e60821ac848355f62734f4f5bd79202cccafb8d",
+    "matter/tools/fixtures/cvsim21.native.v3.json": "eeb6ebc5dad5cb413587038532ac5badc3d3e8aa419cca111604239e7f692818",
+    "matter/tools/vascular_compiler_check.cpp": "7214f08b2fa12faa7b57f78bbf9dae4901c179931183204991460a0e6fcf385e"
+  }
+}

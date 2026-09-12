@@ -1,0 +1,28 @@
+{
+  "schema": "NumiHuman.CVSim21-suite-dispatch.v1",
+  "native_commit": "b91fe6832813497ab532e5dbe05ed8c8233e6b1f",
+  "macmini": {
+    "status": "pass",
+    "command": "NUMI_HUMAN_PYTHON=/opt/homebrew/bin/python3.13 /Users/n/MetalRobo-human-completion-20260907/tools/numi human-circulation --output Build/dispatched.native.v3.json",
+    "cwd": "/Users/n/human-circulation-dispatch-20260912",
+    "launcher_sha256": "2e971e7c3680ec809c7e9ac71355b89502f710f835bc3c69725a91dbbdb01074",
+    "payload_sha256": "eeb6ebc5dad5cb413587038532ac5badc3d3e8aa419cca111604239e7f692818"
+  },
+  "local_direct_workspace_command": {
+    "status": "pass",
+    "command": "./.numi/commands/human-circulation --output Build/absolute-blood-20260912/dispatcher.native.v3.json",
+    "payload_sha256": "eeb6ebc5dad5cb413587038532ac5badc3d3e8aa419cca111604239e7f692818"
+  },
+  "local_global_launcher": {
+    "status": "environment_unavailable",
+    "path": "/Users/home/.local/bin/numi",
+    "symlink_target": "/Users/home/Documents/emergentnumilife/MetalRobo/tools/numi",
+    "observed_flags": [
+      "compressed",
+      "dataless"
+    ],
+    "observed_error": "zsh:1: operation timed out: numi",
+    "source_modified": false
+  },
+  "python_physical_stepping": false
+}

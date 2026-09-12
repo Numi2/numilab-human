@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "HumanPack.cvsim21-source-config.v1",
+  "title": "Pinned CVSim21 aggregate circulation source variant authoring",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "id",
+    "source_manifest_sha256",
+    "initial_sha256",
+    "volume_coordinates",
+    "source_mode",
+    "numerical_settings"
+  ],
+  "properties": {
+    "schema": {
+      "const": "HumanPack.cvsim21-source-config.v1"
+    },
+    "id": {
+      "const": "cvsim21_supine_continuous_fixed_rate"
+    },
+    "source_manifest_sha256": {
+      "const": "b118d58230a3f2766108d05501a3ac9b910124ef823567a7e5fe23f6df0b4f67"
+    },
+    "initial_sha256": {
+      "const": "fad558482f8bfeb94d531d4538e29d7a2c8a59ea63f32496467b087bcb343ff7"
+    },
+    "source_mode": {
+      "const": {
+        "ABReflexOn": false,
+        "CPReflexOn": false,
+        "tiltTestOn": false,
+        "clock": "continuous_fixed_rate_rational"
+      }
+    },
+    "volume_coordinates": {
+      "enum": [
+        "upstream_equation",
+        "heldt_table_aligned"
+      ]
+    },
+    "numerical_settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "volume_scale_m3",
+        "flow_scale_m3_per_s",
+        "pressure_scale_pa",
+        "residual_tolerance"
+      ],
+      "properties": {
+        "volume_scale_m3": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "unit",
+            "role"
+          ],
+          "properties": {
+            "value": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "unit": {
+              "const": "m3"
+            },
+            "role": {
+              "const": "numerical_residual_control_not_source_physiological_parameter"
+            }
+          }
+        },
+        "flow_scale_m3_per_s": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "unit",
+            "role"
+          ],
+          "properties": {
+            "value": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "unit": {
+              "const": "m3/s"
+            },
+            "role": {
+              "const": "numerical_residual_control_not_source_physiological_parameter"
+            }
+          }
+        },
+        "pressure_scale_pa": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "unit",
+            "role"
+          ],
+          "properties": {
+            "value": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "unit": {
+              "const": "Pa"
+            },
+            "role": {
+              "const": "numerical_residual_control_not_source_physiological_parameter"
+            }
+          }
+        },
+        "residual_tolerance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "unit",
+            "role"
+          ],
+          "properties": {
+            "value": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "exclusiveMaximum": 1
+            },
+            "unit": {
+              "const": "1"
+            },
+            "role": {
+              "const": "numerical_residual_control_not_source_physiological_parameter"
+            }
+          }
+        }
+      }
+    }
+  }
+}

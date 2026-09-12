@@ -1,0 +1,349 @@
+UpdateCTestConfiguration  from :/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Parse Config file:/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Test project /Users/n/MetalRobo-human-completion-build-20260907
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 13
+      Start  13: matter.runtime.snapshot_archive
+
+13: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_snapshot_archive_probe "/Users/n/MetalRobo-human-completion-build-20260907/matter-snapshot-archive-probe.bin"
+13: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+13: Test timeout computed to be: 30
+13: matter_snapshot_archive=ok version=6 content_hash=0x342252fa8b847fc payload_bytes=3564 corrupt_payload_rejected=yes
+ 1/15 Test  #13: matter.runtime.snapshot_archive ..................   Passed    0.71 sec
+test 17
+      Start  17: matter.physics.monolithic_multiphysics
+
+17: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe "--multiphysics"
+17: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+17: Test timeout computed to be: 180
+17: {"schema":"numi.matter.physics-probe.v2","representation":"monolithic_multiphysics","temperature_min":300,"temperature_max":354.956,"electric_max":1,"activation_max":0.0427246,"kkt_residual":3.00321e-05,"relative_correction":0,"volume_residual":2.07567e-07,"pressure_residual":4.15134e-07,"transport_residual":1.93967e-06}
+ 2/15 Test  #17: matter.physics.monolithic_multiphysics ...........   Passed    0.41 sec
+test 24
+      Start  24: matter.runtime.production_transaction_rollback
+
+24: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe "--production-rollback"
+24: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+24: Test timeout computed to be: 180
+24: {"schema":"numi.matter.physics-probe.v2","representation":"production_transaction","rollback":true,"active_tetrahedra":1,"learned_revision":0}
+ 3/15 Test  #24: matter.runtime.production_transaction_rollback ...   Passed    0.05 sec
+test 25
+      Start  25: matter.physics.stateful_mpm
+
+25: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe "--stateful-mpm"
+25: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+25: Test timeout computed to be: 180
+25: {"schema":"numi.matter.stateful-runtime.v1","representation":"mpm","state_stride":2,"maximum_damage":0,"maximum_accumulated_strain":0.00177208,"rollback_exact":true,"mismatched_program_rejected":true,"archive_restore_exact":true,"explicit_restore_exact":true,"continuation_exact":true}
+ 4/15 Test  #25: matter.physics.stateful_mpm ......................   Passed    1.92 sec
+test 26
+      Start  26: matter.physics.stateful_fem
+
+26: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe "--stateful-fem"
+26: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+26: Test timeout computed to be: 180
+26: {"schema":"numi.matter.stateful-runtime.v1","representation":"fem","state_stride":2,"maximum_damage":0,"maximum_accumulated_strain":0.00529575,"rollback_exact":true,"mismatched_program_rejected":true,"archive_restore_exact":true,"explicit_restore_exact":true,"continuation_exact":true}
+ 5/15 Test  #26: matter.physics.stateful_fem ......................   Passed    0.85 sec
+test 62
+      Start  62: numanx.integration.matter_accepted_state_2pc
+
+62: Test command: /Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_matter_accepted_state_proof_probe
+62: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907
+62: Test timeout computed to be: 180
+62: numanx_matter_accepted_state_proof_probe=pass
+62: device=Apple_Metal
+62: real_runtime_prepare_proof_apply_publication=pass
+62: accepted_rigid_and_matter_content_mutation=pass
+62: vascular_content_mutation=pass
+62: vascular_clock_content_mutation=pass
+62: human_content_mutation=pass
+62: chunk_tree_cpu_parity=pass
+62: byte_replay=pass
+62: borrowed_interval_aliases=fail_closed
+62: pending=terminal_no_touch
+62: stale_slot_generation=fail_closed
+62: owner_abi4_global_control_step=bound
+62: prepared_disposition_identity=pass
+62: abi4_proposal_ack_apply_accept_reject=pass
+62: terminal_outcome_and_facts=pending_no_touch
+62: explicit_restore_outcome_and_facts=rejected
+62: accepted_pending_publication=blocked_until_exact_fence
+62: accepted_pending_snapshot_and_encode=blocked
+62: publication_facts_fnv_binding=pass
+62: fabricated_publication_fence=terminal_no_touch
+62: aborted_uncommitted_apply_retry=pass
+62: completed_slot_reuse=pass
+62: identification_reset_adaptive=unsupported_fail_closed
+62: multi_substep=unsupported_fail_closed
+62: runtime_resident_bytes=407896
+62: proof_resident_bytes=288
+ 6/15 Test  #62: numanx.integration.matter_accepted_state_2pc .....   Passed    0.87 sec
+test 104
+      Start 104: matter.compiler.stateful_roundtrip
+
+104: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-stateful-check
+104: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+104: Test timeout computed to be: 60
+104: {"schema":"numi.matter.stateful-compiler.v1","fingerprint":5035636654955994376,"state_stride":2,"particles":2,"tetrahedra":1}
+ 7/15 Test #104: matter.compiler.stateful_roundtrip ...............   Passed    0.33 sec
+test 107
+      Start 107: matter.compiler.vascular
+
+107: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-vascular-compiler-check
+107: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+107: Test timeout computed to be: 60
+107: vascular_compiler=pass boundary=source_cooking_package_validation_only laws=compliance_atan_rational_elastance_orifice_diode_starling_transport_exchange canonical_order=true semantic_rejection=true provenance_bound=true
+ 8/15 Test #107: matter.compiler.vascular .........................   Passed    0.01 sec
+test 108
+      Start 108: matter.metal.vascular
+
+108: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-vascular-check
+108: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+108: Test timeout computed to be: 60
+108: vascular_case=resistive_exchange result=pass accepted_steps=16 environments=2 fp64_normalized_max=1.493713651e-07 relative_conservation_max=3.249442659e-08 replay=bitwise isolated_rollback=pass invalid_restore=denied isolated_reset=pass fem_region=none
+108: vascular_case=reverse_flow result=pass accepted_steps=16 environments=2 fp64_normalized_max=1.626981574e-07 relative_conservation_max=2.524757247e-09 replay=bitwise isolated_rollback=pass invalid_restore=denied isolated_reset=pass fem_region=none
+108: vascular_case=inertial_flow result=pass accepted_steps=16 environments=2 fp64_normalized_max=2.396975109e-07 relative_conservation_max=8.304050404e-08 replay=bitwise isolated_rollback=pass invalid_restore=denied isolated_reset=pass fem_region=none
+108: vascular_case=fem_region result=pass accepted_steps=16 environments=2 fp64_normalized_max=1.493713651e-07 relative_conservation_max=3.249442659e-08 replay=bitwise isolated_rollback=pass invalid_restore=denied isolated_reset=pass fem_region=bound_identity_only
+108: vascular_case=valve_closing_species_exchange result=pass accepted_steps=16 environments=2 fp64_normalized_max=1.536787995e-07 relative_conservation_max=7.663766129e-08 replay=bitwise isolated_rollback=pass invalid_restore=denied isolated_reset=pass fem_region=none
+108: vascular_case=valve_opening_species_exchange result=pass accepted_steps=16 environments=2 fp64_normalized_max=5.51953589e-07 relative_conservation_max=2.727756507e-08 replay=bitwise isolated_rollback=pass invalid_restore=denied isolated_reset=pass fem_region=none
+108: vascular_branched=pass compartments=3 edges=3 species=2 tissues=2 exchanges=3 relative_conservation_max=6.370246415e-08 replay=bitwise
+108: vascular_refinement=pass equal_duration_s=0.16 errors_m3=4.54144036e-09,2.296729443e-09,1.15518129e-09
+108: vascular_clock_lifecycle=pass exact_dt_ticks=703687426048 carry=exact huge_snapshot=pass overflow_rollback=pass malformed_arity=denied timestep_override=denied
+108: vascular_native_qualification=pass runtime_input=nmatterpack biological_calibration=unqualified
+ 9/15 Test #108: matter.metal.vascular ............................   Passed    6.16 sec
+test 109
+      Start 109: matter.metal.human_physiology_payload
+
+109: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-vascular-check "--human-input" "/Users/n/MetalRobo-human-completion-20260907/matter/tools/fixtures/human_physiology.native.v1.json"
+109: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+109: Test timeout computed to be: 60
+109: vascular_case=human_compiled_fixture result=pass accepted_steps=16 environments=2 fp64_normalized_max=1.493713651e-07 relative_conservation_max=3.249442659e-08 replay=bitwise isolated_rollback=pass invalid_restore=denied isolated_reset=pass fem_region=none
+109: vascular_native_qualification=pass runtime_input=nmatterpack biological_calibration=unqualified
+10/15 Test #109: matter.metal.human_physiology_payload ............   Passed    0.44 sec
+test 110
+      Start 110: matter.compiler.human_physiology_admission
+
+110: Test command: /opt/homebrew/Frameworks/Python.framework/Versions/3.13/bin/python3.13 "/Users/n/MetalRobo-human-completion-20260907/matter/tools/physiology_input_check.py" "/Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-physiologyc" "/Users/n/MetalRobo-human-completion-20260907/matter/tools/fixtures/human_physiology.native.v1.json" "/Users/n/MetalRobo-human-completion-20260907/matter/tools/fixtures/shi-hose.native.v2.json"
+110: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+110: Test timeout computed to be: 60
+110: physiology_compile=pass compartments=2 species=1 tissue_reservoirs=1 native_fingerprint=0x7436215cc7efbb15 biological_qualification=unqualified
+110: native_input_rejected=v1_duplicate_root output_atomic=pass
+110: native_input_rejected=v1_duplicate_escaped_root output_atomic=pass
+110: native_input_rejected=v1_duplicate_nested output_atomic=pass
+110: native_input_rejected=v1_unsupported_law output_atomic=pass
+110: native_input_rejected=v1_unknown_field output_atomic=pass
+110: native_input_rejected=v1_boolean_scale output_atomic=pass
+110: native_input_rejected=v1_duplicate_volume_owner output_atomic=pass
+110: native_input_rejected=v1_missing_endpoint output_atomic=pass
+110: native_input_rejected=v1_invalid_sha output_atomic=pass
+110: native_input_rejected=v1_unsupported_qualification output_atomic=pass
+110: native_input_rejected=v1_negative_amount output_atomic=pass
+110: native_input_rejected=v1_unknown_species output_atomic=pass
+110: physiology_compile=pass compartments=10 species=0 tissue_reservoirs=0 native_fingerprint=0x247b47bf4f73dcf7 biological_qualification=unqualified
+110: native_input_rejected=v2_duplicate_root output_atomic=pass
+110: native_input_rejected=v2_duplicate_escaped_root output_atomic=pass
+110: native_input_rejected=v2_duplicate_nested output_atomic=pass
+110: native_input_rejected=v2_duplicate_escaped_nested output_atomic=pass
+110: native_input_rejected=v2_wrong_storage_enum output_atomic=pass
+110: native_input_rejected=v2_wrong_pressure_enum output_atomic=pass
+110: native_input_rejected=v2_wrong_flow_enum output_atomic=pass
+110: native_input_rejected=v2_unsupported_law output_atomic=pass
+110: native_input_rejected=v2_unsupported_qualification output_atomic=pass
+110: native_input_rejected=v2_unrepresentable_period output_atomic=pass
+110: native_input_rejected=v2_cardiac_nonzero_compliance output_atomic=pass
+110: native_input_rejected=v2_linear_unused_waveform output_atomic=pass
+110: native_input_rejected=v2_negative_orifice_flow output_atomic=pass
+110: native_input_rejected=v2_negative_orifice_coefficient output_atomic=pass
+110: native_input_rejected=v2_zero_orifice_coefficient output_atomic=pass
+110: native_input_rejected=v2_rlc_nonzero_orifice_coefficient output_atomic=pass
+110: native_input_rejected=v2_storage_with_species output_atomic=pass
+110: native_input_rejected=v2_storage_with_tissue output_atomic=pass
+110: native_input_rejected=v2_storage_with_species_tissue_exchange output_atomic=pass
+110: native_input_rejected=v2_unknown_root_field output_atomic=pass
+110: native_input_rejected=v2_unknown_nested_field output_atomic=pass
+110: native_input_rejected=v2_missing_waveform_field output_atomic=pass
+110: native_input_rejected=v2_missing_orifice_field output_atomic=pass
+110: native_input_rejected=v2_boolean_period output_atomic=pass
+110: native_input_rejected=v2_nonfinite_elastance output_atomic=pass
+110: native_input_admission=pass positive_cases=2 negative_cases=37 v1_negative_cases=12 v2_negative_cases=25 atomic_rejection=pass
+11/15 Test #110: matter.compiler.human_physiology_admission .......   Passed    0.60 sec
+test 111
+      Start 111: matter.metal.cvsim_source
+
+111: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-cvsim-check "/Users/n/MetalRobo-human-completion-20260907/matter/tools/fixtures/cvsim21.native.v3.json" "/Users/n/MetalRobo-human-completion-20260907/matter/tools/fixtures/cvsim21-continuous-reference-64ms.csv"
+111: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+111: Test timeout computed to be: 60
+111: cvsim_device=Apple M4 Pro abi=28 world_fingerprint=12537196384557883178
+111: cvsim_source_run=pass accepted_steps=64 environments=2 failed_steps=0 dt_seconds=0.0010000000474974513 duration_seconds=0.064000003039836884 clock=exact_binary_128_rational_period replay_pair=bitwise snapshot_replay=bitwise max_volume_error_m3=1.2760571119891078e-08 max_flow_error_m3_per_s=4.3195313705665701e-06 scaled_state_rms_error=0.0016275321966170762 relative_blood_volume_invariant_error=1.0474213998424779e-07 wall_seconds=0.90370604200000004 qualification=source_variant_numerical_comparison biological_calibration=unqualified
+12/15 Test #111: matter.metal.cvsim_source ........................   Passed    0.91 sec
+test 112
+      Start 112: matter.compiler.cvsim_admission
+
+112: Test command: /opt/homebrew/Frameworks/Python.framework/Versions/3.13/bin/python3.13 "/Users/n/MetalRobo-human-completion-20260907/matter/tools/cvsim_input_check.py" "/Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-physiologyc" "/Users/n/MetalRobo-human-completion-20260907/matter/tools/fixtures/cvsim21.native.v3.json" "/Users/n/MetalRobo-human-completion-20260907/matter/tools/fixtures/shi-hose.native.v2.json"
+112: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+112: Test timeout computed to be: 60
+112: cvsim_input_positive=valid_v3
+112: cvsim_input_positive=full_width_denominator
+112: cvsim_input_positive=v3_legacy_binary_period
+112: cvsim_input_positive=valid_v2_control
+112: cvsim_input_rejected=duplicate_schema output_atomic=pass
+112: cvsim_input_rejected=escaped_duplicate_schema output_atomic=pass
+112: cvsim_input_rejected=duplicate_period_numerator_seconds output_atomic=pass
+112: cvsim_input_rejected=escaped_duplicate_period_numerator_seconds output_atomic=pass
+112: cvsim_input_rejected=duplicate_period_denominator output_atomic=pass
+112: cvsim_input_rejected=escaped_duplicate_period_denominator output_atomic=pass
+112: cvsim_input_rejected=period_numerator_seconds_numeric output_atomic=pass
+112: cvsim_input_rejected=period_numerator_seconds_boolean output_atomic=pass
+112: cvsim_input_rejected=period_numerator_seconds_null output_atomic=pass
+112: cvsim_input_rejected=period_numerator_seconds_empty output_atomic=pass
+112: cvsim_input_rejected=period_numerator_seconds_leading_zero output_atomic=pass
+112: cvsim_input_rejected=period_numerator_seconds_positive_sign output_atomic=pass
+112: cvsim_input_rejected=period_numerator_seconds_negative output_atomic=pass
+112: cvsim_input_rejected=period_numerator_seconds_whitespace output_atomic=pass
+112: cvsim_input_rejected=period_numerator_seconds_trailing_whitespace output_atomic=pass
+112: cvsim_input_rejected=period_numerator_seconds_decimal output_atomic=pass
+112: cvsim_input_rejected=period_numerator_seconds_exponent output_atomic=pass
+112: cvsim_input_rejected=period_numerator_seconds_unicode_digits output_atomic=pass
+112: cvsim_input_rejected=period_numerator_seconds_u64_overflow output_atomic=pass
+112: cvsim_input_rejected=period_numerator_seconds_overlong output_atomic=pass
+112: cvsim_input_rejected=period_denominator_numeric output_atomic=pass
+112: cvsim_input_rejected=period_denominator_boolean output_atomic=pass
+112: cvsim_input_rejected=period_denominator_null output_atomic=pass
+112: cvsim_input_rejected=period_denominator_empty output_atomic=pass
+112: cvsim_input_rejected=period_denominator_leading_zero output_atomic=pass
+112: cvsim_input_rejected=period_denominator_positive_sign output_atomic=pass
+112: cvsim_input_rejected=period_denominator_negative output_atomic=pass
+112: cvsim_input_rejected=period_denominator_whitespace output_atomic=pass
+112: cvsim_input_rejected=period_denominator_trailing_whitespace output_atomic=pass
+112: cvsim_input_rejected=period_denominator_decimal output_atomic=pass
+112: cvsim_input_rejected=period_denominator_exponent output_atomic=pass
+112: cvsim_input_rejected=period_denominator_unicode_digits output_atomic=pass
+112: cvsim_input_rejected=period_denominator_u64_overflow output_atomic=pass
+112: cvsim_input_rejected=period_denominator_overlong output_atomic=pass
+112: cvsim_input_rejected=schema_v4 output_atomic=pass
+112: cvsim_input_rejected=schema_v0 output_atomic=pass
+112: cvsim_input_rejected=qualification_source_model_reproduction output_atomic=pass
+112: cvsim_input_rejected=qualification_validated_human output_atomic=pass
+112: cvsim_input_rejected=qualification_uncalibrated output_atomic=pass
+112: cvsim_input_rejected=unsupported_root_law output_atomic=pass
+112: cvsim_input_rejected=extra_root_field output_atomic=pass
+112: cvsim_input_rejected=missing_root_field output_atomic=pass
+112: cvsim_input_rejected=extra_compartment_field output_atomic=pass
+112: cvsim_input_rejected=extra_connection_field output_atomic=pass
+112: cvsim_input_rejected=missing_maximum_volume_displacement_m3 output_atomic=pass
+112: cvsim_input_rejected=missing_phase_delay output_atomic=pass
+112: cvsim_input_rejected=missing_period_numerator_seconds output_atomic=pass
+112: cvsim_input_rejected=missing_period_denominator output_atomic=pass
+112: cvsim_input_rejected=missing_floor output_atomic=pass
+112: cvsim_input_rejected=unknown_pressure_law output_atomic=pass
+112: cvsim_input_rejected=unknown_storage_kind output_atomic=pass
+112: cvsim_input_rejected=unknown_flow_law output_atomic=pass
+112: cvsim_input_rejected=rational_non_coprime output_atomic=pass
+112: cvsim_input_rejected=rational_missing_numerator output_atomic=pass
+112: cvsim_input_rejected=rational_missing_denominator output_atomic=pass
+112: cvsim_input_rejected=rational_both_zero output_atomic=pass
+112: cvsim_input_rejected=rational_numerator_tick_overflow output_atomic=pass
+112: cvsim_input_rejected=two_period_authorities output_atomic=pass
+112: cvsim_input_rejected=linear_unused_period output_atomic=pass
+112: cvsim_input_rejected=linear_unused_domain output_atomic=pass
+112: cvsim_input_rejected=linear_unused_delay output_atomic=pass
+112: cvsim_input_rejected=pulse_unused_domain output_atomic=pass
+112: cvsim_input_rejected=pulse_negative_delay output_atomic=pass
+112: cvsim_input_rejected=pulse_wrapped_delay output_atomic=pass
+112: cvsim_input_rejected=pulse_bad_intervals output_atomic=pass
+112: cvsim_input_rejected=pulse_nonzero_compliance output_atomic=pass
+112: cvsim_input_rejected=pulse_nonpositive_elastance output_atomic=pass
+112: cvsim_input_rejected=pulse_signed_storage output_atomic=pass
+112: cvsim_input_rejected=atan_nonpositive_domain output_atomic=pass
+112: cvsim_input_rejected=atan_nonpositive_compliance output_atomic=pass
+112: cvsim_input_rejected=atan_wrong_pi output_atomic=pass
+112: cvsim_input_rejected=atan_signed_storage output_atomic=pass
+112: cvsim_input_rejected=atan_unused_period output_atomic=pass
+112: cvsim_input_rejected=atan_unused_elastance output_atomic=pass
+112: cvsim_input_rejected=atan_nonfinite_volume output_atomic=pass
+112: cvsim_input_rejected=atan_lower_endpoint output_atomic=pass
+112: cvsim_input_rejected=atan_upper_endpoint output_atomic=pass
+112: cvsim_input_rejected=atan_lower_exterior output_atomic=pass
+112: cvsim_input_rejected=atan_upper_exterior output_atomic=pass
+112: cvsim_input_rejected=atan_normalization_hits_endpoint output_atomic=pass
+112: cvsim_input_rejected=one_way_resistance_reverse_initial output_atomic=pass
+112: cvsim_input_rejected=one_way_resistance_zero_resistance output_atomic=pass
+112: cvsim_input_rejected=one_way_resistance_inertance output_atomic=pass
+112: cvsim_input_rejected=one_way_resistance_orifice_coefficient output_atomic=pass
+112: cvsim_input_rejected=starling_resistance_reverse_initial output_atomic=pass
+112: cvsim_input_rejected=starling_resistance_zero_resistance output_atomic=pass
+112: cvsim_input_rejected=starling_resistance_inertance output_atomic=pass
+112: cvsim_input_rejected=starling_resistance_orifice_coefficient output_atomic=pass
+112: cvsim_input_rejected=resistance_inertance_unused_floor output_atomic=pass
+112: cvsim_input_rejected=one_way_resistance_unused_floor output_atomic=pass
+112: cvsim_input_rejected=starling_nonfinite_floor output_atomic=pass
+112: cvsim_input_rejected=starling_boolean_floor output_atomic=pass
+112: cvsim_input_rejected=v2_cannot_smuggle_maximum_volume_displacement_m3 output_atomic=pass
+112: cvsim_input_rejected=v2_cannot_smuggle_phase_delay output_atomic=pass
+112: cvsim_input_rejected=v2_cannot_smuggle_period_numerator_seconds output_atomic=pass
+112: cvsim_input_rejected=v2_cannot_smuggle_period_denominator output_atomic=pass
+112: cvsim_input_rejected=v2_cannot_smuggle_downstream_pressure_floor_pa output_atomic=pass
+112: cvsim_input_rejected=v2_cannot_select_atan_compliance output_atomic=pass
+112: cvsim_input_rejected=v2_cannot_select_cosine_pulse_elastance output_atomic=pass
+112: cvsim_input_rejected=v2_cannot_select_one_way_resistance output_atomic=pass
+112: cvsim_input_rejected=v2_cannot_select_starling_resistance output_atomic=pass
+112: cvsim_input_rejected=v2_cannot_smuggle_qualification output_atomic=pass
+112: cvsim_input_admission=pass positive_cases=4 negative_cases=102 atomic_rejection=pass physical_execution=none
+13/15 Test #112: matter.compiler.cvsim_admission ..................   Passed    0.82 sec
+test 113
+      Start 113: matter.metal.cardiac_transaction
+
+113: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-cardiac-transaction-check
+113: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+113: Test timeout computed to be: 60
+113: cardiac_regional_laws=pass atan_signed_domain=pass asymptotes=denied pressure_tangent_relative_max=2.71103e-06 unilateral_linear=pass starling_reverse_and_floor_ties=pass
+113: cardiac_waveform=pass phase_cases=10 huge_clock_phase=bitwise rational_6_over_7=exact full_width_modular_multiplier=pass fp64_absolute_max=2.98794e-05
+113: cardiac_clock_kernel=pass carry=exact overflow=denied environment_isolation=pass
+113: cardiac_shared_alpha=pass objectless_rigid_support=pass deferral=exact fractional=pass nonvascular_baseline=pass object_baseline=pass
+113: cardiac_working_set_deferral=pass mechanical_direction=zero all_blocks=pass environment_isolation=pass
+113: cardiac_pending_zero_release=pass empty_free_solve=released new_bound=retained feasible_bound=retained
+14/15 Test #113: matter.metal.cardiac_transaction .................   Passed    0.34 sec
+test 114
+      Start 114: matter.metal.cardiac_source
+
+114: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-cardiac-check "/Users/n/MetalRobo-human-completion-20260907/matter/tools/fixtures/shi-hose.native.v2.json" "--steps" "64" "--dt" ".001"
+114: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+114: Test timeout computed to be: 120
+114: cardiac_device=Apple M4 Pro abi=28 world_fingerprint=516565080787823430
+114: cardiac_source_run=pass accepted_steps=64 environments=2 failed_steps=0 dt_seconds=0.0010000000475 duration_seconds=0.0640000030398 clock=exact_binary_128 replay_pair=bitwise max_chamber_volume_error_m3=9.78475261152e-07 max_storage_error_m3=9.64615448121e-07 max_flow_error_m3_per_s=0.000332587144903 scaled_state_rms_error=0.275875379613 relative_storage_invariant_error=7.5213026565e-08 reference_accepted_steps=1613 reference_rejected_steps=26 wall_seconds=0.801935917 qualification=source_model_numerical_comparison absolute_vascular_blood_volume=unqualified biological_calibration=unqualified
+15/15 Test #114: matter.metal.cardiac_source ......................   Passed    1.10 sec
+
+The following tests passed:
+	matter.runtime.snapshot_archive
+	matter.physics.monolithic_multiphysics
+	matter.runtime.production_transaction_rollback
+	matter.physics.stateful_mpm
+	matter.physics.stateful_fem
+	numanx.integration.matter_accepted_state_2pc
+	matter.compiler.stateful_roundtrip
+	matter.compiler.vascular
+	matter.metal.vascular
+	matter.metal.human_physiology_payload
+	matter.compiler.human_physiology_admission
+	matter.metal.cvsim_source
+	matter.compiler.cvsim_admission
+	matter.metal.cardiac_transaction
+	matter.metal.cardiac_source
+
+100% tests passed out of 15
+
+Label Time Summary:
+checkpoint    =   0.71 sec*proc (1 test)
+compiler      =   1.76 sec*proc (4 tests)
+human         =  11.26 sec*proc (9 tests)
+matter        =  14.67 sec*proc (14 tests)
+metal         =  13.07 sec*proc (10 tests)
+numanx        =   0.87 sec*proc (1 test)
+physics       =   4.12 sec*proc (5 tests)
+stateful      =   0.33 sec*proc (1 test)
+vascular      =  10.39 sec*proc (8 tests)
+
+Total Test time (real) =  15.55 sec

@@ -1,0 +1,44 @@
+test_algebraic_initial_flows_preserve_reverse_venous_flow_and_open_pulmonary_valve (test_shi_hose.ShiHoseSourceTests.test_algebraic_initial_flows_preserve_reverse_venous_flow_and_open_pulmonary_valve) ... ok
+test_cli_writes_distinct_immutable_native_payload_and_manifest (test_shi_hose.ShiHoseSourceTests.test_cli_writes_distinct_immutable_native_payload_and_manifest) ... ok
+test_config_key_order_is_irrelevant (test_shi_hose.ShiHoseSourceTests.test_config_key_order_is_irrelevant) ... ok
+test_connected_source_cycle_and_exact_zero_storage_elimination (test_shi_hose.ShiHoseSourceTests.test_connected_source_cycle_and_exact_zero_storage_elimination) ... ok
+test_curated_files_and_full_parameter_coverage (test_shi_hose.ShiHoseSourceTests.test_curated_files_and_full_parameter_coverage) ... ok
+test_duplicate_source_configuration_fields_rejected (test_shi_hose.ShiHoseSourceTests.test_duplicate_source_configuration_fields_rejected) ... ok
+test_invalid_numerical_settings_rejected (test_shi_hose.ShiHoseSourceTests.test_invalid_numerical_settings_rejected) ... ok
+test_numerical_settings_change_identity_without_overriding_source_parameters (test_shi_hose.ShiHoseSourceTests.test_numerical_settings_change_identity_without_overriding_source_parameters) ... ok
+test_numi_overlay_is_executable_and_resolves_module_outside_repository (test_shi_hose.ShiHoseSourceTests.test_numi_overlay_is_executable_and_resolves_module_outside_repository) ... ok
+test_physiological_override_and_baseline_invention_rejected (test_shi_hose.ShiHoseSourceTests.test_physiological_override_and_baseline_invention_rejected) ... ok
+test_resealed_forged_source_manifest_cannot_redefine_the_curated_model (test_shi_hose.ShiHoseSourceTests.test_resealed_forged_source_manifest_cannot_redefine_the_curated_model) ... ok
+test_source_dynamic_initial_volume_is_not_reference_volume (test_shi_hose.ShiHoseSourceTests.test_source_dynamic_initial_volume_is_not_reference_volume) ... ok
+test_source_mutation_and_missing_import_rejected (test_shi_hose.ShiHoseSourceTests.test_source_mutation_and_missing_import_rejected) ... ok
+test_source_units_and_literal_constants_are_preserved (test_shi_hose.ShiHoseSourceTests.test_source_units_and_literal_constants_are_preserved) ... ok
+test_source_units_reject_cycles_and_unsupported_offsets (test_shi_hose.ShiHoseSourceTests.test_source_units_reject_cycles_and_unsupported_offsets) ... ok
+test_transport_is_rejected_without_absolute_vascular_baselines (test_shi_hose.ShiHoseSourceTests.test_transport_is_rejected_without_absolute_vascular_baselines) ... ok
+test_vascular_storage_has_no_fabricated_absolute_volume (test_shi_hose.ShiHoseSourceTests.test_vascular_storage_has_no_fabricated_absolute_volume) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.092s
+
+OK
+{
+  "status": "compiled_source_model",
+  "payload": "/var/folders/t9/k15zzp692dl6xfhzqr26qvkr0000gn/T/tmp4b1c5y3b/model.json",
+  "manifest": "/var/folders/t9/k15zzp692dl6xfhzqr26qvkr0000gn/T/tmp4b1c5y3b/model.manifest.json",
+  "sha256": "7797e2710837ad8ffdfa70adf7a6b66e68f2bf0e12824f063b5ce7d1fc550788",
+  "source_parameter_count": 59,
+  "compartments": 10,
+  "connections": 10,
+  "scientific_status": "source_model_reproduction_target_not_qualified_by_compilation"
+}
+{
+  "status": "compiled_source_model",
+  "payload": "/var/folders/t9/k15zzp692dl6xfhzqr26qvkr0000gn/T/tmp4b1c5y3b/model.json",
+  "manifest": "/var/folders/t9/k15zzp692dl6xfhzqr26qvkr0000gn/T/tmp4b1c5y3b/model.manifest.json",
+  "sha256": "7797e2710837ad8ffdfa70adf7a6b66e68f2bf0e12824f063b5ce7d1fc550788",
+  "source_parameter_count": 59,
+  "compartments": 10,
+  "connections": 10,
+  "scientific_status": "source_model_reproduction_target_not_qualified_by_compilation"
+}
+{"status": "rejected", "error": "source compiler output is immutable; choose a new path"}
+{"status": "rejected", "error": "native payload and source manifest require distinct output paths"}

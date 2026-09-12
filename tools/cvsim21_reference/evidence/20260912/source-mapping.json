@@ -1,0 +1,6158 @@
+{
+  "schema": "NumiHuman.CVSim21-source-mapping-draft.v1",
+  "status": "research_only_source_model_mapping_not_calibration",
+  "source_root": "cvsim/devel/C/21_comp_backend",
+  "source_files": {
+    "main/initial.c": {
+      "sha256": "c6a791e837e1542ebbb910dae1a2ac10bce5f7071ed1a9836b861b8d62267c03",
+      "bytes": 40206
+    },
+    "main/main.c": {
+      "sha256": "1d9273dc4e8c12837d04c35baa1c235a72b9e032d6cb7af24215587549cde941",
+      "bytes": 7473
+    },
+    "main/main_java.c": {
+      "sha256": "046b9d9153125a335aa9a8059d0ec828c528a5653489e6f9db8ab3d1cbac4bab",
+      "bytes": 20460
+    },
+    "main/main.h": {
+      "sha256": "408f5668ed70bc220a6d135871272d420d12e73a750c76d9fc9973c63bf3b665",
+      "bytes": 6595
+    },
+    "sim/equation.c": {
+      "sha256": "72b8d567761e09e22247d0abfc3b465bc2aa62868feb64f08facf16df4733655",
+      "bytes": 27966
+    },
+    "sim/estimate.c": {
+      "sha256": "d9c00244c8102fe6f0a7bf7be614128d160364574dd66e3dfbdc43b84e486664",
+      "bytes": 41908
+    },
+    "sim/reflex.c": {
+      "sha256": "574479c7b8a9b907cb729c580c0a82327f2b47d3aee27abac4f2eea5eb7b20ce",
+      "bytes": 24182
+    },
+    "sim/simulator.h": {
+      "sha256": "10bfb3b5a275a7ecd1f079cea95ed222518bd39701573b20303f7cd4b550beea",
+      "bytes": 5314
+    },
+    "sim/simulator.c": {
+      "sha256": "3c23ce8f3bbea87667f6f2176d8802d80e3c5f477e729f29b9dfff1a310368dc",
+      "bytes": 12582
+    },
+    "sim/rkqc.c": {
+      "sha256": "bf7f45347deca6b8aae9d14c941cefeddf8c8eb13d2739fcc7ebe99c1426f679",
+      "bytes": 14095
+    }
+  },
+  "source_units": {
+    "pressure": "mmHg",
+    "volume": "mL",
+    "flow": "mL/s",
+    "compliance": "mL/mmHg",
+    "resistance": "mmHg*s/mL",
+    "time": "s",
+    "height": "cm",
+    "SI_conversion": "Author a separate explicit mmHg-to-Pa convention; no Shi UnitP133Pa reuse."
+  },
+  "source_mode": {
+    "ABReflexOn": 0,
+    "CPReflexOn": 0,
+    "tiltTestOn": 0,
+    "tiltStartTime": 0.0,
+    "tiltStopTime": 0.0,
+    "refs": [
+      {
+        "file": "main/main.c",
+        "line_start": 44,
+        "line_end": 48
+      }
+    ],
+    "nonflags_settings": {
+      "parameter70_total_blood_volume_mL": 5150.0,
+      "parameter90_heart_rate_bpm": 70.0,
+      "parameter31_intrathoracic_pressure_mmHg": -4.0
+    },
+    "native_mode_gate": "Keep CVSim law/clock/source identity independent from Shi. Reflexes,tilt,blood chemistry,organ tissue exchange and anatomical-mass coupling are not introduced by this mapping."
+  },
+  "compartments": [
+    {
+      "id": "CVSim21:x0",
+      "source_label": "ascending_aorta",
+      "pressure_index": 0,
+      "volume_index": 0,
+      "source_volume_owner": "CVSim21:v0",
+      "anatomy_mapping": null,
+      "mechanical_mass_owner": null,
+      "ownership_scope": "source_model_aggregate_only",
+      "pressure_law": "linear_compliance",
+      "external_pressure_index": 24,
+      "external_pressure_baseline_mmHg": -4.0,
+      "compliance_parameter_index": 97,
+      "compliance_nominal_mL_per_mmHg": 0.28,
+      "zero_pressure_filling_volume_parameter_index": 136,
+      "zero_pressure_filling_volume_mL": 21.0,
+      "zpfv_source_member": "hemo[0].v[0][0]",
+      "zpfv_source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 636,
+          "line_end": 636
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 13,
+          "line_end": 13
+        }
+      ],
+      "source_volume_expression": "(p->x[0] - p->x[24]) * theta->vec[97] + theta->vec[136]",
+      "source_pressure_derivative_expression": "(p->q[0] - p->q[1] - p->q[6]) / theta->vec[97] + p->dxdt[24]",
+      "volume_expression_ref": {
+        "file": "sim/equation.c",
+        "line_start": 226,
+        "line_end": 226
+      },
+      "incoming_flow_indices": [
+        0
+      ],
+      "outgoing_flow_indices": [
+        1,
+        6
+      ],
+      "source_hemodynamic_table_index": 0
+    },
+    {
+      "id": "CVSim21:x1",
+      "source_label": "brachiocephalic_arteries",
+      "pressure_index": 1,
+      "volume_index": 1,
+      "source_volume_owner": "CVSim21:v1",
+      "anatomy_mapping": null,
+      "mechanical_mass_owner": null,
+      "ownership_scope": "source_model_aggregate_only",
+      "pressure_law": "linear_compliance",
+      "external_pressure_index": 24,
+      "external_pressure_baseline_mmHg": -4.0,
+      "compliance_parameter_index": 98,
+      "compliance_nominal_mL_per_mmHg": 0.13,
+      "zero_pressure_filling_volume_parameter_index": 137,
+      "zero_pressure_filling_volume_mL": 5.0,
+      "zpfv_source_member": "hemo[1].v[0][0]",
+      "zpfv_source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 637,
+          "line_end": 637
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 27,
+          "line_end": 27
+        }
+      ],
+      "source_volume_expression": "(p->x[1] - p->x[24]) * theta->vec[98] + theta->vec[137]",
+      "source_pressure_derivative_expression": "(p->q[1] - p->q[2]) / theta->vec[98] + p->dxdt[24]",
+      "volume_expression_ref": {
+        "file": "sim/equation.c",
+        "line_start": 227,
+        "line_end": 227
+      },
+      "incoming_flow_indices": [
+        1
+      ],
+      "outgoing_flow_indices": [
+        2
+      ],
+      "source_hemodynamic_table_index": 1
+    },
+    {
+      "id": "CVSim21:x2",
+      "source_label": "upper_body_arteries",
+      "pressure_index": 2,
+      "volume_index": 2,
+      "source_volume_owner": "CVSim21:v2",
+      "anatomy_mapping": null,
+      "mechanical_mass_owner": null,
+      "ownership_scope": "source_model_aggregate_only",
+      "pressure_law": "linear_compliance",
+      "external_pressure_index": null,
+      "external_pressure_baseline_mmHg": 0.0,
+      "compliance_parameter_index": 100,
+      "compliance_nominal_mL_per_mmHg": 0.2,
+      "zero_pressure_filling_volume_parameter_index": 139,
+      "zero_pressure_filling_volume_mL": 16.0,
+      "zpfv_source_member": "hemo[3].v[0][0]",
+      "zpfv_source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 639,
+          "line_end": 639
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 55,
+          "line_end": 55
+        }
+      ],
+      "source_volume_expression": "p->x[2] * theta->vec[100] + theta->vec[139]",
+      "source_pressure_derivative_expression": "(p->q[2] - p->q[3]) / theta->vec[100]",
+      "volume_expression_ref": {
+        "file": "sim/equation.c",
+        "line_start": 228,
+        "line_end": 228
+      },
+      "incoming_flow_indices": [
+        2
+      ],
+      "outgoing_flow_indices": [
+        3
+      ],
+      "source_hemodynamic_table_index": 2
+    },
+    {
+      "id": "CVSim21:x3",
+      "source_label": "upper_body_veins",
+      "pressure_index": 3,
+      "volume_index": 3,
+      "source_volume_owner": "CVSim21:v3",
+      "anatomy_mapping": null,
+      "mechanical_mass_owner": null,
+      "ownership_scope": "source_model_aggregate_only",
+      "pressure_law": "linear_compliance",
+      "external_pressure_index": null,
+      "external_pressure_baseline_mmHg": 0.0,
+      "compliance_parameter_index": 36,
+      "compliance_nominal_mL_per_mmHg": 7.0,
+      "zero_pressure_filling_volume_parameter_index": 77,
+      "zero_pressure_filling_volume_mL": 645.0,
+      "zpfv_source_member": "hemo[9].v[0][0]",
+      "zpfv_source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 577,
+          "line_end": 577
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 140,
+          "line_end": 140
+        }
+      ],
+      "source_volume_expression": "p->x[3] * theta->vec[36] + r->volume[0]",
+      "source_pressure_derivative_expression": "(p->q[3] - p->q[4]) / theta->vec[36]",
+      "volume_expression_ref": {
+        "file": "sim/equation.c",
+        "line_start": 229,
+        "line_end": 229
+      },
+      "incoming_flow_indices": [
+        3
+      ],
+      "outgoing_flow_indices": [
+        4
+      ],
+      "source_hemodynamic_table_index": 9,
+      "reflex_volume_index": 0
+    },
+    {
+      "id": "CVSim21:x4",
+      "source_label": "superior_vena_cava",
+      "pressure_index": 4,
+      "volume_index": 4,
+      "source_volume_owner": "CVSim21:v4",
+      "anatomy_mapping": null,
+      "mechanical_mass_owner": null,
+      "ownership_scope": "source_model_aggregate_only",
+      "pressure_law": "linear_compliance",
+      "external_pressure_index": 24,
+      "external_pressure_baseline_mmHg": -4.0,
+      "compliance_parameter_index": 42,
+      "compliance_nominal_mL_per_mmHg": 1.3,
+      "zero_pressure_filling_volume_parameter_index": 83,
+      "zero_pressure_filling_volume_mL": 16.0,
+      "zpfv_source_member": "hemo[10].v[0][0]",
+      "zpfv_source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 583,
+          "line_end": 583
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 154,
+          "line_end": 154
+        }
+      ],
+      "source_volume_expression": "(p->x[4] - p->x[24]) * theta->vec[42] + theta->vec[83]",
+      "source_pressure_derivative_expression": "(p->q[4] - p->q[5]) / theta->vec[42] + p->dxdt[24]",
+      "volume_expression_ref": {
+        "file": "sim/equation.c",
+        "line_start": 230,
+        "line_end": 230
+      },
+      "incoming_flow_indices": [
+        4
+      ],
+      "outgoing_flow_indices": [
+        5
+      ],
+      "source_hemodynamic_table_index": 10
+    },
+    {
+      "id": "CVSim21:x5",
+      "source_label": "descending_thoracic_aorta",
+      "pressure_index": 5,
+      "volume_index": 5,
+      "source_volume_owner": "CVSim21:v5",
+      "anatomy_mapping": null,
+      "mechanical_mass_owner": null,
+      "ownership_scope": "source_model_aggregate_only",
+      "pressure_law": "linear_compliance",
+      "external_pressure_index": 24,
+      "external_pressure_baseline_mmHg": -4.0,
+      "compliance_parameter_index": 99,
+      "compliance_nominal_mL_per_mmHg": 0.1,
+      "zero_pressure_filling_volume_parameter_index": 138,
+      "zero_pressure_filling_volume_mL": 200.0,
+      "zpfv_source_member": "hemo[2].v[0][0]",
+      "zpfv_source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 638,
+          "line_end": 638
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 41,
+          "line_end": 41
+        }
+      ],
+      "source_volume_expression": "(p->x[5] - p->x[24]) * theta->vec[99] + theta->vec[138]",
+      "source_pressure_derivative_expression": "(p->q[6] - p->q[7]) / theta->vec[99] + p->dxdt[24]",
+      "volume_expression_ref": {
+        "file": "sim/equation.c",
+        "line_start": 231,
+        "line_end": 231
+      },
+      "incoming_flow_indices": [
+        6
+      ],
+      "outgoing_flow_indices": [
+        7
+      ],
+      "source_hemodynamic_table_index": 3
+    },
+    {
+      "id": "CVSim21:x6",
+      "source_label": "abdominal_aorta",
+      "pressure_index": 6,
+      "volume_index": 6,
+      "source_volume_owner": "CVSim21:v6",
+      "anatomy_mapping": null,
+      "mechanical_mass_owner": null,
+      "ownership_scope": "source_model_aggregate_only",
+      "pressure_law": "linear_compliance",
+      "external_pressure_index": 21,
+      "external_pressure_baseline_mmHg": 0.0,
+      "compliance_parameter_index": 101,
+      "compliance_nominal_mL_per_mmHg": 0.1,
+      "zero_pressure_filling_volume_parameter_index": 140,
+      "zero_pressure_filling_volume_mL": 10.0,
+      "zpfv_source_member": "hemo[4].v[0][0]",
+      "zpfv_source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 640,
+          "line_end": 640
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 69,
+          "line_end": 69
+        }
+      ],
+      "source_volume_expression": "(p->x[6] - p->x[21]) * theta->vec[101] + theta->vec[140]",
+      "source_pressure_derivative_expression": "(p->q[7] - p->q[8] - p->q[11] - p->q[14])/theta->vec[101]+p->dxdt[21]",
+      "volume_expression_ref": {
+        "file": "sim/equation.c",
+        "line_start": 232,
+        "line_end": 232
+      },
+      "incoming_flow_indices": [
+        7
+      ],
+      "outgoing_flow_indices": [
+        8,
+        11,
+        14
+      ],
+      "source_hemodynamic_table_index": 4
+    },
+    {
+      "id": "CVSim21:x7",
+      "source_label": "renal_arteries",
+      "pressure_index": 7,
+      "volume_index": 7,
+      "source_volume_owner": "CVSim21:v7",
+      "anatomy_mapping": null,
+      "mechanical_mass_owner": null,
+      "ownership_scope": "source_model_aggregate_only",
+      "pressure_law": "linear_compliance",
+      "external_pressure_index": 21,
+      "external_pressure_baseline_mmHg": 0.0,
+      "compliance_parameter_index": 102,
+      "compliance_nominal_mL_per_mmHg": 0.21,
+      "zero_pressure_filling_volume_parameter_index": 141,
+      "zero_pressure_filling_volume_mL": 20.0,
+      "zpfv_source_member": "hemo[5].v[0][0]",
+      "zpfv_source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 641,
+          "line_end": 641
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 83,
+          "line_end": 83
+        }
+      ],
+      "source_volume_expression": "(p->x[7] - p->x[21]) * theta->vec[102] + theta->vec[141]",
+      "source_pressure_derivative_expression": "(p->q[8] - p->q[9]) / theta->vec[102] + p->dxdt[21]",
+      "volume_expression_ref": {
+        "file": "sim/equation.c",
+        "line_start": 233,
+        "line_end": 233
+      },
+      "incoming_flow_indices": [
+        8
+      ],
+      "outgoing_flow_indices": [
+        9
+      ],
+      "source_hemodynamic_table_index": 5
+    },
+    {
+      "id": "CVSim21:x8",
+      "source_label": "renal_veins",
+      "pressure_index": 8,
+      "volume_index": 8,
+      "source_volume_owner": "CVSim21:v8",
+      "anatomy_mapping": null,
+      "mechanical_mass_owner": null,
+      "ownership_scope": "source_model_aggregate_only",
+      "pressure_law": "linear_compliance",
+      "external_pressure_index": 21,
+      "external_pressure_baseline_mmHg": 0.0,
+      "compliance_parameter_index": 37,
+      "compliance_nominal_mL_per_mmHg": 5.0,
+      "zero_pressure_filling_volume_parameter_index": 78,
+      "zero_pressure_filling_volume_mL": 30.0,
+      "zpfv_source_member": "hemo[11].v[0][0]",
+      "zpfv_source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 578,
+          "line_end": 578
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 168,
+          "line_end": 168
+        }
+      ],
+      "source_volume_expression": "(p->x[8] - p->x[21]) * theta->vec[37] + r->volume[1]",
+      "source_pressure_derivative_expression": "(p->q[9] - p->q[10]) / theta->vec[37] + p->dxdt[21]",
+      "volume_expression_ref": {
+        "file": "sim/equation.c",
+        "line_start": 234,
+        "line_end": 234
+      },
+      "incoming_flow_indices": [
+        9
+      ],
+      "outgoing_flow_indices": [
+        10
+      ],
+      "source_hemodynamic_table_index": 11,
+      "reflex_volume_index": 1
+    },
+    {
+      "id": "CVSim21:x9",
+      "source_label": "splanchnic_arteries",
+      "pressure_index": 9,
+      "volume_index": 9,
+      "source_volume_owner": "CVSim21:v9",
+      "anatomy_mapping": null,
+      "mechanical_mass_owner": null,
+      "ownership_scope": "source_model_aggregate_only",
+      "pressure_law": "linear_compliance",
+      "external_pressure_index": 21,
+      "external_pressure_baseline_mmHg": 0.0,
+      "compliance_parameter_index": 103,
+      "compliance_nominal_mL_per_mmHg": 0.2,
+      "zero_pressure_filling_volume_parameter_index": 142,
+      "zero_pressure_filling_volume_mL": 300.0,
+      "zpfv_source_member": "hemo[6].v[0][0]",
+      "zpfv_source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 642,
+          "line_end": 642
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 97,
+          "line_end": 97
+        }
+      ],
+      "source_volume_expression": "(p->x[9] - p->x[21]) * theta->vec[103] + theta->vec[142]",
+      "source_pressure_derivative_expression": "(p->q[11] - p->q[12]) / theta->vec[103] + p->dxdt[21]",
+      "volume_expression_ref": {
+        "file": "sim/equation.c",
+        "line_start": 235,
+        "line_end": 235
+      },
+      "incoming_flow_indices": [
+        11
+      ],
+      "outgoing_flow_indices": [
+        12
+      ],
+      "source_hemodynamic_table_index": 6
+    },
+    {
+      "id": "CVSim21:x10",
+      "source_label": "splanchnic_veins",
+      "pressure_index": 10,
+      "volume_index": 10,
+      "source_volume_owner": "CVSim21:v10",
+      "anatomy_mapping": null,
+      "mechanical_mass_owner": null,
+      "ownership_scope": "source_model_aggregate_only",
+      "pressure_law": "atan_venous_compliance",
+      "external_pressure_index": 21,
+      "external_pressure_baseline_mmHg": 0.0,
+      "compliance_parameter_index": 38,
+      "compliance_nominal_mL_per_mmHg": 60.0,
+      "zero_pressure_filling_volume_parameter_index": 79,
+      "zero_pressure_filling_volume_mL": 1146.0,
+      "zpfv_source_member": "hemo[12].v[0][0]",
+      "zpfv_source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 579,
+          "line_end": 579
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 182,
+          "line_end": 182
+        }
+      ],
+      "source_volume_expression": "Vsp + r->volume[2]",
+      "source_pressure_derivative_expression": "(p->q[12] - p->q[13] - t.flow[0]) / Csp + p->dxdt[21]",
+      "volume_expression_ref": {
+        "file": "sim/equation.c",
+        "line_start": 236,
+        "line_end": 236
+      },
+      "incoming_flow_indices": [
+        12
+      ],
+      "outgoing_flow_indices": [
+        13
+      ],
+      "source_hemodynamic_table_index": 12,
+      "reflex_volume_index": 2,
+      "max_distending_volume_parameter_index": 71,
+      "max_distending_volume_mL": 1500.0,
+      "negative_pressure_volume_policy": "signed_atan",
+      "tilt_leak_flow_index": 0
+    },
+    {
+      "id": "CVSim21:x11",
+      "source_label": "leg_arteries",
+      "pressure_index": 11,
+      "volume_index": 11,
+      "source_volume_owner": "CVSim21:v11",
+      "anatomy_mapping": null,
+      "mechanical_mass_owner": null,
+      "ownership_scope": "source_model_aggregate_only",
+      "pressure_law": "linear_compliance",
+      "external_pressure_index": 22,
+      "external_pressure_baseline_mmHg": 0.0,
+      "compliance_parameter_index": 104,
+      "compliance_nominal_mL_per_mmHg": 0.2,
+      "zero_pressure_filling_volume_parameter_index": 143,
+      "zero_pressure_filling_volume_mL": 200.0,
+      "zpfv_source_member": "hemo[7].v[0][0]",
+      "zpfv_source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 643,
+          "line_end": 643
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 111,
+          "line_end": 111
+        }
+      ],
+      "source_volume_expression": "(p->x[11] - p->x[22]) * theta->vec[104] + theta->vec[143]",
+      "source_pressure_derivative_expression": "(p->q[14] - p->q[15]) / theta->vec[104] + p->dxdt[22]",
+      "volume_expression_ref": {
+        "file": "sim/equation.c",
+        "line_start": 237,
+        "line_end": 237
+      },
+      "incoming_flow_indices": [
+        14
+      ],
+      "outgoing_flow_indices": [
+        15
+      ],
+      "source_hemodynamic_table_index": 7
+    },
+    {
+      "id": "CVSim21:x12",
+      "source_label": "leg_veins",
+      "pressure_index": 12,
+      "volume_index": 12,
+      "source_volume_owner": "CVSim21:v12",
+      "anatomy_mapping": null,
+      "mechanical_mass_owner": null,
+      "ownership_scope": "source_model_aggregate_only",
+      "pressure_law": "atan_venous_compliance",
+      "external_pressure_index": 22,
+      "external_pressure_baseline_mmHg": 0.0,
+      "compliance_parameter_index": 39,
+      "compliance_nominal_mL_per_mmHg": 20.0,
+      "zero_pressure_filling_volume_parameter_index": 80,
+      "zero_pressure_filling_volume_mL": 716.0,
+      "zpfv_source_member": "hemo[13].v[0][0]",
+      "zpfv_source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 580,
+          "line_end": 580
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 196,
+          "line_end": 196
+        }
+      ],
+      "source_volume_expression": "Vll + r->volume[3]",
+      "source_pressure_derivative_expression": "(p->q[15] - p->q[16] - t.flow[1]) / Cll + p->dxdt[22]",
+      "volume_expression_ref": {
+        "file": "sim/equation.c",
+        "line_start": 238,
+        "line_end": 238
+      },
+      "incoming_flow_indices": [
+        15
+      ],
+      "outgoing_flow_indices": [
+        16
+      ],
+      "source_hemodynamic_table_index": 13,
+      "reflex_volume_index": 3,
+      "max_distending_volume_parameter_index": 72,
+      "max_distending_volume_mL": 1000.0,
+      "negative_pressure_volume_policy": "source_zero_distending_volume_in_eqns_ptr_inconsistent_with_derivative",
+      "tilt_leak_flow_index": 1
+    },
+    {
+      "id": "CVSim21:x13",
+      "source_label": "abdominal_veins",
+      "pressure_index": 13,
+      "volume_index": 13,
+      "source_volume_owner": "CVSim21:v13",
+      "anatomy_mapping": null,
+      "mechanical_mass_owner": null,
+      "ownership_scope": "source_model_aggregate_only",
+      "pressure_law": "atan_venous_compliance",
+      "external_pressure_index": 21,
+      "external_pressure_baseline_mmHg": 0.0,
+      "compliance_parameter_index": 40,
+      "compliance_nominal_mL_per_mmHg": 1.3,
+      "zero_pressure_filling_volume_parameter_index": 81,
+      "zero_pressure_filling_volume_mL": 79.0,
+      "zpfv_source_member": "hemo[14].v[0][0]",
+      "zpfv_source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 581,
+          "line_end": 581
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 210,
+          "line_end": 210
+        }
+      ],
+      "source_volume_expression": "Vab + theta->vec[81]",
+      "source_pressure_derivative_expression": "(p->q[10]+p->q[13]+p->q[16]-p->q[17]-t.flow[2])/Cab+p->dxdt[21]",
+      "volume_expression_ref": {
+        "file": "sim/equation.c",
+        "line_start": 239,
+        "line_end": 239
+      },
+      "incoming_flow_indices": [
+        10,
+        13,
+        16
+      ],
+      "outgoing_flow_indices": [
+        17
+      ],
+      "source_hemodynamic_table_index": 14,
+      "max_distending_volume_parameter_index": 73,
+      "max_distending_volume_mL": 650.0,
+      "negative_pressure_volume_policy": "signed_atan",
+      "tilt_leak_flow_index": 2
+    },
+    {
+      "id": "CVSim21:x14",
+      "source_label": "inferior_vena_cava",
+      "pressure_index": 14,
+      "volume_index": 14,
+      "source_volume_owner": "CVSim21:v14",
+      "anatomy_mapping": null,
+      "mechanical_mass_owner": null,
+      "ownership_scope": "source_model_aggregate_only",
+      "pressure_law": "linear_compliance",
+      "external_pressure_index": 24,
+      "external_pressure_baseline_mmHg": -4.0,
+      "compliance_parameter_index": 41,
+      "compliance_nominal_mL_per_mmHg": 0.5,
+      "zero_pressure_filling_volume_parameter_index": 82,
+      "zero_pressure_filling_volume_mL": 33.0,
+      "zpfv_source_member": "hemo[15].v[0][0]",
+      "zpfv_source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 582,
+          "line_end": 582
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 224,
+          "line_end": 224
+        }
+      ],
+      "source_volume_expression": "(p->x[14] - p->x[24]) * theta->vec[41] + theta->vec[82]",
+      "source_pressure_derivative_expression": "(p->q[17] - p->q[18]) / theta->vec[41] + p->dxdt[24]",
+      "volume_expression_ref": {
+        "file": "sim/equation.c",
+        "line_start": 240,
+        "line_end": 240
+      },
+      "incoming_flow_indices": [
+        17
+      ],
+      "outgoing_flow_indices": [
+        18
+      ],
+      "source_hemodynamic_table_index": 15
+    },
+    {
+      "id": "CVSim21:x15",
+      "source_label": "right_atrium",
+      "pressure_index": 15,
+      "volume_index": 15,
+      "source_volume_owner": "CVSim21:v15",
+      "anatomy_mapping": null,
+      "mechanical_mass_owner": null,
+      "ownership_scope": "source_model_aggregate_only",
+      "pressure_law": "cardiac_time_varying_compliance",
+      "external_pressure_index": 24,
+      "external_pressure_baseline_mmHg": -4.0,
+      "compliance_parameter_index": 43,
+      "compliance_nominal_mL_per_mmHg": 3.33,
+      "zero_pressure_filling_volume_parameter_index": 84,
+      "zero_pressure_filling_volume_mL": 14.0,
+      "zpfv_source_member": "cardiac[0].v[0][0]",
+      "zpfv_source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 584,
+          "line_end": 584
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 293,
+          "line_end": 293
+        }
+      ],
+      "source_volume_expression": "(p->x[15] - p->x[24]) * p->c[0] + theta->vec[84]",
+      "source_pressure_derivative_expression": "((p->x[24] - p->x[15]) * p->dcdt[0] + p->q[5] + p->q[18] - p->q[19])\n    / p->c[0] + p->dxdt[24]",
+      "volume_expression_ref": {
+        "file": "sim/equation.c",
+        "line_start": 241,
+        "line_end": 241
+      },
+      "incoming_flow_indices": [
+        5,
+        18
+      ],
+      "outgoing_flow_indices": [
+        19
+      ],
+      "cardiac_compliance_index": 0,
+      "systolic_compliance_parameter_index": 44,
+      "systolic_compliance_nominal_mL_per_mmHg": 1.35,
+      "cardiac_table_owner": "cardiac[0]",
+      "cardiac_table_row": 0
+    },
+    {
+      "id": "CVSim21:x16",
+      "source_label": "right_ventricle",
+      "pressure_index": 16,
+      "volume_index": 16,
+      "source_volume_owner": "CVSim21:v16",
+      "anatomy_mapping": null,
+      "mechanical_mass_owner": null,
+      "ownership_scope": "source_model_aggregate_only",
+      "pressure_law": "cardiac_time_varying_compliance",
+      "external_pressure_index": 24,
+      "external_pressure_baseline_mmHg": -4.0,
+      "compliance_parameter_index": 45,
+      "compliance_nominal_mL_per_mmHg": 19.29,
+      "zero_pressure_filling_volume_parameter_index": 85,
+      "zero_pressure_filling_volume_mL": 46.0,
+      "zpfv_source_member": "cardiac[0].v[1][0]",
+      "zpfv_source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 585,
+          "line_end": 585
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 296,
+          "line_end": 296
+        }
+      ],
+      "source_volume_expression": "(p->x[16] - p->x[24]) * p->c[1] + theta->vec[85]",
+      "source_pressure_derivative_expression": "((p->x[24] - p->x[16]) * p->dcdt[1] + p->q[19] - p->q[20]) \n    / p->c[1] + p->dxdt[24]",
+      "volume_expression_ref": {
+        "file": "sim/equation.c",
+        "line_start": 242,
+        "line_end": 242
+      },
+      "incoming_flow_indices": [
+        19
+      ],
+      "outgoing_flow_indices": [
+        20
+      ],
+      "cardiac_compliance_index": 1,
+      "systolic_compliance_parameter_index": 46,
+      "systolic_compliance_nominal_mL_per_mmHg": 1.3,
+      "cardiac_table_owner": "cardiac[0]",
+      "cardiac_table_row": 1
+    },
+    {
+      "id": "CVSim21:x17",
+      "source_label": "pulmonary_arteries",
+      "pressure_index": 17,
+      "volume_index": 17,
+      "source_volume_owner": "CVSim21:v17",
+      "anatomy_mapping": null,
+      "mechanical_mass_owner": null,
+      "ownership_scope": "source_model_aggregate_only",
+      "pressure_law": "linear_compliance",
+      "external_pressure_index": 24,
+      "external_pressure_baseline_mmHg": -4.0,
+      "compliance_parameter_index": 47,
+      "compliance_nominal_mL_per_mmHg": 3.4,
+      "zero_pressure_filling_volume_parameter_index": 86,
+      "zero_pressure_filling_volume_mL": 160.0,
+      "zpfv_source_member": "hemo[8].v[0][0]",
+      "zpfv_source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 586,
+          "line_end": 586
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 125,
+          "line_end": 125
+        }
+      ],
+      "source_volume_expression": "(p->x[17] - p->x[24]) * theta->vec[47] + theta->vec[86]",
+      "source_pressure_derivative_expression": "(p->q[20] - p->q[21]) / theta->vec[47] + p->dxdt[24]",
+      "volume_expression_ref": {
+        "file": "sim/equation.c",
+        "line_start": 243,
+        "line_end": 243
+      },
+      "incoming_flow_indices": [
+        20
+      ],
+      "outgoing_flow_indices": [
+        21
+      ],
+      "source_hemodynamic_table_index": 8
+    },
+    {
+      "id": "CVSim21:x18",
+      "source_label": "pulmonary_veins",
+      "pressure_index": 18,
+      "volume_index": 18,
+      "source_volume_owner": "CVSim21:v18",
+      "anatomy_mapping": null,
+      "mechanical_mass_owner": null,
+      "ownership_scope": "source_model_aggregate_only",
+      "pressure_law": "linear_compliance",
+      "external_pressure_index": 24,
+      "external_pressure_baseline_mmHg": -4.0,
+      "compliance_parameter_index": 48,
+      "compliance_nominal_mL_per_mmHg": 9.0,
+      "zero_pressure_filling_volume_parameter_index": 87,
+      "zero_pressure_filling_volume_mL": 430.0,
+      "zpfv_source_member": "hemo[16].v[0][0]",
+      "zpfv_source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 587,
+          "line_end": 587
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 238,
+          "line_end": 238
+        }
+      ],
+      "source_volume_expression": "(p->x[18] - p->x[24]) * theta->vec[48] + theta->vec[87]",
+      "source_pressure_derivative_expression": "(p->q[21] - p->q[22]) / theta->vec[48] + p->dxdt[24]",
+      "volume_expression_ref": {
+        "file": "sim/equation.c",
+        "line_start": 244,
+        "line_end": 244
+      },
+      "incoming_flow_indices": [
+        21
+      ],
+      "outgoing_flow_indices": [
+        22
+      ],
+      "source_hemodynamic_table_index": 16
+    },
+    {
+      "id": "CVSim21:x19",
+      "source_label": "left_atrium",
+      "pressure_index": 19,
+      "volume_index": 19,
+      "source_volume_owner": "CVSim21:v19",
+      "anatomy_mapping": null,
+      "mechanical_mass_owner": null,
+      "ownership_scope": "source_model_aggregate_only",
+      "pressure_law": "cardiac_time_varying_compliance",
+      "external_pressure_index": 24,
+      "external_pressure_baseline_mmHg": -4.0,
+      "compliance_parameter_index": 49,
+      "compliance_nominal_mL_per_mmHg": 2.0,
+      "zero_pressure_filling_volume_parameter_index": 88,
+      "zero_pressure_filling_volume_mL": 24.0,
+      "zpfv_source_member": "cardiac[1].v[0][0]",
+      "zpfv_source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 588,
+          "line_end": 588
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 299,
+          "line_end": 299
+        }
+      ],
+      "source_volume_expression": "(p->x[19] - p->x[24]) * p->c[2] + theta->vec[88]",
+      "source_pressure_derivative_expression": "((p->x[24] - p->x[19]) * p->dcdt[2] + p->q[22] - p->q[23])\n    / p->c[2] + p->dxdt[24]",
+      "volume_expression_ref": {
+        "file": "sim/equation.c",
+        "line_start": 245,
+        "line_end": 245
+      },
+      "incoming_flow_indices": [
+        22
+      ],
+      "outgoing_flow_indices": [
+        23
+      ],
+      "cardiac_compliance_index": 2,
+      "systolic_compliance_parameter_index": 50,
+      "systolic_compliance_nominal_mL_per_mmHg": 1.64,
+      "cardiac_table_owner": "cardiac[1]",
+      "cardiac_table_row": 0
+    },
+    {
+      "id": "CVSim21:x20",
+      "source_label": "left_ventricle",
+      "pressure_index": 20,
+      "volume_index": 20,
+      "source_volume_owner": "CVSim21:v20",
+      "anatomy_mapping": null,
+      "mechanical_mass_owner": null,
+      "ownership_scope": "source_model_aggregate_only",
+      "pressure_law": "cardiac_time_varying_compliance",
+      "external_pressure_index": 24,
+      "external_pressure_baseline_mmHg": -4.0,
+      "compliance_parameter_index": 51,
+      "compliance_nominal_mL_per_mmHg": 9.69,
+      "zero_pressure_filling_volume_parameter_index": 89,
+      "zero_pressure_filling_volume_mL": 55.0,
+      "zpfv_source_member": "cardiac[1].v[1][0]",
+      "zpfv_source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 589,
+          "line_end": 589
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 302,
+          "line_end": 302
+        }
+      ],
+      "source_volume_expression": "(p->x[20] - p->x[24]) * p->c[3] + theta->vec[89]",
+      "source_pressure_derivative_expression": "((p->x[24] - p->x[20]) * p->dcdt[3] + p->q[23] - p->q[0])\n    / p->c[3] + p->dxdt[24]",
+      "volume_expression_ref": {
+        "file": "sim/equation.c",
+        "line_start": 246,
+        "line_end": 246
+      },
+      "incoming_flow_indices": [
+        23
+      ],
+      "outgoing_flow_indices": [
+        0
+      ],
+      "cardiac_compliance_index": 3,
+      "systolic_compliance_parameter_index": 52,
+      "systolic_compliance_nominal_mL_per_mmHg": 0.4,
+      "cardiac_table_owner": "cardiac[1]",
+      "cardiac_table_row": 1
+    }
+  ],
+  "connections": [
+    {
+      "id": "CVSim21:q0",
+      "flow_index": 0,
+      "from": "CVSim21:x20",
+      "to": "CVSim21:x0",
+      "from_pressure_index": 20,
+      "to_pressure_index": 0,
+      "source_label": "left_ventricle_to_ascending_aorta",
+      "flow_law": "forward_linear_valve",
+      "resistance_parameter_index": 69,
+      "resistance_nominal_mmHg_s_per_mL": 0.007,
+      "resistance_source_member": "hemo[0].r[0][0]",
+      "gravity_index": 0,
+      "gravity_sign_in_upstream_minus_downstream_gradient": -1,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 149,
+          "line_end": 151
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 569,
+          "line_end": 569
+        }
+      ],
+      "source_equation_lines": [
+        "  if (p->x[20] > (p->x[0] + p->grav[0]))",
+        "    p->q[0] = (p->x[20] - p->x[0] - p->grav[0]) / theta->vec[69];",
+        "  else p->q[0] = 0.0;                        // left ventricular outflow"
+      ]
+    },
+    {
+      "id": "CVSim21:q1",
+      "flow_index": 1,
+      "from": "CVSim21:x0",
+      "to": "CVSim21:x1",
+      "from_pressure_index": 0,
+      "to_pressure_index": 1,
+      "source_label": "ascending_aorta_to_brachiocephalic_arteries",
+      "flow_law": "signed_resistance",
+      "resistance_parameter_index": 105,
+      "resistance_nominal_mmHg_s_per_mL": 0.003,
+      "resistance_source_member": "hemo[1].r[0][0]",
+      "gravity_index": 1,
+      "gravity_sign_in_upstream_minus_downstream_gradient": -1,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 153,
+          "line_end": 153
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 605,
+          "line_end": 605
+        }
+      ],
+      "source_equation_lines": [
+        "  p->q[1] = (p->x[0] - p->x[1] - p->grav[1]) / theta->vec[105];"
+      ]
+    },
+    {
+      "id": "CVSim21:q2",
+      "flow_index": 2,
+      "from": "CVSim21:x1",
+      "to": "CVSim21:x2",
+      "from_pressure_index": 1,
+      "to_pressure_index": 2,
+      "source_label": "brachiocephalic_arteries_to_upper_body_arteries",
+      "flow_law": "signed_resistance",
+      "resistance_parameter_index": 106,
+      "resistance_nominal_mmHg_s_per_mL": 0.014,
+      "resistance_source_member": "hemo[2].r[0][0]",
+      "gravity_index": 2,
+      "gravity_sign_in_upstream_minus_downstream_gradient": -1,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 154,
+          "line_end": 154
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 606,
+          "line_end": 606
+        }
+      ],
+      "source_equation_lines": [
+        "  p->q[2] = (p->x[1] - p->x[2] - p->grav[2]) / theta->vec[106];"
+      ]
+    },
+    {
+      "id": "CVSim21:q3",
+      "flow_index": 3,
+      "from": "CVSim21:x2",
+      "to": "CVSim21:x3",
+      "from_pressure_index": 2,
+      "to_pressure_index": 3,
+      "source_label": "upper_body_arteries_to_upper_body_veins",
+      "flow_law": "signed_resistance",
+      "resistance_parameter_index": 53,
+      "resistance_nominal_mmHg_s_per_mL": 4.9,
+      "resistance_source_member": "micro_r.r[0][0]",
+      "gravity_index": null,
+      "gravity_sign_in_upstream_minus_downstream_gradient": 0,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 155,
+          "line_end": 155
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 553,
+          "line_end": 553
+        }
+      ],
+      "source_equation_lines": [
+        "  p->q[3] = (p->x[2] - p->x[3]) / r->resistance[0];"
+      ],
+      "reflex_resistance_index": 0
+    },
+    {
+      "id": "CVSim21:q4",
+      "flow_index": 4,
+      "from": "CVSim21:x3",
+      "to": "CVSim21:x4",
+      "from_pressure_index": 3,
+      "to_pressure_index": 4,
+      "source_label": "upper_body_veins_to_superior_vena_cava",
+      "flow_law": "source_starling_partial_assignment",
+      "resistance_parameter_index": 54,
+      "resistance_nominal_mmHg_s_per_mL": 0.11,
+      "resistance_source_member": "hemo[9].r[0][0]",
+      "gravity_index": 3,
+      "gravity_sign_in_upstream_minus_downstream_gradient": 1,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 158,
+          "line_end": 163
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 554,
+          "line_end": 554
+        }
+      ],
+      "source_equation_lines": [
+        "  if ((p->x[3]+p->grav[3] > p->x[4]) && (p->x[4] > p->x[24]))",
+        "    p->q[4] = (p->x[3] - p->x[4] + p->grav[3]) / theta->vec[54];",
+        "  else if ((p->x[3]+p->grav[3] > p->x[24]) && (p->x[24] > p->x[4]))",
+        "    p->q[4] = (p->x[3] - p->x[24] + p->grav[3]) / theta->vec[54];",
+        "  else if (p->x[24] > p->x[3]+p->grav[3])",
+        "    p->q[4] = 0.0;"
+      ],
+      "starling_external_pressure_index": 24,
+      "unassigned_source_branches": true,
+      "example_stale_flow_regime_mmHg": {
+        "upstream": 1,
+        "downstream": 2,
+        "external": 0,
+        "gravity": 0
+      },
+      "canonical_stateless_extension_requires_explicit_variant": true
+    },
+    {
+      "id": "CVSim21:q5",
+      "flow_index": 5,
+      "from": "CVSim21:x4",
+      "to": "CVSim21:x15",
+      "from_pressure_index": 4,
+      "to_pressure_index": 15,
+      "source_label": "superior_vena_cava_to_right_atrium",
+      "flow_law": "signed_resistance",
+      "resistance_parameter_index": 63,
+      "resistance_nominal_mmHg_s_per_mL": 0.028,
+      "resistance_source_member": "hemo[10].r[0][0]",
+      "gravity_index": 4,
+      "gravity_sign_in_upstream_minus_downstream_gradient": 1,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 165,
+          "line_end": 165
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 563,
+          "line_end": 563
+        }
+      ],
+      "source_equation_lines": [
+        "  p->q[5] = (p->x[4] - p->x[15] + p->grav[4]) / theta->vec[63];"
+      ]
+    },
+    {
+      "id": "CVSim21:q6",
+      "flow_index": 6,
+      "from": "CVSim21:x0",
+      "to": "CVSim21:x5",
+      "from_pressure_index": 0,
+      "to_pressure_index": 5,
+      "source_label": "ascending_aorta_to_descending_thoracic_aorta",
+      "flow_law": "signed_resistance",
+      "resistance_parameter_index": 107,
+      "resistance_nominal_mmHg_s_per_mL": 0.011,
+      "resistance_source_member": "hemo[3].r[0][0]",
+      "gravity_index": 5,
+      "gravity_sign_in_upstream_minus_downstream_gradient": 1,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 166,
+          "line_end": 166
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 607,
+          "line_end": 607
+        }
+      ],
+      "source_equation_lines": [
+        "  p->q[6] = (p->x[0] - p->x[5] + p->grav[5]) / theta->vec[107];"
+      ]
+    },
+    {
+      "id": "CVSim21:q7",
+      "flow_index": 7,
+      "from": "CVSim21:x5",
+      "to": "CVSim21:x6",
+      "from_pressure_index": 5,
+      "to_pressure_index": 6,
+      "source_label": "descending_thoracic_aorta_to_abdominal_aorta",
+      "flow_law": "signed_resistance",
+      "resistance_parameter_index": 108,
+      "resistance_nominal_mmHg_s_per_mL": 0.01,
+      "resistance_source_member": "hemo[4].r[0][0]",
+      "gravity_index": 6,
+      "gravity_sign_in_upstream_minus_downstream_gradient": 1,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 167,
+          "line_end": 167
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 608,
+          "line_end": 608
+        }
+      ],
+      "source_equation_lines": [
+        "  p->q[7] = (p->x[5] - p->x[6] + p->grav[6]) / theta->vec[108];"
+      ]
+    },
+    {
+      "id": "CVSim21:q8",
+      "flow_index": 8,
+      "from": "CVSim21:x6",
+      "to": "CVSim21:x7",
+      "from_pressure_index": 6,
+      "to_pressure_index": 7,
+      "source_label": "abdominal_aorta_to_renal_arteries",
+      "flow_law": "signed_resistance",
+      "resistance_parameter_index": 109,
+      "resistance_nominal_mmHg_s_per_mL": 0.1,
+      "resistance_source_member": "hemo[5].r[0][0]",
+      "gravity_index": 7,
+      "gravity_sign_in_upstream_minus_downstream_gradient": 1,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 168,
+          "line_end": 168
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 609,
+          "line_end": 609
+        }
+      ],
+      "source_equation_lines": [
+        "  p->q[8] = (p->x[6] - p->x[7] + p->grav[7]) / theta->vec[109];"
+      ]
+    },
+    {
+      "id": "CVSim21:q9",
+      "flow_index": 9,
+      "from": "CVSim21:x7",
+      "to": "CVSim21:x8",
+      "from_pressure_index": 7,
+      "to_pressure_index": 8,
+      "source_label": "renal_arteries_to_renal_veins",
+      "flow_law": "signed_resistance",
+      "resistance_parameter_index": 55,
+      "resistance_nominal_mmHg_s_per_mL": 4.1,
+      "resistance_source_member": "micro_r.r[1][0]",
+      "gravity_index": null,
+      "gravity_sign_in_upstream_minus_downstream_gradient": 0,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 169,
+          "line_end": 169
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 555,
+          "line_end": 555
+        }
+      ],
+      "source_equation_lines": [
+        "  p->q[9] = (p->x[7] - p->x[8]) / r->resistance[1];"
+      ],
+      "reflex_resistance_index": 1
+    },
+    {
+      "id": "CVSim21:q10",
+      "flow_index": 10,
+      "from": "CVSim21:x8",
+      "to": "CVSim21:x13",
+      "from_pressure_index": 8,
+      "to_pressure_index": 13,
+      "source_label": "renal_veins_to_abdominal_veins",
+      "flow_law": "signed_resistance",
+      "resistance_parameter_index": 56,
+      "resistance_nominal_mmHg_s_per_mL": 0.11,
+      "resistance_source_member": "hemo[11].r[0][0]",
+      "gravity_index": 8,
+      "gravity_sign_in_upstream_minus_downstream_gradient": -1,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 170,
+          "line_end": 170
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 556,
+          "line_end": 556
+        }
+      ],
+      "source_equation_lines": [
+        "  p->q[10] = (p->x[8] - p->x[13] - p->grav[8]) / theta->vec[56];"
+      ]
+    },
+    {
+      "id": "CVSim21:q11",
+      "flow_index": 11,
+      "from": "CVSim21:x6",
+      "to": "CVSim21:x9",
+      "from_pressure_index": 6,
+      "to_pressure_index": 9,
+      "source_label": "abdominal_aorta_to_splanchnic_arteries",
+      "flow_law": "signed_resistance",
+      "resistance_parameter_index": 110,
+      "resistance_nominal_mmHg_s_per_mL": 0.07,
+      "resistance_source_member": "hemo[6].r[0][0]",
+      "gravity_index": 9,
+      "gravity_sign_in_upstream_minus_downstream_gradient": 1,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 171,
+          "line_end": 171
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 610,
+          "line_end": 610
+        }
+      ],
+      "source_equation_lines": [
+        "  p->q[11] = (p->x[6] - p->x[9] + p->grav[9]) / theta->vec[110];"
+      ]
+    },
+    {
+      "id": "CVSim21:q12",
+      "flow_index": 12,
+      "from": "CVSim21:x9",
+      "to": "CVSim21:x10",
+      "from_pressure_index": 9,
+      "to_pressure_index": 10,
+      "source_label": "splanchnic_arteries_to_splanchnic_veins",
+      "flow_law": "signed_resistance",
+      "resistance_parameter_index": 57,
+      "resistance_nominal_mmHg_s_per_mL": 3.0,
+      "resistance_source_member": "micro_r.r[2][0]",
+      "gravity_index": null,
+      "gravity_sign_in_upstream_minus_downstream_gradient": 0,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 172,
+          "line_end": 172
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 557,
+          "line_end": 557
+        }
+      ],
+      "source_equation_lines": [
+        "  p->q[12] = (p->x[9] - p->x[10]) / r->resistance[2];"
+      ],
+      "reflex_resistance_index": 2
+    },
+    {
+      "id": "CVSim21:q13",
+      "flow_index": 13,
+      "from": "CVSim21:x10",
+      "to": "CVSim21:x13",
+      "from_pressure_index": 10,
+      "to_pressure_index": 13,
+      "source_label": "splanchnic_veins_to_abdominal_veins",
+      "flow_law": "signed_resistance",
+      "resistance_parameter_index": 58,
+      "resistance_nominal_mmHg_s_per_mL": 0.07,
+      "resistance_source_member": "hemo[12].r[0][0]",
+      "gravity_index": 10,
+      "gravity_sign_in_upstream_minus_downstream_gradient": -1,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 173,
+          "line_end": 173
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 558,
+          "line_end": 558
+        }
+      ],
+      "source_equation_lines": [
+        "  p->q[13] = (p->x[10] - p->x[13] - p->grav[10]) / theta->vec[58];"
+      ]
+    },
+    {
+      "id": "CVSim21:q14",
+      "flow_index": 14,
+      "from": "CVSim21:x6",
+      "to": "CVSim21:x11",
+      "from_pressure_index": 6,
+      "to_pressure_index": 11,
+      "source_label": "abdominal_aorta_to_leg_arteries",
+      "flow_law": "signed_resistance",
+      "resistance_parameter_index": 111,
+      "resistance_nominal_mmHg_s_per_mL": 0.09,
+      "resistance_source_member": "hemo[7].r[0][0]",
+      "gravity_index": 11,
+      "gravity_sign_in_upstream_minus_downstream_gradient": 1,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 174,
+          "line_end": 174
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 611,
+          "line_end": 611
+        }
+      ],
+      "source_equation_lines": [
+        "  p->q[14] = (p->x[6] - p->x[11] + p->grav[11]) / theta->vec[111];"
+      ]
+    },
+    {
+      "id": "CVSim21:q15",
+      "flow_index": 15,
+      "from": "CVSim21:x11",
+      "to": "CVSim21:x12",
+      "from_pressure_index": 11,
+      "to_pressure_index": 12,
+      "source_label": "leg_arteries_to_leg_veins",
+      "flow_law": "signed_resistance",
+      "resistance_parameter_index": 59,
+      "resistance_nominal_mmHg_s_per_mL": 4.5,
+      "resistance_source_member": "micro_r.r[3][0]",
+      "gravity_index": null,
+      "gravity_sign_in_upstream_minus_downstream_gradient": 0,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 175,
+          "line_end": 175
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 559,
+          "line_end": 559
+        }
+      ],
+      "source_equation_lines": [
+        "  p->q[15] = (p->x[11] - p->x[12]) / r->resistance[3];"
+      ],
+      "reflex_resistance_index": 3
+    },
+    {
+      "id": "CVSim21:q16",
+      "flow_index": 16,
+      "from": "CVSim21:x12",
+      "to": "CVSim21:x13",
+      "from_pressure_index": 12,
+      "to_pressure_index": 13,
+      "source_label": "leg_veins_to_abdominal_veins",
+      "flow_law": "forward_linear_valve",
+      "resistance_parameter_index": 60,
+      "resistance_nominal_mmHg_s_per_mL": 0.1,
+      "resistance_source_member": "hemo[13].r[0][0]",
+      "gravity_index": 12,
+      "gravity_sign_in_upstream_minus_downstream_gradient": -1,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 177,
+          "line_end": 179
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 560,
+          "line_end": 560
+        }
+      ],
+      "source_equation_lines": [
+        "  if (p->x[12] > (p->x[13] + p->grav[12])) ",
+        "    p->q[16] = (p->x[12] - p->x[13] - p->grav[12]) / theta->vec[60];",
+        "  else p->q[16] = 0.0;"
+      ]
+    },
+    {
+      "id": "CVSim21:q17",
+      "flow_index": 17,
+      "from": "CVSim21:x13",
+      "to": "CVSim21:x14",
+      "from_pressure_index": 13,
+      "to_pressure_index": 14,
+      "source_label": "abdominal_veins_to_inferior_vena_cava",
+      "flow_law": "signed_resistance",
+      "resistance_parameter_index": 61,
+      "resistance_nominal_mmHg_s_per_mL": 0.019,
+      "resistance_source_member": "hemo[14].r[0][0]",
+      "gravity_index": 13,
+      "gravity_sign_in_upstream_minus_downstream_gradient": -1,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 181,
+          "line_end": 181
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 561,
+          "line_end": 561
+        }
+      ],
+      "source_equation_lines": [
+        "  p->q[17] = (p->x[13] - p->x[14] - p->grav[13]) / theta->vec[61];"
+      ]
+    },
+    {
+      "id": "CVSim21:q18",
+      "flow_index": 18,
+      "from": "CVSim21:x14",
+      "to": "CVSim21:x15",
+      "from_pressure_index": 14,
+      "to_pressure_index": 15,
+      "source_label": "inferior_vena_cava_to_right_atrium",
+      "flow_law": "signed_resistance",
+      "resistance_parameter_index": 62,
+      "resistance_nominal_mmHg_s_per_mL": 0.008,
+      "resistance_source_member": "hemo[15].r[0][0]",
+      "gravity_index": 14,
+      "gravity_sign_in_upstream_minus_downstream_gradient": -1,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 182,
+          "line_end": 182
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 562,
+          "line_end": 562
+        }
+      ],
+      "source_equation_lines": [
+        "  p->q[18] = (p->x[14] - p->x[15] - p->grav[14]) / theta->vec[62];"
+      ]
+    },
+    {
+      "id": "CVSim21:q19",
+      "flow_index": 19,
+      "from": "CVSim21:x15",
+      "to": "CVSim21:x16",
+      "from_pressure_index": 15,
+      "to_pressure_index": 16,
+      "source_label": "right_atrium_to_right_ventricle",
+      "flow_law": "forward_linear_valve",
+      "resistance_parameter_index": 64,
+      "resistance_nominal_mmHg_s_per_mL": 0.006,
+      "resistance_source_member": "cardiac[0].r[0][0]",
+      "gravity_index": null,
+      "gravity_sign_in_upstream_minus_downstream_gradient": 0,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 184,
+          "line_end": 185
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 564,
+          "line_end": 564
+        }
+      ],
+      "source_equation_lines": [
+        "  if (p->x[15] > p->x[16]) p->q[19] = (p->x[15] - p->x[16]) / theta->vec[64];",
+        "  else p->q[19] = 0.0;"
+      ]
+    },
+    {
+      "id": "CVSim21:q20",
+      "flow_index": 20,
+      "from": "CVSim21:x16",
+      "to": "CVSim21:x17",
+      "from_pressure_index": 16,
+      "to_pressure_index": 17,
+      "source_label": "right_ventricle_to_pulmonary_arteries",
+      "flow_law": "forward_linear_valve",
+      "resistance_parameter_index": 65,
+      "resistance_nominal_mmHg_s_per_mL": 0.006,
+      "resistance_source_member": "hemo[8].r[0][0]",
+      "gravity_index": null,
+      "gravity_sign_in_upstream_minus_downstream_gradient": 0,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 187,
+          "line_end": 188
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 565,
+          "line_end": 565
+        }
+      ],
+      "source_equation_lines": [
+        "  if (p->x[16] > p->x[17]) p->q[20] = (p->x[16] - p->x[17]) / theta->vec[65];",
+        "  else p->q[20] = 0.0;"
+      ]
+    },
+    {
+      "id": "CVSim21:q21",
+      "flow_index": 21,
+      "from": "CVSim21:x17",
+      "to": "CVSim21:x18",
+      "from_pressure_index": 17,
+      "to_pressure_index": 18,
+      "source_label": "pulmonary_arteries_to_pulmonary_veins",
+      "flow_law": "signed_resistance",
+      "resistance_parameter_index": 66,
+      "resistance_nominal_mmHg_s_per_mL": 0.07,
+      "resistance_source_member": "micro_r.r[4][0]",
+      "gravity_index": null,
+      "gravity_sign_in_upstream_minus_downstream_gradient": 0,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 190,
+          "line_end": 190
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 566,
+          "line_end": 566
+        }
+      ],
+      "source_equation_lines": [
+        "  p->q[21] = (p->x[17] - p->x[18]) / theta->vec[66];"
+      ]
+    },
+    {
+      "id": "CVSim21:q22",
+      "flow_index": 22,
+      "from": "CVSim21:x18",
+      "to": "CVSim21:x19",
+      "from_pressure_index": 18,
+      "to_pressure_index": 19,
+      "source_label": "pulmonary_veins_to_left_atrium",
+      "flow_law": "signed_resistance",
+      "resistance_parameter_index": 67,
+      "resistance_nominal_mmHg_s_per_mL": 0.006,
+      "resistance_source_member": "hemo[16].r[0][0]",
+      "gravity_index": null,
+      "gravity_sign_in_upstream_minus_downstream_gradient": 0,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 191,
+          "line_end": 191
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 567,
+          "line_end": 567
+        }
+      ],
+      "source_equation_lines": [
+        "  p->q[22] = (p->x[18] - p->x[19]) / theta->vec[67];"
+      ]
+    },
+    {
+      "id": "CVSim21:q23",
+      "flow_index": 23,
+      "from": "CVSim21:x19",
+      "to": "CVSim21:x20",
+      "from_pressure_index": 19,
+      "to_pressure_index": 20,
+      "source_label": "left_atrium_to_left_ventricle",
+      "flow_law": "forward_linear_valve",
+      "resistance_parameter_index": 68,
+      "resistance_nominal_mmHg_s_per_mL": 0.01,
+      "resistance_source_member": "cardiac[1].r[0][0]",
+      "gravity_index": null,
+      "gravity_sign_in_upstream_minus_downstream_gradient": 0,
+      "gravity_baseline_mmHg": 0.0,
+      "source_refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 193,
+          "line_end": 194
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 568,
+          "line_end": 568
+        }
+      ],
+      "source_equation_lines": [
+        "  if (p->x[19] > p->x[20]) p->q[23] = (p->x[19] - p->x[20]) / theta->vec[68];",
+        "  else p->q[23] = 0.0;"
+      ]
+    }
+  ],
+  "parameter_ownership": [
+    {
+      "index": 0,
+      "value": 91.0,
+      "source_expression": "(*reflex)[0].set[0][0]",
+      "source_members": [
+        "reflex[0].set[0][0]"
+      ],
+      "source_member": "reflex[0].set[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 500,
+      "source_comment": "Arterial set-point",
+      "source_member_provenance": [
+        {
+          "member": "reflex[0].set[0][0]",
+          "value": 91.0,
+          "source_expression": "91.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 346
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "value": 18.0,
+      "source_expression": "(*reflex)[0].set[1][0]",
+      "source_members": [
+        "reflex[0].set[1][0]"
+      ],
+      "source_member": "reflex[0].set[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 501,
+      "source_comment": "ABR scaling factor",
+      "source_member_provenance": [
+        {
+          "member": "reflex[0].set[1][0]",
+          "value": 18.0,
+          "source_expression": "18.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 349
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "value": 0.012,
+      "source_expression": "(*reflex)[0].rr[0][0]",
+      "source_members": [
+        "reflex[0].rr[0][0]"
+      ],
+      "source_member": "reflex[0].rr[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 502,
+      "source_comment": "RR-symp. gain",
+      "source_member_provenance": [
+        {
+          "member": "reflex[0].rr[0][0]",
+          "value": 0.012,
+          "source_expression": "0.012",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 359
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "value": 0.009,
+      "source_expression": "(*reflex)[0].rr[1][0]",
+      "source_members": [
+        "reflex[0].rr[1][0]"
+      ],
+      "source_member": "reflex[0].rr[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 503,
+      "source_comment": "RR-parasymp. gain",
+      "source_member_provenance": [
+        {
+          "member": "reflex[0].rr[1][0]",
+          "value": 0.009,
+          "source_expression": "0.009",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 362
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "value": -0.13,
+      "source_expression": "(*reflex)[0].res[0][0]",
+      "source_members": [
+        "reflex[0].res[0][0]"
+      ],
+      "source_member": "reflex[0].res[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 504,
+      "source_comment": "ABR R gain to up compartment",
+      "source_member_provenance": [
+        {
+          "member": "reflex[0].res[0][0]",
+          "value": -0.13,
+          "source_expression": "-0.13",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 372
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "value": -0.13,
+      "source_expression": "(*reflex)[0].res[1][0]",
+      "source_members": [
+        "reflex[0].res[1][0]"
+      ],
+      "source_member": "reflex[0].res[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 505,
+      "source_comment": "ABR R gain to k compartment",
+      "source_member_provenance": [
+        {
+          "member": "reflex[0].res[1][0]",
+          "value": -0.13,
+          "source_expression": "-0.13",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 375
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "value": -0.13,
+      "source_expression": "(*reflex)[0].res[2][0]",
+      "source_members": [
+        "reflex[0].res[2][0]"
+      ],
+      "source_member": "reflex[0].res[2][0]",
+      "file": "main/initial.c",
+      "mapping_line": 506,
+      "source_comment": "ABR R gain to sp compartment",
+      "source_member_provenance": [
+        {
+          "member": "reflex[0].res[2][0]",
+          "value": -0.13,
+          "source_expression": "-0.13",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 378
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "value": -0.13,
+      "source_expression": "(*reflex)[0].res[3][0]",
+      "source_members": [
+        "reflex[0].res[3][0]"
+      ],
+      "source_member": "reflex[0].res[3][0]",
+      "file": "main/initial.c",
+      "mapping_line": 507,
+      "source_comment": "ABR R gain to ll compartment",
+      "source_member_provenance": [
+        {
+          "member": "reflex[0].res[3][0]",
+          "value": -0.13,
+          "source_expression": "-0.13",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 381
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "value": 5.3,
+      "source_expression": "(*reflex)[0].vt[0][0]",
+      "source_members": [
+        "reflex[0].vt[0][0]"
+      ],
+      "source_member": "reflex[0].vt[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 508,
+      "source_comment": "ABR VT gain to up compartment",
+      "source_member_provenance": [
+        {
+          "member": "reflex[0].vt[0][0]",
+          "value": 5.3,
+          "source_expression": "5.3*alpha",
+          "constant_refs": [
+            "alpha"
+          ],
+          "file": "main/initial.c",
+          "line": 396
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "value": 1.3,
+      "source_expression": "(*reflex)[0].vt[1][0]",
+      "source_members": [
+        "reflex[0].vt[1][0]"
+      ],
+      "source_member": "reflex[0].vt[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 509,
+      "source_comment": "ABR VT gain to k compartment",
+      "source_member_provenance": [
+        {
+          "member": "reflex[0].vt[1][0]",
+          "value": 1.3,
+          "source_expression": "1.3*alpha",
+          "constant_refs": [
+            "alpha"
+          ],
+          "file": "main/initial.c",
+          "line": 399
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "value": 13.3,
+      "source_expression": "(*reflex)[0].vt[2][0]",
+      "source_members": [
+        "reflex[0].vt[2][0]"
+      ],
+      "source_member": "reflex[0].vt[2][0]",
+      "file": "main/initial.c",
+      "mapping_line": 510,
+      "source_comment": "ABR VT gain to sp compartment",
+      "source_member_provenance": [
+        {
+          "member": "reflex[0].vt[2][0]",
+          "value": 13.3,
+          "source_expression": "13.3*alpha",
+          "constant_refs": [
+            "alpha"
+          ],
+          "file": "main/initial.c",
+          "line": 402
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "value": 6.7,
+      "source_expression": "(*reflex)[0].vt[3][0]",
+      "source_members": [
+        "reflex[0].vt[3][0]"
+      ],
+      "source_member": "reflex[0].vt[3][0]",
+      "file": "main/initial.c",
+      "mapping_line": 511,
+      "source_comment": "ABR VT gain to ll compartment",
+      "source_member_provenance": [
+        {
+          "member": "reflex[0].vt[3][0]",
+          "value": 6.7,
+          "source_expression": "6.7*alpha",
+          "constant_refs": [
+            "alpha"
+          ],
+          "file": "main/initial.c",
+          "line": 405
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "value": 0.021,
+      "source_expression": "(*reflex)[0].c[0][0]",
+      "source_members": [
+        "reflex[0].c[0][0]"
+      ],
+      "source_member": "reflex[0].c[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 512,
+      "source_comment": "ABR RV contractility gain",
+      "source_member_provenance": [
+        {
+          "member": "reflex[0].c[0][0]",
+          "value": 0.021,
+          "source_expression": "0.021",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 421
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "value": 0.014,
+      "source_expression": "(*reflex)[0].c[1][0]",
+      "source_members": [
+        "reflex[0].c[1][0]"
+      ],
+      "source_member": "reflex[0].c[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 513,
+      "source_comment": "ABR LV contractility gain",
+      "source_member_provenance": [
+        {
+          "member": "reflex[0].c[1][0]",
+          "value": 0.014,
+          "source_expression": "0.014",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 424
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "value": -25.0,
+      "source_expression": "-25.0",
+      "source_members": [],
+      "source_member": null,
+      "file": "main/initial.c",
+      "mapping_line": 514,
+      "source_comment": "Sensed pressure off-set during tilt",
+      "source_member_provenance": []
+    },
+    {
+      "index": 15,
+      "value": 8.0,
+      "source_expression": "(*reflex)[1].set[0][0]",
+      "source_members": [
+        "reflex[1].set[0][0]"
+      ],
+      "source_member": "reflex[1].set[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 515,
+      "source_comment": "Cardio-pulmonary set-point",
+      "source_member_provenance": [
+        {
+          "member": "reflex[1].set[0][0]",
+          "value": 8.0,
+          "source_expression": "8.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 352
+        }
+      ]
+    },
+    {
+      "index": 16,
+      "value": 5.0,
+      "source_expression": "(*reflex)[1].set[1][0]",
+      "source_members": [
+        "reflex[1].set[1][0]"
+      ],
+      "source_member": "reflex[1].set[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 516,
+      "source_comment": "CPR scaling factor",
+      "source_member_provenance": [
+        {
+          "member": "reflex[1].set[1][0]",
+          "value": 5.0,
+          "source_expression": "5.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 355
+        }
+      ]
+    },
+    {
+      "index": 17,
+      "value": -0.3,
+      "source_expression": "(*reflex)[1].res[0][0]",
+      "source_members": [
+        "reflex[1].res[0][0]"
+      ],
+      "source_member": "reflex[1].res[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 517,
+      "source_comment": "CPR R gain to up compartment",
+      "source_member_provenance": [
+        {
+          "member": "reflex[1].res[0][0]",
+          "value": -0.3,
+          "source_expression": "-0.3",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 384
+        }
+      ]
+    },
+    {
+      "index": 18,
+      "value": -0.3,
+      "source_expression": "(*reflex)[1].res[1][0]",
+      "source_members": [
+        "reflex[1].res[1][0]"
+      ],
+      "source_member": "reflex[1].res[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 518,
+      "source_comment": "CPR R gain to k compartment",
+      "source_member_provenance": [
+        {
+          "member": "reflex[1].res[1][0]",
+          "value": -0.3,
+          "source_expression": "-0.3",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 387
+        }
+      ]
+    },
+    {
+      "index": 19,
+      "value": -0.3,
+      "source_expression": "(*reflex)[1].res[2][0]",
+      "source_members": [
+        "reflex[1].res[2][0]"
+      ],
+      "source_member": "reflex[1].res[2][0]",
+      "file": "main/initial.c",
+      "mapping_line": 519,
+      "source_comment": "CPR R gain to sp compartment",
+      "source_member_provenance": [
+        {
+          "member": "reflex[1].res[2][0]",
+          "value": -0.3,
+          "source_expression": "-0.3",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 390
+        }
+      ]
+    },
+    {
+      "index": 20,
+      "value": -0.3,
+      "source_expression": "(*reflex)[1].res[3][0]",
+      "source_members": [
+        "reflex[1].res[3][0]"
+      ],
+      "source_member": "reflex[1].res[3][0]",
+      "file": "main/initial.c",
+      "mapping_line": 520,
+      "source_comment": "CPR R gain to ll compartment",
+      "source_member_provenance": [
+        {
+          "member": "reflex[1].res[3][0]",
+          "value": -0.3,
+          "source_expression": "-0.3",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 393
+        }
+      ]
+    },
+    {
+      "index": 21,
+      "value": 13.5,
+      "source_expression": "(*reflex)[1].vt[0][0]",
+      "source_members": [
+        "reflex[1].vt[0][0]"
+      ],
+      "source_member": "reflex[1].vt[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 521,
+      "source_comment": "CPR VT gain to up compartment",
+      "source_member_provenance": [
+        {
+          "member": "reflex[1].vt[0][0]",
+          "value": 13.5,
+          "source_expression": "13.5*beta",
+          "constant_refs": [
+            "beta"
+          ],
+          "file": "main/initial.c",
+          "line": 408
+        }
+      ]
+    },
+    {
+      "index": 22,
+      "value": 2.7,
+      "source_expression": "(*reflex)[1].vt[1][0]",
+      "source_members": [
+        "reflex[1].vt[1][0]"
+      ],
+      "source_member": "reflex[1].vt[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 522,
+      "source_comment": "CPR VT gain to k compartment",
+      "source_member_provenance": [
+        {
+          "member": "reflex[1].vt[1][0]",
+          "value": 2.7,
+          "source_expression": "2.7*beta",
+          "constant_refs": [
+            "beta"
+          ],
+          "file": "main/initial.c",
+          "line": 411
+        }
+      ]
+    },
+    {
+      "index": 23,
+      "value": 64.0,
+      "source_expression": "(*reflex)[1].vt[2][0]",
+      "source_members": [
+        "reflex[1].vt[2][0]"
+      ],
+      "source_member": "reflex[1].vt[2][0]",
+      "file": "main/initial.c",
+      "mapping_line": 523,
+      "source_comment": "CPR VT gain to sp compartment",
+      "source_member_provenance": [
+        {
+          "member": "reflex[1].vt[2][0]",
+          "value": 64.0,
+          "source_expression": "64.0*beta",
+          "constant_refs": [
+            "beta"
+          ],
+          "file": "main/initial.c",
+          "line": 414
+        }
+      ]
+    },
+    {
+      "index": 24,
+      "value": 30.0,
+      "source_expression": "(*reflex)[1].vt[3][0]",
+      "source_members": [
+        "reflex[1].vt[3][0]"
+      ],
+      "source_member": "reflex[1].vt[3][0]",
+      "file": "main/initial.c",
+      "mapping_line": 524,
+      "source_comment": "CPR VT gain to ll compartment",
+      "source_member_provenance": [
+        {
+          "member": "reflex[1].vt[3][0]",
+          "value": 30.0,
+          "source_expression": "30.0*beta",
+          "constant_refs": [
+            "beta"
+          ],
+          "file": "main/initial.c",
+          "line": 417
+        }
+      ]
+    },
+    {
+      "index": 25,
+      "value": 0.59,
+      "source_expression": "timing->para[0][0]",
+      "source_members": [
+        "timing.para[0][0]"
+      ],
+      "source_member": "timing.para[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 525,
+      "source_comment": "Delay parasymp.",
+      "source_member_provenance": [
+        {
+          "member": "timing.para[0][0]",
+          "value": 0.59,
+          "source_expression": "0.59",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 436
+        }
+      ]
+    },
+    {
+      "index": 26,
+      "value": 0.7,
+      "source_expression": "timing->para[1][0]",
+      "source_members": [
+        "timing.para[1][0]"
+      ],
+      "source_member": "timing.para[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 526,
+      "source_comment": "Peak parasymp.",
+      "source_member_provenance": [
+        {
+          "member": "timing.para[1][0]",
+          "value": 0.7,
+          "source_expression": "0.70",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 439
+        }
+      ]
+    },
+    {
+      "index": 27,
+      "value": 1.0,
+      "source_expression": "timing->para[2][0]",
+      "source_members": [
+        "timing.para[2][0]"
+      ],
+      "source_member": "timing.para[2][0]",
+      "file": "main/initial.c",
+      "mapping_line": 527,
+      "source_comment": "End parasymp.",
+      "source_member_provenance": [
+        {
+          "member": "timing.para[2][0]",
+          "value": 1.0,
+          "source_expression": "1.00",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 442
+        }
+      ]
+    },
+    {
+      "index": 28,
+      "value": 2.5,
+      "source_expression": "timing->beta[0][0]",
+      "source_members": [
+        "timing.beta[0][0]"
+      ],
+      "source_member": "timing.beta[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 528,
+      "source_comment": "Delay beta-sympathetic",
+      "source_member_provenance": [
+        {
+          "member": "timing.beta[0][0]",
+          "value": 2.5,
+          "source_expression": "2.5",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 446
+        }
+      ]
+    },
+    {
+      "index": 29,
+      "value": 3.5,
+      "source_expression": "timing->beta[1][0]",
+      "source_members": [
+        "timing.beta[1][0]"
+      ],
+      "source_member": "timing.beta[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 529,
+      "source_comment": "Peak beta- sympathetic",
+      "source_member_provenance": [
+        {
+          "member": "timing.beta[1][0]",
+          "value": 3.5,
+          "source_expression": "3.5",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 449
+        }
+      ]
+    },
+    {
+      "index": 30,
+      "value": 15.0,
+      "source_expression": "timing->beta[2][0]",
+      "source_members": [
+        "timing.beta[2][0]"
+      ],
+      "source_member": "timing.beta[2][0]",
+      "file": "main/initial.c",
+      "mapping_line": 530,
+      "source_comment": "End beat-sympathetic",
+      "source_member_provenance": [
+        {
+          "member": "timing.beta[2][0]",
+          "value": 15.0,
+          "source_expression": "15.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 452
+        }
+      ]
+    },
+    {
+      "index": 31,
+      "value": -4.0,
+      "source_expression": "system->pth[0][0]",
+      "source_members": [
+        "system.pth[0][0]"
+      ],
+      "source_member": "system.pth[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 531,
+      "source_comment": "Intra-thoracic pressure",
+      "source_member_provenance": [
+        {
+          "member": "system.pth[0][0]",
+          "value": -4.0,
+          "source_expression": "-4.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 321
+        }
+      ]
+    },
+    {
+      "index": 32,
+      "value": 7.0,
+      "source_expression": "7.0",
+      "source_members": [],
+      "source_member": null,
+      "file": "main/initial.c",
+      "mapping_line": 532,
+      "source_comment": "Pbias_max at sp compartment",
+      "source_member_provenance": []
+    },
+    {
+      "index": 33,
+      "value": 40.0,
+      "source_expression": "40.0",
+      "source_members": [],
+      "source_member": null,
+      "file": "main/initial.c",
+      "mapping_line": 533,
+      "source_comment": "Pbias_max at ll compartment",
+      "source_member_provenance": []
+    },
+    {
+      "index": 34,
+      "value": 5.0,
+      "source_expression": "5.0",
+      "source_members": [],
+      "source_member": null,
+      "file": "main/initial.c",
+      "mapping_line": 534,
+      "source_comment": "Pbias_max at ab compartment",
+      "source_member_provenance": []
+    },
+    {
+      "index": 35,
+      "value": 2.0,
+      "source_expression": "2.0",
+      "source_members": [],
+      "source_member": null,
+      "file": "main/initial.c",
+      "mapping_line": 535,
+      "source_comment": "Arterial compliance",
+      "source_member_provenance": []
+    },
+    {
+      "index": 36,
+      "value": 7.0,
+      "source_expression": "(*hemo)[9].c[0][0]",
+      "source_members": [
+        "hemo[9].c[0][0]"
+      ],
+      "source_member": "hemo[9].c[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 536,
+      "source_comment": "C upper body veins",
+      "source_member_provenance": [
+        {
+          "member": "hemo[9].c[0][0]",
+          "value": 7.0,
+          "source_expression": "7.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 137
+        }
+      ]
+    },
+    {
+      "index": 37,
+      "value": 5.0,
+      "source_expression": "(*hemo)[11].c[0][0]",
+      "source_members": [
+        "hemo[11].c[0][0]"
+      ],
+      "source_member": "hemo[11].c[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 537,
+      "source_comment": "C renal veins",
+      "source_member_provenance": [
+        {
+          "member": "hemo[11].c[0][0]",
+          "value": 5.0,
+          "source_expression": "5.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 165
+        }
+      ]
+    },
+    {
+      "index": 38,
+      "value": 60.0,
+      "source_expression": "(*hemo)[12].c[0][0]",
+      "source_members": [
+        "hemo[12].c[0][0]"
+      ],
+      "source_member": "hemo[12].c[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 538,
+      "source_comment": "C splanchnic veins",
+      "source_member_provenance": [
+        {
+          "member": "hemo[12].c[0][0]",
+          "value": 60.0,
+          "source_expression": "60.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 179
+        }
+      ]
+    },
+    {
+      "index": 39,
+      "value": 20.0,
+      "source_expression": "(*hemo)[13].c[0][0]",
+      "source_members": [
+        "hemo[13].c[0][0]"
+      ],
+      "source_member": "hemo[13].c[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 539,
+      "source_comment": "C lower body veins",
+      "source_member_provenance": [
+        {
+          "member": "hemo[13].c[0][0]",
+          "value": 20.0,
+          "source_expression": "20.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 193
+        }
+      ]
+    },
+    {
+      "index": 40,
+      "value": 1.3,
+      "source_expression": "(*hemo)[14].c[0][0]",
+      "source_members": [
+        "hemo[14].c[0][0]"
+      ],
+      "source_member": "hemo[14].c[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 540,
+      "source_comment": "C abdominal veins",
+      "source_member_provenance": [
+        {
+          "member": "hemo[14].c[0][0]",
+          "value": 1.3,
+          "source_expression": "1.3",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 207
+        }
+      ]
+    },
+    {
+      "index": 41,
+      "value": 0.5,
+      "source_expression": "(*hemo)[15].c[0][0]",
+      "source_members": [
+        "hemo[15].c[0][0]"
+      ],
+      "source_member": "hemo[15].c[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 541,
+      "source_comment": "C inferior vena cava",
+      "source_member_provenance": [
+        {
+          "member": "hemo[15].c[0][0]",
+          "value": 0.5,
+          "source_expression": "0.5",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 221
+        }
+      ]
+    },
+    {
+      "index": 42,
+      "value": 1.3,
+      "source_expression": "(*hemo)[10].c[0][0]",
+      "source_members": [
+        "hemo[10].c[0][0]"
+      ],
+      "source_member": "hemo[10].c[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 542,
+      "source_comment": "C superior vena cava",
+      "source_member_provenance": [
+        {
+          "member": "hemo[10].c[0][0]",
+          "value": 1.3,
+          "source_expression": "1.3",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 151
+        }
+      ]
+    },
+    {
+      "index": 43,
+      "value": 3.33,
+      "source_expression": "(*cardiac)[0].c_dias[0][0]",
+      "source_members": [
+        "cardiac[0].c_dias[0][0]"
+      ],
+      "source_member": "cardiac[0].c_dias[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 543,
+      "source_comment": "RA diastolic compliance",
+      "source_member_provenance": [
+        {
+          "member": "cardiac[0].c_dias[0][0]",
+          "value": 3.33,
+          "source_expression": "3.33",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 280
+        }
+      ]
+    },
+    {
+      "index": 44,
+      "value": 1.35,
+      "source_expression": "(*cardiac)[0].c_sys[0][0]",
+      "source_members": [
+        "cardiac[0].c_sys[0][0]"
+      ],
+      "source_member": "cardiac[0].c_sys[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 544,
+      "source_comment": "RA systolic compliance",
+      "source_member_provenance": [
+        {
+          "member": "cardiac[0].c_sys[0][0]",
+          "value": 1.35,
+          "source_expression": "1.35",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 267
+        }
+      ]
+    },
+    {
+      "index": 45,
+      "value": 19.29,
+      "source_expression": "(*cardiac)[0].c_dias[1][0]",
+      "source_members": [
+        "cardiac[0].c_dias[1][0]"
+      ],
+      "source_member": "cardiac[0].c_dias[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 545,
+      "source_comment": "RV diastolic compliance",
+      "source_member_provenance": [
+        {
+          "member": "cardiac[0].c_dias[1][0]",
+          "value": 19.29,
+          "source_expression": "19.29",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 283
+        }
+      ]
+    },
+    {
+      "index": 46,
+      "value": 1.3,
+      "source_expression": "(*cardiac)[0].c_sys[1][0]",
+      "source_members": [
+        "cardiac[0].c_sys[1][0]"
+      ],
+      "source_member": "cardiac[0].c_sys[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 546,
+      "source_comment": "RV systolic compliance",
+      "source_member_provenance": [
+        {
+          "member": "cardiac[0].c_sys[1][0]",
+          "value": 1.3,
+          "source_expression": "1.30",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 270
+        }
+      ]
+    },
+    {
+      "index": 47,
+      "value": 3.4,
+      "source_expression": "(*hemo)[8].c[0][0]",
+      "source_members": [
+        "hemo[8].c[0][0]"
+      ],
+      "source_member": "hemo[8].c[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 547,
+      "source_comment": "C pul. arteries",
+      "source_member_provenance": [
+        {
+          "member": "hemo[8].c[0][0]",
+          "value": 3.4,
+          "source_expression": "3.4",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 122
+        }
+      ]
+    },
+    {
+      "index": 48,
+      "value": 9.0,
+      "source_expression": "(*hemo)[16].c[0][0]",
+      "source_members": [
+        "hemo[16].c[0][0]"
+      ],
+      "source_member": "hemo[16].c[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 548,
+      "source_comment": "C pul. veins",
+      "source_member_provenance": [
+        {
+          "member": "hemo[16].c[0][0]",
+          "value": 9.0,
+          "source_expression": "9.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 235
+        }
+      ]
+    },
+    {
+      "index": 49,
+      "value": 2.0,
+      "source_expression": "(*cardiac)[1].c_dias[0][0]",
+      "source_members": [
+        "cardiac[1].c_dias[0][0]"
+      ],
+      "source_member": "cardiac[1].c_dias[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 549,
+      "source_comment": "LA diastolic compliance",
+      "source_member_provenance": [
+        {
+          "member": "cardiac[1].c_dias[0][0]",
+          "value": 2.0,
+          "source_expression": "2.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 286
+        }
+      ]
+    },
+    {
+      "index": 50,
+      "value": 1.64,
+      "source_expression": "(*cardiac)[1].c_sys[0][0]",
+      "source_members": [
+        "cardiac[1].c_sys[0][0]"
+      ],
+      "source_member": "cardiac[1].c_sys[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 550,
+      "source_comment": "LA systolic compliance",
+      "source_member_provenance": [
+        {
+          "member": "cardiac[1].c_sys[0][0]",
+          "value": 1.64,
+          "source_expression": "1.64",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 273
+        }
+      ]
+    },
+    {
+      "index": 51,
+      "value": 9.69,
+      "source_expression": "(*cardiac)[1].c_dias[1][0]",
+      "source_members": [
+        "cardiac[1].c_dias[1][0]"
+      ],
+      "source_member": "cardiac[1].c_dias[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 551,
+      "source_comment": "LV diastolic compliance",
+      "source_member_provenance": [
+        {
+          "member": "cardiac[1].c_dias[1][0]",
+          "value": 9.69,
+          "source_expression": "9.69",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 289
+        }
+      ]
+    },
+    {
+      "index": 52,
+      "value": 0.4,
+      "source_expression": "(*cardiac)[1].c_sys[1][0]",
+      "source_members": [
+        "cardiac[1].c_sys[1][0]"
+      ],
+      "source_member": "cardiac[1].c_sys[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 552,
+      "source_comment": "LV systolic compliance",
+      "source_member_provenance": [
+        {
+          "member": "cardiac[1].c_sys[1][0]",
+          "value": 0.4,
+          "source_expression": "0.40",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 276
+        }
+      ]
+    },
+    {
+      "index": 53,
+      "value": 4.9,
+      "source_expression": "micro_r->r[0][0]",
+      "source_members": [
+        "micro_r.r[0][0]"
+      ],
+      "source_member": "micro_r.r[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 553,
+      "source_comment": "R upper body",
+      "source_member_provenance": [
+        {
+          "member": "micro_r.r[0][0]",
+          "value": 4.9,
+          "source_expression": "4.9",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 250
+        }
+      ]
+    },
+    {
+      "index": 54,
+      "value": 0.11,
+      "source_expression": "(*hemo)[9].r[0][0]",
+      "source_members": [
+        "hemo[9].r[0][0]"
+      ],
+      "source_member": "hemo[9].r[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 554,
+      "source_comment": "R upper body outflow",
+      "source_member_provenance": [
+        {
+          "member": "hemo[9].r[0][0]",
+          "value": 0.11,
+          "source_expression": "0.11",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 143
+        }
+      ]
+    },
+    {
+      "index": 55,
+      "value": 4.1,
+      "source_expression": "micro_r->r[1][0]",
+      "source_members": [
+        "micro_r.r[1][0]"
+      ],
+      "source_member": "micro_r.r[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 555,
+      "source_comment": "R kidney compartment",
+      "source_member_provenance": [
+        {
+          "member": "micro_r.r[1][0]",
+          "value": 4.1,
+          "source_expression": "4.1",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 253
+        }
+      ]
+    },
+    {
+      "index": 56,
+      "value": 0.11,
+      "source_expression": "(*hemo)[11].r[0][0]",
+      "source_members": [
+        "hemo[11].r[0][0]"
+      ],
+      "source_member": "hemo[11].r[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 556,
+      "source_comment": "R kidney outflow",
+      "source_member_provenance": [
+        {
+          "member": "hemo[11].r[0][0]",
+          "value": 0.11,
+          "source_expression": "0.11",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 171
+        }
+      ]
+    },
+    {
+      "index": 57,
+      "value": 3.0,
+      "source_expression": "micro_r->r[2][0]",
+      "source_members": [
+        "micro_r.r[2][0]"
+      ],
+      "source_member": "micro_r.r[2][0]",
+      "file": "main/initial.c",
+      "mapping_line": 557,
+      "source_comment": "R splanchnic compartment",
+      "source_member_provenance": [
+        {
+          "member": "micro_r.r[2][0]",
+          "value": 3.0,
+          "source_expression": "3.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 256
+        }
+      ]
+    },
+    {
+      "index": 58,
+      "value": 0.07,
+      "source_expression": "(*hemo)[12].r[0][0]",
+      "source_members": [
+        "hemo[12].r[0][0]"
+      ],
+      "source_member": "hemo[12].r[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 558,
+      "source_comment": "R splanchnic outflow",
+      "source_member_provenance": [
+        {
+          "member": "hemo[12].r[0][0]",
+          "value": 0.07,
+          "source_expression": "0.07",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 185
+        }
+      ]
+    },
+    {
+      "index": 59,
+      "value": 4.5,
+      "source_expression": "micro_r->r[3][0]",
+      "source_members": [
+        "micro_r.r[3][0]"
+      ],
+      "source_member": "micro_r.r[3][0]",
+      "file": "main/initial.c",
+      "mapping_line": 559,
+      "source_comment": "R lower body compartment",
+      "source_member_provenance": [
+        {
+          "member": "micro_r.r[3][0]",
+          "value": 4.5,
+          "source_expression": "4.5",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 259
+        }
+      ]
+    },
+    {
+      "index": 60,
+      "value": 0.1,
+      "source_expression": "(*hemo)[13].r[0][0]",
+      "source_members": [
+        "hemo[13].r[0][0]"
+      ],
+      "source_member": "hemo[13].r[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 560,
+      "source_comment": "R lower body outflow",
+      "source_member_provenance": [
+        {
+          "member": "hemo[13].r[0][0]",
+          "value": 0.1,
+          "source_expression": "0.10",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 199
+        }
+      ]
+    },
+    {
+      "index": 61,
+      "value": 0.019,
+      "source_expression": "(*hemo)[14].r[0][0]",
+      "source_members": [
+        "hemo[14].r[0][0]"
+      ],
+      "source_member": "hemo[14].r[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 561,
+      "source_comment": "R abdominal venous compartment",
+      "source_member_provenance": [
+        {
+          "member": "hemo[14].r[0][0]",
+          "value": 0.019,
+          "source_expression": "0.019",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 213
+        }
+      ]
+    },
+    {
+      "index": 62,
+      "value": 0.008,
+      "source_expression": "(*hemo)[15].r[0][0]",
+      "source_members": [
+        "hemo[15].r[0][0]"
+      ],
+      "source_member": "hemo[15].r[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 562,
+      "source_comment": "R inferior vena cava comp.",
+      "source_member_provenance": [
+        {
+          "member": "hemo[15].r[0][0]",
+          "value": 0.008,
+          "source_expression": "0.008",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 227
+        }
+      ]
+    },
+    {
+      "index": 63,
+      "value": 0.028,
+      "source_expression": "(*hemo)[10].r[0][0]",
+      "source_members": [
+        "hemo[10].r[0][0]"
+      ],
+      "source_member": "hemo[10].r[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 563,
+      "source_comment": "R superior vena cava comp.",
+      "source_member_provenance": [
+        {
+          "member": "hemo[10].r[0][0]",
+          "value": 0.028,
+          "source_expression": "0.028",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 157
+        }
+      ]
+    },
+    {
+      "index": 64,
+      "value": 0.006,
+      "source_expression": "(*cardiac)[0].r[0][0]",
+      "source_members": [
+        "cardiac[0].r[0][0]"
+      ],
+      "source_member": "cardiac[0].r[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 564,
+      "source_comment": "R tricuspid valve",
+      "source_member_provenance": [
+        {
+          "member": "cardiac[0].r[0][0]",
+          "value": 0.006,
+          "source_expression": "0.006",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 306
+        }
+      ]
+    },
+    {
+      "index": 65,
+      "value": 0.006,
+      "source_expression": "(*hemo)[8].r[0][0]",
+      "source_members": [
+        "hemo[8].r[0][0]"
+      ],
+      "source_member": "hemo[8].r[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 565,
+      "source_comment": "R right ventricular outflow",
+      "source_member_provenance": [
+        {
+          "member": "hemo[8].r[0][0]",
+          "value": 0.006,
+          "source_expression": "0.006",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 128
+        }
+      ]
+    },
+    {
+      "index": 66,
+      "value": 0.07,
+      "source_expression": "micro_r->r[4][0]",
+      "source_members": [
+        "micro_r.r[4][0]"
+      ],
+      "source_member": "micro_r.r[4][0]",
+      "file": "main/initial.c",
+      "mapping_line": 566,
+      "source_comment": "R pulmonary microcirculation",
+      "source_member_provenance": [
+        {
+          "member": "micro_r.r[4][0]",
+          "value": 0.07,
+          "source_expression": "0.07",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 262
+        }
+      ]
+    },
+    {
+      "index": 67,
+      "value": 0.006,
+      "source_expression": "(*hemo)[16].r[0][0]",
+      "source_members": [
+        "hemo[16].r[0][0]"
+      ],
+      "source_member": "hemo[16].r[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 567,
+      "source_comment": "R pulmonary veins / LV inflow",
+      "source_member_provenance": [
+        {
+          "member": "hemo[16].r[0][0]",
+          "value": 0.006,
+          "source_expression": "0.006",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 241
+        }
+      ]
+    },
+    {
+      "index": 68,
+      "value": 0.01,
+      "source_expression": "(*cardiac)[1].r[0][0]",
+      "source_members": [
+        "cardiac[1].r[0][0]"
+      ],
+      "source_member": "cardiac[1].r[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 568,
+      "source_comment": "R mitral valve",
+      "source_member_provenance": [
+        {
+          "member": "cardiac[1].r[0][0]",
+          "value": 0.01,
+          "source_expression": "0.01",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 309
+        }
+      ]
+    },
+    {
+      "index": 69,
+      "value": 0.007,
+      "source_expression": "(*hemo)[0].r[0][0]",
+      "source_members": [
+        "hemo[0].r[0][0]"
+      ],
+      "source_member": "hemo[0].r[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 569,
+      "source_comment": "R left ventricular outflow",
+      "source_member_provenance": [
+        {
+          "member": "hemo[0].r[0][0]",
+          "value": 0.007,
+          "source_expression": "0.007",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 16
+        }
+      ]
+    },
+    {
+      "index": 70,
+      "value": 5150.0,
+      "source_expression": "system->bv[0][0]",
+      "source_members": [
+        "system.bv[0][0]"
+      ],
+      "source_member": "system.bv[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 570,
+      "source_comment": "Total blood volume",
+      "source_member_provenance": [
+        {
+          "member": "system.bv[0][0]",
+          "value": 5150.0,
+          "source_expression": "5150.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 315
+        }
+      ]
+    },
+    {
+      "index": 71,
+      "value": 1500.0,
+      "source_expression": "1500.0",
+      "source_members": [],
+      "source_member": null,
+      "file": "main/initial.c",
+      "mapping_line": 571,
+      "source_comment": "Maximal increase in sp distending vol.",
+      "source_member_provenance": []
+    },
+    {
+      "index": 72,
+      "value": 1000.0,
+      "source_expression": "1000.0",
+      "source_members": [],
+      "source_member": null,
+      "file": "main/initial.c",
+      "mapping_line": 572,
+      "source_comment": "Maximal increase in ll distending vol.",
+      "source_member_provenance": []
+    },
+    {
+      "index": 73,
+      "value": 650.0,
+      "source_expression": "650.0",
+      "source_members": [],
+      "source_member": null,
+      "file": "main/initial.c",
+      "mapping_line": 573,
+      "source_comment": "Maximal increase in ab distending vol.",
+      "source_member_provenance": []
+    },
+    {
+      "index": 74,
+      "value": 300.0,
+      "source_expression": "300.0",
+      "source_members": [],
+      "source_member": null,
+      "file": "main/initial.c",
+      "mapping_line": 574,
+      "source_comment": "Maximal blood volume loss during tilt",
+      "source_member_provenance": []
+    },
+    {
+      "index": 75,
+      "value": 4166.0,
+      "source_expression": "4166.0",
+      "source_members": [],
+      "source_member": null,
+      "file": "main/initial.c",
+      "mapping_line": 575,
+      "source_comment": "Total zero pressure filling volume",
+      "source_member_provenance": []
+    },
+    {
+      "index": 76,
+      "value": 715.0,
+      "source_expression": "715.0",
+      "source_members": [],
+      "source_member": null,
+      "file": "main/initial.c",
+      "mapping_line": 576,
+      "source_comment": "Volume of arterial compartment",
+      "source_member_provenance": []
+    },
+    {
+      "index": 77,
+      "value": 645.0,
+      "source_expression": "(*hemo)[9].v[0][0]",
+      "source_members": [
+        "hemo[9].v[0][0]"
+      ],
+      "source_member": "hemo[9].v[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 577,
+      "source_comment": "ZPFV of upper body compartment",
+      "source_member_provenance": [
+        {
+          "member": "hemo[9].v[0][0]",
+          "value": 645.0,
+          "source_expression": "645.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 140
+        }
+      ]
+    },
+    {
+      "index": 78,
+      "value": 30.0,
+      "source_expression": "(*hemo)[11].v[0][0]",
+      "source_members": [
+        "hemo[11].v[0][0]"
+      ],
+      "source_member": "hemo[11].v[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 578,
+      "source_comment": "ZPFV of kidney compartment",
+      "source_member_provenance": [
+        {
+          "member": "hemo[11].v[0][0]",
+          "value": 30.0,
+          "source_expression": "30.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 168
+        }
+      ]
+    },
+    {
+      "index": 79,
+      "value": 1146.0,
+      "source_expression": "(*hemo)[12].v[0][0]",
+      "source_members": [
+        "hemo[12].v[0][0]"
+      ],
+      "source_member": "hemo[12].v[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 579,
+      "source_comment": "ZPFV of splanchnic compartment",
+      "source_member_provenance": [
+        {
+          "member": "hemo[12].v[0][0]",
+          "value": 1146.0,
+          "source_expression": "1146.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 182
+        }
+      ]
+    },
+    {
+      "index": 80,
+      "value": 716.0,
+      "source_expression": "(*hemo)[13].v[0][0]",
+      "source_members": [
+        "hemo[13].v[0][0]"
+      ],
+      "source_member": "hemo[13].v[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 580,
+      "source_comment": "ZPFV of lower body compartment",
+      "source_member_provenance": [
+        {
+          "member": "hemo[13].v[0][0]",
+          "value": 716.0,
+          "source_expression": "716.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 196
+        }
+      ]
+    },
+    {
+      "index": 81,
+      "value": 79.0,
+      "source_expression": "(*hemo)[14].v[0][0]",
+      "source_members": [
+        "hemo[14].v[0][0]"
+      ],
+      "source_member": "hemo[14].v[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 581,
+      "source_comment": "ZPFV of abdominal veins",
+      "source_member_provenance": [
+        {
+          "member": "hemo[14].v[0][0]",
+          "value": 79.0,
+          "source_expression": "79.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 210
+        }
+      ]
+    },
+    {
+      "index": 82,
+      "value": 33.0,
+      "source_expression": "(*hemo)[15].v[0][0]",
+      "source_members": [
+        "hemo[15].v[0][0]"
+      ],
+      "source_member": "hemo[15].v[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 582,
+      "source_comment": "ZPFV of inferior vena cava",
+      "source_member_provenance": [
+        {
+          "member": "hemo[15].v[0][0]",
+          "value": 33.0,
+          "source_expression": "33.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 224
+        }
+      ]
+    },
+    {
+      "index": 83,
+      "value": 16.0,
+      "source_expression": "(*hemo)[10].v[0][0]",
+      "source_members": [
+        "hemo[10].v[0][0]"
+      ],
+      "source_member": "hemo[10].v[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 583,
+      "source_comment": "ZPFV of superior vena cava",
+      "source_member_provenance": [
+        {
+          "member": "hemo[10].v[0][0]",
+          "value": 16.0,
+          "source_expression": "16.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 154
+        }
+      ]
+    },
+    {
+      "index": 84,
+      "value": 14.0,
+      "source_expression": "(*cardiac)[0].v[0][0]",
+      "source_members": [
+        "cardiac[0].v[0][0]"
+      ],
+      "source_member": "cardiac[0].v[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 584,
+      "source_comment": "ZPFV of right atrium",
+      "source_member_provenance": [
+        {
+          "member": "cardiac[0].v[0][0]",
+          "value": 14.0,
+          "source_expression": "14.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 293
+        }
+      ]
+    },
+    {
+      "index": 85,
+      "value": 46.0,
+      "source_expression": "(*cardiac)[0].v[1][0]",
+      "source_members": [
+        "cardiac[0].v[1][0]"
+      ],
+      "source_member": "cardiac[0].v[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 585,
+      "source_comment": "ZPFV of right ventricle",
+      "source_member_provenance": [
+        {
+          "member": "cardiac[0].v[1][0]",
+          "value": 46.0,
+          "source_expression": "46.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 296
+        }
+      ]
+    },
+    {
+      "index": 86,
+      "value": 160.0,
+      "source_expression": "(*hemo)[8].v[0][0]",
+      "source_members": [
+        "hemo[8].v[0][0]"
+      ],
+      "source_member": "hemo[8].v[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 586,
+      "source_comment": "ZPFV of pulmonary arteries",
+      "source_member_provenance": [
+        {
+          "member": "hemo[8].v[0][0]",
+          "value": 160.0,
+          "source_expression": "160.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 125
+        }
+      ]
+    },
+    {
+      "index": 87,
+      "value": 430.0,
+      "source_expression": "(*hemo)[16].v[0][0]",
+      "source_members": [
+        "hemo[16].v[0][0]"
+      ],
+      "source_member": "hemo[16].v[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 587,
+      "source_comment": "ZPFV of pulmonary veins",
+      "source_member_provenance": [
+        {
+          "member": "hemo[16].v[0][0]",
+          "value": 430.0,
+          "source_expression": "430.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 238
+        }
+      ]
+    },
+    {
+      "index": 88,
+      "value": 24.0,
+      "source_expression": "(*cardiac)[1].v[0][0]",
+      "source_members": [
+        "cardiac[1].v[0][0]"
+      ],
+      "source_member": "cardiac[1].v[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 588,
+      "source_comment": "ZPFV of left atrium",
+      "source_member_provenance": [
+        {
+          "member": "cardiac[1].v[0][0]",
+          "value": 24.0,
+          "source_expression": "24.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 299
+        }
+      ]
+    },
+    {
+      "index": 89,
+      "value": 55.0,
+      "source_expression": "(*cardiac)[1].v[1][0]",
+      "source_members": [
+        "cardiac[1].v[1][0]"
+      ],
+      "source_member": "cardiac[1].v[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 589,
+      "source_comment": "ZPFV of left ventricle",
+      "source_member_provenance": [
+        {
+          "member": "cardiac[1].v[1][0]",
+          "value": 55.0,
+          "source_expression": "55.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 302
+        }
+      ]
+    },
+    {
+      "index": 90,
+      "value": 70.0,
+      "source_expression": "system->hr[0][0]",
+      "source_members": [
+        "system.hr[0][0]"
+      ],
+      "source_member": "system.hr[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 590,
+      "source_comment": "Nominal heart rate",
+      "source_member_provenance": [
+        {
+          "member": "system.hr[0][0]",
+          "value": 70.0,
+          "source_expression": "70.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 318
+        }
+      ]
+    },
+    {
+      "index": 91,
+      "value": 0.0,
+      "source_expression": "0.0",
+      "source_members": [],
+      "source_member": null,
+      "file": "main/initial.c",
+      "mapping_line": 591,
+      "source_comment": "Tilt angle",
+      "source_member_provenance": []
+    },
+    {
+      "index": 92,
+      "value": 2.0,
+      "source_expression": "2.0",
+      "source_members": [],
+      "source_member": null,
+      "file": "main/initial.c",
+      "mapping_line": 592,
+      "source_comment": "Time to max. tilt angle (i.e. tilt time)",
+      "source_member_provenance": []
+    },
+    {
+      "index": 93,
+      "value": 200.0,
+      "source_expression": "200.0",
+      "source_members": [],
+      "source_member": null,
+      "file": "main/initial.c",
+      "mapping_line": 593,
+      "source_comment": "Tilt onset time",
+      "source_member_provenance": []
+    },
+    {
+      "index": 94,
+      "value": 240.0,
+      "source_expression": "240.0",
+      "source_members": [],
+      "source_member": null,
+      "file": "main/initial.c",
+      "mapping_line": 594,
+      "source_comment": "Duration in upright posture",
+      "source_member_provenance": []
+    },
+    {
+      "index": 95,
+      "value": 0.0,
+      "source_expression": "0.0",
+      "source_members": [],
+      "source_member": null,
+      "file": "main/initial.c",
+      "mapping_line": 595,
+      "source_comment": "Maximal external negative pressure",
+      "source_member_provenance": []
+    },
+    {
+      "index": 96,
+      "value": 500.0,
+      "source_expression": "500.0",
+      "source_members": [],
+      "source_member": null,
+      "file": "main/initial.c",
+      "mapping_line": 596,
+      "source_comment": "Volume loss during LBNP",
+      "source_member_provenance": []
+    },
+    {
+      "index": 97,
+      "value": 0.28,
+      "source_expression": "(*hemo)[0].c[0][0]",
+      "source_members": [
+        "hemo[0].c[0][0]"
+      ],
+      "source_member": "hemo[0].c[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 597,
+      "source_comment": "C aortic arch",
+      "source_member_provenance": [
+        {
+          "member": "hemo[0].c[0][0]",
+          "value": 0.28,
+          "source_expression": "0.28",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 10
+        }
+      ]
+    },
+    {
+      "index": 98,
+      "value": 0.13,
+      "source_expression": "(*hemo)[1].c[0][0]",
+      "source_members": [
+        "hemo[1].c[0][0]"
+      ],
+      "source_member": "hemo[1].c[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 598,
+      "source_comment": "C upper thoracic aorta",
+      "source_member_provenance": [
+        {
+          "member": "hemo[1].c[0][0]",
+          "value": 0.13,
+          "source_expression": "0.13",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 24
+        }
+      ]
+    },
+    {
+      "index": 99,
+      "value": 0.1,
+      "source_expression": "(*hemo)[3].c[0][0]",
+      "source_members": [
+        "hemo[3].c[0][0]"
+      ],
+      "source_member": "hemo[3].c[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 599,
+      "source_comment": "C lower thoracic aorta",
+      "source_member_provenance": [
+        {
+          "member": "hemo[3].c[0][0]",
+          "value": 0.1,
+          "source_expression": "0.1",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 52
+        }
+      ]
+    },
+    {
+      "index": 100,
+      "value": 0.2,
+      "source_expression": "(*hemo)[2].c[0][0]",
+      "source_members": [
+        "hemo[2].c[0][0]"
+      ],
+      "source_member": "hemo[2].c[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 600,
+      "source_comment": "C upper body arteries",
+      "source_member_provenance": [
+        {
+          "member": "hemo[2].c[0][0]",
+          "value": 0.2,
+          "source_expression": "0.2",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 38
+        }
+      ]
+    },
+    {
+      "index": 101,
+      "value": 0.1,
+      "source_expression": "(*hemo)[4].c[0][0]",
+      "source_members": [
+        "hemo[4].c[0][0]"
+      ],
+      "source_member": "hemo[4].c[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 601,
+      "source_comment": "C abdominal aorta",
+      "source_member_provenance": [
+        {
+          "member": "hemo[4].c[0][0]",
+          "value": 0.1,
+          "source_expression": "0.10",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 66
+        }
+      ]
+    },
+    {
+      "index": 102,
+      "value": 0.21,
+      "source_expression": "(*hemo)[5].c[0][0]",
+      "source_members": [
+        "hemo[5].c[0][0]"
+      ],
+      "source_member": "hemo[5].c[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 602,
+      "source_comment": "C renal arteries",
+      "source_member_provenance": [
+        {
+          "member": "hemo[5].c[0][0]",
+          "value": 0.21,
+          "source_expression": "0.21",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 80
+        }
+      ]
+    },
+    {
+      "index": 103,
+      "value": 0.2,
+      "source_expression": "(*hemo)[6].c[0][0]",
+      "source_members": [
+        "hemo[6].c[0][0]"
+      ],
+      "source_member": "hemo[6].c[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 603,
+      "source_comment": "C splanchnic arteries",
+      "source_member_provenance": [
+        {
+          "member": "hemo[6].c[0][0]",
+          "value": 0.2,
+          "source_expression": "0.2",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 94
+        }
+      ]
+    },
+    {
+      "index": 104,
+      "value": 0.2,
+      "source_expression": "(*hemo)[7].c[0][0]",
+      "source_members": [
+        "hemo[7].c[0][0]"
+      ],
+      "source_member": "hemo[7].c[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 604,
+      "source_comment": "C leg arteries and arterioles",
+      "source_member_provenance": [
+        {
+          "member": "hemo[7].c[0][0]",
+          "value": 0.2,
+          "source_expression": "0.2",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 108
+        }
+      ]
+    },
+    {
+      "index": 105,
+      "value": 0.003,
+      "source_expression": "(*hemo)[1].r[0][0]",
+      "source_members": [
+        "hemo[1].r[0][0]"
+      ],
+      "source_member": "hemo[1].r[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 605,
+      "source_comment": "R upper thoracic aorta",
+      "source_member_provenance": [
+        {
+          "member": "hemo[1].r[0][0]",
+          "value": 0.003,
+          "source_expression": "0.003",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 30
+        }
+      ]
+    },
+    {
+      "index": 106,
+      "value": 0.014,
+      "source_expression": "(*hemo)[2].r[0][0]",
+      "source_members": [
+        "hemo[2].r[0][0]"
+      ],
+      "source_member": "hemo[2].r[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 606,
+      "source_comment": "R head arteries",
+      "source_member_provenance": [
+        {
+          "member": "hemo[2].r[0][0]",
+          "value": 0.014,
+          "source_expression": "0.014",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 44
+        }
+      ]
+    },
+    {
+      "index": 107,
+      "value": 0.011,
+      "source_expression": "(*hemo)[3].r[0][0]",
+      "source_members": [
+        "hemo[3].r[0][0]"
+      ],
+      "source_member": "hemo[3].r[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 607,
+      "source_comment": "R lower thoracic aorta",
+      "source_member_provenance": [
+        {
+          "member": "hemo[3].r[0][0]",
+          "value": 0.011,
+          "source_expression": "0.011",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 58
+        }
+      ]
+    },
+    {
+      "index": 108,
+      "value": 0.01,
+      "source_expression": "(*hemo)[4].r[0][0]",
+      "source_members": [
+        "hemo[4].r[0][0]"
+      ],
+      "source_member": "hemo[4].r[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 608,
+      "source_comment": "R abdominal aorta",
+      "source_member_provenance": [
+        {
+          "member": "hemo[4].r[0][0]",
+          "value": 0.01,
+          "source_expression": "0.01",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 72
+        }
+      ]
+    },
+    {
+      "index": 109,
+      "value": 0.1,
+      "source_expression": "(*hemo)[5].r[0][0]",
+      "source_members": [
+        "hemo[5].r[0][0]"
+      ],
+      "source_member": "hemo[5].r[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 609,
+      "source_comment": "R renal arteries",
+      "source_member_provenance": [
+        {
+          "member": "hemo[5].r[0][0]",
+          "value": 0.1,
+          "source_expression": "0.10",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 86
+        }
+      ]
+    },
+    {
+      "index": 110,
+      "value": 0.07,
+      "source_expression": "(*hemo)[6].r[0][0]",
+      "source_members": [
+        "hemo[6].r[0][0]"
+      ],
+      "source_member": "hemo[6].r[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 610,
+      "source_comment": "R splanchnic arteries",
+      "source_member_provenance": [
+        {
+          "member": "hemo[6].r[0][0]",
+          "value": 0.07,
+          "source_expression": "0.07",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 100
+        }
+      ]
+    },
+    {
+      "index": 111,
+      "value": 0.09,
+      "source_expression": "(*hemo)[7].r[0][0]",
+      "source_members": [
+        "hemo[7].r[0][0]"
+      ],
+      "source_member": "hemo[7].r[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 611,
+      "source_comment": "R leg arteries",
+      "source_member_provenance": [
+        {
+          "member": "hemo[7].r[0][0]",
+          "value": 0.09,
+          "source_expression": "0.09",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 114
+        }
+      ]
+    },
+    {
+      "index": 112,
+      "value": 5.0,
+      "source_expression": "timing->alpha_v[0][0]",
+      "source_members": [
+        "timing.alpha_v[0][0]"
+      ],
+      "source_member": "timing.alpha_v[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 612,
+      "source_comment": "Delay alpha-symp. to veins",
+      "source_member_provenance": [
+        {
+          "member": "timing.alpha_v[0][0]",
+          "value": 5.0,
+          "source_expression": "5.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 466
+        }
+      ]
+    },
+    {
+      "index": 113,
+      "value": 10.0,
+      "source_expression": "timing->alpha_v[1][0]",
+      "source_members": [
+        "timing.alpha_v[1][0]"
+      ],
+      "source_member": "timing.alpha_v[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 613,
+      "source_comment": "Peak alpha-symp. to veins",
+      "source_member_provenance": [
+        {
+          "member": "timing.alpha_v[1][0]",
+          "value": 10.0,
+          "source_expression": "10.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 469
+        }
+      ]
+    },
+    {
+      "index": 114,
+      "value": 42.0,
+      "source_expression": "timing->alpha_v[2][0]",
+      "source_members": [
+        "timing.alpha_v[2][0]"
+      ],
+      "source_member": "timing.alpha_v[2][0]",
+      "file": "main/initial.c",
+      "mapping_line": 614,
+      "source_comment": "End alpha-symp. to veins",
+      "source_member_provenance": [
+        {
+          "member": "timing.alpha_v[2][0]",
+          "value": 42.0,
+          "source_expression": "42.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 472
+        }
+      ]
+    },
+    {
+      "index": 115,
+      "value": 2.5,
+      "source_expression": "timing->alpha_r[0][0]",
+      "source_members": [
+        "timing.alpha_r[0][0]"
+      ],
+      "source_member": "timing.alpha_r[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 615,
+      "source_comment": "Delay alpha-symp. to arteries",
+      "source_member_provenance": [
+        {
+          "member": "timing.alpha_r[0][0]",
+          "value": 2.5,
+          "source_expression": "2.5",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 456
+        }
+      ]
+    },
+    {
+      "index": 116,
+      "value": 3.5,
+      "source_expression": "timing->alpha_r[1][0]",
+      "source_members": [
+        "timing.alpha_r[1][0]"
+      ],
+      "source_member": "timing.alpha_r[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 616,
+      "source_comment": "Peak alpha-symp. to arteries",
+      "source_member_provenance": [
+        {
+          "member": "timing.alpha_r[1][0]",
+          "value": 3.5,
+          "source_expression": "3.5",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 459
+        }
+      ]
+    },
+    {
+      "index": 117,
+      "value": 30.0,
+      "source_expression": "timing->alpha_r[2][0]",
+      "source_members": [
+        "timing.alpha_r[2][0]"
+      ],
+      "source_member": "timing.alpha_r[2][0]",
+      "file": "main/initial.c",
+      "mapping_line": 617,
+      "source_comment": "End alpha-symp. to arteries",
+      "source_member_provenance": [
+        {
+          "member": "timing.alpha_r[2][0]",
+          "value": 30.0,
+          "source_expression": "30.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 462
+        }
+      ]
+    },
+    {
+      "index": 118,
+      "value": 0.12,
+      "source_expression": "system->T[2][0]",
+      "source_members": [
+        "system.T[2][0]"
+      ],
+      "source_member": "system.T[2][0]",
+      "file": "main/initial.c",
+      "mapping_line": 618,
+      "source_comment": "PR-interval",
+      "source_member_provenance": [
+        {
+          "member": "system.T[2][0]",
+          "value": 0.12,
+          "source_expression": "0.12",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 340
+        }
+      ]
+    },
+    {
+      "index": 119,
+      "value": 0.2,
+      "source_expression": "system->T[0][0]",
+      "source_members": [
+        "system.T[0][0]"
+      ],
+      "source_member": "system.T[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 619,
+      "source_comment": "Atrial systole",
+      "source_member_provenance": [
+        {
+          "member": "system.T[0][0]",
+          "value": 0.2,
+          "source_expression": "0.2",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 334
+        }
+      ]
+    },
+    {
+      "index": 120,
+      "value": 0.3,
+      "source_expression": "system->T[1][0]",
+      "source_members": [
+        "system.T[1][0]"
+      ],
+      "source_member": "system.T[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 620,
+      "source_comment": "Ventricular systole",
+      "source_member_provenance": [
+        {
+          "member": "system.T[1][0]",
+          "value": 0.3,
+          "source_expression": "0.3",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 337
+        }
+      ]
+    },
+    {
+      "index": 121,
+      "value": 10.0,
+      "source_expression": "(*hemo)[0].h[0][0]",
+      "source_members": [
+        "hemo[0].h[0][0]"
+      ],
+      "source_member": "hemo[0].h[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 621,
+      "source_comment": "",
+      "source_member_provenance": [
+        {
+          "member": "hemo[0].h[0][0]",
+          "value": 10.0,
+          "source_expression": "10.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 19
+        }
+      ]
+    },
+    {
+      "index": 122,
+      "value": 4.5,
+      "source_expression": "(*hemo)[1].h[0][0]",
+      "source_members": [
+        "hemo[1].h[0][0]"
+      ],
+      "source_member": "hemo[1].h[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 622,
+      "source_comment": "",
+      "source_member_provenance": [
+        {
+          "member": "hemo[1].h[0][0]",
+          "value": 4.5,
+          "source_expression": "4.5",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 33
+        }
+      ]
+    },
+    {
+      "index": 123,
+      "value": 20.0,
+      "source_expression": "(*hemo)[2].h[0][0]",
+      "source_members": [
+        "hemo[2].h[0][0]"
+      ],
+      "source_member": "hemo[2].h[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 623,
+      "source_comment": "",
+      "source_member_provenance": [
+        {
+          "member": "hemo[2].h[0][0]",
+          "value": 20.0,
+          "source_expression": "20.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 47
+        }
+      ]
+    },
+    {
+      "index": 124,
+      "value": 20.0,
+      "source_expression": "(*hemo)[9].h[0][0]",
+      "source_members": [
+        "hemo[9].h[0][0]"
+      ],
+      "source_member": "hemo[9].h[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 624,
+      "source_comment": "",
+      "source_member_provenance": [
+        {
+          "member": "hemo[9].h[0][0]",
+          "value": 20.0,
+          "source_expression": "20.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 146
+        }
+      ]
+    },
+    {
+      "index": 125,
+      "value": 14.5,
+      "source_expression": "(*hemo)[10].h[0][0]",
+      "source_members": [
+        "hemo[10].h[0][0]"
+      ],
+      "source_member": "hemo[10].h[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 625,
+      "source_comment": "",
+      "source_member_provenance": [
+        {
+          "member": "hemo[10].h[0][0]",
+          "value": 14.5,
+          "source_expression": "14.5",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 160
+        }
+      ]
+    },
+    {
+      "index": 126,
+      "value": 16.0,
+      "source_expression": "(*hemo)[3].h[0][0]",
+      "source_members": [
+        "hemo[3].h[0][0]"
+      ],
+      "source_member": "hemo[3].h[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 626,
+      "source_comment": "",
+      "source_member_provenance": [
+        {
+          "member": "hemo[3].h[0][0]",
+          "value": 16.0,
+          "source_expression": "16.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 61
+        }
+      ]
+    },
+    {
+      "index": 127,
+      "value": 14.5,
+      "source_expression": "(*hemo)[4].h[0][0]",
+      "source_members": [
+        "hemo[4].h[0][0]"
+      ],
+      "source_member": "hemo[4].h[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 627,
+      "source_comment": "",
+      "source_member_provenance": [
+        {
+          "member": "hemo[4].h[0][0]",
+          "value": 14.5,
+          "source_expression": "14.5",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 75
+        }
+      ]
+    },
+    {
+      "index": 128,
+      "value": 0.0,
+      "source_expression": "(*hemo)[5].h[0][0]",
+      "source_members": [
+        "hemo[5].h[0][0]"
+      ],
+      "source_member": "hemo[5].h[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 628,
+      "source_comment": "",
+      "source_member_provenance": [
+        {
+          "member": "hemo[5].h[0][0]",
+          "value": 0.0,
+          "source_expression": "0.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 89
+        }
+      ]
+    },
+    {
+      "index": 129,
+      "value": 0.0,
+      "source_expression": "(*hemo)[11].h[0][0]",
+      "source_members": [
+        "hemo[11].h[0][0]"
+      ],
+      "source_member": "hemo[11].h[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 629,
+      "source_comment": "",
+      "source_member_provenance": [
+        {
+          "member": "hemo[11].h[0][0]",
+          "value": 0.0,
+          "source_expression": "0.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 174
+        }
+      ]
+    },
+    {
+      "index": 130,
+      "value": 5.0,
+      "source_expression": "(*hemo)[6].h[0][0]",
+      "source_members": [
+        "hemo[6].h[0][0]"
+      ],
+      "source_member": "hemo[6].h[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 630,
+      "source_comment": "",
+      "source_member_provenance": [
+        {
+          "member": "hemo[6].h[0][0]",
+          "value": 5.0,
+          "source_expression": "5.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 103
+        }
+      ]
+    },
+    {
+      "index": 131,
+      "value": 5.0,
+      "source_expression": "(*hemo)[12].h[0][0]",
+      "source_members": [
+        "hemo[12].h[0][0]"
+      ],
+      "source_member": "hemo[12].h[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 631,
+      "source_comment": "",
+      "source_member_provenance": [
+        {
+          "member": "hemo[12].h[0][0]",
+          "value": 5.0,
+          "source_expression": "5.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 188
+        }
+      ]
+    },
+    {
+      "index": 132,
+      "value": 106.0,
+      "source_expression": "(*hemo)[7].h[0][0]",
+      "source_members": [
+        "hemo[7].h[0][0]"
+      ],
+      "source_member": "hemo[7].h[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 632,
+      "source_comment": "",
+      "source_member_provenance": [
+        {
+          "member": "hemo[7].h[0][0]",
+          "value": 106.0,
+          "source_expression": "106.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 117
+        }
+      ]
+    },
+    {
+      "index": 133,
+      "value": 106.0,
+      "source_expression": "(*hemo)[13].h[0][0]",
+      "source_members": [
+        "hemo[13].h[0][0]"
+      ],
+      "source_member": "hemo[13].h[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 633,
+      "source_comment": "",
+      "source_member_provenance": [
+        {
+          "member": "hemo[13].h[0][0]",
+          "value": 106.0,
+          "source_expression": "106.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 202
+        }
+      ]
+    },
+    {
+      "index": 134,
+      "value": 14.5,
+      "source_expression": "(*hemo)[14].h[0][0]",
+      "source_members": [
+        "hemo[14].h[0][0]"
+      ],
+      "source_member": "hemo[14].h[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 634,
+      "source_comment": "",
+      "source_member_provenance": [
+        {
+          "member": "hemo[14].h[0][0]",
+          "value": 14.5,
+          "source_expression": "14.5",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 216
+        }
+      ]
+    },
+    {
+      "index": 135,
+      "value": 6.0,
+      "source_expression": "(*hemo)[15].h[0][0]",
+      "source_members": [
+        "hemo[15].h[0][0]"
+      ],
+      "source_member": "hemo[15].h[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 635,
+      "source_comment": "",
+      "source_member_provenance": [
+        {
+          "member": "hemo[15].h[0][0]",
+          "value": 6.0,
+          "source_expression": "6.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 230
+        }
+      ]
+    },
+    {
+      "index": 136,
+      "value": 21.0,
+      "source_expression": "(*hemo)[0].v[0][0]",
+      "source_members": [
+        "hemo[0].v[0][0]"
+      ],
+      "source_member": "hemo[0].v[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 636,
+      "source_comment": "V aortic arch",
+      "source_member_provenance": [
+        {
+          "member": "hemo[0].v[0][0]",
+          "value": 21.0,
+          "source_expression": "21.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 13
+        }
+      ]
+    },
+    {
+      "index": 137,
+      "value": 5.0,
+      "source_expression": "(*hemo)[1].v[0][0]",
+      "source_members": [
+        "hemo[1].v[0][0]"
+      ],
+      "source_member": "hemo[1].v[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 637,
+      "source_comment": "V upper thoracic aorta",
+      "source_member_provenance": [
+        {
+          "member": "hemo[1].v[0][0]",
+          "value": 5.0,
+          "source_expression": "5.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 27
+        }
+      ]
+    },
+    {
+      "index": 138,
+      "value": 200.0,
+      "source_expression": "(*hemo)[2].v[0][0]",
+      "source_members": [
+        "hemo[2].v[0][0]"
+      ],
+      "source_member": "hemo[2].v[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 638,
+      "source_comment": "V lower thoracic aorta",
+      "source_member_provenance": [
+        {
+          "member": "hemo[2].v[0][0]",
+          "value": 200.0,
+          "source_expression": "200.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 41
+        }
+      ]
+    },
+    {
+      "index": 139,
+      "value": 16.0,
+      "source_expression": "(*hemo)[3].v[0][0]",
+      "source_members": [
+        "hemo[3].v[0][0]"
+      ],
+      "source_member": "hemo[3].v[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 639,
+      "source_comment": "V upper body arteries",
+      "source_member_provenance": [
+        {
+          "member": "hemo[3].v[0][0]",
+          "value": 16.0,
+          "source_expression": "16.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 55
+        }
+      ]
+    },
+    {
+      "index": 140,
+      "value": 10.0,
+      "source_expression": "(*hemo)[4].v[0][0]",
+      "source_members": [
+        "hemo[4].v[0][0]"
+      ],
+      "source_member": "hemo[4].v[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 640,
+      "source_comment": "V abdominal aorta",
+      "source_member_provenance": [
+        {
+          "member": "hemo[4].v[0][0]",
+          "value": 10.0,
+          "source_expression": "10.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 69
+        }
+      ]
+    },
+    {
+      "index": 141,
+      "value": 20.0,
+      "source_expression": "(*hemo)[5].v[0][0]",
+      "source_members": [
+        "hemo[5].v[0][0]"
+      ],
+      "source_member": "hemo[5].v[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 641,
+      "source_comment": "V renal arteries",
+      "source_member_provenance": [
+        {
+          "member": "hemo[5].v[0][0]",
+          "value": 20.0,
+          "source_expression": "20.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 83
+        }
+      ]
+    },
+    {
+      "index": 142,
+      "value": 300.0,
+      "source_expression": "(*hemo)[6].v[0][0]",
+      "source_members": [
+        "hemo[6].v[0][0]"
+      ],
+      "source_member": "hemo[6].v[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 642,
+      "source_comment": "V splanchnic arteries",
+      "source_member_provenance": [
+        {
+          "member": "hemo[6].v[0][0]",
+          "value": 300.0,
+          "source_expression": "300.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 97
+        }
+      ]
+    },
+    {
+      "index": 143,
+      "value": 200.0,
+      "source_expression": "(*hemo)[7].v[0][0]",
+      "source_members": [
+        "hemo[7].v[0][0]"
+      ],
+      "source_member": "hemo[7].v[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 643,
+      "source_comment": "V leg arteries",
+      "source_member_provenance": [
+        {
+          "member": "hemo[7].v[0][0]",
+          "value": 200.0,
+          "source_expression": "200.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 111
+        }
+      ]
+    },
+    {
+      "index": 144,
+      "value": 169.3,
+      "source_expression": "system->h[0][0]",
+      "source_members": [
+        "system.h[0][0]"
+      ],
+      "source_member": "system.h[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 644,
+      "source_comment": "",
+      "source_member_provenance": [
+        {
+          "member": "system.h[0][0]",
+          "value": 169.3,
+          "source_expression": "169.3",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 324
+        }
+      ]
+    },
+    {
+      "index": 145,
+      "value": 60.2,
+      "source_expression": "system->w[0][0]",
+      "source_members": [
+        "system.w[0][0]"
+      ],
+      "source_member": "system.w[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 645,
+      "source_comment": "",
+      "source_member_provenance": [
+        {
+          "member": "system.w[0][0]",
+          "value": 60.2,
+          "source_expression": "60.2",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 327
+        }
+      ]
+    },
+    {
+      "index": 146,
+      "value": 1.83,
+      "source_expression": "system->bsa[0][0]",
+      "source_members": [
+        "system.bsa[0][0]"
+      ],
+      "source_member": "system.bsa[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 646,
+      "source_comment": "",
+      "source_member_provenance": [
+        {
+          "member": "system.bsa[0][0]",
+          "value": 1.83,
+          "source_expression": "1.83",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 330
+        }
+      ]
+    },
+    {
+      "index": 147,
+      "value": 5.0,
+      "source_expression": "timing->alpha_cpv[0][0]",
+      "source_members": [
+        "timing.alpha_cpv[0][0]"
+      ],
+      "source_member": "timing.alpha_cpv[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 647,
+      "source_comment": "Delay alpha-symp. to veins",
+      "source_member_provenance": [
+        {
+          "member": "timing.alpha_cpv[0][0]",
+          "value": 5.0,
+          "source_expression": "5.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 486
+        }
+      ]
+    },
+    {
+      "index": 148,
+      "value": 9.0,
+      "source_expression": "timing->alpha_cpv[1][0]",
+      "source_members": [
+        "timing.alpha_cpv[1][0]"
+      ],
+      "source_member": "timing.alpha_cpv[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 648,
+      "source_comment": "Peak alpha-symp. to veins",
+      "source_member_provenance": [
+        {
+          "member": "timing.alpha_cpv[1][0]",
+          "value": 9.0,
+          "source_expression": "9.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 489
+        }
+      ]
+    },
+    {
+      "index": 149,
+      "value": 40.0,
+      "source_expression": "timing->alpha_cpv[2][0]",
+      "source_members": [
+        "timing.alpha_cpv[2][0]"
+      ],
+      "source_member": "timing.alpha_cpv[2][0]",
+      "file": "main/initial.c",
+      "mapping_line": 649,
+      "source_comment": "End alpha-symp. to veins",
+      "source_member_provenance": [
+        {
+          "member": "timing.alpha_cpv[2][0]",
+          "value": 40.0,
+          "source_expression": "40.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 492
+        }
+      ]
+    },
+    {
+      "index": 150,
+      "value": 2.5,
+      "source_expression": "timing->alpha_cpr[0][0]",
+      "source_members": [
+        "timing.alpha_cpr[0][0]"
+      ],
+      "source_member": "timing.alpha_cpr[0][0]",
+      "file": "main/initial.c",
+      "mapping_line": 650,
+      "source_comment": "Delay alpha-symp. to arteries",
+      "source_member_provenance": [
+        {
+          "member": "timing.alpha_cpr[0][0]",
+          "value": 2.5,
+          "source_expression": "2.5",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 476
+        }
+      ]
+    },
+    {
+      "index": 151,
+      "value": 5.5,
+      "source_expression": "timing->alpha_cpr[1][0]",
+      "source_members": [
+        "timing.alpha_cpr[1][0]"
+      ],
+      "source_member": "timing.alpha_cpr[1][0]",
+      "file": "main/initial.c",
+      "mapping_line": 651,
+      "source_comment": "Peak alpha-symp. to arteries",
+      "source_member_provenance": [
+        {
+          "member": "timing.alpha_cpr[1][0]",
+          "value": 5.5,
+          "source_expression": "5.5",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 479
+        }
+      ]
+    },
+    {
+      "index": 152,
+      "value": 35.0,
+      "source_expression": "timing->alpha_cpr[2][0]",
+      "source_members": [
+        "timing.alpha_cpr[2][0]"
+      ],
+      "source_member": "timing.alpha_cpr[2][0]",
+      "file": "main/initial.c",
+      "mapping_line": 652,
+      "source_comment": "End alpha-symp. to arteries",
+      "source_member_provenance": [
+        {
+          "member": "timing.alpha_cpr[2][0]",
+          "value": 35.0,
+          "source_expression": "35.0",
+          "constant_refs": [],
+          "file": "main/initial.c",
+          "line": 482
+        }
+      ]
+    }
+  ],
+  "source_table_metadata_artifact": "cvsim-source-parameters.json",
+  "nonlinear_venous_law": {
+    "source_pi": "M_PI",
+    "definitions": {
+      "Pt": "P-Pexternal",
+      "k": "pi*C0/(2*Vmax)",
+      "Ceff": "C0/(1+(k*Pt)^2)",
+      "Vdistended": "2*Vmax/pi*atan(k*Pt)",
+      "consistent_absolute_volume": "V0+Vdistended"
+    },
+    "native_domain_gate": "Positive ZPFV does not guarantee positive absolute volume for arbitrary negative pressure. Enforce V>0 and abs(V-V0)<Vmax; retain lower-leg source inconsistency separately.",
+    "refs": [
+      {
+        "file": "sim/equation.c",
+        "line_start": 17,
+        "line_end": 17
+      },
+      {
+        "file": "sim/equation.c",
+        "line_start": 129,
+        "line_end": 145
+      }
+    ]
+  },
+  "cardiac_law": {
+    "kind": "source_time_varying_compliance_cosine",
+    "compliance_indices": {
+      "RA": 0,
+      "RV": 1,
+      "LA": 2,
+      "LV": 3
+    },
+    "source_refs": [
+      {
+        "file": "sim/equation.c",
+        "line_start": 19,
+        "line_end": 106
+      },
+      {
+        "file": "sim/reflex.c",
+        "line_start": 32,
+        "line_end": 155
+      }
+    ],
+    "clock": "IPFM sanode, nominal70beats/min; PR,Tasys,Tvsys = theta118/119/120*sqrt(RRinterval); time6 initially -PR, atrial time1 initially0. All actual callback clocks remain source authority.",
+    "timing_coefficients": {
+      "PR": 0.12,
+      "atrial": 0.2,
+      "ventricular": 0.3
+    },
+    "period_off_reflex_exact_rational_seconds": {
+      "numerator": 6,
+      "denominator": 7
+    },
+    "unqualified_implementation_gate": "A rational periodic native clock requires independent source-output convergence; do not claim bitwise source IPFM reproduction from nominal period alone."
+  },
+  "regional_beds": [
+    {
+      "label": "upper_body",
+      "arterial": 2,
+      "venous": 3,
+      "microvascular_flow": 3,
+      "supply_path": [
+        0,
+        1,
+        2
+      ],
+      "return_path": [
+        4,
+        5
+      ]
+    },
+    {
+      "label": "renal",
+      "arterial": 7,
+      "venous": 8,
+      "microvascular_flow": 9,
+      "supply_path": [
+        6,
+        7,
+        8
+      ],
+      "return_path": [
+        10,
+        17,
+        18
+      ]
+    },
+    {
+      "label": "splanchnic",
+      "arterial": 9,
+      "venous": 10,
+      "microvascular_flow": 12,
+      "supply_path": [
+        6,
+        7,
+        11
+      ],
+      "return_path": [
+        13,
+        17,
+        18
+      ]
+    },
+    {
+      "label": "lower_body_legs",
+      "arterial": 11,
+      "venous": 12,
+      "microvascular_flow": 15,
+      "supply_path": [
+        6,
+        7,
+        14
+      ],
+      "return_path": [
+        16,
+        17,
+        18
+      ]
+    },
+    {
+      "label": "pulmonary",
+      "arterial": 17,
+      "venous": 18,
+      "microvascular_flow": 21,
+      "supply_path": [
+        20
+      ],
+      "return_path": [
+        22
+      ]
+    }
+  ],
+  "incidence_check": {
+    "matrix_rows_pressure_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "matrix_columns_flow_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ],
+    "matrix": [
+      [
+        1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        -1,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        -1,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        -1,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        -1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        -1,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        -1
+      ],
+      [
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ]
+    ],
+    "all24_columns_one_positive_one_negative": true,
+    "all24_column_sums_zero": true,
+    "connected_components": 1,
+    "rank": 20,
+    "cycle_rank": 4,
+    "source_pressure_derivative_refs": [
+      {
+        "file": "sim/equation.c",
+        "line_start": 199,
+        "line_end": 223
+      }
+    ],
+    "total_storage_derivative": "-t.flow[0]-t.flow[1]-t.flow[2] for consistent storage laws and fixed reflex offsets; these losses are zero in baseline mode.",
+    "lower_leg_exception": "Raw eqns_ptr V12 violates the derivative identity when Pt12<0; conservation of incidence alone does not prove conservation of inconsistent raw output volumes."
+  },
+  "volume_budget": {
+    "total_blood_parameter_index": 70,
+    "total_blood_mL": 5150.0,
+    "all21_zpfv_positive": true,
+    "zpfv_parameter_indices": [
+      136,
+      137,
+      139,
+      77,
+      83,
+      138,
+      140,
+      141,
+      78,
+      142,
+      79,
+      143,
+      80,
+      81,
+      82,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89
+    ],
+    "sum_zpfv_mL": 4166.0,
+    "source_total_zpfv_parameter_index": 75,
+    "source_total_zpfv_mL": 4166.0,
+    "source_total_zpfv_matches_sum": true,
+    "duplicate_volume_offsets_count": 0,
+    "initial_states_owner": "original C estimate_ptr + elastance_ptr + eqns_ptr; this mapping does not synthesize initial pressure/volume states",
+    "no_mechanical_mass_added": true,
+    "no_species_or_tissue_amounts_in_source": true
+  },
+  "source_inconsistencies": [
+    {
+      "id": "lower_leg_negative_pressure_volume_derivative_mismatch",
+      "severity": "model_behavior",
+      "refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 119,
+          "line_end": 119
+        },
+        {
+          "file": "sim/equation.c",
+          "line_start": 133,
+          "line_end": 141
+        },
+        {
+          "file": "sim/equation.c",
+          "line_start": 211,
+          "line_end": 211
+        },
+        {
+          "file": "sim/equation.c",
+          "line_start": 238,
+          "line_end": 238
+        },
+        {
+          "file": "sim/equation.c",
+          "line_start": 269,
+          "line_end": 277
+        }
+      ],
+      "finding": "At lower-leg transmural pressure<=0, eqns_ptr reports Vll=0 while derivative uses positive atan compliance; fixvolume_ptr computes signed atan on the same branch. Output V and pressure ODE are not the derivative of the same storage law.",
+      "gate": "Retain original source output evidence. Select and name any consistent signed-atan extension; raw-output equivalence only within admitted positive-transmural-pressure domain."
+    },
+    {
+      "id": "starling_flow_unassigned_branches",
+      "severity": "model_behavior",
+      "refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 158,
+          "line_end": 163
+        }
+      ],
+      "finding": "No final else: downstream==external, upstream==threshold, and reverse pressure with both vessels above external can retain prior q4. Example upstream1/downstream2/external0 has no assignment.",
+      "gate": "Strict reproduction must preserve prior q4 where source is partial; stateless max(upstream-max(downstream,external),0)/R is an explicit corrected variant outside the source active branch."
+    },
+    {
+      "id": "crossed_arterial_zpfv_table_owners",
+      "severity": "source_ownership",
+      "refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 37,
+          "line_end": 58
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 638,
+          "line_end": 639
+        },
+        {
+          "file": "sim/equation.c",
+          "line_start": 228,
+          "line_end": 228
+        },
+        {
+          "file": "sim/equation.c",
+          "line_start": 231,
+          "line_end": 231
+        }
+      ],
+      "finding": "theta138 takes hemo2 upper-body arterial200mL but feeds descending-aorta x5; theta139 takes hemo3 descending-aorta16mL but feeds upper-body x2. Raw source mapping must remain exact.",
+      "raw_mL": {
+        "x2": 16.0,
+        "x5": 200.0
+      },
+      "table_aligned_variant_mL": {
+        "x2": 200.0,
+        "x5": 16.0
+      },
+      "volume_translation_mL": {
+        "x2": 184.0,
+        "x5": -184.0
+      },
+      "gate": "Separate table-aligned variant may preserve pressure,flow and total volume by fixed paired translation; individual volume, concentration and transit-time claims change.",
+      "primary_source_ref": {
+        "sha256": "5c25636a491fa8579de319558aa7d36517ddc4ada5816ea648f72bf7251ef8c5",
+        "page": 157,
+        "table": "A.1",
+        "indices": [
+          138,
+          139
+        ]
+      }
+    },
+    {
+      "id": "fixvolume_is_noop_and_dormant_comment_names_wrong_node",
+      "severity": "source_behavior_and_comment",
+      "refs": [
+        {
+          "file": "sim/equation.c",
+          "line_start": 252,
+          "line_end": 259
+        },
+        {
+          "file": "sim/equation.c",
+          "line_start": 283,
+          "line_end": 306
+        },
+        {
+          "file": "sim/equation.c",
+          "line_start": 345,
+          "line_end": 351
+        }
+      ],
+      "finding": "The announced IVC correction is commented out. Dormant line would modify x12 lower-leg veins rather than IVC x14. Do not use function name as evidence of enforced volume conservation."
+    },
+    {
+      "id": "legacy_initialization_is_not_actual_defaults",
+      "severity": "source_selection",
+      "refs": [
+        {
+          "file": "main/main.c",
+          "line_start": 55,
+          "line_end": 56
+        },
+        {
+          "file": "main/main_java.c",
+          "line_start": 59,
+          "line_end": 60
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 315,
+          "line_end": 320
+        }
+      ],
+      "finding": "actual entry points call initial_ptr and mapping_ptr in initial.c; initialization.c is a different, unused alternative. Use5150mL theta70 from actual initial.c, not legacy5950mL."
+    },
+    {
+      "id": "unused_arterial_aggregate_parameter",
+      "severity": "unused_source_metadata",
+      "refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 576,
+          "line_end": 576
+        },
+        {
+          "file": "sim/equation.c",
+          "line_start": 226,
+          "line_end": 246
+        }
+      ],
+      "finding": "Unused theta76=715mL differs from sum of the8 actual arterial ZPFV parameters=772mL. It is not an additional physical volume owner and must not be added to the21 rows."
+    },
+    {
+      "id": "stale_structure_comments",
+      "severity": "documentation",
+      "refs": [
+        {
+          "file": "sim/simulator.h",
+          "line_start": 21,
+          "line_end": 42
+        },
+        {
+          "file": "sim/equation.c",
+          "line_start": 566,
+          "line_end": 567
+        }
+      ],
+      "finding": "Simulator comments describe14+3 pressure entries and6 timing entries, but definitions are25 pressure,24flow,21volume,7time. tilt[0] is sensed-pressure offset and tilt[1] volume loss in live equations, opposite older header descriptions."
+    },
+    {
+      "id": "nominal_outside_source_range",
+      "member": "hemo[10].h[0]",
+      "nominal": 14.5,
+      "sd": 0.5,
+      "lower": 3.0,
+      "upper": 6.0,
+      "source_lines": [
+        160,
+        161
+      ],
+      "policy": "preserve_exact_source_values"
+    },
+    {
+      "id": "nominal_outside_source_range",
+      "member": "hemo[12].h[0]",
+      "nominal": 5.0,
+      "sd": 0.5,
+      "lower": 8.5,
+      "upper": 11.5,
+      "source_lines": [
+        188,
+        189
+      ],
+      "policy": "preserve_exact_source_values"
+    },
+    {
+      "id": "nominal_outside_source_range",
+      "member": "hemo[6].h[0]",
+      "nominal": 5.0,
+      "sd": 0.5,
+      "lower": 8.5,
+      "upper": 11.5,
+      "source_lines": [
+        103,
+        104
+      ],
+      "policy": "preserve_exact_source_values"
+    },
+    {
+      "id": "nominal_outside_source_range",
+      "member": "system.T[2]",
+      "nominal": 0.12,
+      "sd": 0.002,
+      "lower": 0.17,
+      "upper": 0.2,
+      "source_lines": [
+        340,
+        341
+      ],
+      "policy": "preserve_exact_source_values"
+    },
+    {
+      "id": "nominal_outside_source_range",
+      "member": "system.w[0]",
+      "nominal": 60.2,
+      "sd": 2.1,
+      "lower": 63.9,
+      "upper": 76.5,
+      "source_lines": [
+        327,
+        328
+      ],
+      "policy": "preserve_exact_source_values"
+    },
+    {
+      "id": "nominal_outside_source_range",
+      "member": "timing.alpha_v[1]",
+      "nominal": 10.0,
+      "sd": 1.5,
+      "lower": 4.7,
+      "upper": 9.3,
+      "source_lines": [
+        469,
+        470
+      ],
+      "policy": "preserve_exact_source_values"
+    }
+  ],
+  "independent_primary_source": {
+    "title": "Computational Models of Cardiovascular Response to Orthostatic Stress",
+    "author": "Thomas Heldt",
+    "year": 2004,
+    "url": "https://puerta.csail.mit.edu/pdf/HeldtThesis04.pdf",
+    "repository_handle": "https://dspace.mit.edu/handle/1721.1/28761",
+    "file": "Build/absolute-blood-20260912/HeldtThesis04.pdf",
+    "sha256": "5c25636a491fa8579de319558aa7d36517ddc4ada5816ea648f72bf7251ef8c5",
+    "bytes": 3570745,
+    "page": 157,
+    "pdf_page_index": 156,
+    "table": "A.1 continued",
+    "verified_by": "pdftotext and rendered-page visual inspection",
+    "rendered_page": "Build/absolute-blood-20260912/HeldtThesis04-p157.png",
+    "rendered_page_sha256": "545b922953ca7042702c47a829ad91927073590dee374882eb095884a7b6f4fc",
+    "acquisition_note": "Public MIT PDF host certificate expired; bytes retrieved with certificate verification disabled for this one unauthenticated public artifact. Values independently matched indexed MIT PDF search extract and actual C hemo-table owners. Do not imply authenticated transport.",
+    "table_rows": [
+      {
+        "index": 138,
+        "label": "Descending thoracic aorta ZPFV",
+        "unit": "mL",
+        "nominal": 16,
+        "source_plus_minus": 2
+      },
+      {
+        "index": 139,
+        "label": "Upper body arteries ZPFV",
+        "unit": "mL",
+        "nominal": 200,
+        "source_plus_minus": 40
+      }
+    ],
+    "evidence_boundary": "Source model parameter-table correspondence, not measured subject anatomy or biological calibration.",
+    "research_binary_artifacts_versioned": false
+  },
+  "volume_coordinate_variants": [
+    {
+      "id": "upstream_equation",
+      "default": true,
+      "qualification": "source_model_reproduction",
+      "description": "Retains literal theta138/139 assignment and eqns_ptr volume output ownership.",
+      "zero_pressure_filling_volume_mL": {
+        "x2": 16.0,
+        "x5": 200.0
+      },
+      "volume_delta_from_upstream_mL": {
+        "x2": 0.0,
+        "x5": 0.0
+      }
+    },
+    {
+      "id": "heldt_table_aligned",
+      "default": false,
+      "qualification": "explicit_source_table_aligned_volume_coordinate_composition",
+      "description": "Uses hemo2 upper-body and hemo3 descending-thoracic offsets at their named runtime compartments, matching Heldt2004 TableA.1p157. This is a named composition, not unmodified C volume reproduction.",
+      "zero_pressure_filling_volume_mL": {
+        "x2": 200.0,
+        "x5": 16.0
+      },
+      "volume_delta_from_upstream_mL": {
+        "x2": 184.0,
+        "x5": -184.0
+      },
+      "other19_volume_deltas_mL": 0.0,
+      "total_volume_delta_mL": 0.0,
+      "source_refs": [
+        {
+          "file": "main/initial.c",
+          "line_start": 37,
+          "line_end": 58
+        },
+        {
+          "file": "main/initial.c",
+          "line_start": 638,
+          "line_end": 639
+        },
+        {
+          "file": "sim/equation.c",
+          "line_start": 228,
+          "line_end": 231
+        }
+      ],
+      "primary_source_table": "Heldt2004 TableA.1 p157 rows138,139",
+      "invariance": "For each affected constant-compliance row, translating V and V0 by the same delta leaves P=Pext+(V-V0)/C and dV/dt unchanged. Opposite deltas preserve total5150mL and4166mL totalZPFV. All source flow equations depend on pressures, not these translated absolute volumes.",
+      "noninvariance": [
+        "per-compartment absolute volume",
+        "dilution concentration for a fixed amount",
+        "transit time and residence time",
+        "any later mass distribution or volume-dependent coupling"
+      ],
+      "constraints": [
+        "Never silently rewrite raw source parameter vector or original C output evidence.",
+        "No invented FMA/B3D region ownership or mechanical blood mass.",
+        "Any species initialization and mass accounting need explicit independently sourced definitions in the selected coordinates."
+      ]
+    }
+  ],
+  "source_location_kind": "path_inside_pinned_upstream_archive",
+  "curated_source_root": "third_party/physionet/cvsim21/21-comp-backend",
+  "source_lock_sha256": "b118d58230a3f2766108d05501a3ac9b910124ef823567a7e5fe23f6df0b4f67",
+  "source_archive": {
+    "url": "https://physionet.org/files/cvsim/1.0.0/dist/cvsim-1.0.1.tar.gz",
+    "sha256": "8cd784628a1f5dbf7db36d00e6946d60c6546dd7f2fca67ae79242aacbfcdfd1",
+    "filename": "cvsim-1.0.1.tar.gz",
+    "bytes": 17540984
+  },
+  "parameter_crosscheck": {
+    "method": "restricted source parser versus independent compiled actual initial_ptr+mapping_ptr C export",
+    "parameter_values_compared": 153,
+    "source_scalar_values_compared": 568,
+    "exact_equal": true,
+    "test_owner": "tests/test_cvsim_parameters.py",
+    "original_initial_json_sha256": "fad558482f8bfeb94d531d4538e29d7a2c8a59ea63f32496467b087bcb343ff7"
+  }
+}

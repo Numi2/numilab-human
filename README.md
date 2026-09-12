@@ -6,12 +6,15 @@ muscle-tendon actuators); the Core owns the articulated state, muscle route
 evaluation, force scatter, and forward dynamics. There is no Python process in
 the native Human execution path.
 
-The [cardiac source reproduction](Docs/CARDIAC_SOURCE_REPRODUCTION_20260912.md)
-adds the complete curated Shi–Hose four-chamber systemic/pulmonary circulation
-to the existing Matter solver. `numi human-cardiac` authors its pinned source
-payload. Ten physical Mac mini cycles, timestep refinement and transaction
-checks pass. Absolute vascular blood volumes, calibrated organ perfusion and
-anatomical organ mechanics remain open.
+The [regional circulation source variant](Docs/CVSIM21_REGIONAL_CIRCULATION_20260912.md)
+adds CVSim21's 21 absolute blood-volume compartments and 24 flows to the existing
+Matter solver. `numi human-circulation` authors a sourced 5,150 mL aggregate
+circulation with explicit clock and volume-coordinate variants. Physical Mac mini
+timestep refinement, ten cycles and transaction checks pass. Anatomy registration,
+mechanical blood-mass partition and physiological calibration remain open.
+The earlier [Shi–Hose cardiac source](Docs/CARDIAC_SOURCE_REPRODUCTION_20260912.md)
+remains separately available through `numi human-cardiac`; its vascular C·P
+storage does not acquire absolute blood volumes from CVSim21.
 
 [Current-pose foot contact](Docs/CURVED_SUPPORT_20260908.md) now covers the source
 capsules and heel ellipsoids. The [source dynamic-limit integration](Docs/SOURCE_DYNAMIC_LIMITS_20260908.md)

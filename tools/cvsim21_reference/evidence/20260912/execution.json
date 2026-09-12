@@ -1,0 +1,362 @@
+{
+  "artifact_sha256": {
+    "continuous-1e-10.json": "23360f93094272132ac9979e40717e7fbce90db65a90f671ca78a3ed015f333e",
+    "continuous-1e-10.log": "743c5761db3dada39c6f617b1fb11bc93ebb72ea8ad844feddece7cfb6b67b00",
+    "continuous-1e-12.json": "06f8aac37cd3edd5833fd47f9a89e4e7cae500eec2f6f2ea7e329fd82bb4b19c",
+    "continuous-1e-12.log": "1e527dd32af22e7fa13ce642b7c440fbbff94fbb44c30a08b6b3ae3da1d9cd8b",
+    "continuous-1e-13.json": "d7a872e3a90817a97328d8eef68c08865254b3ec67b311a031c970248c0a0b94",
+    "continuous-1e-13.log": "bf158ed5df57f2eb3f7ed958379d86958740c4afc0d69c4f9d35d7bc1cb87526",
+    "continuous-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "continuous-original-times.json": "e050dd0efe9ac3ec0adb51504a0222b5c8d73895945a54e01576d315088748b8",
+    "continuous-original-times.log": "a78a81968c4c267dd3b128788156860b99be0709e4e449ff4b7af51287463a0b",
+    "equation-build.log": "18d0f6446765b9fea56bc62dbc94092160a45991a434f7b55bcda8a139b88ac6",
+    "estimate-build.log": "c872aedf991cf37a3518a68f0370c49c8101cc772bb8cdab3c279a2c01fbc34e",
+    "initial-build.log": "11cb7973de765ecfeb12073c334cf404eaf2ce911a2b6fe4b3bc2a9e0ff58cf0",
+    "initial-manifest.json": "1eedc865d00a9ca84d074a192940f06c2f3e5b3c0d8e67e19fc6c21cb67533e4",
+    "main_java-build.log": "c2bb805e017457c3234652e9bbd7ce20bdae7fdb9696e98e4182603972a5701e",
+    "original-build.log": "0e6fbf204067b3c5f747cae2126aded9359b151a9e14f5215d4de4bd6450a52a",
+    "original-supine.log": "2ea71697c17f852044ad1b74d1e4cba48a492f76a0e6ecd65d879c16ddab1159",
+    "reflex-build.log": "fb50c10763fd772a3a4134e9ebb556061d133306cf80ba8fa6764aba4307ddc5",
+    "rkqc-build.log": "7e09d4cf98e42400e7f34c3870c6ee040469783bb56cd0de8eb6172ead63dc6d",
+    "simulator-build.log": "03a044e90704c028464a8a01d9a98cca1858f6a26ddb3ef4141fdcbd1cbe80a3",
+    "turning-build.log": "041d189fbc591fc8161a6aeaeaa6f1babe2a37e313c2a5b3192c76dbe7be22ec"
+  },
+  "binary_sha256": {
+    "cvsim21-continuous": "edc07a47638d7874bd635a95b5785b1381fd0877907fb4ac429a2af2eff6c9e0",
+    "cvsim21-original": "d11d2facc042be6dfa02b17494d51596fb6b10b4b98a162615f7349c9203c977"
+  },
+  "biological_qualification": "unqualified",
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-O2",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-D_DARWIN_C_SOURCE",
+        "-I/Users/n/cvsim21-reference-20260912/vendor/21-comp-backend",
+        "-c",
+        "/Users/n/cvsim21-reference-20260912/vendor/21-comp-backend/main/initial.c",
+        "-o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/initial.o"
+      ],
+      "log": "initial-build.log",
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-O2",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-D_DARWIN_C_SOURCE",
+        "-I/Users/n/cvsim21-reference-20260912/vendor/21-comp-backend",
+        "-c",
+        "/Users/n/cvsim21-reference-20260912/vendor/21-comp-backend/main/main_java.c",
+        "-o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/main_java.o"
+      ],
+      "log": "main_java-build.log",
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-O2",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-D_DARWIN_C_SOURCE",
+        "-I/Users/n/cvsim21-reference-20260912/vendor/21-comp-backend",
+        "-c",
+        "/Users/n/cvsim21-reference-20260912/vendor/21-comp-backend/main/turning.c",
+        "-o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/turning.o"
+      ],
+      "log": "turning-build.log",
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-O2",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-D_DARWIN_C_SOURCE",
+        "-I/Users/n/cvsim21-reference-20260912/vendor/21-comp-backend",
+        "-c",
+        "/Users/n/cvsim21-reference-20260912/vendor/21-comp-backend/sim/equation.c",
+        "-o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/equation.o"
+      ],
+      "log": "equation-build.log",
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-O2",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-D_DARWIN_C_SOURCE",
+        "-I/Users/n/cvsim21-reference-20260912/vendor/21-comp-backend",
+        "-c",
+        "/Users/n/cvsim21-reference-20260912/vendor/21-comp-backend/sim/estimate.c",
+        "-o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/estimate.o"
+      ],
+      "log": "estimate-build.log",
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-O2",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-D_DARWIN_C_SOURCE",
+        "-I/Users/n/cvsim21-reference-20260912/vendor/21-comp-backend",
+        "-c",
+        "/Users/n/cvsim21-reference-20260912/vendor/21-comp-backend/sim/reflex.c",
+        "-o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/reflex.o"
+      ],
+      "log": "reflex-build.log",
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-O2",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-D_DARWIN_C_SOURCE",
+        "-I/Users/n/cvsim21-reference-20260912/vendor/21-comp-backend",
+        "-c",
+        "/Users/n/cvsim21-reference-20260912/vendor/21-comp-backend/sim/rkqc.c",
+        "-o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/rkqc.o"
+      ],
+      "log": "rkqc-build.log",
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-O2",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-D_DARWIN_C_SOURCE",
+        "-I/Users/n/cvsim21-reference-20260912/vendor/21-comp-backend",
+        "-c",
+        "/Users/n/cvsim21-reference-20260912/vendor/21-comp-backend/sim/simulator.c",
+        "-o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/simulator.o"
+      ],
+      "log": "simulator-build.log",
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-O2",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-D_DARWIN_C_SOURCE",
+        "-I/Users/n/cvsim21-reference-20260912/vendor/21-comp-backend",
+        "/Users/n/cvsim21-reference-20260912/tools/headless.c",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/initial.o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/main_java.o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/turning.o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/equation.o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/estimate.o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/reflex.o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/rkqc.o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/simulator.o",
+        "-o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/cvsim21-original"
+      ],
+      "log": "original-build.log",
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "/usr/bin/clang++",
+        "-std=c++17",
+        "-O2",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-D_DARWIN_C_SOURCE",
+        "-I/Users/n/cvsim21-reference-20260912/vendor/21-comp-backend",
+        "/Users/n/cvsim21-reference-20260912/tools/continuous_reference.cpp",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/initial.o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/main_java.o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/turning.o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/equation.o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/estimate.o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/reflex.o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/rkqc.o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/simulator.o",
+        "-o",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/cvsim21-continuous"
+      ],
+      "log": "continuous-build.log",
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/cvsim21-original",
+        "100.0",
+        "0",
+        "0",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/original-supine.csv",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/parameters.csv"
+      ],
+      "log": "original-supine.log",
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/cvsim21-continuous",
+        "1e-10",
+        "20",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/continuous-1e-10.csv",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/continuous-1e-10.json",
+        "0.0005000000237487257"
+      ],
+      "log": "continuous-1e-10.log",
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/cvsim21-continuous",
+        "1e-12",
+        "20",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/continuous-1e-12.csv",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/continuous-1e-12.json",
+        "0.0005000000237487257"
+      ],
+      "log": "continuous-1e-12.log",
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/cvsim21-continuous",
+        "1e-13",
+        "20",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/continuous-1e-13.csv",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/continuous-1e-13.json",
+        "0.0005000000237487257"
+      ],
+      "log": "continuous-1e-13.log",
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/cvsim21-continuous",
+        "1e-12",
+        "20",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/continuous-original-times.csv",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/continuous-original-times.json",
+        "0.0005000000237487257",
+        "/Users/n/cvsim21-reference-20260912/branch-audited-execution/original-supine.csv"
+      ],
+      "log": "continuous-original-times.log",
+      "returncode": 0
+    }
+  ],
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode-26.6.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin\n",
+  "host_architecture": "arm64",
+  "host_system": "macOS-26.6-arm64-arm-64bit",
+  "native_runtime_qualification": "not_performed",
+  "parameter_csv_sha256": "c790629a913e9b79ccbb40093aa97c32663103c8760b178251ac1e8624726e92",
+  "python_physical_stepping": false,
+  "schema": "NumiHuman.CVSim21-reference-execution.v1",
+  "source_after_sha256": {
+    "main/initial.c": "c6a791e837e1542ebbb910dae1a2ac10bce5f7071ed1a9836b861b8d62267c03",
+    "main/initial.h": "138c3cbeecf84b5ef66161d7c29e0ed20a92ad6ea25e7472125d1de4db679f7a",
+    "main/main.h": "408f5668ed70bc220a6d135871272d420d12e73a750c76d9fc9973c63bf3b665",
+    "main/main_java.c": "046b9d9153125a335aa9a8059d0ec828c528a5653489e6f9db8ab3d1cbac4bab",
+    "main/main_java.h": "bc3a48fb0b48fc52040266e3a5766fc6954c9fc89fadd74c91e234ce0c1eb425",
+    "main/turning.c": "c4e65063b19e24ae38037348f6997c024b91aa749c08ad95d8b8786bff65c0c6",
+    "main/turning.h": "45210c190414a8d49488076d685072902f69603dbd6bc79fa0c5333e3b1af16e",
+    "sim/equation.c": "72b8d567761e09e22247d0abfc3b465bc2aa62868feb64f08facf16df4733655",
+    "sim/equation.h": "62575aa9522089cc24a9e185c152c1cf5a2bc2b91b2599ecedf5c377fabaa93a",
+    "sim/estimate.c": "d9c00244c8102fe6f0a7bf7be614128d160364574dd66e3dfbdc43b84e486664",
+    "sim/estimate.h": "e2e699c1a6a0f56b3d07351b9ee8356ce9134b3f230712c2a6e8a7244d8d6fa1",
+    "sim/reflex.c": "574479c7b8a9b907cb729c580c0a82327f2b47d3aee27abac4f2eea5eb7b20ce",
+    "sim/reflex.h": "0e114bee69ff7be01cfdbeac4de0a78f620acd6c1ab4659b3912228ae65fe494",
+    "sim/rkqc.c": "bf7f45347deca6b8aae9d14c941cefeddf8c8eb13d2739fcc7ebe99c1426f679",
+    "sim/rkqc.h": "d6a4157ef9170d0a09230d3e239c105af44c948212911d2c5f0a7dfc8093f1fa",
+    "sim/simulator.c": "3c23ce8f3bbea87667f6f2176d8802d80e3c5f477e729f29b9dfff1a310368dc",
+    "sim/simulator.h": "10bfb3b5a275a7ecd1f079cea95ed222518bd39701573b20303f7cd4b550beea"
+  },
+  "source_lock_sha256": "b118d58230a3f2766108d05501a3ac9b910124ef823567a7e5fe23f6df0b4f67",
+  "source_lock_sha256_after": "b118d58230a3f2766108d05501a3ac9b910124ef823567a7e5fe23f6df0b4f67",
+  "source_sha256": {
+    "main/initial.c": "c6a791e837e1542ebbb910dae1a2ac10bce5f7071ed1a9836b861b8d62267c03",
+    "main/initial.h": "138c3cbeecf84b5ef66161d7c29e0ed20a92ad6ea25e7472125d1de4db679f7a",
+    "main/main.h": "408f5668ed70bc220a6d135871272d420d12e73a750c76d9fc9973c63bf3b665",
+    "main/main_java.c": "046b9d9153125a335aa9a8059d0ec828c528a5653489e6f9db8ab3d1cbac4bab",
+    "main/main_java.h": "bc3a48fb0b48fc52040266e3a5766fc6954c9fc89fadd74c91e234ce0c1eb425",
+    "main/turning.c": "c4e65063b19e24ae38037348f6997c024b91aa749c08ad95d8b8786bff65c0c6",
+    "main/turning.h": "45210c190414a8d49488076d685072902f69603dbd6bc79fa0c5333e3b1af16e",
+    "sim/equation.c": "72b8d567761e09e22247d0abfc3b465bc2aa62868feb64f08facf16df4733655",
+    "sim/equation.h": "62575aa9522089cc24a9e185c152c1cf5a2bc2b91b2599ecedf5c377fabaa93a",
+    "sim/estimate.c": "d9c00244c8102fe6f0a7bf7be614128d160364574dd66e3dfbdc43b84e486664",
+    "sim/estimate.h": "e2e699c1a6a0f56b3d07351b9ee8356ce9134b3f230712c2a6e8a7244d8d6fa1",
+    "sim/reflex.c": "574479c7b8a9b907cb729c580c0a82327f2b47d3aee27abac4f2eea5eb7b20ce",
+    "sim/reflex.h": "0e114bee69ff7be01cfdbeac4de0a78f620acd6c1ab4659b3912228ae65fe494",
+    "sim/rkqc.c": "bf7f45347deca6b8aae9d14c941cefeddf8c8eb13d2739fcc7ebe99c1426f679",
+    "sim/rkqc.h": "d6a4157ef9170d0a09230d3e239c105af44c948212911d2c5f0a7dfc8093f1fa",
+    "sim/simulator.c": "3c23ce8f3bbea87667f6f2176d8802d80e3c5f477e729f29b9dfff1a310368dc",
+    "sim/simulator.h": "10bfb3b5a275a7ecd1f079cea95ed222518bd39701573b20303f7cd4b550beea"
+  },
+  "status": "pass",
+  "tool_after_sha256": {
+    "analyze_reference.py": "397d918542e411345df06c373a3aec078492a886f2c2e08ef677a11fd37b3bd2",
+    "continuous_reference.cpp": "e4d1834e47eb5d21a094599c76d83e07e0c279f3cf9f88b8695adbd7521826f8",
+    "cvsim21_source.hpp": "5df330a2f393da726a854545eb37c211b3b050070f7c35d9314af2a545417ea2",
+    "dopri.hpp": "c52bb747ae3265992b6070c70a3fb3dac7e4022395c724a289047ab66e0a16cc",
+    "headless.c": "3df55836ec665c88ceeb513a514d7239c08acafed97a6ff6040df5d5f3bb2280",
+    "run_reference.py": "89b876ab51de312de4d94ac1405210a98ee13c85a0bf9c24c32200b2e7a92a2d"
+  },
+  "tool_sha256": {
+    "analyze_reference.py": "397d918542e411345df06c373a3aec078492a886f2c2e08ef677a11fd37b3bd2",
+    "continuous_reference.cpp": "e4d1834e47eb5d21a094599c76d83e07e0c279f3cf9f88b8695adbd7521826f8",
+    "cvsim21_source.hpp": "5df330a2f393da726a854545eb37c211b3b050070f7c35d9314af2a545417ea2",
+    "dopri.hpp": "c52bb747ae3265992b6070c70a3fb3dac7e4022395c724a289047ab66e0a16cc",
+    "headless.c": "3df55836ec665c88ceeb513a514d7239c08acafed97a6ff6040df5d5f3bb2280",
+    "run_reference.py": "89b876ab51de312de4d94ac1405210a98ee13c85a0bf9c24c32200b2e7a92a2d"
+  },
+  "traces": {
+    "continuous-1e-10.csv.gz": {
+      "raw_sha256": "ee2128558ec5219e29585c1b2283e7bfd54c5be713f4ae662d8a007d7748616d",
+      "sha256": "a79bb896c9388ba0875b5d5c290ab7ed28b04b5ebbd293a55e7659dc331e4dbc"
+    },
+    "continuous-1e-12.csv.gz": {
+      "raw_sha256": "1423dbd3ad5c831780ec4462d8e3db8f151934211b36b100d4aea42bb0d43f7e",
+      "sha256": "070228146d471d6e8f44ab20bb1689aa4dac55f8b73be274182a93fd51a46d34"
+    },
+    "continuous-1e-13.csv.gz": {
+      "raw_sha256": "d4b0ef772f87559d9e2155207f0a50f71a36b1433f23fc7df74e68ccfaccbbcb",
+      "sha256": "fa8949650d6f4dfa9040ffeae3f7ffc8d0ef0e1968dfce1800fa63a549d24606"
+    },
+    "continuous-original-times.csv.gz": {
+      "raw_sha256": "0534abbebbf248b8f664c35284cd11f9717b81e0966bece16f3514ba80c87b7c",
+      "sha256": "c4d50127e8acc54f60d4cc573deb719ec9a19c75e034c6ef114ad1473c80d2eb"
+    },
+    "original-supine.csv.gz": {
+      "raw_sha256": "2416ebb2e19052669920a3110cbceb90dd8f3a38316b2884b5ab88e724fc84e0",
+      "sha256": "6f0c037c73f68adb8c5ea8a291ef2696e7dab3d970741045bf27fd3f5c50151a"
+    }
+  }
+}

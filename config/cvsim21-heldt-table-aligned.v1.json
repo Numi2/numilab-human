@@ -1,0 +1,35 @@
+{
+  "schema": "HumanPack.cvsim21-source-config.v1",
+  "id": "cvsim21_supine_continuous_fixed_rate",
+  "source_manifest_sha256": "b118d58230a3f2766108d05501a3ac9b910124ef823567a7e5fe23f6df0b4f67",
+  "initial_sha256": "fad558482f8bfeb94d531d4538e29d7a2c8a59ea63f32496467b087bcb343ff7",
+  "volume_coordinates": "heldt_table_aligned",
+  "source_mode": {
+    "ABReflexOn": false,
+    "CPReflexOn": false,
+    "tiltTestOn": false,
+    "clock": "continuous_fixed_rate_rational"
+  },
+  "numerical_settings": {
+    "volume_scale_m3": {
+      "value": 0.0001,
+      "unit": "m3",
+      "role": "numerical_residual_control_not_source_physiological_parameter"
+    },
+    "flow_scale_m3_per_s": {
+      "value": 0.0001,
+      "unit": "m3/s",
+      "role": "numerical_residual_control_not_source_physiological_parameter"
+    },
+    "pressure_scale_pa": {
+      "value": 10000.0,
+      "unit": "Pa",
+      "role": "numerical_residual_control_not_source_physiological_parameter"
+    },
+    "residual_tolerance": {
+      "value": 1e-05,
+      "unit": "1",
+      "role": "numerical_residual_control_not_source_physiological_parameter"
+    }
+  }
+}
