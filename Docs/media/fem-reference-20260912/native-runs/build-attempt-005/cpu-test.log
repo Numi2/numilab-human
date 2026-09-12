@@ -1,0 +1,35 @@
+UpdateCTestConfiguration  from :/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Parse Config file:/Users/n/MetalRobo-human-completion-build-20260907/DartConfiguration.tcl
+Test project /Users/n/MetalRobo-human-completion-build-20260907
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 121
+    Start 121: matter.compiler.fem_reference
+
+121: Test command: /Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-fem-reference-check "/Users/n/MetalRobo-human-completion-20260907/matter/materials/rodero2021_ventricular_guccione_passive.nmatter" "/Users/n/MetalRobo-human-completion-20260907/matter/materials/rodero2021_nonventricular_neo_hookean_passive.nmatter" "--cpu-only"
+121: Working Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+121: Test timeout computed to be: 180
+121: reference_abi=32
+121: reference_compiler_checks=42 reference_volume_m3=6.3578287760416663e-07 reference_mass_kg=0.0011444092137935513 initial_J=1.015625 inertia_relative_error=2.9802321499516919e-08
+121: reference_compiler_checks=84 reference_volume_m3=6.3578287760416663e-07 reference_mass_kg=0.0013351440827591432 initial_J=1.015625 inertia_relative_error=2.9802321552109992e-08
+121: general_reference_compiler_checks=86 inverse_relative_error=3.7252903090437266e-08 affine_F_max_error=2.2642780095338821e-08 origin_translated=true
+121: general_reference_compiler_checks=88 inverse_relative_error=3.7252903090437266e-08 affine_F_max_error=2.2642780095338821e-08 origin_translated=true
+121: reference_executable_boundary_checks=96 old_ratio=0.20000001179885038 host_nominal_FP32_J=0.19999997317790985 minimum_J=0.20000000298023224 determinant_interval_center=0.19999998789256282 determinant_interval_radius=3.5762825627553419e-07 source_cooked_boundary=rejected snapshot_boundary=ambiguous_not_certified
+121: fem_reference_compiler_check=pass unloaded_reference_recovered=false anatomical_wall_qualified=false
+1/1 Test #121: matter.compiler.fem_reference ....   Passed    0.97 sec
+
+The following tests passed:
+	matter.compiler.fem_reference
+
+100% tests passed out of 1
+
+Label Time Summary:
+human       =   0.97 sec*proc (1 test)
+material    =   0.97 sec*proc (1 test)
+matter      =   0.97 sec*proc (1 test)
+
+Total Test time (real) =   0.97 sec

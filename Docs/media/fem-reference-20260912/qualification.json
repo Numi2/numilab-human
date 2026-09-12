@@ -1,0 +1,374 @@
+{
+  "schema": "numilab-human.fem-reference-qualification.v1",
+  "status": "pass_bounded_native_reference_configuration",
+  "native": {
+    "repository": "https://github.com/Numi2/numi-lab.git",
+    "branch": "coupled",
+    "revision": "cb34a4a3e0ba961fc68b3e027fca3b03c0f48706",
+    "prior_revision": "3636bb371ec78c0c1620323d98fcfdeff3fb8d3f",
+    "verified_remote_revision": "cb34a4a3e0ba961fc68b3e027fca3b03c0f48706",
+    "qualified_source_blobs_verified": 16,
+    "qualified_source_blobs_match": true,
+    "transfer_pack_sha256": "3b8cb94228c902776db5d8dfaea3c1e127ebfc976b69d276435eddf7edf2ecad",
+    "transfer_pack_bytes": 183043,
+    "base_revision": "3636bb371ec78c0c1620323d98fcfdeff3fb8d3f",
+    "host": {
+      "model": "Mac16,11",
+      "cpu": "Apple M4 Pro",
+      "memory_bytes": 25769803776,
+      "os": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6\nBuildVersion:\t\t25G72"
+    },
+    "abi": 32,
+    "package_version": 17,
+    "snapshot_archive_version": 10,
+    "accepted_proof_manifest_version": 10,
+    "source_files": {
+      "include/metalrobo/MatterSnapshotArchive.hpp": {
+        "bytes": 1763,
+        "sha256": "51537cf613abb9e4af8a6b626a00181fe692848bfee5814a7b9e87dd5d699758"
+      },
+      "matter/CMakeLists.txt": {
+        "bytes": 20544,
+        "sha256": "ef5ab54217f9efaa647401bd8bdbb33e0685d6fc418ffe4aa0e3e45fb403d783"
+      },
+      "matter/include/numi/matter/matter.hpp": {
+        "bytes": 68140,
+        "sha256": "8f51c2b940da126d0d12e2ff7ae2a890b5fb77f6c75a03bf6956c37f8c56dd7e"
+      },
+      "matter/include/numi/matter/shared.h": {
+        "bytes": 44536,
+        "sha256": "77ee7607db84c46cef8d144a254c87b1cee3dfd0480c369d6ed3a01bfc64a810"
+      },
+      "matter/src/accepted_state_proof_gpu.hpp": {
+        "bytes": 4388,
+        "sha256": "f8b63c23548e338b7e3e2b4cb1efcdcdc1293be1f8e7285a9c5af5e6215e8e95"
+      },
+      "matter/src/compiler_impl.cpp": {
+        "bytes": 116675,
+        "sha256": "59e4a62d5a4fb087f96d84e0496fcf1127908cfa51182746cd264d859946d29a"
+      },
+      "matter/src/metal/fem.metalinc": {
+        "bytes": 89478,
+        "sha256": "81e55772b96147bebceff0b96efe84d7f65cad450f0b4ecbfc68ec1cf9ee33ef"
+      },
+      "matter/src/package_impl.cpp": {
+        "bytes": 38641,
+        "sha256": "2dd53e12e84ee41ff341720cf9377429594395e8d8b3c93f2aad7a1bac5e2b7a"
+      },
+      "matter/src/runtime.mm": {
+        "bytes": 658454,
+        "sha256": "3ca442870af48f1233b5f93e2ada85578ec335d0dfc643cbb4e3f2b7a0effbdd"
+      },
+      "matter/src/validation_impl.cpp": {
+        "bytes": 92848,
+        "sha256": "2ccbe9073f9c511829904c4076c74b96afbc89a4d2aa0a65b754d2a5c5d503ea"
+      },
+      "matter/src/fem_reference_geometry.hpp": {
+        "bytes": 5783,
+        "sha256": "7e02dd10832dfd4096e60fb59b4f019789a87896acab4aeb3e35fcbc55cad637"
+      },
+      "matter/tools/fem_regional_material_check.mm": {
+        "bytes": 56783,
+        "sha256": "861c29f45ac6934264cdd931cdcf8780c78e5f8c06bc1f6ecb7f595aea761ea9"
+      },
+      "matter/tools/fem_reference_check.mm": {
+        "bytes": 43443,
+        "sha256": "b672149c36a0227b88c0e4e5a705ecbf74cbbef963e9173b949ad2e4e95001f3"
+      },
+      "matter/materials/rodero2021_ventricular_guccione_passive.nmatter": {
+        "bytes": 2412,
+        "sha256": "dd37136f93104ffe058ec334153707d4610be4b3ca6f95938ebee0a7d5799db4"
+      },
+      "matter/materials/rodero2021_nonventricular_neo_hookean_passive.nmatter": {
+        "bytes": 1351,
+        "sha256": "8cc7f3e1936e4303a011b40ff287431a99be861a51a11e82913d630371825b00"
+      },
+      "matter/tools/cardiac_material_reference.hpp": {
+        "bytes": 5926,
+        "sha256": "3d2ecdb04f07a89c8d59e8527c5ae3bc440f909e9f5c540c3765b181756df800"
+      }
+    },
+    "binaries": {
+      "bin/metalrobo_matter_physics_probe": {
+        "bytes": 485920,
+        "sha256": "b95c57d2cfde8242d4e12ec24460010dd01462141052daaee98a09234b85f85d"
+      },
+      "bin/metalrobo_matter_snapshot_archive_probe": {
+        "bytes": 65336,
+        "sha256": "834ee8f690f18f79b9cf01c82d0a73c87ecb02abe3c9d93e139dd22699e86d59"
+      },
+      "bin/metalrobo_numilab_human_tendon_fem_load_probe": {
+        "bytes": 94176,
+        "sha256": "a7320672564ed40dd651c2507e189c7299f875260d7575817e49bcaeddcdcbce"
+      },
+      "matter/numi-matter-stateful-check": {
+        "bytes": 567224,
+        "sha256": "6337486ca730757c62402bd8104193372e7cc7052570ef93e5563770768d6e51"
+      },
+      "matter/numi-matter-vascular-cavity-check": {
+        "bytes": 1146496,
+        "sha256": "2318741f3755cab8a7f6db71caa501c889c6d2a047dc1738fa31b1412bc285c8"
+      },
+      "matter/numi-matter-vascular-compiler-check": {
+        "bytes": 665632,
+        "sha256": "d2b43b4daef3865a9ac19b82b443b5edfe568f6fc1e89f80408d095d24e32688"
+      },
+      "matter/numi-matter-fiber-check": {
+        "bytes": 211880,
+        "sha256": "ebc497954e2542ac48ed6152f0fb4a042cd416fe3cfe1fbe0d9207470ced81ab"
+      },
+      "matter/numi-matter-cardiac-transaction-check": {
+        "bytes": 90504,
+        "sha256": "5e714189c04ad60677d71b5cce40b1f385de1c916400576e60cfb0fec707bbd9"
+      },
+      "matter/numi-matter-cardiac-material-check": {
+        "bytes": 495920,
+        "sha256": "c228ef8e4859e7280188f7a4b24745694e03b21d142f33eb402d6fcee3d241b1"
+      },
+      "matter/numi-matter-fem-material-frame-compiler-check": {
+        "bytes": 575856,
+        "sha256": "d6436cc5419cb2f5159e78e9476f0f93bbacfb293219351b701f258a36f18397"
+      },
+      "matter/numi-matter-fem-material-frame-check": {
+        "bytes": 1173928,
+        "sha256": "1bcdff4af2f7e4b3554b5eb31cec50a2baafc80dbb37a27c123f5906128dffc9"
+      },
+      "matter/numi-matter-fem-regional-material-check": {
+        "bytes": 1376920,
+        "sha256": "d09514831ebf54e0db926c17bbe070dd63c768f7b4209faa92828df1a99199a1"
+      },
+      "matter/numi-matter-fem-reference-check": {
+        "bytes": 1332736,
+        "sha256": "a82f3af9042f9a91f6c75a8afed0d73b8f85df421e4a28d38d7da57c80aaf28c"
+      },
+      "matter/shaders/NumiMatter.metallib": {
+        "bytes": 2783478,
+        "sha256": "1fe3da7bb1976b54ade94b37120d96377fc46949075d7c1fee12e9ae2f9bed7e"
+      },
+      "lib/libmetalrobo.dylib": {
+        "bytes": 6595280,
+        "sha256": "35d57c866aeff10c6557a1b7eee9cd968a08de4462308d4b0aab44d648479051"
+      }
+    }
+  },
+  "human_base_revision": "43e58b2cef2fb6b5a93f4ea52f1e1fb58668a3bf",
+  "qualification": {
+    "distinct_native_checks": 27,
+    "passed": 27,
+    "failed": 0,
+    "skipped": 0,
+    "tests": [
+      "matter.numi_human.tendon_fem_transaction",
+      "matter.runtime.snapshot_archive",
+      "matter.physics.mixed_mpm_fem",
+      "matter.physics.monolithic_multiphysics",
+      "matter.physics.topology_mutation",
+      "matter.physics.cohesive_mutation",
+      "matter.physics.small_scale_topology_conservation",
+      "matter.physics.puncture_mutation",
+      "matter.runtime.topology_rollback",
+      "matter.physics.learned_polyconvex_icnn",
+      "matter.runtime.production_transaction_rollback",
+      "matter.physics.stateful_mpm",
+      "matter.physics.stateful_fem",
+      "matter.runtime.inverse_identification",
+      "matter.compiler.cardiac_material_source",
+      "matter.compiler.fem_material_frame",
+      "matter.compiler.stateful_roundtrip",
+      "matter.compiler.source_fiber",
+      "matter.metal.source_fiber",
+      "matter.compiler.vascular",
+      "matter.metal.cardiac_transaction",
+      "matter.compiler.fem_regional_material",
+      "matter.metal.fem_regional_material",
+      "matter.metal.fem_material_frame",
+      "matter.metal.vascular_cavity",
+      "matter.compiler.fem_reference",
+      "matter.metal.fem_reference"
+    ],
+    "compiler_controls": 96,
+    "build_elapsed_seconds": 34.800546625163406,
+    "native_elapsed_seconds": 80.09779187524691,
+    "source_unchanged": true,
+    "metrics": [
+      {
+        "general_reference_compiler_checks": 86.0,
+        "inverse_relative_error": 3.7252903090437266e-08,
+        "affine_F_max_error": 2.264278009533882e-08,
+        "origin_translated": "true"
+      },
+      {
+        "general_reference_compiler_checks": 88.0,
+        "inverse_relative_error": 3.7252903090437266e-08,
+        "affine_F_max_error": 2.264278009533882e-08,
+        "origin_translated": "true"
+      },
+      {
+        "reference_executable_boundary_checks": 96.0,
+        "old_ratio": 0.20000001179885038,
+        "host_nominal_FP32_J": 0.19999997317790985,
+        "minimum_J": 0.20000000298023224,
+        "determinant_interval_center": 0.19999998789256282,
+        "determinant_interval_radius": 3.576282562755342e-07,
+        "source_cooked_boundary": "rejected",
+        "snapshot_boundary": "ambiguous_not_certified"
+      },
+      {
+        "reference_boundary_restore": "overlap_accepted_without_strict_GPU_certification",
+        "provably_outside": "denied",
+        "restoration": "unchanged"
+      },
+      {
+        "reference_direct_case": "reference_only",
+        "force_relative_error": 8.517857671288853e-08,
+        "tangent_relative_error": 9.71148509528976e-08,
+        "finite_difference_relative_error": 0.0008764731756275653,
+        "initial_prestress_nodal_force_N": 0.6285440921783447,
+        "internal_force_balance_relative": 1.1853711918765089e-08,
+        "unloaded_force_N": 0.0
+      },
+      {
+        "reference_direct_case": "reference_regional_frames",
+        "force_relative_error": 8.578272489844474e-08,
+        "tangent_relative_error": 3.057803571054997e-07,
+        "finite_difference_relative_error": 0.001340282055436168,
+        "initial_prestress_nodal_force_N": 0.6443232893943787,
+        "internal_force_balance_relative": 4.119468256609119e-08,
+        "unloaded_force_N": 0.0
+      },
+      {
+        "reference_runtime_case": "reference_only",
+        "accepted_steps": 16.0,
+        "environments": 2.0,
+        "motion_m": 0.0003625513054430485,
+        "replay": "bitwise",
+        "rollback": "isolated",
+        "reset": "loaded_initial_bitwise",
+        "snapshot_rebinding": "denied",
+        "reference_mass": "unchanged"
+      },
+      {
+        "reference_runtime_case": "reference_regional_frames",
+        "accepted_steps": 16.0,
+        "environments": 2.0,
+        "motion_m": 0.00037146033719182014,
+        "replay": "bitwise",
+        "rollback": "isolated",
+        "reset": "loaded_initial_bitwise",
+        "snapshot_rebinding": "denied",
+        "reference_mass": "unchanged"
+      }
+    ]
+  },
+  "scope": {
+    "separate_supplied_reference_and_initial_coordinates": true,
+    "reference_volume_mass_rest_ownership": true,
+    "initial_loaded_reset": true,
+    "reference_only_and_regional_framed_controls": true,
+    "immutable_package_snapshot_owner": true,
+    "source_cooked_material_domain_interval_admission": true,
+    "snapshot_domain_policy": "Reject provably outside intervals; overlap at a rounding-ambiguous boundary is not exact GPU-domain certification.",
+    "arithmetic_boundary": "Nonzero subnormal coordinate/inverse inputs and potential FP32 intermediate overflow are outside this bounded admission mode.",
+    "production_metal_force_tangent": true,
+    "fp64_constitutive_comparison": true,
+    "synthetic_density_kg_per_m3": [
+      900,
+      1200
+    ],
+    "synthetic_tetrahedra_per_world": 2,
+    "shared_nodes": 3,
+    "environments": 2,
+    "accepted_steps_per_trajectory": 16,
+    "nominal_timestep_seconds": 0.0001,
+    "nominal_duration_seconds_per_trajectory": 0.0016,
+    "bitwise_replay": true,
+    "isolated_rollback": true,
+    "mass_unchanged": true,
+    "anatomical_physical_steps": 0,
+    "case18_unloaded_reference_recovered": false,
+    "source_inertial_density_established": false,
+    "anatomical_wall_qualified": false,
+    "complete_cardiac_active_source_reproduced": false,
+    "physiological_calibration": false,
+    "blood_mass_partition": false,
+    "standing_walking": false,
+    "whole_human": false
+  },
+  "evidence_policy": {
+    "final_execution": "native-runs/final-attempt-001/execution.json",
+    "full_test_output": "native-runs/final-attempt-001/ctest.log",
+    "junit": "native-runs/final-attempt-001/ctest.xml",
+    "junit_system_out_truncated_by_ctest": true,
+    "prequalification": "Build attempts001-005 are retained preparation logs; only the final execution binds all frozen source files and rebuilt binaries to the27-check selection."
+  },
+  "evidence_files": {
+    "commit-verification.json": {
+      "bytes": 694,
+      "sha256": "da1ca4774fbf722bf890b2fd17943d60eb2d274c56a55656ec7a25d7fc8daecc"
+    },
+    "native-runs/build-attempt-001/cpu-test.log": {
+      "bytes": 1820,
+      "sha256": "f402eed33519f59133e2e709fe3595113e2ef0973e8552cee0457477c124140b"
+    },
+    "native-runs/build-attempt-001/output.log": {
+      "bytes": 1934,
+      "sha256": "0aa90ee17adf77d74ed2ac0820fad85ead48a766a832339c5e9f63612a2cbc60"
+    },
+    "native-runs/build-attempt-002/output.log": {
+      "bytes": 1648,
+      "sha256": "078b3c4694996e89ea55b1feb60dde0fe8701bcf748b3d15dd103b8e1e374428"
+    },
+    "native-runs/build-attempt-003/cpu-test.log": {
+      "bytes": 2126,
+      "sha256": "1ad6b73c9bbf713f4a09951273a71b370a30bf0163f6e74391cc054b54c1df91"
+    },
+    "native-runs/build-attempt-003/output.log": {
+      "bytes": 182,
+      "sha256": "0304091f5b8175f06952815c1aabb14b42b234c2895ae60161b0fccc0402258b"
+    },
+    "native-runs/build-attempt-004/cpu-test.log": {
+      "bytes": 2444,
+      "sha256": "3d92d4a3bb5a18e7c3ab484b97e15cc476e042b52c1a39768e498f7bc32a7688"
+    },
+    "native-runs/build-attempt-004/output.log": {
+      "bytes": 613,
+      "sha256": "3acda14caf8865a12a872082d7a467a5f3fb08a04ca1cc58f632d5bfeff704a5"
+    },
+    "native-runs/build-attempt-005/cpu-test.log": {
+      "bytes": 2444,
+      "sha256": "1a058e7476c83eb9147f039c15a445e3b2df570f9d09a3b016bae695eb550fd4"
+    },
+    "native-runs/build-attempt-005/output.log": {
+      "bytes": 613,
+      "sha256": "3acda14caf8865a12a872082d7a467a5f3fb08a04ca1cc58f632d5bfeff704a5"
+    },
+    "native-runs/final-attempt-001/build.log": {
+      "bytes": 12307,
+      "sha256": "cab5a260ad5eb1fb28ceca6b733ebf003b2b327280852383cb53c8bf398c8b92"
+    },
+    "native-runs/final-attempt-001/ctest.log": {
+      "bytes": 33141,
+      "sha256": "57cd8aa32febd70958b0c06a06fe7241034e28fe0e31e889a6b87849976d5b54"
+    },
+    "native-runs/final-attempt-001/ctest.xml": {
+      "bytes": 20945,
+      "sha256": "62a5ba030e6742c545b0f53251a75543e61d3feb336ecac283f01eda7c93f47e"
+    },
+    "native-runs/final-attempt-001/execution.json": {
+      "bytes": 13223,
+      "sha256": "2d1971bcdcb143e8c13c55c17e9ca8213e5aae5865ca8f090a8468bec22e0a1b"
+    },
+    "native-runs/run_final_qualification.py": {
+      "bytes": 5856,
+      "sha256": "057359c85052de3a234f90935a0813ee2efd3194a61ce1acd897abb8ab0a3047"
+    },
+    "publication.json": {
+      "bytes": 487,
+      "sha256": "10674232151a7bd64e0915d3c5b79cac1b0b36e8c626520de7e390413ee2adec"
+    },
+    "source-sha256.json": {
+      "bytes": 1170,
+      "sha256": "fd4958defd140572f8b7ac49f9ac6d006c42fdbb17d04eabab7523ff1f188871"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+In file included from /Users/n/human-cardiac-material-attribution-20260912/cardiac_material_attribution_check.cpp:3:
+/opt/homebrew/opt/gmp/include/gmpxx.h:2163:29: error: identifier '_mpz' preceded by whitespace in a literal operator declaration is deprecated [-Werror,-Wdeprecated-literal-operator]
+ 2163 | inline mpz_class operator"" _mpz(const char* s)
+      |                  ~~~~~~~~~~~^~~~
+      |                  operator""_mpz
+/opt/homebrew/opt/gmp/include/gmpxx.h:2168:29: error: identifier '_mpq' preceded by whitespace in a literal operator declaration is deprecated [-Werror,-Wdeprecated-literal-operator]
+ 2168 | inline mpq_class operator"" _mpq(const char* s)
+      |                  ~~~~~~~~~~~^~~~
+      |                  operator""_mpq
+/opt/homebrew/opt/gmp/include/gmpxx.h:2175:29: error: identifier '_mpf' preceded by whitespace in a literal operator declaration is deprecated [-Werror,-Wdeprecated-literal-operator]
+ 2175 | inline mpf_class operator"" _mpf(const char* s)
+      |                  ~~~~~~~~~~~^~~~
+      |                  operator""_mpf
+3 errors generated.

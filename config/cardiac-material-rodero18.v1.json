@@ -1,0 +1,119 @@
+{
+  "schema": "HumanPack.cardiac-material-rodero18-attribution.v1",
+  "id": "rodero_2021_ct_case18_partial_passive_material_attribution",
+  "parent_source_config": {
+    "path": "config/cardiac-wall-rodero18.v1.json",
+    "sha256": "23c931fef53edced85e0e0a36c73d8490dddb87db6bd988482a2cdfc5a1442cc"
+  },
+  "asset_manifest_sha256": "e8cb0391623577efc4eac04e5710cf7c9a4757614e09d936f5af3889c37d56f1",
+  "source_evidence": {
+    "article": {
+      "doi": "10.1371/journal.pcbi.1008851",
+      "url": "https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1008851",
+      "xml_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8049237/fullTextXML",
+      "retained_xml_sha256": "9a458d885ad810d7ab309b37f4a5784112cf4c3e86e5dd0c6866a44c53eda252",
+      "mass_locator": "Section 3.1, paragraph beginning We compared the anatomical volumes of the CT cohort",
+      "mass_density_interpretation": "The article uses 1.05 g/mL to convert the summed LV mesh element volume into an estimated LV mass. This does not specify the CARP inertial density or densities for other tissue and artificial closure classes."
+    },
+    "S1": {
+      "url": "https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1008851.s001&type=supplementary",
+      "sha256": "08777693dcfd5cfaac676c3e015761d62b68706af21577e678f89808a0c979ba",
+      "locators": ["Section S1.1 and Figure B: exact source label names", "Section S1.2: artificial chamber closure surfaces"]
+    },
+    "S4": {
+      "url": "https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1008851.s004&type=supplementary",
+      "sha256": "5699feb01b7f91f93fd75e26a9a5043ca6bfb5da1803f010c45c71270992ebc6",
+      "locators": ["Equations 3-7 and Table B: ventricular passive law", "Equation 8 and Table C: nonventricular passive law"]
+    },
+    "density_reference": {
+      "doi": "10.1152/ajpheart.00478.2003",
+      "url": "https://journals.physiology.org/doi/full/10.1152/ajpheart.00478.2003",
+      "role": "Rodero article reference 52; underlying tissue-composition literature, not a case18 inertial-density measurement"
+    }
+  },
+  "assignment_policy": {
+    "id": "source_named_tissue_categories_partial_v1",
+    "basis": "Explicit matching of S1 source label names to S4 material categories; not recovery of an original CARP material-ID deck",
+    "class_id_is_native_material_index": false,
+    "unresolved_class_identifier": 4294967295,
+    "unresolved_source_labels": [11, 12, 13, 14, 15, 16, 17],
+    "unresolved_reason": "Extra inlet and removed-appendage closures are artificial structures. S4 does not explicitly map these labels to a passive c value; neither valve stiffness nor vein stiffness is inferred.",
+    "cell_order": "unchanged source tetrahedron order",
+    "geometry_changes": false,
+    "physical_steps": 0
+  },
+  "passive_classes": [
+    {
+      "class_id": 0,
+      "name": "ventricular_myocardium",
+      "source_labels": [1, 2],
+      "law": "isochoric_guccione_logarithmic_volume_penalty",
+      "parameters_si": {"a_pa": 1700, "bf": 8, "bt": 3, "bfs": 4, "kappa_pa": 1000000},
+      "source_locator": "S1 Figure B labels1/2; S4 equations3-7,Table B",
+      "inertial_density_kg_per_m3": null
+    },
+    {
+      "class_id": 1,
+      "name": "atrial_and_retained_vein_tissue",
+      "source_labels": [3, 4, 18, 19, 20, 21, 22, 23, 24],
+      "law": "isochoric_neo_hookean_quadratic_volume_penalty",
+      "parameters_si": {"c_pa": 7450, "kappa_pa": 1000000},
+      "source_locator": "S1 Figure B labels3/4 and retained tissue borders18-24; S4 equation8,Table C atria/veins share c=7.45kPa",
+      "inertial_density_kg_per_m3": null
+    },
+    {
+      "class_id": 2,
+      "name": "aortic_wall",
+      "source_labels": [5],
+      "law": "isochoric_neo_hookean_quadratic_volume_penalty",
+      "parameters_si": {"c_pa": 26660, "kappa_pa": 1000000},
+      "source_locator": "S1 Figure B label5; S4 equation8,Table C aorta",
+      "inertial_density_kg_per_m3": null
+    },
+    {
+      "class_id": 3,
+      "name": "pulmonary_arterial_wall",
+      "source_labels": [6],
+      "law": "isochoric_neo_hookean_quadratic_volume_penalty",
+      "parameters_si": {"c_pa": 3700, "kappa_pa": 1000000},
+      "source_locator": "S1 Figure B label6; S4 equation8,Table C pulmonary artery",
+      "inertial_density_kg_per_m3": null
+    },
+    {
+      "class_id": 4,
+      "name": "artificial_valve_layers",
+      "source_labels": [7, 8, 9, 10],
+      "law": "isochoric_neo_hookean_quadratic_volume_penalty",
+      "parameters_si": {"c_pa": 1000000, "kappa_pa": 1000000},
+      "source_locator": "S1 Figure B labels7-10; S4 equation8,Table C artificial valve layers",
+      "inertial_density_kg_per_m3": null,
+      "physical_leaflet_claim": false
+    }
+  ],
+  "lv_geometric_mass_attribution": {
+    "source_label": 1,
+    "density_kg_per_m3": 1050,
+    "source_density_value": 1.05,
+    "source_density_unit": "g/mL",
+    "si_multiplier": 1000,
+    "source_locator": "Rodero main article section3.1; reference52",
+    "scope": "LV mesh element volume sum times the article's geometric mass-estimation density",
+    "uncertainty": "No uncertainty for the chosen 1.05g/mL convention is supplied by Rodero; not a subject measurement",
+    "mass_is_native_inertia": false,
+    "other_labels_assigned_mass": false,
+    "blood_mass_partitioned": false,
+    "parent_record_correction": "The parent records leave density/inertial convention unresolved. The narrower inertial-data limitation remains valid, but a blanket assertion that the main article supplies no density is incorrect: it supplies this LV mass-estimation convention. The parent bytes and historical receipts are preserved."
+  },
+  "qualification": {
+    "status": "partial_source_material_attribution_only",
+    "complete_passive_material_map": false,
+    "native_inertial_density_map": false,
+    "native_cooking_ready": false,
+    "global_tetrahedral_embedding": false,
+    "physical_pressure_ports": false,
+    "unloaded_reference": false,
+    "source_activation": false,
+    "biological_calibration": false,
+    "whole_human": false
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "schema": "numilab-human.cardiac-attribution-cpp-execution.v1",
+  "argv": [
+    "/usr/bin/time",
+    "-l",
+    "/Users/n/human-cardiac-material-attribution-20260912/cardiac_material_attribution_check",
+    "/Users/n/human-cardiac-wall-anatomy-20260912/asset-final/nodes.f64le",
+    "/Users/n/human-cardiac-wall-anatomy-20260912/asset-final/tetrahedra.u32le",
+    "/Users/n/human-cardiac-wall-anatomy-20260912/asset-final/labels.u32le",
+    "/Users/n/human-cardiac-material-attribution-20260912/attribution/passive-material-classes.u32le",
+    "1470083"
+  ],
+  "returncode": 0,
+  "elapsed_seconds": 0.879931750241667,
+  "before": {
+    "/Users/n/human-cardiac-wall-anatomy-20260912/asset-final/nodes.f64le": {
+      "bytes": 7223160,
+      "sha256": "4c8e6e7d9adfa5180ba0730c99222044c6a1aa51901823cf0b4dd861ae732716"
+    },
+    "/Users/n/human-cardiac-wall-anatomy-20260912/asset-final/tetrahedra.u32le": {
+      "bytes": 23521328,
+      "sha256": "3f571c7815f0fd2e1f9d2735046d3bb7677a1a011215fca6737c6310b5b29066"
+    },
+    "/Users/n/human-cardiac-wall-anatomy-20260912/asset-final/labels.u32le": {
+      "bytes": 5880332,
+      "sha256": "304d0d9d9a99d51be4367529e9598815361018a446ed047923c85b96786b569a"
+    },
+    "/Users/n/human-cardiac-material-attribution-20260912/attribution/passive-material-classes.u32le": {
+      "bytes": 5880332,
+      "sha256": "4c6aa8af284ea640e278c28d5a66dc8c579c2cc018bb71e41132d23871259080"
+    },
+    "/Users/n/human-cardiac-material-attribution-20260912/attribution/manifest.json": {
+      "bytes": 11566,
+      "sha256": "3a7b0631d059295d4011a127ba1daaf75607cab5a6f24dd526fcc07381442571"
+    },
+    "/Users/n/human-cardiac-material-attribution-20260912/cardiac_material_attribution_check.cpp": {
+      "bytes": 7251,
+      "sha256": "49fb07e65279973b458bc831e62001108518328148c55aeb48eaa0246769fc3f"
+    },
+    "/Users/n/human-cardiac-material-attribution-20260912/cardiac_material_attribution_check": {
+      "bytes": 42784,
+      "sha256": "e1ae2f59238c4eae3a48b667a49706817035293e02830ca722c13b06071173a8"
+    }
+  },
+  "after": {
+    "/Users/n/human-cardiac-wall-anatomy-20260912/asset-final/nodes.f64le": {
+      "bytes": 7223160,
+      "sha256": "4c8e6e7d9adfa5180ba0730c99222044c6a1aa51901823cf0b4dd861ae732716"
+    },
+    "/Users/n/human-cardiac-wall-anatomy-20260912/asset-final/tetrahedra.u32le": {
+      "bytes": 23521328,
+      "sha256": "3f571c7815f0fd2e1f9d2735046d3bb7677a1a011215fca6737c6310b5b29066"
+    },
+    "/Users/n/human-cardiac-wall-anatomy-20260912/asset-final/labels.u32le": {
+      "bytes": 5880332,
+      "sha256": "304d0d9d9a99d51be4367529e9598815361018a446ed047923c85b96786b569a"
+    },
+    "/Users/n/human-cardiac-material-attribution-20260912/attribution/passive-material-classes.u32le": {
+      "bytes": 5880332,
+      "sha256": "4c6aa8af284ea640e278c28d5a66dc8c579c2cc018bb71e41132d23871259080"
+    },
+    "/Users/n/human-cardiac-material-attribution-20260912/attribution/manifest.json": {
+      "bytes": 11566,
+      "sha256": "3a7b0631d059295d4011a127ba1daaf75607cab5a6f24dd526fcc07381442571"
+    },
+    "/Users/n/human-cardiac-material-attribution-20260912/cardiac_material_attribution_check.cpp": {
+      "bytes": 7251,
+      "sha256": "49fb07e65279973b458bc831e62001108518328148c55aeb48eaa0246769fc3f"
+    },
+    "/Users/n/human-cardiac-material-attribution-20260912/cardiac_material_attribution_check": {
+      "bytes": 42784,
+      "sha256": "e1ae2f59238c4eae3a48b667a49706817035293e02830ca722c13b06071173a8"
+    }
+  },
+  "inputs_unchanged": true,
+  "physical_steps": 0,
+  "status": "pass",
+  "independent_checks": {
+    "source_label_counts": true,
+    "class_counts": true,
+    "unresolved_cells": true,
+    "lv_cell_count": true,
+    "volume_exact": true,
+    "mass_exact": true
+  }
+}

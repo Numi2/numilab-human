@@ -676,8 +676,15 @@ rather than becoming idle.
   now pass FP64/Metal force/tangent and bounded synthetic transaction checks.
   [Source-bound basis conversion and native regional material ownership](CARDIAC_REGIONAL_MATERIAL_20260912.md)
   now supply all 1,470,083 derived frames and shared-node density-volume mass
-  assembly. The actual anatomical material/density map, native wall loading,
-  physical ports and calibration remain unqualified. A coordinate-preserving
+  assembly. The [source passive-class attribution](CARDIAC_MATERIAL_ATTRIBUTION_20260912.md)
+  maps 1,456,445 cells, retaining 13,638 unresolved artificial closure cells;
+  exact LV mass accounting uses the article's 1050 kg/m³ geometric convention.
+  That convention does not establish native inertial densities.
+  [Separate reference coordinates](FEM_REFERENCE_CONFIGURATION_20260912.md)
+  now own native rest operators, volume and mass independently of initial
+  loading. Actual case18 unloaded geometry, complete material/density assignment,
+  native anatomical wall loading, physical ports and calibration remain
+  unqualified. A coordinate-preserving
   node split cannot resolve the ventricular geometry gate.
   The other 17 aggregates have no anatomy registration, and the 18-region template
   retains 276 unresolved parameters.

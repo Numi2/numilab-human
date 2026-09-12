@@ -33,8 +33,15 @@ The [regional material increment](Docs/CARDIAC_REGIONAL_MATERIAL_20260912.md)
 adds per-cell material ownership with shared-node mass assembly.
 `numi human-cardiac-material-frames` now derives all 1,470,083 source orientation
 frames under an explicit conversion policy, with an independent C++ check.
-Source density, anatomical material assignment, wall admission and subject
-calibration remain open.
+`numi human-cardiac-material-attribution` now provides a
+[source passive-class map and exact LV geometric mass accounting](Docs/CARDIAC_MATERIAL_ATTRIBUTION_20260912.md).
+It preserves 13,638 unresolved closure cells and separates the paper's
+1050 kg/m³ LV mass-estimation convention from missing native inertial densities.
+The [reference-configuration increment](Docs/FEM_REFERENCE_CONFIGURATION_20260912.md)
+separates supplied reference coordinates from initial loaded coordinates, so
+reference volume and mass remain fixed during deformation.
+Case18 unloaded data, complete native material/density assignment, wall admission
+and subject calibration remain open.
 
 [Current-pose foot contact](Docs/CURVED_SUPPORT_20260908.md) now covers the source
 capsules and heel ellipsoids. The [source dynamic-limit integration](Docs/SOURCE_DYNAMIC_LIMITS_20260908.md)
