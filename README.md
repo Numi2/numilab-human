@@ -10,7 +10,10 @@ The [regional circulation source variant](Docs/CVSIM21_REGIONAL_CIRCULATION_2026
 adds CVSim21's 21 absolute blood-volume compartments and 24 flows to the existing
 Matter solver. `numi human-circulation` authors a sourced 5,150 mL aggregate
 circulation with explicit clock and volume-coordinate variants. Physical Mac mini
-timestep refinement, ten cycles and transaction checks pass. Anatomy registration,
+timestep refinement, ten cycles and transaction checks pass.
+`numi human-circulation-anatomy` now binds four [exact cardiac cavity references](Docs/CARDIAC_CAVITY_REGISTRATION_20260912.md)
+and preserves native hydraulic state bit-for-bit. The atlas right atrial and
+ventricular domains overlap; disjoint-volume admission, body registration,
 mechanical blood-mass partition and physiological calibration remain open.
 The earlier [Shi–Hose cardiac source](Docs/CARDIAC_SOURCE_REPRODUCTION_20260912.md)
 remains separately available through `numi human-cardiac`; its vascular C·P

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "HumanPack.cvsim21-cardiac-cavities-config.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "id", "volume_coordinates", "source_manifest_sha256", "geometry_source", "association", "mechanical_mass_policy"],
+  "properties": {
+    "schema": {"const": "HumanPack.cvsim21-cardiac-cavities-config.v1"},
+    "id": {"const": "cvsim21_bodyparts3d_cardiac_cavity_reference"},
+    "volume_coordinates": {"enum": ["upstream_equation", "heldt_table_aligned"]},
+    "source_manifest_sha256": {"const": "b118d58230a3f2766108d05501a3ac9b910124ef823567a7e5fe23f6df0b4f67"},
+    "geometry_source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["archive_sha256", "part_of_table_sha256", "is_a_table_sha256"],
+      "properties": {
+        "archive_sha256": {"const": "9fbc713fffeee924a5a657d9813d84d7eb957bded63adb854931dd5e3eb61c97"},
+        "part_of_table_sha256": {"const": "3f5f6df1028eb122b30de77c711597b6bb8e5541658e5985859fd228adbf88ea"},
+        "is_a_table_sha256": {"const": "a3de74423f943b0d724ae8f59b3a817f87c423a544f8db98113b1980817cbeaf"}
+      }
+    },
+    "association": {"const": "source_cavity_reference_only"},
+    "mechanical_mass_policy": {"const": "unchanged_unresolved_blood_attribution"}
+  }
+}

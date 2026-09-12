@@ -659,8 +659,12 @@ rather than becoming idle.
   absolute blood-volume compartments, 24 flows and a sourced 5,150 mL total,
   with explicit continuous-clock and arterial volume-coordinate variants.
   Ten native cycles, timestep refinement and 15 compatibility/transaction checks
-  pass. These aggregate source volumes have no anatomical or mechanical mass
-  registration; the 18-region template retains 276 unresolved parameters.
+  pass. Four cardiac compartments now have exact [atlas cavity references](CARDIAC_CAVITY_REGISTRATION_20260912.md),
+  with embedded surfaces, volume moments and native identity-equivalence evidence.
+  The right atrial/ventricular domains intersect in 42 triangle pairs; disjoint
+  physical-volume, body-frame and mechanical mass registration remain blocked.
+  The other 17 aggregates have no anatomy registration, and the 18-region template
+  retains 276 unresolved parameters.
 - **Active frontier:** register the aggregate vascular volumes, establish a
   nonduplicated blood mass partition and subject parameters; reproduce reflexes
   and tilt; subdivide, register and calibrate individual-organ perfusion;

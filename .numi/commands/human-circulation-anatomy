@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+if [ "${1:-}" = "--numi-describe" ]; then
+    printf '%s\n' 'Bind CVSim cardiac chambers to exact BodyParts3D cavity reference surfaces; report geometry and source-volume mismatch without adding mechanical mass.'
+    exit 0
+fi
+command_directory=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+repository_root=$(CDPATH= cd -- "$command_directory/../.." && pwd -P)
+export PYTHONPATH="$repository_root/src${PYTHONPATH:+:$PYTHONPATH}"
+exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.cvsim21_anatomy "$@"

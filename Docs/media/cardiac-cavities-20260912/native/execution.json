@@ -1,0 +1,122 @@
+{
+  "build_command": [
+    "xcrun",
+    "clang++",
+    "-O3",
+    "-DNDEBUG",
+    "-std=c++23",
+    "-arch",
+    "arm64",
+    "-fobjc-arc",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-DNUMI_MATTER_METALLIB=\"/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib\"",
+    "-I/Users/n/MetalRobo-human-completion-20260907/include",
+    "-I/Users/n/MetalRobo-human-completion-20260907/matter/include",
+    "/Users/n/human-cardiac-cavities-20260912/tools/cardiac_cavity_native_check.mm",
+    "/Users/n/MetalRobo-human-completion-build-20260907/matter/libnumi_matter_runtime.a",
+    "/Users/n/MetalRobo-human-completion-build-20260907/matter/libnumi_matter_compiler.a",
+    "-framework",
+    "Foundation",
+    "-framework",
+    "Metal",
+    "-o",
+    "/Users/n/human-cardiac-cavities-20260912/qualified/cardiac-cavity-native-check"
+  ],
+  "build_exit_code": 0,
+  "build_inputs_after": {
+    "/Users/n/MetalRobo-human-completion-build-20260907/matter/libnumi_matter_compiler.a": "30daf7d0126139ceddfb75ec798c8aa5228da35e1e119d0c14e1f3bb004c36d5",
+    "/Users/n/MetalRobo-human-completion-build-20260907/matter/libnumi_matter_runtime.a": "817ec224f3df6b61372b3bef4f64d618b1554999747483992d665676f4c38d7d",
+    "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib": "f84a1282fd24a9ed34fd06199596af19d49d7b0ea8561c00d8a73f50f348d86b",
+    "/Users/n/human-cardiac-cavities-20260912/tools/cardiac_cavity_native_check.mm": "c99eec026081399f6a06541ea2800ed244ca553ffdacb05463d50a7aa62dca0a"
+  },
+  "build_inputs_before": {
+    "/Users/n/MetalRobo-human-completion-build-20260907/matter/libnumi_matter_compiler.a": "30daf7d0126139ceddfb75ec798c8aa5228da35e1e119d0c14e1f3bb004c36d5",
+    "/Users/n/MetalRobo-human-completion-build-20260907/matter/libnumi_matter_runtime.a": "817ec224f3df6b61372b3bef4f64d618b1554999747483992d665676f4c38d7d",
+    "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib": "f84a1282fd24a9ed34fd06199596af19d49d7b0ea8561c00d8a73f50f348d86b",
+    "/Users/n/human-cardiac-cavities-20260912/tools/cardiac_cavity_native_check.mm": "c99eec026081399f6a06541ea2800ed244ca553ffdacb05463d50a7aa62dca0a"
+  },
+  "dynamic_dependencies": "/Users/n/human-cardiac-cavities-20260912/qualified/cardiac-cavity-native-check:\n\t/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation (compatibility version 300.0.0, current version 5026.5.4)\n\t/System/Library/Frameworks/Metal.framework/Versions/A/Metal (compatibility version 1.0.0, current version 373.2.0)\n\t/usr/lib/libobjc.A.dylib (compatibility version 1.0.0, current version 228.0.0)\n\t/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 2100.43.0)\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)\n\t/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation (compatibility version 150.0.0, current version 5026.5.4)\n",
+  "environment": {
+    "MTL_DEBUG_LAYER": "1"
+  },
+  "executable_sha256": "52b850f67ccb0ba3afac472d94ee3fc5c1e71df8c0818e50eee70cec3c6ad922",
+  "native_commit": "b91fe6832813497ab532e5dbe05ed8c8233e6b1f",
+  "native_commit_after": "b91fe6832813497ab532e5dbe05ed8c8233e6b1f",
+  "native_status_after": "",
+  "native_status_before": "",
+  "negative_control": {
+    "command": [
+      "/Users/n/human-cardiac-cavities-20260912/qualified/cardiac-cavity-native-check",
+      "/Users/n/human-cardiac-cavities-20260912/evidence/upstream_equation.baseline.json",
+      "/Users/n/human-cardiac-cavities-20260912/qualified/physical-mutation.json"
+    ],
+    "exit_code": 1,
+    "inputs_after": {
+      "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib": "f84a1282fd24a9ed34fd06199596af19d49d7b0ea8561c00d8a73f50f348d86b",
+      "/Users/n/human-cardiac-cavities-20260912/evidence/upstream_equation.baseline.json": "eeb6ebc5dad5cb413587038532ac5badc3d3e8aa419cca111604239e7f692818",
+      "/Users/n/human-cardiac-cavities-20260912/qualified/cardiac-cavity-native-check": "52b850f67ccb0ba3afac472d94ee3fc5c1e71df8c0818e50eee70cec3c6ad922",
+      "/Users/n/human-cardiac-cavities-20260912/qualified/physical-mutation.json": "bd8a2b8e67e444cf4880c8395c8428ba4ea7b6d25e47f1a57c270eea25dce8be"
+    },
+    "inputs_before": {
+      "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib": "f84a1282fd24a9ed34fd06199596af19d49d7b0ea8561c00d8a73f50f348d86b",
+      "/Users/n/human-cardiac-cavities-20260912/evidence/upstream_equation.baseline.json": "eeb6ebc5dad5cb413587038532ac5badc3d3e8aa419cca111604239e7f692818",
+      "/Users/n/human-cardiac-cavities-20260912/qualified/cardiac-cavity-native-check": "52b850f67ccb0ba3afac472d94ee3fc5c1e71df8c0818e50eee70cec3c6ad922",
+      "/Users/n/human-cardiac-cavities-20260912/qualified/physical-mutation.json": "bd8a2b8e67e444cf4880c8395c8428ba4ea7b6d25e47f1a57c270eea25dce8be"
+    },
+    "log": "physical-mutation.log",
+    "wall_seconds": 0.08284120913594961
+  },
+  "runner_sha256": "1a28454999a44586a84ed4c7a640606f9e928e30a7722834e6412adbf4a7d053",
+  "runs": [
+    {
+      "command": [
+        "/Users/n/human-cardiac-cavities-20260912/qualified/cardiac-cavity-native-check",
+        "/Users/n/human-cardiac-cavities-20260912/evidence/upstream_equation.baseline.json",
+        "/Users/n/human-cardiac-cavities-20260912/evidence/upstream_equation.native.json"
+      ],
+      "exit_code": 0,
+      "inputs_after": {
+        "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib": "f84a1282fd24a9ed34fd06199596af19d49d7b0ea8561c00d8a73f50f348d86b",
+        "/Users/n/human-cardiac-cavities-20260912/evidence/upstream_equation.baseline.json": "eeb6ebc5dad5cb413587038532ac5badc3d3e8aa419cca111604239e7f692818",
+        "/Users/n/human-cardiac-cavities-20260912/evidence/upstream_equation.native.json": "48cfa15bcd31f45a6e775bcacd5423aaf0ff28067873fae8c3b398e195c22e5e",
+        "/Users/n/human-cardiac-cavities-20260912/qualified/cardiac-cavity-native-check": "52b850f67ccb0ba3afac472d94ee3fc5c1e71df8c0818e50eee70cec3c6ad922"
+      },
+      "inputs_before": {
+        "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib": "f84a1282fd24a9ed34fd06199596af19d49d7b0ea8561c00d8a73f50f348d86b",
+        "/Users/n/human-cardiac-cavities-20260912/evidence/upstream_equation.baseline.json": "eeb6ebc5dad5cb413587038532ac5badc3d3e8aa419cca111604239e7f692818",
+        "/Users/n/human-cardiac-cavities-20260912/evidence/upstream_equation.native.json": "48cfa15bcd31f45a6e775bcacd5423aaf0ff28067873fae8c3b398e195c22e5e",
+        "/Users/n/human-cardiac-cavities-20260912/qualified/cardiac-cavity-native-check": "52b850f67ccb0ba3afac472d94ee3fc5c1e71df8c0818e50eee70cec3c6ad922"
+      },
+      "log": "upstream_equation.native.log",
+      "volume_coordinates": "upstream_equation",
+      "wall_seconds": 5.940813292283565
+    },
+    {
+      "command": [
+        "/Users/n/human-cardiac-cavities-20260912/qualified/cardiac-cavity-native-check",
+        "/Users/n/human-cardiac-cavities-20260912/evidence/heldt_table_aligned.baseline.json",
+        "/Users/n/human-cardiac-cavities-20260912/evidence/heldt_table_aligned.native.json"
+      ],
+      "exit_code": 0,
+      "inputs_after": {
+        "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib": "f84a1282fd24a9ed34fd06199596af19d49d7b0ea8561c00d8a73f50f348d86b",
+        "/Users/n/human-cardiac-cavities-20260912/evidence/heldt_table_aligned.baseline.json": "aff8b696cfeeabfb29e3126ac38bb1507599c653f5adb5f10a82dbbd537c380d",
+        "/Users/n/human-cardiac-cavities-20260912/evidence/heldt_table_aligned.native.json": "a53801febf851df0fa8c469430429b5613f62fc58dcfc03ae3f0a2c23e25ecd5",
+        "/Users/n/human-cardiac-cavities-20260912/qualified/cardiac-cavity-native-check": "52b850f67ccb0ba3afac472d94ee3fc5c1e71df8c0818e50eee70cec3c6ad922"
+      },
+      "inputs_before": {
+        "/Users/n/MetalRobo-human-completion-build-20260907/matter/shaders/NumiMatter.metallib": "f84a1282fd24a9ed34fd06199596af19d49d7b0ea8561c00d8a73f50f348d86b",
+        "/Users/n/human-cardiac-cavities-20260912/evidence/heldt_table_aligned.baseline.json": "aff8b696cfeeabfb29e3126ac38bb1507599c653f5adb5f10a82dbbd537c380d",
+        "/Users/n/human-cardiac-cavities-20260912/evidence/heldt_table_aligned.native.json": "a53801febf851df0fa8c469430429b5613f62fc58dcfc03ae3f0a2c23e25ecd5",
+        "/Users/n/human-cardiac-cavities-20260912/qualified/cardiac-cavity-native-check": "52b850f67ccb0ba3afac472d94ee3fc5c1e71df8c0818e50eee70cec3c6ad922"
+      },
+      "log": "heldt_table_aligned.native.log",
+      "volume_coordinates": "heldt_table_aligned",
+      "wall_seconds": 5.447109874803573
+    }
+  ],
+  "schema": "HumanPack.cardiac-cavity-native-execution.v1",
+  "status": "pass"
+}
