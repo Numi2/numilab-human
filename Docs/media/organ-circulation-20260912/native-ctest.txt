@@ -1,0 +1,38 @@
+Test project /Users/n/MetalRobo-human-completion-build-20260907
+      Start  13: matter.runtime.snapshot_archive
+ 1/11 Test  #13: matter.runtime.snapshot_archive ..................   Passed    0.00 sec
+      Start  17: matter.physics.monolithic_multiphysics
+ 2/11 Test  #17: matter.physics.monolithic_multiphysics ...........   Passed    0.14 sec
+      Start  24: matter.runtime.production_transaction_rollback
+ 3/11 Test  #24: matter.runtime.production_transaction_rollback ...   Passed    0.08 sec
+      Start  25: matter.physics.stateful_mpm
+ 4/11 Test  #25: matter.physics.stateful_mpm ......................   Passed    2.48 sec
+      Start  26: matter.physics.stateful_fem
+ 5/11 Test  #26: matter.physics.stateful_fem ......................   Passed    1.96 sec
+      Start  62: numanx.integration.matter_accepted_state_2pc
+ 6/11 Test  #62: numanx.integration.matter_accepted_state_2pc .....   Passed    0.75 sec
+      Start 104: matter.compiler.stateful_roundtrip
+ 7/11 Test #104: matter.compiler.stateful_roundtrip ...............   Passed    0.01 sec
+      Start 107: matter.compiler.vascular
+ 8/11 Test #107: matter.compiler.vascular .........................   Passed    0.00 sec
+      Start 108: matter.metal.vascular
+ 9/11 Test #108: matter.metal.vascular ............................   Passed   13.25 sec
+      Start 109: matter.metal.human_physiology_payload
+10/11 Test #109: matter.metal.human_physiology_payload ............   Passed    1.32 sec
+      Start 110: matter.compiler.human_physiology_admission
+11/11 Test #110: matter.compiler.human_physiology_admission .......   Passed    0.06 sec
+
+100% tests passed out of 11
+
+Label Time Summary:
+checkpoint    =   0.00 sec*proc (1 test)
+compiler      =   0.08 sec*proc (3 tests)
+human         =  15.39 sec*proc (5 tests)
+matter        =  19.31 sec*proc (10 tests)
+metal         =  19.98 sec*proc (7 tests)
+numanx        =   0.75 sec*proc (1 test)
+physics       =   5.41 sec*proc (5 tests)
+stateful      =   0.01 sec*proc (1 test)
+vascular      =  14.63 sec*proc (4 tests)
+
+Total Test time (real) =  20.06 sec

@@ -1,0 +1,53 @@
+{
+  "abi": 26,
+  "accepted_proof_manifest": 5,
+  "built_artifact_sha256": {
+    "bin/metalrobo_matter_snapshot_archive_probe": "e399a3bf05fc7fa917b993df1ff09ace1f7e84190f339568e1f1a2a7d3e5a2b8",
+    "bin/metalrobo_numanx_matter_accepted_state_proof_probe": "7aca0a0056af33ad8722887c86e26fd684c3d3040d899a77c5897b5a9901352c",
+    "lib/libmetalrobo.dylib": "3e032c07dadf687b74adfd5abd09f0b4a07c7187d0019dcd72b8643fa8f2e92b",
+    "matter/numi-matter-physiologyc": "07c30186f32568b0ecf04bbbe8108614b34ed58d05f9e0e64e2e84583f52596c",
+    "matter/numi-matter-vascular-check": "b27454c77de26a127062d26b2f555f4c6bd513656be480e23870132ebbb9ec12",
+    "matter/shaders/NumiMatter.metallib": "4d566199221203afeff04301a4864009bb2fd1abe8acf4e22e5c43895901b2c1"
+  },
+  "device": {
+    "chip": "Apple M4 Pro",
+    "cores": 12,
+    "memory_gib": 24,
+    "model": "Mac mini"
+  },
+  "native_base": "ee17f4669f4d6b0955e74ce6faf04033c4575a82",
+  "native_commit": "1594f7aff5503aab96ab9de6e77b6d4f8fa4f1cd",
+  "package_version": 11,
+  "snapshot_archive": 5,
+  "source_sha256": {
+    "apps/matter_snapshot_archive_probe.cpp": "7318e9878d84d3ddadaf6c126dfe7f7e7ddfd887cec0146747627d696947c0df",
+    "apps/numanx_human_matter_adapter_probe.mm": "b502363b0e0ddaf361b976ddc014fcf782e7445ab61ca3f50b7003eb44589bfd",
+    "apps/numanx_matter_accepted_state_proof_probe.mm": "42aa03e82c13ba3f44103b6e05c5b022710890b73b9660affcca9e1ecd5256ac",
+    "docs/HUMAN_VASCULAR_TRANSACTION_V1.md": "b5d5d79960820b30d81d14a8e557ca59dd58bad9cc0722170afa80f833796842",
+    "include/metalrobo/MatterSnapshotArchive.hpp": "d7adeb1861ae22e42b271d2afdd41c2a52a6bb907937592e431cda9cbafc923a",
+    "matter/CMakeLists.txt": "7878eea7dc70fbf71e8209877969fd1a33e4e61e10a3e75edb7d1747eca073ab",
+    "matter/include/numi/matter/human_physiology.hpp": "8e0a7b8fef90710ca26a0c6e08c5e86182968fdfad131418995051a2afcff5ad",
+    "matter/include/numi/matter/matter.hpp": "72835cb9354120177a42c5d53c0e6f14512888d4e0e1e215e38e2c6d9ba7b406",
+    "matter/include/numi/matter/shared.h": "766e5f81408657c7276b0763699c01ba1c29343e9c751d79d4df86f2877d2ac2",
+    "matter/include/numi/matter/vascular.hpp": "149e556aa04bb6de5a15dfaa6fac9d41875b67bc9fab8aac0caf9b3d6b69acb0",
+    "matter/src/accepted_state_proof_gpu.hpp": "a675e96cf17ead6cf6cbb901062b4a611842b30d34ee4b37c5a1f88566fb886e",
+    "matter/src/compiler_impl.cpp": "b7bf038861d8fdf3b510a7e76619990b3410346ad8bb467776f617a0da03ddfd",
+    "matter/src/fingerprint_impl.cpp": "709e5d3fc824638e9bd9429fc9a0d0233e2084639e10f494f1c5e44258c31678",
+    "matter/src/human_physiology.mm": "aa2cda52fb1b5d9535ec75ab17680a8e36777c5d29ad3cdceca047cd7f6090b4",
+    "matter/src/matter_kernels.metal": "37d3530284e2361b20f805409768c65446fc13186c50e94f286b73256debe168",
+    "matter/src/metal/fgmres.metalinc": "4f2cc43ea749082f4c1eb6ce1bfdef90f586688f2989cbd17ef9e960f0c959e3",
+    "matter/src/metal/vascular.metalinc": "e26dab0550288cfe402ed488a4358c7c134ed67eb886d3516e827849a66534f0",
+    "matter/src/package_impl.cpp": "da528528723c5009de4e89277859457ab04943d67ec83be76a7374d90b28f0af",
+    "matter/src/runtime.mm": "5f170f8407475b54f5cb69ca398d2bff21febd4bf518180f9dd31f303b9270e5",
+    "matter/src/validation_impl.cpp": "b04cfaaee731c53be682a614b49bb10cb39036d257559daf54f0679b9d0c4dcd",
+    "matter/src/vascular_impl.cpp": "97f6eae4bb30e370b8c10a9dc2779b813faacbcbe16602d8dad5a3ad0738eeec",
+    "matter/tools/fixtures/human_physiology.native.v1.json": "eacb161e2e89221673efaacf796ff2d174d1697287c9725d7d8edc71f9574c91",
+    "matter/tools/physiology_input_check.py": "91c2760f45b11d432e156ea2af93571355ab3cc5ec20f2b5c04b6887acf821ae",
+    "matter/tools/physiologyc.mm": "ee100c58d34167d2662326b26dc4daf5cb45c889027a7f8e879da3b046a42180",
+    "matter/tools/vascular_check.mm": "a4d810cd394e136a7717cd0e65d5d59899708e748c02ac0401d61d02bef87249",
+    "matter/tools/vascular_compiler_check.cpp": "d29922f00affc5602925f772c3b7df380a780542db7683f4b5b8a931ec79a8d2",
+    "matter/tools/vascular_fixture.hpp": "17b3fd9a7e1c89a4c5b354b32bd53b7c841fe71120efca892b808e60d861905d",
+    "src/core/MatterSnapshotArchive.cpp": "a18c74c778cce65390e52e676badfef2b2531f7086f7bac6245437fbd83232d3"
+  },
+  "worktree_status": ""
+}

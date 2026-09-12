@@ -644,11 +644,15 @@ rather than becoming idle.
   thermoregulation, fluid balance, electrophysiology, and peripheral neural
   conduction are registered to the same anatomy and evolve through explicit
   multi-rate fields/compartments on the accepted-step timeline.
-- **Current proof:** local activation, fibre/tendon, fatigue/energetic concepts,
-  and transaction fields provide partial interfaces only; no systemic owner is
-  qualified today.
-- **Active frontier:** freeze compartment/network/field schemas and units;
-  identify source models and subject parameters; couple perfusion to active
+- **Current proof:** source-bound physiology graph/compiler and native passive
+  blood-volume/flow/species with fixed organ-reservoir exchange now share the
+  Matter Newton/FGMRES transaction. Physical M4 Pro conservation, independent
+  FP64/refinement, reset/replay/rollback and prepared-state proof checks pass
+  ([12 September receipt](ORGAN_CIRCULATION_INTEGRATION_20260912.md)). Anatomical
+  organ mechanics and physiological calibration remain unqualified; the
+  18-region template retains 276 unresolved parameters.
+- **Active frontier:** pin and reproduce source cardiovascular models and
+  subject parameters; implement chamber drive and valve laws; couple perfusion to active
   tissue, ventilation to thoracic mechanics, metabolic/thermal state to muscle,
   and conduction/delay to biological sensors and stimulation; define stable
   subcycling and rollback semantics.

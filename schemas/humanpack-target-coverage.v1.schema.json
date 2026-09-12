@@ -7,7 +7,7 @@
   "required": ["schema", "compiler", "source_lock_sha256", "previous_manifest_sha256", "manifest_sha256", "obligations", "source_records", "registers", "register_history", "leaves", "counts", "scope_status", "integrated_qualification", "evidence_boundary"],
   "properties": {
     "schema": {"const": "HumanPack.target-coverage.v1"},
-    "compiler": {"const": "numilab-human.target-coverage.1"},
+    "compiler": {"enum": ["numilab-human.target-coverage.1", "numilab-human.target-coverage.2"]},
     "source_lock_sha256": {"$ref": "#/$defs/sha256"},
     "previous_manifest_sha256": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sha256"}]},
     "manifest_sha256": {"$ref": "#/$defs/sha256"},
@@ -37,7 +37,7 @@
       "required": ["leaves", "mandatory_leaves", "by_kind", "unresolved_current_registers"],
       "properties": {
         "leaves": {"type": "integer", "minimum": 80},
-        "mandatory_leaves": {"const": 80},
+        "mandatory_leaves": {"enum": [80, 95]},
         "by_kind": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 1}},
         "unresolved_current_registers": {"type": "integer", "minimum": 0}
       }
@@ -46,6 +46,11 @@
     "integrated_qualification": {"const": "unknown"},
     "evidence_boundary": {"type": "string", "minLength": 1}
   },
+  "allOf": [{
+    "if": {"properties": {"compiler": {"const": "numilab-human.target-coverage.2"}}},
+    "then": {"properties": {"counts": {"properties": {"mandatory_leaves": {"const": 95}, "leaves": {"minimum": 95}}}, "leaves": {"minItems": 95}}},
+    "else": {"properties": {"counts": {"properties": {"mandatory_leaves": {"const": 80}}}}}
+  }],
   "$defs": {
     "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "source": {

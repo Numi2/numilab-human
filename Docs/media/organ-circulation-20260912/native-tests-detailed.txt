@@ -1,0 +1,249 @@
+Start testing: Sep 12 06:21 CEST
+----------------------------------------------------------
+13/110 Testing: matter.runtime.snapshot_archive
+13/110 Test: matter.runtime.snapshot_archive
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_snapshot_archive_probe" "/Users/n/MetalRobo-human-completion-build-20260907/matter-snapshot-archive-probe.bin"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907
+"matter.runtime.snapshot_archive" start time: Sep 12 06:21 CEST
+Output:
+----------------------------------------------------------
+matter_snapshot_archive=ok version=5 content_hash=0x461c2b30b5928d9d payload_bytes=3536 corrupt_payload_rejected=yes
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"matter.runtime.snapshot_archive" end time: Sep 12 06:21 CEST
+"matter.runtime.snapshot_archive" time elapsed: 00:00:00
+----------------------------------------------------------
+
+17/110 Testing: matter.physics.monolithic_multiphysics
+17/110 Test: matter.physics.monolithic_multiphysics
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe" "--multiphysics"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907
+"matter.physics.monolithic_multiphysics" start time: Sep 12 06:21 CEST
+Output:
+----------------------------------------------------------
+2026-09-12 06:21:41.023 metalrobo_matter_physics_probe[8304:7363127] Metal API Validation Enabled
+{"schema":"numi.matter.physics-probe.v2","representation":"monolithic_multiphysics","temperature_min":300,"temperature_max":354.956,"electric_max":1,"activation_max":0.0427246,"kkt_residual":3.00321e-05,"relative_correction":0,"volume_residual":2.07567e-07,"pressure_residual":4.15134e-07,"transport_residual":1.93967e-06}
+<end of output>
+Test time =   0.14 sec
+----------------------------------------------------------
+Test Passed.
+"matter.physics.monolithic_multiphysics" end time: Sep 12 06:21 CEST
+"matter.physics.monolithic_multiphysics" time elapsed: 00:00:00
+----------------------------------------------------------
+
+24/110 Testing: matter.runtime.production_transaction_rollback
+24/110 Test: matter.runtime.production_transaction_rollback
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe" "--production-rollback"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907
+"matter.runtime.production_transaction_rollback" start time: Sep 12 06:21 CEST
+Output:
+----------------------------------------------------------
+2026-09-12 06:21:41.167 metalrobo_matter_physics_probe[8305:7363135] Metal API Validation Enabled
+{"schema":"numi.matter.physics-probe.v2","representation":"production_transaction","rollback":true,"active_tetrahedra":1,"learned_revision":0}
+<end of output>
+Test time =   0.08 sec
+----------------------------------------------------------
+Test Passed.
+"matter.runtime.production_transaction_rollback" end time: Sep 12 06:21 CEST
+"matter.runtime.production_transaction_rollback" time elapsed: 00:00:00
+----------------------------------------------------------
+
+25/110 Testing: matter.physics.stateful_mpm
+25/110 Test: matter.physics.stateful_mpm
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe" "--stateful-mpm"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907
+"matter.physics.stateful_mpm" start time: Sep 12 06:21 CEST
+Output:
+----------------------------------------------------------
+2026-09-12 06:21:41.246 metalrobo_matter_physics_probe[8306:7363139] Metal API Validation Enabled
+{"schema":"numi.matter.stateful-runtime.v1","representation":"mpm","state_stride":2,"maximum_damage":0,"maximum_accumulated_strain":0.00177208,"rollback_exact":true,"mismatched_program_rejected":true,"archive_restore_exact":true,"explicit_restore_exact":true,"continuation_exact":true}
+<end of output>
+Test time =   2.48 sec
+----------------------------------------------------------
+Test Passed.
+"matter.physics.stateful_mpm" end time: Sep 12 06:21 CEST
+"matter.physics.stateful_mpm" time elapsed: 00:00:02
+----------------------------------------------------------
+
+26/110 Testing: matter.physics.stateful_fem
+26/110 Test: matter.physics.stateful_fem
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_matter_physics_probe" "--stateful-fem"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907
+"matter.physics.stateful_fem" start time: Sep 12 06:21 CEST
+Output:
+----------------------------------------------------------
+2026-09-12 06:21:43.728 metalrobo_matter_physics_probe[8307:7363145] Metal API Validation Enabled
+{"schema":"numi.matter.stateful-runtime.v1","representation":"fem","state_stride":2,"maximum_damage":0,"maximum_accumulated_strain":0.00529575,"rollback_exact":true,"mismatched_program_rejected":true,"archive_restore_exact":true,"explicit_restore_exact":true,"continuation_exact":true}
+<end of output>
+Test time =   1.96 sec
+----------------------------------------------------------
+Test Passed.
+"matter.physics.stateful_fem" end time: Sep 12 06:21 CEST
+"matter.physics.stateful_fem" time elapsed: 00:00:01
+----------------------------------------------------------
+
+62/110 Testing: numanx.integration.matter_accepted_state_2pc
+62/110 Test: numanx.integration.matter_accepted_state_2pc
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/bin/metalrobo_numanx_matter_accepted_state_proof_probe"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907
+"numanx.integration.matter_accepted_state_2pc" start time: Sep 12 06:21 CEST
+Output:
+----------------------------------------------------------
+2026-09-12 06:21:45.682 metalrobo_numanx_matter_accepted_state_proof_probe[8335:7363306] Metal API Validation Enabled
+numanx_matter_accepted_state_proof_probe=pass
+device=Apple_Metal
+real_runtime_prepare_proof_apply_publication=pass
+accepted_rigid_and_matter_content_mutation=pass
+vascular_content_mutation=pass
+human_content_mutation=pass
+chunk_tree_cpu_parity=pass
+byte_replay=pass
+borrowed_interval_aliases=fail_closed
+pending=terminal_no_touch
+stale_slot_generation=fail_closed
+owner_abi4_global_control_step=bound
+prepared_disposition_identity=pass
+abi4_proposal_ack_apply_accept_reject=pass
+terminal_outcome_and_facts=pending_no_touch
+explicit_restore_outcome_and_facts=rejected
+accepted_pending_publication=blocked_until_exact_fence
+accepted_pending_snapshot_and_encode=blocked
+publication_facts_fnv_binding=pass
+fabricated_publication_fence=terminal_no_touch
+aborted_uncommitted_apply_retry=pass
+completed_slot_reuse=pass
+identification_reset_adaptive=unsupported_fail_closed
+multi_substep=unsupported_fail_closed
+runtime_resident_bytes=407568
+proof_resident_bytes=288
+<end of output>
+Test time =   0.75 sec
+----------------------------------------------------------
+Test Passed.
+"numanx.integration.matter_accepted_state_2pc" end time: Sep 12 06:21 CEST
+"numanx.integration.matter_accepted_state_2pc" time elapsed: 00:00:00
+----------------------------------------------------------
+
+104/110 Testing: matter.compiler.stateful_roundtrip
+104/110 Test: matter.compiler.stateful_roundtrip
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-stateful-check"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+"matter.compiler.stateful_roundtrip" start time: Sep 12 06:21 CEST
+Output:
+----------------------------------------------------------
+{"schema":"numi.matter.stateful-compiler.v1","fingerprint":4555899631085046114,"state_stride":2,"particles":2,"tetrahedra":1}
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"matter.compiler.stateful_roundtrip" end time: Sep 12 06:21 CEST
+"matter.compiler.stateful_roundtrip" time elapsed: 00:00:00
+----------------------------------------------------------
+
+107/110 Testing: matter.compiler.vascular
+107/110 Test: matter.compiler.vascular
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-vascular-compiler-check"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+"matter.compiler.vascular" start time: Sep 12 06:21 CEST
+Output:
+----------------------------------------------------------
+vascular_compiler=pass boundary=source_cooking_package_validation_only laws=passive_compliance_resistance_inertance_transport_exchange canonical_order=true semantic_rejection=true provenance_bound=true
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"matter.compiler.vascular" end time: Sep 12 06:21 CEST
+"matter.compiler.vascular" time elapsed: 00:00:00
+----------------------------------------------------------
+
+108/110 Testing: matter.metal.vascular
+108/110 Test: matter.metal.vascular
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-vascular-check"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+"matter.metal.vascular" start time: Sep 12 06:21 CEST
+Output:
+----------------------------------------------------------
+2026-09-12 06:21:46.865 numi-matter-vascular-check[8338:7363314] Metal API Validation Enabled
+vascular_case=resistive_exchange result=pass accepted_steps=16 environments=2 fp64_normalized_max=1.535277601e-07 relative_conservation_max=3.628520057e-08 replay=bitwise isolated_rollback=pass invalid_restore=denied isolated_reset=pass fem_region=none
+vascular_case=reverse_flow result=pass accepted_steps=16 environments=2 fp64_normalized_max=1.626981574e-07 relative_conservation_max=2.524757247e-09 replay=bitwise isolated_rollback=pass invalid_restore=denied isolated_reset=pass fem_region=none
+vascular_case=inertial_flow result=pass accepted_steps=16 environments=2 fp64_normalized_max=2.993021556e-07 relative_conservation_max=8.31569194e-08 replay=bitwise isolated_rollback=pass invalid_restore=denied isolated_reset=pass fem_region=none
+vascular_case=fem_region result=pass accepted_steps=16 environments=2 fp64_normalized_max=1.535277601e-07 relative_conservation_max=3.628520057e-08 replay=bitwise isolated_rollback=pass invalid_restore=denied isolated_reset=pass fem_region=bound_identity_only
+vascular_branched=pass compartments=3 edges=3 species=2 tissues=2 exchanges=3 relative_conservation_max=6.072223191e-08 replay=bitwise
+vascular_refinement=pass equal_duration_s=0.16 errors_m3=4.54144036e-09,2.296729443e-09,1.15518129e-09
+vascular_native_qualification=pass runtime_input=nmatterpack biological_calibration=unqualified
+<end of output>
+Test time =  13.25 sec
+----------------------------------------------------------
+Test Passed.
+"matter.metal.vascular" end time: Sep 12 06:21 CEST
+"matter.metal.vascular" time elapsed: 00:00:13
+----------------------------------------------------------
+
+109/110 Testing: matter.metal.human_physiology_payload
+109/110 Test: matter.metal.human_physiology_payload
+Command: "/Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-vascular-check" "--human-input" "/Users/n/MetalRobo-human-completion-20260907/matter/tools/fixtures/human_physiology.native.v1.json"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+"matter.metal.human_physiology_payload" start time: Sep 12 06:21 CEST
+Output:
+----------------------------------------------------------
+2026-09-12 06:21:59.706 numi-matter-vascular-check[8348:7363412] Metal API Validation Enabled
+vascular_case=human_compiled_fixture result=pass accepted_steps=16 environments=2 fp64_normalized_max=1.535277601e-07 relative_conservation_max=3.628520057e-08 replay=bitwise isolated_rollback=pass invalid_restore=denied isolated_reset=pass fem_region=none
+vascular_native_qualification=pass runtime_input=nmatterpack biological_calibration=unqualified
+<end of output>
+Test time =   1.32 sec
+----------------------------------------------------------
+Test Passed.
+"matter.metal.human_physiology_payload" end time: Sep 12 06:22 CEST
+"matter.metal.human_physiology_payload" time elapsed: 00:00:01
+----------------------------------------------------------
+
+110/110 Testing: matter.compiler.human_physiology_admission
+110/110 Test: matter.compiler.human_physiology_admission
+Command: "/opt/homebrew/Frameworks/Python.framework/Versions/3.13/bin/python3.13" "/Users/n/MetalRobo-human-completion-20260907/matter/tools/physiology_input_check.py" "/Users/n/MetalRobo-human-completion-build-20260907/matter/numi-matter-physiologyc" "/Users/n/MetalRobo-human-completion-20260907/matter/tools/fixtures/human_physiology.native.v1.json"
+Directory: /Users/n/MetalRobo-human-completion-build-20260907/matter
+"matter.compiler.human_physiology_admission" start time: Sep 12 06:22 CEST
+Output:
+----------------------------------------------------------
+physiology_compile=pass compartments=2 species=1 tissue_reservoirs=1 native_fingerprint=0x71c8099817444d5a biological_qualification=unqualified
+native_input_rejected=duplicate_root
+native_input_rejected=duplicate_escaped_root
+native_input_rejected=duplicate_nested
+native_input_rejected=unsupported_law
+native_input_rejected=unknown_field
+native_input_rejected=boolean_scale
+native_input_rejected=duplicate_volume_owner
+native_input_rejected=missing_endpoint
+native_input_rejected=invalid_sha
+native_input_rejected=unsupported_qualification
+native_input_rejected=negative_amount
+native_input_rejected=unknown_species
+native_input_admission=pass positive_cases=1 negative_cases=12
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"matter.compiler.human_physiology_admission" end time: Sep 12 06:22 CEST
+"matter.compiler.human_physiology_admission" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Sep 12 06:22 CEST
+
+checkpoint =   0.00 sec*proc
+
+compiler =   0.08 sec*proc
+
+human =  15.39 sec*proc
+
+matter =  19.31 sec*proc
+
+metal =  19.98 sec*proc
+
+numanx =   0.75 sec*proc
+
+physics =   5.41 sec*proc
+
+stateful =   0.01 sec*proc
+
+vascular =  14.63 sec*proc

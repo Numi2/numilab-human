@@ -53,8 +53,8 @@ class TargetCoverageTests(unittest.TestCase):
         second = _build(tmp_path, {"fixture": metadata})
         assert canonical_bytes(first) == canonical_bytes(second)
         validate_manifest(first)
-        assert len(MANDATORY) == 7
-        assert first["counts"]["mandatory_leaves"] == 80
+        assert len(MANDATORY) == 8
+        assert first["counts"]["mandatory_leaves"] == 95
         assert {f"mandatory:{domain}/{name}" for domain, names in MANDATORY.items() for name in names} <= {
             leaf["semantic_id"] for leaf in first["leaves"]
         }
@@ -70,6 +70,26 @@ class TargetCoverageTests(unittest.TestCase):
         same = [leaf for leaf in value["leaves"] if leaf["name"] == "same"]
         assert len(same) == 6
         assert len({leaf["semantic_id"] for leaf in same}) == 6
+
+    def test_historical_eighty_leaf_manifest_extends_without_rewriting_old_targets(self) -> None:
+        before = _build(self.directory, {})
+        before["compiler"] = "numilab-human.target-coverage.1"
+        before["leaves"] = [leaf for leaf in before["leaves"] if leaf["domain"] != "systemic_physiology"]
+        before["counts"].update(leaves=80, mandatory_leaves=80, by_kind={"mandatory_target": 80})
+        _seal(before)
+        validate_manifest(before, allow_legacy=True)
+        with self.assertRaisesRegex(HumanImportError, "historical"):
+            validate_manifest(before)
+        after = _build(self.directory, {}, previous=before)
+        validate_transition(before, after)
+        assert after["compiler"] == "numilab-human.target-coverage.2"
+        assert after["counts"]["mandatory_leaves"] == 95
+        old = {leaf["leaf_sha256"]: leaf for leaf in before["leaves"]}
+        current = {leaf["leaf_sha256"]: leaf for leaf in after["leaves"]}
+        assert old.keys() < current.keys()
+        assert all(current[key] == leaf for key, leaf in old.items())
+        with self.assertRaisesRegex(HumanImportError, "historical"):
+            validate_transition(after, before)
 
 
     def test_unnamed_routes_constraints_and_new_named_kinds_are_retained(self) -> None:

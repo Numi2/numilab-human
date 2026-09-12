@@ -2057,6 +2057,11 @@ def parser() -> argparse.ArgumentParser:
         "costal-binding", help="bind costal tissue to a pinned common Human frame for native mass partition",
     )
     add_costal_binding_arguments(costal_binding)
+    from .physiology import add_arguments as add_physiology_arguments
+    physiology = commands.add_parser(
+        "physiology-compile", help="validate source-bound organ and circulation authoring and compile native indices",
+    )
+    add_physiology_arguments(physiology)
     from .locomotor import add_arguments as add_locomotor_arguments
     locomotor = commands.add_parser("locomotor-program", help="author a source-bound Brain spindle and periodic muscle controller candidate")
     add_locomotor_arguments(locomotor)

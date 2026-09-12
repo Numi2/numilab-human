@@ -1,0 +1,574 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HumanPack.physiology.v1",
+  "description": "Offline immutable physiology authoring. The owning compiler additionally verifies exact source hashes and memberships, SI parameter provenance and uncertainty, volume-owner uniqueness, graph connectivity, conservation endpoints and native support. This schema does not grant biological or runtime qualification.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "id",
+    "qualification",
+    "law",
+    "anatomy_source",
+    "regions",
+    "parameter_sources",
+    "residual_tolerance",
+    "species",
+    "compartments",
+    "connections",
+    "tissue_reservoirs",
+    "exchanges"
+  ],
+  "properties": {
+    "schema": {
+      "const": "HumanPack.physiology.v1"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "qualification": {
+      "enum": [
+        "fixture_only",
+        "uncalibrated"
+      ]
+    },
+    "law": {
+      "const": "closed_linear_compliance_transport_v1"
+    },
+    "anatomy_source": {
+      "$ref": "#/$defs/anatomy_source"
+    },
+    "regions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4096,
+      "items": {
+        "$ref": "#/$defs/region"
+      }
+    },
+    "parameter_sources": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 4096,
+      "items": {
+        "$ref": "#/$defs/parameter_source"
+      }
+    },
+    "residual_tolerance": {
+      "$ref": "#/$defs/parameter"
+    },
+    "species": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4096,
+      "items": {
+        "$ref": "#/$defs/species"
+      }
+    },
+    "compartments": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 4096,
+      "items": {
+        "$ref": "#/$defs/compartment"
+      }
+    },
+    "connections": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4096,
+      "items": {
+        "$ref": "#/$defs/connection"
+      }
+    },
+    "tissue_reservoirs": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 4096,
+      "items": {
+        "$ref": "#/$defs/tissue_reservoir"
+      }
+    },
+    "exchanges": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 4096,
+      "items": {
+        "$ref": "#/$defs/exchange"
+      }
+    }
+  },
+  "$defs": {
+    "uncertainty": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "unknown",
+                "exact_fixture"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "lower",
+            "upper",
+            "unit"
+          ],
+          "properties": {
+            "status": {
+              "const": "bounded"
+            },
+            "lower": {
+              "type": "number"
+            },
+            "upper": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "provenance": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "description"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "synthetic_fixture",
+                "unresolved"
+              ]
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "source_id",
+            "record_id"
+          ],
+          "properties": {
+            "kind": {
+              "const": "source"
+            },
+            "source_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "record_id": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "parameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "provenance",
+        "uncertainty"
+      ],
+      "properties": {
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "unit": {
+          "enum": [
+            "1",
+            "m3",
+            "Pa",
+            "m3/Pa",
+            "mol",
+            "m3/s",
+            "Pa*s/m3",
+            "Pa*s2/m3"
+          ]
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        },
+        "uncertainty": {
+          "$ref": "#/$defs/uncertainty"
+        }
+      }
+    },
+    "region": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "semantic_id",
+        "concept_id",
+        "source_name",
+        "hierarchy",
+        "member_ids",
+        "selection"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "semantic_id": {
+          "type": "string",
+          "pattern": "^FMA:[0-9]+$"
+        },
+        "concept_id": {
+          "type": "string",
+          "pattern": "^FMA[0-9]+$"
+        },
+        "source_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "hierarchy": {
+          "enum": [
+            "part_of",
+            "is_a"
+          ]
+        },
+        "member_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^FJ[0-9]+$"
+          }
+        },
+        "selection": {
+          "enum": [
+            "complete_membership",
+            "explicit_subset"
+          ]
+        }
+      }
+    },
+    "source_table": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hierarchy",
+        "file",
+        "sha256"
+      ],
+      "properties": {
+        "hierarchy": {
+          "enum": [
+            "part_of",
+            "is_a"
+          ]
+        },
+        "file": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "anatomy_source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "license",
+        "url",
+        "attribution",
+        "tables"
+      ],
+      "properties": {
+        "id": {
+          "const": "bodyparts3d_4"
+        },
+        "version": {
+          "const": "4.0"
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "attribution": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tables": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 4096,
+          "items": {
+            "$ref": "#/$defs/source_table"
+          }
+        }
+      }
+    },
+    "parameter_source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "url",
+        "revision",
+        "sha256",
+        "license",
+        "allowed_use"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^https://"
+        },
+        "revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1
+        },
+        "allowed_use": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "species": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "description",
+        "amount_scale_mol"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "amount_scale_mol": {
+          "$ref": "#/$defs/parameter"
+        }
+      }
+    },
+    "compartment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "anatomical_region_id",
+        "physical_volume_owner_id",
+        "initial_species_mol",
+        "reference_volume_m3",
+        "reference_pressure_pa",
+        "external_pressure_pa",
+        "compliance_m3_per_pa",
+        "initial_volume_m3",
+        "volume_scale_m3"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "anatomical_region_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "physical_volume_owner_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "initial_species_mol": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "$ref": "#/$defs/parameter"
+          }
+        },
+        "reference_volume_m3": {
+          "$ref": "#/$defs/parameter"
+        },
+        "reference_pressure_pa": {
+          "$ref": "#/$defs/parameter"
+        },
+        "external_pressure_pa": {
+          "$ref": "#/$defs/parameter"
+        },
+        "compliance_m3_per_pa": {
+          "$ref": "#/$defs/parameter"
+        },
+        "initial_volume_m3": {
+          "$ref": "#/$defs/parameter"
+        },
+        "volume_scale_m3": {
+          "$ref": "#/$defs/parameter"
+        }
+      }
+    },
+    "tissue_reservoir": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "anatomical_region_id",
+        "physical_volume_owner_id",
+        "initial_species_mol",
+        "volume_m3"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "anatomical_region_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "physical_volume_owner_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "initial_species_mol": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "$ref": "#/$defs/parameter"
+          }
+        },
+        "volume_m3": {
+          "$ref": "#/$defs/parameter"
+        }
+      }
+    },
+    "connection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "from",
+        "to",
+        "resistance_pa_s_per_m3",
+        "initial_flow_m3_per_s",
+        "flow_scale_m3_per_s",
+        "pressure_scale_pa"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "from": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "to": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "resistance_pa_s_per_m3": {
+          "$ref": "#/$defs/parameter"
+        },
+        "inertance_pa_s2_per_m3": {
+          "$ref": "#/$defs/parameter"
+        },
+        "initial_flow_m3_per_s": {
+          "$ref": "#/$defs/parameter"
+        },
+        "flow_scale_m3_per_s": {
+          "$ref": "#/$defs/parameter"
+        },
+        "pressure_scale_pa": {
+          "$ref": "#/$defs/parameter"
+        }
+      }
+    },
+    "exchange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "compartment",
+        "tissue_reservoir",
+        "species",
+        "clearance_m3_per_s"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "compartment": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "tissue_reservoir": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "species": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "clearance_m3_per_s": {
+          "$ref": "#/$defs/parameter"
+        },
+        "partition_coefficient": {
+          "$ref": "#/$defs/parameter"
+        }
+      }
+    }
+  }
+}

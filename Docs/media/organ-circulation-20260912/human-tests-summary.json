@@ -1,0 +1,31 @@
+{
+  "capture": "summary of observed tool results",
+  "runner_attempts": [
+    {
+      "command": "PYTHONPATH=src python3 -m pytest -q tests/test_physiology.py tests/test_target_coverage.py",
+      "reason": "Python 3.14 environment has no pytest; repository unittest suites executed successfully above",
+      "status": "runner_unavailable"
+    }
+  ],
+  "runs": [
+    {
+      "command": "PYTHONPATH=src python3 -m unittest discover -s tests -p test_physiology.py",
+      "seconds": 0.586,
+      "status": "OK",
+      "tests": 28
+    },
+    {
+      "command": "PYTHONPATH=src python3 -m unittest discover -s tests -p test_target_coverage.py",
+      "seconds": 0.131,
+      "status": "OK",
+      "tests": 14
+    },
+    {
+      "capture": "agent tool result",
+      "command": "PYTHONPATH=src python3 -m unittest discover -s tests -p test_organ_circulation_evidence.py",
+      "seconds": 0.135,
+      "status": "OK",
+      "tests": 18
+    }
+  ]
+}

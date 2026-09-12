@@ -1,0 +1,3981 @@
+{
+  "schema": "HumanPack.physiology.v1",
+  "id": "organ_circulation_authoring_template",
+  "qualification": "uncalibrated",
+  "law": "closed_linear_compliance_transport_v1",
+  "anatomy_source": {
+    "id": "bodyparts3d_4",
+    "version": "4.0",
+    "license": "CC-BY-4.0",
+    "url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/",
+    "attribution": "BodyParts3D, \u00a9 The Database Center for Life Science licensed under CC Attribution 4.0 International",
+    "tables": [
+      {
+        "hierarchy": "part_of",
+        "file": "partof_element_parts.txt",
+        "sha256": "3f5f6df1028eb122b30de77c711597b6bb8e5541658e5985859fd228adbf88ea"
+      },
+      {
+        "hierarchy": "is_a",
+        "file": "isa_element_parts.txt",
+        "sha256": "a3de74423f943b0d724ae8f59b3a817f87c423a544f8db98113b1980817cbeaf"
+      }
+    ]
+  },
+  "parameter_sources": [],
+  "residual_tolerance": {
+    "value": null,
+    "unit": "1",
+    "provenance": {
+      "kind": "unresolved",
+      "description": "Requires an independently sourced compartment model and subject calibration."
+    },
+    "uncertainty": {
+      "status": "unknown"
+    }
+  },
+  "species": [
+    {
+      "id": "oxygen",
+      "description": "Conserved oxygen amount placeholder; no hemoglobin law, gas exchange or metabolic reaction is authored.",
+      "amount_scale_mol": {
+        "value": null,
+        "unit": "mol",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    }
+  ],
+  "regions": [
+    {
+      "id": "right_atrium",
+      "semantic_id": "FMA:7096",
+      "concept_id": "FMA7096",
+      "source_name": "right atrium",
+      "hierarchy": "part_of",
+      "member_ids": [
+        "FJ2421",
+        "FJ2424",
+        "FJ2433",
+        "FJ2436",
+        "FJ2439"
+      ],
+      "selection": "complete_membership"
+    },
+    {
+      "id": "right_ventricle",
+      "semantic_id": "FMA:7098",
+      "concept_id": "FMA7098",
+      "source_name": "right ventricle",
+      "hierarchy": "part_of",
+      "member_ids": [
+        "FJ2417",
+        "FJ2419",
+        "FJ2421",
+        "FJ2423",
+        "FJ2427",
+        "FJ2430",
+        "FJ2433",
+        "FJ2434",
+        "FJ2436",
+        "FJ2437"
+      ],
+      "selection": "complete_membership"
+    },
+    {
+      "id": "left_atrium",
+      "semantic_id": "FMA:7097",
+      "concept_id": "FMA7097",
+      "source_name": "left atrium",
+      "hierarchy": "part_of",
+      "member_ids": [
+        "FJ2420",
+        "FJ2425",
+        "FJ2426",
+        "FJ2431",
+        "FJ2432",
+        "FJ2438"
+      ],
+      "selection": "complete_membership"
+    },
+    {
+      "id": "left_ventricle",
+      "semantic_id": "FMA:7101",
+      "concept_id": "FMA7101",
+      "source_name": "left ventricle",
+      "hierarchy": "part_of",
+      "member_ids": [
+        "FJ2418",
+        "FJ2420",
+        "FJ2422",
+        "FJ2426",
+        "FJ2429",
+        "FJ2431",
+        "FJ2432",
+        "FJ2435"
+      ],
+      "selection": "complete_membership"
+    },
+    {
+      "id": "ascending_aorta",
+      "semantic_id": "FMA:3736",
+      "concept_id": "FMA3736",
+      "source_name": "ascending aorta",
+      "hierarchy": "part_of",
+      "member_ids": [
+        "FJ3413"
+      ],
+      "selection": "complete_membership"
+    },
+    {
+      "id": "aortic_arch",
+      "semantic_id": "FMA:3768",
+      "concept_id": "FMA3768",
+      "source_name": "arch of aorta",
+      "hierarchy": "part_of",
+      "member_ids": [
+        "FJ3411"
+      ],
+      "selection": "complete_membership"
+    },
+    {
+      "id": "descending_aorta",
+      "semantic_id": "FMA:3784",
+      "concept_id": "FMA3784",
+      "source_name": "descending aorta",
+      "hierarchy": "part_of",
+      "member_ids": [
+        "FJ1931",
+        "FJ1932",
+        "FJ3427"
+      ],
+      "selection": "complete_membership"
+    },
+    {
+      "id": "abdominal_aorta",
+      "semantic_id": "FMA:3789",
+      "concept_id": "FMA3789",
+      "source_name": "abdominal aorta",
+      "hierarchy": "part_of",
+      "member_ids": [
+        "FJ1932"
+      ],
+      "selection": "complete_membership"
+    },
+    {
+      "id": "superior_vena_cava",
+      "semantic_id": "FMA:4720",
+      "concept_id": "FMA4720",
+      "source_name": "superior vena cava",
+      "hierarchy": "part_of",
+      "member_ids": [
+        "FJ3645"
+      ],
+      "selection": "complete_membership"
+    },
+    {
+      "id": "inferior_vena_cava",
+      "semantic_id": "FMA:10951",
+      "concept_id": "FMA10951",
+      "source_name": "inferior vena cava",
+      "hierarchy": "part_of",
+      "member_ids": [
+        "FJ3441",
+        "FJ3659"
+      ],
+      "selection": "complete_membership"
+    },
+    {
+      "id": "pulmonary_trunk",
+      "semantic_id": "FMA:8612",
+      "concept_id": "FMA8612",
+      "source_name": "pulmonary trunk",
+      "hierarchy": "part_of",
+      "member_ids": [
+        "FJ2966"
+      ],
+      "selection": "complete_membership"
+    },
+    {
+      "id": "right_lung",
+      "semantic_id": "FMA:7309",
+      "concept_id": "FMA7309",
+      "source_name": "right lung",
+      "hierarchy": "part_of",
+      "member_ids": [
+        "FJ2041",
+        "FJ2044",
+        "FJ2449",
+        "FJ2451",
+        "FJ2452",
+        "FJ2453",
+        "FJ2454",
+        "FJ2455",
+        "FJ2456",
+        "FJ2457",
+        "FJ2458",
+        "FJ2459",
+        "FJ2470",
+        "FJ2481",
+        "FJ2486",
+        "FJ2487",
+        "FJ2488",
+        "FJ2489",
+        "FJ2490",
+        "FJ2491",
+        "FJ2492",
+        "FJ2493",
+        "FJ2494",
+        "FJ2495",
+        "FJ2496",
+        "FJ2497",
+        "FJ2498",
+        "FJ2499",
+        "FJ2500",
+        "FJ2501",
+        "FJ2502",
+        "FJ2503",
+        "FJ2504",
+        "FJ2505",
+        "FJ2506",
+        "FJ2507",
+        "FJ2508",
+        "FJ2509",
+        "FJ2510",
+        "FJ2511",
+        "FJ2512",
+        "FJ2513",
+        "FJ2514",
+        "FJ2515",
+        "FJ2516",
+        "FJ2517",
+        "FJ2518",
+        "FJ2519",
+        "FJ2520",
+        "FJ2521",
+        "FJ2522",
+        "FJ2523",
+        "FJ2524",
+        "FJ2525",
+        "FJ2526",
+        "FJ2967",
+        "FJ2968",
+        "FJ2969",
+        "FJ2970",
+        "FJ2971",
+        "FJ2972",
+        "FJ2973",
+        "FJ2974",
+        "FJ2975",
+        "FJ2976",
+        "FJ2977",
+        "FJ2978",
+        "FJ2979",
+        "FJ2980",
+        "FJ2981",
+        "FJ2982",
+        "FJ2983",
+        "FJ2984",
+        "FJ2985",
+        "FJ2986",
+        "FJ2987",
+        "FJ2988",
+        "FJ2989",
+        "FJ2990",
+        "FJ2991",
+        "FJ2992",
+        "FJ2993",
+        "FJ2994",
+        "FJ2995",
+        "FJ2996",
+        "FJ2997",
+        "FJ2998",
+        "FJ2999",
+        "FJ3000",
+        "FJ3001",
+        "FJ3002",
+        "FJ3003",
+        "FJ3004",
+        "FJ3005",
+        "FJ3006",
+        "FJ3007",
+        "FJ3008",
+        "FJ3009",
+        "FJ3010",
+        "FJ3011",
+        "FJ3012",
+        "FJ3013",
+        "FJ3014",
+        "FJ3015",
+        "FJ3016",
+        "FJ3017",
+        "FJ3018",
+        "FJ3021",
+        "FJ3022",
+        "FJ3023",
+        "FJ3024",
+        "FJ3025",
+        "FJ3026",
+        "FJ3027",
+        "FJ3028",
+        "FJ3029",
+        "FJ3030",
+        "FJ3031",
+        "FJ3032",
+        "FJ3033",
+        "FJ3034",
+        "FJ3035",
+        "FJ3036",
+        "FJ3037",
+        "FJ3038",
+        "FJ3039",
+        "FJ3041",
+        "FJ3042",
+        "FJ3043",
+        "FJ3044",
+        "FJ3045",
+        "FJ3046",
+        "FJ3047",
+        "FJ3048",
+        "FJ3049",
+        "FJ3050",
+        "FJ3051",
+        "FJ3052",
+        "FJ3053",
+        "FJ3054",
+        "FJ3055",
+        "FJ3056",
+        "FJ3057",
+        "FJ3058",
+        "FJ3059",
+        "FJ3060",
+        "FJ3061",
+        "FJ3062",
+        "FJ3063",
+        "FJ3064",
+        "FJ3065",
+        "FJ3066",
+        "FJ3067",
+        "FJ3068",
+        "FJ3069",
+        "FJ3070"
+      ],
+      "selection": "complete_membership"
+    },
+    {
+      "id": "left_lung",
+      "semantic_id": "FMA:7310",
+      "concept_id": "FMA7310",
+      "source_name": "left lung",
+      "hierarchy": "part_of",
+      "member_ids": [
+        "FJ2441",
+        "FJ2442",
+        "FJ2443",
+        "FJ2444",
+        "FJ2445",
+        "FJ2446",
+        "FJ2447",
+        "FJ2448",
+        "FJ2460",
+        "FJ2461",
+        "FJ2462",
+        "FJ2463",
+        "FJ2464",
+        "FJ2465",
+        "FJ2466",
+        "FJ2467",
+        "FJ2468",
+        "FJ2469",
+        "FJ2471",
+        "FJ2472",
+        "FJ2473",
+        "FJ2474",
+        "FJ2475",
+        "FJ2476",
+        "FJ2477",
+        "FJ2478",
+        "FJ2479",
+        "FJ2480",
+        "FJ2482",
+        "FJ2483",
+        "FJ2484",
+        "FJ2485",
+        "FJ2527",
+        "FJ2528",
+        "FJ2529",
+        "FJ2530",
+        "FJ2531",
+        "FJ2532",
+        "FJ2533",
+        "FJ2534",
+        "FJ2535",
+        "FJ2536",
+        "FJ2537",
+        "FJ2538",
+        "FJ2540",
+        "FJ2881",
+        "FJ2882",
+        "FJ2883",
+        "FJ2884",
+        "FJ2885",
+        "FJ2886",
+        "FJ2887",
+        "FJ2888",
+        "FJ2889",
+        "FJ2890",
+        "FJ2891",
+        "FJ2892",
+        "FJ2893",
+        "FJ2894",
+        "FJ2895",
+        "FJ2896",
+        "FJ2897",
+        "FJ2898",
+        "FJ2899",
+        "FJ2900",
+        "FJ2901",
+        "FJ2902",
+        "FJ2903",
+        "FJ2904",
+        "FJ2905",
+        "FJ2906",
+        "FJ2907",
+        "FJ2908",
+        "FJ2909",
+        "FJ2910",
+        "FJ2911",
+        "FJ2912",
+        "FJ2913",
+        "FJ2914",
+        "FJ2915",
+        "FJ2916",
+        "FJ2917",
+        "FJ2918",
+        "FJ2919",
+        "FJ2920",
+        "FJ2921",
+        "FJ2922",
+        "FJ2923",
+        "FJ2926",
+        "FJ2927",
+        "FJ2928",
+        "FJ2929",
+        "FJ2930",
+        "FJ2931",
+        "FJ2932",
+        "FJ2934",
+        "FJ2935",
+        "FJ2936",
+        "FJ2937",
+        "FJ2938",
+        "FJ2939",
+        "FJ2940",
+        "FJ2941",
+        "FJ2942",
+        "FJ2943",
+        "FJ2945",
+        "FJ2946",
+        "FJ2947",
+        "FJ2948",
+        "FJ2949",
+        "FJ2951",
+        "FJ2952",
+        "FJ2953",
+        "FJ2954",
+        "FJ2956",
+        "FJ2957",
+        "FJ2958",
+        "FJ2959",
+        "FJ2960",
+        "FJ2961",
+        "FJ2962",
+        "FJ2963",
+        "FJ2964",
+        "FJ2965"
+      ],
+      "selection": "complete_membership"
+    },
+    {
+      "id": "right_kidney",
+      "semantic_id": "FMA:7204",
+      "concept_id": "FMA7204",
+      "source_name": "right kidney",
+      "hierarchy": "part_of",
+      "member_ids": [
+        "FJ3147"
+      ],
+      "selection": "complete_membership"
+    },
+    {
+      "id": "left_kidney",
+      "semantic_id": "FMA:7205",
+      "concept_id": "FMA7205",
+      "source_name": "left kidney",
+      "hierarchy": "part_of",
+      "member_ids": [
+        "FJ3145"
+      ],
+      "selection": "complete_membership"
+    },
+    {
+      "id": "stomach",
+      "semantic_id": "FMA:7148",
+      "concept_id": "FMA7148",
+      "source_name": "stomach",
+      "hierarchy": "part_of",
+      "member_ids": [
+        "FJ2564"
+      ],
+      "selection": "complete_membership"
+    },
+    {
+      "id": "pancreas",
+      "semantic_id": "FMA:7198",
+      "concept_id": "FMA7198",
+      "source_name": "pancreas",
+      "hierarchy": "part_of",
+      "member_ids": [
+        "FJ1895",
+        "FJ1896",
+        "FJ2629",
+        "FJ2630"
+      ],
+      "selection": "complete_membership"
+    },
+    {
+      "id": "liver",
+      "semantic_id": "FMA:7197",
+      "concept_id": "FMA7197",
+      "source_name": "liver",
+      "hierarchy": "part_of",
+      "member_ids": [
+        "FJ1883",
+        "FJ1893",
+        "FJ1913",
+        "FJ1914",
+        "FJ1916",
+        "FJ2386",
+        "FJ2404",
+        "FJ2405",
+        "FJ2409",
+        "FJ2415",
+        "FJ2416",
+        "FJ2816",
+        "FJ2818",
+        "FJ2819",
+        "FJ2820",
+        "FJ2821",
+        "FJ2822",
+        "FJ2823",
+        "FJ2824",
+        "FJ3071",
+        "FJ3072",
+        "FJ3073",
+        "FJ3074",
+        "FJ3075",
+        "FJ3076",
+        "FJ3077",
+        "FJ3081",
+        "FJ3083",
+        "FJ3086",
+        "FJ3088",
+        "FJ3089",
+        "FJ3090",
+        "FJ3091",
+        "FJ3092",
+        "FJ3093",
+        "FJ3095",
+        "FJ3096",
+        "FJ3102",
+        "FJ3103",
+        "FJ3104",
+        "FJ3105",
+        "FJ3106",
+        "FJ3107",
+        "FJ3108",
+        "FJ3109",
+        "FJ3110",
+        "FJ3111",
+        "FJ3112",
+        "FJ3113",
+        "FJ3114",
+        "FJ3115",
+        "FJ3116",
+        "FJ3117",
+        "FJ3122",
+        "FJ3123",
+        "FJ3124",
+        "FJ3125",
+        "FJ3126",
+        "FJ3127",
+        "FJ3128"
+      ],
+      "selection": "complete_membership"
+    }
+  ],
+  "compartments": [
+    {
+      "id": "right_atrium",
+      "anatomical_region_id": "right_atrium",
+      "physical_volume_owner_id": "blood:right_atrium",
+      "reference_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "reference_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "external_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "compliance_m3_per_pa": {
+        "value": null,
+        "unit": "m3/Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "volume_scale_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "right_ventricle",
+      "anatomical_region_id": "right_ventricle",
+      "physical_volume_owner_id": "blood:right_ventricle",
+      "reference_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "reference_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "external_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "compliance_m3_per_pa": {
+        "value": null,
+        "unit": "m3/Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "volume_scale_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "left_atrium",
+      "anatomical_region_id": "left_atrium",
+      "physical_volume_owner_id": "blood:left_atrium",
+      "reference_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "reference_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "external_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "compliance_m3_per_pa": {
+        "value": null,
+        "unit": "m3/Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "volume_scale_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "left_ventricle",
+      "anatomical_region_id": "left_ventricle",
+      "physical_volume_owner_id": "blood:left_ventricle",
+      "reference_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "reference_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "external_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "compliance_m3_per_pa": {
+        "value": null,
+        "unit": "m3/Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "volume_scale_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "ascending_aorta",
+      "anatomical_region_id": "ascending_aorta",
+      "physical_volume_owner_id": "blood:ascending_aorta",
+      "reference_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "reference_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "external_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "compliance_m3_per_pa": {
+        "value": null,
+        "unit": "m3/Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "volume_scale_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "aortic_arch",
+      "anatomical_region_id": "aortic_arch",
+      "physical_volume_owner_id": "blood:aortic_arch",
+      "reference_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "reference_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "external_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "compliance_m3_per_pa": {
+        "value": null,
+        "unit": "m3/Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "volume_scale_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "descending_aorta",
+      "anatomical_region_id": "descending_aorta",
+      "physical_volume_owner_id": "blood:descending_aorta",
+      "reference_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "reference_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "external_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "compliance_m3_per_pa": {
+        "value": null,
+        "unit": "m3/Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "volume_scale_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "abdominal_aorta",
+      "anatomical_region_id": "abdominal_aorta",
+      "physical_volume_owner_id": "blood:abdominal_aorta",
+      "reference_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "reference_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "external_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "compliance_m3_per_pa": {
+        "value": null,
+        "unit": "m3/Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "volume_scale_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "superior_vena_cava",
+      "anatomical_region_id": "superior_vena_cava",
+      "physical_volume_owner_id": "blood:superior_vena_cava",
+      "reference_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "reference_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "external_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "compliance_m3_per_pa": {
+        "value": null,
+        "unit": "m3/Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "volume_scale_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "inferior_vena_cava",
+      "anatomical_region_id": "inferior_vena_cava",
+      "physical_volume_owner_id": "blood:inferior_vena_cava",
+      "reference_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "reference_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "external_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "compliance_m3_per_pa": {
+        "value": null,
+        "unit": "m3/Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "volume_scale_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "pulmonary_trunk",
+      "anatomical_region_id": "pulmonary_trunk",
+      "physical_volume_owner_id": "blood:pulmonary_trunk",
+      "reference_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "reference_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "external_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "compliance_m3_per_pa": {
+        "value": null,
+        "unit": "m3/Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "volume_scale_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "right_lung",
+      "anatomical_region_id": "right_lung",
+      "physical_volume_owner_id": "blood:right_lung",
+      "reference_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "reference_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "external_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "compliance_m3_per_pa": {
+        "value": null,
+        "unit": "m3/Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "volume_scale_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "left_lung",
+      "anatomical_region_id": "left_lung",
+      "physical_volume_owner_id": "blood:left_lung",
+      "reference_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "reference_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "external_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "compliance_m3_per_pa": {
+        "value": null,
+        "unit": "m3/Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "volume_scale_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "right_kidney",
+      "anatomical_region_id": "right_kidney",
+      "physical_volume_owner_id": "blood:right_kidney",
+      "reference_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "reference_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "external_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "compliance_m3_per_pa": {
+        "value": null,
+        "unit": "m3/Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "volume_scale_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "left_kidney",
+      "anatomical_region_id": "left_kidney",
+      "physical_volume_owner_id": "blood:left_kidney",
+      "reference_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "reference_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "external_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "compliance_m3_per_pa": {
+        "value": null,
+        "unit": "m3/Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "volume_scale_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "stomach",
+      "anatomical_region_id": "stomach",
+      "physical_volume_owner_id": "blood:stomach",
+      "reference_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "reference_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "external_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "compliance_m3_per_pa": {
+        "value": null,
+        "unit": "m3/Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "volume_scale_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "pancreas",
+      "anatomical_region_id": "pancreas",
+      "physical_volume_owner_id": "blood:pancreas",
+      "reference_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "reference_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "external_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "compliance_m3_per_pa": {
+        "value": null,
+        "unit": "m3/Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "volume_scale_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "liver",
+      "anatomical_region_id": "liver",
+      "physical_volume_owner_id": "blood:liver",
+      "reference_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "reference_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "external_pressure_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "compliance_m3_per_pa": {
+        "value": null,
+        "unit": "m3/Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "volume_scale_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    }
+  ],
+  "connections": [
+    {
+      "id": "right_atrium_to_right_ventricle",
+      "from": "right_atrium",
+      "to": "right_ventricle",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "right_ventricle_to_pulmonary_trunk",
+      "from": "right_ventricle",
+      "to": "pulmonary_trunk",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "pulmonary_trunk_to_right_lung",
+      "from": "pulmonary_trunk",
+      "to": "right_lung",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "pulmonary_trunk_to_left_lung",
+      "from": "pulmonary_trunk",
+      "to": "left_lung",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "right_lung_to_left_atrium",
+      "from": "right_lung",
+      "to": "left_atrium",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "left_lung_to_left_atrium",
+      "from": "left_lung",
+      "to": "left_atrium",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "left_atrium_to_left_ventricle",
+      "from": "left_atrium",
+      "to": "left_ventricle",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "left_ventricle_to_ascending_aorta",
+      "from": "left_ventricle",
+      "to": "ascending_aorta",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "ascending_aorta_to_aortic_arch",
+      "from": "ascending_aorta",
+      "to": "aortic_arch",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "aortic_arch_to_descending_aorta",
+      "from": "aortic_arch",
+      "to": "descending_aorta",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "descending_aorta_to_abdominal_aorta",
+      "from": "descending_aorta",
+      "to": "abdominal_aorta",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "aortic_arch_to_superior_vena_cava",
+      "from": "aortic_arch",
+      "to": "superior_vena_cava",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "superior_vena_cava_to_right_atrium",
+      "from": "superior_vena_cava",
+      "to": "right_atrium",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "inferior_vena_cava_to_right_atrium",
+      "from": "inferior_vena_cava",
+      "to": "right_atrium",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "abdominal_aorta_to_right_kidney",
+      "from": "abdominal_aorta",
+      "to": "right_kidney",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "right_kidney_to_inferior_vena_cava",
+      "from": "right_kidney",
+      "to": "inferior_vena_cava",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "abdominal_aorta_to_left_kidney",
+      "from": "abdominal_aorta",
+      "to": "left_kidney",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "left_kidney_to_inferior_vena_cava",
+      "from": "left_kidney",
+      "to": "inferior_vena_cava",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "abdominal_aorta_to_stomach",
+      "from": "abdominal_aorta",
+      "to": "stomach",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "stomach_to_inferior_vena_cava",
+      "from": "stomach",
+      "to": "inferior_vena_cava",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "abdominal_aorta_to_pancreas",
+      "from": "abdominal_aorta",
+      "to": "pancreas",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "pancreas_to_inferior_vena_cava",
+      "from": "pancreas",
+      "to": "inferior_vena_cava",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "abdominal_aorta_to_liver",
+      "from": "abdominal_aorta",
+      "to": "liver",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "liver_to_inferior_vena_cava",
+      "from": "liver",
+      "to": "inferior_vena_cava",
+      "resistance_pa_s_per_m3": {
+        "value": null,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": null,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": null,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    }
+  ],
+  "tissue_reservoirs": [
+    {
+      "id": "right_lung_tissue",
+      "anatomical_region_id": "right_lung",
+      "physical_volume_owner_id": "extravascular:right_lung",
+      "volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "left_lung_tissue",
+      "anatomical_region_id": "left_lung",
+      "physical_volume_owner_id": "extravascular:left_lung",
+      "volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "right_kidney_tissue",
+      "anatomical_region_id": "right_kidney",
+      "physical_volume_owner_id": "extravascular:right_kidney",
+      "volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "left_kidney_tissue",
+      "anatomical_region_id": "left_kidney",
+      "physical_volume_owner_id": "extravascular:left_kidney",
+      "volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "stomach_tissue",
+      "anatomical_region_id": "stomach",
+      "physical_volume_owner_id": "extravascular:stomach",
+      "volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "pancreas_tissue",
+      "anatomical_region_id": "pancreas",
+      "physical_volume_owner_id": "extravascular:pancreas",
+      "volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "liver_tissue",
+      "anatomical_region_id": "liver",
+      "physical_volume_owner_id": "extravascular:liver",
+      "volume_m3": {
+        "value": null,
+        "unit": "m3",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "initial_species_mol": {
+        "oxygen": {
+          "value": null,
+          "unit": "mol",
+          "provenance": {
+            "kind": "unresolved",
+            "description": "Requires an independently sourced compartment model and subject calibration."
+          },
+          "uncertainty": {
+            "status": "unknown"
+          }
+        }
+      }
+    }
+  ],
+  "exchanges": [
+    {
+      "id": "right_lung_exchange",
+      "compartment": "right_lung",
+      "tissue_reservoir": "right_lung_tissue",
+      "species": "oxygen",
+      "clearance_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "partition_coefficient": {
+        "value": null,
+        "unit": "1",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "left_lung_exchange",
+      "compartment": "left_lung",
+      "tissue_reservoir": "left_lung_tissue",
+      "species": "oxygen",
+      "clearance_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "partition_coefficient": {
+        "value": null,
+        "unit": "1",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "right_kidney_exchange",
+      "compartment": "right_kidney",
+      "tissue_reservoir": "right_kidney_tissue",
+      "species": "oxygen",
+      "clearance_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "partition_coefficient": {
+        "value": null,
+        "unit": "1",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "left_kidney_exchange",
+      "compartment": "left_kidney",
+      "tissue_reservoir": "left_kidney_tissue",
+      "species": "oxygen",
+      "clearance_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "partition_coefficient": {
+        "value": null,
+        "unit": "1",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "stomach_exchange",
+      "compartment": "stomach",
+      "tissue_reservoir": "stomach_tissue",
+      "species": "oxygen",
+      "clearance_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "partition_coefficient": {
+        "value": null,
+        "unit": "1",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "pancreas_exchange",
+      "compartment": "pancreas",
+      "tissue_reservoir": "pancreas_tissue",
+      "species": "oxygen",
+      "clearance_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "partition_coefficient": {
+        "value": null,
+        "unit": "1",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    },
+    {
+      "id": "liver_exchange",
+      "compartment": "liver",
+      "tissue_reservoir": "liver_tissue",
+      "species": "oxygen",
+      "clearance_m3_per_s": {
+        "value": null,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      },
+      "partition_coefficient": {
+        "value": null,
+        "unit": "1",
+        "provenance": {
+          "kind": "unresolved",
+          "description": "Requires an independently sourced compartment model and subject calibration."
+        },
+        "uncertainty": {
+          "status": "unknown"
+        }
+      }
+    }
+  ]
+}

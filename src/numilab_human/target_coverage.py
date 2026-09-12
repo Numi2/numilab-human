@@ -24,7 +24,8 @@ from .model import ImportError as HumanImportError
 
 
 SCHEMA = "HumanPack.target-coverage.v1"
-COMPILER_VERSION = "numilab-human.target-coverage.1"
+COMPILER_VERSION = "numilab-human.target-coverage.2"
+LEGACY_COMPILER_VERSION = "numilab-human.target-coverage.1"
 ROOT = Path(__file__).resolve().parents[2]
 
 # These are the mandatory rows of DEVELOPMENT_ROADMAP.md, expanded rather than
@@ -62,6 +63,12 @@ MANDATORY = {
         "subject_atlas", "population_priors", "population_posteriors", "identifiability",
         "uncertainty_quantification", "held_out_physical_data", "competitive_comparisons",
         "exact_apple_execution_evidence",
+    ),
+    "systemic_physiology": (
+        "circulation", "hemodynamics", "perfusion", "cardiac_drive",
+        "respiratory_mechanics", "gas_exchange", "metabolism", "energetic_substrates",
+        "thermoregulation", "fluid_balance", "electrophysiology", "peripheral_neural_conduction",
+        "anatomical_compartment_network", "species_conservation", "multirate_accepted_step_rollback",
     ),
 }
 
@@ -479,7 +486,7 @@ def _supplements(inventory: Inventory, sources: Path, root: Path) -> None:
                            actual, "materialized", count=len(value["objects"]))
 
 
-def validate_manifest(value: dict[str, Any]) -> None:
+def validate_manifest(value: dict[str, Any], *, allow_legacy: bool = False) -> None:
     """Verify immutable content, references, mandatory scope, and claim boundary."""
     required_fields = {"schema", "compiler", "source_lock_sha256", "previous_manifest_sha256",
                        "manifest_sha256", "obligations", "source_records", "registers",
@@ -489,6 +496,11 @@ def validate_manifest(value: dict[str, Any]) -> None:
         raise HumanImportError("target coverage manifest fields differ from the v1 schema")
     if value.get("schema") != SCHEMA:
         raise HumanImportError("unsupported target coverage schema")
+    legacy = allow_legacy and value.get("compiler") == LEGACY_COMPILER_VERSION
+    if value.get("compiler") != COMPILER_VERSION and not legacy:
+        raise HumanImportError("unsupported or historical target coverage compiler; rematerialize current scope")
+    mandatory_catalog = {domain: names for domain, names in MANDATORY.items()
+                         if not legacy or domain != "systemic_physiology"}
     payload = {key: item for key, item in value.items() if key != "manifest_sha256"}
     if value.get("manifest_sha256") != digest(payload):
         raise HumanImportError("target coverage manifest digest mismatch")
@@ -529,7 +541,7 @@ def validate_manifest(value: dict[str, Any]) -> None:
     mandatory = Inventory()
     mandatory_key = mandatory.source("mandatory", {"authority": "Docs/DEVELOPMENT_ROADMAP.md",
                                                    "catalog_version": 1, "license": "Apache-2.0"})
-    for domain, names in MANDATORY.items():
+    for domain, names in mandatory_catalog.items():
         for name in names:
             mandatory.leaf(mandatory_key, f"{domain}/{name}", name.replace("_", " "),
                            "mandatory_target", domain=domain, declaration={"domain": domain, "name": name})
@@ -555,7 +567,7 @@ def validate_manifest(value: dict[str, Any]) -> None:
             raise HumanImportError("materialized source register must match an explicit content pin")
     registers = value.get("registers", [])
     unresolved = sum(item["status"] != "materialized" for item in registers)
-    counts = {"leaves": len(leaves), "mandatory_leaves": sum(map(len, MANDATORY.values())),
+    counts = {"leaves": len(leaves), "mandatory_leaves": sum(map(len, mandatory_catalog.values())),
               "by_kind": dict(sorted(Counter(item["kind"] for item in leaves).items())),
               "unresolved_current_registers": unresolved}
     if value.get("counts") != counts:
@@ -566,7 +578,7 @@ def validate_manifest(value: dict[str, Any]) -> None:
 
 
 def validate_transition(previous: dict[str, Any], candidate: dict[str, Any]) -> None:
-    validate_manifest(previous)
+    validate_manifest(previous, allow_legacy=True)
     validate_manifest(candidate)
     for field, identity in (("leaves", "leaf_sha256"), ("source_records", "record_sha256")):
         before = {item[identity]: item for item in previous[field]}
@@ -616,7 +628,7 @@ def materialize(*, sources: Path, source_lock: Path, repository_root: Path = ROO
     if supplements:
         _supplements(inventory, sources, repository_root)
     if previous is not None:
-        validate_manifest(previous)
+        validate_manifest(previous, allow_legacy=True)
         # Old versions remain byte-for-byte targets. New revisions add versions;
         # even a missing current source cannot erase a previously known leaf.
         current_source_ids = {source["source_id"] for source in inventory.sources.values()}

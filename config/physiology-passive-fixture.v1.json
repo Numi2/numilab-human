@@ -1,0 +1,371 @@
+{
+  "schema": "HumanPack.physiology.v1",
+  "id": "passive_transport_fixture",
+  "qualification": "fixture_only",
+  "law": "closed_linear_compliance_transport_v1",
+  "anatomy_source": {
+    "id": "bodyparts3d_4",
+    "version": "4.0",
+    "license": "CC-BY-4.0",
+    "url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/",
+    "attribution": "BodyParts3D, \u00a9 The Database Center for Life Science licensed under CC Attribution 4.0 International",
+    "tables": [
+      {
+        "hierarchy": "part_of",
+        "file": "partof_element_parts.txt",
+        "sha256": "3f5f6df1028eb122b30de77c711597b6bb8e5541658e5985859fd228adbf88ea"
+      },
+      {
+        "hierarchy": "is_a",
+        "file": "isa_element_parts.txt",
+        "sha256": "a3de74423f943b0d724ae8f59b3a817f87c423a544f8db98113b1980817cbeaf"
+      }
+    ]
+  },
+  "parameter_sources": [],
+  "residual_tolerance": {
+    "value": 1e-05,
+    "unit": "1",
+    "provenance": {
+      "kind": "synthetic_fixture",
+      "description": "Manufactured numerical fixture; not a biological parameter."
+    },
+    "uncertainty": {
+      "status": "exact_fixture"
+    }
+  },
+  "species": [
+    {
+      "id": "tracer",
+      "description": "Conserved synthetic tracer; no biological behavior.",
+      "amount_scale_mol": {
+        "value": 1e-06,
+        "unit": "mol",
+        "provenance": {
+          "kind": "synthetic_fixture",
+          "description": "Manufactured numerical fixture; not a biological parameter."
+        },
+        "uncertainty": {
+          "status": "exact_fixture"
+        }
+      }
+    }
+  ],
+  "regions": [
+    {
+      "id": "right_kidney",
+      "semantic_id": "FMA:7204",
+      "concept_id": "FMA7204",
+      "source_name": "right kidney",
+      "hierarchy": "part_of",
+      "member_ids": [
+        "FJ3147"
+      ],
+      "selection": "complete_membership"
+    },
+    {
+      "id": "left_kidney",
+      "semantic_id": "FMA:7205",
+      "concept_id": "FMA7205",
+      "source_name": "left kidney",
+      "hierarchy": "part_of",
+      "member_ids": [
+        "FJ3145"
+      ],
+      "selection": "complete_membership"
+    }
+  ],
+  "compartments": [
+    {
+      "id": "pool_a",
+      "anatomical_region_id": "right_kidney",
+      "physical_volume_owner_id": "blood:pool_a",
+      "reference_volume_m3": {
+        "value": 1e-06,
+        "unit": "m3",
+        "provenance": {
+          "kind": "synthetic_fixture",
+          "description": "Manufactured numerical fixture; not a biological parameter."
+        },
+        "uncertainty": {
+          "status": "exact_fixture"
+        }
+      },
+      "reference_pressure_pa": {
+        "value": 0,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "synthetic_fixture",
+          "description": "Manufactured numerical fixture; not a biological parameter."
+        },
+        "uncertainty": {
+          "status": "exact_fixture"
+        }
+      },
+      "external_pressure_pa": {
+        "value": 0,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "synthetic_fixture",
+          "description": "Manufactured numerical fixture; not a biological parameter."
+        },
+        "uncertainty": {
+          "status": "exact_fixture"
+        }
+      },
+      "compliance_m3_per_pa": {
+        "value": 1e-09,
+        "unit": "m3/Pa",
+        "provenance": {
+          "kind": "synthetic_fixture",
+          "description": "Manufactured numerical fixture; not a biological parameter."
+        },
+        "uncertainty": {
+          "status": "exact_fixture"
+        }
+      },
+      "initial_volume_m3": {
+        "value": 2e-06,
+        "unit": "m3",
+        "provenance": {
+          "kind": "synthetic_fixture",
+          "description": "Manufactured numerical fixture; not a biological parameter."
+        },
+        "uncertainty": {
+          "status": "exact_fixture"
+        }
+      },
+      "volume_scale_m3": {
+        "value": 1e-06,
+        "unit": "m3",
+        "provenance": {
+          "kind": "synthetic_fixture",
+          "description": "Manufactured numerical fixture; not a biological parameter."
+        },
+        "uncertainty": {
+          "status": "exact_fixture"
+        }
+      },
+      "initial_species_mol": {
+        "tracer": {
+          "value": 2e-06,
+          "unit": "mol",
+          "provenance": {
+            "kind": "synthetic_fixture",
+            "description": "Manufactured numerical fixture; not a biological parameter."
+          },
+          "uncertainty": {
+            "status": "exact_fixture"
+          }
+        }
+      }
+    },
+    {
+      "id": "pool_b",
+      "anatomical_region_id": "left_kidney",
+      "physical_volume_owner_id": "blood:pool_b",
+      "reference_volume_m3": {
+        "value": 1e-06,
+        "unit": "m3",
+        "provenance": {
+          "kind": "synthetic_fixture",
+          "description": "Manufactured numerical fixture; not a biological parameter."
+        },
+        "uncertainty": {
+          "status": "exact_fixture"
+        }
+      },
+      "reference_pressure_pa": {
+        "value": 0,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "synthetic_fixture",
+          "description": "Manufactured numerical fixture; not a biological parameter."
+        },
+        "uncertainty": {
+          "status": "exact_fixture"
+        }
+      },
+      "external_pressure_pa": {
+        "value": 0,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "synthetic_fixture",
+          "description": "Manufactured numerical fixture; not a biological parameter."
+        },
+        "uncertainty": {
+          "status": "exact_fixture"
+        }
+      },
+      "compliance_m3_per_pa": {
+        "value": 1e-09,
+        "unit": "m3/Pa",
+        "provenance": {
+          "kind": "synthetic_fixture",
+          "description": "Manufactured numerical fixture; not a biological parameter."
+        },
+        "uncertainty": {
+          "status": "exact_fixture"
+        }
+      },
+      "initial_volume_m3": {
+        "value": 1e-06,
+        "unit": "m3",
+        "provenance": {
+          "kind": "synthetic_fixture",
+          "description": "Manufactured numerical fixture; not a biological parameter."
+        },
+        "uncertainty": {
+          "status": "exact_fixture"
+        }
+      },
+      "volume_scale_m3": {
+        "value": 1e-06,
+        "unit": "m3",
+        "provenance": {
+          "kind": "synthetic_fixture",
+          "description": "Manufactured numerical fixture; not a biological parameter."
+        },
+        "uncertainty": {
+          "status": "exact_fixture"
+        }
+      },
+      "initial_species_mol": {
+        "tracer": {
+          "value": 0,
+          "unit": "mol",
+          "provenance": {
+            "kind": "synthetic_fixture",
+            "description": "Manufactured numerical fixture; not a biological parameter."
+          },
+          "uncertainty": {
+            "status": "exact_fixture"
+          }
+        }
+      }
+    }
+  ],
+  "connections": [
+    {
+      "id": "pool_a_to_pool_b",
+      "from": "pool_a",
+      "to": "pool_b",
+      "resistance_pa_s_per_m3": {
+        "value": 1000000000.0,
+        "unit": "Pa*s/m3",
+        "provenance": {
+          "kind": "synthetic_fixture",
+          "description": "Manufactured numerical fixture; not a biological parameter."
+        },
+        "uncertainty": {
+          "status": "exact_fixture"
+        }
+      },
+      "inertance_pa_s2_per_m3": {
+        "value": 0,
+        "unit": "Pa*s2/m3",
+        "provenance": {
+          "kind": "synthetic_fixture",
+          "description": "Manufactured numerical fixture; not a biological parameter."
+        },
+        "uncertainty": {
+          "status": "exact_fixture"
+        }
+      },
+      "initial_flow_m3_per_s": {
+        "value": 0,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "synthetic_fixture",
+          "description": "Manufactured numerical fixture; not a biological parameter."
+        },
+        "uncertainty": {
+          "status": "exact_fixture"
+        }
+      },
+      "flow_scale_m3_per_s": {
+        "value": 1e-06,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "synthetic_fixture",
+          "description": "Manufactured numerical fixture; not a biological parameter."
+        },
+        "uncertainty": {
+          "status": "exact_fixture"
+        }
+      },
+      "pressure_scale_pa": {
+        "value": 1000.0,
+        "unit": "Pa",
+        "provenance": {
+          "kind": "synthetic_fixture",
+          "description": "Manufactured numerical fixture; not a biological parameter."
+        },
+        "uncertainty": {
+          "status": "exact_fixture"
+        }
+      }
+    }
+  ],
+  "tissue_reservoirs": [
+    {
+      "id": "left_kidney_tissue",
+      "anatomical_region_id": "left_kidney",
+      "physical_volume_owner_id": "extravascular:left_kidney",
+      "volume_m3": {
+        "value": 1e-06,
+        "unit": "m3",
+        "provenance": {
+          "kind": "synthetic_fixture",
+          "description": "Manufactured numerical fixture; not a biological parameter."
+        },
+        "uncertainty": {
+          "status": "exact_fixture"
+        }
+      },
+      "initial_species_mol": {
+        "tracer": {
+          "value": 0,
+          "unit": "mol",
+          "provenance": {
+            "kind": "synthetic_fixture",
+            "description": "Manufactured numerical fixture; not a biological parameter."
+          },
+          "uncertainty": {
+            "status": "exact_fixture"
+          }
+        }
+      }
+    }
+  ],
+  "exchanges": [
+    {
+      "id": "left_kidney_exchange",
+      "compartment": "pool_b",
+      "tissue_reservoir": "left_kidney_tissue",
+      "species": "tracer",
+      "clearance_m3_per_s": {
+        "value": 1e-07,
+        "unit": "m3/s",
+        "provenance": {
+          "kind": "synthetic_fixture",
+          "description": "Manufactured numerical fixture; not a biological parameter."
+        },
+        "uncertainty": {
+          "status": "exact_fixture"
+        }
+      },
+      "partition_coefficient": {
+        "value": 1,
+        "unit": "1",
+        "provenance": {
+          "kind": "synthetic_fixture",
+          "description": "Manufactured numerical fixture; not a biological parameter."
+        },
+        "uncertainty": {
+          "status": "exact_fixture"
+        }
+      }
+    }
+  ]
+}
