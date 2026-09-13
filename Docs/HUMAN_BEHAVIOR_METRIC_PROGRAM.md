@@ -36,7 +36,9 @@ Native compilation additionally binds the cooked body frames and exact clock.
 There is no default conversion from unknown contact or audit coverage to zero.
 
 The native producer measures paired high/low candidate geometry and source
-body COM velocity on the existing owner submission. Candidate measurements
+body COM velocity on the existing owner submission. At the first begin-step it
+also measures the exact reset pose and records `initial_posture_valid` and
+`initial_settled` without advancing physics or time. Candidate measurements
 remain private. Only an actual successful joint Brain–Human–Matter release,
 with its exact `COMMITTED` publication fence, authorizes accumulation. The next
 owner submission consumes pending records before candidate work; an explicit
@@ -46,12 +48,14 @@ time advance. Rejected attempts add no accepted metric samples.
 `numi.human.accepted-metric-snapshot.v1` is a privileged diagnostic snapshot,
 not a Brain sensory channel or a
 [`numi.human.behavior-trial.v1` qualification trace](HUMAN_BEHAVIOR_QUALIFICATION.md).
-The current producer reports unavailable forbidden-contact coverage, native
-audit coverage, reset-posture measurement, generic TaskPack lowering and the
-complete accepted-root SHA proof schema explicitly. These gaps prevent full
-behavior evidence admission. Compiler and reducer controls, or a short real
-producer run, cannot establish the frozen 420-trial standing, recovery and
-walking cohort.
+The current producer still reports unavailable forbidden-contact coverage,
+native audit coverage and the complete accepted-root SHA proof schema. Its
+`generic_taskpack_lowering=source_bound_metric_program` value records native
+compilation of the source-bound metric program; the generic TaskPack lowering
+receipt remains a separate required artifact. These gaps prevent full behavior
+evidence admission. Compiler and reducer controls, or a short real producer
+run, cannot establish the frozen 420-trial standing, recovery and walking
+cohort.
 
 Runtime qualification results and immutable owner revisions belong in the
 current accepted-state precision qualification record; this authoring guide

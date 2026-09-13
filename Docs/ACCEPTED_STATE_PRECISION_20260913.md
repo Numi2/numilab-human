@@ -96,16 +96,17 @@ them only after the actual joint `COMMITTED` publication fence. An explicit
 final flush uses the existing owner queue without adding a physical step.
 
 The real `MetalNumanXGateCRootRunner` test records four attempts, four accepted
-roots, zero rejected attempts and four samples from 25,000 to 125,000 ns.
-Repeated final collection is byte-identical. Minimum source-root height is
+roots, zero rejected attempts and four samples from 25,000 to 125,000 ns. The
+updated native owner also measures the reset pose before root one and publishes
+`initial_posture_valid` and `initial_settled` from the same source-bound
+geometry path. Repeated final collection is byte-identical. Minimum source-root height is
 0.9449574956 m, maximum trunk tilt 0.008372304 rad, and maximum planar pelvis
 COM speed 0.0001222258 m/s. These are short-run diagnostics against authored
 probe criteria. The pelvis observable is not whole-Human COM.
 
 Sixteen Swift parser/reducer tests and 44 Human authoring/evaluator tests pass.
-Missing forbidden-contact coverage, native audit coverage, reset-posture
-measurement, generic TaskPack lowering and complete accepted-root SHA proof
-remain explicit unavailable fields. The producer emits
+Missing forbidden-contact coverage, native audit coverage and complete
+accepted-root SHA proof remain explicit unavailable fields. The producer emits
 `full_behavior_qualified=false`; no frozen standing, recovery or walking trial
 is admitted by these results.
 

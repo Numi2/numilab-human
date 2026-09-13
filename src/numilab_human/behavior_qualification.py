@@ -137,8 +137,17 @@ def _decode(raw: bytes, label: str) -> dict:
 
 
 def digest(path: Path) -> str:
+    """Return a portable streaming SHA-256 for an evidence artifact.
+
+    ``hashlib.file_digest`` is not available in every Python runtime used by
+    the Human qualification tools (including the current Apple Silicon
+    runtime), so keep the file read explicit and bounded.
+    """
+    hasher = hashlib.sha256()
     with path.open("rb") as stream:
-        return hashlib.file_digest(stream, "sha256").hexdigest()
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            hasher.update(chunk)
+    return hasher.hexdigest()
 
 
 def _artifact(value: Any, base: Path, label: str) -> Path:
