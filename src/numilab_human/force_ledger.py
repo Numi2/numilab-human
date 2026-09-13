@@ -13,12 +13,12 @@ INPUT_SCHEMA = "numi.human.generalized-force-snapshot.v1"
 SCHEMA = "numi.human.generalized-force-ledger.v1"
 NV = 128
 REQUIRED_COMPONENTS = (
-    "bias",
+    "gravity_bias",
     "muscle_tendon",
     "joint_equality",
     "joint_limit",
     "support_contact",
-    "matter_tissue",
+    "passive_tissue",
 )
 
 
