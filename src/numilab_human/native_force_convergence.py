@@ -21,21 +21,16 @@ def _native_metrics(path: Path) -> dict[str, str]:
     except OSError as error:
         raise ImportError(f"cannot read native stdout {path}: {error}") from error
     line = next(
-        (
-            item
-            for item in reversed(lines)
-            if item.startswith("myosim_articulated_marker_visual=")
-        ),
+        (item for item in reversed(lines) if item.startswith("myosim_articulated_marker_visual=")),
         None,
     )
     if line is None:
         raise ImportError(f"{path} has no myosim_articulated_marker_visual result line")
     values: dict[str, str] = {}
     for token in shlex.split(line):
-        if "=" not in token:
-            continue
-        key, value = token.split("=", 1)
-        values[key] = value
+        if "=" in token:
+            key, value = token.split("=", 1)
+            values[key] = value
     if values.get("myosim_articulated_marker_visual") != "ok":
         raise ImportError(f"{path} does not contain a successful native result")
     return values
@@ -84,26 +79,16 @@ def _metrics(values: dict[str, str]) -> dict[str, Any]:
         "muscle_step_max_velocity_delta": _number(values, "muscle_step_max_velocity_delta"),
         "muscle_step_max_configuration_delta": _number(values, "muscle_step_max_configuration_delta"),
         "compiled_stand_balanced": _boolean(values, "compiled_stand_balanced"),
-        "compiled_stand_max_root_force_residual_n": _number(
-            values, "compiled_stand_max_root_force_residual"
-        ),
+        "compiled_stand_max_root_force_residual_n": _number(values, "compiled_stand_max_root_force_residual"),
         "compiled_stand_support_contacts": _integer(values, "compiled_stand_support_contacts"),
-        "compiled_stand_active_support_contacts": _integer(
-            values, "compiled_stand_active_support_contacts"
-        ),
-        "compiled_stand_total_support_force_n": _number(
-            values, "compiled_stand_total_support_force_n"
-        ),
-        "source_dynamic_force_parity_max_delta_n": _number(
-            values, "source_dynamic_force_parity_max_delta_n"
-        ),
+        "compiled_stand_active_support_contacts": _integer(values, "compiled_stand_active_support_contacts"),
+        "compiled_stand_total_support_force_n": _number(values, "compiled_stand_total_support_force_n"),
+        "source_dynamic_force_parity_max_delta_n": _number(values, "source_dynamic_force_parity_max_delta_n"),
         "muscle_force_metal_elapsed_ms": _number(values, "muscle_force_metal_elapsed_ms"),
         "stand_deterministic_replay": _field(values, "stand_deterministic_replay"),
     }
     if "compiled_stand_normalized_residual_rms" in values:
-        result["compiled_stand_normalized_residual_rms"] = _number(
-            values, "compiled_stand_normalized_residual_rms"
-        )
+        result["compiled_stand_normalized_residual_rms"] = _number(values, "compiled_stand_normalized_residual_rms")
     if "compiled_stand_max_activation" in values:
         result["compiled_stand_max_activation"] = _number(values, "compiled_stand_max_activation")
     return result
@@ -112,8 +97,7 @@ def _metrics(values: dict[str, str]) -> dict[str, Any]:
 def _replay_summary(path: Path | None, main: dict[str, Any]) -> dict[str, Any]:
     if path is None:
         return {"same_horizon": "not_supplied", "one_step_bitwise": False}
-    replay_values = _native_metrics(path)
-    replay = _metrics(replay_values)
+    replay = _metrics(_native_metrics(path))
     same_horizon = replay["persistent_completed_steps"] == main["persistent_completed_steps"]
     return {
         "same_horizon": "bitwise" if same_horizon and replay["stand_deterministic_replay"] == "bitwise" else "not_proved",
@@ -138,6 +122,7 @@ def _standing_state(path: Path | None) -> dict[str, Any] | None:
     if not isinstance(qualification, dict) or not isinstance(state, dict):
         raise ImportError("standing-state receipt is missing qualification/state")
     candidate = qualification.get("standing_initial_state_candidate") is True
+    equilibrium_transport = qualification.get("equilibrium_state_transport") is True
     uniform_maximal = state.get("uniform_maximal_activation")
     if type(uniform_maximal) is not bool:
         raise ImportError("standing-state receipt has no boolean maximal-activation classification")
@@ -145,7 +130,7 @@ def _standing_state(path: Path | None) -> dict[str, Any] | None:
         "path": str(resolved),
         "sha256": sha256(resolved),
         "candidate": candidate,
-        "equilibrium_state_transport": qualification.get("equilibrium_state_transport") is True,
+        "equilibrium_state_transport": equilibrium_transport,
         "uniform_maximal_activation": uniform_maximal,
         "activation_nonzero_count": state.get("activation_nonzero_count"),
         "initial_state_sha256": (receipt.get("initial_state") or {}).get("sha256"),
@@ -181,8 +166,7 @@ def _force_ledger(path: Path | None) -> dict[str, Any] | None:
 
 def audit(arguments: argparse.Namespace) -> int:
     stdout = arguments.stdout.resolve()
-    main_values = _native_metrics(stdout)
-    metrics = _metrics(main_values)
+    metrics = _metrics(_native_metrics(stdout))
     thresholds = {
         "clock_seconds": 1.25e-5,
         "clock_tolerance_seconds": 1.0e-12,
@@ -213,13 +197,17 @@ def audit(arguments: argparse.Namespace) -> int:
         reasons.append("same-horizon deterministic replay was not supplied")
 
     standing_state = _standing_state(arguments.standing_state_receipt)
-    standing_state_admissible = bool(standing_state and standing_state["candidate"])
+    standing_state_admissible = bool(
+        standing_state and standing_state["candidate"] and standing_state["equilibrium_state_transport"]
+    )
     if standing_state and standing_state["uniform_maximal_activation"]:
         reasons.append("the supplied standing state is a uniform maximal-activation diagnostic")
+    if standing_state and standing_state["candidate"] and not standing_state["equilibrium_state_transport"]:
+        reasons.append("the supplied standing state is not bound to the solved coupled equilibrium")
     if arguments.require_standing_state_receipt and standing_state is None:
         reasons.append("a prepared standing-state receipt is required")
     if arguments.require_standing_state_receipt and not standing_state_admissible:
-        reasons.append("the prepared standing state is not admissible")
+        reasons.append("the prepared standing state is not equilibrium-admissible")
 
     force_ledger = _force_ledger(arguments.force_ledger_receipt)
     force_ledger_admissible = bool(force_ledger and force_ledger["complete"])
@@ -239,9 +227,7 @@ def audit(arguments: argparse.Namespace) -> int:
         force_convergence = force_convergence and standing_state_admissible
     if arguments.require_force_ledger_receipt:
         force_convergence = force_convergence and force_ledger_admissible
-    standing_force_convergence = (
-        mechanical_force_convergence and standing_state_admissible and force_ledger_admissible
-    )
+    standing_force_convergence = mechanical_force_convergence and standing_state_admissible and force_ledger_admissible
 
     receipt = {
         "schema": SCHEMA,
@@ -253,10 +239,7 @@ def audit(arguments: argparse.Namespace) -> int:
             "dof_count": arguments.dof_count,
             "q_count": arguments.q_count,
         },
-        "binary": {
-            "sha256": arguments.binary_sha256,
-            "device": metrics["device"],
-        },
+        "binary": {"sha256": arguments.binary_sha256, "device": metrics["device"]},
         "horizon": metrics,
         "replay": replay,
         "standing_state": standing_state,
@@ -278,9 +261,6 @@ def audit(arguments: argparse.Namespace) -> int:
             "force_ledger_admissible": force_ledger_admissible,
             "force_convergence": force_convergence,
             "standing_force_convergence": standing_force_convergence,
-            # A converged force horizon is necessary for standing, but it is
-            # not a standing-behavior qualification. The latter needs the
-            # separate accepted-root support/contact and behavior protocol.
             "sustained_standing": False,
             "recovery": False,
             "walking": False,
@@ -298,16 +278,8 @@ def audit(arguments: argparse.Namespace) -> int:
         },
         "artifacts": {
             "stdout": {"path": str(stdout), "sha256": sha256(stdout)},
-            "stderr": (
-                {"path": str(arguments.stderr.resolve()), "sha256": sha256(arguments.stderr.resolve())}
-                if arguments.stderr
-                else None
-            ),
-            "build_log": (
-                {"path": str(arguments.build_log.resolve()), "sha256": sha256(arguments.build_log.resolve())}
-                if arguments.build_log
-                else None
-            ),
+            "stderr": {"path": str(arguments.stderr.resolve()), "sha256": sha256(arguments.stderr.resolve())} if arguments.stderr else None,
+            "build_log": {"path": str(arguments.build_log.resolve()), "sha256": sha256(arguments.build_log.resolve())} if arguments.build_log else None,
         },
     }
     write_json(arguments.output.resolve(), receipt)
