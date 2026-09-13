@@ -12,8 +12,8 @@ The native implementation is the isolated Mac mini worktree
 `human-blood-mass-20260913` at commit
 `f7476cce6186bfe93bb798b46607e19fff932171`, based on
 `53670294dd229e5a0d876a472964130742c89e44`. The qualified native checkout was
-not modified. The commit is retained on that isolated Mac mini branch; remote
-branch publication was not confirmed in this run. The implementation raises
+not modified. The commit is published on
+`origin/human-blood-mass-20260913`. The implementation raises
 `NM_MATTER_ABI_VERSION` to 35 and requires recooking affected Matter packages.
 
 The authoring contract adds `bloodCompartment` and `bloodDensity` to a vascular
