@@ -22,6 +22,12 @@ evaluations, and a deterministic accepted-state trace:
 
 `Docs/media/shi-hose-cardiac-step-20260914/receipt.json`
 
+The exact-clock companion runs 512 attempted steps at `12,500 ns` over a
+`6.4 ms` source horizon, rejects attempt 37, accepts 511 steps, and preserves
+the same volume invariant. It is retained at
+`Docs/media/shi-hose-cardiac-step-20260914/receipt-exact-clock.json`; the CLI
+requires `--require-clock-nanoseconds 12500` for this admission.
+
 The source lowering remains bound to source manifest
 `3c1439ede07f5736520856f77a8cef11103e63471fa4ee264b24c8a04a90a39e`; the
 receipt schema is `HumanPack.shi-hose-step-receipt.v1`. The CLI is exposed as

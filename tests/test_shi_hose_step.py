@@ -7,7 +7,7 @@ from pathlib import Path
 
 from numilab_human.model import ImportError as HumanImportError
 from numilab_human.shi_hose import CONFIG, canonical, compile_source, read_json
-from numilab_human.shi_hose_step import SCHEMA, simulate
+from numilab_human.shi_hose_step import CLOCK_NANOSECONDS, SCHEMA, simulate
 
 
 class ShiHoseStepTests(unittest.TestCase):
@@ -23,7 +23,15 @@ class ShiHoseStepTests(unittest.TestCase):
         self.assertEqual(receipt["rejected_steps"], 0)
         self.assertTrue(receipt["conservation"]["volume_conserved"])
         self.assertGreater(receipt["activation"]["open_valve_evaluation_count"], 0)
+        self.assertFalse(receipt["clock"]["exact"])
         self.assertEqual(len(receipt["activation"]["accepted_trace_sha256"]), 64)
+
+    def test_exact_human_clock_is_recorded_and_conserved(self) -> None:
+        receipt = simulate(self.native, steps=512, timestep_s=12_500e-9)
+        self.assertEqual(receipt["clock"]["required_nanoseconds"], CLOCK_NANOSECONDS)
+        self.assertTrue(receipt["clock"]["exact"])
+        self.assertTrue(receipt["conservation"]["volume_conserved"])
+        self.assertAlmostEqual(receipt["final_state"]["accepted_time_s"], 0.0064)
 
     def test_rejected_candidate_restores_source_state(self) -> None:
         rejected = simulate(self.native, steps=9, timestep_s=1.0e-4, reject_step=4)
@@ -66,6 +74,7 @@ class ShiHoseStepTests(unittest.TestCase):
                 "config": CONFIG,
                 "steps": 4,
                 "timestep_seconds": 1.0e-4,
+                "require_clock_nanoseconds": None,
                 "reject_step": None,
                 "output": output,
             })()
@@ -75,6 +84,22 @@ class ShiHoseStepTests(unittest.TestCase):
             self.assertEqual(output.read_bytes(), before)
             output.write_bytes(b"forged\n")
             with self.assertRaisesRegex(HumanImportError, "immutable"):
+                run(args)
+
+    def test_cli_exact_clock_requirement_rejects_other_timestep(self) -> None:
+        from numilab_human.shi_hose_step import run
+
+        with tempfile.TemporaryDirectory() as temporary:
+            args = type("Args", (), {
+                "source_directory": CONFIG.parents[1] / "third_party/physiome/shi_hose_2009",
+                "config": CONFIG,
+                "steps": 1,
+                "timestep_seconds": 1.0e-4,
+                "require_clock_nanoseconds": CLOCK_NANOSECONDS,
+                "reject_step": None,
+                "output": Path(temporary) / "step.json",
+            })()
+            with self.assertRaisesRegex(HumanImportError, "required nanosecond clock"):
                 run(args)
 
 

@@ -23,6 +23,9 @@ from .shi_hose import CONFIG, ROOT, canonical, compile_source, read_json
 
 SCHEMA = "HumanPack.shi-hose-step-receipt.v1"
 MAX_STEPS = 1_000_000
+CLOCK_NANOSECONDS = 12_500
+CLOCK_SECONDS = CLOCK_NANOSECONDS * 1.0e-9
+CLOCK_TOLERANCE_SECONDS = 1.0e-15
 
 
 class StepError(HumanImportError):
@@ -266,6 +269,11 @@ def simulate(native: dict[str, Any], *, steps: int, timestep_s: float,
         "accepted_steps": state["accepted_steps"],
         "rejected_steps": rejected,
         "timestep_seconds": float(timestep_s),
+        "clock": {
+            "timestep_nanoseconds": float(timestep_s) * 1.0e9,
+            "required_nanoseconds": CLOCK_NANOSECONDS,
+            "exact": abs(float(timestep_s) - CLOCK_SECONDS) <= CLOCK_TOLERANCE_SECONDS,
+        },
         "conservation": {
             "initial_compartment_volume_m3": initial_volume,
             "final_compartment_volume_m3": final_volume,
@@ -299,12 +307,28 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--config", type=Path, default=CONFIG)
     parser.add_argument("--steps", type=int, default=100)
     parser.add_argument("--timestep-seconds", type=float, default=1.0e-4)
+    parser.add_argument(
+        "--require-clock-nanoseconds",
+        type=int,
+        help="fail closed unless the requested timestep equals this clock in nanoseconds",
+    )
     parser.add_argument("--reject-step", type=int)
     parser.add_argument("--output", type=Path, required=True)
     parser.set_defaults(handler=run)
 
 
 def run(args: argparse.Namespace) -> int:
+    required_clock_nanoseconds = getattr(args, "require_clock_nanoseconds", None)
+    if required_clock_nanoseconds is not None:
+        _require(
+            type(required_clock_nanoseconds) is int and required_clock_nanoseconds > 0,
+            "required clock must be a positive integer number of nanoseconds",
+        )
+        required_seconds = required_clock_nanoseconds * 1.0e-9
+        _require(
+            abs(float(args.timestep_seconds) - required_seconds) <= CLOCK_TOLERANCE_SECONDS,
+            "timestep does not equal the required nanosecond clock",
+        )
     native, lowering = compile_source(directory=args.source_directory, config=read_json(args.config))
     receipt = simulate(native, steps=args.steps, timestep_s=args.timestep_seconds,
                        reject_step=args.reject_step)
