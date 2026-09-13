@@ -1,6 +1,8 @@
 # Organ and blood ownership ledger
 
-The immutable receipt at `Docs/media/organ-blood-ownership-ledger-20260913/ledger.json`
+The current immutable receipt at
+`Docs/media/organ-blood-ownership-ledger-corrected-20260913/ledger.json`
+(SHA-256 `bb49c0d4daad6b8dd6a376bba96a4907fb7ac7fc0142ef6b7c6e31537a8d0c1e`)
 joins the current organ and circulation handoffs into one ownership graph. It binds:
 
 - the 12 selected torso source/body-frame links;
