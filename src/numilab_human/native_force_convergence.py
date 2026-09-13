@@ -13,6 +13,7 @@ from .model import ImportError, sha256, write_json
 SCHEMA = "numi.human.native-force-convergence-audit.v1"
 STANDING_STATE_SCHEMA = "numi.human.standing-initial-state-audit.v1"
 FORCE_LEDGER_SCHEMA = "numi.human.generalized-force-ledger.v1"
+STATIC_DYNAMIC_HANDOFF_SCHEMA = "numi.human.static-dynamic-handoff-audit.v1"
 
 
 def _native_metrics(path: Path) -> dict[str, str]:
@@ -83,10 +84,13 @@ def _metrics(values: dict[str, str]) -> dict[str, Any]:
         "compiled_stand_support_contacts": _integer(values, "compiled_stand_support_contacts"),
         "compiled_stand_active_support_contacts": _integer(values, "compiled_stand_active_support_contacts"),
         "compiled_stand_total_support_force_n": _number(values, "compiled_stand_total_support_force_n"),
-        "source_dynamic_force_parity_max_delta_n": _number(values, "source_dynamic_force_parity_max_delta_n"),
         "muscle_force_metal_elapsed_ms": _number(values, "muscle_force_metal_elapsed_ms"),
         "stand_deterministic_replay": _field(values, "stand_deterministic_replay"),
     }
+    result["source_dynamic_force_parity_max_delta_n"] = (
+        _number(values, "source_dynamic_force_parity_max_delta_n")
+        if "source_dynamic_force_parity_max_delta_n" in values else None
+    )
     if "compiled_stand_normalized_residual_rms" in values:
         result["compiled_stand_normalized_residual_rms"] = _number(values, "compiled_stand_normalized_residual_rms")
     if "compiled_stand_max_activation" in values:
@@ -164,6 +168,49 @@ def _force_ledger(path: Path | None) -> dict[str, Any] | None:
     }
 
 
+def _static_dynamic_handoff(path: Path | None) -> dict[str, Any] | None:
+    if path is None:
+        return None
+    resolved = path.resolve()
+    try:
+        receipt = json.loads(resolved.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ImportError(f"cannot read static-dynamic handoff receipt {resolved}: {error}") from error
+    if receipt.get("schema") != STATIC_DYNAMIC_HANDOFF_SCHEMA:
+        raise ImportError("static-dynamic handoff receipt schema mismatch")
+    qualification = receipt.get("qualification")
+    coverage = receipt.get("coverage")
+    if not isinstance(qualification, dict) or not isinstance(coverage, dict):
+        raise ImportError("static-dynamic handoff receipt is missing coverage/qualification")
+    evidence = (
+        receipt.get("status") == "passed"
+        and coverage.get("muscles") == 416
+        and coverage.get("generalized_coordinates") == 128
+        and coverage.get("dynamic_pre_step_state") is True
+        and qualification.get("pre_step_snapshot_present") is True
+        and qualification.get("activation_and_fiber_state_parity") is True
+        and qualification.get("per_muscle_force_parity") is True
+        and qualification.get("generalized_force_parity") is True
+        and qualification.get("fiber_tendon_equilibrium_closed") is True
+        and isinstance(receipt.get("comparisons"), dict)
+    )
+    claimed = qualification.get("static_dynamic_handoff_parity") is True
+    if claimed and not evidence:
+        raise ImportError("static-dynamic handoff receipt claims parity without complete supporting evidence")
+    return {
+        "path": str(resolved),
+        "sha256": sha256(resolved),
+        "complete": claimed and evidence,
+        "pre_step_snapshot_present": qualification.get("pre_step_snapshot_present") is True,
+        "activation_and_fiber_state_parity": qualification.get("activation_and_fiber_state_parity") is True,
+        "per_muscle_force_parity": qualification.get("per_muscle_force_parity") is True,
+        "generalized_force_parity": qualification.get("generalized_force_parity") is True,
+        "fiber_tendon_equilibrium_closed": qualification.get("fiber_tendon_equilibrium_closed") is True,
+        "maximum_damped_equilibrium_residual": receipt.get("maximum_damped_equilibrium_residual"),
+        "comparisons": receipt.get("comparisons"),
+    }
+
+
 def audit(arguments: argparse.Namespace) -> int:
     stdout = arguments.stdout.resolve()
     metrics = _metrics(_native_metrics(stdout))
@@ -216,6 +263,15 @@ def audit(arguments: argparse.Namespace) -> int:
     if arguments.require_force_ledger_receipt and not force_ledger_admissible:
         reasons.append("the generalized-force ledger is incomplete or not force-closed")
 
+    handoff = _static_dynamic_handoff(arguments.static_dynamic_handoff_receipt)
+    handoff_admissible = bool(handoff and handoff["complete"])
+    if handoff is not None and not handoff_admissible:
+        reasons.append("the accepted static state is not proved identical to the persistent dynamic pre-step state")
+    if arguments.require_static_dynamic_handoff_receipt and handoff is None:
+        reasons.append("a complete static-dynamic handoff receipt is required")
+    if arguments.require_static_dynamic_handoff_receipt and not handoff_admissible:
+        reasons.append("the static-dynamic handoff is incomplete or not parity-closed")
+
     exact_eligible = (
         arguments.body_count <= arguments.exact_body_limit
         and arguments.dof_count <= arguments.exact_dof_limit
@@ -227,7 +283,14 @@ def audit(arguments: argparse.Namespace) -> int:
         force_convergence = force_convergence and standing_state_admissible
     if arguments.require_force_ledger_receipt:
         force_convergence = force_convergence and force_ledger_admissible
-    standing_force_convergence = mechanical_force_convergence and standing_state_admissible and force_ledger_admissible
+    if arguments.require_static_dynamic_handoff_receipt:
+        force_convergence = force_convergence and handoff_admissible
+    standing_force_convergence = (
+        mechanical_force_convergence
+        and standing_state_admissible
+        and force_ledger_admissible
+        and handoff_admissible
+    )
 
     receipt = {
         "schema": SCHEMA,
@@ -244,6 +307,7 @@ def audit(arguments: argparse.Namespace) -> int:
         "replay": replay,
         "standing_state": standing_state,
         "force_ledger": force_ledger,
+        "static_dynamic_handoff": handoff,
         "exact_dense_stage": {
             "eligible": exact_eligible,
             "body_limit": arguments.exact_body_limit,
@@ -259,6 +323,7 @@ def audit(arguments: argparse.Namespace) -> int:
             "mechanical_force_convergence": mechanical_force_convergence,
             "standing_state_admissible": standing_state_admissible,
             "force_ledger_admissible": force_ledger_admissible,
+            "static_dynamic_handoff_admissible": handoff_admissible,
             "force_convergence": force_convergence,
             "standing_force_convergence": standing_force_convergence,
             "sustained_standing": False,
@@ -274,6 +339,7 @@ def audit(arguments: argparse.Namespace) -> int:
             "thresholds": thresholds,
             "require_standing_state_receipt": arguments.require_standing_state_receipt,
             "require_force_ledger_receipt": arguments.require_force_ledger_receipt,
+            "require_static_dynamic_handoff_receipt": arguments.require_static_dynamic_handoff_receipt,
             "reasons": reasons,
         },
         "artifacts": {
@@ -297,6 +363,8 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--require-standing-state-receipt", action="store_true")
     parser.add_argument("--force-ledger-receipt", type=Path)
     parser.add_argument("--require-force-ledger-receipt", action="store_true")
+    parser.add_argument("--static-dynamic-handoff-receipt", type=Path)
+    parser.add_argument("--require-static-dynamic-handoff-receipt", action="store_true")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--source-commit", required=True)
     parser.add_argument("--binary-sha256", required=True)
