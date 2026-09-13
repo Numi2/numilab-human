@@ -143,9 +143,9 @@ The producer measures jointly accepted roots through the existing Brainâ€“Humanâ
 runner; unavailable contact, audit and reset evidence remains explicit.
 The [current paired source-route qualification](Docs/SOURCE_ROUTE_PRECISION_20260913.md)
 records the exact native/Brain revisions, source comparisons and bounded replay.
-The [ABI37 blood-mass owner increment](Docs/BLOOD_MASS_OWNER_20260913.md) adds
+The [ABI38 blood-mass owner increment](Docs/BLOOD_MASS_OWNER_20260913.md) adds
 explicit one-owner-per-compartment registration, cooked reference spatial
-moments, initial FEM mass partition, dynamic-volume gravity correction, and
+moments, initial FEM mass partition, dynamic-volume gravity correction, dynamic spatial-moment audit, and
 co-moving inertial replay; pressure-driven momentum and
 calibration remain open.
 

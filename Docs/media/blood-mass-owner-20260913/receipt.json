@@ -2,10 +2,10 @@
   "schema": "numi.human.blood-mass-owner-evidence.v1",
   "date": "2026-09-13",
   "native_branch": "human-blood-mass-20260913",
-  "native_commit": "9711a262bbdf375360b0aa7a5a97244f961bb90e",
+  "native_commit": "e6a695eb4a947bcd91c277c1adc119f764138b12",
   "native_base_commit": "53670294dd229e5a0d876a472964130742c89e44",
   "remote_branch_publication_confirmed": true,
-  "native_abi": 37,
+  "native_abi": 38,
   "host": {
     "ssh_alias": "macmini",
     "device": "Apple M4 Pro",
@@ -22,10 +22,11 @@
     "reference_second_spatial_moment": true,
     "stale_spatial_moment_rejected": true,
     "implicit_cavity_or_tissue_mass": false,
-    "force_path": "initial registered blood mass is partitioned into FEM nodal inertia; runtime scatters only current-volume gravity and co-moving inertial correction over normalized bindings",
+    "force_path": "initial registered blood mass is partitioned into FEM nodal inertia; runtime scatters only current-volume gravity and co-moving inertial correction over normalized bindings; a production Metal audit evaluates current mass moments and co-moving momentum",
     "initial_fem_mass_partition": true,
     "dynamic_volume_mass_correction": true,
-    "co_moving_inertia_correction": true
+    "co_moving_inertia_correction": true,
+    "dynamic_spatial_moment_audit": true
   },
   "checks": {
     "full_build": "pass",
@@ -40,7 +41,9 @@
     "clock": "exact",
     "partitioned_initial_mass": "pass",
     "dynamic_volume_correction": "pass",
-    "co_moving_inertia": "pass"
+    "co_moving_inertia": "pass",
+    "dynamic_spatial_moment_audit": "pass",
+    "dynamic_spatial_moment_replay": "bitwise"
   },
   "measurements": {
     "compartment_stable_id": 12,
@@ -67,14 +70,16 @@
     "full_release": false,
     "initial_fem_mass_partition": true,
     "dynamic_volume_mass_closure": true,
-    "co_moving_inertia": true
+    "co_moving_inertia": true,
+    "dynamic_spatial_moment_audit": true,
+    "dynamic_mass_moment_evaluation": true
   },
   "artifacts": {
-    "Docs/media/blood-mass-owner-20260913/native/full-build.log": "ff4f69d7e347a0eacc596ce40e83a4b45e40032fcce38c8f46fdfc222ecb6001",
+    "Docs/media/blood-mass-owner-20260913/native/full-build.log": "b95ca4a5a1a46aa75906789daca3b7eb3a05a40c60a272fe921f4cf41646e5b7",
     "Docs/media/blood-mass-owner-20260913/native/vascular-compiler.log": "bfe96aad2cf8d5ddcf71ac96f665691dc6c3ac0510584c6708d35064310da47a",
     "Docs/media/blood-mass-owner-20260913/native/vascular-runtime.log": "017aaff7eedf60b96724cb2a0c765eab3282f637cb3b21263ab2a35c2b9ad4ac",
-    "Docs/media/blood-mass-owner-20260913/native/vascular-cavity.log": "c61f3fc7701425dd4ed55c441a06ad322d3fb88b38274e17840d20207710e411",
-    "Docs/media/blood-mass-owner-20260913/native/native-revision.txt": "a6d43b75e10d0afb7b1c5d72d29f40fc4fedaa64b4d68a7c78ae33c6602c575e",
+    "Docs/media/blood-mass-owner-20260913/native/vascular-cavity.log": "987382067b599d94182662093fcba53f7058190e6fca8c68bbe1be77e96b41ac",
+    "Docs/media/blood-mass-owner-20260913/native/native-revision.txt": "13295a06089b9f356c7173c5b17e8c87a8647ebe076e4d0794b5ddab200fd088",
     "Docs/media/blood-mass-owner-20260913/native/native-status.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   }
 }
