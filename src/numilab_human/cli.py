@@ -2136,6 +2136,12 @@ def parser() -> argparse.ArgumentParser:
         "physiology-compile", help="validate source-bound organ and circulation authoring and compile native indices",
     )
     add_physiology_arguments(physiology)
+    from .physiology_step import add_arguments as add_physiology_step_arguments
+    physiology_step = commands.add_parser(
+        "physiology-step",
+        help="advance a compiled organ/circulation graph with conservative accepted-step rollback",
+    )
+    add_physiology_step_arguments(physiology_step)
     from .locomotor import add_arguments as add_locomotor_arguments
     locomotor = commands.add_parser("locomotor-program", help="author a source-bound Brain spindle and periodic muscle controller candidate")
     add_locomotor_arguments(locomotor)

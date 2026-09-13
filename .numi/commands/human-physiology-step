@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+
+if [ "${1:-}" = "--numi-describe" ]; then
+    printf '%s\n' 'Advance a compiled organ/circulation graph with conservative blood transport, tissue exchange, and accepted-step rollback; retain fixture-only qualification boundaries.'
+    exit 0
+fi
+
+command_directory=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+repository_root=$(CDPATH= cd -- "$command_directory/../.." && pwd -P)
+if [ -n "${PYTHONPATH:-}" ]; then
+    export PYTHONPATH="$repository_root/src:$PYTHONPATH"
+else
+    export PYTHONPATH="$repository_root/src"
+fi
+exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.physiology_step "$@"
