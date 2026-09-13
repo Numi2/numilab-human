@@ -179,6 +179,15 @@ The current registry snapshot after the coupled-support requalification is
 [Docs/media/gap-execution-20260913/report-with-native-coupled-support-20260913.json](media/gap-execution-20260913/report-with-native-coupled-support-20260913.json)
 (file SHA-256 `e1f2c8a4da8a4a294cd1603975ef297dc834de2568ca866c32e46e906e0bfc3d`, report SHA-256 `fad05703b0431fc60804b47ef5a6d30e424cb5ff6f00d0096fb0a801faef8e14`). It retains 14 workstreams, 46 tasks and 95 mandatory targets; `integrated_qualification` remains `not_assessed` because the coupled result is synthetic engineering evidence and the anatomical, calibrated, and sustained behavior gates remain open.
 
+The subsequent snapshot includes the native source-surface vessel mass-moment
+admission and its tamper-rejection receipt at
+[`Docs/media/gap-execution-20260913/report-with-native-vessel-mass-moment-20260913.json`](media/gap-execution-20260913/report-with-native-vessel-mass-moment-20260913.json).
+Its file SHA-256 is
+`53d262014467f383b3152e2bafec51718e16a724c40b675ccbc8429a7183b694`,
+its report SHA-256 is
+`536be775edbcc069ec5eb27f0d9dbedbd8aa35feb4e8804df3ff3b11cef5697a`,
+and `integrated_qualification` remains `not_assessed`.
+
 The latest registry snapshot also includes the exact-clock persistent-stand
 refinement receipt at
 [`Docs/media/gap-execution-20260913/report-with-exact-stand-refinement-20260913.json`](media/gap-execution-20260913/report-with-exact-stand-refinement-20260913.json).
