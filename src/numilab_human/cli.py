@@ -2148,6 +2148,12 @@ def parser() -> argparse.ArgumentParser:
         help="advance an explicit fixture blood/tissue mass owner with conservative rollback",
     )
     add_blood_mass_step_arguments(blood_mass_step)
+    from .shi_hose_step import add_arguments as add_shi_hose_step_arguments
+    shi_hose_step = commands.add_parser(
+        "shi-hose-step",
+        help="advance the pinned Shi/Hose source cardiac elastance and valve graph",
+    )
+    add_shi_hose_step_arguments(shi_hose_step)
     from .locomotor import add_arguments as add_locomotor_arguments
     locomotor = commands.add_parser("locomotor-program", help="author a source-bound Brain spindle and periodic muscle controller candidate")
     add_locomotor_arguments(locomotor)
