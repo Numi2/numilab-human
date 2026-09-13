@@ -2634,6 +2634,28 @@ class ImporterTests(unittest.TestCase):
         self.assertIn("--tendon-payload", control)
         self.assertIn("--activated-source-muscle-index", control)
 
+    def test_numi_workspace_stand_uses_authored_support_stance(self) -> None:
+        command = (ROOT / ".numi/commands/human").read_text(encoding="utf-8")
+        stand = command.split(
+            "# Canonical Numi Human v1 standing transaction", 1,
+        )[1].split("# Canonical Numi-owned Human probe", 1)[0]
+        for argument in (
+            "--support-stance-dof 2 0.02",
+            "--support-stance-dof 108 0.1",
+            "--support-stance-dof 109 0.1",
+            "--support-stance-dof 110 0.1",
+            "--support-stance-dof 122 0.1",
+            "--support-stance-dof 123 0.1",
+            "--support-stance-dof 124 0.1",
+            "--support-stance-contact 2",
+            "--support-stance-contact 3",
+            "--support-stance-contact 4",
+            "--support-stance-contact 5",
+            "--support-stance-contact 6",
+            "--support-stance-contact 7",
+        ):
+            self.assertIn(argument, stand)
+
     def test_numi_workspace_native_visual_command_rejects_missing_paths_before_python(self) -> None:
         command = ROOT / ".numi/commands/human"
         result = run(
