@@ -12,3 +12,11 @@ Evidence and hashes are in [`Docs/media/native-force-parity-20260913`](media/nat
 - `stdout.txt`, `stderr.txt`, `ctest.log`, `front.png`, `receipt.mrvpack`, and `visual.json` are copied from the native run.
 - Source SHA-256: `34118b0d01df6d5f5f1bac306d84d71ab19eeb1103b54c9d7cf77c153c1e3b73`.
 - Binary SHA-256: `6ee1257f295733d74bdfb810845729b3e420351ede9896eff960d2ec588b71dc`.
+
+The same committed binary was then run for 512 steps (`6.4 ms`) at the exact
+clock. The force-parity metric remained `0.00644019908254 N` and replay stayed
+bitwise, while the retained dynamic failure reproduced: peak acceleration
+`108763.164062 m/s²`, maximum velocity delta `1.30699014664`, and maximum
+configuration delta `0.00444473000243`. The horizon artifacts are the
+`horizon-*` files in the evidence directory. This is a fresh source-revision
+boundary receipt, not a sustained-standing pass.
