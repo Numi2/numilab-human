@@ -14,7 +14,7 @@ def _snapshot(*, residual_index: int | None = None, assembly_error: bool = False
     names = [f"dof_{index}" for index in range(128)]
     kinds = ["translation"] * 3 + ["rotation"] * 125
     component_values = {name: [0.0] * 128 for name in REQUIRED_COMPONENTS}
-    component_values["bias"][2] = -100.0
+    component_values["gravity_bias"][2] = -100.0
     component_values["support_contact"][2] = 100.0
     if residual_index is not None:
         component_values["muscle_tendon"][residual_index] = 10.0
@@ -79,7 +79,7 @@ def test_unaccounted_authoritative_force_fails_assembly(tmp_path: Path) -> None:
 
 def test_missing_force_owner_is_rejected(tmp_path: Path) -> None:
     payload = _snapshot()
-    payload["components"] = [row for row in payload["components"] if row["name"] != "matter_tissue"]
+    payload["components"] = [row for row in payload["components"] if row["name"] != "passive_tissue"]
     source = tmp_path / "forces.json"
     source.write_text(json.dumps(payload), encoding="utf-8")
     output = tmp_path / "receipt.json"
