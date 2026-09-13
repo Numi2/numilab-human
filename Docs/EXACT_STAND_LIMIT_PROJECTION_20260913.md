@@ -10,7 +10,7 @@ numanx.integration.fullbody_authored_world
 numanx.integration.fullbody_vascular_admission
 ```
 
-The exact source-bound fixture uses one adult full-body source, all 416 source muscle routes at activation `1.0`, NHTENDON3 transfer, 51 joint equalities, six authored support contacts, no root assistance, and 64 steps at `12.5 µs` for `0.8 ms`. The native transaction passes one-step FP64 parity, completes all 64 steps, leaves stderr empty, and reproduces bitwise on the deterministic replay. The receipt and immutable native logs are in [`Docs/media/exact-stand-limits-20260913/`](media/exact-stand-limits-20260913/).
+The exact source-bound fixture uses one adult full-body source, all 416 source muscle routes at activation `1.0`, NHTENDON3 transfer, 51 joint equalities, six authored support contacts, no root assistance, and 64 steps at `12.5 µs` for `0.8 ms`. The native transaction passes one-step FP64 parity, completes all 64 steps, leaves stderr empty, and reproduces bitwise on the deterministic replay. The receipt, immutable native logs, and source patch are in [`Docs/media/exact-stand-limits-20260913/`](media/exact-stand-limits-20260913/).
 
 The corrected horizon reports:
 
