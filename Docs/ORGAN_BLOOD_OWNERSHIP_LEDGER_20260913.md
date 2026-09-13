@@ -11,6 +11,7 @@ joins the current organ and circulation handoffs into one ownership graph. It bi
   their hydraulic region identities;
 - the corrected six-vessel source-surface zeroth/first/second mass-moment candidate,
   with six hash-bound rows and no anatomical owner; and
+- the native mass-moment admission and tamper rejection for that candidate; and
 - the physical-M4 synthetic ABI38 blood-owner and fullbody vascular package receipts
   as separate, explicitly synthetic authorities.
 

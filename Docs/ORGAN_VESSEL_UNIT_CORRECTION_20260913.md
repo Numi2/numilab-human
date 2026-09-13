@@ -39,5 +39,7 @@ anatomical blood-mass transfer false. Its SHA-256 is
 The physical Mac mini rerun against the corrected fixture passes the bounded
 source/world checker; its retained output is
 [`native-rerun.txt`](media/native-vessel-registration-corrected-20260913/native-rerun.txt).
-That native result still does not admit tube/lumen mechanics, pressure transfer,
-tissue exchange, calibrated density, or anatomical blood ownership.
+The follow-up [native mass-moment admission](NATIVE_VESSEL_MASS_MOMENT_ADMISSION_20260913.md)
+recomputes the six candidate rows and rejects a tampered mass. These native
+results still do not admit tube/lumen mechanics, pressure transfer, tissue
+exchange, calibrated density, or anatomical blood ownership.

@@ -362,3 +362,9 @@ its `0.25057866444098925 kg` value is a source-surface proxy. Lumen/tube
 mechanics, native pressure transfer, two-way blood/tissue exchange, calibrated
 density, and anatomical blood-mass ownership remain open, and the Mac mini
 bounded source/world admission now passes against the corrected fixture.
+
+The [native vessel mass-moment admission](NATIVE_VESSEL_MASS_MOMENT_ADMISSION_20260913.md)
+now recomputes the corrected candidate on the physical Mac mini, binds source
+and body-link hashes, and rejects a tampered mass row. It remains a
+source-surface proxy; anatomical lumen/wall mechanics, pressure-driven transfer,
+tissue exchange, calibrated density, and subject calibration remain open.

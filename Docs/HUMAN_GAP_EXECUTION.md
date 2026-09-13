@@ -283,6 +283,9 @@ the registry still has no admitted lumen/tube, wall material, pressure
 gradient, two-way tissue exchange, subject density, or native anatomical
 mechanics qualification; its bounded corrected source/world checker now passes
 on the physical Mac mini.
+The follow-up [native mass-moment admission](NATIVE_VESSEL_MASS_MOMENT_ADMISSION_20260913.md)
+recomputes the candidate's six rows and aggregate moments on that host and
+rejects a tampered mass, while retaining the source-surface boundary.
 
 The refreshed registry snapshot with the exact vessel body links is retained
 at [`Docs/media/gap-execution-20260913/report-with-native-body-links-20260913.json`](media/gap-execution-20260913/report-with-native-body-links-20260913.json).
