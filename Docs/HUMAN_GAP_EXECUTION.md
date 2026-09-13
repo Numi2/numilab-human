@@ -220,3 +220,11 @@ recovery, walking, anatomical supports/loading, activation calibration, blood
 mass transfer, unresolved material data, and subject calibration remain open.
 
 The refreshed [gap-execution snapshot with force parity](media/gap-execution-20260913/report-with-native-force-parity-20260913.json) has file SHA-256 `3b74337bce020dedc332dcf890eb9cf5a620f41d126fc71e7f215ae6ecc76886` and report SHA-256 `a99917a7ca399de4f7f23371edb8166c5c198d77c3a850c411a05bde713d023e`. It retains 14 workstreams, 46 tasks, and 95 mandatory targets with `integrated_qualification: not_assessed`.
+
+The same parity-gated native binary was rerun for 512 exact `12.5 us` steps
+(`6.4 ms`). Its source CPU/Metal force delta remained `0.00644019908254 N`
+and replay was bitwise, while the dynamic boundary reproduced
+`108763.164062 m/s²` peak acceleration, `1.30699014664` velocity delta, and
+`0.00444473000243` configuration delta. This fresh horizon receipt confirms
+that force-path parity does not yet imply temporal convergence or sustained
+standing.

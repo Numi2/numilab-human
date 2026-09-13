@@ -320,3 +320,9 @@ bounded force-transfer closure. It does not establish temporal force
 convergence or sustained standing, recovery, walking, anatomical
 supports/loading, source activation calibration, two-way blood mass transfer,
 unresolved material data, or subject calibration.
+
+A fresh 512-step exact-clock run from the parity-gated native commit preserves
+`0.00644019908254 N` source CPU/Metal force parity and bitwise replay, but still
+reaches `108763.164062 m/s²` peak acceleration, `1.30699014664` velocity delta,
+and `0.00444473000243` configuration delta. The temporal convergence and
+sustained behavior blockers therefore remain active.
