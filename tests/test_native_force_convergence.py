@@ -51,5 +51,55 @@ def test_native_force_audit_retains_partial_status(tmp_path: Path) -> None:
     receipt = json.loads(output.read_text(encoding="utf-8"))
     assert receipt["status"] == "partial"
     assert not receipt["qualification"]["force_convergence"]
+    assert not receipt["qualification"]["sustained_standing"]
     assert receipt["exact_dense_stage"]["selected_path"] == "large_state_fallback"
     assert not receipt["qualification"]["blood_mass_transfer"]
+
+
+def test_force_convergence_does_not_promote_sustained_standing(tmp_path: Path) -> None:
+    stdout = tmp_path / "stdout"
+    stdout.write_text(LINE.replace(
+        "persistent_max_acceleration=46673.2",
+        "persistent_max_acceleration=1",
+    ).replace(
+        "muscle_step_max_velocity_delta=0.472",
+        "muscle_step_max_velocity_delta=0.001",
+    ).replace(
+        "muscle_step_max_configuration_delta=0.0015",
+        "muscle_step_max_configuration_delta=0.00001",
+    ).replace(
+        "compiled_stand_balanced=false",
+        "compiled_stand_balanced=true",
+    ).replace(
+        "compiled_stand_max_root_force_residual=776.8",
+        "compiled_stand_max_root_force_residual=0.001",
+    ), encoding="utf-8")
+    output = tmp_path / "receipt.json"
+    arguments = argparse.Namespace(
+        stdout=stdout,
+        stderr=None,
+        replay_stdout=None,
+        build_log=None,
+        output=output,
+        source_commit="fixture",
+        binary_sha256="0" * 64,
+        subject="one adult male source package",
+        body_count=157,
+        dof_count=128,
+        q_count=129,
+        exact_body_limit=32,
+        exact_dof_limit=40,
+        exact_q_limit=41,
+        minimum_steps=512,
+        maximum_acceleration=1000.0,
+        maximum_velocity_delta=0.01,
+        maximum_configuration_delta=1.0e-4,
+        require_same_horizon_replay=False,
+    )
+    assert audit(arguments) == 0
+    import json
+    receipt = json.loads(output.read_text(encoding="utf-8"))
+    assert receipt["qualification"]["force_convergence"]
+    assert not receipt["qualification"]["sustained_standing"]
+    assert not receipt["qualification"]["recovery"]
+    assert not receipt["qualification"]["walking"]

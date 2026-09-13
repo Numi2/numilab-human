@@ -180,7 +180,11 @@ def audit(arguments: argparse.Namespace) -> int:
             "static_balance": static_balance,
             "temporal_convergence": temporal,
             "force_convergence": force_convergence,
-            "sustained_standing": force_convergence,
+            # A converged force horizon is necessary for standing, but it is
+            # not a standing-behavior qualification.  The latter needs the
+            # separate accepted-root support/contact and behavior protocol;
+            # keep this gate closed until that receipt is supplied.
+            "sustained_standing": False,
             "recovery": False,
             "walking": False,
             "anatomical_supports_loading": False,
