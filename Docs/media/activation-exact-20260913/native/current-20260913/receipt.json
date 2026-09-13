@@ -1,0 +1,82 @@
+{
+  "activation": {
+    "abi": "MR_MUJOCO_MUSCLE_ACTIVATION_EXACT_GPU_ABI_VERSION=3",
+    "changed_activations": 416,
+    "continuation_max_error": 5.96046e-08,
+    "continuation_replay": "byte_exact",
+    "hold": "exact first-order hold",
+    "initialized_fibres": 416,
+    "legacy_abi2_compatibility": "validated by source probe",
+    "metal_activation_step_seconds": 9.99999974738e-05,
+    "metal_max_activation_step_error": 2.98023223877e-08
+  },
+  "assessment": {
+    "activation_calibration": false,
+    "activation_integrator": true,
+    "blood_tissue_transfer": false,
+    "force_convergence": false,
+    "reason": "ABI 3 exact first-order activation is physically executed and legacy ABI 2 remains covered. The source fixture is not held-out activation calibration; the exact stand remains a bounded mechanics run with compiled_stand_balanced=false, and vascular checks remain synthetic owner/admission evidence.",
+    "sustained_standing": false
+  },
+  "binary": {
+    "device": "Apple M4 Pro",
+    "library_sha256": "e8eb19f4be8849e0ef1a6b3cdbf0fbef0936a57ac5a479c72510eeb59ec14be4",
+    "metallib_sha256": "01c06a45eed3172dbbf71a51950549259db47adbfddd944f4376f4a2de0003ce"
+  },
+  "captured_at_utc": "2026-09-13",
+  "native_branch": "human-blood-mass-20260913",
+  "native_patch": {
+    "bytes": 22575,
+    "path": "native-current.patch",
+    "sha256": "ca2b8d427384cd182f50aaa9154320b0fddcbbb988db63d76df2557438b043d0"
+  },
+  "native_revision": "04d5faf0926ec1e498c105b38ea1c16ea5d09f0c",
+  "runtime_worktree_status": "clean",
+  "schema": "numi.human.activation-exact-current.v1",
+  "stand_fixture": {
+    "activation": 1.0,
+    "active_support_contacts": 6,
+    "adult_source": "one source-bound full-body fixture",
+    "all_source_muscles": 416,
+    "duration_seconds": 0.0008,
+    "joint_equalities": 51,
+    "root_assistance": false,
+    "step_count": 64,
+    "timestep_seconds": 1.25e-05
+  },
+  "stand_metrics": {
+    "compiled_stand_balanced": "false",
+    "compiled_stand_max_root_force_residual": 1.87160674159e-06,
+    "compiled_stand_normalized_residual_rms": 0.86077456182,
+    "muscle_step_max_configuration_delta": 4.84237643832e-05,
+    "muscle_step_max_velocity_delta": 0.120149672031,
+    "persistent_max_acceleration": 1715.86254883,
+    "persistent_max_penetration_m": 2.93606206014e-07,
+    "stand_deterministic_replay": "bitwise"
+  },
+  "validation": {
+    "native_ctest": "7/7 passed: fullbody prepared/authored/vascular; vascular compiler/Metal; human binding; vascular cavity",
+    "source_log": {
+      "bytes": 2342,
+      "path": "source-probe.log",
+      "sha256": "ac2a0ea2a497e4eca2fdb79df20bec7174e14341b8b47bf8388c192fd3b05092"
+    },
+    "source_stderr": {
+      "bytes": 0,
+      "path": "source-probe.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "source_stderr_empty": true,
+    "stand_log": {
+      "bytes": 20508,
+      "path": "stand-64.stdout",
+      "sha256": "bd7675eeab2374b7ad5a856f898a30b05b4280b6c97ae3392ae4dffec63dc3d9"
+    },
+    "stand_stderr": {
+      "bytes": 0,
+      "path": "stand-64.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stand_stderr_empty": true
+  }
+}

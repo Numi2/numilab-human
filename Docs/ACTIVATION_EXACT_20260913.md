@@ -42,3 +42,11 @@ force-length-velocity calibration, full source-force or temporal convergence,
 anatomical supports/loading, two-way blood mass/momentum transfer, unresolved
 material calibration, sustained standing or walking, or a complete single-male
 release.
+
+## Current integrated requalification — 13 September 2026
+
+The ABI 3 change was cherry-picked into the current source-limit and blood-owner qualification branch at native revision `04d5faf0926ec1e498c105b38ea1c16ea5d09f0c`. A fresh Apple M4 Pro build ran the source probe and the exact one-adult full-body stand fixture. The source probe again reports 416 initialized and changed fibres, continuation error `5.96046e-08`, byte-exact replay, and `metal_max_activation_step_error=2.98023223877e-08`; the same probe exercises the retained ABI 2 compatibility path.
+
+The same build passed the seven focused native checks for prepared/authored/fullbody vascular roots, vascular compiler/Metal, Human binding, and vascular cavity. The exact 12.5 µs, 64-step, 0.8 ms stance completed with no stderr and bitwise replay. Its metrics remain `persistent_max_acceleration=1715.86254883 m/s²`, `muscle_step_max_velocity_delta=0.120149672031`, `compiled_stand_normalized_residual_rms=0.86077456182`, and `compiled_stand_balanced=false`. This confirms activation integration on the current native tree without promoting the fixture to activation calibration, force convergence, anatomical blood/tissue transfer, or sustained behavior.
+
+The current receipt, manifest, logs, and combined source patch are in [`native/current-20260913/`](media/activation-exact-20260913/native/current-20260913/).

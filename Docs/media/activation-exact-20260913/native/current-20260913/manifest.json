@@ -1,0 +1,51 @@
+{
+  "binary": {
+    "device": "Apple M4 Pro",
+    "library_sha256": "e8eb19f4be8849e0ef1a6b3cdbf0fbef0936a57ac5a479c72510eeb59ec14be4",
+    "metallib_sha256": "01c06a45eed3172dbbf71a51950549259db47adbfddd944f4376f4a2de0003ce"
+  },
+  "files": {
+    "native-current.patch": {
+      "bytes": 22575,
+      "path": "native-current.patch",
+      "sha256": "ca2b8d427384cd182f50aaa9154320b0fddcbbb988db63d76df2557438b043d0"
+    },
+    "receipt.json": {
+      "bytes": 3242,
+      "path": "receipt.json",
+      "sha256": "46e476edd42dc7969084638fca82f9cb77d32874a2c08e56e940e4306479e365"
+    },
+    "source-probe.log": {
+      "bytes": 2342,
+      "path": "source-probe.log",
+      "sha256": "ac2a0ea2a497e4eca2fdb79df20bec7174e14341b8b47bf8388c192fd3b05092"
+    },
+    "source-probe.stderr": {
+      "bytes": 0,
+      "path": "source-probe.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stand-64.stderr": {
+      "bytes": 0,
+      "path": "stand-64.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stand-64.stdout": {
+      "bytes": 20508,
+      "path": "stand-64.stdout",
+      "sha256": "bd7675eeab2374b7ad5a856f898a30b05b4280b6c97ae3392ae4dffec63dc3d9"
+    }
+  },
+  "native_ctest": "7/7 passed: fullbody prepared/authored/vascular; vascular compiler/Metal; human binding; vascular cavity",
+  "native_revision": "04d5faf0926ec1e498c105b38ea1c16ea5d09f0c",
+  "receipt_sha256": "46e476edd42dc7969084638fca82f9cb77d32874a2c08e56e940e4306479e365",
+  "schema": "numi.human.activation-exact-current-manifest.v1",
+  "scope": {
+    "activation_calibration": false,
+    "activation_integrator": true,
+    "blood_tissue_transfer": false,
+    "force_convergence": false,
+    "reason": "ABI 3 exact first-order activation is physically executed and legacy ABI 2 remains covered. The source fixture is not held-out activation calibration; the exact stand remains a bounded mechanics run with compiled_stand_balanced=false, and vascular checks remain synthetic owner/admission evidence.",
+    "sustained_standing": false
+  }
+}
