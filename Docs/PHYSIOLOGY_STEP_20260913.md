@@ -23,6 +23,13 @@ numi human physiology-step \
   --reject-step 9 --output /absolute/path/receipt.json
 ```
 
+The same owner was re-run on the physical Mac mini from commit
+`90b085648b624c5259ccca1ef3eab71bfa6d42e6` in an isolated worktree. The focused
+source-locked suite passed `46` tests, and the CLI receipt accepted `15` of
+`16` attempts with one deliberate rollback; both volume and tracer amount
+remain conserved. The retained command, logs, receipt, and SHA-256 manifest
+are in [`media/physiology-step-20260913/macmini/`](media/physiology-step-20260913/macmini/).
+
 This is an engineering subgate for conservation and accepted-step history. It
 does not provide anatomical vessel tubes, blood density, cardiac activation,
 organ mechanics, material calibration, subject calibration, or sustained
