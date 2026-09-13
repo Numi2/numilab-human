@@ -1,0 +1,191 @@
+{
+  "assessment": {
+    "assistance_free": true,
+    "deterministic_replay": true,
+    "exact_clock_12500ns": true,
+    "force_convergence": false,
+    "reason": "All four bounded horizons replay bitwise and retain the same 1.87e-6 N static root-force residual, but compiled_stand_balanced=false and terminal dynamics reach 8.66e3 m/s^2 peak acceleration with nonzero configuration drift over 0.8 ms. This is engineering refinement evidence, not anatomical, calibrated, or behavioral qualification.",
+    "root_force_residual_bounded": true,
+    "static_balance": false,
+    "sustained_standing": false
+  },
+  "binary": {
+    "device": "Apple M4 Pro",
+    "path": "/Users/n/MetalRobo-blood-mass-build-20260913/bin/metalrobo_numilab_human_myosim_visual_probe",
+    "sha256": "b9d12ced2307a1eadc842fbf83f56c00d19236c8e2e3e049830006e985858d21"
+  },
+  "captured_at_utc": "2026-09-13",
+  "clock_grid_seconds": [
+    0.0001,
+    5e-05,
+    2.5e-05,
+    1.25e-05
+  ],
+  "common_duration_seconds": 0.0008,
+  "fixture": {
+    "activation": 1.0,
+    "joint_equalities": "/Users/n/human-completion-20260907/input/myosim-fullbody-joint-equalities.nheq",
+    "muscle": "/Users/n/human-completion-20260907/input/myosim-fullbody-muscle-reference.nhmyo",
+    "rigid": "/Users/n/human-completion-20260907/input/myosim-fullbody-core-reference.nhrigid",
+    "stance_contacts": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "stance_dofs": {
+      "108": 0.1,
+      "109": 0.1,
+      "110": 0.1,
+      "122": 0.1,
+      "123": 0.1,
+      "124": 0.1,
+      "2": 0.02
+    },
+    "support": "/Users/n/human-completion-20260907/input/myosim-fullbody-support-contact.nhcnt",
+    "tendon": "/Users/n/human-completion-20260907/input/numi-human-tendon-attachments.nhtendon"
+  },
+  "native_revision": "cfef55a8199c2167fbe9beb04417a47db705db5d",
+  "runs": [
+    {
+      "label": "100us",
+      "metrics": {
+        "compiled_stand_active_support_contacts": 6,
+        "compiled_stand_balanced": false,
+        "compiled_stand_max_acceleration_residual": 3.02533696283,
+        "compiled_stand_max_root_acceleration_residual": 2.15730585182,
+        "compiled_stand_max_root_force_residual": 1.87160674159e-06,
+        "compiled_stand_normalized_residual_rms": 0.86077456182,
+        "compiled_stand_total_support_force_n": 952.864475166,
+        "muscle_step_count": 8,
+        "muscle_step_max_configuration_delta": 0.000316912308335,
+        "muscle_step_max_velocity_delta": 0.511480569839,
+        "muscle_step_seconds": 0.0001,
+        "persistent_completed_steps": 8,
+        "persistent_max_acceleration": 8662.20703125,
+        "persistent_max_penetration_m": 1.08950980575e-05,
+        "persistent_normal_impulse": 0.0866939425468,
+        "stand_deterministic_replay": "bitwise"
+      },
+      "simulated_seconds": 0.0008,
+      "stderr": {
+        "bytes": 0,
+        "path": "native/stand-100us.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 22209,
+        "path": "native/stand-100us.stdout",
+        "sha256": "a1c421cea6da8fb71382c516bb881d8d96439610f4f553235f9ddf45fbaf96af"
+      },
+      "step_count": 8,
+      "timestep_seconds": 0.0001
+    },
+    {
+      "label": "50us",
+      "metrics": {
+        "compiled_stand_active_support_contacts": 6,
+        "compiled_stand_balanced": false,
+        "compiled_stand_max_acceleration_residual": 3.02533696283,
+        "compiled_stand_max_root_acceleration_residual": 2.15730585182,
+        "compiled_stand_max_root_force_residual": 1.87160674159e-06,
+        "compiled_stand_normalized_residual_rms": 0.86077456182,
+        "compiled_stand_total_support_force_n": 952.864475166,
+        "muscle_step_count": 16,
+        "muscle_step_max_configuration_delta": 0.00022746794275,
+        "muscle_step_max_velocity_delta": 0.515123605728,
+        "muscle_step_seconds": 5e-05,
+        "persistent_completed_steps": 16,
+        "persistent_max_acceleration": 8669.50488281,
+        "persistent_max_penetration_m": 4.64629965791e-06,
+        "persistent_normal_impulse": 0.0696665346622,
+        "stand_deterministic_replay": "bitwise"
+      },
+      "simulated_seconds": 0.0008,
+      "stderr": {
+        "bytes": 0,
+        "path": "native/stand-50us.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 22253,
+        "path": "native/stand-50us.stdout",
+        "sha256": "9fa86ce89547a403f7803207e1eb524717c0ce4d718411cd08bd13e2c371f26b"
+      },
+      "step_count": 16,
+      "timestep_seconds": 5e-05
+    },
+    {
+      "label": "25us",
+      "metrics": {
+        "compiled_stand_active_support_contacts": 6,
+        "compiled_stand_balanced": false,
+        "compiled_stand_max_acceleration_residual": 3.02533696283,
+        "compiled_stand_max_root_acceleration_residual": 2.15730585182,
+        "compiled_stand_max_root_force_residual": 1.87160674159e-06,
+        "compiled_stand_normalized_residual_rms": 0.86077456182,
+        "compiled_stand_total_support_force_n": 952.864475166,
+        "muscle_step_count": 32,
+        "muscle_step_max_configuration_delta": 0.000221858164878,
+        "muscle_step_max_velocity_delta": 0.516846358776,
+        "muscle_step_seconds": 2.5e-05,
+        "persistent_completed_steps": 32,
+        "persistent_max_acceleration": 8670.61230469,
+        "persistent_max_penetration_m": 1.17323202176e-06,
+        "persistent_normal_impulse": 0.0251474715769,
+        "stand_deterministic_replay": "bitwise"
+      },
+      "simulated_seconds": 0.0008,
+      "stderr": {
+        "bytes": 0,
+        "path": "native/stand-25us.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 22267,
+        "path": "native/stand-25us.stdout",
+        "sha256": "f3bd745f22f6adbc20ab5ac869e9d0ae9d3248b8b9ac03dcf5a2438891170c52"
+      },
+      "step_count": 32,
+      "timestep_seconds": 2.5e-05
+    },
+    {
+      "label": "12.5us",
+      "metrics": {
+        "compiled_stand_active_support_contacts": 6,
+        "compiled_stand_balanced": false,
+        "compiled_stand_max_acceleration_residual": 3.02533696283,
+        "compiled_stand_max_root_acceleration_residual": 2.15730585182,
+        "compiled_stand_max_root_force_residual": 1.87160674159e-06,
+        "compiled_stand_normalized_residual_rms": 0.86077456182,
+        "compiled_stand_total_support_force_n": 952.864475166,
+        "muscle_step_count": 64,
+        "muscle_step_max_configuration_delta": 0.000219049412408,
+        "muscle_step_max_velocity_delta": 0.517730295658,
+        "muscle_step_seconds": 1.25e-05,
+        "persistent_completed_steps": 64,
+        "persistent_max_acceleration": 8672.60449219,
+        "persistent_max_penetration_m": 2.93563147125e-07,
+        "persistent_normal_impulse": 0.0121321342885,
+        "stand_deterministic_replay": "bitwise"
+      },
+      "simulated_seconds": 0.0008,
+      "stderr": {
+        "bytes": 0,
+        "path": "native/stand-12.5us.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 22275,
+        "path": "native/stand-12.5us.stdout",
+        "sha256": "cd1d7e1a9a21882f667c0bdcdc44c3085eefccaa6c229d407ac798aea56721eb"
+      },
+      "step_count": 64,
+      "timestep_seconds": 1.25e-05
+    }
+  ],
+  "runtime_worktree_status": "clean",
+  "schema": "numi.human.exact-stand-refinement.v1"
+}

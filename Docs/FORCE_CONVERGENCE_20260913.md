@@ -29,3 +29,11 @@ This receipt does not qualify the exact `12.5 us` clock beyond its separate
 admission receipt, and does not close anatomical supports/loading, held-out
 activation calibration, two-way blood mass/momentum transfer, unresolved
 materials, sustained standing/walking, or single-male release.
+
+The separate [exact-clock persistent-stand refinement](EXACT_STAND_REFINEMENT_20260913.md)
+uses a common `0.8 ms` duration and the authored six-contact stance at
+`100/50/25/12.5 us`. Static support-wrench residual is stable at
+`1.87e-6 N` and all four runs replay bitwise, but terminal acceleration remains
+about `8.67e3 m/s^2` with `compiled_stand_balanced=false`. It therefore
+localizes the remaining convergence problem to loaded dynamic
+joint/fibre/contact state and does not promote the force or behavior gates.

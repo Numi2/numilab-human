@@ -94,6 +94,18 @@ with its hash-bound native log and JSON receipt. The post-ledger report is
 and remains `integrated_qualification: not_assessed`.
 The fullbody vascular package admission is retained at [`Docs/FULLBODY_VASCULAR_ADMISSION_20260913.md`](FULLBODY_VASCULAR_ADMISSION_20260913.md) with its native receipt, physical-M4 CTest log (3/3), direct probe log, native identity, and SHA-256 manifest under [`Docs/media/organ-blood-cavity-bridge-20260913/native-fullbody-vascular-admission/`](media/organ-blood-cavity-bridge-20260913/native-fullbody-vascular-admission/). It proves source-independent package wiring on the real 157-body topology. The follow-up [`Docs/COUPLED_SUPPORT_REQUALIFICATION_20260913.md`](COUPLED_SUPPORT_REQUALIFICATION_20260913.md) records a successful synthetic exact-clock coupled root with ten valid support receptors at a stable fixture pressure and a retained fail-closed negative-pressure case. The execution registry therefore leaves force convergence over a calibrated range, anatomical supports/loading, activation, unresolved materials, calibration, standing, and walking as open gates.
 
+The current native persistent-stand owner has been exercised on the physical
+M4 Pro at all four common durations (`100/50/25/12.5 us`) using the authored
+six-contact stance, all 416 source routes at activation `1.0`, NHTENDON3
+transfer, and no root assistance. The [exact-stand refinement receipt](EXACT_STAND_REFINEMENT_20260913.md)
+records bitwise replay and a stable `1.87e-6 N` static root-force residual,
+but `compiled_stand_balanced=false`, roughly `8.67e3 m/s^2` terminal
+acceleration, and configuration drift over `0.8 ms`. This is retained partial
+engineering evidence. It identifies the unresolved loaded dynamic
+joint/fibre/contact state as the next owner and does not promote force
+convergence, sustained standing, recovery, walking, or anatomical/calibrated
+qualification.
+
 The post-exact-clock snapshot is retained at
 [Docs/media/gap-execution-20260913/report-with-native-exact-clock-20260913.json](media/gap-execution-20260913/report-with-native-exact-clock-20260913.json)
 (report SHA-256 `ea2f7a2ed73cfdf538addde4e2ee2190e386dd817107edc35d1dd45ac9289715`).
@@ -121,3 +133,11 @@ integrated_qualification remains not_assessed.
 The current registry snapshot after the coupled-support requalification is
 [Docs/media/gap-execution-20260913/report-with-native-coupled-support-20260913.json](media/gap-execution-20260913/report-with-native-coupled-support-20260913.json)
 (file SHA-256 `e1f2c8a4da8a4a294cd1603975ef297dc834de2568ca866c32e46e906e0bfc3d`, report SHA-256 `fad05703b0431fc60804b47ef5a6d30e424cb5ff6f00d0096fb0a801faef8e14`). It retains 14 workstreams, 46 tasks and 95 mandatory targets; `integrated_qualification` remains `not_assessed` because the coupled result is synthetic engineering evidence and the anatomical, calibrated, and sustained behavior gates remain open.
+
+The latest registry snapshot also includes the exact-clock persistent-stand
+refinement receipt at
+[`Docs/media/gap-execution-20260913/report-with-exact-stand-refinement-20260913.json`](media/gap-execution-20260913/report-with-exact-stand-refinement-20260913.json).
+Its file SHA-256 is `d28df51c85c91d6bb3975808d86fd4c5683a652c2c9946ef8fad96edaaddf0f9`,
+its report SHA-256 is `94e703d6cb9fc45bd097502fb35961efbdf6782b02420d584d9f2e045f09c261`,
+and `integrated_qualification` remains `not_assessed` because the native
+terminal still reports `compiled_stand_balanced=false` and dynamic drift.
