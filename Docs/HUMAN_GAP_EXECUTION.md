@@ -199,6 +199,14 @@ It closes source-to-MyoSim-world frame bookkeeping only; body-link vessel
 mechanics, tubular fields, direction/area, density, blood ownership, tissue
 exchange, calibration, and sustained behavior remain open.
 
+The follow-up [exact vessel body-link receipt](ORGAN_VESSEL_BODY_LINK_20260913.md)
+hash-binds the six named vessel surfaces to the compiled MyoSim source/core
+bodies (`Abdomen` source 4/core 7 and `torso` source 9/core 20), validating all
+103 source-body mappings and packed default poses from the NHRIGID2 payload.
+This closes body-frame bookkeeping only; body-link mechanics, vessel tube and
+lumen data, direction/area, blood mass ownership, pressure reaction, tissue
+exchange, material/density resolution, and calibration remain open.
+
 The current ABI39 blood-momentum restore snapshot is
 [`Docs/media/gap-execution-20260913/report-blood-momentum-restore-current-20260913.json`](media/gap-execution-20260913/report-blood-momentum-restore-current-20260913.json)
 (file SHA-256 `00803c8e93b18737839e71b8ae835002dfd09729fdaeca849bca9310cb36b74b`,
@@ -228,3 +236,11 @@ and replay was bitwise, while the dynamic boundary reproduced
 `0.00444473000243` configuration delta. This fresh horizon receipt confirms
 that force-path parity does not yet imply temporal convergence or sustained
 standing.
+
+The refreshed registry snapshot with the exact vessel body links is retained
+at [`Docs/media/gap-execution-20260913/report-with-native-body-links-20260913.json`](media/gap-execution-20260913/report-with-native-body-links-20260913.json).
+Its file SHA-256 is `e83852991a2f71db306bb9543f796af272367c0724ea1fff7414652a3c80950b`
+and its report SHA-256 is `a04507b3df5fdc0ce58c45e3142cbd7a10a1b59ec61be6eb97afc7a56bca21a2`.
+It retains 14 workstreams, 46 tasks, 95 mandatory targets, and
+`integrated_qualification: not_assessed`; the body-link receipt closes named
+source/core frame bookkeeping only.

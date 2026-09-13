@@ -24,6 +24,11 @@ subject calibration, and standing/walking explicitly false or unresolved.
 The registration candidate remains visual-only and is not admitted to
 collision or physics.
 
+The follow-up [exact body-link receipt](ORGAN_VESSEL_BODY_LINK_20260913.md)
+consumes the hash-bound MyoSim `NHRIGID2` manifest and payload and closes named
+source/core body-frame bookkeeping for the six `myosim_body` fields. It still
+does not admit body-link mechanics or any vessel physical owner.
+
 Reproduce it with:
 
 ```sh

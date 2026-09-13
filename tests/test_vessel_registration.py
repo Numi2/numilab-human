@@ -10,6 +10,12 @@ from numilab_human.physiology import canonical
 from numilab_human.vessel_registration import (
     SCHEMA, _immutable_write, compile_registration,
 )
+from numilab_human.vessel_body_links import (
+    SCHEMA as BODY_LINK_SCHEMA, compile_body_links,
+)
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 class VesselRegistrationTests(unittest.TestCase):
@@ -65,6 +71,51 @@ class VesselRegistrationTests(unittest.TestCase):
             path.write_bytes(canonical(tampered) + b"\n")
             with self.assertRaisesRegex(HumanImportError, "signed axis permutation"):
                 compile_registration(registration=path)
+
+    def test_exact_myosim_body_links_are_hash_bound_without_mechanical_promotion(self) -> None:
+        manifest = ROOT / "Docs/media/organ-vessel-body-link-20260913/authoritative/myosim-fullbody-reference.manifest.json"
+        receipt = ROOT / "Docs/media/organ-vessel-registration-20260913/registration.json"
+        result = compile_body_links(registration=receipt, human_manifest=manifest)
+        self.assertEqual(result["schema"], BODY_LINK_SCHEMA)
+        self.assertEqual(
+            [(row["member_id"], row["myosim_body"], row["source_body_id"], row["core_body_index"])
+             for row in result["bindings"]],
+            [("FJ1932", "Abdomen", 4, 7), ("FJ3411", "torso", 9, 20),
+             ("FJ3413", "torso", 9, 20), ("FJ3427", "torso", 9, 20),
+             ("FJ3441", "Abdomen", 4, 7), ("FJ3645", "torso", 9, 20)],
+        )
+        self.assertTrue(result["qualification"]["body_link_registration"])
+        self.assertFalse(result["qualification"]["tubular_vessel_field"])
+        self.assertFalse(result["qualification"]["blood_mass_owner"])
+        self.assertFalse(result["qualification"]["subject_calibration"])
+        for row in result["bindings"]:
+            self.assertTrue(row["body_link_registration"])
+            self.assertIsNone(row["mechanical_mass_owner"])
+            self.assertIsNone(row["material_density_kg_per_m3"])
+
+    def test_body_link_manifest_tampering_is_rejected(self) -> None:
+        manifest = ROOT / "Docs/media/organ-vessel-body-link-20260913/authoritative/myosim-fullbody-reference.manifest.json"
+        receipt = ROOT / "Docs/media/organ-vessel-registration-20260913/registration.json"
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / manifest.name
+            tampered = json.loads(manifest.read_text())
+            tampered["payloads"]["rigid"]["sha256"] = "0" * 64
+            path.write_bytes(canonical(tampered) + b"\n")
+            rigid = path.parent / tampered["payloads"]["rigid"]["file"]
+            rigid.write_bytes((manifest.parent / "myosim-fullbody-core-reference.nhrigid").read_bytes())
+            with self.assertRaisesRegex(HumanImportError, "manifest"):
+                compile_body_links(registration=receipt, human_manifest=path)
+
+    def test_body_link_source_mapping_tampering_is_rejected(self) -> None:
+        manifest = ROOT / "Docs/media/organ-vessel-body-link-20260913/authoritative/myosim-fullbody-reference.manifest.json"
+        receipt = ROOT / "Docs/media/organ-vessel-registration-20260913/registration.json"
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / receipt.name
+            tampered = json.loads(receipt.read_text())
+            next(row for row in tampered["bindings"] if row["member_id"] == "FJ1932")["myosim_body"] = "torso"
+            path.write_bytes(canonical(tampered) + b"\n")
+            with self.assertRaisesRegex(HumanImportError, "pinned anatomy map"):
+                compile_body_links(registration=path, human_manifest=manifest)
 
 
 if __name__ == "__main__":
