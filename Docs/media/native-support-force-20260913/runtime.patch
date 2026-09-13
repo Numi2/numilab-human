@@ -1,0 +1,306 @@
+commit 9af1cf9d597fbb796bb20c370a8ca3c150f07b5a
+Author:     numi2 <numit22@gmail.com>
+AuthorDate: Sun Sep 13 17:20:09 2026 +0200
+Commit:     numi2 <numit22@gmail.com>
+CommitDate: Sun Sep 13 17:20:09 2026 +0200
+
+    Admit source support forces in Human stand solver
+
+diff --git a/apps/numilab_human_myosim_visual_probe.mm b/apps/numilab_human_myosim_visual_probe.mm
+index 4193f60b..d3f20936 100644
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -2946,7 +2946,8 @@ void abortTendonLoadAudit(void* opaque, void*) {
+ 
+ MetalMujocoVisualQueries makeMetalMujocoVisualQueries(
+     const metalrobo::EngineModel& model,
+-    const LoadedSupportContacts* support = nullptr
++    const LoadedSupportContacts* support = nullptr,
++    const std::span<const double> supportNormalForce = {}
+ ) {
+     require(
+         model.articulations.size() == 1u &&
+@@ -2978,8 +2979,15 @@ MetalMujocoVisualQueries makeMetalMujocoVisualQueries(
+         }
+     }
+     if (support != nullptr) {
++        require(
++            supportNormalForce.empty() ||
++                supportNormalForce.size() == support->records.size(),
++            "MyoSim source support force count does not match support witnesses");
+         result.supportContacts.reserve(support->records.size());
+-        for (const SupportContactRecord& record : support->records) {
++        for (std::size_t supportIndex = 0u;
++             supportIndex < support->records.size();
++             ++supportIndex) {
++            const SupportContactRecord& record = support->records[supportIndex];
+             MRArticulatedPointImpulseGPU point =
+                 metalrobo::compileNumiHumanSupportQuery(support->header, record);
+             const std::uint32_t pointQueryIndex =
+@@ -2989,11 +2997,22 @@ MetalMujocoVisualQueries makeMetalMujocoVisualQueries(
+             contact.bodyIndex = record.bodyIndex;
+             contact.pointQueryIndex = pointQueryIndex;
+             contact.sourceGeometryIndex = record.sourceGeometryIndex;
++            double sourceSupportForce = 0.0;
++            if (!supportNormalForce.empty()) {
++                sourceSupportForce = supportNormalForce[supportIndex];
++                require(
++                    std::isfinite(sourceSupportForce) && sourceSupportForce >= 0.0,
++                    "MyoSim source support force is invalid");
++                require(
++                    sourceSupportForce <=
++                        static_cast<double>(std::numeric_limits<float>::max()),
++                    "MyoSim source support force is not representable");
++            }
+             contact.frictionSlopAndStabilization = {
+                 record.friction,
+                 0.002f,
+                 0.2f,
+-                0.0f,
++                static_cast<float>(sourceSupportForce),
+             };
+             result.supportContacts.push_back(contact);
+         }
+@@ -3357,6 +3376,12 @@ CompiledStandActivation compileStaticStandActivation(
+     config.activationLimit = activationCap;
+     config.activationSamples = 65u;
+     config.activationSweeps = activationSweeps;
++    // The stand owner is solving a loaded source equilibrium. Keep the
++    // source residual authoritative while still retaining the bounded search
++    // and exact nonlinear checkpoint path.
++    config.activationRegularization = 1.0e-8;
++    config.poseRegularization = 1.0e-4;
++    config.globalActivationPolishIterations = 64u;
+     if (!passiveCouplings.empty()) {
+         config.poseSweeps = 12u;
+         config.poseCandidateCount = 12u;
+@@ -3677,9 +3702,9 @@ MuscleDrivenVisualState integratePersistentMetalHumanState(
+             {},
+             &supportContacts,
+             {},
+-            240u,
++            1024u,
+             !initialCoordinate.has_value(),
+-            std::nullopt,
++            std::optional<std::uint32_t>{24u},
+             timestepSeconds
+         );
+         selectedControlBaselineActivation = compiledActivation.activation;
+@@ -3700,9 +3725,9 @@ MuscleDrivenVisualState integratePersistentMetalHumanState(
+             selectedSourceMuscleIndices,
+             &supportContacts,
+             {},
+-            240u,
++            1024u,
+             !initialCoordinate.has_value(),
+-            std::nullopt,
++            std::optional<std::uint32_t>{24u},
+             timestepSeconds
+         );
+     }
+@@ -3717,7 +3742,11 @@ MuscleDrivenVisualState integratePersistentMetalHumanState(
+         v.push_back(static_cast<float>(velocity));
+     }
+     const MetalMujocoVisualQueries queries =
+-        makeMetalMujocoVisualQueries(model, &supportContacts);
++        makeMetalMujocoVisualQueries(
++            model,
++            &supportContacts,
++            compiledActivation.supportNormalForce
++        );
+     std::vector<MRMujocoMuscleStateGPU> states(muscles.gpuMuscles.size());
+     for (std::size_t muscleIndex = 0u;
+          muscleIndex < states.size(); ++muscleIndex) {
+diff --git a/include/metalrobo/numi_human_stand_gpu.h b/include/metalrobo/numi_human_stand_gpu.h
+index a29da0ce..25ab21bd 100644
+--- a/include/metalrobo/numi_human_stand_gpu.h
++++ b/include/metalrobo/numi_human_stand_gpu.h
+@@ -2,7 +2,7 @@
+ 
+ #include "metalrobo/engine_types.h"
+ 
+-#define MR_NUMI_HUMAN_STAND_ABI_VERSION 3u
++#define MR_NUMI_HUMAN_STAND_ABI_VERSION 4u
+ #define MR_NUMI_HUMAN_STAND_MAX_BODIES 192u
+ #define MR_NUMI_HUMAN_STAND_MAX_DOFS 160u
+ #define MR_NUMI_HUMAN_STAND_MAX_Q 161u
+@@ -43,7 +43,8 @@ typedef struct MR_ALIGN16 MRNumiHumanStandContactGPU {
+     mr_u32 reserved0;
+ 
+     // x = Coulomb friction, y = activation slop metres,
+-    // z = normal stabilization fraction, w reserved.
++    // z = normal stabilization fraction, w = source static normal
++    // support force in N. A zero force retains cold-start contact.
+     mr_float4 frictionSlopAndStabilization;
+ } MRNumiHumanStandContactGPU;
+ 
+diff --git a/src/metal/MetalArticulatedOperator.mm b/src/metal/MetalArticulatedOperator.mm
+index e05c9cba..8ced0fe7 100644
+--- a/src/metal/MetalArticulatedOperator.mm
++++ b/src/metal/MetalArticulatedOperator.mm
+@@ -1409,7 +1409,7 @@ bool validNumiHumanStand(
+             contact.frictionSlopAndStabilization.y < 0.0f ||
+             contact.frictionSlopAndStabilization.z < 0.0f ||
+             contact.frictionSlopAndStabilization.z > 1.0f ||
+-            contact.frictionSlopAndStabilization.w != 0.0f) {
++            contact.frictionSlopAndStabilization.w < 0.0f) {
+             reason = "stand support-contact record is malformed";
+             return false;
+         }
+diff --git a/src/metal/NumiHumanStand.metal b/src/metal/NumiHumanStand.metal
+index 6fa91968..0be4953e 100644
+--- a/src/metal/NumiHumanStand.metal
++++ b/src/metal/NumiHumanStand.metal
+@@ -109,39 +109,6 @@ inline float pointJacobianAxis(
+         direction.z * pointJacobians[pointBase + 2u * nv + dof];
+ }
+ 
+-inline bool inverseSymmetric3x3(
+-    const float3 row0,
+-    const float3 row1,
+-    const float3 row2,
+-    thread float3& inverse0,
+-    thread float3& inverse1,
+-    thread float3& inverse2
+-) {
+-    const float determinant =
+-        row0.x * (row1.y * row2.z - row1.z * row2.y) -
+-        row0.y * (row1.x * row2.z - row1.z * row2.x) +
+-        row0.z * (row1.x * row2.y - row1.y * row2.x);
+-    if (!(determinant > 1.0e-18f) || !isfinite(determinant)) return false;
+-    const float inverseDeterminant = 1.0f / determinant;
+-    inverse0 = inverseDeterminant * float3(
+-        row1.y * row2.z - row1.z * row2.y,
+-        row0.z * row2.y - row0.y * row2.z,
+-        row0.y * row1.z - row0.z * row1.y
+-    );
+-    inverse1 = inverseDeterminant * float3(
+-        row1.z * row2.x - row1.x * row2.z,
+-        row0.x * row2.z - row0.z * row2.x,
+-        row0.z * row1.x - row0.x * row1.z
+-    );
+-    inverse2 = inverseDeterminant * float3(
+-        row1.x * row2.y - row1.y * row2.x,
+-        row0.y * row2.x - row0.x * row2.y,
+-        row0.x * row1.y - row0.y * row1.x
+-    );
+-    return all(isfinite(inverse0)) && all(isfinite(inverse1)) &&
+-        all(isfinite(inverse2));
+-}
+-
+ inline bool evaluateJointEquality(
+     device const MRNumiHumanJointEqualityGPU& equality,
+     device const float* q,
+@@ -702,8 +669,25 @@ kernel void mr_numi_human_stand_step(
+                 vState[vBase + 3u], vState[vBase + 4u], vState[vBase + 5u]
+             );
+     }
++    // Source static support reactions are explicit contact-owner loads. They
++    // are converted to generalized force through the same point Jacobians
++    // used by the runtime contact solver; they are not root assistance.
+     for (uint dof = 0u; dof < nv; ++dof) {
+         float effort = generalizedForceWorkspace[forceBase + dof];
++        if ((dispatch.flags & MR_NUMI_HUMAN_STAND_ENABLE_CONTACT) != 0u) {
++            for (uint contact = 0u;
++                 contact < dispatch.supportContactCount;
++                 ++contact) {
++                const float supportForce =
++                    contacts[contact].frictionSlopAndStabilization.w;
++                if (supportForce <= 0.0f) continue;
++                effort += supportForce * pointJacobianAxis(
++                    pointJacobians, pointJacobianBase,
++                    contacts[contact].pointQueryIndex, nv, dof,
++                    dispatch.groundNormal.xyz
++                );
++            }
++        }
+         if (dof < 3u) effort += assistanceForce[dof];
+         else if (dof < 6u) effort += assistanceTorque[dof - 3u];
+         candidateV[dof] = effort - bias[dof];
+@@ -759,7 +743,7 @@ kernel void mr_numi_human_stand_step(
+                 support.frictionSlopAndStabilization.y < 0.0f ||
+                 support.frictionSlopAndStabilization.z < 0.0f ||
+                 support.frictionSlopAndStabilization.z > 1.0f ||
+-                support.frictionSlopAndStabilization.w != 0.0f) {
++                support.frictionSlopAndStabilization.w < 0.0f) {
+                 fail(status, MR_NUMI_HUMAN_STAND_INVALID_DISPATCH, contact);
+                 return;
+             }
+@@ -809,7 +793,6 @@ kernel void mr_numi_human_stand_step(
+                 }
+             }
+         }
+-
+         for (uint iteration = 0u;
+              iteration < dispatch.contactIterationCount;
+              ++iteration) {
+@@ -838,33 +821,50 @@ kernel void mr_numi_human_stand_step(
+                         timestep
+                 );
+                 device float* matrix = contactMatrices + 9u * contact;
+-                float3 inverse0, inverse1, inverse2;
+-                if (!inverseSymmetric3x3(
+-                        float3(matrix[0], matrix[1], matrix[2]),
+-                        float3(matrix[3], matrix[4], matrix[5]),
+-                        float3(matrix[6], matrix[7], matrix[8]),
+-                        inverse0, inverse1, inverse2
+-                    )) {
++                const float normalMass = matrix[0u];
++                const float tangentDeterminant =
++                    matrix[4u] * matrix[8u] - matrix[5u] * matrix[7u];
++                if (!(normalMass > kResponseRegularization) ||
++                    !isfinite(normalMass) ||
++                    (support.frictionSlopAndStabilization.x > 0.0f &&
++                     (!(tangentDeterminant > kResponseRegularization) ||
++                      !isfinite(tangentDeterminant)))) {
+                     fail(status, MR_NUMI_HUMAN_STAND_CONTACT_FAILED, contact);
+                     return;
+                 }
+-                const float3 residual{
+-                    targetNormalVelocity - velocity.x,
+-                    -velocity.y,
+-                    -velocity.z,
+-                };
+-                const float3 delta{
+-                    dot(inverse0, residual),
+-                    dot(inverse1, residual),
+-                    dot(inverse2, residual),
+-                };
+                 const float3 oldLambda{
+                     lambdas[3u * contact + 0u],
+                     lambdas[3u * contact + 1u],
+                     lambdas[3u * contact + 2u],
+                 };
+-                float3 newLambda = oldLambda + delta;
+-                newLambda.x = max(newLambda.x, 0.0f);
++                // Solve the unilateral normal row first. A coupled 3x3
++                // inverse may produce a negative normal candidate because
++                // tangential velocity is not an admissible pull force.
++                const float normalDelta =
++                    (targetNormalVelocity - velocity.x) / normalMass;
++                float3 newLambda = oldLambda;
++                newLambda.x = max(oldLambda.x + normalDelta, 0.0f);
++                const float appliedNormal = newLambda.x - oldLambda.x;
++                // Tangential rows see the velocity after the normal update.
++                const float tangentialVelocityY =
++                    velocity.y + matrix[1u] * appliedNormal;
++                const float tangentialVelocityZ =
++                    velocity.z + matrix[2u] * appliedNormal;
++                if (support.frictionSlopAndStabilization.x > 0.0f) {
++                    const float tangentDeltaY =
++                        (matrix[8u] * (-tangentialVelocityY) -
++                         matrix[5u] * (-tangentialVelocityZ)) /
++                        tangentDeterminant;
++                    const float tangentDeltaZ =
++                        (-matrix[7u] * (-tangentialVelocityY) +
++                         matrix[4u] * (-tangentialVelocityZ)) /
++                        tangentDeterminant;
++                    newLambda.y = oldLambda.y + tangentDeltaY;
++                    newLambda.z = oldLambda.z + tangentDeltaZ;
++                } else {
++                    newLambda.y = 0.0f;
++                    newLambda.z = 0.0f;
++                }
+                 const float tangentLimit =
+                     support.frictionSlopAndStabilization.x * newLambda.x;
+                 const float tangentNorm = length(newLambda.yz);

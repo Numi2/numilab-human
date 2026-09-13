@@ -1,0 +1,137 @@
+{
+  "abi": "MR_NUMI_HUMAN_STAND_ABI_VERSION=4",
+  "artifacts": {
+    "build.log": {
+      "bytes": 418,
+      "sha256": "65ea2f0f9f54a73c8e2fa0d00785febf51a179634087fc174be41ab92a97b58b"
+    },
+    "ctest.log": {
+      "bytes": 1030,
+      "sha256": "727f7fa5e50fb79059f142ee28e45c20e98f12ce5bbc4c05a05172d2e907d36b"
+    },
+    "runtime.patch": {
+      "bytes": 13862,
+      "sha256": "894b345aee61b8512b308909286de7ceeeb48df39a5774e9d35040188728c591"
+    },
+    "stand-64.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stand-64.stdout.txt": {
+      "bytes": 23192,
+      "sha256": "e1d21aa8acf3ceafd234fda3ed3b2ba4e7bb065e0b4bc1e4e1b41619f6c53f67"
+    }
+  },
+  "boundary": "Source support-force transport, unilateral contact projection, exact-clock parity and bounded transaction evidence only. This is not anatomical organ/vessel mechanics, calibrated materials, biological blood/tissue transfer, sustained standing, recovery, walking, or subject validation.",
+  "build_test": {
+    "build_log": "build.log",
+    "build_status": "pass",
+    "ctest_log": "ctest.log",
+    "ctest_status": "4/4 pass: numi_human_source_route_precision_metal, numi_human_support_precision, numi_human_behavior_telemetry, numi_human_static_support",
+    "runtime_patch": "runtime.patch"
+  },
+  "captured_at": "2026-09-13",
+  "command": [
+    "/Users/n/MetalRobo-blood-mass-build-20260913/bin/metalrobo_numilab_human_myosim_visual_probe",
+    "/Users/n/NumiHumanCurrent/myosim-fullbody-core-reference.nhrigid",
+    "/Users/n/NumiHumanCurrent/myosim-fullbody-muscle-reference.nhmyo",
+    "/tmp/numi-human-support-force-final-64-20260913",
+    "--muscle-step-seconds",
+    "0.0000125",
+    "--muscle-step-count",
+    "64",
+    "--muscle-activation",
+    "1.0",
+    "--persistent-metal-stand",
+    "--stand-deterministic-replay",
+    "--support-contact-payload",
+    "/Users/n/human-capsule-20260908/input/myosim-fullbody-support-primitives.nhcnt",
+    "--joint-equality-payload",
+    "/Users/n/NumiHumanCurrent/myosim-fullbody-joint-equalities.nheq",
+    "--tendon-payload",
+    "/Users/n/NumiHumanCurrent/numi-human-tendon-attachments.nhtendon",
+    "--support-stance-dof",
+    "2",
+    "0.02",
+    "--support-stance-dof",
+    "108",
+    "0.1",
+    "--support-stance-dof",
+    "109",
+    "0.1",
+    "--support-stance-dof",
+    "110",
+    "0.1",
+    "--support-stance-dof",
+    "122",
+    "0.1",
+    "--support-stance-dof",
+    "123",
+    "0.1",
+    "--support-stance-dof",
+    "124",
+    "0.1",
+    "--support-stance-contact",
+    "5",
+    "--support-stance-contact",
+    "6",
+    "--support-stance-contact",
+    "8",
+    "--support-stance-contact",
+    "10",
+    "--support-stance-contact",
+    "12",
+    "--support-stance-contact",
+    "14"
+  ],
+  "gates": {
+    "64_step_transaction": "pass",
+    "activation_calibration": "unqualified",
+    "anatomical_support_loading": "unqualified",
+    "assistance_free_sustained_standing": "fail_peak_acceleration_and_velocity_drift",
+    "bitwise_replay": "pass",
+    "contact_disabled_one_step_parity": "pass",
+    "material_calibration": "unqualified",
+    "source_support_force_registration": "pass",
+    "static_loaded_source_equilibrium": "pass",
+    "subject_calibration": "unqualified",
+    "walking_recovery": "unqualified"
+  },
+  "host": "Apple M4 Pro physical Mac mini via ssh macmini",
+  "inputs": {
+    "joint_equality_sha256": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a",
+    "muscle_sha256": "9a988f19a6fd8e533cd0f2bf3192cb8535fb008ccd394ffbf1a4432d3db76a05",
+    "rigid_sha256": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44",
+    "support_sha256": "c7712daf79cd8a589a6d23942a4df84a7da928e5911455ce19078f9b24daaaf4",
+    "tendon_sha256": "a594194f510eb4aa990a8767f868f999a10b4fedb745c8665368a231ed39b555"
+  },
+  "result": {
+    "compiled_stand_active_support_contacts": 6,
+    "compiled_stand_balanced": true,
+    "compiled_stand_max_root_force_residual_n": 1.86186775863e-06,
+    "compiled_stand_total_support_force_n": 952.864475176,
+    "persistent_completed_steps": 64,
+    "persistent_max_acceleration_m_s2": 2878.86621094,
+    "persistent_max_configuration_delta": 8.14668237581e-05,
+    "persistent_max_penetration_m": 1.55866828777e-07,
+    "persistent_max_velocity_delta": 0.199699997902,
+    "persistent_normal_impulse": 3.08237504214e-05,
+    "source_support_active_contacts": 10,
+    "source_support_min_plane_gap_m": -1.55866828777e-07,
+    "stand_deterministic_replay": "bitwise",
+    "stand_one_step_max_q_error": 3.01470339803e-08,
+    "stand_one_step_max_v_error": 1.85241077788e-05,
+    "timestep_seconds": 1.25e-05
+  },
+  "runtime_branch": "human-blood-mass-20260913",
+  "runtime_files": {
+    "apps/numilab_human_myosim_visual_probe.mm": "3453b09ae740d9472d878b99ce53e47c5735be178a17d81392734189ee91b7d7",
+    "include/metalrobo/numi_human_stand_gpu.h": "cb0d78b87e0155e9548c564a4ec3f6adfb6151e4a6fe298a464361628be3910e",
+    "src/metal/MetalArticulatedOperator.mm": "e38cbc8d0dd302cf896bad22f67bdc328ab7c15d4a036dbed9f0d851ba4f4202",
+    "src/metal/NumiHumanStand.metal": "22b9dc27831325570db16971a33f09e7f2a195a9a8b6cb339141ac7bea1af260"
+  },
+  "runtime_parent_revision": "c8222041ce04ee84d65cb4d1a52a6b39dd489427",
+  "runtime_revision": "9af1cf9d597fbb796bb20c370a8ca3c150f07b5a",
+  "runtime_worktree_status": "clean after commit; origin push rejected because HTTPS credentials were unavailable",
+  "schema": "numi.human.native-support-force-receipt.v1"
+}
