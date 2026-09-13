@@ -1,0 +1,24 @@
+{
+  "schema": "numi.human.capability-contract-test-receipt.v1",
+  "base_human_sha": "c3baed6e0a81c7b6120619c5135442199bcd3401",
+  "host": "ns-Mac-mini.local",
+  "python": "3.13.14",
+  "native_sha_observed": "53670294dd229e5a0d876a472964130742c89e44",
+  "native_checkout_clean": true,
+  "tests": {
+    "capability_protocol": 14,
+    "gap_execution": 12,
+    "behavior_regression": 44
+  },
+  "source_sha256": {
+    "src/numilab_human/capability_protocol.py": "01e6e96c7c5f5e2cd701848b0588f20344591e3143a7ebca32da4a17240a4552",
+    "src/numilab_human/cli.py": "7f7771a38d148c8f028b07d4d071a138e94193f61129c0f3e597b6e1ed2f210a",
+    "tests/test_capability_protocol.py": "2817e8f11ef6e23cab6319ff3b037341ebd71e3f4858e39086ff093ddeb6b9fd",
+    "config/human-gap-execution.v1.json": "3549a3b25046d2b16612fb2caf5cba18eb2221f347f78736092d1466b7aa5688",
+    "schemas/human-capability-protocol.v1.schema.json": "035fd69584cd6b0b9726085bedb77fe14e27138b1b22106e34184de60a1653f3"
+  },
+  "test_archive_sha256": "b23a0b00201990293343492a65486efe32d01fa46feacbb17bfcffa8877aa568",
+  "log_sha256": "e0a68e3f85d51793bdff6e8b318db1d20453737ce6f4e2b563e52cf36f5caf82",
+  "schema_validation": "Draft202012 schema, protocol and 90 synthetic supporting records; jsonschema 4.25.1 in isolated local venv",
+  "boundary": "Software authoring contract tests only. No measured participant admitted; no native execution, exact-clock migration, force convergence, anatomy, blood transfer, material calibration or whole-body qualification."
+}

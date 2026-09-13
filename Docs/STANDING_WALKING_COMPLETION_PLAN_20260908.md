@@ -1,5 +1,9 @@
 # Standing and walking completion plan
 
+> Historical protocol: the 420-trial gate is retained for regression. The active
+> [single-male completion contract](SINGLE_MALE_COMPLETION.md) requires measured
+> whole-body capability evidence and supersedes it as the release criterion.
+
 The current release target remains the [neuromusculoskeletal release matrix](NEUROMUSCULOSKELETAL_RELEASE_MATRIX.md). Standing and walking require the same published anatomical, tissue, controller and native runtime stack. This plan resolves the next physical dependency and specifies the remaining executable gates.
 
 The immediate critical path is **reproducible loaded native motion, practical coupled GPU

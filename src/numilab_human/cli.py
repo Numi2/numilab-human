@@ -2046,9 +2046,14 @@ def parser() -> argparse.ArgumentParser:
         "gap-execution", help="inspect ledger owners, prerequisites and unqualified source target links",
     )
     add_gap_execution_arguments(execution)
+    from .capability_protocol import add_arguments as add_capability_arguments
+    capability = commands.add_parser(
+        "capability-protocol", help="compile single-subject measured whole-body requirements and evidence bindings",
+    )
+    add_capability_arguments(capability)
     from .behavior_qualification import add_arguments as add_behavior_qualification_arguments
     behavior = commands.add_parser(
-        "behavior-qualify", help="evaluate complete native standing, recovery and walking evidence",
+        "behavior-qualify", help="evaluate the historical 420-trial standing/recovery/walking regression protocol",
     )
     add_behavior_qualification_arguments(behavior)
     from .tissue_calibration import add_arguments as add_tissue_calibration_arguments

@@ -1,0 +1,463 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://numi.dev/schemas/human-capability-protocol.v1.schema.json",
+  "title": "Single participant capability protocol - authoring only",
+  "description": "Structural authoring schema only. The compiler additionally validates referenced bytes, identity, split independence, required cells and per-trial measured modalities. This schema does not qualify empirical results.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "subject",
+    "model",
+    "trials",
+    "cells",
+    "freeze"
+  ],
+  "properties": {
+    "schema": {
+      "const": "numi.human.capability-protocol.v1"
+    },
+    "subject": {
+      "$ref": "#/$defs/subject"
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "human_pack",
+        "subject_binding"
+      ],
+      "properties": {
+        "human_pack": {
+          "$ref": "#/$defs/artifact"
+        },
+        "subject_binding": {
+          "$ref": "#/$defs/artifact"
+        }
+      }
+    },
+    "trials": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "role",
+          "session_id",
+          "source"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "role": {
+            "enum": [
+              "calibration",
+              "validation"
+            ]
+          },
+          "session_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "$ref": "#/$defs/artifact"
+          }
+        }
+      }
+    },
+    "cells": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "family",
+          "trial_ids",
+          "comparisons"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "family": {
+            "enum": [
+              "balance_recovery",
+              "locomotion",
+              "terrain",
+              "transitions",
+              "manipulation",
+              "combined",
+              "sustained"
+            ]
+          },
+          "trial_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "comparisons": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/comparison"
+            }
+          }
+        }
+      }
+    },
+    "freeze": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "before_controller_selection",
+        "statistical_plan",
+        "confidence",
+        "numerical_error_fraction"
+      ],
+      "properties": {
+        "before_controller_selection": {
+          "const": true
+        },
+        "statistical_plan": {
+          "$ref": "#/$defs/artifact"
+        },
+        "confidence": {
+          "const": 0.95
+        },
+        "numerical_error_fraction": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 0.1
+        }
+      }
+    }
+  },
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "bytes"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        }
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "namespace",
+        "participant_id",
+        "sex",
+        "age_years",
+        "source"
+      ],
+      "properties": {
+        "namespace": {
+          "type": "string",
+          "minLength": 1
+        },
+        "participant_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sex": {
+          "const": "male"
+        },
+        "age_years": {
+          "type": "number",
+          "minimum": 18
+        },
+        "source": {
+          "$ref": "#/$defs/artifact"
+        }
+      }
+    },
+    "demographics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "namespace",
+        "participant_id",
+        "sex",
+        "age_years",
+        "raw_source",
+        "source_locator"
+      ],
+      "properties": {
+        "schema": {
+          "const": "numi.human.subject-demographics.v1"
+        },
+        "namespace": {
+          "type": "string",
+          "minLength": 1
+        },
+        "participant_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sex": {
+          "const": "male"
+        },
+        "age_years": {
+          "type": "number",
+          "minimum": 18
+        },
+        "raw_source": {
+          "$ref": "#/$defs/artifact"
+        },
+        "source_locator": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "namespace",
+        "participant_id",
+        "age_years",
+        "human_pack_sha256",
+        "parameters"
+      ],
+      "properties": {
+        "schema": {
+          "const": "numi.human.subject-model-binding.v1"
+        },
+        "namespace": {
+          "type": "string",
+          "minLength": 1
+        },
+        "participant_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "age_years": {
+          "type": "number",
+          "minimum": 18
+        },
+        "human_pack_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "parameters": {
+          "$ref": "#/$defs/artifact"
+        }
+      }
+    },
+    "measurement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "units",
+        "origin",
+        "artifact",
+        "uncertainty"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "enum": [
+            "kinematics",
+            "external_force",
+            "object_kinematics",
+            "hand_force",
+            "muscle_response",
+            "mechanical_work",
+            "tissue_response"
+          ]
+        },
+        "units": {
+          "type": "string",
+          "minLength": 1
+        },
+        "origin": {
+          "enum": [
+            "measured",
+            "derived",
+            "simulated"
+          ]
+        },
+        "artifact": {
+          "$ref": "#/$defs/artifact"
+        },
+        "uncertainty": {
+          "$ref": "#/$defs/artifact"
+        }
+      }
+    },
+    "trial_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "namespace",
+        "participant_id",
+        "age_years",
+        "trial_id",
+        "session_id",
+        "capability_id",
+        "conditions",
+        "measurements"
+      ],
+      "properties": {
+        "schema": {
+          "const": "numi.human.measured-trial.v1"
+        },
+        "namespace": {
+          "type": "string",
+          "minLength": 1
+        },
+        "participant_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "age_years": {
+          "type": "number",
+          "minimum": 18
+        },
+        "trial_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "session_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "capability_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "conditions": {
+          "$ref": "#/$defs/artifact"
+        },
+        "measurements": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/measurement"
+          }
+        }
+      }
+    },
+    "margin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "measurement_id",
+        "units",
+        "metric",
+        "tolerance",
+        "basis",
+        "source"
+      ],
+      "properties": {
+        "schema": {
+          "const": "numi.human.empirical-margin.v1"
+        },
+        "measurement_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "units": {
+          "type": "string",
+          "minLength": 1
+        },
+        "metric": {
+          "enum": [
+            "rmse",
+            "maximum_absolute_error"
+          ]
+        },
+        "tolerance": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "basis": {
+          "enum": [
+            "measurement_repeatability",
+            "source_validated_margin"
+          ]
+        },
+        "source": {
+          "$ref": "#/$defs/artifact"
+        }
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trial_id",
+        "measurement_id",
+        "metric",
+        "tolerance",
+        "numerical_error_limit",
+        "margin_source"
+      ],
+      "properties": {
+        "trial_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "measurement_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "metric": {
+          "enum": [
+            "rmse",
+            "maximum_absolute_error"
+          ]
+        },
+        "tolerance": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "numerical_error_limit": {
+          "type": "number",
+          "minimum": 0
+        },
+        "margin_source": {
+          "$ref": "#/$defs/artifact"
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,9 @@
 # Frozen Human behavior evidence v1
 
+> Historical protocol: the 420-trial gate is retained for regression. The active
+> [single-male completion contract](SINGLE_MALE_COMPLETION.md) requires measured
+> whole-body capability evidence and supersedes it as the release criterion.
+
 `numi human behavior-qualify` (also available as
 `python -m numilab_human.behavior_qualification`) admits a complete, immutable
 behavior evidence bundle against an independently supplied protocol and current

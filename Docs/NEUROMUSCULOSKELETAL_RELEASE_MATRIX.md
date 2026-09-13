@@ -1,5 +1,9 @@
 # Neuromusculoskeletal Human completion
 
+> Historical protocol: the 420-trial gate is retained for regression. The active
+> [single-male completion contract](SINGLE_MALE_COMPLETION.md) requires measured
+> whole-body capability evidence and supersedes it as the release criterion.
+
 This is the selected release target from 8 September 2026. It implements the
 neuromusculoskeletal portion of [the permanent roadmap](DEVELOPMENT_ROADMAP.md).
 The cumulative source target union remains intact. Systemic organ physiology

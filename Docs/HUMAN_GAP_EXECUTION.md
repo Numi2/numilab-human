@@ -42,8 +42,10 @@ tasks retain their full acceptance gates below. Anatomical
 supports/loading, activation, spatial blood mass and momentum ownership,
 unresolved material data and calibration have separate dependency tasks.
 The registry retains the unchanged 100/50/25/12.5µs common-duration refinement
-gate and frozen standing/recovery/walking protocols. Neither a shorter native
-trajectory nor metadata coverage closes those gates.
+gate. The active behavior target is the [single-male whole-body protocol](SINGLE_MALE_COMPLETION.md);
+the historical 420-trial standing/recovery/walking evaluator remains regression
+tooling. Neither a shorter native trajectory nor metadata coverage closes these
+gates. Population tasks describe the broader roadmap, outside this selected release.
 
 Validation on 2026-09-13: twelve focused registry tests and fourteen existing
 target-coverage tests pass. The JSON Schema passes Draft 2020-12 schema checking

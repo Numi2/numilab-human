@@ -614,10 +614,10 @@
         {
           "id": "behavior.standing",
           "category": "validation",
-          "action": "Qualify a source-muscle feedback standing/recovery baseline before learned gait.",
+          "action": "Qualify measured standing and recovery for the single source-bound adult male.",
           "acceptance": [
-            "Standing: 20 distinct seeds x 60 seconds, all pass. Recovery: 100 frozen nonzero impulses x 5 seconds, at least 95 pass.",
-            "Missing, assisted, duplicate or truncated traces invalidate the bundle; existing frozen posture and support gates remain unchanged."
+            "Standing, weight transfer, altered support and unexpected perturbations have held-out same-participant kinematic and force evidence with frozen uncertainty-backed margins.",
+            "Task exposure, physical outcomes and complete accepted/attempted transaction accounting pass the capability protocol; the historical 420-trial gate is regression-only."
           ],
           "depends_on": [
             "runtime.prepared",
@@ -630,9 +630,10 @@
         {
           "id": "behavior.walking",
           "category": "validation",
-          "action": "Qualify assistance-free walking against the existing frozen evaluator.",
+          "action": "Qualify source-muscle locomotion and terrain response for the frozen male subject.",
           "acceptance": [
-            "At each of 0.5, 1.0 and 1.5 m/s: 100 seeds x 120 seconds, at least 95 pass with speed RMSE <= 0.15 m/s; complete trace validity is mandatory."
+            "Held-out start/stop, varying speed, turns, backward/sideways motion, ramps, stairs, obstacles and support/friction changes pass preregistered motion, force and timing comparisons.",
+            "Random seeds do not substitute for physical-condition coverage; every failed, truncated or assisted attempt remains explicit."
           ],
           "depends_on": [
             "behavior.standing"
@@ -641,18 +642,19 @@
         {
           "id": "behavior.broader_protocols",
           "category": "source_data",
-          "action": "Freeze observation-backed running, turning, manipulation, carrying, sit-stand, terrain, contact, physiological/intervention and subject-distribution protocols.",
+          "action": "Freeze single-subject whole-body capability protocols and source-backed measurement margins.",
           "acceptance": [
-            "Protocol populations, failure definitions, observables and acceptance bounds are preregistered before training or result selection."
+            "All seven release families and 25 required scenarios are source-bound to one adult male at one measured age; calibration and validation sessions are disjoint.",
+            "Unknown source data, absent measurements and missing margin evidence block empirical qualification; broader population and age claims are outside this release."
           ],
           "depends_on": []
         },
         {
           "id": "behavior.broader",
           "category": "validation",
-          "action": "Qualify broader movement and physiological/intervention capability distributions.",
+          "action": "Qualify measured transitions, manipulation, combined activities and sustained capability for the frozen subject.",
           "acceptance": [
-            "Every mandatory capability has a complete held-out population assessed by its preregistered protocol on the same supported stack."
+            "Every single-subject release capability has a complete held-out measurement comparison and native physical/evidence assessment; different participants are never silently composed."
           ],
           "depends_on": [
             "behavior.walking",
@@ -666,7 +668,8 @@
       "references": [
         "Docs/HUMAN_BEHAVIOR_QUALIFICATION.md",
         "Docs/SOURCE_COMPLIANT_EQUILIBRIUM_20260910.md",
-        "Docs/CANDIDATE_PRECISION_PERFORMANCE_20260911.md"
+        "Docs/CANDIDATE_PRECISION_PERFORMANCE_20260911.md",
+        "Docs/SINGLE_MALE_COMPLETION.md"
       ]
     },
     {

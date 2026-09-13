@@ -144,6 +144,11 @@ runner; unavailable contact, audit and reset evidence remains explicit.
 The [current paired source-route qualification](Docs/SOURCE_ROUTE_PRECISION_20260913.md)
 records the exact native/Brain revisions, source comparisons and bounded replay.
 
+`numi human capability-protocol` compiles the [single-male whole-body evidence contract](Docs/SINGLE_MALE_COMPLETION.md):
+one sourced adult age, separate calibration and validation sessions, and measured
+observations for every required task. Compilation does not establish qualification.
+The historical 420-trial gate remains regression tooling.
+
 `numi human gap-execution` now joins the live completion ledger to named owners,
 acceptance criteria and a dependency graph covering all 95 mandatory targets.
 The [execution registry](Docs/HUMAN_GAP_EXECUTION.md) separates engineering,
