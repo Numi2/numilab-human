@@ -93,8 +93,8 @@ new native exact-clock receipt is reflected in the ledger while
 The current native organ/blood and cavity requalification is paired with the
 snapshot at
 [Docs/media/gap-execution-20260913/report-with-native-exact-clock-organ-blood-20260913.json](media/gap-execution-20260913/report-with-native-exact-clock-organ-blood-20260913.json)
-(file SHA-256 `73017b162b1a7c267f704ee609ec0ddd0df16b44d477102e49bad5801059714b`,
-report content SHA-256 `bea25a66e600f5c85d2157f9723f22686983e8ea67e6f0443a9151510a0e9663`).
+(file SHA-256 `4466b7cd475008ba1cbfd906bc07741bec000b570eba8702bf2a917881689f44`,
+report content SHA-256 `4858362e8f42844dd334172d8fc20d9f6a8413c64d95a0d1b8e61be632a8f1b2`).
 It still records 14 workstreams, 46 tasks and 95 mandatory targets with
 `integrated_qualification: not_assessed`; the accompanying native receipt is
 the focused 17/17 requalification at commit
