@@ -1,0 +1,58 @@
+name: Human equilibrium evidence audits
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/numilab_human/static_dynamic_handoff.py"
+      - "src/numilab_human/native_force_convergence.py"
+      - "src/numilab_human/equilibrium_force_snapshot.py"
+      - "src/numilab_human/force_ledger.py"
+      - "src/numilab_human/standing_initial_state.py"
+      - "tests/test_static_dynamic_handoff.py"
+      - "tests/test_native_force_convergence.py"
+      - "tests/test_equilibrium_force_snapshot.py"
+      - "tests/test_force_ledger.py"
+      - "tests/test_standing_initial_state.py"
+      - ".github/workflows/human-equilibrium-audits.yml"
+  pull_request:
+    paths:
+      - "src/numilab_human/static_dynamic_handoff.py"
+      - "src/numilab_human/native_force_convergence.py"
+      - "src/numilab_human/equilibrium_force_snapshot.py"
+      - "src/numilab_human/force_ledger.py"
+      - "src/numilab_human/standing_initial_state.py"
+      - "tests/test_static_dynamic_handoff.py"
+      - "tests/test_native_force_convergence.py"
+      - "tests/test_equilibrium_force_snapshot.py"
+      - "tests/test_force_ledger.py"
+      - "tests/test_standing_initial_state.py"
+      - ".github/workflows/human-equilibrium-audits.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install audit package and test runner
+        run: python -m pip install --upgrade pip pytest -e .
+      - name: Run equilibrium evidence contract tests
+        run: >-
+          python -m pytest -q
+          tests/test_static_dynamic_handoff.py
+          tests/test_native_force_convergence.py
+          tests/test_equilibrium_force_snapshot.py
+          tests/test_force_ledger.py
+          tests/test_standing_initial_state.py
