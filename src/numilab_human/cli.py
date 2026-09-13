@@ -941,6 +941,31 @@ def organ_geometry_inventory(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def organ_vessel_registration(arguments: argparse.Namespace) -> int:
+    from .vessel_registration import compile_registration, _immutable_write, SCHEMA
+
+    result = compile_registration(
+        sources=arguments.sources.resolve(),
+        source_lock=arguments.source_lock.resolve(),
+        anatomy_map=arguments.anatomy_map.resolve(),
+        template=arguments.template.resolve(),
+        moments=arguments.moments.resolve(),
+        registration=arguments.registration.resolve(),
+    )
+    output = arguments.output.resolve()
+    digest = _immutable_write(output, result)
+    print(json.dumps({
+        "schema": SCHEMA,
+        "output": str(output),
+        "sha256": digest,
+        "bindings": len(result["bindings"]),
+        "source_to_world_frame_registered": True,
+        "body_link_registration": False,
+        "tubular_vessel_field": False,
+    }, sort_keys=True))
+    return 0
+
+
 def nerve_annotations(arguments: argparse.Namespace) -> int:
     anatomy = parse_bodyparts3d(
         arguments.sources.resolve(),
@@ -1911,6 +1936,18 @@ def parser() -> argparse.ArgumentParser:
     )
     organ_geometry_parser.add_argument("--output", type=Path, required=True)
     organ_geometry_parser.set_defaults(handler=organ_geometry_inventory)
+    organ_vessel_parser = commands.add_parser(
+        "organ-vessel-registration",
+        help="bind six named BodyParts3D vessel surfaces to the pinned MyoSim world frame without admitting mechanics",
+    )
+    organ_vessel_parser.add_argument("--sources", type=Path, default=REPOSITORY_ROOT / "Sources")
+    organ_vessel_parser.add_argument("--source-lock", type=Path, default=REPOSITORY_ROOT / "sources.lock.json")
+    organ_vessel_parser.add_argument("--anatomy-map", type=Path, default=REPOSITORY_ROOT / "config/bodyparts3d-myosim-torso-anatomy-map.v1.json")
+    organ_vessel_parser.add_argument("--template", type=Path, default=REPOSITORY_ROOT / "config/physiology-organ-network-template.v1.json")
+    organ_vessel_parser.add_argument("--moments", type=Path, default=REPOSITORY_ROOT / "Docs/media/organ-geometry-moments-20260913/moments.json")
+    organ_vessel_parser.add_argument("--registration", type=Path, default=REPOSITORY_ROOT / "Docs/media/numi-human-lower-joint-focus-v1/receipts/registration.v3.json")
+    organ_vessel_parser.add_argument("--output", type=Path, required=True)
+    organ_vessel_parser.set_defaults(handler=organ_vessel_registration)
     nerve_parser = commands.add_parser(
         "nerve-annotations",
         help="emit BodyParts3D nerve labels, meshes, and source hierarchy as annotations only",

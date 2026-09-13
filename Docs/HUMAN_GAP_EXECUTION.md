@@ -141,3 +141,15 @@ Its file SHA-256 is `d28df51c85c91d6bb3975808d86fd4c5683a652c2c9946ef8fad96edaad
 its report SHA-256 is `94e703d6cb9fc45bd097502fb35961efbdf6782b02420d584d9f2e045f09c261`,
 and `integrated_qualification` remains `not_assessed` because the native
 terminal still reports `compiled_stand_balanced=false` and dynamic drift.
+
+The current source-data snapshot also includes the six-vessel source-to-world
+registration receipt at
+[`Docs/media/organ-vessel-registration-20260913/registration.json`](media/organ-vessel-registration-20260913/registration.json).
+The receipt SHA-256 is `fb446cd380bac11aaa6ef8de2f011982da7a6aaaab981a4dcd2351583a69d9be`.
+The corresponding registry snapshot is
+[`Docs/media/gap-execution-20260913/report-with-vessel-registration-20260913.json`](media/gap-execution-20260913/report-with-vessel-registration-20260913.json)
+with file SHA-256 `3719b46fb4b9d00aa2283e5c21d2c14f653b01e458208490f23aec7bc9d08c48`
+and report SHA-256 `38ee2a43d6ce9b7d1036cd1f7d9ca4e40955b6d3e7143f47b7de12aa1740ed23`.
+It closes source-to-MyoSim-world frame bookkeeping only; body-link vessel
+mechanics, tubular fields, direction/area, density, blood ownership, tissue
+exchange, calibration, and sustained behavior remain open.
