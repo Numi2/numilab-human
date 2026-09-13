@@ -74,8 +74,10 @@ fixture is a selected participant or a completed capability.
 1. Admit a real participant with source demographics and an explicit anatomy,
    parameter and empirical coverage inventory. Keep unavailable cells open.
 2. Migrate exact clocks through Brain, NumanX, sensors, circulation and restore.
-   The current integer-microsecond transaction rejects 12,500 ns; changing only
-   NHINIT admission would incorrectly round downstream timestamps.
+   The Brain Human-metric receipt parser now admits only the canonical 12,500 ns
+   step, but the current integer-microsecond transaction still cannot carry a
+   12,500 ns physical step; changing only NHINIT admission would incorrectly
+   round downstream timestamps.
 3. Close full source-force consistency and 100/50/25/12.5 microsecond refinement.
 4. Qualify loaded anatomy, supports/contact, prestress, reference reconstruction,
    activation, blood mass/momentum and calibrated materials with single ownership.
