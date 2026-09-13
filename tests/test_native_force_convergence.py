@@ -28,6 +28,8 @@ def _arguments(stdout: Path, output: Path, **overrides) -> argparse.Namespace:
         build_log=None,
         standing_state_receipt=None,
         require_standing_state_receipt=False,
+        force_ledger_receipt=None,
+        require_force_ledger_receipt=False,
         output=output,
         source_commit="fixture",
         binary_sha256="0" * 64,
@@ -75,7 +77,23 @@ def _state_receipt(path: Path, *, candidate: bool, maximal: bool) -> None:
             "uniform_maximal_activation": maximal,
             "activation_nonzero_count": 237 if candidate else 416,
         },
-        "qualification": {"standing_initial_state_candidate": candidate},
+        "qualification": {
+            "standing_initial_state_candidate": candidate,
+            "equilibrium_state_transport": candidate,
+        },
+    }), encoding="utf-8")
+
+
+def _force_ledger(path: Path, *, complete: bool) -> None:
+    path.write_text(json.dumps({
+        "schema": "numi.human.generalized-force-ledger.v1",
+        "coverage": {"full_force_coverage": complete},
+        "residual": {
+            "maximum_assembly_error": 0.0 if complete else 1.0,
+            "maximum_closure_ratio": 0.0 if complete else 1.0,
+        },
+        "worst_coordinates": [],
+        "qualification": {"full_generalized_force_ledger": complete},
     }), encoding="utf-8")
 
 
@@ -101,6 +119,7 @@ def test_force_convergence_does_not_promote_sustained_standing(tmp_path: Path) -
     output = tmp_path / "receipt.json"
     assert audit(_arguments(stdout, output)) == 0
     receipt = json.loads(output.read_text(encoding="utf-8"))
+    assert receipt["qualification"]["mechanical_force_convergence"]
     assert receipt["qualification"]["force_convergence"]
     assert not receipt["qualification"]["standing_force_convergence"]
     assert not receipt["qualification"]["sustained_standing"]
@@ -108,37 +127,70 @@ def test_force_convergence_does_not_promote_sustained_standing(tmp_path: Path) -
     assert not receipt["qualification"]["walking"]
 
 
-def test_required_prepared_state_can_bind_converged_horizon(tmp_path: Path) -> None:
+def test_standing_force_convergence_requires_state_and_force_ledger(tmp_path: Path) -> None:
     stdout = tmp_path / "stdout"
     stdout.write_text(_converged_line(), encoding="utf-8")
     state = tmp_path / "standing-state.json"
+    ledger = tmp_path / "force-ledger.json"
     _state_receipt(state, candidate=True, maximal=False)
+    _force_ledger(ledger, complete=True)
     output = tmp_path / "receipt.json"
     arguments = _arguments(
         stdout,
         output,
         standing_state_receipt=state,
         require_standing_state_receipt=True,
+        force_ledger_receipt=ledger,
+        require_force_ledger_receipt=True,
     )
     assert audit(arguments) == 0
     receipt = json.loads(output.read_text(encoding="utf-8"))
     assert receipt["qualification"]["standing_state_admissible"]
+    assert receipt["qualification"]["force_ledger_admissible"]
     assert receipt["qualification"]["force_convergence"]
     assert receipt["qualification"]["standing_force_convergence"]
     assert not receipt["qualification"]["sustained_standing"]
+
+
+def test_required_incomplete_force_ledger_cannot_pass(tmp_path: Path) -> None:
+    stdout = tmp_path / "stdout"
+    stdout.write_text(_converged_line(), encoding="utf-8")
+    state = tmp_path / "standing-state.json"
+    ledger = tmp_path / "force-ledger.json"
+    _state_receipt(state, candidate=True, maximal=False)
+    _force_ledger(ledger, complete=False)
+    output = tmp_path / "receipt.json"
+    arguments = _arguments(
+        stdout,
+        output,
+        standing_state_receipt=state,
+        require_standing_state_receipt=True,
+        force_ledger_receipt=ledger,
+        require_force_ledger_receipt=True,
+    )
+    assert audit(arguments) == 0
+    receipt = json.loads(output.read_text(encoding="utf-8"))
+    assert receipt["qualification"]["mechanical_force_convergence"]
+    assert not receipt["qualification"]["force_convergence"]
+    assert not receipt["qualification"]["standing_force_convergence"]
+    assert any("force ledger" in reason for reason in receipt["gate"]["reasons"])
 
 
 def test_required_maximal_activation_state_cannot_pass(tmp_path: Path) -> None:
     stdout = tmp_path / "stdout"
     stdout.write_text(_converged_line(), encoding="utf-8")
     state = tmp_path / "standing-state.json"
+    ledger = tmp_path / "force-ledger.json"
     _state_receipt(state, candidate=False, maximal=True)
+    _force_ledger(ledger, complete=True)
     output = tmp_path / "receipt.json"
     arguments = _arguments(
         stdout,
         output,
         standing_state_receipt=state,
         require_standing_state_receipt=True,
+        force_ledger_receipt=ledger,
+        require_force_ledger_receipt=True,
     )
     assert audit(arguments) == 0
     receipt = json.loads(output.read_text(encoding="utf-8"))
