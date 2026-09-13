@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import math
 import shlex
 from pathlib import Path
@@ -10,6 +11,7 @@ from .model import ImportError, sha256, write_json
 
 
 SCHEMA = "numi.human.native-force-convergence-audit.v1"
+STANDING_STATE_SCHEMA = "numi.human.standing-initial-state-audit.v1"
 
 
 def _native_metrics(path: Path) -> dict[str, str]:
@@ -70,7 +72,7 @@ def _boolean(values: dict[str, str], name: str) -> bool:
 
 
 def _metrics(values: dict[str, str]) -> dict[str, Any]:
-    return {
+    result = {
         "device": _field(values, "metal_pose_device"),
         "core_bodies": _integer(values, "core_bodies"),
         "muscle_step_count": _integer(values, "muscle_step_count"),
@@ -97,6 +99,13 @@ def _metrics(values: dict[str, str]) -> dict[str, Any]:
         "muscle_force_metal_elapsed_ms": _number(values, "muscle_force_metal_elapsed_ms"),
         "stand_deterministic_replay": _field(values, "stand_deterministic_replay"),
     }
+    if "compiled_stand_normalized_residual_rms" in values:
+        result["compiled_stand_normalized_residual_rms"] = _number(
+            values, "compiled_stand_normalized_residual_rms"
+        )
+    if "compiled_stand_max_activation" in values:
+        result["compiled_stand_max_activation"] = _number(values, "compiled_stand_max_activation")
+    return result
 
 
 def _replay_summary(path: Path | None, main: dict[str, Any]) -> dict[str, Any]:
@@ -110,6 +119,34 @@ def _replay_summary(path: Path | None, main: dict[str, Any]) -> dict[str, Any]:
         "one_step_bitwise": replay["stand_deterministic_replay"] == "bitwise",
         "steps": replay["persistent_completed_steps"],
         "stdout_sha256": sha256(path),
+    }
+
+
+def _standing_state(path: Path | None) -> dict[str, Any] | None:
+    if path is None:
+        return None
+    resolved = path.resolve()
+    try:
+        receipt = json.loads(resolved.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ImportError(f"cannot read standing-state receipt {resolved}: {error}") from error
+    if receipt.get("schema") != STANDING_STATE_SCHEMA:
+        raise ImportError("standing-state receipt schema mismatch")
+    qualification = receipt.get("qualification")
+    state = receipt.get("state")
+    if not isinstance(qualification, dict) or not isinstance(state, dict):
+        raise ImportError("standing-state receipt is missing qualification/state")
+    candidate = qualification.get("standing_initial_state_candidate") is True
+    uniform_maximal = state.get("uniform_maximal_activation")
+    if type(uniform_maximal) is not bool:
+        raise ImportError("standing-state receipt has no boolean maximal-activation classification")
+    return {
+        "path": str(resolved),
+        "sha256": sha256(resolved),
+        "candidate": candidate,
+        "uniform_maximal_activation": uniform_maximal,
+        "activation_nonzero_count": state.get("activation_nonzero_count"),
+        "initial_state_sha256": (receipt.get("initial_state") or {}).get("sha256"),
     }
 
 
@@ -145,12 +182,26 @@ def audit(arguments: argparse.Namespace) -> int:
     replay = _replay_summary(arguments.replay_stdout.resolve() if arguments.replay_stdout else None, metrics)
     if arguments.require_same_horizon_replay and replay["same_horizon"] != "bitwise":
         reasons.append("same-horizon deterministic replay was not supplied")
+
+    standing_state = _standing_state(arguments.standing_state_receipt)
+    standing_state_admissible = bool(standing_state and standing_state["candidate"])
+    if standing_state and standing_state["uniform_maximal_activation"]:
+        reasons.append("the supplied standing state is a uniform maximal-activation diagnostic")
+    if arguments.require_standing_state_receipt and standing_state is None:
+        reasons.append("a prepared standing-state receipt is required")
+    if arguments.require_standing_state_receipt and not standing_state_admissible:
+        reasons.append("the prepared standing state is not admissible")
+
     exact_eligible = (
         arguments.body_count <= arguments.exact_body_limit
         and arguments.dof_count <= arguments.exact_dof_limit
         and arguments.q_count <= arguments.exact_q_limit
     )
     force_convergence = clock_exact and complete and static_balance and temporal
+    standing_force_convergence = force_convergence and standing_state_admissible
+    if arguments.require_standing_state_receipt:
+        force_convergence = force_convergence and standing_state_admissible
+
     receipt = {
         "schema": SCHEMA,
         "status": "passed" if force_convergence and not reasons else "partial",
@@ -167,6 +218,7 @@ def audit(arguments: argparse.Namespace) -> int:
         },
         "horizon": metrics,
         "replay": replay,
+        "standing_state": standing_state,
         "exact_dense_stage": {
             "eligible": exact_eligible,
             "body_limit": arguments.exact_body_limit,
@@ -179,11 +231,12 @@ def audit(arguments: argparse.Namespace) -> int:
             "horizon_complete": complete,
             "static_balance": static_balance,
             "temporal_convergence": temporal,
+            "standing_state_admissible": standing_state_admissible,
             "force_convergence": force_convergence,
+            "standing_force_convergence": standing_force_convergence,
             # A converged force horizon is necessary for standing, but it is
-            # not a standing-behavior qualification.  The latter needs the
-            # separate accepted-root support/contact and behavior protocol;
-            # keep this gate closed until that receipt is supplied.
+            # not a standing-behavior qualification. The latter needs the
+            # separate accepted-root support/contact and behavior protocol.
             "sustained_standing": False,
             "recovery": False,
             "walking": False,
@@ -195,6 +248,7 @@ def audit(arguments: argparse.Namespace) -> int:
         },
         "gate": {
             "thresholds": thresholds,
+            "require_standing_state_receipt": arguments.require_standing_state_receipt,
             "reasons": reasons,
         },
         "artifacts": {
@@ -222,6 +276,8 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--stderr", type=Path)
     parser.add_argument("--replay-stdout", type=Path)
     parser.add_argument("--build-log", type=Path)
+    parser.add_argument("--standing-state-receipt", type=Path)
+    parser.add_argument("--require-standing-state-receipt", action="store_true")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--source-commit", required=True)
     parser.add_argument("--binary-sha256", required=True)
