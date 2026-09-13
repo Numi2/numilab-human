@@ -1,0 +1,64 @@
+{
+  "schema": "numi.human.blood-mass-owner-evidence.v1",
+  "date": "2026-09-13",
+  "native_branch": "human-blood-mass-20260913",
+  "native_commit": "f7476cce6186bfe93bb798b46607e19fff932171",
+  "native_base_commit": "53670294dd229e5a0d876a472964130742c89e44",
+  "remote_branch_publication_confirmed": false,
+  "native_abi": 35,
+  "host": {
+    "ssh_alias": "macmini",
+    "device": "Apple M4 Pro",
+    "qualified_checkout_unchanged": true,
+    "build_type": "Release"
+  },
+  "implementation": {
+    "explicit_compartment_owner": true,
+    "positive_registered_density": true,
+    "real_fem_region_required": true,
+    "normalized_region_required": true,
+    "duplicate_owner_rejected": true,
+    "implicit_cavity_or_tissue_mass": false,
+    "force_path": "accepted hydraulic volume times registered density scattered over object-local FEM bindings as gravity body force"
+  },
+  "checks": {
+    "full_build": "pass",
+    "compiler_semantic_rejection": "pass",
+    "vascular_runtime_replay_rollback": "pass",
+    "blood_owner_metal_replay": "bitwise",
+    "blood_owner_total_force_conservation": "pass",
+    "cavity_equations_and_wall_work": "pass",
+    "production_operators": "pass",
+    "moving_wall_steps": 32,
+    "moving_wall_replay_rollback": "pass",
+    "clock": "exact"
+  },
+  "measurements": {
+    "compartment_stable_id": 12,
+    "density_kg_m3": 1060.0,
+    "accepted_volume_m3": 3.9999999899009708e-06,
+    "total_force_N_two_environments": -0.083188809454441071,
+    "normalized_region_weight": 0.125
+  },
+  "qualification": {
+    "zeroth_order_spatial_mass_owner": true,
+    "first_mass_moment": false,
+    "second_mass_moment": false,
+    "momentum_transfer": false,
+    "atomic_full_momentum_restore": false,
+    "anatomical_registration": false,
+    "subject_specific_density": false,
+    "physiological_calibration": false,
+    "standing": false,
+    "walking": false,
+    "full_release": false
+  },
+  "artifacts": {
+    "Docs/media/blood-mass-owner-20260913/native/full-build.log": "33851c906f6669bf8a93a6a4c2c2dedf8966c0748e0761fe10ccfa0966a1fc0b",
+    "Docs/media/blood-mass-owner-20260913/native/vascular-compiler.log": "bfe96aad2cf8d5ddcf71ac96f665691dc6c3ac0510584c6708d35064310da47a",
+    "Docs/media/blood-mass-owner-20260913/native/vascular-runtime.log": "017aaff7eedf60b96724cb2a0c765eab3282f637cb3b21263ab2a35c2b9ad4ac",
+    "Docs/media/blood-mass-owner-20260913/native/vascular-cavity.log": "6613ed9c40d6d39450e93a2199781757e399429723f1a70c4a6bd29cbe79d2fa",
+    "Docs/media/blood-mass-owner-20260913/native/native-revision.txt": "989c7ee251735ebc66e30a9af6391d351dca5454f8434ddb541ff8af21618065",
+    "Docs/media/blood-mass-owner-20260913/native/native-status.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
