@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+
+if [ "${1:-}" = "--numi-describe" ]; then
+    printf '%s\n' 'Audit NHINIT1/NHINIT2 pose, recruitment and fibre state before admitting it as a Human standing initial condition.'
+    exit 0
+fi
+
+command_directory=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+repository_root=$(CDPATH= cd -- "$command_directory/../.." && pwd -P)
+if [ -n "${PYTHONPATH:-}" ]; then
+    export PYTHONPATH="$repository_root/src:$PYTHONPATH"
+else
+    export PYTHONPATH="$repository_root/src"
+fi
+exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.standing_state "$@"
