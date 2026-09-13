@@ -7,7 +7,7 @@ density and initial mass, advects mass through hydraulic flow, applies a
 declared bidirectional blood/tissue exchange schedule, and rolls back hydraulic
 and mass state together when a candidate is rejected.
 
-The retained [receipt](media/blood-mass-transfer-step-20260913/receipt.json)
+The retained [receipt](media/blood-mass-transfer-step-20260913/receipt-v2.json)
 completed 32 attempted steps at `100 µs`, accepted 31 after one deliberate
 rollback, and observed both blood-to-tissue and tissue-to-blood transfer. Total
 owned mass was `0.00418 kg` at both endpoints with zero reported mass residual;
@@ -30,6 +30,6 @@ subject blood density, organ mechanics, perfusion, cardiac activation,
 material calibration, subject calibration, standing, or walking.
 
 The same source-locked run passed `52` focused tests on the physical Mac mini
-from commit `80436b50f9a2d213270df11fd4397ad77678a129`. Its receipt, command
+from commit `2cbd6355153a005e5184447747963eb41132bb25`. Its receipt, command
 logs, and SHA-256 manifest are retained in
-[`media/blood-mass-transfer-step-20260913/macmini/`](media/blood-mass-transfer-step-20260913/macmini/).
+[`media/blood-mass-transfer-step-20260913/macmini-v2/`](media/blood-mass-transfer-step-20260913/macmini-v2/).
