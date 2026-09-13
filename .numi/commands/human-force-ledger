@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+
+if [ "${1:-}" = "--numi-describe" ]; then
+    printf '%s\n' 'Audit all 128 Human generalized coordinates against explicit bias, muscle/tendon, equality, limit, support-contact and Matter/tissue force owners.'
+    exit 0
+fi
+
+command_directory=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+repository_root=$(CDPATH= cd -- "$command_directory/../.." && pwd -P)
+if [ -n "${PYTHONPATH:-}" ]; then
+    export PYTHONPATH="$repository_root/src:$PYTHONPATH"
+else
+    export PYTHONPATH="$repository_root/src"
+fi
+exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.force_ledger "$@"
