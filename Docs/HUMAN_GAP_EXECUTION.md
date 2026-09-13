@@ -221,6 +221,13 @@ torso surfaces; organ FEM/MPM, vessel tube/lumen mechanics, neural mechanics,
 mass, materials, pressure reaction, tissue exchange, anatomical loading,
 calibration, standing, and walking remain unqualified.
 
+The [cardiac cavity ownership receipt](ORGAN_CARDIAC_CAVITY_OWNERSHIP_20260913.md)
+then binds both exact source-preserving right-heart partition candidates to the
+four-cavity bridge and torso body frame. Their interiors are disjoint, but no
+biological interface is selected and the original source domains remain
+overlapping; physical cavity volume, density, blood mass, pressure reaction,
+tissue exchange, calibration, and behavior remain unqualified.
+
 The current ABI39 blood-momentum restore snapshot is
 [`Docs/media/gap-execution-20260913/report-blood-momentum-restore-current-20260913.json`](media/gap-execution-20260913/report-blood-momentum-restore-current-20260913.json)
 (file SHA-256 `00803c8e93b18737839e71b8ae835002dfd09729fdaeca849bca9310cb36b74b`,
@@ -267,3 +274,13 @@ and its report content SHA-256 is
 It retains 14 workstreams, 46 tasks, 95 mandatory targets, and
 `integrated_qualification: not_assessed`; the new receipt closes selected
 source/body-frame bookkeeping only.
+
+The current registry snapshot after the cardiac cavity ownership handoff is
+[`Docs/media/gap-execution-20260913/report-with-native-cardiac-ownership-20260913.json`](media/gap-execution-20260913/report-with-native-cardiac-ownership-20260913.json).
+Its file SHA-256 is `e8d9b1e001c96d133dd3bffb2c7e4e5f4ec6a0efbe3e3ada5c19534249aae5dc`
+and its report content SHA-256 is
+`d9b18aff240ed3e213d7f34f2967e605cb1bfd21dfa69b92dd48f35dedc4bdeb`.
+It retains 14 workstreams, 46 tasks, 95 mandatory targets, and
+`integrated_qualification: not_assessed`; both geometric candidates are
+admitted as an unselected handoff, while the original cavity overlap and
+physical blood-mass gates remain open.
