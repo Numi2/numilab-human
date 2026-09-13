@@ -28,3 +28,8 @@ compartment geometry, exchange schedule, and tissue reservoir are manufactured
 numerical inputs. The owner does not admit anatomical vessel tubes or lumens,
 subject blood density, organ mechanics, perfusion, cardiac activation,
 material calibration, subject calibration, standing, or walking.
+
+The same source-locked run passed `52` focused tests on the physical Mac mini
+from commit `80436b50f9a2d213270df11fd4397ad77678a129`. Its receipt, command
+logs, and SHA-256 manifest are retained in
+[`media/blood-mass-transfer-step-20260913/macmini/`](media/blood-mass-transfer-step-20260913/macmini/).
