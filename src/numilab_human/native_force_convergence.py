@@ -14,6 +14,24 @@ SCHEMA = "numi.human.native-force-convergence-audit.v1"
 STANDING_STATE_SCHEMA = "numi.human.standing-initial-state-audit.v1"
 FORCE_LEDGER_SCHEMA = "numi.human.generalized-force-ledger.v1"
 STATIC_DYNAMIC_HANDOFF_SCHEMA = "numi.human.static-dynamic-handoff-audit.v1"
+_HANDOFF_COUNTS = {
+    "activation": 416,
+    "fiber_length": 416,
+    "actuator_force": 416,
+    "passive_actuator_force": 416,
+    "generalized_muscle_force": 128,
+    "generalized_passive_force": 128,
+    "force_residual": 128,
+}
+_HANDOFF_THRESHOLD_CEILINGS = {
+    "activation_absolute": 1.0e-7,
+    "fiber_absolute_m": 5.0e-7,
+    "fiber_relative": 5.0e-6,
+    "force_absolute_n": 5.0e-2,
+    "force_relative": 5.0e-5,
+    "residual_absolute": 1.0e-3,
+    "maximum_damped_equilibrium_residual": 1.0e-5,
+}
 
 
 def _native_metrics(path: Path) -> dict[str, str]:
@@ -69,7 +87,7 @@ def _boolean(values: dict[str, str], name: str) -> bool:
 
 
 def _metrics(values: dict[str, str]) -> dict[str, Any]:
-    result = {
+    result: dict[str, Any] = {
         "device": _field(values, "metal_pose_device"),
         "core_bodies": _integer(values, "core_bodies"),
         "muscle_step_count": _integer(values, "muscle_step_count"),
@@ -86,13 +104,15 @@ def _metrics(values: dict[str, str]) -> dict[str, Any]:
         "compiled_stand_total_support_force_n": _number(values, "compiled_stand_total_support_force_n"),
         "muscle_force_metal_elapsed_ms": _number(values, "muscle_force_metal_elapsed_ms"),
         "stand_deterministic_replay": _field(values, "stand_deterministic_replay"),
+        "source_dynamic_force_parity_max_delta_n": (
+            _number(values, "source_dynamic_force_parity_max_delta_n")
+            if "source_dynamic_force_parity_max_delta_n" in values else None
+        ),
     }
-    result["source_dynamic_force_parity_max_delta_n"] = (
-        _number(values, "source_dynamic_force_parity_max_delta_n")
-        if "source_dynamic_force_parity_max_delta_n" in values else None
-    )
     if "compiled_stand_normalized_residual_rms" in values:
-        result["compiled_stand_normalized_residual_rms"] = _number(values, "compiled_stand_normalized_residual_rms")
+        result["compiled_stand_normalized_residual_rms"] = _number(
+            values, "compiled_stand_normalized_residual_rms"
+        )
     if "compiled_stand_max_activation" in values:
         result["compiled_stand_max_activation"] = _number(values, "compiled_stand_max_activation")
     return result
@@ -104,23 +124,32 @@ def _replay_summary(path: Path | None, main: dict[str, Any]) -> dict[str, Any]:
     replay = _metrics(_native_metrics(path))
     same_horizon = replay["persistent_completed_steps"] == main["persistent_completed_steps"]
     return {
-        "same_horizon": "bitwise" if same_horizon and replay["stand_deterministic_replay"] == "bitwise" else "not_proved",
+        "same_horizon": (
+            "bitwise"
+            if same_horizon and replay["stand_deterministic_replay"] == "bitwise"
+            else "not_proved"
+        ),
         "one_step_bitwise": replay["stand_deterministic_replay"] == "bitwise",
         "steps": replay["persistent_completed_steps"],
         "stdout_sha256": sha256(path),
     }
 
 
-def _standing_state(path: Path | None) -> dict[str, Any] | None:
-    if path is None:
-        return None
+def _load_receipt(path: Path, schema: str, label: str) -> tuple[Path, dict[str, Any]]:
     resolved = path.resolve()
     try:
         receipt = json.loads(resolved.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as error:
-        raise ImportError(f"cannot read standing-state receipt {resolved}: {error}") from error
-    if receipt.get("schema") != STANDING_STATE_SCHEMA:
-        raise ImportError("standing-state receipt schema mismatch")
+        raise ImportError(f"cannot read {label} {resolved}: {error}") from error
+    if not isinstance(receipt, dict) or receipt.get("schema") != schema:
+        raise ImportError(f"{label} schema mismatch")
+    return resolved, receipt
+
+
+def _standing_state(path: Path | None) -> dict[str, Any] | None:
+    if path is None:
+        return None
+    resolved, receipt = _load_receipt(path, STANDING_STATE_SCHEMA, "standing-state receipt")
     qualification = receipt.get("qualification")
     state = receipt.get("state")
     if not isinstance(qualification, dict) or not isinstance(state, dict):
@@ -141,62 +170,128 @@ def _standing_state(path: Path | None) -> dict[str, Any] | None:
     }
 
 
+def _finite_nonnegative(value: Any) -> bool:
+    return type(value) in (int, float) and math.isfinite(value) and value >= 0.0
+
+
 def _force_ledger(path: Path | None) -> dict[str, Any] | None:
     if path is None:
         return None
-    resolved = path.resolve()
-    try:
-        receipt = json.loads(resolved.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as error:
-        raise ImportError(f"cannot read generalized-force ledger {resolved}: {error}") from error
-    if receipt.get("schema") != FORCE_LEDGER_SCHEMA:
-        raise ImportError("generalized-force ledger schema mismatch")
+    resolved, receipt = _load_receipt(path, FORCE_LEDGER_SCHEMA, "generalized-force ledger")
     qualification = receipt.get("qualification")
     coverage = receipt.get("coverage")
     residual = receipt.get("residual")
     if not all(isinstance(value, dict) for value in (qualification, coverage, residual)):
         raise ImportError("generalized-force ledger is missing coverage/residual/qualification")
     complete = qualification.get("full_generalized_force_ledger") is True
+    assembly_error = residual.get("maximum_assembly_error")
+    closure_ratio = residual.get("maximum_closure_ratio")
+    if complete and not (
+        coverage.get("full_force_coverage") is True
+        and _finite_nonnegative(assembly_error)
+        and _finite_nonnegative(closure_ratio)
+    ):
+        raise ImportError("generalized-force ledger claims completion without finite coverage evidence")
     return {
         "path": str(resolved),
         "sha256": sha256(resolved),
         "complete": complete,
         "full_force_coverage": coverage.get("full_force_coverage") is True,
-        "maximum_assembly_error": residual.get("maximum_assembly_error"),
-        "maximum_closure_ratio": residual.get("maximum_closure_ratio"),
+        "maximum_assembly_error": assembly_error,
+        "maximum_closure_ratio": closure_ratio,
         "worst_coordinates": receipt.get("worst_coordinates", [])[:6],
     }
+
+
+def _handoff_comparison(name: str, value: Any, expected_count: int) -> bool:
+    if not isinstance(value, dict):
+        return False
+    count = value.get("count")
+    worst_index = value.get("worst_index")
+    maximum_normalized_error = value.get("maximum_normalized_error")
+    return (
+        count == expected_count
+        and type(worst_index) is int
+        and 0 <= worst_index < expected_count
+        and value.get("passed") is True
+        and _finite_nonnegative(value.get("absolute_tolerance"))
+        and _finite_nonnegative(value.get("relative_tolerance"))
+        and _finite_nonnegative(value.get("maximum_absolute_delta"))
+        and _finite_nonnegative(value.get("rms_absolute_delta"))
+        and _finite_nonnegative(maximum_normalized_error)
+        and maximum_normalized_error <= 1.0
+        and type(value.get("worst_reference")) in (int, float)
+        and math.isfinite(value["worst_reference"])
+        and type(value.get("worst_candidate")) in (int, float)
+        and math.isfinite(value["worst_candidate"])
+        and _finite_nonnegative(value.get("worst_absolute_delta"))
+    )
 
 
 def _static_dynamic_handoff(path: Path | None) -> dict[str, Any] | None:
     if path is None:
         return None
-    resolved = path.resolve()
-    try:
-        receipt = json.loads(resolved.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as error:
-        raise ImportError(f"cannot read static-dynamic handoff receipt {resolved}: {error}") from error
-    if receipt.get("schema") != STATIC_DYNAMIC_HANDOFF_SCHEMA:
-        raise ImportError("static-dynamic handoff receipt schema mismatch")
+    resolved, receipt = _load_receipt(
+        path, STATIC_DYNAMIC_HANDOFF_SCHEMA, "static-dynamic handoff receipt"
+    )
     qualification = receipt.get("qualification")
     coverage = receipt.get("coverage")
-    if not isinstance(qualification, dict) or not isinstance(coverage, dict):
-        raise ImportError("static-dynamic handoff receipt is missing coverage/qualification")
-    evidence = (
-        receipt.get("status") == "passed"
-        and coverage.get("muscles") == 416
+    thresholds = receipt.get("thresholds")
+    comparisons = receipt.get("comparisons")
+    gate = receipt.get("gate")
+    if not all(isinstance(value, dict) for value in (
+        qualification, coverage, thresholds, comparisons, gate
+    )):
+        raise ImportError(
+            "static-dynamic handoff receipt is missing coverage, thresholds, comparisons, gate, or qualification"
+        )
+    threshold_evidence = all(
+        _finite_nonnegative(thresholds.get(name))
+        and thresholds[name] <= ceiling
+        for name, ceiling in _HANDOFF_THRESHOLD_CEILINGS.items()
+    )
+    comparison_evidence = (
+        set(comparisons) == set(_HANDOFF_COUNTS)
+        and all(
+            _handoff_comparison(name, comparisons.get(name), count)
+            for name, count in _HANDOFF_COUNTS.items()
+        )
+    )
+    maximum_equilibrium_residual = receipt.get("maximum_damped_equilibrium_residual")
+    coverage_evidence = (
+        coverage.get("muscles") == 416
         and coverage.get("generalized_coordinates") == 128
+        and coverage.get("static_muscle_state") is True
+        and coverage.get("static_generalized_forces") is True
         and coverage.get("dynamic_pre_step_state") is True
-        and qualification.get("pre_step_snapshot_present") is True
+        and isinstance(coverage.get("dynamic_state_owner"), str)
+        and bool(coverage["dynamic_state_owner"])
+        and isinstance(coverage.get("dynamic_force_owner"), str)
+        and bool(coverage["dynamic_force_owner"])
+    )
+    qualification_evidence = (
+        qualification.get("pre_step_snapshot_present") is True
         and qualification.get("activation_and_fiber_state_parity") is True
         and qualification.get("per_muscle_force_parity") is True
         and qualification.get("generalized_force_parity") is True
         and qualification.get("fiber_tendon_equilibrium_closed") is True
-        and isinstance(receipt.get("comparisons"), dict)
+    )
+    evidence = (
+        receipt.get("status") == "passed"
+        and coverage_evidence
+        and threshold_evidence
+        and comparison_evidence
+        and _finite_nonnegative(maximum_equilibrium_residual)
+        and maximum_equilibrium_residual
+            <= thresholds["maximum_damped_equilibrium_residual"]
+        and qualification_evidence
+        and gate.get("reasons") == []
     )
     claimed = qualification.get("static_dynamic_handoff_parity") is True
     if claimed and not evidence:
-        raise ImportError("static-dynamic handoff receipt claims parity without complete supporting evidence")
+        raise ImportError(
+            "static-dynamic handoff receipt claims parity without complete supporting evidence"
+        )
     return {
         "path": str(resolved),
         "sha256": sha256(resolved),
@@ -206,8 +301,8 @@ def _static_dynamic_handoff(path: Path | None) -> dict[str, Any] | None:
         "per_muscle_force_parity": qualification.get("per_muscle_force_parity") is True,
         "generalized_force_parity": qualification.get("generalized_force_parity") is True,
         "fiber_tendon_equilibrium_closed": qualification.get("fiber_tendon_equilibrium_closed") is True,
-        "maximum_damped_equilibrium_residual": receipt.get("maximum_damped_equilibrium_residual"),
-        "comparisons": receipt.get("comparisons"),
+        "maximum_damped_equilibrium_residual": maximum_equilibrium_residual,
+        "comparisons": comparisons,
     }
 
 
@@ -223,11 +318,14 @@ def audit(arguments: argparse.Namespace) -> int:
         "maximum_configuration_delta": arguments.maximum_configuration_delta,
     }
     reasons: list[str] = []
-    clock_exact = abs(metrics["timestep_seconds"] - thresholds["clock_seconds"]) <= thresholds["clock_tolerance_seconds"]
+    clock_exact = (
+        abs(metrics["timestep_seconds"] - thresholds["clock_seconds"])
+        <= thresholds["clock_tolerance_seconds"]
+    )
     if not clock_exact:
         reasons.append("the native timestep is not the required 12.5 us clock")
-    complete = metrics["persistent_completed_steps"] >= thresholds["minimum_steps"]
-    if not complete:
+    horizon_complete = metrics["persistent_completed_steps"] >= thresholds["minimum_steps"]
+    if not horizon_complete:
         reasons.append("the requested long horizon did not complete")
     static_balance = metrics["compiled_stand_balanced"]
     if not static_balance:
@@ -239,13 +337,18 @@ def audit(arguments: argparse.Namespace) -> int:
     )
     if not temporal:
         reasons.append("temporal drift exceeds the declared engineering bounds")
-    replay = _replay_summary(arguments.replay_stdout.resolve() if arguments.replay_stdout else None, metrics)
+    replay = _replay_summary(
+        arguments.replay_stdout.resolve() if arguments.replay_stdout else None,
+        metrics,
+    )
     if arguments.require_same_horizon_replay and replay["same_horizon"] != "bitwise":
         reasons.append("same-horizon deterministic replay was not supplied")
 
     standing_state = _standing_state(arguments.standing_state_receipt)
     standing_state_admissible = bool(
-        standing_state and standing_state["candidate"] and standing_state["equilibrium_state_transport"]
+        standing_state
+        and standing_state["candidate"]
+        and standing_state["equilibrium_state_transport"]
     )
     if standing_state and standing_state["uniform_maximal_activation"]:
         reasons.append("the supplied standing state is a uniform maximal-activation diagnostic")
@@ -266,7 +369,9 @@ def audit(arguments: argparse.Namespace) -> int:
     handoff = _static_dynamic_handoff(arguments.static_dynamic_handoff_receipt)
     handoff_admissible = bool(handoff and handoff["complete"])
     if handoff is not None and not handoff_admissible:
-        reasons.append("the accepted static state is not proved identical to the persistent dynamic pre-step state")
+        reasons.append(
+            "the accepted static state is not proved identical to the persistent dynamic pre-step state"
+        )
     if arguments.require_static_dynamic_handoff_receipt and handoff is None:
         reasons.append("a complete static-dynamic handoff receipt is required")
     if arguments.require_static_dynamic_handoff_receipt and not handoff_admissible:
@@ -277,7 +382,9 @@ def audit(arguments: argparse.Namespace) -> int:
         and arguments.dof_count <= arguments.exact_dof_limit
         and arguments.q_count <= arguments.exact_q_limit
     )
-    mechanical_force_convergence = clock_exact and complete and static_balance and temporal
+    mechanical_force_convergence = (
+        clock_exact and horizon_complete and static_balance and temporal
+    )
     force_convergence = mechanical_force_convergence
     if arguments.require_standing_state_receipt:
         force_convergence = force_convergence and standing_state_admissible
@@ -317,7 +424,7 @@ def audit(arguments: argparse.Namespace) -> int:
         },
         "qualification": {
             "clock_exact": clock_exact,
-            "horizon_complete": complete,
+            "horizon_complete": horizon_complete,
             "static_balance": static_balance,
             "temporal_convergence": temporal,
             "mechanical_force_convergence": mechanical_force_convergence,
@@ -344,8 +451,14 @@ def audit(arguments: argparse.Namespace) -> int:
         },
         "artifacts": {
             "stdout": {"path": str(stdout), "sha256": sha256(stdout)},
-            "stderr": {"path": str(arguments.stderr.resolve()), "sha256": sha256(arguments.stderr.resolve())} if arguments.stderr else None,
-            "build_log": {"path": str(arguments.build_log.resolve()), "sha256": sha256(arguments.build_log.resolve())} if arguments.build_log else None,
+            "stderr": (
+                {"path": str(arguments.stderr.resolve()), "sha256": sha256(arguments.stderr.resolve())}
+                if arguments.stderr else None
+            ),
+            "build_log": (
+                {"path": str(arguments.build_log.resolve()), "sha256": sha256(arguments.build_log.resolve())}
+                if arguments.build_log else None
+            ),
         },
     }
     write_json(arguments.output.resolve(), receipt)
