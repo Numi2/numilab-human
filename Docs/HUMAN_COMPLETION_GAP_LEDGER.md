@@ -25,6 +25,15 @@ completion gate is still open; **open** means the end-state owner is absent.
 | Apple runtime qualification | M4 Pro executes all routes, tendon transfers, rollback, and bitwise replay | partial | no same-workload performance qualification for the complete future tissue/contact/control stack | exact revision/artifact fingerprints, counters/traces, memory accounting, throughput, replay, and physical outcomes |
 | Scientific validation | source provenance and simulation limitations are explicit | partial | no subject calibration, population variability, or clinical validation | benchmark protocol with held-out anatomical and mechanical data; claims limited to measured scope |
 
+The [organ/blood ownership ledger](ORGAN_BLOOD_OWNERSHIP_LEDGER_20260913.md) now
+binds the current torso, cardiac cavity, vessel, hydraulic, and synthetic blood-owner
+receipts into one duplicate-rejecting ownership graph. It records four unique hydraulic
+cavity authorities and six vessel region authorities while retaining zero anatomical
+physical mass owners. This closes cross-receipt identity bookkeeping only; anatomical
+blood-mass transfer, organ mechanics, activation, calibrated materials, force
+convergence, subject calibration, sustained standing/recovery/walking, and held-out
+physiology remain open.
+
 ## Current endpoint disposition
 
 The current compiler retains one law for every origin and insertion:
