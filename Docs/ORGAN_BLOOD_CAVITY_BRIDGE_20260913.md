@@ -44,3 +44,31 @@ owner was rerun on the physical Apple M4 Pro from isolated branch
 The compiler, vascular runtime, and cavity owner checks passed; the retained
 log and SHA-256 are in
 `Docs/media/organ-blood-cavity-bridge-20260913/native/owner-recheck.log`.
+
+## Current native requalification
+
+The current native tree was requalified on the physical Apple M4 Pro from
+branch `human-blood-mass-20260913` at commit
+`e07026ab3ad497a869ee247cdfd1aa23ecc16ebb` (tree
+`4a9b0fe7b62f4809b9621a0f175ba06a20aa952a`).  The focused CTest selection
+passed all 17 of 17 tests.  It covers the vascular compiler and Metal path,
+Human physiology admission and payload, CVSim source and admission, cardiac
+source and transaction, regional material/frame/reference checks, synthetic
+Human binding and cavity checks, and tissue mass partition.  The complete
+CTest output is retained in
+[`native-organ-blood-ctest.log`](media/organ-blood-cavity-bridge-20260913/native-current/native-organ-blood-ctest.log),
+with the identity, receipt, and per-file hashes in
+[`native-current/`](media/organ-blood-cavity-bridge-20260913/native-current/).
+
+The direct cavity-owner output independently records `blood_mass_owner=pass`,
+`partitioned_inertia=pass`, `dynamic_spatial_moments=pass`,
+`time_integrated_moment_closure=pass`, `pressure_gradient_reaction=pass`,
+`pressure_driven_fluid_momentum=pass`, bitwise replay, and Jacobian checks on
+the same Apple M4 Pro.  It also explicitly reports
+`pressure_driven_momentum=unqualified`, `anatomical_registration=unqualified`,
+`subject_calibration=unqualified`, and absent biological calibration for the
+synthetic moving-wall interface.  That boundary is retained in
+[`vascular-cavity-owner.log`](media/organ-blood-cavity-bridge-20260913/native-current/vascular-cavity-owner.log):
+the native result qualifies the engineering contracts and synthetic cavity,
+not body-frame anatomy, subject-specific density/materials, two-way tissue
+exchange, physiology, or standing/walking.

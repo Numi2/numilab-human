@@ -43,3 +43,12 @@ therefore remains `pressure_momentum=unqualified`, `two_way_transfer=unqualified
 `standing_walking=unqualified`. It does not close anatomical organ mechanics,
 full two-way blood/tissue transfer, force convergence, activation calibration,
 material closure, or sustained standing/walking.
+
+The same owner and cavity path was requalified again at native commit
+`e07026ab3ad497a869ee247cdfd1aa23ecc16ebb` on the physical Apple M4 Pro as
+part of a focused 17-test native selection (17/17 passed). The direct output
+retains `pressure_gradient_reaction=pass` and
+`pressure_driven_fluid_momentum=pass` while preserving the explicit
+`anatomical_registration=unqualified` and `subject_calibration=unqualified`
+outputs. The current receipt and hash-bound logs are under
+[`Docs/media/organ-blood-cavity-bridge-20260913/native-current/`](media/organ-blood-cavity-bridge-20260913/native-current/).
