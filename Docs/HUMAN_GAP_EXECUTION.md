@@ -60,10 +60,13 @@ It records 14 workstreams, 46 tasks, 95 mandatory targets, and
 `integrated_qualification: not_assessed`; it is a completion inventory rather
 than a qualification receipt.
 
-After adding the source-to-hydraulic organ bridge, its native owner recheck, and
-the cardiac material/activation/support/loading contract, the latest no-coverage
-snapshot is retained at
-[`Docs/media/gap-execution-20260913/report-with-organ-blood-and-loading-native.json`](media/gap-execution-20260913/report-with-organ-blood-and-loading-native.json)
-(SHA-256 `b19bdff7276001dc0f6f29f16bc1ac4e9a46541a1f9eff4d47d5f30b6e7f9cd7`).  It has the same 14 workstreams, 46 tasks and 95 mandatory
-targets; the new reference hashes are included while
-`integrated_qualification` remains `not_assessed`.
+The prior source-to-hydraulic organ bridge and cardiac
+material/activation/support/loading snapshot is retained at
+[Docs/media/gap-execution-20260913/report-with-organ-blood-and-loading-native.json](media/gap-execution-20260913/report-with-organ-blood-and-loading-native.json)
+(SHA-256 b19bdff7276001dc0f6f29f16bc1ac4e9a46541a1f9eff4d47d5f30b6e7f9cd7).
+The ABI38 source-to-native identity/owner admission is included in the current
+no-coverage snapshot at
+[Docs/media/gap-execution-20260913/report-with-native-organ-binding.json](media/gap-execution-20260913/report-with-native-organ-binding.json)
+(SHA-256 44f3d8585601a89b1b8fcf40948f03006c9cf813855ef90f6c8482caaff90360).
+Both snapshots have 14 workstreams, 46 tasks and 95 mandatory targets;
+integrated_qualification remains not_assessed.
