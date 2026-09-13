@@ -2154,6 +2154,12 @@ def parser() -> argparse.ArgumentParser:
         help="advance the pinned Shi/Hose source cardiac elastance and valve graph",
     )
     add_shi_hose_step_arguments(shi_hose_step)
+    from .cvsim21_blood_mass_step import add_arguments as add_cvsim21_blood_mass_arguments
+    cvsim21_blood_mass = commands.add_parser(
+        "cvsim21-blood-mass-step",
+        help="advance the pinned CVSim21 aggregate blood-mass owner with accepted-step rollback",
+    )
+    add_cvsim21_blood_mass_arguments(cvsim21_blood_mass)
     from .locomotor import add_arguments as add_locomotor_arguments
     locomotor = commands.add_parser("locomotor-program", help="author a source-bound Brain spindle and periodic muscle controller candidate")
     add_locomotor_arguments(locomotor)
