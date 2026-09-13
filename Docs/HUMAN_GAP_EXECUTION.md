@@ -112,6 +112,17 @@ the receipt deliberately leaves organ and vessel mechanics, materials,
 density, blood/tissue exchange, calibration, loading, standing, recovery, and
 walking unqualified.
 
+The follow-up [`native stance horizon`](NATIVE_STAND_STANCE_HORIZON_20260913.md)
+repeats the same physical M4 run from the authored support stance: six foot
+witnesses carry the static `952.864475177 N` wrench with a
+`1.86146132819e-6 N` root residual, and the compiled source activation is
+balanced. The exact-clock 512-step replay remains dynamically divergent
+(`108763.164 m/s²` peak acceleration, `1.30699` velocity delta,
+`0.00444473` configuration delta), so it closes source stance placement and
+static support/activation admission only; force convergence, sustained
+standing, recovery, walking, calibration, and material/blood exchange remain
+open.
+
 The current native persistent-stand owner has been exercised on the physical
 M4 Pro at all four common durations (`100/50/25/12.5 us`) using the authored
 six-contact stance, all 416 source routes at activation `1.0`, NHTENDON3

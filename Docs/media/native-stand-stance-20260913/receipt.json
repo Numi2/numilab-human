@@ -1,0 +1,156 @@
+{
+  "schema": "numi.human.native-stand-stance-horizon.v1",
+  "captured_at": "2026-09-13",
+  "host": {
+    "ssh_alias": "macmini",
+    "device": "Apple M4 Pro",
+    "matter_abi": 39
+  },
+  "native": {
+    "branch": "human-blood-mass-20260913",
+    "revision": "de83ba9bbde08fee921c1a2ff1e567f981714326",
+    "worktree_status_at_capture": "0",
+    "source": {
+      "path": "apps/numilab_human_myosim_visual_probe.mm",
+      "sha256": "fcf3bffd414cae2345d4abf94c2f9c876297e484ef97dc3a32c763e22b567d4c"
+    },
+    "binary": {
+      "path": "/Users/n/MetalRobo-blood-mass-build-20260913/bin/metalrobo_numilab_human_myosim_visual_probe",
+      "sha256": "cfb8db04bd959eee4710b5aa62bc730ebc88353b8743d7b46570da7134bfcc54"
+    }
+  },
+  "inputs": {
+    "bodyparts_torso_payload": {
+      "path": "Build/nhanatomy-20260913/bodyparts3d-myosim-torso-anatomy.nhanatomy",
+      "sha256": "647121fe5b15b166b5af1059c85ec0ed7d57cac22f1812f5cd477c2c243395cc",
+      "manifest_sha256": "b3143549c3a401f767c045b64599bb532f665fb23d177e9fdf3991a5a63aee5f",
+      "surface_count": 12
+    },
+    "support_stance_profile": {
+      "path": "config/myosim-support-stance.v1.json",
+      "sha256": "35ca636d6e6be46cd61a9504cc50c3faed0e60ae76358fa9d84b7b1ae4c17103",
+      "dofs": [
+        2,
+        108,
+        109,
+        110,
+        122,
+        123,
+        124
+      ],
+      "dof_bounds": [
+        0.02,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1
+      ],
+      "active_witnesses": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    }
+  },
+  "run": {
+    "subject": "one adult male source package",
+    "clock_seconds": 1.25e-05,
+    "steps": 512,
+    "activation": 1.0,
+    "deterministic_replay": true,
+    "root_assistance": false,
+    "support_witnesses": 10,
+    "active_support_witnesses": 6,
+    "support_seed_translation_m": 0.053175445646,
+    "compiled": {
+      "balanced": true,
+      "support_contacts": 10,
+      "active_support_contacts": 6,
+      "total_support_force_n": 952.864475177,
+      "max_root_force_residual_n": 1.86146132819e-06,
+      "max_root_acceleration_residual": 0.0203615588578,
+      "normalized_residual_rms": 0.0110244305589,
+      "initial_normalized_residual_rms": 0.728012321388,
+      "active_muscles": 246,
+      "recruited_muscles": 416,
+      "active_limits": 29,
+      "pose_steps": 24,
+      "max_acceleration_residual": 0.0474679846966,
+      "max_velocity_increment": 5.93349808708e-07,
+      "max_activation": 1.0
+    },
+    "dynamic": {
+      "completed_steps": 512,
+      "max_acceleration": 108763.164062,
+      "max_penetration_m": 1.82576002317e-07,
+      "max_velocity_delta": 1.30699014664,
+      "max_configuration_delta": 0.00444473000243,
+      "configuration_delta_q": 106
+    },
+    "frames": [
+      {
+        "view": "front",
+        "sha256": "5138fabf307178a749ebe580aa3dc0c16205caf6be61ede00c2265de3f4da8f8",
+        "path": "myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-muscle-driven-source-support-contact-front.png"
+      },
+      {
+        "view": "oblique",
+        "sha256": "4af26e814de23a5dafe35ac8843182c951fdbf966a1f901d99ba6c774bb3744e",
+        "path": "myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-muscle-driven-source-support-contact-oblique.png"
+      },
+      {
+        "view": "side",
+        "sha256": "de2e2b443a13bb11ffcf19df4a9000a354d73b1205707492c8f21d0601d91dca",
+        "path": "myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-muscle-driven-source-support-contact-side.png"
+      },
+      {
+        "view": "rear",
+        "sha256": "f8a7c10d3813df10469548fc0eb688729ebefb3ed8b7d3d3966766778bacf5a2",
+        "path": "myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-muscle-driven-source-support-contact-rear.png"
+      }
+    ],
+    "native_stdout": {
+      "path": "numi-human-stand-stance-20260913.stdout",
+      "sha256": "f57deba4779de5459afba7e903885de283cbc0d48ebf684eb69d220a853df915"
+    },
+    "native_stderr": {
+      "path": "numi-human-stand-stance-20260913.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "empty": true
+    }
+  },
+  "validation": {
+    "visual_probe": "passed",
+    "native_status": "myosim_articulated_bodyparts_bone_visual=ok",
+    "focused_ctest": "4/4 passed",
+    "focused_ctest_log": {
+      "path": "ctest.log",
+      "sha256": "b6cb599a1508e17c59218fb9f8afad24b9330a150007e31a76b2b1f91b01f360"
+    }
+  },
+  "qualification": {
+    "support_stance_geometry": true,
+    "static_support_wrench": true,
+    "compiled_stand_balanced": true,
+    "source_activation_recruitment": true,
+    "exact_clock_512_step_replay": true,
+    "torso_visual_binding": true,
+    "force_convergence_over_horizon": false,
+    "sustained_standing": false,
+    "recovery": false,
+    "walking": false,
+    "organ_fem_or_mpm": false,
+    "vessel_tube_or_lumen_mechanics": false,
+    "neural_mechanics": false,
+    "material_density": false,
+    "blood_mass_owner": false,
+    "two_way_tissue_exchange": false,
+    "subject_calibration": false
+  },
+  "boundary": "The authored source stance now closes static support placement and gravity-wrench admission on the physical M4 Pro for one adult male, with exact 12.5 us 512-step transaction and bitwise replay. The dynamic horizon still has 108763.164 m/s^2 peak acceleration, 1.30699 velocity delta, and 0.00444473 configuration delta, so it does not qualify sustained standing, recovery, or walking. It does not create anatomical organ/vessel mechanics, materials, density, blood/tissue exchange, or subject calibration."
+}

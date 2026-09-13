@@ -287,6 +287,17 @@ organ FEM/MPM, vessel tube/lumen mechanics, neural mechanics, calibrated
 materials/density, blood/tissue exchange, subject calibration, anatomical
 loading, standing, recovery, and walking remain open.
 
+The [native stance horizon](NATIVE_STAND_STANCE_HORIZON_20260913.md) now
+repeats the exact-clock physical-M4 run from the authored root/ankle/subtalar/
+MTP stance and six active foot witnesses. Static source support placement and
+activation/recruitment are admitted (`compiled_stand_balanced=true`,
+`952.864475177 N` total support, `1.86146132819e-6 N` root residual) with
+bitwise replay through 512 steps. The run still records
+`108763.164 m/s²` peak acceleration, `1.30699` velocity delta, and
+`0.00444473` configuration delta, so temporal force convergence and sustained
+standing remain open; recovery, walking, anatomical mechanics, materials,
+blood/tissue exchange, and subject calibration remain open.
+
 ## Single-male release target
 
 The current release is one source-bound adult male at one fixed measured age.
