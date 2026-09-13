@@ -106,6 +106,16 @@ joint/fibre/contact state as the next owner and does not promote force
 convergence, sustained standing, recovery, walking, or anatomical/calibrated
 qualification.
 
+The follow-up [native support-force horizon receipt](NATIVE_SUPPORT_FORCE_HORIZON_20260913.md)
+removes the CLI's artificial 64-step ceiling and admits the declared 4096-step
+solver bound. A physical M4 Pro run completes 512 exact `12.5 µs` steps
+(`6.4 ms`) with static `952.864475176 N` support balance and bitwise replay,
+but reaches `114347.445 m/s²` peak generalized acceleration, `1.4058` velocity
+delta, and `0.0047894` configuration delta. The longer horizon is therefore
+accepted transaction evidence and a retained temporal-convergence failure;
+it does not promote standing, recovery, walking, anatomical loading,
+activation calibration, blood/tissue exchange, or material qualification.
+
 The post-exact-clock snapshot is retained at
 [Docs/media/gap-execution-20260913/report-with-native-exact-clock-20260913.json](media/gap-execution-20260913/report-with-native-exact-clock-20260913.json)
 (report SHA-256 `ea2f7a2ed73cfdf538addde4e2ee2190e386dd817107edc35d1dd45ac9289715`).
