@@ -123,6 +123,12 @@ static support/activation admission only; force convergence, sustained
 standing, recovery, walking, calibration, and material/blood exchange remain
 open.
 
+The refreshed registry snapshot is retained at
+[`Docs/media/gap-execution-20260913/report-with-native-stand-stance-20260913.json`](media/gap-execution-20260913/report-with-native-stand-stance-20260913.json)
+with report SHA-256 `534393a5f2c555d46cbdf6499efef52852462220fec395e40c952baa11e35109`.
+It remains `integrated_qualification: not_assessed` across 14 workstreams,
+46 tasks, and 95 mandatory targets.
+
 The current native persistent-stand owner has been exercised on the physical
 M4 Pro at all four common durations (`100/50/25/12.5 us`) using the authored
 six-contact stance, all 416 source routes at activation `1.0`, NHTENDON3
