@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 from numilab_human.native_force_convergence import audit
@@ -19,17 +20,14 @@ LINE = (
 )
 
 
-def test_native_force_audit_retains_partial_status(tmp_path: Path) -> None:
-    stdout = tmp_path / "stdout"
-    stdout.write_text(LINE, encoding="utf-8")
-    stderr = tmp_path / "stderr"
-    stderr.write_text("", encoding="utf-8")
-    output = tmp_path / "receipt.json"
-    arguments = argparse.Namespace(
+def _arguments(stdout: Path, output: Path, **overrides) -> argparse.Namespace:
+    values = dict(
         stdout=stdout,
-        stderr=stderr,
+        stderr=None,
         replay_stdout=None,
         build_log=None,
+        standing_state_receipt=None,
+        require_standing_state_receipt=False,
         output=output,
         source_commit="fixture",
         binary_sha256="0" * 64,
@@ -46,19 +44,12 @@ def test_native_force_audit_retains_partial_status(tmp_path: Path) -> None:
         maximum_configuration_delta=1.0e-4,
         require_same_horizon_replay=False,
     )
-    assert audit(arguments) == 0
-    import json
-    receipt = json.loads(output.read_text(encoding="utf-8"))
-    assert receipt["status"] == "partial"
-    assert not receipt["qualification"]["force_convergence"]
-    assert not receipt["qualification"]["sustained_standing"]
-    assert receipt["exact_dense_stage"]["selected_path"] == "large_state_fallback"
-    assert not receipt["qualification"]["blood_mass_transfer"]
+    values.update(overrides)
+    return argparse.Namespace(**values)
 
 
-def test_force_convergence_does_not_promote_sustained_standing(tmp_path: Path) -> None:
-    stdout = tmp_path / "stdout"
-    stdout.write_text(LINE.replace(
+def _converged_line() -> str:
+    return LINE.replace(
         "persistent_max_acceleration=46673.2",
         "persistent_max_acceleration=1",
     ).replace(
@@ -73,33 +64,84 @@ def test_force_convergence_does_not_promote_sustained_standing(tmp_path: Path) -
     ).replace(
         "compiled_stand_max_root_force_residual=776.8",
         "compiled_stand_max_root_force_residual=0.001",
-    ), encoding="utf-8")
-    output = tmp_path / "receipt.json"
-    arguments = argparse.Namespace(
-        stdout=stdout,
-        stderr=None,
-        replay_stdout=None,
-        build_log=None,
-        output=output,
-        source_commit="fixture",
-        binary_sha256="0" * 64,
-        subject="one adult male source package",
-        body_count=157,
-        dof_count=128,
-        q_count=129,
-        exact_body_limit=32,
-        exact_dof_limit=40,
-        exact_q_limit=41,
-        minimum_steps=512,
-        maximum_acceleration=1000.0,
-        maximum_velocity_delta=0.01,
-        maximum_configuration_delta=1.0e-4,
-        require_same_horizon_replay=False,
     )
+
+
+def _state_receipt(path: Path, *, candidate: bool, maximal: bool) -> None:
+    path.write_text(json.dumps({
+        "schema": "numi.human.standing-initial-state-audit.v1",
+        "initial_state": {"sha256": "1" * 64},
+        "state": {
+            "uniform_maximal_activation": maximal,
+            "activation_nonzero_count": 237 if candidate else 416,
+        },
+        "qualification": {"standing_initial_state_candidate": candidate},
+    }), encoding="utf-8")
+
+
+def test_native_force_audit_retains_partial_status(tmp_path: Path) -> None:
+    stdout = tmp_path / "stdout"
+    stdout.write_text(LINE, encoding="utf-8")
+    stderr = tmp_path / "stderr"
+    stderr.write_text("", encoding="utf-8")
+    output = tmp_path / "receipt.json"
+    arguments = _arguments(stdout, output, stderr=stderr)
     assert audit(arguments) == 0
-    import json
+    receipt = json.loads(output.read_text(encoding="utf-8"))
+    assert receipt["status"] == "partial"
+    assert not receipt["qualification"]["force_convergence"]
+    assert not receipt["qualification"]["sustained_standing"]
+    assert receipt["exact_dense_stage"]["selected_path"] == "large_state_fallback"
+    assert not receipt["qualification"]["blood_mass_transfer"]
+
+
+def test_force_convergence_does_not_promote_sustained_standing(tmp_path: Path) -> None:
+    stdout = tmp_path / "stdout"
+    stdout.write_text(_converged_line(), encoding="utf-8")
+    output = tmp_path / "receipt.json"
+    assert audit(_arguments(stdout, output)) == 0
     receipt = json.loads(output.read_text(encoding="utf-8"))
     assert receipt["qualification"]["force_convergence"]
+    assert not receipt["qualification"]["standing_force_convergence"]
     assert not receipt["qualification"]["sustained_standing"]
     assert not receipt["qualification"]["recovery"]
     assert not receipt["qualification"]["walking"]
+
+
+def test_required_prepared_state_can_bind_converged_horizon(tmp_path: Path) -> None:
+    stdout = tmp_path / "stdout"
+    stdout.write_text(_converged_line(), encoding="utf-8")
+    state = tmp_path / "standing-state.json"
+    _state_receipt(state, candidate=True, maximal=False)
+    output = tmp_path / "receipt.json"
+    arguments = _arguments(
+        stdout,
+        output,
+        standing_state_receipt=state,
+        require_standing_state_receipt=True,
+    )
+    assert audit(arguments) == 0
+    receipt = json.loads(output.read_text(encoding="utf-8"))
+    assert receipt["qualification"]["standing_state_admissible"]
+    assert receipt["qualification"]["force_convergence"]
+    assert receipt["qualification"]["standing_force_convergence"]
+    assert not receipt["qualification"]["sustained_standing"]
+
+
+def test_required_maximal_activation_state_cannot_pass(tmp_path: Path) -> None:
+    stdout = tmp_path / "stdout"
+    stdout.write_text(_converged_line(), encoding="utf-8")
+    state = tmp_path / "standing-state.json"
+    _state_receipt(state, candidate=False, maximal=True)
+    output = tmp_path / "receipt.json"
+    arguments = _arguments(
+        stdout,
+        output,
+        standing_state_receipt=state,
+        require_standing_state_receipt=True,
+    )
+    assert audit(arguments) == 0
+    receipt = json.loads(output.read_text(encoding="utf-8"))
+    assert not receipt["qualification"]["force_convergence"]
+    assert not receipt["qualification"]["standing_force_convergence"]
+    assert any("maximal-activation" in reason for reason in receipt["gate"]["reasons"])
