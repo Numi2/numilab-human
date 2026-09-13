@@ -250,10 +250,14 @@ def _mass_candidate(native: dict[str, Any], validated: dict[str, Any], state: di
         source_table = candidate["compartments"] if source in candidate["compartments"] else candidate["tissue_reservoirs"]
         target_table = candidate["compartments"] if target in candidate["compartments"] else candidate["tissue_reservoirs"]
         transported_volume = abs(timestep_s * flow)
-        source_volume = state["compartments"].get(source, state["tissue_reservoirs"].get(source))["volume_m3"]
+        # The connection transfer above is part of this same split step.  Use
+        # the candidate owner state so exchange density reflects incoming or
+        # outgoing vascular flow deterministically instead of the pre-step
+        # density.
+        source_volume = source_table[source]["volume_m3"]
         _require(transported_volume < source_volume,
                  f"exchange {row.get('id')} empties its source owner")
-        source_density = state["compartments"].get(source, state["tissue_reservoirs"].get(source))["mass_kg"] / source_volume
+        source_density = source_table[source]["mass_kg"] / source_volume
         transfer = transported_volume * source_density
         source_table[source]["volume_m3"] -= transported_volume
         target_table[target]["volume_m3"] += transported_volume
