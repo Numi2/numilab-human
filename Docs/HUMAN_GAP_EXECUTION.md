@@ -64,9 +64,12 @@ The prior source-to-hydraulic organ bridge and cardiac
 material/activation/support/loading snapshot is retained at
 [Docs/media/gap-execution-20260913/report-with-organ-blood-and-loading-native.json](media/gap-execution-20260913/report-with-organ-blood-and-loading-native.json)
 (SHA-256 b19bdff7276001dc0f6f29f16bc1ac4e9a46541a1f9eff4d47d5f30b6e7f9cd7).
-The ABI38 source-to-native identity/owner admission is included in the current
-no-coverage snapshot at
+The ABI38 source-to-native identity/owner admission is included in the
+intermediate no-coverage snapshot at
 [Docs/media/gap-execution-20260913/report-with-native-organ-binding.json](media/gap-execution-20260913/report-with-native-organ-binding.json)
 (SHA-256 44f3d8585601a89b1b8fcf40948f03006c9cf813855ef90f6c8482caaff90360).
+The final post-ledger snapshot is
+[Docs/media/gap-execution-20260913/report-with-native-organ-binding-ledger.json](media/gap-execution-20260913/report-with-native-organ-binding-ledger.json)
+(SHA-256 7a17975431d7911feefc9d8302c510f7e572633db8d0d3f68fdc100f2fda2372).
 Both snapshots have 14 workstreams, 46 tasks and 95 mandatory targets;
 integrated_qualification remains not_assessed.
