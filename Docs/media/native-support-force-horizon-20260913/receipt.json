@@ -1,0 +1,84 @@
+{
+  "artifacts": {
+    "build_sha256": "b9976fe75d87d821e038cc84a290c8a17cac7e25ed91e53de8d46985283e4b7d",
+    "ctest_sha256": "a9c3683a906e2aa005c9fa4be30d6adc5112e5e5ff9fac4c7260dd5c457e3707",
+    "gap_execution_report_sha256": "31a6df07d6de9414dd832f0dc29b6678048288ae3b079b2be695e5e60c5bc0ad",
+    "runtime_patch_sha256": "d81d3becac4a08577a7ed6c0e41f7e47262449a4755cec9df6c8cca133873556",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "aae8ec2a21bf8eb94eec6215fed30accdf7fe7e65c9fdfcb4c9c4c7f8f76f2c5"
+  },
+  "date": "2026-09-13",
+  "horizon": {
+    "completed_steps": 512,
+    "gate": "FAIL: assistance-free sustained standing remains unqualified; temporal drift grows over 6.4 ms",
+    "max_acceleration": 114347.445312,
+    "max_configuration_delta": 0.00478942599148,
+    "max_penetration_m": 1.78268038553e-07,
+    "max_velocity_delta": 1.40579736233,
+    "normal_impulse": 0.000223096329137
+  },
+  "inputs": {
+    "joint_equality": {
+      "path": "/Users/n/NumiHumanCurrent/myosim-fullbody-joint-equalities.nheq",
+      "sha256": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a"
+    },
+    "muscle": {
+      "path": "/Users/n/NumiHumanCurrent/myosim-fullbody-muscle-reference.nhmyo",
+      "sha256": "9a988f19a6fd8e5335fb0cf2bf3192cb8535fb008ccd394ffbf1a4432d3db76a05"
+    },
+    "rigid": {
+      "path": "/Users/n/NumiHumanCurrent/myosim-fullbody-core-reference.nhrigid",
+      "sha256": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44"
+    },
+    "support": {
+      "path": "/Users/n/human-capsule-20260908/input/myosim-fullbody-support-primitives.nhcnt",
+      "sha256": "c7712daf79cd8a589a6d23942a4df84a7da928e5911455ce19078f9b24daaaf4"
+    },
+    "tendon": {
+      "path": "/Users/n/NumiHumanCurrent/numi-human-tendon-attachments.nhtendon",
+      "sha256": "a594194f510eb4aa990a8767f868f999a10b4fedb745c8665368a231ed39b555"
+    }
+  },
+  "remaining_completion_gaps": [
+    "anatomical supports/loading remain source capsule reactions, not registered anatomical tissue mechanics",
+    "activation is not calibrated against held-out subject data",
+    "blood mass transfer is wiring/synthetic owner evidence without tissue-side exchange or vessel mechanics",
+    "unresolved material coefficients and density assignment remain",
+    "force and temporal convergence remain open",
+    "assistance-free standing, recovery, and walking remain unqualified"
+  ],
+  "remote_source": {
+    "branch": "human-blood-mass-20260913",
+    "commit": "a134ad9d0e6ca3416ec3e98e66c5fcb84dc05b0b",
+    "parent": "9af1cf9d597fbb796bb20c370a8ca3c150f07b5a",
+    "push": "blocked: HTTPS origin requires unavailable credentials",
+    "repository": "/Users/n/MetalRobo-blood-mass-20260913"
+  },
+  "schema": "numi.human.native-support-force-horizon.v1",
+  "scope": {
+    "assistance_free": true,
+    "clock_seconds": 1.25e-05,
+    "deterministic_replay": true,
+    "device": "Apple M4 Pro",
+    "duration_seconds": 0.0064,
+    "steps": 512,
+    "subject": "one adult male source package"
+  },
+  "static_support": {
+    "active_contacts": 6,
+    "balanced": "true",
+    "one_step_q_error": 3.01470339803e-08,
+    "one_step_v_error": 1.85241077788e-05,
+    "payload": "NHCNT2",
+    "root_force_residual_newtons": 1.86186775863e-06,
+    "total_force_newtons": 952.864475176,
+    "witnesses": 18
+  },
+  "status": "partial",
+  "tests": {
+    "build": "passed",
+    "focused_ctest": "4/4 passed: source_route_precision_metal, support_precision, behavior_telemetry, static_support",
+    "gap_execution": "not assessed; 14 workstreams / 46 tasks / 95 mandatory targets",
+    "parser_bound": "1..4096 accepted by CLI; 4097 fails closed"
+  }
+}
