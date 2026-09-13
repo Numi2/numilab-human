@@ -1,0 +1,40 @@
+[
+  {
+    "file": "src/metal/NumiHumanExtensorHoodMetal.mm",
+    "sha256": "4ee1d81b1c12b82727230c8c85e97f0b566c01a544bc2deac6426d1c11f71db1",
+    "command": [
+      "xcrun",
+      "clang++",
+      "-std=c++20",
+      "-fobjc-arc",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fsyntax-only",
+      "-I",
+      "/tmp/numi-hood-companion-admission-20260913/include",
+      "-DMETALROBO_DEFAULT_METALLIB=\"unused.metallib\"",
+      "/tmp/numi-hood-companion-admission-20260913/src/metal/NumiHumanExtensorHoodMetal.mm"
+    ],
+    "returncode": 0,
+    "log": "/tmp/numi-hood-companion-admission-20260913/NumiHumanExtensorHoodMetal-syntax.log"
+  },
+  {
+    "file": "apps/numilab_human_extensor_hood_admission_probe.mm",
+    "sha256": "6eb3ddff2a210e50ed78f1b7df7df40c10f22643c31a969e33152077852fb919",
+    "command": [
+      "xcrun",
+      "clang++",
+      "-std=c++20",
+      "-fobjc-arc",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-fsyntax-only",
+      "-I",
+      "/tmp/numi-hood-companion-admission-20260913/include",
+      "-DMETALROBO_DEFAULT_METALLIB=\"unused.metallib\"",
+      "/tmp/numi-hood-companion-admission-20260913/apps/numilab_human_extensor_hood_admission_probe.mm"
+    ],
+    "returncode": 0,
+    "log": "/tmp/numi-hood-companion-admission-20260913/numilab_human_extensor_hood_admission_probe-syntax.log"
+  }
+]

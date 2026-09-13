@@ -141,6 +141,8 @@ Sustained behavior and the complete anatomical composition remain open.
 `numi human-behavior-metrics` authors [source-bound native metric criteria](Docs/HUMAN_BEHAVIOR_METRIC_PROGRAM.md).
 The producer measures jointly accepted roots through the existing Brain–Human–Matter
 runner; unavailable contact, audit and reset evidence remains explicit.
+The [current paired source-route qualification](Docs/SOURCE_ROUTE_PRECISION_20260913.md)
+records the exact native/Brain revisions, source comparisons and bounded replay.
 
 `numi human gap-execution` now joins the live completion ledger to named owners,
 acceptance criteria and a dependency graph covering all 95 mandatory targets.

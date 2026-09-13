@@ -36,7 +36,9 @@ runtime package, or change integrated qualification from `not_assessed`.
 The first engineering streams are candidate/accepted-position precision
 and accepted-root behavioral telemetry. The [bounded implementation](ACCEPTED_STATE_PRECISION_20260913.md)
 repairs the retained 25 µs failure and adds a real joint-publication metric
-producer; both tasks retain their full acceptance gates below. Anatomical
+producer. The [source-route follow-up](SOURCE_ROUTE_PRECISION_20260913.md) adds
+paired muscle/hood geometry and full-model read-only source evaluation; both
+tasks retain their full acceptance gates below. Anatomical
 supports/loading, activation, spatial blood mass and momentum ownership,
 unresolved material data and calibration have separate dependency tasks.
 The registry retains the unchanged 100/50/25/12.5µs common-duration refinement

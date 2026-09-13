@@ -1,0 +1,611 @@
+{
+  "schema": "numilab-human.native-check-execution.v1",
+  "request": {
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/n/MetalRobo-human-completion-build-20260907",
+      "-j",
+      "4",
+      "--target",
+      "metalrobo_source_route_precision_check",
+      "metalrobo_numilab_human_extensor_hood_reference_probe",
+      "metalrobo_numilab_human_myosim_reference_probe"
+    ],
+    "cwd": "/Users/n/MetalRobo-human-completion-20260907",
+    "environment": {},
+    "repositories": {
+      "native": "/Users/n/MetalRobo-human-completion-20260907"
+    },
+    "sources": [
+      "/Users/n/MetalRobo-human-completion-20260907/CMakeLists.txt",
+      "/Users/n/MetalRobo-human-completion-20260907/apps/compensated_geometry_check.mm",
+      "/Users/n/MetalRobo-human-completion-20260907/apps/compensated_translation_check.mm",
+      "/Users/n/MetalRobo-human-completion-20260907/apps/human_behavior_program_check.cpp",
+      "/Users/n/MetalRobo-human-completion-20260907/apps/human_behavior_telemetry_check.mm",
+      "/Users/n/MetalRobo-human-completion-20260907/apps/human_reconcile_probe.mm",
+      "/Users/n/MetalRobo-human-completion-20260907/apps/human_support_precision_check.cpp",
+      "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_fullbody_bridge_probe.mm",
+      "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_human_matter_adapter_probe.mm",
+      "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_human_matter_candidate_probe.mm",
+      "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_human_matter_owner_probe.mm",
+      "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_matter_accepted_state_proof_probe.mm",
+      "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_matter_attachment_runtime_probe.mm",
+      "/Users/n/MetalRobo-human-completion-20260907/apps/numilab_human_myosim_reference_probe.cpp",
+      "/Users/n/MetalRobo-human-completion-20260907/apps/numilab_human_myosim_visual_probe.mm",
+      "/Users/n/MetalRobo-human-completion-20260907/apps/source_route_precision_check.mm",
+      "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/HumanBehaviorProgram.hpp",
+      "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/MatterSnapshotArchive.hpp",
+      "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/MetalArticulatedOperator.hpp",
+      "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/MetalHumanBehaviorTelemetry.hpp",
+      "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/MetalNumanXCoupledHuman.hpp",
+      "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/MetalNumanXHumanMatter.hpp",
+      "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/NumiHumanInitialState.hpp",
+      "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/compensated_geometry_gpu.h",
+      "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/compensated_translation_gpu.h",
+      "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/engine_types.h",
+      "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/human_behavior_gpu.h",
+      "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/mrnx_human_behavior_v1.h",
+      "/Users/n/MetalRobo-human-completion-20260907/matter/CMakeLists.txt",
+      "/Users/n/MetalRobo-human-completion-20260907/matter/include/numi/matter/human_support_precision_gpu.h",
+      "/Users/n/MetalRobo-human-completion-20260907/matter/include/numi/matter/matter.hpp",
+      "/Users/n/MetalRobo-human-completion-20260907/matter/include/numi/matter/shared.h",
+      "/Users/n/MetalRobo-human-completion-20260907/matter/src/accepted_state_proof_gpu.hpp",
+      "/Users/n/MetalRobo-human-completion-20260907/matter/src/metal/contact.metalinc",
+      "/Users/n/MetalRobo-human-completion-20260907/matter/src/metal/fem.metalinc",
+      "/Users/n/MetalRobo-human-completion-20260907/matter/src/runtime.mm",
+      "/Users/n/MetalRobo-human-completion-20260907/src/core/HumanBehaviorProgram.cpp",
+      "/Users/n/MetalRobo-human-completion-20260907/src/core/NumiHumanInitialState.cpp",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/ArticulatedOperator.metal",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/ArticulatedOperatorCompensated.metal",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/CompensatedTranslationCheck.metal",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/HumanBehavior.metal",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/MetalArticulatedOperator.mm",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/MetalHumanBehaviorTelemetry.mm",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/MetalNumanXHumanMatter.mm",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/MujocoMuscleReference.metal",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/MujocoMuscleReferenceCompensated.metal",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumanXBridgeV1.mm",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumanXBridgeV1Internal.hpp",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumanXHumanIO.metal",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumanXHumanMatterOwner.metal",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumanXRuntimeV1.mm",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumiHumanExtensorHood.metal",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumiHumanExtensorHoodCompensated.metal",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumiHumanExtensorHoodMetal.mm",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumiHumanStand.metal",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumiHumanTendonTransfer.metal",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumiHumanTendonTransferCompensated.metal",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/PairedSourceGeometry.metalinc",
+      "/Users/n/MetalRobo-human-completion-20260907/src/metal/RuntimeHumanBehaviorAPI.inc",
+      "/Users/n/MetalRobo-human-completion-20260907/tests/numi_human_initial_state_test.cpp"
+    ],
+    "binaries": [],
+    "timeout_seconds": 300
+  },
+  "request_identity": {
+    "bytes": 6085,
+    "sha256": "9e11ff2d90e69db4b0da8763f2bf75a5e2b4cfeac099d6fdfbef666a7a57a815"
+  },
+  "runner_identity": {
+    "bytes": 3587,
+    "sha256": "050a8e438d8cba8af1b6eaad9c9b86c17f22077a43bb0f3899e19b51a16a02d6"
+  },
+  "started_utc": "2026-09-12T23:50:26.675284+00:00",
+  "source_before": {
+    "/Users/n/MetalRobo-human-completion-20260907/CMakeLists.txt": {
+      "bytes": 165598,
+      "sha256": "5e8bbfe1d1b3ccc252274ae70b31e0bdfb75bc4c1c81fc60c850466dcc94b633"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/compensated_geometry_check.mm": {
+      "bytes": 12692,
+      "sha256": "badd4b0e5163ff88ca93f153dc3f32f0ae3abda603afb77c9cb0392132a12038"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/compensated_translation_check.mm": {
+      "bytes": 7751,
+      "sha256": "3e512efa0cdc6b619c99fb815183649139b5531b9f8f4d1a93b94f5c53529e1d"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/human_behavior_program_check.cpp": {
+      "bytes": 3734,
+      "sha256": "71c783c670acc916972eb729547a94671d7bbe8d0027efd05d0852e7b557dc85"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/human_behavior_telemetry_check.mm": {
+      "bytes": 9113,
+      "sha256": "daf4d2e56e09612a861b079cf096b4a44145ee162ffde510862e1b85c5dd666d"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/human_reconcile_probe.mm": {
+      "bytes": 8586,
+      "sha256": "f70d4248b0be5473719f2c8aae8483646f82a700bc3aefe5972be3b426ae6693"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/human_support_precision_check.cpp": {
+      "bytes": 6291,
+      "sha256": "efb43e03e99663f5b7da279f1fc508c526e0fc18093213d170344a1463e5ec73"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_fullbody_bridge_probe.mm": {
+      "bytes": 91164,
+      "sha256": "b3fb8c25ca14a30d2e5928f8e2452b1b0846f1517279cd0ea7791700dd346d07"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_human_matter_adapter_probe.mm": {
+      "bytes": 144756,
+      "sha256": "0a7e4744a68a258b9a5bf8b76b12248e4cb834617f6bc5c79ac0e75c7b84531a"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_human_matter_candidate_probe.mm": {
+      "bytes": 49623,
+      "sha256": "2d1889a3cede94ab4e40809a5399a9ecb641636470f613805f253719c962eb37"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_human_matter_owner_probe.mm": {
+      "bytes": 35324,
+      "sha256": "e68a7b20cbc7aadc7a7b10ad4848f1547daa860967a4451dc9a752229b82acb3"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_matter_accepted_state_proof_probe.mm": {
+      "bytes": 64948,
+      "sha256": "746bb5a65011fef9e5311ed91afbdaceac12ecba8d3e40a8b58e7e204976b002"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_matter_attachment_runtime_probe.mm": {
+      "bytes": 55841,
+      "sha256": "ec6193af83ce344db62558fe76e06935a9fa155595e0cf52b1c4df0fd266571b"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numilab_human_myosim_reference_probe.cpp": {
+      "bytes": 96056,
+      "sha256": "62d3cb7242fe1563bff14c8508524cb033edb9dc08a3cea782620f0788297619"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numilab_human_myosim_visual_probe.mm": {
+      "bytes": 922575,
+      "sha256": "7cef788efe00b9872e6ca2db44107fb2703cc0c9beca72afc39a03bcdc7e2e9d"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/source_route_precision_check.mm": {
+      "bytes": 29667,
+      "sha256": "fa136976d686cbaff2bed0b982b8ef8e157d2c0330a81b0ced6b7689eba37137"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/HumanBehaviorProgram.hpp": {
+      "bytes": 2042,
+      "sha256": "3b28c97c70824ef590227436ecc0ad60baf339502408daf62b7aecfe5d519cb3"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/MatterSnapshotArchive.hpp": {
+      "bytes": 1763,
+      "sha256": "c4da585de196d3ba6112f869761c48c123524d8bfe06e3779894a7e185278242"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/MetalArticulatedOperator.hpp": {
+      "bytes": 88395,
+      "sha256": "304844a80e58f577588dfeecab20506d408b0081dc8d6c02bc4c37aaa33d4446"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/MetalHumanBehaviorTelemetry.hpp": {
+      "bytes": 2441,
+      "sha256": "9d0876be8489d63768821540335c60e175cc1bccc79ab95eb1fc87555929ba50"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/MetalNumanXCoupledHuman.hpp": {
+      "bytes": 17511,
+      "sha256": "c5076488104aa9e887fb3a1ae8040113f05b3423ca625c022bbe743eafc36626"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/MetalNumanXHumanMatter.hpp": {
+      "bytes": 10980,
+      "sha256": "a2a50172f97c4fcbf01b53391bfb7d2f12eaf2d89f2a3522f969f32635e79bdf"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/NumiHumanInitialState.hpp": {
+      "bytes": 2779,
+      "sha256": "ab9038931b601f2ee18ca623bee1c57a5a9a6b929401b35ea6324de1250c8f8f"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/compensated_geometry_gpu.h": {
+      "bytes": 6421,
+      "sha256": "1bf85c7e7b8b2102c5e0e6f3fbba88e2b30530e6b5fbb33375fb581d5261d84e"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/compensated_translation_gpu.h": {
+      "bytes": 7828,
+      "sha256": "a04166e5c8ef76db05271c8c9b084f0b2edc9bb4a7e6bfe1986527a4f8c09097"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/engine_types.h": {
+      "bytes": 62374,
+      "sha256": "fb6f66bcb8a1f5d0e47f4dabb7a22c7c74ecd6f3a8eeb79a3c6bedd33882efdd"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/human_behavior_gpu.h": {
+      "bytes": 3005,
+      "sha256": "64937fe188ca2be425b6881b228eefba25cc9d9f02dc239045e487f4bd619409"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/mrnx_human_behavior_v1.h": {
+      "bytes": 1081,
+      "sha256": "6dfaf7cce388b3acf7db6d5b4cfa501ecf93676715ad073ef749d73e9b794f34"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/matter/CMakeLists.txt": {
+      "bytes": 22101,
+      "sha256": "cb5778666fcfcdc580fd26874506e4572517da9abfd14f28860c65d025bea1a0"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/matter/include/numi/matter/human_support_precision_gpu.h": {
+      "bytes": 643,
+      "sha256": "d84b419be157c7feba0fe9eb9bfe2379262e38bc5fa4f2bd4641a6b0d8b671a1"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/matter/include/numi/matter/matter.hpp": {
+      "bytes": 70317,
+      "sha256": "aed6d7233dcd5e05e2944a0404057b9648ee4a771fd50b1ab18969d0c35642bd"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/matter/include/numi/matter/shared.h": {
+      "bytes": 44625,
+      "sha256": "456955f42ebba04238f8ae3e19d5e5c3b7c666d5baaf4ee669dca4bc4622346e"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/matter/src/accepted_state_proof_gpu.hpp": {
+      "bytes": 4424,
+      "sha256": "2839c46380b6bddb64c624c20f7fd594f308c495996f7ed9ce98c5d88747c2c3"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/matter/src/metal/contact.metalinc": {
+      "bytes": 195833,
+      "sha256": "4e313f530e87a3cdc35ea2e3d326c8feed42925d261ae3f89af13efa36d78f7c"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/matter/src/metal/fem.metalinc": {
+      "bytes": 90367,
+      "sha256": "2a8d9aaa5522d3d11a9aec2c59a7f3e459872f1ca1a0f7877cb37532a79da16e"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/matter/src/runtime.mm": {
+      "bytes": 673631,
+      "sha256": "ba6c60c014e41943ee9a740bc7ddc4414acc8ef96b31d0f4e39d6cb0a36a7914"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/core/HumanBehaviorProgram.cpp": {
+      "bytes": 8944,
+      "sha256": "e2a83c1e33fb209e3fd09a3bbb1128f2f53481d162143bd0629ece3f34604b11"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/core/NumiHumanInitialState.cpp": {
+      "bytes": 8531,
+      "sha256": "faf29f7107328783e10b9601b0c40abc1750093bdeaae6a1788009f36418dffe"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/ArticulatedOperator.metal": {
+      "bytes": 100595,
+      "sha256": "fd56b4e7f45d0c2e43ec28ca9b2e506c01cd28fdbbfad6614e106109a8f37a27"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/ArticulatedOperatorCompensated.metal": {
+      "bytes": 337,
+      "sha256": "8ec499449b221368c59ab733207ce87567c18610bc0b3b996fd63c1355b8a5f8"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/CompensatedTranslationCheck.metal": {
+      "bytes": 2063,
+      "sha256": "c988122b7abe35bab368a9cfd445e4147160d6c6ed97e53e776d7975a381d5f1"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/HumanBehavior.metal": {
+      "bytes": 9844,
+      "sha256": "5e615c17dba79aab1b65df2409af6141fd0f308ebe1e4fc75f4bab28b061f8f1"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/MetalArticulatedOperator.mm": {
+      "bytes": 505097,
+      "sha256": "d3f6694cf87433a56675e6f5370f9a647834dd23095d5413bb6623a232b67582"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/MetalHumanBehaviorTelemetry.mm": {
+      "bytes": 12316,
+      "sha256": "d393956018e22346e2c89117a7dadf6299f24e22967c4c842fc6fe64bb2e741f"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/MetalNumanXHumanMatter.mm": {
+      "bytes": 198177,
+      "sha256": "c7259c5b64de4c532cf82cdbb0219d1937526e3cbad80d7a8a65ef5169d3a126"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/MujocoMuscleReference.metal": {
+      "bytes": 60766,
+      "sha256": "203da01da73c7014a14fc26db058850970973eb7eac5096f37d2df6ce76beb71"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/MujocoMuscleReferenceCompensated.metal": {
+      "bytes": 242,
+      "sha256": "6bb2a1c9db6d6fd8a5b05150e6cb7906ffe0ebd64441321bc032e44527dd76e3"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumanXBridgeV1.mm": {
+      "bytes": 95815,
+      "sha256": "4b958508a509e56e9be93dd6a384ed7d0c7e8083140ee27019424113f060f52c"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumanXBridgeV1Internal.hpp": {
+      "bytes": 3025,
+      "sha256": "ec2fbf129146af2902cbd30525e0b7628c184b3633633d217c53d0b9048034ff"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumanXHumanIO.metal": {
+      "bytes": 39795,
+      "sha256": "e33a1fb872a4234ac0fbaa4f9af78d696f6428990a447fd722fc88e25c4c9fb6"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumanXHumanMatterOwner.metal": {
+      "bytes": 90750,
+      "sha256": "14238fb51c2d78705c16622feef894ce0caae05fcb15f4d7c4ce9ee3bc0c4aec"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumanXRuntimeV1.mm": {
+      "bytes": 217390,
+      "sha256": "212296ba1277db605170839ec14e96739d17a775e20b30a5b51c092007440ad4"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumiHumanExtensorHood.metal": {
+      "bytes": 40016,
+      "sha256": "fe08af022334409c02cbc07e40afea3b82fdcf9b27aa0a58f1ed2c0143b6b137"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumiHumanExtensorHoodCompensated.metal": {
+      "bytes": 252,
+      "sha256": "c7afde108c91a916142bffb983e4fa90fb796ad47fba15de2b792ff7bb75f5e0"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumiHumanExtensorHoodMetal.mm": {
+      "bytes": 41304,
+      "sha256": "d0c9afd5e0439c594a0cc025dec4e0eece550627fc020378054b6b8c3ec401a0"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumiHumanStand.metal": {
+      "bytes": 53604,
+      "sha256": "138696f86e8b8ef6bc2974cc5803763480bb44d62682a6100fae1260046fe773"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumiHumanTendonTransfer.metal": {
+      "bytes": 12045,
+      "sha256": "68fef8b467408f0197d6c4eb14d41226e482d8dbc33cc109fc70edccfb1ca108"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumiHumanTendonTransferCompensated.metal": {
+      "bytes": 158,
+      "sha256": "f130d1a92ddf4535f0b641bc0dedb72ab8ae07f3895d36c6f600303308820999"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/PairedSourceGeometry.metalinc": {
+      "bytes": 2497,
+      "sha256": "a356506575f8ec0a8ef0bc715bd833950ed5ca485eb80322c6213182fd1ac96d"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/RuntimeHumanBehaviorAPI.inc": {
+      "bytes": 6115,
+      "sha256": "9034c9175577ad05f2630aba15c2aa54538825a26f2fba35f972b8e2cbbdb419"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/tests/numi_human_initial_state_test.cpp": {
+      "bytes": 12695,
+      "sha256": "cc93ae049f0fa72523b320419152fa12db8daca9f8c8c24090ba029a3475badb"
+    }
+  },
+  "artifacts_before": {},
+  "git_before": {
+    "native": {
+      "revision": "b0e195e147c04e96247d043706259ca978718984",
+      "status": "M CMakeLists.txt\n M include/metalrobo/MetalArticulatedOperator.hpp\n M src/metal/MetalArticulatedOperator.mm\n M src/metal/MujocoMuscleReference.metal\n M src/metal/NumiHumanExtensorHood.metal\n M src/metal/NumiHumanExtensorHoodMetal.mm\n M src/metal/NumiHumanTendonTransfer.metal\n?? apps/source_route_precision_check.mm\n?? src/metal/MujocoMuscleReferenceCompensated.metal\n?? src/metal/NumiHumanExtensorHoodCompensated.metal\n?? src/metal/NumiHumanTendonTransferCompensated.metal\n?? src/metal/PairedSourceGeometry.metalinc"
+    }
+  },
+  "workload_process_inventory": [],
+  "returncode": 0,
+  "elapsed_seconds": 4.88522525,
+  "source_after": {
+    "/Users/n/MetalRobo-human-completion-20260907/CMakeLists.txt": {
+      "bytes": 165598,
+      "sha256": "5e8bbfe1d1b3ccc252274ae70b31e0bdfb75bc4c1c81fc60c850466dcc94b633"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/compensated_geometry_check.mm": {
+      "bytes": 12692,
+      "sha256": "badd4b0e5163ff88ca93f153dc3f32f0ae3abda603afb77c9cb0392132a12038"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/compensated_translation_check.mm": {
+      "bytes": 7751,
+      "sha256": "3e512efa0cdc6b619c99fb815183649139b5531b9f8f4d1a93b94f5c53529e1d"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/human_behavior_program_check.cpp": {
+      "bytes": 3734,
+      "sha256": "71c783c670acc916972eb729547a94671d7bbe8d0027efd05d0852e7b557dc85"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/human_behavior_telemetry_check.mm": {
+      "bytes": 9113,
+      "sha256": "daf4d2e56e09612a861b079cf096b4a44145ee162ffde510862e1b85c5dd666d"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/human_reconcile_probe.mm": {
+      "bytes": 8586,
+      "sha256": "f70d4248b0be5473719f2c8aae8483646f82a700bc3aefe5972be3b426ae6693"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/human_support_precision_check.cpp": {
+      "bytes": 6291,
+      "sha256": "efb43e03e99663f5b7da279f1fc508c526e0fc18093213d170344a1463e5ec73"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_fullbody_bridge_probe.mm": {
+      "bytes": 91164,
+      "sha256": "b3fb8c25ca14a30d2e5928f8e2452b1b0846f1517279cd0ea7791700dd346d07"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_human_matter_adapter_probe.mm": {
+      "bytes": 144756,
+      "sha256": "0a7e4744a68a258b9a5bf8b76b12248e4cb834617f6bc5c79ac0e75c7b84531a"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_human_matter_candidate_probe.mm": {
+      "bytes": 49623,
+      "sha256": "2d1889a3cede94ab4e40809a5399a9ecb641636470f613805f253719c962eb37"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_human_matter_owner_probe.mm": {
+      "bytes": 35324,
+      "sha256": "e68a7b20cbc7aadc7a7b10ad4848f1547daa860967a4451dc9a752229b82acb3"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_matter_accepted_state_proof_probe.mm": {
+      "bytes": 64948,
+      "sha256": "746bb5a65011fef9e5311ed91afbdaceac12ecba8d3e40a8b58e7e204976b002"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numanx_matter_attachment_runtime_probe.mm": {
+      "bytes": 55841,
+      "sha256": "ec6193af83ce344db62558fe76e06935a9fa155595e0cf52b1c4df0fd266571b"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numilab_human_myosim_reference_probe.cpp": {
+      "bytes": 96056,
+      "sha256": "62d3cb7242fe1563bff14c8508524cb033edb9dc08a3cea782620f0788297619"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/numilab_human_myosim_visual_probe.mm": {
+      "bytes": 922575,
+      "sha256": "7cef788efe00b9872e6ca2db44107fb2703cc0c9beca72afc39a03bcdc7e2e9d"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/apps/source_route_precision_check.mm": {
+      "bytes": 29667,
+      "sha256": "fa136976d686cbaff2bed0b982b8ef8e157d2c0330a81b0ced6b7689eba37137"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/HumanBehaviorProgram.hpp": {
+      "bytes": 2042,
+      "sha256": "3b28c97c70824ef590227436ecc0ad60baf339502408daf62b7aecfe5d519cb3"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/MatterSnapshotArchive.hpp": {
+      "bytes": 1763,
+      "sha256": "c4da585de196d3ba6112f869761c48c123524d8bfe06e3779894a7e185278242"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/MetalArticulatedOperator.hpp": {
+      "bytes": 88395,
+      "sha256": "304844a80e58f577588dfeecab20506d408b0081dc8d6c02bc4c37aaa33d4446"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/MetalHumanBehaviorTelemetry.hpp": {
+      "bytes": 2441,
+      "sha256": "9d0876be8489d63768821540335c60e175cc1bccc79ab95eb1fc87555929ba50"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/MetalNumanXCoupledHuman.hpp": {
+      "bytes": 17511,
+      "sha256": "c5076488104aa9e887fb3a1ae8040113f05b3423ca625c022bbe743eafc36626"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/MetalNumanXHumanMatter.hpp": {
+      "bytes": 10980,
+      "sha256": "a2a50172f97c4fcbf01b53391bfb7d2f12eaf2d89f2a3522f969f32635e79bdf"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/NumiHumanInitialState.hpp": {
+      "bytes": 2779,
+      "sha256": "ab9038931b601f2ee18ca623bee1c57a5a9a6b929401b35ea6324de1250c8f8f"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/compensated_geometry_gpu.h": {
+      "bytes": 6421,
+      "sha256": "1bf85c7e7b8b2102c5e0e6f3fbba88e2b30530e6b5fbb33375fb581d5261d84e"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/compensated_translation_gpu.h": {
+      "bytes": 7828,
+      "sha256": "a04166e5c8ef76db05271c8c9b084f0b2edc9bb4a7e6bfe1986527a4f8c09097"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/engine_types.h": {
+      "bytes": 62374,
+      "sha256": "fb6f66bcb8a1f5d0e47f4dabb7a22c7c74ecd6f3a8eeb79a3c6bedd33882efdd"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/human_behavior_gpu.h": {
+      "bytes": 3005,
+      "sha256": "64937fe188ca2be425b6881b228eefba25cc9d9f02dc239045e487f4bd619409"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/include/metalrobo/mrnx_human_behavior_v1.h": {
+      "bytes": 1081,
+      "sha256": "6dfaf7cce388b3acf7db6d5b4cfa501ecf93676715ad073ef749d73e9b794f34"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/matter/CMakeLists.txt": {
+      "bytes": 22101,
+      "sha256": "cb5778666fcfcdc580fd26874506e4572517da9abfd14f28860c65d025bea1a0"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/matter/include/numi/matter/human_support_precision_gpu.h": {
+      "bytes": 643,
+      "sha256": "d84b419be157c7feba0fe9eb9bfe2379262e38bc5fa4f2bd4641a6b0d8b671a1"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/matter/include/numi/matter/matter.hpp": {
+      "bytes": 70317,
+      "sha256": "aed6d7233dcd5e05e2944a0404057b9648ee4a771fd50b1ab18969d0c35642bd"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/matter/include/numi/matter/shared.h": {
+      "bytes": 44625,
+      "sha256": "456955f42ebba04238f8ae3e19d5e5c3b7c666d5baaf4ee669dca4bc4622346e"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/matter/src/accepted_state_proof_gpu.hpp": {
+      "bytes": 4424,
+      "sha256": "2839c46380b6bddb64c624c20f7fd594f308c495996f7ed9ce98c5d88747c2c3"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/matter/src/metal/contact.metalinc": {
+      "bytes": 195833,
+      "sha256": "4e313f530e87a3cdc35ea2e3d326c8feed42925d261ae3f89af13efa36d78f7c"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/matter/src/metal/fem.metalinc": {
+      "bytes": 90367,
+      "sha256": "2a8d9aaa5522d3d11a9aec2c59a7f3e459872f1ca1a0f7877cb37532a79da16e"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/matter/src/runtime.mm": {
+      "bytes": 673631,
+      "sha256": "ba6c60c014e41943ee9a740bc7ddc4414acc8ef96b31d0f4e39d6cb0a36a7914"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/core/HumanBehaviorProgram.cpp": {
+      "bytes": 8944,
+      "sha256": "e2a83c1e33fb209e3fd09a3bbb1128f2f53481d162143bd0629ece3f34604b11"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/core/NumiHumanInitialState.cpp": {
+      "bytes": 8531,
+      "sha256": "faf29f7107328783e10b9601b0c40abc1750093bdeaae6a1788009f36418dffe"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/ArticulatedOperator.metal": {
+      "bytes": 100595,
+      "sha256": "fd56b4e7f45d0c2e43ec28ca9b2e506c01cd28fdbbfad6614e106109a8f37a27"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/ArticulatedOperatorCompensated.metal": {
+      "bytes": 337,
+      "sha256": "8ec499449b221368c59ab733207ce87567c18610bc0b3b996fd63c1355b8a5f8"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/CompensatedTranslationCheck.metal": {
+      "bytes": 2063,
+      "sha256": "c988122b7abe35bab368a9cfd445e4147160d6c6ed97e53e776d7975a381d5f1"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/HumanBehavior.metal": {
+      "bytes": 9844,
+      "sha256": "5e615c17dba79aab1b65df2409af6141fd0f308ebe1e4fc75f4bab28b061f8f1"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/MetalArticulatedOperator.mm": {
+      "bytes": 505097,
+      "sha256": "d3f6694cf87433a56675e6f5370f9a647834dd23095d5413bb6623a232b67582"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/MetalHumanBehaviorTelemetry.mm": {
+      "bytes": 12316,
+      "sha256": "d393956018e22346e2c89117a7dadf6299f24e22967c4c842fc6fe64bb2e741f"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/MetalNumanXHumanMatter.mm": {
+      "bytes": 198177,
+      "sha256": "c7259c5b64de4c532cf82cdbb0219d1937526e3cbad80d7a8a65ef5169d3a126"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/MujocoMuscleReference.metal": {
+      "bytes": 60766,
+      "sha256": "203da01da73c7014a14fc26db058850970973eb7eac5096f37d2df6ce76beb71"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/MujocoMuscleReferenceCompensated.metal": {
+      "bytes": 242,
+      "sha256": "6bb2a1c9db6d6fd8a5b05150e6cb7906ffe0ebd64441321bc032e44527dd76e3"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumanXBridgeV1.mm": {
+      "bytes": 95815,
+      "sha256": "4b958508a509e56e9be93dd6a384ed7d0c7e8083140ee27019424113f060f52c"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumanXBridgeV1Internal.hpp": {
+      "bytes": 3025,
+      "sha256": "ec2fbf129146af2902cbd30525e0b7628c184b3633633d217c53d0b9048034ff"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumanXHumanIO.metal": {
+      "bytes": 39795,
+      "sha256": "e33a1fb872a4234ac0fbaa4f9af78d696f6428990a447fd722fc88e25c4c9fb6"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumanXHumanMatterOwner.metal": {
+      "bytes": 90750,
+      "sha256": "14238fb51c2d78705c16622feef894ce0caae05fcb15f4d7c4ce9ee3bc0c4aec"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumanXRuntimeV1.mm": {
+      "bytes": 217390,
+      "sha256": "212296ba1277db605170839ec14e96739d17a775e20b30a5b51c092007440ad4"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumiHumanExtensorHood.metal": {
+      "bytes": 40016,
+      "sha256": "fe08af022334409c02cbc07e40afea3b82fdcf9b27aa0a58f1ed2c0143b6b137"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumiHumanExtensorHoodCompensated.metal": {
+      "bytes": 252,
+      "sha256": "c7afde108c91a916142bffb983e4fa90fb796ad47fba15de2b792ff7bb75f5e0"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumiHumanExtensorHoodMetal.mm": {
+      "bytes": 41304,
+      "sha256": "d0c9afd5e0439c594a0cc025dec4e0eece550627fc020378054b6b8c3ec401a0"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumiHumanStand.metal": {
+      "bytes": 53604,
+      "sha256": "138696f86e8b8ef6bc2974cc5803763480bb44d62682a6100fae1260046fe773"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumiHumanTendonTransfer.metal": {
+      "bytes": 12045,
+      "sha256": "68fef8b467408f0197d6c4eb14d41226e482d8dbc33cc109fc70edccfb1ca108"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/NumiHumanTendonTransferCompensated.metal": {
+      "bytes": 158,
+      "sha256": "f130d1a92ddf4535f0b641bc0dedb72ab8ae07f3895d36c6f600303308820999"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/PairedSourceGeometry.metalinc": {
+      "bytes": 2497,
+      "sha256": "a356506575f8ec0a8ef0bc715bd833950ed5ca485eb80322c6213182fd1ac96d"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/src/metal/RuntimeHumanBehaviorAPI.inc": {
+      "bytes": 6115,
+      "sha256": "9034c9175577ad05f2630aba15c2aa54538825a26f2fba35f972b8e2cbbdb419"
+    },
+    "/Users/n/MetalRobo-human-completion-20260907/tests/numi_human_initial_state_test.cpp": {
+      "bytes": 12695,
+      "sha256": "cc93ae049f0fa72523b320419152fa12db8daca9f8c8c24090ba029a3475badb"
+    }
+  },
+  "artifacts_after": {},
+  "git_after": {
+    "native": {
+      "revision": "b0e195e147c04e96247d043706259ca978718984",
+      "status": "M CMakeLists.txt\n M include/metalrobo/MetalArticulatedOperator.hpp\n M src/metal/MetalArticulatedOperator.mm\n M src/metal/MujocoMuscleReference.metal\n M src/metal/NumiHumanExtensorHood.metal\n M src/metal/NumiHumanExtensorHoodMetal.mm\n M src/metal/NumiHumanTendonTransfer.metal\n?? apps/source_route_precision_check.mm\n?? src/metal/MujocoMuscleReferenceCompensated.metal\n?? src/metal/NumiHumanExtensorHoodCompensated.metal\n?? src/metal/NumiHumanTendonTransferCompensated.metal\n?? src/metal/PairedSourceGeometry.metalinc"
+    }
+  },
+  "log_identity": {
+    "bytes": 44,
+    "sha256": "3da6caabf47c20ec6610604b55c56bf344ce1c51e17465160bd52cfe06905148"
+  },
+  "source_unchanged": true,
+  "artifacts_unchanged": true,
+  "status": "pass"
+}

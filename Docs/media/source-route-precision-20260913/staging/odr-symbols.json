@@ -1,0 +1,38 @@
+[
+  {
+    "directory": "compile-003",
+    "shader": "MujocoMuscleReference",
+    "global_conflicting_names": {
+      "_Z17mrSourceBodyPointDv4_fPU9MTLdeviceKS_j": false,
+      "_Z14mrSourceRotateDv4_fDv3_f": true
+    },
+    "internal_rotate": false
+  },
+  {
+    "directory": "compile-003",
+    "shader": "MujocoMuscleReferenceCompensated",
+    "global_conflicting_names": {
+      "_Z17mrSourceBodyPointDv4_fPU9MTLdeviceKS_j": true,
+      "_Z14mrSourceRotateDv4_fDv3_f": true
+    },
+    "internal_rotate": false
+  },
+  {
+    "directory": "diagnose-002",
+    "shader": "MujocoMuscleReference",
+    "global_conflicting_names": {
+      "_Z17mrSourceBodyPointDv4_fPU9MTLdeviceKS_j": false,
+      "_Z14mrSourceRotateDv4_fDv3_f": false
+    },
+    "internal_rotate": true
+  },
+  {
+    "directory": "diagnose-002",
+    "shader": "MujocoMuscleReferenceCompensated",
+    "global_conflicting_names": {
+      "_Z17mrSourceBodyPointDv4_fPU9MTLdeviceKS_j": false,
+      "_Z14mrSourceRotateDv4_fDv3_f": false
+    },
+    "internal_rotate": true
+  }
+]

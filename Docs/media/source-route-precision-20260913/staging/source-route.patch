@@ -1,0 +1,1388 @@
+--- a/include/metalrobo/MetalArticulatedOperator.hpp
++++ b/include/metalrobo/MetalArticulatedOperator.hpp
+@@ -127,6 +127,11 @@
+     void* generalizedCorrections = nullptr;
+     void* generalizedForces = nullptr;
+     void* bodyPoses = nullptr;
++    // Paired geometry uses the same environment/body stride as bodyPoses.
++    // Null with zero address/count retains the legacy high-only view.
++    void* bodyPositionLow = nullptr;
++    std::uint64_t bodyPositionLowGPUAddress = 0u;
++    std::uint64_t bodyPositionLowElementCount = 0u;
+     void* pointJacobians = nullptr;
+     void* standStatuses = nullptr;
+     std::uint32_t stepIndex = 0u;
+--- a/src/metal/MetalArticulatedOperator.mm
++++ b/src/metal/MetalArticulatedOperator.mm
+@@ -223,12 +223,14 @@
+     __strong id<MTLComputePipelineState> compensatedPipeline = nil;
+     __strong id<MTLComputePipelineState> millardPipeline = nil;
+     __strong id<MTLComputePipelineState> mujocoPipeline = nil;
++    __strong id<MTLComputePipelineState> mujocoCompensatedPipeline = nil;
+     __strong id<MTLComputePipelineState> mujocoActiveForcePipeline = nil;
+     __strong id<MTLComputePipelineState> mujocoReducePipeline = nil;
+     __strong id<MTLComputePipelineState> mujocoActivationPipeline = nil;
+     __strong id<MTLComputePipelineState> standPipeline = nil;
+     __strong id<MTLComputePipelineState> standReconcilePipeline = nil;
+     __strong id<MTLComputePipelineState> tendonPipeline = nil;
++    __strong id<MTLComputePipelineState> tendonCompensatedPipeline = nil;
+     __strong id<MTLComputePipelineState> humanMatterBeginPipeline = nil;
+     __strong id<MTLComputePipelineState> humanMatterConsumePipeline = nil;
+     __strong id<MTLComputePipelineState>
+@@ -2974,12 +2976,34 @@
+         MetalArticulatedOperatorHostStatus::metalPipelineFailure, describeError(error));
+     context.pipeline = pipeline;
+     context.millardPipeline = millardPipeline;
++    id<MTLFunction> mujocoCompensatedFunction = [library
++        newFunctionWithName:@"mr_mujoco_muscle_reference_compensated"];
++    id<MTLComputePipelineState> mujocoCompensatedPipeline =
++        mujocoCompensatedFunction == nil ? nil : [device
++            newComputePipelineStateWithFunction:mujocoCompensatedFunction error:&error];
++    if (mujocoCompensatedPipeline == nil ||
++        mujocoCompensatedPipeline.maxTotalThreadsPerThreadgroup < kThreadsPerThreadgroup)
++        return reject(std::move(diagnostics),
++            MetalArticulatedOperatorHostStatus::metalPipelineFailure,
++            "failed to create paired MyoSim reference pipeline: " + describeError(error));
++    context.mujocoCompensatedPipeline = mujocoCompensatedPipeline;
+     context.mujocoPipeline = mujocoPipeline;
+     context.mujocoActiveForcePipeline = mujocoActiveForcePipeline;
+     context.mujocoReducePipeline = mujocoReducePipeline;
+     context.mujocoActivationPipeline = mujocoActivationPipeline;
+     context.standPipeline = standPipeline;
+     context.standReconcilePipeline = reconcilePipeline;
++    id<MTLFunction> tendonCompensatedFunction = [library
++        newFunctionWithName:@"mr_numi_human_tendon_transfer_compensated"];
++    id<MTLComputePipelineState> tendonCompensatedPipeline =
++        tendonCompensatedFunction == nil ? nil : [device
++            newComputePipelineStateWithFunction:tendonCompensatedFunction error:&error];
++    if (tendonCompensatedPipeline == nil ||
++        tendonCompensatedPipeline.maxTotalThreadsPerThreadgroup < kThreadsPerThreadgroup)
++        return reject(std::move(diagnostics),
++            MetalArticulatedOperatorHostStatus::metalPipelineFailure,
++            "failed to create paired tendon transfer pipeline: " + describeError(error));
++    context.tendonCompensatedPipeline = tendonCompensatedPipeline;
+     context.tendonPipeline = tendonPipeline;
+     context.initialized = true;
+     ++context.stats.pipelineCreationCount;
+@@ -8688,6 +8712,11 @@
+                 pass.generalizedForces =
+                     (__bridge void*)state_->buffers[kMillardForcesBuffer];
+                 pass.bodyPoses = (__bridge void*)state_->buffers[8u];
++                pass.bodyPositionLow = (__bridge void*)state_->standBuffers[
++                    kStandBodyPositionLowBuffer];
++                pass.bodyPositionLowGPUAddress = state_->standBuffers[
++                    kStandBodyPositionLowBuffer].gpuAddress;
++                pass.bodyPositionLowElementCount = diagnostics.layout.bodyPoseElements;
+                 pass.pointJacobians = (__bridge void*)state_->buffers[11u];
+                 pass.standStatuses = (__bridge void*)state_->standBuffers[
+                     kStandStatusBuffer
+@@ -8920,7 +8949,8 @@
+                         "failed to create MyoSim reference encoder"
+                     );
+                 }
+-                [mujocoEncoder setComputePipelineState:state_->mujocoPipeline];
++                [mujocoEncoder setComputePipelineState:input.stand.enabled()
++                    ? state_->mujocoCompensatedPipeline : state_->mujocoPipeline];
+                 for (NSUInteger index = 0u;
+                      index < kRawBufferCount;
+                      ++index) {
+@@ -8931,6 +8961,9 @@
+                 }
+                 [mujocoEncoder setBuffer:state_->standBuffers[
+                     kStandVelocityBuffer] offset:0u atIndex:7u];
++                if (input.stand.enabled())
++                    [mujocoEncoder setBuffer:state_->standBuffers[
++                        kStandBodyPositionLowBuffer] offset:0u atIndex:10u];
+                 const std::size_t threadCount =
+                     diagnostics.layout.mujocoResultElements;
+                 [mujocoEncoder
+@@ -9070,7 +9103,7 @@
+                             "failed to create Numi Human tendon-transfer encoder"
+                         );
+                     }
+-                    [tendonEncoder setComputePipelineState:state_->tendonPipeline];
++                    [tendonEncoder setComputePipelineState:state_->tendonCompensatedPipeline];
+                     [tendonEncoder setBytes:&tendonDispatch
+                                       length:sizeof(tendonDispatch)
+                                      atIndex:0u];
+@@ -9088,6 +9121,8 @@
+                         kStandTendonTransfersBuffer] offset:0u atIndex:6u];
+                     [tendonEncoder setBuffer:state_->standBuffers[
+                         kStandTendonCorrectionsBuffer] offset:0u atIndex:7u];
++                    [tendonEncoder setBuffer:state_->standBuffers[
++                        kStandBodyPositionLowBuffer] offset:0u atIndex:8u];
+                     const std::size_t transferThreadCount =
+                         diagnostics.layout.standTendonTransferElements;
+                     [tendonEncoder
+--- a/src/metal/NumiHumanExtensorHoodMetal.mm
++++ b/src/metal/NumiHumanExtensorHoodMetal.mm
+@@ -48,8 +48,11 @@
+     __strong id<MTLDevice> device = nil;
+     __strong id<MTLLibrary> library = nil;
+     __strong id<MTLComputePipelineState> solvePipeline = nil;
++    __strong id<MTLComputePipelineState> solveCompensatedPipeline = nil;
+     __strong id<MTLComputePipelineState> routeCutPipeline = nil;
++    __strong id<MTLComputePipelineState> routeCutCompensatedPipeline = nil;
+     __strong id<MTLComputePipelineState> assemblePipeline = nil;
++    __strong id<MTLComputePipelineState> assembleCompensatedPipeline = nil;
+     __strong id<MTLComputePipelineState> applyPipeline = nil;
+     __strong id<MTLComputePipelineState> commitPipeline = nil;
+     __strong id<MTLBuffer> rayBuffer = nil;
+@@ -59,6 +62,7 @@
+     __strong id<MTLBuffer> routeCutBuffer = nil;
+     __strong id<MTLBuffer> suffixJacobianBuffer = nil;
+     __strong id<MTLBuffer> nodeResultBuffer = nil;
++    __strong id<MTLBuffer> relativeNodePositionBuffer = nil;
+     __strong id<MTLBuffer> rayResultBuffer = nil;
+     __strong id<MTLBuffer> historyBuffer = nil;
+     __strong id<MTLBuffer> correctionBuffer = nil;
+@@ -265,6 +269,23 @@
+         id<MTLBuffer> bodyPoses = (__bridge id<MTLBuffer>)pass.bodyPoses;
+         id<MTLBuffer> pointJacobians =
+             (__bridge id<MTLBuffer>)pass.pointJacobians;
++        id<MTLBuffer> bodyPositionLow = (__bridge id<MTLBuffer>)pass.bodyPositionLow;
++        const bool paired = bodyPositionLow != nil;
++        const std::uint64_t bodyPositionElements =
++            static_cast<std::uint64_t>(pass.environmentCount) * pass.bodyPoseStride;
++        if (paired ? (pass.bodyPositionLowGPUAddress == 0u ||
++                      bodyPositionLow.gpuAddress != pass.bodyPositionLowGPUAddress ||
++                      pass.bodyPositionLowElementCount != bodyPositionElements ||
++                      bodyPositionLow.length / sizeof(mr_float4) < bodyPositionElements ||
++                      bodyPositionLow.device.registryID != bodyPoses.device.registryID ||
++                      bodyPositionLow == bodyPoses || bodyPositionLow == pointJacobians ||
++                      bodyPositionLow == generalized || bodyPositionLow == results)
++                   : (pass.bodyPositionLowGPUAddress != 0u ||
++                      pass.bodyPositionLowElementCount != 0u)) {
++            state_->message = "hood paired body-position authority is invalid";
++            return false;
++        }
++
+         if (command == nil || muscles == nil || sites == nil || wraps == nil ||
+             routes == nil ||
+             results == nil || generalized == nil || bodyPoses == nil ||
+@@ -319,10 +340,16 @@
+             };
+             state_->solvePipeline = pipeline(
+                 "mr_numi_human_solve_extensor_hood");
++            state_->solveCompensatedPipeline = pipeline(
++                "mr_numi_human_solve_extensor_hood_compensated");
+             state_->routeCutPipeline = pipeline(
+                 "mr_mujoco_muscle_route_suffix_jacobian");
++            state_->routeCutCompensatedPipeline = pipeline(
++                "mr_mujoco_muscle_route_suffix_jacobian_compensated");
+             state_->assemblePipeline = pipeline(
+                 "mr_numi_human_assemble_extensor_hood_correction");
++            state_->assembleCompensatedPipeline = pipeline(
++                "mr_numi_human_assemble_extensor_hood_correction_compensated");
+             state_->applyPipeline = pipeline(
+                 "mr_numi_human_apply_extensor_hood_correction");
+             state_->commitPipeline = pipeline(
+@@ -349,6 +376,10 @@
+                 static_cast<NSUInteger>(state_->environmentCount) *
+                     state_->routeCuts.size() * pass.dofCount * sizeof(float)
+                 options:MTLResourceStorageModeShared];
++            state_->relativeNodePositionBuffer = [device newBufferWithLength:
++                static_cast<NSUInteger>(state_->environmentCount) *
++                    state_->nodes.size() * sizeof(mr_float4)
++                options:MTLResourceStorageModePrivate];
+             state_->nodeResultBuffer = [device newBufferWithLength:
+                 static_cast<NSUInteger>(state_->environmentCount) *
+                     state_->nodes.size() *
+@@ -369,7 +400,9 @@
+                 static_cast<NSUInteger>(state_->environmentCount) *
+                     pass.dofCount * sizeof(float)
+                 options:MTLResourceStorageModeShared];
+-            if (state_->solvePipeline == nil || state_->routeCutPipeline == nil ||
++            if (state_->solveCompensatedPipeline == nil || state_->routeCutCompensatedPipeline == nil ||
++                state_->assembleCompensatedPipeline == nil || state_->relativeNodePositionBuffer == nil ||
++                state_->solvePipeline == nil || state_->routeCutPipeline == nil ||
+                 state_->assemblePipeline == nil ||
+                 state_->applyPipeline == nil || state_->commitPipeline == nil ||
+                 state_->rayBuffer == nil || state_->nodeBuffer == nil ||
+@@ -476,7 +509,8 @@
+             state_->message = "hood source-route cut encoder is unavailable";
+             return false;
+         }
+-        [routeCutEncoder setComputePipelineState:state_->routeCutPipeline];
++        const auto routePipeline = paired ? state_->routeCutCompensatedPipeline : state_->routeCutPipeline;
++        [routeCutEncoder setComputePipelineState:routePipeline];
+         [routeCutEncoder setBuffer:bodyPoses offset:0u atIndex:0u];
+         [routeCutEncoder setBuffer:pointJacobians offset:0u atIndex:1u];
+         [routeCutEncoder setBytes:&routeDispatch
+@@ -491,13 +525,14 @@
+                             offset:0u atIndex:8u];
+         [routeCutEncoder setBuffer:state_->suffixJacobianBuffer
+                             offset:0u atIndex:9u];
++        if (paired) [routeCutEncoder setBuffer:bodyPositionLow offset:0u atIndex:10u];
+         const NSUInteger routeCutWidth = std::max<NSUInteger>(1u, std::min(
+             routeCutCount, std::min<NSUInteger>(
+-                state_->routeCutPipeline.maxTotalThreadsPerThreadgroup, 64u)));
++                routePipeline.maxTotalThreadsPerThreadgroup, 64u)));
+         [routeCutEncoder dispatchThreads:MTLSizeMake(routeCutCount, 1u, 1u)
+             threadsPerThreadgroup:MTLSizeMake(routeCutWidth, 1u, 1u)];
+         [routeCutEncoder endEncoding];
+-        if (!encode(state_->solvePipeline, rayCount,
++        if (!encode(paired ? state_->solveCompensatedPipeline : state_->solvePipeline, rayCount,
+                 [&](id<MTLComputeCommandEncoder> encoder) {
+                     [encoder setBuffer:state_->rayBuffer offset:0u atIndex:1u];
+                     [encoder setBuffer:state_->nodeBuffer offset:0u atIndex:2u];
+@@ -511,8 +546,12 @@
+                     [encoder setBuffer:state_->nodeResultBuffer offset:0u atIndex:10u];
+                     [encoder setBuffer:state_->rayResultBuffer offset:0u atIndex:11u];
+                     [encoder setBuffer:wraps offset:0u atIndex:12u];
++                    if (paired) {
++                        [encoder setBuffer:bodyPositionLow offset:0u atIndex:13u];
++                        [encoder setBuffer:state_->relativeNodePositionBuffer offset:0u atIndex:14u];
++                    }
+                 }) ||
+-            !encode(state_->assemblePipeline, dofCount,
++            !encode(paired ? state_->assembleCompensatedPipeline : state_->assemblePipeline, dofCount,
+                 [&](id<MTLComputeCommandEncoder> encoder) {
+                     [encoder setBuffer:state_->rayBuffer offset:0u atIndex:1u];
+                     [encoder setBuffer:state_->nodeBuffer offset:0u atIndex:2u];
+@@ -528,6 +567,10 @@
+                     [encoder setBuffer:state_->correctionBuffer offset:0u atIndex:12u];
+                     [encoder setBuffer:state_->suffixJacobianBuffer
+                                 offset:0u atIndex:13u];
++                    if (paired) {
++                        [encoder setBuffer:bodyPositionLow offset:0u atIndex:14u];
++                        [encoder setBuffer:state_->relativeNodePositionBuffer offset:0u atIndex:15u];
++                    }
+                 }) ||
+             !encode(state_->applyPipeline, dofCount,
+                 [&](id<MTLComputeCommandEncoder> encoder) {
+--- a/src/metal/MujocoMuscleReference.metal
++++ b/src/metal/MujocoMuscleReference.metal
+@@ -3,6 +3,12 @@
+ #include "metalrobo/mujoco_muscle_gpu.h"
+ 
+ using namespace metal;
++
++#include "PairedSourceGeometry.metalinc"
++#ifndef MR_MUJOCO_REFERENCE_KERNEL_NAME
++#define MR_MUJOCO_REFERENCE_KERNEL_NAME mr_mujoco_muscle_reference
++#define MR_MUJOCO_SUFFIX_KERNEL_NAME mr_mujoco_muscle_route_suffix_jacobian
++#endif
+ 
+ namespace {
+ 
+@@ -229,9 +235,10 @@
+     const uint environment,
+     const MRMujocoMuscleReferenceDispatchGPU dispatch,
+     device const MRArticulatedBodyPoseGPU* bodyPoses,
++    device const float4* bodyPositionLow,
+     device const MRMujocoMuscleSiteGPU* sites,
+     const uint index,
+-    thread float3& world
++    thread MRSourcePoint& world
+ ) {
+     if (index >= dispatch.siteCount) return false;
+     const MRMujocoMuscleSiteGPU site = sites[index];
+@@ -244,8 +251,10 @@
+         site.bodyIndex - dispatch.articulationFirstBody
+     ];
+     if (!finite4(pose.position) || !finite4(pose.orientation)) return false;
+-    world = pose.position.xyz + quaternionRotate(pose.orientation, site.localPoint.xyz);
+-    return all(isfinite(world));
++    world = mrSourceBodyPoint(pose.position,bodyPositionLow,
++        environment*dispatch.bodyPoseStride+site.bodyIndex-dispatch.articulationFirstBody) +
++        mrSourceRotate(pose.orientation, site.localPoint.xyz);
++    return mrSourcePointFinite(world);
+ }
+ 
+ // The enclosing articulated pass supplies four analytic point-Jacobian
+@@ -257,9 +266,10 @@
+     const uint environment,
+     const MRMujocoMuscleReferenceDispatchGPU dispatch,
+     device const MRArticulatedBodyPoseGPU* bodyPoses,
++    device const float4* bodyPositionLow,
+     device const float* pointJacobians,
+     const uint bodyIndex,
+-    const float3 worldPoint,
++    const MRSourcePoint worldPoint,
+     const float3 gradient,
+     device float* lengthJacobian
+ ) {
+@@ -284,7 +294,7 @@
+         environment * dispatch.bodyPoseStride + localBody
+     ];
+     if (!finite4(pose.position) || !finite4(pose.orientation) ||
+-        !all(isfinite(worldPoint)) || !all(isfinite(gradient))) {
++        !mrSourcePointFinite(worldPoint) || !all(isfinite(gradient))) {
+         return false;
+     }
+     const uint environmentBase = environment * dispatch.pointJacobianStride;
+@@ -321,7 +331,7 @@
+         }
+         const float3 pointJacobian = centerJacobian + cross(
+             angularJacobian,
+-            worldPoint - pose.position.xyz
++            worldPoint - mrSourceBodyPoint(pose.position,bodyPositionLow,environment*dispatch.bodyPoseStride+localBody)
+         );
+         if (!all(isfinite(pointJacobian))) return false;
+         lengthJacobian[dof] += dot(gradient, pointJacobian);
+@@ -333,11 +343,12 @@
+     const uint environment,
+     const MRMujocoMuscleReferenceDispatchGPU dispatch,
+     device const MRArticulatedBodyPoseGPU* bodyPoses,
++    device const float4* bodyPositionLow,
+     device const float* pointJacobians,
+     const uint firstBody,
+-    const float3 firstWorld,
++    const MRSourcePoint firstWorld,
+     const uint secondBody,
+-    const float3 secondWorld,
++    const MRSourcePoint secondWorld,
+     device float* lengthJacobian
+ ) {
+     const float3 difference = secondWorld - firstWorld;
+@@ -347,11 +358,11 @@
+     if (!(distance > kMinimum)) return true;
+     const float3 direction = difference / distance;
+     return addPointLengthGradient(
+-               environment, dispatch, bodyPoses, pointJacobians,
++               environment, dispatch, bodyPoses, bodyPositionLow, pointJacobians,
+                firstBody, firstWorld, -direction, lengthJacobian
+            ) &&
+         addPointLengthGradient(
+-            environment, dispatch, bodyPoses, pointJacobians,
++            environment, dispatch, bodyPoses, bodyPositionLow, pointJacobians,
+             secondBody, secondWorld, direction, lengthJacobian
+         );
+ }
+@@ -588,7 +599,7 @@
+ 
+ } // namespace
+ 
+-kernel void mr_mujoco_muscle_reference(
++kernel void MR_MUJOCO_REFERENCE_KERNEL_NAME(
+     device const float* generalizedVelocities [[buffer(7)]],
+     device const MRArticulatedBodyPoseGPU* bodyPoses [[buffer(8)]],
+     device const float* pointJacobians [[buffer(11)]],
+@@ -600,8 +611,15 @@
+     device const MRMujocoMuscleRouteNodeGPU* routes [[buffer(29)]],
+     device MRMujocoMuscleResultGPU* results [[buffer(30)]],
+     device float* muscleGeneralizedForces [[buffer(23)]],
++#if MR_SOURCE_PAIRED_GEOMETRY
++    device const float4* bodyPositionLow [[buffer(10)]],
++#endif
+     uint globalIndex [[thread_position_in_grid]]
+ ) {
++#if !MR_SOURCE_PAIRED_GEOMETRY
++    device const float4* bodyPositionLow = nullptr;
++#endif
++
+     if (dispatch.muscleCount == 0u || globalIndex >= dispatch.environmentCount * dispatch.muscleCount) return;
+     const uint environment = globalIndex / dispatch.muscleCount;
+     const uint muscleIndex = globalIndex - environment * dispatch.muscleCount;
+@@ -656,12 +674,12 @@
+     while (cursor + 1u < routeCount) {
+         const MRMujocoMuscleRouteNodeGPU firstNode = routes[routeOffset + cursor];
+         const MRMujocoMuscleRouteNodeGPU nextNode = routes[routeOffset + cursor + 1u];
+-        float3 firstWorld;
++        MRSourcePoint firstWorld;
+         if (firstNode.type != MR_MUJOCO_MUSCLE_ROUTE_SITE || firstNode.reserved0 != 0u ||
+-            !siteWorld(environment, dispatch, bodyPoses, sites, firstNode.targetIndex, firstWorld)) { validPath = false; break; }
++            !siteWorld(environment, dispatch, bodyPoses, bodyPositionLow, sites, firstNode.targetIndex, firstWorld)) { validPath = false; break; }
+         if (nextNode.type == MR_MUJOCO_MUSCLE_ROUTE_SITE) {
+-            float3 secondWorld;
+-            if (nextNode.reserved0 != 0u || !siteWorld(environment, dispatch, bodyPoses, sites, nextNode.targetIndex, secondWorld)) { validPath = false; break; }
++            MRSourcePoint secondWorld;
++            if (nextNode.reserved0 != 0u || !siteWorld(environment, dispatch, bodyPoses, bodyPositionLow, sites, nextNode.targetIndex, secondWorld)) { validPath = false; break; }
+             const MRMujocoMuscleSiteGPU secondSite = sites[nextNode.targetIndex];
+             const float3 endpointDifference = secondWorld - firstWorld;
+             const float endpointDistance = length(endpointDifference);
+@@ -676,7 +694,7 @@
+                 insertionGradientObserved = true;
+             }
+             if (!addSegmentLengthJacobian(
+-                    environment, dispatch, bodyPoses, pointJacobians,
++                    environment, dispatch, bodyPoses, bodyPositionLow, pointJacobians,
+                     firstNode.targetIndex < dispatch.siteCount
+                         ? sites[firstNode.targetIndex].bodyIndex
+                         : MR_INVALID_INDEX,
+@@ -688,9 +706,9 @@
+         if ((nextNode.type != MR_MUJOCO_MUSCLE_ROUTE_SPHERE && nextNode.type != MR_MUJOCO_MUSCLE_ROUTE_CYLINDER) ||
+             nextNode.reserved0 != 0u || nextNode.targetIndex >= dispatch.wrapCount || cursor + 2u >= routeCount) { validPath = false; break; }
+         const MRMujocoMuscleRouteNodeGPU lastNode = routes[routeOffset + cursor + 2u];
+-        float3 lastWorld;
++        MRSourcePoint lastWorld;
+         if (lastNode.type != MR_MUJOCO_MUSCLE_ROUTE_SITE || lastNode.reserved0 != 0u ||
+-            !siteWorld(environment, dispatch, bodyPoses, sites, lastNode.targetIndex, lastWorld)) { validPath = false; break; }
++            !siteWorld(environment, dispatch, bodyPoses, bodyPositionLow, sites, lastNode.targetIndex, lastWorld)) { validPath = false; break; }
+         const MRMujocoMuscleWrapGPU wrap = wraps[nextNode.targetIndex];
+         if (wrap.type != nextNode.type || wrap.bodyIndex < dispatch.articulationFirstBody ||
+             wrap.bodyIndex - dispatch.articulationFirstBody >= dispatch.bodyPoseStride || wrap.reserved0 != 0u || wrap.reserved1 != 0u ||
+@@ -698,7 +716,8 @@
+             wrap.localCenter.w != 0.0f || wrap.rotationRow0.w != 0.0f || wrap.rotationRow1.w != 0.0f || wrap.rotationRow2.w != 0.0f ||
+             wrap.radius.y != 0.0f || wrap.radius.z != 0.0f || wrap.radius.w != 0.0f || !(wrap.radius.x > kMinimum)) { validPath = false; break; }
+         const MRArticulatedBodyPoseGPU pose = bodyPoses[environment * dispatch.bodyPoseStride + wrap.bodyIndex - dispatch.articulationFirstBody];
+-        const float3 center = pose.position.xyz + quaternionRotate(pose.orientation, wrap.localCenter.xyz);
++        const MRSourcePoint center = mrSourceBodyPoint(pose.position,bodyPositionLow,
++            environment*dispatch.bodyPoseStride+wrap.bodyIndex-dispatch.articulationFirstBody) + mrSourceRotate(pose.orientation, wrap.localCenter.xyz);
+         const float3 localFirst = matrixTransposeApply(wrap, quaternionConjugateRotate(pose.orientation, firstWorld - center));
+         const float3 localLast = matrixTransposeApply(wrap, quaternionConjugateRotate(pose.orientation, lastWorld - center));
+         const float3 basis0 = nextNode.type == MR_MUJOCO_MUSCLE_ROUTE_SPHERE ? normalize(localFirst) : float3(1.0f, 0.0f, 0.0f);
+@@ -720,8 +739,8 @@
+         float2 side{};
+         float3 localSide{};
+         if (hasSideSite) {
+-            float3 sideWorld;
+-            if (!siteWorld(environment, dispatch, bodyPoses, sites, nextNode.sideSiteIndex, sideWorld)) { validPath = false; break; }
++            MRSourcePoint sideWorld;
++            if (!siteWorld(environment, dispatch, bodyPoses, bodyPositionLow, sites, nextNode.sideSiteIndex, sideWorld)) { validPath = false; break; }
+             localSide = matrixTransposeApply(wrap, quaternionConjugateRotate(pose.orientation, sideWorld - center));
+             side = float2(dot(localSide, basis0), dot(localSide, basis1));
+             sideInsideWrap = length(localSide) < wrap.radius.x;
+@@ -749,7 +768,7 @@
+                 insertionGradientObserved = true;
+             }
+             if (!addSegmentLengthJacobian(
+-                    environment, dispatch, bodyPoses, pointJacobians,
++                    environment, dispatch, bodyPoses, bodyPositionLow, pointJacobians,
+                     sites[firstNode.targetIndex].bodyIndex, firstWorld,
+                     sites[lastNode.targetIndex].bodyIndex, lastWorld,
+                     muscleGeneralizedForces + forceBase
+@@ -767,8 +786,8 @@
+                 tangentLast.z = localFirst.z + (localLast.z - localFirst.z) * (firstLeg + wrappingLength) / denominator;
+                 wrappingLength = sqrt(wrappingLength * wrappingLength + (tangentLast.z - tangentFirst.z) * (tangentLast.z - tangentFirst.z));
+             }
+-            const float3 worldTangentFirst = center + quaternionRotate(pose.orientation, matrixApply(wrap, tangentFirst));
+-            const float3 worldTangentLast = center + quaternionRotate(pose.orientation, matrixApply(wrap, tangentLast));
++            const MRSourcePoint worldTangentFirst = center + mrSourceRotate(pose.orientation, matrixApply(wrap, tangentFirst));
++            const MRSourcePoint worldTangentLast = center + mrSourceRotate(pose.orientation, matrixApply(wrap, tangentLast));
+             if (cursor == 0u) {
+                 const float distance = length(worldTangentFirst - firstWorld);
+                 originLengthGradient = distance > kMinimum
+@@ -782,17 +801,17 @@
+                 insertionGradientObserved = true;
+             }
+             if (!addSegmentLengthJacobian(
+-                    environment, dispatch, bodyPoses, pointJacobians,
++                    environment, dispatch, bodyPoses, bodyPositionLow, pointJacobians,
+                     sites[firstNode.targetIndex].bodyIndex, firstWorld,
+                     wrap.bodyIndex, worldTangentFirst,
+                     muscleGeneralizedForces + forceBase
+                 ) || !addSegmentLengthJacobian(
+-                    environment, dispatch, bodyPoses, pointJacobians,
++                    environment, dispatch, bodyPoses, bodyPositionLow, pointJacobians,
+                     wrap.bodyIndex, worldTangentFirst,
+                     wrap.bodyIndex, worldTangentLast,
+                     muscleGeneralizedForces + forceBase
+                 ) || !addSegmentLengthJacobian(
+-                    environment, dispatch, bodyPoses, pointJacobians,
++                    environment, dispatch, bodyPoses, bodyPositionLow, pointJacobians,
+                     wrap.bodyIndex, worldTangentLast,
+                     sites[lastNode.targetIndex].bodyIndex, lastWorld,
+                     muscleGeneralizedForces + forceBase
+@@ -879,6 +898,7 @@
+ // passive MuJoCo bias is retained in the typed result for inspection, but it
+ // is not a registered equilibrium preload for Numi Human v1 and therefore is
+ // not injected into the standing dynamics horizon.
++#if !MR_SOURCE_PAIRED_GEOMETRY
+ kernel void mr_mujoco_muscle_active_force_rows(
+     device const MRMujocoMuscleGPU* muscles [[buffer(0)]],
+     device const MRMujocoMuscleStateGPU* states [[buffer(1)]],
+@@ -1003,11 +1023,13 @@
+     states[globalIndex] = next;
+ }
+ 
++#endif
++
+ // Publish the exact source-owned d(length_suffix)/dq row for each declared
+ // route cut. Anatomical sidecars consume this row to remove only the share
+ // they replace; all sphere/cylinder decisions and tangent Jacobians remain
+ // identical to the owning full-route evaluator above.
+-kernel void mr_mujoco_muscle_route_suffix_jacobian(
++kernel void MR_MUJOCO_SUFFIX_KERNEL_NAME(
+     device const MRArticulatedBodyPoseGPU* bodyPoses [[buffer(0)]],
+     device const float* pointJacobians [[buffer(1)]],
+     constant MRMujocoMuscleReferenceDispatchGPU& dispatch [[buffer(2)]],
+@@ -1018,8 +1040,15 @@
+     constant MRMujocoMuscleRouteCutDispatchGPU& cutDispatch [[buffer(7)]],
+     device const MRMujocoMuscleRouteCutGPU* cuts [[buffer(8)]],
+     device float* suffixJacobians [[buffer(9)]],
++#if MR_SOURCE_PAIRED_GEOMETRY
++    device const float4* bodyPositionLow [[buffer(10)]],
++#endif
+     uint globalIndex [[thread_position_in_grid]]
+ ) {
++#if !MR_SOURCE_PAIRED_GEOMETRY
++    device const float4* bodyPositionLow = nullptr;
++#endif
++
+     if (cutDispatch.cutCount == 0u ||
+         globalIndex >= dispatch.environmentCount * cutDispatch.cutCount) return;
+     const uint environment = globalIndex / cutDispatch.cutCount;
+@@ -1051,21 +1080,21 @@
+             routes[muscle.route.x + cursor];
+         const MRMujocoMuscleRouteNodeGPU nextNode =
+             routes[muscle.route.x + cursor + 1u];
+-        float3 firstWorld;
++        MRSourcePoint firstWorld;
+         if (firstNode.type != MR_MUJOCO_MUSCLE_ROUTE_SITE ||
+             firstNode.reserved0 != 0u ||
+-            !siteWorld(environment, dispatch, bodyPoses, sites,
++            !siteWorld(environment, dispatch, bodyPoses, bodyPositionLow, sites,
+                        firstNode.targetIndex, firstWorld)) {
+             valid = false;
+             break;
+         }
+         if (nextNode.type == MR_MUJOCO_MUSCLE_ROUTE_SITE) {
+-            float3 secondWorld;
++            MRSourcePoint secondWorld;
+             if (nextNode.reserved0 != 0u ||
+-                !siteWorld(environment, dispatch, bodyPoses, sites,
++                !siteWorld(environment, dispatch, bodyPoses, bodyPositionLow, sites,
+                            nextNode.targetIndex, secondWorld) ||
+                 !addSegmentLengthJacobian(
+-                    environment, dispatch, bodyPoses, pointJacobians,
++                    environment, dispatch, bodyPoses, bodyPositionLow, pointJacobians,
+                     sites[firstNode.targetIndex].bodyIndex, firstWorld,
+                     sites[nextNode.targetIndex].bodyIndex, secondWorld,
+                     suffixJacobians + outputBase)) {
+@@ -1085,10 +1114,10 @@
+         }
+         const MRMujocoMuscleRouteNodeGPU lastNode =
+             routes[muscle.route.x + cursor + 2u];
+-        float3 lastWorld;
++        MRSourcePoint lastWorld;
+         if (lastNode.type != MR_MUJOCO_MUSCLE_ROUTE_SITE ||
+             lastNode.reserved0 != 0u ||
+-            !siteWorld(environment, dispatch, bodyPoses, sites,
++            !siteWorld(environment, dispatch, bodyPoses, bodyPositionLow, sites,
+                        lastNode.targetIndex, lastWorld)) {
+             valid = false;
+             break;
+@@ -1112,8 +1141,9 @@
+         const MRArticulatedBodyPoseGPU pose = bodyPoses[
+             environment * dispatch.bodyPoseStride +
+             wrap.bodyIndex - dispatch.articulationFirstBody];
+-        const float3 center = pose.position.xyz +
+-            quaternionRotate(pose.orientation, wrap.localCenter.xyz);
++        const MRSourcePoint center = mrSourceBodyPoint(pose.position,bodyPositionLow,
++            environment*dispatch.bodyPoseStride+wrap.bodyIndex-dispatch.articulationFirstBody) +
++            mrSourceRotate(pose.orientation, wrap.localCenter.xyz);
+         const float3 localFirst = matrixTransposeApply(
+             wrap, quaternionConjugateRotate(
+                 pose.orientation, firstWorld - center));
+@@ -1149,8 +1179,8 @@
+         float2 side{};
+         float3 localSide{};
+         if (hasSideSite) {
+-            float3 sideWorld;
+-            if (!siteWorld(environment, dispatch, bodyPoses, sites,
++            MRSourcePoint sideWorld;
++            if (!siteWorld(environment, dispatch, bodyPoses, bodyPositionLow, sites,
+                            nextNode.sideSiteIndex, sideWorld)) {
+                 valid = false;
+                 break;
+@@ -1171,7 +1201,7 @@
+                          side, wrap.radius.x, contact, wrappingLength);
+         if (!wrapped) {
+             valid = addSegmentLengthJacobian(
+-                environment, dispatch, bodyPoses, pointJacobians,
++                environment, dispatch, bodyPoses, bodyPositionLow, pointJacobians,
+                 sites[firstNode.targetIndex].bodyIndex, firstWorld,
+                 sites[lastNode.targetIndex].bodyIndex, lastWorld,
+                 suffixJacobians + outputBase);
+@@ -1192,22 +1222,22 @@
+                     (localLast.z - localFirst.z) *
+                         (firstLeg + wrappingLength) / denominator;
+             }
+-            const float3 worldTangentFirst = center + quaternionRotate(
++            const MRSourcePoint worldTangentFirst = center + quaternionRotate(
+                 pose.orientation, matrixApply(wrap, tangentFirst));
+-            const float3 worldTangentLast = center + quaternionRotate(
++            const MRSourcePoint worldTangentLast = center + quaternionRotate(
+                 pose.orientation, matrixApply(wrap, tangentLast));
+             valid = addSegmentLengthJacobian(
+-                    environment, dispatch, bodyPoses, pointJacobians,
++                    environment, dispatch, bodyPoses, bodyPositionLow, pointJacobians,
+                     sites[firstNode.targetIndex].bodyIndex, firstWorld,
+                     wrap.bodyIndex, worldTangentFirst,
+                     suffixJacobians + outputBase) &&
+                 addSegmentLengthJacobian(
+-                    environment, dispatch, bodyPoses, pointJacobians,
++                    environment, dispatch, bodyPoses, bodyPositionLow, pointJacobians,
+                     wrap.bodyIndex, worldTangentFirst,
+                     wrap.bodyIndex, worldTangentLast,
+                     suffixJacobians + outputBase) &&
+                 addSegmentLengthJacobian(
+-                    environment, dispatch, bodyPoses, pointJacobians,
++                    environment, dispatch, bodyPoses, bodyPositionLow, pointJacobians,
+                     wrap.bodyIndex, worldTangentLast,
+                     sites[lastNode.targetIndex].bodyIndex, lastWorld,
+                     suffixJacobians + outputBase);
+--- /dev/null
++++ b/src/metal/MujocoMuscleReferenceCompensated.metal
+@@ -0,0 +1,4 @@
++#define MR_SOURCE_PAIRED_GEOMETRY 1
++#define MR_MUJOCO_REFERENCE_KERNEL_NAME mr_mujoco_muscle_reference_compensated
++#define MR_MUJOCO_SUFFIX_KERNEL_NAME mr_mujoco_muscle_route_suffix_jacobian_compensated
++#include "MujocoMuscleReference.metal"
+--- a/src/metal/NumiHumanTendonTransfer.metal
++++ b/src/metal/NumiHumanTendonTransfer.metal
+@@ -4,6 +4,11 @@
+ #include "metalrobo/numi_human_tendon_gpu.h"
+ 
+ using namespace metal;
++
++#include "PairedSourceGeometry.metalinc"
++#ifndef MR_TENDON_TRANSFER_KERNEL_NAME
++#define MR_TENDON_TRANSFER_KERNEL_NAME mr_numi_human_tendon_transfer
++#endif
+ 
+ namespace {
+ 
+@@ -37,9 +42,10 @@
+     const uint dof,
+     const MRNumiHumanTendonTransferDispatchGPU dispatch,
+     device const MRArticulatedBodyPoseGPU* bodyPoses,
++    device const float4* bodyPositionLow,
+     device const float* pointJacobians,
+     const uint bodyIndex,
+-    const float3 worldPoint
++    const MRSourcePoint worldPoint
+ ) {
+     const uint localBody = bodyIndex - dispatch.articulationFirstBody;
+     const MRArticulatedBodyPoseGPU pose = bodyPoses[
+@@ -71,12 +77,12 @@
+         );
+         angular += 0.5f * cross(worldAxis, probe - center);
+     }
+-    return center + cross(angular, worldPoint - pose.position.xyz);
++    return center + cross(angular, worldPoint - mrSourceBodyPoint(pose.position,bodyPositionLow,environment*dispatch.bodyPoseStride+localBody));
+ }
+ 
+ } // namespace
+ 
+-kernel void mr_numi_human_tendon_transfer(
++kernel void MR_TENDON_TRANSFER_KERNEL_NAME(
+     constant MRNumiHumanTendonTransferDispatchGPU& dispatch [[buffer(0)]],
+     device const MRNumiHumanTendonBindingGPU* bindings [[buffer(1)]],
+     device const MRNumiHumanTendonEnvelopeGPU* envelopes [[buffer(2)]],
+@@ -85,8 +91,15 @@
+     device const float* pointJacobians [[buffer(5)]],
+     device MRNumiHumanTendonTransferResultGPU* results [[buffer(6)]],
+     device float* generalizedCorrections [[buffer(7)]],
++#if MR_SOURCE_PAIRED_GEOMETRY
++    device const float4* bodyPositionLow [[buffer(8)]],
++#endif
+     uint globalIndex [[thread_position_in_grid]]
+ ) {
++#if !MR_SOURCE_PAIRED_GEOMETRY
++    device const float4* bodyPositionLow = nullptr;
++#endif
++
+     if (dispatch.endpointCount == 0u ||
+         globalIndex >= dispatch.environmentCount * dispatch.endpointCount) {
+         return;
+@@ -189,8 +202,8 @@
+     float3 localResultant = float3(0.0f);
+     float3 localMoment = float3(0.0f);
+     float3 localNodalForces[4];
+-    float3 worldNodes[4];
+-    const float3 sourceWorld = pose.position.xyz + quaternionRotate(
++    MRSourcePoint worldNodes[4];
++    const MRSourcePoint sourceWorld = mrSourceBodyPoint(pose.position,bodyPositionLow,environment*dispatch.bodyPoseStride+localBody) + mrSourceRotate(
+         pose.orientation, binding.sourceLocalPoint.xyz
+     );
+     for (uint node = 0u; node < 4u; ++node) {
+@@ -208,7 +221,7 @@
+             }
+         }
+         localNodalForces[node] = mappedForce(envelope, node, terminalLocalForce);
+-        worldNodes[node] = pose.position.xyz + quaternionRotate(
++        worldNodes[node] = mrSourceBodyPoint(pose.position,bodyPositionLow,environment*dispatch.bodyPoseStride+localBody) + mrSourceRotate(
+             pose.orientation, envelope.localNodes[node].xyz
+         );
+         const float3 worldForce = quaternionRotate(
+@@ -227,14 +240,14 @@
+     for (uint dof = 0u; dof < dispatch.dofCount; ++dof) {
+         const float sourceGeneralized = dot(
+             terminalWorldForce,
+-            pointJacobian(environment, dof, dispatch, bodyPoses, pointJacobians,
++            pointJacobian(environment, dof, dispatch, bodyPoses, bodyPositionLow, pointJacobians,
+                           binding.bodyIndex, sourceWorld)
+         );
+         float distributedGeneralized = 0.0f;
+         for (uint node = 0u; node < 4u; ++node) {
+             distributedGeneralized += dot(
+                 result.nodalWorldForces[node].xyz,
+-                pointJacobian(environment, dof, dispatch, bodyPoses, pointJacobians,
++                pointJacobian(environment, dof, dispatch, bodyPoses, bodyPositionLow, pointJacobians,
+                               binding.bodyIndex, worldNodes[node])
+             );
+         }
+--- /dev/null
++++ b/src/metal/NumiHumanTendonTransferCompensated.metal
+@@ -0,0 +1,3 @@
++#define MR_SOURCE_PAIRED_GEOMETRY 1
++#define MR_TENDON_TRANSFER_KERNEL_NAME mr_numi_human_tendon_transfer_compensated
++#include "NumiHumanTendonTransfer.metal"
+--- a/src/metal/NumiHumanExtensorHood.metal
++++ b/src/metal/NumiHumanExtensorHood.metal
+@@ -5,6 +5,12 @@
+ #include "metalrobo/numi_human_stand_gpu.h"
+ 
+ using namespace metal;
++
++#include "PairedSourceGeometry.metalinc"
++#ifndef MR_HOOD_SOLVE_KERNEL_NAME
++#define MR_HOOD_SOLVE_KERNEL_NAME mr_numi_human_solve_extensor_hood
++#define MR_HOOD_ASSEMBLE_KERNEL_NAME mr_numi_human_assemble_extensor_hood_correction
++#endif
+ 
+ namespace {
+ 
+@@ -28,17 +34,20 @@
+         bodyIndex - dispatch.articulationFirstBody < dispatch.bodyPoseStride;
+ }
+ 
+-inline float3 worldPoint(
++inline MRSourcePoint worldPoint(
+     const uint environment,
+     constant MRNumiHumanExtensorHoodDispatchGPU& dispatch,
+     device const MRArticulatedBodyPoseGPU* bodyPoses,
++    device const float4* bodyPositionLow,
+     const uint bodyIndex,
+     const float3 localPoint
+ ) {
+     const MRArticulatedBodyPoseGPU pose = bodyPoses[
+         environment * dispatch.bodyPoseStride +
+         bodyIndex - dispatch.articulationFirstBody];
+-    return pose.position.xyz + quaternionRotate(pose.orientation, localPoint);
++    return mrSourceBodyPoint(pose.position,bodyPositionLow,
++        environment * dispatch.bodyPoseStride + bodyIndex - dispatch.articulationFirstBody)
++        + mrSourceRotate(pose.orientation, localPoint);
+ }
+ 
+ inline float3 angularJacobian(
+@@ -82,9 +91,10 @@
+     const uint dof,
+     constant MRNumiHumanExtensorHoodDispatchGPU& dispatch,
+     device const MRArticulatedBodyPoseGPU* bodyPoses,
++    device const float4* bodyPositionLow,
+     device const float* pointJacobians,
+     const uint bodyIndex,
+-    const float3 point
++    const MRSourcePoint point
+ ) {
+     const uint localBody = bodyIndex - dispatch.articulationFirstBody;
+     const MRArticulatedBodyPoseGPU pose = bodyPoses[
+@@ -99,7 +109,8 @@
+     return center + cross(
+         angularJacobian(environment, dof, dispatch, bodyPoses,
+                         pointJacobians, bodyIndex),
+-        point - pose.position.xyz);
++        point - mrSourceBodyPoint(pose.position,bodyPositionLow,
++            environment * dispatch.bodyPoseStride + localBody));
+ }
+ 
+ inline bool evaluate(
+@@ -217,7 +228,7 @@
+ 
+ } // namespace
+ 
+-kernel void mr_numi_human_solve_extensor_hood(
++kernel void MR_HOOD_SOLVE_KERNEL_NAME(
+     constant MRNumiHumanExtensorHoodDispatchGPU& dispatch [[buffer(0)]],
+     device const MRNumiHumanExtensorHoodRayGPU* rays [[buffer(1)]],
+     device const MRNumiHumanExtensorHoodNodeGPU* nodes [[buffer(2)]],
+@@ -231,8 +242,15 @@
+     device MRNumiHumanExtensorHoodNodeResultGPU* nodeResults [[buffer(10)]],
+     device MRNumiHumanExtensorHoodRayResultGPU* rayResults [[buffer(11)]],
+     device const MRMujocoMuscleWrapGPU* wraps [[buffer(12)]],
++#if MR_SOURCE_PAIRED_GEOMETRY
++    device const float4* bodyPositionLow [[buffer(13)]],
++    device float4* relativeNodePositions [[buffer(14)]],
++#endif
+     uint global [[thread_position_in_grid]]
+ ) {
++#if !MR_SOURCE_PAIRED_GEOMETRY
++    device const float4* bodyPositionLow = nullptr;
++#endif
+     if (dispatch.rayCount == 0u ||
+         global >= dispatch.environmentCount * dispatch.rayCount) return;
+     const uint environment = global / dispatch.rayCount;
+@@ -274,6 +292,22 @@
+         return;
+     }
+ 
++    MRSourcePoint rayAnchor = mrSourceZeroPoint();
++#if MR_SOURCE_PAIRED_GEOMETRY
++    const MRNumiHumanExtensorHoodNodeGPU anchorNode = nodes[ray.nodes.x];
++    if (!validBody(anchorNode.bodyIndex, dispatch) || !finite4(anchorNode.localPoint)) {
++        result.status = MR_NUMI_HUMAN_EXTENSOR_HOOD_INVALID_TOPOLOGY;
++        rayResults[global] = result;
++        return;
++    }
++    rayAnchor = worldPoint(environment, dispatch, bodyPoses, bodyPositionLow,
++        anchorNode.bodyIndex, anchorNode.localPoint.xyz);
++    if (!mrSourcePointFinite(rayAnchor)) {
++        result.status = MR_NUMI_HUMAN_EXTENSOR_HOOD_NONFINITE_RESULT;
++        rayResults[global] = result;
++        return;
++    }
++#endif
+     float3 position[kMaxNodes];
+     float3 initialPosition[kMaxNodes];
+     float3 candidate[kMaxNodes];
+@@ -308,8 +342,8 @@
+             return;
+         }
+         position[local] = worldPoint(
+-            environment, dispatch, bodyPoses, node.bodyIndex,
+-            node.localPoint.xyz);
++            environment, dispatch, bodyPoses, bodyPositionLow, node.bodyIndex,
++            node.localPoint.xyz) - rayAnchor;
+         initialPosition[local] = position[local];
+         appliedLoad[local] = float3(0.0f);
+         if ((node.flags & MR_NUMI_HUMAN_EXTENSOR_HOOD_NODE_FIXED) != 0u) {
+@@ -425,8 +459,8 @@
+             return;
+         }
+         const float3 proximal = worldPoint(
+-            environment, dispatch, bodyPoses, input.proximalBodyIndex,
+-            input.proximalLocalPoint.xyz);
++            environment, dispatch, bodyPoses, bodyPositionLow, input.proximalBodyIndex,
++            input.proximalLocalPoint.xyz) - rayAnchor;
+         const float3 delta = proximal - position[nodeLocal];
+         const float distanceValue = length(delta);
+         if (!(distanceValue > dispatch.solver.y) || !isfinite(distanceValue)) {
+@@ -609,7 +643,12 @@
+             maximumDisplacement = max(maximumDisplacement, length(displacement));
+         }
+         MRNumiHumanExtensorHoodNodeResultGPU nodeResult{};
++#if MR_SOURCE_PAIRED_GEOMETRY
++        relativeNodePositions[nodeBase + local] = float4(position[local], 0.0f);
++        nodeResult.position = float4(mrSourcePointProjection(rayAnchor + position[local]), 0.0f);
++#else
+         nodeResult.position = float4(position[local], 0.0f);
++#endif
+         nodeResult.bodyForce = float4(bodyForce, 0.0f);
+         nodeResults[nodeBase + local] = nodeResult;
+         forceClosure += bodyForce;
+@@ -622,8 +661,8 @@
+         const MRNumiHumanExtensorHoodInputGPU input =
+             inputs[ray.elements.z + local];
+         const float3 proximal = worldPoint(
+-            environment, dispatch, bodyPoses, input.proximalBodyIndex,
+-            input.proximalLocalPoint.xyz);
++            environment, dispatch, bodyPoses, bodyPositionLow, input.proximalBodyIndex,
++            input.proximalLocalPoint.xyz) - rayAnchor;
+         const float3 distal = position[input.nodeIndex - ray.nodes.x];
+         const float distanceValue = length(proximal - distal);
+         if (!(distanceValue > dispatch.solver.y)) {
+@@ -651,6 +690,10 @@
+             maximumEngineeringStrain,
+             (currentLength - element.material.x) / element.material.x);
+     }
++#if MR_SOURCE_PAIRED_GEOMETRY
++    momentClosure += cross(rayAnchor.high.xyz, forceClosure) +
++        cross(rayAnchor.low.xyz, forceClosure);
++#endif
+     if (!finite4(float4(forceClosure, maximumResidual)) ||
+         !finite4(float4(momentClosure, maximumTension)) ||
+         !finite4(float4(strainEnergy, maximumDisplacement,
+@@ -671,7 +714,7 @@
+     rayResults[global] = result;
+ }
+ 
+-kernel void mr_numi_human_assemble_extensor_hood_correction(
++kernel void MR_HOOD_ASSEMBLE_KERNEL_NAME(
+     constant MRNumiHumanExtensorHoodDispatchGPU& dispatch [[buffer(0)]],
+     device const MRNumiHumanExtensorHoodRayGPU* rays [[buffer(1)]],
+     device const MRNumiHumanExtensorHoodNodeGPU* nodes [[buffer(2)]],
+@@ -686,8 +729,15 @@
+     device const MRNumiHumanExtensorHoodRayResultGPU* rayResults [[buffer(11)]],
+     device float* corrections [[buffer(12)]],
+     device const float* suffixJacobians [[buffer(13)]],
++#if MR_SOURCE_PAIRED_GEOMETRY
++    device const float4* bodyPositionLow [[buffer(14)]],
++    device const float4* relativeNodePositions [[buffer(15)]],
++#endif
+     uint global [[thread_position_in_grid]]
+ ) {
++#if !MR_SOURCE_PAIRED_GEOMETRY
++    device const float4* bodyPositionLow = nullptr;
++#endif
+     if (global >= dispatch.environmentCount * dispatch.dofCount) return;
+     const uint environment = global / dispatch.dofCount;
+     const uint dof = global - environment * dispatch.dofCount;
+@@ -700,19 +750,29 @@
+             return;
+         }
+         const MRNumiHumanExtensorHoodRayGPU ray = rays[rayIndex];
++#if MR_SOURCE_PAIRED_GEOMETRY
++        const MRNumiHumanExtensorHoodNodeGPU anchorNode = nodes[ray.nodes.x];
++        const MRSourcePoint rayAnchor = worldPoint(environment, dispatch, bodyPoses,
++            bodyPositionLow, anchorNode.bodyIndex, anchorNode.localPoint.xyz);
++#endif
+         for (uint local = 0u; local < ray.nodes.y; ++local) {
+             const uint nodeIndex = ray.nodes.x + local;
+             const MRNumiHumanExtensorHoodNodeGPU node = nodes[nodeIndex];
+             const MRNumiHumanExtensorHoodNodeResultGPU solved = nodeResults[
+                 environment * dispatch.nodeCount + nodeIndex];
+-            const float3 bodyPoint =
++            const MRSourcePoint bodyPoint =
+                 (node.flags & MR_NUMI_HUMAN_EXTENSOR_HOOD_NODE_FIXED) != 0u
++#if MR_SOURCE_PAIRED_GEOMETRY
++                    ? rayAnchor + relativeNodePositions[
++                        environment * dispatch.nodeCount + nodeIndex].xyz
++#else
+                     ? solved.position.xyz
+-                    : worldPoint(environment, dispatch, bodyPoses,
++#endif
++                    : worldPoint(environment, dispatch, bodyPoses, bodyPositionLow,
+                                  node.bodyIndex, node.localPoint.xyz);
+             correction += dot(
+                 solved.bodyForce.xyz,
+-                pointJacobian(environment, dof, dispatch, bodyPoses,
++                pointJacobian(environment, dof, dispatch, bodyPoses, bodyPositionLow,
+                               pointJacobians, node.bodyIndex,
+                               bodyPoint));
+         }
+@@ -722,12 +782,17 @@
+             const float representedForce = muscleResults[
+                 environment * dispatch.muscleCount + input.muscleIndex
+             ].activeForceAndReserved.x;
+-            const float3 proximal = worldPoint(
+-                environment, dispatch, bodyPoses, input.proximalBodyIndex,
++            const MRSourcePoint proximal = worldPoint(
++                environment, dispatch, bodyPoses, bodyPositionLow, input.proximalBodyIndex,
+                 input.proximalLocalPoint.xyz);
+-            const float3 distal = nodeResults[
++#if MR_SOURCE_PAIRED_GEOMETRY
++            const MRSourcePoint distal = rayAnchor + relativeNodePositions[
++                environment * dispatch.nodeCount + input.nodeIndex].xyz;
++#else
++            const MRSourcePoint distal = nodeResults[
+                 environment * dispatch.nodeCount + input.nodeIndex
+             ].position.xyz;
++#endif
+             const float distanceValue = length(proximal - distal);
+             if (!(distanceValue > dispatch.solver.y)) {
+                 corrections[global] = NAN;
+@@ -737,7 +802,7 @@
+                 -abs(representedForce) * (proximal - distal) / distanceValue;
+             correction += dot(
+                 counterforce,
+-                pointJacobian(environment, dof, dispatch, bodyPoses,
++                pointJacobian(environment, dof, dispatch, bodyPoses, bodyPositionLow,
+                               pointJacobians, input.proximalBodyIndex,
+                               proximal));
+             const uint inputIndex = ray.elements.z + local;
+@@ -754,6 +819,7 @@
+     corrections[global] = correction;
+ }
+ 
++#if !MR_SOURCE_PAIRED_GEOMETRY
+ kernel void mr_numi_human_apply_extensor_hood_correction(
+     constant MRNumiHumanExtensorHoodDispatchGPU& dispatch [[buffer(0)]],
+     device const float* corrections [[buffer(1)]],
+@@ -797,3 +863,5 @@
+          dispatch.stepIndex) * dispatch.rayCount + rayIndex;
+     history[historyIndex] = result;
+ }
++
++#endif // !MR_SOURCE_PAIRED_GEOMETRY
+--- /dev/null
++++ b/src/metal/NumiHumanExtensorHoodCompensated.metal
+@@ -0,0 +1,4 @@
++#define MR_SOURCE_PAIRED_GEOMETRY 1
++#define MR_HOOD_SOLVE_KERNEL_NAME mr_numi_human_solve_extensor_hood_compensated
++#define MR_HOOD_ASSEMBLE_KERNEL_NAME mr_numi_human_assemble_extensor_hood_correction_compensated
++#include "NumiHumanExtensorHood.metal"
+--- /dev/null
++++ b/src/metal/PairedSourceGeometry.metalinc
+@@ -0,0 +1,38 @@
++// Source geometry arithmetic shared by full routes, route cuts and terminal
++// transfer. The legacy build retains its exact float3 operations and ABI.
++#include "metalrobo/compensated_geometry_gpu.h"
++#ifndef MR_SOURCE_PAIRED_GEOMETRY
++#define MR_SOURCE_PAIRED_GEOMETRY 0
++#endif
++#if MR_SOURCE_PAIRED_GEOMETRY
++using MRSourcePoint = MRCompensatedPositionGPU;
++inline MRSourcePoint mrSourceBodyPoint(float4 high, device const float4* lows, uint index) {
++    const float4 low = lows[index];
++    if (!all(isfinite(high)) || !all(isfinite(low)) || low.w != 0.0f)
++        return {float4(NAN),float4(NAN)};
++    return {float4(high.xyz,0.0f),low};
++}
++inline MRSourcePoint operator+(MRSourcePoint a, MRSourcePoint b) { return mrCompensatedVectorAdd(a,b); }
++inline MRSourcePoint mrSourceRotate(float4 q,float3 v) { return mrCompensatedQuaternionRotate(q,float4(v,0.0f)); }
++inline MRSourcePoint operator+(MRSourcePoint point, float3 offset) {
++    const auto x=mrCompensatedAdd({point.high.x,point.low.x},{offset.x,0.0f});
++    const auto y=mrCompensatedAdd({point.high.y,point.low.y},{offset.y,0.0f});
++    const auto z=mrCompensatedAdd({point.high.z,point.low.z},{offset.z,0.0f});
++    return {float4(x.high,y.high,z.high,0.0f),float4(x.low,y.low,z.low,0.0f)};
++}
++inline float3 operator-(MRSourcePoint a, MRSourcePoint b) {
++    return mrCompensatedPositionDifference(a.high,a.low,b.high,b.low).xyz;
++}
++inline MRSourcePoint mrSourceZeroPoint() { return {float4(0.0f),float4(0.0f)}; }
++inline float3 mrSourcePointProjection(MRSourcePoint point) { return point.high.xyz; }
++inline bool mrSourcePointFinite(MRSourcePoint point) {
++    return all(isfinite(point.high)) && all(isfinite(point.low));
++}
++#else
++using MRSourcePoint = float3;
++inline MRSourcePoint mrSourceRotate(float4 q,float3 v) { const float3 t=2.0f*cross(q.xyz,v); return v+q.w*t+cross(q.xyz,t); }
++inline MRSourcePoint mrSourceZeroPoint() { return float3(0.0f); }
++inline float3 mrSourcePointProjection(MRSourcePoint point) { return point; }
++inline MRSourcePoint mrSourceBodyPoint(float4 high, device const float4*, uint) { return high.xyz; }
++inline bool mrSourcePointFinite(MRSourcePoint point) { return all(isfinite(point)); }
++#endif
+--- /dev/null
++++ b/apps/source_route_precision_check.mm
+@@ -0,0 +1,347 @@
++#import <Foundation/Foundation.h>
++#import <Metal/Metal.h>
++#include "metalrobo/MujocoMuscleReference.hpp"
++#include "metalrobo/mujoco_muscle_gpu.h"
++#include "metalrobo/numi_human_tendon_gpu.h"
++#include "metalrobo/numi_human_extensor_hood_gpu.h"
++#include <algorithm>
++#include <array>
++#include <cmath>
++#include <cstring>
++#include <iomanip>
++#include <iostream>
++#include <stdexcept>
++#include <string>
++#include <vector>
++
++// Constitutive/geometry evaluation only. This driver never advances physics.
++// Independent FP64 Core source equations are the route/force oracle; an
++// independently derived collinear tension/foundation equilibrium is the hood
++// oracle. Neither uses the compensated arithmetic implementation.
++namespace {
++using namespace metalrobo;
++using V = std::array<double, 3>;
++unsigned checks = 0;
++void require(bool condition, const std::string& message) {
++    ++checks;
++    if (!condition) throw std::runtime_error(message);
++}
++void near(double a, double b, double tolerance, const std::string& message) {
++    require(std::isfinite(a) && std::isfinite(b) && std::abs(a-b)<=tolerance,
++        message+": actual="+std::to_string(a)+" expected="+std::to_string(b));
++}
++mr_float4 f4(double x=0, double y=0, double z=0, double w=0) {
++    return {float(x),float(y),float(z),float(w)};
++}
++double component(mr_float4 x, unsigned i) { return i==0?x.x:i==1?x.y:x.z; }
++V cross(V a,V b) { return {a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]}; }
++constexpr unsigned dofs=7, bodies=3, jacobianCount=bodies*4*3*dofs;
++
++struct Fixture {
++    EngineModel model;
++    std::vector<MujocoMuscleSite> sites;
++    std::vector<MujocoWrapGeometry> wraps;
++    MujocoMuscleDefinition definition;
++    MujocoMuscleState state{double(.43f),double(.37f)};
++    std::vector<MRMujocoMuscleSiteGPU> gpuSites;
++    std::vector<MRMujocoMuscleWrapGPU> gpuWraps;
++    std::vector<MRMujocoMuscleRouteNodeGPU> routes;
++    MRMujocoMuscleGPU muscle{};
++    MRMujocoMuscleStateGPU muscleState{};
++    std::vector<double> velocity=std::vector<double>(dofs,0);
++    Fixture(unsigned wrapKind) {
++        model=makeFreeSphereEngineModel();
++        auto body=model.bodies[1];
++        model.bodies.assign(bodies,body);
++        model.shapes.clear();model.materials.clear();
++        auto& w=model.world;
++        w.bodyCount=bodies;w.jointCount=2;w.shapeCount=0;w.materialCount=0;w.nq=8;w.nv=dofs;
++        model.articulations[0]={0,MR_ROOT_FLOATING,0,bodies,0,2,0,8,0,dofs,0,0};
++        model.joints.resize(2);
++        for(unsigned i=0;i<2;++i) {
++            auto& j=model.joints[i];j.parentBody=0;j.childBody=i+1;
++            j.jointType=i==0?MR_JOINT_PRISMATIC:MR_JOINT_FIXED;
++            j.qOffset=i==0?7:8;j.vOffset=i==0?6:7;j.nq=i==0?1:0;j.nv=i==0?1:0;
++            j.axis0=f4(0,1,0);j.parentRotation=f4(0,0,0,1);j.childRotation=j.parentRotation;
++            j.parentAnchor=i==0?f4(-.2,.01,.03):f4(.2,.01,-.02);
++        }
++        for(unsigned i=0;i<bodies;++i) {
++            auto& b=model.bodies[i];b.articulationIndex=0;
++            b.parentBody=i==0?MR_INVALID_INDEX:0;b.inboundJoint=i==0?MR_INVALID_INDEX:i-1;
++        }
++        model.dofs.resize(dofs);
++        model.dofs[6]={0,0,7,6,0,0,0,0,{},{}};
++        model.defaultQ.assign(8,0);model.defaultQ[6]=1;model.defaultV.assign(dofs,0);
++        std::string reason;require(model.valid(&reason),"source oracle model: "+reason);
++        sites={{0,{double(-.28f),double(.08f),double(.04f)}},{1,{double(.007f),double(.003f),double(.002f)}},
++               {2,{double(-.004f),double(.001f),double(.003f)}},{0,{0,double(.1f),0}}};
++        MujocoWrapGeometry wrap{};wrap.bodyIndex=0;
++        wrap.type=wrapKind==3?MujocoRouteNodeType::cylinder:MujocoRouteNodeType::sphere;
++        wrap.rotationBody={1,0,0,0,1,0,0,0,1};wrap.radius=double(.04f);wraps.push_back(wrap);
++        definition.route={{MujocoRouteNodeType::site,0,MR_INVALID_INDEX},{MujocoRouteNodeType::site,1,MR_INVALID_INDEX}};
++        if(wrapKind)definition.route.push_back({wrap.type,0,3});
++        definition.route.push_back({MujocoRouteNodeType::site,2,MR_INVALID_INDEX});
++        definition.lengthRange={double(.3f),double(.7f)};definition.accelerationScale=1;
++        definition.controlRange={0,1};
++        definition.gainParameters={double(.5f),double(1.5f),20,200,double(.5f),double(1.6f),10,double(1.3f),double(1.2f),0};
++        definition.biasParameters=definition.gainParameters;
++        definition.dynamicParameters={double(.01f),double(.04f),0,0,0,0,0,0,0,0};
++        for(auto s:sites)gpuSites.push_back({s.bodyIndex,0,0,0,f4(s.localPoint[0],s.localPoint[1],s.localPoint[2])});
++        MRMujocoMuscleWrapGPU gw{};gw.bodyIndex=0;gw.type=unsigned(wrap.type);gw.rotationRow0=f4(1,0,0);gw.rotationRow1=f4(0,1,0);gw.rotationRow2=f4(0,0,1);gw.radius=f4(wrap.radius);gpuWraps.push_back(gw);
++        for(auto r:definition.route)routes.push_back({unsigned(r.type),r.targetIndex,r.sideSiteIndex,0});
++        muscle.route={0,unsigned(routes.size()),0,0};muscle.lengthRangeAndAcceleration=f4(definition.lengthRange[0],definition.lengthRange[1],1);muscle.controlRange=f4(0,1);
++        auto writeParameters=[](mr_float4* target,const std::array<double,10>& values){
++            for(unsigned b=0;b<3;++b) {
++                float v[4]{};for(unsigned a=0;a<4 && b*4+a<10;++a)v[a]=float(values[b*4+a]);
++                target[b]={v[0],v[1],v[2],v[3]};
++            }
++        };
++        writeParameters(muscle.gainParameters,definition.gainParameters);writeParameters(muscle.biasParameters,definition.biasParameters);writeParameters(muscle.dynamicParameters,definition.dynamicParameters);
++        muscleState.excitationAndActivation=f4(state.excitation,state.activation);
++        velocity[6]=double(.07f);
++    }
++    MujocoMuscleResult oracle(double joint,bool suffix=false,const std::vector<MujocoMuscleSite>* overrideSites=nullptr) const {
++        std::vector<double> q(8,0);q[6]=1;q[7]=joint;
++        auto def=definition;if(suffix)def.route.erase(def.route.begin());
++        MujocoMuscleResult result;
++        auto status=evaluateMujocoMuscle(model,0,q,velocity,overrideSites?*overrideSites:sites,wraps,def,state,result);
++        require(status.succeeded(),"independent FP64 route evaluation "+std::to_string(unsigned(status.status)));
++        return result;
++    }
++};
++
++struct Geometry {
++    std::vector<MRArticulatedBodyPoseGPU> poses=std::vector<MRArticulatedBodyPoseGPU>(bodies);
++    std::vector<mr_float4> low=std::vector<mr_float4>(bodies);
++    std::vector<float> jacobian=std::vector<float>(jacobianCount);
++    Geometry(const Fixture& f,double origin,double joint) {
++        for(unsigned b=0;b<bodies;++b) {
++            V relative{};
++            if(b)for(unsigned a=0;a<3;++a)relative[a]=component(f.model.joints[b-1].parentAnchor,a);
++            if(b==1)relative[1]+=joint;
++            V world{origin+relative[0],-origin*.5+relative[1],origin*.25+relative[2]};
++            poses[b].position=f4(world[0],world[1],world[2]);poses[b].orientation=f4(0,0,0,1);
++            low[b]=f4(world[0]-poses[b].position.x,world[1]-poses[b].position.y,world[2]-poses[b].position.z);
++            for(unsigned p=0;p<4;++p)for(unsigned d=0;d<dofs;++d) {
++                V value{},arm=relative;if(p)arm[p-1]+=1;
++                if(d<3)value[d]=1;
++                else if(d<6){V axis{};axis[d-3]=1;value=cross(axis,arm);}
++                else if(b==1)value[1]=1;
++                for(unsigned a=0;a<3;++a)jacobian[((b*4+p)*3+a)*dofs+d]=float(value[a]);
++            }
++        }
++    }
++};
++
++struct GPU {
++    id<MTLDevice> device;id<MTLCommandQueue> queue;id<MTLLibrary> library;
++    explicit GPU(const char* path) {
++        device=MTLCreateSystemDefaultDevice();require(device!=nil,"Metal device");queue=[device newCommandQueue];
++        NSError* error=nil;library=[device newLibraryWithURL:[NSURL fileURLWithPath:[NSString stringWithUTF8String:path]] error:&error];
++        require(library!=nil,"source library");
++    }
++    id<MTLBuffer> buffer(const void* bytes,std::size_t size) {
++        require(size>0,"nonempty GPU fixture allocation");
++        id<MTLBuffer> b=bytes?[device newBufferWithBytes:bytes length:size options:MTLResourceStorageModeShared]:[device newBufferWithLength:size options:MTLResourceStorageModeShared];
++        require(b!=nil,"GPU allocation");if(!bytes)std::memset([b contents],0,size);return b;
++    }
++    template<class T> id<MTLBuffer> object(const T& v) {return buffer(&v,sizeof(v));}
++    template<class T> id<MTLBuffer> vector(const std::vector<T>& v) {return buffer(v.data(),v.size()*sizeof(T));}
++    void dispatch(const char* name,std::initializer_list<std::pair<unsigned,id<MTLBuffer>>> bindings,unsigned count) {
++        NSError* error=nil;id<MTLFunction> fn=[library newFunctionWithName:[NSString stringWithUTF8String:name]];
++        require(fn!=nil,std::string("production kernel ")+name);
++        auto pipeline=[device newComputePipelineStateWithFunction:fn error:&error];require(pipeline!=nil,"pipeline");
++        auto cb=[queue commandBuffer];auto enc=[cb computeCommandEncoder];[enc setComputePipelineState:pipeline];
++        for(auto [slot,b]:bindings)[enc setBuffer:b offset:0 atIndex:slot];
++        [enc dispatchThreads:MTLSizeMake(count,1,1) threadsPerThreadgroup:MTLSizeMake(std::min<unsigned>(count,32),1,1)];[enc endEncoding];[cb commit];[cb waitUntilCompleted];
++        require(cb.status==MTLCommandBufferStatusCompleted,std::string("kernel completed ")+name);
++    }
++};
++struct RouteOutput {MRMujocoMuscleResultGPU result;std::array<float,dofs> force,suffix;};
++RouteOutput evaluateGPU(GPU& gpu,const Fixture& f,const Geometry& g,bool paired) {
++    MRMujocoMuscleReferenceDispatchGPU d{};d.abiVersion=MR_MUJOCO_MUSCLE_REFERENCE_GPU_ABI_VERSION;
++    d.muscleCount=1;d.siteCount=unsigned(f.sites.size());d.wrapCount=1;d.routeNodeCount=unsigned(f.routes.size());d.environmentCount=1;d.bodyPoseStride=bodies;d.dofCount=dofs;d.pointJacobianStride=jacobianCount;d.bodyJacobianPointStride=4;d.timestepSecondsAndReserved=f4(.000025);
++    std::vector<float> velocity(f.velocity.begin(),f.velocity.end());
++    auto pose=gpu.vector(g.poses),low=gpu.vector(g.low),jac=gpu.vector(g.jacobian),v=gpu.vector(velocity),db=gpu.object(d),muscle=gpu.object(f.muscle),state=gpu.object(f.muscleState),sites=gpu.vector(f.gpuSites),wraps=gpu.vector(f.gpuWraps),routes=gpu.vector(f.routes),result=gpu.buffer(nullptr,sizeof(MRMujocoMuscleResultGPU)),force=gpu.buffer(nullptr,dofs*sizeof(float));
++    gpu.dispatch(paired?"mr_mujoco_muscle_reference_compensated":"mr_mujoco_muscle_reference",{{7,v},{8,pose},{10,low},{11,jac},{23,force},{24,db},{25,muscle},{26,state},{27,sites},{28,wraps},{29,routes},{30,result}},1);
++    MRMujocoMuscleRouteCutDispatchGPU cd{MR_MUJOCO_MUSCLE_ROUTE_CUT_GPU_ABI_VERSION,1,0,0};MRMujocoMuscleRouteCutGPU cut{0,1,0,0};
++    auto suffix=gpu.buffer(nullptr,dofs*sizeof(float));
++    gpu.dispatch(paired?"mr_mujoco_muscle_route_suffix_jacobian_compensated":"mr_mujoco_muscle_route_suffix_jacobian",{{0,pose},{1,jac},{2,db},{3,muscle},{4,sites},{5,wraps},{6,routes},{7,gpu.object(cd)},{8,gpu.object(cut)},{9,suffix},{10,low}},1);
++    RouteOutput out{};std::memcpy(&out.result,[result contents],sizeof(out.result));std::memcpy(out.force.data(),[force contents],dofs*sizeof(float));std::memcpy(out.suffix.data(),[suffix contents],dofs*sizeof(float));return out;
++}
++
++void terminalCheck(GPU& gpu,const Fixture& f,const Geometry& g,const RouteOutput& route) {
++    MRNumiHumanTendonTransferDispatchGPU d{};d.abiVersion=MR_NUMI_HUMAN_TENDON_TRANSFER_GPU_ABI_VERSION;d.endpointCount=2;d.envelopeCount=1;d.muscleCount=1;d.environmentCount=1;d.dofCount=dofs;d.bodyPoseStride=bodies;d.pointJacobianStride=jacobianCount;d.bodyJacobianPointStride=4;
++    std::vector<MRNumiHumanTendonBindingGPU> bindings(2);
++    bindings[0].bodyIndex=0;bindings[0].mode=MR_NUMI_HUMAN_TENDON_TRANSFER_SOURCE_POINT;bindings[0].envelopeIndex=MR_INVALID_INDEX;bindings[0].sourceLocalPoint=f.gpuSites[0].localPoint;
++    bindings[1].endpointOrdinal=1;bindings[1].bodyIndex=2;bindings[1].mode=MR_NUMI_HUMAN_TENDON_TRANSFER_DISTRIBUTED_ENVELOPE;bindings[1].boneStableId=1;bindings[1].sourceLocalPoint=f.gpuSites[2].localPoint;
++    MRNumiHumanTendonEnvelopeGPU envelope{};envelope.bodyIndex=2;envelope.boneStableId=1;envelope.nodeCount=4;envelope.metrics=f4(0,.004,1,1);
++    const int signs[4][3]={{1,1,1},{1,-1,-1},{-1,1,-1},{-1,-1,1}};
++    for(unsigned n=0;n<4;++n){auto s=bindings[1].sourceLocalPoint;envelope.localNodes[n]=f4(s.x+signs[n][0]*.002,s.y+signs[n][1]*.002,s.z+signs[n][2]*.002);for(unsigned a=0;a<3;++a)envelope.forceMapRows[n*3+a]=f4(a==0?.25:0,a==1?.25:0,a==2?.25:0);}
++    auto results=gpu.buffer(nullptr,2*sizeof(MRNumiHumanTendonTransferResultGPU)),correction=gpu.buffer(nullptr,2*dofs*sizeof(float));
++    gpu.dispatch("mr_numi_human_tendon_transfer_compensated",{{0,gpu.object(d)},{1,gpu.vector(bindings)},{2,gpu.object(envelope)},{3,gpu.object(route.result)},{4,gpu.vector(g.poses)},{5,gpu.vector(g.jacobian)},{6,results},{7,correction},{8,gpu.vector(g.low)}},2);
++    auto r=static_cast<const MRNumiHumanTendonTransferResultGPU*>([results contents]);auto c=static_cast<const float*>([correction contents]);
++    for(unsigned e=0;e<2;++e){require(r[e].status==0,"terminal source/distributed status");for(unsigned j=0;j<dofs;++j)near(c[e*dofs+j],0,2e-5,"conservative terminal generalized correction");}
++    for(unsigned a=0;a<3;++a){double sum=0;for(unsigned n=0;n<4;++n)sum+=component(r[1].nodalWorldForces[n],a);near(sum,component(r[1].terminalWorldForce,a),2e-6,"distributed force conservation");}
++    near(r[1].residualsAndForce.x,0,2e-6,"terminal force residual");near(r[1].residualsAndForce.y,0,2e-7,"terminal moment residual");
++}
++
++void cpuChecks() {
++    for(unsigned kind:{0u,2u,3u}) {
++        Fixture f(kind);const double q=double(.003f);auto oracle=f.oracle(q),suffix=f.oracle(q,true);
++        require(oracle.path.appliedWrapCount==(kind?1u:0u),"fixture executes intended wrap branch");
++        constexpr double h=1e-6;
++        near((f.oracle(q+h).path.length-f.oracle(q-h).path.length)/(2*h),oracle.path.lengthJacobian[6],2e-8,"independent source route FD");
++        near((f.oracle(q+h,true).path.length-f.oracle(q-h,true).path.length)/(2*h),suffix.path.lengthJacobian[6],2e-8,"independent source suffix FD");
++        require(std::abs(oracle.path.lengthJacobian[6]-suffix.path.lengthJacobian[6])>.1,"suffix removes a nontrivial prefix");
++        require(std::abs(oracle.actuatorForce)>.1,"nonzero physical source force control");
++        for(unsigned d=0;d<6;++d)near(oracle.path.lengthJacobian[d],0,2e-14,"rigid-motion route invariance FP64");
++    }
++}
++
++void routeChecks(GPU& gpu) {
++    double maximumLengthError=0,maximumJacobianError=0,maximumForceError=0,maximumOriginError=0;bool legacyDetected=false;
++    for(unsigned kind:{0u,2u,3u}) {
++        Fixture f(kind);const double q=double(.003f);auto oracle=f.oracle(q),suffixOracle=f.oracle(q,true);
++        const auto baseline=evaluateGPU(gpu,f,Geometry(f,0,q),true);
++        for(double origin:{0.,64.,4096.}) {
++            Geometry geometry(f,origin,q);auto out=evaluateGPU(gpu,f,geometry,true);
++            require(out.result.status==0,"paired full route status");require(out.result.appliedWrapCount==oracle.path.appliedWrapCount,"GPU/FP64 wrap branch");
++            const double L=out.result.pathForceAndActivationDerivative.x,F=out.result.pathForceAndActivationDerivative.z;
++            near(L,oracle.path.length,2e-7,"route length FP64");near(F,oracle.actuatorForce,2e-4,"source force FP64");near(out.result.pathForceAndActivationDerivative.y,oracle.path.velocity,2e-6,"source route Jv FP64");
++            maximumLengthError=std::max(maximumLengthError,std::abs(L-oracle.path.length));maximumForceError=std::max(maximumForceError,std::abs(F-oracle.actuatorForce));
++            near(L,baseline.result.pathForceAndActivationDerivative.x,3e-8,"world-origin route length invariance");near(F,baseline.result.pathForceAndActivationDerivative.z,2e-5,"world-origin source force invariance");maximumOriginError=std::max(maximumOriginError,std::abs(L-baseline.result.pathForceAndActivationDerivative.x));
++            for(unsigned d=0;d<dofs;++d) {
++                const double J=out.force[d]/F;near(J,oracle.path.lengthJacobian[d],1e-5,"source Jacobian FP64");near(out.suffix[d],suffixOracle.path.lengthJacobian[d],1e-5,"source suffix Jacobian FP64");near(J,baseline.force[d]/baseline.result.pathForceAndActivationDerivative.z,2e-6,"world-origin route Jacobian invariance");near(out.suffix[d],baseline.suffix[d],2e-6,"world-origin suffix invariance");maximumJacobianError=std::max(maximumJacobianError,std::abs(J-oracle.path.lengthJacobian[d]));
++            }
++            // Endpoint derivatives use independent perturbations of the FP64
++            // source attachment coordinates, not the GPU tangent machinery.
++            constexpr double h=1e-6;
++            for(unsigned endpoint=0;endpoint<2;++endpoint)for(unsigned a=0;a<3;++a) {
++                const unsigned site=endpoint?2:0;auto plus=f.sites,minus=f.sites;plus[site].localPoint[a]+=h;minus[site].localPoint[a]-=h;
++                const double gradient=(f.oracle(q,false,&plus).path.length-f.oracle(q,false,&minus).path.length)/(2*h);
++                near(component(out.result.endpointLengthGradients[endpoint],a),gradient,1e-5,"endpoint force gradient FP64");
++            }
++            terminalCheck(gpu,f,geometry,out);
++            if(origin==4096) {
++                auto old=evaluateGPU(gpu,f,geometry,false);
++                legacyDetected|=old.result.status!=0 || std::abs(old.result.pathForceAndActivationDerivative.x-oracle.path.length)>2e-7;
++            }
++        }
++        // This finite difference is deliberately away from wrap switches.
++        constexpr double h=2e-4;auto plus=evaluateGPU(gpu,f,Geometry(f,4096,q+h),true),minus=evaluateGPU(gpu,f,Geometry(f,4096,q-h),true);
++        near((plus.result.pathForceAndActivationDerivative.x-minus.result.pathForceAndActivationDerivative.x)/(2*h),oracle.path.lengthJacobian[6],4e-4,"production route length/J finite difference");
++    }
++    require(legacyDetected,"large-origin high-only negative control detects lost geometry");
++    std::cout<<"route_max_length_error_m="<<maximumLengthError<<" route_max_J_error="<<maximumJacobianError<<" route_max_force_error_N="<<maximumForceError<<" origin_length_error_m="<<maximumOriginError<<'\n';
++}
++
++struct HoodFixture {
++    MRNumiHumanExtensorHoodDispatchGPU dispatch{};
++    std::vector<MRNumiHumanExtensorHoodRayGPU> rays;
++    std::vector<MRNumiHumanExtensorHoodNodeGPU> nodes;
++    std::vector<MRNumiHumanExtensorHoodElementGPU> elements;
++    std::vector<MRNumiHumanExtensorHoodInputGPU> inputs;
++    std::vector<MRMujocoMuscleSiteGPU> sites;
++    std::vector<MRMujocoMuscleRouteNodeGPU> routes;
++    MRMujocoMuscleGPU muscle{};
++    MRMujocoMuscleResultGPU muscleResult{};
++    std::array<double,4> x{0,double(-.01f),double(-.02f),double(.04f)};
++    double solution=0,energy=0;
++    const V axis{1,.5,-.25};
++    const double axisLength=std::sqrt(1.3125);
++    std::array<double,4> force{};
++    HoodFixture() {
++        auto& d=dispatch;d.abiVersion=MR_NUMI_HUMAN_EXTENSOR_HOOD_GPU_ABI_VERSION;
++        d.environmentCount=1;d.rayCount=8;d.nodeCount=32;d.elementCount=24;d.inputCount=8;
++        d.muscleCount=1;d.siteCount=2;d.routeNodeCount=2;d.dofCount=dofs;d.bodyPoseStride=bodies;
++        d.pointJacobianStride=jacobianCount;d.generalizedForceStride=dofs;
++        d.maximumIterations=32;d.maximumLineSearchSteps=16;d.wrapCount=1;
++        d.solver=f4(1e-6,1e-9,1e-8,1e-4);d.foundation=f4(100);
++        sites={{0,0,0,0,f4(double(.08f),double(.08f)*.5,double(.08f)*-.25)},
++               {1,0,0,0,f4(x[3],x[3]*.5,x[3]*-.25)}};
++        routes={{MR_MUJOCO_MUSCLE_ROUTE_SITE,0,MR_INVALID_INDEX,0},{MR_MUJOCO_MUSCLE_ROUTE_SITE,1,MR_INVALID_INDEX,0}};
++        muscle.route={0,2,0,0};muscleResult.status=MR_MUJOCO_MUSCLE_REFERENCE_SUCCESS;
++        muscleResult.activeForceAndReserved=f4(-.03);
++        for(unsigned r=0;r<8;++r) {
++            rays.push_back({{r*4,4,r/4,2+r%4},{r*3,3,r,1}});
++            for(unsigned n=0;n<4;++n)nodes.push_back({n<3?0u:1u,n<3?MR_NUMI_HUMAN_EXTENSOR_HOOD_NODE_FIXED:0u,n,n==3?1u:MR_INVALID_INDEX,f4(x[n],x[n]*.5,x[n]*-.25)});
++            for(unsigned n=0;n<3;++n)elements.push_back({r*4+n,r*4+3,0,0,f4(.98*(x[3]-x[n])*axisLength,1e5,1e-6)});
++            MRNumiHumanExtensorHoodInputGPU in{};in.nodeIndex=r*4+3;in.proximalBodyIndex=0;
++            in.routeNodeOrdinal=0;in.targetRouteNodeOrdinal=1;in.proximalLocalPoint=sites[0].localPoint;inputs.push_back(in);
++        }
++        // All bars stay tensile and collinear; external load direction is
++        // exactly along axis throughout. Thus the scalar equilibrium is affine and
++        // this closed form is independent of both CPU and Metal Newton code.
++        double stiffness=d.foundation.x,numerator=std::abs(muscleResult.activeForceAndReserved.x)/axisLength+double(d.foundation.x)*x[3];
++        for(unsigned n=0;n<3;++n){const auto& m=elements[n].material;const double k=double(m.y)*double(m.z)/double(m.x);stiffness+=k;numerator+=k*(x[n]+double(m.x)/axisLength);}
++        solution=numerator/stiffness;
++        for(unsigned n=0;n<3;++n){const auto& m=elements[n].material;const double k=double(m.y)*double(m.z)/double(m.x),extension=axisLength*(solution-x[n])-double(m.x);force[n]=k*extension;energy+=.5*k*extension*extension;}
++        force[3]=double(d.foundation.x)*(solution-x[3])*axisLength;
++        require(solution>x[3] && solution<sites[0].localPoint.x,"hood analytic solution in source branch");
++        for(unsigned n=0;n<3;++n)require(force[n]>0,"hood source bars remain tensile");
++        near(force[0]+force[1]+force[2]+force[3],std::abs(muscleResult.activeForceAndReserved.x),1e-14,"independent hood force equilibrium");
++    }
++};
++
++void hoodChecks(GPU& gpu) {
++    HoodFixture h;Fixture f(0);double maxPositionError=0,maxForceError=0,maxOriginError=0;
++    std::vector<mr_float4> baselineLocal;
++    std::vector<MRNumiHumanExtensorHoodNodeResultGPU> baselineResult;
++    for(double origin:{0.,64.,4096.}) {
++        Geometry geometry(f,origin,0);
++        // Independent manufactured root + zero-anchor prismatic child. The
++        // free hood node belongs to that child, so dof6 receives a nonzero
++        // replacement correction that can be checked in closed form.
++        geometry.poses[1]=geometry.poses[0];geometry.low[1]=geometry.low[0];
++        for(unsigned p=0;p<4;++p)for(unsigned a=0;a<3;++a)for(unsigned j=0;j<dofs;++j)
++            geometry.jacobian[((4+p)*3+a)*dofs+j]=j==6?float(a==1):geometry.jacobian[(p*3+a)*dofs+j];
++        auto poses=gpu.vector(geometry.poses),low=gpu.vector(geometry.low),jac=gpu.vector(geometry.jacobian),d=gpu.object(h.dispatch),rays=gpu.vector(h.rays),nodes=gpu.vector(h.nodes),elements=gpu.vector(h.elements),inputs=gpu.vector(h.inputs),muscles=gpu.object(h.muscle),sites=gpu.vector(h.sites),routes=gpu.vector(h.routes),muscleResult=gpu.object(h.muscleResult),wraps=gpu.vector(f.gpuWraps);
++        auto nodeResult=gpu.buffer(nullptr,32*sizeof(MRNumiHumanExtensorHoodNodeResultGPU));
++        auto rayResult=gpu.buffer(nullptr,8*sizeof(MRNumiHumanExtensorHoodRayResultGPU));
++        auto relative=gpu.buffer(nullptr,32*sizeof(mr_float4));
++        gpu.dispatch("mr_numi_human_solve_extensor_hood_compensated",{{0,d},{1,rays},{2,nodes},{3,elements},{4,inputs},{5,muscles},{6,sites},{7,routes},{8,muscleResult},{9,poses},{10,nodeResult},{11,rayResult},{12,wraps},{13,low},{14,relative}},8);
++        const auto* rr=static_cast<const MRNumiHumanExtensorHoodRayResultGPU*>([rayResult contents]);
++        const auto* nr=static_cast<const MRNumiHumanExtensorHoodNodeResultGPU*>([nodeResult contents]);
++        const auto* local=static_cast<const mr_float4*>([relative contents]);
++        for(unsigned r=0;r<8;++r) {
++            require(rr[r].status==0,"paired hood solve status: "+std::to_string(rr[r].status));
++            near(rr[r].energyAndCounts.x,h.energy,1e-8,"hood strain energy analytic FP64");
++            near(rr[r].energyAndCounts.y,3,0,"hood active bars");
++            near(rr[r].forceClosureAndMaximumResidual.x,0,1.1e-6,"hood force closure");
++            for(unsigned n=0;n<4;++n) {
++                unsigned i=r*4+n;const double expected=n==3?h.solution:h.x[n];
++                for(unsigned a=0;a<3;++a){
++                    near(component(local[i],a),expected*h.axis[a],2e-8,"private hood position analytic FP64");
++                    near(component(nr[i].bodyForce,a),h.force[n]*h.axis[a]/h.axisLength,3e-6,"hood nodal force analytic FP64");
++                    maxPositionError=std::max(maxPositionError,std::abs(component(local[i],a)-expected*h.axis[a]));
++                    maxForceError=std::max(maxForceError,std::abs(component(nr[i].bodyForce,a)-h.force[n]*h.axis[a]/h.axisLength));
++                }
++                near(local[i].w,0,0,"hood private padding");
++                near(nr[i].position.x,float(origin+double(local[i].x)),0,"legacy diagnostic projection only");
++                if(origin!=0){near(local[i].x,baselineLocal[i].x,2e-8,"hood origin invariant local solve");near(nr[i].bodyForce.x,baselineResult[i].bodyForce.x,3e-6,"hood origin invariant body load");maxOriginError=std::max(maxOriginError,std::abs(double(local[i].x)-baselineLocal[i].x));}
++            }
++        }
++        // The suffix connects the proximal root site to the prismatic child.
++        // Its derivative is exactly -unit(axis).y, derived geometrically.
++        std::vector<float> suffix(8*dofs,0);for(unsigned r=0;r<8;++r)suffix[r*dofs+6]=float(-h.axis[1]/h.axisLength);
++        auto correction=gpu.buffer(nullptr,dofs*sizeof(float));
++        gpu.dispatch("mr_numi_human_assemble_extensor_hood_correction_compensated",{{0,d},{1,rays},{2,nodes},{3,inputs},{4,muscles},{5,sites},{6,routes},{7,muscleResult},{8,poses},{9,jac},{10,nodeResult},{11,rayResult},{12,correction},{13,gpu.vector(suffix)},{14,low},{15,relative}},dofs);
++        const auto* c=static_cast<const float*>([correction contents]);
++        const double replacement=8*(h.force[3]-std::abs(h.muscleResult.activeForceAndReserved.x))*h.axis[1]/h.axisLength;
++        require(std::abs(replacement)>1e-3,"hood replacement is nontrivial");
++        for(unsigned j=0;j<dofs;++j)near(c[j],j==6?replacement:0,9e-6,"hood source correction analytic resultant");
++        if(origin==0){baselineLocal.assign(local,local+32);baselineResult.assign(nr,nr+32);}
++    }
++    std::cout<<"hood_max_position_error_m="<<maxPositionError<<" hood_max_force_error_N="<<maxForceError<<" hood_origin_error_m="<<maxOriginError<<'\n';
++}
++} // namespace
++
++int main(int argc,char** argv) {
++    @autoreleasepool {try {
++        std::cout<<std::setprecision(17);cpuChecks();HoodFixture hoodOracle;
++        if(argc==2 && std::string(argv[1])=="--cpu") {std::cout<<"source_route_precision_cpu PASS checks="<<checks<<'\n';return 0;}
++        require(argc==2,"usage: source-route-precision-check --cpu|metallib");GPU gpu(argv[1]);routeChecks(gpu);hoodChecks(gpu);
++        std::cout<<"source_route_precision_metal PASS checks="<<checks<<'\n';return 0;
++    }catch(const std::exception& e){std::cerr<<"source_route_precision FAIL "<<e.what()<<'\n';return 1;}}
++}

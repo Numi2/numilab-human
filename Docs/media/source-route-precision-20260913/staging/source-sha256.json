@@ -1,0 +1,75 @@
+{
+  "schema": "numi.source-route-precision.stage.v1",
+  "status": "local_stage_no_gpu_execution",
+  "files": [
+    {
+      "path": "include/metalrobo/MetalArticulatedOperator.hpp",
+      "bytes": 88395,
+      "sha256": "304844a80e58f577588dfeecab20506d408b0081dc8d6c02bc4c37aaa33d4446",
+      "base_sha256": "f1283f4ef97ef76094854d732a6057fa711451d292d996c41f70bdb59bf2bb08"
+    },
+    {
+      "path": "src/metal/MetalArticulatedOperator.mm",
+      "bytes": 505097,
+      "sha256": "d3f6694cf87433a56675e6f5370f9a647834dd23095d5413bb6623a232b67582",
+      "base_sha256": "5266eac4fd4bd785e65e4ae62e5e20145be60e13815ca70651f6f60ea1af6df9"
+    },
+    {
+      "path": "src/metal/NumiHumanExtensorHoodMetal.mm",
+      "bytes": 41304,
+      "sha256": "d0c9afd5e0439c594a0cc025dec4e0eece550627fc020378054b6b8c3ec401a0",
+      "base_sha256": "bf7478de4ff823f76c52abba0bee827ac5d9b4a4e93e2c187d81719c0fa9f19e"
+    },
+    {
+      "path": "src/metal/MujocoMuscleReference.metal",
+      "bytes": 60770,
+      "sha256": "0a0ea4568837a836110475fa5a4be932600edee628745a4b4e971a7590276df1",
+      "base_sha256": "14f97e7f4564ec20185a1272ee8d9964e0099bde00e7530e52f1744cf4af23fc"
+    },
+    {
+      "path": "src/metal/MujocoMuscleReferenceCompensated.metal",
+      "bytes": 242,
+      "sha256": "6bb2a1c9db6d6fd8a5b05150e6cb7906ffe0ebd64441321bc032e44527dd76e3",
+      "base_sha256": null
+    },
+    {
+      "path": "src/metal/NumiHumanTendonTransfer.metal",
+      "bytes": 12045,
+      "sha256": "68fef8b467408f0197d6c4eb14d41226e482d8dbc33cc109fc70edccfb1ca108",
+      "base_sha256": "f067b25df315ef638a13c81a266fec8676c9b355c12cbd959b4239287bf27dc7"
+    },
+    {
+      "path": "src/metal/NumiHumanTendonTransferCompensated.metal",
+      "bytes": 158,
+      "sha256": "f130d1a92ddf4535f0b641bc0dedb72ab8ae07f3895d36c6f600303308820999",
+      "base_sha256": null
+    },
+    {
+      "path": "src/metal/NumiHumanExtensorHood.metal",
+      "bytes": 40016,
+      "sha256": "fe08af022334409c02cbc07e40afea3b82fdcf9b27aa0a58f1ed2c0143b6b137",
+      "base_sha256": "867d63e1420520205d97a0c3dbc0679d790d80c841d244efc393871b1b2feb3f"
+    },
+    {
+      "path": "src/metal/NumiHumanExtensorHoodCompensated.metal",
+      "bytes": 252,
+      "sha256": "c7afde108c91a916142bffb983e4fa90fb796ad47fba15de2b792ff7bb75f5e0",
+      "base_sha256": null
+    },
+    {
+      "path": "src/metal/PairedSourceGeometry.metalinc",
+      "bytes": 2171,
+      "sha256": "eaa002ac6fa88ba16125d9267fc13887c53ab891a975edc47c6f577e533ab56e",
+      "base_sha256": null
+    },
+    {
+      "path": "apps/source_route_precision_check.mm",
+      "bytes": 27085,
+      "sha256": "da8f0e2143ab5c186332f0f4a7428c0cf5b98374c2db6dfece313a511b7d541b",
+      "base_sha256": null
+    }
+  ],
+  "oracle_library_sha256": "a770a712ff47db45ed6dd6c79c222790ef034880b4d8d2068286169038d75f3c",
+  "cpu_result": "source_route_precision_cpu PASS checks=59",
+  "physical_metal_result": null
+}
