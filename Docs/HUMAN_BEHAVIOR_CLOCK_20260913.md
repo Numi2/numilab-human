@@ -33,6 +33,14 @@ human_behavior_program=pass ... exact_ns=pass physical_steps=0
 human_behavior_telemetry=pass ... audit_coverage=unknown clock=12500ns physical_steps=0
 ```
 
+The Brain decoder is bound to the same contract at `numi-brain` commit
+`8f0c3a048d7f11b0466fae1a26077ff10d281c30`: noncanonical metric steps are
+rejected, the 12,500 ns fixture is accepted, and the focused
+`MetalNumanXBehaviorTelemetryTests` suite passes 17/17. This is a fail-closed
+receipt parser boundary; it does not change the Brain C ABI's existing
+microsecond timestamp fields or claim a completed Brain-to-native exact-clock
+transaction.
+
 The raw Mac mini evidence is retained in
 [`native-current/`](media/human-behavior-clock-20260913/native-current/):
 [direct output](media/human-behavior-clock-20260913/native-current/direct.log),
