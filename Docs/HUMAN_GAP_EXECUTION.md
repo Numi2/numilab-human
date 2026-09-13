@@ -59,3 +59,10 @@ The current no-coverage snapshot is retained at
 It records 14 workstreams, 46 tasks, 95 mandatory targets, and
 `integrated_qualification: not_assessed`; it is a completion inventory rather
 than a qualification receipt.
+
+After adding the source-to-hydraulic organ bridge and its native owner recheck, the
+latest no-coverage snapshot is retained at
+[`Docs/media/gap-execution-20260913/report-with-organ-blood-bridge-native.json`](media/gap-execution-20260913/report-with-organ-blood-bridge-native.json)
+(SHA-256 `2322b11d0a5b183861f68065a4d78b3ee64bdd9ecc566c3fcc729be501f2b0fb`).  It has the same 14 workstreams, 46 tasks and 95
+mandatory targets; the new reference hash is included while
+`integrated_qualification` remains `not_assessed`.
