@@ -35,7 +35,16 @@ PYTHONPATH=src python3 -m numilab_human.cardiac_blood_mass_candidate \
 
 The immutable [receipt](media/cardiac-blood-mass-candidate-20260914/receipt.json)
 is source-candidate evidence, not anatomical physical qualification. The
-completion ledger remains partial until one interface is supported by matched
-cardiac phase/body registration, source density and unloaded/loading data,
-tubular wall mechanics, conservative accepted-step tissue exchange, and
+same bytes were produced by the wrapper and the dispatcher in a detached Mac
+mini worktree at `f4f912122ddc44f97c518e5c46bc00832ba5ace0`; the retained
+[Mac manifest](media/cardiac-blood-mass-candidate-20260914/macmini/manifest-v3.json)
+records the `d6d869f52f3fcedb1d9901df9a45c125376dc06732e76a5980537e85c67f6178`
+receipt hash and the [initial Python-3.9 failure](media/cardiac-blood-mass-candidate-20260914/macmini/failed-default-python.json).
+The completion ledger remains partial until one interface is supported by
+matched cardiac phase/body registration, source density and unloaded/loading
+data, tubular wall mechanics, conservative accepted-step tissue exchange, and
 held-out subject validation.
+
+The updated [gap-execution report](media/gap-execution-20260914/report-cardiac-blood-mass-final-v1.json)
+keeps the integrated qualification state `not_assessed` and retains the
+candidate as evidence for the systemic-physiology workstream only.
