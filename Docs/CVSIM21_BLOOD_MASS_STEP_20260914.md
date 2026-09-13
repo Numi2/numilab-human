@@ -33,8 +33,15 @@ PYTHONPATH=src python3 -m numilab_human.cvsim21_blood_mass_step \
 The retained [exact-clock receipt](media/cvsim21-blood-mass-step-20260914/receipt-exact-clock.json)
 and [100 µs receipt](media/cvsim21-blood-mass-step-20260914/receipt.json) are
 immutable. The focused local source, cardiac, physiology, blood-mass, gap, and
-force suites pass 81 tests. Mac mini evidence is retained beside the receipts
-after isolated-worktree validation.
+force suites pass 81 tests. The same source-focused selection passes 43 tests on
+the physical Mac mini, with an identical exact-clock receipt hash; the final
+evidence-inclusive focused selection passes 67 tests at the published revision
+`01e564e`. A broader Mac mini anatomy selection still stops at the pre-existing
+missing cardiac-cavity source archive, which is retained as an environment
+boundary rather than converted into a pass. Mac mini evidence is retained beside
+the receipts after isolated-worktree validation. The live [gap report](media/gap-execution-20260914/report-cvsim21-blood-mass-20260914.json)
+records 14 workstreams, 46 tasks, 95 mandatory targets, and
+`integrated_qualification=not_assessed`.
 
 This increment closes source aggregate zeroth-moment mass ownership and
 accepted-step mass rollback only. The completion ledger remains partial: source
