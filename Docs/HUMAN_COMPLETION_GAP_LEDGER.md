@@ -335,3 +335,18 @@ A fresh 512-step exact-clock run from the parity-gated native commit preserves
 reaches `108763.164062 m/s²` peak acceleration, `1.30699014664` velocity delta,
 and `0.00444473000243` configuration delta. The temporal convergence and
 sustained behavior blockers therefore remain active.
+
+The new [bounded full-body force audit](NATIVE_FORCE_BOUNDED_20260913.md)
+repeats the one-adult-male source package on the physical M4 Pro at the exact
+12.5 microsecond clock for 512 steps. The 157-body/128-v/129-q package is
+correctly routed to the declared large-state fallback because the existing
+exact dense kernel is limited to 32 bodies, 40 velocity coordinates, and 41
+configuration coordinates. The accepted run completes the horizon and keeps a
+bitwise one-step replay, but measures `46673.1992188 m/s²` peak acceleration,
+`0.47243475914` velocity delta, `0.00158670963719` configuration delta,
+`compiled_stand_balanced=false`, and `776.829137423 N` root residual. The
+unguarded exact-stage rejection is retained as failure evidence. This closes
+the full-body clock/horizon audit and the route-selection guard; force
+convergence, sustained standing, recovery, walking, anatomical
+supports/loading, activation calibration, blood mass transfer, unresolved
+materials, and subject calibration remain open.

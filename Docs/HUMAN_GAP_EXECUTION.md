@@ -258,6 +258,18 @@ and replay was bitwise, while the dynamic boundary reproduced
 that force-path parity does not yet imply temporal convergence or sustained
 standing.
 
+The follow-on [full-body bounded force audit](NATIVE_FORCE_BOUNDED_20260913.md)
+uses one adult-male source package and retains the physical M4 Pro command,
+artifacts, hashes, and rejected exact-stage output. It records the exact
+12.5 microsecond clock and 512 completed steps, but routes the real
+157-body/128-v/129-q package to the declared large-state fallback. The run
+measures `46673.1992188 m/s²` peak acceleration, `0.47243475914` velocity
+delta, `0.00158670963719` configuration delta, and `compiled_stand_balanced=false`.
+The registry therefore remains an execution inventory with force convergence,
+standing, recovery, walking, anatomical supports/loading, activation
+calibration, blood mass transfer, unresolved materials, and subject
+calibration unqualified.
+
 The refreshed registry snapshot with the exact vessel body links is retained
 at [`Docs/media/gap-execution-20260913/report-with-native-body-links-20260913.json`](media/gap-execution-20260913/report-with-native-body-links-20260913.json).
 Its file SHA-256 is `3a04f3daf467cc2440ea07c33fefb96480d5419f07947ed502f0f0a893905241`

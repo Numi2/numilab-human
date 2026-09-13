@@ -1,0 +1,55 @@
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+
+from numilab_human.native_force_convergence import audit
+
+
+LINE = (
+    'myosim_articulated_marker_visual=ok metal_pose_device="Apple M4 Pro" '
+    'core_bodies=157 muscle_step_count=512 muscle_step_seconds=1.25e-05 '
+    'persistent_completed_steps=512 persistent_max_acceleration=46673.2 '
+    'persistent_max_penetration_m=1.9e-7 muscle_step_max_velocity_delta=0.472 '
+    'muscle_step_max_configuration_delta=0.0015 compiled_stand_balanced=false '
+    'compiled_stand_max_root_force_residual=776.8 compiled_stand_support_contacts=18 '
+    'compiled_stand_active_support_contacts=2 compiled_stand_total_support_force_n=176 '
+    'source_dynamic_force_parity_max_delta_n=0.01 muscle_force_metal_elapsed_ms=100 '
+    'stand_deterministic_replay=not_requested\n'
+)
+
+
+def test_native_force_audit_retains_partial_status(tmp_path: Path) -> None:
+    stdout = tmp_path / "stdout"
+    stdout.write_text(LINE, encoding="utf-8")
+    stderr = tmp_path / "stderr"
+    stderr.write_text("", encoding="utf-8")
+    output = tmp_path / "receipt.json"
+    arguments = argparse.Namespace(
+        stdout=stdout,
+        stderr=stderr,
+        replay_stdout=None,
+        build_log=None,
+        output=output,
+        source_commit="fixture",
+        binary_sha256="0" * 64,
+        subject="one adult male source package",
+        body_count=157,
+        dof_count=128,
+        q_count=129,
+        exact_body_limit=32,
+        exact_dof_limit=40,
+        exact_q_limit=41,
+        minimum_steps=512,
+        maximum_acceleration=1000.0,
+        maximum_velocity_delta=0.01,
+        maximum_configuration_delta=1.0e-4,
+        require_same_horizon_replay=False,
+    )
+    assert audit(arguments) == 0
+    import json
+    receipt = json.loads(output.read_text(encoding="utf-8"))
+    assert receipt["status"] == "partial"
+    assert not receipt["qualification"]["force_convergence"]
+    assert receipt["exact_dense_stage"]["selected_path"] == "large_state_fallback"
+    assert not receipt["qualification"]["blood_mass_transfer"]

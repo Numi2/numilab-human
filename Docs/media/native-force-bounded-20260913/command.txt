@@ -1,0 +1,16 @@
+ssh macmini
+/tmp/MetalRobo-force-bias-build-20260913/bin/metalrobo_numilab_human_myosim_visual_probe \
+  /Users/n/NumiHumanCurrent/myosim-fullbody-core-reference.nhrigid \
+  /Users/n/NumiHumanCurrent/myosim-fullbody-muscle-reference.nhmyo \
+  /tmp/numi-human-force-bias-512c-20260913 \
+  --muscle-step-seconds 0.0000125 --muscle-step-count 512 --muscle-activation 1 \
+  --persistent-metal-stand \
+  --support-contact-payload /Users/n/human-capsule-20260908/input/myosim-fullbody-support-primitives.nhcnt \
+  --joint-equality-payload /Users/n/NumiHumanCurrent/myosim-fullbody-joint-equalities.nheq \
+  --tendon-payload /Users/n/NumiHumanCurrent/numi-human-tendon-attachments.nhtendon \
+  --dimension 640
+
+The one-step replay uses the same inputs with `--muscle-step-count 1
+--stand-deterministic-replay`. The exact dense stage was intentionally
+attempted once without the host guard; its rejection is retained in the
+adjacent `exact-stage-rejected.*` files.

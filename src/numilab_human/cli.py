@@ -2142,6 +2142,12 @@ def parser() -> argparse.ArgumentParser:
     from .support_stance import add_arguments as add_support_stance_arguments
     stance = commands.add_parser("support-stance", help="compile a source-bound native stance and verify its static gravity wrench")
     add_support_stance_arguments(stance)
+    from .native_force_convergence import add_arguments as add_force_convergence_arguments
+    force_convergence = commands.add_parser(
+        "native-force-convergence-audit",
+        help="audit a retained native Human horizon and fail closed on temporal drift",
+    )
+    add_force_convergence_arguments(force_convergence)
     return result
 
 

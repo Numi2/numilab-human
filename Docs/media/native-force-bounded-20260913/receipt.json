@@ -1,0 +1,90 @@
+{
+  "artifacts": {
+    "build_log": {
+      "path": "/Users/home/numilab-human/Docs/media/native-force-bounded-20260913/build.log",
+      "sha256": "3cf78e97b4f36ed3bebc8bd9cd1cfe4ee6b4381fb3c6929c03c6a0fc257d40ba"
+    },
+    "stderr": {
+      "path": "/Users/home/numilab-human/Docs/media/native-force-bounded-20260913/stand-512.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "path": "/Users/home/numilab-human/Docs/media/native-force-bounded-20260913/stand-512.stdout.txt",
+      "sha256": "9b50c635ace9bf4729c098ca5b92bfa40a9007dd91f3813513ff2ca0d1aad059"
+    }
+  },
+  "binary": {
+    "device": "Apple M4 Pro",
+    "sha256": "1d20e984789929739eecba0e6429b67267e8424651da75959cbfbd1a28c33fe8"
+  },
+  "exact_dense_stage": {
+    "body_limit": 32,
+    "dof_limit": 40,
+    "eligible": false,
+    "q_limit": 41,
+    "selected_path": "large_state_fallback"
+  },
+  "gate": {
+    "reasons": [
+      "compiled_stand_balanced=false",
+      "temporal drift exceeds the declared engineering bounds"
+    ],
+    "thresholds": {
+      "clock_seconds": 1.25e-05,
+      "clock_tolerance_seconds": 1e-12,
+      "maximum_acceleration": 1000.0,
+      "maximum_configuration_delta": 0.0001,
+      "maximum_velocity_delta": 0.01,
+      "minimum_steps": 512
+    }
+  },
+  "horizon": {
+    "compiled_stand_active_support_contacts": 2,
+    "compiled_stand_balanced": false,
+    "compiled_stand_max_root_force_residual_n": 776.829137423,
+    "compiled_stand_support_contacts": 18,
+    "compiled_stand_total_support_force_n": 176.035339615,
+    "core_bodies": 157,
+    "device": "Apple M4 Pro",
+    "muscle_force_metal_elapsed_ms": 100187.672291,
+    "muscle_step_count": 512,
+    "muscle_step_max_configuration_delta": 0.00158670963719,
+    "muscle_step_max_velocity_delta": 0.47243475914,
+    "persistent_completed_steps": 512,
+    "persistent_max_acceleration": 46673.1992188,
+    "persistent_max_penetration_m": 1.94772340478e-07,
+    "source_dynamic_force_parity_max_delta_n": 0.0100077937057,
+    "stand_deterministic_replay": "not_requested",
+    "timestep_seconds": 1.25e-05
+  },
+  "qualification": {
+    "activation_calibration": false,
+    "anatomical_supports_loading": false,
+    "blood_mass_transfer": false,
+    "clock_exact": true,
+    "force_convergence": false,
+    "horizon_complete": true,
+    "materials_resolved": false,
+    "recovery": false,
+    "static_balance": false,
+    "subject_calibration": false,
+    "sustained_standing": false,
+    "temporal_convergence": false,
+    "walking": false
+  },
+  "replay": {
+    "one_step_bitwise": true,
+    "same_horizon": "not_proved",
+    "stdout_sha256": "99aabf9f1ffafa2b6406961c5128ab40c5009c98c700def5c8f7230546ff2392",
+    "steps": 1
+  },
+  "schema": "numi.human.native-force-convergence-audit.v1",
+  "source": {
+    "body_count": 157,
+    "commit": "7c7513ee1859c69d647c47b5a247f4702609a3b9",
+    "dof_count": 128,
+    "q_count": 129,
+    "subject": "one adult male source package"
+  },
+  "status": "partial"
+}
