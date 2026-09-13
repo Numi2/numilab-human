@@ -1,0 +1,136 @@
+test_cli_output_is_immutable (tests.test_shi_hose_step.ShiHoseStepTests.test_cli_output_is_immutable) ... ok
+test_invalid_timestep_is_rejected (tests.test_shi_hose_step.ShiHoseStepTests.test_invalid_timestep_is_rejected) ... ok
+test_rejected_candidate_restores_source_state (tests.test_shi_hose_step.ShiHoseStepTests.test_rejected_candidate_restores_source_state) ... ok
+test_replay_is_canonical_and_does_not_mutate_native_source (tests.test_shi_hose_step.ShiHoseStepTests.test_replay_is_canonical_and_does_not_mutate_native_source) ... ok
+test_source_qualification_and_law_are_fail_closed (tests.test_shi_hose_step.ShiHoseStepTests.test_source_qualification_and_law_are_fail_closed) ... ok
+test_source_step_accepts_activation_valves_and_conserves_volume (tests.test_shi_hose_step.ShiHoseStepTests.test_source_step_accepts_activation_valves_and_conserves_volume) ... ok
+test_algebraic_initial_flows_preserve_reverse_venous_flow_and_open_pulmonary_valve (tests.test_shi_hose.ShiHoseSourceTests.test_algebraic_initial_flows_preserve_reverse_venous_flow_and_open_pulmonary_valve) ... ok
+test_cli_writes_distinct_immutable_native_payload_and_manifest (tests.test_shi_hose.ShiHoseSourceTests.test_cli_writes_distinct_immutable_native_payload_and_manifest) ... ok
+test_config_key_order_is_irrelevant (tests.test_shi_hose.ShiHoseSourceTests.test_config_key_order_is_irrelevant) ... ok
+test_connected_source_cycle_and_exact_zero_storage_elimination (tests.test_shi_hose.ShiHoseSourceTests.test_connected_source_cycle_and_exact_zero_storage_elimination) ... ok
+test_curated_files_and_full_parameter_coverage (tests.test_shi_hose.ShiHoseSourceTests.test_curated_files_and_full_parameter_coverage) ... ok
+test_duplicate_source_configuration_fields_rejected (tests.test_shi_hose.ShiHoseSourceTests.test_duplicate_source_configuration_fields_rejected) ... ok
+test_invalid_numerical_settings_rejected (tests.test_shi_hose.ShiHoseSourceTests.test_invalid_numerical_settings_rejected) ... ok
+test_numerical_settings_change_identity_without_overriding_source_parameters (tests.test_shi_hose.ShiHoseSourceTests.test_numerical_settings_change_identity_without_overriding_source_parameters) ... ok
+test_numi_overlay_is_executable_and_resolves_module_outside_repository (tests.test_shi_hose.ShiHoseSourceTests.test_numi_overlay_is_executable_and_resolves_module_outside_repository) ... ok
+test_physiological_override_and_baseline_invention_rejected (tests.test_shi_hose.ShiHoseSourceTests.test_physiological_override_and_baseline_invention_rejected) ... ok
+test_resealed_forged_source_manifest_cannot_redefine_the_curated_model (tests.test_shi_hose.ShiHoseSourceTests.test_resealed_forged_source_manifest_cannot_redefine_the_curated_model) ... ok
+test_source_dynamic_initial_volume_is_not_reference_volume (tests.test_shi_hose.ShiHoseSourceTests.test_source_dynamic_initial_volume_is_not_reference_volume) ... ok
+test_source_mutation_and_missing_import_rejected (tests.test_shi_hose.ShiHoseSourceTests.test_source_mutation_and_missing_import_rejected) ... ok
+test_source_units_and_literal_constants_are_preserved (tests.test_shi_hose.ShiHoseSourceTests.test_source_units_and_literal_constants_are_preserved) ... ok
+test_source_units_reject_cycles_and_unsupported_offsets (tests.test_shi_hose.ShiHoseSourceTests.test_source_units_reject_cycles_and_unsupported_offsets) ... ok
+test_transport_is_rejected_without_absolute_vascular_baselines (tests.test_shi_hose.ShiHoseSourceTests.test_transport_is_rejected_without_absolute_vascular_baselines) ... ok
+test_vascular_storage_has_no_fabricated_absolute_volume (tests.test_shi_hose.ShiHoseSourceTests.test_vascular_storage_has_no_fabricated_absolute_volume) ... ok
+test_cli_output_is_immutable (tests.test_blood_mass_step.BloodMassStepTests.test_cli_output_is_immutable) ... ok
+test_conservative_mass_and_bidirectional_tissue_transfer (tests.test_blood_mass_step.BloodMassStepTests.test_conservative_mass_and_bidirectional_tissue_transfer) ... ok
+test_negative_schedule_is_reversible_but_nonfinite_is_rejected (tests.test_blood_mass_step.BloodMassStepTests.test_negative_schedule_is_reversible_but_nonfinite_is_rejected) ... ok
+test_non_fixture_native_graph_cannot_be_run (tests.test_blood_mass_step.BloodMassStepTests.test_non_fixture_native_graph_cannot_be_run) ... ok
+test_owner_identity_is_single_and_hash_bound (tests.test_blood_mass_step.BloodMassStepTests.test_owner_identity_is_single_and_hash_bound) ... ok
+test_rejected_candidate_restores_hydraulic_and_mass_state (tests.test_blood_mass_step.BloodMassStepTests.test_rejected_candidate_restores_hydraulic_and_mass_state) ... ok
+test_accepted_transport_exchange_and_conservation (tests.test_physiology_step.PhysiologyStepTests.test_accepted_transport_exchange_and_conservation) ... ok
+test_cli_output_is_immutable (tests.test_physiology_step.PhysiologyStepTests.test_cli_output_is_immutable) ... ok
+test_graph_without_tissue_reservoirs_remains_hydraulically_executable (tests.test_physiology_step.PhysiologyStepTests.test_graph_without_tissue_reservoirs_remains_hydraulically_executable) ... ok
+test_invalid_candidate_is_rejected_without_mutating_inputs (tests.test_physiology_step.PhysiologyStepTests.test_invalid_candidate_is_rejected_without_mutating_inputs) ... ok
+test_rejected_candidate_does_not_advance_time_or_state (tests.test_physiology_step.PhysiologyStepTests.test_rejected_candidate_does_not_advance_time_or_state) ... ok
+test_replay_is_bitwise_deterministic (tests.test_physiology_step.PhysiologyStepTests.test_replay_is_bitwise_deterministic) ... ok
+test_changed_source_bytes_rejected (tests.test_physiology.PhysiologyTests.test_changed_source_bytes_rejected) ... ok
+test_cli_output_is_immutable (tests.test_physiology.PhysiologyTests.test_cli_output_is_immutable) ... ok
+test_complete_actual_anatomy_template_retains_missing_parameters_and_overlaps (tests.test_physiology.PhysiologyTests.test_complete_actual_anatomy_template_retains_missing_parameters_and_overlaps) ... ok
+test_disconnected_compartment_rejected (tests.test_physiology.PhysiologyTests.test_disconnected_compartment_rejected) ... ok
+test_duplicate_hydraulic_edge_rejected (tests.test_physiology.PhysiologyTests.test_duplicate_hydraulic_edge_rejected) ... ok
+test_duplicate_physical_volume_owner_rejected_across_blood_and_tissue (tests.test_physiology.PhysiologyTests.test_duplicate_physical_volume_owner_rejected_across_blood_and_tissue) ... ok
+test_duplicate_record_ids_rejected_for_every_table (tests.test_physiology.PhysiologyTests.test_duplicate_record_ids_rejected_for_every_table) ... ok
+test_duplicate_source_members_rejected (tests.test_physiology.PhysiologyTests.test_duplicate_source_members_rejected) ... ok
+test_fixture_cannot_be_relabelled_biological_or_uncalibrated (tests.test_physiology.PhysiologyTests.test_fixture_cannot_be_relabelled_biological_or_uncalibrated) ... ok
+test_forged_source_concept_rejected (tests.test_physiology.PhysiologyTests.test_forged_source_concept_rejected) ... ok
+test_forged_source_hash_rejected (tests.test_physiology.PhysiologyTests.test_forged_source_hash_rejected) ... ok
+test_forged_source_member_rejected (tests.test_physiology.PhysiologyTests.test_forged_source_member_rejected) ... ok
+test_malformed_structural_types_are_typed_rejections (tests.test_physiology.PhysiologyTests.test_malformed_structural_types_are_typed_rejections) ... ok
+test_missing_exchange_conservation_endpoint_rejected (tests.test_physiology.PhysiologyTests.test_missing_exchange_conservation_endpoint_rejected) ... ok
+test_missing_hydraulic_endpoint_rejected (tests.test_physiology.PhysiologyTests.test_missing_hydraulic_endpoint_rejected) ... ok
+test_missing_source_table_rejected (tests.test_physiology.PhysiologyTests.test_missing_source_table_rejected) ... ok
+test_missing_species_amount_rejected (tests.test_physiology.PhysiologyTests.test_missing_species_amount_rejected) ... ok
+test_missing_uncertainty_rejected (tests.test_physiology.PhysiologyTests.test_missing_uncertainty_rejected) ... ok
+test_native_plan_has_deterministic_global_ids_and_conservation_endpoints (tests.test_physiology.PhysiologyTests.test_native_plan_has_deterministic_global_ids_and_conservation_endpoints) ... ok
+test_negative_resistance_and_amount_rejected (tests.test_physiology.PhysiologyTests.test_negative_resistance_and_amount_rejected) ... ok
+test_nonfinite_and_boolean_parameters_rejected (tests.test_physiology.PhysiologyTests.test_nonfinite_and_boolean_parameters_rejected) ... ok
+test_parameter_provenance_changes_compatibility_identity (tests.test_physiology.PhysiologyTests.test_parameter_provenance_changes_compatibility_identity) ... ok
+test_reordered_authoring_has_identical_native_bytes (tests.test_physiology.PhysiologyTests.test_reordered_authoring_has_identical_native_bytes) ... ok
+test_unexchanged_tissue_rejected (tests.test_physiology.PhysiologyTests.test_unexchanged_tissue_rejected) ... ok
+test_unknown_fields_and_duplicate_json_keys_rejected (tests.test_physiology.PhysiologyTests.test_unknown_fields_and_duplicate_json_keys_rejected) ... ok
+test_unknown_parameter_source_rejected (tests.test_physiology.PhysiologyTests.test_unknown_parameter_source_rejected) ... ok
+test_unresolved_region_rejected (tests.test_physiology.PhysiologyTests.test_unresolved_region_rejected) ... ok
+test_wrong_units_rejected (tests.test_physiology.PhysiologyTests.test_wrong_units_rejected) ... ok
+test_cycle_unknown_parent_duplicate_identity_and_bad_category_are_rejected (tests.test_gap_execution.GapExecutionTests.test_cycle_unknown_parent_duplicate_identity_and_bad_category_are_rejected) ... ok
+test_forged_or_historical_coverage_is_rejected_by_existing_owner (tests.test_gap_execution.GapExecutionTests.test_forged_or_historical_coverage_is_rejected_by_existing_owner) ... ok
+test_immutable_output_and_existing_cli_registration (tests.test_gap_execution.GapExecutionTests.test_immutable_output_and_existing_cli_registration) ... ok
+test_live_ledger_and_entire_mandatory_catalog_are_accounted_for (tests.test_gap_execution.GapExecutionTests.test_live_ledger_and_entire_mandatory_catalog_are_accounted_for) ... ok
+test_live_status_is_quoted_without_promoting_tasks (tests.test_gap_execution.GapExecutionTests.test_live_status_is_quoted_without_promoting_tasks) ... ok
+test_metadata_cannot_inject_status_or_qualification (tests.test_gap_execution.GapExecutionTests.test_metadata_cannot_inject_status_or_qualification) ... ok
+test_missing_external_and_changed_references_are_not_hidden (tests.test_gap_execution.GapExecutionTests.test_missing_external_and_changed_references_are_not_hidden) ... ok
+test_missing_or_added_ledger_row_is_rejected (tests.test_gap_execution.GapExecutionTests.test_missing_or_added_ledger_row_is_rejected) ... ok
+test_reference_change_during_materialization_is_rejected (tests.test_gap_execution.GapExecutionTests.test_reference_change_during_materialization_is_rejected) ... ok
+test_source_leaves_and_missing_registers_are_retained_unassigned (tests.test_gap_execution.GapExecutionTests.test_source_leaves_and_missing_registers_are_retained_unassigned) ... ok
+test_stable_content_and_independent_frontier (tests.test_gap_execution.GapExecutionTests.test_stable_content_and_independent_frontier) ... ok
+test_target_omission_and_unknown_target_are_rejected (tests.test_gap_execution.GapExecutionTests.test_target_omission_and_unknown_target_are_rejected) ... ok
+test_all_twenty_standing_seeds_must_succeed (tests.test_behavior_qualification.BehaviorQualificationTests.test_all_twenty_standing_seeds_must_succeed) ... ok
+test_assistance_and_unaccepted_or_omitted_physics_invalidate_entire_evidence (tests.test_behavior_qualification.BehaviorQualificationTests.test_assistance_and_unaccepted_or_omitted_physics_invalidate_entire_evidence) ... ok
+test_cli_writes_failure_receipt_without_overwriting_existing_evidence (tests.test_behavior_qualification.BehaviorQualificationTests.test_cli_writes_failure_receipt_without_overwriting_existing_evidence) ... ok
+test_complete_frozen_populations_pass_with_exact_horizons (tests.test_behavior_qualification.BehaviorQualificationTests.test_complete_frozen_populations_pass_with_exact_horizons) ... ok
+test_current_stack_pins_and_artifact_bytes_cannot_be_relabelled (tests.test_behavior_qualification.BehaviorQualificationTests.test_current_stack_pins_and_artifact_bytes_cannot_be_relabelled) ... ok
+test_duplicate_trial_execution_and_frozen_impulse_are_rejected (tests.test_behavior_qualification.BehaviorQualificationTests.test_duplicate_trial_execution_and_frozen_impulse_are_rejected) ... ok
+test_frozen_observables_require_registered_bodies_frames_and_velocity (tests.test_behavior_qualification.BehaviorQualificationTests.test_frozen_observables_require_registered_bodies_frames_and_velocity) ... ok
+test_header_binds_native_timestep_os_program_and_proof_schema (tests.test_behavior_qualification.BehaviorQualificationTests.test_header_binds_native_timestep_os_program_and_proof_schema) ... ok
+test_impulse_uniqueness_cannot_be_evaded_with_metadata_or_number_spelling (tests.test_behavior_qualification.BehaviorQualificationTests.test_impulse_uniqueness_cannot_be_evaded_with_metadata_or_number_spelling) ... ok
+test_missing_trial_cannot_be_hidden_by_success_percentage (tests.test_behavior_qualification.BehaviorQualificationTests.test_missing_trial_cannot_be_hidden_by_success_percentage) ... ok
+test_native_reduction_must_cover_every_root_attempt_and_speed_sample (tests.test_behavior_qualification.BehaviorQualificationTests.test_native_reduction_must_cover_every_root_attempt_and_speed_sample) ... ok
+test_recovery_hold_uses_first_settled_sample_time (tests.test_behavior_qualification.BehaviorQualificationTests.test_recovery_hold_uses_first_settled_sample_time) ... ok
+test_recovery_requires_95_complete_trials_and_frozen_hold (tests.test_behavior_qualification.BehaviorQualificationTests.test_recovery_requires_95_complete_trials_and_frozen_hold) ... ok
+test_rehashed_stack_cannot_hide_a_lowering_receipt_for_different_task_or_native_program (tests.test_behavior_qualification.BehaviorQualificationTests.test_rehashed_stack_cannot_hide_a_lowering_receipt_for_different_task_or_native_program) ... ok
+test_short_but_self_consistent_trace_cannot_pass (tests.test_behavior_qualification.BehaviorQualificationTests.test_short_but_self_consistent_trace_cannot_pass) ... ok
+test_standing_requires_settled_reset_and_suffixes_compose_across_spans (tests.test_behavior_qualification.BehaviorQualificationTests.test_standing_requires_settled_reset_and_suffixes_compose_across_spans) ... ok
+test_strict_json_rejects_duplicate_keys_and_nonfinite_numbers (tests.test_behavior_qualification.BehaviorQualificationTests.test_strict_json_rejects_duplicate_keys_and_nonfinite_numbers) ... ok
+test_trace_booleans_do_not_match_frozen_numeric_speed_or_impulse (tests.test_behavior_qualification.BehaviorQualificationTests.test_trace_booleans_do_not_match_frozen_numeric_speed_or_impulse) ... ok
+test_truncation_duplicate_spans_chain_and_mixed_identity_are_rejected (tests.test_behavior_qualification.BehaviorQualificationTests.test_truncation_duplicate_spans_chain_and_mixed_identity_are_rejected) ... ok
+test_walking_cannot_report_unsettled_posture_valid_roots (tests.test_behavior_qualification.BehaviorQualificationTests.test_walking_cannot_report_unsettled_posture_valid_roots) ... ok
+test_walking_rmse_is_per_trial_and_per_speed (tests.test_behavior_qualification.BehaviorQualificationTests.test_walking_rmse_is_per_trial_and_per_speed) ... ok
+
+----------------------------------------------------------------------
+Ran 96 tests in 2.113s
+
+OK
+{"accepted_steps": 4, "open_valve_evaluation_count": 4, "output": "/private/var/folders/ks/sfmz3dh91_7c9_vyd_3lzj100000gn/T/tmpi12p3k25/step.json", "qualification": "source_model_reproduction", "rejected_steps": 0, "schema": "HumanPack.shi-hose-step-receipt.v1", "sha256": "06b025b1c0e64ed987f7d6e6ce856643a5ecbd44c0af68fcba5d0e5cd3566498", "volume_conserved": true}
+{"accepted_steps": 4, "open_valve_evaluation_count": 4, "output": "/private/var/folders/ks/sfmz3dh91_7c9_vyd_3lzj100000gn/T/tmpi12p3k25/step.json", "qualification": "source_model_reproduction", "rejected_steps": 0, "schema": "HumanPack.shi-hose-step-receipt.v1", "sha256": "06b025b1c0e64ed987f7d6e6ce856643a5ecbd44c0af68fcba5d0e5cd3566498", "volume_conserved": true}
+{
+  "status": "compiled_source_model",
+  "payload": "/var/folders/ks/sfmz3dh91_7c9_vyd_3lzj100000gn/T/tmpyco2cndc/model.json",
+  "manifest": "/var/folders/ks/sfmz3dh91_7c9_vyd_3lzj100000gn/T/tmpyco2cndc/model.manifest.json",
+  "sha256": "7797e2710837ad8ffdfa70adf7a6b66e68f2bf0e12824f063b5ce7d1fc550788",
+  "source_parameter_count": 59,
+  "compartments": 10,
+  "connections": 10,
+  "scientific_status": "source_model_reproduction_target_not_qualified_by_compilation"
+}
+{
+  "status": "compiled_source_model",
+  "payload": "/var/folders/ks/sfmz3dh91_7c9_vyd_3lzj100000gn/T/tmpyco2cndc/model.json",
+  "manifest": "/var/folders/ks/sfmz3dh91_7c9_vyd_3lzj100000gn/T/tmpyco2cndc/model.manifest.json",
+  "sha256": "7797e2710837ad8ffdfa70adf7a6b66e68f2bf0e12824f063b5ce7d1fc550788",
+  "source_parameter_count": 59,
+  "compartments": 10,
+  "connections": 10,
+  "scientific_status": "source_model_reproduction_target_not_qualified_by_compilation"
+}
+{"status": "rejected", "error": "source compiler output is immutable; choose a new path"}
+{"status": "rejected", "error": "native payload and source manifest require distinct output paths"}
+{"accepted_steps": 4, "mass_conserved": true, "output": "/private/var/folders/ks/sfmz3dh91_7c9_vyd_3lzj100000gn/T/tmpkiox5nv0/mass.json", "qualification": "fixture_only", "rejected_steps": 0, "schema": "HumanPack.blood-mass-transfer-step-receipt.v1", "sha256": "33ad3e9ef6e6af31ec62f737a252008100645109e9302c48b33e483b6d8afafe", "two_way_exchange": true}
+{"accepted_steps": 4, "mass_conserved": true, "output": "/private/var/folders/ks/sfmz3dh91_7c9_vyd_3lzj100000gn/T/tmpkiox5nv0/mass.json", "qualification": "fixture_only", "rejected_steps": 0, "schema": "HumanPack.blood-mass-transfer-step-receipt.v1", "sha256": "33ad3e9ef6e6af31ec62f737a252008100645109e9302c48b33e483b6d8afafe", "two_way_exchange": true}
+{"accepted_steps": 4, "output": "/private/var/folders/ks/sfmz3dh91_7c9_vyd_3lzj100000gn/T/tmpbn06r141/step.json", "qualification": "fixture_only", "rejected_steps": 0, "schema": "HumanPack.physiology-step-receipt.v1", "sha256": "a329ff2a9b3b57e700746ef05e05a1083bb4b7e649c8a8831c8e3523071c533c", "species_conserved": true, "volume_conserved": true}
+{"accepted_steps": 4, "output": "/private/var/folders/ks/sfmz3dh91_7c9_vyd_3lzj100000gn/T/tmpbn06r141/step.json", "qualification": "fixture_only", "rejected_steps": 0, "schema": "HumanPack.physiology-step-receipt.v1", "sha256": "a329ff2a9b3b57e700746ef05e05a1083bb4b7e649c8a8831c8e3523071c533c", "species_conserved": true, "volume_conserved": true}
+{
+  "schema": "HumanPack.physiology-native.v1",
+  "output": "/var/folders/ks/sfmz3dh91_7c9_vyd_3lzj100000gn/T/tmpx1wrsjeu/native.json",
+  "sha256": "eacb161e2e89221673efaacf796ff2d174d1697287c9725d7d8edc71f9574c91",
+  "qualification": "fixture_only"
+}
+status=invalid report=/var/folders/ks/sfmz3dh91_7c9_vyd_3lzj100000gn/T/tmpba9w1uay/assessment.json

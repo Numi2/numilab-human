@@ -27,6 +27,13 @@ The source lowering remains bound to source manifest
 receipt schema is `HumanPack.shi-hose-step-receipt.v1`. The CLI is exposed as
 `numilab-human shi-hose-step` and `.numi/commands/human-shi-hose-step`.
 
+The same commit was checked in an isolated Mac mini worktree at
+`2a7c2b548a3b8bc406f8330b4cf190be1b8ad4ec`. The source-specific unittest
+selection ran 86 tests with exit status 0, and the Mac mini CLI reproduced the
+same immutable receipt SHA. The retained command/log/receipt hashes are in
+`Docs/media/shi-hose-cardiac-step-20260914/macmini/manifest.json`; the dirty
+shared `/Users/n/numilab-human` checkout was not changed.
+
 This is a source-hydraulic reproduction subgate. It does not create absolute
 vascular blood volume from storage displacement, species or dilution state,
 anatomical organ or vessel mechanics, tissue exchange, material data,
