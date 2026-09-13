@@ -350,3 +350,15 @@ the full-body clock/horizon audit and the route-selection guard; force
 convergence, sustained standing, recovery, walking, anatomical
 supports/loading, activation calibration, blood mass transfer, unresolved
 materials, and subject calibration remain open.
+
+The [corrected vessel moment/unit receipt](ORGAN_VESSEL_UNIT_CORRECTION_20260913.md)
+fixes a source-frame conversion error in the prior vessel registration path:
+the organ moments were already in metres, so the millimetre-to-metre factor was
+being applied a second time. The corrected six-vessel receipt applies the
+uniform scale once and records physically scaled world centroids and volume
+moments. A follow-on candidate computes exact zeroth/first/second mass moments
+and six single-owner rows at an explicitly uncalibrated `1060 kg/m³` density;
+its `0.25057866444098925 kg` value is a source-surface proxy. Lumen/tube
+mechanics, native pressure transfer, two-way blood/tissue exchange, calibrated
+density, and anatomical blood-mass ownership remain open, and the Mac mini
+bounded source/world admission now passes against the corrected fixture.

@@ -59,24 +59,8 @@ def _determinant(matrix: list[list[float]]) -> float:
     )
 
 
-def _transform_point(matrix: list[list[float]], point: list[float]) -> list[float]:
-    return [
-        math.fsum(matrix[row][column] * point[column] for column in range(3)) + matrix[row][3]
-        for row in range(3)
-    ]
-
-
-def _transform_central(matrix: list[list[float]], central: list[list[float]], determinant: float) -> list[list[float]]:
-    return [
-        [
-            determinant * math.fsum(
-                matrix[i][k] * central[k][l] * matrix[j][l]
-                for k in range(3) for l in range(3)
-            )
-            for j in range(3)
-        ]
-        for i in range(3)
-    ]
+def _scale_matrix(matrix: list[list[float]], scale: float) -> list[list[float]]:
+    return [[scale * value for value in row] for row in matrix]
 
 
 def _validate_transform(registration: dict[str, Any]) -> tuple[list[list[float]], float]:
@@ -106,7 +90,7 @@ def _validate_transform(registration: dict[str, Any]) -> tuple[list[list[float]]
     signs = coordinates.get("proper_axis_signs")
     require(permutation == [0, 1, 2] and signs == [1, 1, 1],
             "registration candidate uses an unsupported axis convention")
-    return matrix, _determinant(matrix)
+    return matrix, declared_scale
 
 
 def _load_moments(path: Path, *, sources: Path, source_lock: Path, template: Path) -> dict[str, Any]:
@@ -160,7 +144,7 @@ def compile_registration(
     partof = next((row for row in archives if isinstance(row, dict) and row.get("hierarchy") == "part_of"), None)
     require(isinstance(partof, dict) and partof.get("sha256") == expected_archive,
             "registration archive provenance does not match the source lock")
-    matrix, determinant = _validate_transform(registration_doc)
+    matrix, uniform_scale = _validate_transform(registration_doc)
     moments_doc = _load_moments(moments, sources=sources, source_lock=source_lock, template=template)
     moments_by_member = {row["member_id"]: row for row in moments_doc["members"]}
     region_by_id = {row["id"]: row for row in graph["regions"]}
@@ -201,9 +185,19 @@ def compile_registration(
                 f"vessel source moments are incomplete: {member_id}")
         central = [[_finite(value, f"source central moment {member_id}") for value in values]
                    for values in central]
-        world_centroid = _transform_point(matrix, source_centroid)
-        world_central = _transform_central(matrix, central, determinant)
-        world_volume = determinant * source_volume
+        # The source moments are already in metres (the moments compiler
+        # applies the authored millimetre-to-metre conversion).  The pinned
+        # registration matrix is named ``source_mm_to_world_m`` and therefore
+        # must not be applied to those metre-valued moments a second time.
+        # Apply the declared post-mm uniform scale once, then add its world
+        # translation.  The old path multiplied metre moments by 1e-3 again,
+        # producing volumes and second moments 1e-9/1e-15 too small.
+        world_centroid = [
+            uniform_scale * source_centroid[index] + matrix[index][3]
+            for index in range(3)
+        ]
+        world_central = _scale_matrix(central, uniform_scale ** 5)
+        world_volume = uniform_scale ** 3 * source_volume
         compartment = compartment_by_id[region_id]
         bindings.append({
             "region_id": region_id,
@@ -249,6 +243,7 @@ def compile_registration(
             "registration_sha256": identity["registration_file_sha256"],
             "source_archive_sha256": expected_archive,
             "coordinate_system": "BodyParts3D source metres to MyoSim world metres",
+            "moment_unit_conversion": "moments are authored in metres; uniform_scale_after_mm_to_m is applied once",
             "global_source_mm_to_myosim_world_m": matrix,
         },
         "identity_sha256": _sha256(canonical(identity) + b"\n"),
@@ -256,6 +251,7 @@ def compile_registration(
         "qualification": {
             "source_membership_and_hashes": True,
             "source_moments_recomputed": True,
+            "source_moment_units_corrected": True,
             "source_to_world_frame_registered": True,
             "body_link_registration": False,
             "tubular_vessel_field": False,

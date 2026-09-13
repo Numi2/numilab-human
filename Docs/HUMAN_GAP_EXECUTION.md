@@ -189,8 +189,11 @@ terminal still reports `compiled_stand_balanced=false` and dynamic drift.
 
 The current source-data snapshot also includes the six-vessel source-to-world
 registration receipt at
-[`Docs/media/organ-vessel-registration-20260913/registration.json`](media/organ-vessel-registration-20260913/registration.json).
-The receipt SHA-256 is `fb446cd380bac11aaa6ef8de2f011982da7a6aaaab981a4dcd2351583a69d9be`.
+[`Docs/media/organ-vessel-registration-corrected-20260913/registration.json`](media/organ-vessel-registration-corrected-20260913/registration.json).
+The corrected receipt SHA-256 is
+`002d0fe7dc077de726d3b2454735a5a7d3a9f8a26144888735de47c15239397e`.
+The earlier `organ-vessel-registration-20260913` receipt remains historical
+evidence of the pre-audit double unit conversion.
 The corresponding registry snapshot is
 [`Docs/media/gap-execution-20260913/report-with-vessel-registration-20260913.json`](media/gap-execution-20260913/report-with-vessel-registration-20260913.json)
 with file SHA-256 `3719b46fb4b9d00aa2283e5c21d2c14f653b01e458208490f23aec7bc9d08c48`
@@ -269,6 +272,17 @@ The registry therefore remains an execution inventory with force convergence,
 standing, recovery, walking, anatomical supports/loading, activation
 calibration, blood mass transfer, unresolved materials, and subject
 calibration unqualified.
+
+The [corrected vessel unit and mass-moment receipt](ORGAN_VESSEL_UNIT_CORRECTION_20260913.md)
+repairs the prior double millimetre-to-metre application in the six-vessel
+source/world registration. The corrected source receipt is consumed by a
+deterministic mass-moment candidate that closes zeroth/first/second moments,
+single-owner counting, and atomic checkpoint restore for the six surfaces at an
+explicit `1060 kg/m³` candidate density. It remains a surface-volume proxy:
+the registry still has no admitted lumen/tube, wall material, pressure
+gradient, two-way tissue exchange, subject density, or native anatomical
+mechanics qualification; its bounded corrected source/world checker now passes
+on the physical Mac mini.
 
 The refreshed registry snapshot with the exact vessel body links is retained
 at [`Docs/media/gap-execution-20260913/report-with-native-body-links-20260913.json`](media/gap-execution-20260913/report-with-native-body-links-20260913.json).

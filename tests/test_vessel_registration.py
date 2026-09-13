@@ -42,6 +42,14 @@ class VesselRegistrationTests(unittest.TestCase):
             self.assertIsNone(row["material_density_kg_per_m3"])
             self.assertIsNone(row["mechanical_mass_owner"])
             self.assertGreater(row["registered_world_surface_integral_volume_m3"], 0.0)
+        source = next(row for row in result["bindings"] if row["member_id"] == "FJ1932")
+        self.assertAlmostEqual(source["registered_world_surface_integral_volume_m3"],
+                               source["source_surface_integral_volume_m3"] * 1.0076111869732587 ** 3,
+                               places=18)
+        self.assertAlmostEqual(source["registered_world_centroid_m"][2],
+                               1.0076111869732587 * source["source_centroid_m"][2] + 0.12388234159326472,
+                               places=12)
+        self.assertTrue(result["qualification"]["source_moment_units_corrected"])
 
     def test_deterministic_and_immutable(self) -> None:
         self.assertEqual(canonical(self.result), canonical(compile_registration()))

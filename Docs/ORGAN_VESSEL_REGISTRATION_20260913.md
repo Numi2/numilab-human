@@ -7,6 +7,14 @@ provisional source-to-MyoSim world transform.  It recomputes the source
 membership and the current organ-moment receipt before emitting the immutable
 [registration receipt](media/organ-vessel-registration-20260913/registration.json).
 
+That first receipt is retained as historical evidence. A unit audit found that
+its compiler applied the pinned millimetre-to-metre factor twice to moments that
+were already authored in metres. The current source/world receipt is
+[`media/organ-vessel-registration-corrected-20260913/registration.json`](media/organ-vessel-registration-corrected-20260913/registration.json),
+which applies the declared uniform scale once; see
+[`ORGAN_VESSEL_UNIT_CORRECTION_20260913.md`](ORGAN_VESSEL_UNIT_CORRECTION_20260913.md).
+Native admission must use that corrected fixture.
+
 The six bindings are ascending aorta (`FJ3413`), aortic arch (`FJ3411`),
 descending aorta (`FJ3427`), abdominal aorta (`FJ1932`), superior vena cava
 (`FJ3645`), and inferior vena cava (`FJ3441`).  Each row retains its source

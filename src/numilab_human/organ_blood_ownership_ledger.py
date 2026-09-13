@@ -25,8 +25,11 @@ TORSO = ROOT / "Docs/media/organ-torso-body-link-20260913/body-links.json"
 CARDIAC_BODY = ROOT / "Docs/media/organ-cardiac-cavity-body-link-20260913/body-links.json"
 CARDIAC_OWNERSHIP = ROOT / "Docs/media/organ-cardiac-cavity-ownership-20260913/ownership.json"
 CAVITY_BRIDGE = ROOT / "Docs/media/organ-blood-cavity-bridge-20260913/bridge.json"
-VESSEL_REGISTRATION = ROOT / "Docs/media/organ-vessel-registration-20260913/registration.json"
+VESSEL_REGISTRATION = ROOT / "Docs/media/organ-vessel-registration-corrected-20260913/registration.json"
 VESSEL_BODY = ROOT / "Docs/media/organ-vessel-body-link-20260913/body-links.json"
+VESSEL_MASS_MOMENTS = ROOT / (
+    "Docs/media/vessel-mass-moment-owner-corrected-20260913/receipt.json"
+)
 BLOOD_OWNER = ROOT / "Docs/media/blood-mass-owner-20260913/receipt.json"
 FULLBODY_VASCULAR = ROOT / (
     "Docs/media/organ-blood-cavity-bridge-20260913/"
@@ -113,6 +116,7 @@ def compile_ledger(*, torso: Path = TORSO, cardiac_body: Path = CARDIAC_BODY,
                    cavity_bridge: Path = CAVITY_BRIDGE,
                    vessel_registration: Path = VESSEL_REGISTRATION,
                    vessel_body: Path = VESSEL_BODY,
+                   vessel_mass_moments: Path = VESSEL_MASS_MOMENTS,
                    blood_owner: Path = BLOOD_OWNER,
                    fullbody_vascular: Path = FULLBODY_VASCULAR) -> dict[str, Any]:
     inputs: dict[str, dict[str, Any]] = {}
@@ -124,6 +128,7 @@ def compile_ledger(*, torso: Path = TORSO, cardiac_body: Path = CARDIAC_BODY,
         ("cavity_bridge", cavity_bridge, True),
         ("vessel_registration", vessel_registration, True),
         ("vessel_body_links", vessel_body, True),
+        ("vessel_mass_moment_candidate", vessel_mass_moments, True),
         # These two native receipts predate this ledger and intentionally retain
         # their original serialization; their raw hashes remain bound.
         ("synthetic_blood_owner", blood_owner, False),
@@ -237,6 +242,47 @@ def compile_ledger(*, torso: Path = TORSO, cardiac_body: Path = CARDIAC_BODY,
         require(registration_row.get("source_member_sha256") == torso_row.get("source_member_sha256"),
                 f"vessel source hash disagrees with torso register: {member_id}")
 
+    mass_moment_candidate = docs["vessel_mass_moment_candidate"]
+    require(mass_moment_candidate.get("schema") ==
+            "HumanPack.vessel-mass-moment-owner-candidate.v1",
+            "unsupported vessel mass-moment candidate schema")
+    require(mass_moment_candidate.get("status") == "partial",
+            "vessel mass-moment candidate is not explicitly partial")
+    candidate_source = mass_moment_candidate.get("source")
+    require(isinstance(candidate_source, dict),
+            "vessel mass-moment candidate has no source record")
+    require(candidate_source.get("registration_sha256") == inputs["vessel_registration"]["file_sha256"],
+            "vessel mass-moment candidate registration hash disagrees")
+    require(candidate_source.get("body_links_sha256") == inputs["vessel_body_links"]["file_sha256"],
+            "vessel mass-moment candidate body-link hash disagrees")
+    candidate_rows = mass_moment_candidate.get("owners")
+    require(isinstance(candidate_rows, list) and len(candidate_rows) == 6,
+            "vessel mass-moment candidate must contain six owners")
+    candidate_by_member = _unique(candidate_rows, "member_id", "vessel mass-moment candidate")
+    require(set(candidate_by_member) == set(vessel_by_member),
+            "vessel mass-moment candidate and registration have different members")
+    candidate_density = mass_moment_candidate.get("density", {})
+    require(candidate_density.get("status") == "candidate_not_subject_calibrated",
+            "vessel mass-moment candidate density was promoted")
+    candidate_qualification = mass_moment_candidate.get("qualification", {})
+    require(candidate_qualification.get("zeroth_first_second_mass_moments") is True and
+            candidate_qualification.get("atomic_checkpoint_restore") is True and
+            candidate_qualification.get("anatomical_blood_mass_owner") is False and
+            candidate_qualification.get("pressure_gradient_momentum_transfer") is False and
+            candidate_qualification.get("two_way_blood_tissue_transfer") is False,
+            "vessel mass-moment candidate boundary changed")
+    for member_id, candidate_row in candidate_by_member.items():
+        registration_row = vessel_by_member[member_id]
+        require(candidate_row.get("source_member_sha256") == registration_row.get("source_member_sha256"),
+                f"vessel mass-moment source hash disagrees: {member_id}")
+        require(candidate_row.get("lumen_or_tube_admitted") is False and
+                candidate_row.get("subject_calibration") is False,
+                f"vessel mass-moment candidate promoted a physical gate: {member_id}")
+    candidate_totals = mass_moment_candidate.get("totals", {})
+    require(candidate_totals.get("owner_count") == 6 and
+            candidate_totals.get("unique_member_count") == 6,
+            "vessel mass-moment candidate owner count changed")
+
     synthetic_owner = docs["synthetic_blood_owner"]
     require(synthetic_owner.get("schema") == "numi.human.blood-mass-owner-evidence.v1",
             "unsupported synthetic blood-owner schema")
@@ -269,6 +315,7 @@ def compile_ledger(*, torso: Path = TORSO, cardiac_body: Path = CARDIAC_BODY,
         "cardiac_cavity_body_frames": sorted(cardiac_by_member),
         "vessel_body_frames": sorted(vessel_body_by_member),
         "vessel_surface_registration": sorted(vessel_by_member),
+        "vessel_surface_mass_moment_candidate": sorted(candidate_by_member),
     }
     hydraulic_rows = [{
         "member_id": row["member_id"],
@@ -294,6 +341,7 @@ def compile_ledger(*, torso: Path = TORSO, cardiac_body: Path = CARDIAC_BODY,
         "vessel_rows": vessel_rows_out,
         "candidate_ids": sorted(candidate_ids),
         "candidate_selection": None,
+        "vessel_mass_moment_candidate": inputs["vessel_mass_moment_candidate"]["file_sha256"],
         "synthetic_blood_owner_native_commit": synthetic_owner.get("native_commit"),
         "synthetic_fullbody_native_commit": fullbody_owner.get("native_commit"),
     }
@@ -321,6 +369,12 @@ def compile_ledger(*, torso: Path = TORSO, cardiac_body: Path = CARDIAC_BODY,
             "unique_regions": True,
             "physical_lumen_owner": False,
             "mechanical_mass_owner": False,
+            "surface_mass_moment_candidate": {
+                "file": inputs["vessel_mass_moment_candidate"]["path"],
+                "owner_count": candidate_totals["owner_count"],
+                "source_surface_proxy": True,
+                "anatomical_blood_mass_owner": False,
+            },
         },
         "synthetic_evidence": {
             "blood_owner": {
@@ -353,6 +407,7 @@ def compile_ledger(*, torso: Path = TORSO, cardiac_body: Path = CARDIAC_BODY,
             "anatomical_body_frame_registration": True,
             "anatomical_physical_volume_owner": False,
             "anatomical_blood_mass_transfer": False,
+            "zeroth_first_second_mass_moments_candidate": True,
             "organ_fem_or_mpm": False,
             "vessel_tube_or_lumen_mechanics": False,
             "pressure_gradient_momentum_transfer": False,
@@ -370,8 +425,10 @@ def compile_ledger(*, torso: Path = TORSO, cardiac_body: Path = CARDIAC_BODY,
         "boundary": (
             "This ledger binds exact source member hashes, body-frame links, four CVSim "
             "cavity authorities, six vessel hydraulic identities, two unresolved cardiac "
-            "geometry candidates, and the separate synthetic blood-owner/fullbody package "
-            "receipts. It proves ownership bookkeeping and duplicate-owner rejection only. "
+            "geometry candidates, the corrected six-vessel source-surface mass-moment "
+            "candidate, and the separate synthetic blood-owner/fullbody package receipts. "
+            "It proves ownership bookkeeping, candidate zeroth/first/second moments, and "
+            "duplicate-owner rejection only. "
             "No anatomical physical volume, blood mass transfer, organ mechanics, activation, "
             "calibrated materials, force convergence, exact clock, standing, walking, or "
             "integrated Human qualification is promoted."
@@ -401,6 +458,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--cavity-bridge", type=Path, default=CAVITY_BRIDGE)
     parser.add_argument("--vessel-registration", type=Path, default=VESSEL_REGISTRATION)
     parser.add_argument("--vessel-body", type=Path, default=VESSEL_BODY)
+    parser.add_argument("--vessel-mass-moments", type=Path, default=VESSEL_MASS_MOMENTS)
     parser.add_argument("--blood-owner", type=Path, default=BLOOD_OWNER)
     parser.add_argument("--fullbody-vascular", type=Path, default=FULLBODY_VASCULAR)
     parser.add_argument("--output", type=Path, required=True)
@@ -410,6 +468,7 @@ def main(argv: list[str] | None = None) -> int:
             torso=args.torso, cardiac_body=args.cardiac_body,
             cardiac_ownership=args.cardiac_ownership, cavity_bridge=args.cavity_bridge,
             vessel_registration=args.vessel_registration, vessel_body=args.vessel_body,
+            vessel_mass_moments=args.vessel_mass_moments,
             blood_owner=args.blood_owner, fullbody_vascular=args.fullbody_vascular,
         )
         output = args.output.resolve()

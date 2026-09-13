@@ -2148,6 +2148,18 @@ def parser() -> argparse.ArgumentParser:
         help="audit a retained native Human horizon and fail closed on temporal drift",
     )
     add_force_convergence_arguments(force_convergence)
+    from .vessel_mass_moments import run as vessel_mass_moments_run
+    vessel_mass_moments = commands.add_parser(
+        "vessel-mass-moment-audit",
+        help="compile source-vessel mass moments without promoting lumen or tissue transfer",
+    )
+    vessel_mass_moments.add_argument("--registration", type=Path)
+    vessel_mass_moments.add_argument("--body-links", type=Path)
+    vessel_mass_moments.add_argument("--density-kg-m3", type=float, required=True)
+    vessel_mass_moments.add_argument("--density-provenance", default="explicit_engineering_candidate_not_subject_calibrated")
+    vessel_mass_moments.add_argument("--initial-velocity-mps", type=float, nargs=3, default=[0.0, 0.0, 0.0])
+    vessel_mass_moments.add_argument("--output", type=Path, required=True)
+    vessel_mass_moments.set_defaults(handler=vessel_mass_moments_run)
     return result
 
 
