@@ -1,0 +1,670 @@
+From aeca9c737c706a13ac1a3719b0c1afe92796e3bd Mon Sep 17 00:00:00 2001
+From: numi2 <numit22@gmail.com>
+Date: Sun, 13 Sep 2026 15:07:05 +0200
+Subject: [PATCH 1/3] Project source joint limits during Human stand
+
+---
+ apps/numilab_human_myosim_visual_probe.mm |  15 ++-
+ src/metal/MetalArticulatedOperator.mm     |   4 +
+ src/metal/NumiHumanStand.metal            | 126 ++++++++++++++++++++++
+ 3 files changed, 141 insertions(+), 4 deletions(-)
+
+diff --git a/apps/numilab_human_myosim_visual_probe.mm b/apps/numilab_human_myosim_visual_probe.mm
+index 0d363479..4193f60b 100644
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -3342,7 +3342,8 @@ CompiledStandActivation compileStaticStandActivation(
+         passiveCouplings = {},
+     const std::uint32_t activationSweeps = 240u,
+     const bool allowPoseSearch = true,
+-    const std::optional<std::uint32_t> poseSweeps = std::nullopt
++    const std::optional<std::uint32_t> poseSweeps = std::nullopt,
++    const double solverTimestepSeconds = 1.0e-4
+ ) {
+     require(muscles.header.payloadAbi == kMusclePayloadAbi &&
+                 muscles.referenceArchitectures.size() ==
+@@ -3350,7 +3351,9 @@ CompiledStandActivation compileStaticStandActivation(
+                 !jointEqualities.payload.records.empty(),
+             "stand equilibrium requires NHMYO2 architecture and NHEQ1 constraints");
+     metalrobo::NumiHumanMuscleEquilibriumConfig config;
+-    config.timestep = 1.0e-4;
++    require(std::isfinite(solverTimestepSeconds) && solverTimestepSeconds > 0.0,
++            "stand equilibrium requires a positive finite solver timestep");
++    config.timestep = solverTimestepSeconds;
+     config.activationLimit = activationCap;
+     config.activationSamples = 65u;
+     config.activationSweeps = activationSweeps;
+@@ -3675,7 +3678,9 @@ MuscleDrivenVisualState integratePersistentMetalHumanState(
+             &supportContacts,
+             {},
+             240u,
+-            !initialCoordinate.has_value()
++            !initialCoordinate.has_value(),
++            std::nullopt,
++            timestepSeconds
+         );
+         selectedControlBaselineActivation = compiledActivation.activation;
+         for (const std::uint32_t muscleIndex : selectedSourceMuscleIndices) {
+@@ -3696,7 +3701,9 @@ MuscleDrivenVisualState integratePersistentMetalHumanState(
+             &supportContacts,
+             {},
+             240u,
+-            !initialCoordinate.has_value()
++            !initialCoordinate.has_value(),
++            std::nullopt,
++            timestepSeconds
+         );
+     }
+     // Explicit tissue poses disable pose search before recruitment, so q,
+diff --git a/src/metal/MetalArticulatedOperator.mm b/src/metal/MetalArticulatedOperator.mm
+index b5014268..7ba6dc36 100644
+--- a/src/metal/MetalArticulatedOperator.mm
++++ b/src/metal/MetalArticulatedOperator.mm
+@@ -2202,6 +2202,10 @@ MetalArticulatedOperatorDiagnostics validateAndBuildLayout(
+             !checkedAdd(responsePerEnvironment,
+                         input.stand.jointEqualities.size(),
+                         responsePerEnvironment) ||
++            // Reserve one response vector per generalized coordinate for
++            // source-authored position-limit projection.
++            !checkedAdd(responsePerEnvironment, articulation.nv,
++                        responsePerEnvironment) ||
+             !checkedMultiply(responsePerEnvironment, articulation.nv,
+                              responsePerEnvironment) ||
+             !checkedMultiply(input.environmentCount, responsePerEnvironment,
+diff --git a/src/metal/NumiHumanStand.metal b/src/metal/NumiHumanStand.metal
+index 5a852ada..6fa91968 100644
+--- a/src/metal/NumiHumanStand.metal
++++ b/src/metal/NumiHumanStand.metal
+@@ -1009,7 +1009,133 @@ kernel void mr_numi_human_stand_step(
+         }
+     }
+ 
++    if ((dispatch.flags & MR_NUMI_HUMAN_STAND_ENABLE_CONTACT) != 0u) {
++    // Source-authored scalar position limits are unilateral generalized
++    // constraints. Static Human recruitment may rely on their reaction; a
++    // stand horizon that omits them turns that accepted load into an
++    // artificial high-acceleration joint impulse. Reuse the response arena
++    // after contact/equality projection and solve each active limit against
++    // the same factored mass matrix. The projection is velocity-level and
++    // therefore preserves the accepted q/v transaction without clamping.
++    const uint limitResponseCapacity = nv;
++    const uint limitResponseBase = responseBase +
++        (3u * dispatch.supportContactCount + dispatch.jointEqualityCount) * nv;
++    uint limitCount = 0u;
++    uint limitDofs[MR_NUMI_HUMAN_STAND_MAX_DOFS];
+     for (uint dof = 0u; dof < nv; ++dof) {
++        device const MRDofPropertiesGPU& properties =
++            dofs[articulation.vOffset + dof];
++        if ((properties.flags & MR_DOF_FLAG_POSITION_LIMIT) == 0u) continue;
++        if (properties.qIndex == MR_INVALID_INDEX ||
++            properties.qIndex < articulation.qOffset ||
++            properties.qIndex >= articulation.qOffset + nq ||
++            !(properties.limits.x < properties.limits.y) ||
++            !isfinite(properties.limits.x) ||
++            !isfinite(properties.limits.y)) {
++            fail(status, MR_NUMI_HUMAN_STAND_INVALID_MODEL, dof);
++            return;
++        }
++        const float position = qState[
++            qBase + properties.qIndex - articulation.qOffset];
++        const float tolerance = 1.0e-7f;
++        const bool lowerNear = position <= properties.limits.x + tolerance;
++        const bool upperNear = position >= properties.limits.y - tolerance;
++        const bool lowerActive = lowerNear &&
++            (position < properties.limits.x || candidateV[dof] < 0.0f);
++        const bool upperActive = upperNear &&
++            (position > properties.limits.y || candidateV[dof] > 0.0f);
++        if (!lowerActive && !upperActive) continue;
++        if (lowerActive && upperActive) {
++            fail(status, MR_NUMI_HUMAN_STAND_INVALID_MODEL, dof);
++            return;
++        }
++        if (limitCount >= limitResponseCapacity) {
++            // The fixed response arena is sized for contacts and equalities.
++            // Refuse an over-capacity limit set instead of silently dropping
++            // a source constraint.
++            fail(status, MR_NUMI_HUMAN_STAND_INVALID_DISPATCH, dof);
++            return;
++        }
++        limitDofs[limitCount] = dof;
++        device float* response = responseScratch + limitResponseBase +
++            limitCount * nv;
++        for (uint index = 0u; index < nv; ++index) response[index] = 0.0f;
++        response[dof] = 1.0f;
++        if (!solveFactor(factor, workspace, response, nv)) {
++            fail(status, MR_NUMI_HUMAN_STAND_FACTORIZATION_FAILED, dof);
++            return;
++        }
++        ++limitCount;
++    }
++    for (uint iteration = 0u;
++         iteration < dispatch.contactIterationCount && limitCount != 0u;
++         ++iteration) {
++        for (uint limit = 0u; limit < limitCount; ++limit) {
++            const uint dof = limitDofs[limit];
++            device const MRDofPropertiesGPU& properties =
++                dofs[articulation.vOffset + dof];
++            const float position = qState[
++                qBase + properties.qIndex - articulation.qOffset];
++            const bool lowerActive =
++                position <= properties.limits.x + 1.0e-7f &&
++                (position < properties.limits.x || candidateV[dof] < 0.0f);
++            const bool upperActive =
++                position >= properties.limits.y - 1.0e-7f &&
++                (position > properties.limits.y || candidateV[dof] > 0.0f);
++            device const float* response = responseScratch + limitResponseBase +
++                limit * nv;
++            const float effectiveMass = response[dof] + kResponseRegularization;
++            if (!(effectiveMass > kResponseRegularization) ||
++                !isfinite(effectiveMass)) {
++                fail(status, MR_NUMI_HUMAN_STAND_FACTORIZATION_FAILED, dof);
++                return;
++            }
++            const float velocity = candidateV[dof];
++            float targetVelocity = 0.0f;
++            float impulse = 0.0f;
++            if (lowerActive) {
++                targetVelocity = max(
++                    0.0f,
++                    min(4.0f,
++                        -0.2f * (position - properties.limits.x) / timestep)
++                );
++                if (velocity < targetVelocity) {
++                    impulse = max(
++                        0.0f,
++                        (targetVelocity - velocity) / effectiveMass
++                    );
++                }
++            } else if (upperActive) {
++                targetVelocity = min(
++                    0.0f,
++                    max(-4.0f,
++                        -0.2f * (position - properties.limits.y) / timestep)
++                );
++                if (velocity > targetVelocity) {
++                    impulse = min(
++                        0.0f,
++                        (targetVelocity - velocity) / effectiveMass
++                    );
++                }
++            }
++            if (!isfinite(impulse)) {
++                fail(status, MR_NUMI_HUMAN_STAND_NONFINITE_RESULT, dof);
++                return;
++            }
++            for (uint index = 0u; index < nv; ++index) {
++                candidateV[index] += impulse * response[index];
++            }
++        }
++    }
++
++    }
++
++    maximumAcceleration = 0.0f;
++    for (uint dof = 0u; dof < nv; ++dof) {
++        maximumAcceleration = max(
++            maximumAcceleration,
++            abs((candidateV[dof] - vState[vBase + dof]) / timestep)
++        );
+         if (!isfinite(candidateV[dof])) {
+             fail(status, MR_NUMI_HUMAN_STAND_NONFINITE_RESULT, dof);
+             return;
+-- 
+2.50.1 (Apple Git-155)
+
+
+From 04d5faf0926ec1e498c105b38ea1c16ea5d09f0c Mon Sep 17 00:00:00 2001
+From: numi2 <numit22@gmail.com>
+Date: Sun, 13 Sep 2026 08:01:59 +0200
+Subject: [PATCH 2/3] Add exact first-order Human activation update
+
+---
+ apps/numilab_human_myosim_reference_probe.cpp | 62 +++++++++++++++++--
+ .../metalrobo/MetalArticulatedOperator.hpp    | 11 ++--
+ include/metalrobo/mujoco_muscle_gpu.h         |  8 ++-
+ src/metal/MetalArticulatedOperator.mm         |  8 ++-
+ src/metal/MujocoMuscleReference.metal         | 31 +++++++---
+ 5 files changed, 97 insertions(+), 23 deletions(-)
+
+diff --git a/apps/numilab_human_myosim_reference_probe.cpp b/apps/numilab_human_myosim_reference_probe.cpp
+index 6a5d9137..8aafbb4f 100644
+--- a/apps/numilab_human_myosim_reference_probe.cpp
++++ b/apps/numilab_human_myosim_reference_probe.cpp
+@@ -1010,9 +1010,9 @@ MetalArticulatedMetrics verifyMetalArticulatedReference(
+         );
+     }
+     // Use deliberately non-equilibrium activation values to verify that the
+-    // new Metal sidecar update is performing an actual temporal advance, not
+-    // merely echoing the input state. Force parity above remains tied to the
+-    // source-default 0.5/0.5 state.
++    // exact first-order-hold Metal sidecar update is performing an actual
++    // temporal advance, not merely echoing the input state. Force parity above
++    // remains tied to the source-default 0.5/0.5 state.
+     constexpr float kActivationTimestepSeconds = 1.0e-4f;
+     std::vector<MRMujocoMuscleStateGPU> activationStates = muscles.gpuStates;
+     for (std::size_t index = 0u; index < activationStates.size(); ++index) {
+@@ -1069,6 +1069,37 @@ MetalArticulatedMetrics verifyMetalArticulatedReference(
+                 activationContextDiagnostics.status
+             ) + " " + activationContextDiagnostics.message
+     );
++    // Run the same state through the explicitly versioned ABI 2 path. This
++    // keeps the legacy update available while the Human production path uses
++    // ABI 3 for timestep refinement.
++    auto legacyConfig = activationConfig;
++    legacyConfig.mujocoActivationExactFirstOrderHold = false;
++    metalrobo::MetalArticulatedOperatorResult legacyResult;
++    const auto legacyDiagnostics = metalrobo::runMetalArticulatedOperator(
++        model, activationInput, legacyResult, legacyConfig
++    );
++    require(
++        legacyDiagnostics.succeeded() &&
++            legacyResult.mujocoActivationStates.size() == activationStates.size(),
++        std::string("MyoSim legacy activation-step operator failed: ") +
++            metalrobo::metalArticulatedOperatorHostStatusName(
++                legacyDiagnostics.status
++            ) + " " + legacyDiagnostics.message
++    );
++    for (std::size_t index = 0u; index < activationStates.size(); ++index) {
++        const float initial = activationStates[index].excitationAndActivation.y;
++        const float derivative = activationResult.mujocoResults[index]
++            .pathForceAndActivationDerivative.w;
++        const float expected = std::clamp(
++            initial + kActivationTimestepSeconds * derivative, 0.0f, 1.0f
++        );
++        require(
++            std::abs(double(
++                legacyResult.mujocoActivationStates[index].excitationAndActivation.y
++            ) - expected) < 2.0e-6,
++            "MyoSim ABI 2 legacy activation update changed"
++        );
++    }
+     metrics.activationTimestepSeconds = kActivationTimestepSeconds;
+     for (std::size_t index = 0u;
+          index < activationStates.size();
+@@ -1077,8 +1108,16 @@ MetalArticulatedMetrics verifyMetalArticulatedReference(
+             activationStates[index].excitationAndActivation.y;
+         const float derivative = activationResult.mujocoResults[index]
+             .pathForceAndActivationDerivative.w;
++        const float control = std::clamp(
++            activationStates[index].excitationAndActivation.x, 0.0f, 1.0f
++        );
++        const float excess = control - initialActivation;
+         const float expectedActivation = std::clamp(
+-            initialActivation + kActivationTimestepSeconds * derivative,
++            (excess == 0.0f || derivative == 0.0f)
++                ? initialActivation
++                : control - excess * std::exp(
++                    -kActivationTimestepSeconds / (excess / derivative)
++                ),
+             0.0f,
+             1.0f
+         );
+@@ -1121,8 +1160,19 @@ MetalArticulatedMetrics verifyMetalArticulatedReference(
+     for (std::size_t index = 0; index < continuedStates.size(); ++index) {
+         const auto& before = continuedStates[index].excitationAndActivation;
+         const auto& after = continued.mujocoActivationStates[index].excitationAndActivation;
+-        const float expected = std::clamp(before.y + kActivationTimestepSeconds *
+-            continued.mujocoResults[index].pathForceAndActivationDerivative.w, 0.0f, 1.0f);
++        const float control = std::clamp(before.x, 0.0f, 1.0f);
++        const float excess = control - before.y;
++        const float derivative =
++            continued.mujocoResults[index].pathForceAndActivationDerivative.w;
++        const float expected = std::clamp(
++            (excess == 0.0f || derivative == 0.0f)
++                ? before.y
++                : control - excess * std::exp(
++                    -kActivationTimestepSeconds / (excess / derivative)
++                ),
++            0.0f,
++            1.0f
++        );
+         continuationError = std::max(continuationError, std::abs(double(after.y - expected)));
+         initializedFibres += before.z > 0.0f ? 1u : 0u;
+         changedActivations += after.y != before.y ? 1u : 0u;
+diff --git a/include/metalrobo/MetalArticulatedOperator.hpp b/include/metalrobo/MetalArticulatedOperator.hpp
+index ca752698..7884b469 100644
+--- a/include/metalrobo/MetalArticulatedOperator.hpp
++++ b/include/metalrobo/MetalArticulatedOperator.hpp
+@@ -1646,11 +1646,14 @@ struct MetalArticulatedOperatorConfig {
+     // the multi-articulation contact frontend before batched inverse ABA.
+     bool pointJacobiansOnly = false;
+     // When non-zero, advance each valid MyoSim activation after its force
+-    // reference and reduction pass in the same Metal command buffer. This is
+-    // one explicit-Euler step in seconds; callers retain the returned state
+-    // sidecar and feed it into their next transaction. Zero preserves the
+-    // historical force-only behavior.
++    // reference and reduction pass in the same Metal command buffer. The Human
++    // production path uses the versioned exact first-order hold; callers retain
++    // the returned state sidecar and feed it into their next transaction. Zero
++    // preserves the historical force-only behavior.
+     float mujocoActivationTimestepSeconds = 0.0f;
++    // Select ABI 3's exact first-order hold. False retains ABI 2's historical
++    // explicit-Euler update for legacy callers and compatibility tests.
++    bool mujocoActivationExactFirstOrderHold = true;
+     // Empty discovers the co-installed metallib relative to the loaded
+     // MetalRobo dylib, with the configured build-tree path as a fallback.
+     // A non-empty path is an explicit trusted ABI-compatible override.
+diff --git a/include/metalrobo/mujoco_muscle_gpu.h b/include/metalrobo/mujoco_muscle_gpu.h
+index ce975927..20c22298 100644
+--- a/include/metalrobo/mujoco_muscle_gpu.h
++++ b/include/metalrobo/mujoco_muscle_gpu.h
+@@ -8,6 +8,7 @@
+ 
+ #define MR_MUJOCO_MUSCLE_REFERENCE_GPU_ABI_VERSION 4u
+ #define MR_MUJOCO_MUSCLE_ACTIVATION_GPU_ABI_VERSION 2u
++#define MR_MUJOCO_MUSCLE_ACTIVATION_EXACT_GPU_ABI_VERSION 3u
+ #define MR_MUJOCO_MUSCLE_ACTIVE_FORCE_GPU_ABI_VERSION 1u
+ #define MR_MUJOCO_MUSCLE_ROUTE_CUT_GPU_ABI_VERSION 1u
+ 
+@@ -112,9 +113,10 @@ typedef struct MR_ALIGN16 MRMujocoMuscleStateGPU {
+     mr_float4 excitationAndActivation;
+ } MRMujocoMuscleStateGPU;
+ 
+-// One explicit device-side activation update follows the reference pass. It
+-// intentionally owns only the mutable activation sidecar: source force and
+-// tendon-path evaluation remain in MRMujocoMuscleReferenceDispatchGPU.
++// One device-side activation update follows the reference pass. ABI 2 retains
++// the historical explicit-Euler update. ABI 3 uses an exact first-order hold
++// over the same source derivative and is selected by the Human production
++// operator; both versions own only the mutable activation sidecar.
+ typedef struct MR_ALIGN16 MRMujocoMuscleActivationDispatchGPU {
+     mr_u32 abiVersion;
+     mr_u32 stateCount;
+diff --git a/src/metal/MetalArticulatedOperator.mm b/src/metal/MetalArticulatedOperator.mm
+index 7ba6dc36..e05c9cba 100644
+--- a/src/metal/MetalArticulatedOperator.mm
++++ b/src/metal/MetalArticulatedOperator.mm
+@@ -9182,7 +9182,9 @@ bool finitePayload(
+                 if (state_->config.mujocoActivationTimestepSeconds > 0.0f) {
+                     MRMujocoMuscleActivationDispatchGPU activationDispatch{};
+                     activationDispatch.abiVersion =
+-                        MR_MUJOCO_MUSCLE_ACTIVATION_GPU_ABI_VERSION;
++                        state_->config.mujocoActivationExactFirstOrderHold
++                            ? MR_MUJOCO_MUSCLE_ACTIVATION_EXACT_GPU_ABI_VERSION
++                            : MR_MUJOCO_MUSCLE_ACTIVATION_GPU_ABI_VERSION;
+                     activationDispatch.stateCount = static_cast<mr_u32>(
+                         diagnostics.layout.mujocoStateElements
+                     );
+@@ -10654,7 +10656,9 @@ MetalArticulatedOperatorDiagnostics runMetalArticulatedOperator(
+                 if (config.mujocoActivationTimestepSeconds > 0.0f) {
+                     MRMujocoMuscleActivationDispatchGPU activationDispatch{};
+                     activationDispatch.abiVersion =
+-                        MR_MUJOCO_MUSCLE_ACTIVATION_GPU_ABI_VERSION;
++                        config.mujocoActivationExactFirstOrderHold
++                            ? MR_MUJOCO_MUSCLE_ACTIVATION_EXACT_GPU_ABI_VERSION
++                            : MR_MUJOCO_MUSCLE_ACTIVATION_GPU_ABI_VERSION;
+                     activationDispatch.stateCount = static_cast<mr_u32>(
+                         layout.mujocoStateElements
+                     );
+diff --git a/src/metal/MujocoMuscleReference.metal b/src/metal/MujocoMuscleReference.metal
+index 053e81bd..48d69337 100644
+--- a/src/metal/MujocoMuscleReference.metal
++++ b/src/metal/MujocoMuscleReference.metal
+@@ -980,7 +980,10 @@ kernel void mr_mujoco_muscle_activation_step(
+     constant MRMujocoMuscleActivationDispatchGPU& dispatch [[buffer(2)]],
+     uint globalIndex [[thread_position_in_grid]]
+ ) {
+-    if (dispatch.abiVersion != MR_MUJOCO_MUSCLE_ACTIVATION_GPU_ABI_VERSION ||
++    const bool exactFirstOrderHold =
++        dispatch.abiVersion == MR_MUJOCO_MUSCLE_ACTIVATION_EXACT_GPU_ABI_VERSION;
++    if ((dispatch.abiVersion != MR_MUJOCO_MUSCLE_ACTIVATION_GPU_ABI_VERSION &&
++         !exactFirstOrderHold) ||
+         dispatch.reserved0 != 0u || dispatch.reserved1 != 0u ||
+         dispatch.timestepSecondsAndReserved.y != 0.0f ||
+         dispatch.timestepSecondsAndReserved.z != 0.0f ||
+@@ -1004,13 +1007,25 @@ kernel void mr_mujoco_muscle_activation_step(
+         !finite4(reference.fiberStateTendonForceResidual)) {
+         return;
+     }
+-    const float nextActivation = clamp(
+-        current.excitationAndActivation.y +
+-            dispatch.timestepSecondsAndReserved.x *
+-                reference.pathForceAndActivationDerivative.w,
+-        0.0f,
+-        1.0f
+-    );
++    const float control = clamp(current.excitationAndActivation.x, 0.0f, 1.0f);
++    const float activation = clamp(current.excitationAndActivation.y, 0.0f, 1.0f);
++    const float excess = control - activation;
++    const float derivative = reference.pathForceAndActivationDerivative.w;
++    float nextActivation = activation;
++    if (exactFirstOrderHold && excess != 0.0f && derivative != 0.0f) {
++        // The reference pass already evaluated da/dt = (u-a)/tau at the
++        // accepted state. Recover that positive tau and integrate the
++        // first-order hold analytically without adding a muscle-state buffer.
++        const float tau = excess / derivative;
++        if (!(isfinite(tau) && tau > 0.0f)) return;
++        nextActivation = control - excess * exp(
++            -dispatch.timestepSecondsAndReserved.x / tau
++        );
++    } else if (!exactFirstOrderHold) {
++        nextActivation = activation +
++            dispatch.timestepSecondsAndReserved.x * derivative;
++    }
++    nextActivation = clamp(nextActivation, 0.0f, 1.0f);
+     if (!isfinite(nextActivation)) return;
+     MRMujocoMuscleStateGPU next = current;
+     next.excitationAndActivation.y = nextActivation;
+-- 
+2.50.1 (Apple Git-155)
+
+
+From c8222041ce04ee84d65cb4d1a52a6b39dd489427 Mon Sep 17 00:00:00 2001
+From: numi2 <numit22@gmail.com>
+Date: Sun, 13 Sep 2026 15:28:28 +0200
+Subject: [PATCH 3/3] Admit source vessel registration in Matter
+
+---
+ matter/CMakeLists.txt                         |  11 ++
+ ...an_organ_vessel_registration_20260913.json |   1 +
+ matter/tools/vessel_registration_check.mm     | 168 ++++++++++++++++++
+ 3 files changed, 180 insertions(+)
+ create mode 100644 matter/tools/fixtures/human_organ_vessel_registration_20260913.json
+ create mode 100644 matter/tools/vessel_registration_check.mm
+
+diff --git a/matter/CMakeLists.txt b/matter/CMakeLists.txt
+index 49334fad..b4904887 100644
+--- a/matter/CMakeLists.txt
++++ b/matter/CMakeLists.txt
+@@ -367,6 +367,17 @@ if(APPLE)
+             PROPERTIES LABELS "matter;compiler;human;vascular;provenance" TIMEOUT 120)
+     endif()
+ 
++    add_executable(numi-matter-vessel-registration-check tools/vessel_registration_check.mm)
++    target_link_libraries(numi-matter-vessel-registration-check PRIVATE "${FOUNDATION_FRAMEWORK}")
++    target_compile_options(numi-matter-vessel-registration-check PRIVATE -fobjc-arc -Wall -Wextra -Wpedantic -Werror)
++    if(BUILD_TESTING)
++        add_test(NAME matter.compiler.vessel_registration
++            COMMAND numi-matter-vessel-registration-check
++                "${CMAKE_CURRENT_SOURCE_DIR}/tools/fixtures/human_organ_vessel_registration_20260913.json")
++        set_tests_properties(matter.compiler.vessel_registration
++            PROPERTIES LABELS "matter;compiler;human;vascular;provenance" TIMEOUT 120)
++    endif()
++
+     add_executable(numi-matter-vascular-cavity-check tools/vascular_cavity_check.mm)
+     target_link_libraries(numi-matter-vascular-cavity-check PRIVATE numi_matter_runtime "${FOUNDATION_FRAMEWORK}" "${METAL_FRAMEWORK}")
+     target_include_directories(numi-matter-vascular-cavity-check PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+diff --git a/matter/tools/fixtures/human_organ_vessel_registration_20260913.json b/matter/tools/fixtures/human_organ_vessel_registration_20260913.json
+new file mode 100644
+index 00000000..19f37cbe
+--- /dev/null
++++ b/matter/tools/fixtures/human_organ_vessel_registration_20260913.json
+@@ -0,0 +1 @@
++{"bindings":[{"body_link_registration":false,"centreline_registered":false,"compartment_stable_identifier":8,"cross_section_area_m2":null,"hierarchy":"part_of","hydraulic_volume_owner_id":"blood:abdominal_aorta","material_density_kg_per_m3":null,"mechanical_mass_owner":null,"member_id":"FJ1932","myosim_body":"Abdomen","pressure_gradient_momentum_transfer":false,"region_id":"abdominal_aorta","registered_world_central_second_volume_moment_m5":[[8.106579313243936e-25,6.584249943049053e-25,3.146429980974968e-24],[6.584249943049053e-25,5.574728172569097e-24,2.143817325179344e-23],[3.146429980974968e-24,2.1438173251793438e-23,1.0553867175543946e-22]],"registered_world_centroid_m":[-0.024853402755792682,0.2461660225689151,0.12494428048183852],"registered_world_surface_integral_volume_m3":3.976317887938874e-14,"semantic_id":"FMA:3789","source_centroid_m":[0.008615161030135276,-0.11264507383069021,1.053917326745575],"source_member_sha256":"cbdbe976943f977c48b9dbdfa2efdd9eb025f935d3f921a3fb8479df2090d25d","source_name":"abdominal aorta","source_surface_integral_volume_m3":3.8868891495432754e-05,"subject_calibration":false,"tubular_field_registered":false,"world_frame_registration":true},{"body_link_registration":false,"centreline_registered":false,"compartment_stable_identifier":6,"cross_section_area_m2":null,"hierarchy":"part_of","hydraulic_volume_owner_id":"blood:aortic_arch","material_density_kg_per_m3":null,"mechanical_mass_owner":null,"member_id":"FJ3411","myosim_body":"torso","pressure_gradient_momentum_transfer":false,"region_id":"aortic_arch","registered_world_central_second_volume_moment_m5":[[3.0812475081669484e-24,5.378758491984552e-24,3.8883356866845775e-25],[5.378758491984552e-24,1.8266759993854387e-23,-3.7814128193871854e-25],[3.8883356866845775e-25,-3.781412819387186e-25,2.7910625230192722e-24]],"registered_world_centroid_m":[-0.024845559327801574,0.24618244932431838,0.12519064870795843],"registered_world_surface_integral_volume_m3":3.7220637504887296e-14,"semantic_id":"FMA:3768","source_centroid_m":[0.016399342163205623,-0.09634240111759397,1.2984245625772655],"source_member_sha256":"7f1bbd874b05ea618649bfd5a51ac2675523f419dd3e5f5e160d90f47bd413db","source_name":"arch of aorta","source_surface_integral_volume_m3":3.638353273908414e-05,"subject_calibration":false,"tubular_field_registered":false,"world_frame_registration":true},{"body_link_registration":false,"centreline_registered":false,"compartment_stable_identifier":5,"cross_section_area_m2":null,"hierarchy":"part_of","hydraulic_volume_owner_id":"blood:ascending_aorta","material_density_kg_per_m3":null,"mechanical_mass_owner":null,"member_id":"FJ3413","myosim_body":"torso","pressure_gradient_momentum_transfer":false,"region_id":"ascending_aorta","registered_world_central_second_volume_moment_m5":[[1.2341889462344325e-24,2.6907631025880773e-25,-1.0939511633435836e-24],[2.6907631025880773e-25,9.534231031844754e-25,-6.431928148240672e-25],[-1.0939511633435836e-24,-6.431928148240672e-25,3.465402669098878e-24]],"registered_world_centroid_m":[-0.024851169800156985,0.24615608366987066,0.12515147946617575],"registered_world_surface_integral_volume_m3":2.1989951792037947e-14,"semantic_id":"FMA:3736","source_centroid_m":[0.010831249601365351,-0.1225088974691398,1.2595511932766135],"source_member_sha256":"f4d566821c5ee6347147631b4d1b1e5c5cb3465e05ec23fadffa161c268c7bb2","source_name":"ascending aorta","source_surface_integral_volume_m3":2.149539031542488e-05,"subject_calibration":false,"tubular_field_registered":false,"world_frame_registration":true},{"body_link_registration":false,"centreline_registered":false,"compartment_stable_identifier":7,"cross_section_area_m2":null,"hierarchy":"part_of","hydraulic_volume_owner_id":"blood:descending_aorta","material_density_kg_per_m3":null,"mechanical_mass_owner":null,"member_id":"FJ3427","myosim_body":"torso","pressure_gradient_momentum_transfer":false,"region_id":"descending_aorta","registered_world_central_second_volume_moment_m5":[[6.041698575096041e-24,1.4548061380628395e-23,5.308039423045323e-23],[1.4548061380628395e-23,5.631636331313489e-23,1.9998833721774066e-22],[5.308039423045323e-23,1.9998833721774066e-22,7.661829732049711e-22]],"registered_world_centroid_m":[-0.024848687603132993,0.24619077655614757,0.12503431297812023],"registered_world_surface_integral_volume_m3":9.029007384082974e-14,"semantic_id":"FMA:3784","source_centroid_m":[0.013294696867617858,-0.08807807065276896,1.1432697450649534],"source_member_sha256":"5785787fdaf951e8f64c3f8d5be27cdf015bafb6adf0c70dd4b63f0b5ac2736c","source_name":"descending aorta","source_surface_integral_volume_m3":8.825941944628979e-05,"subject_calibration":false,"tubular_field_registered":false,"world_frame_registration":true},{"body_link_registration":false,"centreline_registered":false,"compartment_stable_identifier":10,"cross_section_area_m2":null,"hierarchy":"part_of","hydraulic_volume_owner_id":"blood:inferior_vena_cava","material_density_kg_per_m3":null,"mechanical_mass_owner":null,"member_id":"FJ3441","myosim_body":"Abdomen","pressure_gradient_momentum_transfer":false,"region_id":"inferior_vena_cava","registered_world_central_second_volume_moment_m5":[[9.896173071821393e-25,8.106523593465334e-27,-1.662544643442261e-25],[8.106523593465334e-27,1.0055466590644884e-24,-4.845734356050557e-26],[-1.662544643442261e-25,-4.845734356050557e-26,2.5989068874475464e-23]],"registered_world_centroid_m":[-0.02487751289455475,0.24616367368801184,0.12503670863588162],"registered_world_surface_integral_volume_m3":3.449825255094822e-14,"semantic_id":"FMA:10951","source_centroid_m":[-0.015312857111953834,-0.11497621200542456,1.1456473067597537],"source_member_sha256":"749081b95f406bd38edea220d216f84aa17e019b91c117e7cfd5f3e546ea1163","source_name":"inferior vena cava","source_surface_integral_volume_m3":3.372237514641726e-05,"subject_calibration":false,"tubular_field_registered":false,"world_frame_registration":true},{"body_link_registration":false,"centreline_registered":false,"compartment_stable_identifier":9,"cross_section_area_m2":null,"hierarchy":"part_of","hydraulic_volume_owner_id":"blood:superior_vena_cava","material_density_kg_per_m3":null,"mechanical_mass_owner":null,"member_id":"FJ3645","myosim_body":"torso","pressure_gradient_momentum_transfer":false,"region_id":"superior_vena_cava","registered_world_central_second_volume_moment_m5":[[3.5986645362936496e-25,-4.561972227445102e-27,1.1925986612571923e-26],[-4.561972227445102e-27,3.7691568399365776e-25,-9.59909809214284e-26],[1.1925986612571923e-26,-9.59909809214284e-26,1.263257678923355e-24]],"registered_world_centroid_m":[-0.024877516808190434,0.2461627503378385,0.1251836904777769],"registered_world_surface_integral_volume_m3":1.2632871885671545e-14,"semantic_id":"FMA:4720","source_centroid_m":[-0.015316741185229858,-0.11589258747375523,1.2915188927400139],"source_member_sha256":"68710b61d5edce86b6a31ce0a471c88cf63308671f78ba57d9974f6514cdb04b","source_name":"superior vena cava","source_surface_integral_volume_m3":1.234875431084796e-05,"subject_calibration":false,"tubular_field_registered":false,"world_frame_registration":true}],"boundary":"Six exact BodyParts3D vessel surfaces are hash-bound to the pinned source-to-MyoSim world transform and their source-frame moments are transformed without assigning a physical volume. The records remain visual/source geometry: no centreline, lumen area, wall material, density, blood mass, pressure reaction, tissue exchange, or subject calibration is inferred.","compiler":"numilab-human.organ-vessel-registration.1","identity_sha256":"33e2619eafef88998908bda9996e2d8563351fe6cfbd1d6ace81be6bea07645f","qualification":{"blood_mass_owner":false,"body_link_registration":false,"centreline_and_area":false,"material_density_calibrated":false,"pressure_gradient_momentum_transfer":false,"source_membership_and_hashes":true,"source_moments_recomputed":true,"source_to_world_frame_registered":true,"standing_walking":false,"subject_calibration":false,"tubular_vessel_field":false,"two_way_tissue_exchange":false},"schema":"HumanPack.organ-vessel-registration.v1","source":{"anatomy_map":"config/bodyparts3d-myosim-torso-anatomy-map.v1.json","coordinate_system":"BodyParts3D source metres to MyoSim world metres","global_source_mm_to_myosim_world_m":[[0.0010076111869732588,0.0,0.0,-0.02486208348842422],[0.0,0.0010076111869732588,0.0,0.24627952500546432],[0.0,0.0,0.0010076111869732588,0.12388234159326472],[0.0,0.0,0.0,1.0]],"moments":"Docs/media/organ-geometry-moments-20260913/moments.json","registration":"Docs/media/numi-human-lower-joint-focus-v1/receipts/registration.v3.json","registration_sha256":"6a48e223545a18390097245b5c21d9d1322991ca451f4bab8e1090e3232ad67f","source_archive_sha256":"9fbc713fffeee924a5a657d9813d84d7eb957bded63adb854931dd5e3eb61c97"}}
+diff --git a/matter/tools/vessel_registration_check.mm b/matter/tools/vessel_registration_check.mm
+new file mode 100644
+index 00000000..5c74b3d4
+--- /dev/null
++++ b/matter/tools/vessel_registration_check.mm
+@@ -0,0 +1,168 @@
++#include <Foundation/Foundation.h>
++
++#include <array>
++#include <cmath>
++#include <cstdint>
++#include <limits>
++#include <stdexcept>
++#include <string>
++
++namespace {
++void requireCondition(const bool condition, const std::string& message) {
++    if (!condition) throw std::runtime_error(message);
++}
++
++id requiredValue(NSDictionary* dictionary, NSString* key) {
++    id value = dictionary[key];
++    requireCondition(value != nil, std::string("missing vessel-registration key: ") + [key UTF8String]);
++    return value;
++}
++
++std::string stringValue(id value, const char* label) {
++    requireCondition([value isKindOfClass:[NSString class]], std::string(label) + " is not a string");
++    return std::string([(NSString*)value UTF8String]);
++}
++
++bool booleanValue(id value, const char* label) {
++    requireCondition([value isKindOfClass:[NSNumber class]], std::string(label) + " is not a boolean");
++    requireCondition([(NSNumber*)value objCType][0] == 'c', std::string(label) + " is not a boolean");
++    return [(NSNumber*)value boolValue];
++}
++
++double finiteNumber(id value, const char* label) {
++    requireCondition([value isKindOfClass:[NSNumber class]], std::string(label) + " is not a number");
++    const double result = [(NSNumber*)value doubleValue];
++    requireCondition(std::isfinite(result), std::string(label) + " is not finite");
++    return result;
++}
++
++void sha256Text(id value, const char* label) {
++    const std::string text = stringValue(value, label);
++    requireCondition(text.size() == 64u, std::string(label) + " is not SHA-256");
++    for (const char c : text) {
++        requireCondition((c >= '0' && c <= '9') ||
++                         (c >= 'a' && c <= 'f') ||
++                         (c >= 'A' && c <= 'F'),
++                         std::string(label) + " has non-hex data");
++    }
++}
++
++void finiteVector(id value, const char* label, const NSUInteger expected) {
++    requireCondition([value isKindOfClass:[NSArray class]], std::string(label) + " is not an array");
++    NSArray* values = (NSArray*)value;
++    requireCondition(values.count == expected, std::string(label) + " has wrong length");
++    for (NSUInteger i = 0; i < values.count; ++i) {
++        (void)finiteNumber(values[i], label);
++    }
++}
++
++void finiteMatrix3(id value, const char* label) {
++    requireCondition([value isKindOfClass:[NSArray class]], std::string(label) + " is not an array");
++    NSArray* rows = (NSArray*)value;
++    requireCondition(rows.count == 3u, std::string(label) + " has wrong row count");
++    for (NSUInteger i = 0; i < rows.count; ++i) finiteVector(rows[i], label, 3u);
++}
++
++void finiteMatrix4(id value, const char* label) {
++    requireCondition([value isKindOfClass:[NSArray class]], std::string(label) + " is not an array");
++    NSArray* rows = (NSArray*)value;
++    requireCondition(rows.count == 4u, std::string(label) + " has wrong row count");
++    for (NSUInteger i = 0; i < rows.count; ++i) finiteVector(rows[i], label, 4u);
++}
++
++void requireNull(id value, const char* label) {
++    requireCondition(value == [NSNull null], std::string(label) + " was mechanically promoted");
++}
++}
++
++int main(int argc, const char* argv[]) {
++    @autoreleasepool {
++        try {
++            requireCondition(argc == 2, "usage: numi-matter-vessel-registration-check registration.json");
++            NSString* path = [NSString stringWithUTF8String:argv[1]];
++            NSError* readError = nil;
++            NSData* data = [NSData dataWithContentsOfFile:path options:0 error:&readError];
++            requireCondition(data != nil, "cannot read vessel-registration receipt");
++            NSError* jsonError = nil;
++            id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
++            requireCondition(json != nil && [json isKindOfClass:[NSDictionary class]],
++                             jsonError == nil ? "vessel-registration is not an object"
++                                               : std::string([[jsonError localizedDescription] UTF8String]));
++            NSDictionary* root = (NSDictionary*)json;
++            requireCondition(stringValue(requiredValue(root, @"schema"), "schema") ==
++                                 "HumanPack.organ-vessel-registration.v1",
++                             "unexpected vessel-registration schema");
++            requireCondition(stringValue(requiredValue(root, @"compiler"), "compiler") ==
++                                 "numilab-human.organ-vessel-registration.1",
++                             "unexpected vessel-registration compiler");
++            sha256Text(requiredValue(root, @"identity_sha256"), "identity_sha256");
++            NSDictionary* source = (NSDictionary*)requiredValue(root, @"source");
++            requireCondition([source isKindOfClass:[NSDictionary class]], "source is not an object");
++            sha256Text(requiredValue(source, @"registration_sha256"), "registration_sha256");
++            sha256Text(requiredValue(source, @"source_archive_sha256"), "source_archive_sha256");
++            finiteMatrix4(requiredValue(source, @"global_source_mm_to_myosim_world_m"), "world transform");
++
++            NSDictionary* qualification = (NSDictionary*)requiredValue(root, @"qualification");
++            requireCondition([qualification isKindOfClass:[NSDictionary class]], "qualification is not an object");
++            requireCondition(booleanValue(requiredValue(qualification, @"source_membership_and_hashes"), "source membership") &&
++                             booleanValue(requiredValue(qualification, @"source_moments_recomputed"), "source moments") &&
++                             booleanValue(requiredValue(qualification, @"source_to_world_frame_registered"), "world frame"),
++                             "source registration qualification is incomplete");
++            requireCondition(!booleanValue(requiredValue(qualification, @"body_link_registration"), "body link") &&
++                             !booleanValue(requiredValue(qualification, @"tubular_vessel_field"), "tubular field") &&
++                             !booleanValue(requiredValue(qualification, @"blood_mass_owner"), "blood mass") &&
++                             !booleanValue(requiredValue(qualification, @"pressure_gradient_momentum_transfer"), "pressure momentum") &&
++                             !booleanValue(requiredValue(qualification, @"two_way_tissue_exchange"), "tissue exchange") &&
++                             !booleanValue(requiredValue(qualification, @"subject_calibration"), "subject calibration"),
++                             "unqualified vessel mechanics were promoted");
++
++            NSArray* rows = (NSArray*)requiredValue(root, @"bindings");
++            requireCondition([rows isKindOfClass:[NSArray class]] && rows.count == 6u,
++                             "vessel-registration must contain six bindings");
++            const std::array<const char*, 6u> members{
++                "FJ1932", "FJ3411", "FJ3413", "FJ3427", "FJ3441", "FJ3645"};
++            const std::array<const char*, 6u> regions{
++                "abdominal_aorta", "aortic_arch", "ascending_aorta", "descending_aorta",
++                "inferior_vena_cava", "superior_vena_cava"};
++            for (NSUInteger i = 0; i < rows.count; ++i) {
++                requireCondition([rows[i] isKindOfClass:[NSDictionary class]], "binding is not an object");
++                NSDictionary* row = (NSDictionary*)rows[i];
++                requireCondition(stringValue(requiredValue(row, @"member_id"), "member_id") == members[i],
++                                 "vessel source member order or identity changed");
++                requireCondition(stringValue(requiredValue(row, @"region_id"), "region_id") == regions[i],
++                                 "vessel region identity changed");
++                requireCondition(!stringValue(requiredValue(row, @"source_name"), "source_name").empty(),
++                                 "vessel source name is empty");
++                requireCondition(!stringValue(requiredValue(row, @"myosim_body"), "myosim_body").empty(),
++                                 "vessel MyoSim body is empty");
++                requireCondition(stringValue(requiredValue(row, @"hierarchy"), "hierarchy") == "part_of",
++                                 "vessel hierarchy changed");
++                sha256Text(requiredValue(row, @"source_member_sha256"), "source_member_sha256");
++                requireCondition(finiteNumber(requiredValue(row, @"source_surface_integral_volume_m3"),
++                                              "source surface volume") > 0.0 &&
++                                 finiteNumber(requiredValue(row, @"registered_world_surface_integral_volume_m3"),
++                                              "world surface volume") > 0.0,
++                                 "vessel source volume is not positive");
++                finiteVector(requiredValue(row, @"source_centroid_m"), "source centroid", 3u);
++                finiteVector(requiredValue(row, @"registered_world_centroid_m"), "world centroid", 3u);
++                finiteMatrix3(requiredValue(row, @"registered_world_central_second_volume_moment_m5"),
++                              "world central moment");
++                requireCondition(booleanValue(requiredValue(row, @"world_frame_registration"), "world registration") &&
++                                 !booleanValue(requiredValue(row, @"body_link_registration"), "body link") &&
++                                 !booleanValue(requiredValue(row, @"tubular_field_registered"), "tubular field") &&
++                                 !booleanValue(requiredValue(row, @"centreline_registered"), "centreline") &&
++                                 !booleanValue(requiredValue(row, @"pressure_gradient_momentum_transfer"), "pressure momentum") &&
++                                 !booleanValue(requiredValue(row, @"subject_calibration"), "subject calibration"),
++                                 "vessel mechanics boundary changed");
++                requireNull(requiredValue(row, @"cross_section_area_m2"), "cross_section_area_m2");
++                requireNull(requiredValue(row, @"material_density_kg_per_m3"), "material_density_kg_per_m3");
++                requireNull(requiredValue(row, @"mechanical_mass_owner"), "mechanical_mass_owner");
++            }
++            std::printf("numi_matter_vessel_registration=pass vessels=6 source_membership=pass source_moments=pass source_to_world=pass mechanics=unqualified calibration=unqualified\n");
++            return 0;
++        } catch (const std::exception& error) {
++            std::fprintf(stderr, "numi_matter_vessel_registration=fail error=\"%s\"\n", error.what());
++            return 1;
++        }
++    }
++}
+-- 
+2.50.1 (Apple Git-155)
+

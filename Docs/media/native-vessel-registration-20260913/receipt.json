@@ -1,0 +1,63 @@
+{
+  "schema": "numi.human.native-vessel-registration-evidence.v1",
+  "captured_at_utc": "2026-09-13",
+  "host": {
+    "ssh_alias": "macmini",
+    "device": "Apple M4 Pro",
+    "matter_abi": 38
+  },
+  "native": {
+    "branch": "human-blood-mass-20260913",
+    "revision": "c8222041ce04ee84d65cb4d1a52a6b39dd489427",
+    "worktree_status_at_capture": "clean",
+    "fixture": {
+      "path": "matter/tools/fixtures/human_organ_vessel_registration_20260913.json",
+      "bytes": 8819,
+      "sha256": "fb446cd380bac11aaa6ef8de2f011982da7a6aaaab981a4dcd2351583a69d9be"
+    },
+    "binary": {
+      "path": "/Users/n/MetalRobo-blood-mass-build-20260913/matter/numi-matter-vessel-registration-check",
+      "bytes": 71752,
+      "sha256": "e999433b55c6a4d58036665fcbff122ad581d09d0489fa6ce520acde393168a0"
+    }
+  },
+  "qualification": {
+    "vessels": 6,
+    "source_membership_and_hashes": true,
+    "source_moments": true,
+    "source_to_world_frame": true,
+    "body_link_mechanics": false,
+    "tubular_vessel_field": false,
+    "blood_mass_owner": false,
+    "pressure_gradient_momentum_transfer": false,
+    "two_way_tissue_exchange": false,
+    "material_density": false,
+    "subject_calibration": false,
+    "standing_or_walking": false
+  },
+  "validation": {
+    "focused_ctest": "8/8 passed",
+    "focused_ctest_log": {
+      "path": "focused-ctest.log",
+      "bytes": 1685,
+      "sha256": "53b53f0fd521b4e5fe48de4aa72cc7e12c234b17b8ede185ab88bd092dc93c03"
+    },
+    "stdout": {
+      "path": "vessel-registration.stdout",
+      "bytes": 157,
+      "sha256": "bae48c88e9bdf9349560bc1982dbfd1cbbc4e1bd269124101bed1b2a0c961d8c"
+    },
+    "stderr": {
+      "path": "vessel-registration.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "empty": true
+    },
+    "native_patch": {
+      "path": "native-current.patch",
+      "bytes": 44653,
+      "sha256": "6dce035d059cde96b7351255dca18d8a211069c9c5710e9f801f5a09fe1d642c"
+    }
+  },
+  "boundary": "Source-to-world vessel frame admission only; no anatomical tube, lumen, wall, blood, tissue-exchange, material, calibration, standing, or walking qualification."
+}
