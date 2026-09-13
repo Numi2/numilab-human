@@ -13,4 +13,11 @@ if [ -n "${PYTHONPATH:-}" ]; then
 else
     export PYTHONPATH="$repository_root/src"
 fi
-exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.cardiac_blood_mass_candidate "$@"
+python_command=${NUMI_HUMAN_PYTHON:-}
+if [ -z "$python_command" ] && [ -x /opt/homebrew/bin/python3.13 ]; then
+    python_command=/opt/homebrew/bin/python3.13
+fi
+if [ -z "$python_command" ]; then
+    python_command=python3
+fi
+exec "$python_command" -m numilab_human.cardiac_blood_mass_candidate "$@"
