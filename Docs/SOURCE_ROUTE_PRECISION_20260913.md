@@ -113,8 +113,10 @@ uses sixteen common observation times and admits only byte-identical authored
 state and solver inputs apart from the exact timestep and dependent identities.
 Maximum root-axis differences are 6.017e-7 m (100 versus 50 µs) and 3.907e-7 m
 (50 versus 25 µs). Maximum applied-force differences are 0.31317 N and
-0.38963 N respectively. Force differences still do not decrease with refinement;
-the 12.5 µs clock path and the complete convergence gate remain open. Twenty-one
+0.38963 N respectively. Force differences still do not decrease with
+refinement; the native v8/v2 12.5 µs bridge is now qualified, while the
+end-to-end Brain exact-clock path
+and the complete convergence gate remain open. Twenty-one
 trajectory and comparison negative tests pass against the retained records.
 
 ## Qualification boundary
@@ -124,7 +126,8 @@ and force-vector storage remain. Millard's separate route owner is outside
 this increment. Private constitutive evaluation at an authored timestep does
 not advance an accepted physical root or qualify loaded equilibrium.
 
-Full source-force consistency, the 12.5 µs transaction clock, sustained loaded
-anatomy, calibration and standing/walking retain their existing gates. The
+Full source-force consistency, the end-to-end Brain exact-clock transaction,
+sustained loaded anatomy, calibration and standing/walking retain their
+existing gates. The
 execution registry continues to distinguish engineering checks from source
 data, calibration and biological evidence.

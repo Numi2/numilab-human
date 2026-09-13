@@ -33,10 +33,11 @@ controls verify rejection before encoding changes owner bytes or callbacks.
 Compatibility is Matter ABI **34**, package **18**, snapshot archive **12** and
 accepted-proof manifest **12**. ABI 33 packages require recooking. `NHINIT2`
 preserves the version-1 byte representation and adds a version-2 exact
-nanosecond timestep plus the 48-byte root state. The current transaction,
-substep and Brain clock contracts still require integer microseconds:
-12,500 ns can be authored but is explicitly rejected by this runtime. A
-versioned end-to-end clock migration is required before the 12.5 µs trial.
+nanosecond timestep plus the 48-byte root state. The published native v8/v2 bridge now carries `12,500 ns` through runtime
+construction, HumanIO, and one prepared physical-root substep; the legacy v1
+root entry is rejected for an exact-clock runtime. The Brain Swift
+transaction/telemetry path remains integer-microsecond, so the end-to-end
+Brain-to-native exact-clock migration remains open.
 
 ## Physical execution evidence
 
@@ -116,8 +117,9 @@ The [common-grid comparison](media/accepted-state-precision-20260912/refinement-
 uses the same sixteen 100 µs observation times for both refinements. Maximum
 root-axis differences decrease from 6.811e-7 m to 4.383e-7 m, but maximum
 applied-force differences increase from 0.6884 N to 1.4346 N. This is an
-observation, not temporal convergence. Full source-route/force precision,
-the 12.5 µs clock path, registered tolerances and longer duration remain open.
+observation, not temporal convergence. Full source-route/force precision, the
+end-to-end Brain exact-clock path, registered tolerances and longer duration
+remain open.
 
 Quaternion composition, joint functions and trigonometry remain FP32.
 Source-force route, suffix, terminal and hood geometry need their own paired

@@ -84,5 +84,11 @@ with its hash-bound native log and JSON receipt. The post-ledger report is
 [Docs/media/gap-execution-20260913/report-with-native-fluid-momentum-v2.json](media/gap-execution-20260913/report-with-native-fluid-momentum-v2.json)
 (report SHA-256 `eca0a63c6ba0648637e80c1c1a08afcd4b5107a9f337ecea7fa01e0ad17ddc40`)
 and remains `integrated_qualification: not_assessed`.
+The post-exact-clock snapshot is retained at
+[Docs/media/gap-execution-20260913/report-with-native-exact-clock-20260913.json](media/gap-execution-20260913/report-with-native-exact-clock-20260913.json)
+(report SHA-256 `ea2f7a2ed73cfdf538addde4e2ee2190e386dd817107edc35d1dd45ac9289715`).
+It records the same 14 workstreams, 46 tasks and 95 mandatory targets; the
+new native exact-clock receipt is reflected in the ledger while
+`integrated_qualification` remains `not_assessed`.
 All snapshots have 14 workstreams, 46 tasks and 95 mandatory targets;
 integrated_qualification remains not_assessed.
