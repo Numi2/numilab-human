@@ -47,6 +47,14 @@ the historical 420-trial standing/recovery/walking evaluator remains regression
 tooling. Neither a shorter native trajectory nor metadata coverage closes these
 gates. Population tasks describe the broader roadmap, outside this selected release.
 
+The native behavior compiler and telemetry clock is now bound to the same
+canonical 12,500 ns constant as the ABI8/v2 exact-clock runtime. The physical
+M4 focused behavior and Human source selection passes 9/9; the retained
+[receipt](HUMAN_BEHAVIOR_CLOCK_20260913.md) records `clock=12500ns` while
+preserving `physical_steps=0` and unknown audit coverage. This removes a unit
+inconsistency in the engineering path without changing the force-convergence,
+anatomical, calibration, standing, or walking acceptance gates.
+
 Validation on 2026-09-13: twelve focused registry tests and fourteen existing
 target-coverage tests pass. The JSON Schema passes Draft 2020-12 schema checking
 and independently validates the shipped registry with `jsonschema` 4.25.1.
@@ -99,5 +107,11 @@ It still records 14 workstreams, 46 tasks and 95 mandatory targets with
 `integrated_qualification: not_assessed`; the accompanying native receipt is
 the focused 17/17 requalification at commit
 `e07026ab3ad497a869ee247cdfd1aa23ecc16ebb`.
+The next snapshot adds the aligned behavior clock receipt:
+[Docs/media/gap-execution-20260913/report-with-native-exact-clock-organ-blood-behavior-clock-20260913.json](media/gap-execution-20260913/report-with-native-exact-clock-organ-blood-behavior-clock-20260913.json)
+(file SHA-256 `fbb9954486a2cc781e615989b76d5561b130e1176fbcead84eb6c31fa2c41492`,
+report content SHA-256 `78b0a2c48e7be93ea1a87fdd0b8c01f0a7e5b36ff61eb1046d108e2b47468422`).
+It remains 14 workstreams, 46 tasks and 95 mandatory targets with
+`integrated_qualification: not_assessed`.
 All snapshots have 14 workstreams, 46 tasks and 95 mandatory targets;
 integrated_qualification remains not_assessed.

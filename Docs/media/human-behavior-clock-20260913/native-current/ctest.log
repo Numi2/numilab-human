@@ -1,0 +1,37 @@
+Test project /Users/n/MetalRobo-blood-mass-build-20260913
+    Start  10: numi_human_behavior_telemetry
+1/9 Test  #10: numi_human_behavior_telemetry ......................   Passed    0.75 sec
+    Start  11: numi_human_behavior_program
+2/9 Test  #11: numi_human_behavior_program ........................   Passed    0.30 sec
+    Start  70: numanx.integration.human_matter_exact_candidate
+3/9 Test  #70: numanx.integration.human_matter_exact_candidate ....   Passed    0.97 sec
+    Start  74: numanx.integration.fullbody_bridge_prepared_root
+4/9 Test  #74: numanx.integration.fullbody_bridge_prepared_root ...   Passed    1.40 sec
+    Start 113: numi_human_tissue_mass_partition
+5/9 Test #113: numi_human_tissue_mass_partition ...................   Passed    0.00 sec
+    Start 119: matter.compiler.vascular
+6/9 Test #119: matter.compiler.vascular ...........................   Passed    0.04 sec
+    Start 120: matter.metal.vascular
+7/9 Test #120: matter.metal.vascular ..............................   Passed    5.92 sec
+    Start 130: matter.compiler.vascular_human_binding
+8/9 Test #130: matter.compiler.vascular_human_binding .............   Passed    0.01 sec
+    Start 131: matter.metal.vascular_cavity
+9/9 Test #131: matter.metal.vascular_cavity .......................   Passed   10.33 sec
+
+100% tests passed out of 9
+
+Label Time Summary:
+behavior      =   1.05 sec*proc (2 tests)
+cavity        =  10.33 sec*proc (1 test)
+compiler      =   0.35 sec*proc (3 tests)
+fullbody      =   1.40 sec*proc (1 test)
+human         =  18.67 sec*proc (6 tests)
+matter        =  17.70 sec*proc (5 tests)
+metal         =  19.38 sec*proc (5 tests)
+numanx        =   2.37 sec*proc (2 tests)
+numi-human    =   1.05 sec*proc (2 tests)
+physics       =   2.37 sec*proc (2 tests)
+provenance    =   0.01 sec*proc (1 test)
+vascular      =  16.30 sec*proc (4 tests)
+
+Total Test time (real) =  19.74 sec

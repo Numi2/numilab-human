@@ -26,3 +26,13 @@ does not establish force or temporal convergence, two-way blood-mass momentum
 closure, anatomical organ/vessel/neural registration, activation-data
 calibration, unresolved material calibration, sustained standing, sustained
 walking, or full release.
+
+The behavior compiler and telemetry path is now aligned to the same canonical
+`12,500 ns` quantum at native commit
+`ac3b4af73c6ae8efef6f07d6e626e71b52e68c75`. The physical-M4 focused selection
+passed 9/9, including the behavior compiler/telemetry checks and the exact
+full-body candidate/root plus current organ/blood selection. The detailed
+[behavior-clock receipt](HUMAN_BEHAVIOR_CLOCK_20260913.md) retains the direct
+outputs and hashes. Its telemetry fixture still reports `physical_steps=0` and
+`audit_coverage=unknown`, so this alignment does not promote the standing or
+walking gates.
