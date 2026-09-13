@@ -23,8 +23,8 @@ evaluations, and a deterministic accepted-state trace:
 `Docs/media/shi-hose-cardiac-step-20260914/receipt.json`
 
 The exact-clock companion runs 512 attempted steps at `12,500 ns` over a
-`6.4 ms` source horizon, rejects attempt 37, accepts 511 steps, and preserves
-the same volume invariant. It is retained at
+`6.4 ms` attempted source horizon, rejects attempt 37, accepts 511 steps
+(`6.3875 ms` accepted time), and preserves the same volume invariant. It is retained at
 `Docs/media/shi-hose-cardiac-step-20260914/receipt-exact-clock.json`; the CLI
 requires `--require-clock-nanoseconds 12500` for this admission.
 
@@ -33,12 +33,17 @@ The source lowering remains bound to source manifest
 receipt schema is `HumanPack.shi-hose-step-receipt.v1`. The CLI is exposed as
 `numilab-human shi-hose-step` and `.numi/commands/human-shi-hose-step`.
 
-The same commit was checked in an isolated Mac mini worktree at
+The 100-step source selection was checked in an isolated Mac mini worktree at
 `2a7c2b548a3b8bc406f8330b4cf190be1b8ad4ec`. The source-specific unittest
 selection ran 86 tests with exit status 0, and the Mac mini CLI reproduced the
 same immutable receipt SHA. The retained command/log/receipt hashes are in
 `Docs/media/shi-hose-cardiac-step-20260914/macmini/manifest.json`; the dirty
 shared `/Users/n/numilab-human` checkout was not changed.
+
+The exact-clock selection was then checked at commit `f5eb3a2` in a second
+isolated Mac mini worktree. Its 25 source tests passed, the 512-attempt CLI
+accepted 511 steps at exactly 12,500 ns, and its receipt SHA is retained in
+`Docs/media/shi-hose-cardiac-step-20260914/macmini-exact-clock/manifest.json`.
 
 This is a source-hydraulic reproduction subgate. It does not create absolute
 vascular blood volume from storage displacement, species or dilution state,
