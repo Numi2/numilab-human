@@ -1,0 +1,75 @@
+{
+  "assessment": {
+    "deterministic_replay": true,
+    "exact_clock_12500ns": true,
+    "force_convergence": false,
+    "one_step_fp64_parity": true,
+    "reason": "Source position-limit reactions now have a native Metal owner and the exact 12.5 us/64-step transaction completes with bitwise replay. The limit owner lowers peak acceleration and velocity increment relative to the prior receipt, but compiled_stand_balanced remains false and the bounded 0.8 ms horizon is not sustained standing or walking qualification.",
+    "source_limit_dispatch": true,
+    "static_balance": false,
+    "sustained_standing": false
+  },
+  "binary": {
+    "device": "Apple M4 Pro",
+    "path": "/Users/n/MetalRobo-blood-mass-build-20260913/bin/metalrobo_numilab_human_myosim_visual_probe",
+    "sha256": "41cb491403220cfe33346427d292d4c5a02d9b866250649a829dbcf7225623e2"
+  },
+  "captured_at_utc": "2026-09-13",
+  "fixture": {
+    "activation": 1.0,
+    "adult_source": "one source-bound full-body fixture",
+    "common_duration_seconds": 0.0008,
+    "joint_equalities": "/Users/n/human-completion-20260907/input/myosim-fullbody-joint-equalities.nheq",
+    "position_limit_projection": "source-authored position limits projected after contact/equality passes; extra nv response vectors reserved",
+    "root_assistance": false,
+    "step_count": 64,
+    "support": "/Users/n/human-completion-20260907/input/myosim-fullbody-support-contact.nhcnt",
+    "support_contacts": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "tendon": "/Users/n/human-completion-20260907/input/numi-human-tendon-attachments.nhtendon",
+    "timestep_seconds": 1.25e-05
+  },
+  "metrics": {
+    "compiled_stand_active_limits": 28.0,
+    "compiled_stand_active_support_contacts": 6.0,
+    "compiled_stand_balanced": "false",
+    "compiled_stand_max_acceleration_residual": 3.02533696283,
+    "compiled_stand_max_equality_reaction": 1346.68209126,
+    "compiled_stand_max_limit_reaction": 1043.89057324,
+    "compiled_stand_max_root_acceleration_residual": 2.15730585182,
+    "compiled_stand_max_root_force_residual": 1.87160674159e-06,
+    "compiled_stand_normalized_residual_rms": 0.86077456182,
+    "compiled_stand_total_support_force_n": 952.864475166,
+    "muscle_step_max_configuration_delta": 4.84237643832e-05,
+    "muscle_step_max_velocity_delta": 0.120149672031,
+    "persistent_max_acceleration": 1715.86254883,
+    "persistent_max_penetration_m": 2.93606206014e-07,
+    "persistent_normal_impulse": 0.010605469346,
+    "stand_max_equality_position_error": 2.69152224064e-07,
+    "stand_max_equality_velocity_error": 0.000207279153983,
+    "timestep_seconds": 1.25e-05
+  },
+  "native_revision": "aeca9c737c706a13ac1a3719b0c1afe92796e3bd",
+  "runtime_worktree_status": "clean",
+  "schema": "numi.human.exact-stand-limit-projection.v1",
+  "validation": {
+    "native_ctest": "numanx.integration.(fullbody_vascular_admission|fullbody_bridge_prepared_root|fullbody_authored_world): 3/3 passed",
+    "stderr": {
+      "bytes": 0,
+      "path": "native.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stderr_empty": true,
+    "stdout": {
+      "bytes": 20504,
+      "path": "native.stdout",
+      "sha256": "67431342d66254e3168fbce7d056a0c58e33ab30c60dc3f396c782074923243d"
+    }
+  }
+}
