@@ -207,3 +207,16 @@ It records 14 workstreams, 46 tasks and 95 mandatory targets with
 `integrated_qualification: not_assessed`; the new atomic restore is a synthetic
 blood-owner subgate and leaves source-bound vessel mechanics, calibration and
 sustained behavior open.
+
+The [native force-parity audit](NATIVE_FORCE_PARITY_20260913.md) adds a
+source-bound CPU/Metal generalized-force gate to the persistent Human stand
+owner. On the physical M4 Pro it compares the full 416-muscle force path before
+the horizon advances; the maximum difference is `0.00644019908254 N`, below the
+source-defined tolerance, and the focused vascular selection remains `4/4`.
+This closes force-transfer parity only. The one-step trace still has
+`233.28062439 m/s²` peak acceleration, while the prior 512-step receipt still
+records temporal divergence, so force convergence, sustained standing,
+recovery, walking, anatomical supports/loading, activation calibration, blood
+mass transfer, unresolved material data, and subject calibration remain open.
+
+The refreshed [gap-execution snapshot with force parity](media/gap-execution-20260913/report-with-native-force-parity-20260913.json) has file SHA-256 `3b74337bce020dedc332dcf890eb9cf5a620f41d126fc71e7f215ae6ecc76886` and report SHA-256 `a99917a7ca399de4f7f23371edb8166c5c198d77c3a850c411a05bde713d023e`. It retains 14 workstreams, 46 tasks, and 95 mandatory targets with `integrated_qualification: not_assessed`.

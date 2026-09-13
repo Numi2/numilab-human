@@ -310,3 +310,13 @@ behavior, authenticate measurements, attest a freeze date, or select a measured
 subject. No complete single-participant anatomy/motion/force bundle has yet
 been admitted. Existing composite source anatomy is not relabeled as that person.
 Population personalization remains a separate roadmap goal outside this release.
+
+The [native force-parity audit](NATIVE_FORCE_PARITY_20260913.md) now gates the
+source CPU generalized muscle force against the Metal force path before a
+persistent stand step. The physical M4 Pro run passes the full-vector check at
+`0.00644019908254 N` maximum difference under the source tolerance and keeps
+bitwise one-step replay; the focused vascular selection is `4/4`. This is a
+bounded force-transfer closure. It does not establish temporal force
+convergence or sustained standing, recovery, walking, anatomical
+supports/loading, source activation calibration, two-way blood mass transfer,
+unresolved material data, or subject calibration.

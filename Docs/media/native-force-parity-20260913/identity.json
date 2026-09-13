@@ -1,0 +1,40 @@
+{
+  "artifacts": {
+    "ctest.log": "a06e838465cf84e12698617dad3b4338b312ef4b7089b90fec391cf958294122",
+    "front.png": "350fbeaf4a8d5e37111133b0e509d819364829b144f6fe750e6052d644dcaa4d",
+    "receipt.mrvpack": "6aa2d5e6615fe9a801b80e9a94fb34d612a8b1a46ded7f97bdc8581e369db396",
+    "stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.txt": "258c7ee62a2389cc9f61ac505186529efc8e99f210f7b95ac599b21bceeb98e2",
+    "visual.json": "814928116e063d423db66dd48aec7090ec669404c6174a95c0809d58dd9cb0db"
+  },
+  "binary": "/Users/n/MetalRobo-blood-mass-build-20260913/bin/metalrobo_numilab_human_myosim_visual_probe",
+  "binary_sha256": "6ee1257f295733d74bdfb810845729b3e420351ede9896eff960d2ec588b71dc",
+  "date": "2026-09-13",
+  "device": "Apple M4 Pro",
+  "host": "macmini",
+  "measured": {
+    "compiled_stand_balanced": true,
+    "compiled_stand_max_acceleration_residual": 0.0474679846966,
+    "compiled_stand_max_root_force_residual_n": 1.86146132819e-06,
+    "muscle_step_max_configuration_delta": 3.64500962746e-08,
+    "muscle_step_max_velocity_delta": 0.00291600776836,
+    "persistent_completed_steps": 1,
+    "persistent_max_acceleration": 233.28062439,
+    "source_dynamic_force_parity_gate": "max(0.05, 1e-4 * max_abs_compiled_generalized_force)",
+    "source_dynamic_force_parity_max_delta_n": 0.00644019908254,
+    "stand_deterministic_replay": "bitwise"
+  },
+  "native_checkout": "/Users/n/MetalRobo-blood-mass-20260913",
+  "native_commit": "7c918e753f656cf42c6f9cab1640a7c7869453db",
+  "native_worktree_status": "clean after commit",
+  "probe": "one source-bound full-body NHTENDON3 run, exact timestep 0.0000125 s, step_count=1, activation=1.0, explicit authored support stance, persistent Metal stand, deterministic replay",
+  "qualification": {
+    "anatomical_tissue_material_blood_calibration": "open",
+    "focused_ctest": "4/4 passed: matter.compiler.vascular, matter.metal.vascular, matter.compiler.vascular_human_binding, matter.metal.vascular_cavity",
+    "source_dynamic_force_parity": "pass",
+    "sustained_standing": "open; one-step only in this audit, prior 512-step trace remains dynamically unstable"
+  },
+  "schema": "numi.human.native-force-parity-identity.v1",
+  "source_file": "apps/numilab_human_myosim_visual_probe.mm",
+  "source_sha256": "34118b0d01df6d5f5f1bac306d84d71ab19eeb1103b54c9d7cf77c153c1e3b73"
+}
