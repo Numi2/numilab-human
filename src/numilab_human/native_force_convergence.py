@@ -12,6 +12,7 @@ from .model import ImportError, sha256, write_json
 
 SCHEMA = "numi.human.native-force-convergence-audit.v1"
 STANDING_STATE_SCHEMA = "numi.human.standing-initial-state-audit.v1"
+FORCE_LEDGER_SCHEMA = "numi.human.generalized-force-ledger.v1"
 
 
 def _native_metrics(path: Path) -> dict[str, str]:
@@ -144,9 +145,37 @@ def _standing_state(path: Path | None) -> dict[str, Any] | None:
         "path": str(resolved),
         "sha256": sha256(resolved),
         "candidate": candidate,
+        "equilibrium_state_transport": qualification.get("equilibrium_state_transport") is True,
         "uniform_maximal_activation": uniform_maximal,
         "activation_nonzero_count": state.get("activation_nonzero_count"),
         "initial_state_sha256": (receipt.get("initial_state") or {}).get("sha256"),
+    }
+
+
+def _force_ledger(path: Path | None) -> dict[str, Any] | None:
+    if path is None:
+        return None
+    resolved = path.resolve()
+    try:
+        receipt = json.loads(resolved.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ImportError(f"cannot read generalized-force ledger {resolved}: {error}") from error
+    if receipt.get("schema") != FORCE_LEDGER_SCHEMA:
+        raise ImportError("generalized-force ledger schema mismatch")
+    qualification = receipt.get("qualification")
+    coverage = receipt.get("coverage")
+    residual = receipt.get("residual")
+    if not all(isinstance(value, dict) for value in (qualification, coverage, residual)):
+        raise ImportError("generalized-force ledger is missing coverage/residual/qualification")
+    complete = qualification.get("full_generalized_force_ledger") is True
+    return {
+        "path": str(resolved),
+        "sha256": sha256(resolved),
+        "complete": complete,
+        "full_force_coverage": coverage.get("full_force_coverage") is True,
+        "maximum_assembly_error": residual.get("maximum_assembly_error"),
+        "maximum_closure_ratio": residual.get("maximum_closure_ratio"),
+        "worst_coordinates": receipt.get("worst_coordinates", [])[:6],
     }
 
 
@@ -192,15 +221,27 @@ def audit(arguments: argparse.Namespace) -> int:
     if arguments.require_standing_state_receipt and not standing_state_admissible:
         reasons.append("the prepared standing state is not admissible")
 
+    force_ledger = _force_ledger(arguments.force_ledger_receipt)
+    force_ledger_admissible = bool(force_ledger and force_ledger["complete"])
+    if arguments.require_force_ledger_receipt and force_ledger is None:
+        reasons.append("a complete generalized-force ledger is required")
+    if arguments.require_force_ledger_receipt and not force_ledger_admissible:
+        reasons.append("the generalized-force ledger is incomplete or not force-closed")
+
     exact_eligible = (
         arguments.body_count <= arguments.exact_body_limit
         and arguments.dof_count <= arguments.exact_dof_limit
         and arguments.q_count <= arguments.exact_q_limit
     )
-    force_convergence = clock_exact and complete and static_balance and temporal
-    standing_force_convergence = force_convergence and standing_state_admissible
+    mechanical_force_convergence = clock_exact and complete and static_balance and temporal
+    force_convergence = mechanical_force_convergence
     if arguments.require_standing_state_receipt:
         force_convergence = force_convergence and standing_state_admissible
+    if arguments.require_force_ledger_receipt:
+        force_convergence = force_convergence and force_ledger_admissible
+    standing_force_convergence = (
+        mechanical_force_convergence and standing_state_admissible and force_ledger_admissible
+    )
 
     receipt = {
         "schema": SCHEMA,
@@ -219,6 +260,7 @@ def audit(arguments: argparse.Namespace) -> int:
         "horizon": metrics,
         "replay": replay,
         "standing_state": standing_state,
+        "force_ledger": force_ledger,
         "exact_dense_stage": {
             "eligible": exact_eligible,
             "body_limit": arguments.exact_body_limit,
@@ -231,7 +273,9 @@ def audit(arguments: argparse.Namespace) -> int:
             "horizon_complete": complete,
             "static_balance": static_balance,
             "temporal_convergence": temporal,
+            "mechanical_force_convergence": mechanical_force_convergence,
             "standing_state_admissible": standing_state_admissible,
+            "force_ledger_admissible": force_ledger_admissible,
             "force_convergence": force_convergence,
             "standing_force_convergence": standing_force_convergence,
             # A converged force horizon is necessary for standing, but it is
@@ -249,6 +293,7 @@ def audit(arguments: argparse.Namespace) -> int:
         "gate": {
             "thresholds": thresholds,
             "require_standing_state_receipt": arguments.require_standing_state_receipt,
+            "require_force_ledger_receipt": arguments.require_force_ledger_receipt,
             "reasons": reasons,
         },
         "artifacts": {
@@ -278,6 +323,8 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--build-log", type=Path)
     parser.add_argument("--standing-state-receipt", type=Path)
     parser.add_argument("--require-standing-state-receipt", action="store_true")
+    parser.add_argument("--force-ledger-receipt", type=Path)
+    parser.add_argument("--require-force-ledger-receipt", action="store_true")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--source-commit", required=True)
     parser.add_argument("--binary-sha256", required=True)
