@@ -1,0 +1,10 @@
+{
+  "schema": "numi.human.bodyparts3d-myosim-cardiac-cavity-map.v1",
+  "description": "Exact BodyParts3D cardiac cavity members used by the CVSim bridge, bound to the named MyoSim torso body for frame bookkeeping only. This map does not assign a physical cavity volume, blood mass, wall material, or pressure owner.",
+  "entries": [
+    {"concept_id": "FMA11359", "source_name": "cavity of right atrium", "member_id": "FJ2424", "hierarchy": "part_of", "layer": "cardiac_cavity", "myosim_body": "torso"},
+    {"concept_id": "FMA9291", "source_name": "cavity of right ventricle", "member_id": "FJ2423", "hierarchy": "part_of", "layer": "cardiac_cavity", "myosim_body": "torso"},
+    {"concept_id": "FMA9465", "source_name": "cavity of left atrium", "member_id": "FJ2425", "hierarchy": "part_of", "layer": "cardiac_cavity", "myosim_body": "torso"},
+    {"concept_id": "FMA9466", "source_name": "cavity of left ventricle", "member_id": "FJ2422", "hierarchy": "part_of", "layer": "cardiac_cavity", "myosim_body": "torso"}
+  ]
+}

@@ -136,6 +136,18 @@ def _validate_rigid(manifest_path: Path, manifest: dict[str, Any]) -> tuple[byte
     }
 
 
+def load_body_catalog(human_manifest: Path) -> dict[str, Any]:
+    """Load the validated source/core body catalog from a Human manifest.
+
+    The returned catalog is frame metadata only.  It contains no mass or
+    tissue mechanics admission.
+    """
+    human_manifest = Path(human_manifest)
+    manifest = read_json(human_manifest)
+    _, info = _validate_rigid(human_manifest, manifest)
+    return info
+
+
 def compile_body_links(*, registration: Path, human_manifest: Path) -> dict[str, Any]:
     registration = Path(registration)
     human_manifest = Path(human_manifest)

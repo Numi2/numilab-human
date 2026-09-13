@@ -207,6 +207,12 @@ This closes body-frame bookkeeping only; body-link mechanics, vessel tube and
 lumen data, direction/area, blood mass ownership, pressure reaction, tissue
 exchange, material/density resolution, and calibration remain open.
 
+The follow-up [cardiac cavity body-link receipt](ORGAN_CARDIAC_CAVITY_BODY_LINK_20260913.md)
+binds the four bridge members to the exact MyoSim torso source/core body
+(`source_body_id=9`, `core_body_index=20`). The cavity domains remain
+non-disjoint, and physical cavity volume, blood mass, pressure coupling,
+material, tissue exchange, and calibration remain unqualified.
+
 The current ABI39 blood-momentum restore snapshot is
 [`Docs/media/gap-execution-20260913/report-blood-momentum-restore-current-20260913.json`](media/gap-execution-20260913/report-blood-momentum-restore-current-20260913.json)
 (file SHA-256 `00803c8e93b18737839e71b8ae835002dfd09729fdaeca849bca9310cb36b74b`,
@@ -239,8 +245,8 @@ standing.
 
 The refreshed registry snapshot with the exact vessel body links is retained
 at [`Docs/media/gap-execution-20260913/report-with-native-body-links-20260913.json`](media/gap-execution-20260913/report-with-native-body-links-20260913.json).
-Its file SHA-256 is `42ea243ad5ed4a198bc223a9dd318a6f971d743017c7af2ecfddc4df6206ccc1`
-and its report SHA-256 is `20eb448afd814efd2736e77efb1274d143f653a3bb30b4feb3e2dbb5603ecd04`.
+Its file SHA-256 is `3a04f3daf467cc2440ea07c33fefb96480d5419f07947ed502f0f0a893905241`
+and its report SHA-256 is `8d93cd0af131ae6d0962a37a2f217134e16b9a52b90b456f5d8528ad4e9ae65f`.
 It retains 14 workstreams, 46 tasks, 95 mandatory targets, and
 `integrated_qualification: not_assessed`; the body-link receipt closes named
 source/core frame bookkeeping only.

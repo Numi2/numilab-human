@@ -38,6 +38,11 @@ therefore closes source identity and comparison bookkeeping while preserving
 the anatomical and physiological gates that still require registration,
 materials, loading, and held-out calibration.
 
+The separate [cardiac cavity body-link receipt](ORGAN_CARDIAC_CAVITY_BODY_LINK_20260913.md)
+binds these four source members to the exact MyoSim torso source/core frame.
+It is frame bookkeeping only and leaves physical-volume, blood-mass, material,
+pressure, tissue-exchange, and disjoint-domain ownership unresolved.
+
 As a native regression check after authoring the bridge, the existing ABI38
 owner was rerun on the physical Apple M4 Pro from isolated branch
 `human-blood-mass-20260913` at `f89991dc55c591fb6dc5ca5388de4b9034592c5a`.
