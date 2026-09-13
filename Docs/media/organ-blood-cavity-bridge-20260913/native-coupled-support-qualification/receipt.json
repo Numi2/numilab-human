@@ -1,0 +1,47 @@
+{
+  "schema": "numi.human.coupled-support-qualification.v1",
+  "date": "2026-09-13",
+  "native": {
+    "repository": "/Users/n/MetalRobo-blood-mass-20260913",
+    "branch": "human-blood-mass-20260913",
+    "commit": "cfef55a8199c2167fbe9beb04417a47db705db5d",
+    "tree": "a842948af74698501546c46de98eb7b36277e528",
+    "device": "Apple M4 Pro",
+    "memory_gb": 24,
+    "probe_sha256": "4327e14d511b0d36412c05193188bc3c1f085bc3fa07f563d7459e68d0e89f0",
+    "metalrobo_metallib_sha256": "676533d07e30d6de2f9f594477bf8a4b29e095c26ba4d180226359afd74feaf3"
+  },
+  "fixture": {
+    "bodies": 157,
+    "q": 129,
+    "v": 128,
+    "muscles": 416,
+    "matter_objects": 3,
+    "fem_nodes": 12,
+    "clock_nanoseconds": 12500,
+    "proximal_pressure_fixture": 0.0008,
+    "scope": "synthetic vascular owner attached to the fullbody fixture; no anatomical or subject-specific claim"
+  },
+  "result": {
+    "focused_ctest": "pass 3/3",
+    "exact_clock_coupled_support": "pass",
+    "support_receptor_rows": "10/10 valid after solver-owned aggregation",
+    "negative_impulse_case": "fail-closed as expected at pressure 0.001",
+    "replay": "bitwise package replay retained by admission test"
+  },
+  "not_qualified": [
+    "anatomical registration and organ/vessel geometry",
+    "prescribed anatomical supports and loading/unloading",
+    "force convergence across a calibrated pressure range",
+    "activation calibration and held-out muscle dynamics",
+    "unresolved material/density/boundary data",
+    "subject calibration and physiological validation",
+    "two-way blood/tissue exchange",
+    "sustained standing, recovery, and walking"
+  ],
+  "evidence": [
+    "coupled-support-exact-12500ns.log",
+    "negative-support-fail-closed.log",
+    "focused-ctest.log"
+  ]
+}
