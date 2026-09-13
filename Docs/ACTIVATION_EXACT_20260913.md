@@ -15,8 +15,18 @@ prepared native Human trajectory with 16 roots per scenario, a `100 us` step,
 three tiny pelvis samples and is explicitly not anatomical tissue or sustained
 behavior qualification.
 
+The follow-up common-grid runs at `100/50/25 us` also pass their bounded
+trajectory/replay checks. Activation differences decrease from
+`6.3240528e-05` to `3.0636787e-05`, while maximum applied-force differences
+increase from `0.3154526 N` to `0.3554077 N`. The force result is retained as a
+failed convergence observation: the exact activation integrator is not the
+remaining source-force convergence owner.
+
 Evidence: [source probe](media/activation-exact-20260913/native/source-probe.log),
 [prepared trajectory](media/activation-exact-20260913/native/prepared-trajectory-100us.log.gz),
+[50 us trajectory](media/activation-exact-20260913/native/prepared-trajectory-50us.log.gz),
+[25 us trajectory](media/activation-exact-20260913/native/prepared-trajectory-25us.log.gz),
+[refinement observations](media/activation-exact-20260913/native/refinement-observations.json),
 [native manifest](media/activation-exact-20260913/native/manifest.txt),
 [SHA-256 manifest](media/activation-exact-20260913/native/SHA256SUMS),
 [prepared package](media/activation-exact-20260913/native/prepared-100000ns.nmatterpack),

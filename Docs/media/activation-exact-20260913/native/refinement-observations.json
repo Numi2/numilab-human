@@ -1,0 +1,136 @@
+{
+  "100us_vs_50us": {
+    "activation": {
+      "common_times": 16,
+      "max_abs": 6.324052810668945e-05,
+      "rms_abs": 9.977717737585551e-06
+    },
+    "applied_force": {
+      "common_times": 16,
+      "max_abs": 0.31545257568359375,
+      "rms_abs": 0.026087147358213967
+    },
+    "fiber_length": {
+      "common_times": 16,
+      "max_abs": 8.642673492431641e-07,
+      "rms_abs": 9.007950755074968e-08
+    },
+    "fiber_residual": {
+      "common_times": 16,
+      "max_abs": 3.62517312169075e-07,
+      "rms_abs": 4.635373209859113e-08
+    },
+    "fiber_velocity": {
+      "common_times": 16,
+      "max_abs": 0.0021129464876139536,
+      "rms_abs": 0.00019199461309689505
+    },
+    "path_length": {
+      "common_times": 16,
+      "max_abs": 2.086162567138672e-07,
+      "rms_abs": 3.307977781307583e-08
+    },
+    "path_velocity": {
+      "common_times": 16,
+      "max_abs": 0.0007663647993467748,
+      "rms_abs": 7.061170113405215e-05
+    },
+    "qv": {
+      "common_times": 16,
+      "max_abs": 0.01949126151157543,
+      "rms_abs": 0.0012273297247325217
+    },
+    "tendon_tension": {
+      "common_times": 16,
+      "max_abs": 0.31545257568359375,
+      "rms_abs": 0.026087147358213967
+    }
+  },
+  "50us_vs_25us": {
+    "activation": {
+      "common_times": 32,
+      "max_abs": 3.063678741455078e-05,
+      "rms_abs": 4.6569353529031385e-06
+    },
+    "applied_force": {
+      "common_times": 32,
+      "max_abs": 0.35540771484375,
+      "rms_abs": 0.019142909789132894
+    },
+    "fiber_length": {
+      "common_times": 32,
+      "max_abs": 5.960464477539062e-07,
+      "rms_abs": 5.176463472022049e-08
+    },
+    "fiber_residual": {
+      "common_times": 32,
+      "max_abs": 7.12854671292007e-07,
+      "rms_abs": 4.319236862114784e-08
+    },
+    "fiber_velocity": {
+      "common_times": 32,
+      "max_abs": 0.002568633120972663,
+      "rms_abs": 0.0001543530332876589
+    },
+    "path_length": {
+      "common_times": 32,
+      "max_abs": 3.203749656677246e-07,
+      "rms_abs": 2.9445620331856606e-08
+    },
+    "path_velocity": {
+      "common_times": 32,
+      "max_abs": 0.0018405390437692404,
+      "rms_abs": 0.0001271361368163066
+    },
+    "qv": {
+      "common_times": 32,
+      "max_abs": 0.03356826491653919,
+      "rms_abs": 0.0016459466856243773
+    },
+    "tendon_tension": {
+      "common_times": 32,
+      "max_abs": 0.35540771484375,
+      "rms_abs": 0.019142909789132894
+    }
+  },
+  "activation_difference_decreases": true,
+  "duration_microseconds": 1600,
+  "force_difference_decreases": false,
+  "native_tree": "f02914ce9634ce94cd0e9648466cb0b499770d9b",
+  "observed_conclusion": "Activation differences halve, but applied-force differences increase from 0.31545257568359375 N to 0.35540771484375 N; full source-force convergence remains open.",
+  "package_identity": {
+    "25": {
+      "composed_human_source_fp": "d49b4ba3d53a89d1",
+      "human_source_fp": "f0943712c830fe4e",
+      "initial_state_fp": "a1d46afd2ad3da6b",
+      "schema": "numi.human.prepared-stance-fixture.v1",
+      "scope": "three tiny pelvis samples; no anatomical tissue or sustained behavior qualification",
+      "world_fp": "619e6b341c831f71"
+    },
+    "50": {
+      "composed_human_source_fp": "d49b4ba3d53a89d1",
+      "human_source_fp": "f0943712c830fe4e",
+      "initial_state_fp": "23e5540d2e115db2",
+      "schema": "numi.human.prepared-stance-fixture.v1",
+      "scope": "three tiny pelvis samples; no anatomical tissue or sustained behavior qualification",
+      "world_fp": "ddf6d40c34f4aef4"
+    }
+  },
+  "raw_log_sha256": {
+    "100": "e03df1dafae5b39372fa08fd30709c61d6576789f2f8a6d3874d6da6224804c2",
+    "25": "2172c4ae9bf1a258f7aaf2c6871f5371ef4793712c2e28852ff7d0ff4820f55d",
+    "50": "7eee9676f4270708df55725f7c4f41b0b2c7935c78ef18a42147afc176009361"
+  },
+  "scenarios": [
+    "zero",
+    "replay"
+  ],
+  "schema": "NumiHuman.activation-refinement-observation.v1",
+  "scope": "bounded prepared three-tiny-pelvis fixture; not anatomical tissue, loaded standing, walking, or calibration",
+  "source_revision": "aecbdcf09f962db149709ee602142d73128335b6",
+  "trajectory_passes": {
+    "100us": true,
+    "25us": true,
+    "50us": true
+  }
+}
