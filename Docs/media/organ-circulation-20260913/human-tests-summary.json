@@ -1,0 +1,12 @@
+{
+  "capture": "current Human source requalification",
+  "runs": [
+    {
+      "command": "PYENV_VERSION=3.11.7 PYTHONPATH=src:.:tests python -m pytest -q tests/test_physiology.py tests/test_target_coverage.py tests/test_organ_circulation_evidence.py",
+      "seconds": 0.92,
+      "status": "OK",
+      "tests": 60,
+      "subtests": 36
+    }
+  ]
+}

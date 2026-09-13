@@ -1,0 +1,170 @@
+UpdateCTestConfiguration  from :/Users/n/MetalRobo-organ-circulation-build-20260913/DartConfiguration.tcl
+Parse Config file:/Users/n/MetalRobo-organ-circulation-build-20260913/DartConfiguration.tcl
+Test project /Users/n/MetalRobo-organ-circulation-build-20260913
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 13
+      Start  13: matter.runtime.snapshot_archive
+
+Test command: /Users/n/MetalRobo-organ-circulation-build-20260913/bin/metalrobo_matter_snapshot_archive_probe "/Users/n/MetalRobo-organ-circulation-build-20260913/matter-snapshot-archive-probe.bin"
+Working Directory: /Users/n/MetalRobo-organ-circulation-build-20260913
+Test timeout computed to be: 30
+matter_snapshot_archive=ok version=5 content_hash=0x461c2b30b5928d9d payload_bytes=3536 corrupt_payload_rejected=yes
+ 1/11 Test  #13: matter.runtime.snapshot_archive ..................   Passed    0.00 sec
+test 17
+      Start  17: matter.physics.monolithic_multiphysics
+
+Test command: /Users/n/MetalRobo-organ-circulation-build-20260913/bin/metalrobo_matter_physics_probe "--multiphysics"
+Working Directory: /Users/n/MetalRobo-organ-circulation-build-20260913
+Test timeout computed to be: 180
+{"schema":"numi.matter.physics-probe.v2","representation":"monolithic_multiphysics","temperature_min":300,"temperature_max":354.956,"electric_max":1,"activation_max":0.0427246,"kkt_residual":3.00321e-05,"relative_correction":0,"volume_residual":2.07567e-07,"pressure_residual":4.15134e-07,"transport_residual":1.93967e-06}
+ 2/11 Test  #17: matter.physics.monolithic_multiphysics ...........   Passed    0.09 sec
+test 24
+      Start  24: matter.runtime.production_transaction_rollback
+
+Test command: /Users/n/MetalRobo-organ-circulation-build-20260913/bin/metalrobo_matter_physics_probe "--production-rollback"
+Working Directory: /Users/n/MetalRobo-organ-circulation-build-20260913
+Test timeout computed to be: 180
+{"schema":"numi.matter.physics-probe.v2","representation":"production_transaction","rollback":true,"active_tetrahedra":1,"learned_revision":0}
+ 3/11 Test  #24: matter.runtime.production_transaction_rollback ...   Passed    0.04 sec
+test 25
+      Start  25: matter.physics.stateful_mpm
+
+Test command: /Users/n/MetalRobo-organ-circulation-build-20260913/bin/metalrobo_matter_physics_probe "--stateful-mpm"
+Working Directory: /Users/n/MetalRobo-organ-circulation-build-20260913
+Test timeout computed to be: 180
+{"schema":"numi.matter.stateful-runtime.v1","representation":"mpm","state_stride":2,"maximum_damage":0,"maximum_accumulated_strain":0.00177208,"rollback_exact":true,"mismatched_program_rejected":true,"archive_restore_exact":true,"explicit_restore_exact":true,"continuation_exact":true}
+ 4/11 Test  #25: matter.physics.stateful_mpm ......................   Passed    1.92 sec
+test 26
+      Start  26: matter.physics.stateful_fem
+
+Test command: /Users/n/MetalRobo-organ-circulation-build-20260913/bin/metalrobo_matter_physics_probe "--stateful-fem"
+Working Directory: /Users/n/MetalRobo-organ-circulation-build-20260913
+Test timeout computed to be: 180
+{"schema":"numi.matter.stateful-runtime.v1","representation":"fem","state_stride":2,"maximum_damage":0,"maximum_accumulated_strain":0.00529575,"rollback_exact":true,"mismatched_program_rejected":true,"archive_restore_exact":true,"explicit_restore_exact":true,"continuation_exact":true}
+ 5/11 Test  #26: matter.physics.stateful_fem ......................   Passed    0.85 sec
+test 62
+      Start  62: numanx.integration.matter_accepted_state_2pc
+
+Test command: /Users/n/MetalRobo-organ-circulation-build-20260913/bin/metalrobo_numanx_matter_accepted_state_proof_probe
+Working Directory: /Users/n/MetalRobo-organ-circulation-build-20260913
+Test timeout computed to be: 180
+numanx_matter_accepted_state_proof_probe=pass
+device=Apple_Metal
+real_runtime_prepare_proof_apply_publication=pass
+accepted_rigid_and_matter_content_mutation=pass
+vascular_content_mutation=pass
+human_content_mutation=pass
+chunk_tree_cpu_parity=pass
+byte_replay=pass
+borrowed_interval_aliases=fail_closed
+pending=terminal_no_touch
+stale_slot_generation=fail_closed
+owner_abi4_global_control_step=bound
+prepared_disposition_identity=pass
+abi4_proposal_ack_apply_accept_reject=pass
+terminal_outcome_and_facts=pending_no_touch
+explicit_restore_outcome_and_facts=rejected
+accepted_pending_publication=blocked_until_exact_fence
+accepted_pending_snapshot_and_encode=blocked
+publication_facts_fnv_binding=pass
+fabricated_publication_fence=terminal_no_touch
+aborted_uncommitted_apply_retry=pass
+completed_slot_reuse=pass
+identification_reset_adaptive=unsupported_fail_closed
+multi_substep=unsupported_fail_closed
+runtime_resident_bytes=407568
+proof_resident_bytes=288
+ 6/11 Test  #62: numanx.integration.matter_accepted_state_2pc .....   Passed    0.44 sec
+test 104
+      Start 104: matter.compiler.stateful_roundtrip
+
+Test command: /Users/n/MetalRobo-organ-circulation-build-20260913/matter/numi-matter-stateful-check
+Working Directory: /Users/n/MetalRobo-organ-circulation-build-20260913/matter
+Test timeout computed to be: 60
+{"schema":"numi.matter.stateful-compiler.v1","fingerprint":4555899631085046114,"state_stride":2,"particles":2,"tetrahedra":1}
+ 7/11 Test #104: matter.compiler.stateful_roundtrip ...............   Passed    0.01 sec
+test 107
+      Start 107: matter.compiler.vascular
+
+Test command: /Users/n/MetalRobo-organ-circulation-build-20260913/matter/numi-matter-vascular-compiler-check
+Working Directory: /Users/n/MetalRobo-organ-circulation-build-20260913/matter
+Test timeout computed to be: 60
+vascular_compiler=pass boundary=source_cooking_package_validation_only laws=passive_compliance_resistance_inertance_transport_exchange canonical_order=true semantic_rejection=true provenance_bound=true
+ 8/11 Test #107: matter.compiler.vascular .........................   Passed    0.00 sec
+test 108
+      Start 108: matter.metal.vascular
+
+Test command: /Users/n/MetalRobo-organ-circulation-build-20260913/matter/numi-matter-vascular-check
+Working Directory: /Users/n/MetalRobo-organ-circulation-build-20260913/matter
+Test timeout computed to be: 60
+vascular_case=resistive_exchange result=pass accepted_steps=16 environments=2 fp64_normalized_max=1.535277601e-07 relative_conservation_max=3.628520057e-08 replay=bitwise isolated_rollback=pass invalid_restore=denied isolated_reset=pass fem_region=none
+vascular_case=reverse_flow result=pass accepted_steps=16 environments=2 fp64_normalized_max=1.626981574e-07 relative_conservation_max=2.524757247e-09 replay=bitwise isolated_rollback=pass invalid_restore=denied isolated_reset=pass fem_region=none
+vascular_case=inertial_flow result=pass accepted_steps=16 environments=2 fp64_normalized_max=2.993021556e-07 relative_conservation_max=8.31569194e-08 replay=bitwise isolated_rollback=pass invalid_restore=denied isolated_reset=pass fem_region=none
+vascular_case=fem_region result=pass accepted_steps=16 environments=2 fp64_normalized_max=1.535277601e-07 relative_conservation_max=3.628520057e-08 replay=bitwise isolated_rollback=pass invalid_restore=denied isolated_reset=pass fem_region=bound_identity_only
+vascular_branched=pass compartments=3 edges=3 species=2 tissues=2 exchanges=3 relative_conservation_max=6.072223191e-08 replay=bitwise
+vascular_refinement=pass equal_duration_s=0.16 errors_m3=4.54144036e-09,2.296729443e-09,1.15518129e-09
+vascular_native_qualification=pass runtime_input=nmatterpack biological_calibration=unqualified
+ 9/11 Test #108: matter.metal.vascular ............................   Passed    4.70 sec
+test 109
+      Start 109: matter.metal.human_physiology_payload
+
+Test command: /Users/n/MetalRobo-organ-circulation-build-20260913/matter/numi-matter-vascular-check "--human-input" "/Users/n/MetalRobo-organ-circulation-20260913/matter/tools/fixtures/human_physiology.native.v1.json"
+Working Directory: /Users/n/MetalRobo-organ-circulation-build-20260913/matter
+Test timeout computed to be: 60
+vascular_case=human_compiled_fixture result=pass accepted_steps=16 environments=2 fp64_normalized_max=1.535277601e-07 relative_conservation_max=3.628520057e-08 replay=bitwise isolated_rollback=pass invalid_restore=denied isolated_reset=pass fem_region=none
+vascular_native_qualification=pass runtime_input=nmatterpack biological_calibration=unqualified
+10/11 Test #109: matter.metal.human_physiology_payload ............   Passed    0.38 sec
+test 110
+      Start 110: matter.compiler.human_physiology_admission
+
+Test command: /opt/homebrew/Frameworks/Python.framework/Versions/3.13/bin/python3.13 "/Users/n/MetalRobo-organ-circulation-20260913/matter/tools/physiology_input_check.py" "/Users/n/MetalRobo-organ-circulation-build-20260913/matter/numi-matter-physiologyc" "/Users/n/MetalRobo-organ-circulation-20260913/matter/tools/fixtures/human_physiology.native.v1.json"
+Working Directory: /Users/n/MetalRobo-organ-circulation-build-20260913/matter
+Test timeout computed to be: 60
+physiology_compile=pass compartments=2 species=1 tissue_reservoirs=1 native_fingerprint=0x71c8099817444d5a biological_qualification=unqualified
+native_input_rejected=duplicate_root
+native_input_rejected=duplicate_escaped_root
+native_input_rejected=duplicate_nested
+native_input_rejected=unsupported_law
+native_input_rejected=unknown_field
+native_input_rejected=boolean_scale
+native_input_rejected=duplicate_volume_owner
+native_input_rejected=missing_endpoint
+native_input_rejected=invalid_sha
+native_input_rejected=unsupported_qualification
+native_input_rejected=negative_amount
+native_input_rejected=unknown_species
+native_input_admission=pass positive_cases=1 negative_cases=12
+11/11 Test #110: matter.compiler.human_physiology_admission .......   Passed    0.06 sec
+
+The following tests passed:
+	matter.runtime.snapshot_archive
+	matter.physics.monolithic_multiphysics
+	matter.runtime.production_transaction_rollback
+	matter.physics.stateful_mpm
+	matter.physics.stateful_fem
+	numanx.integration.matter_accepted_state_2pc
+	matter.compiler.stateful_roundtrip
+	matter.compiler.vascular
+	matter.metal.vascular
+	matter.metal.human_physiology_payload
+	matter.compiler.human_physiology_admission
+
+100% tests passed out of 11
+
+Label Time Summary:
+checkpoint    =   0.00 sec*proc (1 test)
+compiler      =   0.08 sec*proc (3 tests)
+human         =   5.58 sec*proc (5 tests)
+matter        =   8.06 sec*proc (10 tests)
+metal         =   8.42 sec*proc (7 tests)
+numanx        =   0.44 sec*proc (1 test)
+physics       =   3.34 sec*proc (5 tests)
+stateful      =   0.01 sec*proc (1 test)
+vascular      =   5.14 sec*proc (4 tests)
+
+Total Test time (real) =   8.51 sec

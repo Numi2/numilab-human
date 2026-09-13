@@ -21,7 +21,7 @@ class OrganCirculationEvidenceTests(unittest.TestCase):
         self.addCleanup(temporary.cleanup)
         self.repository = Path(temporary.name) / "repository"
         self.bundle = self.repository / "evidence"
-        shutil.copytree(ROOT / "Docs/media/organ-circulation-20260912", self.bundle)
+        shutil.copytree(ROOT / "Docs/media/organ-circulation-20260913", self.bundle)
         self.receipt_path = self.bundle / "receipt.json"
         self.receipt = VERIFY.read_json(self.receipt_path)
         for relative in self.receipt["source_sha256"]:

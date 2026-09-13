@@ -1,0 +1,8 @@
+native_requalification=organ-circulation-20260913
+native_commit=1594f7aff5503aab96ab9de6e77b6d4f8fa4f1cd
+source_worktree=/Users/n/MetalRobo-organ-circulation-20260913
+build_directory=/Users/n/MetalRobo-organ-circulation-build-20260913
+device=Apple M4 Pro
+configure=/opt/homebrew/bin/cmake -S /Users/n/MetalRobo-organ-circulation-20260913 -B /Users/n/MetalRobo-organ-circulation-build-20260913 -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
+build=/opt/homebrew/bin/cmake --build /Users/n/MetalRobo-organ-circulation-build-20260913 --target metalrobo_matter_snapshot_archive_probe metalrobo_matter_physics_probe metalrobo_numanx_matter_accepted_state_proof_probe numi-matter-stateful-check numi-matter-vascular-compiler-check numi-matter-vascular-check numi-matter-physiologyc -j2
+status=pass

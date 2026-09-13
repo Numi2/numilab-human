@@ -52,3 +52,10 @@ target-coverage tests pass. The JSON Schema passes Draft 2020-12 schema checking
 and independently validates the shipped registry with `jsonschema` 4.25.1.
 These checks cover inventory integrity and report behavior, with no new
 anatomical, mechanical or behavioral qualification.
+
+The current no-coverage snapshot is retained at
+[`Docs/media/gap-execution-20260913/report.json`](media/gap-execution-20260913/report.json)
+(SHA-256 `f908872399641f79fe84a42053e382a970eac6457c415e121cbe2a833287ed9f`).
+It records 14 workstreams, 46 tasks, 95 mandatory targets, and
+`integrated_qualification: not_assessed`; it is a completion inventory rather
+than a qualification receipt.
