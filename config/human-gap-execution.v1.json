@@ -418,7 +418,7 @@
         {
           "id": "organs.data",
           "category": "source_data",
-          "action": "Resolve named volumetric/tubular organ, vessel and neural geometry, material and boundary inputs; the six-vessel source-to-MyoSim-world registration receipt is an intermediate provenance gate and does not admit tube mechanics.",
+          "action": "Resolve named volumetric/tubular organ, vessel and neural geometry, material and boundary inputs; the six-vessel source-to-MyoSim-world and exact source/core body-link receipts are intermediate provenance gates and do not admit tube mechanics.",
           "acceptance": [
             "The 18-region BodyParts3D source inventory resolves every declared member and retains its exact topology; missing registration, closure labels 11-17, inertial density, ventricular embedding and the retained RV discrepancy remain explicit."
           ],
@@ -489,6 +489,8 @@
         "Docs/COUPLED_SUPPORT_REQUALIFICATION_20260913.md",
         "Docs/CARDIAC_LOADING_CONTRACT_20260913.md",
         "Docs/NATIVE_ORGAN_BLOOD_BINDING_20260913.md",
+        "Docs/NATIVE_VESSEL_REGISTRATION_20260913.md",
+        "Docs/ORGAN_VESSEL_BODY_LINK_20260913.md",
         "Docs/COSTAL_TISSUE_REQUALIFICATION_20260913.md"
       ]
     },

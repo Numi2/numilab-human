@@ -239,8 +239,8 @@ standing.
 
 The refreshed registry snapshot with the exact vessel body links is retained
 at [`Docs/media/gap-execution-20260913/report-with-native-body-links-20260913.json`](media/gap-execution-20260913/report-with-native-body-links-20260913.json).
-Its file SHA-256 is `e83852991a2f71db306bb9543f796af272367c0724ea1fff7414652a3c80950b`
-and its report SHA-256 is `a04507b3df5fdc0ce58c45e3142cbd7a10a1b59ec61be6eb97afc7a56bca21a2`.
+Its file SHA-256 is `42ea243ad5ed4a198bc223a9dd318a6f971d743017c7af2ecfddc4df6206ccc1`
+and its report SHA-256 is `20eb448afd814efd2736e77efb1274d143f653a3bb30b4feb3e2dbb5603ecd04`.
 It retains 14 workstreams, 46 tasks, 95 mandatory targets, and
 `integrated_qualification: not_assessed`; the body-link receipt closes named
 source/core frame bookkeeping only.
