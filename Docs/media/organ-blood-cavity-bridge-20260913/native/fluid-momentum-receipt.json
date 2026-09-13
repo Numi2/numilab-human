@@ -1,0 +1,42 @@
+{
+  "boundary": "ABI39 proves an explicit finite-volume fluid-momentum reaction for one synthetic registered owner. It does not assign vessel geometry, subject density, tissue exchange, or Human behavioral qualification.",
+  "checks": {
+    "abi39_native_build": true,
+    "explicit_owner_requires_matching_inertial_edge": true,
+    "fluid_momentum_force_conservation": true,
+    "fluid_momentum_jacobian": true,
+    "bitwise_replay": true,
+    "human_source_pressure_momentum_transfer": false,
+    "human_source_two_way_transfer": false,
+    "anatomical_registration": false,
+    "subject_calibration": false,
+    "standing_walking": false
+  },
+  "native": {
+    "abi": 39,
+    "branch": "human-blood-mass-20260913",
+    "commit": "2c9ea8d09fb149f0ceff147b69fa97cff2e73199",
+    "device": "Apple M4 Pro",
+    "host": "n’s Mac mini",
+    "log_path": "Docs/media/organ-blood-cavity-bridge-20260913/native/fluid-momentum-20260913.log",
+    "log_sha256": "888ce9b1cdeb7e4825b37c0eba9381aef89b5dbe1e1c37db955c1e321a6eac95",
+    "os": "26.6"
+  },
+  "qualification": {
+    "pressure_area_m2": 0.00019999999494757503,
+    "pressure_force_per_environment_N": -0.019999999494757503,
+    "momentum_force_per_environment_N": -0.0021199999722831524,
+    "fixture_geometry": "synthetic",
+    "native_density_calibration": "unqualified",
+    "pressure_momentum": "synthetic_pass_source_unqualified",
+    "two_way_transfer": "unqualified",
+    "anatomical_registration": "unqualified",
+    "subject_calibration": "unqualified",
+    "standing_walking": "unqualified"
+  },
+  "schema": "HumanPack.fluid-momentum-transfer-receipt.v1",
+  "source_bridge": {
+    "file_sha256": "1838b1bca193af5f2e7965a29509f8d8673daa978fd7015cb0bd3099f7972d95",
+    "path": "Docs/media/organ-blood-cavity-bridge-20260913/bridge.json"
+  }
+}

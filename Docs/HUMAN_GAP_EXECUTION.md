@@ -78,5 +78,11 @@ The latest snapshot also records the native ABI38 pressure-gradient wall
 reaction path and its source-bound synthetic Jacobian receipt:
 [Docs/media/gap-execution-20260913/report-with-native-organ-binding-pressure-reaction.json](media/gap-execution-20260913/report-with-native-organ-binding-pressure-reaction.json)
 (report SHA-256 24ba96d13ebb908421985b796812014497ee1a1cf90a03a27740ba9abf291887).
+The ABI39 native fluid-momentum owner receipt is recorded at
+[Docs/FLUID_MOMENTUM_TRANSFER_20260913.md](FLUID_MOMENTUM_TRANSFER_20260913.md)
+with its hash-bound native log and JSON receipt. The post-ledger report is
+[Docs/media/gap-execution-20260913/report-with-native-fluid-momentum-v2.json](media/gap-execution-20260913/report-with-native-fluid-momentum-v2.json)
+(report SHA-256 `eca0a63c6ba0648637e80c1c1a08afcd4b5107a9f337ecea7fa01e0ad17ddc40`)
+and remains `integrated_qualification: not_assessed`.
 All snapshots have 14 workstreams, 46 tasks and 95 mandatory targets;
 integrated_qualification remains not_assessed.

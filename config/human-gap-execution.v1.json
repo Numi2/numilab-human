@@ -482,6 +482,7 @@
         "Docs/FEM_REFERENCE_CONFIGURATION_20260912.md",
         "Docs/BLOOD_MOMENT_CLOSURE_20260913.md",
         "Docs/PRESSURE_GRADIENT_REACTION_20260913.md",
+        "Docs/FLUID_MOMENTUM_TRANSFER_20260913.md",
         "Docs/ORGAN_BLOOD_CAVITY_BRIDGE_20260913.md",
         "Docs/CARDIAC_LOADING_CONTRACT_20260913.md",
         "Docs/NATIVE_ORGAN_BLOOD_BINDING_20260913.md",
@@ -546,7 +547,7 @@
         {
           "id": "blood.spatial_owner",
           "category": "engineering",
-          "action": "Add and qualify registered nonduplicated blood mass and momentum ownership distinct from hydraulic volume storage; the ABI38 initial-FEM-mass, dynamic-volume correction, spatial-moment-audit, and explicit pressure-gradient wall-reaction increments are recorded separately and do not satisfy the full acceptance.",
+          "action": "Add and qualify registered nonduplicated blood mass and momentum ownership distinct from hydraulic volume storage; the ABI38 initial-FEM-mass, dynamic-volume correction, spatial-moment-audit, explicit pressure-gradient wall-reaction, and ABI39 synthetic fluid-momentum-owner increments are recorded separately and do not satisfy the full acceptance.",
           "acceptance": [
             "Zeroth/first/second mass moments and momentum close; rigid/tissue/fluid ownership is counted once and restored atomically."
           ],
@@ -592,6 +593,7 @@
         "Docs/ORGAN_GEOMETRY_INVENTORY_20260913.md",
         "Docs/BLOOD_MOMENT_CLOSURE_20260913.md",
         "Docs/PRESSURE_GRADIENT_REACTION_20260913.md",
+        "Docs/FLUID_MOMENTUM_TRANSFER_20260913.md",
         "Docs/ORGAN_BLOOD_CAVITY_BRIDGE_20260913.md",
         "Docs/CARDIAC_LOADING_CONTRACT_20260913.md",
         "Docs/NATIVE_ORGAN_BLOOD_BINDING_20260913.md"
