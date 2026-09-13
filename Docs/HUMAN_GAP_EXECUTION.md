@@ -74,5 +74,9 @@ The final post-ledger snapshot before tissue requalification is
 The current snapshot also includes the native costal tissue requalification:
 [Docs/media/gap-execution-20260913/report-with-native-organ-binding-tissue-ledger.json](media/gap-execution-20260913/report-with-native-organ-binding-tissue-ledger.json)
 (SHA-256 2a9fa4395f95ca9a485b13bbe305b8d05bb99a1272546177df694a6bfe965e79).
+The latest snapshot also records the native ABI38 pressure-gradient wall
+reaction path and its source-bound synthetic Jacobian receipt:
+[Docs/media/gap-execution-20260913/report-with-native-organ-binding-pressure-reaction.json](media/gap-execution-20260913/report-with-native-organ-binding-pressure-reaction.json)
+(report SHA-256 24ba96d13ebb908421985b796812014497ee1a1cf90a03a27740ba9abf291887).
 All snapshots have 14 workstreams, 46 tasks and 95 mandatory targets;
 integrated_qualification remains not_assessed.
