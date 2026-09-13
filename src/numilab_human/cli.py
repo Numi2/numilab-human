@@ -926,6 +926,21 @@ def geometry_audit(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def organ_geometry_inventory(arguments: argparse.Namespace) -> int:
+    from .organ_geometry import inventory, _immutable_write, SCHEMA
+
+    result = inventory(
+        sources=arguments.sources.resolve(),
+        source_lock=arguments.source_lock.resolve(),
+        template=arguments.template.resolve(),
+    )
+    output = arguments.output.resolve()
+    digest = _immutable_write(output, result)
+    print(json.dumps({"schema": SCHEMA, "output": str(output), "sha256": digest,
+                      **result["counts"]}, sort_keys=True))
+    return 0
+
+
 def nerve_annotations(arguments: argparse.Namespace) -> int:
     anatomy = parse_bodyparts3d(
         arguments.sources.resolve(),
@@ -1884,6 +1899,18 @@ def parser() -> argparse.ArgumentParser:
     geometry_parser.add_argument("--sources", type=Path, required=True, help="directory created by fetch")
     geometry_parser.add_argument("--output", type=Path, help="optional JSON report path")
     geometry_parser.set_defaults(handler=geometry_audit)
+    organ_geometry_parser = commands.add_parser(
+        "organ-geometry-inventory",
+        help="resolve the 18-region BodyParts3D organ/vessel surface inventory without admitting mechanics",
+    )
+    organ_geometry_parser.add_argument("--sources", type=Path, required=True)
+    organ_geometry_parser.add_argument("--source-lock", type=Path, default=REPOSITORY_ROOT / "sources.lock.json")
+    organ_geometry_parser.add_argument(
+        "--template", type=Path,
+        default=REPOSITORY_ROOT / "config/physiology-organ-network-template.v1.json",
+    )
+    organ_geometry_parser.add_argument("--output", type=Path, required=True)
+    organ_geometry_parser.set_defaults(handler=organ_geometry_inventory)
     nerve_parser = commands.add_parser(
         "nerve-annotations",
         help="emit BodyParts3D nerve labels, meshes, and source hierarchy as annotations only",
