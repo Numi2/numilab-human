@@ -21,15 +21,17 @@ region, density, cooked mass, and momentum-transfer identity. This is a
 source-independent admission fixture on the actual 157-body package; it proves
 wiring, package identity, and deterministic read/write replay.
 
-This increment does not qualify a dynamic vascular root. Enabling the
-synthetic vascular package in the existing exact-clock support root invalidated
-support row 2, so that path remains fail-closed and the failure is retained as
-the next coupled-support blocker. Anatomical registration, organ/vessel
-mechanics, supports/loading, activation, force convergence, unresolved
-materials, subject calibration, two-way tissue exchange, standing, and walking
-remain open. The result therefore updates the blood mass/momentum workstream
-from source-only wiring to package-admission partial evidence without changing
-its open completion status.
+This increment did not qualify a dynamic vascular root. Enabling the
+synthetic vascular package in the existing exact-clock support root exposed a
+support-row publication failure; the follow-up [coupled-support
+requalification](COUPLED_SUPPORT_REQUALIFICATION_20260913.md) now covers that
+engineering boundary with a stable synthetic pressure and a retained
+fail-closed negative case. Anatomical registration, organ/vessel mechanics,
+supports/loading, activation, force convergence, unresolved materials, subject
+calibration, two-way tissue exchange, standing, and walking remain open. The
+result therefore updates the blood mass/momentum workstream from source-only
+wiring to package-admission plus bounded coupled-support evidence without
+changing its open completion status.
 
 ## Coupled support requalification
 
