@@ -1,0 +1,224 @@
+{
+  "coverage": {
+    "configured_surface_count": 12,
+    "nerve_surface_count": 1,
+    "organ_surface_count": 5,
+    "vessel_surface_count": 6
+  },
+  "evidence_boundary": "This compact source-surface layer does not create organ FEM or MPM bodies, vessel tube mechanics, neural mechanics, tissue material parameters, collision/contact, force transmission, or medical registration.",
+  "payload": {
+    "bytes": 1004916,
+    "file": "bodyparts3d-myosim-torso-anatomy.nhanatomy",
+    "index_count": 121230,
+    "magic": "NHANAT1",
+    "payload_abi": 1,
+    "registration_fingerprint32": "6a48e223",
+    "sha256": "647121fe5b15b166b5af1059c85ec0ed7d57cac22f1812f5cd477c2c243395cc",
+    "surface_count": 12,
+    "vertex_count": 21648
+  },
+  "runtime_binding": "each exact BodyParts3D source component is converted into the declared MyoSim torso or abdomen inertial frame at the registered default pose and then follows that one articulated visual link in the native renderer",
+  "schema": "numi.human.bodyparts3d-myosim-torso-anatomy-visual-payload.v1",
+  "source": {
+    "bodyparts": {
+      "archives": [
+        {
+          "file": "isa_BP3D_4.0_obj_99.zip",
+          "hierarchy": "is_a",
+          "sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e"
+        },
+        {
+          "file": "partof_BP3D_4.0_obj_99.zip",
+          "hierarchy": "part_of",
+          "sha256": "9fbc713fffeee924a5a657d9813d84d7eb957bded63adb854931dd5e3eb61c97"
+        }
+      ],
+      "id": "bodyparts3d_4",
+      "version": "4.0"
+    },
+    "myosim_manifest": {
+      "file": "myosim-fullbody-reference.manifest.json",
+      "sha256": "2cea81e64a3c8da63731ae67c40ddc39aa61d9c4d0436000e806d25005e5b6d8"
+    },
+    "myosim_source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "registration": {
+      "file": "registration.v3.json",
+      "sha256": "6a48e223545a18390097245b5c21d9d1322991ca451f4bab8e1090e3232ad67f"
+    },
+    "surface_map": {
+      "file": "bodyparts3d-myosim-torso-anatomy-map.v1.json",
+      "sha256": "515c69b17c41935c3aac9aa79f3291b61af52db422b4e70611d39bc65377a7f8"
+    },
+    "surfaces": [
+      {
+        "concept_id": "FMA7088",
+        "core_body_index": 20,
+        "hierarchy": "part_of",
+        "label": "heart",
+        "layer": "organ",
+        "member": "partof_BP3D_4.0_obj_99/FJ2439.obj",
+        "member_id": "FJ2439",
+        "member_sha256": "e7c21cd1659eced056eb56e28f4fa9019ace451ea6e0333097846177f807bb5a",
+        "myosim_body": "torso",
+        "stable_id": 1,
+        "triangle_count": 17784,
+        "vertex_count": 9887
+      },
+      {
+        "concept_id": "FMA7148",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "stomach",
+        "layer": "organ",
+        "member": "partof_BP3D_4.0_obj_99/FJ2564.obj",
+        "member_id": "FJ2564",
+        "member_sha256": "cb78c3f2214fd21a16fa6c9f2389b9aa874e9d3ce624c42b34d4563c31554c67",
+        "myosim_body": "Abdomen",
+        "stable_id": 2,
+        "triangle_count": 1810,
+        "vertex_count": 914
+      },
+      {
+        "concept_id": "FMA7198",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "pancreas",
+        "layer": "organ",
+        "member": "partof_BP3D_4.0_obj_99/FJ1895.obj",
+        "member_id": "FJ1895",
+        "member_sha256": "fea8a371ac940fb8c5c13e9d459af6c2bd50e1b499f8989c63883a7db0f149ae",
+        "myosim_body": "Abdomen",
+        "stable_id": 3,
+        "triangle_count": 4890,
+        "vertex_count": 2462
+      },
+      {
+        "concept_id": "FMA7204",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "right kidney",
+        "layer": "organ",
+        "member": "partof_BP3D_4.0_obj_99/FJ3147.obj",
+        "member_id": "FJ3147",
+        "member_sha256": "e21e2ebd5224b1cbf8caabbf4fa788d894819a328a006dcdb2eb8aa6eee5875a",
+        "myosim_body": "Abdomen",
+        "stable_id": 4,
+        "triangle_count": 2310,
+        "vertex_count": 1163
+      },
+      {
+        "concept_id": "FMA7205",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "left kidney",
+        "layer": "organ",
+        "member": "partof_BP3D_4.0_obj_99/FJ3145.obj",
+        "member_id": "FJ3145",
+        "member_sha256": "b52066a987f767ad9e5c3092958bf5dd760d9f05f1497d1fc7f7ff11539bdfd2",
+        "myosim_body": "Abdomen",
+        "stable_id": 5,
+        "triangle_count": 2982,
+        "vertex_count": 1497
+      },
+      {
+        "concept_id": "FMA3736",
+        "core_body_index": 20,
+        "hierarchy": "part_of",
+        "label": "ascending aorta",
+        "layer": "vessel",
+        "member": "partof_BP3D_4.0_obj_99/FJ3413.obj",
+        "member_id": "FJ3413",
+        "member_sha256": "f4d566821c5ee6347147631b4d1b1e5c5cb3465e05ec23fadffa161c268c7bb2",
+        "myosim_body": "torso",
+        "stable_id": 6,
+        "triangle_count": 396,
+        "vertex_count": 229
+      },
+      {
+        "concept_id": "FMA3768",
+        "core_body_index": 20,
+        "hierarchy": "part_of",
+        "label": "arch of aorta",
+        "layer": "vessel",
+        "member": "partof_BP3D_4.0_obj_99/FJ3411.obj",
+        "member_id": "FJ3411",
+        "member_sha256": "7f1bbd874b05ea618649bfd5a51ac2675523f419dd3e5f5e160d90f47bd413db",
+        "myosim_body": "torso",
+        "stable_id": 7,
+        "triangle_count": 670,
+        "vertex_count": 381
+      },
+      {
+        "concept_id": "FMA3784",
+        "core_body_index": 20,
+        "hierarchy": "part_of",
+        "label": "descending aorta",
+        "layer": "vessel",
+        "member": "partof_BP3D_4.0_obj_99/FJ3427.obj",
+        "member_id": "FJ3427",
+        "member_sha256": "5785787fdaf951e8f64c3f8d5be27cdf015bafb6adf0c70dd4b63f0b5ac2736c",
+        "myosim_body": "torso",
+        "stable_id": 8,
+        "triangle_count": 4562,
+        "vertex_count": 2351
+      },
+      {
+        "concept_id": "FMA3789",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "abdominal aorta",
+        "layer": "vessel",
+        "member": "partof_BP3D_4.0_obj_99/FJ1932.obj",
+        "member_id": "FJ1932",
+        "member_sha256": "cbdbe976943f977c48b9dbdfa2efdd9eb025f935d3f921a3fb8479df2090d25d",
+        "myosim_body": "Abdomen",
+        "stable_id": 9,
+        "triangle_count": 2270,
+        "vertex_count": 1226
+      },
+      {
+        "concept_id": "FMA4720",
+        "core_body_index": 20,
+        "hierarchy": "part_of",
+        "label": "superior vena cava",
+        "layer": "vessel",
+        "member": "partof_BP3D_4.0_obj_99/FJ3645.obj",
+        "member_id": "FJ3645",
+        "member_sha256": "68710b61d5edce86b6a31ce0a471c88cf63308671f78ba57d9974f6514cdb04b",
+        "myosim_body": "torso",
+        "stable_id": 10,
+        "triangle_count": 598,
+        "vertex_count": 318
+      },
+      {
+        "concept_id": "FMA10951",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "inferior vena cava",
+        "layer": "vessel",
+        "member": "partof_BP3D_4.0_obj_99/FJ3441.obj",
+        "member_id": "FJ3441",
+        "member_sha256": "749081b95f406bd38edea220d216f84aa17e019b91c117e7cfd5f3e546ea1163",
+        "myosim_body": "Abdomen",
+        "stable_id": 11,
+        "triangle_count": 1410,
+        "vertex_count": 793
+      },
+      {
+        "concept_id": "FMA7647",
+        "core_body_index": 20,
+        "hierarchy": "part_of",
+        "label": "spinal cord",
+        "layer": "nerve",
+        "member": "partof_BP3D_4.0_obj_99/FJ1737.obj",
+        "member_id": "FJ1737",
+        "member_sha256": "c86dd74640e7c820eda28783944a90998045ff42a131a7a1456a64fdff0e6471",
+        "myosim_body": "torso",
+        "stable_id": 12,
+        "triangle_count": 728,
+        "vertex_count": 427
+      }
+    ]
+  },
+  "status": "native_single_link_kinematic_anatomy_surface_binding_input_not_collision_or_physics"
+}

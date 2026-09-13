@@ -1,0 +1,86 @@
+{
+  "schema": "numi.human.native-torso-anatomy-visual-evidence.v1",
+  "captured_at": "2026-09-13",
+  "host": {
+    "ssh_alias": "macmini",
+    "device": "Apple M4 Pro",
+    "matter_abi": 39
+  },
+  "native": {
+    "branch": "human-blood-mass-20260913",
+    "revision": "de83ba9bbde08fee921c1a2ff1e567f981714326",
+    "worktree_status_at_capture": "clean",
+    "source": {
+      "path": "apps/numilab_human_myosim_visual_probe.mm",
+      "sha256": "fcf3bffd414cae2345d4abf94c2f9c876297e484ef97dc3a32c763e22b567d4c"
+    },
+    "binary": {
+      "path": "/Users/n/MetalRobo-blood-mass-build-20260913/bin/metalrobo_numilab_human_myosim_visual_probe",
+      "sha256": "cfb8db04bd959eee4710b5aa62bc730ebc88353b8743d7b46570da7134bfcc54"
+    }
+  },
+  "payload": {
+    "manifest": {
+      "path": "bodyparts3d-myosim-torso-anatomy.manifest.json",
+      "sha256": "b3143549c3a401f767c045b64599bb532f665fb23d177e9fdf3991a5a63aee5f"
+    },
+    "binary": {
+      "path": "bodyparts3d-myosim-torso-anatomy.nhanatomy",
+      "sha256": "647121fe5b15b166b5af1059c85ec0ed7d57cac22f1812f5cd477c2c243395cc"
+    },
+    "payload_abi": 1,
+    "surface_count": 12,
+    "organ_surface_count": 5,
+    "vessel_surface_count": 6,
+    "nerve_surface_count": 1,
+    "source_archive_sha256": "9fbc713fffeee924a5a657d9813d84d7eb957bded63adb854931dd5e3eb61c97",
+    "registration_fingerprint32": "6a48e223"
+  },
+  "visual_run": {
+    "subject": "one adult male source package",
+    "clock_seconds": 0.0000125,
+    "steps": 1,
+    "activation": 1.0,
+    "root_assistance": false,
+    "source_support_contact": true,
+    "deterministic_replay": true,
+    "frames": [
+      {"view": "front", "organ_surface_pixels": 1206, "vessel_surface_pixels": 390, "nerve_surface_pixels": 0, "sha256": "99ef5a89ccc891d1312509750cbec022abe1e2b52ba594b42b73c81583ed4d18"},
+      {"view": "oblique", "organ_surface_pixels": 1176, "vessel_surface_pixels": 369, "nerve_surface_pixels": 0, "sha256": "509e0d7101b222b29225142f870018ad58a491e1d6ee43ccc8cdb164934d14a7"},
+      {"view": "side", "organ_surface_pixels": 933, "vessel_surface_pixels": 251, "nerve_surface_pixels": 2, "sha256": "4a115232eb726252dbd22cfc75bd806b020200e36bc54e84ce2c32bca5a00be0"},
+      {"view": "rear", "organ_surface_pixels": 800, "vessel_surface_pixels": 36, "nerve_surface_pixels": 0, "sha256": "f5cdf0588a628e43e6b8ad144748a190959b5d078391c75e4bade6ca4b8185ff"}
+    ],
+    "native_stdout": {"path": "numi-human-torso-organs-20260913.stdout", "sha256": "ab292278d8b54b97a4a76f9514d38aed8f35caf61439438b4438bf3f6ff09e80"},
+    "native_stderr": {"path": "numi-human-torso-organs-20260913.stderr", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "empty": true}
+  },
+  "validation": {
+    "visual_probe": "passed",
+    "native_status": "myosim_articulated_bodyparts_bone_visual=ok",
+    "torso_anatomy_surfaces_rendered": 12,
+    "focused_ctest": "4/4 passed",
+    "focused_ctest_log": {"path": "ctest.log", "sha256": "7071b1f72dfddd5048f1b6ce52d6c272ff106bc25fd304d82a8c3ffe11c78ad0"}
+  },
+  "qualification": {
+    "source_membership_and_hashes": true,
+    "source_to_world_visual_registration": true,
+    "native_single_link_kinematic_visual_binding": true,
+    "organ_surface_rendering": true,
+    "vessel_surface_rendering": true,
+    "nerve_surface_rendering": true,
+    "organ_fem_or_mpm": false,
+    "vessel_tube_or_lumen_mechanics": false,
+    "neural_mechanics": false,
+    "material_density": false,
+    "blood_mass_owner": false,
+    "pressure_gradient_momentum_transfer": false,
+    "two_way_tissue_exchange": false,
+    "subject_calibration": false,
+    "standing_or_walking": false
+  },
+  "implementation": {
+    "stable_id_admission": "sized sparse global-ID lookup instead of reserve-only zero-length vector",
+    "camera_coverage_admission": "aggregate source anatomy visibility across the selected camera family so occlusion in one view does not reject a valid payload",
+    "remote_push": "blocked: HTTPS origin requires unavailable credentials"
+  },
+  "boundary": "This receipt admits exact BodyParts3D organ, vessel, and spinal-cord surfaces as one-link kinematic visual bindings on the physical M4 Pro. It does not create organ FEM/MPM, vessel tube or lumen mechanics, neural mechanics, materials, density, blood mass, pressure reaction, tissue exchange, calibration, standing, recovery, or walking qualification."
+}

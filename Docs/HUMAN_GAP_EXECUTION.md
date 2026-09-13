@@ -102,6 +102,16 @@ the synthetic restore subgate; the source six-vessel bridge still lacks tube
 geometry, lumen area, calibrated material/density, body-link mechanics,
 tissue-side exchange, and subject calibration.
 
+The physical M4 Pro also admits the exact BodyParts3D torso source surfaces
+through the native MyoSim visual owner. The
+[`native torso anatomy receipt`](NATIVE_TORSO_ANATOMY_20260913.md) renders five
+organ, six vessel, and one spinal-cord surface across four hash-bound camera
+views at the canonical `12.5 us` clock. It closes source membership,
+source-to-world visual registration, and one-link kinematic visual binding;
+the receipt deliberately leaves organ and vessel mechanics, materials,
+density, blood/tissue exchange, calibration, loading, standing, recovery, and
+walking unqualified.
+
 The current native persistent-stand owner has been exercised on the physical
 M4 Pro at all four common durations (`100/50/25/12.5 us`) using the authored
 six-contact stance, all 416 source routes at activation `1.0`, NHTENDON3
