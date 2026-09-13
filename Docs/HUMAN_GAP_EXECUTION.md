@@ -93,6 +93,14 @@ with its hash-bound native log and JSON receipt. The post-ledger report is
 (report SHA-256 `eca0a63c6ba0648637e80c1c1a08afcd4b5107a9f337ecea7fa01e0ad17ddc40`)
 and remains `integrated_qualification: not_assessed`.
 The fullbody vascular package admission is retained at [`Docs/FULLBODY_VASCULAR_ADMISSION_20260913.md`](FULLBODY_VASCULAR_ADMISSION_20260913.md) with its native receipt, physical-M4 CTest log (3/3), direct probe log, native identity, and SHA-256 manifest under [`Docs/media/organ-blood-cavity-bridge-20260913/native-fullbody-vascular-admission/`](media/organ-blood-cavity-bridge-20260913/native-fullbody-vascular-admission/). It proves source-independent package wiring on the real 157-body topology. The follow-up [`Docs/COUPLED_SUPPORT_REQUALIFICATION_20260913.md`](COUPLED_SUPPORT_REQUALIFICATION_20260913.md) records a successful synthetic exact-clock coupled root with ten valid support receptors at a stable fixture pressure and a retained fail-closed negative-pressure case. The execution registry therefore leaves force convergence over a calibrated range, anatomical supports/loading, activation, unresolved materials, calibration, standing, and walking as open gates.
+The current ABI39 blood-owner refresh is retained at
+[`Docs/BLOOD_MOMENTUM_RESTORE_20260913.md`](BLOOD_MOMENTUM_RESTORE_20260913.md)
+with a physical-M4 build, 4/4 focused CTest selection, time-integrated
+first-moment closure, synthetic pressure-gradient fluid momentum, and atomic
+coupled-FEM/vascular restore plus fail-closed invalid restore. It closes only
+the synthetic restore subgate; the source six-vessel bridge still lacks tube
+geometry, lumen area, calibrated material/density, body-link mechanics,
+tissue-side exchange, and subject calibration.
 
 The current native persistent-stand owner has been exercised on the physical
 M4 Pro at all four common durations (`100/50/25/12.5 us`) using the authored
@@ -163,3 +171,12 @@ and report SHA-256 `38ee2a43d6ce9b7d1036cd1f7d9ca4e40955b6d3e7143f47b7de12aa1740
 It closes source-to-MyoSim-world frame bookkeeping only; body-link vessel
 mechanics, tubular fields, direction/area, density, blood ownership, tissue
 exchange, calibration, and sustained behavior remain open.
+
+The current ABI39 blood-momentum restore snapshot is
+[`Docs/media/gap-execution-20260913/report-blood-momentum-restore-current-20260913.json`](media/gap-execution-20260913/report-blood-momentum-restore-current-20260913.json)
+(file SHA-256 `00803c8e93b18737839e71b8ae835002dfd09729fdaeca849bca9310cb36b74b`,
+report content SHA-256 `00774d5a95ba8a1d799be37793e7b4342cdee0199b175abddc10a8b15d4f89a5`).
+It records 14 workstreams, 46 tasks and 95 mandatory targets with
+`integrated_qualification: not_assessed`; the new atomic restore is a synthetic
+blood-owner subgate and leaves source-bound vessel mechanics, calibration and
+sustained behavior open.

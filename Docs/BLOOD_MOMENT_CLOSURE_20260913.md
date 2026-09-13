@@ -1,5 +1,11 @@
 # Blood moment and pressure-impulse closure, 13 September 2026
 
+> The current ABI39 refresh adds the coupled FEM/vascular atomic restore and
+> invalid-restore gate. See [BLOOD_MOMENTUM_RESTORE_20260913.md](BLOOD_MOMENTUM_RESTORE_20260913.md)
+> and its [current receipt](media/blood-momentum-restore-20260913/receipt.json).
+> This page retains the earlier moment/pressure-impulse receipt as historical
+> evidence.
+
 The native blood-owner branch `f89991dc55c591fb6dc5ca5388de4b9034592c5a`
 adds a bounded transfer audit to the ABI38 synthetic registered-cavity check.
 On the physical Apple M4 Pro, the production `nm_vascular_blood_moments`

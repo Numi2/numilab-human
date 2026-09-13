@@ -1,0 +1,74 @@
+{
+  "schema": "HumanPack.blood-momentum-restore-evidence.v1",
+  "date": "2026-09-13",
+  "native_branch": "human-blood-mass-20260913",
+  "native_commit": "171b74062a283b04aec59f949552c38ed5cafef4",
+  "native_parent": "a134ad9d0e6ca3416ec3e98e66c5fcb84dc05b0b",
+  "native_abi": 39,
+  "host": {
+    "ssh_alias": "macmini",
+    "device": "Apple M4 Pro",
+    "build_type": "Release",
+    "checkout_clean": true,
+    "native_push": "not_attempted_on_this_increment"
+  },
+  "command": {
+    "build": "cmake --build . --target numi-matter-vascular-cavity-check -j 10",
+    "executable": "./matter/numi-matter-vascular-cavity-check",
+    "ctest": "ctest --output-on-failure -R matter.(metal.)?vascular|matter.compiler.vascular"
+  },
+  "checks": {
+    "full_build": "pass",
+    "focused_ctest": "4/4 passed",
+    "compiler_vascular": "pass",
+    "metal_vascular": "pass",
+    "human_binding": "pass",
+    "vascular_cavity": "pass",
+    "registered_blood_mass_owner": "pass",
+    "dynamic_spatial_moments": "pass",
+    "co_moving_inertia": "pass",
+    "time_integrated_first_moment_closure": "pass",
+    "closed_surface_pressure_impulse": "pass",
+    "pressure_gradient_fluid_momentum": "pass",
+    "atomic_full_momentum_restore": "pass",
+    "invalid_restore_is_atomic": "pass",
+    "bitwise_replay": "pass",
+    "exact_clock": "pass"
+  },
+  "measurements": {
+    "compartment_stable_id": 12,
+    "density_kg_m3": 1060.0,
+    "accepted_volume_m3": 3.999999989900971e-06,
+    "initial_mechanical_mass_kg": 0.004240000154823065,
+    "dynamic_volume_delta_m3": 4.999999987376214e-07,
+    "dynamic_force_total_N_two_environments": -0.010398597456514835,
+    "pressure_reaction_N_per_environment": -0.019999999494757503,
+    "fluid_momentum_reaction_N_per_environment": -0.0021199999722831524,
+    "moving_wall_steps": 32,
+    "clock_seconds": 1.25e-05
+  },
+  "qualification": {
+    "synthetic_registered_owner": true,
+    "synthetic_dynamic_moment_closure": true,
+    "synthetic_pressure_gradient_fluid_momentum": true,
+    "synthetic_atomic_full_momentum_restore": true,
+    "source_bound_anatomical_registration": false,
+    "source_bound_vessel_tube_mechanics": false,
+    "source_bound_two_way_tissue_exchange": false,
+    "subject_specific_density": false,
+    "physiological_calibration": false,
+    "standing": false,
+    "walking": false,
+    "full_release": false
+  },
+  "boundary": "Synthetic registered FEM owner and hollow-cavity fixture only. The restore gate proves atomic coupled FEM/vascular checkpoint replay and fail-closed invalid restore. It does not promote BodyParts3D vessel surfaces into tubes, assign anatomical lumen area/material/density, or qualify tissue-side physiology, subject calibration, standing, or walking.",
+  "artifacts": {
+    "Docs/media/blood-momentum-restore-20260913/native.log": "d73aaa463975a86debb3378660f65cb2eb2797b6d77cdfc9337bf7b8c57ebccf",
+    "Docs/media/blood-momentum-restore-20260913/ctest.log": "03113dc44f126beffa7bf6eb44251ee68b9ff36aa0610a090667d58abb642d09",
+    "Docs/media/blood-momentum-restore-20260913/identity.txt": "20a9af392a7e44899a17fe82f78586ed6998ed6d9cd0d799b07152c294a245c0",
+    "Docs/media/blood-momentum-restore-20260913/build.log": "0e5440aab02f5257222ee0f473e674e8fae4319f72c71b21e23c3bb0361c037a",
+    "native_binary_sha256": "e2735c4e813b152e7c89172bb54af4c209e409c52a2541630c40954134b7dbf3",
+    "metallib_sha256": "e47aeed89fdb66d8deea4f9c850aa9655925f65755593800b8e342c4182a965f",
+    "source_sha256": "325915cac1d9e946e7992ab4b6579258ff33eb5309d32c992b0ab560460df7f0"
+  }
+}

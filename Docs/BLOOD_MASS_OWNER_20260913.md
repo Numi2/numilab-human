@@ -1,5 +1,12 @@
 # Registered blood mass owner: bounded native increment
 
+> **Current refresh:** the ABI39 source increment at native commit
+> `171b74062a283b04aec59f949552c38ed5cafef4` adds the synthetic atomic
+> coupled-FEM/vascular momentum restore and invalid-restore gate. See
+> [BLOOD_MOMENTUM_RESTORE_20260913.md](BLOOD_MOMENTUM_RESTORE_20260913.md)
+> and its [receipt](media/blood-momentum-restore-20260913/receipt.json).
+> The remainder of this page records the earlier ABI38 owner receipt.
+
 This receipt records the next addressable blood-mechanics slice for the single
 source-bound adult-male release. It registers blood mechanical mass against a
 real FEM tissue region while preserving hydraulic volume as the only volume
