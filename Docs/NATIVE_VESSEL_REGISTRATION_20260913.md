@@ -25,6 +25,13 @@ cross-sectional area, wall material, density, blood mass owner, pressure
 gradient, body-link mechanics, tissue exchange, or subject calibration.  The
 Human organ/blood mechanics and loading rows therefore remain open.
 
+The follow-up native checker at `human-blood-mass-20260913` commit
+`f239c631` also consumes the exact body-link receipt and passes
+`matter.compiler.vessel_registration` plus
+`matter.compiler.vessel_body_links` (`2/2`). This validates named source/core
+body-frame bookkeeping only; it does not promote body-link mechanics or a
+vessel physical owner.
+
 The retained logs and patch are under
 `Docs/media/native-vessel-registration-20260913/`; the immutable receipt is
 `Docs/media/native-vessel-registration-20260913/receipt.json`.

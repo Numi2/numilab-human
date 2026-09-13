@@ -39,5 +39,6 @@ Those gates remain explicit in the receipt.
 
 The focused regression is `tests/test_vessel_registration.py` (`7 passed`;
 `68.35 s`). The same hashes and NHRIGID2 header were checked on `ssh
-macmini`; the retained output is
+macmini`, and the native checker at commit `f239c631` passed both vessel
+registration CTest cases (`2/2`); the retained output is
 [`macmini-validation.txt`](media/organ-vessel-body-link-20260913/macmini-validation.txt).
