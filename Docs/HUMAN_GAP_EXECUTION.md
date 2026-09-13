@@ -68,8 +68,11 @@ The ABI38 source-to-native identity/owner admission is included in the
 intermediate no-coverage snapshot at
 [Docs/media/gap-execution-20260913/report-with-native-organ-binding.json](media/gap-execution-20260913/report-with-native-organ-binding.json)
 (SHA-256 44f3d8585601a89b1b8fcf40948f03006c9cf813855ef90f6c8482caaff90360).
-The final post-ledger snapshot is
+The final post-ledger snapshot before tissue requalification is
 [Docs/media/gap-execution-20260913/report-with-native-organ-binding-ledger.json](media/gap-execution-20260913/report-with-native-organ-binding-ledger.json)
 (SHA-256 7a17975431d7911feefc9d8302c510f7e572633db8d0d3f68fdc100f2fda2372).
-Both snapshots have 14 workstreams, 46 tasks and 95 mandatory targets;
+The current snapshot also includes the native costal tissue requalification:
+[Docs/media/gap-execution-20260913/report-with-native-organ-binding-tissue-ledger.json](media/gap-execution-20260913/report-with-native-organ-binding-tissue-ledger.json)
+(SHA-256 2a9fa4395f95ca9a485b13bbe305b8d05bb99a1272546177df694a6bfe965e79).
+All snapshots have 14 workstreams, 46 tasks and 95 mandatory targets;
 integrated_qualification remains not_assessed.

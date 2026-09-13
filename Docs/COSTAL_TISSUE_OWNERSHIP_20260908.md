@@ -68,6 +68,15 @@ and five selected native compatibility regressions pass. The final published
 Brain source also passes both legacy joint-publication tests and three
 connectome audit regressions.
 
+## Current native requalification
+
+The current isolated native branch re-ran the exact binding, cartilage, rigid-body,
+and registration inputs on Apple M4 Pro. The source-bound mass/rebase and Metal
+replay result is retained in [COSTAL_TISSUE_REQUALIFICATION_20260913.md](COSTAL_TISSUE_REQUALIFICATION_20260913.md)
+with its immutable log and receipt. This refreshes the native evidence without
+changing the boundary: loaded thorax mechanics, subject-specific calibration,
+whole-body dynamic mass, and sustained behavior remain open.
+
 ## Joint transaction evidence
 
 On the initial Brain base, the full release-mode test passes eight accepted
