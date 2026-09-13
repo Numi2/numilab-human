@@ -2160,6 +2160,12 @@ def parser() -> argparse.ArgumentParser:
         help="advance the pinned CVSim21 aggregate blood-mass owner with accepted-step rollback",
     )
     add_cvsim21_blood_mass_arguments(cvsim21_blood_mass)
+    from .cardiac_blood_mass_candidate import add_arguments as add_cardiac_blood_mass_candidate_arguments
+    cardiac_blood_mass_candidate = commands.add_parser(
+        "cardiac-blood-mass-candidate",
+        help="bind disjoint cardiac cavity candidates to the CVSim21 blood-mass budget without selecting an owner",
+    )
+    add_cardiac_blood_mass_candidate_arguments(cardiac_blood_mass_candidate)
     from .locomotor import add_arguments as add_locomotor_arguments
     locomotor = commands.add_parser("locomotor-program", help="author a source-bound Brain spindle and periodic muscle controller candidate")
     add_locomotor_arguments(locomotor)

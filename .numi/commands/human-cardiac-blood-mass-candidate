@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+
+if [ "${1:-}" = "--numi-describe" ]; then
+    printf '%s\n' 'Bind both source-preserving cardiac cavity ownership candidates to the four CVSim21 hydraulic chambers and explicit unresolved density without selecting a biological or physical mass owner.'
+    exit 0
+fi
+
+command_directory=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+repository_root=$(CDPATH= cd -- "$command_directory/../.." && pwd -P)
+if [ -n "${PYTHONPATH:-}" ]; then
+    export PYTHONPATH="$repository_root/src:$PYTHONPATH"
+else
+    export PYTHONPATH="$repository_root/src"
+fi
+exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.cardiac_blood_mass_candidate "$@"
