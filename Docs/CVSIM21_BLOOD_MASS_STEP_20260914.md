@@ -39,7 +39,7 @@ evidence-inclusive focused selection passes 67 tests at the published revision
 `01e564e`. A broader Mac mini anatomy selection still stops at the pre-existing
 missing cardiac-cavity source archive, which is retained as an environment
 boundary rather than converted into a pass. Mac mini evidence is retained beside
-the receipts after isolated-worktree validation. The live [gap report](media/gap-execution-20260914/report-cvsim21-blood-mass-20260914.json)
+the receipts after isolated-worktree validation. The live [gap report](media/gap-execution-20260914/report-cvsim21-blood-mass-final-v3-20260914.json)
 records 14 workstreams, 46 tasks, 95 mandatory targets, and
 `integrated_qualification=not_assessed`.
 
