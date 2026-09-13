@@ -5,6 +5,7 @@ import gzip
 import hashlib
 import json
 import math
+import re
 from pathlib import Path
 from typing import Any
 
@@ -22,6 +23,10 @@ NATIVE_KEYS = (
     "passive_force",
     "force_residual",
     "acceleration",
+)
+RANK_PATTERN = re.compile(
+    r'residual_rank_(?P<rank>\d+)_dof=(?P<dof>\d+).*?'
+    r'residual_rank_(?P=rank)_name="(?P<name>[^"]+)"'
 )
 
 
@@ -63,12 +68,36 @@ def _record(text: str) -> dict[str, list[float]]:
     return {key: _vector(payload.get(key), key) for key in NATIVE_KEYS}
 
 
-def _coordinate_map(path: Path | None) -> tuple[list[str], list[str], dict[str, Any]]:
+def _rank_names(text: str) -> dict[int, str]:
+    result: dict[int, str] = {}
+    for line in text.splitlines():
+        if "residual_rank_" not in line:
+            continue
+        for match in RANK_PATTERN.finditer(line):
+            dof = int(match.group("dof"))
+            name = match.group("name").strip()
+            if 0 <= dof < NV and name:
+                previous = result.get(dof)
+                _require(previous in {None, name}, f"native residual name changed for dof {dof}")
+                result[dof] = name
+    return result
+
+
+def _coordinate_map(path: Path | None, text: str) -> tuple[list[str], list[str], dict[str, Any]]:
     if path is None:
+        recovered = _rank_names(text)
+        names = [f"v_{index:03d}" for index in range(NV)]
+        for index, name in recovered.items():
+            names[index] = f"v_{index:03d}:{name}"
         return (
-            [f"v_{index:03d}" for index in range(NV)],
-            ["translation"] * 3 + ["rotation"] * (NV - 3),
-            {"source": "generic_articulated_velocity_order", "anatomical_names": False},
+            names,
+            ["unknown"] * NV,
+            {
+                "source": "native_residual_rank_plus_generic_velocity_order",
+                "anatomical_names": bool(recovered),
+                "named_coordinates": len(recovered),
+                "coordinate_kinds_known": False,
+            },
         )
     resolved = path.resolve()
     try:
@@ -83,12 +112,14 @@ def _coordinate_map(path: Path | None) -> tuple[list[str], list[str], dict[str, 
              "coordinate map must provide 128 non-empty coordinate_names")
     _require(len(set(names)) == NV, "coordinate map names must be unique")
     _require(isinstance(kinds, list) and len(kinds) == NV and
-             all(kind in {"translation", "rotation"} for kind in kinds),
-             "coordinate map must classify all coordinates")
+             all(kind in {"translation", "rotation", "unknown"} for kind in kinds),
+             "coordinate map must classify all coordinates or explicitly mark them unknown")
     return names, kinds, {
         "source": str(resolved),
         "sha256": hashlib.sha256(resolved.read_bytes()).hexdigest(),
         "anatomical_names": True,
+        "named_coordinates": NV,
+        "coordinate_kinds_known": all(kind != "unknown" for kind in kinds),
     }
 
 
@@ -126,9 +157,10 @@ def convert(arguments: argparse.Namespace) -> int:
     source = arguments.log.resolve()
     _require(math.isfinite(arguments.maximum_reconstruction_error) and arguments.maximum_reconstruction_error >= 0.0,
              "maximum reconstruction error must be finite and non-negative")
-    record = _record(_read_text(source))
+    text = _read_text(source)
+    record = _record(text)
     gravity_sign, gravity_bias, sign_errors = _gravity_sign(record, arguments.maximum_reconstruction_error)
-    names, kinds, coordinate_metadata = _coordinate_map(arguments.coordinate_map)
+    names, kinds, coordinate_metadata = _coordinate_map(arguments.coordinate_map, text)
 
     components = [
         {"name": "gravity_bias", "owner": "NumiHumanMuscleEquilibrium.gravityTarget", "values": gravity_bias},
@@ -172,6 +204,7 @@ def convert(arguments: argparse.Namespace) -> int:
         "schema": INPUT_SCHEMA,
         "gravity_sign": gravity_sign,
         "maximum_reconstruction_error": reconstruction_error,
+        "named_coordinates": coordinate_metadata["named_coordinates"],
         "output": str(arguments.output.resolve()),
     }, sort_keys=True))
     return 0
