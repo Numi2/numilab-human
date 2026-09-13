@@ -109,8 +109,8 @@ the focused 17/17 requalification at commit
 `e07026ab3ad497a869ee247cdfd1aa23ecc16ebb`.
 The next snapshot adds the aligned behavior clock receipt:
 [Docs/media/gap-execution-20260913/report-with-native-exact-clock-organ-blood-behavior-clock-20260913.json](media/gap-execution-20260913/report-with-native-exact-clock-organ-blood-behavior-clock-20260913.json)
-(file SHA-256 `fbb9954486a2cc781e615989b76d5561b130e1176fbcead84eb6c31fa2c41492`,
-report content SHA-256 `78b0a2c48e7be93ea1a87fdd0b8c01f0a7e5b36ff61eb1046d108e2b47468422`).
+(file SHA-256 `f0a576df6b8cb5e601c19eab5f6a27df9f2507436424d98ef86454280e40b1ce`,
+report content SHA-256 `89dbe4bd68f6a3be1c2a82d8927b9c0b5b2fc77089ed7135127dab45a353a2de`).
 It remains 14 workstreams, 46 tasks and 95 mandatory targets with
 `integrated_qualification: not_assessed`.
 All snapshots have 14 workstreams, 46 tasks and 95 mandatory targets;

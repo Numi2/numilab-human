@@ -72,3 +72,10 @@ synthetic moving-wall interface.  That boundary is retained in
 the native result qualifies the engineering contracts and synthetic cavity,
 not body-frame anatomy, subject-specific density/materials, two-way tissue
 exchange, physiology, or standing/walking.
+
+After the native behavior-clock alignment, the same physical M4 Pro selection
+was rerun from commit `ac3b4af73c6ae8efef6f07d6e626e71b52e68c75` (tree
+`4d98915adff9a43964a7e77088212f52953966e7`) and again passed 17/17. The
+post-clock log and receipt are retained in
+[`native-current-post-clock/`](media/organ-blood-cavity-bridge-20260913/native-current-post-clock/)
+with SHA-256 manifest; the qualification boundary is unchanged.
