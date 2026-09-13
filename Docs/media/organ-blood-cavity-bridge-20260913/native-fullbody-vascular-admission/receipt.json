@@ -1,0 +1,54 @@
+{
+  "schema": "numi.human.fullbody-vascular-admission.v1",
+  "captured_at": "2026-09-13",
+  "native_branch": "human-blood-mass-20260913",
+  "native_commit": "8d87e9d46a1f973a6fbd906b90899c2799fe4f6e",
+  "native_tree": "91fc1fc72fb0320c7a4bc6e01a22073ad5162807",
+  "device": "physical Apple M4 Pro",
+  "build_dir": "/Users/n/MetalRobo-blood-mass-build-20260913",
+  "commands": [
+    "cmake --build /Users/n/MetalRobo-blood-mass-build-20260913 --target metalrobo_numanx_fullbody_bridge_probe -j2",
+    "ctest --test-dir /Users/n/MetalRobo-blood-mass-build-20260913 --output-on-failure -R numanx.integration.(fullbody_vascular_admission|fullbody_bridge_prepared_root|fullbody_authored_world)",
+    "metalrobo_numanx_fullbody_bridge_probe --vascular-fullbody-admission"
+  ],
+  "result": "pass",
+  "qualification": {
+    "package_admission": "pass",
+    "deterministic_package_read_write_replay": "pass",
+    "fullbody_bodies": 157,
+    "fullbody_nq": 129,
+    "fullbody_nv": 128,
+    "fullbody_objects": 3,
+    "fem_nodes": 12,
+    "fem_human_attachment_count": 12,
+    "vascular_compartments": 2,
+    "vascular_connections": 1,
+    "vascular_tissue_owners": 1,
+    "vascular_unknowns": 3,
+    "vascular_tissue_bindings": 4,
+    "blood_density_kg_m3": 1060.0,
+    "blood_momentum_transfer": "explicit",
+    "owner_mass_kg": 0.00106
+  },
+  "scope": "Synthetic source-independent vascular package admission on the real fullbody topology; this receipt proves package identity and replay wiring only.",
+  "not_qualified": [
+    "fullbody_dynamic_vascular_root",
+    "force_convergence",
+    "support-row-validity-under-vessel-coupling",
+    "anatomical_registration",
+    "anatomical supports/loading",
+    "subject_specific_density_calibration",
+    "activation",
+    "standing",
+    "walking",
+    "two_way_blood_momentum_closure",
+    "unresolved materials"
+  ],
+  "logs": [
+    "numi-human-fullbody-vascular-admission-20260913.log",
+    "numi-human-fullbody-vascular-ctest-20260913.log",
+    "numi-human-vascular-final-build.log",
+    "numi-human-vascular-reconfigure-20260913.log"
+  ],
+  "identity": "native-identity.txt"
+}
