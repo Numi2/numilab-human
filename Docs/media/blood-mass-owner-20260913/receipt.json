@@ -2,10 +2,10 @@
   "schema": "numi.human.blood-mass-owner-evidence.v1",
   "date": "2026-09-13",
   "native_branch": "human-blood-mass-20260913",
-  "native_commit": "f7476cce6186bfe93bb798b46607e19fff932171",
+  "native_commit": "cd2456739721be31eacbbb120638c3175b9f5f5b",
   "native_base_commit": "53670294dd229e5a0d876a472964130742c89e44",
   "remote_branch_publication_confirmed": true,
-  "native_abi": 35,
+  "native_abi": 36,
   "host": {
     "ssh_alias": "macmini",
     "device": "Apple M4 Pro",
@@ -18,6 +18,9 @@
     "real_fem_region_required": true,
     "normalized_region_required": true,
     "duplicate_owner_rejected": true,
+    "reference_first_spatial_moment": true,
+    "reference_second_spatial_moment": true,
+    "stale_spatial_moment_rejected": true,
     "implicit_cavity_or_tissue_mass": false,
     "force_path": "accepted hydraulic volume times registered density scattered over object-local FEM bindings as gravity body force"
   },
@@ -42,8 +45,9 @@
   },
   "qualification": {
     "zeroth_order_spatial_mass_owner": true,
-    "first_mass_moment": false,
-    "second_mass_moment": false,
+    "reference_first_spatial_moment": true,
+    "reference_second_spatial_moment": true,
+    "dynamic_mass_moment_closure": false,
     "momentum_transfer": false,
     "atomic_full_momentum_restore": false,
     "anatomical_registration": false,
@@ -54,11 +58,11 @@
     "full_release": false
   },
   "artifacts": {
-    "Docs/media/blood-mass-owner-20260913/native/full-build.log": "33851c906f6669bf8a93a6a4c2c2dedf8966c0748e0761fe10ccfa0966a1fc0b",
+    "Docs/media/blood-mass-owner-20260913/native/full-build.log": "0d907229f24e4458130ecf3e8311a0a2ae84ce30bdcea1f884e796a4b2b25a30",
     "Docs/media/blood-mass-owner-20260913/native/vascular-compiler.log": "bfe96aad2cf8d5ddcf71ac96f665691dc6c3ac0510584c6708d35064310da47a",
     "Docs/media/blood-mass-owner-20260913/native/vascular-runtime.log": "017aaff7eedf60b96724cb2a0c765eab3282f637cb3b21263ab2a35c2b9ad4ac",
-    "Docs/media/blood-mass-owner-20260913/native/vascular-cavity.log": "6613ed9c40d6d39450e93a2199781757e399429723f1a70c4a6bd29cbe79d2fa",
-    "Docs/media/blood-mass-owner-20260913/native/native-revision.txt": "989c7ee251735ebc66e30a9af6391d351dca5454f8434ddb541ff8af21618065",
+    "Docs/media/blood-mass-owner-20260913/native/vascular-cavity.log": "bc38a1771d66344a26b2ba82af2e45f843de3b972f1a923e71d7c5775dfc2915",
+    "Docs/media/blood-mass-owner-20260913/native/native-revision.txt": "3be104a3ec2c17f07a61fa452446cb730e0e9bcc29d66dc530fd2c3accdc8d72",
     "Docs/media/blood-mass-owner-20260913/native/native-status.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   }
 }

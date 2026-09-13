@@ -143,10 +143,10 @@ The producer measures jointly accepted roots through the existing Brainâ€“Humanâ
 runner; unavailable contact, audit and reset evidence remains explicit.
 The [current paired source-route qualification](Docs/SOURCE_ROUTE_PRECISION_20260913.md)
 records the exact native/Brain revisions, source comparisons and bounded replay.
-The [ABI35 blood-mass owner increment](Docs/BLOOD_MASS_OWNER_20260913.md) adds
-explicit one-owner-per-compartment registration and replayed zeroth-order FEM
-gravity scatter; first/second moments, two-way momentum and calibration remain
-open.
+The [ABI36 blood-mass owner increment](Docs/BLOOD_MASS_OWNER_20260913.md) adds
+explicit one-owner-per-compartment registration, cooked reference spatial
+moments, and replayed zeroth-order FEM gravity scatter; dynamic momentum and
+calibration remain open.
 
 `numi human capability-protocol` compiles the [single-male whole-body evidence contract](Docs/SINGLE_MALE_COMPLETION.md):
 one sourced adult age, separate calibration and validation sessions, and measured

@@ -10,11 +10,11 @@ completion.
 
 The native implementation is the isolated Mac mini worktree
 `human-blood-mass-20260913` at commit
-`f7476cce6186bfe93bb798b46607e19fff932171`, based on
+`cd2456739721be31eacbbb120638c3175b9f5f5b`, based on
 `53670294dd229e5a0d876a472964130742c89e44`. The qualified native checkout was
 not modified. The commit is published on
 `origin/human-blood-mass-20260913`. The implementation raises
-`NM_MATTER_ABI_VERSION` to 35 and requires recooking affected Matter packages.
+`NM_MATTER_ABI_VERSION` to 36 and requires recooking affected Matter packages.
 
 The authoring contract adds `bloodCompartment` and `bloodDensity` to a vascular
 tissue. A nonzero compartment must resolve to one hydraulic compartment, use a
@@ -22,6 +22,12 @@ positive density, name a real FEM object, and provide a normalized nonempty FEM
 region. The compiler rejects missing identities, nonpositive density, absent
 regions, and duplicate mechanical owners. Owner indices are stored as
 compartment-index plus one; zero remains the explicit no-owner value.
+
+ABI36 also cooks the region's normalized first spatial moment and symmetric raw
+second spatial moments in the authored FEM frame. Package validation recomputes
+those moments from the actual cooked node positions and rejects stale or
+nonfinite metadata. These are reference geometry moments; they are not yet
+dynamic mass-moment or fluid-inertia closure.
 
 At runtime the accepted hydraulic compartment volume is multiplied by the
 registered density and distributed over the owner's normalized FEM bindings as
@@ -32,7 +38,7 @@ are carried through the protected arena and transactional encode path.
 
 ## Mac mini evidence
 
-Host: physical Apple M4 Pro, `ssh macmini`, Release build, ABI 35. The complete
+Host: physical Apple M4 Pro, `ssh macmini`, Release build, ABI 36. The complete
 build reached 100%. The focused checks were run from
 `/Users/n/MetalRobo-blood-mass-build-20260913`:
 
@@ -73,12 +79,13 @@ Raw logs and hashes are retained in
 
 ## Boundary that remains open
 
-This increment closes only explicit zeroth-order spatial ownership and a
-one-way gravity body-force scatter. It does not provide first or second mass
-moments, inertial coupling, pressure-driven momentum transfer, reaction-force
-closure, wet/dry mass partition for anatomical organs, gas or metabolic state,
-thermal/fluid balance, source activation, or subject-specific density and
-perfusion calibration. The synthetic density and volume are fixture values, not
-anatomical measurements. The completion acceptance for `blood.spatial_owner`
-therefore remains open until moments, momentum, atomic restore, anatomical
-registration, and held-out calibration evidence pass together.
+This increment closes explicit zeroth-order ownership and reference first/second
+spatial moments, plus a one-way gravity body-force scatter. It does not provide
+dynamic mass-moment evolution, fluid inertia, pressure-driven momentum transfer,
+reaction-force closure, wet/dry mass partition for anatomical organs, gas or
+metabolic state, thermal/fluid balance, source activation, or subject-specific
+density and perfusion calibration. The synthetic density and volume are fixture
+values, not anatomical measurements. The completion acceptance for
+`blood.spatial_owner` therefore remains open until dynamic moments, momentum,
+atomic restore, anatomical registration, and held-out calibration evidence pass
+together.
