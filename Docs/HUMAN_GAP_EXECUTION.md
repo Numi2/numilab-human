@@ -55,7 +55,7 @@ anatomical, mechanical or behavioral qualification.
 
 The current no-coverage snapshot is retained at
 [`Docs/media/gap-execution-20260913/report.json`](media/gap-execution-20260913/report.json)
-(SHA-256 `f908872399641f79fe84a42053e382a970eac6457c415e121cbe2a833287ed9f`).
+(SHA-256 `e2763bb92599dae96d5bea68fa794e42f6076a3a940fb9b5647058babc9d919a`).
 It records 14 workstreams, 46 tasks, 95 mandatory targets, and
 `integrated_qualification: not_assessed`; it is a completion inventory rather
 than a qualification receipt.

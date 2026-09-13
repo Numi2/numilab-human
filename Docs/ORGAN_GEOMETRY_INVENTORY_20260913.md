@@ -40,3 +40,8 @@ tubular fields, calibrated materials and boundaries, conservative coupling,
 and exact-stack regional mechanics evidence exist. It also supplies the
 source-geometry prerequisite for the blood spatial owner without promoting the
 synthetic ABI38 blood receipt to anatomical completion.
+
+The follow-on [source-frame moments receipt](ORGAN_GEOMETRY_MOMENTS_20260913.md)
+computes algebraic volume and first/second spatial moments for the 357 members
+that are single closed components. It leaves the inventory itself immutable and
+does not change the source-only admission boundary.
