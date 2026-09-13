@@ -51,8 +51,8 @@ def _load_snapshot(path: Path) -> dict[str, Any]:
     _require(len(set(names)) == NV, "coordinate_names must be unique")
     kinds = payload.get("coordinate_kinds")
     _require(isinstance(kinds, list) and len(kinds) == NV and
-             all(kind in {"translation", "rotation"} for kind in kinds),
-             "coordinate_kinds must classify every coordinate")
+             all(kind in {"translation", "rotation", "unknown"} for kind in kinds),
+             "coordinate_kinds must classify every coordinate or explicitly mark it unknown")
     components = payload.get("components")
     _require(isinstance(components, list) and components, "components must be a non-empty list")
     seen: set[str] = set()
