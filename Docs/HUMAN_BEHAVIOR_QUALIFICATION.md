@@ -182,6 +182,12 @@ It never overwrites an earlier report. The report records each trial and
 per-speed population, plus protocol, stack and bundle hashes. No output mutates
 the completion ledger or promotes a capability automatically.
 
+Every report also carries `assessment_scope: historical_420_trial_regression`
+and `release_qualification: not_assessed`. A `passed` report therefore means
+only that the supplied legacy population is admissible regression evidence. It
+does not qualify the one-adult-male release or any anatomical, loading,
+activation, material, convergence, standing, recovery or walking capability.
+
 `tests/test_behavior_qualification.py` uses visibly synthetic artifacts and
 aggregate counters solely to test this admission contract. Its successful
 fixtures are not retained as Human behavior evidence. Run it with:

@@ -21,6 +21,12 @@ TRACE_SCHEMA = "numi.human.behavior-trial.v1"
 REPORT_SCHEMA = "numi.human.behavior-assessment.v1"
 LOWERING_SCHEMA = "numi.human.behavior-task-lowering.v1"
 METRIC_CONTRACT = "accepted-root-task-reduction.v1"
+# The historical 420-trial population is retained as a deterministic
+# regression contract.  It is deliberately not the release qualification
+# population: the source-bound single-male capability protocol owns that
+# decision once native physical evidence exists.
+ASSESSMENT_SCOPE = "historical_420_trial_regression"
+RELEASE_QUALIFICATION = "not_assessed"
 ARTIFACT_ROLES = frozenset({"human_pack", "compiled_run", "task_pack", "policy_pack",
                             "native_library", "human_metallib", "matter_metallib",
                             "brain_metallib", "runner", "qualifier", "metric_program",
@@ -467,11 +473,14 @@ def evaluate(protocol_path: Path, stack_path: Path, bundle_path: Path, *,
         groups.append({"task": task, "target_speed_mps": speed, "trials": len(members),
                        "successful_trials": successes, "required_successes": required,
                        "passed": successes >= required})
-    return {"schema": REPORT_SCHEMA, "status": "passed" if all(g["passed"] for g in groups) else "failed",
+    legacy_status = "passed" if all(g["passed"] for g in groups) else "failed"
+    return {"schema": REPORT_SCHEMA, "status": legacy_status,
+            "assessment_scope": ASSESSMENT_SCOPE,
+            "release_qualification": RELEASE_QUALIFICATION,
             "protocol_sha256": expected_protocol_sha256, "stack_sha256": expected_stack_sha256,
             "bundle_sha256": hashlib.sha256(bundle_raw).hexdigest(), "groups": groups,
             "trials": results,
-            "boundary": "Admission of the supplied native accepted-root metric contract only; hashes bind bytes, not producer authenticity. This does not qualify anatomy, material laws, source parity or performance."}
+            "boundary": "Admission of the supplied native accepted-root metric contract only; this historical 420-trial result is regression evidence. Hashes bind bytes, not producer authenticity. It does not qualify the single-male release, anatomy, material laws, source parity, standing, recovery, walking or performance."}
 
 
 def add_arguments(parser: argparse.ArgumentParser) -> None:
@@ -490,7 +499,10 @@ def run(args: argparse.Namespace) -> int:
                           expected_protocol_sha256=args.protocol_sha256,
                           expected_stack_sha256=args.stack_sha256)
     except (EvidenceError, OSError) as error:
-        report = {"schema": REPORT_SCHEMA, "status": "invalid", "failures": [str(error)]}
+        report = {"schema": REPORT_SCHEMA, "status": "invalid",
+                  "assessment_scope": ASSESSMENT_SCOPE,
+                  "release_qualification": RELEASE_QUALIFICATION,
+                  "failures": [str(error)]}
     # Evidence reports are append-only artifacts; never replace an earlier result.
     with args.output.open("x") as stream:
         json.dump(report, stream, indent=2, allow_nan=False)

@@ -130,6 +130,9 @@ class BehaviorQualificationTests(unittest.TestCase):
     def test_complete_frozen_populations_pass_with_exact_horizons(self):
         report = self.evaluate()
         self.assertEqual(report["status"], "passed")
+        self.assertEqual(report["assessment_scope"], q.ASSESSMENT_SCOPE)
+        self.assertEqual(report["release_qualification"], q.RELEASE_QUALIFICATION)
+        self.assertIn("historical 420-trial", report["boundary"])
         self.assertEqual([g["trials"] for g in report["groups"]], [20, 100, 100, 100, 100])
         self.assertEqual(len(report["trials"]), 420)
         self.assertEqual(report["trials"][-1]["accepted_seconds"], 120)
@@ -407,6 +410,9 @@ class BehaviorQualificationTests(unittest.TestCase):
                      "--bundle", str(self.bundle_path), "--output", str(output)]
         self.assertEqual(q.main(arguments), 1)
         self.assertEqual(json.loads(output.read_text())["status"], "invalid")
+        invalid = json.loads(output.read_text())
+        self.assertEqual(invalid["assessment_scope"], q.ASSESSMENT_SCOPE)
+        self.assertEqual(invalid["release_qualification"], q.RELEASE_QUALIFICATION)
         with self.assertRaises(FileExistsError):
             q.main(arguments)
 
