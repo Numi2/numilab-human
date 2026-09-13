@@ -10,7 +10,9 @@ nodes, vascular values, exact vascular clock, and the production moment output.
 
 The current native source is commit
 `171b74062a283b04aec59f949552c38ed5cafef4` on the isolated
-`human-blood-mass-20260913` branch. The parent is the declared stand-horizon
+`human-blood-mass-20260913` branch. The checkout is clean; publishing that
+Mac mini branch is currently blocked because its HTTPS origin has no available
+credentials. The parent is the declared stand-horizon
 increment `a134ad9d0e6ca3416ec3e98e66c5fcb84dc05b0b`; the focused run was
 rebuilt against ABI 39 on `ssh macmini` (Apple M4 Pro). All four selected CTest
 cases passed: compiler vascular, Metal vascular, Human binding, and the
