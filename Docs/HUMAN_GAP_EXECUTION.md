@@ -213,6 +213,14 @@ binds the four bridge members to the exact MyoSim torso source/core body
 non-disjoint, and physical cavity volume, blood mass, pressure coupling,
 material, tissue exchange, and calibration remain unqualified.
 
+The [torso organ/body-link receipt](ORGAN_TORSO_BODY_LINK_20260913.md) now
+hash-binds all five selected organ surfaces, six selected vessel surfaces, and
+the spinal-cord surface to the native visual payload and named MyoSim
+source/core bodies. This closes source/body-frame bookkeeping for the selected
+torso surfaces; organ FEM/MPM, vessel tube/lumen mechanics, neural mechanics,
+mass, materials, pressure reaction, tissue exchange, anatomical loading,
+calibration, standing, and walking remain unqualified.
+
 The current ABI39 blood-momentum restore snapshot is
 [`Docs/media/gap-execution-20260913/report-blood-momentum-restore-current-20260913.json`](media/gap-execution-20260913/report-blood-momentum-restore-current-20260913.json)
 (file SHA-256 `00803c8e93b18737839e71b8ae835002dfd09729fdaeca849bca9310cb36b74b`,
@@ -250,3 +258,12 @@ and its report SHA-256 is `8d93cd0af131ae6d0962a37a2f217134e16b9a52b90b456f5d852
 It retains 14 workstreams, 46 tasks, 95 mandatory targets, and
 `integrated_qualification: not_assessed`; the body-link receipt closes named
 source/core frame bookkeeping only.
+
+The current registry snapshot after the torso organ/body-link receipt is
+[`Docs/media/gap-execution-20260913/report-with-native-torso-body-links-final2-20260913.json`](media/gap-execution-20260913/report-with-native-torso-body-links-final2-20260913.json).
+Its file SHA-256 is `1cb7357ead5a5b704100de9a735a7129ee3194823f205d39a7144ccd069bfc9a`
+and its report content SHA-256 is
+`617491f7d06b7ecc28d76754f439923aee5e03b7a8d92b86b84126da8123743c`.
+It retains 14 workstreams, 46 tasks, 95 mandatory targets, and
+`integrated_qualification: not_assessed`; the new receipt closes selected
+source/body-frame bookkeeping only.
