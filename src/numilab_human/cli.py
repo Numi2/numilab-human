@@ -2142,6 +2142,12 @@ def parser() -> argparse.ArgumentParser:
         help="advance a compiled organ/circulation graph with conservative accepted-step rollback",
     )
     add_physiology_step_arguments(physiology_step)
+    from .blood_mass_step import add_arguments as add_blood_mass_step_arguments
+    blood_mass_step = commands.add_parser(
+        "blood-mass-step",
+        help="advance an explicit fixture blood/tissue mass owner with conservative rollback",
+    )
+    add_blood_mass_step_arguments(blood_mass_step)
     from .locomotor import add_arguments as add_locomotor_arguments
     locomotor = commands.add_parser("locomotor-program", help="author a source-bound Brain spindle and periodic muscle controller candidate")
     add_locomotor_arguments(locomotor)
