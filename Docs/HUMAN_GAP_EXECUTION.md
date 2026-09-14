@@ -438,14 +438,27 @@ is far below the standing gate, this narrows the recruitment/equilibrium
 failure without closing force convergence, sustained standing, recovery,
 walking, anatomical loading, material, blood/tissue transfer, or calibration.
 The refreshed executable gap report is
-[`Docs/media/gap-execution-20260915/report-v7.json`](media/gap-execution-20260915/report-v7.json),
+[`Docs/media/gap-execution-20260915/report-v8.json`](media/gap-execution-20260915/report-v8.json),
 whose report content SHA-256 is
-`24a894aebfdcdcc576626bf24fe547dbfde2e6399713f42f48d39d7fb0261c78`.
+`289f0cce7f2aa9c48a13ada68441ad88343d2b6beedafeb5aba7ed6ba9517313` and
+whose canonical file SHA-256 is
+`a0ba8a87bb782bc4d4dff71d8c3fbb29847225e4359be05c9345902e1a1bc1e1`.
 It includes the activation-0.8/default receipts, the 512-step temporal-drift
-receipt, the v10 cross-domain body-composition join, the current costal tissue
-requalification, and the canonical per-DoF force ledger receipt, and remains
+receipt, the v11 cross-domain body-composition join, the current costal tissue
+and regional blood/exchange requalifications, and the canonical per-DoF force
+ledger receipt, and remains
 `integrated_qualification: not_assessed` with 14 workstreams, 54 tasks, and
 95 mandatory targets.
+
+The current native regional exchange receipt records 21 source compartments,
+24 source connections and seven regional beds on the physical M4 Pro at the
+canonical `12,500 ns` clock. Its 512 attempted steps include 511 accepted
+environment-0 steps and bitwise rejected-step rollback/replay; maximum
+relative volume, blood-mass and oxygen residuals are `5.711629397e-7`,
+`5.711629397e-7` and `1.057184875e-6`. This is amount/conservation evidence
+for the source graph only. The unresolved density, anatomical lumen, physical
+tissue volume, mechanical blood-mass ownership, organ mechanics, material and
+subject calibration, standing, recovery and walking gates remain open.
 
 The native source owner now defaults persistent stand recruitment to the
 validated `0.8` ceiling when the CLI option is omitted. On the physical M4 Pro,

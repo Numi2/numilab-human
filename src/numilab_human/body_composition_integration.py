@@ -43,6 +43,9 @@ NATIVE_RELEASE = ROOT / "Docs/media/native-current-release-20260915/receipt-v5.j
 NATIVE_COSTAL_TISSUE = ROOT / (
     "Docs/media/tissue-integration-20260908/current-costal-binding-receipt-20260915.json"
 )
+NATIVE_REGIONAL_EXCHANGE = ROOT / (
+    "Docs/media/native-human-regional-exchange-20260915/receipt-v1.json"
+)
 
 
 def _require(condition: bool, message: str) -> None:
@@ -119,7 +122,7 @@ def _read_profile(path: Path) -> dict[str, Any]:
         "blood_transport", "tissue_exchange", "cardiac_blood",
         "cvsim21_blood_mass", "vessel_registration", "cardiac_wall_source",
         "cardiac_wall_config", "tissue_calibration", "native_current_release",
-        "native_costal_tissue",
+        "native_costal_tissue", "native_regional_exchange",
     ], "integration profile input order differs")
     return value
 
@@ -161,6 +164,7 @@ def compile_candidate(
     tissue_calibration: Path = TISSUE_CALIBRATION,
     native_current_release: Path = NATIVE_RELEASE,
     native_costal_tissue: Path = NATIVE_COSTAL_TISSUE,
+    native_regional_exchange: Path = NATIVE_REGIONAL_EXCHANGE,
 ) -> dict[str, Any]:
     profile = Path(profile)
     profile_document = _read_profile(profile)
@@ -184,6 +188,7 @@ def compile_candidate(
         "tissue_calibration": Path(tissue_calibration),
         "native_current_release": Path(native_current_release),
         "native_costal_tissue": Path(native_costal_tissue),
+        "native_regional_exchange": Path(native_regional_exchange),
     }
     documents: dict[str, dict[str, Any]] = {}
     hashes: dict[str, str] = {}
@@ -207,6 +212,7 @@ def compile_candidate(
         "tissue_calibration": "tissue material calibration candidate",
         "native_current_release": "current native Human release requalification",
         "native_costal_tissue": "current native costal tissue requalification",
+        "native_regional_exchange": "current native regional blood exchange requalification",
     }
     for name, path in paths.items():
         documents[name], hashes[name] = _read(path, labels[name])
@@ -241,6 +247,9 @@ def compile_candidate(
     _schema(documents["native_costal_tissue"],
             "HumanPack.costal-tissue-native-current-requalification.v1",
             labels["native_costal_tissue"])
+    _schema(documents["native_regional_exchange"],
+            "HumanPack.native-human-regional-exchange-current-requalification.v1",
+            labels["native_regional_exchange"])
 
     native_release = documents["native_current_release"]
     native_source = native_release.get("source", {})
@@ -290,6 +299,44 @@ def compile_candidate(
              native_costal_qualification.get("whole_body_dynamic_mass_matrix") is False and
              native_costal_qualification.get("experimental_material_calibration") is False,
              "native current costal tissue evidence changed")
+
+    native_exchange = documents["native_regional_exchange"]
+    native_exchange_source = native_exchange.get("source", {})
+    native_exchange_inputs = native_exchange.get("inputs", {})
+    native_exchange_results = native_exchange.get("results", {})
+    native_exchange_qualification = native_exchange.get("qualification", {})
+    _require(native_exchange.get("status") == "partial" and
+             native_exchange_source.get("branch") == "numi-human-equilibrium-20260914" and
+             native_exchange_source.get("commit") == "c45fa9622f6c73b58febdc24a7115aecf3d7699f" and
+             native_exchange_source.get("device") == "Mac mini M4 Pro" and
+             native_exchange_source.get("binary") == "numi-matter-vascular-check" and
+             native_exchange_inputs.get("fixture", {}).get("sha256") ==
+             "eeb6ebc5dad5cb413587038532ac5badc3d3e8aa419cca111604239e7f692818" and
+             native_exchange_results.get("source_compartment_count") == 21 and
+             native_exchange_results.get("source_connection_count") == 24 and
+             native_exchange_results.get("regional_bed_count") == 7 and
+             native_exchange_results.get("attempted_steps") == 512 and
+             native_exchange_results.get("accepted_steps_environment_0") == 511 and
+             native_exchange_results.get("rejected_step_environment_0") == 37 and
+             native_exchange_results.get("timestep_nanoseconds") == 12500 and
+             native_exchange_results.get("blood_density_candidate_kg_per_m3") == 1060.0 and
+             native_exchange_results.get("rollback") == "bitwise" and
+             native_exchange_results.get("replay") == "bitwise",
+             "native regional exchange source identity or exact-clock result changed")
+    _require(native_exchange_results.get("maximum_relative_volume_residual") == 5.711629397e-07 and
+             native_exchange_results.get("maximum_relative_blood_mass_residual") == 5.711629397e-07 and
+             native_exchange_results.get("maximum_relative_oxygen_residual") == 1.057184875e-06 and
+             native_exchange_qualification.get("current_native_replay") is True and
+             native_exchange_qualification.get("regional_blood_transport") is True and
+             native_exchange_qualification.get("oxygen_amount_exchange") is True and
+             native_exchange_qualification.get("accepted_step_conservation") is True and
+             native_exchange_qualification.get("anatomical_vessel_lumen") is False and
+             native_exchange_qualification.get("physical_tissue_volume_owner") is False and
+             native_exchange_qualification.get("mechanical_blood_mass_owner") is False and
+             native_exchange_qualification.get("material_calibration") is False and
+             native_exchange_qualification.get("subject_calibration") is False and
+             native_exchange_qualification.get("standing_walking") is False,
+             "native regional exchange qualification boundary changed")
 
     organ = documents["organ_mass"]
     organ_counts = organ.get("counts", {})
@@ -821,6 +868,10 @@ def compile_candidate(
             "native_costal_tissue_receipt_sha256": hashes["native_costal_tissue"],
             "native_costal_tissue_source_commit": native_costal_source["commit"],
             "native_costal_tissue_output_sha256": native_costal["output"]["sha256"],
+            "native_regional_exchange_receipt_sha256": hashes["native_regional_exchange"],
+            "native_regional_exchange_source_commit": native_exchange_source["commit"],
+            "native_regional_exchange_binary_sha256": native_exchange_source["binary_sha256"],
+            "native_regional_exchange_fixture_sha256": native_exchange_inputs["fixture"]["sha256"],
             "transport_and_exchange_beds_share_clock": (
                 transport["clock"]["nanoseconds"] == exchange["clock"]["nanoseconds"]
             ),
@@ -910,6 +961,14 @@ def compile_candidate(
             "native_costal_tissue_mass_conserved": native_costal_qualification["mass_conservation"],
             "native_costal_tissue_mass_kg": native_costal_results["tissue_mass_kg"],
             "native_costal_tissue_whole_body_mass_owner": native_costal_qualification["whole_body_dynamic_mass_matrix"],
+            "native_regional_exchange_attempted_steps": native_exchange_results["attempted_steps"],
+            "native_regional_exchange_accepted_steps_environment_0": native_exchange_results["accepted_steps_environment_0"],
+            "native_regional_exchange_rejected_steps_environment_0": native_exchange_results["rejected_step_environment_0"],
+            "native_regional_exchange_volume_residual": native_exchange_results["maximum_relative_volume_residual"],
+            "native_regional_exchange_blood_mass_residual": native_exchange_results["maximum_relative_blood_mass_residual"],
+            "native_regional_exchange_oxygen_residual": native_exchange_results["maximum_relative_oxygen_residual"],
+            "native_regional_exchange_conserved": native_exchange_qualification["accepted_step_conservation"],
+            "native_regional_exchange_mechanical_blood_mass_owner": native_exchange_qualification["mechanical_blood_mass_owner"],
         },
         "qualification": {
             "source_identity_graph_bound": True,
@@ -923,6 +982,10 @@ def compile_candidate(
             "native_current_release_sustained_standing": False,
             "native_costal_tissue_requalification_bound": True,
             "native_costal_tissue_whole_body_mass_owner": False,
+            "native_regional_exchange_requalification_bound": True,
+            "native_regional_exchange_mechanical_blood_mass_owner": False,
+            "native_regional_exchange_anatomical_lumen": False,
+            "native_regional_exchange_oxygen_exchange": True,
             "tissue_oxygen_exchange_candidate_bound": True,
             "muscle_activation_route_identity_bound": True,
             "muscle_surface_identity_bound": True,
@@ -962,7 +1025,12 @@ def compile_candidate(
             "M4 Pro receipt; its temporal drift remains visible and does not promote "
             "sustained standing. The current costal tissue transaction is likewise "
             "hash-bound to the same native source owner, but remains regional and "
-            "does not promote a whole-body mass owner. It "
+            "does not promote a whole-body mass owner. The current native regional "
+            "blood/oxygen transaction is hash-bound to the same source owner and "
+            "exact 12.5 microsecond clock; its conservation and rollback are admitted "
+            "only as source-graph amount transport, with no anatomical lumen, tissue "
+            "volume, mechanical blood mass, organ mechanics, material or subject "
+            "calibration. It "
             "proves source identity and nonduplicated ownership bookkeeping only. "
             "The exact bilateral foot source registration and six active support "
             "witness identities are bound as a contact handoff, but they are not "
@@ -1013,6 +1081,9 @@ def run(arguments: argparse.Namespace) -> int:
         cardiac_wall_source=arguments.cardiac_wall_source,
         cardiac_wall_config=arguments.cardiac_wall_config,
         tissue_calibration=arguments.tissue_calibration,
+        native_current_release=arguments.native_current_release,
+        native_costal_tissue=arguments.native_costal_tissue,
+        native_regional_exchange=arguments.native_regional_exchange,
     )
     output = arguments.output.resolve()
     digest = _immutable_write(output, result)
@@ -1044,6 +1115,9 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--cardiac-wall-source", type=Path, default=CARDIAC_WALL_SOURCE)
     parser.add_argument("--cardiac-wall-config", type=Path, default=CARDIAC_WALL_CONFIG)
     parser.add_argument("--tissue-calibration", type=Path, default=TISSUE_CALIBRATION)
+    parser.add_argument("--native-current-release", type=Path, default=NATIVE_RELEASE)
+    parser.add_argument("--native-costal-tissue", type=Path, default=NATIVE_COSTAL_TISSUE)
+    parser.add_argument("--native-regional-exchange", type=Path, default=NATIVE_REGIONAL_EXCHANGE)
     parser.add_argument("--output", type=Path, required=True)
     parser.set_defaults(handler=run)
 

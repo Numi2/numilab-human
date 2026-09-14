@@ -112,3 +112,14 @@ cases, with a conservative `0.11369939548001184 kg` regional partition. This
 is a regional mass/rebase handoff only; it does not become the whole-body mass
 matrix or a calibrated material, thorax, blood-transfer, fat, standing,
 recovery, or walking owner.
+
+The current `v11` receipt additionally binds the physical-M4 regional
+blood/oxygen exchange requalification from the same native source owner. It
+retains the 21-compartment, 24-connection, seven-bed topology and the exact
+`12,500 ns` transaction with 512 attempted steps, 511 accepted environment-0
+steps, bitwise rejected-step rollback, and maximum relative volume,
+blood-mass, and oxygen residuals of `5.711629397e-7`, `5.711629397e-7`, and
+`1.057184875e-6`. This is an amount/conservation and replay handoff only. The
+`1060 kg/m3` density remains an engineering candidate, and anatomical lumen,
+physical tissue volume, mechanical blood mass, organ mechanics, calibrated
+materials, subject calibration, standing, recovery, and walking remain false.

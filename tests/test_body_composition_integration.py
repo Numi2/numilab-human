@@ -60,6 +60,12 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
     assert result["runtime_evidence"]["native_costal_tissue_replay_cases"] == 8
     assert result["runtime_evidence"]["native_costal_tissue_mass_conserved"]
     assert result["runtime_evidence"]["native_costal_tissue_mass_kg"] == pytest.approx(0.11369939548001184)
+    assert result["qualification"]["native_regional_exchange_requalification_bound"]
+    assert result["qualification"]["native_regional_exchange_oxygen_exchange"]
+    assert not result["qualification"]["native_regional_exchange_mechanical_blood_mass_owner"]
+    assert result["runtime_evidence"]["native_regional_exchange_attempted_steps"] == 512
+    assert result["runtime_evidence"]["native_regional_exchange_accepted_steps_environment_0"] == 511
+    assert result["runtime_evidence"]["native_regional_exchange_oxygen_residual"] == pytest.approx(1.057184875e-6)
     assert not result["qualification"]["anatomical_supports_loading"]
     assert result["qualification"]["fat_source_absence_bound"]
     assert not result["qualification"]["integrated_human_qualification"]
@@ -102,3 +108,13 @@ def test_native_release_temporal_receipt_drift_is_rejected(tmp_path: Path) -> No
     path.write_text(json.dumps(value, sort_keys=True, indent=2) + "\n", encoding="utf-8")
     with pytest.raises(ImportError, match="native current release 512-step evidence changed"):
         compile_candidate(native_current_release=path)
+
+
+def test_native_regional_exchange_boundary_is_rejected_if_promoted(tmp_path: Path) -> None:
+    source = Path("Docs/media/native-human-regional-exchange-20260915/receipt-v1.json")
+    value = json.loads(source.read_text(encoding="utf-8"))
+    value["qualification"]["mechanical_blood_mass_owner"] = True
+    path = tmp_path / "native-regional.json"
+    path.write_text(json.dumps(value, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+    with pytest.raises(ImportError, match="native regional exchange qualification boundary changed"):
+        compile_candidate(native_regional_exchange=path)

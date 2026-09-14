@@ -6,15 +6,26 @@ The current published source/runtime join is `ce753bb` in the companion
 `numilab-human` repository and the native Human owner is
 `c45fa9622f6c73b58febdc24a7115aecf3d7699f` on a Mac mini M4 Pro. The latest
 cross-domain receipt is
-[`body-composition-integration/receipt-v10.json`](media/body-composition-integration-20260914/receipt-v10.json),
+[`body-composition-integration/receipt-v11.json`](media/body-composition-integration-20260914/receipt-v11.json),
 and the executable registry snapshot is
-[`gap-execution/report-v7.json`](media/gap-execution-20260915/report-v7.json).
+[`gap-execution/report-v8.json`](media/gap-execution-20260915/report-v8.json).
 The join now includes the current native costal tissue requalification
 ([receipt](media/tissue-integration-20260908/current-costal-binding-receipt-20260915.json)):
 13,516 cooked nodes, 46,278 tetrahedra, 2,871 attachments, eight Apple M4 Pro
 replays, and a conservative `0.11369939548001184 kg` regional partition with
 mass/rebase checks passing. This is regional ownership bookkeeping only; it
 does not become a whole-body dynamic mass matrix or a calibrated thorax.
+
+The current native regional blood/exchange requalification is also bound to
+the same source owner and physical M4 Pro: 21 source compartments, 24 source
+connections, seven regional beds, 512 attempted exact-clock steps with 511
+accepted in environment zero, bitwise rollback/replay, and maximum relative
+volume, blood-mass, and oxygen residuals of `5.711629397e-7`,
+`5.711629397e-7`, and `1.057184875e-6`. This is a source-graph amount and
+conservation subgate only; the candidate `1060 kg/m3` density remains
+unresolved and no anatomical lumen, physical tissue volume, mechanical blood
+mass, organ mechanics, material calibration, subject calibration, standing,
+recovery, or walking gate is promoted.
 
 The same native owner completed 512 exact `12.5 us` steps with zero
 penetration and no root assistance, but peak acceleration rose to

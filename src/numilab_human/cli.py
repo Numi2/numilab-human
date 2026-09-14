@@ -2137,6 +2137,12 @@ def parser() -> argparse.ArgumentParser:
         help="bind the current Mac mini costal tissue transaction without promoting whole-body ownership",
     )
     add_tissue_native_requalification_arguments(tissue_native_requalification)
+    from .native_regional_exchange_requalification import add_arguments as add_native_regional_exchange_arguments
+    native_regional_exchange = commands.add_parser(
+        "native-regional-exchange-requalification",
+        help="bind the current Mac mini regional blood and oxygen exchange replay without promoting anatomical ownership",
+    )
+    add_native_regional_exchange_arguments(native_regional_exchange)
     from .physiology import add_arguments as add_physiology_arguments
     physiology = commands.add_parser(
         "physiology-compile", help="validate source-bound organ and circulation authoring and compile native indices",
