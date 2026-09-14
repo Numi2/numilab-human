@@ -438,12 +438,11 @@ is far below the standing gate, this narrows the recruitment/equilibrium
 failure without closing force convergence, sustained standing, recovery,
 walking, anatomical loading, material, blood/tissue transfer, or calibration.
 The refreshed executable gap report is
-[`Docs/media/gap-execution-20260915/report-v4.json`](media/gap-execution-20260915/report-v4.json),
+[`Docs/media/gap-execution-20260915/report-v5.json`](media/gap-execution-20260915/report-v5.json),
 whose report content SHA-256 is
-`302885bd4b6ba94524bb5e778204af37059982464d6de67015910cb1157fb294` and file
-SHA-256 is `64e268891b5bc58fac28e634070bcbbb1377d17fd66beb5cd33492f742fde5a3`.
-It includes the activation-0.8/default receipt and canonical per-DoF force
-ledger receipt, and remains
+`f25e90e9371dccf624c477ee19d29246ba870e5dbdce2f93f784093b27a5aa7f`.
+It includes the activation-0.8/default receipts, the 512-step temporal-drift
+receipt, and the canonical per-DoF force ledger receipt, and remains
 `integrated_qualification: not_assessed` with 14 workstreams, 54 tasks, and
 95 mandatory targets.
 
@@ -452,9 +451,13 @@ validated `0.8` ceiling when the CLI option is omitted. On the physical M4 Pro,
 the implicit-default 64-step run reproduces the explicit `0.8` trace exactly
 for the standing metrics (`0.49170973897 m/s²` peak,
 `0.0250606500378` compiled residual, zero penetration, no root assistance).
-The source commit is `c45fa9622f6c73b58febdc24a7115aecf3d7699f`; the immutable
-default receipt is
-[`Docs/media/native-current-release-20260915/receipt-v4.json`](media/native-current-release-20260915/receipt-v4.json).
-This changes the default recruitment handoff, but its `0.8 ms` horizon still
-does not close force convergence, sustained standing, recovery, walking,
+The same source completed 512 exact steps (6.4 ms), but its peak acceleration
+rose to `32.7379798889 m/s²` with a `2.52364020525e-6` maximum configuration
+delta, so the longer run is retained as temporal-drift evidence rather than
+standing qualification. The source commit is
+`c45fa9622f6c73b58febdc24a7115aecf3d7699f`; the immutable default receipts are
+[`receipt-v4.json`](media/native-current-release-20260915/receipt-v4.json) and
+[`receipt-v5.json`](media/native-current-release-20260915/receipt-v5.json).
+This changes the default recruitment handoff, but the bounded horizons still
+do not close force convergence, sustained standing, recovery, walking,
 anatomical loading, blood/tissue transfer, materials, or calibration.

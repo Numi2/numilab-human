@@ -9,7 +9,8 @@ retained in `Docs/media/native-current-release-20260915/`.
 The source patch makes `0.8` the default recruitment ceiling for the
 persistent stand when `--muscle-activation` is omitted. The older `1691e321`
 one-step receipt remains retained as the historical `0.5` negative control;
-the current default is covered by `receipt-v4.json`.
+the current default is covered by `receipt-v4.json` and its longer exact-clock
+replay by `receipt-v5.json`.
 
 The source root wrench still closes to `1.50167204538e-6 N`, the source
 constraint preload is present (`2186.6550293 N` maximum), fibre equilibrium
@@ -35,8 +36,8 @@ tissue transfer, or subject calibration.
 
 The same source was then rerun with `--muscle-activation 1.0` for one step and
 64 steps, with an explicit `0.8` ceiling for 64 steps, and with the new
-implicit default ceiling for 64 steps. The raw logs and immutable
-`receipt-v2.json`/`receipt-v3.json`/`receipt-v4.json` are retained in the same
+implicit default ceiling for 64 and 512 steps. The raw logs and immutable
+`receipt-v2.json`/`receipt-v3.json`/`receipt-v4.json`/`receipt-v5.json` are retained in the same
 media directory. This isolates recruitment sensitivity from the historical
 activation-0.5 failure above:
 
@@ -47,6 +48,7 @@ activation-0.5 failure above:
 | activation 1.0 | 64 | 0.8 ms | 0.0250606490784 | 0.489560902119 m/s² | 0 m | bounded release |
 | activation 0.8 | 64 | 0.8 ms | 0.0250606500378 | 0.491709738970 m/s² | 0 m | bounded release |
 | omitted, source default 0.8 | 64 | 0.8 ms | 0.0250606500378 | 0.491709738970 m/s² | 0 m | bounded release |
+| omitted, source default 0.8 | 512 | 6.4 ms | 0.0250606500378 | 32.7379798889 m/s² | 0 m | temporal drift |
 
 The activation-1.0 run has six active supports of ten witnesses, no root
 assistance, zero penetration, and `compiled_stand_balanced=true`. It is still
@@ -57,3 +59,13 @@ ceiling gives the same bounded result within the recorded numerical spread,
 which narrows the immediate failure to the default ceiling/recruitment and
 coupled-equilibrium path without making the biological or sustained-standing
 claim that the gate requires.
+
+The 512-step replay completed on the physical M4 Pro with the same source and
+implicit `0.8` ceiling. It retained six active contacts, zero penetration, no
+root assistance, a `1.7372478851e-6 N` root residual and
+`compiled_stand_balanced=true`, but the peak acceleration increased to
+`32.7379798889 m/s²`; the maximum velocity and configuration deltas increased
+to `0.000557818682864` and `2.52364020525e-6`. This is the current-branch
+longer-horizon temporal-drift receipt (`receipt-v5.json`), not evidence of a
+stable stand. The 6.4 ms horizon remains far below the sustained-standing,
+recovery and walking gates.
