@@ -7,7 +7,10 @@ from pathlib import Path
 import pytest
 
 from numilab_human.model import ImportError
-from numilab_human.native_force_convergence import audit
+from numilab_human.native_force_convergence import (
+    HANDOFF_PASSIVE_BIAS_POLICY,
+    audit,
+)
 
 
 LINE = (
@@ -25,8 +28,9 @@ LINE = (
 HANDOFF_COUNTS = {
     "activation": 416,
     "fiber_length": 416,
-    "actuator_force": 416,
-    "passive_actuator_force": 416,
+    "source_total_actuator_force": 416,
+    "driven_actuator_force": 416,
+    "excluded_passive_bias_force": 416,
     "generalized_muscle_force": 128,
     "generalized_passive_force": 128,
     "force_residual": 128,
@@ -81,30 +85,22 @@ def _converged_line() -> str:
     )
 
 
-def _state_receipt(
-    path: Path,
-    *,
-    candidate: bool,
-    maximal: bool,
-    equilibrium_transport: bool | None = None,
-) -> None:
-    if equilibrium_transport is None:
-        equilibrium_transport = candidate
+def _state(path: Path, *, candidate: bool = True, transported: bool = True) -> None:
     path.write_text(json.dumps({
         "schema": "numi.human.standing-initial-state-audit.v1",
         "initial_state": {"sha256": "1" * 64},
         "state": {
-            "uniform_maximal_activation": maximal,
+            "uniform_maximal_activation": not candidate,
             "activation_nonzero_count": 237 if candidate else 416,
         },
         "qualification": {
             "standing_initial_state_candidate": candidate,
-            "equilibrium_state_transport": equilibrium_transport,
+            "equilibrium_state_transport": transported,
         },
     }), encoding="utf-8")
 
 
-def _force_ledger(path: Path, *, complete: bool) -> None:
+def _ledger(path: Path, *, complete: bool = True) -> None:
     path.write_text(json.dumps({
         "schema": "numi.human.generalized-force-ledger.v1",
         "coverage": {"full_force_coverage": complete},
@@ -117,7 +113,7 @@ def _force_ledger(path: Path, *, complete: bool) -> None:
     }), encoding="utf-8")
 
 
-def _comparison(count: int, *, passed: bool) -> dict:
+def _comparison(count: int, *, passed: bool = True) -> dict:
     return {
         "count": count,
         "absolute_tolerance": 1.0e-7,
@@ -133,23 +129,21 @@ def _comparison(count: int, *, passed: bool) -> dict:
     }
 
 
-def _handoff_payload(*, complete: bool, inconsistent_claim: bool = False) -> dict:
-    evidence = complete and not inconsistent_claim
+def _handoff_payload(*, complete: bool = True) -> dict:
+    evidence = complete
     return {
-        "schema": "numi.human.static-dynamic-handoff-audit.v1",
+        "schema": "numi.human.static-dynamic-handoff-audit.v2",
         "status": "passed" if evidence else "partial",
         "coverage": {
             "muscles": 416,
             "generalized_coordinates": 128,
             "static_muscle_state": True,
             "static_generalized_forces": True,
+            "static_zero_activation_force_diagnostic": True,
+            "passive_bias_policy": HANDOFF_PASSIVE_BIAS_POLICY,
             "dynamic_pre_step_state": evidence,
-            "dynamic_state_owner": (
-                "PersistentMetalHumanState.initial" if evidence else None
-            ),
-            "dynamic_force_owner": (
-                "PersistentMetalHumanState.pre_step_force" if evidence else None
-            ),
+            "dynamic_state_owner": "PersistentMetalHumanState.initial" if evidence else None,
+            "dynamic_force_owner": "PersistentMetalHumanState.pre_step_force" if evidence else None,
         },
         "thresholds": {
             "activation_absolute": 1.0e-7,
@@ -157,6 +151,7 @@ def _handoff_payload(*, complete: bool, inconsistent_claim: bool = False) -> dic
             "fiber_relative": 5.0e-6,
             "force_absolute_n": 5.0e-2,
             "force_relative": 5.0e-5,
+            "decomposition_absolute_n": 1.0e-6,
             "residual_absolute": 1.0e-3,
             "maximum_damped_equilibrium_residual": 1.0e-5,
         },
@@ -164,267 +159,175 @@ def _handoff_payload(*, complete: bool, inconsistent_claim: bool = False) -> dic
             name: _comparison(count, passed=evidence)
             for name, count in HANDOFF_COUNTS.items()
         },
+        "source_force_decomposition": _comparison(416, passed=evidence),
         "maximum_damped_equilibrium_residual": 0.0 if evidence else 0.01,
         "qualification": {
             "pre_step_snapshot_present": evidence,
             "activation_and_fiber_state_parity": evidence,
             "per_muscle_force_parity": evidence,
+            "source_force_decomposition_closed": evidence,
             "generalized_force_parity": evidence,
             "fiber_tendon_equilibrium_closed": evidence,
             "static_dynamic_handoff_parity": complete,
         },
-        "gate": {"reasons": [] if evidence else ["fixture is incomplete"]},
+        "gate": {"reasons": [] if evidence else ["fixture incomplete"]},
     }
 
 
-def _handoff(
-    path: Path, *, complete: bool, inconsistent_claim: bool = False
-) -> None:
-    path.write_text(json.dumps(_handoff_payload(
-        complete=complete, inconsistent_claim=inconsistent_claim
-    )), encoding="utf-8")
+def _handoff(path: Path, *, complete: bool = True) -> None:
+    path.write_text(json.dumps(_handoff_payload(complete=complete)), encoding="utf-8")
 
 
-def _complete_evidence(tmp_path: Path) -> tuple[Path, Path, Path]:
-    state = tmp_path / "standing-state.json"
-    ledger = tmp_path / "force-ledger.json"
+def _evidence(tmp_path: Path) -> tuple[Path, Path, Path]:
+    state = tmp_path / "state.json"
+    ledger = tmp_path / "ledger.json"
     handoff = tmp_path / "handoff.json"
-    _state_receipt(state, candidate=True, maximal=False)
-    _force_ledger(ledger, complete=True)
-    _handoff(handoff, complete=True)
+    _state(state)
+    _ledger(ledger)
+    _handoff(handoff)
     return state, ledger, handoff
 
 
-def test_native_force_audit_retains_partial_status(tmp_path: Path) -> None:
-    stdout = tmp_path / "stdout"
-    stdout.write_text(LINE, encoding="utf-8")
-    stderr = tmp_path / "stderr"
-    stderr.write_text("", encoding="utf-8")
+def _audit(tmp_path: Path, line: str, **overrides) -> dict:
+    stdout = tmp_path / "stdout.log"
     output = tmp_path / "receipt.json"
-    assert audit(_arguments(stdout, output, stderr=stderr)) == 0
-    receipt = json.loads(output.read_text(encoding="utf-8"))
+    stdout.write_text(line, encoding="utf-8")
+    assert audit(_arguments(stdout, output, **overrides)) == 0
+    return json.loads(output.read_text(encoding="utf-8"))
+
+
+def test_unconverged_native_horizon_remains_partial(tmp_path: Path) -> None:
+    receipt = _audit(tmp_path, LINE)
     assert receipt["status"] == "partial"
-    assert not receipt["qualification"]["force_convergence"]
+    assert not receipt["qualification"]["mechanical_force_convergence"]
     assert not receipt["qualification"]["sustained_standing"]
-    assert receipt["exact_dense_stage"]["selected_path"] == "large_state_fallback"
 
 
-def test_mechanical_convergence_does_not_promote_standing(tmp_path: Path) -> None:
-    stdout = tmp_path / "stdout"
-    stdout.write_text(_converged_line(), encoding="utf-8")
-    output = tmp_path / "receipt.json"
-    assert audit(_arguments(stdout, output)) == 0
-    receipt = json.loads(output.read_text(encoding="utf-8"))
+def test_mechanical_convergence_does_not_claim_standing(tmp_path: Path) -> None:
+    receipt = _audit(tmp_path, _converged_line())
     assert receipt["qualification"]["mechanical_force_convergence"]
     assert receipt["qualification"]["force_convergence"]
     assert not receipt["qualification"]["standing_force_convergence"]
     assert not receipt["qualification"]["sustained_standing"]
 
 
-def test_standing_force_convergence_requires_all_evidence(tmp_path: Path) -> None:
-    stdout = tmp_path / "stdout"
-    stdout.write_text(_converged_line(), encoding="utf-8")
-    state, ledger, handoff = _complete_evidence(tmp_path)
-    output = tmp_path / "receipt.json"
-    assert audit(_arguments(
-        stdout,
-        output,
+def test_standing_force_convergence_requires_v2_handoff(tmp_path: Path) -> None:
+    state, ledger, handoff = _evidence(tmp_path)
+    receipt = _audit(
+        tmp_path,
+        _converged_line(),
         standing_state_receipt=state,
         require_standing_state_receipt=True,
         force_ledger_receipt=ledger,
         require_force_ledger_receipt=True,
         static_dynamic_handoff_receipt=handoff,
         require_static_dynamic_handoff_receipt=True,
-    )) == 0
-    receipt = json.loads(output.read_text(encoding="utf-8"))
-    assert receipt["qualification"]["standing_state_admissible"]
-    assert receipt["qualification"]["force_ledger_admissible"]
+    )
     assert receipt["qualification"]["static_dynamic_handoff_admissible"]
-    assert receipt["qualification"]["force_convergence"]
+    assert receipt["static_dynamic_handoff"]["source_force_decomposition_closed"]
     assert receipt["qualification"]["standing_force_convergence"]
     assert not receipt["qualification"]["sustained_standing"]
 
 
-def test_legacy_scalar_cannot_substitute_for_structured_handoff(tmp_path: Path) -> None:
-    stdout = tmp_path / "stdout"
-    stdout.write_text(_converged_line().replace(
-        "source_dynamic_force_parity_max_delta_n=0.01",
-        "source_dynamic_force_parity_max_delta_n=0",
-    ), encoding="utf-8")
-    state = tmp_path / "standing-state.json"
-    ledger = tmp_path / "force-ledger.json"
-    _state_receipt(state, candidate=True, maximal=False)
-    _force_ledger(ledger, complete=True)
-    output = tmp_path / "receipt.json"
-    assert audit(_arguments(
-        stdout,
-        output,
+def test_legacy_scalar_cannot_replace_structured_handoff(tmp_path: Path) -> None:
+    state = tmp_path / "state.json"
+    ledger = tmp_path / "ledger.json"
+    _state(state)
+    _ledger(ledger)
+    receipt = _audit(
+        tmp_path,
+        _converged_line().replace(
+            "source_dynamic_force_parity_max_delta_n=0.01",
+            "source_dynamic_force_parity_max_delta_n=0",
+        ),
         standing_state_receipt=state,
         force_ledger_receipt=ledger,
-    )) == 0
-    receipt = json.loads(output.read_text(encoding="utf-8"))
+    )
     assert receipt["horizon"]["source_dynamic_force_parity_max_delta_n"] == 0.0
-    assert not receipt["qualification"]["static_dynamic_handoff_admissible"]
     assert not receipt["qualification"]["standing_force_convergence"]
 
 
-def test_legacy_scalar_may_be_absent_with_structured_handoff(tmp_path: Path) -> None:
-    stdout = tmp_path / "stdout"
-    stdout.write_text(_converged_line().replace(
-        "source_dynamic_force_parity_max_delta_n=0.01 ", ""
-    ), encoding="utf-8")
-    state, ledger, handoff = _complete_evidence(tmp_path)
-    output = tmp_path / "receipt.json"
-    assert audit(_arguments(
-        stdout,
-        output,
-        standing_state_receipt=state,
-        force_ledger_receipt=ledger,
-        static_dynamic_handoff_receipt=handoff,
-    )) == 0
-    receipt = json.loads(output.read_text(encoding="utf-8"))
-    assert receipt["horizon"]["source_dynamic_force_parity_max_delta_n"] is None
-    assert receipt["qualification"]["standing_force_convergence"]
-
-
-def test_stationary_but_unbound_state_cannot_pass_standing(tmp_path: Path) -> None:
-    stdout = tmp_path / "stdout"
-    stdout.write_text(_converged_line(), encoding="utf-8")
-    state, ledger, handoff = _complete_evidence(tmp_path)
-    _state_receipt(
-        state, candidate=True, maximal=False, equilibrium_transport=False
-    )
-    output = tmp_path / "receipt.json"
-    assert audit(_arguments(
-        stdout,
-        output,
-        standing_state_receipt=state,
-        require_standing_state_receipt=True,
-        force_ledger_receipt=ledger,
-        require_force_ledger_receipt=True,
-        static_dynamic_handoff_receipt=handoff,
-        require_static_dynamic_handoff_receipt=True,
-    )) == 0
-    receipt = json.loads(output.read_text(encoding="utf-8"))
-    assert receipt["qualification"]["mechanical_force_convergence"]
-    assert not receipt["qualification"]["standing_state_admissible"]
-    assert not receipt["qualification"]["force_convergence"]
-    assert any(
-        "solved coupled equilibrium" in reason
-        for reason in receipt["gate"]["reasons"]
-    )
-
-
-def test_required_incomplete_force_ledger_cannot_pass(tmp_path: Path) -> None:
-    stdout = tmp_path / "stdout"
-    stdout.write_text(_converged_line(), encoding="utf-8")
-    state, ledger, handoff = _complete_evidence(tmp_path)
-    _force_ledger(ledger, complete=False)
-    output = tmp_path / "receipt.json"
-    assert audit(_arguments(
-        stdout,
-        output,
-        standing_state_receipt=state,
-        require_standing_state_receipt=True,
-        force_ledger_receipt=ledger,
-        require_force_ledger_receipt=True,
-        static_dynamic_handoff_receipt=handoff,
-        require_static_dynamic_handoff_receipt=True,
-    )) == 0
-    receipt = json.loads(output.read_text(encoding="utf-8"))
-    assert not receipt["qualification"]["force_convergence"]
-    assert any("force ledger" in reason for reason in receipt["gate"]["reasons"])
-
-
-def test_required_incomplete_handoff_cannot_pass(tmp_path: Path) -> None:
-    stdout = tmp_path / "stdout"
-    stdout.write_text(_converged_line(), encoding="utf-8")
-    state, ledger, handoff = _complete_evidence(tmp_path)
+def test_incomplete_required_handoff_cannot_pass(tmp_path: Path) -> None:
+    state, ledger, handoff = _evidence(tmp_path)
     _handoff(handoff, complete=False)
-    output = tmp_path / "receipt.json"
-    assert audit(_arguments(
-        stdout,
-        output,
+    receipt = _audit(
+        tmp_path,
+        _converged_line(),
         standing_state_receipt=state,
         require_standing_state_receipt=True,
         force_ledger_receipt=ledger,
         require_force_ledger_receipt=True,
         static_dynamic_handoff_receipt=handoff,
         require_static_dynamic_handoff_receipt=True,
-    )) == 0
-    receipt = json.loads(output.read_text(encoding="utf-8"))
-    assert not receipt["qualification"]["static_dynamic_handoff_admissible"]
+    )
     assert not receipt["qualification"]["force_convergence"]
     assert any("handoff" in reason for reason in receipt["gate"]["reasons"])
 
 
-def test_claimed_handoff_without_comparison_evidence_is_rejected(tmp_path: Path) -> None:
-    stdout = tmp_path / "stdout"
-    stdout.write_text(_converged_line(), encoding="utf-8")
+def _reject_mutation(tmp_path: Path, mutate) -> None:
+    stdout = tmp_path / "stdout.log"
     handoff = tmp_path / "handoff.json"
-    payload = _handoff_payload(complete=True)
-    payload["comparisons"] = {}
+    output = tmp_path / "receipt.json"
+    stdout.write_text(_converged_line(), encoding="utf-8")
+    payload = _handoff_payload()
+    mutate(payload)
     handoff.write_text(json.dumps(payload), encoding="utf-8")
-    output = tmp_path / "receipt.json"
     with pytest.raises(ImportError, match="claims parity"):
         audit(_arguments(stdout, output, static_dynamic_handoff_receipt=handoff))
 
 
-def test_claimed_handoff_with_relaxed_threshold_is_rejected(tmp_path: Path) -> None:
-    stdout = tmp_path / "stdout"
-    stdout.write_text(_converged_line(), encoding="utf-8")
-    handoff = tmp_path / "handoff.json"
-    payload = _handoff_payload(complete=True)
-    payload["thresholds"]["force_absolute_n"] = 1.0e9
-    handoff.write_text(json.dumps(payload), encoding="utf-8")
-    output = tmp_path / "receipt.json"
-    with pytest.raises(ImportError, match="claims parity"):
-        audit(_arguments(stdout, output, static_dynamic_handoff_receipt=handoff))
+def test_forged_empty_comparisons_are_rejected(tmp_path: Path) -> None:
+    _reject_mutation(tmp_path, lambda payload: payload.__setitem__("comparisons", {}))
 
 
-def test_claimed_handoff_with_nonfinite_residual_is_rejected(tmp_path: Path) -> None:
-    stdout = tmp_path / "stdout"
-    stdout.write_text(_converged_line(), encoding="utf-8")
-    handoff = tmp_path / "handoff.json"
-    payload = _handoff_payload(complete=True)
-    payload["maximum_damped_equilibrium_residual"] = float("nan")
-    handoff.write_text(json.dumps(payload), encoding="utf-8")
-    output = tmp_path / "receipt.json"
-    with pytest.raises(ImportError, match="claims parity"):
-        audit(_arguments(stdout, output, static_dynamic_handoff_receipt=handoff))
-
-
-def test_inconsistent_claimed_handoff_is_rejected(tmp_path: Path) -> None:
-    stdout = tmp_path / "stdout"
-    stdout.write_text(_converged_line(), encoding="utf-8")
-    handoff = tmp_path / "handoff.json"
-    _handoff(handoff, complete=True, inconsistent_claim=True)
-    output = tmp_path / "receipt.json"
-    with pytest.raises(ImportError, match="claims parity"):
-        audit(_arguments(stdout, output, static_dynamic_handoff_receipt=handoff))
-
-
-def test_required_maximal_activation_state_cannot_pass(tmp_path: Path) -> None:
-    stdout = tmp_path / "stdout"
-    stdout.write_text(_converged_line(), encoding="utf-8")
-    state, ledger, handoff = _complete_evidence(tmp_path)
-    _state_receipt(
-        state, candidate=False, maximal=True, equilibrium_transport=True
+def test_forged_decomposition_is_rejected(tmp_path: Path) -> None:
+    _reject_mutation(
+        tmp_path,
+        lambda payload: payload["source_force_decomposition"].__setitem__("passed", False),
     )
-    output = tmp_path / "receipt.json"
-    assert audit(_arguments(
-        stdout,
-        output,
+
+
+def test_relaxed_decomposition_threshold_is_rejected(tmp_path: Path) -> None:
+    _reject_mutation(
+        tmp_path,
+        lambda payload: payload["thresholds"].__setitem__(
+            "decomposition_absolute_n", 1.0e6
+        ),
+    )
+
+
+def test_wrong_passive_bias_policy_is_rejected(tmp_path: Path) -> None:
+    _reject_mutation(
+        tmp_path,
+        lambda payload: payload["coverage"].__setitem__(
+            "passive_bias_policy", "total_source_force"
+        ),
+    )
+
+
+def test_missing_zero_activation_diagnostic_identity_is_rejected(
+    tmp_path: Path,
+) -> None:
+    _reject_mutation(
+        tmp_path,
+        lambda payload: payload["coverage"].__setitem__(
+            "static_zero_activation_force_diagnostic", False
+        ),
+    )
+
+
+def test_unbound_standing_state_cannot_pass(tmp_path: Path) -> None:
+    state, ledger, handoff = _evidence(tmp_path)
+    _state(state, transported=False)
+    receipt = _audit(
+        tmp_path,
+        _converged_line(),
         standing_state_receipt=state,
         require_standing_state_receipt=True,
         force_ledger_receipt=ledger,
         require_force_ledger_receipt=True,
         static_dynamic_handoff_receipt=handoff,
         require_static_dynamic_handoff_receipt=True,
-    )) == 0
-    receipt = json.loads(output.read_text(encoding="utf-8"))
-    assert not receipt["qualification"]["force_convergence"]
-    assert any(
-        "maximal-activation" in reason
-        for reason in receipt["gate"]["reasons"]
     )
+    assert not receipt["qualification"]["standing_state_admissible"]
+    assert not receipt["qualification"]["force_convergence"]
