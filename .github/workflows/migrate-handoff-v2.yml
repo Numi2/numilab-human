@@ -1,0 +1,34 @@
+name: Apply Human handoff v2 binding
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/scripts/migrate_handoff_v2.py"
+      - ".github/workflows/migrate-handoff-v2.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - run: python3 .github/scripts/migrate_handoff_v2.py
+      - run: |
+          git diff --check
+          grep -q 'static-dynamic-handoff-audit.v2' src/numilab_human/native_force_convergence.py
+          grep -q 'source_force_decomposition_closed' src/numilab_human/native_force_convergence.py
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/numilab_human/native_force_convergence.py
+          git commit -m "Bind convergence to driven Human handoff v2"
+          git push origin HEAD:main
