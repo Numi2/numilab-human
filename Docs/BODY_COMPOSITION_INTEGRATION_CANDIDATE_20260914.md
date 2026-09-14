@@ -24,6 +24,9 @@ checks that the current graph contains:
   influences, and sub-micrometre rest-pose reconstruction), plus the native
   Apple M4 Pro four-view visual admission (29,661 / 25,803 / 18,454 / 30,666
   positive shell pixels);
+- the exact bilateral foot contact handoff: 60 source mesh rows, 30 reviewed
+  source members, seven-pose continuity, 18 support witnesses, and six
+  active static witnesses, while retaining collider and dynamic-loading gates;
 - the same seven beds and clock in the bidirectional oxygen-exchange candidate;
 - the exact CVSim21 21-compartment aggregate blood owner, which conserves
   `5.459 kg` and `5.150 L` through 511 accepted and one rejected steps;
@@ -73,7 +76,7 @@ rows from disconnected source evidence to one reproducible integration
 boundary while preserving the completion gates for calibrated mechanics,
 anatomical blood/tissue transfer, standing, recovery, and walking.
 
-The immutable `v5` receipt additionally binds the native-compatible full-skin
+The immutable `v6` receipt additionally binds the native-compatible full-skin
 candidate and its four-view M4 Pro visual admission. It records the one-plug
 material fit and held-out observation counts and keeps `material_calibration`
 false; no fitted coefficient is assigned to the Human body or native Matter
