@@ -21,6 +21,7 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
         "organ_surface_candidates": 378,
         "regional_blood_transport": 329,
         "muscle_tendon_surface_identity": 150,
+        "vessel_surface_identity": 6,
     }
     assert result["runtime_evidence"]["clock_nanoseconds"] == 12500
     assert result["runtime_evidence"]["blood_transport_accepted_steps"] == 511
@@ -31,9 +32,12 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
     assert result["candidate_mass_budgets"]["cvsim21_aggregate_blood_mass_kg"] == 5.459
     assert result["qualification"]["cross_domain_owner_nonduplication_checked"]
     assert result["qualification"]["source_aggregate_blood_mass_bound"]
+    assert result["qualification"]["source_vessel_registration_bound"]
     assert not result["qualification"]["integrated_human_qualification"]
     assert result["identity_bindings"]["blood_members_subset_of_organ_members"]
     assert result["identity_bindings"]["surface_ids_disjoint_from_organ_members"]
+    assert result["identity_bindings"]["vessel_members_subset_of_organ_members"]
+    assert result["identity_bindings"]["vessel_members_disjoint_from_blood_members"]
     assert result["identity_bindings"]["transport_and_exchange_beds_share_clock"]
     assert all(value == 0 for value in result["ownership"].values())
 

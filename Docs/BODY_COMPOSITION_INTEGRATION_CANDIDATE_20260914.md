@@ -22,6 +22,9 @@ checks that the current graph contains:
 - the same seven beds and clock in the bidirectional oxygen-exchange candidate;
 - the exact CVSim21 21-compartment aggregate blood owner, which conserves
   `5.459 kg` and `5.150 L` through 511 accepted and one rejected steps;
+- six corrected source/world vessel registrations whose source surface-volume
+  candidates are inside the organ inventory and disjoint from the regional
+  blood-bed member partition;
 - both cardiac geometry conventions bound to the common `0.39974235600733804
   kg` hydraulic blood-mass budget without selecting a physical owner.
 
@@ -38,6 +41,8 @@ checks used to construct the join.
 The CVSim21 mass owner is included as a conserved aggregate source owner only;
 its explicit density remains an engineering candidate and it is not promoted
 to an anatomical vessel/lumen, tissue, or rigid-body mechanical owner.
+The six vessel rows remain registered source surfaces: they have no lumen area,
+tubular field, calibrated density, blood-mass owner, or tissue-exchange owner.
 
 The candidate therefore advances the organ, systemic-physiology, and muscle
 rows from disconnected source evidence to one reproducible integration

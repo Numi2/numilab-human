@@ -346,7 +346,7 @@ physical volume, mechanical mass, anatomical blood transfer, material,
 subject-calibration, force-convergence, standing, recovery, and walking gates
 as unresolved. The corresponding registry snapshot is retained at
 [`Docs/media/gap-execution-20260914/report-body-composition-integration-20260914.json`](media/gap-execution-20260914/report-body-composition-integration-20260914.json).
-Its file SHA-256 is `ae17e839b9f05495f2e40f0d5fdf405346713ad875b86a814c7e30ca7a76a2d0`
-and its report content SHA-256 is `38845377657bb1b6948f6070f7675701990da2d7b30d70129ea6ab209c8c5aa8`.
+Its file SHA-256 is `6d65c2a89974082e10b8529b82381154e301a9c28ae345daf98e74f846abcc95`
+and its report content SHA-256 is `a532ab50897fc4f85b05658ff09f8247540fd6d9d9e6b2e83c67c7b95a2532b2`.
 The bound body-composition receipt SHA-256 is
-`3b7df58f08d195cd2e544b5f05f2ed73969988acd70f17f7590cbd0a8d4589cc`.
+`eb74baeccb3a7e7c6939ca39026972d4de0350475dabb0032ad275175a011db4`.

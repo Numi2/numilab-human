@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 from typing import Any
 
@@ -29,6 +30,7 @@ BLOOD_TRANSPORT = ROOT / "Docs/media/organ-blood-tissue-transport-20260914/recei
 TISSUE_EXCHANGE = ROOT / "Docs/media/organ-tissue-exchange-candidate-20260914/receipt-v1.json"
 CARDIAC_BLOOD = ROOT / "Docs/media/cardiac-blood-mass-candidate-20260914/receipt.json"
 CVSIM21_BLOOD_MASS = ROOT / "Docs/media/cvsim21-blood-mass-step-20260914/receipt-exact-clock.json"
+VESSEL_REGISTRATION = ROOT / "Docs/media/organ-vessel-registration-corrected-20260913/registration.json"
 
 
 def _require(condition: bool, message: str) -> None:
@@ -85,6 +87,7 @@ def _read_profile(path: Path) -> dict[str, Any]:
         "organ_surface_candidates": 378,
         "regional_blood_transport": 329,
         "muscle_tendon_surface_identity": 150,
+        "vessel_surface_identity": 6,
     }, "integration profile source counts differ")
     _require(value.get("expected_runtime") == {
         "blood_transport_accepted_steps": 511,
@@ -95,7 +98,7 @@ def _read_profile(path: Path) -> dict[str, Any]:
     _require(value.get("inputs") == [
         "organ_mass", "regional_tissue", "muscle_surfaces", "activation",
         "blood_transport", "tissue_exchange", "cardiac_blood",
-        "cvsim21_blood_mass",
+        "cvsim21_blood_mass", "vessel_registration",
     ], "integration profile input order differs")
     return value
 
@@ -126,6 +129,7 @@ def compile_candidate(
     tissue_exchange: Path = TISSUE_EXCHANGE,
     cardiac_blood: Path = CARDIAC_BLOOD,
     cvsim21_blood_mass: Path = CVSIM21_BLOOD_MASS,
+    vessel_registration: Path = VESSEL_REGISTRATION,
 ) -> dict[str, Any]:
     profile = Path(profile)
     profile_document = _read_profile(profile)
@@ -138,6 +142,7 @@ def compile_candidate(
         "tissue_exchange": Path(tissue_exchange),
         "cardiac_blood": Path(cardiac_blood),
         "cvsim21_blood_mass": Path(cvsim21_blood_mass),
+        "vessel_registration": Path(vessel_registration),
     }
     documents: dict[str, dict[str, Any]] = {}
     hashes: dict[str, str] = {}
@@ -150,6 +155,7 @@ def compile_candidate(
         "tissue_exchange": "tissue exchange candidate",
         "cardiac_blood": "cardiac blood candidate",
         "cvsim21_blood_mass": "CVSim21 blood mass receipt",
+        "vessel_registration": "vessel registration receipt",
     }
     for name, path in paths.items():
         documents[name], hashes[name] = _read(path, labels[name])
@@ -324,6 +330,43 @@ def compile_candidate(
     _require(isinstance(cvsim21_mass, (int, float)) and cvsim21_mass > 0.0,
              "CVSim21 source mass is missing")
 
+    vessel = documents["vessel_registration"]
+    _schema(vessel, "HumanPack.organ-vessel-registration.v1", labels["vessel_registration"])
+    vessel_rows = vessel.get("bindings")
+    _require(isinstance(vessel_rows, list) and len(vessel_rows) == 6,
+             "vessel registration rows are incomplete")
+    vessel_ids = [row.get("member_id") for row in vessel_rows]
+    vessel_regions = [row.get("region_id") for row in vessel_rows]
+    _require(all(isinstance(value, str) and value for value in vessel_ids) and
+             len(set(vessel_ids)) == 6 and
+             all(isinstance(value, str) and value for value in vessel_regions) and
+             len(set(vessel_regions)) == 6,
+             "vessel registration identity is invalid")
+    vessel_id_set = set(vessel_ids)
+    _require(vessel_id_set <= organ_id_set and not vessel_id_set.intersection(set(blood_member_ids)),
+             "vessel registration overlaps the regional blood-bed member partition")
+    vessel_volumes = [row.get("source_surface_integral_volume_m3") for row in vessel_rows]
+    _require(all(type(value) in (int, float) and math.isfinite(float(value)) and float(value) > 0.0
+                for value in vessel_volumes),
+             "vessel surface volume candidate is invalid")
+    _all_none(vessel_rows, ("cross_section_area_m2", "material_density_kg_per_m3",
+                            "mechanical_mass_owner"), "vessel registration")
+    _require(all(row.get("tubular_field_registered") is False and
+                 row.get("body_link_registration") is False and
+                 row.get("subject_calibration") is False and
+                 row.get("pressure_gradient_momentum_transfer") is False
+                 for row in vessel_rows),
+             "vessel registration promoted a tubular or calibrated owner")
+    vessel_qualification = vessel.get("qualification", {})
+    _require(vessel_qualification.get("source_membership_and_hashes") is True and
+             vessel_qualification.get("source_to_world_frame_registered") is True and
+             vessel_qualification.get("centreline_and_area") is False and
+             vessel_qualification.get("blood_mass_owner") is False and
+             vessel_qualification.get("two_way_tissue_exchange") is False and
+             vessel_qualification.get("subject_calibration") is False,
+             "vessel registration qualification boundary changed")
+    vessel_surface_volume = math.fsum(float(value) for value in vessel_volumes)
+
     surface_member_ids = [row.get("member_id") for row in surface_rows]
     _require(all(isinstance(value, str) and value for value in surface_member_ids),
              "muscle/tendon surface identity is invalid")
@@ -334,6 +377,7 @@ def compile_candidate(
         "organ_surface_candidates": len(organ_id_set),
         "regional_blood_transport": len(set(blood_member_ids)),
         "muscle_tendon_surface_identity": len(surface_ids),
+        "vessel_surface_identity": len(vessel_id_set),
     }
 
     return {
@@ -353,7 +397,10 @@ def compile_candidate(
             "organ_member_ids_sha256": _identity_digest(organ_id_set),
             "blood_transport_member_ids_sha256": _identity_digest(set(blood_member_ids)),
             "muscle_tendon_surface_ids_sha256": _identity_digest(surface_ids),
+            "vessel_surface_ids_sha256": _identity_digest(vessel_id_set),
             "blood_members_subset_of_organ_members": True,
+            "vessel_members_subset_of_organ_members": True,
+            "vessel_members_disjoint_from_blood_members": True,
             "surface_ids_disjoint_from_organ_members": True,
             "transport_and_exchange_beds_share_clock": (
                 transport["clock"]["nanoseconds"] == exchange["clock"]["nanoseconds"]
@@ -364,6 +411,7 @@ def compile_candidate(
             "regional_costal_tissue_candidate_mass_kg": regional_mass,
             "cardiac_hydraulic_blood_candidate_mass_kg": cardiac_mass,
             "cvsim21_aggregate_blood_mass_kg": cvsim21_mass,
+            "registered_vessel_surface_integral_volume_m3": vessel_surface_volume,
             "sum_is_mechanical_body_mass": False,
         },
         "ownership": {
@@ -400,6 +448,7 @@ def compile_candidate(
             "organ_surface_mass_candidate_bound": True,
             "regional_blood_transport_bound": True,
             "source_aggregate_blood_mass_bound": True,
+            "source_vessel_registration_bound": True,
             "tissue_oxygen_exchange_candidate_bound": True,
             "muscle_activation_route_identity_bound": True,
             "muscle_surface_identity_bound": True,
@@ -418,8 +467,9 @@ def compile_candidate(
         "boundary": (
             "This record joins source organ candidate moments, regional tissue "
             "mass, the exact-clock CVSim21 aggregate blood mass, regional blood "
-            "transport, tissue oxygen exchange, cardiac blood budget, muscle "
-            "route activation and NHTISS4 surface identity. It "
+            "transport, six-vessel source/world registration, tissue oxygen "
+            "exchange, cardiac blood budget, muscle route activation and "
+            "NHTISS4 surface identity. It "
             "proves source identity and nonduplicated ownership bookkeeping only. "
             "Fat and skeletal-muscle tissue volumes, anatomical blood/lumen and "
             "organ mechanics, calibrated materials, subject calibration, and the "
@@ -453,6 +503,7 @@ def run(arguments: argparse.Namespace) -> int:
         tissue_exchange=arguments.tissue_exchange,
         cardiac_blood=arguments.cardiac_blood,
         cvsim21_blood_mass=arguments.cvsim21_blood_mass,
+        vessel_registration=arguments.vessel_registration,
     )
     output = arguments.output.resolve()
     digest = _immutable_write(output, result)
@@ -477,6 +528,7 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--tissue-exchange", type=Path, default=TISSUE_EXCHANGE)
     parser.add_argument("--cardiac-blood", type=Path, default=CARDIAC_BLOOD)
     parser.add_argument("--cvsim21-blood-mass", type=Path, default=CVSIM21_BLOOD_MASS)
+    parser.add_argument("--vessel-registration", type=Path, default=VESSEL_REGISTRATION)
     parser.add_argument("--output", type=Path, required=True)
     parser.set_defaults(handler=run)
 
