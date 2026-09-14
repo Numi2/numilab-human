@@ -404,3 +404,20 @@ The corresponding execution snapshot is
 with file SHA-256 `8614442a645b42ac7442af83e1480cf18e1b50f2e96584fb5799893be973b448`
 and report content SHA-256
 `1e546dbca644be344f8f86b3e8ae167222210a529f325f01c448a9743fd27f80`.
+
+The [muscle geometric-volume candidate](MUSCLE_GEOMETRIC_VOLUME_CANDIDATE_20260915.md)
+now binds the 60 single-closed muscle components to immutable source-member
+IDs and reproduces `0.006471304532959316 m³` of algebraic volume. It covers
+40.5405% of the 148 muscle surfaces; the six closed multi-component and 82
+topology-defective muscle surfaces remain excluded. This is a source geometry
+handoff only. It does not create a watertight FEM volume or assign density,
+mechanical mass, material, active force, activation calibration, subject
+calibration, standing, or walking. The cross-domain body-composition receipt
+v8 records the new hash-bound input and keeps those physical-owner gates false.
+The [native all-DoF requalification](NATIVE_WHOLE_BODY_ALL_DOF_REQUALIFICATION_20260915.md)
+reruns the source-bound static certificate with 960 activation sweeps and a
+complete 128-row residual dump. Root support balance and bitwise replay remain
+closed, but the internal normalized residual is still `0.141417024366` with
+`internal_balanced=false`. The retained native receipt therefore narrows the
+next solver work without promoting force convergence, dynamic release,
+standing, recovery, or walking.

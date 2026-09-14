@@ -22,8 +22,9 @@ checks that the current graph contains:
 - the hash-locked BodyParts3D source-geometry audit for those 150 surfaces,
   including 3.2682904751 m² of recomputed surface area, 60 single-closed
   algebraic volume candidates, six closed multi-component surfaces, and 84
-  topology-defective surfaces. None is promoted to physical volume, mass,
-  material, or active-force ownership;
+  topology-defective surfaces. The follow-up geometric-volume candidate binds
+  the 60 single-closed muscle components to immutable source member IDs while
+  retaining FEM, density, mass, material, and active-force ownership false;
 - the exact BodyParts3D `FJ2810` full-skin source and its registered visual
   outer shell (54,949 retained vertices, 109,183 triangles, 86 body
   influences, and sub-micrometre rest-pose reconstruction), plus the native
@@ -87,3 +88,9 @@ material fit and held-out observation counts and keeps `material_calibration`
 false; it also binds the muscle-surface geometry audit. No fitted coefficient
 or algebraic geometry candidate is assigned to the Human body or native Matter
 runtime.
+
+The current `v8` receipt also consumes
+`MUSCLE_GEOMETRIC_VOLUME_CANDIDATE_20260915.md`. It records 60 geometric
+muscle-volume candidates and their source-member hashes. These are a measured
+geometry handoff, not a physical volume or mechanical mass owner, so the
+integrated qualification and skeletal-muscle mechanics gates remain false.

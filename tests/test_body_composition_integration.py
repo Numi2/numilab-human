@@ -20,6 +20,7 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
     assert result["source_member_layers"] == {
         "cardiac_wall_region_identity": 24,
         "muscle_surface_geometry_audit": 150,
+        "muscle_geometric_volume_candidate": 60,
         "organ_surface_candidates": 378,
         "regional_blood_transport": 329,
         "muscle_tendon_surface_identity": 150,

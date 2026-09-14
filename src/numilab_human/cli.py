@@ -2208,6 +2208,12 @@ def parser() -> argparse.ArgumentParser:
         help="recompute hash-locked muscle/tendon surface topology and algebraic geometry candidates",
     )
     add_muscle_surface_geometry_arguments(muscle_surface_geometry)
+    from .muscle_volume_owner_candidate import add_arguments as add_muscle_volume_candidate_arguments
+    muscle_volume_candidate = commands.add_parser(
+        "muscle-geometric-volume-candidate",
+        help="bind single-closed muscle surface volumes to immutable source identities without promoting mechanics",
+    )
+    add_muscle_volume_candidate_arguments(muscle_volume_candidate)
     return result
 
 
