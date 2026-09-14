@@ -421,3 +421,10 @@ closed, but the internal normalized residual is still `0.141417024366` with
 `internal_balanced=false`. The retained native receipt therefore narrows the
 next solver work without promoting force convergence, dynamic release,
 standing, recovery, or walking.
+
+The current source branch's one-step 12.5 µs [persistent release
+requalification](NATIVE_CURRENT_RELEASE_REQUALIFICATION_20260915.md) retains
+the dynamic failure after the cap control: the static root residual is
+`1.50167204538e-6 N`, but compiled internal residual RMS is `34.0593514806`
+and the first Metal step peaks at `196.14956665 m/s²`. It is a failed exact
+clock smoke with zero penetration, not standing evidence.

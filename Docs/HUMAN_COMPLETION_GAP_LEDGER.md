@@ -26,6 +26,14 @@ the serial handoff; its 6.4 ms horizon is not sustained standing and does not
 close the monolithic KKT, walking, tissue, blood-transfer, material, or
 calibration rows.
 
+The current published native branch is also retained in the [current exact-clock
+release requalification](NATIVE_CURRENT_RELEASE_REQUALIFICATION_20260915.md):
+with the source `NHCNT1` support package and global activation `0.5`, the
+compiled internal residual is `34.0593514806` and the first 12.5 µs release
+peaks at `196.14956665 m/s²`. Root support balance, preload transport and zero
+penetration pass, but `compiled_stand_balanced=false`; this is a failed release
+diagnostic and keeps force convergence and standing open.
+
 | Workstream | Current evidence | Status | Gap that still matters | Completion gate |
 | --- | --- | --- | --- | --- |
 | Source foundation | BodyParts3D 4.0 plus active MyoSim 416-route body; Rajagopal and public MoBL-ARMS retained as comparative imports; cumulative target-coverage compiler retains source leaves and explicit missing registers | partial | one source-faithful lower/upper mechanics composition is not qualified; authenticated bimanual upper source and exact non-cylinder wrap families remain separate | pinned bilateral source composition, exact wraps, mass/inertia/joint/path parity, and license receipts |
