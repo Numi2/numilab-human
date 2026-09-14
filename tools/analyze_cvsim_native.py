@@ -142,7 +142,7 @@ def load_reference(path: Path) -> tuple[list[list[float]], dict]:
             require(values[0] == expected_time, "source sampling time changed")
             require(index == 0 or values[0] > (index - 1) * REFERENCE_DT, "extra source endpoint")
             require(min(values[22:43]) > 0, "source has nonpositive absolute volume")
-            require(abs(sum(values[22:43]) - values[67]) < 1e-7, "source total does not match its coordinates")
+            require(abs(math.fsum(values[22:43]) - values[67]) < 1e-7, "source total does not match its coordinates")
             require(abs(values[67] - 5150.) < 1e-5, "tight source total blood volume drift exceeded")
             require(all(values[43 + i] >= 0 for i in ONE_WAY_FLOWS), "negative source one-way flow")
             states.append([value * 1e-6 for value in values[22:67]])
@@ -208,7 +208,7 @@ def audit_run(trace: Path, log: Path, *, dt: float, steps: int,
     translation = coordinate_translation(coordinates)
     initial = [float32(float32(value + shift) / STATE_SCALE) * STATE_SCALE
                for value, shift in zip(reference[0], translation)]
-    initial_volume = sum(initial[:21])
+    initial_volume = math.fsum(initial[:21])
     require(abs(initial_volume - TOTAL_VOLUME_M3) < 1e-9, "cooked initial absolute blood volume differs")
     max_error = [0.] * 45
     max_location = [{} for _ in range(45)]
@@ -238,7 +238,7 @@ def audit_run(trace: Path, log: Path, *, dt: float, steps: int,
                     f"native row {samples}: negative one-way valve flow")
             min_volume = min(min_volume, min(actual[:21]))
             min_one_way = min(min_one_way, *(actual[21 + i] for i in ONE_WAY_FLOWS))
-            current_volume = sum(actual[:21])
+            current_volume = math.fsum(actual[:21])
             max_drift = max(max_drift, abs(current_volume - initial_volume) / initial_volume)
             max_target = max(max_target, abs(current_volume - TOTAL_VOLUME_M3))
             require(max_drift < CONSERVATION_LIMIT, "native absolute blood conservation exceeds numerical gate")
@@ -251,7 +251,7 @@ def audit_run(trace: Path, log: Path, *, dt: float, steps: int,
                 square_error += (error / STATE_SCALE) ** 2
             if samples * stride % 4 == 0:
                 common_count += 45
-                common_square += sum((error / STATE_SCALE) ** 2 for error in errors)
+                common_square += math.fsum((error / STATE_SCALE) ** 2 for error in errors)
                 common_max_volume = max(common_max_volume, max(errors[:21]))
                 common_max_flow = max(common_max_flow, max(errors[21:]))
     require(samples == steps, "native row count is incomplete")

@@ -33,7 +33,15 @@ def _sha(value: object) -> str:
     return hashlib.sha256(cv.canonical(value) + b"\n").hexdigest()
 
 
-def geometry_moments(vertices: list, triangles: list) -> dict:
+def _legacy_float_sum(values) -> float:
+    """Reproduce the historical reduction used by the organ moments receipt."""
+    total = 0.0
+    for value in values:
+        total += value
+    return total
+
+
+def geometry_moments(vertices: list, triangles: list, *, stable_reduction: bool = False) -> dict:
     """Integrate signed tetrahedra in a local frame, without density or stepping.
 
     The identities are algebraic for closed oriented surfaces. Embeddedness and
@@ -91,7 +99,8 @@ def geometry_moments(vertices: list, triangles: list) -> dict:
         "centroid_source_frame_m": center,
         "first_volume_moment_m4": [volume*x for x in center],
         "second_volume_moment_m5": raw_second, "central_second_volume_moment_m5": central,
-        "inertia_per_unit_density_m5": [[(sum(central[k][k] for k in range(3)) if i == j else 0) - central[i][j]
+        "inertia_per_unit_density_m5": [[((math.fsum if stable_reduction else _legacy_float_sum)
+                                           (central[k][k] for k in range(3)) if i == j else 0) - central[i][j]
                                           for j in range(3)] for i in range(3)],
         "physical_volume_m3": None, "density_kg_per_m3": None, "mechanical_mass_kg": None,
         "self_intersection_qualified": False, "interdomain_disjointness_qualified": False,
@@ -134,7 +143,9 @@ def compile_registration(*, sources: Path = ROOT / "Sources", source_lock: Path 
                     and cavity["semantic_id"] == "FMA:" + expected[1][3:]
                     and cavity["member_id"] == expected[3], "cavity semantic correspondence mismatch")
             quotient = cavity["exact_coordinate_quotient"]
-            moments = geometry_moments(quotient["vertices_m"], quotient["triangles"])
+            moments = geometry_moments(
+                quotient["vertices_m"], quotient["triangles"], stable_reduction=True,
+            )
             moments["self_intersection_qualified"] = True
             moments["embedded_geometric_volume_m3"] = moments["absolute_signed_volume_m3"]
             row["anatomical_region_id"] = cavity["semantic_id"]
