@@ -104,3 +104,13 @@ preload at step two, the 64-step run reached `8755.6796875 m/s²`, a
 partial log is retained at
 [first-step-only-preload-64.log](media/native-human-constraint-preload-20260914/failed-diagnostics/first-step-only-preload-64.log)
 with SHA-256 `74afe4ef48c053167046c4d3fad626774ec186e4489a7f31ce88fd4bf1c7d73e`.
+
+The temporary equality-Schur prototypes are also retained as failed solver
+evidence. Row-normalized elimination rejects the source manifold at row 49
+(`code=8`); adding a `1e-4` diagonal load makes the step numerically unstable
+(`1.070222375e6 m/s²`, equality velocity error `94.4576568604`, position error
+`1.66300145793e-4`). Their logs are
+[equality-schur-scaled-singular.log](media/native-human-constraint-preload-20260914/failed-diagnostics/equality-schur-scaled-singular.log)
+(`fcb7d21415270d9744bec770baf41c850cf36be77f85851a774bd2c203d21b27`) and
+[equality-schur-loaded-unstable.log](media/native-human-constraint-preload-20260914/failed-diagnostics/equality-schur-loaded-unstable.log)
+(`3a648d96d7ffb9025e658d96e257d2637ddadabecfd883f0041b215059939200`).
