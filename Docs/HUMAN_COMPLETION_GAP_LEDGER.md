@@ -8,6 +8,14 @@ Statuses use three terms: **proved** means the named current evidence executes
 the stated boundary; **partial** means useful owning code exists but the
 completion gate is still open; **open** means the end-state owner is absent.
 
+The current physical requalification is recorded in
+[NATIVE_STAND_DYNAMIC_HANDOFF_20260914.md](NATIVE_STAND_DYNAMIC_HANDOFF_20260914.md).
+It supersedes older equivalent-horizon numbers for the isolated 72be18e9 source
+branch: static support, fibre handoff, and source/runtime support parity pass,
+while the exact-clock dynamic release remains a hard failure. The receipt keeps
+the cap-0.5 negative control and failed serial-projection/KKT experiments so a
+static certificate cannot be mislabeled as standing completion.
+
 | Workstream | Current evidence | Status | Gap that still matters | Completion gate |
 | --- | --- | --- | --- | --- |
 | Source foundation | BodyParts3D 4.0 plus active MyoSim 416-route body; Rajagopal and public MoBL-ARMS retained as comparative imports; cumulative target-coverage compiler retains source leaves and explicit missing registers | partial | one source-faithful lower/upper mechanics composition is not qualified; authenticated bimanual upper source and exact non-cylinder wrap families remain separate | pinned bilateral source composition, exact wraps, mass/inertia/joint/path parity, and license receipts |
