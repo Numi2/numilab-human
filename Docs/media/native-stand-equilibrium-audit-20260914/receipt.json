@@ -1,0 +1,213 @@
+{
+  "artifacts": {
+    "diagnostic_equality_deadband_stderr": {
+      "path": "Docs/media/native-stand-equilibrium-audit-20260914/diagnostic-equality-deadband-stance-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "diagnostic_equality_deadband_stdout": {
+      "path": "Docs/media/native-stand-equilibrium-audit-20260914/diagnostic-equality-deadband-stance-1.stdout.log",
+      "sha256": "b03bb86d85dfa15c7e29c97d2d60a93714311afe01c0d481bfedb7445b2dd6a1"
+    },
+    "diagnostic_zero_static_stderr": {
+      "path": "Docs/media/native-stand-equilibrium-audit-20260914/diagnostic-zero-static-stance-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "diagnostic_zero_static_stdout": {
+      "path": "Docs/media/native-stand-equilibrium-audit-20260914/diagnostic-zero-static-stance-1.stdout.log",
+      "sha256": "7f0874ac99c8a42d36fed065966531280d1f704691a1bf0d4890c42b6afd8cc4"
+    },
+    "dynamic_512_step_stderr": {
+      "path": "Docs/media/native-stand-equilibrium-audit-20260914/dynamic-stance-512.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "dynamic_512_step_stdout": {
+      "path": "Docs/media/native-stand-equilibrium-audit-20260914/dynamic-stance-512.stdout.log",
+      "sha256": "e5cd12605750451b6fbedc67515d1dff26d5b6daf31c4dd4125a02c5452ffc73"
+    },
+    "dynamic_one_step_stdout": {
+      "path": "Docs/media/native-stand-equilibrium-audit-20260914/dynamic-stance-1.stdout.log",
+      "sha256": "257dd4d11b91af639bef8bbdd5fcf44903749754890ba37ac28fd97fc91b5899"
+    },
+    "force_ledger": {
+      "path": "Docs/media/native-stand-equilibrium-audit-20260914/force-ledger.json",
+      "sha256": "6a782fb1248b545186bacfb846df9bc8829f5f335b122ccba879e9c0a1eb425f"
+    },
+    "force_snapshot": {
+      "path": "Docs/media/native-stand-equilibrium-audit-20260914/force-snapshot.json",
+      "sha256": "9ddcfbf56702266f1708cf4afd5192e00de16b79f771cda89a03b0f3350d5640"
+    },
+    "static_certificate_stderr": {
+      "path": "Docs/media/native-stand-equilibrium-audit-20260914/static-certificate.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "static_certificate_stdout_gzip": {
+      "path": "Docs/media/native-stand-equilibrium-audit-20260914/static-certificate.stdout.log.gz",
+      "sha256": "593abeb7c6cf82e366febcfc8673a3bab9dc98a8faf9c9d49b6a8e0eb3738339"
+    }
+  },
+  "claims_boundary": {
+    "not_proved": [
+      "dynamic stability",
+      "sustained standing",
+      "recovery",
+      "walking",
+      "anatomical tissue loading",
+      "activation calibration",
+      "blood/tissue mass exchange",
+      "material calibration"
+    ],
+    "proved": [
+      "complete static source generalized equilibrium certificate",
+      "source support weight/wrench identity",
+      "mixed source recruitment transcript",
+      "per-DoF force reconstruction and deterministic replay",
+      "accepted exact 12.5 us 512-step transaction"
+    ]
+  },
+  "date": "2026-09-14",
+  "diagnostic_variants": [
+    {
+      "max_acceleration_m_per_s2": 1246.31665039,
+      "name": "withhold_static_source_support_load",
+      "reason": "contact-only ownership worsened the first-step release; static balanced=true remained unchanged",
+      "result": "rejected",
+      "stdout_sha256": "7f0874ac99c8a42d36fed065966531280d1f704691a1bf0d4890c42b6afd8cc4",
+      "steps": 1
+    },
+    {
+      "max_acceleration_m_per_s2": 252.78237915,
+      "name": "equality_target_velocity_deadband_1e-7_m",
+      "reason": "no meaningful improvement over 252.783828735 baseline; static equality handoff remains unresolved",
+      "result": "rejected",
+      "stdout_sha256": "b03bb86d85dfa15c7e29c97d2d60a93714311afe01c0d481bfedb7445b2dd6a1",
+      "steps": 1
+    }
+  ],
+  "dynamic_release": {
+    "512_steps": {
+      "deterministic_replay": true,
+      "duration_seconds": 0.0064,
+      "max_acceleration_m_per_s2": 114347.445312,
+      "max_configuration_delta": 0.00478942599148,
+      "max_penetration_m": 1.78268038553e-07,
+      "max_velocity_delta": 1.40579736233,
+      "normal_impulse": 0.000223096329137,
+      "steps": 512
+    },
+    "one_step": {
+      "deterministic_replay": true,
+      "duration_seconds": 1.25e-05,
+      "max_acceleration_m_per_s2": 252.783828735,
+      "max_configuration_delta": 3.94974719597e-08,
+      "max_penetration_m": 5.31209609633e-09,
+      "max_velocity_delta": 0.00315979775041,
+      "normal_impulse": 0.0,
+      "steps": 1
+    },
+    "static_source_support": {
+      "compiled_active_support_witnesses": 6,
+      "compiled_balanced": true,
+      "compiled_root_force_residual_n": 1.86186775863e-06,
+      "compiled_support_witnesses": 18,
+      "compiled_total_support_force_n": 952.864475176,
+      "source_dynamic_force_parity_max_delta_n": 0.00531516195382,
+      "source_runtime_active_contacts": 10,
+      "source_runtime_witnesses": 18
+    }
+  },
+  "inputs": {
+    "joint_equalities": {
+      "path": "/Users/n/NumiHumanCurrent/myosim-fullbody-joint-equalities.nheq",
+      "sha256": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a"
+    },
+    "muscle": {
+      "path": "/Users/n/NumiHumanCurrent/myosim-fullbody-muscle-reference.nhmyo",
+      "sha256": "9a988f19a6fd8e5335fb0cf2bf3192cb8535fb008ccd394ffbf1a4432d3db76a05"
+    },
+    "rigid": {
+      "path": "/Users/n/NumiHumanCurrent/myosim-fullbody-core-reference.nhrigid",
+      "sha256": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44"
+    },
+    "support": {
+      "path": "/Users/n/human-capsule-20260908/input/myosim-fullbody-support-primitives.nhcnt",
+      "sha256": "c7712daf79cd8a589a6d23942a4df84a7da928e5911455ce19078f9b24daaaf4"
+    },
+    "tendon": {
+      "path": "/Users/n/NumiHumanCurrent/numi-human-tendon-attachments.nhtendon",
+      "sha256": "a594194f510eb4aa990a8767f868f999a10b4fedb745c8665368a231ed39b555"
+    }
+  },
+  "registry_snapshot": {
+    "counts": {
+      "mandatory_targets": 95,
+      "tasks": 54,
+      "workstreams": 14
+    },
+    "file_sha256": "e0eca7eeb9a58bc2d737667996be9b84aa73af984f87a590d25c2bcd8ee894ef",
+    "integrated_qualification": "not_assessed",
+    "path": "Docs/media/gap-execution-20260914/report-native-stand-equilibrium-audit-20260914.json",
+    "report_sha256": "b07e782619ca8223db98553d38c931f4ddffc29c789533bc9210cd99bae75e32"
+  },
+  "remaining_gaps": [
+    "dynamic whole-body force and temporal convergence remain open despite static generalized equilibrium",
+    "anatomical colliders, exclusion rules, and calibrated foot contact materials remain open",
+    "activation has no held-out subject calibration",
+    "blood mass transfer remains source/synthetic owner evidence without anatomical vessel/tissue exchange",
+    "material coefficients, density assignments, and subject calibration remain unresolved",
+    "assistance-free standing, perturbation recovery, walking, and the 420-trial gate remain unqualified"
+  ],
+  "schema": "numi.human.native-stand-equilibrium-audit.v1",
+  "scope": {
+    "assistance_free": true,
+    "clock_name": "canonical_12.5_us",
+    "clock_seconds": 1.25e-05,
+    "device": "Apple M4 Pro",
+    "dynamic_horizon_binary_sha256": "6ee1257f295733d74bdfb810845729b3e420351ede9896eff960d2ec588b71dc",
+    "joint_equality_payload": "NHEQ1",
+    "native_source_branch": "human-blood-mass-20260913",
+    "native_source_commit": "f239c6314bc3912c641db6eb909525eaa098f20a",
+    "static_certificate_binary_sha256": "3a97773b5f5bb34add8ba7bc9d8ff2948bfa5dfb24a89d26bbac55d70d41a0e6",
+    "subject": "one adult male source package",
+    "support_payload": "NHCNT2",
+    "tendon_payload": "NHTENDON3"
+  },
+  "static_certificate": {
+    "accepted_coupled_pose_steps": 3,
+    "accepted_global_activation_polish_steps": 304,
+    "accepted_pose_steps": 13,
+    "activation_at_upper_bound": 47,
+    "activation_max": 1,
+    "activation_nonzero_routes": 262,
+    "activation_routes": 416,
+    "activation_sweeps": 1024,
+    "active_position_limits": 30,
+    "active_support_witnesses": 6,
+    "body_mass_kg": 97.1319506911,
+    "expected_weight_n": 952.864477038,
+    "force_ledger_max_internal_closure_ratio": 0.0003941310629124404,
+    "force_ledger_root_near_zero_scale_note": "one floating-root row reports ratio 1.0 because its force scale is near zero; absolute reconstruction and all non-root internal ratios remain within the ledger threshold",
+    "force_ledger_sha256": "6a782fb1248b545186bacfb846df9bc8829f5f335b122ccba879e9c0a1eb425f",
+    "force_snapshot_max_reconstruction_error_n": 1.7053025658242404e-13,
+    "force_snapshot_schema": "numi.human.generalized-force-snapshot.v1",
+    "force_snapshot_sha256": "9ddcfbf56702266f1708cf4afd5192e00de16b79f771cda89a03b0f3350d5640",
+    "internal_balanced": true,
+    "internal_normalized_residual_rms": 1.53764252664e-05,
+    "max_root_acceleration_residual": 2.25993978541e-05,
+    "max_root_force_residual_n": 1.86482486697e-06,
+    "position_limit_physical_kkt": 7.14934874559e-13,
+    "relative_weight_error": 1.95707321873e-09,
+    "replay": "bitwise",
+    "solver": "whole_body_support_wrench",
+    "support_normal_force_n_by_witness": {
+      "10": 262.246260117,
+      "12": 118.67917658,
+      "14": 244.19246034,
+      "5": 170.537417535,
+      "6": 4.72653008119,
+      "8": 152.48263052
+    },
+    "support_witnesses": 18,
+    "total_support_force_n": 952.864475173
+  },
+  "status": "partial"
+}

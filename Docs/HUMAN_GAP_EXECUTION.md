@@ -1,7 +1,7 @@
 # Human gap execution registry
 
 The completion plan is now an executable inventory. Its 14 workstreams match
-the [live ledger](HUMAN_COMPLETION_GAP_LEDGER.md), its 46 tasks name owners and
+the [live ledger](HUMAN_COMPLETION_GAP_LEDGER.md), its 54 tasks name owners and
 acceptance criteria, and its target links cover all 95 mandatory Human targets.
 The dependency graph has ten layers and twelve initial independent tasks.
 These are scheduling relationships; tasks are not assessed for readiness or
@@ -322,3 +322,16 @@ It retains 14 workstreams, 46 tasks, 95 mandatory targets, and
 `integrated_qualification: not_assessed`; both geometric candidates are
 admitted as an unselected handoff, while the original cavity overlap and
 physical blood-mass gates remain open.
+
+
+The 2026-09-14 snapshot after the native static-equilibrium audit is retained at
+[`Docs/media/gap-execution-20260914/report-native-stand-equilibrium-audit-20260914.json`](media/gap-execution-20260914/report-native-stand-equilibrium-audit-20260914.json).
+Its file SHA-256 is `e0eca7eeb9a58bc2d737667996be9b84aa73af984f87a590d25c2bcd8ee894ef`
+and its report content SHA-256 is
+`b07e782619ca8223db98553d38c931f4ddffc29c789533bc9210cd99bae75e32`.
+It records 14 workstreams, 54 tasks and 95 mandatory targets with
+`integrated_qualification: not_assessed`. The linked native audit proves a
+complete static per-DoF equilibrium certificate, but the exact-clock dynamic
+release remains divergent, so force convergence, anatomical loading, activation
+calibration, blood/tissue exchange, material resolution, standing, recovery and
+walking remain open.
