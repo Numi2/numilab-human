@@ -2178,6 +2178,12 @@ def parser() -> argparse.ArgumentParser:
         help="audit a retained native Human horizon and fail closed on temporal drift",
     )
     add_force_convergence_arguments(force_convergence)
+    from .native_whole_body_audit import add_arguments as add_native_whole_body_audit_arguments
+    native_whole_body_audit = commands.add_parser(
+        "native-whole-body-force-audit",
+        help="separate native root and internal generalized-force residuals and fail closed on missing owners",
+    )
+    add_native_whole_body_audit_arguments(native_whole_body_audit)
     from .vessel_mass_moments import run as vessel_mass_moments_run
     vessel_mass_moments = commands.add_parser(
         "vessel-mass-moment-audit",

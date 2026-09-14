@@ -1,0 +1,2448 @@
+{
+  "equilibrium": {
+    "contact_active_set_selected": true,
+    "dof_count": 128,
+    "fibre_tendon_equilibrium": true,
+    "maximum_normalized_residual_tolerance": 0.001,
+    "q_sha256": "9da5b0306181e3a42e80bb6dbdf7d8dd2d770b892c5e1d239c4de320db228e0c",
+    "root_dof_count": 6,
+    "rows": [
+      {
+        "force_scale": 6.250270026275105,
+        "index": 0,
+        "name": "dof_0",
+        "net_residual": -6.250270026275105,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.0,
+          "contact": -6.250270026275105,
+          "damping": 0.0,
+          "gravity": 0.0,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 30.926581998198152,
+        "index": 1,
+        "name": "dof_1",
+        "net_residual": 30.926581998198152,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.0,
+          "contact": 30.926581998198152,
+          "damping": 0.0,
+          "gravity": 0.0,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 1905.5142421410073,
+        "index": 2,
+        "name": "dof_2",
+        "net_residual": -0.2147119349370996,
+        "normalized_residual": 0.00011267926011188061,
+        "terms": {
+          "active_muscle": 0.0,
+          "contact": 952.6497651030352,
+          "damping": 0.0,
+          "gravity": -952.8644770379723,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 62.84303648769004,
+        "index": 3,
+        "name": "dof_3",
+        "net_residual": -15.922184533414146,
+        "normalized_residual": 0.2533643411157106,
+        "terms": {
+          "active_muscle": -0.00021576841643676913,
+          "contact": -39.38235265776399,
+          "damping": 0.0,
+          "gravity": 23.460425977137948,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -4.208437167108059e-05,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 50.80732906431035,
+        "index": 4,
+        "name": "dof_4",
+        "net_residual": -3.2005710027703422,
+        "normalized_residual": 0.06299427782789287,
+        "terms": {
+          "active_muscle": -0.00011545597636335964,
+          "contact": -27.003834577563985,
+          "damping": 0.0,
+          "gravity": 23.80337470378939,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 4.326980615587672e-06,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.2733644943074414,
+        "index": 5,
+        "name": "dof_5",
+        "net_residual": 0.27334417771052016,
+        "normalized_residual": 0.9999256794596799,
+        "terms": {
+          "active_muscle": -1.0158298460636695e-05,
+          "contact": 0.27333816140240935,
+          "damping": 0.0,
+          "gravity": 0.0,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 1.6174606571439654e-05,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 88.818479935217,
+        "index": 6,
+        "name": "dof_6",
+        "net_residual": -2.660371383142369,
+        "normalized_residual": 0.02995290377726356,
+        "terms": {
+          "active_muscle": 43.07573950209116,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.0033147739461576267,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -45.73942565917969,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.07585477374426307,
+        "index": 7,
+        "name": "dof_7",
+        "net_residual": -0.0744461419122099,
+        "normalized_residual": 0.9814298855230623,
+        "terms": {
+          "active_muscle": -0.07515045782823648,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.0006448608176460211,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 5.9455098380567506e-05,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.07696914103832801,
+        "index": 8,
+        "name": "dof_8",
+        "net_residual": -0.07694481615687669,
+        "normalized_residual": 0.9996839657930026,
+        "terms": {
+          "active_muscle": -0.07695697859760235,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 1.5815190888310194e-34,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 1.2162440725660417e-05,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 120.82085508416546,
+        "index": 9,
+        "name": "dof_9",
+        "net_residual": -120.82085508416546,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": -67.63304990838421,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 8.03082206122077e-34,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -53.18780517578125,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 302.9966516208502,
+        "index": 10,
+        "name": "dof_10",
+        "net_residual": 76.8042516994623,
+        "normalized_residual": 0.25348217971586706,
+        "terms": {
+          "active_muscle": -112.99809995869049,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.09810000200346111,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 189.90045166015625,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 6.015336236458255,
+        "index": 11,
+        "name": "dof_11",
+        "net_residual": 2.833864012260007,
+        "normalized_residual": 0.4711065019249108,
+        "terms": {
+          "active_muscle": -1.590736112099124,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.0,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 4.424600124359131,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 122.5149650001107,
+        "index": 12,
+        "name": "dof_12",
+        "net_residual": 2.6653632545052446,
+        "normalized_residual": 0.02175540967181304,
+        "terms": {
+          "active_muscle": 57.20201835185652,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 5.388145775451455,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -59.924800872802734,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.005206694464033809,
+        "index": 13,
+        "name": "dof_13",
+        "net_residual": -0.0037980021469580616,
+        "normalized_residual": 0.7294459417954047,
+        "terms": {
+          "active_muscle": -0.004502348305495936,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.0006448608176394832,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 5.948534089839086e-05,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.11067085257715957,
+        "index": 14,
+        "name": "dof_14",
+        "net_residual": -0.11066913579063152,
+        "normalized_residual": 0.9999844874554765,
+        "terms": {
+          "active_muscle": -0.11066999418389555,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 5.313069151710734e-31,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 8.583932640249259e-07,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 117.64360437385668,
+        "index": 15,
+        "name": "dof_15",
+        "net_residual": 3.709095096512918,
+        "normalized_residual": 0.0315282340782919,
+        "terms": {
+          "active_muscle": 54.70401401701322,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 5.972335718171573,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -56.967254638671875,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.053895366075254254,
+        "index": 16,
+        "name": "dof_16",
+        "net_residual": 0.053895366075254254,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.05324019750396046,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.000644860817638726,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 1.0307753655069973e-05,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.041480246625558055,
+        "index": 17,
+        "name": "dof_17",
+        "net_residual": 0.041480246625558055,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.04147315150186593,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 8.833713761080114e-31,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 7.095123692124616e-06,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 116.34201141309742,
+        "index": 18,
+        "name": "dof_18",
+        "net_residual": -5.6160726933478955,
+        "normalized_residual": 0.048272095566637724,
+        "terms": {
+          "active_muscle": 52.22407710612778,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 3.1388922537469837,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -60.979042053222656,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.10143899845035803,
+        "index": 19,
+        "name": "dof_19",
+        "net_residual": 0.10143899845035803,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.10076723626191855,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.0006448608176373993,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 2.6901370802079327e-05,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.10828404101241587,
+        "index": 20,
+        "name": "dof_20",
+        "net_residual": 0.10828020473238623,
+        "normalized_residual": 0.9999645720644171,
+        "terms": {
+          "active_muscle": 0.10828212287240105,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 6.190320671059146e-31,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -1.9181400148227112e-06,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 112.34246210227762,
+        "index": 21,
+        "name": "dof_21",
+        "net_residual": -33.37721403202647,
+        "normalized_residual": 0.2971023903823609,
+        "terms": {
+          "active_muscle": 39.482624035125575,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -1.4683738337536103,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -71.39146423339844,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.07105059371376027,
+        "index": 22,
+        "name": "dof_22",
+        "net_residual": 0.07105059371376027,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.07038851605956001,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.000644860817632286,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 1.721683656796813e-05,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.0026782493352223657,
+        "index": 23,
+        "name": "dof_23",
+        "net_residual": -0.0026782493352223657,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": -0.002673842199929216,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -3.619873764701401e-31,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -4.407135293149622e-06,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.0010172081047278357,
+        "index": 24,
+        "name": "dof_24",
+        "net_residual": 0.0010076546196374258,
+        "normalized_residual": 0.9906081311719729,
+        "terms": {
+          "active_muscle": -4.7767425452050176e-06,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.000989739631263453,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 2.2691730919177644e-05,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 6.194457034680676,
+        "index": 25,
+        "name": "dof_25",
+        "net_residual": -6.1944114075267755,
+        "normalized_residual": 0.9999926341964042,
+        "terms": {
+          "active_muscle": 2.2813576949824667e-05,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -6.1943945188878535,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -3.970221587223932e-05,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 2.973679654394468,
+        "index": 26,
+        "name": "dof_26",
+        "net_residual": -2.973638919558196,
+        "normalized_residual": 0.9999863015384957,
+        "terms": {
+          "active_muscle": 2.036741813602051e-05,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.10998321580933985,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -2.863676071166992,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 2.6183502521764903,
+        "index": 27,
+        "name": "dof_27",
+        "net_residual": 2.618334906261547,
+        "normalized_residual": 0.999994139090089,
+        "terms": {
+          "active_muscle": -7.672957471737546e-06,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.002455414149438572,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 2.61588716506958,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 2.9088600383383167,
+        "index": 28,
+        "name": "dof_28",
+        "net_residual": 2.9088545203145886,
+        "normalized_residual": 0.9999981030287963,
+        "terms": {
+          "active_muscle": -2.7590118640891168e-06,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.018913202788366737,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 2.889944076538086,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 1.3706566607374049,
+        "index": 29,
+        "name": "dof_29",
+        "net_residual": -1.3706370024308487,
+        "normalized_residual": 0.999985657745576,
+        "terms": {
+          "active_muscle": 9.829153277987195e-06,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.08685791213527429,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -1.2837889194488525,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 2.3259160082379933,
+        "index": 30,
+        "name": "dof_30",
+        "net_residual": 2.325907810845612,
+        "normalized_residual": 0.9999964756283751,
+        "terms": {
+          "active_muscle": -4.098696190615981e-06,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.06691661497087989,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 2.258995294570923,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 15.349582190463165,
+        "index": 31,
+        "name": "dof_31",
+        "net_residual": 0.005410676052947316,
+        "normalized_residual": 0.0003524966338373053,
+        "terms": {
+          "active_muscle": -7.161269351180234,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.510816406024875,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 7.677496433258057,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 8.294013481848596,
+        "index": 32,
+        "name": "dof_32",
+        "net_residual": 0.0016675179072631607,
+        "normalized_residual": 0.0002010507833044297,
+        "terms": {
+          "active_muscle": -3.654795277420706,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.4913777045499607,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 4.14784049987793,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 7.1338400393219,
+        "index": 33,
+        "name": "dof_33",
+        "net_residual": -0.011951014450072961,
+        "normalized_residual": 0.0016752568580454116,
+        "terms": {
+          "active_muscle": 3.342568931576957,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.21837558085895625,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -3.5728955268859863,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 1.7303557193303682,
+        "index": 34,
+        "name": "dof_34",
+        "net_residual": -0.009809556666553698,
+        "normalized_residual": 0.005669098299828145,
+        "terms": {
+          "active_muscle": 0.8602730813319073,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.030886373254656055,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -0.8391962647438049,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 1.5688607164389523,
+        "index": 35,
+        "name": "dof_35",
+        "net_residual": 0.000143367991668919,
+        "normalized_residual": 9.138350534669517e-05,
+        "terms": {
+          "active_muscle": 0.7845020422153106,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.12237315767548494,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -0.6619855165481567,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 1.7303557193303682,
+        "index": 36,
+        "name": "dof_36",
+        "net_residual": -0.009809556666553698,
+        "normalized_residual": 0.005669098299828145,
+        "terms": {
+          "active_muscle": 0.8602730813319073,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.030886373254656055,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -0.8391962647438049,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 1.7303557193303682,
+        "index": 37,
+        "name": "dof_37",
+        "net_residual": -0.009809556666553698,
+        "normalized_residual": 0.005669098299828145,
+        "terms": {
+          "active_muscle": 0.8602730813319073,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.030886373254656055,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -0.8391962647438049,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.969637905901278,
+        "index": 38,
+        "name": "dof_38",
+        "net_residual": -0.03237602645715565,
+        "normalized_residual": 0.03338981104194988,
+        "terms": {
+          "active_muscle": -0.2516977364199838,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.24930922975923303,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.46863093972206116,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.73484342859992,
+        "index": 39,
+        "name": "dof_39",
+        "net_residual": -0.009261075985346146,
+        "normalized_residual": 0.012602788056485797,
+        "terms": {
+          "active_muscle": 0.3451400095736902,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.01765116673359675,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -0.37205225229263306,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.031776159102546074,
+        "index": 40,
+        "name": "dof_40",
+        "net_residual": 0.005546059929554982,
+        "normalized_residual": 0.17453525177970936,
+        "terms": {
+          "active_muscle": 0.018661109206305548,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.013115049586495545,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 3.09744979665183e-10,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.024148612129621654,
+        "index": 41,
+        "name": "dof_41",
+        "net_residual": 0.024148611842046634,
+        "normalized_residual": 0.9999999880914473,
+        "terms": {
+          "active_muscle": 0.021242484265228852,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.0029061277206052917,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -1.4378750967658505e-10,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.010514025490972866,
+        "index": 42,
+        "name": "dof_42",
+        "net_residual": 0.004362262408800489,
+        "normalized_residual": 0.41489935634508784,
+        "terms": {
+          "active_muscle": 0.0074381439498866775,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.0030758815410861892,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.08225856743861823,
+        "index": 43,
+        "name": "dof_43",
+        "net_residual": -0.08225856743861823,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": -0.07864884290578797,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.003609724532830254,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.1377028024483749,
+        "index": 44,
+        "name": "dof_44",
+        "net_residual": 0.13528029541459324,
+        "normalized_residual": 0.982407714362314,
+        "terms": {
+          "active_muscle": 0.13649154893148407,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.001211253516890838,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.0272683110973383,
+        "index": 45,
+        "name": "dof_45",
+        "net_residual": 0.026992528876128012,
+        "normalized_residual": 0.9898863475546453,
+        "terms": {
+          "active_muscle": 0.027130419986733156,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.0001378911106051431,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.2602671111214297,
+        "index": 46,
+        "name": "dof_46",
+        "net_residual": 0.2602671111214297,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.2596168946014494,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.00038136514221187784,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.00026885137776844203,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.07930812449815738,
+        "index": 47,
+        "name": "dof_47",
+        "net_residual": 0.0784029712882515,
+        "normalized_residual": 0.9885868791421626,
+        "terms": {
+          "active_muscle": 0.07844660406337929,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.00045257660495294814,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.000408943829825148,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.07734880102708941,
+        "index": 48,
+        "name": "dof_48",
+        "net_residual": 0.07734880102708941,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.07731253217126755,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 3.6268855821857635e-05,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.10512222931040505,
+        "index": 49,
+        "name": "dof_49",
+        "net_residual": -0.10512222931040505,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": -0.10512222931040505,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.0,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.060130941504874004,
+        "index": 50,
+        "name": "dof_50",
+        "net_residual": 0.060130941504874004,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.059526648189126466,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.00025898186800235205,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.00034531144774518907,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.02968490173308227,
+        "index": 51,
+        "name": "dof_51",
+        "net_residual": 0.029393127786678522,
+        "normalized_residual": 0.9901709647204733,
+        "terms": {
+          "active_muscle": 0.02876976769178817,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.00014588697320187425,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.000769247068092227,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.03586784131426711,
+        "index": 52,
+        "name": "dof_52",
+        "net_residual": 0.03586784131426711,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.03582950383124661,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 3.8337483020499475e-05,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.11701663583517075,
+        "index": 53,
+        "name": "dof_53",
+        "net_residual": -0.11701663583517075,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": -0.11701663583517075,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.0,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.03386771493662778,
+        "index": 54,
+        "name": "dof_54",
+        "net_residual": 0.03386771493662778,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.033062962726384704,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.00016439442391920074,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0006403577863238752,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.021654075874169117,
+        "index": 55,
+        "name": "dof_55",
+        "net_residual": -0.018730423523912975,
+        "normalized_residual": 0.8649837394472358,
+        "terms": {
+          "active_muscle": -0.020192249699041046,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.0001632544711725395,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0012985717039555311,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.00918568929144034,
+        "index": 56,
+        "name": "dof_56",
+        "net_residual": 0.00918568929144034,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.009157812428118417,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 2.7876863321922362e-05,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.0067695520536383835,
+        "index": 57,
+        "name": "dof_57",
+        "net_residual": 0.0067695520536383835,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.0067695520536383835,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.0,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.0405667511493692,
+        "index": 58,
+        "name": "dof_58",
+        "net_residual": 0.0405667511493692,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.04031254745962661,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 1.5535763573591308e-05,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.00023866792616900057,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.1159517537180601,
+        "index": 59,
+        "name": "dof_59",
+        "net_residual": -0.11552828168824619,
+        "normalized_residual": 0.9963478600690802,
+        "terms": {
+          "active_muscle": -0.11526461696450221,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.00021173601490695883,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -0.0004754007386509329,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.017385933472923134,
+        "index": 60,
+        "name": "dof_60",
+        "net_residual": 0.01696142100731515,
+        "normalized_residual": 0.9755829926377482,
+        "terms": {
+          "active_muscle": 0.01717367724011914,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -2.2576896625816368e-06,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -0.00020999854314140975,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.013750863634741428,
+        "index": 61,
+        "name": "dof_61",
+        "net_residual": 0.013750863634741428,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.013750863634741428,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.0,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.000997853388360096,
+        "index": 62,
+        "name": "dof_62",
+        "net_residual": 0.000981625874166802,
+        "normalized_residual": 0.9837375766995562,
+        "terms": {
+          "active_muscle": -7.048016662077607e-06,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.000989739631263449,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -1.0657404345693067e-06,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 6.194407611365831,
+        "index": 63,
+        "name": "dof_63",
+        "net_residual": -6.194381426409876,
+        "normalized_residual": 0.9999957728070871,
+        "terms": {
+          "active_muscle": 2.6110526711247428e-06,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -6.1943945188878535,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 1.0481425306352321e-05,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 2.9736271534517518,
+        "index": 64,
+        "name": "dof_64",
+        "net_residual": -2.9736213254386565,
+        "normalized_residual": 0.9999980400995839,
+        "terms": {
+          "active_muscle": 2.914006547455912e-06,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.10998321580933985,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -2.8636410236358643,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 2.6183303818818056,
+        "index": 65,
+        "name": "dof_65",
+        "net_residual": 2.618329027349689,
+        "normalized_residual": 0.9999994826733379,
+        "terms": {
+          "active_muscle": -6.772660582854047e-07,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.0024554141494385695,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 2.6158742904663086,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 2.908851714728388,
+        "index": 66,
+        "name": "dof_66",
+        "net_residual": 2.908851714728388,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 2.3032150457674174e-06,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.018913202788366733,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 2.8899362087249756,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 1.3706200776490551,
+        "index": 67,
+        "name": "dof_67",
+        "net_residual": -1.3706194645017424,
+        "normalized_residual": 0.9999995526496929,
+        "terms": {
+          "active_muscle": 3.0657365644964527e-07,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.08685791213527426,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -1.2837618589401245,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 2.325912162699648,
+        "index": 68,
+        "name": "dof_68",
+        "net_residual": 2.325912162699648,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 2.531578454552417e-07,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.0669166149708799,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 2.258995294570923,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 15.330084842910514,
+        "index": 69,
+        "name": "dof_69",
+        "net_residual": 0.024905162582649076,
+        "normalized_residual": 0.0016245939169845243,
+        "terms": {
+          "active_muscle": -7.141773434139058,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.5108164060248749,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 7.677495002746582,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 8.284270590349754,
+        "index": 70,
+        "name": "dof_70",
+        "net_residual": 0.011434251264014428,
+        "normalized_residual": 0.001380236333339238,
+        "terms": {
+          "active_muscle": -3.6450404649929093,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.4913777045499607,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 4.147852420806885,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 7.13801567822432,
+        "index": 71,
+        "name": "dof_71",
+        "net_residual": -0.0077739450361784534,
+        "normalized_residual": 0.0010890904961016184,
+        "terms": {
+          "active_muscle": 3.346745285735114,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.21837558085895628,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -3.572894811630249,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 1.7403574694495694,
+        "index": 72,
+        "name": "dof_72",
+        "net_residual": 0.00020256466083834468,
+        "normalized_residual": 0.00011639255980118309,
+        "terms": {
+          "active_muscle": 0.8702800170552039,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.030886373254656055,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -0.8391910791397095,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 1.564302119763819,
+        "index": 73,
+        "name": "dof_73",
+        "net_residual": -0.004396632034294523,
+        "normalized_residual": 0.002810602874436004,
+        "terms": {
+          "active_muscle": 0.7799527438647622,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.12237315767548493,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -0.6619762182235718,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 1.7403574694495694,
+        "index": 74,
+        "name": "dof_74",
+        "net_residual": 0.00020256466083834468,
+        "normalized_residual": 0.00011639255980118309,
+        "terms": {
+          "active_muscle": 0.8702800170552039,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.030886373254656055,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -0.8391910791397095,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 1.7403574694495694,
+        "index": 75,
+        "name": "dof_75",
+        "net_residual": 0.00020256466083834468,
+        "normalized_residual": 0.00011639255980118309,
+        "terms": {
+          "active_muscle": 0.8702800170552039,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.030886373254656055,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -0.8391910791397095,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 1.0005302667353595,
+        "index": 76,
+        "name": "dof_76",
+        "net_residual": -0.0632680892680132,
+        "normalized_residual": 0.06323455808533539,
+        "terms": {
+          "active_muscle": -0.2825899482424533,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.24930922975923298,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.4686310887336731,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.6086286955268904,
+        "index": 77,
+        "name": "dof_77",
+        "net_residual": -0.13548343845290697,
+        "normalized_residual": 0.22260442113334608,
+        "terms": {
+          "active_muscle": 0.21892146180339497,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.017651166733596745,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -0.3720560669898987,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.028829863066194436,
+        "index": 78,
+        "name": "dof_78",
+        "net_residual": 0.0025997638932033756,
+        "normalized_residual": 0.0901760749690077,
+        "terms": {
+          "active_muscle": 0.01571481302772395,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.013115049586495531,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 4.519749574605214e-10,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.07337683755169207,
+        "index": 79,
+        "name": "dof_79",
+        "net_residual": 0.07337683755169207,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.0704707098221625,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.00290612772060529,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 8.92427798326878e-12,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.05900511078413701,
+        "index": 80,
+        "name": "dof_80",
+        "net_residual": -0.05900511078413701,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": -0.055929229243050826,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.0030758815410861853,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.17205914148732182,
+        "index": 81,
+        "name": "dof_81",
+        "net_residual": -0.17205914148732182,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": -0.16844941695449156,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.003609724532830253,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.10474397264593288,
+        "index": 82,
+        "name": "dof_82",
+        "net_residual": 0.10232146561215122,
+        "normalized_residual": 0.9768721104175561,
+        "terms": {
+          "active_muscle": 0.10353271912904205,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.0012112535168908377,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.03255449648452858,
+        "index": 83,
+        "name": "dof_83",
+        "net_residual": 0.03227871426331829,
+        "normalized_residual": 0.9915285981664206,
+        "terms": {
+          "active_muscle": 0.032416605373923435,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.00013789111060514276,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.038447737051405625,
+        "index": 84,
+        "name": "dof_84",
+        "net_residual": -0.037147067339095716,
+        "normalized_residual": 0.966170448196447,
+        "terms": {
+          "active_muscle": -0.03779740219525067,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.0003813651422118775,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0002689697139430791,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.05169862667580313,
+        "index": 85,
+        "name": "dof_85",
+        "net_residual": 0.05079347346589724,
+        "normalized_residual": 0.9824917358911289,
+        "terms": {
+          "active_muscle": 0.05083692285778933,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.00045257660495294716,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.00040912721306085587,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.04890464221430323,
+        "index": 86,
+        "name": "dof_86",
+        "net_residual": -0.04883210450265952,
+        "normalized_residual": 0.9985167520227252,
+        "terms": {
+          "active_muscle": -0.048868373358481376,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 3.626885582185748e-05,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.018300616166893047,
+        "index": 87,
+        "name": "dof_87",
+        "net_residual": -0.018300616166893047,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": -0.018300616166893047,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.0,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.042211352362304465,
+        "index": 88,
+        "name": "dof_88",
+        "net_residual": -0.04100265752276775,
+        "normalized_residual": 0.9713656452140562,
+        "terms": {
+          "active_muscle": -0.04160700494253611,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.0002589818680023512,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.00034536555176600814,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.00897227719633951,
+        "index": 89,
+        "name": "dof_89",
+        "net_residual": 0.008680503249935764,
+        "normalized_residual": 0.9674805024389145,
+        "terms": {
+          "active_muscle": 0.008057022839810302,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.00014588697320187276,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0007693673833273351,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.015860425568551814,
+        "index": 90,
+        "name": "dof_90",
+        "net_residual": 0.015860425568551814,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.015822088085531316,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 3.833748302049946e-05,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.03275100548331267,
+        "index": 91,
+        "name": "dof_91",
+        "net_residual": -0.03275100548331267,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": -0.03275100548331267,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.0,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.010382439793002116,
+        "index": 92,
+        "name": "dof_92",
+        "net_residual": 0.010382439793002116,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.009577702658543217,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.00016439442391920085,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0006403427105396986,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.02058299350626446,
+        "index": 93,
+        "name": "dof_93",
+        "net_residual": 0.02058299350626446,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.01912120679593049,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.0001632544711725394,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0012985322391614318,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.00019940151566279917,
+        "index": 94,
+        "name": "dof_94",
+        "net_residual": -0.0001436477890189544,
+        "normalized_residual": 0.7203946697269447,
+        "terms": {
+          "active_muscle": -0.00017152465234087678,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 2.7876863321922383e-05,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.0,
+        "index": 95,
+        "name": "dof_95",
+        "net_residual": 0.0,
+        "normalized_residual": 0.0,
+        "terms": {
+          "active_muscle": 0.0,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.0,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.006069561794132582,
+        "index": 96,
+        "name": "dof_96",
+        "net_residual": 0.006069561794132582,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.00581544733673417,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 1.5535763573591793e-05,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.00023857869382482022,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.013940831533346442,
+        "index": 97,
+        "name": "dof_97",
+        "net_residual": 0.012990385122776149,
+        "normalized_residual": 0.931822832210774,
+        "terms": {
+          "active_muscle": 0.013253872313154336,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.00021173601490695934,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -0.00047522320528514683,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.00789383445515293,
+        "index": 98,
+        "name": "dof_98",
+        "net_residual": -0.007893834455152932,
+        "normalized_residual": 1.0000000000000002,
+        "terms": {
+          "active_muscle": -0.007681656206062648,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -2.257689662581634e-06,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -0.00020992055942770094,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.0,
+        "index": 99,
+        "name": "dof_99",
+        "net_residual": 0.0,
+        "normalized_residual": 0.0,
+        "terms": {
+          "active_muscle": 0.0,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.0,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 46.319189524064925,
+        "index": 100,
+        "name": "dof_100",
+        "net_residual": 6.7143847180834015,
+        "normalized_residual": 0.14495902858133936,
+        "terms": {
+          "active_muscle": -19.634232748145934,
+          "contact": 6.722382137553655,
+          "damping": 0.0,
+          "gravity": -0.16816965484482949,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 19.794404983520508,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 15.448786795164485,
+        "index": 101,
+        "name": "dof_101",
+        "net_residual": -0.006860833378446161,
+        "normalized_residual": 0.00044410175824250624,
+        "terms": {
+          "active_muscle": 7.645450155963107,
+          "contact": -0.004522403596416689,
+          "damping": 0.0,
+          "gravity": 0.07551282492991299,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -7.723301410675049,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 1.1304501558615305,
+        "index": 102,
+        "name": "dof_102",
+        "net_residual": 0.1548687344946052,
+        "normalized_residual": 0.13699740204518593,
+        "terms": {
+          "active_muscle": 0.46903640708925043,
+          "contact": 0.17362303808881746,
+          "damping": 0.0,
+          "gravity": -6.002878725297829e-05,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -0.4877306818962097,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 85.43724776056945,
+        "index": 103,
+        "name": "dof_103",
+        "net_residual": -6.075282918575127,
+        "normalized_residual": 0.07110812997629073,
+        "terms": {
+          "active_muscle": 0.0,
+          "contact": 39.68098242099716,
+          "damping": 0.0,
+          "gravity": -6.1243416640351755,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -39.63192367553711,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 1302.38557914435,
+        "index": 104,
+        "name": "dof_104",
+        "net_residual": 1205.2319194359948,
+        "normalized_residual": 0.9254033050855923,
+        "terms": {
+          "active_muscle": 0.0,
+          "contact": 419.24862966126614,
+          "damping": 0.0,
+          "gravity": -48.576829854177674,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 834.5601196289062,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 20.73499491018922,
+        "index": 105,
+        "name": "dof_105",
+        "net_residual": -2.974880450639075,
+        "normalized_residual": 0.14347148207773192,
+        "terms": {
+          "active_muscle": -1.6751247211753468e-05,
+          "contact": -11.854920929166935,
+          "damping": 0.0,
+          "gravity": 0.14069737412321703,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 8.739359855651855,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 12.182553039289315,
+        "index": 106,
+        "name": "dof_106",
+        "net_residual": -11.825673786192768,
+        "normalized_residual": 0.9707057090623291,
+        "terms": {
+          "active_muscle": 7.916283176054205e-06,
+          "contact": -5.114769197347975,
+          "damping": 0.0,
+          "gravity": 0.17843171026509744,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -6.889344215393066,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 1.8472062866427315,
+        "index": 107,
+        "name": "dof_107",
+        "net_residual": 1.7280622203610527,
+        "normalized_residual": 0.9355004001755423,
+        "terms": {
+          "active_muscle": -1.4291647477111066e-07,
+          "contact": -0.04712922837390801,
+          "damping": 0.0,
+          "gravity": -0.012442661850456501,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 1.787634253501892,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 37.62509012283655,
+        "index": 108,
+        "name": "dof_108",
+        "net_residual": 21.69681136873403,
+        "normalized_residual": 0.57665805710762,
+        "terms": {
+          "active_muscle": 7.966933020490204,
+          "contact": 21.694017725295087,
+          "damping": 0.0,
+          "gravity": -0.43638077872362707,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -7.527758598327637,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 11.18206759498531,
+        "index": 109,
+        "name": "dof_109",
+        "net_residual": -9.785080145139906,
+        "normalized_residual": 0.8750689496393409,
+        "terms": {
+          "active_muscle": -0.664431866722262,
+          "contact": -9.819142003340346,
+          "damping": 0.0,
+          "gravity": 0.11620641336874708,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.5822873115539551,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 1.9611777981798486,
+        "index": 110,
+        "name": "dof_110",
+        "net_residual": -1.3918367949946249,
+        "normalized_residual": 0.7096943460640723,
+        "terms": {
+          "active_muscle": 0.27591050872990763,
+          "contact": -1.6752494187903484,
+          "damping": 0.0,
+          "gravity": 0.008759992862704147,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -0.0012578777968883514,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 942.9055607122818,
+        "index": 111,
+        "name": "dof_111",
+        "net_residual": -942.9055607122818,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.0,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.27323649353179613,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -942.63232421875,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 18.499752190086458,
+        "index": 112,
+        "name": "dof_112",
+        "net_residual": -18.499752190086458,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.0,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.0002175831528654764,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -18.499534606933594,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 6.734733232848456,
+        "index": 113,
+        "name": "dof_113",
+        "net_residual": 6.733393064148614,
+        "normalized_residual": 0.9998010064165117,
+        "terms": {
+          "active_muscle": 0.0,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.0006700843499213296,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 6.734063148498535,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 63.908708333572285,
+        "index": 114,
+        "name": "dof_114",
+        "net_residual": 24.300134458961896,
+        "normalized_residual": 0.3802319760888774,
+        "terms": {
+          "active_muscle": -19.63611728824143,
+          "contact": 24.310058374416506,
+          "damping": 0.0,
+          "gravity": -0.16816964906376533,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 19.794363021850586,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 16.876154261800778,
+        "index": 115,
+        "name": "dof_115",
+        "net_residual": -1.4304218829976285,
+        "normalized_residual": 0.08475994357526065,
+        "terms": {
+          "active_muscle": 7.647411683311663,
+          "contact": -1.4299780786553062,
+          "damping": 0.0,
+          "gravity": 0.07545450608991067,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -7.7233099937438965,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 1.7387895826852637,
+        "index": 116,
+        "name": "dof_116",
+        "net_residual": 0.763208794119103,
+        "normalized_residual": 0.43893108270205833,
+        "terms": {
+          "active_muscle": 0.4815460480585051,
+          "contact": 0.7694531403436783,
+          "damping": 0.0,
+          "gravity": -6.0189224028807294e-05,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -0.4877302050590515,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 94.50199885992205,
+        "index": 117,
+        "name": "dof_117",
+        "net_residual": 2.9902987233694276,
+        "normalized_residual": 0.03164270342897056,
+        "terms": {
+          "active_muscle": 0.0,
+          "contact": 48.74614879164574,
+          "damping": 0.0,
+          "gravity": -6.124342194741156,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -39.631507873535156,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 1412.5684222945472,
+        "index": 118,
+        "name": "dof_118",
+        "net_residual": 1315.4147541128254,
+        "normalized_residual": 0.9312219736415265,
+        "terms": {
+          "active_muscle": 0.0,
+          "contact": 529.4312854693113,
+          "damping": 0.0,
+          "gravity": -48.57683409086084,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 834.560302734375,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 40.21651144699245,
+        "index": 119,
+        "name": "dof_119",
+        "net_residual": -22.456366458436527,
+        "normalized_residual": 0.5583867334697898,
+        "terms": {
+          "active_muscle": -3.780624796181365e-05,
+          "contact": -31.336401146466525,
+          "damping": 0.0,
+          "gravity": 0.1406973798370412,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 8.739375114440918,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 16.3320534808041,
+        "index": 120,
+        "name": "dof_120",
+        "net_residual": -15.975217891150864,
+        "normalized_residual": 0.9781512110480999,
+        "terms": {
+          "active_muscle": -1.2605228049667253e-05,
+          "contact": -9.264303660888592,
+          "damping": 0.0,
+          "gravity": 0.1784177948266173,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -6.88931941986084,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 2.1232643084721947,
+        "index": 121,
+        "name": "dof_121",
+        "net_residual": 1.451984233722172,
+        "normalized_residual": 0.6838452603043822,
+        "terms": {
+          "active_muscle": 1.938524246235128e-06,
+          "contact": -0.3231989550092988,
+          "damping": 0.0,
+          "gravity": -0.012441082365712498,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 1.787622332572937,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 60.19001844448151,
+        "index": 122,
+        "name": "dof_122",
+        "net_residual": 44.26168370521707,
+        "normalized_residual": 0.7353658438573742,
+        "terms": {
+          "active_muscle": 7.952581236641404,
+          "contact": 44.27326983820788,
+          "damping": 0.0,
+          "gravity": -0.43638063791225107,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -7.527786731719971,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 18.696631527664938,
+        "index": 123,
+        "name": "dof_123",
+        "net_residual": -17.2996415207503,
+        "normalized_residual": 0.9252811927727437,
+        "terms": {
+          "active_muscle": -0.6946517162642303,
+          "contact": -17.303484807943388,
+          "damping": 0.0,
+          "gravity": 0.11620578455473055,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.5822892189025879,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 3.208178192199101,
+        "index": 124,
+        "name": "dof_124",
+        "net_residual": -2.702908188890756,
+        "normalized_residual": 0.8425056299749987,
+        "terms": {
+          "active_muscle": 0.24387500921103822,
+          "contact": -2.9542852550060403,
+          "damping": 0.0,
+          "gravity": 0.008759992443134487,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -0.0012579355388879776,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 942.9057438177506,
+        "index": 125,
+        "name": "dof_125",
+        "net_residual": -942.9057438177506,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.0,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.2732364935317962,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -942.6325073242188,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 18.49965300795755,
+        "index": 126,
+        "name": "dof_126",
+        "net_residual": -18.49965300795755,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.0,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.00021758315286547641,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -18.499435424804688,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 6.734750398986152,
+        "index": 127,
+        "name": "dof_127",
+        "net_residual": 6.733410230286309,
+        "normalized_residual": 0.9998010069237244,
+        "terms": {
+          "active_muscle": 0.0,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.000670084349921333,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 6.7340803146362305,
+          "tendon": 0.0
+        }
+      }
+    ],
+    "terms_available": {
+      "active_muscle": true,
+      "contact": false,
+      "damping": false,
+      "gravity": true,
+      "joint_constraint": false,
+      "ligament_limit": false,
+      "passive_muscle": true,
+      "tendon": false
+    },
+    "worst_coordinates": [
+      {
+        "force_scale": 0.00789383445515293,
+        "index": 98,
+        "name": "dof_98",
+        "net_residual": -0.007893834455152932,
+        "normalized_residual": 1.0000000000000002,
+        "terms": {
+          "active_muscle": -0.007681656206062648,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -2.257689662581634e-06,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -0.00020992055942770094,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 942.9057438177506,
+        "index": 125,
+        "name": "dof_125",
+        "net_residual": -942.9057438177506,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.0,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.2732364935317962,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -942.6325073242188,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 942.9055607122818,
+        "index": 111,
+        "name": "dof_111",
+        "net_residual": -942.9055607122818,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.0,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.27323649353179613,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -942.63232421875,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 120.82085508416546,
+        "index": 9,
+        "name": "dof_9",
+        "net_residual": -120.82085508416546,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": -67.63304990838421,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 8.03082206122077e-34,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -53.18780517578125,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 30.926581998198152,
+        "index": 1,
+        "name": "dof_1",
+        "net_residual": 30.926581998198152,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.0,
+          "contact": 30.926581998198152,
+          "damping": 0.0,
+          "gravity": 0.0,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 18.499752190086458,
+        "index": 112,
+        "name": "dof_112",
+        "net_residual": -18.499752190086458,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.0,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.0002175831528654764,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -18.499534606933594,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 18.49965300795755,
+        "index": 126,
+        "name": "dof_126",
+        "net_residual": -18.49965300795755,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.0,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.00021758315286547641,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": -18.499435424804688,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 6.250270026275105,
+        "index": 0,
+        "name": "dof_0",
+        "net_residual": -6.250270026275105,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.0,
+          "contact": -6.250270026275105,
+          "damping": 0.0,
+          "gravity": 0.0,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 2.908851714728388,
+        "index": 66,
+        "name": "dof_66",
+        "net_residual": 2.908851714728388,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 2.3032150457674174e-06,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.018913202788366733,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 2.8899362087249756,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 2.325912162699648,
+        "index": 68,
+        "name": "dof_68",
+        "net_residual": 2.325912162699648,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 2.531578454552417e-07,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.0669166149708799,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 2.258995294570923,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.2602671111214297,
+        "index": 46,
+        "name": "dof_46",
+        "net_residual": 0.2602671111214297,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": 0.2596168946014494,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": 0.00038136514221187784,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.00026885137776844203,
+          "tendon": 0.0
+        }
+      },
+      {
+        "force_scale": 0.17205914148732182,
+        "index": 81,
+        "name": "dof_81",
+        "net_residual": -0.17205914148732182,
+        "normalized_residual": 1.0,
+        "terms": {
+          "active_muscle": -0.16844941695449156,
+          "contact": 0.0,
+          "damping": 0.0,
+          "gravity": -0.003609724532830253,
+          "joint_constraint": 0.0,
+          "ligament_limit": 0.0,
+          "passive_muscle": 0.0,
+          "tendon": 0.0
+        }
+      }
+    ]
+  },
+  "gate": {
+    "maximum_normalized_residual": 0.001,
+    "reasons": [
+      "required generalized-force terms are unavailable: tendon, ligament_limit, contact, joint_constraint, damping",
+      "one or more generalized coordinates exceed the normalized residual bound"
+    ]
+  },
+  "input": {
+    "path": "/private/tmp/native-whole-body-force-audit-20260914.json",
+    "sha256": "8c2ead594dd5a9a1007598d0a79ac9502ccd546471c0084b2a7698aef2f01bd2"
+  },
+  "qualification": {
+    "activation_calibration": false,
+    "anatomical_support_loading": false,
+    "blood_mass_transfer": false,
+    "complete_force_terms": false,
+    "force_convergence": false,
+    "material_calibration": false,
+    "per_dof_source_audit": true,
+    "recovery": false,
+    "static_contact_handoff_admissible": false,
+    "subject_calibration": false,
+    "sustained_standing": false,
+    "walking": false,
+    "whole_body_generalized_equilibrium": false
+  },
+  "residual": {
+    "all_max_absolute_residual": 1315.4147541128254,
+    "all_max_normalized_residual": 1.0000000000000002,
+    "all_rms_absolute_residual": 197.4312813081854,
+    "internal_max_absolute_residual": 1315.4147541128254,
+    "internal_max_normalized_residual": 1.0000000000000002,
+    "internal_rms_absolute_residual": 202.20235740725278,
+    "root_max_absolute_residual": 30.926581998198152,
+    "root_max_normalized_residual": 1.0,
+    "root_rms_absolute_residual": 14.487924758265569
+  },
+  "schema": "numi.human.native-whole-body-force-audit.v1",
+  "source": {
+    "body_count": 157,
+    "commit": "unbound-native-build",
+    "device": "Apple M4 Pro"
+  },
+  "status": "partial"
+}

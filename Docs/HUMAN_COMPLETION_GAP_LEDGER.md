@@ -34,6 +34,13 @@ blood-mass transfer, organ mechanics, activation, calibrated materials, force
 convergence, subject calibration, sustained standing/recovery/walking, and held-out
 physiology remain open.
 
+The [native whole-body force audit](NATIVE_WHOLE_BODY_FORCE_AUDIT_20260914.md)
+now consumes the native 128-row certificate and separates the six floating-root
+rows from the 122 internal rows. The retained Mac mini handoff experiment has
+missing tendon, limit, contact, equality, and damping terms and internal
+residuals up to `1315.41475411 N`; it is diagnostic evidence only and does not
+admit force convergence or standing.
+
 ## Current endpoint disposition
 
 The current compiler retains one law for every origin and insertion:
