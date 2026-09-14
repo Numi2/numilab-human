@@ -97,3 +97,10 @@ isolated process was terminated; this correction is not in `ee5cb816` and is
 not a standing result. The partial input/output log is retained at
 [residual-preload-512-timeout.log](media/native-human-constraint-preload-20260914/failed-diagnostics/residual-preload-512-timeout.log)
 with SHA-256 `fcb7d21415270d9744bec770baf41c850cf36be77f85851a774bd2c203d21b27`.
+
+A separate one-step-only preload handoff was also rejected: after clearing the
+preload at step two, the 64-step run reached `8755.6796875 m/s²`, a
+`0.328599065542` velocity change, and `1.58839938535e-7 m` penetration. Its
+partial log is retained at
+[first-step-only-preload-64.log](media/native-human-constraint-preload-20260914/failed-diagnostics/first-step-only-preload-64.log)
+with SHA-256 `74afe4ef48c053167046c4d3fad626774ec186e4489a7f31ce88fd4bf1c7d73e`.
