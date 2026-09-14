@@ -56,6 +56,9 @@ def test_balanced_force_ledger_passes(tmp_path: Path) -> None:
     assert receipt["status"] == "passed"
     assert receipt["coverage"]["full_force_coverage"]
     assert receipt["qualification"]["full_generalized_force_ledger"]
+    assert receipt["qualification"]["per_dof_source_audit"]
+    assert len(receipt["per_dof_audit"]) == 128
+    assert {row["name"] for row in receipt["per_dof_audit"][2]["contributions"]} == set(REQUIRED_COMPONENTS)
     assert receipt["residual"]["maximum_closure_ratio"] == 0.0
     assert not receipt["qualification"]["force_convergence"]
 
@@ -66,6 +69,8 @@ def test_internal_residual_is_ranked_and_fails(tmp_path: Path) -> None:
     assert not receipt["qualification"]["generalized_force_closed"]
     assert receipt["worst_coordinates"][0]["index"] == 42
     assert receipt["worst_coordinates"][0]["dominant_component"] == "muscle_tendon"
+    assert receipt["worst_coordinates"][0]["normalized_residual"] == 1.0
+    assert any(row["value"] == 10.0 for row in receipt["per_dof_audit"][42]["contributions"])
     assert receipt["residual"]["maximum_internal_closure_ratio"] == 1.0
 
 

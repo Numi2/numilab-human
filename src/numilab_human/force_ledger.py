@@ -96,9 +96,17 @@ def audit(arguments: argparse.Namespace) -> int:
 
     rows = []
     for index in range(NV):
-        magnitudes = [(abs(component["values"][index]), component["name"], component["owner"])
-                      for component in components]
-        force_scale = sum(item[0] for item in magnitudes)
+        contributions = [
+            {
+                "name": component["name"],
+                "owner": component["owner"],
+                "value": component["values"][index],
+            }
+            for component in components
+        ]
+        magnitudes = [(abs(row["value"]), row["name"], row["owner"])
+                      for row in contributions]
+        force_scale = math.fsum(item[0] for item in magnitudes)
         net = snapshot["reported_net"][index]
         closure_ratio = abs(net) / force_scale if force_scale > 0.0 else (0.0 if net == 0.0 else math.inf)
         dominant = max(magnitudes, default=(0.0, "none", "none"))
@@ -111,6 +119,8 @@ def audit(arguments: argparse.Namespace) -> int:
             "assembly_error": assembly_error[index],
             "force_scale": force_scale,
             "closure_ratio": closure_ratio,
+            "normalized_residual": closure_ratio,
+            "contributions": contributions,
             "dominant_component": dominant[1],
             "dominant_owner": dominant[2],
             "dominant_magnitude": dominant[0],
@@ -141,6 +151,8 @@ def audit(arguments: argparse.Namespace) -> int:
                 {"name": component["name"], "owner": component["owner"]}
                 for component in components
             ],
+            "per_dof_source_rows": len(rows),
+            "source_contributions_per_dof": len(components),
             "authoritative_net_present": True,
             "full_force_coverage": assembly_closed,
         },
@@ -151,9 +163,13 @@ def audit(arguments: argparse.Namespace) -> int:
             "maximum_internal_closure_ratio": maximum_internal_closure_ratio,
             "rms_closure_ratio": rms_closure_ratio,
         },
+        "per_dof_audit": rows,
         "worst_coordinates": ranked[:arguments.top],
         "qualification": {
             "component_assembly_closed": assembly_closed,
+            "per_dof_source_audit": len(rows) == NV and all(
+                len(row["contributions"]) == len(components) for row in rows
+            ),
             "generalized_force_closed": force_closed,
             "full_generalized_force_ledger": complete,
             "force_convergence": False,

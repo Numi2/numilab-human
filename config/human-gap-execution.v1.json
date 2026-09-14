@@ -828,6 +828,17 @@
           "depends_on": []
         },
         {
+          "id": "runtime.force_audit",
+          "category": "engineering",
+          "action": "Emit a complete per-DoF force ledger before dynamic standing, with every source contribution, owner, normalized residual and articulated coordinate identity.",
+          "acceptance": [
+            "All 128 generalized coordinates publish gravity, muscle/tendon, equality, limit, support and passive contributions plus the authoritative net; the ledger ranks residuals without promoting an unbalanced state."
+          ],
+          "depends_on": [
+            "runtime.precision"
+          ]
+        },
+        {
           "id": "runtime.prepared",
           "category": "validation",
           "action": "Qualify loaded source-compliant prepared equilibrium.",
@@ -874,7 +885,8 @@
         "Docs/FORCE_CONVERGENCE_20260913.md",
         "Docs/EXACT_STAND_REFINEMENT_20260913.md",
         "Docs/NATIVE_FORCE_BOUNDED_20260913.md",
-        "Docs/ORGAN_VESSEL_UNIT_CORRECTION_20260913.md"
+        "Docs/ORGAN_VESSEL_UNIT_CORRECTION_20260913.md",
+        "Docs/FORCE_LEDGER_20260914.md"
       ]
     },
     {
