@@ -428,3 +428,19 @@ the dynamic failure after the cap control: the static root residual is
 `1.50167204538e-6 N`, but compiled internal residual RMS is `34.0593514806`
 and the first Metal step peaks at `196.14956665 m/s²`. It is a failed exact
 clock smoke with zero penetration, not standing evidence.
+
+The same current binary was then rerun with prescribed activation `1.0` for
+one step and 64 exact-clock steps. The activation-1.0 receipt records a
+bounded release (`0.489560902119 m/s²` peak, zero penetration, no root
+assistance, compiled residual RMS `0.0250606490784`) over only `0.8 ms`.
+Because maximal activation is not a solved recruitment state and the horizon
+is far below the standing gate, this narrows the recruitment/equilibrium
+failure without closing force convergence, sustained standing, recovery,
+walking, anatomical loading, material, blood/tissue transfer, or calibration.
+The refreshed executable gap report is
+[`Docs/media/gap-execution-20260915/report.json`](media/gap-execution-20260915/report.json),
+whose report content SHA-256 is
+`31fcae36f9310bfcb633a85e48119fa22ab586caf1d754b3b226c3a85e48f2a` and file
+SHA-256 is `a4b3155f4c25692aee044d72f47095d2aced88b1d696373bddc5f2c9f469003a`.
+It remains `integrated_qualification: not_assessed` with 14 workstreams, 54
+tasks, and 95 mandatory targets.
