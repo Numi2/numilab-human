@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+
+if [ "${1:-}" = "--numi-describe" ]; then
+    printf '%s\n' 'Bind the 416 source muscle routes to the NHTISS4 muscle/tendon surface inventory while retaining unbound routes and absent fat/volume owners.'
+    exit 0
+fi
+
+command_directory=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+repository_root=$(CDPATH= cd -- "$command_directory/../.." && pwd -P)
+if [ -n "${PYTHONPATH:-}" ]; then
+    export PYTHONPATH="$repository_root/src:$PYTHONPATH"
+else
+    export PYTHONPATH="$repository_root/src"
+fi
+exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.soft_tissue_surface_candidate "$@"

@@ -140,12 +140,26 @@
             "muscle.source_consistency",
             "calibration.acquire"
           ]
+        },
+        {
+          "id": "muscle.surface_tissue_candidate",
+          "category": "engineering",
+          "action": "Bind the complete source muscle route table to the NHTISS4 muscle/tendon surface inventory and retain unbound routes plus absent fat/skin domains.",
+          "acceptance": [
+            "416 source routes, 148 muscle surfaces and two tendon surfaces agree by stable identity; unbound routes and missing fat/skin/volume owners remain explicit and no visual surface is promoted to force or mass authority."
+          ],
+          "depends_on": [
+            "muscle.source_consistency"
+          ]
         }
       ],
       "references": [
         "Docs/ACTIVATION_EXACT_20260913.md",
         "Docs/PREPARED_MUSCLE_NUMERICS_20260911.md",
-        "Docs/CANDIDATE_PRECISION_PERFORMANCE_20260911.md"
+        "Docs/CANDIDATE_PRECISION_PERFORMANCE_20260911.md",
+        "Docs/SOFT_TISSUE_SURFACE_CANDIDATE_20260914.md",
+        "config/soft-tissue-surface-candidate.v1.json",
+        "Docs/media/soft-tissue-surface-candidate-20260914/receipt-v1.json"
       ]
     },
     {
