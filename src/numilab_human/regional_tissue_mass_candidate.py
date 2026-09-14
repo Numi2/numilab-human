@@ -104,6 +104,14 @@ def _profile(path: Path) -> tuple[dict[str, Any], str]:
     for key in ("mass_compilation", "binding", "binding_payload", "native_requalification"):
         _safe_relative(profile[key], key)
     _require(isinstance(profile["expected"], dict), "regional tissue mass expected values missing")
+    expected_keys = {
+        "attachments", "cooked_nodes", "cooked_tetrahedra", "donor_body",
+        "mass_tolerance_kg", "matter_world_fingerprint", "native_replay_cases",
+        "negative_admission_cases", "production_owner_fraction", "rebase_pose_cases",
+        "region_count", "remaining_mass_kg", "source_mass_kg", "tissue_mass_kg",
+    }
+    _require(set(profile["expected"]) == expected_keys,
+             "regional tissue mass expected fields differ")
     _require(isinstance(profile["boundary"], str) and profile["boundary"].strip(),
              "regional tissue mass boundary is missing")
     return profile, profile_sha
@@ -123,7 +131,7 @@ def _check_expected(value: Any, expected: Any, label: str) -> None:
                  f"{label} disagrees with the pinned profile")
 
 
-def _load_binding(path: Path, payload_path: Path) -> tuple[dict[str, Any], str, str]:
+def _load_binding(path: Path, payload_path: Path, expected: dict[str, Any]) -> tuple[dict[str, Any], str, str]:
     binding, binding_sha = _read_json(path, "costal tissue binding")
     _require(binding.get("schema") == "HumanPack.costal-tissue-binding.v1",
              "unsupported costal tissue binding schema")
@@ -146,7 +154,9 @@ def _load_binding(path: Path, payload_path: Path) -> tuple[dict[str, Any], str, 
              == "costal_volume_is_included_in_source_gross_torso_inertia",
              "costal tissue donor assumption changed")
     regions = binding.get("regions")
-    _require(isinstance(regions, list) and len(regions) == 14,
+    _require(isinstance(regions, list), "costal tissue source regions are missing")
+    _check_expected(len(regions), expected["region_count"], "region_count")
+    _require(len(regions) == 14,
              "costal tissue source region count changed")
     members: set[str] = set()
     for row in regions:
@@ -267,7 +277,9 @@ def compile_candidate(*, profile: Path = PROFILE, mass_compilation: Path | None 
         "native_requalification": Path(native_requalification or ROOT / profile_doc["native_requalification"]),
     }
     compilation, compilation_sha, partition = _load_compilation(paths["mass_compilation"], expected)
-    binding_doc, binding_sha, payload_sha = _load_binding(paths["binding"], paths["binding_payload"])
+    binding_doc, binding_sha, payload_sha = _load_binding(
+        paths["binding"], paths["binding_payload"], expected,
+    )
     requalification, requalification_sha = _load_requalification(
         paths["native_requalification"], payload_sha, partition, expected,
     )
