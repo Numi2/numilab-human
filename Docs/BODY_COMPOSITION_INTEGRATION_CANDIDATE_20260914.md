@@ -20,6 +20,8 @@ checks that the current graph contains:
   rows and all 416 activation route identities, while retaining 238 routes
   without a surface binding;
 - the same seven beds and clock in the bidirectional oxygen-exchange candidate;
+- the exact CVSim21 21-compartment aggregate blood owner, which conserves
+  `5.459 kg` and `5.150 L` through 511 accepted and one rejected steps;
 - both cardiac geometry conventions bound to the common `0.39974235600733804
   kg` hydraulic blood-mass budget without selecting a physical owner.
 
@@ -32,6 +34,10 @@ this join fail closed if an upstream identity, route, bed, clock, or ownership
 boundary changes. It also emits stable digests for the organ, blood-member,
 and muscle/tendon surface identity sets, along with the subset/disjointness
 checks used to construct the join.
+
+The CVSim21 mass owner is included as a conserved aggregate source owner only;
+its explicit density remains an engineering candidate and it is not promoted
+to an anatomical vessel/lumen, tissue, or rigid-body mechanical owner.
 
 The candidate therefore advances the organ, systemic-physiology, and muscle
 rows from disconnected source evidence to one reproducible integration

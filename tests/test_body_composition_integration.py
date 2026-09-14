@@ -25,7 +25,12 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
     assert result["runtime_evidence"]["clock_nanoseconds"] == 12500
     assert result["runtime_evidence"]["blood_transport_accepted_steps"] == 511
     assert result["runtime_evidence"]["blood_transport_rejected_steps"] == 1
+    assert result["runtime_evidence"]["cvsim21_mass_accepted_steps"] == 511
+    assert result["runtime_evidence"]["cvsim21_mass_rejected_steps"] == 1
+    assert result["runtime_evidence"]["cvsim21_mass_conserved"]
+    assert result["candidate_mass_budgets"]["cvsim21_aggregate_blood_mass_kg"] == 5.459
     assert result["qualification"]["cross_domain_owner_nonduplication_checked"]
+    assert result["qualification"]["source_aggregate_blood_mass_bound"]
     assert not result["qualification"]["integrated_human_qualification"]
     assert result["identity_bindings"]["blood_members_subset_of_organ_members"]
     assert result["identity_bindings"]["surface_ids_disjoint_from_organ_members"]

@@ -28,6 +28,7 @@ ACTIVATION = ROOT / "Docs/media/activation-recruitment-candidate-20260914/receip
 BLOOD_TRANSPORT = ROOT / "Docs/media/organ-blood-tissue-transport-20260914/receipt-v1.json"
 TISSUE_EXCHANGE = ROOT / "Docs/media/organ-tissue-exchange-candidate-20260914/receipt-v1.json"
 CARDIAC_BLOOD = ROOT / "Docs/media/cardiac-blood-mass-candidate-20260914/receipt.json"
+CVSIM21_BLOOD_MASS = ROOT / "Docs/media/cvsim21-blood-mass-step-20260914/receipt-exact-clock.json"
 
 
 def _require(condition: bool, message: str) -> None:
@@ -88,10 +89,13 @@ def _read_profile(path: Path) -> dict[str, Any]:
     _require(value.get("expected_runtime") == {
         "blood_transport_accepted_steps": 511,
         "blood_transport_rejected_steps": 1,
+        "cvsim21_mass_accepted_steps": 511,
+        "cvsim21_mass_rejected_steps": 1,
     }, "integration profile runtime counts differ")
     _require(value.get("inputs") == [
         "organ_mass", "regional_tissue", "muscle_surfaces", "activation",
         "blood_transport", "tissue_exchange", "cardiac_blood",
+        "cvsim21_blood_mass",
     ], "integration profile input order differs")
     return value
 
@@ -121,6 +125,7 @@ def compile_candidate(
     blood_transport: Path = BLOOD_TRANSPORT,
     tissue_exchange: Path = TISSUE_EXCHANGE,
     cardiac_blood: Path = CARDIAC_BLOOD,
+    cvsim21_blood_mass: Path = CVSIM21_BLOOD_MASS,
 ) -> dict[str, Any]:
     profile = Path(profile)
     profile_document = _read_profile(profile)
@@ -132,6 +137,7 @@ def compile_candidate(
         "blood_transport": Path(blood_transport),
         "tissue_exchange": Path(tissue_exchange),
         "cardiac_blood": Path(cardiac_blood),
+        "cvsim21_blood_mass": Path(cvsim21_blood_mass),
     }
     documents: dict[str, dict[str, Any]] = {}
     hashes: dict[str, str] = {}
@@ -143,6 +149,7 @@ def compile_candidate(
         "blood_transport": "blood transport candidate",
         "tissue_exchange": "tissue exchange candidate",
         "cardiac_blood": "cardiac blood candidate",
+        "cvsim21_blood_mass": "CVSim21 blood mass receipt",
     }
     for name, path in paths.items():
         documents[name], hashes[name] = _read(path, labels[name])
@@ -286,6 +293,37 @@ def compile_candidate(
     _require(isinstance(cardiac_mass, (int, float)) and cardiac_mass > 0.0,
              "cardiac blood candidate mass is missing")
 
+    cvsim21 = documents["cvsim21_blood_mass"]
+    _require(cvsim21.get("model_id") == "cvsim21_supine_continuous_fixed_rate_upstream_equation" and
+             cvsim21.get("attempted_steps") == 512 and
+             cvsim21.get("accepted_steps") == 511 and
+             cvsim21.get("rejected_steps") == 1 and
+             cvsim21.get("clock", {}).get("exact") is True and
+             cvsim21.get("clock", {}).get("required_nanoseconds") == 12500 and
+             cvsim21.get("clock", {}).get("timestep_nanoseconds") == 12500.0,
+             "CVSim21 blood mass receipt is not the exact-clock 512-step run")
+    cvsim21_conservation = cvsim21.get("conservation", {})
+    _require(cvsim21_conservation.get("mass_conserved") is True and
+             cvsim21_conservation.get("volume_conserved") is True and
+             abs(cvsim21_conservation.get("mass_residual_kg", float("inf"))) <= 1.0e-12 and
+             abs(cvsim21_conservation.get("volume_residual_m3", float("inf"))) <= 1.0e-15,
+             "CVSim21 blood mass/volume conservation is not qualified")
+    _require(cvsim21.get("rollback", {}).get("accepted_time_excludes_rejections") is True and
+             cvsim21.get("rollback", {}).get("rejected_steps") == 1,
+             "CVSim21 blood mass rollback boundary changed")
+    cvsim21_scope = cvsim21.get("scope", {})
+    _require(cvsim21.get("qualification") == "source_absolute_blood_mass_candidate" and
+             cvsim21_scope.get("source_aggregate_absolute_blood_mass") is True and
+             cvsim21_scope.get("anatomical_registration") is False and
+             cvsim21_scope.get("mechanical_mass_owner") is False and
+             cvsim21_scope.get("tissue_exchange") is False and
+             cvsim21_scope.get("material_density_calibrated") is False and
+             cvsim21_scope.get("subject_calibration") is False,
+             "CVSim21 blood mass candidate promoted an anatomical owner")
+    cvsim21_mass = cvsim21_conservation.get("initial", {}).get("mass_kg")
+    _require(isinstance(cvsim21_mass, (int, float)) and cvsim21_mass > 0.0,
+             "CVSim21 source mass is missing")
+
     surface_member_ids = [row.get("member_id") for row in surface_rows]
     _require(all(isinstance(value, str) and value for value in surface_member_ids),
              "muscle/tendon surface identity is invalid")
@@ -325,6 +363,7 @@ def compile_candidate(
             "organ_surface_candidate_mass_kg": organ["totals"]["candidate_surface_mass_kg"],
             "regional_costal_tissue_candidate_mass_kg": regional_mass,
             "cardiac_hydraulic_blood_candidate_mass_kg": cardiac_mass,
+            "cvsim21_aggregate_blood_mass_kg": cvsim21_mass,
             "sum_is_mechanical_body_mass": False,
         },
         "ownership": {
@@ -342,6 +381,10 @@ def compile_candidate(
             "clock_nanoseconds": 12500,
             "blood_transport_accepted_steps": transport["accepted_steps"],
             "blood_transport_rejected_steps": transport["rejected_steps"],
+            "cvsim21_mass_accepted_steps": cvsim21["accepted_steps"],
+            "cvsim21_mass_rejected_steps": cvsim21["rejected_steps"],
+            "cvsim21_mass_conserved": cvsim21_conservation["mass_conserved"],
+            "cvsim21_volume_conserved": cvsim21_conservation["volume_conserved"],
             "blood_mass_conserved": transport["conservation"]["mass_conserved"],
             "tissue_oxygen_conserved": exchange["conservation"]["oxygen_conserved"],
             "rejected_step_state_neutral": (
@@ -356,6 +399,7 @@ def compile_candidate(
             "source_identity_graph_bound": True,
             "organ_surface_mass_candidate_bound": True,
             "regional_blood_transport_bound": True,
+            "source_aggregate_blood_mass_bound": True,
             "tissue_oxygen_exchange_candidate_bound": True,
             "muscle_activation_route_identity_bound": True,
             "muscle_surface_identity_bound": True,
@@ -373,8 +417,9 @@ def compile_candidate(
         },
         "boundary": (
             "This record joins source organ candidate moments, regional tissue "
-            "mass, CVSim21 blood transport, tissue oxygen exchange, cardiac blood "
-            "budget, muscle route activation and NHTISS4 surface identity. It "
+            "mass, the exact-clock CVSim21 aggregate blood mass, regional blood "
+            "transport, tissue oxygen exchange, cardiac blood budget, muscle "
+            "route activation and NHTISS4 surface identity. It "
             "proves source identity and nonduplicated ownership bookkeeping only. "
             "Fat and skeletal-muscle tissue volumes, anatomical blood/lumen and "
             "organ mechanics, calibrated materials, subject calibration, and the "
@@ -407,6 +452,7 @@ def run(arguments: argparse.Namespace) -> int:
         blood_transport=arguments.blood_transport,
         tissue_exchange=arguments.tissue_exchange,
         cardiac_blood=arguments.cardiac_blood,
+        cvsim21_blood_mass=arguments.cvsim21_blood_mass,
     )
     output = arguments.output.resolve()
     digest = _immutable_write(output, result)
@@ -430,6 +476,7 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--blood-transport", type=Path, default=BLOOD_TRANSPORT)
     parser.add_argument("--tissue-exchange", type=Path, default=TISSUE_EXCHANGE)
     parser.add_argument("--cardiac-blood", type=Path, default=CARDIAC_BLOOD)
+    parser.add_argument("--cvsim21-blood-mass", type=Path, default=CVSIM21_BLOOD_MASS)
     parser.add_argument("--output", type=Path, required=True)
     parser.set_defaults(handler=run)
 
