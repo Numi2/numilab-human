@@ -1,0 +1,152 @@
+{
+  "artifacts": {
+    "force_ledger": {
+      "path": "force-ledger-v2.json",
+      "sha256": "176a3d347192d174700dcd18eda3588a927051a85ec74d862559f2d3d80a0afc"
+    },
+    "force_snapshot": {
+      "path": "force-snapshot-v2.json",
+      "sha256": "31eb2209e663c5fb81c43fd8bfc1cb6a7c850c7873061ecaf25ea20efd8ebb94"
+    },
+    "native_stderr": {
+      "path": "native-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native_stdout": {
+      "path": "native-stdout.txt",
+      "sha256": "b8f82f4d51bcf0d1cbf59a6a2f1300d3cd06b06944d30f206f7e84cd3665d4b2"
+    }
+  },
+  "boundary": "Canonicalized the 128-DoF compiled equilibrium reaction record into a hash-bound six-owner force snapshot and per-DoF ledger. The ledger proves source contribution reconstruction and exposes internal closure failure; it does not add tendon, deformable tissue, sustained standing, recovery, walking, material, blood-transfer, or calibration ownership.",
+  "qualification": {
+    "activation_calibration": false,
+    "anatomical_support_loading": false,
+    "blood_mass_transfer": false,
+    "force_convergence": false,
+    "generalized_force_closed": false,
+    "material_calibration": false,
+    "per_dof_source_audit": true,
+    "recovery": false,
+    "source_record_reconstructed": true,
+    "subject_calibration": false,
+    "sustained_standing": false,
+    "walking": false,
+    "whole_body_equilibrium": false
+  },
+  "schema": "numi.human.native-whole-body-all-dof-force-ledger-requalification.v1",
+  "source": {
+    "binary_sha256": "288fc13eb196ea9479cc350d685dc1ead681f3c5e4edf1ba1cd34fc8a1aec912",
+    "branch": "numi-human-equilibrium-20260914",
+    "checkout": "/private/tmp/numi-human-native-fiber-f239",
+    "commit": "260ee02ad347a3cfb2281d6333157d084f5ba17b",
+    "device": "Mac mini M4 Pro"
+  },
+  "status": "partial",
+  "summary": {
+    "dof_count": 128,
+    "maximum_assembly_error": 1.1368683772161603e-13,
+    "maximum_closure_ratio": 1.0,
+    "maximum_internal_closure_ratio": 1.0,
+    "maximum_root_closure_ratio": 1.0,
+    "rms_closure_ratio": 0.22314108914802203,
+    "source_contributions_per_dof": 6,
+    "worst_coordinates": [
+      {
+        "closure_ratio": 1.0,
+        "coordinate": "v_051:unnamed",
+        "dominant_component": "gravity_bias",
+        "dominant_owner": "NumiHumanMuscleEquilibrium.gravityTarget",
+        "index": 51,
+        "reported_net": -0.00015513349751972226
+      },
+      {
+        "closure_ratio": 1.0,
+        "coordinate": "v_089:unnamed",
+        "dominant_component": "gravity_bias",
+        "dominant_owner": "NumiHumanMuscleEquilibrium.gravityTarget",
+        "index": 89,
+        "reported_net": -0.00015512460969507112
+      },
+      {
+        "closure_ratio": 1.0,
+        "coordinate": "v_005:unnamed",
+        "dominant_component": "muscle_tendon",
+        "dominant_owner": "NumiHumanMuscleEquilibrium.generalizedMuscleForce",
+        "index": 5,
+        "reported_net": -5.3706463203099995e-14
+      },
+      {
+        "closure_ratio": 0.9679677216351035,
+        "coordinate": "v_102:unnamed",
+        "dominant_component": "support_contact",
+        "dominant_owner": "NumiHumanStaticSupportContact/generalizedSupportForce",
+        "index": 102,
+        "reported_net": 0.0036274246391902226
+      },
+      {
+        "closure_ratio": 0.6663461634709115,
+        "coordinate": "v_058:unnamed",
+        "dominant_component": "muscle_tendon",
+        "dominant_owner": "NumiHumanMuscleEquilibrium.generalizedMuscleForce",
+        "index": 58,
+        "reported_net": -6.20535136748004e-05
+      },
+      {
+        "closure_ratio": 0.6660770663587469,
+        "coordinate": "v_096:unnamed",
+        "dominant_component": "muscle_tendon",
+        "dominant_owner": "NumiHumanMuscleEquilibrium.generalizedMuscleForce",
+        "index": 96,
+        "reported_net": -6.197846737809507e-05
+      },
+      {
+        "closure_ratio": 0.3292375375464492,
+        "coordinate": "v_116:unnamed",
+        "dominant_component": "support_contact",
+        "dominant_owner": "NumiHumanStaticSupportContact/generalizedSupportForce",
+        "index": 116,
+        "reported_net": 0.0033433223737182115
+      },
+      {
+        "closure_ratio": 0.32767017334236187,
+        "coordinate": "v_034:unnamed",
+        "dominant_component": "gravity_bias",
+        "dominant_owner": "NumiHumanMuscleEquilibrium.gravityTarget",
+        "index": 34,
+        "reported_net": -0.0216561256639463
+      },
+      {
+        "closure_ratio": 0.32767017334236187,
+        "coordinate": "v_036:unnamed",
+        "dominant_component": "gravity_bias",
+        "dominant_owner": "NumiHumanMuscleEquilibrium.gravityTarget",
+        "index": 36,
+        "reported_net": -0.0216561256639463
+      },
+      {
+        "closure_ratio": 0.3219560391776786,
+        "coordinate": "v_072:unnamed",
+        "dominant_component": "gravity_bias",
+        "dominant_owner": "NumiHumanMuscleEquilibrium.gravityTarget",
+        "index": 72,
+        "reported_net": -0.02112019622921191
+      },
+      {
+        "closure_ratio": 0.3219560391776786,
+        "coordinate": "v_074:unnamed",
+        "dominant_component": "gravity_bias",
+        "dominant_owner": "NumiHumanMuscleEquilibrium.gravityTarget",
+        "index": 74,
+        "reported_net": -0.02112019622921191
+      },
+      {
+        "closure_ratio": 0.3126670663335019,
+        "coordinate": "v_093:unnamed",
+        "dominant_component": "muscle_tendon",
+        "dominant_owner": "NumiHumanMuscleEquilibrium.generalizedMuscleForce",
+        "index": 93,
+        "reported_net": -0.0001485285923811485
+      }
+    ]
+  }
+}

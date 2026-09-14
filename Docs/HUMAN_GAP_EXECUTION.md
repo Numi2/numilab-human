@@ -438,11 +438,12 @@ is far below the standing gate, this narrows the recruitment/equilibrium
 failure without closing force convergence, sustained standing, recovery,
 walking, anatomical loading, material, blood/tissue transfer, or calibration.
 The refreshed executable gap report is
-[`Docs/media/gap-execution-20260915/report-v3.json`](media/gap-execution-20260915/report-v3.json),
+[`Docs/media/gap-execution-20260915/report-v4.json`](media/gap-execution-20260915/report-v4.json),
 whose report content SHA-256 is
-`8746d92f2697b5cc92a62b81fd191c23e209d551bf7a3694b9cfc6cf8a8eb549` and file
-SHA-256 is `ab5a4ae1b7a28586e5904477eab65f7ed252bdda8025f11be21b45d770b67696`.
-It includes the activation-0.8 receipt and the implicit-default receipt, and remains
+`302885bd4b6ba94524bb5e778204af37059982464d6de67015910cb1157fb294` and file
+SHA-256 is `64e268891b5bc58fac28e634070bcbbb1377d17fd66beb5cd33492f742fde5a3`.
+It includes the activation-0.8/default receipt and canonical per-DoF force
+ledger receipt, and remains
 `integrated_qualification: not_assessed` with 14 workstreams, 54 tasks, and
 95 mandatory targets.
 

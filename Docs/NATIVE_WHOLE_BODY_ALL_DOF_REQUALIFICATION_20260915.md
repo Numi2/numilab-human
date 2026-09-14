@@ -31,3 +31,17 @@ The qualification remains **partial** by design. Root support balance and
 replay are proved for this static certificate; internal generalized balance,
 activation calibration, anatomical contact material, and subject calibration
 remain open.
+
+The same raw reaction record is now canonicalized into a six-owner force
+snapshot and per-DoF ledger by `equilibrium_force_snapshot` and
+`force_ledger`. The immutable artifacts are retained as
+[`force-snapshot-v2.json`](media/native-whole-body-all-dof-20260915/force-snapshot-v2.json),
+[`force-ledger-v2.json`](media/native-whole-body-all-dof-20260915/force-ledger-v2.json),
+and [`receipt-v2.json`](media/native-whole-body-all-dof-20260915/receipt-v2.json).
+All 128 rows reconstruct the native net to `1.1368683772161603e-13 N`, but the
+maximum normalized closure ratio remains `1.0` (internal and root), with RMS
+closure ratio `0.22314108914802203`; the ledger therefore remains partial.
+The worst ranked coordinates are `v_051`, `v_089`, `v_005`, `v_102`, `v_058`,
+and `v_096`, dominated by gravity, muscle-tendon, and support owners. This
+makes the remaining generalized-force failure directly consumable by the next
+monolithic pose/contact/tendon solve.
