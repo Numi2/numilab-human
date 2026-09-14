@@ -336,6 +336,21 @@ release remains divergent, so force convergence, anatomical loading, activation
 calibration, blood/tissue exchange, material resolution, standing, recovery and
 walking remain open.
 
+The follow-up [source-constraint preload requalification](NATIVE_STAND_PRELOAD_REQUALIFICATION_20260914.md)
+on native branch `ee5cb816` carries the accepted static equality and
+position-limit reaction into the first release. It lowers the 12.5 µs peak to
+`0.488360792398 m/s²` and the 512-step peak to `112.067703247 m/s²`, with zero
+penetration and bitwise replay on the physical M4 Pro. The 6.4 ms bounded
+horizon is a force-handoff improvement only; it does not promote the registry's
+force-convergence, standing, recovery, walking, anatomical loading, material,
+blood/tissue, activation-calibration, or subject-calibration targets.
+The refreshed offline report is retained at
+[`Docs/media/gap-execution-20260914/report-native-stand-preload-requalification-20260914.json`](media/gap-execution-20260914/report-native-stand-preload-requalification-20260914.json);
+its file SHA-256 is
+`582e3eeed9ade7678efbc644875e3050494b7074ce52aaa99c05d469f85932d8` and its
+report content SHA-256 is
+`6f820d5fa1921655dde6906e598b05c26874b19ec85fd9d0179dd41d140809ab`.
+
 The 2026-09-14 [body composition integration candidate](BODY_COMPOSITION_INTEGRATION_CANDIDATE_20260914.md)
 adds a hash-bound cross-domain source join for the one-adult-male package. Its
 receipt binds 378 organ identities, 329 unique blood-transport members, 150
