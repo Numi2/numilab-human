@@ -19,6 +19,16 @@ if [ "${1:-}" = "tissue-mass-candidate" ]; then
     exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.tissue_mass_candidate "$@"
 fi
 
+if [ "${1:-}" = "organ-blood-tissue-transport" ]; then
+    shift
+    if [ -n "${PYTHONPATH:-}" ]; then
+        export PYTHONPATH="$repository_root/src:$PYTHONPATH"
+    else
+        export PYTHONPATH="$repository_root/src"
+    fi
+    exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.organ_blood_tissue_transport "$@"
+fi
+
 # Resolve a source body to the exact MyoSim actuator rows whose compiled routes
 # cross it, then add the requested activation to those rows over the compiled
 # full-body posture baseline. The native Apple Metal runtime evaluates all 416

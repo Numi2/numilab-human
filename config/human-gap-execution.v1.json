@@ -580,6 +580,18 @@
           ]
         },
         {
+          "id": "blood.spatial_transport",
+          "category": "engineering",
+          "action": "Bind source organ surface-volume candidates to nonduplicated CVSim21 arterial-to-tissue-to-venous blood transport on the exact 12.5 microsecond clock with accepted-step rollback.",
+          "acceptance": [
+            "Seven lung, kidney, stomach, pancreas and liver beds partition six source blood owners exactly once; zeroth-moment transport, mass/volume conservation and rejected-step neutrality pass while anatomical lumen, tissue exchange, first/second moments and calibration remain explicit gates."
+          ],
+          "depends_on": [
+            "blood.spatial_owner",
+            "organs.mass_composition"
+          ]
+        },
+        {
           "id": "physiology.systems",
           "category": "engineering",
           "action": "Integrate perfusion/exchange, respiratory mechanics, gas, metabolism, thermal/fluid and conduction states through existing owners.",
@@ -587,7 +599,7 @@
             "Each subsystem has explicit equations, units, clocks and source parameters; species, energy and multirate rollback balances close."
           ],
           "depends_on": [
-            "blood.spatial_owner",
+            "blood.spatial_transport",
             "cardiac.activation",
             "cardiac.valve_ports",
             "cardiac.loading"
@@ -642,7 +654,10 @@
         "Docs/media/cvsim21-blood-mass-step-20260914/macmini/manifest.json",
         "Docs/CARDIAC_BLOOD_MASS_CANDIDATE_20260914.md",
         "Docs/media/cardiac-blood-mass-candidate-20260914/receipt.json",
-        "Docs/media/cardiac-blood-mass-candidate-20260914/macmini/manifest-v3.json"
+        "Docs/media/cardiac-blood-mass-candidate-20260914/macmini/manifest-v3.json",
+        "Docs/ORGAN_BLOOD_TISSUE_TRANSPORT_20260914.md",
+        "config/organ-blood-tissue-transport.v1.json",
+        "Docs/media/organ-blood-tissue-transport-20260914/receipt-v1.json"
       ]
     },
     {
