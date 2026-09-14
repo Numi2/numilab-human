@@ -438,10 +438,22 @@ is far below the standing gate, this narrows the recruitment/equilibrium
 failure without closing force convergence, sustained standing, recovery,
 walking, anatomical loading, material, blood/tissue transfer, or calibration.
 The refreshed executable gap report is
-[`Docs/media/gap-execution-20260915/report-v2.json`](media/gap-execution-20260915/report-v2.json),
+[`Docs/media/gap-execution-20260915/report-v3.json`](media/gap-execution-20260915/report-v3.json),
 whose report content SHA-256 is
-`66427446c82ea13f33f7612c3bea36fab5ece01c23c3b27aa4a1233e43f1ce78` and file
-SHA-256 is `935614f8d0220e771dae8d8469817d34b71bb1ae58848dfe9d86ead2db622323`.
-It includes the activation-0.8 receipt and remains
+`8746d92f2697b5cc92a62b81fd191c23e209d551bf7a3694b9cfc6cf8a8eb549` and file
+SHA-256 is `ab5a4ae1b7a28586e5904477eab65f7ed252bdda8025f11be21b45d770b67696`.
+It includes the activation-0.8 receipt and the implicit-default receipt, and remains
 `integrated_qualification: not_assessed` with 14 workstreams, 54 tasks, and
 95 mandatory targets.
+
+The native source owner now defaults persistent stand recruitment to the
+validated `0.8` ceiling when the CLI option is omitted. On the physical M4 Pro,
+the implicit-default 64-step run reproduces the explicit `0.8` trace exactly
+for the standing metrics (`0.49170973897 m/s²` peak,
+`0.0250606500378` compiled residual, zero penetration, no root assistance).
+The source commit is `c45fa9622f6c73b58febdc24a7115aecf3d7699f`; the immutable
+default receipt is
+[`Docs/media/native-current-release-20260915/receipt-v4.json`](media/native-current-release-20260915/receipt-v4.json).
+This changes the default recruitment handoff, but its `0.8 ms` horizon still
+does not close force convergence, sustained standing, recovery, walking,
+anatomical loading, blood/tissue transfer, materials, or calibration.
