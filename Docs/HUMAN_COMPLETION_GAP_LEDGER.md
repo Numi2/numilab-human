@@ -1,5 +1,35 @@
 # NumiLab Human completion gap ledger
 
+## Current requalification — 2026-09-15
+
+The current published source/runtime join is `ce753bb` in the companion
+`numilab-human` repository and the native Human owner is
+`c45fa9622f6c73b58febdc24a7115aecf3d7699f` on a Mac mini M4 Pro. The latest
+cross-domain receipt is
+[`body-composition-integration/receipt-v10.json`](media/body-composition-integration-20260914/receipt-v10.json),
+and the executable registry snapshot is
+[`gap-execution/report-v7.json`](media/gap-execution-20260915/report-v7.json).
+The join now includes the current native costal tissue requalification
+([receipt](media/tissue-integration-20260908/current-costal-binding-receipt-20260915.json)):
+13,516 cooked nodes, 46,278 tetrahedra, 2,871 attachments, eight Apple M4 Pro
+replays, and a conservative `0.11369939548001184 kg` regional partition with
+mass/rebase checks passing. This is regional ownership bookkeeping only; it
+does not become a whole-body dynamic mass matrix or a calibrated thorax.
+
+The same native owner completed 512 exact `12.5 us` steps with zero
+penetration and no root assistance, but peak acceleration rose to
+`32.7379798889 m/s2` and the configuration drift reached
+`2.52364020525e-6`. The static source certificate still has root wrench
+balance while internal generalized balance is false. These results keep the
+force-convergence, sustained standing/recovery/walking, anatomical
+supports/loading, activation calibration, spatial blood mass transfer,
+unresolved materials, fat ownership, and subject calibration gates open.
+
+The canonical execution registry remains `integrated_qualification:
+not_assessed` with 14 workstreams, 54 tasks, and 95 mandatory targets. The
+current one-adult-male scope is retained; the historical 420-trial evaluator
+is regression tooling and is not used as the completion gate.
+
 This ledger defines “complete Human simulation” as a set of independently
 provable workstreams. A green build or realistic image cannot close a mechanics
 row, and an executable force path cannot close a material or control row.
