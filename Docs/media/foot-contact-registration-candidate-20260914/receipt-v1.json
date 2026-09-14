@@ -1,0 +1,1521 @@
+{
+  "boundary": "Source-bound BodyParts3D calcaneus/toe geometry, provisional source-to-MyoSim rest transforms, seven-pose lower-limb continuity and the existing 18 support witnesses for one adult male. This candidate does not admit colliders, pair exclusions, friction/compliance calibration, dynamic anatomical contact, loaded whole-body equilibrium, standing, recovery or walking.",
+  "compiler": "numilab-human.foot-contact-registration-candidate.1",
+  "counts": {
+    "active_support_witness_count": 6,
+    "foot_body_count": 4,
+    "registered_source_member_count": 30,
+    "registered_source_mesh_count": 30,
+    "source_mesh_count": 60,
+    "support_witness_count": 18,
+    "unique_source_member_count": 30
+  },
+  "qualification": {
+    "anatomical_collider_admitted": false,
+    "anatomical_supports_loading": false,
+    "collision_exclusions_admitted": false,
+    "contact_material_calibration": false,
+    "dynamic_contact": false,
+    "loaded_whole_body_equilibrium": false,
+    "lower_limb_multi_pose_continuity": true,
+    "recovery": false,
+    "source_foot_geometry_registered": true,
+    "source_to_body_rest_transform_bound": true,
+    "support_witness_identity_bound": true,
+    "sustained_standing": false,
+    "walking": false
+  },
+  "registration": {
+    "bilateral_gap_parity_maximum_m": 0.004,
+    "continuity_evaluation_count": 280,
+    "global_scale_m_per_source_mm": 0.0010076111869732588,
+    "maximum_local_scale_m_per_source_mm": 0.0010076111869732598,
+    "maximum_scale_deviation_m_per_source_mm": 1.0842021724855044e-18,
+    "minimum_local_scale_m_per_source_mm": 0.0010076111869732585,
+    "multi_pose_count": 7,
+    "source_members": [
+      {
+        "bounds_mm": {
+          "maximum": [
+            -44.8758,
+            -24.0051,
+            -19.1547
+          ],
+          "minimum": [
+            -100.781,
+            -94.1485,
+            -68.4907
+          ]
+        },
+        "core_body_index": 138,
+        "opensim_body": "calcn_r",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3360",
+        "source_member_sha256": "b53e7970e822e997e1b05f94f42514d07a3f98edcc63ec7dd7219354ce1d8176",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            -0.00019708913017582868,
+            -5.786135034418063e-05,
+            0.0009864523521268234,
+            0.022036615359636996
+          ],
+          [
+            -0.0009698688741814816,
+            0.00020390634914060096,
+            -0.00018181548830546303,
+            -0.07296592194744934
+          ],
+          [
+            -0.00018918389406643134,
+            -0.0009850657688855902,
+            -9.557818427529947e-05,
+            -0.12433726155471281
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 1262,
+        "vertex_count": 739
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            -132.348,
+            -221.012,
+            -63.0534
+          ],
+          "minimum": [
+            -143.346,
+            -234.096,
+            -70.2885
+          ]
+        },
+        "core_body_index": 139,
+        "opensim_body": "toes_r",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3189",
+        "source_member_sha256": "82657ea63694cff41a774da0ad28110e80ea4951e0ddaafcb2e2646275a22702",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            -0.0002444477987890392,
+            -4.020683129302359e-05,
+            0.000976682644720499,
+            0.022523935237923915
+          ],
+          [
+            -0.00087284611541034,
+            -0.00044426377856694775,
+            -0.000236748089707518,
+            -0.22219980173268875
+          ],
+          [
+            0.0004400741262491261,
+            -0.0009034895737552557,
+            7.29496924960832e-05,
+            -0.12447545123301079
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 200,
+        "vertex_count": 170
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            -145.891,
+            -212.259,
+            -64.3866
+          ],
+          "minimum": [
+            -154.825,
+            -223.666,
+            -70.1976
+          ]
+        },
+        "core_body_index": 139,
+        "opensim_body": "toes_r",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3190",
+        "source_member_sha256": "b31499b63bc1798909b2c8cec77b7ebbb422cf2e0f715381601aa7c136b32aa9",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            -0.0002444477987890392,
+            -4.020683129302359e-05,
+            0.000976682644720499,
+            0.022523935237923915
+          ],
+          [
+            -0.00087284611541034,
+            -0.00044426377856694775,
+            -0.000236748089707518,
+            -0.22219980173268875
+          ],
+          [
+            0.0004400741262491261,
+            -0.0009034895737552557,
+            7.29496924960832e-05,
+            -0.12447545123301079
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 260,
+        "vertex_count": 162
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            -155.335,
+            -195.368,
+            -63.396
+          ],
+          "minimum": [
+            -164.127,
+            -206.535,
+            -70.3923
+          ]
+        },
+        "core_body_index": 139,
+        "opensim_body": "toes_r",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3191",
+        "source_member_sha256": "24a38431aa67546c25d938f7c5a572fb1206ffcf6bb6a14281c0322fc3d03bac",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            -0.0002444477987890392,
+            -4.020683129302359e-05,
+            0.000976682644720499,
+            0.022523935237923915
+          ],
+          [
+            -0.00087284611541034,
+            -0.00044426377856694775,
+            -0.000236748089707518,
+            -0.22219980173268875
+          ],
+          [
+            0.0004400741262491261,
+            -0.0009034895737552557,
+            7.29496924960832e-05,
+            -0.12447545123301079
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 244,
+        "vertex_count": 144
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            -102.398,
+            -210.782,
+            -59.0054
+          ],
+          "minimum": [
+            -125.119,
+            -236.044,
+            -69.8979
+          ]
+        },
+        "core_body_index": 139,
+        "opensim_body": "toes_r",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3192",
+        "source_member_sha256": "aa15fa88eb0a4643efca0763a8088091f970ae510003dcc78c63e9a3dece5b03",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            -0.0002444477987890392,
+            -4.020683129302359e-05,
+            0.000976682644720499,
+            0.022523935237923915
+          ],
+          [
+            -0.00087284611541034,
+            -0.00044426377856694775,
+            -0.000236748089707518,
+            -0.22219980173268875
+          ],
+          [
+            0.0004400741262491261,
+            -0.0009034895737552557,
+            7.29496924960832e-05,
+            -0.12447545123301079
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 440,
+        "vertex_count": 289
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            -161.169,
+            -176.2,
+            -65.1419
+          ],
+          "minimum": [
+            -169.327,
+            -186.579,
+            -70.3538
+          ]
+        },
+        "core_body_index": 139,
+        "opensim_body": "toes_r",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3195",
+        "source_member_sha256": "8053dcba2724d596cd66546934df05d04e5019b3b95ed6ec46795dff1b9abfde",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            -0.0002444477987890392,
+            -4.020683129302359e-05,
+            0.000976682644720499,
+            0.022523935237923915
+          ],
+          [
+            -0.00087284611541034,
+            -0.00044426377856694775,
+            -0.000236748089707518,
+            -0.22219980173268875
+          ],
+          [
+            0.0004400741262491261,
+            -0.0009034895737552557,
+            7.29496924960832e-05,
+            -0.12447545123301079
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 210,
+        "vertex_count": 178
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            -125.237,
+            -207.648,
+            -59.4039
+          ],
+          "minimum": [
+            -139.355,
+            -224.688,
+            -68.0103
+          ]
+        },
+        "core_body_index": 139,
+        "opensim_body": "toes_r",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3300",
+        "source_member_sha256": "505ff6d5185c0cec018be5a18206a2ccbcc8822f09b9282b9ad2586716d3a3d9",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            -0.0002444477987890392,
+            -4.020683129302359e-05,
+            0.000976682644720499,
+            0.022523935237923915
+          ],
+          [
+            -0.00087284611541034,
+            -0.00044426377856694775,
+            -0.000236748089707518,
+            -0.22219980173268875
+          ],
+          [
+            0.0004400741262491261,
+            -0.0009034895737552557,
+            7.29496924960832e-05,
+            -0.12447545123301079
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 264,
+        "vertex_count": 192
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            -138.889,
+            -198.867,
+            -60.9144
+          ],
+          "minimum": [
+            -151.726,
+            -215.745,
+            -68.8311
+          ]
+        },
+        "core_body_index": 139,
+        "opensim_body": "toes_r",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3301",
+        "source_member_sha256": "1da31f6465a4767ab9dc18df433e5e0df0da4e9578d2864b02e5a71e785b5d8c",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            -0.0002444477987890392,
+            -4.020683129302359e-05,
+            0.000976682644720499,
+            0.022523935237923915
+          ],
+          [
+            -0.00087284611541034,
+            -0.00044426377856694775,
+            -0.000236748089707518,
+            -0.22219980173268875
+          ],
+          [
+            0.0004400741262491261,
+            -0.0009034895737552557,
+            7.29496924960832e-05,
+            -0.12447545123301079
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 292,
+        "vertex_count": 190
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            -149.071,
+            -185.435,
+            -61.9355
+          ],
+          "minimum": [
+            -161.342,
+            -198.806,
+            -69.8888
+          ]
+        },
+        "core_body_index": 139,
+        "opensim_body": "toes_r",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3302",
+        "source_member_sha256": "dd69a8df55e8ff34f55fe2b906507aac2659be0d2784833b6a0c2046258929e3",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            -0.0002444477987890392,
+            -4.020683129302359e-05,
+            0.000976682644720499,
+            0.022523935237923915
+          ],
+          [
+            -0.00087284611541034,
+            -0.00044426377856694775,
+            -0.000236748089707518,
+            -0.22219980173268875
+          ],
+          [
+            0.0004400741262491261,
+            -0.0009034895737552557,
+            7.29496924960832e-05,
+            -0.12447545123301079
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 350,
+        "vertex_count": 220
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            -158.08,
+            -171.45,
+            -63.7391
+          ],
+          "minimum": [
+            -166.69,
+            -178.818,
+            -70.0904
+          ]
+        },
+        "core_body_index": 139,
+        "opensim_body": "toes_r",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3305",
+        "source_member_sha256": "e1a4698c0de159b1851711084ddb96ccaf85022d941f305d670789444d6395bf",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            -0.0002444477987890392,
+            -4.020683129302359e-05,
+            0.000976682644720499,
+            0.022523935237923915
+          ],
+          [
+            -0.00087284611541034,
+            -0.00044426377856694775,
+            -0.000236748089707518,
+            -0.22219980173268875
+          ],
+          [
+            0.0004400741262491261,
+            -0.0009034895737552557,
+            7.29496924960832e-05,
+            -0.12447545123301079
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 136,
+        "vertex_count": 102
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            -86.6596,
+            -186.07,
+            -51.4087
+          ],
+          "minimum": [
+            -117.196,
+            -219.289,
+            -68.6391
+          ]
+        },
+        "core_body_index": 139,
+        "opensim_body": "toes_r",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3310",
+        "source_member_sha256": "bb72eb8ed4cedf8ad2ab9a0ee2de9c80232ab6bd0e8840259beb59b8bac3bd07",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            -0.0002444477987890392,
+            -4.020683129302359e-05,
+            0.000976682644720499,
+            0.022523935237923915
+          ],
+          [
+            -0.00087284611541034,
+            -0.00044426377856694775,
+            -0.000236748089707518,
+            -0.22219980173268875
+          ],
+          [
+            0.0004400741262491261,
+            -0.0009034895737552557,
+            7.29496924960832e-05,
+            -0.12447545123301079
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 486,
+        "vertex_count": 281
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            -111.346,
+            -183.555,
+            -54.5464
+          ],
+          "minimum": [
+            -133.565,
+            -211.68,
+            -66.8736
+          ]
+        },
+        "core_body_index": 139,
+        "opensim_body": "toes_r",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3319",
+        "source_member_sha256": "f8f7d8f026953233fd9412b80ba897fdd329a48108cbfd11578b56dcf9edcc1e",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            -0.0002444477987890392,
+            -4.020683129302359e-05,
+            0.000976682644720499,
+            0.022523935237923915
+          ],
+          [
+            -0.00087284611541034,
+            -0.00044426377856694775,
+            -0.000236748089707518,
+            -0.22219980173268875
+          ],
+          [
+            0.0004400741262491261,
+            -0.0009034895737552557,
+            7.29496924960832e-05,
+            -0.12447545123301079
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 414,
+        "vertex_count": 236
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            -125.076,
+            -174.436,
+            -56.2044
+          ],
+          "minimum": [
+            -145.902,
+            -202.841,
+            -67.645
+          ]
+        },
+        "core_body_index": 139,
+        "opensim_body": "toes_r",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3320",
+        "source_member_sha256": "49b6fc5fe03ba23422e852d1fcd419b94bafbdf69fd20552eca0620e1ed62e6e",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            -0.0002444477987890392,
+            -4.020683129302359e-05,
+            0.000976682644720499,
+            0.022523935237923915
+          ],
+          [
+            -0.00087284611541034,
+            -0.00044426377856694775,
+            -0.000236748089707518,
+            -0.22219980173268875
+          ],
+          [
+            0.0004400741262491261,
+            -0.0009034895737552557,
+            7.29496924960832e-05,
+            -0.12447545123301079
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 422,
+        "vertex_count": 276
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            -134.339,
+            -164.379,
+            -56.4986
+          ],
+          "minimum": [
+            -155.93,
+            -188.428,
+            -69.741
+          ]
+        },
+        "core_body_index": 139,
+        "opensim_body": "toes_r",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3321",
+        "source_member_sha256": "87949e88d498df13a376db05c0b094bae55ade09d5dec4ebd1557a5022d4f8ea",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            -0.0002444477987890392,
+            -4.020683129302359e-05,
+            0.000976682644720499,
+            0.022523935237923915
+          ],
+          [
+            -0.00087284611541034,
+            -0.00044426377856694775,
+            -0.000236748089707518,
+            -0.22219980173268875
+          ],
+          [
+            0.0004400741262491261,
+            -0.0009034895737552557,
+            7.29496924960832e-05,
+            -0.12447545123301079
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 438,
+        "vertex_count": 254
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            -142.885,
+            -148.711,
+            -60.0473
+          ],
+          "minimum": [
+            -164.837,
+            -174.084,
+            -69.8932
+          ]
+        },
+        "core_body_index": 139,
+        "opensim_body": "toes_r",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3324",
+        "source_member_sha256": "deeabcf2bf83d7b9f77acf1c1634650805d467188f05505a6898aa3cbbdcea2b",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            -0.0002444477987890392,
+            -4.020683129302359e-05,
+            0.000976682644720499,
+            0.022523935237923915
+          ],
+          [
+            -0.00087284611541034,
+            -0.00044426377856694775,
+            -0.000236748089707518,
+            -0.22219980173268875
+          ],
+          [
+            0.0004400741262491261,
+            -0.0009034895737552557,
+            7.29496924960832e-05,
+            -0.12447545123301079
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 406,
+        "vertex_count": 238
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            100.768,
+            -24.2068,
+            -19.0712
+          ],
+          "minimum": [
+            45.01,
+            -94.1418,
+            -68.4172
+          ]
+        },
+        "core_body_index": 152,
+        "opensim_body": "calcn_l",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3256",
+        "source_member_sha256": "5424e3e394e233213071fbf46f178ed9123da4763d6b64125f32e7b8af1803d8",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            0.0001880943238490629,
+            -7.377162459784412e-05,
+            0.0009871466845680125,
+            0.021785798657873123
+          ],
+          [
+            -0.0009731081802331096,
+            -0.00019806683805050543,
+            0.00017061741218803535,
+            0.07275150337703036
+          ],
+          [
+            0.0001815524690353476,
+            -0.00098519418349,
+            -0.00010821934170146679,
+            -0.12555071179599409
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 1288,
+        "vertex_count": 719
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            143.397,
+            -220.864,
+            -63.0226
+          ],
+          "minimum": [
+            132.153,
+            -234.017,
+            -70.2268
+          ]
+        },
+        "core_body_index": 153,
+        "opensim_body": "toes_l",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3179",
+        "source_member_sha256": "99c76669f09d0758cd2baadbba001728458615370705ef255b933f184689941b",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            0.00023568478771667255,
+            -5.639049710994928e-05,
+            0.0009780353249184313,
+            0.02233557364613156
+          ],
+          [
+            -0.0008710118481648674,
+            0.00044837732353386985,
+            0.00023574655927645146,
+            0.22243377714327078
+          ],
+          [
+            -0.00044840979617870975,
+            -0.0009005876923931157,
+            5.6131694386276874e-05,
+            -0.12520232415877597
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 240,
+        "vertex_count": 169
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            154.841,
+            -212.314,
+            -64.3681
+          ],
+          "minimum": [
+            145.842,
+            -223.651,
+            -70.2613
+          ]
+        },
+        "core_body_index": 153,
+        "opensim_body": "toes_l",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3180",
+        "source_member_sha256": "4b3b06a548ec2cf7eec686f9314dc0fb10fd7a72afc216b88d0b2bf857bb7bf1",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            0.00023568478771667255,
+            -5.639049710994928e-05,
+            0.0009780353249184313,
+            0.02233557364613156
+          ],
+          [
+            -0.0008710118481648674,
+            0.00044837732353386985,
+            0.00023574655927645146,
+            0.22243377714327078
+          ],
+          [
+            -0.00044840979617870975,
+            -0.0009005876923931157,
+            5.6131694386276874e-05,
+            -0.12520232415877597
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 336,
+        "vertex_count": 188
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            164.075,
+            -195.431,
+            -63.4546
+          ],
+          "minimum": [
+            155.212,
+            -206.553,
+            -70.3093
+          ]
+        },
+        "core_body_index": 153,
+        "opensim_body": "toes_l",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3181",
+        "source_member_sha256": "71e7e83288bde730b7f2c04b3150de2d27236f0ed8e9db6a88704f6c1b9c9721",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            0.00023568478771667255,
+            -5.639049710994928e-05,
+            0.0009780353249184313,
+            0.02233557364613156
+          ],
+          [
+            -0.0008710118481648674,
+            0.00044837732353386985,
+            0.00023574655927645146,
+            0.22243377714327078
+          ],
+          [
+            -0.00044840979617870975,
+            -0.0009005876923931157,
+            5.6131694386276874e-05,
+            -0.12520232415877597
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 226,
+        "vertex_count": 146
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            125.056,
+            -210.725,
+            -59.0411
+          ],
+          "minimum": [
+            102.504,
+            -235.919,
+            -70.0065
+          ]
+        },
+        "core_body_index": 153,
+        "opensim_body": "toes_l",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3182",
+        "source_member_sha256": "aa0a98125fc8e3cfafa4eb1a4a00df9f21b7eefbd6d66327561a70be6f15c5d9",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            0.00023568478771667255,
+            -5.639049710994928e-05,
+            0.0009780353249184313,
+            0.02233557364613156
+          ],
+          [
+            -0.0008710118481648674,
+            0.00044837732353386985,
+            0.00023574655927645146,
+            0.22243377714327078
+          ],
+          [
+            -0.00044840979617870975,
+            -0.0009005876923931157,
+            5.6131694386276874e-05,
+            -0.12520232415877597
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 378,
+        "vertex_count": 256
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            169.358,
+            -176.16,
+            -65.129
+          ],
+          "minimum": [
+            161.261,
+            -186.545,
+            -70.4799
+          ]
+        },
+        "core_body_index": 153,
+        "opensim_body": "toes_l",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3185",
+        "source_member_sha256": "5978ed3c7d728bc03a558c5fe2a7db6fd272d02dc6ed67a1fbb21ce1693d659f",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            0.00023568478771667255,
+            -5.639049710994928e-05,
+            0.0009780353249184313,
+            0.02233557364613156
+          ],
+          [
+            -0.0008710118481648674,
+            0.00044837732353386985,
+            0.00023574655927645146,
+            0.22243377714327078
+          ],
+          [
+            -0.00044840979617870975,
+            -0.0009005876923931157,
+            5.6131694386276874e-05,
+            -0.12520232415877597
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 220,
+        "vertex_count": 160
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            139.212,
+            -207.529,
+            -59.3413
+          ],
+          "minimum": [
+            125.127,
+            -224.629,
+            -67.9536
+          ]
+        },
+        "core_body_index": 153,
+        "opensim_body": "toes_l",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3293",
+        "source_member_sha256": "72afe21185eed25dbab98a1bb7cb28e64012f672bfb3a76d81fdbf5b531f4958",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            0.00023568478771667255,
+            -5.639049710994928e-05,
+            0.0009780353249184313,
+            0.02233557364613156
+          ],
+          [
+            -0.0008710118481648674,
+            0.00044837732353386985,
+            0.00023574655927645146,
+            0.22243377714327078
+          ],
+          [
+            -0.00044840979617870975,
+            -0.0009005876923931157,
+            5.6131694386276874e-05,
+            -0.12520232415877597
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 324,
+        "vertex_count": 197
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            151.811,
+            -198.911,
+            -61.1089
+          ],
+          "minimum": [
+            138.915,
+            -215.852,
+            -68.9836
+          ]
+        },
+        "core_body_index": 153,
+        "opensim_body": "toes_l",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3294",
+        "source_member_sha256": "036f7e9bca027b8b7e6075976249ba90178a9639591878a1b5954d0f7d237c17",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            0.00023568478771667255,
+            -5.639049710994928e-05,
+            0.0009780353249184313,
+            0.02233557364613156
+          ],
+          [
+            -0.0008710118481648674,
+            0.00044837732353386985,
+            0.00023574655927645146,
+            0.22243377714327078
+          ],
+          [
+            -0.00044840979617870975,
+            -0.0009005876923931157,
+            5.6131694386276874e-05,
+            -0.12520232415877597
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 294,
+        "vertex_count": 185
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            161.39,
+            -185.433,
+            -61.9695
+          ],
+          "minimum": [
+            149.044,
+            -198.779,
+            -69.7919
+          ]
+        },
+        "core_body_index": 153,
+        "opensim_body": "toes_l",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3295",
+        "source_member_sha256": "cffbba99a2d64e833cac9545d91dc21092b2d7ecef35dd276a80ff7d35157239",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            0.00023568478771667255,
+            -5.639049710994928e-05,
+            0.0009780353249184313,
+            0.02233557364613156
+          ],
+          [
+            -0.0008710118481648674,
+            0.00044837732353386985,
+            0.00023574655927645146,
+            0.22243377714327078
+          ],
+          [
+            -0.00044840979617870975,
+            -0.0009005876923931157,
+            5.6131694386276874e-05,
+            -0.12520232415877597
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 284,
+        "vertex_count": 183
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            166.674,
+            -171.552,
+            -63.7796
+          ],
+          "minimum": [
+            158.1,
+            -178.954,
+            -70.0543
+          ]
+        },
+        "core_body_index": 153,
+        "opensim_body": "toes_l",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3298",
+        "source_member_sha256": "140d41e53c49bbbaea54972b738b215d3c3ef6bb9c5284f9f7e0516a25e2f68c",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            0.00023568478771667255,
+            -5.639049710994928e-05,
+            0.0009780353249184313,
+            0.02233557364613156
+          ],
+          [
+            -0.0008710118481648674,
+            0.00044837732353386985,
+            0.00023574655927645146,
+            0.22243377714327078
+          ],
+          [
+            -0.00044840979617870975,
+            -0.0009005876923931157,
+            5.6131694386276874e-05,
+            -0.12520232415877597
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 226,
+        "vertex_count": 143
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            145.808,
+            -174.617,
+            -55.9134
+          ],
+          "minimum": [
+            125.132,
+            -202.834,
+            -67.6983
+          ]
+        },
+        "core_body_index": 153,
+        "opensim_body": "toes_l",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3311",
+        "source_member_sha256": "4787599e0e9fefaa45c40736f38ccacc8ec7e7e867cde692c5ea4f775e97364b",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            0.00023568478771667255,
+            -5.639049710994928e-05,
+            0.0009780353249184313,
+            0.02233557364613156
+          ],
+          [
+            -0.0008710118481648674,
+            0.00044837732353386985,
+            0.00023574655927645146,
+            0.22243377714327078
+          ],
+          [
+            -0.00044840979617870975,
+            -0.0009005876923931157,
+            5.6131694386276874e-05,
+            -0.12520232415877597
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 408,
+        "vertex_count": 248
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            155.9,
+            -164.428,
+            -56.5251
+          ],
+          "minimum": [
+            134.309,
+            -188.425,
+            -69.7053
+          ]
+        },
+        "core_body_index": 153,
+        "opensim_body": "toes_l",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3312",
+        "source_member_sha256": "32b171c096dfe9993503b4f14e58d5b2996dadf73352efc506c04d1098370a5b",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            0.00023568478771667255,
+            -5.639049710994928e-05,
+            0.0009780353249184313,
+            0.02233557364613156
+          ],
+          [
+            -0.0008710118481648674,
+            0.00044837732353386985,
+            0.00023574655927645146,
+            0.22243377714327078
+          ],
+          [
+            -0.00044840979617870975,
+            -0.0009005876923931157,
+            5.6131694386276874e-05,
+            -0.12520232415877597
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 438,
+        "vertex_count": 255
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            164.79,
+            -148.775,
+            -59.9871
+          ],
+          "minimum": [
+            142.938,
+            -174.019,
+            -69.8092
+          ]
+        },
+        "core_body_index": 153,
+        "opensim_body": "toes_l",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3315",
+        "source_member_sha256": "4488ac24e66f25118feb375fbdf19e6e123595cbd26c726c3df1604bec59c7f8",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            0.00023568478771667255,
+            -5.639049710994928e-05,
+            0.0009780353249184313,
+            0.02233557364613156
+          ],
+          [
+            -0.0008710118481648674,
+            0.00044837732353386985,
+            0.00023574655927645146,
+            0.22243377714327078
+          ],
+          [
+            -0.00044840979617870975,
+            -0.0009005876923931157,
+            5.6131694386276874e-05,
+            -0.12520232415877597
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 396,
+        "vertex_count": 231
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            133.493,
+            -183.485,
+            -54.4701
+          ],
+          "minimum": [
+            111.449,
+            -211.624,
+            -66.8401
+          ]
+        },
+        "core_body_index": 153,
+        "opensim_body": "toes_l",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3328",
+        "source_member_sha256": "fd7064f417423cb6224e68867b0f3c5fd46c165a76fba035199e4db235d0616b",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            0.00023568478771667255,
+            -5.639049710994928e-05,
+            0.0009780353249184313,
+            0.02233557364613156
+          ],
+          [
+            -0.0008710118481648674,
+            0.00044837732353386985,
+            0.00023574655927645146,
+            0.22243377714327078
+          ],
+          [
+            -0.00044840979617870975,
+            -0.0009005876923931157,
+            5.6131694386276874e-05,
+            -0.12520232415877597
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 380,
+        "vertex_count": 233
+      },
+      {
+        "bounds_mm": {
+          "maximum": [
+            117.082,
+            -186.036,
+            -51.5522
+          ],
+          "minimum": [
+            86.7033,
+            -219.271,
+            -68.4152
+          ]
+        },
+        "core_body_index": 153,
+        "opensim_body": "toes_l",
+        "registration_status": "provisional_lower_limb_source_mesh_bounded_similarity_registration",
+        "source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+        "source_member_id": "FJ3329",
+        "source_member_sha256": "3b6770f4dd2bfc54fea30468a90eafd63c21aea8381688ce0912f85502f86f25",
+        "source_obj_mm_to_core_inertial_body_m": [
+          [
+            0.00023568478771667255,
+            -5.639049710994928e-05,
+            0.0009780353249184313,
+            0.02233557364613156
+          ],
+          [
+            -0.0008710118481648674,
+            0.00044837732353386985,
+            0.00023574655927645146,
+            0.22243377714327078
+          ],
+          [
+            -0.00044840979617870975,
+            -0.0009005876923931157,
+            5.6131694386276874e-05,
+            -0.12520232415877597
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "triangle_count": 516,
+        "vertex_count": 318
+      }
+    ]
+  },
+  "schema": "HumanPack.foot-contact-registration-candidate.v1",
+  "source": {
+    "bodyparts_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+    "multi_pose_receipt": "Docs/media/numi-human-lower-joint-focus-v1/receipts/lower-multi-pose-audit.v1.json",
+    "multi_pose_receipt_sha256": "d9f17ff65d28ae951cc190e7360369f87261b857a7495b2f0e16e58ce51098e4",
+    "opensim_model_sha256": "8f30d0b64750b87eb7f705907862590535212b4afd7e919faa3fd7d1683d22ec",
+    "profile": "config/foot-contact-registration-candidate.v1.json",
+    "profile_sha256": "e6071b849a2a0bebf33c38628de4aa823a283897a3b17d362ad1cc86a73468d5",
+    "registration_receipt": "Docs/media/numi-human-lower-joint-focus-v1/receipts/registration.v3.json",
+    "registration_receipt_sha256": "6a48e223545a18390097245b5c21d9d1322991ca451f4bab8e1090e3232ad67f",
+    "sources_directory": "/Users/home/numilab-human/Sources",
+    "support_profile": "config/myosim-support-stance.v2.json",
+    "support_profile_sha256": "7b680ba4cfad0e448147d949426a35ff151a28e83bc23fa98035b0083bc4b87a",
+    "support_receipt": "Docs/media/curved-support-20260908/receipt.json",
+    "support_receipt_sha256": "50106c6e169d2f2f08da8471f381dc92fb82d50c6bba2dff1c3206a67eb380e9"
+  },
+  "status": "partial",
+  "support": {
+    "active_contact_count": 6,
+    "active_source_names": [
+      "bofoot_col2_l",
+      "bofoot_col2_r",
+      "foot_col1_l",
+      "foot_col1_r",
+      "foot_col3_l",
+      "foot_col3_r"
+    ],
+    "active_witnesses": [
+      5,
+      6,
+      8,
+      10,
+      12,
+      14
+    ],
+    "contact_calibration_qualified": false,
+    "contact_count": 18,
+    "dynamic_contact_qualified": false,
+    "expected_weight_n": 952.864477038,
+    "root_force_residual_n": 1.82520363978e-06,
+    "total_support_force_n": 952.864475213
+  }
+}

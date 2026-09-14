@@ -336,6 +336,15 @@
       ],
       "tasks": [
         {
+          "id": "contact.foot_registration_candidate",
+          "category": "engineering",
+          "action": "Bind the four BodyParts3D foot groups to the provisional source-to-MyoSim rest transforms and the existing 18 support witnesses for the one-adult-male source.",
+          "acceptance": [
+            "All 60 source-local foot rows and 30 reviewed is_a members hash-check against the four target bodies; seven-pose lower-limb continuity and six active support witnesses pass while collider, exclusion and contact-material gates remain false."
+          ],
+          "depends_on": []
+        },
+        {
           "id": "contact.data",
           "category": "source_data",
           "action": "Obtain contact registration and friction/compliance measurements for supported anatomical interfaces.",
@@ -347,13 +356,14 @@
         {
           "id": "contact.register",
           "category": "engineering",
-          "action": "Compile registered anatomical colliders, exclusions, distributed contact and conservative swept-motion bounds.",
+          "action": "Compile registered anatomical colliders, exclusions, distributed contact and conservative swept-motion bounds after the source-bound foot registration candidate.",
           "acceptance": [
-            "Prescribed crossing cases have no missed crossings; loaded support and contact Jacobian controls pass without relaxed geometry gates."
+            "The four-foot source registration candidate binds 60 source-local rows, 30 reviewed is_a members and six active support witnesses; prescribed crossing cases then have no missed crossings and loaded support/contact Jacobian controls pass without relaxed geometry gates."
           ],
           "depends_on": [
             "runtime.precision",
-            "contact.data"
+            "contact.data",
+            "contact.foot_registration_candidate"
           ]
         },
         {
@@ -371,7 +381,10 @@
       ],
       "references": [
         "Docs/HARD_SUPPORT_KKT_20260908.md",
-        "Docs/CANDIDATE_PRECISION_PERFORMANCE_20260911.md"
+        "Docs/CANDIDATE_PRECISION_PERFORMANCE_20260911.md",
+        "Docs/FOOT_CONTACT_REGISTRATION_CANDIDATE_20260914.md",
+        "config/foot-contact-registration-candidate.v1.json",
+        "Docs/media/foot-contact-registration-candidate-20260914/receipt-v1.json"
       ]
     },
     {
