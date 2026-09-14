@@ -86,3 +86,14 @@ physical whole-human closure.
 The replay artifact was run from the same preload implementation before the
 receipt-only output fields were added; the final rebuilt binary and applied
 preload are independently captured by `one-step.log`.
+
+## Retained failed diagnostic
+
+A follow-up experiment also preloaded the published static generalized
+residual. It held the 64-step horizon at `0.467938244343 m/s²`, but the
+512-step transaction never reached a terminal receipt and remained blocked in
+`MTLCommandBuffer waitUntilCompleted` after more than four minutes. The
+isolated process was terminated; this correction is not in `ee5cb816` and is
+not a standing result. The partial input/output log is retained at
+[residual-preload-512-timeout.log](media/native-human-constraint-preload-20260914/failed-diagnostics/residual-preload-512-timeout.log)
+with SHA-256 `fcb7d21415270d9744bec770baf41c850cf36be77f85851a774bd2c203d21b27`.
