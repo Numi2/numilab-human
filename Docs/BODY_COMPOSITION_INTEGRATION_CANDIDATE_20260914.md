@@ -94,3 +94,13 @@ The current `v8` receipt also consumes
 muscle-volume candidates and their source-member hashes. These are a measured
 geometry handoff, not a physical volume or mechanical mass owner, so the
 integrated qualification and skeletal-muscle mechanics gates remain false.
+
+The current `v9` receipt additionally hash-binds the native current-release
+requalification. That receipt ties the one-adult source graph to the physical
+M4 Pro `12.5 µs` run at the validated `0.8` recruitment ceiling and records 512
+completed steps over 6.4 ms. The replay retains zero penetration and no root
+assistance, but its `32.7379798889 m/s²` peak acceleration is retained as
+temporal-drift evidence. This strengthens the source-to-runtime handoff for
+muscle recruitment while keeping sustained standing, anatomical loading,
+blood-to-tissue transfer, fat geometry, materials, and subject calibration
+unqualified.

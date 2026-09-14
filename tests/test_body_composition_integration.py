@@ -47,6 +47,14 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
     assert result["qualification"]["skin_shell_source_identity_bound"]
     assert result["qualification"]["skin_shell_native_visual_admission"]
     assert result["qualification"]["foot_contact_source_registration_bound"]
+    assert result["qualification"]["native_current_release_bound"]
+    assert not result["qualification"]["native_current_release_sustained_standing"]
+    assert result["identity_bindings"]["native_current_release_source_commit"] == (
+        "c45fa9622f6c73b58febdc24a7115aecf3d7699f"
+    )
+    assert result["runtime_evidence"]["native_release_completed_steps"] == 512
+    assert result["runtime_evidence"]["native_release_peak_acceleration_mps2"] == pytest.approx(32.7379798889)
+    assert result["runtime_evidence"]["native_release_temporal_drift_observed"]
     assert not result["qualification"]["anatomical_supports_loading"]
     assert result["qualification"]["fat_source_absence_bound"]
     assert not result["qualification"]["integrated_human_qualification"]
@@ -79,3 +87,13 @@ def test_activation_route_count_drift_is_rejected(tmp_path: Path) -> None:
     path.write_bytes(canonical(value) + b"\n")
     with pytest.raises(ImportError, match="activation route counts changed"):
         compile_candidate(activation=path)
+
+
+def test_native_release_temporal_receipt_drift_is_rejected(tmp_path: Path) -> None:
+    source = Path("Docs/media/native-current-release-20260915/receipt-v5.json")
+    value = json.loads(source.read_text(encoding="utf-8"))
+    value["comparison"]["default_implicit_ceiling_0_8_512_steps"]["persistent_max_acceleration"] = 0.0
+    path = tmp_path / "native-release.json"
+    path.write_text(json.dumps(value, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+    with pytest.raises(ImportError, match="native current release 512-step evidence changed"):
+        compile_candidate(native_current_release=path)

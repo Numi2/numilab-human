@@ -39,6 +39,7 @@ VESSEL_REGISTRATION = ROOT / "Docs/media/organ-vessel-registration-corrected-202
 CARDIAC_WALL_SOURCE = ROOT / "Docs/media/cardiac-wall-anatomy-20260912/manifest.json"
 CARDIAC_WALL_CONFIG = ROOT / "config/cardiac-wall-rodero18.v1.json"
 TISSUE_CALIBRATION = ROOT / "Docs/media/tissue-integration-20260908/calibration-candidate.json"
+NATIVE_RELEASE = ROOT / "Docs/media/native-current-release-20260915/receipt-v5.json"
 
 
 def _require(condition: bool, message: str) -> None:
@@ -114,7 +115,7 @@ def _read_profile(path: Path) -> dict[str, Any]:
         "foot_contact_registration", "activation",
         "blood_transport", "tissue_exchange", "cardiac_blood",
         "cvsim21_blood_mass", "vessel_registration", "cardiac_wall_source",
-        "cardiac_wall_config", "tissue_calibration",
+        "cardiac_wall_config", "tissue_calibration", "native_current_release",
     ], "integration profile input order differs")
     return value
 
@@ -154,6 +155,7 @@ def compile_candidate(
     cardiac_wall_source: Path = CARDIAC_WALL_SOURCE,
     cardiac_wall_config: Path = CARDIAC_WALL_CONFIG,
     tissue_calibration: Path = TISSUE_CALIBRATION,
+    native_current_release: Path = NATIVE_RELEASE,
 ) -> dict[str, Any]:
     profile = Path(profile)
     profile_document = _read_profile(profile)
@@ -175,6 +177,7 @@ def compile_candidate(
         "cardiac_wall_source": Path(cardiac_wall_source),
         "cardiac_wall_config": Path(cardiac_wall_config),
         "tissue_calibration": Path(tissue_calibration),
+        "native_current_release": Path(native_current_release),
     }
     documents: dict[str, dict[str, Any]] = {}
     hashes: dict[str, str] = {}
@@ -196,6 +199,7 @@ def compile_candidate(
         "cardiac_wall_source": "cardiac wall source manifest",
         "cardiac_wall_config": "cardiac wall source config",
         "tissue_calibration": "tissue material calibration candidate",
+        "native_current_release": "current native Human release requalification",
     }
     for name, path in paths.items():
         documents[name], hashes[name] = _read(path, labels[name])
@@ -224,6 +228,40 @@ def compile_candidate(
             labels["cardiac_wall_config"])
     _schema(documents["tissue_calibration"], "HumanPack.tissue-calibration-candidate.v1",
             labels["tissue_calibration"])
+    _schema(documents["native_current_release"],
+            "numi.human.native-current-release-requalification.v5",
+            labels["native_current_release"])
+
+    native_release = documents["native_current_release"]
+    native_source = native_release.get("source", {})
+    native_comparison = native_release.get("comparison", {})
+    native_qualification = native_release.get("qualification", {})
+    _require(native_release.get("status") == "partial" and
+             native_source.get("branch") == "numi-human-equilibrium-20260914" and
+             native_source.get("commit") == "c45fa9622f6c73b58febdc24a7115aecf3d7699f" and
+             native_source.get("device") == "Mac mini M4 Pro" and
+             native_release.get("commands", {}).get("implicit_default_512", {}).get("step_count") == 512 and
+             native_release.get("commands", {}).get("implicit_default_512", {}).get("muscle_step_seconds") == 1.25e-5,
+             "native current release source identity or horizon changed")
+    native_512 = native_comparison.get("default_implicit_ceiling_0_8_512_steps")
+    _require(isinstance(native_512, dict) and
+             native_512.get("persistent_completed_steps") == 512 and
+             native_512.get("compiled_stand_balanced") is True and
+             native_512.get("persistent_max_penetration_m") == 0 and
+             native_512.get("source_support_active_contacts") == 6 and
+             native_512.get("persistent_max_acceleration") == 32.7379798889 and
+             native_comparison.get("default_implicit_512_temporal_drift", {}).get("status") ==
+             "temporal_drift_observed",
+             "native current release 512-step evidence changed")
+    _require(native_qualification.get("exact_clock") is True and
+             native_qualification.get("bounded_dynamic_release") is True and
+             native_qualification.get("sustained_standing") is False and
+             native_qualification.get("walking") is False and
+             native_qualification.get("anatomical_loading") is False and
+             native_qualification.get("blood_tissue_transfer") is False and
+             native_qualification.get("material_calibration") is False and
+             native_qualification.get("subject_calibration") is False,
+             "native current release boundary changed")
 
     organ = documents["organ_mass"]
     organ_counts = organ.get("counts", {})
@@ -747,6 +785,11 @@ def compile_candidate(
             ),
             "tissue_calibration_is_single_plug": True,
             "tissue_calibration_qualified": False,
+            "native_current_release_receipt_sha256": hashes["native_current_release"],
+            "native_current_release_source_commit": native_source["commit"],
+            "native_current_release_binary_sha256": native_source["binary_sha256"],
+            "native_current_release_exact_clock": True,
+            "native_current_release_temporal_drift_observed": True,
             "transport_and_exchange_beds_share_clock": (
                 transport["clock"]["nanoseconds"] == exchange["clock"]["nanoseconds"]
             ),
@@ -827,6 +870,11 @@ def compile_candidate(
             "tissue_calibration_training_observations": training_fit["observations"],
             "tissue_calibration_held_out_observations": held_out_fit["observations"],
             "tissue_calibration_held_out_force_nrmse": held_out_fit["force_nrmse_relative_to_measured_rms"],
+            "native_release_completed_steps": native_512["persistent_completed_steps"],
+            "native_release_horizon_seconds": native_comparison["default_implicit_512_horizon_seconds"],
+            "native_release_peak_acceleration_mps2": native_512["persistent_max_acceleration"],
+            "native_release_zero_penetration": native_512["persistent_max_penetration_m"] == 0,
+            "native_release_temporal_drift_observed": True,
         },
         "qualification": {
             "source_identity_graph_bound": True,
@@ -836,6 +884,8 @@ def compile_candidate(
             "source_vessel_registration_bound": True,
             "cardiac_wall_source_identity_bound": True,
             "tissue_calibration_candidate_bound": True,
+            "native_current_release_bound": True,
+            "native_current_release_sustained_standing": False,
             "tissue_oxygen_exchange_candidate_bound": True,
             "muscle_activation_route_identity_bound": True,
             "muscle_surface_identity_bound": True,
@@ -870,7 +920,10 @@ def compile_candidate(
             "muscle route activation, NHTISS4 surface identity, the hash-locked "
             "BodyParts3D muscle/tendon topology and surface-area audit, and the exact "
             "BodyParts3D FJ2810 full-skin visual shell identity and its "
-            "four-view native Apple M4 Pro visual admission. It "
+            "four-view native Apple M4 Pro visual admission. The current native "
+            "12.5 microsecond Human release is also hash-bound through its 512-step "
+            "M4 Pro receipt; its temporal drift remains visible and does not promote "
+            "sustained standing. It "
             "proves source identity and nonduplicated ownership bookkeeping only. "
             "The exact bilateral foot source registration and six active support "
             "witness identities are bound as a contact handoff, but they are not "
