@@ -2196,6 +2196,18 @@ def parser() -> argparse.ArgumentParser:
     vessel_mass_moments.add_argument("--initial-velocity-mps", type=float, nargs=3, default=[0.0, 0.0, 0.0])
     vessel_mass_moments.add_argument("--output", type=Path, required=True)
     vessel_mass_moments.set_defaults(handler=vessel_mass_moments_run)
+    from .body_composition_integration import add_arguments as add_body_composition_arguments
+    body_composition = commands.add_parser(
+        "body-composition-integration",
+        help="join source organ, blood, tissue, muscle, skin and calibration candidates without promoting physical owners",
+    )
+    add_body_composition_arguments(body_composition)
+    from .muscle_surface_geometry_audit import add_arguments as add_muscle_surface_geometry_arguments
+    muscle_surface_geometry = commands.add_parser(
+        "muscle-surface-geometry-audit",
+        help="recompute hash-locked muscle/tendon surface topology and algebraic geometry candidates",
+    )
+    add_muscle_surface_geometry_arguments(muscle_surface_geometry)
     return result
 
 

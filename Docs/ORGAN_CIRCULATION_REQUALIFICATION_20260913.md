@@ -5,6 +5,12 @@ gained the source-only organ geometry inventory command. The 12 September
 receipt remains retained as historical evidence; this receipt binds the
 current Human source tree and a fresh native run.
 
+On 14 September the receipt was rechecked after the CLI gained the
+body-composition integration and hash-locked muscle-surface geometry audit
+commands. The retained native artifacts, passive owner inputs, and the
+unqualified scientific boundary were unchanged; only the source pin was
+refreshed after the verifier reproduced the same 11/11 native evidence.
+
 The clean detached native worktree at
 `1594f7aff5503aab96ab9de6e77b6d4f8fa4f1cd` was rebuilt on the physical Apple
 M4 Pro Mac mini. The selected owner suite passed all 11 CTest cases, including

@@ -19,6 +19,11 @@ checks that the current graph contains:
 - 150 distinct muscle/tendon surface identities covering the current surface
   rows and all 416 activation route identities, while retaining 238 routes
   without a surface binding;
+- the hash-locked BodyParts3D source-geometry audit for those 150 surfaces,
+  including 3.2682904751 m² of recomputed surface area, 60 single-closed
+  algebraic volume candidates, six closed multi-component surfaces, and 84
+  topology-defective surfaces. None is promoted to physical volume, mass,
+  material, or active-force ownership;
 - the exact BodyParts3D `FJ2810` full-skin source and its registered visual
   outer shell (54,949 retained vertices, 109,183 triangles, 86 body
   influences, and sub-micrometre rest-pose reconstruction), plus the native
@@ -76,8 +81,9 @@ rows from disconnected source evidence to one reproducible integration
 boundary while preserving the completion gates for calibrated mechanics,
 anatomical blood/tissue transfer, standing, recovery, and walking.
 
-The immutable `v6` receipt additionally binds the native-compatible full-skin
+The immutable `v7` receipt additionally binds the native-compatible full-skin
 candidate and its four-view M4 Pro visual admission. It records the one-plug
 material fit and held-out observation counts and keeps `material_calibration`
-false; no fitted coefficient is assigned to the Human body or native Matter
+false; it also binds the muscle-surface geometry audit. No fitted coefficient
+or algebraic geometry candidate is assigned to the Human body or native Matter
 runtime.

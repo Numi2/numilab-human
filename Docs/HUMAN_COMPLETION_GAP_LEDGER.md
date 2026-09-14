@@ -41,6 +41,15 @@ missing tendon, limit, contact, equality, and damping terms and internal
 residuals up to `1315.41475411 N`; it is diagnostic evidence only and does not
 admit force convergence or standing.
 
+The [muscle surface geometry audit](MUSCLE_SURFACE_GEOMETRY_AUDIT_20260914.md)
+now replays all 150 hash-locked BodyParts3D muscle/tendon members and
+recomputes 3.2682904751 m² of surface area. It retains 60 single-closed
+algebraic volume candidates, six closed multi-component surfaces, and 84
+topology-defective surfaces, and binds those measurements into body-composition
+receipt v7. These are geometry candidates only: tissue volume, mass, material,
+active force transfer, anatomical support/loading, and calibration ownership
+remain unresolved.
+
 ## Current endpoint disposition
 
 The current compiler retains one law for every origin and insertion:

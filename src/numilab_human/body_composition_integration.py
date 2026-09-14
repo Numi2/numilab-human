@@ -25,6 +25,7 @@ PROFILE = ROOT / "config/body-composition-integration.v1.json"
 ORGAN_MASS = ROOT / "Docs/media/tissue-mass-candidate-20260914/receipt-v2.json"
 REGIONAL_TISSUE = ROOT / "Docs/media/regional-tissue-mass-candidate-20260914/receipt-v1.json"
 SURFACES = ROOT / "Docs/media/soft-tissue-surface-candidate-20260914/receipt-v1.json"
+MUSCLE_GEOMETRY_AUDIT = ROOT / "Docs/media/muscle-surface-geometry-audit-20260914/receipt-v1.json"
 SKIN_SHELL = ROOT / "Docs/media/skin-shell-candidate-native-v2-20260914/receipt-v2.json"
 SKIN_NATIVE_VISUAL = ROOT / "Docs/media/skin-shell-native-visual-20260914/receipt-v1.json"
 FOOT_CONTACT = ROOT / "Docs/media/foot-contact-registration-candidate-20260914/receipt-v1.json"
@@ -91,6 +92,7 @@ def _read_profile(path: Path) -> dict[str, Any]:
              "integration profile clock differs")
     _require(value.get("expected_source_member_layers") == {
         "cardiac_wall_region_identity": 24,
+        "muscle_surface_geometry_audit": 150,
         "organ_surface_candidates": 378,
         "regional_blood_transport": 329,
         "muscle_tendon_surface_identity": 150,
@@ -105,7 +107,7 @@ def _read_profile(path: Path) -> dict[str, Any]:
         "cvsim21_mass_rejected_steps": 1,
     }, "integration profile runtime counts differ")
     _require(value.get("inputs") == [
-        "organ_mass", "regional_tissue", "muscle_surfaces", "skin_shell", "skin_native_visual",
+        "organ_mass", "regional_tissue", "muscle_surfaces", "muscle_geometry_audit", "skin_shell", "skin_native_visual",
         "foot_contact_registration", "activation",
         "blood_transport", "tissue_exchange", "cardiac_blood",
         "cvsim21_blood_mass", "vessel_registration", "cardiac_wall_source",
@@ -135,6 +137,7 @@ def compile_candidate(
     organ_mass: Path = ORGAN_MASS,
     regional_tissue: Path = REGIONAL_TISSUE,
     surfaces: Path = SURFACES,
+    muscle_geometry_audit: Path = MUSCLE_GEOMETRY_AUDIT,
     skin_shell: Path = SKIN_SHELL,
     skin_native_visual: Path = SKIN_NATIVE_VISUAL,
     foot_contact_registration: Path = FOOT_CONTACT,
@@ -154,6 +157,7 @@ def compile_candidate(
         "organ_mass": Path(organ_mass),
         "regional_tissue": Path(regional_tissue),
         "muscle_surfaces": Path(surfaces),
+        "muscle_geometry_audit": Path(muscle_geometry_audit),
         "skin_shell": Path(skin_shell),
         "skin_native_visual": Path(skin_native_visual),
         "foot_contact_registration": Path(foot_contact_registration),
@@ -173,6 +177,7 @@ def compile_candidate(
         "organ_mass": "organ mass candidate",
         "regional_tissue": "regional tissue candidate",
         "muscle_surfaces": "muscle surface candidate",
+        "muscle_geometry_audit": "muscle surface geometry audit",
         "skin_shell": "skin shell candidate",
         "skin_native_visual": "native skin shell visual receipt",
         "foot_contact_registration": "foot contact registration candidate",
@@ -192,6 +197,8 @@ def compile_candidate(
     _schema(documents["organ_mass"], "HumanPack.tissue-mass-composition-candidate.v1", labels["organ_mass"])
     _schema(documents["regional_tissue"], "HumanPack.regional-tissue-mass-candidate.v1", labels["regional_tissue"])
     _schema(documents["muscle_surfaces"], "HumanPack.soft-tissue-surface-candidate.v1", labels["muscle_surfaces"])
+    _schema(documents["muscle_geometry_audit"], "HumanPack.muscle-surface-geometry-audit.v1",
+            labels["muscle_geometry_audit"])
     _schema(documents["skin_shell"], "HumanPack.skin-shell-candidate.v2", labels["skin_shell"])
     _schema(documents["skin_native_visual"], "HumanPack.skin-shell-native-visual.v1",
             labels["skin_native_visual"])
@@ -269,6 +276,52 @@ def compile_candidate(
              "fat/skin or active muscle ownership was promoted")
     _require(surface_counts.get("routes_with_surface_binding") == 178,
              "muscle route binding count changed")
+
+    geometry = documents["muscle_geometry_audit"]
+    geometry_source = geometry.get("source", {})
+    geometry_counts = geometry.get("counts", {})
+    geometry_summary = geometry.get("geometry", {})
+    _require(geometry.get("status") == "partial" and
+             geometry_source.get("surface_receipt") == _relative(paths["muscle_surfaces"]) and
+             geometry_source.get("surface_receipt_sha256") == hashes["muscle_surfaces"] and
+             geometry_source.get("source_archive_sha256") and
+             len(geometry_source["source_archive_sha256"]) == 64,
+             "muscle surface geometry source identity changed")
+    _require(geometry_counts == {
+        "source_surface_count": 150,
+        "muscle_surface_count": 148,
+        "tendon_surface_count": 2,
+        "topology_recomputed_surface_count": 150,
+        "single_closed_component_count": 60,
+        "closed_multi_component_count": 6,
+        "topology_defective_count": 84,
+        "surface_volume_candidate_count": 60,
+        "physical_volume_owner_count": 0,
+        "mechanical_mass_owner_count": 0,
+        "material_owner_count": 0,
+        "volumetric_active_force_owner_count": 0,
+        "total_quotient_vertex_count": 316420,
+        "total_quotient_triangle_count": 631464,
+        "total_duplicate_face_count": 484,
+        "total_vertex_manifold_defect_count": 1452,
+    }, "muscle surface geometry counts changed")
+    _require(type(geometry_summary.get("surface_area_total_m2")) in (int, float)
+             and math.isfinite(float(geometry_summary["surface_area_total_m2"]))
+             and geometry_summary["surface_area_total_m2"] > 0.0
+             and type(geometry_summary.get("algebraic_volume_total_m3")) in (int, float)
+             and math.isfinite(float(geometry_summary["algebraic_volume_total_m3"]))
+             and geometry_summary["algebraic_volume_total_m3"] > 0.0
+             and geometry_summary.get("volume_is_physical_owner") is False,
+             "muscle surface geometry summary is invalid")
+    _all_none(geometry.get("surfaces", []),
+              ("physical_volume_owner", "mechanical_mass_owner", "material_owner",
+               "volumetric_active_force_owner"), "muscle geometry surface")
+    _require(geometry.get("qualification", {}).get("source_member_hashes_bound") is True and
+             geometry.get("qualification", {}).get("single_closed_surface_volume_candidates_recomputed") is True and
+             geometry.get("qualification", {}).get("physical_tissue_volume_owner") is False and
+             geometry.get("qualification", {}).get("skeletal_muscle_tissue_mass_owner") is False and
+             geometry.get("qualification", {}).get("activation_force_transfer") is False,
+             "muscle surface geometry qualification boundary changed")
 
     skin = documents["skin_shell"]
     skin_counts = skin.get("coverage", {})
@@ -612,6 +665,7 @@ def compile_candidate(
              "skin shell member overlaps another source layer")
     source_member_layers = {
         "cardiac_wall_region_identity": len(cardiac_wall_ids),
+        "muscle_surface_geometry_audit": geometry_counts["source_surface_count"],
         "organ_surface_candidates": len(organ_id_set),
         "regional_blood_transport": len(set(blood_member_ids)),
         "muscle_tendon_surface_identity": len(surface_ids),
@@ -639,6 +693,8 @@ def compile_candidate(
             "organ_member_ids_sha256": _identity_digest(organ_id_set),
             "blood_transport_member_ids_sha256": _identity_digest(set(blood_member_ids)),
             "muscle_tendon_surface_ids_sha256": _identity_digest(surface_ids),
+            "muscle_surface_geometry_audit_sha256": hashes["muscle_geometry_audit"],
+            "muscle_surface_geometry_source_archive_sha256": geometry_source["source_archive_sha256"],
             "skin_shell_member_ids_sha256": _identity_digest({skin_member_id}),
             "skin_native_visual_receipt_sha256": hashes["skin_native_visual"],
             "foot_contact_registration_receipt_sha256": hashes["foot_contact_registration"],
@@ -661,6 +717,9 @@ def compile_candidate(
             "regional_costal_tissue_candidate_mass_kg": regional_mass,
             "cardiac_hydraulic_blood_candidate_mass_kg": cardiac_mass,
             "cvsim21_aggregate_blood_mass_kg": cvsim21_mass,
+            "muscle_surface_area_candidate_m2": geometry_summary["surface_area_total_m2"],
+            "muscle_algebraic_volume_candidate_m3": geometry_summary["algebraic_volume_total_m3"],
+            "muscle_single_closed_surface_volume_candidate_count": geometry_counts["surface_volume_candidate_count"],
             "registered_vessel_surface_integral_volume_m3": vessel_surface_volume,
             "cardiac_wall_geometric_volume_candidate_m3": cardiac_wall_volume,
             "skin_shell_outer_surface_vertex_count": skin_source["outer_surface_vertex_count"],
@@ -707,6 +766,11 @@ def compile_candidate(
             "muscle_activation_routes": act_counts["source_routes"],
             "muscle_surface_routes_with_binding": surface_counts["routes_with_surface_binding"],
             "muscle_surface_routes_without_binding": surface_counts["routes_without_surface_binding"],
+            "muscle_surface_geometry_recomputed": geometry_counts["topology_recomputed_surface_count"],
+            "muscle_surface_geometry_single_closed_components": geometry_counts["single_closed_component_count"],
+            "muscle_surface_geometry_closed_multi_components": geometry_counts["closed_multi_component_count"],
+            "muscle_surface_geometry_topology_defects": geometry_counts["topology_defective_count"],
+            "muscle_surface_area_candidate_m2": geometry_summary["surface_area_total_m2"],
             "cardiac_wall_tetrahedra": cardiac_wall_mesh["cells"],
             "cardiac_wall_positive_orientation": True,
             "cardiac_wall_regional_geometry_volume_m3": cardiac_wall_volume,
@@ -734,6 +798,8 @@ def compile_candidate(
             "tissue_oxygen_exchange_candidate_bound": True,
             "muscle_activation_route_identity_bound": True,
             "muscle_surface_identity_bound": True,
+            "muscle_surface_geometry_audit_bound": True,
+            "muscle_surface_algebraic_volume_candidates_bound": True,
             "skin_shell_source_identity_bound": True,
             "skin_shell_native_visual_admission": True,
             "foot_contact_source_registration_bound": True,
@@ -759,7 +825,8 @@ def compile_candidate(
             "transport, six-vessel source/world registration, tissue oxygen "
             "exchange, cardiac blood budget, 24-region Rodero cardiac-wall "
             "source identity, one-plug held-out tissue calibration candidate, "
-            "muscle route activation, NHTISS4 surface identity, and the exact "
+            "muscle route activation, NHTISS4 surface identity, the hash-locked "
+            "BodyParts3D muscle/tendon topology and surface-area audit, and the exact "
             "BodyParts3D FJ2810 full-skin visual shell identity and its "
             "four-view native Apple M4 Pro visual admission. It "
             "proves source identity and nonduplicated ownership bookkeeping only. "
@@ -769,7 +836,8 @@ def compile_candidate(
             "The cardiac wall has no physical-volume or mechanical owner here; its "
             "imported boundary defects, unloaded reference, closure/material data, "
             "pressure ports and subject calibration remain open. Fat and "
-            "skeletal-muscle tissue volumes, skin thickness/material/mechanics, "
+            "skeletal-muscle tissue volumes, even where algebraic single-closed "
+            "surface candidates exist, skin thickness/material/mechanics, "
             "fat geometry and mass, anatomical blood/lumen and organ mechanics, "
             "calibrated materials, subject calibration, and the whole-body "
             "mechanical owner remain unresolved. The tissue fit is a same-plug "
@@ -799,6 +867,7 @@ def run(arguments: argparse.Namespace) -> int:
         organ_mass=arguments.organ_mass,
         regional_tissue=arguments.regional_tissue,
         surfaces=arguments.surfaces,
+        muscle_geometry_audit=arguments.muscle_geometry_audit,
         skin_shell=arguments.skin_shell,
         activation=arguments.activation,
         blood_transport=arguments.blood_transport,
@@ -828,6 +897,7 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--organ-mass", type=Path, default=ORGAN_MASS)
     parser.add_argument("--regional-tissue", type=Path, default=REGIONAL_TISSUE)
     parser.add_argument("--surfaces", type=Path, default=SURFACES)
+    parser.add_argument("--muscle-geometry-audit", type=Path, default=MUSCLE_GEOMETRY_AUDIT)
     parser.add_argument("--skin-shell", type=Path, default=SKIN_SHELL)
     parser.add_argument("--activation", type=Path, default=ACTIVATION)
     parser.add_argument("--blood-transport", type=Path, default=BLOOD_TRANSPORT)

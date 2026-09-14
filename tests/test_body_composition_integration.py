@@ -19,6 +19,7 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
     assert result["status"] == "partial"
     assert result["source_member_layers"] == {
         "cardiac_wall_region_identity": 24,
+        "muscle_surface_geometry_audit": 150,
         "organ_surface_candidates": 378,
         "regional_blood_transport": 329,
         "muscle_tendon_surface_identity": 150,
@@ -33,9 +34,13 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
     assert result["runtime_evidence"]["cvsim21_mass_rejected_steps"] == 1
     assert result["runtime_evidence"]["cvsim21_mass_conserved"]
     assert result["candidate_mass_budgets"]["cvsim21_aggregate_blood_mass_kg"] == 5.459
+    assert result["candidate_mass_budgets"]["muscle_single_closed_surface_volume_candidate_count"] == 60
+    assert result["candidate_mass_budgets"]["muscle_algebraic_volume_candidate_m3"] == pytest.approx(0.006471304532959317)
     assert result["qualification"]["cross_domain_owner_nonduplication_checked"]
     assert result["qualification"]["source_aggregate_blood_mass_bound"]
     assert result["qualification"]["source_vessel_registration_bound"]
+    assert result["qualification"]["muscle_surface_geometry_audit_bound"]
+    assert result["qualification"]["muscle_surface_algebraic_volume_candidates_bound"]
     assert result["qualification"]["cardiac_wall_source_identity_bound"]
     assert result["qualification"]["tissue_calibration_candidate_bound"]
     assert result["qualification"]["skin_shell_source_identity_bound"]
