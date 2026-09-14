@@ -29,6 +29,10 @@ checks that the current graph contains:
   positive-oriented region identities across the 1,470,083-cell source mesh
   while retaining imported boundary defects, closure faces, unloaded-reference,
   density, pressure-port, native-mechanics, and subject-calibration gaps;
+- the pinned Open Knee tissue-calibration candidate for one `oks003` PTC plug,
+  with six training and three same-plug held-out observations, while retaining
+  native solver validation, stress-free reference, population, and whole-human
+  material gates as false;
 - both cardiac geometry conventions bound to the common `0.39974235600733804
   kg` hydraulic blood-mass budget without selecting a physical owner.
 
@@ -54,7 +58,16 @@ source mesh is recorded as 24 labels, 300,965 points, 1,470,083 tetrahedra,
 and zero negative orientations. The imported wall does not acquire a physical
 volume or mechanical owner from this join.
 
+The tissue calibration row is a provenance link, not a material assignment:
+its `qualified` flag remains false, its native material is not solver
+validated, and its held-out repeat is a test-day split within the same plug.
+
 The candidate therefore advances the organ, systemic-physiology, and muscle
 rows from disconnected source evidence to one reproducible integration
 boundary while preserving the completion gates for calibrated mechanics,
 anatomical blood/tissue transfer, standing, recovery, and walking.
+
+The immutable `v3` receipt additionally binds the one-plug material candidate
+described above. It records the fit and held-out observation counts and keeps
+`material_calibration` false; no fitted coefficient is assigned to the Human
+body or native Matter runtime.
