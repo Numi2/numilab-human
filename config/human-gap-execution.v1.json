@@ -592,6 +592,18 @@
           ]
         },
         {
+          "id": "physiology.tissue_exchange_candidate",
+          "category": "engineering",
+          "action": "Attach a source-bound oxygen amount to the seven regional blood beds and exchange it bidirectionally with admitted organ tissue surface-volume candidates on the exact clock.",
+          "acceptance": [
+            "Blood oxygen advection, two-way tissue amount exchange, amount conservation and rejected-step neutrality pass for all seven beds while capillary geometry, gas/metabolic laws, materials and calibration remain explicit gates."
+          ],
+          "depends_on": [
+            "blood.spatial_transport",
+            "organs.mass_composition"
+          ]
+        },
+        {
           "id": "physiology.systems",
           "category": "engineering",
           "action": "Integrate perfusion/exchange, respiratory mechanics, gas, metabolism, thermal/fluid and conduction states through existing owners.",
@@ -600,6 +612,7 @@
           ],
           "depends_on": [
             "blood.spatial_transport",
+            "physiology.tissue_exchange_candidate",
             "cardiac.activation",
             "cardiac.valve_ports",
             "cardiac.loading"
@@ -657,7 +670,10 @@
         "Docs/media/cardiac-blood-mass-candidate-20260914/macmini/manifest-v3.json",
         "Docs/ORGAN_BLOOD_TISSUE_TRANSPORT_20260914.md",
         "config/organ-blood-tissue-transport.v1.json",
-        "Docs/media/organ-blood-tissue-transport-20260914/receipt-v1.json"
+        "Docs/media/organ-blood-tissue-transport-20260914/receipt-v1.json",
+        "Docs/ORGAN_TISSUE_EXCHANGE_CANDIDATE_20260914.md",
+        "config/organ-tissue-exchange-candidate.v1.json",
+        "Docs/media/organ-tissue-exchange-candidate-20260914/receipt-v1.json"
       ]
     },
     {
