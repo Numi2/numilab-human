@@ -25,3 +25,24 @@ zero penetration, and native device execution for the attempted step. It does
 not prove complete generalized equilibrium, sustained standing, recovery,
 walking, anatomical loading, calibrated material or activation data, blood to
 tissue transfer, or subject calibration.
+
+## Activation-1.0 sensitivity result
+
+The same current source and binary were rerun with `--muscle-activation 1.0`
+for one step and for 64 steps. The raw logs and `receipt-v2.json` are retained
+in the same media directory. This isolates recruitment sensitivity from the
+default activation-0.5 failure above:
+
+| run | steps | horizon | compiled residual RMS | peak acceleration | penetration | result |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| activation 0.5 | 1 | 12.5 µs | 34.0593514806 | 196.14956665 m/s² | 0 m | failed |
+| activation 1.0 | 1 | 12.5 µs | 0.0250606490784 | 0.486476838589 m/s² | 0 m | bounded release |
+| activation 1.0 | 64 | 0.8 ms | 0.0250606490784 | 0.489560902119 m/s² | 0 m | bounded release |
+
+The activation-1.0 run has six active supports of ten witnesses, no root
+assistance, zero penetration, and `compiled_stand_balanced=true`. It is still
+not a standing qualification: 64 base-clock steps cover only 0.8 ms, and the
+activation is a prescribed maximal value rather than a solved recruitment
+state. The result therefore narrows the immediate failure to the current
+activation/recruitment and coupled equilibrium path without making the
+biological or sustained-standing claim that the gate requires.
