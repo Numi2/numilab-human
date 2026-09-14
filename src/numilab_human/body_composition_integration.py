@@ -40,6 +40,9 @@ CARDIAC_WALL_SOURCE = ROOT / "Docs/media/cardiac-wall-anatomy-20260912/manifest.
 CARDIAC_WALL_CONFIG = ROOT / "config/cardiac-wall-rodero18.v1.json"
 TISSUE_CALIBRATION = ROOT / "Docs/media/tissue-integration-20260908/calibration-candidate.json"
 NATIVE_RELEASE = ROOT / "Docs/media/native-current-release-20260915/receipt-v5.json"
+NATIVE_COSTAL_TISSUE = ROOT / (
+    "Docs/media/tissue-integration-20260908/current-costal-binding-receipt-20260915.json"
+)
 
 
 def _require(condition: bool, message: str) -> None:
@@ -116,6 +119,7 @@ def _read_profile(path: Path) -> dict[str, Any]:
         "blood_transport", "tissue_exchange", "cardiac_blood",
         "cvsim21_blood_mass", "vessel_registration", "cardiac_wall_source",
         "cardiac_wall_config", "tissue_calibration", "native_current_release",
+        "native_costal_tissue",
     ], "integration profile input order differs")
     return value
 
@@ -156,6 +160,7 @@ def compile_candidate(
     cardiac_wall_config: Path = CARDIAC_WALL_CONFIG,
     tissue_calibration: Path = TISSUE_CALIBRATION,
     native_current_release: Path = NATIVE_RELEASE,
+    native_costal_tissue: Path = NATIVE_COSTAL_TISSUE,
 ) -> dict[str, Any]:
     profile = Path(profile)
     profile_document = _read_profile(profile)
@@ -178,6 +183,7 @@ def compile_candidate(
         "cardiac_wall_config": Path(cardiac_wall_config),
         "tissue_calibration": Path(tissue_calibration),
         "native_current_release": Path(native_current_release),
+        "native_costal_tissue": Path(native_costal_tissue),
     }
     documents: dict[str, dict[str, Any]] = {}
     hashes: dict[str, str] = {}
@@ -200,6 +206,7 @@ def compile_candidate(
         "cardiac_wall_config": "cardiac wall source config",
         "tissue_calibration": "tissue material calibration candidate",
         "native_current_release": "current native Human release requalification",
+        "native_costal_tissue": "current native costal tissue requalification",
     }
     for name, path in paths.items():
         documents[name], hashes[name] = _read(path, labels[name])
@@ -231,6 +238,9 @@ def compile_candidate(
     _schema(documents["native_current_release"],
             "numi.human.native-current-release-requalification.v5",
             labels["native_current_release"])
+    _schema(documents["native_costal_tissue"],
+            "HumanPack.costal-tissue-native-current-requalification.v1",
+            labels["native_costal_tissue"])
 
     native_release = documents["native_current_release"]
     native_source = native_release.get("source", {})
@@ -262,6 +272,24 @@ def compile_candidate(
              native_qualification.get("material_calibration") is False and
              native_qualification.get("subject_calibration") is False,
              "native current release boundary changed")
+
+    native_costal = documents["native_costal_tissue"]
+    native_costal_source = native_costal.get("source", {})
+    native_costal_results = native_costal.get("results", {})
+    native_costal_qualification = native_costal.get("qualification", {})
+    _require(native_costal.get("status") == "partial" and
+             native_costal_source.get("commit") == "c45fa9622f6c73b58febdc24a7115aecf3d7699f" and
+             native_costal_source.get("device") == "Mac mini M4 Pro" and
+             native_costal_results.get("cooked_nodes") == 13516 and
+             native_costal_results.get("cooked_tetrahedra") == 46278 and
+             native_costal_results.get("attachments") == 2871 and
+             native_costal_results.get("metal_replay_cases") == 8 and
+             native_costal_results.get("tissue_mass_kg") == 0.11369939548001184 and
+             native_costal_qualification.get("native_metal_replay") is True and
+             native_costal_qualification.get("mass_conservation") is True and
+             native_costal_qualification.get("whole_body_dynamic_mass_matrix") is False and
+             native_costal_qualification.get("experimental_material_calibration") is False,
+             "native current costal tissue evidence changed")
 
     organ = documents["organ_mass"]
     organ_counts = organ.get("counts", {})
@@ -790,6 +818,9 @@ def compile_candidate(
             "native_current_release_binary_sha256": native_source["binary_sha256"],
             "native_current_release_exact_clock": True,
             "native_current_release_temporal_drift_observed": True,
+            "native_costal_tissue_receipt_sha256": hashes["native_costal_tissue"],
+            "native_costal_tissue_source_commit": native_costal_source["commit"],
+            "native_costal_tissue_output_sha256": native_costal["output"]["sha256"],
             "transport_and_exchange_beds_share_clock": (
                 transport["clock"]["nanoseconds"] == exchange["clock"]["nanoseconds"]
             ),
@@ -875,6 +906,10 @@ def compile_candidate(
             "native_release_peak_acceleration_mps2": native_512["persistent_max_acceleration"],
             "native_release_zero_penetration": native_512["persistent_max_penetration_m"] == 0,
             "native_release_temporal_drift_observed": True,
+            "native_costal_tissue_replay_cases": native_costal_results["metal_replay_cases"],
+            "native_costal_tissue_mass_conserved": native_costal_qualification["mass_conservation"],
+            "native_costal_tissue_mass_kg": native_costal_results["tissue_mass_kg"],
+            "native_costal_tissue_whole_body_mass_owner": native_costal_qualification["whole_body_dynamic_mass_matrix"],
         },
         "qualification": {
             "source_identity_graph_bound": True,
@@ -886,6 +921,8 @@ def compile_candidate(
             "tissue_calibration_candidate_bound": True,
             "native_current_release_bound": True,
             "native_current_release_sustained_standing": False,
+            "native_costal_tissue_requalification_bound": True,
+            "native_costal_tissue_whole_body_mass_owner": False,
             "tissue_oxygen_exchange_candidate_bound": True,
             "muscle_activation_route_identity_bound": True,
             "muscle_surface_identity_bound": True,
@@ -923,7 +960,9 @@ def compile_candidate(
             "four-view native Apple M4 Pro visual admission. The current native "
             "12.5 microsecond Human release is also hash-bound through its 512-step "
             "M4 Pro receipt; its temporal drift remains visible and does not promote "
-            "sustained standing. It "
+            "sustained standing. The current costal tissue transaction is likewise "
+            "hash-bound to the same native source owner, but remains regional and "
+            "does not promote a whole-body mass owner. It "
             "proves source identity and nonduplicated ownership bookkeeping only. "
             "The exact bilateral foot source registration and six active support "
             "witness identities are bound as a contact handoff, but they are not "

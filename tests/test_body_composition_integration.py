@@ -55,6 +55,11 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
     assert result["runtime_evidence"]["native_release_completed_steps"] == 512
     assert result["runtime_evidence"]["native_release_peak_acceleration_mps2"] == pytest.approx(32.7379798889)
     assert result["runtime_evidence"]["native_release_temporal_drift_observed"]
+    assert result["qualification"]["native_costal_tissue_requalification_bound"]
+    assert not result["qualification"]["native_costal_tissue_whole_body_mass_owner"]
+    assert result["runtime_evidence"]["native_costal_tissue_replay_cases"] == 8
+    assert result["runtime_evidence"]["native_costal_tissue_mass_conserved"]
+    assert result["runtime_evidence"]["native_costal_tissue_mass_kg"] == pytest.approx(0.11369939548001184)
     assert not result["qualification"]["anatomical_supports_loading"]
     assert result["qualification"]["fat_source_absence_bound"]
     assert not result["qualification"]["integrated_human_qualification"]

@@ -2131,6 +2131,12 @@ def parser() -> argparse.ArgumentParser:
         "costal-binding", help="bind costal tissue to a pinned common Human frame for native mass partition",
     )
     add_costal_binding_arguments(costal_binding)
+    from .tissue_native_requalification import add_arguments as add_tissue_native_requalification_arguments
+    tissue_native_requalification = commands.add_parser(
+        "tissue-native-requalification",
+        help="bind the current Mac mini costal tissue transaction without promoting whole-body ownership",
+    )
+    add_tissue_native_requalification_arguments(tissue_native_requalification)
     from .physiology import add_arguments as add_physiology_arguments
     physiology = commands.add_parser(
         "physiology-compile", help="validate source-bound organ and circulation authoring and compile native indices",

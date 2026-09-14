@@ -104,3 +104,11 @@ temporal-drift evidence. This strengthens the source-to-runtime handoff for
 muscle recruitment while keeping sustained standing, anatomical loading,
 blood-to-tissue transfer, fat geometry, materials, and subject calibration
 unqualified.
+
+The current `v10` receipt also binds the current native costal tissue
+transaction from the same source owner. The physical M4 Pro replay covers
+13,516 cooked nodes, 46,278 tetrahedra, 2,871 attachments and eight replay
+cases, with a conservative `0.11369939548001184 kg` regional partition. This
+is a regional mass/rebase handoff only; it does not become the whole-body mass
+matrix or a calibrated material, thorax, blood-transfer, fat, standing,
+recovery, or walking owner.
