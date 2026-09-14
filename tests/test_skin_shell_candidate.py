@@ -15,6 +15,7 @@ def test_skin_shell_binds_source_geometry_without_promoting_mechanics() -> None:
     result = compile_candidate()
 
     assert result["status"] == "partial"
+    assert result["schema"] == "HumanPack.skin-shell-candidate.v2"
     assert result["source"]["bodyparts3d_member_id"] == "FJ2810"
     assert result["source"]["source_vertex_count"] == 102467
     assert result["source"]["outer_surface_vertex_count"] == 54949
@@ -22,6 +23,8 @@ def test_skin_shell_binds_source_geometry_without_promoting_mechanics() -> None:
     assert result["coverage"]["rest_pose_reconstruction_max_error_m"] < 2.0e-5
     assert result["qualification"]["source_skin_member_bound"]
     assert result["qualification"]["registered_visual_influences_bound"]
+    assert result["qualification"]["native_registration_fingerprint_bound"]
+    assert result["source"]["native_bone_registration_fingerprint32"] == "6a48e223"
     assert not result["qualification"]["skin_physical_volume"]
     assert not result["qualification"]["skin_material_calibration"]
     assert not result["qualification"]["fat_geometry"]

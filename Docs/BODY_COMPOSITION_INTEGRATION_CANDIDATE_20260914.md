@@ -21,7 +21,9 @@ checks that the current graph contains:
   without a surface binding;
 - the exact BodyParts3D `FJ2810` full-skin source and its registered visual
   outer shell (54,949 retained vertices, 109,183 triangles, 86 body
-  influences, and sub-micrometre rest-pose reconstruction);
+  influences, and sub-micrometre rest-pose reconstruction), plus the native
+  Apple M4 Pro four-view visual admission (29,661 / 25,803 / 18,454 / 30,666
+  positive shell pixels);
 - the same seven beds and clock in the bidirectional oxygen-exchange candidate;
 - the exact CVSim21 21-compartment aggregate blood owner, which conserves
   `5.459 kg` and `5.150 L` through 511 accepted and one rejected steps;
@@ -71,7 +73,8 @@ rows from disconnected source evidence to one reproducible integration
 boundary while preserving the completion gates for calibrated mechanics,
 anatomical blood/tissue transfer, standing, recovery, and walking.
 
-The immutable `v4` receipt additionally binds the full-skin shell candidate
-described above. It records the one-plug material fit and held-out observation
-counts and keeps `material_calibration` false; no fitted coefficient is
-assigned to the Human body or native Matter runtime.
+The immutable `v5` receipt additionally binds the native-compatible full-skin
+candidate and its four-view M4 Pro visual admission. It records the one-plug
+material fit and held-out observation counts and keeps `material_calibration`
+false; no fitted coefficient is assigned to the Human body or native Matter
+runtime.

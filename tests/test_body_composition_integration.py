@@ -39,6 +39,7 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
     assert result["qualification"]["cardiac_wall_source_identity_bound"]
     assert result["qualification"]["tissue_calibration_candidate_bound"]
     assert result["qualification"]["skin_shell_source_identity_bound"]
+    assert result["qualification"]["skin_shell_native_visual_admission"]
     assert result["qualification"]["fat_source_absence_bound"]
     assert not result["qualification"]["integrated_human_qualification"]
     assert result["identity_bindings"]["blood_members_subset_of_organ_members"]

@@ -21,11 +21,14 @@ from .physiology import canonical, read_json
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SCHEMA = "HumanPack.skin-shell-candidate.v1"
-PROFILE = ROOT / "config/skin-shell-candidate.v1.json"
-MANIFEST = ROOT / "Docs/media/skin-shell-candidate-20260914/bodyparts3d-myosim-skinned-shell.manifest.json"
-PAYLOAD = ROOT / "Docs/media/skin-shell-candidate-20260914/bodyparts3d-myosim-skinned-shell.nhskin"
+SCHEMA_V1 = "HumanPack.skin-shell-candidate.v1"
+SCHEMA_V2 = "HumanPack.skin-shell-candidate.v2"
+SCHEMA = SCHEMA_V2
+PROFILE = ROOT / "config/skin-shell-candidate.v2.json"
+MANIFEST = ROOT / "Docs/media/skin-shell-candidate-native-v2-20260914/bodyparts3d-myosim-skinned-shell-native.manifest.json"
+PAYLOAD = ROOT / "Docs/media/skin-shell-candidate-native-v2-20260914/bodyparts3d-myosim-skinned-shell-native.nhskin"
 REGISTRATION = ROOT / "Docs/media/skin-shell-candidate-20260914/registration.json"
+NATIVE_BONE_MANIFEST = ROOT / "Docs/media/numi-human-lower-joint-focus-v1/receipts/nhbones1.manifest.json"
 MYOSIM_ARCHIVE = ROOT / "Sources/myosim/myo_sim-33c89c2b.tar.gz"
 ISA_ARCHIVE = ROOT / "Sources/isa_BP3D_4.0_obj_99.zip"
 PARTOF_ARCHIVE = ROOT / "Sources/partof_BP3D_4.0_obj_99.zip"
@@ -68,15 +71,26 @@ def _read(path: Path, label: str) -> tuple[dict[str, Any], str]:
 def _profile(path: Path) -> dict[str, Any]:
     profile, _ = _read(path, "skin shell profile")
     _require(path.read_bytes() == canonical(profile) + b"\n", "skin shell profile is not canonical")
-    _require(profile.get("schema") == "numi.human.skin-shell-candidate.v1",
+    schema = profile.get("schema")
+    _require(schema in {"numi.human.skin-shell-candidate.v1", "numi.human.skin-shell-candidate.v2"},
              "unsupported skin shell profile schema")
-    _require(profile.get("id") == "bodyparts3d_full_skin_visual_shell_candidate",
-             "unsupported skin shell profile")
-    _require(set(profile) == {
+    expected_id = (
+        "bodyparts3d_full_skin_visual_shell_candidate"
+        if schema == "numi.human.skin-shell-candidate.v1"
+        else "bodyparts3d_full_skin_visual_shell_native_candidate"
+    )
+    _require(profile.get("id") == expected_id, "unsupported skin shell profile")
+    expected_fields = {
         "boundary", "expected_payload_abi", "expected_registration_anchor_count",
         "expected_skin_member_id", "id", "manifest", "payload", "registration", "schema",
-    }, "skin shell profile fields differ")
-    for key in ("manifest", "payload", "registration"):
+    }
+    if schema == "numi.human.skin-shell-candidate.v2":
+        expected_fields.update({"expected_native_registration_fingerprint32", "native_bone_manifest"})
+    _require(set(profile) == expected_fields, "skin shell profile fields differ")
+    path_fields = ["manifest", "payload", "registration"]
+    if schema == "numi.human.skin-shell-candidate.v2":
+        path_fields.append("native_bone_manifest")
+    for key in path_fields:
         value = profile.get(key)
         _require(isinstance(value, str) and value and not Path(value).is_absolute()
                  and ".." not in Path(value).parts and "\\" not in value,
@@ -85,6 +99,11 @@ def _profile(path: Path) -> dict[str, Any]:
              profile.get("expected_registration_anchor_count") == 185 and
              profile.get("expected_skin_member_id") == "FJ2810",
              "skin shell profile constants differ")
+    if schema == "numi.human.skin-shell-candidate.v2":
+        fingerprint = profile.get("expected_native_registration_fingerprint32")
+        _require(isinstance(fingerprint, str) and len(fingerprint) == 8 and
+                 all(character in "0123456789abcdef" for character in fingerprint),
+                 "native skin registration fingerprint is malformed")
     return profile
 
 
@@ -173,6 +192,35 @@ def compile_candidate(
     myosim_source_hash = _sha256(myosim_archive)
     _require(myosim_source_hash == source_doc.get("myosim_source_archive_sha256"),
              "skin shell MyoSim source archive differs")
+    native_registration_bound = False
+    native_bone_manifest_sha: str | None = None
+    native_bone_payload_sha: str | None = None
+    if profile_doc["schema"] == "numi.human.skin-shell-candidate.v2":
+        native_manifest_path = _safe_repo_path(
+            profile_doc["native_bone_manifest"], "native BodyParts3D bone manifest"
+        )
+        native_manifest, native_bone_manifest_sha = _read(
+            native_manifest_path, "native BodyParts3D bone manifest"
+        )
+        _require(native_manifest.get("schema") ==
+                 "numi.human.bodyparts3d-myosim-major-bone-visual-payload.v1",
+                 "unsupported native BodyParts3D bone manifest")
+        native_payload = native_manifest.get("payload")
+        _require(isinstance(native_payload, dict) and
+                 native_payload.get("magic") == "NHBONES1" and
+                 native_payload.get("payload_abi") == 2 and
+                 native_payload.get("bone_count") == 185 and
+                 native_payload.get("registration_fingerprint32") ==
+                 profile_doc["expected_native_registration_fingerprint32"] and
+                 native_payload.get("sha256") and
+                 native_payload.get("vertex_count") == 252167 and
+                 native_payload.get("index_count") == 1378566,
+                 "native BodyParts3D bone identity differs")
+        native_bone_payload_sha = native_payload["sha256"]
+        _require(payload_doc.get("registration_fingerprint32") ==
+                 profile_doc["expected_native_registration_fingerprint32"],
+                 "skin shell registration fingerprint is not compatible with native NHBONES1")
+        native_registration_bound = True
     skin = source_doc.get("skin")
     _require(isinstance(skin, dict) and skin.get("member_id") == profile_doc["expected_skin_member_id"] and
              skin.get("member") == SKIN_MEMBER and skin.get("archive") == isa_archive.name and
@@ -197,8 +245,8 @@ def compile_candidate(
              type(coverage.get("rest_pose_reconstruction_max_error_m")) in (int, float) and
              coverage["rest_pose_reconstruction_max_error_m"] <= 2.0e-5,
              "skin shell registration coverage is not qualified")
-    return {
-        "schema": SCHEMA,
+    result = {
+        "schema": SCHEMA_V2 if profile_doc["schema"] == "numi.human.skin-shell-candidate.v2" else SCHEMA_V1,
         "compiler": "numilab-human.skin-shell-candidate.1",
         "status": "partial",
         "subject": "one adult male source package",
@@ -242,6 +290,7 @@ def compile_candidate(
             "outer_surface_topology_selection_bound": True,
             "registered_visual_influences_bound": True,
             "rest_pose_reconstruction_bound": True,
+            "native_registration_fingerprint_bound": native_registration_bound,
             "skin_physical_volume": False,
             "skin_shell_thickness": False,
             "skin_material_calibration": False,
@@ -255,7 +304,10 @@ def compile_candidate(
         "boundary": (
             "The candidate binds the exact BodyParts3D FJ2810 full-skin source, "
             "its selected outer connected component, and four-body visual "
-            "influences to the source-bound MyoSim rest frame. It is a visual "
+            "influences to the source-bound MyoSim rest frame"
+            + (" and the native NHBONES1 registration fingerprint. "
+               if native_registration_bound else ". ")
+            + "It is a visual "
             "registration artifact only. No shell thickness, physical volume, "
             "mechanical mass, constitutive material, collision/contact, "
             "self-contact, muscle sliding, adipose domain, or subject-specific "
@@ -263,6 +315,16 @@ def compile_candidate(
             "inventory and must not be inferred from the skin shell."
         ),
     }
+    if native_registration_bound:
+        result["inputs"]["native_bone_manifest"] = {
+            "path": _relative(_safe_repo_path(profile_doc["native_bone_manifest"], "native BodyParts3D bone manifest")),
+            "sha256": native_bone_manifest_sha,
+        }
+        result["source"]["native_bone_registration_fingerprint32"] = profile_doc[
+            "expected_native_registration_fingerprint32"
+        ]
+        result["source"]["native_bone_payload_sha256"] = native_bone_payload_sha
+    return result
 
 
 def registration_path_name(path: Path) -> str:
@@ -289,7 +351,7 @@ def run(arguments: argparse.Namespace) -> int:
     )
     output = arguments.output.resolve()
     digest = _immutable_write(output, result)
-    print(json.dumps({"schema": SCHEMA, "output": str(output), "sha256": digest,
+    print(json.dumps({"schema": result["schema"], "output": str(output), "sha256": digest,
                       "status": result["status"], "coverage": result["coverage"],
                       "qualification": result["qualification"]}, sort_keys=True))
     return 0

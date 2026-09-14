@@ -25,7 +25,8 @@ PROFILE = ROOT / "config/body-composition-integration.v1.json"
 ORGAN_MASS = ROOT / "Docs/media/tissue-mass-candidate-20260914/receipt-v2.json"
 REGIONAL_TISSUE = ROOT / "Docs/media/regional-tissue-mass-candidate-20260914/receipt-v1.json"
 SURFACES = ROOT / "Docs/media/soft-tissue-surface-candidate-20260914/receipt-v1.json"
-SKIN_SHELL = ROOT / "Docs/media/skin-shell-candidate-20260914/receipt-v1.json"
+SKIN_SHELL = ROOT / "Docs/media/skin-shell-candidate-native-v2-20260914/receipt-v2.json"
+SKIN_NATIVE_VISUAL = ROOT / "Docs/media/skin-shell-native-visual-20260914/receipt-v1.json"
 ACTIVATION = ROOT / "Docs/media/activation-recruitment-candidate-20260914/receipt-v1.json"
 BLOOD_TRANSPORT = ROOT / "Docs/media/organ-blood-tissue-transport-20260914/receipt-v1.json"
 TISSUE_EXCHANGE = ROOT / "Docs/media/organ-tissue-exchange-candidate-20260914/receipt-v1.json"
@@ -103,7 +104,7 @@ def _read_profile(path: Path) -> dict[str, Any]:
         "cvsim21_mass_rejected_steps": 1,
     }, "integration profile runtime counts differ")
     _require(value.get("inputs") == [
-        "organ_mass", "regional_tissue", "muscle_surfaces", "skin_shell", "activation",
+        "organ_mass", "regional_tissue", "muscle_surfaces", "skin_shell", "skin_native_visual", "activation",
         "blood_transport", "tissue_exchange", "cardiac_blood",
         "cvsim21_blood_mass", "vessel_registration", "cardiac_wall_source",
         "cardiac_wall_config", "tissue_calibration",
@@ -133,6 +134,7 @@ def compile_candidate(
     regional_tissue: Path = REGIONAL_TISSUE,
     surfaces: Path = SURFACES,
     skin_shell: Path = SKIN_SHELL,
+    skin_native_visual: Path = SKIN_NATIVE_VISUAL,
     activation: Path = ACTIVATION,
     blood_transport: Path = BLOOD_TRANSPORT,
     tissue_exchange: Path = TISSUE_EXCHANGE,
@@ -150,6 +152,7 @@ def compile_candidate(
         "regional_tissue": Path(regional_tissue),
         "muscle_surfaces": Path(surfaces),
         "skin_shell": Path(skin_shell),
+        "skin_native_visual": Path(skin_native_visual),
         "activation": Path(activation),
         "blood_transport": Path(blood_transport),
         "tissue_exchange": Path(tissue_exchange),
@@ -167,6 +170,7 @@ def compile_candidate(
         "regional_tissue": "regional tissue candidate",
         "muscle_surfaces": "muscle surface candidate",
         "skin_shell": "skin shell candidate",
+        "skin_native_visual": "native skin shell visual receipt",
         "activation": "activation candidate",
         "blood_transport": "blood transport candidate",
         "tissue_exchange": "tissue exchange candidate",
@@ -183,7 +187,9 @@ def compile_candidate(
     _schema(documents["organ_mass"], "HumanPack.tissue-mass-composition-candidate.v1", labels["organ_mass"])
     _schema(documents["regional_tissue"], "HumanPack.regional-tissue-mass-candidate.v1", labels["regional_tissue"])
     _schema(documents["muscle_surfaces"], "HumanPack.soft-tissue-surface-candidate.v1", labels["muscle_surfaces"])
-    _schema(documents["skin_shell"], "HumanPack.skin-shell-candidate.v1", labels["skin_shell"])
+    _schema(documents["skin_shell"], "HumanPack.skin-shell-candidate.v2", labels["skin_shell"])
+    _schema(documents["skin_native_visual"], "HumanPack.skin-shell-native-visual.v1",
+            labels["skin_native_visual"])
     _schema(documents["activation"], "HumanPack.activation-recruitment-candidate.v1", labels["activation"])
     _schema(documents["blood_transport"], "HumanPack.organ-blood-tissue-transport-candidate.v1", labels["blood_transport"])
     _schema(documents["tissue_exchange"], "HumanPack.organ-tissue-exchange-candidate.v1", labels["tissue_exchange"])
@@ -282,10 +288,41 @@ def compile_candidate(
                  f"skin shell promoted {key}")
     _require(skin.get("qualification", {}).get("source_skin_member_bound") is True and
              skin.get("qualification", {}).get("registered_visual_influences_bound") is True and
+             skin.get("qualification", {}).get("native_registration_fingerprint_bound") is True and
              skin.get("qualification", {}).get("skin_physical_volume") is False and
              skin.get("qualification", {}).get("skin_material_calibration") is False and
              skin.get("qualification", {}).get("fat_geometry") is False,
              "skin shell qualification boundary changed")
+
+    skin_visual = documents["skin_native_visual"]
+    skin_visual_source = skin_visual.get("source", {})
+    skin_visual_capture = skin_visual.get("capture", {})
+    skin_visual_qualification = skin_visual.get("qualification", {})
+    _require(skin_visual.get("status") == "qualified" and
+             skin_visual_source.get("bodyparts3d_member_id") == "FJ2810" and
+             skin_visual_source.get("skin_payload_sha256") ==
+             skin.get("inputs", {}).get("payload", {}).get("sha256") and
+             skin_visual_source.get("native_registration_fingerprint32") ==
+             skin.get("source", {}).get("native_bone_registration_fingerprint32") and
+             skin_visual_source.get("core_body_count") == 157 and
+             skin_visual_source.get("rendered_skin_shell_count") == 1,
+             "native skin visual source identity changed")
+    visual_views = skin_visual_capture.get("views")
+    _require(skin_visual_capture.get("metal_pose_device") == "Apple M4 Pro" and
+             skin_visual_capture.get("renderer_device") == "Apple M4 Pro" and
+             skin_visual_capture.get("frame_dimension") == 512 and
+             isinstance(visual_views, list) and
+             [row.get("view") for row in visual_views] == ["front", "oblique", "side", "rear"] and
+             all(isinstance(row.get("skin_shell_pixels"), int) and row["skin_shell_pixels"] > 0
+                 for row in visual_views),
+             "native skin visual capture is incomplete")
+    _require(skin_visual_qualification.get("native_visual_admission") is True and
+             skin_visual_qualification.get("source_payload_hash_bound") is True and
+             skin_visual_qualification.get("four_view_capture") is True and
+             skin_visual_qualification.get("skin_physical_volume") is False and
+             skin_visual_qualification.get("skin_deformation") is False and
+             skin_visual_qualification.get("subject_calibration") is False,
+             "native skin visual qualification boundary changed")
 
     act = documents["activation"]
     act_counts = act.get("counts", {})
@@ -554,6 +591,7 @@ def compile_candidate(
             "blood_transport_member_ids_sha256": _identity_digest(set(blood_member_ids)),
             "muscle_tendon_surface_ids_sha256": _identity_digest(surface_ids),
             "skin_shell_member_ids_sha256": _identity_digest({skin_member_id}),
+            "skin_native_visual_receipt_sha256": hashes["skin_native_visual"],
             "vessel_surface_ids_sha256": _identity_digest(vessel_id_set),
             "blood_members_subset_of_organ_members": True,
             "vessel_members_subset_of_organ_members": True,
@@ -577,6 +615,10 @@ def compile_candidate(
             "cardiac_wall_geometric_volume_candidate_m3": cardiac_wall_volume,
             "skin_shell_outer_surface_vertex_count": skin_source["outer_surface_vertex_count"],
             "skin_shell_outer_surface_triangle_count": skin_source["outer_surface_triangle_count"],
+            "skin_native_visual_view_count": len(visual_views),
+            "skin_native_visual_positive_pixel_views": sum(
+                1 for row in visual_views if row.get("skin_shell_pixels", 0) > 0
+            ),
             "tissue_calibration_training_observations": training_fit["observations"],
             "tissue_calibration_held_out_observations": held_out_fit["observations"],
             "sum_is_mechanical_body_mass": False,
@@ -618,6 +660,9 @@ def compile_candidate(
             "skin_shell_outer_surface_vertices": skin_source["outer_surface_vertex_count"],
             "skin_shell_outer_surface_triangles": skin_source["outer_surface_triangle_count"],
             "skin_shell_rest_pose_reconstruction_max_error_m": skin_counts["rest_pose_reconstruction_max_error_m"],
+            "skin_native_visual_admission": skin_visual_qualification["native_visual_admission"],
+            "skin_native_visual_frame_dimension": skin_visual_capture["frame_dimension"],
+            "skin_native_visual_positive_pixel_views": len(visual_views),
             "tissue_calibration_training_observations": training_fit["observations"],
             "tissue_calibration_held_out_observations": held_out_fit["observations"],
             "tissue_calibration_held_out_force_nrmse": held_out_fit["force_nrmse_relative_to_measured_rms"],
@@ -634,6 +679,7 @@ def compile_candidate(
             "muscle_activation_route_identity_bound": True,
             "muscle_surface_identity_bound": True,
             "skin_shell_source_identity_bound": True,
+            "skin_shell_native_visual_admission": True,
             "fat_source_absence_bound": True,
             "cross_domain_owner_nonduplication_checked": True,
             "anatomical_physical_volume_owners": False,
@@ -655,7 +701,8 @@ def compile_candidate(
             "exchange, cardiac blood budget, 24-region Rodero cardiac-wall "
             "source identity, one-plug held-out tissue calibration candidate, "
             "muscle route activation, NHTISS4 surface identity, and the exact "
-            "BodyParts3D FJ2810 full-skin visual shell identity. It "
+            "BodyParts3D FJ2810 full-skin visual shell identity and its "
+            "four-view native Apple M4 Pro visual admission. It "
             "proves source identity and nonduplicated ownership bookkeeping only. "
             "The cardiac wall has no physical-volume or mechanical owner here; its "
             "imported boundary defects, unloaded reference, closure/material data, "
