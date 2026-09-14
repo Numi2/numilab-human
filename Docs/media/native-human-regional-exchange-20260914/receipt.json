@@ -1,0 +1,60 @@
+{
+  "schema": "HumanPack.native-human-regional-exchange.v1",
+  "compiler": "numilab-human.matter.native-regional-exchange.1",
+  "source": {
+    "model_id": "cvsim21_supine_continuous_fixed_rate_upstream_equation",
+    "schema": "HumanPack.physiology-native.v3",
+    "fixture": "matter/tools/fixtures/cvsim21.native.v3.json",
+    "source_graph_sha256": "b118d58230a3f2766108d05501a3ac9b910124ef823567a7e5fe23f6df0b4f67",
+    "authored_graph_sha256": "0b39959800fa666671ed7f8ca598564cc58a0207179701e255e967484f40a9a0",
+    "native_source_commit": "260ee02ad347a3cfb2281d6333157d084f5ba17b"
+  },
+  "host": {
+    "machine": "macmini",
+    "model": "Mac mini",
+    "chip": "Apple M4 Pro",
+    "binary_sha256": "dd4663054a9fc52b52dfff082a8afa1d7895180ac4527fddcaccaf8d205e4fa0",
+    "native_log_sha256": "b1bb71ad008dc2e74b117c5a9d1838962bf5a8aca042fb5ea2954463e3149e8a"
+  },
+  "topology": {
+    "source_compartment_count": 21,
+    "source_connection_count": 24,
+    "regional_bed_count": 7,
+    "regional_beds": [
+      "right_lung", "left_lung", "right_kidney", "left_kidney",
+      "stomach", "pancreas", "liver"
+    ]
+  },
+  "clock": {
+    "timestep_seconds": 0.0000125,
+    "timestep_nanoseconds": 12500,
+    "attempted_steps": 512,
+    "accepted_steps_environment_0": 511,
+    "accepted_steps_environment_1": 512,
+    "rejected_step_environment_0": 37
+  },
+  "conservation": {
+    "blood_density_candidate_kg_per_m3": 1060.0,
+    "blood_density_provenance": "engineering_candidate_unresolved",
+    "maximum_relative_volume_residual": 5.711629397e-07,
+    "maximum_relative_blood_mass_residual": 5.711629397e-07,
+    "maximum_relative_oxygen_residual": 1.057184875e-06,
+    "rejected_candidate_state_neutral": true,
+    "bitwise_replay": true
+  },
+  "qualification": {
+    "source_graph_identity_retained": true,
+    "regional_blood_transport_bound": true,
+    "oxygen_amount_exchange_executed": true,
+    "accepted_step_conservation": true,
+    "exact_clock": true,
+    "anatomical_vessel_lumen": false,
+    "physical_tissue_volume_owner": false,
+    "mechanical_blood_mass_owner": false,
+    "organ_mechanics": false,
+    "material_calibration": false,
+    "subject_calibration": false,
+    "standing_walking": false
+  },
+  "boundary": "This is native source-graph amount and rollback evidence. The seven organ beds use explicit engineering candidate tissue volumes, a 1060 kg/m3 unresolved blood-density candidate, and an amount-exchange coefficient. No vessel tube/lumen, capillary, physical tissue-volume owner, mechanical blood-mass owner, organ mechanics, material calibration, subject calibration, standing, or walking claim is made."
+}

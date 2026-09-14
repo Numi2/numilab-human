@@ -386,3 +386,21 @@ its file SHA-256 is
 This remains source integration evidence only; cardiac mechanics, blood/lumen
 ownership, material resolution, subject calibration, force convergence,
 standing, recovery, and walking remain open.
+
+The physical-M4 [native regional organ exchange admission](NATIVE_REGIONAL_ORGAN_EXCHANGE_20260914.md)
+now executes the 21-compartment CVSim21 source graph with seven source-labeled
+organ beds and bidirectional oxygen amount exchange at the exact `12,500 ns`
+clock. It accepts 511 of 512 candidates in one environment, deliberately
+rejects candidate 37 without changing accepted state, conserves volume and the
+derived unresolved `1060 kg/m3` blood-mass candidate, and replays bitwise. It
+is a native amount/conservation subgate; vessel lumen/capillary, physical
+tissue-volume, mechanical blood-mass, organ mechanics, material, subject
+calibration, force-convergence, standing, recovery, and walking targets remain
+open. The immutable receipt is
+[`Docs/media/native-human-regional-exchange-20260914/receipt.json`](media/native-human-regional-exchange-20260914/receipt.json)
+with SHA-256 `d30b816d5efb1a0de995837a9cc2d242fba8817a623e60b81f6039b830a8782c`.
+The corresponding execution snapshot is
+[`Docs/media/gap-execution-20260914/report-native-regional-organ-exchange-20260914.json`](media/gap-execution-20260914/report-native-regional-organ-exchange-20260914.json),
+with file SHA-256 `8614442a645b42ac7442af83e1480cf18e1b50f2e96584fb5799893be973b448`
+and report content SHA-256
+`1e546dbca644be344f8f86b3e8ae167222210a529f325f01c448a9743fd27f80`.

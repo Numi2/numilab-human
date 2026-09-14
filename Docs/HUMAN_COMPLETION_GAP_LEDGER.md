@@ -402,3 +402,14 @@ now recomputes the corrected candidate on the physical Mac mini, binds source
 and body-link hashes, and rejects a tampered mass row. It remains a
 source-surface proxy; anatomical lumen/wall mechanics, pressure-driven transfer,
 tissue exchange, calibrated density, and subject calibration remain open.
+
+The [native regional organ exchange admission](NATIVE_REGIONAL_ORGAN_EXCHANGE_20260914.md)
+now executes the hash-bound CVSim21 source graph on the physical Apple M4 Pro
+with seven source-labeled lung, kidney, stomach, pancreas, and liver beds. It
+advects the 21-compartment blood state, performs bidirectional oxygen amount
+exchange, rejects one candidate at the exact `12.5 us` clock, conserves volume,
+the derived `1060 kg/m3` blood-mass candidate, and oxygen amount, and replays
+bitwise. This is a native amount/conservation subgate only: the explicit density
+and tissue volumes remain engineering candidates, and vessel lumen/capillary,
+physical tissue-volume, mechanical blood-mass, organ mechanics, material,
+subject-calibration, standing, and walking gates remain open.
