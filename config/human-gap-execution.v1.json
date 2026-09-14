@@ -450,6 +450,17 @@
           ]
         },
         {
+          "id": "organs.regional_mass_partition",
+          "category": "engineering",
+          "action": "Bind the native source-bound costal tissue mass partition and COM-frame rebase to the one-adult-male anatomy record while retaining whole-body, fat and skeletal-muscle ownership boundaries.",
+          "acceptance": [
+            "The fourteen-region body-20 partition conserves its published source and residual mass within the pinned serialization tolerance, matches the NHTBIND payload, and passes the recorded Apple M4 Pro replay; production mechanical ownership, whole-body dynamic mass, calibrated materials and loaded thorax remain false."
+          ],
+          "depends_on": [
+            "organs.mass_composition"
+          ]
+        },
+        {
           "id": "cardiac.boundaries",
           "category": "engineering",
           "action": "Implement conservative wall pressure work/tangents, spatial normal supports and artificial-structure ownership.",
@@ -523,7 +534,8 @@
         "Docs/ORGAN_VESSEL_BODY_LINK_20260913.md",
         "Docs/COSTAL_TISSUE_REQUALIFICATION_20260913.md",
         "Docs/ORGAN_BLOOD_OWNERSHIP_LEDGER_20260913.md",
-        "Docs/TISSUE_MASS_CANDIDATE_20260914.md"
+        "Docs/TISSUE_MASS_CANDIDATE_20260914.md",
+        "Docs/REGIONAL_TISSUE_MASS_CANDIDATE_20260914.md"
       ]
     },
     {
