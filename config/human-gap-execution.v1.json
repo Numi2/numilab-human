@@ -425,6 +425,17 @@
           "depends_on": []
         },
         {
+          "id": "organs.mass_composition",
+          "category": "engineering",
+          "depends_on": [
+            "organs.data"
+          ],
+          "action": "Compile source organ surface moments into a disjoint tissue-mass composition candidate while retaining explicit blood, vessel, skeletal-muscle, fat, tendon, fascia and skin ownership boundaries.",
+          "acceptance": [
+            "All 18 source regions and 378 unique members are represented; shared seam members are rejected from double counting; candidate zeroth/first/second moments are hash-bound and no physical mechanical owner is promoted."
+          ]
+        },
+        {
           "id": "cardiac.boundaries",
           "category": "engineering",
           "action": "Implement conservative wall pressure work/tangents, spatial normal supports and artificial-structure ownership.",
@@ -457,7 +468,8 @@
           "depends_on": [
             "organs.data",
             "contact.register",
-            "cardiac.loading"
+            "cardiac.loading",
+            "organs.mass_composition"
           ]
         },
         {
@@ -496,7 +508,8 @@
         "Docs/NATIVE_VESSEL_REGISTRATION_20260913.md",
         "Docs/ORGAN_VESSEL_BODY_LINK_20260913.md",
         "Docs/COSTAL_TISSUE_REQUALIFICATION_20260913.md",
-        "Docs/ORGAN_BLOOD_OWNERSHIP_LEDGER_20260913.md"
+        "Docs/ORGAN_BLOOD_OWNERSHIP_LEDGER_20260913.md",
+        "Docs/TISSUE_MASS_CANDIDATE_20260914.md"
       ]
     },
     {

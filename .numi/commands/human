@@ -9,6 +9,16 @@ fi
 command_directory=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
 repository_root=$(CDPATH= cd -- "$command_directory/../.." && pwd -P)
 
+if [ "${1:-}" = "tissue-mass-candidate" ]; then
+    shift
+    if [ -n "${PYTHONPATH:-}" ]; then
+        export PYTHONPATH="$repository_root/src:$PYTHONPATH"
+    else
+        export PYTHONPATH="$repository_root/src"
+    fi
+    exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.tissue_mass_candidate "$@"
+fi
+
 # Resolve a source body to the exact MyoSim actuator rows whose compiled routes
 # cross it, then add the requested activation to those rows over the compiled
 # full-body posture baseline. The native Apple Metal runtime evaluates all 416
@@ -216,6 +226,8 @@ if [ "${1:-}" = "stand" ]; then
         printf '%s\n' "build target metalrobo_numilab_human_myosim_visual_probe in $runtime_root" >&2
         exit 2
     fi
+    # Standing uses a bounded recruitment candidate; activation 1.0 is a
+    # diagnostic saturation state, not a prepared equilibrium.
     set -- "$probe" \
         "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
         "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
@@ -238,7 +250,7 @@ if [ "${1:-}" = "stand" ]; then
         --support-stance-contact 7 \
         --muscle-step-seconds "$timestep" \
         --muscle-step-count "$steps" \
-        --muscle-activation 1 \
+        --muscle-activation 0.5 \
         --persistent-metal-stand \
         --stand-root-assistance \
         --stand-remove-assistance \
