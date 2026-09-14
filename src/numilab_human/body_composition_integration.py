@@ -31,6 +31,8 @@ TISSUE_EXCHANGE = ROOT / "Docs/media/organ-tissue-exchange-candidate-20260914/re
 CARDIAC_BLOOD = ROOT / "Docs/media/cardiac-blood-mass-candidate-20260914/receipt.json"
 CVSIM21_BLOOD_MASS = ROOT / "Docs/media/cvsim21-blood-mass-step-20260914/receipt-exact-clock.json"
 VESSEL_REGISTRATION = ROOT / "Docs/media/organ-vessel-registration-corrected-20260913/registration.json"
+CARDIAC_WALL_SOURCE = ROOT / "Docs/media/cardiac-wall-anatomy-20260912/manifest.json"
+CARDIAC_WALL_CONFIG = ROOT / "config/cardiac-wall-rodero18.v1.json"
 
 
 def _require(condition: bool, message: str) -> None:
@@ -84,6 +86,7 @@ def _read_profile(path: Path) -> dict[str, Any]:
     _require(value.get("clock_nanoseconds") == 12500,
              "integration profile clock differs")
     _require(value.get("expected_source_member_layers") == {
+        "cardiac_wall_region_identity": 24,
         "organ_surface_candidates": 378,
         "regional_blood_transport": 329,
         "muscle_tendon_surface_identity": 150,
@@ -98,7 +101,8 @@ def _read_profile(path: Path) -> dict[str, Any]:
     _require(value.get("inputs") == [
         "organ_mass", "regional_tissue", "muscle_surfaces", "activation",
         "blood_transport", "tissue_exchange", "cardiac_blood",
-        "cvsim21_blood_mass", "vessel_registration",
+        "cvsim21_blood_mass", "vessel_registration", "cardiac_wall_source",
+        "cardiac_wall_config",
     ], "integration profile input order differs")
     return value
 
@@ -130,6 +134,8 @@ def compile_candidate(
     cardiac_blood: Path = CARDIAC_BLOOD,
     cvsim21_blood_mass: Path = CVSIM21_BLOOD_MASS,
     vessel_registration: Path = VESSEL_REGISTRATION,
+    cardiac_wall_source: Path = CARDIAC_WALL_SOURCE,
+    cardiac_wall_config: Path = CARDIAC_WALL_CONFIG,
 ) -> dict[str, Any]:
     profile = Path(profile)
     profile_document = _read_profile(profile)
@@ -143,6 +149,8 @@ def compile_candidate(
         "cardiac_blood": Path(cardiac_blood),
         "cvsim21_blood_mass": Path(cvsim21_blood_mass),
         "vessel_registration": Path(vessel_registration),
+        "cardiac_wall_source": Path(cardiac_wall_source),
+        "cardiac_wall_config": Path(cardiac_wall_config),
     }
     documents: dict[str, dict[str, Any]] = {}
     hashes: dict[str, str] = {}
@@ -156,6 +164,8 @@ def compile_candidate(
         "cardiac_blood": "cardiac blood candidate",
         "cvsim21_blood_mass": "CVSim21 blood mass receipt",
         "vessel_registration": "vessel registration receipt",
+        "cardiac_wall_source": "cardiac wall source manifest",
+        "cardiac_wall_config": "cardiac wall source config",
     }
     for name, path in paths.items():
         documents[name], hashes[name] = _read(path, labels[name])
@@ -167,6 +177,10 @@ def compile_candidate(
     _schema(documents["blood_transport"], "HumanPack.organ-blood-tissue-transport-candidate.v1", labels["blood_transport"])
     _schema(documents["tissue_exchange"], "HumanPack.organ-tissue-exchange-candidate.v1", labels["tissue_exchange"])
     _schema(documents["cardiac_blood"], "HumanPack.cardiac-blood-mass-candidate.v1", labels["cardiac_blood"])
+    _schema(documents["cardiac_wall_source"], "HumanPack.cardiac-wall-source-asset.v1",
+            labels["cardiac_wall_source"])
+    _schema(documents["cardiac_wall_config"], "HumanPack.cardiac-wall-rodero18-source.v1",
+            labels["cardiac_wall_config"])
 
     organ = documents["organ_mass"]
     organ_counts = organ.get("counts", {})
@@ -299,6 +313,56 @@ def compile_candidate(
     _require(isinstance(cardiac_mass, (int, float)) and cardiac_mass > 0.0,
              "cardiac blood candidate mass is missing")
 
+    cardiac_wall = documents["cardiac_wall_source"]
+    cardiac_wall_config = documents["cardiac_wall_config"]
+    _require(cardiac_wall.get("source_config_sha256") == hashes["cardiac_wall_config"],
+             "cardiac wall manifest does not bind the source config hash")
+    _require(cardiac_wall.get("source_config") == cardiac_wall_config,
+             "cardiac wall manifest and source config differ")
+    _require(cardiac_wall_config.get("id") == "rodero_2021_ct_case18_cardiac_wall",
+             "unsupported cardiac wall source")
+    cardiac_labels = cardiac_wall_config.get("labels")
+    _require(isinstance(cardiac_labels, list) and len(cardiac_labels) == 24,
+             "cardiac wall label inventory is incomplete")
+    cardiac_label_ids = [row.get("id") for row in cardiac_labels]
+    _require(cardiac_label_ids == list(range(1, 25)) and
+             all(isinstance(row.get("anatomical_structure"), str) and
+                 row.get("anatomical_structure") for row in cardiac_labels),
+             "cardiac wall label identity is invalid")
+    cardiac_wall_mesh = cardiac_wall_config.get("mesh", {})
+    _require(cardiac_wall_mesh.get("points") == 300965 and
+             cardiac_wall_mesh.get("cells") == 1470083 and
+             cardiac_wall_mesh.get("cell_type") == 10 and
+             cardiac_wall_mesh.get("nodes_per_cell") == 4,
+             "cardiac wall mesh identity changed")
+    cardiac_topology = cardiac_wall.get("topology", {})
+    regional_cell_counts = cardiac_topology.get("regional_cell_counts", {})
+    regional_volumes = cardiac_topology.get("regional_geometric_volume_m3", {})
+    _require(set(regional_cell_counts) == {str(index) for index in range(1, 25)} and
+             sum(regional_cell_counts.values()) == cardiac_wall_mesh["cells"] and
+             set(regional_volumes) == set(regional_cell_counts),
+             "cardiac wall regional topology is incomplete")
+    _require(cardiac_topology.get("positive_oriented_tetrahedra") == cardiac_wall_mesh["cells"] and
+             cardiac_topology.get("source_negative_orientation_count") == 0 and
+             cardiac_topology.get("blood_volume_or_mass_assigned") is False and
+             cardiac_topology.get("source_surface_edits") is False,
+             "cardiac wall source orientation or ownership boundary changed")
+    _require(all(type(value) in (int, float) and math.isfinite(float(value)) and float(value) > 0.0
+                 for value in regional_volumes.values()),
+             "cardiac wall regional geometry is invalid")
+    cardiac_wall_qualification = cardiac_wall_config.get("qualification", {})
+    _require(cardiac_wall_qualification.get("native_anatomical_coupling_qualified") is False and
+             cardiac_wall_qualification.get("native_source_reproduction_qualified") is False and
+             cardiac_wall_qualification.get("subject_specific_material_calibration") is False and
+             cardiac_wall_qualification.get("subject_specific_pressure_volume_calibration") is False and
+             cardiac_wall_qualification.get("whole_human_qualified") is False,
+             "cardiac wall source promoted a mechanics or calibration owner")
+    cardiac_wall_ids = {
+        f"{cardiac_wall_config['id']}:label:{int(label_id)}"
+        for label_id in cardiac_label_ids
+    }
+    cardiac_wall_volume = math.fsum(float(value) for value in regional_volumes.values())
+
     cvsim21 = documents["cvsim21_blood_mass"]
     _require(cvsim21.get("model_id") == "cvsim21_supine_continuous_fixed_rate_upstream_equation" and
              cvsim21.get("attempted_steps") == 512 and
@@ -374,6 +438,7 @@ def compile_candidate(
     _require(len(surface_ids) == 150 and not surface_ids.intersection(organ_id_set),
              "muscle/tendon visual surfaces overlap organ member ownership")
     source_member_layers = {
+        "cardiac_wall_region_identity": len(cardiac_wall_ids),
         "organ_surface_candidates": len(organ_id_set),
         "regional_blood_transport": len(set(blood_member_ids)),
         "muscle_tendon_surface_identity": len(surface_ids),
@@ -394,6 +459,7 @@ def compile_candidate(
         },
         "source_member_layers": source_member_layers,
         "identity_bindings": {
+            "cardiac_wall_region_ids_sha256": _identity_digest(cardiac_wall_ids),
             "organ_member_ids_sha256": _identity_digest(organ_id_set),
             "blood_transport_member_ids_sha256": _identity_digest(set(blood_member_ids)),
             "muscle_tendon_surface_ids_sha256": _identity_digest(surface_ids),
@@ -402,6 +468,9 @@ def compile_candidate(
             "vessel_members_subset_of_organ_members": True,
             "vessel_members_disjoint_from_blood_members": True,
             "surface_ids_disjoint_from_organ_members": True,
+            "cardiac_wall_manifest_config_hash_matches": (
+                cardiac_wall["source_config_sha256"] == hashes["cardiac_wall_config"]
+            ),
             "transport_and_exchange_beds_share_clock": (
                 transport["clock"]["nanoseconds"] == exchange["clock"]["nanoseconds"]
             ),
@@ -412,6 +481,7 @@ def compile_candidate(
             "cardiac_hydraulic_blood_candidate_mass_kg": cardiac_mass,
             "cvsim21_aggregate_blood_mass_kg": cvsim21_mass,
             "registered_vessel_surface_integral_volume_m3": vessel_surface_volume,
+            "cardiac_wall_geometric_volume_candidate_m3": cardiac_wall_volume,
             "sum_is_mechanical_body_mass": False,
         },
         "ownership": {
@@ -422,6 +492,7 @@ def compile_candidate(
             "fat_volume_and_mass_owner_count": 0,
             "skin_volume_and_mass_owner_count": 0,
             "tendon_fascia_volume_and_mass_owner_count": 0,
+            "cardiac_wall_physical_volume_owner_count": 0,
             "whole_body_dynamic_mass_matrix_owner_count": 0,
             "cross_domain_physical_owner_duplicates": 0,
         },
@@ -442,6 +513,9 @@ def compile_candidate(
             "muscle_activation_routes": act_counts["source_routes"],
             "muscle_surface_routes_with_binding": surface_counts["routes_with_surface_binding"],
             "muscle_surface_routes_without_binding": surface_counts["routes_without_surface_binding"],
+            "cardiac_wall_tetrahedra": cardiac_wall_mesh["cells"],
+            "cardiac_wall_positive_orientation": True,
+            "cardiac_wall_regional_geometry_volume_m3": cardiac_wall_volume,
         },
         "qualification": {
             "source_identity_graph_bound": True,
@@ -449,6 +523,7 @@ def compile_candidate(
             "regional_blood_transport_bound": True,
             "source_aggregate_blood_mass_bound": True,
             "source_vessel_registration_bound": True,
+            "cardiac_wall_source_identity_bound": True,
             "tissue_oxygen_exchange_candidate_bound": True,
             "muscle_activation_route_identity_bound": True,
             "muscle_surface_identity_bound": True,
@@ -460,6 +535,7 @@ def compile_candidate(
             "skin_geometry_and_mass": False,
             "anatomical_blood_mass_transfer": False,
             "organ_mechanics": False,
+            "cardiac_wall_native_mechanics": False,
             "material_calibration": False,
             "subject_calibration": False,
             "integrated_human_qualification": False,
@@ -468,13 +544,17 @@ def compile_candidate(
             "This record joins source organ candidate moments, regional tissue "
             "mass, the exact-clock CVSim21 aggregate blood mass, regional blood "
             "transport, six-vessel source/world registration, tissue oxygen "
-            "exchange, cardiac blood budget, muscle route activation and "
-            "NHTISS4 surface identity. It "
+            "exchange, cardiac blood budget, 24-region Rodero cardiac-wall "
+            "source identity, muscle route activation and NHTISS4 surface "
+            "identity. It "
             "proves source identity and nonduplicated ownership bookkeeping only. "
-            "Fat and skeletal-muscle tissue volumes, anatomical blood/lumen and "
-            "organ mechanics, calibrated materials, subject calibration, and the "
-            "whole-body mechanical owner remain unresolved. Candidate mass budgets "
-            "must not be added to the rigid-body dynamics."
+            "The cardiac wall has no physical-volume or mechanical owner here; its "
+            "imported boundary defects, unloaded reference, closure/material data, "
+            "pressure ports and subject calibration remain open. Fat and "
+            "skeletal-muscle tissue volumes, anatomical blood/lumen and organ "
+            "mechanics, calibrated materials, subject calibration, and the whole-body "
+            "mechanical owner remain unresolved. Candidate mass budgets must not be "
+            "added to the rigid-body dynamics."
         ),
     }
 
@@ -504,6 +584,8 @@ def run(arguments: argparse.Namespace) -> int:
         cardiac_blood=arguments.cardiac_blood,
         cvsim21_blood_mass=arguments.cvsim21_blood_mass,
         vessel_registration=arguments.vessel_registration,
+        cardiac_wall_source=arguments.cardiac_wall_source,
+        cardiac_wall_config=arguments.cardiac_wall_config,
     )
     output = arguments.output.resolve()
     digest = _immutable_write(output, result)
@@ -529,6 +611,8 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--cardiac-blood", type=Path, default=CARDIAC_BLOOD)
     parser.add_argument("--cvsim21-blood-mass", type=Path, default=CVSIM21_BLOOD_MASS)
     parser.add_argument("--vessel-registration", type=Path, default=VESSEL_REGISTRATION)
+    parser.add_argument("--cardiac-wall-source", type=Path, default=CARDIAC_WALL_SOURCE)
+    parser.add_argument("--cardiac-wall-config", type=Path, default=CARDIAC_WALL_CONFIG)
     parser.add_argument("--output", type=Path, required=True)
     parser.set_defaults(handler=run)
 

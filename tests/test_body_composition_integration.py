@@ -18,6 +18,7 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
 
     assert result["status"] == "partial"
     assert result["source_member_layers"] == {
+        "cardiac_wall_region_identity": 24,
         "organ_surface_candidates": 378,
         "regional_blood_transport": 329,
         "muscle_tendon_surface_identity": 150,
@@ -33,11 +34,13 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
     assert result["qualification"]["cross_domain_owner_nonduplication_checked"]
     assert result["qualification"]["source_aggregate_blood_mass_bound"]
     assert result["qualification"]["source_vessel_registration_bound"]
+    assert result["qualification"]["cardiac_wall_source_identity_bound"]
     assert not result["qualification"]["integrated_human_qualification"]
     assert result["identity_bindings"]["blood_members_subset_of_organ_members"]
     assert result["identity_bindings"]["surface_ids_disjoint_from_organ_members"]
     assert result["identity_bindings"]["vessel_members_subset_of_organ_members"]
     assert result["identity_bindings"]["vessel_members_disjoint_from_blood_members"]
+    assert result["identity_bindings"]["cardiac_wall_manifest_config_hash_matches"]
     assert result["identity_bindings"]["transport_and_exchange_beds_share_clock"]
     assert all(value == 0 for value in result["ownership"].values())
 

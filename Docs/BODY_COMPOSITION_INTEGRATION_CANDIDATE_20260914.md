@@ -25,6 +25,10 @@ checks that the current graph contains:
 - six corrected source/world vessel registrations whose source surface-volume
   candidates are inside the organ inventory and disjoint from the regional
   blood-bed member partition;
+- the Rodero case-18 cardiac-wall manifest and source config, binding 24
+  positive-oriented region identities across the 1,470,083-cell source mesh
+  while retaining imported boundary defects, closure faces, unloaded-reference,
+  density, pressure-port, native-mechanics, and subject-calibration gaps;
 - both cardiac geometry conventions bound to the common `0.39974235600733804
   kg` hydraulic blood-mass budget without selecting a physical owner.
 
@@ -43,6 +47,12 @@ its explicit density remains an engineering candidate and it is not promoted
 to an anatomical vessel/lumen, tissue, or rigid-body mechanical owner.
 The six vessel rows remain registered source surfaces: they have no lumen area,
 tubular field, calibrated density, blood-mass owner, or tissue-exchange owner.
+
+The cardiac-wall rows are source labels and geometric-volume candidates only.
+The manifest and source config are required to carry the same SHA-256, and the
+source mesh is recorded as 24 labels, 300,965 points, 1,470,083 tetrahedra,
+and zero negative orientations. The imported wall does not acquire a physical
+volume or mechanical owner from this join.
 
 The candidate therefore advances the organ, systemic-physiology, and muscle
 rows from disconnected source evidence to one reproducible integration

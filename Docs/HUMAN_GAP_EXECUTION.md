@@ -350,3 +350,20 @@ Its file SHA-256 is `6d65c2a89974082e10b8529b82381154e301a9c28ae345daf98e74f846a
 and its report content SHA-256 is `a532ab50897fc4f85b05658ff09f8247540fd6d9d9e6b2e83c67c7b95a2532b2`.
 The bound body-composition receipt SHA-256 is
 `eb74baeccb3a7e7c6939ca39026972d4de0350475dabb0032ad275175a011db4`.
+
+The follow-up [body composition integration candidate](BODY_COMPOSITION_INTEGRATION_CANDIDATE_20260914.md)
+retains that receipt as `v1` and publishes immutable `v2`, adding the
+hash-consistent Rodero case-18 cardiac-wall source/config pair: 24 labeled
+regions, 300,965 points, 1,470,083 positive-oriented tetrahedra, and an
+explicit zero-owner mechanics boundary. The receipt is
+[`Docs/media/body-composition-integration-20260914/receipt-v2.json`](media/body-composition-integration-20260914/receipt-v2.json),
+with SHA-256
+`0d845d3819d0127c91fb3a7b8d99088b819af17542915174b5b72cb7d71a3a56`.
+The corresponding registry snapshot is
+[`Docs/media/gap-execution-20260914/report-body-composition-integration-v3-20260914.json`](media/gap-execution-20260914/report-body-composition-integration-v3-20260914.json);
+its file SHA-256 is
+`bdb2b93c951849e1048476b27e1799db093f8dc3b9848802cac62d9b3c198105` and its report SHA-256 is
+`ab4b5518b9ebae3fac909451018833028f7c43d9b13474890324c0cc470fa413`.
+This remains source integration evidence only; cardiac mechanics, blood/lumen
+ownership, material resolution, subject calibration, force convergence,
+standing, recovery, and walking remain open.
