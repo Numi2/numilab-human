@@ -335,3 +335,18 @@ complete static per-DoF equilibrium certificate, but the exact-clock dynamic
 release remains divergent, so force convergence, anatomical loading, activation
 calibration, blood/tissue exchange, material resolution, standing, recovery and
 walking remain open.
+
+The 2026-09-14 [body composition integration candidate](BODY_COMPOSITION_INTEGRATION_CANDIDATE_20260914.md)
+adds a hash-bound cross-domain source join for the one-adult-male package. Its
+receipt binds 378 organ identities, 329 unique blood-transport members, 150
+muscle/tendon surface identities, 416 activation-route identities, matching
+seven-bed oxygen exchange, the cardiac blood budget, and the canonical
+`12,500 ns` physiology clock. It checks owner nonduplication and retains all
+physical volume, mechanical mass, anatomical blood transfer, material,
+subject-calibration, force-convergence, standing, recovery, and walking gates
+as unresolved. The corresponding registry snapshot is retained at
+[`Docs/media/gap-execution-20260914/report-body-composition-integration-20260914.json`](media/gap-execution-20260914/report-body-composition-integration-20260914.json).
+Its file SHA-256 is `2859def4aae132151623c0a01ed3e8bfaa79325c18f49c332a4f67bc9865a360`
+and its report content SHA-256 is `0d16e273b8cc0c81e47cef9b447f05b14c4587a5e63275c6843aebd771b08eb5`.
+The bound body-composition receipt SHA-256 is
+`e266bccb17a5f26765c9e18abc521cb646f4f10f3b491310e0d524aac3984d0e`.
