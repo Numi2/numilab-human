@@ -59,6 +59,16 @@ if [ "${1:-}" = "soft-tissue-surface-candidate" ]; then
     exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.soft_tissue_surface_candidate "$@"
 fi
 
+if [ "${1:-}" = "skin-shell-candidate" ]; then
+    shift
+    if [ -n "${PYTHONPATH:-}" ]; then
+        export PYTHONPATH="$repository_root/src:$PYTHONPATH"
+    else
+        export PYTHONPATH="$repository_root/src"
+    fi
+    exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.skin_shell_candidate "$@"
+fi
+
 if [ "${1:-}" = "activation-recruitment-candidate" ]; then
     shift
     if [ -n "${PYTHONPATH:-}" ]; then

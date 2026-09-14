@@ -22,6 +22,7 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
         "organ_surface_candidates": 378,
         "regional_blood_transport": 329,
         "muscle_tendon_surface_identity": 150,
+        "skin_shell_surface_identity": 1,
         "tissue_calibration_candidate": 1,
         "vessel_surface_identity": 6,
     }
@@ -37,6 +38,8 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
     assert result["qualification"]["source_vessel_registration_bound"]
     assert result["qualification"]["cardiac_wall_source_identity_bound"]
     assert result["qualification"]["tissue_calibration_candidate_bound"]
+    assert result["qualification"]["skin_shell_source_identity_bound"]
+    assert result["qualification"]["fat_source_absence_bound"]
     assert not result["qualification"]["integrated_human_qualification"]
     assert result["identity_bindings"]["blood_members_subset_of_organ_members"]
     assert result["identity_bindings"]["surface_ids_disjoint_from_organ_members"]

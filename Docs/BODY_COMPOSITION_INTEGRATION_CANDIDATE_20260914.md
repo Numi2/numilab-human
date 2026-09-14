@@ -19,6 +19,9 @@ checks that the current graph contains:
 - 150 distinct muscle/tendon surface identities covering the current surface
   rows and all 416 activation route identities, while retaining 238 routes
   without a surface binding;
+- the exact BodyParts3D `FJ2810` full-skin source and its registered visual
+  outer shell (54,949 retained vertices, 109,183 triangles, 86 body
+  influences, and sub-micrometre rest-pose reconstruction);
 - the same seven beds and clock in the bidirectional oxygen-exchange candidate;
 - the exact CVSim21 21-compartment aggregate blood owner, which conserves
   `5.459 kg` and `5.150 L` through 511 accepted and one rejected steps;
@@ -39,12 +42,13 @@ checks that the current graph contains:
 The resulting receipt is a graph and ownership certificate. It does not add
 candidate masses to rigid dynamics, create anatomical blood or lumen volume,
 assign skeletal-muscle, fat, skin, tendon, or organ mechanical volume, or
-claim material or subject calibration. Those are the next physical owners and
+claim material or subject calibration. The skin shell is a visual registration
+input only; its thickness, material, collision, self-contact, and deformation
 remain open. The source receipt hashes, counts, and owner-null assertions make
 this join fail closed if an upstream identity, route, bed, clock, or ownership
 boundary changes. It also emits stable digests for the organ, blood-member,
-and muscle/tendon surface identity sets, along with the subset/disjointness
-checks used to construct the join.
+muscle/tendon surface, and skin-shell identity sets, along with the
+subset/disjointness checks used to construct the join.
 
 The CVSim21 mass owner is included as a conserved aggregate source owner only;
 its explicit density remains an engineering candidate and it is not promoted
@@ -67,7 +71,7 @@ rows from disconnected source evidence to one reproducible integration
 boundary while preserving the completion gates for calibrated mechanics,
 anatomical blood/tissue transfer, standing, recovery, and walking.
 
-The immutable `v3` receipt additionally binds the one-plug material candidate
-described above. It records the fit and held-out observation counts and keeps
-`material_calibration` false; no fitted coefficient is assigned to the Human
-body or native Matter runtime.
+The immutable `v4` receipt additionally binds the full-skin shell candidate
+described above. It records the one-plug material fit and held-out observation
+counts and keeps `material_calibration` false; no fitted coefficient is
+assigned to the Human body or native Matter runtime.
