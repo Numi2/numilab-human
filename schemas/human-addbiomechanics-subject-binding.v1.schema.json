@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://numi.example/schemas/human-addbiomechanics-subject-binding.v1.schema.json",
+  "title": "Numi Human AddBiomechanics subject binding receipt",
+  "type": "object",
+  "required": ["schema", "compiler", "status", "inputs", "subject", "runtime", "mass_comparison", "qualification", "blockers", "boundary"],
+  "properties": {
+    "schema": {"const": "HumanPack.addbiomechanics-subject-binding.v1"},
+    "compiler": {"const": "numilab-human.addbiomechanics-subject-binding.1"},
+    "status": {"const": "partial"},
+    "inputs": {"type": "object", "minProperties": 3},
+    "subject": {"type": "object"},
+    "runtime": {"type": "object"},
+    "mass_comparison": {"type": "object"},
+    "qualification": {"type": "object"},
+    "blockers": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+    "boundary": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}

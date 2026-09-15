@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+
+if [ "${1:-}" = "--numi-describe" ]; then
+    printf '%s\n' 'Bind the acquired adult-male AddBiomechanics subject to the current Human evidence graph and expose mass-scaling blockers without promoting calibration.'
+    exit 0
+fi
+
+command_directory=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+repository_root=$(CDPATH= cd -- "$command_directory/../.." && pwd -P)
+export PYTHONPATH="$repository_root/src${PYTHONPATH:+:$PYTHONPATH}"
+exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.addbiomechanics_subject_binding "$@"
