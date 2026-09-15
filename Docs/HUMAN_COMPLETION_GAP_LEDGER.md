@@ -11,7 +11,7 @@ cross-domain receipt is
 and the current mechanics/organ/blood evidence join is
 [`current-human-evidence-join/receipt-v1.json`](media/current-human-evidence-join-20260915/receipt-v1.json).
 The executable registry snapshot is
-[`gap-execution/report-v33.json`](media/gap-execution-20260915/report-v33.json).
+[`gap-execution/report-v34.json`](media/gap-execution-20260915/report-v34.json).
 The join now includes the current native costal tissue requalification
 ([receipt](media/tissue-integration-20260908/current-costal-binding-receipt-20260915.json)):
 13,516 cooked nodes, 46,278 tetrahedra, 2,871 attachments, eight Apple M4 Pro
