@@ -27,7 +27,7 @@ materials or subject calibration.
 The table above is a historical pre-repair result and must not be used as the
 current dynamic release result. The later native runtime is published in
 [`Numi2/numi-lab` branch `numi-human-passive-stand-20260915`](https://github.com/Numi2/numi-lab/tree/numi-human-passive-stand-20260915),
-pinned at `1b91a681da7f051d54193c879fa669a6bd04b8e9`. A fresh build of that
+pinned at `e4a7494c0d9c914f10698dd1e87cb63b95cbb438`. A fresh build of that
 source carried all 416 accepted static fibre lengths into the persistent
 runtime, preserves a stationary compliant-fibre root at exactly zero path
 velocity, and records a one-step-at-a-time production trace without changing
@@ -54,6 +54,16 @@ largest published-state acceleration at that same step is
 bitwise with the unsegmented production horizon. This distinguishes an
 unconstrained candidate correction from the final constrained trajectory; it
 does **not** by itself establish force convergence or physiologic standing.
+
+The trace now independently evaluates every equality-owned peak state in FP64
+against the published equality polynomial. Across 358 such samples, the
+largest position residual is `4.64732169414e-10` and the largest velocity
+residual is `5.78374039776e-14 m/s`. At the 4.82679 m/s² step specifically,
+the derivative is `0.0247611515387`, the position residual is
+`4.49739146965e-10`, and the velocity residual is
+`1.87239068210e-14 m/s`. This validates the final equality projection at the
+observed states; it does not prove that the unconstrained candidate solve or
+the full constrained trajectory have converged across clocks.
 
 At the 12.5 µs common-duration run, continuous generalized virtual work was
 `9.36397474459e-6 J` from source muscle force,

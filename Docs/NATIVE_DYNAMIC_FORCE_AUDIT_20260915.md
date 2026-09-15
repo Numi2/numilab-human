@@ -7,13 +7,14 @@ not the authoritative implementation delivery. The complete native runtime
 used for the later fibre-state repair, segmented production trace, and source
 build is published in
 [`Numi2/numi-lab` branch `numi-human-passive-stand-20260915`](https://github.com/Numi2/numi-lab/tree/numi-human-passive-stand-20260915)
-at commit `1b91a681da7f051d54193c879fa669a6bd04b8e9`.
+at commit `e4a7494c0d9c914f10698dd1e87cb63b95cbb438`.
 
 That branch contains the accepted fibre-state handoff, stationary-fibre
-continuity check, deterministic segmented trace, and the trace owner
-provenance. It is source reproducibility progress, but is not a merge to the
-default branch or a standing qualification. This evidence repository does not
-substitute its reports or patches for the buildable runtime source.
+continuity check, deterministic segmented trace, trace owner provenance, and
+an independent FP64 check of equality-owned peak-state projections. It is
+source reproducibility progress, but is not a merge to the default branch or a
+standing qualification. This evidence repository does not substitute its
+reports or patches for the buildable runtime source.
 
 The physical Mac mini M4 Pro reran the repaired one-adult-male Human source at the canonical `12.5 us` clock for 64 persistent Metal steps (`0.8 ms`), with the accepted stationary MyoSim fibre/tendon root, ten source support witnesses, 40 source passive coordinate couplings, and no root assistance. The native source is `0967c4561392a04be6c47d158ec9bd1e4daa2009`; the audited binary SHA-256 is `74aac5cc43e0e2a19016ab5e6d5e61f042f013d457ae32b494398a85426f886b`.
 
