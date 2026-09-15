@@ -1,0 +1,29 @@
+{
+  "artifacts": {
+    "source_patch": "segmented-horizon-source.patch",
+    "source_patch_sha256": "62ff8246a475653387e856f72e0e5e175c633cef4f4a83d3c164234eb53d8826"
+  },
+  "boundary": "Compiled host-side candidate that partitions a long Human stand horizon into bounded 64-step native submissions and carries accepted q, v, activation state, and root translation between chunks. Runtime requalification is intentionally pending because the physical Mac mini was occupied by another long-horizon job.",
+  "candidate": {
+    "maximum_segment_steps": 64,
+    "state_carried": ["q", "v", "mujoco_activation_states", "root_translations"],
+    "status_aggregation": ["contact", "acceleration", "tendon", "equality", "projection"]
+  },
+  "qualification": {
+    "source_compiled": true,
+    "runtime_requalification": false,
+    "force_convergence": false,
+    "sustained_standing": false,
+    "recovery": false,
+    "walking": false
+  },
+  "schema": "numi.human.native-segmented-horizon-candidate.v1",
+  "source": {
+    "branch": "human-coupled-velocity-closure-trace-20260915",
+    "commit": "841b559a",
+    "base_commit": "1fd04506",
+    "device_build": "Apple M4 Pro",
+    "prior_runtime_blocker": "long-horizon-timeout-v1.json"
+  },
+  "status": "compiled_unrequalified"
+}

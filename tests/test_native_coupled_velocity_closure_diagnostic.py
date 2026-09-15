@@ -45,3 +45,14 @@ def test_long_horizon_timeout_is_preserved_as_failure() -> None:
         name = timeout["artifacts"][name_key]
         digest = hashlib.sha256((EVIDENCE / name).read_bytes()).hexdigest()
         assert digest == timeout["artifacts"][key]
+
+
+def test_segmented_horizon_candidate_is_compiled_but_unrequalified() -> None:
+    candidate = json.loads((EVIDENCE / "segmented-horizon-candidate-v1.json").read_text())
+    assert candidate["schema"] == "numi.human.native-segmented-horizon-candidate.v1"
+    assert candidate["status"] == "compiled_unrequalified"
+    assert candidate["qualification"]["source_compiled"]
+    assert candidate["qualification"]["runtime_requalification"] is False
+    assert candidate["candidate"]["maximum_segment_steps"] == 64
+    patch = EVIDENCE / candidate["artifacts"]["source_patch"]
+    assert hashlib.sha256(patch.read_bytes()).hexdigest() == candidate["artifacts"]["source_patch_sha256"]

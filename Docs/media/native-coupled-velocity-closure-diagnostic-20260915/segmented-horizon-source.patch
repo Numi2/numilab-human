@@ -1,0 +1,276 @@
+diff --git a/apps/numilab_human_myosim_visual_probe.mm b/apps/numilab_human_myosim_visual_probe.mm
+index 8dc97267..83a16a1b 100644
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -4244,6 +4244,260 @@ MuscleDrivenVisualState integratePersistentMetalHumanState(
+                 : mr_float4{0.0f, 0.0f, 0.0f, 0.0f},
+         },
+     };
++
++    // Keep the physical horizon bounded per command buffer. A single 512-step
++    // Human submission can remain in Metal wait without publishing a result;
++    // carrying the accepted q/v/activation/root state across 64-step chunks
++    // preserves the same source inputs while making the host-side wait
++    // observable and interruptible.
++    auto runSegmentedStandHorizon =
++        [&model, &context](const metalrobo::MetalArticulatedOperatorInput& baseInput,
++                           const std::uint32_t totalSteps,
++                           metalrobo::MetalArticulatedOperatorResult& output) {
++            constexpr std::uint32_t kMaximumSegmentSteps = 64u;
++            require(totalSteps >= 1u,
++                    "persistent Human segmented horizon has no steps");
++            std::vector<float> currentQ(baseInput.q.begin(), baseInput.q.end());
++            std::vector<float> currentV(
++                baseInput.stand.v.begin(), baseInput.stand.v.end()
++            );
++            std::vector<MRMujocoMuscleStateGPU> currentStates(
++                baseInput.mujoco.states.begin(), baseInput.mujoco.states.end()
++            );
++            std::vector<MRCompensatedRootTranslationGPU> currentRoots(
++                baseInput.rootTranslations.begin(),
++                baseInput.rootTranslations.end()
++            );
++            MRNumiHumanStandStatusGPU aggregateStatus{};
++            metalrobo::MetalArticulatedOperatorDiagnostics aggregateDiagnostics;
++            bool haveSegment = false;
++            std::uint32_t completed = 0u;
++            while (completed < totalSteps) {
++                const std::uint32_t segmentSteps = std::min(
++                    kMaximumSegmentSteps, totalSteps - completed
++                );
++                metalrobo::MetalArticulatedOperatorInput segmentInput = baseInput;
++                segmentInput.q = currentQ;
++                segmentInput.rootTranslations = currentRoots;
++                segmentInput.stand.v = currentV;
++                segmentInput.mujoco.states = currentStates;
++                segmentInput.stand.stepCount = segmentSteps;
++                metalrobo::MetalArticulatedOperatorResult segmentResult;
++                const auto segmentDiagnostics = context.run(
++                    model, segmentInput, segmentResult
++                );
++                require(
++                    segmentDiagnostics.succeeded() &&
++                        segmentDiagnostics.dispatched &&
++                        segmentDiagnostics.published &&
++                        segmentDiagnostics.successfulEnvironmentCount == 1u &&
++                        segmentDiagnostics.failedEnvironmentCount == 0u &&
++                        segmentDiagnostics.completedStandSteps == segmentSteps &&
++                        segmentResult.standQ.size() == currentQ.size() &&
++                        segmentResult.standV.size() == currentV.size() &&
++                        segmentResult.standRootTranslations.size() == 1u &&
++                        segmentResult.mujocoActivationStates.size() ==
++                            currentStates.size() &&
++                        segmentResult.standStatuses.size() == 1u &&
++                        segmentResult.standStatuses.front().code ==
++                            MR_NUMI_HUMAN_STAND_SUCCESS,
++                    "persistent Human segmented Metal horizon failed: " +
++                        segmentDiagnostics.message
++                );
++                const auto& status = segmentResult.standStatuses.front();
++                if (!haveSegment) {
++                    aggregateStatus = status;
++                    aggregateDiagnostics = segmentDiagnostics;
++                    haveSegment = true;
++                } else {
++                    const float previousAcceleration =
++                        aggregateStatus.contactAndAcceleration.w;
++                    aggregateStatus.code = status.code;
++                    aggregateStatus.environment = status.environment;
++                    aggregateStatus.failingIndex = status.failingIndex;
++                    aggregateStatus.activeContactCount =
++                        status.activeContactCount;
++                    aggregateStatus.maximumActiveContactCount = std::max(
++                        aggregateStatus.maximumActiveContactCount,
++                        status.maximumActiveContactCount
++                    );
++                    aggregateStatus.contactIterations =
++                        status.contactIterations;
++                    aggregateStatus.flags = status.flags;
++                    aggregateStatus.contactAndAcceleration.x = std::min(
++                        aggregateStatus.contactAndAcceleration.x,
++                        status.contactAndAcceleration.x
++                    );
++                    aggregateStatus.contactAndAcceleration.y = std::max(
++                        aggregateStatus.contactAndAcceleration.y,
++                        status.contactAndAcceleration.y
++                    );
++                    aggregateStatus.contactAndAcceleration.z =
++                        status.contactAndAcceleration.z;
++                    aggregateStatus.contactAndAcceleration.w = std::max(
++                        aggregateStatus.contactAndAcceleration.w,
++                        status.contactAndAcceleration.w
++                    );
++                    aggregateStatus.factorAndAssistance.x = std::min(
++                        aggregateStatus.factorAndAssistance.x,
++                        status.factorAndAssistance.x
++                    );
++                    aggregateStatus.factorAndAssistance.y = std::max(
++                        aggregateStatus.factorAndAssistance.y,
++                        status.factorAndAssistance.y
++                    );
++                    aggregateStatus.factorAndAssistance.z = std::max(
++                        aggregateStatus.factorAndAssistance.z,
++                        status.factorAndAssistance.z
++                    );
++                    aggregateStatus.factorAndAssistance.w = std::max(
++                        aggregateStatus.factorAndAssistance.w,
++                        status.factorAndAssistance.w
++                    );
++                    aggregateStatus.tendonTransferCount +=
++                        status.tendonTransferCount;
++                    aggregateStatus.tendonEnvelopeTransferCount +=
++                        status.tendonEnvelopeTransferCount;
++                    aggregateStatus.tendonPointTransferCount +=
++                        status.tendonPointTransferCount;
++                    aggregateStatus.tendonFailureCount +=
++                        status.tendonFailureCount;
++                    aggregateStatus.tendonDiagnostics.x = std::max(
++                        aggregateStatus.tendonDiagnostics.x,
++                        status.tendonDiagnostics.x
++                    );
++                    aggregateStatus.tendonDiagnostics.y = std::max(
++                        aggregateStatus.tendonDiagnostics.y,
++                        status.tendonDiagnostics.y
++                    );
++                    aggregateStatus.tendonDiagnostics.z = std::max(
++                        aggregateStatus.tendonDiagnostics.z,
++                        status.tendonDiagnostics.z
++                    );
++                    aggregateStatus.tendonDiagnostics.w = std::max(
++                        aggregateStatus.tendonDiagnostics.w,
++                        status.tendonDiagnostics.w
++                    );
++                    aggregateStatus.jointEqualityCounts.x =
++                        status.jointEqualityCounts.x;
++                    aggregateStatus.jointEqualityCounts.y = std::max(
++                        aggregateStatus.jointEqualityCounts.y,
++                        status.jointEqualityCounts.y
++                    );
++                    aggregateStatus.jointEqualityCounts.z +=
++                        status.jointEqualityCounts.z;
++                    if (status.contactAndAcceleration.w >=
++                        previousAcceleration) {
++                        aggregateStatus.jointEqualityCounts.w =
++                            status.jointEqualityCounts.w;
++                    }
++                    aggregateStatus.jointEqualityDiagnostics.x = std::max(
++                        aggregateStatus.jointEqualityDiagnostics.x,
++                        status.jointEqualityDiagnostics.x
++                    );
++                    aggregateStatus.jointEqualityDiagnostics.y = std::max(
++                        aggregateStatus.jointEqualityDiagnostics.y,
++                        status.jointEqualityDiagnostics.y
++                    );
++                    aggregateStatus.jointEqualityDiagnostics.z = std::max(
++                        aggregateStatus.jointEqualityDiagnostics.z,
++                        status.jointEqualityDiagnostics.z
++                    );
++                    aggregateStatus.jointEqualityDiagnostics.w +=
++                        status.jointEqualityDiagnostics.w;
++                    aggregateStatus.jointEqualityProjectionDiagnostics.x =
++                        std::max(
++                            aggregateStatus.jointEqualityProjectionDiagnostics.x,
++                            status.jointEqualityProjectionDiagnostics.x
++                        );
++                    aggregateStatus.jointEqualityProjectionDiagnostics.y +=
++                        status.jointEqualityProjectionDiagnostics.y;
++                    aggregateStatus.jointEqualityProjectionDiagnostics.z =
++                        std::max(
++                            aggregateStatus.jointEqualityProjectionDiagnostics.z,
++                            status.jointEqualityProjectionDiagnostics.z
++                        );
++                    aggregateStatus.jointEqualityProjectionDiagnostics.w +=
++                        status.jointEqualityProjectionDiagnostics.w;
++                    aggregateStatus.preProjectionPreStepConstraintDiagnostics.x =
++                        std::max(
++                            aggregateStatus.preProjectionPreStepConstraintDiagnostics.x,
++                            status.preProjectionPreStepConstraintDiagnostics.x
++                        );
++                    aggregateStatus.preProjectionPreStepConstraintDiagnostics.y =
++                        std::max(
++                            aggregateStatus.preProjectionPreStepConstraintDiagnostics.y,
++                            status.preProjectionPreStepConstraintDiagnostics.y
++                        );
++                    aggregateStatus.preProjectionPreStepConstraintDiagnostics.z =
++                        std::max(
++                            aggregateStatus.preProjectionPreStepConstraintDiagnostics.z,
++                            status.preProjectionPreStepConstraintDiagnostics.z
++                        );
++                    aggregateStatus.preProjectionPreStepConstraintDiagnostics.w =
++                        std::max(
++                            aggregateStatus.preProjectionPreStepConstraintDiagnostics.w,
++                            status.preProjectionPreStepConstraintDiagnostics.w
++                        );
++                    aggregateStatus.postProjectionPreStepConstraintDiagnostics.x =
++                        std::max(
++                            aggregateStatus.postProjectionPreStepConstraintDiagnostics.x,
++                            status.postProjectionPreStepConstraintDiagnostics.x
++                        );
++                    aggregateStatus.postProjectionPreStepConstraintDiagnostics.y =
++                        std::max(
++                            aggregateStatus.postProjectionPreStepConstraintDiagnostics.y,
++                            status.postProjectionPreStepConstraintDiagnostics.y
++                        );
++                    aggregateStatus.postProjectionPreStepConstraintDiagnostics.z =
++                        std::max(
++                            aggregateStatus.postProjectionPreStepConstraintDiagnostics.z,
++                            status.postProjectionPreStepConstraintDiagnostics.z
++                        );
++                    aggregateStatus.postProjectionPreStepConstraintDiagnostics.w =
++                        std::max(
++                            aggregateStatus.postProjectionPreStepConstraintDiagnostics.w,
++                            status.postProjectionPreStepConstraintDiagnostics.w
++                        );
++                    aggregateDiagnostics.dispatched =
++                        aggregateDiagnostics.dispatched && segmentDiagnostics.dispatched;
++                    aggregateDiagnostics.published =
++                        aggregateDiagnostics.published && segmentDiagnostics.published;
++                    aggregateDiagnostics.successfulEnvironmentCount =
++                        segmentDiagnostics.successfulEnvironmentCount;
++                    aggregateDiagnostics.failedEnvironmentCount =
++                        segmentDiagnostics.failedEnvironmentCount;
++                    aggregateDiagnostics.firstFailingEnvironment =
++                        segmentDiagnostics.firstFailingEnvironment;
++                    aggregateDiagnostics.firstGPUStatusCode =
++                        segmentDiagnostics.firstGPUStatusCode;
++                    aggregateDiagnostics.firstStandGPUStatusCode =
++                        segmentDiagnostics.firstStandGPUStatusCode;
++                    aggregateDiagnostics.elapsedMilliseconds +=
++                        segmentDiagnostics.elapsedMilliseconds;
++                    aggregateDiagnostics.deviceName =
++                        segmentDiagnostics.deviceName;
++                    aggregateDiagnostics.message =
++                        segmentDiagnostics.message;
++                }
++                completed += segmentSteps;
++                aggregateStatus.completedSteps = completed;
++                aggregateDiagnostics.completedStandSteps = completed;
++                currentQ = std::move(segmentResult.standQ);
++                currentV = std::move(segmentResult.standV);
++                currentRoots = std::move(segmentResult.standRootTranslations);
++                currentStates = std::move(segmentResult.mujocoActivationStates);
++                output = std::move(segmentResult);
++            }
++            output.standQ = std::move(currentQ);
++            output.standV = std::move(currentV);
++            output.standRootTranslations = std::move(currentRoots);
++            output.mujocoActivationStates = std::move(currentStates);
++            output.standStatuses = {aggregateStatus};
++            aggregateDiagnostics.completedStandSteps = completed;
++            return aggregateDiagnostics;
++        };
++
+     metalrobo::MetalArticulatedOperatorResult selectedControlBaselineResult;
+     double selectedControlBaselineElapsedMilliseconds = 0.0;
+     if (applySelectedActivationIncrement) {
+@@ -4530,7 +4784,9 @@ MuscleDrivenVisualState integratePersistentMetalHumanState(
+         }
+     }
+     metalrobo::MetalArticulatedOperatorResult metalResult;
+-    auto diagnostics = context.run(model, input, metalResult);
++    auto diagnostics = runSegmentedStandHorizon(
++        input, stepCount, metalResult
++    );
+     if (!diagnostics.succeeded() && continuumTransaction != nullptr) {
+         const auto failed = continuumTransaction->runtime->snapshot();
+         std::cerr << "human_joint_failure completed_steps=" << diagnostics.completedStandSteps;

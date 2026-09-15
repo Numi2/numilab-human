@@ -29,6 +29,13 @@ was published. The typed [timeout receipt](media/native-coupled-velocity-closure
 keeps that failure visible and leaves long-horizon force convergence and
 standing open.
 
+The isolated follow-on source change at native commit `841b559a` partitions a
+long horizon into bounded 64-step submissions and carries accepted generalized
+state between chunks. It compiles on the Apple M4 Pro build, but its physical
+runtime requalification is still pending because the Mac mini was occupied by
+another long-horizon job. The [candidate receipt](media/native-coupled-velocity-closure-diagnostic-20260915/segmented-horizon-candidate-v1.json)
+therefore remains `compiled_unrequalified`.
+
 The full native stdout/stderr and source patch are stored beside
 `receipt-v1.json`. The native source checkout is isolated from the dirty
 `/Users/n/MetalRobo-human` checkout.
