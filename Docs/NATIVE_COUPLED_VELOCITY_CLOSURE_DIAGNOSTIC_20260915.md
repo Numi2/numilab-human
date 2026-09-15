@@ -22,6 +22,15 @@ production force convergence, sustained standing, recovery, walking, anatomy,
 activation calibration, blood/tissue mass transfer, materials, and subject
 calibration open.
 
+The emitted 128-row `persistent_dynamic_force_audit` is now converted into the
+canonical six-owner [dynamic force snapshot](media/native-coupled-velocity-closure-diagnostic-20260915/dynamic-force-snapshot-v1.json)
+and [per-DoF ledger](media/native-coupled-velocity-closure-diagnostic-20260915/dynamic-force-ledger-v1.json).
+Component reconstruction closes to `8.53e-14 N` and the absolute residual
+peaks at `0.032620927143 N`; the ledger remains `partial` because low-load
+internal coordinates reach a `0.0161364514` normalized residual. This makes
+the local force imbalance explicit and ranked without promoting it to whole-
+body force convergence or standing.
+
 The 512-step extension was attempted with the same inputs and clock. The
 native process remained in GPU wait for a bounded six-minute window, emitted
 only payload-admission lines, and was terminated with `SIGINT` before a result
@@ -29,7 +38,7 @@ was published. The typed [timeout receipt](media/native-coupled-velocity-closure
 keeps that failure visible and leaves long-horizon force convergence and
 standing open.
 
-The isolated follow-on source change at native commit `841b559a` partitions a
+The v2 [receipt](media/native-coupled-velocity-closure-diagnostic-20260915/receipt-v2.json) now binds that per-DoF audit to the diagnostic. The isolated follow-on source change at native commit `841b559a` partitions a
 long horizon into bounded 64-step submissions and carries accepted generalized
 state between chunks. It compiles on the Apple M4 Pro build, but its physical
 runtime requalification is still pending because the Mac mini was occupied by

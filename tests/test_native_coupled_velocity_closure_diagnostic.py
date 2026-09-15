@@ -34,6 +34,35 @@ def test_coupled_velocity_closure_artifacts_are_hash_bound() -> None:
         assert digest == receipt["artifacts"][key]
 
 
+def test_dynamic_force_audit_snapshot_and_ledger_keep_internal_gap_visible() -> None:
+    snapshot = json.loads((EVIDENCE / "dynamic-force-snapshot-v1.json").read_text())
+    ledger = json.loads((EVIDENCE / "dynamic-force-ledger-v1.json").read_text())
+    assert snapshot["schema"] == "numi.human.generalized-force-snapshot.v1"
+    assert snapshot["metadata"]["native_log"]["record"] == "persistent_dynamic_force_audit"
+    assert snapshot["metadata"]["native_log"]["sha256"] == hashlib.sha256(
+        (EVIDENCE / "native.stdout.txt").read_bytes()
+    ).hexdigest()
+    assert ledger["schema"] == "numi.human.generalized-force-ledger.v1"
+    assert ledger["status"] == "partial"
+    assert ledger["coverage"]["per_dof_source_rows"] == 128
+    assert ledger["qualification"]["per_dof_source_audit"] is True
+    assert ledger["qualification"]["force_convergence"] is False
+    assert ledger["residual"]["maximum_assembly_error"] < 1.0e-12
+    assert ledger["residual"]["maximum_closure_ratio"] > 0.001
+
+
+def test_v2_receipt_binds_dynamic_force_audit_artifacts() -> None:
+    receipt = json.loads((EVIDENCE / "receipt-v2.json").read_text())
+    assert receipt["schema"] == "numi.human.native-coupled-velocity-closure-diagnostic.v1"
+    assert receipt["qualification"]["per_dof_dynamic_force_audit"] is True
+    for digest_key, path_key in (
+        ("dynamic_force_snapshot_sha256", "dynamic_force_snapshot"),
+        ("dynamic_force_ledger_sha256", "dynamic_force_ledger"),
+    ):
+        path = EVIDENCE / receipt["artifacts"][path_key]
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == receipt["artifacts"][digest_key]
+
+
 def test_long_horizon_timeout_is_preserved_as_failure() -> None:
     timeout = json.loads((EVIDENCE / "long-horizon-timeout-v1.json").read_text())
     assert timeout["schema"] == "numi.human.native-coupled-velocity-closure-timeout.v1"

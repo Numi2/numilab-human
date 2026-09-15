@@ -57,6 +57,40 @@ def _write_log(path: Path, record: dict, *, compressed: bool = False) -> None:
         path.write_bytes(raw)
 
 
+def _write_persistent_log(path: Path) -> None:
+    rows = []
+    for dof in reversed(range(128)):
+        # Deliberately reverse the rows: the native audit is ranked by
+        # residual magnitude, so the converter must use the explicit DoF.
+        muscle = 2.0 if dof == 7 else 0.0
+        support = 3.0 if dof == 7 else 0.0
+        equality = -4.0 if dof == 7 else 0.0
+        gravity = 1.0 if dof == 7 else 0.0
+        residual = muscle + support + equality - gravity
+        rows.append({
+            "dof": dof,
+            "metal_muscle_force_n": muscle,
+            "support_force_n": support,
+            "equality_force_n": equality,
+            "limit_force_n": 0.0,
+            "passive_force_n": 0.0,
+            "compiled_passive_force_n": 0.0,
+            "gravity_target_n": gravity,
+            "residual_n": residual,
+        })
+    payload = {
+        "schema": "numi.human.persistent-dynamic-force-audit.v1",
+        "maximum_abs_residual_n": 2.0,
+        "rows": rows,
+    }
+    path.write_text(
+        "prefix\npersistent_dynamic_force_audit="
+        + json.dumps(payload)
+        + "\nsuffix\n",
+        encoding="utf-8",
+    )
+
+
 def test_plus_gravity_convention_is_reconstructed(tmp_path: Path) -> None:
     log = tmp_path / "native.log"
     _write_log(log, _record(gravity_sign=1.0))
@@ -108,3 +142,18 @@ def test_coordinate_map_is_bound(tmp_path: Path) -> None:
     snapshot = json.loads(output.read_text(encoding="utf-8"))
     assert snapshot["coordinate_names"][42] == "joint_42"
     assert snapshot["metadata"]["coordinate_map"]["anatomical_names"]
+
+
+def test_persistent_dynamic_audit_is_reindexed_and_reconstructed(tmp_path: Path) -> None:
+    log = tmp_path / "persistent.log"
+    _write_persistent_log(log)
+    output = tmp_path / "snapshot.json"
+    assert convert(_args(log, output)) == 0
+    snapshot = json.loads(output.read_text(encoding="utf-8"))
+    assert snapshot["metadata"]["native_log"]["record"] == "persistent_dynamic_force_audit"
+    assert snapshot["metadata"]["boundary"].startswith("Persistent dynamic force rows")
+    muscle = next(row for row in snapshot["components"] if row["name"] == "muscle_tendon")
+    assert muscle["values"][7] == 2.0
+    assert muscle["values"][6] == 0.0
+    assert snapshot["reported_net"][7] == 0.0
+    assert snapshot["generalized_acceleration"] is None

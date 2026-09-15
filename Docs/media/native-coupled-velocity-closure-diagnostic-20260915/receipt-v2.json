@@ -1,0 +1,78 @@
+{
+  "artifacts": {
+    "dynamic_force_ledger": "dynamic-force-ledger-v1.json",
+    "dynamic_force_ledger_sha256": "e187603919fd630014f95898d55412ef3c7faf7177e14b384d3954736364be44",
+    "dynamic_force_snapshot": "dynamic-force-snapshot-v1.json",
+    "dynamic_force_snapshot_sha256": "4d6af219f9aee832f1869ba19db7c615c60c144b272240446aef2d899f48dd3d",
+    "native_source_patch": "native-source.patch",
+    "native_source_patch_sha256": "bf451b0c6c716f3cb886686ff292158cf20ffa911c21a1dbd426dfab348dfb71",
+    "native_stderr": "native.stderr.txt",
+    "native_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "native_stdout": "native.stdout.txt",
+    "native_stdout_sha256": "b1ae9596fb2ba426cfa1bd624c075b6109e0f1a229c881a8b26a5637a62166f0"
+  },
+  "boundary": "Physical-M4 bounded diagnostic of the experimental coupled-velocity closure candidate. The host verifier now checks exact equality position projection while retaining the dependent-velocity delta as an explicit diagnostic. This candidate does not qualify production force convergence, sustained standing, recovery, walking, anatomical supports/loading, activation calibration, blood mass transfer, material calibration, or subject calibration. The v2 receipt additionally binds the canonical 128-row dynamic force snapshot and partial per-DoF ledger; the low-load internal residual remains an explicit blocker.",
+  "command": {
+    "deterministic_replay": "bitwise",
+    "experimental_coupled_velocity_closure": true,
+    "joint_manifold": "NHEQ1",
+    "muscle_activation": 0.8,
+    "muscle_step_count": 64,
+    "muscle_step_seconds": 1.25e-05,
+    "persistent_source_passive_joint_tissue": true,
+    "support_payload": "NHCNT2",
+    "tendon_payload": "NHTENDON3"
+  },
+  "qualification": {
+    "bounded_candidate_replay": true,
+    "compiled_static_balance": true,
+    "dynamic_force_ledger_partial": true,
+    "experimental_candidate": true,
+    "force_convergence": false,
+    "host_verifier_false_failure_fixed": true,
+    "native_trace_endpoint": "bitwise",
+    "per_dof_dynamic_force_audit": true,
+    "recovery": false,
+    "standing": false,
+    "subject_calibration": false,
+    "walking": false
+  },
+  "results": {
+    "body_count": 157,
+    "compiled_active_support_contacts": 6,
+    "compiled_normalized_residual_rms": 9.0656247312e-06,
+    "compiled_static_balanced": true,
+    "compiled_total_support_force_n": 952.864475301,
+    "dof_count": 128,
+    "dynamic_force_audit_max_assembly_error_n": 8.526512829121202e-14,
+    "dynamic_force_audit_max_closure_ratio": 0.016136451410965154,
+    "dynamic_force_audit_rms_closure_ratio": 0.0032333510493017877,
+    "equality_count": 51,
+    "maximum_equality_velocity_error_mps_or_rad_s": 3.09879681026e-07,
+    "persistent_completed_steps": 64,
+    "persistent_dynamic_force_residual_max_n": 0.032620927143,
+    "persistent_max_acceleration_mps2": 0.115922890604,
+    "persistent_max_penetration_m": 0.0,
+    "source_support_witnesses": 10,
+    "tendon_max_force_residual_n": 3.23687781929e-05,
+    "tendon_max_moment_residual_nm": 1.43177203427e-06
+  },
+  "schema": "numi.human.native-coupled-velocity-closure-diagnostic.v1",
+  "source": {
+    "binary": "metalrobo_numilab_human_myosim_visual_probe",
+    "binary_sha256": "65f4dab68fb6db66b7e05c4c134d50f25f3618c9759c40fa8f0156f7f8f177d",
+    "branch": "human-coupled-velocity-closure-trace-20260915",
+    "checkout": "/private/tmp/numi-human-dynamics-isolation-20260915",
+    "commit": "1fd04506",
+    "device": "Mac mini M4 Pro",
+    "input_sha256": {
+      "myosim-fullbody-core-reference.nhrigid": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44",
+      "myosim-fullbody-joint-equalities.nheq": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a",
+      "myosim-fullbody-muscle-reference.nhmyo": "9a988f19a6fd8e533cd0f2bf3192cb8535fb008ccd394ffbf1a4432d3db76a05",
+      "myosim-fullbody-support-contact.nhcnt": "4d54f8155cd83baaee7af536099824ac0da61e5d5e77544b42c6e5ce1b48c907",
+      "numi-human-tendon-attachments.nhtendon": "a594194f510eb4aa990a8767f868f999a10b4fedb745c8665368a231ed39b555"
+    }
+  },
+  "status": "partial",
+  "subject": "one adult male source package"
+}

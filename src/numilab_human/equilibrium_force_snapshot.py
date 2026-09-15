@@ -14,6 +14,7 @@ from .model import ImportError, write_json
 
 
 PREFIX = "compiled_equilibrium_reactions="
+PERSISTENT_PREFIX = "persistent_dynamic_force_audit="
 NATIVE_KEYS = (
     "gravity_target",
     "muscle_force",
@@ -66,6 +67,82 @@ def _record(text: str) -> dict[str, list[float]]:
         raise ImportError(f"compiled_equilibrium_reactions is not valid JSON: {error}") from error
     _require(isinstance(payload, dict), "compiled_equilibrium_reactions must be an object")
     return {key: _vector(payload.get(key), key) for key in NATIVE_KEYS}
+
+
+def _persistent_record(text: str) -> dict[str, Any]:
+    """Decode the native persistent dynamic per-DoF audit.
+
+    The persistent runner publishes rows sorted by residual magnitude rather
+    than by DoF.  Re-indexing by the explicit DoF is therefore mandatory; a
+    positional interpretation would silently attach forces to the wrong
+    coordinates.  The two passive fields are deliberately combined because
+    the canonical snapshot has one passive-tissue owner and the native audit
+    already reports their signed sum in ``residual_n``.
+    """
+    rows = [line[len(PERSISTENT_PREFIX):]
+            for line in text.splitlines() if line.startswith(PERSISTENT_PREFIX)]
+    _require(len(rows) == 1,
+             "native log must contain exactly one persistent_dynamic_force_audit record")
+    try:
+        payload = json.loads(rows[0])
+    except json.JSONDecodeError as error:
+        raise ImportError(
+            f"persistent_dynamic_force_audit is not valid JSON: {error}"
+        ) from error
+    _require(isinstance(payload, dict),
+             "persistent_dynamic_force_audit must be an object")
+    _require(payload.get("schema") == "numi.human.persistent-dynamic-force-audit.v1",
+             "persistent_dynamic_force_audit schema mismatch")
+    source_rows = payload.get("rows")
+    _require(isinstance(source_rows, list) and len(source_rows) == NV,
+             f"persistent_dynamic_force_audit must contain {NV} rows")
+    fields = (
+        "metal_muscle_force_n", "support_force_n", "equality_force_n",
+        "limit_force_n", "passive_force_n", "compiled_passive_force_n",
+        "gravity_target_n", "residual_n",
+    )
+    by_dof: dict[int, dict[str, float]] = {}
+    for row in source_rows:
+        _require(isinstance(row, dict),
+                 "persistent_dynamic_force_audit rows must be objects")
+        dof = row.get("dof")
+        _require(type(dof) is int and 0 <= dof < NV and dof not in by_dof,
+                 "persistent_dynamic_force_audit must contain each DoF exactly once")
+        values: dict[str, float] = {}
+        for field in fields:
+            value = row.get(field)
+            _require(type(value) in (int, float) and math.isfinite(value),
+                     f"persistent_dynamic_force_audit {field}[{dof}] is not finite")
+            values[field] = float(value)
+        by_dof[dof] = values
+    _require(set(by_dof) == set(range(NV)),
+             "persistent_dynamic_force_audit DoF coverage is incomplete")
+    return {
+        "gravity_target": [by_dof[index]["gravity_target_n"] for index in range(NV)],
+        "muscle_force": [by_dof[index]["metal_muscle_force_n"] for index in range(NV)],
+        "equality_force": [by_dof[index]["equality_force_n"] for index in range(NV)],
+        "limit_force": [by_dof[index]["limit_force_n"] for index in range(NV)],
+        "support_force": [by_dof[index]["support_force_n"] for index in range(NV)],
+        "passive_force": [
+            by_dof[index]["passive_force_n"]
+            + by_dof[index]["compiled_passive_force_n"]
+            for index in range(NV)
+        ],
+        "force_residual": [by_dof[index]["residual_n"] for index in range(NV)],
+        "acceleration": None,
+    }
+
+
+def _decode_record(text: str) -> tuple[dict[str, Any], str]:
+    """Select one authoritative native record and reject mixed/empty logs."""
+    compiled = [line for line in text.splitlines() if line.startswith(PREFIX)]
+    persistent = [line for line in text.splitlines()
+                  if line.startswith(PERSISTENT_PREFIX)]
+    _require(bool(compiled) ^ bool(persistent),
+             "native log must contain exactly one supported force record kind")
+    if compiled:
+        return _record(text), PREFIX[:-1]
+    return _persistent_record(text), PERSISTENT_PREFIX[:-1]
 
 
 def _rank_names(text: str) -> dict[int, str]:
@@ -161,7 +238,7 @@ def convert(arguments: argparse.Namespace) -> int:
     _require(math.isfinite(arguments.maximum_reconstruction_error) and arguments.maximum_reconstruction_error >= 0.0,
              "maximum reconstruction error must be finite and non-negative")
     text = _read_text(source)
-    record = _record(text)
+    record, record_kind = _decode_record(text)
     gravity_sign, gravity_bias, sign_errors = _gravity_sign(record, arguments.maximum_reconstruction_error)
     names, kinds, coordinate_metadata = _coordinate_map(arguments.coordinate_map, text)
 
@@ -190,7 +267,7 @@ def convert(arguments: argparse.Namespace) -> int:
             "native_log": {
                 "path": str(source),
                 "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
-                "record": PREFIX[:-1],
+                "record": record_kind,
             },
             "coordinate_map": coordinate_metadata,
             "gravity_convention": {
@@ -199,6 +276,15 @@ def convert(arguments: argparse.Namespace) -> int:
                 "candidate_reconstruction_errors": sign_errors,
             },
             "maximum_reconstruction_error": reconstruction_error,
+            "boundary": (
+                "Persistent dynamic force rows are a six-owner generalized-force "
+                "audit for the captured horizon. They do not establish a solved "
+                "initial equilibrium, long-horizon convergence, standing, recovery, "
+                "walking, anatomy, activation calibration, materials, or subject "
+                "calibration."
+                if record_kind == PERSISTENT_PREFIX[:-1]
+                else "Compiled equilibrium reaction record converted without physical promotion."
+            ),
             "source_owner": "Numi2/numi-lab:coupled",
         },
     }
@@ -206,6 +292,7 @@ def convert(arguments: argparse.Namespace) -> int:
     print(json.dumps({
         "schema": INPUT_SCHEMA,
         "gravity_sign": gravity_sign,
+        "record": record_kind,
         "maximum_reconstruction_error": reconstruction_error,
         "named_coordinates": coordinate_metadata["named_coordinates"],
         "output": str(arguments.output.resolve()),
