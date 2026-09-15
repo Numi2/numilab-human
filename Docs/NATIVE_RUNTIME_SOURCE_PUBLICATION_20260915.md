@@ -82,7 +82,10 @@ upper-limit triad test passed and recorded:
 | FP64 production order after the final equality overwrite | `2.242479803114606e-7 m/s` |
 
 The final overwrite therefore contributes to the mismatch but does not fully
-explain it. The simultaneous reference remains well conditioned in this
-minimal scene; this is evidence to investigate the coupled formulation and
-active-row ordering, not authorization to change a solver, add regularization,
-or claim full-body temporal convergence or standing.
+explain it. The `2.2428295665122278e-7 m/s` post-projection limit residual
+appears only with normal contact, equality, and the dependent upper limit all
+active; the no-contact, inactive-limit, and no-equality controls each retain
+zero residual in this fixture. The simultaneous reference remains well
+conditioned in this minimal scene; this is evidence to investigate the coupled
+formulation and active-row ordering, not authorization to change a solver, add
+regularization, or claim full-body temporal convergence or standing.
