@@ -55,6 +55,8 @@ preserving `physical_steps=0` and unknown audit coverage. This removes a unit
 inconsistency in the engineering path without changing the force-convergence,
 anatomical, calibration, standing, or walking acceptance gates.
 
+The current dynamic handoff diagnostic is now source-bound in [NATIVE_DYNAMIC_FORCE_AUDIT_20260915.md](NATIVE_DYNAMIC_FORCE_AUDIT_20260915.md). It publishes all 128 accepted Metal fibre-root force components and their initial residuals at 12.5 microseconds, and retains the rejected frozen-preload experiment. This adds an executable diagnostic target without changing the registry disposition: force convergence, anatomical supports/loading, activation calibration, blood mass transfer, unresolved materials, subject calibration, sustained standing, recovery, and walking remain open.
+
 Validation on 2026-09-13: twelve focused registry tests and fourteen existing
 target-coverage tests pass. The JSON Schema passes Draft 2020-12 schema checking
 and independently validates the shipped registry with `jsonschema` 4.25.1.
@@ -451,7 +453,7 @@ is far below the standing gate, this narrows the recruitment/equilibrium
 failure without closing force convergence, sustained standing, recovery,
 walking, anatomical loading, material, blood/tissue transfer, or calibration.
 The refreshed executable gap report is
-[`Docs/media/gap-execution-20260915/report-v30.json`](media/gap-execution-20260915/report-v30.json).
+[`Docs/media/gap-execution-20260915/report-v32.json`](media/gap-execution-20260915/report-v32.json).
 It now includes the current mechanics/organ/blood evidence join
 ([receipt](CURRENT_HUMAN_EVIDENCE_JOIN_20260915.md)) and the regional exchange
 requalification rebuilt on the pose-24 native owner.

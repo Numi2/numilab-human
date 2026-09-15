@@ -1,0 +1,82 @@
+{
+  "artifacts": {
+    "dynamic_force_audit": "dynamic-force-audit.json",
+    "dynamic_force_audit_sha256": "64b13f83fdb6d8b78a00eed311514180f147931a465dfe827d89e3691e9521e1",
+    "native_stderr": "native.stderr.log",
+    "native_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "native_stdout": "native.stdout.log",
+    "native_stdout_sha256": "5283324a2c2f5521c5c186c00428bb1e8720bc543d5de72cf156525bb01885e4"
+  },
+  "boundary": "Physical-M4 source-bound dynamic release component audit at the accepted Metal fibre/tendon root. It reconstructs every 128 generalized coordinates from the accepted Metal MyoSim muscle wrench, source support, joint equalities, position limits, passive coordinate loads, and gravity target. It diagnoses the static-to-dynamic release mismatch; it does not qualify force convergence, sustained standing, recovery, walking, anatomical supports/loading, activation calibration, blood mass transfer, material calibration, or subject calibration.",
+  "command": {
+    "deterministic_replay": "bitwise",
+    "joint_manifold": "NHEQ1",
+    "muscle_activation": 0.8,
+    "muscle_step_count": 64,
+    "muscle_step_seconds": 1.25e-05,
+    "persistent_source_passive_joint_tissue": true,
+    "support_payload": "NHCNT2",
+    "tendon_payload": "NHTENDON3"
+  },
+  "qualification": {
+    "accepted_metal_fibre_root_used": true,
+    "activation_calibration": false,
+    "anatomical_support_loading": false,
+    "blood_mass_transfer": false,
+    "coordinate_identity_bound": true,
+    "dynamic_component_reconstruction": true,
+    "dynamic_release": false,
+    "force_convergence": false,
+    "full_128_dof_component_rows": true,
+    "material_calibration": false,
+    "recovery": false,
+    "replay": "bitwise",
+    "source_identity_bound": true,
+    "stderr_empty": true,
+    "subject_calibration": false,
+    "sustained_standing": false,
+    "walking": false
+  },
+  "results": {
+    "body_count": 157,
+    "compiled_max_acceleration_residual": 3.58558728939e-05,
+    "compiled_max_root_acceleration_residual": 5.62472659219e-06,
+    "compiled_max_root_force_residual_n": 1.73712146534e-06,
+    "compiled_normalized_residual_rms": 6.42342632457e-06,
+    "compiled_total_support_force_n": 952.864475301,
+    "dof_count": 128,
+    "dynamic_initial_max_abs_residual_n": 0.03216604835060366,
+    "dynamic_initial_max_residual_child_body": 147,
+    "dynamic_initial_max_residual_dof": 118,
+    "dynamic_initial_max_residual_joint": 146,
+    "initial_fiber_equilibration_iterations": 2,
+    "initial_fiber_equilibration_max_length_delta_m": 2.98023223877e-08,
+    "initial_fiber_equilibration_max_velocity_mps": 0.000321700499626,
+    "muscle_step_max_configuration_delta": 3.41644188495e-08,
+    "muscle_step_max_velocity_delta": 8.03850489319e-05,
+    "persistent_completed_steps": 64,
+    "persistent_max_acceleration_mps2": 0.115904301405,
+    "persistent_max_penetration_m": 0.0,
+    "source_dynamic_force_parity_max_delta_n": 0.0321654636734,
+    "source_support_active_contacts": 6,
+    "source_support_witnesses": 10
+  },
+  "schema": "numi.human.native-dynamic-force-audit-requalification.v1",
+  "source": {
+    "binary": "metalrobo_numilab_human_myosim_visual_probe",
+    "binary_sha256": "74aac5cc43e0e2a19016ab5e6d5e61f042f013d457ae32b494398a85426f886b",
+    "branch": "numi-human-passive-stand-20260915",
+    "checkout": "/private/tmp/numi-human-native-passive-stand-20260915",
+    "commit": "0967c4561392a04be6c47d158ec9bd1e4daa2009",
+    "device": "Mac mini M4 Pro",
+    "input_sha256": {
+      "bodyparts3d-myosim-major-bones.nhbones": "de6a792cb4a4a0a50124105d268eda42b2ebbed08e77c34cd1b7ea0696841777",
+      "myosim-fullbody-core-reference.nhrigid": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44",
+      "myosim-fullbody-joint-equalities.nheq": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a",
+      "myosim-fullbody-muscle-reference.nhmyo": "9a988f19a6fd8e533cd0f2bf3192cb8535fb008ccd394ffbf1a4432d3db76a05",
+      "myosim-fullbody-support-contact.nhcnt": "4d54f8155cd83baaee7af536099824ac0da61e5d5e77544b42c6e5ce1b48c907"
+    }
+  },
+  "status": "partial",
+  "subject": "one adult male source package"
+}

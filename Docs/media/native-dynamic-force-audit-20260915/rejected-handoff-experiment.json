@@ -1,0 +1,31 @@
+{
+  "baseline_repaired_state": {
+    "dt_s": 1.25e-05,
+    "max_acceleration_512_mps2": 4.82679176331,
+    "max_acceleration_mps2": 0.115904301405,
+    "steps": 64,
+    "steps_512": 512
+  },
+  "correction_max_n": 0.0321654636734,
+  "patched_binary_sha256": "74aac5cc43e0e2a19016ab5e6d5e61f042f013d457ae32b494398a85426f886b",
+  "patched_state": [
+    {
+      "max_acceleration_mps2": 0.177733644843,
+      "steps": 64
+    },
+    {
+      "max_acceleration_mps2": 1.23970520496,
+      "steps": 128
+    },
+    {
+      "max_acceleration_mps2": 8.46329212189,
+      "steps": 512
+    }
+  ],
+  "promoted": false,
+  "reason": "Adding the frozen CPU-minus-Metal initial muscle-force difference to the dynamic preload worsened the long-horizon release and was reverted.",
+  "schema": "numi.human.static-dynamic-handoff-experiment.v1",
+  "source_commit": "f45fcfdc80a05c2226d638227295add7f789c55c",
+  "source_dynamic_force_parity_max_delta_n": 0.0321654636734,
+  "status": "rejected"
+}

@@ -10,7 +10,7 @@ cross-domain receipt is
 and the current mechanics/organ/blood evidence join is
 [`current-human-evidence-join/receipt-v1.json`](media/current-human-evidence-join-20260915/receipt-v1.json).
 The executable registry snapshot is
-[`gap-execution/report-v30.json`](media/gap-execution-20260915/report-v30.json).
+[`gap-execution/report-v32.json`](media/gap-execution-20260915/report-v32.json).
 The join now includes the current native costal tissue requalification
 ([receipt](media/tissue-integration-20260908/current-costal-binding-receipt-20260915.json)):
 13,516 cooked nodes, 46,278 tetrahedra, 2,871 attachments, eight Apple M4 Pro
@@ -77,6 +77,8 @@ the maximum net residual is `2.99e-6 N`, and internal normalized residual RMS is
 force convergence, anatomical supports/loading, activation calibration, blood
 mass transfer, unresolved materials, fat ownership, and subject calibration
 remain open.
+
+The follow-on [dynamic force-component audit](NATIVE_DYNAMIC_FORCE_AUDIT_20260915.md) now carries the same accepted fibre/tendon state into the persistent Metal owner and publishes every 128-DoF initial dynamic component. The maximum reconstructed residual is `0.03216604835060366 N` at DOF 118, matching the `0.0321654636734 N` source CPU/Metal muscle-force parity delta; the 64-step release remains `0.115904301405 m/s2` with six active source contacts, zero penetration, and bitwise replay. A frozen CPU-minus-Metal preload experiment was explicitly rejected after its 512-step peak worsened from `4.82679176331` to `8.46329212189 m/s2`. This closes the component-diagnostic subgate only; temporal force convergence, sustained standing/recovery/walking, anatomical support/loading, activation calibration, blood mass transfer, unresolved materials, fat ownership, and subject calibration remain open.
 
 The next isolated native increment is recorded in the
 [pose24 passive persistent-stand requalification](NATIVE_PASSIVE_STAND_POSE24_20260915.md).
