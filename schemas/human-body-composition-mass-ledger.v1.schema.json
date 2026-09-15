@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://numi.example/schemas/human-body-composition-mass-ledger.v1.schema.json",
+  "title": "Numi Human one-male body-composition mass ledger",
+  "type": "object",
+  "required": ["schema", "compiler", "status", "subject", "inputs", "scalar_mass_closure", "candidate_scopes", "scope_policy", "ownership", "qualification", "blockers", "boundary"],
+  "properties": {
+    "schema": {"const": "HumanPack.body-composition-mass-ledger.v1"},
+    "compiler": {"const": "numilab-human.body-composition-mass-ledger.1"},
+    "status": {"const": "partial"},
+    "subject": {"type": "object", "required": ["id", "age_years", "sex", "height_m", "target_mass_kg"]},
+    "inputs": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "object"}},
+    "scalar_mass_closure": {"type": "object", "required": ["source_rigid_body_mass_kg", "target_subject_mass_kg", "scaled_mass_kg", "closure_error_kg", "target_closed", "mechanical_subject_calibrated"]},
+    "candidate_scopes": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "object"}},
+    "scope_policy": {"type": "object", "required": ["candidate_scopes_are_disjoint", "candidate_mass_sum_kg", "candidate_mass_sum_status", "candidate_mass_admitted_to_dynamics"]},
+    "ownership": {"type": "object"},
+    "qualification": {"type": "object"},
+    "blockers": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+    "boundary": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}

@@ -2,7 +2,7 @@
 
 ## Current requalification — 2026-09-15
 
-The current repository evidence layer is published at `3c6c423` on `main` and
+The current repository evidence layer is published at `fbad284` on `main` and
 `origin/main`. The source-pin refresh and the body-composition release join
 are the controlling receipts for this ledger; the older native-branch lines
 below are retained as historical provenance. The newly retained subject-scaled
@@ -16,7 +16,7 @@ remains local because the configured GitHub HTTPS credential cannot publish it. 
 cross-domain receipt is
 [`body-composition-integration/receipt-v14.json`](media/body-composition-integration-20260914/receipt-v14.json),
 and the current mechanics/organ/blood evidence join is
-[`current-human-evidence-join/receipt-v4.json`](media/current-human-evidence-join-20260915/receipt-v4.json).
+[`current-human-evidence-join/receipt-v5.json`](media/current-human-evidence-join-20260915/receipt-v5.json).
 The v14 join also binds the compiled MyoSim rigid-body mass owner
 ([candidate](MYOSIM_RIGID_BODY_MASS_OWNER_CANDIDATE_20260915.md)): 103 source
 bodies, 96 mass-bearing rows, seven zero-mass rows, and `97.13195176621342 kg`
@@ -36,7 +36,7 @@ count remains zero. The new cross-domain source/evidence bridge
 to the current native mechanics, organ/blood transport, and zeroth-moment
 blood/tissue transfer receipt while retaining zero physical owners. The executable
 registry snapshot is
-[`gap-execution/report-v69.json`](media/gap-execution-20260915/report-v69.json).
+[`gap-execution/report-v73.json`](media/gap-execution-20260915/report-v73.json).
 The bridge now also records the fat-source absence candidate: the current male
 package has zero adipose surfaces, volume candidates, mass candidates, and
 physical owners. This makes the missing source explicit without treating skin
@@ -247,6 +247,8 @@ The isolated [coupled-velocity closure diagnostic](NATIVE_COUPLED_VELOCITY_CLOSU
 The same diagnostic now has a canonical [dynamic force snapshot](media/native-coupled-velocity-closure-diagnostic-20260915/dynamic-force-snapshot-v1.json) and [per-DoF ledger](media/native-coupled-velocity-closure-diagnostic-20260915/dynamic-force-ledger-v1.json). All 128 native rows reconstruct the six published force owners to `8.53e-14 N` assembly error, while the maximum absolute residual is `0.032620927143 N` and the normalized internal maximum is `0.0161364514`; the ledger remains partial. This closes the reusable force-audit diagnostic path and leaves full generalized convergence, anatomical support/loading, measured activation, blood mechanical mass transfer, materials, calibration, sustained standing, recovery, and walking open.
 
 The v4 [current Human evidence join](CURRENT_HUMAN_EVIDENCE_JOIN_20260915.md) now hash-binds that coupled-velocity diagnostic and ledger into the cross-domain receipt. It records the 64-step physical M4 Pro candidate, six active supports, zero penetration, bitwise replay, `0.115922890604 m/s2` peak acceleration, and `0.032620927143 N` dynamic residual while preserving the partial boundary. This makes the dynamic evidence discoverable from the gap ledger; it does not promote force convergence, anatomical support/loading, activation calibration, blood mechanical ownership, materials, subject calibration, sustained standing, recovery, or walking.
+
+The v5 [current Human evidence join](CURRENT_HUMAN_EVIDENCE_JOIN_20260915.md) now binds the [one-male body-composition mass ledger](BODY_COMPOSITION_MASS_LEDGER_20260915.md). The 43-year-old Falisse2017 male is identity-bound at 1.78 m and 65.5 kg; the uniform scalar mass handoff closes that target with a `-5.684341886080802e-14 kg` residual against the `97.13195176621342 kg` compiled source owner. Organ surface, blood/tissue, cardiac, vessel, regional tissue, skeletal-muscle and fat quantities remain explicit non-disjoint candidates: the receipt forbids summing them and keeps them out of rigid-body dynamics. This advances mass ownership bookkeeping and leaves segment/inertia composition, materials, activation transfer, anatomical blood mechanics, standing, recovery, walking, and integrated qualification open.
 
 The [regional blood/tissue mass-transfer candidate](ORGAN_BLOOD_MASS_TRANSFER_CANDIDATE_20260915.md) now binds the same seven organ beds to explicit zeroth-moment tissue and blood states. Its exact-clock receipt accepts 511 of 512 attempts, rejects step 37 atomically, conserves owned mass and volume, and exercises both transfer directions. This advances the source-bound blood/tissue transfer subgate; anatomical lumen/capillary geometry, mechanical mass ownership, calibrated density, organ mechanics, and subject physiology remain open.
 

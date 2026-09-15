@@ -51,6 +51,18 @@ def test_current_join_binds_pose24_mechanics_and_regional_exchange() -> None:
     assert result["coupled_velocity_diagnostic"]["replay"] == "bitwise"
     assert result["coupled_velocity_diagnostic"]["ledger_max_assembly_error_n"] < 1.0e-12
     assert result["coupled_velocity_diagnostic"]["ledger_max_closure_ratio"] > 0.001
+    assert result["mass_ledger"]["subject_id"] == "Falisse2017:subject_1"
+    assert result["mass_ledger"]["age_years"] == 43
+    assert result["mass_ledger"]["target_mass_kg"] == pytest.approx(65.5)
+    assert result["mass_ledger"]["closure_error_kg"] == pytest.approx(
+        -5.684341886080802e-14
+    )
+    assert result["mass_ledger"]["candidate_mass_sum_status"] == (
+        "forbidden_until_interdomain_partition"
+    )
+    assert result["mass_ledger"]["candidate_mass_admitted_to_dynamics"] is False
+    assert result["qualification"]["scalar_subject_target_closure"]
+    assert result["qualification"]["candidate_scope_non_additivity_checked"]
     for key in (
         "anatomical_supports_loading", "activation_calibration", "force_convergence",
         "anatomical_blood_mass_transfer", "material_calibration", "subject_calibration",

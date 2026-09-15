@@ -109,6 +109,16 @@ if [ "${1:-}" = "body-composition-integration" ]; then
     exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.body_composition_integration "$@"
 fi
 
+if [ "${1:-}" = "body-composition-mass-ledger" ]; then
+    shift
+    if [ -n "${PYTHONPATH:-}" ]; then
+        export PYTHONPATH="$repository_root/src:$PYTHONPATH"
+    else
+        export PYTHONPATH="$repository_root/src"
+    fi
+    exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.body_composition_mass_ledger "$@"
+fi
+
 if [ "${1:-}" = "myosim-rigid-body-mass-owner-candidate" ]; then
     shift
     if [ -n "${PYTHONPATH:-}" ]; then

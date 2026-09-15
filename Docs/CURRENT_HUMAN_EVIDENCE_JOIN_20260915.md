@@ -99,3 +99,25 @@ Reproduce the current receipt with:
 PYTHONPATH=src python3 -m numilab_human.current_human_evidence_join \
   --output Docs/media/current-human-evidence-join-20260915/receipt-v4.json
 ```
+
+## v5 evidence join
+
+The v5 receipt additionally binds the one-male body-composition mass ledger.
+It identifies Falisse2017 `subject_1` as a 43-year-old male at 1.78 m and
+65.5 kg, closes the scalar mass-only handoff with a
+`-5.684341886080802e-14 kg` residual, and records the 97.13195176621342 kg
+compiled source mass and the 31.63195176621342 kg pre-scaling mismatch.
+Organ surface, blood/tissue, cardiac, vessel, regional tissue, skeletal-muscle
+and fat quantities are retained as separate candidate scopes; their mass sum
+is forbidden until a disjoint interdomain partition exists, and no candidate
+mass is admitted to rigid-body dynamics. The receipt therefore advances
+one-male mass bookkeeping while leaving physical soft-tissue ownership,
+materials, activation transfer, anatomical blood mechanics, standing,
+recovery, walking, and integrated qualification false.
+
+Reproduce the current receipt with:
+
+```sh
+PYTHONPATH=src python3 -m numilab_human.current_human_evidence_join \
+  --output Docs/media/current-human-evidence-join-20260915/receipt-v5.json
+```

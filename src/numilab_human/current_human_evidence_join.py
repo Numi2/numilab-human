@@ -32,6 +32,9 @@ COUPLED_VELOCITY_DIAGNOSTIC = ROOT / (
 COUPLED_DYNAMIC_FORCE_LEDGER = ROOT / (
     "Docs/media/native-coupled-velocity-closure-diagnostic-20260915/dynamic-force-ledger-v1.json"
 )
+MASS_LEDGER = ROOT / (
+    "Docs/media/body-composition-mass-ledger-20260915/receipt-v1.json"
+)
 
 
 def _require(condition: bool, message: str) -> None:
@@ -86,6 +89,7 @@ def compile_join(
     blood_mass_transfer: Path = BLOOD_MASS_TRANSFER,
     coupled_velocity_diagnostic: Path = COUPLED_VELOCITY_DIAGNOSTIC,
     coupled_dynamic_force_ledger: Path = COUPLED_DYNAMIC_FORCE_LEDGER,
+    mass_ledger: Path = MASS_LEDGER,
 ) -> dict[str, Any]:
     paths = {
         "body_composition": Path(body_composition),
@@ -97,6 +101,7 @@ def compile_join(
         "blood_mass_transfer": Path(blood_mass_transfer),
         "coupled_velocity_diagnostic": Path(coupled_velocity_diagnostic),
         "coupled_dynamic_force_ledger": Path(coupled_dynamic_force_ledger),
+        "mass_ledger": Path(mass_ledger),
     }
     documents: dict[str, dict[str, Any]] = {}
     hashes: dict[str, str] = {}
@@ -115,6 +120,39 @@ def compile_join(
     ownership = composition.get("ownership", {})
     _require(isinstance(ownership, dict) and ownership and all(value == 0 for value in ownership.values()),
              "body composition contains a physical owner")
+
+    mass_ledger = documents["mass_ledger"]
+    _require(mass_ledger.get("schema") ==
+             "HumanPack.body-composition-mass-ledger.v1" and
+             mass_ledger.get("status") == "partial",
+             "body composition mass ledger schema or status changed")
+    mass_qualification = mass_ledger.get("qualification", {})
+    _require(mass_qualification.get("one_male_identity_bound") is True and
+             mass_qualification.get("rigid_body_source_mass_owner_bound") is True and
+             mass_qualification.get("scalar_subject_target_closure") is True and
+             mass_qualification.get("candidate_scope_non_additivity_checked") is True and
+             mass_qualification.get("candidate_mass_admitted_to_dynamics") is False and
+             mass_qualification.get("integrated_human_qualification") is False,
+             "body composition mass ledger boundary changed")
+    mass_subject = mass_ledger.get("subject", {})
+    _require(mass_subject == {
+        "id": "Falisse2017:subject_1", "age_years": 43, "sex": "male",
+        "height_m": 1.78, "target_mass_kg": 65.5,
+    }, "body composition mass ledger subject changed")
+    mass_closure = mass_ledger.get("scalar_mass_closure", {})
+    _require(mass_closure.get("target_closed") is True and
+             mass_closure.get("target_subject_mass_kg") == 65.5 and
+             abs(float(mass_closure.get("closure_error_kg", 1.0))) <= 1.0e-12,
+             "body composition scalar mass closure changed")
+    mass_ownership = mass_ledger.get("ownership", {})
+    _require(mass_ownership.get("rigid_body_source_owner_count") == 103 and
+             mass_ownership.get("organ_physical_volume_owner_count") == 0 and
+             mass_ownership.get("mechanical_blood_mass_owner_count") == 0 and
+             mass_ownership.get("mechanical_tissue_mass_owner_count") == 0 and
+             mass_ownership.get("skeletal_muscle_tissue_mass_owner_count") == 0 and
+             mass_ownership.get("fat_mechanical_mass_owner_count") == 0 and
+             mass_ownership.get("whole_body_dynamic_mass_matrix_owner_count") == 0,
+             "body composition mass ledger ownership changed")
 
     force = documents["force_audit"]
     _require(force.get("schema") == "HumanPack.native-human-force-audit-current-requalification.v1"
@@ -320,6 +358,9 @@ def compile_join(
         "skeletal_muscle_tissue_volume": False,
         "material_calibration": False,
         "subject_calibration": False,
+        "scalar_subject_target_closure": True,
+        "candidate_scope_non_additivity_checked": True,
+        "candidate_mass_admitted_to_dynamics": False,
         "sustained_standing": False,
         "recovery": False,
         "walking": False,
@@ -339,8 +380,8 @@ def compile_join(
          "evidence": _relative(paths["blood_mass_transfer"]),
          "reason": "Regional zeroth-moment blood/tissue mass transfer conserves on the exact clock in both directions; anatomical lumen and mechanical blood ownership are absent."},
         {"id": "materials_and_subject_calibration", "status": "open",
-         "evidence": _relative(paths["body_composition"]),
-         "reason": "Candidate tissue fits and source densities remain uncalibrated and are not admitted to production mechanics."},
+         "evidence": _relative(paths["mass_ledger"]),
+         "reason": "The one-male scalar mass target closes, but segment composition, density/material, measured activation and subject calibration remain unresolved; candidate masses are not admitted to production mechanics."},
         {"id": "standing_recovery_walking", "status": "open",
          "evidence": _relative(paths["passive_stand"]),
          "reason": "The 512-step release is bounded and replayable, but sustained standing, perturbation recovery and walking are not demonstrated."},
@@ -363,6 +404,32 @@ def compile_join(
             "seconds": 1.25e-5,
             "regional_transport_exact": True,
             "mechanics_exact": True,
+        },
+        "mass_ledger": {
+            "subject_id": mass_subject["id"],
+            "age_years": mass_subject["age_years"],
+            "height_m": mass_subject["height_m"],
+            "target_mass_kg": mass_closure["target_subject_mass_kg"],
+            "source_rigid_body_mass_kg": mass_closure["source_rigid_body_mass_kg"],
+            "scaled_mass_kg": mass_closure["scaled_mass_kg"],
+            "closure_error_kg": mass_closure["closure_error_kg"],
+            "candidate_mass_sum_status": mass_ledger["scope_policy"]["candidate_mass_sum_status"],
+            "candidate_mass_admitted_to_dynamics": mass_ledger["scope_policy"][
+                "candidate_mass_admitted_to_dynamics"
+            ],
+            "organ_candidate_mass_kg": mass_ledger["candidate_scopes"][
+                "organ_surface_candidates"
+            ]["mass_kg"],
+            "blood_tissue_candidate_mass_kg": mass_ledger["candidate_scopes"][
+                "blood_tissue_transfer"
+            ]["mass_kg"],
+            "skeletal_muscle_candidate_volume_m3": mass_ledger["candidate_scopes"][
+                "skeletal_muscle_route_partition"
+            ]["volume_m3"],
+            "regional_tissue_candidate_mass_kg": mass_ledger["candidate_scopes"][
+                "regional_costal_tissue"
+            ]["mass_kg"],
+            "fat_surface_count": mass_ledger["candidate_scopes"]["fat"]["surface_count"],
         },
         "static_closure": {
             "body_count": force_results["body_count"],
@@ -481,6 +548,7 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
                         default=COUPLED_VELOCITY_DIAGNOSTIC)
     parser.add_argument("--coupled-dynamic-force-ledger", type=Path,
                         default=COUPLED_DYNAMIC_FORCE_LEDGER)
+    parser.add_argument("--mass-ledger", type=Path, default=MASS_LEDGER)
     parser.add_argument("--output", type=Path, required=True)
     parser.set_defaults(handler=run)
 
@@ -496,6 +564,7 @@ def run(arguments: argparse.Namespace) -> int:
         blood_mass_transfer=arguments.blood_mass_transfer,
         coupled_velocity_diagnostic=arguments.coupled_velocity_diagnostic,
         coupled_dynamic_force_ledger=arguments.coupled_dynamic_force_ledger,
+        mass_ledger=arguments.mass_ledger,
     )
     digest = immutable_write(arguments.output.resolve(), result)
     print(json.dumps({"schema": SCHEMA, "status": result["status"],
