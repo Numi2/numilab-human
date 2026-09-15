@@ -3,6 +3,7 @@ on:
   push:
     branches: [main]
     paths:
+      - ".numi/commands/human"
       - "src/numilab_human/static_dynamic_handoff.py"
       - "src/numilab_human/native_force_convergence.py"
       - "src/numilab_human/equilibrium_force_snapshot.py"
@@ -17,9 +18,13 @@ on:
       - "tests/test_standing_state.py"
       - "tests/test_native_passive_stand_refinement.py"
       - "tests/test_native_refinement_binding.py"
+      - "tests/test_native_mechanics_summary.py"
+      - "tests/test_stand_execution_options.py"
+      - "tests/test_importer.py"
       - ".github/workflows/human-equilibrium-audits.yml"
   pull_request:
     paths:
+      - ".numi/commands/human"
       - "src/numilab_human/*force*"
       - "src/numilab_human/*handoff*"
       - "src/numilab_human/*stand*"
@@ -27,6 +32,8 @@ on:
       - "tests/test_*handoff*"
       - "tests/test_*stand*"
       - "tests/test_native_refinement_binding.py"
+      - "tests/test_native_mechanics_summary.py"
+      - "tests/test_importer.py"
       - ".github/workflows/human-equilibrium-audits.yml"
 permissions:
   contents: read
@@ -57,17 +64,28 @@ jobs:
           tests/test_standing_state.py
           tests/test_native_passive_stand_refinement.py
           tests/test_native_refinement_binding.py
+          tests/test_native_mechanics_summary.py
+          tests/test_stand_execution_options.py
+      - name: Verify workspace launch compatibility
+        run: python -m pytest -q --junitxml=human-workspace-results.xml tests/test_importer.py -k numi_workspace
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: human-equilibrium-python-${{ matrix.python-version }}
           path: |
             human-equilibrium-results.xml
+            human-workspace-results.xml
             src/numilab_human/model.py
             src/numilab_human/physiology.py
             src/numilab_human/native_passive_stand_refinement.py
             src/numilab_human/equilibrium_force_snapshot.py
+            src/numilab_human/native_force_convergence.py
             src/numilab_human/force_ledger.py
             tests/test_native_refinement_binding.py
             tests/test_equilibrium_force_snapshot.py
             tests/test_initial_force_reference.py
+            tests/test_native_mechanics_summary.py
+            tests/test_stand_execution_options.py
+            .numi/commands/human
+          include-hidden-files: true
+          retention-days: 14
