@@ -28,6 +28,7 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
         "tissue_calibration_candidate": 1,
         "vessel_mass_moment_candidate": 6,
         "vessel_surface_identity": 6,
+        "blood_tissue_mass_transfer_beds": 7,
     }
     assert result["runtime_evidence"]["clock_nanoseconds"] == 12500
     assert result["runtime_evidence"]["blood_transport_accepted_steps"] == 511
@@ -65,10 +66,17 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
     assert result["runtime_evidence"]["native_costal_tissue_mass_kg"] == pytest.approx(0.11369939548001184)
     assert result["qualification"]["native_regional_exchange_requalification_bound"]
     assert result["qualification"]["native_regional_exchange_oxygen_exchange"]
+    assert result["qualification"]["blood_tissue_mass_transfer_candidate_bound"]
+    assert not result["qualification"]["blood_tissue_mass_transfer_mechanical_owner"]
     assert not result["qualification"]["native_regional_exchange_mechanical_blood_mass_owner"]
     assert result["runtime_evidence"]["native_regional_exchange_attempted_steps"] == 512
     assert result["runtime_evidence"]["native_regional_exchange_accepted_steps_environment_0"] == 511
     assert result["runtime_evidence"]["native_regional_exchange_oxygen_residual"] == pytest.approx(1.057184875e-6)
+    assert result["runtime_evidence"]["blood_tissue_mass_transfer_accepted_steps"] == 511
+    assert result["runtime_evidence"]["blood_tissue_mass_transfer_rejected_steps"] == 1
+    assert result["runtime_evidence"]["blood_tissue_mass_transfer_mass_conserved"]
+    assert result["runtime_evidence"]["blood_tissue_mass_transfer_volume_conserved"]
+    assert result["runtime_evidence"]["blood_tissue_mass_transfer_bidirectional"]
     assert result["runtime_evidence"]["vessel_moment_transport_accepted_steps"] == 511
     assert result["runtime_evidence"]["vessel_moment_transport_rejected_steps"] == 1
     assert result["runtime_evidence"]["vessel_moment_transport_mass_conserved"]

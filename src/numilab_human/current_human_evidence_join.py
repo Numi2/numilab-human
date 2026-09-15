@@ -18,12 +18,14 @@ from .model import ImportError as HumanImportError
 from .physiology import canonical, read_json
 
 ROOT = Path(__file__).resolve().parents[2]
-SCHEMA = "HumanPack.current-human-evidence-join.v1"
-BODY_COMPOSITION = ROOT / "Docs/media/body-composition-integration-20260914/receipt-v12.json"
+SCHEMA = "HumanPack.current-human-evidence-join.v2"
+BODY_COMPOSITION = ROOT / "Docs/media/body-composition-integration-20260914/receipt-v13.json"
 FORCE_AUDIT = ROOT / "Docs/media/native-force-audit-pose24-20260915/receipt-v1.json"
 FORCE_LEDGER = ROOT / "Docs/media/native-force-audit-pose24-20260915/force-ledger.json"
 PASSIVE_STAND = ROOT / "Docs/media/native-passive-stand-pose24-20260915/receipt-v1.json"
 REGIONAL_EXCHANGE = ROOT / "Docs/media/native-human-regional-exchange-pose24-20260915/receipt-v1.json"
+DYNAMIC_AUDIT = ROOT / "Docs/media/native-dynamic-force-audit-20260915/receipt-v1.json"
+BLOOD_MASS_TRANSFER = ROOT / "Docs/media/organ-blood-mass-transfer-20260915/receipt-v3.json"
 
 
 def _require(condition: bool, message: str) -> None:
@@ -74,6 +76,8 @@ def compile_join(
     force_ledger: Path = FORCE_LEDGER,
     passive_stand: Path = PASSIVE_STAND,
     regional_exchange: Path = REGIONAL_EXCHANGE,
+    dynamic_audit: Path = DYNAMIC_AUDIT,
+    blood_mass_transfer: Path = BLOOD_MASS_TRANSFER,
 ) -> dict[str, Any]:
     paths = {
         "body_composition": Path(body_composition),
@@ -81,6 +85,8 @@ def compile_join(
         "force_ledger": Path(force_ledger),
         "passive_stand": Path(passive_stand),
         "regional_exchange": Path(regional_exchange),
+        "dynamic_audit": Path(dynamic_audit),
+        "blood_mass_transfer": Path(blood_mass_transfer),
     }
     documents: dict[str, dict[str, Any]] = {}
     hashes: dict[str, str] = {}
@@ -183,8 +189,57 @@ def compile_join(
              regional_results.get("rollback") == "bitwise",
              "regional exchange exact-clock evidence is incomplete")
 
+    dynamic = documents["dynamic_audit"]
+    _require(dynamic.get("schema") == "numi.human.native-dynamic-force-audit-requalification.v1"
+             and dynamic.get("status") == "partial",
+             "dynamic force audit schema or status changed")
+    dynamic_source = _source(dynamic, "dynamic force audit")
+    dynamic_qualification = dynamic.get("qualification", {})
+    _require(dynamic_qualification.get("source_identity_bound") is True and
+             dynamic_qualification.get("coordinate_identity_bound") is True and
+             dynamic_qualification.get("full_128_dof_component_rows") is True and
+             dynamic_qualification.get("dynamic_component_reconstruction") is True and
+             dynamic_qualification.get("dynamic_release") is False and
+             dynamic_qualification.get("force_convergence") is False and
+             dynamic_qualification.get("activation_calibration") is False and
+             dynamic_qualification.get("anatomical_support_loading") is False,
+             "dynamic force audit boundary changed")
+    dynamic_results = dynamic.get("results", {})
+    _require(dynamic_results.get("body_count") == 157 and
+             dynamic_results.get("dof_count") == 128 and
+             dynamic_results.get("persistent_completed_steps") == 64 and
+             dynamic_results.get("source_support_active_contacts") == 6 and
+             dynamic_results.get("persistent_max_penetration_m") == 0.0 and
+             dynamic_results.get("dynamic_initial_max_abs_residual_n") == 0.03216604835060366 and
+             dynamic_results.get("source_dynamic_force_parity_max_delta_n") == 0.0321654636734 and
+             dynamic_results.get("persistent_max_acceleration_mps2") == 0.115904301405,
+             "dynamic force audit metrics changed")
+
+    mass_transfer = documents["blood_mass_transfer"]
+    _require(mass_transfer.get("schema") == "HumanPack.organ-blood-mass-transfer-candidate.v1"
+             and mass_transfer.get("status") == "partial" and
+             mass_transfer.get("clock", {}).get("nanoseconds") == 12500 and
+             mass_transfer.get("counts", {}).get("bed_count") == 7 and
+             mass_transfer.get("counts", {}).get("source_blood_owner_count") == 6 and
+             mass_transfer.get("accepted_steps") == 511 and
+             mass_transfer.get("rejected_steps") == 1 and
+             mass_transfer.get("conservation", {}).get("mass_conserved") is True and
+             mass_transfer.get("conservation", {}).get("volume_conserved") is True and
+             mass_transfer.get("rollback", {}).get("rejected_candidate_state_neutral") is True and
+             mass_transfer.get("transfer_counts", {}).get("blood_to_tissue", 0) > 0 and
+             mass_transfer.get("transfer_counts", {}).get("tissue_to_blood", 0) > 0,
+             "regional blood/tissue mass-transfer evidence changed")
+    mass_transfer_qualification = mass_transfer.get("qualification", {})
+    _require(mass_transfer_qualification.get("blood_tissue_zeroth_moment_mass_transfer") is True and
+             mass_transfer_qualification.get("mechanical_blood_mass_owner") is False and
+             mass_transfer_qualification.get("mechanical_tissue_mass_owner") is False and
+             mass_transfer_qualification.get("anatomical_exchange_owner") is False and
+             mass_transfer_qualification.get("anatomical_vessel_lumen") is False,
+             "regional blood/tissue mass-transfer qualification boundary changed")
+
     for label, source in (("force audit", force_source), ("passive stand", stand_source),
-                          ("regional exchange", regional_source)):
+                          ("regional exchange", regional_source),
+                          ("dynamic force audit", dynamic_source)):
         _require(source["device"] == "Mac mini M4 Pro", f"{label} is not physical-Mac evidence")
     _require(force_source["commit"] == stand_source["commit"] == regional_source["commit"],
              "native source commits diverge")
@@ -199,8 +254,10 @@ def compile_join(
         "per_dof_source_audit": True,
         "bounded_passive_release": True,
         "exact_clock": True,
+        "dynamic_force_component_audit": True,
         "regional_blood_transport": True,
         "oxygen_amount_exchange": True,
+        "blood_tissue_mass_transfer_candidate": True,
         "accepted_step_conservation": True,
         "bitwise_replay": True,
         "anatomical_supports_loading": False,
@@ -230,8 +287,8 @@ def compile_join(
          "evidence": _relative(paths["body_composition"]),
          "reason": "Recruitment is source-bound, but measured activation and held-out force validation are absent."},
         {"id": "blood_mass_transfer", "status": "open",
-         "evidence": _relative(paths["regional_exchange"]),
-         "reason": "Regional amount transport and oxygen exchange conserve on the exact clock; anatomical lumen and mechanical blood ownership are absent."},
+         "evidence": _relative(paths["blood_mass_transfer"]),
+         "reason": "Regional zeroth-moment blood/tissue mass transfer conserves on the exact clock in both directions; anatomical lumen and mechanical blood ownership are absent."},
         {"id": "materials_and_subject_calibration", "status": "open",
          "evidence": _relative(paths["body_composition"]),
          "reason": "Candidate tissue fits and source densities remain uncalibrated and are not admitted to production mechanics."},
@@ -290,6 +347,24 @@ def compile_join(
             "rollback": regional_results["rollback"],
             "replay": regional_results["replay"],
         },
+        "dynamic_force_diagnostic": {
+            "completed_steps": dynamic_results["persistent_completed_steps"],
+            "initial_max_abs_residual_n": dynamic_results["dynamic_initial_max_abs_residual_n"],
+            "persistent_max_acceleration_mps2": dynamic_results["persistent_max_acceleration_mps2"],
+            "source_dynamic_force_parity_max_delta_n": dynamic_results["source_dynamic_force_parity_max_delta_n"],
+            "active_support_contacts": dynamic_results["source_support_active_contacts"],
+            "maximum_penetration_m": dynamic_results["persistent_max_penetration_m"],
+            "replay": dynamic_qualification["replay"],
+        },
+        "blood_tissue_mass_transfer": {
+            "accepted_steps": mass_transfer["accepted_steps"],
+            "rejected_steps": mass_transfer["rejected_steps"],
+            "blood_to_tissue_transfers": mass_transfer["transfer_counts"]["blood_to_tissue"],
+            "tissue_to_blood_transfers": mass_transfer["transfer_counts"]["tissue_to_blood"],
+            "mass_conserved": mass_transfer["conservation"]["mass_conserved"],
+            "volume_conserved": mass_transfer["conservation"]["volume_conserved"],
+            "rollback": mass_transfer["rollback"]["rejected_candidate_state_neutral"],
+        },
         "ownership": {
             "physical_owner_count": 0,
             "mechanical_blood_mass_owner_count": 0,
@@ -300,12 +375,15 @@ def compile_join(
         "boundary": (
             "This receipt joins the current source-composition candidate, pose-24 native "
             "whole-body force audit, complete 128-DoF source ledger, pose-24 passive "
-            "release, and exact-clock regional blood/oxygen replay for one adult male. "
+            "release, dynamic force-component diagnostic, exact-clock regional blood/oxygen "
+            "replay, and the zeroth-moment blood/tissue mass-transfer candidate for one adult male. "
             "It proves source and runtime identity, static generalized closure, bounded "
-            "release, regional amount conservation and replay. It does not admit candidate "
+            "release, regional amount/mass conservation and replay. It does not admit candidate "
             "tissue or blood mass to rigid-body dynamics and does not prove anatomical "
             "contact, activation calibration, anatomical blood transfer, organ mechanics, "
-            "materials, subject calibration, sustained standing, recovery or walking."
+            "materials, subject calibration, sustained standing, recovery or walking. "
+            "The dynamic component result is a diagnostic only; its short release does not "
+            "qualify temporal force convergence."
         ),
     }
 
@@ -328,6 +406,8 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--force-ledger", type=Path, default=FORCE_LEDGER)
     parser.add_argument("--passive-stand", type=Path, default=PASSIVE_STAND)
     parser.add_argument("--regional-exchange", type=Path, default=REGIONAL_EXCHANGE)
+    parser.add_argument("--dynamic-audit", type=Path, default=DYNAMIC_AUDIT)
+    parser.add_argument("--blood-mass-transfer", type=Path, default=BLOOD_MASS_TRANSFER)
     parser.add_argument("--output", type=Path, required=True)
     parser.set_defaults(handler=run)
 
@@ -339,6 +419,8 @@ def run(arguments: argparse.Namespace) -> int:
         force_ledger=arguments.force_ledger,
         passive_stand=arguments.passive_stand,
         regional_exchange=arguments.regional_exchange,
+        dynamic_audit=arguments.dynamic_audit,
+        blood_mass_transfer=arguments.blood_mass_transfer,
     )
     digest = immutable_write(arguments.output.resolve(), result)
     print(json.dumps({"schema": SCHEMA, "status": result["status"],

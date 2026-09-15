@@ -57,6 +57,8 @@ anatomical, calibration, standing, or walking acceptance gates.
 
 The current dynamic handoff diagnostic is now source-bound in [NATIVE_DYNAMIC_FORCE_AUDIT_20260915.md](NATIVE_DYNAMIC_FORCE_AUDIT_20260915.md). It publishes all 128 accepted Metal fibre-root force components and their initial residuals at 12.5 microseconds, and retains the rejected frozen-preload experiment. This adds an executable diagnostic target without changing the registry disposition: force convergence, anatomical supports/loading, activation calibration, blood mass transfer, unresolved materials, subject calibration, sustained standing, recovery, and walking remain open.
 
+The regional [blood/tissue mass-transfer candidate](ORGAN_BLOOD_MASS_TRANSFER_CANDIDATE_20260915.md) now binds seven source beds to explicit zeroth-moment blood and tissue states. Its 512-attempt exact-clock receipt accepts 511 steps, atomically rejects step 37, conserves mass and owned volume, and exercises both transfer directions. It remains a source-bound transport subgate; anatomical lumen/capillary geometry, mechanical ownership, calibrated density, organ mechanics, and subject physiology remain unresolved.
+
 Validation on 2026-09-13: twelve focused registry tests and fourteen existing
 target-coverage tests pass. The JSON Schema passes Draft 2020-12 schema checking
 and independently validates the shipped registry with `jsonschema` 4.25.1.
@@ -453,12 +455,12 @@ is far below the standing gate, this narrows the recruitment/equilibrium
 failure without closing force convergence, sustained standing, recovery,
 walking, anatomical loading, material, blood/tissue transfer, or calibration.
 The refreshed executable gap report is
-[`Docs/media/gap-execution-20260915/report-v34.json`](media/gap-execution-20260915/report-v34.json).
+[`Docs/media/gap-execution-20260915/report-v40.json`](media/gap-execution-20260915/report-v40.json).
 It now includes the current mechanics/organ/blood evidence join
 ([receipt](CURRENT_HUMAN_EVIDENCE_JOIN_20260915.md)) and the regional exchange
 requalification rebuilt on the pose-24 native owner.
 It includes the activation-0.8/default receipts, the 512-step temporal-drift
-receipt, the v12 cross-domain body-composition join, the six-vessel mass-moment
+receipt, the v13 cross-domain body-composition join, the six-vessel mass-moment
 transport probe, the current costal tissue and regional blood/exchange
 requalifications, the complete static passive-equilibrium persistent-stand
 receipt, and the current physical-M4 per-DoF force audit, and remains
@@ -535,3 +537,12 @@ standing qualification. The source commit is
 This changes the default recruitment handoff, but the bounded horizons still
 do not close force convergence, sustained standing, recovery, walking,
 anatomical loading, blood/tissue transfer, materials, or calibration.
+
+The current v40 snapshot also includes the regional zeroth-moment
+blood/tissue mass-transfer candidate and the v2 current Human evidence join.
+The mass-transfer candidate accepts 511 of 512 exact-clock attempts, rejects
+step 37 atomically, conserves mass and owned volume, and exercises both
+transfer directions. The dynamic force-component audit is bound as a diagnostic
+with all 128 rows and a short bounded release; neither increment changes the
+force-convergence, anatomical-loading, material, subject-calibration, standing,
+recovery, or walking dispositions.

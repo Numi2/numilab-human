@@ -7,11 +7,11 @@ The current published source/runtime join is `cd391fa8287e03ea0085bae310434c5da2
 Mac mini branch `0967c4561392a04be6c47d158ec9bd1e4daa2009`; its source branch
 remains local because the configured GitHub HTTPS credential cannot publish it. The latest
 cross-domain receipt is
-[`body-composition-integration/receipt-v12.json`](media/body-composition-integration-20260914/receipt-v12.json),
+[`body-composition-integration/receipt-v13.json`](media/body-composition-integration-20260914/receipt-v13.json),
 and the current mechanics/organ/blood evidence join is
-[`current-human-evidence-join/receipt-v1.json`](media/current-human-evidence-join-20260915/receipt-v1.json).
+[`current-human-evidence-join/receipt-v2.json`](media/current-human-evidence-join-20260915/receipt-v2.json).
 The executable registry snapshot is
-[`gap-execution/report-v34.json`](media/gap-execution-20260915/report-v34.json).
+[`gap-execution/report-v40.json`](media/gap-execution-20260915/report-v40.json).
 The join now includes the current native costal tissue requalification
 ([receipt](media/tissue-integration-20260908/current-costal-binding-receipt-20260915.json)):
 13,516 cooked nodes, 46,278 tetrahedra, 2,871 attachments, eight Apple M4 Pro
@@ -80,6 +80,8 @@ mass transfer, unresolved materials, fat ownership, and subject calibration
 remain open.
 
 The follow-on [dynamic force-component audit](NATIVE_DYNAMIC_FORCE_AUDIT_20260915.md) now carries the same accepted fibre/tendon state into the persistent Metal owner and publishes every 128-DoF initial dynamic component. The maximum reconstructed residual is `0.03216604835060366 N` at DOF 118, matching the `0.0321654636734 N` source CPU/Metal muscle-force parity delta; the 64-step release remains `0.115904301405 m/s2` with six active source contacts, zero penetration, and bitwise replay. A frozen CPU-minus-Metal preload experiment was explicitly rejected after its 512-step peak worsened from `4.82679176331` to `8.46329212189 m/s2`. This closes the component-diagnostic subgate only; temporal force convergence, sustained standing/recovery/walking, anatomical support/loading, activation calibration, blood mass transfer, unresolved materials, fat ownership, and subject calibration remain open.
+
+The [regional blood/tissue mass-transfer candidate](ORGAN_BLOOD_MASS_TRANSFER_CANDIDATE_20260915.md) now binds the same seven organ beds to explicit zeroth-moment tissue and blood states. Its exact-clock receipt accepts 511 of 512 attempts, rejects step 37 atomically, conserves owned mass and volume, and exercises both transfer directions. This advances the source-bound blood/tissue transfer subgate; anatomical lumen/capillary geometry, mechanical mass ownership, calibrated density, organ mechanics, and subject physiology remain open.
 
 The next isolated native increment is recorded in the
 [pose24 passive persistent-stand requalification](NATIVE_PASSIVE_STAND_POSE24_20260915.md).

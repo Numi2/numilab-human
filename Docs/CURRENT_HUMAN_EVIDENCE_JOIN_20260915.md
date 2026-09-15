@@ -40,3 +40,24 @@ anatomical blood mass transfer, organ mechanics, fat and skeletal-muscle
 physical ownership, calibrated materials, subject calibration, sustained
 standing, perturbation recovery, and walking. Candidate masses remain barred
 from the rigid-body dynamics.
+
+## v2 evidence join
+
+The v2 receipt additionally hash-binds the v13 body-composition integration,
+the physical-M4 dynamic force-component audit, and the exact-clock regional
+blood/tissue mass-transfer candidate. The dynamic audit exposes all 128 initial
+components and retains a 64-step, `0.115904301405 m/s2` release with
+`0.03216604835060366 N` maximum initial residual, zero penetration, six active
+source contacts, and bitwise replay; it is diagnostic evidence and does not
+qualify temporal force convergence. The mass-transfer candidate accepts 511 of
+512 attempts, rejects step 37 atomically, conserves mass and volume, and
+exercises both directions. Anatomical lumen/capillary geometry, mechanical
+blood/tissue ownership, calibrated density, materials, subject calibration,
+sustained standing, recovery, and walking remain open.
+
+Reproduce the current receipt with:
+
+```sh
+PYTHONPATH=src python3 -m numilab_human.current_human_evidence_join \
+  --output Docs/media/current-human-evidence-join-20260915/receipt-v2.json
+```

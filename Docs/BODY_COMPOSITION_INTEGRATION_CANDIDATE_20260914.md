@@ -131,3 +131,12 @@ raw second moments under an explicitly synthetic uniform velocity field for
 mass and linear momentum, and replays bitwise. It remains surface-integral
 bookkeeping: no anatomical lumen, mechanical blood-mass owner, vessel-to-tissue
 transfer, calibrated material, or subject claim is promoted.
+
+The current `v13` receipt additionally binds the regional blood/tissue
+zeroth-moment mass-transfer candidate. The seven source beds reuse the admitted
+regional blood and tissue identities on the exact `12,500 ns` clock, accept 511
+of 512 attempts, reject step 37 with neutral rollback, conserve owned mass and
+volume, and exercise both transfer directions. This is a transport/conservation
+subgate only: it does not create an anatomical lumen or capillary network,
+promote blood or tissue to the rigid-body mass matrix, calibrate density or
+exchange coefficients, or qualify organ mechanics or subject physiology.

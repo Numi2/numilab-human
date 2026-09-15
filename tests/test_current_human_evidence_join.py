@@ -13,6 +13,7 @@ from numilab_human.physiology import canonical
 def test_current_join_binds_pose24_mechanics_and_regional_exchange() -> None:
     result = compile_join()
 
+    assert result["schema"] == "HumanPack.current-human-evidence-join.v2"
     assert result["status"] == "partial"
     assert result["subject"] == "one adult male source package"
     assert result["native_owner"]["commit"] == "7625ec565e086faf0dcd349846dadc2d22d65e86"
@@ -37,6 +38,14 @@ def test_current_join_binds_pose24_mechanics_and_regional_exchange() -> None:
     assert result["qualification"]["static_generalized_force_closure"]
     assert result["qualification"]["regional_blood_transport"]
     assert result["qualification"]["oxygen_amount_exchange"]
+    assert result["qualification"]["dynamic_force_component_audit"]
+    assert result["qualification"]["blood_tissue_mass_transfer_candidate"]
+    assert result["dynamic_force_diagnostic"]["completed_steps"] == 64
+    assert result["dynamic_force_diagnostic"]["maximum_penetration_m"] == 0.0
+    assert result["blood_tissue_mass_transfer"]["accepted_steps"] == 511
+    assert result["blood_tissue_mass_transfer"]["rejected_steps"] == 1
+    assert result["blood_tissue_mass_transfer"]["mass_conserved"]
+    assert result["blood_tissue_mass_transfer"]["volume_conserved"]
     for key in (
         "anatomical_supports_loading", "activation_calibration", "force_convergence",
         "anatomical_blood_mass_transfer", "material_calibration", "subject_calibration",
@@ -77,3 +86,23 @@ def test_current_join_receipt_is_immutable(tmp_path: Path) -> None:
     changed = {**result, "status": "changed"}
     with pytest.raises(ImportError, match="immutable"):
         immutable_write(output, changed)
+
+
+def test_current_join_rejects_promoted_mass_transfer_owner(tmp_path: Path) -> None:
+    source = Path("Docs/media/organ-blood-mass-transfer-20260915/receipt-v3.json")
+    value = json.loads(source.read_text(encoding="utf-8"))
+    value["qualification"]["mechanical_blood_mass_owner"] = True
+    path = tmp_path / "mass-transfer.json"
+    path.write_bytes(canonical(value) + b"\n")
+    with pytest.raises(ImportError, match="mass-transfer qualification boundary changed"):
+        compile_join(blood_mass_transfer=path)
+
+
+def test_current_join_rejects_dynamic_release_promotion(tmp_path: Path) -> None:
+    source = Path("Docs/media/native-dynamic-force-audit-20260915/receipt-v1.json")
+    value = json.loads(source.read_text(encoding="utf-8"))
+    value["qualification"]["dynamic_release"] = True
+    path = tmp_path / "dynamic.json"
+    path.write_bytes(canonical(value) + b"\n")
+    with pytest.raises(ImportError, match="dynamic force audit boundary changed"):
+        compile_join(dynamic_audit=path)

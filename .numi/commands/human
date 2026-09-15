@@ -49,6 +49,16 @@ if [ "${1:-}" = "organ-tissue-exchange-candidate" ]; then
     exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.organ_tissue_exchange_candidate "$@"
 fi
 
+if [ "${1:-}" = "organ-blood-mass-transfer-candidate" ]; then
+    shift
+    if [ -n "${PYTHONPATH:-}" ]; then
+        export PYTHONPATH="$repository_root/src:$PYTHONPATH"
+    else
+        export PYTHONPATH="$repository_root/src"
+    fi
+    exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.organ_blood_mass_transfer_candidate "$@"
+fi
+
 if [ "${1:-}" = "soft-tissue-surface-candidate" ]; then
     shift
     if [ -n "${PYTHONPATH:-}" ]; then
