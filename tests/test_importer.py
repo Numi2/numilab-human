@@ -2639,6 +2639,8 @@ class ImporterTests(unittest.TestCase):
         stand = command.split(
             "# Canonical Numi Human v1 standing transaction", 1,
         )[1].split("# Canonical Numi-owned Human probe", 1)[0]
+        self.assertIn("native source-compliant recruitment candidate", stand)
+        self.assertNotIn("--muscle-activation 0.5", stand)
         for argument in (
             "--support-stance-dof 2 0.02",
             "--support-stance-dof 108 0.1",

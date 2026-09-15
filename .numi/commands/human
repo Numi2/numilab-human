@@ -436,8 +436,10 @@ if [ "${1:-}" = "stand" ]; then
         printf '%s\n' "build target metalrobo_numilab_human_myosim_visual_probe in $runtime_root" >&2
         exit 2
     fi
-    # Standing uses a bounded recruitment candidate; activation 1.0 is a
-    # diagnostic saturation state, not a prepared equilibrium.
+    # Standing uses the native source-compliant recruitment candidate.  Leave
+    # activation unspecified here so the compiled probe selects its qualified
+    # 0.8 recruitment ceiling and emits the per-route state; a scalar override
+    # is reserved for explicit diagnostic commands.
     set -- "$probe" \
         "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
         "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
@@ -460,7 +462,6 @@ if [ "${1:-}" = "stand" ]; then
         --support-stance-contact 7 \
         --muscle-step-seconds "$timestep" \
         --muscle-step-count "$steps" \
-        --muscle-activation 0.5 \
         --persistent-metal-stand \
         --stand-root-assistance \
         --stand-remove-assistance \

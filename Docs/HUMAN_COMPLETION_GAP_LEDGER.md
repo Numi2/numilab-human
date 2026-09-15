@@ -40,6 +40,14 @@ candidate and the one-plug finite-hold material fit; both retain explicit
 measured-activation, whole-body transfer, and production-material gates as
 unqualified.
 
+The canonical `.numi/commands/human stand` wrapper now leaves
+`--muscle-activation` unspecified, so the native probe uses its qualified
+source default `0.8` recruitment ceiling and emits the per-route recruitment
+state. This removes the historical `0.5` negative control from the normal
+standing path; it does not promote standing because the exact-clock release
+still drifts over the 512-step horizon and measured activation calibration is
+absent.
+
 The follow-on [source-evidence bridge extension](HUMAN_SOURCE_EVIDENCE_BRIDGE_20260915.md)
 now hash-binds the equal-incidence route-mass partition to the immutable v6
 cross-domain bridge and its route-volume source. The v7 receipt carries 416
