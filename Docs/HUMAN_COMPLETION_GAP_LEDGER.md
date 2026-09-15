@@ -8,7 +8,7 @@ The current published source/runtime join is `1a25757` in the companion
 cross-domain receipt is
 [`body-composition-integration/receipt-v12.json`](media/body-composition-integration-20260914/receipt-v12.json),
 and the executable registry snapshot is
-[`gap-execution/report-v15.json`](media/gap-execution-20260915/report-v15.json).
+[`gap-execution/report-v19.json`](media/gap-execution-20260915/report-v19.json).
 The join now includes the current native costal tissue requalification
 ([receipt](media/tissue-integration-20260908/current-costal-binding-receipt-20260915.json)):
 13,516 cooked nodes, 46,278 tetrahedra, 2,871 attachments, eight Apple M4 Pro
@@ -130,6 +130,19 @@ rows from the 122 internal rows. The retained Mac mini handoff experiment has
 missing tendon, limit, contact, equality, and damping terms and internal
 residuals up to `1315.41475411 N`; it is diagnostic evidence only and does not
 admit force convergence or standing.
+
+The current physical-M4 [force-audit requalification](NATIVE_FORCE_AUDIT_REQUALIFICATION_20260915.md)
+reruns the complete 128-row component dump on the passive-equilibrium source
+branch `ef0fc708db0f4de1a07fca426e5a415f62e9da27`, with 40 source passive
+coordinate couplings and the canonical `12.5 us` response step. Component
+assembly reconstructs the authoritative net within `1.1368683772161603e-13 N`
+and the root support wrench remains closed at `1.85360568139e-6 N`, but the
+internal normalized residual RMS is still `0.141417024366` and the maximum
+closure ratio is `1.0`. All rows now carry native joint and child-body identity
+indices; anatomical labels and coordinate kinds remain unavailable. This is the
+current per-DoF diagnostic owner; it keeps force convergence, sustained
+standing, recovery, walking, anatomical loading, activation calibration, blood
+mass transfer, materials, and subject calibration open.
 
 The [muscle surface geometry audit](MUSCLE_SURFACE_GEOMETRY_AUDIT_20260914.md)
 now replays all 150 hash-locked BodyParts3D muscle/tendon members and

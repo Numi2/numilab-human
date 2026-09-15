@@ -107,6 +107,9 @@ def _coordinate_map(path: Path | None, text: str) -> tuple[list[str], list[str],
     _require(isinstance(payload, dict), "coordinate map must be an object")
     names = payload.get("coordinate_names")
     kinds = payload.get("coordinate_kinds")
+    anatomical_names = payload.get("anatomical_names", True)
+    _require(type(anatomical_names) is bool,
+             "coordinate map anatomical_names must be boolean when supplied")
     _require(isinstance(names, list) and len(names) == NV and
              all(isinstance(name, str) and name for name in names),
              "coordinate map must provide 128 non-empty coordinate_names")
@@ -117,7 +120,7 @@ def _coordinate_map(path: Path | None, text: str) -> tuple[list[str], list[str],
     return names, kinds, {
         "source": str(resolved),
         "sha256": hashlib.sha256(resolved.read_bytes()).hexdigest(),
-        "anatomical_names": True,
+        "anatomical_names": anatomical_names,
         "named_coordinates": NV,
         "coordinate_kinds_known": all(kind != "unknown" for kind in kinds),
     }

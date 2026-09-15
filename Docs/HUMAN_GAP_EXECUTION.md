@@ -450,18 +450,26 @@ is far below the standing gate, this narrows the recruitment/equilibrium
 failure without closing force convergence, sustained standing, recovery,
 walking, anatomical loading, material, blood/tissue transfer, or calibration.
 The refreshed executable gap report is
-[`Docs/media/gap-execution-20260915/report-v15.json`](media/gap-execution-20260915/report-v15.json),
-whose report content SHA-256 is
-`7b3de4f138d3926b4705b72d38644c79d1395e1f7ef9b99c07c44a8be8ab7bdb` and
-whose canonical file SHA-256 is
-`72f09d483ef9869d4b8c308d69adbbbf8e52a9bcb3427a6371aac30221b446e3`.
+[`Docs/media/gap-execution-20260915/report-v19.json`](media/gap-execution-20260915/report-v19.json),
+whose report SHA-256 is
+`9f8525f11b6bd4a58839b9306b3ba1f8e4ae58b60d9db169e82bec79d3d5a03b`.
 It includes the activation-0.8/default receipts, the 512-step temporal-drift
 receipt, the v12 cross-domain body-composition join, the six-vessel mass-moment
 transport probe, the current costal tissue and regional blood/exchange
 requalifications, the complete static passive-equilibrium persistent-stand
-receipt, and the canonical per-DoF force ledger receipt, and remains
+receipt, and the current physical-M4 per-DoF force audit, and remains
 `integrated_qualification: not_assessed` with 14 workstreams, 54 tasks, and
 95 mandatory targets.
+
+The new [current force-audit requalification](NATIVE_FORCE_AUDIT_REQUALIFICATION_20260915.md)
+binds all 128 generalized coordinates on the current passive-equilibrium branch.
+Component reconstruction closes to `1.1368683772161603e-13 N`, while internal
+normalized residual RMS remains `0.141417024366` and the maximum closure ratio
+remains `1.0`. Native joint and child-body indices are bound for all rows, while
+anatomical labels and coordinate kinds remain unavailable. It is a diagnostic
+owner for the next monolithic equilibrium solve; it does not promote force convergence, standing, recovery, walking,
+anatomical loading, activation calibration, blood mass transfer, materials, or
+subject calibration.
 
 The current native regional exchange receipt records 21 source compartments,
 24 source connections and seven regional beds on the physical M4 Pro at the
