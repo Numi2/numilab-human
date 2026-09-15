@@ -25,8 +25,12 @@ unadmitted for collision, material, loading, or behavior. The executable
 registry extension also hash-binds that proxy and the 416-route/60-volume
 muscle incidence join to the v14 composition graph
 ([receipt](BODY_COMPOSITION_EXTENSION_JOIN_20260915.md)); its physical-owner
-count remains zero. The executable registry snapshot is
-[`gap-execution/report-v50.json`](media/gap-execution-20260915/report-v50.json).
+count remains zero. The new cross-domain source/evidence bridge
+([receipt](HUMAN_SOURCE_EVIDENCE_BRIDGE_20260915.md)) now binds that extension
+to the current native mechanics, organ/blood transport, and zeroth-moment
+blood/tissue transfer receipt while retaining zero physical owners. The executable
+registry snapshot is
+[`gap-execution/report-v54.json`](media/gap-execution-20260915/report-v54.json).
 The join now includes the current native costal tissue requalification
 ([receipt](media/tissue-integration-20260908/current-costal-binding-receipt-20260915.json)):
 13,516 cooked nodes, 46,278 tetrahedra, 2,871 attachments, eight Apple M4 Pro
