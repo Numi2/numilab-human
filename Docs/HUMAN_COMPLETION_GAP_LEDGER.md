@@ -2,15 +2,16 @@
 
 ## Current requalification — 2026-09-15
 
-The current published source/runtime join is `8f48855` in the companion
-`numilab-human` repository and the latest native Human owner is
-`7625ec565e086faf0dcd349846dadc2d22d65e86` on a Mac mini M4 Pro. The latest
+The current published source/runtime join is `cd391fa8287e03ea0085bae310434c5da219bbd8` in the
+`numilab-human` repository. The latest native dynamic-audit owner is local
+Mac mini branch `0967c4561392a04be6c47d158ec9bd1e4daa2009`; its source branch
+remains local because the configured GitHub HTTPS credential cannot publish it. The latest
 cross-domain receipt is
 [`body-composition-integration/receipt-v12.json`](media/body-composition-integration-20260914/receipt-v12.json),
 and the current mechanics/organ/blood evidence join is
 [`current-human-evidence-join/receipt-v1.json`](media/current-human-evidence-join-20260915/receipt-v1.json).
 The executable registry snapshot is
-[`gap-execution/report-v32.json`](media/gap-execution-20260915/report-v32.json).
+[`gap-execution/report-v33.json`](media/gap-execution-20260915/report-v33.json).
 The join now includes the current native costal tissue requalification
 ([receipt](media/tissue-integration-20260908/current-costal-binding-receipt-20260915.json)):
 13,516 cooked nodes, 46,278 tetrahedra, 2,871 attachments, eight Apple M4 Pro
