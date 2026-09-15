@@ -451,7 +451,7 @@ is far below the standing gate, this narrows the recruitment/equilibrium
 failure without closing force convergence, sustained standing, recovery,
 walking, anatomical loading, material, blood/tissue transfer, or calibration.
 The refreshed executable gap report is
-[`Docs/media/gap-execution-20260915/report-v27.json`](media/gap-execution-20260915/report-v27.json).
+[`Docs/media/gap-execution-20260915/report-v28.json`](media/gap-execution-20260915/report-v28.json).
 It now includes the current mechanics/organ/blood evidence join
 ([receipt](CURRENT_HUMAN_EVIDENCE_JOIN_20260915.md)) and the regional exchange
 requalification rebuilt on the pose-24 native owner.
@@ -481,6 +481,13 @@ with zero penetration and bitwise replay at every clock, but release peaks are
 `0.642376363277`, `0.682456016541`, `0.918696343899`, and `4.85533761978
 m/s2`. The `6.5584` range/minimum exceeds the 5% refinement gate, so force
 convergence remains open and the next solver work is stiffness/state coupling.
+
+The [fibre-root repair](NATIVE_PASSIVE_STAND_FIBRE_ROOT_20260915.md) then
+transfers the accepted static lengths into the runtime and guards stationary
+zero-velocity roots at `12.5 us`. The 0.8 ms release is bounded at
+`0.115904301405 m/s2`, but the same state reaches `4.82679176331 m/s2` over
+6.4 ms. This closes initial fibre-state ownership while retaining the
+long-horizon force-convergence and standing blockers.
 
 The current native regional exchange receipt records 21 source compartments,
 24 source connections and seven regional beds on the physical M4 Pro at the

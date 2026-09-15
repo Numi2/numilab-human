@@ -10,7 +10,7 @@ cross-domain receipt is
 and the current mechanics/organ/blood evidence join is
 [`current-human-evidence-join/receipt-v1.json`](media/current-human-evidence-join-20260915/receipt-v1.json).
 The executable registry snapshot is
-[`gap-execution/report-v27.json`](media/gap-execution-20260915/report-v27.json).
+[`gap-execution/report-v28.json`](media/gap-execution-20260915/report-v28.json).
 The join now includes the current native costal tissue requalification
 ([receipt](media/tissue-integration-20260908/current-costal-binding-receipt-20260915.json)):
 13,516 cooked nodes, 46,278 tetrahedra, 2,871 attachments, eight Apple M4 Pro
@@ -58,6 +58,14 @@ but the release peaks are `0.642376363277`, `0.682456016541`,
 `0.918696343899`, and `4.85533761978 m/s2`. The range is `6.5584` times the
 minimum, so force convergence remains open and further timestep reduction is
 not the corrective path.
+
+The [native fibre-root repair](NATIVE_PASSIVE_STAND_FIBRE_ROOT_20260915.md)
+now carries the accepted static fibre lengths into the Metal horizon and guards
+the stationary constitutive root against sub-micron float roundoff. On the
+physical Mac mini at the canonical `12.5 us` clock, the 0.8 ms release peaks at
+`0.115904301405 m/s2`, while the same source state reaches `4.82679176331 m/s2`
+over 6.4 ms. Static balance, zero penetration and bitwise replay remain valid,
+but long-horizon state/force coupling and force convergence remain open.
 
 The next isolated native increment is recorded in the
 [pose24 passive persistent-stand requalification](NATIVE_PASSIVE_STAND_POSE24_20260915.md).

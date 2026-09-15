@@ -2155,6 +2155,12 @@ def parser() -> argparse.ArgumentParser:
         help="audit common-duration Mac mini passive-stand timestep refinement and keep force convergence fail-closed",
     )
     add_native_passive_stand_refinement_arguments(native_passive_stand_refinement)
+    from .native_passive_stand_fibre_root import add_arguments as add_native_passive_stand_fibre_root_arguments
+    native_passive_stand_fibre_root = commands.add_parser(
+        "native-passive-stand-fibre-root",
+        help="validate native static fibre-root ownership and retain the long-horizon force-convergence blocker",
+    )
+    add_native_passive_stand_fibre_root_arguments(native_passive_stand_fibre_root)
     from .physiology import add_arguments as add_physiology_arguments
     physiology = commands.add_parser(
         "physiology-compile", help="validate source-bound organ and circulation authoring and compile native indices",
