@@ -2,13 +2,13 @@
 
 ## Current requalification — 2026-09-15
 
-The current published source/runtime join is `80ff731` in the companion
+The current published source/runtime join is `1a25757` in the companion
 `numilab-human` repository and the native Human owner is
 `c45fa9622f6c73b58febdc24a7115aecf3d7699f` on a Mac mini M4 Pro. The latest
 cross-domain receipt is
 [`body-composition-integration/receipt-v11.json`](media/body-composition-integration-20260914/receipt-v11.json),
 and the executable registry snapshot is
-[`gap-execution/report-v10.json`](media/gap-execution-20260915/report-v10.json).
+[`gap-execution/report-v11.json`](media/gap-execution-20260915/report-v11.json).
 The join now includes the current native costal tissue requalification
 ([receipt](media/tissue-integration-20260908/current-costal-binding-receipt-20260915.json)):
 13,516 cooked nodes, 46,278 tetrahedra, 2,871 attachments, eight Apple M4 Pro

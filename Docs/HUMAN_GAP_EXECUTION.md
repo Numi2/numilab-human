@@ -450,11 +450,11 @@ is far below the standing gate, this narrows the recruitment/equilibrium
 failure without closing force convergence, sustained standing, recovery,
 walking, anatomical loading, material, blood/tissue transfer, or calibration.
 The refreshed executable gap report is
-[`Docs/media/gap-execution-20260915/report-v10.json`](media/gap-execution-20260915/report-v10.json),
+[`Docs/media/gap-execution-20260915/report-v11.json`](media/gap-execution-20260915/report-v11.json),
 whose report content SHA-256 is
-`13beea8cfbc4a418a773002ef14a391b3415193856ec81b4609c6c2fff254a21` and
+`1acd34ee39914f025c1d81e0efe0255d4fa1dffa6c27d793d7b66b3064b5aae9` and
 whose canonical file SHA-256 is
-`c3ffe8389ed11a27480d63748d5ce62bec33ecc691fbb597115790ddb240a257`.
+`ca568ee98a85346c37ce44cdcd9f977b04d47e35057eded6456051b9c977fc2d`.
 It includes the activation-0.8/default receipts, the 512-step temporal-drift
 receipt, the v11 cross-domain body-composition join, the current costal tissue
 and regional blood/exchange requalifications, the complete static passive-
