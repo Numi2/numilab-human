@@ -5,7 +5,7 @@ organ/blood evidence to the published v14 composition extension:
 
 ```sh
 PYTHONPATH=src python3 -m numilab_human.human_source_evidence_bridge \
-  --output Docs/media/human-source-evidence-bridge-20260915/receipt-v4.json
+  --output Docs/media/human-source-evidence-bridge-20260915/receipt-v5.json
 ```
 
 The receipt checks the exact v14 composition hash, six source blood owners
@@ -26,6 +26,8 @@ the current source has zero adipose surfaces, zero fat volume/mass candidates,
 and zero fat owners. The FJ2810 shell remains visual skin and is not treated as
 adipose tissue. A registered fat layer for this same male subject is still
 required before fat geometry, material, or mechanics can be admitted.
+
+The bridge also binds the source-compliant non-maximal recruitment candidate (416 routes, 237 nonzero, 47 at the upper bound) and the one-plug finite-hold material candidate (six training and three held-out observations). Both remain explicitly unqualified for measured activation, whole-body material transfer, and production mechanics.
 
 This is a cross-domain source/evidence hand-off. It does not turn source
 surfaces or candidate amounts into production anatomy, dynamics, or physiology.

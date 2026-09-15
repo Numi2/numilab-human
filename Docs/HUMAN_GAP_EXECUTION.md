@@ -455,7 +455,7 @@ is far below the standing gate, this narrows the recruitment/equilibrium
 failure without closing force convergence, sustained standing, recovery,
 walking, anatomical loading, material, blood/tissue transfer, or calibration.
 The refreshed executable gap report is
-[`Docs/media/gap-execution-20260915/report-v56.json`](media/gap-execution-20260915/report-v56.json).
+[`Docs/media/gap-execution-20260915/report-v59.json`](media/gap-execution-20260915/report-v59.json).
 The current source/evidence bridge is recorded in
 [`HUMAN_SOURCE_EVIDENCE_BRIDGE_20260915.md`](HUMAN_SOURCE_EVIDENCE_BRIDGE_20260915.md).
 It now includes the current mechanics/organ/blood evidence join
@@ -472,6 +472,9 @@ The cross-domain bridge also carries an explicit source-absence receipt for
 adipose tissue: zero fat surfaces, volume candidates, mass candidates, and
 physical owners. That inventory boundary does not estimate fat or admit it to
 mechanics.
+It also binds the non-maximal 416-route recruitment candidate and the
+single-plug finite-hold material candidate directly, while retaining measured
+activation, whole-body material transfer, and production calibration as open.
 
 The [current force-audit requalification](NATIVE_FORCE_AUDIT_POSE24_20260915.md)
 now binds all 128 generalized coordinates after the bounded 24-step passive
