@@ -31,6 +31,12 @@ MUSCLE_TISSUE_MASS = ROOT / "Docs/media/muscle-tissue-mass-candidate-20260915/re
 FAT_SOURCE_ABSENCE = ROOT / "Docs/media/fat-source-absence-candidate-20260915/receipt-v1.json"
 ACTIVATION_CANDIDATE = ROOT / "Docs/media/activation-recruitment-candidate-20260914/receipt-v1.json"
 MATERIAL_CALIBRATION = ROOT / "Docs/media/tissue-integration-20260908/calibration-candidate.json"
+ANATOMICAL_SUPPORT_CANDIDATE = ROOT / (
+    "Docs/media/anatomical-support-candidate-20260915/receipt-v1.json"
+)
+NATIVE_ANATOMICAL_SUPPORT = ROOT / (
+    "Docs/media/anatomical-support-candidate-20260915/native-static-support-receipt-v1.json"
+)
 SCHEMA = "HumanPack.human-source-evidence-bridge.v1"
 
 
@@ -72,6 +78,7 @@ def _profile(path: Path) -> tuple[dict[str, Any], str]:
         "schema", "id", "current_evidence", "composition_extension", "blood_mass_transfer",
         "muscle_tissue_mass_candidate", "fat_source_absence_candidate",
         "activation_candidate", "material_calibration_candidate",
+        "anatomical_support_candidate", "native_anatomical_support",
         "expected_bed_count", "expected_blood_owner_count", "expected_closed_muscle_volume_count",
         "expected_muscle_route_count",
         "expected_foot_proxy_count", "boundary",
@@ -83,7 +90,8 @@ def _profile(path: Path) -> tuple[dict[str, Any], str]:
              "unsupported bridge profile")
     for key in ("current_evidence", "composition_extension", "blood_mass_transfer",
                 "muscle_tissue_mass_candidate", "fat_source_absence_candidate",
-                "activation_candidate", "material_calibration_candidate"):
+                "activation_candidate", "material_calibration_candidate",
+                "anatomical_support_candidate", "native_anatomical_support"):
         value = profile[key]
         _require(isinstance(value, str) and value.strip() and not Path(value).is_absolute()
                  and ".." not in Path(value).parts and "\\" not in value,
@@ -109,6 +117,8 @@ def compile_bridge(*, current_evidence: Path = CURRENT_EVIDENCE,
                    fat_source_absence: Path = FAT_SOURCE_ABSENCE,
                    activation_candidate: Path = ACTIVATION_CANDIDATE,
                    material_calibration: Path = MATERIAL_CALIBRATION,
+                   anatomical_support_candidate: Path = ANATOMICAL_SUPPORT_CANDIDATE,
+                   native_anatomical_support: Path = NATIVE_ANATOMICAL_SUPPORT,
                    profile: Path = PROFILE) -> dict[str, Any]:
     profile_doc, profile_sha = _profile(Path(profile))
     current_path = Path(current_evidence)
@@ -118,6 +128,8 @@ def compile_bridge(*, current_evidence: Path = CURRENT_EVIDENCE,
     fat_absence_path = Path(fat_source_absence)
     activation_path = Path(activation_candidate)
     material_path = Path(material_calibration)
+    support_candidate_path = Path(anatomical_support_candidate)
+    native_support_path = Path(native_anatomical_support)
     current, current_sha = _read(current_path, "current evidence receipt")
     extension, extension_sha = _read(extension_path, "composition extension receipt")
     blood_doc, blood_sha = _read(blood_path, "blood mass-transfer receipt")
@@ -125,6 +137,83 @@ def compile_bridge(*, current_evidence: Path = CURRENT_EVIDENCE,
     fat_absence_doc, fat_absence_sha = _read(fat_absence_path, "fat source-absence receipt")
     activation_doc, activation_sha = _read(activation_path, "activation recruitment receipt")
     material_doc, material_sha = _read(material_path, "material calibration receipt")
+    support_doc, support_sha = _read(support_candidate_path, "anatomical support candidate receipt")
+    native_support_doc, native_support_sha = _read(
+        native_support_path, "native anatomical support receipt"
+    )
+
+    _require(
+        support_doc.get("schema") == "HumanPack.anatomical-support-candidate.v1"
+        and support_doc.get("status") == "candidate"
+        and support_doc.get("subject") == "one adult male source package",
+        "anatomical support candidate receipt changed",
+    )
+    support_payload = support_doc.get("payload", {})
+    support_source = support_doc.get("source", {})
+    _require(
+        isinstance(support_payload, dict)
+        and support_payload.get("magic") == "NHCNT2"
+        and support_payload.get("payload_abi") == 2
+        and support_payload.get("primitive_count") == 10
+        and support_payload.get("expanded_contact_count") == 10,
+        "anatomical support candidate payload is incomplete",
+    )
+    _require(isinstance(support_source, dict), "anatomical support candidate source is incomplete")
+    _require(
+        support_source.get("support_contact", {}).get("sha256")
+        == "4d54f8155cd83baaee7af536099824ac0da61e5d5e77544b42c6e5ce1b48c907"
+        and support_source.get("bones", {}).get("sha256")
+        == "189287e859ead06785281ae8342fad817a62616ee77724cf61daed7812ffe669"
+        and support_source.get("rigid", {}).get("sha256")
+        == "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44",
+        "anatomical support source hashes changed",
+    )
+    candidate_payload_name = support_payload.get("file", "")
+    _require(
+        isinstance(candidate_payload_name, str)
+        and candidate_payload_name
+        and not Path(candidate_payload_name).is_absolute()
+        and ".." not in Path(candidate_payload_name).parts
+        and "\\" not in candidate_payload_name,
+        "anatomical support candidate payload path is unsafe",
+    )
+    candidate_payload_path = (support_candidate_path.parent / candidate_payload_name).resolve()
+    _require(candidate_payload_path.is_file() and not candidate_payload_path.is_symlink(),
+             "anatomical support candidate payload is unavailable")
+    candidate_payload_sha = hashlib.sha256(candidate_payload_path.read_bytes()).hexdigest()
+    _require(candidate_payload_sha == support_payload.get("sha256"),
+             "anatomical support candidate payload hash diverged")
+    support_qualification = support_doc.get("qualification", {})
+    _require(
+        support_qualification.get("source_geometry_identity_bound") is True
+        and support_qualification.get("source_foot_frame_bound") is True
+        and support_qualification.get("anatomical_support_surface_candidate") is True
+        and support_qualification.get("dynamic_contact") is False
+        and support_qualification.get("internal_generalized_equilibrium") is False,
+        "anatomical support candidate boundary changed",
+    )
+    _require(
+        native_support_doc.get("schema") == "HumanPack.native-anatomical-support-wrench.v1"
+        and native_support_doc.get("status") == "partial"
+        and native_support_doc.get("subject") == "one adult male source package",
+        "native anatomical support receipt changed",
+    )
+    native_inputs = native_support_doc.get("inputs", {})
+    native_run = native_support_doc.get("run", {})
+    native_qualification = native_support_doc.get("qualification", {})
+    _require(
+        native_inputs.get("support_payload", {}).get("sha256") == candidate_payload_sha
+        and native_support_doc.get("native", {}).get("commit")
+        == "863afb9d9208e9a98235c703d95bdbbb1165d511"
+        and native_support_doc.get("native", {}).get("exit_code") == 0
+        and native_support_doc.get("native", {}).get("replay") == "bitwise"
+        and native_run.get("relative_weight_error", 1.0) <= 1.0e-5
+        and native_run.get("maximum_root_force_residual_n", 1.0) <= 1.0e-3
+        and native_run.get("internal_balanced") is False
+        and native_qualification.get("static_unilateral_support_wrench_closed") is True
+        and native_qualification.get("internal_generalized_equilibrium") is False,
+        "native anatomical support qualification boundary changed",
+    )
 
     _require(current.get("schema") == "HumanPack.current-human-evidence-join.v2"
              and current.get("status") == "partial",
@@ -292,6 +381,8 @@ def compile_bridge(*, current_evidence: Path = CURRENT_EVIDENCE,
         "organ_blood_transport_candidate_bound": True,
         "blood_tissue_mass_transfer_candidate_bound": True,
         "foot_contact_proxy_bound": True,
+        "anatomical_support_candidate_bound": True,
+        "static_unilateral_support_wrench_closed": True,
         "muscle_route_volume_incidence_bound": True,
         "physical_owner_count": 0,
         "anatomical_supports_loading": False,
@@ -329,6 +420,12 @@ def compile_bridge(*, current_evidence: Path = CURRENT_EVIDENCE,
             "fat_source_absence": _input(fat_absence_path, fat_absence_doc, fat_absence_sha),
             "activation_candidate": _input(activation_path, activation_doc, activation_sha),
             "material_calibration_candidate": _input(material_path, material_doc, material_sha),
+            "anatomical_support_candidate": _input(
+                support_candidate_path, support_doc, support_sha
+            ),
+            "native_anatomical_support": _input(
+                native_support_path, native_support_doc, native_support_sha
+            ),
             "profile": {"path": _relative(Path(profile)), "schema": profile_doc["schema"],
                         "file_sha256": profile_sha},
         },
@@ -353,6 +450,11 @@ def compile_bridge(*, current_evidence: Path = CURRENT_EVIDENCE,
                 "foot_body_count": foot["foot_body_count"],
                 "proxy_count": foot["proxy_count"],
                 "active_support_witness_count": foot["active_support_witness_count"],
+                "candidate_primitive_count": support_payload["primitive_count"],
+                "static_unilateral_support_wrench_closed": True,
+                "relative_weight_error": native_run["relative_weight_error"],
+                "maximum_root_force_residual_n": native_run["maximum_root_force_residual_n"],
+                "internal_generalized_equilibrium": False,
                 "dynamic_contact": False,
             },
             "muscle": {
@@ -392,7 +494,7 @@ def compile_bridge(*, current_evidence: Path = CURRENT_EVIDENCE,
             {"id": "force_convergence", "status": "open",
              "reason": "Static force rows and dynamic components are diagnosed, but common-duration state/force convergence remains unqualified."},
             {"id": "anatomical_supports_loading", "status": "open",
-             "reason": "Foot proxy bounds and support identities are joined; collider admission, exclusions, friction and calibrated loading remain open."},
+             "reason": "A source-bound ten-primitive plantar candidate now closes the native static unilateral wrench, but internal generalized equilibrium, dynamic contact and calibrated loading remain open."},
             {"id": "activation_calibration", "status": "open",
              "reason": "The source recruitment vector is bounded and non-maximal, but its explicit candidate still has no measured activation or held-out force validation."},
             {"id": "blood_mass_transfer", "status": "open",
@@ -426,6 +528,8 @@ def run(arguments: argparse.Namespace) -> int:
                             fat_source_absence=arguments.fat_source_absence,
                             activation_candidate=arguments.activation_candidate,
                             material_calibration=arguments.material_calibration,
+                            anatomical_support_candidate=arguments.anatomical_support_candidate,
+                            native_anatomical_support=arguments.native_anatomical_support,
                             profile=arguments.profile)
     output = arguments.output.resolve()
     digest = _immutable_write(output, result)
@@ -443,6 +547,10 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--fat-source-absence", type=Path, default=FAT_SOURCE_ABSENCE)
     parser.add_argument("--activation-candidate", type=Path, default=ACTIVATION_CANDIDATE)
     parser.add_argument("--material-calibration", type=Path, default=MATERIAL_CALIBRATION)
+    parser.add_argument("--anatomical-support-candidate", type=Path,
+                        default=ANATOMICAL_SUPPORT_CANDIDATE)
+    parser.add_argument("--native-anatomical-support", type=Path,
+                        default=NATIVE_ANATOMICAL_SUPPORT)
     parser.add_argument("--profile", type=Path, default=PROFILE)
     parser.add_argument("--output", type=Path, required=True)
     parser.set_defaults(handler=run)
