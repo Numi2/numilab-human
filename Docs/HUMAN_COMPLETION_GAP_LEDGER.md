@@ -21,8 +21,11 @@ enclosures for the four target foot bodies
 ([candidate](FOOT_CONTACT_PROXY_CANDIDATE_20260915.md)); these preserve source
 triangle enclosure and six active support-witness identities, but remain
 unadmitted for collision, material, loading, or behavior. The executable
-registry snapshot is
-[`gap-execution/report-v49.json`](media/gap-execution-20260915/report-v49.json).
+registry extension also hash-binds that proxy and the 416-route/60-volume
+muscle incidence join to the v14 composition graph
+([receipt](BODY_COMPOSITION_EXTENSION_JOIN_20260915.md)); its physical-owner
+count remains zero. The executable registry snapshot is
+[`gap-execution/report-v50.json`](media/gap-execution-20260915/report-v50.json).
 The join now includes the current native costal tissue requalification
 ([receipt](media/tissue-integration-20260908/current-costal-binding-receipt-20260915.json)):
 13,516 cooked nodes, 46,278 tetrahedra, 2,871 attachments, eight Apple M4 Pro
