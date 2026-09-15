@@ -567,3 +567,16 @@ is now explicit for non-duplication, while anatomical organ/blood/fat/skin and
 soft-tissue mass, materials, subject calibration, standing, recovery, and
 walking remain open. The generated v46 registry snapshot keeps its integrated
 qualification `not_assessed`.
+
+The latest source-bound support owner requalification is recorded in
+[`NATIVE_ANATOMICAL_SUPPORT_POSE_SEARCH_20260915.md`](NATIVE_ANATOMICAL_SUPPORT_POSE_SEARCH_20260915.md)
+and `media/anatomical-support-candidate-20260915/native-static-support-receipt-v2.json`.
+Retaining the bounded pose search during the support solve lowers the internal
+normalized residual RMS to `0.71909649283` while preserving body-weight/root
+wrench closure and bitwise replay. The v2 all-DoF ledger still reports
+`internal_balanced=false` with `v_006` at `-20.4440 N` / `-2.5236 m/s²`, so
+this is a diagnostic improvement and does not qualify force convergence,
+standing, recovery, walking, anatomical loading, activation calibration,
+blood/tissue transfer, materials, or subject calibration.
+The refreshed registry snapshot is [`report-v65.json`](media/gap-execution-20260915/report-v65.json)
+and remains `integrated_qualification: not_assessed`.

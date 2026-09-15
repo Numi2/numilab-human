@@ -40,5 +40,15 @@ The paired all-DoF force ledger reconstructs all six source contributions for
 all 128 coordinates and retains the unresolved internal maximum of 14.8179 N
 at `v_067:unnamed` as the next equilibrium diagnostic.
 
+The follow-up native pose-search requalification is retained as supplemental
+v2 evidence in
+[`NATIVE_ANATOMICAL_SUPPORT_POSE_SEARCH_20260915.md`](NATIVE_ANATOMICAL_SUPPORT_POSE_SEARCH_20260915.md).
+It keeps the support manifold registered while applying 4096 activation
+sweeps and 12 bounded pose sweeps, reducing the internal normalized residual
+RMS to `0.71909649283`. The v2 ledger's leading independent row is `v_006`
+at `-20.4440 N` / `-2.5236 m/s²`, so the bridge remains partial and the
+internal equilibrium, dynamic contact, standing, recovery, and walking gates
+stay false.
+
 This is a cross-domain source/evidence hand-off. It does not turn source
 surfaces or candidate amounts into production anatomy, dynamics, or physiology.

@@ -35,3 +35,13 @@ force-closure gate remains partial with a maximum internal residual of
 root rows remain closed at 9.34e-10 closure ratio. This diagnostic identifies
 the internal muscle/equality solve as the next owner and does not promote
 standing or dynamic convergence.
+
+The follow-up bounded pose-search requalification is recorded in
+[`NATIVE_ANATOMICAL_SUPPORT_POSE_SEARCH_20260915.md`](NATIVE_ANATOMICAL_SUPPORT_POSE_SEARCH_20260915.md)
+and `native-static-support-receipt-v2.json`. The native owner retains the
+geometry-certified support manifold while allowing the caller's bounded pose
+budget to participate in recruitment. With 4096 activation sweeps and 12
+pose sweeps, internal normalized residual RMS falls to `0.71909649283`; body
+weight, root wrench, geometric admission, and bitwise replay remain closed.
+The v2 all-DoF ledger is still partial: `v_006` is `-20.4440225427 N` and
+`-2.52362308904 m/s²`, so internal generalized equilibrium remains false.
