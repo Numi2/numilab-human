@@ -2,7 +2,7 @@
 
 ## Current requalification — 2026-09-15
 
-The current repository evidence layer is published at `517ead9` on `main` and
+The current repository evidence layer is published at `4bca31c` on `main` and
 `origin/main`. The source-pin refresh and the body-composition release join
 are the controlling receipts for this ledger; the older native-branch lines
 below are retained as historical provenance. The newly retained subject-scaled
@@ -36,7 +36,7 @@ count remains zero. The new cross-domain source/evidence bridge
 to the current native mechanics, organ/blood transport, and zeroth-moment
 blood/tissue transfer receipt while retaining zero physical owners. The executable
 registry snapshot is
-[`gap-execution/report-v81.json`](media/gap-execution-20260915/report-v81.json).
+[`gap-execution/report-v82.json`](media/gap-execution-20260915/report-v82.json).
 The bridge now also records the fat-source absence candidate: the current male
 package has zero adipose surfaces, volume candidates, mass candidates, and
 physical owners. This makes the missing source explicit without treating skin
