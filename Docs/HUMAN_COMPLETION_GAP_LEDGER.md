@@ -36,7 +36,7 @@ count remains zero. The new cross-domain source/evidence bridge
 to the current native mechanics, organ/blood transport, and zeroth-moment
 blood/tissue transfer receipt while retaining zero physical owners. The executable
 registry snapshot is
-[`gap-execution/report-v74.json`](media/gap-execution-20260915/report-v74.json).
+[`gap-execution/report-v79.json`](media/gap-execution-20260915/report-v79.json).
 The bridge now also records the fat-source absence candidate: the current male
 package has zero adipose surfaces, volume candidates, mass candidates, and
 physical owners. This makes the missing source explicit without treating skin
@@ -251,6 +251,26 @@ The v4 [current Human evidence join](CURRENT_HUMAN_EVIDENCE_JOIN_20260915.md) no
 The v5 [current Human evidence join](CURRENT_HUMAN_EVIDENCE_JOIN_20260915.md) now binds the [one-male body-composition mass ledger](BODY_COMPOSITION_MASS_LEDGER_20260915.md). The 43-year-old Falisse2017 male is identity-bound at 1.78 m and 65.5 kg; the uniform scalar mass handoff closes that target with a `-5.684341886080802e-14 kg` residual against the `97.13195176621342 kg` compiled source owner. Organ surface, blood/tissue, cardiac, vessel, regional tissue, skeletal-muscle and fat quantities remain explicit non-disjoint candidates: the receipt forbids summing them and keeps them out of rigid-body dynamics. This advances mass ownership bookkeeping and leaves segment/inertia composition, materials, activation transfer, anatomical blood mechanics, standing, recovery, walking, and integrated qualification open.
 
 The [regional blood/tissue mass-transfer candidate](ORGAN_BLOOD_MASS_TRANSFER_CANDIDATE_20260915.md) now binds the same seven organ beds to explicit zeroth-moment tissue and blood states. Its exact-clock receipt accepts 511 of 512 attempts, rejects step 37 atomically, conserves owned mass and volume, and exercises both transfer directions. This advances the source-bound blood/tissue transfer subgate; anatomical lumen/capillary geometry, mechanical mass ownership, calibrated density, organ mechanics, and subject physiology remain open.
+
+The new [native activation-sweep audit](NATIVE_ACTIVATION_SWEEP_AUDIT_20260915.md)
+tests the proposed recruitment direction on the physical Mac mini instead of
+assuming that a floating-root solution is a whole-body equilibrium. The native
+probe evaluates 32 global activation candidates, accepts 24 activation-polish
+steps and four pose steps, and replays bitwise. Root wrench and body-weight
+closure remain excellent (`1.78277309715e-6 N` and
+`1.87096257887e-9` relative error), but the best articulated internal residual
+RMS is `17.1808154012` with `internal_balanced=false`; the highest-ranked
+coordinate is DOF 119 with `90.9280057267` acceleration residual. This is a
+hard negative for global activation polish: it leaves force convergence,
+anatomical support/loading, measured activation, material calibration, blood
+mechanics, standing, recovery, and walking open.
+
+The paired [support pose-search failure](NATIVE_SUPPORT_POSE_SEARCH_FAILURE_20260915.md)
+isolates the contact-side blocker. The newer isolated native build admits the
+support geometry tolerance but rejects 88 pose candidates, retains eight
+separated witnesses, and fails closed before a unilateral support wrench is
+available. This preserves the anatomical active-set failure as its own receipt;
+it is not counted as loaded contact or body-weight support.
 
 The next isolated native increment is recorded in the
 [pose24 passive persistent-stand requalification](NATIVE_PASSIVE_STAND_POSE24_20260915.md).

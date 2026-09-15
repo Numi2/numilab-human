@@ -119,6 +119,26 @@ if [ "${1:-}" = "body-composition-mass-ledger" ]; then
     exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.body_composition_mass_ledger "$@"
 fi
 
+if [ "${1:-}" = "native-activation-sweep-audit" ]; then
+    shift
+    if [ -n "${PYTHONPATH:-}" ]; then
+        export PYTHONPATH="$repository_root/src:$PYTHONPATH"
+    else
+        export PYTHONPATH="$repository_root/src"
+    fi
+    exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.native_activation_sweep_audit "$@"
+fi
+
+if [ "${1:-}" = "native-support-pose-search-failure" ]; then
+    shift
+    if [ -n "${PYTHONPATH:-}" ]; then
+        export PYTHONPATH="$repository_root/src:$PYTHONPATH"
+    else
+        export PYTHONPATH="$repository_root/src"
+    fi
+    exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.native_support_pose_search_failure "$@"
+fi
+
 if [ "${1:-}" = "myosim-rigid-body-mass-owner-candidate" ]; then
     shift
     if [ -n "${PYTHONPATH:-}" ]; then

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://numi.example/schemas/human-native-support-pose-search-failure.v1.schema.json",
+  "title": "Numi Human native support pose search failure",
+  "type": "object",
+  "required": ["schema", "status", "subject", "source", "input", "metrics", "failure", "qualification", "gate", "boundary"],
+  "properties": {
+    "schema": {"const": "HumanPack.native-support-pose-search-failure.v1"},
+    "status": {"const": "failed"},
+    "subject": {"type": "string", "minLength": 1},
+    "source": {"type": "object", "required": ["branch", "commit", "source_worktree_dirty", "binary_sha256", "device", "clock_nanoseconds", "payloads"]},
+    "input": {"type": "object", "required": ["stdout", "stderr"]},
+    "metrics": {"type": "object", "required": ["minimum_gap_m", "gap_tolerance_m", "separated_witnesses", "maximum_separated_force_n", "rejected_pose_candidates"]},
+    "failure": {"type": "string", "minLength": 1},
+    "qualification": {"type": "object"},
+    "gate": {"type": "object", "required": ["reasons"]},
+    "boundary": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}

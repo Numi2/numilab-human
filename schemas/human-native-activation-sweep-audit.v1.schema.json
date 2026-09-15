@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://numi.example/schemas/human-native-activation-sweep-audit.v1.schema.json",
+  "title": "Numi Human native activation sweep audit",
+  "type": "object",
+  "required": ["schema", "status", "subject", "source", "input", "metrics", "ranked_internal_residuals", "qualification", "gate", "boundary"],
+  "properties": {
+    "schema": {"const": "HumanPack.native-activation-sweep-audit.v1"},
+    "status": {"enum": ["partial", "passed"]},
+    "subject": {"type": "string", "minLength": 1},
+    "source": {"type": "object", "required": ["branch", "commit", "source_worktree_dirty", "binary_sha256", "device", "clock_nanoseconds", "payloads"]},
+    "input": {"type": "object", "required": ["stdout", "stderr"]},
+    "metrics": {"type": "object", "required": ["body_mass_kg", "expected_weight_n", "total_support_force_n", "relative_weight_error", "support_contacts", "active_support_contacts", "maximum_root_force_residual_n", "maximum_root_acceleration_residual", "internal_normalized_residual_rms", "activation_sweeps", "global_activation_polish_iterations", "accepted_global_activation_polish_steps", "accepted_pose_steps", "active_position_limits", "internal_balanced"]},
+    "ranked_internal_residuals": {"type": "array", "minItems": 1},
+    "qualification": {"type": "object"},
+    "gate": {"type": "object", "required": ["root_force_tolerance_n", "weight_relative_tolerance", "maximum_internal_residual", "reasons"]},
+    "boundary": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}
