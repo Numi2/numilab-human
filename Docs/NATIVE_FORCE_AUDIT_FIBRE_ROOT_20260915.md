@@ -20,5 +20,14 @@ transfer, calibrated materials and subject calibration remain open.
 
 The receipt and all raw/derived artifacts are in
 [`media/native-force-audit-fibre-root-20260915/`](media/native-force-audit-fibre-root-20260915/).
-The branch is a local Mac mini worktree; publication of the native source
-branch remains blocked by the configured GitHub HTTPS credential.
+At the time of this audit, the source branch was a local Mac mini worktree and
+publication was blocked by its configured GitHub HTTPS credential. That is no
+longer the delivery state: the native source is publicly pinned by Numi Lab tag
+`human-native-step281-rank-audit-20260915`
+(`337741b51bfc4a5552a837dacb4d0b5c4268d298`) together with the exact five-input
+Human package at tag `human-native-runtime-source-inputs-20260915`. The
+[published runtime tuple](NATIVE_RUNTIME_SOURCE_PUBLICATION_20260915.md) retains
+the reconstruction command and a fresh public-source bounded replay. The
+historical binary hash and this audit's raw artifacts remain historical
+provenance; the later source publication does not assert a byte-identical
+rebuild of that executable.
