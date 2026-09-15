@@ -26,3 +26,12 @@ and internal_balanced=false. This is static unilateral support/loading
 evidence. Dynamic contact, sustained standing, perturbation recovery, walking,
 activation calibration, material calibration, blood/tissue mechanics, fat mass,
 and subject calibration remain open.
+
+The all-DoF rerun is retained beside the candidate receipt. Its canonical
+snapshot and force ledger cover all 128 generalized coordinates and all six
+force owners; component reconstruction is closed to 1.14e-13 N, while the
+force-closure gate remains partial with a maximum internal residual of
+14.8179301822 N at v_067:unnamed and an internal closure ratio of 1.0. The
+root rows remain closed at 9.34e-10 closure ratio. This diagnostic identifies
+the internal muscle/equality solve as the next owner and does not promote
+standing or dynamic convergence.

@@ -36,6 +36,9 @@ body weight (1.87e-9 relative error) and floating-root force (1.78e-6 N) with
 bitwise replay. Its internal generalized residual remains unbalanced (RMS
 1.008), so this is static anatomical support/loading evidence only; dynamic
 contact, standing, recovery, and walking remain false.
+The paired all-DoF force ledger reconstructs all six source contributions for
+all 128 coordinates and retains the unresolved internal maximum of 14.8179 N
+at `v_067:unnamed` as the next equilibrium diagnostic.
 
 This is a cross-domain source/evidence hand-off. It does not turn source
 surfaces or candidate amounts into production anatomy, dynamics, or physiology.
