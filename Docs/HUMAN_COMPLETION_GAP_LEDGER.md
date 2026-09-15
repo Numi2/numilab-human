@@ -36,7 +36,7 @@ count remains zero. The new cross-domain source/evidence bridge
 to the current native mechanics, organ/blood transport, and zeroth-moment
 blood/tissue transfer receipt while retaining zero physical owners. The executable
 registry snapshot is
-[`gap-execution/report-v79.json`](media/gap-execution-20260915/report-v79.json).
+[`gap-execution/report-v81.json`](media/gap-execution-20260915/report-v81.json).
 The bridge now also records the fat-source absence candidate: the current male
 package has zero adipose surfaces, volume candidates, mass candidates, and
 physical owners. This makes the missing source explicit without treating skin
@@ -45,6 +45,16 @@ The same bridge now binds the source-compliant non-maximal recruitment
 candidate and the one-plug finite-hold material fit; both retain explicit
 measured-activation, whole-body transfer, and production-material gates as
 unqualified.
+
+The new [calibration and unresolved-material evidence registry](CALIBRATION_EVIDENCE_REGISTRY_20260915.md)
+joins eight source records with exact hashes and keeps fitted observations,
+held-out observations, and production ownership separate. It records the
+cartilage fit, offline muscle recruitment, measured one-male reference,
+organ/tissue mass, zeroth-moment blood/tissue transfer, skeletal-muscle mass,
+adipose-source absence, and native activation diagnostic. The registry has two
+fit rows, one held-out row, zero production-owner rows, and sixteen explicit
+blockers; activation, material, subject, anatomical blood-mass, standing,
+recovery, walking, and integrated qualification remain false.
 
 The canonical `.numi/commands/human stand` wrapper now defaults to the exact
 `12.5 us` clock for `512` steps (the common `6.4 ms` release horizon) and

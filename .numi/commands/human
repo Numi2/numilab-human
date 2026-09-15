@@ -99,6 +99,16 @@ if [ "${1:-}" = "activation-recruitment-candidate" ]; then
     exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.activation_recruitment_candidate "$@"
 fi
 
+if [ "${1:-}" = "calibration-evidence-registry" ]; then
+    shift
+    if [ -n "${PYTHONPATH:-}" ]; then
+        export PYTHONPATH="$repository_root/src:$PYTHONPATH"
+    else
+        export PYTHONPATH="$repository_root/src"
+    fi
+    exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.calibration_evidence_registry "$@"
+fi
+
 if [ "${1:-}" = "body-composition-integration" ]; then
     shift
     if [ -n "${PYTHONPATH:-}" ]; then

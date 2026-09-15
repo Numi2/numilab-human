@@ -1,0 +1,78 @@
+{
+  "schema": "numi.human.calibration-evidence-registry.v1",
+  "id": "one-male-calibration-evidence-registry",
+  "rows": [
+    {
+      "id": "cartilage_material",
+      "domain": "specimen_material",
+      "source": "Docs/media/tissue-integration-20260908/calibration-candidate.json",
+      "fit_evidence": true,
+      "held_out_evidence": true,
+      "production_owner": false,
+      "scope": "oks003 left patellar plug finite-hold fit: six training points and three same-plug held-out points"
+    },
+    {
+      "id": "muscle_activation_recruitment",
+      "domain": "muscle_activation",
+      "source": "Docs/media/activation-recruitment-candidate-20260914/receipt-v1.json",
+      "fit_evidence": true,
+      "held_out_evidence": false,
+      "production_owner": false,
+      "scope": "source-compliant offline nonmaximal recruitment and fibre-state candidate for one adult male"
+    },
+    {
+      "id": "subject_reference",
+      "domain": "subject_mechanics",
+      "source": "Docs/media/addbiomechanics-falisse-20260915/acquisition-receipt.json",
+      "fit_evidence": false,
+      "held_out_evidence": false,
+      "production_owner": false,
+      "scope": "Falisse2017 subject_1 measured gait and stair reference tables; no Numi prediction comparison"
+    },
+    {
+      "id": "organ_tissue_mass",
+      "domain": "organ_tissue",
+      "source": "Docs/media/tissue-mass-candidate-20260914/receipt-v2.json",
+      "fit_evidence": false,
+      "held_out_evidence": false,
+      "production_owner": false,
+      "scope": "source organ surface density and mass-moment candidates without physical owner"
+    },
+    {
+      "id": "blood_tissue_transfer",
+      "domain": "blood_tissue_transport",
+      "source": "Docs/media/organ-blood-mass-transfer-20260915/receipt-v3.json",
+      "fit_evidence": false,
+      "held_out_evidence": false,
+      "production_owner": false,
+      "scope": "exact-clock seven-bed zeroth-moment bidirectional mass and volume transfer candidate"
+    },
+    {
+      "id": "muscle_tissue_mass",
+      "domain": "skeletal_muscle_tissue",
+      "source": "Docs/media/muscle-tissue-mass-candidate-20260915/receipt-v1.json",
+      "fit_evidence": false,
+      "held_out_evidence": false,
+      "production_owner": false,
+      "scope": "60 closed muscle-surface mass candidates; 88 of 148 source surfaces remain unadmitted"
+    },
+    {
+      "id": "adipose_source_absence",
+      "domain": "adipose_tissue",
+      "source": "Docs/media/fat-source-absence-candidate-20260915/receipt-v1.json",
+      "fit_evidence": false,
+      "held_out_evidence": false,
+      "production_owner": false,
+      "scope": "one-male source package records zero adipose surface, volume, mass and owner inputs"
+    },
+    {
+      "id": "native_activation_diagnostic",
+      "domain": "native_activation_diagnostic",
+      "source": "Docs/media/native-activation-sweep-20260915/receipt-v1.json",
+      "fit_evidence": false,
+      "held_out_evidence": false,
+      "production_owner": false,
+      "scope": "physical M4 Pro activation sweep with root/body-weight closure separated from internal residual"
+    }
+  ]
+}

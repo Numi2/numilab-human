@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://numi.example/schemas/human-calibration-evidence-registry.v1.schema.json",
+  "title": "Numi Human calibration and unresolved-material evidence registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "compiler", "compiler_sha256", "status", "registry_id", "inputs", "rows", "blockers", "qualification", "counts", "boundary", "report_sha256"],
+  "properties": {
+    "schema": {"const": "HumanPack.calibration-evidence-registry.v1"},
+    "compiler": {"const": "numilab-human.calibration-evidence-registry.1"},
+    "compiler_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "status": {"const": "partial"},
+    "registry_id": {"type": "string", "minLength": 1},
+    "inputs": {"type": "object", "required": ["profile"]},
+    "rows": {"type": "array", "minItems": 8},
+    "blockers": {"type": "array", "minItems": 1},
+    "qualification": {
+      "type": "object",
+      "required": ["registry_complete", "fit_and_holdout_scopes_separated", "activation_calibration", "material_calibration", "subject_calibration", "anatomical_blood_mass_transfer", "production_owner_admission", "integrated_human_qualification"]
+    },
+    "counts": {"type": "object"},
+    "boundary": {"type": "string", "minLength": 1},
+    "report_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
