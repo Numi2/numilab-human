@@ -26,9 +26,12 @@ def test_binds_runtime_organs_blood_contact_and_muscle_graph_without_owner() -> 
     assert result["domains"]["organ_blood"]["mass_conserved"]
     assert result["domains"]["contact"]["proxy_count"] == 30
     assert result["domains"]["muscle"]["source_route_count"] == 416
+    assert result["domains"]["muscle"]["candidate_mass_kg"] == pytest.approx(6.859582804936875)
+    assert result["domains"]["muscle"]["skeletal_muscle_tissue_mass_owner"] is False
     assert result["qualification"]["blood_tissue_mass_transfer_candidate_bound"]
     assert result["qualification"]["foot_contact_proxy_bound"]
     assert result["qualification"]["muscle_route_volume_incidence_bound"]
+    assert result["qualification"]["skeletal_muscle_tissue_mass_candidate_bound"]
     for key in ("anatomical_supports_loading", "activation_calibration",
                 "anatomical_blood_mass_transfer", "mechanical_blood_mass_owner",
                 "skeletal_muscle_tissue_mass", "fat_geometry_and_mass",

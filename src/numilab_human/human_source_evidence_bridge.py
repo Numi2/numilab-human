@@ -26,6 +26,7 @@ COMPOSITION_EXTENSION = ROOT / (
     "Docs/media/body-composition-extension-join-20260915/receipt-v1.json"
 )
 BLOOD_MASS_TRANSFER = ROOT / "Docs/media/organ-blood-mass-transfer-20260915/receipt-v3.json"
+MUSCLE_TISSUE_MASS = ROOT / "Docs/media/muscle-tissue-mass-candidate-20260915/receipt-v1.json"
 SCHEMA = "HumanPack.human-source-evidence-bridge.v1"
 
 
@@ -65,7 +66,9 @@ def _profile(path: Path) -> tuple[dict[str, Any], str]:
     profile, digest = _read(path, "bridge profile", canonical_required=True)
     required = {
         "schema", "id", "current_evidence", "composition_extension", "blood_mass_transfer",
-        "expected_bed_count", "expected_blood_owner_count", "expected_muscle_route_count",
+        "muscle_tissue_mass_candidate",
+        "expected_bed_count", "expected_blood_owner_count", "expected_closed_muscle_volume_count",
+        "expected_muscle_route_count",
         "expected_foot_proxy_count", "boundary",
     }
     _require(set(profile) == required, "bridge profile fields differ")
@@ -73,7 +76,8 @@ def _profile(path: Path) -> tuple[dict[str, Any], str]:
              "unsupported bridge profile schema")
     _require(profile["id"] == "current_runtime_to_composition_graph",
              "unsupported bridge profile")
-    for key in ("current_evidence", "composition_extension", "blood_mass_transfer"):
+    for key in ("current_evidence", "composition_extension", "blood_mass_transfer",
+                "muscle_tissue_mass_candidate"):
         value = profile[key]
         _require(isinstance(value, str) and value.strip() and not Path(value).is_absolute()
                  and ".." not in Path(value).parts and "\\" not in value,
@@ -81,6 +85,7 @@ def _profile(path: Path) -> tuple[dict[str, Any], str]:
     expected = {
         "expected_bed_count": 7,
         "expected_blood_owner_count": 6,
+        "expected_closed_muscle_volume_count": 60,
         "expected_muscle_route_count": 416,
         "expected_foot_proxy_count": 30,
     }
@@ -94,14 +99,17 @@ def _profile(path: Path) -> tuple[dict[str, Any], str]:
 def compile_bridge(*, current_evidence: Path = CURRENT_EVIDENCE,
                    composition_extension: Path = COMPOSITION_EXTENSION,
                    blood_mass_transfer: Path = BLOOD_MASS_TRANSFER,
+                   muscle_tissue_mass: Path = MUSCLE_TISSUE_MASS,
                    profile: Path = PROFILE) -> dict[str, Any]:
     profile_doc, profile_sha = _profile(Path(profile))
     current_path = Path(current_evidence)
     extension_path = Path(composition_extension)
     blood_path = Path(blood_mass_transfer)
+    muscle_mass_path = Path(muscle_tissue_mass)
     current, current_sha = _read(current_path, "current evidence receipt")
     extension, extension_sha = _read(extension_path, "composition extension receipt")
     blood_doc, blood_sha = _read(blood_path, "blood mass-transfer receipt")
+    muscle_mass_doc, muscle_mass_sha = _read(muscle_mass_path, "muscle tissue-mass receipt")
 
     _require(current.get("schema") == "HumanPack.current-human-evidence-join.v2"
              and current.get("status") == "partial",
@@ -143,6 +151,20 @@ def compile_bridge(*, current_evidence: Path = CURRENT_EVIDENCE,
                 "material_density_calibrated", "organ_mechanics", "subject_calibration"):
         _require(blood_qualification.get(key) is False,
                  f"blood mass-transfer boundary changed for {key}")
+
+    _require(muscle_mass_doc.get("schema") == "HumanPack.muscle-tissue-mass-candidate.v1"
+             and muscle_mass_doc.get("status") == "partial"
+             and muscle_mass_doc.get("counts", {}).get("source_muscle_surface_count") == 148
+             and muscle_mass_doc.get("counts", {}).get("closed_volume_count") == profile_doc["expected_closed_muscle_volume_count"]
+             and muscle_mass_doc.get("counts", {}).get("unadmitted_surface_count") == 88
+             and muscle_mass_doc.get("counts", {}).get("mechanical_mass_owner_count") == 0,
+             "muscle tissue-mass receipt changed")
+    muscle_mass_qualification = muscle_mass_doc.get("qualification", {})
+    _require(muscle_mass_qualification.get("candidate_mass_budget") is True
+             and muscle_mass_qualification.get("skeletal_muscle_tissue_mass_candidate") is True
+             and muscle_mass_qualification.get("skeletal_muscle_tissue_mass_owner") is False
+             and muscle_mass_qualification.get("disjoint_volume_partition") is False,
+             "muscle tissue-mass boundary changed")
 
     _require(extension.get("schema") == "HumanPack.body-composition-extension-join.v1"
              and extension.get("status") == "partial",
@@ -192,7 +214,9 @@ def compile_bridge(*, current_evidence: Path = CURRENT_EVIDENCE,
              "composition extension domains are incomplete")
     _require(foot.get("proxy_count") == profile_doc["expected_foot_proxy_count"]
              and muscle.get("source_route_count") == profile_doc["expected_muscle_route_count"]
-             and muscle.get("closed_geometry_volume_owner_count") == 60,
+             and muscle.get("closed_geometry_volume_owner_count") == profile_doc["expected_closed_muscle_volume_count"]
+             and muscle.get("volume_receipt_sha256") ==
+             muscle_mass_doc.get("inputs", {}).get("muscle_volume_receipt", {}).get("file_sha256"),
              "composition extension counts changed")
 
     qualification = {
@@ -209,6 +233,7 @@ def compile_bridge(*, current_evidence: Path = CURRENT_EVIDENCE,
         "mechanical_blood_mass_owner": False,
         "skeletal_muscle_tissue_volume": False,
         "skeletal_muscle_tissue_mass": False,
+        "skeletal_muscle_tissue_mass_candidate_bound": True,
         "fat_geometry_and_mass": False,
         "organ_mechanics": False,
         "material_calibration": False,
@@ -229,6 +254,7 @@ def compile_bridge(*, current_evidence: Path = CURRENT_EVIDENCE,
             "current_evidence": _input(current_path, current, current_sha),
             "composition_extension": _input(extension_path, extension, extension_sha),
             "blood_mass_transfer": _input(blood_path, blood_doc, blood_sha),
+            "muscle_tissue_mass": _input(muscle_mass_path, muscle_mass_doc, muscle_mass_sha),
             "profile": {"path": _relative(Path(profile)), "schema": profile_doc["schema"],
                         "file_sha256": profile_sha},
         },
@@ -262,6 +288,10 @@ def compile_bridge(*, current_evidence: Path = CURRENT_EVIDENCE,
                 "routes_without_surface_binding": muscle["routes_without_surface_binding"],
                 "volume_partition_owner": False,
                 "activation_force_transfer": False,
+                "candidate_mass_kg": muscle_mass_doc["totals"]["candidate_mass_kg"],
+                "candidate_density_kg_per_m3": muscle_mass_doc["density"]["candidate_kg_per_m3"],
+                "skeletal_muscle_tissue_mass_candidate": True,
+                "skeletal_muscle_tissue_mass_owner": False,
             },
         },
         "qualification": qualification,
@@ -299,6 +329,7 @@ def run(arguments: argparse.Namespace) -> int:
     result = compile_bridge(current_evidence=arguments.current_evidence,
                             composition_extension=arguments.composition_extension,
                             blood_mass_transfer=arguments.blood_mass_transfer,
+                            muscle_tissue_mass=arguments.muscle_tissue_mass,
                             profile=arguments.profile)
     output = arguments.output.resolve()
     digest = _immutable_write(output, result)
@@ -312,6 +343,7 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--current-evidence", type=Path, default=CURRENT_EVIDENCE)
     parser.add_argument("--composition-extension", type=Path, default=COMPOSITION_EXTENSION)
     parser.add_argument("--blood-mass-transfer", type=Path, default=BLOOD_MASS_TRANSFER)
+    parser.add_argument("--muscle-tissue-mass", type=Path, default=MUSCLE_TISSUE_MASS)
     parser.add_argument("--profile", type=Path, default=PROFILE)
     parser.add_argument("--output", type=Path, required=True)
     parser.set_defaults(handler=run)
