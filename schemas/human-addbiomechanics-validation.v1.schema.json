@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://numi.example/schemas/human-addbiomechanics-validation.v1.schema.json",
+  "title": "Numi Human one-subject AddBiomechanics validation manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "dataset",
+    "subject",
+    "time_column",
+    "time_tolerance_s",
+    "required_activities",
+    "channels",
+    "trials",
+    "prediction"
+  ],
+  "properties": {
+    "schema": {"const": "HumanPack.addbiomechanics-validation.v1"},
+    "dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "url", "license", "provenance", "source_artifact"],
+      "properties": {
+        "id": {"const": "addbiomechanics-core-v1"},
+        "version": {"const": "1.0"},
+        "url": {"format": "uri"},
+        "license": {"type": "string"},
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "note"],
+          "properties": {
+            "kind": {"enum": ["public_dataset", "fixture_only"]},
+            "note": {"type": "string", "minLength": 1}
+          }
+        },
+        "source_artifact": {"$ref": "#/$defs/artifact"}
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "sex", "age_years", "height_m", "mass_kg"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "sex": {"const": "male"},
+        "age_years": {"type": "integer", "minimum": 18, "maximum": 120},
+        "height_m": {"type": "number", "exclusiveMinimum": 0},
+        "mass_kg": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "time_column": {"type": "string", "minLength": 1},
+    "time_tolerance_s": {"type": "number", "minimum": 0, "maximum": 0.001},
+    "required_activities": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"enum": ["standing", "recovery", "walking", "other"]}
+    },
+    "channels": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind", "column", "unit", "threshold"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "kind": {"enum": ["joint_angle", "grf", "joint_moment"]},
+          "column": {"type": "string", "minLength": 1},
+          "unit": {"type": "string", "minLength": 1},
+          "threshold": {"type": "number", "minimum": 0}
+        }
+      }
+    },
+    "trials": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "activity", "split", "reference", "prediction"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "activity": {"enum": ["standing", "recovery", "walking", "other"]},
+          "split": {"enum": ["calibration", "validation"]},
+          "reference": {"$ref": "#/$defs/artifact"},
+          "prediction": {"$ref": "#/$defs/artifact"}
+        }
+      }
+    },
+    "prediction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtime", "source_revision", "clock_nanoseconds", "fit_trial_ids"],
+      "properties": {
+        "runtime": {"type": "string", "minLength": 1},
+        "source_revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "clock_nanoseconds": {"const": 12500},
+        "fit_trial_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+      }
+    }
+  },
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}
