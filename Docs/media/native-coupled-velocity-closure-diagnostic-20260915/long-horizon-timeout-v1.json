@@ -1,0 +1,32 @@
+{
+  "artifacts": {
+    "native_stderr": "native-512.stderr.txt",
+    "native_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "native_stdout": "native-512.stdout.txt",
+    "native_stdout_sha256": "08a837920fb76a2131675b6f71401a1567f5ae1d392ac8f2a9bfedf7aa71e67b"
+  },
+  "boundary": "Typed failure evidence for the same isolated experimental coupled-velocity candidate at 512 steps and 12.5 microseconds. The process remained in the native GPU wait before publishing a result and was terminated after a bounded timeout. No long-horizon dynamics, standing, recovery, walking, or force-convergence claim is inferred.",
+  "command": {
+    "experimental_coupled_velocity_closure": true,
+    "muscle_activation": 0.8,
+    "muscle_step_count": 512,
+    "muscle_step_seconds": 1.25e-05,
+    "termination_signal": "SIGINT",
+    "timeout_seconds": 370
+  },
+  "qualification": {
+    "native_result_published": false,
+    "long_horizon_timeout_preserved": true,
+    "force_convergence": false,
+    "sustained_standing": false,
+    "recovery": false,
+    "walking": false
+  },
+  "schema": "numi.human.native-coupled-velocity-closure-timeout.v1",
+  "source": {
+    "branch": "human-coupled-velocity-closure-trace-20260915",
+    "commit": "1fd04506",
+    "device": "Mac mini M4 Pro"
+  },
+  "status": "failed_timeout"
+}

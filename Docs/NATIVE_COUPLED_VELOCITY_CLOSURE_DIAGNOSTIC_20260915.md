@@ -22,6 +22,13 @@ production force convergence, sustained standing, recovery, walking, anatomy,
 activation calibration, blood/tissue mass transfer, materials, and subject
 calibration open.
 
+The 512-step extension was attempted with the same inputs and clock. The
+native process remained in GPU wait for a bounded six-minute window, emitted
+only payload-admission lines, and was terminated with `SIGINT` before a result
+was published. The typed [timeout receipt](media/native-coupled-velocity-closure-diagnostic-20260915/long-horizon-timeout-v1.json)
+keeps that failure visible and leaves long-horizon force convergence and
+standing open.
+
 The full native stdout/stderr and source patch are stored beside
 `receipt-v1.json`. The native source checkout is isolated from the dirty
 `/Users/n/MetalRobo-human` checkout.

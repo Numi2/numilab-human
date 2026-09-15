@@ -32,3 +32,16 @@ def test_coupled_velocity_closure_artifacts_are_hash_bound() -> None:
         name = receipt["artifacts"][name_key]
         digest = hashlib.sha256((EVIDENCE / name).read_bytes()).hexdigest()
         assert digest == receipt["artifacts"][key]
+
+
+def test_long_horizon_timeout_is_preserved_as_failure() -> None:
+    timeout = json.loads((EVIDENCE / "long-horizon-timeout-v1.json").read_text())
+    assert timeout["schema"] == "numi.human.native-coupled-velocity-closure-timeout.v1"
+    assert timeout["status"] == "failed_timeout"
+    assert timeout["qualification"]["long_horizon_timeout_preserved"]
+    assert timeout["qualification"]["native_result_published"] is False
+    for key, name_key in (("native_stdout_sha256", "native_stdout"),
+                          ("native_stderr_sha256", "native_stderr")):
+        name = timeout["artifacts"][name_key]
+        digest = hashlib.sha256((EVIDENCE / name).read_bytes()).hexdigest()
+        assert digest == timeout["artifacts"][key]
