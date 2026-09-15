@@ -30,6 +30,14 @@ def test_subject_scaled_long_horizon_retains_both_native_wait_failures() -> None
     assert control["dynamic_force_audit_rows"] == 128
     assert control["stand_deterministic_replay"] == "bitwise"
     assert control["persistent_max_penetration_m"] == 0.0
+    assert control["trace_samples"] == 2
+    assert control["muscle_force_metal_active_records"] == 416
+    assert result["two_step_control"]["persistent_completed_steps"] == 2
+    assert result["two_step_control"]["trace_samples"] == 3
+    assert result["two_step_control"]["muscle_force_metal_active_records"] == 832
+    assert result["eight_step_control"]["persistent_completed_steps"] == 8
+    assert result["eight_step_control"]["trace_samples"] == 9
+    assert result["eight_step_control"]["muscle_force_metal_active_records"] == 3328
     assert not result["qualification"]["long_horizon_completed"]
     assert not result["qualification"]["sustained_standing"]
 

@@ -3,7 +3,7 @@
   "$id": "https://numilab.local/schemas/human-native-subject-scaled-long-horizon-failure.v1.schema.json",
   "title": "Numi Human subject-scaled native long-horizon failure",
   "type": "object",
-  "required": ["schema", "status", "source", "inputs", "attempts", "one_step_control", "qualification", "blocker", "boundary"],
+  "required": ["schema", "status", "source", "inputs", "attempts", "one_step_control", "two_step_control", "eight_step_control", "qualification", "blocker", "boundary"],
   "properties": {
     "schema": {"const": "HumanPack.native-subject-scaled-long-horizon-failure.v1"},
     "status": {"const": "failed"},
@@ -11,6 +11,8 @@
     "inputs": {"type": "object", "required": ["scaled_rigid_sha256", "muscle_sha256", "tendon_sha256", "support_contact_sha256", "joint_equalities_sha256"]},
     "attempts": {"type": "array", "minItems": 2, "items": {"type": "object", "required": ["name", "timestep_seconds", "step_count_requested", "completed", "termination", "native_capture", "observed"]}},
     "one_step_control": {"type": "object", "required": ["timestep_seconds", "step_count", "persistent_completed_steps", "persistent_max_acceleration_mps2", "persistent_max_penetration_m", "dynamic_force_audit_rows", "stand_deterministic_replay", "native_capture"]},
+    "two_step_control": {"type": "object", "required": ["timestep_seconds", "step_count", "persistent_completed_steps", "persistent_max_acceleration_mps2", "persistent_max_penetration_m", "dynamic_force_audit_rows", "stand_deterministic_replay", "native_capture"]},
+    "eight_step_control": {"type": "object", "required": ["timestep_seconds", "step_count", "persistent_completed_steps", "persistent_max_acceleration_mps2", "persistent_max_penetration_m", "dynamic_force_audit_rows", "stand_deterministic_replay", "native_capture"]},
     "qualification": {"type": "object", "required": ["scaled_input_admitted", "long_horizon_completed", "full_generalized_force_convergence", "sustained_standing", "recovery", "walking", "subject_calibration"]},
     "blocker": {"type": "object", "required": ["id", "status", "reason"]},
     "boundary": {"type": "string", "minLength": 1}

@@ -4,7 +4,8 @@ The bounded subject-scaled replay already proves that the patched NHRIGID2
 input can be consumed for 64 steps.  Longer runs attempted with the same
 payload and the current Mac mini build stopped in the native Metal operator
 before publishing a result.  This compiler keeps that negative evidence
-immutable and fail-closed; it never turns a timeout into a mechanics result.
+immutable and fail-closed, while binding short completed controls so a timeout
+is not mistaken for an immediate state failure or a mechanics result.
 """
 from __future__ import annotations
 
@@ -23,7 +24,9 @@ ROOT = Path(__file__).resolve().parents[2]
 EVIDENCE = ROOT / "Docs/media/native-subject-scaled-runtime-128-failure-20260915"
 EVIDENCE_512 = ROOT / "Docs/media/native-subject-scaled-runtime-512-failure-20260915"
 CONTROL = ROOT / "Docs/media/native-subject-scaled-runtime-1-20260915"
-OUTPUT = ROOT / "Docs/media/native-subject-scaled-long-horizon-failure-20260915/receipt-v3.json"
+CONTROL_2 = ROOT / "Docs/media/native-subject-scaled-runtime-2-20260915"
+CONTROL_8 = ROOT / "Docs/media/native-subject-scaled-runtime-8-20260915"
+OUTPUT = ROOT / "Docs/media/native-subject-scaled-long-horizon-failure-20260915/receipt-v4.json"
 SCHEMA = "HumanPack.native-subject-scaled-long-horizon-failure.v1"
 SCALED_RIGID_SHA256 = "303722b1f50ba603d75c52796aad0072f8a33776d5c3a24557ad9b393db3efb4"
 BINARY_SHA256 = "47b6426c66f81042e167ad3c17c46d3d620ed8e05fd377225a0b45739402c50b"
@@ -102,54 +105,66 @@ def _attempt(root: Path, *, name: str, step_count: int, validation_layer: bool,
     }
 
 
-def _control(root: Path) -> dict[str, Any]:
+def _control(root: Path, *, expected_steps: int, label: str) -> dict[str, Any]:
     stdout = root / "native.stdout.txt"
     stderr = root / "native.stderr.txt"
-    stdout_raw = _regular(stdout, "one-step control stdout")
-    stderr_raw = _regular(stderr, "one-step control stderr")
-    _require(not stderr_raw, "one-step control emitted stderr")
+    stdout_raw = _regular(stdout, f"{label} control stdout")
+    stderr_raw = _regular(stderr, f"{label} control stderr")
+    _require(not stderr_raw, f"{label} control emitted stderr")
     text = stdout_raw.decode("utf-8")
     line = next((row for row in text.splitlines()
                  if row.startswith("myosim_articulated_marker_visual=")), None)
     _require(line is not None and "myosim_articulated_marker_visual=ok" in line,
-             "one-step control did not complete")
+             f"{label} control did not complete")
     fields = {}
     for token in shlex.split(line):
         if "=" in token:
             key, value = token.split("=", 1)
             fields[key] = value.strip('"')
     _require(fields.get("metal_pose_device") == "Apple M4 Pro",
-             "one-step control device changed")
+             f"{label} control device changed")
     _require(fields.get("muscle_step_seconds") == "1.25e-05" and
-             fields.get("muscle_step_count") == "1" and
-             fields.get("persistent_completed_steps") == "1",
-             "one-step control horizon changed")
+             fields.get("muscle_step_count") == str(expected_steps) and
+             fields.get("persistent_completed_steps") == str(expected_steps),
+             f"{label} control horizon changed")
     _require(fields.get("persistent_max_penetration_m") == "0" and
              fields.get("persistent_root_assistance") == "none" and
              fields.get("stand_deterministic_replay") == "bitwise",
-             "one-step control safety boundary changed")
+             f"{label} control safety boundary changed")
     audit_line = next((row for row in text.splitlines()
                        if row.startswith("persistent_dynamic_force_audit=")), None)
     trace_line = next((row for row in text.splitlines()
                        if row.startswith("persistent_stand_trace=")), None)
     _require(audit_line is not None and trace_line is not None,
-             "one-step control audit or trace is missing")
+             f"{label} control audit or trace is missing")
     try:
         audit = json.loads(audit_line.split("=", 1)[1])
         trace = json.loads(trace_line.split("=", 1)[1])
     except json.JSONDecodeError as error:
-        raise HumanImportError("one-step control audit/trace is not JSON") from error
+        raise HumanImportError(f"{label} control audit/trace is not JSON") from error
     _require(audit.get("schema") == "numi.human.persistent-dynamic-force-audit.v1" and
              len(audit.get("rows", [])) == 128,
-             "one-step control audit coverage changed")
+             f"{label} control audit coverage changed")
     _require(trace.get("endpoint_equivalent") == "bitwise" and
              trace.get("endpoint_max_q_delta") == 0 and
-             trace.get("endpoint_max_v_delta") == 0,
-             "one-step control trace is not bitwise")
+             trace.get("endpoint_max_v_delta") == 0 and
+             len(trace.get("samples", [])) == expected_steps + 1,
+             f"{label} control trace is not bitwise or complete")
+    required_fields = (
+        "persistent_max_acceleration", "persistent_max_penetration_m",
+        "persistent_dynamic_force_residual_max_n", "compiled_stand_normalized_residual_rms",
+        "compiled_stand_active_support_contacts", "compiled_stand_total_support_force_n",
+        "muscle_force_metal_elapsed_ms", "muscle_force_metal_active_records",
+    )
+    _require(all(key in fields for key in required_fields),
+             f"{label} control is missing a required metric")
+    _require(int(fields["muscle_force_metal_active_records"]) == 416 * expected_steps,
+             f"{label} control did not process all source muscle routes")
     return {
+        "label": label,
         "timestep_seconds": 1.25e-5,
-        "step_count": 1,
-        "persistent_completed_steps": 1,
+        "step_count": expected_steps,
+        "persistent_completed_steps": int(fields["persistent_completed_steps"]),
         "persistent_max_acceleration_mps2": float(fields["persistent_max_acceleration"]),
         "persistent_max_penetration_m": float(fields["persistent_max_penetration_m"]),
         "persistent_dynamic_force_residual_max_n": float(fields["persistent_dynamic_force_residual_max_n"]),
@@ -158,6 +173,9 @@ def _control(root: Path) -> dict[str, Any]:
         "compiled_stand_total_support_force_n": float(fields["compiled_stand_total_support_force_n"]),
         "dynamic_force_audit_max_abs_residual_n": float(audit["maximum_abs_residual_n"]),
         "dynamic_force_audit_rows": len(audit["rows"]),
+        "trace_samples": len(trace["samples"]),
+        "muscle_force_metal_elapsed_ms": float(fields["muscle_force_metal_elapsed_ms"]),
+        "muscle_force_metal_active_records": int(fields["muscle_force_metal_active_records"]),
         "stand_deterministic_replay": "bitwise",
         "native_capture": {
             "stdout": {"path": str(stdout.relative_to(ROOT)), "bytes": len(stdout_raw),
@@ -206,7 +224,9 @@ def compile_receipt() -> dict[str, Any]:
             "root_assistance": "none",
         },
         "attempts": attempts,
-        "one_step_control": _control(CONTROL),
+        "one_step_control": _control(CONTROL, expected_steps=1, label="one-step"),
+        "two_step_control": _control(CONTROL_2, expected_steps=2, label="two-step"),
+        "eight_step_control": _control(CONTROL_8, expected_steps=8, label="eight-step"),
         "qualification": {
             "scaled_input_admitted": True,
             "long_horizon_completed": False,
@@ -220,15 +240,18 @@ def compile_receipt() -> dict[str, Any]:
             "id": "subject_scaled_long_horizon_native_execution",
             "status": "open",
             "reason": (
-                "Both 128-step and 512-step 12.5 us attempts admitted the scaled "
-                "payloads but stopped in MetalArticulatedOperatorSubmission::wait "
-                "before publishing a native result."
+                "The 128-step and 512-step 12.5 us attempts admitted the scaled "
+                "payloads but were agent-terminated after 105.196 s and 199.037 s "
+                "in MetalArticulatedOperatorSubmission::wait before publishing a "
+                "native result. Completed 1-, 2-, and 8-step controls show that the "
+                "retained blocker is long-horizon native throughput, not an observed "
+                "first-step or two-step state break."
             ),
         },
         "boundary": (
-            "This receipt retains two failed subject-scaled long-horizon attempts. "
-            "The 64-step subject-scaled replay remains the only completed result. "
-            "A Metal command-buffer wait is execution evidence, not a physics, "
+            "This receipt retains two failed subject-scaled long-horizon attempts and "
+            "completed 1-, 2-, and 8-step controls. The 64-step subject-scaled replay "
+            "remains the only released subject-scaled qualification. A Metal command-buffer wait is execution evidence, not a physics, "
             "standing, recovery, walking, activation, anatomy, material, or subject "
             "calibration qualification."
         ),
