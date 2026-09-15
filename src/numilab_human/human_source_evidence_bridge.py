@@ -3,8 +3,9 @@
 The current evidence receipt already binds native mechanics, regional blood and
 zeroth-moment blood/tissue transfer.  The composition extension binds the same
 one-male source graph to registered foot proxies and the muscle route/volume
-incidence table.  This bridge checks that the two receipts refer to the exact
-v14 composition hash and keeps every physical-owner, material, fat, and
+incidence table.  This bridge also binds an explicit receipt proving that no
+adipose source layer is present.  It checks that the receipts refer to the
+exact v14 composition hash and keeps every physical-owner, material, fat, and
 behavior gate fail-closed.
 """
 from __future__ import annotations
@@ -27,6 +28,7 @@ COMPOSITION_EXTENSION = ROOT / (
 )
 BLOOD_MASS_TRANSFER = ROOT / "Docs/media/organ-blood-mass-transfer-20260915/receipt-v3.json"
 MUSCLE_TISSUE_MASS = ROOT / "Docs/media/muscle-tissue-mass-candidate-20260915/receipt-v1.json"
+FAT_SOURCE_ABSENCE = ROOT / "Docs/media/fat-source-absence-candidate-20260915/receipt-v1.json"
 SCHEMA = "HumanPack.human-source-evidence-bridge.v1"
 
 
@@ -66,7 +68,7 @@ def _profile(path: Path) -> tuple[dict[str, Any], str]:
     profile, digest = _read(path, "bridge profile", canonical_required=True)
     required = {
         "schema", "id", "current_evidence", "composition_extension", "blood_mass_transfer",
-        "muscle_tissue_mass_candidate",
+        "muscle_tissue_mass_candidate", "fat_source_absence_candidate",
         "expected_bed_count", "expected_blood_owner_count", "expected_closed_muscle_volume_count",
         "expected_muscle_route_count",
         "expected_foot_proxy_count", "boundary",
@@ -77,7 +79,7 @@ def _profile(path: Path) -> tuple[dict[str, Any], str]:
     _require(profile["id"] == "current_runtime_to_composition_graph",
              "unsupported bridge profile")
     for key in ("current_evidence", "composition_extension", "blood_mass_transfer",
-                "muscle_tissue_mass_candidate"):
+                "muscle_tissue_mass_candidate", "fat_source_absence_candidate"):
         value = profile[key]
         _require(isinstance(value, str) and value.strip() and not Path(value).is_absolute()
                  and ".." not in Path(value).parts and "\\" not in value,
@@ -100,16 +102,19 @@ def compile_bridge(*, current_evidence: Path = CURRENT_EVIDENCE,
                    composition_extension: Path = COMPOSITION_EXTENSION,
                    blood_mass_transfer: Path = BLOOD_MASS_TRANSFER,
                    muscle_tissue_mass: Path = MUSCLE_TISSUE_MASS,
+                   fat_source_absence: Path = FAT_SOURCE_ABSENCE,
                    profile: Path = PROFILE) -> dict[str, Any]:
     profile_doc, profile_sha = _profile(Path(profile))
     current_path = Path(current_evidence)
     extension_path = Path(composition_extension)
     blood_path = Path(blood_mass_transfer)
     muscle_mass_path = Path(muscle_tissue_mass)
+    fat_absence_path = Path(fat_source_absence)
     current, current_sha = _read(current_path, "current evidence receipt")
     extension, extension_sha = _read(extension_path, "composition extension receipt")
     blood_doc, blood_sha = _read(blood_path, "blood mass-transfer receipt")
     muscle_mass_doc, muscle_mass_sha = _read(muscle_mass_path, "muscle tissue-mass receipt")
+    fat_absence_doc, fat_absence_sha = _read(fat_absence_path, "fat source-absence receipt")
 
     _require(current.get("schema") == "HumanPack.current-human-evidence-join.v2"
              and current.get("status") == "partial",
@@ -165,6 +170,25 @@ def compile_bridge(*, current_evidence: Path = CURRENT_EVIDENCE,
              and muscle_mass_qualification.get("skeletal_muscle_tissue_mass_owner") is False
              and muscle_mass_qualification.get("disjoint_volume_partition") is False,
              "muscle tissue-mass boundary changed")
+
+    _require(fat_absence_doc.get("schema") == "HumanPack.fat-source-absence-candidate.v1"
+             and fat_absence_doc.get("status") == "partial"
+             and fat_absence_doc.get("subject") == "one adult male source package",
+             "fat source-absence receipt changed")
+    fat_counts = fat_absence_doc.get("counts", {})
+    _require(fat_counts.get("fat_surface_count") == 0
+             and fat_counts.get("fat_volume_candidate_count") == 0
+             and fat_counts.get("fat_mass_candidate_count") == 0
+             and fat_counts.get("fat_physical_volume_owner_count") == 0
+             and fat_counts.get("fat_mechanical_mass_owner_count") == 0,
+             "fat source-absence counts changed")
+    fat_qualification = fat_absence_doc.get("qualification", {})
+    _require(fat_qualification.get("fat_source_absence_bound") is True
+             and fat_qualification.get("fat_geometry_present") is False
+             and fat_qualification.get("fat_mass_candidate") is False
+             and fat_qualification.get("fat_mechanical_mass_owner") is False
+             and fat_qualification.get("integrated_human_qualification") is False,
+             "fat source-absence boundary changed")
 
     _require(extension.get("schema") == "HumanPack.body-composition-extension-join.v1"
              and extension.get("status") == "partial",
@@ -234,6 +258,7 @@ def compile_bridge(*, current_evidence: Path = CURRENT_EVIDENCE,
         "skeletal_muscle_tissue_volume": False,
         "skeletal_muscle_tissue_mass": False,
         "skeletal_muscle_tissue_mass_candidate_bound": True,
+        "fat_source_absence_bound": True,
         "fat_geometry_and_mass": False,
         "organ_mechanics": False,
         "material_calibration": False,
@@ -255,6 +280,7 @@ def compile_bridge(*, current_evidence: Path = CURRENT_EVIDENCE,
             "composition_extension": _input(extension_path, extension, extension_sha),
             "blood_mass_transfer": _input(blood_path, blood_doc, blood_sha),
             "muscle_tissue_mass": _input(muscle_mass_path, muscle_mass_doc, muscle_mass_sha),
+            "fat_source_absence": _input(fat_absence_path, fat_absence_doc, fat_absence_sha),
             "profile": {"path": _relative(Path(profile)), "schema": profile_doc["schema"],
                         "file_sha256": profile_sha},
         },
@@ -293,6 +319,14 @@ def compile_bridge(*, current_evidence: Path = CURRENT_EVIDENCE,
                 "skeletal_muscle_tissue_mass_candidate": True,
                 "skeletal_muscle_tissue_mass_owner": False,
             },
+            "fat": {
+                "fat_surface_count": fat_counts["fat_surface_count"],
+                "fat_volume_candidate_count": fat_counts["fat_volume_candidate_count"],
+                "fat_mass_candidate_count": fat_counts["fat_mass_candidate_count"],
+                "fat_source_absence_bound": True,
+                "fat_physical_volume_owner_count": fat_counts["fat_physical_volume_owner_count"],
+                "fat_mechanical_mass_owner_count": fat_counts["fat_mechanical_mass_owner_count"],
+            },
         },
         "qualification": qualification,
         "blockers": [
@@ -305,7 +339,7 @@ def compile_bridge(*, current_evidence: Path = CURRENT_EVIDENCE,
             {"id": "blood_mass_transfer", "status": "open",
              "reason": "Regional zeroth-moment transfer conserves and rolls back on the exact clock; anatomical lumen, tissue exchange ownership and mechanical blood mass remain open."},
             {"id": "materials_and_fat", "status": "open",
-             "reason": "Material calibration, subject density, fat geometry/mass and skeletal-muscle tissue partition are not admitted."},
+             "reason": "Material calibration and subject density remain unresolved; the source graph now explicitly proves that no adipose geometry or mass layer is available, so fat geometry/mass and skeletal-muscle tissue partition are not admitted."},
             {"id": "standing_recovery_walking", "status": "open",
              "reason": "The joined release is bounded and replayable, but sustained standing, perturbation recovery and walking remain unqualified."},
         ],
@@ -330,6 +364,7 @@ def run(arguments: argparse.Namespace) -> int:
                             composition_extension=arguments.composition_extension,
                             blood_mass_transfer=arguments.blood_mass_transfer,
                             muscle_tissue_mass=arguments.muscle_tissue_mass,
+                            fat_source_absence=arguments.fat_source_absence,
                             profile=arguments.profile)
     output = arguments.output.resolve()
     digest = _immutable_write(output, result)
@@ -344,6 +379,7 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--composition-extension", type=Path, default=COMPOSITION_EXTENSION)
     parser.add_argument("--blood-mass-transfer", type=Path, default=BLOOD_MASS_TRANSFER)
     parser.add_argument("--muscle-tissue-mass", type=Path, default=MUSCLE_TISSUE_MASS)
+    parser.add_argument("--fat-source-absence", type=Path, default=FAT_SOURCE_ABSENCE)
     parser.add_argument("--profile", type=Path, default=PROFILE)
     parser.add_argument("--output", type=Path, required=True)
     parser.set_defaults(handler=run)

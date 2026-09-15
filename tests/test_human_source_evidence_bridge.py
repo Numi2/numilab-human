@@ -28,6 +28,8 @@ def test_binds_runtime_organs_blood_contact_and_muscle_graph_without_owner() -> 
     assert result["domains"]["muscle"]["source_route_count"] == 416
     assert result["domains"]["muscle"]["candidate_mass_kg"] == pytest.approx(6.859582804936875)
     assert result["domains"]["muscle"]["skeletal_muscle_tissue_mass_owner"] is False
+    assert result["domains"]["fat"]["fat_surface_count"] == 0
+    assert result["domains"]["fat"]["fat_source_absence_bound"] is True
     assert result["qualification"]["blood_tissue_mass_transfer_candidate_bound"]
     assert result["qualification"]["foot_contact_proxy_bound"]
     assert result["qualification"]["muscle_route_volume_incidence_bound"]
@@ -38,6 +40,7 @@ def test_binds_runtime_organs_blood_contact_and_muscle_graph_without_owner() -> 
                 "material_calibration", "standing", "recovery", "walking",
                 "integrated_human_qualification"):
         assert result["qualification"][key] is False
+    assert result["qualification"]["fat_source_absence_bound"] is True
 
 
 def test_rejects_extension_base_hash_divergence(tmp_path: Path) -> None:

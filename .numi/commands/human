@@ -159,6 +159,16 @@ if [ "${1:-}" = "muscle-tissue-mass-candidate" ]; then
     exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.muscle_tissue_mass_candidate "$@"
 fi
 
+if [ "${1:-}" = "fat-source-absence-candidate" ]; then
+    shift
+    if [ -n "${PYTHONPATH:-}" ]; then
+        export PYTHONPATH="$repository_root/src:$PYTHONPATH"
+    else
+        export PYTHONPATH="$repository_root/src"
+    fi
+    exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.fat_source_absence_candidate "$@"
+fi
+
 if [ "${1:-}" = "body-composition-extension-join" ]; then
     shift
     if [ -n "${PYTHONPATH:-}" ]; then

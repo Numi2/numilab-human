@@ -30,7 +30,11 @@ count remains zero. The new cross-domain source/evidence bridge
 to the current native mechanics, organ/blood transport, and zeroth-moment
 blood/tissue transfer receipt while retaining zero physical owners. The executable
 registry snapshot is
-[`gap-execution/report-v55.json`](media/gap-execution-20260915/report-v55.json).
+[`gap-execution/report-v56.json`](media/gap-execution-20260915/report-v56.json).
+The bridge now also records the fat-source absence candidate: the current male
+package has zero adipose surfaces, volume candidates, mass candidates, and
+physical owners. This makes the missing source explicit without treating skin
+or muscle surfaces as fat.
 The join now includes the current native costal tissue requalification
 ([receipt](media/tissue-integration-20260908/current-costal-binding-receipt-20260915.json)):
 13,516 cooked nodes, 46,278 tetrahedra, 2,871 attachments, eight Apple M4 Pro
