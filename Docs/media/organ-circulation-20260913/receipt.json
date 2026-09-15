@@ -36,24 +36,27 @@
   "native_commit": "1594f7aff5503aab96ab9de6e77b6d4f8fa4f1cd",
   "schema": "numi.human.organ-circulation-evidence.v1",
   "scientific_status": "unqualified",
+  "source_requalification": {
+    "current_cli_sha256": "59d4f6a5c020034563e6ecae2ee6fbf3fd5d72165c60d70141ac306c9c22d97a",
+    "kind": "source_pin_refresh",
+    "previous_cli_sha256": "177e2fa901abb05ecda514cdc9540f5d1644dbd4ae7286f0242152d95d233a8a",
+    "reason": "CLI source changed after the prior refresh; the passive physiology owner inputs, native identity, native logs and qualification boundary were re-verified without promoting biological status",
+    "scientific_status": "unqualified",
+    "verification": "tools/verify_organ_circulation_20260912.py",
+    "verified": "2026-09-15"
+  },
   "source_sha256": {
     "config/physiology-organ-network-template.v1.json": "57bba63528f4f66aa6337b1eebe1585579c8ccb54850549ac4e5bf944ef43b15",
     "config/physiology-passive-fixture.v1.json": "2f09cbb621df93c88dd7825a4809e6f7a9193977aec8ea44994e68355e25021a",
     "schemas/humanpack-physiology.v1.schema.json": "f2a8949d57a28a57459ccd75c1a2a5ede0ef72098ce2e54fba62e916b12cf072",
     "schemas/humanpack-target-coverage.v1.schema.json": "44781d46d61e07d915095298b145a53f8a6e641eeddd437cfbdbc410df741762",
     "sources.lock.json": "03d20d46bfb47b67fb251182758eebbc8f1bbe2f38ce51881dc4c2694774fdee",
-    "src/numilab_human/cli.py": "177e2fa901abb05ecda514cdc9540f5d1644dbd4ae7286f0242152d95d233a8a",
+    "src/numilab_human/cli.py": "59d4f6a5c020034563e6ecae2ee6fbf3fd5d72165c60d70141ac306c9c22d97a",
     "src/numilab_human/physiology.py": "efb717aee62893268b266abe6a5c2901b0259333ccbae90110fda2070d84ecef",
     "src/numilab_human/target_coverage.py": "8981c3689bffac2408f6b24e3fa893789c2f17ccd47e9220b459c99868ff5c05",
     "tests/test_organ_circulation_evidence.py": "06ffbe05bd7b712e75776f122dcae9e36841b21e48a594f699fe2615408885eb",
     "tests/test_physiology.py": "8dba2db47d2b9782993b41c109852e6aa9af6d096a0fe10153ff24f348c64e9d",
     "tests/test_target_coverage.py": "c28cc6c1f57bf61980d88b8f08b66e4df180d30f6381d0cff35711482b7c80aa",
     "tools/verify_organ_circulation_20260912.py": "27d9f8c7dea016cef49e6c944b9c82e75abfb699fbad2298047da7e188f60124"
-  },
-  "source_requalification": {
-    "kind": "source_pin_refresh",
-    "reason": "CLI gained the body-composition and muscle-surface geometry audit commands; existing passive physiology owner inputs and native artifacts were unchanged",
-    "verified": "2026-09-14",
-    "scientific_status": "unqualified"
   }
 }
