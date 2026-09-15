@@ -451,7 +451,7 @@ is far below the standing gate, this narrows the recruitment/equilibrium
 failure without closing force convergence, sustained standing, recovery,
 walking, anatomical loading, material, blood/tissue transfer, or calibration.
 The refreshed executable gap report is
-[`Docs/media/gap-execution-20260915/report-v29.json`](media/gap-execution-20260915/report-v29.json).
+[`Docs/media/gap-execution-20260915/report-v30.json`](media/gap-execution-20260915/report-v30.json).
 It now includes the current mechanics/organ/blood evidence join
 ([receipt](CURRENT_HUMAN_EVIDENCE_JOIN_20260915.md)) and the regional exchange
 requalification rebuilt on the pose-24 native owner.
@@ -488,6 +488,16 @@ zero-velocity roots at `12.5 us`. The 0.8 ms release is bounded at
 `0.115904301405 m/s2`, but the same state reaches `4.82679176331 m/s2` over
 6.4 ms. This closes initial fibre-state ownership while retaining the
 long-horizon force-convergence and standing blockers.
+
+The [fibre-root per-DoF force audit](NATIVE_FORCE_AUDIT_FIBRE_ROOT_20260915.md)
+then reruns the complete native source decomposition after the repair. All 128
+rows expose gravity, muscle/tendon, equality, limit, support, passive-tissue and
+authoritative-net components; reconstruction closes within `5.68e-14 N`, the
+maximum net residual is `2.99e-6 N`, and internal normalized residual RMS is
+`3.13e-6`. Six of ten source support witnesses carry `952.864475319 N` against
+`952.864477038 N` body weight. This is static per-DoF evidence only and does not
+promote temporal force convergence, anatomical supports/loading, activation
+calibration, blood mass transfer, material calibration, or subject calibration.
 
 The current native regional exchange receipt records 21 source compartments,
 24 source connections and seven regional beds on the physical M4 Pro at the

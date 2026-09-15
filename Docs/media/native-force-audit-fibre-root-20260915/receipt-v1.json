@@ -1,0 +1,177 @@
+{
+  "artifacts": {
+    "coordinate_map": "coordinate-map.json",
+    "coordinate_map_sha256": "a3342c5088e0e4a7116e850083474cd1229d04c9ef5fd79c486ec106c981a9fd",
+    "force_ledger": "force-ledger.json",
+    "force_ledger_sha256": "89b9e072ff0a80ce0735109cf527c0a19322f3a440abe5f794fc49c1a309ac31",
+    "force_snapshot": "force-snapshot.json",
+    "force_snapshot_sha256": "9657f8137546894496f2c4c5dea5b4193f33c17019d141b28475b6501a0b484d",
+    "native_stderr": "native-force-audit-stderr.txt",
+    "native_stderr_sha256": "8042233f05ced7191ae636cfeea20c4641a90e76c5b18d3de413e2c3a3c0ae59",
+    "native_stdout": "native-force-audit-stdout.txt",
+    "native_stdout_sha256": "29e79572a7b63c585414e660d0e864d92cedf7348b97fe50169c6e385375a89b"
+  },
+  "boundary": "Physical-M4 source-bound static per-DoF diagnostic after the stationary fibre-root repair. Every one of 128 velocity coordinates exposes gravity, muscle/tendon, joint equality, joint limit, support, passive tissue and authoritative net components; the current static decomposition closes within 8.53e-14 N assembly error and 2.99e-6 N maximum net residual. This is a static source audit and does not qualify temporal force convergence, sustained standing, recovery, walking, anatomical loading, activation calibration, blood mass transfer, material calibration or subject calibration.",
+  "command": {
+    "joint_equality_count": 51,
+    "joint_manifold": "NHEQ1",
+    "muscle_step_seconds": 1.25e-05,
+    "source_passive_joint_tissue": true,
+    "support_contact_count": 10,
+    "support_payload": "NHCNT1",
+    "whole_body_activation_cap": 0.8,
+    "whole_body_activation_sweeps": 960,
+    "whole_body_all_residuals": true,
+    "whole_body_pose_sweeps": 24
+  },
+  "qualification": {
+    "activation_calibration": false,
+    "anatomical_support_loading": false,
+    "authoritative_net_reconstructed": true,
+    "blood_mass_transfer": false,
+    "dynamic_release": false,
+    "force_convergence": false,
+    "full_128_dof_component_rows": true,
+    "generalized_force_closed": true,
+    "internal_generalized_balance": true,
+    "material_calibration": false,
+    "per_dof_source_audit": true,
+    "recovery": false,
+    "source_coordinate_identity_bound": true,
+    "source_identity_bound": true,
+    "static_root_wrench_balance": true,
+    "subject_calibration": false,
+    "sustained_standing": false,
+    "walking": false
+  },
+  "results": {
+    "accepted_pose_steps": 23,
+    "active_position_limits": 31,
+    "body_count": 157,
+    "body_mass_kg": 97.1319506911,
+    "coordinate_identity_kind": "source joint and child-body identity; anatomical labels unavailable",
+    "coordinate_identity_rows": 128,
+    "dof_count": 128,
+    "expected_weight_n": 952.864477038,
+    "internal_balanced": true,
+    "internal_normalized_residual_rms": 3.1314402101e-06,
+    "max_root_acceleration_residual": 4.05027255754e-06,
+    "max_root_force_residual_n": 1.71905924162e-06,
+    "maximum_absolute_force_residual": 2.992262523093814e-06,
+    "maximum_assembly_error": 5.684341886080802e-14,
+    "maximum_closure_ratio": 1.0,
+    "passive_coordinate_couplings": 40,
+    "position_limit_physical_kkt": 7.11648472999e-13,
+    "rejected_support_manifold_pose_candidates": 576,
+    "relative_weight_error": 1.80409697829e-09,
+    "replay": "bitwise",
+    "rms_closure_ratio": 0.08838834775708769,
+    "static_active_support_contacts": 6,
+    "static_support_contacts": 10,
+    "total_support_force_n": 952.864475319,
+    "worst_coordinates": [
+      {
+        "coordinate": "v_005:joint_4294967295:child_body_4294967295",
+        "dominant_component": "muscle_tendon",
+        "index": 5,
+        "normalized_residual": 1.0,
+        "reported_net": 4.5123557026166066e-14
+      },
+      {
+        "coordinate": "v_102:joint_130:child_body_131",
+        "dominant_component": "support_contact",
+        "index": 102,
+        "normalized_residual": 3.840769188675659e-05,
+        "reported_net": 3.244457207624826e-07
+      },
+      {
+        "coordinate": "v_116:joint_144:child_body_145",
+        "dominant_component": "support_contact",
+        "index": 116,
+        "normalized_residual": 2.5884875263960374e-05,
+        "reported_net": 2.769482204551598e-07
+      },
+      {
+        "coordinate": "v_058:joint_72:child_body_73",
+        "dominant_component": "gravity_bias",
+        "index": 58,
+        "normalized_residual": 1.648417706990433e-05,
+        "reported_net": 5.121907744486254e-10
+      },
+      {
+        "coordinate": "v_056:joint_69:child_body_70",
+        "dominant_component": "gravity_bias",
+        "index": 56,
+        "normalized_residual": 5.102262267637142e-06,
+        "reported_net": 2.8447157023258645e-10
+      },
+      {
+        "coordinate": "v_096:joint_122:child_body_123",
+        "dominant_component": "gravity_bias",
+        "index": 96,
+        "normalized_residual": 3.8299816107213576e-06,
+        "reported_net": 1.1900294652172635e-10
+      },
+      {
+        "coordinate": "v_094:joint_119:child_body_120",
+        "dominant_component": "gravity_bias",
+        "index": 94,
+        "normalized_residual": 1.2392362647633914e-06,
+        "reported_net": 6.90920627455795e-11
+      },
+      {
+        "coordinate": "v_114:joint_142:child_body_143",
+        "dominant_component": "muscle_tendon",
+        "index": 114,
+        "normalized_residual": 7.379013482796155e-07,
+        "reported_net": -2.12297480634005e-06
+      },
+      {
+        "coordinate": "v_041:joint_44:child_body_45",
+        "dominant_component": "gravity_bias",
+        "index": 41,
+        "normalized_residual": 7.074159295619715e-07,
+        "reported_net": 4.245431907065611e-09
+      },
+      {
+        "coordinate": "v_072:joint_87:child_body_88",
+        "dominant_component": "gravity_bias",
+        "index": 72,
+        "normalized_residual": 3.893512537211198e-07,
+        "reported_net": -2.4064560700863558e-08
+      },
+      {
+        "coordinate": "v_074:joint_89:child_body_90",
+        "dominant_component": "gravity_bias",
+        "index": 74,
+        "normalized_residual": 3.893512537211198e-07,
+        "reported_net": -2.4064560700863558e-08
+      },
+      {
+        "coordinate": "v_047:joint_58:child_body_59",
+        "dominant_component": "gravity_bias",
+        "index": 47,
+        "normalized_residual": 3.718629378045417e-07,
+        "reported_net": -3.3659280663242766e-10
+      }
+    ]
+  },
+  "schema": "numi.human.native-force-audit-fibre-root-requalification.v1",
+  "source": {
+    "binary": "metalrobo_numilab_human_myosim_visual_probe",
+    "binary_sha256": "62648144c20f386b25f625d503fd101f5c846b9ca8b0dac0649e4a064fb04919",
+    "branch": "numi-human-passive-stand-20260915",
+    "checkout": "/private/tmp/numi-human-native-passive-stand-20260915",
+    "commit": "f45fcfdc80a05c2226d638227295add7f789c55c",
+    "device": "Mac mini M4 Pro",
+    "input_sha256": {
+      "bodyparts3d-myosim-major-bones.nhbones": "de6a792cb4a4a0a50124105d268eda42b2ebbed08e77c34cd1b7ea0696841777",
+      "myosim-fullbody-core-reference.nhrigid": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44",
+      "myosim-fullbody-joint-equalities.nheq": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a",
+      "myosim-fullbody-muscle-reference.nhmyo": "9a988f19a6fd8e533cd0f2bf3192cb8535fb008ccd394ffbf1a4432d3db76a05",
+      "myosim-fullbody-support-contact.nhcnt": "4d54f8155cd83baaee7af536099824ac0da61e5d5e77544b42c6e5ce1b48c907"
+    }
+  },
+  "status": "partial",
+  "subject": "one adult male source package"
+}

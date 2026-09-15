@@ -10,7 +10,7 @@ cross-domain receipt is
 and the current mechanics/organ/blood evidence join is
 [`current-human-evidence-join/receipt-v1.json`](media/current-human-evidence-join-20260915/receipt-v1.json).
 The executable registry snapshot is
-[`gap-execution/report-v29.json`](media/gap-execution-20260915/report-v29.json).
+[`gap-execution/report-v30.json`](media/gap-execution-20260915/report-v30.json).
 The join now includes the current native costal tissue requalification
 ([receipt](media/tissue-integration-20260908/current-costal-binding-receipt-20260915.json)):
 13,516 cooked nodes, 46,278 tetrahedra, 2,871 attachments, eight Apple M4 Pro
@@ -66,6 +66,17 @@ physical Mac mini at the canonical `12.5 us` clock, the 0.8 ms release peaks at
 `0.115904301405 m/s2`, while the same source state reaches `4.82679176331 m/s2`
 over 6.4 ms. Static balance, zero penetration and bitwise replay remain valid,
 but long-horizon state/force coupling and force convergence remain open.
+
+The follow-on [fibre-root per-DoF force audit](NATIVE_FORCE_AUDIT_FIBRE_ROOT_20260915.md)
+reruns the complete native source decomposition after that repair. All 128 rows
+carry gravity, muscle/tendon, equality, limit, support, passive-tissue and
+authoritative-net components; component assembly closes within `5.68e-14 N`,
+the maximum net residual is `2.99e-6 N`, and internal normalized residual RMS is
+`3.13e-6`. Six of ten source support witnesses carry `952.864475319 N` against
+`952.864477038 N` body weight. This closes the static diagnostic only; temporal
+force convergence, anatomical supports/loading, activation calibration, blood
+mass transfer, unresolved materials, fat ownership, and subject calibration
+remain open.
 
 The next isolated native increment is recorded in the
 [pose24 passive persistent-stand requalification](NATIVE_PASSIVE_STAND_POSE24_20260915.md).
