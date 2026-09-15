@@ -125,9 +125,11 @@ retains two physical Mac mini attempts at the same `12.5 us` clock: 128 steps
 without the validation layer and 512 steps with it. Both admitted the scaled
 rigid input plus tendon, equality, and support payloads, then stalled before a
 native result in `MetalArticulatedOperatorSubmission::wait`/`waitUntilCompleted`.
-This is a typed native-execution blocker; it does not promote long-horizon
-force convergence, standing, recovery, walking, activation, anatomy, materials,
-or subject calibration.
+The same build completes a one-step control with 128 audit rows, bitwise trace,
+six active supports and zero penetration, so the blocker is multi-step
+persistence after first-step execution. This is a typed native-execution
+blocker; it does not promote long-horizon force convergence, standing, recovery,
+walking, activation, anatomy, materials, or subject calibration.
 
 The [body-composition release join](BODY_COMPOSITION_RELEASE_JOIN_20260915.md)
 now hash-binds that subject replay to the seven-bed blood/tissue mass-transfer

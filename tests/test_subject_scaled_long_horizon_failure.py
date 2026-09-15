@@ -25,6 +25,11 @@ def test_subject_scaled_long_horizon_retains_both_native_wait_failures() -> None
     assert all(not attempt["completed"] for attempt in result["attempts"])
     assert all(attempt["observed"]["payload_admission_reached"] for attempt in result["attempts"])
     assert all(attempt["observed"]["metal_submission_wait_observed"] for attempt in result["attempts"])
+    control = result["one_step_control"]
+    assert control["persistent_completed_steps"] == 1
+    assert control["dynamic_force_audit_rows"] == 128
+    assert control["stand_deterministic_replay"] == "bitwise"
+    assert control["persistent_max_penetration_m"] == 0.0
     assert not result["qualification"]["long_horizon_completed"]
     assert not result["qualification"]["sustained_standing"]
 
