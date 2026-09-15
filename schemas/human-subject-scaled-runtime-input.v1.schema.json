@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://numi.example/schemas/human-subject-scaled-runtime-input.v1.schema.json",
+  "title": "Numi Human subject-scaled NHRIGID2 runtime input",
+  "type": "object",
+  "required": ["schema", "compiler", "status", "source", "scaling_candidate", "output", "mapping", "qualification", "blockers", "boundary"],
+  "properties": {
+    "schema": {"const": "HumanPack.subject-scaled-runtime-input.v1"},
+    "compiler": {"const": "numilab-human.subject-scaled-runtime-input.1"},
+    "status": {"const": "partial"},
+    "source": {"type": "object"},
+    "scaling_candidate": {"type": "object"},
+    "output": {"type": "object"},
+    "mapping": {"type": "object"},
+    "qualification": {"type": "object"},
+    "blockers": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+    "boundary": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}

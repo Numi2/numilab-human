@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+repo=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+export PYTHONPATH="$repo/src${PYTHONPATH:+:$PYTHONPATH}"
+exec python3 -m numilab_human.subject_scaled_native_requalification "$@"
