@@ -33,3 +33,15 @@ with the immutable manifest in the same directory. It deliberately keeps
 anatomical support loading, activation calibration, blood mass transfer,
 material calibration, subject calibration, sustained standing, recovery and
 walking false.
+
+## Published runtime tuple
+
+The retained historical binary receipt above remains historical evidence. The
+actual native implementation is now pinned at the public Numi Lab tag
+`human-native-step281-rank-audit-20260915` (`337741b51bfc4a5552a837dacb4d0b5c4268d298`),
+and the five exact runtime inputs plus a fresh public-tag replay are pinned at
+the companion Human source-input tag
+`human-native-runtime-source-inputs-20260915`. See
+[`NATIVE_RUNTIME_SOURCE_PUBLICATION_20260915.md`](NATIVE_RUNTIME_SOURCE_PUBLICATION_20260915.md)
+for the complete tuple, hashes, reconstruction command, and its deliberately
+limited qualification boundary.

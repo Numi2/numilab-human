@@ -2149,6 +2149,12 @@ def parser() -> argparse.ArgumentParser:
         help="bind the current Mac mini passive-equilibrium persistent Human stand replay without promoting sustained standing",
     )
     add_native_passive_stand_arguments(native_passive_stand)
+    from .native_runtime_source_publication import add_arguments as add_native_runtime_source_publication_arguments
+    native_runtime_source_publication = commands.add_parser(
+        "native-runtime-source-publication",
+        help="compile the immutable public native-runtime source and input tuple without promoting dynamics",
+    )
+    add_native_runtime_source_publication_arguments(native_runtime_source_publication)
     from .physiology import add_arguments as add_physiology_arguments
     physiology = commands.add_parser(
         "physiology-compile", help="validate source-bound organ and circulation authoring and compile native indices",
