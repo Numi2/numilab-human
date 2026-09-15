@@ -2,7 +2,7 @@
 
 ## Current requalification — 2026-09-15
 
-The current repository evidence layer is published at `c9a0d80` on `main` and
+The current repository evidence layer is published at `cc68eb4` on `main` and
 `origin/main`. The source-pin refresh and the body-composition release join
 are the controlling receipts for this ledger; the older native-branch lines
 below are retained as historical provenance. The newly retained subject-scaled
@@ -243,6 +243,8 @@ remain open.
 The follow-on [dynamic force-component audit](NATIVE_DYNAMIC_FORCE_AUDIT_20260915.md) now carries the same accepted fibre/tendon state into the persistent Metal owner and publishes every 128-DoF initial dynamic component. The maximum reconstructed residual is `0.03216604835060366 N` at DOF 118, matching the `0.0321654636734 N` source CPU/Metal muscle-force parity delta; the 64-step release remains `0.115904301405 m/s2` with six active source contacts, zero penetration, and bitwise replay. A frozen CPU-minus-Metal preload experiment was explicitly rejected after its 512-step peak worsened from `4.82679176331` to `8.46329212189 m/s2`. This closes the component-diagnostic subgate only; temporal force convergence, sustained standing/recovery/walking, anatomical support/loading, activation calibration, blood mass transfer, unresolved materials, fat ownership, and subject calibration remain open.
 
 The isolated [coupled-velocity closure diagnostic](NATIVE_COUPLED_VELOCITY_CLOSURE_DIAGNOSTIC_20260915.md) fixes the host verifier so the experimental kernel's intentional dependent-velocity delta is retained as evidence rather than reported as a false projection failure. The physical M4 Pro bounded replay completes 64 exact-clock steps with six active contacts, zero penetration, bitwise endpoint replay, static normalized residual RMS `9.0656247312e-6`, persistent peak acceleration `0.115922890604 m/s2`, and dynamic residual `0.032620927143 N`. The equality velocity error remains explicit at `3.09879681026e-7`; this is a diagnostic candidate, not production velocity closure, force convergence, sustained standing, recovery, walking, anatomy, activation calibration, blood transfer, materials, or subject calibration.
+
+The same diagnostic now has a canonical [dynamic force snapshot](media/native-coupled-velocity-closure-diagnostic-20260915/dynamic-force-snapshot-v1.json) and [per-DoF ledger](media/native-coupled-velocity-closure-diagnostic-20260915/dynamic-force-ledger-v1.json). All 128 native rows reconstruct the six published force owners to `8.53e-14 N` assembly error, while the maximum absolute residual is `0.032620927143 N` and the normalized internal maximum is `0.0161364514`; the ledger remains partial. This closes the reusable force-audit diagnostic path and leaves full generalized convergence, anatomical support/loading, measured activation, blood mechanical mass transfer, materials, calibration, sustained standing, recovery, and walking open.
 
 The [regional blood/tissue mass-transfer candidate](ORGAN_BLOOD_MASS_TRANSFER_CANDIDATE_20260915.md) now binds the same seven organ beds to explicit zeroth-moment tissue and blood states. Its exact-clock receipt accepts 511 of 512 attempts, rejects step 37 atomically, conserves owned mass and volume, and exercises both transfer directions. This advances the source-bound blood/tissue transfer subgate; anatomical lumen/capillary geometry, mechanical mass ownership, calibrated density, organ mechanics, and subject physiology remain open.
 
