@@ -2,8 +2,9 @@
 
 ## Current requalification — 2026-09-15
 
-The current published source/runtime join is `c71b99142a6a56ea6752466af51cce21ae546c4` in the
-`numilab-human` repository. The latest native dynamic-audit owner is local
+The current published source/runtime join is `b4ce4af3a4d1258d6357a3f309c2e013f8106c74` in the
+`numilab-human` repository (with the compiled rigid-body mass owner first bound by
+`c71b99142a6a56ea6752466af51cce21ae546c4`). The latest native dynamic-audit owner is local
 Mac mini branch `0967c4561392a04be6c47d158ec9bd1e4daa2009`; its source branch
 remains local because the configured GitHub HTTPS credential cannot publish it. The latest
 cross-domain receipt is
