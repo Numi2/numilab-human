@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+
+if [ "${1:-}" = "--numi-describe" ]; then
+    printf '%s\n' 'Compile immutable failure evidence for subject-scaled 12.5 us native long-horizon attempts; never promote a stalled Metal run.'
+    exit 0
+fi
+
+command_directory=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+repository_root=$(CDPATH= cd -- "$command_directory/../.." && pwd -P)
+export PYTHONPATH="$repository_root/src${PYTHONPATH:+:$PYTHONPATH}"
+exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.subject_scaled_long_horizon_failure "$@"

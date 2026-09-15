@@ -2,6 +2,12 @@
 
 ## Current requalification — 2026-09-15
 
+The current repository evidence layer is published at `c9a0d80` on `main` and
+`origin/main`. The source-pin refresh and the body-composition release join
+are the controlling receipts for this ledger; the older native-branch lines
+below are retained as historical provenance. The newly retained subject-scaled
+long-horizon attempts are explicitly failed before native result publication.
+
 The current published source/runtime join is `b4ce4af3a4d1258d6357a3f309c2e013f8106c74` in the
 `numilab-human` repository (with the compiled rigid-body mass owner first bound by
 `c71b99142a6a56ea6752466af51cce21ae546c4`). The latest native dynamic-audit owner is local
@@ -113,6 +119,15 @@ requalification, not full generalized force convergence. Segment composition,
 geometry/inertia calibration, anatomical plantar loading, activation
 calibration, organ/blood/tissue/fat/muscle ownership, sustained standing,
 recovery, walking, and held-out subject prediction remain open.
+
+The follow-on [subject-scaled long-horizon failure receipt](SUBJECT_SCALED_LONG_HORIZON_FAILURE_20260915.md)
+retains two physical Mac mini attempts at the same `12.5 us` clock: 128 steps
+without the validation layer and 512 steps with it. Both admitted the scaled
+rigid input plus tendon, equality, and support payloads, then stalled before a
+native result in `MetalArticulatedOperatorSubmission::wait`/`waitUntilCompleted`.
+This is a typed native-execution blocker; it does not promote long-horizon
+force convergence, standing, recovery, walking, activation, anatomy, materials,
+or subject calibration.
 
 The [body-composition release join](BODY_COMPOSITION_RELEASE_JOIN_20260915.md)
 now hash-binds that subject replay to the seven-bed blood/tissue mass-transfer

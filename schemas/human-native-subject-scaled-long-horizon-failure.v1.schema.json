@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://numilab.local/schemas/human-native-subject-scaled-long-horizon-failure.v1.schema.json",
+  "title": "Numi Human subject-scaled native long-horizon failure",
+  "type": "object",
+  "required": ["schema", "status", "source", "inputs", "attempts", "qualification", "blocker", "boundary"],
+  "properties": {
+    "schema": {"const": "HumanPack.native-subject-scaled-long-horizon-failure.v1"},
+    "status": {"const": "failed"},
+    "source": {"type": "object", "required": ["checkout", "head", "binary_sha256", "device", "worktree_dirty"]},
+    "inputs": {"type": "object", "required": ["scaled_rigid_sha256", "muscle_sha256", "tendon_sha256", "support_contact_sha256", "joint_equalities_sha256"]},
+    "attempts": {"type": "array", "minItems": 2, "items": {"type": "object", "required": ["name", "timestep_seconds", "step_count_requested", "completed", "termination", "native_capture", "observed"]}},
+    "qualification": {"type": "object", "required": ["scaled_input_admitted", "long_horizon_completed", "full_generalized_force_convergence", "sustained_standing", "recovery", "walking", "subject_calibration"]},
+    "blocker": {"type": "object", "required": ["id", "status", "reason"]},
+    "boundary": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": true
+}
