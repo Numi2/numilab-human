@@ -24,6 +24,13 @@ python3 tools/verify_organ_circulation_20260912.py \
   Docs/media/organ-circulation-20260913/receipt.json
 ```
 
+On 15 September the CLI command registry changed again while the passive
+physiology inputs and native owner remained unchanged. The receipt was
+source-pin refreshed at the current Human commit and the verifier was rerun
+against the current tree; the native 11/11 result and its unqualified boundary
+were retained. This is source evidence maintenance, not a new biological or
+organ-mechanics qualification.
+
 The requalification preserves the same boundary: passive closed compliance,
 resistance/inertance, transport, exchange, source membership, and native
 transaction evidence are admitted. The result remains `scientific_status:
