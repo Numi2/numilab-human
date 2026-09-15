@@ -2718,7 +2718,10 @@ class ImporterTests(unittest.TestCase):
                 self.assertEqual(argv[argv.index("--muscle-step-count") + 1], "512")
                 self.assertNotIn("--muscle-activation", argv)
                 self.assertIn("--persistent-metal-stand", argv)
-                self.assertIn("--stand-remove-assistance", argv)
+                self.assertNotIn("--stand-root-assistance", argv)
+                self.assertNotIn("--stand-remove-assistance", argv)
+                self.assertIn("--persistent-source-passive-joint-tissue", argv)
+                self.assertIn("--persistent-stand-trace", argv)
                 actual_contacts = [
                     argv[index + 1]
                     for index, value in enumerate(argv)

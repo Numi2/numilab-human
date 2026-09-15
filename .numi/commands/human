@@ -407,16 +407,16 @@ fi
 
 # Canonical Numi Human v1 standing transaction. The native runtime compiles a
 # bounded posture activation from all 416 current-pose source force rows and
-# 51 exact source joint equalities, then executes assisted and zero-root-wrench
-# horizons in persistent Apple Metal.
-# Four native camera frames and a bitwise replay are mandatory evidence.
+# 51 exact source joint equalities, then executes without root assistance
+# using current-state passive joints. Assistance is an explicit diagnostic.
+# Rendering is optional; mechanics-only runs cannot qualify visual coverage.
 if [ "${1:-}" = "stand" ]; then
     if [ "${2:-}" = "--help" ] || [ "${2:-}" = "-h" ]; then
-        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-or-NHTENDON3-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..512>] [--timestep <1e-6..1e-3; default 12.5 us>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay]"
+        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-or-NHTENDON3-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..512>] [--timestep <1e-6..1e-3; default 12.5 us>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay] [--mechanics-only] [--assisted-diagnostic]"
         exit 0
     fi
     if [ "$#" -lt 6 ]; then
-        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-or-NHTENDON3-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..512>] [--timestep <1e-6..1e-3; default 12.5 us>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay]" >&2
+        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-or-NHTENDON3-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..512>] [--timestep <1e-6..1e-3; default 12.5 us>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay] [--mechanics-only] [--assisted-diagnostic]" >&2
         exit 2
     fi
     artifact_directory=$2
@@ -430,6 +430,8 @@ if [ "${1:-}" = "stand" ]; then
     dimension=640
     soft_tissue_payload=
     mechanics_overlay=false
+    mechanics_only=false
+    assisted_diagnostic=false
     while [ "$#" -gt 0 ]; do
         case "$1" in
             --steps)
@@ -453,6 +455,16 @@ if [ "${1:-}" = "stand" ]; then
                 soft_tissue_payload=$2
                 shift 2
                 ;;
+            --mechanics-only)
+                [ "$mechanics_only" = false ] || { printf '%s\n' "--mechanics-only may be given only once" >&2; exit 2; }
+                mechanics_only=true
+                shift
+                ;;
+            --assisted-diagnostic)
+                [ "$assisted_diagnostic" = false ] || { printf '%s\n' "--assisted-diagnostic may be given only once" >&2; exit 2; }
+                assisted_diagnostic=true
+                shift
+                ;;
             --mechanics-overlay)
                 [ "$mechanics_overlay" = false ] || { printf '%s\n' "--mechanics-overlay may be given only once" >&2; exit 2; }
                 mechanics_overlay=true
@@ -464,7 +476,11 @@ if [ "${1:-}" = "stand" ]; then
                 ;;
         esac
     done
-    if [ -z "$soft_tissue_payload" ] && \
+    if [ "$mechanics_only" = true ] && [ "$mechanics_overlay" = true ]; then
+        printf '%s\n' "--mechanics-only cannot request a visual mechanics overlay" >&2
+        exit 2
+    fi
+    if [ "$mechanics_only" = false ] && [ -z "$soft_tissue_payload" ] && \
        [ -f "$repository_root/Build/bodyparts3d-myosim-fullbody-muscle-surfaces/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue" ]; then
         soft_tissue_payload=$repository_root/Build/bodyparts3d-myosim-fullbody-muscle-surfaces/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue
     fi
@@ -491,7 +507,14 @@ if [ "${1:-}" = "stand" ]; then
     set -- "$probe" \
         "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
         "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
-        "$bone_payload" "$output_directory" \
+        "$output_directory"
+    if [ "$mechanics_only" = false ]; then
+        set -- "$probe" \
+            "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
+            "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
+            "$bone_payload" "$output_directory"
+    fi
+    set -- "$@" \
         --tendon-payload "$tendon_payload" \
         --support-contact-payload "$support_payload" \
         --joint-equality-payload "$artifact_directory/myosim-fullbody-joint-equalities.nheq" \
@@ -532,10 +555,17 @@ if [ "${1:-}" = "stand" ]; then
         --muscle-step-seconds "$timestep" \
         --muscle-step-count "$steps" \
         --persistent-metal-stand \
-        --stand-root-assistance \
-        --stand-remove-assistance \
+        --persistent-source-passive-joint-tissue \
+        --stand-contact-iterations 64 \
+        --persistent-stand-trace \
         --stand-deterministic-replay \
         --dimension "$dimension"
+    if [ "$assisted_diagnostic" = true ]; then
+        set -- "$@" --stand-root-assistance --stand-remove-assistance
+    fi
+    if [ "$mechanics_only" = true ]; then
+        set -- "$@" --mechanics-only
+    fi
     if [ "$mechanics_overlay" = true ]; then
         set -- "$@" --source-route-centrelines
     fi

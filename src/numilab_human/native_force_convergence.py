@@ -62,25 +62,36 @@ _HANDOFF_THRESHOLD_CEILINGS = {
 def _native_metrics(path: Path) -> dict[str, str]:
     try:
         lines = path.read_text(encoding="utf-8").splitlines()
-    except OSError as error:
+    except (OSError, UnicodeError) as error:
         raise ImportError(f"cannot read native stdout {path}: {error}") from error
-    line = next(
-        (
-            item
-            for item in reversed(lines)
-            if item.startswith("myosim_articulated_marker_visual=")
-        ),
-        None,
+    kinds = (
+        "myosim_articulated_marker_visual",
+        "myosim_articulated_bodyparts_bone_visual",
+        "myosim_articulated_mechanics",
     )
-    if line is None:
-        raise ImportError(f"{path} has no myosim_articulated_marker_visual result line")
+    matches = [(kind, line) for line in lines for kind in kinds
+               if line.startswith(kind + "=")]
+    if len(matches) != 1:
+        raise ImportError(f"{path} must contain exactly one native result line")
+    kind, line = matches[0]
+    try:
+        tokens = shlex.split(line)
+    except ValueError as error:
+        raise ImportError(f"{path} contains a malformed native result") from error
     values: dict[str, str] = {}
-    for token in shlex.split(line):
-        if "=" in token:
-            key, value = token.split("=", 1)
-            values[key] = value
-    if values.get("myosim_articulated_marker_visual") != "ok":
-        raise ImportError(f"{path} does not contain a successful native result")
+    for token in tokens:
+        if "=" not in token:
+            continue
+        key, value = token.split("=", 1)
+        if key in values:
+            raise ImportError(f"native result contains duplicate metric {key}")
+        values[key] = value
+    if values.get(kind) != "ok" or sum(key in values for key in kinds) != 1:
+        raise ImportError(f"{path} does not contain an unambiguous successful native result")
+    if kind == "myosim_articulated_mechanics":
+        if (values.get("rendering_performed") != "false" or
+                values.get("visual_coverage_qualified") != "false"):
+            raise ImportError("mechanics-only result must explicitly exclude visual qualification")
     return values
 
 
