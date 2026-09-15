@@ -12,6 +12,7 @@ on:
       - "tests/test_static_dynamic_handoff.py"
       - "tests/test_native_force_convergence.py"
       - "tests/test_equilibrium_force_snapshot.py"
+      - "tests/test_initial_force_reference.py"
       - "tests/test_force_ledger.py"
       - "tests/test_standing_state.py"
       - "tests/test_native_passive_stand_refinement.py"
@@ -51,6 +52,7 @@ jobs:
           tests/test_static_dynamic_handoff.py
           tests/test_native_force_convergence.py
           tests/test_equilibrium_force_snapshot.py
+          tests/test_initial_force_reference.py
           tests/test_force_ledger.py
           tests/test_standing_state.py
           tests/test_native_passive_stand_refinement.py
@@ -64,4 +66,8 @@ jobs:
             src/numilab_human/model.py
             src/numilab_human/physiology.py
             src/numilab_human/native_passive_stand_refinement.py
+            src/numilab_human/equilibrium_force_snapshot.py
+            src/numilab_human/force_ledger.py
             tests/test_native_refinement_binding.py
+            tests/test_equilibrium_force_snapshot.py
+            tests/test_initial_force_reference.py
