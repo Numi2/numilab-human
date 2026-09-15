@@ -1,5 +1,20 @@
 # Native dynamic force-component audit — 15 September 2026
 
+## Source-publication correction
+
+The retained patch and the source commit named below are historical evidence,
+not the authoritative implementation delivery. The complete native runtime
+used for the later fibre-state repair, segmented production trace, and source
+build is published in
+[`Numi2/numi-lab` branch `numi-human-passive-stand-20260915`](https://github.com/Numi2/numi-lab/tree/numi-human-passive-stand-20260915)
+at commit `1b91a681da7f051d54193c879fa669a6bd04b8e9`.
+
+That branch contains the accepted fibre-state handoff, stationary-fibre
+continuity check, deterministic segmented trace, and the trace owner
+provenance. It is source reproducibility progress, but is not a merge to the
+default branch or a standing qualification. This evidence repository does not
+substitute its reports or patches for the buildable runtime source.
+
 The physical Mac mini M4 Pro reran the repaired one-adult-male Human source at the canonical `12.5 us` clock for 64 persistent Metal steps (`0.8 ms`), with the accepted stationary MyoSim fibre/tendon root, ten source support witnesses, 40 source passive coordinate couplings, and no root assistance. The native source is `0967c4561392a04be6c47d158ec9bd1e4daa2009`; the audited binary SHA-256 is `74aac5cc43e0e2a19016ab5e6d5e61f042f013d457ae32b494398a85426f886b`.
 
 The new `persistent_dynamic_force_audit` record exposes all 128 velocity coordinates. Each row contains the accepted Metal muscle wrench, source support wrench, joint-equality reaction, position-limit reaction, passive-coordinate reaction, gravity target, and the reconstructed initial dynamic residual. The largest residual is `0.03216604835060366 N` at DOF 118 (joint 146, child body 147); the next largest are DOF 104 at `0.027029216809921763 N` and DOF 103 at `0.018328018158972448 N`. The maximum source CPU/Metal muscle-force parity delta is `0.0321654636734 N`, so the residual is explained by the source-to-device muscle-force handoff rather than by a missing support or gravity term.
@@ -22,4 +37,3 @@ Top residual rows:
 | 6 | 1 | 2 | 3.84993481636047 | 0 | -3.86123827113562 | -0.00248997272568284 | -0.00881348204946344 |
 | 9 | 4 | 5 | -180.83039855957 | 0 | 180.837638640621 | -8.03082206122077e-34 | 0.00724008105103735 |
 | 12 | 7 | 8 | 13.8599987030029 | 0 | -19.2545054261408 | -5.38732097423098 | -0.00718574890691759 |
-
