@@ -79,3 +79,23 @@ Reproduce the current receipt with:
 PYTHONPATH=src python3 -m numilab_human.current_human_evidence_join \
   --output Docs/media/current-human-evidence-join-20260915/receipt-v3.json
 ```
+
+## v4 evidence join
+
+The v4 receipt additionally binds the isolated coupled-velocity diagnostic and
+its canonical 128-DoF dynamic force ledger. The experimental M4 Pro replay
+completes 64 exact-clock steps with six active contacts, zero penetration,
+bitwise endpoint replay, `0.115922890604 m/s2` peak acceleration, and
+`0.032620927143 N` dynamic residual. The ledger reconstructs all six force
+owners to `8.53e-14 N` assembly error, while its low-load internal normalized
+residual reaches `0.0161364514`; these records remain diagnostics and do not
+promote force convergence, standing, recovery, walking, anatomical loading,
+activation calibration, blood mechanical ownership, materials, or subject
+calibration.
+
+Reproduce the current receipt with:
+
+```sh
+PYTHONPATH=src python3 -m numilab_human.current_human_evidence_join \
+  --output Docs/media/current-human-evidence-join-20260915/receipt-v4.json
+```

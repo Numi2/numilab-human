@@ -26,6 +26,12 @@ PASSIVE_STAND = ROOT / "Docs/media/native-passive-stand-pose24-20260915/receipt-
 REGIONAL_EXCHANGE = ROOT / "Docs/media/native-human-regional-exchange-pose24-20260915/receipt-v1.json"
 DYNAMIC_AUDIT = ROOT / "Docs/media/native-dynamic-force-audit-20260915/receipt-v1.json"
 BLOOD_MASS_TRANSFER = ROOT / "Docs/media/organ-blood-mass-transfer-20260915/receipt-v3.json"
+COUPLED_VELOCITY_DIAGNOSTIC = ROOT / (
+    "Docs/media/native-coupled-velocity-closure-diagnostic-20260915/receipt-v2.json"
+)
+COUPLED_DYNAMIC_FORCE_LEDGER = ROOT / (
+    "Docs/media/native-coupled-velocity-closure-diagnostic-20260915/dynamic-force-ledger-v1.json"
+)
 
 
 def _require(condition: bool, message: str) -> None:
@@ -78,6 +84,8 @@ def compile_join(
     regional_exchange: Path = REGIONAL_EXCHANGE,
     dynamic_audit: Path = DYNAMIC_AUDIT,
     blood_mass_transfer: Path = BLOOD_MASS_TRANSFER,
+    coupled_velocity_diagnostic: Path = COUPLED_VELOCITY_DIAGNOSTIC,
+    coupled_dynamic_force_ledger: Path = COUPLED_DYNAMIC_FORCE_LEDGER,
 ) -> dict[str, Any]:
     paths = {
         "body_composition": Path(body_composition),
@@ -87,6 +95,8 @@ def compile_join(
         "regional_exchange": Path(regional_exchange),
         "dynamic_audit": Path(dynamic_audit),
         "blood_mass_transfer": Path(blood_mass_transfer),
+        "coupled_velocity_diagnostic": Path(coupled_velocity_diagnostic),
+        "coupled_dynamic_force_ledger": Path(coupled_dynamic_force_ledger),
     }
     documents: dict[str, dict[str, Any]] = {}
     hashes: dict[str, str] = {}
@@ -237,9 +247,47 @@ def compile_join(
              mass_transfer_qualification.get("anatomical_vessel_lumen") is False,
              "regional blood/tissue mass-transfer qualification boundary changed")
 
+    coupled = documents["coupled_velocity_diagnostic"]
+    _require(coupled.get("schema") ==
+             "numi.human.native-coupled-velocity-closure-diagnostic.v1" and
+             coupled.get("status") == "partial",
+             "coupled velocity diagnostic schema or status changed")
+    coupled_source = _source(coupled, "coupled velocity diagnostic")
+    coupled_qualification = coupled.get("qualification", {})
+    _require(coupled_qualification.get("experimental_candidate") is True and
+             coupled_qualification.get("per_dof_dynamic_force_audit") is True and
+             coupled_qualification.get("force_convergence") is False and
+             coupled_qualification.get("standing") is False and
+             coupled_qualification.get("walking") is False,
+             "coupled velocity diagnostic boundary changed")
+    coupled_results = coupled.get("results", {})
+    _require(coupled_results.get("body_count") == 157 and
+             coupled_results.get("dof_count") == 128 and
+             coupled_results.get("persistent_completed_steps") == 64 and
+             coupled_results.get("persistent_max_penetration_m") == 0.0 and
+             coupled_results.get("compiled_active_support_contacts") == 6,
+             "coupled velocity diagnostic metrics are incomplete")
+
+    coupled_ledger = documents["coupled_dynamic_force_ledger"]
+    _require(coupled_ledger.get("schema") ==
+             "numi.human.generalized-force-ledger.v1" and
+             coupled_ledger.get("status") == "partial",
+             "coupled dynamic force ledger schema or status changed")
+    coupled_ledger_qualification = coupled_ledger.get("qualification", {})
+    _require(coupled_ledger_qualification.get("per_dof_source_audit") is True and
+             coupled_ledger_qualification.get("force_convergence") is False,
+             "coupled dynamic force ledger boundary changed")
+    coupled_ledger_coverage = coupled_ledger.get("coverage", {})
+    coupled_ledger_residual = coupled_ledger.get("residual", {})
+    _require(coupled_ledger_coverage.get("per_dof_source_rows") == 128 and
+             coupled_ledger_coverage.get("source_contributions_per_dof") == 6 and
+             coupled_ledger_residual.get("maximum_assembly_error") < 1.0e-9,
+             "coupled dynamic force ledger coverage is incomplete")
+
     for label, source in (("force audit", force_source), ("passive stand", stand_source),
                           ("regional exchange", regional_source),
-                          ("dynamic force audit", dynamic_source)):
+                          ("dynamic force audit", dynamic_source),
+                          ("coupled velocity diagnostic", coupled_source)):
         _require(source["device"] == "Mac mini M4 Pro", f"{label} is not physical-Mac evidence")
     _require(force_source["commit"] == stand_source["commit"] == regional_source["commit"],
              "native source commits diverge")
@@ -255,6 +303,7 @@ def compile_join(
         "bounded_passive_release": True,
         "exact_clock": True,
         "dynamic_force_component_audit": True,
+        "experimental_coupled_velocity_audit": True,
         "regional_blood_transport": True,
         "oxygen_amount_exchange": True,
         "blood_tissue_mass_transfer_candidate": True,
@@ -356,6 +405,25 @@ def compile_join(
             "maximum_penetration_m": dynamic_results["persistent_max_penetration_m"],
             "replay": dynamic_qualification["replay"],
         },
+        "coupled_velocity_diagnostic": {
+            "completed_steps": coupled_results["persistent_completed_steps"],
+            "persistent_max_acceleration_mps2": coupled_results[
+                "persistent_max_acceleration_mps2"
+            ],
+            "dynamic_force_residual_max_n": coupled_results[
+                "persistent_dynamic_force_residual_max_n"
+            ],
+            "maximum_equality_velocity_error_mps_or_rad_s": coupled_results[
+                "maximum_equality_velocity_error_mps_or_rad_s"
+            ],
+            "ledger_max_assembly_error_n": coupled_ledger_residual[
+                "maximum_assembly_error"
+            ],
+            "ledger_max_closure_ratio": coupled_ledger_residual[
+                "maximum_closure_ratio"
+            ],
+            "replay": coupled_qualification["native_trace_endpoint"],
+        },
         "blood_tissue_mass_transfer": {
             "accepted_steps": mass_transfer["accepted_steps"],
             "rejected_steps": mass_transfer["rejected_steps"],
@@ -376,14 +444,15 @@ def compile_join(
             "This receipt joins the current source-composition candidate, pose-24 native "
             "whole-body force audit, complete 128-DoF source ledger, pose-24 passive "
             "release, dynamic force-component diagnostic, exact-clock regional blood/oxygen "
-            "replay, and the zeroth-moment blood/tissue mass-transfer candidate for one adult male. "
+            "replay, the zeroth-moment blood/tissue mass-transfer candidate, and the "
+            "experimental coupled-velocity diagnostic for one adult male. "
             "It proves source and runtime identity, static generalized closure, bounded "
             "release, regional amount/mass conservation and replay. It does not admit candidate "
             "tissue or blood mass to rigid-body dynamics and does not prove anatomical "
             "contact, activation calibration, anatomical blood transfer, organ mechanics, "
             "materials, subject calibration, sustained standing, recovery or walking. "
-            "The dynamic component result is a diagnostic only; its short release does not "
-            "qualify temporal force convergence."
+            "The dynamic component and coupled-velocity results are diagnostics only; "
+            "their short releases do not qualify temporal force convergence."
         ),
     }
 
@@ -408,6 +477,10 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--regional-exchange", type=Path, default=REGIONAL_EXCHANGE)
     parser.add_argument("--dynamic-audit", type=Path, default=DYNAMIC_AUDIT)
     parser.add_argument("--blood-mass-transfer", type=Path, default=BLOOD_MASS_TRANSFER)
+    parser.add_argument("--coupled-velocity-diagnostic", type=Path,
+                        default=COUPLED_VELOCITY_DIAGNOSTIC)
+    parser.add_argument("--coupled-dynamic-force-ledger", type=Path,
+                        default=COUPLED_DYNAMIC_FORCE_LEDGER)
     parser.add_argument("--output", type=Path, required=True)
     parser.set_defaults(handler=run)
 
@@ -421,6 +494,8 @@ def run(arguments: argparse.Namespace) -> int:
         regional_exchange=arguments.regional_exchange,
         dynamic_audit=arguments.dynamic_audit,
         blood_mass_transfer=arguments.blood_mass_transfer,
+        coupled_velocity_diagnostic=arguments.coupled_velocity_diagnostic,
+        coupled_dynamic_force_ledger=arguments.coupled_dynamic_force_ledger,
     )
     digest = immutable_write(arguments.output.resolve(), result)
     print(json.dumps({"schema": SCHEMA, "status": result["status"],

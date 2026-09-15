@@ -39,6 +39,7 @@ def test_current_join_binds_pose24_mechanics_and_regional_exchange() -> None:
     assert result["qualification"]["regional_blood_transport"]
     assert result["qualification"]["oxygen_amount_exchange"]
     assert result["qualification"]["dynamic_force_component_audit"]
+    assert result["qualification"]["experimental_coupled_velocity_audit"]
     assert result["qualification"]["blood_tissue_mass_transfer_candidate"]
     assert result["dynamic_force_diagnostic"]["completed_steps"] == 64
     assert result["dynamic_force_diagnostic"]["maximum_penetration_m"] == 0.0
@@ -46,6 +47,10 @@ def test_current_join_binds_pose24_mechanics_and_regional_exchange() -> None:
     assert result["blood_tissue_mass_transfer"]["rejected_steps"] == 1
     assert result["blood_tissue_mass_transfer"]["mass_conserved"]
     assert result["blood_tissue_mass_transfer"]["volume_conserved"]
+    assert result["coupled_velocity_diagnostic"]["completed_steps"] == 64
+    assert result["coupled_velocity_diagnostic"]["replay"] == "bitwise"
+    assert result["coupled_velocity_diagnostic"]["ledger_max_assembly_error_n"] < 1.0e-12
+    assert result["coupled_velocity_diagnostic"]["ledger_max_closure_ratio"] > 0.001
     for key in (
         "anatomical_supports_loading", "activation_calibration", "force_convergence",
         "anatomical_blood_mass_transfer", "material_calibration", "subject_calibration",
@@ -106,3 +111,15 @@ def test_current_join_rejects_dynamic_release_promotion(tmp_path: Path) -> None:
     path.write_bytes(canonical(value) + b"\n")
     with pytest.raises(ImportError, match="dynamic force audit boundary changed"):
         compile_join(dynamic_audit=path)
+
+
+def test_current_join_rejects_coupled_velocity_promotion(tmp_path: Path) -> None:
+    source = Path(
+        "Docs/media/native-coupled-velocity-closure-diagnostic-20260915/receipt-v2.json"
+    )
+    value = json.loads(source.read_text(encoding="utf-8"))
+    value["qualification"]["force_convergence"] = True
+    path = tmp_path / "coupled.json"
+    path.write_bytes(canonical(value) + b"\n")
+    with pytest.raises(ImportError, match="coupled velocity diagnostic boundary changed"):
+        compile_join(coupled_velocity_diagnostic=path)
