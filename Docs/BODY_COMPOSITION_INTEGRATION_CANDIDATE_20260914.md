@@ -123,3 +123,11 @@ blood-mass, and oxygen residuals of `5.711629397e-7`, `5.711629397e-7`, and
 `1060 kg/m3` density remains an engineering candidate, and anatomical lumen,
 physical tissue volume, mechanical blood mass, organ mechanics, calibrated
 materials, subject calibration, standing, recovery, and walking remain false.
+
+The current `v12` receipt additionally binds the six-vessel source mass-moment
+candidate and its exact-clock transport probe. The probe advances first and
+raw second moments under an explicitly synthetic uniform velocity field for
+512 attempts, accepts 511, rejects one with atomic restore, conserves candidate
+mass and linear momentum, and replays bitwise. It remains surface-integral
+bookkeeping: no anatomical lumen, mechanical blood-mass owner, vessel-to-tissue
+transfer, calibrated material, or subject claim is promoted.

@@ -2214,6 +2214,12 @@ def parser() -> argparse.ArgumentParser:
     vessel_mass_moments.add_argument("--initial-velocity-mps", type=float, nargs=3, default=[0.0, 0.0, 0.0])
     vessel_mass_moments.add_argument("--output", type=Path, required=True)
     vessel_mass_moments.set_defaults(handler=vessel_mass_moments_run)
+    from .vessel_mass_moment_transport_candidate import add_arguments as add_vessel_mass_moment_transport_arguments
+    vessel_mass_moment_transport = commands.add_parser(
+        "vessel-mass-moment-transport",
+        help="step source-vessel mass moments conservatively on the exact clock without promoting anatomy",
+    )
+    add_vessel_mass_moment_transport_arguments(vessel_mass_moment_transport)
     from .body_composition_integration import add_arguments as add_body_composition_arguments
     body_composition = commands.add_parser(
         "body-composition-integration",

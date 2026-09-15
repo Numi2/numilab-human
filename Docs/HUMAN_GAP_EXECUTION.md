@@ -450,16 +450,16 @@ is far below the standing gate, this narrows the recruitment/equilibrium
 failure without closing force convergence, sustained standing, recovery,
 walking, anatomical loading, material, blood/tissue transfer, or calibration.
 The refreshed executable gap report is
-[`Docs/media/gap-execution-20260915/report-v11.json`](media/gap-execution-20260915/report-v11.json),
+[`Docs/media/gap-execution-20260915/report-v15.json`](media/gap-execution-20260915/report-v15.json),
 whose report content SHA-256 is
-`1acd34ee39914f025c1d81e0efe0255d4fa1dffa6c27d793d7b66b3064b5aae9` and
+`7b3de4f138d3926b4705b72d38644c79d1395e1f7ef9b99c07c44a8be8ab7bdb` and
 whose canonical file SHA-256 is
-`ca568ee98a85346c37ce44cdcd9f977b04d47e35057eded6456051b9c977fc2d`.
+`72f09d483ef9869d4b8c308d69adbbbf8e52a9bcb3427a6371aac30221b446e3`.
 It includes the activation-0.8/default receipts, the 512-step temporal-drift
-receipt, the v11 cross-domain body-composition join, the current costal tissue
-and regional blood/exchange requalifications, the complete static passive-
-equilibrium persistent-stand receipt, and the canonical per-DoF force ledger
-receipt, and remains
+receipt, the v12 cross-domain body-composition join, the six-vessel mass-moment
+transport probe, the current costal tissue and regional blood/exchange
+requalifications, the complete static passive-equilibrium persistent-stand
+receipt, and the canonical per-DoF force ledger receipt, and remains
 `integrated_qualification: not_assessed` with 14 workstreams, 54 tasks, and
 95 mandatory targets.
 
@@ -472,6 +472,15 @@ relative volume, blood-mass and oxygen residuals are `5.711629397e-7`,
 for the source graph only. The unresolved density, anatomical lumen, physical
 tissue volume, mechanical blood-mass ownership, organ mechanics, material and
 subject calibration, standing, recovery and walking gates remain open.
+
+The [vessel mass-moment transport candidate](VESSEL_MASS_MOMENT_TRANSPORT_CANDIDATE_20260915.md)
+now binds the six source/world vessel moment candidates to that same native
+receipt and exact clock. Its prescribed-velocity probe advances first and raw
+second moments over 512 attempts (511 accepted, one atomically rejected),
+conserves candidate mass and linear momentum, and replays bitwise. It remains
+surface-integral engineering evidence; anatomical lumen, mechanical blood-mass
+ownership, vessel-to-tissue exchange, material calibration, subject
+calibration, standing, recovery, and walking remain unqualified.
 
 The native source owner now defaults persistent stand recruitment to the
 validated `0.8` ceiling when the CLI option is omitted. On the physical M4 Pro,

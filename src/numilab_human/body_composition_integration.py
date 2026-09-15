@@ -46,6 +46,12 @@ NATIVE_COSTAL_TISSUE = ROOT / (
 NATIVE_REGIONAL_EXCHANGE = ROOT / (
     "Docs/media/native-human-regional-exchange-20260915/receipt-v1.json"
 )
+VESSEL_MASS_MOMENTS = ROOT / (
+    "Docs/media/vessel-mass-moment-candidate-20260915/receipt-v1.json"
+)
+VESSEL_MOMENT_TRANSPORT = ROOT / (
+    "Docs/media/vessel-mass-moment-candidate-20260915/transport-receipt-v1.json"
+)
 
 
 def _require(condition: bool, message: str) -> None:
@@ -108,6 +114,7 @@ def _read_profile(path: Path) -> dict[str, Any]:
         "skin_shell_surface_identity": 1,
         "tissue_calibration_candidate": 1,
         "vessel_surface_identity": 6,
+        "vessel_mass_moment_candidate": 6,
     }, "integration profile source counts differ")
     _require(value.get("expected_runtime") == {
         "blood_transport_accepted_steps": 511,
@@ -123,6 +130,7 @@ def _read_profile(path: Path) -> dict[str, Any]:
         "cvsim21_blood_mass", "vessel_registration", "cardiac_wall_source",
         "cardiac_wall_config", "tissue_calibration", "native_current_release",
         "native_costal_tissue", "native_regional_exchange",
+        "vessel_mass_moments", "vessel_moment_transport",
     ], "integration profile input order differs")
     return value
 
@@ -165,6 +173,8 @@ def compile_candidate(
     native_current_release: Path = NATIVE_RELEASE,
     native_costal_tissue: Path = NATIVE_COSTAL_TISSUE,
     native_regional_exchange: Path = NATIVE_REGIONAL_EXCHANGE,
+    vessel_mass_moments: Path = VESSEL_MASS_MOMENTS,
+    vessel_moment_transport: Path = VESSEL_MOMENT_TRANSPORT,
 ) -> dict[str, Any]:
     profile = Path(profile)
     profile_document = _read_profile(profile)
@@ -189,6 +199,8 @@ def compile_candidate(
         "native_current_release": Path(native_current_release),
         "native_costal_tissue": Path(native_costal_tissue),
         "native_regional_exchange": Path(native_regional_exchange),
+        "vessel_mass_moments": Path(vessel_mass_moments),
+        "vessel_moment_transport": Path(vessel_moment_transport),
     }
     documents: dict[str, dict[str, Any]] = {}
     hashes: dict[str, str] = {}
@@ -213,6 +225,8 @@ def compile_candidate(
         "native_current_release": "current native Human release requalification",
         "native_costal_tissue": "current native costal tissue requalification",
         "native_regional_exchange": "current native regional blood exchange requalification",
+        "vessel_mass_moments": "source vessel mass moment candidate",
+        "vessel_moment_transport": "source vessel mass moment transport candidate",
     }
     for name, path in paths.items():
         documents[name], hashes[name] = _read(path, labels[name])
@@ -250,6 +264,12 @@ def compile_candidate(
     _schema(documents["native_regional_exchange"],
             "HumanPack.native-human-regional-exchange-current-requalification.v1",
             labels["native_regional_exchange"])
+    _schema(documents["vessel_mass_moments"],
+            "HumanPack.vessel-mass-moment-owner-candidate.v1",
+            labels["vessel_mass_moments"])
+    _schema(documents["vessel_moment_transport"],
+            "HumanPack.vessel-mass-moment-transport-candidate.v1",
+            labels["vessel_moment_transport"])
 
     native_release = documents["native_current_release"]
     native_source = native_release.get("source", {})
@@ -801,6 +821,53 @@ def compile_candidate(
              "vessel registration qualification boundary changed")
     vessel_surface_volume = math.fsum(float(value) for value in vessel_volumes)
 
+    vessel_moments = documents["vessel_mass_moments"]
+    vessel_moment_source = vessel_moments.get("source", {})
+    vessel_moment_totals = vessel_moments.get("totals", {})
+    vessel_moment_qualification = vessel_moments.get("qualification", {})
+    _require(vessel_moment_source.get("registration") == _relative(paths["vessel_registration"]) and
+             vessel_moment_source.get("registration_sha256") == hashes["vessel_registration"] and
+             vessel_moment_source.get("vessel_count") == 6 and
+             vessel_moment_totals.get("owner_count") == 6 and
+             vessel_moment_totals.get("unique_member_count") == 6 and
+             type(vessel_moment_totals.get("mass_kg")) in (int, float) and
+             vessel_moment_totals["mass_kg"] > 0.0,
+             "vessel mass moment candidate identity or count changed")
+    _require(vessel_moment_qualification.get("zeroth_first_second_mass_moments") is True and
+             vessel_moment_qualification.get("atomic_checkpoint_restore") is True and
+             vessel_moment_qualification.get("anatomical_blood_mass_owner") is False and
+             vessel_moment_qualification.get("material_density_calibrated") is False and
+             vessel_moment_qualification.get("subject_calibration") is False,
+             "vessel mass moment candidate promoted an owner")
+    vessel_moment_transport = documents["vessel_moment_transport"]
+    transport_source = vessel_moment_transport.get("source", {})
+    transport_clock = vessel_moment_transport.get("clock", {})
+    transport_conservation = vessel_moment_transport.get("conservation", {})
+    transport_qualification = vessel_moment_transport.get("qualification", {})
+    _require(transport_source.get("moments_path") == _relative(paths["vessel_mass_moments"]) and
+             transport_source.get("moments_sha256") == hashes["vessel_mass_moments"] and
+             transport_source.get("regional_exchange_path") == _relative(paths["native_regional_exchange"]) and
+             transport_source.get("regional_exchange_sha256") == hashes["native_regional_exchange"] and
+             transport_source.get("vessel_count") == 6 and
+             transport_clock.get("nanoseconds") == 12500 and
+             transport_clock.get("source") == "regional_exchange_and_transport_probe" and
+             vessel_moment_transport.get("attempted_steps") == 512 and
+             vessel_moment_transport.get("accepted_steps") == 511 and
+             vessel_moment_transport.get("rejected_steps") == 1 and
+             vessel_moment_transport.get("replay") == "bitwise" and
+             transport_conservation.get("mass_conserved") is True and
+             transport_conservation.get("linear_momentum_conserved") is True,
+             "vessel mass moment transport exact-clock evidence changed")
+    _require(transport_qualification.get("source_vessel_moments_bound") is True and
+             transport_qualification.get("regional_exchange_exact_clock_bound") is True and
+             transport_qualification.get("atomic_rejected_step_rollback") is True and
+             transport_qualification.get("mechanical_blood_mass_owner") is False and
+             transport_qualification.get("anatomical_vessel_lumen") is False and
+             transport_qualification.get("two_way_blood_tissue_transfer") is False and
+             transport_qualification.get("subject_calibration") is False,
+             "vessel mass moment transport boundary changed")
+    vessel_moment_mass = vessel_moment_totals["mass_kg"]
+
     surface_member_ids = [row.get("member_id") for row in surface_rows]
     _require(all(isinstance(value, str) and value for value in surface_member_ids),
              "muscle/tendon surface identity is invalid")
@@ -820,6 +887,7 @@ def compile_candidate(
         "skin_shell_surface_identity": 1,
         "tissue_calibration_candidate": 1,
         "vessel_surface_identity": len(vessel_id_set),
+        "vessel_mass_moment_candidate": vessel_moment_totals["unique_member_count"],
     }
 
     return {
@@ -851,6 +919,11 @@ def compile_candidate(
             "skin_native_visual_receipt_sha256": hashes["skin_native_visual"],
             "foot_contact_registration_receipt_sha256": hashes["foot_contact_registration"],
             "vessel_surface_ids_sha256": _identity_digest(vessel_id_set),
+            "vessel_mass_moment_candidate_sha256": hashes["vessel_mass_moments"],
+            "vessel_mass_moment_transport_sha256": hashes["vessel_moment_transport"],
+            "vessel_mass_moment_owner_ids_sha256": _identity_digest(
+                {row["member_id"] for row in vessel_moments["owners"]}
+            ),
             "blood_members_subset_of_organ_members": True,
             "vessel_members_subset_of_organ_members": True,
             "vessel_members_disjoint_from_blood_members": True,
@@ -886,6 +959,8 @@ def compile_candidate(
             "muscle_single_closed_surface_volume_candidate_count": geometry_counts["surface_volume_candidate_count"],
             "muscle_closed_geometric_volume_candidate_m3": geometric_volume_geometry["closed_muscle_volume_total_m3"],
             "registered_vessel_surface_integral_volume_m3": vessel_surface_volume,
+            "registered_vessel_surface_mass_moment_candidate_kg": vessel_moment_mass,
+            "vessel_moment_transport_final_mass_kg": vessel_moment_transport["final_totals"]["mass_kg"],
             "cardiac_wall_geometric_volume_candidate_m3": cardiac_wall_volume,
             "skin_shell_outer_surface_vertex_count": skin_source["outer_surface_vertex_count"],
             "skin_shell_outer_surface_triangle_count": skin_source["outer_surface_triangle_count"],
@@ -969,6 +1044,12 @@ def compile_candidate(
             "native_regional_exchange_oxygen_residual": native_exchange_results["maximum_relative_oxygen_residual"],
             "native_regional_exchange_conserved": native_exchange_qualification["accepted_step_conservation"],
             "native_regional_exchange_mechanical_blood_mass_owner": native_exchange_qualification["mechanical_blood_mass_owner"],
+            "vessel_moment_transport_attempted_steps": vessel_moment_transport["attempted_steps"],
+            "vessel_moment_transport_accepted_steps": vessel_moment_transport["accepted_steps"],
+            "vessel_moment_transport_rejected_steps": vessel_moment_transport["rejected_steps"],
+            "vessel_moment_transport_mass_conserved": transport_conservation["mass_conserved"],
+            "vessel_moment_transport_linear_momentum_conserved": transport_conservation["linear_momentum_conserved"],
+            "vessel_moment_transport_replay": vessel_moment_transport["replay"],
         },
         "qualification": {
             "source_identity_graph_bound": True,
@@ -976,6 +1057,8 @@ def compile_candidate(
             "regional_blood_transport_bound": True,
             "source_aggregate_blood_mass_bound": True,
             "source_vessel_registration_bound": True,
+            "vessel_mass_moment_candidate_bound": True,
+            "vessel_mass_moment_transport_candidate_bound": True,
             "cardiac_wall_source_identity_bound": True,
             "tissue_calibration_candidate_bound": True,
             "native_current_release_bound": True,
@@ -1030,7 +1113,11 @@ def compile_candidate(
             "exact 12.5 microsecond clock; its conservation and rollback are admitted "
             "only as source-graph amount transport, with no anatomical lumen, tissue "
             "volume, mechanical blood mass, organ mechanics, material or subject "
-            "calibration. It "
+            "calibration. The six-vessel mass-moment candidate and its exact-clock "
+            "prescribed-velocity transport probe are also hash-bound to the vessel "
+            "registration and regional exchange, proving conservative spatial-moment "
+            "bookkeeping with atomic rollback while retaining the same lumen, "
+            "mechanical, tissue-transfer, material, and calibration boundaries. It "
             "proves source identity and nonduplicated ownership bookkeeping only. "
             "The exact bilateral foot source registration and six active support "
             "witness identities are bound as a contact handoff, but they are not "
@@ -1084,6 +1171,8 @@ def run(arguments: argparse.Namespace) -> int:
         native_current_release=arguments.native_current_release,
         native_costal_tissue=arguments.native_costal_tissue,
         native_regional_exchange=arguments.native_regional_exchange,
+        vessel_mass_moments=arguments.vessel_mass_moments,
+        vessel_moment_transport=arguments.vessel_moment_transport,
     )
     output = arguments.output.resolve()
     digest = _immutable_write(output, result)
@@ -1118,6 +1207,8 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--native-current-release", type=Path, default=NATIVE_RELEASE)
     parser.add_argument("--native-costal-tissue", type=Path, default=NATIVE_COSTAL_TISSUE)
     parser.add_argument("--native-regional-exchange", type=Path, default=NATIVE_REGIONAL_EXCHANGE)
+    parser.add_argument("--vessel-mass-moments", type=Path, default=VESSEL_MASS_MOMENTS)
+    parser.add_argument("--vessel-moment-transport", type=Path, default=VESSEL_MOMENT_TRANSPORT)
     parser.add_argument("--output", type=Path, required=True)
     parser.set_defaults(handler=run)
 

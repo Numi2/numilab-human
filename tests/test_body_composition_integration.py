@@ -26,6 +26,7 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
         "muscle_tendon_surface_identity": 150,
         "skin_shell_surface_identity": 1,
         "tissue_calibration_candidate": 1,
+        "vessel_mass_moment_candidate": 6,
         "vessel_surface_identity": 6,
     }
     assert result["runtime_evidence"]["clock_nanoseconds"] == 12500
@@ -40,6 +41,8 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
     assert result["qualification"]["cross_domain_owner_nonduplication_checked"]
     assert result["qualification"]["source_aggregate_blood_mass_bound"]
     assert result["qualification"]["source_vessel_registration_bound"]
+    assert result["qualification"]["vessel_mass_moment_candidate_bound"]
+    assert result["qualification"]["vessel_mass_moment_transport_candidate_bound"]
     assert result["qualification"]["muscle_surface_geometry_audit_bound"]
     assert result["qualification"]["muscle_surface_algebraic_volume_candidates_bound"]
     assert result["qualification"]["cardiac_wall_source_identity_bound"]
@@ -66,6 +69,10 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
     assert result["runtime_evidence"]["native_regional_exchange_attempted_steps"] == 512
     assert result["runtime_evidence"]["native_regional_exchange_accepted_steps_environment_0"] == 511
     assert result["runtime_evidence"]["native_regional_exchange_oxygen_residual"] == pytest.approx(1.057184875e-6)
+    assert result["runtime_evidence"]["vessel_moment_transport_accepted_steps"] == 511
+    assert result["runtime_evidence"]["vessel_moment_transport_rejected_steps"] == 1
+    assert result["runtime_evidence"]["vessel_moment_transport_mass_conserved"]
+    assert result["runtime_evidence"]["vessel_moment_transport_linear_momentum_conserved"]
     assert not result["qualification"]["anatomical_supports_loading"]
     assert result["qualification"]["fat_source_absence_bound"]
     assert not result["qualification"]["integrated_human_qualification"]
