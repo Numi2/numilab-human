@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+
+if [ "${1:-}" = "--numi-describe" ]; then
+    printf '%s\n' 'Create a subject-mass normalization candidate from the pinned Human rigid-body ledger without admitting it to native dynamics.'
+    exit 0
+fi
+
+command_directory=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+repository_root=$(CDPATH= cd -- "$command_directory/../.." && pwd -P)
+export PYTHONPATH="$repository_root/src${PYTHONPATH:+:$PYTHONPATH}"
+exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.subject_mass_scaling_candidate "$@"
