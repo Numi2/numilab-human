@@ -451,7 +451,7 @@ is far below the standing gate, this narrows the recruitment/equilibrium
 failure without closing force convergence, sustained standing, recovery,
 walking, anatomical loading, material, blood/tissue transfer, or calibration.
 The refreshed executable gap report is
-[`Docs/media/gap-execution-20260915/report-v23.json`](media/gap-execution-20260915/report-v23.json).
+[`Docs/media/gap-execution-20260915/report-v27.json`](media/gap-execution-20260915/report-v27.json).
 It now includes the current mechanics/organ/blood evidence join
 ([receipt](CURRENT_HUMAN_EVIDENCE_JOIN_20260915.md)) and the regional exchange
 requalification rebuilt on the pose-24 native owner.
@@ -473,6 +473,14 @@ all rows, while anatomical labels and coordinate kinds remain unavailable.
 The receipt still does not promote temporal force convergence, standing,
 recovery, walking, anatomical loading, activation calibration, blood mass
 transfer, materials, or subject calibration.
+
+The [common-duration passive-stand refinement](NATIVE_PASSIVE_STAND_REFINEMENT_20260915.md)
+then runs the same pose-24 source state for `6.4 ms` at 100, 50, 25 and
+12.5 microseconds. Static residual RMS is identical at `6.42342632457e-6`,
+with zero penetration and bitwise replay at every clock, but release peaks are
+`0.642376363277`, `0.682456016541`, `0.918696343899`, and `4.85533761978
+m/s2`. The `6.5584` range/minimum exceeds the 5% refinement gate, so force
+convergence remains open and the next solver work is stiffness/state coupling.
 
 The current native regional exchange receipt records 21 source compartments,
 24 source connections and seven regional beds on the physical M4 Pro at the
