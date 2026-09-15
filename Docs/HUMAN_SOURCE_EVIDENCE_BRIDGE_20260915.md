@@ -52,3 +52,14 @@ stay false.
 
 This is a cross-domain source/evidence hand-off. It does not turn source
 surfaces or candidate amounts into production anatomy, dynamics, or physiology.
+
+The immutable [v7 extension receipt](media/human-source-evidence-bridge-20260915/receipt-v7.json)
+binds the equal-incidence route-mass partition to this v6 bridge. It verifies
+the exact route-volume source hash and the existing muscle-mass candidate hash,
+then carries 416 source routes, 60 closed surfaces, 82 explicit incidences, 78
+routes with a candidate budget, 238 routes without emitted surface binding, and
+88 unadmitted surfaces. The candidate closes at `6.859582804936875 kg` and
+`0.006471304532959316 m^3` with zero bookkeeping residual, but remains
+non-measured, non-mechanical and non-calibrated. The extension therefore keeps
+physical volume, mechanical mass, active-force transfer, activation calibration,
+fat, standing, recovery, walking, and integrated Human qualification false.

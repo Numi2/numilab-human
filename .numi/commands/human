@@ -199,6 +199,16 @@ if [ "${1:-}" = "human-source-evidence-bridge" ]; then
     exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.human_source_evidence_bridge "$@"
 fi
 
+if [ "${1:-}" = "human-source-evidence-bridge-extension" ]; then
+    shift
+    if [ -n "${PYTHONPATH:-}" ]; then
+        export PYTHONPATH="$repository_root/src:$PYTHONPATH"
+    else
+        export PYTHONPATH="$repository_root/src"
+    fi
+    exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.human_source_evidence_bridge_extension "$@"
+fi
+
 if [ "${1:-}" = "anatomical-support-candidate" ]; then
     shift
     if [ -n "${PYTHONPATH:-}" ]; then

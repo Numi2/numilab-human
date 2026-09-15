@@ -30,7 +30,7 @@ count remains zero. The new cross-domain source/evidence bridge
 to the current native mechanics, organ/blood transport, and zeroth-moment
 blood/tissue transfer receipt while retaining zero physical owners. The executable
 registry snapshot is
-[`gap-execution/report-v66.json`](media/gap-execution-20260915/report-v66.json).
+[`gap-execution/report-v68.json`](media/gap-execution-20260915/report-v68.json).
 The bridge now also records the fat-source absence candidate: the current male
 package has zero adipose surfaces, volume candidates, mass candidates, and
 physical owners. This makes the missing source explicit without treating skin
@@ -39,6 +39,15 @@ The same bridge now binds the source-compliant non-maximal recruitment
 candidate and the one-plug finite-hold material fit; both retain explicit
 measured-activation, whole-body transfer, and production-material gates as
 unqualified.
+
+The follow-on [source-evidence bridge extension](HUMAN_SOURCE_EVIDENCE_BRIDGE_20260915.md)
+now hash-binds the equal-incidence route-mass partition to the immutable v6
+cross-domain bridge and its route-volume source. The v7 receipt carries 416
+routes, 60 closed surfaces, 82 incidences, the closed
+`6.859582804936875 kg` / `0.006471304532959316 m^3` candidate budget, and zero
+physical owners. It remains an evidence-graph binding only: physical muscle
+volume, mechanical mass, active force transfer, activation calibration,
+materials, fat, standing, recovery, and walking stay open.
 
 The muscle route-mass partition candidate now joins the 60 closed source
 muscle-surface budgets to their 82 explicit route incidences. Equal-incidence
