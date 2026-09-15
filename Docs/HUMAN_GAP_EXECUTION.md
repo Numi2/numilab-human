@@ -141,6 +141,18 @@ joint/fibre/contact state as the next owner and does not promote force
 convergence, sustained standing, recovery, walking, or anatomical/calibrated
 qualification.
 
+The current isolated follow-up
+[passive-equilibrium persistent-stand receipt](NATIVE_PASSIVE_STAND_REQUALIFICATION_20260915.md)
+binds the 40-entry source passive joint/tissue coupling set into the
+persistent preload. On the one-adult Mac mini M4 Pro package it closes the
+static 128-DoF balance at `9.0656247312e-6` normalized RMS and lowers the
+matched 512-step, `12.5 us` peak from `33.9849624634` to `4.86072206497
+m/s2`, with six active support witnesses, zero penetration, no root assistance,
+and bitwise replay. It is a bounded force-balance increment; the coupling is
+linearized experimental data and the support witnesses are not an anatomical
+contact admission, so sustained standing, recovery, walking, activation,
+material, blood-transfer and subject-calibration gates remain open.
+
 The follow-up [native support-force horizon receipt](NATIVE_SUPPORT_FORCE_HORIZON_20260913.md)
 removes the CLI's artificial 64-step ceiling and admits the declared 4096-step
 solver bound. A physical M4 Pro run completes 512 exact `12.5 µs` steps
@@ -438,15 +450,16 @@ is far below the standing gate, this narrows the recruitment/equilibrium
 failure without closing force convergence, sustained standing, recovery,
 walking, anatomical loading, material, blood/tissue transfer, or calibration.
 The refreshed executable gap report is
-[`Docs/media/gap-execution-20260915/report-v9.json`](media/gap-execution-20260915/report-v9.json),
+[`Docs/media/gap-execution-20260915/report-v10.json`](media/gap-execution-20260915/report-v10.json),
 whose report content SHA-256 is
-`e8997f01ac7ff49dc4971b57a4a88eedc3525585a80539228a30ea96a0ecc59b` and
+`13beea8cfbc4a418a773002ef14a391b3415193856ec81b4609c6c2fff254a21` and
 whose canonical file SHA-256 is
-`e52f9485fce1156a8ec52f336b1f94f9bedddd68dc4792faad0cb88a26460ab3`.
+`c3ffe8389ed11a27480d63748d5ce62bec33ecc691fbb597115790ddb240a257`.
 It includes the activation-0.8/default receipts, the 512-step temporal-drift
 receipt, the v11 cross-domain body-composition join, the current costal tissue
-and regional blood/exchange requalifications, and the canonical per-DoF force
-ledger receipt, and remains
+and regional blood/exchange requalifications, the complete static passive-
+equilibrium persistent-stand receipt, and the canonical per-DoF force ledger
+receipt, and remains
 `integrated_qualification: not_assessed` with 14 workstreams, 54 tasks, and
 95 mandatory targets.
 

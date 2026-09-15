@@ -8,7 +8,7 @@ The current published source/runtime join is `80ff731` in the companion
 cross-domain receipt is
 [`body-composition-integration/receipt-v11.json`](media/body-composition-integration-20260914/receipt-v11.json),
 and the executable registry snapshot is
-[`gap-execution/report-v9.json`](media/gap-execution-20260915/report-v9.json).
+[`gap-execution/report-v10.json`](media/gap-execution-20260915/report-v10.json).
 The join now includes the current native costal tissue requalification
 ([receipt](media/tissue-integration-20260908/current-costal-binding-receipt-20260915.json)):
 13,516 cooked nodes, 46,278 tetrahedra, 2,871 attachments, eight Apple M4 Pro
@@ -35,6 +35,20 @@ balance while internal generalized balance is false. These results keep the
 force-convergence, sustained standing/recovery/walking, anatomical
 supports/loading, activation calibration, spatial blood mass transfer,
 unresolved materials, fat ownership, and subject calibration gates open.
+
+The next isolated native increment is recorded in the
+[passive-equilibrium persistent-stand requalification](NATIVE_PASSIVE_STAND_REQUALIFICATION_20260915.md).
+On branch `ef0fc708db0f4de1a07fca426e5a415f62e9da27`, the explicit
+`--persistent-source-passive-joint-tissue` path carries the 40-entry source
+passive coupling set into the persistent preload. At the canonical `12.5 us`
+clock and 512 steps it closes the complete static 128-DoF balance at
+`9.0656247312e-06` normalized RMS and lowers the matched release peak from
+`33.9849624634` to `4.86072206497 m/s2`; six support witnesses remain active,
+the compiled load is `952.864475301 N`, penetration is zero, root assistance
+is absent, and replay is bitwise. This is a bounded force-balance increment,
+not sustained standing: the passive coupling is linearized experimental upper
+joint data and the source support witnesses remain unregistered anatomical
+contact.
 
 The canonical execution registry remains `integrated_qualification:
 not_assessed` with 14 workstreams, 54 tasks, and 95 mandatory targets. The
