@@ -65,3 +65,24 @@ the common-duration temporal force-convergence gate, sustained standing,
 passive-force physiology, recovery, or walking. No solver formulation,
 regularization, passive stiffness, or runtime mechanics changed in this
 publication release.
+
+## Coupled-projection diagnostic
+
+The source-only diagnostic at Numi Lab tag
+`human-projection-order-preprojection-diagnostic-20260915`
+(`f6c9b98449235e2e5dc649279a4df8bce429d278`) leaves the runtime policy,
+regularization, passive stiffness, and source-input package unchanged. On the
+physical M4 Pro, its focused `12.5 us` frictionless normal-contact/equality/
+upper-limit triad test passed and recorded:
+
+| Comparison against the simultaneous FP64 triad | Maximum velocity difference |
+|---|---:|
+| Metal against the FP64 replay of its production order | `1.0902011396326465e-11 m/s` |
+| FP64 production order before the final equality overwrite | `1.5092744990489538e-7 m/s` |
+| FP64 production order after the final equality overwrite | `2.242479803114606e-7 m/s` |
+
+The final overwrite therefore contributes to the mismatch but does not fully
+explain it. The simultaneous reference remains well conditioned in this
+minimal scene; this is evidence to investigate the coupled formulation and
+active-row ordering, not authorization to change a solver, add regularization,
+or claim full-body temporal convergence or standing.
