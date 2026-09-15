@@ -14,7 +14,8 @@ is no per-step CPU dynamics loop.
   curves, and one appended positive compliant-architecture record per muscle;
 - `NHTENDON2`: 832 explicit body-owned route endpoints, comprising 304
   four-node surface envelopes and 528 exact source-point fallbacks;
-- `NHCNT1`: ten source-authored calcaneus/toe plane witnesses; and
+- `NHCNT1` or `NHCNT2`: the ten legacy or eighteen expanded source-authored
+  calcaneus/toe witnesses; and
 - BodyParts3D 4.0 bone and optional named muscle surfaces for visual review.
 
 Every production endpoint preserves its source OpenSim/MyoSim attachment
@@ -93,6 +94,12 @@ than silently running without per-step terminal loads. The retained 100 µs
 qualification below is historical; the canonical wrapper now defaults to the
 12.5 µs, 512-step common-duration release documented in the [current native
 requalification](NATIVE_CURRENT_RELEASE_REQUALIFICATION_20260915.md).
+
+The wrapper inspects the support payload magic before launch. NHCNT1 selects
+legacy witness indices `2,3,4,5,6,7`; NHCNT2 selects the expanded plantar
+indices `5,6,8,10,12,14`. An unknown or missing support ABI is rejected before
+the native probe starts, so a payload cannot be paired with a different
+witness namespace.
 
 ## Final M4 Pro qualification
 

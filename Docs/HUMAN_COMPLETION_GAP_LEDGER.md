@@ -49,6 +49,17 @@ the normal standing path; it does not promote standing because the exact-clock
 release still drifts over that horizon and measured activation calibration is
 absent.
 
+The wrapper now reads the support payload ABI before launch and selects the
+matching source witness namespace: legacy `NHCNT1` uses indices `2,3,4,5,6,7`,
+while expanded plantar `NHCNT2` uses `5,6,8,10,12,14`. Unknown or missing
+support payloads fail closed. An isolated Apple M4 Pro replay of the current
+native owner with NHCNT2 admitted six compiled plantar contacts and the full
+18-witness payload, but still reported `compiled_stand_balanced=false`,
+`compiled_stand_normalized_residual_rms=0.863190823587`, and
+`persistent_max_acceleration=8677.59179688 m/s2` over the bounded 64-step
+diagnostic. This fixes payload/witness ownership; it does not close force
+convergence or standing.
+
 The follow-on [source-evidence bridge extension](HUMAN_SOURCE_EVIDENCE_BRIDGE_20260915.md)
 now hash-binds the equal-incidence route-mass partition to the immutable v6
 cross-domain bridge and its route-volume source. The v7 receipt carries 416

@@ -2652,12 +2652,21 @@ class ImporterTests(unittest.TestCase):
             "--support-stance-dof 122 0.1",
             "--support-stance-dof 123 0.1",
             "--support-stance-dof 124 0.1",
+        ):
+            self.assertIn(argument, stand)
+        self.assertIn("NHCNT1: ten legacy source witnesses", stand)
+        self.assertIn("NHCNT2: eighteen expanded plantar witnesses", stand)
+        for argument in (
             "--support-stance-contact 2",
             "--support-stance-contact 3",
             "--support-stance-contact 4",
             "--support-stance-contact 5",
             "--support-stance-contact 6",
             "--support-stance-contact 7",
+            "--support-stance-contact 8",
+            "--support-stance-contact 10",
+            "--support-stance-contact 12",
+            "--support-stance-contact 14",
         ):
             self.assertIn(argument, stand)
 
@@ -2677,33 +2686,45 @@ class ImporterTests(unittest.TestCase):
             probe.chmod(0o755)
             artifacts = root / "artifacts"
             output = root / "output"
-            result = run(
-                [
-                    command,
-                    "stand",
-                    artifacts,
-                    root / "bones.nhbones",
-                    root / "tendon.nhtendon",
-                    root / "support.nhcnt",
-                    output,
-                ],
-                env={
-                    **os.environ,
-                    "NUMI_LAB_ROOT": str(root),
-                    "NUMI_BUILD_DIR": str(build),
-                    "NUMI_PROBE_ARGS": str(args_file),
-                },
-                capture_output=True,
-                text=True,
-                check=True,
-            )
-            self.assertEqual(result.stdout, "")
-            argv = args_file.read_text(encoding="utf-8").splitlines()
-            self.assertEqual(argv[argv.index("--muscle-step-seconds") + 1], "0.0000125")
-            self.assertEqual(argv[argv.index("--muscle-step-count") + 1], "512")
-            self.assertNotIn("--muscle-activation", argv)
-            self.assertIn("--persistent-metal-stand", argv)
-            self.assertIn("--stand-remove-assistance", argv)
+            for magic, expected_contacts in (
+                (b"NHCNT1", ["2", "3", "4", "5", "6", "7"]),
+                (b"NHCNT2", ["5", "6", "8", "10", "12", "14"]),
+            ):
+                support = root / f"support-{magic.decode()}.nhcnt"
+                support.write_bytes(magic)
+                result = run(
+                    [
+                        command,
+                        "stand",
+                        artifacts,
+                        root / "bones.nhbones",
+                        root / "tendon.nhtendon",
+                        support,
+                        output,
+                    ],
+                    env={
+                        **os.environ,
+                        "NUMI_LAB_ROOT": str(root),
+                        "NUMI_BUILD_DIR": str(build),
+                        "NUMI_PROBE_ARGS": str(args_file),
+                    },
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                )
+                self.assertEqual(result.stdout, "")
+                argv = args_file.read_text(encoding="utf-8").splitlines()
+                self.assertEqual(argv[argv.index("--muscle-step-seconds") + 1], "0.0000125")
+                self.assertEqual(argv[argv.index("--muscle-step-count") + 1], "512")
+                self.assertNotIn("--muscle-activation", argv)
+                self.assertIn("--persistent-metal-stand", argv)
+                self.assertIn("--stand-remove-assistance", argv)
+                actual_contacts = [
+                    argv[index + 1]
+                    for index, value in enumerate(argv)
+                    if value == "--support-stance-contact"
+                ]
+                self.assertEqual(actual_contacts, expected_contacts)
 
     def test_numi_workspace_native_visual_command_rejects_missing_paths_before_python(self) -> None:
         command = ROOT / ".numi/commands/human"

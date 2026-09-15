@@ -440,6 +440,14 @@ if [ "${1:-}" = "stand" ]; then
     # activation unspecified here so the compiled probe selects its qualified
     # 0.8 recruitment ceiling and emits the per-route state; a scalar override
     # is reserved for explicit diagnostic commands.
+    # The two support payload ABIs carry different witness namespaces.  Keep
+    # the source-qualified NHCNT2 plantar witnesses aligned with the payload
+    # instead of silently applying the legacy NHCNT1 indices to them.
+    if [ ! -f "$support_payload" ]; then
+        printf '%s\n' "support contact payload is unavailable: $support_payload" >&2
+        exit 2
+    fi
+    support_magic=$(od -An -tx1 -N6 "$support_payload" 2>/dev/null | tr -d '[:space:]')
     set -- "$probe" \
         "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
         "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
@@ -453,13 +461,34 @@ if [ "${1:-}" = "stand" ]; then
         --support-stance-dof 110 0.1 \
         --support-stance-dof 122 0.1 \
         --support-stance-dof 123 0.1 \
-        --support-stance-dof 124 0.1 \
-        --support-stance-contact 2 \
-        --support-stance-contact 3 \
-        --support-stance-contact 4 \
-        --support-stance-contact 5 \
-        --support-stance-contact 6 \
-        --support-stance-contact 7 \
+        --support-stance-dof 124 0.1
+    case "$support_magic" in
+        4e48434e5431)
+            # NHCNT1: ten legacy source witnesses.
+            set -- "$@" \
+                --support-stance-contact 2 \
+                --support-stance-contact 3 \
+                --support-stance-contact 4 \
+                --support-stance-contact 5 \
+                --support-stance-contact 6 \
+                --support-stance-contact 7
+            ;;
+        4e48434e5432)
+            # NHCNT2: eighteen expanded plantar witnesses.
+            set -- "$@" \
+                --support-stance-contact 5 \
+                --support-stance-contact 6 \
+                --support-stance-contact 8 \
+                --support-stance-contact 10 \
+                --support-stance-contact 12 \
+                --support-stance-contact 14
+            ;;
+        *)
+            printf '%s\n' "unsupported support contact payload ABI (expected NHCNT1 or NHCNT2): $support_payload" >&2
+            exit 2
+            ;;
+    esac
+    set -- "$@" \
         --muscle-step-seconds "$timestep" \
         --muscle-step-count "$steps" \
         --persistent-metal-stand \
