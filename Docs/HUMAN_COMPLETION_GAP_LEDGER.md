@@ -2,13 +2,15 @@
 
 ## Current requalification — 2026-09-15
 
-The current published source/runtime join is `1a25757` in the companion
+The current published source/runtime join is `8f48855` in the companion
 `numilab-human` repository and the latest native Human owner is
 `7625ec565e086faf0dcd349846dadc2d22d65e86` on a Mac mini M4 Pro. The latest
 cross-domain receipt is
 [`body-composition-integration/receipt-v12.json`](media/body-composition-integration-20260914/receipt-v12.json),
-and the executable registry snapshot is
-[`gap-execution/report-v22.json`](media/gap-execution-20260915/report-v22.json).
+and the current mechanics/organ/blood evidence join is
+[`current-human-evidence-join/receipt-v1.json`](media/current-human-evidence-join-20260915/receipt-v1.json).
+The executable registry snapshot is
+[`gap-execution/report-v23.json`](media/gap-execution-20260915/report-v23.json).
 The join now includes the current native costal tissue requalification
 ([receipt](media/tissue-integration-20260908/current-costal-binding-receipt-20260915.json)):
 13,516 cooked nodes, 46,278 tetrahedra, 2,871 attachments, eight Apple M4 Pro
@@ -17,7 +19,7 @@ mass/rebase checks passing. This is regional ownership bookkeeping only; it
 does not become a whole-body dynamic mass matrix or a calibrated thorax.
 
 The current native regional blood/exchange requalification is also bound to
-the same source owner and physical M4 Pro: 21 source compartments, 24 source
+the pose-24 source owner and physical M4 Pro: 21 source compartments, 24 source
 connections, seven regional beds, 512 attempted exact-clock steps with 511
 accepted in environment zero, bitwise rollback/replay, and maximum relative
 volume, blood-mass, and oxygen residuals of `5.711629397e-7`,

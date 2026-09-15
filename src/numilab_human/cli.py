@@ -2226,6 +2226,12 @@ def parser() -> argparse.ArgumentParser:
         help="join source organ, blood, tissue, muscle, skin and calibration candidates without promoting physical owners",
     )
     add_body_composition_arguments(body_composition)
+    from .current_human_evidence_join import add_arguments as add_current_human_evidence_arguments
+    current_human_evidence = commands.add_parser(
+        "current-human-evidence-join",
+        help="join current native mechanics and organ/blood evidence while keeping unresolved Human gates fail-closed",
+    )
+    add_current_human_evidence_arguments(current_human_evidence)
     from .muscle_surface_geometry_audit import add_arguments as add_muscle_surface_geometry_arguments
     muscle_surface_geometry = commands.add_parser(
         "muscle-surface-geometry-audit",
