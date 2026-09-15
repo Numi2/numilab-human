@@ -80,7 +80,7 @@ numi human stand \
   Build/numi-human-tendon-v5/numi-human-tendon-attachments.nhtendon \
   Build/myosim-fullbody/myosim-fullbody-support-contact.nhcnt \
   Build/numi-human-stand-v1 \
-  --steps 64 --timestep 0.0001 --dimension 640
+  --steps 512 --timestep 0.0000125 --dimension 640
 ```
 
 The command automatically adds the canonical BodyParts3D full-body muscle
@@ -89,7 +89,10 @@ frames with dimension-invariant camera field of view, checks a one-step FP64
 reference, executes assisted and assistance-removed horizons, and requires a
 bitwise replay of final q, v, stand status, terminal-load records, and
 generalized-correction diagnostics. The stand path rejects NHTENDON1 rather
-than silently running without per-step terminal loads.
+than silently running without per-step terminal loads. The retained 100 µs
+qualification below is historical; the canonical wrapper now defaults to the
+12.5 µs, 512-step common-duration release documented in the [current native
+requalification](NATIVE_CURRENT_RELEASE_REQUALIFICATION_20260915.md).
 
 ## Final M4 Pro qualification
 
