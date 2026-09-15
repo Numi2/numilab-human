@@ -140,3 +140,14 @@ volume, and exercise both transfer directions. This is a transport/conservation
 subgate only: it does not create an anatomical lumen or capillary network,
 promote blood or tissue to the rigid-body mass matrix, calibrate density or
 exchange coefficients, or qualify organ mechanics or subject physiology.
+
+The current `v14` receipt additionally binds the compiled MyoSim rigid-body
+mass owner candidate. The pinned `myofullbody` export contributes 103 non-world
+bodies, 96 mass-bearing rows, seven zero-mass rows, 128 velocity coordinates,
+129 position coordinates, and a compiled rigid-body mass sum of
+`97.13195176621342 kg` (the floating-point sum of the expected
+`97.13195176621338 kg`). The body IDs, parent tree, masses, inertias, source
+revision, and export hash are immutable. This closes the source rigid-body mass
+ledger and non-duplication boundary; it does not assign organ, blood, fat, skin,
+skeletal-muscle tissue, soft-tissue material, dynamic mass-matrix, subject,
+standing, recovery, or walking ownership.

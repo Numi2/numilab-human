@@ -55,6 +55,9 @@ VESSEL_MASS_MOMENTS = ROOT / (
 VESSEL_MOMENT_TRANSPORT = ROOT / (
     "Docs/media/vessel-mass-moment-candidate-20260915/transport-receipt-v1.json"
 )
+MYOSIM_MASS_OWNER = ROOT / (
+    "Docs/media/myosim-mass-owner-20260915/receipt-v1.json"
+)
 
 
 def _require(condition: bool, message: str) -> None:
@@ -119,6 +122,7 @@ def _read_profile(path: Path) -> dict[str, Any]:
         "vessel_surface_identity": 6,
         "vessel_mass_moment_candidate": 6,
         "blood_tissue_mass_transfer_beds": 7,
+        "myosim_rigid_body_mass_owner": 103,
     }, "integration profile source counts differ")
     _require(value.get("expected_runtime") == {
         "blood_transport_accepted_steps": 511,
@@ -137,6 +141,7 @@ def _read_profile(path: Path) -> dict[str, Any]:
         "cardiac_wall_config", "tissue_calibration", "native_current_release",
         "native_costal_tissue", "native_regional_exchange",
         "vessel_mass_moments", "vessel_moment_transport",
+        "myosim_mass_owner",
     ], "integration profile input order differs")
     return value
 
@@ -209,6 +214,7 @@ def compile_candidate(
         "blood_mass_transfer": Path(blood_mass_transfer),
         "vessel_mass_moments": Path(vessel_mass_moments),
         "vessel_moment_transport": Path(vessel_moment_transport),
+        "myosim_mass_owner": MYOSIM_MASS_OWNER,
     }
     documents: dict[str, dict[str, Any]] = {}
     hashes: dict[str, str] = {}
@@ -236,6 +242,7 @@ def compile_candidate(
         "blood_mass_transfer": "regional blood/tissue mass-transfer candidate",
         "vessel_mass_moments": "source vessel mass moment candidate",
         "vessel_moment_transport": "source vessel mass moment transport candidate",
+        "myosim_mass_owner": "compiled MyoSim rigid-body mass owner candidate",
     }
     for name, path in paths.items():
         documents[name], hashes[name] = _read(path, labels[name])
@@ -282,6 +289,56 @@ def compile_candidate(
     _schema(documents["vessel_moment_transport"],
             "HumanPack.vessel-mass-moment-transport-candidate.v1",
             labels["vessel_moment_transport"])
+    _schema(documents["myosim_mass_owner"],
+            "HumanPack.myosim-rigid-body-mass-owner-candidate.v1",
+            labels["myosim_mass_owner"])
+
+    myosim_mass_owner = documents["myosim_mass_owner"]
+    myosim_mass_source = myosim_mass_owner.get("source", {})
+    myosim_mass_model = myosim_mass_source.get("model", {})
+    myosim_mass_ledger = myosim_mass_owner.get("rigid_body_mass", {})
+    myosim_mass_qualification = myosim_mass_owner.get("qualification", {})
+    _require(myosim_mass_owner.get("status") == "partial" and
+             myosim_mass_source.get("myosim_revision") ==
+             "33c89c2bde282553dde3f526768eb3bdcfaa7649" and
+             myosim_mass_source.get("archive_sha256") ==
+             "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975" and
+             myosim_mass_source.get("mujoco_version") == "3.12.0" and
+             myosim_mass_model == {
+                 "body_count_with_world": 104,
+                 "joint_count": 123,
+                 "name": "myofullbody",
+                 "nq": 129,
+                 "nu": 416,
+                 "nv": 128,
+                 "root_body": 1,
+                 "root_joint": 0,
+                 "tendon_count": 424,
+                 "timestep_seconds": 0.002,
+             } and
+             myosim_mass_ledger.get("body_count") == 103 and
+             myosim_mass_ledger.get("mass_bearing_body_count") == 96 and
+             myosim_mass_ledger.get("zero_mass_body_count") == 7 and
+             math.isclose(myosim_mass_ledger.get("total_mass_kg", float("nan")),
+                          97.13195176621338, rel_tol=0.0, abs_tol=1.0e-12),
+             "compiled MyoSim rigid-body mass source identity or totals changed")
+    _require(myosim_mass_qualification.get("source_compiled_body_mass_bound") is True and
+             myosim_mass_qualification.get("source_compiled_body_inertia_bound") is True and
+             myosim_mass_qualification.get("source_body_tree_identity_bound") is True and
+             myosim_mass_qualification.get("single_rigid_body_mass_owner_per_body") is True and
+             myosim_mass_qualification.get("source_rigid_body_mass_nonduplication_checked") is True and
+             myosim_mass_qualification.get("whole_body_dynamic_mass_matrix_owner") is False and
+             myosim_mass_qualification.get("anatomical_organ_mass_owner") is False and
+             myosim_mass_qualification.get("mechanical_blood_mass_owner") is False and
+             myosim_mass_qualification.get("skeletal_muscle_tissue_mass_owner") is False and
+             myosim_mass_qualification.get("fat_volume_and_mass_owner") is False and
+             myosim_mass_qualification.get("skin_volume_and_mass_owner") is False and
+             myosim_mass_qualification.get("soft_tissue_material_calibration") is False and
+             myosim_mass_qualification.get("subject_calibration") is False and
+             myosim_mass_qualification.get("standing") is False and
+             myosim_mass_qualification.get("recovery") is False and
+             myosim_mass_qualification.get("walking") is False,
+             "compiled MyoSim rigid-body mass qualification boundary changed")
 
     native_release = documents["native_current_release"]
     native_source = native_release.get("source", {})
@@ -932,6 +989,7 @@ def compile_candidate(
         "vessel_surface_identity": len(vessel_id_set),
         "vessel_mass_moment_candidate": vessel_moment_totals["unique_member_count"],
         "blood_tissue_mass_transfer_beds": mass_transfer_counts["bed_count"],
+        "myosim_rigid_body_mass_owner": myosim_mass_ledger["body_count"],
     }
 
     return {
@@ -966,6 +1024,10 @@ def compile_candidate(
             "vessel_mass_moment_candidate_sha256": hashes["vessel_mass_moments"],
             "vessel_mass_moment_transport_sha256": hashes["vessel_moment_transport"],
             "blood_mass_transfer_receipt_sha256": hashes["blood_mass_transfer"],
+            "myosim_rigid_body_mass_owner_receipt_sha256": hashes["myosim_mass_owner"],
+            "myosim_rigid_body_mass_owner_ids_sha256": myosim_mass_ledger["owner_ids_sha256"],
+            "myosim_rigid_body_mass_owner_source_export_sha256": myosim_mass_source["export_sha256"],
+            "myosim_rigid_body_mass_owner_source_revision": myosim_mass_source["myosim_revision"],
             "blood_tissue_mass_transfer_beds_share_clock": (
                 mass_transfer_clock.get("nanoseconds") == transport["clock"]["nanoseconds"]
             ),
@@ -1010,6 +1072,8 @@ def compile_candidate(
             "registered_vessel_surface_mass_moment_candidate_kg": vessel_moment_mass,
             "vessel_moment_transport_final_mass_kg": vessel_moment_transport["final_totals"]["mass_kg"],
             "blood_tissue_mass_transfer_final_mass_kg": mass_transfer["final_totals"]["mass_kg"],
+            "myosim_compiled_rigid_body_mass_kg": myosim_mass_ledger["total_mass_kg"],
+            "myosim_compiled_rigid_body_count": myosim_mass_ledger["body_count"],
             "cardiac_wall_geometric_volume_candidate_m3": cardiac_wall_volume,
             "skin_shell_outer_surface_vertex_count": skin_source["outer_surface_vertex_count"],
             "skin_shell_outer_surface_triangle_count": skin_source["outer_surface_triangle_count"],
@@ -1038,6 +1102,17 @@ def compile_candidate(
             "whole_body_dynamic_mass_matrix_owner_count": 0,
             "cross_domain_physical_owner_duplicates": 0,
             "blood_tissue_mass_transfer_mechanical_owner_count": 0,
+        },
+        "rigid_body_mass_owner": {
+            "body_count": myosim_mass_ledger["body_count"],
+            "mass_bearing_body_count": myosim_mass_ledger["mass_bearing_body_count"],
+            "zero_mass_body_count": myosim_mass_ledger["zero_mass_body_count"],
+            "total_mass_kg": myosim_mass_ledger["total_mass_kg"],
+            "source_revision": myosim_mass_source["myosim_revision"],
+            "source_export_sha256": myosim_mass_source["export_sha256"],
+            "source_bound": True,
+            "anatomical_soft_tissue_mass_owner": False,
+            "whole_body_dynamic_mass_matrix_owner": False,
         },
         "runtime_evidence": {
             "clock_nanoseconds": 12500,
@@ -1130,6 +1205,9 @@ def compile_candidate(
             "native_regional_exchange_oxygen_exchange": True,
             "blood_tissue_mass_transfer_candidate_bound": True,
             "blood_tissue_mass_transfer_mechanical_owner": False,
+            "source_rigid_body_mass_owner_bound": True,
+            "source_rigid_body_mass_nonduplication_checked": True,
+            "whole_body_dynamic_mass_matrix_owner": False,
             "tissue_oxygen_exchange_candidate_bound": True,
             "muscle_activation_route_identity_bound": True,
             "muscle_surface_identity_bound": True,

@@ -455,7 +455,7 @@ is far below the standing gate, this narrows the recruitment/equilibrium
 failure without closing force convergence, sustained standing, recovery,
 walking, anatomical loading, material, blood/tissue transfer, or calibration.
 The refreshed executable gap report is
-[`Docs/media/gap-execution-20260915/report-v40.json`](media/gap-execution-20260915/report-v40.json).
+[`Docs/media/gap-execution-20260915/report-v46.json`](media/gap-execution-20260915/report-v46.json).
 It now includes the current mechanics/organ/blood evidence join
 ([receipt](CURRENT_HUMAN_EVIDENCE_JOIN_20260915.md)) and the regional exchange
 requalification rebuilt on the pose-24 native owner.
@@ -538,11 +538,23 @@ This changes the default recruitment handoff, but the bounded horizons still
 do not close force convergence, sustained standing, recovery, walking,
 anatomical loading, blood/tissue transfer, materials, or calibration.
 
-The current v40 snapshot also includes the regional zeroth-moment
-blood/tissue mass-transfer candidate and the v2 current Human evidence join.
+The current v46 snapshot also includes the regional zeroth-moment
+blood/tissue mass-transfer candidate, the v3 current Human evidence join, and
+the v14 source rigid-body mass owner.
 The mass-transfer candidate accepts 511 of 512 exact-clock attempts, rejects
 step 37 atomically, conserves mass and owned volume, and exercises both
 transfer directions. The dynamic force-component audit is bound as a diagnostic
 with all 128 rows and a short bounded release; neither increment changes the
 force-convergence, anatomical-loading, material, subject-calibration, standing,
-recovery, or walking dispositions.
+recovery, or walking dispositions. The v46 registry report remains
+`integrated_qualification: not_assessed`.
+
+The source-bound increment adds the compiled MyoSim rigid-body mass owner
+candidate and is retained in the v14 body-composition receipt. It binds the
+103-body parent tree, 96 mass-bearing rows, seven zero-mass rows, source
+inertias, and `97.13195176621342 kg` compiled rigid-body mass to MyoSim revision
+`33c89c2bde282553dde3f526768eb3bdcfaa7649`. The source rigid-body mass ledger
+is now explicit for non-duplication, while anatomical organ/blood/fat/skin and
+soft-tissue mass, materials, subject calibration, standing, recovery, and
+walking remain open. The generated v46 registry snapshot keeps its integrated
+qualification `not_assessed`.

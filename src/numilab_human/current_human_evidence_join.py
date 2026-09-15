@@ -19,7 +19,7 @@ from .physiology import canonical, read_json
 
 ROOT = Path(__file__).resolve().parents[2]
 SCHEMA = "HumanPack.current-human-evidence-join.v2"
-BODY_COMPOSITION = ROOT / "Docs/media/body-composition-integration-20260914/receipt-v13.json"
+BODY_COMPOSITION = ROOT / "Docs/media/body-composition-integration-20260914/receipt-v14.json"
 FORCE_AUDIT = ROOT / "Docs/media/native-force-audit-pose24-20260915/receipt-v1.json"
 FORCE_LEDGER = ROOT / "Docs/media/native-force-audit-pose24-20260915/force-ledger.json"
 PASSIVE_STAND = ROOT / "Docs/media/native-passive-stand-pose24-20260915/receipt-v1.json"

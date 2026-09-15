@@ -29,6 +29,7 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
         "vessel_mass_moment_candidate": 6,
         "vessel_surface_identity": 6,
         "blood_tissue_mass_transfer_beds": 7,
+        "myosim_rigid_body_mass_owner": 103,
     }
     assert result["runtime_evidence"]["clock_nanoseconds"] == 12500
     assert result["runtime_evidence"]["blood_transport_accepted_steps"] == 511
@@ -39,6 +40,11 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
     assert result["candidate_mass_budgets"]["cvsim21_aggregate_blood_mass_kg"] == 5.459
     assert result["candidate_mass_budgets"]["muscle_single_closed_surface_volume_candidate_count"] == 60
     assert result["candidate_mass_budgets"]["muscle_algebraic_volume_candidate_m3"] == pytest.approx(0.006471304532959317)
+    assert result["candidate_mass_budgets"]["myosim_compiled_rigid_body_mass_kg"] == pytest.approx(97.13195176621338)
+    assert result["rigid_body_mass_owner"]["body_count"] == 103
+    assert result["rigid_body_mass_owner"]["mass_bearing_body_count"] == 96
+    assert result["rigid_body_mass_owner"]["zero_mass_body_count"] == 7
+    assert result["rigid_body_mass_owner"]["source_bound"]
     assert result["qualification"]["cross_domain_owner_nonduplication_checked"]
     assert result["qualification"]["source_aggregate_blood_mass_bound"]
     assert result["qualification"]["source_vessel_registration_bound"]
@@ -68,6 +74,9 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
     assert result["qualification"]["native_regional_exchange_oxygen_exchange"]
     assert result["qualification"]["blood_tissue_mass_transfer_candidate_bound"]
     assert not result["qualification"]["blood_tissue_mass_transfer_mechanical_owner"]
+    assert result["qualification"]["source_rigid_body_mass_owner_bound"]
+    assert result["qualification"]["source_rigid_body_mass_nonduplication_checked"]
+    assert not result["qualification"]["whole_body_dynamic_mass_matrix_owner"]
     assert not result["qualification"]["native_regional_exchange_mechanical_blood_mass_owner"]
     assert result["runtime_evidence"]["native_regional_exchange_attempted_steps"] == 512
     assert result["runtime_evidence"]["native_regional_exchange_accepted_steps_environment_0"] == 511

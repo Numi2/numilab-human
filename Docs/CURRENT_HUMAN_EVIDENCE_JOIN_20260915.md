@@ -61,3 +61,21 @@ Reproduce the current receipt with:
 PYTHONPATH=src python3 -m numilab_human.current_human_evidence_join \
   --output Docs/media/current-human-evidence-join-20260915/receipt-v2.json
 ```
+
+## v3 evidence join
+
+The v3 receipt uses the v14 body-composition integration. In addition to the
+existing mechanics and exact-clock blood/tissue candidates, it therefore
+hash-binds the compiled MyoSim rigid-body mass ledger: 103 non-world bodies,
+96 mass-bearing rows, seven zero-mass rows, and `97.13195176621342 kg` of
+compiled rigid-body mass. The source revision and export hash are retained;
+anatomical organ, blood, fat, skin, soft-tissue material, whole-body dynamic
+mass-matrix, subject-calibration, standing, recovery, and walking gates remain
+false.
+
+Reproduce the current receipt with:
+
+```sh
+PYTHONPATH=src python3 -m numilab_human.current_human_evidence_join \
+  --output Docs/media/current-human-evidence-join-20260915/receipt-v3.json
+```
