@@ -63,3 +63,14 @@ routes with a candidate budget, 238 routes without emitted surface binding, and
 non-measured, non-mechanical and non-calibrated. The extension therefore keeps
 physical volume, mechanical mass, active-force transfer, activation calibration,
 fat, standing, recovery, walking, and integrated Human qualification false.
+
+The [v8 tissue extension receipt](media/human-source-evidence-bridge-20260915/receipt-v8.json)
+now binds the exact-clock seven-bed blood/tissue transfer, the 18-region organ
+tissue-mass candidate, and the native costal partition to the v7 muscle graph.
+It carries six source blood owners across seven beds, 511 accepted and one
+rejected `12,500 ns` step, 342 organ surface-mass candidates across 378 source
+members, and the native 14-region, 13,516-node, `0.11369939548001184 kg`
+costal partition. Candidate mass/volume conservation and rollback remain
+qualified evidence; anatomical lumen, physical tissue volume, mechanical blood
+or tissue mass, organ mechanics, materials, calibration, fat, standing,
+recovery, and walking remain false.

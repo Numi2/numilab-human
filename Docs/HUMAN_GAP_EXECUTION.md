@@ -578,7 +578,7 @@ wrench closure and bitwise replay. The v2 all-DoF ledger still reports
 this is a diagnostic improvement and does not qualify force convergence,
 standing, recovery, walking, anatomical loading, activation calibration,
 blood/tissue transfer, materials, or subject calibration.
-The refreshed registry snapshot is [`report-v68.json`](media/gap-execution-20260915/report-v68.json)
+The refreshed registry snapshot is [`report-v69.json`](media/gap-execution-20260915/report-v69.json)
 and remains `integrated_qualification: not_assessed`.
 
 The muscle tissue follow-on now emits an equal-incidence route-mass partition
@@ -595,3 +595,12 @@ and 88-unadmitted-surface counts, with a closed candidate budget of
 `6.859582804936875 kg` and `0.006471304532959316 m^3`. It keeps physical
 volume, mechanical mass, active-force transfer, activation calibration,
 materials, fat, standing, recovery, and walking unqualified.
+
+The v8 tissue extension now joins the same graph to the exact-clock
+blood/tissue transfer, 18-region organ tissue-mass candidate, and native costal
+partition. It retains six source blood owners across seven beds, 511 accepted
+and one rejected `12,500 ns` step, 342 organ surface-mass candidates across 378
+members, and the `0.11369939548001184 kg` regional tissue candidate. It remains
+source/conservation evidence only; anatomical lumen, physical tissue volume,
+mechanical mass, organ mechanics, materials, calibration, fat, standing,
+recovery, and walking remain unqualified.

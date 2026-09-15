@@ -30,7 +30,7 @@ count remains zero. The new cross-domain source/evidence bridge
 to the current native mechanics, organ/blood transport, and zeroth-moment
 blood/tissue transfer receipt while retaining zero physical owners. The executable
 registry snapshot is
-[`gap-execution/report-v68.json`](media/gap-execution-20260915/report-v68.json).
+[`gap-execution/report-v69.json`](media/gap-execution-20260915/report-v69.json).
 The bridge now also records the fat-source absence candidate: the current male
 package has zero adipose surfaces, volume candidates, mass candidates, and
 physical owners. This makes the missing source explicit without treating skin
@@ -48,6 +48,15 @@ routes, 60 closed surfaces, 82 incidences, the closed
 physical owners. It remains an evidence-graph binding only: physical muscle
 volume, mechanical mass, active force transfer, activation calibration,
 materials, fat, standing, recovery, and walking stay open.
+
+The v8 tissue extension now joins that muscle graph to the exact-clock blood
+transfer, 18-region organ tissue-mass candidate, and native costal tissue
+partition. It retains six source blood owners over seven beds, 511 accepted and
+one rejected `12.5 us` step, 342 organ surface-mass candidates across 378
+members, and the `0.11369939548001184 kg` regional tissue candidate. This closes
+the source-hash and conservation handoff while leaving anatomical lumen,
+physical tissue volume, mechanical mass, organ mechanics, materials,
+calibration, fat, standing, recovery, and walking open.
 
 The muscle route-mass partition candidate now joins the 60 closed source
 muscle-surface budgets to their 82 explicit route incidences. Equal-incidence
