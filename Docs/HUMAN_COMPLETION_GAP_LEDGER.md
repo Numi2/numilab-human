@@ -114,6 +114,17 @@ geometry/inertia calibration, anatomical plantar loading, activation
 calibration, organ/blood/tissue/fat/muscle ownership, sustained standing,
 recovery, walking, and held-out subject prediction remain open.
 
+The [body-composition release join](BODY_COMPOSITION_RELEASE_JOIN_20260915.md)
+now hash-binds that subject replay to the seven-bed blood/tissue mass-transfer
+candidate, the 416-route muscle-volume incidence graph, and the explicit
+no-adipose-source receipt. It records six source blood owners, 329 organ
+members, 60 closed muscle geometry candidates, 238 routes without a surface
+binding, and zero production physical owners. This closes cross-domain source
+identity and non-duplication bookkeeping only; anatomical lumen and organ
+mechanics, physical blood/tissue/muscle/fat mass, calibrated materials and
+activation, full force convergence, standing, recovery, walking, and subject
+prediction remain open.
+
 The follow-on [source-evidence bridge extension](HUMAN_SOURCE_EVIDENCE_BRIDGE_20260915.md)
 now hash-binds the equal-incidence route-mass partition to the immutable v6
 cross-domain bridge and its route-volume source. The v7 receipt carries 416

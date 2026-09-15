@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://numi.example/schemas/human-body-composition-release-join.v1.schema.json",
+  "title": "Numi Human body composition release join",
+  "type": "object",
+  "required": ["schema", "compiler", "status", "subject", "inputs", "domain_counts", "ownership", "qualification", "blockers", "boundary"],
+  "properties": {
+    "schema": {"const": "HumanPack.body-composition-release-join.v1"},
+    "compiler": {"const": "numilab-human.body-composition-release-join.1"},
+    "status": {"const": "partial"},
+    "subject": {"const": "one adult male source package"},
+    "inputs": {"type": "object"},
+    "domain_counts": {"type": "object"},
+    "ownership": {"type": "object"},
+    "qualification": {"type": "object"},
+    "blockers": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+    "boundary": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}
