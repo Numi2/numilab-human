@@ -3,12 +3,12 @@
 ## Current requalification — 2026-09-15
 
 The current published source/runtime join is `1a25757` in the companion
-`numilab-human` repository and the native Human owner is
-`c45fa9622f6c73b58febdc24a7115aecf3d7699f` on a Mac mini M4 Pro. The latest
+`numilab-human` repository and the latest native Human owner is
+`7625ec565e086faf0dcd349846dadc2d22d65e86` on a Mac mini M4 Pro. The latest
 cross-domain receipt is
 [`body-composition-integration/receipt-v12.json`](media/body-composition-integration-20260914/receipt-v12.json),
 and the executable registry snapshot is
-[`gap-execution/report-v19.json`](media/gap-execution-20260915/report-v19.json).
+[`gap-execution/report-v22.json`](media/gap-execution-20260915/report-v22.json).
 The join now includes the current native costal tissue requalification
 ([receipt](media/tissue-integration-20260908/current-costal-binding-receipt-20260915.json)):
 13,516 cooked nodes, 46,278 tetrahedra, 2,871 attachments, eight Apple M4 Pro
@@ -36,28 +36,31 @@ engineering probe: no anatomical lumen, mechanical blood-mass owner,
 vessel-to-tissue transfer, material calibration, subject calibration,
 standing, recovery, or walking claim is promoted.
 
-The same native owner completed 512 exact `12.5 us` steps with zero
-penetration and no root assistance, but peak acceleration rose to
-`32.7379798889 m/s2` and the configuration drift reached
-`2.52364020525e-6`. The static source certificate still has root wrench
-balance while internal generalized balance is false. These results keep the
-force-convergence, sustained standing/recovery/walking, anatomical
+The same native owner then extended the passive-coupled pose/recruitment
+search from 12 to a bounded 24 steps. The resulting [force audit](NATIVE_FORCE_AUDIT_POSE24_20260915.md)
+closes all 128 generalized rows with maximum absolute residual `2.28e-6 N`,
+maximum closure ratio `1.56e-5`, and internal normalized residual RMS
+`6.51e-6`. The matched [persistent release](NATIVE_PASSIVE_STAND_POSE24_20260915.md)
+peaks at `4.85533761978 m/s2` over 512 exact-clock steps, with zero
+penetration, six loaded source witnesses, no root assistance, and bitwise
+replay. This closes the static generalized-force and per-DoF audit subgates;
+force convergence, sustained standing/recovery/walking, anatomical
 supports/loading, activation calibration, spatial blood mass transfer,
-unresolved materials, fat ownership, and subject calibration gates open.
+unresolved materials, fat ownership, and subject calibration remain open.
 
 The next isolated native increment is recorded in the
-[passive-equilibrium persistent-stand requalification](NATIVE_PASSIVE_STAND_REQUALIFICATION_20260915.md).
-On branch `ef0fc708db0f4de1a07fca426e5a415f62e9da27`, the explicit
+[pose24 passive persistent-stand requalification](NATIVE_PASSIVE_STAND_POSE24_20260915.md).
+On branch `7625ec565e086faf0dcd349846dadc2d22d65e86`, the explicit
 `--persistent-source-passive-joint-tissue` path carries the 40-entry source
-passive coupling set into the persistent preload. At the canonical `12.5 us`
-clock and 512 steps it closes the complete static 128-DoF balance at
-`9.0656247312e-06` normalized RMS and lowers the matched release peak from
-`33.9849624634` to `4.86072206497 m/s2`; six support witnesses remain active,
-the compiled load is `952.864475301 N`, penetration is zero, root assistance
-is absent, and replay is bitwise. This is a bounded force-balance increment,
-not sustained standing: the passive coupling is linearized experimental upper
-joint data and the source support witnesses remain unregistered anatomical
-contact.
+passive coupling set into the persistent preload after a bounded 24-step
+pose/recruitment search. At the canonical `12.5 us` clock and 512 steps it
+closes the complete static 128-DoF balance at `6.42342632457e-06` normalized
+RMS and lowers the matched release peak to `4.85533761978 m/s2`; six support
+witnesses remain active, the compiled load is `952.864475301 N`, penetration
+is zero, root assistance is absent, and replay is bitwise. This is a bounded
+force-balance increment, not sustained standing: the passive coupling is
+linearized experimental upper-joint data and the source support witnesses
+remain unregistered anatomical contact.
 
 The canonical execution registry remains `integrated_qualification:
 not_assessed` with 14 workstreams, 54 tasks, and 95 mandatory targets. The

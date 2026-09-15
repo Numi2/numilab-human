@@ -87,6 +87,13 @@ def audit(arguments: argparse.Namespace) -> int:
              "maximum assembly error must be finite and non-negative")
     _require(math.isfinite(arguments.maximum_closure_ratio) and 0.0 <= arguments.maximum_closure_ratio < 1.0,
              "maximum closure ratio must be finite and in [0, 1)")
+    maximum_absolute_residual = float(
+        getattr(arguments, "maximum_absolute_residual", 1.0e-3)
+    )
+    _require(
+        math.isfinite(maximum_absolute_residual) and maximum_absolute_residual >= 0.0,
+        "maximum absolute residual must be finite and non-negative",
+    )
     _require(type(arguments.top) is int and 1 <= arguments.top <= NV, "top must be in [1, 128]")
 
     components = snapshot["components"]
@@ -108,7 +115,11 @@ def audit(arguments: argparse.Namespace) -> int:
                       for row in contributions]
         force_scale = math.fsum(item[0] for item in magnitudes)
         net = snapshot["reported_net"][index]
-        closure_ratio = abs(net) / force_scale if force_scale > 0.0 else (0.0 if net == 0.0 else math.inf)
+        # A coordinate with only roundoff-sized contributions has no useful
+        # relative force scale.  Use an explicit absolute Newton floor in
+        # that case instead of turning an O(1e-7 N) residual into a false
+        # 1.0 closure failure.  The absolute gate remains separate below.
+        closure_ratio = abs(net) / max(force_scale, maximum_absolute_residual)
         dominant = max(magnitudes, default=(0.0, "none", "none"))
         row = {
             "index": index,
@@ -136,8 +147,10 @@ def audit(arguments: argparse.Namespace) -> int:
     maximum_root_closure_ratio = max(row["closure_ratio"] for row in root)
     maximum_internal_closure_ratio = max(row["closure_ratio"] for row in internal)
     rms_closure_ratio = math.sqrt(sum(row["closure_ratio"] ** 2 for row in rows) / NV)
+    maximum_absolute_force_residual = max(abs(row["reported_net"]) for row in rows)
     assembly_closed = maximum_assembly_error <= arguments.maximum_assembly_error
-    force_closed = maximum_closure_ratio <= arguments.maximum_closure_ratio
+    absolute_force_closed = maximum_absolute_force_residual <= maximum_absolute_residual
+    force_closed = maximum_closure_ratio <= arguments.maximum_closure_ratio and absolute_force_closed
     complete = assembly_closed and force_closed
 
     receipt = {
@@ -162,6 +175,8 @@ def audit(arguments: argparse.Namespace) -> int:
             "maximum_root_closure_ratio": maximum_root_closure_ratio,
             "maximum_internal_closure_ratio": maximum_internal_closure_ratio,
             "rms_closure_ratio": rms_closure_ratio,
+            "maximum_absolute_force_residual": maximum_absolute_force_residual,
+            "maximum_absolute_force_residual_tolerance": maximum_absolute_residual,
         },
         "per_dof_audit": rows,
         "worst_coordinates": ranked[:arguments.top],
@@ -182,6 +197,7 @@ def audit(arguments: argparse.Namespace) -> int:
             "reasons": [
                 *([] if assembly_closed else ["published force components do not reconstruct the authoritative net force"]),
                 *([] if force_closed else ["one or more generalized coordinates exceed the force-closure ratio"]),
+                *([] if absolute_force_closed else ["one or more generalized coordinates exceed the absolute force-residual tolerance"]),
             ],
         },
         "metadata": snapshot["metadata"],
@@ -191,6 +207,7 @@ def audit(arguments: argparse.Namespace) -> int:
         "status": receipt["status"],
         "maximum_assembly_error": maximum_assembly_error,
         "maximum_closure_ratio": maximum_closure_ratio,
+        "maximum_absolute_force_residual": maximum_absolute_force_residual,
         "worst_coordinate": ranked[0]["coordinate"],
         "worst_component": ranked[0]["dominant_component"],
     }, sort_keys=True))
@@ -203,6 +220,12 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--maximum-assembly-error", type=float, default=1.0e-4)
     parser.add_argument("--maximum-closure-ratio", type=float, default=0.05)
+    parser.add_argument(
+        "--maximum-absolute-residual",
+        type=float,
+        default=1.0e-3,
+        help="absolute generalized-force residual floor in newtons",
+    )
     parser.add_argument("--top", type=int, default=12)
     parser.set_defaults(handler=audit)
 

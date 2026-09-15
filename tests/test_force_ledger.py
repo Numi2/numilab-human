@@ -82,6 +82,17 @@ def test_unaccounted_authoritative_force_fails_assembly(tmp_path: Path) -> None:
     assert receipt["residual"]["maximum_assembly_error"] == 1.0
 
 
+def test_near_zero_force_scale_uses_explicit_absolute_floor(tmp_path: Path) -> None:
+    payload = _snapshot()
+    payload["components"][1]["values"][51] = 2.0e-6
+    payload["reported_net"][51] = 2.0e-6
+    receipt = _run(tmp_path, payload)
+    assert receipt["status"] == "passed"
+    assert receipt["qualification"]["generalized_force_closed"]
+    assert receipt["residual"]["maximum_absolute_force_residual"] == 2.0e-6
+    assert receipt["residual"]["maximum_closure_ratio"] == 0.002
+
+
 def test_missing_force_owner_is_rejected(tmp_path: Path) -> None:
     payload = _snapshot()
     payload["components"] = [row for row in payload["components"] if row["name"] != "passive_tissue"]

@@ -142,16 +142,17 @@ convergence, sustained standing, recovery, walking, or anatomical/calibrated
 qualification.
 
 The current isolated follow-up
-[passive-equilibrium persistent-stand receipt](NATIVE_PASSIVE_STAND_REQUALIFICATION_20260915.md)
+[pose24 passive-equilibrium persistent-stand receipt](NATIVE_PASSIVE_STAND_POSE24_20260915.md)
 binds the 40-entry source passive joint/tissue coupling set into the
-persistent preload. On the one-adult Mac mini M4 Pro package it closes the
-static 128-DoF balance at `9.0656247312e-6` normalized RMS and lowers the
-matched 512-step, `12.5 us` peak from `33.9849624634` to `4.86072206497
-m/s2`, with six active support witnesses, zero penetration, no root assistance,
-and bitwise replay. It is a bounded force-balance increment; the coupling is
-linearized experimental data and the support witnesses are not an anatomical
-contact admission, so sustained standing, recovery, walking, activation,
-material, blood-transfer and subject-calibration gates remain open.
+persistent preload after a bounded 24-step pose/recruitment search. On the
+one-adult Mac mini M4 Pro package it closes the static 128-DoF balance at
+`6.42342632457e-6` normalized RMS and lowers the matched 512-step,
+`12.5 us` release peak to `4.85533761978 m/s2`, with six active support
+witnesses, zero penetration, no root assistance, and bitwise replay. It is a
+bounded force-balance increment; the coupling is linearized experimental data
+and the support witnesses are not an anatomical contact admission, so
+sustained standing, recovery, walking, activation, material, blood-transfer
+and subject-calibration gates remain open.
 
 The follow-up [native support-force horizon receipt](NATIVE_SUPPORT_FORCE_HORIZON_20260913.md)
 removes the CLI's artificial 64-step ceiling and admits the declared 4096-step
@@ -450,9 +451,9 @@ is far below the standing gate, this narrows the recruitment/equilibrium
 failure without closing force convergence, sustained standing, recovery,
 walking, anatomical loading, material, blood/tissue transfer, or calibration.
 The refreshed executable gap report is
-[`Docs/media/gap-execution-20260915/report-v19.json`](media/gap-execution-20260915/report-v19.json),
+[`Docs/media/gap-execution-20260915/report-v22.json`](media/gap-execution-20260915/report-v22.json),
 whose report SHA-256 is
-`9f8525f11b6bd4a58839b9306b3ba1f8e4ae58b60d9db169e82bec79d3d5a03b`.
+`284006f45c5d4a1621af996d532495f834fcb9267d26d4ec05e5906c8a8eec46`.
 It includes the activation-0.8/default receipts, the 512-step temporal-drift
 receipt, the v12 cross-domain body-composition join, the six-vessel mass-moment
 transport probe, the current costal tissue and regional blood/exchange
@@ -461,15 +462,16 @@ receipt, and the current physical-M4 per-DoF force audit, and remains
 `integrated_qualification: not_assessed` with 14 workstreams, 54 tasks, and
 95 mandatory targets.
 
-The new [current force-audit requalification](NATIVE_FORCE_AUDIT_REQUALIFICATION_20260915.md)
-binds all 128 generalized coordinates on the current passive-equilibrium branch.
-Component reconstruction closes to `1.1368683772161603e-13 N`, while internal
-normalized residual RMS remains `0.141417024366` and the maximum closure ratio
-remains `1.0`. Native joint and child-body indices are bound for all rows, while
-anatomical labels and coordinate kinds remain unavailable. It is a diagnostic
-owner for the next monolithic equilibrium solve; it does not promote force convergence, standing, recovery, walking,
-anatomical loading, activation calibration, blood mass transfer, materials, or
-subject calibration.
+The [current force-audit requalification](NATIVE_FORCE_AUDIT_POSE24_20260915.md)
+now binds all 128 generalized coordinates after the bounded 24-step passive
+pose/recruitment extension. Component reconstruction closes to
+`6.77e-14 N`; the explicit `1e-3 N` absolute and `0.05` relative gates pass,
+with internal normalized residual RMS `6.51e-6` and
+`internal_balanced=true`. Native joint and child-body indices are bound for
+all rows, while anatomical labels and coordinate kinds remain unavailable.
+The receipt still does not promote temporal force convergence, standing,
+recovery, walking, anatomical loading, activation calibration, blood mass
+transfer, materials, or subject calibration.
 
 The current native regional exchange receipt records 21 source compartments,
 24 source connections and seven regional beds on the physical M4 Pro at the
