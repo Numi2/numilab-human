@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from numilab_human.model import ImportError
-from numilab_human.tissue_mass_candidate import PROFILE, compile_candidate
+from numilab_human.tissue_mass_candidate import PROFILE, ROOT, compile_candidate
 from numilab_human.physiology import canonical
 
 
@@ -34,3 +34,14 @@ def test_profile_must_cover_all_regions(tmp_path: Path) -> None:
     path.write_bytes(canonical(profile) + b"\n")
     with pytest.raises(ImportError, match="cover every source region"):
         compile_candidate(profile=path)
+
+
+def test_component_moment_receipt_adds_only_the_seven_safe_sums() -> None:
+    result = compile_candidate(
+        moments=ROOT / "Docs/media/organ-geometry-component-moments-20260915/receipt-v1.json"
+    )
+    assert result["source"]["moments_schema"] == "HumanPack.organ-geometry-component-moments.v1"
+    assert result["counts"]["organ_surface_mass_candidates"] == 349
+    assert result["counts"]["source_members"] == 378
+    assert result["totals"]["physical_mass_owner_count"] == 0
+    assert not result["qualification"]["material_calibration"]

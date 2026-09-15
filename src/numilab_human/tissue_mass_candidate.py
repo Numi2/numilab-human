@@ -23,6 +23,10 @@ ROOT = Path(__file__).resolve().parents[2]
 SCHEMA = "HumanPack.tissue-mass-composition-candidate.v1"
 MOMENTS = ROOT / "Docs/media/organ-geometry-moments-20260913/moments.json"
 PROFILE = ROOT / "config/numi-human-tissue-mass-candidate.v1.json"
+SUPPORTED_MOMENT_SCHEMAS = {
+    "HumanPack.organ-geometry-moments.v1",
+    "HumanPack.organ-geometry-component-moments.v1",
+}
 
 
 def _require(condition: bool, message: str) -> None:
@@ -68,7 +72,7 @@ def _vector(value: Any, label: str) -> list[float]:
 def compile_candidate(*, moments: Path = MOMENTS, profile: Path = PROFILE) -> dict[str, Any]:
     moments_doc, moments_sha = _canonical_json(Path(moments), "organ moments")
     profile_doc, profile_sha = _canonical_json(Path(profile), "tissue mass profile")
-    _require(moments_doc.get("schema") == "HumanPack.organ-geometry-moments.v1",
+    _require(moments_doc.get("schema") in SUPPORTED_MOMENT_SCHEMAS,
              "unsupported organ moments schema")
     _require(profile_doc.get("schema") == "numi.human.tissue-mass-candidate.v1",
              "unsupported tissue mass profile schema")
@@ -114,7 +118,10 @@ def compile_candidate(*, moments: Path = MOMENTS, profile: Path = PROFILE) -> di
         moment = member.get("source_surface_moments")
         admissible = (
             class_id == "organ_parenchyma"
-            and member.get("moment_status") == "computed_single_closed_component"
+            and member.get("moment_status") in {
+                "computed_single_closed_component",
+                "computed_disjoint_closed_component_sum",
+            }
             and isinstance(moment, dict)
             and density is not None
         )
@@ -167,17 +174,20 @@ def compile_candidate(*, moments: Path = MOMENTS, profile: Path = PROFILE) -> di
     source_counts = moments_doc.get("counts", {})
     _require(computed > 0 and len(candidates) == source_counts.get("member_count"),
              "candidate rows do not cover the source moments")
+    source = {
+        "subject": profile_doc.get("subject"),
+        "moments": str(Path(moments).relative_to(ROOT)) if Path(moments).is_relative_to(ROOT) else str(moments),
+        "moments_sha256": moments_sha,
+        "profile": str(Path(profile).relative_to(ROOT)) if Path(profile).is_relative_to(ROOT) else str(profile),
+        "profile_sha256": profile_sha,
+    }
+    if moments_doc["schema"] != "HumanPack.organ-geometry-moments.v1":
+        source["moments_schema"] = moments_doc["schema"]
     return {
         "schema": SCHEMA,
         "compiler": "numilab-human.tissue-mass-candidate.1",
         "status": "partial",
-        "source": {
-            "subject": profile_doc.get("subject"),
-            "moments": str(Path(moments).relative_to(ROOT)) if Path(moments).is_relative_to(ROOT) else str(moments),
-            "moments_sha256": moments_sha,
-            "profile": str(Path(profile).relative_to(ROOT)) if Path(profile).is_relative_to(ROOT) else str(profile),
-            "profile_sha256": profile_sha,
-        },
+        "source": source,
         "counts": {
             "source_members": len(candidates),
             "organ_surface_mass_candidates": computed,
