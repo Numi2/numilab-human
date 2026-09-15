@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import struct
 import tempfile
 import unittest
@@ -2659,6 +2660,50 @@ class ImporterTests(unittest.TestCase):
             "--support-stance-contact 7",
         ):
             self.assertIn(argument, stand)
+
+    def test_numi_workspace_stand_launches_native_default_clock_and_recruitment(self) -> None:
+        command = ROOT / ".numi/commands/human"
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            build = root / "build"
+            probe = build / "bin" / "metalrobo_numilab_human_myosim_visual_probe"
+            probe.parent.mkdir(parents=True)
+            args_file = root / "probe-args.txt"
+            probe.write_text(
+                "#!/bin/sh\n"
+                "printf '%s\\n' \"$@\" > \"$NUMI_PROBE_ARGS\"\n",
+                encoding="utf-8",
+            )
+            probe.chmod(0o755)
+            artifacts = root / "artifacts"
+            output = root / "output"
+            result = run(
+                [
+                    command,
+                    "stand",
+                    artifacts,
+                    root / "bones.nhbones",
+                    root / "tendon.nhtendon",
+                    root / "support.nhcnt",
+                    output,
+                ],
+                env={
+                    **os.environ,
+                    "NUMI_LAB_ROOT": str(root),
+                    "NUMI_BUILD_DIR": str(build),
+                    "NUMI_PROBE_ARGS": str(args_file),
+                },
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            self.assertEqual(result.stdout, "")
+            argv = args_file.read_text(encoding="utf-8").splitlines()
+            self.assertEqual(argv[argv.index("--muscle-step-seconds") + 1], "0.0000125")
+            self.assertEqual(argv[argv.index("--muscle-step-count") + 1], "512")
+            self.assertNotIn("--muscle-activation", argv)
+            self.assertIn("--persistent-metal-stand", argv)
+            self.assertIn("--stand-remove-assistance", argv)
 
     def test_numi_workspace_native_visual_command_rejects_missing_paths_before_python(self) -> None:
         command = ROOT / ".numi/commands/human"
