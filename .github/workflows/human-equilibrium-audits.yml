@@ -1,5 +1,4 @@
 name: Human equilibrium evidence audits
-
 on:
   push:
     branches: [main]
@@ -9,29 +8,27 @@ on:
       - "src/numilab_human/equilibrium_force_snapshot.py"
       - "src/numilab_human/force_ledger.py"
       - "src/numilab_human/standing_initial_state.py"
+      - "src/numilab_human/native_passive_stand_refinement.py"
       - "tests/test_static_dynamic_handoff.py"
       - "tests/test_native_force_convergence.py"
       - "tests/test_equilibrium_force_snapshot.py"
       - "tests/test_force_ledger.py"
       - "tests/test_standing_state.py"
+      - "tests/test_native_passive_stand_refinement.py"
+      - "tests/test_native_refinement_binding.py"
       - ".github/workflows/human-equilibrium-audits.yml"
   pull_request:
     paths:
-      - "src/numilab_human/static_dynamic_handoff.py"
-      - "src/numilab_human/native_force_convergence.py"
-      - "src/numilab_human/equilibrium_force_snapshot.py"
-      - "src/numilab_human/force_ledger.py"
-      - "src/numilab_human/standing_initial_state.py"
-      - "tests/test_static_dynamic_handoff.py"
-      - "tests/test_native_force_convergence.py"
-      - "tests/test_equilibrium_force_snapshot.py"
-      - "tests/test_force_ledger.py"
-      - "tests/test_standing_state.py"
+      - "src/numilab_human/*force*"
+      - "src/numilab_human/*handoff*"
+      - "src/numilab_human/*stand*"
+      - "tests/test_*force*"
+      - "tests/test_*handoff*"
+      - "tests/test_*stand*"
+      - "tests/test_native_refinement_binding.py"
       - ".github/workflows/human-equilibrium-audits.yml"
-
 permissions:
   contents: read
-
 jobs:
   audit-contracts:
     runs-on: ubuntu-latest
@@ -48,11 +45,23 @@ jobs:
           cache: pip
       - name: Install audit package and test runner
         run: python -m pip install --upgrade pip pytest -e .
-      - name: Run equilibrium evidence contract tests
+      - name: Run equilibrium and refinement contract tests
         run: >-
-          python -m pytest -q
+          python -m pytest -q --junitxml=human-equilibrium-results.xml
           tests/test_static_dynamic_handoff.py
           tests/test_native_force_convergence.py
           tests/test_equilibrium_force_snapshot.py
           tests/test_force_ledger.py
           tests/test_standing_state.py
+          tests/test_native_passive_stand_refinement.py
+          tests/test_native_refinement_binding.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: human-equilibrium-python-${{ matrix.python-version }}
+          path: |
+            human-equilibrium-results.xml
+            src/numilab_human/model.py
+            src/numilab_human/physiology.py
+            src/numilab_human/native_passive_stand_refinement.py
+            tests/test_native_refinement_binding.py
