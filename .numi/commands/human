@@ -149,6 +149,16 @@ if [ "${1:-}" = "muscle-route-volume-join-candidate" ]; then
     exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.muscle_route_volume_join_candidate "$@"
 fi
 
+if [ "${1:-}" = "muscle-route-mass-partition-candidate" ]; then
+    shift
+    if [ -n "${PYTHONPATH:-}" ]; then
+        export PYTHONPATH="$repository_root/src:$PYTHONPATH"
+    else
+        export PYTHONPATH="$repository_root/src"
+    fi
+    exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.muscle_route_mass_partition_candidate "$@"
+fi
+
 if [ "${1:-}" = "muscle-tissue-mass-candidate" ]; then
     shift
     if [ -n "${PYTHONPATH:-}" ]; then

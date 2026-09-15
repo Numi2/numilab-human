@@ -578,5 +578,12 @@ wrench closure and bitwise replay. The v2 all-DoF ledger still reports
 this is a diagnostic improvement and does not qualify force convergence,
 standing, recovery, walking, anatomical loading, activation calibration,
 blood/tissue transfer, materials, or subject calibration.
-The refreshed registry snapshot is [`report-v65.json`](media/gap-execution-20260915/report-v65.json)
+The refreshed registry snapshot is [`report-v66.json`](media/gap-execution-20260915/report-v66.json)
 and remains `integrated_qualification: not_assessed`.
+
+The muscle tissue follow-on now emits an equal-incidence route-mass partition
+for the 60 closed surface candidates and 82 explicit route incidences. It
+closes the candidate mass/volume budget, keeps 238 routes without an emitted
+surface and 88 unadmitted surfaces visible, and leaves physical mass, active
+force, activation calibration, fat, and subject ownership false. Its receipt is
+[`receipt-v1.json`](media/muscle-route-mass-partition-candidate-20260915/receipt-v1.json).

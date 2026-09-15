@@ -30,7 +30,7 @@ count remains zero. The new cross-domain source/evidence bridge
 to the current native mechanics, organ/blood transport, and zeroth-moment
 blood/tissue transfer receipt while retaining zero physical owners. The executable
 registry snapshot is
-[`gap-execution/report-v65.json`](media/gap-execution-20260915/report-v65.json).
+[`gap-execution/report-v66.json`](media/gap-execution-20260915/report-v66.json).
 The bridge now also records the fat-source absence candidate: the current male
 package has zero adipose surfaces, volume candidates, mass candidates, and
 physical owners. This makes the missing source explicit without treating skin
@@ -39,6 +39,15 @@ The same bridge now binds the source-compliant non-maximal recruitment
 candidate and the one-plug finite-hold material fit; both retain explicit
 measured-activation, whole-body transfer, and production-material gates as
 unqualified.
+
+The muscle route-mass partition candidate now joins the 60 closed source
+muscle-surface budgets to their 82 explicit route incidences. Equal-incidence
+allocation closes the `6.859582804936879 kg` candidate budget without double
+counting, covers 78 routes, and retains 238 routes without any emitted surface
+plus 88 unadmitted surfaces. This is a source-bound tissue bookkeeping
+subgate; it does not create mechanical mass, active force, activation
+calibration, fat geometry, or subject ownership
+([receipt](media/muscle-route-mass-partition-candidate-20260915/receipt-v1.json)).
 
 The anatomical support follow-on is now source-bound to the ten authored NHCNT1 foot witnesses, the paired NHBONES1 foot frames, and the full NHRIGID2 owner. The native isolated Mac mini branch fits a unilateral active set and closes static body weight at relative error 1.87e-9 and floating-root force at 1.78e-6 N with bitwise replay. The internal generalized residual remains unbalanced at RMS 1.008, so this advances the anatomical support/loading gate without promoting dynamic contact, standing, recovery, or walking.
 
