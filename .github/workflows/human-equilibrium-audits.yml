@@ -10,6 +10,7 @@ on:
       - "src/numilab_human/force_ledger.py"
       - "src/numilab_human/standing_initial_state.py"
       - "src/numilab_human/native_passive_stand_refinement.py"
+      - "src/numilab_human/native_trace_refinement.py"
       - "tests/test_static_dynamic_handoff.py"
       - "tests/test_native_force_convergence.py"
       - "tests/test_equilibrium_force_snapshot.py"
@@ -20,6 +21,7 @@ on:
       - "tests/test_native_refinement_binding.py"
       - "tests/test_native_refinement_stage_diagnostics.py"
       - "tests/test_native_refinement_free_acceleration.py"
+      - "tests/test_native_trace_refinement.py"
       - "tests/test_native_mechanics_summary.py"
       - "tests/test_stand_execution_options.py"
       - "tests/test_importer.py"
@@ -30,9 +32,11 @@ on:
       - "src/numilab_human/*force*"
       - "src/numilab_human/*handoff*"
       - "src/numilab_human/*stand*"
+      - "src/numilab_human/*trace*"
       - "tests/test_*force*"
       - "tests/test_*handoff*"
       - "tests/test_*stand*"
+      - "tests/test_*trace*"
       - "tests/test_native_refinement_binding.py"
       - "tests/test_native_refinement_stage_diagnostics.py"
       - "tests/test_native_refinement_free_acceleration.py"
@@ -70,6 +74,7 @@ jobs:
           tests/test_native_refinement_binding.py
           tests/test_native_refinement_stage_diagnostics.py
           tests/test_native_refinement_free_acceleration.py
+          tests/test_native_trace_refinement.py
           tests/test_native_mechanics_summary.py
           tests/test_stand_execution_options.py
       - name: Verify workspace launch compatibility
@@ -84,12 +89,14 @@ jobs:
             src/numilab_human/model.py
             src/numilab_human/physiology.py
             src/numilab_human/native_passive_stand_refinement.py
+            src/numilab_human/native_trace_refinement.py
             src/numilab_human/equilibrium_force_snapshot.py
             src/numilab_human/native_force_convergence.py
             src/numilab_human/force_ledger.py
             tests/test_native_refinement_binding.py
             tests/test_native_refinement_stage_diagnostics.py
             tests/test_native_refinement_free_acceleration.py
+            tests/test_native_trace_refinement.py
             tests/test_equilibrium_force_snapshot.py
             tests/test_initial_force_reference.py
             tests/test_native_mechanics_summary.py
