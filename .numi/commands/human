@@ -412,11 +412,11 @@ fi
 # Rendering is optional; mechanics-only runs cannot qualify visual coverage.
 if [ "${1:-}" = "stand" ]; then
     if [ "${2:-}" = "--help" ] || [ "${2:-}" = "-h" ]; then
-        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-or-NHTENDON3-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..512>] [--timestep <1e-6..1e-3; default 12.5 us>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay] [--mechanics-only] [--assisted-diagnostic]"
+        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-or-NHTENDON3-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..512>] [--timestep <1e-6..1e-3; default 12.5 us>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay] [--mechanics-only] [--assisted-diagnostic] [--no-step-trace]"
         exit 0
     fi
     if [ "$#" -lt 6 ]; then
-        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-or-NHTENDON3-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..512>] [--timestep <1e-6..1e-3; default 12.5 us>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay] [--mechanics-only] [--assisted-diagnostic]" >&2
+        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-or-NHTENDON3-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..512>] [--timestep <1e-6..1e-3; default 12.5 us>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay] [--mechanics-only] [--assisted-diagnostic] [--no-step-trace]" >&2
         exit 2
     fi
     artifact_directory=$2
@@ -432,6 +432,7 @@ if [ "${1:-}" = "stand" ]; then
     mechanics_overlay=false
     mechanics_only=false
     assisted_diagnostic=false
+    step_trace=true
     while [ "$#" -gt 0 ]; do
         case "$1" in
             --steps)
@@ -463,6 +464,11 @@ if [ "${1:-}" = "stand" ]; then
             --assisted-diagnostic)
                 [ "$assisted_diagnostic" = false ] || { printf '%s\n' "--assisted-diagnostic may be given only once" >&2; exit 2; }
                 assisted_diagnostic=true
+                shift
+                ;;
+            --no-step-trace)
+                [ "$step_trace" = true ] || { printf '%s\n' "--no-step-trace may be given only once" >&2; exit 2; }
+                step_trace=false
                 shift
                 ;;
             --mechanics-overlay)
@@ -557,9 +563,11 @@ if [ "${1:-}" = "stand" ]; then
         --persistent-metal-stand \
         --persistent-source-passive-joint-tissue \
         --stand-contact-iterations 64 \
-        --persistent-stand-trace \
         --stand-deterministic-replay \
         --dimension "$dimension"
+    if [ "$step_trace" = true ]; then
+        set -- "$@" --persistent-stand-trace
+    fi
     if [ "$assisted_diagnostic" = true ]; then
         set -- "$@" --stand-root-assistance --stand-remove-assistance
     fi

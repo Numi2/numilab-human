@@ -83,3 +83,22 @@ def test_mechanics_only_does_not_bypass_payload_admission(launch):
     result, argv, _, _ = launch('--mechanics-only', magic=b'INVALID')
     assert result.returncode == 2
     assert argv is None
+
+def test_long_horizon_release_can_skip_per_step_trace_without_assistance(launch):
+    result, argv, _, _ = launch(
+        '--mechanics-only', '--no-step-trace',
+        '--steps', '1000', '--timestep', '0.0001',
+    )
+    assert result.returncode == 0, result.stderr
+    assert '--persistent-stand-trace' not in argv
+    assert '--stand-deterministic-replay' in argv
+    assert '--stand-root-assistance' not in argv
+    assert '--stand-remove-assistance' not in argv
+    assert argv[argv.index('--muscle-step-count') + 1] == '1000'
+    assert argv[argv.index('--muscle-step-seconds') + 1] == '0.0001'
+
+
+def test_no_step_trace_is_not_silently_repeatable(launch):
+    result, argv, _, _ = launch('--no-step-trace', '--no-step-trace')
+    assert result.returncode == 2
+    assert argv is None
