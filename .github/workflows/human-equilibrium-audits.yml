@@ -6,6 +6,7 @@ on:
       - ".numi/commands/human"
       - "src/numilab_human/static_dynamic_handoff.py"
       - "src/numilab_human/native_force_convergence.py"
+      - "src/numilab_human/native_acceleration_force_parity.py"
       - "src/numilab_human/equilibrium_force_snapshot.py"
       - "src/numilab_human/force_ledger.py"
       - "src/numilab_human/standing_initial_state.py"
@@ -13,6 +14,7 @@ on:
       - "src/numilab_human/native_trace_refinement.py"
       - "tests/test_static_dynamic_handoff.py"
       - "tests/test_native_force_convergence.py"
+      - "tests/test_native_acceleration_force_parity.py"
       - "tests/test_equilibrium_force_snapshot.py"
       - "tests/test_initial_force_reference.py"
       - "tests/test_force_ledger.py"
@@ -66,6 +68,7 @@ jobs:
           python -m pytest -q --junitxml=human-equilibrium-results.xml
           tests/test_static_dynamic_handoff.py
           tests/test_native_force_convergence.py
+          tests/test_native_acceleration_force_parity.py
           tests/test_equilibrium_force_snapshot.py
           tests/test_initial_force_reference.py
           tests/test_force_ledger.py
@@ -92,6 +95,7 @@ jobs:
             src/numilab_human/native_trace_refinement.py
             src/numilab_human/equilibrium_force_snapshot.py
             src/numilab_human/native_force_convergence.py
+            src/numilab_human/native_acceleration_force_parity.py
             src/numilab_human/force_ledger.py
             tests/test_native_refinement_binding.py
             tests/test_native_refinement_stage_diagnostics.py
@@ -99,6 +103,7 @@ jobs:
             tests/test_native_trace_refinement.py
             tests/test_equilibrium_force_snapshot.py
             tests/test_initial_force_reference.py
+            tests/test_native_acceleration_force_parity.py
             tests/test_native_mechanics_summary.py
             tests/test_stand_execution_options.py
             .numi/commands/human
