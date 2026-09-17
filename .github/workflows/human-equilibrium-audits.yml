@@ -18,6 +18,8 @@ on:
       - "tests/test_standing_state.py"
       - "tests/test_native_passive_stand_refinement.py"
       - "tests/test_native_refinement_binding.py"
+      - "tests/test_native_refinement_stage_diagnostics.py"
+      - "tests/test_native_refinement_free_acceleration.py"
       - "tests/test_native_mechanics_summary.py"
       - "tests/test_stand_execution_options.py"
       - "tests/test_importer.py"
@@ -32,6 +34,8 @@ on:
       - "tests/test_*handoff*"
       - "tests/test_*stand*"
       - "tests/test_native_refinement_binding.py"
+      - "tests/test_native_refinement_stage_diagnostics.py"
+      - "tests/test_native_refinement_free_acceleration.py"
       - "tests/test_native_mechanics_summary.py"
       - "tests/test_importer.py"
       - ".github/workflows/human-equilibrium-audits.yml"
@@ -64,6 +68,8 @@ jobs:
           tests/test_standing_state.py
           tests/test_native_passive_stand_refinement.py
           tests/test_native_refinement_binding.py
+          tests/test_native_refinement_stage_diagnostics.py
+          tests/test_native_refinement_free_acceleration.py
           tests/test_native_mechanics_summary.py
           tests/test_stand_execution_options.py
       - name: Verify workspace launch compatibility
@@ -82,6 +88,8 @@ jobs:
             src/numilab_human/native_force_convergence.py
             src/numilab_human/force_ledger.py
             tests/test_native_refinement_binding.py
+            tests/test_native_refinement_stage_diagnostics.py
+            tests/test_native_refinement_free_acceleration.py
             tests/test_equilibrium_force_snapshot.py
             tests/test_initial_force_reference.py
             tests/test_native_mechanics_summary.py
