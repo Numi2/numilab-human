@@ -226,20 +226,26 @@ def compile_refinement(*, case_root: Path = CASE_ROOT,
              "velocity-stage diagnostics differ across refinement cases")
     stage_convergence = None
     if all(stage_presence):
-        smooth = [row["velocity_stage_diagnostics"]["maximum_free_acceleration_mixed_units"]
-                  for row in cases]
-        smooth_low, smooth_high = min(smooth), max(smooth)
-        smooth_ratio = ((smooth_high - smooth_low) / smooth_low if smooth_low > 0.0
-                        else (0.0 if smooth_high == 0.0 else None))
+        free_acceleration = [
+            row["velocity_stage_diagnostics"]["maximum_free_acceleration_mixed_units"]
+            for row in cases
+        ]
+        free_low, free_high = min(free_acceleration), max(free_acceleration)
+        free_ratio = ((free_high - free_low) / free_low if free_low > 0.0
+                      else (0.0 if free_high == 0.0 else None))
         constraint_delta_v = [row["velocity_stage_diagnostics"]["maximum_constraint_delta_v_mixed_units"]
                               for row in cases]
         published_delta_v = [row["velocity_stage_diagnostics"]["maximum_published_delta_v_mixed_units"]
                              for row in cases]
         stage_convergence = {
-            "smooth_force_acceleration_range_over_minimum": smooth_ratio,
-            "smooth_force_acceleration_relative_tolerance": tolerance,
-            "smooth_force_acceleration_converged": smooth_ratio is not None and smooth_ratio <= tolerance,
-            "maximum_smooth_force_acceleration_mixed_units": smooth_high,
+            "free_force_acceleration_range_over_minimum": free_ratio,
+            "free_force_acceleration_relative_tolerance": tolerance,
+            "free_force_acceleration_converged": free_ratio is not None and free_ratio <= tolerance,
+            "maximum_free_force_acceleration_mixed_units": free_high,
+            "free_force_acceleration_semantics": (
+                "unconstrained M_effective^-1 applied-force acceleration before contact, equality, "
+                "and joint-limit projection; not a constrained physical body acceleration"
+            ),
             "maximum_constraint_delta_v_mixed_units": max(constraint_delta_v),
             "minimum_constraint_delta_v_mixed_units": min(constraint_delta_v),
             "maximum_published_delta_v_mixed_units": max(published_delta_v),
@@ -247,7 +253,7 @@ def compile_refinement(*, case_root: Path = CASE_ROOT,
             "constraint_events_temporally_converged": False,
         }
     return {
-        "schema": SCHEMA, "compiler": "numilab-human.native-passive-stand-refinement.3",
+        "schema": SCHEMA, "compiler": "numilab-human.native-passive-stand-refinement.4",
         "status": "partial", "subject": "one adult male source package", "source": source,
         "run_binding": binding,
         "common_duration": {"duration_seconds": durations[0], "case_count": len(cases),
@@ -270,8 +276,15 @@ def compile_refinement(*, case_root: Path = CASE_ROOT,
                           "blood_mass_transfer": False, "material_calibration": False,
                           "subject_calibration": False, "sustained_standing": False, "recovery": False, "walking": False},
         "blocker": {"id": "force_convergence", "status": "open", "reason": (
-            "Matching acceleration peaks alone do not establish force convergence; compare same-time state, "
-            "constraint reactions, complementarity, and work on the bound source."
+            ((("Free-force acceleration is grid-consistent, but it is unconstrained and can contain "
+               "forces subsequently balanced by equality, contact, and joint-limit reactions. "
+               "Compare same-time state, complete reactions, complementarity, and impulsive work.")
+              if stage_convergence and stage_convergence["free_force_acceleration_converged"]
+              else "Separated velocity stages are available, but unconstrained free-force acceleration "
+                   "or the constrained trajectory is not yet timestep-converged.")
+             if all(stage_presence) else
+             "Matching legacy acceleration peaks alone do not establish force convergence; compare "
+             "same-time state, constraint reactions, complementarity, and work on the bound source.")
             if peak_consistent else f"Common-duration acceleration peaks are inconsistent: range/minimum={ratio!r}, tolerance={tolerance}.")},
         "boundary": "Bounded source-bound release diagnostics only. Static reaction references are not runtime force evidence. "
                     "Neither peak agreement, zero penetration nor replay establishes temporal force convergence or biological validation.",
