@@ -1,0 +1,41 @@
+{
+  "boundary": "This diagnostic compares compiled and Metal-evaluated muscle-force vectors through the same unconstrained mass, gravity and damping operator. It excludes contact, joint equalities, joint limits and their impulses. It therefore cannot independently qualify complete force convergence, standing, recovery or walking.",
+  "diagnostic": {
+    "maximum_acceleration_delta_dof": 42,
+    "maximum_acceleration_delta_mixed_units": 1.53133185452,
+    "maximum_generalized_force_delta_n": 0.0686324962951,
+    "maximum_velocity_increment_delta_mixed_units": 0.000153133185452,
+    "semantics": "unconstrained_same_operator_compiled_vs_metal_muscle_force",
+    "timestep_seconds": 0.0001
+  },
+  "execution": {
+    "artifact_digest": "sha256:738ead229ad9960171bb2aba2945ae0122cc2ab40ed755c8db0fb041339be005",
+    "artifact_id": 10522059640,
+    "binary_sha256": "37df57b4171319ecefcb8e7de85bd6b40db4d2f5c4c53eb74223a1a9161b9f3b",
+    "exit_code": 0,
+    "input_commit": "68209b1566187ef648eb9538bda0eeef117caee9",
+    "native_commit": "2651eb35994cae97aa37601eab23260169638e96",
+    "root_assistance": "none",
+    "stdout_sha256": "375798aefb709ea727d2677276b2a2fae65ad7af0909861862adc0fb90275274",
+    "step_count": 1,
+    "wall_seconds": 81.86812054200001,
+    "workflow_run_id": 35281921823
+  },
+  "model": {
+    "body_count": 157,
+    "compiled_static_balance": true,
+    "recruited_muscle_count": 416,
+    "root_assistance": "none",
+    "velocity_coordinate_count": 128
+  },
+  "qualification": {
+    "complete_dynamic_force_assembly": false,
+    "generalized_force_convergence": false,
+    "perturbation_recovery": false,
+    "same_operator_muscle_force_acceleration_parity_measured": true,
+    "sustained_standing": false,
+    "walking": false
+  },
+  "schema": "numi.human.native-acceleration-force-parity.v1",
+  "status": "partial"
+}
