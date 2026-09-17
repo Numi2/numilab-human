@@ -92,10 +92,51 @@ def _case(case_root: Path, name: str, timestep: float, expected_steps: int,
     }
     values = {name: _field(text, key) for name, key in metrics.items()}
     _require(all(value >= 0.0 for value in values.values()), f"{name} negative norm/peak diagnostic")
+    stage_fields = {
+        "maximum_free_acceleration_mixed_units": "persistent_max_free_acceleration",
+        "maximum_free_acceleration_dof": "persistent_max_free_acceleration_dof",
+        "maximum_constraint_delta_v_mixed_units": "persistent_max_constraint_delta_v",
+        "maximum_constraint_delta_v_dof": "persistent_max_constraint_delta_v_dof",
+        "maximum_pre_projection_delta_v_mixed_units": "persistent_max_pre_projection_delta_v",
+        "maximum_pre_projection_delta_v_dof": "persistent_max_pre_projection_delta_v_dof",
+        "maximum_published_delta_v_mixed_units": "persistent_max_published_delta_v",
+        "maximum_published_delta_v_dof": "persistent_max_published_delta_v_dof",
+    }
+    stage_tokens = [f"{key}=" in text for key in (
+        "persistent_max_acceleration_semantics", *stage_fields.values())]
+    _require(not any(stage_tokens) or all(stage_tokens),
+             f"{name} has a partial velocity-stage diagnostic record")
+    velocity_stage = None
+    if all(stage_tokens):
+        semantics = _field(text, "persistent_max_acceleration_semantics", cast=str)
+        _require(semantics == "pre_projection_total_delta_v_divided_by_timestep",
+                 f"{name} acceleration semantics changed")
+        stage: dict[str, Any] = {}
+        for output_name, native_name in stage_fields.items():
+            cast = int if output_name.endswith("_dof") else float
+            stage[output_name] = _field(text, native_name, cast=cast)
+        for key, value in stage.items():
+            if key.endswith("_dof"):
+                _require(0 <= value < 128, f"{name} invalid {key}")
+            else:
+                _require(value >= 0.0, f"{name} negative {key}")
+        legacy_rate = values["persistent_max_acceleration_mps2"]
+        reconstructed_rate = stage["maximum_pre_projection_delta_v_mixed_units"] / timestep
+        rate_tolerance = max(1.0e-5, 2.0e-5 * max(legacy_rate, reconstructed_rate, 1.0))
+        _require(abs(legacy_rate - reconstructed_rate) <= rate_tolerance,
+                 f"{name} legacy acceleration does not reconstruct pre-projection delta-v")
+        velocity_stage = {
+            "schema": "numi.human.velocity-stage-diagnostics.v1",
+            "legacy_acceleration_semantics": semantics,
+            **stage,
+            "reconstructed_pre_projection_rate_mixed_units": reconstructed_rate,
+            "legacy_rate_reconstruction_tolerance": rate_tolerance,
+        }
     return {"name": name, "timestep_seconds": timestep,
             "timestep_nanoseconds": int(round(timestep * 1.0e9)), "step_count": steps,
             "duration_seconds": timestep * completed, "persistent_completed_steps": completed,
-            **values, "persistent_max_penetration_m": penetration, "compiled_stand_balanced": True,
+            **values, "velocity_stage_diagnostics": velocity_stage,
+            "persistent_max_penetration_m": penetration, "compiled_stand_balanced": True,
             "stand_deterministic_replay": "bitwise", "stdout_sha256": _sha256(stdout),
             "stderr_sha256": _sha256(stderr), "stdout": _relative(stdout), "stderr": _relative(stderr)}
 
@@ -180,8 +221,33 @@ def compile_refinement(*, case_root: Path = CASE_ROOT,
     ratio = (high - low) / low if low > 0.0 else (0.0 if high == 0.0 else None)
     tolerance = 0.05
     peak_consistent = ratio is not None and ratio <= tolerance
+    stage_presence = [row["velocity_stage_diagnostics"] is not None for row in cases]
+    _require(not any(stage_presence) or all(stage_presence),
+             "velocity-stage diagnostics differ across refinement cases")
+    stage_convergence = None
+    if all(stage_presence):
+        smooth = [row["velocity_stage_diagnostics"]["maximum_free_acceleration_mixed_units"]
+                  for row in cases]
+        smooth_low, smooth_high = min(smooth), max(smooth)
+        smooth_ratio = ((smooth_high - smooth_low) / smooth_low if smooth_low > 0.0
+                        else (0.0 if smooth_high == 0.0 else None))
+        constraint_delta_v = [row["velocity_stage_diagnostics"]["maximum_constraint_delta_v_mixed_units"]
+                              for row in cases]
+        published_delta_v = [row["velocity_stage_diagnostics"]["maximum_published_delta_v_mixed_units"]
+                             for row in cases]
+        stage_convergence = {
+            "smooth_force_acceleration_range_over_minimum": smooth_ratio,
+            "smooth_force_acceleration_relative_tolerance": tolerance,
+            "smooth_force_acceleration_converged": smooth_ratio is not None and smooth_ratio <= tolerance,
+            "maximum_smooth_force_acceleration_mixed_units": smooth_high,
+            "maximum_constraint_delta_v_mixed_units": max(constraint_delta_v),
+            "minimum_constraint_delta_v_mixed_units": min(constraint_delta_v),
+            "maximum_published_delta_v_mixed_units": max(published_delta_v),
+            "minimum_published_delta_v_mixed_units": min(published_delta_v),
+            "constraint_events_temporally_converged": False,
+        }
     return {
-        "schema": SCHEMA, "compiler": "numilab-human.native-passive-stand-refinement.2",
+        "schema": SCHEMA, "compiler": "numilab-human.native-passive-stand-refinement.3",
         "status": "partial", "subject": "one adult male source package", "source": source,
         "run_binding": binding,
         "common_duration": {"duration_seconds": durations[0], "case_count": len(cases),
@@ -193,6 +259,9 @@ def compile_refinement(*, case_root: Path = CASE_ROOT,
                         "peak_acceleration_range_over_minimum": ratio,
                         "peak_acceleration_relative_tolerance": tolerance,
                         "peak_acceleration_converged": peak_consistent,
+                        "legacy_peak_acceleration_is_constraint_rate_mixed": all(stage_presence),
+                        "velocity_stage_diagnostics_available": all(stage_presence),
+                        "velocity_stage": stage_convergence,
                         "force_convergence": False},
         "qualification": {"physical_mac_replay": True, "exact_clock_cases": True, "common_duration": True,
                           "complete_static_generalized_balance": True, "zero_penetration": True,
