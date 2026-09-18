@@ -11,6 +11,8 @@ from .model import ImportError, sha256, write_json
 
 
 SCHEMA = "numi.human.native-acceleration-force-parity.v1"
+# Standing admission limit, independent of the native success flag.
+MAXIMUM_STATIC_BALANCE_RESIDUAL = 0.05
 EXPECTED_SEMANTICS = (
     "unconstrained_same_operator_compiled_vs_metal_muscle_force"
 )
@@ -55,8 +57,9 @@ def _field(fields: dict[str, str], name: str) -> str:
 
 
 def _number(fields: dict[str, str], name: str, *, nonnegative: bool = False) -> float:
+    raw = _field(fields, name)
     try:
-        value = float(_field(fields, name))
+        value = float(raw)
     except ValueError as error:
         raise ImportError(f"native acceleration force parity: {name} is not numeric") from error
     _require(math.isfinite(value), f"{name} is not finite")
@@ -88,6 +91,11 @@ def compile_receipt(
              "all 416 source muscles were not recruited")
     _require(_field(fields, "compiled_stand_balanced") == "true",
              "compiled static standing state is not balanced")
+    static_residual = _number(
+        fields, "compiled_stand_normalized_residual_rms", nonnegative=True
+    )
+    _require(static_residual <= MAXIMUM_STATIC_BALANCE_RESIDUAL,
+             "compiled static balance residual exceeds the 0.05 admission limit")
 
     timestep = _number(fields, "muscle_step_seconds")
     _require(timestep > 0.0, "muscle_step_seconds must be positive")
@@ -136,6 +144,8 @@ def compile_receipt(
             "recruited_muscle_count": 416,
             "root_assistance": "none",
             "compiled_static_balance": True,
+            "compiled_static_residual_rms": static_residual,
+            "maximum_static_balance_residual_rms": MAXIMUM_STATIC_BALANCE_RESIDUAL,
         },
         "diagnostic": {
             "timestep_seconds": timestep,
@@ -146,6 +156,7 @@ def compile_receipt(
             "semantics": semantics,
         },
         "qualification": {
+            "static_balance_residual_verified": True,
             "same_operator_muscle_force_acceleration_parity_measured": True,
             "complete_dynamic_force_assembly": False,
             "generalized_force_convergence": False,

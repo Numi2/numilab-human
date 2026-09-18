@@ -18,6 +18,7 @@ def _summary(**overrides: str) -> str:
         "core_bodies": "157",
         "compiled_stand_recruited_muscles": "416",
         "compiled_stand_balanced": "true",
+        "compiled_stand_normalized_residual_rms": "0.00814",
         "persistent_root_assistance": "none",
         "muscle_step_seconds": "0.0001",
         "source_dynamic_force_parity_max_delta_n": "8.0",
@@ -109,3 +110,27 @@ def test_source_identities_must_be_full_lowercase_hashes(tmp_path: Path) -> None
         compile_receipt(stdout, source_commit="abc")
     with pytest.raises(ImportError, match="SHA-256"):
         compile_receipt(stdout, binary_sha256="ABC")
+
+
+@pytest.mark.parametrize("residual", ["0.0824449059063", "0.0500000001", "-0.01", "nan", "inf", "invalid"])
+def test_balance_flag_cannot_override_numeric_residual(tmp_path: Path, residual: str) -> None:
+    stdout = _write(tmp_path / "stdout.txt", compiled_stand_normalized_residual_rms=residual)
+    with pytest.raises(ImportError, match="residual"):
+        compile_receipt(stdout)
+
+
+@pytest.mark.parametrize("residual", ["0", "0.05"])
+def test_static_balance_numeric_boundary_is_preserved(tmp_path: Path, residual: str) -> None:
+    stdout = _write(tmp_path / "stdout.txt", compiled_stand_normalized_residual_rms=residual)
+    receipt = compile_receipt(stdout)
+    assert receipt["model"]["compiled_static_residual_rms"] == float(residual)
+    assert receipt["model"]["maximum_static_balance_residual_rms"] == 0.05
+    assert receipt["qualification"]["static_balance_residual_verified"] is True
+    assert receipt["qualification"]["generalized_force_convergence"] is False
+
+
+def test_missing_balance_residual_is_rejected(tmp_path: Path) -> None:
+    stdout = tmp_path / "stdout.txt"
+    stdout.write_text(_summary().replace(' compiled_stand_normalized_residual_rms="0.00814"', ''), encoding="utf-8")
+    with pytest.raises(ImportError, match="missing.*residual"):
+        compile_receipt(stdout)
