@@ -60,6 +60,30 @@ def test_valid_classification_is_partial_and_reconstructs_total(tmp_path: Path) 
     assert not receipt["qualification"]["sustained_standing"]
 
 
+def test_unbalanced_state_retains_reaction_classification_without_promotion(
+    tmp_path: Path,
+) -> None:
+    stdout = _write(
+        tmp_path / "stdout.txt",
+        compiled_stand_balanced="false",
+        compiled_stand_active_limits="31",
+        compiled_stand_active_structural_locks="0",
+        compiled_stand_active_finite_range_limits="31",
+        compiled_stand_max_limit_reaction="1695",
+        compiled_stand_max_structural_lock_reaction="0",
+        compiled_stand_max_structural_lock_reaction_dof=INVALID,
+        compiled_stand_max_finite_range_limit_reaction="1695",
+        compiled_stand_max_finite_range_limit_reaction_dof="113",
+    )
+    receipt = compile_receipt(stdout)
+    assert receipt["model"]["compiled_static_balance"] is False
+    assert receipt["qualification"]["compiled_static_balance"] is False
+    assert receipt["qualification"]["reaction_classes_measured"] is True
+    assert receipt["classification"]["finite_range_stops"]["active_count"] == 31
+    assert not receipt["qualification"]["finite_range_stop_dependence_resolved"]
+    assert not receipt["qualification"]["generalized_force_convergence"]
+
+
 def test_empty_finite_range_class_is_admitted_with_invalid_index(tmp_path: Path) -> None:
     stdout = _write(
         tmp_path / "stdout.txt",
@@ -82,7 +106,7 @@ def test_empty_finite_range_class_is_admitted_with_invalid_index(tmp_path: Path)
         ({"persistent_root_assistance": "enabled"}, "assistance"),
         ({"core_bodies": "156"}, "157-body"),
         ({"compiled_stand_recruited_muscles": "415"}, "416"),
-        ({"compiled_stand_balanced": "false"}, "not balanced"),
+        ({"compiled_stand_balanced": "maybe"}, "not boolean"),
         ({"compiled_stand_active_limits": "29"}, "do not reconstruct"),
         ({"compiled_stand_active_structural_locks": "129"}, "outside"),
         ({"compiled_stand_max_structural_lock_reaction": "nan"}, "finite"),

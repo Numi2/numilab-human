@@ -111,8 +111,10 @@ def compile_receipt(
              "full 157-body source model was not executed")
     _require(_integer(values, "compiled_stand_recruited_muscles") == 416,
              "all 416 source muscles were not recruited")
-    _require(_field(values, "compiled_stand_balanced") == "true",
-             "compiled static standing state is not balanced")
+    balanced_value = _field(values, "compiled_stand_balanced")
+    _require(balanced_value in {"true", "false"},
+             "compiled_stand_balanced is not boolean")
+    compiled_static_balance = balanced_value == "true"
 
     active_total = _integer(values, "compiled_stand_active_limits")
     _require(0 <= active_total <= 128,
@@ -166,7 +168,7 @@ def compile_receipt(
             "velocity_coordinate_count": 128,
             "recruited_muscle_count": 416,
             "root_assistance": "none",
-            "compiled_static_balance": True,
+            "compiled_static_balance": compiled_static_balance,
         },
         "classification": {
             "active_total": active_total,
@@ -182,6 +184,7 @@ def compile_receipt(
         },
         "qualification": {
             "reaction_classes_measured": True,
+            "compiled_static_balance": compiled_static_balance,
             "finite_range_stop_dependence_resolved": False,
             "generalized_force_convergence": False,
             "sustained_standing": False,
@@ -189,8 +192,9 @@ def compile_receipt(
             "walking": False,
         },
         "boundary": (
-            "This receipt classifies the compiled static unilateral reactions. "
-            "It does not prove that finite-range reactions are physiologically "
+            "This receipt classifies the compiled static unilateral reactions, "
+            "including experiments that fail the static balance gate. It does "
+            "not prove that finite-range reactions are physiologically "
             "valid, that runtime reactions reproduce them, or that standing is "
             "stable. Structural locks must not be penalized as anatomical stop "
             "dependence merely because they carry reaction force."
