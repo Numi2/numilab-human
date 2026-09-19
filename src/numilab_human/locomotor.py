@@ -111,7 +111,8 @@ def _balance_feedback(program: dict, balance: dict, artifact: bytes, muscles: in
     update = balance["updatePeriodMicroseconds"]
     initialization = balance["initializationDurationMicroseconds"]
     if (type(update) is not int or not 1_000 <= update <= 20_000
-            or type(initialization) is not int or not 0 <= initialization <= 1_000_000):
+            or type(initialization) is not int or not 0 <= initialization <= 1_000_000
+            or initialization % update != 0):
         raise ValueError("balance update and initialization clocks are outside executable bounds")
     sources = balance["sources"]
     routes = balance["routes"]
@@ -123,6 +124,8 @@ def _balance_feedback(program: dict, balance: dict, artifact: bytes, muscles: in
     binding_ids: set[int] = set()
     evidence: set[str] = set()
     compiled_sources = []
+    maximum_delay = 0
+    has_filter = False
     source_fields = {
         "identifier", "bodyReceptorBindingIdentifier", "referenceValue",
         "filterTimeConstantSeconds", "conductionDelayMicroseconds", "evidenceKind",
@@ -141,12 +144,16 @@ def _balance_feedback(program: dict, balance: dict, artifact: bytes, muscles: in
                 or not 0 < binding < 2**32 or binding in binding_ids
                 or type(reference) not in (int, float) or not math.isfinite(reference)
                 or type(filtering) not in (int, float) or not math.isfinite(filtering)
-                or filtering != 0 or type(delay) is not int or delay != 0
+                or not 0 <= filtering <= 1
+                or type(delay) is not int or not 0 <= delay <= 500_000
+                or delay % update != 0
                 or kind not in ("kinematic", "support")):
             raise ValueError("balance source identity, calibration or executable history is invalid")
         source_ids.add(identifier)
         binding_ids.add(binding)
         evidence.add(kind)
+        maximum_delay = max(maximum_delay, delay)
+        has_filter = has_filter or filtering > 0
         compiled_sources.append({
             "identifier": identifier,
             "bodyReceptorBindingIdentifier": binding,
@@ -154,6 +161,10 @@ def _balance_feedback(program: dict, balance: dict, artifact: bytes, muscles: in
             "filterTimeConstantSeconds": filtering,
             "conductionDelayMicroseconds": delay,
         })
+    minimum_initialization = maximum_delay + (update if has_filter else 0)
+    history_capacity = maximum_delay // update + 1
+    if initialization < minimum_initialization or history_capacity > 501:
+        raise ValueError("balance initialization does not cover bounded delay and filter history")
     if "kinematic" not in evidence or (mode == "supportAware" and "support" not in evidence):
         raise ValueError("balance mode lacks its required kinematic or support evidence")
 
@@ -286,7 +297,7 @@ def add_arguments(parser):
     parser.add_argument("--period-microseconds", type=int, default=0)
     parser.add_argument("--gait-map", type=Path)
     parser.add_argument("--balance-map", type=Path,
-                        help="source-bound v1 whole-body feedback map; current executable subset requires zero filter and delay")
+                        help="source-bound v1 whole-body feedback map with bounded transactional delay and filtering")
     parser.set_defaults(handler=run)
 
 
