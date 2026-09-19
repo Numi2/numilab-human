@@ -30,8 +30,14 @@ The qualifying truth-layer increment established:
 
 - native constraint-stage impulse-work accounting on the Human runtime branch,
   including contact-normal, tangential, equality, and source-limit families;
-- analytic passive/contact, friction, and bilateral Metal fixtures, plus a
-  physical M4 0.8 ms run with bitwise endpoint replay;
+- analytic passive/contact, friction, and bilateral Metal fixtures;
+- physical M4 Pro equivalence of 8/16/32-step segmentation to the true
+  monolithic 64-step path over 0.8 ms: terminal q/v are bitwise identical, 308
+  non-timing mechanics fields are exact, and 12 cumulative reductions remain
+  inside their declared arithmetic bounds;
+- physical M4 Pro completion of the 512-step, 6.4 ms cap-8 horizon and bitwise
+  replay with Metal validation both disabled and enabled, with exact
+  debug-on/off mechanics identity;
 - explicit scope: this is constraint-stage work, not complete physical-energy
   closure;
 - equality work as the dominant measured owned constraint work, while current
@@ -39,11 +45,12 @@ The qualifying truth-layer increment established:
   causal event;
 - the first safe default-branch reconciliation slice as a leaf acceleration-
   parity diagnostic with CTest coverage; and
-- a reproducible hosted Apple-Paravirtual failure envelope: the new diagnostic
-  work makes a 32-step command buffer take about 55 seconds and later buffers
-  cross the roughly 60-second GPU watchdog. This is an execution-envelope
-  failure, not evidence of physical divergence. It still blocks the hosted
-  6.4 ms qualification.
+- a reproducible hosted Apple-Paravirtual failure envelope: isolated cap-8 and
+  cap-16 probes complete with bitwise replay and exact mechanics identity,
+  while cap-32 and monolithic 64-step command buffers cross the virtual GPU
+  watchdog. Physical M4 cap-32 success shows this is an execution-envelope
+  boundary, not evidence of physical divergence. Hosted execution still does
+  not qualify the 6.4 ms target.
 
 The active release still lacks an admitted same-participant measurement bundle,
 authoritative anatomical foot contact, qualified loaded equilibrium, sustained
@@ -92,7 +99,7 @@ wherever dependencies permit, but nothing bypasses this promotion path.
 
 | Gate | Primary deliverables | Promotion evidence |
 | --- | --- | --- |
-| **G0 - trustworthy dynamics** | Qualify an 8-step hosted command-buffer cap against 16/32-step trajectories; optimize the new work instrumentation instead of treating segmentation as performance closure; rerun the 100/50/25/12.5 microsecond common-duration matrix on the physical Mac mini; add a paired compound-limit/equality event record; freeze exact Human/runtime/source hashes; acquire or contract the real single-participant dataset and freeze the 25-scenario protocol; continue dependency-ordered default-branch reconciliation. | Common-duration runs complete or fail with a typed, bounded cause; replay and retry are invariant; no unexplained owner, omitted segment, or hidden work family remains. Do not add the next diagnostic ABI or promote behavior while the execution envelope and causal event remain unresolved. |
+| **G0 - trustworthy dynamics** | Promote the physically qualified 8-step command-buffer cap; optimize the new work instrumentation instead of treating segmentation as performance closure; complete the 100/50/25/12.5 microsecond common-duration matrix on the physical Mac mini; add a paired compound-limit/equality event record; freeze exact Human/runtime/source hashes; acquire or contract the real single-participant dataset and freeze the 25-scenario protocol; continue dependency-ordered default-branch reconciliation. | Common-duration runs complete or fail with a typed, bounded cause; replay and retry are invariant; no unexplained owner, omitted segment, or hidden work family remains. Do not add the next diagnostic ABI or promote behavior while the execution envelope and causal event remain unresolved. |
 | **G1 - mechanics foundations** | Close `runtime.precision`, `runtime.force_audit`, and `muscle.source_consistency`; admit registered foot colliders, exclusions, CCD bounds, friction/compliance data, distributed pressure, and centre of pressure; produce subject-scaled mass, inertia, routes, support, and material inputs; complete causal accepted-only sensing. | Zero-input prepared equilibrium is stable and bitwise replayable over the frozen common-duration protocol, with no root wrench, pose drive, direct torque, or compensating controller force. Contact passes crossing, complementarity/cone, pressure, energy, refinement, rollback, and measured-response gates. |
 | **G2 - measured equilibrium and recovery** | Qualify quiet standing, weight transfer, altered support, and unexpected perturbation recovery; run reflex, optimal-control, imitation, reinforcement-learning, and hybrid bake-offs behind one stimulation interface; reproduce at least one mechanics/contact and one behavior comparator; introduce bounded offline differentiation or ensemble identification without changing runtime authority. | Same-participant held-out kinematics and forces pass frozen uncertainty-backed margins; every accepted and rejected transaction is accounted for; behavior is assistance-free and uses only authoritative or error-certified physics. |
 | **G3 - locomotion and first frontier release** | Qualify start/stop, speed changes, turns, backward/sideways motion, ramps, stairs, obstacles, and support/friction changes; complete the remaining transition, manipulation, combined, and sustained scenarios where measurements exist; close exact-device latency, memory, thermal, energy, and physical-equivalence envelopes; reproduce external benchmarks on comparable workloads. | All 25 scenarios have disjoint calibration/validation sessions and complete measured modalities. The exact release stack achieves real-time factor at least 1, p99 step latency within its authored control period, no swap or untyped failure, and unchanged physical outcomes. Publish only when all linked gates pass. |
@@ -117,19 +124,21 @@ action, and integration target.
 
 ## Dependency-ordered operating queue
 
-1. **Contain without hiding the hosted watchdog.** Prove 8/16/32-step
-   segmentation equivalence on fresh runners, retain the 32-step failure
-   evidence, and use an 8-step cap only after terminal q/v, maxima, and work
-   totals pass the arithmetic equivalence contract.
+1. **Promote qualified containment without hiding the hosted watchdog.** Use
+   cap 8 as the production default, retain the hosted cap-32/64 failures, and
+   preserve the physical monolithic/cap-8/16/32 plus 512-step debug-off/on
+   reports as the promotion receipt. This closes command-buffer containment,
+   not performance, force convergence, or standing.
 2. **Recover the performance regression.** Remove redundant serial lane-0
    Jacobian-vector contractions from impulse-work accounting by reusing the
    contact Delassus data and cached equality pre-velocities/derivatives. Re-run
    analytic fixtures, trajectory equivalence, and exact work totals after each
    optimization.
-3. **Re-establish the physical-M4 common-duration baseline.** Use `ssh macmini`
-   for the exact 6.4 ms four-grid protocol and all sustained GPU work. Retain
-   competing-job checks, elapsed time, counters, memory, thermals, replay, and
-   failures. Hosted runners execute only bounded CI and watchdog probes.
+3. **Complete the physical-M4 common-duration baseline.** Keep the qualified
+   12.5-microsecond, 512-step receipt and run the remaining 25/50/100-
+   microsecond grids through `ssh macmini`. Retain competing-job checks,
+   elapsed time, counters, memory, thermals, replay, and failures. Hosted
+   runners execute only bounded CI and watchdog probes.
 4. **Localize the dynamics event.** Record one paired source-limit/equality
    compensation event: source DOF, equality row, sweep, signed impulses,
    amplification, residuals before/after, and signed work. Follow it with a
