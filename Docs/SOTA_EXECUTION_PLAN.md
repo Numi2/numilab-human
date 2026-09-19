@@ -57,12 +57,13 @@ The qualifying truth-layer increment established:
   causal event;
 - the first safe default-branch reconciliation slice as a leaf acceleration-
   parity diagnostic with CTest coverage; and
-- a reproducible hosted Apple-Paravirtual failure envelope: isolated cap-8 and
-  cap-16 probes complete with bitwise replay and exact mechanics identity,
-  while cap-32 and monolithic 64-step command buffers cross the virtual GPU
-  watchdog. Physical M4 cap-32 success shows this is an execution-envelope
-  boundary, not evidence of physical divergence. Hosted execution still does
-  not qualify the 6.4 ms target.
+- a reproducible hosted Apple-Paravirtual failure envelope: isolated cap-8
+  debug-off/on probes complete with bitwise replay and exact mechanics identity;
+  cap 16 has both completed on earlier fresh runners and crossed the watchdog on
+  the optimized build after 16 accepted steps; cap 32 and monolithic 64-step
+  buffers also cross the virtual watchdog. Physical M4 cap-16/32 success shows
+  this is an execution-envelope boundary, not evidence of physical divergence.
+  Hosted execution does not qualify cap-16 containment or the 6.4 ms target.
 
 The active release still lacks an admitted same-participant measurement bundle,
 authoritative anatomical foot contact, qualified loaded equilibrium, sustained
