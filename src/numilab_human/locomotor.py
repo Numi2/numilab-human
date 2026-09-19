@@ -14,6 +14,45 @@ def _fnv(payload: bytes, seed: int = 0xcbf29ce484222325) -> int:
     return seed
 
 
+def _fnv_u64(value: int, seed: int) -> int:
+    return _fnv(struct.pack("<Q", value), seed)
+
+
+def _float_u64(value: float) -> int:
+    return struct.unpack("<I", struct.pack("<f", value))[0]
+
+
+def _baseline_fingerprint(program: dict) -> int:
+    """Match ``MuscleLocomotorProgram.baselineFingerprint`` byte-for-byte."""
+    seed = _fnv(b"NBMUSCLELOCOMOTOR1")
+    for value in (
+        1,
+        program["modelSourceFingerprint"],
+        program["sensoryProfileFingerprint"],
+    ):
+        seed = _fnv_u64(value, seed)
+    seed = _fnv(program["calibrationArtifactSHA256"].encode("ascii"), seed)
+    for value in (
+        program["epochMicroseconds"],
+        program["periodMicroseconds"],
+        len(program["channels"]),
+    ):
+        seed = _fnv_u64(value, seed)
+    for channel in program["channels"]:
+        seed = _fnv_u64(channel["muscleIdentifier"], seed)
+        for key in (
+            "referenceLengthMeters",
+            "tonicExcitation",
+            "lengthGain",
+            "velocityGainSeconds",
+            "gaitSine",
+            "gaitCosine",
+            "maximumExcitation",
+        ):
+            seed = _fnv_u64(_float_u64(channel[key]), seed)
+    return seed
+
+
 def _prepared_recruitment(body: dict, state: bytes, muscles: int,
                           source: bytes) -> list[float]:
     identity = body.get("prepared_initial_state")
@@ -45,10 +84,133 @@ def _prepared_recruitment(body: dict, state: bytes, muscles: int,
     return recruitment
 
 
+def _balance_feedback(program: dict, balance: dict, artifact: bytes, muscles: int) -> dict:
+    expected = {
+        "format", "modelSourceFingerprint", "sensoryProfileFingerprint", "mode",
+        "updatePeriodMicroseconds", "initializationDurationMicroseconds",
+        "sources", "routes",
+    }
+    if not isinstance(balance, dict) or set(balance) != expected \
+            or balance.get("format") != "numi-human-muscle-balance-map-v1":
+        raise ValueError("balance map requires the exact v1 authoring fields")
+    try:
+        decoded = json.loads(artifact)
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise ValueError("balance calibration artifact is not valid JSON") from error
+    if decoded != balance:
+        raise ValueError("balance calibration bytes do not encode the supplied map")
+    if (type(balance["modelSourceFingerprint"]) is not int
+            or balance["modelSourceFingerprint"] != program["modelSourceFingerprint"]
+            or type(balance["sensoryProfileFingerprint"]) is not int
+            or balance["sensoryProfileFingerprint"] != program["sensoryProfileFingerprint"]):
+        raise ValueError("balance map belongs to another body or sensory generation")
+    modes = {"posture": 1, "supportAware": 2}
+    mode = balance["mode"]
+    if not isinstance(mode, str) or mode not in modes:
+        raise ValueError("balance mode must be posture or supportAware")
+    update = balance["updatePeriodMicroseconds"]
+    initialization = balance["initializationDurationMicroseconds"]
+    if (type(update) is not int or not 1_000 <= update <= 20_000
+            or type(initialization) is not int or not 0 <= initialization <= 1_000_000):
+        raise ValueError("balance update and initialization clocks are outside executable bounds")
+    sources = balance["sources"]
+    routes = balance["routes"]
+    if (not isinstance(sources, list) or not 0 < len(sources) <= 64
+            or not isinstance(routes, list) or not 0 < len(routes) <= 65_536):
+        raise ValueError("balance map requires bounded nonempty source and route arrays")
+
+    source_ids: set[int] = set()
+    binding_ids: set[int] = set()
+    evidence: set[str] = set()
+    compiled_sources = []
+    source_fields = {
+        "identifier", "bodyReceptorBindingIdentifier", "referenceValue",
+        "filterTimeConstantSeconds", "conductionDelayMicroseconds", "evidenceKind",
+    }
+    for source in sources:
+        if not isinstance(source, dict) or set(source) != source_fields:
+            raise ValueError("balance source fields are incomplete or ambiguous")
+        identifier = source["identifier"]
+        binding = source["bodyReceptorBindingIdentifier"]
+        reference = source["referenceValue"]
+        filtering = source["filterTimeConstantSeconds"]
+        delay = source["conductionDelayMicroseconds"]
+        kind = source["evidenceKind"]
+        if (type(identifier) is not int or not 0 < identifier < 2**32
+                or identifier in source_ids or type(binding) is not int
+                or not 0 < binding < 2**32 or binding in binding_ids
+                or type(reference) not in (int, float) or not math.isfinite(reference)
+                or type(filtering) not in (int, float) or not math.isfinite(filtering)
+                or filtering != 0 or type(delay) is not int or delay != 0
+                or kind not in ("kinematic", "support")):
+            raise ValueError("balance source identity, calibration or executable history is invalid")
+        source_ids.add(identifier)
+        binding_ids.add(binding)
+        evidence.add(kind)
+        compiled_sources.append({
+            "identifier": identifier,
+            "bodyReceptorBindingIdentifier": binding,
+            "referenceValue": reference,
+            "filterTimeConstantSeconds": filtering,
+            "conductionDelayMicroseconds": delay,
+        })
+    if "kinematic" not in evidence or (mode == "supportAware" and "support" not in evidence):
+        raise ValueError("balance mode lacks its required kinematic or support evidence")
+
+    route_fields = {
+        "sourceIdentifier", "muscleIdentifier", "gain", "maximumCorrection",
+    }
+    route_keys: set[tuple[int, int]] = set()
+    maximum_by_muscle: dict[int, float] = {}
+    compiled_routes = []
+    for route in routes:
+        if not isinstance(route, dict) or set(route) != route_fields:
+            raise ValueError("balance route fields are incomplete or ambiguous")
+        source = route["sourceIdentifier"]
+        muscle = route["muscleIdentifier"]
+        gain = route["gain"]
+        maximum_correction = route["maximumCorrection"]
+        key = (source, muscle)
+        if (type(source) is not int or source not in source_ids
+                or type(muscle) is not int or not 0 <= muscle < muscles
+                or key in route_keys or type(gain) not in (int, float)
+                or not math.isfinite(gain) or gain == 0 or abs(gain) > 10
+                or type(maximum_correction) not in (int, float)
+                or not math.isfinite(maximum_correction)
+                or not 0 < maximum_correction <= 0.5):
+            raise ValueError("balance route is unbound, duplicate or outside excitation bounds")
+        cumulative = maximum_by_muscle.get(muscle, 0.0) + maximum_correction
+        if cumulative > 0.5:
+            raise ValueError("balance routes exceed the per-muscle correction budget")
+        route_keys.add(key)
+        maximum_by_muscle[muscle] = cumulative
+        compiled_routes.append({
+            "sourceIdentifier": source,
+            "muscleIdentifier": muscle,
+            "gain": gain,
+            "maximumCorrection": maximum_correction,
+        })
+
+    return {
+        "version": 1,
+        "locomotorProgramFingerprint": _baseline_fingerprint(program),
+        "modelSourceFingerprint": program["modelSourceFingerprint"],
+        "sensoryProfileFingerprint": program["sensoryProfileFingerprint"],
+        "calibrationArtifactSHA256": hashlib.sha256(artifact).hexdigest(),
+        "mode": modes[mode],
+        "updatePeriodMicroseconds": update,
+        "initializationDurationMicroseconds": initialization,
+        "sources": compiled_sources,
+        "routes": compiled_routes,
+    }
+
+
 def compile_program(body: dict, payload: bytes, *, tonic: float | None = None, length_gain: float,
                     velocity_gain: float, maximum: float = 0.95,
                     period_us: int = 0, gait: list[dict] | None = None,
-                    prepared_state: bytes | None = None) -> dict:
+                    prepared_state: bytes | None = None,
+                    balance: dict | None = None,
+                    balance_artifact: bytes | None = None) -> dict:
     if (not isinstance(body, dict) or body.get("format") != "numanx-locomotor-body-v1"
             or body.get("muscle_payload_sha256") != hashlib.sha256(payload).hexdigest()
             or any(type(body.get(k)) is not int or not 0 < body[k] < 2**64
@@ -97,10 +259,18 @@ def compile_program(body: dict, payload: bytes, *, tonic: float | None = None, l
                              tonicExcitation=recruitment[i], lengthGain=length_gain,
                              velocityGainSeconds=velocity_gain, gaitSine=a, gaitCosine=b,
                              maximumExcitation=maximum))
-    return dict(version=1, modelSourceFingerprint=body["model_source_fingerprint"],
-                sensoryProfileFingerprint=body["sensory_profile_fingerprint"],
-                calibrationArtifactSHA256=hashlib.sha256(prepared_state if prepared_state is not None else payload).hexdigest(),
-                epochMicroseconds=0, periodMicroseconds=period_us, channels=channels)
+    program = dict(version=1, modelSourceFingerprint=body["model_source_fingerprint"],
+                   sensoryProfileFingerprint=body["sensory_profile_fingerprint"],
+                   calibrationArtifactSHA256=hashlib.sha256(prepared_state if prepared_state is not None else payload).hexdigest(),
+                   epochMicroseconds=0, periodMicroseconds=period_us, channels=channels)
+    if (balance is None) != (balance_artifact is None):
+        raise ValueError("balance map and calibration bytes must be supplied together")
+    if balance is not None:
+        program["balanceFeedback"] = _balance_feedback(
+            program, balance, balance_artifact, muscles
+        )
+        program["version"] = 2
+    return program
 
 
 def add_arguments(parser):
@@ -115,23 +285,29 @@ def add_arguments(parser):
     parser.add_argument("--maximum-excitation", type=float, default=0.95)
     parser.add_argument("--period-microseconds", type=int, default=0)
     parser.add_argument("--gait-map", type=Path)
+    parser.add_argument("--balance-map", type=Path,
+                        help="source-bound v1 whole-body feedback map; current executable subset requires zero filter and delay")
     parser.set_defaults(handler=run)
 
 
 def run(args):
     try:
+        balance_artifact = args.balance_map.read_bytes() if args.balance_map else None
         program = compile_program(json.loads(args.body_description.read_text()), args.muscle_payload.read_bytes(),
                                   tonic=args.tonic, length_gain=args.length_gain,
                                   velocity_gain=args.velocity_gain_seconds, maximum=args.maximum_excitation,
                                   period_us=args.period_microseconds,
                                   gait=json.loads(args.gait_map.read_text()) if args.gait_map else None,
-                                  prepared_state=args.prepared_state.read_bytes() if args.prepared_state else None)
-    except (ValueError, TypeError, struct.error) as error:
+                                  prepared_state=args.prepared_state.read_bytes() if args.prepared_state else None,
+                                  balance=json.loads(balance_artifact) if balance_artifact else None,
+                                  balance_artifact=balance_artifact)
+    except (ValueError, TypeError, struct.error, json.JSONDecodeError) as error:
         from .model import ImportError as HumanImportError
         raise HumanImportError(str(error)) from error
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(program, indent=2, sort_keys=True, allow_nan=False) + "\n")
     print(json.dumps({"program": str(args.output), "channels": len(program["channels"]),
-                      "period_microseconds": program["periodMicroseconds"], "promotable": False,
-                      "boundary": "immutable recruitment authoring; source reference lengths; no loaded balance or experimental calibration"}))
+                      "period_microseconds": program["periodMicroseconds"],
+                      "balance_feedback": "balanceFeedback" in program, "promotable": False,
+                      "boundary": "immutable recruitment and bounded body-feedback authoring; no standing or human-response qualification"}))
     return 0
