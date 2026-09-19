@@ -167,7 +167,7 @@ derivatives; all other raw or derived source artifacts remain local. See
 
 The permanent evidence-gated architecture is in the
 [Numi Human development roadmap](Docs/DEVELOPMENT_ROADMAP.md). The current
-[board execution plan](Docs/SOTA_EXECUTION_PLAN_20260919.md) turns it into a
+[board execution plan](Docs/SOTA_EXECUTION_PLAN.md) turns it into a
 dependency-ordered critical path, parallel work lanes, measurable promotion
 gates, and explicit go/no-go decisions.
 

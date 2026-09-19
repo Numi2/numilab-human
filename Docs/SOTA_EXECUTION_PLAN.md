@@ -1,6 +1,6 @@
 # Numi Human execution plan to state of the art
 
-Status: board execution baseline, 2026-09-19
+Status: board execution baseline
 
 This plan turns the permanent [frontier roadmap](DEVELOPMENT_ROADMAP.md),
 [single-male completion contract](SINGLE_MALE_COMPLETION.md), and executable
@@ -24,9 +24,9 @@ external comparator, a declared metric, a measured Numi delta, and a retest
 trigger. There is no aggregate state-of-the-art whole-Human claim until all 95
 mandatory targets qualify on one immutable stack.
 
-## Current starting line
+## Current evidence baseline
 
-The September 19 truth-layer increment established:
+The qualifying truth-layer increment established:
 
 - native constraint-stage impulse-work accounting on the Human runtime branch,
   including contact-normal, tangential, equality, and source-limit families;
@@ -85,8 +85,8 @@ Muscle source consistency     Anatomical contact qualification
              Immutable single-male release
 ```
 
-Controller, tissue, physiology, sensing, data, and performance research begins
-immediately, but nothing bypasses this promotion path.
+Controller, tissue, physiology, sensing, data, and performance research proceeds
+wherever dependencies permit, but nothing bypasses this promotion path.
 
 ## Evidence-gated delivery sequence
 
@@ -100,9 +100,9 @@ immediately, but nothing bypasses this promotion path.
 
 ## Parallel lanes and accountable owners
 
-| Lane | Accountable owner | Near-term output |
+| Lane | Accountable owner | Required output |
 | --- | --- | --- |
-| Program, architecture, and claims | Human compiler/evidence lead | Immutable stack registry, target coverage, decision records, migration policy, and weekly gate report |
+| Program, architecture, and claims | Human compiler/evidence lead | Immutable stack registry, target coverage, decision records, migration policy, and evidence-triggered gate report |
 | Dynamics and musculotendon | Native CompiledRun/Matter lead | Precision closure, force/work ledger, source consistency, and prepared equilibrium |
 | Anatomy and contact | Human anatomy/contact lead | Registered colliders, material protocol, CCD, pressure, and centre-of-pressure qualification |
 | Data, calibration, and uncertainty | Human data/provenance lead | Real participant admission, disjoint splits, measurement uncertainty, and frozen margins |
@@ -115,7 +115,7 @@ Each lane reports only `blocked`, `active`, `gate_passed`, or `superseded`.
 Every report names the immutable artifact, dependency, next evidence-producing
 action, and integration target.
 
-## Immediate operating queue
+## Dependency-ordered operating queue
 
 1. **Contain without hiding the hosted watchdog.** Prove 8/16/32-step
    segmentation equivalence on fresh runners, retain the 32-step failure
@@ -202,7 +202,7 @@ claim.
 6. Preserve every failed, partial, and competing result in the immutable
    decision ledger.
 
-The first milestone is not standing. It is a trustworthy accepted step whose
+The foundation gate is not standing. It is a trustworthy accepted step whose
 sources, owners, work, failure semantics, replay, and Apple execution are all
 explainable. Once that foundation passes, standing, walking, personalization,
 and physiology become cumulative progress rather than repeated reintegration.
