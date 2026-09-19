@@ -111,6 +111,9 @@ wherever dependencies permit, but nothing bypasses this promotion path.
 All sustained, profiling, thermal, and high-load Metal qualification runs execute
 through `ssh macmini` on the physical Apple GPU after workload and disk checks.
 Hosted runners are restricted to bounded CI and measured watchdog probes.
+The fixed [cap-8 performance preregistration](PERFORMANCE_QUALIFICATION_PREREGISTRATION.md)
+defines the A/B protocol and remains `status: incomplete` until both energy and
+detailed GPU-counter evidence exist.
 
 ## Evidence-gated delivery sequence
 
