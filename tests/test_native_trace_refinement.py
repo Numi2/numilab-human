@@ -18,6 +18,7 @@ def _sample(index: int, timestep: float, scale: float) -> dict:
     q[2] = 1.9 + scale * index * timestep
     q[6] = 1.0
     v = [scale * index * timestep] * refinement.V_COUNT
+    impulse_work = scale * timestep if index else 0.0
     return {
         "step": index,
         "time_seconds": index * timestep,
@@ -36,6 +37,14 @@ def _sample(index: int, timestep: float, scale: float) -> dict:
         "muscle_virtual_work_j": -scale * timestep * 0.01,
         "passive_joint_potential_work_j": scale * timestep * 0.001,
         "support_virtual_work_j": scale * timestep * 0.002,
+        "contact_normal_impulse_work_j": -impulse_work * 0.03,
+        "contact_tangential_impulse_work_j": -impulse_work * 0.02,
+        "equality_impulse_work_j": impulse_work * 0.01,
+        "source_limit_impulse_work_j": -impulse_work * 0.005,
+        "contact_normal_absolute_impulse_work_j": impulse_work * 0.04,
+        "contact_tangential_absolute_impulse_work_j": impulse_work * 0.03,
+        "equality_absolute_impulse_work_j": impulse_work * 0.02,
+        "source_limit_absolute_impulse_work_j": impulse_work * 0.01,
         "passive_joint_energy_j": 0.02 + scale * index * timestep * 0.001,
         "maximum_normal_contact_impulse_index": 1,
         "maximum_tangential_contact_impulse_index": 2,
@@ -53,13 +62,20 @@ def _case(root: Path, name: str, source: str = "a" * 40) -> Path:
     timestep = nanoseconds * 1.0e-9
     directory = root / name
     directory.mkdir()
+    samples = [_sample(index, timestep, 950.0) for index in range(steps + 1)]
     trace = {
         "schema": refinement.TRACE_SCHEMA,
+        "work_scope": (
+            "production_constraint_impulse_work_by_family;"
+            "exact_coordinate_projection_is_an_unowned_overwrite_not_impulse_work"
+        ),
         "endpoint_equivalent": "bitwise",
         "endpoint_max_q_delta": 0,
         "endpoint_max_v_delta": 0,
-        "samples": [_sample(index, timestep, 950.0) for index in range(steps + 1)],
+        "samples": samples,
     }
+    for sample_field, total_field in refinement.TRACE_IMPULSE_WORK_TOTALS.items():
+        trace[total_field] = sum(sample[sample_field] for sample in samples[1:])
     stdout = directory / "stdout.txt"
     stdout.write_text(
         "persistent_stand_trace=" + json.dumps(trace) + "\n",
@@ -85,6 +101,7 @@ def _case(root: Path, name: str, source: str = "a" * 40) -> Path:
         "stderr_nonbanner_lines": [],
         "required_metric_mismatches": {},
         "velocity_stage_diagnostics_complete": True,
+        "constraint_impulse_work_complete": True,
         "compiled_static_balance": True,
     }
     (directory / "case-summary.json").write_text(
@@ -94,11 +111,28 @@ def _case(root: Path, name: str, source: str = "a" * 40) -> Path:
     return directory
 
 
+def _rewrite_trace(case: Path, mutate) -> None:
+    stdout = case / "stdout.txt"
+    trace = json.loads(stdout.read_text(encoding="utf-8").split("=", 1)[1])
+    mutate(trace)
+    stdout.write_text(
+        "persistent_stand_trace=" + json.dumps(trace) + "\n",
+        encoding="utf-8",
+    )
+    summary_path = case / "case-summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    summary["stdout_sha256"] = _sha(stdout)
+    summary_path.write_text(json.dumps(summary), encoding="utf-8")
+
+
 def test_complete_source_bound_trace_comparison(tmp_path: Path) -> None:
     cases = [_case(tmp_path, name) for name in refinement.CASE_SPEC]
     report = refinement.compare_cases(cases)
     assert report["status"] == "diagnostic_complete"
     assert report["coverage"]["aggregate_equality_impulse"]
+    assert report["coverage"]["constraint_stage_impulsive_work"]
+    assert not report["coverage"]["complete_impulsive_work"]
+    assert not report["coverage"]["complete_physical_energy_closure"]
     assert not report["coverage"]["complete_per_constraint_reaction_vectors"]
     assert not report["qualification"]["force_convergence"]
     assert len(report["comparisons"]) == 3
@@ -126,16 +160,51 @@ def test_changed_stdout_is_rejected(tmp_path: Path) -> None:
 
 def test_partial_velocity_stage_is_rejected(tmp_path: Path) -> None:
     case = _case(tmp_path, "100us")
-    stdout = case / "stdout.txt"
-    trace = json.loads(stdout.read_text(encoding="utf-8").split("=", 1)[1])
-    del trace["samples"][1]["published_velocity_delta"]
-    stdout.write_text(
-        "persistent_stand_trace=" + json.dumps(trace) + "\n",
-        encoding="utf-8",
+    _rewrite_trace(
+        case,
+        lambda trace: trace["samples"][1].pop("published_velocity_delta"),
     )
+    with pytest.raises(refinement.TraceRefinementError, match="partial velocity-stage"):
+        refinement.load_case(case)
+
+
+def test_missing_constraint_impulse_work_is_rejected(tmp_path: Path) -> None:
+    case = _case(tmp_path, "100us")
+    _rewrite_trace(
+        case,
+        lambda trace: trace["samples"][1].pop("equality_impulse_work_j"),
+    )
+    with pytest.raises(refinement.TraceRefinementError, match="equality_impulse_work_j"):
+        refinement.load_case(case)
+
+
+def test_absolute_constraint_work_cannot_hide_signed_work(tmp_path: Path) -> None:
+    case = _case(tmp_path, "100us")
+    _rewrite_trace(
+        case,
+        lambda trace: trace["samples"][1].__setitem__(
+            "contact_normal_absolute_impulse_work_j", 0.0
+        ),
+    )
+    with pytest.raises(refinement.TraceRefinementError, match="hides signed work"):
+        refinement.load_case(case)
+
+
+def test_trace_constraint_work_total_must_match_samples(tmp_path: Path) -> None:
+    case = _case(tmp_path, "100us")
+    _rewrite_trace(
+        case,
+        lambda trace: trace.__setitem__("total_equality_impulse_work_j", 1.0),
+    )
+    with pytest.raises(refinement.TraceRefinementError, match="disagrees with samples"):
+        refinement.load_case(case)
+
+
+def test_case_without_constraint_work_completion_is_rejected(tmp_path: Path) -> None:
+    case = _case(tmp_path, "100us")
     summary_path = case / "case-summary.json"
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
-    summary["stdout_sha256"] = _sha(stdout)
+    summary["constraint_impulse_work_complete"] = False
     summary_path.write_text(json.dumps(summary), encoding="utf-8")
-    with pytest.raises(refinement.TraceRefinementError, match="partial velocity-stage"):
+    with pytest.raises(refinement.TraceRefinementError, match="lacks constraint impulse work"):
         refinement.load_case(case)

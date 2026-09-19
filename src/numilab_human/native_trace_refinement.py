@@ -2,9 +2,11 @@
 
 This reader is deliberately diagnostic. It verifies identities and complete
 trace records, then compares same-time state, aggregate constraint impulses,
-post-projection residuals, and bounded work terms. The native trace does not
-yet contain complete per-row reaction vectors or impulsive work, so this module
-cannot issue a force-convergence or standing qualification.
+post-projection residuals, bounded force work, and production constraint-stage
+impulse work. The native trace still lacks complete per-row reaction vectors,
+target-relative dissipation, and a mass-consistent energy account for the final
+exact-coordinate overwrite, so this module cannot issue a force-convergence or
+standing qualification.
 """
 from __future__ import annotations
 
@@ -15,9 +17,9 @@ import math
 from pathlib import Path
 from typing import Any, Iterable
 
-SCHEMA = "numi.human.native-trace-refinement.v1"
-CASE_SCHEMA = "numi.human.current-refinement-case.v1"
-TRACE_SCHEMA = "numi.human.persistent-stand-trace.v4"
+SCHEMA = "numi.human.native-trace-refinement.v2"
+CASE_SCHEMA = "numi.human.current-refinement-case.v2"
+TRACE_SCHEMA = "numi.human.persistent-stand-trace.v5"
 CASE_SPEC = {
     "100us": (100_000, 64),
     "50us": (50_000, 128),
@@ -47,6 +49,34 @@ WORK_FIELDS = (
     "muscle_virtual_work_j",
     "passive_joint_potential_work_j",
     "support_virtual_work_j",
+)
+IMPULSE_WORK_FIELDS = (
+    "contact_normal_impulse_work_j",
+    "contact_tangential_impulse_work_j",
+    "equality_impulse_work_j",
+    "source_limit_impulse_work_j",
+)
+ABSOLUTE_IMPULSE_WORK_FIELDS = (
+    "contact_normal_absolute_impulse_work_j",
+    "contact_tangential_absolute_impulse_work_j",
+    "equality_absolute_impulse_work_j",
+    "source_limit_absolute_impulse_work_j",
+)
+TRACE_IMPULSE_WORK_TOTALS = dict(
+    zip(
+        IMPULSE_WORK_FIELDS + ABSOLUTE_IMPULSE_WORK_FIELDS,
+        (
+            "total_contact_normal_impulse_work_j",
+            "total_contact_tangential_impulse_work_j",
+            "total_equality_impulse_work_j",
+            "total_source_limit_impulse_work_j",
+            "total_contact_normal_absolute_impulse_work_j",
+            "total_contact_tangential_absolute_impulse_work_j",
+            "total_equality_absolute_impulse_work_j",
+            "total_source_limit_absolute_impulse_work_j",
+        ),
+        strict=True,
+    )
 )
 OWNER_FIELDS = (
     "maximum_normal_contact_impulse_index",
@@ -178,11 +208,24 @@ def _sample(sample: Any, index: int, timestep_seconds: float) -> dict[str, Any]:
     normalized["q"] = q
     normalized["v"] = v
     for field in REACTION_FIELDS + RESIDUAL_FIELDS + WORK_FIELDS + (
+        *IMPULSE_WORK_FIELDS,
+        *ABSOLUTE_IMPULSE_WORK_FIELDS,
         "passive_joint_energy_j",
     ):
         normalized[field] = _finite(sample.get(field), f"trace sample {index} {field}")
     for field in REACTION_FIELDS + RESIDUAL_FIELDS:
         _require(normalized[field] >= 0.0, f"trace sample {index} {field} is negative")
+    for signed, absolute in zip(
+        IMPULSE_WORK_FIELDS, ABSOLUTE_IMPULSE_WORK_FIELDS, strict=True
+    ):
+        _require(
+            normalized[absolute] >= 0.0,
+            f"trace sample {index} {absolute} is negative",
+        )
+        _require(
+            normalized[absolute] + 1.0e-12 >= abs(normalized[signed]),
+            f"trace sample {index} {absolute} hides signed work",
+        )
     for field in OWNER_FIELDS:
         normalized[field] = _integer(sample.get(field), f"trace sample {index} {field}")
     stage_presence = [field in sample for field in VELOCITY_STAGE_FIELDS]
@@ -221,6 +264,10 @@ def load_case(directory: Path) -> dict[str, Any]:
         summary.get("velocity_stage_diagnostics_complete") is True,
         f"{name} lacks velocity-stage diagnostics",
     )
+    _require(
+        summary.get("constraint_impulse_work_complete") is True,
+        f"{name} lacks constraint impulse work",
+    )
     _require(summary.get("compiled_static_balance") is True, f"{name} static balance failed")
     _commit(summary.get("native_commit"), f"{name} native commit")
     _commit(summary.get("input_commit"), f"{name} input commit")
@@ -248,6 +295,14 @@ def load_case(directory: Path) -> dict[str, Any]:
     text = stdout.read_text(encoding="utf-8")
     trace = _prefixed_json(text, "persistent_stand_trace=", f"{name} stdout")
     _require(trace.get("schema") == TRACE_SCHEMA, f"{name} trace schema mismatch")
+    work_scope = trace.get("work_scope")
+    _require(
+        isinstance(work_scope, str)
+        and "production_constraint_impulse_work_by_family" in work_scope
+        and "exact_coordinate_projection_is_an_unowned_overwrite_not_impulse_work"
+        in work_scope,
+        f"{name} trace work scope is incomplete",
+    )
     _require(
         trace.get("endpoint_equivalent") == "bitwise"
         and trace.get("endpoint_max_q_delta") == 0
@@ -263,6 +318,18 @@ def load_case(directory: Path) -> dict[str, Any]:
     normalized_samples = [
         _sample(sample, index, timestep_seconds) for index, sample in enumerate(samples)
     ]
+    for field in IMPULSE_WORK_FIELDS + ABSOLUTE_IMPULSE_WORK_FIELDS:
+        _require(
+            normalized_samples[0][field] == 0.0,
+            f"{name} initial sample {field} is not zero",
+        )
+    for sample_field, total_field in TRACE_IMPULSE_WORK_TOTALS.items():
+        reported = _finite(trace.get(total_field), f"{name} trace {total_field}")
+        expected = sum(sample[sample_field] for sample in normalized_samples[1:])
+        _require(
+            abs(reported - expected) <= 1.0e-12 * (1.0 + abs(expected)),
+            f"{name} trace {total_field} disagrees with samples",
+        )
     _require(
         all(all(field in sample for field in VELOCITY_STAGE_FIELDS) for sample in normalized_samples),
         f"{name} trace does not retain all velocity stages",
@@ -353,6 +420,10 @@ def compare_cases(directories: Iterable[Path]) -> dict[str, Any]:
         }
         residual_deltas = {field: [] for field in RESIDUAL_FIELDS}
         stage_deltas = {field: [] for field in VELOCITY_STAGE_FIELDS}
+        impulse_work_deltas = {field: [] for field in IMPULSE_WORK_FIELDS}
+        absolute_impulse_work_deltas = {
+            field: [] for field in ABSOLUTE_IMPULSE_WORK_FIELDS
+        }
         owner_mismatches = {field: 0 for field in OWNER_FIELDS}
 
         for common_index in range(COMMON_DURATION_NS // COMMON_INTERVAL_NS + 1):
@@ -418,6 +489,26 @@ def compare_cases(directories: Iterable[Path]) -> dict[str, Any]:
                         )
                     )
                 )
+            for field in IMPULSE_WORK_FIELDS:
+                impulse_work_deltas[field].append(
+                    abs(
+                        _interval_sum(case["samples"], field, start, stop)
+                        - _interval_sum(
+                            reference["samples"], field,
+                            reference_start, reference_stop
+                        )
+                    )
+                )
+            for field in ABSOLUTE_IMPULSE_WORK_FIELDS:
+                absolute_impulse_work_deltas[field].append(
+                    abs(
+                        _interval_sum(case["samples"], field, start, stop)
+                        - _interval_sum(
+                            reference["samples"], field,
+                            reference_start, reference_stop
+                        )
+                    )
+                )
 
         comparisons.append(
             {
@@ -461,6 +552,14 @@ def compare_cases(directories: Iterable[Path]) -> dict[str, Any]:
                     "passive_potential": max(metrics["passive_potential_work"]),
                     "support_reference": max(metrics["support_work"]),
                 },
+                "maximum_interval_constraint_impulse_work_deltas_j": {
+                    field: max(values)
+                    for field, values in impulse_work_deltas.items()
+                },
+                "maximum_interval_constraint_absolute_impulse_work_deltas_j": {
+                    field: max(values)
+                    for field, values in absolute_impulse_work_deltas.items()
+                },
                 "maximum_passive_energy_delta_j": max(metrics["passive_energy"]),
                 "maximum_impulse_owner_mismatch_counts": owner_mismatches,
             }
@@ -499,6 +598,14 @@ def compare_cases(directories: Iterable[Path]) -> dict[str, Any]:
                     field: sum(sample[field] for sample in samples[1:])
                     for field in WORK_FIELDS
                 },
+                "total_constraint_impulse_work_j": {
+                    field: sum(sample[field] for sample in samples[1:])
+                    for field in IMPULSE_WORK_FIELDS
+                },
+                "total_constraint_absolute_impulse_work_j": {
+                    field: sum(sample[field] for sample in samples[1:])
+                    for field in ABSOLUTE_IMPULSE_WORK_FIELDS
+                },
             }
         )
 
@@ -519,8 +626,10 @@ def compare_cases(directories: Iterable[Path]) -> dict[str, Any]:
             "aggregate_joint_limit_impulse": True,
             "post_projection_residuals": True,
             "bounded_work_terms": True,
+            "constraint_stage_impulsive_work": True,
             "complete_per_constraint_reaction_vectors": False,
             "complete_impulsive_work": False,
+            "complete_physical_energy_closure": False,
         },
         "qualification": {
             "diagnostic_complete": True,
@@ -531,9 +640,11 @@ def compare_cases(directories: Iterable[Path]) -> dict[str, Any]:
         },
         "boundary": (
             "Source-identical hosted comparison of captured state, aggregate reaction impulses, "
-            "post-projection residuals, and bounded work terms. No acceptance tolerance is inferred. "
-            "The trace lacks complete per-constraint reaction vectors and complete impulsive work, "
-            "so it cannot certify force convergence, sustained standing, recovery, or walking."
+            "post-projection residuals, bounded force work, and all owned production constraint-stage "
+            "impulse work. No acceptance tolerance is inferred. The trace lacks complete per-constraint "
+            "reaction vectors, target-relative dissipation, and mass-consistent energy for the final "
+            "exact-coordinate overwrite, so it cannot certify force convergence, sustained standing, "
+            "recovery, or walking."
         ),
     }
 
