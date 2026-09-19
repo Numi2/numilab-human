@@ -41,12 +41,12 @@ reconciled onto the native repository's default line.
 
 ## Physical result
 
-| Grid    | Steps | Wall time (s) | Peak RSS (KiB) | Mean normal reaction (N) | Maximum published delta-v | Dynamic force residual (N) |
-| ------- | ----: | ------------: | -------------: | -----------------------: | ------------------------: | -------------------------: |
-| 100 us  |    64 |       147.712 |         52,976 |                 953.7471 |                0.00294141 |                0.372853463 |
-| 50 us   |   128 |       243.787 |         51,024 |                 953.2543 |                0.00147134 |                0.372853463 |
-| 25 us   |   256 |       440.032 |         50,640 |                 953.0133 |               0.000735831 |                0.372853463 |
-| 12.5 us |   512 |       832.541 |         51,232 |                 952.9009 |               0.000367957 |                0.372853463 |
+| Grid    | Steps | Wall time (s) | Peak RSS (KiB) | Mean normal reaction (N) | Maximum published delta-v | Initial persistent force-reference residual (N) |
+| ------- | ----: | ------------: | -------------: | -----------------------: | ------------------------: | ----------------------------------------------: |
+| 100 us  |    64 |       147.712 |         52,976 |                 953.7471 |                0.00294141 |                                     0.372853463 |
+| 50 us   |   128 |       243.787 |         51,024 |                 953.2543 |                0.00147134 |                                     0.372853463 |
+| 25 us   |   256 |       440.032 |         50,640 |                 953.0133 |               0.000735831 |                                     0.372853463 |
+| 12.5 us |   512 |       832.541 |         51,232 |                 952.9009 |               0.000367957 |                                     0.372853463 |
 
 Every case completed without timeout, validation error, or non-banner stderr.
 Swap did not grow, memory pressure remained nominal, and `pmset` reported no
@@ -64,9 +64,11 @@ for 50 us.
 
 The contact and source-limit post-projection residual maxima approximately
 halve with the timestep, while the tendon force residual remains near
-`8.665e-5 N` on the three finer grids. Most importantly, the reported dynamic
-force residual is exactly `0.372853462949 N` at every grid. Finer stepping
-therefore does not close the measured force defect.
+`8.665e-5 N` on the three finer grids. The reported maximum initial persistent
+force-reference residual is exactly `0.372853462949 N` at every grid because
+it is the same initial-state diagnostic. It identifies an unchanged launch
+defect, but cannot by itself test trajectory-wide force convergence. The
+four-grid evidence therefore does not close force convergence.
 
 The current constraint-work totals also cannot be promoted as physical-energy
 closure: signed and absolute equality work scale approximately with the

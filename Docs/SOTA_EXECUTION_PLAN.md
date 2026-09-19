@@ -54,9 +54,10 @@ The qualifying truth-layer increment established:
   machine/build/input identity, complete trace-v5 state, residual, reaction,
   tendon, work, and velocity-stage diagnostics, and bitwise replay. This closes
   the trace-basis subgate only. Same-time state and reaction deltas shrink under
-  refinement, but the dynamic force residual remains exactly
-  `0.372853462949 N` on all four grids; state convergence, force convergence,
-  standing, and performance remain false;
+  refinement, while the maximum initial persistent force-reference residual is
+  the same `0.372853462949 N` scalar on all four grids. That invariant initial
+  diagnostic is not a trajectory-wide convergence measure; state convergence,
+  force convergence, standing, and performance remain false;
 - physical-M4 shader A/B equivalence at both 64 and 512 steps: terminal q/v are
   bitwise identical, all 319 non-timing/non-work fields are exact, and all eight
   work fields remain inside their declared arithmetic bounds. The sustained
@@ -85,37 +86,23 @@ standing, walking, and integrated qualification.
 ## Critical path
 
 ```text
-Exact stack + participant/data freeze
-                 |
-                 v
-Runtime precision and GPU reliability
-                 |
-                 v
-Complete force/work/event ownership
-                 |
-                 +--------------------+
-                 |                    |
-                 v                    v
-Muscle source consistency     Anatomical contact qualification
-                 |                    |
-                 +----------+---------+
-                            v
-               Loaded prepared equilibrium
-                            |
-                            v
-               Measured standing + recovery
-                            |
-                            v
-             Measured walking + terrain response
-                            |
-                            v
-       Remaining 25 single-subject capability scenarios
-                            |
-                            v
- Held-out validation + reproduced comparator + Apple envelope
-                            |
-                            v
-             Immutable single-male release
+Runtime trace truth -> prepared support continuity -> causal force/state closure
+                                                        |
+Muscle source consistency -> anatomical contact --------+
+                                                        v
+                                      Loaded prepared equilibrium
+                                                        |
+Participant rights + data + uncertainty ----------------+
+                                                        v
+                                      Measured standing + recovery
+                                                        |
+                                      Walking + terrain + remaining scenarios
+                                                        |
+Apple envelope + reproduced comparators ----------------+
+                                                        v
+                                      Immutable single-male release
+
+Default-line reconciliation follows each qualified contract and owner.
 ```
 
 Controller, tissue, physiology, sensing, data, and performance research proceeds
@@ -163,7 +150,7 @@ Each lane reports only `blocked`, `active`, `gate_passed`, or `superseded`.
 Every report names the immutable artifact, dependency, next evidence-producing
 action, and integration target.
 
-## Dependency-ordered operating queue
+## Next causal mechanics action
 
 1. **Preserve prepared support state.** Implement NHINIT3 as the permanent
    support-history contract, checksum-bound to the exact contact payload.
@@ -181,19 +168,26 @@ action, and integration target.
    one paired source-limit/equality compensation event: source DOF, equality
    row, sweep, signed impulses, amplification, residuals before/after, and
    signed work. Follow it with a selected-step full production owner snapshot.
-4. **Unlock, then execute, performance qualification.** Provide narrow
-   noninteractive `powermetrics` access and one GUI Profile-after-Replay path
-   for occupancy, limiter, and bandwidth counters. Then execute the frozen
-   six-pair AB/BA protocol unchanged. Until both surfaces exist, keep the
-   current 1.81x wall and 1.89x segment results as observations and do not spend
-   the Mac mini on a campaign that is structurally unable to pass.
-5. **Freeze the measured release inputs.** Admit one participant's rights,
-   demographics, sessions, raw modalities, uncertainty, calibration/validation
-   split, and missing cells. Do not combine people or substitute public
-   benchmark participants for the selected subject.
-6. **Continue reconciliation in dependency order.** Port leaf diagnostics and
-   contracts with their tests first, then owners, then integrated workflows.
-   Never use a wholesale branch merge as the integration strategy.
+
+## Concurrent dependency-ready work
+
+- **Unlock, then execute, performance qualification.** Provide narrow
+  noninteractive `powermetrics` access and one GUI Profile-after-Replay path
+  for occupancy, limiter, and bandwidth counters. Then execute the frozen
+  six-pair AB/BA protocol unchanged. Until both surfaces exist, keep the
+  current 1.81x wall and 1.89x segment results as observations and do not spend
+  the Mac mini on a campaign that is structurally unable to pass.
+- **Freeze the measured release inputs.** Admit one participant's rights,
+  demographics, sessions, raw modalities, uncertainty, calibration/validation
+  split, and missing cells. Do not combine people or substitute public
+  benchmark participants for the selected subject.
+- **Continue reconciliation in dependency order.** Port leaf diagnostics and
+  contracts with their tests first, then owners, then integrated workflows.
+  Never use a wholesale branch merge as the integration strategy.
+- **Advance anatomy and research behind the permanent interfaces.** Continue
+  anatomical contact, controller candidates, continuum, and physiology work
+  wherever their own dependencies are ready. None may inflate a release claim
+  or bypass loaded-equilibrium and held-out behavior evidence.
 
 ## Go/no-go decisions
 

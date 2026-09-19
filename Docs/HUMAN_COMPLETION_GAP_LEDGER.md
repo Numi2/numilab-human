@@ -10,7 +10,7 @@ a calendar schedule. The current physical runtime baseline is the published
 integration branch and [four-grid production diagnostic](NATIVE_COMMON_DURATION_PRODUCTION.md);
 reconciliation onto the native default line remains open.
 
-## Current requalification — 2026-09-15
+## Historical requalification snapshot — 2026-09-15
 
 The current repository evidence layer is published at `4bca31c` on `main` and
 `origin/main`. The source-pin refresh and the body-composition release join
