@@ -165,8 +165,11 @@ BodyParts3D, and explicitly marked Z-Anatomy validation media are attributed
 derivatives; all other raw or derived source artifacts remain local. See
 [third-party notices](THIRD_PARTY_NOTICES.md).
 
-The evidence-gated development sequence is in the
-[Numi Human development roadmap](Docs/DEVELOPMENT_ROADMAP.md).
+The permanent evidence-gated architecture is in the
+[Numi Human development roadmap](Docs/DEVELOPMENT_ROADMAP.md). The current
+[board execution plan](Docs/SOTA_EXECUTION_PLAN_20260919.md) turns it into a
+0--24 month critical path, parallel work lanes, measurable promotion gates, and
+explicit go/no-go decisions.
 
 ## Visual progress
 
