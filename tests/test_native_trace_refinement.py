@@ -13,6 +13,34 @@ def _sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _machine_receipt(
+    identity: str = "1" * 64,
+    *,
+    chip: str = "Apple M4 Pro",
+    machine_name: str = "Mac mini",
+) -> dict[str, str]:
+    receipt = {
+        "architecture": "arm64",
+        "chip": chip,
+        "machine_identity_sha256": identity,
+        "machine_model": "Mac16,11",
+        "machine_name": machine_name,
+        "memory": "24 GB",
+        "os_build": "25G72",
+        "os_version": "26.6",
+    }
+    receipt["sha256"] = hashlib.sha256(
+        json.dumps(
+            receipt,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=True,
+            allow_nan=False,
+        ).encode("utf-8")
+    ).hexdigest()
+    return receipt
+
+
 def _sample(index: int, timestep: float, scale: float) -> dict:
     q = [0.0] * refinement.Q_COUNT
     q[2] = 1.9 + scale * index * timestep
@@ -57,7 +85,15 @@ def _sample(index: int, timestep: float, scale: float) -> dict:
     }
 
 
-def _case(root: Path, name: str, source: str = "a" * 40) -> Path:
+def _case(
+    root: Path,
+    name: str,
+    source: str = "a" * 40,
+    *,
+    machine_identity: str = "1" * 64,
+    chip: str = "Apple M4 Pro",
+    machine_name: str = "Mac mini",
+) -> Path:
     nanoseconds, steps = refinement.CASE_SPEC[name]
     timestep = nanoseconds * 1.0e-9
     directory = root / name
@@ -91,6 +127,11 @@ def _case(root: Path, name: str, source: str = "a" * 40) -> Path:
         "binary_sha256": "c" * 64,
         "payload_sha256": {"rigid": "d" * 64},
         "launcher_sha256": "e" * 64,
+        "physical_machine_receipt": _machine_receipt(
+            machine_identity,
+            chip=chip,
+            machine_name=machine_name,
+        ),
         "timestep_nanoseconds": nanoseconds,
         "step_count": steps,
         "duration_nanoseconds": refinement.COMMON_DURATION_NS,
@@ -134,7 +175,11 @@ def test_complete_source_bound_trace_comparison(tmp_path: Path) -> None:
     assert not report["coverage"]["complete_impulsive_work"]
     assert not report["coverage"]["complete_physical_energy_closure"]
     assert not report["coverage"]["complete_per_constraint_reaction_vectors"]
+    assert report["coverage"]["identical_physical_machine_identity"]
+    assert report["qualification"]["physical_m4_validation"]
     assert not report["qualification"]["force_convergence"]
+    assert not report["qualification"]["sustained_standing"]
+    assert report["physical_machine_receipt"]["machine_name"] == "Mac mini"
     assert len(report["comparisons"]) == 3
     assert all(
         row["maximum_normal_reaction_delta_n"] < 1.0e-9
@@ -149,6 +194,69 @@ def test_mixed_source_is_rejected(tmp_path: Path) -> None:
     ]
     with pytest.raises(refinement.TraceRefinementError, match="mix native_commit"):
         refinement.compare_cases(cases)
+
+
+def test_mixed_physical_machine_identity_is_rejected(tmp_path: Path) -> None:
+    cases = [
+        _case(
+            tmp_path,
+            name,
+            machine_identity="2" * 64 if name == "25us" else "1" * 64,
+        )
+        for name in refinement.CASE_SPEC
+    ]
+    with pytest.raises(
+        refinement.TraceRefinementError,
+        match="mix physical_machine_receipt",
+    ):
+        refinement.compare_cases(cases)
+
+
+def test_non_m4_machine_remains_diagnostic(tmp_path: Path) -> None:
+    cases = [
+        _case(tmp_path, name, chip="Apple M3 Pro")
+        for name in refinement.CASE_SPEC
+    ]
+    report = refinement.compare_cases(cases)
+    assert not report["qualification"]["physical_m4_validation"]
+    assert not report["qualification"]["force_convergence"]
+    assert not report["qualification"]["sustained_standing"]
+
+
+def test_missing_physical_machine_receipt_is_rejected(tmp_path: Path) -> None:
+    case = _case(tmp_path, "100us")
+    summary_path = case / "case-summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    summary.pop("physical_machine_receipt")
+    summary_path.write_text(json.dumps(summary), encoding="utf-8")
+    with pytest.raises(
+        refinement.TraceRefinementError,
+        match="physical_machine_receipt is not an object",
+    ):
+        refinement.load_case(case)
+
+
+def test_physical_machine_receipt_digest_is_bound(tmp_path: Path) -> None:
+    case = _case(tmp_path, "100us")
+    summary_path = case / "case-summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    summary["physical_machine_receipt"]["memory"] = "128 GB"
+    summary_path.write_text(json.dumps(summary), encoding="utf-8")
+    with pytest.raises(
+        refinement.TraceRefinementError,
+        match="physical_machine_receipt digest mismatch",
+    ):
+        refinement.load_case(case)
+
+
+def test_v2_case_without_machine_binding_is_rejected(tmp_path: Path) -> None:
+    case = _case(tmp_path, "100us")
+    summary_path = case / "case-summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    summary["schema"] = "numi.human.current-refinement-case.v2"
+    summary_path.write_text(json.dumps(summary), encoding="utf-8")
+    with pytest.raises(refinement.TraceRefinementError, match="schema mismatch"):
+        refinement.load_case(case)
 
 
 def test_changed_stdout_is_rejected(tmp_path: Path) -> None:

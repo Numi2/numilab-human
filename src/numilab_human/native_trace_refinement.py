@@ -17,8 +17,8 @@ import math
 from pathlib import Path
 from typing import Any, Iterable
 
-SCHEMA = "numi.human.native-trace-refinement.v2"
-CASE_SCHEMA = "numi.human.current-refinement-case.v2"
+SCHEMA = "numi.human.native-trace-refinement.v3"
+CASE_SCHEMA = "numi.human.current-refinement-case.v3"
 TRACE_SCHEMA = "numi.human.persistent-stand-trace.v5"
 CASE_SPEC = {
     "100us": (100_000, 64),
@@ -30,6 +30,17 @@ COMMON_DURATION_NS = 6_400_000
 COMMON_INTERVAL_NS = 100_000
 Q_COUNT = 129
 V_COUNT = 128
+
+PHYSICAL_MACHINE_FIELDS = (
+    "architecture",
+    "chip",
+    "machine_identity_sha256",
+    "machine_model",
+    "machine_name",
+    "memory",
+    "os_build",
+    "os_version",
+)
 
 REACTION_FIELDS = (
     "normal_impulse",
@@ -132,6 +143,17 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _canonical_sha256(value: Any) -> str:
+    payload = json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+        allow_nan=False,
+    ).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
 def _finite(value: Any, context: str) -> float:
     _require(type(value) in (int, float), f"{context} is not numeric")
     result = float(value)
@@ -165,6 +187,43 @@ def _commit(value: Any, context: str) -> str:
         f"{context} is not a full lowercase commit",
     )
     return value
+
+
+def _physical_machine_receipt(value: Any, context: str) -> dict[str, str]:
+    _require(isinstance(value, dict), f"{context} is not an object")
+    _require(
+        set(value) == {*PHYSICAL_MACHINE_FIELDS, "sha256"},
+        f"{context} fields differ",
+    )
+    receipt: dict[str, str] = {}
+    for field in PHYSICAL_MACHINE_FIELDS:
+        item = value.get(field)
+        _require(
+            isinstance(item, str) and item.strip() == item and bool(item),
+            f"{context} {field} is not a non-empty canonical string",
+        )
+        receipt[field] = item
+    receipt["machine_identity_sha256"] = _hash(
+        receipt["machine_identity_sha256"],
+        f"{context} machine_identity_sha256",
+    )
+    reported = _hash(value.get("sha256"), f"{context} sha256")
+    _require(
+        _canonical_sha256(receipt) == reported,
+        f"{context} digest mismatch",
+    )
+    receipt["sha256"] = reported
+    return receipt
+
+
+def _is_physical_m4_mac_mini(receipt: dict[str, str]) -> bool:
+    identity_text = " ".join(receipt[field] for field in PHYSICAL_MACHINE_FIELDS)
+    return (
+        receipt["architecture"] == "arm64"
+        and receipt["machine_name"] == "Mac mini"
+        and receipt["chip"].startswith("Apple M4")
+        and "paravirtual" not in identity_text.lower()
+    )
 
 
 def _prefixed_json(text: str, prefix: str, context: str) -> dict[str, Any]:
@@ -273,6 +332,10 @@ def load_case(directory: Path) -> dict[str, Any]:
     _commit(summary.get("input_commit"), f"{name} input commit")
     _hash(summary.get("binary_sha256"), f"{name} binary")
     _hash(summary.get("launcher_sha256"), f"{name} launcher")
+    summary["physical_machine_receipt"] = _physical_machine_receipt(
+        summary.get("physical_machine_receipt"),
+        f"{name} physical_machine_receipt",
+    )
     payloads = summary.get("payload_sha256")
     _require(isinstance(payloads, dict) and payloads, f"{name} payload identities are missing")
     for key, value in payloads.items():
@@ -395,6 +458,17 @@ def compare_cases(directories: Iterable[Path]) -> dict[str, Any]:
             len({case["summary"]["payload_sha256"][key] for case in cases}) == 1,
             f"refinement cases mix payload {key}",
         )
+    machine_receipts = [
+        case["summary"]["physical_machine_receipt"] for case in cases
+    ]
+    _require(
+        all(receipt == machine_receipts[0] for receipt in machine_receipts[1:]),
+        "refinement cases mix physical_machine_receipt",
+    )
+    physical_machine_receipt = machine_receipts[0]
+    physical_m4_validation = _is_physical_m4_mac_mini(
+        physical_machine_receipt
+    )
 
     reference = by_name["12p5us"]
     comparisons: list[dict[str, Any]] = []
@@ -615,6 +689,7 @@ def compare_cases(directories: Iterable[Path]) -> dict[str, Any]:
         "native_commit": cases[0]["summary"]["native_commit"],
         "input_commit": cases[0]["summary"]["input_commit"],
         "binary_sha256": cases[0]["summary"]["binary_sha256"],
+        "physical_machine_receipt": physical_machine_receipt,
         "common_duration_nanoseconds": COMMON_DURATION_NS,
         "case_count": 4,
         "cases": case_rows,
@@ -627,6 +702,7 @@ def compare_cases(directories: Iterable[Path]) -> dict[str, Any]:
             "post_projection_residuals": True,
             "bounded_work_terms": True,
             "constraint_stage_impulsive_work": True,
+            "identical_physical_machine_identity": True,
             "complete_per_constraint_reaction_vectors": False,
             "complete_impulsive_work": False,
             "complete_physical_energy_closure": False,
@@ -636,12 +712,14 @@ def compare_cases(directories: Iterable[Path]) -> dict[str, Any]:
             "state_convergence": False,
             "force_convergence": False,
             "sustained_standing": False,
-            "physical_m4_validation": False,
+            "physical_m4_validation": physical_m4_validation,
         },
         "boundary": (
-            "Source-identical hosted comparison of captured state, aggregate reaction impulses, "
+            "Source-identical single-machine comparison of captured state, aggregate reaction impulses, "
             "post-projection residuals, bounded force work, and all owned production constraint-stage "
-            "impulse work. No acceptance tolerance is inferred. The trace lacks complete per-constraint "
+            "impulse work. Physical M4 validation means only that all four cases carry one matching "
+            "physical Mac mini M4 identity receipt; it is not a performance or thermal qualification. "
+            "No acceptance tolerance is inferred. The trace lacks complete per-constraint "
             "reaction vectors, target-relative dissipation, and mass-consistent energy for the final "
             "exact-coordinate overwrite, so it cannot certify force convergence, sustained standing, "
             "recovery, or walking."
@@ -695,6 +773,9 @@ def main(argv: list[str] | None = None) -> int:
                 "output": str(arguments.output.resolve()),
                 "sha256": digest,
                 "force_convergence": report["qualification"]["force_convergence"],
+                "physical_m4_validation": report["qualification"][
+                    "physical_m4_validation"
+                ],
             },
             sort_keys=True,
         )
