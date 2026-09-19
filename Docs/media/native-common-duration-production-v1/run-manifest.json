@@ -1,0 +1,49 @@
+{
+  "schema": "numi.human.physical-common-duration-run.v1",
+  "status": "passed",
+  "native_commit": "4e0e817a72222bccecafc51a579fe951f4649b66",
+  "native_tree": "112fea28802ba1e7dd54b0eb1c3c84b3f89ce552",
+  "input_commit": "f53c2e1053bc90e7ec44fd69a5b49f96b71b71ab",
+  "binary_sha256": "207226d814968e6c673243de4a22efaaf9c7f91c0736c9582e0653b7c5603687",
+  "metalrobo_metallib_sha256": "e0156b2dbcacea0a39653dee75722b9ade4e04e822e0184d10592f3bd6b8a093",
+  "physical_machine_receipt": {
+    "architecture": "arm64",
+    "chip": "Apple M4 Pro",
+    "machine_identity_sha256": "dedf8c6a84734c3ddeea7d687877352f8ab55641d7d70f17b23f051e60dd9c5a",
+    "machine_model": "Mac16,11",
+    "machine_name": "Mac mini",
+    "memory": "24 GB",
+    "os_build": "25G72",
+    "os_version": "26.6",
+    "sha256": "5ad2b8017e76f37668214d653119b5e55ba8793bd2af90079d8f62f502a0bad7"
+  },
+  "physical_machine_receipt_sha256": "5ad2b8017e76f37668214d653119b5e55ba8793bd2af90079d8f62f502a0bad7",
+  "common_duration_nanoseconds": 6400000,
+  "case_summaries": {
+    "100us": {
+      "path": "100us/case-summary.json",
+      "sha256": "b02cad95d5cdcddd11e8ab77fc90a208b7c830cf3c9909b9ff720eea841a908d"
+    },
+    "50us": {
+      "path": "50us/case-summary.json",
+      "sha256": "8c46dccfda99ce4dc50a46aa0703e95bcd1366cb571c4012b023cff1bd46b958"
+    },
+    "25us": {
+      "path": "25us/case-summary.json",
+      "sha256": "6491f44383aed1d0415d2cc68c36e3cdadf95d8cdb7a22796ee335f168d2db6e"
+    },
+    "12p5us": {
+      "path": "12p5us/case-summary.json",
+      "sha256": "cfe6297ea460cd2640f47c37da42351cb287ef1f74b4c6c2551ba44aee11f1fe"
+    }
+  },
+  "failures": [],
+  "qualification": {
+    "physical_m4_execution": true,
+    "all_four_common_duration_traces": true,
+    "force_convergence": false,
+    "sustained_standing": false,
+    "performance": false
+  },
+  "boundary": "The manifest qualifies only complete source-identical physical M4 execution and retained bitwise-replayed traces. The cross-grid diagnostic and every physical acceptance claim are separate."
+}
