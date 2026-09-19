@@ -26,6 +26,9 @@ mandatory targets qualify on one immutable stack.
 
 ## Current evidence baseline
 
+Board posture: physical command-buffer containment is qualified; performance,
+force convergence, behavior, and whole-Human validity are not.
+
 The qualifying truth-layer increment established:
 
 - native constraint-stage impulse-work accounting on the Human runtime branch,
@@ -95,11 +98,17 @@ Muscle source consistency     Anatomical contact qualification
 Controller, tissue, physiology, sensing, data, and performance research proceeds
 wherever dependencies permit, but nothing bypasses this promotion path.
 
+All sustained, profiling, thermal, and high-load Metal qualification runs execute
+through `ssh macmini` on the physical Apple GPU after workload and disk checks.
+Hosted runners are restricted to bounded CI and measured watchdog probes.
+
 ## Evidence-gated delivery sequence
 
 | Gate | Primary deliverables | Promotion evidence |
 | --- | --- | --- |
-| **G0 - trustworthy dynamics** | Promote the physically qualified 8-step command-buffer cap; optimize the new work instrumentation instead of treating segmentation as performance closure; complete the 100/50/25/12.5 microsecond common-duration matrix on the physical Mac mini; add a paired compound-limit/equality event record; freeze exact Human/runtime/source hashes; acquire or contract the real single-participant dataset and freeze the 25-scenario protocol; continue dependency-ordered default-branch reconciliation. | Common-duration runs complete or fail with a typed, bounded cause; replay and retry are invariant; no unexplained owner, omitted segment, or hidden work family remains. Do not add the next diagnostic ABI or promote behavior while the execution envelope and causal event remain unresolved. |
+| **G0-R - trustworthy runtime** | Promote the physically qualified 8-step command-buffer cap; optimize the new work instrumentation instead of treating segmentation as performance closure; complete the 100/50/25/12.5 microsecond common-duration matrix on the physical Mac mini; add a paired compound-limit/equality event record; freeze exact Human/runtime/source hashes. | Common-duration runs complete or fail with a typed, bounded cause; replay and retry are invariant; no unexplained owner, omitted segment, or hidden work family remains. Do not add the next diagnostic ABI or promote behavior while the execution envelope and causal event remain unresolved. |
+| **G0-D - admitted release inputs** | Acquire or contract the real single-participant dataset; bind rights, demographics, raw modalities, uncertainty, calibration/validation sessions, and missing cells; freeze the 25-scenario protocol and decision margins. | The admission receipt names one participant, disjoint sessions, immutable source hashes, usable rights, every required observable, declared uncertainty, and explicit unsupported cells. Public or synthetic substitutes cannot pass this gate. |
+| **G0-I - reconciled integration surface** | Reconcile the Human runtime branch into the default line in dependency order: leaf diagnostics and contracts, then owners, then integrated workflows. Preserve both branch histories and resolve semantic conflicts explicitly. | Every landed slice has owner tests and exact-source evidence on default; branch ancestry and unresolved conflicts are recorded; no wholesale merge or unreviewed transplant is used as evidence of integration. |
 | **G1 - mechanics foundations** | Close `runtime.precision`, `runtime.force_audit`, and `muscle.source_consistency`; admit registered foot colliders, exclusions, CCD bounds, friction/compliance data, distributed pressure, and centre of pressure; produce subject-scaled mass, inertia, routes, support, and material inputs; complete causal accepted-only sensing. | Zero-input prepared equilibrium is stable and bitwise replayable over the frozen common-duration protocol, with no root wrench, pose drive, direct torque, or compensating controller force. Contact passes crossing, complementarity/cone, pressure, energy, refinement, rollback, and measured-response gates. |
 | **G2 - measured equilibrium and recovery** | Qualify quiet standing, weight transfer, altered support, and unexpected perturbation recovery; run reflex, optimal-control, imitation, reinforcement-learning, and hybrid bake-offs behind one stimulation interface; reproduce at least one mechanics/contact and one behavior comparator; introduce bounded offline differentiation or ensemble identification without changing runtime authority. | Same-participant held-out kinematics and forces pass frozen uncertainty-backed margins; every accepted and rejected transaction is accounted for; behavior is assistance-free and uses only authoritative or error-certified physics. |
 | **G3 - locomotion and first frontier release** | Qualify start/stop, speed changes, turns, backward/sideways motion, ramps, stairs, obstacles, and support/friction changes; complete the remaining transition, manipulation, combined, and sustained scenarios where measurements exist; close exact-device latency, memory, thermal, energy, and physical-equivalence envelopes; reproduce external benchmarks on comparable workloads. | All 25 scenarios have disjoint calibration/validation sessions and complete measured modalities. The exact release stack achieves real-time factor at least 1, p99 step latency within its authored control period, no swap or untyped failure, and unchanged physical outcomes. Publish only when all linked gates pass. |
@@ -115,7 +124,7 @@ wherever dependencies permit, but nothing bypasses this promotion path.
 | Data, calibration, and uncertainty | Human data/provenance lead | Real participant admission, disjoint splits, measurement uncertainty, and frozen margins |
 | Behavior, sensing, and learning | TaskPack/SensorPack/Brain lead | Accepted-only sensing and assistance-free standing, recovery, and locomotion |
 | Continuum and physiology | Matter tissue/physiology lead | Conservative substrate cases and independently named physiology evidence |
-| Apple runtime and performance | Metal/Swift/MLX lead | Mac-mini GPU qualification, hosted-watchdog closure, instrumentation optimization, counters, memory, thermal, energy, and performance envelopes |
+| Apple runtime and performance | Metal/Swift/MLX lead | Physical Mac-mini GPU qualification, hosted-watchdog characterization, instrumentation optimization, counters, memory, thermal, energy, and performance envelopes; sustained and high-load work runs through `ssh macmini` |
 | Release verification | Independent evidence owner | Comparator reproduction, exact-stack reruns, and claim approval |
 
 Each lane reports only `blocked`, `active`, `gate_passed`, or `superseded`.
@@ -196,14 +205,16 @@ authority:
 Each comparison enters the roadmap's decision register before it can support a
 claim.
 
-## Board approvals required now
+## Standing board directives
 
 1. Approve the single-male neuromusculoskeletal release as the first externally
    defensible target.
 2. Fund participant data acquisition, licensing, measurement completion, and
    independent validation before additional visual breadth.
-3. Reserve a dedicated physical Apple runner for qualification. Hosted virtual
-   Metal remains CI evidence only inside its measured execution envelope.
+3. Reserve the Mac mini as the physical Apple qualification runner and route all
+   sustained, profiling, thermal, and high-load GPU work through `ssh macmini`.
+   Hosted virtual Metal remains bounded CI evidence only inside its measured
+   execution envelope.
 4. Require evidence-gate reporting instead of feature-count reporting.
 5. Keep physiology and continuum funded in parallel, while prohibiting
    component or synthetic success from being marketed as whole-Human
