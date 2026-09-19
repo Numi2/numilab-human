@@ -56,6 +56,10 @@ RESIDUAL_FIELDS = (
     "post_projection_source_limit_target_velocity_residual_m_s_or_rad_s",
     "post_projection_equality_target_velocity_residual_m_s_or_rad_s",
 )
+TENDON_RESIDUAL_FIELDS = (
+    "tendon_max_force_residual_n",
+    "tendon_max_moment_residual_nm",
+)
 WORK_FIELDS = (
     "muscle_virtual_work_j",
     "passive_joint_potential_work_j",
@@ -266,13 +270,13 @@ def _sample(sample: Any, index: int, timestep_seconds: float) -> dict[str, Any]:
     normalized["time_seconds"] = time_seconds
     normalized["q"] = q
     normalized["v"] = v
-    for field in REACTION_FIELDS + RESIDUAL_FIELDS + WORK_FIELDS + (
+    for field in REACTION_FIELDS + RESIDUAL_FIELDS + TENDON_RESIDUAL_FIELDS + WORK_FIELDS + (
         *IMPULSE_WORK_FIELDS,
         *ABSOLUTE_IMPULSE_WORK_FIELDS,
         "passive_joint_energy_j",
     ):
         normalized[field] = _finite(sample.get(field), f"trace sample {index} {field}")
-    for field in REACTION_FIELDS + RESIDUAL_FIELDS:
+    for field in REACTION_FIELDS + RESIDUAL_FIELDS + TENDON_RESIDUAL_FIELDS:
         _require(normalized[field] >= 0.0, f"trace sample {index} {field} is negative")
     for signed, absolute in zip(
         IMPULSE_WORK_FIELDS, ABSOLUTE_IMPULSE_WORK_FIELDS, strict=True
@@ -493,6 +497,9 @@ def compare_cases(directories: Iterable[Path]) -> dict[str, Any]:
             "passive_energy": [],
         }
         residual_deltas = {field: [] for field in RESIDUAL_FIELDS}
+        tendon_residual_deltas = {
+            field: [] for field in TENDON_RESIDUAL_FIELDS
+        }
         stage_deltas = {field: [] for field in VELOCITY_STAGE_FIELDS}
         impulse_work_deltas = {field: [] for field in IMPULSE_WORK_FIELDS}
         absolute_impulse_work_deltas = {
@@ -518,6 +525,10 @@ def compare_cases(directories: Iterable[Path]) -> dict[str, Any]:
             )
             for field in RESIDUAL_FIELDS:
                 residual_deltas[field].append(abs(sample[field] - finest[field]))
+            for field in TENDON_RESIDUAL_FIELDS:
+                tendon_residual_deltas[field].append(
+                    abs(sample[field] - finest[field])
+                )
             for field in VELOCITY_STAGE_FIELDS:
                 stage_deltas[field].append(abs(sample[field] - finest[field]))
             for field in OWNER_FIELDS:
@@ -618,6 +629,10 @@ def compare_cases(directories: Iterable[Path]) -> dict[str, Any]:
                 "maximum_post_projection_residual_deltas": {
                     field: max(values) for field, values in residual_deltas.items()
                 },
+                "maximum_tendon_residual_deltas": {
+                    field: max(values)
+                    for field, values in tendon_residual_deltas.items()
+                },
                 "maximum_velocity_stage_deltas": {
                     field: max(values) for field, values in stage_deltas.items()
                 },
@@ -661,6 +676,10 @@ def compare_cases(directories: Iterable[Path]) -> dict[str, Any]:
                     field: max(sample[field] for sample in samples[1:])
                     for field in RESIDUAL_FIELDS
                 },
+                "maximum_tendon_residuals": {
+                    field: max(sample[field] for sample in samples[1:])
+                    for field in TENDON_RESIDUAL_FIELDS
+                },
                 "maximum_velocity_stages": {
                     field: max(sample[field] for sample in samples[1:])
                     for field in VELOCITY_STAGE_FIELDS
@@ -700,6 +719,7 @@ def compare_cases(directories: Iterable[Path]) -> dict[str, Any]:
             "aggregate_equality_impulse": True,
             "aggregate_joint_limit_impulse": True,
             "post_projection_residuals": True,
+            "tendon_force_and_moment_residuals": True,
             "bounded_work_terms": True,
             "constraint_stage_impulsive_work": True,
             "identical_physical_machine_identity": True,

@@ -62,6 +62,8 @@ def _sample(index: int, timestep: float, scale: float) -> dict:
         "post_projection_normal_contact_target_velocity_residual_m_s": 1.0e-7,
         "post_projection_source_limit_target_velocity_residual_m_s_or_rad_s": 2.0e-7,
         "post_projection_equality_target_velocity_residual_m_s_or_rad_s": 3.0e-9,
+        "tendon_max_force_residual_n": scale * timestep * 0.002,
+        "tendon_max_moment_residual_nm": scale * timestep * 0.0002,
         "muscle_virtual_work_j": -scale * timestep * 0.01,
         "passive_joint_potential_work_j": scale * timestep * 0.001,
         "support_virtual_work_j": scale * timestep * 0.002,
@@ -176,6 +178,7 @@ def test_complete_source_bound_trace_comparison(tmp_path: Path) -> None:
     assert not report["coverage"]["complete_physical_energy_closure"]
     assert not report["coverage"]["complete_per_constraint_reaction_vectors"]
     assert report["coverage"]["identical_physical_machine_identity"]
+    assert report["coverage"]["tendon_force_and_moment_residuals"]
     assert report["qualification"]["physical_m4_validation"]
     assert not report["qualification"]["force_convergence"]
     assert not report["qualification"]["sustained_standing"]
@@ -184,6 +187,16 @@ def test_complete_source_bound_trace_comparison(tmp_path: Path) -> None:
     assert all(
         row["maximum_normal_reaction_delta_n"] < 1.0e-9
         for row in report["comparisons"]
+    )
+    assert all(
+        set(row["maximum_tendon_residual_deltas"])
+        == set(refinement.TENDON_RESIDUAL_FIELDS)
+        for row in report["comparisons"]
+    )
+    assert all(
+        set(row["maximum_tendon_residuals"])
+        == set(refinement.TENDON_RESIDUAL_FIELDS)
+        for row in report["cases"]
     )
 
 
