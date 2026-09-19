@@ -168,8 +168,8 @@ derivatives; all other raw or derived source artifacts remain local. See
 The permanent evidence-gated architecture is in the
 [Numi Human development roadmap](Docs/DEVELOPMENT_ROADMAP.md). The current
 [board execution plan](Docs/SOTA_EXECUTION_PLAN_20260919.md) turns it into a
-0--24 month critical path, parallel work lanes, measurable promotion gates, and
-explicit go/no-go decisions.
+dependency-ordered critical path, parallel work lanes, measurable promotion
+gates, and explicit go/no-go decisions.
 
 ## Visual progress
 

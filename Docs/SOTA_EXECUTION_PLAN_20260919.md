@@ -4,9 +4,8 @@ Status: board execution baseline, 2026-09-19
 
 This plan turns the permanent [frontier roadmap](DEVELOPMENT_ROADMAP.md),
 [single-male completion contract](SINGLE_MALE_COMPLETION.md), and executable
-[54-task gap registry](HUMAN_GAP_EXECUTION.md) into a staged delivery program.
-Calendar ranges are planning envelopes. Evidence gates, not dates, authorize
-promotion.
+[54-task gap registry](HUMAN_GAP_EXECUTION.md) into a dependency-ordered
+delivery program. Evidence gates authorize promotion; elapsed time does not.
 
 ## Executive recommendation
 
@@ -89,15 +88,15 @@ Muscle source consistency     Anatomical contact qualification
 Controller, tissue, physiology, sensing, data, and performance research begins
 immediately, but nothing bypasses this promotion path.
 
-## Delivery horizons
+## Evidence-gated delivery sequence
 
-| Horizon | Primary deliverables | Promotion gate |
+| Gate | Primary deliverables | Promotion evidence |
 | --- | --- | --- |
-| **0-30 days: trustworthy dynamics** | Qualify an 8-step hosted command-buffer cap against 16/32-step trajectories; optimize the new work instrumentation instead of treating segmentation as performance closure; rerun the 100/50/25/12.5 microsecond common-duration matrix on a physical M4; add a paired compound-limit/equality event record; freeze exact Human/runtime/source hashes; acquire or contract the real single-participant dataset and freeze the 25-scenario protocol; continue dependency-ordered default-branch reconciliation. | Common-duration runs complete or fail with a typed, bounded cause; replay and retry are invariant; no unexplained owner, omitted segment, or hidden work family remains. Do not add the next diagnostic ABI or promote behavior while the execution envelope and causal event remain unresolved. |
-| **31-90 days: mechanics foundations** | Close `runtime.precision`, `runtime.force_audit`, and `muscle.source_consistency`; admit registered foot colliders, exclusions, CCD bounds, friction/compliance data, distributed pressure, and centre of pressure; produce subject-scaled mass, inertia, routes, support, and material inputs; complete causal accepted-only sensing. | Zero-input prepared equilibrium is stable and bitwise replayable over the frozen common-duration protocol, with no root wrench, pose drive, direct torque, or compensating controller force. Contact passes crossing, complementarity/cone, pressure, energy, refinement, rollback, and measured-response gates. |
-| **3-6 months: measured equilibrium and recovery** | Qualify quiet standing, weight transfer, altered support, and unexpected perturbation recovery; run reflex, optimal-control, imitation, reinforcement-learning, and hybrid bake-offs behind one stimulation interface; reproduce at least one mechanics/contact and one behavior comparator; introduce bounded offline differentiation or ensemble identification without changing runtime authority. | Same-participant held-out kinematics and forces pass frozen uncertainty-backed margins; every accepted and rejected transaction is accounted for; behavior is assistance-free and uses only authoritative or error-certified physics. |
-| **6-12 months: locomotion and first frontier release** | Qualify start/stop, speed changes, turns, backward/sideways motion, ramps, stairs, obstacles, and support/friction changes; complete the remaining transition, manipulation, combined, and sustained scenarios where measurements exist; close exact-device latency, memory, thermal, energy, and physical-equivalence envelopes; reproduce external benchmarks on comparable workloads. | All 25 scenarios have disjoint calibration/validation sessions and complete measured modalities. The exact release stack achieves real-time factor at least 1, p99 step latency within its authored control period, no swap or untyped failure, and unchanged physical outcomes. Publish only when all linked gates pass. |
-| **12-24 months: whole-Human frontier** | Extend joint tissues, fascia, skin/fat, organs, vessels, nerves, cardiac activation, perfusion, respiration, metabolism, thermal state, and conduction through the same transaction; add held-out deformation, internal-load, and physiological observables; qualify population inference and uncertainty separately from the selected male release. | Every represented field has one mass/force/state owner; tissue exchange is conservative and two-way; mass, species, charge, momentum, work, and energy close; all 95 target leaves have exact-stack evidence. This is an integrated frontier candidate, not automatically a clinical model. |
+| **G0 - trustworthy dynamics** | Qualify an 8-step hosted command-buffer cap against 16/32-step trajectories; optimize the new work instrumentation instead of treating segmentation as performance closure; rerun the 100/50/25/12.5 microsecond common-duration matrix on the physical Mac mini; add a paired compound-limit/equality event record; freeze exact Human/runtime/source hashes; acquire or contract the real single-participant dataset and freeze the 25-scenario protocol; continue dependency-ordered default-branch reconciliation. | Common-duration runs complete or fail with a typed, bounded cause; replay and retry are invariant; no unexplained owner, omitted segment, or hidden work family remains. Do not add the next diagnostic ABI or promote behavior while the execution envelope and causal event remain unresolved. |
+| **G1 - mechanics foundations** | Close `runtime.precision`, `runtime.force_audit`, and `muscle.source_consistency`; admit registered foot colliders, exclusions, CCD bounds, friction/compliance data, distributed pressure, and centre of pressure; produce subject-scaled mass, inertia, routes, support, and material inputs; complete causal accepted-only sensing. | Zero-input prepared equilibrium is stable and bitwise replayable over the frozen common-duration protocol, with no root wrench, pose drive, direct torque, or compensating controller force. Contact passes crossing, complementarity/cone, pressure, energy, refinement, rollback, and measured-response gates. |
+| **G2 - measured equilibrium and recovery** | Qualify quiet standing, weight transfer, altered support, and unexpected perturbation recovery; run reflex, optimal-control, imitation, reinforcement-learning, and hybrid bake-offs behind one stimulation interface; reproduce at least one mechanics/contact and one behavior comparator; introduce bounded offline differentiation or ensemble identification without changing runtime authority. | Same-participant held-out kinematics and forces pass frozen uncertainty-backed margins; every accepted and rejected transaction is accounted for; behavior is assistance-free and uses only authoritative or error-certified physics. |
+| **G3 - locomotion and first frontier release** | Qualify start/stop, speed changes, turns, backward/sideways motion, ramps, stairs, obstacles, and support/friction changes; complete the remaining transition, manipulation, combined, and sustained scenarios where measurements exist; close exact-device latency, memory, thermal, energy, and physical-equivalence envelopes; reproduce external benchmarks on comparable workloads. | All 25 scenarios have disjoint calibration/validation sessions and complete measured modalities. The exact release stack achieves real-time factor at least 1, p99 step latency within its authored control period, no swap or untyped failure, and unchanged physical outcomes. Publish only when all linked gates pass. |
+| **G4 - whole-Human frontier** | Extend joint tissues, fascia, skin/fat, organs, vessels, nerves, cardiac activation, perfusion, respiration, metabolism, thermal state, and conduction through the same transaction; add held-out deformation, internal-load, and physiological observables; qualify population inference and uncertainty separately from the selected male release. | Every represented field has one mass/force/state owner; tissue exchange is conservative and two-way; mass, species, charge, momentum, work, and energy close; all 95 target leaves have exact-stack evidence. This is an integrated frontier candidate, not automatically a clinical model. |
 
 ## Parallel lanes and accountable owners
 
@@ -109,14 +108,14 @@ immediately, but nothing bypasses this promotion path.
 | Data, calibration, and uncertainty | Human data/provenance lead | Real participant admission, disjoint splits, measurement uncertainty, and frozen margins |
 | Behavior, sensing, and learning | TaskPack/SensorPack/Brain lead | Accepted-only sensing and assistance-free standing, recovery, and locomotion |
 | Continuum and physiology | Matter tissue/physiology lead | Conservative substrate cases and independently named physiology evidence |
-| Apple runtime and performance | Metal/Swift/MLX lead | GPU-watchdog closure, instrumentation optimization, counters, memory, thermal, energy, and performance envelopes |
+| Apple runtime and performance | Metal/Swift/MLX lead | Mac-mini GPU qualification, hosted-watchdog closure, instrumentation optimization, counters, memory, thermal, energy, and performance envelopes |
 | Release verification | Independent evidence owner | Comparator reproduction, exact-stack reruns, and claim approval |
 
 Each lane reports only `blocked`, `active`, `gate_passed`, or `superseded`.
 Every report names the immutable artifact, dependency, next evidence-producing
 action, and integration target.
 
-## Immediate 30-day operating queue
+## Immediate operating queue
 
 1. **Contain without hiding the hosted watchdog.** Prove 8/16/32-step
    segmentation equivalence on fresh runners, retain the 32-step failure
@@ -127,9 +126,10 @@ action, and integration target.
    contact Delassus data and cached equality pre-velocities/derivatives. Re-run
    analytic fixtures, trajectory equivalence, and exact work totals after each
    optimization.
-3. **Re-establish the physical-M4 common-duration baseline.** Run the exact
-   6.4 ms four-grid protocol without hosted watchdog ambiguity and retain
-   elapsed time, counters, memory, thermals, replay, and failures.
+3. **Re-establish the physical-M4 common-duration baseline.** Use `ssh macmini`
+   for the exact 6.4 ms four-grid protocol and all sustained GPU work. Retain
+   competing-job checks, elapsed time, counters, memory, thermals, replay, and
+   failures. Hosted runners execute only bounded CI and watchdog probes.
 4. **Localize the dynamics event.** Record one paired source-limit/equality
    compensation event: source DOF, equality row, sweep, signed impulses,
    amplification, residuals before/after, and signed work. Follow it with a
@@ -144,20 +144,20 @@ action, and integration target.
 
 ## Go/no-go decisions
 
-- **Day 30:** no-go on another diagnostic ABI or long behavior work if the
+- **Runtime gate:** no-go on another diagnostic ABI or long behavior work if the
   hosted/physical execution boundary remains untyped or the dominant
   force/work event cannot be attributed.
-- **Day 60:** no-go on single-male release timing if participant rights, raw
+- **Data gate:** no-go on the single-male release if participant rights, raw
   trials, required modalities, uncertainty, and disjoint sessions are not
   secured.
-- **Day 90:** no-go on policy scaling if anatomical contact and zero-input
+- **Mechanics gate:** no-go on policy scaling if anatomical contact and zero-input
   prepared equilibrium have not qualified.
-- **Month 6:** no-go on locomotion promotion if standing/recovery fails held-out
+- **Behavior gate:** no-go on locomotion promotion if standing/recovery fails held-out
   kinematic or force margins; failed and partial candidates remain evidence.
-- **Month 12:** no-go on state-of-the-art wording for any capability without a
+- **Frontier-claim gate:** no-go on state-of-the-art wording for any capability without a
   reproduced comparator and exact-device Numi evidence on a comparable
   workload.
-- **Month 24:** no-go on whole-Human or clinical language if target coverage,
+- **Whole-Human gate:** no-go on whole-Human or clinical language if target coverage,
   coupled conservation, context of use, risk analysis, or held-out
   physiological evidence remains incomplete.
 
