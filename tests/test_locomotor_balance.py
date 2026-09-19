@@ -137,6 +137,21 @@ class BalanceAuthoringTests(unittest.TestCase):
         self.assertNotIn('evidenceKind', feedback['sources'][0])
         self.assertEqual(feedback['sources'][1]['referenceValue'], 350)
 
+    def test_delayed_filtered_sources_compile_with_sufficient_warmup(self):
+        body, _, _ = self.prepared_fixture()
+        balance = self.balance(body)
+        balance['sources'][0]['filterTimeConstantSeconds'] = .04
+        balance['sources'][0]['conductionDelayMicroseconds'] = 80000
+        artifact = json.dumps(balance, sort_keys=True).encode()
+        feedback = self.compile(balance, artifact)['balanceFeedback']
+        self.assertEqual(
+            feedback['sources'][0]['filterTimeConstantSeconds'], .04
+        )
+        self.assertEqual(
+            feedback['sources'][0]['conductionDelayMicroseconds'], 80000
+        )
+        self.assertEqual(feedback['initializationDurationMicroseconds'], 100000)
+
     def test_balance_bytes_are_provenance_not_a_replaceable_parse(self):
         body, _, _ = self.prepared_fixture()
         balance = self.balance(body)
@@ -169,8 +184,17 @@ class BalanceAuthoringTests(unittest.TestCase):
         reject(lambda x: x.__setitem__('mode', 'unknown'), 'mode')
         reject(lambda x: x['sources'][0].__setitem__('identifier', 2), 'identity')
         reject(lambda x: x['sources'][0].__setitem__('bodyReceptorBindingIdentifier', x['sources'][1]['bodyReceptorBindingIdentifier']), 'identity')
-        reject(lambda x: x['sources'][0].__setitem__('filterTimeConstantSeconds', .01), 'history')
+        reject(lambda x: x['sources'][0].__setitem__('filterTimeConstantSeconds', 1.01), 'history')
         reject(lambda x: x['sources'][0].__setitem__('conductionDelayMicroseconds', 1), 'history')
+        reject(lambda x: x['sources'][0].__setitem__('conductionDelayMicroseconds', 504000), 'history')
+        reject(lambda x: x.__setitem__('initializationDurationMicroseconds', 100001), 'clocks')
+
+        def insufficient_warmup(balance):
+            balance['sources'][0]['filterTimeConstantSeconds'] = .04
+            balance['sources'][0]['conductionDelayMicroseconds'] = 80000
+            balance['initializationDurationMicroseconds'] = 80000
+
+        reject(insufficient_warmup, 'initialization')
         reject(lambda x: x['sources'][1].__setitem__('evidenceKind', 'kinematic'), 'support evidence')
         reject(lambda x: x['routes'][0].__setitem__('sourceIdentifier', 99), 'unbound')
         reject(lambda x: x['routes'][0].__setitem__('muscleIdentifier', 3), 'unbound')
