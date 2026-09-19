@@ -8,9 +8,10 @@ calendar phases.
 ## Board readout
 
 Numi2 is making real technical progress, but raw GitHub activity materially
-overstates product progress. GitHub commit search returned 819 default-branch
-commits: 628 (76.7%) are automated `numichart-news` feed refreshes. The remaining
-191 commits are concentrated in Human, Vivo, and Brain. The portfolio is
+overstates product progress. The publication snapshot contained roughly 820
+default-branch commits: about 630 (roughly 77%) were automated
+`numichart-news` feed refreshes. The roughly 190 non-feed commits were
+concentrated in Human, Vivo, and Brain. The portfolio is
 building permanent source, runtime, transaction, and evidence infrastructure;
 it has not yet produced a defensible whole-Human, biological-prediction, or
 device-execution claim.
@@ -27,8 +28,8 @@ release claim.
 
 | Stream | Default-branch commits | What moved | Board interpretation |
 | --- | ---: | --- | --- |
-| `numichart-news` | 628 | Automated feed refreshes | Operational churn, not engineering throughput. Remove it from delivery KPIs and batch/snapshot the history. |
-| `numilab-human` | 106 | Source binding, mass/organ/muscle ownership, participant-data handoff, exact clocks, unassisted launch contracts, dynamics/work semantics, and the evidence-gated execution plan | Strongest concentration of product-definition and scientific-credibility work. Still missing an admitted same-participant bundle, anatomical foot contact, loaded equilibrium, standing, walking, and integrated validation. |
+| `numichart-news` | ~630 | Automated feed refreshes | Operational churn, not engineering throughput. Remove it from delivery KPIs and batch/snapshot the history. |
+| `numilab-human` | ~110 | Source binding, mass/organ/muscle ownership, participant-data handoff, exact clocks, unassisted launch contracts, dynamics/work semantics, and the evidence-gated execution plan | Strongest concentration of product-definition and scientific-credibility work. Still missing an admitted same-participant bundle, anatomical foot contact, loaded equilibrium, standing, walking, and integrated validation. |
 | `numiVivo` | 52 | Native sparse H5AD interoperability, binder surfaces, negative-binomial compute work, and evidence/reporting improvements | Platform progress is real; predictive and Metal-promotion evidence is not. General-platform and single-cell workflow failures remain open. CPU remains authoritative for the cited Kang fit domain. |
 | `numi-brain` | 32 | Source-bound whole-body feedback, exact sensor timestamps, transactional delay/filter history, and safety/overflow contracts | Contract and runtime infrastructure is credible and CI is green. It does not yet demonstrate measured assistance-free standing or integrated behavior. |
 | `numi-lab` default | 1 | One acceleration-parity diagnostic landed on `numisolver` | The important Human native work is on `human-native-runtime-20260915`, now more than 700 commits ahead and 100 behind the default branch. This is a reconciliation program, not a merge button. |
