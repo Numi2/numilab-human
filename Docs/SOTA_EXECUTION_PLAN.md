@@ -41,6 +41,15 @@ The qualifying truth-layer increment established:
 - physical M4 Pro completion of the 512-step, 6.4 ms cap-8 horizon and bitwise
   replay with Metal validation both disabled and enabled, with exact
   debug-on/off mechanics identity;
+- promotion of cap 8 as the production default, followed by a clean-commit
+  physical-M4 run with no diagnostic override: 16 authoritative segments across
+  primary plus replay, every segment bounded to eight steps, and bitwise replay;
+- physical-M4 shader A/B equivalence at both 64 and 512 steps: terminal q/v are
+  bitwise identical, all 319 non-timing/non-work fields are exact, and all eight
+  work fields remain inside their declared arithmetic bounds. The sustained
+  single samples observed 1.8134x wall-time and 1.8871x authoritative-segment
+  speedups, but do not yet qualify a performance envelope; the immutable
+  receipts are in the [native optimization record](https://github.com/Numi2/numi-lab/blob/human-native-runtime-20260915/docs/NUMI_HUMAN_SEGMENT_OPTIMIZATION.md);
 - explicit scope: this is constraint-stage work, not complete physical-energy
   closure;
 - equality work as the dominant measured owned constraint work, while current
@@ -106,7 +115,7 @@ Hosted runners are restricted to bounded CI and measured watchdog probes.
 
 | Gate | Primary deliverables | Promotion evidence |
 | --- | --- | --- |
-| **G0-R - trustworthy runtime** | Promote the physically qualified 8-step command-buffer cap; optimize the new work instrumentation instead of treating segmentation as performance closure; complete the 100/50/25/12.5 microsecond common-duration matrix on the physical Mac mini; add a paired compound-limit/equality event record; freeze exact Human/runtime/source hashes. | Common-duration runs complete or fail with a typed, bounded cause; replay and retry are invariant; no unexplained owner, omitted segment, or hidden work family remains. Do not add the next diagnostic ABI or promote behavior while the execution envelope and causal event remain unresolved. |
+| **G0-R - trustworthy runtime** | Retain the promoted cap-8 production default and mechanics-equivalent shader optimization; convert the observed speedup into a repeated interleaved performance receipt with load, thermal, memory, energy, and counter evidence; complete the 100/50/25/12.5 microsecond common-duration matrix on the physical Mac mini; add a paired compound-limit/equality event record; freeze exact Human/runtime/source hashes. | Common-duration runs complete or fail with a typed, bounded cause; replay and retry are invariant; no unexplained owner, omitted segment, or hidden work family remains. The performance receipt passes its fixed protocol. Do not add the next diagnostic ABI or promote behavior while the causal event remains unresolved. |
 | **G0-D - admitted release inputs** | Acquire or contract the real single-participant dataset; bind rights, demographics, raw modalities, uncertainty, calibration/validation sessions, and missing cells; freeze the 25-scenario protocol and decision margins. | The admission receipt names one participant, disjoint sessions, immutable source hashes, usable rights, every required observable, declared uncertainty, and explicit unsupported cells. Public or synthetic substitutes cannot pass this gate. |
 | **G0-I - reconciled integration surface** | Reconcile the Human runtime branch into the default line in dependency order: leaf diagnostics and contracts, then owners, then integrated workflows. Preserve both branch histories and resolve semantic conflicts explicitly. | Every landed slice has owner tests and exact-source evidence on default; branch ancestry and unresolved conflicts are recorded; no wholesale merge or unreviewed transplant is used as evidence of integration. |
 | **G1 - mechanics foundations** | Close `runtime.precision`, `runtime.force_audit`, and `muscle.source_consistency`; admit registered foot colliders, exclusions, CCD bounds, friction/compliance data, distributed pressure, and centre of pressure; produce subject-scaled mass, inertia, routes, support, and material inputs; complete causal accepted-only sensing. | Zero-input prepared equilibrium is stable and bitwise replayable over the frozen common-duration protocol, with no root wrench, pose drive, direct torque, or compensating controller force. Contact passes crossing, complementarity/cone, pressure, energy, refinement, rollback, and measured-response gates. |
@@ -133,30 +142,25 @@ action, and integration target.
 
 ## Dependency-ordered operating queue
 
-1. **Promote qualified containment without hiding the hosted watchdog.** Use
-   cap 8 as the production default, retain the hosted cap-32/64 failures, and
-   preserve the physical monolithic/cap-8/16/32 plus 512-step debug-off/on
-   reports as the promotion receipt. This closes command-buffer containment,
-   not performance, force convergence, or standing.
-2. **Recover the performance regression.** Remove redundant serial lane-0
-   Jacobian-vector contractions from impulse-work accounting by reusing the
-   contact Delassus data and cached equality pre-velocities/derivatives. Re-run
-   analytic fixtures, trajectory equivalence, and exact work totals after each
-   optimization.
-3. **Complete the physical-M4 common-duration baseline.** Keep the qualified
+1. **Convert the qualified optimization into a performance envelope.** Retain
+   the exact 64- and 512-step mechanics receipts, then run repeated interleaved
+   baseline/candidate samples with fixed background load, thermal state,
+   counters, memory, energy, and clock conditions. Treat the current 1.81x wall
+   and 1.89x segment results as observations until that protocol passes.
+2. **Complete the physical-M4 common-duration baseline.** Keep the qualified
    12.5-microsecond, 512-step receipt and run the remaining 25/50/100-
    microsecond grids through `ssh macmini`. Retain competing-job checks,
    elapsed time, counters, memory, thermals, replay, and failures. Hosted
    runners execute only bounded CI and watchdog probes.
-4. **Localize the dynamics event.** Record one paired source-limit/equality
+3. **Localize the dynamics event.** Record one paired source-limit/equality
    compensation event: source DOF, equality row, sweep, signed impulses,
    amplification, residuals before/after, and signed work. Follow it with a
    selected-step full production snapshot if it explains the dominant event.
-5. **Freeze the measured release inputs.** Admit one participant's rights,
+4. **Freeze the measured release inputs.** Admit one participant's rights,
    demographics, sessions, raw modalities, uncertainty, calibration/validation
    split, and missing cells. Do not combine people or substitute public
    benchmark participants for the selected subject.
-6. **Continue reconciliation in dependency order.** Port leaf diagnostics and
+5. **Continue reconciliation in dependency order.** Port leaf diagnostics and
    contracts with their tests first, then owners, then integrated workflows.
    Never use a wholesale branch merge as the integration strategy.
 
