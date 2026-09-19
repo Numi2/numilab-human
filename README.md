@@ -169,7 +169,9 @@ The permanent evidence-gated architecture is in the
 [Numi Human development roadmap](Docs/DEVELOPMENT_ROADMAP.md). The current
 [board execution plan](Docs/SOTA_EXECUTION_PLAN.md) turns it into a
 dependency-ordered critical path, parallel work lanes, measurable promotion
-gates, and explicit go/no-go decisions.
+gates, and explicit go/no-go decisions. The current cross-repository activity,
+risks, and board recommendations are in the
+[Numi2 board executive summary](Docs/NUMI2_BOARD_EXECUTIVE_SUMMARY.md).
 
 ## Visual progress
 
