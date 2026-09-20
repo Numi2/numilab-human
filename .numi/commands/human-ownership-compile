@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eu
+repo=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+export PYTHONPATH="$repo/src${PYTHONPATH:+:$PYTHONPATH}"
+if [ "${1:-}" = "--numi-describe" ]; then
+    printf '%s\n' 'Compile HumanPack.ownership.v1 from validated target coverage and body-composition evidence without promoting candidate owners.'
+    exit 0
+fi
+exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.ownership "$@"

@@ -1,0 +1,310 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://numi.example/schemas/humanpack-ownership.v1.schema.json",
+  "title": "HumanPack stable semantic and physical ownership authoring manifest",
+  "description": "Fail-closed source/candidate ownership and raw mass-moment authoring contract. V1 admits no production record and does not grant mechanics or integrated Human qualification.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "compiler", "manifest_sha256", "status", "subject", "inputs",
+    "source_coverage", "body_composition", "records", "moment_closures", "counts",
+    "qualification", "boundary"
+  ],
+  "properties": {
+    "schema": {"const": "HumanPack.ownership.v1"},
+    "compiler": {"const": "numilab-human.ownership.1"},
+    "manifest_sha256": {"$ref": "#/$defs/sha256"},
+    "status": {"enum": ["partial", "blocked"]},
+    "subject": {"type": "string", "minLength": 1},
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_coverage", "body_composition", "muscle_routes", "muscle_route_identities", "authoring"],
+      "properties": {
+        "target_coverage": {"$ref": "#/$defs/input"},
+        "body_composition": {"$ref": "#/$defs/input"},
+        "muscle_routes": {"$ref": "#/$defs/input"},
+        "muscle_route_identities": {"$ref": "#/$defs/input"},
+        "authoring": {"$ref": "#/$defs/input"}
+      }
+    },
+    "source_coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["manifest_sha256", "scope_status", "leaf_count", "unresolved_current_registers"],
+      "properties": {
+        "manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "scope_status": {"enum": ["blocked", "source_union_materialized"]},
+        "leaf_count": {"type": "integer", "minimum": 95},
+        "unresolved_current_registers": {"type": "integer", "minimum": 0}
+      }
+    },
+    "body_composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "status", "domain_counts", "ownership", "candidate_scopes_disjoint", "production_physical_owner_count"],
+      "properties": {
+        "schema": {"const": "HumanPack.body-composition-release-join.v1"},
+        "status": {"const": "partial"},
+        "domain_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+        "ownership": {
+          "type": "object",
+          "additionalProperties": {
+            "oneOf": [
+              {"type": "boolean"},
+              {"type": "integer", "minimum": 0}
+            ]
+          }
+        },
+        "candidate_scopes_disjoint": {"const": false},
+        "production_physical_owner_count": {"const": 0}
+      }
+    },
+    "records": {
+      "type": "array",
+      "minItems": 95,
+      "items": {"$ref": "#/$defs/record"}
+    },
+    "moment_closures": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/closure"}
+    },
+    "counts": {"$ref": "#/$defs/counts"},
+    "qualification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_coverage_validated", "body_composition_join_bound",
+        "all_source_routes_retained", "route_semantic_ids_coverage_bound",
+        "candidate_moment_closure_validated",
+        "production_physical_ownership", "integrated_human_qualification"
+      ],
+      "properties": {
+        "target_coverage_validated": {"const": true},
+        "body_composition_join_bound": {"const": true},
+        "all_source_routes_retained": {"const": true},
+        "route_semantic_ids_coverage_bound": {"type": "boolean"},
+        "candidate_moment_closure_validated": {"type": "boolean"},
+        "production_physical_ownership": {"const": false},
+        "integrated_human_qualification": {"const": false}
+      }
+    },
+    "boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "identifier": {"type": "string", "minLength": 1},
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "file_sha256", "identity_sha256"],
+      "properties": {
+        "schema": {"$ref": "#/$defs/identifier"},
+        "file_sha256": {"$ref": "#/$defs/sha256"},
+        "identity_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "ids"],
+      "properties": {
+        "status": {"enum": ["unresolved", "source", "candidate"]},
+        "ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/identifier"}}
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "status": {"const": "unresolved"},
+            "ids": {"maxItems": 0}
+          }
+        },
+        {
+          "properties": {
+            "status": {"enum": ["source", "candidate"]},
+            "ids": {"minItems": 1}
+          }
+        }
+      ]
+    },
+    "owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "owner_id"],
+      "properties": {
+        "status": {"enum": ["unresolved", "candidate"]},
+        "owner_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/identifier"}]}
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "status": {"const": "unresolved"},
+            "owner_id": {"type": "null"}
+          }
+        },
+        {
+          "properties": {
+            "status": {"const": "candidate"},
+            "owner_id": {"$ref": "#/$defs/identifier"}
+          }
+        }
+      ]
+    },
+    "vector3": {
+      "type": "array", "minItems": 3, "maxItems": 3,
+      "items": {"type": "number"}
+    },
+    "matrix3": {
+      "type": "array", "minItems": 3, "maxItems": 3,
+      "items": {"$ref": "#/$defs/vector3"}
+    },
+    "momentComponents": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["volume_m3", "zeroth_mass_kg", "first_mass_moment_kg_m", "second_mass_moment_kg_m2"],
+      "properties": {
+        "volume_m3": {"type": ["number", "null"], "minimum": 0},
+        "zeroth_mass_kg": {"type": ["number", "null"], "minimum": 0},
+        "first_mass_moment_kg_m": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/vector3"}]},
+        "second_mass_moment_kg_m2": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/matrix3"}]}
+      }
+    },
+    "momentValues": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["volume_m3", "zeroth_mass_kg", "first_mass_moment_kg_m", "second_mass_moment_kg_m2"],
+      "properties": {
+        "volume_m3": {"type": ["number", "null"]},
+        "zeroth_mass_kg": {"type": ["number", "null"]},
+        "first_mass_moment_kg_m": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/vector3"}]},
+        "second_mass_moment_kg_m2": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/matrix3"}]}
+      }
+    },
+    "moments": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "frame_id", "volume_m3", "zeroth_mass_kg", "first_mass_moment_kg_m", "second_mass_moment_kg_m2"],
+      "properties": {
+        "status": {"enum": ["unresolved", "candidate"]},
+        "frame_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/identifier"}]},
+        "volume_m3": {"type": ["number", "null"], "minimum": 0},
+        "zeroth_mass_kg": {"type": ["number", "null"], "minimum": 0},
+        "first_mass_moment_kg_m": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/vector3"}]},
+        "second_mass_moment_kg_m2": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/matrix3"}]}
+      }
+    },
+    "forceSemantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "mode", "replaces_owner_ids"],
+      "properties": {
+        "status": {"enum": ["unresolved", "candidate"]},
+        "mode": {"enum": [null, "replacement", "additive"]},
+        "replaces_owner_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/identifier"}}
+      }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "semantic_action_id", "source_index"],
+      "properties": {
+        "status": {"enum": ["source", "candidate"]},
+        "semantic_action_id": {"$ref": "#/$defs/identifier"},
+        "source_index": {"type": "integer", "minimum": 0}
+      }
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "semantic_id", "coverage_leaf_sha256s", "entity_kind", "topology", "fields",
+        "motor_compartments", "composition", "owners", "moments", "force_semantics",
+        "action", "qualification_status"
+      ],
+      "properties": {
+        "semantic_id": {"$ref": "#/$defs/identifier"},
+        "coverage_leaf_sha256s": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/sha256"}},
+        "entity_kind": {"$ref": "#/$defs/identifier"},
+        "topology": {"$ref": "#/$defs/binding"},
+        "fields": {"$ref": "#/$defs/binding"},
+        "motor_compartments": {"$ref": "#/$defs/binding"},
+        "composition": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "component_semantic_ids", "conflict_ids"],
+          "properties": {
+            "status": {"enum": ["unresolved", "single_source", "composed", "conflict"]},
+            "component_semantic_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/identifier"}},
+            "conflict_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/identifier"}}
+          }
+        },
+        "owners": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["physical_volume", "mechanical_mass", "material", "active_force", "state"],
+          "properties": {
+            "physical_volume": {"$ref": "#/$defs/owner"},
+            "mechanical_mass": {"$ref": "#/$defs/owner"},
+            "material": {"$ref": "#/$defs/owner"},
+            "active_force": {"$ref": "#/$defs/owner"},
+            "state": {"$ref": "#/$defs/owner"}
+          }
+        },
+        "moments": {"$ref": "#/$defs/moments"},
+        "force_semantics": {"$ref": "#/$defs/forceSemantics"},
+        "action": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/action"}]},
+        "qualification_status": {"enum": ["unresolved", "source_only", "candidate"]}
+      }
+    },
+    "closure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "status", "member_semantic_ids", "frame_id", "expected", "actual", "residual", "absolute_tolerance"],
+      "properties": {
+        "id": {"$ref": "#/$defs/identifier"},
+        "status": {"const": "candidate"},
+        "member_semantic_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/identifier"}},
+        "frame_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/identifier"}]},
+        "expected": {"$ref": "#/$defs/momentComponents"},
+        "actual": {"$ref": "#/$defs/momentComponents"},
+        "residual": {"$ref": "#/$defs/momentValues"},
+        "absolute_tolerance": {"type": "number", "minimum": 0}
+      }
+    },
+    "statusCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "unresolved": {"type": "integer", "minimum": 0},
+        "candidate": {"type": "integer", "minimum": 0},
+        "production": {"const": 0}
+      }
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["records", "semantic_actions", "unmapped_route_records", "composition_conflicts", "candidate_moment_records", "production_moment_records", "moment_closures", "owners_by_role_and_status"],
+      "properties": {
+        "records": {"type": "integer", "minimum": 95},
+        "semantic_actions": {"type": "integer", "minimum": 1},
+        "unmapped_route_records": {"type": "integer", "minimum": 0},
+        "composition_conflicts": {"type": "integer", "minimum": 0},
+        "candidate_moment_records": {"type": "integer", "minimum": 0},
+        "production_moment_records": {"const": 0},
+        "moment_closures": {"type": "integer", "minimum": 0},
+        "owners_by_role_and_status": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["physical_volume", "mechanical_mass", "material", "active_force", "state"],
+          "properties": {
+            "physical_volume": {"$ref": "#/$defs/statusCounts"},
+            "mechanical_mass": {"$ref": "#/$defs/statusCounts"},
+            "material": {"$ref": "#/$defs/statusCounts"},
+            "active_force": {"$ref": "#/$defs/statusCounts"},
+            "state": {"$ref": "#/$defs/statusCounts"}
+          }
+        }
+      }
+    }
+  }
+}
