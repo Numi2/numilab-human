@@ -82,7 +82,7 @@ tolerance is inferred from these four observations.
 
 The exact native-v8 construction and inbound request-v3 subgates are now passed
 and retained in
-[NumiBrain evidence commit `3153d5d`](https://github.com/Numi2/numi-brain/tree/3153d5d67dac5d12f29fe594c362c2ea0055d8ca/evidence/numanx-exact-request-v3-contract-v0.1).
+[NumiBrain evidence commit `c64449c`](https://github.com/Numi2/numi-brain/tree/c64449c50793da1ba11ab716dcc9c550e53a2eed/evidence/numanx-exact-request-v3-contract-v0.1).
 The physical-M4 probe validates the exact request, rejects mixed v1 records, and
 stops at stage 900 before resource import or GPU submission. It does not yet
 cross HumanMatter close or the accepted publication/ACK boundary.

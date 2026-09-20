@@ -104,8 +104,8 @@ tests, authored-world/NHEQ negative matrix, and asset-backed exact-request probe
 pass. This is an admission-contract increment, not an accepted-root or standing
 result.
 
-NumiBrain commits `a2783fc` and `5d9398b` are now on `main`. They preserve the
-legacy microsecond ABI byte-for-byte and add domain-separated v2 root, substep,
+NumiBrain commits `a2783fc`, `5d9398b`, and `53d90bc` are now on `main`. They
+preserve the legacy microsecond ABI byte-for-byte and add domain-separated v2 root, substep,
 motor-candidate, motor-output-header, ready-gate, accepted-state, and commit
 records with explicit nanosecond timestamps, a `1 ns` quantum, distinct hashes,
 typed Swift clocks, and mixed-family rejection.
@@ -120,7 +120,7 @@ asset-backed physical-M4 probe pass. The probe rejects mixed families and stops
 at stage 900 before resource import or GPU submission. The construction receipt
 is published in [NumiBrain evidence commit `2cfd46c`](https://github.com/Numi2/numi-brain/tree/2cfd46cccf78ae4ba23f22654cc44bf9e343d788/evidence/numanx-exact-domain-construction-v0.1),
 and the inbound-contract receipt is published in
-[evidence commit `3153d5d`](https://github.com/Numi2/numi-brain/tree/3153d5d67dac5d12f29fe594c362c2ea0055d8ca/evidence/numanx-exact-request-v3-contract-v0.1).
+[evidence commit `c64449c`](https://github.com/Numi2/numi-brain/tree/c64449c50793da1ba11ab716dcc9c550e53a2eed/evidence/numanx-exact-request-v3-contract-v0.1).
 HumanMatter close, outbound sensor, accepted publication, snapshot, and
 persistent-state lanes do not yet form an executable exact family; accepted-root
 publication, support-history continuity, and standing remain open.

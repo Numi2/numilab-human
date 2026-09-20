@@ -70,8 +70,8 @@ fixed-vector contract tests, authored-world/NHEQ negative matrix, and
 asset-backed exact-request admission probe pass. This reduces integration risk;
 it does not establish an accepted root or standing.
 
-NumiBrain commits `a2783fc` and `5d9398b` are published on `main`. They preserve
-every legacy microsecond byte and hash while adding domain-separated v2 root,
+NumiBrain commits `a2783fc`, `5d9398b`, and `53d90bc` are published on `main`.
+They preserve every legacy microsecond byte and hash while adding domain-separated v2 root,
 substep, motor-candidate, motor-header, ready-gate, accepted-state, and commit
 records with explicit nanosecond clocks, `1 ns` quantum, typed Swift time, and
 mixed-family rejection. Native-v8
@@ -82,12 +82,13 @@ construction receipt is in
 [evidence commit `2cfd46c`](https://github.com/Numi2/numi-brain/tree/2cfd46cccf78ae4ba23f22654cc44bf9e343d788/evidence/numanx-exact-domain-construction-v0.1).
 
 Brain and native now reproduce the same five fixed request-v3 fingerprints. On
-the physical M4 Pro, 15 exact/layout tests passed with Metal validation, 33
-focused compatibility tests passed, and the native fixed-vector CTest plus
-asset-backed admission probe passed. The probe rejected mixed v1 records and
-stopped coherently at stage 900 before resource import or GPU submission. The
+the physical M4 Pro, all 33 focused exact/compatibility tests passed with Metal
+validation after an optional zero-channel GPU dispatch was corrected, and the
+native fixed-vector CTest plus asset-backed admission probe passed. The probe
+rejected mixed v1 records and stopped coherently at stage 900 before resource
+import or GPU submission. The
 immutable cross-repository receipt is in
-[evidence commit `3153d5d`](https://github.com/Numi2/numi-brain/tree/3153d5d67dac5d12f29fe594c362c2ea0055d8ca/evidence/numanx-exact-request-v3-contract-v0.1).
+[evidence commit `c64449c`](https://github.com/Numi2/numi-brain/tree/c64449c50793da1ba11ab716dcc9c550e53a2eed/evidence/numanx-exact-request-v3-contract-v0.1).
 
 This fixes the audited Core identity defect and closes exact inbound motor
 authority, but it is not an accepted-root result. HumanMatter close, outbound
