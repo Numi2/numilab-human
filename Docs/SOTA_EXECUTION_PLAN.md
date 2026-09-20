@@ -112,6 +112,18 @@ support-history continuity, and standing remain open.
 The immutable passing receipt and the retained failed mixed-tuple attempts are
 published in [NumiBrain evidence commit `ebbffa4`](https://github.com/Numi2/numi-brain/tree/ebbffa484c6a6f1aa91aaf640f165fc0047f98eb/evidence/numanx-v8-exact-construction-v0.1).
 
+A follow-on cross-repository ABI audit found that native request v2 is not yet a
+safe accepted-root boundary. It currently preserves the v1 fixed layouts while
+reinterpreting microsecond-named transaction and publication words as
+nanoseconds. Because that clock domain is absent from the nested fingerprints,
+the same numeric bytes can identify two different physical times. Exact
+construction remains qualified; exact accepted-root routing stays disabled.
+The permanent fix is a parallel, domain-separated nanosecond ABI, not an
+in-place reinterpretation of v1. It spans root/substep/accepted/commit identity,
+motor and ready gates, fast status, sensor timing and aggregate publication,
+HumanMatter close records, persistent shader state, and evidence schemas. The
+legacy microsecond lane and its golden hashes remain byte-for-byte unchanged.
+
 The ownership audit also closes a design question: the legacy standalone stand
 path recomputes q/v/muscle state and cold-creates its own contact impulses. It
 cannot consume Matter's NHINIT3 accepted-history arena. Prepared production
@@ -197,12 +209,16 @@ action, and integration target.
 ## Next causal mechanics action
 
 1. **Complete exact accepted-root clock ownership.** Native-v8 construction now
-   admits `12,500 ns` without rounding. Version the Brain transaction, motor,
-   witness, and ACK timestamp contracts so nanoseconds remain authoritative
-   through publication, then drive one and two nil-muscle roots through the
-   existing genuine preflight, ACK, generation latch, rollback, and accepted
-   publication sequence. The legacy standalone stand shader is not a valid
-   NHINIT3 destination because it cold-creates its own contact state.
+   admits `12,500 ns` without rounding. Add a parallel v2 nanosecond lane across
+   Brain, NumanX/HumanMatter, persistent Metal state, publication, and evidence;
+   mix clock domain and record version into every time-bearing identity. Enforce
+   the compatibility matrix before GPU submission: v1-v7 runtime with v1
+   microsecond request is valid; v8 with v2 nanosecond request is valid; either
+   cross-pairing or any mixed nested family is rejected. Then drive one and two
+   semantic-zero-muscle roots through the existing genuine preflight, ACK,
+   generation latch, rollback/retry, and accepted publication sequence. The
+   legacy standalone stand shader is not a valid NHINIT3 destination because it
+   cold-creates its own contact state.
 2. **Reach full stand-stack parity.** Add a permanent hashed NHTENDON runtime
    configuration and bind its programs into the NumanX/Matter owner input. Add
    a quiescent post-publication copied snapshot for raw accepted support

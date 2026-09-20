@@ -75,6 +75,14 @@ construction-admission result, not accepted behavior or standing.
 The passing hashes and failed mixed-tuple attempts are retained in
 [evidence commit `ebbffa4`](https://github.com/Numi2/numi-brain/tree/ebbffa484c6a6f1aa91aaf640f165fc0047f98eb/evidence/numanx-v8-exact-construction-v0.1).
 
+The subsequent interface audit identified one critical integration defect
+before it reached accepted-root evidence: native request v2 currently assigns
+nanosecond meaning to v1 microsecond-named nested records without putting the
+clock domain into their identities. Construction evidence remains valid, but
+that request cannot yet be promoted. The remedy is a parallel, versioned
+nanosecond path through Brain, NumanX/HumanMatter, Metal state, sensor
+publication, and evidence while preserving all legacy hashes unchanged.
+
 A fresh reconciliation audit confirms that the two native identity commits
 cannot be safely cherry-picked onto native `main` today: the default line does
 not yet contain the Matter/NumanX/Human owner stack they modify. The safe route
@@ -110,9 +118,12 @@ parity evidence; native Metal on the reserved Mac mini remains authoritative.
 The next causal mechanics action is:
 
 1. Extend the real Brain witness/preflight/ACK publication path from its
-   now-qualified exact-v8 construction boundary to nanosecond transaction and
-   ACK ownership. Do not bolt NHINIT3 onto the legacy stand shader, which does
-   not own accepted support history.
+   now-qualified exact-v8 construction boundary with a domain-separated v2
+   nanosecond ABI. Reject mixed runtime/request or nested record families before
+   GPU submission; then qualify one root, two consecutive roots, and
+   reject/retry with an explicitly fingerprinted zero-muscle command. Do not
+   bolt NHINIT3 onto the legacy stand shader, which does not own accepted
+   support history.
 2. Add hashed NHTENDON parity, a copied
    post-publication support-history snapshot, and one atomic runtime receipt.
 3. Freeze the common native commit/tree, runner/runtime/shader set, rigid,
