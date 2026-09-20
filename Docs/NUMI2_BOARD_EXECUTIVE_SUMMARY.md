@@ -59,6 +59,30 @@ has:
 
 These are separate immutable artifact sets, not one integrated release stack.
 
+The first recommended integration seam is now published on the Human native
+branch: commits `a924748f` and `b1a9bdd3` replace duplicated runtime/probe
+source-fingerprint composition with one tested contract while preserving the
+historical zero-identity edge. The physical M4 Pro warnings-as-errors build,
+CPU identity/NHINIT tests, and authored-world/NHEQ negative matrix pass. This
+reduces integration risk; it does not establish an accepted root or standing.
+
+NumiBrain commit `87e7b13` is also published on `main`. It carries an exact
+`12,500 ns` construction clock into native v8 without microsecond rounding and
+passes a source-coherent physical-M4 admission test with Metal validation. It
+deliberately rejects the existing Brain Gate C accepted-root path because that
+transaction/ACK ABI still owns whole-microsecond timestamps. This is a
+construction-admission result, not accepted behavior or standing.
+The passing hashes and failed mixed-tuple attempts are retained in
+[evidence commit `ebbffa4`](https://github.com/Numi2/numi-brain/tree/ebbffa484c6a6f1aa91aaf640f165fc0047f98eb/evidence/numanx-v8-exact-construction-v0.1).
+
+A fresh reconciliation audit confirms that the two native identity commits
+cannot be safely cherry-picked onto native `main` today: the default line does
+not yet contain the Matter/NumanX/Human owner stack they modify. The safe route
+is to reconcile that owner baseline through `3b968495`, preserving the newer
+default-line HyperPolicy/K1 work, qualify it on the Mac mini, and only then
+apply the two identity commits. A wholesale merge would obscure semantic
+conflicts and is not the recommendation.
+
 The sustained A/B observed 1.8134x end-to-end and 1.8871x authoritative-segment
 speedups. These are single-sample observations, not a qualified performance
 envelope. The four-grid matrix closes the physical trace-basis subgate only:
@@ -77,17 +101,28 @@ uncertainty, measures a delta on a comparable workload, and records the retest
 trigger. Do not use feature count, visual completeness, reward, liveness, or
 commit volume as substitutes.
 
+The refreshed benchmark bar now includes MuscleMimic and MS-Human-700 for
+muscle-actuated control, Gait120/MM-EvalKit for measured kinematics, kinetics,
+ground reaction and EMG, and ContactBench/DiffMJX for contact and gradients.
+CUDA/JAX systems remain off-device algorithmic comparators, not Apple-GPU
+parity evidence; native Metal on the reserved Mac mini remains authoritative.
+
 The next causal mechanics action is:
 
-1. Add and qualify fail-closed NHINIT3 admission in the production stand runner.
-2. Freeze the common native commit/tree, runner/runtime/shader set, rigid,
+1. Extend the real Brain witness/preflight/ACK publication path from its
+   now-qualified exact-v8 construction boundary to nanosecond transaction and
+   ACK ownership. Do not bolt NHINIT3 onto the legacy stand shader, which does
+   not own accepted support history.
+2. Add hashed NHTENDON parity, a copied
+   post-publication support-history snapshot, and one atomic runtime receipt.
+3. Freeze the common native commit/tree, runner/runtime/shader set, rigid,
    muscle, NHEQ2, NHLIM1, and NHCNT2 identities. For each 100/50/25/12.5
    microsecond grid, author and qualify one exact-clock tuple of Matter-package
    SHA, world fingerprint, NHINIT3 SHA, and initial-state fingerprint.
-3. Run paired cold-versus-seeded evidence on that identical stack through
+4. Run paired cold-versus-seeded evidence on that identical stack through
    `ssh macmini`. Retain improvement, no change, or regression without
    promoting force convergence from this experiment alone.
-4. If continuity is not causal, capture the paired limit/equality event and a
+5. If continuity is not causal, capture the paired limit/equality event and a
    selected-step full owner snapshot before changing solver behavior.
 
 In parallel, admit the real participant inputs; reconcile contracts and owners

@@ -92,14 +92,49 @@ The active release still lacks an admitted same-participant measurement bundle,
 authoritative anatomical foot contact, qualified loaded equilibrium, sustained
 standing, walking, and integrated qualification.
 
+Execution has started at the first dependency seam. Native commits
+`a924748f` and `b1a9bdd3` centralize the exact base, NHEQ2, NHLIM1, and NHINIT
+source-identity composition shared by the v8 runtime and its qualification
+probe, preserve the historical zero-identity edge, and add a golden CPU
+contract. On the physical M4 Pro Mac mini, the warnings-as-errors native build,
+the identity and NHINIT tests, and the authored-world/NHEQ negative matrix pass.
+This is an admission-contract increment, not an accepted-root or standing
+result.
+
+NumiBrain commit `87e7b13` is now on `main`. It adds typed native-v8
+construction with one authoritative nanosecond clock and rejects exact-clock
+use in the existing Gate C root runner, whose transaction and ACK contracts
+still carry whole microseconds. A source-coherent physical-M4 test with Metal
+validation admitted the authored Matter world and NHINIT3 state at exactly
+`12,500 ns`; the nested legacy microsecond word remained zero. This closes the
+construction boundary only. Exact Brain witness/ACK publication, accepted
+support-history continuity, and standing remain open.
+The immutable passing receipt and the retained failed mixed-tuple attempts are
+published in [NumiBrain evidence commit `ebbffa4`](https://github.com/Numi2/numi-brain/tree/ebbffa484c6a6f1aa91aaf640f165fc0047f98eb/evidence/numanx-v8-exact-construction-v0.1).
+
+The ownership audit also closes a design question: the legacy standalone stand
+path recomputes q/v/muscle state and cold-creates its own contact impulses. It
+cannot consume Matter's NHINIT3 accepted-history arena. Prepared production
+execution must therefore enter through v8 NumanX/Matter and the existing Brain
+accepted-root coordinator.
+
+The default-line reconciliation audit also rules out a direct cherry-pick of
+the two new identity commits. Native `main` does not yet contain the
+Matter/NumanX/Human owners, probe, or CTest surfaces they modify; applying only
+the helper would create an orphan interface. First reconcile the owner baseline
+through `3b968495` in an isolated integration line while retaining the newer
+default-line HyperPolicy/K1 work, qualify that union, then apply `a924748f` and
+`b1a9bdd3` in order. This is a semantic owner reconciliation, not a wholesale
+branch merge.
+
 ## Critical path
 
 ```text
-Runtime trace truth -> prepared support continuity -> causal force/state closure
-                                                        |
-Muscle source consistency -> anatomical contact --------+
-                                                        v
-                                      Loaded prepared equilibrium
+Runtime trace truth -> exact Brain transaction/ACK ownership -> prepared support continuity --+
+Full tendon/contact parity + accepted-owner snapshot -------------------------------+
+Muscle source consistency -> anatomical contact ------------------------------------+
+                                                                                     v
+                                                                  Loaded prepared equilibrium
                                                         |
 Participant rights + data + uncertainty ----------------+
                                                         v
@@ -133,9 +168,9 @@ not serialize causal mechanics, data admission, anatomy, or interface work.
 | Gate                                           | Primary deliverables                                                                                                                                                                                                                                                                                                                                                                                  | Promotion evidence                                                                                                                                                                                                                                                                                                               |
 | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **G0-R - trustworthy runtime**                 | Retain the promoted cap-8 integration-branch default and mechanics-equivalent shader optimization; preserve the completed 100/50/25/12.5 microsecond physical trace matrix; finish force/work/event ownership; freeze exact Human/runtime/source hashes.                                                                                                                                              | Source-identical common-duration runs complete or fail with a typed, bounded cause; replay and retry are invariant; no unexplained owner, omitted segment, or hidden work family remains. Permanent state contracts that directly test an observed state loss may proceed; behavioral promotion may not.                         |
-| **G0-S - prepared-state continuity**           | Retain the qualified fixed-topology raw-NHCNT-bound NHINIT3 contract and analytic Matter owner transaction; add fail-closed NHINIT3 admission to the production stand runner; freeze common native commit/tree, executable/library/shader, and rigid/muscle/NHEQ2/NHLIM1/NHCNT2 identities; author one exact-clock `(Matter-package SHA, world fingerprint, NHINIT3 SHA, initial-state fingerprint)` tuple per 100/50/25/12.5 microsecond grid; execute paired cold/seeded cases on those exact tuples; add a topology-growth transaction regression before claiming migrated-history continuity. | Authored rows reach the production accepted owner with exact clock, composed-source, contact, package/world, and initial-state identity; legacy bytes are preserved; malformed identity/count/order is rejected atomically; and hard mechanics invariants remain unchanged. The causal A/B result is retained whether it improves, leaves unchanged, or worsens the force/state defect; no result alone promotes force convergence. |
+| **G0-S - prepared-state continuity**           | Retain the qualified fixed-topology raw-NHCNT-bound NHINIT3 contract and analytic Matter owner transaction. Route prepared execution through v8 NumanX/Matter and Brain's genuine accepted-root coordinator; never decode NHINIT3 into the legacy standalone stand shader, which has no accepted support-history owner. Add a typed nanosecond Brain boundary, a copied post-publication support-history snapshot, permanent hashed NHTENDON admission and one strict runtime receipt. Freeze common native commit/tree, executable/library/shader, and rigid/muscle/tendon/NHEQ2/NHLIM1/NHCNT2 identities; author one exact-clock `(Matter-package SHA, world fingerprint, NHINIT3 SHA, initial-state fingerprint)` tuple per numerical grid; execute paired cold/seeded cases on those exact tuples; add a topology-growth transaction regression before claiming migrated-history continuity. | A real Brain witness, preflight, ACK and generation latch publish the root; authored rows reach Matter's accepted arena with exact clock, composed-source, tendon, contact, package/world and initial-state identities; the copied snapshot proves the post-publication owner state; legacy bytes are preserved; malformed identity/count/order is rejected atomically; and hard mechanics invariants remain unchanged. The causal A/B result is retained whether it improves, leaves unchanged or worsens the force/state defect; no result alone promotes force convergence. |
 | **G0-P - qualified performance**               | Convert the observed shader speedup into the preregistered repeated interleaved receipt with load, thermal, memory, energy, traces, and detailed GPU counters.                                                                                                                                                                                                                                        | The exact six-pair protocol passes every mechanics, speed, latency, memory, thermal, energy, and counter gate without exclusions. Timing-only evidence cannot pass.                                                                                                                                                              |
-| **G0-D - admitted release inputs**             | Acquire or contract the real single-participant dataset; bind rights, demographics, raw modalities, uncertainty, calibration/validation sessions, and missing cells; freeze the 25-scenario protocol and decision margins.                                                                                                                                                                            | The admission receipt names one participant, disjoint sessions, immutable source hashes, usable rights, every required observable, declared uncertainty, and explicit unsupported cells. Public or synthetic substitutes cannot pass this gate.                                                                                  |
+| **G0-D - admitted release inputs**             | Acquire or contract the real single-participant dataset; bind rights, demographics, raw modalities, uncertainty, calibration/validation sessions, and missing cells; freeze the 25-scenario protocol and decision margins.                                                                                                                                                                            | The admission receipt names one participant, disjoint sessions, immutable source hashes, usable rights, every required observable, declared uncertainty, and explicit unsupported cells. Public real-human data may pass only when the selected participant, rights, raw modalities, uncertainty, and genuinely disjoint sessions satisfy this same contract; synthetic substitutes cannot pass. |
 | **G0-I - reconciled integration surface**      | Reconcile the Human runtime branch into the default line in dependency order: leaf diagnostics and contracts, then owners, then integrated workflows. Preserve both branch histories and resolve semantic conflicts explicitly.                                                                                                                                                                       | Every landed slice has owner tests and exact-source evidence on default; branch ancestry and unresolved conflicts are recorded; no wholesale merge or unreviewed transplant is used as evidence of integration.                                                                                                                  |
 | **G1 - mechanics foundations**                 | Close `runtime.precision`, `runtime.force_audit`, and `muscle.source_consistency`; admit registered foot colliders, exclusions, CCD bounds, friction/compliance data, distributed pressure, and centre of pressure; produce subject-scaled mass, inertia, routes, support, and material inputs; complete causal accepted-only sensing.                                                                | Zero-input prepared equilibrium is stable and bitwise replayable over the frozen common-duration protocol, with no root wrench, pose drive, direct torque, or compensating controller force. Contact passes crossing, complementarity/cone, pressure, energy, refinement, rollback, and measured-response gates.                 |
 | **G2 - measured equilibrium and recovery**     | Qualify quiet standing, weight transfer, altered support, and unexpected perturbation recovery; run reflex, optimal-control, imitation, reinforcement-learning, and hybrid bake-offs behind one stimulation interface; reproduce at least one mechanics/contact and one behavior comparator; introduce bounded offline differentiation or ensemble identification without changing runtime authority. | Same-participant held-out kinematics and forces pass frozen uncertainty-backed margins; every accepted and rejected transaction is accounted for; behavior is assistance-free and uses only authoritative or error-certified physics.                                                                                            |
@@ -161,24 +196,36 @@ action, and integration target.
 
 ## Next causal mechanics action
 
-1. **Admit NHINIT3 to the production runner.** Add fail-closed clock, source,
-   NHCNT2, package/world, and initial-state identity checks to the stand runner.
-   The current qualification is fixed-topology authoring plus an analytic
-   Matter transaction, not yet a production state-transfer substrate.
-2. **Freeze and author the comparison stack.** Select one common native
+1. **Complete exact accepted-root clock ownership.** Native-v8 construction now
+   admits `12,500 ns` without rounding. Version the Brain transaction, motor,
+   witness, and ACK timestamp contracts so nanoseconds remain authoritative
+   through publication, then drive one and two nil-muscle roots through the
+   existing genuine preflight, ACK, generation latch, rollback, and accepted
+   publication sequence. The legacy standalone stand shader is not a valid
+   NHINIT3 destination because it cold-creates its own contact state.
+2. **Reach full stand-stack parity.** Add a permanent hashed NHTENDON runtime
+   configuration and bind its programs into the NumanX/Matter owner input. Add
+   a quiescent post-publication copied snapshot for raw accepted support
+   histories; do not expose a live Metal address or read back inside commit.
+3. **Make admission one atomic receipt.** Build the full v8 chain from one
+   strict manifest that binds exact paths, SHA-256 values, ABI fingerprints,
+   integer clock, Matter package/world, NHINIT3, NHCNT2 and binary/shader
+   identities. Route `numi human stand --prepared-manifest` to this accepted
+   owner and reject mixed legacy initialization flags.
+4. **Freeze and author the comparison stack.** Select one common native
    commit/tree, runner, runtime library, metallib, rigid, muscle, NHEQ2, NHLIM1,
    and NHCNT2 identity set. For each 100/50/25/12.5 microsecond grid, author and
    qualify an exact-clock `(Matter-package SHA, world fingerprint, NHINIT3 SHA,
    initial-state fingerprint)` tuple. The older NHCNT1 matrix remains
    historical trace-basis evidence only.
-3. **Run the causal cold-versus-seeded comparison.** Through `ssh macmini`,
+5. **Run the causal cold-versus-seeded comparison.** Through `ssh macmini`,
    execute paired cases on the identical frozen stack from isolated worktrees.
    Compare same-time q/v, dynamic force and tendon residuals, normal/tangential
    histories, equality/limit impulses and work, rollback, and replay. Accept
    state continuity only when the authored history reaches its owner with hard
    mechanics invariants unchanged; retain an unchanged or worse result as a
    causal negative.
-4. **Localize the dynamics event if state continuity is not causal.** Record
+6. **Localize the dynamics event if state continuity is not causal.** Record
    one paired source-limit/equality compensation event: source DOF, equality
    row, sweep, signed impulses, amplification, residuals before/after, and
    signed work. Follow it with a selected-step full production owner snapshot.
@@ -229,25 +276,51 @@ External systems are comparators or offline oracles, never alternate production
 authority:
 
 - contact and differentiable mechanics: [Jade](https://arxiv.org/abs/2309.04710),
-  [Dojo](https://arxiv.org/abs/2203.00806), and the
-  [ICLR 2026 contact-gradient study](https://proceedings.iclr.cc/paper_files/paper/2026/hash/6776737cd11cf4afa3af226898474418-Abstract-Conference.html);
-- behavior: [LocoMuJoCo](https://arxiv.org/abs/2311.02496),
-  [MyoChallenge](https://papers.neurips.cc/paper_files/paper/2025/hash/5a8f69523f9511a5706568c552de0ebb-Abstract-Datasets_and_Benchmarks_Track.html),
-  and [natural walking control](https://doi.org/10.1016/j.isci.2025.112203);
-- human validation data: [AddBiomechanics](https://www.addbiomechanics.org/download_data.html),
-  [OpenCap validation](https://doi.org/10.1371/journal.pcbi.1011462),
-  [CAMS-Knee](https://cams-knee.orthoload.com/wp-content/uploads/sites/4/Description_CAMS_Knee_Full_Dataset_v1.1.pdf),
-  and [BioAMASS/SKEL](https://arxiv.org/abs/2509.06607);
+  [Dojo](https://arxiv.org/abs/2203.00806),
+  [ContactBench](https://github.com/Simple-Robotics/ContactBench),
+  [DiffMJX](https://proceedings.iclr.cc/paper_files/paper/2026/hash/44039e59aaf6a41b16f1fc5b27bcd409-Abstract-Conference.html),
+  and the [ICLR 2026 long-range contact-gradient study](https://proceedings.iclr.cc/paper_files/paper/2026/hash/6776737cd11cf4afa3af226898474418-Abstract-Conference.html).
+  Forward physical fidelity and derivative correctness/usefulness are separate
+  gates; a smoother backward pass cannot promote forward mechanics;
+- muscle-actuated behavior and control: [MuscleMimic](https://github.com/amathislab/musclemimic),
+  [MS-Human-700](https://github.com/LNSGroup/MS-Human-700),
+  [LocoMuJoCo](https://arxiv.org/abs/2311.02496),
+  [MyoChallenge 2025](https://arxiv.org/abs/2605.15650), and
+  [natural walking control](https://doi.org/10.1016/j.isci.2025.112203).
+  The [standing/falling study](https://arxiv.org/abs/2506.09383) is a metric
+  target until its announced implementation is reproducible. Task success is
+  control evidence, not physiological validation;
+- measured human validation: [Gait120](https://www.nature.com/articles/s41597-025-05391-0),
+  [MM-EvalKit](https://github.com/amathislab/mm-evalkit),
+  [AddBiomechanics](https://www.addbiomechanics.org/download_data.html),
+  [OpenCap validation](https://doi.org/10.1371/journal.pcbi.1011462), and
+  [CAMS-Knee](https://cams-knee.orthoload.com/wp-content/uploads/sites/4/Description_CAMS_Knee_Full_Dataset_v1.1.pdf).
+  [BioAMASS/SKEL](https://arxiv.org/abs/2509.06607) is limited to anatomy,
+  registration, and kinematic-prior work; it cannot validate force, contact,
+  muscle activation, or physiology;
 - continuum and physiology: the [FEBio test suite](https://repo.febio.org/modelRepo/TestSuite),
-  [openCARP](https://opencarp.org/getting-started), and
-  [simcardems](https://joss.theoj.org/papers/10.21105/joss.04753);
-- throughput: [MJX](https://github.com/google-deepmind/mujoco/blob/main/doc/mjx.rst)
-  and [MuJoCo Warp](https://github.com/google-deepmind/mujoco_warp), with
-  matched workload and device caveats; and
-- credibility structure: [FDA computational-model credibility guidance](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/assessing-credibility-computational-modeling-and-simulation-medical-device-submissions).
+  [openCARP](https://opencarp.org/getting-started),
+  [simcardems](https://joss.theoj.org/papers/10.21105/joss.04753), and the
+  [Pulse Physiology Engine](https://pulse.kitware.com/). Pulse is a system-level
+  scenario comparator, not biological ground truth;
+- performance: same-Mac CPU MuJoCo is the local reference and native Metal on
+  the reserved Mac mini is authoritative for Apple-GPU qualification.
+  [MJX](https://github.com/google-deepmind/mujoco/blob/main/doc/mjx.rst) and
+  [MuJoCo Warp](https://github.com/google-deepmind/mujoco_warp) support only
+  off-device algorithmic throughput comparisons: current
+  [JAX guidance](https://docs.jax.dev/en/latest/installation.html#mac-gpu) does
+  not support Mac GPU execution, while MuJoCo Warp targets NVIDIA/CUDA; and
+- credibility structure: [FDA computational-model credibility guidance](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/assessing-credibility-computational-modeling-and-simulation-medical-device-submissions),
+  FDA-recognized [ASME V&V 40-2018](https://www.accessdata.fda.gov/scripts/cdrh/cfdocs/cfstandards/detail.cfm?standard__identification_no=38534),
+  and [NASA-STD-7009B](https://standards.nasa.gov/node/263). Each promoted claim
+  declares context of use, consequence of error/model risk, applicability,
+  validation uncertainty, sensitivity/robustness, and permissible-use bounds.
 
 Each comparison enters the roadmap's decision register before it can support a
-claim.
+claim. Its receipt freezes repository commit or release, model assets,
+checkpoint, dataset version and licence, task definition, seeds, hardware,
+precision, solver settings, and metric implementation. Mutable `main` links are
+research leads, not qualification evidence.
 
 ## Standing board directives
 

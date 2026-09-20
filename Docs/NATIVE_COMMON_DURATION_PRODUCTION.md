@@ -79,13 +79,27 @@ tolerance is inferred from these four observations.
 
 ## Next evidence-producing action
 
-1. Add and qualify fail-closed NHINIT3 admission in the production stand runner.
-2. Freeze the common native commit/tree, runner, runtime library, metallib,
+The exact native-v8 construction subgate is now passed and retained in
+[NumiBrain evidence commit `ebbffa4`](https://github.com/Numi2/numi-brain/tree/ebbffa484c6a6f1aa91aaf640f165fc0047f98eb/evidence/numanx-v8-exact-construction-v0.1).
+It does not yet cross the Brain transaction/ACK boundary.
+
+1. Extend NumiBrain's now-qualified exact-v8 construction boundary through the
+   genuine accepted-root publication sequence by versioning its transaction,
+   motor, witness, and ACK timestamps for nanosecond ownership. Do not add
+   decoder-only support to the legacy standalone stand shader: it has no
+   accepted support-history arena and would discard the defining NHINIT3
+   continuation state.
+2. Add permanent hashed NHTENDON runtime input and a quiescent copied
+   post-publication snapshot of Matter's raw
+   accepted support histories. Require real witness, preflight, ACK, generation
+   latch, rollback and replay before exposing the path as production stand.
+3. Admit the full v8 chain through one fail-closed manifest/receipt, then freeze
+   the common native commit/tree, runner, runtime library, metallib,
    rigid, muscle, NHEQ2, NHLIM1, and NHCNT2 identities. For each
    100/50/25/12.5 us grid, author and qualify an exact-clock tuple of
    Matter-package SHA, world fingerprint, NHINIT3 SHA, and initial-state
    fingerprint.
-3. Through `ssh macmini`, after confirming the host is uncontended, run matched
+4. Through `ssh macmini`, after confirming the host is uncontended, run matched
    cold-versus-seeded cases on that identical stack from isolated worktrees.
    Retain all results and compare
    same-time q/v, first-interval and trajectory support impulses,
@@ -94,7 +108,7 @@ tolerance is inferred from these four observations.
    as state continuity only if the exact authored history reaches the accepted
    Matter owner with unchanged hard mechanics invariants. Force convergence
    remains a separate uncertainty-backed gate.
-4. If the seeded launch leaves the defect unchanged or worsens it, retain that
+5. If the seeded launch leaves the defect unchanged or worsens it, retain that
    causal negative and capture the paired source-limit/equality event plus a
    selected-step full owner snapshot next. Do not tune the seed to the output.
 
