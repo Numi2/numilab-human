@@ -4,20 +4,21 @@ Status: `diagnostic_complete`
 
 ## Decision
 
-The physical trace-basis subgate is complete for the current Human workload.
+The physical trace-basis subgate is complete for the captured NHCNT1 Human
+workload.
 All four clean-production cases ran for the same 6.4 ms simulated duration on
 one physical M4 Pro Mac mini, used one native tree, binary, input commit, and
 payload set, and reproduced their terminal state bitwise. This qualifies the
 captured comparison surface. It does **not** qualify state or force convergence,
 performance, sustained standing, recovery, walking, or whole-Human behavior.
 
-The next causal mechanics slice is prepared support-history continuity. The
-static solve already owns support impulses, but the dynamic Matter transaction
-starts its accepted support histories at zero. Preserve that state through a
-payload-bound initial-state contract, then compare cold and seeded launches on
-the same four-grid protocol. A negative result is useful: it retires the
-state-loss hypothesis and promotes the paired source-limit/equality event
-snapshot as the next diagnostic.
+The payload-bound [prepared support-history contract](NATIVE_PREPARED_SUPPORT_HISTORY.md)
+now exists and passes source authoring, byte-exact round-trip, provenance
+rejection, and the analytic physical-M4 Matter transaction. This diagnostic's
+native revision and NHCNT1 payload differ from the NHINIT3 evidence revision and
+NHCNT2 payload, and the production runner does not yet admit NHINIT3. The matrix
+therefore remains historical trace-basis evidence, not the direct seeded
+comparator.
 
 ## Exact evidence identity
 
@@ -78,22 +79,22 @@ tolerance is inferred from these four observations.
 
 ## Next evidence-producing action
 
-1. Add an `NHINIT3` prepared-support-history record bound to the exact NHCNT
-   byte image, while preserving NHINIT1/2 byte compatibility.
-2. Initialize Matter's accepted support-history owner directly; candidate and
-   checkpoint state must inherit it through the existing transaction. Keep the
-   standalone stand-contact reserved word zero.
-3. Prove malformed identity/count/row-order rejection, failure atomicity,
-   rollback, commit, and bitwise replay in CPU and native probes.
-4. On an uncontended Mac mini, run matched cold-versus-seeded
-   100/50/25/12.5 us cases from isolated worktrees. Retain all results.
-5. Compare same-time q/v, first-interval and trajectory support impulses,
+1. Add and qualify fail-closed NHINIT3 admission in the production stand runner.
+2. Freeze the common native commit/tree, runner, runtime library, metallib,
+   rigid, muscle, NHEQ2, NHLIM1, and NHCNT2 identities. For each
+   100/50/25/12.5 us grid, author and qualify an exact-clock tuple of
+   Matter-package SHA, world fingerprint, NHINIT3 SHA, and initial-state
+   fingerprint.
+3. Through `ssh macmini`, after confirming the host is uncontended, run matched
+   cold-versus-seeded cases on that identical stack from isolated worktrees.
+   Retain all results and compare
+   same-time q/v, first-interval and trajectory support impulses,
    reaction owners, equality/limit impulses, tendon residuals, dynamic force
    residual, signed/absolute work, rollback, and replay. The contract passes
    as state continuity only if the exact authored history reaches the accepted
    Matter owner with unchanged hard mechanics invariants. Force convergence
    remains a separate uncertainty-backed gate.
-6. If the seeded launch leaves the defect unchanged or worsens it, retain that
+4. If the seeded launch leaves the defect unchanged or worsens it, retain that
    causal negative and capture the paired source-limit/equality event plus a
    selected-step full owner snapshot next. Do not tune the seed to the output.
 

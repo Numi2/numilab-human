@@ -1,0 +1,182 @@
+{
+  "schema": "numi.human.prepared-support-history-receipt.v1",
+  "status": "partial",
+  "scope": "Fixed-topology raw-NHCNT-bound NHINIT3 serialization/provenance and analytic Matter support-history transaction verification on one physical Apple M4 Pro.",
+  "source": {
+    "repository": "Numi2/numi-lab",
+    "branch": "human-native-runtime-20260915",
+    "implementation_commit": "c785abae322a1604f09f4d509f5d2af51ac42e5e",
+    "qualified_head_commit": "3b968495e05253cb4675893c3b94fec448c63361",
+    "qualified_head_tree": "ee68992948f3b884571f380498f8e9af5d78edb1",
+    "worktree_clean": true,
+    "machine": {
+      "name": "Mac mini",
+      "model": "Mac16,11",
+      "architecture": "arm64",
+      "chip": "Apple M4 Pro",
+      "memory_bytes": 25769803776,
+      "macos_version": "26.6",
+      "macos_build": "25G72",
+      "xcode_version": "26.6",
+      "xcode_build": "17F113"
+    },
+    "binaries": {
+      "matter_physics_probe_sha256": "bbd86c0aefeffdcebbc049c74ea7b423381b1d0e44c9f48f6fb8be24f7d56f3e",
+      "matter_metallib_sha256": "6397674c0463683e182c41dc110944847c82a0832848ead4310bbe3e305033fc",
+      "metalrobo_runtime_library_sha256": "d9c2e192db8f42e8906dc7ce3c405fb7c0f6a4722646b573ee172e6cb7537de5",
+      "fullbody_author_sha256": "1f6196839f17d0ee93a384a9ec10ae5cbedab58ce36e945e4c5443f86f1d99e2",
+      "source_certificate_sha256": "4319694915a4c789252473520b6cfe76db630164fa3520835cded467b79d4d8b"
+    },
+    "build_run_manifest": "build-run-manifest.json",
+    "environment_evidence": "runtime-environment.txt",
+    "git_identity_evidence": "source-git.txt"
+  },
+  "inputs": {
+    "rigid": {
+      "path": "inputs/myosim-fullbody-core-reference.nhrigid",
+      "bytes": 60324,
+      "sha256": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44"
+    },
+    "muscle": {
+      "path": "inputs/myosim-fullbody-muscle-reference.nhmyo",
+      "bytes": 149372,
+      "sha256": "9a988f19a6fd8e533cd0f2bf3192cb8535fb008ccd394ffbf1a4432d3db76a05"
+    },
+    "support": {
+      "path": "inputs/myosim-fullbody-support-primitives.nhcnt",
+      "bytes": 1044,
+      "sha256": "c7712daf79cd8a589a6d23942a4df84a7da928e5911455ce19078f9b24daaaf4",
+      "abi": 2,
+      "source_records": 10,
+      "expanded_rows": 18
+    },
+    "alternate_valid_support": {
+      "path": "inputs/alternate-valid-support-plantar-ellipsoid.nhcnt",
+      "bytes": 1044,
+      "sha256": "5ebe9d4a7a830a9206f48edfe78cf4c989258e9ad91b46caa74826392ee5f915"
+    },
+    "joint_equalities": {
+      "path": "inputs/myosim-fullbody-joint-equalities-source-compliance.nheq",
+      "bytes": 5792,
+      "magic": "NHEQ2",
+      "sha256": "12db05fddb492e77e7fd461fad566d3e1e75390f2cb6f77f26568254a6cb4477"
+    },
+    "joint_limits": {
+      "path": "inputs/myosim-fullbody-joint-limits.nhlim",
+      "bytes": 9840,
+      "magic": "NHLIM1",
+      "sha256": "c583611fcedc326a32c6f69504a65e675c8e0adc987c6db622ca0d95a02438d3"
+    },
+    "legacy_prepared_state": {
+      "path": "inputs/prepared.nhinit",
+      "bytes": 7780,
+      "magic": "NHINIT1",
+      "sha256": "e7597abe656c5a4b9231f087edd19e6937e123bbb4583f6421f60da625f63238"
+    }
+  },
+  "source_certificate": {
+    "status": "passed",
+    "balanced": true,
+    "accepted_iterations": 3,
+    "rejected_evaluations": 88,
+    "initial_acceleration_rms": 184.89466180689243,
+    "terminal_acceleration_rms": 0.0013903104493953569,
+    "maximum_acceleration": 0.008042384484473962,
+    "maximum_acceleration_dof": 125,
+    "maximum_force_residual": 0.00030487972614373637,
+    "minimum_support_gap_m": -2.811430141469451e-08,
+    "maximum_loaded_support_gap_m": 2.811175641576069e-08,
+    "support_identity_exact": true,
+    "mode": "support-reactions-only"
+  },
+  "nhinit3": {
+    "path": "generated/positive/prepared.nhinit",
+    "magic": "NHINIT3",
+    "bytes": 8196,
+    "header_bytes": 224,
+    "history_record_bytes": 16,
+    "history_encoding": 1,
+    "history_rows": 18,
+    "support_sha256": "c7712daf79cd8a589a6d23942a4df84a7da928e5911455ce19078f9b24daaaf4",
+    "sha256": "b4908f21aee3434091b4c9935fadbe276be30b142114a3dd51c1eb548ad28dad",
+    "matter_package_sha256": "b830c33de03b6b746876aa6f7a4eab8bb9e64fe6acba3e5768b5f9ce59c2a5b7",
+    "roundtrip_byte_exact": true,
+    "roundtrip_package_byte_exact": true
+  },
+  "physical_matter_transaction": {
+    "status": "passed",
+    "device": "Apple M4 Pro",
+    "case_count": 11,
+    "environment_count_per_case": 3,
+    "cases": [
+      "cold_97kg",
+      "weight_seed_97kg",
+      "double_seed_97kg",
+      "redundant_six_cold",
+      "redundant_six_double",
+      "cold_1kg",
+      "half_timestep",
+      "airborne_double_seed",
+      "sticking",
+      "sliding",
+      "sliding_warm"
+    ],
+    "q_replay_error": 0,
+    "v_replay_error": 0,
+    "normal_history_replay_error": 0,
+    "swap_count": 0,
+    "restore_extent_admissibility_and_atomicity_rejected": true,
+    "missing_or_short_initial_bodies_rejected": true,
+    "bad_count_cone_and_overflow_initial_history_rejected": true,
+    "borrowed_query_capacity_rejected_before_gpu": true
+  },
+  "negative_controls": {
+    "alternate_valid_same_extent_support_identity_rejected": true,
+    "alternate_valid_support_exit_status": 1,
+    "alternate_valid_support_diagnostic": "source-compliant support identity disagrees with supplied NHCNT",
+    "unbound_nhinit3_decoder_rejected": true,
+    "malformed_header_extent_and_history_rejected_atomically": true,
+    "nonfinite_negative_nontangent_and_outside_cone_restore_rejected_atomically": true,
+    "legacy_nhinit1_and_nhinit2_bytes_preserved_by_core_tests": true,
+    "focused_ctest_passed": true,
+    "focused_ctest_count": 2
+  },
+  "retained_failures": [
+    {
+      "commit": "c785abae322a1604f09f4d509f5d2af51ac42e5e",
+      "failure": "The fullbody fixture helper added a root-translation extension while importing an otherwise byte-stable NHINIT3.",
+      "positive_sha256": "b4908f21aee3434091b4c9935fadbe276be30b142114a3dd51c1eb548ad28dad",
+      "roundtrip_sha256": "4393a0f0665c4a52176fd87ec676d6f9c197a523b66de72275ad3bcfdf2d034d",
+      "resolution_commit": "3b968495e05253cb4675893c3b94fec448c63361",
+      "resolution": "Preserve an imported state's root-extension representation; final NHINIT3 and Matter package round trips are byte-identical."
+    }
+  ],
+  "qualification": {
+    "nhinit3_contract": true,
+    "raw_nhcnt_identity_binding": true,
+    "source_certificate_authoring": true,
+    "authoring_roundtrip": true,
+    "fixed_topology_serialization_and_provenance": true,
+    "analytic_matter_accepted_history_ownership": true,
+    "analytic_restore_and_replay": true,
+    "physical_apple_gpu_execution": true,
+    "production_runner_nhinit3_admission": false,
+    "per_grid_clocked_nhinit3_states": false,
+    "whole_human_cold_seeded_comparison": false,
+    "whole_human_numanx_runtime_publication": false,
+    "topology_growth_execution": false,
+    "anatomical_contact_loading": false,
+    "force_convergence": false,
+    "sustained_standing": false,
+    "performance": false,
+    "biological_validation": false,
+    "production_readiness": false
+  },
+  "retained_observations": [
+    "The airborne analytic case published a -7.17903e-09 impulse in one environment, inside the probe's existing oracle tolerance; the raw line remains in matter-physical/stdout.txt.",
+    "The physical Matter probe is an analytic support transaction, not the full anatomical Human workload.",
+    "The authoring helper compiles three tiny pelvis samples and does not construct or publish the whole-Human runtime."
+  ],
+  "next_evidence": "Add and qualify production-runner NHINIT3 admission with exact clock, composed-source, raw-NHCNT2, package/world, and initial-state checks; freeze common native commit/tree, runner/runtime-library/metallib, and rigid/muscle/NHEQ2/NHLIM1/NHCNT2 identities; author and qualify one exact-clock Matter-package SHA, world fingerprint, NHINIT3 SHA, and initial-state fingerprint tuple per 100/50/25/12.5 microsecond grid; then run paired cold/seeded cases on those exact tuples. The earlier NHCNT1 matrix remains historical trace-basis evidence, not the seeded comparator.",
+  "boundary": "This receipt qualifies, on one physical Apple M4 Pro and one exact revision/artifact set, NHINIT3 raw-NHCNT provenance, source-certificate authoring, byte-exact import/re-emission, and the analytic Matter accepted-history, restore, rejection, and replay transaction. It does not qualify whole-Human NHINIT3 dynamics, topology-growth execution, anatomical contact/loading, calibrated friction or compliance, pressure or centre-of-pressure outcomes, force or timestep convergence, sustained standing, recovery, walking, performance, participant generalization, biological validity, clinical validity, or production readiness."
+}

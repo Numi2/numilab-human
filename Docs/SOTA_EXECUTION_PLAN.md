@@ -27,9 +27,10 @@ mandatory targets qualify on one immutable stack.
 ## Current evidence baseline
 
 Board posture: physical cap-8 command-buffer containment, clean-production
-common-duration trace coverage, and deterministic replay are qualified for the
-exact current Human workload on one physical M4 Pro. Dynamic state and force
-convergence, complete energy closure, anatomical contact, performance,
+common-duration trace coverage, deterministic replay, and the bounded NHINIT3
+prepared-support contract are qualified on one physical M4 Pro in separate
+immutable artifact sets, not as one integrated release stack. Dynamic state and
+force convergence, complete energy closure, anatomical contact, performance,
 behavior, and whole-Human validity are not.
 
 The qualifying truth-layer increment established:
@@ -58,6 +59,14 @@ The qualifying truth-layer increment established:
   the same `0.372853462949 N` scalar on all four grids. That invariant initial
   diagnostic is not a trajectory-wide convergence measure; state convergence,
   force convergence, standing, and performance remain false;
+- the [NHINIT3 prepared-support contract](NATIVE_PREPARED_SUPPORT_HISTORY.md):
+  raw NHCNT identity is preserved through certificate authoring, import, and
+  byte-exact re-emission; malformed histories and an alternate valid NHCNT2
+  fail closed; and an analytic physical-M4 Matter transaction passes 11 cases
+  across three environments with exact q/v/history replay. This qualifies the
+  fixed-topology NHINIT3 serialization/provenance and analytic-owner contract,
+  not production-runner admission, the whole-Human cold-versus-seeded result,
+  topology growth, force convergence, or standing;
 - physical-M4 shader A/B equivalence at both 64 and 512 steps: terminal q/v are
   bitwise identical, all 319 non-timing/non-work fields are exact, and all eight
   work fields remain inside their declared arithmetic bounds. The sustained
@@ -124,7 +133,7 @@ not serialize causal mechanics, data admission, anatomy, or interface work.
 | Gate                                           | Primary deliverables                                                                                                                                                                                                                                                                                                                                                                                  | Promotion evidence                                                                                                                                                                                                                                                                                                               |
 | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **G0-R - trustworthy runtime**                 | Retain the promoted cap-8 integration-branch default and mechanics-equivalent shader optimization; preserve the completed 100/50/25/12.5 microsecond physical trace matrix; finish force/work/event ownership; freeze exact Human/runtime/source hashes.                                                                                                                                              | Source-identical common-duration runs complete or fail with a typed, bounded cause; replay and retry are invariant; no unexplained owner, omitted segment, or hidden work family remains. Permanent state contracts that directly test an observed state loss may proceed; behavioral promotion may not.                         |
-| **G0-S - prepared-state continuity**           | Add an NHINIT3 support-history contract bound to the exact NHCNT payload; initialize Matter's accepted owner and prove candidate/checkpoint inheritance, rollback, commit, and replay; run matched cold-versus-seeded four-grid evidence.                                                                                                                                                             | Authored rows reach the correct accepted owner with legacy bytes preserved, malformed identity/count/order rejected atomically, and hard mechanics invariants unchanged. The causal A/B result is retained whether it improves, leaves unchanged, or worsens the force/state defect; no result alone promotes force convergence. |
+| **G0-S - prepared-state continuity**           | Retain the qualified fixed-topology raw-NHCNT-bound NHINIT3 contract and analytic Matter owner transaction; add fail-closed NHINIT3 admission to the production stand runner; freeze common native commit/tree, executable/library/shader, and rigid/muscle/NHEQ2/NHLIM1/NHCNT2 identities; author one exact-clock `(Matter-package SHA, world fingerprint, NHINIT3 SHA, initial-state fingerprint)` tuple per 100/50/25/12.5 microsecond grid; execute paired cold/seeded cases on those exact tuples; add a topology-growth transaction regression before claiming migrated-history continuity. | Authored rows reach the production accepted owner with exact clock, composed-source, contact, package/world, and initial-state identity; legacy bytes are preserved; malformed identity/count/order is rejected atomically; and hard mechanics invariants remain unchanged. The causal A/B result is retained whether it improves, leaves unchanged, or worsens the force/state defect; no result alone promotes force convergence. |
 | **G0-P - qualified performance**               | Convert the observed shader speedup into the preregistered repeated interleaved receipt with load, thermal, memory, energy, traces, and detailed GPU counters.                                                                                                                                                                                                                                        | The exact six-pair protocol passes every mechanics, speed, latency, memory, thermal, energy, and counter gate without exclusions. Timing-only evidence cannot pass.                                                                                                                                                              |
 | **G0-D - admitted release inputs**             | Acquire or contract the real single-participant dataset; bind rights, demographics, raw modalities, uncertainty, calibration/validation sessions, and missing cells; freeze the 25-scenario protocol and decision margins.                                                                                                                                                                            | The admission receipt names one participant, disjoint sessions, immutable source hashes, usable rights, every required observable, declared uncertainty, and explicit unsupported cells. Public or synthetic substitutes cannot pass this gate.                                                                                  |
 | **G0-I - reconciled integration surface**      | Reconcile the Human runtime branch into the default line in dependency order: leaf diagnostics and contracts, then owners, then integrated workflows. Preserve both branch histories and resolve semantic conflicts explicitly.                                                                                                                                                                       | Every landed slice has owner tests and exact-source evidence on default; branch ancestry and unresolved conflicts are recorded; no wholesale merge or unreviewed transplant is used as evidence of integration.                                                                                                                  |
@@ -152,19 +161,24 @@ action, and integration target.
 
 ## Next causal mechanics action
 
-1. **Preserve prepared support state.** Implement NHINIT3 as the permanent
-   support-history contract, checksum-bound to the exact contact payload.
-   Preserve NHINIT1/2 bytes, seed Matter's accepted/candidate/checkpoint
-   histories from the admitted static solve, and keep the standalone
-   stand-contact reserved word zero.
-2. **Run the causal cold-versus-seeded comparison.** Through `ssh macmini`,
-   execute matched 100/50/25/12.5 microsecond cases from isolated worktrees.
+1. **Admit NHINIT3 to the production runner.** Add fail-closed clock, source,
+   NHCNT2, package/world, and initial-state identity checks to the stand runner.
+   The current qualification is fixed-topology authoring plus an analytic
+   Matter transaction, not yet a production state-transfer substrate.
+2. **Freeze and author the comparison stack.** Select one common native
+   commit/tree, runner, runtime library, metallib, rigid, muscle, NHEQ2, NHLIM1,
+   and NHCNT2 identity set. For each 100/50/25/12.5 microsecond grid, author and
+   qualify an exact-clock `(Matter-package SHA, world fingerprint, NHINIT3 SHA,
+   initial-state fingerprint)` tuple. The older NHCNT1 matrix remains
+   historical trace-basis evidence only.
+3. **Run the causal cold-versus-seeded comparison.** Through `ssh macmini`,
+   execute paired cases on the identical frozen stack from isolated worktrees.
    Compare same-time q/v, dynamic force and tendon residuals, normal/tangential
    histories, equality/limit impulses and work, rollback, and replay. Accept
    state continuity only when the authored history reaches its owner with hard
    mechanics invariants unchanged; retain an unchanged or worse result as a
    causal negative.
-3. **Localize the dynamics event if state continuity is not causal.** Record
+4. **Localize the dynamics event if state continuity is not causal.** Record
    one paired source-limit/equality compensation event: source DOF, equality
    row, sweep, signed impulses, amplification, residuals before/after, and
    signed work. Follow it with a selected-step full production owner snapshot.
@@ -215,7 +229,7 @@ External systems are comparators or offline oracles, never alternate production
 authority:
 
 - contact and differentiable mechanics: [Jade](https://arxiv.org/abs/2309.04710),
-  [Dojo](https://msl.stanford.edu/papers/howell_dojo_2022.pdf), and the
+  [Dojo](https://arxiv.org/abs/2203.00806), and the
   [ICLR 2026 contact-gradient study](https://proceedings.iclr.cc/paper_files/paper/2026/hash/6776737cd11cf4afa3af226898474418-Abstract-Conference.html);
 - behavior: [LocoMuJoCo](https://arxiv.org/abs/2311.02496),
   [MyoChallenge](https://papers.neurips.cc/paper_files/paper/2025/hash/5a8f69523f9511a5706568c552de0ebb-Abstract-Datasets_and_Benchmarks_Track.html),
@@ -245,8 +259,12 @@ claim.
    sustained, profiling, thermal, and high-load GPU work through `ssh macmini`.
    Hosted virtual Metal remains bounded CI evidence only inside its measured
    execution envelope.
-4. Authorize the NHINIT3 prepared-support-history handoff as the next permanent
-   mechanics slice and require the matched cold-versus-seeded physical A/B.
+4. Accept the bounded NHINIT3 result as a fixed-topology
+   serialization/provenance and analytic-owner contract. Require production
+   runner admission; exact common commit/tree, executable, library, shader, and
+   source identities; exact-clock per-grid package/world/NHINIT3/state tuples;
+   and the matched physical A/B before any whole-Human continuity or
+   force-convergence promotion.
 5. Unlock the narrow privileged energy and GUI detailed-counter surfaces needed
    by the already frozen performance protocol.
 6. Require evidence-gate reporting instead of feature-count reporting.

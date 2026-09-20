@@ -32,7 +32,7 @@ release claim.
 | `numilab-human`    |                   ~110 | Source binding, mass/organ/muscle ownership, participant-data handoff, exact clocks, unassisted launch contracts, dynamics/work semantics, and the evidence-gated execution plan | Strongest concentration of product-definition and scientific-credibility work. Still missing an admitted same-participant bundle, anatomical foot contact, loaded equilibrium, standing, walking, and integrated validation. |
 | `numiVivo`         |                     52 | Native sparse H5AD interoperability, binder surfaces, negative-binomial compute work, and evidence/reporting improvements                                                        | Platform progress is real; predictive and Metal-promotion evidence is not. General-platform and single-cell workflow failures remain open. CPU remains authoritative for the cited Kang fit domain.                          |
 | `numi-brain`       |                     32 | Source-bound whole-body feedback, exact sensor timestamps, transactional delay/filter history, and safety/overflow contracts                                                     | Contract and runtime infrastructure is credible and CI is green. It does not yet demonstrate measured assistance-free standing or integrated behavior.                                                                       |
-| `numi-lab` default |                      1 | One acceleration-parity diagnostic landed on `numisolver`                                                                                                                        | The important Human native work is on `human-native-runtime-20260915`, now more than 700 commits ahead and 100 behind the default branch. This is a reconciliation program, not a merge button.                              |
+| `numi-lab` default |                      1 | One acceleration-parity diagnostic landed on `numisolver`                                                                                                                        | The important Human native work is on `human-native-runtime-20260915` with substantial two-way divergence from the default branch. This is a dependency-ordered reconciliation program, not a merge button.                |
 | `numaios`          |               Draft PR | Guarded iPhone-agent baseline: 4 commits, 22 files, +1,710 lines; macOS checks green                                                                                             | Useful product surface, but physical-device execution, Apple-model inference, visual grounding, and independent app-data verification remain unqualified.                                                                    |
 
 ## Strongest new native result
@@ -47,18 +47,27 @@ has:
   debug-on/off mechanics;
 - an optimized Human stand shader whose 64- and 512-step trajectories preserve
   terminal `q/v` bitwise, all 319 non-timing/non-work metrics exactly, and all
-  eight work metrics inside their arithmetic bounds; and
+  eight work metrics inside their arithmetic bounds;
 - a clean integration-branch-default run with no diagnostic override and
-  bitwise replay; and
+  bitwise replay;
 - a source-identical 100/50/25/12.5 microsecond matrix over the same 6.4 ms,
-  with trace-v5 diagnostics and bitwise replay on all four grids.
+  with trace-v5 diagnostics and bitwise replay on all four grids; and
+- a raw-NHCNT-bound NHINIT3 prepared-support contract whose authoring path and
+  Matter package round-trip byte-for-byte, whose provenance gate rejects a
+  different valid NHCNT2, and whose analytic physical-M4 Matter probe passes
+  11 cases across three environments with exact replay.
+
+These are separate immutable artifact sets, not one integrated release stack.
 
 The sustained A/B observed 1.8134x end-to-end and 1.8871x authoritative-segment
 speedups. These are single-sample observations, not a qualified performance
 envelope. The four-grid matrix closes the physical trace-basis subgate only:
 same-time state and reaction deltas shrink under refinement, while the maximum
 initial persistent force-reference residual is unchanged. It establishes
-neither trajectory-wide force convergence nor standing.
+neither trajectory-wide force convergence nor standing. The NHINIT3 result
+qualifies fixed-topology serialization/provenance and an analytic-owner
+contract, not production-runner admission or a whole-Human improvement; that
+causal comparison remains open.
 
 ## Recommendation to reach state of the art
 
@@ -70,13 +79,15 @@ commit volume as substitutes.
 
 The next causal mechanics action is:
 
-1. Preserve the admitted static support solution through NHINIT3, bound to the
-   exact contact payload, and prove accepted/candidate/checkpoint ownership,
-   rollback, commit, and replay.
-2. Run matched cold-versus-seeded 100/50/25/12.5 microsecond evidence on the
-   physical Mac mini. Retain improvement, no change, or regression as a causal
-   result without promoting force convergence from this experiment alone.
-3. If continuity is not causal, capture the paired limit/equality event and a
+1. Add and qualify fail-closed NHINIT3 admission in the production stand runner.
+2. Freeze the common native commit/tree, runner/runtime/shader set, rigid,
+   muscle, NHEQ2, NHLIM1, and NHCNT2 identities. For each 100/50/25/12.5
+   microsecond grid, author and qualify one exact-clock tuple of Matter-package
+   SHA, world fingerprint, NHINIT3 SHA, and initial-state fingerprint.
+3. Run paired cold-versus-seeded evidence on that identical stack through
+   `ssh macmini`. Retain improvement, no change, or regression without
+   promoting force convergence from this experiment alone.
+4. If continuity is not causal, capture the paired limit/equality event and a
    selected-step full owner snapshot before changing solver behavior.
 
 In parallel, admit the real participant inputs; reconcile contracts and owners
@@ -107,4 +118,6 @@ to bounded CI and measured watchdog characterization.
 
 The full undated execution system is
 [SOTA_EXECUTION_PLAN.md](SOTA_EXECUTION_PLAN.md). Native optimization evidence
-is in the [Human segment optimization record](https://github.com/Numi2/numi-lab/blob/human-native-runtime-20260915/docs/NUMI_HUMAN_SEGMENT_OPTIMIZATION.md).
+is in the [Human segment optimization record](https://github.com/Numi2/numi-lab/blob/human-native-runtime-20260915/docs/NUMI_HUMAN_SEGMENT_OPTIMIZATION.md),
+and the bounded fixed-topology serialization/provenance evidence is in the
+[NHINIT3 receipt](NATIVE_PREPARED_SUPPORT_HISTORY.md).

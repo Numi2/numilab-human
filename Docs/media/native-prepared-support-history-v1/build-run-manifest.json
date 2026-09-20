@@ -1,0 +1,167 @@
+{
+  "schema": "numi.human.prepared-support-history-build-run.v1",
+  "source": {
+    "repository": "https://github.com/Numi2/numi-lab.git",
+    "branch": "human-native-runtime-20260915",
+    "head": "3b968495e05253cb4675893c3b94fec448c63361",
+    "tree": "ee68992948f3b884571f380498f8e9af5d78edb1",
+    "identity_evidence": "source-git.txt"
+  },
+  "host": {
+    "machine": "Mac mini",
+    "model": "Mac16,11",
+    "architecture": "arm64",
+    "chip": "Apple M4 Pro",
+    "memory_bytes": 25769803776,
+    "macos_version": "26.6",
+    "macos_build": "25G72",
+    "xcode_version": "26.6",
+    "xcode_build": "17F113"
+  },
+  "build": {
+    "configuration": "Release",
+    "generator": "Ninja",
+    "cmake_version": "4.4",
+    "compiler": "/usr/bin/clang++",
+    "objective_cxx_flags": [
+      "-O3",
+      "-DNDEBUG",
+      "-std=c++23",
+      "-arch",
+      "arm64",
+      "-fPIE",
+      "-fobjc-arc",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Werror"
+    ],
+    "final_executed_command": [
+      "/opt/homebrew/bin/cmake",
+      "--build",
+      "/Users/n/Developer/numi-human-nhinit3-c785aba/build",
+      "--target",
+      "metalrobo_numanx_fullbody_bridge_probe",
+      "-j",
+      "8"
+    ],
+    "reproduction_targets": [
+      "metalrobo_matter_physics_probe",
+      "metalrobo_numanx_fullbody_bridge_probe",
+      "metalrobo_numilab_human_myosim_visual_probe"
+    ],
+    "fullbody_compile_time_inputs": {
+      "MRNX_FULLBODY_RIGID": {
+        "evidence_path": "inputs/myosim-fullbody-core-reference.nhrigid",
+        "sha256": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44"
+      },
+      "MRNX_FULLBODY_MUSCLE": {
+        "evidence_path": "inputs/myosim-fullbody-muscle-reference.nhmyo",
+        "sha256": "9a988f19a6fd8e533cd0f2bf3192cb8535fb008ccd394ffbf1a4432d3db76a05"
+      },
+      "MRNX_MATTER_METALLIB": {
+        "evidence_path": "artifacts/matter/shaders/NumiMatter.metallib",
+        "sha256": "6397674c0463683e182c41dc110944847c82a0832848ead4310bbe3e305033fc"
+      }
+    }
+  },
+  "artifacts": {
+    "matter_physics_probe": {
+      "path": "artifacts/bin/metalrobo_matter_physics_probe",
+      "bytes": 505568,
+      "sha256": "bbd86c0aefeffdcebbc049c74ea7b423381b1d0e44c9f48f6fb8be24f7d56f3e"
+    },
+    "numanx_fullbody_bridge_probe": {
+      "path": "artifacts/bin/metalrobo_numanx_fullbody_bridge_probe",
+      "bytes": 246056,
+      "sha256": "1f6196839f17d0ee93a384a9ec10ae5cbedab58ce36e945e4c5443f86f1d99e2"
+    },
+    "myosim_visual_probe": {
+      "path": "artifacts/bin/metalrobo_numilab_human_myosim_visual_probe",
+      "bytes": 991064,
+      "sha256": "4319694915a4c789252473520b6cfe76db630164fa3520835cded467b79d4d8b"
+    },
+    "numi_matter_metallib": {
+      "path": "artifacts/matter/shaders/NumiMatter.metallib",
+      "bytes": 2823560,
+      "sha256": "6397674c0463683e182c41dc110944847c82a0832848ead4310bbe3e305033fc"
+    },
+    "metalrobo_runtime_library": {
+      "path": "artifacts/lib/libmetalrobo.dylib",
+      "bytes": 6726608,
+      "sha256": "d9c2e192db8f42e8906dc7ce3c405fb7c0f6a4722646b573ee172e6cb7537de5"
+    }
+  },
+  "environment": {
+    "evidence_path": "runtime-environment.txt",
+    "allowlisted_relevant_variables": [
+      "DEVELOPER_DIR",
+      "DYLD_LIBRARY_PATH",
+      "METAL_DEVICE_WRAPPER_TYPE",
+      "MTL_CAPTURE_ENABLED",
+      "MTL_DEBUG_LAYER",
+      "MTL_SHADER_VALIDATION",
+      "MRNX_INCLUDE_SYNTHETIC_VASCULAR"
+    ],
+    "all_allowlisted_variables_unset": true
+  },
+  "commands": {
+    "source_certificate": [
+      "artifacts/bin/metalrobo_numilab_human_myosim_visual_probe",
+      "--source-compliant-certificate",
+      "inputs/myosim-fullbody-core-reference.nhrigid",
+      "inputs/myosim-fullbody-muscle-reference.nhmyo",
+      "inputs/myosim-fullbody-support-primitives.nhcnt",
+      "inputs/prepared.nhinit",
+      "inputs/myosim-fullbody-joint-equalities-source-compliance.nheq",
+      "inputs/myosim-fullbody-joint-limits.nhlim",
+      "32",
+      "--support-reactions-only"
+    ],
+    "author": [
+      "artifacts/bin/metalrobo_numanx_fullbody_bridge_probe",
+      "--prepared-stance-fixture",
+      "certificate.stdout.txt",
+      "generated/positive",
+      "inputs/myosim-fullbody-support-primitives.nhcnt",
+      "inputs/myosim-fullbody-joint-equalities-source-compliance.nheq",
+      "inputs/myosim-fullbody-joint-limits.nhlim",
+      "100",
+      "16"
+    ],
+    "roundtrip": [
+      "artifacts/bin/metalrobo_numanx_fullbody_bridge_probe",
+      "--prepared-state-fixture",
+      "generated/positive/prepared.nhinit",
+      "generated/roundtrip",
+      "inputs/myosim-fullbody-support-primitives.nhcnt",
+      "inputs/myosim-fullbody-joint-equalities-source-compliance.nheq",
+      "inputs/myosim-fullbody-joint-limits.nhlim",
+      "100",
+      "16"
+    ],
+    "provenance_negative": [
+      "artifacts/bin/metalrobo_numanx_fullbody_bridge_probe",
+      "--prepared-stance-fixture",
+      "certificate.stdout.txt",
+      "generated/negative-provenance",
+      "inputs/alternate-valid-support-plantar-ellipsoid.nhcnt",
+      "inputs/myosim-fullbody-joint-equalities-source-compliance.nheq",
+      "inputs/myosim-fullbody-joint-limits.nhlim",
+      "100",
+      "16"
+    ],
+    "physical_matter": [
+      "artifacts/bin/metalrobo_matter_physics_probe",
+      "--human-support-loaded"
+    ],
+    "focused_ctest": [
+      "/opt/homebrew/bin/ctest",
+      "--test-dir",
+      "/Users/n/Developer/numi-human-nhinit3-c785aba/build",
+      "-R",
+      "^(numi_human_initial_state|numi_human_static_support)$",
+      "--output-on-failure"
+    ]
+  }
+}
