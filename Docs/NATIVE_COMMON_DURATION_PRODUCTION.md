@@ -37,8 +37,9 @@ comparator.
   replay enabled.
 
 The cap-8 default and this runner live on the published
-`human-native-runtime-20260915` integration branch. They are not yet
-reconciled onto the native repository's default line.
+`human-native-runtime-20260915` integration branch and are absent from the
+native repository's default line; no default-line receipt currently binds their
+implementation and evidence to one resulting commit and tree.
 
 ## Physical result
 

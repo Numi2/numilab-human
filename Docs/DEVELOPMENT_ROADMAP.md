@@ -467,15 +467,16 @@ separate evidence categories. Success in one never silently qualifies another.
 
 ## Permanent parallel workstreams
 
-Every workstream below is active immediately. A dependency can block a claim
-or a merge into the authoritative stack; it cannot justify leaving unrelated
-research, data, compiler, geometry, controller, or validation work idle.
-Acceptance requires every lane to have a named owner, active/blocked status,
-exact dependency, current artifact, next evidence-producing action, and
-integration target in the machine-readable execution registry. Until that
-registry exists, this coordination gate is explicitly blocked. When a lane is
-blocked, its available capacity moves to the highest-fan-out upstream dependency
-rather than becoming idle.
+Every workstream below is active immediately. A dependency can block promotion
+of a specific claim or landing of a specific owner slice; it cannot justify
+leaving unrelated research, data, compiler, geometry, controller, or validation
+work idle. Acceptance requires every lane to record its target repository and
+branch, owned paths, predecessor owners, candidate commit/tree, required tests,
+required receipts, exact pass predicate, current artifact, and next evidence-
+producing action in the machine-readable execution registry. Until that registry
+exists, this coordination gate is explicitly blocked. When a lane is blocked,
+its available capacity moves to the highest-fan-out upstream dependency rather
+than becoming idle.
 
 ### A. Source graph, anatomy, provenance, and licensing
 

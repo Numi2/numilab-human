@@ -69,22 +69,22 @@ prove byte identity, not truth, independence of the original experiment, a
 chronological preregistration, or successful native execution. No synthetic test
 fixture is a selected participant or a completed capability.
 
-## Execution dependencies
+## Independently executable release predicates
 
-1. Admit a real participant with source demographics and an explicit anatomy,
-   parameter and empirical coverage inventory. Keep unavailable cells open.
-2. Migrate exact clocks through Brain, NumanX, sensors, circulation and restore.
-   The Brain Human-metric receipt parser now admits only the canonical 12,500 ns
-   step, but the current integer-microsecond transaction still cannot carry a
-   12,500 ns physical step; changing only NHINIT admission would incorrectly
-   round downstream timestamps.
-3. Close full source-force consistency and 100/50/25/12.5 microsecond refinement.
-4. Qualify loaded anatomy, supports/contact, prestress, reference reconstruction,
-   activation, blood mass/momentum and calibrated materials with single ownership.
-5. Lower the complete native task/observable program, prove accepted-only data
-   production, and evaluate held-out responses with the frozen statistical plan.
-6. Qualify sustained source-muscle control and task compositions on the same
-   immutable subject/runtime stack. Profile native execution before long runs.
+Participant admission, exact-clock integrity, mechanics closure, and loaded-
+anatomy qualification run concurrently. Accepted-only evaluation starts when
+its declared clock, mechanics, anatomy, and participant inputs pass. Sustained
+behavior promotion additionally requires that evaluation receipt and one
+immutable subject/runtime stack.
+
+| Predicate | Requires | Passes when |
+| --- | --- | --- |
+| participant admission | Source demographics, rights, sessions, modalities, uncertainty, and explicit anatomy/parameter/empirical coverage inventory | One participant receipt binds all available cells and keeps unavailable cells open; calibration and validation trials are disjoint. |
+| exact-clock integrity | Versioned Brain, NumanX, sensor, circulation, checkpoint, and restore records | The canonical `12,500 ns` step remains nanosecond-native through every identity and publication; mixed or rounded clock families reject before execution. |
+| mechanics closure | Full source inputs plus the frozen 100/50/25/12.5 microsecond refinement protocol | Force, impulse, work, state, retry, and replay ownership closes without hidden assistance or omitted contributors. |
+| loaded-anatomy qualification | Registered anatomy, supports/contact, prestress, reference reconstruction, activation, blood mass/momentum, and calibrated materials | Every mass, force, and state has one owner and the held-out loaded cases pass their uncertainty-backed metrics. |
+| accepted-only evaluation | Passing clock, mechanics, anatomy, and participant inputs plus the complete native task/observable program | Every attempted transaction is audited and only accepted state reaches the frozen held-out statistical evaluation. |
+| sustained behavior | Passing evaluation receipt, source-muscle control, task compositions, and one immutable subject/runtime stack | Sustained scenarios pass their physical and measurement margins; native profiling identifies no unqualified execution envelope. |
 
 Different subjects, anatomical components or specimens can support separately
 named component tests. They cannot be relabeled as this participant. Population

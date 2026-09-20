@@ -32,7 +32,7 @@ release claim.
 | `numilab-human`    |                   ~110 | Source binding, mass/organ/muscle ownership, participant-data handoff, exact clocks, unassisted launch contracts, dynamics/work semantics, and the evidence-gated execution plan | Strongest concentration of product-definition and scientific-credibility work. Still missing an admitted same-participant bundle, anatomical foot contact, loaded equilibrium, standing, walking, and integrated validation. |
 | `numiVivo`         |                     52 | Native sparse H5AD interoperability, binder surfaces, negative-binomial compute work, and evidence/reporting improvements                                                        | Platform progress is real; predictive and Metal-promotion evidence is not. General-platform and single-cell workflow failures remain open. CPU remains authoritative for the cited Kang fit domain.                          |
 | `numi-brain`       |                     32 | Source-bound whole-body feedback, exact sensor timestamps, transactional delay/filter history, and safety/overflow contracts                                                     | Contract and runtime infrastructure is credible and CI is green. It does not yet demonstrate measured assistance-free standing or integrated behavior.                                                                       |
-| `numi-lab` default |                      1 | One acceleration-parity diagnostic landed on `numisolver`                                                                                                                        | The important Human native work is on `human-native-runtime-20260915` with substantial two-way divergence from the default branch. This is a dependency-ordered reconciliation program, not a merge button.                |
+| `numi-lab` default |                      1 | One acceleration-parity diagnostic landed on `numisolver`                                                                                                                        | The important Human native work is on `human-native-runtime-20260915` with substantial two-way divergence from default. Default-line progress counts only when a dependency-complete owner slice has frozen source/target identities, owner tests, exact-source evidence, a conflict ledger, and a resulting commit/tree receipt. |
 | `numaios`          |               Draft PR | Guarded iPhone-agent baseline: 4 commits, 22 files, +1,710 lines; macOS checks green                                                                                             | Useful product surface, but physical-device execution, Apple-model inference, visual grounding, and independent app-data verification remain unqualified.                                                                    |
 
 ## Strongest new native result
@@ -41,7 +41,8 @@ On a physical Apple M4 Pro Mac mini, the published Human integration branch now
 has:
 
 - a cap of eight authoritative steps per command buffer as that branch's
-  runtime default; this has not yet been reconciled to the native default line;
+  runtime default; native `main` has no matching implementation-and-evidence
+  receipt;
 - physical equivalence of cap 8/16/32 against the monolithic 64-step path;
 - a clean 512-step, 6.4 ms cap-8 run with bitwise replay and exact
   debug-on/off mechanics;
@@ -59,8 +60,8 @@ has:
 
 These are separate immutable artifact sets, not one integrated release stack.
 
-The first recommended integration seam is now published on the Human native
-branch: commits `a924748f` and `b1a9bdd3` replace duplicated runtime/probe
+The lowest dependency-complete landing candidate is now published on the Human
+native branch: commits `a924748f` and `b1a9bdd3` replace duplicated runtime/probe
 source-fingerprint composition with one tested contract while preserving the
 historical zero-identity edge. The physical M4 Pro warnings-as-errors build,
 CPU identity/NHINIT tests, and authored-world/NHEQ negative matrix pass. This
@@ -83,13 +84,16 @@ that request cannot yet be promoted. The remedy is a parallel, versioned
 nanosecond path through Brain, NumanX/HumanMatter, Metal state, sensor
 publication, and evidence while preserving all legacy hashes unchanged.
 
-A fresh reconciliation audit confirms that the two native identity commits
-cannot be safely cherry-picked onto native `main` today: the default line does
-not yet contain the Matter/NumanX/Human owner stack they modify. The safe route
-is to reconcile that owner baseline through `3b968495`, preserving the newer
-default-line HyperPolicy/K1 work, qualify it on the Mac mini, and only then
-apply the two identity commits. A wholesale merge would obscure semantic
-conflicts and is not the recommendation.
+A fresh ownership audit confirms that the two native identity commits cannot be
+safely cherry-picked onto native `main`: the default line does not yet contain
+the Matter/NumanX/Human owner stack they modify. Freeze the source head, target
+head, and merge base; construct an isolated candidate containing the owner tree
+through `3b968495` while preserving current HyperPolicy/K1 behavior; enumerate
+owned-path and ABI/schema deltas; record every semantic conflict and resolution;
+pass owner tests, the warnings-as-errors build, exact-source checks, negative
+matrices, and affected physical-M4 qualification; then apply the two identity
+commits in order. Completion is a receipt naming the resulting default-line
+commit, tree, artifacts, and evidence hashes—not the branch operation itself.
 
 The sustained A/B observed 1.8134x end-to-end and 1.8871x authoritative-segment
 speedups. These are single-sample observations, not a qualified performance
@@ -136,9 +140,10 @@ The next causal mechanics action is:
 5. If continuity is not causal, capture the paired limit/equality event and a
    selected-step full owner snapshot before changing solver behavior.
 
-In parallel, admit the real participant inputs; reconcile contracts and owners
-onto the default line in dependency order; unlock the preregistered performance
-instrumentation; qualify anatomical contact; and continue controller,
+In parallel, admit the real participant inputs; execute every default-line owner
+landing whose predecessor contracts and qualification surfaces are present;
+unlock the preregistered performance instrumentation; qualify anatomical
+contact; and continue controller,
 continuum, and physiology work behind permanent interfaces. These lanes
 converge at loaded equilibrium, held-out standing/recovery, locomotion, the
 remaining 25 scenarios, reproduced comparators, and the immutable single-male
