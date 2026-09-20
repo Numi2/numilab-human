@@ -102,28 +102,35 @@ the identity and NHINIT tests, and the authored-world/NHEQ negative matrix pass.
 This is an admission-contract increment, not an accepted-root or standing
 result.
 
-NumiBrain commit `87e7b13` is now on `main`. It adds typed native-v8
-construction with one authoritative nanosecond clock and rejects exact-clock
-use in the existing Gate C root runner, whose transaction and ACK contracts
-still carry whole microseconds. A source-coherent physical-M4 test with Metal
-validation admitted the authored Matter world and NHINIT3 state at exactly
-`12,500 ns`; the nested legacy microsecond word remained zero. This closes the
-construction boundary only. Exact Brain witness/ACK publication, accepted
-support-history continuity, and standing remain open.
-The immutable passing receipt and the retained failed mixed-tuple attempts are
-published in [NumiBrain evidence commit `ebbffa4`](https://github.com/Numi2/numi-brain/tree/ebbffa484c6a6f1aa91aaf640f165fc0047f98eb/evidence/numanx-v8-exact-construction-v0.1).
+NumiBrain commit `a2783fc` is now on `main`. It preserves the legacy
+microsecond ABI byte-for-byte and adds domain-separated v2 root, substep,
+accepted-state, and commit records with explicit nanosecond timestamps, a
+`1 ns` quantum, distinct hashes, typed Swift clocks, and mixed-family rejection.
+The native-v8 constructor now requires exact-clock introspection rather than
+inferring admission from configuration alone. A fresh full-graph build and
+source-coherent physical-M4 test with Metal validation admitted the authored
+Matter world and NHINIT3 state at exactly `12,500 ns` and copied the initial
+clock authority. This closes construction, introspection, and Core identity
+only. The motor candidate/header/ready gate, native request, HumanMatter close,
+outbound sensor, accepted publication, snapshot, and persistent-state lanes do
+not yet form an executable v2 family; exact accepted-root publication,
+support-history continuity, and standing remain open. The current passing
+receipt is published in [NumiBrain evidence commit `2cfd46c`](https://github.com/Numi2/numi-brain/tree/2cfd46cccf78ae4ba23f22654cc44bf9e343d788/evidence/numanx-exact-domain-construction-v0.1),
+while the earlier failed mixed-tuple attempts remain retained with their
+original construction receipt.
 
-A follow-on cross-repository ABI audit found that native request v2 is not yet a
-safe accepted-root boundary. It currently preserves the v1 fixed layouts while
+A follow-on cross-repository ABI audit found that the published native request
+v2 is not yet a safe accepted-root boundary. It preserves the v1 fixed layouts while
 reinterpreting microsecond-named transaction and publication words as
 nanoseconds. Because that clock domain is absent from the nested fingerprints,
 the same numeric bytes can identify two different physical times. Exact
 construction remains qualified; exact accepted-root routing stays disabled.
 The permanent fix is a parallel, domain-separated nanosecond ABI, not an
-in-place reinterpretation of v1. It spans root/substep/accepted/commit identity,
-motor and ready gates, fast status, sensor timing and aggregate publication,
-HumanMatter close records, persistent shader state, and evidence schemas. The
-legacy microsecond lane and its golden hashes remain byte-for-byte unchanged.
+in-place reinterpretation of v1. The root/substep/accepted/commit identity slice
+is now landed; the remaining work spans motor and ready gates, fast status,
+sensor timing and aggregate publication, HumanMatter close records, persistent
+shader state, and evidence schemas. The legacy microsecond lane and its golden
+hashes remain byte-for-byte unchanged.
 
 The ownership audit also closes a design question: the legacy standalone stand
 path recomputes q/v/muscle state and cold-creates its own contact impulses. It
