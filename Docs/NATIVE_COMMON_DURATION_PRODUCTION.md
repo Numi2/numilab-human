@@ -80,15 +80,19 @@ tolerance is inferred from these four observations.
 
 ## Next evidence-producing action
 
-The exact native-v8 construction subgate is now passed and retained in
-[NumiBrain evidence commit `ebbffa4`](https://github.com/Numi2/numi-brain/tree/ebbffa484c6a6f1aa91aaf640f165fc0047f98eb/evidence/numanx-v8-exact-construction-v0.1).
-It does not yet cross the Brain transaction/ACK boundary.
+The exact native-v8 construction and inbound request-v3 subgates are now passed
+and retained in
+[NumiBrain evidence commit `3153d5d`](https://github.com/Numi2/numi-brain/tree/3153d5d67dac5d12f29fe594c362c2ea0055d8ca/evidence/numanx-exact-request-v3-contract-v0.1).
+The physical-M4 probe validates the exact request, rejects mixed v1 records, and
+stops at stage 900 before resource import or GPU submission. It does not yet
+cross HumanMatter close or the accepted publication/ACK boundary.
 
-1. Extend NumiBrain's now-qualified exact-v8 construction boundary through the
-   genuine accepted-root publication sequence by versioning its transaction,
-   motor, witness, and ACK timestamps for nanosecond ownership. Do not add
-   decoder-only support to the legacy standalone stand shader: it has no
-   accepted support-history arena and would discard the defining NHINIT3
+1. Extend the now-qualified exact request-v3 motor boundary with exact
+   HumanMatter-close, outbound-sensor, accepted-publication, snapshot,
+   persistent-state, witness, and ACK owners. Keep stage 900 fail-closed until
+   the complete family exists, then qualify the genuine accepted-root sequence.
+   Do not add decoder-only support to the legacy standalone stand shader: it has
+   no accepted support-history arena and would discard the defining NHINIT3
    continuation state.
 2. Add permanent hashed NHTENDON runtime input and a quiescent copied
    post-publication snapshot of Matter's raw

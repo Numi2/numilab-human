@@ -63,37 +63,51 @@ These are separate immutable artifact sets, not one integrated release stack.
 The lowest dependency-complete landing candidate is now published on the Human
 native branch: commits `a924748f` and `b1a9bdd3` replace duplicated runtime/probe
 source-fingerprint composition with one tested contract while preserving the
-historical zero-identity edge. The physical M4 Pro warnings-as-errors build,
-CPU identity/NHINIT tests, and authored-world/NHEQ negative matrix pass. This
-reduces integration risk; it does not establish an accepted root or standing.
+historical zero-identity edge. Commit `e7ad0ac` adds an all-exact request-v3
+inbound boundary while freezing the published all-v1 request-v2 ABI and making
+it fail closed. The physical M4 Pro warnings-as-errors build, CPU identity and
+fixed-vector contract tests, authored-world/NHEQ negative matrix, and
+asset-backed exact-request admission probe pass. This reduces integration risk;
+it does not establish an accepted root or standing.
 
-NumiBrain commit `a2783fc` is also published on `main`. It preserves every
-legacy microsecond byte and hash while adding domain-separated v2 root,
-substep, accepted-state, and commit records with explicit nanosecond clocks,
-`1 ns` quantum, typed Swift time, and mixed-family rejection. Native-v8
+NumiBrain commits `a2783fc` and `5d9398b` are published on `main`. They preserve
+every legacy microsecond byte and hash while adding domain-separated v2 root,
+substep, motor-candidate, motor-header, ready-gate, accepted-state, and commit
+records with explicit nanosecond clocks, `1 ns` quantum, typed Swift time, and
+mixed-family rejection. Native-v8
 construction now requires clock introspection rather than trusting requested
 configuration alone. A fresh full-graph build and source-coherent physical-M4
 admission test with Metal validation passed at exactly `12,500 ns`; its
-immutable receipt is in
+construction receipt is in
 [evidence commit `2cfd46c`](https://github.com/Numi2/numi-brain/tree/2cfd46cccf78ae4ba23f22654cc44bf9e343d788/evidence/numanx-exact-domain-construction-v0.1).
 
-This fixes the audited Core identity defect but is not an accepted-root result.
-Motor candidate/header/ready gate, native request, HumanMatter close, outbound
-sensor, accepted publication, snapshot, and persistent-state ownership still
-need one coherent v2 family before GPU submission can open. Construction and
-clock-copy evidence therefore remains distinct from behavior or standing; the
-earlier failed mixed-tuple attempts remain retained rather than overwritten.
+Brain and native now reproduce the same five fixed request-v3 fingerprints. On
+the physical M4 Pro, 15 exact/layout tests passed with Metal validation, 33
+focused compatibility tests passed, and the native fixed-vector CTest plus
+asset-backed admission probe passed. The probe rejected mixed v1 records and
+stopped coherently at stage 900 before resource import or GPU submission. The
+immutable cross-repository receipt is in
+[evidence commit `3153d5d`](https://github.com/Numi2/numi-brain/tree/3153d5d67dac5d12f29fe594c362c2ea0055d8ca/evidence/numanx-exact-request-v3-contract-v0.1).
 
-A fresh ownership audit confirms that the two native identity commits cannot be
+This fixes the audited Core identity defect and closes exact inbound motor
+authority, but it is not an accepted-root result. HumanMatter close, outbound
+sensor, accepted publication, snapshot, and persistent-state ownership still
+need one coherent exact family before GPU submission can open. Construction,
+clock-copy, and inbound-admission evidence therefore remain distinct from
+behavior or standing; failed and partial attempts remain retained rather than
+overwritten.
+
+A fresh ownership audit confirms that the three native commits cannot be
 safely cherry-picked onto native `main`: the default line does not yet contain
 the Matter/NumanX/Human owner stack they modify. Freeze the source head, target
 head, and merge base; construct an isolated candidate containing the owner tree
 through `3b968495` while preserving current HyperPolicy/K1 behavior; enumerate
 owned-path and ABI/schema deltas; record every semantic conflict and resolution;
 pass owner tests, the warnings-as-errors build, exact-source checks, negative
-matrices, and affected physical-M4 qualification; then apply the two identity
-commits in order. Completion is a receipt naming the resulting default-line
-commit, tree, artifacts, and evidence hashes—not the branch operation itself.
+matrices, and affected physical-M4 qualification; then apply `a924748f`,
+`b1a9bdd3`, and `e7ad0ac` in order. Completion is a receipt naming the resulting
+default-line commit, tree, artifacts, and evidence hashes—not the branch
+operation itself.
 
 The sustained A/B observed 1.8134x end-to-end and 1.8871x authoritative-segment
 speedups. These are single-sample observations, not a qualified performance
@@ -121,13 +135,14 @@ parity evidence; native Metal on the reserved Mac mini remains authoritative.
 
 The next causal mechanics action is:
 
-1. Extend the published v2 root/substep/accepted/commit identity through the
-   motor candidate/header/ready gate, native request, HumanMatter close,
-   outbound sensor, snapshot, and persistent-state owners. Reject mixed
-   runtime/request or nested record families before GPU submission; then
-   qualify one root, two consecutive roots, and reject/retry with an explicitly
-   fingerprinted zero-muscle command. Do not bolt NHINIT3 onto the legacy stand
-   shader, which does not own accepted support history.
+1. Extend the now-qualified exact request-v3 inbound boundary through
+   HumanMatter close, outbound sensor, accepted publication, snapshot, and
+   persistent-state owners. Preserve the stage-900 no-touch boundary until the
+   entire successor family exists; then open resource import and GPU submission
+   once, behind the compatibility matrix, and qualify one root, two consecutive
+   roots, and reject/retry with an explicitly fingerprinted zero-muscle command.
+   Do not bolt NHINIT3 onto the legacy stand shader, which does not own accepted
+   support history.
 2. Add hashed NHTENDON parity, a copied
    post-publication support-history snapshot, and one atomic runtime receipt.
 3. Freeze the common native commit/tree, runner/runtime/shader set, rigid,

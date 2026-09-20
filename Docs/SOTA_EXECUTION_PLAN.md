@@ -94,43 +94,47 @@ authoritative anatomical foot contact, qualified loaded equilibrium, sustained
 standing, walking, and integrated qualification.
 
 Execution has started at the first dependency seam. Native commits
-`a924748f` and `b1a9bdd3` centralize the exact base, NHEQ2, NHLIM1, and NHINIT
+`a924748f`, `b1a9bdd3`, and `e7ad0ac` centralize the exact base, NHEQ2, NHLIM1,
+and NHINIT
 source-identity composition shared by the v8 runtime and its qualification
-probe, preserve the historical zero-identity edge, and add a golden CPU
-contract. On the physical M4 Pro Mac mini, the warnings-as-errors native build,
-the identity and NHINIT tests, and the authored-world/NHEQ negative matrix pass.
-This is an admission-contract increment, not an accepted-root or standing
+probe, preserve the historical zero-identity edge and all-v1 request-v2 ABI,
+and add golden CPU and all-exact request-v3 contracts. On the physical M4 Pro
+Mac mini, the warnings-as-errors native build, identity/NHINIT and fixed-vector
+tests, authored-world/NHEQ negative matrix, and asset-backed exact-request probe
+pass. This is an admission-contract increment, not an accepted-root or standing
 result.
 
-NumiBrain commit `a2783fc` is now on `main`. It preserves the legacy
-microsecond ABI byte-for-byte and adds domain-separated v2 root, substep,
-accepted-state, and commit records with explicit nanosecond timestamps, a
-`1 ns` quantum, distinct hashes, typed Swift clocks, and mixed-family rejection.
+NumiBrain commits `a2783fc` and `5d9398b` are now on `main`. They preserve the
+legacy microsecond ABI byte-for-byte and add domain-separated v2 root, substep,
+motor-candidate, motor-output-header, ready-gate, accepted-state, and commit
+records with explicit nanosecond timestamps, a `1 ns` quantum, distinct hashes,
+typed Swift clocks, and mixed-family rejection.
 The native-v8 constructor now requires exact-clock introspection rather than
 inferring admission from configuration alone. A fresh full-graph build and
 source-coherent physical-M4 test with Metal validation admitted the authored
 Matter world and NHINIT3 state at exactly `12,500 ns` and copied the initial
-clock authority. This closes construction, introspection, and Core identity
-only. The motor candidate/header/ready gate, native request, HumanMatter close,
-outbound sensor, accepted publication, snapshot, and persistent-state lanes do
-not yet form an executable v2 family; exact accepted-root publication,
-support-history continuity, and standing remain open. The current passing
-receipt is published in [NumiBrain evidence commit `2cfd46c`](https://github.com/Numi2/numi-brain/tree/2cfd46cccf78ae4ba23f22654cc44bf9e343d788/evidence/numanx-exact-domain-construction-v0.1),
-while the earlier failed mixed-tuple attempts remain retained with their
-original construction receipt.
+clock authority. This closes construction, introspection, Core identity, and
+inbound motor authority only. Brain and native share five literal request-v3
+fingerprints; the warnings-as-errors build, registered CPU contract, and
+asset-backed physical-M4 probe pass. The probe rejects mixed families and stops
+at stage 900 before resource import or GPU submission. The construction receipt
+is published in [NumiBrain evidence commit `2cfd46c`](https://github.com/Numi2/numi-brain/tree/2cfd46cccf78ae4ba23f22654cc44bf9e343d788/evidence/numanx-exact-domain-construction-v0.1),
+and the inbound-contract receipt is published in
+[evidence commit `3153d5d`](https://github.com/Numi2/numi-brain/tree/3153d5d67dac5d12f29fe594c362c2ea0055d8ca/evidence/numanx-exact-request-v3-contract-v0.1).
+HumanMatter close, outbound sensor, accepted publication, snapshot, and
+persistent-state lanes do not yet form an executable exact family; accepted-root
+publication, support-history continuity, and standing remain open.
 
-A follow-on cross-repository ABI audit found that the published native request
-v2 is not yet a safe accepted-root boundary. It preserves the v1 fixed layouts while
-reinterpreting microsecond-named transaction and publication words as
-nanoseconds. Because that clock domain is absent from the nested fingerprints,
-the same numeric bytes can identify two different physical times. Exact
-construction remains qualified; exact accepted-root routing stays disabled.
-The permanent fix is a parallel, domain-separated nanosecond ABI, not an
-in-place reinterpretation of v1. The root/substep/accepted/commit identity slice
-is now landed; the remaining work spans motor and ready gates, fast status,
-sensor timing and aggregate publication, HumanMatter close records, persistent
-shader state, and evidence schemas. The legacy microsecond lane and its golden
-hashes remain byte-for-byte unchanged.
+A follow-on cross-repository ABI audit found that published request-v2 could
+not safely become an exact accepted-root boundary because its nested records
+are the immutable v1 microsecond family. That history is now frozen rather than
+reinterpreted: exact runtimes reject request-v2 at stage 901 before borrowed
+resource inspection. The additive request-v3 uses domain-separated exact root,
+substep, candidate, motor-header, and ready-gate identities. It is qualified for
+inbound admission but deliberately unroutable past stage 900. The remaining
+successor work spans fast status, sensor timing and aggregate publication,
+HumanMatter close records, persistent shader state, and evidence schemas. The
+legacy microsecond lane and its golden hashes remain byte-for-byte unchanged.
 
 The ownership audit also closes a design question: the legacy standalone stand
 path recomputes q/v/muscle state and cold-creates its own contact impulses. It
@@ -138,15 +142,16 @@ cannot consume Matter's NHINIT3 accepted-history arena. Prepared production
 execution must therefore enter through v8 NumanX/Matter and the existing Brain
 accepted-root coordinator.
 
-The default-line ownership audit also rules out a direct cherry-pick of the two
-new identity commits. Native `main` does not yet contain the Matter/NumanX/Human
+The default-line ownership audit also rules out a direct cherry-pick of the
+three native commits. Native `main` does not yet contain the Matter/NumanX/Human
 owners, probe, or CTest surfaces they modify; applying only the helper would
 create an orphan interface. Freeze the source head, target head, and merge base;
 construct an isolated candidate containing the owner tree through `3b968495`
 while preserving current HyperPolicy/K1 behavior; record every owned-path,
 ABI/schema, and semantic conflict; pass the owner tests, warnings-as-errors
 build, authored-world/NHEQ negative matrix, exact-source checks, and affected
-physical-M4 qualification; then apply `a924748f` and `b1a9bdd3` in order.
+physical-M4 qualification; then apply `a924748f`, `b1a9bdd3`, and `e7ad0ac` in
+order.
 Presence on default is established only by a receipt naming the resulting
 default-line commit and tree.
 
@@ -221,16 +226,16 @@ action, and integration target.
 
 ## Next causal mechanics action
 
-1. **Complete exact accepted-root clock ownership.** Native-v8 construction now
-   admits `12,500 ns` without rounding. Add a parallel v2 nanosecond lane across
-   Brain, NumanX/HumanMatter, persistent Metal state, publication, and evidence;
-   mix clock domain and record version into every time-bearing identity. Enforce
-   the compatibility matrix before GPU submission: v1-v7 runtime with v1
-   microsecond request is valid; v8 with v2 nanosecond request is valid; either
-   cross-pairing or any mixed nested family is rejected. Then drive one and two
-   semantic-zero-muscle roots through the existing genuine preflight, ACK,
-   generation latch, rollback/retry, and accepted publication sequence. The
-   legacy standalone stand shader is not a valid NHINIT3 destination because it
+1. **Complete exact accepted-root clock ownership.** Construction and the
+   all-exact request-v3 inbound motor family now pass at `12,500 ns`; historical
+   request-v2 and mixed nested families fail before resource import. Add the
+   exact successors for NumanX/HumanMatter close, outbound sensors, aggregate
+   publication, snapshots, persistent Metal state, and evidence. Preserve the
+   stage-900 no-touch boundary until all of those owners exist. Then open
+   resource import and GPU submission behind the compatibility matrix and drive
+   one and two semantic-zero-muscle roots through genuine preflight, ACK,
+   generation latch, rollback/retry, and accepted publication. The legacy
+   standalone stand shader is not a valid NHINIT3 destination because it
    cold-creates its own contact state.
 2. **Reach full stand-stack parity.** Add a permanent hashed NHTENDON runtime
    configuration and bind its programs into the NumanX/Matter owner input. Add
