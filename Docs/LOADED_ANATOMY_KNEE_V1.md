@@ -33,8 +33,16 @@ compile the Human bundle with:
 ```
 
 The equivalent routed command is `numi human loaded-anatomy-knee-compile`.
-The checked-in left-knee profile is frozen inside the compiler; callers cannot
-substitute a different profile.
+The compiler selects one of two checked-in profiles from the authenticated Lab
+export; callers cannot substitute a profile. The legacy projected-reference
+tuple uses `numi.human.loaded-anatomy-knee-authoring.v1`. The source-compliant
+identity-reference tuple uses
+`numi.human.loaded-anatomy-knee-source-default-authoring.v2`, file SHA-256
+`fe0ae4a11c928178718cff7874215768683bf498650c8abcc25ced458e0f17b6`, and
+content identity
+`f9375445dd7375b9c5b2f4c3eb69ea9454c567b1910b5093b41ec0762280d07f`.
+Profile, equality role, pose, mapping, diagnostics, and receipt boundary form
+one correlated tuple; independently mixing fields from the two modes fails.
 
 The output directory contains exactly:
 
@@ -68,8 +76,8 @@ The authoring export and Human receipt jointly bind:
 - source anchor ownership and executed moving-enthesis anchors;
 - per-region runtime node and tetrahedron spans;
 - raw float32 lumped node masses;
-- the exact rigid and equality payload identities;
-- source and projected body-pose identities; and
+- the exact rigid payload identity and the equality payload's explicit role;
+- source and selected authoring-reference body-pose identities; and
 - donor source, subtracted, remaining, and closure moments.
 
 The five passive regions are `ACL`, `LCL`, `MCL`, `PCL`, and `PTL`. The seven
@@ -86,25 +94,31 @@ not a tolerance.
 
 ## Coordinate and state ownership
 
-The coordinate chain has four distinct states:
+The coordinate chain has four distinct states. `B_ref` has two deliberately
+different frozen constructions:
 
 1. `A`, or `x_source`, is ABI3 `restWorld` in MyoSim world metres, registered
    against the unprojected default body pose.
-2. `B_ref`, or `x_ref`, maps `A` from the unprojected default bodies to the
-   equality-projected default bodies. Human authoring owns this immutable
-   projected-rest candidate.
-3. `C_init` maps `B_ref` from the projected reference bodies into the support or
-   qualification pose. Lab runtime owns this initialization state.
+2. `B_ref`, or `x_ref`, is either the legacy NHEQ1 equality-projected reference
+   or the source-default identity reference. Human authoring owns the immutable
+   candidate selected by the correlated profile and export tuple.
+3. `C_init` maps `B_ref` from the selected authoring-reference bodies into the
+   support or qualification pose. Lab runtime owns this initialization state.
 4. `x_current` is the accepted runtime position state. Only the separate Lab
    accepted-step transaction may publish its hash.
 
 The compiler independently recomputes signed source-to-reference tetrahedron
 Jacobians. A collapsed or orientation-reversing element is rejected. None of
 `A`, `B_ref`, `C_init`, or `x_current` is described as unloaded or stress-free.
-The reference class is `projected-rest-candidate`; prestress reset remains
-unresolved and volumetric prestress is not applied.
+Prestress reset remains unresolved and volumetric prestress is not applied in
+both modes.
 
-The frozen A-to-B_ref construction uses
+The legacy v1 tuple binds NHEQ1 SHA-256
+`b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a`
+with its exact, implicit legacy role `authoring-projection`, the
+`numi-human:equality-projected-default-reference-body-pose` pose, and mapping
+`numi-lab.open-knee-restWorld-to-equality-projected-default-body-poses.1`.
+Its frozen A-to-B_ref construction uses
 `adaptive-dyadic-first-success-slerp-geodesic-inverse-distance-moving-enthesis.1`.
 Its implementation identity is encoded as
 `sha256(domain-utf8||header-file-sha256||core-file-sha256||adapter-file-sha256)`:
@@ -120,14 +134,41 @@ PTL source rejects the direct one-increment interpolation at local tetrahedron
 419 and succeeds with two increments. Failure to find an admitted dyadic path
 fails closed.
 
+The source-default v2 tuple instead binds canonical NHEQ2 SHA-256
+`12db05fddb492e77e7fd461fad566d3e1e75390f2cb6f77f26568254a6cb4477`
+with role `source-compliance-runtime-link` and
+`equality_projection_applied: false`. It uses pose
+`numi-human:unprojected-myosim-default-body-pose`, reference class
+`source-default-registered-reference`, and mapping/construction ID
+`numi-lab.open-knee-restWorld-source-default-identity.1` with algorithm
+`identity-copy-source-restWorld-f32.1`. `B_ref` must be byte-identical to raw
+ABI3 `restWorld` `A`; the two coordinate hashes and the two pose hashes must be
+equal, maximum displacement must be exactly zero, the separately evaluated
+NHEQ2 diagnostic residual must equal `0.052419200539588928`, aggregate and
+regional Jacobian extrema must be exactly one, and all six regional direct maps
+must be accepted with one substep and null failure evidence. The mapping
+implementation hash remains mandatory.
+
+NHEQ2 is not a hard position projection in this mode. It remains a compliant
+acceleration program for runtime initialization and stepping; the authoring
+reference reconstruction is the source-default identity copy. This separation
+is material-significant: mapping the legacy NHEQ1-projected reference back to
+the NHEQ2 default pose produced a PTL continuation determinant below Matter's
+conservative material-valid interval, even though the geometric continuation
+was orientation preserving. Reusing that projected reference would therefore
+confuse geometric invertibility with executable material compatibility. The
+identity reference avoids that contradiction, but Matter compilation and
+runtime material gates still have to pass independently.
+
 The Lab export records one exact diagnostics row for each region in
 `ACL, LCL, MCL, PCL, PTL, QAT` order. Human rechecks each row against the
 persisted float32 `B_ref`: per-region and aggregate signed Jacobian extrema must
 match Human's independent recomputation, the direct-map status and selected
 increment count are frozen, and source, final-double, and persisted-float32
-anchor residuals must each be no more than 200 nanometres. This continuation is
-a deterministic geometric authoring map, not a material equilibrium solve, an
-unloaded reference, or evidence of physiological prestrain.
+anchor residuals must each be no more than 200 nanometres. The legacy
+continuation and source-default identity copy are deterministic geometric
+authoring maps, not material equilibrium solves, unloaded references, or
+evidence of physiological prestrain.
 
 The executable nodal-mass digest uses the pinned algorithm
 `matter-referenced-f32-volume-f32-density-fp64-source-order-accumulate-final-f32.1`.

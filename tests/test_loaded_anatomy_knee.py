@@ -500,11 +500,119 @@ def _sync_export_mapping_and_rehash(value: dict) -> None:
     _rehash_embedded_lab_export(value)
 
 
+def _sync_export_provenance_and_rehash(value: dict) -> None:
+    export = value["lab_authoring_export"]
+    provenance = value["mass_partition"]["provenance"]
+    for key, item in export["source"].items():
+        provenance[key] = item
+    provenance["poses"] = copy.deepcopy(export["poses"])
+    provenance["mapping"] = copy.deepcopy(export["mapping"])
+    _rehash_embedded_lab_export(value)
+
+
+def _source_compliant_nheq2_manifest() -> dict:
+    value = _manifest()
+    export = value["lab_authoring_export"]
+    export["source"]["equality_payload_sha256"] = (
+        knee.SOURCE_COMPLIANT_NHEQ2_RUNTIME_EQUALITY_PAYLOAD_SHA256
+    )
+    export["source"]["equality_payload_role"] = (
+        knee.SOURCE_COMPLIANT_EQUALITY_PAYLOAD_ROLE
+    )
+    export["source"]["equality_projection_applied"] = False
+    export["x_ref"]["file_sha256"] = export["source"]["x_source_sha256"]
+    export["poses"]["projected_reference"] = copy.deepcopy(
+        export["poses"]["source_default"]
+    )
+    export["mapping"]["id"] = knee.SOURCE_DEFAULT_LAB_MAPPING_ID
+    export["mapping"]["algorithm"] = knee.SOURCE_DEFAULT_LAB_MAPPING_ALGORITHM
+    diagnostics = export["mapping"]["diagnostics"]
+    diagnostics["maximum_displacement_m"] = 0.0
+    diagnostics["equality_residual_maximum"] = (
+        knee.SOURCE_DEFAULT_NHEQ2_DIAGNOSTIC_RESIDUAL_MAXIMUM
+    )
+    ptl = next(
+        row
+        for row in diagnostics["regions"]
+        if row["name"] == "PTL"
+    )
+    ptl["substep_count"] = 1
+    ptl["direct_map_status"] = "accepted"
+    ptl["direct_failure_tetrahedron"] = None
+    ptl["direct_failure_jacobian"] = None
+    provenance = value["mass_partition"]["provenance"]
+    for key, item in export["source"].items():
+        provenance[key] = item
+    provenance["x_ref_sha256"] = export["source"]["x_source_sha256"]
+    provenance["poses"] = copy.deepcopy(export["poses"])
+    provenance["mapping"] = copy.deepcopy(export["mapping"])
+    value["inputs"]["authoring_profile"] = {
+        "schema": knee.SOURCE_DEFAULT_PROFILE_SCHEMA,
+        "file_sha256": knee.FROZEN_SOURCE_DEFAULT_PROFILE_FILE_SHA256,
+        "identity_sha256": knee.FROZEN_SOURCE_DEFAULT_PROFILE_IDENTITY_SHA256,
+    }
+    value["inputs"]["x_ref"]["file_sha256"] = export["source"][
+        "x_source_sha256"
+    ]
+    value["inputs"]["x_ref"]["identity_sha256"] = export["source"][
+        "x_source_sha256"
+    ]
+    value["coordinates"]["x_ref"].update(
+        knee._load_frozen_source_default_profile()["reference_state"]
+    )
+    value["coordinates"]["x_ref"]["sha256"] = export["source"][
+        "x_source_sha256"
+    ]
+    value["coordinates"]["x_ref"]["mapping_identity_sha256"] = digest(
+        {
+            "x_source_sha256": value["coordinates"]["x_source"]["sha256"],
+            "source_frame_id": value["coordinates"]["x_source"]["frame_id"],
+            "source_body_pose_id": value["coordinates"]["x_source"][
+                "body_pose_id"
+            ],
+            "source_registration_id": value["coordinates"]["x_source"][
+                "registration_id"
+            ],
+            "x_ref_sha256": value["coordinates"]["x_ref"]["sha256"],
+            "construction_id": value["coordinates"]["x_ref"]["construction_id"],
+            "reference_body_pose_id": value["coordinates"]["x_ref"][
+                "reference_body_pose_id"
+            ],
+            "source_to_reference_mapping_id": value["coordinates"]["x_ref"][
+                "source_to_reference_mapping_id"
+            ],
+        }
+    )
+    export["boundary"] = knee.SOURCE_DEFAULT_LAB_EXPORT_BOUNDARY
+    value["boundary"] = knee.SOURCE_DEFAULT_BOUNDARY
+    _rehash_embedded_lab_export(value)
+    return value
+
+
 def test_checked_in_profile_and_real_source_decoders_when_available() -> None:
     profile = _profile()
     profile_bytes = knee.PROFILE.read_bytes()
     assert profile_bytes == canonical_bytes(profile) + b"\n"
     assert hashlib.sha256(profile_bytes).hexdigest() == knee.FROZEN_PROFILE_FILE_SHA256
+    source_default_profile = knee._load_frozen_source_default_profile()
+    source_default_profile_bytes = knee.SOURCE_DEFAULT_PROFILE.read_bytes()
+    assert source_default_profile_bytes == canonical_bytes(source_default_profile) + b"\n"
+    assert hashlib.sha256(source_default_profile_bytes).hexdigest() == (
+        knee.FROZEN_SOURCE_DEFAULT_PROFILE_FILE_SHA256
+    )
+    assert digest(source_default_profile) == (
+        knee.FROZEN_SOURCE_DEFAULT_PROFILE_IDENTITY_SHA256
+    )
+    assert source_default_profile["reference_state"] == {
+        **profile["reference_state"],
+        "reference_state_class": "source-default-registered-reference",
+        "construction_id": knee.SOURCE_DEFAULT_LAB_MAPPING_ID,
+        "reference_body_pose_id": profile["reference_state"]["source_body_pose_id"],
+        "source_to_reference_mapping_id": knee.SOURCE_DEFAULT_LAB_MAPPING_ID,
+    }
+    assert source_default_profile["reference_state"][
+        "unloaded_reference_qualified"
+    ] is False
     expected_pair_order = [
         "TBC-L_To_FMC",
         "TBC-L_To_MNS-L",
@@ -871,6 +979,165 @@ def test_mapping_continuation_region_evidence_is_strict_and_cross_checked() -> N
             knee.validate_manifest(value)
 
 
+def test_nheq2_runtime_link_uses_source_default_identity_reference() -> None:
+    value = _source_compliant_nheq2_manifest()
+    knee.validate_manifest(value)
+    export = value["lab_authoring_export"]
+    provenance = value["mass_partition"]["provenance"]
+    assert (
+        export["source"]["equality_payload_sha256"]
+        == knee.SOURCE_COMPLIANT_NHEQ2_RUNTIME_EQUALITY_PAYLOAD_SHA256
+    )
+    assert provenance["equality_payload_sha256"] == export["source"][
+        "equality_payload_sha256"
+    ]
+    assert export["poses"] == provenance["poses"]
+    assert export["mapping"] == provenance["mapping"]
+    assert export["source"]["equality_payload_role"] == (
+        knee.SOURCE_COMPLIANT_EQUALITY_PAYLOAD_ROLE
+    )
+    assert export["source"]["equality_projection_applied"] is False
+    assert value["inputs"]["authoring_profile"] == {
+        "schema": knee.SOURCE_DEFAULT_PROFILE_SCHEMA,
+        "file_sha256": knee.FROZEN_SOURCE_DEFAULT_PROFILE_FILE_SHA256,
+        "identity_sha256": knee.FROZEN_SOURCE_DEFAULT_PROFILE_IDENTITY_SHA256,
+    }
+    assert export["x_ref"]["file_sha256"] == export["source"]["x_source_sha256"]
+    assert export["poses"]["projected_reference"] == export["poses"][
+        "source_default"
+    ]
+    assert export["mapping"]["id"] == knee.SOURCE_DEFAULT_LAB_MAPPING_ID
+    assert (
+        export["mapping"]["algorithm"]
+        == knee.SOURCE_DEFAULT_LAB_MAPPING_ALGORITHM
+    )
+    assert export["mapping"]["diagnostics"]["maximum_displacement_m"] == 0.0
+    assert export["mapping"]["diagnostics"]["equality_residual_maximum"] == (
+        knee.SOURCE_DEFAULT_NHEQ2_DIAGNOSTIC_RESIDUAL_MAXIMUM
+    )
+    assert export["mapping"]["diagnostics"]["jacobian"] == {
+        "finite": True,
+        "minimum_determinant": 1.0,
+        "maximum_determinant": 1.0,
+        "orientation_preserving": True,
+    }
+    for row in export["mapping"]["diagnostics"]["regions"]:
+        assert row["direct_map_status"] == "accepted"
+        assert row["substep_count"] == 1
+        assert row["direct_failure_tetrahedron"] is None
+        assert row["direct_failure_jacobian"] is None
+
+    two_step = copy.deepcopy(value)
+    two_step["lab_authoring_export"]["mapping"]["diagnostics"]["regions"][4][
+        "substep_count"
+    ] = 2
+    _sync_export_mapping_and_rehash(two_step)
+    with pytest.raises(
+        knee.LoadedAnatomyKneeError,
+        match="PTL direct-map status or continuation count differs",
+    ):
+        knee.validate_manifest(two_step)
+
+    pose = copy.deepcopy(value)
+    pose["lab_authoring_export"]["poses"]["projected_reference"][
+        "identity_sha256"
+    ] = "4" * 64
+    _sync_export_provenance_and_rehash(pose)
+    with pytest.raises(
+        knee.LoadedAnatomyKneeError,
+        match="source-default A-to-B_ref identity evidence differs",
+    ):
+        knee.validate_manifest(pose)
+
+    displacement = copy.deepcopy(value)
+    displacement["lab_authoring_export"]["mapping"]["diagnostics"][
+        "maximum_displacement_m"
+    ] = 1.0e-12
+    _sync_export_provenance_and_rehash(displacement)
+    with pytest.raises(
+        knee.LoadedAnatomyKneeError,
+        match="source-default A-to-B_ref identity evidence differs",
+    ):
+        knee.validate_manifest(displacement)
+
+    residual = copy.deepcopy(value)
+    residual["lab_authoring_export"]["mapping"]["diagnostics"][
+        "equality_residual_maximum"
+    ] = 0.0
+    _sync_export_provenance_and_rehash(residual)
+    with pytest.raises(
+        knee.LoadedAnatomyKneeError,
+        match="source-default A-to-B_ref identity evidence differs",
+    ):
+        knee.validate_manifest(residual)
+
+    regional_jacobian = copy.deepcopy(value)
+    regional_jacobian["lab_authoring_export"]["mapping"]["diagnostics"]["regions"][
+        0
+    ]["minimum_jacobian"] = 0.999
+    _sync_export_provenance_and_rehash(regional_jacobian)
+    with pytest.raises(
+        knee.LoadedAnatomyKneeError,
+        match="ACL source-default identity Jacobians differ",
+    ):
+        knee.validate_manifest(regional_jacobian)
+
+
+def test_legacy_projection_and_runtime_link_modes_are_correlated() -> None:
+    legacy_with_nheq2_mapping = _manifest()
+    legacy_ptl = legacy_with_nheq2_mapping["lab_authoring_export"]["mapping"][
+        "diagnostics"
+    ]["regions"][4]
+    legacy_ptl.update(
+        {
+            "substep_count": 1,
+            "direct_map_status": "accepted",
+            "direct_failure_tetrahedron": None,
+            "direct_failure_jacobian": None,
+        }
+    )
+    _sync_export_mapping_and_rehash(legacy_with_nheq2_mapping)
+    with pytest.raises(
+        knee.LoadedAnatomyKneeError,
+        match="PTL direct-map status or continuation count differs",
+    ):
+        knee.validate_manifest(legacy_with_nheq2_mapping)
+
+    nheq2_with_legacy_mapping = _source_compliant_nheq2_manifest()
+    nheq2_ptl = nheq2_with_legacy_mapping["lab_authoring_export"]["mapping"][
+        "diagnostics"
+    ]["regions"][4]
+    nheq2_ptl.update(
+        {
+            "substep_count": 2,
+            "direct_map_status": "rejected_inversion",
+            "direct_failure_tetrahedron": 419,
+            "direct_failure_jacobian": -0.20709127479457548,
+        }
+    )
+    _sync_export_mapping_and_rehash(nheq2_with_legacy_mapping)
+    with pytest.raises(
+        knee.LoadedAnatomyKneeError,
+        match="PTL direct-map status or continuation count differs",
+    ):
+        knee.validate_manifest(nheq2_with_legacy_mapping)
+
+    unknown = _source_compliant_nheq2_manifest()
+    unknown_sha256 = "0" * 64
+    unknown["lab_authoring_export"]["source"][
+        "equality_payload_sha256"
+    ] = unknown_sha256
+    unknown["mass_partition"]["provenance"][
+        "equality_payload_sha256"
+    ] = unknown_sha256
+    _rehash_embedded_lab_export(unknown)
+    with pytest.raises(
+        knee.LoadedAnatomyKneeError,
+        match="Lab equality role or payload identity differs",
+    ):
+        knee.validate_manifest(unknown)
+
+
 def test_blocked_source_status_remains_visible_without_production_promotion() -> None:
     value = _manifest()
     knee.validate_manifest(value)
@@ -924,6 +1191,40 @@ def test_json_schema_behavior_matches_candidate_boundary() -> None:
     validator = jsonschema.Draft202012Validator(schema)
     value = _manifest()
     validator.validate(value)
+    source_default = _source_compliant_nheq2_manifest()
+    validator.validate(source_default)
+    for mutation in (
+        lambda item: item["inputs"].__setitem__(
+            "authoring_profile", value["inputs"]["authoring_profile"]
+        ),
+        lambda item: item["lab_authoring_export"]["source"].__setitem__(
+            "equality_payload_role", "authoring-projection"
+        ),
+        lambda item: item["lab_authoring_export"]["source"].__setitem__(
+            "equality_projection_applied", True
+        ),
+        lambda item: item["lab_authoring_export"]["mapping"].__setitem__(
+            "id", knee.LAB_MAPPING_ID
+        ),
+        lambda item: item["lab_authoring_export"]["mapping"][
+            "diagnostics"
+        ].__setitem__("maximum_displacement_m", 1.0e-6),
+        lambda item: item["lab_authoring_export"]["mapping"][
+            "diagnostics"
+        ].__setitem__("equality_residual_maximum", 0.0),
+        lambda item: item["lab_authoring_export"]["mapping"]["diagnostics"][
+            "jacobian"
+        ].__setitem__("minimum_determinant", 0.999),
+        lambda item: item["lab_authoring_export"]["mapping"]["diagnostics"][
+            "regions"
+        ][4].__setitem__("substep_count", 2),
+        lambda item: item["coordinates"]["x_ref"].__setitem__(
+            "reference_state_class", "projected-rest-candidate"
+        ),
+    ):
+        changed = copy.deepcopy(source_default)
+        mutation(changed)
+        assert list(validator.iter_errors(changed))
     for mutation in (
         lambda item: item["qualification"].__setitem__(
             "production_physical_ownership", True

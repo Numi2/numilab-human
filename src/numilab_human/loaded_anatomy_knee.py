@@ -1,8 +1,9 @@
 """Compile the immutable HumanPack left-knee authoring companion receipt.
 
-The receipt binds source anatomy, a projected-rest candidate, population material
-priors, candidate mass replacement, and ownership identities.  It deliberately
-does not admit an accepted ``x_current`` value or any production mechanics claim.
+The receipt binds source anatomy, an authenticated authoring-reference candidate,
+population material priors, candidate mass replacement, and ownership identities.
+It deliberately does not admit an accepted ``x_current`` value or any production
+mechanics claim.
 """
 
 from __future__ import annotations
@@ -39,6 +40,9 @@ SCHEMA = "HumanPack.loaded-anatomy-knee.v1"
 BINDING_SCHEMA = "HumanPack.loaded-anatomy-knee.binding.v1"
 COMPILER = "numilab-human.loaded-anatomy-knee.1"
 PROFILE_SCHEMA = "numi.human.loaded-anatomy-knee-authoring.v1"
+SOURCE_DEFAULT_PROFILE_SCHEMA = (
+    "numi.human.loaded-anatomy-knee-source-default-authoring.v2"
+)
 LAB_EXPORT_SCHEMA = "numi.lab.loaded-knee-authoring-export.v1"
 LAB_MAPPING_ID = (
     "numi-lab.open-knee-restWorld-to-equality-projected-default-body-poses.1"
@@ -46,9 +50,21 @@ LAB_MAPPING_ID = (
 LAB_MAPPING_ALGORITHM = (
     "adaptive-dyadic-first-success-slerp-geodesic-inverse-distance-moving-enthesis.1"
 )
+SOURCE_DEFAULT_LAB_MAPPING_ID = (
+    "numi-lab.open-knee-restWorld-source-default-identity.1"
+)
+SOURCE_DEFAULT_LAB_MAPPING_ALGORITHM = "identity-copy-source-restWorld-f32.1"
 LAB_MAPPING_CODE_IDENTITY_ENCODING = (
     "sha256(domain-utf8||header-file-sha256||core-file-sha256||adapter-file-sha256)"
 )
+LEGACY_NHEQ1_AUTHORING_EQUALITY_PAYLOAD_SHA256 = (
+    "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a"
+)
+SOURCE_COMPLIANT_NHEQ2_RUNTIME_EQUALITY_PAYLOAD_SHA256 = (
+    "12db05fddb492e77e7fd461fad566d3e1e75390f2cb6f77f26568254a6cb4477"
+)
+SOURCE_COMPLIANT_EQUALITY_PAYLOAD_ROLE = "source-compliance-runtime-link"
+SOURCE_DEFAULT_NHEQ2_DIAGNOSTIC_RESIDUAL_MAXIMUM = 0.052419200539588928
 RAW_F32_NODE_MASS_ALGORITHM = (
     "matter-referenced-f32-volume-f32-density-fp64-source-order-accumulate-final-f32.1"
 )
@@ -57,6 +73,9 @@ RAW_F32_NODE_MASS_ENCODING = (
 )
 MAXIMUM_ANCHOR_RESIDUAL_METERS = 2.0e-7
 PROFILE = ROOT / "config/loaded-anatomy-knee-left.v1.json"
+SOURCE_DEFAULT_PROFILE = (
+    ROOT / "config/loaded-anatomy-knee-left-source-default.v2.json"
+)
 CANONICALIZATION = "utf8-json-sorted-keys-compact-ensure_ascii=false-allow_nan=false"
 HASH_EXCLUSION = "top-level manifest_sha256"
 LAB_EXPORT_BOUNDARY = (
@@ -65,6 +84,15 @@ LAB_EXPORT_BOUNDARY = (
     "priors, prescribed contact coverage, and this export do not establish subject "
     "mechanics, production ownership, sustained tracking, mesh convergence, clinical "
     "validity, or a global seven-owner accepted-state root."
+)
+SOURCE_DEFAULT_LAB_EXPORT_BOUNDARY = (
+    "Candidate-only source-default registered reference and donor provenance export. "
+    "B_ref is a byte-identical copy of raw OpenKnee restWorld; NHEQ2 is evaluated "
+    "here only as a source-compliance diagnostic and remains a "
+    "compliant-acceleration program at runtime, never an authoring projector. This "
+    "export does not qualify an unloaded or stress-free state, subject mechanics, "
+    "production ownership, sustained tracking, mesh convergence, clinical validity, "
+    "or a global seven-owner accepted-state root."
 )
 REGION_NAMES = ("ACL", "LCL", "MCL", "PCL", "PTL", "QAT")
 PASSIVE_NAMES = ("ACL", "LCL", "MCL", "PCL", "PTL")
@@ -191,6 +219,14 @@ BOUNDARY = (
     "x_current value, production ownership, loaded motion, clinical validity, or "
     "integrated Human qualification."
 )
+SOURCE_DEFAULT_BOUNDARY = (
+    "Candidate-only left Open Knee authoring receipt. It binds source topology, "
+    "source-default restWorld authoring-reference identity, population material "
+    "priors, explicit donor subtraction, and candidate force/state ownership. It "
+    "does not establish an unloaded or stress-free reference, prestress equilibrium, "
+    "subject calibration, an accepted x_current value, production ownership, loaded "
+    "motion, clinical validity, or integrated Human qualification."
+)
 TENDON_HEADER = struct.Struct("<8s10I32s32s32s")
 TENDON_ENDPOINT = struct.Struct("<8I8f")
 TENDON_ENVELOPE_BYTES = 288
@@ -202,6 +238,12 @@ FROZEN_PROFILE_FILE_SHA256 = (
 )
 FROZEN_PROFILE_IDENTITY_SHA256 = (
     "c4bbde523018016b94c5e176fd01e519cfbb2a811f84005f964d0718753b6437"
+)
+FROZEN_SOURCE_DEFAULT_PROFILE_FILE_SHA256 = (
+    "fe0ae4a11c928178718cff7874215768683bf498650c8abcc25ced458e0f17b6"
+)
+FROZEN_SOURCE_DEFAULT_PROFILE_IDENTITY_SHA256 = (
+    "f9375445dd7375b9c5b2f4c3eb69ea9454c567b1910b5093b41ec0762280d07f"
 )
 
 
@@ -408,6 +450,123 @@ def _close(left: Any, right: Any, tolerance: float) -> bool:
     return all(_close(a, b, tolerance) for a, b in zip(left, right, strict=True))
 
 
+LEGACY_PROJECTED_REFERENCE_MODE = "legacy-equality-projected-reference"
+SOURCE_DEFAULT_REFERENCE_MODE = "source-default-restWorld-identity-reference"
+
+
+def _authoring_reference_mode(source: Any) -> str:
+    legacy_keys = {
+        "nhknee_sha256",
+        "x_source_sha256",
+        "source_rigid_payload_sha256",
+        "equality_payload_sha256",
+        "source_model_fingerprint_sha256",
+    }
+    source_default_keys = {
+        *legacy_keys,
+        "equality_payload_role",
+        "equality_projection_applied",
+    }
+    if (
+        isinstance(source, dict)
+        and set(source) == legacy_keys
+        and source.get("equality_payload_sha256")
+        == LEGACY_NHEQ1_AUTHORING_EQUALITY_PAYLOAD_SHA256
+    ):
+        return LEGACY_PROJECTED_REFERENCE_MODE
+    if (
+        isinstance(source, dict)
+        and set(source) == source_default_keys
+        and source.get("equality_payload_sha256")
+        == SOURCE_COMPLIANT_NHEQ2_RUNTIME_EQUALITY_PAYLOAD_SHA256
+        and source.get("equality_payload_role")
+        == SOURCE_COMPLIANT_EQUALITY_PAYLOAD_ROLE
+        and source.get("equality_projection_applied") is False
+    ):
+        return SOURCE_DEFAULT_REFERENCE_MODE
+    raise LoadedAnatomyKneeError(
+        "HumanPack loaded anatomy knee: Lab equality role or payload identity differs"
+    )
+
+
+def _profile_contract(schema: str) -> tuple[str, dict[str, Any], str]:
+    common = {
+        "frame_id": "myosim-world-m",
+        "encoding": "float32-le-xyz",
+        "source_frame_id": "myosim-world-m",
+        "source_body_pose_id": "numi-human:unprojected-myosim-default-body-pose",
+        "source_registration_id": (
+            "numi-lab.open-knee-oks003-registered-unprojected-default.1"
+        ),
+        "unloaded_reference_qualified": False,
+        "volumetric_prestress_status": "not_applied",
+        "prestrain_reset_method": {"status": "unresolved", "method_id": None},
+    }
+    if schema == PROFILE_SCHEMA:
+        return (
+            "open-knee-oks003-left-candidate",
+            {
+                **common,
+                "reference_state_class": "projected-rest-candidate",
+                "construction_id": (
+                    "numi-lab.open-knee-moving-enthesis-projected-rest.1"
+                ),
+                "reference_body_pose_id": (
+                    "numi-human:equality-projected-default-reference-body-pose"
+                ),
+                "source_to_reference_mapping_id": LAB_MAPPING_ID,
+            },
+            (
+                "Candidate-only left Open Knee authoring contract. Source topology, "
+                "projected-rest identity, population material priors, explicit donor "
+                "subtraction, and candidate force/state owners do not establish an "
+                "unloaded reference, prestress equilibrium, subject calibration, "
+                "production ownership, loaded motion, clinical validity, or "
+                "integrated Human qualification."
+            ),
+        )
+    if schema == SOURCE_DEFAULT_PROFILE_SCHEMA:
+        return (
+            "open-knee-oks003-left-source-default-candidate",
+            {
+                **common,
+                "reference_state_class": "source-default-registered-reference",
+                "construction_id": SOURCE_DEFAULT_LAB_MAPPING_ID,
+                "reference_body_pose_id": common["source_body_pose_id"],
+                "source_to_reference_mapping_id": SOURCE_DEFAULT_LAB_MAPPING_ID,
+            },
+            (
+                "Candidate-only left Open Knee source-default authoring contract. "
+                "Source topology, source-default restWorld identity, population "
+                "material priors, explicit donor subtraction, and candidate "
+                "force/state owners do not establish an unloaded reference, "
+                "prestress equilibrium, subject calibration, production ownership, "
+                "loaded motion, clinical validity, or integrated Human qualification."
+            ),
+        )
+    raise LoadedAnatomyKneeError(
+        "HumanPack loaded anatomy knee: authoring profile schema differs"
+    )
+
+
+def _profile_input_identity(profile: dict[str, Any]) -> dict[str, str]:
+    if profile["schema"] == PROFILE_SCHEMA:
+        return {
+            "schema": PROFILE_SCHEMA,
+            "file_sha256": FROZEN_PROFILE_FILE_SHA256,
+            "identity_sha256": FROZEN_PROFILE_IDENTITY_SHA256,
+        }
+    _require(
+        profile["schema"] == SOURCE_DEFAULT_PROFILE_SCHEMA,
+        "authoring profile schema differs",
+    )
+    return {
+        "schema": SOURCE_DEFAULT_PROFILE_SCHEMA,
+        "file_sha256": FROZEN_SOURCE_DEFAULT_PROFILE_FILE_SHA256,
+        "identity_sha256": FROZEN_SOURCE_DEFAULT_PROFILE_IDENTITY_SHA256,
+    }
+
+
 def _validate_profile(profile: dict[str, Any]) -> dict[str, Any]:
     required = {
         "schema",
@@ -428,11 +587,11 @@ def _validate_profile(profile: dict[str, Any]) -> dict[str, Any]:
         "full_state_authority",
         "boundary",
     }
-    _require(
-        set(profile) == required and profile["schema"] == PROFILE_SCHEMA,
-        "authoring profile fields or schema differ",
+    _require(set(profile) == required, "authoring profile fields differ")
+    expected_profile_id, expected_reference, expected_boundary = _profile_contract(
+        profile.get("schema")
     )
-    _identifier(profile["id"], "profile ID")
+    _require(profile["id"] == expected_profile_id, "profile ID differs")
     _identifier(profile["subject_id"], "subject ID")
     _require(profile["side"] == "left", "only the left source candidate is admitted")
     source = profile["source"]
@@ -523,23 +682,8 @@ def _validate_profile(profile: dict[str, Any]) -> dict[str, Any]:
     )
     for row in topology_identity["regions"]:
         _sha256(row["tetrahedra_sha256"], f"{row['name']} tetrahedra hash")
-    reference = profile["reference_state"]
     _require(
-        reference
-        == {
-            "frame_id": "myosim-world-m",
-            "encoding": "float32-le-xyz",
-            "source_frame_id": "myosim-world-m",
-            "source_body_pose_id": "numi-human:unprojected-myosim-default-body-pose",
-            "source_registration_id": "numi-lab.open-knee-oks003-registered-unprojected-default.1",
-            "reference_state_class": "projected-rest-candidate",
-            "construction_id": "numi-lab.open-knee-moving-enthesis-projected-rest.1",
-            "reference_body_pose_id": "numi-human:equality-projected-default-reference-body-pose",
-            "source_to_reference_mapping_id": "numi-lab.open-knee-restWorld-to-equality-projected-default-body-poses.1",
-            "unloaded_reference_qualified": False,
-            "volumetric_prestress_status": "not_applied",
-            "prestrain_reset_method": {"status": "unresolved", "method_id": None},
-        },
+        profile["reference_state"] == expected_reference,
         "reference-state boundary differs",
     )
     density = profile["density_conversion"]
@@ -758,10 +902,7 @@ def _validate_profile(profile: dict[str, Any]) -> dict[str, Any]:
         and len(assigned) == len(set(assigned)),
         "donor region partition is not exact and disjoint",
     )
-    _require(
-        profile["boundary"].startswith("Candidate-only left Open Knee"),
-        "profile evidence boundary differs",
-    )
+    _require(profile["boundary"] == expected_boundary, "profile evidence boundary differs")
     _require(
         profile["full_state_authority"]
         == {
@@ -800,6 +941,55 @@ def _load_frozen_profile() -> dict[str, Any]:
         "checked-in authoring profile content identity differs",
     )
     return profile
+
+
+def _load_frozen_source_default_profile() -> dict[str, Any]:
+    raw = SOURCE_DEFAULT_PROFILE.read_bytes()
+    _require(
+        hashlib.sha256(raw).hexdigest()
+        == FROZEN_SOURCE_DEFAULT_PROFILE_FILE_SHA256,
+        "checked-in source-default authoring profile file identity differs",
+    )
+    try:
+        profile = json.loads(raw)
+    except (ValueError, UnicodeError) as error:
+        raise LoadedAnatomyKneeError(
+            "HumanPack loaded anatomy knee: checked-in source-default authoring "
+            "profile is invalid"
+        ) from error
+    _validate_profile(profile)
+    _require(
+        digest(profile) == FROZEN_SOURCE_DEFAULT_PROFILE_IDENTITY_SHA256,
+        "checked-in source-default authoring profile content identity differs",
+    )
+    return profile
+
+
+def _load_frozen_profile_for_input(value: Any) -> dict[str, Any]:
+    _require(isinstance(value, dict), "authoring profile input identity differs")
+    if value == {
+        "schema": PROFILE_SCHEMA,
+        "file_sha256": FROZEN_PROFILE_FILE_SHA256,
+        "identity_sha256": FROZEN_PROFILE_IDENTITY_SHA256,
+    }:
+        return _load_frozen_profile()
+    if value == {
+        "schema": SOURCE_DEFAULT_PROFILE_SCHEMA,
+        "file_sha256": FROZEN_SOURCE_DEFAULT_PROFILE_FILE_SHA256,
+        "identity_sha256": FROZEN_SOURCE_DEFAULT_PROFILE_IDENTITY_SHA256,
+    }:
+        return _load_frozen_source_default_profile()
+    raise LoadedAnatomyKneeError(
+        "HumanPack loaded anatomy knee: frozen authoring profile identity differs"
+    )
+
+
+def _load_frozen_profile_for_export(export: Any) -> dict[str, Any]:
+    _require(isinstance(export, dict), "Lab authoring export must be an object")
+    mode = _authoring_reference_mode(export.get("source"))
+    if mode == LEGACY_PROJECTED_REFERENCE_MODE:
+        return _load_frozen_profile()
+    return _load_frozen_source_default_profile()
 
 
 def _decode_payload(raw: bytes, profile: dict[str, Any]) -> dict[str, Any]:
@@ -1713,8 +1903,14 @@ def _compile_mass_partition(
         and export["side"] == profile["side"],
         "Lab authoring export subject or side differs",
     )
+    reference_mode = _authoring_reference_mode(export.get("source"))
+    expected_export_boundary = (
+        LAB_EXPORT_BOUNDARY
+        if reference_mode == LEGACY_PROJECTED_REFERENCE_MODE
+        else SOURCE_DEFAULT_LAB_EXPORT_BOUNDARY
+    )
     _require(
-        export["boundary"] == LAB_EXPORT_BOUNDARY,
+        export["boundary"] == expected_export_boundary,
         "Lab authoring export evidence boundary differs",
     )
     x_ref = export["x_ref"]
@@ -1778,23 +1974,19 @@ def _compile_mass_partition(
         "Lab x_ref span, node-map, executable topology, or anchor binding differs",
     )
     source = export["source"]
+    expected_profile_schema = (
+        PROFILE_SCHEMA
+        if reference_mode == LEGACY_PROJECTED_REFERENCE_MODE
+        else SOURCE_DEFAULT_PROFILE_SCHEMA
+    )
     _require(
         isinstance(source, dict)
-        and set(source)
-        == {
-            "nhknee_sha256",
-            "x_source_sha256",
-            "source_rigid_payload_sha256",
-            "equality_payload_sha256",
-            "source_model_fingerprint_sha256",
-        }
+        and profile["schema"] == expected_profile_schema
         and source["nhknee_sha256"] == profile["source"]["nhknee"]["sha256"]
         and source["x_source_sha256"] == x_source_sha256
         and source["source_rigid_payload_sha256"]
-        == "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44"
-        and source["equality_payload_sha256"]
-        == "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a",
-        "Lab source provenance differs",
+        == "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44",
+        "Lab source provenance or authoring profile mode differs",
     )
     _sha256(source["source_model_fingerprint_sha256"], "source model fingerprint")
     poses = export["poses"]
@@ -1820,6 +2012,11 @@ def _compile_mass_partition(
         )
         _sha256(pose["identity_sha256"], f"Lab {key} pose hash")
     mapping = export["mapping"]
+    expected_mapping_algorithm = (
+        LAB_MAPPING_ALGORITHM
+        if reference_mode == LEGACY_PROJECTED_REFERENCE_MODE
+        else SOURCE_DEFAULT_LAB_MAPPING_ALGORITHM
+    )
     _require(
         isinstance(mapping, dict)
         and set(mapping)
@@ -1830,10 +2027,8 @@ def _compile_mass_partition(
             "code_identity_encoding",
             "diagnostics",
         }
-        and mapping["id"] == LAB_MAPPING_ID
-        and mapping["id"]
-        == profile["reference_state"]["source_to_reference_mapping_id"]
-        and mapping["algorithm"] == LAB_MAPPING_ALGORITHM
+        and mapping["id"] == profile["reference_state"]["source_to_reference_mapping_id"]
+        and mapping["algorithm"] == expected_mapping_algorithm
         and mapping["code_identity_encoding"] == LAB_MAPPING_CODE_IDENTITY_ENCODING,
         "Lab A-to-B_ref mapping identity differs",
     )
@@ -1859,8 +2054,12 @@ def _compile_mass_partition(
         and diagnostics["raw_f32_node_mass_algorithm"] == RAW_F32_NODE_MASS_ALGORITHM,
         "Lab mapping diagnostics differ",
     )
-    _nonnegative(diagnostics["maximum_displacement_m"], "mapping maximum displacement")
-    _nonnegative(diagnostics["equality_residual_maximum"], "mapping equality residual")
+    mapping_maximum_displacement = _nonnegative(
+        diagnostics["maximum_displacement_m"], "mapping maximum displacement"
+    )
+    equality_residual_maximum = _nonnegative(
+        diagnostics["equality_residual_maximum"], "mapping equality residual"
+    )
     _sha256(diagnostics["raw_f32_node_mass_sha256"], "Lab raw f32 node-mass hash")
     jacobian = diagnostics["jacobian"]
     _require(
@@ -1888,6 +2087,17 @@ def _compile_mass_partition(
         0.0 < minimum_determinant <= maximum_determinant,
         "Lab mapping Jacobian is not orientation preserving",
     )
+    if reference_mode == SOURCE_DEFAULT_REFERENCE_MODE:
+        _require(
+            x_ref_sha256 == x_source_sha256
+            and poses["projected_reference"] == poses["source_default"]
+            and mapping_maximum_displacement == 0.0
+            and equality_residual_maximum
+            == SOURCE_DEFAULT_NHEQ2_DIAGNOSTIC_RESIDUAL_MAXIMUM
+            and minimum_determinant == 1.0
+            and maximum_determinant == 1.0,
+            "source-default A-to-B_ref identity evidence differs",
+        )
     _require(
         math.isclose(
             diagnostics["maximum_displacement_m"],
@@ -1922,14 +2132,17 @@ def _compile_mass_partition(
         and [row.get("name") for row in mapping_regions] == list(REGION_NAMES),
         "Lab mapping region diagnostics order differs",
     )
-    expected_direct_status = {
-        "ACL": ("accepted", 1),
-        "LCL": ("accepted", 1),
-        "MCL": ("accepted", 1),
-        "PCL": ("accepted", 1),
-        "PTL": ("rejected_inversion", 2),
-        "QAT": ("accepted", 1),
-    }
+    if reference_mode == SOURCE_DEFAULT_REFERENCE_MODE:
+        expected_direct_status = {name: ("accepted", 1) for name in REGION_NAMES}
+    else:
+        expected_direct_status = {
+            "ACL": ("accepted", 1),
+            "LCL": ("accepted", 1),
+            "MCL": ("accepted", 1),
+            "PCL": ("accepted", 1),
+            "PTL": ("rejected_inversion", 2),
+            "QAT": ("accepted", 1),
+        }
     region_moments_by_name = {row["name"]: row for row in regions}
     topology_by_name = {
         row["name"]: row for row in profile["topology_identity"]["regions"]
@@ -1997,6 +2210,11 @@ def _compile_mass_partition(
             0.0 < minimum <= maximum,
             f"{name} persisted-f32 Jacobian range is invalid",
         )
+        if reference_mode == SOURCE_DEFAULT_REFERENCE_MODE:
+            _require(
+                minimum == 1.0 and maximum == 1.0,
+                f"{name} source-default identity Jacobians differ",
+            )
         authored = region_moments_by_name[name]
         _require(
             math.isclose(
@@ -2170,6 +2388,16 @@ def compile_manifest(
 ) -> dict[str, Any]:
     """Compile a deterministic authoring receipt from already loaded inputs."""
     profile = _validate_profile(profile)
+    reference_mode = _authoring_reference_mode(lab_export.get("source"))
+    expected_profile_schema = (
+        PROFILE_SCHEMA
+        if reference_mode == LEGACY_PROJECTED_REFERENCE_MODE
+        else SOURCE_DEFAULT_PROFILE_SCHEMA
+    )
+    _require(
+        profile["schema"] == expected_profile_schema,
+        "Lab equality role and frozen authoring profile are not correlated",
+    )
     represented = _bind_ownership(ownership, profile)
     decoded = _decode_payload(payload_bytes, profile)
     endpoint_bindings, tendon_identity = _decode_tendon(tendon_payload_bytes, profile)
@@ -2177,6 +2405,11 @@ def compile_manifest(
     region_moments, geometry_diagnostics = _region_moments(decoded, x_ref, profile)
     x_ref_sha256 = hashlib.sha256(x_ref_bytes).hexdigest()
     x_source_sha256 = hashlib.sha256(decoded["x_source_bytes"]).hexdigest()
+    if reference_mode == SOURCE_DEFAULT_REFERENCE_MODE:
+        _require(
+            x_ref_bytes == decoded["x_source_bytes"],
+            "source-default x_ref bytes differ from raw ABI3 restWorld",
+        )
     mass_partition = _compile_mass_partition(
         lab_export,
         profile,
@@ -2295,11 +2528,7 @@ def compile_manifest(
                 "file_sha256": hashes["ownership"],
                 "identity_sha256": ownership["manifest_sha256"],
             },
-            "authoring_profile": {
-                "schema": profile["schema"],
-                "file_sha256": hashes["profile"],
-                "identity_sha256": digest(profile),
-            },
+            "authoring_profile": _profile_input_identity(profile),
             "open_knee_payload": {
                 "schema": "numi.human.open-knee-oks003-payload.v3",
                 "file_sha256": hashes["open_knee_payload"],
@@ -2451,7 +2680,11 @@ def compile_manifest(
             "runtime_x_current_accepted": False,
             "integrated_human_qualification": False,
         },
-        "boundary": BOUNDARY,
+        "boundary": (
+            BOUNDARY
+            if reference_mode == LEGACY_PROJECTED_REFERENCE_MODE
+            else SOURCE_DEFAULT_BOUNDARY
+        ),
     }
     result["manifest_sha256"] = digest(
         {key: value for key, value in result.items() if key != "manifest_sha256"}
@@ -2509,17 +2742,10 @@ def validate_manifest(value: dict[str, Any]) -> None:
         ),
         "manifest hash mismatch",
     )
-    profile = _load_frozen_profile()
     _require(
         value["status"] == "candidate"
         and value["source_ownership_status"] in {"partial", "blocked"},
         "scoped candidate or source ownership status is invalid",
-    )
-    _require(
-        value["subject_id"] == profile["subject_id"]
-        and value["side"] == profile["side"]
-        and value["boundary"] == BOUNDARY,
-        "subject, side, or evidence boundary differs",
     )
     _sha256(value["ownership_manifest_sha256"], "ownership identity")
     inputs = value["inputs"]
@@ -2538,7 +2764,6 @@ def validate_manifest(value: dict[str, Any]) -> None:
     )
     expected_input_schemas = {
         "ownership": "HumanPack.ownership.v1",
-        "authoring_profile": PROFILE_SCHEMA,
         "open_knee_payload": "numi.human.open-knee-oks003-payload.v3",
         "tendon_payload": "numi.human.tendon-attachment-envelope-payload.v3",
         "x_ref": "numi.human.loaded-anatomy-knee-x-ref-f32le.v1",
@@ -2553,19 +2778,28 @@ def validate_manifest(value: dict[str, Any]) -> None:
                 "file_sha256",
                 "identity_sha256",
             }
-            and item["schema"] == expected_input_schemas[name],
+            and (
+                name == "authoring_profile"
+                or item["schema"] == expected_input_schemas[name]
+            ),
             f"{name} input identity fields differ",
         )
         _sha256(item["file_sha256"], f"{name} file hash")
         _sha256(item["identity_sha256"], f"{name} identity hash")
+    profile = _load_frozen_profile_for_input(inputs["authoring_profile"])
+    expected_boundary = (
+        BOUNDARY
+        if profile["schema"] == PROFILE_SCHEMA
+        else SOURCE_DEFAULT_BOUNDARY
+    )
     _require(
-        inputs["authoring_profile"]
-        == {
-            "schema": PROFILE_SCHEMA,
-            "file_sha256": FROZEN_PROFILE_FILE_SHA256,
-            "identity_sha256": FROZEN_PROFILE_IDENTITY_SHA256,
-        }
-        and inputs["open_knee_payload"]["file_sha256"]
+        value["subject_id"] == profile["subject_id"]
+        and value["side"] == profile["side"]
+        and value["boundary"] == expected_boundary,
+        "subject, side, or evidence boundary differs",
+    )
+    _require(
+        inputs["open_knee_payload"]["file_sha256"]
         == inputs["open_knee_payload"]["identity_sha256"]
         == profile["source"]["nhknee"]["sha256"]
         and inputs["tendon_payload"]["file_sha256"]
@@ -2586,6 +2820,16 @@ def validate_manifest(value: dict[str, Any]) -> None:
         and lab_export.get("manifest_canonicalization") == CANONICALIZATION
         and lab_export.get("manifest_hash_exclusion") == HASH_EXCLUSION,
         "embedded Lab authoring export envelope differs",
+    )
+    reference_mode = _authoring_reference_mode(lab_export.get("source"))
+    expected_profile_schema = (
+        PROFILE_SCHEMA
+        if reference_mode == LEGACY_PROJECTED_REFERENCE_MODE
+        else SOURCE_DEFAULT_PROFILE_SCHEMA
+    )
+    _require(
+        profile["schema"] == expected_profile_schema,
+        "Lab equality role and frozen authoring profile are not correlated",
     )
     _sha256(lab_export.get("manifest_sha256"), "embedded Lab export identity")
     _require(
@@ -2770,7 +3014,7 @@ def validate_manifest(value: dict[str, Any]) -> None:
                 projected["maximum_jacobian_determinant"],
                 f"{row['name']} maximum Jacobian",
             ),
-            f"{row['name']} projected-reference moment fields differ",
+            f"{row['name']} authoring-reference moment fields differ",
         )
         _sha256(
             projected["raw_f32_node_mass_sha256"],
@@ -2785,7 +3029,7 @@ def validate_manifest(value: dict[str, Any]) -> None:
                     "raw_second_mass_moment_kg_m2",
                 )
             },
-            f"{row['name']} projected moments",
+            f"{row['name']} authoring-reference moments",
         )
     _require(
         tuple(row.get("name") for row in value["articular_contact_pairs"])
@@ -2927,7 +3171,7 @@ def validate_manifest(value: dict[str, Any]) -> None:
             "mapping_identity_sha256": x_ref["mapping_identity_sha256"],
             **profile["reference_state"],
         },
-        "projected reference identity or candidate boundary differs",
+        "authoring reference identity or candidate boundary differs",
     )
     expected_mapping_identity = digest(
         {
@@ -3187,14 +3431,14 @@ def compile_paths(
     lab_export_path: Path,
 ) -> dict[str, Any]:
     ownership, _ = _read_json(ownership_path, "ownership manifest")
-    profile = _load_frozen_profile()
     payload, _ = _read_bytes(payload_path, "Open Knee payload")
     tendon, _ = _read_bytes(tendon_payload_path, "tendon payload")
-    x_ref, _ = _read_bytes(x_ref_path, "projected x_ref")
+    x_ref, _ = _read_bytes(x_ref_path, "authored x_ref")
     lab_export, _ = _read_json(
         lab_export_path,
         "Lab authoring export envelope",
     )
+    profile = _load_frozen_profile_for_export(lab_export)
     return compile_manifest(
         ownership=ownership,
         profile=profile,
