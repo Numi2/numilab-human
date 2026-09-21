@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://numi.dev/schemas/humanpack-loaded-anatomy-knee-binding.v1.schema.json",
+  "title": "HumanPack loaded anatomy knee loader binding v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "manifest_canonicalization", "binding_hash_exclusion",
+    "binding_sha256", "manifest_file_sha256", "manifest"
+  ],
+  "properties": {
+    "schema": {"const": "HumanPack.loaded-anatomy-knee.binding.v1"},
+    "manifest_canonicalization": {"const": "utf8-json-sorted-keys-compact-ensure_ascii=false-allow_nan=false"},
+    "binding_hash_exclusion": {"const": "top-level binding_sha256"},
+    "binding_sha256": {"$ref": "#/$defs/sha256"},
+    "manifest_file_sha256": {"$ref": "#/$defs/sha256"},
+    "manifest": {"$ref": "humanpack-loaded-anatomy-knee.v1.schema.json"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

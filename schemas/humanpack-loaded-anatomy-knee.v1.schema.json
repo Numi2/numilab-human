@@ -1,0 +1,256 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://numi.dev/schemas/humanpack-loaded-anatomy-knee.v1.schema.json",
+  "title": "HumanPack loaded anatomy knee v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "compiler", "manifest_canonicalization", "manifest_hash_exclusion",
+    "manifest_sha256", "status", "source_ownership_status", "subject_id", "side",
+    "ownership_manifest_sha256", "inputs", "semantic_scope", "lab_authoring_export", "source", "topology",
+    "coordinates", "density_conversion", "regions", "mass_partition",
+    "articular_contact_pairs", "active_force_replacements", "passive_ligament_owners",
+    "full_state_authority", "qualification", "boundary"
+  ],
+  "properties": {
+    "schema": {"const": "HumanPack.loaded-anatomy-knee.v1"},
+    "compiler": {"const": "numilab-human.loaded-anatomy-knee.1"},
+    "manifest_canonicalization": {"const": "utf8-json-sorted-keys-compact-ensure_ascii=false-allow_nan=false"},
+    "manifest_hash_exclusion": {"const": "top-level manifest_sha256"},
+    "manifest_sha256": {"$ref": "#/$defs/sha256"},
+    "status": {"const": "candidate"},
+    "source_ownership_status": {"enum": ["partial", "blocked"]},
+    "subject_id": {"const": "OpenKnee:oks003:left"},
+    "side": {"const": "left"},
+    "ownership_manifest_sha256": {"$ref": "#/$defs/sha256"},
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ownership", "authoring_profile", "open_knee_payload", "tendon_payload", "x_ref", "lab_export"],
+      "properties": {
+        "ownership": {"allOf": [{"$ref": "#/$defs/input"}, {"properties": {"schema": {"const": "HumanPack.ownership.v1"}}}]},
+        "authoring_profile": {"const": {"schema": "numi.human.loaded-anatomy-knee-authoring.v1", "file_sha256": "ec311c48c7ab58dede83da228686d6574d8ebd1c47d22539dbee09967131d3f5", "identity_sha256": "c4bbde523018016b94c5e176fd01e519cfbb2a811f84005f964d0718753b6437"}},
+        "open_knee_payload": {"const": {"schema": "numi.human.open-knee-oks003-payload.v3", "file_sha256": "2e38201528de25911ea496164602ea7e823cd9c2e3c94efa550ee52689324ae5", "identity_sha256": "2e38201528de25911ea496164602ea7e823cd9c2e3c94efa550ee52689324ae5"}},
+        "tendon_payload": {"const": {"schema": "numi.human.tendon-attachment-envelope-payload.v3", "file_sha256": "72ca0ec4ef53f647784a89f761e78495d4997c7d72cfe6a1d9eedb24dd97feaa", "identity_sha256": "72ca0ec4ef53f647784a89f761e78495d4997c7d72cfe6a1d9eedb24dd97feaa"}},
+        "x_ref": {"allOf": [{"$ref": "#/$defs/input"}, {"properties": {"schema": {"const": "numi.human.loaded-anatomy-knee-x-ref-f32le.v1"}}}]},
+        "lab_export": {"allOf": [{"$ref": "#/$defs/input"}, {"properties": {"schema": {"const": "numi.lab.loaded-knee-authoring-export.v1"}}}]}
+      }
+    },
+    "semantic_scope": {
+      "type": "object", "additionalProperties": false,
+      "required": ["ownership_manifest_sha256", "coverage_leaf_sha256s"],
+      "properties": {
+        "ownership_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "coverage_leaf_sha256s": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/sha256"}}
+      }
+    },
+    "lab_authoring_export": {"$ref": "#/$defs/labExport"},
+    "source": {"const": {"dataset_id":"OpenKnee:oks003","doi":"10.18735/b0zv-n395","files":{"FeBio_custom.feb":"00b6efb53ad7e7330296cbb9569d358d48ed60819e22732e6149db6fb98a158a","Geometry.feb":"3642bd368bbc867569f181fa76129f746470e807e3977585d3803f092dd11262","ModelProperties.xml":"0ac446ce098b9a09505992eb4f4419c7b944cd57a4afbf6392b137f4806603c1","license.txt":"d72918838b4adf30979d2a26c23837f0ca05185ba799a3a4fe1fe1b4c05b20b8"},"license":"CC-BY-4.0","nhknee":{"abi":3,"bytes":34357400,"magic":"NHKNEE1","sha256":"2e38201528de25911ea496164602ea7e823cd9c2e3c94efa550ee52689324ae5"},"tendon_payload":{"abi":3,"body_count":157,"bodyparts3d_bone_payload_sha256":"f9132393dfb259a80e2b2084ac5ff15f2bf988f7e073f7a961a7ddcfb9febc3c","bone_count":185,"bytes":238288,"endpoint_count":832,"envelope_count":642,"magic":"NHTENDON3","muscle_count":416,"myosim_archive_sha256":"280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975","myosim_muscle_payload_sha256":"9a988f19a6fd8e533cd0f2bf3192cb8535fb008ccd394ffbf1a4432d3db76a05","point_fallback_count":190,"registration_fingerprint32":"6a48e223","schema":"numi.human.tendon-attachment-envelope-payload.v3","sha256":"72ca0ec4ef53f647784a89f761e78495d4997c7d72cfe6a1d9eedb24dd97feaa","site_count":1815,"wire_magic_hex":"4e4854454e443300"},"material_and_density_status":"source_population_prior"}},
+    "topology": {
+      "type": "object", "additionalProperties": false,
+      "required": ["region_count", "node_count", "tetrahedron_count", "surface_count", "surface_face_count", "node_set_count", "node_set_membership_count", "surface_pair_count", "loaded_node_count", "loaded_tetrahedron_count", "identity_sha256", "executable_fem_topology_sha256", "executable_fem_topology_encoding", "source_global_node_index_sha256", "source_global_node_index_encoding", "anchor_ownership_sha256", "anchor_ownership_encoding", "region_spans", "ordering"],
+      "properties": {
+        "region_count": {"const": 16}, "node_count": {"const": 248236},
+        "tetrahedron_count": {"const": 844287}, "surface_count": {"const": 88},
+        "surface_face_count": {"const": 729068}, "node_set_count": {"const": 42},
+        "node_set_membership_count": {"const": 43260}, "surface_pair_count": {"const": 19},
+        "loaded_node_count": {"const": 62402}, "loaded_tetrahedron_count": {"const": 264442},
+        "identity_sha256": {"const": "0569112a4d39eccc84bcb81a19a870b690cb2b3d642a74708d41881923f3c349"},
+        "executable_fem_topology_sha256": {"const": "56af24e63c9a4c2ecafb2c94bab98fa95bbcbc77085f425c84b9c1a95e3a9040"},
+        "executable_fem_topology_encoding": {"const": "uint32-le-tetrahedra-profile-region-order-source-element-order-concatenated-local-node-indices"},
+        "source_global_node_index_sha256": {"const": "e451aa9e773a90dfb0cde77d4fb1555c7f1393c0362c7fbb3614909045a6602b"},
+        "source_global_node_index_encoding": {"const": "uint32-le-source-global-node-indices-profile-region-order"},
+        "anchor_ownership_sha256": {"const": "04a5c374f15f8681af40ae2e07fe35258f0bbc805d4d9d8291eae1f891d23de6"},
+        "anchor_ownership_encoding": {"const": "uint32-le-source-global-node,anchor-body,flags;float32-le-anchor-local-xyz"},
+        "region_spans": {"$ref": "#/$defs/regionSpans"},
+        "ordering": {"const": "authoring-profile-region-order-then-source-local-order"}
+      }
+    },
+    "coordinates": {
+      "type": "object", "additionalProperties": false,
+      "required": ["x_source", "x_ref", "x_current"],
+      "properties": {
+        "x_source": {"type": "object", "unevaluatedProperties": false, "allOf": [{"$ref": "#/$defs/coordinateIdentity"}, {"type": "object", "required": ["frame_id", "body_pose_id", "registration_id"], "properties": {"frame_id": {"const": "myosim-world-m"}, "body_pose_id": {"const": "numi-human:unprojected-myosim-default-body-pose"}, "registration_id": {"const": "numi-lab.open-knee-oks003-registered-unprojected-default.1"}}}]},
+        "x_ref": {
+          "type": "object", "unevaluatedProperties": false,
+          "allOf": [
+            {"$ref": "#/$defs/coordinateIdentity"},
+            {"type": "object", "required": ["mapping_identity_sha256", "frame_id", "source_frame_id", "source_body_pose_id", "source_registration_id", "reference_state_class", "construction_id", "reference_body_pose_id", "source_to_reference_mapping_id", "unloaded_reference_qualified", "volumetric_prestress_status", "prestrain_reset_method"], "properties": {
+              "mapping_identity_sha256": {"$ref": "#/$defs/sha256"},
+              "frame_id": {"const": "myosim-world-m"},
+              "source_frame_id": {"const": "myosim-world-m"},
+              "source_body_pose_id": {"const": "numi-human:unprojected-myosim-default-body-pose"},
+              "source_registration_id": {"const": "numi-lab.open-knee-oks003-registered-unprojected-default.1"},
+              "reference_state_class": {"const": "projected-rest-candidate"},
+              "construction_id": {"const": "numi-lab.open-knee-moving-enthesis-projected-rest.1"},
+              "reference_body_pose_id": {"const": "numi-human:equality-projected-default-reference-body-pose"},
+              "source_to_reference_mapping_id": {"const": "numi-lab.open-knee-restWorld-to-equality-projected-default-body-poses.1"},
+              "unloaded_reference_qualified": {"const": false},
+              "volumetric_prestress_status": {"const": "not_applied"},
+              "prestrain_reset_method": {"type": "object", "additionalProperties": false, "required": ["status", "method_id"], "properties": {"status": {"const": "unresolved"}, "method_id": {"type": "null"}}}
+            }}
+          ]
+        },
+        "x_current": {
+          "type": "object", "additionalProperties": false,
+          "required": ["scope", "encoding", "hash_algorithm", "accepted_sha256", "acceptance_receipt_sha256", "authority"],
+          "properties": {
+            "scope": {"const": "six-loaded-regions-in-authoring-profile-order"},
+            "encoding": {"const": "float32-le-xyz"}, "hash_algorithm": {"const": "sha256"},
+            "accepted_sha256": {"type": "null"}, "acceptance_receipt_sha256": {"type": "null"},
+            "authority": {"const": "separate-lab-runtime-acceptance-receipt"}
+          }
+        }
+      }
+    },
+    "density_conversion": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_value", "source_unit", "conversion_factor_to_kg_per_m3", "runtime_value_kg_per_m3", "calibration_status"],
+      "properties": {
+        "source_value": {"const": 1e-9}, "source_unit": {"const": "tonne_per_mm3"},
+        "conversion_factor_to_kg_per_m3": {"const": 1e12}, "runtime_value_kg_per_m3": {"const": 1000.0},
+        "calibration_status": {"const": "source_population_prior"}
+      }
+    },
+    "regions": {
+      "type": "array", "minItems": 6, "maxItems": 6,
+      "prefixItems": [
+        {"$ref": "#/$defs/aclRegion"}, {"$ref": "#/$defs/lclRegion"},
+        {"$ref": "#/$defs/mclRegion"}, {"$ref": "#/$defs/pclRegion"},
+        {"$ref": "#/$defs/ptlRegion"}, {"$ref": "#/$defs/qatRegion"}
+      ], "items": false
+    },
+    "mass_partition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["policy_id", "frame_id", "source_kind", "density_kg_per_m3", "provenance", "regions", "donors", "raw_f32_node_mass", "excluded_bodies", "qualification_status", "identity_sha256"],
+      "properties": {
+        "policy_id": {"const": "explicit-proximal-segment-candidate-no-visual-body-inference"},
+        "frame_id": {"const": "myosim-world-m"},
+        "source_kind": {"const": "cooked-myosim-rigid-body-mass-properties"},
+        "density_kg_per_m3": {"const": 1000.0},
+        "provenance": {
+          "type": "object", "additionalProperties": false,
+          "required": ["lab_export_manifest_sha256", "x_ref_sha256", "x_source_sha256", "nhknee_sha256", "source_rigid_payload_sha256", "equality_payload_sha256", "source_model_fingerprint_sha256", "poses", "mapping"],
+          "properties": {
+            "lab_export_manifest_sha256": {"$ref": "#/$defs/sha256"},
+            "x_ref_sha256": {"$ref": "#/$defs/sha256"},
+            "x_source_sha256": {"$ref": "#/$defs/sha256"},
+            "nhknee_sha256": {"const": "2e38201528de25911ea496164602ea7e823cd9c2e3c94efa550ee52689324ae5"},
+            "source_rigid_payload_sha256": {"const": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44"},
+            "equality_payload_sha256": {"const": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a"},
+            "source_model_fingerprint_sha256": {"$ref": "#/$defs/sha256"},
+            "poses": {"$ref": "#/$defs/poses"},
+            "mapping": {"$ref": "#/$defs/mapping"}
+          }
+        },
+        "regions": {"type": "array", "minItems": 6, "maxItems": 6, "prefixItems": [{"$ref": "#/$defs/regionMomentACL"}, {"$ref": "#/$defs/regionMomentLCL"}, {"$ref": "#/$defs/regionMomentMCL"}, {"$ref": "#/$defs/regionMomentPCL"}, {"$ref": "#/$defs/regionMomentPTL"}, {"$ref": "#/$defs/regionMomentQAT"}], "items": false},
+        "donors": {"type": "array", "minItems": 2, "maxItems": 2, "prefixItems": [{"$ref": "#/$defs/femurDonor"}, {"$ref": "#/$defs/tibiaDonor"}], "items": false},
+        "raw_f32_node_mass": {"type": "object", "additionalProperties": false, "required": ["sha256", "algorithm", "encoding", "node_count"], "properties": {"sha256": {"$ref": "#/$defs/sha256"}, "algorithm": {"const": "matter-referenced-f32-volume-f32-density-fp64-source-order-accumulate-final-f32.1"}, "encoding": {"const": "float32-le-lumped-tet-mass-quarter-source-element-order-profile-region-node-order"}, "node_count": {"const": 62402}}},
+        "excluded_bodies": {"const": [{"semantic_id":"myosim_fullbody:myo_sim/models/leg/assets/myolegs_chain.xml#/mujocoinclude[1]/body[name=pelvis][1]/body[name=femur_l][1]/body[name=patella_l][1]","source_body_id":103,"core_body_index":156,"source_mass_kg":0.02785286,"reason":"patella is the attachment and visual body, not an inferred continuum mass donor"}]},
+        "qualification_status": {"const": "candidate_not_physiologically_partitioned"},
+        "identity_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "articular_contact_pairs": {"const": [{"master_surface":"TBC-L_@_FMC_ContactFaces","name":"TBC-L_To_FMC","slave_surface":"FMC_@_TBC-L_ContactFaces","semantic_id":"open_knee_oks003:Geometry.feb#/febio_spec[1]/Geometry[1]/SurfacePair[name=TBC-L_To_FMC][1]","state_owner":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/contact/TBC-L_To_FMC/state"}},{"master_surface":"TBC-L_@_MNS-L_ContactFaces","name":"TBC-L_To_MNS-L","slave_surface":"MNS-L_@_TBC-L_ContactFaces","semantic_id":"open_knee_oks003:Geometry.feb#/febio_spec[1]/Geometry[1]/SurfacePair[name=TBC-L_To_MNS-L][1]","state_owner":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/contact/TBC-L_To_MNS-L/state"}},{"master_surface":"PTC_@_FMC_ContactFaces","name":"PTC_To_FMC","slave_surface":"FMC_@_PTC_ContactFaces","semantic_id":"open_knee_oks003:Geometry.feb#/febio_spec[1]/Geometry[1]/SurfacePair[name=PTC_To_FMC][1]","state_owner":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/contact/PTC_To_FMC/state"}},{"master_surface":"MNS-L_@_FMC_ContactFaces","name":"MNS-L_To_FMC","slave_surface":"FMC_@_MNS-L_ContactFaces","semantic_id":"open_knee_oks003:Geometry.feb#/febio_spec[1]/Geometry[1]/SurfacePair[name=MNS-L_To_FMC][1]","state_owner":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/contact/MNS-L_To_FMC/state"}},{"master_surface":"MNS-M_@_TBC-M_ContactFaces","name":"MNS-M_To_TBC-M","slave_surface":"TBC-M_@_MNS-M_ContactFaces","semantic_id":"open_knee_oks003:Geometry.feb#/febio_spec[1]/Geometry[1]/SurfacePair[name=MNS-M_To_TBC-M][1]","state_owner":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/contact/MNS-M_To_TBC-M/state"}},{"master_surface":"MNS-M_@_FMC_ContactFaces","name":"MNS-M_To_FMC","slave_surface":"FMC_@_MNS-M_ContactFaces","semantic_id":"open_knee_oks003:Geometry.feb#/febio_spec[1]/Geometry[1]/SurfacePair[name=MNS-M_To_FMC][1]","state_owner":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/contact/MNS-M_To_FMC/state"}},{"master_surface":"TBC-M_@_FMC_ContactFaces","name":"TBC-M_To_FMC","slave_surface":"FMC_@_TBC-M_ContactFaces","semantic_id":"open_knee_oks003:Geometry.feb#/febio_spec[1]/Geometry[1]/SurfacePair[name=TBC-M_To_FMC][1]","state_owner":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/contact/TBC-M_To_FMC/state"}}]},
+    "active_force_replacements": {"const": [{"name":"recfem_l","source_actuator_index":405,"route_semantic_id":"myosim_fullbody:composed/myofullbody/muscles/recfem_l","semantic_action_id":"myosim_fullbody:composed/myofullbody/muscles/recfem_l/action/stimulation","replaces_owner_id":"myosim_fullbody:composed/myofullbody/muscles/recfem_l/owner/source-jt","replacement_owner_id":"humanpack:loaded-anatomy-knee:left/QAT/active-force","replacement_scale":1.0,"status":"candidate","endpoints":[{"role":"load","endpoint_index":810,"endpoint_ordinal":0,"route_node_index":1798,"source_site_index":1548,"body_index":128,"attachment_mode":2,"envelope_index":622,"bone_stable_id":19},{"role":"anchor","endpoint_index":811,"endpoint_ordinal":1,"route_node_index":1803,"source_site_index":1751,"body_index":150,"attachment_mode":2,"envelope_index":623,"bone_stable_id":5}]},{"name":"vasint_l","source_actuator_index":413,"route_semantic_id":"myosim_fullbody:composed/myofullbody/muscles/vasint_l","semantic_action_id":"myosim_fullbody:composed/myofullbody/muscles/vasint_l/action/stimulation","replaces_owner_id":"myosim_fullbody:composed/myofullbody/muscles/vasint_l/owner/source-jt","replacement_owner_id":"humanpack:loaded-anatomy-knee:left/QAT/active-force","replacement_scale":1.0,"status":"candidate","endpoints":[{"role":"load","endpoint_index":826,"endpoint_ordinal":0,"route_node_index":1830,"source_site_index":1715,"body_index":145,"attachment_mode":0,"envelope_index":4294967295,"bone_stable_id":0},{"role":"anchor","endpoint_index":827,"endpoint_ordinal":1,"route_node_index":1835,"source_site_index":1765,"body_index":150,"attachment_mode":2,"envelope_index":638,"bone_stable_id":5}]},{"name":"vaslat_l","source_actuator_index":414,"route_semantic_id":"myosim_fullbody:composed/myofullbody/muscles/vaslat_l","semantic_action_id":"myosim_fullbody:composed/myofullbody/muscles/vaslat_l/action/stimulation","replaces_owner_id":"myosim_fullbody:composed/myofullbody/muscles/vaslat_l/owner/source-jt","replacement_owner_id":"humanpack:loaded-anatomy-knee:left/QAT/active-force","replacement_scale":1.0,"status":"candidate","endpoints":[{"role":"load","endpoint_index":828,"endpoint_ordinal":0,"route_node_index":1836,"source_site_index":1717,"body_index":145,"attachment_mode":2,"envelope_index":639,"bone_stable_id":3},{"role":"anchor","endpoint_index":829,"endpoint_ordinal":1,"route_node_index":1841,"source_site_index":1766,"body_index":150,"attachment_mode":2,"envelope_index":640,"bone_stable_id":5}]},{"name":"vasmed_l","source_actuator_index":415,"route_semantic_id":"myosim_fullbody:composed/myofullbody/muscles/vasmed_l","semantic_action_id":"myosim_fullbody:composed/myofullbody/muscles/vasmed_l/action/stimulation","replaces_owner_id":"myosim_fullbody:composed/myofullbody/muscles/vasmed_l/owner/source-jt","replacement_owner_id":"humanpack:loaded-anatomy-knee:left/QAT/active-force","replacement_scale":1.0,"status":"candidate","endpoints":[{"role":"load","endpoint_index":830,"endpoint_ordinal":0,"route_node_index":1842,"source_site_index":1719,"body_index":145,"attachment_mode":2,"envelope_index":641,"bone_stable_id":3},{"role":"anchor","endpoint_index":831,"endpoint_ordinal":1,"route_node_index":1847,"source_site_index":1767,"body_index":150,"attachment_mode":0,"envelope_index":4294967295,"bone_stable_id":0}]}]},
+    "passive_ligament_owners": {"const": [{"name":"ACL","semantic_id":"humanpack:loaded-anatomy-knee:left/region/ACL/passive-force","active_force":{"status":"none","owner_id":null},"passive_force_owner":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/ACL/material"}},{"name":"LCL","semantic_id":"humanpack:loaded-anatomy-knee:left/region/LCL/passive-force","active_force":{"status":"none","owner_id":null},"passive_force_owner":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/LCL/material"}},{"name":"MCL","semantic_id":"humanpack:loaded-anatomy-knee:left/region/MCL/passive-force","active_force":{"status":"none","owner_id":null},"passive_force_owner":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/MCL/material"}},{"name":"PCL","semantic_id":"humanpack:loaded-anatomy-knee:left/region/PCL/passive-force","active_force":{"status":"none","owner_id":null},"passive_force_owner":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/PCL/material"}},{"name":"PTL","semantic_id":"humanpack:loaded-anatomy-knee:left/region/PTL/passive-force","active_force":{"status":"none","owner_id":null},"passive_force_owner":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/PTL/material"}}]},
+    "full_state_authority": {"const": {"owner_id":"numi-lab:human-matter/accepted-step-transaction","required_snapshot_components":["articulated-q-v-root-time","articular-contact-history","fem-position-velocity-mass-material-status","passive-ligament-state","solver-adaptive-state","tendon-transfer-replacement-state"],"schema":"NumiLab.HumanMatterAcceptedState.v1","semantic_id":"humanpack:loaded-anatomy-knee:left/full-state-authority","identity_sha256":"8feddf3921b45d5cc53d7c4c202f2e900374f215ee1b353dd96fd2782ec9cfdc"}},
+    "qualification": {
+      "type": "object", "additionalProperties": false,
+      "required": ["candidate_only", "source_identity_bound", "ownership_identity_bound", "topology_identity_bound", "projected_reference_identity_bound", "unloaded_reference_qualified", "prestrain_reference_reset_executed", "subject_material_calibrated", "donor_mass_and_raw_moments_subtracted", "mesh_convergence_qualified", "specimen_load_validation_qualified", "clinical_validity_qualified", "production_physical_ownership", "production_active_force", "runtime_x_current_accepted", "integrated_human_qualification"],
+      "properties": {
+        "candidate_only": {"const": true}, "source_identity_bound": {"const": true},
+        "ownership_identity_bound": {"const": true}, "topology_identity_bound": {"const": true},
+        "projected_reference_identity_bound": {"const": true},
+        "donor_mass_and_raw_moments_subtracted": {"const": true},
+        "unloaded_reference_qualified": {"const": false},
+        "prestrain_reference_reset_executed": {"const": false},
+        "subject_material_calibrated": {"const": false},
+        "mesh_convergence_qualified": {"const": false},
+        "specimen_load_validation_qualified": {"const": false},
+        "clinical_validity_qualified": {"const": false},
+        "production_physical_ownership": {"const": false},
+        "production_active_force": {"const": false},
+        "runtime_x_current_accepted": {"const": false},
+        "integrated_human_qualification": {"const": false}
+      }
+    },
+    "boundary": {"const": "Candidate-only left Open Knee authoring receipt. It binds source topology, projected-rest identity, population material priors, explicit donor subtraction, and candidate force/state ownership. It does not establish an unloaded or stress-free reference, prestress equilibrium, subject calibration, an accepted x_current value, production ownership, loaded motion, clinical validity, or integrated Human qualification."}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "input": {"type": "object", "additionalProperties": false, "required": ["schema", "file_sha256", "identity_sha256"], "properties": {"schema": {"type": "string", "minLength": 1}, "file_sha256": {"$ref": "#/$defs/sha256"}, "identity_sha256": {"$ref": "#/$defs/sha256"}}},
+    "pose": {"type": "object", "additionalProperties": false, "required": ["id", "identity_sha256"], "properties": {"id": {"type": "string", "minLength": 1}, "identity_sha256": {"$ref": "#/$defs/sha256"}}},
+    "poses": {"type": "object", "additionalProperties": false, "required": ["source_default", "projected_reference"], "properties": {"source_default": {"allOf": [{"$ref": "#/$defs/pose"}, {"properties": {"id": {"const": "numi-human:unprojected-myosim-default-body-pose"}}}]}, "projected_reference": {"allOf": [{"$ref": "#/$defs/pose"}, {"properties": {"id": {"const": "numi-human:equality-projected-default-reference-body-pose"}}}]}}},
+    "jacobian": {"type": "object", "additionalProperties": false, "required": ["finite", "minimum_determinant", "maximum_determinant", "orientation_preserving"], "properties": {"finite": {"const": true}, "minimum_determinant": {"type": "number", "exclusiveMinimum": 0}, "maximum_determinant": {"type": "number", "exclusiveMinimum": 0}, "orientation_preserving": {"const": true}}},
+    "mappingRegionAccepted": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "substep_count", "direct_map_status", "direct_failure_tetrahedron", "direct_failure_jacobian", "minimum_jacobian", "maximum_jacobian", "maximum_source_anchor_reconstruction_residual_m", "maximum_anchor_residual_m", "maximum_persisted_f32_anchor_residual_m"],
+      "properties": {
+        "name": {"enum": ["ACL", "LCL", "MCL", "PCL", "QAT"]},
+        "substep_count": {"const": 1},
+        "direct_map_status": {"const": "accepted"},
+        "direct_failure_tetrahedron": {"const": null},
+        "direct_failure_jacobian": {"const": null},
+        "minimum_jacobian": {"type": "number", "exclusiveMinimum": 0},
+        "maximum_jacobian": {"type": "number", "exclusiveMinimum": 0},
+        "maximum_source_anchor_reconstruction_residual_m": {"type": "number", "minimum": 0, "maximum": 0.0000002},
+        "maximum_anchor_residual_m": {"type": "number", "minimum": 0, "maximum": 0.0000002},
+        "maximum_persisted_f32_anchor_residual_m": {"type": "number", "minimum": 0, "maximum": 0.0000002}
+      }
+    },
+    "mappingRegionPTL": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "substep_count", "direct_map_status", "direct_failure_tetrahedron", "direct_failure_jacobian", "minimum_jacobian", "maximum_jacobian", "maximum_source_anchor_reconstruction_residual_m", "maximum_anchor_residual_m", "maximum_persisted_f32_anchor_residual_m"],
+      "properties": {
+        "name": {"const": "PTL"},
+        "substep_count": {"const": 2},
+        "direct_map_status": {"const": "rejected_inversion"},
+        "direct_failure_tetrahedron": {"const": 419},
+        "direct_failure_jacobian": {"type": "number", "exclusiveMaximum": 0},
+        "minimum_jacobian": {"type": "number", "exclusiveMinimum": 0},
+        "maximum_jacobian": {"type": "number", "exclusiveMinimum": 0},
+        "maximum_source_anchor_reconstruction_residual_m": {"type": "number", "minimum": 0, "maximum": 0.0000002},
+        "maximum_anchor_residual_m": {"type": "number", "minimum": 0, "maximum": 0.0000002},
+        "maximum_persisted_f32_anchor_residual_m": {"type": "number", "minimum": 0, "maximum": 0.0000002}
+      }
+    },
+    "mappingRegions": {
+      "type": "array", "minItems": 6, "maxItems": 6,
+      "prefixItems": [
+        {"allOf": [{"$ref": "#/$defs/mappingRegionAccepted"}, {"properties": {"name": {"const": "ACL"}}}]},
+        {"allOf": [{"$ref": "#/$defs/mappingRegionAccepted"}, {"properties": {"name": {"const": "LCL"}}}]},
+        {"allOf": [{"$ref": "#/$defs/mappingRegionAccepted"}, {"properties": {"name": {"const": "MCL"}}}]},
+        {"allOf": [{"$ref": "#/$defs/mappingRegionAccepted"}, {"properties": {"name": {"const": "PCL"}}}]},
+        {"$ref": "#/$defs/mappingRegionPTL"},
+        {"allOf": [{"$ref": "#/$defs/mappingRegionAccepted"}, {"properties": {"name": {"const": "QAT"}}}]}
+      ],
+      "items": false
+    },
+    "mapping": {"type": "object", "additionalProperties": false, "required": ["id", "algorithm", "code_identity_sha256", "code_identity_encoding", "diagnostics"], "properties": {"id": {"const": "numi-lab.open-knee-restWorld-to-equality-projected-default-body-poses.1"}, "algorithm": {"const": "adaptive-dyadic-first-success-slerp-geodesic-inverse-distance-moving-enthesis.1"}, "code_identity_sha256": {"$ref": "#/$defs/sha256"}, "code_identity_encoding": {"const": "sha256(domain-utf8||header-file-sha256||core-file-sha256||adapter-file-sha256)"}, "diagnostics": {"type": "object", "additionalProperties": false, "required": ["finite", "source_node_count", "output_node_count", "maximum_displacement_m", "equality_residual_maximum", "jacobian", "raw_f32_node_mass_sha256", "raw_f32_node_mass_algorithm", "regions"], "properties": {"finite": {"const": true}, "source_node_count": {"const": 62402}, "output_node_count": {"const": 62402}, "maximum_displacement_m": {"type": "number", "minimum": 0}, "equality_residual_maximum": {"type": "number", "minimum": 0}, "jacobian": {"$ref": "#/$defs/jacobian"}, "raw_f32_node_mass_sha256": {"$ref": "#/$defs/sha256"}, "raw_f32_node_mass_algorithm": {"const": "matter-referenced-f32-volume-f32-density-fp64-source-order-accumulate-final-f32.1"}, "regions": {"$ref": "#/$defs/mappingRegions"}}}}},
+    "regionSpans": {"const": [{"name":"ACL","first_node":94109,"node_count":15792,"first_tetrahedron":404973,"tetrahedron_count":72552,"runtime_first_node":0,"runtime_node_count":15792,"runtime_first_tetrahedron":0,"runtime_tetrahedron_count":72552},{"name":"LCL","first_node":161275,"node_count":2960,"first_tetrahedron":671815,"tetrahedron_count":9773,"runtime_first_node":15792,"runtime_node_count":2960,"runtime_first_tetrahedron":72552,"runtime_tetrahedron_count":9773},{"name":"MCL","first_node":113695,"node_count":15693,"first_tetrahedron":477525,"tetrahedron_count":62712,"runtime_first_node":18752,"runtime_node_count":15693,"runtime_first_tetrahedron":82325,"runtime_tetrahedron_count":62712},{"name":"PCL","first_node":55632,"node_count":3714,"first_tetrahedron":269489,"tetrahedron_count":14379,"runtime_first_node":34445,"runtime_node_count":3714,"runtime_first_tetrahedron":145037,"runtime_tetrahedron_count":14379},{"name":"PTL","first_node":129388,"node_count":9280,"first_tetrahedron":540237,"tetrahedron_count":35616,"runtime_first_node":38159,"runtime_node_count":9280,"runtime_first_tetrahedron":159416,"runtime_tetrahedron_count":35616},{"name":"QAT","first_node":0,"node_count":14963,"first_tetrahedron":0,"tetrahedron_count":69410,"runtime_first_node":47439,"runtime_node_count":14963,"runtime_first_tetrahedron":195032,"runtime_tetrahedron_count":69410}]},
+    "labExport": {"type": "object", "additionalProperties": false, "required": ["schema", "status", "manifest_canonicalization", "manifest_hash_exclusion", "manifest_sha256", "subject_id", "side", "x_ref", "source", "poses", "mapping", "donor_moments", "boundary"], "properties": {"schema": {"const": "numi.lab.loaded-knee-authoring-export.v1"}, "status": {"const": "candidate"}, "manifest_canonicalization": {"const": "utf8-json-sorted-keys-compact-ensure_ascii=false-allow_nan=false"}, "manifest_hash_exclusion": {"const": "top-level manifest_sha256"}, "manifest_sha256": {"$ref": "#/$defs/sha256"}, "subject_id": {"const": "OpenKnee:oks003:left"}, "side": {"const": "left"}, "x_ref": {"type": "object", "additionalProperties": false, "required": ["bytes", "file_sha256", "encoding", "node_count", "region_order", "local_order", "region_spans", "source_global_node_index_sha256", "source_global_node_index_encoding", "executable_fem_topology_sha256", "executable_fem_topology_encoding", "anchor_ownership_sha256", "anchor_ownership_encoding"], "properties": {"bytes": {"const": 748824}, "file_sha256": {"$ref": "#/$defs/sha256"}, "encoding": {"const": "float32-le-xyz"}, "node_count": {"const": 62402}, "region_order": {"const": ["ACL", "LCL", "MCL", "PCL", "PTL", "QAT"]}, "local_order": {"const": "source-local-node-order"}, "region_spans": {"$ref": "#/$defs/regionSpans"}, "source_global_node_index_sha256": {"const": "e451aa9e773a90dfb0cde77d4fb1555c7f1393c0362c7fbb3614909045a6602b"}, "source_global_node_index_encoding": {"const": "uint32-le-source-global-node-indices-profile-region-order"}, "executable_fem_topology_sha256": {"const": "56af24e63c9a4c2ecafb2c94bab98fa95bbcbc77085f425c84b9c1a95e3a9040"}, "executable_fem_topology_encoding": {"const": "uint32-le-tetrahedra-profile-region-order-source-element-order-concatenated-local-node-indices"}, "anchor_ownership_sha256": {"const": "04a5c374f15f8681af40ae2e07fe35258f0bbc805d4d9d8291eae1f891d23de6"}, "anchor_ownership_encoding": {"const": "uint32-le-source-global-node,anchor-body,flags;float32-le-anchor-local-xyz"}}}, "source": {"type": "object", "additionalProperties": false, "required": ["nhknee_sha256", "x_source_sha256", "source_rigid_payload_sha256", "equality_payload_sha256", "source_model_fingerprint_sha256"], "properties": {"nhknee_sha256": {"const": "2e38201528de25911ea496164602ea7e823cd9c2e3c94efa550ee52689324ae5"}, "x_source_sha256": {"$ref": "#/$defs/sha256"}, "source_rigid_payload_sha256": {"const": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44"}, "equality_payload_sha256": {"const": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a"}, "source_model_fingerprint_sha256": {"$ref": "#/$defs/sha256"}}}, "poses": {"$ref": "#/$defs/poses"}, "mapping": {"$ref": "#/$defs/mapping"}, "donor_moments": {"type": "object", "additionalProperties": false, "required": ["policy_id", "frame_id", "source_kind", "donors"], "properties": {"policy_id": {"const": "explicit-proximal-segment-candidate-no-visual-body-inference"}, "frame_id": {"const": "myosim-world-m"}, "source_kind": {"const": "cooked-myosim-rigid-body-mass-properties"}, "donors": {"type": "array", "minItems": 2, "maxItems": 2, "prefixItems": [{"$ref": "#/$defs/labFemurDonor"}, {"$ref": "#/$defs/labTibiaDonor"}], "items": false}}}, "boundary": {"const": "Candidate-only source/projected-reference and donor provenance export. Projected rest is not an unloaded or stress-free state; population material priors, prescribed contact coverage, and this export do not establish subject mechanics, production ownership, sustained tracking, mesh convergence, clinical validity, or a global seven-owner accepted-state root."}}},
+    "coordinateIdentity": {"type": "object", "required": ["scope", "encoding", "node_count", "sha256"], "properties": {"scope": {"const": "six-loaded-regions"}, "encoding": {"const": "float32-le-xyz"}, "node_count": {"const": 62402}, "sha256": {"$ref": "#/$defs/sha256"}}},
+    "moments": {"type": "object", "additionalProperties": false, "required": ["zeroth_mass_kg", "first_mass_moment_kg_m", "raw_second_mass_moment_kg_m2"], "properties": {"zeroth_mass_kg": {"type": "number", "minimum": 0}, "first_mass_moment_kg_m": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}}, "raw_second_mass_moment_kg_m2": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}}}}},
+    "regionMoment": {"type": "object", "additionalProperties": false, "required": ["name", "volume_m3", "zeroth_mass_kg", "first_mass_moment_kg_m", "raw_second_mass_moment_kg_m2", "minimum_jacobian_determinant", "maximum_jacobian_determinant", "raw_f32_node_mass_sha256"], "properties": {"name": {"enum": ["ACL", "LCL", "MCL", "PCL", "PTL", "QAT"]}, "volume_m3": {"type": "number", "exclusiveMinimum": 0}, "zeroth_mass_kg": {"type": "number", "exclusiveMinimum": 0}, "first_mass_moment_kg_m": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}}, "raw_second_mass_moment_kg_m2": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}}}, "minimum_jacobian_determinant": {"type": "number", "exclusiveMinimum": 0}, "maximum_jacobian_determinant": {"type": "number", "exclusiveMinimum": 0}, "raw_f32_node_mass_sha256": {"$ref": "#/$defs/sha256"}}},
+    "regionMomentACL": {"allOf": [{"$ref": "#/$defs/regionMoment"}, {"properties": {"name": {"const": "ACL"}}}]},
+    "regionMomentLCL": {"allOf": [{"$ref": "#/$defs/regionMoment"}, {"properties": {"name": {"const": "LCL"}}}]},
+    "regionMomentMCL": {"allOf": [{"$ref": "#/$defs/regionMoment"}, {"properties": {"name": {"const": "MCL"}}}]},
+    "regionMomentPCL": {"allOf": [{"$ref": "#/$defs/regionMoment"}, {"properties": {"name": {"const": "PCL"}}}]},
+    "regionMomentPTL": {"allOf": [{"$ref": "#/$defs/regionMoment"}, {"properties": {"name": {"const": "PTL"}}}]},
+    "regionMomentQAT": {"allOf": [{"$ref": "#/$defs/regionMoment"}, {"properties": {"name": {"const": "QAT"}}}]},
+    "regionBase": {"type": "object", "additionalProperties": false, "required": ["name", "topology_semantic_id", "material_semantic_ids", "payload", "material", "owners", "donor_body_semantic_id", "projected_reference_moments"], "properties": {"name": {}, "topology_semantic_id": {}, "material_semantic_ids": {}, "payload": {}, "material": {}, "owners": {}, "donor_body_semantic_id": {}, "projected_reference_moments": {"$ref": "#/$defs/regionMoment"}}},
+    "aclRegion": {"allOf":[{"$ref":"#/$defs/regionBase"},{"properties":{"name":{"const":"ACL"},"topology_semantic_id":{"const":"open_knee_oks003:Geometry.feb#/febio_spec[1]/Geometry[1]/Elements[name=ACL][1]"},"material_semantic_ids":{"const":["open_knee_oks003:FeBio_custom.feb#/febio_spec[1]/Material[1]/material[name=ACL][1]","open_knee_oks003:ModelProperties.xml#/ModelProperties[1]/Material[1]/material[name=ACL][1]"]},"payload":{"const":{"first_node":94109,"first_surface":22,"first_tetrahedron":404973,"index":5,"kind":4,"material_flags":3,"name":"ACL","node_count":15792,"runtime_first_node":0,"runtime_first_tetrahedron":0,"runtime_node_count":15792,"runtime_tetrahedron_count":72552,"surface_count":6,"tetrahedra_sha256":"0048be5a2b460e78dacc1c1a3c47cbc235efee96675fd60e6342128348f70eb0","tetrahedron_count":72552,"visual_body_index":145}},"material":{"const":{"bulk_modulus_mpa":146.41,"c1_mpa":1.95,"c2_mpa":0.0,"c3_mpa":0.0139,"c4":116.22,"c5_mpa":535.039,"lambda_max":1.046,"source_initial_stretch":1.016,"type":"trans iso Mooney-Rivlin","fiber_world":[0.023879600688815117,0.5208771824836731,0.8532975912094116],"calibration_status":"source_population_prior"}},"owners":{"const":{"physical_volume":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/ACL/physical-volume"},"mechanical_mass":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/ACL/mechanical-mass"},"material":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/ACL/material"},"active_force":{"status":"none","owner_id":null},"state":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/full-state"}}},"donor_body_semantic_id":{"const":"myosim_fullbody:myo_sim/models/leg/assets/myolegs_chain.xml#/mujocoinclude[1]/body[name=pelvis][1]/body[name=femur_l][1]"},"projected_reference_moments":{"$ref":"#/$defs/regionMomentACL"}}}]},
+    "lclRegion": {"allOf":[{"$ref":"#/$defs/regionBase"},{"properties":{"name":{"const":"LCL"},"topology_semantic_id":{"const":"open_knee_oks003:Geometry.feb#/febio_spec[1]/Geometry[1]/Elements[name=LCL][1]"},"material_semantic_ids":{"const":["open_knee_oks003:FeBio_custom.feb#/febio_spec[1]/Material[1]/material[name=LCL][1]","open_knee_oks003:ModelProperties.xml#/ModelProperties[1]/Material[1]/material[name=LCL][1]"]},"payload":{"const":{"first_node":161275,"first_surface":49,"first_tetrahedron":671815,"index":11,"kind":4,"material_flags":3,"name":"LCL","node_count":2960,"runtime_first_node":15792,"runtime_first_tetrahedron":72552,"runtime_node_count":2960,"runtime_tetrahedron_count":9773,"surface_count":4,"tetrahedra_sha256":"56425cdebee86c4f5f88f409e32d567a3cf7b6c8a5c5069bbdfdab7cfb500533","tetrahedron_count":9773,"visual_body_index":145}},"material":{"const":{"bulk_modulus_mpa":793.65,"c1_mpa":1.44,"c2_mpa":0.0,"c3_mpa":0.57,"c4":48.0,"c5_mpa":467.1,"lambda_max":1.063,"source_initial_stretch":1.027,"type":"trans iso Mooney-Rivlin","fiber_world":[-0.1950301229953766,-0.1955101639032364,0.961113452911377],"calibration_status":"source_population_prior"}},"owners":{"const":{"physical_volume":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/LCL/physical-volume"},"mechanical_mass":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/LCL/mechanical-mass"},"material":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/LCL/material"},"active_force":{"status":"none","owner_id":null},"state":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/full-state"}}},"donor_body_semantic_id":{"const":"myosim_fullbody:myo_sim/models/leg/assets/myolegs_chain.xml#/mujocoinclude[1]/body[name=pelvis][1]/body[name=femur_l][1]"},"projected_reference_moments":{"$ref":"#/$defs/regionMomentLCL"}}}]},
+    "mclRegion": {"allOf":[{"$ref":"#/$defs/regionBase"},{"properties":{"name":{"const":"MCL"},"topology_semantic_id":{"const":"open_knee_oks003:Geometry.feb#/febio_spec[1]/Geometry[1]/Elements[name=MCL][1]"},"material_semantic_ids":{"const":["open_knee_oks003:FeBio_custom.feb#/febio_spec[1]/Material[1]/material[name=MCL][1]","open_knee_oks003:ModelProperties.xml#/ModelProperties[1]/Material[1]/material[name=MCL][1]"]},"payload":{"const":{"first_node":113695,"first_surface":30,"first_tetrahedron":477525,"index":7,"kind":4,"material_flags":3,"name":"MCL","node_count":15693,"runtime_first_node":18752,"runtime_first_tetrahedron":82325,"runtime_node_count":15693,"runtime_tetrahedron_count":62712,"surface_count":6,"tetrahedra_sha256":"a31d0932ba09fd68e82e9e90c738f72d98069fb9852e4fa2174cc349ded04dd3","tetrahedron_count":62712,"visual_body_index":145}},"material":{"const":{"bulk_modulus_mpa":793.65,"c1_mpa":1.44,"c2_mpa":0.0,"c3_mpa":0.57,"c4":48.0,"c5_mpa":467.1,"lambda_max":1.063,"source_initial_stretch":1.034,"type":"trans iso Mooney-Rivlin","fiber_world":[-0.28888770937919617,-0.0032872306182980537,0.9573573470115662],"calibration_status":"source_population_prior"}},"owners":{"const":{"physical_volume":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/MCL/physical-volume"},"mechanical_mass":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/MCL/mechanical-mass"},"material":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/MCL/material"},"active_force":{"status":"none","owner_id":null},"state":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/full-state"}}},"donor_body_semantic_id":{"const":"myosim_fullbody:myo_sim/models/leg/assets/myolegs_chain.xml#/mujocoinclude[1]/body[name=pelvis][1]/body[name=femur_l][1]"},"projected_reference_moments":{"$ref":"#/$defs/regionMomentMCL"}}}]},
+    "pclRegion": {"allOf":[{"$ref":"#/$defs/regionBase"},{"properties":{"name":{"const":"PCL"},"topology_semantic_id":{"const":"open_knee_oks003:Geometry.feb#/febio_spec[1]/Geometry[1]/Elements[name=PCL][1]"},"material_semantic_ids":{"const":["open_knee_oks003:FeBio_custom.feb#/febio_spec[1]/Material[1]/material[name=PCL][1]","open_knee_oks003:ModelProperties.xml#/ModelProperties[1]/Material[1]/material[name=PCL][1]"]},"payload":{"const":{"first_node":55632,"first_surface":8,"first_tetrahedron":269489,"index":2,"kind":4,"material_flags":3,"name":"PCL","node_count":3714,"runtime_first_node":34445,"runtime_first_tetrahedron":145037,"runtime_node_count":3714,"runtime_tetrahedron_count":14379,"surface_count":7,"tetrahedra_sha256":"1e65fc3029e009a09e26ba65d900f5e04b3afa4160f602e6b451eafe66b5d92e","tetrahedron_count":14379,"visual_body_index":145}},"material":{"const":{"bulk_modulus_mpa":243.9,"c1_mpa":3.25,"c2_mpa":0.0,"c3_mpa":0.1196,"c4":87.178,"c5_mpa":431.063,"lambda_max":1.035,"source_initial_stretch":1.0,"type":"trans iso Mooney-Rivlin","fiber_world":[0.02508438006043434,0.7640138864517212,-0.644711971282959],"calibration_status":"source_population_prior"}},"owners":{"const":{"physical_volume":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/PCL/physical-volume"},"mechanical_mass":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/PCL/mechanical-mass"},"material":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/PCL/material"},"active_force":{"status":"none","owner_id":null},"state":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/full-state"}}},"donor_body_semantic_id":{"const":"myosim_fullbody:myo_sim/models/leg/assets/myolegs_chain.xml#/mujocoinclude[1]/body[name=pelvis][1]/body[name=femur_l][1]"},"projected_reference_moments":{"$ref":"#/$defs/regionMomentPCL"}}}]},
+    "ptlRegion": {"allOf":[{"$ref":"#/$defs/regionBase"},{"properties":{"name":{"const":"PTL"},"topology_semantic_id":{"const":"open_knee_oks003:Geometry.feb#/febio_spec[1]/Geometry[1]/Elements[name=PTL][1]"},"material_semantic_ids":{"const":["open_knee_oks003:FeBio_custom.feb#/febio_spec[1]/Material[1]/material[name=PTL][1]","open_knee_oks003:ModelProperties.xml#/ModelProperties[1]/Material[1]/material[name=PTL][1]"]},"payload":{"const":{"first_node":129388,"first_surface":36,"first_tetrahedron":540237,"index":8,"kind":5,"material_flags":3,"name":"PTL","node_count":9280,"runtime_first_node":38159,"runtime_first_tetrahedron":159416,"runtime_node_count":9280,"runtime_tetrahedron_count":35616,"surface_count":3,"tetrahedra_sha256":"11868dd1a06e28880f99ce3a1b395fc96afda9c4ab17746214ed29a9384f877d","tetrahedron_count":35616,"visual_body_index":156}},"material":{"const":{"bulk_modulus_mpa":206.61,"c1_mpa":2.75,"c2_mpa":0.0,"c3_mpa":0.065,"c4":115.89,"c5_mpa":777.56,"lambda_max":1.042,"source_initial_stretch":1.0,"type":"trans iso Mooney-Rivlin","fiber_world":[-0.1883269101381302,-0.4512072503566742,0.872321605682373],"calibration_status":"source_population_prior"}},"owners":{"const":{"physical_volume":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/PTL/physical-volume"},"mechanical_mass":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/PTL/mechanical-mass"},"material":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/PTL/material"},"active_force":{"status":"none","owner_id":null},"state":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/full-state"}}},"donor_body_semantic_id":{"const":"myosim_fullbody:myo_sim/models/leg/assets/myolegs_chain.xml#/mujocoinclude[1]/body[name=pelvis][1]/body[name=femur_l][1]/body[name=tibia_l][1]"},"projected_reference_moments":{"$ref":"#/$defs/regionMomentPTL"}}}]},
+    "qatRegion": {"allOf":[{"$ref":"#/$defs/regionBase"},{"properties":{"name":{"const":"QAT"},"topology_semantic_id":{"const":"open_knee_oks003:Geometry.feb#/febio_spec[1]/Geometry[1]/Elements[name=QAT][1]"},"material_semantic_ids":{"const":["open_knee_oks003:FeBio_custom.feb#/febio_spec[1]/Material[1]/material[name=QAT][1]","open_knee_oks003:ModelProperties.xml#/ModelProperties[1]/Material[1]/material[name=QAT][1]"]},"payload":{"const":{"first_node":0,"first_surface":0,"first_tetrahedron":0,"index":0,"kind":5,"material_flags":3,"name":"QAT","node_count":14963,"runtime_first_node":47439,"runtime_first_tetrahedron":195032,"runtime_node_count":14963,"runtime_tetrahedron_count":69410,"surface_count":4,"tetrahedra_sha256":"049a3f5bd045043fba6e513b50b4fe72dd4741771ec058cb3c9729f68ff0c66c","tetrahedron_count":69410,"visual_body_index":156}},"material":{"const":{"bulk_modulus_mpa":206.61,"c1_mpa":2.75,"c2_mpa":0.0,"c3_mpa":0.065,"c4":115.89,"c5_mpa":777.56,"lambda_max":1.042,"source_initial_stretch":1.0,"type":"trans iso Mooney-Rivlin","fiber_world":[-0.035553932189941406,0.22192594408988953,0.974415123462677],"calibration_status":"source_population_prior"}},"owners":{"const":{"physical_volume":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/QAT/physical-volume"},"mechanical_mass":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/QAT/mechanical-mass"},"material":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/region/QAT/material"},"active_force":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/QAT/active-force"},"state":{"status":"candidate","owner_id":"humanpack:loaded-anatomy-knee:left/full-state"}}},"donor_body_semantic_id":{"const":"myosim_fullbody:myo_sim/models/leg/assets/myolegs_chain.xml#/mujocoinclude[1]/body[name=pelvis][1]/body[name=femur_l][1]"},"projected_reference_moments":{"$ref":"#/$defs/regionMomentQAT"}}}]},
+    "donor": {"type": "object", "additionalProperties": false, "required": ["semantic_id", "source_body_id", "core_body_index", "region_names", "source", "subtracted", "remaining", "closure_residual"], "properties": {"semantic_id": {}, "source_body_id": {}, "core_body_index": {}, "region_names": {}, "source": {"$ref": "#/$defs/moments"}, "subtracted": {"$ref": "#/$defs/moments"}, "remaining": {"$ref": "#/$defs/moments"}, "closure_residual": {"const": {"zeroth_mass_kg":0.0,"first_mass_moment_kg_m":[0.0,0.0,0.0],"raw_second_mass_moment_kg_m2":[[0.0,0.0,0.0],[0.0,0.0,0.0],[0.0,0.0,0.0]]}}}},
+    "femurDonor": {"allOf": [{"$ref": "#/$defs/donor"}, {"properties": {"semantic_id": {"const": "myosim_fullbody:myo_sim/models/leg/assets/myolegs_chain.xml#/mujocoinclude[1]/body[name=pelvis][1]/body[name=femur_l][1]"}, "source_body_id": {"const": 98}, "core_body_index": {"const": 145}, "region_names": {"const": ["ACL", "LCL", "MCL", "PCL", "QAT"]}, "source": {"allOf": [{"$ref": "#/$defs/moments"}, {"properties": {"zeroth_mass_kg": {"const": 8.399999618530273}}}]}}}]},
+    "tibiaDonor": {"allOf": [{"$ref": "#/$defs/donor"}, {"properties": {"semantic_id": {"const": "myosim_fullbody:myo_sim/models/leg/assets/myolegs_chain.xml#/mujocoinclude[1]/body[name=pelvis][1]/body[name=femur_l][1]/body[name=tibia_l][1]"}, "source_body_id": {"const": 99}, "core_body_index": {"const": 150}, "region_names": {"const": ["PTL"]}, "source": {"allOf": [{"$ref": "#/$defs/moments"}, {"properties": {"zeroth_mass_kg": {"const": 3.799999952316284}}}]}}}]},
+    "labDonor": {"type": "object", "additionalProperties": false, "required": ["semantic_id", "source_body_id", "core_body_index", "moments"], "properties": {"semantic_id": {}, "source_body_id": {}, "core_body_index": {}, "moments": {"$ref": "#/$defs/moments"}}},
+    "labFemurDonor": {"allOf": [{"$ref": "#/$defs/labDonor"}, {"properties": {"semantic_id": {"const": "myosim_fullbody:myo_sim/models/leg/assets/myolegs_chain.xml#/mujocoinclude[1]/body[name=pelvis][1]/body[name=femur_l][1]"}, "source_body_id": {"const": 98}, "core_body_index": {"const": 145}, "moments": {"allOf": [{"$ref": "#/$defs/moments"}, {"properties": {"zeroth_mass_kg": {"const": 8.399999618530273}}}]}}}]},
+    "labTibiaDonor": {"allOf": [{"$ref": "#/$defs/labDonor"}, {"properties": {"semantic_id": {"const": "myosim_fullbody:myo_sim/models/leg/assets/myolegs_chain.xml#/mujocoinclude[1]/body[name=pelvis][1]/body[name=femur_l][1]/body[name=tibia_l][1]"}, "source_body_id": {"const": 99}, "core_body_index": {"const": 150}, "moments": {"allOf": [{"$ref": "#/$defs/moments"}, {"properties": {"zeroth_mass_kg": {"const": 3.799999952316284}}}]}}}]}
+  }
+}
