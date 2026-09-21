@@ -129,6 +129,16 @@ if [ "${1:-}" = "loaded-anatomy-knee-compile" ]; then
     exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.loaded_anatomy_knee "$@"
 fi
 
+if [ "${1:-}" = "loaded-anatomy-knee-source-compliance" ]; then
+    shift
+    if [ -n "${PYTHONPATH:-}" ]; then
+        export PYTHONPATH="$repository_root/src:$PYTHONPATH"
+    else
+        export PYTHONPATH="$repository_root/src"
+    fi
+    exec "${NUMI_HUMAN_PYTHON:-python3}" -m numilab_human.loaded_anatomy_knee_source_compliance "$@"
+fi
+
 if [ "${1:-}" = "body-composition-integration" ]; then
     shift
     if [ -n "${PYTHONPATH:-}" ]; then

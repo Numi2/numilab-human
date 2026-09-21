@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://numi.dev/schemas/humanpack-loaded-anatomy-knee-source-compliance.v1.schema.json",
+  "title": "HumanPack loaded anatomy knee source-compliance companion v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "compiler", "manifest_canonicalization", "binding_hash_exclusion",
+    "binding_sha256", "status", "base_manifest", "source_model", "programs",
+    "cross_program", "ownership", "prepared_state", "qualification", "boundary"
+  ],
+  "properties": {
+    "schema": {"const": "HumanPack.loaded-anatomy-knee.source-compliance.v1"},
+    "compiler": {"const": "numilab-human.loaded-anatomy-knee-source-compliance.1"},
+    "manifest_canonicalization": {"const": "utf8-json-sorted-keys-compact-ensure_ascii=false-allow_nan=false"},
+    "binding_hash_exclusion": {"const": "top-level binding_sha256"},
+    "binding_sha256": {"$ref": "#/$defs/sha256"},
+    "status": {"const": "candidate"},
+    "base_manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "manifest_sha256", "file_sha256"],
+      "properties": {
+        "schema": {"const": "HumanPack.loaded-anatomy-knee.v1"},
+        "manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "file_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "source_model": {
+      "const": {
+        "nq": 129,
+        "nv": 128,
+        "source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+        "source_rigid_payload_sha256": "6328f7e84663c611c5498624d1386b00b2d5b0e162c4cc2967c7b1dc49ab0c44"
+      }
+    },
+    "programs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["joint_equalities", "joint_limits"],
+      "properties": {
+        "joint_equalities": {"$ref": "#/$defs/jointEqualities"},
+        "joint_limits": {"$ref": "#/$defs/jointLimits"}
+      }
+    },
+    "cross_program": {
+      "const": {
+        "same_nq_nv": true,
+        "same_source_archive_sha256": true,
+        "same_policy_id": true,
+        "same_flags": true,
+        "same_refsafe": true
+      }
+    },
+    "ownership": {
+      "const": {
+        "human_source_laws": {
+          "owner_id": "numilab-human:loaded-anatomy-knee/source-constraint-laws",
+          "owner_system": "Human",
+          "authority": "immutable-source-law-program-bytes",
+          "programs": ["joint_equalities", "joint_limits"],
+          "owns_runtime_constraint_force": false,
+          "owns_runtime_constraint_state": false
+        },
+        "matter_runtime_constraints": {
+          "owner_id": "numi-lab:human-matter/accepted-step-transaction",
+          "owner_system": "Matter",
+          "authority": "runtime-constraint-force-and-accepted-state",
+          "accepted_state_schema": "NumiLab.HumanMatterAcceptedState.v1",
+          "accepted_state_semantic_id": "humanpack:loaded-anatomy-knee:left/full-state-authority",
+          "accepted_state_authority_identity_sha256": "8feddf3921b45d5cc53d7c4c202f2e900374f215ee1b353dd96fd2782ec9cfdc",
+          "authors_source_laws": false,
+          "owns_runtime_constraint_force": true,
+          "owns_runtime_constraint_state": true
+        }
+      }
+    },
+    "prepared_state": {
+      "const": {
+        "status": "absent",
+        "identity_sha256": null,
+        "qualification_receipt_sha256": null,
+        "qualified": false
+      }
+    },
+    "qualification": {
+      "const": {
+        "candidate_only": true,
+        "base_manifest_identity_bound": true,
+        "exact_source_program_bytes_bound": true,
+        "source_rigid_identity_bound": true,
+        "program_headers_validated": true,
+        "cross_program_consistency_validated": true,
+        "prepared_state_identity_bound": false,
+        "runtime_constraint_force_or_state_executed": false,
+        "production_physical_ownership": false,
+        "clinical_validity_qualified": false,
+        "integrated_human_qualification": false
+      }
+    },
+    "boundary": {
+      "const": "Candidate-only additive source-compliance binding for HumanPack.loaded-anatomy-knee.v1. Human authors the immutable NHEQ2 and NHLIM1 source-law bytes; Matter alone owns runtime constraint force and accepted constraint state. This companion binds no prepared-state identity and does not establish runtime execution, production physical ownership, standing, walking, clinical validity, or integrated Human qualification."
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "jointEqualities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "filename", "magic", "abi", "bytes", "file_sha256", "nq",
+        "nv", "row_count", "record_bytes", "source_row_count", "policy_id",
+        "flags", "refsafe", "source_archive_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "numi.human.joint-equality-source-compliance-payload.v1"},
+        "filename": {"const": "myosim-fullbody-joint-equalities-source-compliance.nheq"},
+        "magic": {"const": "NHEQ2"},
+        "abi": {"const": 2},
+        "bytes": {"const": 5792},
+        "file_sha256": {"const": "12db05fddb492e77e7fd461fad566d3e1e75390f2cb6f77f26568254a6cb4477"},
+        "nq": {"const": 129},
+        "nv": {"const": 128},
+        "row_count": {"const": 51},
+        "record_bytes": {"const": 112},
+        "source_row_count": {"const": 51},
+        "policy_id": {"const": 1},
+        "flags": {"const": 1},
+        "refsafe": {"const": true},
+        "source_archive_sha256": {"const": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975"}
+      }
+    },
+    "jointLimits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "filename", "magic", "abi", "bytes", "file_sha256", "nq",
+        "nv", "row_count", "record_bytes", "source_row_count", "policy_id",
+        "flags", "refsafe", "source_archive_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "numi.human.joint-limit-source-compliance-payload.v1"},
+        "filename": {"const": "myosim-fullbody-joint-limits.nhlim"},
+        "magic": {"const": "NHLIM1"},
+        "abi": {"const": 1},
+        "bytes": {"const": 9840},
+        "file_sha256": {"const": "c583611fcedc326a32c6f69504a65e675c8e0adc987c6db622ca0d95a02438d3"},
+        "nq": {"const": 129},
+        "nv": {"const": 128},
+        "row_count": {"const": 122},
+        "record_bytes": {"const": 80},
+        "source_row_count": {"const": 122},
+        "policy_id": {"const": 1},
+        "flags": {"const": 1},
+        "refsafe": {"const": true},
+        "source_archive_sha256": {"const": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975"}
+      }
+    }
+  }
+}
