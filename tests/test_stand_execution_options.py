@@ -134,3 +134,18 @@ def test_feedback_requires_explicit_execution_mode(launch):
     result, argv, _, _ = launch('--muscle-feedback', '10', '1')
     assert result.returncode == 2
     assert argv is None
+
+
+def test_execute_passes_reference_path_feedback(launch):
+    result, argv, _, _ = launch('--execute', '--muscle-path-feedback', '10', '1')
+    assert result.returncode == 0, result.stderr
+    index = argv.index('--stand-muscle-path-feedback')
+    assert argv[index + 1:index + 3] == ['10', '1']
+    assert '--stand-muscle-feedback' not in argv
+
+
+def test_feedback_signals_are_mutually_exclusive(launch):
+    result, argv, _, _ = launch('--execute', '--muscle-feedback', '10', '1',
+                              '--muscle-path-feedback', '10', '1')
+    assert result.returncode == 2
+    assert argv is None
