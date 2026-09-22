@@ -120,3 +120,17 @@ def test_execute_rejects_assistance(launch):
     result, argv, _, _ = launch('--execute', '--assisted-diagnostic')
     assert result.returncode == 2
     assert argv is None
+
+
+def test_execute_passes_explicit_muscle_feedback_gains(launch):
+    result, argv, _, _ = launch('--execute', '--muscle-feedback', '10', '1')
+    assert result.returncode == 0, result.stderr
+    index = argv.index('--stand-muscle-feedback')
+    assert argv[index + 1:index + 3] == ['10', '1']
+    assert '--stand-root-assistance' not in argv
+
+
+def test_feedback_requires_explicit_execution_mode(launch):
+    result, argv, _, _ = launch('--muscle-feedback', '10', '1')
+    assert result.returncode == 2
+    assert argv is None
