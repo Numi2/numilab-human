@@ -442,11 +442,11 @@ fi
 # Rendering is optional; mechanics-only runs cannot qualify visual coverage.
 if [ "${1:-}" = "stand" ]; then
     if [ "${2:-}" = "--help" ] || [ "${2:-}" = "-h" ]; then
-        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-or-NHTENDON3-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..1000000; extended native horizons>] [--timestep <1e-6..1e-3; default 12.5 us>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay] [--mechanics-only] [--assisted-diagnostic] [--no-step-trace] [--execute] [--muscle-feedback <length-gain> <velocity-gain-seconds>; experimental, requires --execute] [--muscle-path-feedback <length-gain> <velocity-gain-seconds>; experimental, requires --execute]"
+        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-or-NHTENDON3-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..1000000; extended native horizons>] [--timestep <1e-6..1e-3; default 12.5 us>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay] [--mechanics-only] [--assisted-diagnostic] [--no-step-trace] [--execute] [--endpoint-energy; accepted-state accounting, requires --execute] [--muscle-feedback <length-gain> <velocity-gain-seconds>; experimental, requires --execute] [--muscle-path-feedback <length-gain> <velocity-gain-seconds>; experimental, requires --execute]"
         exit 0
     fi
     if [ "$#" -lt 6 ]; then
-        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-or-NHTENDON3-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..1000000; extended native horizons>] [--timestep <1e-6..1e-3; default 12.5 us>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay] [--mechanics-only] [--assisted-diagnostic] [--no-step-trace] [--execute] [--muscle-feedback <length-gain> <velocity-gain-seconds>; experimental, requires --execute] [--muscle-path-feedback <length-gain> <velocity-gain-seconds>; experimental, requires --execute]" >&2
+        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-or-NHTENDON3-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..1000000; extended native horizons>] [--timestep <1e-6..1e-3; default 12.5 us>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay] [--mechanics-only] [--assisted-diagnostic] [--no-step-trace] [--execute] [--endpoint-energy; accepted-state accounting, requires --execute] [--muscle-feedback <length-gain> <velocity-gain-seconds>; experimental, requires --execute] [--muscle-path-feedback <length-gain> <velocity-gain-seconds>; experimental, requires --execute]" >&2
         exit 2
     fi
     artifact_directory=$2
@@ -464,6 +464,7 @@ if [ "${1:-}" = "stand" ]; then
     assisted_diagnostic=false
     step_trace=true
     execute_only=false
+    endpoint_energy=false
     muscle_feedback_option=--stand-muscle-feedback
     muscle_feedback_length=
     muscle_feedback_velocity=
@@ -500,6 +501,11 @@ if [ "${1:-}" = "stand" ]; then
                 muscle_feedback_velocity=$3
                 shift 3
                 ;;
+            --endpoint-energy)
+                [ "$endpoint_energy" = false ] || { printf '%s\n' "--endpoint-energy may be given only once" >&2; exit 2; }
+                endpoint_energy=true
+                shift
+                ;;
             --execute)
                 [ "$execute_only" = false ] || { printf '%s\n' "--execute may be given only once" >&2; exit 2; }
                 execute_only=true
@@ -533,6 +539,10 @@ if [ "${1:-}" = "stand" ]; then
     done
     if [ -n "$muscle_feedback_length" ] && [ "$execute_only" = false ]; then
         printf '%s\n' "--muscle-feedback requires --execute" >&2
+        exit 2
+    fi
+    if [ "$endpoint_energy" = true ] && [ "$execute_only" = false ]; then
+        printf '%s\n' "--endpoint-energy requires --execute" >&2
         exit 2
     fi
     if [ "$execute_only" = true ] && [ "$assisted_diagnostic" = true ]; then
@@ -623,6 +633,9 @@ if [ "${1:-}" = "stand" ]; then
         --dimension "$dimension"
     if [ -n "$muscle_feedback_length" ]; then
         set -- "$@" "$muscle_feedback_option" "$muscle_feedback_length" "$muscle_feedback_velocity"
+    fi
+    if [ "$endpoint_energy" = true ]; then
+        set -- "$@" --stand-endpoint-energy
     fi
     if [ "$execute_only" = false ]; then
         set -- "$@" --stand-deterministic-replay
