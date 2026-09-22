@@ -24,6 +24,10 @@ every other source in local generated artifacts.
   exact BodyParts3D source meshes after a bounded Core muscle-force state step;
   the source attribution and non-registration boundary remain unchanged. The
   earlier 18-mesh galleries remain tracked as provenance-preserving milestones.
+  The four terminal PNGs in `Docs/media/unassisted-standing-20260922/`
+  render registered BodyParts3D bone and muscle surfaces at the accepted state
+  after ten simulated seconds; their attribution, source/binary hashes and
+  physical qualification limits are recorded in that directory's README.
 
 ## Z-Anatomy right-calf visual supplement
 
