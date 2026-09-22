@@ -102,3 +102,21 @@ def test_no_step_trace_is_not_silently_repeatable(launch):
     result, argv, _, _ = launch('--no-step-trace', '--no-step-trace')
     assert result.returncode == 2
     assert argv is None
+
+
+def test_execute_runs_requested_horizon_once_without_assistance(launch):
+    result, argv, _, _ = launch(
+        '--execute', '--mechanics-only', '--steps', '10000', '--timestep', '0.001',
+    )
+    assert result.returncode == 0, result.stderr
+    assert '--stand-deterministic-replay' not in argv
+    assert '--persistent-stand-trace' not in argv
+    assert '--stand-root-assistance' not in argv
+    assert argv[argv.index('--muscle-step-count') + 1] == '10000'
+    assert argv[argv.index('--muscle-step-seconds') + 1] == '0.001'
+
+
+def test_execute_rejects_assistance(launch):
+    result, argv, _, _ = launch('--execute', '--assisted-diagnostic')
+    assert result.returncode == 2
+    assert argv is None
