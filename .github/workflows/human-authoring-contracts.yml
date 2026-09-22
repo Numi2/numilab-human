@@ -1,0 +1,69 @@
+name: Human authoring contracts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/numilab_human/**'
+      - 'tests/**'
+      - 'config/**'
+      - 'schemas/**'
+      - '.numi/**'
+      - 'tools/**'
+      - 'pyproject.toml'
+      - 'sources.lock.json'
+      - '.github/workflows/human-authoring-contracts.yml'
+  pull_request:
+    paths:
+      - 'src/numilab_human/**'
+      - 'tests/**'
+      - 'config/**'
+      - 'schemas/**'
+      - '.numi/**'
+      - 'tools/**'
+      - 'pyproject.toml'
+      - 'sources.lock.json'
+      - '.github/workflows/human-authoring-contracts.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  authoring-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install package and test runner
+        run: python -m pip install pytest -e .
+      # These suites are intentionally explicit: a renamed or missing suite
+      # must fail, not silently reduce coverage. Existing equilibrium CI remains.
+      - name: Run ownership and loaded-knee authoring regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pytest -q --junitxml=human-authoring-results.xml \
+            tests/test_ownership.py \
+            tests/test_loaded_anatomy_knee.py \
+            tests/test_loaded_anatomy_knee_source_compliance.py \
+            2>&1 | tee human-authoring-results.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: human-authoring-python-${{ matrix.python-version }}-${{ github.sha }}
+          path: |
+            human-authoring-results.xml
+            human-authoring-results.log
+          if-no-files-found: error
+          retention-days: 14
