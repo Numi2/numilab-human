@@ -91,6 +91,20 @@ def _continuity_transitions() -> list[tuple[str, str, str, float]]:
     ]
 
 
+def _posed_continuity_gates(
+    rest_gate: float, mechanics_reference: dict[str, Any] | None,
+    reference_allowance: float,
+) -> tuple[float, float, float, float]:
+    """One tolerance basis for the source registrar and independent pose audit."""
+    base_gap = rest_gate + POSE_CONTINUITY_ALLOWANCE_M
+    base_patch = INTERFACE_PATCH_GATE_MULTIPLIER * base_gap
+    gap, patch = base_gap, base_patch
+    if mechanics_reference is not None:
+        gap = max(gap, mechanics_reference["minimum_vertex_gap_m"] + reference_allowance)
+        patch = max(patch, mechanics_reference["interface_patch"]["bidirectional_p90_m"] + reference_allowance)
+    return base_gap, base_patch, gap, patch
+
+
 def audit_lower_limb_poses(*, sources: Path, registration_path: Path, artifact: Path) -> dict[str, Any]:
     try:
         import mujoco
@@ -288,26 +302,14 @@ def audit_lower_limb_poses(*, sources: Path, registration_path: Path, artifact: 
                     "minimum_vertex_gap_m": source_gap,
                     "interface_patch": source_patch,
                 }
-            base_posed_gate = rest_gate + POSE_CONTINUITY_ALLOWANCE_M
-            base_posed_patch_gate = INTERFACE_PATCH_GATE_MULTIPLIER * base_posed_gate
-            posed_gate = base_posed_gate
-            posed_patch_gate = base_posed_patch_gate
             reference_allowance = (
                 RIGID_TOE_COMPOUND_REFERENCE_ALLOWANCE_M
                 if "metatarsal_to" in transition_name
                 else MECHANICS_REFERENCE_INTERFACE_ALLOWANCE_M
             )
-            if mechanics_reference is not None:
-                posed_gate = max(
-                    posed_gate,
-                    mechanics_reference["minimum_vertex_gap_m"]
-                    + reference_allowance,
-                )
-                posed_patch_gate = max(
-                    posed_patch_gate,
-                    mechanics_reference["interface_patch"]["bidirectional_p90_m"]
-                    + reference_allowance,
-                )
+            base_posed_gate, base_posed_patch_gate, posed_gate, posed_patch_gate = _posed_continuity_gates(
+                rest_gate, mechanics_reference, reference_allowance,
+            )
             record = {
                 "name": transition_name,
                 "source_member_ids": [first_member, second_member],

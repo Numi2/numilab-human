@@ -533,6 +533,7 @@ def myosim_lower_limb_source_registration(arguments: argparse.Namespace) -> int:
     command = [
         str(exporter), "-m", "numilab_human.lower_limb_source_registration",
         "--sources", str(arguments.sources.resolve()),
+        "--artifact", str(arguments.artifact.resolve()),
         "--registration", str(arguments.registration.resolve()),
         "--tendon-manifest", str(arguments.tendon_manifest.resolve()),
         "--output", str(output),
@@ -1514,6 +1515,7 @@ def parser() -> argparse.ArgumentParser:
         help="propose bilateral source-mesh-constrained BodyParts3D lower-limb registration",
     )
     lower_limb_source_registration_parser.add_argument("--sources", type=Path, required=True)
+    lower_limb_source_registration_parser.add_argument("--artifact", type=Path, required=True)
     lower_limb_source_registration_parser.add_argument("--registration", type=Path, required=True)
     lower_limb_source_registration_parser.add_argument("--tendon-manifest", type=Path, required=True)
     lower_limb_source_registration_parser.add_argument("--output", type=Path, required=True)

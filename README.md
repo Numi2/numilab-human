@@ -580,6 +580,16 @@ and retains the existing audit JSON, including gap witnesses, tolerances,
 input/runtime hashes and a reproduction command. Inspect this output even when
 the native renderer successfully admits the same pose.
 
+The existing lower-limb source registrar also requires `--artifact`. It freshly
+checks an existing v3 registration against the pinned source meshes before
+preserving valid segment fits. Its bounded interface refinement now carries
+each proposed correction through the same eight source poses as the audit,
+including deep crouch. It retains the 1.5 mm translation bound, source-fit and
+attachment gates, and the audit's original gap and patch tolerances. Recompile
+the paired bone and tendon payloads after a correction, then run the independent
+pose audit; a repaired interface does not imply that every bilateral or loaded
+mechanics gate passes.
+
 ```sh
 # No Python process is started by this command. `--metal` additionally
 # executes full-body pose/Jacobians plus all MyoSim route and static-force
