@@ -590,6 +590,14 @@ the paired bone and tendon payloads after a correction, then run the independent
 pose audit; a repaired interface does not imply that every bilateral or loaded
 mechanics gate passes.
 
+The lower-limb audit recomputes regional source-surface fits and femoral-head
+gates from the actual meshes. The source registrar and, for lower-limb v3
+registrations, the bone compiler also check total orientation and scale against
+the common atlas frame reconstructed from pinned source vertices and bound
+runtime rest poses. Stored fit receipts and an
+editable common-frame matrix cannot admit a flipped or repeatedly scaled bone.
+The collective toe mesh retains its existing inherited rigid-foot disposition.
+
 ```sh
 # No Python process is started by this command. `--metal` additionally
 # executes full-body pose/Jacobians plus all MyoSim route and static-force

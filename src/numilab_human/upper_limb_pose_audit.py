@@ -52,6 +52,24 @@ def _finish_pose_audit(result: dict[str, Any], region: str) -> dict[str, Any]:
             f"default source/Core frame: member={result.get('default_frame_worst_member')} "
             f"residual_m={residual:.12g}, allowed_m={allowed:.12g}"
         )
+    for item in result.get("source_geometry_checks", []):
+        if item["passed"]:
+            continue
+        details = []
+        for check in item["source_frame_checks"]:
+            if not check["passed"]:
+                details.append(
+                    f"{check['source_member_id']}:atlas_rotation_rad={check['atlas_relative_rotation_angle_rad']:.12g},"
+                    f"allowed_rad={check['maximum_rotation_angle_rad']:.12g},"
+                    f"scale={check['atlas_relative_uniform_scale']:.12g},allowed_scale={check['uniform_scale_bounds']}"
+                )
+        surface = item.get("held_out_surface_metrics")
+        if surface is not None and surface["p90_m"] > item["maximum_held_out_p90_m"]:
+            details.append(f"source_surface_p90_m={surface['p90_m']:.12g},allowed_m={item['maximum_held_out_p90_m']:.12g}")
+        articular = item.get("femoral_head_articular_gate")
+        if articular is not None and not articular["passed"]:
+            details.append(f"femoral_head_articular_gate={articular}")
+        failures.append(f"{region} source geometry:{item['myosim_body']} members={item['source_member_ids']}: " + "; ".join(details))
     for pose in result["poses"]:
         for item in pose["continuity"]:
             if not item["passed"]:

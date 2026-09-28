@@ -16,7 +16,10 @@ from pathlib import Path
 from typing import Any
 
 from . import model as human_model
-from .lower_limb_source_registration import SCHEMA as LOWER_REGISTRATION_SCHEMA
+from .lower_limb_source_registration import (
+    SCHEMA as LOWER_REGISTRATION_SCHEMA, _BODY_GATES, _lower_limb_source_frame_checks,
+    _femoral_head_articular_metrics,
+)
 from .myosim_bone_proximity import _compiled_meshes_by_body
 from .myosim_export import export_fullbody
 from .upper_limb_pose_audit import PoseAuditError, _finish_pose_audit, _pose_qpos
@@ -26,6 +29,7 @@ from .upper_limb_registration import (
     _interface_patch_metrics,
     _minimum_gap,
     _rotation_xyzw,
+    _surface_split_metrics, _body_frame_to_core,
 )
 
 
@@ -124,7 +128,9 @@ def audit_lower_limb_poses(*, sources: Path, registration_path: Path, artifact: 
         or lower_receipt.get("schema") != LOWER_REGISTRATION_SCHEMA
     ):
         raise RuntimeError("lower-limb pose audit requires admitted lower-limb registration v3")
-    runtime_reference, _ = human_model._bodyparts_runtime_bindings(registration, artifact)
+    runtime_reference, runtime_bodies = human_model._bodyparts_runtime_bindings(registration, artifact)
+    common_frame = human_model._bodyparts_source_common_frame(sources, registration, runtime_bodies)
+    source_frame_checks = _lower_limb_source_frame_checks(registration, common_frame, runtime_bodies)
 
     exported = export_fullbody(sources)
     if exported.get("source") != registration["source"]["myosim"]["source"]:
@@ -200,6 +206,46 @@ def audit_lower_limb_poses(*, sources: Path, registration_path: Path, artifact: 
         raise RuntimeError(
             "lower-limb pose audit is missing bodies: " + ", ".join(missing_bodies)
         )
+
+    source_geometry_checks = []
+    for name in sorted(LOWER_BODY_NAMES):
+        anchors = anchors_by_name[name]
+        body_id = int(anchors[0]["target"]["source_body_id"])
+        frame_checks = [check for check in source_frame_checks if check["myosim_body"] == name]
+        record = {
+            "myosim_body": name, "source_member_ids": [a["source"]["member_id"] for a in anchors],
+            "source_frame_checks": frame_checks, "passed": all(c["passed"] for c in frame_checks),
+        }
+        if name.startswith("toes_"):
+            record["source_surface_fit_disposition"] = "inherited_complete_rigid_foot_transform_not_collective_toe_mesh_refit"
+        else:
+            vertices = np.concatenate([local_vertices[a["source"]["member_id"]][1] for a in anchors])
+            training, held_out, training_count, held_out_count = _surface_split_metrics(
+                vertices, source_local_vertices[body_id], np.eye(3), np.zeros(3), np,
+            )
+            gate = _BODY_GATES[name.rsplit("_", 1)[0]]["held_out_p90_m"]
+            record.update({
+                "training_surface_metrics": training, "held_out_surface_metrics": held_out,
+                "training_vertex_count": training_count, "held_out_vertex_count": held_out_count,
+                "maximum_held_out_p90_m": gate,
+            })
+            record["passed"] = record["passed"] and held_out["p90_m"] <= gate
+            if name.startswith("femur_"):
+                source_body = source_bodies[body_id]
+                body_record = {
+                    "source_body": source_body,
+                    "vertices": _body_frame_to_core(vertices, source_body, np),
+                    "source_vertices": _body_frame_to_core(source_local_vertices[body_id], source_body, np),
+                }
+                try:
+                    articular = _femoral_head_articular_metrics(body_record, {
+                        "rotation": np.eye(3), "translation": np.zeros(3), "uniform_scale": 1.,
+                    }, np)
+                except RuntimeError as error:
+                    articular = {"passed": False, "error": str(error)}
+                record["femoral_head_articular_gate"] = articular
+                record["passed"] = record["passed"] and articular["passed"]
+        source_geometry_checks.append(record)
 
     transitions = _continuity_transitions()
     expected_members = {
@@ -417,6 +463,8 @@ def audit_lower_limb_poses(*, sources: Path, registration_path: Path, artifact: 
         },
         "source_body_count": len(LOWER_BODY_NAMES),
         "source_member_count": len(local_vertices),
+        "source_common_frame": common_frame,
+        "source_geometry_checks": source_geometry_checks,
         "pose_count": len(POSE_SUITE),
         "continuity_transition_count_per_pose": len(transitions),
         "continuity_evaluation_count": len(all_continuity),
@@ -442,7 +490,9 @@ def audit_lower_limb_poses(*, sources: Path, registration_path: Path, artifact: 
         "evidence_boundary": (
             "Rigid BodyParts3D lower-limb bones were replayed through pinned MyoSim "
             "kinematics and exact polynomial joint-equality projection. Passing proves "
-            "body ownership, default-frame identity, bounded minimum-gap and robust "
+            "body ownership, default-frame identity, freshly measured regional source-surface "
+            "fits and femoral-head gates, total orientation/scale bounds against the source-derived "
+            "atlas frame, bounded minimum-gap and robust "
             "bidirectional interface-patch continuity relative to the same-pose pinned "
             "mechanics surfaces, and bilateral parity for this "
             "pose suite. The complete toe compound retains one MTP body. This is not "

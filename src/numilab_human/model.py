@@ -5066,6 +5066,41 @@ def _bodyparts_registration_matrix(
     ] + [[0.0, 0.0, 0.0, 1.0]]
 
 
+def _bodyparts_source_common_frame(
+    sources: Path, registration: dict[str, Any],
+    runtime_bodies: dict[str, tuple[int, dict[str, Any]]],
+) -> dict[str, Any]:
+    """Recompute the existing atlas frame from pinned meshes and bound rest COMs."""
+    anchors = {a["source"]["member_id"]: a for a in registration["anchors"]}
+    source_points, target_points = [], []
+    archive_hashes: dict[Path, str] = {}
+    for spec in _BODYPARTS_MYOSIM_FIT_BONE_ANCHORS:
+        member_id, name = spec["member_id"], spec["myosim_body"]
+        anchor = anchors.get(member_id)
+        if anchor is None or anchor["target"]["name"] != name or name not in runtime_bodies:
+            raise ImportError(f"BodyParts3D common frame has no bound fit anchor {member_id} ({name})")
+        archive, member, obj = _bodyparts_obj_member(sources, spec["hierarchy"], member_id)
+        if archive not in archive_hashes:
+            archive_hashes[archive] = sha256(archive)
+        if (anchor["source"].get("archive_sha256") != archive_hashes[archive]
+                or anchor["source"].get("member_sha256") != hashlib.sha256(obj).hexdigest()):
+            raise ImportError(f"BodyParts3D common-frame source drift: {member_id} ({name})")
+        vertices, _ = _bodyparts_obj_triangles(obj, member)
+        source_points.append([.001 * sum(v[i] for v in vertices) / len(vertices) for i in range(3)])
+        target_points.append(runtime_bodies[name][1]["position_world_m"])
+    fit = _bodyparts_similarity_fit(source_points, target_points)
+    return {
+        "method": "source_mesh_centroid_to_bound_runtime_rest_COM_proper_signed_axis_similarity",
+        "anchor_count": len(source_points),
+        "global_source_mm_to_myosim_world_m": _bodyparts_registration_matrix(
+            fit["rotation"], fit["scale_after_mm_to_m"], fit["translation_world_m"],
+        ),
+        "bodyparts_archive_sha256": {p.name: value for p, value in archive_hashes.items()},
+        "rms_vertex_centroid_to_com_residual_m": fit["rms_residual_m"],
+        "evidence_boundary": "Atlas axis/scale basis only; mesh centroids are not homologous inertial COM landmarks.",
+    }
+
+
 def _bodyparts_local_registration_matrix(
     global_matrix: list[list[float]], body_com_world_m: list[float], body_quaternion_world_xyzw: list[float],
 ) -> list[list[float]]:
@@ -6135,6 +6170,19 @@ def bodyparts_myosim_bone_visual_payload(
     if not isinstance(anchors, list) or len(anchors) != len(_BODYPARTS_MYOSIM_BONE_ANCHORS):
         raise ImportError("BodyParts3D visual payload requires the complete visual-skeleton anchor set")
     runtime_reference, runtime_bodies = _bodyparts_runtime_bindings(registration, artifact)
+    lower_frame_admission = None
+    from .lower_limb_source_registration import SCHEMA as lower_schema, _lower_limb_source_frame_checks
+    lower_receipt = registration.get("lower_limb_source_mesh_registration")
+    if isinstance(lower_receipt, dict) and lower_receipt.get("schema") == lower_schema:
+        common_frame = _bodyparts_source_common_frame(sources, registration, runtime_bodies)
+        frame_checks = _lower_limb_source_frame_checks(registration, common_frame, runtime_bodies)
+        failed_frames = [check for check in frame_checks if not check["passed"]]
+        if failed_frames:
+            raise ImportError(
+                f"BodyParts3D lower-limb atlas orientation/scale failed: {failed_frames}; "
+                f"registration_sha256={sha256(registration_file)}; rigid_sha256={runtime_reference['rigid']['sha256']}"
+            )
+        lower_frame_admission = {"source_common_frame": common_frame, "checks": frame_checks}
     member_body_indices = {
         str(anchor.get("source", {}).get("member_id")): int(
             anchor.get("target", {}).get("core_body_index", -1)
@@ -6461,6 +6509,7 @@ def bodyparts_myosim_bone_visual_payload(
             "anchors": provenance_anchors,
         },
         "runtime_binding": "one source-local bone instance per Core articulated inertial body; local translation, rotation, and uniform scale are carried in the native payload",
+        **({"lower_limb_source_frame_admission": lower_frame_admission} if lower_frame_admission is not None else {}),
         **({
             "source_component_enthesis_registration": source_component_enthesis_receipt,
         } if source_component_enthesis_receipt is not None else {}),

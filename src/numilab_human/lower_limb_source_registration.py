@@ -126,6 +126,56 @@ def _fit_angle(rotation: Any, np: Any) -> float:
     return math.acos(cosine)
 
 
+def _source_frame_check(
+    anchor: dict[str, Any], common_frame: dict[str, Any], world_rotation: Any,
+    matrix: Any = None,
+) -> dict[str, Any]:
+    """Measure the emitted transform against the independently reconstructed atlas frame."""
+    name = anchor["target"]["name"]
+    family = name.rsplit("_", 1)[0]
+    gate = _BODY_GATES["calcn" if family == "toes" else family]
+    local = matrix if matrix is not None else anchor["registration"]["source_obj_mm_to_core_inertial_body_m"]
+    human_model._bodyparts_visual_local_pose(local, f"lower-limb {anchor['source']['member_id']} ({name})")
+    linear = human_model._matrix_product(world_rotation, [row[:3] for row in local[:3]])
+    common = [row[:3] for row in common_frame["global_source_mm_to_myosim_world_m"][:3]]
+    scale = human_model._matrix3_determinant(linear) ** (1. / 3.)
+    common_scale = human_model._matrix3_determinant(common) ** (1. / 3.)
+    rotation = [[value / scale for value in row] for row in linear]
+    common_rotation = [[value / common_scale for value in row] for row in common]
+    relative = human_model._matrix_product(rotation, human_model._matrix_transpose(common_rotation))
+    angle = math.acos(max(-1., min(1., (sum(relative[i][i] for i in range(3)) - 1.) / 2.)))
+    ratio = scale / common_scale
+    return {
+        "source_member_id": anchor["source"]["member_id"], "myosim_body": name,
+        "atlas_relative_rotation_angle_rad": angle, "maximum_rotation_angle_rad": gate["rotation_rad"],
+        "atlas_relative_uniform_scale": ratio,
+        "uniform_scale_bounds": [gate["minimum_scale"], gate["maximum_scale"]],
+        "passed": (angle <= gate["rotation_rad"] + 1e-12
+                   and gate["minimum_scale"] - 1e-12 <= ratio <= gate["maximum_scale"] + 1e-12),
+    }
+
+
+def _lower_limb_source_frame_checks(
+    registration: dict[str, Any], common_frame: dict[str, Any], runtime_bodies: Any,
+) -> list[dict[str, Any]]:
+    return [
+        _source_frame_check(anchor, common_frame, runtime_bodies[anchor["target"]["name"]][1]["rotation_world"])
+        for anchor in registration["anchors"]
+        if anchor["target"]["name"].rsplit("_", 1)[0] in {*_BODY_GATES, "toes"}
+    ]
+
+
+def _fit_source_frame_checks(record: dict[str, Any], fit: dict[str, Any], common_frame: Any, np: Any) -> list[dict[str, Any]]:
+    checks = []
+    for anchor in record["anchors"]:
+        matrix = np.asarray(anchor["registration"]["source_obj_mm_to_core_inertial_body_m"]).copy()
+        scale = float(fit.get("uniform_scale", 1.))
+        matrix[:3, :3] = scale * fit["rotation"] @ matrix[:3, :3]
+        matrix[:3, 3] = scale * fit["rotation"] @ matrix[:3, 3] + fit["translation"]
+        checks.append(_source_frame_check(anchor, common_frame, record["runtime_body"]["rotation_world"], matrix.tolist()))
+    return checks
+
+
 def _fit_passes(name: str, fit: dict[str, Any], np: Any) -> bool:
     gate = _BODY_GATES[_body_family(name)]
     scale = float(fit.get("uniform_scale", 1.0))
@@ -137,6 +187,7 @@ def _fit_passes(name: str, fit: dict[str, Any], np: Any) -> bool:
         and gate["minimum_scale"] - 1.0e-12 <= scale
         and scale <= gate["maximum_scale"] + 1.0e-12
         and fit.get("femoral_head_articular_gate", {"passed": True})["passed"]
+        and all(check["passed"] for check in fit.get("source_frame_checks", []))
     )
 
 
@@ -298,7 +349,8 @@ def propose_lower_limb_source_registration(
     tendon_manifest = json.loads(tendon_manifest_path.read_text(encoding="utf-8"))
     if registration.get("schema") != REGISTRATION_SCHEMA:
         raise RuntimeError("lower-limb source registration requires registration candidate v2")
-    runtime_reference, _ = human_model._bodyparts_runtime_bindings(registration, artifact)
+    runtime_reference, runtime_bodies = human_model._bodyparts_runtime_bindings(registration, artifact)
+    common_frame = human_model._bodyparts_source_common_frame(sources, registration, runtime_bodies)
     if tendon_manifest.get("schema") not in TENDON_SCHEMAS:
         raise RuntimeError("lower-limb source registration requires NHTENDON2 or NHTENDON3")
     lower_registration = registration.get("lower_limb_source_mesh_registration")
@@ -385,6 +437,7 @@ def propose_lower_limb_source_registration(
             "anchors": anchors,
             "target": target,
             "source_body": source_body,
+            "runtime_body": runtime_bodies[name][1],
             "vertices": np.concatenate(vertices),
             "triangles": np.concatenate(triangles),
             "member_vertices": member_vertices,
@@ -408,6 +461,7 @@ def propose_lower_limb_source_registration(
                 }
                 if name in {"femur_r", "femur_l"}:
                     current_fit = _refine_femoral_head_center(body_records[name], current_fit, np)
+                current_fit["source_frame_checks"] = _fit_source_frame_checks(body_records[name], current_fit, common_frame, np)
                 if _fit_passes(name, current_fit, np):
                     body_records[name]["fit_candidates"] = [current_fit]
                     continue
@@ -422,6 +476,8 @@ def propose_lower_limb_source_registration(
                     _refine_femoral_head_center(body_records[name], fit, np)
                     for fit in body_records[name]["fit_candidates"]
                 ]
+            for fit in body_records[name]["fit_candidates"]:
+                fit["source_frame_checks"] = _fit_source_frame_checks(body_records[name], fit, common_frame, np)
 
     plane_samples = []
     for family in _BODY_GATES:
@@ -500,7 +556,8 @@ def propose_lower_limb_source_registration(
                         f"translation={float(np.linalg.norm(fit['translation'])):.6f},"
                         f"head_center={articular.get('center_residual_m', 0.0):.6f},"
                         f"head_axis={articular.get('candidate_center_to_mechanics_axis_m', 0.0):.6f},"
-                        f"passes={_fit_passes(name, fit, np)}"
+                        f"passes={_fit_passes(name, fit, np)},"
+                        f"failed_atlas_frames={[check for check in fit.get('source_frame_checks', []) if not check['passed']]}"
                     )
                 return ";".join(summaries)
             raise RuntimeError(
@@ -858,6 +915,11 @@ def propose_lower_limb_source_registration(
             )
         receipt["mirrored_surface_metrics"] = symmetry
 
+    for name, fit in chosen.items():
+        fit["source_frame_checks"] = _fit_source_frame_checks(body_records[name], fit, common_frame, np)
+        if not all(check["passed"] for check in fit["source_frame_checks"]):
+            raise RuntimeError(f"lower-limb source registration violates atlas orientation/scale for {name}: {fit['source_frame_checks']}")
+
     for side in ("r", "l"):
         toe_name = f"toes_{side}"
         endpoint_points = np.asarray([
@@ -961,6 +1023,7 @@ def propose_lower_limb_source_registration(
             "training_vertex_count": int(fit["training_vertex_count"]),
             "held_out_vertex_count": int(fit["held_out_vertex_count"]),
             "independent_articulation_count": 0,
+            "source_frame_checks": fit["source_frame_checks"],
         }
         if inherited:
             receipt["inherited_from"] = inherited
@@ -1000,7 +1063,9 @@ def propose_lower_limb_source_registration(
             anchor["registration"]["status"] = (
                 "provisional_lower_limb_source_mesh_bounded_similarity_registration"
             )
-            anchor["registration"]["lower_limb_source_mesh_registration"] = receipt
+            anchor["registration"]["lower_limb_source_mesh_registration"] = {
+                key: value for key, value in receipt.items() if key != "source_frame_checks"
+            }
         body_receipts.append({"myosim_body": name, **receipt})
 
     output["lower_limb_source_mesh_registration"] = {
@@ -1011,6 +1076,7 @@ def propose_lower_limb_source_registration(
             "tendon_manifest": {"file": tendon_manifest_path.name, "sha256": _sha256(tendon_manifest_path)},
             "myosim_archive_sha256": next(iter(source_hashes)),
             "runtime_reference": runtime_reference,
+            "source_common_frame": common_frame,
         },
         "sagittal_mirror_plane_world_x_m": sagittal_plane_x,
         "direct_source_mesh_fit_body_count": len(selected_names),
