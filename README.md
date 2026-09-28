@@ -598,6 +598,15 @@ runtime rest poses. Stored fit receipts and an
 editable common-frame matrix cannot admit a flipped or repeatedly scaled bone.
 The collective toe mesh retains its existing inherited rigid-foot disposition.
 
+The native pose renderer checks all 21 existing axial transitions on complete
+source-bound bone payloads using the executed Metal body poses. It retains the
+8 mm minimum-gap gate and adds the regional audits' opposed 2%/p90 interface
+patch at 1.25 times that gate, so isolated touching vertices cannot admit a
+disconnected spine. Each failure reports the interface, bone stable IDs,
+measured distances and tolerances before rendering. Legacy or partial payloads
+remain readable and explicitly report axial verification as unavailable. These
+checks establish rigid bone proximity, not disc, cartilage or loaded mechanics.
+
 ```sh
 # No Python process is started by this command. `--metal` additionally
 # executes full-body pose/Jacobians plus all MyoSim route and static-force
