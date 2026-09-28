@@ -5858,7 +5858,7 @@ def bodyparts_myosim_attachment_surface_registration_candidate(
 
 
 _BODYPARTS_MYOSIM_BONE_VISUAL_MAGIC = b"NHBONES1"
-_BODYPARTS_MYOSIM_BONE_VISUAL_ABI = 2
+_BODYPARTS_MYOSIM_BONE_VISUAL_ABI = 3
 _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_MAGIC = b"NHTISS2\0"
 _BODYPARTS_MYOSIM_SOFT_TISSUE_VISUAL_ABI = 3
 # ``NHTISS2`` remains the compact two-body payload used by the focused legacy
@@ -6023,8 +6023,82 @@ def _bodyparts_bounded_vertex_gap(
     return math.sqrt(best_squared)
 
 
+def _bodyparts_runtime_bindings(
+    registration: dict[str, Any], artifact: Path,
+) -> tuple[dict[str, Any], dict[str, tuple[int, dict[str, Any]]]]:
+    """Bind registered source frames to the consumed rigid payload, not IDs alone."""
+    artifact = artifact.resolve()
+    manifest_path = artifact / "myosim-fullbody-reference.manifest.json"
+    manifest = read_json(manifest_path)
+    if manifest.get("schema") != "numi.human.myosim-fullbody-reference.v1":
+        raise ImportError("BodyParts3D runtime binding requires a MyoSim full-body reference artifact")
+    source = manifest.get("source")
+    registration_source = registration.get("source")
+    registered_myosim = registration_source.get("myosim") if isinstance(registration_source, dict) else None
+    registered_source = registered_myosim.get("source") if isinstance(registered_myosim, dict) else None
+    if not isinstance(source, dict) or not isinstance(registered_source, dict) or source != registered_source:
+        raise ImportError("BodyParts3D registration and runtime reference use different MyoSim sources")
+    payloads = manifest.get("payloads")
+    descriptor = payloads.get("rigid") if isinstance(payloads, dict) else None
+    if not isinstance(descriptor, dict):
+        raise ImportError("BodyParts3D runtime reference has no rigid payload descriptor")
+    context = _numi_human_fixed_cluster_context(artifact, manifest, descriptor)
+    body_by_name = {pose["name"]: (index, pose) for index, pose in context["poses"].items()}
+    if len(body_by_name) != len(context["poses"]):
+        raise ImportError("BodyParts3D runtime reference has duplicate source body names")
+    anchors = registration.get("anchors")
+    if not isinstance(anchors, list) or not anchors:
+        raise ImportError("BodyParts3D runtime binding has no registered source anchors")
+    seen_members: set[str] = set()
+    for anchor in anchors:
+        if not isinstance(anchor, dict):
+            raise ImportError("BodyParts3D runtime binding has a malformed anchor")
+        target, source_mesh, transform = (
+            anchor.get("target"), anchor.get("source"), anchor.get("registration")
+        )
+        if not isinstance(target, dict) or not isinstance(source_mesh, dict) or not isinstance(transform, dict):
+            raise ImportError("BodyParts3D runtime binding has an incomplete anchor")
+        member, name = source_mesh.get("member_id"), target.get("name")
+        if not isinstance(member, str) or member in seen_members or not isinstance(name, str) or name not in body_by_name:
+            raise ImportError(f"BodyParts3D source member {member} has a duplicate or unresolved body {name}")
+        seen_members.add(member)
+        core_index, body = body_by_name[name]
+        source_id = target.get("source_body_id")
+        actual_core = target.get("core_body_index")
+        if type(source_id) is not int or source_id != body["source_body_id"] or type(actual_core) is not int or actual_core != core_index:
+            raise ImportError(
+                f"BodyParts3D {member} ({name}) owner mismatch: registered source/Core "
+                f"IDs {source_id}/{actual_core}, NHRIGID2 requires "
+                f"{body['source_body_id']}/{core_index}; "
+                f"rigid_sha256={context['rigid_payload_sha256']}"
+            )
+        position = _myosim_vector(target.get("default_com_position_world_m"), f"BodyParts3D {member} target COM")
+        quaternion = target.get("default_inertial_quaternion_world_xyzw")
+        rotation = _myosim_matrix_from_quaternion_xyzw(quaternion if isinstance(quaternion, list) else [])
+        position_error = max(abs(a - b) for a, b in zip(position, body["position_world_m"], strict=True))
+        rotation_error = max(abs(rotation[i][j] - body["rotation_world"][i][j]) for i in range(3) for j in range(3))
+        # Same source-frame identity tolerance used by the regional pose audits.
+        if max(position_error, rotation_error) > 1.0e-9:
+            raise ImportError(
+                f"BodyParts3D {member} ({name}) runtime rest-frame drift: "
+                f"COM error={position_error:.12g} m, rotation error={rotation_error:.12g}; "
+                f"source-frame identity tolerance=1e-9; rigid_sha256={context['rigid_payload_sha256']}"
+            )
+        _bodyparts_visual_local_pose(
+            transform.get("source_obj_mm_to_core_inertial_body_m"),
+            f"BodyParts3D {member} ({name}) local transform",
+        )
+    return {
+        "manifest": {"file": str(manifest_path), "sha256": sha256(manifest_path)},
+        "rigid": {"file": str(artifact / descriptor["file"]), "sha256": descriptor["sha256"], "bytes": descriptor["bytes"]},
+        "source_archive_sha256": source["archive_sha256"],
+        "bound_anchor_count": len(anchors),
+    }, body_by_name
+
+
 def bodyparts_myosim_bone_visual_payload(
     sources: Path, anatomy: dict[str, Any], registration_path: Path, output: Path,
+    *, artifact: Path,
 ) -> dict[str, Any]:
     """Prepare exact visual-skeleton triangles for the native articulated renderer.
 
@@ -6060,6 +6134,7 @@ def bodyparts_myosim_bone_visual_payload(
     anchors = registration.get("anchors")
     if not isinstance(anchors, list) or len(anchors) != len(_BODYPARTS_MYOSIM_BONE_ANCHORS):
         raise ImportError("BodyParts3D visual payload requires the complete visual-skeleton anchor set")
+    runtime_reference, runtime_bodies = _bodyparts_runtime_bindings(registration, artifact)
     member_body_indices = {
         str(anchor.get("source", {}).get("member_id")): int(
             anchor.get("target", {}).get("core_body_index", -1)
@@ -6200,12 +6275,14 @@ def bodyparts_myosim_bone_visual_payload(
             ))
         indices_payload.extend(first_vertex + index for triangle in triangles for index in triangle)
         records_payload.append(struct.pack(
-            "<6I8f", core_body_index, first_vertex, len(vertices_mm), first_index,
+            "<6I8fI", core_body_index, first_vertex, len(vertices_mm), first_index,
             len(triangles) * 3, stable_id, *translation, *quaternion, scale,
+            runtime_bodies[target_record["name"]][1]["source_record_index"],
         ))
         provenance_anchors.append({
             "member_id": specification["member_id"], "member_sha256": source_record["member_sha256"],
             "core_body_index": core_body_index, "myosim_body": specification["myosim_body"],
+            "source_record_index": runtime_bodies[target_record["name"]][1]["source_record_index"],
             "vertex_count": len(vertices_mm), "triangle_count": len(triangles),
         })
     axial_transitions: list[dict[str, Any]] = []
@@ -6380,6 +6457,7 @@ def bodyparts_myosim_bone_visual_payload(
         "source": {
             "registration": {"file": registration_file.name, "sha256": sha256(registration_file)},
             "bodyparts": expected_bodyparts, "myosim_source_archive_sha256": source_sha,
+            "runtime_reference": runtime_reference,
             "anchors": provenance_anchors,
         },
         "runtime_binding": "one source-local bone instance per Core articulated inertial body; local translation, rotation, and uniform scale are carried in the native payload",
@@ -7846,25 +7924,30 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
     )
     if (
         magic != _BODYPARTS_MYOSIM_BONE_VISUAL_MAGIC
-        or abi != _BODYPARTS_MYOSIM_BONE_VISUAL_ABI
+        or abi not in (2, _BODYPARTS_MYOSIM_BONE_VISUAL_ABI)
         or bone_count == 0 or bone_count != len(anchors)
         or embedded_source.hex() != source_sha
         or descriptor.get("registration_fingerprint32") != f"{fingerprint:08x}"
     ):
         raise ImportError("Numi Human tendon envelope NHBONES1 identity is invalid")
-    record_size = struct.calcsize("<6I8f")
+    record_format = "<6I8fI" if abi == 3 else "<6I8f"
+    record_size = struct.calcsize(record_format)
     vertex_size = struct.calcsize("<6f")
     expected_size = header_size + record_size * bone_count + vertex_size * vertex_count + 4 * index_count
     if len(raw) != expected_size:
         raise ImportError("Numi Human tendon envelope NHBONES1 length is invalid")
     offset = header_size
-    records = [struct.unpack_from("<6I8f", raw, offset + record_size * index) for index in range(bone_count)]
+    records = [struct.unpack_from(record_format, raw, offset + record_size * index) for index in range(bone_count)]
     offset += record_size * bone_count
     vertices = [struct.unpack_from("<6f", raw, offset + vertex_size * index) for index in range(vertex_count)]
     offset += vertex_size * vertex_count
     indices = struct.unpack_from(f"<{index_count}I", raw, offset)
     by_body: dict[int, list[dict[str, Any]]] = defaultdict(list)
     for stable_id, (record, anchor) in enumerate(zip(records, anchors, strict=True), start=1):
+        if abi == 3:
+            if not isinstance(anchor, dict) or anchor.get("source_record_index") != record[-1]:
+                raise ImportError("Numi Human tendon envelope bone source owner identity drifted")
+            record = record[:-1]
         body_index, first_vertex, count, first_index, count_indices, record_stable_id, *pose = record
         if (
             record_stable_id != stable_id or count == 0 or count_indices == 0 or count_indices % 3 != 0
@@ -7932,8 +8015,8 @@ def _numi_human_fixed_cluster_context(
     if len(raw) < header_size + 96 + 48:
         raise ImportError("Numi Human fixed-cluster rigid payload is truncated")
     (
-        magic, abi, _engine_abi, source_body_count, body_count, joint_count,
-        _nq, _nv, reserved0, virtual_count, reserved1, embedded_source,
+        magic, abi, engine_abi, source_body_count, body_count, joint_count,
+        nq, nv, reserved0, virtual_count, reserved1, embedded_source,
     ) = struct.unpack_from("<8s10I32s", raw)
     source = manifest.get("source")
     source_sha = source.get("archive_sha256") if isinstance(source, dict) else None
@@ -7945,6 +8028,9 @@ def _numi_human_fixed_cluster_context(
     if (
         magic != _MYOSIM_CORE_REFERENCE_MAGIC
         or abi != _MYOSIM_CORE_REFERENCE_ABI
+        or engine_abi != _MR_ENGINE_ABI_VERSION
+        or not 0 < source_body_count <= body_count
+        or joint_count + 1 != body_count or nq != nv + 1
         or not isinstance(source_sha, str) or embedded_source.hex() != source_sha
         or reserved0 != 0 or reserved1 != 0
         or not isinstance(body_order, list) or len(body_order) != body_count
@@ -7956,8 +8042,11 @@ def _numi_human_fixed_cluster_context(
         raise ImportError("Numi Human fixed-cluster rigid identity is invalid")
     body_offset = header_size + 96 + 48
     joint_offset = body_offset + 160 * body_count
-    if joint_offset + 144 * joint_count > len(raw):
-        raise ImportError("Numi Human fixed-cluster rigid tables are truncated")
+    map_offset = joint_offset + 144 * joint_count + 64 * nv + 4 * (nq + nv)
+    if len(raw) != map_offset + 32 * source_body_count:
+        raise ImportError("Numi Human fixed-cluster rigid table counts disagree with payload bytes")
+    source_to_core = struct.unpack_from(f"<{source_body_count}I", raw, map_offset)
+    source_pose_offset = map_offset + 4 * source_body_count
     relationships: dict[int, dict[str, int]] = {}
     for body_index in range(body_count):
         _, parent_body, inbound_joint, _ = struct.unpack_from(
@@ -7983,27 +8072,44 @@ def _numi_human_fixed_cluster_context(
             "joint_nv": joint_nv,
         }
     poses: dict[int, dict[str, Any]] = {}
-    for record in source_records:
+    previous_source_id = -1
+    for ordinal, record in enumerate(source_records):
         if not isinstance(record, dict):
             raise ImportError("Numi Human fixed-cluster source pose is malformed")
         body_index = record.get("core_body_index")
+        source_id = record.get("source_body_id")
         name = record.get("name")
         position = record.get("default_com_position_world_m")
         quaternion = record.get("default_inertial_quaternion_world_xyzw")
         if (
-            not isinstance(body_index, int) or not 0 <= body_index < body_count
+            type(body_index) is not int or not 0 <= body_index < body_count
             or body_index in poses or body_order[body_index] != name
             or not isinstance(name, str)
+            or type(source_id) is not int or not 0 <= source_id < 2**32 or source_id <= previous_source_id
+            or body_index != source_to_core[ordinal]
         ):
-            raise ImportError("Numi Human fixed-cluster source pose identity drifted")
+            raise ImportError(
+                f"Numi Human source body {name} (source ID {source_id}) Core index "
+                f"{body_index} disagrees with NHRIGID2 source map index "
+                f"{source_to_core[ordinal]}; rigid_sha256={expected_sha}"
+            )
+        position = _myosim_vector(position, f"Numi Human fixed-cluster {name} position")
+        quaternion = list(quaternion) if isinstance(quaternion, list) else []
+        rotation = _myosim_matrix_from_quaternion_xyzw(quaternion)
+        if struct.pack("<7f", *position, *quaternion) != raw[
+            source_pose_offset + 28 * ordinal:source_pose_offset + 28 * (ordinal + 1)
+        ]:
+            raise ImportError(
+                f"Numi Human source body {name} rest pose disagrees with NHRIGID2 "
+                f"source pose bytes; rigid_sha256={expected_sha}"
+            )
+        previous_source_id = source_id
         poses[body_index] = {
             "name": name,
-            "position_world_m": _myosim_vector(
-                position, f"Numi Human fixed-cluster {name} position",
-            ),
-            "rotation_world": _myosim_matrix_from_quaternion_xyzw(
-                list(quaternion) if isinstance(quaternion, list) else [],
-            ),
+            "source_body_id": source_id,
+            "source_record_index": ordinal,
+            "position_world_m": position,
+            "rotation_world": rotation,
         }
     return {
         "body_names": list(body_order),

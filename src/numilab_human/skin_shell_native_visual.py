@@ -144,7 +144,7 @@ def compile_candidate(
     native_payload = native_manifest.get("payload")
     _require(isinstance(native_payload, dict) and
              native_payload.get("magic") == "NHBONES1" and
-             native_payload.get("payload_abi") == 2 and
+             native_payload.get("payload_abi") in (2, 3) and
              native_payload.get("bone_count") == 185 and
              native_payload.get("registration_fingerprint32") == "6a48e223" and
              native_payload.get("vertex_count") == 252167 and

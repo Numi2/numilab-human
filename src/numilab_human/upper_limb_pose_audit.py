@@ -34,6 +34,53 @@ POSE_CONTINUITY_ALLOWANCE_M = 0.001
 BILATERAL_GAP_PARITY_MAXIMUM_M = 0.002
 DEFAULT_FRAME_RESIDUAL_MAXIMUM_M = 1.0e-9
 
+
+class PoseAuditError(RuntimeError):
+    """A failed measurement retains the existing pose-audit diagnostic output."""
+
+    def __init__(self, message: str, result: dict[str, Any]):
+        super().__init__(message)
+        self.result = result
+
+
+def _finish_pose_audit(result: dict[str, Any], region: str) -> dict[str, Any]:
+    failures = []
+    residual = result["default_frame_maximum_centroid_residual_m"]
+    allowed = result["default_frame_maximum_allowed_residual_m"]
+    if residual > allowed:
+        failures.append(
+            f"default source/Core frame: member={result.get('default_frame_worst_member')} "
+            f"residual_m={residual:.12g}, allowed_m={allowed:.12g}"
+        )
+    for pose in result["poses"]:
+        for item in pose["continuity"]:
+            if not item["passed"]:
+                failures.append(
+                    f"{pose['name']}:{item['name']} members={item['source_member_ids']} "
+                    f"minimum_gap_m={item['minimum_vertex_gap_m']:.12g}, "
+                    f"allowed_gap_m={item['posed_maximum_allowed_gap_m']:.12g}, "
+                    f"patch_p90_m={item['interface_patch']['bidirectional_p90_m']:.12g}, "
+                    f"allowed_patch_p90_m={item['posed_maximum_allowed_interface_patch_p90_m']:.12g}"
+                )
+        for item in pose["bilateral_gap_parity"]:
+            if not item["passed"]:
+                failures.append(
+                    f"{pose['name']}:{item['transition']} bilateral parity: "
+                    f"gap_difference_m={item['absolute_gap_difference_m']:.12g}, "
+                    f"patch_difference_m={item['absolute_interface_patch_p90_difference_m']:.12g}, "
+                    f"allowed_m={item['maximum_allowed_difference_m']:.12g}"
+                )
+    result["failures"] = failures
+    if failures:
+        result["status"] = result["status"].replace("passed_", "failed_", 1)
+        raise PoseAuditError(
+            f"{region} pose audit failed: " + "; ".join(failures[:12])
+            + f"; registration_sha256={result['inputs']['registration']['sha256']}"
+            + f"; rigid_sha256={result['inputs']['runtime_reference']['rigid']['sha256']}",
+            result,
+        )
+    return result
+
 # Indices are the exact source qpos addresses used by NHRIGID/Metal --pose-q.
 # Values are deliberately bounded functional inspections, not range extrema.
 POSE_SUITE: tuple[tuple[str, tuple[tuple[int, float], ...]], ...] = (
@@ -43,6 +90,10 @@ POSE_SUITE: tuple[tuple[str, tuple[tuple[int, float], ...]], ...] = (
     ("bilateral_forearm_pronation", ((40, 1.2), (78, 1.2))),
     ("bilateral_wrist_deviation_flexion", (
         (41, 0.25), (42, 0.6), (79, 0.25), (80, 0.6),
+    )),
+    ("bilateral_coupled_reach", (
+        (36, 0.8), (39, 1.0), (40, 0.7), (41, 0.15), (42, 0.3),
+        (74, 0.8), (77, 1.0), (78, 0.7), (79, 0.15), (80, 0.3),
     )),
     ("bilateral_functional_fist", (
         (43, -0.4), (45, -0.5), (46, -0.7),
@@ -124,7 +175,7 @@ def _pose_qpos(model: Any, pose: tuple[tuple[int, float], ...], mujoco: Any, np:
     return qpos, equality_count, maximum_correction
 
 
-def audit_upper_limb_poses(*, sources: Path, registration_path: Path) -> dict[str, Any]:
+def audit_upper_limb_poses(*, sources: Path, registration_path: Path, artifact: Path) -> dict[str, Any]:
     try:
         import mujoco
         import numpy as np
@@ -140,8 +191,11 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
     upper_receipt = registration.get("upper_limb_source_mesh_registration")
     if not isinstance(upper_receipt, dict) or upper_receipt.get("schema") != UPPER_REGISTRATION_SCHEMA:
         raise RuntimeError("upper-limb pose audit requires admitted upper-limb registration v1")
+    runtime_reference, _ = human_model._bodyparts_runtime_bindings(registration, artifact)
 
     exported = export_fullbody(sources)
+    if exported.get("source") != registration["source"]["myosim"]["source"]:
+        raise RuntimeError("upper-limb pose audit pinned source export differs from its registered runtime source")
     source_bodies = {int(body["id"]): body for body in exported["bodies"]}
     model = build_model("myofullbody")
     data = mujoco.MjData(model)
@@ -203,6 +257,7 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
 
     pose_receipts = []
     default_frame_maximum_residual = 0.0
+    default_frame_worst_member = "none"
     all_continuity = []
     all_parity = []
     equality_count: int | None = None
@@ -234,17 +289,17 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
                 expected_centroid = np.asarray(
                     anchor["registration"]["default_pose_vertex_centroid_world_m"], dtype=float
                 )
-                default_frame_maximum_residual = max(
-                    default_frame_maximum_residual,
-                    float(np.linalg.norm(centroid - expected_centroid)),
-                )
+                residual = float(np.linalg.norm(centroid - expected_centroid))
+                if residual > default_frame_maximum_residual:
+                    default_frame_maximum_residual = residual
+                    default_frame_worst_member = str(member_id)
 
         continuity = []
         by_name: dict[str, dict[str, Any]] = {}
         for transition_name, first_member, second_member, rest_gate in transitions:
             first_vertices = world_vertices[first_member]
             second_vertices = world_vertices[second_member]
-            gap, _, _ = _minimum_gap(
+            gap, first_witness, second_witness = _minimum_gap(
                 first_vertices, second_vertices, np
             )
             patch = _interface_patch_metrics(first_vertices, second_vertices, np)
@@ -254,6 +309,7 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
                 "name": transition_name,
                 "source_member_ids": [first_member, second_member],
                 "minimum_vertex_gap_m": gap,
+                "minimum_gap_witness_world_m": [first_witness.tolist(), second_witness.tolist()],
                 "rest_maximum_allowed_gap_m": rest_gate,
                 "posed_maximum_allowed_gap_m": posed_gate,
                 "interface_patch": patch,
@@ -307,27 +363,6 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
             "bilateral_gap_parity": parity,
         })
 
-    failed_continuity = [
-        f"{item['pose']}:{item['name']}" for item in all_continuity if not item["passed"]
-    ]
-    failed_parity = [
-        f"{item['pose']}:{item['transition']}" for item in all_parity if not item["passed"]
-    ]
-    if default_frame_maximum_residual > DEFAULT_FRAME_RESIDUAL_MAXIMUM_M:
-        raise RuntimeError(
-            "upper-limb pose audit default source/Core frame transform drifted"
-        )
-    if failed_continuity:
-        raise RuntimeError(
-            "upper-limb pose audit violates posed continuity: "
-            + ", ".join(failed_continuity[:12])
-        )
-    if failed_parity:
-        raise RuntimeError(
-            "upper-limb pose audit violates bilateral gap parity: "
-            + ", ".join(failed_parity[:12])
-        )
-
     worst_continuity = max(
         all_continuity,
         key=lambda item: item["minimum_vertex_gap_m"] - item["rest_maximum_allowed_gap_m"],
@@ -346,7 +381,7 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
             item["absolute_interface_patch_p90_difference_m"],
         ),
     )
-    return {
+    result = {
         "schema": SCHEMA,
         "status": "passed_source_owned_bilateral_upper_limb_multi_pose_interface_patches",
         "inputs": {
@@ -354,6 +389,7 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
                 "file": registration_path.name,
                 "sha256": _sha256(registration_path),
             },
+            "runtime_reference": runtime_reference,
             "myosim_archive_sha256": registration["source"]["myosim"]["source"][
                 "archive_sha256"
             ],
@@ -367,6 +403,7 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
         "joint_equality_count": equality_count,
         "joint_equality_maximum_correction": equality_maximum_correction,
         "default_frame_maximum_centroid_residual_m": default_frame_maximum_residual,
+        "default_frame_worst_member": default_frame_worst_member,
         "default_frame_maximum_allowed_residual_m": DEFAULT_FRAME_RESIDUAL_MAXIMUM_M,
         "posed_continuity_allowance_m": POSE_CONTINUITY_ALLOWANCE_M,
         "interface_patch_gate_multiplier": INTERFACE_PATCH_GATE_MULTIPLIER,
@@ -385,26 +422,44 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
         ),
     }
 
+    return _finish_pose_audit(result, "upper-limb")
+
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sources", type=Path, required=True)
     parser.add_argument("--registration", type=Path, required=True)
+    parser.add_argument("--artifact", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     arguments = parser.parse_args(argv)
+    failure = None
     try:
         result = audit_upper_limb_poses(
             sources=arguments.sources.resolve(),
             registration_path=arguments.registration.resolve(),
+            artifact=arguments.artifact.resolve(),
         )
+    except PoseAuditError as error:
+        result = error.result
+        failure = error
     except (RuntimeError, OSError, ValueError) as error:
         print(f"numilab-human upper-limb pose audit: {error}", file=sys.stderr)
         return 2
+    result["inputs"]["reproduction_command"] = [
+        sys.executable, "-m", "numilab_human.upper_limb_pose_audit",
+        "--sources", str(arguments.sources.resolve()),
+        "--artifact", str(arguments.artifact.resolve()),
+        "--registration", str(arguments.registration.resolve()),
+        "--output", str(arguments.output.resolve()),
+    ]
     arguments.output.parent.mkdir(parents=True, exist_ok=True)
     arguments.output.write_text(
         json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
     print(f"wrote {arguments.output}")
+    if failure is not None:
+        print(f"numilab-human upper-limb pose audit: {failure}; diagnostics={arguments.output.resolve()}", file=sys.stderr)
+        return 2
     return 0
 
 

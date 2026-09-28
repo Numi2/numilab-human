@@ -565,6 +565,21 @@ gallery. See [visual progress](Docs/VISUAL_PROGRESS.md) for the exact boundary.
 After a local artifact has been acquired and compiled, the production-facing
 reference needs only the Apple-native Numi Core executable:
 
+Bone payload preparation and regional pose audits require `--artifact` so the
+registered source body, Core owner and rest frame can be checked against the
+actual NHRIGID2 map and pose bytes. NHBONES1 ABI 3 appends a source-record index
+to each bone record. Rebuild the native visual probe before consuming these
+payloads; it checks that each index resolves to the recorded Core owner and
+reports `bone_source_owner_bindings_verified=true`. Historical ABI 2 remains
+readable and reports that check as unavailable (`false`). This verifies owner
+binding for visual geometry; it does not qualify loaded tissue or contact.
+
+The upper-limb audit includes coupled reach, and the lower-limb audit includes
+deep crouch with source joint-equality projection. A measured failure exits 2
+and retains the existing audit JSON, including gap witnesses, tolerances,
+input/runtime hashes and a reproduction command. Inspect this output even when
+the native renderer successfully admits the same pose.
+
 ```sh
 # No Python process is started by this command. `--metal` additionally
 # executes full-body pose/Jacobians plus all MyoSim route and static-force
@@ -586,7 +601,7 @@ numi human myosim-bodyparts-registration \
   --sources Sources --artifact Build/myosim-fullbody \
   --output Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json
 numi human myosim-bodyparts-bone-payload \
-  --sources Sources \
+  --sources Sources --artifact Build/myosim-fullbody \
   --registration Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json \
   --output Build/bodyparts3d-myosim-major-bones
 numi human myosim-native-bone-visuals \

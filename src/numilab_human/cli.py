@@ -442,6 +442,7 @@ def myosim_upper_limb_pose_audit(arguments: argparse.Namespace) -> int:
     command = [
         str(auditor), "-m", "numilab_human.upper_limb_pose_audit",
         "--sources", str(arguments.sources.resolve()),
+        "--artifact", str(arguments.artifact.resolve()),
         "--registration", str(arguments.registration.resolve()),
         "--output", str(output),
     ]
@@ -471,6 +472,7 @@ def myosim_lower_limb_pose_audit(arguments: argparse.Namespace) -> int:
     command = [
         str(auditor), "-m", "numilab_human.lower_limb_pose_audit",
         "--sources", str(arguments.sources.resolve()),
+        "--artifact", str(arguments.artifact.resolve()),
         "--registration", str(arguments.registration.resolve()),
         "--output", str(output),
     ]
@@ -1320,6 +1322,7 @@ def myosim_bodyparts_bone_visual_payload(arguments: argparse.Namespace) -> int:
     anatomy = parse_bodyparts3d(sources, REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
     manifest = bodyparts_myosim_bone_visual_payload(
         sources, anatomy, arguments.registration.resolve(), arguments.output.resolve(),
+        artifact=arguments.artifact.resolve(),
     )
     print(f"wrote {arguments.output.resolve() / manifest['payload']['file']}")
     print(f"wrote {arguments.output.resolve() / 'bodyparts3d-myosim-major-bones.manifest.json'}")
@@ -1467,6 +1470,7 @@ def parser() -> argparse.ArgumentParser:
         help="prove bilateral shoulder-to-finger registration across bounded source poses",
     )
     upper_limb_pose_audit_parser.add_argument("--sources", type=Path, required=True)
+    upper_limb_pose_audit_parser.add_argument("--artifact", type=Path, required=True)
     upper_limb_pose_audit_parser.add_argument("--registration", type=Path, required=True)
     upper_limb_pose_audit_parser.add_argument("--output", type=Path, required=True)
     upper_limb_pose_audit_parser.add_argument(
@@ -1479,6 +1483,7 @@ def parser() -> argparse.ArgumentParser:
         help="prove bilateral hip-to-toe registration across bounded source poses",
     )
     lower_limb_pose_audit_parser.add_argument("--sources", type=Path, required=True)
+    lower_limb_pose_audit_parser.add_argument("--artifact", type=Path, required=True)
     lower_limb_pose_audit_parser.add_argument("--registration", type=Path, required=True)
     lower_limb_pose_audit_parser.add_argument("--output", type=Path, required=True)
     lower_limb_pose_audit_parser.add_argument(
@@ -1799,6 +1804,7 @@ def parser() -> argparse.ArgumentParser:
         help="prepare source visual-skeleton triangles and articulated local transforms for the native Human visual renderer",
     )
     myosim_bone_payload_parser.add_argument("--sources", type=Path, required=True)
+    myosim_bone_payload_parser.add_argument("--artifact", type=Path, required=True)
     myosim_bone_payload_parser.add_argument(
         "--registration", type=Path, required=True,
         help="candidate JSON from myosim-bodyparts-registration",

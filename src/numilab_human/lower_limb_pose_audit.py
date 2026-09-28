@@ -19,7 +19,7 @@ from . import model as human_model
 from .lower_limb_source_registration import SCHEMA as LOWER_REGISTRATION_SCHEMA
 from .myosim_bone_proximity import _compiled_meshes_by_body
 from .myosim_export import export_fullbody
-from .upper_limb_pose_audit import _pose_qpos
+from .upper_limb_pose_audit import PoseAuditError, _finish_pose_audit, _pose_qpos
 from .upper_limb_registration import (
     INTERFACE_PATCH_GATE_MULTIPLIER,
     REGISTRATION_SCHEMA,
@@ -50,6 +50,10 @@ POSE_SUITE: tuple[tuple[str, tuple[tuple[int, float], ...]], ...] = (
     ("bilateral_ankle_dorsiflexion", ((109, -0.25), (123, -0.25))),
     ("bilateral_subtalar_rotation", ((110, 0.20), (124, 0.20))),
     ("bilateral_mtp_flexion", ((111, 0.35), (125, 0.35))),
+    ("bilateral_deep_crouch", (
+        (101, 0.9), (106, 1.4), (109, -0.25), (111, 0.2),
+        (115, 0.9), (120, 1.4), (123, -0.25), (125, 0.2),
+    )),
     ("bilateral_functional_crouch", (
         (101, 0.50), (106, 0.75), (109, -0.15), (111, 0.20),
         (115, 0.50), (120, 0.75), (123, -0.15), (125, 0.20),
@@ -87,7 +91,7 @@ def _continuity_transitions() -> list[tuple[str, str, str, float]]:
     ]
 
 
-def audit_lower_limb_poses(*, sources: Path, registration_path: Path) -> dict[str, Any]:
+def audit_lower_limb_poses(*, sources: Path, registration_path: Path, artifact: Path) -> dict[str, Any]:
     try:
         import mujoco
         import numpy as np
@@ -106,8 +110,11 @@ def audit_lower_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
         or lower_receipt.get("schema") != LOWER_REGISTRATION_SCHEMA
     ):
         raise RuntimeError("lower-limb pose audit requires admitted lower-limb registration v3")
+    runtime_reference, _ = human_model._bodyparts_runtime_bindings(registration, artifact)
 
     exported = export_fullbody(sources)
+    if exported.get("source") != registration["source"]["myosim"]["source"]:
+        raise RuntimeError("lower-limb pose audit pinned source export differs from its registered runtime source")
     source_bodies = {int(body["id"]): body for body in exported["bodies"]}
     model = build_model("myofullbody")
     data = mujoco.MjData(model)
@@ -257,7 +264,7 @@ def audit_lower_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
         continuity = []
         by_name: dict[str, dict[str, Any]] = {}
         for transition_name, first_member, second_member, rest_gate in transitions:
-            gap, _, _ = _minimum_gap(
+            gap, first_witness, second_witness = _minimum_gap(
                 world_vertices[first_member], world_vertices[second_member], np
             )
             patch = _interface_patch_metrics(
@@ -305,6 +312,7 @@ def audit_lower_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
                 "name": transition_name,
                 "source_member_ids": [first_member, second_member],
                 "minimum_vertex_gap_m": gap,
+                "minimum_gap_witness_world_m": [first_witness.tolist(), second_witness.tolist()],
                 "rest_maximum_allowed_gap_m": rest_gate,
                 "base_posed_maximum_allowed_gap_m": base_posed_gate,
                 "posed_maximum_allowed_gap_m": posed_gate,
@@ -372,46 +380,6 @@ def audit_lower_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
             "bilateral_gap_parity": parity,
         })
 
-    failed_continuity = [
-        item for item in all_continuity if not item["passed"]
-    ]
-    failed_parity = [item for item in all_parity if not item["passed"]]
-    if default_frame_maximum_residual > DEFAULT_FRAME_RESIDUAL_MAXIMUM_M:
-        raise RuntimeError(
-            "lower-limb pose audit default source/Core frame transform drifted: "
-            f"member={default_frame_worst_member} "
-            f"residual_m={default_frame_maximum_residual:.12g} "
-            f"allowed_m={DEFAULT_FRAME_RESIDUAL_MAXIMUM_M:.12g}"
-        )
-    if failed_continuity:
-        raise RuntimeError(
-            "lower-limb pose audit violates posed continuity: "
-            + ", ".join(
-                f"{item['pose']}:{item['name']}"
-                f"(minimum={item['minimum_vertex_gap_m']:.6f},"
-                f"patch_p90={item['interface_patch']['bidirectional_p90_m']:.6f},"
-                f"allowed_patch_p90="
-                f"{item['posed_maximum_allowed_interface_patch_p90_m']:.6f},"
-                f"source_patch_p90="
-                f"{(item['mechanics_reference_interface'] or {'interface_patch': {'bidirectional_p90_m': float('nan')}})['interface_patch']['bidirectional_p90_m']:.6f})"
-                for item in failed_continuity[:12]
-            )
-        )
-    if failed_parity:
-        raise RuntimeError(
-            "lower-limb pose audit violates bilateral parity: "
-            + ", ".join(
-                f"{item['pose']}:{item['transition']}"
-                f"(gap_difference={item['absolute_gap_difference_m']:.6f},"
-                f"patch_difference="
-                f"{item['absolute_interface_patch_p90_difference_m']:.6f},"
-                f"right_patch={item['right_interface_patch_p90_m']:.6f},"
-                f"left_patch={item['left_interface_patch_p90_m']:.6f},"
-                f"allowed={item['maximum_allowed_difference_m']:.6f})"
-                for item in failed_parity[:12]
-            )
-        )
-
     worst_continuity = max(
         all_continuity,
         key=lambda item: (
@@ -432,7 +400,7 @@ def audit_lower_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
             item["absolute_interface_patch_p90_difference_m"],
         ),
     )
-    return {
+    result = {
         "schema": SCHEMA,
         "status": "passed_source_owned_bilateral_lower_limb_multi_pose_interface_patches",
         "inputs": {
@@ -440,6 +408,7 @@ def audit_lower_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
                 "file": registration_path.name,
                 "sha256": _sha256(registration_path),
             },
+            "runtime_reference": runtime_reference,
             "myosim_archive_sha256": registration["source"]["myosim"]["source"][
                 "archive_sha256"
             ],
@@ -480,26 +449,44 @@ def audit_lower_limb_poses(*, sources: Path, registration_path: Path) -> dict[st
         ),
     }
 
+    return _finish_pose_audit(result, "lower-limb")
+
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sources", type=Path, required=True)
     parser.add_argument("--registration", type=Path, required=True)
+    parser.add_argument("--artifact", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     arguments = parser.parse_args(argv)
+    failure = None
     try:
         result = audit_lower_limb_poses(
             sources=arguments.sources.resolve(),
             registration_path=arguments.registration.resolve(),
+            artifact=arguments.artifact.resolve(),
         )
+    except PoseAuditError as error:
+        result = error.result
+        failure = error
     except (RuntimeError, OSError, ValueError) as error:
         print(f"numilab-human lower-limb pose audit: {error}", file=sys.stderr)
         return 2
+    result["inputs"]["reproduction_command"] = [
+        sys.executable, "-m", "numilab_human.lower_limb_pose_audit",
+        "--sources", str(arguments.sources.resolve()),
+        "--artifact", str(arguments.artifact.resolve()),
+        "--registration", str(arguments.registration.resolve()),
+        "--output", str(arguments.output.resolve()),
+    ]
     arguments.output.parent.mkdir(parents=True, exist_ok=True)
     arguments.output.write_text(
         json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
     print(f"wrote {arguments.output}")
+    if failure is not None:
+        print(f"numilab-human lower-limb pose audit: {failure}; diagnostics={arguments.output.resolve()}", file=sys.stderr)
+        return 2
     return 0
 
 

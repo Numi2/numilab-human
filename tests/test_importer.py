@@ -1145,7 +1145,7 @@ class ImporterTests(unittest.TestCase):
         )
         return directory
 
-    def _minimal_bodyparts_bone_artifact(self, directory: Path) -> Path:
+    def _minimal_bodyparts_bone_artifact(self, directory: Path, abi: int = 2) -> Path:
         directory.mkdir(parents=True)
         source_sha = "11" * 32
         fingerprint = 0x1234ABCD
@@ -1171,6 +1171,8 @@ class ImporterTests(unittest.TestCase):
                 "<6I8f", body_index, first_vertex, 5, first_index, 12, body_index + 1,
                 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0,
             ))
+            if abi == 3:
+                records[-1] += struct.pack("<I", 10 + body_index)
             anchors.append({
                 "member_id": f"FJ{1000 + body_index}",
                 "core_body_index": body_index,
@@ -1178,9 +1180,11 @@ class ImporterTests(unittest.TestCase):
                 "vertex_count": 5,
                 "triangle_count": 4,
             })
+            if abi == 3:
+                anchors[-1]["source_record_index"] = 10 + body_index
         payload = b"".join([
             struct.pack(
-                "<8s5I32s", b"NHBONES1", 2, 2, len(vertices), len(indices),
+                "<8s5I32s", b"NHBONES1", abi, 2, len(vertices), len(indices),
                 fingerprint, bytes.fromhex(source_sha),
             ),
             *records,
@@ -1196,7 +1200,7 @@ class ImporterTests(unittest.TestCase):
                 "sha256": hashlib.sha256(payload).hexdigest(),
                 "bytes": len(payload),
                 "magic": "NHBONES1",
-                "payload_abi": 2,
+                "payload_abi": abi,
                 "registration_fingerprint32": f"{fingerprint:08x}",
                 "bone_count": 2,
                 "vertex_count": len(vertices),
@@ -1213,6 +1217,22 @@ class ImporterTests(unittest.TestCase):
             json.dumps(manifest), encoding="utf-8",
         )
         return directory
+
+    def test_bound_bone_surface_reader_preserves_geometry_and_rejects_owner_drift(self) -> None:
+        from numilab_human.model import ImportError as HumanImportError, _numi_human_bone_envelope_surfaces
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            legacy = self._minimal_bodyparts_bone_artifact(root / "legacy")
+            current = self._minimal_bodyparts_bone_artifact(root / "current", abi=3)
+            old_surfaces, _, _ = _numi_human_bone_envelope_surfaces(legacy, "11" * 32)
+            new_surfaces, _, _ = _numi_human_bone_envelope_surfaces(current, "11" * 32)
+            self.assertEqual(old_surfaces, new_surfaces)
+            manifest_path = current / "bodyparts3d-myosim-major-bones.manifest.json"
+            manifest = json.loads(manifest_path.read_text())
+            manifest["source"]["anchors"][0]["source_record_index"] = 11
+            manifest_path.write_text(json.dumps(manifest))
+            with self.assertRaisesRegex(HumanImportError, "source owner identity drifted"):
+                _numi_human_bone_envelope_surfaces(current, "11" * 32)
 
     def test_numi_human_tendon_payload_covers_both_route_endpoints_once(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -2032,6 +2052,7 @@ class ImporterTests(unittest.TestCase):
                 "bilateral_elbow_flexion",
                 "bilateral_forearm_pronation",
                 "bilateral_wrist_deviation_flexion",
+                "bilateral_coupled_reach",
                 "bilateral_functional_fist",
             ],
         )
@@ -2075,6 +2096,7 @@ class ImporterTests(unittest.TestCase):
                 "bilateral_ankle_dorsiflexion",
                 "bilateral_subtalar_rotation",
                 "bilateral_mtp_flexion",
+                "bilateral_deep_crouch",
                 "bilateral_functional_crouch",
             ],
         )

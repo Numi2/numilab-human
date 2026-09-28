@@ -139,16 +139,17 @@ def _parse_nhbones(raw: bytes, source_hash: str) -> tuple[dict[str, Any], dict[i
     _require(len(raw) >= NHBONES_HEADER.size, "NHBONES1 payload is truncated")
     header = NHBONES_HEADER.unpack_from(raw)
     magic, abi, bone_count, vertex_count, index_count, fingerprint, embedded_source = header
-    _require(magic == NHBONES_MAGIC and abi == NHBONES_ABI,
-             "bone source is not NHBONES1 ABI 2")
+    _require(magic == NHBONES_MAGIC and abi in (NHBONES_ABI, 3),
+             "bone source is not NHBONES1 ABI 2 or 3")
     _require(embedded_source.hex() == source_hash,
              "NHCNT1 and NHBONES1 source archive hashes differ")
-    expected = (NHBONES_HEADER.size + NHBONES_RECORD.size * bone_count
+    record_size = NHBONES_RECORD.size + (4 if abi == 3 else 0)
+    expected = (NHBONES_HEADER.size + record_size * bone_count
                 + 24 * vertex_count + 4 * index_count)
     _require(len(raw) == expected, "NHBONES1 payload length is invalid")
     orientations: dict[int, tuple[float, ...]] = {}
     for index in range(bone_count):
-        record = NHBONES_RECORD.unpack_from(raw, NHBONES_HEADER.size + index * NHBONES_RECORD.size)
+        record = NHBONES_RECORD.unpack_from(raw, NHBONES_HEADER.size + index * record_size)
         body, *_, stable_id, tx, ty, tz, qx, qy, qz, qw, scale = record
         _require(stable_id == index + 1, "NHBONES1 stable record identity is not contiguous")
         _finite(tx, "NHBONES1 translation x"); _finite(ty, "NHBONES1 translation y")

@@ -65,6 +65,26 @@ def test_candidate_is_deterministic_and_source_bound(tmp_path: Path) -> None:
     assert first["qualification"]["anatomical_support_surface_candidate"] is True
 
 
+def test_source_bound_bone_records_preserve_legacy_foot_orientations(tmp_path: Path) -> None:
+    support, bones, rigid = _fixtures(tmp_path)
+    legacy, legacy_payload = compile_anatomical_support_candidate(support, bones, rigid)
+    raw = bones.read_bytes()
+    header = list(NHBONES_HEADER.unpack_from(raw))
+    header[1] = 3
+    bound = NHBONES_HEADER.pack(*header)
+    for index in range(header[2]):
+        start = NHBONES_HEADER.size + index * NHBONES_RECORD.size
+        bound += raw[start:start + NHBONES_RECORD.size] + struct.pack("<I", 80 + index)
+    bones.write_bytes(bound)
+    current, current_payload = compile_anatomical_support_candidate(support, bones, rigid)
+    assert current_payload == legacy_payload
+    assert current["counts"] == legacy["counts"]
+
+    bones.write_bytes(bound[:-1])
+    with pytest.raises(ImportError, match="payload length is invalid"):
+        compile_anatomical_support_candidate(support, bones, rigid)
+
+
 @pytest.mark.parametrize("which", ["support", "bones", "rigid"])
 def test_foreign_source_hash_rejected(tmp_path: Path, which: str) -> None:
     support, bones, rigid = _fixtures(tmp_path)
