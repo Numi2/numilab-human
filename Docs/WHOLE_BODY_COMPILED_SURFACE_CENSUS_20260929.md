@@ -63,3 +63,10 @@ rechecks each original compiled mesh slice against both censuses, and checks
 all five retained native packet profiles. The source and candidate payloads
 remain separately pinned. BodyParts3D is CC-BY-SA 2.1 Japan and Z-Anatomy is
 CC-BY-SA 4.0; the pinned source attribution remains in the payload manifests.
+
+The later [exact cross-surface abdominal organ gate](ABDOMINAL_ORGAN_SEPARATION_20260929.md)
+tests a separate missing claim. Although five named organ representations
+each pass this census's individual embeddedness gate, four of their ten
+pairwise relationships contain a total of 182 exact triangle crossings.
+That finding blocks disjoint organ-domain admission for the tested set;
+the remaining anatomy surfaces still lack a comprehensive cross-surface audit.

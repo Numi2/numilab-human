@@ -1,0 +1,80 @@
+{
+  "boundary": "An independent double-precision strict edge/plane and barycentric check confirms one transverse intersection for each of four failed organ pairs. The primary census uses exact rational predicates for complete pair counts.",
+  "primary_receipt_sha256": "936da9c819545e08207410dde6be7b51ba1486d08c51e0a73ef7d64cec4d6ab1",
+  "schema": "numi.human.abdominal-organ-transverse-witness.v1",
+  "selected_payload_sha256": "5da65cf16efcd65461970515cf7cfe8ee49f7b96ad826d23f85318dedc42a54d",
+  "witnesses": [
+    {
+      "direction": "second_edge_through_first_face",
+      "first": "stomach",
+      "first_triangle_id": 1178,
+      "minimum_target_triangle_barycentric": 0.11779157565705833,
+      "point_owner_local_m": [
+        -0.03867478638855457,
+        0.06445343403199237,
+        -0.05173142384558581
+      ],
+      "second": "pancreas",
+      "second_triangle_id": 4454,
+      "signed_plane_endpoints": [
+        -1.0302446944462752e-08,
+        2.6069282734012505e-08
+      ],
+      "source_edge": 0
+    },
+    {
+      "direction": "second_edge_through_first_face",
+      "first": "stomach",
+      "first_triangle_id": 1406,
+      "minimum_target_triangle_barycentric": 0.0970017340431983,
+      "point_owner_local_m": [
+        -0.028144879977112066,
+        0.06209261752062411,
+        -0.07535657672407904
+      ],
+      "second": "spleen",
+      "second_triangle_id": 10,
+      "signed_plane_endpoints": [
+        4.784196191807374e-07,
+        -3.7096516421071223e-07
+      ],
+      "source_edge": 0
+    },
+    {
+      "direction": "first_edge_through_second_face",
+      "first": "pancreas",
+      "first_triangle_id": 4814,
+      "minimum_target_triangle_barycentric": 0.008616439708277131,
+      "point_owner_local_m": [
+        -0.045226182495084775,
+        0.05868483916917054,
+        -0.07322187611473135
+      ],
+      "second": "spleen",
+      "second_triangle_id": 11,
+      "signed_plane_endpoints": [
+        6.008124376717288e-08,
+        -7.24249289362565e-09
+      ],
+      "source_edge": 1
+    },
+    {
+      "direction": "first_edge_through_second_face",
+      "first": "left kidney",
+      "first_triangle_id": 2235,
+      "minimum_target_triangle_barycentric": 0.13226398804859762,
+      "point_owner_local_m": [
+        -0.06585537277731368,
+        0.07646904907941332,
+        -0.059420052030433136
+      ],
+      "second": "spleen",
+      "second_triangle_id": 0,
+      "signed_plane_endpoints": [
+        -7.086848934350132e-10,
+        7.662682179697871e-09
+      ],
+      "source_edge": 1
+    }
+  ]
+}
