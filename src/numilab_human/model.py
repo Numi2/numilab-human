@@ -11470,6 +11470,21 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                     )
                 toe_enthesis_weight_lock["toe_rigid_compounds"] = toe_rigid_compounds
 
+        source_visual_untangle: dict[str, Any] | None = None
+        if member_id in {"FJ1444", "FJ1444M"}:
+            from .muscle_tip_visual_untangle import untangle
+            # This changes only the emitted visual point positions/normals.
+            # Source OBJ coordinates, route-derived weights, indices, and
+            # mechanics remain independently retained and source-bound.
+            visual_vertices_mm, source_visual_untangle = untangle(
+                vertices_mm, triangles, member_id, hashlib.sha256(obj).hexdigest(),
+            )
+            stored_vertices_m = [[coordinate * .001 for coordinate in point]
+                                 for point in visual_vertices_mm]
+            stored_normals = _bodyparts_vertex_normals(
+                visual_vertices_mm, triangles, member,
+            )
+
         if face_cancellation["cancelled_opposite_face_pairs"]:
             removed_faces = {
                 index
@@ -11564,6 +11579,8 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             provenance[-1]["source_component_selection"] = source_component_selection
         if face_cancellation["cancelled_opposite_face_pairs"]:
             provenance[-1]["source_topology_cancellation"] = face_cancellation
+        if source_visual_untangle is not None:
+            provenance[-1]["source_visual_untangle"] = source_visual_untangle
         if layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE:
             source_surface_bindings[member_id] = {
                 "member_id": member_id,

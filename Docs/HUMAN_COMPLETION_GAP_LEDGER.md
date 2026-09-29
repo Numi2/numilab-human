@@ -762,6 +762,15 @@ Both sheets remain open (388/389 boundary edges) with one/two local normal
 reversals, so anatomical enthesis and force transfer are still open. The
 earlier standing video predates this visual payload.
 
+The [bilateral biceps short-head visual tip repair](BICEPS_SHORT_HEAD_VISUAL_UNTANGLE_20260929.md)
+now removes three exact source-tip triangle crossings per side from two
+explicitly derived muscle visual surfaces. The matching-registration
+150-surface census rises from 52 to 54 single embedded muscle candidates.
+The source OBJ, all face indices, bindings, skinning weights and force paths
+are unchanged; 12 emitted positions move by at most approximately 0.065 mm.
+Clinical shape, material, contact, loaded muscle mechanics and native
+rendering remain open.
+
 The [compiled abdominal organ separation gate](ABDOMINAL_ORGAN_SEPARATION_20260929.md)
 now checks all ten pairs among five source-named whole-organ representations
 that individually pass the closed, connected, exact self-embedded test in the
@@ -772,6 +781,11 @@ failed pair. All share one Abdomen owner, so a common rigid pose cannot fix
 the source placement conflict. The gate exits 2 and blocks a disjoint organ
 domain claim; clinical registration, organ mechanics and whole-body anatomy
 remain open.
+
+The later [eight-organ expansion](EXPANDED_ABDOMINAL_ORGAN_SEPARATION_20260929.md)
+finds seven crossing pairs among 28 named organ pairs in the same Abdomen
+owner frame. Those source-atlas placement contradictions still block disjoint
+organ-domain admission.
 
 The [native stance horizon](NATIVE_STAND_STANCE_HORIZON_20260913.md) now
 repeats the exact-clock physical-M4 run from the authored root/ankle/subtalar/

@@ -54,3 +54,10 @@ still admits 52 single embedded muscle candidates and no tendon volume:
 82 closed embedded, 62 closed self-intersecting, two open/nonmanifold
 intersecting and four open/nonmanifold without detected intersections. Both
 tendons remain open and retain one or two local source-face normal reversals.
+
+The later [bilateral short-head visual tip repair](BICEPS_SHORT_HEAD_VISUAL_UNTANGLE_20260929.md)
+keeps the original BodyParts3D OBJ members unchanged but emits two explicitly
+derived muscle visual candidates. The [v4 full census](media/muscle-surface-embeddedness-20260929/receipt-v4.json)
+raises single embedded muscle visual candidates to **54 of 148**; both biceps
+short-head members change from three exact self-intersections to zero. This
+does not add physical muscle volumes or change MyoSim force paths.
