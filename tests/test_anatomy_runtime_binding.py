@@ -3,6 +3,7 @@ import copy
 import hashlib
 import json
 import os
+import re
 import struct
 import subprocess
 import tempfile
@@ -198,13 +199,13 @@ class NativeBoneOwnerBindingTests(unittest.TestCase):
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
 
-    def run_probe(self, raw):
+    def run_probe(self, raw, arguments=(), dimension=512):
         bones = self.root / "candidate.nhbones"
         bones.write_bytes(raw)
         return subprocess.run([
             str(self.probe), str(self.artifact / "myosim-fullbody-core-reference.nhrigid"),
             str(self.artifact / "myosim-fullbody-muscle-reference.nhmyo"), str(bones),
-            str(self.root / "views"), "--dimension", "512",
+            str(self.root / "views"), "--dimension", str(dimension), *arguments,
         ], capture_output=True, text=True, timeout=60)
 
     def test_valid_source_bound_payload_executes_and_reports_verified_owners(self):
@@ -212,6 +213,27 @@ class NativeBoneOwnerBindingTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("bone_source_owner_bindings_verified=true", result.stdout)
         self.assertIn("bone_payload_abi=3", result.stdout)
+
+    def test_filtered_left_knee_remains_visible_in_source_crouch(self):
+        arguments = ["--joint-equality-payload", str(
+            self.artifact / "myosim-fullbody-joint-equalities.nheq"
+        )]
+        for dof, value in [(101, .9), (106, 1.4), (109, -.25), (111, .2),
+                           (115, .9), (120, 1.4), (123, -.25), (125, .2)]:
+            arguments += ["--pose-q", str(dof), str(value)]
+        for body in [145, 150, 156]:
+            arguments += ["--visible-bone-body-index", str(body)]
+        for focus in [["--focus-body-index", "156"],
+                      ["--focus-joint-child-body-index", "156",
+                       "--focus-distance-m", "0.32"]]:
+            with self.subTest(focus=focus[0]):
+                result = self.run_probe(self.bones.read_bytes(), arguments + focus, 1024)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertIn("bone_source_owner_bindings_verified=true", result.stdout)
+                coverage = re.findall(r"view=(\w+).*?bone_pixels=(\d+)", result.stdout)
+                self.assertEqual({view for view, _ in coverage},
+                                 {"front", "oblique", "side", "rear"})
+                self.assertTrue(all(int(pixels) > 0 for _, pixels in coverage), coverage)
 
     def test_historical_records_remain_readable_with_owner_verification_unavailable(self):
         raw = self.bones.read_bytes()
