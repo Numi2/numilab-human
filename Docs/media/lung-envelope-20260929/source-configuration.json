@@ -1,0 +1,135 @@
+{
+  "base_payload_sha256": "e828bc31ba31e5ab6939d435c971933414bce6320e2c17327ac4b9abcc660e0d",
+  "base_surface_count": 304,
+  "boundary": "Source-authored reference-atlas lobe envelopes and pleura, with measured atlas-to-atlas bone registration. No parenchymal microstructure, material, fluid volume, respiratory motion, mechanics or clinical registration is admitted.",
+  "export": {
+    "compressed_sha256": "2cf22afa6ccb5971d3e0606fc791cb3eead9d4d818d3a4f0a9c3c72e60fc2ec1",
+    "exporter_file": "tools/export_zanatomy_thorax.py",
+    "exporter_sha256": "ee5365406299a8d56e6d1a6ea3ca10c407c4df8421ca6a0120f334d4a3870f4b",
+    "file": "Docs/media/zanatomy-thorax-source-20260929/thorax-source-export.json.gz",
+    "sha256": "a3571dbef37373be0db614dd225458e0e888fe63b9ddab70a692484632cc376a"
+  },
+  "fit_anchor_names": [
+    "Body of sternum",
+    "First rib.r",
+    "Third rib.r",
+    "Fifth rib.r",
+    "Seventh rib.r",
+    "Ninth rib.r",
+    "Eleventh rib.r",
+    "First rib.l",
+    "Third rib.l",
+    "Fifth rib.l",
+    "Seventh rib.l",
+    "Ninth rib.l",
+    "Eleventh rib.l"
+  ],
+  "objects": [
+    {
+      "concept_id": "FMA7371",
+      "id": "left_lower_lobe",
+      "layer": "lung_lobe",
+      "layer_code": 7,
+      "myosim_body": "torso",
+      "object_name": "Inferior lobe of left lung",
+      "parent_lung_concept_id": "FMA7310",
+      "stable_id": 305
+    },
+    {
+      "concept_id": "FMA7337",
+      "id": "right_lower_lobe",
+      "layer": "lung_lobe",
+      "layer_code": 7,
+      "myosim_body": "torso",
+      "object_name": "Inferior lobe of right lung",
+      "parent_lung_concept_id": "FMA7309",
+      "stable_id": 306
+    },
+    {
+      "concept_id": "FMA7383",
+      "id": "right_middle_lobe",
+      "layer": "lung_lobe",
+      "layer_code": 7,
+      "myosim_body": "torso",
+      "object_name": "Middle lobe of right lung",
+      "parent_lung_concept_id": "FMA7309",
+      "stable_id": 307
+    },
+    {
+      "concept_id": "FMA7370",
+      "id": "left_upper_lobe",
+      "layer": "lung_lobe",
+      "layer_code": 7,
+      "myosim_body": "torso",
+      "object_name": "Superior lobe of left lung",
+      "parent_lung_concept_id": "FMA7310",
+      "stable_id": 308
+    },
+    {
+      "concept_id": "FMA7333",
+      "id": "right_upper_lobe",
+      "layer": "lung_lobe",
+      "layer_code": 7,
+      "myosim_body": "torso",
+      "object_name": "Superior lobe of right lung",
+      "parent_lung_concept_id": "FMA7309",
+      "stable_id": 309
+    },
+    {
+      "concept_id": null,
+      "id": "pleural_surface",
+      "layer": "pleura",
+      "layer_code": 8,
+      "myosim_body": "torso",
+      "object_name": "Pleura",
+      "parent_lung_concept_id": null,
+      "stable_id": 310
+    }
+  ],
+  "registration_anchor_members": {
+    "Body of sternum": "FJ3178",
+    "Clavicle.l": "FJ3237",
+    "Clavicle.r": "FJ3362",
+    "Eighth rib.l": "FJ3235",
+    "Eighth rib.r": "FJ3347",
+    "Eleventh rib.l": "FJ3226",
+    "Eleventh rib.r": "FJ3331",
+    "Fifth rib.l": "FJ3232",
+    "Fifth rib.r": "FJ3342",
+    "First rib.l": "FJ3228",
+    "First rib.r": "FJ3334",
+    "Fourth rib.l": "FJ3231",
+    "Fourth rib.r": "FJ3340",
+    "Ninth rib.l": "FJ3236",
+    "Ninth rib.r": "FJ3348",
+    "Second rib.l": "FJ3229",
+    "Second rib.r": "FJ3336",
+    "Seventh rib.l": "FJ3234",
+    "Seventh rib.r": "FJ3346",
+    "Sixth rib.l": "FJ3233",
+    "Sixth rib.r": "FJ3344",
+    "Tenth rib.l": "FJ3225",
+    "Tenth rib.r": "FJ3330",
+    "Third rib.l": "FJ3230",
+    "Third rib.r": "FJ3338",
+    "Twelfth rib.l": "FJ3227",
+    "Twelfth rib.r": "FJ3332"
+  },
+  "registration_sha256": "0b7129f788ae91272d03abf9f10b985359f3b9d9569941515b222787ffe71324",
+  "schema": "numi.human.zanatomy-thorax-source.v1",
+  "source": {
+    "archive": {
+      "bytes": 86734957,
+      "file": "Z-Anatomy.zip",
+      "sha256": "e029688545627bd0214b269e1063143abb580aad72b2c2445d6d8a9a0d9da736"
+    },
+    "blend": {
+      "bytes": 306838281,
+      "member": "Z-Anatomy/Startup.blend",
+      "sha256": "9f08a17ea0115fed80b2a73ecdf0a1bc2ab2f6956f37c593ce23d513ea35afcd"
+    },
+    "license": "CC-BY-SA-4.0",
+    "repository": "https://github.com/Z-Anatomy/Models-of-human-anatomy",
+    "revision": "9a2ef22cc8443d14f9aa18ba91246416b1c6ab7a"
+  }
+}

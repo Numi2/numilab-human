@@ -1,0 +1,569 @@
+{
+  "schema": "numi.human.lung-envelope-source-evidence.v1",
+  "date": "2026-09-29",
+  "human_base_commit": "f26c06d7c97db2f9fd08237004e7cac7aa33350c",
+  "native_commit": "e982c61d633306a85a51ce4858771186c87b014c",
+  "inputs": {
+    "payload": {
+      "sha256": "d905d7c76c0e95346c0a84cfe0a829e47afdd55cf8b8c84aa26c291f79a51d4e",
+      "abi": 3,
+      "indices": 1451088,
+      "surfaces": 310,
+      "vertices": 264157
+    },
+    "configuration_sha256": "d6b31d3a921b14d8729b1565c2f2ba9420661122e0f0774a415f94d58f82af97",
+    "source_export_sha256": "a3571dbef37373be0db614dd225458e0e888fe63b9ddab70a692484632cc376a",
+    "registration_sha256": "0b7129f788ae91272d03abf9f10b985359f3b9d9569941515b222787ffe71324",
+    "base_payload_sha256": "e828bc31ba31e5ab6939d435c971933414bce6320e2c17327ac4b9abcc660e0d",
+    "native_binary_sha256": "6c363826d1e89e2d84b8177dfea31f3d5fb392d3c0bd9c1b4d9110889a48f975",
+    "native_executed_source_sha256": "3f2180d34f22876288e21e0b7d344d2f697b1f1f13e691dbadc7cb3d7e19c435",
+    "unchanged_runtime_library_sha256": "6b9062e84bdacd6b86b413d5c549cd0046d9a271fb0caa141e03db41ffa213f6"
+  },
+  "coverage": {
+    "torso_surfaces": 310,
+    "source_lobes": 5,
+    "source_pleural_meshes": 1,
+    "added_vertices": 77300,
+    "added_triangles": 154432,
+    "total_vertices": 264157,
+    "total_triangles": 483696
+  },
+  "validation": {
+    "all_native_source_audits_passed": true,
+    "poses": 3,
+    "profiles_per_pose": 4,
+    "native_camera_captures": 48,
+    "maximum_added_source_position_error_m": 1.4101311202836875e-07,
+    "maximum_baseline_source_position_error_m": 1.6896793262292576e-07,
+    "held_out_atlas_centroid_rms_m": 0.0044676918991343895,
+    "source_export_byte_identically_reproduced": true,
+    "original_304_payload_geometry_byte_identical": true,
+    "historical_abi1_and_abi2_native_geometry_sections_byte_identical": true,
+    "unique_final_checks_passed": 129,
+    "skipped_final_checks": 0,
+    "test_runs": [
+      {
+        "directory": "tests.final.v2",
+        "tests": 126,
+        "failures": 3,
+        "errors": 0,
+        "skipped": 0,
+        "wall_seconds": 636.1565788751468,
+        "exit_code": 1
+      },
+      {
+        "directory": "body-links-final",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "wall_seconds": 4.355319749563932,
+        "exit_code": 0
+      }
+    ],
+    "intermediate_retry": "one passed and five test setup errors from missing temporary parent; fixed harness passed all six",
+    "executed_source_sha256": {
+      "src/numilab_human/lung_envelope.py": "6c3af4084d24cdffa3df6cd8e0a31e177c84ca01cf74f8f751e1021e2f87d11f",
+      "src/numilab_human/torso_anatomy_audit.py": "90fee627697ef32dea36639474e359a7c6c402fd004a605ea2f7d32794a081ad",
+      "tests/test_lung_envelope.py": "1c4c081dd8862478bc69033d3a689adbbdc574665b187be0d6f4e761c0878846",
+      "tests/test_torso_anatomy_source_audit.py": "18b21552c26f9939a1eb600f1f02c5039e96d4e5ea5cac22e770970ba2b4b29c",
+      "tests/test_torso_anatomy_coverage.py": "0f582e5de1053aa740bd5821ae388043e4d11ba10710dee3dff107f712e440c6",
+      "tests/test_torso_body_links.py": "d0ce1068c21e3e8ecdc05d0bcf7b285dbb4f4a95c391e7d138674ef02759cdc6",
+      ".numi/commands/human": "3e555e4031ea2deacc70f948e968bd74e82a9e9b2965e296602ea88e76e7ce1c",
+      "config/zanatomy-thorax-source.v1.json": "d6b31d3a921b14d8729b1565c2f2ba9420661122e0f0774a415f94d58f82af97",
+      "tools/export_zanatomy_thorax.py": "ee5365406299a8d56e6d1a6ea3ca10c407c4df8421ca6a0120f334d4a3870f4b",
+      "src/numilab_human/torso_body_links.py": "c44799088a6c71d96ad76b053eaf59c41182118ea9e20d400b6dd12a4928a8b9"
+    }
+  },
+  "qualification": {
+    "source_geometry": true,
+    "clinical_registration": false,
+    "sealed_lung_tissue": false,
+    "fluid_domains_or_tissue_volume": false,
+    "respiratory_motion": false,
+    "organ_or_pleural_mechanics": false,
+    "standing_controller": false,
+    "whole_human_anatomy": false
+  },
+  "source_topology": [
+    {
+      "boundary_edge_count": 14,
+      "closed_oriented_manifold_candidate": false,
+      "degenerate_face_ids": 0,
+      "duplicate_face_ids": 0,
+      "euler_characteristic": 1,
+      "face_component_count": 1,
+      "face_count": 9258,
+      "fluid_or_tissue_volume_admitted": false,
+      "geometry_modified": false,
+      "nonmanifold_edges": 0,
+      "object_name": "Inferior lobe of left lung",
+      "orientation_defect_edges": 0,
+      "repeated_vertex_face_ids": 0,
+      "self_intersections": "not_checked",
+      "signed_surface_integral_m3": 0.0008301089023440818,
+      "unused_vertex_ids": 0,
+      "vertex_count": 4637,
+      "vertex_manifold_defect_ids": 0
+    },
+    {
+      "boundary_edge_count": 16,
+      "closed_oriented_manifold_candidate": false,
+      "degenerate_face_ids": 0,
+      "duplicate_face_ids": 0,
+      "euler_characteristic": 1,
+      "face_component_count": 1,
+      "face_count": 8452,
+      "fluid_or_tissue_volume_admitted": false,
+      "geometry_modified": false,
+      "nonmanifold_edges": 8,
+      "object_name": "Inferior lobe of right lung",
+      "orientation_defect_edges": 0,
+      "repeated_vertex_face_ids": 0,
+      "self_intersections": "not_checked",
+      "signed_surface_integral_m3": 0.0007529797086780572,
+      "unused_vertex_ids": 0,
+      "vertex_count": 4231,
+      "vertex_manifold_defect_ids": 9
+    },
+    {
+      "boundary_edge_count": 20,
+      "closed_oriented_manifold_candidate": false,
+      "degenerate_face_ids": 0,
+      "duplicate_face_ids": 0,
+      "euler_characteristic": 0,
+      "face_component_count": 1,
+      "face_count": 7396,
+      "fluid_or_tissue_volume_admitted": false,
+      "geometry_modified": false,
+      "nonmanifold_edges": 0,
+      "object_name": "Middle lobe of right lung",
+      "orientation_defect_edges": 0,
+      "repeated_vertex_face_ids": 0,
+      "self_intersections": "not_checked",
+      "signed_surface_integral_m3": 0.0003463429304734424,
+      "unused_vertex_ids": 0,
+      "vertex_count": 3708,
+      "vertex_manifold_defect_ids": 0
+    },
+    {
+      "boundary_edge_count": 34,
+      "closed_oriented_manifold_candidate": false,
+      "degenerate_face_ids": 0,
+      "duplicate_face_ids": 0,
+      "euler_characteristic": 0,
+      "face_component_count": 1,
+      "face_count": 9290,
+      "fluid_or_tissue_volume_admitted": false,
+      "geometry_modified": false,
+      "nonmanifold_edges": 0,
+      "object_name": "Superior lobe of left lung",
+      "orientation_defect_edges": 0,
+      "repeated_vertex_face_ids": 0,
+      "self_intersections": "not_checked",
+      "signed_surface_integral_m3": 0.0007601334942242024,
+      "unused_vertex_ids": 0,
+      "vertex_count": 4662,
+      "vertex_manifold_defect_ids": 0
+    },
+    {
+      "boundary_edge_count": 60,
+      "closed_oriented_manifold_candidate": false,
+      "degenerate_face_ids": 0,
+      "duplicate_face_ids": 0,
+      "euler_characteristic": -2,
+      "face_component_count": 1,
+      "face_count": 7748,
+      "fluid_or_tissue_volume_admitted": false,
+      "geometry_modified": false,
+      "nonmanifold_edges": 0,
+      "object_name": "Superior lobe of right lung",
+      "orientation_defect_edges": 0,
+      "repeated_vertex_face_ids": 0,
+      "self_intersections": "not_checked",
+      "signed_surface_integral_m3": 0.0008280228119169174,
+      "unused_vertex_ids": 0,
+      "vertex_count": 3902,
+      "vertex_manifold_defect_ids": 0
+    },
+    {
+      "boundary_edge_count": 0,
+      "closed_oriented_manifold_candidate": true,
+      "degenerate_face_ids": 0,
+      "duplicate_face_ids": 0,
+      "euler_characteristic": 16,
+      "face_component_count": 8,
+      "face_count": 112288,
+      "fluid_or_tissue_volume_admitted": false,
+      "geometry_modified": false,
+      "nonmanifold_edges": 0,
+      "object_name": "Pleura",
+      "orientation_defect_edges": 0,
+      "repeated_vertex_face_ids": 0,
+      "self_intersections": "not_checked",
+      "signed_surface_integral_m3": 0.0002445636764088355,
+      "unused_vertex_ids": 0,
+      "vertex_count": 56160,
+      "vertex_manifold_defect_ids": 0
+    }
+  ],
+  "boundary": "Source-authored reference-atlas lobe envelopes and pleura, with measured atlas-to-atlas bone registration. No parenchymal microstructure, material, fluid volume, respiratory motion, mechanics or clinical registration is admitted.",
+  "public_artifacts": {
+    "current-body-links.json": {
+      "bytes": 252918,
+      "sha256": "c4964407e68cce4218d2a796843902f0cc21c8a8fb1d4231a4eb6ebae26da676"
+    },
+    "executive-lung-envelope-progress.png": {
+      "bytes": 276430,
+      "sha256": "fb02d59e970e4667e99afbd289d01d347f30b0ecc21cafe7819e986181d420fe"
+    },
+    "executive-lung-source-quality.png": {
+      "bytes": 144235,
+      "sha256": "623bc6013ce460929f5523b7fd3e57a1984ead3f0a9c906e8c362711f5a7e28c"
+    },
+    "geometry-parity.json": {
+      "bytes": 460,
+      "sha256": "ccc45e307fce306a3a0c1a65ee4e3dcf08b30ebca681a2bc8f07e157ccece33d"
+    },
+    "native/projected-neutral-mask128/command.json": {
+      "bytes": 861,
+      "sha256": "00ca0edd17343add677a44c5372e9d1f2220aba57028a57e860fda0a5be7d3b8"
+    },
+    "native/projected-neutral-mask128/exit.code": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "native/projected-neutral-mask128/source-audit.json": {
+      "bytes": 801219,
+      "sha256": "5d8865d4e0020506bd0d038936a9edfa0146390711d0ea5b5e9ebe7cdbf7a8e7"
+    },
+    "native/projected-neutral-mask128/stderr": {
+      "bytes": 90,
+      "sha256": "125772c4c5edbab733a1cda6b9b89a68927c8f411276d7440366b3c3e15c9550"
+    },
+    "native/projected-neutral-mask128/stdout": {
+      "bytes": 23973,
+      "sha256": "aaffc5c3d177429024b25c1fb834dfb029f5366fc8660ac73f2cae5cc92a7400"
+    },
+    "native/projected-neutral-mask255/command.json": {
+      "bytes": 861,
+      "sha256": "43a9dd7aa84d8c30f7cb0ca63a37d447d2629e85582eccdc11a14126a29aa956"
+    },
+    "native/projected-neutral-mask255/exit.code": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "native/projected-neutral-mask255/source-audit.json": {
+      "bytes": 801215,
+      "sha256": "949d1a11cb09075264ac54f3bd54f7e38a5aabeb7e7627080325ae6039aa08da"
+    },
+    "native/projected-neutral-mask255/stderr": {
+      "bytes": 90,
+      "sha256": "9757a70a49a4d52dc4d57fa2ef43f4fe37ed28405eeda3b0c4bfd490bd0b0f6f"
+    },
+    "native/projected-neutral-mask255/stdout": {
+      "bytes": 24015,
+      "sha256": "dba34b7fe14be1ed98aaf3e9ec5291cecbe370deeacf9c7d9ac9290dece32938"
+    },
+    "native/projected-neutral-mask63/command.json": {
+      "bytes": 859,
+      "sha256": "f551f0f416615e388fcc162cd81a04365cc3870ad932e98b07a54ba307e0ca2e"
+    },
+    "native/projected-neutral-mask63/exit.code": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "native/projected-neutral-mask63/source-audit.json": {
+      "bytes": 801213,
+      "sha256": "bc3e46587ff5bfd2f73f2afabfb6bd6d9bfd398df2f4596dd8f0739cf9180823"
+    },
+    "native/projected-neutral-mask63/stderr": {
+      "bytes": 90,
+      "sha256": "8862cb41f329d5b2859bea9d5de25505e2d2250ad95a88f2113b871607837862"
+    },
+    "native/projected-neutral-mask63/stdout": {
+      "bytes": 24017,
+      "sha256": "59f27b9103f91ecbd74a946f75f4926d7be088de2477bfcd2480958f1767e59c"
+    },
+    "native/projected-neutral-mask64/command.json": {
+      "bytes": 859,
+      "sha256": "c6a1dbe100c37a2e4d7c618775f43839310a4d33360f5eadb1eeb583fb21ba47"
+    },
+    "native/projected-neutral-mask64/exit.code": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "native/projected-neutral-mask64/source-audit.json": {
+      "bytes": 801207,
+      "sha256": "e672684df8418031c4df80d4f0454d285bbce81c23c6d7e00066d1963f6c4b0a"
+    },
+    "native/projected-neutral-mask64/stderr": {
+      "bytes": 90,
+      "sha256": "6a5a30430aa17f1ca9a21b3fb0c3d01bbf68a16ff23a7c3704e37c554dbab23d"
+    },
+    "native/projected-neutral-mask64/stdout": {
+      "bytes": 23968,
+      "sha256": "22e5cb3ee865378245de5c24ffdabc0ad19a18fb1b9639e92df02e12573109e4"
+    },
+    "native/raw-source-rest-mask128/command.json": {
+      "bytes": 738,
+      "sha256": "566335e6452ccef362a87a99b804cbda0e649095627d19dee49fcd8dabb8dceb"
+    },
+    "native/raw-source-rest-mask128/exit.code": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "native/raw-source-rest-mask128/source-audit.json": {
+      "bytes": 788140,
+      "sha256": "665a527bc5d85668b4c45ec7b50570afa6dc4ebc6123ab73bd193f61bf33c3f1"
+    },
+    "native/raw-source-rest-mask128/stderr": {
+      "bytes": 90,
+      "sha256": "cd644cb57cef6a88a6ef4b319278c5447b1a6f2abfb25f78f2dc9b66220834ef"
+    },
+    "native/raw-source-rest-mask128/stdout": {
+      "bytes": 23223,
+      "sha256": "9c2a05f8c3b4b97c337aae1326d6e8a371a7d5c99995ec76e38b9193f5fdd843"
+    },
+    "native/raw-source-rest-mask255/command.json": {
+      "bytes": 738,
+      "sha256": "a042223a4b4699e01267a0a53a8255fbe566b1b5612c1372c951baf24fbdde5b"
+    },
+    "native/raw-source-rest-mask255/exit.code": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "native/raw-source-rest-mask255/source-audit.json": {
+      "bytes": 788135,
+      "sha256": "88806ff22f0c2429e34fbc31cff6e1b291c187ba03319ef7fc7924a631747f7d"
+    },
+    "native/raw-source-rest-mask255/stderr": {
+      "bytes": 90,
+      "sha256": "62d1452ad2b5ac13c57446a644191621b67640072b16b2d8062bcbed144f5377"
+    },
+    "native/raw-source-rest-mask255/stdout": {
+      "bytes": 23266,
+      "sha256": "0e44a1ca764169efd9ecab440a9c6002ff4ee4382119e5f24008ce2ae12ffb8a"
+    },
+    "native/raw-source-rest-mask63/command.json": {
+      "bytes": 736,
+      "sha256": "688b9fa22e09ec59bd518337d3b5ec1f598aef16286e9457206c11c54a1fbb00"
+    },
+    "native/raw-source-rest-mask63/exit.code": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "native/raw-source-rest-mask63/source-audit.json": {
+      "bytes": 788133,
+      "sha256": "232e2933f02eaefac4dd9e2d0b7c4531d99a681d45267b9ad4c46850a339c304"
+    },
+    "native/raw-source-rest-mask63/stderr": {
+      "bytes": 90,
+      "sha256": "e02e01cd6ee3a3d8dc9630e681bcd914963c9f1d2293ad1a1dd1bfde1c34acc4"
+    },
+    "native/raw-source-rest-mask63/stdout": {
+      "bytes": 23268,
+      "sha256": "87519a2b3d283fb1b820055bd57aeeb32dc493da5343267fa1ca78aeaaec442a"
+    },
+    "native/raw-source-rest-mask64/command.json": {
+      "bytes": 736,
+      "sha256": "ccc2f1411fd29c00b46891823fac04f4c568486042abb4fcc772611f6ed113d0"
+    },
+    "native/raw-source-rest-mask64/exit.code": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "native/raw-source-rest-mask64/source-audit.json": {
+      "bytes": 788128,
+      "sha256": "194c174bff4f00095371dd1580a69e5671c990145d85ffcfb8724949902b4f13"
+    },
+    "native/raw-source-rest-mask64/stderr": {
+      "bytes": 90,
+      "sha256": "2088c30c938cb6f10fc13bd96cd99ed7beef5e6e30228933de65b45bc6a92094"
+    },
+    "native/raw-source-rest-mask64/stdout": {
+      "bytes": 23219,
+      "sha256": "600400d4a5315d042bce08cb17a10894390ec0ba1212ae4c22e68a8248ba7fe8"
+    },
+    "native/torso-flexion-mask128/command.json": {
+      "bytes": 948,
+      "sha256": "b8b06f86ae371c88d73abae21a353174703b4ff4848be15e9b2184afac8fa733"
+    },
+    "native/torso-flexion-mask128/exit.code": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "native/torso-flexion-mask128/source-audit.json": {
+      "bytes": 802316,
+      "sha256": "a8bf6d7464139afc4db392885c97103c255b15ecfab358fa52f3d44b125b1081"
+    },
+    "native/torso-flexion-mask128/stderr": {
+      "bytes": 90,
+      "sha256": "2b791fdb0c2c0cf40346c783e5a4266dd3bcb63e33fdf7cc281c3c961aee88a7"
+    },
+    "native/torso-flexion-mask128/stdout": {
+      "bytes": 23940,
+      "sha256": "67fd299bdd8c36f0d62de304b724a56ea59e91170f60a8b946b4e053e7485108"
+    },
+    "native/torso-flexion-mask255/command.json": {
+      "bytes": 948,
+      "sha256": "978d3380c1d0e6ccbff6a422f4b89dd7d884e971e7f97f8537910872717ea992"
+    },
+    "native/torso-flexion-mask255/exit.code": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "native/torso-flexion-mask255/source-audit.json": {
+      "bytes": 802311,
+      "sha256": "477e6aee84f8a963586ac746fa3a4cf9b7a87b4c844e0a13a8c70b9c667694c7"
+    },
+    "native/torso-flexion-mask255/stderr": {
+      "bytes": 90,
+      "sha256": "4afdcd6c733f8bc76fc900605c7ea0c2d887fed4f150a3cda17bb865fe82d82f"
+    },
+    "native/torso-flexion-mask255/stdout": {
+      "bytes": 23987,
+      "sha256": "f64db653546d60155128368a2f6309e1e551217b1845031e05a20d7a4db47a4d"
+    },
+    "native/torso-flexion-mask63/command.json": {
+      "bytes": 946,
+      "sha256": "73adbb310d75dbdfeef78fd5cc02d6d0e34e696a96d95861f4a4988a42305079"
+    },
+    "native/torso-flexion-mask63/exit.code": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "native/torso-flexion-mask63/source-audit.json": {
+      "bytes": 802309,
+      "sha256": "37cffd1bfe63509aec7471844f141ed2a3777209f6851bac7ae33e938f16448e"
+    },
+    "native/torso-flexion-mask63/stderr": {
+      "bytes": 90,
+      "sha256": "1ff3d85cbc5b2f3cbda6550868deadac44e5fa1e2387e21d619c8d2c7536eaec"
+    },
+    "native/torso-flexion-mask63/stdout": {
+      "bytes": 23987,
+      "sha256": "f85d528b4e9486d494f0c45c66a06d571d2cbbfb52ecf930aa5665f5b4099ab7"
+    },
+    "native/torso-flexion-mask64/command.json": {
+      "bytes": 946,
+      "sha256": "80375bf169030ef3266e4af6bef51ccebe2f22c21bb03c8c9a33fd8e6a5e280a"
+    },
+    "native/torso-flexion-mask64/exit.code": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "native/torso-flexion-mask64/source-audit.json": {
+      "bytes": 802304,
+      "sha256": "0d9951604954fa938f137478e9b8261496ce81db65f3cd421ef2f44cddceca2e"
+    },
+    "native/torso-flexion-mask64/stderr": {
+      "bytes": 90,
+      "sha256": "afe3a988cd81eea6ccfab136f45044aa3b4a1f81737ef8a62638ce3e9412e7f5"
+    },
+    "native/torso-flexion-mask64/stdout": {
+      "bytes": 23938,
+      "sha256": "73bd635977a74f472142f6b2ccc92e4752f05336c28a77b58550d12ae28151f5"
+    },
+    "native-neutral-mask128-oblique.png": {
+      "bytes": 223497,
+      "sha256": "38009e49e58014769d476e2b6be842ec9777d08be8e4f11242fc606d146298e6"
+    },
+    "native-neutral-mask63-oblique.png": {
+      "bytes": 244938,
+      "sha256": "c8ae52f5f8b3097afbb7c12dbecedce2582ed015323971734972300ff6a07b1a"
+    },
+    "native-neutral-mask64-oblique.png": {
+      "bytes": 224793,
+      "sha256": "d9a27f877993462e2ff79855a8ff87cf4e5670ece55257ab663716e15cdb058f"
+    },
+    "payload-manifest.json": {
+      "bytes": 23790,
+      "sha256": "20316ae7a690e2b184687c3349b35a8859dc1f03e5f11272827c108131802a08"
+    },
+    "reference/myosim-fullbody-core-reference.nhrigid": {
+      "bytes": 60324,
+      "sha256": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951"
+    },
+    "reference/myosim-fullbody-reference.manifest.json": {
+      "bytes": 596853,
+      "sha256": "5d1d749632b521bc84bbd1d08b86044740635724c062667d6a4710e7c9735b07"
+    },
+    "source-configuration.json": {
+      "bytes": 4226,
+      "sha256": "d6b31d3a921b14d8729b1565c2f2ba9420661122e0f0774a415f94d58f82af97"
+    },
+    "source-export-reproduction-command.json": {
+      "bytes": 486,
+      "sha256": "0753cf2c2bbbd33fc5c3227d973c129995d0e15b6c951b6129889b8c16a5392c"
+    },
+    "source-export-reproduction.json": {
+      "bytes": 474,
+      "sha256": "0071672fd1a6cdb78ed882110f07f1bb179be6ae32e432d6e689fc41cc3ad69b"
+    },
+    "tests/body-links-final/command.json": {
+      "bytes": 418,
+      "sha256": "9cf4c212e4aecae1d6dcacf8c253aadd1c7ba918031f6f4a7c59ceb9af136688"
+    },
+    "tests/body-links-final/exit.code": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "tests/body-links-final/junit.xml": {
+      "bytes": 964,
+      "sha256": "5721c7210b0bc20de83c9d912efd90fbfa799d12603d813b2449f8c75eb1c355"
+    },
+    "tests/body-links-final/source.sha256.json": {
+      "bytes": 218,
+      "sha256": "0b0ef5407a6c7038ac79a84fe2945fba9f90cda4437a8e6ea734a474a6535b14"
+    },
+    "tests/body-links-final/stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tests/body-links-final/stdout": {
+      "bytes": 98,
+      "sha256": "bc1da5993c70de41ace88b9d2ea653178f71801b6508b4857f05459a9eba3861"
+    },
+    "tests/body-links-final/wall.seconds": {
+      "bytes": 18,
+      "sha256": "443f850751a2ccaf581e5a67c913ce530f45afdef3b1735f9864f8add685937b"
+    },
+    "tests/tests.final.v2/command.json": {
+      "bytes": 1307,
+      "sha256": "1d132dc93f54555948b5a3d532dba59f607a79d56779a831b548ef5a38aed92e"
+    },
+    "tests/tests.final.v2/exit.code": {
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    "tests/tests.final.v2/source.sha256.json": {
+      "bytes": 964,
+      "sha256": "e2c5258fba0abf101f77db212b1c2b43aaa883d14ca9b9ebe734c652637a6de2"
+    },
+    "tests/tests.final.v2/stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tests/tests.final.v2/wall.seconds": {
+      "bytes": 18,
+      "sha256": "ce57280b009928ccbadf8b627e153c230c4bf82c74ff859fa87dedc354447193"
+    },
+    "tests/body-links-harness-error/junit.xml": {
+      "bytes": 4909,
+      "sha256": "8e48db7c4bf2494d85957a7638a1e82c6f75594e660da6af92811f7cc3803db4"
+    },
+    "tests/tests.final.v2/junit.xml.gz": {
+      "bytes": 2966,
+      "sha256": "e05863814da64f4fe28d1ad2dfad625f3bdffdc6af867597957b0535b9144aed",
+      "uncompressed_sha256": "2f3744d2beb4e9ffe5d1276d37fed8c1a67fb5c762e6fa4b11df8537456be5fc",
+      "encoding": "gzip"
+    },
+    "tests/tests.final.v2/stdout.gz": {
+      "bytes": 945,
+      "sha256": "1f14d8218fab170cd3c85054e7d8cd5dcdb7391fcec69aaac847925f2ea174cc",
+      "uncompressed_sha256": "cb9e1c8326263ca0f183941c3fee50ce8e01742fd659733d7ce5c1d1ce6b5dec",
+      "encoding": "gzip"
+    }
+  }
+}

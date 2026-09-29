@@ -20,9 +20,9 @@ from .vessel_body_links import load_body_catalog
 ROOT = Path(__file__).resolve().parents[2]
 SCHEMA = "HumanPack.organ-torso-body-link-registration.v1"
 MAP = ROOT / "config/bodyparts3d-myosim-torso-anatomy-map.v1.json"
-VISUAL_MANIFEST = ROOT / "Docs/media/native-torso-anatomy-20260913/bodyparts3d-myosim-torso-anatomy.manifest.json"
-NATIVE_RECEIPT = ROOT / "Docs/media/native-torso-anatomy-20260913/receipt.json"
-HUMAN_MANIFEST = ROOT / "Docs/media/organ-vessel-body-link-20260913/authoritative/myosim-fullbody-reference.manifest.json"
+VISUAL_MANIFEST = ROOT / "Docs/media/pulmonary-branch-coverage-20260929/bodyparts3d-myosim-torso-anatomy.manifest.json"
+NATIVE_RECEIPT = ROOT / "Docs/media/pulmonary-branch-coverage-20260929/projected-neutral-source-geometry-audit.json"
+HUMAN_MANIFEST = ROOT / "Docs/media/lung-envelope-20260929/reference/myosim-fullbody-reference.manifest.json"
 
 
 def require(condition: bool, message: str) -> None:
@@ -58,8 +58,8 @@ def compile_body_links(*, sources: Path = ROOT / "Sources",
     require(mapping.get("schema") == "numi.human.bodyparts3d-myosim-torso-anatomy-map.v1",
             "unsupported torso anatomy map schema")
     entries = mapping.get("entries")
-    require(isinstance(entries, list) and len(entries) == 12,
-            "torso anatomy map must contain twelve surfaces")
+    require(isinstance(entries, list) and 0 < len(entries) <= 1024,
+            "torso anatomy map must contain 1 to 1024 surfaces")
 
     anatomy = load_anatomy(Path(sources), Path(source_lock))
     by_member: dict[str, dict[str, Any]] = {}
@@ -67,11 +67,13 @@ def compile_body_links(*, sources: Path = ROOT / "Sources",
         require(isinstance(entry, dict), "torso anatomy map entry is malformed")
         required = {"concept_id", "source_name", "member_id", "hierarchy", "layer", "myosim_body"}
         require(required <= entry.keys(), "torso anatomy map entry is incomplete")
-        require(entry["hierarchy"] == "part_of", f"unsupported source hierarchy: {entry.get('member_id')}")
+        require(entry["hierarchy"] in {"part_of", "is_a"}, f"unsupported source hierarchy: {entry.get('member_id')}")
+        require(entry['layer'] in {'organ', 'vessel', 'nerve', 'airway', 'pulmonary_artery', 'pulmonary_vein'},
+                "unsupported torso source layer")
         member = entry["member_id"]
         require(isinstance(member, str) and member and member not in by_member,
                 "duplicate torso anatomy member")
-        relation = anatomy["tables"].get("part_of", {})
+        relation = anatomy["tables"].get(entry['hierarchy'], {})
         key = (entry["concept_id"], entry["source_name"])
         require(member in relation.get(key, set()),
                 f"torso anatomy source relation drifted: {member}")
@@ -123,14 +125,28 @@ def compile_body_links(*, sources: Path = ROOT / "Sources",
         visual_by_member[member] = row
 
     native = _read_json(Path(native_receipt))
-    require(native.get("schema") == "numi.human.native-torso-anatomy-visual-evidence.v1",
+    require(native.get("schema") in {"numi.human.native-torso-anatomy-visual-evidence.v1",
+                                     "numi.human.native-torso-anatomy-source-audit.v1"},
             "unsupported native torso receipt schema")
-    native_payload = native.get("payload", {})
-    require(native_payload.get("manifest", {}).get("sha256") == _sha256(Path(visual_manifest).read_bytes()),
-            "native torso receipt manifest identity drifted")
-    require(native.get("validation", {}).get("visual_probe") == "passed" and
-            native.get("qualification", {}).get("source_to_world_visual_registration") is True,
-            "native torso receipt is not visually qualified")
+    source_audit = native['schema'] == 'numi.human.native-torso-anatomy-source-audit.v1'
+    if source_audit:
+        require(native.get('inputs', {}).get('payload_manifest', {}).get('sha256')
+                == _sha256(Path(visual_manifest).read_bytes()), 'native torso receipt manifest identity drifted')
+        require(native.get('passed') is True and native.get('surface_count') == len(entries)
+                and native.get('native_source_family_coverage', {}).get('passed') is True,
+                'native torso source audit is not qualified')
+        native_rows = native.get('rows', [])
+        require(len(native_rows) == len(entries) and {r['member_id'] for r in native_rows} == set(by_member)
+                and all(r.get('passed') is True and r.get('topology_exact') is True for r in native_rows),
+                'native torso source audit coverage')
+        native_by_member = {r['member_id']:r for r in native_rows}
+    else:
+        native_payload = native.get("payload", {})
+        require(native_payload.get("manifest", {}).get("sha256") == _sha256(Path(visual_manifest).read_bytes()),
+                "native torso receipt manifest identity drifted")
+        require(native.get("validation", {}).get("visual_probe") == "passed" and
+                native.get("qualification", {}).get("source_to_world_visual_registration") is True,
+                "native torso receipt is not visually qualified")
 
     catalog = load_body_catalog(Path(human_manifest))
     linked: list[dict[str, Any]] = []
@@ -140,6 +156,16 @@ def compile_body_links(*, sources: Path = ROOT / "Sources",
         body_name = entry["myosim_body"]
         body = catalog["bodies"].get(body_name)
         require(body is not None, f"MyoSim body link is absent from NHRIGID2: {body_name}")
+        from .model import _bodyparts_obj_member
+        _, source_member, source_obj = _bodyparts_obj_member(Path(sources), entry['hierarchy'], member)
+        require(visual.get('member') == source_member and visual['member_sha256'] == _sha256(source_obj),
+                'visual source member hash/identity drifted')
+        require(visual.get('core_body_index') == body['core_body_index'], 'visual core body owner drifted')
+        if source_audit:
+            row = native_by_member[member]
+            require(row['core_body_index'] == body['core_body_index'] and row['source_body_id'] == body['source_body_id']
+                    and row['source_member_sha256'] == visual['member_sha256'] and row['layer'] == entry['layer']
+                    and row['stable_id'] == visual.get('stable_id'), 'native source body/member owner drifted')
         linked.append({
             "member_id": member,
             "concept_id": entry["concept_id"],
@@ -209,8 +235,7 @@ def compile_body_links(*, sources: Path = ROOT / "Sources",
             "standing_walking": False,
         },
         "boundary": (
-            "Twelve exact BodyParts3D torso surfaces (five organs, six vessels, "
-            "and one spinal cord) are hash-bound to the native visual payload and "
+            f"{len(linked)} exact BodyParts3D torso surfaces are hash-bound to the native visual payload and "
             "named MyoSim source/core body frames. This closes source/body-frame "
             "bookkeeping only; it does not create organ FEM/MPM, vessel tube or "
             "lumen mechanics, neural mechanics, mass, material density, pressure "

@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "/Users/home/numilab-human/.venv-mujoco312/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_lung_envelope.py",
+    "tests/test_torso_anatomy_source_audit.py",
+    "tests/test_torso_anatomy_coverage.py",
+    "tests/test_torso_body_links.py",
+    "--basetemp=/Users/home/numilab-human/Build/lung-envelope-20260929/tests.final.v2/tmp",
+    "--junitxml=/Users/home/numilab-human/Build/lung-envelope-20260929/tests.final.v2/junit.xml"
+  ],
+  "env": {
+    "PYTHONPATH": "src:tests:Sources/myosim/checkout",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MTL_DEBUG_LAYER": "1",
+    "NUMILAB_HUMAN_LUNG_ENVELOPE_EVIDENCE": "/Users/home/numilab-human/Build/lung-envelope-20260929",
+    "NUMILAB_HUMAN_NATIVE_VISUAL_PROBE": "/Users/home/numilab-human/Build/lung-envelope-20260929/native.final/myosim-visual-probe",
+    "NUMILAB_HUMAN_NATIVE_BONE_PAYLOAD": "/Users/home/numilab-human/Build/knee-parity-registration-20260929/bones.v6/payload/bodyparts3d-myosim-major-bones.nhbones",
+    "NUMILAB_HUMAN_NATIVE_REFERENCE_ARTIFACT": "/Users/home/numilab-human/Build/myosim-fullbody",
+    "NUMILAB_HUMAN_MOTION_SOURCES": "/Users/home/numilab-human/Sources",
+    "NUMILAB_HUMAN_MOTION_REPAIRED": "/Users/home/numilab-human/Build/knee-parity-registration-20260929/candidate.v6.registration.json"
+  }
+}

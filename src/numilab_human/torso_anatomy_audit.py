@@ -72,6 +72,7 @@ def _native_source_family_coverage(requirements, measured, relations, owners):
 def audit_torso_anatomy(
     sources: Path, artifact: Path, registration_path: Path, payload: Path,
     native_pack: Path, native_poses: Path, pose: tuple[tuple[int, float], ...] | None,
+    *, native_surface_count: int | None = None, visible_layer_mask: int = 63,
 ) -> dict[str, Any]:
     import mujoco
     import numpy as np
@@ -129,8 +130,11 @@ def audit_torso_anatomy(
     _require(len(selected) == surface_count and len(set(selected[:, 5])) == surface_count, "native torso surface coverage")
     by_id = {int(p[5]): p for p in selected}
     snapshot = json.loads(native_poses.read_text())
+    expected_native_count = surface_count if native_surface_count is None else native_surface_count
+    _require(surface_count <= expected_native_count <= 1024 and 0 < visible_layer_mask <= 255,
+             "native extended anatomy count/visibility contract")
     _require(snapshot["schema"] == "numi.human.native-torso-anatomy-pose-snapshot.v1"
-             and snapshot["surface_count"] == surface_count
+             and snapshot["surface_count"] == expected_native_count
              and snapshot["registration_fingerprint32"] == fingerprint, "native torso pose header")
     poses = {b["body_index"]: b for b in snapshot["bodies"]}
     _require(len(poses) == len(snapshot["bodies"]), "duplicate native torso pose owners")
@@ -216,6 +220,8 @@ def audit_torso_anatomy(
         iu, transform = instances_u[instance_index], instances_f[instance_index, :8]
         _require(int(iu[9]) == body and int(iu[10]) == 3
                  and np.array_equal(iu[12:16], primitive[4:8]), "native articulated instance owner")
+        _require(int(iu[11]) == (11 if visible_layer_mask & (1 << (layer - 1)) else 0),
+                 "native source anatomy visibility")
         _require(np.array_equal(transform, [0, 0, 0, 1, 0, 0, 0, 1]), "native unexpected surface local transform")
         native_local = packed_vertices[p_vertex:p_vertex + count_v, :3]
         _require(bool(np.isfinite(native_local).all()), "nonfinite native surface")
