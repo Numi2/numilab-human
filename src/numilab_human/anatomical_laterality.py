@@ -113,7 +113,7 @@ def support_metrics(world, faces, torso_origin, left_axis, side_sign, source_fac
 def inspect_selected(payload, selected_rows, metadata, pose):
     import numpy as np
     _, header, records, vertices, indices = lung.decode(payload)
-    require(header[0] == 5 and header[1] in (598, 599), 'candidate ABI/source count')
+    require(header[0] == 5 and header[1] in (598, 599, 602), 'candidate ABI/source count')
     require(len(selected_rows) == 579 and
             [x['source_stable_id'] for x in selected_rows] == list(range(1, 580)),
             'selected view incomplete')

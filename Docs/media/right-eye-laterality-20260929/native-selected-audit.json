@@ -1,0 +1,80 @@
+{
+  "all_602_surfaces_retained_in_native_packet": true,
+  "bilateral_source_surface_count": 58,
+  "boundary": "All 58 explicitly bilateral surfaces pass full support laterality in one native source-rest packet. Three right-eye source meshes still fail geometry, 521 other source surfaces are not checked for laterality, and clinical anatomy and mechanics remain unqualified.",
+  "clinical_anatomy": false,
+  "full_support_pass_after": 58,
+  "full_support_pass_before": 55,
+  "mechanics": false,
+  "native_audit": {
+    "candidate_count": 23,
+    "clinical_anatomy": false,
+    "hidden_parent_ids": [
+      18,
+      20,
+      170,
+      319,
+      339,
+      405,
+      412,
+      413,
+      423,
+      426,
+      427,
+      449,
+      458,
+      481,
+      584,
+      587,
+      589,
+      593,
+      594,
+      595,
+      596,
+      597,
+      598
+    ],
+    "mechanics": false,
+    "native_local_geometry_bit_identical": true,
+    "native_pack_sha256": "40d307564794a1f5e160559db2de6fefefee8cf00caad62dd39cf6f7e2ec7ed3",
+    "passed": true,
+    "payload_sha256": "5da65cf16efcd65461970515cf7cfe8ee49f7b96ad826d23f85318dedc42a54d",
+    "physical_volume": false,
+    "schema": "numi.human.native-topology-repair-audit.v1",
+    "snapshot_sha256": "c90f18f81b2ea395666dc773f640a328d5377eaf5cb0af3b5840e4f79f51ab79",
+    "surface_count": 602,
+    "visible_layer_mask": 32767
+  },
+  "passed": true,
+  "physical_volume": false,
+  "remaining_geometry_failed_right_eye_source_ids": [
+    413,
+    426,
+    427
+  ],
+  "remaining_wrong_side_source_ids": [],
+  "schema": "numi.human.right-eye-contralateral-source-components.v1.native-selected-audit",
+  "selected_right_eye_ids": {
+    "412": 599,
+    "413": 600,
+    "426": 601,
+    "427": 602
+  },
+  "source_audit": {
+    "all_first_599_surfaces_retained_byte_identically": true,
+    "clinical_anatomy": false,
+    "mechanics": false,
+    "passed": true,
+    "payload_sha256": "5da65cf16efcd65461970515cf7cfe8ee49f7b96ad826d23f85318dedc42a54d",
+    "physical_volume": false,
+    "schema": "numi.human.right-eye-contralateral-source-components.v1.audit",
+    "three_geometry_failures_remain": true,
+    "three_right_eye_laterality_candidates": [
+      600,
+      601,
+      602
+    ]
+  },
+  "source_rest_body_pose_unchanged": true,
+  "unassessed_source_surface_count": 521
+}
