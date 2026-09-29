@@ -81,6 +81,32 @@ LOWER_BODY_NAMES = {
 }
 
 
+def _patellar_anteriority(vertices, knee_origin, anterior_axis, *, side, member_id):
+    """Measure every compiled patella point against the source knee anchor."""
+    import numpy as np
+
+    vertices = np.asarray(vertices, dtype=float)
+    origin = np.asarray(knee_origin, dtype=float)
+    axis = np.asarray(anterior_axis, dtype=float)
+    if (vertices.ndim != 2 or vertices.shape[1] != 3 or not len(vertices)
+            or origin.shape != (3,) or axis.shape != (3,)
+            or not np.isfinite(vertices).all() or not np.isfinite(origin).all()
+            or not np.isfinite(axis).all() or abs(float(np.linalg.norm(axis)) - 1.) > 1e-12):
+        raise RuntimeError('lower-limb patellar anteriority has invalid geometry or axis')
+    signed = (vertices - origin) @ axis
+    return {
+        'side': side, 'source_member_id': member_id,
+        'patella_vertex_count': len(vertices),
+        'source_knee_anchor_world_m': origin.tolist(),
+        'source_anterior_axis_world': axis.tolist(),
+        'minimum_signed_anterior_offset_m': float(signed.min()),
+        'centroid_signed_anterior_offset_m': float(signed.mean()),
+        'p05_signed_anterior_offset_m': float(np.quantile(signed, .05)),
+        'vertices_posterior_or_on_knee_anchor_plane': int((signed <= 0).sum()),
+        'passed': bool((signed > 0).all()),
+    }
+
+
 def _sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as stream:
@@ -368,6 +394,34 @@ def audit_lower_limb_poses(
         )
         for member_id, (body_id, vertices) in registered_local_vertices.items()
     }
+    # The literal source qpos0 precedes the patellofemoral equality projection.
+    # Record it explicitly so source-rest pictures cannot be presented as the
+    # corrected runtime posture. The gate below applies to projected poses.
+    patella_members = {}
+    knee_joint_ids = {}
+    for side in ('r', 'l'):
+        patella_anchors = anchors_by_name[f'patella_{side}']
+        if len(patella_anchors) != 1:
+            raise RuntimeError(f'lower-limb patella_{side} requires one source member')
+        patella_members[side] = patella_anchors[0]['source']['member_id']
+        knee_joint_ids[side] = mujoco.mj_name2id(
+            model, mujoco.mjtObj.mjOBJ_JOINT, f'knee_angle_{side}')
+        if knee_joint_ids[side] < 0:
+            raise RuntimeError(f'lower-limb knee_angle_{side} source joint missing')
+    source_anterior_axis = np.asarray([0., -1., 0.])
+    pelvis_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, 'pelvis')
+    if pelvis_id < 0:
+        raise RuntimeError('lower-limb source pelvis body missing')
+    source_pelvis_rotation = data.xmat[pelvis_id].reshape(3, 3).copy()
+    source_qpos0_patellar_anteriority = [
+        _patellar_anteriority(
+            np.einsum('ki,ji->kj', local_vertices[patella_members[side]][1],
+                      data.xmat[local_vertices[patella_members[side]][0]].reshape(3, 3))
+            + data.xpos[local_vertices[patella_members[side]][0]],
+            data.xanchor[knee_joint_ids[side]], source_anterior_axis,
+            side=side, member_id=patella_members[side],
+        ) for side in ('r', 'l')
+    ]
     for anchor in anchors_by_member.values():
         member_id = anchor["source"]["member_id"]
         centroid = np.mean(default_world_vertices[member_id], axis=0)
@@ -391,6 +445,8 @@ def audit_lower_limb_poses(
         equality_maximum_correction = max(equality_maximum_correction, correction)
         data.qpos[:] = qpos
         mujoco.mj_forward(model, data)
+        anterior_axis = (data.xmat[pelvis_id].reshape(3, 3)
+                         @ source_pelvis_rotation.T @ source_anterior_axis)
         world_vertices = {
             member_id: (
                 np.einsum(
@@ -407,6 +463,12 @@ def audit_lower_limb_poses(
             )
             for body_id, vertices in source_local_vertices.items()
         }
+        patellar_anteriority = [
+            _patellar_anteriority(
+                world_vertices[patella_members[side]], data.xanchor[knee_joint_ids[side]],
+                anterior_axis, side=side, member_id=patella_members[side],
+            ) for side in ('r', 'l')
+        ]
 
         continuity = []
         by_name: dict[str, dict[str, Any]] = {}
@@ -483,6 +545,7 @@ def audit_lower_limb_poses(
             "projected_joint_range_checks": _projected_joint_range_checks(qpos, joint_ranges, np),
             "continuity": continuity,
             "bilateral_gap_parity": parity,
+            "patellar_anteriority": patellar_anteriority,
         })
 
     worst_continuity = max(
@@ -538,6 +601,11 @@ def audit_lower_limb_poses(
         ),
         "rigid_source_program_checks": rigid_program,
         "joint_equality_maximum_correction": equality_maximum_correction,
+        "source_qpos0_patellar_anteriority": source_qpos0_patellar_anteriority,
+        "projected_patellar_anteriority_evaluation_count": 2 * len(POSE_SUITE),
+        "minimum_projected_patellar_anterior_offset_m": min(
+            row['minimum_signed_anterior_offset_m'] for pose in pose_receipts
+            for row in pose['patellar_anteriority']),
         "default_frame_maximum_centroid_residual_m": default_frame_maximum_residual,
         "default_frame_worst_member": default_frame_worst_member,
         "default_frame_maximum_allowed_residual_m": DEFAULT_FRAME_RESIDUAL_MAXIMUM_M,
@@ -583,6 +651,12 @@ def audit_lower_limb_poses(
             "supplied, its complete skeleton is checked against registered source geometry; only regional "
             "interfaces are posed. This audit does not "
             "execute those native programs or qualify their loaded response."
+            " Patellar anteriority measures every decoded or registered patella vertex against"
+            " its source knee joint anchor along the source world anterior axis carried"
+            " through the posed pelvis orientation in each"
+            " equality-projected pose. The literal unprojected qpos0 is reported separately"
+            " and is not a runtime anatomical acceptance pose. This geometric side test"
+            " does not establish cartilage-facing orientation, contact, or clinical anatomy."
         ),
     }
 

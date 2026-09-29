@@ -111,6 +111,13 @@ def _finish_pose_audit(result: dict[str, Any], region: str) -> dict[str, Any]:
             details.append(f"femoral_head_articular_gate={articular}")
         failures.append(f"{region} source geometry:{item['myosim_body']} members={item['source_member_ids']}: " + "; ".join(details))
     for pose in result["poses"]:
+        for item in pose.get('patellar_anteriority', []):
+            if not item['passed']:
+                failures.append(
+                    f"{pose['name']}:patella_{item['side']} member={item['source_member_id']} "
+                    f"minimum_anterior_offset_m={item['minimum_signed_anterior_offset_m']:.12g} "
+                    f"posterior_or_plane_vertices={item['vertices_posterior_or_on_knee_anchor_plane']}"
+                )
         oracle = pose.get("source_equality_projection_oracle")
         if oracle is not None and not oracle["passed"]:
             failed_rows = [row["name"] for row in oracle["rows"] if not row["passed"]]

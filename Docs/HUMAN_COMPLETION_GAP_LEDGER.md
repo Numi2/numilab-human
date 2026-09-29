@@ -722,6 +722,15 @@ self-intersection, complete skin shape, mechanical material-point identity,
 anatomical weights, loading, subject calibration and clinical anatomy remain
 open.
 
+The [compiled-bone patellar full-support check](PATELLAR_ANTERIORITY_FULL_SUPPORT_20260929.md)
+now distinguishes literal unprojected source `qpos0` from the displayed
+equality-projected anatomy. Both raw patellar centroids are posterior to their
+source knee anchors, explaining a misleading source-rest view. Every compiled
+patella vertex is anterior in all 16 side/pose checks of the eight projected
+inspection states, with a minimum 6.093 mm offset. Five authored dependent
+joint-range conflicts still make the full lower-limb audit exit 2; cartilage
+orientation, loaded contact, clinical anatomy and sustained behavior are open.
+
 The [native stance horizon](NATIVE_STAND_STANCE_HORIZON_20260913.md) now
 repeats the exact-clock physical-M4 run from the authored root/ankle/subtalar/
 MTP stance and six active foot witnesses. Static source support placement and
