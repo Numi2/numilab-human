@@ -608,6 +608,14 @@ also fails the existing complete-anchor contract. These are source geometry
 checks; regional motion, collision, material and loaded response keep their
 own qualification boundaries.
 
+The native bone reader normalizes admitted quaternions once before geometry,
+contact, attachment and rendering preparation. Antipodal and near-unit
+representations therefore retain the source reader's orientation semantics;
+the existing 0.002 norm admission bound is unchanged. Invalid orientations
+report the bone stable ID, Core body, measured norm, tolerance and raw input
+SHA-256. The same identity and normalization policy are retained for accepted
+inputs. This repairs geometry preparation, not loaded mechanical qualification.
+
 The existing lower-limb source registrar also requires `--artifact`. It freshly
 checks an existing v3 registration against the pinned source meshes before
 preserving valid segment fits. Its bounded interface refinement now carries

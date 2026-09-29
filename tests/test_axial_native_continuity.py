@@ -74,6 +74,30 @@ def measurements(result):
             for line in result.stdout.splitlines() if line.startswith("axial_bone_interface=")]
 
 
+def assert_source_geometry(inputs, result, pose):
+    import mujoco
+    _, _, _, _, model, geometry, stable_ids = inputs
+    data = mujoco.MjData(model)
+    q, count, _ = _pose_qpos(model, pose, mujoco, np)
+    assert count == 51
+    data.qpos[:] = q
+    mujoco.mj_forward(model, data)
+    world = {member: vertices @ data.xmat[body].reshape(3, 3).T + data.xpos[body]
+             for member, (body, vertices) in geometry.items()}
+    checks = measurements(result)
+    transitions = human._NUMI_HUMAN_AXIAL_CONTINUITY_TRANSITIONS
+    assert len(checks) == len(transitions) == 27
+    for check, (name, first, second) in zip(checks, transitions, strict=True):
+        assert check["axial_bone_interface"] == name and check["passed"] == "true"
+        assert int(check["first_stable_id"]) == stable_ids[first]
+        assert int(check["second_stable_id"]) == stable_ids[second]
+        assert float(check["allowed_gap_m"]) == human._NUMI_HUMAN_AXIAL_CONTINUITY_MAXIMUM_GAP_M
+        assert float(check["allowed_patch_p90_m"]) == .010
+        assert float(check["minimum_gap_m"]) == pytest.approx(_minimum_gap(world[first], world[second], np)[0], abs=1e-6)
+        expected_patch = _interface_patch_metrics(world[first], world[second], np)["bidirectional_p90_m"]
+        assert float(check["patch_p90_m"]) == pytest.approx(expected_patch, abs=1e-6)
+
+
 @pytest.mark.parametrize("pose", [(), ((7, -.4),), ((8, .15),), ((9, .25),),
     POSE_SUITE[-1][1] + ((7, -.4), (8, .1), (9, .2))],
     ids=["neutral", "flexion", "lateral_bend", "rotation", "coupled_crouch"])
@@ -111,26 +135,62 @@ def test_executed_axial_interfaces_match_independent_source_poses(inputs, tmp_pa
     else:
         assert result.returncode == 0, result.stderr
     assert "axial_bone_continuity=passed transition_count=27" in result.stdout
-    _, _, _, _, model, geometry, stable_ids = inputs
-    data = mujoco.MjData(model)
-    q, count, _ = _pose_qpos(model, pose, mujoco, np)
-    assert count == 51
-    data.qpos[:] = q
-    mujoco.mj_forward(model, data)
-    world = {member: vertices @ data.xmat[body].reshape(3, 3).T + data.xpos[body]
-             for member, (body, vertices) in geometry.items()}
-    checks = measurements(result)
-    transitions = human._NUMI_HUMAN_AXIAL_CONTINUITY_TRANSITIONS
-    assert len(checks) == len(transitions) == 27
-    for check, (name, first, second) in zip(checks, transitions, strict=True):
-        assert check["axial_bone_interface"] == name and check["passed"] == "true"
-        assert int(check["first_stable_id"]) == stable_ids[first]
-        assert int(check["second_stable_id"]) == stable_ids[second]
-        assert float(check["allowed_gap_m"]) == human._NUMI_HUMAN_AXIAL_CONTINUITY_MAXIMUM_GAP_M
-        assert float(check["allowed_patch_p90_m"]) == .010
-        assert float(check["minimum_gap_m"]) == pytest.approx(_minimum_gap(world[first], world[second], np)[0], abs=1e-6)
-        expected_patch = _interface_patch_metrics(world[first], world[second], np)["bidirectional_p90_m"]
-        assert float(check["patch_p90_m"]) == pytest.approx(expected_patch, abs=1e-6)
+    assert_source_geometry(inputs, result, pose)
+
+
+def scaled_cervical_orientation(inputs, factor):
+    raw = bytearray(inputs[1])
+    offset = 60 + (inputs[-1]["FJ3164"] - 1) * 60 + 36
+    original = struct.unpack_from("<4f", raw, offset)
+    assert original == (-.5, .5, .5, .5)
+    struct.pack_into("<4f", raw, offset, *(v * factor for v in original))
+    return raw, original, struct.unpack_from("<4f", raw, offset)
+
+
+@pytest.mark.parametrize("factor", [-1., 1. + 2.**-10, -(1. + 2.**-10), 1.00199, .99801],
+                         ids=["antipodal", "scaled", "scaled_antipodal", "near_upper", "near_lower"])
+@pytest.mark.parametrize("pose", [((7, -.4), (8, .1), (9, .2)),
+                                  POSE_SUITE[-1][1] + ((7, -.4), (8, .1), (9, .2))],
+                         ids=["coupled_torso", "coupled_crouch"])
+def test_equivalent_bone_orientations_match_executed_source_geometry(inputs, tmp_path, factor, pose):
+    raw, original, candidate = scaled_cervical_orientation(inputs, factor)
+    # The owning source reader defines these as the same orientation. The old
+    # native geometry path deformed scaled inputs, then failed visual admission.
+    np.testing.assert_allclose(human._myosim_matrix_from_quaternion_xyzw(candidate),
+                               human._myosim_matrix_from_quaternion_xyzw(original),
+                               rtol=0., atol=np.finfo(float).eps)
+    result = run_probe(inputs, tmp_path, raw, pose=pose)
+    if (106, .75) in pose:
+        assert result.returncode != 0 and "projected native position range failed" in result.stderr
+        assert "failed_range_count=2" in result.stdout
+    else:
+        assert result.returncode == 0, result.stderr
+    assert_source_geometry(inputs, result, pose)
+    assert len(list((tmp_path / "views").glob("*.png"))) == 4
+    preparation = next(dict(part.split("=", 1) for part in line.split())
+                       for line in result.stdout.splitlines() if line.startswith("bone_orientation_semantics="))
+    assert preparation["bone_orientation_semantics"] == "unit_normalized_once_at_load"
+    assert int(preparation["bone_count"]) == 185
+    assert float(preparation["norm_admission_tolerance"]) == pytest.approx(float(np.float32(.002)), abs=1e-12)
+    assert preparation["bone_sha256"] == human.sha256(tmp_path / "candidate.nhbones")
+
+
+@pytest.mark.parametrize("factor", [0., 1.0021, .9979, float("nan"), float("inf")],
+                         ids=["zero", "above_admission", "below_admission", "nan", "infinite"])
+def test_invalid_bone_orientation_retains_structure_tolerance_and_identity(inputs, tmp_path, factor):
+    raw, _, _ = scaled_cervical_orientation(inputs, factor)
+    result = run_probe(inputs, tmp_path, raw)
+    assert result.returncode != 0
+    line = next(line for line in result.stderr.splitlines() if "BodyParts3D bone stable_id=" in line)
+    fields = line.split("BodyParts3D bone ", 1)[1].rstrip('"')
+    check = dict(part.split("=", 1) for part in fields.split())
+    assert int(check["stable_id"]) == inputs[-1]["FJ3164"]
+    assert int(check["body_index"]) == 26
+    norm, tolerance = float(check["orientation_norm"]), float(check["allowed_absolute_norm_error"])
+    assert tolerance == pytest.approx(float(np.float32(.002)), abs=1e-12)
+    assert not np.isfinite(norm) or abs(norm - 1.) > tolerance
+    assert check["bone_sha256"] == human.sha256(tmp_path / "candidate.nhbones")
+    assert not measurements(result) and not (tmp_path / "views").exists()
 
 
 @pytest.fixture(scope="module")
