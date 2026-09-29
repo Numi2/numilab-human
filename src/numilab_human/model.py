@@ -4823,14 +4823,20 @@ _BODYPARTS_MYOSIM_AXIAL_EXTENSIONS = tuple(
 )
 
 
-# These are the source-mesh transitions that cross a MyoSim rigid-body
-# boundary in the axial skeleton.  Vertebrae carried by one common body cannot
-# separate under articulation, while these boundaries can be pulled apart by
-# an otherwise useful per-body attachment refinement.  Keep the gate at 8 mm:
+# These source-mesh transitions cover the axial rigid-body boundaries and
+# the C1-C7 compound carried by one existing cervical body. Common-body meshes
+# cannot separate under articulation, but their individual registration or
+# compiled transforms can still disconnect them. Keep the gate at 8 mm:
 # it admits an intervertebral joint space, but rejects the 16.8 mm L4/L5 visual
 # discontinuity found during the pectoral-fascia multi-angle review.
 _NUMI_HUMAN_AXIAL_CONTINUITY_TRANSITIONS = (
     ("occiput_to_atlas", "FJ3309", "FJ3176"),
+    ("cervical1_to_cervical2", "FJ3176", "FJ3177"),
+    ("cervical2_to_cervical3", "FJ3177", "FJ3161"),
+    ("cervical3_to_cervical4", "FJ3161", "FJ3164"),
+    ("cervical4_to_cervical5", "FJ3164", "FJ3167"),
+    ("cervical5_to_cervical6", "FJ3167", "FJ3170"),
+    ("cervical6_to_cervical7", "FJ3170", "FJ3172"),
     ("cervical7_to_thoracic1", "FJ3172", "FJ3158"),
     ("thoracic1_to_thoracic2", "FJ3158", "FJ3160"),
     ("thoracic2_to_thoracic3", "FJ3160", "FJ3163"),

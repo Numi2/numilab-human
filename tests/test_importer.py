@@ -1984,7 +1984,11 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(
             [name for name, _, _ in _NUMI_HUMAN_AXIAL_CONTINUITY_TRANSITIONS],
             [
-                "occiput_to_atlas", "cervical7_to_thoracic1",
+                "occiput_to_atlas",
+                "cervical1_to_cervical2", "cervical2_to_cervical3",
+                "cervical3_to_cervical4", "cervical4_to_cervical5",
+                "cervical5_to_cervical6", "cervical6_to_cervical7",
+                "cervical7_to_thoracic1",
                 "thoracic1_to_thoracic2", "thoracic2_to_thoracic3",
                 "thoracic3_to_thoracic4", "thoracic4_to_thoracic5",
                 "thoracic5_to_thoracic6", "thoracic6_to_thoracic7",

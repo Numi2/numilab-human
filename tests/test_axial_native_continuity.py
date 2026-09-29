@@ -55,7 +55,12 @@ def run_probe(inputs, tmp_path, raw=None, pose=()):
                "--joint-equality-payload", str(artifact / "myosim-fullbody-joint-equalities.nheq")]
     for q, value in pose:
         command += ["--pose-q", str(q), str(value)]
-    return subprocess.run(command, capture_output=True, text=True, timeout=60)
+    result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+    (tmp_path / "command.json").write_text(json.dumps(command, indent=2) + "\n")
+    (tmp_path / "stdout").write_text(result.stdout)
+    (tmp_path / "stderr").write_text(result.stderr)
+    (tmp_path / "exit.code").write_text(str(result.returncode) + "\n")
+    return result
 
 
 def measurements(result):
@@ -70,7 +75,7 @@ def test_executed_axial_interfaces_match_independent_source_poses(inputs, tmp_pa
     import mujoco
     result = run_probe(inputs, tmp_path, pose=pose)
     assert result.returncode == 0, result.stderr
-    assert "axial_bone_continuity=passed transition_count=21" in result.stdout
+    assert "axial_bone_continuity=passed transition_count=27" in result.stdout
     _, _, _, _, model, geometry, stable_ids = inputs
     data = mujoco.MjData(model)
     q, count, _ = _pose_qpos(model, pose, mujoco, np)
@@ -81,7 +86,7 @@ def test_executed_axial_interfaces_match_independent_source_poses(inputs, tmp_pa
              for member, (body, vertices) in geometry.items()}
     checks = measurements(result)
     transitions = human._NUMI_HUMAN_AXIAL_CONTINUITY_TRANSITIONS
-    assert len(checks) == len(transitions) == 21
+    assert len(checks) == len(transitions) == 27
     for check, (name, first, second) in zip(checks, transitions, strict=True):
         assert check["axial_bone_interface"] == name and check["passed"] == "true"
         assert int(check["first_stable_id"]) == stable_ids[first]
@@ -93,7 +98,9 @@ def test_executed_axial_interfaces_match_independent_source_poses(inputs, tmp_pa
         assert float(check["patch_p90_m"]) == pytest.approx(expected_patch, abs=1e-6)
 
 
-def displaced_lumbar4(inputs, amount, isolated_witnesses=False):
+def displaced_bone(inputs, amount, isolated_witnesses=False, *,
+                   member="FJ3165", body_name="lumbar4",
+                   neighbours=(("FJ3162", "lumbar3"), ("FJ3168", "lumbar5"))):
     _, valid, _, runtime, _, _, stable_ids = inputs
     raw = bytearray(valid)
     header_size = struct.calcsize("<8s5I32s")
@@ -101,19 +108,19 @@ def displaced_lumbar4(inputs, amount, isolated_witnesses=False):
     assert abi == 3 and count == 185
     records = {struct.unpack_from("<I", raw, header_size + i*60 + 20)[0]: header_size + i*60
                for i in range(count)}
-    offset = records[stable_ids["FJ3165"]]
+    offset = records[stable_ids[member]]
     translation = np.asarray(struct.unpack_from("<3f", raw, offset + 24))
-    translation += np.asarray(runtime["lumbar4"][1]["rotation_world"]).T @ np.asarray([0., 0., amount])
+    translation += np.asarray(runtime[body_name][1]["rotation_world"]).T @ np.asarray([0., 0., amount])
     struct.pack_into("<3f", raw, offset + 24, *translation)
     if isolated_witnesses:
         vertex_start = header_size + count*60
         first_vertex = struct.unpack_from("<I", raw, offset + 4)[0]
-        moved_rotation = np.asarray(runtime["lumbar4"][1]["rotation_world"])
-        moved_origin = np.asarray(runtime["lumbar4"][1]["position_world_m"])
+        moved_rotation = np.asarray(runtime[body_name][1]["rotation_world"])
+        moved_origin = np.asarray(runtime[body_name][1]["position_world_m"])
         bone_values = struct.unpack_from("<8f", raw, offset + 24)
         bone_rotation = _rotation_xyzw(bone_values[3:7], np)
-        for i, (member, name) in enumerate([("FJ3162", "lumbar3"), ("FJ3168", "lumbar5")]):
-            neighbour = records[stable_ids[member]]
+        for i, (neighbour_member, name) in enumerate(neighbours):
+            neighbour = records[stable_ids[neighbour_member]]
             index = struct.unpack_from("<I", raw, neighbour + 4)[0]
             vertex = np.asarray(struct.unpack_from("<3f", raw, vertex_start + index*24))
             values = struct.unpack_from("<8f", raw, neighbour + 24)
@@ -126,7 +133,7 @@ def displaced_lumbar4(inputs, amount, isolated_witnesses=False):
 
 @pytest.mark.parametrize("isolated_witnesses", [False, True], ids=["disconnected", "isolated_touching_vertices"])
 def test_displaced_executing_bone_is_rejected_despite_valid_owner_binding(inputs, tmp_path, isolated_witnesses):
-    result = run_probe(inputs, tmp_path, displaced_lumbar4(inputs, .040, isolated_witnesses))
+    result = run_probe(inputs, tmp_path, displaced_bone(inputs, .040, isolated_witnesses))
     assert result.returncode != 0
     assert "executed axial continuity failed" in result.stderr
     failed = [c for c in measurements(result) if c["passed"] == "false"]
@@ -138,8 +145,61 @@ def test_displaced_executing_bone_is_rejected_despite_valid_owner_binding(inputs
     assert not (tmp_path / "views").exists()
 
 
+@pytest.mark.parametrize("isolated_witnesses", [False, True], ids=["disconnected", "isolated_touching_vertices"])
+def test_displaced_cervical_compound_member_is_rejected(inputs, tmp_path, isolated_witnesses):
+    raw = displaced_bone(inputs, .040, isolated_witnesses, member="FJ3164",
+                         body_name="cervical_spine",
+                         neighbours=(("FJ3161", "cervical_spine"), ("FJ3167", "cervical_spine")))
+    result = run_probe(inputs, tmp_path, raw)
+    assert result.returncode != 0
+    assert "executed axial continuity failed" in result.stderr
+    failed = [c for c in measurements(result) if c["passed"] == "false"]
+    assert len(failed) == 1
+    assert failed[0]["axial_bone_interface"] == "cervical3_to_cervical4"
+    assert int(failed[0]["second_stable_id"]) == inputs[-1]["FJ3164"]
+    assert float(failed[0]["allowed_gap_m"]) == .008
+    assert float(failed[0]["allowed_patch_p90_m"]) == .010
+    assert f"bone_sha256={human.sha256(tmp_path / 'candidate.nhbones')}" in result.stderr
+    if isolated_witnesses:
+        assert float(failed[0]["minimum_gap_m"]) < .008
+        assert float(failed[0]["patch_p90_m"]) > .010
+    assert not (tmp_path / "views").exists()
+
+
 @pytest.mark.parametrize("amount", [-.00025, .00025])
-def test_small_valid_registration_variation_is_preserved(inputs, tmp_path, amount):
-    result = run_probe(inputs, tmp_path, displaced_lumbar4(inputs, amount))
+@pytest.mark.parametrize("member,body_name", [("FJ3165", "lumbar4"), ("FJ3164", "cervical_spine")],
+                         ids=["lumbar", "cervical"])
+def test_small_valid_registration_variation_is_preserved(inputs, tmp_path, amount, member, body_name):
+    result = run_probe(inputs, tmp_path, displaced_bone(inputs, amount, member=member, body_name=body_name))
     assert result.returncode == 0, result.stderr
     assert "axial_bone_continuity=passed" in result.stdout
+
+
+def test_source_compiler_preserves_geometry_and_rejects_disconnected_cervical_registration(inputs, tmp_path):
+    sources = Path(os.environ["NUMILAB_HUMAN_MOTION_SOURCES"])
+    registration_path = Path(os.environ["NUMILAB_HUMAN_MOTION_REPAIRED"])
+    anatomy = human.parse_bodyparts3d(sources, Path(human.__file__).resolve().parents[2] /
+                                    "config/anatomy-classification.v1.json")
+    _, valid, artifact, runtime, *_ = inputs
+    compiled = tmp_path / "valid"
+    manifest = human.bodyparts_myosim_bone_visual_payload(
+        sources, anatomy, registration_path, compiled, artifact=artifact)
+    assert (compiled / manifest["payload"]["file"]).read_bytes() == valid
+    transitions = manifest["axial_continuity"]["transitions"]
+    assert len(transitions) == 27
+    assert sum(t["name"].startswith("cervical") for t in transitions) == 7
+    assert all(t["minimum_vertex_gap_m"] <= .008 for t in transitions)
+    assert manifest["axial_continuity"]["independent_articulation_count"] == 0
+
+    registration = json.loads(registration_path.read_text())
+    anchor = next(a for a in registration["anchors"] if a["source"]["member_id"] == "FJ3164")
+    matrix = np.asarray(anchor["registration"]["source_obj_mm_to_core_inertial_body_m"])
+    matrix[:3, 3] += np.asarray(runtime["cervical_spine"][1]["rotation_world"]).T @ [0., 0., .040]
+    anchor["registration"]["source_obj_mm_to_core_inertial_body_m"] = matrix.tolist()
+    invalid_registration = tmp_path / "disconnected-cervical4.registration.json"
+    invalid_registration.write_text(json.dumps(registration))
+    rejected = tmp_path / "rejected"
+    with pytest.raises(human.ImportError, match="cervical3_to_cervical4.*axial continuity gate"):
+        human.bodyparts_myosim_bone_visual_payload(
+            sources, anatomy, invalid_registration, rejected, artifact=artifact)
+    assert not rejected.exists()

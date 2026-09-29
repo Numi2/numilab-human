@@ -598,12 +598,16 @@ runtime rest poses. Stored fit receipts and an
 editable common-frame matrix cannot admit a flipped or repeatedly scaled bone.
 The collective toe mesh retains its existing inherited rigid-foot disposition.
 
-The native pose renderer checks all 21 existing axial transitions on complete
-source-bound bone payloads using the executed Metal body poses. It retains the
-8 mm minimum-gap gate and adds the regional audits' opposed 2%/p90 interface
+The native pose renderer checks 27 axial interfaces on complete source-bound
+bone payloads using the executed Metal body poses, including the six internal
+interfaces in the existing C1-C7 rigid compound. The bone compiler checks the
+minimum gaps at these same source interfaces without adding cervical
+articulations. The native audit retains the 8 mm minimum-gap gate and uses the
+regional audits' opposed 2%/p90 interface
 patch at 1.25 times that gate, so isolated touching vertices cannot admit a
 disconnected spine. Each failure reports the interface, bone stable IDs,
-measured distances and tolerances before rendering. Legacy or partial payloads
+measured distances, tolerances and the consumed bone payload SHA-256 before
+rendering. Legacy or partial payloads
 remain readable and explicitly report axial verification as unavailable. These
 checks establish rigid bone proximity, not disc, cartilage or loaded mechanics.
 
