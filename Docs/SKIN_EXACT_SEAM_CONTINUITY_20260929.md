@@ -9,7 +9,9 @@ source length disappear.
 
 ![Actual native seam continuity comparison](media/skin-exact-seam-continuity-20260929/executive-seam-progress.png)
 
-This closes an inferred visual-binding defect. It does not close overall skin
+This closes an inferred visual-binding defect. A later [exact native-pose
+embeddedness audit](SKIN_NATIVE_EMBEDDEDNESS_20260929.md) found self-intersections
+in three of nine sampled native poses. It does not close overall skin
 shape quality. The shoulder's worst added edge length rises from 40.82 to
 50.08 mm, two shoulder triangles still exceed ten-times source area, and
 seven triangles oppose their rendered vertex normals. Source openings,
@@ -107,7 +109,8 @@ degenerate or duplicate faces, nonmanifold edges or winding defects. It is
 not a closed oriented manifold. The original source-index topology has
 827 boundary edges; identifying coordinate seams exposes the remaining source
 openings without altering the payload. Closed volume remains unadmitted, and
-self-intersection checking remains explicitly unavailable. Shared visual
+self-intersection checking was not part of this seam audit; the later exact
+native-pose audit supplies it. Shared visual
 weights do not resolve source topology or establish mechanical material-point
 identity.
 
