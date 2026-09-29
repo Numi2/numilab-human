@@ -5021,6 +5021,8 @@ _NUMI_HUMAN_HALLUX_DOMINANT_SOURCE_SURFACE_MEMBERS = frozenset({
 })
 _NUMI_HUMAN_HALLUX_VISUAL_ENTHESIS_MINIMUM_GAP_M = 0.001
 _NUMI_HUMAN_HALLUX_VISUAL_ENTHESIS_INSET_M = 0.00035
+_NUMI_HUMAN_CALCANEAL_VISUAL_BOUNDARY_INSET_M = 0.00035
+_NUMI_HUMAN_CALCANEAL_VISUAL_HARMONIC_RADIUS_M = 0.020
 
 
 _BODYPARTS_MYOSIM_AXIAL_EXTENSIONS = tuple(
@@ -7572,6 +7574,176 @@ def _bodyparts_non_degenerate_fp32_projection(
     raise ImportError(
         f"BodyParts3D {member} visual projection has unresolved compiled Float32 degenerate faces {before}"
     )
+
+
+def _bodyparts_locked_tendon_boundary(
+    triangles: list[tuple[int, int, int]], distal_attenuation: list[float],
+    vertex_count: int, member: str,
+) -> tuple[list[tuple[int, int]], list[int]]:
+    """Identify only the opened source cap attached to the named distal bone."""
+    edge_counts: dict[tuple[int, int], int] = {}
+    for triangle in triangles:
+        if len(triangle) != 3 or any(not 0 <= index < vertex_count for index in triangle):
+            raise ImportError(f"BodyParts3D tendon {member} has an invalid source triangle")
+        for first, second in ((triangle[0], triangle[1]), (triangle[1], triangle[2]), (triangle[2], triangle[0])):
+            edge = (min(first, second), max(first, second))
+            edge_counts[edge] = edge_counts.get(edge, 0) + 1
+    source_edges = sorted(
+        edge for edge, count in edge_counts.items()
+        if count == 1 and all(distal_attenuation[index] <= 1.0e-8 for index in edge)
+    )
+    if not source_edges:
+        raise ImportError(f"BodyParts3D tendon {member} has no named distal source-cap boundary")
+    return source_edges, sorted({index for edge in source_edges for index in edge})
+
+
+def _bodyparts_project_tendon_boundary_harmonic(
+    vertices_world_m: list[list[float]], triangles: list[tuple[int, int, int]],
+    distal_attenuation: list[float], bone_vertices_world_m: list[list[float]],
+    bone_triangles: list[tuple[int, int, int]], member: str,
+    inset_m: float = _NUMI_HUMAN_CALCANEAL_VISUAL_BOUNDARY_INSET_M,
+    radius_m: float = _NUMI_HUMAN_CALCANEAL_VISUAL_HARMONIC_RADIUS_M,
+) -> tuple[list[list[float]], dict[str, Any]]:
+    """Fit the source insertion boundary; harmonically spread only its motion.
+
+    No synthetic triangles are added. Exact-coordinate seam copies share one
+    displacement. The nearby interior minimizes weighted edge displacement,
+    while the remaining source points stay at their authored positions.
+    """
+    import numpy as np
+
+    if len(vertices_world_m) != len(distal_attenuation) or not 0.0 < inset_m <= 0.001 \
+            or not 0.0 < radius_m <= 0.1 or any(
+                not math.isfinite(value) or not 0.0 <= value <= 1.0
+                for value in distal_attenuation
+            ):
+        raise ImportError(f"BodyParts3D tendon {member} has invalid boundary-projection inputs")
+    source_edges, source_indices = _bodyparts_locked_tendon_boundary(
+        triangles, distal_attenuation, len(vertices_world_m), member,
+    )
+    source_set = set(source_indices)
+    boundary_attenuation = [0.0 if index in source_set else 1.0
+                            for index in range(len(vertices_world_m))]
+    boundary_target, projection = _bodyparts_project_tendon_attachment_band(
+        vertices_world_m, boundary_attenuation, bone_vertices_world_m,
+        bone_triangles, inset_m,
+    )
+    unique: dict[tuple[float, float, float], int] = {}
+    quotient_vertices: list[list[float]] = []
+    source_to_quotient = []
+    for point in vertices_world_m:
+        key = tuple(point)
+        if key not in unique:
+            unique[key] = len(quotient_vertices)
+            quotient_vertices.append(point)
+        source_to_quotient.append(unique[key])
+    count = len(quotient_vertices)
+    seed = {source_to_quotient[index] for index in source_indices}
+    displacement = np.zeros((count, 3), dtype=float)
+    seen_target: dict[int, list[float]] = {}
+    for index in source_indices:
+        q = source_to_quotient[index]
+        target = boundary_target[index]
+        previous = seen_target.setdefault(q, target)
+        if math.dist(previous, target) > 1.0e-9:
+            raise ImportError(f"BodyParts3D tendon {member} split one source seam target")
+        displacement[q] = [target[axis] - vertices_world_m[index][axis] for axis in range(3)]
+    adjacency: list[dict[int, float]] = [dict() for _ in range(count)]
+    edge_keys = sorted({
+        tuple(sorted((source_to_quotient[first], source_to_quotient[second])))
+        for a, b, c in triangles
+        for first, second in ((a, b), (b, c), (c, a))
+        if source_to_quotient[first] != source_to_quotient[second]
+    })
+    for first, second in edge_keys:
+        length = math.dist(quotient_vertices[first], quotient_vertices[second])
+        if not math.isfinite(length) or length <= 0.0:
+            raise ImportError(f"BodyParts3D tendon {member} has an invalid source edge")
+        weight = 1.0 / length
+        adjacency[first][second] = weight
+        adjacency[second][first] = weight
+    distance = [math.inf] * count
+    queue = []
+    for q in sorted(seed):
+        distance[q] = 0.0
+        heapq.heappush(queue, (0.0, q))
+    while queue:
+        current, first = heapq.heappop(queue)
+        if current != distance[first]:
+            continue
+        for second in sorted(adjacency[first]):
+            candidate = current + math.dist(quotient_vertices[first], quotient_vertices[second])
+            if candidate < distance[second]:
+                distance[second] = candidate
+                heapq.heappush(queue, (candidate, second))
+    free = [index for index in range(count) if index not in seed and distance[index] < radius_m]
+    if free:
+        compact = {index: local for local, index in enumerate(free)}
+        matrix = np.zeros((len(free), len(free)), dtype=float)
+        right = np.zeros((len(free), 3), dtype=float)
+        for local, first in enumerate(free):
+            for second, weight in sorted(adjacency[first].items()):
+                matrix[local, local] += weight
+                if second in compact:
+                    matrix[local, compact[second]] -= weight
+                elif second in seed:
+                    right[local] += weight * displacement[second]
+        try:
+            solved = np.linalg.solve(matrix, right)
+        except np.linalg.LinAlgError as error:
+            raise ImportError(
+                f"BodyParts3D tendon {member} harmonic source graph is singular"
+            ) from error
+        if not np.isfinite(solved).all():
+            raise ImportError(f"BodyParts3D tendon {member} harmonic field is nonfinite")
+        for source_index, value in zip(free, solved, strict=True):
+            displacement[source_index] = value
+    result = [
+        [point[axis] + float(displacement[source_to_quotient[index], axis])
+         for axis in range(3)]
+        for index, point in enumerate(vertices_world_m)
+    ]
+    ratios = sorted(
+        math.dist(result[first], result[second])
+        / math.dist(vertices_world_m[first], vertices_world_m[second])
+        for first, second in sorted({
+            tuple(sorted(edge)) for a, b, c in triangles
+            for edge in ((a, b), (b, c), (c, a))
+        })
+        if math.dist(vertices_world_m[first], vertices_world_m[second]) > 1.0e-10
+    )
+    reversed_faces = []
+    for face_id, (a, b, c) in enumerate(triangles):
+        old_u = [vertices_world_m[b][i]-vertices_world_m[a][i] for i in range(3)]
+        old_v = [vertices_world_m[c][i]-vertices_world_m[a][i] for i in range(3)]
+        new_u = [result[b][i]-result[a][i] for i in range(3)]
+        new_v = [result[c][i]-result[a][i] for i in range(3)]
+        old_n = (old_u[1]*old_v[2]-old_u[2]*old_v[1],
+                 old_u[2]*old_v[0]-old_u[0]*old_v[2],
+                 old_u[0]*old_v[1]-old_u[1]*old_v[0])
+        new_n = (new_u[1]*new_v[2]-new_u[2]*new_v[1],
+                 new_u[2]*new_v[0]-new_u[0]*new_v[2],
+                 new_u[0]*new_v[1]-new_u[1]*new_v[0])
+        if sum(x*y for x, y in zip(old_n, new_n)) < 0.0:
+            reversed_faces.append(face_id)
+    return result, {
+        "method": "exact_named_calcaneus_boundary_projection_with_source_seam_harmonic_field",
+        "source_boundary_edge_count": len(source_edges),
+        "source_boundary_vertex_count": len(source_indices),
+        "source_quotient_vertex_count": count,
+        "harmonic_free_quotient_vertex_count": len(free),
+        "harmonic_geodesic_radius_m": radius_m,
+        "visual_enthesis_inset_m": inset_m,
+        "source_boundary_to_named_bone_distance_upper_bound_m": inset_m,
+        "boundary_projection": projection,
+        "max_source_edge_stretch_ratio": ratios[-1],
+        "p99_source_edge_stretch_ratio": ratios[int(0.99 * (len(ratios)-1))],
+        "source_face_normal_reversal_ids": reversed_faces,
+        "generated_triangle_count": 0,
+        "new_faces_added": False,
+        "source_indices_preserved": True,
+        "boundary": "visual registration only; open source tendon, local face reversals, anatomical attachment and force transfer remain unqualified",
+    }
 
 
 def _bodyparts_stitch_tendon_enthesis_band(
@@ -10479,7 +10651,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
     gastrocnemius heads start on the femur, while soleus starts on the tibia
     and all three terminate on the calcaneus.  Its visual surface therefore
     inherits a three-body blend from the nearest named source muscle surface
-    and locks its distal insertion to the exact calcaneal source surface.
+    and presents its distal source boundary at the named calcaneal surface.
     This is kinematic presentation data, not a deformable tendon or a
     replacement for the MyoSim force path.
     """
@@ -10745,16 +10917,11 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             triangles, interior_cap_trim = _bodyparts_drop_interior_tendon_cap_triangles(
                 triangles, distal_attenuation, member,
             )
-            # The named-body weight lock keeps the distal source vertices in
-            # the calcaneus frame, but it cannot repair a rest-frame gap
-            # between independently authored tendon and bone surfaces.  Move
-            # only that already locked/feathered boundary onto the exact
-            # named calcaneal triangles.  This replaces the coarse generated
-            # render-time collar with a continuous source-topology surface.
-            global_vertices, surface_projection = _bodyparts_project_tendon_attachment_band(
-                global_vertices, distal_attenuation, bone_vertices_world_m, bone_triangles,
-            )
-            global_vertices, triangles, distal_attenuation, enthesis_stitch = _bodyparts_stitch_tendon_enthesis_band(
+            # The old five-millimetre band inset and generated strip folded
+            # both compiled calcaneal tendons. Fit only the exact opened
+            # distal source boundary to its named bone; spread that required
+            # displacement through nearby source edges without adding faces.
+            global_vertices, boundary_presentation = _bodyparts_project_tendon_boundary_harmonic(
                 global_vertices, triangles, distal_attenuation,
                 bone_vertices_world_m, bone_triangles, member,
             )
@@ -10767,14 +10934,28 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             stored_normals = _bodyparts_vertex_normals(
                 [[coordinate * 1000.0 for coordinate in vertex] for vertex in stored_vertices_m], triangles, member,
             )
+            from .compiled_quotient_embeddedness import classify_quotient
+            compiled_positions = [
+                list(struct.unpack("<3f", struct.pack("<3f", *point)))
+                for point in stored_vertices_m
+            ]
+            embeddedness = classify_quotient(compiled_positions, [list(face) for face in triangles])
+            if embeddedness["self_intersection"] != "exact_checked" or \
+                    embeddedness["exact_intersection_pairs"] != 0:
+                raise ImportError(
+                    f"BodyParts3D tendon {member_id} boundary projection intersects its compiled source sheet"
+                )
+            boundary_presentation["compiled_fp32_self_intersection_pairs"] = 0
+            boundary_presentation["compiled_fp32_boundary_edge_count"] = (
+                embeddedness["topology"]["boundary_edge_count"]
+            )
             attachment_weight_lock.update({
                 "secondary_body": secondary_name,
                 "secondary_bone_member_id": bone_member_id,
                 "secondary_bone_member": bone_member,
                 "secondary_bone_member_sha256": hashlib.sha256(bone_obj).hexdigest(),
-                "surface_projection": surface_projection,
+                "distal_boundary_presentation": boundary_presentation,
                 "interior_cap_triangle_trim": interior_cap_trim,
-                "enthesis_stitch": enthesis_stitch,
             })
             contributor_bindings = [
                 binding for binding in source_surface_bindings.values()
@@ -11435,7 +11616,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                          )) for entry in provenance
                      ),
                      "authored_myosim_muscle_count": len(myosim_manifest["muscles"])},
-        "runtime_binding": "BodyParts3D source-topology surfaces use a variable exact MyoSim route-body table with four sparse influences per vertex; shared digital surfaces include every authored digit route instead of a middle-finger proxy, while each calcaneal-tendon surface inherits femur/tibia/calcaneus weights from its nearest named source muscle surface, registers its locked/feathered distal boundary to exact named calcaneal source triangles, and adds a separately labelled visual enthesis strip at the opened source cap",
+        "runtime_binding": "BodyParts3D source-topology surfaces use a variable exact MyoSim route-body table with four sparse influences per vertex; shared digital surfaces include every authored digit route instead of a middle-finger proxy, while each calcaneal-tendon surface inherits femur/tibia/calcaneus weights from its nearest named source muscle surface and fits only its opened distal source boundary to exact named calcaneal triangles with a local harmonic field and no generated enthesis strip",
         "status": "native_route_body_sparse_kinematic_surface_binding_input_not_collision_or_physics",
         "evidence_boundary": "This source-authored surface package visually follows exact named articulated endpoint bodies. It does not make the source surface a force-transmitting continuum, add a tendon constitutive law, create collision/contact, or establish a medical registration.",
     }

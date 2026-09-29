@@ -751,6 +751,13 @@ inspection states, with a minimum 6.093 mm offset. Five authored dependent
 joint-range conflicts still make the full lower-limb audit exit 2; cartilage
 orientation, loaded contact, clinical anatomy and sustained behavior are open.
 
+The [calcaneal tendon visual boundary repair](TENDON_HARMONIC_BOUNDARY_20260929.md)
+removes 145 right and 163 left exact intersections in the compiled tendon
+surfaces without changing the other 148 surfaces or any body-binding bytes.
+Both sheets remain open (388/389 boundary edges) with one/two local normal
+reversals, so anatomical enthesis and force transfer are still open. The
+earlier standing video predates this visual payload.
+
 The [native stance horizon](NATIVE_STAND_STANCE_HORIZON_20260913.md) now
 repeats the exact-clock physical-M4 run from the authored root/ankle/subtalar/
 MTP stance and six active foot witnesses. Static source support placement and

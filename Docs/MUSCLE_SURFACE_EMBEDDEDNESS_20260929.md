@@ -46,3 +46,11 @@ exact-checks all 150 surfaces: 82 closed embedded (including 30 with multiple
 components), 62 closed self-intersecting, four open/nonmanifold intersecting,
 and two open/nonmanifold without detected intersections. The right EHL remains
 open/intersecting after the quantization repair.
+
+The subsequent [calcaneal tendon boundary repair](TENDON_HARMONIC_BOUNDARY_20260929.md)
+removes 145 right and 163 left compiled exact intersection pairs. Its
+[v3 census](media/muscle-surface-embeddedness-20260929/receipt-v3.json)
+still admits 52 single embedded muscle candidates and no tendon volume:
+82 closed embedded, 62 closed self-intersecting, two open/nonmanifold
+intersecting and four open/nonmanifold without detected intersections. Both
+tendons remain open and retain one or two local source-face normal reversals.
