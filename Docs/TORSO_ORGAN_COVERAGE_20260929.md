@@ -1,5 +1,11 @@
 # Native torso organ coverage and source geometry audit
 
+This is the immutable 22-surface increment published at `d338102`. The
+[subsequent cardiac wall increment](CARDIAC_WALL_COVERAGE_20260929.md) adds two
+surfaces and source-family/type/topology checks. Reproducing the command below
+requires this record's matching source/map revision; newer maps correctly
+reject the older payload's map hash.
+
 The native anatomical view now adds the retained spleen surface and nine liver
 components. The bundle increases from 12 to 22 surfaces and from 21,648 to
 92,623 vertices. The first 12 records, vertices and triangle indices are

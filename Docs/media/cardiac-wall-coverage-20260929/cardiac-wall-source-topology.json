@@ -1,0 +1,114 @@
+{
+  "schema": "numi.human.cardiac-wall-source-topology-inspection.v1",
+  "rows": [
+    {
+      "member_id": "FJ2428",
+      "hierarchy": "is_a",
+      "member": "isa_BP3D_4.0_obj_99/FJ2428.obj",
+      "member_sha256": "ac3c7d6714bed8cf549c97b013546541cf67e189dad2107092a59758aa3ccc45",
+      "raw": {
+        "vertex_count": 21053,
+        "face_count": 37442,
+        "boundary_edge_count": 3640,
+        "nonmanifold_edges": 0,
+        "orientation_defect_edges": 0,
+        "degenerate_face_ids": 3,
+        "duplicate_face_ids": 0,
+        "vertex_manifold_defect_ids": 0,
+        "face_component_count": 560,
+        "euler_characteristic": 512,
+        "closed_oriented_manifold_candidate": false
+      },
+      "exact_coordinate_quotient": {
+        "vertex_count": 18706,
+        "face_count": 37442,
+        "boundary_edge_count": 0,
+        "nonmanifold_edges": 7,
+        "orientation_defect_edges": 0,
+        "degenerate_face_ids": 3,
+        "duplicate_face_ids": 4,
+        "vertex_manifold_defect_ids": 10,
+        "face_component_count": 8,
+        "euler_characteristic": -8,
+        "closed_oriented_manifold_candidate": false
+      },
+      "identified_seam_vertex_count": 2347,
+      "payload_geometry_changed": false,
+      "self_intersections": "not_checked",
+      "mechanical_volume": "not_admitted"
+    },
+    {
+      "member_id": "FJ2438",
+      "hierarchy": "part_of",
+      "member": "partof_BP3D_4.0_obj_99/FJ2438.obj",
+      "member_sha256": "187235f3c3612ef27abde924d01c71579c2946435e64319164f43e5ad008284d",
+      "raw": {
+        "vertex_count": 4284,
+        "face_count": 7544,
+        "boundary_edge_count": 1102,
+        "nonmanifold_edges": 0,
+        "orientation_defect_edges": 0,
+        "degenerate_face_ids": 0,
+        "duplicate_face_ids": 0,
+        "vertex_manifold_defect_ids": 0,
+        "face_component_count": 32,
+        "euler_characteristic": -39,
+        "closed_oriented_manifold_candidate": false
+      },
+      "exact_coordinate_quotient": {
+        "vertex_count": 3766,
+        "face_count": 7544,
+        "boundary_edge_count": 0,
+        "nonmanifold_edges": 0,
+        "orientation_defect_edges": 0,
+        "degenerate_face_ids": 0,
+        "duplicate_face_ids": 0,
+        "vertex_manifold_defect_ids": 0,
+        "face_component_count": 1,
+        "euler_characteristic": -6,
+        "closed_oriented_manifold_candidate": true
+      },
+      "identified_seam_vertex_count": 518,
+      "payload_geometry_changed": false,
+      "self_intersections": "not_checked",
+      "mechanical_volume": "not_admitted"
+    },
+    {
+      "member_id": "FJ2439",
+      "hierarchy": "part_of",
+      "member": "partof_BP3D_4.0_obj_99/FJ2439.obj",
+      "member_sha256": "e7c21cd1659eced056eb56e28f4fa9019ace451ea6e0333097846177f807bb5a",
+      "raw": {
+        "vertex_count": 9887,
+        "face_count": 17784,
+        "boundary_edge_count": 1826,
+        "nonmanifold_edges": 0,
+        "orientation_defect_edges": 0,
+        "degenerate_face_ids": 0,
+        "duplicate_face_ids": 0,
+        "vertex_manifold_defect_ids": 0,
+        "face_component_count": 124,
+        "euler_characteristic": 82,
+        "closed_oriented_manifold_candidate": false
+      },
+      "exact_coordinate_quotient": {
+        "vertex_count": 8890,
+        "face_count": 17784,
+        "boundary_edge_count": 0,
+        "nonmanifold_edges": 0,
+        "orientation_defect_edges": 0,
+        "degenerate_face_ids": 0,
+        "duplicate_face_ids": 0,
+        "vertex_manifold_defect_ids": 0,
+        "face_component_count": 1,
+        "euler_characteristic": -2,
+        "closed_oriented_manifold_candidate": true
+      },
+      "identified_seam_vertex_count": 997,
+      "payload_geometry_changed": false,
+      "self_intersections": "not_checked",
+      "mechanical_volume": "not_admitted"
+    }
+  ],
+  "boundary": "Diagnostic exact coordinate seam quotient only; emitted visual payload retains raw OBJ vertices/triangles. No source hole is filled, and no volume, collision or mechanics is admitted."
+}

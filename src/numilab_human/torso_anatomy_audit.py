@@ -35,6 +35,31 @@ def _pack_sections(path: Path) -> dict[int, tuple[bytes, int, int]]:
     return sections
 
 
+def _native_source_family_coverage(requirements, measured, relations, owners):
+    """Independently compare rendered members/owners with source family sets."""
+    _require(isinstance(requirements, list) and bool(requirements), "native source coverage requirements")
+    checks = []
+    seen = set()
+    for requirement in requirements:
+        identity = requirement["id"]
+        _require(identity not in seen and requirement["selection"] == "complete_source_membership",
+                 "native source coverage requirement identity/selection")
+        seen.add(identity)
+        expected = {member for concept, name, member in relations[requirement["hierarchy"]]
+                    if concept == requirement["concept_id"] and name == requirement["source_name"]}
+        _require(bool(expected), "native source family has no exact source members")
+        actual_rows = [row for row in measured if row["member_id"] in expected]
+        actual = {row["member_id"] for row in actual_rows}
+        owner = owners[requirement["myosim_body"]][0]
+        wrong = sorted(row["member_id"] for row in actual_rows
+                       if row["core_body_index"] != owner or row["layer"] != requirement["layer"])
+        checks.append({"id": identity, "expected_members": sorted(expected), "rendered_members": sorted(actual),
+                       "missing_members": sorted(expected - actual), "wrong_layer_or_body_members": wrong,
+                       "passed": actual == expected and len(actual_rows) == len(actual) and not wrong})
+    return {"requirements": checks, "passed": all(row["passed"] for row in checks),
+            "boundary": "Declared atlas family coverage in native geometry, not clinical or whole-organ completeness."}
+
+
 def audit_torso_anatomy(
     sources: Path, artifact: Path, registration_path: Path, payload: Path,
     native_pack: Path, native_poses: Path, pose: tuple[tuple[int, float], ...] | None,
@@ -44,6 +69,7 @@ def audit_torso_anatomy(
     from myo_sim.build.compose import build_model
     from . import model as human
     from .joint_constraint_consistency import source_equality_projection_oracle
+    from .torso_anatomy_coverage import source_family_topology, source_organ_coverage
     from .upper_limb_pose_audit import _pose_qpos
 
     registration = json.loads(registration_path.read_text())
@@ -111,7 +137,10 @@ def audit_torso_anatomy(
     matrix = np.asarray(registration["coordinate_system"]["global_source_mm_to_myosim_world_m"])
     _require(matrix.shape == (4, 4) and bool(np.isfinite(matrix).all()), "source global transform")
     source_relations = {h: human._bodyparts_source_element_relation_names(sources, h)
-                        for h in {s["hierarchy"] for s in specs}}
+                        for h in {s["hierarchy"] for s in specs} | {"is_a"}}
+    family_members = {member for requirement in mapping["coverage_requirements"]
+                      for concept, label, member in source_relations[requirement["hierarchy"]]
+                      if concept == requirement["concept_id"] and label == requirement["source_name"]}
     rows = []
     layer_codes = {"organ": 1, "vessel": 2, "nerve": 3}
     for stable, (spec, record) in enumerate(zip(specs, records, strict=True), 1):
@@ -127,6 +156,13 @@ def audit_torso_anatomy(
         _require(declared_source["stable_id"] == stable and declared_source["member_id"] == spec["member_id"]
                  and declared_source["member"] == member
                  and declared_source["member_sha256"] == hashlib.sha256(obj).hexdigest(), "torso source member hash/identity")
+        if spec["layer"] == "organ":
+            source_types = [{"concept_id": concept, "label": name} for concept, name, typed_member
+                            in source_relations["is_a"] if typed_member == spec["member_id"]]
+            typed = source_organ_coverage(spec, source_types)
+            _require(all(declared_source.get(key) == value for key, value in typed.items()), "torso source organ typing")
+        topology = source_family_topology(obj, member) if spec["member_id"] in family_members else None
+        _require(declared_source.get("source_family_topology") == topology, "torso source topology diagnostic")
         source_v, triangles = human._bodyparts_obj_triangles(obj, member)
         source_v = np.asarray(source_v)
         _require(count_v == len(source_v) and count_i == 3 * len(triangles), "source surface topology size")
@@ -189,8 +225,9 @@ def audit_torso_anatomy(
             np.max(np.linalg.norm(vertices[first_v:first_v + count_v, 3:] - local_normals, axis=1)),
             np.max(np.linalg.norm(native_normals - local_normals, axis=1))))
         rows.append({
-            "stable_id": stable, "member_id": spec["member_id"], "label": spec["source_name"],
+            "stable_id": stable, "member_id": spec["member_id"], "label": spec["source_name"], "layer": spec["layer"],
             "source_member_sha256": hashlib.sha256(obj).hexdigest(), "source_body_id": int(sid), "core_body_index": body,
+            "source_family_topology": topology,
             "vertex_count": count_v, "triangle_count": len(triangles), "topology_exact": True,
             "payload_local_error_m": local_error, "native_pack_local_error_m": pack_error,
             "native_pose_world_error_m": world_error, "normal_unit_error": normals_error,
@@ -203,9 +240,11 @@ def audit_torso_anatomy(
                        and normal_source_error <= 2e-5 and max(pose_position_error, orientation_error) <= 1e-6),
         })
     _require(set(poses) == set(records[:, 0]), "native torso pose coverage")
+    family_coverage = _native_source_family_coverage(mapping.get("coverage_requirements"), rows, source_relations, owners)
     return {
         "schema": "numi.human.native-torso-anatomy-source-audit.v1",
-        "passed": all(row["passed"] for row in rows), "surface_count": surface_count,
+        "passed": all(row["passed"] for row in rows) and family_coverage["passed"], "surface_count": surface_count,
+        "native_source_family_coverage": family_coverage,
         "vertex_count": sum(row["vertex_count"] for row in rows), "rows": rows,
         "maximum_native_pose_world_error_m": max(row["native_pose_world_error_m"] for row in rows),
         "source_equality_projection_oracle": equality_oracle, "rigid_source_program_checks": source_checks,

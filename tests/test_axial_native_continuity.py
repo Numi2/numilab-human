@@ -472,7 +472,7 @@ def test_organ_coverage_distinguishes_atrial_wall_from_named_whole_organ(inputs,
     result = human.bodyparts_myosim_torso_anatomy_visual_payload(
         sources, anatomy, registration, inputs[2], tmp_path / "organs")
     surfaces = {surface["label"]: surface for surface in result["source"]["surfaces"]}
-    heart = surfaces["heart"]
+    heart = next(s for s in result["source"]["surfaces"] if s["member_id"] == "FJ2439")
     assert heart["member_id"] == "FJ2439"
     assert not heart["source_named_organ_type_matches"]
     assert heart["organ_coverage"] == "source_part_of_organ_component"
@@ -486,9 +486,16 @@ def test_organ_coverage_distinguishes_atrial_wall_from_named_whole_organ(inputs,
     assert all(not s["source_named_organ_type_matches"] and s["organ_coverage"] == "source_part_of_organ_component" for s in liver)
     assert all(any("liver" in t["label"] or "hepatovenous" in t["label"] for t in s["source_is_a_types"]) for s in liver)
     assert {"concept_id": "FMA9457", "label": "wall of right atrium"} in heart["source_is_a_types"]
-    assert coverage["organ_surface_count"] == 15
+    ventricle = next(s for s in result["source"]["surfaces"] if s["member_id"] == "FJ2428")
+    assert ventricle["source_named_structure_type_matches"]
+    assert not ventricle["source_named_organ_type_matches"]
+    assert ventricle["source_structure_kind"] == "organ_component"
+    assert ventricle["organ_coverage"] == "source_named_organ_component_representation"
+    assert coverage["source_family_coverage"]["passed"]
+    assert coverage["source_family_coverage"]["requirements"][0]["selected_members"] == ["FJ2428", "FJ2438", "FJ2439"]
+    assert coverage["organ_surface_count"] == 17
     assert coverage["source_named_organ_representation_count"] == 5
-    assert coverage["source_partial_organ_component_count"] == 10
+    assert coverage["source_partial_organ_component_count"] == 12
     assert coverage["source_organ_type_relations"]["sha256"] == human.sha256(sources / "isa_element_parts.txt")
 
 

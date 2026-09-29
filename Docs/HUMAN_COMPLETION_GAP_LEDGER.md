@@ -652,13 +652,19 @@ direction/area, body-frame registration, subject density, or a tissue-side
 exchange law, so this receipt does not close anatomical supports/loading,
 two-way blood/tissue transfer, calibration, or sustained standing/walking.
 
-The physical-M4 [native torso anatomy visual admission](NATIVE_TORSO_ANATOMY_20260913.md)
-now renders the exact hash-bound BodyParts3D payload: five organ, six vessel,
-and one spinal-cord source surface across four camera views. Sparse source IDs
-and camera-family occlusion are admitted by the native loader, and the focused
-vascular selection passes `4/4` CTest cases. This is source membership,
-source-to-world registration, and one-link kinematic visual evidence only;
-organ FEM/MPM, vessel tube/lumen mechanics, neural mechanics, calibrated
+The 13 September physical-M4 [native torso anatomy visual admission](NATIVE_TORSO_ANATOMY_20260913.md)
+rendered five organ, six vessel and one spinal-cord source surface across four
+camera views. The current [cardiac wall coverage increment](CARDIAC_WALL_COVERAGE_20260929.md)
+renders 24 source surfaces and independently checks all 117,960 vertices.
+It retains five named organ representations, all three atlas chamber-wall
+members, nine liver components, six vessel surfaces and the spinal cord.
+Complete source-family coverage is checked against both atlas hierarchies;
+cavities cannot be imported as organ tissue. The ventricular surface retains
+seven nonmanifold edges, three degenerate faces and four duplicate faces after
+exact coordinate seam identification, so closed mechanical-wall admission
+remains open. This is source membership, source-to-world registration and
+one-link kinematic visual evidence only; lung surfaces, complete functional
+heart anatomy, organ FEM/MPM, vessel tube/lumen mechanics, neural mechanics, calibrated
 materials/density, blood/tissue exchange, subject calibration, anatomical
 loading, standing, recovery, and walking remain open.
 

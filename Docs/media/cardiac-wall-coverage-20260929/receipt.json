@@ -1,0 +1,150 @@
+{
+  "schema": "numi.human.cardiac-wall-coverage-increment.v1",
+  "human_base_revision": "d338102f8382607d6585dd197b21499182deb992",
+  "native_revision": "281a51cb8bebc808f70208abefe9bc6e9fe3ec10",
+  "payload": {
+    "bytes": 5406036,
+    "file": "bodyparts3d-myosim-torso-anatomy.nhanatomy",
+    "index_count": 643542,
+    "magic": "NHANAT1",
+    "payload_abi": 1,
+    "registration_fingerprint32": "0b7129f7",
+    "sha256": "3de7b6a6f9fcdec97117fc9890e4ce9c0e179bb205bb72fccd72d2b99b63ea7f",
+    "surface_count": 24,
+    "vertex_count": 117960
+  },
+  "coverage": {
+    "configured_surface_count": 24,
+    "nerve_surface_count": 1,
+    "organ_surface_count": 17,
+    "source_family_coverage": {
+      "boundary": "Complete membership of declared atlas source families; not whole-organ or clinical completeness, material, contact, blood volume or physiological qualification.",
+      "passed": true,
+      "requirements": [
+        {
+          "concept_id": "FMA13256",
+          "duplicate_members": false,
+          "expected_members": [
+            "FJ2428",
+            "FJ2438",
+            "FJ2439"
+          ],
+          "hierarchy": "is_a",
+          "id": "cardiac_chamber_walls",
+          "label": "wall of cardiac chamber",
+          "missing_members": [],
+          "passed": true,
+          "required_layer": "organ",
+          "required_myosim_body": "torso",
+          "selected_members": [
+            "FJ2428",
+            "FJ2438",
+            "FJ2439"
+          ],
+          "wrong_layer_or_body_members": []
+        }
+      ]
+    },
+    "source_named_organ_representation_count": 5,
+    "source_organ_type_relations": {
+      "basis": "exact_source_is_a_membership_of_named_FMA_structure_and_FMA67498_organ_type_not_only_part_of_ancestry",
+      "boundary": "source_representation_type_not_mesh_completeness_or_clinical_qualification",
+      "file": "isa_element_parts.txt",
+      "sha256": "a3de74423f943b0d724ae8f59b3a817f87c423a544f8db98113b1980817cbeaf"
+    },
+    "source_partial_organ_component_count": 12,
+    "vessel_surface_count": 6
+  },
+  "executed_source_sha256": {
+    "src/numilab_human/model.py": "f238290bd01235890ba8f9ac566f7232fea5c156dc5230417ef2511f3c3127cf",
+    "src/numilab_human/torso_anatomy_coverage.py": "71c5c5234223a052fc0e1cea5185c0b9ff1430f5863a82d14fc6ffca36e0e4eb",
+    "src/numilab_human/torso_anatomy_audit.py": "be6abed236cfe3a7643c581deb7b0c45632a22be2b3cea97dcca03e24b0e8c8f",
+    "tests/test_torso_anatomy_source_audit.py": "491b94133b1c1abdcee5172a7eb220a05b6d3f0ccd3f1fd9a7e561119750fa8c",
+    "tests/test_torso_anatomy_coverage.py": "bb40ba56e606f633b64150356cd73e800c828155a6033ea0db52b84750dd40c6",
+    "tests/test_axial_native_continuity.py": "9e43a7dffb8f5ba39153db788afc5fcd2c6aa5b33699dc518b1449dc89d0c0bf",
+    "tests/test_importer.py": "71a62c07c94d34b49199160260466b62377e79228149a0358b2f780deeb1b495",
+    "config/bodyparts3d-myosim-torso-anatomy-map.v1.json": "8da50ed72db0d75fc97c1d3e159af563a4fc0caf563b5e1de32cb65ef362d65a"
+  },
+  "validation": {
+    "result": "...............................................                          [100%]\n47 passed in 42.99s",
+    "exit_code": 0,
+    "stdout_sha256": "c77b792807e7c2a6f893a52c996ec9e54e8db96257ec8111fc1bf7058b1d2194"
+  },
+  "captures": [
+    {
+      "name": "neutral",
+      "pose_q": [],
+      "surface_count": 24,
+      "vertex_count": 117960,
+      "maximum_world_vertex_error_m": 1.1952297497807905e-07,
+      "native_source_family_coverage": {
+        "requirements": [
+          {
+            "id": "cardiac_chamber_walls",
+            "expected_members": [
+              "FJ2428",
+              "FJ2438",
+              "FJ2439"
+            ],
+            "rendered_members": [
+              "FJ2428",
+              "FJ2438",
+              "FJ2439"
+            ],
+            "missing_members": [],
+            "wrong_layer_or_body_members": [],
+            "passed": true
+          }
+        ],
+        "passed": true,
+        "boundary": "Declared atlas family coverage in native geometry, not clinical or whole-organ completeness."
+      }
+    },
+    {
+      "name": "coupled_torso",
+      "pose_q": [
+        [
+          7,
+          -0.4
+        ],
+        [
+          8,
+          0.1
+        ],
+        [
+          9,
+          0.2
+        ]
+      ],
+      "surface_count": 24,
+      "vertex_count": 117960,
+      "maximum_world_vertex_error_m": 1.6896793262292576e-07,
+      "native_source_family_coverage": {
+        "requirements": [
+          {
+            "id": "cardiac_chamber_walls",
+            "expected_members": [
+              "FJ2428",
+              "FJ2438",
+              "FJ2439"
+            ],
+            "rendered_members": [
+              "FJ2428",
+              "FJ2438",
+              "FJ2439"
+            ],
+            "missing_members": [],
+            "wrong_layer_or_body_members": [],
+            "passed": true
+          }
+        ],
+        "passed": true,
+        "boundary": "Declared atlas family coverage in native geometry, not clinical or whole-organ completeness."
+      }
+    }
+  ],
+  "native_binary_sha256": "e8e447b24636e8a3f0c8c8c641e727cbc4fec3bddc64abb60454a84f486a2bec",
+  "native_runtime_sha256": "6b9062e84bdacd6b86b413d5c549cd0046d9a271fb0caa141e03db41ffa213f6",
+  "proof_root": "/Users/home/numilab-human/Build/cardiac-wall-coverage-20260929",
+  "boundary": "All three source chamber-wall members are covered; ventricular topology remains nonmanifold. No geometry repair was applied; no whole-heart, closed-wall, mechanics, pressure/contact, physiology, clinical or standing qualification is claimed."
+}

@@ -670,15 +670,18 @@ for the measured witnesses and the distinction between exact kinematic conflicts
 and compliant source dynamics.
 
 Organ manifests distinguish source-named organ representations from selected
-organ components using exact source `is_a` membership. The current 22-surface
-bundle includes five named organ representations, a right atrial wall selected
-under `heart`, nine liver components, six vessels and the spinal cord. The
-original 12 surfaces remain byte-identical. An independent audit checks all
-92,623 vertices, source topology, normals and native body poses at rest and
-during torso motion. Retained lung selections resolve to vessels and airways;
-lung surfaces remain missing. Source agreement does not certify whole-organ
-completeness or clinical anatomy. See
-[native organ coverage and source audit](Docs/TORSO_ORGAN_COVERAGE_20260929.md).
+organ components using exact source `is_a` membership and source structural
+types. The current 24-surface bundle includes five named organ representations,
+all three atlas chamber-wall members, nine liver components, six vessels and
+the spinal cord. The original 22 surfaces remain byte-identical. An independent
+audit checks all 117,960 vertices, source topology, normals and native body
+poses at rest and during torso motion. Missing walls, wrong body ownership and
+cavity-as-tissue substitutions fail before output. The ventricular source has
+recorded topology defects; complete source membership does not admit a closed
+mechanical wall. Retained lung selections resolve to vessels and airways;
+lung surfaces remain missing. See
+[cardiac wall coverage and topology checks](Docs/CARDIAC_WALL_COVERAGE_20260929.md)
+and the preceding [organ coverage record](Docs/TORSO_ORGAN_COVERAGE_20260929.md).
 
 Static native previews supplied with `--joint-equality-payload` now project
 the dependent coordinates even when no `--pose-q` is given. The raw source

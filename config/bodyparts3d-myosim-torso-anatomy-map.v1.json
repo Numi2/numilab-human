@@ -1,6 +1,9 @@
 {
   "schema": "numi.human.bodyparts3d-myosim-torso-anatomy-map.v1",
   "description": "A small, explicit BodyParts3D 4.0 source-surface selection for native torso anatomy inspection. Each row preserves its source FMA parent relationship, exact OBJ member, and one inspected MyoSim torso or abdomen link. These are kinematic visual bindings only: they do not make an organ a FEM body, a vessel a compliant tube, or the spinal cord a neural mechanics model.",
+  "coverage_requirements": [
+    {"id": "cardiac_chamber_walls", "concept_id": "FMA13256", "source_name": "wall of cardiac chamber", "hierarchy": "is_a", "layer": "organ", "myosim_body": "torso", "selection": "complete_source_membership"}
+  ],
   "entries": [
     {"concept_id": "FMA7088", "source_name": "heart", "member_id": "FJ2439", "hierarchy": "part_of", "layer": "organ", "myosim_body": "torso"},
     {"concept_id": "FMA7148", "source_name": "stomach", "member_id": "FJ2564", "hierarchy": "part_of", "layer": "organ", "myosim_body": "Abdomen"},
@@ -23,6 +26,8 @@
     {"concept_id": "FMA7197", "source_name": "liver", "member_id": "FJ2822", "hierarchy": "part_of", "layer": "organ", "myosim_body": "Abdomen"},
     {"concept_id": "FMA7197", "source_name": "liver", "member_id": "FJ2409", "hierarchy": "part_of", "layer": "organ", "myosim_body": "Abdomen"},
     {"concept_id": "FMA7197", "source_name": "liver", "member_id": "FJ2823", "hierarchy": "part_of", "layer": "organ", "myosim_body": "Abdomen"},
-    {"concept_id": "FMA7197", "source_name": "liver", "member_id": "FJ2824", "hierarchy": "part_of", "layer": "organ", "myosim_body": "Abdomen"}
+    {"concept_id": "FMA7197", "source_name": "liver", "member_id": "FJ2824", "hierarchy": "part_of", "layer": "organ", "myosim_body": "Abdomen"},
+    {"concept_id": "FMA13884", "source_name": "wall of ventricle", "member_id": "FJ2428", "hierarchy": "is_a", "layer": "organ", "myosim_body": "torso"},
+    {"concept_id": "FMA7088", "source_name": "heart", "member_id": "FJ2438", "hierarchy": "part_of", "layer": "organ", "myosim_body": "torso"}
   ]
 }

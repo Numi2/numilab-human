@@ -54,7 +54,7 @@ def native_organs(organ_inputs, request):
 
 def test_native_organs_preserve_every_source_vertex_and_topology(native_organs):
     report = audit_torso_anatomy(*native_organs)
-    assert report["passed"] and report["surface_count"] == 22
+    assert report["passed"] and report["surface_count"] == 24
     assert all(row["topology_exact"] for row in report["rows"])
     assert {row["member_id"] for row in report["rows"] if row["label"] == "liver"} == {
         "FJ2816", "FJ2818", "FJ2819", "FJ2820", "FJ2821", "FJ2822", "FJ2409", "FJ2823", "FJ2824"}
@@ -132,4 +132,17 @@ def test_organ_oracle_rejects_member_provenance_drift_even_with_unchanged_geomet
     payload.with_name("bodyparts3d-myosim-torso-anatomy.manifest.json").write_text(json.dumps(manifest))
     args[3] = payload
     with pytest.raises(ValueError, match="torso source member hash/identity"):
+        audit_torso_anatomy(*args)
+
+
+def test_native_oracle_rejects_forged_closed_ventricular_topology(native_organs, tmp_path):
+    args = list(native_organs)
+    payload = tmp_path / args[3].name
+    payload.write_bytes(args[3].read_bytes())
+    manifest = json.loads(args[3].with_name("bodyparts3d-myosim-torso-anatomy.manifest.json").read_text())
+    wall = next(s for s in manifest["source"]["surfaces"] if s["member_id"] == "FJ2428")
+    wall["source_family_topology"]["exact_coordinate_quotient"]["closed_oriented_manifold_candidate"] = True
+    payload.with_name("bodyparts3d-myosim-torso-anatomy.manifest.json").write_text(json.dumps(manifest))
+    args[3] = payload
+    with pytest.raises(ValueError, match="torso source topology diagnostic"):
         audit_torso_anatomy(*args)

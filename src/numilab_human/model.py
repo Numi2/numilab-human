@@ -11404,6 +11404,18 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
     # rather than a source representation of the named whole organ.
     # Preserve that source selection while making its coverage explicit.
     organ_type_relations = _bodyparts_source_element_relation_names(sources, "is_a")
+    from .torso_anatomy_coverage import source_family_coverage, source_family_topology, source_organ_coverage
+    try:
+        family_coverage = source_family_coverage(
+            surface_map.get("coverage_requirements"), specifications,
+            {**relation_cache, "is_a": organ_type_relations},
+        )
+    except ValueError as error:
+        raise ImportError(str(error)) from error
+    if not family_coverage["passed"]:
+        raise ImportError("BodyParts3D torso anatomy source family coverage is incomplete: "
+                          + json.dumps(family_coverage["requirements"], sort_keys=True))
+    family_members = {member for requirement in family_coverage["requirements"] for member in requirement["expected_members"]}
     source_types_by_member: dict[str, list[dict[str, str]]] = {}
     for typed_concept, typed_label, typed_member in sorted(organ_type_relations):
         source_types_by_member.setdefault(typed_member, []).append({
@@ -11445,6 +11457,15 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
         if not isinstance(body_index, int) or body_index < 0 or not isinstance(position, list) or not isinstance(quaternion, list):
             raise ImportError(f"BodyParts3D torso anatomy target body is malformed: {body_name}")
         archive_path, member, obj = _bodyparts_obj_member(sources, hierarchy, member_id)
+        try:
+            organ_coverage = source_organ_coverage(
+                specification, source_types_by_member.get(member_id, []),
+            ) if layer_name == "organ" else {
+                "source_named_organ_type_matches": None, "source_named_structure_type_matches": None,
+                "source_structure_kind": None, "organ_coverage": None,
+            }
+        except ValueError as error:
+            raise ImportError(f"BodyParts3D torso anatomy {member_id}: {error}") from error
         vertices_mm, triangles = _bodyparts_obj_triangles(obj, member)
         normals = _bodyparts_vertex_normals(vertices_mm, triangles, member)
         world_vertices = _bodyparts_source_mm_to_body_world(
@@ -11483,15 +11504,9 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
             "hierarchy": hierarchy, "layer": layer_name,
             "myosim_body": body_name, "core_body_index": body_index,
             "vertex_count": len(vertices_mm), "triangle_count": len(triangles),
-            "source_named_organ_type_matches": (
-                (concept_id, label, member_id) in organ_type_relations
-                if layer_name == "organ" else None
-            ),
-            "organ_coverage": (
-                "source_named_organ_representation" if (concept_id, label, member_id) in organ_type_relations
-                else "source_part_of_organ_component"
-            ) if layer_name == "organ" else None,
+            **organ_coverage,
             "source_is_a_types": source_types_by_member.get(member_id, []),
+            "source_family_topology": source_family_topology(obj, member) if member_id in family_members else None,
         })
     if len(vertices_payload) > 0xFFFFFFFF or len(indices_payload) > 0xFFFFFFFF:
         raise ImportError("BodyParts3D torso anatomy payload exceeds the uint32 native renderer capacity")
@@ -11543,11 +11558,12 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
                 entry["organ_coverage"] == "source_named_organ_representation" for entry in provenance
             ),
             "source_partial_organ_component_count": sum(
-                entry["organ_coverage"] == "source_part_of_organ_component" for entry in provenance
+                entry["source_structure_kind"] == "organ_component" for entry in provenance
             ),
+            "source_family_coverage": family_coverage,
             "source_organ_type_relations": {
                 "file": "isa_element_parts.txt", "sha256": sha256(sources / "isa_element_parts.txt"),
-                "basis": "exact_source_is_a_membership_of_named_FMA_organ_not_only_part_of_ancestry",
+                "basis": "exact_source_is_a_membership_of_named_FMA_structure_and_FMA67498_organ_type_not_only_part_of_ancestry",
                 "boundary": "source_representation_type_not_mesh_completeness_or_clinical_qualification",
             },
             "vessel_surface_count": sum(entry["layer"] == "vessel" for entry in provenance),
