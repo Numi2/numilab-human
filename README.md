@@ -649,8 +649,14 @@ A failed paired proposal is recorded with `applied=false` and preserves the
 geometry from before that search. Source ranges, interface gates and clinical boundaries remain
 unchanged.
 The executed bounded repair passes all 320 posed interfaces and 160 bilateral
-checks, while retaining five source-range conflicts and two newly exposed tendon
-surface fallbacks. See [bilateral knee geometry repair](Docs/BILATERAL_KNEE_GEOMETRY_REPAIR_20260929.md).
+checks, while retaining five source-range conflicts. See
+[bilateral knee geometry repair](Docs/BILATERAL_KNEE_GEOMETRY_REPAIR_20260929.md).
+The subsequent connected-face quadrature fallback recovers both exposed tendon
+surface regressions and six other point fallbacks at the unchanged admission
+limits. The paired payload has 650 distributed attachments and 182 source points;
+all 832 source laws and resolved points are preserved, with no admitted endpoint
+downgraded. See [tendon surface recovery](Docs/TENDON_CONNECTED_FACE_RECOVERY_20260929.md)
+for the exact surface-path and native GPU evidence and the remaining boundaries.
 
 Organ manifests now distinguish source-named organ representations from selected
 organ components using exact source `is_a` membership. The current five organ

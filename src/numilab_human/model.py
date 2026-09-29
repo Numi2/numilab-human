@@ -8482,6 +8482,104 @@ def _numi_human_reframe_fixed_cluster_surface(
     return reframed
 
 
+def _tendon_connected_face_path_candidates(
+    surface: dict[str, Any], seed_triangle_index: int,
+    closest_point: list[float], maximum_patch_radius_m: float,
+) -> tuple[list[dict[str, Any]], int]:
+    """Exact surface points with explicit bounded piecewise-triangle paths.
+
+    Coarse triangles can cover a useful patch even when none of their vertices
+    are within the geodesic vertex search. Traverse shared edges using valid
+    face segments. This is a conservative reachability search, not a claim of
+    globally shortest surface geodesics or anatomical enthesis calibration.
+    """
+    vertices, triangles = surface["vertices"], surface["triangles"]
+    source_indices = surface.get("_source_triangle_indices")
+
+    def source_index(index: int) -> int:
+        return int(source_indices[index]) if isinstance(source_indices, list) else index
+
+    def distance(first: list[float], second: list[float]) -> float:
+        return math.sqrt(sum((first[axis] - second[axis]) ** 2 for axis in range(3)))
+
+    by_edge: dict[tuple[int, int], list[int]] = defaultdict(list)
+    for index, triangle in enumerate(triangles):
+        for first, second in ((triangle[0], triangle[1]), (triangle[1], triangle[2]), (triangle[2], triangle[0])):
+            by_edge[tuple(sorted((first, second)))].append(index)
+    queue = [(0.0, seed_triangle_index, list(closest_point),
+              [source_index(seed_triangle_index)], [list(closest_point)])]
+    best_cost = {seed_triangle_index: 0.0}
+    visited: set[int] = set()
+    candidates: list[dict[str, Any]] = []
+    while queue:
+        cost, index, entry, path_triangles, path_points = heapq.heappop(queue)
+        if index in visited or cost > maximum_patch_radius_m + 1.0e-12:
+            continue
+        visited.add(index)
+        triangle = triangles[index]
+        points = [vertices[vertex] for vertex in triangle]
+        first_edge = [points[1][axis] - points[0][axis] for axis in range(3)]
+        second_edge = [points[2][axis] - points[0][axis] for axis in range(3)]
+        cross = [
+            first_edge[1]*second_edge[2] - first_edge[2]*second_edge[1],
+            first_edge[2]*second_edge[0] - first_edge[0]*second_edge[2],
+            first_edge[0]*second_edge[1] - first_edge[1]*second_edge[0],
+        ]
+        if math.sqrt(sum(value*value for value in cross)) <= 1.0e-12:
+            continue
+        _, entry_weights = _tendon_closest_point_on_triangle(entry, points)
+
+        def add(weights: list[float]) -> None:
+            point = [sum(weights[vertex] * points[vertex][axis] for vertex in range(3)) for axis in range(3)]
+            length = cost + distance(entry, point)
+            if (
+                length > maximum_patch_radius_m + 1.0e-12
+                or any(distance(point, candidate["point"]) <= 1.0e-9 for candidate in candidates)
+            ):
+                return
+            candidates.append({
+                "point": point, "vertex_index": None,
+                "source": {
+                    "kind": "connected_triangle_barycentric",
+                    "source_triangle_index": source_index(index),
+                    "barycentric": weights,
+                    "path_triangle_indices": list(path_triangles),
+                    "path_points_m": [*path_points, point],
+                    "path_length_m": length,
+                },
+            })
+
+        add(list(entry_weights))
+        for vertex, point in enumerate(points):
+            length = distance(entry, point)
+            if length <= 1.0e-12:
+                continue
+            fraction = min(1.0, max(0.0, maximum_patch_radius_m - cost) / length)
+            weights = [(1.0 - fraction) * value for value in entry_weights]
+            weights[vertex] += fraction
+            add(weights)
+        for weights in ((1.0/3.0, 1.0/3.0, 1.0/3.0), (0.5, 0.5, 0.0), (0.0, 0.5, 0.5), (0.5, 0.0, 0.5)):
+            add(list(weights))
+        for first, second in ((triangle[0], triangle[1]), (triangle[1], triangle[2]), (triangle[2], triangle[0])):
+            start, end = vertices[first], vertices[second]
+            delta = [end[axis] - start[axis] for axis in range(3)]
+            squared = sum(value * value for value in delta)
+            fraction = max(0.0, min(1.0, sum(
+                (entry[axis] - start[axis]) * delta[axis] for axis in range(3)
+            ) / squared)) if squared > 0.0 else 0.0
+            crossing = [start[axis] + fraction * delta[axis] for axis in range(3)]
+            next_cost = cost + distance(entry, crossing)
+            if next_cost > maximum_patch_radius_m + 1.0e-12:
+                continue
+            for neighbor in by_edge[tuple(sorted((first, second)))]:
+                if neighbor in visited or next_cost >= best_cost.get(neighbor, math.inf):
+                    continue
+                best_cost[neighbor] = next_cost
+                heapq.heappush(queue, (next_cost, neighbor, crossing,
+                    [*path_triangles, source_index(neighbor)], [*path_points, crossing]))
+    return candidates, len(visited)
+
+
 def _numi_human_tendon_surface_envelope_connected(
     source_point: list[float], surface: dict[str, Any], maximum_distance_m: float,
     maximum_patch_radius_m: float, maximum_force_amplification: float,
@@ -8655,6 +8753,7 @@ def _numi_human_tendon_surface_envelope_connected(
     # NHTENDON2 consumes positions and maps, not vertex indices, so this is an
     # offline force-transfer discretization rather than geometry mutation.
     topology_candidate_count = 0
+    connected_face_search = None
     if best is None:
         topology_candidates: list[dict[str, Any]] = []
 
@@ -8792,7 +8891,41 @@ def _numi_human_tendon_surface_envelope_connected(
                 "connected_geodesic_topology_aware_exact_surface_points",
                 [candidate["source"] for candidate in selected_candidates],
             )
+        if best is None:
+            face_candidates, visited_face_count = _tendon_connected_face_path_candidates(
+                surface, source_triangle_index, closest_point, maximum_patch_radius_m,
+            )
+            # Represent the searched candidate pool by deterministic 3-D
+            # support extrema. No face-visit or path-depth cap truncates this
+            # conservative search. Four-point quadrature is a sampled stencil;
+            # it does not establish global optimality or clinical attachment.
+            selected_indices: list[int] = []
+            for direction in product((-1.0, 0.0, 1.0), repeat=3):
+                if not any(direction) or not face_candidates:
+                    continue
+                selected_index = max(range(len(face_candidates)), key=lambda index: (
+                    sum(face_candidates[index]["point"][axis] * direction[axis] for axis in range(3)), -index,
+                ))
+                if selected_index not in selected_indices:
+                    selected_indices.append(selected_index)
+            selected_faces = [face_candidates[index] for index in selected_indices]
+            topology_candidate_count = max(topology_candidate_count, len(selected_faces))
+            connected_face_search = {
+                "visited_triangle_count": visited_face_count,
+                "reachable_exact_point_count": len(face_candidates),
+                "support_extrema_count": len(selected_faces),
+                "candidate_selection": "26_source_frame_support_directions_not_global_optimality",
+            }
+            for selected_candidates in combinations(selected_faces, 4):
+                consider_patch(
+                    [candidate["point"] for candidate in selected_candidates], [],
+                    "connected_face_path_exact_surface_points",
+                    [candidate["source"] for candidate in selected_candidates],
+                )
     if best is not None:
+        if best[1]["surface_patch_method"] == "connected_face_path_exact_surface_points":
+            best[1]["connected_face_search"] = connected_face_search
+            return best[1], "admitted_connected_face_path_exact_surface_patch"
         reason = (
             "admitted_topology_aware_exact_surface_patch"
             if best[1]["surface_patch_method"] == "connected_geodesic_topology_aware_exact_surface_points"
@@ -9377,6 +9510,7 @@ def numi_human_tendon_attachment_envelope_payload(
     source_component_anterior_thorax_composite_enthesis_count = 0
     compass_vertex_envelope_count = 0
     topology_aware_exact_surface_envelope_count = 0
+    connected_face_path_envelope_count = 0
     disconnected_component_recovery_count = 0
     fixed_metacarpal_cluster_enthesis_count = 0
     bilateral_counterpart_enthesis_count = 0
@@ -9682,6 +9816,8 @@ def numi_human_tendon_attachment_envelope_payload(
                     compass_vertex_envelope_count += 1
                 elif envelope.get("surface_patch_method") == "connected_geodesic_topology_aware_exact_surface_points":
                     topology_aware_exact_surface_envelope_count += 1
+                elif envelope.get("surface_patch_method") == "connected_face_path_exact_surface_points":
+                    connected_face_path_envelope_count += 1
                 if "surface_component_search" in envelope:
                     disconnected_component_recovery_count += 1
                 if "semantic_enthesis_map" in envelope:
@@ -9732,6 +9868,10 @@ def numi_human_tendon_attachment_envelope_payload(
                 if "node_surface_sources" in envelope:
                     surface_manifest["node_surface_sources"] = envelope[
                         "node_surface_sources"
+                    ]
+                if "connected_face_search" in envelope:
+                    surface_manifest["connected_face_search"] = envelope[
+                        "connected_face_search"
                     ]
                 if "surface_component_search" in envelope:
                     surface_manifest["surface_component_search"] = envelope[
@@ -9837,6 +9977,7 @@ def numi_human_tendon_attachment_envelope_payload(
             "method": (
                 "single_named_NHBONES1_member_exact_nearest_triangle_connected_surface_patch_"
                 "with_deterministic_topology_aware_exact_triangle_quadrature_fallback_"
+                "and_bounded_connected_face_path_exact_surface_quadrature_"
                 "or_explicit_same_body_semantic_member_map_minimum_L2_wrench_distribution_"
                 "or_explicit_fixed_metacarpal_cluster_cross_frame_surface_"
                 "or_explicit_bilateral_counterpart_projected_exact_surface_patch_"
@@ -9988,6 +10129,7 @@ def numi_human_tendon_attachment_envelope_payload(
             ),
             "compass_vertex_envelope_count": compass_vertex_envelope_count,
             "topology_aware_exact_surface_envelope_count": topology_aware_exact_surface_envelope_count,
+            "connected_face_path_envelope_count": connected_face_path_envelope_count,
             "disconnected_component_recovery_count": disconnected_component_recovery_count,
             "source_site_point_fallback_count": point_count,
             "surface_coverage_fraction": admitted_count / len(endpoint_payload),

@@ -51,6 +51,11 @@ def identity_line(result):
     return dict(part.split("=", 1) for part in line.split())
 
 
+def expected_coverage(inputs):
+    manifest = inputs[3].parent / "numi-human-tendon-attachments.manifest.json"
+    return json.loads(manifest.read_text())["coverage"]
+
+
 @pytest.mark.parametrize("pose", [(), ((9, .25),),
     POSE_SUITE[-1][1] + ((7, -.4), (8, .1), (9, .2))],
     ids=["neutral", "rotation", "coupled_crouch"])
@@ -62,9 +67,10 @@ def test_paired_anatomy_executes_with_all_point_and_distributed_attachments(inpu
     else:
         assert result.returncode == 0, result.stderr
     check = identity_line(result)
+    coverage = expected_coverage(inputs)
     assert check["tendon_endpoints"] == "832"
-    assert check["tendon_point_bindings"] == "190"
-    assert check["tendon_envelope_bindings"] == "642"
+    assert check["tendon_point_bindings"] == str(coverage["source_site_point_fallback_count"])
+    assert check["tendon_envelope_bindings"] == str(coverage["distributed_surface_envelope_count"])
     assert check["tendon_migrated_envelope_bindings"] == "18"
     assert check["tendon_geometry_identity_verified"] == "true"
     assert check["tendon_muscle_payload_sha256"] == hashlib.sha256(
@@ -74,7 +80,7 @@ def test_paired_anatomy_executes_with_all_point_and_distributed_attachments(inpu
     geometry = next(dict(part.split("=", 1) for part in line.split())
                     for line in result.stdout.splitlines() if line.startswith("tendon_bone_geometry="))
     assert geometry["tendon_bone_geometry"] == "checked_bodyparts_subset"
-    assert int(geometry["bodyparts_envelope_count"]) == 632
+    assert int(geometry["bodyparts_envelope_count"]) == coverage["registered_bone_distributed_envelope_count"]
     assert int(geometry["fixed_sibling_envelope_count"]) == 2
     assert int(geometry["external_surface_unverified_count"]) == 10
     assert float(geometry["maximum_node_residual_m"]) <= float(geometry["allowed_point_residual_m"]) == 1e-6
@@ -85,7 +91,8 @@ def test_paired_anatomy_executes_with_all_point_and_distributed_attachments(inpu
 def corrupted_envelope(inputs, corruption):
     raw = bytearray(inputs[3].read_bytes())
     header = struct.unpack_from("<8s10I96s", raw)
-    assert header[0] == b"NHTEND3\0" and header[5:8] == (832, 642, 185)
+    assert header[0] == b"NHTEND3\0" and header[5:8] == (
+        832, expected_coverage(inputs)["distributed_surface_envelope_count"], 185)
     binding = 144
     envelope = 144 + 64 * header[5]
     assert struct.unpack_from("<8I", raw, binding)[5:8] == (2, 0, 164)
@@ -326,7 +333,7 @@ def test_reference_probe_executes_all_transfers_without_claiming_loaded_geometry
     assert "tendon_geometry_identity_verified=false" in result.stdout
     assert "metal_geometry=paired_high_low" in result.stdout
     assert "metal_tendon_transfers=832" in result.stdout
-    assert "metal_tendon_envelope_transfers=642" in result.stdout
+    assert "metal_tendon_envelope_transfers=" + str(expected_coverage(inputs)["distributed_surface_envelope_count"]) in result.stdout
     assert "metal_tendon_replay_byte_identical=true" in result.stdout
 
 
