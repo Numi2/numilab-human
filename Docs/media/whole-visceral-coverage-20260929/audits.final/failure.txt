@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/Users/home/numilab-human/Build/whole-visceral-coverage-20260929/audit_native.py", line 14, in <module>
+    report=g.audit(*a,next(v.glob('*.mrvpack')),next(v.glob('*.torso-anatomy-poses.json')),None if pose is None else tuple(tuple(x) for x in pose),mask,config=c,prefix_base_payload=prefix)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/home/numilab-human/src/numilab_human/organ_family_geometry.py", line 289, in audit
+    base_audit = audit(sources, artifact, registration_path, baseline_payload, prefix_base_payload,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/home/numilab-human/src/numilab_human/organ_family_geometry.py", line 293, in audit
+    base_audit = lung.audit(sources, artifact, registration_path, baseline_payload, base_payload,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/home/numilab-human/src/numilab_human/lung_envelope.py", line 230, in audit
+    base_audit = audit_torso_anatomy(sources, artifact, registration_path, base_payload, native_pack, native_poses,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/home/numilab-human/src/numilab_human/torso_anatomy_audit.py", line 266, in audit_torso_anatomy
+    _require(set(poses) == set(records[:, 0]), "native torso pose coverage")
+  File "/Users/home/numilab-human/src/numilab_human/torso_anatomy_audit.py", line 18, in _require
+    raise ValueError(message)
+ValueError: native torso pose coverage

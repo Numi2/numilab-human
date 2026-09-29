@@ -1,0 +1,41 @@
+from pathlib import Path
+import json,shutil
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+r=Path(__file__).resolve().parent;out=Path('Docs/media/whole-visceral-coverage-20260929');out.mkdir(parents=True,exist_ok=True)
+bg='#101c2b';white='#f1f4f8';muted='#bac8d8';accent='#56d9c3'
+plt.rcParams.update({'font.family':'DejaVu Sans','text.color':white,'axes.facecolor':bg,'figure.facecolor':bg})
+def panel(fig,name,view,box,rect):
+ p=next((r/'final-native'/name/'views').glob('*-'+view+'.png'));shutil.copy2(p,out/f'native-{name}-{view}.png')
+ data=mpimg.imread(p);x0,y0,x1,y1=box;ax=fig.add_axes(rect);ax.imshow(data[y0:y1,x0:x1]);ax.axis('off')
+fig=plt.figure(figsize=(16,9),dpi=120)
+fig.text(.045,.94,'Numi Human | Brain and eye source coverage',fontsize=25,weight='bold')
+fig.text(.045,.885,'Actual Apple-native renders | 29 September 2026 | atlas reference geometry',fontsize=13.5,color=muted)
+panel(fig,'brain','oblique',(350,330,680,735),[.04,.25,.34,.59])
+panel(fig,'ocular-regions','front',(365,480,665,745),[.415,.43,.31,.37])
+panel(fig,'ocular-muscles','oblique',(350,490,645,725),[.755,.43,.20,.37])
+fig.text(.06,.20,'54 neural-region surfaces',fontsize=17,weight='bold',color=accent)
+fig.text(.43,.36,'45 eye members, with separate types',fontsize=16,weight='bold',color=accent)
+fig.text(.43,.285,'Ocular regions / glands, 14 muscle surfaces,',fontsize=13,color=white)
+fig.text(.43,.24,'6 duct segments and 2 lacrimal space references.',fontsize=13,color=white)
+fig.text(.045,.12,'Seven cranial bones omitted from these inspection views; all 579 anatomy surfaces remain in each packet.',fontsize=12,color=muted)
+fig.text(.045,.068,'Source head / neck are fixed to torso. Independent cervical / eye motion and clinical registration remain open.',fontsize=12,color=muted)
+fig.savefig(out/'executive-brain-eye-coverage.png',dpi=120);plt.close(fig)
+fig=plt.figure(figsize=(16,9),dpi=120)
+fig.text(.045,.94,'Numi Human | Gut, glands and pelvic source coverage',fontsize=25,weight='bold')
+fig.text(.045,.885,'387 to 579 surfaces | 192 additions | previous 387 surfaces byte-identical',fontsize=14,color=muted)
+panel(fig,'gut','front',(310,300,710,765),[.045,.19,.39,.66])
+fig.text(.49,.765,'46 declared source families',fontsize=22,weight='bold',color=accent)
+fig.text(.49,.69,'571 unique members represented',fontsize=19)
+fig.text(.49,.60,'63 intestinal members, including the',fontsize=17)
+fig.text(.49,.55,'shared ileocecal junction',fontsize=17)
+fig.text(.49,.46,'Urinary / male reproductive structures',fontsize=17)
+fig.text(.49,.41,'and adrenal / salivary / lacrimal glands',fontsize=17)
+fig.text(.49,.30,'15 new meshes retain source topology defects.',fontsize=13.5,color=muted)
+fig.text(.49,.25,'No connected-lumen or physical-volume admission.',fontsize=13.5,color=muted)
+fig.text(.045,.115,'Native front view cropped to the gut. Family counts overlap; aggregate / descendant atlas surfaces can overlap.',fontsize=12,color=muted)
+fig.text(.045,.067,'Whole-body / subject anatomy, tissue deformation, clinical placement and organ mechanics remain unqualified.',fontsize=12,color=muted)
+fig.savefig(out/'executive-visceral-coverage.png',dpi=120);plt.close(fig)
+print(out)

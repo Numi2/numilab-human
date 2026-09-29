@@ -107,7 +107,7 @@ def decode(path: Path):
     raw = path.read_bytes()
     require(len(raw) >= 60, 'payload header size')
     magic, abi, n, nv, ni, fingerprint, source = HEADER.unpack_from(raw)
-    require(magic == b'NHANAT1\0' and abi in [2, 3, 4] and 0 < n <= 1024
+    require(magic == b'NHANAT1\0' and abi in [2, 3, 4, 5] and 0 < n <= 1024
             and 0 < nv <= 1000000 and 0 < ni <= 6000000 and ni % 3 == 0,
             'payload header')
     offset = 60 + n*32;end = offset+nv*24
@@ -230,7 +230,7 @@ def audit(sources, artifact, registration_path, base_payload, payload, native_pa
     base_audit = audit_torso_anatomy(sources, artifact, registration_path, base_payload, native_pack, native_poses,
                                     pose, native_surface_count=native_surface_count, visible_layer_mask=mask)
     snapshot = json.loads(native_poses.read_text())
-    require(snapshot.get('visible_layer_mask') == mask and 0 < mask <= 1023
+    require(snapshot.get('visible_layer_mask') == mask and 0 < mask <= 32767
             and 310 <= native_surface_count <= 1024, 'native visibility profile')
     sections = _pack_sections(native_pack)
     pv = np.frombuffer(sections[2][0], '<f4').reshape(-1,20)

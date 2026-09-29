@@ -1,0 +1,463 @@
+{
+  "base_bodyparts_surface_count": 381,
+  "base_payload_abi": 4,
+  "base_payload_sha256": "7bb24753aa535dd6c5351580486517d92955d3ef3a04d6db8510e59e44419287",
+  "base_surface_count": 387,
+  "baseline_map": {
+    "file": "config/source-organ-family-baseline-members.v2.json",
+    "sha256": "c10a5534cc68f6da51642ca247aa07d9b40349dff630cc6b03954e4d835b667e"
+  },
+  "boundary": "Cumulative source-family reference geometry with explicit source muscle, neural, ventricular, ocular, duct, cavity and junction distinctions. Single-link kinematic bindings retain source atlas positions and fixed source head/neck behavior. Not exhaustive whole-body coverage, clinical registration, disjoint tissue, connected lumen, fluid or mechanical volume, material, independent eye/cervical motion, physiology or control.",
+  "configuration_file": "config/source-organ-family-composite.v2.json",
+  "family_bindings": {
+    "abdominal_aorta": {
+      "concept_id": "FMA3789",
+      "hierarchy": "part_of",
+      "myosim_body": "Abdomen",
+      "source_name": "abdominal aorta"
+    },
+    "aortic_arch": {
+      "concept_id": "FMA3768",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "arch of aorta"
+    },
+    "ascending_aorta": {
+      "concept_id": "FMA3736",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "ascending aorta"
+    },
+    "brain": {
+      "concept_id": "FMA50801",
+      "hierarchy": "part_of",
+      "myosim_body": "head",
+      "source_name": "brain"
+    },
+    "descending_aorta": {
+      "concept_id": "FMA3784",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "descending aorta"
+    },
+    "epididymides": {
+      "concept_id": "FMA18255",
+      "hierarchy": "is_a",
+      "myosim_body": "pelvis",
+      "source_name": "epididymis"
+    },
+    "esophagus": {
+      "concept_id": "FMA7131",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "esophagus"
+    },
+    "gallbladder": {
+      "concept_id": "FMA7202",
+      "hierarchy": "part_of",
+      "myosim_body": "Abdomen",
+      "source_name": "gallbladder"
+    },
+    "glans_penis": {
+      "concept_id": "FMA18247",
+      "hierarchy": "is_a",
+      "myosim_body": "pelvis",
+      "source_name": "glans penis"
+    },
+    "inferior_vena_cava": {
+      "concept_id": "FMA10951",
+      "hierarchy": "part_of",
+      "myosim_body": "Abdomen",
+      "source_name": "inferior vena cava"
+    },
+    "large_intestine": {
+      "concept_id": "FMA7201",
+      "hierarchy": "part_of",
+      "myosim_body": "Abdomen",
+      "source_name": "large intestine"
+    },
+    "left_adrenal": {
+      "concept_id": "FMA15630",
+      "hierarchy": "part_of",
+      "myosim_body": "Abdomen",
+      "source_name": "left adrenal gland"
+    },
+    "left_atrium": {
+      "concept_id": "FMA7097",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "left atrium"
+    },
+    "left_eye": {
+      "concept_id": "FMA54450",
+      "hierarchy": "part_of",
+      "myosim_body": "head",
+      "source_name": "left eye"
+    },
+    "left_kidney": {
+      "concept_id": "FMA7205",
+      "hierarchy": "part_of",
+      "myosim_body": "Abdomen",
+      "source_name": "left kidney"
+    },
+    "left_lacrimal_gland": {
+      "concept_id": "FMA59103",
+      "hierarchy": "part_of",
+      "myosim_body": "head",
+      "source_name": "left lacrimal gland"
+    },
+    "left_lung": {
+      "concept_id": "FMA7310",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "left lung"
+    },
+    "left_testis": {
+      "concept_id": "FMA7212",
+      "hierarchy": "is_a",
+      "myosim_body": "pelvis",
+      "source_name": "left testis"
+    },
+    "left_ureter": {
+      "concept_id": "FMA15572",
+      "hierarchy": "part_of",
+      "myosim_body": "Abdomen",
+      "source_name": "left ureter"
+    },
+    "left_ventricle": {
+      "concept_id": "FMA7101",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "left ventricle"
+    },
+    "liver": {
+      "concept_id": "FMA7197",
+      "hierarchy": "part_of",
+      "myosim_body": "Abdomen",
+      "source_name": "liver"
+    },
+    "pancreas": {
+      "concept_id": "FMA7198",
+      "hierarchy": "part_of",
+      "myosim_body": "Abdomen",
+      "source_name": "pancreas"
+    },
+    "penile_cavernosum": {
+      "concept_id": "FMA19618",
+      "hierarchy": "is_a",
+      "myosim_body": "pelvis",
+      "source_name": "corpus cavernosum of penis"
+    },
+    "penile_spongiosum": {
+      "concept_id": "FMA19617",
+      "hierarchy": "is_a",
+      "myosim_body": "pelvis",
+      "source_name": "corpus spongiosum of penis"
+    },
+    "prostate": {
+      "concept_id": "FMA9600",
+      "hierarchy": "part_of",
+      "myosim_body": "pelvis",
+      "source_name": "prostate"
+    },
+    "pulmonary_trunk": {
+      "concept_id": "FMA8612",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "pulmonary trunk"
+    },
+    "rectum": {
+      "concept_id": "FMA14544",
+      "hierarchy": "part_of",
+      "myosim_body": "pelvis",
+      "source_name": "rectum"
+    },
+    "right_adrenal": {
+      "concept_id": "FMA15629",
+      "hierarchy": "part_of",
+      "myosim_body": "Abdomen",
+      "source_name": "right adrenal gland"
+    },
+    "right_atrium": {
+      "concept_id": "FMA7096",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "right atrium"
+    },
+    "right_eye": {
+      "concept_id": "FMA54449",
+      "hierarchy": "part_of",
+      "myosim_body": "head",
+      "source_name": "right eye"
+    },
+    "right_kidney": {
+      "concept_id": "FMA7204",
+      "hierarchy": "part_of",
+      "myosim_body": "Abdomen",
+      "source_name": "right kidney"
+    },
+    "right_lacrimal_gland": {
+      "concept_id": "FMA59102",
+      "hierarchy": "part_of",
+      "myosim_body": "head",
+      "source_name": "right lacrimal gland"
+    },
+    "right_lung": {
+      "concept_id": "FMA7309",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "right lung"
+    },
+    "right_testis": {
+      "concept_id": "FMA7211",
+      "hierarchy": "is_a",
+      "myosim_body": "pelvis",
+      "source_name": "right testis"
+    },
+    "right_ureter": {
+      "concept_id": "FMA15571",
+      "hierarchy": "part_of",
+      "myosim_body": "Abdomen",
+      "source_name": "right ureter"
+    },
+    "right_ventricle": {
+      "concept_id": "FMA7098",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "right ventricle"
+    },
+    "salivary_glands": {
+      "concept_id": "FMA9597",
+      "hierarchy": "is_a",
+      "myosim_body": "head",
+      "source_name": "salivary gland"
+    },
+    "seminal_vesicles": {
+      "concept_id": "FMA19386",
+      "hierarchy": "is_a",
+      "myosim_body": "pelvis",
+      "source_name": "seminal vesicle"
+    },
+    "small_intestine": {
+      "concept_id": "FMA7200",
+      "hierarchy": "part_of",
+      "myosim_body": "Abdomen",
+      "source_name": "small intestine"
+    },
+    "spleen": {
+      "concept_id": "FMA7196",
+      "hierarchy": "is_a",
+      "myosim_body": "Abdomen",
+      "source_name": "spleen"
+    },
+    "stomach": {
+      "concept_id": "FMA7148",
+      "hierarchy": "part_of",
+      "myosim_body": "Abdomen",
+      "source_name": "stomach"
+    },
+    "superior_vena_cava": {
+      "concept_id": "FMA4720",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "superior vena cava"
+    },
+    "thymus": {
+      "concept_id": "FMA9607",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "thymus"
+    },
+    "trachea": {
+      "concept_id": "FMA7394",
+      "hierarchy": "part_of",
+      "myosim_body": "neck",
+      "source_name": "trachea"
+    },
+    "urethra": {
+      "concept_id": "FMA19667",
+      "hierarchy": "part_of",
+      "myosim_body": "pelvis",
+      "source_name": "urethra"
+    },
+    "urinary_bladder": {
+      "concept_id": "FMA15900",
+      "hierarchy": "part_of",
+      "myosim_body": "pelvis",
+      "source_name": "urinary bladder"
+    }
+  },
+  "layer_registry": {
+    "cavity_reference": {
+      "layer_code": 9,
+      "semantic": 51025,
+      "source_types": [
+        [
+          "FMA67112",
+          "immaterial anatomical entity"
+        ],
+        [
+          "FMA5897",
+          "anatomical space"
+        ]
+      ]
+    },
+    "duct": {
+      "layer_code": 10,
+      "semantic": 51026,
+      "source_types": [
+        [
+          "FMA30320",
+          "duct"
+        ],
+        [
+          "FMA71856",
+          "segment of biliary tree"
+        ],
+        [
+          "FMA86195",
+          "segment of lacrimal duct"
+        ]
+      ]
+    },
+    "junction_reference": {
+      "layer_code": 13,
+      "semantic": 51029,
+      "source_types": [
+        [
+          "FMA5898",
+          "anatomical junction"
+        ]
+      ]
+    },
+    "neural_region_reference": {
+      "excluded_source_types": [
+        [
+          "FMA78447",
+          "region of ventricular system of brain"
+        ]
+      ],
+      "layer_code": 11,
+      "required_family": "brain",
+      "semantic": 51027,
+      "source_types": [
+        [
+          "FMA67165",
+          "material anatomical entity"
+        ]
+      ]
+    },
+    "ocular_muscle_reference": {
+      "layer_code": 15,
+      "required_families": [
+        "right_eye",
+        "left_eye"
+      ],
+      "semantic": 51031,
+      "source_types": [
+        [
+          "FMA5022",
+          "muscle organ"
+        ]
+      ]
+    },
+    "ocular_region_reference": {
+      "excluded_source_types": [
+        [
+          "FMA67112",
+          "immaterial anatomical entity"
+        ],
+        [
+          "FMA5897",
+          "anatomical space"
+        ],
+        [
+          "FMA30320",
+          "duct"
+        ],
+        [
+          "FMA71856",
+          "segment of biliary tree"
+        ],
+        [
+          "FMA86195",
+          "segment of lacrimal duct"
+        ],
+        [
+          "FMA86187",
+          "segment of arterial tree organ"
+        ],
+        [
+          "FMA86188",
+          "segment of venous tree organ"
+        ],
+        [
+          "FMA5898",
+          "anatomical junction"
+        ],
+        [
+          "FMA5022",
+          "muscle organ"
+        ]
+      ],
+      "layer_code": 14,
+      "required_families": [
+        "right_eye",
+        "left_eye"
+      ],
+      "semantic": 51030,
+      "source_types": [
+        [
+          "FMA61775",
+          "physical anatomical entity"
+        ]
+      ]
+    },
+    "organ_component": {
+      "layer_code": 1,
+      "semantic": 51010,
+      "type_rule": "material organ or cardinal organ part, excluding vessel, duct and space rules"
+    },
+    "ventricular_region_reference": {
+      "layer_code": 12,
+      "required_family": "brain",
+      "semantic": 51028,
+      "source_types": [
+        [
+          "FMA78447",
+          "region of ventricular system of brain"
+        ]
+      ]
+    },
+    "vessel": {
+      "layer_code": 2,
+      "semantic": 51011,
+      "source_types": [
+        [
+          "FMA86187",
+          "segment of arterial tree organ"
+        ],
+        [
+          "FMA86188",
+          "segment of venous tree organ"
+        ]
+      ]
+    }
+  },
+  "member_owner_overrides": {
+    "FJ1932": "Abdomen",
+    "FJ2571": "pelvis"
+  },
+  "payload_abi": 5,
+  "prefix_configuration": {
+    "file": "config/source-organ-family-composite.v1.json",
+    "sha256": "0c6d2788cb2b5cfb238a04b15ea21298b815d793e1611b53d818100cb5861cc8"
+  },
+  "registration_sha256": "0b7129f788ae91272d03abf9f10b985359f3b9d9569941515b222787ffe71324",
+  "schema": "numi.human.source-organ-family-composite.v2",
+  "source_lock_sha256": "03d20d46bfb47b67fb251182758eebbc8f1bbe2f38ce51881dc4c2694774fdee",
+  "template": {
+    "file": "config/source-organ-family-template.v2.json",
+    "sha256": "37ed35d27852959e39c0a783ab515c072506e88b7e1f0dbcd751e65344a5c3f5"
+  }
+}

@@ -31,9 +31,9 @@ def configuration():
     return human.read_json(CONFIG)
 
 
-def source_selection(sources: Path):
+def source_selection(sources: Path, config=None):
     """Resolve every family independently from both pinned hierarchy tables."""
-    config = configuration()
+    config = configuration() if config is None else config
     require(human.sha256(ROOT / 'sources.lock.json') == config['source_lock_sha256'], 'source lock identity')
     lock = human.read_json(ROOT / 'sources.lock.json')['sources']['bodyparts3d_4']['files']
     for filename in ['isa_BP3D_4.0_obj_99.zip', 'partof_BP3D_4.0_obj_99.zip']:
@@ -85,6 +85,12 @@ def source_selection(sources: Path):
         for name, rule in config['layer_registry'].items():
             if name == 'organ_component':
                 continue
+            if rule.get('required_family') and rule['required_family'] not in row['families']:
+                continue
+            if rule.get('required_families') and not set(rule['required_families']) & set(row['families']):
+                continue
+            if any({'concept_id': c, 'label': n} in types for c, n in rule.get('excluded_source_types', [])):
+                continue
             if any({'concept_id': c, 'label': n} in types for c, n in rule['source_types']):
                 matches.append(name)
         require(len(matches) <= 1, 'ambiguous source tissue/vessel/duct/space type')
@@ -109,26 +115,49 @@ def source_selection(sources: Path):
             'baseline_source_members': baseline_by_member, 'anatomy_source': anatomy['source']}
 
 
-def context(sources, artifact, registration_path, base_payload):
-    config = configuration()
+def context(sources, artifact, registration_path, base_payload, config=None):
+    config = configuration() if config is None else config
     require(human.sha256(base_payload) == config['base_payload_sha256'], 'base composite payload identity')
     raw, header, records, vertices, indices = lung.decode(base_payload)
-    require(header[:2] == (3, config['base_surface_count']), 'base composite ABI/count')
+    require(header[:2] == (config.get('base_payload_abi', 3), config['base_surface_count']), 'base composite ABI/count')
     model, rest, _, _, reg, checks = lung.oracle_model(sources, artifact, registration_path)
     require(human.sha256(registration_path) == config['registration_sha256'], 'source registration identity')
     _, owners = human._bodyparts_runtime_bindings(reg, artifact)
     return raw, header, records, vertices, indices, model, rest, reg, owners, checks
 
 
+def oracle_triangles(obj, member):
+    """Parse source faces independently of the compiler's OBJ lowering."""
+    import numpy as np
+    vertices, triangles = [], []
+    for line in obj.decode('utf-8').splitlines():
+        fields = line.split()
+        if not fields or fields[0].startswith('#'):
+            continue
+        if fields[0] == 'v':
+            require(len(fields) == 4, 'oracle source vertex arity: ' + member)
+            vertices.append([float(x) for x in fields[1:]])
+        elif fields[0] == 'f':
+            require(len(fields) >= 4, 'oracle source face arity: ' + member)
+            face = [int(x.split('/')[0]) for x in fields[1:]]
+            require(all(x != 0 for x in face), 'oracle zero source index')
+            face = [x-1 if x > 0 else len(vertices)+x for x in face]
+            triangles.extend([[face[0], face[i], face[i+1]] for i in range(1, len(face)-1)])
+    v, f = np.asarray(vertices, float), np.asarray(triangles, int)
+    require(v.ndim == 2 and v.shape[1] == 3 and len(v) > 0 and np.isfinite(v).all()
+            and f.ndim == 2 and f.shape[1] == 3 and len(f) > 0 and f.min() >= 0 and f.max() < len(v),
+            'oracle source geometry ranges: ' + member)
+    return v, f
+
+
 def source_surface(sources, spec, model, rest, matrix, owners):
-    """Independent NumPy/MuJoCo geometry oracle; compiler helpers are not used."""
+    """Independent source-face, normal and NumPy/MuJoCo coordinate oracle."""
     import mujoco
     import numpy as np
     _, member, obj = human._bodyparts_obj_member(sources, spec['hierarchy'], spec['member_id'])
     require(hashlib.sha256(obj).hexdigest() == spec['source_member_sha256'] and member == spec['source_member'],
             'source OBJ identity')
-    v, f = human._bodyparts_obj_triangles(obj, member)
-    v, f = np.asarray(v), np.asarray(f)
+    v, f = oracle_triangles(obj, member)
     owner, source_body = owners[spec['myosim_body']]
     sid = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, spec['myosim_body'])
     require(sid == source_body['source_body_id'], 'named source body identity')
@@ -173,12 +202,12 @@ def compiled_surface(sources, spec, registration, bodies):
     return body['core_body_index'], body['source_body_id'], np.asarray(local), np.asarray(stored_normals), np.asarray(triangles)
 
 
-def compose(sources, artifact, registration_path, base_payload, output):
+def compose(sources, artifact, registration_path, base_payload, output, *, config=None):
     import numpy as np
-    config = configuration()
-    selection = source_selection(sources)
+    config = configuration() if config is None else config
+    selection = source_selection(sources, config)
     _, header, records, vertices, indices, model, rest, reg, owners, checks = context(
-        sources, artifact, registration_path, base_payload)
+        sources, artifact, registration_path, base_payload, config)
     bodies, _, _ = human._myosim_surface_route_context(artifact, reg['source']['myosim']['source']['archive_sha256'])
     packed_records = [records.tobytes()]
     packed_vertices = [vertices.tobytes()]
@@ -197,14 +226,15 @@ def compose(sources, artifact, registration_path, base_payload, output):
         ni += f.size
     count = header[1] + len(surfaces)
     require(nv <= 1000000 and ni <= 6000000, 'native geometry capacity')
-    raw = lung.HEADER.pack(b'NHANAT1\0', 4, count, nv, ni, header[4], header[5])
+    abi = config.get('payload_abi', 4)
+    raw = lung.HEADER.pack(b'NHANAT1\0', abi, count, nv, ni, header[4], header[5])
     raw += b''.join(packed_records) + b''.join(packed_vertices) + b''.join(packed_indices)
     output.mkdir(parents=True, exist_ok=True)
     path = output / PAYLOAD_NAME
     path.write_bytes(raw)
     manifest = {'schema': 'numi.human.source-organ-family-composite-payload.v1',
-                'payload': {'sha256': human.sha256(path), 'abi': 4, 'surfaces': count, 'vertices': nv, 'indices': ni},
-                'source_configuration_sha256': human.sha256(CONFIG), 'base_payload_sha256': human.sha256(base_payload),
+                'payload': {'sha256': human.sha256(path), 'abi': abi, 'surfaces': count, 'vertices': nv, 'indices': ni},
+                'source_configuration_sha256': human.sha256(config_path(config)), 'base_payload_sha256': human.sha256(base_payload),
                 'registration_sha256': human.sha256(registration_path), 'selection': selection,
                 'surfaces': surfaces, 'rigid_source_program_checks': checks, 'geometry_repair_applied': False,
                 'license': 'CC-BY-4.0 AND CC-BY-SA-4.0 AND Apache-2.0',
@@ -214,27 +244,36 @@ def compose(sources, artifact, registration_path, base_payload, output):
     return manifest
 
 
+def config_path(config):
+    return ROOT / config.get('configuration_file', str(CONFIG.relative_to(ROOT)))
+
+
 def audit(sources, artifact, registration_path, baseline_payload, base_payload,
-          payload, native_pack, native_poses, pose, mask=1023):
+          payload, native_pack, native_poses, pose, mask=1023, *, config=None,
+          native_surface_count=None, prefix_base_payload=None):
     import mujoco
     import numpy as np
     from .torso_anatomy_audit import _pack_sections
     from .upper_limb_pose_audit import _pose_qpos
-    config = configuration()
-    selection = source_selection(sources)
+    config = configuration() if config is None else config
+    selection = source_selection(sources, config)
     _, old_header, old_records, old_v, old_i, model, rest, reg, owners, checks = context(
-        sources, artifact, registration_path, base_payload)
+        sources, artifact, registration_path, base_payload, config)
     _, header, records, vertices, indices = lung.decode(payload)
     count = config['base_surface_count'] + len(selection['added'])
-    require(header[:2] == (4, count) and header[4:] == old_header[4:], 'complete composite header identity')
+    native_count = count if native_surface_count is None else native_surface_count
+    require(count <= native_count <= 1024, 'native complete surface capacity')
+    abi = config.get('payload_abi', 4)
+    require(header[:2] == (abi, count) and header[4:] == old_header[4:], 'complete composite header identity')
     require(records[:old_header[1]].tobytes() == old_records.tobytes()
             and vertices[:len(old_v)].tobytes() == old_v.tobytes()
-            and indices[:len(old_i)].tobytes() == old_i.tobytes(), 'unchanged complete 310-surface baseline')
+            and indices[:len(old_i)].tobytes() == old_i.tobytes(),
+            f'unchanged complete {old_header[1]}-surface baseline')
     manifest = human.read_json(payload.with_name(MANIFEST_NAME))
-    require(manifest['source_configuration_sha256'] == human.sha256(CONFIG)
+    require(manifest['source_configuration_sha256'] == human.sha256(config_path(config))
             and manifest['base_payload_sha256'] == human.sha256(base_payload)
             and manifest['registration_sha256'] == human.sha256(registration_path), 'composite provenance')
-    require(manifest['payload'] == {'sha256': human.sha256(payload), 'abi': 4, 'surfaces': count,
+    require(manifest['payload'] == {'sha256': human.sha256(payload), 'abi': abi, 'surfaces': count,
                                     'vertices': header[2], 'indices': header[3]}, 'composite payload identity')
     require(manifest['selection'] == selection, 'independent source selection/type/topology')
     require(manifest['geometry_repair_applied'] is False and manifest['clinical_registration'] is False
@@ -242,22 +281,38 @@ def audit(sources, artifact, registration_path, baseline_payload, base_payload,
             'source-only qualification boundary')
     require({k:v for k,v in manifest['rigid_source_program_checks'].items() if k != 'file'}
             == {k:v for k,v in checks.items() if k != 'file'}, 'source program identity')
-    base_audit = lung.audit(sources, artifact, registration_path, baseline_payload, base_payload,
-                           native_pack, native_poses, pose, mask, native_surface_count=count)
+    if config.get('prefix_configuration'):
+        prefix = config['prefix_configuration']
+        path = ROOT / prefix['file']
+        require(human.sha256(path) == prefix['sha256'] and prefix_base_payload is not None,
+                'prefix configuration/source payload identity')
+        base_audit = audit(sources, artifact, registration_path, baseline_payload, prefix_base_payload,
+                           base_payload, native_pack, native_poses, pose, mask,
+                           config=human.read_json(path), native_surface_count=native_count)
+    else:
+        base_audit = lung.audit(sources, artifact, registration_path, baseline_payload, base_payload,
+                               native_pack, native_poses, pose, mask, native_surface_count=native_count)
     sections = _pack_sections(native_pack)
     pv = np.frombuffer(sections[2][0], '<f4').reshape(-1, 20)
     pi = np.frombuffer(sections[3][0], '<u4')
     primitives = np.frombuffer(sections[4][0], '<u4').reshape(-1, 16)
     instances = np.frombuffer(sections[5][0], '<u4').reshape(-1, 20)
     transforms = np.frombuffer(sections[5][0], '<f4').reshape(-1, 20)
-    semantic_codes = [51010,51011,51012,51020,51021,51022,51023,51024,51025,51026]
+    semantic_codes = [51010,51011,51012,51020,51021,51022,51023,51024,51025,51026,51027,51028,51029,51030,51031]
     all_anatomy = primitives[np.isin(primitives[:, 4], semantic_codes)]
+    if native_count > count:
+        all_anatomy = all_anatomy[all_anatomy[:,5] <= count]
     require(len(all_anatomy) == count and set(all_anatomy[:, 5]) == set(range(1, count+1)),
             'complete native anatomy identity coverage')
     by_id = {int(p[5]):p for p in all_anatomy}
     snapshot = human.read_json(native_poses)
-    require(snapshot['surface_count'] == count and snapshot['visible_layer_mask'] == mask, 'native composite pose/profile')
+    require(snapshot['surface_count'] == native_count and snapshot['visible_layer_mask'] == mask, 'native composite pose/profile')
     poses = {b['body_index']: b for b in snapshot['bodies']}
+    require(len(poses) == len(snapshot['bodies']) and
+            snapshot['registration_fingerprint32'] == header[4] and
+            set(map(int, records[:, 0])) <= set(poses), 'unique native pose owner identity')
+    if native_count == count:
+        require(set(poses) == set(map(int, records[:, 0])), 'exact native pose owner coverage')
     data = mujoco.MjData(model)
     data.qpos[:] = model.qpos0 if pose is None else _pose_qpos(model, pose, mujoco, np)[0]
     mujoco.mj_forward(model, data)
@@ -290,6 +345,9 @@ def audit(sources, artifact, registration_path, baseline_payload, base_payload,
         require(np.isfinite(packed_local).all() and np.isfinite(packed_normal).all(), 'finite native component geometry')
         q = np.asarray(poses[owner]['orientation_world_xyzw'])
         position = np.asarray(poses[owner]['position_world_m'])
+        require(q.shape == (4,) and position.shape == (3,) and np.isfinite(q).all()
+                and np.isfinite(position).all() and abs(np.linalg.norm(q)-1.) <= 1e-6,
+                'native finite unit component pose')
         rotation = np.empty(9)
         mujoco.mju_quat2Mat(rotation, q[[3,0,1,2]] / np.linalg.norm(q))
         rotation = rotation.reshape(3,3)
@@ -318,7 +376,8 @@ def audit(sources, artifact, registration_path, baseline_payload, base_payload,
                  'passed': set(r['expected_members']) <= selected_members} for r in selection['families']]
     passed = base_audit['passed'] and all(r['passed'] for r in rows) and all(r['passed'] for r in families)
     return {'schema': 'numi.human.native-organ-family-source-audit.v1', 'passed': passed,
-            'surface_count': count, 'family_count': len(families), 'families': families,
+            'surface_count': count, 'native_surface_count': native_count,
+            'family_count': len(families), 'families': families,
             'required_unique_source_members': selection['required_member_count'],
             'shared_family_members': selection['shared_family_members'], 'rows': rows, 'baseline_audit': base_audit,
             'maximum_added_native_source_error_m': max(r['native_pose_world_error_m'] for r in rows),
@@ -328,7 +387,7 @@ def audit(sources, artifact, registration_path, baseline_payload, base_payload,
                               'disjoint_tissue': False, 'connected_lumen': False, 'physical_volume': False,
                               'clinical_registration': False, 'mechanics': False},
             'inputs': {k: {'path': str(p.resolve()), 'sha256': human.sha256(p)} for k,p in {
-                'configuration': CONFIG, 'registration': registration_path, 'baseline_payload': baseline_payload,
+                'configuration': config_path(config), 'registration': registration_path, 'baseline_payload': baseline_payload,
                 'base_payload': base_payload, 'payload': payload, 'payload_manifest': payload.with_name(MANIFEST_NAME),
                 'native_pack': native_pack, 'native_poses': native_poses}.items()},
             'pose_coordinates': pose, 'boundary': config['boundary']}
@@ -337,24 +396,29 @@ def audit(sources, artifact, registration_path, baseline_payload, base_payload,
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('mode', choices=['compose', 'audit'])
+    parser.add_argument('--configuration', type=Path, default=CONFIG)
     for name in ['sources', 'artifact', 'registration', 'base-payload', 'output']:
         parser.add_argument('--'+name, type=Path, required=True)
     for name in ['baseline-payload', 'payload', 'native-pack', 'native-poses']:
         parser.add_argument('--'+name, type=Path)
+    parser.add_argument('--prefix-base-payload', type=Path)
     parser.add_argument('--mask', type=int, default=1023)
     parser.add_argument('--raw-source-rest', action='store_true')
     parser.add_argument('--pose-q', nargs=2, action='append', default=[])
     args = parser.parse_args()
+    config = human.read_json(args.configuration)
+    require(args.configuration.resolve() == config_path(config).resolve(), 'configuration path identity')
     if args.raw_source_rest and args.pose_q:
         parser.error('raw source rest cannot have pose coordinates')
     if args.mode == 'compose':
-        result = compose(args.sources, args.artifact, args.registration, args.base_payload, args.output)
+        result = compose(args.sources, args.artifact, args.registration, args.base_payload, args.output, config=config)
     else:
         if not all([args.baseline_payload,args.payload,args.native_pack,args.native_poses]):
             parser.error('audit requires baseline-payload, payload, native-pack and native-poses')
         pose = None if args.raw_source_rest else tuple((int(i),float(v)) for i,v in args.pose_q)
         result = audit(args.sources,args.artifact,args.registration,args.baseline_payload,args.base_payload,
-                       args.payload,args.native_pack,args.native_poses,pose,args.mask)
+                       args.payload,args.native_pack,args.native_poses,pose,args.mask,
+                       config=config, prefix_base_payload=args.prefix_base_payload)
         human.write_json(args.output, result)
     print(json.dumps({'mode': args.mode, 'passed': result.get('passed'), 'payload': result.get('payload'),
                       'surface_count': result.get('surface_count')}))

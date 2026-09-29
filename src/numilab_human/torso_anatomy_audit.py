@@ -133,7 +133,7 @@ def audit_torso_anatomy(
     by_id = {int(p[5]): p for p in selected}
     snapshot = json.loads(native_poses.read_text())
     expected_native_count = surface_count if native_surface_count is None else native_surface_count
-    _require(surface_count <= expected_native_count <= 1024 and 0 < visible_layer_mask <= 1023,
+    _require(surface_count <= expected_native_count <= 1024 and 0 < visible_layer_mask <= 32767,
              "native extended anatomy count/visibility contract")
     _require(snapshot["schema"] == "numi.human.native-torso-anatomy-pose-snapshot.v1"
              and snapshot["surface_count"] == expected_native_count
@@ -263,7 +263,9 @@ def audit_torso_anatomy(
             "passed": (max(local_error, pack_error, world_error) <= 2e-5 and normals_error <= .002
                        and normal_source_error <= 2e-5 and max(pose_position_error, orientation_error) <= 1e-6),
         })
-    _require(set(poses) == set(records[:, 0]), "native torso pose coverage")
+    expected_owners = set(records[:, 0])
+    _require(expected_owners <= set(poses) if expected_native_count > surface_count
+             else expected_owners == set(poses), "native torso pose coverage")
     family_coverage = _native_source_family_coverage(mapping.get("coverage_requirements"), rows, source_relations, owners)
     return {
         "schema": "numi.human.native-torso-anatomy-source-audit.v1",

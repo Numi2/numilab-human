@@ -10,6 +10,19 @@ a calendar schedule. The current physical runtime baseline is the published
 integration branch and [four-grid production diagnostic](NATIVE_COMMON_DURATION_PRODUCTION.md);
 reconciliation onto the native default line remains open.
 
+## Cumulative source anatomy extension - 2026-09-29
+
+The [brain, ocular and visceral source receipt](WHOLE_VISCERAL_SOURCE_GEOMETRY_20260929.md)
+extends the 387-surface organ-family composite to 579 surfaces and 46 declared
+source families containing 571 unique members. Every previous surface remains
+byte-identical. Independent source/native geometry and actual body-frame audits
+cover rest, neutral and coupled torso poses, with separate typed head/eye/junction
+inspection profiles. This extends source reference coverage, not integrated
+Human qualification. Fifteen new source meshes retain topology defects;
+clinical placement, volume/lumen ownership, independent cervical/eye motion,
+deformation and whole-Human anatomy remain open. The prior knee-range,
+cardiac/lung topology and shoulder/skin gaps are not closed by this increment.
+
 ## Historical requalification snapshot — 2026-09-15
 
 The current repository evidence layer is published at `4bca31c` on `main` and

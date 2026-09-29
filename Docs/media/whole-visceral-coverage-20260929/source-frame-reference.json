@@ -1,0 +1,216 @@
+{
+  "schema": "numi.human.source-head-pelvic-frame-reference.v1",
+  "passed": true,
+  "skull_anchor_count": 8,
+  "skull_common_frame_checks": [
+    {
+      "source_member_id": "FJ3380",
+      "maximum_coefficient_error": 4.9960036108132044e-15,
+      "source_status": "provisional_visual_binding_from_fitted_common_frame",
+      "passed": true
+    },
+    {
+      "source_member_id": "FJ3274",
+      "maximum_coefficient_error": 4.9960036108132044e-15,
+      "source_status": "provisional_visual_binding_from_fitted_common_frame",
+      "passed": true
+    },
+    {
+      "source_member_id": "FJ3386",
+      "maximum_coefficient_error": 4.9960036108132044e-15,
+      "source_status": "provisional_visual_binding_from_fitted_common_frame",
+      "passed": true
+    },
+    {
+      "source_member_id": "FJ3281",
+      "maximum_coefficient_error": 4.9960036108132044e-15,
+      "source_status": "provisional_visual_binding_from_fitted_common_frame",
+      "passed": true
+    },
+    {
+      "source_member_id": "FJ3200",
+      "maximum_coefficient_error": 4.9960036108132044e-15,
+      "source_status": "provisional_visual_binding_from_fitted_common_frame",
+      "passed": true
+    },
+    {
+      "source_member_id": "FJ3309",
+      "maximum_coefficient_error": 4.9960036108132044e-15,
+      "source_status": "provisional_visual_binding_from_fitted_common_frame",
+      "passed": true
+    },
+    {
+      "source_member_id": "FJ3394",
+      "maximum_coefficient_error": 4.9960036108132044e-15,
+      "source_status": "provisional_visual_binding_from_fitted_common_frame",
+      "passed": true
+    },
+    {
+      "source_member_id": "FJ3289",
+      "maximum_coefficient_error": 4.9960036108132044e-15,
+      "source_status": "provisional_visual_binding_from_fitted_common_frame",
+      "passed": true
+    }
+  ],
+  "source_body_chains": [
+    {
+      "myosim_body": "head",
+      "core_body_index": 23,
+      "ancestors": [
+        {
+          "name": "head",
+          "source_body_id": 12,
+          "local_joint_count": 0
+        },
+        {
+          "name": "neck",
+          "source_body_id": 11,
+          "local_joint_count": 0
+        },
+        {
+          "name": "head_attach",
+          "source_body_id": 10,
+          "local_joint_count": 0
+        },
+        {
+          "name": "torso",
+          "source_body_id": 9,
+          "local_joint_count": 0
+        },
+        {
+          "name": "lumbar1",
+          "source_body_id": 8,
+          "local_joint_count": 3
+        },
+        {
+          "name": "lumbar2",
+          "source_body_id": 7,
+          "local_joint_count": 3
+        },
+        {
+          "name": "lumbar3",
+          "source_body_id": 6,
+          "local_joint_count": 3
+        },
+        {
+          "name": "lumbar4",
+          "source_body_id": 5,
+          "local_joint_count": 3
+        },
+        {
+          "name": "lumbar5",
+          "source_body_id": 3,
+          "local_joint_count": 3
+        },
+        {
+          "name": "sacrum",
+          "source_body_id": 2,
+          "local_joint_count": 0
+        },
+        {
+          "name": "Full Body",
+          "source_body_id": 1,
+          "local_joint_count": 1
+        }
+      ]
+    },
+    {
+      "myosim_body": "neck",
+      "core_body_index": 22,
+      "ancestors": [
+        {
+          "name": "neck",
+          "source_body_id": 11,
+          "local_joint_count": 0
+        },
+        {
+          "name": "head_attach",
+          "source_body_id": 10,
+          "local_joint_count": 0
+        },
+        {
+          "name": "torso",
+          "source_body_id": 9,
+          "local_joint_count": 0
+        },
+        {
+          "name": "lumbar1",
+          "source_body_id": 8,
+          "local_joint_count": 3
+        },
+        {
+          "name": "lumbar2",
+          "source_body_id": 7,
+          "local_joint_count": 3
+        },
+        {
+          "name": "lumbar3",
+          "source_body_id": 6,
+          "local_joint_count": 3
+        },
+        {
+          "name": "lumbar4",
+          "source_body_id": 5,
+          "local_joint_count": 3
+        },
+        {
+          "name": "lumbar5",
+          "source_body_id": 3,
+          "local_joint_count": 3
+        },
+        {
+          "name": "sacrum",
+          "source_body_id": 2,
+          "local_joint_count": 0
+        },
+        {
+          "name": "Full Body",
+          "source_body_id": 1,
+          "local_joint_count": 1
+        }
+      ]
+    },
+    {
+      "myosim_body": "pelvis",
+      "core_body_index": 128,
+      "ancestors": [
+        {
+          "name": "pelvis",
+          "source_body_id": 91,
+          "local_joint_count": 0
+        },
+        {
+          "name": "myolegs_root",
+          "source_body_id": 90,
+          "local_joint_count": 0
+        },
+        {
+          "name": "Full Body",
+          "source_body_id": 1,
+          "local_joint_count": 1
+        }
+      ]
+    }
+  ],
+  "rigid_source_program_checks": {
+    "file": "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid",
+    "actual_sha256": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951",
+    "expected_source_sha256": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951",
+    "actual_bytes": 60324,
+    "expected_bytes": 60324,
+    "declared_identity_matches": true,
+    "source_metadata_matches": true,
+    "checked_field_count": 2250,
+    "engine_body_count": 157,
+    "joint_count": 156,
+    "source_body_count": 103,
+    "failures": [],
+    "tolerance_basis": "existing_source_lowerer_FP32_fields_and_native_norm_admission_with_common_scale_rounding_bins",
+    "passed": true,
+    "boundary": "source_program_agreement_not_native_execution_loaded_or_clinical_anatomy"
+  },
+  "independent_cervical_and_eye_motion": false,
+  "clinical_registration": false,
+  "intracranial_containment_and_clearance": "not_assessed",
+  "boundary": "Algebraic source atlas/common frame agreement and named source body ancestry only. Head and neck are fixed descendants of torso; pelvis is fixed under source root. No anatomical containment, clearance, cervical/ocular actuation, organ mechanics, or clinical qualification."
+}

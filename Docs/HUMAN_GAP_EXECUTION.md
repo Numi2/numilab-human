@@ -7,6 +7,12 @@ The dependency graph has ten layers and twelve initial independent tasks.
 These are scheduling relationships; tasks are not assessed for readiness or
 completion by this command.
 
+The [29 September cumulative source anatomy extension](WHOLE_VISCERAL_SOURCE_GEOMETRY_20260929.md)
+adds independently checked brain, ocular and visceral references while retaining
+the prior source geometry. Its 46-family membership proof does not change task
+readiness or integrated qualification; clinical, volume/lumen, tissue motion
+and whole-Human acceptance gates remain open.
+
 ```sh
 numi human gap-execution
 numi human gap-execution --output /private/tmp/human-gap-execution.json
