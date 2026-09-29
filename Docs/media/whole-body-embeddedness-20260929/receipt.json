@@ -1,0 +1,157 @@
+{
+  "schema": "numi.human.whole-body-compiled-surface-census-receipt.v1",
+  "date": "2026-09-29",
+  "baseline_payload_sha256": "b2d2490a5fcf37c5229eca04e9c20da95e538f5dc6bcbbccdf2ab68da1f8f580",
+  "candidate_payload_sha256": "c8b8a01aac9d55d1dd154f0e3f92450e5a1a980668eebfcc2a012bb47268b280",
+  "source_surface_count": 579,
+  "source_triangle_count": 1289680,
+  "indexed_closed_embedded_candidates": 26,
+  "compiled_quotient_closed_embedded_candidates": 546,
+  "selected_closed_embedded_candidates": 557,
+  "source_support_repairs_improving_selected_view": 11,
+  "selected_unqualified_source_ids": [
+    16,
+    17,
+    23,
+    305,
+    306,
+    307,
+    308,
+    309,
+    310,
+    320,
+    391,
+    413,
+    426,
+    427,
+    456,
+    483,
+    496,
+    497,
+    498,
+    564,
+    566,
+    571
+  ],
+  "native_packet_profiles_reaudited": 5,
+  "source_program_sha256": {
+    "src/numilab_human/whole_body_embeddedness.py": "78851feeb65e32855294769873f3edca74e075da4a6715ebfdd860ed21ff217c",
+    "src/numilab_human/compiled_quotient_embeddedness.py": "e14793d27e014e23117967a2f486415157d5ae494db342ace0ac701dd1bb5361",
+    "src/numilab_human/whole_body_surface_gate.py": "ad4e372cdb1d799fb42671465773e94273dcf59a62ad49589fa66a5eab825a73",
+    "src/numilab_human/surface_topology_audit.py": "837f6281d6f2c58e4aa2e8d1972af7cb67ce068bc25862504eebc0f82df48a38",
+    "src/numilab_human/cardiac_cavity_intersections.py": "8b138882161c78312cb9b5aa46f49795092eb9b67ed9f705dc354787cb0a635b",
+    "src/numilab_human/cardiac_cavity_geometry.py": "f6e98744dad9e23cd3b505efc02e7faa618fccce81d2ee08b07f948ef182fb72"
+  },
+  "cross_surface_overlap_qualified": false,
+  "component_containment_qualified": false,
+  "clinical_anatomy_qualified": false,
+  "physical_volume_qualified": false,
+  "mechanics_qualified": false,
+  "boundary": "All 579 individual compiled meshes, 11 selected repairs, and five native packets are checked. Exact coordinate welding changes the audit representation, not source bytes. Results do not establish clinical or physical anatomy.",
+  "files": {
+    "README.md": {
+      "sha256": "71748309179cfb71ee804a7fcd51519edc3570dfe1f502d38fcb134fbe883a2e",
+      "bytes": 1165
+    },
+    "gate-command.json": {
+      "sha256": "c9643f319d9d0cd3a97a763f5dfc7df38e722c30a4c4add8086bf9512f96b0c4",
+      "bytes": 1274
+    },
+    "gate-executed-source.json": {
+      "sha256": "f56cf137123843559c120fd00635f320528a8bcd9174378fbf68363b8830b3eb",
+      "bytes": 103
+    },
+    "gate-exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "gate-stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "gate-stdout.txt": {
+      "sha256": "8a5277378e891e2587b56ed70dae1bbe8f1b26eac08a1630150bbe2b67f6e359",
+      "bytes": 100
+    },
+    "gate-wall.seconds": {
+      "sha256": "6a4f29e272531d60af71789fcd8bfbfd50460847065b4d6f01d1eddbf765b0e7",
+      "bytes": 19
+    },
+    "indexed-census.tar.gz": {
+      "sha256": "f09766ee3cba6b230de5727d7235909abad0b36b4632e7a98d1e0096de7fca48",
+      "bytes": 152611
+    },
+    "indexed-command.json": {
+      "sha256": "922695e1d7599060a02df5bd2e488f5f1d10b39464e4743c3bf6aded8fe76502",
+      "bytes": 500
+    },
+    "indexed-executed-source.json": {
+      "sha256": "55d7fb8a3dc0887ff459b98cf2a23437719856f6ec64f9f31661825243f1833b",
+      "bytes": 407
+    },
+    "indexed-exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "indexed-identity.json": {
+      "sha256": "c21ba601e1d1663ac2780d3a14529de37ac6ef9d15159637c0dd0d00ae52f459",
+      "bytes": 1537
+    },
+    "indexed-stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "indexed-stdout.jsonl": {
+      "sha256": "5f90b3506830682ae1733ec17ded742c00703509f1bdd571459775f8b29ddd2b",
+      "bytes": 76924
+    },
+    "indexed-summary.json": {
+      "sha256": "267c52caadd1e073fcf8280135387aa497851ec294deaa0d280dae5578657986",
+      "bytes": 54666
+    },
+    "indexed-wall.seconds": {
+      "sha256": "0dfdbfe5420ee7d3dea4c397eb97c7d5b721a622c311ab40f7db51232a1a9429",
+      "bytes": 18
+    },
+    "quotient-census.tar.gz": {
+      "sha256": "194910d98558288ba2e5313745879638b87959add699f767b5172e2299950b60",
+      "bytes": 125174
+    },
+    "quotient-command.json": {
+      "sha256": "513dbf39c391d138e443b4a4eba57f76f5d8ed2a620af2ef739f86fa9f010376",
+      "bytes": 680
+    },
+    "quotient-executed-source.json": {
+      "sha256": "d14d218cf534065cc5af6531a1ea91e4bee2ea85c41021390e9f7f5d5258f2a9",
+      "bytes": 514
+    },
+    "quotient-exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "quotient-identity.json": {
+      "sha256": "b58e5b2adabf3126b82711352ae5272578c7c2b9066e031561afc84ec4431685",
+      "bytes": 1783
+    },
+    "quotient-stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "quotient-stdout.jsonl": {
+      "sha256": "fffaf8e7fc23f4f540b30d6f623a6010356d051dabdf8a381685a6559a0c3d7f",
+      "bytes": 97270
+    },
+    "quotient-summary.json": {
+      "sha256": "ea4b6a4216441f03055abb1b5e0dd81ef7cbac39108d3925bd7e026fd8d2a748",
+      "bytes": 50168
+    },
+    "quotient-wall.seconds": {
+      "sha256": "1c7a423837931eeed87d4513828a81ed41da88b4ebecf8899ca679b32d3bf623",
+      "bytes": 18
+    },
+    "selected-surface-gate.json": {
+      "sha256": "4079fe980a46b0d63f89ab3f0e266850cd6558f4bbd416f97226e25e842321f3",
+      "bytes": 294184
+    }
+  }
+}
