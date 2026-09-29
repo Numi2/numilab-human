@@ -616,6 +616,17 @@ report the bone stable ID, Core body, measured norm, tolerance and raw input
 SHA-256. The same identity and normalization policy are retained for accepted
 inputs. This repairs geometry preparation, not loaded mechanical qualification.
 
+Before NHTENDON2/3 calibration, the native loader also joins BodyParts3D
+attachment face indices, source distances, migrated endpoints and all four
+force nodes to the consumed bone surfaces. It preserves exact fixed-sibling
+frames and multi-bone quadrature within one physical owner, using the tendon
+resolver's existing 1 micrometre point tolerance. Failures identify the route,
+bone, face or node, measured violation, tolerance basis and tendon/bone/rigid
+hashes before installing the program. Output separates checked BodyParts3D
+bindings from external pinned surfaces whose geometry is unavailable to this
+join; a matching payload hash does not qualify those surfaces. These are rest
+surface checks, not loaded tissue or clinical validation.
+
 The existing lower-limb source registrar also requires `--artifact`. It freshly
 checks an existing v3 registration against the pinned source meshes before
 preserving valid segment fits. Its bounded interface refinement now carries

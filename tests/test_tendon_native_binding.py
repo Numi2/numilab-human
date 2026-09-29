@@ -38,11 +38,17 @@ def run_probe(inputs, root, *, bone_bytes=None, muscle_bytes=None, tendon=None, 
                 str(artifact / "myosim-fullbody-joint-equalities.nheq")]
     for q, value in pose:
         command += ["--pose-q", str(q), str(value)]
-    return subprocess.run(command, capture_output=True, text=True, timeout=60)
+    result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+    (root / "command.json").write_text(json.dumps(command, indent=2) + "\n")
+    (root / "stdout").write_text(result.stdout)
+    (root / "stderr").write_text(result.stderr)
+    (root / "exit.code").write_text(str(result.returncode) + "\n")
+    return result
 
 
 def identity_line(result):
-    return dict(part.split("=", 1) for part in result.stdout.splitlines()[0].split())
+    line = next(line for line in result.stdout.splitlines() if line.startswith("tendon_payload="))
+    return dict(part.split("=", 1) for part in line.split())
 
 
 @pytest.mark.parametrize("pose", [(), ((9, .25),),
@@ -50,7 +56,11 @@ def identity_line(result):
     ids=["neutral", "rotation", "coupled_crouch"])
 def test_paired_anatomy_executes_with_all_point_and_distributed_attachments(inputs, tmp_path, pose):
     result = run_probe(inputs, tmp_path, pose=pose)
-    assert result.returncode == 0, result.stderr
+    if (106, .75) in pose:
+        assert result.returncode != 0 and "projected native position range failed" in result.stderr
+        assert "failed_range_count=2" in result.stdout
+    else:
+        assert result.returncode == 0, result.stderr
     check = identity_line(result)
     assert check["tendon_endpoints"] == "832"
     assert check["tendon_point_bindings"] == "190"
@@ -61,7 +71,116 @@ def test_paired_anatomy_executes_with_all_point_and_distributed_attachments(inpu
         (inputs[2] / "myosim-fullbody-muscle-reference.nhmyo").read_bytes()).hexdigest()
     assert check["tendon_bone_payload_sha256"] == hashlib.sha256(inputs[1].read_bytes()).hexdigest()
     assert "axial_bone_continuity=passed" in result.stdout
+    geometry = next(dict(part.split("=", 1) for part in line.split())
+                    for line in result.stdout.splitlines() if line.startswith("tendon_bone_geometry="))
+    assert geometry["tendon_bone_geometry"] == "checked_bodyparts_subset"
+    assert int(geometry["bodyparts_envelope_count"]) == 632
+    assert int(geometry["fixed_sibling_envelope_count"]) == 2
+    assert int(geometry["external_surface_unverified_count"]) == 10
+    assert float(geometry["maximum_node_residual_m"]) <= float(geometry["allowed_point_residual_m"]) == 1e-6
+    assert geometry["tendon_sha256"] == hashlib.sha256(inputs[3].read_bytes()).hexdigest()
     assert len(list((tmp_path / "views").glob("*.png"))) == 4
+
+
+def corrupted_envelope(inputs, corruption):
+    raw = bytearray(inputs[3].read_bytes())
+    header = struct.unpack_from("<8s10I96s", raw)
+    assert header[0] == b"NHTEND3\0" and header[5:8] == (832, 642, 185)
+    binding = 144
+    envelope = 144 + 64 * header[5]
+    assert struct.unpack_from("<8I", raw, binding)[5:8] == (2, 0, 164)
+    assert struct.unpack_from("<4I", raw, envelope) == (19, 164, 502, 4)
+    if corruption == "phantom_triangle":
+        struct.pack_into("<I", raw, envelope + 8, 1000000)
+    elif corruption == "wrong_named_owner":
+        # Keep the executing route owner and force program unchanged, but
+        # falsely identify a right hallux bone as this lumbar attachment.
+        struct.pack_into("<I", raw, binding + 28, 132)
+        struct.pack_into("<I", raw, envelope + 4, 132)
+    else:
+        assert corruption == "off_surface_force_conserving"
+        values = list(struct.unpack_from("<68f", raw, envelope + 16))
+        nodes = [[values[4*i] + .010, values[4*i+1], values[4*i+2]] for i in range(4)]
+        source = list(struct.unpack_from("<3f", raw, binding + 32))
+        radius = values[65]
+        mapped = human._tendon_envelope_force_maps(source, nodes, radius)
+        assert mapped is not None
+        maps, metrics = mapped
+        assert metrics["force_residual"] <= 2e-6 and metrics["moment_residual_m"] <= 2e-8
+        values[:16] = [value for node in nodes for value in (*node, 0.)]
+        values[16:64] = [value for matrix in maps for row in matrix for value in (*row, 0.)]
+        values[66:68] = [metrics["sampled_total_force_amplification"], metrics["l2_force_amplification"]]
+        struct.pack_into("<68f", raw, envelope + 16, *values)
+        struct.pack_into("<f", raw, binding + 48, metrics["sampled_total_force_amplification"])
+        struct.pack_into("<f", raw, binding + 56, metrics["moment_residual_m"])
+    # The exact consumed muscle/bone identities and all original dispositions
+    # are unchanged. Force/moment closure cannot establish surface agreement.
+    assert raw[:144] == inputs[3].read_bytes()[:144]
+    return raw
+
+
+def displaced_migrated_route_site(inputs):
+    raw = bytearray(inputs[3].read_bytes())
+    binding = 144 + 64 * 691  # ehl_r insertion, original route-private migration.
+    row = struct.unpack_from("<8I8f", raw, binding)
+    assert row[:2] == (345, 1) and row[4:6] == (139, 3)
+    envelope = 144 + 64 * 832 + 288 * row[6]
+    values = list(struct.unpack_from("<68f", raw, envelope + 16))
+    point = list(row[8:11])
+    point[0] += .00025
+    point = list(struct.unpack("<3f", struct.pack("<3f", *point)))
+    nodes = [values[4*i:4*i+3] for i in range(4)]
+    maps, metrics = human._tendon_envelope_force_maps(point, nodes, values[65])
+    muscle = (inputs[2] / "myosim-fullbody-muscle-reference.nhmyo").read_bytes()
+    site = struct.unpack_from("<I3f", muscle, 76 + 16 * row[3])
+    assert site[0] == row[4]
+    migration = sum((point[i] - site[i+1])**2 for i in range(3))**.5
+    struct.pack_into("<3f", raw, binding + 32, *point)
+    struct.pack_into("<f", raw, binding + 48, metrics["sampled_total_force_amplification"])
+    struct.pack_into("<2f", raw, binding + 56, metrics["moment_residual_m"], migration)
+    values[16:64] = [value for matrix in maps for row in matrix for value in (*row, 0.)]
+    values[66:68] = [metrics["sampled_total_force_amplification"], metrics["l2_force_amplification"]]
+    struct.pack_into("<68f", raw, envelope + 16, *values)
+    return raw
+
+
+def test_migrated_route_site_cannot_leave_exact_consumed_projection(inputs, tmp_path):
+    raw = displaced_migrated_route_site(inputs)
+    path = tmp_path / "moved-route-site.nhtendon"
+    path.write_bytes(raw)
+    result = run_probe(inputs, tmp_path, tendon=path)
+    assert result.returncode != 0
+    assert "reason=migrated_point_differs_from_source_projection_m" in result.stderr
+    assert "binding_index=691 muscle_index=345 endpoint_ordinal=1 body_index=139" in result.stderr
+    assert "allowed=1e-06 tolerance_basis=existing_tendon_resolver_point_tolerance_m" in result.stderr
+    assert f"tendon_sha256={hashlib.sha256(raw).hexdigest()}" in result.stderr
+    assert "tendon_max_reference_path_delta_m=" not in result.stdout
+    assert not (tmp_path / "views").exists()
+
+
+@pytest.mark.parametrize("corruption,reason", [
+    ("phantom_triangle", "source_triangle_missing"),
+    ("wrong_named_owner", "owner_not_fixed_sibling"),
+    ("off_surface_force_conserving", "node_off_consumed_surface_m"),
+])
+def test_geometry_identity_and_force_closure_cannot_admit_unjoined_attachment(
+    inputs, tmp_path, corruption, reason,
+):
+    raw = corrupted_envelope(inputs, corruption)
+    tendon = tmp_path / "candidate.nhtendon"
+    tendon.write_bytes(raw)
+    result = run_probe(inputs, tmp_path, tendon=tendon, pose=((9, .25),))
+    assert result.returncode != 0
+    assert "NHTENDON bone geometry binding failed" in result.stderr
+    assert f"reason={reason}" in result.stderr
+    assert "binding_index=0 muscle_index=0 endpoint_ordinal=0 body_index=19" in result.stderr
+    assert f"tendon_sha256={hashlib.sha256(raw).hexdigest()}" in result.stderr
+    assert f"bone_sha256={hashlib.sha256(inputs[1].read_bytes()).hexdigest()}" in result.stderr
+    assert f"rigid_sha256={hashlib.sha256((inputs[2] / 'myosim-fullbody-core-reference.nhrigid').read_bytes()).hexdigest()}" in result.stderr
+    if corruption == "off_surface_force_conserving":
+        assert "allowed=1e-06 tolerance_basis=existing_tendon_resolver_point_tolerance_m" in result.stderr
+    assert "tendon_max_reference_path_delta_m=" not in result.stdout
+    assert not (tmp_path / "views").exists()
 
 
 def displaced_patella(inputs, displacement):
