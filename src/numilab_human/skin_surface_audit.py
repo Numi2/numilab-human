@@ -171,6 +171,7 @@ def _source_oracle(sources, artifact, registration_bytes, rigid_sha, artifact_ma
         neighbours[a].append((int(b), length))
         neighbours[b].append((int(a), length))
     targets = []
+    projection_gaps = []
     for anchor, core, centroid, ids, points, diameter in bones:
         # Direct all-vertex distances are independent of the author's kd tree.
         center = int(np.argmin(np.sum((world - centroid) ** 2, axis=1)))
@@ -189,25 +190,40 @@ def _source_oracle(sources, artifact, registration_bytes, rigid_sha, artifact_ma
         for source_vertex, point in [(0xffffffff, centroid)] + list(zip(ids, points)):
             skin = int(np.argmin(np.sum((world - point) ** 2, axis=1)))
             targets.append((anchor, source_vertex, skin, binding_by_core[core], int(skin in reachable)))
-    return vertices, faces, normals, world, core_ids, source_ids, subset, np.asarray(targets, dtype='<u4'), (len(raw_v), len(raw_f))
+            projection_gaps.append(float(np.linalg.norm(world[skin] - point)))
+    return (vertices, faces, normals, world, core_ids, source_ids, subset,
+            np.asarray(targets, dtype='<u4'), np.asarray(projection_gaps, dtype='<f8'),
+            (len(raw_v), len(raw_f)))
 
 
 @lru_cache(maxsize=2)
-def _verified_weights(proof_bytes, world_bytes, face_bytes, target_bytes, binding_count):
+def _verified_weights(proof_bytes, world_bytes, face_bytes, target_bytes, gap_bytes, binding_count, method):
     """Verify every source graph equation directly, without the authoring solver."""
     import numpy as np
     world = np.frombuffer(world_bytes, '<f8').reshape(-1, 3)
     faces = np.frombuffer(face_bytes, '<u4').reshape(-1, 3)
     targets = np.frombuffer(target_bytes, '<u4').reshape(-1, 5)
+    from .skin_surface_binding import LEGACY_METHOD, METHOD
+    _require(method in {LEGACY_METHOD, METHOD}, 'source binding method')
+    geometric = method == METHOD
+    gaps = np.frombuffer(gap_bytes, '<f8')
     with np.load(io.BytesIO(proof_bytes), allow_pickle=False) as archive:
-        _require(set(archive.files) == {'full_weights', 'seed_targets'}, 'binding solution fields')
+        fields = {'full_weights', 'seed_targets'} | ({'seed_projection_gaps_m'} if geometric else set())
+        _require(set(archive.files) == fields, 'binding solution fields')
         full = archive['full_weights']
         _require(full.dtype == np.dtype('<f8') and full.shape == (len(world), binding_count)
                  and bool(np.isfinite(full).all()), 'binding solution layout')
         seed_targets = archive['seed_targets']
         _require(seed_targets.dtype == np.dtype('<u4') and seed_targets.shape == targets.shape
                  and np.array_equal(seed_targets, targets), 'source skin seed association')
-    _require(float(full.min()) >= -1e-12 and float(np.max(np.abs(full.sum(axis=1) - 1))) <= 1e-10,
+        if geometric:
+            declared = archive['seed_projection_gaps_m']
+            _require(declared.dtype == np.dtype('<f8') and declared.shape == gaps.shape
+                     and bool(np.isfinite(declared).all()) and bool((declared > 0).all())
+                     and float(np.max(np.abs(declared - gaps))) <= 1e-12,
+                     'source bone-to-skin projection gaps')
+    _require(float(full.min()) >= (0 if geometric else -1e-12)
+             and float(np.max(np.abs(full.sum(axis=1) - 1))) <= 1e-10,
              'binding solution positivity/partition')
     edges = np.unique(np.sort(np.concatenate([faces[:, [0, 1]], faces[:, [1, 2]], faces[:, [2, 0]]]), axis=1), axis=0)
     conductance = 1 / np.linalg.norm(world[edges[:, 0]] - world[edges[:, 1]], axis=1)
@@ -215,9 +231,9 @@ def _verified_weights(proof_bytes, world_bytes, face_bytes, target_bytes, bindin
     np.add.at(degree, edges[:, 0], conductance)
     np.add.at(degree, edges[:, 1], conductance)
     owners = {}
-    for _, _, vertex, body, admitted in targets:
+    for (_, _, vertex, body, admitted), gap in zip(targets, gaps):
         if admitted:
-            owners.setdefault(int(vertex), set()).add(int(body))
+            owners.setdefault(int(vertex), {}).setdefault(int(body), []).append(1 / float(gap) if geometric else 1.)
     _require({b for row in owners.values() for b in row} == set(range(binding_count)), 'source seed body coverage')
     flux = np.zeros_like(full)
     denominator = degree[:, None] * np.abs(full)
@@ -229,11 +245,18 @@ def _verified_weights(proof_bytes, world_bytes, face_bytes, target_bytes, bindin
         np.add.at(flux, edge[:, 1], -delta)
         np.add.at(denominator, edge[:, 0], weight * np.abs(full[edge[:, 1]]))
         np.add.at(denominator, edge[:, 1], weight * np.abs(full[edge[:, 0]]))
-    for point, body_ids in owners.items():
+    for point, body_values in owners.items():
         target = np.zeros(binding_count)
-        target[list(body_ids)] = 1 / len(body_ids)
-        flux[point] += degree[point] * (full[point] - target)
-        denominator[point] += degree[point] * (np.abs(full[point]) + target)
+        if geometric:
+            values = {body: float(np.mean(weights)) for body, weights in body_values.items()}
+            confidence = float(np.mean(list(values.values())))
+            for body, value in values.items():
+                target[body] = value / sum(values.values())
+        else:
+            confidence = degree[point]
+            target[list(body_values)] = 1 / len(body_values)
+        flux[point] += confidence * (full[point] - target)
+        denominator[point] += confidence * (np.abs(full[point]) + target)
     residual = float(np.max(np.abs(flux) / np.maximum(denominator, np.finfo(float).tiny)))
     _require(residual <= 1e-10, 'source skin harmonic equations')
     positive = np.maximum(full, 0)
@@ -243,13 +266,17 @@ def _verified_weights(proof_bytes, world_bytes, face_bytes, target_bytes, bindin
     weights /= retained[:, None]
     quartet.setflags(write=False)
     weights.setflags(write=False)
-    return quartet, weights, {'passed': True, 'maximum_relative_equation_residual': residual,
+    full.setflags(write=False)
+    return quartet, weights, full, {'passed': True, 'method': method,
+                              'maximum_relative_equation_residual': residual,
                               'source_bone_count': len(set(map(int, targets[:, 0]))),
                               'source_graph_edge_count': len(edges),
                               'seed_candidate_count': len(targets), 'seed_vertex_count': len(owners),
                               'rejected_seed_count': int((targets[:, 4] == 0).sum()),
                               'minimum_retained_four_weight_mass': float(retained.min()),
                               'maximum_discarded_weight_mass': float(1 - retained.min()),
+                              'minimum_source_projection_gap_m': float(gaps.min()) if geometric else None,
+                              'maximum_source_projection_gap_m': float(gaps.max()) if geometric else None,
                               'boundary': 'Independent source seed and full graph-equation certificate; not measured anatomical skin weights or deformation qualification.'}
 
 
@@ -269,8 +296,12 @@ def audit_skin_surface(sources: Path, artifact: Path, registration_path: Path,
         _require(human.sha256(sources / archive["file"]) == archive["sha256"], "source archive hash")
     _, member, obj = human._bodyparts_obj_member(sources, "is_a", "FJ2810")
     manifest = json.loads(payload.with_name("bodyparts3d-myosim-skinned-shell.manifest.json").read_text())
-    _require(manifest.get('schema') == 'numi.human.bodyparts3d-myosim-skinned-shell-visual-payload.v4'
-             and manifest.get('status') == 'native_four_body_source_surface_local_linear_blend_skin_shell_visual_input_not_collision_or_physics',
+    declared_abi = manifest['payload']['payload_abi']
+    expected_status = {4: 'native_four_body_source_surface_local_linear_blend_skin_shell_visual_input_not_collision_or_physics',
+                       5: 'native_full_body_source_surface_linear_blend_skin_shell_visual_input_not_collision_or_physics'}
+    _require(declared_abi in expected_status
+             and manifest.get('schema') == f'numi.human.bodyparts3d-myosim-skinned-shell-visual-payload.v{declared_abi}'
+             and manifest.get('status') == expected_status[declared_abi],
              'payload type/ownership')
     _require(manifest['source']['bodyparts'] == registration['source']['bodyparts'], 'atlas provenance')
     _require(manifest["source"]["registration"]["sha256"] == hashlib.sha256(registration_bytes).hexdigest(), "registration hash")
@@ -279,7 +310,8 @@ def audit_skin_surface(sources: Path, artifact: Path, registration_path: Path,
              and manifest["source"]["skin"]["member_sha256"] == hashlib.sha256(obj).hexdigest(), "skin member hash")
     raw = payload.read_bytes()
     magic, abi, nb, nv, ni, fingerprint, source_hash = struct.unpack_from('<8s5I32s', raw)
-    _require(magic == b'NHSKIN1\0' and abi == 4 and len(raw) == 60 + 36 * nb + 56 * nv + 4 * ni,
+    _require(magic == b'NHSKIN1\0' and abi == declared_abi
+             and len(raw) == 60 + 36 * nb + 56 * nv + 4 * ni + (4 * nv * nb if abi == 5 else 0),
              "payload layout")
     _require(fingerprint == int(hashlib.sha256(registration_bytes).hexdigest()[:8], 16)
              and source_hash.hex() == registration["source"]["myosim"]["source"]["archive_sha256"], "payload source identity")
@@ -294,16 +326,18 @@ def audit_skin_surface(sources: Path, artifact: Path, registration_path: Path,
     reference = _source_oracle(str(sources.resolve()), str(artifact.resolve()), registration_bytes,
                                human.sha256(artifact / 'myosim-fullbody-core-reference.nhrigid'),
                                human.sha256(artifact / 'myosim-fullbody-reference.manifest.json'), obj)
-    source_v, faces, normals, world, core_ids, source_ids, subset, targets, raw_counts = reference
+    source_v, faces, normals, world, core_ids, source_ids, subset, targets, gaps, raw_counts = reference
     binding = manifest['coverage']['source_surface_binding']
-    _require(binding['method'] == 'positive_source_surface_screened_harmonic_four_influence.v1', 'source binding method')
+    from .skin_surface_binding import LEGACY_METHOD, METHOD
+    _require(binding['method'] == (METHOD if abi == 5 else LEGACY_METHOD), 'source binding method')
     solution = manifest['coverage']['binding_solution']
     _require(Path(solution['file']).name == solution['file'] and solution['runtime_input'] is False,
              'binding solution path/ownership')
     proof = (payload.parent / solution['file']).read_bytes()
     _require(hashlib.sha256(proof).hexdigest() == solution['sha256'], 'binding solution hash')
-    quartet, weights, certificate = _verified_weights(proof, np.asarray(world, dtype='<f8').tobytes(),
-                                                     faces.astype('<u4').tobytes(), targets.tobytes(), nb)
+    quartet, weights, full, certificate = _verified_weights(
+        proof, np.asarray(world, dtype='<f8').tobytes(), faces.astype('<u4').tobytes(),
+        targets.tobytes(), gaps.tobytes(), nb, binding['method'])
     _require(solution['bytes'] == len(proof) and solution['full_weight_shape'] == [nv, nb],
              'binding solution declared layout')
     for field in ['source_bone_count', 'source_graph_edge_count', 'seed_candidate_count',
@@ -311,6 +345,16 @@ def audit_skin_surface(sources: Path, artifact: Path, registration_path: Path,
         _require(binding[field] == certificate[field], 'source binding declared counts')
     for field in ['minimum_retained_four_weight_mass', 'maximum_discarded_weight_mass']:
         _require(abs(binding[field] - certificate[field]) <= 1e-12, 'source binding declared truncation')
+    if abi == 5:
+        for field in ['minimum_source_projection_gap_m', 'maximum_source_projection_gap_m']:
+            _require(abs(binding[field] - certificate[field]) <= 1e-12, 'source binding declared projection metric')
+        _require(manifest['coverage']['influences_per_vertex'] == nb
+                 and manifest['coverage']['diagnostic_influences_per_vertex'] == 4
+                 and manifest['coverage']['maximum_runtime_discarded_weight_mass'] == 0,
+                 'full runtime weight ownership/coverage')
+        native_weights = np.frombuffer(raw, '<f4', count=nv*nb, offset=offset + 56*nv + 4*ni).reshape(nv, nb)
+        _require(np.array_equal(native_weights, np.asarray(full, dtype='<f4')),
+                 'source skin full influence weights')
     _require((manifest['source']['skin']['source_vertex_count'], manifest['source']['skin']['source_triangle_count']) == raw_counts,
              'source declared counts')
     _require(nv == len(source_v) and ni == faces.size and nb == len(core_ids), "source geometry counts")
@@ -331,7 +375,7 @@ def audit_skin_surface(sources: Path, artifact: Path, registration_path: Path,
     snapshot = json.loads(native_poses.read_text())
     _require(snapshot['schema'] == 'numi.human.native-skin-pose-snapshot.v1'
              and snapshot['registration_fingerprint32'] == fingerprint and snapshot['binding_count'] == nb
-             and snapshot['vertex_count'] == nv, "native pose identity")
+             and snapshot['vertex_count'] == nv and snapshot.get('payload_abi', 4) == abi, "native pose identity")
     poses = {b['body_index']: b for b in snapshot['bodies']}
     _require(len(poses) == len(snapshot['bodies']) and set(poses) == set(core_ids), "native pose owner coverage")
     expected_world = np.zeros_like(world)
@@ -352,7 +396,7 @@ def audit_skin_surface(sources: Path, artifact: Path, registration_path: Path,
             _require(position.shape == (3,) and bool(np.isfinite(position).all()), "native pose values")
             errors.append((float(np.linalg.norm(position - oracle.xipos[sid])),
                            float(np.max(np.abs(_rotation(native['orientation_world_xyzw']) - oracle.ximat[sid].reshape(3, 3))))))
-        amount = (weights * (quartet == binding)).sum(axis=1)
+        amount = full[:, binding] if abi == 5 else (weights * (quartet == binding)).sum(axis=1)
         rotation = current_r @ rest_r.T
         expected_world += amount[:, None] * ((world - rest.xipos[sid]) @ rotation.T + data.xipos[sid])
         expected_normal += amount[:, None] * (normals @ rotation.T)
@@ -396,6 +440,8 @@ def audit_skin_surface(sources: Path, artifact: Path, registration_path: Path,
         'passed': all(b['passed'] for b in body_checks) and world_error <= 2e-5
                   and max(source_normal_error, normal_error) <= 2e-5,
         'vertex_count': nv, 'triangle_count': ni // 3, 'binding_count': nb,
+        'payload_abi': abi, 'runtime_influences_per_vertex': nb if abi == 5 else 4,
+        'runtime_discarded_weight_mass': 0. if abi == 5 else certificate['maximum_discarded_weight_mass'],
         'source_member_sha256': hashlib.sha256(obj).hexdigest(), 'source_subset': subset,
         'source_weight_solution_certificate': certificate, 'source_weight_error': weight_error,
         'source_normal_error': source_normal_error, 'maximum_native_world_vertex_error_m': world_error,

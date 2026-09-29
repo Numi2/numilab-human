@@ -605,7 +605,7 @@ def compiled_skin(inputs, tmp_path_factory):
     path = output / manifest["payload"]["file"]
     raw = path.read_bytes()
     _, abi, bindings, vertices, indices, *_ = struct.unpack_from("<8s5I32s", raw)
-    assert abi == 4 and bindings == 86
+    assert abi == 5 and bindings == 86
     records = [struct.unpack_from("<I8f", raw, 60+36*i) for i in range(bindings)]
     dtype = np.dtype([("position", "<f4", (3,)), ("normal", "<f4", (3,)),
                       ("binding", "<u4", (4,)), ("weight", "<f4", (4,))])
@@ -619,7 +619,10 @@ def compiled_skin(inputs, tmp_path_factory):
     np.testing.assert_array_equal(decoded_indices, np.asarray(source_triangles).ravel())
     assert manifest["rigid_source_program_checks"]["passed"]
     assert manifest["coverage"]["rest_pose_reconstruction_max_error_m"] <= 2e-5
-    return path, manifest, records, decoded, registration
+    full = np.frombuffer(raw, dtype='<f4', count=vertices*bindings,
+                         offset=60+36*bindings+56*vertices+4*indices).reshape(vertices,bindings)
+    assert np.max(np.abs(full.sum(axis=1)-1)) <= 2e-3
+    return path, manifest, records, decoded, registration, full
 
 
 def native_skin_world_vertices(path):
@@ -651,7 +654,7 @@ def native_skin_world_vertices(path):
                          ids=["raw_source_rest", "projected_neutral", "coupled_torso", "knee_flexion"])
 def test_native_skin_preserves_source_sheet_with_separate_bone_registrations(inputs, compiled_skin, tmp_path, pose):
     import mujoco
-    path, manifest, bindings, vertices, registration = compiled_skin
+    path, manifest, bindings, vertices, registration, full = compiled_skin
     bones = tmp_path / "candidate.nhbones"
     bones.write_bytes(inputs[1])
     command = [str(inputs[0]), str(inputs[2] / "myosim-fullbody-core-reference.nhrigid"),
@@ -688,7 +691,7 @@ def test_native_skin_preserves_source_sheet_with_separate_bone_registrations(inp
         local = vertices["position"] @ _rotation_xyzw(frame[3:7], np).T * frame[7] + frame[:3]
         rotation = data.xmat[sid].reshape(3, 3) @ _rotation_xyzw(inputs[4].body_iquat[sid][[1,2,3,0]], np)
         world = local @ rotation.T + data.xipos[sid]
-        weights = np.sum(np.where(vertices["binding"] == i, vertices["weight"], 0), axis=1)
+        weights = full[:, i]
         expected += weights[:, None] * world
     native = native_skin_world_vertices(next((tmp_path / "views").glob("*.mrvpack")))
     assert native.shape == expected.shape

@@ -2,8 +2,9 @@
 
 Bone samples seed the connected source skin, rather than assigning skin to an
 unrelated nearby hand in Euclidean space. A positive screened graph Laplacian
-smooths those inferred associations. The native renderer receives four sparse
-influences; the full offline solution is retained for independent verification.
+smooths those inferred associations. ABI 5 receives every body weight; the four
+largest weights remain diagnostics and the offline solution is independently
+verified against exact source projection gaps and graph equations.
 """
 from __future__ import annotations
 
@@ -11,7 +12,8 @@ import hashlib
 import heapq
 from pathlib import Path
 
-METHOD = 'positive_source_surface_screened_harmonic_four_influence.v1'
+LEGACY_METHOD = 'positive_source_surface_screened_harmonic_four_influence.v1'
+METHOD = 'positive_source_surface_projection_gap_screened_harmonic_full_weight.v2'
 
 
 def source_surface_binding(vertices, faces, bones, binding_count):
@@ -49,6 +51,7 @@ def source_surface_binding(vertices, faces, bones, binding_count):
         return ids[int(np.argmin(squared))]
 
     targets = []
+    projection_gaps = []
     seed_owners = {}
     for anchor_index, bone in enumerate(bones):
         centroid = np.asarray(bone['centroid_world_m'])
@@ -71,48 +74,58 @@ def source_surface_binding(vertices, faces, bones, binding_count):
             skin_vertex = closest(point)
             admitted = skin_vertex in distances
             targets.append((anchor_index, source_vertex, skin_vertex, bone['binding_index'], int(admitted)))
+            projection_gap = float(np.linalg.norm(vertices[skin_vertex] - point))
+            if not np.isfinite(projection_gap) or projection_gap <= 0:
+                raise ValueError('source bone-to-skin projection gap is not positive and finite')
+            projection_gaps.append(projection_gap)
             if admitted:
-                seed_owners.setdefault(skin_vertex, set()).add(bone['binding_index'])
+                seed_owners.setdefault(skin_vertex, {}).setdefault(bone['binding_index'], []).append(1 / projection_gap)
     if {owner for owners in seed_owners.values() for owner in owners} != set(range(binding_count)):
         raise ValueError('source skin seeds do not cover every bound body')
     seed_ids = np.asarray(sorted(seed_owners))
     confidence = np.zeros(len(vertices))
-    confidence[seed_ids] = degree[seed_ids]
     rhs = np.zeros((len(vertices), binding_count))
     for point in seed_ids:
-        for owner in seed_owners[point]:
-            rhs[point, owner] = confidence[point] / len(seed_owners[point])
-    # One source graph diagonal per seed; no fitted stiffness or tissue law.
+        values = {owner: float(np.mean(gaps)) for owner, gaps in seed_owners[point].items()}
+        confidence[point] = float(np.mean(list(values.values())))
+        total = sum(values.values())
+        for owner, value in values.items():
+            rhs[point, owner] = confidence[point] * value / total
+    # Projection confidence and source graph conductance both have units 1/m.
+    # A tiny skin edge strengthens continuity, not the source seed penalty.
     operator = (diags(degree + confidence) - adjacency).tocsc()
     full = spsolve(operator, rhs, permc_spec='COLAMD')
     minimum = float(full.min())
     unity_error = float(np.max(np.abs(full.sum(axis=1) - 1)))
     residual = float(np.max(np.abs(operator @ full - rhs)) / max(1., float(np.max(np.abs(rhs)))))
-    if not bool(np.isfinite(full).all()) or minimum < -1e-12 or unity_error > 1e-10 or residual > 1e-10:
+    if not bool(np.isfinite(full).all()) or minimum < 0 or unity_error > 1e-10 or residual > 1e-10:
         raise ValueError('source skin harmonic solution failed positivity, partition or residual checks')
     positive = np.maximum(full, 0)
     quartet = np.argsort(-positive, axis=1, kind='stable')[:, :4]
     weights = np.take_along_axis(positive, quartet, axis=1)
     retained = weights.sum(axis=1)
     weights /= retained[:, None]
-    return quartet, weights, full, np.asarray(targets, dtype='<u4'), {
+    return quartet, weights, full, np.asarray(targets, dtype='<u4'), np.asarray(projection_gaps, dtype='<f8'), {
         'method': METHOD, 'scipy_version': scipy.__version__,
         'source_bone_count': len(bones), 'seed_candidate_count': len(targets),
         'seed_vertex_count': len(seed_ids), 'rejected_seed_count': sum(row[4] == 0 for row in targets),
         'seed_rule': 'centroid_and_64_stratified_source_bone_vertices_projected_to_source_skin; sample must lie within source skin geodesic bone diameter bound plus twice centroid projection gap',
-        'screening': 'one positive source graph degree per seed vertex; duplicate body associations share the target equally',
+        'screening': 'inverse exact source bone-to-skin projection gap; mean confidence per distinct body then mean across bodies; target shares confidence proportionally; no mesh-edge-dependent seed penalty',
+        'minimum_source_projection_gap_m': min(projection_gaps),
+        'maximum_source_projection_gap_m': max(projection_gaps),
         'source_graph_edge_count': len(edges), 'relative_solve_residual': residual,
         'maximum_partition_unity_error': unity_error, 'minimum_full_solution_weight': minimum,
         'minimum_retained_four_weight_mass': float(retained.min()),
         'maximum_discarded_weight_mass': float(1 - retained.min()),
-        'boundary': 'Inferred visual source-surface association and four-influence approximation, not measured skin weights, material stiffness, thickness, mass, contact, mechanical deformation or clinical registration.',
+        'boundary': 'Inferred visual source-surface association; four-weight fields are diagnostics and the native ABI 5 retains the full field. Not measured skin weights, material stiffness, thickness, mass, contact, mechanical deformation or clinical registration.',
     }
 
 
-def write_binding_solution(output: Path, full, targets):
+def write_binding_solution(output: Path, full, targets, projection_gaps):
     import numpy as np
     path = output / 'bodyparts3d-skin-binding-solution.npz'
-    np.savez_compressed(path, full_weights=np.asarray(full, dtype='<f8'), seed_targets=targets)
+    np.savez_compressed(path, full_weights=np.asarray(full, dtype='<f8'), seed_targets=targets,
+                        seed_projection_gaps_m=projection_gaps)
     return {'file': path.name, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
             'bytes': path.stat().st_size, 'full_weight_shape': list(full.shape),
             'seed_target_columns': ['source_anchor_index', 'source_vertex_id_or_centroid_sentinel',

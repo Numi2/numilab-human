@@ -514,11 +514,12 @@ three-body review above.
 The exact 102,467-vertex, 203,382-triangle BodyParts3D `FJ2810` shell remains
 the exterior source. It has no upstream skin weights. The older proximity
 binding remains a rejected diagnostic; the current
-[source-surface binding repair](Docs/SKIN_SOURCE_SURFACE_BINDING_20260929.md)
-removes arm-to-thigh sheets while independently checking the complete native
-exterior. Local shoulder/knee distortion and anatomical deformation qualification
-remain open. These are source visual checks, not deformable-shell mechanics
-or a finished textured avatar.
+[complete-field skin repair](Docs/SKIN_GEOMETRIC_FULL_FIELD_20260929.md)
+uses source projection gaps for seed confidence and retains all 86 body weights
+in native ABI 5. It reduces knee and shoulder defects while independently
+checking the complete native exterior across nine poses. Local raised-shoulder
+distortion and anatomical deformation qualification remain open. These are
+source visual checks, not deformable-shell mechanics or a finished textured avatar.
 
 ### Selective upper-limb source-actuator drive
 
@@ -637,12 +638,18 @@ check before binding geometry. Skin preparation requires `--artifact` and
 checks the source atlas frame against the existing common-frame fit. Each skin
 influence uses its bound body's inverse rest transform and the shared atlas
 frame. Source bone centroids and guarded bone samples seed a smooth association
-on the connected source skin surface. The independently checked full offline
-solution is reduced to four native influences, preserving exact source skin
-coordinates, normals, triangles and binding transforms. Five native poses pass
-the full 54,949-vertex/109,183-triangle check and 76 selected tests pass.
-The [skin repair record](Docs/SKIN_SOURCE_SURFACE_BINDING_20260929.md) retains
-the measured improvements and local ratio regressions. Inferred visual weights
+on the connected source skin surface. Exact source bone-to-skin projection gaps
+set confidence independently of local skin edge lengths. NHSKIN ABI 5 retains
+the complete 86-body field, preserving exact source skin coordinates, normals,
+triangles and binding transforms. Nine native poses pass the full
+54,949-vertex/109,183-triangle check and 107 selected tests pass. In bilateral
+knee flexion, maximum source-edge stretch decreases from 18.48 to 2.05 and
+maximum added edge length from 33.28 to 10.12 mm. Six edges remain above five-times
+source length in shoulder elevation; these diagnostics do not admit skin shape
+quality. The [complete-field repair record](Docs/SKIN_GEOMETRIC_FULL_FIELD_20260929.md)
+retains all comparisons, native captures and legacy ABI 4 byte parity.
+The [earlier four-weight repair](Docs/SKIN_SOURCE_SURFACE_BINDING_20260929.md)
+remains a dated baseline. Inferred visual weights
 do not establish anatomical skin weights, complete organ coverage, loaded
 mechanics or clinical anatomy.
 
@@ -918,6 +925,9 @@ numi human myosim-native-supported-fullbody-muscle-visuals \
 # Build the exact exterior BodyParts3D shell for source-static inspection only.
 # The source has no anatomical skin weights. Authoring now requires the
 # skin-authoring extra (Python 3.11+) and retains a full offline weight certificate.
+# NHSKIN ABI 5 carries every body weight and requires an ABI 5 native probe;
+# the probe keeps ABI 1-4 compatibility. The dated September 14 candidate and
+# native-visual admission commands keep their original ABI 4 evidence profiles.
 # This source-surface binding remains visual, with local deformation gaps.
 numi human myosim-bodyparts-skinned-shell-payload \
   --sources Sources \

@@ -668,21 +668,27 @@ heart anatomy, organ FEM/MPM, vessel tube/lumen mechanics, neural mechanics, cal
 materials/density, blood/tissue exchange, subject calibration, anatomical
 loading, standing, recovery, and walking remain open.
 
-The [skin source-surface repair](SKIN_SOURCE_SURFACE_BINDING_20260929.md)
-replaces Euclidean four-bone assignment with a screened association on the
-connected source skin. It removes large sheets caused by thigh vertices bound
-to nearby finger bones. In the native coupled-reach pose, maximum added edge
-length decreases from 608 to 58 mm and edges above five-times source length
-decrease from 2,093 to 64. All 54,949 selected vertices, 109,183 triangles,
-86 native body frames, source seed targets and full offline graph equations
-are independently checked across five poses; 70 adversarial source-audit tests
-and six producer/native regression tests pass. The source geometry, normals,
-binding transforms and topology stay byte-identical. Local shoulder/knee
-distortion remains, and neutral/knee maximum and p99 stretch ratios worsen;
-the four-influence approximation discards up to 42.23 percent of full weight
-mass before renormalization. These remain measured visual limitations, not
-admitted skin strain, anatomical weights, mechanical deformation, contact,
-material, clinical anatomy or whole-body qualification.
+The [earlier skin source-surface repair](SKIN_SOURCE_SURFACE_BINDING_20260929.md)
+removed large arm-to-thigh sheets with a connected-surface association but
+retained local defects and four-weight truncation. The current
+[complete-field repair](SKIN_GEOMETRIC_FULL_FIELD_20260929.md) derives seed
+confidence from exact bone-to-skin projection gaps and retains every body
+weight in native NHSKIN ABI 5. Compared with that four-weight baseline, native
+coupled reach decreases maximum added edge length from 57.63 to 22.50 mm and
+edges above five-times source length from 64 to one. Bilateral knee flexion
+decreases those measures from 33.28 to 10.12 mm and 18 to zero; maximum/p99
+stretch ratios decrease from 18.48/1.280 to 2.05/1.165. All 54,949 selected
+vertices, 109,183 triangles, 86 native body frames, exact seed projection gaps
+and full graph equations pass independent checks in nine native poses, and
+107 selected tests pass without skips. Source geometry, normals, binding
+transforms and topology stay byte-identical. Ten legacy ABI 4 packs/PNGs are
+also byte-identical through the updated native probe. The current field has
+zero intentional runtime truncation and explicit float32 quantization;
+diagnostic quartets would retain only 34.20 percent at the worst vertex and
+are not used by ABI 5 rendering. Shoulder elevation still has six edges above
+five-times source length. Edge diagnostics, self-intersection/volume checks,
+anatomical weights, mechanical deformation, contact, material, clinical anatomy
+and whole-body qualification remain separate open requirements.
 
 The [native stance horizon](NATIVE_STAND_STANCE_HORIZON_20260913.md) now
 repeats the exact-clock physical-M4 run from the authored root/ankle/subtalar/

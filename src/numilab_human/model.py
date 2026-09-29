@@ -6161,7 +6161,7 @@ _BODYPARTS_MYOSIM_SKIN_VISUAL_MAGIC = b"NHSKIN1\0"
 # Native rendering can then apply each body-relative rotation from that common
 # rest frame rather than blending slightly different fitted source-to-body
 # normal transforms across every skin triangle.
-_BODYPARTS_MYOSIM_SKIN_VISUAL_ABI = 4
+_BODYPARTS_MYOSIM_SKIN_VISUAL_ABI = 5
 _BODYPARTS_MYOSIM_TORSO_ANATOMY_VISUAL_MAGIC = b"NHANAT1\0"
 _BODYPARTS_MYOSIM_TORSO_ANATOMY_VISUAL_ABI = 1
 _BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_ORGAN = 1
@@ -11931,8 +11931,8 @@ def bodyparts_myosim_skinned_shell_visual_payload(
     screened graph Laplacian. This avoids skin following an unrelated nearby
     hand and retains an offline certificate of the full weight field.
     Source-to-body transforms are recorded separately so
-    the C++/Metal renderer can linearly blend the shell at the current
-    articulated pose without a Python process.  This is an improved visual
+    the C++/Metal renderer can blend all body weights at the current
+    articulated pose without a Python process or four-weight truncation. This is an improved visual
     shell, deliberately not a claimed FEM skin, collision shell, closest-triangle
     skin-weight dataset, or clinical soft-tissue registration.
     """
@@ -12098,7 +12098,7 @@ def bodyparts_myosim_skinned_shell_visual_payload(
         bone["binding_index"] = binding_by_core[bone["core_body_index"]]
     from .skin_surface_binding import source_surface_binding, write_binding_solution
     try:
-        source_quartets, source_weights, full_weights, seed_targets, binding_evidence = source_surface_binding(
+        source_quartets, source_weights, full_weights, seed_targets, projection_gaps, binding_evidence = source_surface_binding(
             [world_point(vertex) for vertex in vertices_mm], triangles, skin_seed_bones, len(bindings),
         )
     except (ValueError, ModuleNotFoundError) as error:
@@ -12161,14 +12161,15 @@ def bodyparts_myosim_skinned_shell_visual_payload(
         ],
         *vertex_payload,
         struct.pack(f"<{len(index_payload)}I", *index_payload),
+        np.asarray(full_weights, dtype='<f4').tobytes(),
     ])
     output = output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     payload_path = output / "bodyparts3d-myosim-skinned-shell.nhskin"
     payload_path.write_bytes(payload)
-    solution = write_binding_solution(output, full_weights, seed_targets)
+    solution = write_binding_solution(output, full_weights, seed_targets, projection_gaps)
     manifest = {
-        "schema": "numi.human.bodyparts3d-myosim-skinned-shell-visual-payload.v4",
+        "schema": "numi.human.bodyparts3d-myosim-skinned-shell-visual-payload.v5",
         "runtime_reference": runtime_reference,
         "rigid_source_program_checks": rigid_program,
         "payload": {
@@ -12199,7 +12200,12 @@ def bodyparts_myosim_skinned_shell_visual_payload(
             ],
         },
         "coverage": {
-            "influences_per_vertex": 4,
+            "influences_per_vertex": len(bindings),
+            "diagnostic_influences_per_vertex": 4,
+            "runtime_weight_policy": "complete_vertex_major_body_weight_matrix; diagnostic quartets are not used by ABI 5 rendering",
+            "maximum_runtime_discarded_weight_mass": 0.0,
+            "maximum_float32_weight_quantization_error": float(np.max(np.abs(full_weights - np.asarray(full_weights, dtype='<f4')))),
+            "maximum_float32_partition_error": float(np.max(np.abs(np.asarray(full_weights, dtype='<f4').sum(axis=1) - 1))),
             "distinct_influence_quartets": len(influence_histogram),
             "source_surface_binding": binding_evidence,
             "binding_solution": solution,
@@ -12220,9 +12226,9 @@ def bodyparts_myosim_skinned_shell_visual_payload(
                 "changes": "visual normals only; exact source vertices and triangle connectivity are retained",
             },
         },
-        "runtime_binding": "Exact BodyParts3D source skin triangles use four sparse influences from an offline positive source-surface screened harmonic association. Source bone centroid and geodesically guarded source samples seed the exterior sheet, rather than Euclidean proximity to an unrelated resting hand. The full source weight solution is retained for independent verification. Each influence carries the common source-atlas frame transformed into its bound runtime body's rest frame, preserving exact skin geometry at rest. Source normals follow each articulated influence through its current-from-rest body rotation.",
-        "status": "native_four_body_source_surface_local_linear_blend_skin_shell_visual_input_not_collision_or_physics",
-        "evidence_boundary": "This is an inferred source-surface articulated visual shell with a four-influence approximation, not FEM/MPM skin, a tissue material law, collision/contact geometry, measured anatomical skin weights, clinical registration or a force-coupled soft-tissue model.",
+        "runtime_binding": "Exact BodyParts3D source skin triangles use the complete certified source-surface harmonic field. Source bone-to-skin projection distances determine seed confidence independently of skin edge resolution. ABI 5 appends all body weights in vertex-major order; its four-weight vertex fields are diagnostic only. Each influence carries the common source-atlas frame transformed into its bound runtime body's rest frame, preserving exact skin geometry at rest. Source normals follow each articulated influence through its current-from-rest body rotation.",
+        "status": "native_full_body_source_surface_linear_blend_skin_shell_visual_input_not_collision_or_physics",
+        "evidence_boundary": "This is an inferred source-surface articulated visual shell with full certified weights and float32 runtime quantization, not FEM/MPM skin, a tissue material law, collision/contact geometry, measured anatomical skin weights, clinical registration or a force-coupled soft-tissue model.",
     }
     write_json(output / "bodyparts3d-myosim-skinned-shell.manifest.json", manifest)
     return manifest

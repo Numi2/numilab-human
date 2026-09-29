@@ -1,0 +1,56 @@
+{
+  "schema": "numi.human.skin-abi5-render-dimension-parity.v1",
+  "passed": true,
+  "cases": [
+    {
+      "version": "before",
+      "case": "neutral",
+      "pack_sha256_512": "b1ff52c7347ad0fcbe07eb5e7f4cded6bc6d262c8ed302dba336004d5a9952f4",
+      "pack_sha256_1024": "b1ff52c7347ad0fcbe07eb5e7f4cded6bc6d262c8ed302dba336004d5a9952f4",
+      "byte_identical": true
+    },
+    {
+      "version": "before",
+      "case": "coupled-reach",
+      "pack_sha256_512": "0e9297e41e6501f5ed35554149091a9ce6a73cd33f17c708beee7699c06f979b",
+      "pack_sha256_1024": "0e9297e41e6501f5ed35554149091a9ce6a73cd33f17c708beee7699c06f979b",
+      "byte_identical": true
+    },
+    {
+      "version": "before",
+      "case": "knee-flexion",
+      "pack_sha256_512": "ea23fcf18c7723858b80541b0342c47b9df4afcf44cbebf96811738674f62fd5",
+      "pack_sha256_1024": "ea23fcf18c7723858b80541b0342c47b9df4afcf44cbebf96811738674f62fd5",
+      "byte_identical": true
+    },
+    {
+      "version": "after",
+      "case": "neutral",
+      "pack_sha256_512": "72530c0dcf8ecc641a81ea65239e7755d406e05adba1181cffdc37c53336dbdb",
+      "pack_sha256_1024": "72530c0dcf8ecc641a81ea65239e7755d406e05adba1181cffdc37c53336dbdb",
+      "byte_identical": true
+    },
+    {
+      "version": "after",
+      "case": "coupled-reach",
+      "pack_sha256_512": "c4d532fa76a73563f4586f80569054f77e0054ec775fb65561259594ee776dd7",
+      "pack_sha256_1024": "c4d532fa76a73563f4586f80569054f77e0054ec775fb65561259594ee776dd7",
+      "byte_identical": true
+    },
+    {
+      "version": "after",
+      "case": "knee-flexion",
+      "pack_sha256_512": "5259748b9f34bb222b14ac9d6b3ed7327d4cd402131f7f876289a2888acc197d",
+      "pack_sha256_1024": "5259748b9f34bb222b14ac9d6b3ed7327d4cd402131f7f876289a2888acc197d",
+      "byte_identical": true
+    },
+    {
+      "version": "after",
+      "case": "shoulder-elevation",
+      "pack_sha256_512": "a0ab778e1727e736550bd05bac08b3d42683871d118baff57adf0e94961eda07",
+      "pack_sha256_1024": "a0ab778e1727e736550bd05bac08b3d42683871d118baff57adf0e94961eda07",
+      "byte_identical": true
+    }
+  ],
+  "boundary": "Only render dimension changes; geometry packs remain exact. These are source visual poses, not physical mechanics or standing."
+}

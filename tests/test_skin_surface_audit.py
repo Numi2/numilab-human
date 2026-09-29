@@ -36,6 +36,8 @@ def test_every_source_vertex_triangle_and_body_blend_reaches_native_skin(skin_in
     assert report['passed']
     assert report['vertex_count'] == 54949 and report['triangle_count'] == 109183
     assert report['binding_count'] == 86 and len(report['body_checks']) == 86
+    assert report['payload_abi'] == 5 and report['runtime_influences_per_vertex'] == 86
+    assert report['runtime_discarded_weight_mass'] == 0
     assert report['source_subset']['edge_component_count'] == 100
     certificate = report['source_weight_solution_certificate']
     assert certificate['passed'] and certificate['source_bone_count'] == 185
@@ -51,7 +53,8 @@ def test_every_source_vertex_triangle_and_body_blend_reaches_native_skin(skin_in
                                        'native_owner', 'payload_owner', 'payload_weights',
                                        'native_current_pose', 'native_rest_pose', 'source_hash',
                                        'seed_association', 'harmonic_equation', 'false_physics',
-                                       'hidden_truncation'])
+                                       'hidden_truncation', 'projection_gap', 'full_runtime_weights',
+                                       'claimed_runtime_truncation'])
 def test_skin_oracle_rejects_rehashed_geometry_and_rest_invisible_influence_corruption(skin_inputs, tmp_path, corruption):
     from numilab_human.torso_anatomy_audit import _pack_sections
     args = list(skin_inputs)
@@ -100,7 +103,7 @@ def test_skin_oracle_rejects_rehashed_geometry_and_rest_invisible_influence_corr
     else:
         payload = tmp_path / args[3].name
         raw = bytearray(args[3].read_bytes())
-        _, _, nb, nv, *_ = struct.unpack_from('<8s5I32s', raw)
+        _, _, nb, nv, ni, *_ = struct.unpack_from('<8s5I32s', raw)
         if corruption == 'payload_owner':
             struct.pack_into('<I', raw, 60, 7)
             message = 'source skin body ownership'
@@ -120,6 +123,15 @@ def test_skin_oracle_rejects_rehashed_geometry_and_rest_invisible_influence_corr
             # to the same world point at rest: static rest geometry cannot
             # identify this corruption; the source blend oracle must.
             message = 'source skin influence weights'
+        elif corruption == 'full_runtime_weights':
+            matrix = np.frombuffer(raw, '<f4', offset=60+36*nb+56*nv+4*ni).reshape(nv,nb)
+            point = int(np.argmax(matrix[:,0]))
+            donor = int(np.argmax(matrix[point]))
+            receiver = (donor+1) % nb
+            amount = min(.1, matrix[point,donor]/2)
+            matrix[point,donor] -= amount
+            matrix[point,receiver] += amount
+            message = 'source skin full influence weights'
         else:
             message = 'skin member hash'
         payload.write_bytes(raw)
@@ -128,13 +140,14 @@ def test_skin_oracle_rejects_rehashed_geometry_and_rest_invisible_influence_corr
         solution = manifest['coverage']['binding_solution']
         proof = tmp_path / solution['file']
         shutil.copyfile(args[3].parent / solution['file'], proof)
-        if corruption in {'seed_association', 'harmonic_equation'}:
+        if corruption in {'seed_association', 'harmonic_equation', 'projection_gap'}:
             with np.load(proof, allow_pickle=False) as archive:
                 full, targets = archive['full_weights'].copy(), archive['seed_targets'].copy()
+                gaps = archive['seed_projection_gaps_m'].copy()
             if corruption == 'seed_association':
                 targets[0, 3] = (targets[0, 3] + 1) % nb
                 message = 'source skin seed association'
-            else:
+            elif corruption == 'harmonic_equation':
                 # Keep positivity and partition unity while breaking a row
                 # of the independently checked source graph equations.
                 point = int(np.argmax(full[:, 0]))
@@ -144,7 +157,10 @@ def test_skin_oracle_rejects_rehashed_geometry_and_rest_invisible_influence_corr
                 full[point, donor] -= amount
                 full[point, receiver] += amount
                 message = 'source skin harmonic equations'
-            np.savez_compressed(proof, full_weights=full, seed_targets=targets)
+            else:
+                gaps[0] += .01
+                message = 'source bone-to-skin projection gaps'
+            np.savez_compressed(proof, full_weights=full, seed_targets=targets, seed_projection_gaps_m=gaps)
             solution['sha256'] = hashlib.sha256(proof.read_bytes()).hexdigest()
             solution['bytes'] = proof.stat().st_size
         elif corruption == 'false_physics':
@@ -153,6 +169,9 @@ def test_skin_oracle_rejects_rehashed_geometry_and_rest_invisible_influence_corr
         elif corruption == 'hidden_truncation':
             manifest['coverage']['source_surface_binding']['maximum_discarded_weight_mass'] = 0
             message = 'source binding declared truncation'
+        elif corruption == 'claimed_runtime_truncation':
+            manifest['coverage']['maximum_runtime_discarded_weight_mass'] = .1
+            message = 'full runtime weight ownership/coverage'
         if corruption == 'source_hash':
             manifest['source']['skin']['member_sha256'] = '0' * 64
         payload.with_name('bodyparts3d-myosim-skinned-shell.manifest.json').write_text(json.dumps(manifest))
