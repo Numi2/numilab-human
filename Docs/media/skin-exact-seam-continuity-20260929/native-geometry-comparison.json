@@ -1,0 +1,2843 @@
+{
+  "schema": "numi.human.skin-exact-seam-native-geometry-comparison.v1",
+  "cases": [
+    {
+      "name": "raw-source-rest",
+      "before": {
+        "native_surface_edge_diagnostics": {
+          "edge_count": 164188,
+          "maximum_stretch_ratio": 1.0006953487049763,
+          "edge_p99_stretch_ratio": 1.0001248978749102,
+          "edges_over_5x": 0,
+          "maximum_edge_length_increase_m": 1.3316336978487844e-06,
+          "worst_length_increases": [
+            {
+              "source_skin_vertex_ids": [
+                27906,
+                27910
+              ],
+              "source_length_m": 0.00449295450859179,
+              "native_length_m": 0.0044942861422896385,
+              "stretch_ratio": 1.0002963826353688
+            },
+            {
+              "source_skin_vertex_ids": [
+                4524,
+                4525
+              ],
+              "source_length_m": 0.022473120028668796,
+              "native_length_m": 0.022474443539977074,
+              "stretch_ratio": 1.0000588930823398
+            },
+            {
+              "source_skin_vertex_ids": [
+                5338,
+                5351
+              ],
+              "source_length_m": 0.011757577002602585,
+              "native_length_m": 0.011758899316191673,
+              "stretch_ratio": 1.0001124648036577
+            },
+            {
+              "source_skin_vertex_ids": [
+                15019,
+                15021
+              ],
+              "source_length_m": 0.0036208119299697135,
+              "native_length_m": 0.00362201314419508,
+              "stretch_ratio": 1.0003317527252449
+            },
+            {
+              "source_skin_vertex_ids": [
+                34986,
+                35671
+              ],
+              "source_length_m": 0.004914749131560779,
+              "native_length_m": 0.004915926605463028,
+              "stretch_ratio": 1.0002395796551826
+            }
+          ],
+          "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+        },
+        "native_surface_face_diagnostics": {
+          "face_count": 109183,
+          "source_degenerate_face_count": 0,
+          "native_collapsed_face_count": 0,
+          "source_surface_area_m2": 1.8076662289952967,
+          "native_surface_area_m2": 1.80766576455782,
+          "minimum_area_ratio": 0.9987774000255758,
+          "area_ratio_p01": 0.9998124341786533,
+          "area_ratio_p99": 1.0001871694294118,
+          "maximum_area_ratio": 1.00114925585012,
+          "minimum_surface_stretch": 0.9983017510261095,
+          "maximum_surface_stretch": 1.001112200644059,
+          "surface_stretch_p01": 0.9997847696982246,
+          "surface_stretch_p99": 1.0002146100042872,
+          "faces_area_below_0_1x": 0,
+          "faces_area_above_10x": 0,
+          "faces_opposed_to_rendered_vertex_normals": 0,
+          "lowest_area_faces": [
+            {
+              "source_face_id": 88340,
+              "source_skin_vertex_ids": [
+                44140,
+                44159,
+                44141
+              ],
+              "source_area_m2": 2.5691829161548844e-06,
+              "area_ratio": 0.9987774000255758
+            },
+            {
+              "source_face_id": 41179,
+              "source_skin_vertex_ids": [
+                54721,
+                20539,
+                54725
+              ],
+              "source_area_m2": 3.896973085711322e-07,
+              "area_ratio": 0.9989827055151345
+            },
+            {
+              "source_face_id": 20764,
+              "source_skin_vertex_ids": [
+                10383,
+                10374,
+                10379
+              ],
+              "source_area_m2": 4.814567065248417e-07,
+              "area_ratio": 0.9991031300425678
+            },
+            {
+              "source_face_id": 67503,
+              "source_skin_vertex_ids": [
+                33739,
+                33740,
+                54830
+              ],
+              "source_area_m2": 2.1757427139666218e-07,
+              "area_ratio": 0.9991928110551912
+            },
+            {
+              "source_face_id": 67499,
+              "source_skin_vertex_ids": [
+                33739,
+                54830,
+                54829
+              ],
+              "source_area_m2": 2.016807847084405e-07,
+              "area_ratio": 0.9992671399556015
+            }
+          ],
+          "boundary": "All-face geometric area and tangent-map diagnostics; 0.1x/10x counts are descriptive, not physiological thresholds. Normal opposition is a presentation diagnostic, not an inversion/strain certificate. No skin-quality, material or clinical admission."
+        },
+        "native_source_seam_diagnostics": {
+          "exact_coincident_vertex_group_count": 257,
+          "exact_coincident_redundant_vertex_count": 286,
+          "source_seam_pair_count": 316,
+          "maximum_native_seam_gap_m": 9.53732522290915e-07,
+          "seam_pairs_with_nonzero_native_gap": 310,
+          "seam_vertices_separated_from_canonical": 281,
+          "worst_source_seam_pairs": [
+            {
+              "source_skin_vertex_ids": [
+                20550,
+                54726
+              ],
+              "native_gap_m": 9.53732522290915e-07
+            },
+            {
+              "source_skin_vertex_ids": [
+                44141,
+                54833
+              ],
+              "native_gap_m": 8.374200699197985e-07
+            },
+            {
+              "source_skin_vertex_ids": [
+                11041,
+                54716
+              ],
+              "native_gap_m": 8.367237532953296e-07
+            },
+            {
+              "source_skin_vertex_ids": [
+                9152,
+                54640
+              ],
+              "native_gap_m": 8.351299923182758e-07
+            },
+            {
+              "source_skin_vertex_ids": [
+                45748,
+                54903
+              ],
+              "native_gap_m": 7.290917529299895e-07
+            }
+          ],
+          "boundary": "Coincident source-point continuity only; source openings, self-intersection, volume and mechanics remain separate."
+        }
+      },
+      "after": {
+        "native_surface_edge_diagnostics": {
+          "edge_count": 164188,
+          "maximum_stretch_ratio": 1.0009460272400217,
+          "edge_p99_stretch_ratio": 1.0001246644669257,
+          "edges_over_5x": 0,
+          "maximum_edge_length_increase_m": 1.476708884635275e-06,
+          "worst_length_increases": [
+            {
+              "source_skin_vertex_ids": [
+                21858,
+                22622
+              ],
+              "source_length_m": 0.00811330265915831,
+              "native_length_m": 0.008114779368042946,
+              "stretch_ratio": 1.000182010821816
+            },
+            {
+              "source_skin_vertex_ids": [
+                31940,
+                31948
+              ],
+              "source_length_m": 0.027786415874947255,
+              "native_length_m": 0.027787864208221436,
+              "stretch_ratio": 1.0000521237888578
+            },
+            {
+              "source_skin_vertex_ids": [
+                19343,
+                19365
+              ],
+              "source_length_m": 0.005182499590104956,
+              "native_length_m": 0.005183806177228689,
+              "stretch_ratio": 1.0002521152391846
+            },
+            {
+              "source_skin_vertex_ids": [
+                10178,
+                10857
+              ],
+              "source_length_m": 0.026303259447980863,
+              "native_length_m": 0.02630450204014778,
+              "stretch_ratio": 1.0000472409957166
+            },
+            {
+              "source_skin_vertex_ids": [
+                10478,
+                10482
+              ],
+              "source_length_m": 0.00433316618298066,
+              "native_length_m": 0.004334394354373217,
+              "stretch_ratio": 1.0002834351004999
+            }
+          ],
+          "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+        },
+        "native_surface_face_diagnostics": {
+          "face_count": 109183,
+          "source_degenerate_face_count": 0,
+          "native_collapsed_face_count": 0,
+          "source_surface_area_m2": 1.8076662289952967,
+          "native_surface_area_m2": 1.8076657270111227,
+          "minimum_area_ratio": 0.9987779434501755,
+          "area_ratio_p01": 0.9998149744034495,
+          "area_ratio_p99": 1.0001845513020138,
+          "maximum_area_ratio": 1.001120432237039,
+          "minimum_surface_stretch": 0.9987892872336875,
+          "maximum_surface_stretch": 1.0012901402685415,
+          "surface_stretch_p01": 0.9997860139142938,
+          "surface_stretch_p99": 1.000214334429357,
+          "faces_area_below_0_1x": 0,
+          "faces_area_above_10x": 0,
+          "faces_opposed_to_rendered_vertex_normals": 0,
+          "lowest_area_faces": [
+            {
+              "source_face_id": 20938,
+              "source_skin_vertex_ids": [
+                10476,
+                10475,
+                10474
+              ],
+              "source_area_m2": 2.471256636400378e-07,
+              "area_ratio": 0.9987779434501755
+            },
+            {
+              "source_face_id": 41199,
+              "source_skin_vertex_ids": [
+                54727,
+                20552,
+                20556
+              ],
+              "source_area_m2": 3.8338166943614764e-07,
+              "area_ratio": 0.9987837391711623
+            },
+            {
+              "source_face_id": 41245,
+              "source_skin_vertex_ids": [
+                20552,
+                20581,
+                20556
+              ],
+              "source_area_m2": 7.49554395964729e-07,
+              "area_ratio": 0.9990662952792453
+            },
+            {
+              "source_face_id": 92486,
+              "source_skin_vertex_ids": [
+                46233,
+                46232,
+                46235
+              ],
+              "source_area_m2": 2.2218260961262993e-07,
+              "area_ratio": 0.9990703473114184
+            },
+            {
+              "source_face_id": 92489,
+              "source_skin_vertex_ids": [
+                46233,
+                46235,
+                46238
+              ],
+              "source_area_m2": 2.6735003920788815e-07,
+              "area_ratio": 0.999089756623615
+            }
+          ],
+          "boundary": "All-face geometric area and tangent-map diagnostics; 0.1x/10x counts are descriptive, not physiological thresholds. Normal opposition is a presentation diagnostic, not an inversion/strain certificate. No skin-quality, material or clinical admission."
+        },
+        "native_source_seam_diagnostics": {
+          "exact_coincident_vertex_group_count": 257,
+          "exact_coincident_redundant_vertex_count": 286,
+          "source_seam_pair_count": 316,
+          "maximum_native_seam_gap_m": 0.0,
+          "seam_pairs_with_nonzero_native_gap": 0,
+          "seam_vertices_separated_from_canonical": 0,
+          "worst_source_seam_pairs": [],
+          "boundary": "Coincident source-point continuity only; source openings, self-intersection, volume and mechanics remain separate."
+        }
+      }
+    },
+    {
+      "name": "neutral",
+      "before": {
+        "native_surface_edge_diagnostics": {
+          "edge_count": 164188,
+          "maximum_stretch_ratio": 2.141260275169082,
+          "edge_p99_stretch_ratio": 1.0676950620226289,
+          "edges_over_5x": 0,
+          "maximum_edge_length_increase_m": 0.009744474866364514,
+          "worst_length_increases": [
+            {
+              "source_skin_vertex_ids": [
+                41205,
+                42310
+              ],
+              "source_length_m": 0.02479150312307068,
+              "native_length_m": 0.034535977989435196,
+              "stretch_ratio": 1.3930570412770342
+            },
+            {
+              "source_skin_vertex_ids": [
+                19948,
+                20650
+              ],
+              "source_length_m": 0.01643558050008526,
+              "native_length_m": 0.024240700528025627,
+              "stretch_ratio": 1.4748916552049913
+            },
+            {
+              "source_skin_vertex_ids": [
+                13691,
+                13701
+              ],
+              "source_length_m": 0.012206563277918026,
+              "native_length_m": 0.01949373632669449,
+              "stretch_ratio": 1.5969881024546146
+            },
+            {
+              "source_skin_vertex_ids": [
+                41188,
+                41757
+              ],
+              "source_length_m": 0.01305900142661059,
+              "native_length_m": 0.02033906988799572,
+              "stretch_ratio": 1.5574751256669892
+            },
+            {
+              "source_skin_vertex_ids": [
+                12591,
+                13702
+              ],
+              "source_length_m": 0.03069239914264648,
+              "native_length_m": 0.03757380694150925,
+              "stretch_ratio": 1.2242056010962397
+            }
+          ],
+          "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+        },
+        "native_surface_face_diagnostics": {
+          "face_count": 109183,
+          "source_degenerate_face_count": 0,
+          "native_collapsed_face_count": 0,
+          "source_surface_area_m2": 1.8076662289952967,
+          "native_surface_area_m2": 1.8290091375295958,
+          "minimum_area_ratio": 0.387500969001378,
+          "area_ratio_p01": 0.9887585424728127,
+          "area_ratio_p99": 1.1490584387612781,
+          "maximum_area_ratio": 3.186653047700996,
+          "minimum_surface_stretch": 0.38686777302516584,
+          "maximum_surface_stretch": 3.2988526599359567,
+          "surface_stretch_p01": 0.9757101339051727,
+          "surface_stretch_p99": 1.1635876119168989,
+          "faces_area_below_0_1x": 0,
+          "faces_area_above_10x": 0,
+          "faces_opposed_to_rendered_vertex_normals": 0,
+          "lowest_area_faces": [
+            {
+              "source_face_id": 28327,
+              "source_skin_vertex_ids": [
+                14138,
+                14134,
+                14126
+              ],
+              "source_area_m2": 6.470718602409128e-06,
+              "area_ratio": 0.387500969001378
+            },
+            {
+              "source_face_id": 81100,
+              "source_skin_vertex_ids": [
+                40530,
+                40544,
+                40545
+              ],
+              "source_area_m2": 1.661547628049008e-05,
+              "area_ratio": 0.6331591588474074
+            },
+            {
+              "source_face_id": 81102,
+              "source_skin_vertex_ids": [
+                40530,
+                40545,
+                40531
+              ],
+              "source_area_m2": 8.367568068952853e-06,
+              "area_ratio": 0.7169211149941777
+            },
+            {
+              "source_face_id": 28321,
+              "source_skin_vertex_ids": [
+                14132,
+                14131,
+                14137
+              ],
+              "source_area_m2": 1.5117811964462893e-05,
+              "area_ratio": 0.7326136810519229
+            },
+            {
+              "source_face_id": 28310,
+              "source_skin_vertex_ids": [
+                14143,
+                14131,
+                14132
+              ],
+              "source_area_m2": 1.5154751438141379e-05,
+              "area_ratio": 0.7793147983633972
+            }
+          ],
+          "boundary": "All-face geometric area and tangent-map diagnostics; 0.1x/10x counts are descriptive, not physiological thresholds. Normal opposition is a presentation diagnostic, not an inversion/strain certificate. No skin-quality, material or clinical admission."
+        },
+        "native_source_seam_diagnostics": {
+          "exact_coincident_vertex_group_count": 257,
+          "exact_coincident_redundant_vertex_count": 286,
+          "source_seam_pair_count": 316,
+          "maximum_native_seam_gap_m": 0.00010015357712584939,
+          "seam_pairs_with_nonzero_native_gap": 312,
+          "seam_vertices_separated_from_canonical": 283,
+          "worst_source_seam_pairs": [
+            {
+              "source_skin_vertex_ids": [
+                31617,
+                54804
+              ],
+              "native_gap_m": 0.00010015357712584939
+            },
+            {
+              "source_skin_vertex_ids": [
+                31611,
+                54803
+              ],
+              "native_gap_m": 9.123799674219543e-05
+            },
+            {
+              "source_skin_vertex_ids": [
+                31609,
+                54802
+              ],
+              "native_gap_m": 7.695885893767206e-05
+            },
+            {
+              "source_skin_vertex_ids": [
+                32354,
+                54808
+              ],
+              "native_gap_m": 6.797498642486338e-05
+            },
+            {
+              "source_skin_vertex_ids": [
+                30840,
+                54789
+              ],
+              "native_gap_m": 5.128637711660745e-05
+            }
+          ],
+          "boundary": "Coincident source-point continuity only; source openings, self-intersection, volume and mechanics remain separate."
+        }
+      },
+      "after": {
+        "native_surface_edge_diagnostics": {
+          "edge_count": 164188,
+          "maximum_stretch_ratio": 2.1412658269289313,
+          "edge_p99_stretch_ratio": 1.0676956328908525,
+          "edges_over_5x": 0,
+          "maximum_edge_length_increase_m": 0.00974453447100929,
+          "worst_length_increases": [
+            {
+              "source_skin_vertex_ids": [
+                41205,
+                42310
+              ],
+              "source_length_m": 0.02479150312307068,
+              "native_length_m": 0.03453603759407997,
+              "stretch_ratio": 1.39305944551386
+            },
+            {
+              "source_skin_vertex_ids": [
+                19948,
+                20650
+              ],
+              "source_length_m": 0.01643558050008526,
+              "native_length_m": 0.024240747094154358,
+              "stretch_ratio": 1.4748944884562252
+            },
+            {
+              "source_skin_vertex_ids": [
+                13691,
+                13701
+              ],
+              "source_length_m": 0.012206563277918026,
+              "native_length_m": 0.01949370466172695,
+              "stretch_ratio": 1.596985508361026
+            },
+            {
+              "source_skin_vertex_ids": [
+                41188,
+                41757
+              ],
+              "source_length_m": 0.01305900142661059,
+              "native_length_m": 0.020339056849479675,
+              "stretch_ratio": 1.5574741272356682
+            },
+            {
+              "source_skin_vertex_ids": [
+                12591,
+                13702
+              ],
+              "source_length_m": 0.03069239914264648,
+              "native_length_m": 0.037573862820863724,
+              "stretch_ratio": 1.224207421721412
+            }
+          ],
+          "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+        },
+        "native_surface_face_diagnostics": {
+          "face_count": 109183,
+          "source_degenerate_face_count": 0,
+          "native_collapsed_face_count": 0,
+          "source_surface_area_m2": 1.8076662289952967,
+          "native_surface_area_m2": 1.8290105667272796,
+          "minimum_area_ratio": 0.3875228802234677,
+          "area_ratio_p01": 0.9887419569377764,
+          "area_ratio_p99": 1.1490630266331183,
+          "maximum_area_ratio": 3.186646146351464,
+          "minimum_surface_stretch": 0.3868889368403658,
+          "maximum_surface_stretch": 3.298845100249495,
+          "surface_stretch_p01": 0.9757478561107565,
+          "surface_stretch_p99": 1.163572078816999,
+          "faces_area_below_0_1x": 0,
+          "faces_area_above_10x": 0,
+          "faces_opposed_to_rendered_vertex_normals": 0,
+          "lowest_area_faces": [
+            {
+              "source_face_id": 28327,
+              "source_skin_vertex_ids": [
+                14138,
+                14134,
+                14126
+              ],
+              "source_area_m2": 6.470718602409128e-06,
+              "area_ratio": 0.3875228802234677
+            },
+            {
+              "source_face_id": 81100,
+              "source_skin_vertex_ids": [
+                40530,
+                40544,
+                40545
+              ],
+              "source_area_m2": 1.661547628049008e-05,
+              "area_ratio": 0.6331637092223191
+            },
+            {
+              "source_face_id": 81102,
+              "source_skin_vertex_ids": [
+                40530,
+                40545,
+                40531
+              ],
+              "source_area_m2": 8.367568068952853e-06,
+              "area_ratio": 0.7169079862545282
+            },
+            {
+              "source_face_id": 28321,
+              "source_skin_vertex_ids": [
+                14132,
+                14131,
+                14137
+              ],
+              "source_area_m2": 1.5117811964462893e-05,
+              "area_ratio": 0.7326046164714294
+            },
+            {
+              "source_face_id": 28310,
+              "source_skin_vertex_ids": [
+                14143,
+                14131,
+                14132
+              ],
+              "source_area_m2": 1.5154751438141379e-05,
+              "area_ratio": 0.7793127670324586
+            }
+          ],
+          "boundary": "All-face geometric area and tangent-map diagnostics; 0.1x/10x counts are descriptive, not physiological thresholds. Normal opposition is a presentation diagnostic, not an inversion/strain certificate. No skin-quality, material or clinical admission."
+        },
+        "native_source_seam_diagnostics": {
+          "exact_coincident_vertex_group_count": 257,
+          "exact_coincident_redundant_vertex_count": 286,
+          "source_seam_pair_count": 316,
+          "maximum_native_seam_gap_m": 0.0,
+          "seam_pairs_with_nonzero_native_gap": 0,
+          "seam_vertices_separated_from_canonical": 0,
+          "worst_source_seam_pairs": [],
+          "boundary": "Coincident source-point continuity only; source openings, self-intersection, volume and mechanics remain separate."
+        }
+      }
+    },
+    {
+      "name": "coupled-torso",
+      "before": {
+        "native_surface_edge_diagnostics": {
+          "edge_count": 164188,
+          "maximum_stretch_ratio": 2.1704754419125534,
+          "edge_p99_stretch_ratio": 1.1014010962845526,
+          "edges_over_5x": 0,
+          "maximum_edge_length_increase_m": 0.010797737368319547,
+          "worst_length_increases": [
+            {
+              "source_skin_vertex_ids": [
+                41205,
+                42310
+              ],
+              "source_length_m": 0.02479150312307068,
+              "native_length_m": 0.03558924049139023,
+              "stretch_ratio": 1.4355418594313185
+            },
+            {
+              "source_skin_vertex_ids": [
+                19948,
+                20650
+              ],
+              "source_length_m": 0.01643558050008526,
+              "native_length_m": 0.025278277695178986,
+              "stretch_ratio": 1.5380215925472092
+            },
+            {
+              "source_skin_vertex_ids": [
+                38472,
+                38825
+              ],
+              "source_length_m": 0.05169833783158464,
+              "native_length_m": 0.06049748510122299,
+              "stretch_ratio": 1.1702017441702466
+            },
+            {
+              "source_skin_vertex_ids": [
+                36865,
+                36881
+              ],
+              "source_length_m": 0.044455938870243204,
+              "native_length_m": 0.05249028280377388,
+              "stretch_ratio": 1.1807259983189446
+            },
+            {
+              "source_skin_vertex_ids": [
+                41205,
+                41773
+              ],
+              "source_length_m": 0.021886816729705823,
+              "native_length_m": 0.02955399453639984,
+              "stretch_ratio": 1.3503103215684975
+            }
+          ],
+          "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+        },
+        "native_surface_face_diagnostics": {
+          "face_count": 109183,
+          "source_degenerate_face_count": 0,
+          "native_collapsed_face_count": 0,
+          "source_surface_area_m2": 1.8076662289952967,
+          "native_surface_area_m2": 1.7878304208485942,
+          "minimum_area_ratio": 0.19295684921405545,
+          "area_ratio_p01": 0.7097124197226765,
+          "area_ratio_p99": 1.1931066255103362,
+          "maximum_area_ratio": 3.2023649287034535,
+          "minimum_surface_stretch": 0.20345110003073918,
+          "maximum_surface_stretch": 3.311754807598792,
+          "surface_stretch_p01": 0.7152664760958951,
+          "surface_stretch_p99": 1.2134180574342963,
+          "faces_area_below_0_1x": 0,
+          "faces_area_above_10x": 0,
+          "faces_opposed_to_rendered_vertex_normals": 1,
+          "lowest_area_faces": [
+            {
+              "source_face_id": 22950,
+              "source_skin_vertex_ids": [
+                10930,
+                10944,
+                11450
+              ],
+              "source_area_m2": 1.8052922869402225e-05,
+              "area_ratio": 0.19295684921405545
+            },
+            {
+              "source_face_id": 88029,
+              "source_skin_vertex_ids": [
+                44465,
+                44482,
+                43995
+              ],
+              "source_area_m2": 4.0279497337961306e-05,
+              "area_ratio": 0.19423886723303083
+            },
+            {
+              "source_face_id": 22912,
+              "source_skin_vertex_ids": [
+                11430,
+                11417,
+                11418
+              ],
+              "source_area_m2": 1.8628685812463424e-05,
+              "area_ratio": 0.27126559825479185
+            },
+            {
+              "source_face_id": 29325,
+              "source_skin_vertex_ids": [
+                15533,
+                14094,
+                15532
+              ],
+              "source_area_m2": 9.105732126718628e-05,
+              "area_ratio": 0.2752008758044487
+            },
+            {
+              "source_face_id": 21887,
+              "source_skin_vertex_ids": [
+                10930,
+                10932,
+                10944
+              ],
+              "source_area_m2": 1.98883548002077e-05,
+              "area_ratio": 0.2771529416125602
+            }
+          ],
+          "boundary": "All-face geometric area and tangent-map diagnostics; 0.1x/10x counts are descriptive, not physiological thresholds. Normal opposition is a presentation diagnostic, not an inversion/strain certificate. No skin-quality, material or clinical admission."
+        },
+        "native_source_seam_diagnostics": {
+          "exact_coincident_vertex_group_count": 257,
+          "exact_coincident_redundant_vertex_count": 286,
+          "source_seam_pair_count": 316,
+          "maximum_native_seam_gap_m": 0.0016055581656328915,
+          "seam_pairs_with_nonzero_native_gap": 314,
+          "seam_vertices_separated_from_canonical": 284,
+          "worst_source_seam_pairs": [
+            {
+              "source_skin_vertex_ids": [
+                54690,
+                54691
+              ],
+              "native_gap_m": 0.0016055581656328915
+            },
+            {
+              "source_skin_vertex_ids": [
+                54694,
+                54695
+              ],
+              "native_gap_m": 0.0016029042753722693
+            },
+            {
+              "source_skin_vertex_ids": [
+                10405,
+                54692
+              ],
+              "native_gap_m": 0.001602780654676455
+            },
+            {
+              "source_skin_vertex_ids": [
+                10418,
+                54696
+              ],
+              "native_gap_m": 0.0015928038033869761
+            },
+            {
+              "source_skin_vertex_ids": [
+                10419,
+                54697
+              ],
+              "native_gap_m": 0.0015879942413386707
+            }
+          ],
+          "boundary": "Coincident source-point continuity only; source openings, self-intersection, volume and mechanics remain separate."
+        }
+      },
+      "after": {
+        "native_surface_edge_diagnostics": {
+          "edge_count": 164188,
+          "maximum_stretch_ratio": 2.1704777968240774,
+          "edge_p99_stretch_ratio": 1.1014261540275916,
+          "edges_over_5x": 0,
+          "maximum_edge_length_increase_m": 0.010798076369736707,
+          "worst_length_increases": [
+            {
+              "source_skin_vertex_ids": [
+                41205,
+                42310
+              ],
+              "source_length_m": 0.02479150312307068,
+              "native_length_m": 0.03558957949280739,
+              "stretch_ratio": 1.4355555335282653
+            },
+            {
+              "source_skin_vertex_ids": [
+                19948,
+                20650
+              ],
+              "source_length_m": 0.01643558050008526,
+              "native_length_m": 0.025278976187109947,
+              "stretch_ratio": 1.5380640913157166
+            },
+            {
+              "source_skin_vertex_ids": [
+                38472,
+                38825
+              ],
+              "source_length_m": 0.05169833783158464,
+              "native_length_m": 0.06049720197916031,
+              "stretch_ratio": 1.1701962677453834
+            },
+            {
+              "source_skin_vertex_ids": [
+                36865,
+                36881
+              ],
+              "source_length_m": 0.044455938870243204,
+              "native_length_m": 0.05248961225152016,
+              "stretch_ratio": 1.180710914794206
+            },
+            {
+              "source_skin_vertex_ids": [
+                41205,
+                41773
+              ],
+              "source_length_m": 0.021886816729705823,
+              "native_length_m": 0.029554851353168488,
+              "stretch_ratio": 1.3503494691877802
+            }
+          ],
+          "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+        },
+        "native_surface_face_diagnostics": {
+          "face_count": 109183,
+          "source_degenerate_face_count": 0,
+          "native_collapsed_face_count": 0,
+          "source_surface_area_m2": 1.8076662289952967,
+          "native_surface_area_m2": 1.787779363990413,
+          "minimum_area_ratio": 0.19300231563440812,
+          "area_ratio_p01": 0.7096378788744736,
+          "area_ratio_p99": 1.19307268708776,
+          "maximum_area_ratio": 3.202322408808346,
+          "minimum_surface_stretch": 0.20348730640239793,
+          "maximum_surface_stretch": 3.311707821285603,
+          "surface_stretch_p01": 0.7151803804484274,
+          "surface_stretch_p99": 1.2133715570710393,
+          "faces_area_below_0_1x": 0,
+          "faces_area_above_10x": 0,
+          "faces_opposed_to_rendered_vertex_normals": 1,
+          "lowest_area_faces": [
+            {
+              "source_face_id": 22950,
+              "source_skin_vertex_ids": [
+                10930,
+                10944,
+                11450
+              ],
+              "source_area_m2": 1.8052922869402225e-05,
+              "area_ratio": 0.19300231563440812
+            },
+            {
+              "source_face_id": 88029,
+              "source_skin_vertex_ids": [
+                44465,
+                44482,
+                43995
+              ],
+              "source_area_m2": 4.0279497337961306e-05,
+              "area_ratio": 0.1940207626690135
+            },
+            {
+              "source_face_id": 22912,
+              "source_skin_vertex_ids": [
+                11430,
+                11417,
+                11418
+              ],
+              "source_area_m2": 1.8628685812463424e-05,
+              "area_ratio": 0.2711148350094379
+            },
+            {
+              "source_face_id": 29325,
+              "source_skin_vertex_ids": [
+                15533,
+                14094,
+                15532
+              ],
+              "source_area_m2": 9.105732126718628e-05,
+              "area_ratio": 0.2751785183813846
+            },
+            {
+              "source_face_id": 21887,
+              "source_skin_vertex_ids": [
+                10930,
+                10932,
+                10944
+              ],
+              "source_area_m2": 1.98883548002077e-05,
+              "area_ratio": 0.277045457376102
+            }
+          ],
+          "boundary": "All-face geometric area and tangent-map diagnostics; 0.1x/10x counts are descriptive, not physiological thresholds. Normal opposition is a presentation diagnostic, not an inversion/strain certificate. No skin-quality, material or clinical admission."
+        },
+        "native_source_seam_diagnostics": {
+          "exact_coincident_vertex_group_count": 257,
+          "exact_coincident_redundant_vertex_count": 286,
+          "source_seam_pair_count": 316,
+          "maximum_native_seam_gap_m": 0.0,
+          "seam_pairs_with_nonzero_native_gap": 0,
+          "seam_vertices_separated_from_canonical": 0,
+          "worst_source_seam_pairs": [],
+          "boundary": "Coincident source-point continuity only; source openings, self-intersection, volume and mechanics remain separate."
+        }
+      }
+    },
+    {
+      "name": "coupled-reach",
+      "before": {
+        "native_surface_edge_diagnostics": {
+          "edge_count": 164188,
+          "maximum_stretch_ratio": 5.027085182593668,
+          "edge_p99_stretch_ratio": 1.2748776900378613,
+          "edges_over_5x": 1,
+          "maximum_edge_length_increase_m": 0.022504771359945483,
+          "worst_length_increases": [
+            {
+              "source_skin_vertex_ids": [
+                8277,
+                9302
+              ],
+              "source_length_m": 0.022748196265910917,
+              "native_length_m": 0.0452529676258564,
+              "stretch_ratio": 1.989299155716789
+            },
+            {
+              "source_skin_vertex_ids": [
+                8265,
+                8747
+              ],
+              "source_length_m": 0.025482204620313052,
+              "native_length_m": 0.046615637838840485,
+              "stretch_ratio": 1.8293408491697374
+            },
+            {
+              "source_skin_vertex_ids": [
+                8750,
+                9305
+              ],
+              "source_length_m": 0.027984026762448468,
+              "native_length_m": 0.04821209982037544,
+              "stretch_ratio": 1.7228435431983955
+            },
+            {
+              "source_skin_vertex_ids": [
+                8265,
+                9302
+              ],
+              "source_length_m": 0.03013439730201112,
+              "native_length_m": 0.04990959167480469,
+              "stretch_ratio": 1.656233279683805
+            },
+            {
+              "source_skin_vertex_ids": [
+                8749,
+                9305
+              ],
+              "source_length_m": 0.023075293940713167,
+              "native_length_m": 0.04260704293847084,
+              "stretch_ratio": 1.8464355447839649
+            }
+          ],
+          "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+        },
+        "native_surface_face_diagnostics": {
+          "face_count": 109183,
+          "source_degenerate_face_count": 0,
+          "native_collapsed_face_count": 0,
+          "source_surface_area_m2": 1.8076662289952967,
+          "native_surface_area_m2": 1.8627790526291896,
+          "minimum_area_ratio": 0.13358294830743317,
+          "area_ratio_p01": 0.7700861110886542,
+          "area_ratio_p99": 1.3812928237500703,
+          "maximum_area_ratio": 14.562951427166555,
+          "minimum_surface_stretch": 0.11267835336157846,
+          "maximum_surface_stretch": 15.736894959069636,
+          "surface_stretch_p01": 0.7346232481330843,
+          "surface_stretch_p99": 1.5501785188253725,
+          "faces_area_below_0_1x": 0,
+          "faces_area_above_10x": 1,
+          "faces_opposed_to_rendered_vertex_normals": 16,
+          "lowest_area_faces": [
+            {
+              "source_face_id": 96195,
+              "source_skin_vertex_ids": [
+                47643,
+                48640,
+                48090
+              ],
+              "source_area_m2": 2.57898557911868e-05,
+              "area_ratio": 0.13358294830743317
+            },
+            {
+              "source_face_id": 26490,
+              "source_skin_vertex_ids": [
+                14771,
+                11043,
+                12679
+              ],
+              "source_area_m2": 3.7646781193113986e-05,
+              "area_ratio": 0.1383378167161427
+            },
+            {
+              "source_face_id": 93390,
+              "source_skin_vertex_ids": [
+                46719,
+                46720,
+                46699
+              ],
+              "source_area_m2": 1.2476059324674099e-05,
+              "area_ratio": 0.15343227185501954
+            },
+            {
+              "source_face_id": 89521,
+              "source_skin_vertex_ids": [
+                44734,
+                54861,
+                44738
+              ],
+              "source_area_m2": 1.6881101470452077e-06,
+              "area_ratio": 0.19183326589903202
+            },
+            {
+              "source_face_id": 89527,
+              "source_skin_vertex_ids": [
+                44738,
+                54863,
+                44741
+              ],
+              "source_area_m2": 1.149090610327317e-06,
+              "area_ratio": 0.19520825132320768
+            }
+          ],
+          "boundary": "All-face geometric area and tangent-map diagnostics; 0.1x/10x counts are descriptive, not physiological thresholds. Normal opposition is a presentation diagnostic, not an inversion/strain certificate. No skin-quality, material or clinical admission."
+        },
+        "native_source_seam_diagnostics": {
+          "exact_coincident_vertex_group_count": 257,
+          "exact_coincident_redundant_vertex_count": 286,
+          "source_seam_pair_count": 316,
+          "maximum_native_seam_gap_m": 0.09689105844588283,
+          "seam_pairs_with_nonzero_native_gap": 316,
+          "seam_vertices_separated_from_canonical": 286,
+          "worst_source_seam_pairs": [
+            {
+              "source_skin_vertex_ids": [
+                44651,
+                54841
+              ],
+              "native_gap_m": 0.09689105844588283
+            },
+            {
+              "source_skin_vertex_ids": [
+                44651,
+                54842
+              ],
+              "native_gap_m": 0.09688319987458095
+            },
+            {
+              "source_skin_vertex_ids": [
+                44652,
+                54843
+              ],
+              "native_gap_m": 0.09680051958290868
+            },
+            {
+              "source_skin_vertex_ids": [
+                44669,
+                54847
+              ],
+              "native_gap_m": 0.09674475972504673
+            },
+            {
+              "source_skin_vertex_ids": [
+                44653,
+                54844
+              ],
+              "native_gap_m": 0.09656669672877202
+            }
+          ],
+          "boundary": "Coincident source-point continuity only; source openings, self-intersection, volume and mechanics remain separate."
+        }
+      },
+      "after": {
+        "native_surface_edge_diagnostics": {
+          "edge_count": 164188,
+          "maximum_stretch_ratio": 2.831039832701658,
+          "edge_p99_stretch_ratio": 1.3124980757565556,
+          "edges_over_5x": 0,
+          "maximum_edge_length_increase_m": 0.028672242768789477,
+          "worst_length_increases": [
+            {
+              "source_skin_vertex_ids": [
+                8277,
+                9302
+              ],
+              "source_length_m": 0.022748196265910917,
+              "native_length_m": 0.051420439034700394,
+              "stretch_ratio": 2.2604182957466383
+            },
+            {
+              "source_skin_vertex_ids": [
+                8265,
+                8747
+              ],
+              "source_length_m": 0.025482204620313052,
+              "native_length_m": 0.05236472189426422,
+              "stretch_ratio": 2.0549525708039353
+            },
+            {
+              "source_skin_vertex_ids": [
+                8750,
+                9305
+              ],
+              "source_length_m": 0.027984026762448468,
+              "native_length_m": 0.05453285574913025,
+              "stretch_ratio": 1.948713679130247
+            },
+            {
+              "source_skin_vertex_ids": [
+                8265,
+                9302
+              ],
+              "source_length_m": 0.03013439730201112,
+              "native_length_m": 0.05599648132920265,
+              "stretch_ratio": 1.858224698108216
+            },
+            {
+              "source_skin_vertex_ids": [
+                8749,
+                9305
+              ],
+              "source_length_m": 0.023075293940713167,
+              "native_length_m": 0.04842624068260193,
+              "stretch_ratio": 2.0986185834521707
+            }
+          ],
+          "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+        },
+        "native_surface_face_diagnostics": {
+          "face_count": 109183,
+          "source_degenerate_face_count": 0,
+          "native_collapsed_face_count": 0,
+          "source_surface_area_m2": 1.8076662289952967,
+          "native_surface_area_m2": 1.8782600623879622,
+          "minimum_area_ratio": 0.1314345892454728,
+          "area_ratio_p01": 0.7791436915517748,
+          "area_ratio_p99": 1.4673904577447923,
+          "maximum_area_ratio": 10.23114270504987,
+          "minimum_surface_stretch": 0.10774137885409836,
+          "maximum_surface_stretch": 11.344748583284911,
+          "surface_stretch_p01": 0.7462934767197111,
+          "surface_stretch_p99": 1.6469523475466046,
+          "faces_area_below_0_1x": 0,
+          "faces_area_above_10x": 1,
+          "faces_opposed_to_rendered_vertex_normals": 6,
+          "lowest_area_faces": [
+            {
+              "source_face_id": 26490,
+              "source_skin_vertex_ids": [
+                14771,
+                11043,
+                12679
+              ],
+              "source_area_m2": 3.7646781193113986e-05,
+              "area_ratio": 0.1314345892454728
+            },
+            {
+              "source_face_id": 96195,
+              "source_skin_vertex_ids": [
+                47643,
+                48640,
+                48090
+              ],
+              "source_area_m2": 2.57898557911868e-05,
+              "area_ratio": 0.13737350697347017
+            },
+            {
+              "source_face_id": 93390,
+              "source_skin_vertex_ids": [
+                46719,
+                46720,
+                46699
+              ],
+              "source_area_m2": 1.2476059324674099e-05,
+              "area_ratio": 0.21006380804079217
+            },
+            {
+              "source_face_id": 11574,
+              "source_skin_vertex_ids": [
+                6320,
+                5764,
+                4899
+              ],
+              "source_area_m2": 4.751878963033553e-05,
+              "area_ratio": 0.2720288902361142
+            },
+            {
+              "source_face_id": 95348,
+              "source_skin_vertex_ids": [
+                47335,
+                49023,
+                47502
+              ],
+              "source_area_m2": 5.720455646902119e-05,
+              "area_ratio": 0.29045731106834516
+            }
+          ],
+          "boundary": "All-face geometric area and tangent-map diagnostics; 0.1x/10x counts are descriptive, not physiological thresholds. Normal opposition is a presentation diagnostic, not an inversion/strain certificate. No skin-quality, material or clinical admission."
+        },
+        "native_source_seam_diagnostics": {
+          "exact_coincident_vertex_group_count": 257,
+          "exact_coincident_redundant_vertex_count": 286,
+          "source_seam_pair_count": 316,
+          "maximum_native_seam_gap_m": 0.0,
+          "seam_pairs_with_nonzero_native_gap": 0,
+          "seam_vertices_separated_from_canonical": 0,
+          "worst_source_seam_pairs": [],
+          "boundary": "Coincident source-point continuity only; source openings, self-intersection, volume and mechanics remain separate."
+        }
+      }
+    },
+    {
+      "name": "knee-flexion",
+      "before": {
+        "native_surface_edge_diagnostics": {
+          "edge_count": 164188,
+          "maximum_stretch_ratio": 2.0548118183422326,
+          "edge_p99_stretch_ratio": 1.1652634945047202,
+          "edges_over_5x": 0,
+          "maximum_edge_length_increase_m": 0.010118546166394269,
+          "worst_length_increases": [
+            {
+              "source_skin_vertex_ids": [
+                41205,
+                42310
+              ],
+              "source_length_m": 0.02479150312307068,
+              "native_length_m": 0.03491004928946495,
+              "stretch_ratio": 1.4081457310661438
+            },
+            {
+              "source_skin_vertex_ids": [
+                19948,
+                20650
+              ],
+              "source_length_m": 0.01643558050008526,
+              "native_length_m": 0.026376234367489815,
+              "stretch_ratio": 1.6048252367692755
+            },
+            {
+              "source_skin_vertex_ids": [
+                8690,
+                8727
+              ],
+              "source_length_m": 0.03241180137376531,
+              "native_length_m": 0.04234893247485161,
+              "stretch_ratio": 1.306589904908204
+            },
+            {
+              "source_skin_vertex_ids": [
+                41188,
+                41757
+              ],
+              "source_length_m": 0.01305900142661059,
+              "native_length_m": 0.02247421257197857,
+              "stretch_ratio": 1.7209748155921336
+            },
+            {
+              "source_skin_vertex_ids": [
+                41604,
+                42164
+              ],
+              "source_length_m": 0.05940188635808735,
+              "native_length_m": 0.0686333179473877,
+              "stretch_ratio": 1.1554063709972322
+            }
+          ],
+          "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+        },
+        "native_surface_face_diagnostics": {
+          "face_count": 109183,
+          "source_degenerate_face_count": 0,
+          "native_collapsed_face_count": 0,
+          "source_surface_area_m2": 1.8076662289952967,
+          "native_surface_area_m2": 1.8098265478160227,
+          "minimum_area_ratio": 0.19377721970885023,
+          "area_ratio_p01": 0.7721918850833432,
+          "area_ratio_p99": 1.2312015145087494,
+          "maximum_area_ratio": 2.740780547060131,
+          "minimum_surface_stretch": 0.19067322337380516,
+          "maximum_surface_stretch": 3.021757511960287,
+          "surface_stretch_p01": 0.7820537461828315,
+          "surface_stretch_p99": 1.2814024703114935,
+          "faces_area_below_0_1x": 0,
+          "faces_area_above_10x": 0,
+          "faces_opposed_to_rendered_vertex_normals": 1,
+          "lowest_area_faces": [
+            {
+              "source_face_id": 82514,
+              "source_skin_vertex_ids": [
+                41233,
+                41234,
+                41241
+              ],
+              "source_area_m2": 7.83462837187879e-06,
+              "area_ratio": 0.19377721970885023
+            },
+            {
+              "source_face_id": 46359,
+              "source_skin_vertex_ids": [
+                23138,
+                23143,
+                23139
+              ],
+              "source_area_m2": 7.321248526444828e-05,
+              "area_ratio": 0.22398815609522518
+            },
+            {
+              "source_face_id": 46358,
+              "source_skin_vertex_ids": [
+                23138,
+                23137,
+                23143
+              ],
+              "source_area_m2": 1.725610584543145e-05,
+              "area_ratio": 0.28015688370564173
+            },
+            {
+              "source_face_id": 44678,
+              "source_skin_vertex_ids": [
+                23112,
+                22316,
+                22315
+              ],
+              "source_area_m2": 3.3102492644842085e-05,
+              "area_ratio": 0.3100318678041439
+            },
+            {
+              "source_face_id": 84875,
+              "source_skin_vertex_ids": [
+                42428,
+                42429,
+                42966
+              ],
+              "source_area_m2": 3.353829436560187e-05,
+              "area_ratio": 0.34109131776810037
+            }
+          ],
+          "boundary": "All-face geometric area and tangent-map diagnostics; 0.1x/10x counts are descriptive, not physiological thresholds. Normal opposition is a presentation diagnostic, not an inversion/strain certificate. No skin-quality, material or clinical admission."
+        },
+        "native_source_seam_diagnostics": {
+          "exact_coincident_vertex_group_count": 257,
+          "exact_coincident_redundant_vertex_count": 286,
+          "source_seam_pair_count": 316,
+          "maximum_native_seam_gap_m": 0.001079116965683312,
+          "seam_pairs_with_nonzero_native_gap": 312,
+          "seam_vertices_separated_from_canonical": 283,
+          "worst_source_seam_pairs": [
+            {
+              "source_skin_vertex_ids": [
+                31617,
+                54804
+              ],
+              "native_gap_m": 0.001079116965683312
+            },
+            {
+              "source_skin_vertex_ids": [
+                31611,
+                54803
+              ],
+              "native_gap_m": 0.0010094275110107125
+            },
+            {
+              "source_skin_vertex_ids": [
+                31609,
+                54802
+              ],
+              "native_gap_m": 0.0008490314285671978
+            },
+            {
+              "source_skin_vertex_ids": [
+                32354,
+                54808
+              ],
+              "native_gap_m": 0.000708374458265408
+            },
+            {
+              "source_skin_vertex_ids": [
+                30852,
+                54790
+              ],
+              "native_gap_m": 0.0006518425492407448
+            }
+          ],
+          "boundary": "Coincident source-point continuity only; source openings, self-intersection, volume and mechanics remain separate."
+        }
+      },
+      "after": {
+        "native_surface_edge_diagnostics": {
+          "edge_count": 164188,
+          "maximum_stretch_ratio": 2.0548052463638142,
+          "edge_p99_stretch_ratio": 1.1653662650850038,
+          "edges_over_5x": 0,
+          "maximum_edge_length_increase_m": 0.010118620672200238,
+          "worst_length_increases": [
+            {
+              "source_skin_vertex_ids": [
+                41205,
+                42310
+              ],
+              "source_length_m": 0.02479150312307068,
+              "native_length_m": 0.03491012379527092,
+              "stretch_ratio": 1.408148736362176
+            },
+            {
+              "source_skin_vertex_ids": [
+                19948,
+                20650
+              ],
+              "source_length_m": 0.01643558050008526,
+              "native_length_m": 0.026376238092780113,
+              "stretch_ratio": 1.6048254634293742
+            },
+            {
+              "source_skin_vertex_ids": [
+                8690,
+                8727
+              ],
+              "source_length_m": 0.03241180137376531,
+              "native_length_m": 0.04234997183084488,
+              "stretch_ratio": 1.3066219721167274
+            },
+            {
+              "source_skin_vertex_ids": [
+                41188,
+                41757
+              ],
+              "source_length_m": 0.01305900142661059,
+              "native_length_m": 0.02247418463230133,
+              "stretch_ratio": 1.7209726760964459
+            },
+            {
+              "source_skin_vertex_ids": [
+                41604,
+                42164
+              ],
+              "source_length_m": 0.05940188635808735,
+              "native_length_m": 0.06862752884626389,
+              "stretch_ratio": 1.1553089144772672
+            }
+          ],
+          "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+        },
+        "native_surface_face_diagnostics": {
+          "face_count": 109183,
+          "source_degenerate_face_count": 0,
+          "native_collapsed_face_count": 0,
+          "source_surface_area_m2": 1.8076662289952967,
+          "native_surface_area_m2": 1.809838410219228,
+          "minimum_area_ratio": 0.19375930893711166,
+          "area_ratio_p01": 0.7725382554743951,
+          "area_ratio_p99": 1.2314619263571305,
+          "maximum_area_ratio": 2.740773560220632,
+          "minimum_surface_stretch": 0.1906556126747481,
+          "maximum_surface_stretch": 3.021717837852771,
+          "surface_stretch_p01": 0.7825829818614221,
+          "surface_stretch_p99": 1.2813965818821933,
+          "faces_area_below_0_1x": 0,
+          "faces_area_above_10x": 0,
+          "faces_opposed_to_rendered_vertex_normals": 1,
+          "lowest_area_faces": [
+            {
+              "source_face_id": 82514,
+              "source_skin_vertex_ids": [
+                41233,
+                41234,
+                41241
+              ],
+              "source_area_m2": 7.83462837187879e-06,
+              "area_ratio": 0.19375930893711166
+            },
+            {
+              "source_face_id": 46359,
+              "source_skin_vertex_ids": [
+                23138,
+                23143,
+                23139
+              ],
+              "source_area_m2": 7.321248526444828e-05,
+              "area_ratio": 0.22397218288636334
+            },
+            {
+              "source_face_id": 46358,
+              "source_skin_vertex_ids": [
+                23138,
+                23137,
+                23143
+              ],
+              "source_area_m2": 1.725610584543145e-05,
+              "area_ratio": 0.28017736633105855
+            },
+            {
+              "source_face_id": 44678,
+              "source_skin_vertex_ids": [
+                23112,
+                22316,
+                22315
+              ],
+              "source_area_m2": 3.3102492644842085e-05,
+              "area_ratio": 0.310063187760573
+            },
+            {
+              "source_face_id": 84875,
+              "source_skin_vertex_ids": [
+                42428,
+                42429,
+                42966
+              ],
+              "source_area_m2": 3.353829436560187e-05,
+              "area_ratio": 0.3410956585978728
+            }
+          ],
+          "boundary": "All-face geometric area and tangent-map diagnostics; 0.1x/10x counts are descriptive, not physiological thresholds. Normal opposition is a presentation diagnostic, not an inversion/strain certificate. No skin-quality, material or clinical admission."
+        },
+        "native_source_seam_diagnostics": {
+          "exact_coincident_vertex_group_count": 257,
+          "exact_coincident_redundant_vertex_count": 286,
+          "source_seam_pair_count": 316,
+          "maximum_native_seam_gap_m": 0.0,
+          "seam_pairs_with_nonzero_native_gap": 0,
+          "seam_vertices_separated_from_canonical": 0,
+          "worst_source_seam_pairs": [],
+          "boundary": "Coincident source-point continuity only; source openings, self-intersection, volume and mechanics remain separate."
+        }
+      }
+    },
+    {
+      "name": "shoulder-elevation",
+      "before": {
+        "native_surface_edge_diagnostics": {
+          "edge_count": 164188,
+          "maximum_stretch_ratio": 6.3944354997581785,
+          "edge_p99_stretch_ratio": 1.3925407177082214,
+          "edges_over_5x": 6,
+          "maximum_edge_length_increase_m": 0.04081559763171787,
+          "worst_length_increases": [
+            {
+              "source_skin_vertex_ids": [
+                8277,
+                9302
+              ],
+              "source_length_m": 0.022748196265910917,
+              "native_length_m": 0.06356379389762878,
+              "stretch_ratio": 2.7942344594978583
+            },
+            {
+              "source_skin_vertex_ids": [
+                8265,
+                8747
+              ],
+              "source_length_m": 0.025482204620313052,
+              "native_length_m": 0.06451666355133057,
+              "stretch_ratio": 2.5318320966585963
+            },
+            {
+              "source_skin_vertex_ids": [
+                8265,
+                9302
+              ],
+              "source_length_m": 0.03013439730201112,
+              "native_length_m": 0.06799941509962082,
+              "stretch_ratio": 2.2565380823157413
+            },
+            {
+              "source_skin_vertex_ids": [
+                8750,
+                9305
+              ],
+              "source_length_m": 0.027984026762448468,
+              "native_length_m": 0.06542934477329254,
+              "stretch_ratio": 2.3380961335089787
+            },
+            {
+              "source_skin_vertex_ids": [
+                8749,
+                9305
+              ],
+              "source_length_m": 0.023075293940713167,
+              "native_length_m": 0.05940011516213417,
+              "stretch_ratio": 2.574186717393484
+            }
+          ],
+          "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+        },
+        "native_surface_face_diagnostics": {
+          "face_count": 109183,
+          "source_degenerate_face_count": 0,
+          "native_collapsed_face_count": 0,
+          "source_surface_area_m2": 1.8076662289952967,
+          "native_surface_area_m2": 1.8850318507776305,
+          "minimum_area_ratio": 0.09541994037164783,
+          "area_ratio_p01": 0.7745689526758655,
+          "area_ratio_p99": 1.481805896391497,
+          "maximum_area_ratio": 17.15751730549038,
+          "minimum_surface_stretch": 0.020440879859173217,
+          "maximum_surface_stretch": 21.110742397661433,
+          "surface_stretch_p01": 0.7358446144727161,
+          "surface_stretch_p99": 1.7569590481667725,
+          "faces_area_below_0_1x": 1,
+          "faces_area_above_10x": 3,
+          "faces_opposed_to_rendered_vertex_normals": 27,
+          "lowest_area_faces": [
+            {
+              "source_face_id": 91469,
+              "source_skin_vertex_ids": [
+                45720,
+                45723,
+                54895
+              ],
+              "source_area_m2": 4.468529826010045e-07,
+              "area_ratio": 0.09541994037164783
+            },
+            {
+              "source_face_id": 14142,
+              "source_skin_vertex_ids": [
+                6881,
+                7062,
+                7061
+              ],
+              "source_area_m2": 2.1324577282720444e-05,
+              "area_ratio": 0.13916485344463675
+            },
+            {
+              "source_face_id": 9796,
+              "source_skin_vertex_ids": [
+                4886,
+                4897,
+                4887
+              ],
+              "source_area_m2": 1.8422791541218106e-05,
+              "area_ratio": 0.19758955468753076
+            },
+            {
+              "source_face_id": 19646,
+              "source_skin_vertex_ids": [
+                54664,
+                54665,
+                9812
+              ],
+              "source_area_m2": 8.58789466013101e-07,
+              "area_ratio": 0.2182918324359188
+            },
+            {
+              "source_face_id": 18456,
+              "source_skin_vertex_ids": [
+                9228,
+                9196,
+                9195
+              ],
+              "source_area_m2": 1.448887960113311e-06,
+              "area_ratio": 0.2788777127727197
+            }
+          ],
+          "boundary": "All-face geometric area and tangent-map diagnostics; 0.1x/10x counts are descriptive, not physiological thresholds. Normal opposition is a presentation diagnostic, not an inversion/strain certificate. No skin-quality, material or clinical admission."
+        },
+        "native_source_seam_diagnostics": {
+          "exact_coincident_vertex_group_count": 257,
+          "exact_coincident_redundant_vertex_count": 286,
+          "source_seam_pair_count": 316,
+          "maximum_native_seam_gap_m": 0.13222901521979763,
+          "seam_pairs_with_nonzero_native_gap": 316,
+          "seam_vertices_separated_from_canonical": 286,
+          "worst_source_seam_pairs": [
+            {
+              "source_skin_vertex_ids": [
+                44651,
+                54842
+              ],
+              "native_gap_m": 0.13222901521979763
+            },
+            {
+              "source_skin_vertex_ids": [
+                44651,
+                54841
+              ],
+              "native_gap_m": 0.13220936785404183
+            },
+            {
+              "source_skin_vertex_ids": [
+                44653,
+                54844
+              ],
+              "native_gap_m": 0.13210661521451908
+            },
+            {
+              "source_skin_vertex_ids": [
+                44655,
+                54846
+              ],
+              "native_gap_m": 0.1318016806341658
+            },
+            {
+              "source_skin_vertex_ids": [
+                44652,
+                54843
+              ],
+              "native_gap_m": 0.13176549534676235
+            }
+          ],
+          "boundary": "Coincident source-point continuity only; source openings, self-intersection, volume and mechanics remain separate."
+        }
+      },
+      "after": {
+        "native_surface_edge_diagnostics": {
+          "edge_count": 164188,
+          "maximum_stretch_ratio": 3.602614418370876,
+          "edge_p99_stretch_ratio": 1.4394654657376516,
+          "edges_over_5x": 0,
+          "maximum_edge_length_increase_m": 0.05008120671727771,
+          "worst_length_increases": [
+            {
+              "source_skin_vertex_ids": [
+                8277,
+                9302
+              ],
+              "source_length_m": 0.022748196265910917,
+              "native_length_m": 0.07282940298318863,
+              "stretch_ratio": 3.201546273465488
+            },
+            {
+              "source_skin_vertex_ids": [
+                8265,
+                8747
+              ],
+              "source_length_m": 0.025482204620313052,
+              "native_length_m": 0.07331731170415878,
+              "stretch_ratio": 2.877196569001496
+            },
+            {
+              "source_skin_vertex_ids": [
+                8265,
+                9302
+              ],
+              "source_length_m": 0.03013439730201112,
+              "native_length_m": 0.077386774122715,
+              "stretch_ratio": 2.5680544842869755
+            },
+            {
+              "source_skin_vertex_ids": [
+                8750,
+                9305
+              ],
+              "source_length_m": 0.027984026762448468,
+              "native_length_m": 0.07478998601436615,
+              "stretch_ratio": 2.672595572082793
+            },
+            {
+              "source_skin_vertex_ids": [
+                45821,
+                46566
+              ],
+              "source_length_m": 0.030187926553772098,
+              "native_length_m": 0.07555559277534485,
+              "stretch_ratio": 2.50284141379375
+            }
+          ],
+          "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+        },
+        "native_surface_face_diagnostics": {
+          "face_count": 109183,
+          "source_degenerate_face_count": 0,
+          "native_collapsed_face_count": 0,
+          "source_surface_area_m2": 1.8076662289952967,
+          "native_surface_area_m2": 1.907144673301446,
+          "minimum_area_ratio": 0.12948828867109682,
+          "area_ratio_p01": 0.78082018717485,
+          "area_ratio_p99": 1.6226115012917535,
+          "maximum_area_ratio": 12.986143058798056,
+          "minimum_surface_stretch": 0.0883707664854122,
+          "maximum_surface_stretch": 16.18102756986639,
+          "surface_stretch_p01": 0.7500850735391065,
+          "surface_stretch_p99": 1.905945267283286,
+          "faces_area_below_0_1x": 0,
+          "faces_area_above_10x": 2,
+          "faces_opposed_to_rendered_vertex_normals": 7,
+          "lowest_area_faces": [
+            {
+              "source_face_id": 14142,
+              "source_skin_vertex_ids": [
+                6881,
+                7062,
+                7061
+              ],
+              "source_area_m2": 2.1324577282720444e-05,
+              "area_ratio": 0.12948828867109682
+            },
+            {
+              "source_face_id": 9796,
+              "source_skin_vertex_ids": [
+                4886,
+                4897,
+                4887
+              ],
+              "source_area_m2": 1.8422791541218106e-05,
+              "area_ratio": 0.180606087967215
+            },
+            {
+              "source_face_id": 9107,
+              "source_skin_vertex_ids": [
+                4540,
+                4542,
+                4539
+              ],
+              "source_area_m2": 1.4953828056892044e-05,
+              "area_ratio": 0.31630817232649416
+            },
+            {
+              "source_face_id": 13900,
+              "source_skin_vertex_ids": [
+                7103,
+                6943,
+                6789
+              ],
+              "source_area_m2": 2.580435023266081e-05,
+              "area_ratio": 0.3179069333913494
+            },
+            {
+              "source_face_id": 22048,
+              "source_skin_vertex_ids": [
+                10423,
+                12671,
+                9886
+              ],
+              "source_area_m2": 0.00010667333206349725,
+              "area_ratio": 0.3256436401533681
+            }
+          ],
+          "boundary": "All-face geometric area and tangent-map diagnostics; 0.1x/10x counts are descriptive, not physiological thresholds. Normal opposition is a presentation diagnostic, not an inversion/strain certificate. No skin-quality, material or clinical admission."
+        },
+        "native_source_seam_diagnostics": {
+          "exact_coincident_vertex_group_count": 257,
+          "exact_coincident_redundant_vertex_count": 286,
+          "source_seam_pair_count": 316,
+          "maximum_native_seam_gap_m": 0.0,
+          "seam_pairs_with_nonzero_native_gap": 0,
+          "seam_vertices_separated_from_canonical": 0,
+          "worst_source_seam_pairs": [],
+          "boundary": "Coincident source-point continuity only; source openings, self-intersection, volume and mechanics remain separate."
+        }
+      }
+    },
+    {
+      "name": "hip-flexion",
+      "before": {
+        "native_surface_edge_diagnostics": {
+          "edge_count": 164188,
+          "maximum_stretch_ratio": 2.2854481097795016,
+          "edge_p99_stretch_ratio": 1.1869894104961987,
+          "edges_over_5x": 0,
+          "maximum_edge_length_increase_m": 0.013741282948229825,
+          "worst_length_increases": [
+            {
+              "source_skin_vertex_ids": [
+                41205,
+                42310
+              ],
+              "source_length_m": 0.02479150312307068,
+              "native_length_m": 0.03853278607130051,
+              "stretch_ratio": 1.5542738929549758
+            },
+            {
+              "source_skin_vertex_ids": [
+                19948,
+                20650
+              ],
+              "source_length_m": 0.01643558050008526,
+              "native_length_m": 0.029116839170455933,
+              "stretch_ratio": 1.7715735182158543
+            },
+            {
+              "source_skin_vertex_ids": [
+                41205,
+                41773
+              ],
+              "source_length_m": 0.021886816729705823,
+              "native_length_m": 0.0338808037340641,
+              "stretch_ratio": 1.5480005225282245
+            },
+            {
+              "source_skin_vertex_ids": [
+                19948,
+                20639
+              ],
+              "source_length_m": 0.017537091459613924,
+              "native_length_m": 0.029344450682401657,
+              "stretch_ratio": 1.6732792179352454
+            },
+            {
+              "source_skin_vertex_ids": [
+                23162,
+                23163
+              ],
+              "source_length_m": 0.06605766892454472,
+              "native_length_m": 0.07693576067686081,
+              "stretch_ratio": 1.164675683072343
+            }
+          ],
+          "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+        },
+        "native_surface_face_diagnostics": {
+          "face_count": 109183,
+          "source_degenerate_face_count": 0,
+          "native_collapsed_face_count": 0,
+          "source_surface_area_m2": 1.8076662289952967,
+          "native_surface_area_m2": 1.8290710883396355,
+          "minimum_area_ratio": 0.2990797288064685,
+          "area_ratio_p01": 0.8373666390869425,
+          "area_ratio_p99": 1.288916661858476,
+          "maximum_area_ratio": 3.302144552610378,
+          "minimum_surface_stretch": 0.2735514615680856,
+          "maximum_surface_stretch": 3.3881668666028197,
+          "surface_stretch_p01": 0.8351430984288359,
+          "surface_stretch_p99": 1.3511296241389594,
+          "faces_area_below_0_1x": 0,
+          "faces_area_above_10x": 0,
+          "faces_opposed_to_rendered_vertex_normals": 1,
+          "lowest_area_faces": [
+            {
+              "source_face_id": 88196,
+              "source_skin_vertex_ids": [
+                44574,
+                44073,
+                44567
+              ],
+              "source_area_m2": 4.158193373867851e-05,
+              "area_ratio": 0.2990797288064685
+            },
+            {
+              "source_face_id": 88177,
+              "source_skin_vertex_ids": [
+                44567,
+                44073,
+                44065
+              ],
+              "source_area_m2": 6.375514088678862e-05,
+              "area_ratio": 0.34671958525991287
+            },
+            {
+              "source_face_id": 81100,
+              "source_skin_vertex_ids": [
+                40530,
+                40544,
+                40545
+              ],
+              "source_area_m2": 1.661547628049008e-05,
+              "area_ratio": 0.44864688823484344
+            },
+            {
+              "source_face_id": 20286,
+              "source_skin_vertex_ids": [
+                10131,
+                9597,
+                10842
+              ],
+              "source_area_m2": 4.329800044392395e-05,
+              "area_ratio": 0.5098846608735281
+            },
+            {
+              "source_face_id": 28321,
+              "source_skin_vertex_ids": [
+                14132,
+                14131,
+                14137
+              ],
+              "source_area_m2": 1.5117811964462893e-05,
+              "area_ratio": 0.5646278122988448
+            }
+          ],
+          "boundary": "All-face geometric area and tangent-map diagnostics; 0.1x/10x counts are descriptive, not physiological thresholds. Normal opposition is a presentation diagnostic, not an inversion/strain certificate. No skin-quality, material or clinical admission."
+        },
+        "native_source_seam_diagnostics": {
+          "exact_coincident_vertex_group_count": 257,
+          "exact_coincident_redundant_vertex_count": 286,
+          "source_seam_pair_count": 316,
+          "maximum_native_seam_gap_m": 0.0007662993406941269,
+          "seam_pairs_with_nonzero_native_gap": 312,
+          "seam_vertices_separated_from_canonical": 283,
+          "worst_source_seam_pairs": [
+            {
+              "source_skin_vertex_ids": [
+                45226,
+                54884
+              ],
+              "native_gap_m": 0.0007662993406941269
+            },
+            {
+              "source_skin_vertex_ids": [
+                54883,
+                54884
+              ],
+              "native_gap_m": 0.0007475681741957707
+            },
+            {
+              "source_skin_vertex_ids": [
+                44643,
+                54840
+              ],
+              "native_gap_m": 0.0007407215137734197
+            },
+            {
+              "source_skin_vertex_ids": [
+                45212,
+                54879
+              ],
+              "native_gap_m": 0.0007344998148564922
+            },
+            {
+              "source_skin_vertex_ids": [
+                45211,
+                54877
+              ],
+              "native_gap_m": 0.0007330267063311953
+            }
+          ],
+          "boundary": "Coincident source-point continuity only; source openings, self-intersection, volume and mechanics remain separate."
+        }
+      },
+      "after": {
+        "native_surface_edge_diagnostics": {
+          "edge_count": 164188,
+          "maximum_stretch_ratio": 2.285444773654843,
+          "edge_p99_stretch_ratio": 1.1869825903627442,
+          "edges_over_5x": 0,
+          "maximum_edge_length_increase_m": 0.013741592147324597,
+          "worst_length_increases": [
+            {
+              "source_skin_vertex_ids": [
+                41205,
+                42310
+              ],
+              "source_length_m": 0.02479150312307068,
+              "native_length_m": 0.03853309527039528,
+              "stretch_ratio": 1.5542863649335095
+            },
+            {
+              "source_skin_vertex_ids": [
+                19948,
+                20650
+              ],
+              "source_length_m": 0.01643558050008526,
+              "native_length_m": 0.029117105528712273,
+              "stretch_ratio": 1.7715897244129117
+            },
+            {
+              "source_skin_vertex_ids": [
+                41205,
+                41773
+              ],
+              "source_length_m": 0.021886816729705823,
+              "native_length_m": 0.033881403505802155,
+              "stretch_ratio": 1.5480279258617224
+            },
+            {
+              "source_skin_vertex_ids": [
+                19948,
+                20639
+              ],
+              "source_length_m": 0.017537091459613924,
+              "native_length_m": 0.02934454195201397,
+              "stretch_ratio": 1.6732844223109264
+            },
+            {
+              "source_skin_vertex_ids": [
+                23162,
+                23163
+              ],
+              "source_length_m": 0.06605766892454472,
+              "native_length_m": 0.076937235891819,
+              "stretch_ratio": 1.164698015300867
+            }
+          ],
+          "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+        },
+        "native_surface_face_diagnostics": {
+          "face_count": 109183,
+          "source_degenerate_face_count": 0,
+          "native_collapsed_face_count": 0,
+          "source_surface_area_m2": 1.8076662289952967,
+          "native_surface_area_m2": 1.8290580643547867,
+          "minimum_area_ratio": 0.29909551320779165,
+          "area_ratio_p01": 0.8373189677070244,
+          "area_ratio_p99": 1.2888944102684106,
+          "maximum_area_ratio": 3.3020453698374537,
+          "minimum_surface_stretch": 0.2735669176420898,
+          "maximum_surface_stretch": 3.3881069635999412,
+          "surface_stretch_p01": 0.8353995170022063,
+          "surface_stretch_p99": 1.3511464809662999,
+          "faces_area_below_0_1x": 0,
+          "faces_area_above_10x": 0,
+          "faces_opposed_to_rendered_vertex_normals": 1,
+          "lowest_area_faces": [
+            {
+              "source_face_id": 88196,
+              "source_skin_vertex_ids": [
+                44574,
+                44073,
+                44567
+              ],
+              "source_area_m2": 4.158193373867851e-05,
+              "area_ratio": 0.29909551320779165
+            },
+            {
+              "source_face_id": 88177,
+              "source_skin_vertex_ids": [
+                44567,
+                44073,
+                44065
+              ],
+              "source_area_m2": 6.375514088678862e-05,
+              "area_ratio": 0.34673253424926276
+            },
+            {
+              "source_face_id": 81100,
+              "source_skin_vertex_ids": [
+                40530,
+                40544,
+                40545
+              ],
+              "source_area_m2": 1.661547628049008e-05,
+              "area_ratio": 0.44862172228064534
+            },
+            {
+              "source_face_id": 20286,
+              "source_skin_vertex_ids": [
+                10131,
+                9597,
+                10842
+              ],
+              "source_area_m2": 4.329800044392395e-05,
+              "area_ratio": 0.5097969140590181
+            },
+            {
+              "source_face_id": 28321,
+              "source_skin_vertex_ids": [
+                14132,
+                14131,
+                14137
+              ],
+              "source_area_m2": 1.5117811964462893e-05,
+              "area_ratio": 0.564628589918326
+            }
+          ],
+          "boundary": "All-face geometric area and tangent-map diagnostics; 0.1x/10x counts are descriptive, not physiological thresholds. Normal opposition is a presentation diagnostic, not an inversion/strain certificate. No skin-quality, material or clinical admission."
+        },
+        "native_source_seam_diagnostics": {
+          "exact_coincident_vertex_group_count": 257,
+          "exact_coincident_redundant_vertex_count": 286,
+          "source_seam_pair_count": 316,
+          "maximum_native_seam_gap_m": 0.0,
+          "seam_pairs_with_nonzero_native_gap": 0,
+          "seam_vertices_separated_from_canonical": 0,
+          "worst_source_seam_pairs": [],
+          "boundary": "Coincident source-point continuity only; source openings, self-intersection, volume and mechanics remain separate."
+        }
+      }
+    },
+    {
+      "name": "unilateral-reach",
+      "before": {
+        "native_surface_edge_diagnostics": {
+          "edge_count": 164188,
+          "maximum_stretch_ratio": 4.046043355758773,
+          "edge_p99_stretch_ratio": 1.2061521351890272,
+          "edges_over_5x": 0,
+          "maximum_edge_length_increase_m": 0.02249693334915752,
+          "worst_length_increases": [
+            {
+              "source_skin_vertex_ids": [
+                8277,
+                9302
+              ],
+              "source_length_m": 0.022748196265910917,
+              "native_length_m": 0.045245129615068436,
+              "stretch_ratio": 1.988954600451996
+            },
+            {
+              "source_skin_vertex_ids": [
+                8265,
+                8747
+              ],
+              "source_length_m": 0.025482204620313052,
+              "native_length_m": 0.04660848155617714,
+              "stretch_ratio": 1.829060014651297
+            },
+            {
+              "source_skin_vertex_ids": [
+                8750,
+                9305
+              ],
+              "source_length_m": 0.027984026762448468,
+              "native_length_m": 0.04820576682686806,
+              "stretch_ratio": 1.722617235756613
+            },
+            {
+              "source_skin_vertex_ids": [
+                8265,
+                9302
+              ],
+              "source_length_m": 0.03013439730201112,
+              "native_length_m": 0.04990250617265701,
+              "stretch_ratio": 1.6559981496403315
+            },
+            {
+              "source_skin_vertex_ids": [
+                8749,
+                9305
+              ],
+              "source_length_m": 0.023075293940713167,
+              "native_length_m": 0.0425998717546463,
+              "stretch_ratio": 1.8461247715455842
+            }
+          ],
+          "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+        },
+        "native_surface_face_diagnostics": {
+          "face_count": 109183,
+          "source_degenerate_face_count": 0,
+          "native_collapsed_face_count": 0,
+          "source_surface_area_m2": 1.8076662289952967,
+          "native_surface_area_m2": 1.8459737777170382,
+          "minimum_area_ratio": 0.10721383322140088,
+          "area_ratio_p01": 0.8250261256722954,
+          "area_ratio_p99": 1.298723212050222,
+          "maximum_area_ratio": 6.986671356912571,
+          "minimum_surface_stretch": 0.08779928861340151,
+          "maximum_surface_stretch": 7.8517512033795445,
+          "surface_stretch_p01": 0.7835195656363543,
+          "surface_stretch_p99": 1.4221863437811877,
+          "faces_area_below_0_1x": 0,
+          "faces_area_above_10x": 0,
+          "faces_opposed_to_rendered_vertex_normals": 7,
+          "lowest_area_faces": [
+            {
+              "source_face_id": 26490,
+              "source_skin_vertex_ids": [
+                14771,
+                11043,
+                12679
+              ],
+              "source_area_m2": 3.7646781193113986e-05,
+              "area_ratio": 0.10721383322140088
+            },
+            {
+              "source_face_id": 11574,
+              "source_skin_vertex_ids": [
+                6320,
+                5764,
+                4899
+              ],
+              "source_area_m2": 4.751878963033553e-05,
+              "area_ratio": 0.25175308594280355
+            },
+            {
+              "source_face_id": 11575,
+              "source_skin_vertex_ids": [
+                4899,
+                5764,
+                5302
+              ],
+              "source_area_m2": 3.866186397249674e-05,
+              "area_ratio": 0.30684448433865713
+            },
+            {
+              "source_face_id": 9818,
+              "source_skin_vertex_ids": [
+                4899,
+                5302,
+                4898
+              ],
+              "source_area_m2": 1.7084244733453312e-05,
+              "area_ratio": 0.31593909886265037
+            },
+            {
+              "source_face_id": 14142,
+              "source_skin_vertex_ids": [
+                6881,
+                7062,
+                7061
+              ],
+              "source_area_m2": 2.1324577282720444e-05,
+              "area_ratio": 0.3321025027158757
+            }
+          ],
+          "boundary": "All-face geometric area and tangent-map diagnostics; 0.1x/10x counts are descriptive, not physiological thresholds. Normal opposition is a presentation diagnostic, not an inversion/strain certificate. No skin-quality, material or clinical admission."
+        },
+        "native_source_seam_diagnostics": {
+          "exact_coincident_vertex_group_count": 257,
+          "exact_coincident_redundant_vertex_count": 286,
+          "source_seam_pair_count": 316,
+          "maximum_native_seam_gap_m": 0.0559916276995309,
+          "seam_pairs_with_nonzero_native_gap": 315,
+          "seam_vertices_separated_from_canonical": 285,
+          "worst_source_seam_pairs": [
+            {
+              "source_skin_vertex_ids": [
+                10418,
+                54696
+              ],
+              "native_gap_m": 0.0559916276995309
+            },
+            {
+              "source_skin_vertex_ids": [
+                10419,
+                54697
+              ],
+              "native_gap_m": 0.05595411814616607
+            },
+            {
+              "source_skin_vertex_ids": [
+                54694,
+                54695
+              ],
+              "native_gap_m": 0.05591912901740873
+            },
+            {
+              "source_skin_vertex_ids": [
+                10422,
+                54698
+              ],
+              "native_gap_m": 0.05575771365153658
+            },
+            {
+              "source_skin_vertex_ids": [
+                10405,
+                54692
+              ],
+              "native_gap_m": 0.055137923339972
+            }
+          ],
+          "boundary": "Coincident source-point continuity only; source openings, self-intersection, volume and mechanics remain separate."
+        }
+      },
+      "after": {
+        "native_surface_edge_diagnostics": {
+          "edge_count": 164188,
+          "maximum_stretch_ratio": 2.5457187866068445,
+          "edge_p99_stretch_ratio": 1.2149158525877959,
+          "edges_over_5x": 0,
+          "maximum_edge_length_increase_m": 0.02866409928419704,
+          "worst_length_increases": [
+            {
+              "source_skin_vertex_ids": [
+                8277,
+                9302
+              ],
+              "source_length_m": 0.022748196265910917,
+              "native_length_m": 0.051412295550107956,
+              "stretch_ratio": 2.260060311997191
+            },
+            {
+              "source_skin_vertex_ids": [
+                8265,
+                8747
+              ],
+              "source_length_m": 0.025482204620313052,
+              "native_length_m": 0.052357129752635956,
+              "stretch_ratio": 2.0546546318405925
+            },
+            {
+              "source_skin_vertex_ids": [
+                8750,
+                9305
+              ],
+              "source_length_m": 0.027984026762448468,
+              "native_length_m": 0.05452629551291466,
+              "stretch_ratio": 1.9484792512449651
+            },
+            {
+              "source_skin_vertex_ids": [
+                8265,
+                9302
+              ],
+              "source_length_m": 0.03013439730201112,
+              "native_length_m": 0.055989015847444534,
+              "stretch_ratio": 1.8579769585671426
+            },
+            {
+              "source_skin_vertex_ids": [
+                8749,
+                9305
+              ],
+              "source_length_m": 0.023075293940713167,
+              "native_length_m": 0.04841882362961769,
+              "stretch_ratio": 2.0982971551313314
+            }
+          ],
+          "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+        },
+        "native_surface_face_diagnostics": {
+          "face_count": 109183,
+          "source_degenerate_face_count": 0,
+          "native_collapsed_face_count": 0,
+          "source_surface_area_m2": 1.8076662289952967,
+          "native_surface_area_m2": 1.8511639560290496,
+          "minimum_area_ratio": 0.10119689569118487,
+          "area_ratio_p01": 0.8334038752876273,
+          "area_ratio_p99": 1.335373195506705,
+          "maximum_area_ratio": 8.042248888708276,
+          "minimum_surface_stretch": 0.08338696615711354,
+          "maximum_surface_stretch": 9.015811424579933,
+          "surface_stretch_p01": 0.7907994802173177,
+          "surface_stretch_p99": 1.4732578468684592,
+          "faces_area_below_0_1x": 0,
+          "faces_area_above_10x": 0,
+          "faces_opposed_to_rendered_vertex_normals": 3,
+          "lowest_area_faces": [
+            {
+              "source_face_id": 26490,
+              "source_skin_vertex_ids": [
+                14771,
+                11043,
+                12679
+              ],
+              "source_area_m2": 3.7646781193113986e-05,
+              "area_ratio": 0.10119689569118487
+            },
+            {
+              "source_face_id": 11574,
+              "source_skin_vertex_ids": [
+                6320,
+                5764,
+                4899
+              ],
+              "source_area_m2": 4.751878963033553e-05,
+              "area_ratio": 0.2719917570384506
+            },
+            {
+              "source_face_id": 11575,
+              "source_skin_vertex_ids": [
+                4899,
+                5764,
+                5302
+              ],
+              "source_area_m2": 3.866186397249674e-05,
+              "area_ratio": 0.3056287083199427
+            },
+            {
+              "source_face_id": 9818,
+              "source_skin_vertex_ids": [
+                4899,
+                5302,
+                4898
+              ],
+              "source_area_m2": 1.7084244733453312e-05,
+              "area_ratio": 0.31868524604278775
+            },
+            {
+              "source_face_id": 14142,
+              "source_skin_vertex_ids": [
+                6881,
+                7062,
+                7061
+              ],
+              "source_area_m2": 2.1324577282720444e-05,
+              "area_ratio": 0.3200387401599373
+            }
+          ],
+          "boundary": "All-face geometric area and tangent-map diagnostics; 0.1x/10x counts are descriptive, not physiological thresholds. Normal opposition is a presentation diagnostic, not an inversion/strain certificate. No skin-quality, material or clinical admission."
+        },
+        "native_source_seam_diagnostics": {
+          "exact_coincident_vertex_group_count": 257,
+          "exact_coincident_redundant_vertex_count": 286,
+          "source_seam_pair_count": 316,
+          "maximum_native_seam_gap_m": 0.0,
+          "seam_pairs_with_nonzero_native_gap": 0,
+          "seam_vertices_separated_from_canonical": 0,
+          "worst_source_seam_pairs": [],
+          "boundary": "Coincident source-point continuity only; source openings, self-intersection, volume and mechanics remain separate."
+        }
+      }
+    },
+    {
+      "name": "asymmetric-knee",
+      "before": {
+        "native_surface_edge_diagnostics": {
+          "edge_count": 164188,
+          "maximum_stretch_ratio": 2.0513496913308935,
+          "edge_p99_stretch_ratio": 1.1347837733288346,
+          "edges_over_5x": 0,
+          "maximum_edge_length_increase_m": 0.011065130881350135,
+          "worst_length_increases": [
+            {
+              "source_skin_vertex_ids": [
+                19948,
+                20650
+              ],
+              "source_length_m": 0.01643558050008526,
+              "native_length_m": 0.027500711381435394,
+              "stretch_ratio": 1.6732424742340397
+            },
+            {
+              "source_skin_vertex_ids": [
+                41205,
+                42310
+              ],
+              "source_length_m": 0.02479150312307068,
+              "native_length_m": 0.035625867545604706,
+              "stretch_ratio": 1.4370192629607719
+            },
+            {
+              "source_skin_vertex_ids": [
+                19948,
+                20639
+              ],
+              "source_length_m": 0.017537091459613924,
+              "native_length_m": 0.026875516399741173,
+              "stretch_ratio": 1.5324956513816819
+            },
+            {
+              "source_skin_vertex_ids": [
+                41188,
+                41757
+              ],
+              "source_length_m": 0.01305900142661059,
+              "native_length_m": 0.021631376817822456,
+              "stretch_ratio": 1.656434218143492
+            },
+            {
+              "source_skin_vertex_ids": [
+                8690,
+                8727
+              ],
+              "source_length_m": 0.03241180137376531,
+              "native_length_m": 0.04071749001741409,
+              "stretch_ratio": 1.2562550765960068
+            }
+          ],
+          "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+        },
+        "native_surface_face_diagnostics": {
+          "face_count": 109183,
+          "source_degenerate_face_count": 0,
+          "native_collapsed_face_count": 0,
+          "source_surface_area_m2": 1.8076662289952967,
+          "native_surface_area_m2": 1.8092164092507845,
+          "minimum_area_ratio": 0.3409611842058004,
+          "area_ratio_p01": 0.8132865135322214,
+          "area_ratio_p99": 1.1769472600491253,
+          "maximum_area_ratio": 2.7183314144125923,
+          "minimum_surface_stretch": 0.2807531779594982,
+          "maximum_surface_stretch": 3.0547947274284253,
+          "surface_stretch_p01": 0.7854359022249204,
+          "surface_stretch_p99": 1.2507566498867655,
+          "faces_area_below_0_1x": 0,
+          "faces_area_above_10x": 0,
+          "faces_opposed_to_rendered_vertex_normals": 1,
+          "lowest_area_faces": [
+            {
+              "source_face_id": 46359,
+              "source_skin_vertex_ids": [
+                23138,
+                23143,
+                23139
+              ],
+              "source_area_m2": 7.321248526444828e-05,
+              "area_ratio": 0.3409611842058004
+            },
+            {
+              "source_face_id": 26347,
+              "source_skin_vertex_ids": [
+                13702,
+                12591,
+                12557
+              ],
+              "source_area_m2": 3.9251919412957166e-05,
+              "area_ratio": 0.3425325716930869
+            },
+            {
+              "source_face_id": 46358,
+              "source_skin_vertex_ids": [
+                23138,
+                23137,
+                23143
+              ],
+              "source_area_m2": 1.725610584543145e-05,
+              "area_ratio": 0.3641189444409347
+            },
+            {
+              "source_face_id": 30614,
+              "source_skin_vertex_ids": [
+                15667,
+                15292,
+                15291
+              ],
+              "source_area_m2": 1.1801959184340007e-05,
+              "area_ratio": 0.41359883158041627
+            },
+            {
+              "source_face_id": 44678,
+              "source_skin_vertex_ids": [
+                23112,
+                22316,
+                22315
+              ],
+              "source_area_m2": 3.3102492644842085e-05,
+              "area_ratio": 0.43428437877717135
+            }
+          ],
+          "boundary": "All-face geometric area and tangent-map diagnostics; 0.1x/10x counts are descriptive, not physiological thresholds. Normal opposition is a presentation diagnostic, not an inversion/strain certificate. No skin-quality, material or clinical admission."
+        },
+        "native_source_seam_diagnostics": {
+          "exact_coincident_vertex_group_count": 257,
+          "exact_coincident_redundant_vertex_count": 286,
+          "source_seam_pair_count": 316,
+          "maximum_native_seam_gap_m": 0.0006976800594060351,
+          "seam_pairs_with_nonzero_native_gap": 312,
+          "seam_vertices_separated_from_canonical": 283,
+          "worst_source_seam_pairs": [
+            {
+              "source_skin_vertex_ids": [
+                24775,
+                54771
+              ],
+              "native_gap_m": 0.0006976800594060351
+            },
+            {
+              "source_skin_vertex_ids": [
+                22976,
+                54752
+              ],
+              "native_gap_m": 0.0006876929058181503
+            },
+            {
+              "source_skin_vertex_ids": [
+                23009,
+                54754
+              ],
+              "native_gap_m": 0.0006596040256246283
+            },
+            {
+              "source_skin_vertex_ids": [
+                22194,
+                54744
+              ],
+              "native_gap_m": 0.0006536457510770805
+            },
+            {
+              "source_skin_vertex_ids": [
+                22973,
+                54751
+              ],
+              "native_gap_m": 0.0006142731278791682
+            }
+          ],
+          "boundary": "Coincident source-point continuity only; source openings, self-intersection, volume and mechanics remain separate."
+        }
+      },
+      "after": {
+        "native_surface_edge_diagnostics": {
+          "edge_count": 164188,
+          "maximum_stretch_ratio": 2.0513496913308935,
+          "edge_p99_stretch_ratio": 1.1347398928133792,
+          "edges_over_5x": 0,
+          "maximum_edge_length_increase_m": 0.011065469882767295,
+          "worst_length_increases": [
+            {
+              "source_skin_vertex_ids": [
+                19948,
+                20650
+              ],
+              "source_length_m": 0.01643558050008526,
+              "native_length_m": 0.027501050382852554,
+              "stretch_ratio": 1.673263100303022
+            },
+            {
+              "source_skin_vertex_ids": [
+                41205,
+                42310
+              ],
+              "source_length_m": 0.02479150312307068,
+              "native_length_m": 0.035625819116830826,
+              "stretch_ratio": 1.437017309518351
+            },
+            {
+              "source_skin_vertex_ids": [
+                19948,
+                20639
+              ],
+              "source_length_m": 0.017537091459613924,
+              "native_length_m": 0.026875926181674004,
+              "stretch_ratio": 1.5325190179663732
+            },
+            {
+              "source_skin_vertex_ids": [
+                41188,
+                41757
+              ],
+              "source_length_m": 0.01305900142661059,
+              "native_length_m": 0.02163144387304783,
+              "stretch_ratio": 1.6564393529331425
+            },
+            {
+              "source_skin_vertex_ids": [
+                8690,
+                8727
+              ],
+              "source_length_m": 0.03241180137376531,
+              "native_length_m": 0.04071751609444618,
+              "stretch_ratio": 1.2562558811496256
+            }
+          ],
+          "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+        },
+        "native_surface_face_diagnostics": {
+          "face_count": 109183,
+          "source_degenerate_face_count": 0,
+          "native_collapsed_face_count": 0,
+          "source_surface_area_m2": 1.8076662289952967,
+          "native_surface_area_m2": 1.8092195908754025,
+          "minimum_area_ratio": 0.34097142691117327,
+          "area_ratio_p01": 0.8134483189598731,
+          "area_ratio_p99": 1.1769697511263983,
+          "maximum_area_ratio": 2.7183484094024313,
+          "minimum_surface_stretch": 0.28071160322253,
+          "maximum_surface_stretch": 3.0547987169136155,
+          "surface_stretch_p01": 0.7854160354804197,
+          "surface_stretch_p99": 1.2507592212767802,
+          "faces_area_below_0_1x": 0,
+          "faces_area_above_10x": 0,
+          "faces_opposed_to_rendered_vertex_normals": 1,
+          "lowest_area_faces": [
+            {
+              "source_face_id": 46359,
+              "source_skin_vertex_ids": [
+                23138,
+                23143,
+                23139
+              ],
+              "source_area_m2": 7.321248526444828e-05,
+              "area_ratio": 0.34097142691117327
+            },
+            {
+              "source_face_id": 26347,
+              "source_skin_vertex_ids": [
+                13702,
+                12591,
+                12557
+              ],
+              "source_area_m2": 3.9251919412957166e-05,
+              "area_ratio": 0.34248237066953086
+            },
+            {
+              "source_face_id": 46358,
+              "source_skin_vertex_ids": [
+                23138,
+                23137,
+                23143
+              ],
+              "source_area_m2": 1.725610584543145e-05,
+              "area_ratio": 0.36410532124851686
+            },
+            {
+              "source_face_id": 30614,
+              "source_skin_vertex_ids": [
+                15667,
+                15292,
+                15291
+              ],
+              "source_area_m2": 1.1801959184340007e-05,
+              "area_ratio": 0.41357141935708397
+            },
+            {
+              "source_face_id": 44678,
+              "source_skin_vertex_ids": [
+                23112,
+                22316,
+                22315
+              ],
+              "source_area_m2": 3.3102492644842085e-05,
+              "area_ratio": 0.43428994732755466
+            }
+          ],
+          "boundary": "All-face geometric area and tangent-map diagnostics; 0.1x/10x counts are descriptive, not physiological thresholds. Normal opposition is a presentation diagnostic, not an inversion/strain certificate. No skin-quality, material or clinical admission."
+        },
+        "native_source_seam_diagnostics": {
+          "exact_coincident_vertex_group_count": 257,
+          "exact_coincident_redundant_vertex_count": 286,
+          "source_seam_pair_count": 316,
+          "maximum_native_seam_gap_m": 0.0,
+          "seam_pairs_with_nonzero_native_gap": 0,
+          "seam_vertices_separated_from_canonical": 0,
+          "worst_source_seam_pairs": [],
+          "boundary": "Coincident source-point continuity only; source openings, self-intersection, volume and mechanics remain separate."
+        }
+      }
+    }
+  ],
+  "wall_seconds": 67.82436841633171,
+  "script_sha256": "358b383a79819a903fbfb19c51523cf785f220ed02c071f6b9957ac24ccecac0",
+  "boundary": "Actual native source geometry, seam continuity and all-face diagnostics. No continuum strain, clinical quality, physical skin, volume or standing qualification."
+}

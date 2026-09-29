@@ -2,7 +2,8 @@
 
 The offline oracle independently reconstructs the edge-connected exterior,
 source surface seeds and MuJoCo COM frames, then verifies every screened graph
-equation and native sparse influence. This admits source visual fidelity only,
+equation and native influence. Source seam and triangle metrics expose visual
+shape defects separately. This admits source visual fidelity only,
 never clinical weights, contact or continuum skin mechanics.
 """
 from __future__ import annotations
@@ -119,7 +120,7 @@ def _edge_deformation_diagnostics(world, faces, native):
 
 
 @lru_cache(maxsize=2)
-def _source_oracle(sources, artifact, registration_bytes, rigid_sha, artifact_manifest_sha, skin_obj):
+def _source_oracle(sources, artifact, registration_bytes, rigid_sha, artifact_manifest_sha, skin_obj, method):
     """Cache immutable, hash-checked source inputs, never emitted skin bytes."""
     import mujoco
     import numpy as np
@@ -163,10 +164,14 @@ def _source_oracle(sources, artifact, registration_bytes, rigid_sha, artifact_ma
                       float(2 * np.linalg.norm(placed - centroid, axis=1).max())))
     core_ids = sorted(source_ids)
     binding_by_core = {core: i for i, core in enumerate(core_ids)}
-    neighbours = [[] for _ in world]
-    edges = np.unique(np.sort(np.concatenate([faces[:, [0, 1]], faces[:, [1, 2]], faces[:, [2, 0]]]), axis=1), axis=0)
+    from .skin_surface_binding import METHOD
+    graph_world, graph_map = np.unique(world, axis=0, return_inverse=True) if method == METHOD else (world, np.arange(len(world)))
+    graph_faces = graph_map[faces]
+    neighbours = [[] for _ in graph_world]
+    edges = np.unique(np.sort(np.concatenate([graph_faces[:, [0, 1]], graph_faces[:, [1, 2]],
+                                             graph_faces[:, [2, 0]]]), axis=1), axis=0)
     for a, b in edges:
-        length = float(np.linalg.norm(world[a] - world[b]))
+        length = float(np.linalg.norm(graph_world[a] - graph_world[b]))
         _require(length > 0 and np.isfinite(length), 'source graph edge metric')
         neighbours[a].append((int(b), length))
         neighbours[b].append((int(a), length))
@@ -176,6 +181,7 @@ def _source_oracle(sources, artifact, registration_bytes, rigid_sha, artifact_ma
         # Direct all-vertex distances are independent of the author's kd tree.
         center = int(np.argmin(np.sum((world - centroid) ** 2, axis=1)))
         radius = diameter + 2 * float(np.linalg.norm(world[center] - centroid))
+        center = int(graph_map[center])
         reachable = {center: 0.}
         queue = [(0., center)]
         while queue:
@@ -189,7 +195,7 @@ def _source_oracle(sources, artifact, registration_bytes, rigid_sha, artifact_ma
                     heapq.heappush(queue, (candidate, neighbour))
         for source_vertex, point in [(0xffffffff, centroid)] + list(zip(ids, points)):
             skin = int(np.argmin(np.sum((world - point) ** 2, axis=1)))
-            targets.append((anchor, source_vertex, skin, binding_by_core[core], int(skin in reachable)))
+            targets.append((anchor, source_vertex, skin, binding_by_core[core], int(graph_map[skin] in reachable)))
             projection_gaps.append(float(np.linalg.norm(world[skin] - point)))
     return (vertices, faces, normals, world, core_ids, source_ids, subset,
             np.asarray(targets, dtype='<u4'), np.asarray(projection_gaps, dtype='<f8'),
@@ -203,9 +209,9 @@ def _verified_weights(proof_bytes, world_bytes, face_bytes, target_bytes, gap_by
     world = np.frombuffer(world_bytes, '<f8').reshape(-1, 3)
     faces = np.frombuffer(face_bytes, '<u4').reshape(-1, 3)
     targets = np.frombuffer(target_bytes, '<u4').reshape(-1, 5)
-    from .skin_surface_binding import LEGACY_METHOD, METHOD
-    _require(method in {LEGACY_METHOD, METHOD}, 'source binding method')
-    geometric = method == METHOD
+    from .skin_surface_binding import LEGACY_METHOD, FULL_METHOD, METHOD
+    _require(method in {LEGACY_METHOD, FULL_METHOD, METHOD}, 'source binding method')
+    geometric = method != LEGACY_METHOD
     gaps = np.frombuffer(gap_bytes, '<f8')
     with np.load(io.BytesIO(proof_bytes), allow_pickle=False) as archive:
         fields = {'full_weights', 'seed_targets'} | ({'seed_projection_gaps_m'} if geometric else set())
@@ -225,26 +231,36 @@ def _verified_weights(proof_bytes, world_bytes, face_bytes, target_bytes, gap_by
     _require(float(full.min()) >= (0 if geometric else -1e-12)
              and float(np.max(np.abs(full.sum(axis=1) - 1))) <= 1e-10,
              'binding solution positivity/partition')
-    edges = np.unique(np.sort(np.concatenate([faces[:, [0, 1]], faces[:, [1, 2]], faces[:, [2, 0]]]), axis=1), axis=0)
-    conductance = 1 / np.linalg.norm(world[edges[:, 0]] - world[edges[:, 1]], axis=1)
-    degree = np.zeros(len(world))
+    if method == METHOD:
+        graph_world, first, graph_map, multiplicity = np.unique(
+            world, axis=0, return_index=True, return_inverse=True, return_counts=True)
+        _require(np.array_equal(full, full[first][graph_map]), 'source exact seam weights')
+        graph_full = full[first]
+    else:
+        graph_world, graph_full, graph_map = world, full, np.arange(len(world))
+        multiplicity = np.ones(len(world), dtype=int)
+    graph_faces = graph_map[faces]
+    edges = np.unique(np.sort(np.concatenate([graph_faces[:, [0, 1]], graph_faces[:, [1, 2]],
+                                             graph_faces[:, [2, 0]]]), axis=1), axis=0)
+    conductance = 1 / np.linalg.norm(graph_world[edges[:, 0]] - graph_world[edges[:, 1]], axis=1)
+    degree = np.zeros(len(graph_world))
     np.add.at(degree, edges[:, 0], conductance)
     np.add.at(degree, edges[:, 1], conductance)
     owners = {}
     for (_, _, vertex, body, admitted), gap in zip(targets, gaps):
         if admitted:
-            owners.setdefault(int(vertex), {}).setdefault(int(body), []).append(1 / float(gap) if geometric else 1.)
+            owners.setdefault(int(graph_map[vertex]), {}).setdefault(int(body), []).append(1 / float(gap) if geometric else 1.)
     _require({b for row in owners.values() for b in row} == set(range(binding_count)), 'source seed body coverage')
-    flux = np.zeros_like(full)
-    denominator = degree[:, None] * np.abs(full)
+    flux = np.zeros_like(graph_full)
+    denominator = degree[:, None] * np.abs(graph_full)
     for first in range(0, len(edges), 2048):
         edge = edges[first:first + 2048]
         weight = conductance[first:first + 2048, None]
-        delta = weight * (full[edge[:, 0]] - full[edge[:, 1]])
+        delta = weight * (graph_full[edge[:, 0]] - graph_full[edge[:, 1]])
         np.add.at(flux, edge[:, 0], delta)
         np.add.at(flux, edge[:, 1], -delta)
-        np.add.at(denominator, edge[:, 0], weight * np.abs(full[edge[:, 1]]))
-        np.add.at(denominator, edge[:, 1], weight * np.abs(full[edge[:, 0]]))
+        np.add.at(denominator, edge[:, 0], weight * np.abs(graph_full[edge[:, 1]]))
+        np.add.at(denominator, edge[:, 1], weight * np.abs(graph_full[edge[:, 0]]))
     for point, body_values in owners.items():
         target = np.zeros(binding_count)
         if geometric:
@@ -255,8 +271,8 @@ def _verified_weights(proof_bytes, world_bytes, face_bytes, target_bytes, gap_by
         else:
             confidence = degree[point]
             target[list(body_values)] = 1 / len(body_values)
-        flux[point] += confidence * (full[point] - target)
-        denominator[point] += confidence * (np.abs(full[point]) + target)
+        flux[point] += confidence * (graph_full[point] - target)
+        denominator[point] += confidence * (np.abs(graph_full[point]) + target)
     residual = float(np.max(np.abs(flux) / np.maximum(denominator, np.finfo(float).tiny)))
     _require(residual <= 1e-10, 'source skin harmonic equations')
     positive = np.maximum(full, 0)
@@ -271,6 +287,9 @@ def _verified_weights(proof_bytes, world_bytes, face_bytes, target_bytes, gap_by
                               'maximum_relative_equation_residual': residual,
                               'source_bone_count': len(set(map(int, targets[:, 0]))),
                               'source_graph_edge_count': len(edges),
+                              'source_graph_vertex_count': len(graph_world),
+                              'exact_coincident_vertex_group_count': int((multiplicity > 1).sum()) if method == METHOD else None,
+                              'exact_coincident_redundant_vertex_count': len(world) - len(graph_world) if method == METHOD else None,
                               'seed_candidate_count': len(targets), 'seed_vertex_count': len(owners),
                               'rejected_seed_count': int((targets[:, 4] == 0).sum()),
                               'minimum_retained_four_weight_mass': float(retained.min()),
@@ -323,13 +342,13 @@ def audit_skin_surface(sources: Path, artifact: Path, registration_path: Path,
     indices = np.frombuffer(raw, '<u4', count=ni, offset=offset + 56 * nv)
     _require(bool(np.isfinite(bindings_f[:, 1:]).all()) and bool(np.isfinite(vertices_f[:, :6]).all())
              and bool(np.isfinite(vertices_f[:, 10:]).all()), "nonfinite payload")
+    binding = manifest['coverage']['source_surface_binding']
+    from .skin_surface_binding import LEGACY_METHOD, FULL_METHOD, METHOD
+    _require(binding['method'] in ({FULL_METHOD, METHOD} if abi == 5 else {LEGACY_METHOD}), 'source binding method')
     reference = _source_oracle(str(sources.resolve()), str(artifact.resolve()), registration_bytes,
                                human.sha256(artifact / 'myosim-fullbody-core-reference.nhrigid'),
-                               human.sha256(artifact / 'myosim-fullbody-reference.manifest.json'), obj)
+                               human.sha256(artifact / 'myosim-fullbody-reference.manifest.json'), obj, binding['method'])
     source_v, faces, normals, world, core_ids, source_ids, subset, targets, gaps, raw_counts = reference
-    binding = manifest['coverage']['source_surface_binding']
-    from .skin_surface_binding import LEGACY_METHOD, METHOD
-    _require(binding['method'] == (METHOD if abi == 5 else LEGACY_METHOD), 'source binding method')
     solution = manifest['coverage']['binding_solution']
     _require(Path(solution['file']).name == solution['file'] and solution['runtime_input'] is False,
              'binding solution path/ownership')
@@ -343,6 +362,10 @@ def audit_skin_surface(sources: Path, artifact: Path, registration_path: Path,
     for field in ['source_bone_count', 'source_graph_edge_count', 'seed_candidate_count',
                   'seed_vertex_count', 'rejected_seed_count']:
         _require(binding[field] == certificate[field], 'source binding declared counts')
+    if binding['method'] == METHOD:
+        for field in ['source_graph_vertex_count', 'exact_coincident_vertex_group_count',
+                      'exact_coincident_redundant_vertex_count']:
+            _require(binding[field] == certificate[field], 'source exact seam declared counts')
     for field in ['minimum_retained_four_weight_mass', 'maximum_discarded_weight_mass']:
         _require(abs(binding[field] - certificate[field]) <= 1e-12, 'source binding declared truncation')
     if abi == 5:
@@ -435,10 +458,13 @@ def audit_skin_surface(sources: Path, artifact: Path, registration_path: Path,
     _require(bool(np.isfinite(native_v[:, :3]).all()) and bool(np.isfinite(native_v[:, 4:7]).all()), "nonfinite native skin")
     world_error = float(np.max(np.linalg.norm(native_v[:, :3] - expected_world, axis=1)))
     normal_error = float(np.max(np.linalg.norm(native_v[:, 4:7] - expected_normal, axis=1)))
+    from .skin_geometry_diagnostics import source_seam_diagnostics, source_surface_topology, surface_face_diagnostics
+    seams = source_seam_diagnostics(world, native_v[:, :3])
     return {
         'schema': 'numi.human.native-skin-source-audit.v1',
         'passed': all(b['passed'] for b in body_checks) and world_error <= 2e-5
-                  and max(source_normal_error, normal_error) <= 2e-5,
+                  and max(source_normal_error, normal_error) <= 2e-5
+                  and (certificate['method'] != METHOD or seams['maximum_native_seam_gap_m'] <= 2e-5),
         'vertex_count': nv, 'triangle_count': ni // 3, 'binding_count': nb,
         'payload_abi': abi, 'runtime_influences_per_vertex': nb if abi == 5 else 4,
         'runtime_discarded_weight_mass': 0. if abi == 5 else certificate['maximum_discarded_weight_mass'],
@@ -447,13 +473,16 @@ def audit_skin_surface(sources: Path, artifact: Path, registration_path: Path,
         'source_normal_error': source_normal_error, 'maximum_native_world_vertex_error_m': world_error,
         'maximum_native_normal_error': normal_error, 'body_checks': body_checks,
         'native_surface_edge_diagnostics': _edge_deformation_diagnostics(world, faces, native_v[:, :3]),
+        'native_surface_face_diagnostics': surface_face_diagnostics(world, faces, native_v[:, :3], native_v[:, 4:7]),
+        'source_surface_topology': source_surface_topology(world, faces),
+        'native_source_seam_diagnostics': seams,
         'source_equality_projection_oracle': equality, 'rigid_source_program_checks': checks,
         'inputs': {label: {'path': str(path), 'sha256': human.sha256(path)} for label, path in
                    [('registration', registration_path), ('payload', payload),
                     ('manifest', payload.with_name('bodyparts3d-myosim-skinned-shell.manifest.json')),
                     ('binding_solution', payload.parent / solution['file']),
                     ('native_pack', native_pack), ('native_poses', native_poses)]},
-        'boundary': 'Complete selected source exterior and sampled visual blend verification; not clinical skin weights, tissue deformation, thickness, mass, material, contact, self-intersection or whole-Human qualification.',
+        'boundary': 'Complete selected source exterior and sampled visual blend verification with separate seam, face and topology diagnostics; not clinical skin weights, tissue deformation, thickness, mass, material, contact, self-intersection or whole-Human qualification.',
     }
 
 

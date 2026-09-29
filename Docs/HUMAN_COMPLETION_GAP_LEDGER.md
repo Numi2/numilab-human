@@ -670,7 +670,7 @@ loading, standing, recovery, and walking remain open.
 
 The [earlier skin source-surface repair](SKIN_SOURCE_SURFACE_BINDING_20260929.md)
 removed large arm-to-thigh sheets with a connected-surface association but
-retained local defects and four-weight truncation. The current
+retained local defects and four-weight truncation. The subsequent
 [complete-field repair](SKIN_GEOMETRIC_FULL_FIELD_20260929.md) derives seed
 confidence from exact bone-to-skin projection gaps and retains every body
 weight in native NHSKIN ABI 5. Compared with that four-weight baseline, native
@@ -685,10 +685,29 @@ transforms and topology stay byte-identical. Ten legacy ABI 4 packs/PNGs are
 also byte-identical through the updated native probe. The current field has
 zero intentional runtime truncation and explicit float32 quantization;
 diagnostic quartets would retain only 34.20 percent at the worst vertex and
-are not used by ABI 5 rendering. Shoulder elevation still has six edges above
-five-times source length. Edge diagnostics, self-intersection/volume checks,
+are not used by ABI 5 rendering. Its shoulder elevation retains six edges
+above five-times source length. Edge diagnostics, self-intersection/volume checks,
 anatomical weights, mechanical deformation, contact, material, clinical anatomy
 and whole-body qualification remain separate open requirements.
+
+The current [exact skin seam repair](SKIN_EXACT_SEAM_CONTINUITY_20260929.md)
+solves one visual weight row per exactly coincident source point and expands
+it to the unchanged vertex order. All 257 groups, including 286 redundant
+vertices, remain exactly coincident in nine native poses. Shoulder elevation
+closes its 132.23 mm seam gap and reduces edges above five-times source length
+from six to zero. All nine poses have zero such edges, but this is a diagnostic
+count rather than shape admission. Maximum added shoulder edge length rises
+from 40.82 to 50.08 mm; two triangles still exceed ten-times source area, and
+seven oppose their rendered normals. Unilateral reach also worsens maximum
+tangent stretch. The audit now checks all-face area/tangent metrics, exact
+all-pairs seam distances and complete source edge/orientation/vertex-link
+topology; 135 selected checks pass, including the earlier ABI 4 and ABI 5
+evidence. The source remains open with 171 boundary edges and two vertex-link
+defects after exact-coordinate identification. Geometry, normals, binding
+frames, ABI and native/physics binaries are preserved. Closed volume,
+self-intersection, complete skin shape, mechanical material-point identity,
+anatomical weights, loading, subject calibration and clinical anatomy remain
+open.
 
 The [native stance horizon](NATIVE_STAND_STANCE_HORIZON_20260913.md) now
 repeats the exact-clock physical-M4 run from the authored root/ankle/subtalar/

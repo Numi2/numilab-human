@@ -13,7 +13,8 @@ import heapq
 from pathlib import Path
 
 LEGACY_METHOD = 'positive_source_surface_screened_harmonic_four_influence.v1'
-METHOD = 'positive_source_surface_projection_gap_screened_harmonic_full_weight.v2'
+FULL_METHOD = 'positive_source_surface_projection_gap_screened_harmonic_full_weight.v2'
+METHOD = 'positive_source_surface_exact_seam_projection_gap_full_weight.v3'
 
 
 def source_surface_binding(vertices, faces, bones, binding_count):
@@ -25,18 +26,25 @@ def source_surface_binding(vertices, faces, bones, binding_count):
     from scipy.spatial import cKDTree
 
     vertices, faces = np.asarray(vertices), np.asarray(faces)
-    edges = np.unique(np.sort(np.concatenate([faces[:, [0, 1]], faces[:, [1, 2]], faces[:, [2, 0]]]), axis=1), axis=0)
-    lengths = np.linalg.norm(vertices[edges[:, 0]] - vertices[edges[:, 1]], axis=1)
+    # Exact-coordinate duplicates are one material point for visual binding.
+    # Keep all source vertices/faces in the emitted payload; do not merge near
+    # points, cap source boundaries, or invent mechanical skin connectivity.
+    graph_vertices, inverse, multiplicity = np.unique(
+        vertices, axis=0, return_inverse=True, return_counts=True)
+    graph_faces = inverse[faces]
+    edges = np.unique(np.sort(np.concatenate([graph_faces[:, [0, 1]], graph_faces[:, [1, 2]],
+                                             graph_faces[:, [2, 0]]]), axis=1), axis=0)
+    lengths = np.linalg.norm(graph_vertices[edges[:, 0]] - graph_vertices[edges[:, 1]], axis=1)
     if not bool(np.isfinite(lengths).all()) or not bool((lengths > 0).all()):
         raise ValueError('source skin graph has nonfinite or zero-length edges')
     conductance = 1 / lengths
     adjacency = coo_matrix((np.r_[conductance, conductance],
                             (np.r_[edges[:, 0], edges[:, 1]], np.r_[edges[:, 1], edges[:, 0]])),
-                           shape=(len(vertices), len(vertices))).tocsr()
+                           shape=(len(graph_vertices), len(graph_vertices))).tocsr()
     if connected_components(adjacency, directed=False, return_labels=False) != 1:
         raise ValueError('source exterior skin graph is not connected')
     degree = np.asarray(adjacency.sum(axis=1)).ravel()
-    neighbours = [[] for _ in vertices]
+    neighbours = [[] for _ in graph_vertices]
     for (a, b), length in zip(edges, lengths):
         neighbours[a].append((int(b), float(length)))
         neighbours[b].append((int(a), float(length)))
@@ -58,6 +66,7 @@ def source_surface_binding(vertices, faces, bones, binding_count):
         center = closest(centroid)
         gap = float(np.linalg.norm(vertices[center] - centroid))
         radius = bone['diameter_bound_m'] + 2 * gap
+        center = int(inverse[center])
         distances = {center: 0.}
         queue = [(0., center)]
         while queue:
@@ -72,19 +81,20 @@ def source_surface_binding(vertices, faces, bones, binding_count):
         samples = [(0xffffffff, centroid)] + list(zip(bone['sample_vertex_ids'], bone['sample_points_world_m']))
         for source_vertex, point in samples:
             skin_vertex = closest(point)
-            admitted = skin_vertex in distances
+            graph_vertex = int(inverse[skin_vertex])
+            admitted = graph_vertex in distances
             targets.append((anchor_index, source_vertex, skin_vertex, bone['binding_index'], int(admitted)))
             projection_gap = float(np.linalg.norm(vertices[skin_vertex] - point))
             if not np.isfinite(projection_gap) or projection_gap <= 0:
                 raise ValueError('source bone-to-skin projection gap is not positive and finite')
             projection_gaps.append(projection_gap)
             if admitted:
-                seed_owners.setdefault(skin_vertex, {}).setdefault(bone['binding_index'], []).append(1 / projection_gap)
+                seed_owners.setdefault(graph_vertex, {}).setdefault(bone['binding_index'], []).append(1 / projection_gap)
     if {owner for owners in seed_owners.values() for owner in owners} != set(range(binding_count)):
         raise ValueError('source skin seeds do not cover every bound body')
     seed_ids = np.asarray(sorted(seed_owners))
-    confidence = np.zeros(len(vertices))
-    rhs = np.zeros((len(vertices), binding_count))
+    confidence = np.zeros(len(graph_vertices))
+    rhs = np.zeros((len(graph_vertices), binding_count))
     for point in seed_ids:
         values = {owner: float(np.mean(gaps)) for owner, gaps in seed_owners[point].items()}
         confidence[point] = float(np.mean(list(values.values())))
@@ -100,6 +110,9 @@ def source_surface_binding(vertices, faces, bones, binding_count):
     residual = float(np.max(np.abs(operator @ full - rhs)) / max(1., float(np.max(np.abs(rhs)))))
     if not bool(np.isfinite(full).all()) or minimum < 0 or unity_error > 1e-10 or residual > 1e-10:
         raise ValueError('source skin harmonic solution failed positivity, partition or residual checks')
+    # Expand by exact source identity. Every duplicate receives identical
+    # weights, including the same float32 quantization at the native boundary.
+    full = full[inverse]
     positive = np.maximum(full, 0)
     quartet = np.argsort(-positive, axis=1, kind='stable')[:, :4]
     weights = np.take_along_axis(positive, quartet, axis=1)
@@ -114,6 +127,10 @@ def source_surface_binding(vertices, faces, bones, binding_count):
         'minimum_source_projection_gap_m': min(projection_gaps),
         'maximum_source_projection_gap_m': max(projection_gaps),
         'source_graph_edge_count': len(edges), 'relative_solve_residual': residual,
+        'source_graph_vertex_count': len(graph_vertices),
+        'exact_coincident_vertex_group_count': int((multiplicity > 1).sum()),
+        'exact_coincident_redundant_vertex_count': len(vertices) - len(graph_vertices),
+        'seam_policy': 'exact source world-coordinate equality only; solve quotient graph and expand to unchanged source vertex order; no proximity tolerance or hole capping',
         'maximum_partition_unity_error': unity_error, 'minimum_full_solution_weight': minimum,
         'minimum_retained_four_weight_mass': float(retained.min()),
         'maximum_discarded_weight_mass': float(1 - retained.min()),

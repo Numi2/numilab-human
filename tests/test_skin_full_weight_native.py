@@ -86,3 +86,16 @@ def test_archived_four_weight_source_evidence_remains_verifiable(case):
     report = audit_skin_surface(*source_inputs(Path(path).resolve(), case))
     assert report['passed'] and report['payload_abi'] == 4
     assert report['runtime_influences_per_vertex'] == 4
+
+
+@pytest.mark.parametrize('case', ['raw-source-rest', 'neutral', 'coupled-torso',
+                                  'coupled-reach', 'knee-flexion', 'shoulder-elevation',
+                                  'hip-flexion', 'unilateral-reach', 'asymmetric-knee'])
+def test_archived_pre_seam_full_weight_evidence_remains_verifiable(case):
+    path = os.environ.get('NUMILAB_HUMAN_PRE_SEAM_SKIN_AUDIT_ROOT')
+    if not path:
+        pytest.skip('pre-seam full-field checks require retained native corpus')
+    report = audit_skin_surface(*source_inputs(Path(path).resolve(), case))
+    assert report['passed'] and report['payload_abi'] == 5
+    assert report['runtime_influences_per_vertex'] == 86
+    assert report['native_source_seam_diagnostics']['exact_coincident_vertex_group_count'] == 257

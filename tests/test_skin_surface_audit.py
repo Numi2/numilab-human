@@ -43,6 +43,14 @@ def test_every_source_vertex_triangle_and_body_blend_reaches_native_skin(skin_in
     assert certificate['passed'] and certificate['source_bone_count'] == 185
     assert certificate['seed_candidate_count'] == 12025 and certificate['seed_vertex_count'] == 5039
     assert certificate['rejected_seed_count'] == 696
+    assert certificate['source_graph_vertex_count'] == 54663
+    assert certificate['source_graph_edge_count'] == 163860
+    assert certificate['exact_coincident_vertex_group_count'] == 257
+    assert certificate['exact_coincident_redundant_vertex_count'] == 286
+    assert report['native_source_seam_diagnostics']['maximum_native_seam_gap_m'] == 0
+    assert report['native_surface_face_diagnostics']['face_count'] == 109183
+    assert report['source_surface_topology']['exact_coordinate_quotient']['boundary_edge_count'] == 171
+    assert not report['source_surface_topology']['closed_volume_admitted']
     assert certificate['maximum_relative_equation_residual'] <= 1e-10
     assert report['maximum_native_world_vertex_error_m'] <= 2e-5
     assert all(row['passed'] for row in report['body_checks'])
@@ -54,7 +62,8 @@ def test_every_source_vertex_triangle_and_body_blend_reaches_native_skin(skin_in
                                        'native_current_pose', 'native_rest_pose', 'source_hash',
                                        'seed_association', 'harmonic_equation', 'false_physics',
                                        'hidden_truncation', 'projection_gap', 'full_runtime_weights',
-                                       'claimed_runtime_truncation'])
+                                       'claimed_runtime_truncation', 'unequal_exact_seam_weights',
+                                       'false_seam_counts'])
 def test_skin_oracle_rejects_rehashed_geometry_and_rest_invisible_influence_corruption(skin_inputs, tmp_path, corruption):
     from numilab_human.torso_anatomy_audit import _pack_sections
     args = list(skin_inputs)
@@ -140,23 +149,23 @@ def test_skin_oracle_rejects_rehashed_geometry_and_rest_invisible_influence_corr
         solution = manifest['coverage']['binding_solution']
         proof = tmp_path / solution['file']
         shutil.copyfile(args[3].parent / solution['file'], proof)
-        if corruption in {'seed_association', 'harmonic_equation', 'projection_gap'}:
+        if corruption in {'seed_association', 'harmonic_equation', 'projection_gap', 'unequal_exact_seam_weights'}:
             with np.load(proof, allow_pickle=False) as archive:
                 full, targets = archive['full_weights'].copy(), archive['seed_targets'].copy()
                 gaps = archive['seed_projection_gaps_m'].copy()
             if corruption == 'seed_association':
                 targets[0, 3] = (targets[0, 3] + 1) % nb
                 message = 'source skin seed association'
-            elif corruption == 'harmonic_equation':
+            elif corruption in {'harmonic_equation', 'unequal_exact_seam_weights'}:
                 # Keep positivity and partition unity while breaking a row
                 # of the independently checked source graph equations.
-                point = int(np.argmax(full[:, 0]))
+                point = 54847 if corruption == 'unequal_exact_seam_weights' else int(np.argmax(full[:, 0]))
                 donor = int(np.argmax(full[point]))
                 receiver = (donor + 1) % nb
                 amount = min(.1, full[point, donor] / 2)
                 full[point, donor] -= amount
                 full[point, receiver] += amount
-                message = 'source skin harmonic equations'
+                message = 'source exact seam weights' if corruption == 'unequal_exact_seam_weights' else 'source skin harmonic equations'
             else:
                 gaps[0] += .01
                 message = 'source bone-to-skin projection gaps'
@@ -172,6 +181,9 @@ def test_skin_oracle_rejects_rehashed_geometry_and_rest_invisible_influence_corr
         elif corruption == 'claimed_runtime_truncation':
             manifest['coverage']['maximum_runtime_discarded_weight_mass'] = .1
             message = 'full runtime weight ownership/coverage'
+        elif corruption == 'false_seam_counts':
+            manifest['coverage']['source_surface_binding']['exact_coincident_vertex_group_count'] = 0
+            message = 'source exact seam declared counts'
         if corruption == 'source_hash':
             manifest['source']['skin']['member_sha256'] = '0' * 64
         payload.with_name('bodyparts3d-myosim-skinned-shell.manifest.json').write_text(json.dumps(manifest))

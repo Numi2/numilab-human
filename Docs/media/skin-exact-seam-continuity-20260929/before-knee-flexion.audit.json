@@ -1,0 +1,1707 @@
+{
+  "schema": "numi.human.native-skin-source-audit.v1",
+  "passed": true,
+  "vertex_count": 54949,
+  "triangle_count": 109183,
+  "binding_count": 86,
+  "payload_abi": 5,
+  "runtime_influences_per_vertex": 86,
+  "runtime_discarded_weight_mass": 0.0,
+  "source_member_sha256": "682f402206f15592acdeaae8ffb6b34c3e5c3267fa4685e63d2e4920ef2a80e0",
+  "source_subset": {
+    "edge_component_count": 100,
+    "source_vertex_ids_sha256": "6e6017c9bbab2b7324f7f921dec47434f86eb7442f406620a245ad55a45a23e4",
+    "source_face_ids_sha256": "11068454cc48fe4f1fcf5e3ba9f8b1e0bd83842d32747876b98f7d2a95d4a143"
+  },
+  "source_weight_solution_certificate": {
+    "passed": true,
+    "method": "positive_source_surface_projection_gap_screened_harmonic_full_weight.v2",
+    "maximum_relative_equation_residual": 9.83963777258879e-16,
+    "source_bone_count": 185,
+    "source_graph_edge_count": 164188,
+    "source_graph_vertex_count": 54949,
+    "exact_coincident_vertex_group_count": null,
+    "exact_coincident_redundant_vertex_count": null,
+    "seed_candidate_count": 12025,
+    "seed_vertex_count": 5039,
+    "rejected_seed_count": 696,
+    "minimum_retained_four_weight_mass": 0.34204240229243893,
+    "maximum_discarded_weight_mass": 0.6579575977075611,
+    "minimum_source_projection_gap_m": 0.0012839524840258752,
+    "maximum_source_projection_gap_m": 0.10720182024294737,
+    "boundary": "Independent source seed and full graph-equation certificate; not measured anatomical skin weights or deformation qualification."
+  },
+  "source_weight_error": 2.9802199374984184e-08,
+  "source_normal_error": 4.779647605193889e-08,
+  "maximum_native_world_vertex_error_m": 1.4348624474037154e-06,
+  "maximum_native_normal_error": 5.607908583289959e-07,
+  "body_checks": [
+    {
+      "core_body_index": 1,
+      "source_body_id": 2,
+      "binding_translation_error_m": 1.2290647114467841e-08,
+      "binding_rotation_scale_error": 3.146330995740243e-08,
+      "rest_position_error_m": 1.0770329603445901e-09,
+      "rest_orientation_error": 4.8964997677027914e-12,
+      "current_position_error_m": 1.0770329603445901e-09,
+      "current_orientation_error": 4.8964997677027914e-12,
+      "passed": true
+    },
+    {
+      "core_body_index": 4,
+      "source_body_id": 3,
+      "binding_translation_error_m": 9.020428094447467e-09,
+      "binding_rotation_scale_error": 3.146330995740243e-08,
+      "rest_position_error_m": 4.034287669335371e-08,
+      "rest_orientation_error": 2.4693953187932895e-08,
+      "current_position_error_m": 4.034287669335371e-08,
+      "current_orientation_error": 2.4693953187932895e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 10,
+      "source_body_id": 5,
+      "binding_translation_error_m": 3.267881442610735e-09,
+      "binding_rotation_scale_error": 3.146330995740243e-08,
+      "rest_position_error_m": 5.059034783469204e-08,
+      "rest_orientation_error": 5.44962805955218e-08,
+      "current_position_error_m": 5.059034783469204e-08,
+      "current_orientation_error": 5.44962805955218e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 13,
+      "source_body_id": 6,
+      "binding_translation_error_m": 2.234900747182745e-08,
+      "binding_rotation_scale_error": 3.146330995740243e-08,
+      "rest_position_error_m": 3.2115523390836875e-08,
+      "rest_orientation_error": 5.44962805955218e-08,
+      "current_position_error_m": 3.2115523390836875e-08,
+      "current_orientation_error": 5.44962805955218e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 16,
+      "source_body_id": 7,
+      "binding_translation_error_m": 6.212867696977248e-09,
+      "binding_rotation_scale_error": 3.146330995740243e-08,
+      "rest_position_error_m": 4.0674114086326316e-08,
+      "rest_orientation_error": 5.44962805955218e-08,
+      "current_position_error_m": 4.0674114086326316e-08,
+      "current_orientation_error": 5.44962805955218e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 19,
+      "source_body_id": 8,
+      "binding_translation_error_m": 3.05171211440855e-08,
+      "binding_rotation_scale_error": 3.146330995740243e-08,
+      "rest_position_error_m": 4.2088769779394617e-08,
+      "rest_orientation_error": 5.44962805955218e-08,
+      "current_position_error_m": 4.2088769779394617e-08,
+      "current_orientation_error": 5.44962805955218e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 20,
+      "source_body_id": 9,
+      "binding_translation_error_m": 4.482088634119244e-08,
+      "binding_rotation_scale_error": 3.146330995740243e-08,
+      "rest_position_error_m": 9.050375401885245e-08,
+      "rest_orientation_error": 9.000489656352251e-08,
+      "current_position_error_m": 9.050375401885245e-08,
+      "current_orientation_error": 9.000489656352251e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 23,
+      "source_body_id": 12,
+      "binding_translation_error_m": 5.300856586009753e-08,
+      "binding_rotation_scale_error": 3.1463132099673885e-08,
+      "rest_position_error_m": 6.022613294171634e-08,
+      "rest_orientation_error": 4.776296954906584e-08,
+      "current_position_error_m": 6.022613294171634e-08,
+      "current_orientation_error": 4.776296954906584e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 26,
+      "source_body_id": 15,
+      "binding_translation_error_m": 2.0008507037938373e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 2.0283078753438035e-07,
+      "rest_orientation_error": 1.1999509619275983e-07,
+      "current_position_error_m": 2.0283078753438035e-07,
+      "current_orientation_error": 1.1999509619275983e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 29,
+      "source_body_id": 17,
+      "binding_translation_error_m": 2.7131267391330683e-08,
+      "binding_rotation_scale_error": 5.6305656914723556e-08,
+      "rest_position_error_m": 2.358419299463125e-07,
+      "rest_orientation_error": 4.6774125295190316e-08,
+      "current_position_error_m": 2.358419299463125e-07,
+      "current_orientation_error": 4.6774125295190316e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 34,
+      "source_body_id": 19,
+      "binding_translation_error_m": 2.47582102698113e-08,
+      "binding_rotation_scale_error": 3.2252761905660066e-08,
+      "rest_position_error_m": 2.3239438449094392e-07,
+      "rest_orientation_error": 4.403664904950588e-08,
+      "current_position_error_m": 2.3239438449094392e-07,
+      "current_orientation_error": 4.403664904950588e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 41,
+      "source_body_id": 23,
+      "binding_translation_error_m": 5.690944032660524e-08,
+      "binding_rotation_scale_error": 3.078163457459482e-08,
+      "rest_position_error_m": 2.4527417459132506e-07,
+      "rest_orientation_error": 5.72197711989908e-08,
+      "current_position_error_m": 2.4527417459132506e-07,
+      "current_orientation_error": 5.72197711989908e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 42,
+      "source_body_id": 24,
+      "binding_translation_error_m": 2.932912174129688e-08,
+      "binding_rotation_scale_error": 6.035104182372519e-08,
+      "rest_position_error_m": 3.239805282873229e-07,
+      "rest_orientation_error": 1.2286757975973894e-07,
+      "current_position_error_m": 3.239805282873229e-07,
+      "current_orientation_error": 1.2286757975973894e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 43,
+      "source_body_id": 25,
+      "binding_translation_error_m": 1.922219852453203e-08,
+      "binding_rotation_scale_error": 3.814294236015314e-08,
+      "rest_position_error_m": 3.4743150560457007e-07,
+      "rest_orientation_error": 1.0430972935404625e-07,
+      "current_position_error_m": 3.4743150560457007e-07,
+      "current_orientation_error": 1.0430972935404625e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 45,
+      "source_body_id": 26,
+      "binding_translation_error_m": 2.091859084899766e-08,
+      "binding_rotation_scale_error": 4.6229537364883555e-08,
+      "rest_position_error_m": 3.55438633645111e-07,
+      "rest_orientation_error": 1.1749781625436384e-07,
+      "current_position_error_m": 3.55438633645111e-07,
+      "current_orientation_error": 1.1749781625436384e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 46,
+      "source_body_id": 27,
+      "binding_translation_error_m": 1.5180930956970647e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 3.962697048460413e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 3.962697048460413e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 47,
+      "source_body_id": 28,
+      "binding_translation_error_m": 1.9003577498459835e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 3.9114505194142254e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 3.9114505194142254e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 48,
+      "source_body_id": 29,
+      "binding_translation_error_m": 6.125127992860899e-09,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 3.459662383461899e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 3.459662383461899e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 49,
+      "source_body_id": 30,
+      "binding_translation_error_m": 2.750704209343713e-08,
+      "binding_rotation_scale_error": 6.2102986031487e-08,
+      "rest_position_error_m": 4.423121900997411e-07,
+      "rest_orientation_error": 1.101503557809913e-07,
+      "current_position_error_m": 4.423121900997411e-07,
+      "current_orientation_error": 1.101503557809913e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 50,
+      "source_body_id": 31,
+      "binding_translation_error_m": 8.477107554380825e-09,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 4.0459936585443415e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 4.0459936585443415e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 52,
+      "source_body_id": 32,
+      "binding_translation_error_m": 1.0399659159068198e-08,
+      "binding_rotation_scale_error": 2.8779623018060363e-08,
+      "rest_position_error_m": 4.0487278547649313e-07,
+      "rest_orientation_error": 8.644826282599993e-08,
+      "current_position_error_m": 4.0487278547649313e-07,
+      "current_orientation_error": 8.644826282599993e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 53,
+      "source_body_id": 33,
+      "binding_translation_error_m": 1.3379899550712353e-08,
+      "binding_rotation_scale_error": 3.49726414494711e-08,
+      "rest_position_error_m": 3.888767433369124e-07,
+      "rest_orientation_error": 1.6659711166155944e-07,
+      "current_position_error_m": 3.888767433369124e-07,
+      "current_orientation_error": 1.6659711166155944e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 54,
+      "source_body_id": 34,
+      "binding_translation_error_m": 2.4897437483035257e-08,
+      "binding_rotation_scale_error": 4.69384162649078e-08,
+      "rest_position_error_m": 3.703380402537899e-07,
+      "rest_orientation_error": 1.976417606242009e-07,
+      "current_position_error_m": 3.703380402537899e-07,
+      "current_orientation_error": 1.976417606242009e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 55,
+      "source_body_id": 35,
+      "binding_translation_error_m": 6.495546310725917e-09,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 4.0854085066161446e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 4.0854085066161446e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 56,
+      "source_body_id": 36,
+      "binding_translation_error_m": 7.297070121956209e-09,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 4.0130707740623644e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 4.0130707740623644e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 57,
+      "source_body_id": 37,
+      "binding_translation_error_m": 1.2476942861079072e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 4.200817840618135e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 4.200817840618135e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 59,
+      "source_body_id": 38,
+      "binding_translation_error_m": 1.6533980247625398e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 3.671210972218538e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 3.671210972218538e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 60,
+      "source_body_id": 39,
+      "binding_translation_error_m": 1.3090696943998915e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 3.670710083090102e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 3.670710083090102e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 61,
+      "source_body_id": 40,
+      "binding_translation_error_m": 8.373302666915666e-09,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 4.0507788526205635e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 4.0507788526205635e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 62,
+      "source_body_id": 41,
+      "binding_translation_error_m": 9.519125499582422e-09,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 4.027662407358296e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 4.027662407358296e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 64,
+      "source_body_id": 42,
+      "binding_translation_error_m": 1.0809579752594422e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 4.6156643614216745e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 4.6156643614216745e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 65,
+      "source_body_id": 43,
+      "binding_translation_error_m": 2.1993774713134623e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 4.903065086622615e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 4.903065086622615e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 66,
+      "source_body_id": 44,
+      "binding_translation_error_m": 2.6860141188231465e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 5.035609323985172e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 5.035609323985172e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 67,
+      "source_body_id": 45,
+      "binding_translation_error_m": 4.035235888133342e-09,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 4.706934973968322e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 4.706934973968322e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 69,
+      "source_body_id": 46,
+      "binding_translation_error_m": 2.7334163013786448e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 5.01892667017244e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 5.01892667017244e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 70,
+      "source_body_id": 47,
+      "binding_translation_error_m": 1.7491022534677555e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 4.5274325163014064e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 4.5274325163014064e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 71,
+      "source_body_id": 48,
+      "binding_translation_error_m": 1.8432685794852183e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 4.3026576378577667e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 4.3026576378577667e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 72,
+      "source_body_id": 49,
+      "binding_translation_error_m": 1.15226294505711e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 4.599828932268908e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 4.599828932268908e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 74,
+      "source_body_id": 50,
+      "binding_translation_error_m": 2.0687370385061456e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 4.2945242150576614e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 4.2945242150576614e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 75,
+      "source_body_id": 51,
+      "binding_translation_error_m": 1.2400306315676641e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 4.224138880345983e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 4.224138880345983e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 76,
+      "source_body_id": 52,
+      "binding_translation_error_m": 1.7642975399935672e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 3.9280724220115903e-07,
+      "rest_orientation_error": 9.000979314666147e-08,
+      "current_position_error_m": 3.9280724220115903e-07,
+      "current_orientation_error": 9.000979314666147e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 79,
+      "source_body_id": 54,
+      "binding_translation_error_m": 1.4236408548436153e-08,
+      "binding_rotation_scale_error": 5.630885724361434e-08,
+      "rest_position_error_m": 2.3929665828338586e-07,
+      "rest_orientation_error": 6.778318045741472e-08,
+      "current_position_error_m": 2.3929665828338586e-07,
+      "current_orientation_error": 6.778318045741472e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 84,
+      "source_body_id": 56,
+      "binding_translation_error_m": 2.8639282820510542e-08,
+      "binding_rotation_scale_error": 3.22549861264676e-08,
+      "rest_position_error_m": 1.1778254249515068e-07,
+      "rest_orientation_error": 8.676602381019194e-08,
+      "current_position_error_m": 1.1778254249515068e-07,
+      "current_orientation_error": 8.676602381019194e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 91,
+      "source_body_id": 60,
+      "binding_translation_error_m": 1.3297995050294199e-08,
+      "binding_rotation_scale_error": 3.078046018067937e-08,
+      "rest_position_error_m": 2.5005989611602996e-07,
+      "rest_orientation_error": 5.8574977479519674e-08,
+      "current_position_error_m": 2.5005989611602996e-07,
+      "current_orientation_error": 5.8574977479519674e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 92,
+      "source_body_id": 61,
+      "binding_translation_error_m": 2.939766768415548e-08,
+      "binding_rotation_scale_error": 6.034198827761794e-08,
+      "rest_position_error_m": 2.1406809738748977e-07,
+      "rest_orientation_error": 6.199032875908728e-08,
+      "current_position_error_m": 2.1406809738748977e-07,
+      "current_orientation_error": 6.199032875908728e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 93,
+      "source_body_id": 62,
+      "binding_translation_error_m": 1.4678246973274691e-08,
+      "binding_rotation_scale_error": 3.813404948760368e-08,
+      "rest_position_error_m": 2.463033564231958e-07,
+      "rest_orientation_error": 1.1609093517050972e-07,
+      "current_position_error_m": 2.463033564231958e-07,
+      "current_orientation_error": 1.1609093517050972e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 95,
+      "source_body_id": 63,
+      "binding_translation_error_m": 2.030404249056281e-08,
+      "binding_rotation_scale_error": 4.623615051935204e-08,
+      "rest_position_error_m": 2.5739937330625325e-07,
+      "rest_orientation_error": 1.0838862785078618e-07,
+      "current_position_error_m": 2.5739937330625325e-07,
+      "current_orientation_error": 1.0838862785078618e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 96,
+      "source_body_id": 64,
+      "binding_translation_error_m": 1.4962009148991108e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 2.9129794083461895e-07,
+      "rest_orientation_error": 5.999510510612538e-08,
+      "current_position_error_m": 2.9129794083461895e-07,
+      "current_orientation_error": 5.999510510612538e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 97,
+      "source_body_id": 65,
+      "binding_translation_error_m": 1.942176214030556e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 2.849813094815311e-07,
+      "rest_orientation_error": 5.999510510612538e-08,
+      "current_position_error_m": 2.849813094815311e-07,
+      "current_orientation_error": 5.999510510612538e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 98,
+      "source_body_id": 66,
+      "binding_translation_error_m": 6.663183358318924e-09,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 2.453270117055968e-07,
+      "rest_orientation_error": 5.999510510612538e-08,
+      "current_position_error_m": 2.453270117055968e-07,
+      "current_orientation_error": 5.999510510612538e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 99,
+      "source_body_id": 67,
+      "binding_translation_error_m": 2.2990957973479845e-08,
+      "binding_rotation_scale_error": 6.209333242024329e-08,
+      "rest_position_error_m": 2.3023989872573508e-07,
+      "rest_orientation_error": 1.3951047389548776e-07,
+      "current_position_error_m": 2.3023989872573508e-07,
+      "current_orientation_error": 1.3951047389548776e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 100,
+      "source_body_id": 68,
+      "binding_translation_error_m": 6.51145855231948e-09,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 2.0020829623576384e-07,
+      "rest_orientation_error": 1.1999510513005518e-07,
+      "current_position_error_m": 2.0020829623576384e-07,
+      "current_orientation_error": 1.1999510513005518e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 102,
+      "source_body_id": 69,
+      "binding_translation_error_m": 2.0608161628339112e-08,
+      "binding_rotation_scale_error": 2.8779975735915286e-08,
+      "rest_position_error_m": 1.9985340337708034e-07,
+      "rest_orientation_error": 7.775319638136935e-08,
+      "current_position_error_m": 1.9985340337708034e-07,
+      "current_orientation_error": 7.775319638136935e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 103,
+      "source_body_id": 70,
+      "binding_translation_error_m": 2.5382624717950436e-08,
+      "binding_rotation_scale_error": 3.496442668726729e-08,
+      "rest_position_error_m": 1.9029034301693139e-07,
+      "rest_orientation_error": 1.2477334576654897e-07,
+      "current_position_error_m": 1.9029034301693139e-07,
+      "current_orientation_error": 1.2477334576654897e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 104,
+      "source_body_id": 71,
+      "binding_translation_error_m": 2.5446462789503197e-08,
+      "binding_rotation_scale_error": 4.693143840217573e-08,
+      "rest_position_error_m": 1.752668150225097e-07,
+      "rest_orientation_error": 1.6773596578367744e-07,
+      "current_position_error_m": 1.752668150225097e-07,
+      "current_orientation_error": 1.6773596578367744e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 105,
+      "source_body_id": 72,
+      "binding_translation_error_m": 6.255882840074779e-09,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 1.9937230235796732e-07,
+      "rest_orientation_error": 1.1999510513005518e-07,
+      "current_position_error_m": 1.9937230235796732e-07,
+      "current_orientation_error": 1.1999510513005518e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 106,
+      "source_body_id": 73,
+      "binding_translation_error_m": 7.773551718157318e-09,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 1.9551298898693033e-07,
+      "rest_orientation_error": 1.1999510513005518e-07,
+      "current_position_error_m": 1.9551298898693033e-07,
+      "current_orientation_error": 1.1999510513005518e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 107,
+      "source_body_id": 74,
+      "binding_translation_error_m": 1.16619363783686e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 2.1075439424866334e-07,
+      "rest_orientation_error": 1.1999510513005518e-07,
+      "current_position_error_m": 2.1075439424866334e-07,
+      "current_orientation_error": 1.1999510513005518e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 109,
+      "source_body_id": 75,
+      "binding_translation_error_m": 1.574259018683471e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 1.6828957364124216e-07,
+      "rest_orientation_error": 1.1999510513005518e-07,
+      "current_position_error_m": 1.6828957364124216e-07,
+      "current_orientation_error": 1.1999510513005518e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 110,
+      "source_body_id": 76,
+      "binding_translation_error_m": 1.3565264870892101e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 1.742826683307429e-07,
+      "rest_orientation_error": 1.1999510513005518e-07,
+      "current_position_error_m": 1.742826683307429e-07,
+      "current_orientation_error": 1.1999510513005518e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 111,
+      "source_body_id": 77,
+      "binding_translation_error_m": 8.339980586474003e-09,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 2.0262659248060375e-07,
+      "rest_orientation_error": 1.1999510513005518e-07,
+      "current_position_error_m": 2.0262659248060375e-07,
+      "current_orientation_error": 1.1999510513005518e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 112,
+      "source_body_id": 78,
+      "binding_translation_error_m": 8.897410232153753e-09,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 1.95318704313871e-07,
+      "rest_orientation_error": 1.1999510513005518e-07,
+      "current_position_error_m": 1.95318704313871e-07,
+      "current_orientation_error": 1.1999510513005518e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 114,
+      "source_body_id": 79,
+      "binding_translation_error_m": 1.2049518193040196e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 1.5463927600350987e-07,
+      "rest_orientation_error": 1.1999510513005518e-07,
+      "current_position_error_m": 1.5463927600350987e-07,
+      "current_orientation_error": 1.1999510513005518e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 115,
+      "source_body_id": 80,
+      "binding_translation_error_m": 2.137417231228156e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 1.776859797418511e-07,
+      "rest_orientation_error": 1.1999510513005518e-07,
+      "current_position_error_m": 1.776859797418511e-07,
+      "current_orientation_error": 1.1999510513005518e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 116,
+      "source_body_id": 81,
+      "binding_translation_error_m": 2.7308612488014474e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 1.862076658962768e-07,
+      "rest_orientation_error": 1.1999510513005518e-07,
+      "current_position_error_m": 1.862076658962768e-07,
+      "current_orientation_error": 1.1999510513005518e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 117,
+      "source_body_id": 82,
+      "binding_translation_error_m": 5.446154646938341e-09,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 2.56113986694498e-07,
+      "rest_orientation_error": 1.1999510513005518e-07,
+      "current_position_error_m": 2.56113986694498e-07,
+      "current_orientation_error": 1.1999510513005518e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 119,
+      "source_body_id": 83,
+      "binding_translation_error_m": 2.7791426828553958e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 2.826064817639299e-07,
+      "rest_orientation_error": 1.1999510513005518e-07,
+      "current_position_error_m": 2.826064817639299e-07,
+      "current_orientation_error": 1.1999510513005518e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 120,
+      "source_body_id": 84,
+      "binding_translation_error_m": 1.703202168079802e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 2.406456809259867e-07,
+      "rest_orientation_error": 1.1999510513005518e-07,
+      "current_position_error_m": 2.406456809259867e-07,
+      "current_orientation_error": 1.1999510513005518e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 121,
+      "source_body_id": 85,
+      "binding_translation_error_m": 1.85620279262953e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 2.2321611102995348e-07,
+      "rest_orientation_error": 1.1999510513005518e-07,
+      "current_position_error_m": 2.2321611102995348e-07,
+      "current_orientation_error": 1.1999510513005518e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 122,
+      "source_body_id": 86,
+      "binding_translation_error_m": 1.0493484820656688e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 2.440170289221046e-07,
+      "rest_orientation_error": 1.1999510513005518e-07,
+      "current_position_error_m": 2.440170289221046e-07,
+      "current_orientation_error": 1.1999510513005518e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 124,
+      "source_body_id": 87,
+      "binding_translation_error_m": 2.0166064847471532e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 2.1736219282857239e-07,
+      "rest_orientation_error": 1.1999510513005518e-07,
+      "current_position_error_m": 2.1736219282857239e-07,
+      "current_orientation_error": 1.1999510513005518e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 125,
+      "source_body_id": 88,
+      "binding_translation_error_m": 1.317990563780537e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 2.141829337231193e-07,
+      "rest_orientation_error": 1.1999510513005518e-07,
+      "current_position_error_m": 2.141829337231193e-07,
+      "current_orientation_error": 1.1999510513005518e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 126,
+      "source_body_id": 89,
+      "binding_translation_error_m": 1.784073402906582e-08,
+      "binding_rotation_scale_error": 3.1463309735357825e-08,
+      "rest_position_error_m": 1.8801662499076565e-07,
+      "rest_orientation_error": 1.1999510513005518e-07,
+      "current_position_error_m": 1.8801662499076565e-07,
+      "current_orientation_error": 1.1999510513005518e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 128,
+      "source_body_id": 91,
+      "binding_translation_error_m": 1.5558067958638175e-08,
+      "binding_rotation_scale_error": 3.145634241974449e-08,
+      "rest_position_error_m": 3.367830486660201e-08,
+      "rest_orientation_error": 1.9075107687838155e-08,
+      "current_position_error_m": 3.367830486660201e-08,
+      "current_orientation_error": 1.9075107687838155e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 131,
+      "source_body_id": 92,
+      "binding_translation_error_m": 5.06200099368827e-09,
+      "binding_rotation_scale_error": 3.1462983773877795e-08,
+      "rest_position_error_m": 2.8585968156301635e-08,
+      "rest_orientation_error": 2.0751757364898503e-08,
+      "current_position_error_m": 2.8585968156301635e-08,
+      "current_orientation_error": 2.0751757364898503e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 136,
+      "source_body_id": 93,
+      "binding_translation_error_m": 2.8296135192147513e-09,
+      "binding_rotation_scale_error": 5.682974065293611e-08,
+      "rest_position_error_m": 3.541079308670347e-08,
+      "rest_orientation_error": 7.304772508751056e-08,
+      "current_position_error_m": 5.9457712278241346e-08,
+      "current_orientation_error": 1.0195864941220378e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 137,
+      "source_body_id": 94,
+      "binding_translation_error_m": 3.7737038957270616e-09,
+      "binding_rotation_scale_error": 3.964204566692109e-08,
+      "rest_position_error_m": 7.890165940665759e-08,
+      "rest_orientation_error": 8.350510888321949e-08,
+      "current_position_error_m": 1.2504787582132499e-07,
+      "current_orientation_error": 1.3021786196554253e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 138,
+      "source_body_id": 95,
+      "binding_translation_error_m": 1.8618734170809376e-09,
+      "binding_rotation_scale_error": 4.150910952634146e-08,
+      "rest_position_error_m": 1.0440949486620192e-07,
+      "rest_orientation_error": 1.4043063611968165e-07,
+      "current_position_error_m": 5.677604474086939e-08,
+      "current_orientation_error": 9.866596632768232e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 139,
+      "source_body_id": 96,
+      "binding_translation_error_m": 2.358401335253081e-09,
+      "binding_rotation_scale_error": 3.554478805734007e-08,
+      "rest_position_error_m": 7.669614470954094e-08,
+      "rest_orientation_error": 1.3257887970796745e-07,
+      "current_position_error_m": 6.782983632433574e-08,
+      "current_orientation_error": 8.453578226319536e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 142,
+      "source_body_id": 97,
+      "binding_translation_error_m": 1.0769872534714347e-08,
+      "binding_rotation_scale_error": 3.1105488407234816e-08,
+      "rest_position_error_m": 6.952680821145613e-08,
+      "rest_orientation_error": 1.212444741133245e-07,
+      "current_position_error_m": 3.247868553865117e-08,
+      "current_orientation_error": 6.006131297864314e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 145,
+      "source_body_id": 98,
+      "binding_translation_error_m": 8.995504964149279e-09,
+      "binding_rotation_scale_error": 3.146797800113177e-08,
+      "rest_position_error_m": 2.059956631448291e-08,
+      "rest_orientation_error": 3.054913737937908e-08,
+      "current_position_error_m": 2.059956631448291e-08,
+      "current_orientation_error": 3.054913737937908e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 150,
+      "source_body_id": 99,
+      "binding_translation_error_m": 4.624696009867186e-09,
+      "binding_rotation_scale_error": 3.1494656438368906e-08,
+      "rest_position_error_m": 4.201137717792996e-08,
+      "rest_orientation_error": 7.985671501842262e-08,
+      "current_position_error_m": 1.2149370909038487e-07,
+      "current_orientation_error": 4.9921949685227673e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 151,
+      "source_body_id": 100,
+      "binding_translation_error_m": 3.805549117547209e-09,
+      "binding_rotation_scale_error": 3.699022649295003e-08,
+      "rest_position_error_m": 6.896328698575158e-08,
+      "rest_orientation_error": 8.963447550858206e-08,
+      "current_position_error_m": 2.919586014618642e-07,
+      "current_orientation_error": 5.527409707717368e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 152,
+      "source_body_id": 101,
+      "binding_translation_error_m": 3.490436615505569e-09,
+      "binding_rotation_scale_error": 3.2499820390441414e-08,
+      "rest_position_error_m": 1.099589627376533e-07,
+      "rest_orientation_error": 1.6775402519875193e-07,
+      "current_position_error_m": 2.249230920485251e-07,
+      "current_orientation_error": 1.2298859242143578e-07,
+      "passed": true
+    },
+    {
+      "core_body_index": 153,
+      "source_body_id": 102,
+      "binding_translation_error_m": 3.949147283582967e-09,
+      "binding_rotation_scale_error": 4.118589483348423e-08,
+      "rest_position_error_m": 9.355139058657844e-08,
+      "rest_orientation_error": 2.267654258258922e-07,
+      "current_position_error_m": 2.2106725208672724e-07,
+      "current_orientation_error": 8.073228952021339e-08,
+      "passed": true
+    },
+    {
+      "core_body_index": 156,
+      "source_body_id": 103,
+      "binding_translation_error_m": 2.7508851326705487e-09,
+      "binding_rotation_scale_error": 3.142893501006938e-08,
+      "rest_position_error_m": 8.384472893864639e-08,
+      "rest_orientation_error": 4.6331778941199886e-08,
+      "current_position_error_m": 1.1007254231244114e-07,
+      "current_orientation_error": 8.424706154919193e-08,
+      "passed": true
+    }
+  ],
+  "native_surface_edge_diagnostics": {
+    "edge_count": 164188,
+    "maximum_stretch_ratio": 2.0548118183422326,
+    "edge_p99_stretch_ratio": 1.1652634945047202,
+    "edges_over_5x": 0,
+    "maximum_edge_length_increase_m": 0.010118546166394269,
+    "worst_length_increases": [
+      {
+        "source_skin_vertex_ids": [
+          41205,
+          42310
+        ],
+        "source_length_m": 0.02479150312307068,
+        "native_length_m": 0.03491004928946495,
+        "stretch_ratio": 1.4081457310661438
+      },
+      {
+        "source_skin_vertex_ids": [
+          19948,
+          20650
+        ],
+        "source_length_m": 0.01643558050008526,
+        "native_length_m": 0.026376234367489815,
+        "stretch_ratio": 1.6048252367692755
+      },
+      {
+        "source_skin_vertex_ids": [
+          8690,
+          8727
+        ],
+        "source_length_m": 0.03241180137376531,
+        "native_length_m": 0.04234893247485161,
+        "stretch_ratio": 1.306589904908204
+      },
+      {
+        "source_skin_vertex_ids": [
+          41188,
+          41757
+        ],
+        "source_length_m": 0.01305900142661059,
+        "native_length_m": 0.02247421257197857,
+        "stretch_ratio": 1.7209748155921336
+      },
+      {
+        "source_skin_vertex_ids": [
+          41604,
+          42164
+        ],
+        "source_length_m": 0.05940188635808735,
+        "native_length_m": 0.0686333179473877,
+        "stretch_ratio": 1.1554063709972322
+      }
+    ],
+    "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+  },
+  "native_surface_face_diagnostics": {
+    "face_count": 109183,
+    "source_degenerate_face_count": 0,
+    "native_collapsed_face_count": 0,
+    "source_surface_area_m2": 1.8076662289952967,
+    "native_surface_area_m2": 1.8098265478160227,
+    "minimum_area_ratio": 0.19377721970885023,
+    "area_ratio_p01": 0.7721918850833432,
+    "area_ratio_p99": 1.2312015145087494,
+    "maximum_area_ratio": 2.740780547060131,
+    "minimum_surface_stretch": 0.19067322337380516,
+    "maximum_surface_stretch": 3.021757511960287,
+    "surface_stretch_p01": 0.7820537461828315,
+    "surface_stretch_p99": 1.2814024703114935,
+    "faces_area_below_0_1x": 0,
+    "faces_area_above_10x": 0,
+    "faces_opposed_to_rendered_vertex_normals": 1,
+    "lowest_area_faces": [
+      {
+        "source_face_id": 82514,
+        "source_skin_vertex_ids": [
+          41233,
+          41234,
+          41241
+        ],
+        "source_area_m2": 7.83462837187879e-06,
+        "area_ratio": 0.19377721970885023
+      },
+      {
+        "source_face_id": 46359,
+        "source_skin_vertex_ids": [
+          23138,
+          23143,
+          23139
+        ],
+        "source_area_m2": 7.321248526444828e-05,
+        "area_ratio": 0.22398815609522518
+      },
+      {
+        "source_face_id": 46358,
+        "source_skin_vertex_ids": [
+          23138,
+          23137,
+          23143
+        ],
+        "source_area_m2": 1.725610584543145e-05,
+        "area_ratio": 0.28015688370564173
+      },
+      {
+        "source_face_id": 44678,
+        "source_skin_vertex_ids": [
+          23112,
+          22316,
+          22315
+        ],
+        "source_area_m2": 3.3102492644842085e-05,
+        "area_ratio": 0.3100318678041439
+      },
+      {
+        "source_face_id": 84875,
+        "source_skin_vertex_ids": [
+          42428,
+          42429,
+          42966
+        ],
+        "source_area_m2": 3.353829436560187e-05,
+        "area_ratio": 0.34109131776810037
+      }
+    ],
+    "boundary": "All-face geometric area and tangent-map diagnostics; 0.1x/10x counts are descriptive, not physiological thresholds. Normal opposition is a presentation diagnostic, not an inversion/strain certificate. No skin-quality, material or clinical admission."
+  },
+  "source_surface_topology": {
+    "boundary": "Source topology only. Even a closed-oriented candidate does not admit volume, material, contact or clinical anatomy.",
+    "closed_volume_admitted": false,
+    "exact_coordinate_quotient": {
+      "boundary_branch_vertex_ids": [
+        34146,
+        44577
+      ],
+      "boundary_edge_count": 171,
+      "boundary_loop_count": 0,
+      "closed_oriented_manifold_candidate": false,
+      "degenerate_face_ids": [],
+      "duplicate_face_ids": [],
+      "edge_count": 163860,
+      "euler_characteristic": -14,
+      "face_component_count": 1,
+      "face_count": 109183,
+      "nonmanifold_edges": [],
+      "orientation_defect_edges": [],
+      "repeated_vertex_face_ids": [],
+      "unused_vertex_ids": [],
+      "vertex_count": 54663,
+      "vertex_manifold_defect_ids": [
+        34146,
+        44577
+      ]
+    },
+    "identification": "exact Float64 source world-coordinate equality; no proximity tolerance",
+    "identified_seam_vertex_count": 286,
+    "payload_geometry_modified": false,
+    "self_intersection_status": "not_checked",
+    "source_vertex_count": 54949
+  },
+  "native_source_seam_diagnostics": {
+    "exact_coincident_vertex_group_count": 257,
+    "exact_coincident_redundant_vertex_count": 286,
+    "source_seam_pair_count": 316,
+    "maximum_native_seam_gap_m": 0.001079116965683312,
+    "seam_pairs_with_nonzero_native_gap": 312,
+    "seam_vertices_separated_from_canonical": 283,
+    "worst_source_seam_pairs": [
+      {
+        "source_skin_vertex_ids": [
+          31617,
+          54804
+        ],
+        "native_gap_m": 0.001079116965683312
+      },
+      {
+        "source_skin_vertex_ids": [
+          31611,
+          54803
+        ],
+        "native_gap_m": 0.0010094275110107125
+      },
+      {
+        "source_skin_vertex_ids": [
+          31609,
+          54802
+        ],
+        "native_gap_m": 0.0008490314285671978
+      },
+      {
+        "source_skin_vertex_ids": [
+          32354,
+          54808
+        ],
+        "native_gap_m": 0.000708374458265408
+      },
+      {
+        "source_skin_vertex_ids": [
+          30852,
+          54790
+        ],
+        "native_gap_m": 0.0006518425492407448
+      }
+    ],
+    "boundary": "Coincident source-point continuity only; source openings, self-intersection, volume and mechanics remain separate."
+  },
+  "source_equality_projection_oracle": {
+    "method": "independent_MuJoCo_mj_forward_efc_pos_not_importer_polynomial_recalculation",
+    "expected_active_joint_equalities": 51,
+    "measured_joint_equalities": 51,
+    "complete_unique_coverage": true,
+    "maximum_absolute_residual": 2.220446049250313e-16,
+    "maximum_allowed_residual": 1e-09,
+    "tolerance_basis": "existing_projected_joint_range_coordinate_arithmetic_admission",
+    "rows": [
+      {
+        "source_equality_id": 0,
+        "name": "Abs_r3_con",
+        "dependent_q_index": 12,
+        "driver_q_index": 7,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 1,
+        "name": "L4_L5_FE_con",
+        "dependent_q_index": 13,
+        "driver_q_index": 7,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 2,
+        "name": "L4_L5_AR_con",
+        "dependent_q_index": 15,
+        "driver_q_index": 9,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 3,
+        "name": "L4_L5_LB_con",
+        "dependent_q_index": 14,
+        "driver_q_index": 8,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 4,
+        "name": "L3_L4_FE_con",
+        "dependent_q_index": 16,
+        "driver_q_index": 7,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 5,
+        "name": "L3_L4_AR_con",
+        "dependent_q_index": 18,
+        "driver_q_index": 9,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 6,
+        "name": "L3_L4_LB_con",
+        "dependent_q_index": 17,
+        "driver_q_index": 8,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 7,
+        "name": "L2_L3_FE_con",
+        "dependent_q_index": 19,
+        "driver_q_index": 7,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 8,
+        "name": "L2_L3_AR_con",
+        "dependent_q_index": 21,
+        "driver_q_index": 9,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 9,
+        "name": "L2_L3_LB_con",
+        "dependent_q_index": 20,
+        "driver_q_index": 8,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 10,
+        "name": "L1_L2_FE_con",
+        "dependent_q_index": 22,
+        "driver_q_index": 7,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 11,
+        "name": "L1_L2_AR_con",
+        "dependent_q_index": 24,
+        "driver_q_index": 9,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 12,
+        "name": "L1_L2_LB_con",
+        "dependent_q_index": 23,
+        "driver_q_index": 8,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 13,
+        "name": "Abs_t1_locked",
+        "dependent_q_index": 10,
+        "driver_q_index": null,
+        "residual": 0.0,
+        "unit": "m",
+        "passed": true
+      },
+      {
+        "source_equality_id": 14,
+        "name": "Abs_t2_locked",
+        "dependent_q_index": 11,
+        "driver_q_index": null,
+        "residual": 0.0,
+        "unit": "m",
+        "passed": true
+      },
+      {
+        "source_equality_id": 15,
+        "name": "sternoclavicular_r2_con_r",
+        "dependent_q_index": 25,
+        "driver_q_index": 36,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 16,
+        "name": "sternoclavicular_r3_con_r",
+        "dependent_q_index": 26,
+        "driver_q_index": 36,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 17,
+        "name": "unrotscap_r2_con_r",
+        "dependent_q_index": 28,
+        "driver_q_index": 36,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 18,
+        "name": "unrotscap_r3_con_r",
+        "dependent_q_index": 27,
+        "driver_q_index": 36,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 19,
+        "name": "acromioclavicular_r1_con_r",
+        "dependent_q_index": 31,
+        "driver_q_index": 36,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 20,
+        "name": "acromioclavicular_r2_con_r",
+        "dependent_q_index": 29,
+        "driver_q_index": 36,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 21,
+        "name": "acromioclavicular_r3_con_r",
+        "dependent_q_index": 30,
+        "driver_q_index": 36,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 22,
+        "name": "unrothum_r1_con_r",
+        "dependent_q_index": 32,
+        "driver_q_index": 36,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 23,
+        "name": "unrothum_r2_con_r",
+        "dependent_q_index": 34,
+        "driver_q_index": 36,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 24,
+        "name": "unrothum_r3_con_r",
+        "dependent_q_index": 33,
+        "driver_q_index": 36,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 25,
+        "name": "shoulder1_r2_con_r",
+        "dependent_q_index": 37,
+        "driver_q_index": 35,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 26,
+        "name": "sternoclavicular_r2_con_l",
+        "dependent_q_index": 63,
+        "driver_q_index": 74,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 27,
+        "name": "sternoclavicular_r3_con_l",
+        "dependent_q_index": 64,
+        "driver_q_index": 74,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 28,
+        "name": "unrotscap_r2_con_l",
+        "dependent_q_index": 66,
+        "driver_q_index": 74,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 29,
+        "name": "unrotscap_r3_con_l",
+        "dependent_q_index": 65,
+        "driver_q_index": 74,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 30,
+        "name": "acromioclavicular_r1_con_l",
+        "dependent_q_index": 69,
+        "driver_q_index": 74,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 31,
+        "name": "acromioclavicular_r2_con_l",
+        "dependent_q_index": 67,
+        "driver_q_index": 74,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 32,
+        "name": "acromioclavicular_r3_con_l",
+        "dependent_q_index": 68,
+        "driver_q_index": 74,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 33,
+        "name": "unrothum_r1_con_l",
+        "dependent_q_index": 70,
+        "driver_q_index": 74,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 34,
+        "name": "unrothum_r2_con_l",
+        "dependent_q_index": 72,
+        "driver_q_index": 74,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 35,
+        "name": "unrothum_r3_con_l",
+        "dependent_q_index": 71,
+        "driver_q_index": 74,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 36,
+        "name": "shoulder1_r2_con_l",
+        "dependent_q_index": 75,
+        "driver_q_index": 73,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 37,
+        "name": "knee_angle_translation2_constraint_r",
+        "dependent_q_index": 104,
+        "driver_q_index": 106,
+        "residual": 0.0,
+        "unit": "m",
+        "passed": true
+      },
+      {
+        "source_equality_id": 38,
+        "name": "knee_angle_translation1_constraint_r",
+        "dependent_q_index": 105,
+        "driver_q_index": 106,
+        "residual": 6.505213034913027e-19,
+        "unit": "m",
+        "passed": true
+      },
+      {
+        "source_equality_id": 39,
+        "name": "knee_angle_rotation2_constraint_r",
+        "dependent_q_index": 107,
+        "driver_q_index": 106,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 40,
+        "name": "knee_angle_rotation3_constraint_r",
+        "dependent_q_index": 108,
+        "driver_q_index": 106,
+        "residual": 2.7755575615628914e-17,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 41,
+        "name": "knee_angle_beta_translation2_constraint_r",
+        "dependent_q_index": 112,
+        "driver_q_index": 106,
+        "residual": 0.0,
+        "unit": "m",
+        "passed": true
+      },
+      {
+        "source_equality_id": 42,
+        "name": "knee_angle_beta_translation1_constraint_r",
+        "dependent_q_index": 113,
+        "driver_q_index": 106,
+        "residual": 6.938893903907228e-18,
+        "unit": "m",
+        "passed": true
+      },
+      {
+        "source_equality_id": 43,
+        "name": "knee_angle_beta_rotation1_constraint_r",
+        "dependent_q_index": 114,
+        "driver_q_index": 106,
+        "residual": 2.220446049250313e-16,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 44,
+        "name": "knee_angle_translation2_constraint_l",
+        "dependent_q_index": 118,
+        "driver_q_index": 120,
+        "residual": 0.0,
+        "unit": "m",
+        "passed": true
+      },
+      {
+        "source_equality_id": 45,
+        "name": "knee_angle_translation1_constraint_l",
+        "dependent_q_index": 119,
+        "driver_q_index": 120,
+        "residual": 6.505213034913027e-19,
+        "unit": "m",
+        "passed": true
+      },
+      {
+        "source_equality_id": 46,
+        "name": "knee_angle_rotation2_constraint_l",
+        "dependent_q_index": 121,
+        "driver_q_index": 120,
+        "residual": 0.0,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 47,
+        "name": "knee_angle_rotation3_constraint_l",
+        "dependent_q_index": 122,
+        "driver_q_index": 120,
+        "residual": -2.7755575615628914e-17,
+        "unit": "rad",
+        "passed": true
+      },
+      {
+        "source_equality_id": 48,
+        "name": "knee_angle_beta_translation2_constraint_l",
+        "dependent_q_index": 126,
+        "driver_q_index": 120,
+        "residual": 0.0,
+        "unit": "m",
+        "passed": true
+      },
+      {
+        "source_equality_id": 49,
+        "name": "knee_angle_beta_translation1_constraint_l",
+        "dependent_q_index": 127,
+        "driver_q_index": 120,
+        "residual": 6.938893903907228e-18,
+        "unit": "m",
+        "passed": true
+      },
+      {
+        "source_equality_id": 50,
+        "name": "knee_angle_beta_rotation1_constraint_l",
+        "dependent_q_index": 128,
+        "driver_q_index": 120,
+        "residual": 2.220446049250313e-16,
+        "unit": "rad",
+        "passed": true
+      }
+    ],
+    "passed": true,
+    "boundary": "Kinematic projection at this pose; not soft-constraint dynamics or loaded qualification."
+  },
+  "rigid_source_program_checks": {
+    "file": "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid",
+    "actual_sha256": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951",
+    "expected_source_sha256": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951",
+    "actual_bytes": 60324,
+    "expected_bytes": 60324,
+    "declared_identity_matches": true,
+    "source_metadata_matches": true,
+    "checked_field_count": 2250,
+    "engine_body_count": 157,
+    "joint_count": 156,
+    "source_body_count": 103,
+    "failures": [],
+    "tolerance_basis": "existing_source_lowerer_FP32_fields_and_native_norm_admission_with_common_scale_rounding_bins",
+    "passed": true,
+    "boundary": "source_program_agreement_not_native_execution_loaded_or_clinical_anatomy"
+  },
+  "inputs": {
+    "registration": {
+      "path": "/Users/home/numilab-human/Build/knee-parity-registration-20260929/candidate.v6.registration.json",
+      "sha256": "0b7129f788ae91272d03abf9f10b985359f3b9d9569941515b222787ffe71324"
+    },
+    "payload": {
+      "path": "/Users/home/numilab-human/Build/skin-full-weight-20260929/production/payload/bodyparts3d-myosim-skinned-shell.nhskin",
+      "sha256": "e5e1bba600ecbed09ad8407b32f6e0e4a118acfc9575fa3de7da1660ff4317de"
+    },
+    "manifest": {
+      "path": "/Users/home/numilab-human/Build/skin-full-weight-20260929/production/payload/bodyparts3d-myosim-skinned-shell.manifest.json",
+      "sha256": "49b8e834d08a3ea278d74a6889d0562828416c0bc375f9409ebb7b2569458e4c"
+    },
+    "binding_solution": {
+      "path": "/Users/home/numilab-human/Build/skin-full-weight-20260929/production/payload/bodyparts3d-skin-binding-solution.npz",
+      "sha256": "fbcf934f37c6cd2f1b911b7c3a5a0b7737cbebee62199d73c5643f27e39d961d"
+    },
+    "native_pack": {
+      "path": "/Users/home/numilab-human/Build/skin-full-weight-20260929/production/native-knee-flexion/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-posed.mrvpack",
+      "sha256": "5259748b9f34bb222b14ac9d6b3ed7327d4cd402131f7f876289a2888acc197d"
+    },
+    "native_poses": {
+      "path": "/Users/home/numilab-human/Build/skin-full-weight-20260929/production/native-knee-flexion/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-posed.skin-poses.json",
+      "sha256": "8ddd2874a5aa84fab787baa715a84274006b9c21f88e468eccef6b70f125ffb8"
+    }
+  },
+  "boundary": "Complete selected source exterior and sampled visual blend verification with separate seam, face and topology diagnostics; not clinical skin weights, tissue deformation, thickness, mass, material, contact, self-intersection or whole-Human qualification."
+}

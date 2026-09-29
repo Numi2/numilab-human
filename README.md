@@ -514,12 +514,13 @@ three-body review above.
 The exact 102,467-vertex, 203,382-triangle BodyParts3D `FJ2810` shell remains
 the exterior source. It has no upstream skin weights. The older proximity
 binding remains a rejected diagnostic; the current
-[complete-field skin repair](Docs/SKIN_GEOMETRIC_FULL_FIELD_20260929.md)
-uses source projection gaps for seed confidence and retains all 86 body weights
-in native ABI 5. It reduces knee and shoulder defects while independently
-checking the complete native exterior across nine poses. Local raised-shoulder
-distortion and anatomical deformation qualification remain open. These are
-source visual checks, not deformable-shell mechanics or a finished textured avatar.
+[exact source seam repair](Docs/SKIN_EXACT_SEAM_CONTINUITY_20260929.md)
+retains all 86 body weights in native ABI 5 and binds exactly coincident source
+positions together. All 257 duplicate groups remain coincident across nine
+native poses, closing a 132 mm raised-shoulder crack. Triangle shape measures
+retain local regressions and the source retains 171 boundary edges and two
+vertex-link defects. These are source visual checks, not deformable-shell
+mechanics or a finished textured avatar.
 
 ### Selective upper-limb source-actuator drive
 
@@ -642,12 +643,17 @@ on the connected source skin surface. Exact source bone-to-skin projection gaps
 set confidence independently of local skin edge lengths. NHSKIN ABI 5 retains
 the complete 86-body field, preserving exact source skin coordinates, normals,
 triangles and binding transforms. Nine native poses pass the full
-54,949-vertex/109,183-triangle check and 107 selected tests pass. In bilateral
+54,949-vertex/109,183-triangle check. In bilateral
 knee flexion, maximum source-edge stretch decreases from 18.48 to 2.05 and
-maximum added edge length from 33.28 to 10.12 mm. Six edges remain above five-times
-source length in shoulder elevation; these diagnostics do not admit skin shape
-quality. The [complete-field repair record](Docs/SKIN_GEOMETRIC_FULL_FIELD_20260929.md)
-retains all comparisons, native captures and legacy ABI 4 byte parity.
+maximum added edge length from 33.28 to 10.12 mm. The subsequent
+[exact seam repair](Docs/SKIN_EXACT_SEAM_CONTINUITY_20260929.md) shares weights
+between all exactly coincident source positions, closing a 132 mm shoulder
+crack and removing its six edges above five-times source length. It passes
+135 selected tests without skips. New all-face and source-topology diagnostics
+retain remaining defects and regressions: shoulder maximum added edge length
+rises from 40.82 to 50.08 mm, and the source remains open. These diagnostics
+do not admit skin shape quality. The [previous full-field repair record](Docs/SKIN_GEOMETRIC_FULL_FIELD_20260929.md)
+retains its dated comparisons, native captures and legacy ABI 4 byte parity.
 The [earlier four-weight repair](Docs/SKIN_SOURCE_SURFACE_BINDING_20260929.md)
 remains a dated baseline. Inferred visual weights
 do not establish anatomical skin weights, complete organ coverage, loaded
