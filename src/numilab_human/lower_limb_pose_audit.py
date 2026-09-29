@@ -109,7 +109,129 @@ def _posed_continuity_gates(
     return base_gap, base_patch, gap, patch
 
 
-def audit_lower_limb_poses(*, sources: Path, registration_path: Path, artifact: Path) -> dict[str, Any]:
+def _compiled_bone_members(
+    bone_artifact: Path, registration_path: Path,
+    registration: dict[str, Any], runtime_reference: dict[str, Any],
+    runtime_bodies: dict[str, Any],
+) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
+    """Use the owning NHBONES reader, then join its owners to consumed NHRIGID."""
+    by_body, descriptor, payload_path = human_model._numi_human_bone_envelope_surfaces(
+        bone_artifact, runtime_reference["source_archive_sha256"],
+    )
+    identity = (
+        f"bone_sha256={descriptor['sha256']}; "
+        f"rigid_sha256={runtime_reference['rigid']['sha256']}"
+    )
+    if descriptor["payload_abi"] != 3:
+        raise RuntimeError(
+            "lower-limb compiled geometry requires NHBONES1 ABI 3 source owners; " + identity
+        )
+    manifest = human_model.read_json(
+        bone_artifact / "bodyparts3d-myosim-major-bones.manifest.json"
+    )
+    source = manifest["source"]
+    registration_sha = _sha256(registration_path)
+    compiled_registration = source.get("registration")
+    if (
+        not isinstance(compiled_registration, dict)
+        or compiled_registration.get("sha256") != registration_sha
+        or descriptor["registration_fingerprint32"] != registration_sha[:8]
+    ):
+        raise RuntimeError(
+            "lower-limb compiled geometry registration identity drifted; "
+            f"registration_sha256={registration_sha}; " + identity
+        )
+    compiled_reference = source.get("runtime_reference", {})
+    for owner in ("rigid", "manifest"):
+        compiled_owner = compiled_reference.get(owner) if isinstance(compiled_reference, dict) else None
+        if not isinstance(compiled_owner, dict) or compiled_owner.get("sha256") != runtime_reference[owner]["sha256"]:
+            raise RuntimeError(
+                f"lower-limb compiled geometry {owner} identity drifted; " + identity
+            )
+    registered = {
+        anchor["source"]["member_id"]: anchor for anchor in registration["anchors"]
+    }
+    members: dict[str, dict[str, Any]] = {}
+    for core_body_index, surfaces in by_body.items():
+        for surface in surfaces:
+            member_id = surface["member_id"]
+            if member_id in members or member_id not in registered:
+                raise RuntimeError(
+                    f"lower-limb compiled geometry duplicate or unknown member={member_id}; " + identity
+                )
+            anchor = registered[member_id]
+            name = anchor["target"]["name"]
+            expected_core, body = runtime_bodies[name]
+            provenance = source["anchors"][surface["stable_id"] - 1]
+            if (
+                core_body_index != expected_core
+                or provenance.get("source_record_index") != body["source_record_index"]
+                or provenance.get("myosim_body") != name
+                or provenance.get("member_sha256") != anchor["source"]["member_sha256"]
+            ):
+                raise RuntimeError(
+                    f"lower-limb compiled geometry member={member_id} ({name}) owner/source mismatch: "
+                    f"Core={core_body_index}, source_record={provenance.get('source_record_index')}; "
+                    f"NHRIGID requires Core={expected_core}, source_record={body['source_record_index']}; "
+                    + identity
+                )
+            members[member_id] = surface
+    if members.keys() != registered.keys():
+        raise RuntimeError("lower-limb compiled geometry member coverage drifted; " + identity)
+    return members, {**descriptor, "file": str(payload_path.resolve())}
+
+
+def _compiled_member_geometry_check(
+    anchor: dict[str, Any], raw_vertices: list[Any], raw_triangles: list[Any],
+    surface: dict[str, Any], np: Any,
+) -> dict[str, Any]:
+    """Compare source geometry after the format's specified FP32 round trip.
+
+    This is an identity check, not a larger anatomical tolerance. The source
+    frame and regional gates still use their original bounds.
+    """
+    translation, quaternion, scale = human_model._bodyparts_visual_local_pose(
+        anchor["registration"]["source_obj_mm_to_core_inertial_body_m"],
+        f"lower-limb compiled geometry {anchor['source']['member_id']}",
+    )
+    pose = np.asarray([*translation, *quaternion, scale], dtype=np.float32).astype(float)
+    rotation = human_model._myosim_matrix_from_quaternion_xyzw(pose[3:7].tolist())
+    source_meters = np.asarray([
+        [coordinate * .001 for coordinate in vertex] for vertex in raw_vertices
+    ], dtype=np.float32).astype(float)
+    expected = np.asarray([
+        human_model._myosim_add(pose[:3].tolist(), human_model._myosim_matrix_vector(
+            rotation, [float(pose[7]) * float(value) for value in vertex],
+        )) for vertex in source_meters
+    ])
+    actual = np.asarray(surface["vertices"], dtype=float)
+    shape_matches = actual.shape == expected.shape
+    finite = bool(np.all(np.isfinite(actual)))
+    residual = (
+        float(np.max(np.linalg.norm(actual - expected, axis=1)))
+        if shape_matches and finite else None
+    )
+    topology_matches = surface["triangles"] == [tuple(t) for t in raw_triangles]
+    return {
+        "source_member_id": anchor["source"]["member_id"],
+        "myosim_body": anchor["target"]["name"],
+        "core_body_index": anchor["target"]["core_body_index"],
+        "source_vertex_count": len(raw_vertices),
+        "compiled_vertex_count": len(actual),
+        "source_triangle_count": len(raw_triangles),
+        "compiled_triangle_count": len(surface["triangles"]),
+        "maximum_vertex_residual_m": residual,
+        "maximum_allowed_vertex_residual_m": 0.0,
+        "tolerance_basis": "exact_source_geometry_after_NHBONES1_FP32_round_trip",
+        "source_topology_matches": topology_matches,
+        "passed": shape_matches and finite and residual == 0.0 and topology_matches,
+    }
+
+
+def audit_lower_limb_poses(
+    *, sources: Path, registration_path: Path, artifact: Path,
+    bone_artifact: Path | None = None,
+) -> dict[str, Any]:
     try:
         import mujoco
         import numpy as np
@@ -129,6 +251,12 @@ def audit_lower_limb_poses(*, sources: Path, registration_path: Path, artifact: 
     ):
         raise RuntimeError("lower-limb pose audit requires admitted lower-limb registration v3")
     runtime_reference, runtime_bodies = human_model._bodyparts_runtime_bindings(registration, artifact)
+    compiled_members, bone_descriptor = ({}, None)
+    if bone_artifact is not None:
+        compiled_members, bone_descriptor = _compiled_bone_members(
+            bone_artifact, registration_path, registration,
+            runtime_reference, runtime_bodies,
+        )
     common_frame = human_model._bodyparts_source_common_frame(sources, registration, runtime_bodies)
     source_frame_checks = _lower_limb_source_frame_checks(registration, common_frame, runtime_bodies)
 
@@ -144,6 +272,8 @@ def audit_lower_limb_poses(*, sources: Path, registration_path: Path, artifact: 
     }
     anchors_by_member: dict[str, dict[str, Any]] = {}
     local_vertices: dict[str, tuple[int, Any]] = {}
+    registered_local_vertices: dict[str, tuple[int, Any]] = {}
+    compiled_geometry_checks: dict[str, dict[str, Any]] = {}
     source_local_vertices: dict[int, Any] = {}
 
     for anchor in registration.get("anchors", []):
@@ -176,7 +306,13 @@ def audit_lower_limb_poses(*, sources: Path, registration_path: Path, artifact: 
         _, member, obj = human_model._bodyparts_obj_member(
             sources, source["hierarchy"], member_id
         )
-        raw_vertices, _ = human_model._bodyparts_obj_triangles(obj, member)
+        raw_vertices, raw_triangles = human_model._bodyparts_obj_triangles(obj, member)
+        if (
+            source.get("member_sha256") != hashlib.sha256(obj).hexdigest()
+            or source.get("vertex_count") != len(raw_vertices)
+            or source.get("triangle_count") != len(raw_triangles)
+        ):
+            raise RuntimeError(f"lower-limb pose audit pinned mesh identity drifted for {member_id}")
         matrix = np.asarray(
             anchor["registration"]["source_obj_mm_to_core_inertial_body_m"],
             dtype=float,
@@ -195,6 +331,16 @@ def audit_lower_limb_poses(*, sources: Path, registration_path: Path, artifact: 
         body_vertices = np.einsum(
             "ki,ji->kj", core_vertices, inertial_rotation
         ) + inertial_position
+        registered_local_vertices[member_id] = (source_body_id, body_vertices)
+        if bone_descriptor is not None:
+            surface = compiled_members[member_id]
+            compiled_geometry_checks[member_id] = _compiled_member_geometry_check(
+                anchor, raw_vertices, raw_triangles, surface, np,
+            )
+            body_vertices = np.einsum(
+                "ki,ji->kj", np.asarray(surface["vertices"], dtype=float),
+                inertial_rotation,
+            ) + inertial_position
         anchors_by_name[name].append(anchor)
         anchors_by_member[member_id] = anchor
         local_vertices[member_id] = (source_body_id, body_vertices)
@@ -216,6 +362,10 @@ def audit_lower_limb_poses(*, sources: Path, registration_path: Path, artifact: 
             "myosim_body": name, "source_member_ids": [a["source"]["member_id"] for a in anchors],
             "source_frame_checks": frame_checks, "passed": all(c["passed"] for c in frame_checks),
         }
+        if bone_descriptor is not None:
+            checks = [compiled_geometry_checks[a["source"]["member_id"]] for a in anchors]
+            record["compiled_bone_geometry_checks"] = checks
+            record["passed"] = record["passed"] and all(c["passed"] for c in checks)
         if name.startswith("toes_"):
             record["source_surface_fit_disposition"] = "inherited_complete_rigid_foot_transform_not_collective_toe_mesh_refit"
         else:
@@ -279,7 +429,7 @@ def audit_lower_limb_poses(*, sources: Path, registration_path: Path, artifact: 
                 "ki,ji->kj", vertices, data.xmat[body_id].reshape(3, 3)
             ) + data.xpos[body_id]
         )
-        for member_id, (body_id, vertices) in local_vertices.items()
+        for member_id, (body_id, vertices) in registered_local_vertices.items()
     }
     for anchor in anchors_by_member.values():
         member_id = anchor["source"]["member_id"]
@@ -457,6 +607,11 @@ def audit_lower_limb_poses(*, sources: Path, registration_path: Path, artifact: 
                 "sha256": _sha256(registration_path),
             },
             "runtime_reference": runtime_reference,
+            "evaluated_geometry": (
+                "decoded_NHBONES1_source_owned_vertices_and_triangles"
+                if bone_descriptor is not None else "registration_source_OBJ_vertices"
+            ),
+            **({"bone_payload": bone_descriptor} if bone_descriptor is not None else {}),
             "myosim_archive_sha256": registration["source"]["myosim"]["source"][
                 "archive_sha256"
             ],
@@ -488,6 +643,14 @@ def audit_lower_limb_poses(*, sources: Path, registration_path: Path, artifact: 
         "worst_bilateral_gap_parity": worst_parity,
         "poses": pose_receipts,
         "evidence_boundary": (
+            (
+                "The decoded NHBONES1 payload was compared with the pinned source geometry "
+                "after the specified FP32 round trip, including topology and NHRIGID "
+                "source/Core owners. Pose metrics below use those decoded payload vertices. "
+                if bone_descriptor is not None else
+                "Pose metrics below use registered source OBJ geometry; no compiled bone "
+                "payload was evaluated. "
+            ) +
             "Rigid BodyParts3D lower-limb bones were replayed through pinned MyoSim "
             "kinematics and exact polynomial joint-equality projection. Passing proves "
             "body ownership, default-frame identity, freshly measured regional source-surface "
@@ -509,6 +672,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--sources", type=Path, required=True)
     parser.add_argument("--registration", type=Path, required=True)
     parser.add_argument("--artifact", type=Path, required=True)
+    parser.add_argument(
+        "--bone-artifact", type=Path,
+        help="evaluate the decoded native NHBONES1 payload against source geometry and runtime owners",
+    )
     parser.add_argument("--output", type=Path, required=True)
     arguments = parser.parse_args(argv)
     failure = None
@@ -517,6 +684,7 @@ def main(argv: list[str] | None = None) -> int:
             sources=arguments.sources.resolve(),
             registration_path=arguments.registration.resolve(),
             artifact=arguments.artifact.resolve(),
+            bone_artifact=arguments.bone_artifact.resolve() if arguments.bone_artifact else None,
         )
     except PoseAuditError as error:
         result = error.result
@@ -531,6 +699,10 @@ def main(argv: list[str] | None = None) -> int:
         "--registration", str(arguments.registration.resolve()),
         "--output", str(arguments.output.resolve()),
     ]
+    if arguments.bone_artifact is not None:
+        result["inputs"]["reproduction_command"].extend([
+            "--bone-artifact", str(arguments.bone_artifact.resolve()),
+        ])
     arguments.output.parent.mkdir(parents=True, exist_ok=True)
     arguments.output.write_text(
         json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8"

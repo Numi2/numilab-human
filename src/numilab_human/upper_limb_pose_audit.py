@@ -63,6 +63,15 @@ def _finish_pose_audit(result: dict[str, Any], region: str) -> dict[str, Any]:
                     f"allowed_rad={check['maximum_rotation_angle_rad']:.12g},"
                     f"scale={check['atlas_relative_uniform_scale']:.12g},allowed_scale={check['uniform_scale_bounds']}"
                 )
+        for check in item.get("compiled_bone_geometry_checks", []):
+            if not check["passed"]:
+                details.append(
+                    f"{check['source_member_id']}:compiled_vertex_residual_m="
+                    f"{check['maximum_vertex_residual_m']},allowed_m=0,"
+                    f"topology_matches={check['source_topology_matches']},"
+                    f"vertices={check['compiled_vertex_count']}/{check['source_vertex_count']},"
+                    f"tolerance_basis={check['tolerance_basis']}"
+                )
         surface = item.get("held_out_surface_metrics")
         if surface is not None and surface["p90_m"] > item["maximum_held_out_p90_m"]:
             details.append(f"source_surface_p90_m={surface['p90_m']:.12g},allowed_m={item['maximum_held_out_p90_m']:.12g}")
@@ -94,7 +103,9 @@ def _finish_pose_audit(result: dict[str, Any], region: str) -> dict[str, Any]:
         raise PoseAuditError(
             f"{region} pose audit failed: " + "; ".join(failures[:12])
             + f"; registration_sha256={result['inputs']['registration']['sha256']}"
-            + f"; rigid_sha256={result['inputs']['runtime_reference']['rigid']['sha256']}",
+            + f"; rigid_sha256={result['inputs']['runtime_reference']['rigid']['sha256']}"
+            + (f"; bone_sha256={result['inputs']['bone_payload']['sha256']}"
+               if "bone_payload" in result["inputs"] else ""),
             result,
         )
     return result

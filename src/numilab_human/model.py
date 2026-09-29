@@ -8005,12 +8005,20 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
         ):
             raise ImportError("Numi Human tendon envelope NHBONES1 record is malformed")
         translation = pose[:3]
+        if not all(math.isfinite(value) for value in pose):
+            raise ImportError(
+                f"Numi Human tendon envelope bone {anchor.get('member_id')} pose is non-finite"
+            )
         rotation = _myosim_matrix_from_quaternion_xyzw(list(pose[3:7]))
         scale = pose[7]
         if not math.isfinite(scale) or scale <= 0.0:
             raise ImportError("Numi Human tendon envelope bone scale is invalid")
         local_vertices = []
         for vertex in vertices[first_vertex:first_vertex + count]:
+            if not all(math.isfinite(value) for value in vertex):
+                raise ImportError(
+                    f"Numi Human tendon envelope bone {anchor.get('member_id')} vertex is non-finite"
+                )
             transformed = _myosim_matrix_vector(rotation, [scale * vertex[axis] for axis in range(3)])
             local_vertices.append([translation[axis] + transformed[axis] for axis in range(3)])
         local_indices = indices[first_index:first_index + count_indices]
@@ -8030,6 +8038,7 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
         "file": payload_path.name,
         "sha256": expected_sha,
         "bytes": len(raw),
+        "payload_abi": abi,
         "bone_count": bone_count,
         "registration_fingerprint32": f"{fingerprint:08x}",
         "manifest": {"file": manifest_path.name, "sha256": sha256(manifest_path)},
