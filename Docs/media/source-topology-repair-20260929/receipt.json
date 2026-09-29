@@ -1,0 +1,234 @@
+{
+  "schema": "numi.human.surface-topology-repair-evidence.v1",
+  "date": "2026-09-29",
+  "source_base_revision": "1a3b244be4ecd01a0d54d1d307297b82a16bc0ed",
+  "native_revision": "9c6aefb6c0d3d54589d8d20b161f51d771d6103c",
+  "published_payload_sha256": "c8b8a01aac9d55d1dd154f0e3f92450e5a1a980668eebfcc2a012bb47268b280",
+  "raw_original_surface_count": 579,
+  "derived_surface_count": 19,
+  "native_surface_count": 598,
+  "source_unchanged_closed_topology_count": 551,
+  "derived_exact_self_intersection_free_count": 11,
+  "derived_self_intersecting_count": 8,
+  "derived_intersection_pair_count": 262,
+  "unresolved_source_ids": [
+    17,
+    23,
+    305,
+    306,
+    307,
+    308,
+    309,
+    413,
+    427
+  ],
+  "unresolved_source_count": 9,
+  "actual_native_profiles": 5,
+  "full_raw_579_pose_audits": 3,
+  "maximum_raw_source_pose_error_m": 1.8318541644235473e-07,
+  "old_abi5_default_pack_and_four_views_byte_identical": true,
+  "executed_source_sha256": {
+    "src/numilab_human/surface_topology_repair.py": "801e0b75d7d512e4d60b4c48e7c60cfc13497a6e4889e090949a5adf8dde9142",
+    "src/numilab_human/surface_topology_audit.py": "837f6281d6f2c58e4aa2e8d1972af7cb67ce068bc25862504eebc0f82df48a38",
+    "src/numilab_human/lung_envelope.py": "4bb5d3c69396b5b3f12d6354207156d3d6e6c2c5cec8418b4943914d82733417",
+    "src/numilab_human/organ_family_geometry.py": "abe662a79508b8373a9dc60510c5a265070e8b9c08b8bcdfd980cf1f5296f2ed",
+    "src/numilab_human/torso_anatomy_audit.py": "58b199b50516fc776463cfc1ea213f0ef58accacb9211fbea5d0928a02055f01",
+    "tests/test_surface_topology_repair.py": "0bd9dc5b0fc70b0d54bb2b8c7b5c0fb4f79cbd37776904c7a38ea3dc345f9750"
+  },
+  "native_binary_sha256": "e48bc479522bccdacb495b62c31e8f88385647176ce43a92ad1abcc7d6af2664",
+  "physical_volume_qualified": false,
+  "clinical_anatomy_qualified": false,
+  "whole_human_qualified": false,
+  "mechanics_qualified": false,
+  "boundary": "Exact source-oriented surface chain and actual Float32 self-intersection audits are diagnostic geometry gates only. The 11 displayed copies lack cross-surface/component containment, clinical placement, volumetric material and mechanical proof. The 10-second standing run predates this payload.",
+  "files": {
+    "abi5-default-parity.json": {
+      "sha256": "be4538c764b748604548ba6d1d9fa1ca3a87dead43513d385dcad9b9ea89545d",
+      "bytes": 1098
+    },
+    "capture-audit-summary.final.json": {
+      "sha256": "3fd4db9781b6d583f71903452ed65b4ec2e0eb0cb1939427e748f5f260370e3b",
+      "bytes": 1027
+    },
+    "captures/brain/command.json": {
+      "sha256": "3e5376231c32965d5b2df09f848e5de4f3dc06cccd4a42ae713ba3ebe52c0b35",
+      "bytes": 9368
+    },
+    "captures/brain/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "captures/brain/front.png": {
+      "sha256": "a6f2372d787f52fb31e6cd25fdf9a0b94907bd068e01a1953953b3df5198b30d",
+      "bytes": 312149
+    },
+    "captures/brain/native-audit.json": {
+      "sha256": "bc9a9e7b25b7b0d7ee47488633fee03389eb39104df234986728ef84574e1a17",
+      "bytes": 751
+    },
+    "captures/brain/oblique.png": {
+      "sha256": "9a138ab1d7e795d8ef441ed82c4b3f96509bf223f0495caf99e474d61b5dbedc",
+      "bytes": 289837
+    },
+    "captures/brain/pose-snapshot.json": {
+      "sha256": "a48f7fe58ab696036e853fae3ad40ceee3594b60a1a26bcde19f8b3e7a246727",
+      "bytes": 1139
+    },
+    "captures/brain/wall.seconds": {
+      "sha256": "e5577e24d6ab6adfe1aeb0b647bbd3fc616d69a9b25b865aff4148d89732f7fc",
+      "bytes": 18
+    },
+    "captures/gut/command.json": {
+      "sha256": "9f2a104d7cd2b7287d8dbbf0c422f6b3ac455ea523f3630b0c336fe2a14f716e",
+      "bytes": 1809
+    },
+    "captures/gut/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "captures/gut/front.png": {
+      "sha256": "2c75196d82d79c3c7b61eb3c718f3666392d9e1cd9a3a5f50e0cbd52ceb8a99d",
+      "bytes": 413389
+    },
+    "captures/gut/native-audit.json": {
+      "sha256": "51196958208f6927f6d9d7b6c9c95af9bd7b99ac48a89916bf63027adbdcb860",
+      "bytes": 748
+    },
+    "captures/gut/oblique.png": {
+      "sha256": "0a6f5964a1b97ca0843c111cd7efad9e8e807638e1ff76d82a8a5233739224f3",
+      "bytes": 396166
+    },
+    "captures/gut/pose-snapshot.json": {
+      "sha256": "e74edaaa71df43357ac73f38945cdffa2ca921d83c4b87f4f4479d402d7c02d2",
+      "bytes": 1136
+    },
+    "captures/gut/wall.seconds": {
+      "sha256": "85622e49016735f27747b7add5309a575d82584a8f3fb0157192b55309206ae7",
+      "bytes": 18
+    },
+    "captures/projected-neutral/command.json": {
+      "sha256": "8ed6ef549c784b44b29039e7141f6c7cd1a926459634f114198c3bace9ac0610",
+      "bytes": 1828
+    },
+    "captures/projected-neutral/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "captures/projected-neutral/front.png": {
+      "sha256": "60086201e8ec029eea084f294717b3a3515ba5233eae5a96ac6e99282611b21d",
+      "bytes": 272608
+    },
+    "captures/projected-neutral/native-audit.json": {
+      "sha256": "e36ac83257797919d55b75f76773372108565c9d005cacfd58f509b3ddc7f21e",
+      "bytes": 752
+    },
+    "captures/projected-neutral/oblique.png": {
+      "sha256": "366feeb213bec3c91974b010fed6a4b3bcf798bc308028d30a47246e52dd33c3",
+      "bytes": 247578
+    },
+    "captures/projected-neutral/pose-snapshot.json": {
+      "sha256": "c6d526301e528da436429aa236363371004a6b6c2a32963d40c3ee3bcece1eef",
+      "bytes": 1140
+    },
+    "captures/projected-neutral/raw-579-audit.json": {
+      "sha256": "0bfbf47f13af444669e5cf9b0958a0eaabfe9cecacccd0cb28208fd9649ba9f8",
+      "bytes": 1135800
+    },
+    "captures/projected-neutral/wall.seconds": {
+      "sha256": "4a02f482be447c808256683c952a78d8ff5c79a2e7193949d13868431c8f1a56",
+      "bytes": 18
+    },
+    "captures/source-rest/command.json": {
+      "sha256": "8158131d907daf60af25e9dfde88a8bb86db4db3041af134daffe969284c092d",
+      "bytes": 1697
+    },
+    "captures/source-rest/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "captures/source-rest/front.png": {
+      "sha256": "60086201e8ec029eea084f294717b3a3515ba5233eae5a96ac6e99282611b21d",
+      "bytes": 272608
+    },
+    "captures/source-rest/native-audit.json": {
+      "sha256": "e36ac83257797919d55b75f76773372108565c9d005cacfd58f509b3ddc7f21e",
+      "bytes": 752
+    },
+    "captures/source-rest/oblique.png": {
+      "sha256": "366feeb213bec3c91974b010fed6a4b3bcf798bc308028d30a47246e52dd33c3",
+      "bytes": 247578
+    },
+    "captures/source-rest/pose-snapshot.json": {
+      "sha256": "c6d526301e528da436429aa236363371004a6b6c2a32963d40c3ee3bcece1eef",
+      "bytes": 1140
+    },
+    "captures/source-rest/raw-579-audit.json": {
+      "sha256": "f85eb4b3673a8e5b514c39932c88b7e6185875a7a90047593942b67d1f38ebab",
+      "bytes": 1120812
+    },
+    "captures/source-rest/wall.seconds": {
+      "sha256": "46c0a9c9a5b7a68cfe47fc87d85e6d64b86082c49b241425fbecd27365baaa03",
+      "bytes": 19
+    },
+    "captures/torso-flexion/command.json": {
+      "sha256": "e126a230cf5d554258928fa7714c60fa49e8872a5fd4224fa2b570b1da3518b5",
+      "bytes": 1933
+    },
+    "captures/torso-flexion/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "captures/torso-flexion/front.png": {
+      "sha256": "1c5aa1b44649948005bca5d24d167c1ffceb91394c91abb699767ae8137da607",
+      "bytes": 352732
+    },
+    "captures/torso-flexion/native-audit.json": {
+      "sha256": "c93d6ce3422c4e87b204c5683d904f37f86767dd5ea25527ce2a13f684b15a17",
+      "bytes": 752
+    },
+    "captures/torso-flexion/oblique.png": {
+      "sha256": "02d49e6fe5eadce8926a4036c374d5471cc9de3bd2a16a1a941609277cc48972",
+      "bytes": 345075
+    },
+    "captures/torso-flexion/pose-snapshot.json": {
+      "sha256": "3b5b9e66f7c43aa816b3cfe204eb86d8c8c3dfb161e483bd7467fcb96062a880",
+      "bytes": 1184
+    },
+    "captures/torso-flexion/raw-579-audit.json": {
+      "sha256": "cc8a3287973e3e400ef4dbd444385dce08be181c64c84909ec4259b6f44de265",
+      "bytes": 1137183
+    },
+    "captures/torso-flexion/wall.seconds": {
+      "sha256": "909d3de40a3cd54ed9b4a089f7dc43c375c767f70faac549ce3a99531985660f",
+      "bytes": 19
+    },
+    "executed-audit-source.json": {
+      "sha256": "6a5b66021493d8bc936b9d56461b0679b9ba2a5f56eecf2f86e9d0f6dd9b55d4",
+      "bytes": 479
+    },
+    "inspection-selection.final.json": {
+      "sha256": "6cfe0a99b33981fa4ceec9c06c219d1f597e7fa8a588c0a48a2822c9d37d4772",
+      "bytes": 816
+    },
+    "native-identity.json": {
+      "sha256": "f86472508ce912c8f3c0279d4afc5eda406daa17e23c5f2e55a154d35aec34c4",
+      "bytes": 279
+    },
+    "native-rejection.json": {
+      "sha256": "ba5ae6ec679f3604215329b3d1561915d67d866f2a75ec960d2e74134a9ecc51",
+      "bytes": 532
+    },
+    "payload/source-topology-repair-candidates.manifest.json": {
+      "sha256": "06f600e34fd9709006d815ab7d1200ae781a9731da0b239d3f149211a40a71ad",
+      "bytes": 9771730
+    },
+    "payload/source-topology-repair-candidates.nhanatomy": {
+      "sha256": "c8b8a01aac9d55d1dd154f0e3f92450e5a1a980668eebfcc2a012bb47268b280",
+      "bytes": 37913348
+    },
+    "source-audit.json": {
+      "sha256": "20b94fc5d3043f0aaea49ff744516946879fe9f526c501dd9c2a0ff998921ef7",
+      "bytes": 46798
+    }
+  }
+}

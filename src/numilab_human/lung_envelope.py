@@ -195,11 +195,11 @@ def source_topology():
 
 
 def audit(sources, artifact, registration_path, base_payload, payload, native_pack, native_poses, pose, mask=255,
-          *, native_surface_count=310):
+          *, native_surface_count=310, hidden_source_surface_ids=()):
     import mujoco
     import numpy as np
     from . import model as human
-    from .torso_anatomy_audit import _pack_sections, audit_torso_anatomy
+    from .torso_anatomy_audit import _pack_sections, audit_torso_anatomy, anatomy_hidden_ids
     from .upper_limb_pose_audit import _pose_qpos
     config = configuration();d = source_data(config)
     require(human.sha256(base_payload) == config['base_payload_sha256'], 'base anatomy payload hash')
@@ -228,8 +228,10 @@ def audit(sources, artifact, registration_path, base_payload, payload, native_pa
     world_matrix = g @ np.asarray(alignment['source_world_m_to_bodyparts_world_m'])
     require(np.array_equal(manifest['world_matrix'], world_matrix), 'source composite world matrix')
     base_audit = audit_torso_anatomy(sources, artifact, registration_path, base_payload, native_pack, native_poses,
-                                    pose, native_surface_count=native_surface_count, visible_layer_mask=mask)
+                                    pose, native_surface_count=native_surface_count, visible_layer_mask=mask,
+                                    hidden_source_surface_ids=hidden_source_surface_ids)
     snapshot = json.loads(native_poses.read_text())
+    hidden = anatomy_hidden_ids(snapshot, hidden_source_surface_ids, native_surface_count)
     require(snapshot.get('visible_layer_mask') == mask and 0 < mask <= 32767
             and 310 <= native_surface_count <= 1024, 'native visibility profile')
     sections = _pack_sections(native_pack)
@@ -285,7 +287,7 @@ def audit(sources, artifact, registration_path, base_payload, payload, native_pa
                 and bool(np.isfinite(pv[first:first+nv,4:7]).all()), 'finite native lung geometry/normals')
         require(int(iu[inst,9]) == owner and int(iu[inst,10]) == 3 and np.array_equal(iu[inst,12:16],p[4:8]),
                 'native lung instance identity')
-        require(int(iu[inst,11]) == (11 if mask&(1<<(layer-1)) else 0), 'native lung visibility')
+        require(int(iu[inst,11]) == (11 if mask&(1<<(layer-1)) and stable not in hidden else 0), 'native lung visibility')
         require(np.array_equal(transform[inst,:8],[0,0,0,1,0,0,0,1]), 'native lung local transform')
         errors = {'payload_local_error_m':float(np.linalg.norm(vertices[fv:fv+nv,:3]-local,axis=1).max()),
                   'native_pack_local_error_m':float(np.linalg.norm(pv[first:first+nv,:3]-local,axis=1).max()),

@@ -250,10 +250,10 @@ def config_path(config):
 
 def audit(sources, artifact, registration_path, baseline_payload, base_payload,
           payload, native_pack, native_poses, pose, mask=1023, *, config=None,
-          native_surface_count=None, prefix_base_payload=None):
+          native_surface_count=None, prefix_base_payload=None, hidden_source_surface_ids=()):
     import mujoco
     import numpy as np
-    from .torso_anatomy_audit import _pack_sections
+    from .torso_anatomy_audit import _pack_sections, anatomy_hidden_ids
     from .upper_limb_pose_audit import _pose_qpos
     config = configuration() if config is None else config
     selection = source_selection(sources, config)
@@ -288,10 +288,12 @@ def audit(sources, artifact, registration_path, baseline_payload, base_payload,
                 'prefix configuration/source payload identity')
         base_audit = audit(sources, artifact, registration_path, baseline_payload, prefix_base_payload,
                            base_payload, native_pack, native_poses, pose, mask,
-                           config=human.read_json(path), native_surface_count=native_count)
+                           config=human.read_json(path), native_surface_count=native_count,
+                           hidden_source_surface_ids=hidden_source_surface_ids)
     else:
         base_audit = lung.audit(sources, artifact, registration_path, baseline_payload, base_payload,
-                               native_pack, native_poses, pose, mask, native_surface_count=native_count)
+                               native_pack, native_poses, pose, mask, native_surface_count=native_count,
+                               hidden_source_surface_ids=hidden_source_surface_ids)
     sections = _pack_sections(native_pack)
     pv = np.frombuffer(sections[2][0], '<f4').reshape(-1, 20)
     pi = np.frombuffer(sections[3][0], '<u4')
@@ -306,6 +308,7 @@ def audit(sources, artifact, registration_path, baseline_payload, base_payload,
             'complete native anatomy identity coverage')
     by_id = {int(p[5]):p for p in all_anatomy}
     snapshot = human.read_json(native_poses)
+    hidden = anatomy_hidden_ids(snapshot, hidden_source_surface_ids, native_count)
     require(snapshot['surface_count'] == native_count and snapshot['visible_layer_mask'] == mask, 'native composite pose/profile')
     poses = {b['body_index']: b for b in snapshot['bodies']}
     require(len(poses) == len(snapshot['bodies']) and
@@ -338,7 +341,7 @@ def audit(sources, artifact, registration_path, baseline_payload, base_payload,
                 'native exact source topology')
         require(instances[inst, 9] == owner and instances[inst, 10] == 3
                 and np.array_equal(instances[inst, 12:16], p[4:8])
-                and instances[inst, 11] == (11 if mask & (1 << (spec['layer_code']-1)) else 0),
+                and instances[inst, 11] == (11 if mask & (1 << (spec['layer_code']-1)) and spec['stable_id'] not in hidden else 0),
                 'native component binding/visibility')
         require(np.array_equal(transforms[inst, :8], [0,0,0,1,0,0,0,1]), 'native component local transform')
         packed_local, packed_normal = pv[first_v:first_v+nv, :3], pv[first_v:first_v+nv, 4:7]

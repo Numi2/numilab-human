@@ -18,6 +18,16 @@ def _require(condition: bool, message: str) -> None:
         raise ValueError(message)
 
 
+def anatomy_hidden_ids(snapshot, expected_ids, surface_count):
+    """Bind explicit inspection visibility to the native snapshot."""
+    values = list(expected_ids)
+    _require(all(type(x) is int and 1 <= x <= surface_count for x in values)
+             and values == sorted(set(values)), "invalid hidden anatomy IDs")
+    _require(snapshot.get("hidden_anatomy_stable_ids", []) == values,
+             "native hidden anatomy profile differs")
+    return frozenset(values)
+
+
 def _pack_sections(path: Path) -> dict[int, tuple[bytes, int, int]]:
     raw = path.read_bytes()
     _require(len(raw) >= 32, "truncated native visual pack")
@@ -73,6 +83,7 @@ def audit_torso_anatomy(
     sources: Path, artifact: Path, registration_path: Path, payload: Path,
     native_pack: Path, native_poses: Path, pose: tuple[tuple[int, float], ...] | None,
     *, native_surface_count: int | None = None, visible_layer_mask: int = 63,
+    hidden_source_surface_ids=(),
 ) -> dict[str, Any]:
     import mujoco
     import numpy as np
@@ -133,6 +144,7 @@ def audit_torso_anatomy(
     by_id = {int(p[5]): p for p in selected}
     snapshot = json.loads(native_poses.read_text())
     expected_native_count = surface_count if native_surface_count is None else native_surface_count
+    hidden = anatomy_hidden_ids(snapshot, hidden_source_surface_ids, expected_native_count)
     _require(surface_count <= expected_native_count <= 1024 and 0 < visible_layer_mask <= 32767,
              "native extended anatomy count/visibility contract")
     _require(snapshot["schema"] == "numi.human.native-torso-anatomy-pose-snapshot.v1"
@@ -222,7 +234,7 @@ def audit_torso_anatomy(
         iu, transform = instances_u[instance_index], instances_f[instance_index, :8]
         _require(int(iu[9]) == body and int(iu[10]) == 3
                  and np.array_equal(iu[12:16], primitive[4:8]), "native articulated instance owner")
-        _require(int(iu[11]) == (11 if visible_layer_mask & (1 << (layer - 1)) else 0),
+        _require(int(iu[11]) == (11 if visible_layer_mask & (1 << (layer - 1)) and stable not in hidden else 0),
                  "native source anatomy visibility")
         _require(np.array_equal(transform, [0, 0, 0, 1, 0, 0, 0, 1]), "native unexpected surface local transform")
         native_local = packed_vertices[p_vertex:p_vertex + count_v, :3]
