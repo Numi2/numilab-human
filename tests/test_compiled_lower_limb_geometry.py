@@ -330,8 +330,15 @@ class SourceCompiledLowerLimbGeometryTests(unittest.TestCase):
         self.assertEqual(accepted["continuity_evaluation_count"], 320)
         self.assertEqual(accepted["default_frame_maximum_allowed_residual_m"], 1e-9)
         self.assertEqual(accepted["bilateral_gap_parity_maximum_m"], .004)
-        # The existing deep-crouch femur/tibia parity failure must remain visible.
-        self.assertTrue(any("bilateral_deep_crouch:femur_to_tibia" in f for f in accepted["failures"]))
+        # Preserve the current source-geometry result, including a failed
+        # parity gate when present. A repaired registration must not inherit
+        # a hard-coded expectation that the old gap can never be fixed.
+        reference = measured()
+        for native_pose, source_pose in zip(accepted["poses"], reference["poses"], strict=True):
+            self.assertEqual(native_pose["name"], source_pose["name"])
+            for field in ("continuity", "bilateral_gap_parity"):
+                self.assertEqual([c["passed"] for c in native_pose[field]],
+                                 [c["passed"] for c in source_pose[field]])
         self.assertFalse(any("compiled_vertex_residual" in f for f in accepted["failures"]))
 
         with tempfile.TemporaryDirectory() as temporary:

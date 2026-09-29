@@ -86,6 +86,17 @@ def _sha256(path: Path) -> str:
 
 def _bounded_interface_translation(objective: Any, np: Any, *, group_count: int = 1) -> tuple[Any, Any, Any]:
     """Search the existing 1.5 mm registration bound; never enlarge a gate."""
+    # Objectives are pure geometry measurements for one fixed active set.
+    # Reuse exact repeated trial vectors without quantization or approximating
+    # the distance/patch metric, especially for intersecting paired moves.
+    measurements = {}
+    uncached_objective = objective
+    def objective(candidate: Any) -> Any:
+        key = candidate.tobytes()
+        if key not in measurements:
+            measurements[key] = uncached_objective(candidate)
+        return measurements[key]
+
     delta = np.zeros(3 if group_count == 1 else (group_count, 3))
     initial = objective(delta)
     if initial[0] <= 1.0 + 1.0e-12:
@@ -94,16 +105,37 @@ def _bounded_interface_translation(objective: Any, np: Any, *, group_count: int 
         while True:
             best = objective(delta)
             best_delta = delta
-            for axis in np.ndindex(delta.shape):
-                for sign in (-1.0, 1.0):
-                    candidate = delta.copy()
+            axes = list(np.ndindex(delta.shape))
+
+            def trial(changes: tuple[Any, ...]) -> tuple[Any, Any]:
+                candidate = delta.copy()
+                for axis, sign in changes:
                     candidate[axis] += sign * step
-                    norms = np.linalg.norm(candidate.reshape(-1, 3), axis=1)
-                    if float(np.max(norms)) > _INTERFACE_TRANSLATION_REFINEMENT_MAXIMUM_M + 1.0e-12:
-                        continue
-                    measured = objective(candidate)
+                rows = candidate.reshape(-1, 3)
+                norms = np.linalg.norm(rows, axis=1)
+                # Project trial directions onto the same ball. Rejecting
+                # every outward coordinate step can trap the search on an
+                # axis even when a better direction lies on the boundary.
+                for index in np.flatnonzero(norms > _INTERFACE_TRANSLATION_REFINEMENT_MAXIMUM_M):
+                    rows[index] *= _INTERFACE_TRANSLATION_REFINEMENT_MAXIMUM_M / norms[index]
+                return candidate, objective(candidate)
+
+            for axis in axes:
+                for sign in (-1.0, 1.0):
+                    candidate, measured = trial(((axis, sign),))
                     if measured < best:
                         best, best_delta = measured, candidate
+            if bool(np.array_equal(best_delta, delta)):
+                # At intersecting interface constraints, either individual
+                # owner move can make the worst error larger. A paired move
+                # can reduce both without changing either owner's bound.
+                for ordinal, first in enumerate(axes):
+                    for second in axes[ordinal+1:]:
+                        for first_sign in (-1., 1.):
+                            for second_sign in (-1., 1.):
+                                candidate, measured = trial(((first, first_sign), (second, second_sign)))
+                                if measured < best:
+                                    best, best_delta = measured, candidate
             if bool(np.array_equal(best_delta, delta)):
                 break
             delta = best_delta
@@ -350,6 +382,7 @@ def propose_lower_limb_source_registration(
     if registration.get("schema") != REGISTRATION_SCHEMA:
         raise RuntimeError("lower-limb source registration requires registration candidate v2")
     runtime_reference, runtime_bodies = human_model._bodyparts_runtime_bindings(registration, artifact)
+    rigid_program = human_model._require_myosim_rigid_program(sources, artifact)
     common_frame = human_model._bodyparts_source_common_frame(sources, registration, runtime_bodies)
     if tendon_manifest.get("schema") not in TENDON_SCHEMAS:
         raise RuntimeError("lower-limb source registration requires NHTENDON2 or NHTENDON3")
@@ -750,6 +783,7 @@ def propose_lower_limb_source_registration(
     from .lower_limb_pose_audit import (
         POSE_SUITE, MECHANICS_REFERENCE_INTERFACE_ALLOWANCE_M,
         RIGID_TOE_COMPOUND_REFERENCE_ALLOWANCE_M, _posed_continuity_gates,
+        _bilateral_interface_parity,
     )
     from .upper_limb_pose_audit import _pose_qpos
     data = mujoco.MjData(model)
@@ -879,6 +913,147 @@ def propose_lower_limb_source_registration(
         if refinement is not None:
             interface_translation_refinements.append(refinement)
 
+    # Both sides can pass their source-relative interface gates while the
+    # bilateral motion differs. Translate the adjacent knee bone groups together;
+    # keep every member rigid and preserve the existing per-owner 1.5 mm bound.
+    groups = tuple(names for side in ("r", "l") for names in (
+        {f"femur_{side}", f"patella_{side}"},
+        {f"tibia_{side}"},
+        {f"talus_{side}", f"calcn_{side}", f"toes_{side}"},
+    ))
+    group_index = {name: index for index, names in enumerate(groups) for name in names}
+    cases = {}
+    for pose_name, frames in [("source_default", None), *pose_frames.items()]:
+        for transition in transitions:
+            name, first, second, rest_gate = transition
+            owners = [anchors_by_member[member]["target"]["name"] for member in (first, second)]
+            if not any(owner in group_index for owner in owners):
+                continue
+            if frames is None and group_index.get(owners[0], -1) == group_index.get(owners[1], -1):
+                continue
+            points, rotations, source_points = [], [], []
+            for member, owner in zip((first, second), owners, strict=True):
+                record = body_records[owner]
+                rest_rotation = _rotation_xyzw(record["target"]["default_inertial_quaternion_world_xyzw"], np)
+                if frames is None:
+                    points.append(world_vertices(member))
+                    rotations.append(np.eye(3))
+                else:
+                    rotation, position = frames[owner]
+                    core_points = _transform_points(record["member_vertices"][member], chosen[owner], np)
+                    points.append(core_points @ rotation.T + position)
+                    rotations.append(rotation @ rest_rotation.T)
+                    source_points.append(record["source_vertices"] @ rotation.T + position)
+            gap_gate, patch_gate = rest_gate, INTERFACE_PATCH_GATE_MULTIPLIER * rest_gate
+            if frames is not None:
+                reference = None
+                if owners[0] != owners[1]:
+                    gap, _, _ = _minimum_gap(*source_points, np)
+                    reference = {"minimum_vertex_gap_m": gap,
+                                 "interface_patch": _interface_patch_metrics(*source_points, np)}
+                allowance = (RIGID_TOE_COMPOUND_REFERENCE_ALLOWANCE_M if "metatarsal_to" in name
+                             else MECHANICS_REFERENCE_INTERFACE_ALLOWANCE_M)
+                _, _, gap_gate, patch_gate = _posed_continuity_gates(rest_gate, reference, allowance)
+            cases[f"{pose_name}:{name}"] = (pose_name, name, points, rotations,
+                [group_index.get(owner, -1) for owner in owners], gap_gate, patch_gate)
+
+    parity_keys = {
+        f"{pose}:bilateral:{name[len('right_'):]}"
+        for pose, name, *_ in cases.values() if pose != "source_default" and name.startswith("right_")
+    }
+    head_keys = {f"source_default:femoral_head:{name}" for name in group_index if name.startswith("femur_")}
+    previous_shifts = {name: np.zeros(3) for name in group_index}
+    for receipt in interface_translation_refinements:
+        for name in receipt["body_names"]:
+            if name in previous_shifts:
+                previous_shifts[name] += receipt["translation_world_m"]
+
+    def bilateral_objective(delta: Any, selected: set[str] | None = None) -> tuple[Any, Any]:
+        # The bound applies to total new translation per body in this invocation,
+        # including an earlier ankle/toe refinement, rather than per search stage.
+        if any(float(np.linalg.norm(previous_shifts[name] + delta[index])) >
+               _INTERFACE_TRANSLATION_REFINEMENT_MAXIMUM_M + 1e-12
+               for name, index in group_index.items()):
+            return (math.inf, math.inf, float(np.linalg.norm(delta))), {}
+        wanted = set(cases) | parity_keys | head_keys if selected is None else selected
+        needed = set(wanted) & cases.keys()
+        for key in wanted & parity_keys:
+            pose, _, suffix = key.split(":", 2)
+            needed.update(f"{pose}:{side}_{suffix}" for side in ("right", "left"))
+        primitive, metrics = {}, {}
+        for key in sorted(needed):
+            pose, name, points, rotations, indices, gap_gate, patch_gate = cases[key]
+            moved = [point + rotation @ delta[index] if index >= 0 else point
+                     for point, rotation, index in zip(points, rotations, indices, strict=True)]
+            gap, _, _ = _minimum_gap(*moved, np)
+            patch = _interface_patch_metrics(*moved, np)
+            primitive[key] = {"pose": pose, "name": name, "minimum_vertex_gap_m": gap,
+                "interface_patch": patch, "maximum_allowed_gap_m": gap_gate,
+                "maximum_allowed_interface_patch_p90_m": patch_gate,
+                "normalized_error": max(gap / gap_gate, patch["bidirectional_p90_m"] / patch_gate)}
+            if key in wanted:
+                metrics[key] = primitive[key]
+        for pose in sorted({key.split(":", 1)[0] for key in wanted & parity_keys}):
+            by_name = {item["name"]: item for item in primitive.values() if item["pose"] == pose}
+            for parity in _bilateral_interface_parity(by_name):
+                key = f"{pose}:bilateral:{parity['transition']}"
+                if key in wanted:
+                    metrics[key] = {"pose": pose, **parity, "normalized_error": max(
+                        parity["absolute_gap_difference_m"], parity["absolute_interface_patch_p90_difference_m"]
+                    ) / parity["maximum_allowed_difference_m"]}
+        for key in sorted(wanted & head_keys):
+            name = key.split(":", 2)[2]
+            trial = {**chosen[name], "translation": chosen[name]["translation"] +
+                     _world_delta_to_core(delta[group_index[name]], body_records[name]["target"], np)}
+            head = _femoral_head_articular_metrics(body_records[name], trial, np)
+            metrics[key] = {**head, "normalized_error": max(
+                head["center_residual_m"] / head["maximum_center_residual_m"],
+                head["radius_residual_m"] / head["maximum_radius_residual_m"],
+                head["source_center_to_mechanics_axis_m"] / head["maximum_center_to_mechanics_axis_m"],
+                head["candidate_center_to_mechanics_axis_m"] / head["maximum_center_to_mechanics_axis_m"],
+            )}
+        errors = [item["normalized_error"] for item in metrics.values()]
+        return (max(errors, default=0.), sum(errors), float(np.linalg.norm(delta))), metrics
+
+    zero = np.zeros((len(groups), 3))
+    initial, initial_metrics = bilateral_objective(zero)
+    if initial[0] > 1.0 + 1e-12:
+        # Search the failed constraints first. Every proposal is remeasured
+        # against all interfaces and all source poses before being applied;
+        # add any newly failing constraint and search again within the same bound.
+        active = {key for key, item in initial_metrics.items() if item["normalized_error"] > 1.0 + 1e-12}
+        attempts = 0
+        while True:
+            delta, _, _ = _bounded_interface_translation(
+                lambda d: bilateral_objective(d, active)[0], np, group_count=len(groups))
+            final, final_metrics = bilateral_objective(delta)
+            attempts += 1
+            if final[0] <= 1.0 + 1e-12:
+                break
+            added = {key for key, item in final_metrics.items()
+                     if item["normalized_error"] > 1.0 + 1e-12} - active
+            if not added:
+                break
+            active.update(added)
+        admitted = final[0] <= 1.0 + 1e-12
+        if admitted:
+            for name, index in group_index.items():
+                chosen[name]["translation"] += _world_delta_to_core(delta[index], body_records[name]["target"], np)
+        interface_translation_refinements.append({
+            "label": "bilateral_complete_knee_chain", "body_names": sorted(group_index) if admitted else [],
+            "method": "bounded_paired_world_translation_with_full_source_pose_and_bilateral_interface_remeasurement",
+            "passed": admitted, "applied": admitted, "pose_count": len(pose_frames),
+            "groups": [{"body_names": sorted(names), "proposed_translation_world_m": delta[index].tolist(),
+                        "proposed_translation_norm_m": float(np.linalg.norm(delta[index]))}
+                       for index, names in enumerate(groups)],
+            "maximum_translation_per_body_m": _INTERFACE_TRANSLATION_REFINEMENT_MAXIMUM_M,
+            "search_attempt_count": attempts, "active_constraint_count": len(active),
+            "initial_maximum_normalized_interface_error": initial[0],
+            "final_maximum_normalized_interface_error": final[0],
+            "initial_boundary_metrics": initial_metrics, "final_boundary_metrics": final_metrics,
+            "new_joint_count": 0,
+        })
+
     refined_fit_names = {
         name
         for refinement in interface_translation_refinements
@@ -900,6 +1075,8 @@ def propose_lower_limb_source_registration(
             np,
             float(fit.get("uniform_scale", 1.0)),
         )
+        if name.startswith("femur_"):
+            fit["femoral_head_articular_gate"] = _femoral_head_articular_metrics(body_records[name], fit, np)
         if not _fit_passes(name, fit, np):
             raise RuntimeError(
                 f"lower-limb interface refinement invalidated the source fit for {name}"
@@ -1078,6 +1255,7 @@ def propose_lower_limb_source_registration(
             "runtime_reference": runtime_reference,
             "source_common_frame": common_frame,
         },
+        "rigid_source_program_checks": rigid_program,
         "sagittal_mirror_plane_world_x_m": sagittal_plane_x,
         "direct_source_mesh_fit_body_count": len(selected_names),
         "inherited_toe_body_count": len(toe_names),

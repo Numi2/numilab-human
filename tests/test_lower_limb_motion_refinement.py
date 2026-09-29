@@ -79,6 +79,27 @@ def test_coupled_search_bounds_each_owner_independently():
     assert initial[0] > 1. and final[0] <= 1.
     assert np.all(np.linalg.norm(delta, axis=1) <= .0015 + 1e-12)
 
+def test_paired_translation_can_resolve_intersecting_owner_constraints():
+    def intersecting(delta):
+        first, second = delta[:, 0] / .001
+        errors = [abs(2. + first - 2.*second), abs(2. + second - 2.*first)]
+        return max(errors), sum(errors), float(np.linalg.norm(delta))
+    delta, initial, final = _bounded_interface_translation(intersecting, np, group_count=2)
+    assert initial[0] > 1. and final[0] <= 1.
+    assert np.all(delta[:, 0] > 0.)
+    assert np.all(np.linalg.norm(delta, axis=1) <= .0015 + 1e-12)
+
+
+def test_translation_search_can_change_direction_at_the_existing_bound():
+    target = np.array([.002, .001, 0.])
+    def boundary_objective(delta):
+        error = float(np.linalg.norm(delta-target)) / .00075
+        return error, error, float(np.linalg.norm(delta))
+    delta, initial, final = _bounded_interface_translation(boundary_objective, np)
+    assert initial[0] > 1. and final[0] <= 1.
+    assert delta[1] > .0004
+    assert np.linalg.norm(delta) <= .0015 + 1e-12
+
 
 def test_preserved_foot_does_not_add_roundoff_motion_to_its_toes():
     foot = {"default_inertial_quaternion_world_xyzw": [0., -.7071067811865475, 0., .7071067811865475],
@@ -132,3 +153,50 @@ def test_source_pose_audit_rejects_original_patella_error_and_accepts_bounded_re
         assert patella(after, pose["name"])["passed"]
         for key in ("posed_maximum_allowed_gap_m", "posed_maximum_allowed_interface_patch_p90_m"):
             assert patella(before, pose["name"])[key] == patella(after, pose["name"])[key]
+
+
+def test_coupled_source_geometry_repairs_parity_without_hiding_range_failures():
+    """Exact compiled source geometry; no loaded/clinical claim follows."""
+    from numilab_human.lower_limb_pose_audit import audit_lower_limb_poses
+    from numilab_human.upper_limb_pose_audit import PoseAuditError
+
+    keys = ("SOURCES", "ARTIFACT", "PARITY_BASELINE", "PARITY_REPAIRED", "BONES")
+    paths = {key: os.environ.get(f"NUMILAB_HUMAN_MOTION_{key}") for key in keys}
+    if not all(paths.values()):
+        pytest.skip("exact coupled source-pose geometry inputs were not supplied")
+    baseline = json.loads(Path(paths["PARITY_BASELINE"]).read_text())
+    repaired = json.loads(Path(paths["PARITY_REPAIRED"]).read_text())
+    assert baseline["source"] == repaired["source"]
+    shifts = []
+    matrix_key = "source_obj_mm_to_core_inertial_body_m"
+    for first, second in zip(baseline["anchors"], repaired["anchors"], strict=True):
+        assert first["source"] == second["source"]
+        assert first["target"] == second["target"]
+        a = np.asarray(first["registration"][matrix_key])
+        b = np.asarray(second["registration"][matrix_key])
+        assert np.array_equal(a[:3, :3], b[:3, :3])
+        distance = float(np.linalg.norm(b[:3, 3] - a[:3, 3]))
+        assert distance <= .0015 + 1e-12
+        shifts.append(distance)
+    assert any(distance > 0 for distance in shifts)
+
+    def measured(registration, bone_artifact=None):
+        try:
+            return audit_lower_limb_poses(sources=Path(paths["SOURCES"]),
+                artifact=Path(paths["ARTIFACT"]), registration_path=Path(registration),
+                bone_artifact=bone_artifact)
+        except PoseAuditError as error:
+            return error.result
+
+    before = measured(paths["PARITY_BASELINE"])
+    after = measured(paths["PARITY_REPAIRED"], Path(paths["BONES"]))
+    assert len(before["failures"]) == 6
+    assert len(after["failures"]) == 5
+    assert after["failures"] == [failure for failure in before["failures"]
+                                  if " bilateral parity:" not in failure]
+    assert before["rigid_source_program_checks"] == after["rigid_source_program_checks"]
+    assert before["joint_equality_program_checks"] == after["joint_equality_program_checks"]
+    assert all(check["passed"] for check in after["source_geometry_checks"])
+    for pose in after["poses"]:
+        assert all(check["passed"] for check in pose["continuity"])
+        assert all(check["passed"] for check in pose["bilateral_gap_parity"])

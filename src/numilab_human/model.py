@@ -11258,6 +11258,10 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
     }
     if not relation_cache:
         raise ImportError("BodyParts3D torso anatomy surface map has no source hierarchies")
+    # A part-of ancestor label can select one chamber wall or vessel,
+    # rather than a source representation of the named whole organ.
+    # Preserve that source selection while making its coverage explicit.
+    organ_type_relations = _bodyparts_source_element_relation_names(sources, "is_a")
     layer_codes = {
         "organ": _BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_ORGAN,
         "vessel": _BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_VESSEL,
@@ -11332,6 +11336,14 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
             "hierarchy": hierarchy, "layer": layer_name,
             "myosim_body": body_name, "core_body_index": body_index,
             "vertex_count": len(vertices_mm), "triangle_count": len(triangles),
+            "source_named_organ_type_matches": (
+                (concept_id, label, member_id) in organ_type_relations
+                if layer_name == "organ" else None
+            ),
+            "organ_coverage": (
+                "source_named_organ_representation" if (concept_id, label, member_id) in organ_type_relations
+                else "source_part_of_organ_component"
+            ) if layer_name == "organ" else None,
         })
     if len(vertices_payload) > 0xFFFFFFFF or len(indices_payload) > 0xFFFFFFFF:
         raise ImportError("BodyParts3D torso anatomy payload exceeds the uint32 native renderer capacity")
@@ -11375,6 +11387,17 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
         "coverage": {
             "configured_surface_count": len(provenance),
             "organ_surface_count": sum(entry["layer"] == "organ" for entry in provenance),
+            "source_named_organ_representation_count": sum(
+                entry["organ_coverage"] == "source_named_organ_representation" for entry in provenance
+            ),
+            "source_partial_organ_component_count": sum(
+                entry["organ_coverage"] == "source_part_of_organ_component" for entry in provenance
+            ),
+            "source_organ_type_relations": {
+                "file": "isa_element_parts.txt", "sha256": sha256(sources / "isa_element_parts.txt"),
+                "basis": "exact_source_is_a_membership_of_named_FMA_organ_not_only_part_of_ancestry",
+                "boundary": "source_representation_type_not_mesh_completeness_or_clinical_qualification",
+            },
             "vessel_surface_count": sum(entry["layer"] == "vessel" for entry in provenance),
             "nerve_surface_count": sum(entry["layer"] == "nerve" for entry in provenance),
         },

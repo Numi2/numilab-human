@@ -115,6 +115,46 @@ def _posed_continuity_gates(
     return base_gap, base_patch, gap, patch
 
 
+def _bilateral_interface_parity(by_name: dict[str, Any]) -> list[dict[str, Any]]:
+    """Measure the existing bilateral interface bound without changing its basis."""
+    parity = []
+    for right_name in sorted(name for name in by_name if name.startswith("right_")):
+        suffix = right_name[len("right_"):]
+        left_name = "left_" + suffix
+        if left_name not in by_name:
+            raise RuntimeError(
+                f"lower-limb pose audit has no bilateral pair for {right_name}"
+            )
+        difference = abs(
+            by_name[right_name]["minimum_vertex_gap_m"]
+            - by_name[left_name]["minimum_vertex_gap_m"]
+        )
+        patch_difference = abs(
+            by_name[right_name]["interface_patch"]["bidirectional_p90_m"]
+            - by_name[left_name]["interface_patch"]["bidirectional_p90_m"]
+        )
+        record = {
+            "transition": suffix,
+            "right_minimum_vertex_gap_m": by_name[right_name]["minimum_vertex_gap_m"],
+            "left_minimum_vertex_gap_m": by_name[left_name]["minimum_vertex_gap_m"],
+            "right_interface_patch_p90_m": by_name[right_name]["interface_patch"][
+                "bidirectional_p90_m"
+            ],
+            "left_interface_patch_p90_m": by_name[left_name]["interface_patch"][
+                "bidirectional_p90_m"
+            ],
+            "absolute_gap_difference_m": difference,
+            "absolute_interface_patch_p90_difference_m": patch_difference,
+            "maximum_allowed_difference_m": BILATERAL_GAP_PARITY_MAXIMUM_M,
+            "passed": (
+                difference <= BILATERAL_GAP_PARITY_MAXIMUM_M + 1.0e-12
+                and patch_difference <= BILATERAL_GAP_PARITY_MAXIMUM_M + 1.0e-12
+            ),
+        }
+        parity.append(record)
+    return parity
+
+
 def audit_lower_limb_poses(
     *, sources: Path, registration_path: Path, artifact: Path,
     bone_artifact: Path | None = None,
@@ -423,42 +463,8 @@ def audit_lower_limb_poses(
             by_name[transition_name] = record
             all_continuity.append({"pose": pose_name, **record})
 
-        parity = []
-        for right_name in sorted(name for name in by_name if name.startswith("right_")):
-            suffix = right_name[len("right_"):]
-            left_name = "left_" + suffix
-            if left_name not in by_name:
-                raise RuntimeError(
-                    f"lower-limb pose audit has no bilateral pair for {right_name}"
-                )
-            difference = abs(
-                by_name[right_name]["minimum_vertex_gap_m"]
-                - by_name[left_name]["minimum_vertex_gap_m"]
-            )
-            patch_difference = abs(
-                by_name[right_name]["interface_patch"]["bidirectional_p90_m"]
-                - by_name[left_name]["interface_patch"]["bidirectional_p90_m"]
-            )
-            record = {
-                "transition": suffix,
-                "right_minimum_vertex_gap_m": by_name[right_name]["minimum_vertex_gap_m"],
-                "left_minimum_vertex_gap_m": by_name[left_name]["minimum_vertex_gap_m"],
-                "right_interface_patch_p90_m": by_name[right_name]["interface_patch"][
-                    "bidirectional_p90_m"
-                ],
-                "left_interface_patch_p90_m": by_name[left_name]["interface_patch"][
-                    "bidirectional_p90_m"
-                ],
-                "absolute_gap_difference_m": difference,
-                "absolute_interface_patch_p90_difference_m": patch_difference,
-                "maximum_allowed_difference_m": BILATERAL_GAP_PARITY_MAXIMUM_M,
-                "passed": (
-                    difference <= BILATERAL_GAP_PARITY_MAXIMUM_M + 1.0e-12
-                    and patch_difference <= BILATERAL_GAP_PARITY_MAXIMUM_M + 1.0e-12
-                ),
-            }
-            parity.append(record)
-            all_parity.append({"pose": pose_name, **record})
+        parity = _bilateral_interface_parity(by_name)
+        all_parity.extend({"pose": pose_name, **record} for record in parity)
 
         pose_receipts.append({
             "name": pose_name,

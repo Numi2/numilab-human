@@ -638,6 +638,27 @@ skin sheet at rest. Proximity weights remain visual diagnostics; source-program
 agreement does not establish anatomical skin weights, complete organ coverage,
 loaded mechanics or clinical anatomy.
 
+Lower-limb registration also checks the consumed source program before fitting.
+Its paired knee repair remeasures every affected default and projected interface,
+bilateral parity and femoral-head centre/radius before applying a proposal.
+Femur/patella, tibia and complete-foot groups can move separately so that a
+knee correction cannot silently displace an already passing ankle or toe interface.
+Trials can move adjacent owners together and change direction at the same
+1.5 mm translation bound; the bound includes prior refinements in that invocation.
+A failed paired proposal is recorded with `applied=false` and preserves the
+geometry from before that search. Source ranges, interface gates and clinical boundaries remain
+unchanged.
+The executed bounded repair passes all 320 posed interfaces and 160 bilateral
+checks, while retaining five source-range conflicts and two newly exposed tendon
+surface fallbacks. See [bilateral knee geometry repair](Docs/BILATERAL_KNEE_GEOMETRY_REPAIR_20260929.md).
+
+Organ manifests now distinguish source-named organ representations from selected
+organ components using exact source `is_a` membership. The current five organ
+surfaces contain four named organ representations and a right atrial wall
+selected under the parent label `heart`. The `part_of` relationship alone does
+not establish a whole-heart representation. This coverage check preserves the
+native geometry and does not certify mesh completeness or clinical anatomy.
+
 Static native previews supplied with `--joint-equality-payload` now project
 the dependent coordinates even when no `--pose-q` is given. The raw source
 default differs from the equality-projected neutral pose, including about

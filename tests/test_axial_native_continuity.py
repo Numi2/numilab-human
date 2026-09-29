@@ -465,7 +465,29 @@ def test_equivalent_normalized_rigid_directions_preserve_source_program(
     assert_source_geometry(inputs, result, ((7, -.4), (8, .1), (9, .2)))
 
 
-@pytest.mark.parametrize("compiler", ["organs", "muscles_tendons", "skin"])
+def test_organ_coverage_distinguishes_atrial_wall_from_named_whole_organ(inputs, tmp_path):
+    sources = Path(os.environ["NUMILAB_HUMAN_MOTION_SOURCES"])
+    registration = Path(os.environ["NUMILAB_HUMAN_MOTION_REPAIRED"])
+    anatomy = human.parse_bodyparts3d(sources, human.REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
+    result = human.bodyparts_myosim_torso_anatomy_visual_payload(
+        sources, anatomy, registration, inputs[2], tmp_path / "organs")
+    surfaces = {surface["label"]: surface for surface in result["source"]["surfaces"]}
+    heart = surfaces["heart"]
+    assert heart["member_id"] == "FJ2439"
+    assert not heart["source_named_organ_type_matches"]
+    assert heart["organ_coverage"] == "source_part_of_organ_component"
+    assert ("FMA9457", "wall of right atrium", heart["member_id"]) in human._bodyparts_source_element_relation_names(sources, "is_a")
+    for name in ("stomach", "pancreas", "right kidney", "left kidney"):
+        assert surfaces[name]["source_named_organ_type_matches"]
+        assert surfaces[name]["organ_coverage"] == "source_named_organ_representation"
+    coverage = result["coverage"]
+    assert coverage["organ_surface_count"] == 5
+    assert coverage["source_named_organ_representation_count"] == 4
+    assert coverage["source_partial_organ_component_count"] == 1
+    assert coverage["source_organ_type_relations"]["sha256"] == human.sha256(sources / "isa_element_parts.txt")
+
+
+@pytest.mark.parametrize("compiler", ["organs", "muscles_tendons", "skin", "lower_limb_registration"])
 def test_anatomy_compilers_reject_reversed_executing_knee_before_surface_output(inputs, tmp_path, compiler):
     artifact = tmp_path / "artifact"
     manifest = copy_reference_artifact(inputs, artifact)
@@ -486,6 +508,11 @@ def test_anatomy_compilers_reject_reversed_executing_knee_before_surface_output(
             human.bodyparts_myosim_torso_anatomy_visual_payload(sources, anatomy, registration, artifact, output)
         elif compiler == "muscles_tendons":
             human.bodyparts_myosim_fullbody_soft_tissue_visual_payload(sources, anatomy, registration, artifact, output)
+        elif compiler == "lower_limb_registration":
+            from numilab_human.lower_limb_source_registration import propose_lower_limb_source_registration
+            tendon = Path(os.environ["NUMILAB_HUMAN_NATIVE_TENDON_PAYLOAD"])
+            propose_lower_limb_source_registration(sources=sources, registration_path=registration,
+                artifact=artifact, tendon_manifest_path=tendon.parent / "numi-human-tendon-attachments.manifest.json")
         else:
             human.bodyparts_myosim_skinned_shell_visual_payload(
                 sources, anatomy, registration, output, myosim_artifact=artifact)
