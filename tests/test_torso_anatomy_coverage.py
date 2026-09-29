@@ -65,12 +65,13 @@ def test_native_family_oracle_checks_rendered_members_and_owner_independently(so
     mapping, relations = source_data
     measured = [{"member_id": m, "layer": "organ", "core_body_index": 20}
                 for m in ["FJ2428", "FJ2438", "FJ2439"]]
-    assert _native_source_family_coverage(mapping["coverage_requirements"], measured, relations, {"torso": (20, {})})["passed"]
+    requirements = mapping["coverage_requirements"][:1]
+    assert _native_source_family_coverage(requirements, measured, relations, {"torso": (20, {})})["passed"]
     if corruption == "missing":measured.pop()
     elif corruption == "wrong_body":measured[0]["core_body_index"] = 7
     elif corruption == "wrong_layer":measured[0]["layer"] = "vessel"
     else:measured.append(dict(measured[0]))
-    report = _native_source_family_coverage(mapping["coverage_requirements"], measured, relations, {"torso": (20, {})})
+    report = _native_source_family_coverage(requirements, measured, relations, {"torso": (20, {})})
     assert not report["passed"]
 
 
@@ -102,3 +103,58 @@ def test_compiler_rejects_incomplete_or_mistyped_anatomy_before_output(source_da
     with pytest.raises(human.ImportError, match=message):
         human.bodyparts_myosim_torso_anatomy_visual_payload(sources, anatomy, registration, artifact, output)
     assert not output.exists()
+
+
+def test_complete_lung_descendants_are_branches_not_parenchyma(source_data):
+    from collections import Counter
+    mapping, relations = source_data
+    full = source_family_coverage(mapping["coverage_requirements"], mapping["entries"], relations)
+    assert full["passed"]
+    assert [len(r["expected_members"]) for r in full["requirements"]] == [3, 156, 124]
+    branches = mapping["entries"][24:]
+    assert Counter(row["layer"] for row in branches) == {
+        "airway": 98, "pulmonary_artery": 97, "pulmonary_vein": 85}
+    assert all(row["myosim_body"] == "torso" and row["hierarchy"] == "is_a" for row in branches)
+    assert not any("lung" in label.lower() for _, label, _ in relations["is_a"])
+    trunk = next(row for row in branches if row["member_id"] == "FJ3031")
+    assert trunk["layer"] == "pulmonary_vein"
+    assert {"concept_id": "FMA8648", "label": "trunk of pulmonary vein"} in types_for(relations, "FJ3031")
+
+
+@pytest.mark.parametrize("layer", ["airway", "pulmonary_artery", "pulmonary_vein"])
+@pytest.mark.parametrize("corruption", ["missing", "wrong_layer", "wrong_body", "duplicate"])
+def test_each_lung_branch_type_has_independent_complete_coverage(source_data, layer, corruption):
+    mapping, relations = source_data
+    specs = copy.deepcopy(mapping["entries"])
+    row = next(r for r in specs if r["layer"] == layer)
+    member = row["member_id"]
+    if corruption == "missing":specs.remove(row)
+    elif corruption == "wrong_layer":row["layer"] = "organ"
+    elif corruption == "wrong_body":row["myosim_body"] = "Abdomen"
+    else:specs.append(dict(row))
+    result = source_family_coverage(mapping["coverage_requirements"], specs, relations)
+    assert not result["passed"]
+    measured = [{"member_id": r["member_id"], "layer": r["layer"],
+                 "core_body_index": 20 if r["myosim_body"] == "torso" else 19} for r in specs]
+    native = _native_source_family_coverage(mapping["coverage_requirements"], measured, relations,
+                                          {"torso": (20, {}), "Abdomen": (19, {})})
+    assert not native["passed"]
+    assert any(member in r["missing_members"] or member in r["wrong_layer_or_body_members"]
+               or not r["passed"] for r in native["requirements"][1:])
+
+
+@pytest.mark.parametrize("corruption", ["missing_type", "ambiguous_type", "missing_name", "missing_rules"])
+def test_lung_family_cannot_infer_a_branch_type_from_ancestry_only(source_data, corruption):
+    mapping, relations = source_data
+    mapping, relations = copy.deepcopy(mapping), copy.deepcopy(relations)
+    requirement = mapping["coverage_requirements"][1]
+    member = next(r["member_id"] for r in mapping["entries"] if r["layer"] == "airway")
+    if corruption == "missing_type":
+        relations["is_a"].remove(("FMA68208", "pulmonary segment of bronchial tree", member))
+    elif corruption == "ambiguous_type":
+        relations["is_a"].add(("FMA66326", "pulmonary artery", member))
+    elif corruption == "missing_name":
+        requirement["source_type_layers"][0]["source_name"] = "invented pulmonary tissue"
+    else:requirement.pop("source_type_layers")
+    with pytest.raises(ValueError, match="source type|type partitions"):
+        source_family_coverage(mapping["coverage_requirements"], mapping["entries"], relations)

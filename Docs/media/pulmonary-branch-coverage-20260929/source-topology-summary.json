@@ -1,0 +1,45 @@
+{
+  "schema": "numi.human.pulmonary-source-topology-summary.v1",
+  "layers": {
+    "airway": {
+      "surfaces": 98,
+      "vertices": 32288,
+      "triangles": 52866,
+      "closed_oriented_manifold_candidates": 98,
+      "boundary_edges": 0,
+      "nonmanifold_edges": 0,
+      "orientation_defect_edges": 0,
+      "degenerate_faces": 0,
+      "duplicate_faces": 0,
+      "vertex_link_defects": 0
+    },
+    "pulmonary_artery": {
+      "surfaces": 97,
+      "vertices": 24430,
+      "triangles": 40936,
+      "closed_oriented_manifold_candidates": 97,
+      "boundary_edges": 0,
+      "nonmanifold_edges": 0,
+      "orientation_defect_edges": 0,
+      "degenerate_faces": 0,
+      "duplicate_faces": 0,
+      "vertex_link_defects": 0
+    },
+    "pulmonary_vein": {
+      "surfaces": 85,
+      "vertices": 12179,
+      "triangles": 20948,
+      "closed_oriented_manifold_candidates": 84,
+      "boundary_edges": 0,
+      "nonmanifold_edges": 0,
+      "orientation_defect_edges": 0,
+      "degenerate_faces": 0,
+      "duplicate_faces": 1,
+      "vertex_link_defects": 3
+    }
+  },
+  "self_intersections": "not_checked",
+  "geometry_modified": false,
+  "physics_admitted": false,
+  "boundary": "Counts refer to each retained branch mesh with exact source-coordinate seams identified diagnostically. They do not establish connected airway or vascular trees, luminal domains, parenchyma, fluid continuity, mechanics or clinical correctness."
+}

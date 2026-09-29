@@ -68,10 +68,24 @@ def source_family_coverage(
                     if concept == requirement["concept_id"] and name == requirement["source_name"]}
         if not expected:
             raise ValueError("torso source coverage family has no exact source members")
+        required_layers = {member: requirement["layer"] for member in expected}
+        if requirement["layer"] == "source_typed":
+            rules = requirement.get("source_type_layers")
+            if (not isinstance(rules, list) or not rules or "is_a" not in relations
+                    or any(not isinstance(rule, dict) or any(
+                        not isinstance(rule.get(key), str) or not rule[key]
+                        for key in ["concept_id", "source_name", "layer"]) for rule in rules)):
+                raise ValueError("torso source coverage type partitions are malformed")
+            for member in expected:
+                matches = [rule["layer"] for rule in rules if
+                           (rule["concept_id"], rule["source_name"], member) in relations["is_a"]]
+                if len(matches) != 1 or matches[0] == "source_typed":
+                    raise ValueError("torso source coverage member has missing or ambiguous source type")
+                required_layers[member] = matches[0]
         selected = [spec for spec in specifications if spec["member_id"] in expected]
         covered = {spec["member_id"] for spec in selected}
         wrong_owners = sorted(spec["member_id"] for spec in selected
-                              if spec["layer"] != requirement["layer"]
+                              if spec["layer"] != required_layers[spec["member_id"]]
                               or spec["myosim_body"] != requirement["myosim_body"])
         duplicated = len(selected) != len(covered)
         rows.append({
@@ -80,6 +94,7 @@ def source_family_coverage(
             "missing_members": sorted(expected - covered), "wrong_layer_or_body_members": wrong_owners,
             "duplicate_members": duplicated, "passed": covered == expected and not wrong_owners and not duplicated,
             "required_layer": requirement["layer"], "required_myosim_body": requirement["myosim_body"],
+            "required_member_layers": required_layers,
         })
     return {
         "requirements": rows, "passed": all(row["passed"] for row in rows),
@@ -87,7 +102,7 @@ def source_family_coverage(
     }
 
 
-@lru_cache(maxsize=8)
+@lru_cache(maxsize=512)
 def _source_family_topology_json(obj: bytes, member: str) -> str:
     """Cache by exact immutable source bytes, never by path or mtime."""
     from .cardiac_cavity_geometry import analyze_topology, exact_coordinate_quotient, parse_obj

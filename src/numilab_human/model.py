@@ -6163,10 +6163,13 @@ _BODYPARTS_MYOSIM_SKIN_VISUAL_MAGIC = b"NHSKIN1\0"
 # normal transforms across every skin triangle.
 _BODYPARTS_MYOSIM_SKIN_VISUAL_ABI = 5
 _BODYPARTS_MYOSIM_TORSO_ANATOMY_VISUAL_MAGIC = b"NHANAT1\0"
-_BODYPARTS_MYOSIM_TORSO_ANATOMY_VISUAL_ABI = 1
+_BODYPARTS_MYOSIM_TORSO_ANATOMY_VISUAL_ABI = 2
 _BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_ORGAN = 1
 _BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_VESSEL = 2
 _BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_NERVE = 3
+_BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_AIRWAY = 4
+_BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_PULMONARY_ARTERY = 5
+_BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_PULMONARY_VEIN = 6
 
 
 def _bodyparts_visual_registration_fingerprint(registration_file: Path) -> int:
@@ -11425,6 +11428,9 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
         "organ": _BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_ORGAN,
         "vessel": _BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_VESSEL,
         "nerve": _BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_NERVE,
+        "airway": _BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_AIRWAY,
+        "pulmonary_artery": _BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_PULMONARY_ARTERY,
+        "pulmonary_vein": _BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_PULMONARY_VEIN,
     }
     global_rotation = _myosim_matrix_from_quaternion_xyzw(global_quaternion)
     vertices_payload: list[tuple[float, float, float, float, float, float]] = []
@@ -11568,6 +11574,11 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
             },
             "vessel_surface_count": sum(entry["layer"] == "vessel" for entry in provenance),
             "nerve_surface_count": sum(entry["layer"] == "nerve" for entry in provenance),
+            "airway_surface_count": sum(entry["layer"] == "airway" for entry in provenance),
+            "pulmonary_artery_surface_count": sum(entry["layer"] == "pulmonary_artery" for entry in provenance),
+            "pulmonary_vein_surface_count": sum(entry["layer"] == "pulmonary_vein" for entry in provenance),
+            "lung_parenchyma_surface_count": 0,
+            "lung_coverage_boundary": "Complete declared lung descendant membership is bronchovascular branch anatomy; the retained atlas has no lung parenchymal or lung-envelope surface. No pulmonary tissue, lobe envelope, air or blood volume, gas exchange or mechanics is admitted.",
         },
         "runtime_binding": "each exact BodyParts3D source component is converted into the declared MyoSim torso or abdomen inertial frame at the registered default pose and then follows that one articulated visual link in the native renderer",
         "status": "native_single_link_kinematic_anatomy_surface_binding_input_not_collision_or_physics",

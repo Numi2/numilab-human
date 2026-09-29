@@ -1,0 +1,208 @@
+{
+  "boundary": "Source-family and branch-type completeness plus native geometry parity only. The retained source has no lung parenchyma or lung envelope; whole-organ, mechanics and clinical anatomy remain unqualified. Closed individual branch candidates do not establish connected airway or vascular domains.",
+  "coverage": {
+    "added_branches": 280,
+    "airway": 98,
+    "arterial": 97,
+    "left_lung_descendants": 124,
+    "lung_parenchyma": 0,
+    "new_source_triangles": 114750,
+    "new_source_vertices": 68897,
+    "right_lung_descendants": 156,
+    "surfaces_after": 304,
+    "surfaces_before": 24,
+    "venous": 85,
+    "vertices": 186857
+  },
+  "date": "2026-09-29",
+  "host": {
+    "machine": "arm64",
+    "native_device": "Apple M4",
+    "platform": "macOS-26.6-arm64-arm-64bit"
+  },
+  "human_base_commit": "995e1796d9256b6e01e686e05fff81e44ee792cf",
+  "inputs": {
+    "anatomy_payload": {
+      "path": "/Users/home/numilab-human/Build/lung-source-coverage-20260929/payload/bodyparts3d-myosim-torso-anatomy.nhanatomy",
+      "sha256": "e828bc31ba31e5ab6939d435c971933414bce6320e2c17327ac4b9abcc660e0d"
+    },
+    "bones": {
+      "path": "/Users/home/numilab-human/Build/knee-parity-registration-20260929/bones.v6/payload/bodyparts3d-myosim-major-bones.nhbones",
+      "sha256": "2aaf0567e6a5131c88b599cd56cb605b9d585c2792084b324e84699cabbc9b33"
+    },
+    "executed_native_source": {
+      "path": "/Users/home/numilab-human/Build/lung-source-coverage-20260929/native.v2/probe.executed.mm",
+      "sha256": "5b51a3465f54e3e2d945dffad5ae20a07ef57ef371cf4940dc7905857ba65c70"
+    },
+    "frozen_physics_library": {
+      "path": "/Users/home/numilab-human/Build/tendon-surface-binding-20260929/runtime/lib/libmetalrobo.dylib",
+      "sha256": "6b9062e84bdacd6b86b413d5c549cd0046d9a271fb0caa141e03db41ffa213f6"
+    },
+    "is_a_table": {
+      "path": "/Users/home/numilab-human/Sources/isa_element_parts.txt",
+      "sha256": "a3de74423f943b0d724ae8f59b3a817f87c423a544f8db98113b1980817cbeaf"
+    },
+    "native_probe": {
+      "path": "/Users/home/numilab-human/Build/lung-source-coverage-20260929/native.v2/myosim-visual-probe",
+      "sha256": "71e2cf803902282cc305543ab46469739f38b1fffa6156a8e35ce5da941c96c0"
+    },
+    "part_of_table": {
+      "path": "/Users/home/numilab-human/Sources/partof_element_parts.txt",
+      "sha256": "3f5f6df1028eb122b30de77c711597b6bb8e5541658e5985859fd228adbf88ea"
+    },
+    "registration": {
+      "path": "/Users/home/numilab-human/Build/knee-parity-registration-20260929/candidate.v6.registration.json",
+      "sha256": "0b7129f788ae91272d03abf9f10b985359f3b9d9569941515b222787ffe71324"
+    }
+  },
+  "native_commit": "598bac836efc2c5c37d04cce5797ca0a5e8bedd7",
+  "public_artifacts": {
+    "after-front.png": {
+      "bytes": 269324,
+      "sha256": "9fdfbb01caa5f4812611713e8c3956fa178df01da6c3cfaf0f3cbea6d4ce9e00"
+    },
+    "before-front.png": {
+      "bytes": 258212,
+      "sha256": "507acbab327487cfd86c0b2594a63907a9349575d36a254832bed905fe2d5b91"
+    },
+    "bodyparts3d-myosim-torso-anatomy.manifest.json": {
+      "bytes": 1097600,
+      "sha256": "37c0b02b473f1d9ec612a03e7cf425f254f8bf704d21d2f29457385821c56b7f"
+    },
+    "executive-pulmonary-progress.png": {
+      "bytes": 405178,
+      "sha256": "b0b2d30de65a4a702868e65d4d101e1eea0b3f7d5b627a2a622ae521f1b53390"
+    },
+    "original-surface-parity.json": {
+      "bytes": 402,
+      "sha256": "d9d7e8aee196bb359078845f345db3fca83a34d00c5647a3cb206de19ba51359"
+    },
+    "projected-neutral-source-geometry-audit.json": {
+      "bytes": 737330,
+      "sha256": "507f8c026a030d3cb8ae2b5632d4d9f0e2654725ec538361486c9859b6931e98"
+    },
+    "raw-rest-source-geometry-audit.json": {
+      "bytes": 725182,
+      "sha256": "3ab050d2b63d89db4f64d6fd8ae845c75e5917814fd42d4447fbbca2d94aac14"
+    },
+    "source-lung-families.json": {
+      "bytes": 12870,
+      "sha256": "71b4903d283ff4d8741585c402c1b6b459d39c5ee87933e7b73339f1ce0f429c"
+    },
+    "source-lung-types.json": {
+      "bytes": 365687,
+      "sha256": "945c983a36041f4476b172e0b1da62827c3960c2bbb48c384793cd821af17442"
+    },
+    "source-topology-summary.json": {
+      "bytes": 1442,
+      "sha256": "1597d49afa0801da0a15c9cf8f89715b895bd7dc174b97a244eb4110811e6c3b"
+    },
+    "torso-flexion-oblique.png": {
+      "bytes": 346513,
+      "sha256": "acec462c71990bef59f53bf6a414b87247a55ff5015f5e297cd78e4e444e98c9"
+    },
+    "torso-flexion-source-geometry-audit.json": {
+      "bytes": 738133,
+      "sha256": "9876b6a6e2d21c7282782d3c1a1142bb80aec896ff87272e4a903197d69a49ff"
+    }
+  },
+  "qualification": {
+    "airflow_or_blood_volume": false,
+    "clinical_registration": false,
+    "connected_luminal_domains": false,
+    "exact_source_membership": true,
+    "lung_or_organ_mechanics": false,
+    "lung_parenchyma": false,
+    "native_single_link_source_geometry": true,
+    "standing_controller": false
+  },
+  "remaining_source_defect": {
+    "duplicate_face_count": 1,
+    "face_component_count": 2,
+    "member_id": "FJ2928",
+    "source_mesh_modified": false,
+    "vertex_link_defect_count": 3
+  },
+  "schema": "numi.human.pulmonary-branch-coverage-evidence.v1",
+  "validation": {
+    "all_source_geometry_audits_passed": true,
+    "executed_source_sha256": {
+      "config/bodyparts3d-myosim-torso-anatomy-map.v1.json": "a3ff17c10fd5903e86e30d85ac2ea88acd5e9d7f3b0468f22518a8fcb5d67ea3",
+      "src/numilab_human/model.py": "95cfce2dff2e293ab40680cecf99bf6bd1ade4cfac1f4cbc5da3e83f0179bf07",
+      "src/numilab_human/torso_anatomy_audit.py": "57002a2ca313331ce1ad4a7ebfc5918250e80b0841ff679607d0a59b014e73f2",
+      "src/numilab_human/torso_anatomy_coverage.py": "1d18763b832efda24994ec3a331138431f32acc99e386fd07cf28590f8a4bfd3"
+    },
+    "maximum_native_source_error_m": 1.6896793262292576e-07,
+    "native_poses": 3,
+    "original_24_payload_surfaces_byte_identical": {
+      "new_abi": 2,
+      "new_payload_sha256": "e828bc31ba31e5ab6939d435c971933414bce6320e2c17327ac4b9abcc660e0d",
+      "old_abi": 1,
+      "old_payload_sha256": "3de7b6a6f9fcdec97117fc9890e4ce9c0e179bb205bb72fccd72d2b99b63ea7f",
+      "original_records_byte_identical": true,
+      "original_surface_count": 24,
+      "original_triangle_indices_byte_identical": true,
+      "original_vertices_and_normals_byte_identical": true
+    },
+    "original_abi1_native_geometry_sections_byte_identical": true,
+    "test_runs": [
+      {
+        "command": [
+          "/Users/home/numilab-human/.venv-mujoco312/bin/python",
+          "-m",
+          "pytest",
+          "tests/test_torso_anatomy_coverage.py",
+          "tests/test_torso_anatomy_source_audit.py",
+          "tests/test_axial_native_continuity.py::test_anatomy_compilers_reject_reversed_executing_knee_before_surface_output",
+          "tests/test_axial_native_continuity.py::test_surface_binding_cannot_trust_a_shifted_declared_torso_frame",
+          "tests/test_importer.py::ImporterTests::test_torso_anatomy_map_is_unique_and_source_backed",
+          "-q",
+          "--basetemp",
+          "/Users/home/numilab-human/Build/lung-source-coverage-20260929/tests-work.v2"
+        ],
+        "duration_seconds": 174.49262099992484,
+        "failed_cases": 1,
+        "failure": "lower_limb_registration test was missing NUMILAB_HUMAN_NATIVE_TENDON_PAYLOAD in the selected test environment",
+        "name": "final-source-and-native-tests",
+        "passed_cases": 91,
+        "source_sha256": {
+          "config/bodyparts3d-myosim-torso-anatomy-map.v1.json": "a3ff17c10fd5903e86e30d85ac2ea88acd5e9d7f3b0468f22518a8fcb5d67ea3",
+          "src/numilab_human/model.py": "95cfce2dff2e293ab40680cecf99bf6bd1ade4cfac1f4cbc5da3e83f0179bf07",
+          "src/numilab_human/torso_anatomy_audit.py": "57002a2ca313331ce1ad4a7ebfc5918250e80b0841ff679607d0a59b014e73f2",
+          "src/numilab_human/torso_anatomy_coverage.py": "1d18763b832efda24994ec3a331138431f32acc99e386fd07cf28590f8a4bfd3",
+          "tests/test_axial_native_continuity.py": "3fafd48b326cb33572202914541f23c96bb7df920a6a83fdfc141c6524ad8537",
+          "tests/test_importer.py": "50313073f95d10fb10296d2e46cd2d1b8e7807498943764eeef8fcda158a4c37",
+          "tests/test_torso_anatomy_coverage.py": "0f582e5de1053aa740bd5821ae388043e4d11ba10710dee3dff107f712e440c6",
+          "tests/test_torso_anatomy_source_audit.py": "b48c353365f476c4520510829ee723bde3d8a45a87705fbf78bf093df4469ae5"
+        }
+      },
+      {
+        "command": [
+          "/Users/home/numilab-human/.venv-mujoco312/bin/python",
+          "-m",
+          "pytest",
+          "tests/test_axial_native_continuity.py::test_anatomy_compilers_reject_reversed_executing_knee_before_surface_output[lower_limb_registration]",
+          "-q",
+          "--basetemp",
+          "/Users/home/numilab-human/Build/lung-source-coverage-20260929/owner-env-retry-work"
+        ],
+        "duration_seconds": 1.5771972499787807,
+        "failed_cases": 0,
+        "name": "corrected-owner-input-retry",
+        "passed_cases": 1,
+        "source_sha256": {
+          "config/bodyparts3d-myosim-torso-anatomy-map.v1.json": "a3ff17c10fd5903e86e30d85ac2ea88acd5e9d7f3b0468f22518a8fcb5d67ea3",
+          "src/numilab_human/model.py": "95cfce2dff2e293ab40680cecf99bf6bd1ade4cfac1f4cbc5da3e83f0179bf07",
+          "src/numilab_human/torso_anatomy_audit.py": "57002a2ca313331ce1ad4a7ebfc5918250e80b0841ff679607d0a59b014e73f2",
+          "src/numilab_human/torso_anatomy_coverage.py": "1d18763b832efda24994ec3a331138431f32acc99e386fd07cf28590f8a4bfd3",
+          "tests/test_axial_native_continuity.py": "3fafd48b326cb33572202914541f23c96bb7df920a6a83fdfc141c6524ad8537",
+          "tests/test_importer.py": "50313073f95d10fb10296d2e46cd2d1b8e7807498943764eeef8fcda158a4c37",
+          "tests/test_torso_anatomy_coverage.py": "0f582e5de1053aa740bd5821ae388043e4d11ba10710dee3dff107f712e440c6",
+          "tests/test_torso_anatomy_source_audit.py": "b48c353365f476c4520510829ee723bde3d8a45a87705fbf78bf093df4469ae5"
+        }
+      }
+    ],
+    "unchanged_allowed_geometry_error_m": 2e-05,
+    "unique_final_checks_passed": 92
+  }
+}

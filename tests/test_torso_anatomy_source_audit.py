@@ -54,7 +54,11 @@ def native_organs(organ_inputs, request):
 
 def test_native_organs_preserve_every_source_vertex_and_topology(native_organs):
     report = audit_torso_anatomy(*native_organs)
-    assert report["passed"] and report["surface_count"] == 24
+    assert report["passed"] and report["surface_count"] == 304
+    assert all(row["passed"] for row in report["native_source_family_coverage"]["requirements"])
+    assert {layer: sum(row["layer"] == layer for row in report["rows"])
+            for layer in ["airway", "pulmonary_artery", "pulmonary_vein"]} == {
+                "airway": 98, "pulmonary_artery": 97, "pulmonary_vein": 85}
     assert all(row["topology_exact"] for row in report["rows"])
     assert {row["member_id"] for row in report["rows"] if row["label"] == "liver"} == {
         "FJ2816", "FJ2818", "FJ2819", "FJ2820", "FJ2821", "FJ2822", "FJ2409", "FJ2823", "FJ2824"}
@@ -145,4 +149,83 @@ def test_native_oracle_rejects_forged_closed_ventricular_topology(native_organs,
     payload.with_name("bodyparts3d-myosim-torso-anatomy.manifest.json").write_text(json.dumps(manifest))
     args[3] = payload
     with pytest.raises(ValueError, match="torso source topology diagnostic"):
+        audit_torso_anatomy(*args)
+
+
+@pytest.mark.parametrize("semantic", [51020, 51021, 51022])
+@pytest.mark.parametrize("corruption", ["wrong_semantic", "wrong_owner"])
+def test_native_lung_branch_types_and_owners_cannot_be_rehashed_away(native_organs, tmp_path, semantic, corruption):
+    from numilab_human.torso_anatomy_audit import _pack_sections
+    import numpy as np
+    args = list(native_organs)
+    primitives = np.frombuffer(_pack_sections(args[4])[4][0], dtype="<u4").reshape(-1, 16)
+    index = int(np.flatnonzero(primitives[:, 4] == semantic)[0])
+    output = tmp_path / "rehashed-branch.mrvpack"
+    field, value = (16, 51010) if corruption == "wrong_semantic" else (24, 7)
+    _mutate_pack(args[4], output, 4,
+                 lambda raw, offset, _: struct.pack_into("<I", raw, offset + 64 * index + field, value))
+    args[4] = output
+    with pytest.raises(ValueError, match="native surface semantic/owner"):
+        audit_torso_anatomy(*args)
+
+
+def test_lung_branch_type_provenance_cannot_claim_parenchyma(native_organs, tmp_path):
+    args = list(native_organs)
+    payload = tmp_path / args[3].name
+    payload.write_bytes(args[3].read_bytes())
+    manifest = json.loads(args[3].with_name("bodyparts3d-myosim-torso-anatomy.manifest.json").read_text())
+    branch = next(s for s in manifest["source"]["surfaces"] if s["layer"] == "airway")
+    branch["source_is_a_types"] = [{"concept_id": "FMA7309", "label": "right lung"}]
+    payload.with_name("bodyparts3d-myosim-torso-anatomy.manifest.json").write_text(json.dumps(manifest))
+    args[3] = payload
+    with pytest.raises(ValueError, match="torso source type provenance"):
+        audit_torso_anatomy(*args)
+
+
+@pytest.mark.parametrize("corruption", ["unknown_abi", "v1_with_v2_surfaces", "unknown_layer", "surface_capacity"])
+def test_native_lung_payload_rejects_unsupported_abi_layers_and_counts(organ_inputs, tmp_path, corruption):
+    probe, bones, sources, artifact, registration, payload, root = organ_inputs
+    raw = bytearray(payload.read_bytes())
+    if corruption == "unknown_abi":struct.pack_into("<I", raw, 8, 3)
+    elif corruption == "v1_with_v2_surfaces":struct.pack_into("<I", raw, 8, 1)
+    elif corruption == "surface_capacity":struct.pack_into("<I", raw, 12, 1025)
+    else:struct.pack_into("<I", raw, 60 + 32 * 24 + 24, 7)
+    changed = tmp_path / "invalid.nhanatomy"
+    changed.write_bytes(raw)
+    command = [str(probe), str(artifact / "myosim-fullbody-core-reference.nhrigid"),
+               str(artifact / "myosim-fullbody-muscle-reference.nhmyo"), str(bones), str(tmp_path / "views"),
+               "--dimension", "512", "--torso-anatomy-payload", str(changed)]
+    result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+    assert result.returncode != 0
+    assert "payload/header disagreement" in result.stderr or "record is malformed" in result.stderr
+    assert not list((tmp_path / "views").glob("*.png"))
+
+
+def test_native_v1_cardiac_payload_retains_exact_packed_geometry(organ_inputs, tmp_path):
+    from numilab_human.torso_anatomy_audit import _pack_sections
+    probe, bones, sources, artifact, registration, payload, root = organ_inputs
+    previous = human.REPOSITORY_ROOT / "Build/cardiac-wall-coverage-20260929"
+    old_payload = previous / "payload/bodyparts3d-myosim-torso-anatomy.nhanatomy"
+    command = [str(probe), str(artifact / "myosim-fullbody-core-reference.nhrigid"),
+               str(artifact / "myosim-fullbody-muscle-reference.nhmyo"), str(bones), str(tmp_path / "views"),
+               "--dimension", "1024", "--focus-body-index", "20", "--joint-equality-payload",
+               str(artifact / "myosim-fullbody-joint-equalities.nheq"), "--torso-anatomy-payload", str(old_payload)]
+    result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+    assert result.returncode == 0, result.stderr
+    new_sections = _pack_sections(next((tmp_path / "views").glob("*.mrvpack")))
+    old_sections = _pack_sections(next((previous / "native-neutral/views").glob("*.mrvpack")))
+    assert all(new_sections[kind] == old_sections[kind] for kind in [2, 3, 4, 5])
+
+
+def test_native_source_audit_rejects_rehashed_v2_payload_claiming_v1(native_organs, tmp_path):
+    args = list(native_organs)
+    raw = bytearray(args[3].read_bytes())
+    struct.pack_into("<I", raw, 8, 1)
+    payload = tmp_path / args[3].name
+    payload.write_bytes(raw)
+    manifest = json.loads(args[3].with_name("bodyparts3d-myosim-torso-anatomy.manifest.json").read_text())
+    manifest["payload"]["sha256"] = hashlib.sha256(raw).hexdigest()
+    payload.with_name("bodyparts3d-myosim-torso-anatomy.manifest.json").write_text(json.dumps(manifest))
+    args[3] = payload
+    with pytest.raises(ValueError, match="torso payload ABI surface capacity"):
         audit_torso_anatomy(*args)

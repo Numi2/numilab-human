@@ -2828,8 +2828,9 @@ class ImporterTests(unittest.TestCase):
         mapping = read_json(ROOT / "config/bodyparts3d-myosim-torso-anatomy-map.v1.json")
         self.assertEqual(mapping["schema"], "numi.human.bodyparts3d-myosim-torso-anatomy-map.v1")
         entries = mapping["entries"]
-        self.assertEqual(len(entries), 24)
-        self.assertEqual({entry["layer"] for entry in entries}, {"organ", "vessel", "nerve"})
+        self.assertEqual(len(entries), 304)
+        self.assertEqual({entry["layer"] for entry in entries},
+                         {"organ", "vessel", "nerve", "airway", "pulmonary_artery", "pulmonary_vein"})
         self.assertEqual(len({entry["member_id"] for entry in entries}), len(entries))
         source_relations = {
             hierarchy: {tuple(line.split("\t")) for line in (ROOT / path).read_text(encoding="utf-8").splitlines()}

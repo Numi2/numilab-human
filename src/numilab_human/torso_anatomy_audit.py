@@ -48,13 +48,22 @@ def _native_source_family_coverage(requirements, measured, relations, owners):
         expected = {member for concept, name, member in relations[requirement["hierarchy"]]
                     if concept == requirement["concept_id"] and name == requirement["source_name"]}
         _require(bool(expected), "native source family has no exact source members")
+        layers = {member: requirement["layer"] for member in expected}
+        if requirement["layer"] == "source_typed":
+            for member in expected:
+                matches = [rule["layer"] for rule in requirement["source_type_layers"] if
+                           (rule["concept_id"], rule["source_name"], member) in relations["is_a"]]
+                _require(len(matches) == 1 and matches[0] != "source_typed",
+                         "native family source type missing or ambiguous")
+                layers[member] = matches[0]
         actual_rows = [row for row in measured if row["member_id"] in expected]
         actual = {row["member_id"] for row in actual_rows}
         owner = owners[requirement["myosim_body"]][0]
         wrong = sorted(row["member_id"] for row in actual_rows
-                       if row["core_body_index"] != owner or row["layer"] != requirement["layer"])
+                       if row["core_body_index"] != owner or row["layer"] != layers[row["member_id"]])
         checks.append({"id": identity, "expected_members": sorted(expected), "rendered_members": sorted(actual),
                        "missing_members": sorted(expected - actual), "wrong_layer_or_body_members": wrong,
+                       "required_member_layers": layers,
                        "passed": actual == expected and len(actual_rows) == len(actual) and not wrong})
     return {"requirements": checks, "passed": all(row["passed"] for row in checks),
             "boundary": "Declared atlas family coverage in native geometry, not clinical or whole-organ completeness."}
@@ -94,7 +103,8 @@ def audit_torso_anatomy(
     _require(len(surface_sources) == len(specs), "torso surface provenance coverage")
     raw = payload.read_bytes()
     magic, abi, surface_count, vertex_count, index_count, fingerprint, source_sha = struct.unpack_from("<8s5I32s", raw)
-    _require(magic == b"NHANAT1\0" and abi == 1 and surface_count == len(specs), "torso payload header")
+    _require(magic == b"NHANAT1\0" and abi in {1, 2} and surface_count == len(specs), "torso payload header")
+    _require(surface_count <= (64 if abi == 1 else 1024), "torso payload ABI surface capacity")
     _require(fingerprint == int(human.sha256(registration_path)[:8], 16), "torso payload registration fingerprint")
     _require(source_sha.hex() == registration["source"]["myosim"]["source"]["archive_sha256"], "torso payload source hash")
     vertices_offset = 60 + 32 * surface_count
@@ -113,7 +123,9 @@ def audit_torso_anatomy(
     primitives = np.frombuffer(sections[4][0], dtype="<u4").reshape(-1, 16)
     instances_u = np.frombuffer(sections[5][0], dtype="<u4").reshape(-1, 20)
     instances_f = np.frombuffer(sections[5][0], dtype="<f4").reshape(-1, 20)
-    selected = primitives[np.isin(primitives[:, 4], [51010, 51011, 51012])]
+    semantic_codes = {"organ": 51010, "vessel": 51011, "nerve": 51012,
+                      "airway": 51020, "pulmonary_artery": 51021, "pulmonary_vein": 51022}
+    selected = primitives[np.isin(primitives[:, 4], list(semantic_codes.values()))]
     _require(len(selected) == surface_count and len(set(selected[:, 5])) == surface_count, "native torso surface coverage")
     by_id = {int(p[5]): p for p in selected}
     snapshot = json.loads(native_poses.read_text())
@@ -142,7 +154,8 @@ def audit_torso_anatomy(
                       for concept, label, member in source_relations[requirement["hierarchy"]]
                       if concept == requirement["concept_id"] and label == requirement["source_name"]}
     rows = []
-    layer_codes = {"organ": 1, "vessel": 2, "nerve": 3}
+    layer_codes = {"organ": 1, "vessel": 2, "nerve": 3,
+                   "airway": 4, "pulmonary_artery": 5, "pulmonary_vein": 6}
     for stable, (spec, record) in enumerate(zip(specs, records, strict=True), 1):
         body, first_v, count_v, first_i, count_i, identity, layer, reserved = map(int, record)
         _require((spec["concept_id"], spec["source_name"], spec["member_id"]) in source_relations[spec["hierarchy"]], "source surface relation")
@@ -150,15 +163,17 @@ def audit_torso_anatomy(
         sid = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, spec["myosim_body"])
         _require(sid == source_body["source_body_id"] and body == expected_body, "torso source body owner")
         _require(identity == stable and layer == layer_codes[spec["layer"]] and reserved == 0, "torso surface identity")
+        _require(abi == 2 or layer <= 3, "torso payload ABI layer identity")
         _require(first_v + count_v <= vertex_count and first_i + count_i <= index_count, "torso surface range")
         _, member, obj = human._bodyparts_obj_member(sources, spec["hierarchy"], spec["member_id"])
         declared_source = surface_sources[stable - 1]
         _require(declared_source["stable_id"] == stable and declared_source["member_id"] == spec["member_id"]
                  and declared_source["member"] == member
                  and declared_source["member_sha256"] == hashlib.sha256(obj).hexdigest(), "torso source member hash/identity")
+        source_types = [{"concept_id": concept, "label": name} for concept, name, typed_member
+                        in sorted(source_relations["is_a"]) if typed_member == spec["member_id"]]
+        _require(declared_source.get("source_is_a_types") == source_types, "torso source type provenance")
         if spec["layer"] == "organ":
-            source_types = [{"concept_id": concept, "label": name} for concept, name, typed_member
-                            in source_relations["is_a"] if typed_member == spec["member_id"]]
             typed = source_organ_coverage(spec, source_types)
             _require(all(declared_source.get(key) == value for key, value in typed.items()), "torso source organ typing")
         topology = source_family_topology(obj, member) if spec["member_id"] in family_members else None
@@ -189,7 +204,8 @@ def audit_torso_anatomy(
         normal_world_rest /= np.linalg.norm(normal_world_rest, axis=1)[:, None]
         local_normals = normal_world_rest @ rest.ximat[sid].reshape(3, 3)
         primitive = by_id[stable]
-        _require(int(primitive[4]) == 51009 + layer and int(primitive[6]) == body, "native surface semantic/owner")
+        _require(int(primitive[4]) == semantic_codes[spec["layer"]] and int(primitive[6]) == body,
+                 "native surface semantic/owner")
         p_first, p_count, _, instance_index = map(int, primitive[:4])
         _require(p_count == count_i and p_first + p_count <= len(packed_indices)
                  and instance_index < len(instances_u), "native surface index range")
