@@ -608,6 +608,17 @@ also fails the existing complete-anchor contract. These are source geometry
 checks; regional motion, collision, material and loaded response keep their
 own qualification boundaries.
 
+Before geometry or tendon calibration, the native NHRIGID2 loader joins all
+stored source rest poses to forward kinematics from the actual joint program.
+A knee anchor shifted by 20 mm previously passed with unchanged source pose
+records; it now fails with the affected source/Core owner, measured residual,
+tolerance basis and raw rigid payload hash. The check uses the existing native
+1 micrometre rest reconstruction bound, including a unit-length orientation
+witness, and preserves admitted equivalent quaternion representations. This
+checks consumed rest-frame consistency; it does not authenticate a mutually
+changed program and witness, qualify source-supported motion, or establish
+loaded or clinical anatomy.
+
 The native bone reader normalizes admitted quaternions once before geometry,
 contact, attachment and rendering preparation. Antipodal and near-unit
 representations therefore retain the source reader's orientation semantics;

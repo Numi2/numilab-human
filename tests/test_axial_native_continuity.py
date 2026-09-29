@@ -1,4 +1,5 @@
 """Execute axial geometry checks on the selected native runtime and source pack."""
+import hashlib
 import json
 import os
 import struct
@@ -47,7 +48,7 @@ def inputs():
     return probe, bones.read_bytes(), artifact, runtime, build_model("myofullbody"), geometry, stable_ids
 
 
-def run_probe(inputs, tmp_path, raw=None, pose=(), equality_raw=None):
+def run_probe(inputs, tmp_path, raw=None, pose=(), equality_raw=None, rigid_raw=None):
     probe, valid, artifact, *_ = inputs
     path = tmp_path / "candidate.nhbones"
     path.write_bytes(valid if raw is None else raw)
@@ -55,7 +56,11 @@ def run_probe(inputs, tmp_path, raw=None, pose=(), equality_raw=None):
     if equality_raw is not None:
         equality = tmp_path / "candidate.nheq"
         equality.write_bytes(equality_raw)
-    command = [str(probe), str(artifact / "myosim-fullbody-core-reference.nhrigid"),
+    rigid = artifact / "myosim-fullbody-core-reference.nhrigid"
+    if rigid_raw is not None:
+        rigid = tmp_path / "candidate.nhrigid"
+        rigid.write_bytes(rigid_raw)
+    command = [str(probe), str(rigid),
                str(artifact / "myosim-fullbody-muscle-reference.nhmyo"), str(path),
                str(tmp_path / "views"), "--dimension", "512",
                "--joint-equality-payload", str(equality)]
@@ -67,6 +72,94 @@ def run_probe(inputs, tmp_path, raw=None, pose=(), equality_raw=None):
     (tmp_path / "stderr").write_text(result.stderr)
     (tmp_path / "exit.code").write_text(str(result.returncode) + "\n")
     return result
+
+
+def rigid_source_frames(inputs):
+    raw = bytearray((inputs[2] / "myosim-fullbody-core-reference.nhrigid").read_bytes())
+    header = struct.unpack_from("<8s10I32s", raw)
+    assert header[0] == b"NHRIGID2" and header[4:8] == (157, 156, 129, 128)
+    joint_offset = 80 + 96 + 48 + 160 * header[4]
+    source_map_offset = joint_offset + 144 * header[5] + 64 * header[7] + 4 * (header[6] + header[7])
+    source_map = struct.unpack_from(f"<{header[3]}I", raw, source_map_offset)
+    # Join the existing source/Core map rather than treating the knee's virtual
+    # rotation carrier as the physical tibia owner.
+    record = source_map.index(136)
+    pose_offset = source_map_offset + 4 * header[3] + 28 * record
+    joint = joint_offset + 144 * 133
+    assert struct.unpack_from("<8I", raw, joint)[1:6] == (134, 0, 0, 106, 1)
+    return raw, joint, pose_offset, record
+
+
+@pytest.mark.parametrize("corruption,field", [
+    ("knee_anchor", "source_COM_position_m"),
+    ("knee_frame_rotation", "source_COM_position_m"),
+    ("source_position_witness", "source_COM_position_m"),
+    ("source_orientation_witness", "source_orientation_unit_witness_m"),
+    ("zero_source_orientation", "source_orientation_norm_error"),
+    ("nonunit_source_orientation", "source_orientation_norm_error"),
+])
+def test_source_witnesses_join_executing_rest_frames_before_geometry(inputs, tmp_path, corruption, field):
+    raw, joint, pose, record = rigid_source_frames(inputs)
+    if corruption == "knee_anchor":
+        # All stored source poses, source identities and topology are unchanged.
+        struct.pack_into("<f", raw, joint + 80, .020)
+    elif corruption == "knee_frame_rotation":
+        angle = .020
+        struct.pack_into("<4f", raw, joint + 128, 0., 0., np.sin(angle / 2), np.cos(angle / 2))
+    elif corruption == "source_position_witness":
+        struct.pack_into("<f", raw, pose, struct.unpack_from("<f", raw, pose)[0] + .020)
+    else:
+        quaternion = struct.unpack_from("<4f", raw, pose + 12)
+        if corruption == "source_orientation_witness":
+            # A unit quaternion can still falsely describe this source frame.
+            angle = .020
+            x, y, z, w = quaternion
+            c, s = np.cos(angle / 2), np.sin(angle / 2)
+            candidate = (c*x - s*y, c*y + s*x, c*z + s*w, c*w - s*z)
+        else:
+            factor = 0. if corruption == "zero_source_orientation" else 1.0021
+            candidate = tuple(factor * value for value in quaternion)
+        struct.pack_into("<4f", raw, pose + 12, *candidate)
+    result = run_probe(inputs, tmp_path, rigid_raw=raw)
+    assert result.returncode != 0
+    assert "NHRIGID source rest-frame binding failed" in result.stderr
+    assert f"field={field} source_record_index={record} body_index=136 inbound_joint_index=135" in result.stderr
+    assert f"rigid_sha256={hashlib.sha256(raw).hexdigest()}" in result.stderr
+    failure = dict(part.split("=", 1) for part in result.stderr.split('failed: ', 1)[1].rstrip('\n"').split())
+    assert float(failure["measured"]) > float(failure["allowed"])
+    if field == "source_orientation_norm_error":
+        assert float(failure["allowed"]) == pytest.approx(float(np.float32(.002)), abs=1e-12)
+        assert failure["tolerance_basis"] == "existing_native_geometry_quaternion_norm_admission"
+    else:
+        assert float(failure["allowed"]) == 1e-6
+        assert failure["tolerance_basis"] == (
+            "existing_native_rest_reconstruction_tolerance_m" if field == "source_COM_position_m" else
+            "existing_native_rest_reconstruction_tolerance_on_1m_orientation_witness")
+    assert "bone_orientation_semantics=" not in result.stdout
+    assert not (tmp_path / "views").exists()
+
+
+@pytest.mark.parametrize("target,factor", [
+    ("source_witness", -1.), ("source_witness", 1.00199), ("source_witness", .99801),
+    ("joint_frame", -1.), ("joint_frame", 1.0000049), ("joint_frame", .9999951),
+], ids=["source_antipodal", "source_near_upper", "source_near_lower",
+        "joint_antipodal", "joint_near_upper", "joint_near_lower"])
+def test_equivalent_rigid_frame_orientations_preserve_source_geometry(inputs, tmp_path, factor, target):
+    raw, joint, pose, _ = rigid_source_frames(inputs)
+    offset = pose + 12 if target == "source_witness" else joint + 128
+    original = struct.unpack_from("<4f", raw, offset)
+    # Witness geometry uses the native geometry norm admission (0.002);
+    # executing Core joint frames retain their tighter squared-norm bound (1e-5).
+    struct.pack_into("<4f", raw, offset, *(factor * value for value in original))
+    result = run_probe(inputs, tmp_path, pose=((7, -.4), (8, .1), (9, .2)), rigid_raw=raw)
+    assert result.returncode == 0, result.stderr
+    check = next(dict(part.split("=", 1) for part in line.split())
+                 for line in result.stdout.splitlines() if line.startswith("rigid_source_rest_frames="))
+    assert check["rigid_source_rest_frames"] == "passed" and check["source_body_count"] == "103"
+    assert check["rigid_sha256"] == hashlib.sha256(raw).hexdigest()
+    assert float(check["maximum_COM_position_residual_m"]) <= 1e-6
+    assert float(check["maximum_orientation_unit_witness_residual_m"]) <= 1e-6
+    assert_source_geometry(inputs, result, ((7, -.4), (8, .1), (9, .2)))
 
 
 def measurements(result):
