@@ -9,6 +9,7 @@ import shutil
 import struct
 import tempfile
 import unittest
+from unittest.mock import patch
 
 import numpy as np
 
@@ -17,7 +18,9 @@ from numilab_human.lower_limb_pose_audit import (
     _compiled_bone_members, _compiled_member_geometry_check, audit_lower_limb_poses,
 )
 from numilab_human.lower_limb_source_registration import _source_frame_check
-from numilab_human.upper_limb_pose_audit import PoseAuditError, audit_upper_limb_poses
+from numilab_human.upper_limb_pose_audit import (
+    PoseAuditError, audit_upper_limb_poses, _compiled_bone_geometry_checks,
+)
 
 
 class CompiledLowerLimbGeometryTests(unittest.TestCase):
@@ -28,6 +31,9 @@ class CompiledLowerLimbGeometryTests(unittest.TestCase):
         self.registration_path = self.root / "registration.json"
         self.payload_path = self.root / "bones.nhbones"
         self.manifest_path = self.root / "bodyparts3d-myosim-major-bones.manifest.json"
+        self.archive = self.root / "source.zip"
+        self.archive.write_bytes(b"source archive fixture")
+        self.obj = b"source mesh fixture"
         self.vertices = [[11.1234567, -22.2345678, 33.3456789],
                          [50.4567891, 20.5678912, -10.6789123],
                          [-7.7891234, 15.8912345, 80.9123456]]
@@ -43,7 +49,10 @@ class CompiledLowerLimbGeometryTests(unittest.TestCase):
         matrix = [[.001 * scale * c, -.001 * scale * s, 0., .02],
                   [.001 * scale * s, .001 * scale * c, 0., .03],
                   [0., 0., .001 * scale, .04], [0., 0., 0., 1.]]
-        self.anchor = {"source": {"member_id": "FJ-tibia-fixture", "member_sha256": "44" * 32},
+        self.anchor = {"source": {"member_id": "FJ-tibia-fixture",
+                       "hierarchy": "isa", "name": "left tibia", "archive_sha256": human.sha256(self.archive),
+                       "member_sha256": hashlib.sha256(self.obj).hexdigest(),
+                       "vertex_count": 3, "triangle_count": 1},
                        "target": {"name": "tibia_l", "core_body_index": 150},
                        "registration": {"source_obj_mm_to_core_inertial_body_m": matrix}}
         self.registration = {"anchors": [self.anchor]}
@@ -71,7 +80,7 @@ class CompiledLowerLimbGeometryTests(unittest.TestCase):
                 "runtime_reference": copy.deepcopy(self.reference),
                 "anchors": [{"member_id": "FJ-tibia-fixture", "core_body_index": 150,
                              "source_record_index": 7, "myosim_body": "tibia_l",
-                             "member_sha256": "44" * 32}],
+                             "member_sha256": hashlib.sha256(self.obj).hexdigest()}],
             },
         }
         self.persist()
@@ -90,6 +99,17 @@ class CompiledLowerLimbGeometryTests(unittest.TestCase):
         surface = self.members()["FJ-tibia-fixture"]
         return _compiled_member_geometry_check(self.anchor, self.vertices, self.triangles, surface, np)
 
+    def complete_check(self, registration=None, members=None):
+        specification = {"member_id": "FJ-tibia-fixture", "hierarchy": "isa",
+                         "bodyparts_name": "left tibia", "myosim_body": "tibia_l"}
+        with patch.object(human, "_BODYPARTS_MYOSIM_BONE_ANCHORS", (specification,)), \
+             patch.object(human, "_bodyparts_obj_member", return_value=(self.archive, "bone.obj", self.obj)), \
+             patch.object(human, "_bodyparts_obj_triangles", return_value=(self.vertices, self.triangles)):
+            return _compiled_bone_geometry_checks(
+                self.root, self.registration if registration is None else registration,
+                self.members() if members is None else members, np,
+            )
+
     def test_valid_source_variation_preserves_exact_fp32_geometry(self):
         common = {"global_source_mm_to_myosim_world_m": np.diag([.001, .001, .001, 1.]).tolist()}
         for angle in (0., .12, .249):
@@ -100,6 +120,44 @@ class CompiledLowerLimbGeometryTests(unittest.TestCase):
                     result = self.check()
                     self.assertTrue(result["passed"])
                     self.assertEqual(result["maximum_vertex_residual_m"], 0.)
+                    self.assertTrue(self.complete_check()["tibia_l"]["passed"])
+
+    def test_missing_complete_skeleton_member_is_retained_as_a_failed_measurement(self):
+        groups = self.complete_check({"anchors": []}, {})
+        check = groups["tibia_l"]["compiled_bone_geometry_checks"][0]
+        self.assertFalse(groups["tibia_l"]["passed"])
+        self.assertEqual(check["source_member_id"], "FJ-tibia-fixture")
+        self.assertEqual(check["source_member_name"], "left tibia")
+        self.assertEqual(check["coverage_status"], "missing_registration")
+        self.assertEqual(check["compiled_vertex_count"], 0)
+        self.assertEqual(check["source_vertex_count"], 3)
+
+    def test_unknown_member_cannot_replace_the_expected_source_structure(self):
+        altered = copy.deepcopy(self.registration)
+        altered["anchors"][0]["source"]["member_id"] = "unexpected"
+        groups = self.complete_check(altered, {"unexpected": self.members()["FJ-tibia-fixture"]})
+        checks = groups["tibia_l"]["compiled_bone_geometry_checks"]
+        self.assertEqual({c["coverage_status"] for c in checks}, {"missing_registration", "unexpected_source_member"})
+        self.assertTrue(all(not c["passed"] for c in checks))
+
+    def test_duplicate_registration_cannot_hide_behind_one_compiled_member(self):
+        altered = copy.deepcopy(self.registration)
+        altered["anchors"].append(copy.deepcopy(altered["anchors"][0]))
+        check = self.complete_check(altered)["tibia_l"]["compiled_bone_geometry_checks"][0]
+        self.assertFalse(check["passed"])
+        self.assertEqual(check["coverage_status"], "duplicate_registration")
+        self.assertEqual(check["registration_occurrence_count"], 2)
+        self.assertEqual(check["maximum_vertex_residual_m"], 0.)
+
+    def test_registered_mesh_identity_is_checked_against_the_current_pinned_mesh(self):
+        altered = copy.deepcopy(self.registration)
+        altered["anchors"][0]["source"]["member_sha256"] = "55" * 32
+        check = self.complete_check(altered)["tibia_l"]["compiled_bone_geometry_checks"][0]
+        self.assertFalse(check["registered_source_identity_matches"])
+        self.assertEqual(check["expected_source_identity"]["member_sha256"], hashlib.sha256(self.obj).hexdigest())
+        self.assertEqual(check["registered_source_identity"]["member_sha256"], "55" * 32)
+        self.assertFalse(check["passed"])
+        self.assertEqual(check["maximum_vertex_residual_m"], 0.)
 
     def test_displaced_payload_fails_with_unchanged_registration_and_valid_hash(self):
         header = struct.calcsize("<8s5I32s")
@@ -177,6 +235,77 @@ class CompiledLowerLimbGeometryTests(unittest.TestCase):
             self.members()
 
 
+class SourceCompiledWholeBodyGeometryTests(unittest.TestCase):
+    def test_all_non_limb_members_and_self_consistent_omission_are_checked(self):
+        from numilab_human.lower_limb_pose_audit import LOWER_BODY_NAMES
+        from numilab_human.upper_limb_registration import _upper_names
+        paths = {key: os.environ.get("NUMILAB_HUMAN_MOTION_" + key)
+                 for key in ("SOURCES", "ARTIFACT", "REPAIRED", "BONES")}
+        if not all(paths.values()):
+            self.skipTest("exact source/payload motion inputs were not supplied")
+        registration_path = Path(paths["REPAIRED"])
+        registration = json.loads(registration_path.read_text())
+        reference, bodies = human._bodyparts_runtime_bindings(registration, Path(paths["ARTIFACT"]))
+
+        def checks(bones, source_registration=registration, source_path=registration_path):
+            members, _ = _compiled_bone_members(bones, source_path, source_registration, reference, bodies)
+            groups = _compiled_bone_geometry_checks(Path(paths["SOURCES"]), source_registration, members, np)
+            return [c for body in groups.values() for c in body["compiled_bone_geometry_checks"]]
+
+        admitted = checks(Path(paths["BONES"]))
+        self.assertEqual(len(admitted), 185)
+        self.assertTrue(all(c["passed"] for c in admitted))
+        limb_names = _upper_names("r") | _upper_names("l") | LOWER_BODY_NAMES
+        formerly_unchecked = {a["source"]["member_id"] for a in registration["anchors"]
+                              if a["target"]["name"] not in limb_names}
+        self.assertEqual(len(formerly_unchecked), 61)
+        with tempfile.TemporaryDirectory() as temporary:
+            altered = Path(temporary) / "bones"
+            shutil.copytree(paths["BONES"], altered)
+            manifest_path = altered / "bodyparts3d-myosim-major-bones.manifest.json"
+            original_manifest = json.loads(manifest_path.read_text())
+            payload_path = altered / original_manifest["payload"]["file"]
+            original_raw = payload_path.read_bytes()
+            header, stride = struct.calcsize("<8s5I32s"), struct.calcsize("<6I8fI")
+            raw = bytearray(original_raw)
+            for index, anchor in enumerate(original_manifest["source"]["anchors"]):
+                if anchor["member_id"] in formerly_unchecked:
+                    offset = header + stride * index + 24
+                    struct.pack_into("<f", raw, offset, struct.unpack_from("<f", raw, offset)[0] + .04)
+            payload_path.write_bytes(raw)
+            manifest = copy.deepcopy(original_manifest)
+            manifest["payload"]["sha256"] = human.sha256(payload_path)
+            manifest_path.write_text(json.dumps(manifest))
+            failed = [c for c in checks(altered) if not c["passed"]]
+            self.assertEqual({c["source_member_id"] for c in failed}, formerly_unchecked)
+            for check in failed:
+                self.assertAlmostEqual(check["maximum_vertex_residual_m"], .04, places=7)
+                self.assertEqual(check["maximum_allowed_vertex_residual_m"], 0.)
+
+            # Remove the last cervical member from both registration and
+            # payload, retaining valid owner records and updated identities.
+            manifest = copy.deepcopy(original_manifest)
+            omitted = manifest["source"]["anchors"].pop()["member_id"]
+            partial = copy.deepcopy(registration)
+            partial["anchors"] = [a for a in partial["anchors"] if a["source"]["member_id"] != omitted]
+            partial_path = Path(temporary) / "partial.registration.json"
+            partial_path.write_text(json.dumps(partial))
+            fingerprint = human.sha256(partial_path)
+            raw = bytearray(original_raw)
+            del raw[header + 184 * stride:header + 185 * stride]
+            struct.pack_into("<I", raw, 12, 184)
+            struct.pack_into("<I", raw, 24, int(fingerprint[:8], 16))
+            payload_path.write_bytes(raw)
+            manifest["source"]["registration"]["sha256"] = fingerprint
+            manifest["payload"].update(sha256=human.sha256(payload_path), bytes=len(raw),
+                                       bone_count=184, registration_fingerprint32=fingerprint[:8])
+            manifest_path.write_text(json.dumps(manifest))
+            failed = [c for c in checks(altered, partial, partial_path) if not c["passed"]]
+            self.assertEqual(len(failed), 1)
+            self.assertEqual(failed[0]["source_member_id"], omitted)
+            self.assertEqual(failed[0]["coverage_status"], "missing_registration")
+
+
 class SourceCompiledLowerLimbGeometryTests(unittest.TestCase):
     def test_exact_source_pose_audit_uses_payload_and_rejects_postcompile_displacement(self):
         paths = {key: os.environ.get("NUMILAB_HUMAN_MOTION_" + key)
@@ -195,7 +324,7 @@ class SourceCompiledLowerLimbGeometryTests(unittest.TestCase):
         accepted = measured(Path(paths["BONES"]))
         checks = [c for body in accepted["source_geometry_checks"]
                   for c in body["compiled_bone_geometry_checks"]]
-        self.assertEqual(len(checks), 60)
+        self.assertEqual(len(checks), 185)
         self.assertTrue(all(c["passed"] for c in checks))
         self.assertEqual(accepted["pose_count"], 8)
         self.assertEqual(accepted["continuity_evaluation_count"], 320)
@@ -256,7 +385,7 @@ class SourceCompiledUpperLimbGeometryTests(unittest.TestCase):
         accepted = measured(Path(paths["BONES"]))
         checks = [c for body in accepted["source_geometry_checks"]
                   for c in body["compiled_bone_geometry_checks"]]
-        self.assertEqual(len(checks), accepted["source_member_count"])
+        self.assertEqual(len(checks), 185)
         self.assertTrue(all(c["passed"] for c in checks))
         self.assertTrue(all(c["maximum_vertex_residual_m"] == 0. for c in checks))
         self.assertEqual(accepted["pose_count"], 7)

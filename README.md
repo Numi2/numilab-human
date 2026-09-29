@@ -600,6 +600,14 @@ failure names affected equalities and retains the actual/expected identities
 with all pose measurements. This verifies source-program agreement; native
 execution and loaded response remain separate checks.
 
+With `--bone-artifact`, both regional audits check source identity, compiled
+vertices and topology for the complete 185-member visual skeleton. Skull,
+ribs, sternum, pelvis and spine are included even when they are outside the
+regional pose suite. A self-consistent omission from registration and payload
+also fails the existing complete-anchor contract. These are source geometry
+checks; regional motion, collision, material and loaded response keep their
+own qualification boundaries.
+
 The existing lower-limb source registrar also requires `--artifact`. It freshly
 checks an existing v3 registration against the pinned source meshes before
 preserving valid segment fits. Its bounded interface refinement now carries

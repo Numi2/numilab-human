@@ -14,6 +14,7 @@ import json
 import math
 import struct
 import sys
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -82,8 +83,12 @@ def _finish_pose_audit(result: dict[str, Any], region: str) -> dict[str, Any]:
                 details.append(
                     f"{check['source_member_id']}:compiled_vertex_residual_m="
                     f"{check['maximum_vertex_residual_m']},allowed_m=0,"
+                    f"structure={check.get('source_member_name', check['source_member_id'])},"
                     f"topology_matches={check['source_topology_matches']},"
                     f"vertices={check['compiled_vertex_count']}/{check['source_vertex_count']},"
+                    f"coverage={check.get('coverage_status', 'present')},"
+                    f"registration_occurrences={check.get('registration_occurrence_count', 1)}/1,"
+                    f"source_identity_matches={check.get('registered_source_identity_matches', True)},"
                     f"tolerance_basis={check['tolerance_basis']}"
                 )
         surface = item.get("held_out_surface_metrics")
@@ -296,6 +301,76 @@ def _compiled_member_geometry_check(
         "source_topology_matches": topology_matches,
         "passed": shape_matches and finite and residual == 0.0 and topology_matches,
     }
+
+
+def _compiled_bone_geometry_checks(
+    sources: Path, registration: dict[str, Any],
+    members: dict[str, dict[str, Any]], np: Any,
+) -> dict[str, dict[str, Any]]:
+    """Check the complete owning skeleton contract, including non-limb bones."""
+    registered = {anchor["source"]["member_id"]: anchor for anchor in registration["anchors"]}
+    occurrences = Counter(anchor["source"]["member_id"] for anchor in registration["anchors"])
+    groups: dict[str, dict[str, Any]] = {}
+    archive_hashes: dict[Path, str] = {}
+    specifications = {spec["member_id"]: spec for spec in human_model._BODYPARTS_MYOSIM_BONE_ANCHORS}
+    for member_id in sorted(specifications.keys() | registered.keys() | members.keys()):
+        spec = specifications.get(member_id)
+        anchor, surface = registered.get(member_id), members.get(member_id)
+        name = spec["myosim_body"] if spec else anchor["target"]["name"] if anchor else "unknown"
+        raw_vertices, raw_triangles = [], []
+        identity_matches = False
+        if spec is not None:
+            archive, member, obj = human_model._bodyparts_obj_member(sources, spec["hierarchy"], member_id)
+            if archive not in archive_hashes:
+                archive_hashes[archive] = _sha256(archive)
+            raw_vertices, raw_triangles = human_model._bodyparts_obj_triangles(obj, member)
+            if anchor is not None:
+                source = anchor["source"]
+                identity_matches = (
+                    source.get("hierarchy") == spec["hierarchy"]
+                    and source.get("name") == spec["bodyparts_name"]
+                    and source.get("archive_sha256") == archive_hashes[archive]
+                    and source.get("member_sha256") == hashlib.sha256(obj).hexdigest()
+                    and source.get("vertex_count") == len(raw_vertices)
+                    and source.get("triangle_count") == len(raw_triangles)
+                    and anchor["target"]["name"] == name
+                )
+        if spec is not None and anchor is not None and surface is not None:
+            check = _compiled_member_geometry_check(anchor, raw_vertices, raw_triangles, surface, np)
+        else:
+            check = {
+                "source_member_id": member_id, "myosim_body": name,
+                "source_vertex_count": len(raw_vertices),
+                "compiled_vertex_count": len(surface["vertices"]) if surface else 0,
+                "source_triangle_count": len(raw_triangles),
+                "compiled_triangle_count": len(surface["triangles"]) if surface else 0,
+                "maximum_vertex_residual_m": None, "maximum_allowed_vertex_residual_m": 0.0,
+                "source_topology_matches": False, "passed": False,
+                "coverage_status": "unexpected_source_member" if spec is None else
+                    "missing_registration" if anchor is None else "missing_compiled_member",
+                "tolerance_basis": "existing_complete_BodyParts3D_visual_skeleton_anchor_contract",
+            }
+        check["source_member_name"] = spec["bodyparts_name"] if spec else anchor["source"].get("name", "unknown") if anchor else "unknown"
+        check["registered_source_identity_matches"] = identity_matches
+        if spec is not None and anchor is not None and not identity_matches:
+            check["expected_source_identity"] = {
+                "hierarchy": spec["hierarchy"], "name": spec["bodyparts_name"], "myosim_body": name,
+                "archive_sha256": archive_hashes[archive], "member_sha256": hashlib.sha256(obj).hexdigest(),
+                "vertex_count": len(raw_vertices), "triangle_count": len(raw_triangles),
+            }
+            check["registered_source_identity"] = {**anchor["source"], "myosim_body": anchor["target"]["name"]}
+        check["passed"] = check["passed"] and identity_matches
+        if occurrences[member_id] > 1:
+            check.update(passed=False, coverage_status="duplicate_registration",
+                         registration_occurrence_count=occurrences[member_id])
+        group = groups.setdefault(name, {
+            "myosim_body": name, "source_member_ids": [], "source_frame_checks": [],
+            "compiled_bone_geometry_checks": [], "passed": True,
+        })
+        group["source_member_ids"].append(member_id)
+        group["compiled_bone_geometry_checks"].append(check)
+        group["passed"] = group["passed"] and check["passed"]
+    return groups
 
 
 def _project_joint_equalities(model: Any, qpos: Any, mujoco: Any) -> tuple[int, float]:
@@ -517,6 +592,10 @@ def audit_upper_limb_poses(
             bone_artifact, registration_path, registration,
             runtime_reference, runtime_bodies,
         )
+    compiled_geometry_by_body = (
+        _compiled_bone_geometry_checks(sources, registration, compiled_members, np)
+        if bone_descriptor is not None else {}
+    )
 
     exported = export_fullbody(sources)
     if exported.get("source") != registration["source"]["myosim"]["source"]:
@@ -530,7 +609,6 @@ def audit_upper_limb_poses(
     anchors_by_name: dict[str, dict[str, Any]] = {}
     local_vertices: dict[str, tuple[int, Any]] = {}
     registered_local_vertices: dict[str, tuple[int, Any]] = {}
-    compiled_geometry_checks: dict[str, dict[str, Any]] = {}
 
     for anchor in registration.get("anchors", []):
         name = anchor.get("target", {}).get("name")
@@ -580,9 +658,6 @@ def audit_upper_limb_poses(
         registered_local_vertices[source["member_id"]] = (source_body_id, body_vertices)
         if bone_descriptor is not None:
             surface = compiled_members[source["member_id"]]
-            compiled_geometry_checks[source["member_id"]] = _compiled_member_geometry_check(
-                anchor, raw_vertices, raw_triangles, surface, np,
-            )
             body_vertices = np.einsum(
                 "ki,ji->kj", np.asarray(surface["vertices"], dtype=float),
                 inertial_rotation,
@@ -599,17 +674,7 @@ def audit_upper_limb_poses(
     }
     if not expected_members.issubset(local_vertices.keys()):
         raise RuntimeError("upper-limb pose audit transition/member coverage drifted")
-    source_geometry_checks = []
-    if bone_descriptor is not None:
-        for name, anchor in sorted(anchors_by_name.items()):
-            check = compiled_geometry_checks[anchor["source"]["member_id"]]
-            source_geometry_checks.append({
-                "myosim_body": name,
-                "source_member_ids": [anchor["source"]["member_id"]],
-                "source_frame_checks": [],
-                "compiled_bone_geometry_checks": [check],
-                "passed": check["passed"],
-            })
+    source_geometry_checks = list(compiled_geometry_by_body.values())
 
     pose_receipts = []
     default_frame_maximum_residual = 0.0
@@ -789,7 +854,9 @@ def audit_upper_limb_poses(
             "suite. It is not cartilage/contact, ligament constraint, loaded dynamics, clinical "
             "registration, or a deformable tendon solve. Range coordinates are projected from "
             "the source model and rounded to FP32. Native equality program bytes are checked against "
-            "the pinned source compiler, including declared compliance parameters; this audit does not "
+            "the pinned source compiler, including declared compliance parameters. When a bone payload is "
+            "supplied, its complete skeleton is checked against registered source geometry; only regional "
+            "interfaces are posed. This audit does not "
             "execute those native programs or qualify their loaded response."
         ),
     }

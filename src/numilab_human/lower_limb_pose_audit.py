@@ -25,6 +25,7 @@ from .myosim_export import export_fullbody
 from .upper_limb_pose_audit import (
     PoseAuditError, _finish_pose_audit, _pose_qpos,
     _compiled_bone_members, _compiled_member_geometry_check,
+    _compiled_bone_geometry_checks,
     _pose_joint_range_context, _projected_joint_range_checks,
     _joint_equality_program_checks,
 )
@@ -143,6 +144,10 @@ def audit_lower_limb_poses(
             bone_artifact, registration_path, registration,
             runtime_reference, runtime_bodies,
         )
+    compiled_geometry_by_body = (
+        _compiled_bone_geometry_checks(sources, registration, compiled_members, np)
+        if bone_descriptor is not None else {}
+    )
     common_frame = human_model._bodyparts_source_common_frame(sources, registration, runtime_bodies)
     source_frame_checks = _lower_limb_source_frame_checks(registration, common_frame, runtime_bodies)
 
@@ -161,7 +166,6 @@ def audit_lower_limb_poses(
     anchors_by_member: dict[str, dict[str, Any]] = {}
     local_vertices: dict[str, tuple[int, Any]] = {}
     registered_local_vertices: dict[str, tuple[int, Any]] = {}
-    compiled_geometry_checks: dict[str, dict[str, Any]] = {}
     source_local_vertices: dict[int, Any] = {}
 
     for anchor in registration.get("anchors", []):
@@ -222,9 +226,6 @@ def audit_lower_limb_poses(
         registered_local_vertices[member_id] = (source_body_id, body_vertices)
         if bone_descriptor is not None:
             surface = compiled_members[member_id]
-            compiled_geometry_checks[member_id] = _compiled_member_geometry_check(
-                anchor, raw_vertices, raw_triangles, surface, np,
-            )
             body_vertices = np.einsum(
                 "ki,ji->kj", np.asarray(surface["vertices"], dtype=float),
                 inertial_rotation,
@@ -241,7 +242,9 @@ def audit_lower_limb_poses(
             "lower-limb pose audit is missing bodies: " + ", ".join(missing_bodies)
         )
 
-    source_geometry_checks = []
+    source_geometry_checks = [
+        record for name, record in compiled_geometry_by_body.items() if name not in LOWER_BODY_NAMES
+    ]
     for name in sorted(LOWER_BODY_NAMES):
         anchors = anchors_by_name[name]
         body_id = int(anchors[0]["target"]["source_body_id"])
@@ -251,7 +254,8 @@ def audit_lower_limb_poses(
             "source_frame_checks": frame_checks, "passed": all(c["passed"] for c in frame_checks),
         }
         if bone_descriptor is not None:
-            checks = [compiled_geometry_checks[a["source"]["member_id"]] for a in anchors]
+            checks = compiled_geometry_by_body[name]["compiled_bone_geometry_checks"]
+            record["source_member_ids"] = compiled_geometry_by_body[name]["source_member_ids"]
             record["compiled_bone_geometry_checks"] = checks
             record["passed"] = record["passed"] and all(c["passed"] for c in checks)
         if name.startswith("toes_"):
@@ -552,7 +556,9 @@ def audit_lower_limb_poses(
             "cartilage/contact, ligament restraint, loaded dynamics, gait, clinical "
             "registration, or a deformable tendon solve. Range coordinates are projected from "
             "the source model and rounded to FP32. Native equality program bytes are checked against "
-            "the pinned source compiler, including declared compliance parameters; this audit does not "
+            "the pinned source compiler, including declared compliance parameters. When a bone payload is "
+            "supplied, its complete skeleton is checked against registered source geometry; only regional "
+            "interfaces are posed. This audit does not "
             "execute those native programs or qualify their loaded response."
         ),
     }
