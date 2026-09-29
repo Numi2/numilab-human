@@ -173,6 +173,15 @@ class FailedPoseDiagnosticTests(unittest.TestCase):
             _finish_pose_audit(result, "lower-limb")
         self.assertIs(caught.exception.result, result)
         self.assertTrue(result["status"].startswith("failed_"))
+        result["poses"][0]["projected_joint_range_checks"] = [{
+            "passed": False, "source_joint_name": "knee_angle_rotation2_r", "q_index": 107,
+            "projected_value": .10, "unit": "rad", "source_range": [-.00167821, .0335354],
+            "source_range_violation": .0664646, "native_position_limit_enabled": True,
+            "native_position_range": [-.00167821, .0335354], "native_range_violation": .0664646,
+            "maximum_allowed_range_violation": 1e-9, "tolerance_basis": "native_pose_admission",
+        }]
+        with self.assertRaisesRegex(PoseAuditError, "knee_angle_rotation2_r q_index=107"):
+            _finish_pose_audit(result, "lower-limb")
         for module, function in [(upper, "audit_upper_limb_poses"), (lower, "audit_lower_limb_poses")]:
             with self.subTest(module=module.__name__), tempfile.TemporaryDirectory() as temporary:
                 output = Path(temporary) / "failed.json"

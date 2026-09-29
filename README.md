@@ -580,6 +580,18 @@ and retains the existing audit JSON, including gap witnesses, tolerances,
 input/runtime hashes and a reproduction command. Inspect this output even when
 the native renderer successfully admits the same pose.
 
+Both regional audits check scalar source ranges after equality projection and
+join them to the consumed NHRIGID2 DoF flags and FP32 ranges. Failures retain
+the joint name, source/Core indices, projected value, units, violation and
+tolerance basis alongside all geometry measurements. Source ranges retained
+only in the manifest are reported separately from enabled native limits.
+The native `--pose-q` path also checks the actual FP32 coordinates after
+projection: enabled-limit violations retain diagnostic views but exit with a
+failure instead of publishing a successful pose. The post-projection check
+uses the existing native 1e-9 arithmetic admission tolerance; the source input
+override, geometry and bilateral tolerances are unchanged. These are bounded
+kinematic pose checks, not source soft-limit dynamics or loaded qualification.
+
 The existing lower-limb source registrar also requires `--artifact`. It freshly
 checks an existing v3 registration against the pinned source meshes before
 preserving valid segment fits. Its bounded interface refinement now carries

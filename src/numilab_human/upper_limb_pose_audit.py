@@ -12,6 +12,7 @@ import argparse
 import hashlib
 import json
 import math
+import struct
 import sys
 from pathlib import Path
 from typing import Any
@@ -33,6 +34,9 @@ SCHEMA = "numi.human.bodyparts3d-myosim-upper-limb-multi-pose-audit.v1"
 POSE_CONTINUITY_ALLOWANCE_M = 0.001
 BILATERAL_GAP_PARITY_MAXIMUM_M = 0.002
 DEFAULT_FRAME_RESIDUAL_MAXIMUM_M = 1.0e-9
+# Match native --pose-q arithmetic admission, including its FP32 range table.
+# This new post-projection gate does not change the 1e-12 input override gate.
+PROJECTED_JOINT_RANGE_TOLERANCE = 1.0e-9
 
 
 class PoseAuditError(RuntimeError):
@@ -80,6 +84,17 @@ def _finish_pose_audit(result: dict[str, Any], region: str) -> dict[str, Any]:
             details.append(f"femoral_head_articular_gate={articular}")
         failures.append(f"{region} source geometry:{item['myosim_body']} members={item['source_member_ids']}: " + "; ".join(details))
     for pose in result["poses"]:
+        for item in pose.get("projected_joint_range_checks", []):
+            if not item["passed"]:
+                failures.append(
+                    f"{pose['name']}:{item['source_joint_name']} q_index={item['q_index']} "
+                    f"projected_value={item['projected_value']:.12g} unit={item['unit']} "
+                    f"source_range={item['source_range']} source_violation={item['source_range_violation']:.12g}, "
+                    f"native_position_limit_enabled={item['native_position_limit_enabled']} "
+                    f"native_range={item['native_position_range']} native_violation={item['native_range_violation']:.12g}, "
+                    f"allowed_violation={item['maximum_allowed_range_violation']:.12g} "
+                    f"tolerance_basis={item['tolerance_basis']}"
+                )
         for item in pose["continuity"]:
             if not item["passed"]:
                 failures.append(
@@ -323,6 +338,91 @@ def _pose_qpos(model: Any, pose: tuple[tuple[int, float], ...], mujoco: Any, np:
     return qpos, equality_count, maximum_correction
 
 
+def _pose_joint_range_context(
+    artifact: Path, runtime_reference: dict[str, Any], model: Any, mujoco: Any,
+) -> list[dict[str, Any]]:
+    """Join source joints to the exact consumed NHRIGID2 range flags/bytes."""
+    manifest_path = Path(runtime_reference["manifest"]["file"])
+    if _sha256(manifest_path) != runtime_reference["manifest"]["sha256"]:
+        raise RuntimeError("pose audit runtime manifest drifted during range binding")
+    manifest = human_model.read_json(manifest_path)
+    context = human_model._numi_human_fixed_cluster_context(
+        artifact, manifest, manifest["payloads"]["rigid"],
+    )
+    scalar_joints = {i for i in range(model.njnt) if int(model.jnt_type[i]) in (
+        int(mujoco.mjtJoint.mjJNT_SLIDE), int(mujoco.mjtJoint.mjJNT_HINGE),
+    )}
+    joined = []
+    seen = set()
+    for row in manifest["core_tree"]["source_joint_map"]:
+        joint = row["source_joint_id"]
+        v = row["core_v_index"]
+        if type(joint) is not int or joint not in scalar_joints or joint in seen:
+            raise RuntimeError("pose audit source joint map is incomplete or duplicated")
+        if type(v) is not int or not 0 <= v < len(context["dof_properties"]):
+            raise RuntimeError("pose audit source joint map has an invalid native DoF")
+        native = context["dof_properties"][v]
+        enforced = row["core_limit_status"] == "enforced"
+        native_range = [struct.unpack("<f", struct.pack("<f", x))[0] for x in row["source_range"]]
+        if (
+            row["source_name"] != mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_JOINT, joint)
+            or row["source_type"] != int(model.jnt_type[joint])
+            or row["core_q_index"] != int(model.jnt_qposadr[joint])
+            or row["source_limited"] != bool(model.jnt_limited[joint])
+            or list(row["source_range"]) != [float(x) for x in model.jnt_range[joint]]
+            or native["q_index"] != row["core_q_index"] or native["v_index"] != v
+            or native["joint_index"] != row["core_joint_index"]
+            or bool(native["flags"] & human_model._MR_DOF_POSITION_LIMIT) != enforced
+            or native["position_range"] != (native_range if enforced else [0.0, 0.0])
+        ):
+            raise RuntimeError(
+                f"pose audit source/native joint range binding drifted: {row['source_name']} "
+                f"q_index={row['core_q_index']} v_index={v} source_range={row['source_range']} "
+                f"declared_native_enforced={enforced} consumed_flags={native['flags']} "
+                f"consumed_native_range={native['position_range']}; "
+                f"rigid_sha256={context['rigid_payload_sha256']}"
+            )
+        seen.add(joint)
+        joined.append({**row, "native_dof": native})
+    if seen != scalar_joints:
+        raise RuntimeError("pose audit source/native scalar joint range coverage drifted")
+    return joined
+
+
+def _projected_joint_range_checks(qpos: Any, joints: list[dict[str, Any]], np: Any) -> list[dict[str, Any]]:
+    """Check source-projected q and its FP32 rounding against bound range bytes."""
+    checks = []
+    for joint in joints:
+        native = joint["native_dof"]
+        enabled = bool(native["flags"] & human_model._MR_DOF_POSITION_LIMIT)
+        if not joint["source_limited"] and not enabled:
+            continue
+        value = float(qpos[joint["core_q_index"]])
+        if not math.isfinite(value):
+            raise RuntimeError(f"pose audit projected a nonfinite coordinate: {joint['source_name']}")
+        consumed = float(np.float32(value))
+        source_range = joint["source_range"] if joint["source_limited"] else None
+        native_range = native["position_range"] if enabled else None
+        source_violation = max(0.0, source_range[0] - value, value - source_range[1]) if source_range else 0.0
+        native_violation = max(0.0, native_range[0] - consumed, consumed - native_range[1]) if native_range else 0.0
+        checks.append({
+            "source_joint_id": joint["source_joint_id"], "source_joint_name": joint["source_name"],
+            "q_index": native["q_index"], "v_index": native["v_index"], "core_joint_index": native["joint_index"],
+            "unit": "m" if joint["source_type"] == 2 else "rad",
+            "projected_value": value, "projected_fp32_value": consumed,
+            "source_range": source_range, "source_range_violation": source_violation,
+            "native_position_limit_enabled": enabled, "native_position_range": native_range,
+            "native_range_violation": native_violation,
+            "compiler_limit_status": joint["core_limit_status"],
+            "maximum_allowed_range_violation": PROJECTED_JOINT_RANGE_TOLERANCE,
+            "tolerance_basis": "existing_native_pose_q_position_range_arithmetic_admission_1e-9",
+            "source_range_passed": source_violation <= PROJECTED_JOINT_RANGE_TOLERANCE,
+            "native_position_range_passed": native_violation <= PROJECTED_JOINT_RANGE_TOLERANCE,
+            "passed": max(source_violation, native_violation) <= PROJECTED_JOINT_RANGE_TOLERANCE,
+        })
+    return checks
+
+
 def audit_upper_limb_poses(
     *, sources: Path, registration_path: Path, artifact: Path,
     bone_artifact: Path | None = None,
@@ -356,6 +456,7 @@ def audit_upper_limb_poses(
     source_bodies = {int(body["id"]): body for body in exported["bodies"]}
     model = build_model("myofullbody")
     data = mujoco.MjData(model)
+    joint_ranges = _pose_joint_range_context(artifact, runtime_reference, model, mujoco)
     expected_names = _upper_names("r") | _upper_names("l")
     anchors_by_name: dict[str, dict[str, Any]] = {}
     local_vertices: dict[str, tuple[int, Any]] = {}
@@ -551,6 +652,7 @@ def audit_upper_limb_poses(
             ],
             "joint_equality_count": current_equality_count,
             "joint_equality_maximum_correction": correction,
+            "projected_joint_range_checks": _projected_joint_range_checks(qpos, joint_ranges, np),
             "continuity": continuity,
             "bilateral_gap_parity": parity,
         })
@@ -613,9 +715,10 @@ def audit_upper_limb_poses(
             "Rigid BodyParts3D bones were replayed through pinned MyoSim kinematics and exact "
             "polynomial joint equality projection. Passing proves body ownership, default frame "
             "identity, bounded one-vertex and robust bidirectional interface-patch continuity, "
-            "and bilateral parity for this pose "
+            "post-projection source and consumed native position ranges, and bilateral parity for this pose "
             "suite. It is not cartilage/contact, ligament constraint, loaded dynamics, clinical "
-            "registration, or a deformable tendon solve."
+            "registration, or a deformable tendon solve. Range coordinates are projected from "
+            "the source model and rounded to FP32; this audit does not execute a native NHEQ payload."
         ),
     }
     if bone_descriptor is not None:

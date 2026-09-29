@@ -25,6 +25,7 @@ from .myosim_export import export_fullbody
 from .upper_limb_pose_audit import (
     PoseAuditError, _finish_pose_audit, _pose_qpos,
     _compiled_bone_members, _compiled_member_geometry_check,
+    _pose_joint_range_context, _projected_joint_range_checks,
 )
 from .upper_limb_registration import (
     INTERFACE_PATCH_GATE_MULTIPLIER,
@@ -150,6 +151,7 @@ def audit_lower_limb_poses(
     source_bodies = {int(body["id"]): body for body in exported["bodies"]}
     model = build_model("myofullbody")
     data = mujoco.MjData(model)
+    joint_ranges = _pose_joint_range_context(artifact, runtime_reference, model, mujoco)
     compiled_meshes_by_body = _compiled_meshes_by_body(model, mujoco, np)
     anchors_by_name: dict[str, list[dict[str, Any]]] = {
         name: [] for name in LOWER_BODY_NAMES
@@ -458,6 +460,7 @@ def audit_lower_limb_poses(
             ],
             "joint_equality_count": current_equality_count,
             "joint_equality_maximum_correction": correction,
+            "projected_joint_range_checks": _projected_joint_range_checks(qpos, joint_ranges, np),
             "continuity": continuity,
             "bilateral_gap_parity": parity,
         })
@@ -541,10 +544,11 @@ def audit_lower_limb_poses(
             "fits and femoral-head gates, total orientation/scale bounds against the source-derived "
             "atlas frame, bounded minimum-gap and robust "
             "bidirectional interface-patch continuity relative to the same-pose pinned "
-            "mechanics surfaces, and bilateral parity for this "
+            "mechanics surfaces, post-projection source and consumed native position ranges, and bilateral parity for this "
             "pose suite. The complete toe compound retains one MTP body. This is not "
             "cartilage/contact, ligament restraint, loaded dynamics, gait, clinical "
-            "registration, or a deformable tendon solve."
+            "registration, or a deformable tendon solve. Range coordinates are projected from "
+            "the source model and rounded to FP32; this audit does not execute a native NHEQ payload."
         ),
     }
 

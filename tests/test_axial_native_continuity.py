@@ -10,7 +10,9 @@ import pytest
 
 from numilab_human import model as human
 from numilab_human.lower_limb_pose_audit import POSE_SUITE
-from numilab_human.upper_limb_pose_audit import _pose_qpos
+from numilab_human.upper_limb_pose_audit import (
+    _pose_qpos, _pose_joint_range_context, _projected_joint_range_checks,
+)
 from numilab_human.upper_limb_registration import _interface_patch_metrics, _minimum_gap, _rotation_xyzw
 
 
@@ -45,14 +47,18 @@ def inputs():
     return probe, bones.read_bytes(), artifact, runtime, build_model("myofullbody"), geometry, stable_ids
 
 
-def run_probe(inputs, tmp_path, raw=None, pose=()):
+def run_probe(inputs, tmp_path, raw=None, pose=(), equality_raw=None):
     probe, valid, artifact, *_ = inputs
     path = tmp_path / "candidate.nhbones"
     path.write_bytes(valid if raw is None else raw)
+    equality = artifact / "myosim-fullbody-joint-equalities.nheq"
+    if equality_raw is not None:
+        equality = tmp_path / "candidate.nheq"
+        equality.write_bytes(equality_raw)
     command = [str(probe), str(artifact / "myosim-fullbody-core-reference.nhrigid"),
                str(artifact / "myosim-fullbody-muscle-reference.nhmyo"), str(path),
                str(tmp_path / "views"), "--dimension", "512",
-               "--joint-equality-payload", str(artifact / "myosim-fullbody-joint-equalities.nheq")]
+               "--joint-equality-payload", str(equality)]
     for q, value in pose:
         command += ["--pose-q", str(q), str(value)]
     result = subprocess.run(command, capture_output=True, text=True, timeout=60)
@@ -74,7 +80,36 @@ def measurements(result):
 def test_executed_axial_interfaces_match_independent_source_poses(inputs, tmp_path, pose):
     import mujoco
     result = run_probe(inputs, tmp_path, pose=pose)
-    assert result.returncode == 0, result.stderr
+    if (106, .75) in pose:
+        # The source polynomial exceeds both enabled rotation2 limits here.
+        # Keep the difficult pose and all 27 geometry comparisons below.
+        assert result.returncode != 0
+        assert "projected native position range failed" in result.stderr
+        assert "failed_range_count=2" in result.stdout
+        ranges = [dict(part.split("=", 1) for part in line.split())
+                  for line in result.stdout.splitlines() if line.startswith("pose_joint_range=failed ")]
+        assert {int(r["q_index"]) for r in ranges} == {107, 121}
+        # Independently evaluate the actual serialized coefficients, rather
+        # than the higher-precision source model used by the geometry oracle.
+        equality_bytes = (inputs[2] / "myosim-fullbody-joint-equalities.nheq").read_bytes()
+        equalities = {row[0]: row for offset in range(80, len(equality_bytes), 96)
+                      for row in [struct.unpack_from("<4I20f", equality_bytes, offset)]}
+        rigid_bytes = (inputs[2] / "myosim-fullbody-core-reference.nhrigid").read_bytes()
+        header = struct.unpack_from("<8s10I32s", rigid_bytes)
+        dof_offset = 80 + 96 + 48 + 160 * header[4] + 144 * header[5]
+        for r in ranges:
+            assert r["unit"] == "rad" and float(r["allowed_violation"]) == 1e-9
+            row = equalities[int(r["q_index"])]
+            delta = dict(pose)[row[2]] - row[5]
+            target = row[4] + sum(row[6 + degree] * delta ** degree for degree in range(5))
+            value = float(np.float32(target))
+            lower, upper = struct.unpack_from("<2f", rigid_bytes, dof_offset + 64 * row[1] + 32)
+            assert float(r["native_fp32_value"]) == pytest.approx(value, abs=1e-12)
+            assert float(r["violation"]) == pytest.approx(max(0., lower - value, value - upper), abs=1e-12)
+        assert len(list((tmp_path / "views").glob("*.png"))) == 4
+        assert "myosim_articulated_bodyparts_bone_visual=ok" not in result.stdout
+    else:
+        assert result.returncode == 0, result.stderr
     assert "axial_bone_continuity=passed transition_count=27" in result.stdout
     _, _, _, _, model, geometry, stable_ids = inputs
     data = mujoco.MjData(model)
@@ -96,6 +131,103 @@ def test_executed_axial_interfaces_match_independent_source_poses(inputs, tmp_pa
         assert float(check["minimum_gap_m"]) == pytest.approx(_minimum_gap(world[first], world[second], np)[0], abs=1e-6)
         expected_patch = _interface_patch_metrics(world[first], world[second], np)["bidirectional_p90_m"]
         assert float(check["patch_p90_m"]) == pytest.approx(expected_patch, abs=1e-6)
+
+
+@pytest.fixture(scope="module")
+def joint_ranges(inputs):
+    import mujoco
+    artifact, model = inputs[2], inputs[4]
+    registration = json.loads(Path(os.environ["NUMILAB_HUMAN_MOTION_REPAIRED"]).read_text())
+    reference, _ = human._bodyparts_runtime_bindings(registration, artifact)
+    return _pose_joint_range_context(artifact, reference, model, mujoco)
+
+
+@pytest.mark.parametrize("pose_name,expected", [
+    ("neutral", set()),
+    ("bilateral_knee_flexion", {"knee_angle_translation2_l"}),
+    ("bilateral_deep_crouch", {"knee_angle_translation2_l"}),
+    ("bilateral_functional_crouch", {
+        "knee_angle_translation2_l", "knee_angle_rotation2_r", "knee_angle_rotation2_l",
+    }),
+])
+def test_source_projection_conflicts_are_distinct_from_consumed_limits(inputs, joint_ranges, pose_name, expected):
+    import mujoco
+    q, _, _ = _pose_qpos(inputs[4], dict(POSE_SUITE)[pose_name], mujoco, np)
+    checks = _projected_joint_range_checks(q, joint_ranges, np)
+    assert len(checks) == 122
+    failed = {c["source_joint_name"]: c for c in checks if not c["passed"]}
+    assert set(failed) == expected
+    if "knee_angle_translation2_l" in failed:
+        left = failed["knee_angle_translation2_l"]
+        assert left["unit"] == "m" and left["q_index"] == 118
+        assert not left["native_position_limit_enabled"]
+        assert left["native_position_range"] is None and left["native_position_range_passed"]
+        assert left["source_range_violation"] > .003
+    for name in expected - {"knee_angle_translation2_l"}:
+        assert failed[name]["native_position_limit_enabled"]
+        assert not failed[name]["native_position_range_passed"]
+        assert failed[name]["native_range_violation"] == pytest.approx(.00010107457637786865, abs=1e-12)
+
+
+@pytest.mark.parametrize("constant,valid", [(.10, False), (-.00025, True), (.00025, True)])
+def test_dependent_coordinate_corruption_and_valid_variation(inputs, joint_ranges, tmp_path, constant, valid):
+    import hashlib
+    import mujoco
+    model = inputs[4]
+    equality_index = next(i for i in range(model.neq)
+                          if int(model.jnt_qposadr[int(model.eq_obj1id[i])]) == 107)
+    saved = model.eq_data[equality_index, :5].copy()
+    try:
+        model.eq_data[equality_index, :5] = [constant, 0., 0., 0., 0.]
+        q, _, _ = _pose_qpos(model, ((7, -.4),), mujoco, np)
+        check = next(c for c in _projected_joint_range_checks(q, joint_ranges, np) if c["q_index"] == 107)
+        assert check["passed"] is valid
+    finally:
+        model.eq_data[equality_index, :5] = saved
+    raw = bytearray((inputs[2] / "myosim-fullbody-joint-equalities.nheq").read_bytes())
+    assert raw[:8] == b"NHEQ1\0\0\0"
+    record = next(offset for offset in range(80, len(raw), 96)
+                  if struct.unpack_from("<I", raw, offset)[0] == 107)
+    struct.pack_into("<5f", raw, record + 24, constant, 0., 0., 0., 0.)
+    result = run_probe(inputs, tmp_path, pose=((7, -.4),), equality_raw=raw)
+    assert (result.returncode == 0) is valid, result.stderr
+    assert len(list((tmp_path / "views").glob("*.png"))) == 4
+    assert hashlib.sha256(raw).hexdigest() in result.stdout
+    if not valid:
+        assert "pose_joint_range=failed q_index=107 v_index=106 core_joint_index=134" in result.stdout
+        assert "projected native position range failed" in result.stderr
+        assert "diagnostic_views=" in result.stderr and "rigid_sha256=" in result.stderr
+        assert "myosim_articulated_bodyparts_bone_visual=ok" not in result.stdout
+
+
+def test_source_input_range_tolerance_is_unchanged(inputs):
+    import mujoco
+    joint = next(i for i in range(inputs[4].njnt) if int(inputs[4].jnt_qposadr[i]) == 107)
+    upper = float(inputs[4].jnt_range[joint, 1])
+    with pytest.raises(RuntimeError, match="exceeds its source range"):
+        _pose_qpos(inputs[4], ((107, upper + 5e-12),), mujoco, np)
+
+
+@pytest.mark.parametrize("corruption", ["disable_native_limit", "widen_native_range"])
+def test_source_range_claim_cannot_override_consumed_limit_bytes(inputs, tmp_path, corruption):
+    import hashlib
+    import mujoco
+    manifest = json.loads((inputs[2] / "myosim-fullbody-reference.manifest.json").read_text())
+    raw = bytearray((inputs[2] / manifest["payloads"]["rigid"]["file"]).read_bytes())
+    header = struct.unpack_from("<8s10I32s", raw)
+    dofs = 80 + 96 + 48 + 160 * header[4] + 144 * header[5]
+    offset = dofs + 64 * 106
+    if corruption == "disable_native_limit":
+        struct.pack_into("<I", raw, offset + 20, 0)
+    else:
+        struct.pack_into("<f", raw, offset + 36, .10)
+    (tmp_path / manifest["payloads"]["rigid"]["file"]).write_bytes(raw)
+    manifest["payloads"]["rigid"]["sha256"] = hashlib.sha256(raw).hexdigest()
+    path = tmp_path / "myosim-fullbody-reference.manifest.json"
+    path.write_text(json.dumps(manifest))
+    reference = {"manifest": {"file": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}}
+    with pytest.raises(RuntimeError, match="joint range binding drifted: knee_angle_rotation2_r"):
+        _pose_joint_range_context(tmp_path, reference, inputs[4], mujoco)
 
 
 def displaced_bone(inputs, amount, isolated_witnesses=False, *,

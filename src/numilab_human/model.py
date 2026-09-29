@@ -8106,7 +8106,8 @@ def _numi_human_fixed_cluster_context(
         raise ImportError("Numi Human fixed-cluster rigid identity is invalid")
     body_offset = header_size + 96 + 48
     joint_offset = body_offset + 160 * body_count
-    map_offset = joint_offset + 144 * joint_count + 64 * nv + 4 * (nq + nv)
+    dof_offset = joint_offset + 144 * joint_count
+    map_offset = dof_offset + 64 * nv + 4 * (nq + nv)
     if len(raw) != map_offset + 32 * source_body_count:
         raise ImportError("Numi Human fixed-cluster rigid table counts disagree with payload bytes")
     source_to_core = struct.unpack_from(f"<{source_body_count}I", raw, map_offset)
@@ -8180,6 +8181,16 @@ def _numi_human_fixed_cluster_context(
         "relationships": relationships,
         "poses": poses,
         "rigid_payload_sha256": expected_sha,
+        "dof_properties": [
+            {
+                "joint_index": struct.unpack_from("<I", raw, dof_offset + 64 * i + 4)[0],
+                "q_index": struct.unpack_from("<I", raw, dof_offset + 64 * i + 8)[0],
+                "v_index": struct.unpack_from("<I", raw, dof_offset + 64 * i + 12)[0],
+                "flags": struct.unpack_from("<I", raw, dof_offset + 64 * i + 20)[0],
+                "position_range": list(struct.unpack_from("<2f", raw, dof_offset + 64 * i + 32)),
+            }
+            for i in range(nv)
+        ],
     }
 
 
