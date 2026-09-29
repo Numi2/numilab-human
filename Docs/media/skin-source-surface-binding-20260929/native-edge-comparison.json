@@ -1,0 +1,571 @@
+{
+  "schema": "numi.human.skin-native-source-edge-comparison.v1",
+  "cases": [
+    {
+      "name": "raw-source-rest",
+      "before": {
+        "edge_count": 164188,
+        "maximum_stretch_ratio": 1.000623227165612,
+        "edge_p99_stretch_ratio": 1.000067313847113,
+        "edges_over_5x": 0,
+        "maximum_edge_length_increase_m": 5.647857579688803e-07,
+        "worst_length_increases": [
+          {
+            "source_skin_vertex_ids": [
+              28079,
+              28080
+            ],
+            "source_length_m": 0.005674080984583189,
+            "native_length_m": 0.005674645770341158,
+            "stretch_ratio": 1.0000995378387272
+          },
+          {
+            "source_skin_vertex_ids": [
+              16977,
+              16978
+            ],
+            "source_length_m": 0.005694959777372471,
+            "native_length_m": 0.005695438478142023,
+            "stretch_ratio": 1.0000840569184446
+          },
+          {
+            "source_skin_vertex_ids": [
+              25240,
+              25242
+            ],
+            "source_length_m": 0.0020235893774156197,
+            "native_length_m": 0.002024054992944002,
+            "stretch_ratio": 1.0002300938785205
+          },
+          {
+            "source_skin_vertex_ids": [
+              35582,
+              35584
+            ],
+            "source_length_m": 0.006231772828713578,
+            "native_length_m": 0.006232237443327904,
+            "stretch_ratio": 1.000074555768815
+          },
+          {
+            "source_skin_vertex_ids": [
+              10146,
+              10843
+            ],
+            "source_length_m": 0.01996761096901101,
+            "native_length_m": 0.019968051463365555,
+            "stretch_ratio": 1.0000220604435468
+          }
+        ],
+        "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+      },
+      "after": {
+        "edge_count": 164188,
+        "maximum_stretch_ratio": 1.0006545007198457,
+        "edge_p99_stretch_ratio": 1.0000761997704726,
+        "edges_over_5x": 0,
+        "maximum_edge_length_increase_m": 5.965130752405567e-07,
+        "worst_length_increases": [
+          {
+            "source_skin_vertex_ids": [
+              16977,
+              16978
+            ],
+            "source_length_m": 0.005694959777372471,
+            "native_length_m": 0.005695556290447712,
+            "stretch_ratio": 1.0001047440365796
+          },
+          {
+            "source_skin_vertex_ids": [
+              20473,
+              20474
+            ],
+            "source_length_m": 0.0015918112402079263,
+            "native_length_m": 0.0015924059553071856,
+            "stretch_ratio": 1.0003736090588113
+          },
+          {
+            "source_skin_vertex_ids": [
+              28079,
+              28080
+            ],
+            "source_length_m": 0.005674080984583189,
+            "native_length_m": 0.005674644839018583,
+            "stretch_ratio": 1.0000993737024422
+          },
+          {
+            "source_skin_vertex_ids": [
+              35150,
+              35152
+            ],
+            "source_length_m": 0.005318406833675558,
+            "native_length_m": 0.005318946670740843,
+            "stretch_ratio": 1.0001015035295657
+          },
+          {
+            "source_skin_vertex_ids": [
+              27921,
+              27929
+            ],
+            "source_length_m": 0.0016987072094297774,
+            "native_length_m": 0.0016992182936519384,
+            "stretch_ratio": 1.0003008665762552
+          }
+        ],
+        "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+      }
+    },
+    {
+      "name": "neutral",
+      "before": {
+        "edge_count": 164188,
+        "maximum_stretch_ratio": 10.009841157970403,
+        "edge_p99_stretch_ratio": 1.0268887562973426,
+        "edges_over_5x": 37,
+        "maximum_edge_length_increase_m": 0.03731208611333171,
+        "worst_length_increases": [
+          {
+            "source_skin_vertex_ids": [
+              38817,
+              38828
+            ],
+            "source_length_m": 0.03491129409468373,
+            "native_length_m": 0.07222338020801544,
+            "stretch_ratio": 2.06876834792021
+          },
+          {
+            "source_skin_vertex_ids": [
+              38421,
+              38445
+            ],
+            "source_length_m": 0.046500842119080836,
+            "native_length_m": 0.08052808046340942,
+            "stretch_ratio": 1.7317553143917384
+          },
+          {
+            "source_skin_vertex_ids": [
+              42386,
+              42405
+            ],
+            "source_length_m": 0.013353914022946221,
+            "native_length_m": 0.034806009382009506,
+            "stretch_ratio": 2.606427547923541
+          },
+          {
+            "source_skin_vertex_ids": [
+              38423,
+              38828
+            ],
+            "source_length_m": 0.031484360554550596,
+            "native_length_m": 0.05184188857674599,
+            "stretch_ratio": 1.646591757419479
+          },
+          {
+            "source_skin_vertex_ids": [
+              43514,
+              43520
+            ],
+            "source_length_m": 0.00851541818700937,
+            "native_length_m": 0.02842344157397747,
+            "stretch_ratio": 3.337879708284748
+          }
+        ],
+        "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+      },
+      "after": {
+        "edge_count": 164188,
+        "maximum_stretch_ratio": 17.447509256352287,
+        "edge_p99_stretch_ratio": 1.1201373434696398,
+        "edges_over_5x": 17,
+        "maximum_edge_length_increase_m": 0.030453391901356278,
+        "worst_length_increases": [
+          {
+            "source_skin_vertex_ids": [
+              13691,
+              14166
+            ],
+            "source_length_m": 0.004745765992301407,
+            "native_length_m": 0.035199157893657684,
+            "stretch_ratio": 7.416960286444348
+          },
+          {
+            "source_skin_vertex_ids": [
+              36491,
+              36495
+            ],
+            "source_length_m": 0.003404251364989789,
+            "native_length_m": 0.0337478332221508,
+            "stretch_ratio": 9.913437523804012
+          },
+          {
+            "source_skin_vertex_ids": [
+              19976,
+              19977
+            ],
+            "source_length_m": 0.0036905694032288894,
+            "native_length_m": 0.032037846744060516,
+            "stretch_ratio": 8.68100372696704
+          },
+          {
+            "source_skin_vertex_ids": [
+              36491,
+              37174
+            ],
+            "source_length_m": 0.003895708461362307,
+            "native_length_m": 0.03175345063209534,
+            "stretch_ratio": 8.150879601753191
+          },
+          {
+            "source_skin_vertex_ids": [
+              41142,
+              41164
+            ],
+            "source_length_m": 0.004827583273684985,
+            "native_length_m": 0.03200627118349075,
+            "stretch_ratio": 6.629874487708166
+          }
+        ],
+        "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+      }
+    },
+    {
+      "name": "coupled-torso",
+      "before": {
+        "edge_count": 164188,
+        "maximum_stretch_ratio": 35.70952584135353,
+        "edge_p99_stretch_ratio": 2.2163173336483917,
+        "edges_over_5x": 609,
+        "maximum_edge_length_increase_m": 0.2528249512881689,
+        "worst_length_increases": [
+          {
+            "source_skin_vertex_ids": [
+              42964,
+              44129
+            ],
+            "source_length_m": 0.04806072604947761,
+            "native_length_m": 0.3008856773376465,
+            "stretch_ratio": 6.26053125014987
+          },
+          {
+            "source_skin_vertex_ids": [
+              42964,
+              44142
+            ],
+            "source_length_m": 0.06119971236520268,
+            "native_length_m": 0.306062251329422,
+            "stretch_ratio": 5.001040683051393
+          },
+          {
+            "source_skin_vertex_ids": [
+              45033,
+              45563
+            ],
+            "source_length_m": 0.035583854787999095,
+            "native_length_m": 0.2508213222026825,
+            "stretch_ratio": 7.048739483033011
+          },
+          {
+            "source_skin_vertex_ids": [
+              10999,
+              11577
+            ],
+            "source_length_m": 0.028955291268635327,
+            "native_length_m": 0.24224576354026794,
+            "stretch_ratio": 8.366200197843325
+          },
+          {
+            "source_skin_vertex_ids": [
+              45033,
+              45509
+            ],
+            "source_length_m": 0.03961749111885364,
+            "native_length_m": 0.25214338302612305,
+            "stretch_ratio": 6.3644460036524135
+          }
+        ],
+        "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+      },
+      "after": {
+        "edge_count": 164188,
+        "maximum_stretch_ratio": 17.447509256352287,
+        "edge_p99_stretch_ratio": 1.1576200181639482,
+        "edges_over_5x": 17,
+        "maximum_edge_length_increase_m": 0.030453391901356278,
+        "worst_length_increases": [
+          {
+            "source_skin_vertex_ids": [
+              13691,
+              14166
+            ],
+            "source_length_m": 0.004745765992301407,
+            "native_length_m": 0.035199157893657684,
+            "stretch_ratio": 7.416960286444348
+          },
+          {
+            "source_skin_vertex_ids": [
+              36491,
+              36495
+            ],
+            "source_length_m": 0.003404251364989789,
+            "native_length_m": 0.0337478332221508,
+            "stretch_ratio": 9.913437523804012
+          },
+          {
+            "source_skin_vertex_ids": [
+              19976,
+              19977
+            ],
+            "source_length_m": 0.0036905694032288894,
+            "native_length_m": 0.032037846744060516,
+            "stretch_ratio": 8.68100372696704
+          },
+          {
+            "source_skin_vertex_ids": [
+              36491,
+              37174
+            ],
+            "source_length_m": 0.003895708461362307,
+            "native_length_m": 0.03175345063209534,
+            "stretch_ratio": 8.150879601753191
+          },
+          {
+            "source_skin_vertex_ids": [
+              41142,
+              41164
+            ],
+            "source_length_m": 0.004827583273684985,
+            "native_length_m": 0.03200627118349075,
+            "stretch_ratio": 6.629874487708166
+          }
+        ],
+        "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+      }
+    },
+    {
+      "name": "coupled-reach",
+      "before": {
+        "edge_count": 164188,
+        "maximum_stretch_ratio": 81.58487095990989,
+        "edge_p99_stretch_ratio": 6.176588938937332,
+        "edges_over_5x": 2093,
+        "maximum_edge_length_increase_m": 0.6075135960604663,
+        "worst_length_increases": [
+          {
+            "source_skin_vertex_ids": [
+              10999,
+              11577
+            ],
+            "source_length_m": 0.028955291268635327,
+            "native_length_m": 0.6364688873291016,
+            "stretch_ratio": 21.981090828070215
+          },
+          {
+            "source_skin_vertex_ids": [
+              42964,
+              44129
+            ],
+            "source_length_m": 0.04806072604947761,
+            "native_length_m": 0.6286009550094604,
+            "stretch_ratio": 13.079306258551476
+          },
+          {
+            "source_skin_vertex_ids": [
+              42964,
+              44142
+            ],
+            "source_length_m": 0.06119971236520268,
+            "native_length_m": 0.6182951927185059,
+            "stretch_ratio": 10.10291010893803
+          },
+          {
+            "source_skin_vertex_ids": [
+              42964,
+              43599
+            ],
+            "source_length_m": 0.04150847216031565,
+            "native_length_m": 0.5176103711128235,
+            "stretch_ratio": 12.469993333257086
+          },
+          {
+            "source_skin_vertex_ids": [
+              45033,
+              45509
+            ],
+            "source_length_m": 0.03961749111885364,
+            "native_length_m": 0.5067790746688843,
+            "stretch_ratio": 12.791801306865498
+          }
+        ],
+        "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+      },
+      "after": {
+        "edge_count": 164188,
+        "maximum_stretch_ratio": 17.447509256352287,
+        "edge_p99_stretch_ratio": 1.716995750930896,
+        "edges_over_5x": 64,
+        "maximum_edge_length_increase_m": 0.057633526422433676,
+        "worst_length_increases": [
+          {
+            "source_skin_vertex_ids": [
+              46231,
+              46235
+            ],
+            "source_length_m": 0.0038224497955514796,
+            "native_length_m": 0.06145597621798515,
+            "stretch_ratio": 16.077641173863647
+          },
+          {
+            "source_skin_vertex_ids": [
+              9292,
+              9830
+            ],
+            "source_length_m": 0.012552198434999304,
+            "native_length_m": 0.0685533955693245,
+            "stretch_ratio": 5.461465250435892
+          },
+          {
+            "source_skin_vertex_ids": [
+              45676,
+              45700
+            ],
+            "source_length_m": 0.009371893501292245,
+            "native_length_m": 0.057639751583337784,
+            "stretch_ratio": 6.150278124200848
+          },
+          {
+            "source_skin_vertex_ids": [
+              8680,
+              9184
+            ],
+            "source_length_m": 0.009153186552151103,
+            "native_length_m": 0.05503120273351669,
+            "stretch_ratio": 6.012245289656391
+          },
+          {
+            "source_skin_vertex_ids": [
+              46231,
+              46237
+            ],
+            "source_length_m": 0.002827331303730043,
+            "native_length_m": 0.04688860476016998,
+            "stretch_ratio": 16.584050372275353
+          }
+        ],
+        "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+      }
+    },
+    {
+      "name": "knee-flexion",
+      "before": {
+        "edge_count": 164188,
+        "maximum_stretch_ratio": 16.413448138841567,
+        "edge_p99_stretch_ratio": 1.1189321685052158,
+        "edges_over_5x": 131,
+        "maximum_edge_length_increase_m": 0.06698502916896144,
+        "worst_length_increases": [
+          {
+            "source_skin_vertex_ids": [
+              38817,
+              38828
+            ],
+            "source_length_m": 0.03491129409468373,
+            "native_length_m": 0.10189632326364517,
+            "stretch_ratio": 2.9187208869224324
+          },
+          {
+            "source_skin_vertex_ids": [
+              38421,
+              38445
+            ],
+            "source_length_m": 0.046500842119080836,
+            "native_length_m": 0.1086832582950592,
+            "stretch_ratio": 2.3372320444593164
+          },
+          {
+            "source_skin_vertex_ids": [
+              23967,
+              24017
+            ],
+            "source_length_m": 0.021149504799766565,
+            "native_length_m": 0.06523600220680237,
+            "stretch_ratio": 3.0845167688050266
+          },
+          {
+            "source_skin_vertex_ids": [
+              23967,
+              24916
+            ],
+            "source_length_m": 0.021323390635309605,
+            "native_length_m": 0.06205446645617485,
+            "stretch_ratio": 2.9101594355926808
+          },
+          {
+            "source_skin_vertex_ids": [
+              42386,
+              42405
+            ],
+            "source_length_m": 0.013353914022946221,
+            "native_length_m": 0.053170833736658096,
+            "stretch_ratio": 3.9816666218828347
+          }
+        ],
+        "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+      },
+      "after": {
+        "edge_count": 164188,
+        "maximum_stretch_ratio": 18.47998367024529,
+        "edge_p99_stretch_ratio": 1.2804132397442871,
+        "edges_over_5x": 18,
+        "maximum_edge_length_increase_m": 0.03327868965454528,
+        "worst_length_increases": [
+          {
+            "source_skin_vertex_ids": [
+              36491,
+              36495
+            ],
+            "source_length_m": 0.003404251364989789,
+            "native_length_m": 0.036682941019535065,
+            "stretch_ratio": 10.775626440747596
+          },
+          {
+            "source_skin_vertex_ids": [
+              13691,
+              14166
+            ],
+            "source_length_m": 0.004745765992301407,
+            "native_length_m": 0.03568800538778305,
+            "stretch_ratio": 7.5199673657901
+          },
+          {
+            "source_skin_vertex_ids": [
+              19948,
+              20650
+            ],
+            "source_length_m": 0.016435571488895934,
+            "native_length_m": 0.04720427095890045,
+            "stretch_ratio": 2.8720796834349334
+          },
+          {
+            "source_skin_vertex_ids": [
+              41142,
+              41164
+            ],
+            "source_length_m": 0.004827583273684985,
+            "native_length_m": 0.03537720441818237,
+            "stretch_ratio": 7.328139653441604
+          },
+          {
+            "source_skin_vertex_ids": [
+              36491,
+              37174
+            ],
+            "source_length_m": 0.003895708461362307,
+            "native_length_m": 0.03405265137553215,
+            "stretch_ratio": 8.741067693660046
+          }
+        ],
+        "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only."
+      }
+    }
+  ],
+  "boundary": "Source-edge visual diagnostics only; no clinical strain or skin-quality limit is admitted."
+}

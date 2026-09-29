@@ -668,6 +668,22 @@ heart anatomy, organ FEM/MPM, vessel tube/lumen mechanics, neural mechanics, cal
 materials/density, blood/tissue exchange, subject calibration, anatomical
 loading, standing, recovery, and walking remain open.
 
+The [skin source-surface repair](SKIN_SOURCE_SURFACE_BINDING_20260929.md)
+replaces Euclidean four-bone assignment with a screened association on the
+connected source skin. It removes large sheets caused by thigh vertices bound
+to nearby finger bones. In the native coupled-reach pose, maximum added edge
+length decreases from 608 to 58 mm and edges above five-times source length
+decrease from 2,093 to 64. All 54,949 selected vertices, 109,183 triangles,
+86 native body frames, source seed targets and full offline graph equations
+are independently checked across five poses; 70 adversarial source-audit tests
+and six producer/native regression tests pass. The source geometry, normals,
+binding transforms and topology stay byte-identical. Local shoulder/knee
+distortion remains, and neutral/knee maximum and p99 stretch ratios worsen;
+the four-influence approximation discards up to 42.23 percent of full weight
+mass before renormalization. These remain measured visual limitations, not
+admitted skin strain, anatomical weights, mechanical deformation, contact,
+material, clinical anatomy or whole-body qualification.
+
 The [native stance horizon](NATIVE_STAND_STANCE_HORIZON_20260913.md) now
 repeats the exact-clock physical-M4 run from the authored root/ankle/subtalar/
 MTP stance and six active foot witnesses. Static source support placement and

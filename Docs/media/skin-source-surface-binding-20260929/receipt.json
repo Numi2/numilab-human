@@ -1,0 +1,622 @@
+{
+  "schema": "numi.human.skin-source-surface-binding-receipt.v1",
+  "human_base_revision": "9726f8252b1f9eadb0d211be0291ab9921b58f84",
+  "native_compilation_base_revision": "281a51cb8bebc808f70208abefe9bc6e9fe3ec10",
+  "native_published_revision": "7766f3ad6e2010285ac086c779fbfe270a0c1d1d",
+  "proof_root": "/Users/home/numilab-human/Build/skin-surface-audit-20260929",
+  "inputs": {
+    "registration": {
+      "path": "/Users/home/numilab-human/Build/knee-parity-registration-20260929/candidate.v6.registration.json",
+      "sha256": "0b7129f788ae91272d03abf9f10b985359f3b9d9569941515b222787ffe71324",
+      "bytes": 2443242
+    },
+    "bones": {
+      "path": "/Users/home/numilab-human/Build/knee-parity-registration-20260929/bones.v6/payload/bodyparts3d-myosim-major-bones.nhbones",
+      "sha256": "2aaf0567e6a5131c88b599cd56cb605b9d585c2792084b324e84699cabbc9b33",
+      "bytes": 11577432
+    },
+    "rigid": {
+      "path": "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid",
+      "sha256": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951",
+      "bytes": 60324
+    },
+    "muscles": {
+      "path": "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-muscle-reference.nhmyo",
+      "sha256": "a4381465ca97a7af20108180e2fc0d0f0d9c11778d913de4c0728bd20ed459a7",
+      "bytes": 149372
+    },
+    "joint_equalities": {
+      "path": "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-joint-equalities.nheq",
+      "sha256": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a",
+      "bytes": 4976
+    },
+    "skin": {
+      "path": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/payload/bodyparts3d-myosim-skinned-shell.nhskin",
+      "sha256": "5a1d1eec9ceda20cb898aa2260a9d0067a44e8d2f7de778cf9ec1063efab0185",
+      "bytes": 4390496
+    },
+    "skin_manifest": {
+      "path": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/payload/bodyparts3d-myosim-skinned-shell.manifest.json",
+      "sha256": "2c9712601fde6579db63f57a3aad4e6ace1806a12925b0a61d9237ed6cde941f",
+      "bytes": 44817
+    },
+    "offline_solution": {
+      "path": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/payload/bodyparts3d-skin-binding-solution.npz",
+      "sha256": "8af86cf316f5f02f6b75285d9dae1eb471135b5bb807ec2e160e22ae7eea85eb",
+      "bytes": 36498201
+    },
+    "native_binary": {
+      "path": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/native/myosim-visual-probe",
+      "sha256": "dee513199aff647730ed66f85a24663c8b0567ed80dfc8f77298851ed1c1308b",
+      "bytes": 1481600
+    },
+    "native_executed_source": {
+      "path": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/native/probe.executed.mm",
+      "sha256": "25b79bb86feb7b00cf05abc8ca051a96eb09d949d9ceb7bda0c1463a5717aba0",
+      "bytes": 1307946
+    },
+    "native_published_source": {
+      "path": "/Users/home/numi-human-standing-20260922/apps/numilab_human_myosim_visual_probe.mm",
+      "sha256": "25b79bb86feb7b00cf05abc8ca051a96eb09d949d9ceb7bda0c1463a5717aba0",
+      "bytes": 1307946
+    },
+    "frozen_runtime": {
+      "path": "/Users/home/numilab-human/Build/tendon-surface-binding-20260929/runtime/lib/libmetalrobo.dylib",
+      "sha256": "6b9062e84bdacd6b86b413d5c549cd0046d9a271fb0caa141e03db41ffa213f6",
+      "bytes": 7736656
+    }
+  },
+  "software": {
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "mujoco": "3.12.0"
+  },
+  "source_surface_binding": {
+    "boundary": "Inferred visual source-surface association and four-influence approximation, not measured skin weights, material stiffness, thickness, mass, contact, mechanical deformation or clinical registration.",
+    "maximum_discarded_weight_mass": 0.42232827948909835,
+    "maximum_partition_unity_error": 2.020605904817785e-14,
+    "method": "positive_source_surface_screened_harmonic_four_influence.v1",
+    "minimum_full_solution_weight": 1.4060972530653825e-37,
+    "minimum_retained_four_weight_mass": 0.5776717205109017,
+    "rejected_seed_count": 696,
+    "relative_solve_residual": 9.582168811802316e-16,
+    "scipy_version": "1.17.1",
+    "screening": "one positive source graph degree per seed vertex; duplicate body associations share the target equally",
+    "seed_candidate_count": 12025,
+    "seed_rule": "centroid_and_64_stratified_source_bone_vertices_projected_to_source_skin; sample must lie within source skin geodesic bone diameter bound plus twice centroid projection gap",
+    "seed_vertex_count": 5039,
+    "source_bone_count": 185,
+    "source_graph_edge_count": 164188
+  },
+  "offline_solution": {
+    "bytes": 36498201,
+    "file": "bodyparts3d-skin-binding-solution.npz",
+    "full_weight_shape": [
+      54949,
+      86
+    ],
+    "runtime_input": false,
+    "seed_target_columns": [
+      "source_anchor_index",
+      "source_vertex_id_or_centroid_sentinel",
+      "source_skin_vertex_id",
+      "binding_index",
+      "admitted"
+    ],
+    "sha256": "8af86cf316f5f02f6b75285d9dae1eb471135b5bb807ec2e160e22ae7eea85eb"
+  },
+  "native_source_audits": [
+    {
+      "case": "raw-source-rest",
+      "audit_file": "raw-source-rest.audit.json",
+      "audit_sha256": "b5ab885f388f1c469aee8d489100fc454ed9120e8182dcc06ae69ee8c862df43",
+      "command": [
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/native/myosim-visual-probe",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-muscle-reference.nhmyo",
+        "/Users/home/numilab-human/Build/knee-parity-registration-20260929/bones.v6/payload/bodyparts3d-myosim-major-bones.nhbones",
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/native-raw-source-rest",
+        "--skin-payload",
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/payload/bodyparts3d-myosim-skinned-shell.nhskin",
+        "--dimension",
+        "512"
+      ],
+      "exit_code": 0,
+      "maximum_native_world_vertex_error_m": 7.133434510793293e-07,
+      "native_pack": {
+        "path": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/native-raw-source-rest/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell.mrvpack",
+        "sha256": "77fdcc002f7fccf014be76a93fdc0ab8cab7862a4df39b4a28a56069f8f13926",
+        "bytes": 5730304
+      },
+      "native_pose_snapshot": {
+        "path": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/native-raw-source-rest/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell.skin-poses.json",
+        "sha256": "232ecaa3f32dd0edb489ff218d3067b493a32292a7c8dcfae94f7f849a53d350",
+        "bytes": 25483
+      }
+    },
+    {
+      "case": "neutral",
+      "audit_file": "neutral.audit.json",
+      "audit_sha256": "8f1bbba3a5b0f81a1a26540e117167ce8b9991d5d1f65b8d6087fabaa41e9401",
+      "command": [
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/native/myosim-visual-probe",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-muscle-reference.nhmyo",
+        "/Users/home/numilab-human/Build/knee-parity-registration-20260929/bones.v6/payload/bodyparts3d-myosim-major-bones.nhbones",
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/native-neutral",
+        "--skin-payload",
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/payload/bodyparts3d-myosim-skinned-shell.nhskin",
+        "--dimension",
+        "512",
+        "--joint-equality-payload",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-joint-equalities.nheq"
+      ],
+      "exit_code": 0,
+      "maximum_native_world_vertex_error_m": 7.133434510793293e-07,
+      "native_pack": {
+        "path": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/native-neutral/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell.mrvpack",
+        "sha256": "b1ff52c7347ad0fcbe07eb5e7f4cded6bc6d262c8ed302dba336004d5a9952f4",
+        "bytes": 5730304
+      },
+      "native_pose_snapshot": {
+        "path": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/native-neutral/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell.skin-poses.json",
+        "sha256": "4b9a0866d6d2c6317aa65f6644ad76db5acf62794083bd14d31b2c8c9ac1a348",
+        "bytes": 25482
+      }
+    },
+    {
+      "case": "coupled-torso",
+      "audit_file": "coupled-torso.audit.json",
+      "audit_sha256": "9912e3629857e63dc6cb8ebc426fa8658b1a496bac8eaf3cb8e001e7b47d35bc",
+      "command": [
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/native/myosim-visual-probe",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-muscle-reference.nhmyo",
+        "/Users/home/numilab-human/Build/knee-parity-registration-20260929/bones.v6/payload/bodyparts3d-myosim-major-bones.nhbones",
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/native-coupled-torso",
+        "--skin-payload",
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/payload/bodyparts3d-myosim-skinned-shell.nhskin",
+        "--dimension",
+        "512",
+        "--joint-equality-payload",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-joint-equalities.nheq",
+        "--pose-q",
+        "7",
+        "-0.4",
+        "--pose-q",
+        "8",
+        "0.1",
+        "--pose-q",
+        "9",
+        "0.2"
+      ],
+      "exit_code": 0,
+      "maximum_native_world_vertex_error_m": 5.875077762538418e-07,
+      "native_pack": {
+        "path": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/native-coupled-torso/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-posed.mrvpack",
+        "sha256": "e7f4ece6d753d18a186b6f14eee16e22eb35f8704eabc16a36feca07b55ae079",
+        "bytes": 5730304
+      },
+      "native_pose_snapshot": {
+        "path": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/native-coupled-torso/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-posed.skin-poses.json",
+        "sha256": "0723e2530957fb950c8e671606537ba6b84ef075b3fbc197947dcc2c663f629d",
+        "bytes": 26143
+      }
+    },
+    {
+      "case": "coupled-reach",
+      "audit_file": "coupled-reach.audit.json",
+      "audit_sha256": "9894c0c8b9550d198d1aa6faaabeade3223209fc9b8953bdcdc821c74ea4de02",
+      "command": [
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/native/myosim-visual-probe",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-muscle-reference.nhmyo",
+        "/Users/home/numilab-human/Build/knee-parity-registration-20260929/bones.v6/payload/bodyparts3d-myosim-major-bones.nhbones",
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/native-coupled-reach",
+        "--skin-payload",
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/payload/bodyparts3d-myosim-skinned-shell.nhskin",
+        "--dimension",
+        "512",
+        "--joint-equality-payload",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-joint-equalities.nheq",
+        "--pose-q",
+        "36",
+        "0.8",
+        "--pose-q",
+        "39",
+        "1.0",
+        "--pose-q",
+        "74",
+        "0.8",
+        "--pose-q",
+        "77",
+        "1.0"
+      ],
+      "exit_code": 0,
+      "maximum_native_world_vertex_error_m": 7.362704291541525e-07,
+      "native_pack": {
+        "path": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/native-coupled-reach/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-posed.mrvpack",
+        "sha256": "0e9297e41e6501f5ed35554149091a9ce6a73cd33f17c708beee7699c06f979b",
+        "bytes": 5730304
+      },
+      "native_pose_snapshot": {
+        "path": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/native-coupled-reach/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-posed.skin-poses.json",
+        "sha256": "4ce1048c78189a454c022884738f8200cbd1d0329fa81a01de1da50ac46e860e",
+        "bytes": 26152
+      }
+    },
+    {
+      "case": "knee-flexion",
+      "audit_file": "knee-flexion.audit.json",
+      "audit_sha256": "a616e9b51f20b819687a4fb2c0009f22109527169f229fdded10f59450b81348",
+      "command": [
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/native/myosim-visual-probe",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-muscle-reference.nhmyo",
+        "/Users/home/numilab-human/Build/knee-parity-registration-20260929/bones.v6/payload/bodyparts3d-myosim-major-bones.nhbones",
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/native-knee-flexion",
+        "--skin-payload",
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/payload/bodyparts3d-myosim-skinned-shell.nhskin",
+        "--dimension",
+        "512",
+        "--joint-equality-payload",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-joint-equalities.nheq",
+        "--pose-q",
+        "106",
+        "0.9",
+        "--pose-q",
+        "120",
+        "0.9"
+      ],
+      "exit_code": 0,
+      "maximum_native_world_vertex_error_m": 7.133434510793293e-07,
+      "native_pack": {
+        "path": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/native-knee-flexion/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-posed.mrvpack",
+        "sha256": "ea23fcf18c7723858b80541b0342c47b9df4afcf44cbebf96811738674f62fd5",
+        "bytes": 5730304
+      },
+      "native_pose_snapshot": {
+        "path": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/native-knee-flexion/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-posed.skin-poses.json",
+        "sha256": "50e4f114e635c0baad2b306030b4d97aa2637d3e15cdabd900eaf20ed4eb65d9",
+        "bytes": 25466
+      }
+    }
+  ],
+  "native_compile": {
+    "commands": {
+      "cwd": "/Users/home/numilab-human/Build/tendon-surface-binding-20260929/runtime",
+      "compile": [
+        "/usr/bin/clang++",
+        "-I/Users/home/numi-human-standing-20260922/apps",
+        "-DMETALROBO_METALLIB=\"/Users/home/numilab-human/Build/tendon-surface-binding-20260929/runtime/shaders/MetalRobo.metallib\"",
+        "-DNUMI_HUMAN_ANTERIOR_THORAX_MATERIAL=\"/Users/home/numi-human-standing-20260922/matter/materials/human_anterior_abdominal_wall_composite_effective.nmatter\"",
+        "-DNUMI_HUMAN_OPEN_KNEE_LIGAMENT_MATERIAL=\"/Users/home/numi-human-standing-20260922/matter/materials/open_knee_ligament_febio_exp_linear.nmatter\"",
+        "-DNUMI_HUMAN_PASSIVE_TISSUE_MATERIAL=\"/Users/home/numi-human-standing-20260922/matter/materials/passive_skeletal_muscle_unqualified.nmatter\"",
+        "-DNUMI_HUMAN_PECTORALIS_FASCIA_MATERIAL=\"/Users/home/numi-human-standing-20260922/matter/materials/human_pectoralis_fascia_goh_uniaxial.nmatter\"",
+        "-DNUMI_HUMAN_PLANTAR_FASCIA_MATERIAL=\"/Users/home/numi-human-standing-20260922/matter/materials/human_plantar_fascia_reduced.nmatter\"",
+        "-DNUMI_HUMAN_REGIONAL_MYOFASCIA_MATERIAL=\"/Users/home/numi-human-standing-20260922/matter/materials/human_myofascia_regional_transverse_isotropic.nmatter\"",
+        "-DNUMI_HUMAN_THORACOLUMBAR_FASCIA_MATERIAL=\"/Users/home/numi-human-standing-20260922/matter/materials/human_thoracolumbar_fascia_effective_isotropic.nmatter\"",
+        "-DNUMI_MATTER_METALLIB=\"/Users/home/numilab-human/Build/tendon-surface-binding-20260929/runtime/matter/shaders/NumiMatter.metallib\"",
+        "-I/Users/home/numi-human-standing-20260922/include",
+        "-I/Users/home/numi-human-standing-20260922/matter/include",
+        "-F/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks",
+        "-x",
+        "objective-c++",
+        "-O3",
+        "-DNDEBUG",
+        "-std=c++23",
+        "-arch",
+        "arm64",
+        "-fPIE",
+        "-fobjc-arc",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-MD",
+        "-MT",
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/native/probe.o",
+        "-MF",
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/native/probe.o.d",
+        "-o",
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/native/probe.o",
+        "-c",
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/native/probe.executed.mm"
+      ],
+      "link": [
+        "/usr/bin/clang++",
+        "-O3",
+        "-DNDEBUG",
+        "-arch",
+        "arm64",
+        "-Wl,-search_paths_first",
+        "-Wl,-headerpad_max_install_names",
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/native/probe.o",
+        "-o",
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/native/myosim-visual-probe",
+        "-Wl,-rpath,/Users/home/numilab-human/Build/tendon-surface-binding-20260929/runtime/lib",
+        "lib/libmetalrobo.dylib",
+        "-framework",
+        "Foundation",
+        "-framework",
+        "Metal",
+        "-framework",
+        "CoreGraphics",
+        "-framework",
+        "ImageIO"
+      ]
+    },
+    "exit_code": 0,
+    "source_sha256": "25b79bb86feb7b00cf05abc8ca051a96eb09d949d9ceb7bda0c1463a5717aba0"
+  },
+  "tests": [
+    {
+      "name": "final-tests.v2",
+      "passed": 70,
+      "skipped": 0,
+      "exit_code": 0,
+      "wall_seconds": 130.58608699962497,
+      "summary": "......................................................................   [100%]\n70 passed in 130.38s (0:02:10)",
+      "command": [
+        "/Users/home/numilab-human/.venv-mujoco312/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_skin_surface_audit.py",
+        "--basetemp",
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/final-tests.v2/temporary"
+      ],
+      "environment": {
+        "PYTHONPATH": "src:tests:Sources/myosim/checkout",
+        "OPENBLAS_NUM_THREADS": "1",
+        "NUMILAB_HUMAN_NATIVE_SKIN_AUDIT_ROOT": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production"
+      },
+      "executed_source_sha256": {
+        "src/numilab_human/model.py": "7da94d2b424f39e0fe461127ca3d1a368eb2eaa55e97337020a77503f8bce700",
+        "src/numilab_human/skin_surface_binding.py": "559d7997dd25eb4d847bd55a3a81d3e53890c3029d32f885f9f18515b677e0d1",
+        "src/numilab_human/skin_surface_audit.py": "e61bc4761616e3465b43c01455f4c91159d8003fcf0f2fcb00ba016e93ceeec4",
+        "src/numilab_human/torso_anatomy_audit.py": "be6abed236cfe3a7643c581deb7b0c45632a22be2b3cea97dcca03e24b0e8c8f",
+        "src/numilab_human/joint_constraint_consistency.py": "362f9536de5eeea8a9001d7242498a1f8f89bb486cc59fbb3e67010163c8c47b",
+        "tests/test_skin_surface_audit.py": "8315f660b833642b7b8347270c8027ca40d8698baa2866fedcdd2c8505e6fd5f",
+        "tests/test_torso_anatomy_source_audit.py": "491b94133b1c1abdcee5172a7eb220a05b6d3f0ccd3f1fd9a7e561119750fa8c",
+        ".numi/commands/human": "703089f8a69468139ab2a500ed7cac1923677390035adb2e02b2cc6b2eb355fb",
+        "pyproject.toml": "a7daa2b7f302e1cbc5a864a55b830b1b28b228837732bf10ba0a2154554db864"
+      },
+      "stdout": {
+        "path": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/final-tests.v2/stdout",
+        "sha256": "c212185a37419d84512e41999158b665119727590faffd77f87e6d7c1ca88234",
+        "bytes": 111
+      },
+      "stderr": {
+        "path": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/final-tests.v2/stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "name": "producer-regressions",
+      "passed": 6,
+      "skipped": 0,
+      "exit_code": 0,
+      "wall_seconds": 46.83496316615492,
+      "summary": "......                                                                   [100%]\n6 passed in 46.60s",
+      "command": [
+        "/Users/home/numilab-human/.venv-mujoco312/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_axial_native_continuity.py::test_native_skin_preserves_source_sheet_with_separate_bone_registrations",
+        "tests/test_axial_native_continuity.py::test_skin_rejects_changed_source_atlas_frame_before_emitting_geometry",
+        "tests/test_axial_native_continuity.py::test_anatomy_compilers_reject_reversed_executing_knee_before_surface_output[skin]",
+        "--basetemp",
+        "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/producer-regressions/temporary"
+      ],
+      "environment": {
+        "PYTHONPATH": "src:tests:Sources/myosim/checkout",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MTL_DEBUG_LAYER": "1",
+        "NUMILAB_HUMAN_NATIVE_VISUAL_PROBE": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/native/myosim-visual-probe",
+        "NUMILAB_HUMAN_NATIVE_BONE_PAYLOAD": "/Users/home/numilab-human/Build/knee-parity-registration-20260929/bones.v6/payload/bodyparts3d-myosim-major-bones.nhbones",
+        "NUMILAB_HUMAN_NATIVE_REFERENCE_ARTIFACT": "/Users/home/numilab-human/Build/myosim-fullbody",
+        "NUMILAB_HUMAN_MOTION_SOURCES": "/Users/home/numilab-human/Sources",
+        "NUMILAB_HUMAN_MOTION_REPAIRED": "/Users/home/numilab-human/Build/knee-parity-registration-20260929/candidate.v6.registration.json"
+      },
+      "executed_source_sha256": {
+        "tests/test_axial_native_continuity.py": "9e43a7dffb8f5ba39153db788afc5fcd2c6aa5b33699dc518b1449dc89d0c0bf",
+        "src/numilab_human/model.py": "7da94d2b424f39e0fe461127ca3d1a368eb2eaa55e97337020a77503f8bce700",
+        "src/numilab_human/skin_surface_binding.py": "559d7997dd25eb4d847bd55a3a81d3e53890c3029d32f885f9f18515b677e0d1"
+      },
+      "stdout": {
+        "path": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/producer-regressions/stdout",
+        "sha256": "aa99399e5e432c0d45d8ce85d560ace5b2703c5320cc025362dcfb60b1987a38",
+        "bytes": 99
+      },
+      "stderr": {
+        "path": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/producer-regressions/stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  ],
+  "total_tests_passed": 76,
+  "cli_dispatch": {
+    "passed": true,
+    "command": [
+      "/Users/home/numilab-human/.numi/commands/human",
+      "skin-surface-audit",
+      "--sources",
+      "/Users/home/numilab-human/Sources",
+      "--artifact",
+      "/Users/home/numilab-human/Build/myosim-fullbody",
+      "--registration",
+      "/Users/home/numilab-human/Build/knee-parity-registration-20260929/candidate.v6.registration.json",
+      "--payload",
+      "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/payload/bodyparts3d-myosim-skinned-shell.nhskin",
+      "--native-pack",
+      "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/native-neutral/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell.mrvpack",
+      "--native-poses",
+      "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/native-neutral/myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell.skin-poses.json",
+      "--output",
+      "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/cli-dispatch-check/audit.json"
+    ],
+    "audit": {
+      "path": "/Users/home/numilab-human/Build/skin-surface-audit-20260929/production/cli-dispatch-check/audit.json",
+      "sha256": "8f1bbba3a5b0f81a1a26540e117167ce8b9991d5d1f65b8d6087fabaa41e9401",
+      "bytes": 55499
+    }
+  },
+  "parity_records": {
+    "source-byte-parity.json": {
+      "schema": "numi.human.skin-source-byte-parity.v1",
+      "fields": {
+        "header": {
+          "before_sha256": "07d75e2f5d2b8e20cff54a25a0931ae9d4270b3e7dd6afd713cec6da4de42690",
+          "after_sha256": "07d75e2f5d2b8e20cff54a25a0931ae9d4270b3e7dd6afd713cec6da4de42690",
+          "byte_identical": true
+        },
+        "binding_records": {
+          "before_sha256": "92a13a71d0545286ff94ff9824f4e80c4e55372714dfa4d3a59db42936d52502",
+          "after_sha256": "92a13a71d0545286ff94ff9824f4e80c4e55372714dfa4d3a59db42936d52502",
+          "byte_identical": true
+        },
+        "source_positions_and_normals": {
+          "before_sha256": "ed591a5e5023884be79831bdd048d27b9caeb0c995a517b5abb82bcd5c76636a",
+          "after_sha256": "ed591a5e5023884be79831bdd048d27b9caeb0c995a517b5abb82bcd5c76636a",
+          "byte_identical": true
+        },
+        "triangle_indices": {
+          "before_sha256": "42357deb7b80997986e6b576f734a1643811f14dade9fb046dbf02b8a9cfbe9a",
+          "after_sha256": "42357deb7b80997986e6b576f734a1643811f14dade9fb046dbf02b8a9cfbe9a",
+          "byte_identical": true
+        }
+      },
+      "passed": true,
+      "boundary": "Only native influence indices and weights change; exact source positions, normals, triangle topology, binding frames and header stay byte-identical."
+    },
+    "native-export-render-parity.json": {
+      "schema": "numi.human.native-skin-pose-export-render-parity.v1",
+      "passed": true,
+      "files": [
+        {
+          "case": "raw-source-rest",
+          "file": "myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-front.png",
+          "old_sha256": "fb7246c02819bc20ef24776971ff739daa8af46ed744fec992414f3982b036aa",
+          "new_sha256": "fb7246c02819bc20ef24776971ff739daa8af46ed744fec992414f3982b036aa",
+          "byte_identical": true
+        },
+        {
+          "case": "raw-source-rest",
+          "file": "myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-oblique.png",
+          "old_sha256": "72b099a79eabe7303744a0e51b9e5e4cc8ec7c82f490369e722b13b4d1e991cd",
+          "new_sha256": "72b099a79eabe7303744a0e51b9e5e4cc8ec7c82f490369e722b13b4d1e991cd",
+          "byte_identical": true
+        },
+        {
+          "case": "raw-source-rest",
+          "file": "myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-rear.png",
+          "old_sha256": "a82d9640ba7f1599fcae05dcb2e6113f8f08d569e74d7fca6a7cb659a03c1c1d",
+          "new_sha256": "a82d9640ba7f1599fcae05dcb2e6113f8f08d569e74d7fca6a7cb659a03c1c1d",
+          "byte_identical": true
+        },
+        {
+          "case": "raw-source-rest",
+          "file": "myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-side.png",
+          "old_sha256": "b1cb6f7577b2ab022f5f8b545ab58f4e9d69b31395f87a8526ba4228b7eebf84",
+          "new_sha256": "b1cb6f7577b2ab022f5f8b545ab58f4e9d69b31395f87a8526ba4228b7eebf84",
+          "byte_identical": true
+        },
+        {
+          "case": "raw-source-rest",
+          "file": "myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell.mrvpack",
+          "old_sha256": "77fdcc002f7fccf014be76a93fdc0ab8cab7862a4df39b4a28a56069f8f13926",
+          "new_sha256": "77fdcc002f7fccf014be76a93fdc0ab8cab7862a4df39b4a28a56069f8f13926",
+          "byte_identical": true
+        },
+        {
+          "case": "neutral",
+          "file": "myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-front.png",
+          "old_sha256": "ec4bd7c953800e7fa9a30c05ee18faf4e8903adf1ade5cec8bdae355675642c7",
+          "new_sha256": "ec4bd7c953800e7fa9a30c05ee18faf4e8903adf1ade5cec8bdae355675642c7",
+          "byte_identical": true
+        },
+        {
+          "case": "neutral",
+          "file": "myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-oblique.png",
+          "old_sha256": "6fc4885e2a87a34efd71b1217c041f39074f8e488e769388f2f1ec6865edaf4b",
+          "new_sha256": "6fc4885e2a87a34efd71b1217c041f39074f8e488e769388f2f1ec6865edaf4b",
+          "byte_identical": true
+        },
+        {
+          "case": "neutral",
+          "file": "myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-rear.png",
+          "old_sha256": "7f12d7a167e8979c2feb8f36cf330789711c10bd01e25cac9e49f2a6cb068ddd",
+          "new_sha256": "7f12d7a167e8979c2feb8f36cf330789711c10bd01e25cac9e49f2a6cb068ddd",
+          "byte_identical": true
+        },
+        {
+          "case": "neutral",
+          "file": "myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-side.png",
+          "old_sha256": "578b96169eaf1c8c15397cd47f5b8bd1f8cb3c8dc4086aef4491a4436c062579",
+          "new_sha256": "578b96169eaf1c8c15397cd47f5b8bd1f8cb3c8dc4086aef4491a4436c062579",
+          "byte_identical": true
+        },
+        {
+          "case": "neutral",
+          "file": "myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell.mrvpack",
+          "old_sha256": "b1ff52c7347ad0fcbe07eb5e7f4cded6bc6d262c8ed302dba336004d5a9952f4",
+          "new_sha256": "b1ff52c7347ad0fcbe07eb5e7f4cded6bc6d262c8ed302dba336004d5a9952f4",
+          "byte_identical": true
+        }
+      ],
+      "boundary": "Same current skin payload through the pre-export and post-export native binaries; verifies exporter preserved these captured packs and pixels, not physical skin."
+    },
+    "render-dimension-geometry-parity.json": {
+      "passed": true,
+      "files": [
+        {
+          "version": "before",
+          "case": "coupled-reach",
+          "512_pack_sha256": "be70795626fac249b040a31b3a3757bdfc33d396d11e1d4423f18805b08fec43",
+          "1024_pack_sha256": "be70795626fac249b040a31b3a3757bdfc33d396d11e1d4423f18805b08fec43",
+          "byte_identical": true
+        },
+        {
+          "version": "after",
+          "case": "neutral",
+          "512_pack_sha256": "b1ff52c7347ad0fcbe07eb5e7f4cded6bc6d262c8ed302dba336004d5a9952f4",
+          "1024_pack_sha256": "b1ff52c7347ad0fcbe07eb5e7f4cded6bc6d262c8ed302dba336004d5a9952f4",
+          "byte_identical": true
+        },
+        {
+          "version": "after",
+          "case": "coupled-reach",
+          "512_pack_sha256": "0e9297e41e6501f5ed35554149091a9ce6a73cd33f17c708beee7699c06f979b",
+          "1024_pack_sha256": "0e9297e41e6501f5ed35554149091a9ce6a73cd33f17c708beee7699c06f979b",
+          "byte_identical": true
+        },
+        {
+          "version": "after",
+          "case": "knee-flexion",
+          "512_pack_sha256": "ea23fcf18c7723858b80541b0342c47b9df4afcf44cbebf96811738674f62fd5",
+          "1024_pack_sha256": "ea23fcf18c7723858b80541b0342c47b9df4afcf44cbebf96811738674f62fd5",
+          "byte_identical": true
+        }
+      ],
+      "boundary": "Native packs unchanged by render dimension; 1024 PNGs use the same source-bound geometry as the 512 captures."
+    }
+  },
+  "edge_comparison_file": "native-edge-comparison.json",
+  "qualification": {
+    "selected_source_visual_fidelity": true,
+    "shape_quality_complete": false,
+    "measured_skin_weights": false,
+    "clinical_registration": false,
+    "skin_mechanics": false,
+    "skin_material": false,
+    "skin_contact": false,
+    "self_intersections_checked": false,
+    "current_10_second_standing": false,
+    "whole_human": false
+  },
+  "boundary": "Fixes inferred visual cross-limb associations and independently verifies source mesh/seed/equation/native binding fidelity; localized shoulder/knee distortion and neutral/knee ratio regressions remain. No physics, clinical anatomy or behavioral qualification."
+}

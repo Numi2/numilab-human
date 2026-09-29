@@ -11926,10 +11926,11 @@ def bodyparts_myosim_skinned_shell_visual_payload(
 
     The source has one exact exterior mesh, while the registered skeleton has
     many named source bones.  This offline importer assigns each source skin
-    vertex to its four nearest *sampled exact registered source-bone surfaces*
-    in the shared rest frame.  The samples replace coarse box-distance
-    selection; a short joint band permits blending only between genuinely local
-    candidate bodies.  Source-to-body transforms are recorded separately so
+    vertex through an inferred association on the connected source skin sheet.
+    Source bone centroids and guarded source surface samples seed a positive
+    screened graph Laplacian. This avoids skin following an unrelated nearby
+    hand and retains an offline certificate of the full weight field.
+    Source-to-body transforms are recorded separately so
     the C++/Metal renderer can linearly blend the shell at the current
     articulated pose without a Python process.  This is an improved visual
     shell, deliberately not a claimed FEM skin, collision shell, closest-triangle
@@ -11986,6 +11987,7 @@ def bodyparts_myosim_skinned_shell_visual_payload(
         ]
 
     bindings_by_body: dict[int, dict[str, Any]] = {}
+    skin_seed_bones: list[dict[str, Any]] = []
     for specification, anchor in zip(_BODYPARTS_MYOSIM_BONE_ANCHORS, anchors, strict=True):
         if not isinstance(anchor, dict):
             raise ImportError("BodyParts3D skinned shell has an invalid visual-skeleton anchor")
@@ -12037,6 +12039,16 @@ def bodyparts_myosim_skinned_shell_visual_payload(
                 source_record.get("member_sha256") != hashlib.sha256(obj).hexdigest():
             raise ImportError("BodyParts3D skinned shell bone-envelope provenance drifted")
         bone_vertices_mm, _ = _bodyparts_obj_triangles(obj, member)
+        import numpy as np
+        bone_world = np.asarray([world_point(vertex) for vertex in bone_vertices_mm])
+        centroid = bone_world.mean(axis=0)
+        sample_ids = _bodyparts_skin_surface_sample_indices(len(bone_vertices_mm))
+        skin_seed_bones.append({
+            "core_body_index": body_index, "source_member_id": specification["member_id"],
+            "centroid_world_m": centroid.tolist(), "sample_vertex_ids": sample_ids,
+            "sample_points_world_m": bone_world[sample_ids].tolist(),
+            "diameter_bound_m": float(2 * np.linalg.norm(bone_world - centroid, axis=1).max()),
+        })
         bone_rotation = _myosim_matrix_from_quaternion_xyzw(bone_quaternion)
 
         def placed_bone_point(vertex_mm: tuple[float, float, float]) -> list[float]:
@@ -12074,12 +12086,6 @@ def bodyparts_myosim_skinned_shell_visual_payload(
                 samples[index]
                 for index in _bodyparts_skin_surface_sample_indices(len(samples), 256)
             ]
-    surface_index = _bodyparts_skin_surface_index([
-        (sample, binding_index)
-        for binding_index, binding in enumerate(bindings)
-        for sample in binding["surface_samples"]
-    ])
-
     archive_path, member, obj = _bodyparts_obj_member(sources, "is_a", "FJ2810")
     source_vertices_mm, source_triangles = _bodyparts_obj_triangles(obj, member)
     vertices_mm, triangles, outer_surface = _bodyparts_skin_outer_surface_component(
@@ -12087,36 +12093,29 @@ def bodyparts_myosim_skinned_shell_visual_payload(
     )
     normals = _bodyparts_vertex_normals(vertices_mm, triangles, member)
     normals = _bodyparts_skin_smooth_visual_normals(normals, triangles)
+    binding_by_core = {binding["body_index"]: index for index, binding in enumerate(bindings)}
+    for bone in skin_seed_bones:
+        bone["binding_index"] = binding_by_core[bone["core_body_index"]]
+    from .skin_surface_binding import source_surface_binding, write_binding_solution
+    try:
+        source_quartets, source_weights, full_weights, seed_targets, binding_evidence = source_surface_binding(
+            [world_point(vertex) for vertex in vertices_mm], triangles, skin_seed_bones, len(bindings),
+        )
+    except (ValueError, ModuleNotFoundError) as error:
+        raise ImportError(f"BodyParts3D skin source-surface binding: {error}; authoring requires the skin-authoring extra") from error
     source_skin_sha = hashlib.sha256(obj).hexdigest()
     vertex_payload: list[bytes] = []
     maximum_rest_error_m = 0.0
     influence_histogram: Counter[tuple[int, int, int, int]] = Counter()
-    for vertex, normal in zip(vertices_mm, normals, strict=True):
+    for vertex_index, (vertex, normal) in enumerate(zip(vertices_mm, normals, strict=True)):
         position_m = [coordinate * 0.001 for coordinate in vertex]
         world = world_point(vertex)
-        candidates = _bodyparts_skin_nearest_surface_bindings(surface_index, world)
-        if len(candidates) != 4:
-            raise ImportError("BodyParts3D skinned shell has fewer than four bone bindings")
-        # Only a candidate genuinely close to the nearest registered source
-        # bone surface may share this vertex.  The band preserves conventional
-        # local blend at a source joint while leaving ordinary limb/torso skin
-        # rigidly local rather than letting a distant box overlap pull it.
-        nearest_distance_m = math.sqrt(candidates[0][0])
-        joint_band_m = 0.0125
-        unnormalized = [
-            (1.0 / (0.0075 + math.sqrt(distance_squared)) ** 4)
-            if math.sqrt(distance_squared) <= nearest_distance_m + joint_band_m
-            else 0.0
-            for distance_squared, _ in candidates
-        ]
-        normalizer = sum(unnormalized)
-        if not math.isfinite(normalizer) or normalizer <= 0.0:
-            raise ImportError("BodyParts3D skinned shell has invalid envelope weights")
-        weights = [weight / normalizer for weight in unnormalized]
+        indices = [int(index) for index in source_quartets[vertex_index]]
+        weights = [float(weight) for weight in source_weights[vertex_index]]
         if not all(math.isfinite(weight) and 0.0 <= weight <= 1.0 for weight in weights):
             raise ImportError("BodyParts3D skinned shell has non-finite blend weights")
         reconstructed = [0.0, 0.0, 0.0]
-        for weight, (_, binding_index) in zip(weights, candidates, strict=True):
+        for weight, binding_index in zip(weights, indices, strict=True):
             binding = bindings[binding_index]
             local_rotation = _myosim_matrix_from_quaternion_xyzw(binding["quaternion"])
             body_rotation = _myosim_matrix_from_quaternion_xyzw(binding["rest_quaternion"])
@@ -12135,7 +12134,6 @@ def bodyparts_myosim_skinned_shell_visual_payload(
             maximum_rest_error_m,
             math.sqrt(sum((reconstructed[axis] - world[axis]) ** 2 for axis in range(3))),
         )
-        indices = [binding_index for _, binding_index in candidates]
         world_normal = _bodyparts_unit_vector(
             _myosim_matrix_vector(global_rotation, normal),
             "BodyParts3D skinned shell rest world normal",
@@ -12168,6 +12166,7 @@ def bodyparts_myosim_skinned_shell_visual_payload(
     output.mkdir(parents=True, exist_ok=True)
     payload_path = output / "bodyparts3d-myosim-skinned-shell.nhskin"
     payload_path.write_bytes(payload)
+    solution = write_binding_solution(output, full_weights, seed_targets)
     manifest = {
         "schema": "numi.human.bodyparts3d-myosim-skinned-shell-visual-payload.v4",
         "runtime_reference": runtime_reference,
@@ -12202,8 +12201,9 @@ def bodyparts_myosim_skinned_shell_visual_payload(
         "coverage": {
             "influences_per_vertex": 4,
             "distinct_influence_quartets": len(influence_histogram),
-            "joint_band_m": 0.0125,
-            "source_bone_surface_sample_count": sum(
+            "source_surface_binding": binding_evidence,
+            "binding_solution": solution,
+            "diagnostic_registered_bone_surface_sample_count": sum(
                 len(binding["surface_samples"]) for binding in bindings
             ),
             "rest_pose_reconstruction_max_error_m": maximum_rest_error_m,
@@ -12220,9 +12220,9 @@ def bodyparts_myosim_skinned_shell_visual_payload(
                 "changes": "visual normals only; exact source vertices and triangle connectivity are retained",
             },
         },
-        "runtime_binding": "Exact BodyParts3D source skin triangles use four nearest distinct registered source-bone surface samples with deterministic inverse-quartic weights, restricted to candidates within a 12.5 mm source-joint band of the nearest sample. Samples use each bone's separate registered placement. Each skin influence instead carries the common source-atlas frame transformed into its bound runtime body's rest frame, preserving the exact shared skin surface at rest. The source normal is registered once into the shared world rest frame and follows each articulated influence through its current-from-rest body rotation.",
+        "runtime_binding": "Exact BodyParts3D source skin triangles use four sparse influences from an offline positive source-surface screened harmonic association. Source bone centroid and geodesically guarded source samples seed the exterior sheet, rather than Euclidean proximity to an unrelated resting hand. The full source weight solution is retained for independent verification. Each influence carries the common source-atlas frame transformed into its bound runtime body's rest frame, preserving exact skin geometry at rest. Source normals follow each articulated influence through its current-from-rest body rotation.",
         "status": "native_four_body_source_surface_local_linear_blend_skin_shell_visual_input_not_collision_or_physics",
-        "evidence_boundary": "This is a sampled-source-bone-surface-proximity-derived articulated visual shell, not FEM/MPM skin, a tissue material law, collision/contact geometry, clinical registration, closest-triangle anatomical skin weights, or a force-coupled soft-tissue model.",
+        "evidence_boundary": "This is an inferred source-surface articulated visual shell with a four-influence approximation, not FEM/MPM skin, a tissue material law, collision/contact geometry, measured anatomical skin weights, clinical registration or a force-coupled soft-tissue model.",
     }
     write_json(output / "bodyparts3d-myosim-skinned-shell.manifest.json", manifest)
     return manifest

@@ -512,9 +512,13 @@ three-body review above.
 ### Source skin provenance
 
 The exact 102,467-vertex, 203,382-triangle BodyParts3D `FJ2810` shell remains
-the exterior source. It has no upstream skin weights, so proximity-derived
-articulation is a rejected diagnostic rather than a Human presentation. It is
-not a deformable-shell mechanics result or a human-quality textured avatar.
+the exterior source. It has no upstream skin weights. The older proximity
+binding remains a rejected diagnostic; the current
+[source-surface binding repair](Docs/SKIN_SOURCE_SURFACE_BINDING_20260929.md)
+removes arm-to-thigh sheets while independently checking the complete native
+exterior. Local shoulder/knee distortion and anatomical deformation qualification
+remain open. These are source visual checks, not deformable-shell mechanics
+or a finished textured avatar.
 
 ### Selective upper-limb source-actuator drive
 
@@ -632,11 +636,15 @@ Organ and muscle/tendon surface preparation perform the same source-program
 check before binding geometry. Skin preparation requires `--artifact` and
 checks the source atlas frame against the existing common-frame fit. Each skin
 influence uses its bound body's inverse rest transform and the shared atlas
-frame; proximity samples use the separately placed bone surfaces. This permits
-different bone registrations within one body while preserving the exact outer
-skin sheet at rest. Proximity weights remain visual diagnostics; source-program
-agreement does not establish anatomical skin weights, complete organ coverage,
-loaded mechanics or clinical anatomy.
+frame. Source bone centroids and guarded bone samples seed a smooth association
+on the connected source skin surface. The independently checked full offline
+solution is reduced to four native influences, preserving exact source skin
+coordinates, normals, triangles and binding transforms. Five native poses pass
+the full 54,949-vertex/109,183-triangle check and 76 selected tests pass.
+The [skin repair record](Docs/SKIN_SOURCE_SURFACE_BINDING_20260929.md) retains
+the measured improvements and local ratio regressions. Inferred visual weights
+do not establish anatomical skin weights, complete organ coverage, loaded
+mechanics or clinical anatomy.
 
 Lower-limb registration also checks the consumed source program before fitting.
 Its paired knee repair remeasures every affected default and projected interface,
@@ -908,8 +916,9 @@ numi human myosim-native-supported-fullbody-muscle-visuals \
   --muscle-activation 0.05 --dimension 2048
 
 # Build the exact exterior BodyParts3D shell for source-static inspection only.
-# The source has no anatomical skin weights. The optional proximity binding is
-# a rejected diagnostic, not current muscle-driven gallery or motion evidence.
+# The source has no anatomical skin weights. Authoring now requires the
+# skin-authoring extra (Python 3.11+) and retains a full offline weight certificate.
+# This source-surface binding remains visual, with local deformation gaps.
 numi human myosim-bodyparts-skinned-shell-payload \
   --sources Sources \
   --artifact Build/myosim-fullbody \
