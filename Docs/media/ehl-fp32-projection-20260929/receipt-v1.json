@@ -1,0 +1,53 @@
+{
+  "after": {
+    "boundary_edge_count": 186,
+    "exact_intersection_pairs": 3,
+    "self_intersection": "exact_checked",
+    "status": "open_or_nonmanifold_intersecting"
+  },
+  "baseline_manifest_sha256": "41a82c0988c5da854fb5c9dd11cf370355253fa3c3082154edaf2b98830c9545",
+  "baseline_payload_sha256": "e3dd29401cc88d6981e83ec3001263b7b304dcf110b9430fe20c6893192975d5",
+  "before": {
+    "self_intersection": "not_checked_exact_degenerate_face",
+    "status": "exact_degenerate_face"
+  },
+  "body_bindings_byte_identical": true,
+  "boundary": "This repairs only an emitted Float32 zero-area visual face. The EHL source remains open/intersecting; bone enthesis, force transfer, clinical placement, and standing are not qualified.",
+  "candidate_manifest_sha256": "58fe2b213c2df1208df3db06f40b28dece6d8a70fcd9b9532f25101e8d810c77",
+  "candidate_payload_sha256": "2427bc01578f4964049d2c3c37c7b27ab7873e068ebc3e0526b0e1508a5380e1",
+  "changed_normal_vertex_count": 83,
+  "changed_position_vertex_count": 71,
+  "changed_surface_ids": [
+    23
+  ],
+  "clinical_anatomy": false,
+  "compiler_source_sha256": "8508db553bf208dbc2225462dda5c519023e087a74c078af21456ed6dfa4e5fa",
+  "face_indices_byte_identical": true,
+  "max_compiled_position_delta_m": 2.006130221163669e-08,
+  "mechanics": false,
+  "member_id": "FJ1408",
+  "physical_volume": false,
+  "predicate_sha256": {
+    "cardiac_cavity_geometry.py": "f6e98744dad9e23cd3b505efc02e7faa618fccce81d2ee08b07f948ef182fb72",
+    "cardiac_cavity_intersections.py": "8b138882161c78312cb9b5aa46f49795092eb9b67ed9f705dc354787cb0a635b",
+    "compiled_quotient_embeddedness.py": "e14793d27e014e23117967a2f486415157d5ae494db342ace0ac701dd1bb5361",
+    "hallux_fp32_projection_delta.py": "d49ee7b09881d7d9212cda5f0ad1c66495104c2be8a63365cdfa297a4569629d",
+    "surface_topology_audit.py": "837f6281d6f2c58e4aa2e8d1972af7cb67ce068bc25862504eebc0f82df48a38",
+    "whole_body_embeddedness.py": "78851feeb65e32855294769873f3edca74e075da4a6715ebfdd860ed21ff217c"
+  },
+  "projection_quantization": {
+    "backoff_exponent": 19,
+    "backoff_fraction": 1.9073486328125e-06,
+    "degenerate_face_ids_after": [],
+    "degenerate_face_ids_before": [
+      1475,
+      1477
+    ],
+    "max_retreat_m": 1.5990718227521527e-08,
+    "status": "bounded_source_segment_backoff"
+  },
+  "schema": "numi.human.hallux-fp32-projection-delta.v1",
+  "skinning_indices_weights_byte_identical": true,
+  "source_member_sha256": "5d04387c23d30f567bd43765a7eb860bb5844bd67a16e8ddf3c571eaaad9facc",
+  "stable_id": 23
+}

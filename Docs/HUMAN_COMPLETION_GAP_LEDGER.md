@@ -693,6 +693,14 @@ baseline; 62 closed surfaces
 still self-intersect, and physical tissue-volume, material, loading and
 clinical placement gates remain open.
 
+The subsequent [right EHL Float32 visual-face repair](EHL_FP32_VISUAL_PROJECTION_20260929.md)
+prevents a named hallux attachment projection from collapsing two emitted
+triangles. Only surface 23 changes, by at most 20.061 nm in compiled position;
+all face indices, body bindings and skinning weights remain byte-identical.
+The renewed exact census checks all 150 surfaces and retains 52 single
+embedded muscle candidates. Right EHL still has 186 boundary edges and three
+intersection pairs, so its tissue volume and force transfer remain open.
+
 The [earlier skin source-surface repair](SKIN_SOURCE_SURFACE_BINDING_20260929.md)
 removed large arm-to-thigh sheets with a connected-surface association but
 retained local defects and four-weight truncation. The subsequent

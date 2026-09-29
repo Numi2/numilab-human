@@ -14,7 +14,7 @@ from collections import Counter, defaultdict, deque
 from dataclasses import dataclass
 from itertools import combinations, permutations, product
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Callable, Iterable
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
@@ -7503,6 +7503,77 @@ def _bodyparts_project_tendon_attachment_band(
     }
 
 
+def _bodyparts_exact_fp32_degenerate_faces(
+    vertices: list[list[float]], triangles: list[tuple[int, int, int]],
+) -> list[int]:
+    """Find zero-area faces after the same Float32 position packing as NHTISS4."""
+    from fractions import Fraction
+
+    exact = [
+        tuple(Fraction.from_float(value) for value in struct.unpack("<3f", struct.pack("<3f", *vertex)))
+        for vertex in vertices
+    ]
+    result = []
+    for face_id, (i, j, k) in enumerate(triangles):
+        a, b, c = exact[i], exact[j], exact[k]
+        u = tuple(b[axis] - a[axis] for axis in range(3))
+        v = tuple(c[axis] - a[axis] for axis in range(3))
+        cross = (u[1]*v[2]-u[2]*v[1],
+                 u[2]*v[0]-u[0]*v[2],
+                 u[0]*v[1]-u[1]*v[0])
+        if not any(cross):
+            result.append(face_id)
+    return result
+
+
+def _bodyparts_non_degenerate_fp32_projection(
+    source_world: list[list[float]], projected_world: list[list[float]],
+    triangles: list[tuple[int, int, int]],
+    world_to_stored: Callable[[list[list[float]]], list[list[float]]],
+    member: str,
+) -> tuple[list[list[float]], list[list[float]], dict[str, Any]]:
+    """Back off only enough to keep a visual enthesis face nonzero in NHTISS4.
+
+    The projection target and source points are unchanged. A powers-of-two
+    search moves along their existing segment, never beyond either endpoint.
+    Refuse if Float32 still collapses a face or the retreat exceeds 10 um.
+    """
+    if len(source_world) != len(projected_world) or not triangles:
+        raise ImportError(f"BodyParts3D {member} visual projection coverage is incomplete")
+    stored = world_to_stored(projected_world)
+    before = _bodyparts_exact_fp32_degenerate_faces(stored, triangles)
+    if not before:
+        return projected_world, stored, {
+            "status": "no_backoff_needed", "degenerate_face_ids_before": [],
+            "degenerate_face_ids_after": [], "backoff_fraction": 0.0,
+            "max_retreat_m": 0.0,
+        }
+    for exponent in range(24, 11, -1):
+        backoff = 2.0 ** -exponent
+        candidate = [
+            [source[axis] * backoff + target[axis] * (1.0 - backoff)
+             for axis in range(3)]
+            for source, target in zip(source_world, projected_world, strict=True)
+        ]
+        retreat = max(math.dist(a, b) for a, b in zip(candidate, projected_world, strict=True))
+        if retreat > 1.0e-5:
+            break
+        stored = world_to_stored(candidate)
+        after = _bodyparts_exact_fp32_degenerate_faces(stored, triangles)
+        if not after:
+            return candidate, stored, {
+                "status": "bounded_source_segment_backoff",
+                "degenerate_face_ids_before": before,
+                "degenerate_face_ids_after": [],
+                "backoff_fraction": backoff,
+                "backoff_exponent": exponent,
+                "max_retreat_m": retreat,
+            }
+    raise ImportError(
+        f"BodyParts3D {member} visual projection has unresolved compiled Float32 degenerate faces {before}"
+    )
+
+
 def _bodyparts_stitch_tendon_enthesis_band(
     vertices_world_m: list[list[float]], triangles: list[tuple[int, int, int]], distal_attenuation: list[float],
     bone_vertices_world_m: list[list[float]], bone_triangles: list[tuple[int, int, int]], member: str,
@@ -11120,13 +11191,36 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                             enthesis_triangles,
                             _NUMI_HUMAN_HALLUX_VISUAL_ENTHESIS_INSET_M,
                         )
-                        stored_vertices_m = _bodyparts_world_to_body_stored_m(
-                            projected_world,
-                            secondary_position,
-                            secondary_quaternion,
-                            *secondary_local_pose,
-                            f"BodyParts3D hallucis {member_id} visual enthesis registration",
-                        )
+                        projected_world, stored_vertices_m, quantization = \
+                            _bodyparts_non_degenerate_fp32_projection(
+                                tissue_in_secondary_world,
+                                projected_world,
+                                triangles,
+                                lambda points: _bodyparts_world_to_body_stored_m(
+                                    points,
+                                    secondary_position,
+                                    secondary_quaternion,
+                                    *secondary_local_pose,
+                                    f"BodyParts3D hallucis {member_id} visual enthesis registration",
+                                ),
+                                member_id,
+                            )
+                        if quantization["backoff_fraction"]:
+                            corrected = [
+                                math.dist(source, target)
+                                for source, target, attenuation in zip(
+                                    tissue_in_secondary_world, projected_world,
+                                    proximity_attenuation, strict=True,
+                                ) if 1.0 - attenuation > 1.0e-8
+                            ]
+                            if len(corrected) != projection["projected_vertex_count"]:
+                                raise ImportError(
+                                    f"BodyParts3D hallucis {member_id} projection count changed"
+                                )
+                            projection["max_correction_m"] = max(corrected)
+                            projection["rms_correction_m"] = math.sqrt(
+                                sum(value * value for value in corrected) / len(corrected)
+                            )
                         stored_normals = _bodyparts_vertex_normals(
                             [
                                 [coordinate * 1000.0 for coordinate in vertex]
@@ -11142,6 +11236,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                                 _NUMI_HUMAN_HALLUX_VISUAL_ENTHESIS_MINIMUM_GAP_M
                             ),
                             "projection": projection,
+                            "compiled_fp32_face_area": quantization,
                             "source_endpoint_migration_m": 0.0,
                         }
                     else:

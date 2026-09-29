@@ -38,3 +38,11 @@ overlap and containment, anatomical placement under motion, clinical anatomy,
 skin and tendon mechanics, organ interfaces, physical volume/mass ownership,
 and standing qualification remain open. In particular, this receipt does not
 establish that the repaired muscles attach to the clinically correct sites.
+
+The later [right EHL Float32 visual-face repair](EHL_FP32_VISUAL_PROJECTION_20260929.md)
+removes that one exact-degenerate status without changing the 52 single
+embedded muscle candidates. Its [v2 census](media/muscle-surface-embeddedness-20260929/receipt-v2.json)
+exact-checks all 150 surfaces: 82 closed embedded (including 30 with multiple
+components), 62 closed self-intersecting, four open/nonmanifold intersecting,
+and two open/nonmanifold without detected intersections. The right EHL remains
+open/intersecting after the quantization repair.
