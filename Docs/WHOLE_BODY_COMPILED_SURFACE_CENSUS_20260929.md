@@ -70,3 +70,6 @@ each pass this census's individual embeddedness gate, four of their ten
 pairwise relationships contain a total of 182 exact triangle crossings.
 That finding blocks disjoint organ-domain admission for the tested set;
 the remaining anatomy surfaces still lack a comprehensive cross-surface audit.
+The later [eight-organ expansion](EXPANDED_ABDOMINAL_ORGAN_SEPARATION_20260929.md)
+finds seven crossing pairs among 28 source-named organ pairs in the same native
+owner frame. It does not change the per-surface census result.

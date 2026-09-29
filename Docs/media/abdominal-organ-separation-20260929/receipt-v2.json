@@ -1,0 +1,1310 @@
+{
+  "all_organs_share_native_abdomen_body_index": 7,
+  "boundary": "Eight source-named whole-organ atlas representations are individually closed and exactly embedded. Their 28 pairwise domain relationships are tested in one native owner frame. Any surface crossing blocks disjoint organ-domain admission. No source geometry was moved, clipped, or capped; this does not establish clinical registration, tissue boundaries, material, or mechanics.",
+  "clear_pair_count": 21,
+  "clinical_anatomy": false,
+  "coordinate_semantics": "exact_rational_value_of_compiled_Float32_owner_local_metres",
+  "executed_source_sha256": {
+    "abdominal_organ_separation.py": "f085913dc7afa05e71c497138f1f13f80cb410804e603bfe13645cfeef7b9d6b",
+    "anatomical_laterality.py": "567c7be31eefd67df00c4bd6f2b530511c0326ef19d0104bb692ac42ecb431b9",
+    "cardiac_cavity_intersections.py": "8b138882161c78312cb9b5aa46f49795092eb9b67ed9f705dc354787cb0a635b",
+    "compiled_quotient_embeddedness.py": "e14793d27e014e23117967a2f486415157d5ae494db342ace0ac701dd1bb5361",
+    "expanded_abdominal_organ_separation.py": "92407f1fee4f471c38e069903ad745ef84dea31405382c05336cbc53c7f63f62",
+    "lung_envelope.py": "4bb5d3c69396b5b3f12d6354207156d3d6e6c2c5cec8418b4943914d82733417",
+    "surface_topology_repair.py": "801e0b75d7d512e4d60b4c48e7c60cfc13497a6e4889e090949a5adf8dde9142",
+    "whole_body_embeddedness.py": "78851feeb65e32855294769873f3edca74e075da4a6715ebfdd860ed21ff217c",
+    "whole_body_surface_gate.py": "ad4e372cdb1d799fb42671465773e94273dcf59a62ad49589fa66a5eab825a73"
+  },
+  "failed_pair_names": [
+    "stomach--pancreas",
+    "stomach--spleen",
+    "pancreas--spleen",
+    "right kidney--right adrenal gland",
+    "left kidney--spleen",
+    "left kidney--left adrenal gland",
+    "spleen--left adrenal gland"
+  ],
+  "native_pack_sha256": "40d307564794a1f5e160559db2de6fefefee8cf00caad62dd39cf6f7e2ec7ed3",
+  "native_source_rest_pose_sha256": "c90f18f81b2ea395666dc773f640a328d5377eaf5cb0af3b5840e4f79f51ab79",
+  "organ_mechanics": false,
+  "organs": [
+    {
+      "compiled_triangle_count": 1810,
+      "compiled_vertex_count": 914,
+      "label": "stomach",
+      "member_id": "FJ2564",
+      "member_sha256": "cb78c3f2214fd21a16fa6c9f2389b9aa874e9d3ce624c42b34d4563c31554c67",
+      "native_body_index": 7,
+      "single_embedded_surface_candidate": true,
+      "source_stable_id": 2
+    },
+    {
+      "compiled_triangle_count": 4890,
+      "compiled_vertex_count": 2462,
+      "label": "pancreas",
+      "member_id": "FJ1895",
+      "member_sha256": "fea8a371ac940fb8c5c13e9d459af6c2bd50e1b499f8989c63883a7db0f149ae",
+      "native_body_index": 7,
+      "single_embedded_surface_candidate": true,
+      "source_stable_id": 3
+    },
+    {
+      "compiled_triangle_count": 2310,
+      "compiled_vertex_count": 1163,
+      "label": "right kidney",
+      "member_id": "FJ3147",
+      "member_sha256": "e21e2ebd5224b1cbf8caabbf4fa788d894819a328a006dcdb2eb8aa6eee5875a",
+      "native_body_index": 7,
+      "single_embedded_surface_candidate": true,
+      "source_stable_id": 4
+    },
+    {
+      "compiled_triangle_count": 2982,
+      "compiled_vertex_count": 1497,
+      "label": "left kidney",
+      "member_id": "FJ3145",
+      "member_sha256": "b52066a987f767ad9e5c3092958bf5dd760d9f05f1497d1fc7f7ff11539bdfd2",
+      "native_body_index": 7,
+      "single_embedded_surface_candidate": true,
+      "source_stable_id": 5
+    },
+    {
+      "compiled_triangle_count": 1330,
+      "compiled_vertex_count": 689,
+      "label": "spleen",
+      "member_id": "FJ2561",
+      "member_sha256": "8dadb164d15392b61e0b08286625c9ea9f959a0f13d8f166b32d84abad4689bf",
+      "native_body_index": 7,
+      "single_embedded_surface_candidate": true,
+      "source_stable_id": 13
+    },
+    {
+      "compiled_triangle_count": 2396,
+      "compiled_vertex_count": 1202,
+      "label": "gallbladder",
+      "member_id": "FJ2817",
+      "member_sha256": "625af13ef374a4df98eb5e51f9c2201a1436ca33168ce4deb277ce811c3fb8c8",
+      "native_body_index": 7,
+      "single_embedded_surface_candidate": true,
+      "source_stable_id": 561
+    },
+    {
+      "compiled_triangle_count": 3996,
+      "compiled_vertex_count": 2000,
+      "label": "left adrenal gland",
+      "member_id": "FJ3129",
+      "member_sha256": "ba5fd50b54d62d8d6e99ce7c2fb19b13979173619ec78c223e01227142943c47",
+      "native_body_index": 7,
+      "single_embedded_surface_candidate": true,
+      "source_stable_id": 562
+    },
+    {
+      "compiled_triangle_count": 2294,
+      "compiled_vertex_count": 1149,
+      "label": "right adrenal gland",
+      "member_id": "FJ3130",
+      "member_sha256": "919d7260f7109f19b8d443b167b8e25d55112ff3a0c437f327d260d71c6a0b4e",
+      "native_body_index": 7,
+      "single_embedded_surface_candidate": true,
+      "source_stable_id": 563
+    }
+  ],
+  "pair_count": 28,
+  "pairs": [
+    {
+      "aabb_candidate_triangle_pairs": 862,
+      "containment": {
+        "status": "not_checked_intersecting_surfaces"
+      },
+      "disjoint_closed_domains": false,
+      "exact_intersecting_triangle_pairs": 39,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 39,
+      "first": "stomach",
+      "first_intersecting_triangle_pairs": [
+        [
+          1178,
+          4454
+        ],
+        [
+          1178,
+          4455
+        ],
+        [
+          1178,
+          4468
+        ],
+        [
+          1178,
+          4471
+        ],
+        [
+          1178,
+          4563
+        ],
+        [
+          1178,
+          4569
+        ],
+        [
+          1179,
+          4559
+        ],
+        [
+          1179,
+          4563
+        ],
+        [
+          1179,
+          4569
+        ],
+        [
+          1179,
+          4570
+        ],
+        [
+          1260,
+          4614
+        ],
+        [
+          1260,
+          4615
+        ]
+      ],
+      "maximum_intersection_segment_m": 0.002029247452672076,
+      "second": "pancreas",
+      "status": "surface_crossing"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 0,
+      "containment": {
+        "first_in_second": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "second_in_first": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "status": "checked"
+      },
+      "disjoint_closed_domains": true,
+      "exact_intersecting_triangle_pairs": 0,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 0,
+      "first": "stomach",
+      "first_intersecting_triangle_pairs": [],
+      "maximum_intersection_segment_m": 0.0,
+      "second": "right kidney",
+      "status": "separate_closed_domains"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 0,
+      "containment": {
+        "first_in_second": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "second_in_first": {
+          "attempts": 1,
+          "crossings": 2,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "status": "checked"
+      },
+      "disjoint_closed_domains": true,
+      "exact_intersecting_triangle_pairs": 0,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 0,
+      "first": "stomach",
+      "first_intersecting_triangle_pairs": [],
+      "maximum_intersection_segment_m": 0.0,
+      "second": "left kidney",
+      "status": "separate_closed_domains"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 1125,
+      "containment": {
+        "status": "not_checked_intersecting_surfaces"
+      },
+      "disjoint_closed_domains": false,
+      "exact_intersecting_triangle_pairs": 39,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 39,
+      "first": "stomach",
+      "first_intersecting_triangle_pairs": [
+        [
+          1406,
+          10
+        ],
+        [
+          1406,
+          21
+        ],
+        [
+          1406,
+          23
+        ],
+        [
+          1406,
+          95
+        ],
+        [
+          1406,
+          96
+        ],
+        [
+          1406,
+          111
+        ],
+        [
+          1406,
+          112
+        ],
+        [
+          1406,
+          114
+        ],
+        [
+          1406,
+          115
+        ],
+        [
+          1406,
+          123
+        ],
+        [
+          1406,
+          126
+        ],
+        [
+          1406,
+          132
+        ]
+      ],
+      "maximum_intersection_segment_m": 0.004813517491868903,
+      "second": "spleen",
+      "status": "surface_crossing"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 0,
+      "containment": {
+        "first_in_second": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "second_in_first": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "status": "checked"
+      },
+      "disjoint_closed_domains": true,
+      "exact_intersecting_triangle_pairs": 0,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 0,
+      "first": "stomach",
+      "first_intersecting_triangle_pairs": [],
+      "maximum_intersection_segment_m": 0.0,
+      "second": "gallbladder",
+      "status": "separate_closed_domains"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 0,
+      "containment": {
+        "first_in_second": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "second_in_first": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "status": "checked"
+      },
+      "disjoint_closed_domains": true,
+      "exact_intersecting_triangle_pairs": 0,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 0,
+      "first": "stomach",
+      "first_intersecting_triangle_pairs": [],
+      "maximum_intersection_segment_m": 0.0,
+      "second": "left adrenal gland",
+      "status": "separate_closed_domains"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 0,
+      "containment": {
+        "first_in_second": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "second_in_first": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "status": "checked"
+      },
+      "disjoint_closed_domains": true,
+      "exact_intersecting_triangle_pairs": 0,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 0,
+      "first": "stomach",
+      "first_intersecting_triangle_pairs": [],
+      "maximum_intersection_segment_m": 0.0,
+      "second": "right adrenal gland",
+      "status": "separate_closed_domains"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 0,
+      "containment": {
+        "first_in_second": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "second_in_first": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "status": "checked"
+      },
+      "disjoint_closed_domains": true,
+      "exact_intersecting_triangle_pairs": 0,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 0,
+      "first": "pancreas",
+      "first_intersecting_triangle_pairs": [],
+      "maximum_intersection_segment_m": 0.0,
+      "second": "right kidney",
+      "status": "separate_closed_domains"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 0,
+      "containment": {
+        "first_in_second": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "second_in_first": {
+          "attempts": 1,
+          "crossings": 2,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "status": "checked"
+      },
+      "disjoint_closed_domains": true,
+      "exact_intersecting_triangle_pairs": 0,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 0,
+      "first": "pancreas",
+      "first_intersecting_triangle_pairs": [],
+      "maximum_intersection_segment_m": 0.0,
+      "second": "left kidney",
+      "status": "separate_closed_domains"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 439,
+      "containment": {
+        "status": "not_checked_intersecting_surfaces"
+      },
+      "disjoint_closed_domains": false,
+      "exact_intersecting_triangle_pairs": 38,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 38,
+      "first": "pancreas",
+      "first_intersecting_triangle_pairs": [
+        [
+          4814,
+          11
+        ],
+        [
+          4816,
+          11
+        ],
+        [
+          4829,
+          30
+        ],
+        [
+          4830,
+          30
+        ],
+        [
+          4831,
+          30
+        ],
+        [
+          4839,
+          30
+        ],
+        [
+          4839,
+          31
+        ],
+        [
+          4840,
+          30
+        ],
+        [
+          4858,
+          12
+        ],
+        [
+          4859,
+          12
+        ],
+        [
+          4860,
+          12
+        ],
+        [
+          4862,
+          11
+        ]
+      ],
+      "maximum_intersection_segment_m": 0.002708105024291601,
+      "second": "spleen",
+      "status": "surface_crossing"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 0,
+      "containment": {
+        "first_in_second": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "second_in_first": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "status": "checked"
+      },
+      "disjoint_closed_domains": true,
+      "exact_intersecting_triangle_pairs": 0,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 0,
+      "first": "pancreas",
+      "first_intersecting_triangle_pairs": [],
+      "maximum_intersection_segment_m": 0.0,
+      "second": "gallbladder",
+      "status": "separate_closed_domains"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 0,
+      "containment": {
+        "first_in_second": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "second_in_first": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "status": "checked"
+      },
+      "disjoint_closed_domains": true,
+      "exact_intersecting_triangle_pairs": 0,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 0,
+      "first": "pancreas",
+      "first_intersecting_triangle_pairs": [],
+      "maximum_intersection_segment_m": 0.0,
+      "second": "left adrenal gland",
+      "status": "separate_closed_domains"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 0,
+      "containment": {
+        "first_in_second": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "second_in_first": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "status": "checked"
+      },
+      "disjoint_closed_domains": true,
+      "exact_intersecting_triangle_pairs": 0,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 0,
+      "first": "pancreas",
+      "first_intersecting_triangle_pairs": [],
+      "maximum_intersection_segment_m": 0.0,
+      "second": "right adrenal gland",
+      "status": "separate_closed_domains"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 0,
+      "containment": {
+        "first_in_second": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "second_in_first": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "status": "checked"
+      },
+      "disjoint_closed_domains": true,
+      "exact_intersecting_triangle_pairs": 0,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 0,
+      "first": "right kidney",
+      "first_intersecting_triangle_pairs": [],
+      "maximum_intersection_segment_m": 0.0,
+      "second": "left kidney",
+      "status": "separate_closed_domains"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 0,
+      "containment": {
+        "first_in_second": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "second_in_first": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "status": "checked"
+      },
+      "disjoint_closed_domains": true,
+      "exact_intersecting_triangle_pairs": 0,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 0,
+      "first": "right kidney",
+      "first_intersecting_triangle_pairs": [],
+      "maximum_intersection_segment_m": 0.0,
+      "second": "spleen",
+      "status": "separate_closed_domains"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 0,
+      "containment": {
+        "first_in_second": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "second_in_first": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "status": "checked"
+      },
+      "disjoint_closed_domains": true,
+      "exact_intersecting_triangle_pairs": 0,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 0,
+      "first": "right kidney",
+      "first_intersecting_triangle_pairs": [],
+      "maximum_intersection_segment_m": 0.0,
+      "second": "gallbladder",
+      "status": "separate_closed_domains"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 0,
+      "containment": {
+        "first_in_second": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "second_in_first": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "status": "checked"
+      },
+      "disjoint_closed_domains": true,
+      "exact_intersecting_triangle_pairs": 0,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 0,
+      "first": "right kidney",
+      "first_intersecting_triangle_pairs": [],
+      "maximum_intersection_segment_m": 0.0,
+      "second": "left adrenal gland",
+      "status": "separate_closed_domains"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 2414,
+      "containment": {
+        "status": "not_checked_intersecting_surfaces"
+      },
+      "disjoint_closed_domains": false,
+      "exact_intersecting_triangle_pairs": 202,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 202,
+      "first": "right kidney",
+      "first_intersecting_triangle_pairs": [
+        [
+          577,
+          1553
+        ],
+        [
+          577,
+          1555
+        ],
+        [
+          577,
+          1557
+        ],
+        [
+          577,
+          1560
+        ],
+        [
+          577,
+          1561
+        ],
+        [
+          577,
+          1574
+        ],
+        [
+          579,
+          1539
+        ],
+        [
+          579,
+          1540
+        ],
+        [
+          579,
+          1541
+        ],
+        [
+          579,
+          1558
+        ],
+        [
+          580,
+          1504
+        ],
+        [
+          580,
+          1522
+        ]
+      ],
+      "maximum_intersection_segment_m": 0.0022476482185354585,
+      "second": "right adrenal gland",
+      "status": "surface_crossing"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 686,
+      "containment": {
+        "status": "not_checked_intersecting_surfaces"
+      },
+      "disjoint_closed_domains": false,
+      "exact_intersecting_triangle_pairs": 66,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 66,
+      "first": "left kidney",
+      "first_intersecting_triangle_pairs": [
+        [
+          2235,
+          0
+        ],
+        [
+          2235,
+          53
+        ],
+        [
+          2235,
+          54
+        ],
+        [
+          2245,
+          0
+        ],
+        [
+          2319,
+          59
+        ],
+        [
+          2319,
+          157
+        ],
+        [
+          2326,
+          53
+        ],
+        [
+          2326,
+          57
+        ],
+        [
+          2327,
+          57
+        ],
+        [
+          2327,
+          59
+        ],
+        [
+          2331,
+          70
+        ],
+        [
+          2332,
+          70
+        ]
+      ],
+      "maximum_intersection_segment_m": 0.0022857762578138777,
+      "second": "spleen",
+      "status": "surface_crossing"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 0,
+      "containment": {
+        "first_in_second": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "second_in_first": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "status": "checked"
+      },
+      "disjoint_closed_domains": true,
+      "exact_intersecting_triangle_pairs": 0,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 0,
+      "first": "left kidney",
+      "first_intersecting_triangle_pairs": [],
+      "maximum_intersection_segment_m": 0.0,
+      "second": "gallbladder",
+      "status": "separate_closed_domains"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 2510,
+      "containment": {
+        "status": "not_checked_intersecting_surfaces"
+      },
+      "disjoint_closed_domains": false,
+      "exact_intersecting_triangle_pairs": 248,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 248,
+      "first": "left kidney",
+      "first_intersecting_triangle_pairs": [
+        [
+          342,
+          3942
+        ],
+        [
+          342,
+          3943
+        ],
+        [
+          342,
+          3944
+        ],
+        [
+          350,
+          3852
+        ],
+        [
+          350,
+          3856
+        ],
+        [
+          351,
+          3856
+        ],
+        [
+          351,
+          3858
+        ],
+        [
+          351,
+          3936
+        ],
+        [
+          351,
+          3940
+        ],
+        [
+          351,
+          3944
+        ],
+        [
+          352,
+          3852
+        ],
+        [
+          352,
+          3853
+        ]
+      ],
+      "maximum_intersection_segment_m": 0.0030665273177691507,
+      "second": "left adrenal gland",
+      "status": "surface_crossing"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 0,
+      "containment": {
+        "first_in_second": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "second_in_first": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "status": "checked"
+      },
+      "disjoint_closed_domains": true,
+      "exact_intersecting_triangle_pairs": 0,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 0,
+      "first": "left kidney",
+      "first_intersecting_triangle_pairs": [],
+      "maximum_intersection_segment_m": 0.0,
+      "second": "right adrenal gland",
+      "status": "separate_closed_domains"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 0,
+      "containment": {
+        "first_in_second": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "second_in_first": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "status": "checked"
+      },
+      "disjoint_closed_domains": true,
+      "exact_intersecting_triangle_pairs": 0,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 0,
+      "first": "spleen",
+      "first_intersecting_triangle_pairs": [],
+      "maximum_intersection_segment_m": 0.0,
+      "second": "gallbladder",
+      "status": "separate_closed_domains"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 2067,
+      "containment": {
+        "status": "not_checked_intersecting_surfaces"
+      },
+      "disjoint_closed_domains": false,
+      "exact_intersecting_triangle_pairs": 182,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 182,
+      "first": "spleen",
+      "first_intersecting_triangle_pairs": [
+        [
+          0,
+          2220
+        ],
+        [
+          0,
+          2480
+        ],
+        [
+          2,
+          2223
+        ],
+        [
+          2,
+          2224
+        ],
+        [
+          2,
+          2225
+        ],
+        [
+          2,
+          2226
+        ],
+        [
+          2,
+          2230
+        ],
+        [
+          2,
+          2231
+        ],
+        [
+          2,
+          2232
+        ],
+        [
+          3,
+          1877
+        ],
+        [
+          3,
+          2033
+        ],
+        [
+          3,
+          2229
+        ]
+      ],
+      "maximum_intersection_segment_m": 0.002639526824069577,
+      "second": "left adrenal gland",
+      "status": "surface_crossing"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 0,
+      "containment": {
+        "first_in_second": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "second_in_first": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "status": "checked"
+      },
+      "disjoint_closed_domains": true,
+      "exact_intersecting_triangle_pairs": 0,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 0,
+      "first": "spleen",
+      "first_intersecting_triangle_pairs": [],
+      "maximum_intersection_segment_m": 0.0,
+      "second": "right adrenal gland",
+      "status": "separate_closed_domains"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 0,
+      "containment": {
+        "first_in_second": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "second_in_first": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "status": "checked"
+      },
+      "disjoint_closed_domains": true,
+      "exact_intersecting_triangle_pairs": 0,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 0,
+      "first": "gallbladder",
+      "first_intersecting_triangle_pairs": [],
+      "maximum_intersection_segment_m": 0.0,
+      "second": "left adrenal gland",
+      "status": "separate_closed_domains"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 0,
+      "containment": {
+        "first_in_second": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "second_in_first": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "status": "checked"
+      },
+      "disjoint_closed_domains": true,
+      "exact_intersecting_triangle_pairs": 0,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 0,
+      "first": "gallbladder",
+      "first_intersecting_triangle_pairs": [],
+      "maximum_intersection_segment_m": 0.0,
+      "second": "right adrenal gland",
+      "status": "separate_closed_domains"
+    },
+    {
+      "aabb_candidate_triangle_pairs": 0,
+      "containment": {
+        "first_in_second": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "second_in_first": {
+          "attempts": 1,
+          "crossings": 0,
+          "location": "outside",
+          "ray": [
+            1,
+            1,
+            1
+          ]
+        },
+        "status": "checked"
+      },
+      "disjoint_closed_domains": true,
+      "exact_intersecting_triangle_pairs": 0,
+      "exact_point_contact_pairs": 0,
+      "exact_segment_or_polygon_crossing_pairs": 0,
+      "first": "left adrenal gland",
+      "first_intersecting_triangle_pairs": [],
+      "maximum_intersection_segment_m": 0.0,
+      "second": "right adrenal gland",
+      "status": "separate_closed_domains"
+    }
+  ],
+  "physical_volume_owner": false,
+  "prior_five_organ_receipt_sha256": "936da9c819545e08207410dde6be7b51ba1486d08c51e0a73ef7d64cec4d6ab1",
+  "schema": "numi.human.compiled-abdominal-organ-separation.v2",
+  "selected_payload_sha256": "5da65cf16efcd65461970515cf7cfe8ee49f7b96ad826d23f85318dedc42a54d",
+  "source_census_summary_sha256": "ea4b6a4216441f03055abb1b5e0dd81ef7cbac39108d3925bd7e026fd8d2a748",
+  "source_semantic_manifest_sha256": {
+    "Build/lung-envelope-20260929/payload/thorax-lung-envelope.manifest.json": "20316ae7a690e2b184687c3349b35a8859dc1f03e5f11272827c108131802a08",
+    "Build/lung-source-coverage-20260929/payload/bodyparts3d-myosim-torso-anatomy.manifest.json": "37c0b02b473f1d9ec612a03e7cf425f254f8bf704d21d2f29457385821c56b7f",
+    "Build/organ-family-coverage-20260929/payload.final/source-organ-family-anatomy.manifest.json": "64ec90641612a63420fe29c5fb29fb98780fe71ef021890900af8e3e270b9be3",
+    "Build/whole-visceral-coverage-20260929/payload.verified/source-organ-family-anatomy.manifest.json": "3de6fd5f976d23b2607f42a70171c44ca58c1b87dfe5b695053afdef8727b0f8"
+  },
+  "status": "failed_cross_surface_separation"
+}

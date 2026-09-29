@@ -45,6 +45,10 @@ registration or replacement anatomy before those four domain relationships
 can be admitted. Minimizing crossings alone would not establish clinical
 position, shape or tissue boundaries.
 
+The later [eight-organ expansion](EXPANDED_ABDOMINAL_ORGAN_SEPARATION_20260929.md)
+retains this five-organ receipt unchanged and measures 28 pairs, including
+three more crossing relationships around the kidneys, adrenal glands and spleen.
+
 Reproduce with the pinned retained inputs (expected exit 2):
 
 ```sh
