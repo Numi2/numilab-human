@@ -592,6 +592,14 @@ uses the existing native 1e-9 arithmetic admission tolerance; the source input
 override, geometry and bilateral tolerances are unchanged. These are bounded
 kinematic pose checks, not source soft-limit dynamics or loaded qualification.
 
+The audits also rebuild the projection program and any declared compliance
+program with the existing pinned-source equality compiler, then compare their
+complete NHEQ bytes. Updating a sidecar checksum cannot admit a changed
+polynomial, coordinate owner, reference, policy or compliance parameter. A
+failure names affected equalities and retains the actual/expected identities
+with all pose measurements. This verifies source-program agreement; native
+execution and loaded response remain separate checks.
+
 The existing lower-limb source registrar also requires `--artifact`. It freshly
 checks an existing v3 registration against the pinned source meshes before
 preserving valid segment fits. Its bounded interface refinement now carries

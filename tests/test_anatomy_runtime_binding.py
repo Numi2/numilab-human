@@ -182,6 +182,15 @@ class FailedPoseDiagnosticTests(unittest.TestCase):
         }]
         with self.assertRaisesRegex(PoseAuditError, "knee_angle_rotation2_r q_index=107"):
             _finish_pose_audit(result, "lower-limb")
+        result["joint_equality_program_checks"] = [{
+            "passed": False, "payload_role": "joint_equalities",
+            "affected_equalities": [{"dependent_name": "knee_angle_rotation2_r", "dependent_core_q": 107}],
+            "source_byte_mismatch_count": 4, "tolerance_basis": "exact_source_compiler_FP32_bytes",
+            "declared_identity_matches": True, "actual_sha256": "c" * 64,
+            "expected_source_sha256": "d" * 64,
+        }]
+        with self.assertRaisesRegex(PoseAuditError, "source equality program mismatch.*knee_angle_rotation2_r"):
+            _finish_pose_audit(result, "lower-limb")
         for module, function in [(upper, "audit_upper_limb_poses"), (lower, "audit_lower_limb_poses")]:
             with self.subTest(module=module.__name__), tempfile.TemporaryDirectory() as temporary:
                 output = Path(temporary) / "failed.json"
@@ -194,6 +203,7 @@ class FailedPoseDiagnosticTests(unittest.TestCase):
                 self.assertEqual(audit.call_args.kwargs["bone_artifact"], Path(temporary).resolve())
                 retained = json.loads(output.read_text())
                 self.assertEqual(retained["poses"], result["poses"])
+                self.assertEqual(retained["joint_equality_program_checks"], result["joint_equality_program_checks"])
                 self.assertIn(module.__name__, retained["inputs"]["reproduction_command"])
                 self.assertIn("--bone-artifact", retained["inputs"]["reproduction_command"])
 

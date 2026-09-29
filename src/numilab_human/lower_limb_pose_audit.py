@@ -26,6 +26,7 @@ from .upper_limb_pose_audit import (
     PoseAuditError, _finish_pose_audit, _pose_qpos,
     _compiled_bone_members, _compiled_member_geometry_check,
     _pose_joint_range_context, _projected_joint_range_checks,
+    _joint_equality_program_checks,
 )
 from .upper_limb_registration import (
     INTERFACE_PATCH_GATE_MULTIPLIER,
@@ -152,6 +153,7 @@ def audit_lower_limb_poses(
     model = build_model("myofullbody")
     data = mujoco.MjData(model)
     joint_ranges = _pose_joint_range_context(artifact, runtime_reference, model, mujoco)
+    equality_programs = _joint_equality_program_checks(artifact, runtime_reference, exported, joint_ranges)
     compiled_meshes_by_body = _compiled_meshes_by_body(model, mujoco, np)
     anchors_by_name: dict[str, list[dict[str, Any]]] = {
         name: [] for name in LOWER_BODY_NAMES
@@ -512,6 +514,7 @@ def audit_lower_limb_poses(
         "continuity_evaluation_count": len(all_continuity),
         "bilateral_parity_evaluation_count": len(all_parity),
         "joint_equality_count": equality_count,
+        "joint_equality_program_checks": equality_programs,
         "joint_equality_maximum_correction": equality_maximum_correction,
         "default_frame_maximum_centroid_residual_m": default_frame_maximum_residual,
         "default_frame_worst_member": default_frame_worst_member,
@@ -548,7 +551,9 @@ def audit_lower_limb_poses(
             "pose suite. The complete toe compound retains one MTP body. This is not "
             "cartilage/contact, ligament restraint, loaded dynamics, gait, clinical "
             "registration, or a deformable tendon solve. Range coordinates are projected from "
-            "the source model and rounded to FP32; this audit does not execute a native NHEQ payload."
+            "the source model and rounded to FP32. Native equality program bytes are checked against "
+            "the pinned source compiler, including declared compliance parameters; this audit does not "
+            "execute those native programs or qualify their loaded response."
         ),
     }
 

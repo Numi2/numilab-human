@@ -49,6 +49,16 @@ class PoseAuditError(RuntimeError):
 
 def _finish_pose_audit(result: dict[str, Any], region: str) -> dict[str, Any]:
     failures = []
+    for program in result.get("joint_equality_program_checks", []):
+        if not program["passed"]:
+            failures.append(
+                f"{program['payload_role']}:source equality program mismatch "
+                f"affected_equalities={program['affected_equalities']} "
+                f"source_byte_mismatch_count={program['source_byte_mismatch_count']} "
+                f"allowed_byte_mismatch_count=0 tolerance_basis={program['tolerance_basis']} "
+                f"declared_identity_matches={program['declared_identity_matches']} "
+                f"actual_sha256={program['actual_sha256']} expected_source_sha256={program['expected_source_sha256']}"
+            )
     residual = result["default_frame_maximum_centroid_residual_m"]
     allowed = result["default_frame_maximum_allowed_residual_m"]
     if residual > allowed:
@@ -389,6 +399,64 @@ def _pose_joint_range_context(
     return joined
 
 
+def _joint_equality_program_checks(
+    artifact: Path, runtime_reference: dict[str, Any], exported: dict[str, Any],
+    joints: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Compare native motion/constraint programs with the owning source compiler."""
+    manifest_path = Path(runtime_reference["manifest"]["file"])
+    if _sha256(manifest_path) != runtime_reference["manifest"]["sha256"]:
+        raise RuntimeError("pose audit runtime manifest drifted during equality binding")
+    manifest = human_model.read_json(manifest_path)
+    rows, projection, compliance = human_model._myosim_joint_equality_bundle(
+        exported["source"], exported["model"], exported["joint_equalities"],
+        {joint["source_joint_id"]: joint for joint in joints},
+        manifest["core_tree"]["nq"], manifest["core_tree"]["nv"],
+    )
+    programs = [("joint_equalities", projection, 96, 1)]
+    if "joint_equalities_source_compliance" in manifest["payloads"]:
+        if compliance is None:
+            raise RuntimeError("pose audit declares native compliance without a source compliance law")
+        programs.append(("joint_equalities_source_compliance", compliance, 112, 2))
+    checks = []
+    for role, expected, record_bytes, abi in programs:
+        descriptor = manifest["payloads"].get(role, {})
+        filename = descriptor.get("file")
+        path = artifact / filename if isinstance(filename, str) else None
+        actual = path.read_bytes() if path is not None and path.is_file() else None
+        actual_sha = hashlib.sha256(actual).hexdigest() if actual is not None else None
+        declared_matches = (
+            actual is not None and descriptor.get("bytes") == len(actual)
+            and descriptor.get("sha256") == actual_sha and descriptor.get("payload_abi") == abi
+        )
+        mismatch_count = (sum(a != b for a, b in zip(actual, expected))
+                          + abs(len(actual) - len(expected))) if actual is not None else len(expected)
+        affected = []
+        for index, row in enumerate(rows):
+            start = 80 + record_bytes * index
+            if actual is not None and actual[start:start + record_bytes] == expected[start:start + record_bytes]:
+                continue
+            affected.append({
+                "record_index": index, "source_equality_id": row["source_equality_id"],
+                "name": row["name"], "dependent_name": row["dependent_name"],
+                "dependent_core_q": row["dependent_core_q"], "dependent_core_v": row["dependent_core_v"],
+                "master_name": row["master_name"], "master_core_q": row["master_core_q"],
+            })
+        checks.append({
+            "payload_role": role, "file": str(path) if path is not None else None,
+            "payload_abi": abi, "record_count": len(rows),
+            "actual_sha256": actual_sha, "expected_source_sha256": hashlib.sha256(expected).hexdigest(),
+            "actual_bytes": len(actual) if actual is not None else 0, "expected_bytes": len(expected),
+            "declared_identity_matches": declared_matches,
+            "source_header_matches": actual is not None and actual[:80] == expected[:80],
+            "source_byte_mismatch_count": mismatch_count, "maximum_allowed_byte_mismatch_count": 0,
+            "tolerance_basis": "exact_pinned_source_compiler_NHEQ_FP32_bytes_including_policy_references_and_compliance",
+            "affected_equalities": affected,
+            "passed": declared_matches and actual == expected,
+        })
+    return checks
+
+
 def _projected_joint_range_checks(qpos: Any, joints: list[dict[str, Any]], np: Any) -> list[dict[str, Any]]:
     """Check source-projected q and its FP32 rounding against bound range bytes."""
     checks = []
@@ -457,6 +525,7 @@ def audit_upper_limb_poses(
     model = build_model("myofullbody")
     data = mujoco.MjData(model)
     joint_ranges = _pose_joint_range_context(artifact, runtime_reference, model, mujoco)
+    equality_programs = _joint_equality_program_checks(artifact, runtime_reference, exported, joint_ranges)
     expected_names = _upper_names("r") | _upper_names("l")
     anchors_by_name: dict[str, dict[str, Any]] = {}
     local_vertices: dict[str, tuple[int, Any]] = {}
@@ -700,6 +769,7 @@ def audit_upper_limb_poses(
         "continuity_evaluation_count": len(all_continuity),
         "bilateral_parity_evaluation_count": len(all_parity),
         "joint_equality_count": equality_count,
+        "joint_equality_program_checks": equality_programs,
         "joint_equality_maximum_correction": equality_maximum_correction,
         "default_frame_maximum_centroid_residual_m": default_frame_maximum_residual,
         "default_frame_worst_member": default_frame_worst_member,
@@ -718,7 +788,9 @@ def audit_upper_limb_poses(
             "post-projection source and consumed native position ranges, and bilateral parity for this pose "
             "suite. It is not cartilage/contact, ligament constraint, loaded dynamics, clinical "
             "registration, or a deformable tendon solve. Range coordinates are projected from "
-            "the source model and rounded to FP32; this audit does not execute a native NHEQ payload."
+            "the source model and rounded to FP32. Native equality program bytes are checked against "
+            "the pinned source compiler, including declared compliance parameters; this audit does not "
+            "execute those native programs or qualify their loaded response."
         ),
     }
     if bone_descriptor is not None:

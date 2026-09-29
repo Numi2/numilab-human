@@ -11,7 +11,7 @@ import pytest
 from numilab_human import model as human
 from numilab_human.lower_limb_pose_audit import POSE_SUITE
 from numilab_human.upper_limb_pose_audit import (
-    _pose_qpos, _pose_joint_range_context, _projected_joint_range_checks,
+    _pose_qpos, _pose_joint_range_context, _projected_joint_range_checks, _joint_equality_program_checks,
 )
 from numilab_human.upper_limb_registration import _interface_patch_metrics, _minimum_gap, _rotation_xyzw
 
@@ -206,6 +206,80 @@ def test_source_input_range_tolerance_is_unchanged(inputs):
     upper = float(inputs[4].jnt_range[joint, 1])
     with pytest.raises(RuntimeError, match="exceeds its source range"):
         _pose_qpos(inputs[4], ((107, upper + 5e-12),), mujoco, np)
+
+
+@pytest.fixture(scope="module")
+def equality_source(inputs):
+    from numilab_human.myosim_export import export_fullbody
+    return export_fullbody(Path(os.environ["NUMILAB_HUMAN_MOTION_SOURCES"]))
+
+
+def copy_reference_artifact(inputs, output):
+    import shutil
+    output.mkdir()
+    manifest = json.loads((inputs[2] / "myosim-fullbody-reference.manifest.json").read_text())
+    for descriptor in manifest["payloads"].values():
+        source = inputs[2] / descriptor["file"]
+        if source.is_file():
+            shutil.copy2(source, output / descriptor["file"])
+    return manifest
+
+
+@pytest.mark.parametrize("role,field", [
+    ("joint_equalities", "polynomial"),
+    ("joint_equalities", "coordinate_owner"),
+    ("joint_equalities_source_compliance", "reference"),
+    ("joint_equalities_source_compliance", "solref"),
+    ("joint_equalities_source_compliance", "inverse_weight"),
+])
+def test_changed_native_equality_law_cannot_hide_behind_updated_sidecar(
+    inputs, joint_ranges, equality_source, tmp_path, role, field,
+):
+    import hashlib
+    artifact = tmp_path / "artifact"
+    manifest = copy_reference_artifact(inputs, artifact)
+    descriptor = manifest["payloads"][role]
+    path = artifact / descriptor["file"]
+    raw = bytearray(path.read_bytes())
+    stride = 96 if role == "joint_equalities" else 112
+    offset = next(i for i in range(80, len(raw), stride) if struct.unpack_from("<I", raw, i)[0] == 107)
+    if field == "coordinate_owner":
+        struct.pack_into("<2I", raw, offset + 8, 7, 6)  # Valid independent torso coordinate, wrong owner.
+    else:
+        relative = {"polynomial": 24, "reference": 16, "solref": 48, "inverse_weight": 96}[field]
+        value = .02 if field in ("polynomial", "reference") else .04 if field == "solref" else 2.0
+        struct.pack_into("<f", raw, offset + relative, value)
+    path.write_bytes(raw)
+    descriptor["sha256"] = hashlib.sha256(raw).hexdigest()
+    manifest_path = artifact / "myosim-fullbody-reference.manifest.json"
+    manifest_path.write_text(json.dumps(manifest))
+    reference = {"manifest": {"file": str(manifest_path), "sha256": hashlib.sha256(manifest_path.read_bytes()).hexdigest()}}
+    checks = _joint_equality_program_checks(artifact, reference, equality_source, joint_ranges)
+    failed = [c for c in checks if not c["passed"]]
+    assert len(failed) == 1 and failed[0]["payload_role"] == role
+    assert failed[0]["declared_identity_matches"] and failed[0]["source_header_matches"]
+    assert failed[0]["source_byte_mismatch_count"] > 0
+    assert failed[0]["maximum_allowed_byte_mismatch_count"] == 0
+    assert failed[0]["actual_sha256"] != failed[0]["expected_source_sha256"]
+    assert len(failed[0]["affected_equalities"]) == 1
+    assert failed[0]["affected_equalities"][0]["dependent_name"] == "knee_angle_rotation2_r"
+    if field == "polynomial":
+        candidate_inputs = (inputs[0], inputs[1], artifact, *inputs[3:])
+        result = run_probe(candidate_inputs, tmp_path, pose=((7, -.4),))
+        assert result.returncode == 0, result.stderr  # Numeric range admission alone is insufficient.
+        assert "pose_joint_ranges=passed" in result.stdout
+        assert descriptor["sha256"] in result.stdout
+
+
+def test_pinned_equality_programs_match_without_rejecting_registered_variation(inputs, joint_ranges, equality_source):
+    import hashlib
+    path = inputs[2] / "myosim-fullbody-reference.manifest.json"
+    reference = {"manifest": {"file": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}}
+    checks = _joint_equality_program_checks(inputs[2], reference, equality_source, joint_ranges)
+    assert {c["payload_abi"] for c in checks} == {1, 2}
+    assert all(c["passed"] and c["record_count"] == 51 for c in checks)
+    # These checks consume source programs, not registration placement. The
+    # existing small cervical/lumbar variation tests still execute below.
 
 
 @pytest.mark.parametrize("corruption", ["disable_native_limit", "widen_native_range"])
