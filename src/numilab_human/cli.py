@@ -826,6 +826,8 @@ def myosim_visuals(arguments: argparse.Namespace) -> int:
         str(exporter), "-m", "numilab_human.myosim_visual",
         "--sources", str(arguments.sources.resolve()), "--output", str(output),
     ]
+    if arguments.raw_source_rest:
+        command.append("--raw-source-rest")
     completed = subprocess.run(command, capture_output=True, text=True, check=False, env=environment)
     output.mkdir(parents=True, exist_ok=True)
     transcript = output / "myosim-fullbody-source-visual.txt"
@@ -1656,10 +1658,14 @@ def parser() -> argparse.ArgumentParser:
     myosim_part_control_parser.set_defaults(handler=myosim_part_controls)
     myosim_visuals_parser = commands.add_parser(
         "myosim-visuals",
-        help="render three default-pose MyoSim source-model views for visual validation",
+        help="render three equality-projected neutral MyoSim source-model views for visual validation",
     )
     myosim_visuals_parser.add_argument("--sources", type=Path, required=True)
     myosim_visuals_parser.add_argument("--output", type=Path, required=True, help="ignored local visual artifact directory")
+    myosim_visuals_parser.add_argument(
+        "--raw-source-rest", action="store_true",
+        help="render literal unprojected source qpos0 for diagnostics only",
+    )
     myosim_visuals_parser.add_argument(
         "--python", type=Path, default=Path(sys.executable),
         help="Python environment with the pinned myo-sim checkout and mujoco installed",

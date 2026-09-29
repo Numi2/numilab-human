@@ -57,6 +57,12 @@ def main() -> None:
     shutil.copy2(scan, evidence/'muscle-surface-embeddedness-receipt-v3.json')
     shutil.copy2(ROOT/'Docs/TENDON_HARMONIC_BOUNDARY_20260929.md',
                  evidence/'TENDON_HARMONIC_BOUNDARY_20260929.md')
+    patella_evidence = OUT/'evidence/patellar-anteriority-20260929'
+    patella_source = ROOT/'Docs/media/patellar-anteriority-20260929'
+    for name in ('create_source_visual_pose_receipt.py', 'source-visual-pose-selection.json'):
+        shutil.copy2(patella_source/name, patella_evidence/name)
+    shutil.copy2(ROOT/'Docs/PATELLAR_ANTERIORITY_FULL_SUPPORT_20260929.md',
+                 patella_evidence/'PATELLAR_ANTERIORITY_FULL_SUPPORT_20260929.md')
 
     p = Presentation(prior_pptx)
     assert len(p.slides) == 34
@@ -101,6 +107,8 @@ def main() -> None:
         'The included 10-second standing clip is the September 28 native run. '
         'It predates the patellar audit and tendon repair, so it is historical '
         'simulation footage, not a standing run of the current anatomy. '
+        'The source-view command now projects the pinned joint equalities '
+        'for its default neutral pose; raw qpos0 requires an explicit flag. '
         'The visual repairs do not qualify clinical anatomy, tendon force, '
         'loaded contact or sustained standing.\n\n'
         'BodyParts3D CC-BY-SA 2.1 Japan; Z-Anatomy CC-BY-SA 4.0. '
@@ -114,6 +122,8 @@ def main() -> None:
         'prior_pdf_pixel_identical_pages': [1, 33, 34],
         'prior_manifest_sha256': sha(PRIOR/'manifest.json'),
         'patella_figure_sha256': sha(OUT/'assets/executive-patellar-orientation.png'),
+        'patella_source_visual_pose_receipt_sha256': sha(
+            patella_evidence/'source-visual-pose-selection.json'),
         'tendon_figure_sha256': sha(asset),
         'tendon_delta_receipt_sha256': sha(evidence/'receipt-v1.json'),
         'tendon_full_scan_sha256': sha(evidence/'muscle-surface-embeddedness-receipt-v3.json'),

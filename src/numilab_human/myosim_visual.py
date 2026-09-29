@@ -36,7 +36,27 @@ def _write_png(path: Path, image: object) -> None:
     path.write_bytes(payload)
 
 
-def render(sources: Path, output: Path) -> dict[str, object]:
+def _visual_qpos(model: object, mujoco: object, raw_source_rest: bool):
+    import numpy as np
+
+    if raw_source_rest:
+        return np.asarray(model.qpos0, dtype=float).copy(), {
+            "pose_state": "literal_unprojected_source_qpos0",
+            "source_joint_equalities_projected": 0,
+            "maximum_equality_coordinate_correction": 0.0,
+        }
+    from .upper_limb_pose_audit import _pose_qpos
+    qpos, count, correction = _pose_qpos(model, (), mujoco, np)
+    if count <= 0:
+        raise RuntimeError("MyoSim visual source model has no active joint equalities")
+    return qpos, {
+        "pose_state": "source_equality_projected_neutral",
+        "source_joint_equalities_projected": count,
+        "maximum_equality_coordinate_correction": correction,
+    }
+
+
+def render(sources: Path, output: Path, raw_source_rest: bool = False) -> dict[str, object]:
     # MuJoCo chooses a GL backend when imported, so set this before the import.
     os.environ.setdefault("MUJOCO_GL", "glfw")
     try:
@@ -50,7 +70,8 @@ def render(sources: Path, output: Path) -> dict[str, object]:
     output.mkdir(parents=True, exist_ok=True)
     model = build_model("myofullbody")
     data = mujoco.MjData(model)
-    data.qpos[:] = model.qpos0
+    qpos, pose = _visual_qpos(model, mujoco, raw_source_rest)
+    data.qpos[:] = qpos
     mujoco.mj_forward(model, data)
     # The authored model declares a 640x480 MuJoCo offscreen framebuffer.
     renderer = mujoco.Renderer(model, height=480, width=640)
@@ -74,16 +95,20 @@ def render(sources: Path, output: Path) -> dict[str, object]:
         outputs.append({"id": name, "file": path.name, "sha256": _sha256(path), **camera_settings})
     renderer.close()
     return {
-        "schema": "numi.human.myosim-source-visual-validation.v1",
+        "schema": "numi.human.myosim-source-visual-validation.v2",
         "source": {
             "model": "myofullbody",
             "revision": "33c89c2bde282553dde3f526768eb3bdcfaa7649",
             "archive_sha256": _sha256(archive),
             "mujoco_version": mujoco.__version__,
         },
+        "pose": pose,
         "views": outputs,
         "evidence_boundary": (
-            "These are rendered default-pose MyoSim source frames from three camera angles. "
+            "These are rendered MyoSim source frames from three camera angles in the explicitly "
+            "recorded source pose. The projected neutral pose applies active source joint "
+            "equalities before rendering; raw unprojected qpos0 is diagnostic only and "
+            "can place the patella behind the knee anchor. "
             "They validate source-model visibility, not Core-native rendering, contact, or a locomotion rollout."
         ),
     }
@@ -93,9 +118,15 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sources", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--raw-source-rest", action="store_true",
+        help="render literal unprojected qpos0 for source diagnostics only",
+    )
     arguments = parser.parse_args(argv)
     try:
-        manifest = render(arguments.sources.resolve(), arguments.output.resolve())
+        manifest = render(
+            arguments.sources.resolve(), arguments.output.resolve(), arguments.raw_source_rest,
+        )
     except RuntimeError as error:
         print(f"numilab-human MyoSim visual: {error}", file=sys.stderr)
         return 2

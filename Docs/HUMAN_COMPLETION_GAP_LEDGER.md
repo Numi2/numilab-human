@@ -750,6 +750,10 @@ patella vertex is anterior in all 16 side/pose checks of the eight projected
 inspection states, with a minimum 6.093 mm offset. Five authored dependent
 joint-range conflicts still make the full lower-limb audit exit 2; cartilage
 orientation, loaded contact, clinical anatomy and sustained behavior are open.
+The MyoSim source-view command now selects equality-projected neutral by
+default and requires an explicit diagnostic flag for raw `qpos0`; the pinned
+CPU source check confirms 51 projected equalities and a 52.428 mm anterior
+patella-body shift on each side. No new GPU image was claimed for this change.
 
 The [calcaneal tendon visual boundary repair](TENDON_HARMONIC_BOUNDARY_20260929.md)
 removes 145 right and 163 left exact intersections in the compiled tendon

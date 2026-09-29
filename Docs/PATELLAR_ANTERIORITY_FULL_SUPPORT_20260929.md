@@ -43,6 +43,17 @@ registration, audit and figure hashes are in the adjacent
 [`summary.json`](media/patellar-anteriority-20260929/summary.json). The full
 audit remains at `Build/patellar-anteriority-20260929/compiled-bone-audit.json`.
 
+The separate `numi human myosim-visuals` source-view command previously
+rendered literal `qpos0` by default. It now projects all active source joint
+equalities before its neutral views, while `--raw-source-rest` explicitly
+requests the unprojected diagnostic state. The
+[source visual pose receipt](media/patellar-anteriority-20260929/source-visual-pose-selection.json)
+checks the pinned MyoSim source model on CPU: 51 active joint equalities move
+each patella body center 52.428 mm anterior between these two states. The
+visual manifest records which state was used. This change does not alter the
+source model, compiled bones, native renderer, or historical images; a fresh
+view from this command has not been rendered while another job owns the GPU.
+
 The full lower-limb audit still exits **2** because of **five previously
 documented dependent-coordinate source-range conflicts**. No range, bone,
 registration or joint law was changed to obtain these anteriority results.
