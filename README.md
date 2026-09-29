@@ -669,12 +669,16 @@ source laws and admission limits. See
 for the measured witnesses and the distinction between exact kinematic conflicts
 and compliant source dynamics.
 
-Organ manifests now distinguish source-named organ representations from selected
-organ components using exact source `is_a` membership. The current five organ
-surfaces contain four named organ representations and a right atrial wall
-selected under the parent label `heart`. The `part_of` relationship alone does
-not establish a whole-heart representation. This coverage check preserves the
-native geometry and does not certify mesh completeness or clinical anatomy.
+Organ manifests distinguish source-named organ representations from selected
+organ components using exact source `is_a` membership. The current 22-surface
+bundle includes five named organ representations, a right atrial wall selected
+under `heart`, nine liver components, six vessels and the spinal cord. The
+original 12 surfaces remain byte-identical. An independent audit checks all
+92,623 vertices, source topology, normals and native body poses at rest and
+during torso motion. Retained lung selections resolve to vessels and airways;
+lung surfaces remain missing. Source agreement does not certify whole-organ
+completeness or clinical anatomy. See
+[native organ coverage and source audit](Docs/TORSO_ORGAN_COVERAGE_20260929.md).
 
 Static native previews supplied with `--joint-equality-payload` now project
 the dependent coordinates even when no `--pose-q` is given. The raw source

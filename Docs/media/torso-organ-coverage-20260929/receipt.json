@@ -1,0 +1,85 @@
+{
+  "schema": "numi.human.torso-organ-coverage-increment.v1",
+  "human_base_revision": "01cc0968cbb6851c69954992aa3e2573cd505111",
+  "native_base_revision": "d1a13a6b48675743fc242d7b7b7f56e2e40b4209",
+  "payload": {
+    "bytes": 4258052,
+    "file": "bodyparts3d-myosim-torso-anatomy.nhanatomy",
+    "index_count": 508584,
+    "magic": "NHANAT1",
+    "payload_abi": 1,
+    "registration_fingerprint32": "0b7129f7",
+    "sha256": "894b796d246ce9b2e320828e2fd2cbd0ad67de56c8e1702676ba653a0c7b5743",
+    "surface_count": 22,
+    "vertex_count": 92623
+  },
+  "coverage": {
+    "configured_surface_count": 22,
+    "nerve_surface_count": 1,
+    "organ_surface_count": 15,
+    "source_named_organ_representation_count": 5,
+    "source_organ_type_relations": {
+      "basis": "exact_source_is_a_membership_of_named_FMA_organ_not_only_part_of_ancestry",
+      "boundary": "source_representation_type_not_mesh_completeness_or_clinical_qualification",
+      "file": "isa_element_parts.txt",
+      "sha256": "a3de74423f943b0d724ae8f59b3a817f87c423a544f8db98113b1980817cbeaf"
+    },
+    "source_partial_organ_component_count": 10,
+    "vessel_surface_count": 6
+  },
+  "native_executable": {
+    "path": "/Users/home/numilab-human/Build/torso-organ-coverage-20260929/native.v2/myosim-visual-probe",
+    "sha256": "e8e447b24636e8a3f0c8c8c641e727cbc4fec3bddc64abb60454a84f486a2bec"
+  },
+  "native_runtime": {
+    "path": "/Users/home/numilab-human/Build/tendon-surface-binding-20260929/runtime/lib/libmetalrobo.dylib",
+    "sha256": "6b9062e84bdacd6b86b413d5c549cd0046d9a271fb0caa141e03db41ffa213f6"
+  },
+  "captures": [
+    {
+      "name": "neutral",
+      "pose_q": [],
+      "surface_count": 22,
+      "vertex_count": 92623,
+      "maximum_native_pose_world_error_m": 1.1952297497807905e-07
+    },
+    {
+      "name": "coupled_torso",
+      "pose_q": [
+        [
+          7,
+          -0.4
+        ],
+        [
+          8,
+          0.1
+        ],
+        [
+          9,
+          0.2
+        ]
+      ],
+      "surface_count": 22,
+      "vertex_count": 92623,
+      "maximum_native_pose_world_error_m": 1.6896793262292576e-07
+    }
+  ],
+  "proof_root": "/Users/home/numilab-human/Build/torso-organ-coverage-20260929",
+  "boundary": "Source geometry and single-link visual articulation only. Whole-heart and whole-liver completeness, lung surfaces, clinical anatomy, organ mechanics/contact/physiology, and whole-body loaded control remain unqualified.",
+  "validation": {
+    "stdout": "/Users/home/numilab-human/Build/torso-organ-coverage-20260929/final-tests/stdout",
+    "sha256": "c1082b2d3d59cdae4955be48ec3ef04c00adbfe66caacf6880ced81a5654d7f0",
+    "exit_code": 0,
+    "result": ".............................                                            [100%]\n29 passed in 57.57s"
+  },
+  "executed_source_sha256": {
+    "src/numilab_human/model.py": "da9ce118177f06f174458ed5f44bf681586597a7ac695a8486871f61a903b78b",
+    "src/numilab_human/torso_anatomy_audit.py": "087f4e43e2487996fb8907cac18312199adece8e7738183dc7c9514740b938ff",
+    "tests/test_torso_anatomy_source_audit.py": "40dc92e3e9efe2516f2667fe7268acdebb265acd81f8472de8849e36c25f7d94",
+    "tests/test_axial_native_continuity.py": "6606838f1c3dc738cd8530108cc525ef9182bed0b9aa3289c6fb451b2103b603",
+    "tests/test_importer.py": "67e963dde8fc9626eb9d2d7a6df21f2793e9ffde4ff089b5b5a560b9ecb3e68b",
+    "config/bodyparts3d-myosim-torso-anatomy-map.v1.json": "73ce18793f2fef49bd7814ffc0d8c7859bd68d4c9096be27d8dd3f6e16e9a2e4"
+  },
+  "native_source_sha256": "9519cb3d53bf9d69f5fc10c284d4b599229fb8fc420702a96447e676afb65925",
+  "native_published_revision": "281a51cb8bebc808f70208abefe9bc6e9fe3ec10"
+}

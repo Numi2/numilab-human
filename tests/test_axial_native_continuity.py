@@ -477,13 +477,18 @@ def test_organ_coverage_distinguishes_atrial_wall_from_named_whole_organ(inputs,
     assert not heart["source_named_organ_type_matches"]
     assert heart["organ_coverage"] == "source_part_of_organ_component"
     assert ("FMA9457", "wall of right atrium", heart["member_id"]) in human._bodyparts_source_element_relation_names(sources, "is_a")
-    for name in ("stomach", "pancreas", "right kidney", "left kidney"):
+    for name in ("stomach", "pancreas", "right kidney", "left kidney", "spleen"):
         assert surfaces[name]["source_named_organ_type_matches"]
         assert surfaces[name]["organ_coverage"] == "source_named_organ_representation"
     coverage = result["coverage"]
-    assert coverage["organ_surface_count"] == 5
-    assert coverage["source_named_organ_representation_count"] == 4
-    assert coverage["source_partial_organ_component_count"] == 1
+    liver = [s for s in result["source"]["surfaces"] if s["label"] == "liver"]
+    assert len(liver) == 9
+    assert all(not s["source_named_organ_type_matches"] and s["organ_coverage"] == "source_part_of_organ_component" for s in liver)
+    assert all(any("liver" in t["label"] or "hepatovenous" in t["label"] for t in s["source_is_a_types"]) for s in liver)
+    assert {"concept_id": "FMA9457", "label": "wall of right atrium"} in heart["source_is_a_types"]
+    assert coverage["organ_surface_count"] == 15
+    assert coverage["source_named_organ_representation_count"] == 5
+    assert coverage["source_partial_organ_component_count"] == 10
     assert coverage["source_organ_type_relations"]["sha256"] == human.sha256(sources / "isa_element_parts.txt")
 
 

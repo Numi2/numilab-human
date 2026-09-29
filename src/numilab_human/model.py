@@ -11404,6 +11404,11 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
     # rather than a source representation of the named whole organ.
     # Preserve that source selection while making its coverage explicit.
     organ_type_relations = _bodyparts_source_element_relation_names(sources, "is_a")
+    source_types_by_member: dict[str, list[dict[str, str]]] = {}
+    for typed_concept, typed_label, typed_member in sorted(organ_type_relations):
+        source_types_by_member.setdefault(typed_member, []).append({
+            "concept_id": typed_concept, "label": typed_label,
+        })
     layer_codes = {
         "organ": _BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_ORGAN,
         "vessel": _BODYPARTS_MYOSIM_TORSO_ANATOMY_LAYER_VESSEL,
@@ -11486,6 +11491,7 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
                 "source_named_organ_representation" if (concept_id, label, member_id) in organ_type_relations
                 else "source_part_of_organ_component"
             ) if layer_name == "organ" else None,
+            "source_is_a_types": source_types_by_member.get(member_id, []),
         })
     if len(vertices_payload) > 0xFFFFFFFF or len(indices_payload) > 0xFFFFFFFF:
         raise ImportError("BodyParts3D torso anatomy payload exceeds the uint32 native renderer capacity")
@@ -11524,6 +11530,10 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
                 "sha256": sha256((myosim_artifact.resolve() / "myosim-fullbody-reference.manifest.json")),
             },
             "surface_map": {"file": map_path.name, "sha256": sha256(map_path)},
+            "source_relation_tables": [
+                {"hierarchy": hierarchy, "file": filename, "sha256": sha256(sources / filename)}
+                for hierarchy, filename in [("part_of", "partof_element_parts.txt"), ("is_a", "isa_element_parts.txt")]
+            ],
             "surfaces": provenance,
         },
         "coverage": {

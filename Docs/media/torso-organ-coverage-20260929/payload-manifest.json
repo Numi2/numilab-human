@@ -1,0 +1,1397 @@
+{
+  "coverage": {
+    "configured_surface_count": 22,
+    "nerve_surface_count": 1,
+    "organ_surface_count": 15,
+    "source_named_organ_representation_count": 5,
+    "source_organ_type_relations": {
+      "basis": "exact_source_is_a_membership_of_named_FMA_organ_not_only_part_of_ancestry",
+      "boundary": "source_representation_type_not_mesh_completeness_or_clinical_qualification",
+      "file": "isa_element_parts.txt",
+      "sha256": "a3de74423f943b0d724ae8f59b3a817f87c423a544f8db98113b1980817cbeaf"
+    },
+    "source_partial_organ_component_count": 10,
+    "vessel_surface_count": 6
+  },
+  "evidence_boundary": "This compact source-surface layer does not create organ FEM or MPM bodies, vessel tube mechanics, neural mechanics, tissue material parameters, collision/contact, force transmission, or medical registration.",
+  "payload": {
+    "bytes": 4258052,
+    "file": "bodyparts3d-myosim-torso-anatomy.nhanatomy",
+    "index_count": 508584,
+    "magic": "NHANAT1",
+    "payload_abi": 1,
+    "registration_fingerprint32": "0b7129f7",
+    "sha256": "894b796d246ce9b2e320828e2fd2cbd0ad67de56c8e1702676ba653a0c7b5743",
+    "surface_count": 22,
+    "vertex_count": 92623
+  },
+  "rigid_source_program_checks": {
+    "actual_bytes": 60324,
+    "actual_sha256": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951",
+    "boundary": "source_program_agreement_not_native_execution_loaded_or_clinical_anatomy",
+    "checked_field_count": 2250,
+    "declared_identity_matches": true,
+    "engine_body_count": 157,
+    "expected_bytes": 60324,
+    "expected_source_sha256": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951",
+    "failures": [],
+    "file": "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid",
+    "joint_count": 156,
+    "passed": true,
+    "source_body_count": 103,
+    "source_metadata_matches": true,
+    "tolerance_basis": "existing_source_lowerer_FP32_fields_and_native_norm_admission_with_common_scale_rounding_bins"
+  },
+  "runtime_binding": "each exact BodyParts3D source component is converted into the declared MyoSim torso or abdomen inertial frame at the registered default pose and then follows that one articulated visual link in the native renderer",
+  "schema": "numi.human.bodyparts3d-myosim-torso-anatomy-visual-payload.v1",
+  "source": {
+    "bodyparts": {
+      "archives": [
+        {
+          "file": "isa_BP3D_4.0_obj_99.zip",
+          "hierarchy": "is_a",
+          "sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e"
+        },
+        {
+          "file": "partof_BP3D_4.0_obj_99.zip",
+          "hierarchy": "part_of",
+          "sha256": "9fbc713fffeee924a5a657d9813d84d7eb957bded63adb854931dd5e3eb61c97"
+        }
+      ],
+      "id": "bodyparts3d_4",
+      "version": "4.0"
+    },
+    "myosim_manifest": {
+      "file": "myosim-fullbody-reference.manifest.json",
+      "sha256": "5d1d749632b521bc84bbd1d08b86044740635724c062667d6a4710e7c9735b07"
+    },
+    "myosim_source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "registration": {
+      "file": "candidate.v6.registration.json",
+      "sha256": "0b7129f788ae91272d03abf9f10b985359f3b9d9569941515b222787ffe71324"
+    },
+    "source_relation_tables": [
+      {
+        "file": "partof_element_parts.txt",
+        "hierarchy": "part_of",
+        "sha256": "3f5f6df1028eb122b30de77c711597b6bb8e5541658e5985859fd228adbf88ea"
+      },
+      {
+        "file": "isa_element_parts.txt",
+        "hierarchy": "is_a",
+        "sha256": "a3de74423f943b0d724ae8f59b3a817f87c423a544f8db98113b1980817cbeaf"
+      }
+    ],
+    "surface_map": {
+      "file": "bodyparts3d-myosim-torso-anatomy-map.v1.json",
+      "sha256": "73ce18793f2fef49bd7814ffc0d8c7859bd68d4c9096be27d8dd3f6e16e9a2e4"
+    },
+    "surfaces": [
+      {
+        "concept_id": "FMA7088",
+        "core_body_index": 20,
+        "hierarchy": "part_of",
+        "label": "heart",
+        "layer": "organ",
+        "member": "partof_BP3D_4.0_obj_99/FJ2439.obj",
+        "member_id": "FJ2439",
+        "member_sha256": "e7c21cd1659eced056eb56e28f4fa9019ace451ea6e0333097846177f807bb5a",
+        "myosim_body": "torso",
+        "organ_coverage": "source_part_of_organ_component",
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA13256",
+            "label": "wall of cardiac chamber"
+          },
+          {
+            "concept_id": "FMA13883",
+            "label": "wall of atrium"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA82472",
+            "label": "cardinal organ part"
+          },
+          {
+            "concept_id": "FMA86103",
+            "label": "region of organ component"
+          },
+          {
+            "concept_id": "FMA86212",
+            "label": "region of wall of heart"
+          },
+          {
+            "concept_id": "FMA9457",
+            "label": "wall of right atrium"
+          }
+        ],
+        "source_named_organ_type_matches": false,
+        "stable_id": 1,
+        "triangle_count": 17784,
+        "vertex_count": 9887
+      },
+      {
+        "concept_id": "FMA7148",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "stomach",
+        "layer": "organ",
+        "member": "partof_BP3D_4.0_obj_99/FJ2564.obj",
+        "member_id": "FJ2564",
+        "member_sha256": "cb78c3f2214fd21a16fa6c9f2389b9aa874e9d3ce624c42b34d4563c31554c67",
+        "myosim_body": "Abdomen",
+        "organ_coverage": "source_named_organ_representation",
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA55671",
+            "label": "cavitated organ"
+          },
+          {
+            "concept_id": "FMA55672",
+            "label": "organ with organ cavity"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA67498",
+            "label": "organ"
+          },
+          {
+            "concept_id": "FMA7148",
+            "label": "stomach"
+          }
+        ],
+        "source_named_organ_type_matches": true,
+        "stable_id": 2,
+        "triangle_count": 1810,
+        "vertex_count": 914
+      },
+      {
+        "concept_id": "FMA7198",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "pancreas",
+        "layer": "organ",
+        "member": "partof_BP3D_4.0_obj_99/FJ1895.obj",
+        "member_id": "FJ1895",
+        "member_sha256": "fea8a371ac940fb8c5c13e9d459af6c2bd50e1b499f8989c63883a7db0f149ae",
+        "myosim_body": "Abdomen",
+        "organ_coverage": "source_named_organ_representation",
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA55661",
+            "label": "parenchymatous organ"
+          },
+          {
+            "concept_id": "FMA55662",
+            "label": "lobular organ"
+          },
+          {
+            "concept_id": "FMA55670",
+            "label": "solid organ"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA67498",
+            "label": "organ"
+          },
+          {
+            "concept_id": "FMA7198",
+            "label": "pancreas"
+          }
+        ],
+        "source_named_organ_type_matches": true,
+        "stable_id": 3,
+        "triangle_count": 4890,
+        "vertex_count": 2462
+      },
+      {
+        "concept_id": "FMA7204",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "right kidney",
+        "layer": "organ",
+        "member": "partof_BP3D_4.0_obj_99/FJ3147.obj",
+        "member_id": "FJ3147",
+        "member_sha256": "e21e2ebd5224b1cbf8caabbf4fa788d894819a328a006dcdb2eb8aa6eee5875a",
+        "myosim_body": "Abdomen",
+        "organ_coverage": "source_named_organ_representation",
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA55661",
+            "label": "parenchymatous organ"
+          },
+          {
+            "concept_id": "FMA55663",
+            "label": "corticomedullary organ"
+          },
+          {
+            "concept_id": "FMA55670",
+            "label": "solid organ"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA67498",
+            "label": "organ"
+          },
+          {
+            "concept_id": "FMA7203",
+            "label": "kidney"
+          },
+          {
+            "concept_id": "FMA7204",
+            "label": "right kidney"
+          }
+        ],
+        "source_named_organ_type_matches": true,
+        "stable_id": 4,
+        "triangle_count": 2310,
+        "vertex_count": 1163
+      },
+      {
+        "concept_id": "FMA7205",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "left kidney",
+        "layer": "organ",
+        "member": "partof_BP3D_4.0_obj_99/FJ3145.obj",
+        "member_id": "FJ3145",
+        "member_sha256": "b52066a987f767ad9e5c3092958bf5dd760d9f05f1497d1fc7f7ff11539bdfd2",
+        "myosim_body": "Abdomen",
+        "organ_coverage": "source_named_organ_representation",
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA55661",
+            "label": "parenchymatous organ"
+          },
+          {
+            "concept_id": "FMA55663",
+            "label": "corticomedullary organ"
+          },
+          {
+            "concept_id": "FMA55670",
+            "label": "solid organ"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA67498",
+            "label": "organ"
+          },
+          {
+            "concept_id": "FMA7203",
+            "label": "kidney"
+          },
+          {
+            "concept_id": "FMA7205",
+            "label": "left kidney"
+          }
+        ],
+        "source_named_organ_type_matches": true,
+        "stable_id": 5,
+        "triangle_count": 2982,
+        "vertex_count": 1497
+      },
+      {
+        "concept_id": "FMA3736",
+        "core_body_index": 20,
+        "hierarchy": "part_of",
+        "label": "ascending aorta",
+        "layer": "vessel",
+        "member": "partof_BP3D_4.0_obj_99/FJ3413.obj",
+        "member_id": "FJ3413",
+        "member_sha256": "f4d566821c5ee6347147631b4d1b1e5c5cb3465e05ec23fadffa161c268c7bb2",
+        "myosim_body": "torso",
+        "organ_coverage": null,
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA13087",
+            "label": "segment of aorta"
+          },
+          {
+            "concept_id": "FMA3736",
+            "label": "ascending aorta"
+          },
+          {
+            "concept_id": "FMA50722",
+            "label": "region of vascular tree organ"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA67619",
+            "label": "organ region"
+          },
+          {
+            "concept_id": "FMA68045",
+            "label": "segment of thoracic aorta"
+          },
+          {
+            "concept_id": "FMA82472",
+            "label": "cardinal organ part"
+          },
+          {
+            "concept_id": "FMA86140",
+            "label": "organ segment"
+          },
+          {
+            "concept_id": "FMA86187",
+            "label": "segment of arterial tree organ"
+          },
+          {
+            "concept_id": "FMA86256",
+            "label": "segment of arterial trunk"
+          }
+        ],
+        "source_named_organ_type_matches": null,
+        "stable_id": 6,
+        "triangle_count": 396,
+        "vertex_count": 229
+      },
+      {
+        "concept_id": "FMA3768",
+        "core_body_index": 20,
+        "hierarchy": "part_of",
+        "label": "arch of aorta",
+        "layer": "vessel",
+        "member": "partof_BP3D_4.0_obj_99/FJ3411.obj",
+        "member_id": "FJ3411",
+        "member_sha256": "7f1bbd874b05ea618649bfd5a51ac2675523f419dd3e5f5e160d90f47bd413db",
+        "myosim_body": "torso",
+        "organ_coverage": null,
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA13087",
+            "label": "segment of aorta"
+          },
+          {
+            "concept_id": "FMA3768",
+            "label": "arch of aorta"
+          },
+          {
+            "concept_id": "FMA50722",
+            "label": "region of vascular tree organ"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA67619",
+            "label": "organ region"
+          },
+          {
+            "concept_id": "FMA68045",
+            "label": "segment of thoracic aorta"
+          },
+          {
+            "concept_id": "FMA82472",
+            "label": "cardinal organ part"
+          },
+          {
+            "concept_id": "FMA86140",
+            "label": "organ segment"
+          },
+          {
+            "concept_id": "FMA86187",
+            "label": "segment of arterial tree organ"
+          },
+          {
+            "concept_id": "FMA86256",
+            "label": "segment of arterial trunk"
+          }
+        ],
+        "source_named_organ_type_matches": null,
+        "stable_id": 7,
+        "triangle_count": 670,
+        "vertex_count": 381
+      },
+      {
+        "concept_id": "FMA3784",
+        "core_body_index": 20,
+        "hierarchy": "part_of",
+        "label": "descending aorta",
+        "layer": "vessel",
+        "member": "partof_BP3D_4.0_obj_99/FJ3427.obj",
+        "member_id": "FJ3427",
+        "member_sha256": "5785787fdaf951e8f64c3f8d5be27cdf015bafb6adf0c70dd4b63f0b5ac2736c",
+        "myosim_body": "torso",
+        "organ_coverage": null,
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA13087",
+            "label": "segment of aorta"
+          },
+          {
+            "concept_id": "FMA3784",
+            "label": "descending aorta"
+          },
+          {
+            "concept_id": "FMA50722",
+            "label": "region of vascular tree organ"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA67619",
+            "label": "organ region"
+          },
+          {
+            "concept_id": "FMA82472",
+            "label": "cardinal organ part"
+          },
+          {
+            "concept_id": "FMA86140",
+            "label": "organ segment"
+          },
+          {
+            "concept_id": "FMA86187",
+            "label": "segment of arterial tree organ"
+          },
+          {
+            "concept_id": "FMA86256",
+            "label": "segment of arterial trunk"
+          }
+        ],
+        "source_named_organ_type_matches": null,
+        "stable_id": 8,
+        "triangle_count": 4562,
+        "vertex_count": 2351
+      },
+      {
+        "concept_id": "FMA3789",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "abdominal aorta",
+        "layer": "vessel",
+        "member": "partof_BP3D_4.0_obj_99/FJ1932.obj",
+        "member_id": "FJ1932",
+        "member_sha256": "cbdbe976943f977c48b9dbdfa2efdd9eb025f935d3f921a3fb8479df2090d25d",
+        "myosim_body": "Abdomen",
+        "organ_coverage": null,
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA13087",
+            "label": "segment of aorta"
+          },
+          {
+            "concept_id": "FMA3789",
+            "label": "abdominal aorta"
+          },
+          {
+            "concept_id": "FMA50722",
+            "label": "region of vascular tree organ"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA67619",
+            "label": "organ region"
+          },
+          {
+            "concept_id": "FMA82472",
+            "label": "cardinal organ part"
+          },
+          {
+            "concept_id": "FMA86140",
+            "label": "organ segment"
+          },
+          {
+            "concept_id": "FMA86187",
+            "label": "segment of arterial tree organ"
+          },
+          {
+            "concept_id": "FMA86256",
+            "label": "segment of arterial trunk"
+          }
+        ],
+        "source_named_organ_type_matches": null,
+        "stable_id": 9,
+        "triangle_count": 2270,
+        "vertex_count": 1226
+      },
+      {
+        "concept_id": "FMA4720",
+        "core_body_index": 20,
+        "hierarchy": "part_of",
+        "label": "superior vena cava",
+        "layer": "vessel",
+        "member": "partof_BP3D_4.0_obj_99/FJ3645.obj",
+        "member_id": "FJ3645",
+        "member_sha256": "68710b61d5edce86b6a31ce0a471c88cf63308671f78ba57d9974f6514cdb04b",
+        "myosim_body": "torso",
+        "organ_coverage": null,
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA30314",
+            "label": "venous trunk"
+          },
+          {
+            "concept_id": "FMA4720",
+            "label": "superior vena cava"
+          },
+          {
+            "concept_id": "FMA50722",
+            "label": "region of vascular tree organ"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62512",
+            "label": "trunk of systemic vein"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA67619",
+            "label": "organ region"
+          },
+          {
+            "concept_id": "FMA82472",
+            "label": "cardinal organ part"
+          },
+          {
+            "concept_id": "FMA86140",
+            "label": "organ segment"
+          },
+          {
+            "concept_id": "FMA86188",
+            "label": "segment of venous tree organ"
+          }
+        ],
+        "source_named_organ_type_matches": null,
+        "stable_id": 10,
+        "triangle_count": 598,
+        "vertex_count": 318
+      },
+      {
+        "concept_id": "FMA10951",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "inferior vena cava",
+        "layer": "vessel",
+        "member": "partof_BP3D_4.0_obj_99/FJ3441.obj",
+        "member_id": "FJ3441",
+        "member_sha256": "749081b95f406bd38edea220d216f84aa17e019b91c117e7cfd5f3e546ea1163",
+        "myosim_body": "Abdomen",
+        "organ_coverage": null,
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA10951",
+            "label": "inferior vena cava"
+          },
+          {
+            "concept_id": "FMA30314",
+            "label": "venous trunk"
+          },
+          {
+            "concept_id": "FMA50722",
+            "label": "region of vascular tree organ"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62512",
+            "label": "trunk of systemic vein"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA67619",
+            "label": "organ region"
+          },
+          {
+            "concept_id": "FMA82472",
+            "label": "cardinal organ part"
+          },
+          {
+            "concept_id": "FMA86140",
+            "label": "organ segment"
+          },
+          {
+            "concept_id": "FMA86188",
+            "label": "segment of venous tree organ"
+          }
+        ],
+        "source_named_organ_type_matches": null,
+        "stable_id": 11,
+        "triangle_count": 1410,
+        "vertex_count": 793
+      },
+      {
+        "concept_id": "FMA7647",
+        "core_body_index": 20,
+        "hierarchy": "part_of",
+        "label": "spinal cord",
+        "layer": "nerve",
+        "member": "partof_BP3D_4.0_obj_99/FJ1737.obj",
+        "member_id": "FJ1737",
+        "member_sha256": "c86dd74640e7c820eda28783944a90998045ff42a131a7a1456a64fdff0e6471",
+        "myosim_body": "torso",
+        "organ_coverage": null,
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA242789",
+            "label": "region of ventricular system of neuraxis"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA78497",
+            "label": "central canal of spinal cord"
+          },
+          {
+            "concept_id": "FMA82472",
+            "label": "cardinal organ part"
+          },
+          {
+            "concept_id": "FMA86103",
+            "label": "region of organ component"
+          }
+        ],
+        "source_named_organ_type_matches": null,
+        "stable_id": 12,
+        "triangle_count": 728,
+        "vertex_count": 427
+      },
+      {
+        "concept_id": "FMA7196",
+        "core_body_index": 7,
+        "hierarchy": "is_a",
+        "label": "spleen",
+        "layer": "organ",
+        "member": "isa_BP3D_4.0_obj_99/FJ2561.obj",
+        "member_id": "FJ2561",
+        "member_sha256": "8dadb164d15392b61e0b08286625c9ea9f959a0f13d8f166b32d84abad4689bf",
+        "myosim_body": "Abdomen",
+        "organ_coverage": "source_named_organ_representation",
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA55661",
+            "label": "parenchymatous organ"
+          },
+          {
+            "concept_id": "FMA55663",
+            "label": "corticomedullary organ"
+          },
+          {
+            "concept_id": "FMA55670",
+            "label": "solid organ"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA67498",
+            "label": "organ"
+          },
+          {
+            "concept_id": "FMA7196",
+            "label": "spleen"
+          }
+        ],
+        "source_named_organ_type_matches": true,
+        "stable_id": 13,
+        "triangle_count": 1330,
+        "vertex_count": 689
+      },
+      {
+        "concept_id": "FMA7197",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "liver",
+        "layer": "organ",
+        "member": "partof_BP3D_4.0_obj_99/FJ2816.obj",
+        "member_id": "FJ2816",
+        "member_sha256": "81c86ccdd356c27a960f957f49b4ea883d22d7e75fef29aa794e154d4f5da51e",
+        "myosim_body": "Abdomen",
+        "organ_coverage": "source_part_of_organ_component",
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA13365",
+            "label": "caudate lobe of liver"
+          },
+          {
+            "concept_id": "FMA14065",
+            "label": "organ component"
+          },
+          {
+            "concept_id": "FMA14495",
+            "label": "segment of liver"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA82472",
+            "label": "cardinal organ part"
+          },
+          {
+            "concept_id": "FMA82478",
+            "label": "lobular organ component"
+          },
+          {
+            "concept_id": "FMA82494",
+            "label": "lobular segment"
+          }
+        ],
+        "source_named_organ_type_matches": false,
+        "stable_id": 14,
+        "triangle_count": 5020,
+        "vertex_count": 2526
+      },
+      {
+        "concept_id": "FMA7197",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "liver",
+        "layer": "organ",
+        "member": "partof_BP3D_4.0_obj_99/FJ2818.obj",
+        "member_id": "FJ2818",
+        "member_sha256": "773b11b267fd680f399e0dbc71217aef981c6f8ee2a2273723481edc5864ee8a",
+        "myosim_body": "Abdomen",
+        "organ_coverage": "source_part_of_organ_component",
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA15737",
+            "label": "hepatovenous subsector"
+          },
+          {
+            "concept_id": "FMA15739",
+            "label": "hepatovenous segment ii"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA67619",
+            "label": "organ region"
+          },
+          {
+            "concept_id": "FMA82472",
+            "label": "cardinal organ part"
+          },
+          {
+            "concept_id": "FMA86140",
+            "label": "organ segment"
+          }
+        ],
+        "source_named_organ_type_matches": false,
+        "stable_id": 15,
+        "triangle_count": 14326,
+        "vertex_count": 7482
+      },
+      {
+        "concept_id": "FMA7197",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "liver",
+        "layer": "organ",
+        "member": "partof_BP3D_4.0_obj_99/FJ2819.obj",
+        "member_id": "FJ2819",
+        "member_sha256": "ba7174ecd641887a57116848661d56c2c377659cc3aca4235132e8f548bbd8b9",
+        "myosim_body": "Abdomen",
+        "organ_coverage": "source_part_of_organ_component",
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA15737",
+            "label": "hepatovenous subsector"
+          },
+          {
+            "concept_id": "FMA15741",
+            "label": "hepatovenous segment iii"
+          },
+          {
+            "concept_id": "FMA15757",
+            "label": "region of anterior sector of left liver (in-vivo)"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA67619",
+            "label": "organ region"
+          },
+          {
+            "concept_id": "FMA82472",
+            "label": "cardinal organ part"
+          },
+          {
+            "concept_id": "FMA86140",
+            "label": "organ segment"
+          }
+        ],
+        "source_named_organ_type_matches": false,
+        "stable_id": 16,
+        "triangle_count": 10326,
+        "vertex_count": 5487
+      },
+      {
+        "concept_id": "FMA7197",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "liver",
+        "layer": "organ",
+        "member": "partof_BP3D_4.0_obj_99/FJ2820.obj",
+        "member_id": "FJ2820",
+        "member_sha256": "af49d0747496fb3008b7b33be23ea1c169bb4667ccfad0fa0208d42390737c22",
+        "myosim_body": "Abdomen",
+        "organ_coverage": "source_part_of_organ_component",
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA15737",
+            "label": "hepatovenous subsector"
+          },
+          {
+            "concept_id": "FMA15742",
+            "label": "hepatovenous segment iv"
+          },
+          {
+            "concept_id": "FMA15757",
+            "label": "region of anterior sector of left liver (in-vivo)"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA67619",
+            "label": "organ region"
+          },
+          {
+            "concept_id": "FMA82472",
+            "label": "cardinal organ part"
+          },
+          {
+            "concept_id": "FMA86140",
+            "label": "organ segment"
+          }
+        ],
+        "source_named_organ_type_matches": false,
+        "stable_id": 17,
+        "triangle_count": 17942,
+        "vertex_count": 11418
+      },
+      {
+        "concept_id": "FMA7197",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "liver",
+        "layer": "organ",
+        "member": "partof_BP3D_4.0_obj_99/FJ2821.obj",
+        "member_id": "FJ2821",
+        "member_sha256": "13886d9c2d473e121e27083fa03218fe22e4a75aab3402dcf53754a1375948f9",
+        "myosim_body": "Abdomen",
+        "organ_coverage": "source_part_of_organ_component",
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA15737",
+            "label": "hepatovenous subsector"
+          },
+          {
+            "concept_id": "FMA15743",
+            "label": "hepatovenous segment v"
+          },
+          {
+            "concept_id": "FMA15755",
+            "label": "region of anterior sector of right liver (in-vivo)"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA67619",
+            "label": "organ region"
+          },
+          {
+            "concept_id": "FMA82472",
+            "label": "cardinal organ part"
+          },
+          {
+            "concept_id": "FMA86140",
+            "label": "organ segment"
+          }
+        ],
+        "source_named_organ_type_matches": false,
+        "stable_id": 18,
+        "triangle_count": 11442,
+        "vertex_count": 6605
+      },
+      {
+        "concept_id": "FMA7197",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "liver",
+        "layer": "organ",
+        "member": "partof_BP3D_4.0_obj_99/FJ2822.obj",
+        "member_id": "FJ2822",
+        "member_sha256": "8f64d0c177586089610214a5a32a189a6a659ca2770b15d193c9255667c8afd2",
+        "myosim_body": "Abdomen",
+        "organ_coverage": "source_part_of_organ_component",
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA15737",
+            "label": "hepatovenous subsector"
+          },
+          {
+            "concept_id": "FMA15744",
+            "label": "hepatovenous segment vi"
+          },
+          {
+            "concept_id": "FMA15756",
+            "label": "region of posterior sector of right liver (in-vivo)"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA67619",
+            "label": "organ region"
+          },
+          {
+            "concept_id": "FMA82472",
+            "label": "cardinal organ part"
+          },
+          {
+            "concept_id": "FMA86140",
+            "label": "organ segment"
+          }
+        ],
+        "source_named_organ_type_matches": false,
+        "stable_id": 19,
+        "triangle_count": 19450,
+        "vertex_count": 9988
+      },
+      {
+        "concept_id": "FMA7197",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "liver",
+        "layer": "organ",
+        "member": "partof_BP3D_4.0_obj_99/FJ2409.obj",
+        "member_id": "FJ2409",
+        "member_sha256": "4662aac785711a9b0ca91b860720d018f4e61e8457e919722b68ce814bc27e84",
+        "myosim_body": "Abdomen",
+        "organ_coverage": "source_part_of_organ_component",
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA15737",
+            "label": "hepatovenous subsector"
+          },
+          {
+            "concept_id": "FMA15745",
+            "label": "hepatovenous segment vii"
+          },
+          {
+            "concept_id": "FMA15756",
+            "label": "region of posterior sector of right liver (in-vivo)"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA67619",
+            "label": "organ region"
+          },
+          {
+            "concept_id": "FMA82472",
+            "label": "cardinal organ part"
+          },
+          {
+            "concept_id": "FMA86140",
+            "label": "organ segment"
+          }
+        ],
+        "source_named_organ_type_matches": false,
+        "stable_id": 20,
+        "triangle_count": 8534,
+        "vertex_count": 5091
+      },
+      {
+        "concept_id": "FMA7197",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "liver",
+        "layer": "organ",
+        "member": "partof_BP3D_4.0_obj_99/FJ2823.obj",
+        "member_id": "FJ2823",
+        "member_sha256": "a89dd2a52ffee337e9777376d1235330463577331fc7f18a40ccf8bc6c99a8d0",
+        "myosim_body": "Abdomen",
+        "organ_coverage": "source_part_of_organ_component",
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA15737",
+            "label": "hepatovenous subsector"
+          },
+          {
+            "concept_id": "FMA15746",
+            "label": "hepatovenous segment viii"
+          },
+          {
+            "concept_id": "FMA15755",
+            "label": "region of anterior sector of right liver (in-vivo)"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA67619",
+            "label": "organ region"
+          },
+          {
+            "concept_id": "FMA82472",
+            "label": "cardinal organ part"
+          },
+          {
+            "concept_id": "FMA86140",
+            "label": "organ segment"
+          }
+        ],
+        "source_named_organ_type_matches": false,
+        "stable_id": 21,
+        "triangle_count": 19156,
+        "vertex_count": 10230
+      },
+      {
+        "concept_id": "FMA7197",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "liver",
+        "layer": "organ",
+        "member": "partof_BP3D_4.0_obj_99/FJ2824.obj",
+        "member_id": "FJ2824",
+        "member_sha256": "2f5e34fceea6c8b718bd3f50a125bf24c434ae7eb3d925b9795b0585272c1349",
+        "myosim_body": "Abdomen",
+        "organ_coverage": "source_part_of_organ_component",
+        "source_is_a_types": [
+          {
+            "concept_id": "FMA15737",
+            "label": "hepatovenous subsector"
+          },
+          {
+            "concept_id": "FMA15746",
+            "label": "hepatovenous segment viii"
+          },
+          {
+            "concept_id": "FMA15755",
+            "label": "region of anterior sector of right liver (in-vivo)"
+          },
+          {
+            "concept_id": "FMA61775",
+            "label": "physical anatomical entity"
+          },
+          {
+            "concept_id": "FMA62955",
+            "label": "anatomical entity"
+          },
+          {
+            "concept_id": "FMA67135",
+            "label": "anatomical structure"
+          },
+          {
+            "concept_id": "FMA67165",
+            "label": "material anatomical entity"
+          },
+          {
+            "concept_id": "FMA67619",
+            "label": "organ region"
+          },
+          {
+            "concept_id": "FMA82472",
+            "label": "cardinal organ part"
+          },
+          {
+            "concept_id": "FMA86140",
+            "label": "organ segment"
+          }
+        ],
+        "source_named_organ_type_matches": false,
+        "stable_id": 22,
+        "triangle_count": 21592,
+        "vertex_count": 11459
+      }
+    ]
+  },
+  "status": "native_single_link_kinematic_anatomy_surface_binding_input_not_collision_or_physics"
+}

@@ -2828,18 +2828,21 @@ class ImporterTests(unittest.TestCase):
         mapping = read_json(ROOT / "config/bodyparts3d-myosim-torso-anatomy-map.v1.json")
         self.assertEqual(mapping["schema"], "numi.human.bodyparts3d-myosim-torso-anatomy-map.v1")
         entries = mapping["entries"]
-        self.assertEqual(len(entries), 12)
+        self.assertEqual(len(entries), 22)
         self.assertEqual({entry["layer"] for entry in entries}, {"organ", "vessel", "nerve"})
         self.assertEqual(len({entry["member_id"] for entry in entries}), len(entries))
         source_relations = {
-            tuple(line.split("\t"))
-            for line in (ROOT / "Sources/partof_element_parts.txt").read_text(encoding="utf-8").splitlines()
+            hierarchy: {tuple(line.split("\t")) for line in (ROOT / path).read_text(encoding="utf-8").splitlines()}
+            for hierarchy, path in [("part_of", "Sources/partof_element_parts.txt"), ("is_a", "Sources/isa_element_parts.txt")]
         }
         for entry in entries:
             self.assertIn(
                 (entry["concept_id"], entry["source_name"], entry["member_id"]),
-                source_relations,
+                source_relations[entry["hierarchy"]],
             )
+        liver = {entry["member_id"] for entry in entries if entry["concept_id"] == "FMA7197"}
+        self.assertEqual(liver, {"FJ2816", "FJ2818", "FJ2819", "FJ2820", "FJ2821", "FJ2822", "FJ2409", "FJ2823", "FJ2824"})
+        self.assertTrue(any(entry["member_id"] == "FJ2561" and entry["source_name"] == "spleen" for entry in entries))
 
     def test_numi_workspace_supported_muscle_surface_command_rejects_missing_paths_before_python(self) -> None:
         command = ROOT / ".numi/commands/human"
