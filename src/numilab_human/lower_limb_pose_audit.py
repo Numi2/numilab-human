@@ -159,6 +159,7 @@ def audit_lower_limb_poses(
     data = mujoco.MjData(model)
     joint_ranges = _pose_joint_range_context(artifact, runtime_reference, model, mujoco)
     equality_programs = _joint_equality_program_checks(artifact, runtime_reference, exported, joint_ranges)
+    rigid_program = human_model._myosim_rigid_program_checks(artifact, exported)
     compiled_meshes_by_body = _compiled_meshes_by_body(model, mujoco, np)
     anchors_by_name: dict[str, list[dict[str, Any]]] = {
         name: [] for name in LOWER_BODY_NAMES
@@ -519,6 +520,7 @@ def audit_lower_limb_poses(
         "bilateral_parity_evaluation_count": len(all_parity),
         "joint_equality_count": equality_count,
         "joint_equality_program_checks": equality_programs,
+        "rigid_source_program_checks": rigid_program,
         "joint_equality_maximum_correction": equality_maximum_correction,
         "default_frame_maximum_centroid_residual_m": default_frame_maximum_residual,
         "default_frame_worst_member": default_frame_worst_member,
@@ -555,7 +557,10 @@ def audit_lower_limb_poses(
             "pose suite. The complete toe compound retains one MTP body. This is not "
             "cartilage/contact, ligament restraint, loaded dynamics, gait, clinical "
             "registration, or a deformable tendon solve. Range coordinates are projected from "
-            "the source model and rounded to FP32. Native equality program bytes are checked against "
+            "the source model and rounded to FP32. The consumed rigid program, including body "
+            "inertia, joint axes/frames, DoF policy, default state and source mappings, is joined "
+            "to a fresh lowering of the pinned source model. Normalized direction and antipodal "
+            "quaternion representations retain the existing native admission bounds. Native equality program bytes are checked against "
             "the pinned source compiler, including declared compliance parameters. When a bone payload is "
             "supplied, its complete skeleton is checked against registered source geometry; only regional "
             "interfaces are posed. This audit does not "

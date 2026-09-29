@@ -3158,10 +3158,10 @@ def _myosim_joint_equality_bundle(
     return rows, legacy, payload
 
 
-def myosim_fullbody_reference_artifacts(
+def _myosim_fullbody_rigid_artifacts(
     exported: dict[str, Any],
-) -> tuple[dict[str, Any], bytes, bytes, bytes, bytes, bytes, bytes | None]:
-    """Lower MyoSim's compiled full body into Core rigid and muscle payloads.
+) -> tuple[dict[str, Any], bytes]:
+    """Lower the existing source-owned rigid program without muscle fitting.
 
     The source uses a MuJoCo free root and several multiple-joint bodies.  A
     one-joint-per-body Core tree therefore receives zero-inertia transform
@@ -3440,12 +3440,6 @@ def myosim_fullbody_reference_artifacts(
     if nv != model.get("nv"):
         raise ImportError("MyoSim Core lowerer did not retain the source velocity dimensions")
 
-    source_joint_to_core = {
-        int(record["source_joint_id"]): record for record in source_joint_map
-    }
-    equality_manifest, equality_payload, equality_compliance_payload = _myosim_joint_equality_bundle(
-        source, model, joint_equalities, source_joint_to_core, nq, nv
-    )
     world_gravity = _myosim_vector(model.get("gravity_m_s2"), "MyoSim gravity")
     timestep = _finite_scalar(model.get("timestep_seconds"), "MyoSim timestep")
     if timestep <= 0.0:
@@ -3508,6 +3502,251 @@ def myosim_fullbody_reference_artifacts(
             f"({len(rigid_payload)} != {expected_rigid_bytes})"
         )
 
+    return {
+        "root": "floating_source_com", "engine_body_count": len(body_records),
+        "zero_inertia_serial_transform_carrier_count": sum(1 for node in body_nodes if node["virtual"]),
+        "joint_count": len(joint_records), "nq": nq, "nv": nv,
+        "source_joint_map": source_joint_map,
+        "body_order": [node["name"] for node in body_nodes],
+        "source_body_records": source_body_records,
+    }, rigid_payload
+
+
+def _myosim_fp32_direction_matches(
+    actual: tuple[float, ...], expected: tuple[float, ...], *, antipodal: bool,
+    geometry_quaternion: bool = False,
+) -> tuple[bool, dict[str, Any]]:
+    """Admit a normalized direction only when one scale explains FP32 rounding.
+
+    CPU and Metal normalize joint axes and frame quaternions. Quaternion sign
+    is a gauge; axis sign changes the source coordinate's motion. Intersect the
+    actual components' rounding bins, rather than widening an angular gate.
+    """
+    if not all(math.isfinite(value) for value in actual):
+        return False, {"reason": "nonfinite_direction"}
+    squared = sum(value * value for value in actual)
+    norm_error = abs(math.sqrt(squared) - 1.0) if geometry_quaternion else abs(squared - 1.0)
+    allowed = float(struct.unpack("<f", struct.pack("<f", .002))[0]) if geometry_quaternion else 1e-5
+    metrics = {
+        "norm_error": norm_error, "allowed_norm_error": allowed,
+        "norm_basis": ("existing_native_geometry_absolute_norm_admission" if geometry_quaternion
+                       else "existing_Core_squared_norm_admission"),
+    }
+    if norm_error > allowed:
+        return False, {**metrics, "reason": "norm_admission"}
+    sign = -1.0 if antipodal and sum(a*b for a, b in zip(actual, expected)) < 0.0 else 1.0
+    lower, upper = 0.0, math.inf
+    for candidate, reference in zip(actual, expected):
+        candidate *= sign
+        if reference == 0.0:
+            if candidate != 0.0:
+                return False, {**metrics, "reason": "source_zero_component_changed",
+                               "measured": abs(candidate), "allowed": 0.0}
+            continue
+        bits = struct.unpack("<I", struct.pack("<f", abs(candidate)))[0]
+        previous = struct.unpack("<f", struct.pack("<I", max(0, bits-1)))[0]
+        following = struct.unpack("<f", struct.pack("<I", bits+1))[0]
+        lo, hi = (previous + abs(candidate))/2.0, (abs(candidate) + following)/2.0
+        if candidate < 0.0:
+            lo, hi = -hi, -lo
+        interval = sorted((lo/reference, hi/reference))
+        lower, upper = max(lower, interval[0]), min(upper, interval[1])
+    gap = max(0.0, lower - upper)
+    return upper > 0.0 and gap == 0.0, {
+        **metrics, "reason": "common_positive_scale_FP32_rounding_bins",
+        "measured": gap, "allowed": 0.0, "scale_interval": [lower, upper],
+    }
+
+
+def _myosim_rigid_program_checks(artifact: Path, exported: dict[str, Any]) -> dict[str, Any]:
+    """Join the consumed whole-body program to the existing pinned-source lowerer."""
+    tree, expected = _myosim_fullbody_rigid_artifacts(exported)
+    manifest_path = artifact / "myosim-fullbody-reference.manifest.json"
+    manifest = read_json(manifest_path)
+    if not isinstance(manifest, dict) or not isinstance(manifest.get("core_tree"), dict):
+        raise ImportError("MyoSim rigid source check requires a full-body reference manifest")
+    payloads = manifest.get("payloads")
+    descriptor = payloads.get("rigid") if isinstance(payloads, dict) else None
+    if not isinstance(descriptor, dict):
+        raise ImportError("MyoSim rigid source check requires a rigid payload descriptor")
+    filename = descriptor.get("file")
+    path = artifact / filename if isinstance(filename, str) else None
+    actual = path.read_bytes() if path is not None and path.is_file() else b""
+    actual_sha = hashlib.sha256(actual).hexdigest()
+    failures: list[dict[str, Any]] = []
+    count = 0
+    if len(actual) != len(expected):
+        failures.append({"field": "payload_bytes", "actual": len(actual), "expected": len(expected),
+                         "measured": abs(len(actual)-len(expected)), "allowed": 0})
+
+    def check(field: str, offset: int, fmt: str, structure: dict[str, Any], direction: str = "") -> None:
+        nonlocal count
+        count += 1
+        size = struct.calcsize(fmt)
+        reference = struct.unpack_from(fmt, expected, offset)
+        candidate = struct.unpack_from(fmt, actual, offset) if offset + size <= len(actual) else None
+        metrics: dict[str, Any] = {}
+        if candidate is not None and direction:
+            passed, metrics = _myosim_fp32_direction_matches(
+                candidate, reference, antipodal=direction != "axis",
+                geometry_quaternion=direction == "source_quaternion",
+            )
+        else:
+            passed = candidate == reference
+            if not passed:
+                numeric = candidate is not None and all(isinstance(v, (int, float)) for v in reference)
+                measured = max((abs(a-b) for a, b in zip(candidate, reference)), default=0.) if numeric else None
+                metrics = {"measured": measured if measured is not None and math.isfinite(measured) else None,
+                           "allowed": 0.0, "reason": "exact_source_FP32_scalar_or_integer_fields"}
+        if not passed:
+            failures.append({**structure, "field": field, "byte_offset": offset,
+                             "actual": [v if not isinstance(v, float) or math.isfinite(v) else None
+                                        for v in candidate] if candidate is not None and fmt[-1] != 's' else None,
+                             "expected": list(reference) if fmt[-1] != 's' else None,
+                             **metrics})
+
+    check("header", 0, "<80s", {})
+    check("world_ownership", 80, "<16I", {})
+    check("gravity_m_s2", 144, "<3f", {})
+    check("timestep_seconds", 156, "<f", {})
+    check("world_solver_parameters", 160, "<4f", {})
+    check("articulation", 176, "<12I", {})
+    offset = 224
+    for index, name in enumerate(tree["body_order"]):
+        identity = {"core_body_index": index, "body_name": name}
+        check("body_ownership", offset, "<4I", identity)
+        check("body_mass_COM_inertia_damping", offset+16, "<36f", identity)
+        offset += 160
+    source_joints = {r["core_joint_index"]: r for r in tree["source_joint_map"]}
+    exported_joints = {r["id"]: r for r in exported["joints"]}
+    exported_bodies = {r["id"]: r for r in exported["bodies"]}
+    for index in range(tree["joint_count"]):
+        row = source_joints.get(index, {})
+        identity = {"core_joint_index": index, "source_joint_id": row.get("source_joint_id"),
+                    "source_joint_name": row.get("source_name"), "core_q_index": row.get("core_q_index")}
+        if row:
+            source_body = exported_bodies[exported_joints[row["source_joint_id"]]["body"]]
+            identity.update(source_body_id=source_body["id"], source_body_name=source_body["name"])
+        topology = struct.unpack_from("<8I", expected, offset)
+        identity["child_body_name"] = tree["body_order"][topology[1]]
+        check("joint_ownership_type_coordinates", offset, "<8I", identity)
+        if topology[7] == 1:
+            check("joint_axis", offset+32, "<3f", identity, "axis")
+            check("axis_padding", offset+44, "<f", identity)
+        else:
+            check("fixed_joint_axis", offset+32, "<4f", identity)
+        check("unused_axes", offset+48, "<8f", identity)
+        check("parent_anchor_m", offset+80, "<4f", identity)
+        check("child_anchor_m", offset+96, "<4f", identity)
+        check("parent_orientation", offset+112, "<4f", identity, "quaternion")
+        check("child_orientation", offset+128, "<4f", identity, "quaternion")
+        offset += 144
+    for index in range(tree["nv"]):
+        identity = {"core_v_index": index}
+        check("dof_ownership_policy", offset, "<8I", identity)
+        check("dof_limits", offset+32, "<4f", identity)
+        check("dof_drive", offset+48, "<4f", identity)
+        offset += 64
+    check("root_position_m", offset, "<3f", {"body_name": tree["body_order"][0]})
+    check("root_orientation", offset+12, "<4f", {"body_name": tree["body_order"][0]}, "quaternion")
+    for row in tree["source_joint_map"]:
+        check("default_joint_coordinate", offset+4*row["core_q_index"], "<f", {
+            "source_joint_id": row["source_joint_id"], "source_joint_name": row["source_name"],
+            "core_q_index": row["core_q_index"],
+        })
+    offset += 4*tree["nq"]
+    check("default_velocity", offset, f"<{tree['nv']}f", {})
+    offset += 4*tree["nv"]
+    records = tree["source_body_records"]
+    check("source_to_core_map", offset, f"<{len(records)}I", {})
+    offset += 4*len(records)
+    for row in records:
+        identity = {"source_body_id": row["source_body_id"], "core_body_index": row["core_body_index"],
+                    "body_name": row["name"]}
+        check("source_COM_position_m", offset, "<3f", identity)
+        check("source_orientation", offset+12, "<4f", identity, "source_quaternion")
+        offset += 28
+    assert offset == len(expected)
+    identity_matches = descriptor.get("sha256") == actual_sha and descriptor.get("bytes") == len(actual)
+    metadata_matches = all(manifest.get("core_tree", {}).get(key) == tree[key] for key in (
+        "root", "engine_body_count", "joint_count", "nq", "nv", "body_order", "source_joint_map",
+        "zero_inertia_serial_transform_carrier_count",
+    )) and manifest.get("source") == exported["source"]
+    declared_records = manifest.get("core_tree", {}).get("source_body_records", [])
+    if not isinstance(declared_records, list) or len(declared_records) != len(records):
+        metadata_matches = False
+    else:
+        for declared, reference in zip(declared_records, records):
+            identity = {key: reference[key] for key in ("name", "source_body_id", "core_body_index")}
+            if not isinstance(declared, dict) or any(
+                type(declared.get(key)) is not type(value) or declared.get(key) != value
+                for key, value in identity.items()
+            ):
+                metadata_matches = False
+                failures.append({**identity, "field": "manifest_source_owner", "measured": 1, "allowed": 0})
+                continue
+            for field in ("default_com_position_world_m", "default_inertial_quaternion_world_xyzw"):
+                try:
+                    a, b = declared[field], reference[field]
+                    if field.endswith("xyzw"):
+                        a = [v for row in _myosim_matrix_from_quaternion_xyzw(a) for v in row]
+                        b = [v for row in _myosim_matrix_from_quaternion_xyzw(b) for v in row]
+                    else:
+                        a = _myosim_vector(a, "MyoSim declared source COM")
+                    residual = max(abs(x-y) for x, y in zip(a, b, strict=True))
+                except (KeyError, TypeError, ValueError, ImportError):
+                    residual = math.inf
+                if not math.isfinite(residual) or residual > 1e-9:
+                    metadata_matches = False
+                    failures.append({**identity, "field": "manifest_"+field,
+                                     "measured": residual if math.isfinite(residual) else None, "allowed": 1e-9,
+                                     "reason": "existing_FP64_source_frame_admission"})
+    return {
+        "file": str(path) if path is not None else None, "actual_sha256": actual_sha,
+        "expected_source_sha256": hashlib.sha256(expected).hexdigest(),
+        "actual_bytes": len(actual), "expected_bytes": len(expected),
+        "declared_identity_matches": identity_matches, "source_metadata_matches": metadata_matches,
+        "checked_field_count": count, "engine_body_count": tree["engine_body_count"],
+        "joint_count": tree["joint_count"], "source_body_count": len(records),
+        "failures": failures,
+        "tolerance_basis": "existing_source_lowerer_FP32_fields_and_native_norm_admission_with_common_scale_rounding_bins",
+        "passed": identity_matches and metadata_matches and len(actual) == len(expected) and not failures,
+        "boundary": "source_program_agreement_not_native_execution_loaded_or_clinical_anatomy",
+    }
+
+
+def _require_myosim_rigid_program(sources: Path, artifact: Path) -> dict[str, Any]:
+    from .myosim_export import export_fullbody
+    checks = _myosim_rigid_program_checks(artifact, export_fullbody(sources))
+    if not checks["passed"]:
+        diagnostic = {**checks, "failures": checks["failures"][:8],
+                      "failed_field_count": len(checks["failures"])}
+        raise ImportError("MyoSim consumed rigid source program mismatch: " + json.dumps(diagnostic, allow_nan=False))
+    return checks
+
+
+def myosim_fullbody_reference_artifacts(
+    exported: dict[str, Any],
+) -> tuple[dict[str, Any], bytes, bytes, bytes, bytes, bytes, bytes | None]:
+    """Lower MyoSim's compiled full body into Core rigid and muscle payloads."""
+    core_tree, rigid_payload = _myosim_fullbody_rigid_artifacts(exported)
+    source, model = exported["source"], exported["model"]
+    bodies, joints = exported["bodies"], exported["joints"]
+    joint_equalities = exported["joint_equalities"]
+    sites, geometries, muscles = exported["sites"], exported["wrap_geometries"], exported["muscles"]
+    source_hash = source["archive_sha256"]
+    body_by_id = {body["id"]: body for body in bodies}
+    source_body_to_core = {
+        row["source_body_id"]: row["core_body_index"] for row in core_tree["source_body_records"]
+    }
+    source_joint_map = core_tree["source_joint_map"]
+    nq, nv = core_tree["nq"], core_tree["nv"]
+    source_joint_to_core = {
+        int(record["source_joint_id"]): record for record in source_joint_map
+    }
+    equality_manifest, equality_payload, equality_compliance_payload = _myosim_joint_equality_bundle(
+        source, model, joint_equalities, source_joint_to_core, nq, nv
+    )
     site_by_id = {site.get("id"): site for site in sites if isinstance(site, dict)}
     geom_by_id = {geom.get("id"): geom for geom in geometries if isinstance(geom, dict)}
     used_site_ids = sorted({
@@ -3688,7 +3927,7 @@ def myosim_fullbody_reference_artifacts(
         })
     muscle_header = struct.pack(
         "<8s9I32s", _MYOSIM_MUSCLE_REFERENCE_MAGIC, _MYOSIM_MUSCLE_REFERENCE_ABI,
-        len(body_records), len(muscle_records), len(site_records), len(geom_records), len(route_records),
+        core_tree["engine_body_count"], len(muscle_records), len(site_records), len(geom_records), len(route_records),
         int(model.get("tendon_count")), len(architecture_records),
         _MYOSIM_MUSCLE_ARCHITECTURE_BYTES, bytes.fromhex(source_hash)
     )
@@ -3817,7 +4056,7 @@ def myosim_fullbody_reference_artifacts(
     support_header = struct.pack(
         "<8s4I32s7f",
         _MYOSIM_SUPPORT_CONTACT_MAGIC, _MYOSIM_SUPPORT_CONTACT_ABI,
-        len(body_records), len(support_records), 0, bytes.fromhex(source_hash),
+        core_tree["engine_body_count"], len(support_records), 0, bytes.fromhex(source_hash),
         *ground_point, *ground_normal, ground_friction,
     )
     support_payload = b"".join([support_header, *support_records])
@@ -3833,18 +4072,11 @@ def myosim_fullbody_reference_artifacts(
         "schema": "numi.human.myosim-fullbody-reference.v1",
         "source": source,
         "model": {
-            "name": model.get("name"), "source_body_count": len(source_body_ids),
+            "name": model.get("name"), "source_body_count": len(bodies),
             "source_joint_count": len(joints), "source_nq": model.get("nq"), "source_nv": model.get("nv"),
             "source_muscle_count": len(muscles), "source_tendon_count": model.get("tendon_count"),
         },
-        "core_tree": {
-            "root": "floating_source_com", "engine_body_count": len(body_records),
-            "zero_inertia_serial_transform_carrier_count": sum(1 for node in body_nodes if node["virtual"]),
-            "joint_count": len(joint_records), "nq": nq, "nv": nv,
-            "source_joint_map": source_joint_map,
-            "body_order": [node["name"] for node in body_nodes],
-            "source_body_records": source_body_records,
-        },
+        "core_tree": core_tree,
         "payloads": {
             "rigid": {"file": "myosim-fullbody-core-reference.nhrigid", "bytes": len(rigid_payload),
                       "sha256": hashlib.sha256(rigid_payload).hexdigest(), "payload_abi": _MYOSIM_CORE_REFERENCE_ABI},
@@ -10057,6 +10289,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         raise ImportError("BodyParts3D full-body tissue payload has no global rest-frame registration")
     # Validate it eagerly before using its rows to transform hundreds of exact OBJ vertices.
     _bodyparts_visual_local_pose(global_matrix, "BodyParts3D full-body tissue global transform")
+    rigid_program = _require_myosim_rigid_program(sources, myosim_artifact)
     bodies, route_muscles, myosim_manifest = _myosim_surface_route_context(myosim_artifact, source_sha)
     element_names = _bodyparts_source_element_names(sources)
     specifications = _bodyparts_myosim_surface_specifications()
@@ -10918,6 +11151,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
     payload_path.write_bytes(payload)
     manifest = {
         "schema": "numi.human.bodyparts3d-myosim-fullbody-muscle-surface-visual-payload.v1",
+        "rigid_source_program_checks": rigid_program,
         "payload": {"file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
                     "magic": _BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_VISUAL_MAGIC.rstrip(b"\0").decode("ascii"),
                     "payload_abi": _BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_VISUAL_ABI,
@@ -11008,6 +11242,7 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
     global_translation, global_quaternion, global_scale = _bodyparts_visual_local_pose(
         global_matrix, "BodyParts3D torso anatomy global transform",
     )
+    rigid_program = _require_myosim_rigid_program(sources, myosim_artifact)
     bodies, _, myosim_manifest = _myosim_surface_route_context(myosim_artifact, source_sha)
     map_path = REPOSITORY_ROOT / "config/bodyparts3d-myosim-torso-anatomy-map.v1.json"
     surface_map = read_json(map_path)
@@ -11118,6 +11353,7 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
     payload_path.write_bytes(payload)
     manifest = {
         "schema": "numi.human.bodyparts3d-myosim-torso-anatomy-visual-payload.v1",
+        "rigid_source_program_checks": rigid_program,
         "payload": {
             "file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
             "magic": _BODYPARTS_MYOSIM_TORSO_ANATOMY_VISUAL_MAGIC.rstrip(b"\0").decode("ascii"),
@@ -11493,6 +11729,7 @@ def _bodyparts_largest_connected_surface_component(
 
 def bodyparts_myosim_skinned_shell_visual_payload(
     sources: Path, anatomy: dict[str, Any], registration_path: Path, output: Path,
+    *, myosim_artifact: Path,
 ) -> dict[str, Any]:
     """Prepare BodyParts3D's exterior shell for native multi-bone posing.
 
@@ -11526,6 +11763,8 @@ def bodyparts_myosim_skinned_shell_visual_payload(
     source_sha = myosim.get("source", {}).get("archive_sha256") if isinstance(myosim, dict) else None
     if not isinstance(source_sha, str) or not re.fullmatch(r"[0-9a-f]{64}", source_sha):
         raise ImportError("BodyParts3D skinned shell has no MyoSim source SHA-256")
+    runtime_reference, runtime_bodies = _bodyparts_runtime_bindings(registration, myosim_artifact)
+    rigid_program = _require_myosim_rigid_program(sources, myosim_artifact)
     coordinates = registration.get("coordinate_system")
     global_matrix = coordinates.get("global_source_mm_to_myosim_world_m") if isinstance(coordinates, dict) else None
     if not isinstance(global_matrix, list) or len(global_matrix) != 4:
@@ -11533,6 +11772,16 @@ def bodyparts_myosim_skinned_shell_visual_payload(
     _, global_quaternion, _ = _bodyparts_visual_local_pose(
         global_matrix, "BodyParts3D skinned shell global transform",
     )
+    common_frame = _bodyparts_source_common_frame(sources, registration, runtime_bodies)
+    frame_error = max(
+        abs(global_matrix[i][j] - common_frame["global_source_mm_to_myosim_world_m"][i][j])
+        for i in range(4) for j in range(4)
+    )
+    if frame_error > 1.0e-9:
+        raise ImportError(
+            f"BodyParts3D skinned shell atlas frame drift: maximum matrix error={frame_error:.12g}; "
+            f"source-frame identity tolerance=1e-9; rigid_sha256={runtime_reference['rigid']['sha256']}"
+        )
     global_rotation = _myosim_matrix_from_quaternion_xyzw(global_quaternion)
     anchors = registration.get("anchors")
     if not isinstance(anchors, list) or len(anchors) != len(_BODYPARTS_MYOSIM_BONE_ANCHORS):
@@ -11559,18 +11808,23 @@ def bodyparts_myosim_skinned_shell_visual_payload(
         body_index = target.get("core_body_index")
         if not isinstance(body_index, int) or body_index < 0:
             raise ImportError("BodyParts3D skinned shell anchor has an invalid Core body index")
-        translation, quaternion, scale = _bodyparts_visual_local_pose(
+        bone_translation, bone_quaternion, bone_scale = _bodyparts_visual_local_pose(
             fitted.get("source_obj_mm_to_core_inertial_body_m"),
             f"BodyParts3D skinned shell {specification['member_id']} local transform",
         )
-        body_position = _myosim_vector(
-            target.get("default_com_position_world_m"),
-            f"BodyParts3D skinned shell {specification['member_id']} body position",
-        )
-        body_quaternion = list(target.get("default_inertial_quaternion_world_xyzw", []))
-        _myosim_matrix_from_quaternion_xyzw(body_quaternion)
+        _, runtime_body = runtime_bodies[specification["myosim_body"]]
+        body_position = runtime_body["position_world_m"]
+        body_rotation = runtime_body["rotation_world"]
+        body_quaternion = _quaternion_xyzw_from_matrix(body_rotation)
         record = bindings_by_body.get(body_index)
         if record is None:
+            # The exact exterior shell has one common atlas frame. Per-bone
+            # registrations can differ even when those bones share a body;
+            # copying any one bone's local placement would move skin at rest.
+            translation, quaternion, scale = _bodyparts_visual_local_pose(
+                _bodyparts_local_registration_matrix(global_matrix, body_position, body_quaternion),
+                f"BodyParts3D skinned shell {specification['myosim_body']} shared rest binding",
+            )
             record = {
                 "body_index": body_index,
                 "translation": translation,
@@ -11584,13 +11838,6 @@ def bodyparts_myosim_skinned_shell_visual_payload(
                 "surface_samples": [],
             }
             bindings_by_body[body_index] = record
-        else:
-            values = (*translation, *quaternion, scale, *body_position, *body_quaternion)
-            existing = (*record["translation"], *record["quaternion"], record["scale"],
-                        *record["rest_position"], *record["rest_quaternion"])
-            if any(abs(float(current) - float(reference)) > 2.0e-5
-                   for current, reference in zip(values, existing, strict=True)):
-                raise ImportError("BodyParts3D skinned shell has inconsistent source-to-body transforms")
         archive_path, member, obj = _bodyparts_obj_member(
             sources, specification["hierarchy"], specification["member_id"],
         )
@@ -11599,8 +11846,16 @@ def bodyparts_myosim_skinned_shell_visual_payload(
                 source_record.get("member_sha256") != hashlib.sha256(obj).hexdigest():
             raise ImportError("BodyParts3D skinned shell bone-envelope provenance drifted")
         bone_vertices_mm, _ = _bodyparts_obj_triangles(obj, member)
+        bone_rotation = _myosim_matrix_from_quaternion_xyzw(bone_quaternion)
+
+        def placed_bone_point(vertex_mm: tuple[float, float, float]) -> list[float]:
+            local = _myosim_matrix_vector(bone_rotation, [value * 0.001 for value in vertex_mm])
+            local = [bone_translation[axis] + bone_scale * local[axis] for axis in range(3)]
+            placed = _myosim_matrix_vector(body_rotation, local)
+            return [body_position[axis] + placed[axis] for axis in range(3)]
+
         for vertex in bone_vertices_mm:
-            point = world_point(vertex)
+            point = placed_bone_point(vertex)
             for axis in range(3):
                 record["minimum"][axis] = min(record["minimum"][axis], point[axis])
                 record["maximum"][axis] = max(record["maximum"][axis], point[axis])
@@ -11608,7 +11863,7 @@ def bodyparts_myosim_skinned_shell_visual_payload(
         # hands, vertebrae, and paired small bones that a global downsample
         # would otherwise erase before body-level balancing below.
         for sample_index in _bodyparts_skin_surface_sample_indices(len(bone_vertices_mm)):
-            record["surface_samples"].append(tuple(world_point(bone_vertices_mm[sample_index])))
+            record["surface_samples"].append(tuple(placed_bone_point(bone_vertices_mm[sample_index])))
         record["source_members"].append(specification["member_id"])
     if not bindings_by_body:
         raise ImportError("BodyParts3D skinned shell has no registered bone envelopes")
@@ -11724,6 +11979,8 @@ def bodyparts_myosim_skinned_shell_visual_payload(
     payload_path.write_bytes(payload)
     manifest = {
         "schema": "numi.human.bodyparts3d-myosim-skinned-shell-visual-payload.v4",
+        "runtime_reference": runtime_reference,
+        "rigid_source_program_checks": rigid_program,
         "payload": {
             "file": payload_path.name, "sha256": sha256(payload_path), "bytes": len(payload),
             "magic": _BODYPARTS_MYOSIM_SKIN_VISUAL_MAGIC.rstrip(b"\0").decode("ascii"),
@@ -11759,6 +12016,9 @@ def bodyparts_myosim_skinned_shell_visual_payload(
                 len(binding["surface_samples"]) for binding in bindings
             ),
             "rest_pose_reconstruction_max_error_m": maximum_rest_error_m,
+            "rest_binding": "inverse_bound_runtime_body_rest_frame_times_source_atlas_frame",
+            "source_common_frame": common_frame,
+            "source_common_frame_maximum_matrix_error": frame_error,
             "outer_source_surface": outer_surface,
             "normal_binding": (
                 "registered_world_rest_normal blended through each articulated "
@@ -11769,7 +12029,7 @@ def bodyparts_myosim_skinned_shell_visual_payload(
                 "changes": "visual normals only; exact source vertices and triangle connectivity are retained",
             },
         },
-        "runtime_binding": "Exact BodyParts3D source skin triangles use four nearest distinct registered source-bone surface samples with deterministic inverse-quartic weights, restricted to candidates within a 12.5 mm source-joint band of the nearest sample; each influence carries its source-to-Core local transform for native C++/Metal posing. The source normal is registered once into the shared world rest frame and follows each articulated influence through its current-from-rest body rotation.",
+        "runtime_binding": "Exact BodyParts3D source skin triangles use four nearest distinct registered source-bone surface samples with deterministic inverse-quartic weights, restricted to candidates within a 12.5 mm source-joint band of the nearest sample. Samples use each bone's separate registered placement. Each skin influence instead carries the common source-atlas frame transformed into its bound runtime body's rest frame, preserving the exact shared skin surface at rest. The source normal is registered once into the shared world rest frame and follows each articulated influence through its current-from-rest body rotation.",
         "status": "native_four_body_source_surface_local_linear_blend_skin_shell_visual_input_not_collision_or_physics",
         "evidence_boundary": "This is a sampled-source-bone-surface-proximity-derived articulated visual shell, not FEM/MPM skin, a tissue material law, collision/contact geometry, clinical registration, closest-triangle anatomical skin weights, or a force-coupled soft-tissue model.",
     }

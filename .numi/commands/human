@@ -780,7 +780,8 @@ if [ "${1:-}" = "myosim-native-visuals" ]; then
     exec "$probe" \
         "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
         "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
-        "$output_directory"
+        "$output_directory" \
+        --joint-equality-payload "$artifact_directory/myosim-fullbody-joint-equalities.nheq"
 fi
 
 # The source-prepared .nhbones package is consumed only by the native C++/Metal
@@ -808,13 +809,15 @@ if [ "${1:-}" = "myosim-native-bone-visuals" ]; then
             "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
             "$bone_payload" \
             "$output_directory" \
+            --joint-equality-payload "$artifact_directory/myosim-fullbody-joint-equalities.nheq" \
             --dimension "$6"
     fi
     exec "$probe" \
         "$artifact_directory/myosim-fullbody-core-reference.nhrigid" \
         "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
         "$bone_payload" \
-        "$output_directory"
+        "$output_directory" \
+        --joint-equality-payload "$artifact_directory/myosim-fullbody-joint-equalities.nheq"
 fi
 
 # The compact NHANAT1 layer keeps exact selected BodyParts3D organ, vessel,
@@ -1065,6 +1068,7 @@ if [ "${1:-}" = "myosim-native-fullbody-soft-tissue-visuals" ]; then
             "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
             "$bone_payload" \
             "$output_directory" \
+            --joint-equality-payload "$artifact_directory/myosim-fullbody-joint-equalities.nheq" \
             --soft-tissue-payload "$soft_tissue_payload" \
             --dimension "$7"
     fi
@@ -1073,6 +1077,7 @@ if [ "${1:-}" = "myosim-native-fullbody-soft-tissue-visuals" ]; then
         "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
         "$bone_payload" \
         "$output_directory" \
+        --joint-equality-payload "$artifact_directory/myosim-fullbody-joint-equalities.nheq" \
         --soft-tissue-payload "$soft_tissue_payload"
 fi
 
@@ -1104,6 +1109,7 @@ if [ "${1:-}" = "myosim-native-soft-tissue-visuals" ]; then
             "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
             "$bone_payload" \
             "$output_directory" \
+            --joint-equality-payload "$artifact_directory/myosim-fullbody-joint-equalities.nheq" \
             --soft-tissue-payload "$soft_tissue_payload" \
             --focus-body-index "$focus_body_index" \
             --dimension "$8"
@@ -1113,6 +1119,7 @@ if [ "${1:-}" = "myosim-native-soft-tissue-visuals" ]; then
         "$artifact_directory/myosim-fullbody-muscle-reference.nhmyo" \
         "$bone_payload" \
         "$output_directory" \
+        --joint-equality-payload "$artifact_directory/myosim-fullbody-joint-equalities.nheq" \
         --soft-tissue-payload "$soft_tissue_payload" \
         --focus-body-index "$focus_body_index"
 fi

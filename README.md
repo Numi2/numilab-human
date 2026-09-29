@@ -619,6 +619,35 @@ checks consumed rest-frame consistency; it does not authenticate a mutually
 changed program and witness, qualify source-supported motion, or establish
 loaded or clinical anatomy.
 
+Both regional audits now compare the whole consumed NHRIGID2 program with a
+fresh invocation of the existing pinned-source rigid lowerer. The current
+157-body program checks 2,250 field groups, covering mass/inertia, joint
+ownership, axes/frames, DoF policy, default state and source maps. A reversed
+knee axis can pass the native rest-frame check but fails this source comparison.
+Admitted normalization and antipodal quaternion representations remain valid;
+sidecar checksum changes cannot admit a changed source law or declared body
+frame. The full importer reuses this lowerer without changing its payloads.
+
+Organ and muscle/tendon surface preparation perform the same source-program
+check before binding geometry. Skin preparation requires `--artifact` and
+checks the source atlas frame against the existing common-frame fit. Each skin
+influence uses its bound body's inverse rest transform and the shared atlas
+frame; proximity samples use the separately placed bone surfaces. This permits
+different bone registrations within one body while preserving the exact outer
+skin sheet at rest. Proximity weights remain visual diagnostics; source-program
+agreement does not establish anatomical skin weights, complete organ coverage,
+loaded mechanics or clinical anatomy.
+
+Static native previews supplied with `--joint-equality-payload` now project
+the dependent coordinates even when no `--pose-q` is given. The raw source
+default differs from the equality-projected neutral pose, including about
+52 mm of patellar translation in the current model. Neutral previews and
+explicit zero-knee previews therefore use the same source law and range
+checks. The loader's source rest witnesses and mechanics initialization are
+unchanged; this fixes a kinematic presentation discrepancy. The static native
+muscle, bone, full-body tissue and focused tissue commands supply the artifact
+joint-equality payload so their neutral previews use this projection.
+
 The native bone reader normalizes admitted quaternions once before geometry,
 contact, attachment and rendering preparation. Antipodal and near-unit
 representations therefore retain the source reader's orientation semantics;
@@ -838,6 +867,7 @@ numi human myosim-native-supported-fullbody-muscle-visuals \
 # a rejected diagnostic, not current muscle-driven gallery or motion evidence.
 numi human myosim-bodyparts-skinned-shell-payload \
   --sources Sources \
+  --artifact Build/myosim-fullbody \
   --registration Build/myosim-fullbody/bodyparts3d-major-bone-registration.candidate.json \
   --output Build/bodyparts3d-myosim-skinned-shell
 numi human myosim-native-supported-skinned-fullbody-visuals \

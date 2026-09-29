@@ -378,6 +378,323 @@ def copy_reference_artifact(inputs, output):
     return manifest
 
 
+@pytest.mark.parametrize("corruption,field", [
+    ("knee_axis", "joint_axis"), ("lumbar_axis", "joint_axis"),
+    ("body_mass", "body_mass_COM_inertia_damping"),
+    ("torso_metadata", "manifest_default_com_position_world_m"),
+])
+def test_consumed_rigid_program_cannot_hide_behind_updated_sidecar(
+    inputs, equality_source, tmp_path, corruption, field,
+):
+    artifact = tmp_path / "artifact"
+    manifest = copy_reference_artifact(inputs, artifact)
+    descriptor = manifest["payloads"]["rigid"]
+    path = artifact / descriptor["file"]
+    raw = bytearray(path.read_bytes())
+    if corruption.endswith("axis"):
+        q = 106 if corruption == "knee_axis" else 8
+        row = next(r for r in manifest["core_tree"]["source_joint_map"] if r["core_q_index"] == q)
+        offset = 224 + 160*157 + 144*row["core_joint_index"] + 32
+        axis = struct.unpack_from("<3f", raw, offset)
+        struct.pack_into("<3f", raw, offset, *[-v for v in axis])
+    elif corruption == "body_mass":
+        offset = next(224+160*i+16 for i in range(157)
+                      if struct.unpack_from("<f", raw, 224+160*i+16)[0] > 0.)
+        mass, inverse = struct.unpack_from("<2f", raw, offset)
+        struct.pack_into("<2f", raw, offset, mass*1.05, inverse/1.05)
+    else:
+        torso = next(r for r in manifest["core_tree"]["source_body_records"] if r["name"] == "torso")
+        torso["default_com_position_world_m"][0] += .020
+    path.write_bytes(raw)
+    descriptor["sha256"] = hashlib.sha256(raw).hexdigest()
+    (artifact / "myosim-fullbody-reference.manifest.json").write_text(json.dumps(manifest))
+    check = human._myosim_rigid_program_checks(artifact, equality_source)
+    assert not check["passed"] and check["declared_identity_matches"]
+    assert check["actual_sha256"] == hashlib.sha256(raw).hexdigest()
+    assert check["checked_field_count"] == 2250
+    assert {failure["field"] for failure in check["failures"]} == {field}
+    failure = check["failures"][0]
+    assert failure["measured"] > failure["allowed"]
+    if corruption.endswith("axis"):
+        assert failure["source_joint_name"] == row["source_name"]
+        assert failure["core_q_index"] == q and failure["allowed"] == 0
+        assert failure["norm_error"] <= failure["allowed_norm_error"] == 1e-5
+        # The actual native runtime accepts the malformed motion at rest.
+        candidate_inputs = (inputs[0], inputs[1], artifact, *inputs[3:])
+        result = run_probe(candidate_inputs, tmp_path)
+        assert result.returncode == 0, result.stderr
+        assert "rigid_source_rest_frames=passed" in result.stdout
+        assert len(list((tmp_path / "views").glob("*.png"))) == 4
+    if corruption == "torso_metadata":
+        assert failure["name"] == "torso" and failure["allowed"] == 1e-9
+    with pytest.raises(human.ImportError, match="consumed rigid source program mismatch"):
+        human._require_myosim_rigid_program(Path(os.environ["NUMILAB_HUMAN_MOTION_SOURCES"]), artifact)
+
+
+@pytest.mark.parametrize("target,factor", [
+    ("axis", 1.0000049), ("axis", .9999951),
+    ("quaternion", -1.), ("quaternion", 1.0000049), ("quaternion", .9999951),
+    ("mixed_quaternion", -1.0000049),
+])
+def test_equivalent_normalized_rigid_directions_preserve_source_program(
+    inputs, equality_source, tmp_path, target, factor,
+):
+    artifact = tmp_path / "artifact"
+    manifest = copy_reference_artifact(inputs, artifact)
+    descriptor = manifest["payloads"]["rigid"]
+    path = artifact / descriptor["file"]
+    raw = bytearray(path.read_bytes())
+    start = 224 + 160*157
+    if target == "mixed_quaternion":
+        offset = next(start+144*i+112 for i in range(156)
+                      if sum(abs(v)>0 for v in struct.unpack_from("<4f",raw,start+144*i+112)) >= 3)
+    else:
+        offset = start + 144*133 + (32 if target == "axis" else 128)
+    fmt = "<3f" if target == "axis" else "<4f"
+    original = struct.unpack_from(fmt, raw, offset)
+    struct.pack_into(fmt, raw, offset, *[factor*v for v in original])
+    path.write_bytes(raw)
+    descriptor["sha256"] = hashlib.sha256(raw).hexdigest()
+    (artifact / "myosim-fullbody-reference.manifest.json").write_text(json.dumps(manifest))
+    check = human._myosim_rigid_program_checks(artifact, equality_source)
+    assert check["passed"], check["failures"]
+    assert check["actual_sha256"] != check["expected_source_sha256"] and not check["failures"]
+    candidate_inputs = (inputs[0], inputs[1], artifact, *inputs[3:])
+    result = run_probe(candidate_inputs, tmp_path, pose=((7, -.4), (8, .1), (9, .2)))
+    assert result.returncode == 0, result.stderr
+    assert_source_geometry(inputs, result, ((7, -.4), (8, .1), (9, .2)))
+
+
+@pytest.mark.parametrize("compiler", ["organs", "muscles_tendons", "skin"])
+def test_anatomy_compilers_reject_reversed_executing_knee_before_surface_output(inputs, tmp_path, compiler):
+    artifact = tmp_path / "artifact"
+    manifest = copy_reference_artifact(inputs, artifact)
+    descriptor = manifest["payloads"]["rigid"]
+    path = artifact / descriptor["file"]
+    raw = bytearray(path.read_bytes())
+    offset = 224 + 160*157 + 144*133 + 32
+    struct.pack_into("<3f", raw, offset, *[-v for v in struct.unpack_from("<3f", raw, offset)])
+    path.write_bytes(raw)
+    descriptor["sha256"] = hashlib.sha256(raw).hexdigest()
+    (artifact / "myosim-fullbody-reference.manifest.json").write_text(json.dumps(manifest))
+    sources = Path(os.environ["NUMILAB_HUMAN_MOTION_SOURCES"])
+    registration = Path(os.environ["NUMILAB_HUMAN_MOTION_REPAIRED"])
+    anatomy = human.parse_bodyparts3d(sources, human.REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
+    output = tmp_path / "rejected"
+    with pytest.raises(human.ImportError, match="consumed rigid source program mismatch") as caught:
+        if compiler == "organs":
+            human.bodyparts_myosim_torso_anatomy_visual_payload(sources, anatomy, registration, artifact, output)
+        elif compiler == "muscles_tendons":
+            human.bodyparts_myosim_fullbody_soft_tissue_visual_payload(sources, anatomy, registration, artifact, output)
+        else:
+            human.bodyparts_myosim_skinned_shell_visual_payload(
+                sources, anatomy, registration, output, myosim_artifact=artifact)
+    assert descriptor["sha256"] in str(caught.value) and "knee_angle_r" in str(caught.value)
+    assert "tibia_r" in str(caught.value) and not output.exists()
+
+
+@pytest.mark.parametrize("compiler", ["organs", "muscles_tendons"])
+def test_surface_binding_cannot_trust_a_shifted_declared_torso_frame(inputs, tmp_path, compiler):
+    artifact = tmp_path / "artifact"
+    manifest = copy_reference_artifact(inputs, artifact)
+    torso = next(r for r in manifest["core_tree"]["source_body_records"] if r["name"] == "torso")
+    torso["default_com_position_world_m"][0] += .020
+    (artifact / "myosim-fullbody-reference.manifest.json").write_text(json.dumps(manifest))
+    sources = Path(os.environ["NUMILAB_HUMAN_MOTION_SOURCES"])
+    registration = Path(os.environ["NUMILAB_HUMAN_MOTION_REPAIRED"])
+    anatomy = human.parse_bodyparts3d(sources, human.REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
+    output = tmp_path / "rejected"
+    compile = (human.bodyparts_myosim_torso_anatomy_visual_payload if compiler == "organs" else
+               human.bodyparts_myosim_fullbody_soft_tissue_visual_payload)
+    with pytest.raises(human.ImportError, match="manifest_default_com_position_world_m.*0.02"):
+        compile(sources, anatomy, registration, artifact, output)
+    assert not output.exists()
+
+
+@pytest.mark.parametrize("coordinate", [0, 1, 2])
+def test_nonfinite_declared_source_frame_is_rejected_with_finite_diagnostics(
+    inputs, equality_source, tmp_path, coordinate,
+):
+    artifact = tmp_path / "artifact"
+    manifest = copy_reference_artifact(inputs, artifact)
+    torso = next(r for r in manifest["core_tree"]["source_body_records"] if r["name"] == "torso")
+    torso["default_com_position_world_m"][coordinate] = float("nan")
+    (artifact / "myosim-fullbody-reference.manifest.json").write_text(json.dumps(manifest))
+    result = human._myosim_rigid_program_checks(artifact, equality_source)
+    assert not result["passed"] and result["declared_identity_matches"]
+    assert result["failures"][0]["field"] == "manifest_default_com_position_world_m"
+    assert result["failures"][0]["measured"] is None
+    json.dumps(result, allow_nan=False)
+
+
+def test_rigid_source_check_retains_trailing_byte_failure(inputs, equality_source, tmp_path):
+    artifact = tmp_path / "artifact"
+    manifest = copy_reference_artifact(inputs, artifact)
+    descriptor = manifest["payloads"]["rigid"]
+    path = artifact / descriptor["file"]
+    path.write_bytes(path.read_bytes() + b"\x00")
+    descriptor.update(sha256=human.sha256(path), bytes=path.stat().st_size)
+    (artifact / "myosim-fullbody-reference.manifest.json").write_text(json.dumps(manifest))
+    result = human._myosim_rigid_program_checks(artifact, equality_source)
+    assert not result["passed"] and result["declared_identity_matches"]
+    assert result["failures"] == [{"field": "payload_bytes", "actual": path.stat().st_size,
+                                    "expected": path.stat().st_size-1, "measured": 1, "allowed": 0}]
+
+
+def test_skin_rejects_changed_source_atlas_frame_before_emitting_geometry(inputs, tmp_path):
+    registration = json.loads(Path(os.environ["NUMILAB_HUMAN_MOTION_REPAIRED"]).read_text())
+    registration["coordinate_system"]["global_source_mm_to_myosim_world_m"][0][3] += .020
+    path = tmp_path / "shifted-atlas.registration.json"
+    path.write_text(json.dumps(registration))
+    sources = Path(os.environ["NUMILAB_HUMAN_MOTION_SOURCES"])
+    anatomy = human.parse_bodyparts3d(sources, human.REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
+    with pytest.raises(human.ImportError, match="atlas frame drift.*0.02.*tolerance=1e-9.*rigid_sha256"):
+        human.bodyparts_myosim_skinned_shell_visual_payload(
+            sources, anatomy, path, tmp_path / "rejected", myosim_artifact=inputs[2])
+    assert not (tmp_path / "rejected").exists()
+
+
+@pytest.fixture(scope="module")
+def compiled_skin(inputs, tmp_path_factory):
+    sources = Path(os.environ["NUMILAB_HUMAN_MOTION_SOURCES"])
+    registration_path = Path(os.environ["NUMILAB_HUMAN_MOTION_REPAIRED"])
+    registration = json.loads(registration_path.read_text())
+    anatomy = human.parse_bodyparts3d(sources, human.REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
+    output = tmp_path_factory.mktemp("shared-body-skin")
+    manifest = human.bodyparts_myosim_skinned_shell_visual_payload(
+        sources, anatomy, registration_path, output, myosim_artifact=inputs[2])
+    path = output / manifest["payload"]["file"]
+    raw = path.read_bytes()
+    _, abi, bindings, vertices, indices, *_ = struct.unpack_from("<8s5I32s", raw)
+    assert abi == 4 and bindings == 86
+    records = [struct.unpack_from("<I8f", raw, 60+36*i) for i in range(bindings)]
+    dtype = np.dtype([("position", "<f4", (3,)), ("normal", "<f4", (3,)),
+                      ("binding", "<u4", (4,)), ("weight", "<f4", (4,))])
+    decoded = np.frombuffer(raw, dtype=dtype, count=vertices, offset=60+36*bindings)
+    decoded_indices = np.frombuffer(raw, dtype="<u4", count=indices, offset=60+36*bindings+56*vertices)
+    _, member, obj = human._bodyparts_obj_member(sources, "is_a", "FJ2810")
+    source_vertices, source_triangles = human._bodyparts_obj_triangles(obj, member)
+    source_vertices, source_triangles, _ = human._bodyparts_skin_outer_surface_component(
+        source_vertices, source_triangles, member)
+    np.testing.assert_array_equal(decoded["position"], (np.asarray(source_vertices)*.001).astype("<f4"))
+    np.testing.assert_array_equal(decoded_indices, np.asarray(source_triangles).ravel())
+    assert manifest["rigid_source_program_checks"]["passed"]
+    assert manifest["coverage"]["rest_pose_reconstruction_max_error_m"] <= 2e-5
+    return path, manifest, records, decoded, registration
+
+
+def native_skin_world_vertices(path):
+    """Read the owning native MRVPACK2 writer's world-bound skin primitive."""
+    raw = path.read_bytes()
+    magic, version, count, directory, file_bytes = struct.unpack_from("<8sIIQQ", raw)
+    assert magic == b"MRVPACK2" and version == 2 and file_bytes == len(raw)
+    sections = {}
+    for i in range(count):
+        kind, index, offset, size, elements, stride, _, digest = struct.unpack_from("<IIQQQII32s", raw, directory+72*i)
+        section = raw[offset:offset+size]
+        assert index == 0 and hashlib.sha256(section).digest() == digest
+        sections[kind] = (section, elements, stride)
+    raw_vertices, count, stride = sections[2]
+    assert stride == 80
+    vertices = np.frombuffer(raw_vertices, dtype="<f4").reshape(count, 20)
+    indices = np.frombuffer(sections[3][0], dtype="<u4")
+    assert sections[4][2] == 64
+    primitives = np.frombuffer(sections[4][0], dtype="<u4").reshape(-1, 16)
+    skin = primitives[primitives[:, 4] == 51007]
+    assert len(skin) == 1
+    first, count = skin[0, :2]
+    selected = np.unique(indices[first:first+count])
+    assert np.all(np.diff(selected) == 1)
+    return vertices[selected, :3]
+
+
+@pytest.mark.parametrize("pose", [None, (), ((7, -.4), (8, .1), (9, .2)), ((106, .25),)],
+                         ids=["raw_source_rest", "projected_neutral", "coupled_torso", "knee_flexion"])
+def test_native_skin_preserves_source_sheet_with_separate_bone_registrations(inputs, compiled_skin, tmp_path, pose):
+    import mujoco
+    path, manifest, bindings, vertices, registration = compiled_skin
+    bones = tmp_path / "candidate.nhbones"
+    bones.write_bytes(inputs[1])
+    command = [str(inputs[0]), str(inputs[2] / "myosim-fullbody-core-reference.nhrigid"),
+               str(inputs[2] / "myosim-fullbody-muscle-reference.nhmyo"), str(bones),
+               str(tmp_path / "views"), "--dimension", "512", "--skin-payload", str(path)]
+    if pose is not None:
+        command += ["--joint-equality-payload", str(inputs[2] / "myosim-fullbody-joint-equalities.nheq")]
+    for q, value in pose or ():
+        command += ["--pose-q", str(q), str(value)]
+    result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+    (tmp_path / "command.json").write_text(json.dumps(command, indent=2)+"\n")
+    (tmp_path / "stdout").write_text(result.stdout)
+    (tmp_path / "stderr").write_text(result.stderr)
+    (tmp_path / "exit.code").write_text(str(result.returncode)+"\n")
+    assert result.returncode == 0, result.stderr
+    views = [dict(part.split("=", 1) for part in line.split())
+             for line in result.stdout.splitlines() if line.startswith("view=")]
+    assert len(views) == 4 and all(int(v["skin_shell_pixels"]) > 0 for v in views)
+    data = mujoco.MjData(inputs[4])
+    if pose is not None:
+        q, equality_count, _ = _pose_qpos(inputs[4], pose, mujoco, np)
+        assert equality_count == 51
+        data.qpos[:] = q
+    else:
+        # With no equality payload, the native static path retains the source
+        # default. This separately verifies exact skin rest reconstruction.
+        data.qpos[:] = inputs[4].qpos0
+    mujoco.mj_forward(inputs[4], data)
+    source_for_core = {core: row for core, row in inputs[3].values()}
+    expected = np.zeros((len(vertices), 3))
+    for i, (core, *frame) in enumerate(bindings):
+        row = source_for_core[core]
+        sid = row["source_body_id"]
+        local = vertices["position"] @ _rotation_xyzw(frame[3:7], np).T * frame[7] + frame[:3]
+        rotation = data.xmat[sid].reshape(3, 3) @ _rotation_xyzw(inputs[4].body_iquat[sid][[1,2,3,0]], np)
+        world = local @ rotation.T + data.xipos[sid]
+        weights = np.sum(np.where(vertices["binding"] == i, vertices["weight"], 0), axis=1)
+        expected += weights[:, None] * world
+    native = native_skin_world_vertices(next((tmp_path / "views").glob("*.mrvpack")))
+    assert native.shape == expected.shape
+    error = float(np.max(np.linalg.norm(native-expected, axis=1)))
+    assert error <= 2e-5  # Existing skin compiler rest reconstruction bound.
+    if pose is None:
+        matrix = np.asarray(registration["coordinate_system"]["global_source_mm_to_myosim_world_m"])
+        rest = vertices["position"] @ (matrix[:3, :3] / .001).T + matrix[:3, 3]
+        assert np.max(np.linalg.norm(native-rest, axis=1)) <= 2e-5
+    (tmp_path / "native-source-geometry.json").write_text(json.dumps({
+        "skin_sha256": human.sha256(path), "native_sha256": human.sha256(inputs[0]),
+        "maximum_native_vs_source_kinematic_blend_error_m": error, "allowed_m": 2e-5,
+        "boundary": "Source-sheet and kinematic serialization agreement; skin weights, mechanics and clinical anatomy unqualified.",
+    }, indent=2)+"\n")
+
+
+def test_default_neutral_preview_matches_explicit_zero_knee_pose(inputs, tmp_path):
+    neutral = tmp_path / "neutral"
+    explicit = tmp_path / "explicit"
+    neutral.mkdir()
+    explicit.mkdir()
+    build = tmp_path / "build"
+    (build / "bin").mkdir(parents=True)
+    (build / "bin" / "metalrobo_numilab_human_myosim_visual_probe").symlink_to(inputs[0])
+    bones = tmp_path / "candidate.nhbones"
+    bones.write_bytes(inputs[1])
+    command = [str(human.REPOSITORY_ROOT / ".numi/commands/human"),
+               "myosim-native-bone-visuals", str(inputs[2]), str(bones),
+               str(neutral / "views"), "--dimension", "512"]
+    result = subprocess.run(command, env={**os.environ, "NUMI_BUILD_DIR": str(build)},
+                            capture_output=True, text=True, timeout=60)
+    (neutral / "command.json").write_text(json.dumps(command, indent=2)+"\n")
+    (neutral / "stdout").write_text(result.stdout)
+    (neutral / "stderr").write_text(result.stderr)
+    (neutral / "exit.code").write_text(str(result.returncode)+"\n")
+    zero = run_probe(inputs, explicit, pose=((106, 0.),))
+    assert result.returncode == zero.returncode == 0, result.stderr + zero.stderr
+    assert "presentation_pose=source_default_equality_projected equality_count=51" in result.stdout
+    assert "pose_q_override_count=0" in result.stdout and "pose_joint_ranges=passed" in result.stdout
+    for view in ("front", "side", "rear", "oblique"):
+        first = next((neutral / "views").glob(f"*-{view}.png"))
+        second = next((explicit / "views").glob(f"*-{view}.png"))
+        assert first.read_bytes() == second.read_bytes()
+
+
 @pytest.mark.parametrize("role,field", [
     ("joint_equalities", "polynomial"),
     ("joint_equalities", "coordinate_owner"),

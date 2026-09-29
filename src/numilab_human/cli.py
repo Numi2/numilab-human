@@ -1385,6 +1385,7 @@ def myosim_bodyparts_skinned_shell_visual_payload(arguments: argparse.Namespace)
     anatomy = parse_bodyparts3d(sources, REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
     manifest = bodyparts_myosim_skinned_shell_visual_payload(
         sources, anatomy, arguments.registration.resolve(), arguments.output.resolve(),
+        myosim_artifact=arguments.artifact.resolve(),
     )
     print(f"wrote {arguments.output.resolve() / manifest['payload']['file']}")
     print(f"wrote {arguments.output.resolve() / 'bodyparts3d-myosim-skinned-shell.manifest.json'}")
@@ -1894,6 +1895,10 @@ def parser() -> argparse.ArgumentParser:
         help="prepare the exact BodyParts3D exterior mesh with four registered articulated visual influences per vertex",
     )
     myosim_skinned_shell_payload_parser.add_argument("--sources", type=Path, required=True)
+    myosim_skinned_shell_payload_parser.add_argument(
+        "--artifact", type=Path, required=True,
+        help="exact native MyoSim reference artifact whose body owners and rigid program are checked",
+    )
     myosim_skinned_shell_payload_parser.add_argument(
         "--registration", type=Path, required=True,
         help="unmodified v2 candidate JSON from myosim-bodyparts-registration",

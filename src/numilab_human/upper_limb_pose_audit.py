@@ -50,6 +50,15 @@ class PoseAuditError(RuntimeError):
 
 def _finish_pose_audit(result: dict[str, Any], region: str) -> dict[str, Any]:
     failures = []
+    rigid = result.get("rigid_source_program_checks")
+    if rigid is not None and not rigid["passed"]:
+        failures.append(
+            f"consumed rigid source program mismatch: affected_fields={rigid['failures']} "
+            f"declared_identity_matches={rigid['declared_identity_matches']} "
+            f"source_metadata_matches={rigid['source_metadata_matches']} "
+            f"actual_sha256={rigid['actual_sha256']} expected_source_sha256={rigid['expected_source_sha256']} "
+            f"tolerance_basis={rigid['tolerance_basis']}"
+        )
     for program in result.get("joint_equality_program_checks", []):
         if not program["passed"]:
             failures.append(
@@ -605,6 +614,7 @@ def audit_upper_limb_poses(
     data = mujoco.MjData(model)
     joint_ranges = _pose_joint_range_context(artifact, runtime_reference, model, mujoco)
     equality_programs = _joint_equality_program_checks(artifact, runtime_reference, exported, joint_ranges)
+    rigid_program = human_model._myosim_rigid_program_checks(artifact, exported)
     expected_names = _upper_names("r") | _upper_names("l")
     anchors_by_name: dict[str, dict[str, Any]] = {}
     local_vertices: dict[str, tuple[int, Any]] = {}
@@ -835,6 +845,7 @@ def audit_upper_limb_poses(
         "bilateral_parity_evaluation_count": len(all_parity),
         "joint_equality_count": equality_count,
         "joint_equality_program_checks": equality_programs,
+        "rigid_source_program_checks": rigid_program,
         "joint_equality_maximum_correction": equality_maximum_correction,
         "default_frame_maximum_centroid_residual_m": default_frame_maximum_residual,
         "default_frame_worst_member": default_frame_worst_member,
@@ -853,7 +864,10 @@ def audit_upper_limb_poses(
             "post-projection source and consumed native position ranges, and bilateral parity for this pose "
             "suite. It is not cartilage/contact, ligament constraint, loaded dynamics, clinical "
             "registration, or a deformable tendon solve. Range coordinates are projected from "
-            "the source model and rounded to FP32. Native equality program bytes are checked against "
+            "the source model and rounded to FP32. The consumed rigid program, including body "
+            "inertia, joint axes/frames, DoF policy, default state and source mappings, is joined "
+            "to a fresh lowering of the pinned source model. Normalized direction and antipodal "
+            "quaternion representations retain the existing native admission bounds. Native equality program bytes are checked against "
             "the pinned source compiler, including declared compliance parameters. When a bone payload is "
             "supplied, its complete skeleton is checked against registered source geometry; only regional "
             "interfaces are posed. This audit does not "
