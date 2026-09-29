@@ -1,0 +1,112 @@
+{
+  "schema": "numi.human.right-choroid-laterality-evidence.v1",
+  "date": "2026-09-29",
+  "parent_payload_sha256": "c8b8a01aac9d55d1dd154f0e3f92450e5a1a980668eebfcc2a012bb47268b280",
+  "new_payload_sha256": "c32c13c555308f9671c92f1083db4f9fa4a4b096cd3d1734412013c0c7a47ecd",
+  "source_surface_count": 579,
+  "native_packet_surface_count": 599,
+  "bilateral_source_surfaces_checked": 58,
+  "centroid_side_pass_before": 58,
+  "full_support_pass_before": 54,
+  "full_support_pass_after": 55,
+  "remaining_wrong_side_source_ids": [
+    413,
+    426,
+    427
+  ],
+  "original_579_and_first_19_candidates_byte_identical": true,
+  "native_pack_retained_path": "/Users/home/numilab-human/Build/right-choroid-laterality-repair-20260929/native/source-rest/views/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20.mrvpack",
+  "native_pack_sha256": "7fc22735edbff3dcd04848cd0c0e35b71a1d82bbfae64ad2f457cd391a11c14d",
+  "native_probe_sha256": "e48bc479522bccdacb495b62c31e8f88385647176ce43a92ad1abcc7d6af2664",
+  "source_program_sha256": {
+    "src/numilab_human/anatomical_laterality.py": "433f3565259dcca9ef5dd577e33d0f9047893483f108826bdf9458d42c3c9e05",
+    "src/numilab_human/right_choroid_laterality_repair.py": "0ddf45ba395656520514e98b2298b5f11b5c44611a967718002e03bb6d6b5512",
+    "src/numilab_human/whole_body_surface_gate.py": "ad4e372cdb1d799fb42671465773e94273dcf59a62ad49589fa66a5eab825a73",
+    "src/numilab_human/surface_topology_audit.py": "837f6281d6f2c58e4aa2e8d1972af7cb67ce068bc25862504eebc0f82df48a38"
+  },
+  "clinical_anatomy_qualified": false,
+  "physical_volume_qualified": false,
+  "mechanics_qualified": false,
+  "files": {
+    "README.md": {
+      "sha256": "b324d4f479672b735eb1428e916a08731c478a3defe79d0b61d75cbe088d6ef4",
+      "bytes": 578
+    },
+    "candidate/right-choroid-laterality-audit.json": {
+      "sha256": "7e667015a9740b643f01347118c65fef57fdd2787fa7594befcafec290b53758",
+      "bytes": 501
+    },
+    "candidate/right-choroid-laterality-candidate.manifest.json": {
+      "sha256": "3e9f01375f237e26092a6d2a63ded59c3610821d4c70312a18277ab923a05104",
+      "bytes": 457192
+    },
+    "candidate/right-choroid-laterality-candidate.nhanatomy": {
+      "sha256": "c32c13c555308f9671c92f1083db4f9fa4a4b096cd3d1734412013c0c7a47ecd",
+      "bytes": 38605876
+    },
+    "commands/run_native.py": {
+      "sha256": "e37fa0c343f56d64a4d960a825012b6a7c46dceb315b2c0bac7c6e60dc0405c3",
+      "bytes": 1094
+    },
+    "commands/verify_native.py": {
+      "sha256": "2762a2960909b7b6670df5bd338735abba7057f8bb22c12c6ef3e9c122eb10cb",
+      "bytes": 1510
+    },
+    "laterality-before.json": {
+      "sha256": "f34a7d918d9656c9c0f0f83e345aeba2dbd727a23847c4e6eb6e0663c0baf8c4",
+      "bytes": 42548
+    },
+    "native/command.json": {
+      "sha256": "4fc1280c2482e696618fd57d92eb210b696e35cd704fe70bb85392666d60ff7c",
+      "bytes": 1753
+    },
+    "native/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "native/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20-front.png": {
+      "sha256": "60086201e8ec029eea084f294717b3a3515ba5233eae5a96ac6e99282611b21d",
+      "bytes": 272608
+    },
+    "native/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20-oblique.png": {
+      "sha256": "366feeb213bec3c91974b010fed6a4b3bcf798bc308028d30a47246e52dd33c3",
+      "bytes": 247578
+    },
+    "native/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20-rear.png": {
+      "sha256": "889414f6504b4414a150fb6db9ce2a91110ede846a454372d1005d7bbc662760",
+      "bytes": 285930
+    },
+    "native/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20-side.png": {
+      "sha256": "0d9e1d02833041388f9b2a708ba708269bf9f141ea5a21ef62f624c9e7214254",
+      "bytes": 216553
+    },
+    "native/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20.torso-anatomy-poses.json": {
+      "sha256": "f0e1d73457150500bd7687bdc4168cde0e46a566407c671bb07129279ea8093a",
+      "bytes": 1144
+    },
+    "native/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20.visual.v3.json": {
+      "sha256": "c443c0d99e3d226d33d67badf116d6a854f981dfc560247f5b77f754de481ff9",
+      "bytes": 951
+    },
+    "native/native-audit.json": {
+      "sha256": "8809bca33c7cf1c507946d88a4c46396ed897f61ad9f81a0eba3b52bc54b643a",
+      "bytes": 761
+    },
+    "native/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "native/stdout.txt": {
+      "sha256": "b815ebe057365cba434b85a123e40823df1f6714f1f3930c927d8017dd47b5f6",
+      "bytes": 24408
+    },
+    "native/wall.seconds": {
+      "sha256": "c087f24b1d246d19dab89ff38709763330a5759b6e3458f05f2c3b44599aeb8f",
+      "bytes": 18
+    },
+    "native-selected-audit.json": {
+      "sha256": "14a7077ef2aeb60fc5fca067d1f5f701658bb510758ee731316832d9ab37b146",
+      "bytes": 2263
+    }
+  }
+}
