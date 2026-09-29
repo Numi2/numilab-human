@@ -681,6 +681,18 @@ heart anatomy, organ FEM/MPM, vessel tube/lumen mechanics, neural mechanics, cal
 materials/density, blood/tissue exchange, subject calibration, anatomical
 loading, standing, recovery, and walking remain open.
 
+The [compiled muscle/tendon embeddedness audit](MUSCLE_SURFACE_EMBEDDEDNESS_20260929.md)
+now gates all 150 NHTISS4 surfaces by exact Float32 quotient topology and
+self-intersection. Only 34 of the older 60 single-closed source muscle
+volume candidates pass the compiled single-embedded gate. Conservative
+opposite-face cancellation removes 462 double-sided source pairs, with
+2.7145019056868547 mm² of explicitly accounted visual support loss, and
+raises the single-embedded muscle candidate count to 52. All 434,917
+compiled vertex records and 512 body bindings stay byte-identical to the
+baseline; 62 closed surfaces
+still self-intersect, and physical tissue-volume, material, loading and
+clinical placement gates remain open.
+
 The [earlier skin source-surface repair](SKIN_SOURCE_SURFACE_BINDING_20260929.md)
 removed large arm-to-thigh sheets with a connected-surface association but
 retained local defects and four-weight truncation. The subsequent

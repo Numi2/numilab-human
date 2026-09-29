@@ -10528,6 +10528,9 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             # exact dominant sheet, not a remeshed repair.
             vertices_mm, triangles, source_component_selection = \
                 _bodyparts_largest_connected_surface_component(vertices_mm, triangles, member)
+        _, _, face_cancellation = _bodyparts_cancel_opposite_surface_faces(
+            vertices_mm, triangles, member
+        )
         normals = _bodyparts_vertex_normals(vertices_mm, triangles, member)
         global_vertices = [[sum(global_matrix[row][column] * vertex[column] for column in range(3)) + global_matrix[row][3] for row in range(3)] for vertex in vertices_mm]
         explicit_primary, explicit_secondary = specification.get("primary_body"), specification.get("secondary_body")
@@ -11191,6 +11194,19 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                     )
                 toe_enthesis_weight_lock["toe_rigid_compounds"] = toe_rigid_compounds
 
+        if face_cancellation["cancelled_opposite_face_pairs"]:
+            removed_faces = {
+                index
+                for pair in face_cancellation["cancelled_opposite_face_pairs"]
+                for index in pair
+            }
+            triangles = [
+                triangle for index, triangle in enumerate(triangles)
+                if index not in removed_faces
+            ]
+            face_cancellation["emitted_vertex_count"] = len(stored_vertices_m)
+            face_cancellation["emitted_triangle_count"] = len(triangles)
+            face_cancellation["emitted_vertices_compacted"] = False
         first_binding = len(bindings_payload)
         for target, transform in zip(
             binding_targets,
@@ -11270,6 +11286,8 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             provenance[-1]["toe_enthesis_weight_lock"] = toe_enthesis_weight_lock
         if source_component_selection is not None:
             provenance[-1]["source_component_selection"] = source_component_selection
+        if face_cancellation["cancelled_opposite_face_pairs"]:
+            provenance[-1]["source_topology_cancellation"] = face_cancellation
         if layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE:
             source_surface_bindings[member_id] = {
                 "member_id": member_id,
@@ -11313,6 +11331,14 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                      "selected_stable_ids": sorted(stable_id_subset) if stable_id_subset is not None else None,
                      "muscle_surface_count": sum(1 for entry in provenance if entry["layer"] == "muscle"),
                      "tendon_surface_count": sum(1 for entry in provenance if entry["layer"] == "tendon"),
+                     "opposite_face_pair_cancellation_surface_count": sum(
+                         "source_topology_cancellation" in entry for entry in provenance
+                     ),
+                     "cancelled_opposite_face_pair_count": sum(
+                         len(entry.get("source_topology_cancellation", {}).get(
+                             "cancelled_opposite_face_pairs", []
+                         )) for entry in provenance
+                     ),
                      "authored_myosim_muscle_count": len(myosim_manifest["muscles"])},
         "runtime_binding": "BodyParts3D source-topology surfaces use a variable exact MyoSim route-body table with four sparse influences per vertex; shared digital surfaces include every authored digit route instead of a middle-finger proxy, while each calcaneal-tendon surface inherits femur/tibia/calcaneus weights from its nearest named source muscle surface, registers its locked/feathered distal boundary to exact named calcaneal source triangles, and adds a separately labelled visual enthesis strip at the opened source cap",
         "status": "native_route_body_sparse_kinematic_surface_binding_input_not_collision_or_physics",
@@ -13862,6 +13888,97 @@ def _bodyparts_obj_triangles(
     """Parse the position/triangle subset needed by physics-facing import stages."""
     vertices, triangles, _ = _bodyparts_obj_geometry(obj, source_name)
     return vertices, triangles
+
+
+def _bodyparts_cancel_opposite_surface_faces(
+    vertices: list[tuple[float, float, float]],
+    triangles: list[tuple[int, int, int]],
+    source_name: str,
+) -> tuple[list[tuple[float, float, float]], list[tuple[int, int, int]], dict[str, Any]]:
+    """Remove only coincident, oppositely oriented source face pairs.
+
+    The two oriented triangles cancel exactly as a chain. Their rendered
+    spatial support may disappear; report that loss explicitly. No vertex is
+    moved and no new face or cap is inferred. Same-winding overlaps and all
+    other topology defects remain visible to the downstream geometry audit.
+    """
+    coordinate_ids: dict[tuple[float, float, float], int] = {}
+    quotient = []
+    for vertex in vertices:
+        quotient.append(coordinate_ids.setdefault(tuple(vertex), len(coordinate_ids)))
+    groups: dict[tuple[int, int, int], list[list[int]]] = defaultdict(
+        lambda: [[], []]
+    )
+    for face_id, face in enumerate(triangles):
+        positions = tuple(quotient[index] for index in face)
+        if len(set(positions)) != 3:
+            raise ImportError(
+                f"BodyParts3D surface {source_name} has a collapsed source face"
+            )
+        parity = sum(
+            positions[i] > positions[j]
+            for i in range(3) for j in range(i + 1, 3)
+        ) % 2
+        groups[tuple(sorted(positions))][parity].append(face_id)
+    pairs = sorted(
+        tuple(sorted((a, b)))
+        for even, odd in groups.values()
+        for a, b in zip(reversed(even), reversed(odd), strict=False)
+    )
+    if not pairs:
+        return vertices, triangles, {
+            "cancelled_opposite_face_pairs": [],
+            "source_vertex_count": len(vertices),
+            "source_triangle_count": len(triangles),
+            "retained_vertex_count": len(vertices),
+            "retained_triangle_count": len(triangles),
+            "source_coordinate_support_preserved": True,
+            "removed_unique_visual_support_triangle_count": 0,
+            "removed_visual_support_area_mm2": 0.0,
+            "oriented_source_chain_preserved": True,
+            "new_faces_added": False,
+            "vertices_moved": False,
+        }
+    removed = {face_id for pair in pairs for face_id in pair}
+    retained = [face for i, face in enumerate(triangles) if i not in removed]
+    if not retained:
+        raise ImportError(f"BodyParts3D surface {source_name} cancels completely")
+    used = sorted({vertex for face in retained for vertex in face})
+    compact = {old: new for new, old in enumerate(used)}
+    result = [tuple(compact[index] for index in face) for face in retained]
+    retained_support = {
+        tuple(sorted(quotient[index] for index in face)) for face in retained
+    }
+    removed_support = sorted({
+        tuple(sorted(quotient[index] for index in triangles[pair[0]]))
+        for pair in pairs
+    } - retained_support)
+    area_mm2 = 0.0
+    for key in removed_support:
+        face_id = next(
+            pair[0] for pair in pairs
+            if tuple(sorted(quotient[index] for index in triangles[pair[0]])) == key
+        )
+        a, b, c = (vertices[index] for index in triangles[face_id])
+        ab = tuple(b[i] - a[i] for i in range(3))
+        ac = tuple(c[i] - a[i] for i in range(3))
+        cross = (ab[1]*ac[2]-ab[2]*ac[1],
+                 ab[2]*ac[0]-ab[0]*ac[2],
+                 ab[0]*ac[1]-ab[1]*ac[0])
+        area_mm2 += 0.5 * math.sqrt(sum(x*x for x in cross))
+    return [vertices[index] for index in used], result, {
+        "cancelled_opposite_face_pairs": [list(pair) for pair in pairs],
+        "source_vertex_count": len(vertices),
+        "source_triangle_count": len(triangles),
+        "retained_vertex_count": len(used),
+        "retained_triangle_count": len(result),
+        "source_coordinate_support_preserved": not removed_support,
+        "removed_unique_visual_support_triangle_count": len(removed_support),
+        "removed_visual_support_area_mm2": area_mm2,
+        "oriented_source_chain_preserved": True,
+        "new_faces_added": False,
+        "vertices_moved": False,
+    }
 
 
 _NUMI_HUMAN_PECTORAL_FASCIA_MAGIC = b"NHFASC4\0"

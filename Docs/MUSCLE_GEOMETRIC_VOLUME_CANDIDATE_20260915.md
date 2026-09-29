@@ -23,3 +23,9 @@ integration receipt v8 records this candidate while keeping all physical-owner
 and calibration gates false.
 
 Receipt: `media/muscle-geometric-volume-candidate-20260914/receipt-v1.json`.
+
+The subsequent [compiled embeddedness audit](MUSCLE_SURFACE_EMBEDDEDNESS_20260929.md)
+adds a stricter gate. Only 34 of these 60 source-closed surfaces are single,
+closed, and non-self-intersecting in the unchanged compiled Float32 baseline.
+Do not interpret the 60 algebraic source volumes as 60 embedded compiled
+tissue volumes.
