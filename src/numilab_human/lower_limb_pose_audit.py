@@ -28,6 +28,10 @@ from .upper_limb_pose_audit import (
     _compiled_bone_geometry_checks,
     _pose_joint_range_context, _projected_joint_range_checks,
     _joint_equality_program_checks,
+    PROJECTED_JOINT_RANGE_TOLERANCE,
+)
+from .joint_constraint_consistency import (
+    joint_equality_driver_domain_audit, source_equality_projection_oracle,
 )
 from .upper_limb_registration import (
     INTERFACE_PATCH_GATE_MULTIPLIER,
@@ -473,6 +477,9 @@ def audit_lower_limb_poses(
             ],
             "joint_equality_count": current_equality_count,
             "joint_equality_maximum_correction": correction,
+            "source_equality_projection_oracle": source_equality_projection_oracle(
+                model, data, mujoco, PROJECTED_JOINT_RANGE_TOLERANCE,
+            ),
             "projected_joint_range_checks": _projected_joint_range_checks(qpos, joint_ranges, np),
             "continuity": continuity,
             "bilateral_gap_parity": parity,
@@ -526,6 +533,9 @@ def audit_lower_limb_poses(
         "bilateral_parity_evaluation_count": len(all_parity),
         "joint_equality_count": equality_count,
         "joint_equality_program_checks": equality_programs,
+        "joint_equality_driver_domain_audit": joint_equality_driver_domain_audit(
+            exported, joint_ranges, np, PROJECTED_JOINT_RANGE_TOLERANCE,
+        ),
         "rigid_source_program_checks": rigid_program,
         "joint_equality_maximum_correction": equality_maximum_correction,
         "default_frame_maximum_centroid_residual_m": default_frame_maximum_residual,
@@ -560,7 +570,9 @@ def audit_lower_limb_poses(
             "atlas frame, bounded minimum-gap and robust "
             "bidirectional interface-patch continuity relative to the same-pose pinned "
             "mechanics surfaces, post-projection source and consumed native position ranges, and bilateral parity for this "
-            "pose suite. The complete toe compound retains one MTP body. This is not "
+            "pose suite, with independent MuJoCo constraint-residual checks at every pose. "
+            "A separate full-driver-domain diagnostic retains conflicts beyond the sampled poses "
+            "without rewriting source ranges or polynomial laws. The complete toe compound retains one MTP body. This is not "
             "cartilage/contact, ligament restraint, loaded dynamics, gait, clinical "
             "registration, or a deformable tendon solve. Range coordinates are projected from "
             "the source model and rounded to FP32. The consumed rigid program, including body "

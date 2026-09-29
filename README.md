@@ -658,6 +658,17 @@ all 832 source laws and resolved points are preserved, with no admitted endpoint
 downgraded. See [tendon surface recovery](Docs/TENDON_CONNECTED_FACE_RECOVERY_20260929.md)
 for the exact surface-path and native GPU evidence and the remaining boundaries.
 
+Both limb audits independently check every projected active joint equality
+against MuJoCo's constraint residuals. The shared projector preserves joint
+reference offsets and ignores inactive source equalities. A separate driver
+domain receipt evaluates endpoints and numerical stationary points across all
+51 source equality laws: 38 have witnessed source-range conflicts, beyond the
+five failures in the current inspection poses. These diagnostics preserve the
+source laws and admission limits. See
+[source joint constraint consistency](Docs/SOURCE_JOINT_CONSTRAINT_CONSISTENCY_20260929.md)
+for the measured witnesses and the distinction between exact kinematic conflicts
+and compliant source dynamics.
+
 Organ manifests now distinguish source-named organ representations from selected
 organ components using exact source `is_a` membership. The current five organ
 surfaces contain four named organ representations and a right atrial wall

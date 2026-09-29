@@ -1,0 +1,3326 @@
+{
+  "schema": "numi.human.source-joint-constraint-consistency-evidence.v1",
+  "source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+  "source_revision": "33c89c2bde282553dde3f526768eb3bdcfaa7649",
+  "source_license": "Apache-2.0",
+  "rigid_sha256": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951",
+  "joint_equality_programs": [
+    {
+      "payload_role": "joint_equalities",
+      "actual_sha256": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a",
+      "expected_source_sha256": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a",
+      "source_byte_mismatch_count": 0,
+      "passed": true
+    },
+    {
+      "payload_role": "joint_equalities_source_compliance",
+      "actual_sha256": "12db05fddb492e77e7fd461fad566d3e1e75390f2cb6f77f26568254a6cb4477",
+      "expected_source_sha256": "12db05fddb492e77e7fd461fad566d3e1e75390f2cb6f77f26568254a6cb4477",
+      "source_byte_mismatch_count": 0,
+      "passed": true
+    }
+  ],
+  "lower_audit_sha256": "ddb017d75c54eab774fd75339956b66018fbd8d04734b54d480c0d4c62210dbf",
+  "upper_audit_sha256": "a7cf0f1061efeaafa148bbbf6e21bb6768b7259d30a8139e30d445896c27bdd7",
+  "verification": {
+    "source_equalities": 51,
+    "source_domain_conflicts": 38,
+    "native_domain_conflicts": 33,
+    "unverified_domains": 0,
+    "source_pose_oracle_rows": 408,
+    "maximum_source_oracle_residual": 2.220446049250313e-16,
+    "geometry_and_pose_range_measurements_preserved_exactly": true,
+    "sampled_pose_failures_preserved": 5,
+    "interface_checks_passed": 320,
+    "bilateral_checks_passed": 160,
+    "diagnostic_boundary": "All declared independent driver ranges are inspected without changing any source law or gate. A witness proves incompatibility of exact equality projection with the declared bound at that driver value. MuJoCo source equality/limit dynamics are compliant; these witnesses do not prove those soft dynamics infeasible. FP32 native checks round source-projected coordinates against consumed range bytes, not native polynomial execution. Numerical stationary points do not constitute interval-arithmetic proof or clinical joint-range calibration.",
+    "upper_pose_count": 7,
+    "upper_oracle_rows": 357,
+    "upper_audit_exit": 0,
+    "lower_audit_exit": 2,
+    "constraint_tests_passed": 14,
+    "native_source_tests_passed": 84,
+    "total_engine_oracle_rows": 765,
+    "upper_interface_checks_passed": 364,
+    "upper_bilateral_checks_passed": 182
+  },
+  "driver_domain_audit": {
+    "boundary": "All declared independent driver ranges are inspected without changing any source law or gate. A witness proves incompatibility of exact equality projection with the declared bound at that driver value. MuJoCo source equality/limit dynamics are compliant; these witnesses do not prove those soft dynamics infeasible. FP32 native checks round source-projected coordinates against consumed range bytes, not native polynomial execution. Numerical stationary points do not constitute interval-arithmetic proof or clinical joint-range calibration.",
+    "evaluated_equalities": 51,
+    "expected_source_equalities": 51,
+    "maximum_allowed_range_violation": 1e-09,
+    "method": "FP64_source_polynomial_endpoints_and_numerical_stationary_witnesses",
+    "native_range_conflict_count": 33,
+    "rows": [
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "Abs_r3",
+        "dependent_q_index": 12,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.8679150000000001,
+          0.48461802000000004
+        ],
+        "driver_domain": [
+          -1.35,
+          0.7538
+        ],
+        "driver_joint_name": "flex_extension",
+        "driver_q_index": 7,
+        "driver_reference": 0.0,
+        "name": "Abs_r3_con",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.699999988079071,
+          0.699999988079071
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          0.6429,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 0,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.7,
+          0.7
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": -0.8679150000000001,
+            "driver_value": -1.35,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.1679149866104126,
+            "projected_fp32_value": -0.8679149746894836,
+            "source_range_conflict": true,
+            "source_range_violation": 0.16791500000000015
+          },
+          {
+            "dependent_value": 0.48461802000000004,
+            "driver_value": 0.7538,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.48461800813674927,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "L4_L5_FE",
+        "dependent_q_index": 13,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.24975,
+          0.139453
+        ],
+        "driver_domain": [
+          -1.35,
+          0.7538
+        ],
+        "driver_joint_name": "flex_extension",
+        "driver_q_index": 7,
+        "driver_reference": 0.0,
+        "name": "L4_L5_FE_con",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.18606999516487122,
+          0.08395300060510635
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          0.185,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 1,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.18607,
+          0.083953
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": -0.24975,
+            "driver_value": -1.35,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.0636800080537796,
+            "projected_fp32_value": -0.24975000321865082,
+            "source_range_conflict": true,
+            "source_range_violation": 0.06367999999999999
+          },
+          {
+            "dependent_value": 0.139453,
+            "driver_value": 0.7538,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.05549999326467514,
+            "projected_fp32_value": 0.1394529938697815,
+            "source_range_conflict": true,
+            "source_range_violation": 0.055499999999999994
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "L4_L5_AR",
+        "dependent_q_index": 15,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.029672412,
+          0.029672412
+        ],
+        "driver_domain": [
+          -0.7854,
+          0.7854
+        ],
+        "driver_joint_name": "axial_rotation",
+        "driver_q_index": 9,
+        "driver_reference": 0.0,
+        "name": "L4_L5_AR_con",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.3168812096118927,
+          0.3168812096118927
+        ],
+        "native_range_conflict": false,
+        "polycoef": [
+          0.0,
+          0.03778,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 2,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.3168812,
+          0.3168812
+        ],
+        "source_range_conflict": false,
+        "status": "no_conflict_at_polynomial_witnesses",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": -0.029672412,
+            "driver_value": -0.7854,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -0.0296724122017622,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.029672412,
+            "driver_value": 0.7854,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0296724122017622,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "L4_L5_LB",
+        "dependent_q_index": 14,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.07901393000000001,
+          0.07901393000000001
+        ],
+        "driver_domain": [
+          -0.4363,
+          0.4363
+        ],
+        "driver_joint_name": "lat_bending",
+        "driver_q_index": 8,
+        "driver_reference": 0.0,
+        "name": "L4_L5_LB_con",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.08897030353546143,
+          0.08970300108194351
+        ],
+        "native_range_conflict": false,
+        "polycoef": [
+          0.0,
+          0.1811,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 3,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.0889703,
+          0.089703
+        ],
+        "source_range_conflict": false,
+        "status": "no_conflict_at_polynomial_witnesses",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": -0.07901393000000001,
+            "driver_value": -0.4363,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -0.07901392877101898,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.07901393000000001,
+            "driver_value": 0.4363,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.07901392877101898,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "L3_L4_FE",
+        "dependent_q_index": 16,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.2754,
+          0.1537752
+        ],
+        "driver_domain": [
+          -1.35,
+          0.7538
+        ],
+        "driver_joint_name": "flex_extension",
+        "driver_q_index": 7,
+        "driver_reference": 0.0,
+        "name": "L3_L4_FE_con",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.24928799271583557,
+          0.09257519990205765
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          0.204,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 4,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.249288,
+          0.0925752
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": -0.2754,
+            "driver_value": -1.35,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.026112020015716553,
+            "projected_fp32_value": -0.2754000127315521,
+            "source_range_conflict": true,
+            "source_range_violation": 0.02611199999999997
+          },
+          {
+            "dependent_value": 0.1537752,
+            "driver_value": 0.7538,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.06120000034570694,
+            "projected_fp32_value": 0.1537752002477646,
+            "source_range_conflict": true,
+            "source_range_violation": 0.061200000000000004
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "L3_L4_AR",
+        "dependent_q_index": 18,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.029672412,
+          0.029672412
+        ],
+        "driver_domain": [
+          -0.7854,
+          0.7854
+        ],
+        "driver_joint_name": "axial_rotation",
+        "driver_q_index": 9,
+        "driver_reference": 0.0,
+        "name": "L3_L4_AR_con",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.029688119888305664,
+          0.029688119888305664
+        ],
+        "native_range_conflict": false,
+        "polycoef": [
+          0.0,
+          0.03778,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 5,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.02968812,
+          0.02968812
+        ],
+        "source_range_conflict": false,
+        "status": "no_conflict_at_polynomial_witnesses",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": -0.029672412,
+            "driver_value": -0.7854,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -0.0296724122017622,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.029672412,
+            "driver_value": 0.7854,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0296724122017622,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "L3_L4_LB",
+        "dependent_q_index": 17,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.10702439,
+          0.10702439
+        ],
+        "driver_domain": [
+          -0.4363,
+          0.4363
+        ],
+        "driver_joint_name": "lat_bending",
+        "driver_q_index": 8,
+        "driver_reference": 0.0,
+        "name": "L3_L4_LB_con",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.1568935066461563,
+          0.1568935066461563
+        ],
+        "native_range_conflict": false,
+        "polycoef": [
+          0.0,
+          0.2453,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 6,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.1568935,
+          0.1568935
+        ],
+        "source_range_conflict": false,
+        "status": "no_conflict_at_polynomial_witnesses",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": -0.10702439,
+            "driver_value": -0.4363,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -0.10702438652515411,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.10702439,
+            "driver_value": 0.4363,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.10702438652515411,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "L2_L3_FE",
+        "dependent_q_index": 19,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.31185,
+          0.17412780000000003
+        ],
+        "driver_domain": [
+          -1.35,
+          0.7538
+        ],
+        "driver_joint_name": "flex_extension",
+        "driver_q_index": 7,
+        "driver_reference": 0.0,
+        "name": "L2_L3_FE_con",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.2822819948196411,
+          0.10482779890298843
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          0.231,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 7,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.282282,
+          0.1048278
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": -0.31185,
+            "driver_value": -1.35,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.029568016529083252,
+            "projected_fp32_value": -0.31185001134872437,
+            "source_range_conflict": true,
+            "source_range_violation": 0.02956800000000004
+          },
+          {
+            "dependent_value": 0.17412780000000003,
+            "driver_value": 0.7538,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.06930000334978104,
+            "projected_fp32_value": 0.17412780225276947,
+            "source_range_conflict": true,
+            "source_range_violation": 0.06930000000000003
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "L2_L3_AR",
+        "dependent_q_index": 21,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.024433793999999998,
+          0.024433793999999998
+        ],
+        "driver_domain": [
+          -0.7854,
+          0.7854
+        ],
+        "driver_joint_name": "axial_rotation",
+        "driver_q_index": 9,
+        "driver_reference": 0.0,
+        "name": "L2_L3_AR_con",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.10442593693733215,
+          0.10442593693733215
+        ],
+        "native_range_conflict": false,
+        "polycoef": [
+          0.0,
+          0.03111,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 8,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.10442594,
+          0.10442594
+        ],
+        "source_range_conflict": false,
+        "status": "no_conflict_at_polynomial_witnesses",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": -0.024433793999999998,
+            "driver_value": -0.7854,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -0.024433793500065804,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.024433793999999998,
+            "driver_value": 0.7854,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.024433793500065804,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "L2_L3_LB",
+        "dependent_q_index": 20,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.10911863,
+          0.10911863
+        ],
+        "driver_domain": [
+          -0.4363,
+          0.4363
+        ],
+        "driver_joint_name": "lat_bending",
+        "driver_q_index": 8,
+        "driver_reference": 0.0,
+        "name": "L2_L3_LB_con",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.15907500684261322,
+          0.15907500684261322
+        ],
+        "native_range_conflict": false,
+        "polycoef": [
+          0.0,
+          0.2501,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 9,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.159075,
+          0.159075
+        ],
+        "source_range_conflict": false,
+        "status": "no_conflict_at_polynomial_witnesses",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": -0.10911863,
+            "driver_value": -0.4363,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -0.10911863297224045,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.10911863,
+            "driver_value": 0.4363,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.10911863297224045,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "L1_L2_FE",
+        "dependent_q_index": 22,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.34425000000000006,
+          0.192219
+        ],
+        "driver_domain": [
+          -1.35,
+          0.7538
+        ],
+        "driver_joint_name": "flex_extension",
+        "driver_q_index": 7,
+        "driver_reference": 0.0,
+        "name": "L1_L2_FE_con",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.31161001324653625,
+          0.11571899801492691
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          0.255,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 10,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.31161,
+          0.115719
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": -0.34425000000000006,
+            "driver_value": -1.35,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.03263998031616211,
+            "projected_fp32_value": -0.34424999356269836,
+            "source_range_conflict": true,
+            "source_range_violation": 0.03264000000000006
+          },
+          {
+            "dependent_value": 0.192219,
+            "driver_value": 0.7538,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.07650000602006912,
+            "projected_fp32_value": 0.19221900403499603,
+            "source_range_conflict": true,
+            "source_range_violation": 0.0765
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "L1_L2_AR",
+        "dependent_q_index": 24,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.022690205999999997,
+          0.022690205999999997
+        ],
+        "driver_domain": [
+          -0.7854,
+          0.7854
+        ],
+        "driver_joint_name": "axial_rotation",
+        "driver_q_index": 9,
+        "driver_reference": 0.0,
+        "name": "L1_L2_AR_con",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.08269806206226349,
+          0.08269806206226349
+        ],
+        "native_range_conflict": false,
+        "polycoef": [
+          0.0,
+          0.02889,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 11,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.08269806,
+          0.08269806
+        ],
+        "source_range_conflict": false,
+        "status": "no_conflict_at_polynomial_witnesses",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": -0.022690205999999997,
+            "driver_value": -0.7854,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -0.02269020676612854,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.022690205999999997,
+            "driver_value": 0.7854,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.02269020676612854,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "L1_L2_LB",
+        "dependent_q_index": 23,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.0820244,
+          0.0820244
+        ],
+        "driver_domain": [
+          -0.4363,
+          0.4363
+        ],
+        "driver_joint_name": "lat_bending",
+        "driver_q_index": 8,
+        "driver_reference": 0.0,
+        "name": "L1_L2_LB_con",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.08202440291643143,
+          0.08202440291643143
+        ],
+        "native_range_conflict": false,
+        "polycoef": [
+          0.0,
+          0.188,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 12,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.0820244,
+          0.0820244
+        ],
+        "source_range_conflict": false,
+        "status": "no_conflict_at_polynomial_witnesses",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": -0.0820244,
+            "driver_value": -0.4363,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -0.08202440291643143,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.0820244,
+            "driver_value": 0.4363,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.08202440291643143,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "Abs_t1",
+        "dependent_q_index": 10,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          0.0,
+          0.0
+        ],
+        "driver_domain": [
+          0.0,
+          0.0
+        ],
+        "driver_joint_name": null,
+        "driver_q_index": null,
+        "driver_reference": 0.0,
+        "name": "Abs_t1_locked",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.05000000074505806,
+          0.014999999664723873
+        ],
+        "native_range_conflict": false,
+        "polycoef": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 13,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.05,
+          0.015
+        ],
+        "source_range_conflict": false,
+        "status": "no_conflict_at_polynomial_witnesses",
+        "unit": "m",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "Abs_t2",
+        "dependent_q_index": 11,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          0.0,
+          0.0
+        ],
+        "driver_domain": [
+          0.0,
+          0.0
+        ],
+        "driver_joint_name": null,
+        "driver_q_index": null,
+        "driver_reference": 0.0,
+        "name": "Abs_t2_locked",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.029999999329447746,
+          0.029999999329447746
+        ],
+        "native_range_conflict": false,
+        "polycoef": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 14,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.03,
+          0.03
+        ],
+        "source_range_conflict": false,
+        "status": "no_conflict_at_polynomial_witnesses",
+        "unit": "m",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "sternoclavicular_r2_r",
+        "dependent_q_index": 25,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.7603639999999999,
+          0.0
+        ],
+        "driver_domain": [
+          0.0,
+          3.142
+        ],
+        "driver_joint_name": "shoulder_elv_r",
+        "driver_q_index": 36,
+        "driver_reference": 0.0,
+        "name": "sternoclavicular_r2_con_r",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.75,
+          -0.0
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          -0.242,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 15,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.75,
+          -0.0
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": -0.7603639999999999,
+            "driver_value": 3.142,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.010363996028900146,
+            "projected_fp32_value": -0.7603639960289001,
+            "source_range_conflict": true,
+            "source_range_violation": 0.010363999999999929
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "sternoclavicular_r3_r",
+        "dependent_q_index": 26,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          0.0,
+          0.322055
+        ],
+        "driver_domain": [
+          0.0,
+          3.142
+        ],
+        "driver_joint_name": "shoulder_elv_r",
+        "driver_q_index": 36,
+        "driver_reference": 0.0,
+        "name": "sternoclavicular_r3_con_r",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          0.0,
+          0.3179999887943268
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          0.1025,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 16,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          0.0,
+          0.318
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.322055,
+            "driver_value": 3.142,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.004055023193359375,
+            "projected_fp32_value": 0.32205501198768616,
+            "source_range_conflict": true,
+            "source_range_violation": 0.004054999999999975
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "unrotscap_r2_r",
+        "dependent_q_index": 28,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          0.0,
+          0.7603639999999999
+        ],
+        "driver_domain": [
+          0.0,
+          3.142
+        ],
+        "driver_joint_name": "shoulder_elv_r",
+        "driver_q_index": 36,
+        "driver_reference": 0.0,
+        "name": "unrotscap_r2_con_r",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          0.0,
+          0.75
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          0.242,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 17,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          0.0,
+          0.75
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.7603639999999999,
+            "driver_value": 3.142,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.010363996028900146,
+            "projected_fp32_value": 0.7603639960289001,
+            "source_range_conflict": true,
+            "source_range_violation": 0.010363999999999929
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "unrotscap_r3_r",
+        "dependent_q_index": 27,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.322055,
+          0.0
+        ],
+        "driver_domain": [
+          0.0,
+          3.142
+        ],
+        "driver_joint_name": "shoulder_elv_r",
+        "driver_q_index": 36,
+        "driver_reference": 0.0,
+        "name": "unrotscap_r3_con_r",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.3179999887943268,
+          -0.0
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          -0.1025,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 18,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.318,
+          -0.0
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": -0.322055,
+            "driver_value": 3.142,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.004055023193359375,
+            "projected_fp32_value": -0.32205501198768616,
+            "source_range_conflict": true,
+            "source_range_violation": 0.004054999999999975
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "acromioclavicular_r1_r",
+        "dependent_q_index": 31,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          0.0,
+          0.559276
+        ],
+        "driver_domain": [
+          0.0,
+          3.142
+        ],
+        "driver_joint_name": "shoulder_elv_r",
+        "driver_q_index": 36,
+        "driver_reference": 0.0,
+        "name": "acromioclavicular_r1_con_r",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          0.0,
+          0.5519999861717224
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          0.178,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 19,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          0.0,
+          0.552
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.559276,
+            "driver_value": 3.142,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.007275998592376709,
+            "projected_fp32_value": 0.5592759847640991,
+            "source_range_conflict": true,
+            "source_range_violation": 0.007275999999999949
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "acromioclavicular_r2_r",
+        "dependent_q_index": 29,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.153958,
+          0.0
+        ],
+        "driver_domain": [
+          0.0,
+          3.142
+        ],
+        "driver_joint_name": "shoulder_elv_r",
+        "driver_q_index": 36,
+        "driver_reference": 0.0,
+        "name": "acromioclavicular_r2_con_r",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.15199999511241913,
+          -0.0
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          -0.049,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 20,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.152,
+          -0.0
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": -0.153958,
+            "driver_value": 3.142,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.001957997679710388,
+            "projected_fp32_value": -0.15395799279212952,
+            "source_range_conflict": true,
+            "source_range_violation": 0.0019580000000000153
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "acromioclavicular_r3_r",
+        "dependent_q_index": 30,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          0.0,
+          1.244232
+        ],
+        "driver_domain": [
+          0.0,
+          3.142
+        ],
+        "driver_joint_name": "shoulder_elv_r",
+        "driver_q_index": 36,
+        "driver_reference": 0.0,
+        "name": "acromioclavicular_r3_con_r",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          0.0,
+          1.2280000448226929
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          0.396,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 21,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          0.0,
+          1.228
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 1.244232,
+            "driver_value": 3.142,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.016232013702392578,
+            "projected_fp32_value": 1.2442320585250854,
+            "source_range_conflict": true,
+            "source_range_violation": 0.016232000000000024
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "unrothum_r1_r",
+        "dependent_q_index": 32,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.559276,
+          0.0
+        ],
+        "driver_domain": [
+          0.0,
+          3.142
+        ],
+        "driver_joint_name": "shoulder_elv_r",
+        "driver_q_index": 36,
+        "driver_reference": 0.0,
+        "name": "unrothum_r1_con_r",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.5519999861717224,
+          -0.0
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          -0.178,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 22,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.552,
+          -0.0
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": -0.559276,
+            "driver_value": 3.142,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.007275998592376709,
+            "projected_fp32_value": -0.5592759847640991,
+            "source_range_conflict": true,
+            "source_range_violation": 0.007275999999999949
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "unrothum_r2_r",
+        "dependent_q_index": 34,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          0.0,
+          0.153958
+        ],
+        "driver_domain": [
+          0.0,
+          3.142
+        ],
+        "driver_joint_name": "shoulder_elv_r",
+        "driver_q_index": 36,
+        "driver_reference": 0.0,
+        "name": "unrothum_r2_con_r",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          0.0,
+          0.15199999511241913
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          0.049,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 23,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          0.0,
+          0.152
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.153958,
+            "driver_value": 3.142,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.001957997679710388,
+            "projected_fp32_value": 0.15395799279212952,
+            "source_range_conflict": true,
+            "source_range_violation": 0.0019580000000000153
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "unrothum_r3_r",
+        "dependent_q_index": 33,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -1.244232,
+          0.0
+        ],
+        "driver_domain": [
+          0.0,
+          3.142
+        ],
+        "driver_joint_name": "shoulder_elv_r",
+        "driver_q_index": 36,
+        "driver_reference": 0.0,
+        "name": "unrothum_r3_con_r",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -1.2280000448226929,
+          -0.0
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          -0.396,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 24,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -1.228,
+          -0.0
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": -1.244232,
+            "driver_value": 3.142,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.016232013702392578,
+            "projected_fp32_value": -1.2442320585250854,
+            "source_range_conflict": true,
+            "source_range_violation": 0.016232000000000024
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "shoulder1_r2_r",
+        "dependent_q_index": 37,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -2.269,
+          1.658
+        ],
+        "driver_domain": [
+          -1.658,
+          2.269
+        ],
+        "driver_joint_name": "elv_angle_r",
+        "driver_q_index": 35,
+        "driver_reference": 0.0,
+        "name": "shoulder1_r2_con_r",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -2.242000102996826,
+          1.6579999923706055
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          -1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 25,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -2.242,
+          1.658
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 1.658,
+            "driver_value": -1.658,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 1.6579999923706055,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": -2.269,
+            "driver_value": 2.269,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.026999950408935547,
+            "projected_fp32_value": -2.2690000534057617,
+            "source_range_conflict": true,
+            "source_range_violation": 0.027000000000000135
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "sternoclavicular_r2_l",
+        "dependent_q_index": 63,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.7603639999999999,
+          0.0
+        ],
+        "driver_domain": [
+          0.0,
+          3.142
+        ],
+        "driver_joint_name": "shoulder_elv_l",
+        "driver_q_index": 74,
+        "driver_reference": 0.0,
+        "name": "sternoclavicular_r2_con_l",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.75,
+          -0.0
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          -0.242,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 26,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.75,
+          -0.0
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": -0.7603639999999999,
+            "driver_value": 3.142,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.010363996028900146,
+            "projected_fp32_value": -0.7603639960289001,
+            "source_range_conflict": true,
+            "source_range_violation": 0.010363999999999929
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "sternoclavicular_r3_l",
+        "dependent_q_index": 64,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          0.0,
+          0.322055
+        ],
+        "driver_domain": [
+          0.0,
+          3.142
+        ],
+        "driver_joint_name": "shoulder_elv_l",
+        "driver_q_index": 74,
+        "driver_reference": 0.0,
+        "name": "sternoclavicular_r3_con_l",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          0.0,
+          0.3179999887943268
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          0.1025,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 27,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          0.0,
+          0.318
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.322055,
+            "driver_value": 3.142,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.004055023193359375,
+            "projected_fp32_value": 0.32205501198768616,
+            "source_range_conflict": true,
+            "source_range_violation": 0.004054999999999975
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "unrotscap_r2_l",
+        "dependent_q_index": 66,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          0.0,
+          0.7603639999999999
+        ],
+        "driver_domain": [
+          0.0,
+          3.142
+        ],
+        "driver_joint_name": "shoulder_elv_l",
+        "driver_q_index": 74,
+        "driver_reference": 0.0,
+        "name": "unrotscap_r2_con_l",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          0.0,
+          0.75
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          0.242,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 28,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          0.0,
+          0.75
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.7603639999999999,
+            "driver_value": 3.142,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.010363996028900146,
+            "projected_fp32_value": 0.7603639960289001,
+            "source_range_conflict": true,
+            "source_range_violation": 0.010363999999999929
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "unrotscap_r3_l",
+        "dependent_q_index": 65,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.322055,
+          0.0
+        ],
+        "driver_domain": [
+          0.0,
+          3.142
+        ],
+        "driver_joint_name": "shoulder_elv_l",
+        "driver_q_index": 74,
+        "driver_reference": 0.0,
+        "name": "unrotscap_r3_con_l",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.3179999887943268,
+          -0.0
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          -0.1025,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 29,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.318,
+          -0.0
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": -0.322055,
+            "driver_value": 3.142,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.004055023193359375,
+            "projected_fp32_value": -0.32205501198768616,
+            "source_range_conflict": true,
+            "source_range_violation": 0.004054999999999975
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "acromioclavicular_r1_l",
+        "dependent_q_index": 69,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          0.0,
+          0.559276
+        ],
+        "driver_domain": [
+          0.0,
+          3.142
+        ],
+        "driver_joint_name": "shoulder_elv_l",
+        "driver_q_index": 74,
+        "driver_reference": 0.0,
+        "name": "acromioclavicular_r1_con_l",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          0.0,
+          0.5519999861717224
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          0.178,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 30,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          0.0,
+          0.552
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.559276,
+            "driver_value": 3.142,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.007275998592376709,
+            "projected_fp32_value": 0.5592759847640991,
+            "source_range_conflict": true,
+            "source_range_violation": 0.007275999999999949
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "acromioclavicular_r2_l",
+        "dependent_q_index": 67,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.153958,
+          0.0
+        ],
+        "driver_domain": [
+          0.0,
+          3.142
+        ],
+        "driver_joint_name": "shoulder_elv_l",
+        "driver_q_index": 74,
+        "driver_reference": 0.0,
+        "name": "acromioclavicular_r2_con_l",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.15199999511241913,
+          -0.0
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          -0.049,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 31,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.152,
+          -0.0
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": -0.153958,
+            "driver_value": 3.142,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.001957997679710388,
+            "projected_fp32_value": -0.15395799279212952,
+            "source_range_conflict": true,
+            "source_range_violation": 0.0019580000000000153
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "acromioclavicular_r3_l",
+        "dependent_q_index": 68,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          0.0,
+          1.244232
+        ],
+        "driver_domain": [
+          0.0,
+          3.142
+        ],
+        "driver_joint_name": "shoulder_elv_l",
+        "driver_q_index": 74,
+        "driver_reference": 0.0,
+        "name": "acromioclavicular_r3_con_l",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          0.0,
+          1.2280000448226929
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          0.396,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 32,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          0.0,
+          1.228
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 1.244232,
+            "driver_value": 3.142,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.016232013702392578,
+            "projected_fp32_value": 1.2442320585250854,
+            "source_range_conflict": true,
+            "source_range_violation": 0.016232000000000024
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "unrothum_r1_l",
+        "dependent_q_index": 70,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.559276,
+          0.0
+        ],
+        "driver_domain": [
+          0.0,
+          3.142
+        ],
+        "driver_joint_name": "shoulder_elv_l",
+        "driver_q_index": 74,
+        "driver_reference": 0.0,
+        "name": "unrothum_r1_con_l",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.5519999861717224,
+          -0.0
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          -0.178,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 33,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.552,
+          -0.0
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": -0.559276,
+            "driver_value": 3.142,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.007275998592376709,
+            "projected_fp32_value": -0.5592759847640991,
+            "source_range_conflict": true,
+            "source_range_violation": 0.007275999999999949
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "unrothum_r2_l",
+        "dependent_q_index": 72,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          0.0,
+          0.153958
+        ],
+        "driver_domain": [
+          0.0,
+          3.142
+        ],
+        "driver_joint_name": "shoulder_elv_l",
+        "driver_q_index": 74,
+        "driver_reference": 0.0,
+        "name": "unrothum_r2_con_l",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          0.0,
+          0.15199999511241913
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          0.049,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 34,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          0.0,
+          0.152
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.153958,
+            "driver_value": 3.142,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.001957997679710388,
+            "projected_fp32_value": 0.15395799279212952,
+            "source_range_conflict": true,
+            "source_range_violation": 0.0019580000000000153
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "unrothum_r3_l",
+        "dependent_q_index": 71,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -1.244232,
+          0.0
+        ],
+        "driver_domain": [
+          0.0,
+          3.142
+        ],
+        "driver_joint_name": "shoulder_elv_l",
+        "driver_q_index": 74,
+        "driver_reference": 0.0,
+        "name": "unrothum_r3_con_l",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -1.2280000448226929,
+          -0.0
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          -0.396,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 35,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -1.228,
+          -0.0
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.0,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": -1.244232,
+            "driver_value": 3.142,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.016232013702392578,
+            "projected_fp32_value": -1.2442320585250854,
+            "source_range_conflict": true,
+            "source_range_violation": 0.016232000000000024
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "shoulder1_r2_l",
+        "dependent_q_index": 75,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -2.269,
+          1.658
+        ],
+        "driver_domain": [
+          -1.658,
+          2.269
+        ],
+        "driver_joint_name": "elv_angle_l",
+        "driver_q_index": 73,
+        "driver_reference": 0.0,
+        "name": "shoulder1_r2_con_l",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -2.242000102996826,
+          1.6579999923706055
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.0,
+          -1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_equality_id": 36,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -2.242,
+          1.658
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 1.658,
+            "driver_value": -1.658,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 1.6579999923706055,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": -2.269,
+            "driver_value": 2.269,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 0.026999950408935547,
+            "projected_fp32_value": -2.2690000534057617,
+            "source_range_conflict": true,
+            "source_range_violation": 0.027000000000000135
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "retained_in_manifest_not_enforced_at_source_default",
+        "dependent_joint_name": "knee_angle_translation2_r",
+        "dependent_q_index": 104,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          7.69254e-11,
+          0.006791998837245416
+        ],
+        "driver_domain": [
+          0.0,
+          2.0944
+        ],
+        "driver_joint_name": "knee_angle_r",
+        "driver_q_index": 106,
+        "driver_reference": 0.0,
+        "name": "knee_angle_translation2_constraint_r",
+        "native_position_limit_enabled": false,
+        "native_position_range": null,
+        "native_range_conflict": false,
+        "polycoef": [
+          7.69254e-11,
+          0.00587971,
+          -0.00125622,
+          -2.61846e-06,
+          6.24355e-07
+        ],
+        "source_equality_id": 37,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          7.69254e-11,
+          0.006792
+        ],
+        "source_range_conflict": false,
+        "status": "no_conflict_at_polynomial_witnesses",
+        "unit": "m",
+        "witnesses": [
+          {
+            "dependent_value": 7.69254e-11,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 7.69253966081962e-11,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.006791998837245416,
+            "driver_value": 2.0944,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.006791998632252216,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "retained_in_manifest_not_enforced_at_source_default",
+        "dependent_joint_name": "knee_angle_translation1_r",
+        "dependent_q_index": 105,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          9.53733e-08,
+          0.0015988480115702126
+        ],
+        "driver_domain": [
+          0.0,
+          2.0944
+        ],
+        "driver_joint_name": "knee_angle_r",
+        "driver_q_index": 106,
+        "driver_reference": 0.0,
+        "name": "knee_angle_translation1_constraint_r",
+        "native_position_limit_enabled": false,
+        "native_position_range": null,
+        "native_range_conflict": false,
+        "polycoef": [
+          9.53733e-08,
+          0.00312879,
+          -0.00230804,
+          0.000561561,
+          5.68366e-07
+        ],
+        "source_equality_id": 38,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          9.53733e-08,
+          0.00159883
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "m",
+        "witnesses": [
+          {
+            "dependent_value": 9.53733e-08,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 9.537330214470785e-08,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.0014029823200299094,
+            "driver_value": 1.2389612419748102,
+            "kind": "numerical_polynomial_stationary_point",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0014029822777956724,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.0013983268042799832,
+            "driver_value": 1.4934889771530835,
+            "kind": "numerical_polynomial_stationary_point",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0013983268290758133,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.0015988480115702126,
+            "driver_value": 2.0944,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0015988480299711227,
+            "source_range_conflict": true,
+            "source_range_violation": 1.801157021251963e-08
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "knee_angle_rotation2_r",
+        "dependent_q_index": 107,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.0018410786544459097,
+          0.03378291168672603
+        ],
+        "driver_domain": [
+          0.0,
+          2.0944
+        ],
+        "driver_joint_name": "knee_angle_r",
+        "driver_q_index": 106,
+        "driver_reference": 0.0,
+        "name": "knee_angle_rotation2_constraint_r",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.0016782099846750498,
+          0.03353539854288101
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          -1.47325e-08,
+          0.0791,
+          -0.0328478,
+          -0.0252183,
+          0.0108321
+        ],
+        "source_equality_id": 39,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.00167821,
+          0.0335354
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": -1.47325e-08,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -1.4732499664660281e-08,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.03378291168672603,
+            "driver_value": 0.8029818366640893,
+            "kind": "numerical_polynomial_stationary_point",
+            "native_range_conflict": true,
+            "native_range_violation": 0.00024751201272010803,
+            "projected_fp32_value": 0.03378291055560112,
+            "source_range_conflict": true,
+            "source_range_violation": 0.0002475116867260291
+          },
+          {
+            "dependent_value": -0.0018410786544459097,
+            "driver_value": 2.051383653289048,
+            "kind": "numerical_polynomial_stationary_point",
+            "native_range_conflict": true,
+            "native_range_violation": 0.00016286864411085844,
+            "projected_fp32_value": -0.0018410786287859082,
+            "source_range_conflict": true,
+            "source_range_violation": 0.00016286865444590961
+          },
+          {
+            "dependent_value": -0.0016778471608914175,
+            "driver_value": 2.0944,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -0.0016778471181169152,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "knee_angle_rotation3_r",
+        "dependent_q_index": 108,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          1.08939e-08,
+          0.26287534145422314
+        ],
+        "driver_domain": [
+          0.0,
+          2.0944
+        ],
+        "driver_joint_name": "knee_angle_r",
+        "driver_q_index": 106,
+        "driver_reference": 0.0,
+        "name": "knee_angle_rotation3_constraint_r",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.26278799772262573,
+          0.26278799772262573
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          1.08939e-08,
+          0.369499,
+          -0.169478,
+          0.0251643,
+          3.50498e-07
+        ],
+        "source_equality_id": 40,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.262788,
+          0.262788
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 1.08939e-08,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 1.0893900004305124e-08,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.26287534145422314,
+            "driver_value": 1.8638935007161512,
+            "kind": "numerical_polynomial_stationary_point",
+            "native_range_conflict": true,
+            "native_range_violation": 8.735060691833496e-05,
+            "projected_fp32_value": 0.26287534832954407,
+            "source_range_conflict": true,
+            "source_range_violation": 8.734145422312212e-05
+          },
+          {
+            "dependent_value": 0.26165546520751576,
+            "driver_value": 2.0944,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.2616554796695709,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "retained_in_manifest_not_enforced_at_source_default",
+        "dependent_joint_name": "knee_angle_beta_translation2_r",
+        "dependent_q_index": 112,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.040866569823475384,
+          -0.0108281
+        ],
+        "driver_domain": [
+          0.0,
+          2.0944
+        ],
+        "driver_joint_name": "knee_angle_r",
+        "driver_q_index": 106,
+        "driver_reference": 0.0,
+        "name": "knee_angle_beta_translation2_constraint_r",
+        "native_position_limit_enabled": false,
+        "native_position_range": null,
+        "native_range_conflict": false,
+        "polycoef": [
+          -0.0108281,
+          -0.0487847,
+          0.00927644,
+          0.0131673,
+          -0.00349673
+        ],
+        "source_equality_id": 41,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.0408267,
+          -0.0108281
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "m",
+        "witnesses": [
+          {
+            "dependent_value": -0.0108281,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -0.010828100144863129,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": -0.040866569823475384,
+            "driver_value": 1.0853196806882062,
+            "kind": "numerical_polynomial_stationary_point",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -0.04086656868457794,
+            "source_range_conflict": true,
+            "source_range_violation": 3.986982347538304e-05
+          },
+          {
+            "dependent_value": -0.01862440778138512,
+            "driver_value": 2.0944,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -0.018624408170580864,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "knee_angle_beta_translation1_r",
+        "dependent_q_index": 113,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.022773096599061265,
+          0.0524192
+        ],
+        "driver_domain": [
+          0.0,
+          2.0944
+        ],
+        "driver_joint_name": "knee_angle_r",
+        "driver_q_index": 106,
+        "driver_reference": 0.0,
+        "name": "knee_angle_beta_translation1_constraint_r",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.022773100063204765,
+          0.05241920053958893
+        ],
+        "native_range_conflict": false,
+        "polycoef": [
+          0.0524192,
+          -0.0150188,
+          -0.0340522,
+          0.0133393,
+          -0.000879151
+        ],
+        "source_equality_id": 42,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.0227731,
+          0.0524192
+        ],
+        "source_range_conflict": false,
+        "status": "no_conflict_at_polynomial_witnesses",
+        "unit": "m",
+        "witnesses": [
+          {
+            "dependent_value": 0.0524192,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.05241920053958893,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": -0.022773096599061265,
+            "driver_value": 2.0944,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -0.022773096337914467,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "knee_angle_beta_rotation1_r",
+        "dependent_q_index": 114,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -1.792413174998717,
+          0.010623036523321352
+        ],
+        "driver_domain": [
+          0.0,
+          2.0944
+        ],
+        "driver_joint_name": "knee_angle_r",
+        "driver_q_index": 106,
+        "driver_reference": 0.0,
+        "name": "knee_angle_beta_rotation1_constraint_r",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -1.7924100160598755,
+          0.010506000369787216
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.010506,
+          0.0247615,
+          -1.31647,
+          0.716337,
+          -0.138302
+        ],
+        "source_equality_id": 43,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -1.79241,
+          0.010506
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.010506,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.010506000369787216,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.010623036523321352,
+            "driver_value": 0.009477643049072827,
+            "kind": "numerical_polynomial_stationary_point",
+            "native_range_conflict": true,
+            "native_range_violation": 0.00011703651398420334,
+            "projected_fp32_value": 0.01062303688377142,
+            "source_range_conflict": true,
+            "source_range_violation": 0.00011703652332135245
+          },
+          {
+            "dependent_value": -1.792413174998717,
+            "driver_value": 2.0944,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 3.0994415283203125e-06,
+            "projected_fp32_value": -1.7924131155014038,
+            "source_range_conflict": true,
+            "source_range_violation": 3.174998717048183e-06
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "retained_in_manifest_not_enforced_at_source_default",
+        "dependent_joint_name": "knee_angle_translation2_l",
+        "dependent_q_index": 118,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.006791998837245416,
+          -7.69254e-11
+        ],
+        "driver_domain": [
+          0.0,
+          2.0944
+        ],
+        "driver_joint_name": "knee_angle_l",
+        "driver_q_index": 120,
+        "driver_reference": 0.0,
+        "name": "knee_angle_translation2_constraint_l",
+        "native_position_limit_enabled": false,
+        "native_position_range": null,
+        "native_range_conflict": false,
+        "polycoef": [
+          -7.69254e-11,
+          -0.00587971,
+          0.00125622,
+          2.61846e-06,
+          -6.24355e-07
+        ],
+        "source_equality_id": 44,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          7.69254e-11,
+          0.006792
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "m",
+        "witnesses": [
+          {
+            "dependent_value": -7.69254e-11,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -7.69253966081962e-11,
+            "source_range_conflict": false,
+            "source_range_violation": 1.538508e-10
+          },
+          {
+            "dependent_value": -0.006791998837245416,
+            "driver_value": 2.0944,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -0.006791998632252216,
+            "source_range_conflict": true,
+            "source_range_violation": 0.006791998914170816
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "retained_in_manifest_not_enforced_at_source_default",
+        "dependent_joint_name": "knee_angle_translation1_l",
+        "dependent_q_index": 119,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          9.53733e-08,
+          0.0015988480115702126
+        ],
+        "driver_domain": [
+          0.0,
+          2.0944
+        ],
+        "driver_joint_name": "knee_angle_l",
+        "driver_q_index": 120,
+        "driver_reference": 0.0,
+        "name": "knee_angle_translation1_constraint_l",
+        "native_position_limit_enabled": false,
+        "native_position_range": null,
+        "native_range_conflict": false,
+        "polycoef": [
+          9.53733e-08,
+          0.00312879,
+          -0.00230804,
+          0.000561561,
+          5.68366e-07
+        ],
+        "source_equality_id": 45,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          9.53733e-08,
+          0.00159883
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "m",
+        "witnesses": [
+          {
+            "dependent_value": 9.53733e-08,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 9.537330214470785e-08,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.0014029823200299094,
+            "driver_value": 1.2389612419748102,
+            "kind": "numerical_polynomial_stationary_point",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0014029822777956724,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.0013983268042799832,
+            "driver_value": 1.4934889771530835,
+            "kind": "numerical_polynomial_stationary_point",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0013983268290758133,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.0015988480115702126,
+            "driver_value": 2.0944,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.0015988480299711227,
+            "source_range_conflict": true,
+            "source_range_violation": 1.801157021251963e-08
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "knee_angle_rotation2_l",
+        "dependent_q_index": 121,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.0018410786544459097,
+          0.03378291168672603
+        ],
+        "driver_domain": [
+          0.0,
+          2.0944
+        ],
+        "driver_joint_name": "knee_angle_l",
+        "driver_q_index": 120,
+        "driver_reference": 0.0,
+        "name": "knee_angle_rotation2_constraint_l",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.0016782099846750498,
+          0.03353539854288101
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          -1.47325e-08,
+          0.0791,
+          -0.0328478,
+          -0.0252183,
+          0.0108321
+        ],
+        "source_equality_id": 46,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.00167821,
+          0.0335354
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": -1.47325e-08,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -1.4732499664660281e-08,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.03378291168672603,
+            "driver_value": 0.8029818366640893,
+            "kind": "numerical_polynomial_stationary_point",
+            "native_range_conflict": true,
+            "native_range_violation": 0.00024751201272010803,
+            "projected_fp32_value": 0.03378291055560112,
+            "source_range_conflict": true,
+            "source_range_violation": 0.0002475116867260291
+          },
+          {
+            "dependent_value": -0.0018410786544459097,
+            "driver_value": 2.051383653289048,
+            "kind": "numerical_polynomial_stationary_point",
+            "native_range_conflict": true,
+            "native_range_violation": 0.00016286864411085844,
+            "projected_fp32_value": -0.0018410786287859082,
+            "source_range_conflict": true,
+            "source_range_violation": 0.00016286865444590961
+          },
+          {
+            "dependent_value": -0.0016778471608914175,
+            "driver_value": 2.0944,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -0.0016778471181169152,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "knee_angle_rotation3_l",
+        "dependent_q_index": 122,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.26287534145422314,
+          -1.08939e-08
+        ],
+        "driver_domain": [
+          0.0,
+          2.0944
+        ],
+        "driver_joint_name": "knee_angle_l",
+        "driver_q_index": 120,
+        "driver_reference": 0.0,
+        "name": "knee_angle_rotation3_constraint_l",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.26278799772262573,
+          0.26278799772262573
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          -1.08939e-08,
+          -0.369499,
+          0.169478,
+          -0.0251643,
+          -3.50498e-07
+        ],
+        "source_equality_id": 47,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.262788,
+          0.262788
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": -1.08939e-08,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -1.0893900004305124e-08,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": -0.26287534145422314,
+            "driver_value": 1.8638935007161512,
+            "kind": "numerical_polynomial_stationary_point",
+            "native_range_conflict": true,
+            "native_range_violation": 8.735060691833496e-05,
+            "projected_fp32_value": -0.26287534832954407,
+            "source_range_conflict": true,
+            "source_range_violation": 8.734145422312212e-05
+          },
+          {
+            "dependent_value": -0.26165546520751576,
+            "driver_value": 2.0944,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -0.2616554796695709,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "retained_in_manifest_not_enforced_at_source_default",
+        "dependent_joint_name": "knee_angle_beta_translation2_l",
+        "dependent_q_index": 126,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.040866569823475384,
+          -0.0108281
+        ],
+        "driver_domain": [
+          0.0,
+          2.0944
+        ],
+        "driver_joint_name": "knee_angle_l",
+        "driver_q_index": 120,
+        "driver_reference": 0.0,
+        "name": "knee_angle_beta_translation2_constraint_l",
+        "native_position_limit_enabled": false,
+        "native_position_range": null,
+        "native_range_conflict": false,
+        "polycoef": [
+          -0.0108281,
+          -0.0487847,
+          0.00927644,
+          0.0131673,
+          -0.00349673
+        ],
+        "source_equality_id": 48,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.0408267,
+          -0.0108281
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "m",
+        "witnesses": [
+          {
+            "dependent_value": -0.0108281,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -0.010828100144863129,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": -0.040866569823475384,
+            "driver_value": 1.0853196806882062,
+            "kind": "numerical_polynomial_stationary_point",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -0.04086656868457794,
+            "source_range_conflict": true,
+            "source_range_violation": 3.986982347538304e-05
+          },
+          {
+            "dependent_value": -0.01862440778138512,
+            "driver_value": 2.0944,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -0.018624408170580864,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "knee_angle_beta_translation1_l",
+        "dependent_q_index": 127,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -0.022773096599061265,
+          0.0524192
+        ],
+        "driver_domain": [
+          0.0,
+          2.0944
+        ],
+        "driver_joint_name": "knee_angle_l",
+        "driver_q_index": 120,
+        "driver_reference": 0.0,
+        "name": "knee_angle_beta_translation1_constraint_l",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -0.022773100063204765,
+          0.05241920053958893
+        ],
+        "native_range_conflict": false,
+        "polycoef": [
+          0.0524192,
+          -0.0150188,
+          -0.0340522,
+          0.0133393,
+          -0.000879151
+        ],
+        "source_equality_id": 49,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -0.0227731,
+          0.0524192
+        ],
+        "source_range_conflict": false,
+        "status": "no_conflict_at_polynomial_witnesses",
+        "unit": "m",
+        "witnesses": [
+          {
+            "dependent_value": 0.0524192,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.05241920053958893,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": -0.022773096599061265,
+            "driver_value": 2.0944,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": -0.022773096337914467,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          }
+        ]
+      },
+      {
+        "compiler_limit_status": "enforced",
+        "dependent_joint_name": "knee_angle_beta_rotation1_l",
+        "dependent_q_index": 128,
+        "dependent_reference": 0.0,
+        "dependent_witness_extrema": [
+          -1.792413174998717,
+          0.010623036523321352
+        ],
+        "driver_domain": [
+          0.0,
+          2.0944
+        ],
+        "driver_joint_name": "knee_angle_l",
+        "driver_q_index": 120,
+        "driver_reference": 0.0,
+        "name": "knee_angle_beta_rotation1_constraint_l",
+        "native_position_limit_enabled": true,
+        "native_position_range": [
+          -1.7924100160598755,
+          0.010506000369787216
+        ],
+        "native_range_conflict": true,
+        "polycoef": [
+          0.010506,
+          0.0247615,
+          -1.31647,
+          0.716337,
+          -0.138302
+        ],
+        "source_equality_id": 50,
+        "source_position_limit_enabled": true,
+        "source_range": [
+          -1.79241,
+          0.010506
+        ],
+        "source_range_conflict": true,
+        "status": "witnessed_projection_range_conflict",
+        "unit": "rad",
+        "witnesses": [
+          {
+            "dependent_value": 0.010506,
+            "driver_value": 0.0,
+            "kind": "driver_lower_endpoint",
+            "native_range_conflict": false,
+            "native_range_violation": 0.0,
+            "projected_fp32_value": 0.010506000369787216,
+            "source_range_conflict": false,
+            "source_range_violation": 0.0
+          },
+          {
+            "dependent_value": 0.010623036523321352,
+            "driver_value": 0.009477643049072827,
+            "kind": "numerical_polynomial_stationary_point",
+            "native_range_conflict": true,
+            "native_range_violation": 0.00011703651398420334,
+            "projected_fp32_value": 0.01062303688377142,
+            "source_range_conflict": true,
+            "source_range_violation": 0.00011703652332135245
+          },
+          {
+            "dependent_value": -1.792413174998717,
+            "driver_value": 2.0944,
+            "kind": "driver_upper_endpoint",
+            "native_range_conflict": true,
+            "native_range_violation": 3.0994415283203125e-06,
+            "projected_fp32_value": -1.7924131155014038,
+            "source_range_conflict": true,
+            "source_range_violation": 3.174998717048183e-06
+          }
+        ]
+      }
+    ],
+    "schema": "numi.human.source-joint-equality-driver-domain-audit.v1",
+    "source_range_conflict_count": 38,
+    "status": "witnessed_projection_range_conflicts",
+    "tolerance_basis": "existing_projected_joint_range_coordinate_arithmetic_admission",
+    "unverified_driver_domain_count": 0
+  }
+}

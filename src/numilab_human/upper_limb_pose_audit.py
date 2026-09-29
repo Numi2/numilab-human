@@ -20,6 +20,9 @@ from typing import Any
 
 from . import model as human_model
 from .myosim_export import export_fullbody
+from .joint_constraint_consistency import (
+    joint_equality_driver_domain_audit, source_equality_projection_oracle,
+)
 from .upper_limb_registration import (
     INTERFACE_PATCH_GATE_MULTIPLIER,
     REGISTRATION_SCHEMA,
@@ -108,6 +111,17 @@ def _finish_pose_audit(result: dict[str, Any], region: str) -> dict[str, Any]:
             details.append(f"femoral_head_articular_gate={articular}")
         failures.append(f"{region} source geometry:{item['myosim_body']} members={item['source_member_ids']}: " + "; ".join(details))
     for pose in result["poses"]:
+        oracle = pose.get("source_equality_projection_oracle")
+        if oracle is not None and not oracle["passed"]:
+            failed_rows = [row["name"] for row in oracle["rows"] if not row["passed"]]
+            failures.append(
+                f"{pose['name']}:source equality projection differs from MuJoCo oracle "
+                f"failed_equalities={failed_rows} unique_coverage={oracle['complete_unique_coverage']} "
+                f"measured={oracle['measured_joint_equalities']}/{oracle['expected_active_joint_equalities']} "
+                f"maximum_residual={oracle['maximum_absolute_residual']:.12g} "
+                f"allowed={oracle['maximum_allowed_residual']:.12g} "
+                f"tolerance_basis={oracle['tolerance_basis']}"
+            )
         for item in pose.get("projected_joint_range_checks", []):
             if not item["passed"]:
                 failures.append(
@@ -386,16 +400,18 @@ def _project_joint_equalities(model: Any, qpos: Any, mujoco: Any) -> tuple[int, 
     count = 0
     maximum_correction = 0.0
     for equality_index in range(model.neq):
-        if int(model.eq_type[equality_index]) != int(mujoco.mjtEq.mjEQ_JOINT):
+        if (
+            not bool(model.eq_active0[equality_index])
+            or int(model.eq_type[equality_index]) != int(mujoco.mjtEq.mjEQ_JOINT)
+        ):
             continue
         dependent_joint = int(model.eq_obj1id[equality_index])
         driver_joint = int(model.eq_obj2id[equality_index])
         dependent_q = int(model.jnt_qposadr[dependent_joint])
-        driver = 0.0 if driver_joint < 0 else float(
-            qpos[int(model.jnt_qposadr[driver_joint])]
-        )
+        driver_q = int(model.jnt_qposadr[driver_joint]) if driver_joint >= 0 else None
+        driver = float(qpos[driver_q] - model.qpos0[driver_q]) if driver_q is not None else 0.0
         coefficients = model.eq_data[equality_index, :5]
-        projected = sum(
+        projected = float(model.qpos0[dependent_q]) + sum(
             float(coefficients[degree]) * driver ** degree for degree in range(5)
         )
         maximum_correction = max(maximum_correction, abs(float(qpos[dependent_q]) - projected))
@@ -796,6 +812,9 @@ def audit_upper_limb_poses(
             ],
             "joint_equality_count": current_equality_count,
             "joint_equality_maximum_correction": correction,
+            "source_equality_projection_oracle": source_equality_projection_oracle(
+                model, data, mujoco, PROJECTED_JOINT_RANGE_TOLERANCE,
+            ),
             "projected_joint_range_checks": _projected_joint_range_checks(qpos, joint_ranges, np),
             "continuity": continuity,
             "bilateral_gap_parity": parity,
@@ -845,6 +864,9 @@ def audit_upper_limb_poses(
         "bilateral_parity_evaluation_count": len(all_parity),
         "joint_equality_count": equality_count,
         "joint_equality_program_checks": equality_programs,
+        "joint_equality_driver_domain_audit": joint_equality_driver_domain_audit(
+            exported, joint_ranges, np, PROJECTED_JOINT_RANGE_TOLERANCE,
+        ),
         "rigid_source_program_checks": rigid_program,
         "joint_equality_maximum_correction": equality_maximum_correction,
         "default_frame_maximum_centroid_residual_m": default_frame_maximum_residual,
@@ -862,7 +884,9 @@ def audit_upper_limb_poses(
             "polynomial joint equality projection. Passing proves body ownership, default frame "
             "identity, bounded one-vertex and robust bidirectional interface-patch continuity, "
             "post-projection source and consumed native position ranges, and bilateral parity for this pose "
-            "suite. It is not cartilage/contact, ligament constraint, loaded dynamics, clinical "
+            "suite, with independent MuJoCo constraint-residual checks at every pose. A separate "
+            "full-driver-domain diagnostic retains conflicts beyond the sampled poses without "
+            "rewriting source ranges or polynomial laws. It is not cartilage/contact, ligament constraint, loaded dynamics, clinical "
             "registration, or a deformable tendon solve. Range coordinates are projected from "
             "the source model and rounded to FP32. The consumed rigid program, including body "
             "inertia, joint axes/frames, DoF policy, default state and source mappings, is joined "
