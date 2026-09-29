@@ -17,7 +17,7 @@ from numilab_human.lower_limb_pose_audit import (
     _compiled_bone_members, _compiled_member_geometry_check, audit_lower_limb_poses,
 )
 from numilab_human.lower_limb_source_registration import _source_frame_check
-from numilab_human.upper_limb_pose_audit import PoseAuditError
+from numilab_human.upper_limb_pose_audit import PoseAuditError, audit_upper_limb_poses
 
 
 class CompiledLowerLimbGeometryTests(unittest.TestCase):
@@ -235,6 +235,72 @@ class SourceCompiledLowerLimbGeometryTests(unittest.TestCase):
             gap = lambda p: next(c["minimum_vertex_gap_m"] for c in p["continuity"]
                                  if c["name"] == "left_femur_to_patella")
             self.assertNotEqual(gap(first), gap(second))
+
+
+class SourceCompiledUpperLimbGeometryTests(unittest.TestCase):
+    def test_actual_upper_limb_motion_uses_payload_and_rejects_displacement(self):
+        paths = {key: os.environ.get("NUMILAB_HUMAN_MOTION_" + key)
+                 for key in ("SOURCES", "ARTIFACT", "REPAIRED", "BONES")}
+        if not all(paths.values()):
+            self.skipTest("exact source/payload motion inputs were not supplied")
+
+        def measured(bones=None):
+            try:
+                return audit_upper_limb_poses(sources=Path(paths["SOURCES"]),
+                    registration_path=Path(paths["REPAIRED"]), artifact=Path(paths["ARTIFACT"]),
+                    bone_artifact=bones)
+            except PoseAuditError as error:
+                return error.result
+
+        registered = measured()
+        accepted = measured(Path(paths["BONES"]))
+        checks = [c for body in accepted["source_geometry_checks"]
+                  for c in body["compiled_bone_geometry_checks"]]
+        self.assertEqual(len(checks), accepted["source_member_count"])
+        self.assertTrue(all(c["passed"] for c in checks))
+        self.assertTrue(all(c["maximum_vertex_residual_m"] == 0. for c in checks))
+        self.assertEqual(accepted["pose_count"], 7)
+        self.assertEqual(accepted["continuity_evaluation_count"], 364)
+        self.assertEqual(accepted["default_frame_maximum_allowed_residual_m"], 1e-9)
+        self.assertEqual(accepted["bilateral_gap_parity_maximum_m"], .002)
+        self.assertTrue(accepted["status"].startswith("passed_"), accepted.get("failures"))
+        self.assertEqual(accepted["default_frame_maximum_centroid_residual_m"],
+                         registered["default_frame_maximum_centroid_residual_m"])
+        self.assertEqual(accepted["inputs"]["bone_payload"]["payload_abi"], 3)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            altered = Path(temporary) / "bones"
+            shutil.copytree(paths["BONES"], altered)
+            manifest_path = altered / "bodyparts3d-myosim-major-bones.manifest.json"
+            manifest = json.loads(manifest_path.read_text())
+            payload_path = altered / manifest["payload"]["file"]
+            raw = bytearray(payload_path.read_bytes())
+            index = next(i for i, a in enumerate(manifest["source"]["anchors"])
+                         if a["myosim_body"] == "humerus_r")
+            member_id = manifest["source"]["anchors"][index]["member_id"]
+            offset = struct.calcsize("<8s5I32s") + index * struct.calcsize("<6I8fI") + 24
+            x = struct.unpack_from("<f", raw, offset)[0]
+            struct.pack_into("<f", raw, offset, x + .02)
+            payload_path.write_bytes(raw)
+            manifest["payload"]["sha256"] = human.sha256(payload_path)
+            manifest_path.write_text(json.dumps(manifest))
+            corrupted = measured(altered)
+            body = next(b for b in corrupted["source_geometry_checks"]
+                        if b["myosim_body"] == "humerus_r")
+            self.assertFalse(body["passed"])
+            check = body["compiled_bone_geometry_checks"][0]
+            self.assertAlmostEqual(check["maximum_vertex_residual_m"], .02, places=7)
+            self.assertTrue(any(member_id + ":compiled_vertex_residual_m" in f
+                                for f in corrupted["failures"]))
+            self.assertEqual(corrupted["inputs"]["registration"], accepted["inputs"]["registration"])
+            self.assertNotEqual(corrupted["inputs"]["bone_payload"]["sha256"],
+                                accepted["inputs"]["bone_payload"]["sha256"])
+            self.assertEqual(corrupted["default_frame_maximum_centroid_residual_m"],
+                             accepted["default_frame_maximum_centroid_residual_m"])
+            pose = lambda r: next(p for p in r["poses"] if p["name"] == "bilateral_coupled_reach")
+            gap = lambda r: next(c["minimum_vertex_gap_m"] for c in pose(r)["continuity"]
+                                 if c["name"] == "right_scapula_to_humerus")
+            self.assertNotEqual(gap(corrupted), gap(accepted))
 
 
 if __name__ == "__main__":

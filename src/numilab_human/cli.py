@@ -446,6 +446,8 @@ def myosim_upper_limb_pose_audit(arguments: argparse.Namespace) -> int:
         "--registration", str(arguments.registration.resolve()),
         "--output", str(output),
     ]
+    if arguments.bone_artifact is not None:
+        command.extend(["--bone-artifact", str(arguments.bone_artifact.resolve())])
     completed = subprocess.run(command, capture_output=True, text=True, check=False, env=environment)
     if completed.returncode != 0:
         detail = completed.stderr.strip() or completed.stdout.strip() or "no pose-audit output"
@@ -1474,6 +1476,7 @@ def parser() -> argparse.ArgumentParser:
     )
     upper_limb_pose_audit_parser.add_argument("--sources", type=Path, required=True)
     upper_limb_pose_audit_parser.add_argument("--artifact", type=Path, required=True)
+    upper_limb_pose_audit_parser.add_argument("--bone-artifact", type=Path)
     upper_limb_pose_audit_parser.add_argument("--registration", type=Path, required=True)
     upper_limb_pose_audit_parser.add_argument("--output", type=Path, required=True)
     upper_limb_pose_audit_parser.add_argument(

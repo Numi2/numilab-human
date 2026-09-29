@@ -177,13 +177,16 @@ class FailedPoseDiagnosticTests(unittest.TestCase):
             with self.subTest(module=module.__name__), tempfile.TemporaryDirectory() as temporary:
                 output = Path(temporary) / "failed.json"
                 failure = PoseAuditError("measured gap exceeds source gate", copy.deepcopy(result))
-                with patch.object(module, function, side_effect=failure):
+                with patch.object(module, function, side_effect=failure) as audit:
                     code = module.main(["--sources", temporary, "--artifact", temporary,
-                                        "--registration", temporary + "/source.json", "--output", str(output)])
+                                        "--registration", temporary + "/source.json", "--output", str(output),
+                                        "--bone-artifact", temporary])
                 self.assertEqual(code, 2)
+                self.assertEqual(audit.call_args.kwargs["bone_artifact"], Path(temporary).resolve())
                 retained = json.loads(output.read_text())
                 self.assertEqual(retained["poses"], result["poses"])
                 self.assertIn(module.__name__, retained["inputs"]["reproduction_command"])
+                self.assertIn("--bone-artifact", retained["inputs"]["reproduction_command"])
 
 
 class NativeBoneOwnerBindingTests(unittest.TestCase):

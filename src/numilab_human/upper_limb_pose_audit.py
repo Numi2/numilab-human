@@ -154,6 +154,125 @@ def _continuity_transitions() -> list[tuple[str, str, str, float]]:
     ]
 
 
+def _compiled_bone_members(
+    bone_artifact: Path, registration_path: Path,
+    registration: dict[str, Any], runtime_reference: dict[str, Any],
+    runtime_bodies: dict[str, Any],
+) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
+    """Use the owning NHBONES reader, then join its owners to consumed NHRIGID."""
+    by_body, descriptor, payload_path = human_model._numi_human_bone_envelope_surfaces(
+        bone_artifact, runtime_reference["source_archive_sha256"],
+    )
+    identity = (
+        f"bone_sha256={descriptor['sha256']}; "
+        f"rigid_sha256={runtime_reference['rigid']['sha256']}"
+    )
+    if descriptor["payload_abi"] != 3:
+        raise RuntimeError(
+            "compiled bone geometry requires NHBONES1 ABI 3 source owners; " + identity
+        )
+    manifest = human_model.read_json(
+        bone_artifact / "bodyparts3d-myosim-major-bones.manifest.json"
+    )
+    source = manifest["source"]
+    registration_sha = _sha256(registration_path)
+    compiled_registration = source.get("registration")
+    if (
+        not isinstance(compiled_registration, dict)
+        or compiled_registration.get("sha256") != registration_sha
+        or descriptor["registration_fingerprint32"] != registration_sha[:8]
+    ):
+        raise RuntimeError(
+            "compiled bone geometry registration identity drifted; "
+            f"registration_sha256={registration_sha}; " + identity
+        )
+    compiled_reference = source.get("runtime_reference", {})
+    for owner in ("rigid", "manifest"):
+        compiled_owner = compiled_reference.get(owner) if isinstance(compiled_reference, dict) else None
+        if not isinstance(compiled_owner, dict) or compiled_owner.get("sha256") != runtime_reference[owner]["sha256"]:
+            raise RuntimeError(
+                f"compiled bone geometry {owner} identity drifted; " + identity
+            )
+    registered = {
+        anchor["source"]["member_id"]: anchor for anchor in registration["anchors"]
+    }
+    members: dict[str, dict[str, Any]] = {}
+    for core_body_index, surfaces in by_body.items():
+        for surface in surfaces:
+            member_id = surface["member_id"]
+            if member_id in members or member_id not in registered:
+                raise RuntimeError(
+                    f"compiled bone geometry duplicate or unknown member={member_id}; " + identity
+                )
+            anchor = registered[member_id]
+            name = anchor["target"]["name"]
+            expected_core, body = runtime_bodies[name]
+            provenance = source["anchors"][surface["stable_id"] - 1]
+            if (
+                core_body_index != expected_core
+                or provenance.get("source_record_index") != body["source_record_index"]
+                or provenance.get("myosim_body") != name
+                or provenance.get("member_sha256") != anchor["source"]["member_sha256"]
+            ):
+                raise RuntimeError(
+                    f"compiled bone geometry member={member_id} ({name}) owner/source mismatch: "
+                    f"Core={core_body_index}, source_record={provenance.get('source_record_index')}; "
+                    f"NHRIGID requires Core={expected_core}, source_record={body['source_record_index']}; "
+                    + identity
+                )
+            members[member_id] = surface
+    if members.keys() != registered.keys():
+        raise RuntimeError("compiled bone geometry member coverage drifted; " + identity)
+    return members, {**descriptor, "file": str(payload_path.resolve())}
+
+
+def _compiled_member_geometry_check(
+    anchor: dict[str, Any], raw_vertices: list[Any], raw_triangles: list[Any],
+    surface: dict[str, Any], np: Any,
+) -> dict[str, Any]:
+    """Compare source geometry after the format's specified FP32 round trip.
+
+    This is an identity check, not a larger anatomical tolerance. The source
+    frame and regional gates still use their original bounds.
+    """
+    translation, quaternion, scale = human_model._bodyparts_visual_local_pose(
+        anchor["registration"]["source_obj_mm_to_core_inertial_body_m"],
+        f"compiled bone geometry {anchor['source']['member_id']}",
+    )
+    pose = np.asarray([*translation, *quaternion, scale], dtype=np.float32).astype(float)
+    rotation = human_model._myosim_matrix_from_quaternion_xyzw(pose[3:7].tolist())
+    source_meters = np.asarray([
+        [coordinate * .001 for coordinate in vertex] for vertex in raw_vertices
+    ], dtype=np.float32).astype(float)
+    expected = np.asarray([
+        human_model._myosim_add(pose[:3].tolist(), human_model._myosim_matrix_vector(
+            rotation, [float(pose[7]) * float(value) for value in vertex],
+        )) for vertex in source_meters
+    ])
+    actual = np.asarray(surface["vertices"], dtype=float)
+    shape_matches = actual.shape == expected.shape
+    finite = bool(np.all(np.isfinite(actual)))
+    residual = (
+        float(np.max(np.linalg.norm(actual - expected, axis=1)))
+        if shape_matches and finite else None
+    )
+    topology_matches = surface["triangles"] == [tuple(t) for t in raw_triangles]
+    return {
+        "source_member_id": anchor["source"]["member_id"],
+        "myosim_body": anchor["target"]["name"],
+        "core_body_index": anchor["target"]["core_body_index"],
+        "source_vertex_count": len(raw_vertices),
+        "compiled_vertex_count": len(actual),
+        "source_triangle_count": len(raw_triangles),
+        "compiled_triangle_count": len(surface["triangles"]),
+        "maximum_vertex_residual_m": residual,
+        "maximum_allowed_vertex_residual_m": 0.0,
+        "tolerance_basis": "exact_source_geometry_after_NHBONES1_FP32_round_trip",
+        "source_topology_matches": topology_matches,
+        "passed": shape_matches and finite and residual == 0.0 and topology_matches,
+    }
+
+
 def _project_joint_equalities(model: Any, qpos: Any, mujoco: Any) -> tuple[int, float]:
     count = 0
     maximum_correction = 0.0
@@ -204,7 +323,10 @@ def _pose_qpos(model: Any, pose: tuple[tuple[int, float], ...], mujoco: Any, np:
     return qpos, equality_count, maximum_correction
 
 
-def audit_upper_limb_poses(*, sources: Path, registration_path: Path, artifact: Path) -> dict[str, Any]:
+def audit_upper_limb_poses(
+    *, sources: Path, registration_path: Path, artifact: Path,
+    bone_artifact: Path | None = None,
+) -> dict[str, Any]:
     try:
         import mujoco
         import numpy as np
@@ -220,7 +342,13 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path, artifact: 
     upper_receipt = registration.get("upper_limb_source_mesh_registration")
     if not isinstance(upper_receipt, dict) or upper_receipt.get("schema") != UPPER_REGISTRATION_SCHEMA:
         raise RuntimeError("upper-limb pose audit requires admitted upper-limb registration v1")
-    runtime_reference, _ = human_model._bodyparts_runtime_bindings(registration, artifact)
+    runtime_reference, runtime_bodies = human_model._bodyparts_runtime_bindings(registration, artifact)
+    compiled_members, bone_descriptor = ({}, None)
+    if bone_artifact is not None:
+        compiled_members, bone_descriptor = _compiled_bone_members(
+            bone_artifact, registration_path, registration,
+            runtime_reference, runtime_bodies,
+        )
 
     exported = export_fullbody(sources)
     if exported.get("source") != registration["source"]["myosim"]["source"]:
@@ -231,6 +359,8 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path, artifact: 
     expected_names = _upper_names("r") | _upper_names("l")
     anchors_by_name: dict[str, dict[str, Any]] = {}
     local_vertices: dict[str, tuple[int, Any]] = {}
+    registered_local_vertices: dict[str, tuple[int, Any]] = {}
+    compiled_geometry_checks: dict[str, dict[str, Any]] = {}
 
     for anchor in registration.get("anchors", []):
         name = anchor.get("target", {}).get("name")
@@ -253,7 +383,13 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path, artifact: 
         _, member, obj = human_model._bodyparts_obj_member(
             sources, source["hierarchy"], source["member_id"]
         )
-        raw_vertices, _ = human_model._bodyparts_obj_triangles(obj, member)
+        raw_vertices, raw_triangles = human_model._bodyparts_obj_triangles(obj, member)
+        if (
+            source.get("member_sha256") != hashlib.sha256(obj).hexdigest()
+            or source.get("vertex_count") != len(raw_vertices)
+            or source.get("triangle_count") != len(raw_triangles)
+        ):
+            raise RuntimeError(f"upper-limb pose audit pinned mesh identity drifted for {source['member_id']}")
         matrix = np.asarray(
             anchor["registration"]["source_obj_mm_to_core_inertial_body_m"], dtype=float
         )
@@ -271,6 +407,16 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path, artifact: 
         body_vertices = np.einsum(
             "ki,ji->kj", core_vertices, inertial_rotation
         ) + inertial_position
+        registered_local_vertices[source["member_id"]] = (source_body_id, body_vertices)
+        if bone_descriptor is not None:
+            surface = compiled_members[source["member_id"]]
+            compiled_geometry_checks[source["member_id"]] = _compiled_member_geometry_check(
+                anchor, raw_vertices, raw_triangles, surface, np,
+            )
+            body_vertices = np.einsum(
+                "ki,ji->kj", np.asarray(surface["vertices"], dtype=float),
+                inertial_rotation,
+            ) + inertial_position
         local_vertices[source["member_id"]] = (source_body_id, body_vertices)
 
     missing = sorted(expected_names - anchors_by_name.keys())
@@ -283,6 +429,17 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path, artifact: 
     }
     if not expected_members.issubset(local_vertices.keys()):
         raise RuntimeError("upper-limb pose audit transition/member coverage drifted")
+    source_geometry_checks = []
+    if bone_descriptor is not None:
+        for name, anchor in sorted(anchors_by_name.items()):
+            check = compiled_geometry_checks[anchor["source"]["member_id"]]
+            source_geometry_checks.append({
+                "myosim_body": name,
+                "source_member_ids": [anchor["source"]["member_id"]],
+                "source_frame_checks": [],
+                "compiled_bone_geometry_checks": [check],
+                "passed": check["passed"],
+            })
 
     pose_receipts = []
     default_frame_maximum_residual = 0.0
@@ -314,7 +471,13 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path, artifact: 
         if pose_name == "neutral":
             for name, anchor in anchors_by_name.items():
                 member_id = anchor["source"]["member_id"]
-                centroid = np.mean(world_vertices[member_id], axis=0)
+                # Retain the strict registration-frame gate independently of
+                # the compiled format's FP32 round trip. Motion/interface
+                # measurements above use the actual decoded payload vertices.
+                body_id, vertices = registered_local_vertices[member_id]
+                centroid = np.mean(np.einsum(
+                    "ki,ji->kj", vertices, data.xmat[body_id].reshape(3, 3)
+                ) + data.xpos[body_id], axis=0)
                 expected_centroid = np.asarray(
                     anchor["registration"]["default_pose_vertex_centroid_world_m"], dtype=float
                 )
@@ -425,6 +588,11 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path, artifact: 
         },
         "source_body_count": len(expected_names),
         "source_member_count": len(local_vertices),
+        "source_geometry_checks": source_geometry_checks,
+        "geometry_basis": (
+            "consumed_NHBONES1_ABI3_vertices_and_source_owners"
+            if bone_descriptor is not None else "registered_source_vertices"
+        ),
         "pose_count": len(POSE_SUITE),
         "continuity_transition_count_per_pose": len(transitions),
         "continuity_evaluation_count": len(all_continuity),
@@ -450,6 +618,14 @@ def audit_upper_limb_poses(*, sources: Path, registration_path: Path, artifact: 
             "registration, or a deformable tendon solve."
         ),
     }
+    if bone_descriptor is not None:
+        result["inputs"]["bone_payload"] = bone_descriptor
+        result["evidence_boundary"] += (
+            " NHBONES1 ABI 3 geometry was decoded by the owning payload reader, "
+            "joined to the exact NHRIGID source owners and registration, and "
+            "checked against source vertices/topology after the specified FP32 "
+            "round trip before the pose measurements."
+        )
 
     return _finish_pose_audit(result, "upper-limb")
 
@@ -459,6 +635,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--sources", type=Path, required=True)
     parser.add_argument("--registration", type=Path, required=True)
     parser.add_argument("--artifact", type=Path, required=True)
+    parser.add_argument("--bone-artifact", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     arguments = parser.parse_args(argv)
     failure = None
@@ -467,6 +644,7 @@ def main(argv: list[str] | None = None) -> int:
             sources=arguments.sources.resolve(),
             registration_path=arguments.registration.resolve(),
             artifact=arguments.artifact.resolve(),
+            bone_artifact=arguments.bone_artifact.resolve() if arguments.bone_artifact else None,
         )
     except PoseAuditError as error:
         result = error.result
@@ -481,6 +659,10 @@ def main(argv: list[str] | None = None) -> int:
         "--registration", str(arguments.registration.resolve()),
         "--output", str(arguments.output.resolve()),
     ]
+    if arguments.bone_artifact is not None:
+        result["inputs"]["reproduction_command"].extend([
+            "--bone-artifact", str(arguments.bone_artifact.resolve()),
+        ])
     arguments.output.parent.mkdir(parents=True, exist_ok=True)
     arguments.output.write_text(
         json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8"
