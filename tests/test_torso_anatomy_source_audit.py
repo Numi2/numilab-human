@@ -186,7 +186,7 @@ def test_lung_branch_type_provenance_cannot_claim_parenchyma(native_organs, tmp_
 def test_native_lung_payload_rejects_unsupported_abi_layers_and_counts(organ_inputs, tmp_path, corruption):
     probe, bones, sources, artifact, registration, payload, root = organ_inputs
     raw = bytearray(payload.read_bytes())
-    if corruption == "unknown_abi":struct.pack_into("<I", raw, 8, 4)
+    if corruption == "unknown_abi":struct.pack_into("<I", raw, 8, 5)
     elif corruption == "v1_with_v2_surfaces":struct.pack_into("<I", raw, 8, 1)
     elif corruption == "surface_capacity":struct.pack_into("<I", raw, 12, 1025)
     else:struct.pack_into("<I", raw, 60 + 32 * 24 + 24, 7)

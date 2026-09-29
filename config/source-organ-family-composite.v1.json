@@ -1,0 +1,179 @@
+{
+  "base_bodyparts_surface_count": 304,
+  "base_payload_sha256": "d905d7c76c0e95346c0a84cfe0a829e47afdd55cf8b8c84aa26c291f79a51d4e",
+  "base_surface_count": 310,
+  "baseline_map": {
+    "file": "config/bodyparts3d-myosim-torso-anatomy-map.v1.json",
+    "sha256": "a3ff17c10fd5903e86e30d85ac2ea88acd5e9d7f3b0468f22518a8fcb5d67ea3"
+  },
+  "boundary": "Complete declared 18-region source-family membership and native single-link visual geometry. Overlapping aggregate/descendant atlas representations, cavity reference surfaces and branch/duct segments are retained as source representations, not disjoint tissue, connected lumen, mechanical mass, fluid volume, motion or clinical anatomy.",
+  "family_bindings": {
+    "abdominal_aorta": {
+      "concept_id": "FMA3789",
+      "hierarchy": "part_of",
+      "myosim_body": "Abdomen",
+      "source_name": "abdominal aorta"
+    },
+    "aortic_arch": {
+      "concept_id": "FMA3768",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "arch of aorta"
+    },
+    "ascending_aorta": {
+      "concept_id": "FMA3736",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "ascending aorta"
+    },
+    "descending_aorta": {
+      "concept_id": "FMA3784",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "descending aorta"
+    },
+    "inferior_vena_cava": {
+      "concept_id": "FMA10951",
+      "hierarchy": "part_of",
+      "myosim_body": "Abdomen",
+      "source_name": "inferior vena cava"
+    },
+    "left_atrium": {
+      "concept_id": "FMA7097",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "left atrium"
+    },
+    "left_kidney": {
+      "concept_id": "FMA7205",
+      "hierarchy": "part_of",
+      "myosim_body": "Abdomen",
+      "source_name": "left kidney"
+    },
+    "left_lung": {
+      "concept_id": "FMA7310",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "left lung"
+    },
+    "left_ventricle": {
+      "concept_id": "FMA7101",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "left ventricle"
+    },
+    "liver": {
+      "concept_id": "FMA7197",
+      "hierarchy": "part_of",
+      "myosim_body": "Abdomen",
+      "source_name": "liver"
+    },
+    "pancreas": {
+      "concept_id": "FMA7198",
+      "hierarchy": "part_of",
+      "myosim_body": "Abdomen",
+      "source_name": "pancreas"
+    },
+    "pulmonary_trunk": {
+      "concept_id": "FMA8612",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "pulmonary trunk"
+    },
+    "right_atrium": {
+      "concept_id": "FMA7096",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "right atrium"
+    },
+    "right_kidney": {
+      "concept_id": "FMA7204",
+      "hierarchy": "part_of",
+      "myosim_body": "Abdomen",
+      "source_name": "right kidney"
+    },
+    "right_lung": {
+      "concept_id": "FMA7309",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "right lung"
+    },
+    "right_ventricle": {
+      "concept_id": "FMA7098",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "right ventricle"
+    },
+    "stomach": {
+      "concept_id": "FMA7148",
+      "hierarchy": "part_of",
+      "myosim_body": "Abdomen",
+      "source_name": "stomach"
+    },
+    "superior_vena_cava": {
+      "concept_id": "FMA4720",
+      "hierarchy": "part_of",
+      "myosim_body": "torso",
+      "source_name": "superior vena cava"
+    }
+  },
+  "layer_registry": {
+    "cavity_reference": {
+      "layer_code": 9,
+      "semantic": 51025,
+      "source_types": [
+        [
+          "FMA67112",
+          "immaterial anatomical entity"
+        ],
+        [
+          "FMA5897",
+          "anatomical space"
+        ]
+      ]
+    },
+    "duct": {
+      "layer_code": 10,
+      "semantic": 51026,
+      "source_types": [
+        [
+          "FMA30320",
+          "duct"
+        ],
+        [
+          "FMA71856",
+          "segment of biliary tree"
+        ]
+      ]
+    },
+    "organ_component": {
+      "layer_code": 1,
+      "semantic": 51010,
+      "type_rule": "material organ or cardinal organ part, excluding vessel, duct and space rules"
+    },
+    "vessel": {
+      "layer_code": 2,
+      "semantic": 51011,
+      "source_types": [
+        [
+          "FMA86187",
+          "segment of arterial tree organ"
+        ],
+        [
+          "FMA86188",
+          "segment of venous tree organ"
+        ]
+      ]
+    }
+  },
+  "member_owner_overrides": {
+    "FJ1932": "Abdomen"
+  },
+  "registration_sha256": "0b7129f788ae91272d03abf9f10b985359f3b9d9569941515b222787ffe71324",
+  "schema": "numi.human.source-organ-family-composite.v1",
+  "source_lock_sha256": "03d20d46bfb47b67fb251182758eebbc8f1bbe2f38ce51881dc4c2694774fdee",
+  "template": {
+    "file": "config/physiology-organ-network-template.v1.json",
+    "sha256": "57bba63528f4f66aa6337b1eebe1585579c8ccb54850549ac4e5bf944ef43b15"
+  }
+}

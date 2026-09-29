@@ -792,3 +792,15 @@ bitwise. This is a native amount/conservation subgate only: the explicit density
 and tissue volumes remain engineering candidates, and vessel lumen/capillary,
 physical tissue-volume, mechanical blood-mass, organ mechanics, material,
 subject-calibration, standing, and walking gates remain open.
+
+The [declared organ-family geometry increment](ORGAN_FAMILY_SOURCE_GEOMETRY_20260929.md)
+now adds the 77 omitted members of the existing 18-region atlas graph, with
+distinct organ-component, vessel, duct and cardiac-cavity-reference types.
+All 378 unique declared source members are represented in a 387-surface
+composite that retains the original 310 surfaces byte for byte. Twelve native
+source audits pass across three poses and four masks, with 0.120 micrometres
+maximum added position error. Three added meshes retain source topology
+defects and the known right-heart cavity overlap remains. This closes declared
+source membership and renderer parity only; whole-body coverage, clinical
+registration, disjoint tissue, connected lumens, motion and mechanics remain
+open.

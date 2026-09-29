@@ -179,10 +179,10 @@ def test_payload_receipt_cannot_forge_registration_or_source_coverage(neutral,tm
 def test_native_abi3_rejects_unknown_layers_and_visibility(neutral,inputs,tmp_path,corruption):
     _,root = inputs;cmd = json.loads((root/'final-native/projected-neutral-mask64/command.json').read_text())
     raw = bytearray(neutral[4].read_bytes())
-    if corruption == 'abi':struct.pack_into('<I',raw,8,4)
+    if corruption == 'abi':struct.pack_into('<I',raw,8,5)
     if corruption == 'layer':struct.pack_into('<I',raw,60+32*304+24,9)
     payload = tmp_path/'invalid.nhanatomy';payload.write_bytes(raw)
     cmd[4] = str(tmp_path/'views');cmd[cmd.index('--torso-anatomy-payload')+1] = str(payload)
-    if corruption.startswith('mask_'):cmd[-1] = '0' if corruption == 'mask_zero' else '256'
+    if corruption.startswith('mask_'):cmd[-1] = '0' if corruption == 'mask_zero' else '1024'
     result = subprocess.run(cmd,capture_output=True,text=True,timeout=60)
     assert result.returncode != 0 and not list((tmp_path/'views').glob('*.png'))

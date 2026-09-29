@@ -1,0 +1,835 @@
+{
+  "schema": "numi.human.organ-family-source-evidence.v1",
+  "date": "2026-09-29",
+  "human_base_commit": "35200bf8e60c2af577eeaad7c4faf394a01bb73c",
+  "native_commit": "3840e052c2470d2542b9b00e7a10b6beb93769b9",
+  "inputs": {
+    "payload": {
+      "abi": 4,
+      "indices": 1831812,
+      "sha256": "7bb24753aa535dd6c5351580486517d92955d3ef3a04d6db8510e59e44419287",
+      "surfaces": 387,
+      "vertices": 342870
+    },
+    "configuration_sha256": "0c6d2788cb2b5cfb238a04b15ea21298b815d793e1611b53d818100cb5861cc8",
+    "base_310_payload_sha256": "d905d7c76c0e95346c0a84cfe0a829e47afdd55cf8b8c84aa26c291f79a51d4e",
+    "registration_sha256": "0b7129f788ae91272d03abf9f10b985359f3b9d9569941515b222787ffe71324",
+    "native_binary_sha256": "68d85d07385fd5df487bccc5f0d8ace5eaba61e1fe1e601e1a8cf9cfa767b07e",
+    "native_executed_source_sha256": "1a4ad7808f7bae6604a7aae409eeb59a599a6169ad8c413aadb159f468ee076a",
+    "unchanged_runtime_library_sha256": "6b9062e84bdacd6b86b413d5c549cd0046d9a271fb0caa141e03db41ffa213f6"
+  },
+  "coverage": {
+    "declared_families": 18,
+    "required_unique_source_members": 378,
+    "original_surfaces": 310,
+    "total_surfaces": 387,
+    "shared_family_members": {
+      "FJ1932": [
+        "descending_aorta",
+        "abdominal_aorta"
+      ],
+      "FJ2420": [
+        "left_atrium",
+        "left_ventricle"
+      ],
+      "FJ2421": [
+        "right_atrium",
+        "right_ventricle"
+      ],
+      "FJ2426": [
+        "left_atrium",
+        "left_ventricle"
+      ],
+      "FJ2431": [
+        "left_atrium",
+        "left_ventricle"
+      ],
+      "FJ2432": [
+        "left_atrium",
+        "left_ventricle"
+      ],
+      "FJ2433": [
+        "right_atrium",
+        "right_ventricle"
+      ],
+      "FJ2436": [
+        "right_atrium",
+        "right_ventricle"
+      ]
+    },
+    "added_types": {
+      "organ_component": 18,
+      "vessel": 40,
+      "duct": 15,
+      "cavity_reference": 4
+    }
+  },
+  "validation": {
+    "all_native_source_audits_passed": true,
+    "poses": 3,
+    "profiles_per_pose": 4,
+    "final_native_camera_captures": 48,
+    "maximum_added_native_source_position_error_m": 1.202025193778875e-07,
+    "original_310_payload_geometry_byte_identical": true,
+    "historical_abi1_abi2_abi3_native_geometry_sections_byte_identical": true,
+    "final_checks_passed": 93,
+    "initial_passed_checks": 83,
+    "corrected_failed_checks": 4,
+    "new_archive_refusal_checks": 2,
+    "additional_abi2_negative_checks": 4,
+    "skipped_checks": 0,
+    "final_test_exit_code": 0,
+    "test_runs": [
+      {
+        "directory": "tests.final",
+        "passed": 83,
+        "failed": 4,
+        "exit_code": 1
+      },
+      {
+        "directory": "tests.retry",
+        "passed": 5,
+        "failed": 1,
+        "exit_code": 1
+      },
+      {
+        "directory": "tests.verified",
+        "passed": 8,
+        "failed": 0,
+        "exit_code": 0
+      },
+      {
+        "directory": "abi2-checks",
+        "passed": 4,
+        "failed": 0,
+        "exit_code": 0
+      }
+    ],
+    "failed_harness_cases": "Already-baseline FJ1932 expected among additions; unchanged owner values used as corruptions; obsolete ABI1 CLI flag; first retry used directory without retained packet. Corrected ABI1 input is current-neutral.v2. No source/geometry tolerances widened.",
+    "unique_check_count_excludes_duplicate_abi2_and_abi3_positive_rechecks": true,
+    "test_wall_seconds": 781.2315905829892,
+    "executed_source_sha256": {
+      "src/numilab_human/organ_family_geometry.py": "b332ab3e4a8f4514bd82aad455bbb520f0e673fbc0a0e6d75e920fffb8cd559b",
+      "src/numilab_human/lung_envelope.py": "972bfc5da8813ba8be862961bc5783cb429c6e9d6a8c819e64c7ecbc819bf15a",
+      "src/numilab_human/torso_anatomy_audit.py": "f6673205c6ce327e36245dbec2c6da99a95fd62c797dc2de5db7c0ac4e35cd3c",
+      "tests/test_organ_family_geometry.py": "0c6bd8e1548b58e4a74e97baec2c1be1f62572babcd1f6c11c803ff852de5dd1",
+      "tests/test_lung_envelope.py": "2ce2038314d2068ca3a7f355e1e260ee4771daad10e9a247559dd2a13be6c1cc",
+      "tests/test_torso_anatomy_source_audit.py": "0939029a5e387702e764db9d31e24f1b7b51d7f1f83caa8e14ec971a58d7c4a7",
+      "config/source-organ-family-composite.v1.json": "0c6d2788cb2b5cfb238a04b15ea21298b815d793e1611b53d818100cb5861cc8"
+    }
+  },
+  "qualification": {
+    "source_geometry": true,
+    "complete_declared_family_membership": true,
+    "disjoint_tissue": false,
+    "connected_lumen": false,
+    "physical_volume": false,
+    "clinical_registration": false,
+    "mechanics": false,
+    "whole_human_anatomy": false,
+    "standing_controller": false
+  },
+  "source_topology": {
+    "added_defective_members": [
+      "FJ2404",
+      "FJ2405",
+      "FJ2434"
+    ],
+    "added_closed_oriented_candidates": 74,
+    "self_intersections": "not_checked_by_this_increment",
+    "geometry_repair_applied": false,
+    "existing_cardiac_RA_RV_intersection_evidence": "Docs/media/cardiac-cavities-20260912/independent/intersections.json",
+    "existing_cardiac_intersection_evidence_sha256": "9e70f732989dce803f9ac7f04ce30dc9d643bd2cc0968441325a2fdcf9f01e3d",
+    "existing_RA_RV_intersecting_triangle_pairs": 42
+  },
+  "retained_build_evidence": "/Users/home/numilab-human/Build/organ-family-coverage-20260929",
+  "preliminary_evidence": "Initial shared-helper payload/captures superseded by independent compiler/oracle; all preliminary evidence retained separately.",
+  "standing_video": "28 September run retained; predates later anatomy repairs, not a new 387-surface standing run.",
+  "boundary": "Complete declared 18-region source-family membership and native single-link visual geometry. Overlapping aggregate/descendant atlas representations, cavity reference surfaces and branch/duct segments are retained as source representations, not disjoint tissue, connected lumen, mechanical mass, fluid volume, motion or clinical anatomy.",
+  "artifacts": {
+    "ATTRIBUTION.md": {
+      "sha256": "98198b22e6500d20f6ea7d09373f48482e9fb8b05d24bdbebd5952ae6cb025a0",
+      "bytes": 2168
+    },
+    "abi2-checks/command.json": {
+      "sha256": "16546d712bf39f503a71dd2bc49281abd22c92545412ca34ba5f5bc26f1648c3",
+      "bytes": 304
+    },
+    "abi2-checks/executed-source.json": {
+      "sha256": "b438644952d0214dc3f4bad5e214868b59121f835c4c23d2ae6a2da2730c4e6c",
+      "bytes": 217
+    },
+    "abi2-checks/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "abi2-checks/stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "abi2-checks/stdout.gz": {
+      "sha256": "6f3300d874fee19089c76e3bbb1144f1325f1cd50bc8006fe978121e08e39548",
+      "bytes": 53
+    },
+    "abi2-checks/wall.seconds": {
+      "sha256": "c995d935f4610202e7d0cdb94ba204dd3dfb2b5e31879ad15363ba2c34d4f5ba",
+      "bytes": 18
+    },
+    "audits/executed-source.json": {
+      "sha256": "3cd8ab8cf0ea34f0d1f4f6cb569ad521ab17f22372c9fb698e2dd62525afcd07",
+      "bytes": 459
+    },
+    "audits/projected-neutral-mask1023.json": {
+      "sha256": "366654bf91cc79d5e164d997f41680bbe13f1a68dc949d74d641ac405713258e",
+      "bytes": 914845
+    },
+    "audits/projected-neutral-mask256.json": {
+      "sha256": "913a62d92395450a1b9ad0d6ed84e1ccf740a8401a4c5908e8c9cfa3bf1cd1ca",
+      "bytes": 914845
+    },
+    "audits/projected-neutral-mask512.json": {
+      "sha256": "6d170605eef8d2f31db8d54f27bfa281b7a592fcfdf59fc3fe19aced88d20889",
+      "bytes": 914845
+    },
+    "audits/projected-neutral-mask63.json": {
+      "sha256": "52fea1720e3e0609c7ec454e2b97999babab4b35b0fa50693a3f75923833479b",
+      "bytes": 914839
+    },
+    "audits/raw-source-rest-mask1023.json": {
+      "sha256": "292942023151cca20c0579426920a55e8634d150417c6a5d4a668a2c8a521d82",
+      "bytes": 900825
+    },
+    "audits/raw-source-rest-mask256.json": {
+      "sha256": "cc9befa221aba78d2bf623932e5c6a471aebc4c62ae15ad654c88ef399a61848",
+      "bytes": 900825
+    },
+    "audits/raw-source-rest-mask512.json": {
+      "sha256": "a1b2bb86407113c430fed1572815ec45b66faff88d6f74fb4ec46759bc4ea2b3",
+      "bytes": 900825
+    },
+    "audits/raw-source-rest-mask63.json": {
+      "sha256": "74cddfb4e0de282e30cba92a4c81a49b6a9746484b0c7ee0f6687692234efa7e",
+      "bytes": 900819
+    },
+    "audits/summary.json": {
+      "sha256": "a1a6ced269de01ab12f47fe9779962b00d89b94265dfbbac57fd607b1c3b9fed",
+      "bytes": 2186
+    },
+    "audits/torso-flexion-mask1023.json": {
+      "sha256": "d579cdb7c21e3db38174afba78fe99b7226253c06248e9656ccb5ccf5b4f3c77",
+      "bytes": 915852
+    },
+    "audits/torso-flexion-mask256.json": {
+      "sha256": "d34b858b458c7a38e4efbe5a76384e818806879e4bbd347484c72baa4e3e0286",
+      "bytes": 915852
+    },
+    "audits/torso-flexion-mask512.json": {
+      "sha256": "4453d61cff78c571977ff98bb26d05889385d966251cfe0d7eafea442b90f18c",
+      "bytes": 915852
+    },
+    "audits/torso-flexion-mask63.json": {
+      "sha256": "5bea3a2046240593117d86546ab47003e2a4c9d24eec8b20a83c06207c236d19",
+      "bytes": 915846
+    },
+    "compose.final/command.json": {
+      "sha256": "f0f7e6b635e8356acc122b7eddba5352538f9a17d9aba2d992ad196671b59652",
+      "bytes": 583
+    },
+    "compose.final/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "compose.final/stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "compose.final/stdout.gz": {
+      "sha256": "6d14421f8c66ccb4b15f08ece780e875de359374790d95645882b556ad80c809",
+      "bytes": 174
+    },
+    "compose.final/wall.seconds": {
+      "sha256": "e84d4e050c9fbafc8f25023db0185a711f536cbd7d6ef1244e478c304531b333",
+      "bytes": 18
+    },
+    "compose.verified/command.json": {
+      "sha256": "b629c7119a92199ce5b35c905324f051be5d7fe535571ec175611802d6a143b0",
+      "bytes": 586
+    },
+    "compose.verified/executed-source.json": {
+      "sha256": "72a1f89ca723e2ac39248c8d6e11493f8f9342f9219fea6713405d8e1c6b7c6f",
+      "bytes": 119
+    },
+    "compose.verified/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "compose.verified/stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "compose.verified/stdout.gz": {
+      "sha256": "6d14421f8c66ccb4b15f08ece780e875de359374790d95645882b556ad80c809",
+      "bytes": 174
+    },
+    "compose.verified/wall.seconds": {
+      "sha256": "b2c0eeb93d5d3d639d1fb54a909a4c9dd4f95bea4cb8ea1339d5a285aa1ef4be",
+      "bytes": 17
+    },
+    "executed-source/config/source-organ-family-composite.v1.json": {
+      "sha256": "0c6d2788cb2b5cfb238a04b15ea21298b815d793e1611b53d818100cb5861cc8",
+      "bytes": 5008
+    },
+    "executed-source/history/organ-family-before-early-archive-check.py": {
+      "sha256": "1bcdddd6aac89f608c93371092b63a704b92c4e5399003d0d7a9527a38414faf",
+      "bytes": 23327
+    },
+    "executed-source/history/tests-first-retry.py": {
+      "sha256": "832398efd7d0491296a640bf9f6364ffde4b5fb5350742fc3e4de132a6ad4014",
+      "bytes": 11317
+    },
+    "executed-source/history/tests-initial.py": {
+      "sha256": "e0c0ee1c34c87ff0db030a1f2062bb96b55543a996a3052c7d0b1b4079b2c7d3",
+      "bytes": 11169
+    },
+    "executed-source/native-probe.mm.gz": {
+      "sha256": "4d1039e8b1e71af5da3d552b54fae5b5a948c49e20e41a97933ae8817fd2ec00",
+      "bytes": 223774
+    },
+    "executed-source/src/numilab_human/lung_envelope.py": {
+      "sha256": "972bfc5da8813ba8be862961bc5783cb429c6e9d6a8c819e64c7ecbc819bf15a",
+      "bytes": 22609
+    },
+    "executed-source/src/numilab_human/organ_family_geometry.py": {
+      "sha256": "b332ab3e4a8f4514bd82aad455bbb520f0e673fbc0a0e6d75e920fffb8cd559b",
+      "bytes": 23722
+    },
+    "executed-source/src/numilab_human/torso_anatomy_audit.py": {
+      "sha256": "f6673205c6ce327e36245dbec2c6da99a95fd62c797dc2de5db7c0ac4e35cd3c",
+      "bytes": 21005
+    },
+    "executed-source/tests/test_lung_envelope.py.gz": {
+      "sha256": "0950aa6679c535c1acefc8059784b633304be65abb738a1fc0be3f7b32316f98",
+      "bytes": 3478
+    },
+    "executed-source/tests/test_organ_family_geometry.py.gz": {
+      "sha256": "c87a047a06b1cf7902a6dcbcc16d669e3421baacbe708dc8c12c9e9a05e8e5f9",
+      "bytes": 3965
+    },
+    "executed-source/tests/test_torso_anatomy_source_audit.py.gz": {
+      "sha256": "a4ffd8d75fc15d84a0e71fcffd2026d95480ddac02fc264b99562a5b5bd4ae3a",
+      "bytes": 3446
+    },
+    "executive-organ-family-progress.png": {
+      "sha256": "03e7495f1bcd0bedfa11d2fc4cb8c3107835208bb0eebd8364a2ad643f50121c",
+      "bytes": 152370
+    },
+    "executive-organ-family-types.png": {
+      "sha256": "ed1dfa5b090d959e088f29479e0069e83261408fcf4c1a22c29c07ae596f18b9",
+      "bytes": 440114
+    },
+    "native/command.json": {
+      "sha256": "bb01162696ef2558f4440889283d5a30ddcf32d928772e986b1ebb5ac53e3261",
+      "bytes": 3024
+    },
+    "native/compile.exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "native/compile.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "native/compile.stdout.gz": {
+      "sha256": "f1b651238a58fe290baec6c5e32f3bdb1943dd2bd582f02569231f7a757c7837",
+      "bytes": 20
+    },
+    "native/link.exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "native/link.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "native/link.stdout.gz": {
+      "sha256": "f1b651238a58fe290baec6c5e32f3bdb1943dd2bd582f02569231f7a757c7837",
+      "bytes": 20
+    },
+    "native/projected-neutral-mask1023/command.json": {
+      "sha256": "8da5e9a5c894670a9c64b0368ca4c668665245f9e4adbc779dcf78d6dbb50e44",
+      "bytes": 894
+    },
+    "native/projected-neutral-mask1023/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "native/projected-neutral-mask1023/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20.torso-anatomy-poses.json": {
+      "sha256": "b187c6f3d349cee55beb46d6768d9fb7b1aea9f3a7f05cc8a0382d640d00a8bd",
+      "bytes": 565
+    },
+    "native/projected-neutral-mask1023/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20.visual.v3.json": {
+      "sha256": "a2282d8be921988a4abe81c5f7f8c4057b4c428d520500274961dbda619ca463",
+      "bytes": 950
+    },
+    "native/projected-neutral-mask1023/stderr": {
+      "sha256": "5b075a39874f621c8419e0d9291d0d82ad1504567b1379777c17f399d006512f",
+      "bytes": 90
+    },
+    "native/projected-neutral-mask1023/stdout.gz": {
+      "sha256": "0a011ac9c963007d8e1bab469e9c74b79ba4558e71ec12ebd6e23f6e85990a0a",
+      "bytes": 5252
+    },
+    "native/projected-neutral-mask1023/wall.seconds": {
+      "sha256": "e2cf2eb0fc7457c0c16faefadd8125409ae7111728ebd858830bbddbd8843a2d",
+      "bytes": 18
+    },
+    "native/projected-neutral-mask256/command.json": {
+      "sha256": "4f1813989aff9b9e5da30b1a2328beb67b8c275e48e8732f0293981b4fe53687",
+      "bytes": 892
+    },
+    "native/projected-neutral-mask256/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "native/projected-neutral-mask256/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20.torso-anatomy-poses.json": {
+      "sha256": "5b97c5e889bf2f5ab6aeef4b9fe950ff554e26df483e9a57a5c09854de5702a6",
+      "bytes": 564
+    },
+    "native/projected-neutral-mask256/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20.visual.v3.json": {
+      "sha256": "ca158f24d562925dfc5a7f9effefcf47d702cda7cd70556fe34e474cffba0e43",
+      "bytes": 950
+    },
+    "native/projected-neutral-mask256/stderr": {
+      "sha256": "9f0c21ec22f7ecc9d29f772cc8327f2ac5b72d0041ce9f241ab9f0fc690bad07",
+      "bytes": 90
+    },
+    "native/projected-neutral-mask256/stdout.gz": {
+      "sha256": "8af1fe493903f25af10ea5d367ac70d3af843b01e486d9e90d488112d130e1d1",
+      "bytes": 5143
+    },
+    "native/projected-neutral-mask256/wall.seconds": {
+      "sha256": "ad84c74e9ff9823668f65c6dedb9592f0904c0c31a2cf36c9dc39408e38bc1c2",
+      "bytes": 17
+    },
+    "native/projected-neutral-mask512/command.json": {
+      "sha256": "8d3663d841b25e4fe7435bf4c065db1d76e885c1495a59165b0593c0920ad46b",
+      "bytes": 892
+    },
+    "native/projected-neutral-mask512/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "native/projected-neutral-mask512/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20.torso-anatomy-poses.json": {
+      "sha256": "654656d23430260c95899c01cfe245d6e3f81017620ab9545bf6b9c1e21c3184",
+      "bytes": 564
+    },
+    "native/projected-neutral-mask512/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20.visual.v3.json": {
+      "sha256": "c3cbc0cf3d37c4812c6b4e2160cf2196d68f5d898733456f3882ec903656096b",
+      "bytes": 951
+    },
+    "native/projected-neutral-mask512/stderr": {
+      "sha256": "8a041cdbe280e68b784108f68d5a0ea9a93b06a1f1c77e5c1f383ae128638b1b",
+      "bytes": 90
+    },
+    "native/projected-neutral-mask512/stdout.gz": {
+      "sha256": "6e64de7a6fbb9802b6b0cc44390266194436f99b97e5c642d62257750f17fbd0",
+      "bytes": 5142
+    },
+    "native/projected-neutral-mask512/wall.seconds": {
+      "sha256": "02ce56b73132c9cd61ec63cddbd8195a634c82362729cc6d16cff6ba1615da3c",
+      "bytes": 18
+    },
+    "native/projected-neutral-mask63/command.json": {
+      "sha256": "14c32b27ef1c288740102aaf70f20fda41796383c2824920c863d84dfa5b4b20",
+      "bytes": 890
+    },
+    "native/projected-neutral-mask63/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "native/projected-neutral-mask63/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20.torso-anatomy-poses.json": {
+      "sha256": "79cf2eaef8a42efd9960ac97af538370741d8e621ce7a322ebe7cce3b2d59eb5",
+      "bytes": 563
+    },
+    "native/projected-neutral-mask63/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20.visual.v3.json": {
+      "sha256": "7a7fd57416485afb00fb1103b99ce2a5620294e4702107f4d2cb5f6017d3d9c3",
+      "bytes": 951
+    },
+    "native/projected-neutral-mask63/stderr": {
+      "sha256": "462d797b59daa82347493afd7b19b994540cd8fb0be924000eb040b8ea231dc3",
+      "bytes": 90
+    },
+    "native/projected-neutral-mask63/stdout.gz": {
+      "sha256": "a6131723435f094322f8a0dfb044e51e3e4d2b29b79e798a32f6fb3313f7421e",
+      "bytes": 5227
+    },
+    "native/projected-neutral-mask63/wall.seconds": {
+      "sha256": "cc1aff69b3e12571dcc199c173b5ac30e5ce75cd93be59e359d01d1cb33849f9",
+      "bytes": 18
+    },
+    "native/raw-source-rest-mask1023/command.json": {
+      "sha256": "e625c289757d2441afd26d6ad6bc6f925404addf5bdb044618b553d72ea3fb2d",
+      "bytes": 771
+    },
+    "native/raw-source-rest-mask1023/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "native/raw-source-rest-mask1023/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20.torso-anatomy-poses.json": {
+      "sha256": "b187c6f3d349cee55beb46d6768d9fb7b1aea9f3a7f05cc8a0382d640d00a8bd",
+      "bytes": 565
+    },
+    "native/raw-source-rest-mask1023/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20.visual.v3.json": {
+      "sha256": "5af9aa5db67ae0566168c0418b77b5f0649acac92666025ce9c8388cff7883ae",
+      "bytes": 951
+    },
+    "native/raw-source-rest-mask1023/stderr": {
+      "sha256": "ff72a4053af0008113b270a5741aca40386e802052d0d391dd101b6e3f06034c",
+      "bytes": 90
+    },
+    "native/raw-source-rest-mask1023/stdout.gz": {
+      "sha256": "7f6745539c70234cc4eb8f468e94d3f441781154de71faa30c389b872c05c5a6",
+      "bytes": 5034
+    },
+    "native/raw-source-rest-mask1023/wall.seconds": {
+      "sha256": "86e25e0eba841e2f838acb74aae52777a736fadc8b9464e4e9a7cd63a8dba224",
+      "bytes": 18
+    },
+    "native/raw-source-rest-mask256/command.json": {
+      "sha256": "186fb27c980097904c7bbb5a93bd6ec8f4857715e9031d43dce295d5e5b7d87d",
+      "bytes": 769
+    },
+    "native/raw-source-rest-mask256/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "native/raw-source-rest-mask256/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20.torso-anatomy-poses.json": {
+      "sha256": "5b97c5e889bf2f5ab6aeef4b9fe950ff554e26df483e9a57a5c09854de5702a6",
+      "bytes": 564
+    },
+    "native/raw-source-rest-mask256/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20.visual.v3.json": {
+      "sha256": "cc3616a0380cb804bbde50e96cc8619b8851254c6dbf3f575c7a1296755725e3",
+      "bytes": 951
+    },
+    "native/raw-source-rest-mask256/stderr": {
+      "sha256": "53cbc468be893480a8f9de94ff8d2fcae80c1643b354d36ca5166db8b4e6d59a",
+      "bytes": 90
+    },
+    "native/raw-source-rest-mask256/stdout.gz": {
+      "sha256": "471ece98b0f60571239fed8c26f4c3b6809b9791077ff3faeeaa6a6315766bbe",
+      "bytes": 4930
+    },
+    "native/raw-source-rest-mask256/wall.seconds": {
+      "sha256": "4bbdd1265fb0f17e298fcd42d057c1dee5c13dc36df2cae68802d3d00d358466",
+      "bytes": 18
+    },
+    "native/raw-source-rest-mask512/command.json": {
+      "sha256": "89c898f4f3401194baddb2c89b4bfc639e9060f6960520fe6d5f18795e66ea9e",
+      "bytes": 769
+    },
+    "native/raw-source-rest-mask512/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "native/raw-source-rest-mask512/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20.torso-anatomy-poses.json": {
+      "sha256": "654656d23430260c95899c01cfe245d6e3f81017620ab9545bf6b9c1e21c3184",
+      "bytes": 564
+    },
+    "native/raw-source-rest-mask512/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20.visual.v3.json": {
+      "sha256": "a98ee3963e5f7634218e7b560759736512f4afa1c0934aa0d68f0329e28f428c",
+      "bytes": 951
+    },
+    "native/raw-source-rest-mask512/stderr": {
+      "sha256": "1de0e0098fecf9638173a3f696cc1a2f4cb7376e68a9429278b5e7e3b6437630",
+      "bytes": 90
+    },
+    "native/raw-source-rest-mask512/stdout.gz": {
+      "sha256": "9c4b06fdb52a8fc1c9e66c3daa2782243bdc1d3fe44654d28964c3b4fb5cd096",
+      "bytes": 4928
+    },
+    "native/raw-source-rest-mask512/wall.seconds": {
+      "sha256": "e2d0af84bbbcd06968bb2568bf191e2caf543c43f48928cc83d38158195beff0",
+      "bytes": 18
+    },
+    "native/raw-source-rest-mask63/command.json": {
+      "sha256": "e9b1a3dcd59e2f1925839a3b40a6401a38a1c66463a751345766fe2d9c41d4d5",
+      "bytes": 767
+    },
+    "native/raw-source-rest-mask63/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "native/raw-source-rest-mask63/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20.torso-anatomy-poses.json": {
+      "sha256": "79cf2eaef8a42efd9960ac97af538370741d8e621ce7a322ebe7cce3b2d59eb5",
+      "bytes": 563
+    },
+    "native/raw-source-rest-mask63/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-focus-body-20.visual.v3.json": {
+      "sha256": "714e574195affc239ab509fbc013e020696a6ceacb97f38f40164371831d2120",
+      "bytes": 952
+    },
+    "native/raw-source-rest-mask63/stderr": {
+      "sha256": "df022aca25c7dd98f6d96fe9f534c5d653147c2afcca0c9cc97c967affeacac9",
+      "bytes": 90
+    },
+    "native/raw-source-rest-mask63/stdout.gz": {
+      "sha256": "14b635339f41344fd27be5e4bdd09a2fd8a781bedf3b81042bfec36781bb9917",
+      "bytes": 5010
+    },
+    "native/raw-source-rest-mask63/wall.seconds": {
+      "sha256": "5217b9652688eb2f925312595dde36869a84d410c2ed1debab1b746d61dcc914",
+      "bytes": 18
+    },
+    "native/source.sha256": {
+      "sha256": "a1bb0815ec82aaadfbd307af5006c1dbfee56d26ae98c654a88afa32becf6a74",
+      "bytes": 65
+    },
+    "native/torso-flexion-mask1023/command.json": {
+      "sha256": "97f411a456baaa5c4346644a8f5959471772ff4bc09250cb113b9950997750c9",
+      "bytes": 981
+    },
+    "native/torso-flexion-mask1023/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "native/torso-flexion-mask1023/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-posed-focus-body-20.torso-anatomy-poses.json": {
+      "sha256": "2e49b06c55ceafcfd93063e1885ace6fb99b7351c15f2bf93d2994903dbbe148",
+      "bytes": 609
+    },
+    "native/torso-flexion-mask1023/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-posed-focus-body-20.visual.v3.json": {
+      "sha256": "345ef32c83a5da1a2d1a1a9e92cbca3e30853a0900479c061ead1132e5aa7eac",
+      "bytes": 950
+    },
+    "native/torso-flexion-mask1023/stderr": {
+      "sha256": "0b58efecc4d31be46c79c135c3197d2a71bdc6f37608cfaf591d378dc0bd67f2",
+      "bytes": 90
+    },
+    "native/torso-flexion-mask1023/stdout.gz": {
+      "sha256": "5a165e4fca23e36c8a2ae791cf381dfae3aa3e638ffa77fd3882c173e984edb8",
+      "bytes": 5265
+    },
+    "native/torso-flexion-mask1023/wall.seconds": {
+      "sha256": "a81a9aea2f3aaed6a6b1ad712a6040ee61e8fec785933d4267418deebe229c38",
+      "bytes": 17
+    },
+    "native/torso-flexion-mask256/command.json": {
+      "sha256": "3519c5be6a7d43b24c1a0adaa7eef00b435fcf7930af46a81e66ca3615b4acc4",
+      "bytes": 979
+    },
+    "native/torso-flexion-mask256/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "native/torso-flexion-mask256/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-posed-focus-body-20.torso-anatomy-poses.json": {
+      "sha256": "e0fd9525a28021bfb5969bdb6206672daa558db05f7af5d2326b62c592c8b0c5",
+      "bytes": 608
+    },
+    "native/torso-flexion-mask256/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-posed-focus-body-20.visual.v3.json": {
+      "sha256": "df618a241b2c139e3ace0125d08c554d7c681a1faf36307eb30a5d79a1da4faf",
+      "bytes": 952
+    },
+    "native/torso-flexion-mask256/stderr": {
+      "sha256": "aa7cafdd9f65a53f28f77c950c629bd29cd1449110c9e427550cfbb6518e269d",
+      "bytes": 90
+    },
+    "native/torso-flexion-mask256/stdout.gz": {
+      "sha256": "6ba6f3e0f59895c43f5b763f09b20f5888204fa1a16f12ee0056eba9956a4658",
+      "bytes": 5154
+    },
+    "native/torso-flexion-mask256/wall.seconds": {
+      "sha256": "2144746e5fdc1fe1af2edf5b41a0c4bbddcc1949009f72c2ef002beca1ac6261",
+      "bytes": 18
+    },
+    "native/torso-flexion-mask512/command.json": {
+      "sha256": "6c7609d06db4f234273d0e7352c754111d094c18fbc085ac79f649d4a9cb6d17",
+      "bytes": 979
+    },
+    "native/torso-flexion-mask512/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "native/torso-flexion-mask512/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-posed-focus-body-20.torso-anatomy-poses.json": {
+      "sha256": "5995f4b4cb3f7f0ebd6f7e2ac9092b339089ab277970f7f4ad6899b2dd84745f",
+      "bytes": 608
+    },
+    "native/torso-flexion-mask512/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-posed-focus-body-20.visual.v3.json": {
+      "sha256": "12871dfd9bd9c8a7065cda5aa8ade0bc9d533b3248375b46f2a7d75bd874dc4f",
+      "bytes": 951
+    },
+    "native/torso-flexion-mask512/stderr": {
+      "sha256": "c5ac1f2f7431147652c641bfe9897d6d26a1a8417b55fda2aba75829695fe5fe",
+      "bytes": 90
+    },
+    "native/torso-flexion-mask512/stdout.gz": {
+      "sha256": "a10b9f3f3e9370b6e6da3323c2fcee2845a2a33459a287f9028770c877d90adb",
+      "bytes": 5153
+    },
+    "native/torso-flexion-mask512/wall.seconds": {
+      "sha256": "f532ed262de375443479d7f572332fdf1662173e0aa72578e0da372d481fce8d",
+      "bytes": 19
+    },
+    "native/torso-flexion-mask63/command.json": {
+      "sha256": "a8ec77c6b625a9d1f0648f9fd7b0d0ddd392be7fff08a45a101d1fba02d9814a",
+      "bytes": 977
+    },
+    "native/torso-flexion-mask63/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "native/torso-flexion-mask63/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-posed-focus-body-20.torso-anatomy-poses.json": {
+      "sha256": "fdf3cc511d93e45813e7c80598e1b558a4e9077219cb526e687287a59f62fed3",
+      "bytes": 607
+    },
+    "native/torso-flexion-mask63/myosim-fullbody-articulated-bodyparts-bones-source-torso-anatomy-posed-focus-body-20.visual.v3.json": {
+      "sha256": "acd57ef2ab197a17406e727259e63b4bb3058a1116cf47c482f380af771ed854",
+      "bytes": 951
+    },
+    "native/torso-flexion-mask63/stderr": {
+      "sha256": "2dde39c984c1c1864f567856a93143cb8c5e1688bf890ddb8d64a8d599e1d89d",
+      "bytes": 90
+    },
+    "native/torso-flexion-mask63/stdout.gz": {
+      "sha256": "de5b7466188cabeb14a1ae122e079a273671eee9951c2d905e6117a0679b3777",
+      "bytes": 5237
+    },
+    "native/torso-flexion-mask63/wall.seconds": {
+      "sha256": "f869ba2824546f748d2842a7a31e6f3cb198352a6ea9b0c253c85500f2e72d2f",
+      "bytes": 18
+    },
+    "native/wall.seconds": {
+      "sha256": "aa59d8f2602abeedf20928a52430ff0d7dd5e015891865d5a0bc5b3277918750",
+      "bytes": 19
+    },
+    "native-neutral-mask1023-oblique.png": {
+      "sha256": "ce07ed361519da48b6e3400eec786f6627f1b20dc3fa8b09fe841055c841fa43",
+      "bytes": 232239
+    },
+    "native-neutral-mask256-oblique.png": {
+      "sha256": "2149a364a640a284c734cd0f9e91ea086d983aa66491753b9016794243b7a1fd",
+      "bytes": 229570
+    },
+    "native-neutral-mask512-oblique.png": {
+      "sha256": "e6d9871b05d3c3ed0f1d42fa221f3ad62a8b5a5c21da6a98fa117a610249e5ef",
+      "bytes": 231976
+    },
+    "native-neutral-mask63-front.png": {
+      "sha256": "3ca5312d11afef1949949af6944e41b075fb7a56098fa6e9998af5deb485fa38",
+      "bytes": 268915
+    },
+    "payload-manifest.json": {
+      "sha256": "64ec90641612a63420fe29c5fb29fb98780fe71ef021890900af8e3e270b9be3",
+      "bytes": 646608
+    },
+    "reproduce/audit_profiles.py": {
+      "sha256": "c915e8a1f32026ab70cc90d8d72d2b93136ffdfeb6276ef743f602b222ece85a",
+      "bytes": 1754
+    },
+    "reproduce/collect_public.py": {
+      "sha256": "705b92eb74e35f574f7bee4046ca76900a5dc4d9c0e8f6d97bb377127325b170",
+      "bytes": 7465
+    },
+    "reproduce/create_figures.py": {
+      "sha256": "17d1879ab0eaab8ed8208e75a008b3f3cbfa81b94b87a061dc97153adbbb62d6",
+      "bytes": 3595
+    },
+    "reproduce/freeze_history.py": {
+      "sha256": "4be7b28a58a3391033345f0dc7e52569c96ae2f8423556acdd90fc0bf95a4217",
+      "bytes": 2377
+    },
+    "reproduce/retry_tests.py": {
+      "sha256": "6e95e62d3b9c797d3e2abe5c1dcce93e3b809becf613bebbdb17e5d67daccbe5",
+      "bytes": 1632
+    },
+    "reproduce/run_abi2_checks.py": {
+      "sha256": "e6e60c7ef485fbb1009ea51bb3a9db87570c0b4daa963bd0ec355288da7b9299",
+      "bytes": 1559
+    },
+    "reproduce/run_tests.py": {
+      "sha256": "211c1795bced4031a771218466b5649b97d800544b7328c8007ad83813904971",
+      "bytes": 1399
+    },
+    "reproduce/update_board.py": {
+      "sha256": "9e0d06193986b88478edecd1318fdb700e3d5c6c16e877178a0cbb4b749d0c1e",
+      "bytes": 4358
+    },
+    "reproduce/verify_final.py": {
+      "sha256": "774290cb6b5b3f4cc6d4b3b0ee8cac492453dc4ed6dd60652d56688bf70fe5b6",
+      "bytes": 1910
+    },
+    "reproduce/verify_pdf.py": {
+      "sha256": "44090d1f48d95a052ebda597a3464ea82bbdf6f1189b23d4ec5ea43d4f59eb29",
+      "bytes": 1123
+    },
+    "tests.final/command.json": {
+      "sha256": "17372d4401386add02d61b88ba286e01fc53ffea1a6498511a24cafb86dfa2ce",
+      "bytes": 264
+    },
+    "tests.final/executed-source.json": {
+      "sha256": "8d6b771c88a421453e88e4200706b4d4f9b4f8fe18faa18fc70edc59be2e0a82",
+      "bytes": 783
+    },
+    "tests.final/exit.code": {
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "bytes": 2
+    },
+    "tests.final/stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "tests.final/stdout.gz": {
+      "sha256": "44df0d63b77c87a22fab6d169e2b6b0d5e9692b15a5a193bbca3c09f63513caa",
+      "bytes": 2525
+    },
+    "tests.final/wall.seconds": {
+      "sha256": "7e46c442d3bd7148dd1a40beddba82b8352ec059499128462ef85d39806ae06c",
+      "bytes": 18
+    },
+    "tests.retry/command.json": {
+      "sha256": "b684a2ac4fdc86498a9b4ea74ad9550deb4708d92c4a9251bf6fcaf0e8e42720",
+      "bytes": 589
+    },
+    "tests.retry/executed-source.json": {
+      "sha256": "35b112d9cfa2832eeafb8da91717e49ea767b8f43693bc8f0655f0aba4b4bcac",
+      "bytes": 783
+    },
+    "tests.retry/exit.code": {
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "bytes": 2
+    },
+    "tests.retry/stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "tests.retry/stdout.gz": {
+      "sha256": "caab0661e4fac204cb353a9ea70e51307542b8b696d8ef79fb62370c8d78925b",
+      "bytes": 803
+    },
+    "tests.retry/wall.seconds": {
+      "sha256": "863af9a2c10b7b910642b4e3ab2e48bbe5713da71936da4998031fbff56833cd",
+      "bytes": 18
+    },
+    "tests.verified/command.json": {
+      "sha256": "9f1b2a0e1b1a003183e6e9122d6c64c32b34b890df3d82053ab61c12e9197bae",
+      "bytes": 695
+    },
+    "tests.verified/executed-source.json": {
+      "sha256": "888a6b5cfac89ce36700564ac0b9ed0d419595cebb66e4249a770ddcd4caa3b4",
+      "bytes": 783
+    },
+    "tests.verified/exit.code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "tests.verified/stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "tests.verified/stdout.gz": {
+      "sha256": "360907b0fb5389e1c9125240d40f108b814e28534bf8947136c94c95729c398b",
+      "bytes": 52
+    },
+    "tests.verified/wall.seconds": {
+      "sha256": "a906647224422bc17499417c1979cbc38e09300471ac8a4260e3b2a5e007d026",
+      "bytes": 19
+    }
+  }
+}
