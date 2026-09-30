@@ -1,0 +1,55 @@
+{
+  "boundary": "Two source tetrahedra per knee only. Native fail-closed admission and exact rollback do not resolve the authored cartilage intersection or qualify loaded knee contact.",
+  "clinical_anatomy_qualified": false,
+  "close_noncrossing_active_deformable_histories": 16,
+  "close_noncrossing_contact_accepted": true,
+  "lab_coupled_commit": "5a09376646a4197aef37d98445781ee30c0d62cb",
+  "left_rejection_replay_exact": true,
+  "loaded_contact_qualified": false,
+  "metallib_sha256": "ff3937eacff88872b8a8adf0990ab5369bf2565570190ee160c5c712fd0ce01d",
+  "native_outputs_sha256": {
+    "native-guard-close-contact": "bc557d86a858e108c0eded7603d4ca7afd6d00669534e931179c718f4c37dfbc",
+    "native-guard-left": "2fc934c128cb5619f95375e35985435dcf58a0c4e0fae1ba4298f8506e63ee87",
+    "native-guard-left-replay": "2fc934c128cb5619f95375e35985435dcf58a0c4e0fae1ba4298f8506e63ee87",
+    "native-guard-right": "4905d619751d963618b8ee55c94fc92657a4e48d4e508c6f4bbf6570ea9d5b5a",
+    "native-guard-separated": "8de0220c3d560f05f558153b967610003400ae7523ce5fd48ea71123731e4df2"
+  },
+  "near_contact_fixture_sha256": "18bcf1c0a5fa46acea6818b7040920618827c00b95b23766d161bb665ed84117",
+  "probe_binary_sha256": "ab9d2d59109aaaab4bc46046ced9115208da0f3ab7db8cd166b77db78d68f989",
+  "schema": "numi.human.patellofemoral-contact-guard-audit.v1",
+  "source_cells": {
+    "left": {
+      "completed_microsteps": 0,
+      "fixture_sha256": "de53ca7b3a7fec1ee3474c3cec28e24fedfcd308184acb501957b11da4f77973",
+      "input": {
+        "crossing": true,
+        "intersection_point_count": 2,
+        "segment_length_m": 6.825957299010955e-05
+      },
+      "retained_after_rejection": {
+        "crossing": true,
+        "intersection_point_count": 2,
+        "segment_length_m": 6.82575675188814e-05
+      },
+      "rollback_bitwise": true,
+      "status_code": 6
+    },
+    "right": {
+      "completed_microsteps": 0,
+      "fixture_sha256": "4b3203465e3750cc45ec4477c1947e207af0ac075f7a1d422c1890b55b736839",
+      "input": {
+        "crossing": true,
+        "intersection_point_count": 2,
+        "segment_length_m": 6.825957299010955e-05
+      },
+      "retained_after_rejection": {
+        "crossing": true,
+        "intersection_point_count": 2,
+        "segment_length_m": 6.825741154967175e-05
+      },
+      "rollback_bitwise": true,
+      "status_code": 6
+    }
+  },
+  "status": "bilateral_source_cell_initial_crossings_rejected"
+}

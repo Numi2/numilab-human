@@ -14,7 +14,6 @@ from tools.verify_patellofemoral_surface import payload
 
 
 ROOT = Path(__file__).resolve().parents[1]
-BUILD = ROOT / 'Build/patellofemoral-surface-20260930/left'
 OUTPUT = ROOT / 'Docs/media/patellofemoral-crossing-fixture-20260930'
 
 
@@ -22,15 +21,18 @@ def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def build() -> dict:
+def build(side: str = 'left') -> dict:
+    assert side in {'left', 'right'}
+    build_root = ROOT / 'Build/patellofemoral-surface-20260930' / side
+    stem = 'open-knee-oks003-left' if side == 'left' else 'open-knee-oks003-right-mirrored'
     source = parse_source(ROOT / 'Sources/open-knee-oks003')
-    manifest_path = BUILD / 'open-knee-oks003-left.manifest.json'
-    payload_path = BUILD / 'open-knee-oks003-left.nhknee'
+    manifest_path = build_root / f'{stem}.manifest.json'
+    payload_path = build_root / f'{stem}.nhknee'
     decoded = payload(payload_path, json.loads(manifest_path.read_text()), source)
     loop_path = ROOT / 'Docs/media/patellofemoral-loop-20260930/receipt.json'
     loop = json.loads(loop_path.read_text())
-    assert sha(payload_path) == loop['compiled']['left']['payload_sha256']
-    segment = loop['compiled']['left']['segments'][0]
+    assert sha(payload_path) == loop['compiled'][side]['payload_sha256']
+    segment = loop['compiled'][side]['segments'][0]
     selected = []
     owners = {}
     for region, face_key in (('PTC', 'patellar_node_indices'),
@@ -46,12 +48,13 @@ def build() -> dict:
         owners[region] = {'global_tet_index': tet_index, 'global_node_indices': nodes}
         selected.extend(decoded['positions'][nodes].tolist())
     OUTPUT.mkdir(parents=True, exist_ok=True)
-    fixture_path = OUTPUT / 'left-crossing-0.txt'
+    fixture_path = OUTPUT / f'{side}-crossing-0.txt'
     fixture_path.write_text(''.join(' '.join(format(value, '.17g') for value in node) + '\n'
                                     for node in selected))
     result = {
         'schema': 'numi.human.patellofemoral-crossing-cell-fixture.v1',
         'boundary': 'Two exact source tetrahedra selected at one of 18 crossing triangle pairs. Diagnostic kernel input only; synthetic material and no physiological load.',
+        'side': side,
         'payload_sha256': sha(payload_path),
         'manifest_sha256': sha(manifest_path),
         'intersection_loop_receipt_sha256': sha(loop_path),
@@ -64,9 +67,10 @@ def build() -> dict:
         'loaded_contact_qualified': False,
         'clinical_anatomy_qualified': False,
     }
-    (OUTPUT / 'receipt.json').write_text(json.dumps(result, indent=2, sort_keys=True) + '\n')
+    receipt = OUTPUT / ('receipt.json' if side == 'left' else 'right-receipt.json')
+    receipt.write_text(json.dumps(result, indent=2, sort_keys=True) + '\n')
     return result
 
 
 if __name__ == '__main__':
-    print(json.dumps(build(), sort_keys=True))
+    print(json.dumps({'left': build('left'), 'right': build('right')}, sort_keys=True))
