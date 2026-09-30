@@ -860,6 +860,11 @@ then executes both current compiled sides and shows that five named articular
 pairs activate the same 11,586 femoral slave nodes under prescribed closure.
 It leaves source-rest response zero despite the 18 crossings; its patellar
 pressure/force is not a localized, loaded contact result.
+The [intersection-loop candidate](PATELLOFEMORAL_INTERSECTION_LOOP_20260930.md)
+resolves those crossings into one closed 18-edge/18-point curve with exact
+barycentric witnesses on both compiled cartilage surfaces. It is a usable
+geometric input for native initial-contact constraints, not a separating
+displacement, contact pressure, energy result, or accepted loaded state.
 
 The [calcaneal tendon visual boundary repair](TENDON_HARMONIC_BOUNDARY_20260929.md)
 removes 145 right and 163 left exact intersections in the compiled tendon

@@ -36,6 +36,10 @@ initial-penetration policy, followed by an accepted native transaction with
 contact work, force balance, rollback and sustained-state checks. No source
 faces or compiled payload bytes were altered here.
 
+The later [source-bound intersection loop](PATELLOFEMORAL_INTERSECTION_LOOP_20260930.md)
+captures the missing triangle-pair geometry; it has not yet entered this
+native contact operator.
+
 Reproduce with the retained native build and exact Human payloads. Exit 2 is
 the expected failed localized-contact admission after the receipt is written:
 
