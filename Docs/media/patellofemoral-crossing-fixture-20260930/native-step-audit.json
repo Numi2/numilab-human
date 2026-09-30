@@ -1,0 +1,43 @@
+{
+  "accepted_after_one_microsecond": {
+    "crossing": true,
+    "intersection_point_count": 2,
+    "segment_length_m": 6.804960860371347e-05
+  },
+  "accepted_overlap_active_deformable_histories": 5,
+  "accepted_overlap_step_status": 0,
+  "clinical_anatomy_qualified": false,
+  "exact_native_replay": true,
+  "fixture_receipt_sha256": "0572240caba8f2a5562b519dccf1acdc2e4fc3e49f1b8ff70eaa514cf01015b1",
+  "gap": "A native accepted contact step leaves the authored patella-femur surface crossing in place. Contact activation and solver acceptance do not establish noninterpenetration.",
+  "initial": {
+    "crossing": true,
+    "intersection_point_count": 2,
+    "segment_length_m": 6.825957299010955e-05
+  },
+  "input_face_node_indices": [
+    [
+      2,
+      1,
+      0
+    ],
+    [
+      6,
+      7,
+      5
+    ]
+  ],
+  "loaded_contact_qualified": false,
+  "native_outputs_sha256": {
+    "native-overlap-replay": "1aebb4f07fa96ac55c9c0500878cc9bb25475854b1e4a2ee1b2b0741cafe9837",
+    "native-overlap-step": "1aebb4f07fa96ac55c9c0500878cc9bb25475854b1e4a2ee1b2b0741cafe9837",
+    "native-separated-control": "8de0220c3d560f05f558153b967610003400ae7523ce5fd48ea71123731e4df2"
+  },
+  "schema": "numi.human.patellofemoral-native-crossing-audit.v1",
+  "separated_control": {
+    "crossing": false,
+    "intersection_point_count": 0,
+    "segment_length_m": 0.0
+  },
+  "status": "failed_initial_crossing_clearance"
+}
