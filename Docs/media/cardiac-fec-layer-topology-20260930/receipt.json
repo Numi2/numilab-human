@@ -1,0 +1,65 @@
+{
+  "auditor_source_sha256": "55ad99588b5ffc00eabc522ebb141cffa8281b556b76c8f954f024b88e01ab03",
+  "boundary": "Geometric fast-layer sensitivity on the pinned case18 mesh. The source FEC cell tag is absent; neither vertex-ring nor boundary-face mask is asserted to be the published CARP tag. No voltage, ionic state, native accepted electrical step or heartbeat.",
+  "boundary_face_arrival_sha256": "6c64ea4ae0279b0968a14b1f52326179aae084b567f8591322ff329898662612",
+  "boundary_face_mask_sha256": "73422876778da53155bbae52bfe782bc05130ac7505f439d2d4cf6c673422df8",
+  "heartbeat_qualified": false,
+  "measurements": {
+    "boundary_endocardial_faces": 35082,
+    "boundary_face_fec_cells": 35081,
+    "edge_contact_only_cells": 33837,
+    "point_contact_only_cells": 32792,
+    "three_or_four_endo_corner_cells_without_boundary_face": 2,
+    "ventricular_cells": 1097534,
+    "ventricular_exterior_faces": 142374,
+    "ventricular_nonmanifold_faces": 0,
+    "ventricular_unique_faces": 2266255,
+    "vertex_only_fec_cells": 66631,
+    "vertex_ring_fec_cells": 101712
+  },
+  "native_accepted_electrical_steps": 0,
+  "published_case18_lv_10_to_90_ms": 29.841,
+  "published_case18_lv_span_ms": 71.9895,
+  "schema": "numi.human.cardiac-fec-layer-topology.v1",
+  "source_activation_gate_sha256": "d6545c8e268a238eb1dde66f2cf5bcc59c24f2eaae89fdef0cbb55df07fac545",
+  "source_activation_summary_sha256": "4bd6b06afbd430900b75b0e9ca952d0c018690bc0d441f8e65b953901519ea2f",
+  "source_manifest_sha256": "e8cb0391623577efc4eac04e5710cf7c9a4757614e09d936f5af3889c37d56f1",
+  "source_model_reproduced": false,
+  "source_refiner_sha256": "219cb620b652b9b1fcacf9e29cab32b2c9ce8ec39b78eb77af5896db29f9c51c",
+  "status": "boundary_face_candidate_measured_source_mismatch_retained",
+  "variant": {
+    "generated_refiner_sha256": "5765a871ba2b62759f4176577cf6d7ce4cd171b9724a54dd5f841b55982edff7",
+    "graph_arrival_sha256": "6491df9b469bf6d957869451fdb04ed9fe38c985c2288a059676de4b55d0f916",
+    "graph_edges": 1386798,
+    "lv": {
+      "maximum_ms": 75.2904694795797,
+      "minimum_ms": 0.0,
+      "p10_ms": 3.6806739089323863,
+      "p10_to_p90_ms": 37.39666931780697,
+      "p90_ms": 41.07734322673935,
+      "source_node_count": 139642,
+      "span_ms": 75.2904694795797
+    },
+    "native_replay_bitwise": true,
+    "refiner_binary_sha256": "ade6f392734a3fc908a696316c624e58bc5f636458eed33cfb762890ea534794",
+    "refiner_stdout_sha256": "b9155da38bd5c4947f34d3afd345a48e01dde8d53d68c5661102c99478ca91f3",
+    "rv": {
+      "maximum_ms": 73.36469166596048,
+      "minimum_ms": 0.0,
+      "p10_ms": 3.921949188944734,
+      "p10_to_p90_ms": 47.45730602307949,
+      "p90_ms": 51.379255212024226,
+      "source_node_count": 81066,
+      "span_ms": 73.36469166596048
+    }
+  },
+  "vertex_ring_lv": {
+    "maximum_ms": 75.18922382805133,
+    "minimum_ms": 0.0,
+    "p10_ms": 3.4055673213614863,
+    "p10_to_p90_ms": 37.32949786133055,
+    "p90_ms": 40.73506518269204,
+    "source_node_count": 139642,
+    "span_ms": 75.18922382805133
+  }
+}

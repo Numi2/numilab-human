@@ -48,6 +48,13 @@ of the CARP reaction-eikonal numerical scheme or its exact fast-layer tags.
 The source archive contains no case18 voltage trace or local activation-time
 field to compare pointwise.
 
+The follow-up [exact-face sensitivity audit](CARDIAC_FEC_LAYER_TOPOLOGY_20260930.md)
+shows this is a *vertex one-ring* interpretation: only 35,081 of those cells
+actually have an exterior endocardial face. Restricting FEC to those cells
+increased the LV span to 75.2905 ms and the 10–90% interval to 37.3967 ms,
+moving both farther from the published simulation. The case18 FEC tag and
+reaction-eikonal method remain unresolved.
+
 The [producer receipt](media/cardiac-source-activation-20260930/summary.json),
 [independent gate](media/cardiac-source-activation-20260930/independent-gate.json),
 [rehashed wrong-region control](media/cardiac-source-activation-20260930/tamper-control.json),

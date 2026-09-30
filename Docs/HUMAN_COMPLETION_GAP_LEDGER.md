@@ -514,6 +514,14 @@ reproduction, voltage/ionic state, native accepted electrical steps, atrial/AV
 conduction, ECG, electromechanical feedback and heartbeat qualification remain
 open.
 
+The [exact-face fast-layer sensitivity](CARDIAC_FEC_LAYER_TOPOLOGY_20260930.md)
+separates the current 101,712-cell endocardial vertex ring from 35,081 cells
+with complete exterior endocardial faces. A source-bound Apple CPU replay of
+the face-only candidate yields a 75.2905 ms LV span and 37.3967 ms 10–90%
+interval, farther from the published 71.9895/29.8410 ms CARP outputs. This
+retains the missing source FEC tag and solver discrepancy as explicit blockers;
+it is no native electrical step or heartbeat evidence.
+
 The [full-source ventricular active-force reference](CARDIAC_ACTIVE_FORCE_REFERENCE_20260930.md)
 now maps that candidate activation into a fixed-geometry active-fibre FEM
 internal residual on all 1,097,534 ventricular tetrahedra and 218,077 unique
