@@ -45,13 +45,26 @@ terms. Subtracting the known active couple leaves 10.80 N at the patellar
 attachment and 5.51 N at the tibial attachment; the combined PTL attachment
 reaction is 10.21 N. These residuals are **not** isolated passive forces or
 proof of a new anatomical defect. The existing PTL gate still rejects the
-run, and the app exits nonzero. The immediate force-accounting gap is to
-attribute those residuals against a matched zero-active-load reference or
-source-bound continuum/contact terms before revising the gate.
+run, and the app exits nonzero.
+
+The subsequent [one-step momentum receipt](media/cruciate-source-contact-20260930/ptl-momentum-one-step-receipt.json)
+binds Matter `c7464bf` and the final binary to the same inputs. PTL enthesis
+centroids separate by only 27 nm in the accepted step, and the independently
+evaluated reduced fiber law contributes 0.000201 N. The 4.423 g tendon
+continuum changes momentum at a vector rate almost opposite to the combined
+10.21 N attachment reaction: their vector sum has magnitude 0.0714 N (0.70%
+of the attachment resultant). This attributes the *combined* PTL attachment
+reaction to one-step continuum momentum change within that residual; it does
+not isolate the matrix force at either patch. The reduced fiber tension is
+negligible at this step. Comparing each *total* attachment reaction
+with the 2.26 N active patch load is not a valid stand-alone force-transfer
+test. The physical gate remains unchanged and rejects the run. A replacement
+must measure per-step vector impulse closure over the full accepted trajectory
+and separately close contact and energy accounting before admitting loaded motion.
 
 The next implementation must reconcile the source's initially intersecting
 contact surfaces with a source-consistent contact or equilibrated
 initialization policy across all affected pairs, then close PTL/quadriceps
-force transfer and rerun loaded flexion, articular clearance, energy,
-replay, and rollback gates. A localized ACL shift cannot serve as the final
+trajectory-level force transfer and rerun loaded flexion, articular clearance,
+energy, replay, and rollback gates. A localized ACL shift cannot serve as the final
 whole-knee solution.
