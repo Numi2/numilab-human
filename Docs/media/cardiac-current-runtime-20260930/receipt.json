@@ -1,0 +1,72 @@
+{
+  "accepted_native_steps_per_run": 1,
+  "active_vs_zero_nodes_different": 190921,
+  "boundary": "Same prescribed source-ordered ventricular tension, synthetic density, three synthetic fixed nodes and one 1 us step as the prior fixture. Identical accepted states requalify the bounded runtime result only; no four-chamber mechanics, hydraulic wall coupling, native electrical propagation or heartbeat follows.",
+  "cases": {
+    "active": {
+      "abi": 35,
+      "accepted_native_steps": 1,
+      "completed_microsteps": 1,
+      "device": "Apple M4",
+      "failing_index": 4294967295,
+      "fgmres_iterations": 2,
+      "heartbeat_qualified": false,
+      "maximum_displacement_m": 4.88670199885e-07,
+      "moved_nodes": 190921,
+      "status_code": 0,
+      "synthetic_density_kg_m3": 1050,
+      "synthetic_fixed_nodes": 3,
+      "zero_tension_input": false
+    },
+    "replay": {
+      "abi": 35,
+      "accepted_native_steps": 1,
+      "completed_microsteps": 1,
+      "device": "Apple M4",
+      "failing_index": 4294967295,
+      "fgmres_iterations": 2,
+      "heartbeat_qualified": false,
+      "maximum_displacement_m": 4.88670199885e-07,
+      "moved_nodes": 190921,
+      "status_code": 0,
+      "synthetic_density_kg_m3": 1050,
+      "synthetic_fixed_nodes": 3,
+      "zero_tension_input": false
+    },
+    "zero": {
+      "abi": 35,
+      "accepted_native_steps": 1,
+      "completed_microsteps": 1,
+      "device": "Apple M4",
+      "failing_index": 4294967295,
+      "fgmres_iterations": 1,
+      "heartbeat_qualified": false,
+      "maximum_displacement_m": 4.54747350886e-13,
+      "moved_nodes": 10,
+      "status_code": 0,
+      "synthetic_density_kg_m3": 1050,
+      "synthetic_fixed_nodes": 3,
+      "zero_tension_input": true
+    }
+  },
+  "cooked_package_sha256": "6de9d9837d15d1f2bfd281b4dc65c6996d6eb4329490d2ed4fd9cb6c7bbf46d5",
+  "full_four_chamber_accepted_steps": 0,
+  "heartbeat_qualified": false,
+  "maximum_active_minus_zero_displacement_m": 4.88670199885378e-07,
+  "native_metallib_sha256": "3a8d051ffd1921861f88e8885ae4d524f73b4b07bf98d2bd774e25b2a4bbb62f",
+  "native_revision": "322ddbdffda47b1ecec7c8053d61c495a116e22b",
+  "native_step_binary_sha256": "9fc21d641b2b1d171c6bbd86268e0af34558977803d0867ca69a0f12df217f2c",
+  "prior_receipt_sha256": "861778f0d3f904710db772a0f2c96310b39bc64ae809c18d1159f4493301a334",
+  "schema": "numi.human.ventricular-current-runtime-requalification.v1",
+  "source_tension_sha256": "5197acfab75af8fa229693740d9535a3bb4c86f883b5c8471610ad03eb5592f5",
+  "state_sha256": {
+    "active": "7d9d89ff5fc9e5dc94ff9ab8be1ea8c338c575a0e81e857bacdbb35d86c8baa7",
+    "replay": "7d9d89ff5fc9e5dc94ff9ab8be1ea8c338c575a0e81e857bacdbb35d86c8baa7",
+    "zero": "ed6f820c13f6c3816ae8c542f5c80e040844e92677b0a1ea0feb86101a15f5f3"
+  },
+  "status": "current_runtime_requalified_identical_bounded_ventricular_fixture",
+  "timestep_seconds": 1e-06,
+  "ventricular_nodes": 218077,
+  "ventricular_tetrahedra": 1097534,
+  "verifier_source_sha256": "3d976e7f8eeda50e05bb2ef4caa15bf78362ffb62f6c8d199741951b55e13de7"
+}
