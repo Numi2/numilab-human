@@ -527,6 +527,17 @@ The source activation discrepancy, three point-only LV/RV mechanical contacts,
 unknown stress-free reference and native electromechanical transaction remain
 open.
 
+The [source-ordered active-tension ingress](CARDIAC_ACTIVE_TENSION_INGRESS_20260930.md)
+now writes Float32 tension for all 1,470,083 source tetrahedra at 100 and
+250 ms; an independent full-source residual assembly agrees with the pinned
+Float64 force reference to at most 4.63e-9 N per component. Matter ABI35
+accepts optional per-cooked-tetrahedron tension in the native non-mixed FEM
+stress and tangent. A physical Apple M4 one-cell run with exact case18 geometry,
+derived fibre frame and source-derived tension accepts and replays bitwise;
+synthetic density and three fixed nodes keep that result a bounded fixture.
+Source-to-cooked mapping and whole-wall accepted steps remain open, as do
+anatomical boundary conditions, calibrated wall motion and heartbeat.
+
 The [source dynamic-limit increment](SOURCE_DYNAMIC_LIMITS_20260908.md) closes scalar-law, complete limit-anatomy and bounded transaction integration. All 122 source-limited coordinates are retained, including six missing legacy hard flags. The identical recruited stance with registered tissue and curved support remains the next physical admission gate. The interrupted costal attempt adds no timeout or performance qualification.
 
 The [selected neuromusculoskeletal release matrix](NEUROMUSCULOSKELETAL_RELEASE_MATRIX.md) fixes the current completion target. The [registered costal ownership increment](COSTAL_TISSUE_OWNERSHIP_20260908.md) adds source-bound common registration, actual cooked mass subtraction and native v5 COM-frame admission. It does not close loaded thorax, experimental calibration or sustained behaviour.

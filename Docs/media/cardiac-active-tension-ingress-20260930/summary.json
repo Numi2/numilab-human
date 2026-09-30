@@ -1,0 +1,33 @@
+{
+  "accepted_native_anatomical_steps": 0,
+  "candidate_activation_summary_sha256": "4bd6b06afbd430900b75b0e9ca952d0c018690bc0d441f8e65b953901519ea2f",
+  "fixed_reference_summary_sha256": "82d8884eb5296a412d30d870b034f2a64030ce34c0971c885f9cf89ed8876647",
+  "frames": [
+    {
+      "active_ventricular_cells": 1097534,
+      "bytes": 5880332,
+      "file": "active-tension-100ms.f32le",
+      "maximum_f32_tension_pa": 101918.9765625,
+      "reference_internal_residual_sha256": "03b3e7f7f09fc59da8c7b5a7cfbcd6270aa26a1f72b96611a40ca2055afbb2e1",
+      "sha256": "358d88a1603e73f8a09c6677afbe9e2f5584031d56bd345295a468153d1d5366",
+      "time_ms": 100
+    },
+    {
+      "active_ventricular_cells": 1097534,
+      "bytes": 5880332,
+      "file": "active-tension-250ms.f32le",
+      "maximum_f32_tension_pa": 119950.1328125,
+      "reference_internal_residual_sha256": "ec09035fff5c3d6d9d0ab420a66edd330396510db6e2c6327762a94c847a8e62",
+      "sha256": "dfcbc3623717a7ce5af38b5cdeaf574e0eedf7be945fbfe26b9ba2a96af1b1c4",
+      "time_ms": 250
+    }
+  ],
+  "heartbeat_qualified": false,
+  "ordering": "one little-endian Float32 Cauchy tension per source tetrahedron; labels 1/2 active, all other labels zero",
+  "producer_source_sha256": "0e1ec3713ba8012bc0295df0245f443cc93af0d9c669674b8f7c032706c53e0d",
+  "schema": "numi.human.cardiac-active-tension-ingress.v1",
+  "source_asset_manifest_sha256": "e8cb0391623577efc4eac04e5710cf7c9a4757614e09d936f5af3889c37d56f1",
+  "source_cell_count": 1470083,
+  "source_model_reproduced": false,
+  "status": "source_ordered_prescribed_active_tension_candidate"
+}
