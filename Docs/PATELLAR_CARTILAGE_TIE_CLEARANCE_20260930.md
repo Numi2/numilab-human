@@ -55,6 +55,12 @@ material calibration, two-way bone and tendon reaction, contact force/energy
 closure, and sustained flexion. It does not establish clinical anatomy or a
 corrected whole-body standing simulation.
 
+The later [live pose-transport audit](PATELLAR_CARTILAGE_LIVE_POSE_TRANSPORT_20260930.md)
+measures the source-frame problem directly: the old patellar visual is about
+53.45 mm from its mechanical rest position at equality-projected neutral.
+An opt-in projected-frame payload removes that mismatch, but exact PTC/FMC
+crossings recur under the source flexion law. Neither candidate is adopted.
+
 Reproduce the geometry and native receipts from the pinned sources and current
 local Numi Lab build:
 

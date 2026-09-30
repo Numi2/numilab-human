@@ -656,7 +656,7 @@ def _fixed_name(value: str, width: int) -> bytes:
 
 def compile_payload(
     *, sources: Path, open_knee: Path, registration_path: Path, output: Path,
-    side: str = "left",
+    side: str = "left", projected_visual_frame: bool = False,
 ) -> dict[str, Any]:
     if side not in {"left", "right"}:
         raise ValueError("Open Knee(s) payload side must be left or right")
@@ -710,6 +710,37 @@ def compile_payload(
     source_bodies = {body["name"]: body for body in exported["bodies"]}
     femur_body = source_bodies["femur_l"]
     model = build_model("myofullbody")
+    visual_targets = targets
+    visual_reference_pose = "source_default_qpos0"
+    projected_visual_maximum_body_shift_m = 0.0
+    if projected_visual_frame:
+        from .myosim_export import _matrix_to_quaternion
+        from .myosim_visual import _visual_qpos
+
+        projected_qpos, projection = _visual_qpos(model, mujoco, False)
+        if projection["pose_state"] != "source_equality_projected_neutral":
+            raise RuntimeError("Open Knee(s) projected visual frame was not equality projected")
+        projected_data = mujoco.MjData(model)
+        projected_data.qpos[:] = projected_qpos
+        mujoco.mj_forward(model, projected_data)
+        visual_targets = {name: target.copy() for name, target in targets.items()}
+        for name, target in visual_targets.items():
+            body_index = mujoco.mj_name2id(
+                model, mujoco.mjtObj.mjOBJ_BODY, name
+            )
+            if body_index < 0 or body_index != int(target["source_body_id"]):
+                raise RuntimeError("Open Knee(s) projected visual body binding drifted")
+            projected_position = np.asarray(projected_data.xipos[body_index], dtype=float)
+            default_position = np.asarray(target["default_com_position_world_m"], dtype=float)
+            projected_visual_maximum_body_shift_m = max(
+                projected_visual_maximum_body_shift_m,
+                float(np.linalg.norm(projected_position - default_position)),
+            )
+            target["default_com_position_world_m"] = projected_position.tolist()
+            target["default_inertial_quaternion_world_xyzw"] = (
+                _matrix_to_quaternion(projected_data.ximat[body_index], mujoco)
+            )
+        visual_reference_pose = "source_equality_projected_neutral"
     meshes = _compiled_meshes_by_body(model, mujoco, np)
     femur_meshes = meshes.get(int(femur_body["id"]), [])
     if not femur_meshes:
@@ -839,7 +870,7 @@ def compile_payload(
             world = world.copy()
             world[:, 0] = 2.0 * sagittal_mirror_x - world[:, 0]
         visual_body_name = body_name(VISUAL_BODY_ROLE[name])
-        visual = _world_to_core(world, targets[visual_body_name], np)
+        visual = _world_to_core(world, visual_targets[visual_body_name], np)
         region_node_world[name] = world
         region_node_visual[name] = visual
         for local, identifier in enumerate(region.node_ids):
@@ -895,7 +926,7 @@ def compile_payload(
         counterpart_role = RIGID_COUNTERPART_ROLE.get(counterpart)
         if counterpart_role is None or owner_name in RIGID_COUNTERPART_ROLE:
             continue
-        target = targets[body_name(counterpart_role)]
+        target = visual_targets[body_name(counterpart_role)]
         target_body = int(target["core_body_index"])
         owner = source.regions.get(owner_name)
         if owner is None:
@@ -1095,10 +1126,19 @@ def compile_payload(
     manifest = {
         "schema": SCHEMA,
         "status": (
+            "equality_projected_visual_frame_candidate"
+            if projected_visual_frame else
             "exact_source_payload_registered_to_live_left_knee_candidate"
-            if side == "left"
-            else "exact_left_source_topology_mirrored_to_live_right_knee_candidate"
+            if side == "left" else
+            "exact_left_source_topology_mirrored_to_live_right_knee_candidate"
         ),
+        "visual_reference_frame": {
+            "pose": visual_reference_pose,
+            "maximum_body_origin_shift_from_default_m":
+                projected_visual_maximum_body_shift_m,
+            "changes_rest_world_positions": False,
+            "changes_source_tetrahedra": False,
+        },
         "source": {
             "dataset": "Open Knee(s) oks003",
             "doi": "10.18735/b0zv-n395",
@@ -1244,6 +1284,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--registration", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--side", choices=("left", "right"), default="left")
+    parser.add_argument("--projected-visual-frame", action="store_true")
     arguments = parser.parse_args(argv)
     compile_payload(
         sources=arguments.sources.resolve(),
@@ -1251,6 +1292,7 @@ def main(argv: list[str] | None = None) -> int:
         registration_path=arguments.registration.resolve(),
         output=arguments.output.resolve(),
         side=arguments.side,
+        projected_visual_frame=arguments.projected_visual_frame,
     )
     return 0
 
