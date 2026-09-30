@@ -38,11 +38,14 @@ PYTHONPATH=src:Sources/myosim/checkout OPENBLAS_NUM_THREADS=1 \
 
 This closes the **gross posterior-placement and reversed extensor-stack
 presentation regression** for these source-bound static states. It does not
-verify the facing normals of the patellar articular surface, patellofemoral
-contact pressure, loaded tendon-force transfer, clinical subject anatomy, or
+verify patellofemoral contact pressure, loaded tendon-force transfer, clinical
+subject anatomy, or
 the old standing video's anatomy. Five source dependent-coordinate range
 conflicts remain in the lower-limb pose audit. Broader placement is likewise
 unfinished: 58 explicitly bilateral source surfaces pass the current
 source-rest laterality gate, but the other 521 have no verdict from that gate;
 seven of 28 tested pairs among eight abdominal organs have exact mesh
 crossings. We do not move source organs or relax gates to hide those failures.
+
+The later [patellofemoral surface audit](PATELLOFEMORAL_SURFACE_ORIENTATION_20260930.md)
+checks the static articular-face winding in the source and both compiled sides.

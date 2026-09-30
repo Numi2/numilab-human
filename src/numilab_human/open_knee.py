@@ -418,6 +418,83 @@ def _extensor_stack_metrics(region_node_world: dict[str, Any], anterior: Any,
     return metrics
 
 
+def _patellofemoral_surface_winding(
+    source: Source, region_node_world: dict[str, Any], *, reflected: bool,
+    np: Any,
+) -> dict[str, dict[str, float | int]]:
+    """Reject an inward or posteriorly facing patellofemoral contact layer.
+
+    This is a static source-specific winding gate. It checks actual triangle
+    faces against their tetrahedral interior after registration and, on the
+    mirrored side, after the connectivity parity correction. It does not infer
+    contact pressure or a physical cartilage gap.
+    """
+    groups = {
+        "PTC": ("PTC_@_FMC_ContactFaces", "PTC_@_PTB_TiesFaces"),
+        "FMC": ("FMC_@_PTC_ContactFaces", "FMC_@_FMB_TiesFaces"),
+    }
+    anterior = np.asarray([0.0, -1.0, 0.0], dtype=float)
+    result: dict[str, dict[str, float | int]] = {}
+    for name, surfaces in groups.items():
+        region = source.regions[name]
+        coordinates = np.asarray(region_node_world[name], dtype=float)
+        if coordinates.shape != (len(region.node_ids), 3) or not bool(
+            np.isfinite(coordinates).all()
+        ):
+            raise RuntimeError("Open Knee(s) patellofemoral surface has invalid nodes")
+        local = {identifier: index for index, identifier in enumerate(region.node_ids)}
+        wanted = {
+            tuple(sorted(face))
+            for surface_name in surfaces
+            for face in source.surfaces[surface_name].faces
+        }
+        incidence: dict[tuple[int, int, int], list[int]] = {}
+        for tetrahedron in region.elements:
+            for opposite in range(4):
+                key = tuple(sorted(tetrahedron[corner] for corner in range(4)
+                                   if corner != opposite))
+                if key in wanted:
+                    incidence.setdefault(key, []).append(tetrahedron[opposite])
+        for surface_name in surfaces:
+            area_normal = np.zeros(3, dtype=float)
+            total_area = 0.0
+            faces = source.surfaces[surface_name].faces
+            for face in faces:
+                owners = incidence.get(tuple(sorted(face)), [])
+                if len(owners) != 1:
+                    raise RuntimeError(
+                        f"Open Knee(s) patellofemoral surface {surface_name} "
+                        "is not an exterior one-owner tetrahedron face")
+                oriented = _orientation_preserving_connectivity(
+                    face, reflected=reflected)
+                points = coordinates[[local[identifier] for identifier in oriented]]
+                inward = coordinates[local[owners[0]]] - points[0]
+                normal = np.cross(points[1] - points[0], points[2] - points[0])
+                normal_length = float(np.linalg.norm(normal))
+                if not (math.isfinite(normal_length) and normal_length > 0.0 and
+                        float(_dot3(normal, inward, np)) < 0.0):
+                    raise RuntimeError(
+                        f"Open Knee(s) patellofemoral surface {surface_name} "
+                        "has a degenerate or inward face")
+                area_normal += normal
+                total_area += normal_length
+            if not (len(faces) > 0 and total_area > 0.0):
+                raise RuntimeError(
+                    f"Open Knee(s) patellofemoral surface {surface_name} is empty")
+            cosine = float(_dot3(area_normal, anterior, np) / total_area)
+            result[surface_name] = {
+                "faces": len(faces),
+                "all_exterior_outward": 1,
+                "area_weighted_anterior_cosine": cosine,
+            }
+    if (result["PTC_@_FMC_ContactFaces"]["area_weighted_anterior_cosine"] > -0.7 or
+        result["PTC_@_PTB_TiesFaces"]["area_weighted_anterior_cosine"] < 0.7):
+        raise RuntimeError(
+            "Open Knee(s) patellofemoral cartilage contact/tie faces point "
+            "toward the wrong anterior layer")
+    return result
+
+
 def _anatomical_femoral_basis(
     knee_axis_line_body: Any,
     proximal_body: Any,
@@ -806,6 +883,9 @@ def compile_payload(
         proximal_world[0] *= -1.0
     extensor_stack_metrics = _extensor_stack_metrics(
         region_node_world, human_anterior_world, proximal_world, np)
+    _patellofemoral_surface_winding(
+        source, region_node_world,
+        reflected=sagittal_mirror_x is not None, np=np)
 
     node_sets_order = sorted(source.node_sets)
     for set_name in node_sets_order:
