@@ -81,7 +81,7 @@ maps the reported pair to pinned PCL face 3525 and ACL face 6832. These faces
 do not strictly cross in the source, candidate, or native step-start geometry,
 but strictly cross at the rejected step finish after at most 3.45 µm of
 reported vertex motion. The local ACL shift therefore does not give a stable
-contact trajectory. The solver's rejection remains authoritative.
+contact trajectory. The solver's rejection remains authoritative. A source- and binary-bound [contact-pass receipt](media/cruciate-source-contact-20260930/contact-pass-stage-receipt.json) now identifies the first strict predicted-finish crossing at nonlinear contact pass 2 (zero-based solver iteration 1). This is after the first Newton update and before the next contact force evaluation. The current selected-feature line search has not certified all surface-pair motion; the fail-closed rejection is retained.
 
 The next implementation must reconcile the source's initially intersecting
 contact surfaces with a source-consistent contact or equilibrated
@@ -89,4 +89,7 @@ initialization policy across all affected pairs. The accepted-step PTL impulse
 gate is now measured for two microseconds, but sustained PTL/quadriceps force
 transfer, loaded flexion, patellar clearance, energy, replay, and rollback
 still need full-horizon evidence. A localized ACL shift cannot serve as the
-final whole-knee solution.
+final whole-knee solution. The next contact-solver check must establish whether
+the crossing pair was in the preceding correction's broadphase candidate set;
+if absent, the broadphase must cover the swept Newton correction before a
+triangle-pair CCD bound can certify that correction.

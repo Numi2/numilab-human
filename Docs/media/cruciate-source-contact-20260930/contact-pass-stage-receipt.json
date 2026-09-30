@@ -1,0 +1,105 @@
+{
+  "accepted_steps_before_rejection": 5,
+  "binary_sha256": "4549f90fe970fcb756bac7d48b12730fedefa8c48a1aab872b7dbce0aa79e156",
+  "boundary": "Five steps are accepted; the sixth predicts a strict PCL/ACL crossing on nonlinear pass two. The contact solver rejects the candidate before publication. This does not validate the local ACL initialization or sustained knee mechanics.",
+  "captured_pair": {
+    "primitive_pair": [
+      306892,
+      603698
+    ],
+    "slot": 219,
+    "source_faces": {
+      "ACL": 6832,
+      "PCL": 3525
+    },
+    "zero_based_nonlinear_iteration": 1
+  },
+  "command": [
+    "/Users/home/numi-lab-cardiac-native-20260930/Build/human-unprescribed-patella-20260930/bin/metalrobo_numilab_human_myosim_visual_probe",
+    "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid",
+    "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-muscle-reference.nhmyo",
+    "/Users/home/numilab-human/Build/bodyparts3d-myosim-major-bones-v2/bodyparts3d-myosim-major-bones.nhbones",
+    "/Users/home/numilab-human/Build/cruciate-contact-pass-final-20260930",
+    "--tendon-payload",
+    "/Users/home/numilab-human/Build/motion-interface-refinement-20260928/tendon-final/numi-human-tendon-attachments.nhtendon",
+    "--support-contact-payload",
+    "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-support-contact.nhcnt",
+    "--joint-equality-payload",
+    "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-joint-equalities.nheq",
+    "--open-knee-payload",
+    "/Users/home/numilab-human/Build/patellofemoral-surface-20260930/left/open-knee-oks003-left.nhknee",
+    "--open-knee-live-tissue-fem",
+    "--open-knee-cruciate-initialization-diagnostic",
+    "--muscle-step-seconds",
+    "0.000001",
+    "--muscle-step-count",
+    "8",
+    "--muscle-activation",
+    "0.1",
+    "--activated-source-muscle-index",
+    "405",
+    "--activated-source-muscle-index",
+    "413",
+    "--activated-source-muscle-index",
+    "414",
+    "--activated-source-muscle-index",
+    "415",
+    "--selected-tendon-control",
+    "--dimension",
+    "512"
+  ],
+  "inputs": {
+    "bones": {
+      "path": "/Users/home/numilab-human/Build/bodyparts3d-myosim-major-bones-v2/bodyparts3d-myosim-major-bones.nhbones",
+      "sha256": "482c040f197e183b31a98fc82c17fa1bf908eb5c60c788cc054e4699ddd42027"
+    },
+    "equalities": {
+      "path": "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-joint-equalities.nheq",
+      "sha256": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a"
+    },
+    "knee": {
+      "path": "/Users/home/numilab-human/Build/patellofemoral-surface-20260930/left/open-knee-oks003-left.nhknee",
+      "sha256": "2e38201528de25911ea496164602ea7e823cd9c2e3c94efa550ee52689324ae5"
+    },
+    "muscle": {
+      "path": "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-muscle-reference.nhmyo",
+      "sha256": "a4381465ca97a7af20108180e2fc0d0f0d9c11778d913de4c0728bd20ed459a7"
+    },
+    "rigid": {
+      "path": "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid",
+      "sha256": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951"
+    },
+    "support": {
+      "path": "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-support-contact.nhcnt",
+      "sha256": "4d54f8155cd83baaee7af536099824ac0da61e5d5e77544b42c6e5ce1b48c907"
+    },
+    "tendon": {
+      "path": "/Users/home/numilab-human/Build/motion-interface-refinement-20260928/tendon-final/numi-human-tendon-attachments.nhtendon",
+      "sha256": "b9927adda550712a2260075d795b629cbea747359936e85e1f36016c8d3b81e3"
+    }
+  },
+  "library_sha256": "10881b9550c8df499530df357e99be2a273d5793f5ee1aa1595542a43bb27a36",
+  "log_sha256": "bacd388ecdde65eba2b725cf1663b06a796e7bdea8f7f9515d584f07b4e36375",
+  "matter_commit": "07779c38eaf4564238181e145d623e87b699685d",
+  "metallib_sha256": "1ec161dce44b4accde5a9145b7c75294ee4bf08a98b9beb129862e477209f78f",
+  "prior_contact_witness_sha256": "b807bca23867af21e985e7fc210ebf5d2032c4b51ce63d599b4732072abafd99",
+  "qualified": false,
+  "schema": "numi.human.open-knee-contact-pass-stage.v1",
+  "source_sha256": {
+    "contact_shader": "a9a2650fbd8b48b713892ae9c136270288948c1d569a49175e8af2817ec57e32",
+    "human_probe": "1d4482fbbf696a7504aa7d4b9b60de5455d4234bf4e9c1f2fb10069bf1668de3",
+    "runtime": "70b6152377ab51009ec9f22b359fbf2f9b8ba6bd3c596003adcc8752d97af35d"
+  },
+  "status": {
+    "code": 6,
+    "completed_microsteps": 0,
+    "object": 1,
+    "one_based_nonlinear_contact_pass": 2,
+    "primitive_pair": [
+      311954,
+      603698
+    ],
+    "slot": 225,
+    "stage_code": -2
+  }
+}
