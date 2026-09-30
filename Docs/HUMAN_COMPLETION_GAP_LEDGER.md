@@ -855,6 +855,11 @@ and both compiled sides (longest source segment 0.423 mm). Static
 noninterpenetration therefore **fails** despite correct outward winding. The
 source is retained for a future initial-contact/load/energy qualification;
 the crossing count is not a penetration depth or a clinical verdict.
+The [native contact-preflight scope check](PATELLOFEMORAL_NATIVE_PREFLIGHT_SCOPE_20260930.md)
+then executes both current compiled sides and shows that five named articular
+pairs activate the same 11,586 femoral slave nodes under prescribed closure.
+It leaves source-rest response zero despite the 18 crossings; its patellar
+pressure/force is not a localized, loaded contact result.
 
 The [calcaneal tendon visual boundary repair](TENDON_HARMONIC_BOUNDARY_20260929.md)
 removes 145 right and 163 left exact intersections in the compiled tendon

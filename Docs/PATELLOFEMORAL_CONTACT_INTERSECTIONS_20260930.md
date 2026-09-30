@@ -33,6 +33,11 @@ needs native contact execution with explicit initial-penetration handling,
 load/energy accounting and deterministic accepted-state evidence. Clinical
 placement remains unqualified.
 
+The subsequent [native contact-preflight scope check](PATELLOFEMORAL_NATIVE_PREFLIGHT_SCOPE_20260930.md)
+shows that the existing 65-point prescribed-closure test assigns the broad
+femoral slave surface to five named articular pairs and zeroes source-rest
+contact force. Its positive pressure does not resolve these 18 intersections.
+
 Reproduce with the retained pinned source and bilateral payloads. Exit 2 is
 the expected failed static-noninterpenetration result; the receipt is written
 before exit:
