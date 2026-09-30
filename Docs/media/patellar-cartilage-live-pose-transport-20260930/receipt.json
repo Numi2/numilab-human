@@ -1,19 +1,15 @@
 {
-  "boundary": "The opt-in projected visual/anchor frame makes NHKNEE1 restWorld agree with equality-projected Human geometry, but the local PTC clearance field crosses FMC under source patellar flexion. The default-frame visual separation is displaced from the mechanical rest geometry and is not an admission result. The right knee is a mirrored left specimen. This is a geometric preflight, not a native accepted Human/Matter step or clinical anatomy claim.",
+  "boundary": "The opt-in projected visual/anchor frame makes raw NHKNEE1 visual locals match equality-projected restWorld. The existing live Human runner already reconstructs non-FEM visuals from restWorld in that frame, so the old payload correction is not a live-render error. The local PTC clearance field crosses FMC under source patellar flexion. The default-frame raw payload visual separation is not an admission result. The right knee is a mirrored left specimen. This is a geometric preflight, not a native accepted Human/Matter step or clinical claim.",
   "geometry_receipt_sha256": "f32989e1bc9de2a2069498fdae4dbc9b7d9619413276b4a31f6fd0c66947a34e",
   "mujoco_version": "3.12.0",
   "native_loaded_contact_qualified": false,
-  "schema": "numi.human.patellar-cartilage-live-pose-transport-preflight.v1",
+  "schema": "numi.human.patellar-cartilage-live-pose-transport-preflight.v2",
   "sides": {
     "left": {
       "candidate_nhcar_sha256": "887f6b6b29e54a7b88a19cc87c2764b293575ace2dfe1a3e9101146abedc1d3e",
       "nhknee_payload_sha256": "2e38201528de25911ea496164602ea7e823cd9c2e3c94efa550ee52689324ae5",
       "poses": {
         "0.0": {
-          "current_runner_projected_rest_frame_error_m": {
-            "FMC": 6.188917057900187e-08,
-            "PTC": 0.05344958305799108
-          },
           "default_frame_payload_visual_articular_intersections": {
             "aabb_candidate_triangle_pairs": 0,
             "crossing_triangle_pairs": [],
@@ -23,7 +19,19 @@
             "maximum_intersection_segment_m": 0.0,
             "static_noninterpenetration_qualified": true
           },
+          "hypothetical_default_reference_to_live_ptl_map": {
+            "maximum_jacobian": 3.360988757480989,
+            "maximum_node_displacement_m": 0.05352186988945295,
+            "minimum_jacobian": -0.20709162193493733,
+            "tetrahedra": 35616,
+            "tetrahedra_above_native_20_gate": 0,
+            "tetrahedra_below_native_0_05_gate": 1
+          },
           "maximum_source_joint_correction": 0.0524192,
+          "old_payload_visual_correction_to_live_rest_m": {
+            "FMC": 6.188917057900187e-08,
+            "PTC": 0.05344958305799108
+          },
           "projected_payload_candidate_articular_intersections": {
             "aabb_candidate_triangle_pairs": 1577,
             "crossing_triangle_pairs": [],
@@ -33,7 +41,6 @@
             "maximum_intersection_segment_m": 0.0,
             "static_noninterpenetration_qualified": true
           },
-          "projected_payload_candidate_maximum_ptc_position_difference_m": 0.05343242879467032,
           "projected_payload_candidate_neutral_current_error_m": 3.041445177053526e-08,
           "projected_reference_to_live_ptl_continuum_map": {
             "maximum_jacobian": 1.0000000000002796,
@@ -42,19 +49,11 @@
             "tetrahedra_above_native_20_gate": 0,
             "tetrahedra_below_native_0_05_gate": 0
           },
+          "projected_vs_default_payload_visual_ptc_difference_m": 0.05343242879467032,
           "ptc_bone_tie_maximum_current_displacement_from_visual_m": 0.0,
-          "source_default_to_live_ptl_continuum_map": {
-            "maximum_jacobian": 3.360988757480989,
-            "maximum_node_displacement_m": 0.05352186988945295,
-            "minimum_jacobian": -0.20709162193493733,
-            "tetrahedra": 35616,
-            "tetrahedra_above_native_20_gate": 0,
-            "tetrahedra_below_native_0_05_gate": 1
-          },
           "source_joint_equalities_projected": 51
         },
         "0.1": {
-          "current_runner_projected_rest_frame_error_m": null,
           "default_frame_payload_visual_articular_intersections": {
             "aabb_candidate_triangle_pairs": 0,
             "crossing_triangle_pairs": [],
@@ -64,7 +63,16 @@
             "maximum_intersection_segment_m": 0.0,
             "static_noninterpenetration_qualified": true
           },
+          "hypothetical_default_reference_to_live_ptl_map": {
+            "maximum_jacobian": 3.547908780613334,
+            "maximum_node_displacement_m": 0.052937918159264206,
+            "minimum_jacobian": -0.20025180511327773,
+            "tetrahedra": 35616,
+            "tetrahedra_above_native_20_gate": 0,
+            "tetrahedra_below_native_0_05_gate": 1
+          },
           "maximum_source_joint_correction": 0.0524192,
+          "old_payload_visual_correction_to_live_rest_m": null,
           "projected_payload_candidate_articular_intersections": {
             "aabb_candidate_triangle_pairs": 877,
             "crossing_triangle_pairs": [
@@ -742,7 +750,6 @@
             "maximum_intersection_segment_m": 0.0004662118964191515,
             "static_noninterpenetration_qualified": false
           },
-          "projected_payload_candidate_maximum_ptc_position_difference_m": 0.05343243539998022,
           "projected_payload_candidate_neutral_current_error_m": null,
           "projected_reference_to_live_ptl_continuum_map": {
             "maximum_jacobian": 1.1110399418047086,
@@ -751,19 +758,11 @@
             "tetrahedra_above_native_20_gate": 0,
             "tetrahedra_below_native_0_05_gate": 0
           },
+          "projected_vs_default_payload_visual_ptc_difference_m": 0.05343243539998022,
           "ptc_bone_tie_maximum_current_displacement_from_visual_m": 0.0,
-          "source_default_to_live_ptl_continuum_map": {
-            "maximum_jacobian": 3.547908780613334,
-            "maximum_node_displacement_m": 0.052937918159264206,
-            "minimum_jacobian": -0.20025180511327773,
-            "tetrahedra": 35616,
-            "tetrahedra_above_native_20_gate": 0,
-            "tetrahedra_below_native_0_05_gate": 1
-          },
           "source_joint_equalities_projected": 51
         },
         "0.9": {
-          "current_runner_projected_rest_frame_error_m": null,
           "default_frame_payload_visual_articular_intersections": {
             "aabb_candidate_triangle_pairs": 0,
             "crossing_triangle_pairs": [],
@@ -773,7 +772,16 @@
             "maximum_intersection_segment_m": 0.0,
             "static_noninterpenetration_qualified": true
           },
+          "hypothetical_default_reference_to_live_ptl_map": {
+            "maximum_jacobian": 3.9599681641352915,
+            "maximum_node_displacement_m": 0.0767706928447685,
+            "minimum_jacobian": -0.008738915458824067,
+            "tetrahedra": 35616,
+            "tetrahedra_above_native_20_gate": 0,
+            "tetrahedra_below_native_0_05_gate": 1
+          },
           "maximum_source_joint_correction": 0.6020796191999999,
+          "old_payload_visual_correction_to_live_rest_m": null,
           "projected_payload_candidate_articular_intersections": {
             "aabb_candidate_triangle_pairs": 2378,
             "crossing_triangle_pairs": [
@@ -2459,7 +2467,6 @@
             "maximum_intersection_segment_m": 0.0005043180723301847,
             "static_noninterpenetration_qualified": false
           },
-          "projected_payload_candidate_maximum_ptc_position_difference_m": 0.05343243369533173,
           "projected_payload_candidate_neutral_current_error_m": null,
           "projected_reference_to_live_ptl_continuum_map": {
             "maximum_jacobian": 1.4332027623779333,
@@ -2468,15 +2475,8 @@
             "tetrahedra_above_native_20_gate": 0,
             "tetrahedra_below_native_0_05_gate": 0
           },
+          "projected_vs_default_payload_visual_ptc_difference_m": 0.05343243369533173,
           "ptc_bone_tie_maximum_current_displacement_from_visual_m": 0.0,
-          "source_default_to_live_ptl_continuum_map": {
-            "maximum_jacobian": 3.9599681641352915,
-            "maximum_node_displacement_m": 0.0767706928447685,
-            "minimum_jacobian": -0.008738915458824067,
-            "tetrahedra": 35616,
-            "tetrahedra_above_native_20_gate": 0,
-            "tetrahedra_below_native_0_05_gate": 1
-          },
           "source_joint_equalities_projected": 51
         }
       },
@@ -2510,10 +2510,6 @@
       "nhknee_payload_sha256": "f13e251b8ff8c8a4a4c3445fe006aa3c0aadd64d51c2c63eaec175705507b702",
       "poses": {
         "0.0": {
-          "current_runner_projected_rest_frame_error_m": {
-            "FMC": 6.188917057900187e-08,
-            "PTC": 0.05344987201466048
-          },
           "default_frame_payload_visual_articular_intersections": {
             "aabb_candidate_triangle_pairs": 0,
             "crossing_triangle_pairs": [],
@@ -2523,7 +2519,19 @@
             "maximum_intersection_segment_m": 0.0,
             "static_noninterpenetration_qualified": true
           },
+          "hypothetical_default_reference_to_live_ptl_map": {
+            "maximum_jacobian": 3.3617631767315097,
+            "maximum_node_displacement_m": 0.05352213804195321,
+            "minimum_jacobian": -0.20535673571495375,
+            "tetrahedra": 35616,
+            "tetrahedra_above_native_20_gate": 0,
+            "tetrahedra_below_native_0_05_gate": 1
+          },
           "maximum_source_joint_correction": 0.0524192,
+          "old_payload_visual_correction_to_live_rest_m": {
+            "FMC": 6.188917057900187e-08,
+            "PTC": 0.05344987201466048
+          },
           "projected_payload_candidate_articular_intersections": {
             "aabb_candidate_triangle_pairs": 1577,
             "crossing_triangle_pairs": [],
@@ -2533,7 +2541,6 @@
             "maximum_intersection_segment_m": 0.0,
             "static_noninterpenetration_qualified": true
           },
-          "projected_payload_candidate_maximum_ptc_position_difference_m": 0.053432711577289405,
           "projected_payload_candidate_neutral_current_error_m": 3.060181965822573e-08,
           "projected_reference_to_live_ptl_continuum_map": {
             "maximum_jacobian": 1.0000000000006433,
@@ -2542,19 +2549,11 @@
             "tetrahedra_above_native_20_gate": 0,
             "tetrahedra_below_native_0_05_gate": 0
           },
+          "projected_vs_default_payload_visual_ptc_difference_m": 0.053432711577289405,
           "ptc_bone_tie_maximum_current_displacement_from_visual_m": 0.0,
-          "source_default_to_live_ptl_continuum_map": {
-            "maximum_jacobian": 3.3617631767315097,
-            "maximum_node_displacement_m": 0.05352213804195321,
-            "minimum_jacobian": -0.20535673571495375,
-            "tetrahedra": 35616,
-            "tetrahedra_above_native_20_gate": 0,
-            "tetrahedra_below_native_0_05_gate": 1
-          },
           "source_joint_equalities_projected": 51
         },
         "0.1": {
-          "current_runner_projected_rest_frame_error_m": null,
           "default_frame_payload_visual_articular_intersections": {
             "aabb_candidate_triangle_pairs": 0,
             "crossing_triangle_pairs": [],
@@ -2564,7 +2563,16 @@
             "maximum_intersection_segment_m": 0.0,
             "static_noninterpenetration_qualified": true
           },
+          "hypothetical_default_reference_to_live_ptl_map": {
+            "maximum_jacobian": 3.44423326530281,
+            "maximum_node_displacement_m": 0.05293793804291067,
+            "minimum_jacobian": -0.2552244868606077,
+            "tetrahedra": 35616,
+            "tetrahedra_above_native_20_gate": 0,
+            "tetrahedra_below_native_0_05_gate": 1
+          },
           "maximum_source_joint_correction": 0.0524192,
+          "old_payload_visual_correction_to_live_rest_m": null,
           "projected_payload_candidate_articular_intersections": {
             "aabb_candidate_triangle_pairs": 877,
             "crossing_triangle_pairs": [
@@ -3242,7 +3250,6 @@
             "maximum_intersection_segment_m": 0.00046562207245047163,
             "static_noninterpenetration_qualified": false
           },
-          "projected_payload_candidate_maximum_ptc_position_difference_m": 0.053432709638159825,
           "projected_payload_candidate_neutral_current_error_m": null,
           "projected_reference_to_live_ptl_continuum_map": {
             "maximum_jacobian": 1.0309153051121585,
@@ -3251,19 +3258,11 @@
             "tetrahedra_above_native_20_gate": 0,
             "tetrahedra_below_native_0_05_gate": 0
           },
+          "projected_vs_default_payload_visual_ptc_difference_m": 0.053432709638159825,
           "ptc_bone_tie_maximum_current_displacement_from_visual_m": 0.0,
-          "source_default_to_live_ptl_continuum_map": {
-            "maximum_jacobian": 3.44423326530281,
-            "maximum_node_displacement_m": 0.05293793804291067,
-            "minimum_jacobian": -0.2552244868606077,
-            "tetrahedra": 35616,
-            "tetrahedra_above_native_20_gate": 0,
-            "tetrahedra_below_native_0_05_gate": 1
-          },
           "source_joint_equalities_projected": 51
         },
         "0.9": {
-          "current_runner_projected_rest_frame_error_m": null,
           "default_frame_payload_visual_articular_intersections": {
             "aabb_candidate_triangle_pairs": 0,
             "crossing_triangle_pairs": [],
@@ -3273,7 +3272,16 @@
             "maximum_intersection_segment_m": 0.0,
             "static_noninterpenetration_qualified": true
           },
+          "hypothetical_default_reference_to_live_ptl_map": {
+            "maximum_jacobian": 3.3573897843380895,
+            "maximum_node_displacement_m": 0.07670583054725101,
+            "minimum_jacobian": -0.542185041624425,
+            "tetrahedra": 35616,
+            "tetrahedra_above_native_20_gate": 0,
+            "tetrahedra_below_native_0_05_gate": 2
+          },
           "maximum_source_joint_correction": 0.6020796191999999,
+          "old_payload_visual_correction_to_live_rest_m": null,
           "projected_payload_candidate_articular_intersections": {
             "aabb_candidate_triangle_pairs": 2381,
             "crossing_triangle_pairs": [
@@ -4951,7 +4959,6 @@
             "maximum_intersection_segment_m": 0.0004408065063989211,
             "static_noninterpenetration_qualified": false
           },
-          "projected_payload_candidate_maximum_ptc_position_difference_m": 0.05343269910762369,
           "projected_payload_candidate_neutral_current_error_m": null,
           "projected_reference_to_live_ptl_continuum_map": {
             "maximum_jacobian": 1.0545529223381054,
@@ -4960,15 +4967,8 @@
             "tetrahedra_above_native_20_gate": 0,
             "tetrahedra_below_native_0_05_gate": 0
           },
+          "projected_vs_default_payload_visual_ptc_difference_m": 0.05343269910762369,
           "ptc_bone_tie_maximum_current_displacement_from_visual_m": 0.0,
-          "source_default_to_live_ptl_continuum_map": {
-            "maximum_jacobian": 3.3573897843380895,
-            "maximum_node_displacement_m": 0.07670583054725101,
-            "minimum_jacobian": -0.542185041624425,
-            "tetrahedra": 35616,
-            "tetrahedra_above_native_20_gate": 0,
-            "tetrahedra_below_native_0_05_gate": 2
-          },
           "source_joint_equalities_projected": 51
         }
       },
@@ -4999,6 +4999,6 @@
     }
   },
   "source_model": "myofullbody",
-  "status": "projected_frame_repairs_neutral_but_flexion_crosses",
+  "status": "projected_payload_matches_live_reference_but_flexion_crosses",
   "whole_body_cartilage_adopted": false
 }

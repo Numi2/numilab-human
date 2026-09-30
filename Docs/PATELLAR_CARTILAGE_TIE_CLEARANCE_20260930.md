@@ -56,10 +56,12 @@ closure, and sustained flexion. It does not establish clinical anatomy or a
 corrected whole-body standing simulation.
 
 The later [live pose-transport audit](PATELLAR_CARTILAGE_LIVE_POSE_TRANSPORT_20260930.md)
-measures the source-frame problem directly: the old patellar visual is about
-53.45 mm from its mechanical rest position at equality-projected neutral.
-An opt-in projected-frame payload removes that mismatch, but exact PTC/FMC
-crossings recur under the source flexion law. Neither candidate is adopted.
+measures the raw-payload frame mismatch directly: its old patellar visual
+coordinates place cartilage about 53.45 mm from `restWorld` at projected
+neutral. The live runner already reconstructs that visual from `restWorld`.
+An opt-in projected-frame payload aligns the raw coordinates, but exact
+PTC/FMC crossings recur under the source flexion law. Neither candidate is
+adopted.
 
 Reproduce the geometry and native receipts from the pinned sources and current
 local Numi Lab build:

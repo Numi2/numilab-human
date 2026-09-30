@@ -331,12 +331,12 @@ def run() -> dict:
                 "FMC": (projected_fmc_live.astype("<f4").astype(np.float64),
                         articular["FMC"][1]),
             })
-            # The current six-tissue runner takes NHKNEE1 restWorld as a
-            # projected-rest position. Measure the frame error this would
-            # produce if cartilage were appended to that path unchanged.
-            neutral_mechanics_frame_error = None
+            # The live runner reconstructs non-FEM visuals from restWorld in
+            # the projected frame. Measure the correction it must apply to
+            # the old payload-local visual, not an error in that live visual.
+            old_payload_visual_correction = None
             if flexion == 0.0:
-                neutral_mechanics_frame_error = {
+                old_payload_visual_correction = {
                     name: maximum_distance(regions[name]["rest"], live[name])
                     for name in ("PTC", "FMC")
                 }
@@ -351,7 +351,7 @@ def run() -> dict:
                                   f"patella_{suffix}"))).astype("<f4"),
                         live["PTC"][tie]),
                 "default_frame_payload_visual_articular_intersections": contacts,
-                "source_default_to_live_ptl_continuum_map": {
+                "hypothetical_default_reference_to_live_ptl_map": {
                     "tetrahedra": len(pt_l_cells),
                     "minimum_jacobian": float(pt_l_jacobian.min()),
                     "maximum_jacobian": float(pt_l_jacobian.max()),
@@ -372,15 +372,15 @@ def run() -> dict:
                     "maximum_node_displacement_m":
                         maximum_distance(projected_pt_l, pt_l["rest"]),
                 },
-                "projected_payload_candidate_maximum_ptc_position_difference_m":
+                "projected_vs_default_payload_visual_ptc_difference_m":
                     maximum_distance(projected_candidate_live, live["PTC"]),
                 "projected_payload_candidate_articular_intersections":
                     projected_contacts,
                 "projected_payload_candidate_neutral_current_error_m":
                     maximum_distance(projected_candidate_live, current)
                     if flexion == 0.0 else None,
-                "current_runner_projected_rest_frame_error_m":
-                    neutral_mechanics_frame_error,
+                "old_payload_visual_correction_to_live_rest_m":
+                    old_payload_visual_correction,
             }
         sides[side] = {
             "nhknee_payload_sha256": sha(path.read_bytes()),
@@ -401,8 +401,8 @@ def run() -> dict:
                 for angle in FLEXION_RADIANS),
         }
     return {
-        "schema": "numi.human.patellar-cartilage-live-pose-transport-preflight.v1",
-        "status": "projected_frame_repairs_neutral_but_flexion_crosses",
+        "schema": "numi.human.patellar-cartilage-live-pose-transport-preflight.v2",
+        "status": "projected_payload_matches_live_reference_but_flexion_crosses",
         "geometry_receipt_sha256": sha(geometry_bytes),
         "source_model": "myofullbody",
         "mujoco_version": mujoco.__version__,
@@ -410,13 +410,15 @@ def run() -> dict:
         "whole_body_cartilage_adopted": False,
         "native_loaded_contact_qualified": False,
         "boundary": (
-            "The opt-in projected visual/anchor frame makes NHKNEE1 restWorld "
-            "agree with equality-projected Human geometry, but the local PTC "
-            "clearance field crosses FMC under source patellar flexion. The "
-            "default-frame visual separation is displaced from the mechanical "
-            "rest geometry and is not an admission result. The right knee is "
-            "a mirrored left specimen. This is a geometric preflight, not a "
-            "native accepted Human/Matter step or clinical anatomy claim."
+            "The opt-in projected visual/anchor frame makes raw NHKNEE1 "
+            "visual locals match equality-projected restWorld. The existing "
+            "live Human runner already reconstructs non-FEM visuals from "
+            "restWorld in that frame, so the old payload correction is not "
+            "a live-render error. The local PTC clearance field crosses FMC "
+            "under source patellar flexion. The default-frame raw payload "
+            "visual separation is not an admission result. The right knee "
+            "is a mirrored left specimen. This is a geometric preflight, "
+            "not a native accepted Human/Matter step or clinical claim."
         ),
     }
 
