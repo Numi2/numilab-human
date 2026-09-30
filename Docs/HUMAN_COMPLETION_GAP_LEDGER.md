@@ -560,6 +560,15 @@ synthetic mass. Anatomical support/loading, source closure defects, unloaded
 reference, full four-chamber mechanics, native electrical coupling and
 heartbeat remain open.
 
+The [corrected active-force reference](CARDIAC_SPLIT_ACTIVE_FORCE_REFERENCE_20260930.md)
+now transfers the three point-only RV active-fibre contributions onto those
+separate cooked mechanical nodes at both 100 and 250 ms. Its independent
+full-source gate agrees with the native source-ordered field to at most
+`2.61e-18 N` per component and retains total force, torque and affine-work
+balance. This resolves the offline force-ownership mismatch left by the
+mechanical split; runtime full-source force parity and electromechanical
+transaction qualification remain open.
+
 The [source dynamic-limit increment](SOURCE_DYNAMIC_LIMITS_20260908.md) closes scalar-law, complete limit-anatomy and bounded transaction integration. All 122 source-limited coordinates are retained, including six missing legacy hard flags. The identical recruited stance with registered tissue and curved support remains the next physical admission gate. The interrupted costal attempt adds no timeout or performance qualification.
 
 The [selected neuromusculoskeletal release matrix](NEUROMUSCULOSKELETAL_RELEASE_MATRIX.md) fixes the current completion target. The [registered costal ownership increment](COSTAL_TISSUE_OWNERSHIP_20260908.md) adds source-bound common registration, actual cooked mass subtraction and native v5 COM-frame admission. It does not close loaded thorax, experimental calibration or sustained behaviour.

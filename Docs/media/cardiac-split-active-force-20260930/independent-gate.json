@@ -1,0 +1,69 @@
+{
+  "activation_summary_sha256": "4bd6b06afbd430900b75b0e9ca952d0c018690bc0d441f8e65b953901519ea2f",
+  "asset_manifest_sha256": "e8cb0391623577efc4eac04e5710cf7c9a4757614e09d936f5af3889c37d56f1",
+  "boundary": "Offline source F=I active-stress internal residual in corrected cooked node order. The 100-ms source tension was separately used by the bounded native mechanics fixture. This does not prove runtime force parity, physiological motion, or heartbeat.",
+  "corrected_cook_receipt_sha256": "30c49bb6487aa29bb22b4c4578811f22b404de702344a12af904b74a4bf29355",
+  "corrected_cooked_source_map_sha256": "28a979109e515020101263ace0801d8f4fe24cf2dd6d172ce6bbf5446e6d0138",
+  "corrected_mechanical_nodes": 218080,
+  "frames": [
+    {
+      "affine_virtual_work_j": 0.011342866377159144,
+      "max_independent_component_error_n": 1.734723475976807e-18,
+      "native_receipt_sha256": "a79d7f2d255042f0f13fba9ad0789185ba8666cbb3caf0a69946003454dce380",
+      "net_force_n": [
+        2.268096734731051e-14,
+        1.5085426397637436e-14,
+        -2.831675866010741e-14
+      ],
+      "net_torque_nm": [
+        -7.275199865285076e-16,
+        -1.2050419256198763e-14,
+        -1.2212724321419843e-15
+      ],
+      "old_merged_virtual_work_j": 0.011342866377159146,
+      "replay_bitwise": true,
+      "rv_point_transfer_force_norm_n": [
+        0.0007797107026739756,
+        0.006887755219793611,
+        0.0011810012656692742
+      ],
+      "source_to_cooked_residual_sha256": "72ce909359c5d74ddc77d88f74e1ae0cbc29c50032f1a96956eaaec3b2e86d11",
+      "time_ms": 100
+    },
+    {
+      "affine_virtual_work_j": 0.01482512253658424,
+      "max_independent_component_error_n": 2.6020852139652106e-18,
+      "native_receipt_sha256": "f7c09f5b72ceeabfbed892a65324b129126b2e44fb9ca62654fb8bbf6fb16f93",
+      "net_force_n": [
+        -3.7375701492092794e-14,
+        -2.3044066654875905e-14,
+        -5.031782282505226e-14
+      ],
+      "net_torque_nm": [
+        1.1625452662165914e-14,
+        -1.29564870117449e-14,
+        -1.599577675176489e-15
+      ],
+      "old_merged_virtual_work_j": 0.01482512253658424,
+      "replay_bitwise": true,
+      "rv_point_transfer_force_norm_n": [
+        0.0020551362657769937,
+        0.008111271131047752,
+        0.002813530810221712
+      ],
+      "source_to_cooked_residual_sha256": "f884857b1b672674c8a0b97c308d2a61be61e3d92ef935760fd25d50f04cc58b",
+      "time_ms": 250
+    }
+  ],
+  "gate_source_sha256": "3f55b1e9125d997eeedad283dd993c43507f717a992417a849dd31634dc4ccd7",
+  "heartbeat_qualified": false,
+  "native_accepted_steps_with_this_residual": 0,
+  "prior_force_gate_sha256": "26bab6db7118c865e6ecf9adf05473dda2b5f3dd63417a4f2e79a4453a4d39ff",
+  "prior_force_summary_sha256": "82d8884eb5296a412d30d870b034f2a64030ce34c0971c885f9cf89ed8876647",
+  "producer_binary_sha256": "4e91d23ceb65433a46f8d30504f138408ea81a50b3b515ddc81296a94ba8e1cc",
+  "producer_source_sha256": "557977e0032ccbb2a2016454e6f3e9c1cddcfb4bc44dc7f48874195295360788",
+  "schema": "numi.human.cardiac-split-active-force-gate.v1",
+  "source_activation_model_reproduced": false,
+  "status": "passed_full_source_split_mechanical_force_reference",
+  "ventricular_tetrahedra": 1097534
+}
