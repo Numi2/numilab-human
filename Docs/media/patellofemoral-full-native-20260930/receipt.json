@@ -1,24 +1,504 @@
 {
-  "accepted_full_boundary_exact_face_intersections": {
+  "accepted_full_boundary_geometry": {
     "left_off": {
-      "aabb_candidate_pairs": 1578,
-      "point_contact_pairs": 0,
-      "segment_or_polygon_crossing_pairs": 0
+      "accepted_tetrahedral_orientation": {
+        "FMC": {
+          "minimum_signed_tetrahedron_volume_m3": 2.263403697980617e-14,
+          "positive_tetrahedra": 87072,
+          "sum_signed_tetrahedron_volume_m3": 8.062709884890434e-06,
+          "zero_or_negative_tetrahedra": 0
+        },
+        "PTC": {
+          "minimum_signed_tetrahedron_volume_m3": 2.5588051176281067e-12,
+          "positive_tetrahedra": 121105,
+          "sum_signed_tetrahedron_volume_m3": 2.9465876482396125e-06,
+          "zero_or_negative_tetrahedra": 0
+        }
+      },
+      "exact_self_embedding": {
+        "FMC": {
+          "aabb_candidate_pairs": 251629,
+          "allowed_shared_vertex_or_edge_pairs": 245030,
+          "closed_oriented_manifold_candidate": false,
+          "exact_self_intersection_pairs": 0
+        },
+        "PTC": {
+          "aabb_candidate_pairs": 132818,
+          "allowed_shared_vertex_or_edge_pairs": 130551,
+          "closed_oriented_manifold_candidate": true,
+          "exact_self_intersection_pairs": 0
+        }
+      },
+      "face_intersections": {
+        "aabb_candidate_pairs": 1578,
+        "point_contact_pairs": 0,
+        "segment_or_polygon_crossing_pairs": 0
+      },
+      "mutual_surface_point_parity": {
+        "FMC_in_PTC": [
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 0,
+            "source_surface_vertex_index": 0
+          },
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 20412,
+            "source_surface_vertex_index": 10270
+          },
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 40823,
+            "source_surface_vertex_index": 20205
+          }
+        ],
+        "PTC_in_FMC": [
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 0,
+            "source_surface_vertex_index": 0
+          },
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 10878,
+            "source_surface_vertex_index": 4221
+          },
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 21755,
+            "source_surface_vertex_index": 10718
+          }
+        ]
+      }
     },
     "left_on": {
-      "aabb_candidate_pairs": 1578,
-      "point_contact_pairs": 0,
-      "segment_or_polygon_crossing_pairs": 0
+      "accepted_tetrahedral_orientation": {
+        "FMC": {
+          "minimum_signed_tetrahedron_volume_m3": 2.263403697980617e-14,
+          "positive_tetrahedra": 87072,
+          "sum_signed_tetrahedron_volume_m3": 8.062709884890434e-06,
+          "zero_or_negative_tetrahedra": 0
+        },
+        "PTC": {
+          "minimum_signed_tetrahedron_volume_m3": 2.5588940075006336e-12,
+          "positive_tetrahedra": 121105,
+          "sum_signed_tetrahedron_volume_m3": 2.9465881432611777e-06,
+          "zero_or_negative_tetrahedra": 0
+        }
+      },
+      "exact_self_embedding": {
+        "FMC": {
+          "aabb_candidate_pairs": 251629,
+          "allowed_shared_vertex_or_edge_pairs": 245030,
+          "closed_oriented_manifold_candidate": false,
+          "exact_self_intersection_pairs": 0
+        },
+        "PTC": {
+          "aabb_candidate_pairs": 132818,
+          "allowed_shared_vertex_or_edge_pairs": 130551,
+          "closed_oriented_manifold_candidate": true,
+          "exact_self_intersection_pairs": 0
+        }
+      },
+      "face_intersections": {
+        "aabb_candidate_pairs": 1578,
+        "point_contact_pairs": 0,
+        "segment_or_polygon_crossing_pairs": 0
+      },
+      "mutual_surface_point_parity": {
+        "FMC_in_PTC": [
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 0,
+            "source_surface_vertex_index": 0
+          },
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 20412,
+            "source_surface_vertex_index": 10270
+          },
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 40823,
+            "source_surface_vertex_index": 20205
+          }
+        ],
+        "PTC_in_FMC": [
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 0,
+            "source_surface_vertex_index": 0
+          },
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 10878,
+            "source_surface_vertex_index": 4221
+          },
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 21755,
+            "source_surface_vertex_index": 10718
+          }
+        ]
+      }
     },
     "right_off": {
-      "aabb_candidate_pairs": 1578,
-      "point_contact_pairs": 0,
-      "segment_or_polygon_crossing_pairs": 0
+      "accepted_tetrahedral_orientation": {
+        "FMC": {
+          "minimum_signed_tetrahedron_volume_m3": 2.262449581016103e-14,
+          "positive_tetrahedra": 87072,
+          "sum_signed_tetrahedron_volume_m3": 8.062710028402545e-06,
+          "zero_or_negative_tetrahedra": 0
+        },
+        "PTC": {
+          "minimum_signed_tetrahedron_volume_m3": 2.5588451094245834e-12,
+          "positive_tetrahedra": 121105,
+          "sum_signed_tetrahedron_volume_m3": 2.9465877203945363e-06,
+          "zero_or_negative_tetrahedra": 0
+        }
+      },
+      "exact_self_embedding": {
+        "FMC": {
+          "aabb_candidate_pairs": 251629,
+          "allowed_shared_vertex_or_edge_pairs": 245030,
+          "closed_oriented_manifold_candidate": false,
+          "exact_self_intersection_pairs": 0
+        },
+        "PTC": {
+          "aabb_candidate_pairs": 132818,
+          "allowed_shared_vertex_or_edge_pairs": 130551,
+          "closed_oriented_manifold_candidate": true,
+          "exact_self_intersection_pairs": 0
+        }
+      },
+      "face_intersections": {
+        "aabb_candidate_pairs": 1578,
+        "point_contact_pairs": 0,
+        "segment_or_polygon_crossing_pairs": 0
+      },
+      "mutual_surface_point_parity": {
+        "FMC_in_PTC": [
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 0,
+            "source_surface_vertex_index": 0
+          },
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 20412,
+            "source_surface_vertex_index": 10270
+          },
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 40823,
+            "source_surface_vertex_index": 20205
+          }
+        ],
+        "PTC_in_FMC": [
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 0,
+            "source_surface_vertex_index": 0
+          },
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 10878,
+            "source_surface_vertex_index": 4221
+          },
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 21755,
+            "source_surface_vertex_index": 10718
+          }
+        ]
+      }
     },
     "right_on": {
-      "aabb_candidate_pairs": 1578,
-      "point_contact_pairs": 0,
-      "segment_or_polygon_crossing_pairs": 0
+      "accepted_tetrahedral_orientation": {
+        "FMC": {
+          "minimum_signed_tetrahedron_volume_m3": 2.262449581016103e-14,
+          "positive_tetrahedra": 87072,
+          "sum_signed_tetrahedron_volume_m3": 8.062710028402545e-06,
+          "zero_or_negative_tetrahedra": 0
+        },
+        "PTC": {
+          "minimum_signed_tetrahedron_volume_m3": 2.55883851510655e-12,
+          "positive_tetrahedra": 121105,
+          "sum_signed_tetrahedron_volume_m3": 2.94658798100064e-06,
+          "zero_or_negative_tetrahedra": 0
+        }
+      },
+      "exact_self_embedding": {
+        "FMC": {
+          "aabb_candidate_pairs": 251629,
+          "allowed_shared_vertex_or_edge_pairs": 245030,
+          "closed_oriented_manifold_candidate": false,
+          "exact_self_intersection_pairs": 0
+        },
+        "PTC": {
+          "aabb_candidate_pairs": 132818,
+          "allowed_shared_vertex_or_edge_pairs": 130551,
+          "closed_oriented_manifold_candidate": true,
+          "exact_self_intersection_pairs": 0
+        }
+      },
+      "face_intersections": {
+        "aabb_candidate_pairs": 1578,
+        "point_contact_pairs": 0,
+        "segment_or_polygon_crossing_pairs": 0
+      },
+      "mutual_surface_point_parity": {
+        "FMC_in_PTC": [
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 0,
+            "source_surface_vertex_index": 0
+          },
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 20412,
+            "source_surface_vertex_index": 10270
+          },
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 40823,
+            "source_surface_vertex_index": 20205
+          }
+        ],
+        "PTC_in_FMC": [
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 0,
+            "source_surface_vertex_index": 0
+          },
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 10878,
+            "source_surface_vertex_index": 4221
+          },
+          {
+            "exact_ray_parity": {
+              "attempts": 1,
+              "crossings": 0,
+              "location": "outside",
+              "ray": [
+                1,
+                1,
+                1
+              ]
+            },
+            "source_surface_face_index": 21755,
+            "source_surface_vertex_index": 10718
+          }
+        ]
+      }
     }
   },
   "cases": {
@@ -261,6 +741,9 @@
   "left_contact_on_replay_byte_identical": true,
   "limits": [
     "FMC source boundary has a two-fan vertex link; zero face crossings does not qualify disjoint volumes.",
+    "Exact ray parity found sampled boundary points outside the opposite surface; FMC is not an embedded manifold solid, so this is not volume qualification.",
+    "The source FMC defect has a connected annular tetrahedral star; splitting its vertex alone would sever valid tetrahedral adjacency.",
+    "Exact self-intersection and tetrahedral orientation checks pass for retained states, but these do not calibrate material or physiological load.",
     "PTC current pose is an unadopted 20 micrometer candidate; patellar bone, PTB, QAT and PTL attachments are absent.",
     "The material uses a synthetic density and an unvalidated isotropic energy; no source FEBio material equivalence was established.",
     "One 1 microsecond zero-gravity step with 0.1 m/s prescribed approach is not sustained or physiological load.",
@@ -279,7 +762,65 @@
   },
   "native_source_revision": "322ddbdffda47b1ecec7c8053d61c495a116e22b",
   "pose_status": "unadopted_candidate",
-  "schema": "numi.human.patellofemoral-full-native-step.v1",
+  "schema": "numi.human.patellofemoral-full-native-step.v3",
+  "source_cartilage_tetrahedral_boundary_chain": {
+    "FMC": {
+      "declared_full_boundary_oriented_face_match": true,
+      "minimum_source_tetrahedron_volume_m3": 2.3697941972522432e-14,
+      "one_owner_boundary_faces": 40824,
+      "positive_source_tetrahedra": 87072,
+      "sum_source_tetrahedron_volume_m3": 8.456878809409719e-06,
+      "tetrahedra": 87072,
+      "three_or_more_owner_faces": 0,
+      "two_owner_interior_faces": 153732,
+      "unique_tetrahedral_faces": 194556
+    },
+    "PTC": {
+      "declared_full_boundary_oriented_face_match": true,
+      "minimum_source_tetrahedron_volume_m3": 2.684168420447761e-12,
+      "one_owner_boundary_faces": 21756,
+      "positive_source_tetrahedra": 121105,
+      "sum_source_tetrahedron_volume_m3": 3.0906406936013043e-06,
+      "tetrahedra": 121105,
+      "three_or_more_owner_faces": 0,
+      "two_owner_interior_faces": 231332,
+      "unique_tetrahedral_faces": 253088
+    }
+  },
+  "source_fmc_defect_tetrahedral_star": {
+    "incident_source_surface_faces": {
+      "FMC_@_FMB_TiesFaces": 6,
+      "FMC_@_PTC_ContactFaces": 6
+    },
+    "incident_tetrahedra": 12,
+    "link_boundary_cycles_source_node_ids": [
+      [
+        233514,
+        233515,
+        233522,
+        233524,
+        233531,
+        233532
+      ],
+      [
+        233558,
+        233559,
+        233566,
+        233567,
+        233574,
+        233575
+      ]
+    ],
+    "link_edges": 24,
+    "link_euler_characteristic": 0,
+    "link_triangles": 12,
+    "link_vertices": 12,
+    "nearest_PTC_source_node_distance_mm": 46.673440030746285,
+    "nearest_PTC_source_node_id": 60873,
+    "single_vertex_split_preserves_tetrahedral_adjacency": false,
+    "source_node_id": 233523,
+    "tetrahedral_star_components": 1
+  },
   "source_fmc_vertex_link_manifold_defect_node_id": 233523,
   "source_inputs": {
     "14um": {
