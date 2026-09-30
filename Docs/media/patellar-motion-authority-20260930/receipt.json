@@ -1,0 +1,176 @@
+{
+  "boundary": "The pinned FEBio model supplies free patellar cylindrical-joint motion under contact and tendon/ligament loads, not a measured patellar trajectory. MyoSim instead prescribes three patellar coordinates from knee angle on each side. This source-contract audit does not qualify an alternative joint law, a released native patella, loaded cartilage, or clinical anatomy.",
+  "live_free_patella_mode_qualified": false,
+  "myosim_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+  "myosim_source_file_sha256": {
+    "myo_sim/build/compose.py": "93dd551216e94081cba8a86e9d13d065a2a0e8f4580a658c99eb5d3c33d40062",
+    "myo_sim/models/leg/assets/myolegs_assets.xml": "ea48e7612c8da4ed852d66b922d01311d24823d171c733b77a884fb6a5e01be3",
+    "myo_sim/models/leg/assets/myolegs_chain.xml": "da7c4a13eec2abfedc683210972ea423d630461a56909bee2884e181e1bf1d97"
+  },
+  "open_knee_febio_sha256": "00b6efb53ad7e7330296cbb9569d358d48ed60819e22732e6149db6fb98a158a",
+  "open_knee_patellar_bone_rigid_ties": [
+    "PTC_With_PTB",
+    "PTL_With_PTB",
+    "QAT_With_PTB"
+  ],
+  "open_knee_patellar_constraints": [
+    {
+      "body_a_material_id": 4,
+      "body_b_material_id": 20,
+      "joint_axis_source": [
+        0.9889108468842679,
+        -0.1485103932882822,
+        0.0
+      ],
+      "joint_origin_source_mm": [
+        -1.036,
+        -6.717,
+        0.171
+      ],
+      "name": "Patellar_Extension_Flexion",
+      "rotation_prescribed": false,
+      "translation_prescribed": false
+    },
+    {
+      "body_a_material_id": 19,
+      "body_b_material_id": 1,
+      "joint_axis_source": [
+        0.007345507674492785,
+        0.0,
+        0.9999730213945794
+      ],
+      "joint_origin_source_mm": [
+        3.8855000000000004,
+        46.3435,
+        3.6414999999999997
+      ],
+      "name": "Patellar_Lateral_Tilt",
+      "rotation_prescribed": false,
+      "translation_prescribed": false
+    },
+    {
+      "body_a_material_id": 20,
+      "body_b_material_id": 19,
+      "joint_axis_source": [
+        0.1485103049177992,
+        0.9889102584370404,
+        -0.0010909130158267598
+      ],
+      "joint_origin_source_mm": [
+        -4.041046061001632,
+        -6.265715059830884,
+        0.171
+      ],
+      "name": "Patellar_Lateral_Rotation",
+      "rotation_prescribed": false,
+      "translation_prescribed": false
+    }
+  ],
+  "open_knee_tibiofemoral_flexion": {
+    "constraint": "Extension_Flexion",
+    "loadcurve_id": 9,
+    "rotation_prescribed": true,
+    "translation_prescribed": false
+  },
+  "prior_joint_admission_receipt_sha256": "0b878b8bf1f8fe5a0d1e6df926c94807577da66c1214125df0f929958c23e7c9",
+  "schema": "numi.human.patellar-motion-authority.v1",
+  "sides": {
+    "left": {
+      "motion_authority_compatible": false,
+      "myosim_patellar_equalities": [
+        {
+          "active": true,
+          "dependent_q_index": 127,
+          "equality": "knee_angle_beta_translation1_constraint_l",
+          "joint": "knee_angle_beta_translation1_l",
+          "master_knee_q_index": 120,
+          "polycoef": [
+            0.0524192,
+            -0.0150188,
+            -0.0340522,
+            0.0133393,
+            -0.000879151
+          ]
+        },
+        {
+          "active": true,
+          "dependent_q_index": 126,
+          "equality": "knee_angle_beta_translation2_constraint_l",
+          "joint": "knee_angle_beta_translation2_l",
+          "master_knee_q_index": 120,
+          "polycoef": [
+            -0.0108281,
+            -0.0487847,
+            0.00927644,
+            0.0131673,
+            -0.00349673
+          ]
+        },
+        {
+          "active": true,
+          "dependent_q_index": 128,
+          "equality": "knee_angle_beta_rotation1_constraint_l",
+          "joint": "knee_angle_beta_rotation1_l",
+          "master_knee_q_index": 120,
+          "polycoef": [
+            0.010506,
+            0.0247615,
+            -1.31647,
+            0.716337,
+            -0.138302
+          ]
+        }
+      ],
+      "open_knee_patellar_motion_prescribed": false
+    },
+    "right": {
+      "motion_authority_compatible": false,
+      "myosim_patellar_equalities": [
+        {
+          "active": true,
+          "dependent_q_index": 113,
+          "equality": "knee_angle_beta_translation1_constraint_r",
+          "joint": "knee_angle_beta_translation1_r",
+          "master_knee_q_index": 106,
+          "polycoef": [
+            0.0524192,
+            -0.0150188,
+            -0.0340522,
+            0.0133393,
+            -0.000879151
+          ]
+        },
+        {
+          "active": true,
+          "dependent_q_index": 112,
+          "equality": "knee_angle_beta_translation2_constraint_r",
+          "joint": "knee_angle_beta_translation2_r",
+          "master_knee_q_index": 106,
+          "polycoef": [
+            -0.0108281,
+            -0.0487847,
+            0.00927644,
+            0.0131673,
+            -0.00349673
+          ]
+        },
+        {
+          "active": true,
+          "dependent_q_index": 114,
+          "equality": "knee_angle_beta_rotation1_constraint_r",
+          "joint": "knee_angle_beta_rotation1_r",
+          "master_knee_q_index": 106,
+          "polycoef": [
+            0.010506,
+            0.0247615,
+            -1.31647,
+            0.716337,
+            -0.138302
+          ]
+        }
+      ],
+      "open_knee_patellar_motion_prescribed": false
+    }
+  },
+  "status": "open_knee_free_patella_conflicts_with_myosim_prescription"
+}
