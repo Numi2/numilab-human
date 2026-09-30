@@ -569,6 +569,16 @@ balance. This resolves the offline force-ownership mismatch left by the
 mechanical split; runtime full-source force parity and electromechanical
 transaction qualification remain open.
 
+The [native initial-force parity increment](CARDIAC_RUNTIME_FORCE_PARITY_20260930.md)
+now copies the first Metal FEM assembly from the corrected full-source package.
+Active-minus-zero force matches the independent 100 ms source residual on all
+218,080 cooked nodes within `4.61e-7 N` per component and `5.37e-6` relative
+L2; the captured field replays byte for byte, and accepted state hashes remain
+unchanged. This closes the bounded runtime force-assembly comparison left by
+the split correction. Accepted native electrical-to-mechanical evolution,
+anatomical loading/support, physiological-duration motion and heartbeat remain
+open.
+
 The [source dynamic-limit increment](SOURCE_DYNAMIC_LIMITS_20260908.md) closes scalar-law, complete limit-anatomy and bounded transaction integration. All 122 source-limited coordinates are retained, including six missing legacy hard flags. The identical recruited stance with registered tissue and curved support remains the next physical admission gate. The interrupted costal attempt adds no timeout or performance qualification.
 
 The [selected neuromusculoskeletal release matrix](NEUROMUSCULOSKELETAL_RELEASE_MATRIX.md) fixes the current completion target. The [registered costal ownership increment](COSTAL_TISSUE_OWNERSHIP_20260908.md) adds source-bound common registration, actual cooked mass subtraction and native v5 COM-frame admission. It does not close loaded thorax, experimental calibration or sustained behaviour.

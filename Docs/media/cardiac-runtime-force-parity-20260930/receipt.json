@@ -1,0 +1,61 @@
+{
+  "accepted_active_and_zero_state_unchanged": true,
+  "auditor_source_sha256": "13ae2251e820c26e16a9426a8a5f8a4a35e1fffb12bd6db6dfb9740ca33e4dbd",
+  "boundary": "First Newton assembly of one synthetic-support 1 us native FEM fixture; active-minus-zero internal stress at supplied CT geometry. No native electrical evolution, chamber loading, anatomical support, physiological motion or heartbeat.",
+  "cooked_mechanical_nodes": 218080,
+  "max_component_error_n": 4.6012391681764936e-07,
+  "native_accepted_fixture_steps_per_run": 1,
+  "native_and_replay_byte_identical": true,
+  "native_header_source_sha256": "9577ff063b4666ea42f2c60faf6ae1e1e95a68a1e1af815a829ea86833be9661",
+  "native_internal_residual_sha256": "07c79a2181622cfcb24d6eff3b37b60d9e98536546079e1a0046c5eee007ea14",
+  "native_metallib_sha256": "b7c8db37cdbb8788b5f1c13fd449c330f3c244792c83c2cb77ff0de6fb968721",
+  "native_net_internal_residual_n": [
+    -2.5306181277579e-07,
+    1.769487876389017e-07,
+    -1.5847363892332322e-07
+  ],
+  "native_revision": "0b5792370ee73993f3f256c538d63f91bce23051",
+  "native_runtime_source_sha256": "5c3990b4fc43d331b7243a98fc0e34c45c16776c6c1579ed36861f231edd400e",
+  "native_shader_source_sha256": "97e5fd3dcde8dff97d7843fea4558abaf5c8bd38a502e58b039d269da9f0d8ce",
+  "native_step_binary_sha256": "ec705ccdaa24c829fad2ef17aedb4ca241a87a4ce622d98b24db60ef3dd55d05",
+  "native_step_source_sha256": "a3013fdf92efa372dc748e9eb1df1b73df969137670528e6ab29d519289cd5e5",
+  "package_sha256": "f6ad2e22d4ebaa4c78952b7815210aa0d378220ab376f18447bb7e842ef5b699",
+  "physiological_heartbeat_qualified": false,
+  "point_contact_cook_receipt_sha256": "30c49bb6487aa29bb22b4c4578811f22b404de702344a12af904b74a4bf29355",
+  "point_only_contacts": [
+    {
+      "lv_node": 13174,
+      "max_component_error_n": 6.130828660629722e-08,
+      "rv_node": 218077,
+      "source_node": 17565
+    },
+    {
+      "lv_node": 126653,
+      "max_component_error_n": 2.518125326810526e-08,
+      "rv_node": 218078,
+      "source_node": 170947
+    },
+    {
+      "lv_node": 173376,
+      "max_component_error_n": 4.085705727148621e-08,
+      "rv_node": 218079,
+      "source_node": 235754
+    }
+  ],
+  "relative_l2_error": 5.368227696406014e-06,
+  "retained_local_capture_sha256": {
+    "active-elements.bin": "9a76587a7262d1ee252760529c1175eb55e9a4b7b36f5bde45dc11a3aff48a19",
+    "active-nodes.bin": "c9e344118f82e4ff94b57d62c6568032afaa969f51280e71ab20a92e1195af7e",
+    "replay-elements.bin": "9a76587a7262d1ee252760529c1175eb55e9a4b7b36f5bde45dc11a3aff48a19",
+    "replay-nodes.bin": "c9e344118f82e4ff94b57d62c6568032afaa969f51280e71ab20a92e1195af7e",
+    "zero-elements.bin": "db1c0c34216c924044c721ec3a54f6520856a64757eab4d4b8b73c92371cb3e9",
+    "zero-nodes.bin": "9b4e45cb1d57b6733a0382428ac03b4549dcd8d0931bfe11c3aa25141b1ab494"
+  },
+  "schema": "numi.human.cardiac-runtime-force-parity.v1",
+  "source_activation_model_reproduced": false,
+  "source_force_gate_sha256": "29c060f75bd5df3f7d70a0d4da8c7db81498ee140830a29f59bd9805f51f87b3",
+  "source_reference_residual_sha256": "72ce909359c5d74ddc77d88f74e1ae0cbc29c50032f1a96956eaaec3b2e86d11",
+  "source_ventricular_tetrahedra": 1097534,
+  "status": "passed_full_source_native_initial_force_parity",
+  "tension_sha256": "5197acfab75af8fa229693740d9535a3bb4c86f883b5c8471610ad03eb5592f5"
+}
