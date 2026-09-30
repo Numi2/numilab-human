@@ -1,0 +1,126 @@
+{
+  "schema": "numi.human.cruciate-contact-clearance.v1",
+  "qualified": false,
+  "boundary": "Eight accepted 1-microsecond steps use an opt-in 0.5-mm local ACL initialization. Untouched pinned Open Knee source still has strict crossing contact faces. This is a short native contact/load diagnostic, not sustained loaded-knee, anatomical, clinical, whole-body, organ, or physiological qualification.",
+  "source": {
+    "matter_commit": "fac41f55c68af622b8b06214adb7c0b876faeeb7",
+    "human_parent_commit": "48b894e",
+    "contact_metalinc_sha256": "15f1a2292f0b23a3b44328a26a9d826db515c828947d9b2b96124547bebb3b42",
+    "ccd_probe_source_sha256": "1f74d647478479ac85e1afe5df2f83b9bdfb43ed9a5f499abfe60a79a0439c5c",
+    "human_visual_probe_source_sha256": "1d4482fbbf696a7504aa7d4b9b60de5455d4234bf4e9c1f2fb10069bf1668de3"
+  },
+  "runtime": {
+    "human_probe": {
+      "path": "/Users/home/numi-lab-cardiac-native-20260930/Build/human-unprescribed-patella-20260930/bin/metalrobo_numilab_human_myosim_visual_probe",
+      "sha256": "4549f90fe970fcb756bac7d48b12730fedefa8c48a1aab872b7dbce0aa79e156"
+    },
+    "matter_metallib": {
+      "path": "/Users/home/numi-lab-cardiac-native-20260930/Build/human-unprescribed-patella-20260930/matter/shaders/NumiMatter.metallib",
+      "sha256": "b653627bfef555997f4c89472427ccf66b527c6e61ac6a49e9d7564aead7c6a2"
+    },
+    "matter_dylib": {
+      "path": "/Users/home/numi-lab-cardiac-native-20260930/Build/human-unprescribed-patella-20260930/lib/libmetalrobo.dylib",
+      "sha256": "10881b9550c8df499530df357e99be2a273d5793f5ee1aa1595542a43bb27a36"
+    },
+    "ccd_probe": {
+      "path": "/Users/home/numi-lab-cardiac-native-20260930/Build/human-unprescribed-patella-20260930/bin/metalrobo_matter_ccd_probe",
+      "sha256": "b0683d9254549f9645dd7694f7789757e1ba3ead54d5aebfe261bc1c32491a3b"
+    }
+  },
+  "inputs": {
+    "bones": {
+      "path": "/Users/home/numilab-human/Build/bodyparts3d-myosim-major-bones-v2/bodyparts3d-myosim-major-bones.nhbones",
+      "sha256": "482c040f197e183b31a98fc82c17fa1bf908eb5c60c788cc054e4699ddd42027"
+    },
+    "equalities": {
+      "path": "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-joint-equalities.nheq",
+      "sha256": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a"
+    },
+    "knee": {
+      "path": "/Users/home/numilab-human/Build/patellofemoral-surface-20260930/left/open-knee-oks003-left.nhknee",
+      "sha256": "2e38201528de25911ea496164602ea7e823cd9c2e3c94efa550ee52689324ae5"
+    },
+    "muscle": {
+      "path": "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-muscle-reference.nhmyo",
+      "sha256": "a4381465ca97a7af20108180e2fc0d0f0d9c11778d913de4c0728bd20ed459a7"
+    },
+    "rigid": {
+      "path": "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid",
+      "sha256": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951"
+    },
+    "support": {
+      "path": "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-support-contact.nhcnt",
+      "sha256": "4d54f8155cd83baaee7af536099824ac0da61e5d5e77544b42c6e5ce1b48c907"
+    },
+    "tendon": {
+      "path": "/Users/home/numilab-human/Build/motion-interface-refinement-20260928/tendon-final/numi-human-tendon-attachments.nhtendon",
+      "sha256": "b9927adda550712a2260075d795b629cbea747359936e85e1f36016c8d3b81e3"
+    }
+  },
+  "native_run": {
+    "argv": [
+      "/Users/home/numi-lab-cardiac-native-20260930/Build/human-unprescribed-patella-20260930/bin/metalrobo_numilab_human_myosim_visual_probe",
+      "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid",
+      "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-muscle-reference.nhmyo",
+      "/Users/home/numilab-human/Build/bodyparts3d-myosim-major-bones-v2/bodyparts3d-myosim-major-bones.nhbones",
+      "/Users/home/numilab-human/Build/cruciate-scoped-final-eight-20261001",
+      "--tendon-payload",
+      "/Users/home/numilab-human/Build/motion-interface-refinement-20260928/tendon-final/numi-human-tendon-attachments.nhtendon",
+      "--support-contact-payload",
+      "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-support-contact.nhcnt",
+      "--joint-equality-payload",
+      "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-joint-equalities.nheq",
+      "--open-knee-payload",
+      "/Users/home/numilab-human/Build/patellofemoral-surface-20260930/left/open-knee-oks003-left.nhknee",
+      "--open-knee-live-tissue-fem",
+      "--open-knee-cruciate-initialization-diagnostic",
+      "--muscle-step-seconds",
+      "0.000001",
+      "--muscle-step-count",
+      "8",
+      "--muscle-activation",
+      "0.1",
+      "--activated-source-muscle-index",
+      "405",
+      "--activated-source-muscle-index",
+      "413",
+      "--activated-source-muscle-index",
+      "414",
+      "--activated-source-muscle-index",
+      "415",
+      "--selected-tendon-control",
+      "--dimension",
+      "512"
+    ],
+    "exit_code": 0,
+    "requested_steps": 8,
+    "accepted_steps": 8,
+    "timestep_seconds": 1e-06,
+    "root_assistance": false,
+    "log": "native-eight-step.log",
+    "log_sha256": "f438d387b145bd2f670279e211a74da99b12cd9f595d431040e88b7fbf725eb6",
+    "replay": "bitwise",
+    "rollback": "verified",
+    "minimum_deformation_determinant": 0.953206718,
+    "articular_audited_steps": 8,
+    "articular_normal_force_n": 0.443824232,
+    "articular_max_pressure_pa": 569.637939,
+    "articular_stored_energy_j": 7.49051665e-09,
+    "articular_force_residual_n": 1.1920929e-07,
+    "ptl_reaction_impulse_l1_ns": 0.000131195528,
+    "ptl_impulse_momentum_residual_ns": 6.20910999e-07,
+    "ptl_impulse_relative_to_l1": 0.00473271468
+  },
+  "ccd_regression": {
+    "case_count": 90,
+    "passed": 90,
+    "failed": 0,
+    "step7_edge_edge_0_0": "certified_hit",
+    "log": "matter-ccd-90-cases.log",
+    "log_sha256": "07f961d43357d0ec3283a6cb4c8c06e2263ecfbada7146926480c7e97aa1d60e"
+  },
+  "previous_diagnostic": {
+    "receipt": "../cruciate-source-contact-20260930/ptl-trajectory-native-receipt.json",
+    "accepted_steps_before_rejection": 5
+  }
+}
