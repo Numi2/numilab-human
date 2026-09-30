@@ -32,6 +32,11 @@ contact force and energy. The 20 µm geometry result stays unadopted until
 that owner passes these checks. This receipt makes no clinical-anatomy or
 standing-simulation qualification claim.
 
+The subsequent [bone-tie-fixed cartilage field](PATELLAR_CARTILAGE_TIE_CLEARANCE_20260930.md)
+avoids an independent rigid-joint translation by leaving the patella and its
+bone tie fixed. Its one-step native check is still a PTC/FMC-only diagnostic;
+it has not admitted a new whole-body pose or loaded contact law.
+
 Reproduce the CPU source audit:
 
 ```sh

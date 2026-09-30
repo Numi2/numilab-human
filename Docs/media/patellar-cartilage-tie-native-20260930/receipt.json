@@ -1,0 +1,375 @@
+{
+  "binary_sha256": "f467b609f838ccc28b6134e400e91265d4b0e075b369aa2bcf3011f35b702948",
+  "boundary": "Apple M4 one-microsecond PTC/FMC-only diagnostic using synthetic material and static fixed PTC/PTB tie nodes. Both candidate states accept and remain exact-volume-disjoint; source crossing baselines reject and roll back. This does not apply tie reactions to a rigid patella, include QAT/PTL, qualify pressure or energy closure, or adopt a whole-body anatomical state.",
+  "cases": {
+    "left-fixed-off": {
+      "accepted_positions_bytes": 611892,
+      "accepted_positions_sha256": "92bc7a40fad4fdcec31aef1f9d76b3a5c5c48748b5aba260c00e4f99f0efc8cc",
+      "native": {
+        "abi": 35,
+        "accepted_barrier_impulse_magnitude_raw": 0,
+        "accepted_kinetic_energy_j": 0.000525288287905,
+        "active_deformable_histories": 0,
+        "approach_speed_mps": 0,
+        "baseline": false,
+        "completed_microsteps": 1,
+        "contact_disabled": true,
+        "contact_slop_m": 1e-05,
+        "device": "Apple M4",
+        "diagnostics": [
+          0.967582047,
+          0,
+          0,
+          0
+        ],
+        "failing_index": 4294967295,
+        "initial_kinetic_energy_j": 0,
+        "maximum_fixed_node_movement_m": 0,
+        "maximum_movement_m": 7.03368844e-06,
+        "ptc_fixed_node_count": 4592,
+        "ptc_fixed_nodes_moved": 0,
+        "rollback_bitwise": false,
+        "side": 0,
+        "source_nodes": 50991,
+        "source_tetrahedra": 208177,
+        "status_code": 0,
+        "surface_faces": 447644
+      }
+    },
+    "left-fixed-on": {
+      "accepted_positions_bytes": 611892,
+      "accepted_positions_sha256": "92bc7a40fad4fdcec31aef1f9d76b3a5c5c48748b5aba260c00e4f99f0efc8cc",
+      "accepted_ptc_ptb_tie_unchanged": true,
+      "exact_accepted_solid_separation": {
+        "aabb_candidate_tetrahedron_pairs": 5589,
+        "exact_boundary_contact_pairs": 0,
+        "exact_interior_overlap_pairs": 0,
+        "exact_tetrahedral_orientation": {
+          "FMC": {
+            "minimum_absolute_six_volume_lattice": 180514773667136554401792,
+            "negative": 0,
+            "positive": 87072,
+            "zero": 0
+          },
+          "PTC": {
+            "minimum_absolute_six_volume_lattice": 20433972670169526925524992,
+            "negative": 0,
+            "positive": 121105,
+            "zero": 0
+          }
+        },
+        "first_boundary_contact_pairs": [],
+        "first_interior_overlap_pairs": [],
+        "solid_domains_disjoint": true
+      },
+      "native": {
+        "abi": 35,
+        "accepted_barrier_impulse_magnitude_raw": 0,
+        "accepted_kinetic_energy_j": 0.000525288287905,
+        "active_deformable_histories": 0,
+        "approach_speed_mps": 0,
+        "baseline": false,
+        "completed_microsteps": 1,
+        "contact_disabled": false,
+        "contact_slop_m": 1e-05,
+        "device": "Apple M4",
+        "diagnostics": [
+          0.967582047,
+          0,
+          0,
+          0
+        ],
+        "failing_index": 4294967295,
+        "initial_kinetic_energy_j": 0,
+        "maximum_fixed_node_movement_m": 0,
+        "maximum_movement_m": 7.03368844e-06,
+        "ptc_fixed_node_count": 4592,
+        "ptc_fixed_nodes_moved": 0,
+        "rollback_bitwise": false,
+        "side": 0,
+        "source_nodes": 50991,
+        "source_tetrahedra": 208177,
+        "status_code": 0,
+        "surface_faces": 447644
+      }
+    },
+    "left-fixed-on-replay": {
+      "accepted_positions_bytes": 611892,
+      "accepted_positions_sha256": "92bc7a40fad4fdcec31aef1f9d76b3a5c5c48748b5aba260c00e4f99f0efc8cc",
+      "native": {
+        "abi": 35,
+        "accepted_barrier_impulse_magnitude_raw": 0,
+        "accepted_kinetic_energy_j": 0.000525288287905,
+        "active_deformable_histories": 0,
+        "approach_speed_mps": 0,
+        "baseline": false,
+        "completed_microsteps": 1,
+        "contact_disabled": false,
+        "contact_slop_m": 1e-05,
+        "device": "Apple M4",
+        "diagnostics": [
+          0.967582047,
+          0,
+          0,
+          0
+        ],
+        "failing_index": 4294967295,
+        "initial_kinetic_energy_j": 0,
+        "maximum_fixed_node_movement_m": 0,
+        "maximum_movement_m": 7.03368844e-06,
+        "ptc_fixed_node_count": 4592,
+        "ptc_fixed_nodes_moved": 0,
+        "rollback_bitwise": false,
+        "side": 0,
+        "source_nodes": 50991,
+        "source_tetrahedra": 208177,
+        "status_code": 0,
+        "surface_faces": 447644
+      }
+    },
+    "left-fixed-source-baseline": {
+      "accepted_positions_bytes": 611892,
+      "accepted_positions_sha256": "dd0ef75941bc1442cf905a81683f1b3ef7b48ce4580a2c0a6f528f7a9abd26cf",
+      "native": {
+        "abi": 35,
+        "accepted_barrier_impulse_magnitude_raw": 0,
+        "accepted_kinetic_energy_j": 0,
+        "active_deformable_histories": 0,
+        "approach_speed_mps": 0,
+        "baseline": true,
+        "completed_microsteps": 0,
+        "contact_disabled": false,
+        "contact_slop_m": 1e-05,
+        "device": "Apple M4",
+        "diagnostics": [
+          265683,
+          495520,
+          -1,
+          0
+        ],
+        "failing_index": 1790,
+        "initial_kinetic_energy_j": 0,
+        "maximum_fixed_node_movement_m": 0,
+        "maximum_movement_m": 0,
+        "ptc_fixed_node_count": 4592,
+        "ptc_fixed_nodes_moved": 0,
+        "rollback_bitwise": true,
+        "side": 0,
+        "source_nodes": 50991,
+        "source_tetrahedra": 208177,
+        "status_code": 6,
+        "surface_faces": 447644
+      }
+    },
+    "right-fixed-off": {
+      "accepted_positions_bytes": 611892,
+      "accepted_positions_sha256": "fbb198122be28f6300d177f66748ae9335263daa2a8c9a7585020c29a21cedbd",
+      "native": {
+        "abi": 35,
+        "accepted_barrier_impulse_magnitude_raw": 0,
+        "accepted_kinetic_energy_j": 0.000519318476747,
+        "active_deformable_histories": 0,
+        "approach_speed_mps": 0,
+        "baseline": false,
+        "completed_microsteps": 1,
+        "contact_disabled": true,
+        "contact_slop_m": 1e-05,
+        "device": "Apple M4",
+        "diagnostics": [
+          0.967607379,
+          0,
+          0,
+          0
+        ],
+        "failing_index": 4294967295,
+        "initial_kinetic_energy_j": 0,
+        "maximum_fixed_node_movement_m": 0,
+        "maximum_movement_m": 7.0180554e-06,
+        "ptc_fixed_node_count": 4592,
+        "ptc_fixed_nodes_moved": 0,
+        "rollback_bitwise": false,
+        "side": 1,
+        "source_nodes": 50991,
+        "source_tetrahedra": 208177,
+        "status_code": 0,
+        "surface_faces": 447644
+      }
+    },
+    "right-fixed-on": {
+      "accepted_positions_bytes": 611892,
+      "accepted_positions_sha256": "fbb198122be28f6300d177f66748ae9335263daa2a8c9a7585020c29a21cedbd",
+      "accepted_ptc_ptb_tie_unchanged": true,
+      "exact_accepted_solid_separation": {
+        "aabb_candidate_tetrahedron_pairs": 5589,
+        "exact_boundary_contact_pairs": 0,
+        "exact_interior_overlap_pairs": 0,
+        "exact_tetrahedral_orientation": {
+          "FMC": {
+            "minimum_absolute_six_volume_lattice": 180438679328307432914944,
+            "negative": 0,
+            "positive": 87072,
+            "zero": 0
+          },
+          "PTC": {
+            "minimum_absolute_six_volume_lattice": 20378548757043109169201152,
+            "negative": 0,
+            "positive": 121105,
+            "zero": 0
+          }
+        },
+        "first_boundary_contact_pairs": [],
+        "first_interior_overlap_pairs": [],
+        "solid_domains_disjoint": true
+      },
+      "native": {
+        "abi": 35,
+        "accepted_barrier_impulse_magnitude_raw": 0,
+        "accepted_kinetic_energy_j": 0.000519318476747,
+        "active_deformable_histories": 0,
+        "approach_speed_mps": 0,
+        "baseline": false,
+        "completed_microsteps": 1,
+        "contact_disabled": false,
+        "contact_slop_m": 1e-05,
+        "device": "Apple M4",
+        "diagnostics": [
+          0.967607379,
+          0,
+          0,
+          0
+        ],
+        "failing_index": 4294967295,
+        "initial_kinetic_energy_j": 0,
+        "maximum_fixed_node_movement_m": 0,
+        "maximum_movement_m": 7.0180554e-06,
+        "ptc_fixed_node_count": 4592,
+        "ptc_fixed_nodes_moved": 0,
+        "rollback_bitwise": false,
+        "side": 1,
+        "source_nodes": 50991,
+        "source_tetrahedra": 208177,
+        "status_code": 0,
+        "surface_faces": 447644
+      }
+    },
+    "right-fixed-source-baseline": {
+      "accepted_positions_bytes": 611892,
+      "accepted_positions_sha256": "56b01d5c81918d5307cc3cba4daa11419107b51712cc762ca461f626eab536ed",
+      "native": {
+        "abi": 35,
+        "accepted_barrier_impulse_magnitude_raw": 0,
+        "accepted_kinetic_energy_j": 0,
+        "active_deformable_histories": 0,
+        "approach_speed_mps": 0,
+        "baseline": true,
+        "completed_microsteps": 0,
+        "contact_disabled": false,
+        "contact_slop_m": 1e-05,
+        "device": "Apple M4",
+        "diagnostics": [
+          754646,
+          359411,
+          -1,
+          0
+        ],
+        "failing_index": 323,
+        "initial_kinetic_energy_j": 0,
+        "maximum_fixed_node_movement_m": 0,
+        "maximum_movement_m": 0,
+        "ptc_fixed_node_count": 4592,
+        "ptc_fixed_nodes_moved": 0,
+        "rollback_bitwise": true,
+        "side": 1,
+        "source_nodes": 50991,
+        "source_tetrahedra": 208177,
+        "status_code": 6,
+        "surface_faces": 447644
+      }
+    }
+  },
+  "clinical_anatomy_qualified": false,
+  "geometry_receipt_sha256": "f32989e1bc9de2a2069498fdae4dbc9b7d9619413276b4a31f6fd0c66947a34e",
+  "lab_source_commit": "5b517712204453c1df6d1de72ae283e404e658fe",
+  "left_replay_bitwise": true,
+  "loaded_contact_qualified": false,
+  "metallib_sha256": "a4f45d4fea2c67483703cec55ecd3502e411d5990cc3b7749e24097499311dc4",
+  "native_source_sha256": "c592cfd8ceb1ef57fa90cff2ec6a6b73283576a8193cc255a9d63bed1618a345",
+  "schema": "numi.human.patellar-cartilage-tie-native-diagnostic.v1",
+  "source_crossings_rejected_bilaterally": true,
+  "status": "bilateral_tie_fixed_cartilage_microstep_accepted",
+  "unfixed_tie_controls": {
+    "left": {
+      "accepted_positions_sha256": "9f563bff4037b7dfcf3cf52420136c7286ba4bf4b3cd368d9e7bb9ed4cc676fa",
+      "maximum_ptc_ptb_tie_movement_m": 7.476965743336759e-06,
+      "median_ptc_ptb_tie_movement_m": 1.389063793700111e-06,
+      "native": {
+        "abi": 35,
+        "accepted_barrier_impulse_magnitude_raw": 0,
+        "accepted_kinetic_energy_j": 0.000893239456671,
+        "active_deformable_histories": 0,
+        "approach_speed_mps": 0,
+        "baseline": false,
+        "completed_microsteps": 1,
+        "contact_disabled": false,
+        "contact_slop_m": 1e-05,
+        "device": "Apple M4",
+        "diagnostics": [
+          0.981737375,
+          0,
+          0,
+          0
+        ],
+        "failing_index": 4294967295,
+        "initial_kinetic_energy_j": 0,
+        "maximum_fixed_node_movement_m": 0,
+        "maximum_movement_m": 7.47696574e-06,
+        "ptc_fixed_node_count": 0,
+        "ptc_fixed_nodes_moved": 0,
+        "rollback_bitwise": false,
+        "side": 0,
+        "source_nodes": 50991,
+        "source_tetrahedra": 208177,
+        "status_code": 0,
+        "surface_faces": 447644
+      },
+      "ptc_ptb_tie_nodes_moved": 4592
+    },
+    "right": {
+      "accepted_positions_sha256": "923cff0a080c7e25186b58e0fbcd324f6be8f5c68a8e50239053c175ed60f68a",
+      "maximum_ptc_ptb_tie_movement_m": 7.377463177580769e-06,
+      "median_ptc_ptb_tie_movement_m": 1.3767656439135975e-06,
+      "native": {
+        "abi": 35,
+        "accepted_barrier_impulse_magnitude_raw": 0,
+        "accepted_kinetic_energy_j": 0.000882310547028,
+        "active_deformable_histories": 0,
+        "approach_speed_mps": 0,
+        "baseline": false,
+        "completed_microsteps": 1,
+        "contact_disabled": false,
+        "contact_slop_m": 1e-05,
+        "device": "Apple M4",
+        "diagnostics": [
+          0.979334474,
+          0,
+          0,
+          0
+        ],
+        "failing_index": 4294967295,
+        "initial_kinetic_energy_j": 0,
+        "maximum_fixed_node_movement_m": 0,
+        "maximum_movement_m": 7.37746318e-06,
+        "ptc_fixed_node_count": 0,
+        "ptc_fixed_nodes_moved": 0,
+        "rollback_bitwise": false,
+        "side": 1,
+        "source_nodes": 50991,
+        "source_tetrahedra": 208177,
+        "status_code": 0,
+        "surface_faces": 447644
+      },
+      "ptc_ptb_tie_nodes_moved": 4592
+    }
+  },
+  "whole_body_joint_and_bone_reaction_coupled": false
+}

@@ -925,6 +925,16 @@ prescribed by active knee-angle equalities. The 20 µm clearance field has no
 independent exact joint-coordinate path at a fixed knee angle. A source-frame
 bridge and an initial-contact or calibrated joint owner are required before
 adoption; the candidate has not changed the standing model.
+The [bone-tie-fixed cartilage clearance audit](PATELLAR_CARTILAGE_TIE_CLEARANCE_20260930.md)
+now supplies a different unadopted path: deform PTC locally while keeping all
+4,592 PTC/PTB tie nodes, patellar bone, tendons and the rigid joint law fixed.
+Both bilateral exact solids separate without inverted tetrahedra. A 1 µs Apple
+M4 PTC/FMC native step with the tie set statically fixed accepts and preserves
+that separation; the original source crossing rejects and rolls back. However,
+contact-on/off streams are identical with zero contact histories, and the
+diagnostic has no articulated patellar reaction or QAT/PTL. Initial cartilage
+stress, calibrated material, loaded contact/energy and whole-body adoption
+remain open.
 
 The [calcaneal tendon visual boundary repair](TENDON_HARMONIC_BOUNDARY_20260929.md)
 removes 145 right and 163 left exact intersections in the compiled tendon
