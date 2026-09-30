@@ -488,6 +488,18 @@ Closure-label 11–17 passive coefficients, global ventricular embedding, the re
 
 The separate [CVSim21 regional circulation](CVSIM21_REGIONAL_CIRCULATION_20260912.md) now supplies 21 source-model absolute blood volumes totaling 5,150 mL, nonlinear venous compliance and exact rational cardiac time. Explicit variants preserve the original volume mapping or align two arterial offsets to the thesis. Ten cycles, first-order refinement, replay and 15 compatibility/transaction tests pass on the physical M4 Pro. That receipt uses Matter ABI28/package13, snapshot archive6 and accepted-proof manifest6. Four chambers now have [exact atlas cavity references](CARDIAC_CAVITY_REGISTRATION_20260912.md), source volume moments and native identity-equivalence evidence. Original RA/RV surfaces retain 42 intersecting triangle pairs. Two [conservative overlap ownership candidates](CARDIAC_CAVITY_PARTITION_20260912.md) now preserve source union/exclusive regions in exact rational construction and separately pass emitted Float64 interior-disjointness checks. No biological interface is selected. The [native wall-coupling increment](CARDIAC_WALL_COUPLING_20260912.md) adds pressure–volume FEM feedback, exact nodal mass preservation and synthetic interface/transaction qualification at ABI29/package14, snapshot7/proof7. Body-frame registration, the other 17 aggregate anatomy bindings, first/second blood moments and two-way momentum, organ-specific perfusion calibration, reflex/tilt qualification and tissue exchange remain open.
 
+The [cardiac electrical geometry reference](CARDIAC_ELECTRICAL_REFERENCE_20260930.md)
+now binds all 1,337,558 myocardial tetrahedra of the pinned Rodero case18
+asset to 281,704 region-specific electrical DOFs. Its independent gate proves
+the complete (region, source-node) mapping and all four geometric capacity
+sums. Shared source nodes across chambers are intentionally split: 7,389
+extra DOF identities prevent an implicit atrial/ventricular conduction route.
+A dimensionless passive unit-diffusion probe conserves each region's weighted
+measure, dissipates energy and replays bitwise on the Apple M4 CPU. It has no
+physiological conductivity, ionic model, stimulus, AV/Purkinje connection,
+voltage trace, native accepted-state owner, electromechanical activation, or
+heartbeat qualification; physical steps remain zero.
+
 The [source dynamic-limit increment](SOURCE_DYNAMIC_LIMITS_20260908.md) closes scalar-law, complete limit-anatomy and bounded transaction integration. All 122 source-limited coordinates are retained, including six missing legacy hard flags. The identical recruited stance with registered tissue and curved support remains the next physical admission gate. The interrupted costal attempt adds no timeout or performance qualification.
 
 The [selected neuromusculoskeletal release matrix](NEUROMUSCULOSKELETAL_RELEASE_MATRIX.md) fixes the current completion target. The [registered costal ownership increment](COSTAL_TISSUE_OWNERSHIP_20260908.md) adds source-bound common registration, actual cooked mass subtraction and native v5 COM-frame admission. It does not close loaded thorax, experimental calibration or sustained behaviour.
