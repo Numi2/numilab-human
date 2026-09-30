@@ -549,6 +549,17 @@ the supplied loaded CT mesh. The other 372,549 cells, anatomical supports,
 unloaded reference, chamber pressure/flow, measured motion, four-chamber
 accepted state, and heartbeat remain open.
 
+The [point-contact mechanics correction](CARDIAC_VENTRICULAR_POINT_CONTACT_SPLIT_20260930.md)
+supersedes that merged-node ventricular cook. It keeps the 2,628 complete-face
+LV/RV interface nodes shared and splits the three point-only contacts, giving
+218,080 cooked mechanical nodes. A separate package reader checked every
+source-to-cooked tetrahedron, and the physical M4 accepted and bitwise-replayed
+one 1 µs active step with a zero-tension control. The matched merged-versus-
+split comparison changed six incumbent node positions and conserved total
+synthetic mass. Anatomical support/loading, source closure defects, unloaded
+reference, full four-chamber mechanics, native electrical coupling and
+heartbeat remain open.
+
 The [source dynamic-limit increment](SOURCE_DYNAMIC_LIMITS_20260908.md) closes scalar-law, complete limit-anatomy and bounded transaction integration. All 122 source-limited coordinates are retained, including six missing legacy hard flags. The identical recruited stance with registered tissue and curved support remains the next physical admission gate. The interrupted costal attempt adds no timeout or performance qualification.
 
 The [selected neuromusculoskeletal release matrix](NEUROMUSCULOSKELETAL_RELEASE_MATRIX.md) fixes the current completion target. The [registered costal ownership increment](COSTAL_TISSUE_OWNERSHIP_20260908.md) adds source-bound common registration, actual cooked mass subtraction and native v5 COM-frame admission. It does not close loaded thorax, experimental calibration or sustained behaviour.

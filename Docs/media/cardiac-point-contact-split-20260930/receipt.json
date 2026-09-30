@@ -1,0 +1,78 @@
+{
+  "accepted_state_sha256": {
+    "active": "c9e344118f82e4ff94b57d62c6568032afaa969f51280e71ab20a92e1195af7e",
+    "replay": "c9e344118f82e4ff94b57d62c6568032afaa969f51280e71ab20a92e1195af7e",
+    "zero": "9b4e45cb1d57b6733a0382428ac03b4549dcd8d0931bfe11c3aa25141b1ab494"
+  },
+  "auditor_source_sha256": "5efb889e36249ed6486bcbe561f6f4582782d4af6ea8253a3558bf5068f4c264",
+  "baseline_shared_nodes_with_changed_position": 6,
+  "boundary": "Exact source ventricular subset; synthetic 1050 kg/m3 inertia, three fixed nodes, one 1 us active-tension FEM microstep. No anatomical support, unloaded reference, chamber loading, electrical-to-mechanical native coupling or heartbeat.",
+  "cooked_package_bytes": 230151184,
+  "cooked_package_sha256": "f6ad2e22d4ebaa4c78952b7815210aa0d378220ab376f18447bb7e842ef5b699",
+  "files_sha256": {
+    "active-nodes.bin": "c9e344118f82e4ff94b57d62c6568032afaa969f51280e71ab20a92e1195af7e",
+    "active.json": "f20ef071af149e6350d1f26aebee32bee7ad4b11ec3aa28962cda3c33c804362",
+    "cook.json": "f9bb198c8e66efe556d9007f79a2134868901b24769f6d57c9832caaf127cef5",
+    "cooked-source-nodes.u32le": "28a979109e515020101263ace0801d8f4fe24cf2dd6d172ce6bbf5446e6d0138",
+    "cooked-tension.f32le": "5197acfab75af8fa229693740d9535a3bb4c86f883b5c8471610ad03eb5592f5",
+    "package-topology.json": "9c9750f75fcde58c083a3002d24aa09c21843f494e13595e04daf570370d46c4",
+    "replay-nodes.bin": "c9e344118f82e4ff94b57d62c6568032afaa969f51280e71ab20a92e1195af7e",
+    "replay.json": "f20ef071af149e6350d1f26aebee32bee7ad4b11ec3aa28962cda3c33c804362",
+    "zero-nodes.bin": "9b4e45cb1d57b6733a0382428ac03b4549dcd8d0931bfe11c3aa25141b1ab494",
+    "zero.json": "0473d384079e2cae036199010642e16611f6ae8e86d4ae6b1d26fc6e67bca8f7"
+  },
+  "four_chamber_accepted_steps": 0,
+  "heartbeat_qualified": false,
+  "maximum_source_mass_relative_error": 1.7625719363086156e-05,
+  "maximum_split_minus_merged_displacement_m": 2.014758778063947e-08,
+  "native": {
+    "cook_binary_sha256": "94509a00b6df3d1d80368c77d1e99f1b6ca48f99503b44dae358134e9ba1d3dd",
+    "metallib_sha256": "3a8d051ffd1921861f88e8885ae4d524f73b4b07bf98d2bd774e25b2a4bbb62f",
+    "native_cook_source_sha256": "ac78490e574b62662e46b820d771b2d3843c6d69c457f68e560667046eec163c",
+    "native_revision": "2de0a62f44f6cbaaf1bce7a63b9fd6f7ffef7f78",
+    "native_step_source_sha256": "496cdc37af2d7608a2b34b03e811a474e1a73cbc6349728100252c6c1db14c94",
+    "native_topology_source_sha256": "f7323586c86b434e61be8feb4e51750e672e877f1d662cd7e17d7e6df5fad3da",
+    "step_binary_sha256": "c65847a83103e6723984840c0a80f018802967da455e2bd8e02437f6493438a1",
+    "topology_binary_sha256": "09d9dcffa31f8b43b08bfb58f1224e9cfc0a1ccbd7c0173adbdf0054c10d3097"
+  },
+  "native_accepted_steps_per_run": 1,
+  "native_bitwise_replay": true,
+  "point_only_lv_rv_nodes_split": [
+    {
+      "accepted_lv_rv_separation_m": 3.247632789269592e-08,
+      "lv_cooked_node": 13174,
+      "new_split_mass_sum_kg": 2.2776849384342768e-07,
+      "old_shared_mass_kg": 2.2776849561978452e-07,
+      "rv_cooked_node": 218077,
+      "source_node": 17565
+    },
+    {
+      "accepted_lv_rv_separation_m": 2.3496107605563926e-07,
+      "lv_cooked_node": 126653,
+      "new_split_mass_sum_kg": 3.892514737202646e-07,
+      "old_shared_mass_kg": 3.8925145418033935e-07,
+      "rv_cooked_node": 218078,
+      "source_node": 170947
+    },
+    {
+      "accepted_lv_rv_separation_m": 5.475036224983286e-08,
+      "lv_cooked_node": 173376,
+      "new_split_mass_sum_kg": 3.5561419586827014e-07,
+      "old_shared_mass_kg": 3.5561421896090906e-07,
+      "rv_cooked_node": 218079,
+      "source_node": 235754
+    }
+  ],
+  "prior_active_state_sha256": "7d9d89ff5fc9e5dc94ff9ab8be1ea8c338c575a0e81e857bacdbb35d86c8baa7",
+  "prior_merged_receipt_sha256": "861778f0d3f904710db772a0f2c96310b39bc64ae809c18d1159f4493301a334",
+  "published_ventricular_mapping_sha256": "dba00562eb2cef9da107d41aec26e7bd601557be7585c666cc3ca6ceafae07fe",
+  "schema": "numi.human.cardiac-ventricular-point-contact-split.v1",
+  "source_activation_gate_sha256": "d6545c8e268a238eb1dde66f2cf5bcc59c24f2eaae89fdef0cbb55df07fac545",
+  "source_asset_manifest_sha256": "e8cb0391623577efc4eac04e5710cf7c9a4757614e09d936f5af3889c37d56f1",
+  "source_cells": 1470083,
+  "source_frames_sha256": "9fb21ec06d6d73b209f47b1f905708b9ff26cb228114786fb3dbf9163e1ff0be",
+  "source_tension_sha256": "358d88a1603e73f8a09c6677afbe9e2f5584031d56bd345295a468153d1d5366",
+  "status": "full_source_native_point_contacts_split_and_step_accepted",
+  "ventricular_nodes": 218080,
+  "ventricular_tetrahedra": 1097534
+}
