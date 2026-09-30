@@ -1,0 +1,57 @@
+{
+  "acl_tetrahedra": 72552,
+  "anchored_acl_nodes_changed": 0,
+  "boundary": "This free-node ACL correction is a bounded diagnostic, not a source-authored unloaded configuration. It clears named ACL contact-surface crossings and preserves ACL volume orientation, but seven other source contact pairs retain initial crossings and native patellar-tendon force transfer still fails its physical gate.",
+  "center_source_world_m": [
+    0.05168572,
+    0.15708857,
+    0.50562678
+  ],
+  "inverted_acl_tetrahedra": 0,
+  "loaded_knee_qualified": false,
+  "maximum_actual_shift_m": 0.0005000010132789612,
+  "maximum_authored_shift_m": 0.0005,
+  "maximum_source_to_candidate_tetra_volume_ratio": 1.0466304438320746,
+  "minimum_source_to_candidate_tetra_volume_ratio": 0.8485131373975121,
+  "named_acl_contact_pairs": {
+    "ACL_@_FMB_ContactFaces/FMB_@_ACL_ContactFaces": {
+      "candidate": {
+        "aabb_candidates": 586,
+        "strict_crossings": 0
+      },
+      "source": {
+        "aabb_candidates": 586,
+        "strict_crossings": 0
+      }
+    },
+    "ACL_@_TBB_ContactFaces/TBB_@_ACL_ContactFaces": {
+      "candidate": {
+        "aabb_candidates": 2,
+        "strict_crossings": 0
+      },
+      "source": {
+        "aabb_candidates": 2,
+        "strict_crossings": 0
+      }
+    },
+    "PCL_@_ACL_ContactFaces/ACL_@_PCL_ContactFaces": {
+      "candidate": {
+        "aabb_candidates": 246,
+        "strict_crossings": 0
+      },
+      "source": {
+        "aabb_candidates": 679,
+        "strict_crossings": 84
+      }
+    }
+  },
+  "outer_radius_m": 0.008,
+  "plateau_radius_m": 0.003,
+  "schema": "numi.human.cruciate-initialization-candidate.v1",
+  "shift_axis": "source_world_positive_x",
+  "shifted_free_acl_nodes": 4448,
+  "source_contact_audit_sha256": "daf3fc6e9fb6f942519230bae1bd6a9b40144df2d5984208b57495d48948e2e2",
+  "source_payload_sha256": "2e38201528de25911ea496164602ea7e823cd9c2e3c94efa550ee52689324ae5",
+  "status": "unadopted_local_acl_separation_candidate",
+  "whole_knee_source_contact_pairs_with_crossings": 8
+}

@@ -33,3 +33,7 @@ unprescribed trajectories with articular clearance, contact force, tendon
 reactions, energy balance, and replay/rollback checks. Neither source audit
 nor this rejected one-step diagnostic confirms clinically correct patellar
 placement or a corrected standing simulation.
+
+The follow-up [source contact and native initialization audit](CRUCIATE_SOURCE_CONTACT_20260930.md)
+found other initially intersecting source contact pairs and a bounded
+one-step diagnostic that still fails force-transfer admission.

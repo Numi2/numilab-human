@@ -1,0 +1,182 @@
+{
+  "binary": {
+    "path": "/Users/home/numi-lab-cardiac-native-20260930/Build/human-unprescribed-patella-20260930/bin/metalrobo_numilab_human_myosim_visual_probe",
+    "sha256": "1489aad19a2e2970796c0f3d60b3abfaff031086b6a16521e91065fc63ee0955"
+  },
+  "boundary": "The same final binary rejects the untouched source at step zero. The opt-in corrected initial state permits one 1-microsecond native coupled step and retains source reference coordinates, but the constrained candidate fails patellar tendon force transfer and the free-patella variant has zero quadriceps transfer. None is a loaded-knee qualification or clinically validated anatomy.",
+  "initialization_candidate_sha256": "e5bead7102f40969cc56f5cf4f12f1d8f30859646615e3e8df7afe58385a1e09",
+  "inputs": {
+    "bones": {
+      "path": "/Users/home/numilab-human/Build/bodyparts3d-myosim-major-bones-v2/bodyparts3d-myosim-major-bones.nhbones",
+      "sha256": "482c040f197e183b31a98fc82c17fa1bf908eb5c60c788cc054e4699ddd42027"
+    },
+    "equalities": {
+      "path": "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-joint-equalities.nheq",
+      "sha256": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a"
+    },
+    "knee": {
+      "path": "/Users/home/numilab-human/Build/patellofemoral-surface-20260930/left/open-knee-oks003-left.nhknee",
+      "sha256": "2e38201528de25911ea496164602ea7e823cd9c2e3c94efa550ee52689324ae5"
+    },
+    "muscle": {
+      "path": "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-muscle-reference.nhmyo",
+      "sha256": "a4381465ca97a7af20108180e2fc0d0f0d9c11778d913de4c0728bd20ed459a7"
+    },
+    "rigid": {
+      "path": "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid",
+      "sha256": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951"
+    },
+    "support": {
+      "path": "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-support-contact.nhcnt",
+      "sha256": "4d54f8155cd83baaee7af536099824ac0da61e5d5e77544b42c6e5ce1b48c907"
+    },
+    "tendon": {
+      "path": "/Users/home/numilab-human/Build/motion-interface-refinement-20260928/tendon-final/numi-human-tendon-attachments.nhtendon",
+      "sha256": "b9927adda550712a2260075d795b629cbea747359936e85e1f36016c8d3b81e3"
+    }
+  },
+  "matter_source": {
+    "path": "/Users/home/numi-lab-cardiac-native-20260930/apps/numilab_human_myosim_visual_probe.mm",
+    "sha256": "72b76d92bdbc09c6d650bd07ec265a2dee5b2988c69d15785b8276f3345d8aa1"
+  },
+  "qualified": false,
+  "runs": {
+    "constrained": {
+      "argv": [
+        "/Users/home/numi-lab-cardiac-native-20260930/Build/human-unprescribed-patella-20260930/bin/metalrobo_numilab_human_myosim_visual_probe",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-muscle-reference.nhmyo",
+        "/Users/home/numilab-human/Build/bodyparts3d-myosim-major-bones-v2/bodyparts3d-myosim-major-bones.nhbones",
+        "/Users/home/numilab-human/Build/cruciate-source-contact-20260930/native-initialization",
+        "--tendon-payload",
+        "/Users/home/numilab-human/Build/motion-interface-refinement-20260928/tendon-final/numi-human-tendon-attachments.nhtendon",
+        "--support-contact-payload",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-support-contact.nhcnt",
+        "--joint-equality-payload",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-joint-equalities.nheq",
+        "--open-knee-payload",
+        "/Users/home/numilab-human/Build/patellofemoral-surface-20260930/left/open-knee-oks003-left.nhknee",
+        "--open-knee-live-tissue-fem",
+        "--open-knee-cruciate-initialization-diagnostic",
+        "--muscle-step-seconds",
+        "0.000001",
+        "--muscle-step-count",
+        "1",
+        "--muscle-activation",
+        "0.1",
+        "--activated-source-muscle-index",
+        "405",
+        "--activated-source-muscle-index",
+        "413",
+        "--activated-source-muscle-index",
+        "414",
+        "--activated-source-muscle-index",
+        "415",
+        "--selected-tendon-control",
+        "--dimension",
+        "512"
+      ],
+      "exit_code": 1,
+      "log": "Docs/media/cruciate-source-contact-20260930/native-initialization-constrained.log",
+      "log_sha256": "0bba224c643c8e2970b3dbc1e8f4bac23d3ffc7084a017f3bb7acf987c1eca90",
+      "outcome": {
+        "applied_ptl_force_n": 2.261764,
+        "patella_ptl_reaction_n": 8.683518,
+        "patellar_tendon_transfer_gate": false,
+        "replay_verified": true,
+        "rollback_verified": true,
+        "terminal_step_count": 1
+      }
+    },
+    "unprescribed": {
+      "argv": [
+        "/Users/home/numi-lab-cardiac-native-20260930/Build/human-unprescribed-patella-20260930/bin/metalrobo_numilab_human_myosim_visual_probe",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-muscle-reference.nhmyo",
+        "/Users/home/numilab-human/Build/bodyparts3d-myosim-major-bones-v2/bodyparts3d-myosim-major-bones.nhbones",
+        "/Users/home/numilab-human/Build/cruciate-source-contact-20260930/native-initialization-unprescribed",
+        "--tendon-payload",
+        "/Users/home/numilab-human/Build/motion-interface-refinement-20260928/tendon-final/numi-human-tendon-attachments.nhtendon",
+        "--support-contact-payload",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-support-contact.nhcnt",
+        "--joint-equality-payload",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-joint-equalities.nheq",
+        "--open-knee-payload",
+        "/Users/home/numilab-human/Build/patellofemoral-surface-20260930/left/open-knee-oks003-left.nhknee",
+        "--open-knee-live-tissue-fem",
+        "--open-knee-cruciate-initialization-diagnostic",
+        "--open-knee-unprescribed-patella-diagnostic",
+        "--muscle-step-seconds",
+        "0.000001",
+        "--muscle-step-count",
+        "1",
+        "--muscle-activation",
+        "0.1",
+        "--activated-source-muscle-index",
+        "405",
+        "--activated-source-muscle-index",
+        "413",
+        "--activated-source-muscle-index",
+        "414",
+        "--activated-source-muscle-index",
+        "415",
+        "--selected-tendon-control",
+        "--dimension",
+        "512"
+      ],
+      "exit_code": 1,
+      "log": "Docs/media/cruciate-source-contact-20260930/native-initialization-unprescribed.log",
+      "log_sha256": "c76c7c6e0907ffd4ae75c266efa5eb6eabcffba29298361cf145fdbe6bf675a5",
+      "outcome": {
+        "quadriceps_transfer_nonzero": false,
+        "released_patellar_equalities": 3,
+        "terminal_step_count": 1
+      }
+    },
+    "untouched_source": {
+      "argv": [
+        "/Users/home/numi-lab-cardiac-native-20260930/Build/human-unprescribed-patella-20260930/bin/metalrobo_numilab_human_myosim_visual_probe",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-muscle-reference.nhmyo",
+        "/Users/home/numilab-human/Build/bodyparts3d-myosim-major-bones-v2/bodyparts3d-myosim-major-bones.nhbones",
+        "/Users/home/numilab-human/Build/cruciate-source-contact-20260930/native-untouched-source",
+        "--tendon-payload",
+        "/Users/home/numilab-human/Build/motion-interface-refinement-20260928/tendon-final/numi-human-tendon-attachments.nhtendon",
+        "--support-contact-payload",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-support-contact.nhcnt",
+        "--joint-equality-payload",
+        "/Users/home/numilab-human/Build/myosim-fullbody/myosim-fullbody-joint-equalities.nheq",
+        "--open-knee-payload",
+        "/Users/home/numilab-human/Build/patellofemoral-surface-20260930/left/open-knee-oks003-left.nhknee",
+        "--open-knee-live-tissue-fem",
+        "--muscle-step-seconds",
+        "0.000001",
+        "--muscle-step-count",
+        "1",
+        "--muscle-activation",
+        "0.1",
+        "--activated-source-muscle-index",
+        "405",
+        "--activated-source-muscle-index",
+        "413",
+        "--activated-source-muscle-index",
+        "414",
+        "--activated-source-muscle-index",
+        "415",
+        "--selected-tendon-control",
+        "--dimension",
+        "512"
+      ],
+      "exit_code": 1,
+      "log": "Docs/media/cruciate-source-contact-20260930/native-untouched-source.log",
+      "log_sha256": "cc03ca39f36eeb03dee21ecf2ca4aa809db39b66bf686260d7094ce67f78ccc1",
+      "outcome": {
+        "deformable_contact_rejected": true,
+        "terminal_step_count": 0
+      }
+    }
+  },
+  "schema": "numi.human.cruciate-native-initialization-diagnostic.v1",
+  "source_contact_audit_sha256": "daf3fc6e9fb6f942519230bae1bd6a9b40144df2d5984208b57495d48948e2e2",
+  "status": "native_one_step_completed_but_physical_admission_rejected"
+}
