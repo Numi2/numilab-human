@@ -738,9 +738,19 @@ topology; 135 selected checks pass, including the earlier ABI 4 and ABI 5
 evidence. The source remains open with 171 boundary edges and two vertex-link
 defects after exact-coordinate identification. Geometry, normals, binding
 frames, ABI and native/physics binaries are preserved. Closed volume,
-self-intersection, complete skin shape, mechanical material-point identity,
+motion-wide self-intersection freedom, complete skin shape, mechanical material-point identity,
 anatomical weights, loading, subject calibration and clinical anatomy remain
 open.
+
+The [exact native skin embeddedness audit](SKIN_NATIVE_EMBEDDEDNESS_20260929.md)
+subsequently found 42 self-intersecting triangle pairs in three of nine retained
+native poses. The [source-bound attribution and visual trial](SKIN_CROSSING_ATTRIBUTION_20260930.md)
+traced the crossings through the full 86-body field and checked a derived
+payload on the Apple M4. It clears those nine sampled poses, but a held-out
+1.2-radian bilateral knee pose retains 73 pairs and creates 37 pairs not in
+the 78-pair baseline; pair-level nonregression fails. The original source's
+171 boundary edges remain. The derived visual payload is not a production
+skin, physical tissue, or anatomy qualification.
 
 The [compiled-bone patellar full-support check](PATELLAR_ANTERIORITY_FULL_SUPPORT_20260929.md)
 now distinguishes literal unprojected source `qpos0` from the displayed

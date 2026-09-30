@@ -28,6 +28,11 @@ edges, two boundary-branch vertices and two vertex-link defects. The mesh is
 therefore not a closed, oriented skin volume even in states with zero crossings.
 The closed-skin gate fails for all ten states.
 
+A later [source-bound visual-weight trial](SKIN_CROSSING_ATTRIBUTION_20260930.md)
+clears these nine native pose crossings but fails strict pair-level nonregression
+at a deeper held-out knee pose. It remains a diagnostic candidate rather than
+a replacement for this baseline.
+
 ![Actual retained native bilateral knee-flexion side capture](media/skin-native-embeddedness-20260929/native-knee-flexion-side.png)
 
 The crossing triangles are below the resolution of this full-body capture;

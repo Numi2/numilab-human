@@ -1,0 +1,193 @@
+{
+  "case": "shoulder-elevation",
+  "edges": {
+    "boundary": "Visual source-edge length diagnostics, not continuum strain, clinical limits or a skin-quality admission gate. Five-times counts are diagnostic only.",
+    "edge_count": 164188,
+    "edge_p99_stretch_ratio": 1.4394693500553972,
+    "edges_over_5x": 0,
+    "maximum_edge_length_increase_m": 0.05008140100511116,
+    "maximum_stretch_ratio": 3.602576425467173,
+    "worst_length_increases": [
+      {
+        "native_length_m": 0.07282940038826947,
+        "source_length_m": 0.022747999383158312,
+        "source_skin_vertex_ids": [
+          8277,
+          9302
+        ],
+        "stretch_ratio": 3.201573868609711
+      },
+      {
+        "native_length_m": 0.07331730730279391,
+        "source_length_m": 0.02548267435054556,
+        "source_skin_vertex_ids": [
+          8265,
+          8747
+        ],
+        "stretch_ratio": 2.8771433600031173
+      },
+      {
+        "native_length_m": 0.07738677753235604,
+        "source_length_m": 0.030134542880307088,
+        "source_skin_vertex_ids": [
+          8265,
+          9302
+        ],
+        "stretch_ratio": 2.5680421913062523
+      },
+      {
+        "native_length_m": 0.07478998789349503,
+        "source_length_m": 0.027984630697176056,
+        "source_skin_vertex_ids": [
+          8750,
+          9305
+        ],
+        "stretch_ratio": 2.672537962097964
+      },
+      {
+        "native_length_m": 0.07555521149186668,
+        "source_length_m": 0.030188203540550747,
+        "source_skin_vertex_ids": [
+          45821,
+          46566
+        ],
+        "stretch_ratio": 2.502805819179536
+      }
+    ]
+  },
+  "exact": {
+    "aabb_candidate_pairs": 716029,
+    "allowed_shared_vertex_or_edge_pairs": 681714,
+    "closed_embedded_surface_candidate": false,
+    "compiled_coordinate_quotient_vertex_count": 54663,
+    "compiled_exact_duplicate_vertex_count": 286,
+    "exact_intersection_pairs": 0,
+    "face_count_unchanged": true,
+    "first_intersecting_face_pairs": [],
+    "intersection_pair_list_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "new_points_added": false,
+    "self_intersection": "exact_checked",
+    "source_face_support_unchanged": true,
+    "source_vertex_to_compiled_quotient_sha256": "f5d5a398ca681d12ee53ce1286506549586a5fca26994d949ae408bec2f6c85a",
+    "status": "open_or_nonmanifold",
+    "topology": {
+      "boundary_branch_vertex_ids": 2,
+      "boundary_edge_count": 171,
+      "boundary_loop_count": 0,
+      "closed_oriented_manifold_candidate": false,
+      "degenerate_face_ids": 0,
+      "duplicate_face_ids": 0,
+      "edge_count": 163860,
+      "euler_characteristic": -14,
+      "face_component_count": 1,
+      "face_count": 109183,
+      "interdomain_overlap_status": "not_checked",
+      "nonmanifold_edges": 0,
+      "orientation_defect_edges": 0,
+      "repeated_vertex_face_ids": 0,
+      "self_intersection_status": "not_checked",
+      "unused_vertex_ids": 0,
+      "vertex_count": 54663,
+      "vertex_manifold_defect_ids": 2
+    },
+    "unused_quotient_vertex_count": 0
+  },
+  "faces": {
+    "area_ratio_p01": 0.7808000541495794,
+    "area_ratio_p99": 1.6232968948850397,
+    "boundary": "All-face geometric area and tangent-map diagnostics; 0.1x/10x counts are descriptive, not physiological thresholds. Normal opposition is a presentation diagnostic, not an inversion/strain certificate. No skin-quality, material or clinical admission.",
+    "face_count": 109183,
+    "faces_area_above_10x": 2,
+    "faces_area_below_0_1x": 0,
+    "faces_opposed_to_rendered_vertex_normals": 6,
+    "lowest_area_faces": [
+      {
+        "area_ratio": 0.12949211236657626,
+        "source_area_m2": 2.1323947601975673e-05,
+        "source_face_id": 14142,
+        "source_skin_vertex_ids": [
+          6881,
+          7062,
+          7061
+        ]
+      },
+      {
+        "area_ratio": 0.18059814295630275,
+        "source_area_m2": 1.842360201068049e-05,
+        "source_face_id": 9796,
+        "source_skin_vertex_ids": [
+          4886,
+          4897,
+          4887
+        ]
+      },
+      {
+        "area_ratio": 0.3162907846835507,
+        "source_area_m2": 1.4954650122647615e-05,
+        "source_face_id": 9107,
+        "source_skin_vertex_ids": [
+          4540,
+          4542,
+          4539
+        ]
+      },
+      {
+        "area_ratio": 0.31788279646910234,
+        "source_area_m2": 2.5806309563590697e-05,
+        "source_face_id": 13900,
+        "source_skin_vertex_ids": [
+          7103,
+          6943,
+          6789
+        ]
+      },
+      {
+        "area_ratio": 0.3256405720536767,
+        "source_area_m2": 0.00010667433711153265,
+        "source_face_id": 22048,
+        "source_skin_vertex_ids": [
+          10423,
+          12671,
+          9886
+        ]
+      }
+    ],
+    "maximum_area_ratio": 13.072179428464853,
+    "maximum_surface_stretch": 16.29597470883262,
+    "minimum_area_ratio": 0.12949211236657626,
+    "minimum_surface_stretch": 0.08836898968327069,
+    "native_collapsed_face_count": 0,
+    "native_surface_area_m2": 1.9071549784756632,
+    "source_degenerate_face_count": 0,
+    "source_surface_area_m2": 1.8076657270111227,
+    "surface_stretch_p01": 0.750082386696033,
+    "surface_stretch_p99": 1.9061911850674726
+  },
+  "maximum_native_pose_oracle_normal_error": 6.562823711724853e-07,
+  "maximum_native_pose_oracle_position_error_m": 1.317277293573944e-06,
+  "maximum_position_change_from_baseline_m": 0.0004980345432383619,
+  "metal_pose_device": "Apple M4",
+  "native_command_sha256": "6e6388a54aa0011407507df2a0d924079d66740adcb3387000e5db57de0e0c40",
+  "native_images_sha256": {
+    "myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-posed-front.png": "d0d79d7e41092e4e816f8b8d14c5eab0caf4d8cba2341722f1d0f3c595d1baa2",
+    "myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-posed-oblique.png": "b42a1406dd36bf7b0a3c5159c41593876a177ba1279709190366aead2c4d628a",
+    "myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-posed-rear.png": "789b60a04a3631159c22b023af8e8da1b4009630289985e71a28f840c146f7a8",
+    "myosim-fullbody-articulated-bodyparts-bones-source-skinned-shell-posed-side.png": "3061628ff2f3169723c99b4b5f7d9fa6f89e204717809a504dbc1f88e54a2928"
+  },
+  "native_pack_sha256": "6cdc318b5059fe5926bf6d3d4768d17f54a6e51cf14ec2612b17e65368c0ad60",
+  "native_pose_sha256": "6d6e124591c0718a6a9da1116d514be3cf395d111aa6ecaf215a74cbeab4617a",
+  "native_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "native_stdout_sha256": "3881751ca025e5fa473f9f16f0d2b19a878b5b803238c7f6658d8263e9a25c32",
+  "position_change_p99_m": 0.00019101535664569933,
+  "renderer_device": "Apple M4",
+  "seams": {
+    "boundary": "Coincident source-point continuity only; source openings, self-intersection, volume and mechanics remain separate.",
+    "exact_coincident_redundant_vertex_count": 286,
+    "exact_coincident_vertex_group_count": 257,
+    "maximum_native_seam_gap_m": 0.0,
+    "seam_pairs_with_nonzero_native_gap": 0,
+    "seam_vertices_separated_from_canonical": 0,
+    "source_seam_pair_count": 316,
+    "worst_source_seam_pairs": []
+  }
+}
