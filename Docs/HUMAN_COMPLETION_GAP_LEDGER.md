@@ -535,8 +535,19 @@ accepts optional per-cooked-tetrahedron tension in the native non-mixed FEM
 stress and tangent. A physical Apple M4 one-cell run with exact case18 geometry,
 derived fibre frame and source-derived tension accepts and replays bitwise;
 synthetic density and three fixed nodes keep that result a bounded fixture.
-Source-to-cooked mapping and whole-wall accepted steps remain open, as do
-anatomical boundary conditions, calibrated wall motion and heartbeat.
+That one-cell increment left source-to-cooked mapping and ventricular-scale
+stepping open. Anatomical boundary conditions, calibrated wall motion and
+heartbeat remain open.
+
+The subsequent [source-ventricular native step](CARDIAC_VENTRICULAR_NATIVE_STEP_20260930.md)
+closes that initial source-to-cooked mapping and accepts one 1 µs native FEM
+step for all 1,097,534 ventricular source tetrahedra and 218,077 shared nodes
+on the Apple M4. Two active runs give byte-identical accepted node buffers;
+a zero-tension control also accepts, with 190,921 nodes differing from active.
+This is an explicit synthetic-density, three-fixed-node mechanics fixture on
+the supplied loaded CT mesh. The other 372,549 cells, anatomical supports,
+unloaded reference, chamber pressure/flow, measured motion, four-chamber
+accepted state, and heartbeat remain open.
 
 The [source dynamic-limit increment](SOURCE_DYNAMIC_LIMITS_20260908.md) closes scalar-law, complete limit-anatomy and bounded transaction integration. All 122 source-limited coordinates are retained, including six missing legacy hard flags. The identical recruited stance with registered tissue and curved support remains the next physical admission gate. The interrupted costal attempt adds no timeout or performance qualification.
 

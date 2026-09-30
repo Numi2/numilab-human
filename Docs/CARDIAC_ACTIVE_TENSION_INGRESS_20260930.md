@@ -54,9 +54,12 @@ PYTHONPATH=src OPENBLAS_NUM_THREADS=1 .venv-mujoco312/bin/python \
   --output Build/cardiac-active-tension-ingress-20260930/independent-gate.json
 ```
 
-The source-ordered field still needs an explicit source-to-cooked tetrahedron
-mapping before any whole-wall encode. The case18 wall has **zero accepted
-native electromechanical steps**. The source activation timing discrepancy,
-stress-free reference, inertial densities, supports, chamber loads, and
-measured motion remain unresolved. No blood-flow, heartbeat, or physical
-anatomical qualification follows from the one-cell result.
+The source-ordered field requires an explicit source-to-cooked tetrahedron map.
+That transfer and one accepted synthetic-boundary step for the complete
+ventricular subset are now documented in the
+[follow-up native evidence](CARDIAC_VENTRICULAR_NATIVE_STEP_20260930.md).
+The complete four-chamber case18 wall still has **zero accepted native
+electromechanical steps**. The source activation timing discrepancy,
+stress-free reference, inertial densities, anatomical supports, chamber loads,
+and measured motion remain unresolved. No blood-flow, heartbeat, or physical
+anatomical qualification follows from these mechanics fixtures.
