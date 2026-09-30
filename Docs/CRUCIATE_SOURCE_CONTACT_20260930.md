@@ -29,11 +29,25 @@ binds the final binary and payload hashes to three 1 µs runs. The untouched
 source is rejected by deformable contact before step zero completes. Both
 opt-in candidate variants complete one coupled step. The constrained
 variant verifies replay and rollback but **fails patellar-tendon force
-transfer**: applied PTL force 2.26 N versus patellar reaction 8.68 N. The
+transfer admission**: applied PTL force 2.26 N versus total patellar reaction
+8.68 N. The
 variant releasing the three patellar equalities also completes one step but
 has **zero quadriceps transfer**, so it fails before loaded-motion admission.
 Both app invocations exit nonzero. Neither confirms correct patellar
 placement, force closure, sustained stance, or clinical anatomy.
+
+The follow-up [PTL force-accounting receipt](media/cruciate-source-contact-20260930/ptl-force-accounting-receipt.json)
+binds the diagnostic to Matter `02de76c`, its final binary, the same payloads,
+and one native 1 µs step. The active PTL load is assembled (force-assembly
+gate passes), with equal and opposite 2.26 N patch loads. The total fixed-node
+reaction includes that load plus internal, contact, gravity, and inertial
+terms. Subtracting the known active couple leaves 10.80 N at the patellar
+attachment and 5.51 N at the tibial attachment; the combined PTL attachment
+reaction is 10.21 N. These residuals are **not** isolated passive forces or
+proof of a new anatomical defect. The existing PTL gate still rejects the
+run, and the app exits nonzero. The immediate force-accounting gap is to
+attribute those residuals against a matched zero-active-load reference or
+source-bound continuum/contact terms before revising the gate.
 
 The next implementation must reconcile the source's initially intersecting
 contact surfaces with a source-consistent contact or equilibrated
