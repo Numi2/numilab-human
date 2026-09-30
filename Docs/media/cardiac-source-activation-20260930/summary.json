@@ -1,0 +1,76 @@
+{
+  "asset_manifest_sha256": "e8cb0391623577efc4eac04e5710cf7c9a4757614e09d936f5af3889c37d56f1",
+  "atrial_tetrahedra_in_electrical_solve": 0,
+  "boundary": "A source-parameter, full-mesh offline ventricular timing reconstruction with explicit complete-face LV/RV coupling. Its output differs from the published case18 CARP simulation. The one-cell FEC reconstruction is a declared variant; no voltage, atrial/AV system, native accepted step, ECG, mechanical contraction or clinical qualification follows.",
+  "compile_command": [
+    "clang++",
+    "-std=c++20",
+    "-O3",
+    "-march=native",
+    "/Users/home/numilab-human/tools/cardiac_activation_refine.cpp",
+    "-o",
+    "/Users/home/numilab-human/Build/cardiac-source-activation-20260930/cardiac-activation-refine"
+  ],
+  "electrical_config_sha256": "513bcee4194dcbb793dd4bc5df284ee5db58110f0a66b4b4bf4f427500a363e9",
+  "fast_layer_tetrahedra": 101712,
+  "graph_undirected_edge_count": 1386798,
+  "heartbeat_qualified": false,
+  "lv": {
+    "maximum_ms": 75.18922382805133,
+    "minimum_ms": 0.0,
+    "p10_ms": 3.4055673213614863,
+    "p10_to_p90_ms": 37.32949786133055,
+    "p90_ms": 40.73506518269204,
+    "source_node_count": 139642,
+    "span_ms": 75.18922382805133
+  },
+  "lv_rv_complete_shared_faces": 4494,
+  "lv_rv_face_connected_shared_nodes": 2628,
+  "lv_rv_point_only_shared_source_nodes": [
+    17565,
+    170947,
+    235754
+  ],
+  "native_refiner_binary_sha256": "97c92aaf797750c531b896b11876f17e350e567542a2d588f4c527d4b7560015",
+  "native_refiner_source_sha256": "219cb620b652b9b1fcacf9e29cab32b2c9ce8ec39b78eb77af5896db29f9c51c",
+  "output_sha256": {
+    "graph-arrival.f64le": "7194c0647a4087a6151c68372f0d6caf60ae7ed3dc4c7128f2e15574dd93e022",
+    "refined-arrival.f64le": "83fc204c0e628d9f4da9614d900a8caa739195f580b12efe1a321fe0390f4cfc",
+    "refiner.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "refiner.stdout": "06b51c7cfce08d03ce485e0bfacdbb4d371b7a9aa0368e1f596a186d598da74b",
+    "ventricular-dof-regions.u32le": "5846478a5b9ecdc406bd821866e5ec4ee8bf2b7e26ad4496f6a654b0d5151603",
+    "ventricular-source-nodes.u32le": "dba00562eb2cef9da107d41aec26e7bd601557be7585c666cc3ca6ceafae07fe"
+  },
+  "platform": "macOS-26.6-arm64-arm-64bit",
+  "producer_source_sha256": "8323124e2a4a60662e792a9c11b45bc83c41e50f1d4bea30a154634d13f42268",
+  "production_native_electrical_steps": 0,
+  "replay_bitwise": true,
+  "rv": {
+    "maximum_ms": 73.29586093405933,
+    "minimum_ms": 0.0,
+    "p10_ms": 3.709726909419699,
+    "p10_to_p90_ms": 47.46369047236786,
+    "p90_ms": 51.17341738178756,
+    "source_node_count": 81066,
+    "span_ms": 73.29586093405933
+  },
+  "schema": "numi.human.cardiac-source-activation-reconstruction.v1",
+  "source_model_comparison": {
+    "case18_AT1090_LV_ms": 29.841,
+    "case18_AT_LV_ms": 71.9895,
+    "case18_QRS_LV_ms": 73.9895,
+    "comparison_is_simulation_output_not_measured_human_data": true,
+    "exact_source_model_reproduced": false,
+    "reconstructed_AT1090_LV_minus_source_ms": 7.488497861330551,
+    "reconstructed_AT_LV_minus_source_ms": 3.1997238280513187
+  },
+  "source_output_sha256": "3f59ea2e6388aa370efe9046ecd5b4fd8bee87037aa904f45a80356f3932edcd",
+  "source_supplement_sha256": "5699feb01b7f91f93fd75e26a9a5043ca6bfb5da1803f010c45c71270992ebc6",
+  "source_voltage_or_ionic_model": false,
+  "status": "full_source_reconstruction_with_source_output_mismatch",
+  "stimulus_dof_count": 3927,
+  "ventricular_dofs": 218080,
+  "ventricular_graph_components": 1,
+  "ventricular_tetrahedra": 1097534,
+  "ventricular_unique_source_nodes": 218077
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "HumanPack.cardiac-rodero18-electrical-s4.v1",
+  "id": "rodero2021_case18_ventricular_source_parameter_reconstruction",
+  "anatomy_manifest_sha256": "e8cb0391623577efc4eac04e5710cf7c9a4757614e09d936f5af3889c37d56f1",
+  "source": {
+    "article_url": "https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1008851",
+    "supplement_url": "https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1008851.s004&type=supplementary",
+    "supplement_sha256": "5699feb01b7f91f93fd75e26a9a5043ca6bfb5da1803f010c45c71270992ebc6",
+    "source_output_sha256": "3f59ea2e6388aa370efe9046ecd5b4fd8bee87037aa904f45a80356f3932edcd",
+    "source_output_role": "published simulations, not patient measurements",
+    "license": "CC-BY-4.0"
+  },
+  "ventricular_region_labels": [1, 2],
+  "fibre_conduction_m_per_s": 0.8,
+  "transverse_conduction_m_per_s": 0.23,
+  "fast_endocardial_conduction_m_per_s": 5.6,
+  "endocardium_rho": 0.0,
+  "stimulus_max_uvc_z": 0.33,
+  "fast_layer_max_uvc_z": 0.7,
+  "fast_layer_reconstruction": "one layer of tetrahedra incident to exact rho=0 endocardial vertices, all four vertex Z values <= 0.7; source paper does not release a case18 FEC cell tag",
+  "continuous_solver_variant": "anisotropic metric edge-graph upper bound followed by monotone tetrahedral simplex travel-time relaxation",
+  "target_comparison": {
+    "mesh_id": 18,
+    "QRS_LV_ms": 73.9895,
+    "AT1090_LV_ms": 29.841,
+    "AT_LV_ms": 71.9895
+  },
+  "qualification": {
+    "source_voltage_field_present": false,
+    "case18_activation_time_field_present": false,
+    "source_FEC_cell_tag_present": false,
+    "native_electrical_runtime": false,
+    "subject_specific_calibration": false,
+    "clinical_electrophysiology": false
+  }
+}

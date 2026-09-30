@@ -500,6 +500,20 @@ physiological conductivity, ionic model, stimulus, AV/Purkinje connection,
 voltage trace, native accepted-state owner, electromechanical activation, or
 heartbeat qualification; physical steps remain zero.
 
+The subsequent [source-parameter ventricular activation reconstruction](CARDIAC_SOURCE_ACTIVATION_20260930.md)
+uses all 1,097,534 ventricular tetrahedra, source UVC/fibres and the Rodero S4
+conduction/stimulus parameters. Unlike the passive reference, it explicitly
+joins LV/RV only across 4,494 complete shared tissue faces; three point-only
+shared nodes remain split. A native Apple CPU eikonal candidate solves 218,080
+DOFs from 3,927 endocardial stimulus DOFs and replays bitwise. Its LV total
+activation is 75.1892 ms versus 71.9895 ms in the published case18 CARP
+simulation, and its 10–90% interval is 37.3295 versus 29.8410 ms. The
+independent full-source gate retains that discrepancy. The fast endocardial
+layer is reconstructed because its cell tag is absent; source-model
+reproduction, voltage/ionic state, native accepted electrical steps, atrial/AV
+conduction, ECG, electromechanical feedback and heartbeat qualification remain
+open.
+
 The [source dynamic-limit increment](SOURCE_DYNAMIC_LIMITS_20260908.md) closes scalar-law, complete limit-anatomy and bounded transaction integration. All 122 source-limited coordinates are retained, including six missing legacy hard flags. The identical recruited stance with registered tissue and curved support remains the next physical admission gate. The interrupted costal attempt adds no timeout or performance qualification.
 
 The [selected neuromusculoskeletal release matrix](NEUROMUSCULOSKELETAL_RELEASE_MATRIX.md) fixes the current completion target. The [registered costal ownership increment](COSTAL_TISSUE_OWNERSHIP_20260908.md) adds source-bound common registration, actual cooked mass subtraction and native v5 COM-frame admission. It does not close loaded thorax, experimental calibration or sustained behaviour.
