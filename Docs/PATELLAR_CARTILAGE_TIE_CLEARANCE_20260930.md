@@ -33,11 +33,22 @@ both sides reject with status 6, zero accepted microsteps and bitwise rollback.
 Without the fixed-node input, all 4,592 tie nodes drift after one accepted
 microstep, up to **7.477 µm** left and **7.377 µm** right.
 
+Numi Lab `coupled` commit `dbe3df2` also captures the raw **815,856-byte**
+GPU constraint-reaction stream for each accepted step. The Human auditor
+independently reduces those Float32 node forces over the exact PTC/PTB tie set.
+The synthetic-material candidate produces a **639.078 N** resultant and
+**0.952 N·m** moment about the tie centroid on the left; the mirrored right
+produces **638.876 N** and **0.951 N·m**. Left/right force mirror mismatch is
+0.202 N. The norm of reaction plus accepted momentum rate is
+**4.239 N** left and **7.856 N** right (0.66%/1.23% of resultant), so exact
+force closure has not been established. The raw reaction stream replays
+bitwise on the left and matches between contact-on/off controls on both sides.
+
 The candidate's contact-on and contact-off accepted position streams are
 identical on each side, with **zero active deformable-contact histories**.
 The step therefore demonstrates strain relaxation with a static bone tie,
 not a loaded patellofemoral contact force. Its material is a synthetic probe
-material. The fixed nodes do not yet return reactions to the articulated
+material. The measured tie reaction is not yet applied to the articulated
 patella, and QAT/PTL are absent from this Matter scene. The field remains
 **unadopted** pending source-frame registration, initial strain/stress and
 material calibration, two-way bone and tendon reaction, contact force/energy

@@ -42,6 +42,58 @@ def require(condition: bool, message: str) -> None:
         raise RuntimeError("patellar cartilage tie native: " + message)
 
 
+def verify_reaction_stream(path: Path, input_bytes: bytes,
+                           fixed: np.ndarray, native: dict) -> dict:
+    raw = path.read_bytes()
+    require(len(raw) == native["accepted_reaction_stream_bytes"] ==
+            50991 * 4 * 4, "accepted FEM reaction stream length changed")
+    reactions = np.frombuffer(raw, dtype="<f4").reshape(50991, 4)
+    require(np.isfinite(reactions).all() and np.all(reactions[:, 3] == 0),
+            "accepted FEM reaction stream contains invalid components")
+    owned = np.zeros(50991, dtype=bool)
+    owned[fixed] = True
+    require(np.all(reactions[~owned, :3] == 0),
+            "reaction was published outside the authored bone tie")
+    start = HEADER.size + 12 * 26121
+    positions = np.frombuffer(input_bytes, dtype="<f4", count=3 * 26121,
+                              offset=start).reshape(-1, 3).astype(float)
+    force = reactions[fixed, :3].astype(float)
+    resultant = force.sum(axis=0)
+    centroid = positions[fixed].mean(axis=0)
+    moment = np.cross(positions[fixed] - centroid, force).sum(axis=0)
+    scalars = {
+        "fixed_tie_reaction_l1_n": float(np.linalg.norm(force, axis=1).sum()),
+        "fixed_tie_reaction_resultant_n": float(np.linalg.norm(resultant)),
+        "fixed_tie_reaction_max_node_n": float(np.linalg.norm(force, axis=1).max()),
+        "fixed_tie_moment_magnitude_nm": float(np.linalg.norm(moment)),
+    }
+    vectors = {
+        "fixed_tie_reaction_xyz_n": resultant,
+        "fixed_tie_centroid_m": centroid,
+        "fixed_tie_moment_about_centroid_nm": moment,
+    }
+    for name, value in scalars.items():
+        require(abs(value - native[name]) < 1e-6,
+                "native aggregate differs from reaction stream: " + name)
+    for name, value in vectors.items():
+        require(np.allclose(value, native[name], rtol=0, atol=1e-6),
+                "native vector differs from reaction stream: " + name)
+    require(float(np.linalg.norm(resultant)) > 0 and
+            np.isfinite(native["momentum_reaction_residual_n"]) and
+            0 <= native["momentum_reaction_residual_n"] <
+            native["fixed_tie_reaction_resultant_n"],
+            "fixed tie has no finite, signed reaction or momentum diagnostic")
+    return {
+        "reaction_stream_sha256": sha(raw),
+        "reaction_stream_bytes": len(raw),
+        "bone_tie_reaction_aggregate_independently_verified": True,
+        "non_tie_reaction_nodes": 0,
+        "momentum_reaction_residual_fraction_of_resultant":
+            native["momentum_reaction_residual_n"] /
+            native["fixed_tie_reaction_resultant_n"],
+    }
+
+
 def run() -> dict:
     self_check()
     geometry = json.loads(GEOMETRY.read_text())
@@ -95,6 +147,9 @@ def run() -> dict:
             require(result["status_code"] == 0 and
                     result["completed_microsteps"] == 1,
                     f"{stem} candidate step was rejected")
+            row.update(verify_reaction_stream(
+                Path(str(accepted_path) + ".reactions.f32le"),
+                source_input.read_bytes(), fixed, result))
             if mode == "on":
                 body = source_input.read_bytes()
                 start = HEADER.size + 12 * 26121
@@ -115,7 +170,9 @@ def run() -> dict:
         else:
             require(result["status_code"] == 6 and
                     result["completed_microsteps"] == 0 and
-                    result["rollback_bitwise"],
+                    result["rollback_bitwise"] and
+                    result["accepted_reaction_stream_bytes"] == 0 and
+                    not Path(str(accepted_path) + ".reactions.f32le").exists(),
                     f"{stem} source crossing was not rejected and rolled back")
         cases[stem] = row
     require(cases["left-fixed-on"]["native"] ==
@@ -123,6 +180,30 @@ def run() -> dict:
             cases["left-fixed-on"]["accepted_positions_sha256"] ==
             cases["left-fixed-on-replay"]["accepted_positions_sha256"],
             "left accepted step does not replay exactly")
+    require(cases["left-fixed-on"]["reaction_stream_sha256"] ==
+            cases["left-fixed-on-replay"]["reaction_stream_sha256"],
+            "left bone-tie reaction does not replay exactly")
+    for side in ("left", "right"):
+        require(cases[side + "-fixed-on"]["accepted_positions_sha256"] ==
+                cases[side + "-fixed-off"]["accepted_positions_sha256"] and
+                cases[side + "-fixed-on"]["reaction_stream_sha256"] ==
+                cases[side + "-fixed-off"]["reaction_stream_sha256"] and
+                cases[side + "-fixed-on"]["native"]["active_deformable_histories"] == 0,
+                f"{side} contact-on/off diagnostic unexpectedly differs")
+    left = cases["left-fixed-on"]["native"]
+    right = cases["right-fixed-on"]["native"]
+    mirrored_force = np.asarray(left["fixed_tie_reaction_xyz_n"]) * \
+        np.asarray((-1.0, 1.0, 1.0))
+    mirrored_moment = np.asarray(left["fixed_tie_moment_about_centroid_nm"]) * \
+        np.asarray((1.0, -1.0, -1.0))
+    force_mirror_error = float(np.linalg.norm(
+        mirrored_force - right["fixed_tie_reaction_xyz_n"]))
+    moment_mirror_error = float(np.linalg.norm(
+        mirrored_moment - right["fixed_tie_moment_about_centroid_nm"]))
+    require(force_mirror_error < 0.005 * left["fixed_tie_reaction_resultant_n"]
+            and moment_mirror_error <
+            0.005 * left["fixed_tie_moment_magnitude_nm"],
+            "bilateral source-mirrored bone-tie reaction changed direction")
     unfixed_controls = {}
     for side in ("left", "right"):
         input_row = geometry["sides"][side]["diagnostic_native_input"]
@@ -140,6 +221,11 @@ def run() -> dict:
                 native["completed_microsteps"] == 1 and
                 native["ptc_fixed_node_count"] == 0,
                 f"{side} unfixed control did not accept")
+        reaction_path = Path(str(accepted_path) + ".reactions.f32le")
+        reaction_bytes = reaction_path.read_bytes()
+        require(len(reaction_bytes) == 50991 * 4 * 4 and
+                np.all(np.frombuffer(reaction_bytes, dtype="<f4") == 0),
+                f"{side} unfixed control has a nonzero constraint reaction")
         body = source_input.read_bytes()
         start = HEADER.size + 12 * 26121
         before = np.frombuffer(body, dtype="<f4", count=3 * 26121,
@@ -153,13 +239,14 @@ def run() -> dict:
         unfixed_controls[side] = {
             "native": native,
             "accepted_positions_sha256": sha(accepted),
+            "reaction_stream_sha256": sha(reaction_bytes),
             "ptc_ptb_tie_nodes_moved": int(np.count_nonzero(movement)),
             "maximum_ptc_ptb_tie_movement_m": float(movement.max()),
             "median_ptc_ptb_tie_movement_m": float(np.median(movement)),
         }
     result = {
-        "schema": "numi.human.patellar-cartilage-tie-native-diagnostic.v1",
-        "status": "bilateral_tie_fixed_cartilage_microstep_accepted",
+        "schema": "numi.human.patellar-cartilage-tie-native-diagnostic.v2",
+        "status": "bilateral_tie_fixed_cartilage_reaction_measured",
         "geometry_receipt_sha256": sha(GEOMETRY.read_bytes()),
         "lab_source_commit": subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=LAB, text=True).strip(),
@@ -170,6 +257,9 @@ def run() -> dict:
         "unfixed_tie_controls": unfixed_controls,
         "left_replay_bitwise": True,
         "source_crossings_rejected_bilaterally": True,
+        "bone_tie_reaction_field_verified_bilaterally": True,
+        "bilateral_reaction_mirror_force_error_n": force_mirror_error,
+        "bilateral_reaction_mirror_moment_error_nm": moment_mirror_error,
         "whole_body_joint_and_bone_reaction_coupled": False,
         "loaded_contact_qualified": False,
         "clinical_anatomy_qualified": False,
@@ -177,7 +267,8 @@ def run() -> dict:
             "Apple M4 one-microsecond PTC/FMC-only diagnostic using synthetic "
             "material and static fixed PTC/PTB tie nodes. Both candidate states "
             "accept and remain exact-volume-disjoint; source crossing baselines "
-            "reject and roll back. This does not apply tie reactions to a rigid "
+            "reject and roll back. The fixed-node reaction field is captured "
+            "and independently reduced to a wrench, but not applied to a rigid "
             "patella, include QAT/PTL, qualify pressure or energy closure, or "
             "adopt a whole-body anatomical state."
         ),

@@ -1,14 +1,20 @@
 {
-  "binary_sha256": "f467b609f838ccc28b6134e400e91265d4b0e075b369aa2bcf3011f35b702948",
-  "boundary": "Apple M4 one-microsecond PTC/FMC-only diagnostic using synthetic material and static fixed PTC/PTB tie nodes. Both candidate states accept and remain exact-volume-disjoint; source crossing baselines reject and roll back. This does not apply tie reactions to a rigid patella, include QAT/PTL, qualify pressure or energy closure, or adopt a whole-body anatomical state.",
+  "bilateral_reaction_mirror_force_error_n": 0.20176356256777345,
+  "bilateral_reaction_mirror_moment_error_nm": 0.00044644915944629923,
+  "binary_sha256": "ce11321e35a672d6cbf90dac753bf9f593ec1c524a63b5eff8b0d016ada5dc28",
+  "bone_tie_reaction_field_verified_bilaterally": true,
+  "boundary": "Apple M4 one-microsecond PTC/FMC-only diagnostic using synthetic material and static fixed PTC/PTB tie nodes. Both candidate states accept and remain exact-volume-disjoint; source crossing baselines reject and roll back. The fixed-node reaction field is captured and independently reduced to a wrench, but not applied to a rigid patella, include QAT/PTL, qualify pressure or energy closure, or adopt a whole-body anatomical state.",
   "cases": {
     "left-fixed-off": {
       "accepted_positions_bytes": 611892,
       "accepted_positions_sha256": "92bc7a40fad4fdcec31aef1f9d76b3a5c5c48748b5aba260c00e4f99f0efc8cc",
+      "bone_tie_reaction_aggregate_independently_verified": true,
+      "momentum_reaction_residual_fraction_of_resultant": 0.006632284425059124,
       "native": {
         "abi": 35,
         "accepted_barrier_impulse_magnitude_raw": 0,
         "accepted_kinetic_energy_j": 0.000525288287905,
+        "accepted_reaction_stream_bytes": 815856,
         "active_deformable_histories": 0,
         "approach_speed_mps": 0,
         "baseline": false,
@@ -23,9 +29,29 @@
           0
         ],
         "failing_index": 4294967295,
+        "fixed_tie_centroid_m": [
+          0.0538708024013,
+          0.116199631153,
+          0.529378783724
+        ],
+        "fixed_tie_moment_about_centroid_nm": [
+          -0.178374477191,
+          0.159918245455,
+          -0.921116954818
+        ],
+        "fixed_tie_moment_magnitude_nm": 0.951760339474,
+        "fixed_tie_reaction_l1_n": 684.919894599,
+        "fixed_tie_reaction_max_node_n": 0.558710420314,
+        "fixed_tie_reaction_resultant_n": 639.077709286,
+        "fixed_tie_reaction_xyz_n": [
+          -41.8925134963,
+          -636.892351302,
+          -32.1476075674
+        ],
         "initial_kinetic_energy_j": 0,
         "maximum_fixed_node_movement_m": 0,
         "maximum_movement_m": 7.03368844e-06,
+        "momentum_reaction_residual_n": 4.2385451377,
         "ptc_fixed_node_count": 4592,
         "ptc_fixed_nodes_moved": 0,
         "rollback_bitwise": false,
@@ -34,12 +60,16 @@
         "source_tetrahedra": 208177,
         "status_code": 0,
         "surface_faces": 447644
-      }
+      },
+      "non_tie_reaction_nodes": 0,
+      "reaction_stream_bytes": 815856,
+      "reaction_stream_sha256": "cfe22510a4750983bb46f038dbc1fdad156363713452598b9efd75a26d74a94b"
     },
     "left-fixed-on": {
       "accepted_positions_bytes": 611892,
       "accepted_positions_sha256": "92bc7a40fad4fdcec31aef1f9d76b3a5c5c48748b5aba260c00e4f99f0efc8cc",
       "accepted_ptc_ptb_tie_unchanged": true,
+      "bone_tie_reaction_aggregate_independently_verified": true,
       "exact_accepted_solid_separation": {
         "aabb_candidate_tetrahedron_pairs": 5589,
         "exact_boundary_contact_pairs": 0,
@@ -62,10 +92,12 @@
         "first_interior_overlap_pairs": [],
         "solid_domains_disjoint": true
       },
+      "momentum_reaction_residual_fraction_of_resultant": 0.006632284425059124,
       "native": {
         "abi": 35,
         "accepted_barrier_impulse_magnitude_raw": 0,
         "accepted_kinetic_energy_j": 0.000525288287905,
+        "accepted_reaction_stream_bytes": 815856,
         "active_deformable_histories": 0,
         "approach_speed_mps": 0,
         "baseline": false,
@@ -80,9 +112,29 @@
           0
         ],
         "failing_index": 4294967295,
+        "fixed_tie_centroid_m": [
+          0.0538708024013,
+          0.116199631153,
+          0.529378783724
+        ],
+        "fixed_tie_moment_about_centroid_nm": [
+          -0.178374477191,
+          0.159918245455,
+          -0.921116954818
+        ],
+        "fixed_tie_moment_magnitude_nm": 0.951760339474,
+        "fixed_tie_reaction_l1_n": 684.919894599,
+        "fixed_tie_reaction_max_node_n": 0.558710420314,
+        "fixed_tie_reaction_resultant_n": 639.077709286,
+        "fixed_tie_reaction_xyz_n": [
+          -41.8925134963,
+          -636.892351302,
+          -32.1476075674
+        ],
         "initial_kinetic_energy_j": 0,
         "maximum_fixed_node_movement_m": 0,
         "maximum_movement_m": 7.03368844e-06,
+        "momentum_reaction_residual_n": 4.2385451377,
         "ptc_fixed_node_count": 4592,
         "ptc_fixed_nodes_moved": 0,
         "rollback_bitwise": false,
@@ -91,15 +143,21 @@
         "source_tetrahedra": 208177,
         "status_code": 0,
         "surface_faces": 447644
-      }
+      },
+      "non_tie_reaction_nodes": 0,
+      "reaction_stream_bytes": 815856,
+      "reaction_stream_sha256": "cfe22510a4750983bb46f038dbc1fdad156363713452598b9efd75a26d74a94b"
     },
     "left-fixed-on-replay": {
       "accepted_positions_bytes": 611892,
       "accepted_positions_sha256": "92bc7a40fad4fdcec31aef1f9d76b3a5c5c48748b5aba260c00e4f99f0efc8cc",
+      "bone_tie_reaction_aggregate_independently_verified": true,
+      "momentum_reaction_residual_fraction_of_resultant": 0.006632284425059124,
       "native": {
         "abi": 35,
         "accepted_barrier_impulse_magnitude_raw": 0,
         "accepted_kinetic_energy_j": 0.000525288287905,
+        "accepted_reaction_stream_bytes": 815856,
         "active_deformable_histories": 0,
         "approach_speed_mps": 0,
         "baseline": false,
@@ -114,9 +172,29 @@
           0
         ],
         "failing_index": 4294967295,
+        "fixed_tie_centroid_m": [
+          0.0538708024013,
+          0.116199631153,
+          0.529378783724
+        ],
+        "fixed_tie_moment_about_centroid_nm": [
+          -0.178374477191,
+          0.159918245455,
+          -0.921116954818
+        ],
+        "fixed_tie_moment_magnitude_nm": 0.951760339474,
+        "fixed_tie_reaction_l1_n": 684.919894599,
+        "fixed_tie_reaction_max_node_n": 0.558710420314,
+        "fixed_tie_reaction_resultant_n": 639.077709286,
+        "fixed_tie_reaction_xyz_n": [
+          -41.8925134963,
+          -636.892351302,
+          -32.1476075674
+        ],
         "initial_kinetic_energy_j": 0,
         "maximum_fixed_node_movement_m": 0,
         "maximum_movement_m": 7.03368844e-06,
+        "momentum_reaction_residual_n": 4.2385451377,
         "ptc_fixed_node_count": 4592,
         "ptc_fixed_nodes_moved": 0,
         "rollback_bitwise": false,
@@ -125,7 +203,10 @@
         "source_tetrahedra": 208177,
         "status_code": 0,
         "surface_faces": 447644
-      }
+      },
+      "non_tie_reaction_nodes": 0,
+      "reaction_stream_bytes": 815856,
+      "reaction_stream_sha256": "cfe22510a4750983bb46f038dbc1fdad156363713452598b9efd75a26d74a94b"
     },
     "left-fixed-source-baseline": {
       "accepted_positions_bytes": 611892,
@@ -134,6 +215,7 @@
         "abi": 35,
         "accepted_barrier_impulse_magnitude_raw": 0,
         "accepted_kinetic_energy_j": 0,
+        "accepted_reaction_stream_bytes": 0,
         "active_deformable_histories": 0,
         "approach_speed_mps": 0,
         "baseline": true,
@@ -142,15 +224,35 @@
         "contact_slop_m": 1e-05,
         "device": "Apple M4",
         "diagnostics": [
-          265683,
-          495520,
+          720065,
+          337682,
           -1,
           0
         ],
-        "failing_index": 1790,
+        "failing_index": 1808,
+        "fixed_tie_centroid_m": [
+          0.0538708024013,
+          0.116199631153,
+          0.529378783724
+        ],
+        "fixed_tie_moment_about_centroid_nm": [
+          0,
+          0,
+          0
+        ],
+        "fixed_tie_moment_magnitude_nm": 0,
+        "fixed_tie_reaction_l1_n": 0,
+        "fixed_tie_reaction_max_node_n": 0,
+        "fixed_tie_reaction_resultant_n": 0,
+        "fixed_tie_reaction_xyz_n": [
+          0,
+          0,
+          0
+        ],
         "initial_kinetic_energy_j": 0,
         "maximum_fixed_node_movement_m": 0,
         "maximum_movement_m": 0,
+        "momentum_reaction_residual_n": 0,
         "ptc_fixed_node_count": 4592,
         "ptc_fixed_nodes_moved": 0,
         "rollback_bitwise": true,
@@ -164,10 +266,13 @@
     "right-fixed-off": {
       "accepted_positions_bytes": 611892,
       "accepted_positions_sha256": "fbb198122be28f6300d177f66748ae9335263daa2a8c9a7585020c29a21cedbd",
+      "bone_tie_reaction_aggregate_independently_verified": true,
+      "momentum_reaction_residual_fraction_of_resultant": 0.012296334401929532,
       "native": {
         "abi": 35,
         "accepted_barrier_impulse_magnitude_raw": 0,
         "accepted_kinetic_energy_j": 0.000519318476747,
+        "accepted_reaction_stream_bytes": 815856,
         "active_deformable_histories": 0,
         "approach_speed_mps": 0,
         "baseline": false,
@@ -182,9 +287,29 @@
           0
         ],
         "failing_index": 4294967295,
+        "fixed_tie_centroid_m": [
+          -0.103960430594,
+          0.116199631153,
+          0.529378783724
+        ],
+        "fixed_tie_moment_about_centroid_nm": [
+          -0.178083710236,
+          -0.159968586879,
+          0.920781936653
+        ],
+        "fixed_tie_moment_magnitude_nm": 0.951390104797,
+        "fixed_tie_reaction_l1_n": 684.715315944,
+        "fixed_tie_reaction_max_node_n": 0.557771298378,
+        "fixed_tie_reaction_resultant_n": 638.876267741,
+        "fixed_tie_reaction_xyz_n": [
+          41.8681083592,
+          -636.692431734,
+          -32.1355622034
+        ],
         "initial_kinetic_energy_j": 0,
         "maximum_fixed_node_movement_m": 0,
         "maximum_movement_m": 7.0180554e-06,
+        "momentum_reaction_residual_n": 7.8558362296,
         "ptc_fixed_node_count": 4592,
         "ptc_fixed_nodes_moved": 0,
         "rollback_bitwise": false,
@@ -193,12 +318,16 @@
         "source_tetrahedra": 208177,
         "status_code": 0,
         "surface_faces": 447644
-      }
+      },
+      "non_tie_reaction_nodes": 0,
+      "reaction_stream_bytes": 815856,
+      "reaction_stream_sha256": "9bdc4eeba2b8615d96f5f5391410df9261e474cd9a1fc25321ecc0a6b78ece28"
     },
     "right-fixed-on": {
       "accepted_positions_bytes": 611892,
       "accepted_positions_sha256": "fbb198122be28f6300d177f66748ae9335263daa2a8c9a7585020c29a21cedbd",
       "accepted_ptc_ptb_tie_unchanged": true,
+      "bone_tie_reaction_aggregate_independently_verified": true,
       "exact_accepted_solid_separation": {
         "aabb_candidate_tetrahedron_pairs": 5589,
         "exact_boundary_contact_pairs": 0,
@@ -221,10 +350,12 @@
         "first_interior_overlap_pairs": [],
         "solid_domains_disjoint": true
       },
+      "momentum_reaction_residual_fraction_of_resultant": 0.012296334401929532,
       "native": {
         "abi": 35,
         "accepted_barrier_impulse_magnitude_raw": 0,
         "accepted_kinetic_energy_j": 0.000519318476747,
+        "accepted_reaction_stream_bytes": 815856,
         "active_deformable_histories": 0,
         "approach_speed_mps": 0,
         "baseline": false,
@@ -239,9 +370,29 @@
           0
         ],
         "failing_index": 4294967295,
+        "fixed_tie_centroid_m": [
+          -0.103960430594,
+          0.116199631153,
+          0.529378783724
+        ],
+        "fixed_tie_moment_about_centroid_nm": [
+          -0.178083710236,
+          -0.159968586879,
+          0.920781936653
+        ],
+        "fixed_tie_moment_magnitude_nm": 0.951390104797,
+        "fixed_tie_reaction_l1_n": 684.715315944,
+        "fixed_tie_reaction_max_node_n": 0.557771298378,
+        "fixed_tie_reaction_resultant_n": 638.876267741,
+        "fixed_tie_reaction_xyz_n": [
+          41.8681083592,
+          -636.692431734,
+          -32.1355622034
+        ],
         "initial_kinetic_energy_j": 0,
         "maximum_fixed_node_movement_m": 0,
         "maximum_movement_m": 7.0180554e-06,
+        "momentum_reaction_residual_n": 7.8558362296,
         "ptc_fixed_node_count": 4592,
         "ptc_fixed_nodes_moved": 0,
         "rollback_bitwise": false,
@@ -250,7 +401,10 @@
         "source_tetrahedra": 208177,
         "status_code": 0,
         "surface_faces": 447644
-      }
+      },
+      "non_tie_reaction_nodes": 0,
+      "reaction_stream_bytes": 815856,
+      "reaction_stream_sha256": "9bdc4eeba2b8615d96f5f5391410df9261e474cd9a1fc25321ecc0a6b78ece28"
     },
     "right-fixed-source-baseline": {
       "accepted_positions_bytes": 611892,
@@ -259,6 +413,7 @@
         "abi": 35,
         "accepted_barrier_impulse_magnitude_raw": 0,
         "accepted_kinetic_energy_j": 0,
+        "accepted_reaction_stream_bytes": 0,
         "active_deformable_histories": 0,
         "approach_speed_mps": 0,
         "baseline": true,
@@ -267,15 +422,35 @@
         "contact_slop_m": 1e-05,
         "device": "Apple M4",
         "diagnostics": [
-          754646,
-          359411,
+          720064,
+          5070,
           -1,
           0
         ],
-        "failing_index": 323,
+        "failing_index": 289,
+        "fixed_tie_centroid_m": [
+          -0.103960430594,
+          0.116199631153,
+          0.529378783724
+        ],
+        "fixed_tie_moment_about_centroid_nm": [
+          0,
+          0,
+          0
+        ],
+        "fixed_tie_moment_magnitude_nm": 0,
+        "fixed_tie_reaction_l1_n": 0,
+        "fixed_tie_reaction_max_node_n": 0,
+        "fixed_tie_reaction_resultant_n": 0,
+        "fixed_tie_reaction_xyz_n": [
+          0,
+          0,
+          0
+        ],
         "initial_kinetic_energy_j": 0,
         "maximum_fixed_node_movement_m": 0,
         "maximum_movement_m": 0,
+        "momentum_reaction_residual_n": 0,
         "ptc_fixed_node_count": 4592,
         "ptc_fixed_nodes_moved": 0,
         "rollback_bitwise": true,
@@ -289,14 +464,14 @@
   },
   "clinical_anatomy_qualified": false,
   "geometry_receipt_sha256": "f32989e1bc9de2a2069498fdae4dbc9b7d9619413276b4a31f6fd0c66947a34e",
-  "lab_source_commit": "5b517712204453c1df6d1de72ae283e404e658fe",
+  "lab_source_commit": "116ec9009f5c163ec11214cfda20a1be26b2494c",
   "left_replay_bitwise": true,
   "loaded_contact_qualified": false,
   "metallib_sha256": "a4f45d4fea2c67483703cec55ecd3502e411d5990cc3b7749e24097499311dc4",
-  "native_source_sha256": "c592cfd8ceb1ef57fa90cff2ec6a6b73283576a8193cc255a9d63bed1618a345",
-  "schema": "numi.human.patellar-cartilage-tie-native-diagnostic.v1",
+  "native_source_sha256": "16bce638926b793565b2e54c423998cc21f5a4a775c492f53b644ecebb621431",
+  "schema": "numi.human.patellar-cartilage-tie-native-diagnostic.v2",
   "source_crossings_rejected_bilaterally": true,
-  "status": "bilateral_tie_fixed_cartilage_microstep_accepted",
+  "status": "bilateral_tie_fixed_cartilage_reaction_measured",
   "unfixed_tie_controls": {
     "left": {
       "accepted_positions_sha256": "9f563bff4037b7dfcf3cf52420136c7286ba4bf4b3cd368d9e7bb9ed4cc676fa",
@@ -306,6 +481,7 @@
         "abi": 35,
         "accepted_barrier_impulse_magnitude_raw": 0,
         "accepted_kinetic_energy_j": 0.000893239456671,
+        "accepted_reaction_stream_bytes": 815856,
         "active_deformable_histories": 0,
         "approach_speed_mps": 0,
         "baseline": false,
@@ -320,9 +496,29 @@
           0
         ],
         "failing_index": 4294967295,
+        "fixed_tie_centroid_m": [
+          0,
+          0,
+          0
+        ],
+        "fixed_tie_moment_about_centroid_nm": [
+          0,
+          0,
+          0
+        ],
+        "fixed_tie_moment_magnitude_nm": 0,
+        "fixed_tie_reaction_l1_n": 0,
+        "fixed_tie_reaction_max_node_n": 0,
+        "fixed_tie_reaction_resultant_n": 0,
+        "fixed_tie_reaction_xyz_n": [
+          0,
+          0,
+          0
+        ],
         "initial_kinetic_energy_j": 0,
         "maximum_fixed_node_movement_m": 0,
         "maximum_movement_m": 7.47696574e-06,
+        "momentum_reaction_residual_n": 3.45308190915,
         "ptc_fixed_node_count": 0,
         "ptc_fixed_nodes_moved": 0,
         "rollback_bitwise": false,
@@ -332,7 +528,8 @@
         "status_code": 0,
         "surface_faces": 447644
       },
-      "ptc_ptb_tie_nodes_moved": 4592
+      "ptc_ptb_tie_nodes_moved": 4592,
+      "reaction_stream_sha256": "9ce42468173f5abcf9756306d766376a5d81b13b1b527ac974996fce15a194d0"
     },
     "right": {
       "accepted_positions_sha256": "923cff0a080c7e25186b58e0fbcd324f6be8f5c68a8e50239053c175ed60f68a",
@@ -342,6 +539,7 @@
         "abi": 35,
         "accepted_barrier_impulse_magnitude_raw": 0,
         "accepted_kinetic_energy_j": 0.000882310547028,
+        "accepted_reaction_stream_bytes": 815856,
         "active_deformable_histories": 0,
         "approach_speed_mps": 0,
         "baseline": false,
@@ -356,9 +554,29 @@
           0
         ],
         "failing_index": 4294967295,
+        "fixed_tie_centroid_m": [
+          0,
+          0,
+          0
+        ],
+        "fixed_tie_moment_about_centroid_nm": [
+          0,
+          0,
+          0
+        ],
+        "fixed_tie_moment_magnitude_nm": 0,
+        "fixed_tie_reaction_l1_n": 0,
+        "fixed_tie_reaction_max_node_n": 0,
+        "fixed_tie_reaction_resultant_n": 0,
+        "fixed_tie_reaction_xyz_n": [
+          0,
+          0,
+          0
+        ],
         "initial_kinetic_energy_j": 0,
         "maximum_fixed_node_movement_m": 0,
         "maximum_movement_m": 7.37746318e-06,
+        "momentum_reaction_residual_n": 3.49130045522,
         "ptc_fixed_node_count": 0,
         "ptc_fixed_nodes_moved": 0,
         "rollback_bitwise": false,
@@ -368,7 +586,8 @@
         "status_code": 0,
         "surface_faces": 447644
       },
-      "ptc_ptb_tie_nodes_moved": 4592
+      "ptc_ptb_tie_nodes_moved": 4592,
+      "reaction_stream_sha256": "9ce42468173f5abcf9756306d766376a5d81b13b1b527ac974996fce15a194d0"
     }
   },
   "whole_body_joint_and_bone_reaction_coupled": false

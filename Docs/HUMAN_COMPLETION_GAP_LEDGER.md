@@ -935,6 +935,11 @@ contact-on/off streams are identical with zero contact histories, and the
 diagnostic has no articulated patellar reaction or QAT/PTL. Initial cartilage
 stress, calibrated material, loaded contact/energy and whole-body adoption
 remain open.
+The native probe now publishes a raw, independently reducible patellar
+bone-tie reaction field: 639.078 N left and 638.876 N right synthetic-material
+resultants for the same 1 µs candidate. It is not yet scattered to the live
+patella joint; momentum-rate residual is 4.239/7.856 N, and zero contact
+histories still exclude a loaded cartilage-contact claim.
 
 The [calcaneal tendon visual boundary repair](TENDON_HARMONIC_BOUNDARY_20260929.md)
 removes 145 right and 163 left exact intersections in the compiled tendon
