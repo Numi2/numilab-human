@@ -1,0 +1,155 @@
+{
+  "boundary": "Only PTC current positions were translated for this exact face-crossing experiment. The FMC full boundary has a source vertex-link manifold defect, so zero pairwise face intersections does not qualify disjoint volumes. Adopting a patellar pose requires coherent PTB, QAT and PTL attachments, source rest-state and force/energy validation; no runtime state or source payload was changed.",
+  "clinical_anatomy_qualified": false,
+  "intersection_loop_receipt_sha256": "6de55f2a39b7ddd914adbab87f690ff34089a8e4c7e021791464a608cbb83ab7",
+  "loaded_contact_qualified": false,
+  "prescribed_translation_magnitude_m": 2e-05,
+  "schema": "numi.human.patellofemoral-pose-clearance-candidate.v1",
+  "sides": {
+    "left": {
+      "baseline": {
+        "aabb_candidate_pairs": 1800,
+        "point_contact_pairs": 0,
+        "segment_or_polygon_crossing_pairs": 18
+      },
+      "candidate": {
+        "aabb_candidate_pairs": 1577,
+        "point_contact_pairs": 0,
+        "segment_or_polygon_crossing_pairs": 0
+      },
+      "candidate_volume_disjointness_qualified": false,
+      "compiled_float32_displacement_m": {
+        "maximum": 2.000675678093512e-05,
+        "minimum": 2.000675678093512e-05
+      },
+      "exact_integer_denominators": {
+        "baseline": "536870912",
+        "candidate": "536870912"
+      },
+      "manifest_sha256": "86570419827ea81723f4ef5e89b9b4ce887eb2da67b32a79d1e72a84eb9dfbe5",
+      "outward_mean_normal": [
+        0.1963151671555772,
+        0.9335424389789473,
+        -0.2999314417828116
+      ],
+      "payload_sha256": "2e38201528de25911ea496164602ea7e823cd9c2e3c94efa550ee52689324ae5",
+      "prescribed_pose_translation_m": [
+        -3.926303343111544e-06,
+        -1.867084877957895e-05,
+        5.998628835656233e-06
+      ],
+      "source_boundary_topology": {
+        "FMC": {
+          "boundary_edge_count": 0,
+          "closed_oriented_manifold_candidate": false,
+          "euler_characteristic": 1,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_defect_edge_count": 0,
+          "used_surface_vertices": 20413,
+          "vertex_manifold_defect_global_node_indices": [
+            233522
+          ],
+          "vertex_manifold_defect_link_fan_counts": [
+            2
+          ],
+          "vertex_manifold_defect_source_node_ids": [
+            233523
+          ]
+        },
+        "PTC": {
+          "boundary_edge_count": 0,
+          "closed_oriented_manifold_candidate": true,
+          "euler_characteristic": 2,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_defect_edge_count": 0,
+          "used_surface_vertices": 10880,
+          "vertex_manifold_defect_global_node_indices": [],
+          "vertex_manifold_defect_link_fan_counts": [],
+          "vertex_manifold_defect_source_node_ids": []
+        }
+      },
+      "source_full_boundary_faces": {
+        "FMC": 40824,
+        "PTC": 21756
+      }
+    },
+    "right": {
+      "baseline": {
+        "aabb_candidate_pairs": 1800,
+        "point_contact_pairs": 0,
+        "segment_or_polygon_crossing_pairs": 18
+      },
+      "candidate": {
+        "aabb_candidate_pairs": 1577,
+        "point_contact_pairs": 0,
+        "segment_or_polygon_crossing_pairs": 0
+      },
+      "candidate_volume_disjointness_qualified": false,
+      "compiled_float32_displacement_m": {
+        "maximum": 2.000675678093512e-05,
+        "minimum": 2.000529589006988e-05
+      },
+      "exact_integer_denominators": {
+        "baseline": "134217728",
+        "candidate": "134217728"
+      },
+      "manifest_sha256": "f3b4bbdc0575eaa2a01a4c75ea8b74420654eb24590b9943b9c6dfe44f045b50",
+      "outward_mean_normal": [
+        -0.1963151671555772,
+        0.9335424389789473,
+        -0.2999314417828116
+      ],
+      "payload_sha256": "f13e251b8ff8c8a4a4c3445fe006aa3c0aadd64d51c2c63eaec175705507b702",
+      "prescribed_pose_translation_m": [
+        3.926303343111544e-06,
+        -1.867084877957895e-05,
+        5.998628835656233e-06
+      ],
+      "source_boundary_topology": {
+        "FMC": {
+          "boundary_edge_count": 0,
+          "closed_oriented_manifold_candidate": false,
+          "euler_characteristic": 1,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_defect_edge_count": 0,
+          "used_surface_vertices": 20413,
+          "vertex_manifold_defect_global_node_indices": [
+            233522
+          ],
+          "vertex_manifold_defect_link_fan_counts": [
+            2
+          ],
+          "vertex_manifold_defect_source_node_ids": [
+            233523
+          ]
+        },
+        "PTC": {
+          "boundary_edge_count": 0,
+          "closed_oriented_manifold_candidate": true,
+          "euler_characteristic": 2,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_defect_edge_count": 0,
+          "used_surface_vertices": 10880,
+          "vertex_manifold_defect_global_node_indices": [],
+          "vertex_manifold_defect_link_fan_counts": [],
+          "vertex_manifold_defect_source_node_ids": []
+        }
+      },
+      "source_full_boundary_faces": {
+        "FMC": 40824,
+        "PTC": 21756
+      }
+    }
+  },
+  "source_files_sha256": {
+    "FeBio_custom.feb": "00b6efb53ad7e7330296cbb9569d358d48ed60819e22732e6149db6fb98a158a",
+    "Geometry.feb": "3642bd368bbc867569f181fa76129f746470e807e3977585d3803f092dd11262",
+    "ModelProperties.xml": "0ac446ce098b9a09505992eb4f4419c7b944cd57a4afbf6392b137f4806603c1",
+    "license.txt": "d72918838b4adf30979d2a26c23837f0ca05185ba799a3a4fe1fe1b4c05b20b8"
+  },
+  "status": "unadopted_bilateral_geometric_pose_candidate"
+}
