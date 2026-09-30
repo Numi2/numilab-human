@@ -1,0 +1,39 @@
+{
+  "schema": "HumanPack.cardiac-rodero18-active-force-reference.v1",
+  "id": "rodero18_candidate_activation_to_fixed_reference_active_fibre_load",
+  "anatomy_manifest_sha256": "e8cb0391623577efc4eac04e5710cf7c9a4757614e09d936f5af3889c37d56f1",
+  "candidate_activation_summary_sha256": "4bd6b06afbd430900b75b0e9ca952d0c018690bc0d441f8e65b953901519ea2f",
+  "source_supplement_sha256": "5699feb01b7f91f93fd75e26a9a5043ca6bfb5da1803f010c45c71270992ebc6",
+  "tanh_formula_url": "https://opencarp.org/documentation/examples/01_ep_single_cell/06_em_coupling",
+  "source_supplement_url": "https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1008851.s004&type=supplementary",
+  "source_parameter_owner": "config/cardiac-wall-rodero18.v1.json source_mechanics.active_ventricular.parameters",
+  "source_parameters": {
+    "peak_isometric_tension_pa": 120000.0,
+    "electromechanical_delay_ms": 20.0,
+    "contraction_time_constant_ms": 50.0,
+    "relaxation_time_constant_ms": 50.0,
+    "transient_duration_ms": 550.0
+  },
+  "declared_variants": {
+    "length_dependence": "disabled, phi=1 and tau_c=tau_c0; Rodero S4 does not publish ldOn/lambda0/ld/ld_up",
+    "deformation_gradient": "identity on the source CT end-diastolic coordinates; stress-free configuration is not supplied",
+    "cell_activation": "linear nodal timing interpolated at four symmetric tetrahedral quadrature points",
+    "active_stress": "first Piola at F=I is T_a f0 outer f0; source fibre vectors are normalized without modifying source bytes",
+    "output_sign": "positive FEM internal residual integral P grad(N) dV; an applied external nodal load would have the opposite sign",
+    "mechanical_node_identity": "original source node IDs, including three point-only LV/RV contacts; electrical timing keeps those contacts separate"
+  },
+  "four_point_tetrahedral_quadrature": {
+    "major_barycentric": 0.5854101966249685,
+    "minor_barycentric": 0.1381966011250105,
+    "weight_each": 0.25
+  },
+  "force_frames_ms": [100, 250],
+  "virtual_work_affine_gradient_diagonal": [0.01, -0.004, -0.006],
+  "qualification": {
+    "source_model_reproduced": false,
+    "native_matter_accepted_step": false,
+    "physical_heart_motion": false,
+    "blood_flow_coupled": false,
+    "heartbeat_qualified": false
+  }
+}

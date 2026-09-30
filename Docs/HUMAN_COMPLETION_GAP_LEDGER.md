@@ -514,6 +514,19 @@ reproduction, voltage/ionic state, native accepted electrical steps, atrial/AV
 conduction, ECG, electromechanical feedback and heartbeat qualification remain
 open.
 
+The [full-source ventricular active-force reference](CARDIAC_ACTIVE_FORCE_REFERENCE_20260930.md)
+now maps that candidate activation into a fixed-geometry active-fibre FEM
+internal residual on all 1,097,534 ventricular tetrahedra and 218,077 unique
+mechanical source nodes. The Apple-native producer replays bitwise at 100 and
+250 ms; an independent full-source assembly agrees within 7.81e-17 N per
+component and checks force/torque balance and the virtual-work identity.
+Zero-tension and tampered-output controls pass. This is an offline, positive
+internal residual at `F=I`, not an accepted native external load, dynamic
+deformation, calibrated heart motion, pressure/flow response or heartbeat.
+The source activation discrepancy, three point-only LV/RV mechanical contacts,
+unknown stress-free reference and native electromechanical transaction remain
+open.
+
 The [source dynamic-limit increment](SOURCE_DYNAMIC_LIMITS_20260908.md) closes scalar-law, complete limit-anatomy and bounded transaction integration. All 122 source-limited coordinates are retained, including six missing legacy hard flags. The identical recruited stance with registered tissue and curved support remains the next physical admission gate. The interrupted costal attempt adds no timeout or performance qualification.
 
 The [selected neuromusculoskeletal release matrix](NEUROMUSCULOSKELETAL_RELEASE_MATRIX.md) fixes the current completion target. The [registered costal ownership increment](COSTAL_TISSUE_OWNERSHIP_20260908.md) adds source-bound common registration, actual cooked mass subtraction and native v5 COM-frame admission. It does not close loaded thorax, experimental calibration or sustained behaviour.

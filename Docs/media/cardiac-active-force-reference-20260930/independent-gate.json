@@ -1,0 +1,75 @@
+{
+  "accepted_native_matter_steps": 0,
+  "asset_manifest_sha256": "e8cb0391623577efc4eac04e5710cf7c9a4757614e09d936f5af3889c37d56f1",
+  "boundary": "Independent NumPy full-source fixed-reference internal-residual check. This does not supply stress-free reference, deformation, accepted-state coupling, pressure/flow, or physiological cardiac motion.",
+  "candidate_activation_summary_sha256": "4bd6b06afbd430900b75b0e9ca952d0c018690bc0d441f8e65b953901519ea2f",
+  "candidate_summary_sha256": "82d8884eb5296a412d30d870b034f2a64030ce34c0971c885f9cf89ed8876647",
+  "frames": [
+    {
+      "independent": {
+        "active_cells": 1097534,
+        "analytic_affine_virtual_work_j": 0.011342866377159144,
+        "max_tension_pa": 101918.97698842754,
+        "stress_volume_integral_j": 10.659165986044218,
+        "ventricular_cells": 1097534,
+        "volume_m3": 0.00013271063895494372
+      },
+      "largest_nodal_residual_n": 0.10611710698101662,
+      "max_component_discrepancy_n": 6.938893903907228e-17,
+      "native_file_sha256": "03b3e7f7f09fc59da8c7b5a7cfbcd6270aa26a1f72b96611a40ca2055afbb2e1",
+      "net_internal_residual_n": [
+        3.056496028497335e-14,
+        1.3016714442426469e-14,
+        -2.4170661132305593e-14
+      ],
+      "net_internal_residual_norm_n": 4.108372563035661e-14,
+      "net_internal_torque_nm": [
+        -1.712266938479201e-15,
+        -1.193504659251915e-14,
+        -3.783201508143763e-15
+      ],
+      "net_internal_torque_norm_nm": 1.2636843311738622e-14,
+      "nodal_affine_virtual_work_j": 0.011342866377159146,
+      "relative_l2_discrepancy": 1.3975687150245138e-15,
+      "sum_nodal_residual_magnitudes_n": 1218.0385558755083,
+      "time_ms": 100,
+      "virtual_work_discrepancy_j": 1.734723475976807e-18
+    },
+    {
+      "independent": {
+        "active_cells": 1097534,
+        "analytic_affine_virtual_work_j": 0.014825122536584242,
+        "max_tension_pa": 119950.13591457397,
+        "stress_volume_integral_j": 15.907509890647017,
+        "ventricular_cells": 1097534,
+        "volume_m3": 0.00013271063895494372
+      },
+      "largest_nodal_residual_n": 0.16070784944013333,
+      "max_component_discrepancy_n": 7.806255641895632e-17,
+      "native_file_sha256": "ec09035fff5c3d6d9d0ab420a66edd330396510db6e2c6327762a94c847a8e62",
+      "net_internal_residual_n": [
+        -7.720907246877573e-14,
+        4.2418325796322875e-15,
+        -3.450440887869943e-14
+      ],
+      "net_internal_residual_norm_n": 8.467460213777661e-14,
+      "net_internal_torque_nm": [
+        6.276141444657574e-15,
+        -2.8489038385315357e-15,
+        -2.308442608074668e-15
+      ],
+      "net_internal_torque_norm_nm": 7.268776498787314e-15,
+      "nodal_affine_virtual_work_j": 0.01482512253658424,
+      "relative_l2_discrepancy": 1.1476727313771313e-15,
+      "sum_nodal_residual_magnitudes_n": 1990.4563736654482,
+      "time_ms": 250,
+      "virtual_work_discrepancy_j": -1.734723475976807e-18
+    }
+  ],
+  "gate_source_sha256": "09d2274f29bd874a5b96ad9b957ad8443c51e9824c34f2189c8bba2d9c7888d6",
+  "heartbeat_qualified": false,
+  "mechanical_source_nodes_checked_per_frame": 218077,
+  "schema": "numi.human.cardiac-active-force-independent-gate.v1",
+  "status": "passed_full_source_reference_residual_and_work_gate",
+  "ventricular_cells_checked_per_frame": 1097534
+}

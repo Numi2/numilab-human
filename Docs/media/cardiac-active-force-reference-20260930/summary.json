@@ -1,0 +1,60 @@
+{
+  "asset_manifest_sha256": "e8cb0391623577efc4eac04e5710cf7c9a4757614e09d936f5af3889c37d56f1",
+  "boundary": "Offline positive FEM internal residual at F=I from candidate activation. External nodal load sign is opposite. No stress-free reference, dynamic deformation, native accepted state, blood-flow coupling or heartbeat.",
+  "candidate_activation_summary_sha256": "4bd6b06afbd430900b75b0e9ca952d0c018690bc0d441f8e65b953901519ea2f",
+  "compile_command": [
+    "clang++",
+    "-std=c++20",
+    "-O3",
+    "-march=native",
+    "/Users/home/numilab-human/tools/cardiac_active_force_reference.cpp",
+    "-o",
+    "/Users/home/numilab-human/Build/cardiac-active-force-reference-20260930/cardiac-active-internal-residual"
+  ],
+  "frames": [
+    {
+      "bytes": 5233848,
+      "file": "internal-residual-100ms.f64le",
+      "native_metrics": {
+        "active_cells": 1097534,
+        "cells": 1097534,
+        "max_tension_pa": 101918.97698842752,
+        "nodes": 218077,
+        "stress_volume_integral_j": 10.659165986044215,
+        "volume_m3": 0.0001327106389549414
+      },
+      "native_stdout": "cells=1097534 active_cells=1097534 nodes=218077 volume_m3=0.00013271063895494139 stress_volume_integral_j=10.659165986044215 max_tension_pa=101918.97698842752",
+      "replay_bitwise": true,
+      "sha256": "03b3e7f7f09fc59da8c7b5a7cfbcd6270aa26a1f72b96611a40ca2055afbb2e1",
+      "time_ms": 100
+    },
+    {
+      "bytes": 5233848,
+      "file": "internal-residual-250ms.f64le",
+      "native_metrics": {
+        "active_cells": 1097534,
+        "cells": 1097534,
+        "max_tension_pa": 119950.13591457397,
+        "nodes": 218077,
+        "stress_volume_integral_j": 15.907509890646677,
+        "volume_m3": 0.0001327106389549414
+      },
+      "native_stdout": "cells=1097534 active_cells=1097534 nodes=218077 volume_m3=0.00013271063895494139 stress_volume_integral_j=15.907509890646677 max_tension_pa=119950.13591457397",
+      "replay_bitwise": true,
+      "sha256": "ec09035fff5c3d6d9d0ab420a66edd330396510db6e2c6327762a94c847a8e62",
+      "time_ms": 250
+    }
+  ],
+  "heartbeat_qualified": false,
+  "native_binary_sha256": "c70135cc2a08dc6b083e05d1d083120d08e9721c10fc8324aa5df43a8fb6d071",
+  "physical_heart_motion": false,
+  "platform": "macOS-26.6-arm64-arm-64bit",
+  "production_native_electromechanical_steps": 0,
+  "reference_config_sha256": "b4e605a920f81fdfe54b787c66bdc76b22908915c9973c5b533a812fa2d070ac",
+  "schema": "numi.human.cardiac-active-force-reference.v1",
+  "source_config_sha256": "23c931fef53edced85e0e0a36c73d8490dddb87db6bd988482a2cdfc5a1442cc",
+  "source_cpp_sha256": "c67e9044710682ce0511a76b3a89d0340e9d7b2a52ccbe109a95f92924228af5",
+  "source_model_reproduced": false,
+  "source_supplement_sha256": "5699feb01b7f91f93fd75e26a9a5043ca6bfb5da1803f010c45c71270992ebc6",
+  "status": "candidate_fixed_reference_active_internal_residual"
+}
