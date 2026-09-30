@@ -1,0 +1,23 @@
+tendon_payload=NHTENDON3 tendon_endpoints=832 tendon_point_bindings=190 tendon_triangle_bindings=0 tendon_envelope_bindings=642 tendon_migrated_envelope_bindings=18 tendon_max_reference_path_delta_m=0.0107642 tendon_max_architecture_scale_change=0.0492621
+joint_equality_payload=NHEQ1 joint_equalities=51
+open_knee_articular_cook=accepted pairs=7 samples=69701 mechanical_samples=57930 internal_same_body_samples=11771 adjacent_candidates=201898
+open_knee_solver_preflight=accepted formulation=displacement newton_iterations=8 fgmres_restart=16 fgmres_budget=32 line_search_steps=6
+open_knee_passive_ligament_cook=accepted tissue=PCL rest_length_m=0.0303031 volume_m3=7.23995e-07 effective_area_m2=2.38918e-05 source_fiber_alignment=0.99644 source_initial_stretch=1 reference_tension_n=0
+open_knee_passive_ligament_cook=accepted tissue=ACL rest_length_m=0.0324358 volume_m3=1.43859e-06 effective_area_m2=4.4352e-05 source_fiber_alignment=0.996945 source_initial_stretch=1.016 reference_tension_n=3.34181
+open_knee_passive_ligament_cook=accepted tissue=MCL rest_length_m=0.0489108 volume_m3=1.15627e-06 effective_area_m2=2.36405e-05 source_fiber_alignment=0.999282 source_initial_stretch=1.034 reference_tension_n=55.4378
+open_knee_passive_ligament_cook=accepted tissue=PTL rest_length_m=0.0610492 volume_m3=4.42344e-06 effective_area_m2=7.2457e-05 source_fiber_alignment=0.999702 source_initial_stretch=1 reference_tension_n=0
+open_knee_passive_ligament_cook=accepted tissue=LCL rest_length_m=0.0496997 volume_m3=2.75962e-07 effective_area_m2=5.55259e-06 source_fiber_alignment=0.999931 source_initial_stretch=1.027 reference_tension_n=8.40188
+open_knee_qat_load_preflight=accepted load_nodes=378 positive_mass_nodes=378 patch_mass_kg=0.000120273 minimum_node_mass_kg=4.97835e-08 ptl_patella_load_nodes=424 ptl_tibia_load_nodes=553 ptl_patella_patch_area_m2=0.000214181 ptl_tibia_patch_area_m2=0.000293686
+compiled_support_geometry=admissible compiled_support_min_gap_m=-2.14149478015e-07 compiled_support_gap_tolerance_m=1e-06 compiled_support_separated_witnesses=8 compiled_support_max_separated_force_n=0 compiled_support_rejected_pose_candidates=0
+human_joint_failure completed_steps=0 matter_status=6 matter_failing_index=432
+deformable_contact_failure step=0 microtick=0 slot=432 primitive_a=320794 primitive_b=622324 thickness=9.99999975e-06 dt_a=9.99999997e-07 dt_b=9.99999997e-07
+contact_primitive side=0 object=1 kind=0 source=320794
+contact_vertex side=0 corner=0 node=16805 start=0.0521027707,0.156387001,0.452894092 finish=0.0521027707,0.156387001,0.452894092
+contact_vertex side=0 corner=1 node=16804 start=0.0522120371,0.156197444,0.453332841 finish=0.0522120371,0.156197444,0.453332841
+contact_vertex side=0 corner=2 node=16808 start=0.0523150563,0.155830547,0.452796459 finish=0.0523150563,0.155830547,0.452796459
+contact_primitive side=1 object=2 kind=0 source=622324
+contact_vertex side=1 corner=0 node=22565 start=0.0520618632,0.15603596,0.452821255 finish=0.0520618632,0.15603596,0.452821255
+contact_vertex side=1 corner=1 node=22566 start=0.052295953,0.156046048,0.453075528 finish=0.052295953,0.156046048,0.453075528
+contact_vertex side=1 corner=2 node=22561 start=0.0519604646,0.156459659,0.453193545 finish=0.0519604646,0.156459659,0.453193545
+open_knee_ptl_partial_impulse=diagnostic accepted_steps=0 reaction_impulse_xyz_ns=0,0,0 reaction_impulse_l1_ns=0 boundary=no_accepted_terminal_state_after_failure
+myosim_articulated_visual=failed error="persistent Human stand Metal horizon failed: GPU rejected the Numi Human stand horizon: code=9 completed_steps=0 failing_index=1"

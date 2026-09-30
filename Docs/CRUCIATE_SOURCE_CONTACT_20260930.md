@@ -58,13 +58,35 @@ reaction to one-step continuum momentum change within that residual; it does
 not isolate the matrix force at either patch. The reduced fiber tension is
 negligible at this step. Comparing each *total* attachment reaction
 with the 2.26 N active patch load is not a valid stand-alone force-transfer
-test. The physical gate remains unchanged and rejects the run. A replacement
-must measure per-step vector impulse closure over the full accepted trajectory
-and separately close contact and energy accounting before admitting loaded motion.
+test. At that revision the physical gate remained unchanged and rejected the
+run. A replacement needed accepted-step vector impulse closure and separate
+contact and energy accounting.
+
+Matter `a334f99` now accumulates PTL attachment impulse only after each Human
+step is accepted, with a step-index guard against replay double counting. Its
+PTL gate checks active load assembly and impulse-versus-continuum-momentum
+closure within 2% of the sum of accepted reaction-impulse magnitudes. The
+[matched native trajectory receipt](media/cruciate-source-contact-20260930/ptl-trajectory-native-receipt.json)
+binds the final binary, shader, source, payloads, commands, and four logs. The
+local ACL diagnostic completes one and two 1 µs steps with 0.70% and 1.10%
+PTL impulse residual respectively, and verifies bitwise replay and rollback.
+Omitting the second accepted impulse in a negative control gives 74% error.
+These short runs remain explicitly marked `unqualified_local_acl_initialization`.
+
+The untouched source still rejects step zero with zero accepted PTL impulse.
+With the local ACL candidate, the eight-step request accepts five steps, then
+rejects the sixth at PCL–ACL contact; the PTL audit retains exactly five
+accepted impulses. The independent [contact witness](media/cruciate-source-contact-20260930/ptl-trajectory-contact-witness.json)
+maps the reported pair to pinned PCL face 3525 and ACL face 6832. These faces
+do not strictly cross in the source, candidate, or native step-start geometry,
+but strictly cross at the rejected step finish after at most 3.45 µm of
+reported vertex motion. The local ACL shift therefore does not give a stable
+contact trajectory. The solver's rejection remains authoritative.
 
 The next implementation must reconcile the source's initially intersecting
 contact surfaces with a source-consistent contact or equilibrated
-initialization policy across all affected pairs, then close PTL/quadriceps
-trajectory-level force transfer and rerun loaded flexion, articular clearance,
-energy, replay, and rollback gates. A localized ACL shift cannot serve as the final
-whole-knee solution.
+initialization policy across all affected pairs. The accepted-step PTL impulse
+gate is now measured for two microseconds, but sustained PTL/quadriceps force
+transfer, loaded flexion, patellar clearance, energy, replay, and rollback
+still need full-horizon evidence. A localized ACL shift cannot serve as the
+final whole-knee solution.
