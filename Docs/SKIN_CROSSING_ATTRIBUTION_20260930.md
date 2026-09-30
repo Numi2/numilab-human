@@ -69,9 +69,11 @@ pairs, leaving **73**. The [held-out exact pair audit](media/skin-geodesic-visua
 therefore fails its no-new-crossings gate. A count-only reduction would conceal
 the regression.
 
-The native candidate remains a diagnostic visual variant. The original FJ2810
-source still has **171 boundary edges and two vertex-link defects**, so neither
-payload is a closed skin volume. Intervening motion, skin/fat material, contact,
+The native candidate remains a diagnostic visual variant. The selected FJ2810
+**outer visual sheet** has **171 boundary edges and two vertex-link defects**, so neither
+visual payload is a closed skin volume. A later [complete source-solid audit](SKIN_FULL_SOURCE_SOLID_20260930.md)
+finds the inner sheet and source connectors close the full source geometry at
+rest; that solid has not been deformed in the native renderer. Intervening motion, skin/fat material, contact,
 loaded knee mechanics, subject calibration and clinical anatomy remain open.
 No physics or production Human payload was changed.
 

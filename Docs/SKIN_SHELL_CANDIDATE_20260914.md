@@ -45,3 +45,8 @@ collision/contact, self-contact, muscle sliding, adipose geometry,
 deformation, or subject calibration. The pinned source inventory has no
 adipose member, so fat remains an explicit missing source rather than an
 inferred layer.
+
+A later [full FJ2810 source audit](SKIN_FULL_SOURCE_SOLID_20260930.md) finds
+that the complete source member, including its inner sheet and connectors,
+forms a closed geometric solid. This historical outer-only visual payload did
+not include that inner surface or its geometric thickness.

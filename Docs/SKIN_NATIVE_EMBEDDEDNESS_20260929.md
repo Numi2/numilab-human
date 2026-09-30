@@ -1,6 +1,6 @@
 # Exact skin embeddedness in retained native poses
 
-The compiled source skin and nine retained native inspection poses were checked
+The compiled **outer visual sheet** and nine retained native inspection poses were checked
 for triangle self-intersections with the exact-coordinate quotient predicate.
 The predicate found **42 crossing triangle pairs in three poses**. Coupled
 reach had 3, bilateral knee flexion had 18, and asymmetric knee flexion had 21.
@@ -26,7 +26,11 @@ coordinate quotient preserves every triangle's spatial support, including
 authored duplicate vertex positions. Source topology still has 171 boundary
 edges, two boundary-branch vertices and two vertex-link defects. The mesh is
 therefore not a closed, oriented skin volume even in states with zero crossings.
-The closed-skin gate fails for all ten states.
+The closed-skin gate fails for all ten outer-sheet states. The later
+[complete source-solid audit](SKIN_FULL_SOURCE_SOLID_20260930.md) shows that
+the source's retained inner sheet and small connectors make the full FJ2810
+source a closed, intersection-free geometric candidate at rest. That full
+source solid has not been run in these native poses.
 
 A later [source-bound visual-weight trial](SKIN_CROSSING_ATTRIBUTION_20260930.md)
 clears these nine native pose crossings but fails strict pair-level nonregression

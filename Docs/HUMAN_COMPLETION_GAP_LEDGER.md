@@ -735,8 +735,8 @@ seven oppose their rendered normals. Unilateral reach also worsens maximum
 tangent stretch. The audit now checks all-face area/tangent metrics, exact
 all-pairs seam distances and complete source edge/orientation/vertex-link
 topology; 135 selected checks pass, including the earlier ABI 4 and ABI 5
-evidence. The source remains open with 171 boundary edges and two vertex-link
-defects after exact-coordinate identification. Geometry, normals, binding
+evidence. The selected outer visual sheet remains open with 171 boundary edges
+and two vertex-link defects after exact-coordinate identification. Geometry, normals, binding
 frames, ABI and native/physics binaries are preserved. Closed volume,
 motion-wide self-intersection freedom, complete skin shape, mechanical material-point identity,
 anatomical weights, loading, subject calibration and clinical anatomy remain
@@ -748,9 +748,20 @@ native poses. The [source-bound attribution and visual trial](SKIN_CROSSING_ATTR
 traced the crossings through the full 86-body field and checked a derived
 payload on the Apple M4. It clears those nine sampled poses, but a held-out
 1.2-radian bilateral knee pose retains 73 pairs and creates 37 pairs not in
-the 78-pair baseline; pair-level nonregression fails. The original source's
+the 78-pair baseline; pair-level nonregression fails. The outer visual sheet's
 171 boundary edges remain. The derived visual payload is not a production
 skin, physical tissue, or anatomy qualification.
+
+The [complete FJ2810 source-solid audit](SKIN_FULL_SOURCE_SOLID_20260930.md)
+recovers the inner sheet and all 98 small source patches without filling
+holes or changing source faces. After exact-coordinate identification, all
+203,382 source triangles form one closed oriented surface with zero exact
+self-intersection pairs; the same holds after Float32 compilation. Its positive
+registered enclosed geometric volume is 3.511 L. A hash-bound offline geometry
+artifact is retained. This resolves the source-topology gap for the **complete
+source mesh only**; it does not resolve outer-shell motion crossings, native
+full-solid articulation, skin material/contact/mass, physiological thickness,
+subject calibration or clinical anatomy.
 
 The [compiled-bone patellar full-support check](PATELLAR_ANTERIORITY_FULL_SUPPORT_20260929.md)
 now distinguishes literal unprojected source `qpos0` from the displayed
