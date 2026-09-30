@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 from pathlib import Path
@@ -16,7 +17,7 @@ from tools.verify_patellofemoral_surface import payload
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SHIFT_M = 20.0e-6
+DEFAULT_SHIFT_UM = 20
 
 
 def sha(path: Path) -> str:
@@ -98,7 +99,7 @@ def boundary_topology(vertices: np.ndarray, faces: np.ndarray,
     }
 
 
-def side_result(side: str, source, loop: dict) -> dict:
+def side_result(side: str, source, loop: dict, shift_m: float) -> dict:
     stem = ('open-knee-oks003-left' if side == 'left'
             else 'open-knee-oks003-right-mirrored')
     folder = ROOT / 'Build/patellofemoral-surface-20260930' / side
@@ -123,7 +124,7 @@ def side_result(side: str, source, loop: dict) -> dict:
     initial_denominator, initial = exact_integer_meshes(meshes)
     baseline = count_intersections(initial)
     assert baseline['segment_or_polygon_crossing_pairs'] == 18
-    shifted = (meshes['PTC'][0] - SHIFT_M * direction).astype('<f4').astype(np.float64)
+    shifted = (meshes['PTC'][0] - shift_m * direction).astype('<f4').astype(np.float64)
     changed = {**meshes, 'PTC': (shifted, meshes['PTC'][1])}
     candidate_denominator, candidate = exact_integer_meshes(changed)
     clearance = count_intersections(candidate)
@@ -140,7 +141,7 @@ def side_result(side: str, source, loop: dict) -> dict:
         'baseline': baseline,
         'candidate': clearance,
         'outward_mean_normal': direction.tolist(),
-        'prescribed_pose_translation_m': (-SHIFT_M * direction).tolist(),
+        'prescribed_pose_translation_m': (-shift_m * direction).tolist(),
         'compiled_float32_displacement_m': {
             'minimum': float(actual.min()), 'maximum': float(actual.max())},
         'source_boundary_topology': topology,
@@ -153,7 +154,9 @@ def side_result(side: str, source, loop: dict) -> dict:
     }
 
 
-def run() -> dict:
+def run(shift_um: int = DEFAULT_SHIFT_UM) -> dict:
+    assert 1 <= shift_um <= 100
+    shift_m = 20.0e-6 if shift_um == DEFAULT_SHIFT_UM else shift_um * 1.0e-6
     source = parse_source(ROOT / 'Sources/open-knee-oks003')
     loop_path = ROOT / 'Docs/media/patellofemoral-loop-20260930/receipt.json'
     loop = json.loads(loop_path.read_text())
@@ -162,18 +165,22 @@ def run() -> dict:
         'status': 'unadopted_bilateral_geometric_pose_candidate',
         'intersection_loop_receipt_sha256': sha(loop_path),
         'source_files_sha256': loop['source_file_sha256'],
-        'prescribed_translation_magnitude_m': SHIFT_M,
-        'sides': {side: side_result(side, source, loop)
+        'prescribed_translation_magnitude_m': shift_m,
+        'sides': {side: side_result(side, source, loop, shift_m)
                   for side in ('left', 'right')},
         'boundary': 'Only PTC current positions were translated for this exact face-crossing experiment. The FMC full boundary has a source vertex-link manifold defect, so zero pairwise face intersections does not qualify disjoint volumes. Adopting a patellar pose requires coherent PTB, QAT and PTL attachments, source rest-state and force/energy validation; no runtime state or source payload was changed.',
         'loaded_contact_qualified': False,
         'clinical_anatomy_qualified': False,
     }
-    out = ROOT / 'Docs/media/patellofemoral-pose-clearance-20260930'
-    out.mkdir(parents=True, exist_ok=True)
-    (out / 'receipt.json').write_text(json.dumps(result, indent=2, sort_keys=True) + '\n')
+    path = (ROOT / 'Docs/media/patellofemoral-pose-clearance-20260930/receipt.json'
+            if shift_um == DEFAULT_SHIFT_UM else
+            ROOT / f'Build/full-patellofemoral-matter-20260930/pose-clearance-{shift_um}um.json')
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(result, indent=2, sort_keys=True) + '\n')
     return result
 
 
 if __name__ == '__main__':
-    print(json.dumps(run(), sort_keys=True))
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--shift-um', type=int, default=DEFAULT_SHIFT_UM)
+    print(json.dumps(run(parser.parse_args().shift_um), sort_keys=True))

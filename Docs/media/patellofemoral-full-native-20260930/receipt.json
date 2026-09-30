@@ -1,0 +1,359 @@
+{
+  "accepted_full_boundary_exact_face_intersections": {
+    "left_off": {
+      "aabb_candidate_pairs": 1578,
+      "point_contact_pairs": 0,
+      "segment_or_polygon_crossing_pairs": 0
+    },
+    "left_on": {
+      "aabb_candidate_pairs": 1578,
+      "point_contact_pairs": 0,
+      "segment_or_polygon_crossing_pairs": 0
+    },
+    "right_off": {
+      "aabb_candidate_pairs": 1578,
+      "point_contact_pairs": 0,
+      "segment_or_polygon_crossing_pairs": 0
+    },
+    "right_on": {
+      "aabb_candidate_pairs": 1578,
+      "point_contact_pairs": 0,
+      "segment_or_polygon_crossing_pairs": 0
+    }
+  },
+  "cases": {
+    "left": {
+      "baseline": {
+        "abi": 35,
+        "accepted_barrier_impulse_magnitude_raw": 0,
+        "accepted_kinetic_energy_j": 0,
+        "active_deformable_histories": 0,
+        "approach_speed_mps": 0,
+        "baseline": true,
+        "completed_microsteps": 0,
+        "contact_disabled": false,
+        "contact_slop_m": 1e-05,
+        "device": "Apple M4",
+        "diagnostics": [
+          720065,
+          337682,
+          -1,
+          0
+        ],
+        "failing_index": 1808,
+        "initial_kinetic_energy_j": 0,
+        "maximum_movement_m": 0,
+        "rollback_bitwise": true,
+        "side": 0,
+        "source_nodes": 50991,
+        "source_tetrahedra": 208177,
+        "status_code": 6,
+        "surface_faces": 447644
+      },
+      "contact_ab": {
+        "changed_fmc_nodes": 0,
+        "changed_ptc_nodes": 25285,
+        "maximum_position_delta_m": 6.757064591056501e-08
+      },
+      "near_plane_14um": {
+        "abi": 35,
+        "accepted_barrier_impulse_magnitude_raw": 0,
+        "accepted_kinetic_energy_j": 1.62062378396e-05,
+        "active_deformable_histories": 0,
+        "approach_speed_mps": 0.1,
+        "baseline": false,
+        "completed_microsteps": 0,
+        "contact_disabled": false,
+        "contact_slop_m": 2e-05,
+        "device": "Apple M4",
+        "diagnostics": [
+          573923,
+          324820,
+          -4,
+          0
+        ],
+        "failing_index": 1888,
+        "initial_kinetic_energy_j": 1.62062378396e-05,
+        "maximum_movement_m": 0,
+        "rollback_bitwise": true,
+        "side": 0,
+        "source_nodes": 50991,
+        "source_tetrahedra": 208177,
+        "status_code": 6,
+        "surface_faces": 447644
+      },
+      "off": {
+        "abi": 35,
+        "accepted_barrier_impulse_magnitude_raw": 0,
+        "accepted_kinetic_energy_j": 1.4979598938e-05,
+        "active_deformable_histories": 0,
+        "approach_speed_mps": 0.1,
+        "baseline": false,
+        "completed_microsteps": 1,
+        "contact_disabled": true,
+        "contact_slop_m": 2e-05,
+        "device": "Apple M4",
+        "diagnostics": [
+          0.999746978,
+          0,
+          0,
+          0
+        ],
+        "failing_index": 4294967295,
+        "initial_kinetic_energy_j": 1.62062378396e-05,
+        "maximum_movement_m": 1.28616963e-07,
+        "rollback_bitwise": false,
+        "side": 0,
+        "source_nodes": 50991,
+        "source_tetrahedra": 208177,
+        "status_code": 0,
+        "surface_faces": 447644
+      },
+      "off_positions_sha256": "d6fb87c79bc4ed79460948bb0dac253f96841d936ac610fa5edff6d880910509",
+      "on": {
+        "abi": 35,
+        "accepted_barrier_impulse_magnitude_raw": 0,
+        "accepted_kinetic_energy_j": 1.61445765486e-05,
+        "active_deformable_histories": 11,
+        "approach_speed_mps": 0.1,
+        "baseline": false,
+        "completed_microsteps": 1,
+        "contact_disabled": false,
+        "contact_slop_m": 2e-05,
+        "device": "Apple M4",
+        "diagnostics": [
+          0.999591589,
+          0,
+          0,
+          0
+        ],
+        "failing_index": 4294967295,
+        "initial_kinetic_energy_j": 1.62062378396e-05,
+        "maximum_movement_m": 1.28616963e-07,
+        "rollback_bitwise": false,
+        "side": 0,
+        "source_nodes": 50991,
+        "source_tetrahedra": 208177,
+        "status_code": 0,
+        "surface_faces": 447644
+      },
+      "on_positions_sha256": "8a9e2e6d48106ab115b92b626735e8b475722154a9ac79e4039c7a86c1789737"
+    },
+    "right": {
+      "baseline": {
+        "abi": 35,
+        "accepted_barrier_impulse_magnitude_raw": 0,
+        "accepted_kinetic_energy_j": 0,
+        "active_deformable_histories": 0,
+        "approach_speed_mps": 0,
+        "baseline": true,
+        "completed_microsteps": 0,
+        "contact_disabled": false,
+        "contact_slop_m": 1e-05,
+        "device": "Apple M4",
+        "diagnostics": [
+          754646,
+          359411,
+          -1,
+          0
+        ],
+        "failing_index": 323,
+        "initial_kinetic_energy_j": 0,
+        "maximum_movement_m": 0,
+        "rollback_bitwise": true,
+        "side": 1,
+        "source_nodes": 50991,
+        "source_tetrahedra": 208177,
+        "status_code": 6,
+        "surface_faces": 447644
+      },
+      "contact_ab": {
+        "changed_fmc_nodes": 0,
+        "changed_ptc_nodes": 25725,
+        "maximum_position_delta_m": 6.705522537231445e-08
+      },
+      "near_plane_14um": {
+        "abi": 35,
+        "accepted_barrier_impulse_magnitude_raw": 0,
+        "accepted_kinetic_energy_j": 1.6206238113e-05,
+        "active_deformable_histories": 0,
+        "approach_speed_mps": 0.1,
+        "baseline": false,
+        "completed_microsteps": 0,
+        "contact_disabled": false,
+        "contact_slop_m": 2e-05,
+        "device": "Apple M4",
+        "diagnostics": [
+          720064,
+          324821,
+          -4,
+          0
+        ],
+        "failing_index": 307,
+        "initial_kinetic_energy_j": 1.6206238113e-05,
+        "maximum_movement_m": 0,
+        "rollback_bitwise": true,
+        "side": 1,
+        "source_nodes": 50991,
+        "source_tetrahedra": 208177,
+        "status_code": 6,
+        "surface_faces": 447644
+      },
+      "off": {
+        "abi": 35,
+        "accepted_barrier_impulse_magnitude_raw": 0,
+        "accepted_kinetic_energy_j": 1.49807202564e-05,
+        "active_deformable_histories": 0,
+        "approach_speed_mps": 0.1,
+        "baseline": false,
+        "completed_microsteps": 1,
+        "contact_disabled": true,
+        "contact_slop_m": 2e-05,
+        "device": "Apple M4",
+        "diagnostics": [
+          0.999700606,
+          0,
+          0,
+          0
+        ],
+        "failing_index": 4294967295,
+        "initial_kinetic_energy_j": 1.6206238113e-05,
+        "maximum_movement_m": 1.28616963e-07,
+        "rollback_bitwise": false,
+        "side": 1,
+        "source_nodes": 50991,
+        "source_tetrahedra": 208177,
+        "status_code": 0,
+        "surface_faces": 447644
+      },
+      "off_positions_sha256": "5975494c5dbcfb383480d8634436084dd29edc9025e6db33597bf7ad5d7cd63c",
+      "on": {
+        "abi": 35,
+        "accepted_barrier_impulse_magnitude_raw": 0,
+        "accepted_kinetic_energy_j": 1.61235770988e-05,
+        "active_deformable_histories": 11,
+        "approach_speed_mps": 0.1,
+        "baseline": false,
+        "completed_microsteps": 1,
+        "contact_disabled": false,
+        "contact_slop_m": 2e-05,
+        "device": "Apple M4",
+        "diagnostics": [
+          0.999602795,
+          0,
+          0,
+          0
+        ],
+        "failing_index": 4294967295,
+        "initial_kinetic_energy_j": 1.6206238113e-05,
+        "maximum_movement_m": 1.28616963e-07,
+        "rollback_bitwise": false,
+        "side": 1,
+        "source_nodes": 50991,
+        "source_tetrahedra": 208177,
+        "status_code": 0,
+        "surface_faces": 447644
+      },
+      "on_positions_sha256": "f87ce1d04db92b63dfd0cfb81786d892966f48a0633ca0bb75474db9524fa9c2"
+    }
+  },
+  "clinical_anatomy_qualified": false,
+  "left_contact_on_replay_byte_identical": true,
+  "limits": [
+    "FMC source boundary has a two-fan vertex link; zero face crossings does not qualify disjoint volumes.",
+    "PTC current pose is an unadopted 20 micrometer candidate; patellar bone, PTB, QAT and PTL attachments are absent.",
+    "The material uses a synthetic density and an unvalidated isotropic energy; no source FEBio material equivalence was established.",
+    "One 1 microsecond zero-gravity step with 0.1 m/s prescribed approach is not sustained or physiological load.",
+    "Active history count is not pressure or force; accepted barrier impulse field was zero.",
+    "Only kinetic energy is reported; strain, contact work and whole-system energy closure are not established.",
+    "The conservative FP32 final-state guard rejects unresolved near-plane vertices; it does not establish general clinical nonpenetration."
+  ],
+  "loaded_knee_qualified": false,
+  "native_identity_sha256": {
+    "contact_shader_source": "b4e791e3e75b142cba6d5451f34f4ee3ed56e9e93c1f301d4ec083e41242bd93",
+    "executable": "48f847129429ed4ed779d5fb1d6e434ee460aa538f641f94f982709f5ac89e29",
+    "material": "26ed27fd41220e0c256d25ec513436bedd2a9b560fb4d9a8b7ca992ec29c9643",
+    "metallib": "3a8d051ffd1921861f88e8885ae4d524f73b4b07bf98d2bd774e25b2a4bbb62f",
+    "probe_source": "08f9d7591df1459a5534bdd256e848d7eb50d63daea69efec08b0e3427a0b9e0",
+    "runtime_source": "566e8acc570f558168b2a25dcbbb9c631341bda9e22f34ba74401d222a2b9fc4"
+  },
+  "native_source_revision": "322ddbdffda47b1ecec7c8053d61c495a116e22b",
+  "pose_status": "unadopted_candidate",
+  "schema": "numi.human.patellofemoral-full-native-step.v1",
+  "source_fmc_vertex_link_manifold_defect_node_id": 233523,
+  "source_inputs": {
+    "14um": {
+      "left": {
+        "boundary": "Source FEM topology and rest positions plus an unadopted PTC current-pose candidate. Does not include patellar bone/tendon attachment, density, qualified source material execution, or load.",
+        "fmc_nodes": 24870,
+        "fmc_tetrahedra": 87072,
+        "input_bytes": 4256300,
+        "input_sha256": "b65d875f2b04a44a42b589b2a06002124f4f1420eb1d1acc93a66f50b58e4f6f",
+        "nhknee_manifest_sha256": "86570419827ea81723f4ef5e89b9b4ce887eb2da67b32a79d1e72a84eb9dfbe5",
+        "nhknee_payload_sha256": "2e38201528de25911ea496164602ea7e823cd9c2e3c94efa550ee52689324ae5",
+        "pose_receipt_sha256": "68ae42161f3a7ccddab9178b70a461e17281c09226375a2e14ac5513c2f22256",
+        "ptc_nodes": 26121,
+        "ptc_tetrahedra": 121105,
+        "schema": "numi.human.patellofemoral-matter-input.v1",
+        "side": "left",
+        "source_cartilage_bulk_mpa": 100.0,
+        "source_cartilage_c1_mpa": 2.54,
+        "source_cartilage_c2_mpa": 0.0
+      },
+      "right": {
+        "boundary": "Source FEM topology and rest positions plus an unadopted PTC current-pose candidate. Does not include patellar bone/tendon attachment, density, qualified source material execution, or load.",
+        "fmc_nodes": 24870,
+        "fmc_tetrahedra": 87072,
+        "input_bytes": 4256300,
+        "input_sha256": "00e4346b69a5e0a790227f3b7cdb6bbe66cec7ee40b64209e61714ed39fea007",
+        "nhknee_manifest_sha256": "f3b4bbdc0575eaa2a01a4c75ea8b74420654eb24590b9943b9c6dfe44f045b50",
+        "nhknee_payload_sha256": "f13e251b8ff8c8a4a4c3445fe006aa3c0aadd64d51c2c63eaec175705507b702",
+        "pose_receipt_sha256": "68ae42161f3a7ccddab9178b70a461e17281c09226375a2e14ac5513c2f22256",
+        "ptc_nodes": 26121,
+        "ptc_tetrahedra": 121105,
+        "schema": "numi.human.patellofemoral-matter-input.v1",
+        "side": "right",
+        "source_cartilage_bulk_mpa": 100.0,
+        "source_cartilage_c1_mpa": 2.54,
+        "source_cartilage_c2_mpa": 0.0
+      }
+    },
+    "20um": {
+      "left": {
+        "boundary": "Source FEM topology and rest positions plus an unadopted PTC current-pose candidate. Does not include patellar bone/tendon attachment, density, qualified source material execution, or load.",
+        "fmc_nodes": 24870,
+        "fmc_tetrahedra": 87072,
+        "input_bytes": 4256300,
+        "input_sha256": "1c96eb60c8578fd24c877290203ece648874bef9dde0379b602719cf4c928b62",
+        "nhknee_manifest_sha256": "86570419827ea81723f4ef5e89b9b4ce887eb2da67b32a79d1e72a84eb9dfbe5",
+        "nhknee_payload_sha256": "2e38201528de25911ea496164602ea7e823cd9c2e3c94efa550ee52689324ae5",
+        "pose_receipt_sha256": "24c710f4be22b488fee1711af41c1cb790e37a20331d3352ed9665a236f981c3",
+        "ptc_nodes": 26121,
+        "ptc_tetrahedra": 121105,
+        "schema": "numi.human.patellofemoral-matter-input.v1",
+        "side": "left",
+        "source_cartilage_bulk_mpa": 100.0,
+        "source_cartilage_c1_mpa": 2.54,
+        "source_cartilage_c2_mpa": 0.0
+      },
+      "right": {
+        "boundary": "Source FEM topology and rest positions plus an unadopted PTC current-pose candidate. Does not include patellar bone/tendon attachment, density, qualified source material execution, or load.",
+        "fmc_nodes": 24870,
+        "fmc_tetrahedra": 87072,
+        "input_bytes": 4256300,
+        "input_sha256": "38d59c14ebe7d72afce370f66dde15953e7c42e70768d6aa1db3dbfd2329d35c",
+        "nhknee_manifest_sha256": "f3b4bbdc0575eaa2a01a4c75ea8b74420654eb24590b9943b9c6dfe44f045b50",
+        "nhknee_payload_sha256": "f13e251b8ff8c8a4a4c3445fe006aa3c0aadd64d51c2c63eaec175705507b702",
+        "pose_receipt_sha256": "24c710f4be22b488fee1711af41c1cb790e37a20331d3352ed9665a236f981c3",
+        "ptc_nodes": 26121,
+        "ptc_tetrahedra": 121105,
+        "schema": "numi.human.patellofemoral-matter-input.v1",
+        "side": "right",
+        "source_cartilage_bulk_mpa": 100.0,
+        "source_cartilage_c1_mpa": 2.54,
+        "source_cartilage_c2_mpa": 0.0
+      }
+    }
+  },
+  "status": "bounded_source_cartilage_contact_preflight"
+}
