@@ -1,0 +1,168 @@
+{
+  "boundary": "Both source patellar bodies have exactly three joints, and each is prescribed by an active knee-angle equality. At a fixed knee angle, the exact authored coordinate law has no independent patellar pose degree of freedom. MuJoCo equality constraints have solver compliance; this is a source-law admission check, not a claim of infinite stiffness. Open Knee mesh vectors and MyoSim world axes are different source frames and were not mapped here. The geometric candidate remains unadopted; no native coupled contact/load or anatomical calibration is qualified.",
+  "mujoco_version": "3.12.0",
+  "open_knee_extensor_receipt_sha256": "917a7ca7867c2672f10e24a5731583eae57761979e8aac6ee3ffd7e53a6ea260",
+  "open_knee_pose_receipt_sha256": "24c710f4be22b488fee1711af41c1cb790e37a20331d3352ed9665a236f981c3",
+  "projected_pose": {
+    "maximum_equality_coordinate_correction": 0.0524192,
+    "pose_state": "source_equality_projected_neutral",
+    "source_joint_equalities_projected": 51
+  },
+  "schema": "numi.human.patellar-joint-pose-admission.v1",
+  "sides": {
+    "left": {
+      "authored_body_joints": [
+        {
+          "equality": "knee_angle_beta_translation1_constraint_l",
+          "equality_coefficients": [
+            0.0524192,
+            -0.0150188,
+            -0.0340522,
+            0.0133393,
+            -0.000879151
+          ],
+          "joint": "knee_angle_beta_translation1_l",
+          "joint_qpos_address": 127,
+          "neutral_coordinate": 0.0524192,
+          "source_prescribed_coordinates_at_knee_angles": {
+            "0.0": 0.0524192,
+            "0.9": 0.0204675367289,
+            "2.0": -0.021179215999999987
+          }
+        },
+        {
+          "equality": "knee_angle_beta_translation2_constraint_l",
+          "equality_coefficients": [
+            -0.0108281,
+            -0.0487847,
+            0.00927644,
+            0.0131673,
+            -0.00349673
+          ],
+          "joint": "knee_angle_beta_translation2_l",
+          "joint_qpos_address": 126,
+          "neutral_coordinate": -0.0108281,
+          "source_prescribed_coordinates_at_knee_angles": {
+            "0.0": -0.0108281,
+            "0.9": -0.039915656453000006,
+            "2.0": -0.021901020000000007
+          }
+        },
+        {
+          "equality": "knee_angle_beta_rotation1_constraint_l",
+          "equality_coefficients": [
+            0.010506,
+            0.0247615,
+            -1.31647,
+            0.716337,
+            -0.138302
+          ],
+          "joint": "knee_angle_beta_rotation1_l",
+          "joint_qpos_address": 128,
+          "neutral_coordinate": 0.010506,
+          "source_prescribed_coordinates_at_knee_angles": {
+            "0.0": 0.010506,
+            "0.9": -0.6020796191999999,
+            "2.0": -1.6879870000000001
+          }
+        }
+      ],
+      "independent_exact_source_joint_coordinates_at_fixed_knee_angle": 0,
+      "open_knee_candidate_magnitude_m": 2e-05,
+      "open_knee_candidate_translation_m": [
+        -3.926303343111544e-06,
+        -1.867084877957895e-05,
+        5.998628835656233e-06
+      ],
+      "projected_neutral_body_center_world_m": [
+        0.05225046194736578,
+        0.11161232077257248,
+        0.5027124951247584
+      ],
+      "source_body": "patella_l",
+      "source_knee_joint": "knee_angle_l",
+      "whole_body_pose_admitted": false
+    },
+    "right": {
+      "authored_body_joints": [
+        {
+          "equality": "knee_angle_beta_translation1_constraint_r",
+          "equality_coefficients": [
+            0.0524192,
+            -0.0150188,
+            -0.0340522,
+            0.0133393,
+            -0.000879151
+          ],
+          "joint": "knee_angle_beta_translation1_r",
+          "joint_qpos_address": 113,
+          "neutral_coordinate": 0.0524192,
+          "source_prescribed_coordinates_at_knee_angles": {
+            "0.0": 0.0524192,
+            "0.9": 0.0204675367289,
+            "2.0": -0.021179215999999987
+          }
+        },
+        {
+          "equality": "knee_angle_beta_translation2_constraint_r",
+          "equality_coefficients": [
+            -0.0108281,
+            -0.0487847,
+            0.00927644,
+            0.0131673,
+            -0.00349673
+          ],
+          "joint": "knee_angle_beta_translation2_r",
+          "joint_qpos_address": 112,
+          "neutral_coordinate": -0.0108281,
+          "source_prescribed_coordinates_at_knee_angles": {
+            "0.0": -0.0108281,
+            "0.9": -0.039915656453000006,
+            "2.0": -0.021901020000000007
+          }
+        },
+        {
+          "equality": "knee_angle_beta_rotation1_constraint_r",
+          "equality_coefficients": [
+            0.010506,
+            0.0247615,
+            -1.31647,
+            0.716337,
+            -0.138302
+          ],
+          "joint": "knee_angle_beta_rotation1_r",
+          "joint_qpos_address": 114,
+          "neutral_coordinate": 0.010506,
+          "source_prescribed_coordinates_at_knee_angles": {
+            "0.0": 0.010506,
+            "0.9": -0.6020796191999999,
+            "2.0": -1.6879870000000001
+          }
+        }
+      ],
+      "independent_exact_source_joint_coordinates_at_fixed_knee_angle": 0,
+      "open_knee_candidate_magnitude_m": 2e-05,
+      "open_knee_candidate_translation_m": [
+        3.926303343111544e-06,
+        -1.867084877957895e-05,
+        5.998628835656233e-06
+      ],
+      "projected_neutral_body_center_world_m": [
+        -0.10226948905926132,
+        0.1114892724082447,
+        0.5027125931114886
+      ],
+      "source_body": "patella_r",
+      "source_knee_joint": "knee_angle_r",
+      "whole_body_pose_admitted": false
+    }
+  },
+  "source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+  "source_file_sha256": {
+    "myo_sim/build/compose.py": "93dd551216e94081cba8a86e9d13d065a2a0e8f4580a658c99eb5d3c33d40062",
+    "myo_sim/models/leg/assets/myolegs_assets.xml": "ea48e7612c8da4ed852d66b922d01311d24823d171c733b77a884fb6a5e01be3",
+    "myo_sim/models/leg/assets/myolegs_chain.xml": "da7c4a13eec2abfedc683210972ea423d630461a56909bee2884e181e1bf1d97"
+  },
+  "source_model": "myofullbody",
+  "status": "blocked_source_joint_admission"
+}

@@ -918,6 +918,13 @@ nearest-node tie gaps after Float32 rounding; changed source surfaces stay
 closed and exactly self-intersection-free, and PTL's minimum volume ratio is
 0.9980719. The rigid patella joint frame, QAT proximal muscle owner, native
 coupled force/contact transaction and physiological loading remain unresolved.
+The [whole-body joint admission audit](PATELLAR_JOINT_POSE_ADMISSION_20260930.md)
+now binds that unadopted Open Knee(s) pose to the pinned MyoSim source-joint
+law: both patellar bodies have exactly three joints, and all three are
+prescribed by active knee-angle equalities. The 20 µm clearance field has no
+independent exact joint-coordinate path at a fixed knee angle. A source-frame
+bridge and an initial-contact or calibrated joint owner are required before
+adoption; the candidate has not changed the standing model.
 
 The [calcaneal tendon visual boundary repair](TENDON_HARMONIC_BOUNDARY_20260929.md)
 removes 145 right and 163 left exact intersections in the compiled tendon
