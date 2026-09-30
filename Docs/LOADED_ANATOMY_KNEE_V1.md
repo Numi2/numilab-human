@@ -86,6 +86,10 @@ articular pairs retain their full ABI3 source order:
 `MNS-M_To_TBC-M`, `MNS-M_To_FMC`, and `TBC-M_To_FMC`. Femur body 145 donates
 mass to `ACL`, `LCL`, `MCL`, `PCL`, and `QAT`; tibia body 150 donates mass to
 `PTL`; patella body 156 is explicitly excluded as a mass donor.
+The later [exact patellofemoral audit](PATELLOFEMORAL_CONTACT_INTERSECTIONS_20260930.md)
+finds 18 source-authored crossing triangle pairs in `PTC_To_FMC` on both
+compiled sides. This bundle preserves that initial contact geometry; it does
+not certify a nonpenetrating contact state or an accepted pressure response.
 The frozen profile keeps the readable nominal donor masses `8.4 kg` and
 `3.8 kg`; the source-derived export and authored receipt preserve their exact
 EngineModel float32 values `8.399999618530273 kg` and

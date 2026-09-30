@@ -849,6 +849,13 @@ patch mostly facing across the joint. Exact surface gap, loaded contact and
 pressure, clinical anatomy, five knee range conflicts, and the old standing
 video's anatomy remain open.
 
+The subsequent [exact patellofemoral intersection audit](PATELLOFEMORAL_CONTACT_INTERSECTIONS_20260930.md)
+finds the same **18** crossing cartilage triangle pairs in the pinned source
+and both compiled sides (longest source segment 0.423 mm). Static
+noninterpenetration therefore **fails** despite correct outward winding. The
+source is retained for a future initial-contact/load/energy qualification;
+the crossing count is not a penetration depth or a clinical verdict.
+
 The [calcaneal tendon visual boundary repair](TENDON_HARMONIC_BOUNDARY_20260929.md)
 removes 145 right and 163 left exact intersections in the compiled tendon
 surfaces without changing the other 148 surfaces or any body-binding bytes.

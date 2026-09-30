@@ -35,6 +35,10 @@ flexion, clinical anatomy, or the historical standing video's anatomy. The
 five authored dependent-coordinate range conflicts in the separate lower-limb
 pose audit remain open.
 
+The later [exact contact-surface audit](PATELLOFEMORAL_CONTACT_INTERSECTIONS_20260930.md)
+finds 18 source-authored crossing triangle pairs on both compiled sides.
+Correct outward winding therefore does not imply static noninterpenetration.
+
 Reproduce the audit after compiling both sides with the Open Knee compiler:
 
 ```sh
