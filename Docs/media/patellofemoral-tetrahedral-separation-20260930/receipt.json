@@ -1,0 +1,128 @@
+{
+  "algorithm": "exact_binary32_integer_aabb_and_tetrahedron_separating_axes_v1",
+  "all_retained_native_states_volume_disjoint": true,
+  "boundary": "This tests exact separation of the two retained cartilage tetrahedral domains only. The 20 um patellar-cartilage pose is unadopted and omits patellar bone, QAT/PTL tie, source material equivalence, physiological load, pressure and energy.",
+  "broadphase_cell_lattice": 2199023255,
+  "clinical_anatomy_qualified": false,
+  "fmc_tetrahedra": 87072,
+  "full_native_receipt_sha256": "eb692baa92e4dbe74e7f6f538aed03018b55fee92a32712d9706a556b938a78f",
+  "loaded_contact_qualified": false,
+  "native_input_sha256": {
+    "left": "1c96eb60c8578fd24c877290203ece648874bef9dde0379b602719cf4c928b62",
+    "right": "38d59c14ebe7d72afce370f66dde15953e7c42e70768d6aa1db3dbfd2329d35c"
+  },
+  "native_input_tetrahedron_order_verified": true,
+  "predicate_self_checks_passed": 6,
+  "producer_sha256": "abefd5866a6c32e3c98a6b5eb88ff3a7c9337749afc846d00fbffb77def87ce6",
+  "ptc_tetrahedra": 121105,
+  "schema": "numi.human.patellofemoral-tetrahedral-separation.v1",
+  "source_file_sha256": {
+    "FeBio_custom.feb": "00b6efb53ad7e7330296cbb9569d358d48ed60819e22732e6149db6fb98a158a",
+    "Geometry.feb": "3642bd368bbc867569f181fa76129f746470e807e3977585d3803f092dd11262",
+    "ModelProperties.xml": "0ac446ce098b9a09505992eb4f4419c7b944cd57a4afbf6392b137f4806603c1",
+    "license.txt": "d72918838b4adf30979d2a26c23837f0ca05185ba799a3a4fe1fe1b4c05b20b8"
+  },
+  "states": {
+    "left": {
+      "off": {
+        "aabb_candidate_tetrahedron_pairs": 5512,
+        "accepted_positions_sha256": "d6fb87c79bc4ed79460948bb0dac253f96841d936ac610fa5edff6d880910509",
+        "compressed_file_sha256": "b73f6c968a251cf13ee42d98a1f8ddf079a51bb32bae21d53e058ec22cae1988",
+        "exact_boundary_contact_pairs": 0,
+        "exact_interior_overlap_pairs": 0,
+        "exact_tetrahedral_orientation": {
+          "FMC": {
+            "minimum_absolute_six_volume_lattice": 180514773667136554401792,
+            "negative": 0,
+            "positive": 87072,
+            "zero": 0
+          },
+          "PTC": {
+            "minimum_absolute_six_volume_lattice": 20407412388653966112587776,
+            "negative": 0,
+            "positive": 121105,
+            "zero": 0
+          }
+        },
+        "first_boundary_contact_pairs": [],
+        "first_interior_overlap_pairs": [],
+        "solid_domains_disjoint": true
+      },
+      "on": {
+        "aabb_candidate_tetrahedron_pairs": 5512,
+        "accepted_positions_sha256": "8a9e2e6d48106ab115b92b626735e8b475722154a9ac79e4039c7a86c1789737",
+        "compressed_file_sha256": "b4fb05f83107c3c62be326a06730fe17a7bd74cba5aa79c16460dd66b340a9d0",
+        "exact_boundary_contact_pairs": 0,
+        "exact_interior_overlap_pairs": 0,
+        "exact_tetrahedral_orientation": {
+          "FMC": {
+            "minimum_absolute_six_volume_lattice": 180514773667136554401792,
+            "negative": 0,
+            "positive": 87072,
+            "zero": 0
+          },
+          "PTC": {
+            "minimum_absolute_six_volume_lattice": 20408121318096593011867648,
+            "negative": 0,
+            "positive": 121105,
+            "zero": 0
+          }
+        },
+        "first_boundary_contact_pairs": [],
+        "first_interior_overlap_pairs": [],
+        "solid_domains_disjoint": true
+      }
+    },
+    "right": {
+      "off": {
+        "aabb_candidate_tetrahedron_pairs": 5512,
+        "accepted_positions_sha256": "5975494c5dbcfb383480d8634436084dd29edc9025e6db33597bf7ad5d7cd63c",
+        "compressed_file_sha256": "059db8cedfd5637d171a09d809f057c8f6bb8c60689f8c5efe8ea755113a0dc4",
+        "exact_boundary_contact_pairs": 0,
+        "exact_interior_overlap_pairs": 0,
+        "exact_tetrahedral_orientation": {
+          "FMC": {
+            "minimum_absolute_six_volume_lattice": 180438679328307432914944,
+            "negative": 0,
+            "positive": 87072,
+            "zero": 0
+          },
+          "PTC": {
+            "minimum_absolute_six_volume_lattice": 20407731337946836676640768,
+            "negative": 0,
+            "positive": 121105,
+            "zero": 0
+          }
+        },
+        "first_boundary_contact_pairs": [],
+        "first_interior_overlap_pairs": [],
+        "solid_domains_disjoint": true
+      },
+      "on": {
+        "aabb_candidate_tetrahedron_pairs": 5512,
+        "accepted_positions_sha256": "f87ce1d04db92b63dfd0cfb81786d892966f48a0633ca0bb75474db9524fa9c2",
+        "compressed_file_sha256": "f2582a35ba05c23f93ef387268ba224ce18912503d3558b310b77efb5c18a4fc",
+        "exact_boundary_contact_pairs": 0,
+        "exact_interior_overlap_pairs": 0,
+        "exact_tetrahedral_orientation": {
+          "FMC": {
+            "minimum_absolute_six_volume_lattice": 180438679328307432914944,
+            "negative": 0,
+            "positive": 87072,
+            "zero": 0
+          },
+          "PTC": {
+            "minimum_absolute_six_volume_lattice": 20407678745833978011320320,
+            "negative": 0,
+            "positive": 121105,
+            "zero": 0
+          }
+        },
+        "first_boundary_contact_pairs": [],
+        "first_interior_overlap_pairs": [],
+        "solid_domains_disjoint": true
+      }
+    }
+  },
+  "status": "retained_candidate_cartilage_volumes_disjoint"
+}

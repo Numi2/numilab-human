@@ -903,6 +903,14 @@ resolves those crossings into one closed 18-edge/18-point curve with exact
 barycentric witnesses on both compiled cartilage surfaces. It is a usable
 geometric input for native initial-contact constraints, not a separating
 displacement, contact pressure, energy result, or accepted loaded state.
+The subsequent [exact tetrahedral separation audit](PATELLOFEMORAL_TETRAHEDRAL_SEPARATION_20260930.md)
+checks the retained full-source native **unadopted 20 µm cartilage pose** on
+left and right, contact on and off. All 5,512 exact AABB candidates per state
+separate under integer tetrahedral SAT; there are zero cross-domain boundary
+contacts or interior overlaps in those four accepted 1 µs states. This closes
+the candidate PTC/FMC solid-separation question despite the FMC two-fan
+boundary vertex, but does not correct the original 18 source crossings or
+qualify bone/tendon ties, pressure, loaded energy, sustained flexion or anatomy.
 
 The [calcaneal tendon visual boundary repair](TENDON_HARMONIC_BOUNDARY_20260929.md)
 removes 145 right and 163 left exact intersections in the compiled tendon

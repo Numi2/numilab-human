@@ -49,3 +49,8 @@ unvalidated isotropic cartilage energy, and has no physiological load or
 whole-system energy closure. Eleven active contact histories are not a force or
 pressure measurement; the accepted barrier impulse field was zero. No clinical
 or loaded-knee claim follows from this receipt.
+
+A later [exact tetrahedron-to-tetrahedron audit](../../PATELLOFEMORAL_TETRAHEDRAL_SEPARATION_20260930.md)
+establishes PTC/FMC solid separation in these four retained candidate states
+without relying on boundary manifoldness. The unadopted-pose and loaded-contact
+limits above still apply.
