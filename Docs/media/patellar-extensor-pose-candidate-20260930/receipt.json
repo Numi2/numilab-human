@@ -1,0 +1,281 @@
+{
+  "boundary": "The derived PTB/PTC/QAT translation and PTL axial taper are an unadopted geometry field. Source meshes, joint equalities, rigid patella pose and native force owners remain unchanged; no physiological loading is tested.",
+  "clinical_anatomy_qualified": false,
+  "native_coupled_knee_step_qualified": false,
+  "native_receipt_sha256": "eb692baa92e4dbe74e7f6f538aed03018b55fee92a32712d9706a556b938a78f",
+  "patella_rigid_joint_pose_updated": false,
+  "pose_receipt_sha256": "24c710f4be22b488fee1711af41c1cb790e37a20331d3352ed9665a236f981c3",
+  "producer_sha256": "5db0c3fae8cd4fd294185007a92655442aa9f7a5a66483423fda1a5f8edc76d0",
+  "quadriceps_proximal_muscle_attachment_qualified": false,
+  "schema": "numi.human.patellar-extensor-pose-candidate.v1",
+  "sides": {
+    "left": {
+      "compiled_manifest_sha256": "86570419827ea81723f4ef5e89b9b4ce887eb2da67b32a79d1e72a84eb9dfbe5",
+      "compiled_payload_sha256": "2e38201528de25911ea496164602ea7e823cd9c2e3c94efa550ee52689324ae5",
+      "native_input_sha256": "1c96eb60c8578fd24c877290203ece648874bef9dde0379b602719cf4c928b62",
+      "pose_translation_m": [
+        -3.926303343111544e-06,
+        -1.867084877957895e-05,
+        5.998628835656233e-06
+      ],
+      "ptc_native_clearance_positions_bitwise": true,
+      "ptl_taper_maximum": 1.0,
+      "ptl_taper_minimum": 0.0,
+      "ptl_tibial_tie_unchanged": true,
+      "ptl_tie_axis_length_m": 0.06104910622484721,
+      "regions": {
+        "PTB": {
+          "candidate_positions_sha256": "2794eb51389f34815c1e99d1fa0a88e2a18d953e3857bb69ceb0badeec58fbea",
+          "candidate_surface": {
+            "aabb_candidate_pairs": 104800,
+            "closed_oriented_manifold": true,
+            "exact_self_intersection_pairs": 0,
+            "faces": 17280
+          },
+          "exact_degenerate_triangles": 0,
+          "maximum_area_ratio": 1.0,
+          "maximum_node_displacement_m": 2.000675678093512e-05,
+          "minimum_area_ratio": 1.0,
+          "nodes": 8642,
+          "reversed_triangles": 0,
+          "source_surface": {
+            "aabb_candidate_pairs": 104800,
+            "closed_oriented_manifold": true,
+            "exact_self_intersection_pairs": 0,
+            "faces": 17280
+          },
+          "triangles": 17280
+        },
+        "PTC": {
+          "candidate_positions_sha256": "9c3ba64cbbd86398b3d822204760059535f968a2c525f76110657188ab3f1cba",
+          "candidate_surface": {
+            "aabb_candidate_pairs": 132818,
+            "closed_oriented_manifold": true,
+            "exact_self_intersection_pairs": 0,
+            "faces": 21756
+          },
+          "maximum_deformation_jacobian": 1.0,
+          "maximum_node_displacement_m": 2.000675678093512e-05,
+          "minimum_deformation_jacobian": 1.0,
+          "minimum_exact_six_volume_lattice": 20407202390320135593263104,
+          "nodes": 26121,
+          "positive_tetrahedra": 121105,
+          "source_surface": {
+            "aabb_candidate_pairs": 132818,
+            "closed_oriented_manifold": true,
+            "exact_self_intersection_pairs": 0,
+            "faces": 21756
+          },
+          "tetrahedra": 121105,
+          "zero_or_negative_tetrahedra": 0
+        },
+        "PTL": {
+          "candidate_positions_sha256": "876286c2a61ad44047e83b08125391020f2400d4af31cca51146ab94cfb445d3",
+          "candidate_surface": {
+            "aabb_candidate_pairs": 77405,
+            "closed_oriented_manifold": true,
+            "exact_self_intersection_pairs": 0,
+            "faces": 12600
+          },
+          "maximum_deformation_jacobian": 1.0067978895287577,
+          "maximum_node_displacement_m": 2.000675678093512e-05,
+          "minimum_deformation_jacobian": 0.9980719106819204,
+          "minimum_exact_six_volume_lattice": 70848699892001942773170176,
+          "nodes": 9280,
+          "positive_tetrahedra": 35616,
+          "source_surface": {
+            "aabb_candidate_pairs": 77405,
+            "closed_oriented_manifold": true,
+            "exact_self_intersection_pairs": 0,
+            "faces": 12600
+          },
+          "tetrahedra": 35616,
+          "zero_or_negative_tetrahedra": 0
+        },
+        "QAT": {
+          "candidate_positions_sha256": "59bfcc60a9c92823e12de2e54c2845c78a77f4cf217b8bfa9b3858548f2b9b3c",
+          "candidate_surface": {
+            "aabb_candidate_pairs": 75621,
+            "closed_oriented_manifold": true,
+            "exact_self_intersection_pairs": 0,
+            "faces": 12300
+          },
+          "maximum_deformation_jacobian": 1.0,
+          "maximum_node_displacement_m": 2.000675678093512e-05,
+          "minimum_deformation_jacobian": 1.0,
+          "minimum_exact_six_volume_lattice": 60580400101180686370603008,
+          "nodes": 14963,
+          "positive_tetrahedra": 69410,
+          "source_surface": {
+            "aabb_candidate_pairs": 75621,
+            "closed_oriented_manifold": true,
+            "exact_self_intersection_pairs": 0,
+            "faces": 12300
+          },
+          "tetrahedra": 69410,
+          "zero_or_negative_tetrahedra": 0
+        }
+      },
+      "ties": {
+        "PTC_@_PTB_TiesNodes<->PTB_@_PTC_TiesNodes": {
+          "first_nodes": 4592,
+          "maximum_nearest_gap_change_m": 0.0,
+          "second_nodes": 2315
+        },
+        "PTL_@_PTB_TiesNodes<->PTB_@_PTL_TiesNodes": {
+          "first_nodes": 424,
+          "maximum_nearest_gap_change_m": 0.0,
+          "second_nodes": 497
+        },
+        "PTL_@_TBB_TiesNodes<->TBB_@_PTL_TiesNodes": {
+          "first_nodes": 553,
+          "maximum_nearest_gap_change_m": 0.0,
+          "second_nodes": 571
+        },
+        "QAT_@_PTB_TiesNodes<->PTB_@_QAT_TiesNodes": {
+          "first_nodes": 378,
+          "maximum_nearest_gap_change_m": 0.0,
+          "second_nodes": 617
+        }
+      }
+    },
+    "right": {
+      "compiled_manifest_sha256": "f3b4bbdc0575eaa2a01a4c75ea8b74420654eb24590b9943b9c6dfe44f045b50",
+      "compiled_payload_sha256": "f13e251b8ff8c8a4a4c3445fe006aa3c0aadd64d51c2c63eaec175705507b702",
+      "native_input_sha256": "38d59c14ebe7d72afce370f66dde15953e7c42e70768d6aa1db3dbfd2329d35c",
+      "pose_translation_m": [
+        3.926303343111544e-06,
+        -1.867084877957895e-05,
+        5.998628835656233e-06
+      ],
+      "ptc_native_clearance_positions_bitwise": true,
+      "ptl_taper_maximum": 1.0,
+      "ptl_taper_minimum": 0.0,
+      "ptl_tibial_tie_unchanged": true,
+      "ptl_tie_axis_length_m": 0.061049106237225946,
+      "regions": {
+        "PTB": {
+          "candidate_positions_sha256": "783048f0c59e718893ee24ff1de7c47a17ae7b3c72e51d70bfd28d753cb5c514",
+          "candidate_surface": {
+            "aabb_candidate_pairs": 104800,
+            "closed_oriented_manifold": true,
+            "exact_self_intersection_pairs": 0,
+            "faces": 17280
+          },
+          "exact_degenerate_triangles": 0,
+          "maximum_area_ratio": 1.0000118365619868,
+          "maximum_node_displacement_m": 2.000675678093512e-05,
+          "minimum_area_ratio": 1.0,
+          "nodes": 8642,
+          "reversed_triangles": 0,
+          "source_surface": {
+            "aabb_candidate_pairs": 104800,
+            "closed_oriented_manifold": true,
+            "exact_self_intersection_pairs": 0,
+            "faces": 17280
+          },
+          "triangles": 17280
+        },
+        "PTC": {
+          "candidate_positions_sha256": "86c277acdf93c5b62f99765219d532ce12cb523886b1e59763d38e83384f7308",
+          "candidate_surface": {
+            "aabb_candidate_pairs": 132818,
+            "closed_oriented_manifold": true,
+            "exact_self_intersection_pairs": 0,
+            "faces": 21756
+          },
+          "maximum_deformation_jacobian": 1.000025837173315,
+          "maximum_node_displacement_m": 2.000675678093512e-05,
+          "minimum_deformation_jacobian": 1.0,
+          "minimum_exact_six_volume_lattice": 20407202390320135593263104,
+          "nodes": 26121,
+          "positive_tetrahedra": 121105,
+          "source_surface": {
+            "aabb_candidate_pairs": 132818,
+            "closed_oriented_manifold": true,
+            "exact_self_intersection_pairs": 0,
+            "faces": 21756
+          },
+          "tetrahedra": 121105,
+          "zero_or_negative_tetrahedra": 0
+        },
+        "PTL": {
+          "candidate_positions_sha256": "ed9dcd13836a7b71be9b62be73dfcdd307593610c781dfabf5a0221f7cc00fe0",
+          "candidate_surface": {
+            "aabb_candidate_pairs": 77405,
+            "closed_oriented_manifold": true,
+            "exact_self_intersection_pairs": 0,
+            "faces": 12600
+          },
+          "maximum_deformation_jacobian": 1.0067978895287577,
+          "maximum_node_displacement_m": 2.000675678093512e-05,
+          "minimum_deformation_jacobian": 0.9980719160992805,
+          "minimum_exact_six_volume_lattice": 70849529466488225347403776,
+          "nodes": 9280,
+          "positive_tetrahedra": 35616,
+          "source_surface": {
+            "aabb_candidate_pairs": 77405,
+            "closed_oriented_manifold": true,
+            "exact_self_intersection_pairs": 0,
+            "faces": 12600
+          },
+          "tetrahedra": 35616,
+          "zero_or_negative_tetrahedra": 0
+        },
+        "QAT": {
+          "candidate_positions_sha256": "2505d2035c0895fd20692519cf97e8766def6ddef3edd64320f00566bbe69c89",
+          "candidate_surface": {
+            "aabb_candidate_pairs": 75621,
+            "closed_oriented_manifold": true,
+            "exact_self_intersection_pairs": 0,
+            "faces": 12300
+          },
+          "maximum_deformation_jacobian": 1.0,
+          "maximum_node_displacement_m": 2.000675678093512e-05,
+          "minimum_deformation_jacobian": 1.0,
+          "minimum_exact_six_volume_lattice": 60580344898189506620948480,
+          "nodes": 14963,
+          "positive_tetrahedra": 69410,
+          "source_surface": {
+            "aabb_candidate_pairs": 75621,
+            "closed_oriented_manifold": true,
+            "exact_self_intersection_pairs": 0,
+            "faces": 12300
+          },
+          "tetrahedra": 69410,
+          "zero_or_negative_tetrahedra": 0
+        }
+      },
+      "ties": {
+        "PTC_@_PTB_TiesNodes<->PTB_@_PTC_TiesNodes": {
+          "first_nodes": 4592,
+          "maximum_nearest_gap_change_m": 0.0,
+          "second_nodes": 2315
+        },
+        "PTL_@_PTB_TiesNodes<->PTB_@_PTL_TiesNodes": {
+          "first_nodes": 424,
+          "maximum_nearest_gap_change_m": 0.0,
+          "second_nodes": 497
+        },
+        "PTL_@_TBB_TiesNodes<->TBB_@_PTL_TiesNodes": {
+          "first_nodes": 553,
+          "maximum_nearest_gap_change_m": 0.0,
+          "second_nodes": 571
+        },
+        "QAT_@_PTB_TiesNodes<->PTB_@_QAT_TiesNodes": {
+          "first_nodes": 378,
+          "maximum_nearest_gap_change_m": 0.0,
+          "second_nodes": 617
+        }
+      }
+    }
+  },
+  "solid_separation_receipt_sha256": "483146a4f2cfd047c1c3c709047dae5d8181a3ec651fbd045446d5714d77f3fc",
+  "source_file_sha256": {
+    "FeBio_custom.feb": "00b6efb53ad7e7330296cbb9569d358d48ed60819e22732e6149db6fb98a158a",
+    "Geometry.feb": "3642bd368bbc867569f181fa76129f746470e807e3977585d3803f092dd11262",
+    "ModelProperties.xml": "0ac446ce098b9a09505992eb4f4419c7b944cd57a4afbf6392b137f4806603c1",
+    "license.txt": "d72918838b4adf30979d2a26c23837f0ca05185ba799a3a4fe1fe1b4c05b20b8"
+  },
+  "status": "bounded_coherent_extensor_geometry_candidate"
+}

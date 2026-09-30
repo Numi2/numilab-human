@@ -911,6 +911,13 @@ contacts or interior overlaps in those four accepted 1 µs states. This closes
 the candidate PTC/FMC solid-separation question despite the FMC two-fan
 boundary vertex, but does not correct the original 18 source crossings or
 qualify bone/tendon ties, pressure, loaded energy, sustained flexion or anatomy.
+The [coherent extensor geometry candidate](PATELLAR_EXTENSOR_COHERENT_POSE_CANDIDATE_20260930.md)
+extends that same unadopted 20 µm clearance vector to patellar bone and QAT
+and tapers PTL to its fixed tibial tie. Both compiled sides retain all four
+nearest-node tie gaps after Float32 rounding; changed source surfaces stay
+closed and exactly self-intersection-free, and PTL's minimum volume ratio is
+0.9980719. The rigid patella joint frame, QAT proximal muscle owner, native
+coupled force/contact transaction and physiological loading remain unresolved.
 
 The [calcaneal tendon visual boundary repair](TENDON_HARMONIC_BOUNDARY_20260929.md)
 removes 145 right and 163 left exact intersections in the compiled tendon
