@@ -1,0 +1,63 @@
+{
+  "boundary": "Bone/cartilage/tendon centroid ordering is a source-specific regression check. The selected compiled-bone vertex check covers static projected poses. Neither check proves patellar cartilage-facing normals, contact pressure, loaded extensor force transfer, or clinical anatomy.",
+  "cartilage_facing_surface_qualified": false,
+  "clinical_anatomy_qualified": false,
+  "compiled": {
+    "left": {
+      "extensor_stack_m": {
+        "patellar_cartilage_posterior_to_bone_m": 0.008739407886155251,
+        "patellar_tendon_distal_to_patella_m": 0.04617902595148798,
+        "quadriceps_tendon_proximal_to_patella_m": 0.042142466888859434
+      },
+      "fibula_lateral_to_tibia_m": 0.028564589763954443,
+      "manifest_sha256": "86570419827ea81723f4ef5e89b9b4ce887eb2da67b32a79d1e72a84eb9dfbe5",
+      "patella_anterior_to_knee_anchor_m": 0.04693417952573367,
+      "payload_sha256": "2e38201528de25911ea496164602ea7e823cd9c2e3c94efa550ee52689324ae5",
+      "uniform_scale": 0.9842157677410566
+    },
+    "right": {
+      "extensor_stack_m": {
+        "patellar_cartilage_posterior_to_bone_m": 0.008739407886155251,
+        "patellar_tendon_distal_to_patella_m": 0.04617902595148798,
+        "quadriceps_tendon_proximal_to_patella_m": 0.042142466888859434
+      },
+      "fibula_lateral_to_tibia_m": 0.02856458976395433,
+      "manifest_sha256": "f3b4bbdc0575eaa2a01a4c75ea8b74420654eb24590b9943b9c6dfe44f045b50",
+      "patella_anterior_to_knee_anchor_m": 0.04693417952573367,
+      "payload_sha256": "f13e251b8ff8c8a4a4c3445fe006aa3c0aadd64d51c2c63eaec175705507b702",
+      "uniform_scale": 0.9842157677410566
+    }
+  },
+  "compiled_bone_full_support_side_pose_checks_passed": 16,
+  "compiled_bone_full_support_summary_sha256": "c3bb564cd8bb1316b4ddc9095016e873c1519445a01081ca12409b67066b1e97",
+  "loaded_patellofemoral_contact_qualified": false,
+  "myosim_visual_body_center_anterior_offset_m": {
+    "literal_unprojected_source_qpos0": {
+      "l": -0.008087727415221707,
+      "r": -0.008085712295192587
+    },
+    "source_equality_projected_neutral": {
+      "l": 0.044340074049506614,
+      "r": 0.04434208902755106
+    }
+  },
+  "open_knee_source_sha256": {
+    "FeBio_custom.feb": "00b6efb53ad7e7330296cbb9569d358d48ed60819e22732e6149db6fb98a158a",
+    "Geometry.feb": "3642bd368bbc867569f181fa76129f746470e807e3977585d3803f092dd11262",
+    "ModelProperties.xml": "0ac446ce098b9a09505992eb4f4419c7b944cd57a4afbf6392b137f4806603c1",
+    "license.txt": "d72918838b4adf30979d2a26c23837f0ca05185ba799a3a4fe1fe1b4c05b20b8"
+  },
+  "registration_sha256": "0b7129f788ae91272d03abf9f10b985359f3b9d9569941515b222787ffe71324",
+  "schema": "numi.human.patellar-extensor-stack-check.v1",
+  "source_axis_offsets_mm": {
+    "patellar_cartilage_posterior_to_bone_m": 8.876878122227803,
+    "patellar_tendon_distal_to_patella_m": 46.91961606902088,
+    "quadriceps_tendon_proximal_to_patella_m": 42.81832121587082
+  },
+  "source_code_sha256": {
+    "src/numilab_human/myosim_visual.py": "5d764de5c67a368ee2c71ab68e33a8ded49f6596e98fdaa1a6997804d02dc98b",
+    "src/numilab_human/open_knee.py": "963f9d3fff7d57008b43487046d55e618034daea68380babcb395c5cac3ffab5",
+    "tools/verify_patellar_extensor_stack.py": "49f2565140417d261e5787b5005ee1449bafecf5f86387b5320fcbe64165499e"
+  },
+  "status": "passed_gross_source_ordering_and_projected_presentation"
+}

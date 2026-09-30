@@ -802,6 +802,14 @@ default and requires an explicit diagnostic flag for raw `qpos0`; the pinned
 CPU source check confirms 51 projected equalities and a 52.428 mm anterior
 patella-body shift on each side. No new GPU image was claimed for this change.
 
+The [patellar extensor-stack check](PATELLAR_EXTENSOR_STACK_CHECK_20260930.md)
+adds a fail-closed projected source-visual anteriority preflight and bilateral
+Open Knee(s) bone/cartilage/quadriceps/patellar-tendon ordering gates. Exact
+source and compiled geometry pass, including 8.739 mm cartilage-behind-bone
+and 42.142/46.179 mm proximal/distal tendon offsets. This is static gross
+orientation only; cartilage-facing normals, loaded contact, clinical anatomy,
+five knee range conflicts, and the old standing video's anatomy remain open.
+
 The [calcaneal tendon visual boundary repair](TENDON_HARMONIC_BOUNDARY_20260929.md)
 removes 145 right and 163 left exact intersections in the compiled tendon
 surfaces without changing the other 148 surfaces or any body-binding bytes.

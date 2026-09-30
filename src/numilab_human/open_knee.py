@@ -56,6 +56,12 @@ EXPECTED_REGIONS = {
     "FMC": (24870, "tet4", 87072),
 }
 
+EXTENSOR_STACK_MINIMUMS_M = {
+    "patellar_cartilage_posterior_to_bone_m": 0.005,
+    "quadriceps_tendon_proximal_to_patella_m": 0.020,
+    "patellar_tendon_distal_to_patella_m": 0.020,
+}
+
 REGION_KIND = {
     "FMB": 1, "TBB": 1, "FBB": 1, "PTB": 1,
     "FMC": 2, "TBC-L": 2, "TBC-M": 2, "PTC": 2,
@@ -384,6 +390,32 @@ def _dot3(values: Any, axis: Any, np: Any) -> Any:
         + points[..., 1] * direction[1]
         + points[..., 2] * direction[2]
     )
+
+
+def _extensor_stack_metrics(region_node_world: dict[str, Any], anterior: Any,
+                            proximal: Any, np: Any) -> dict[str, float]:
+    """Source-specific layer/order preflight for the patellar extensor stack."""
+    centers = {name: np.mean(np.asarray(region_node_world[name], dtype=float), axis=0)
+               for name in ("PTB", "PTC", "QAT", "PTL")}
+    metrics = {
+        "patellar_cartilage_posterior_to_bone_m": float(_dot3(
+            centers["PTB"] - centers["PTC"], anterior, np)),
+        "quadriceps_tendon_proximal_to_patella_m": float(_dot3(
+            centers["QAT"] - centers["PTB"], proximal, np)),
+        "patellar_tendon_distal_to_patella_m": float(_dot3(
+            centers["PTB"] - centers["PTL"], proximal, np)),
+    }
+    if not all(math.isfinite(value) for value in metrics.values()):
+        raise RuntimeError("Open Knee(s) patellar extensor stack is nonfinite")
+    # These loose source-regression margins detect reversed or collapsed
+    # layers. They are not clinical spacing or cartilage-contact criteria.
+    for name, value in metrics.items():
+        minimum = EXTENSOR_STACK_MINIMUMS_M[name]
+        if value < minimum:
+            raise RuntimeError(
+                f"Open Knee(s) patellar extensor stack reversed/too close: "
+                f"{name}={value:.6g} m minimum={minimum:.6g} m")
+    return metrics
 
 
 def _anatomical_femoral_basis(
@@ -767,6 +799,13 @@ def compile_payload(
         raise RuntimeError(
             "Open Knee(s) anatomical orientation gate placed the fibula medially"
         )
+    proximal_world = _unit(np.einsum(
+        "ij,j->i", femur_body_world_rotation, proximal_body), np)
+    if sagittal_mirror_x is not None:
+        proximal_world = proximal_world.copy()
+        proximal_world[0] *= -1.0
+    extensor_stack_metrics = _extensor_stack_metrics(
+        region_node_world, human_anterior_world, proximal_world, np)
 
     node_sets_order = sorted(source.node_sets)
     for set_name in node_sets_order:
@@ -1009,6 +1048,7 @@ def compile_payload(
             "target_anterior_alignment": anterior_alignment,
             "patella_anterior_offset_m": patella_anterior_offset_m,
             "fibula_lateral_offset_m": fibula_lateral_offset_m,
+            "patellar_extensor_stack": extensor_stack_metrics,
             "proper_rotation_source_to_femur_body": rotation.tolist(),
             "translation_femur_body_m": [float(value) for value in translation],
             "FMO_to_mechanics_origin_initial_translation_femur_body_m": [
@@ -1035,6 +1075,12 @@ def compile_payload(
                 "anterior_alignment_minimum": 0.999,
                 "patella_anterior_offset_minimum_m": 0.025,
                 "fibula_lateral_offset_minimum_m": 0.020,
+                "patellar_cartilage_posterior_to_bone_minimum_m": EXTENSOR_STACK_MINIMUMS_M[
+                    "patellar_cartilage_posterior_to_bone_m"],
+                "quadriceps_tendon_proximal_to_patella_minimum_m": EXTENSOR_STACK_MINIMUMS_M[
+                    "quadriceps_tendon_proximal_to_patella_m"],
+                "patellar_tendon_distal_to_patella_minimum_m": EXTENSOR_STACK_MINIMUMS_M[
+                    "patellar_tendon_distal_to_patella_m"],
                 "uniform_scale_minimum": 0.90, "uniform_scale_maximum": 1.10,
                 "held_out_p90_maximum_m": 0.020,
                 "reflection": side == "right", "anisotropic_warp": False,

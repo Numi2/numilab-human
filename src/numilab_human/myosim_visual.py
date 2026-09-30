@@ -56,6 +56,42 @@ def _visual_qpos(model: object, mujoco: object, raw_source_rest: bool):
     }
 
 
+def _patella_body_center_anteriority(model: object, data: object, mujoco: object,
+                                    raw_source_rest: bool) -> list[dict[str, object]]:
+    """Reject a displayed neutral pose with either patella behind its knee.
+
+    The compiled BodyParts3D full-mesh audit is separate. This small source-
+    visual preflight catches an omitted/changed equality projection before a
+    new rendered source image can be mistaken for current neutral anatomy.
+    """
+    import numpy as np
+
+    # Neutral MyoSim source world anterior is -Y. The pelvis body's local
+    # frame is rotated relative to source world and must not rotate this axis.
+    anterior = np.array([0., -1., 0.])
+    rows = []
+    for side in ("r", "l"):
+        body = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "patella_" + side)
+        joint = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "knee_angle_" + side)
+        if body < 0 or joint < 0:
+            raise RuntimeError(f"MyoSim visual is missing patella/knee source identity for {side}")
+        offset = float(np.dot(np.asarray(data.xpos[body])-np.asarray(data.xanchor[joint]), anterior))
+        if not np.isfinite(offset):
+            raise RuntimeError(f"MyoSim visual patella {side} anteriority is nonfinite")
+        passed = offset >= .025
+        rows.append({"side": side, "patella_body": "patella_" + side,
+                     "knee_joint": "knee_angle_" + side,
+                     "source_body_center_anterior_offset_m": offset,
+                     "source_specific_minimum_m": .025,
+                     "passed_display_gate": passed})
+        if not raw_source_rest and not passed:
+            raise RuntimeError(
+                f"MyoSim projected visual would place patella_{side} behind/too near "
+                f"the knee anchor: center anterior offset {offset:.6g} m; "
+                "source-specific display minimum 0.025 m")
+    return rows
+
+
 def render(sources: Path, output: Path, raw_source_rest: bool = False) -> dict[str, object]:
     # MuJoCo chooses a GL backend when imported, so set this before the import.
     os.environ.setdefault("MUJOCO_GL", "glfw")
@@ -73,6 +109,8 @@ def render(sources: Path, output: Path, raw_source_rest: bool = False) -> dict[s
     qpos, pose = _visual_qpos(model, mujoco, raw_source_rest)
     data.qpos[:] = qpos
     mujoco.mj_forward(model, data)
+    pose["patella_body_center_anteriority"] = _patella_body_center_anteriority(
+        model, data, mujoco, raw_source_rest)
     # The authored model declares a 640x480 MuJoCo offscreen framebuffer.
     renderer = mujoco.Renderer(model, height=480, width=640)
     views = {
@@ -109,6 +147,8 @@ def render(sources: Path, output: Path, raw_source_rest: bool = False) -> dict[s
             "recorded source pose. The projected neutral pose applies active source joint "
             "equalities before rendering; raw unprojected qpos0 is diagnostic only and "
             "can place the patella behind the knee anchor. "
+            "The source-visual display gate checks patella body centers only; the separate "
+            "compiled-bone audit checks every patella vertex across posed states. "
             "They validate source-model visibility, not Core-native rendering, contact, or a locomotion rollout."
         ),
     }

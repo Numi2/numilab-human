@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
-from numilab_human.myosim_visual import _visual_qpos
+from numilab_human.myosim_visual import _patella_body_center_anteriority, _visual_qpos
 
 
 def test_projected_neutral_is_default_and_raw_rest_is_explicit():
@@ -33,3 +33,26 @@ def test_projected_visual_rejects_model_without_equality_projection():
     mujoco = SimpleNamespace(mjtEq=SimpleNamespace(mjEQ_JOINT=1))
     with pytest.raises(RuntimeError, match='no active joint equalities'):
         _visual_qpos(source, mujoco, False)
+
+
+def test_source_visual_rejects_posterior_patella_before_rendering():
+    names = {'pelvis': 0, 'patella_r': 1, 'patella_l': 2,
+             'knee_angle_r': 0, 'knee_angle_l': 1}
+    mujoco = SimpleNamespace(
+        mjtObj=SimpleNamespace(mjOBJ_BODY=1, mjOBJ_JOINT=2),
+        mj_name2id=lambda _model, _kind, name: names.get(name, -1),
+    )
+    data = SimpleNamespace(
+        xmat=np.eye(3)[None, :, :],
+        xpos=np.array([[0., 0., 0.], [-.1, .11, .5], [.1, .11, .5]]),
+        xanchor=np.array([[-.1, .15, .5], [.1, .15, .5]]),
+    )
+    measured = _patella_body_center_anteriority(object(), data, mujoco, False)
+    assert [row['passed_display_gate'] for row in measured] == [True, True]
+    assert measured[0]['source_body_center_anterior_offset_m'] == pytest.approx(.04)
+
+    data.xpos[2, 1] = .16
+    with pytest.raises(RuntimeError, match='patella_l behind/too near'):
+        _patella_body_center_anteriority(object(), data, mujoco, False)
+    raw = _patella_body_center_anteriority(object(), data, mujoco, True)
+    assert raw[1]['passed_display_gate'] is False
