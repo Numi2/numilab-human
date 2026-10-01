@@ -171,6 +171,11 @@ class Source:
     landmarks: dict[str, tuple[float, float, float] | int]
     materials: dict[str, dict[str, float | str]]
     fiber_directions: dict[str, tuple[float, float, float]]
+    # Complete authored FEBio program, including nested material/prestrain laws,
+    # per-element meniscus fibres, joints, contact enforcement, curves and steps.
+    # The legacy NHKNEE1 payload does NOT execute this program. Admission and
+    # source-frame freezing are owned by open_knee_reference.
+    mechanical_program: ET.Element | None = None
 
 
 def _parse_febio_fiber_directions(
@@ -367,7 +372,7 @@ def parse_source(directory: Path, *, enforce_exact: bool = True) -> Source:
             raise ValueError("Open Knee(s) exact attachment/contact topology drifted")
     return Source(
         regions, node_sets, surfaces, surface_pairs, landmarks, materials,
-        fiber_directions,
+        fiber_directions, ET.parse(directory / "FeBio_custom.feb").getroot(),
     )
 
 
@@ -1263,8 +1268,11 @@ def compile_payload(
             "bytes": len(payload), "sha256": _sha256(payload_path),
         },
         "evidence_boundary": (
-            "This preserves exact oks003 specimen geometry, topology, material, attachment, "
-            "and contact data. The left output has a bounded anatomical registration; the "
+            "This is the registered reduced-hybrid payload, not a complete executable "
+            "FEBio mechanical problem or source-equivalent knee. It preserves selected "
+            "oks003 geometry, topology, material parameters, attachments and surface pairs; "
+            "it does not execute the source rigid-joint, prestrain, contact and load program. "
+            "The left output has a bounded anatomical registration; the "
             "right output is its explicitly labelled sagittal mirror in the measured live "
             "bilateral frames, not an independently segmented right specimen. Neither is "
             "subject-matched, a coarsened Apple FEM solve, or admitted production contact."

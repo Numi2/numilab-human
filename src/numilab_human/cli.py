@@ -1552,6 +1552,15 @@ def parser() -> argparse.ArgumentParser:
         help="Python environment with pinned MyoSim, NumPy, and MuJoCo",
     )
     open_knee_parser.set_defaults(handler=open_knee_payload)
+    from .open_knee_reference import cli as open_knee_reference_cli
+    reference_parser = commands.add_parser(
+        "open-knee-reference-case",
+        help="freeze the source-frame FEBio program and reject missing mechanical dependencies",
+    )
+    reference_parser.add_argument("--open-knee", type=Path, required=True)
+    reference_parser.add_argument("--output", type=Path, required=True)
+    reference_parser.add_argument("--matter-root", type=Path, required=True)
+    reference_parser.set_defaults(handler=open_knee_reference_cli)
     thoracic_registration_parser = commands.add_parser(
         "myosim-thoracic-registration",
         help="propose exact T1-T12 source-mesh registration with enthesis and continuity gates",

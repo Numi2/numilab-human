@@ -1,0 +1,3504 @@
+{
+  "compiler_sources": {
+    "src/numilab_human/cli.py": "a0019b67666f32e02a60fed53eb662682afaa86f077dcf8a1f2984b4093cd5db",
+    "src/numilab_human/open_knee.py": "4a8695d3786edea29a69c18c657b92bea13ce918226dcd979685a4d40844bbf8",
+    "src/numilab_human/open_knee_reference.py": "8168ae216846c41da5158db4e2d0baf11fa79379c1964816a292e118a0ceedd8"
+  },
+  "coordinate_policy": {
+    "frame": "source_specimen",
+    "material_reference_reset": false,
+    "registration": null,
+    "scale": 1.0
+  },
+  "dependencies": [
+    {
+      "authored": "C:\\oks_simulations\\oks003\\MD_outputs\\CC\\CC-OKS-MD-outcomes\\CC-OKS-MD-outputs\\model\\Febio\\rerun_updated_customization\\Geometry_custom.feb",
+      "local_filename": "Geometry_custom.feb",
+      "path": "/febio_spec/Geometry[1]",
+      "present": false,
+      "sha256": null
+    }
+  ],
+  "geometry_audited": "Geometry.feb",
+  "geometry_binding": "diagnostic_only",
+  "inventory": {
+    "active_contact_count": 18,
+    "constraints": [
+      {
+        "attributes": {
+          "type": "prestrain"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "update",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0.03"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "min_iters",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "max_iters",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "constraint",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "name": "Extension_Flexion",
+          "type": "rigid cylindrical joint"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "angtol",
+            "tail": "\n        ",
+            "text": "0.0001"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "force_penalty",
+            "tail": "\n        ",
+            "text": "10000.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "moment_penalty",
+            "tail": "\n        ",
+            "text": "3000000.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "body_a",
+            "tail": "\n        ",
+            "text": "4"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "body_b",
+            "tail": "\n        ",
+            "text": "18"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "joint_origin",
+            "tail": "\n        ",
+            "text": "-1.036,-6.717,0.171"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "joint_axis",
+            "tail": "\n        ",
+            "text": "0.9889108468842679,-0.1485103932882822,0.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "prescribed_rotation",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {
+              "lc": "9"
+            },
+            "children": [],
+            "tag": "rotation",
+            "tail": "\n        ",
+            "text": "-1.57"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "prescribed_translation",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "translation",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "constraint",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "name": "External_Internal",
+          "type": "rigid cylindrical joint"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "angtol",
+            "tail": "\n        ",
+            "text": "0.0001"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "force_penalty",
+            "tail": "\n        ",
+            "text": "10000.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "moment_penalty",
+            "tail": "\n        ",
+            "text": "3000000.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "body_a",
+            "tail": "\n        ",
+            "text": "17"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "body_b",
+            "tail": "\n        ",
+            "text": "3"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "joint_origin",
+            "tail": "\n        ",
+            "text": "-4.4315,-7.2204999999999995,-24.9345"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "joint_axis",
+            "tail": "\n        ",
+            "text": "0.0,0.0,1.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "prescribed_rotation",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "rotation",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "prescribed_translation",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "translation",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "constraint",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "name": "Abduction_Adduction",
+          "type": "rigid cylindrical joint"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "angtol",
+            "tail": "\n        ",
+            "text": "0.0001"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "force_penalty",
+            "tail": "\n        ",
+            "text": "10000.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "moment_penalty",
+            "tail": "\n        ",
+            "text": "3000000.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "body_a",
+            "tail": "\n        ",
+            "text": "18"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "body_b",
+            "tail": "\n        ",
+            "text": "17"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "joint_origin",
+            "tail": "\n        ",
+            "text": "-4.282665311721631,-6.229429716148487,0.171"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "joint_axis",
+            "tail": "\n        ",
+            "text": "0.1485103932882822,0.9889108468842679,-0.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "prescribed_rotation",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "rotation",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "prescribed_translation",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "translation",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "constraint",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "name": "Patellar_Extension_Flexion",
+          "type": "rigid cylindrical joint"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "angtol",
+            "tail": "\n        ",
+            "text": "0.0001"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "force_penalty",
+            "tail": "\n        ",
+            "text": "10000.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "moment_penalty",
+            "tail": "\n        ",
+            "text": "3000000.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "body_a",
+            "tail": "\n        ",
+            "text": "4"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "body_b",
+            "tail": "\n        ",
+            "text": "20"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "joint_origin",
+            "tail": "\n        ",
+            "text": "-1.036,-6.717,0.171"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "joint_axis",
+            "tail": "\n        ",
+            "text": "0.9889108468842679,-0.1485103932882822,0.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "prescribed_rotation",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "rotation",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "prescribed_translation",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "translation",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "constraint",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "name": "Patellar_Lateral_Tilt",
+          "type": "rigid cylindrical joint"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "angtol",
+            "tail": "\n        ",
+            "text": "0.0001"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "force_penalty",
+            "tail": "\n        ",
+            "text": "10000.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "moment_penalty",
+            "tail": "\n        ",
+            "text": "3000000.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "body_a",
+            "tail": "\n        ",
+            "text": "19"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "body_b",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "joint_origin",
+            "tail": "\n        ",
+            "text": "3.8855000000000004,46.3435,3.6414999999999997"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "joint_axis",
+            "tail": "\n        ",
+            "text": "0.007345507674492785,0.0,0.9999730213945794"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "prescribed_rotation",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "rotation",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "prescribed_translation",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "translation",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "constraint",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "name": "Patellar_Lateral_Rotation",
+          "type": "rigid cylindrical joint"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "angtol",
+            "tail": "\n        ",
+            "text": "0.0001"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "force_penalty",
+            "tail": "\n        ",
+            "text": "10000.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "moment_penalty",
+            "tail": "\n        ",
+            "text": "3000000.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "body_a",
+            "tail": "\n        ",
+            "text": "20"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "body_b",
+            "tail": "\n        ",
+            "text": "19"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "joint_origin",
+            "tail": "\n        ",
+            "text": "-4.041046061001632,-6.265715059830884,0.171"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "joint_axis",
+            "tail": "\n        ",
+            "text": "0.1485103049177992,0.9889102584370404,-0.0010909130158267598"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "prescribed_rotation",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "rotation",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "prescribed_translation",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "translation",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "constraint",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "type": "rigid spring"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "body_a",
+            "tail": "\n        ",
+            "text": "21"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "body_b",
+            "tail": "\n        ",
+            "text": "4"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "insertion_a",
+            "tail": "\n        ",
+            "text": "1.0835532632546936,38.06618835977137,90.2025146484375"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "insertion_b",
+            "tail": "\n        ",
+            "text": "1.0835532632546936,38.06618835977137,90.2025146484375"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "k",
+            "tail": "\n      ",
+            "text": "0.1"
+          }
+        ],
+        "tag": "constraint",
+        "tail": "\n    ",
+        "text": "\n        "
+      }
+    ],
+    "contacts": [
+      {
+        "attributes": {
+          "surface_pair": "QAT_To_FMB",
+          "type": "sliding-elastic"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "laugon",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "penalty",
+            "tail": "\n        ",
+            "text": "0.1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "two_pass",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "auto_penalty",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "fric_coeff",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_tol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_radius",
+            "tail": "\n        ",
+            "text": "0.005"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "10"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "seg_up",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "contact",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "surface_pair": "FMC_To_QAT",
+          "type": "sliding-elastic"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "laugon",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "penalty",
+            "tail": "\n        ",
+            "text": "0.1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "two_pass",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "auto_penalty",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "fric_coeff",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_tol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_radius",
+            "tail": "\n        ",
+            "text": "0.005"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "10"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "seg_up",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "contact",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "surface_pair": "TBC-L_To_FMC",
+          "type": "sliding-elastic"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "laugon",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "penalty",
+            "tail": "\n        ",
+            "text": "0.1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "two_pass",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "auto_penalty",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "fric_coeff",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_tol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_radius",
+            "tail": "\n        ",
+            "text": "0.005"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "10"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "seg_up",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "contact",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "surface_pair": "TBC-L_To_MNS-L",
+          "type": "sliding-elastic"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "laugon",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "penalty",
+            "tail": "\n        ",
+            "text": "0.1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "two_pass",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "auto_penalty",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "fric_coeff",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_tol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_radius",
+            "tail": "\n        ",
+            "text": "0.005"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "10"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "seg_up",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "contact",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "surface_pair": "PCL_To_TBB",
+          "type": "sliding-elastic"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "laugon",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "penalty",
+            "tail": "\n        ",
+            "text": "0.1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "two_pass",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "auto_penalty",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "fric_coeff",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_tol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_radius",
+            "tail": "\n        ",
+            "text": "0.005"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "10"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "seg_up",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "contact",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "surface_pair": "PCL_To_FMB",
+          "type": "sliding-elastic"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "laugon",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "penalty",
+            "tail": "\n        ",
+            "text": "0.1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "two_pass",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "auto_penalty",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "fric_coeff",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_tol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_radius",
+            "tail": "\n        ",
+            "text": "0.005"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "10"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "seg_up",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "contact",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "surface_pair": "PCL_To_MNS-M",
+          "type": "sliding-elastic"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "laugon",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "penalty",
+            "tail": "\n        ",
+            "text": "0.1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "two_pass",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "auto_penalty",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "fric_coeff",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_tol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_radius",
+            "tail": "\n        ",
+            "text": "0.005"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "10"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "seg_up",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "contact",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "surface_pair": "PCL_To_ACL",
+          "type": "sliding-elastic"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "laugon",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "penalty",
+            "tail": "\n        ",
+            "text": "0.1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "two_pass",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "auto_penalty",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "fric_coeff",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_tol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_radius",
+            "tail": "\n        ",
+            "text": "0.005"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "10"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "seg_up",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "contact",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "surface_pair": "PTC_To_FMC",
+          "type": "sliding-elastic"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "laugon",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "penalty",
+            "tail": "\n        ",
+            "text": "0.1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "two_pass",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "auto_penalty",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "fric_coeff",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_tol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_radius",
+            "tail": "\n        ",
+            "text": "0.005"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "10"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "seg_up",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "contact",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "surface_pair": "ACL_To_TBB",
+          "type": "sliding-elastic"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "laugon",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "penalty",
+            "tail": "\n        ",
+            "text": "0.1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "two_pass",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "auto_penalty",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "fric_coeff",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_tol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_radius",
+            "tail": "\n        ",
+            "text": "0.005"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "10"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "seg_up",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "contact",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "surface_pair": "ACL_To_FMB",
+          "type": "sliding-elastic"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "laugon",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "penalty",
+            "tail": "\n        ",
+            "text": "0.1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "two_pass",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "auto_penalty",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "fric_coeff",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_tol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_radius",
+            "tail": "\n        ",
+            "text": "0.005"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "10"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "seg_up",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "contact",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "surface_pair": "MCL_To_TBB",
+          "type": "sliding-elastic"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "laugon",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "penalty",
+            "tail": "\n        ",
+            "text": "0.1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "two_pass",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "auto_penalty",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "fric_coeff",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_tol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_radius",
+            "tail": "\n        ",
+            "text": "0.005"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "10"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "seg_up",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "contact",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "surface_pair": "MCL_To_FMB",
+          "type": "sliding-elastic"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "laugon",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "penalty",
+            "tail": "\n        ",
+            "text": "0.1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "two_pass",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "auto_penalty",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "fric_coeff",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_tol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_radius",
+            "tail": "\n        ",
+            "text": "0.005"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "10"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "seg_up",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "contact",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "surface_pair": "MNS-L_To_FMC",
+          "type": "sliding-elastic"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "laugon",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "penalty",
+            "tail": "\n        ",
+            "text": "0.1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "two_pass",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "auto_penalty",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "fric_coeff",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_tol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_radius",
+            "tail": "\n        ",
+            "text": "0.005"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "10"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "seg_up",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "contact",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "surface_pair": "MNS-M_To_TBC-M",
+          "type": "sliding-elastic"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "laugon",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "penalty",
+            "tail": "\n        ",
+            "text": "0.1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "two_pass",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "auto_penalty",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "fric_coeff",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_tol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_radius",
+            "tail": "\n        ",
+            "text": "0.005"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "10"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "seg_up",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "contact",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "surface_pair": "MNS-M_To_FMC",
+          "type": "sliding-elastic"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "laugon",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "penalty",
+            "tail": "\n        ",
+            "text": "0.1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "two_pass",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "auto_penalty",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "fric_coeff",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_tol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_radius",
+            "tail": "\n        ",
+            "text": "0.005"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "10"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "seg_up",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "contact",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "surface_pair": "LCL_To_FMB",
+          "type": "sliding-elastic"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "laugon",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "penalty",
+            "tail": "\n        ",
+            "text": "0.1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "two_pass",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "auto_penalty",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "fric_coeff",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_tol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_radius",
+            "tail": "\n        ",
+            "text": "0.005"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "10"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "seg_up",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "contact",
+        "tail": "\n      ",
+        "text": "\n        "
+      },
+      {
+        "attributes": {
+          "surface_pair": "TBC-M_To_FMC",
+          "type": "sliding-elastic"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "laugon",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "tolerance",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "gaptol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "penalty",
+            "tail": "\n        ",
+            "text": "0.1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "two_pass",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "auto_penalty",
+            "tail": "\n        ",
+            "text": "1"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "fric_coeff",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_tol",
+            "tail": "\n        ",
+            "text": "0.01"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "search_radius",
+            "tail": "\n        ",
+            "text": "0.005"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "minaug",
+            "tail": "\n        ",
+            "text": "0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "maxaug",
+            "tail": "\n        ",
+            "text": "10"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "seg_up",
+            "tail": "\n      ",
+            "text": "0"
+          }
+        ],
+        "tag": "contact",
+        "tail": "\n    ",
+        "text": "\n        "
+      }
+    ],
+    "control": {
+      "attributes": {
+        "type": "febio"
+      },
+      "children": [
+        {
+          "attributes": {},
+          "children": [],
+          "tag": "time_steps",
+          "tail": "\n      ",
+          "text": "40"
+        },
+        {
+          "attributes": {},
+          "children": [],
+          "tag": "step_size",
+          "tail": "\n      ",
+          "text": "0.05"
+        },
+        {
+          "attributes": {},
+          "children": [],
+          "tag": "max_refs",
+          "tail": "\n      ",
+          "text": "25"
+        },
+        {
+          "attributes": {},
+          "children": [],
+          "tag": "max_ups",
+          "tail": "\n      ",
+          "text": "0"
+        },
+        {
+          "attributes": {},
+          "children": [],
+          "tag": "diverge_reform",
+          "tail": "\n      ",
+          "text": "1"
+        },
+        {
+          "attributes": {},
+          "children": [],
+          "tag": "reform_each_time_step",
+          "tail": "\n      ",
+          "text": "1"
+        },
+        {
+          "attributes": {},
+          "children": [],
+          "tag": "dtol",
+          "tail": "\n      ",
+          "text": "0.01"
+        },
+        {
+          "attributes": {},
+          "children": [],
+          "tag": "etol",
+          "tail": "\n      ",
+          "text": "0.1"
+        },
+        {
+          "attributes": {},
+          "children": [],
+          "tag": "rtol",
+          "tail": "\n      ",
+          "text": "0"
+        },
+        {
+          "attributes": {},
+          "children": [],
+          "tag": "lstol",
+          "tail": "\n      ",
+          "text": "0.9"
+        },
+        {
+          "attributes": {},
+          "children": [],
+          "tag": "min_residual",
+          "tail": "\n      ",
+          "text": "0.001"
+        },
+        {
+          "attributes": {},
+          "children": [],
+          "tag": "qnmethod",
+          "tail": "\n      ",
+          "text": "1"
+        },
+        {
+          "attributes": {},
+          "children": [],
+          "tag": "symmetric_stiffness",
+          "tail": "\n      ",
+          "text": "0"
+        },
+        {
+          "attributes": {},
+          "children": [],
+          "tag": "plot_level",
+          "tail": "\n      ",
+          "text": "PLOT_MAJOR_ITRS"
+        },
+        {
+          "attributes": {
+            "type": "static"
+          },
+          "children": [],
+          "tag": "analysis",
+          "tail": "\n      ",
+          "text": null
+        },
+        {
+          "attributes": {},
+          "children": [
+            {
+              "attributes": {},
+              "children": [],
+              "tag": "dtmin",
+              "tail": "\n        ",
+              "text": "0.001"
+            },
+            {
+              "attributes": {},
+              "children": [],
+              "tag": "dtmax",
+              "tail": "\n        ",
+              "text": "0.05"
+            },
+            {
+              "attributes": {},
+              "children": [],
+              "tag": "max_retries",
+              "tail": "\n        ",
+              "text": "5"
+            },
+            {
+              "attributes": {},
+              "children": [],
+              "tag": "opt_iter",
+              "tail": "\n        ",
+              "text": "50"
+            },
+            {
+              "attributes": {},
+              "children": [],
+              "tag": "aggressiveness",
+              "tail": "\n      ",
+              "text": "1"
+            }
+          ],
+          "tag": "time_stepper",
+          "tail": "\n    ",
+          "text": "\n        "
+        }
+      ],
+      "tag": "Control",
+      "tail": "\n    ",
+      "text": "\n      "
+    },
+    "defined_surface_pair_count": 19,
+    "explicit_load_section_count": 0,
+    "loadcurves": [
+      {
+        "attributes": {
+          "id": "1",
+          "name": "QAT_prestrain",
+          "type": "linear"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n      ",
+            "text": "0,1.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n      ",
+            "text": "1,1.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n    ",
+            "text": "2,1.0"
+          }
+        ],
+        "tag": "loadcurve",
+        "tail": "\n    ",
+        "text": "\n      "
+      },
+      {
+        "attributes": {
+          "id": "2",
+          "name": "PCL_prestrain",
+          "type": "linear"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n      ",
+            "text": "0,1.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n      ",
+            "text": "1,1.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n    ",
+            "text": "2,1.0"
+          }
+        ],
+        "tag": "loadcurve",
+        "tail": "\n    ",
+        "text": "\n      "
+      },
+      {
+        "attributes": {
+          "id": "3",
+          "name": "ACL_prestrain",
+          "type": "linear"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n      ",
+            "text": "0,1.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n      ",
+            "text": "1,1.016"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n    ",
+            "text": "2,1.016"
+          }
+        ],
+        "tag": "loadcurve",
+        "tail": "\n    ",
+        "text": "\n      "
+      },
+      {
+        "attributes": {
+          "id": "4",
+          "name": "MCL_prestrain",
+          "type": "linear"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n      ",
+            "text": "0,1.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n      ",
+            "text": "1,1.034"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n    ",
+            "text": "2,1.034"
+          }
+        ],
+        "tag": "loadcurve",
+        "tail": "\n    ",
+        "text": "\n      "
+      },
+      {
+        "attributes": {
+          "id": "5",
+          "name": "PTL_prestrain",
+          "type": "linear"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n      ",
+            "text": "0,1.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n      ",
+            "text": "1,1.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n    ",
+            "text": "2,1.0"
+          }
+        ],
+        "tag": "loadcurve",
+        "tail": "\n    ",
+        "text": "\n      "
+      },
+      {
+        "attributes": {
+          "id": "6",
+          "name": "LCL_prestrain",
+          "type": "linear"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n      ",
+            "text": "0,1.0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n      ",
+            "text": "1,1.027"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n    ",
+            "text": "2,1.027"
+          }
+        ],
+        "tag": "loadcurve",
+        "tail": "\n    ",
+        "text": "\n      "
+      },
+      {
+        "attributes": {
+          "id": "7",
+          "name": "MPFL_force_displacement",
+          "type": "linear"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n      ",
+            "text": "-1,0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n      ",
+            "text": "0,0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n    ",
+            "text": "1,50.0"
+          }
+        ],
+        "tag": "loadcurve",
+        "tail": "\n    ",
+        "text": "\n      "
+      },
+      {
+        "attributes": {
+          "id": "8",
+          "name": "LPFL_force_displacement",
+          "type": "linear"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n      ",
+            "text": "-1,0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n      ",
+            "text": "0,0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n    ",
+            "text": "1,8.0"
+          }
+        ],
+        "tag": "loadcurve",
+        "tail": "\n    ",
+        "text": "\n      "
+      },
+      {
+        "attributes": {
+          "id": "9",
+          "name": "Loading_Curve",
+          "type": "linear"
+        },
+        "children": [
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n      ",
+            "text": "0,0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n      ",
+            "text": "1,0"
+          },
+          {
+            "attributes": {},
+            "children": [],
+            "tag": "point",
+            "tail": "\n    ",
+            "text": "2,1"
+          }
+        ],
+        "tag": "loadcurve",
+        "tail": "\n  ",
+        "text": "\n      "
+      }
+    ],
+    "materials": [
+      {
+        "id": "1",
+        "name": "PTB",
+        "type": "rigid body"
+      },
+      {
+        "id": "2",
+        "name": "FBB",
+        "type": "rigid body"
+      },
+      {
+        "id": "3",
+        "name": "TBB",
+        "type": "rigid body"
+      },
+      {
+        "id": "4",
+        "name": "FMB",
+        "type": "rigid body"
+      },
+      {
+        "id": "5",
+        "name": "QAT",
+        "type": "uncoupled prestrain elastic"
+      },
+      {
+        "id": "6",
+        "name": "TBC-L",
+        "type": "Mooney-Rivlin"
+      },
+      {
+        "id": "7",
+        "name": "PCL",
+        "type": "uncoupled prestrain elastic"
+      },
+      {
+        "id": "8",
+        "name": "PTC",
+        "type": "Mooney-Rivlin"
+      },
+      {
+        "id": "9",
+        "name": "ACL",
+        "type": "uncoupled prestrain elastic"
+      },
+      {
+        "id": "10",
+        "name": "MCL",
+        "type": "uncoupled prestrain elastic"
+      },
+      {
+        "id": "11",
+        "name": "PTL",
+        "type": "uncoupled prestrain elastic"
+      },
+      {
+        "id": "12",
+        "name": "MNS-L",
+        "type": "trans iso Mooney-Rivlin"
+      },
+      {
+        "id": "13",
+        "name": "MNS-M",
+        "type": "trans iso Mooney-Rivlin"
+      },
+      {
+        "id": "14",
+        "name": "LCL",
+        "type": "uncoupled prestrain elastic"
+      },
+      {
+        "id": "15",
+        "name": "TBC-M",
+        "type": "Mooney-Rivlin"
+      },
+      {
+        "id": "16",
+        "name": "FMC",
+        "type": "Mooney-Rivlin"
+      },
+      {
+        "id": "17",
+        "name": "TFTO",
+        "type": "rigid body"
+      },
+      {
+        "id": "18",
+        "name": "TFFO",
+        "type": "rigid body"
+      },
+      {
+        "id": "19",
+        "name": "PFPO",
+        "type": "rigid body"
+      },
+      {
+        "id": "20",
+        "name": "PFFO",
+        "type": "rigid body"
+      },
+      {
+        "id": "21",
+        "name": "QSO",
+        "type": "rigid body"
+      }
+    ],
+    "mesh_data": [
+      {
+        "attributes": {
+          "elem_set": "MNS-M",
+          "var": "fiber"
+        },
+        "entries": 51009
+      },
+      {
+        "attributes": {
+          "elem_set": "MNS-L",
+          "var": "fiber"
+        },
+        "entries": 44953
+      }
+    ],
+    "rigid_bodies": [
+      {
+        "id": "1",
+        "name": "PTB",
+        "type": "rigid body"
+      },
+      {
+        "id": "2",
+        "name": "FBB",
+        "type": "rigid body"
+      },
+      {
+        "id": "3",
+        "name": "TBB",
+        "type": "rigid body"
+      },
+      {
+        "id": "4",
+        "name": "FMB",
+        "type": "rigid body"
+      },
+      {
+        "id": "17",
+        "name": "TFTO",
+        "type": "rigid body"
+      },
+      {
+        "id": "18",
+        "name": "TFFO",
+        "type": "rigid body"
+      },
+      {
+        "id": "19",
+        "name": "PFPO",
+        "type": "rigid body"
+      },
+      {
+        "id": "20",
+        "name": "PFFO",
+        "type": "rigid body"
+      },
+      {
+        "id": "21",
+        "name": "QSO",
+        "type": "rigid body"
+      }
+    ],
+    "rigid_ties": [
+      {
+        "name": "QAT_With_PTB",
+        "node_set": "QAT_@_PTB_TiesNodes",
+        "rb": "1"
+      },
+      {
+        "name": "TBC-L_With_TBB",
+        "node_set": "TBC-L_@_TBB_TiesNodes",
+        "rb": "3"
+      },
+      {
+        "name": "PCL_With_TBB",
+        "node_set": "PCL_@_TBB_TiesNodes",
+        "rb": "3"
+      },
+      {
+        "name": "PCL_With_FMB",
+        "node_set": "PCL_@_FMB_TiesNodes",
+        "rb": "4"
+      },
+      {
+        "name": "PTC_With_PTB",
+        "node_set": "PTC_@_PTB_TiesNodes",
+        "rb": "1"
+      },
+      {
+        "name": "PTL_With_PTB",
+        "node_set": "PTL_@_PTB_TiesNodes",
+        "rb": "1"
+      },
+      {
+        "name": "ACL_With_TBB",
+        "node_set": "ACL_@_TBB_TiesNodes",
+        "rb": "3"
+      },
+      {
+        "name": "ACL_With_FMB",
+        "node_set": "ACL_@_FMB_TiesNodes",
+        "rb": "4"
+      },
+      {
+        "name": "LCL_With_FBB",
+        "node_set": "LCL_@_FBB_TiesNodes",
+        "rb": "2"
+      },
+      {
+        "name": "MCL_With_TBB",
+        "node_set": "MCL_@_TBB_TiesNodes",
+        "rb": "3"
+      },
+      {
+        "name": "MCL_With_FMB",
+        "node_set": "MCL_@_FMB_TiesNodes",
+        "rb": "4"
+      },
+      {
+        "name": "PTL_With_TBB",
+        "node_set": "PTL_@_TBB_TiesNodes",
+        "rb": "3"
+      },
+      {
+        "name": "MNS-L_With_TBB",
+        "node_set": "MNS-L_@_TBB_TiesNodes",
+        "rb": "3"
+      },
+      {
+        "name": "MNS-M_With_TBB",
+        "node_set": "MNS-M_@_TBB_TiesNodes",
+        "rb": "3"
+      },
+      {
+        "name": "LCL_With_FMB",
+        "node_set": "LCL_@_FMB_TiesNodes",
+        "rb": "4"
+      },
+      {
+        "name": "TBC-M_With_TBB",
+        "node_set": "TBC-M_@_TBB_TiesNodes",
+        "rb": "3"
+      },
+      {
+        "name": "FMC_With_FMB",
+        "node_set": "FMC_@_FMB_TiesNodes",
+        "rb": "4"
+      },
+      {
+        "name": "QSO_With_QAT",
+        "node_set": "QAT_@_QSO_TiesNodes",
+        "rb": "21"
+      }
+    ],
+    "unused_surface_pairs": [
+      "MCL_To_MNS-M",
+      "QAT_To_FMC"
+    ]
+  },
+  "mechanical_program": {
+    "coverage": "all XML elements, attributes, text, tail and child order",
+    "file": "mechanical-program.json",
+    "sha256": "3f531de7486f98a5ed89c1ca2a8e16daff99908fa50549a33b54a2a8b766d23b"
+  },
+  "model_class": "source_frame_reference_candidate",
+  "native_admission": {
+    "executable": false,
+    "sections": [
+      {
+        "path": "/febio_spec/Module[1]",
+        "reason": "No qualified source-equivalent Matter lowering for this section",
+        "status": "retained_not_executed",
+        "tag": "Module",
+        "type": "solid"
+      },
+      {
+        "path": "/febio_spec/Material[1]",
+        "reason": "No qualified source-equivalent Matter lowering for this section",
+        "status": "retained_not_executed",
+        "tag": "Material",
+        "type": null
+      },
+      {
+        "path": "/febio_spec/Geometry[1]",
+        "reason": "No qualified source-equivalent Matter lowering for this section",
+        "status": "retained_not_executed",
+        "tag": "Geometry",
+        "type": null
+      },
+      {
+        "path": "/febio_spec/MeshData[1]",
+        "reason": "No qualified source-equivalent Matter lowering for this section",
+        "status": "retained_not_executed",
+        "tag": "MeshData",
+        "type": null
+      },
+      {
+        "path": "/febio_spec/Boundary[1]",
+        "reason": "No qualified source-equivalent Matter lowering for this section",
+        "status": "retained_not_executed",
+        "tag": "Boundary",
+        "type": null
+      },
+      {
+        "path": "/febio_spec/Discrete[1]",
+        "reason": "No qualified source-equivalent Matter lowering for this section",
+        "status": "retained_not_executed",
+        "tag": "Discrete",
+        "type": null
+      },
+      {
+        "path": "/febio_spec/LoadData[1]",
+        "reason": "No qualified source-equivalent Matter lowering for this section",
+        "status": "retained_not_executed",
+        "tag": "LoadData",
+        "type": null
+      },
+      {
+        "path": "/febio_spec/Output[1]",
+        "reason": "No qualified source-equivalent Matter lowering for this section",
+        "status": "retained_not_executed",
+        "tag": "Output",
+        "type": null
+      },
+      {
+        "path": "/febio_spec/Step[1]",
+        "reason": "No qualified source-equivalent Matter lowering for this section",
+        "status": "retained_not_executed",
+        "tag": "Step",
+        "type": null
+      }
+    ],
+    "status": "rejected_unsupported_source_program",
+    "unknown_fields": "retained verbatim; never replaced by runtime defaults"
+  },
+  "patellar_chain": {
+    "body_material_ids": [
+      4,
+      20,
+      19,
+      1
+    ],
+    "configuration": "authored_neutral",
+    "flexed_transform_and_reaction_validation": "not_run",
+    "free_coordinates": [
+      {
+        "coordinate": "translation",
+        "joint": "Patellar_Extension_Flexion"
+      },
+      {
+        "coordinate": "rotation",
+        "joint": "Patellar_Extension_Flexion"
+      },
+      {
+        "coordinate": "translation",
+        "joint": "Patellar_Lateral_Rotation"
+      },
+      {
+        "coordinate": "rotation",
+        "joint": "Patellar_Lateral_Rotation"
+      },
+      {
+        "coordinate": "translation",
+        "joint": "Patellar_Lateral_Tilt"
+      },
+      {
+        "coordinate": "rotation",
+        "joint": "Patellar_Lateral_Tilt"
+      }
+    ],
+    "normalized_joint_axes": [
+      [
+        0.9889108468842679,
+        -0.1485103932882822,
+        0.0
+      ],
+      [
+        0.14851030491779924,
+        0.9889102584370405,
+        -0.00109091301582676
+      ],
+      [
+        0.007345507674492785,
+        0.0,
+        0.9999730213945794
+      ]
+    ],
+    "rank": 6,
+    "spatial_jacobian_mm_radian": [
+      [
+        0.9889108468842679,
+        0.025395277252296258,
+        0.14851030491779924,
+        -0.16226830408050266,
+        0.007345507674492785,
+        46.34224971699969
+      ],
+      [
+        -0.1485103932882822,
+        0.16910375481720982,
+        0.9889102584370405,
+        0.02098683239544153,
+        0.0,
+        -3.8586465084319737
+      ],
+      [
+        0.0,
+        6.796370925968287,
+        -0.00109091301582676,
+        -3.0657086504775766,
+        0.9999730213945794,
+        -0.34041653491285634
+      ],
+      [
+        0.0,
+        0.9889108468842679,
+        0.0,
+        0.14851030491779924,
+        0.0,
+        0.007345507674492785
+      ],
+      [
+        0.0,
+        -0.1485103932882822,
+        0.0,
+        0.9889102584370405,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        -0.00109091301582676,
+        0.0,
+        0.9999730213945794
+      ]
+    ],
+    "status": "kinematic_calculation_only"
+  },
+  "qualification": {
+    "extensor_transmission": false,
+    "initialized_equilibrium": false,
+    "source_equivalence": false,
+    "strict_nonintersection": false,
+    "whole_body_integration": false
+  },
+  "reference_errors": [
+    {
+      "code": "missing_authored_include",
+      "path": "/febio_spec/Geometry[1]",
+      "reference": "C:\\oks_simulations\\oks003\\MD_outputs\\CC\\CC-OKS-MD-outcomes\\CC-OKS-MD-outputs\\model\\Febio\\rerun_updated_customization\\Geometry_custom.feb"
+    },
+    {
+      "code": "unresolved_node_set",
+      "path": "/febio_spec/Boundary[1]/rigid[18]",
+      "reference": "QAT_@_QSO_TiesNodes"
+    },
+    {
+      "code": "unresolved_discrete_set",
+      "path": "/febio_spec/Discrete[1]/discrete[1]",
+      "reference": "MPFL"
+    },
+    {
+      "code": "unresolved_discrete_set",
+      "path": "/febio_spec/Discrete[1]/discrete[2]",
+      "reference": "LPFL"
+    },
+    {
+      "code": "unresolved_discrete_set",
+      "path": "/febio_spec/Discrete[1]/discrete[3]",
+      "reference": "MCL_MNS-M_tie"
+    },
+    {
+      "code": "unresolved_surface_pair",
+      "path": "/febio_spec/Step[1]/Contact[1]/contact[2]",
+      "reference": "FMC_To_QAT"
+    }
+  ],
+  "reference_solver": {
+    "binary_sha256": null,
+    "deck_format_version": "2.5",
+    "settings": "authored_deck",
+    "status": "not_run",
+    "version": null
+  },
+  "revisions": {
+    "human": "499d87044c614a6ac69281182b875767cb02bccb",
+    "matter": "fac41f55c68af622b8b06214adb7c0b876faeeb7"
+  },
+  "schema": "numi.human.open-knee-source-problem.v1",
+  "source_files": {
+    "FeBio_custom.feb": {
+      "bytes": 8666471,
+      "sha256": "00b6efb53ad7e7330296cbb9569d358d48ed60819e22732e6149db6fb98a158a"
+    },
+    "Geometry.feb": {
+      "bytes": 107215987,
+      "sha256": "3642bd368bbc867569f181fa76129f746470e807e3977585d3803f092dd11262"
+    },
+    "ModelProperties.xml": {
+      "bytes": 5015,
+      "sha256": "0ac446ce098b9a09505992eb4f4419c7b944cd57a4afbf6392b137f4806603c1"
+    },
+    "license.txt": {
+      "bytes": 485,
+      "sha256": "d72918838b4adf30979d2a26c23837f0ca05185ba799a3a4fe1fe1b4c05b20b8"
+    }
+  },
+  "status": "blocked_reference_dependencies",
+  "worktree_status": {
+    "human": " M src/numilab_human/cli.py\n M src/numilab_human/open_knee.py\n?? config/open-knee-shifted-acl-hybrid-regression.v1.json\n?? src/numilab_human/open_knee_reference.py\n?? tests/test_open_knee_reference.py\n",
+    "matter": " M apps/matter_physics_probe.mm\n M matter/CMakeLists.txt\n M matter/include/numi/matter/matter.hpp\n M matter/src/compiler_impl.cpp\n M matter/src/runtime.mm\n M matter/src/validation_impl.cpp\n M matter/tools/fem_field_active_tension_probe.mm\n M matter/tools/ventricular_source_step.mm\n?? docs/HUMAN_COUPLED_RESULTS_20261001.md\n?? matter/tools/vascular_cavity_pump_demo.mm\n"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "numi.human.open-knee-upstream-comparison.v1",
+  "status": "rejected_as_pinned_source_replacement",
+  "url": "https://simtk.org/svn/openknee/oks/oks003/Model/Febio/",
+  "directory_revision_observed": 3413,
+  "files": {
+    "FeBio_custom.feb": {
+      "sha256": "498e24f8f862f94ea0e27b73fd84ba516d9749629ed53233953ca97d3b6b9c66",
+      "bytes": 8668758
+    },
+    "Geometry_custom.feb": {
+      "sha256": "1e4f4a8c4aacdd701ec17e4761eb398ca9005952922e38fe1119f6d05559ee36",
+      "bytes": 119017987
+    }
+  },
+  "pinned_deck_with_svn_geometry_errors": [
+    {
+      "code": "unresolved_discrete_set",
+      "path": "/febio_spec/Discrete[1]/discrete[3]",
+      "reference": "MCL_MNS-M_tie"
+    },
+    {
+      "code": "unresolved_surface_pair",
+      "path": "/febio_spec/Step[1]/Contact[1]/contact[2]",
+      "reference": "FMC_To_QAT"
+    }
+  ],
+  "substitution_performed": false,
+  "doi_archive_listing": {
+    "Geometry_custom.feb": 119032115,
+    "FeBio_custom.log": 1472687,
+    "FeBio_custom.xplt": 5345476723
+  },
+  "original_archive_retrieved": false
+}

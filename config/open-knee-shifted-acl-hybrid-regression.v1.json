@@ -1,0 +1,20 @@
+{
+  "schema": "numi.human.open-knee-regression.v1",
+  "name": "oks003-shifted-acl-reduced-hybrid-eight-microseconds",
+  "model_class": "reduced_hybrid_regression",
+  "source_equivalence": false,
+  "human_commit": "499d87044c614a6ac69281182b875767cb02bccb",
+  "matter_commit": "fac41f55c68af622b8b06214adb7c0b876faeeb7",
+  "receipt": "Docs/media/cruciate-contact-clearance-20261001/receipt.json",
+  "receipt_sha256": "fdfbb1c0a03cbdfd42205d67784c54740d962512df7b76c2211352186e846bf9",
+  "accepted_steps": 8,
+  "step_seconds": 1e-06,
+  "initialization": "opt-in 0.5 mm local ACL displacement",
+  "substitutions": [
+    "MyoSim articulated patella coordinates rather than the complete source cylindrical-joint graph",
+    "Reduced endpoint fibre forces alongside neutral-stretch viscous tendon/ligament continua",
+    "Rigid-owner articular surfaces with reference-relative elastic foundation contact",
+    "Quadriceps loads at patellar attachment and prescribed active PTL force pair"
+  ],
+  "qualification": "Contact implementation regression only. No source-equivalent tissue, equilibrium, extensor-transmission or sustained knee claim."
+}
