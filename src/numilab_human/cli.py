@@ -1560,7 +1560,17 @@ def parser() -> argparse.ArgumentParser:
     reference_parser.add_argument("--open-knee", type=Path, required=True)
     reference_parser.add_argument("--output", type=Path, required=True)
     reference_parser.add_argument("--matter-root", type=Path, required=True)
+    reference_parser.add_argument("--archive", type=Path,
+        help="hash-pinned DOI final-model downloads, including customized geometry and original log")
+    reference_parser.add_argument("--febio", type=Path,
+        help="run the frozen problem with this reference executable; requires FEBio 2.9.1 for matching status")
     reference_parser.set_defaults(handler=open_knee_reference_cli)
+    from .open_knee_xplt import cli as open_knee_reference_contact_cli
+    reference_contact_parser = commands.add_parser("open-knee-reference-contact",
+        help="read original XPLT v5 contact fields and explicitly report partial downloads")
+    reference_contact_parser.add_argument("--plot", type=Path, required=True)
+    reference_contact_parser.add_argument("--output", type=Path, required=True)
+    reference_contact_parser.set_defaults(handler=open_knee_reference_contact_cli)
     thoracic_registration_parser = commands.add_parser(
         "myosim-thoracic-registration",
         help="propose exact T1-T12 source-mesh registration with enthesis and continuity gates",

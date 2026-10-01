@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 import pytest
 
 from numilab_human.open_knee_reference import (
-    audit_program, cylindrical_chain_audit, freeze_reference_case, xml_record,
+    audit_program, cylindrical_chain_audit, freeze_reference_case, run_reference_case, xml_record,
 )
 
 
@@ -144,3 +144,82 @@ def test_freeze_retains_full_program_and_never_rebinds_missing_geometry(tmp_path
     assert (out/'source/FeBio_custom.feb').read_bytes() == (directory/'FeBio_custom.feb').read_bytes()
     with pytest.raises(FileExistsError):
         freeze_reference_case(directory, out, human_revision='h', matter_revision='m')
+
+
+def runnable_case(tmp_path, monkeypatch):
+    import hashlib
+    from numilab_human import open_knee
+    directory = tmp_path / 'source'
+    directory.mkdir()
+    r = source()
+    ET.SubElement(r, 'Geometry', {'from': r'C:\source\Geometry_custom.feb'})
+    (directory/'FeBio_custom.feb').write_bytes(ET.tostring(r))
+    (directory/'Geometry.feb').write_bytes(ET.tostring(geometry()))
+    (directory/'Geometry_custom.feb').write_bytes(ET.tostring(geometry()))
+    (directory/'license.txt').write_text('fixture')
+    monkeypatch.setattr(open_knee, 'EXPECTED_HASHES', {
+        p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in directory.iterdir()
+        if p.name != 'Geometry_custom.feb'})
+    out = tmp_path/'case'
+    result = freeze_reference_case(directory, out, human_revision='h', matter_revision='m')
+    assert result['reference_errors'] == []
+    assert result['geometry_binding'] == 'authored_dependency'
+    return directory, out
+
+
+def test_runnable_case_relocates_only_include_and_retains_source_bytes(tmp_path, monkeypatch):
+    directory, out = runnable_case(tmp_path, monkeypatch)
+    original = (directory/'FeBio_custom.feb').read_bytes()
+    assert (out/'source/FeBio_custom.feb').read_bytes() == original
+    assert (out/'execution/FeBio_custom.feb').read_bytes() == original.replace(
+        b'C:\\source\\Geometry_custom.feb', b'../source/Geometry_custom.feb')
+
+
+def test_frozen_geometry_mutation_rejected_before_solver_runs(tmp_path, monkeypatch):
+    _, out = runnable_case(tmp_path, monkeypatch)
+    (out/'source/Geometry_custom.feb').write_text('changed')
+    with pytest.raises(ValueError, match='frozen source identity drift'):
+        run_reference_case(out, Path('/bin/false'))
+
+
+def test_solver_failure_is_retained_and_cannot_be_overwritten(tmp_path, monkeypatch):
+    import json
+    import shutil
+    _, out = runnable_case(tmp_path, monkeypatch)
+    binary = Path(shutil.which('false'))
+    result = run_reference_case(out, binary)
+    assert result['reference_solver']['returncode'] != 0
+    assert result['reference_solver']['status'] == 'failed_missing_log'
+    assert not result['qualification']['source_equivalence']
+    assert result == json.loads((out/'receipt.json').read_text())
+    with pytest.raises(ValueError, match='already attempted'):
+        run_reference_case(out, binary)
+
+
+@pytest.mark.parametrize('version,exitcode,expected', [
+    ('2.9.1', 0, 'completed_source_protocol'),
+    ('3.0.0', 0, 'failed_or_nonmatching_reference'),
+    ('2.9.1', 1, 'failed_or_nonmatching_reference'),
+])
+def test_completed_protocol_does_not_promote_source_equivalence(tmp_path, monkeypatch, version, exitcode, expected):
+    import shutil
+    from types import SimpleNamespace
+    from numilab_human.open_knee_febio_log import CONNECTOR_IDS, FIELDS, RIGID_BODY_IDS
+    from numilab_human import open_knee_reference
+    _, out = runnable_case(tmp_path, monkeypatch)
+    # Synthetic process output exercises receipt admission only, not mechanics.
+    text = f'--- version-{version} ---\n------- converged at time : 2\n'
+    for i, (name, (width, _)) in enumerate(FIELDS.items(), 1):
+        text += f'\nData Record #{i}\n=====\nStep = 1\nTime = 2\nData = {name}\n'
+        ids = CONNECTOR_IDS if name.startswith('Rigid_Connector') else RIGID_BODY_IDS
+        text += ''.join(str(j) + ' ' + ' '.join(['0']*width) + '\n' for j in sorted(ids))
+    text += '\nNumber of time steps completed ... : 1\nN O R M A L   T E R M I N A T I O N\n'
+
+    def process(*args, **kwargs):
+        (kwargs['cwd']/'FeBio_custom.log').write_text(text)
+        return SimpleNamespace(returncode=exitcode)
+
+    monkeypatch.setattr(open_knee_reference.subprocess, 'run', process)
+    result = run_reference_case(out, Path(shutil.which('false')))
+    assert result['reference_solver']['status'] == expected
+    assert not any(result['qualification'].values())

@@ -14,6 +14,7 @@ import math
 from pathlib import Path, PureWindowsPath
 import shutil
 import subprocess
+import time
 import xml.etree.ElementTree as ET
 
 SCHEMA = "numi.human.open-knee-source-problem.v1"
@@ -242,7 +243,7 @@ def audit_program(root: ET.Element, geometry: ET.Element | None) -> dict:
 
 
 def freeze_reference_case(directory: Path, output: Path, *, human_revision: str,
-                          matter_revision: str) -> dict:
+                          matter_revision: str, archive: Path | None = None) -> dict:
     """Freeze the pinned legacy inputs and compile their entire source program.
 
     Missing authored includes are audited against the retained geometry for
@@ -254,6 +255,23 @@ def freeze_reference_case(directory: Path, output: Path, *, human_revision: str,
     for name, expected in EXPECTED_HASHES.items():
         if not (directory / name).is_file() or _sha(directory / name) != expected:
             raise ValueError(f"pinned source identity drift: {name}")
+    archive_manifest = None
+    archive_files = {}
+    if archive is not None:
+        archive = archive.resolve()
+        archive_manifest = json.loads((Path(__file__).resolve().parents[2] /
+            "config/open-knee-oks003-reference-archive.v1.json").read_text())
+        archive_files = {**archive_manifest["files"], **{
+            "processed-results/" + name: identity
+            for name, identity in archive_manifest.get("processed_results", {}).items()}}
+        for name, identity in archive_files.items():
+            candidate = archive / name
+            if not candidate.is_file() or _sha(candidate) != identity["sha256"]:
+                raise ValueError(f"pinned reference archive identity drift: {name}")
+        plot = archive_manifest.get("plot")
+        if plot is not None and (not (archive / plot["file"]).is_file() or
+                                 _sha(archive / plot["file"]) != plot["sha256"]):
+            raise ValueError("pinned reference archive plot identity drift")
     output.mkdir(parents=True, exist_ok=False)
     frozen = output / "source"
     frozen.mkdir()
@@ -261,15 +279,21 @@ def freeze_reference_case(directory: Path, output: Path, *, human_revision: str,
         shutil.copyfile(directory / name, frozen / name)
         if _sha(frozen / name) != expected:
             raise ValueError(f"source changed while freezing: {name}")
+    if archive_manifest is not None:
+        for name, identity in archive_files.items():
+            (frozen / name).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(archive / name, frozen / name)
+            if _sha(frozen / name) != identity["sha256"]:
+                raise ValueError(f"reference archive changed while freezing: {name}")
     root = ET.parse(frozen / "FeBio_custom.feb").getroot()
     includes = [(path, e.get("from")) for path, e in _walk(root) if e.get("from")]
     dependencies, dependency_errors = [], []
     selected_geometry = None
     for path, authored in includes:
         basename = PureWindowsPath(authored).name
-        candidate = directory / basename
+        candidate = (archive if archive is not None else directory) / basename
         present = candidate.is_file()
-        if present and basename not in EXPECTED_HASHES:
+        if present and not (frozen / basename).exists():
             shutil.copyfile(candidate, frozen / basename)
             if _sha(frozen / basename) != _sha(candidate):
                 raise ValueError(f"dependency changed while freezing: {basename}")
@@ -305,6 +329,24 @@ def freeze_reference_case(directory: Path, output: Path, *, human_revision: str,
                                     "extensor_transmission": False, "strict_nonintersection": False,
                                     "whole_body_integration": False}})
     files = set(EXPECTED_HASHES) | {d["local_filename"] for d in dependencies if d["present"]}
+    if archive_manifest is not None:
+        files |= set(archive_files)
+        from .open_knee_febio_log import parse_febio_log
+        observations = parse_febio_log((frozen / "FeBio_custom.log").read_text())
+        observation_file = output / "archived-observations.json"
+        observation_file.write_text(json.dumps(observations, separators=(",", ":")) + "\n")
+        audit["archived_reference"] = {
+            **{k: v for k, v in observations.items() if k not in ("records", "accepted_times")},
+            "evidence_origin": "published DOI archive; not a new local solver run",
+            "manifest": archive_manifest,
+            "observations": {"file": observation_file.name, "sha256": _sha(observation_file)},
+            "local_reproduction": False,
+            "pressure_and_tissue_fields": "not contained in text log; require XPLT output",
+        }
+        if archive_manifest.get("plot") is not None:
+            audit["archived_reference"]["plot"] = {**archive_manifest["plot"],
+                "path": str(archive / archive_manifest["plot"]["file"])}
+            audit["archived_reference"]["pressure_and_tissue_fields"] = "retained in hash-pinned original XPLT"
     audit["source_files"] = {}
     for name in sorted(files):
         digest = _sha(frozen / name)
@@ -314,8 +356,80 @@ def freeze_reference_case(directory: Path, output: Path, *, human_revision: str,
                                   separators=(",", ":")) + "\n")
     audit["mechanical_program"] = {"file": program.name, "sha256": _sha(program),
                                    "coverage": "all XML elements, attributes, text, tail and child order"}
+    if not audit["reference_errors"]:
+        # The only edit to the execution deck is explicit include relocation.
+        # The original source bytes remain immutable under source/.
+        execution = output / "execution"
+        execution.mkdir()
+        data = (frozen / "FeBio_custom.feb").read_bytes()
+        for dependency in dependencies:
+            original = ('from="' + dependency["authored"] + '"').encode("ascii")
+            replacement = ('from="../source/' + dependency["local_filename"] + '"').encode("ascii")
+            if data.count(original) != 1:
+                raise ValueError("cannot uniquely relocate authored include")
+            data = data.replace(original, replacement)
+        deck = execution / "FeBio_custom.feb"
+        deck.write_bytes(data)
+        audit["execution_deck"] = {"file": str(deck.relative_to(output)), "sha256": _sha(deck),
+                                   "changes": "external include paths only; all mechanical values unchanged"}
     (output / "receipt.json").write_text(json.dumps(audit, indent=2, sort_keys=True) + "\n")
     return audit
+
+
+def run_reference_case(output: Path, binary: Path) -> dict:
+    """Execute the frozen source experiment once; preserve unsuccessful baselines.
+
+    Runtime qualification is deliberately separate from archive import and
+    from native source equivalence. Never rerun into a previous output folder.
+    """
+    from .open_knee_febio_log import parse_febio_log
+    output, binary = output.resolve(), binary.resolve()
+    receipt = output / "receipt.json"
+    result = json.loads(receipt.read_text())
+    if result["reference_errors"] or "execution_deck" not in result:
+        raise ValueError("reference dependencies are not closed")
+    if result["reference_solver"]["status"] != "not_run":
+        raise ValueError("reference execution already attempted; freeze a new case")
+    for name, identity in result["source_files"].items():
+        if _sha(output / "source" / name) != identity["sha256"]:
+            raise ValueError(f"frozen source identity drift: {name}")
+    deck = output / result["execution_deck"]["file"]
+    if _sha(deck) != result["execution_deck"]["sha256"]:
+        raise ValueError("execution deck identity drift")
+    run = result["reference_solver"]
+    run.update({"status": "running", "binary": str(binary), "binary_sha256": _sha(binary),
+                "command": [str(binary), "-i", deck.name], "started_unix": time.time()})
+    receipt.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+    try:
+        with (deck.parent / "stdout.txt").open("x") as stdout:
+            process = subprocess.run(run["command"], cwd=deck.parent, stdin=subprocess.DEVNULL,
+                                     stdout=stdout, stderr=subprocess.STDOUT, check=False)
+        run["returncode"] = process.returncode
+        log = deck.with_suffix(".log")
+        if not log.exists():
+            run["status"] = "failed_missing_log"
+        else:
+            observations = parse_febio_log(log.read_text(errors="replace"))
+            destination = output / "local-observations.json"
+            destination.write_text(json.dumps(observations, separators=(",", ":")) + "\n")
+            run.update({k: v for k, v in observations.items() if k not in ("records", "accepted_times")})
+            run["log_sha256"] = _sha(log)
+            run["observations_sha256"] = _sha(destination)
+            matched = observations["version"] == "2.9.1"
+            reached = bool(observations["accepted_times"]) and observations["accepted_times"][-1] == 2.0
+            run["status"] = ("completed_source_protocol" if process.returncode == 0 and matched and reached
+                             and observations["status"] == "normal_termination_with_complete_observations"
+                             else "failed_or_nonmatching_reference")
+            run["original_binary_identity_match"] = "unknown; archived executable not supplied"
+    except BaseException as error:
+        run["status"] = "interrupted_or_failed"
+        run["error"] = str(error)
+        raise
+    finally:
+        run["finished_unix"] = time.time()
+        result["status"] = "reference_" + run["status"]
+        receipt.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+    return result
 
 
 def cli(arguments) -> int:
@@ -324,16 +438,21 @@ def cli(arguments) -> int:
     human_root = Path(__file__).resolve().parents[2]
     result = freeze_reference_case(arguments.open_knee, arguments.output,
                                    human_revision=revision(human_root),
-                                   matter_revision=revision(arguments.matter_root))
+                                   matter_revision=revision(arguments.matter_root),
+                                   archive=arguments.archive)
     result["compiler_sources"] = {
         path: _sha(human_root / path) for path in
         ("src/numilab_human/open_knee.py", "src/numilab_human/open_knee_reference.py",
-         "src/numilab_human/cli.py")}
+         "src/numilab_human/open_knee_febio_log.py", "src/numilab_human/cli.py",
+         "config/open-knee-oks003-reference-archive.v1.json")}
     result["worktree_status"] = {
         owner: subprocess.check_output(["git", "-C", str(path), "status", "--short"], text=True)
         for owner, path in (("human", human_root), ("matter", arguments.matter_root))}
     (arguments.output / "receipt.json").write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+    if arguments.febio is not None:
+        result = run_reference_case(arguments.output, arguments.febio)
     print(json.dumps({"status": result["status"], "receipt": str(arguments.output / "receipt.json"),
                       "reference_errors": result["reference_errors"],
                       "native_admission": result["native_admission"]["status"]}, indent=2))
-    return 2 if result["reference_errors"] else 0
+    return 2 if result["reference_errors"] or (arguments.febio is not None and
+        result["reference_solver"]["status"] != "completed_source_protocol") else 0
