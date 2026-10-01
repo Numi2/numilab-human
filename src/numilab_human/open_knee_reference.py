@@ -376,7 +376,71 @@ def freeze_reference_case(directory: Path, output: Path, *, human_revision: str,
     return audit
 
 
-def run_reference_case(output: Path, binary: Path) -> dict:
+def _translate_febio3_material_frames(root: ET.Element) -> list[dict]:
+    records = []
+    for material in root.findall("Material/material"):
+        if material.get("type") != "uncoupled prestrain elastic":
+            continue
+        fiber, elastic = material.find("fiber"), material.find("elastic")
+        if fiber is None or fiber.get("type") != "vector" or elastic is None or elastic.find("fiber") is not None:
+            raise ValueError("unsupported source fibre-frame layout")
+        if elastic.get("type") != "trans iso Mooney-Rivlin" or material.find("mat_axis") is not None:
+            raise ValueError("unsupported source prestrain material")
+        axis = _vec(fiber.text)
+        norm = math.sqrt(sum(x*x for x in axis))
+        if not .999 <= norm <= 1.001:
+            raise ValueError("invalid source fibre axis")
+        axis = [x/norm for x in axis]
+        # Choose a stable transverse seed; transverse isotropy makes this
+        # choice mechanically immaterial. The source direction is preserved.
+        seed = [0., 0., 0.]
+        seed[min(range(3), key=lambda i: abs(axis[i]))] = 1.
+        frame = ET.Element("mat_axis", {"type": "vector"})
+        ET.SubElement(frame, "a").text = ",".join(format(x, ".17g") for x in axis)
+        ET.SubElement(frame, "d").text = ",".join(format(x, ".17g") for x in seed)
+        material.insert(list(material).index(fiber), frame)
+        material.remove(fiber)
+        ET.SubElement(elastic, "fiber", {"type": "vector"}).text = "1,0,0"
+        records.append({"material": material.get("name"), "source_axis": _vec(fiber.text),
+                        "normalized_axis": axis, "transverse_seed": seed,
+                        "elastic_local_fiber": [1,0,0]})
+    if {x["material"] for x in records} != {"QAT", "ACL", "PCL", "MCL", "LCL", "PTL"}:
+        raise ValueError("incomplete source prestrain frame conversion")
+    return records
+
+
+def prepare_febio3_comparison(output: Path) -> dict:
+    """Explicit legacy fibre-frame translation for the public 3.0 comparator.
+
+    FEBio 2.5 stores a prestrain material's fibre as its material x axis.
+    FEBio 3.0 exposes mat_axis on the parent and a local fibre on its elastic
+    child. Both the isochoric prestrain and child fibre must share that frame.
+    All original source bytes remain immutable. This does not admit Matter.
+    """
+    output = output.resolve()
+    receipt = output / "receipt.json"
+    result = json.loads(receipt.read_text())
+    if result["reference_solver"]["status"] != "not_run":
+        raise ValueError("cannot translate an attempted reference case")
+    if result["source_files"]["FeBio_custom.feb"]["sha256"] != "00b6efb53ad7e7330296cbb9569d358d48ed60819e22732e6149db6fb98a158a":
+        raise ValueError("FEBio 3 translation is restricted to the pinned source")
+    deck = output / result["execution_deck"]["file"]
+    if result["execution_deck"].get("required_comparison_version") or _sha(deck) != result["execution_deck"]["sha256"]:
+        raise ValueError("execution deck already translated or changed")
+    root = ET.parse(deck).getroot()
+    records = _translate_febio3_material_frames(root)
+    previous = result["execution_deck"]["sha256"]
+    data = ET.tostring(root, encoding="utf-8", xml_declaration=True)
+    deck.write_bytes(data)
+    result["execution_deck"].update(sha256=_sha(deck), before_translation_sha256=previous,
+        required_comparison_version="3.0.0", frame_translation=records,
+        changes="external include paths and six explicit parent material frames with local elastic fibre; XML formatting normalized")
+    receipt.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+    return result
+
+
+def run_reference_case(output: Path, binary: Path, *, config: Path | None = None,
+                       comparison_version: str | None = None) -> dict:
     """Execute the frozen source experiment once; preserve unsuccessful baselines.
 
     Runtime qualification is deliberately separate from archive import and
@@ -384,10 +448,17 @@ def run_reference_case(output: Path, binary: Path) -> dict:
     """
     from .open_knee_febio_log import parse_febio_log
     output, binary = output.resolve(), binary.resolve()
+    if comparison_version is not None:
+        import re
+        if not re.fullmatch(r"\d+\.\d+\.\d+", comparison_version) or comparison_version == "2.9.1":
+            raise ValueError("comparison version must explicitly name a different FEBio version")
     receipt = output / "receipt.json"
     result = json.loads(receipt.read_text())
     if result["reference_errors"] or "execution_deck" not in result:
         raise ValueError("reference dependencies are not closed")
+    required_version = result["execution_deck"].get("required_comparison_version")
+    if required_version and comparison_version != required_version:
+        raise ValueError("translated execution deck requires its explicit comparison version")
     if result["reference_solver"]["status"] != "not_run":
         raise ValueError("reference execution already attempted; freeze a new case")
     for name, identity in result["source_files"].items():
@@ -399,6 +470,18 @@ def run_reference_case(output: Path, binary: Path) -> dict:
     run = result["reference_solver"]
     run.update({"status": "running", "binary": str(binary), "binary_sha256": _sha(binary),
                 "command": [str(binary), "-i", deck.name], "started_unix": time.time()})
+    run["comparison_version"] = comparison_version
+    if config is not None:
+        frozen_config = output / "execution" / "reference-config.xml"
+        # Capture the linear backend and thread settings, instead of inheriting
+        # an unrecorded febio.xml from the executable's directory.
+        with frozen_config.open("xb") as stream:
+            stream.write(config.resolve().read_bytes())
+        run["config_sha256"] = _sha(frozen_config)
+        run["command"] += ["-config", str(frozen_config)]
+    else:
+        run["command"] += ["-noconfig"]
+        run["config"] = "explicit solver defaults; no external febio.xml"
     receipt.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
     try:
         with (deck.parent / "stdout.txt").open("x") as stdout:
@@ -415,9 +498,10 @@ def run_reference_case(output: Path, binary: Path) -> dict:
             run.update({k: v for k, v in observations.items() if k not in ("records", "accepted_times")})
             run["log_sha256"] = _sha(log)
             run["observations_sha256"] = _sha(destination)
-            matched = observations["version"] == "2.9.1"
+            matched = observations["version"] == (comparison_version or "2.9.1")
             reached = bool(observations["accepted_times"]) and observations["accepted_times"][-1] == 2.0
-            run["status"] = ("completed_source_protocol" if process.returncode == 0 and matched and reached
+            completed = "completed_version_comparison" if comparison_version else "completed_source_protocol"
+            run["status"] = (completed if process.returncode == 0 and matched and reached
                              and observations["status"] == "normal_termination_with_complete_observations"
                              else "failed_or_nonmatching_reference")
             run["original_binary_identity_match"] = "unknown; archived executable not supplied"
@@ -433,6 +517,8 @@ def run_reference_case(output: Path, binary: Path) -> dict:
 
 
 def cli(arguments) -> int:
+    if arguments.febio3_material_frames and arguments.comparison_version != "3.0.0":
+        raise ValueError("FEBio 3 material-frame translation requires --comparison-version 3.0.0")
     def revision(path):
         return subprocess.check_output(["git", "-C", str(path), "rev-parse", "HEAD"], text=True).strip()
     human_root = Path(__file__).resolve().parents[2]
@@ -449,10 +535,15 @@ def cli(arguments) -> int:
         owner: subprocess.check_output(["git", "-C", str(path), "status", "--short"], text=True)
         for owner, path in (("human", human_root), ("matter", arguments.matter_root))}
     (arguments.output / "receipt.json").write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+    if arguments.febio3_material_frames:
+        result = prepare_febio3_comparison(arguments.output)
     if arguments.febio is not None:
-        result = run_reference_case(arguments.output, arguments.febio)
+        result = run_reference_case(arguments.output, arguments.febio,
+                                    config=arguments.febio_config,
+                                    comparison_version=arguments.comparison_version)
     print(json.dumps({"status": result["status"], "receipt": str(arguments.output / "receipt.json"),
                       "reference_errors": result["reference_errors"],
                       "native_admission": result["native_admission"]["status"]}, indent=2))
     return 2 if result["reference_errors"] or (arguments.febio is not None and
-        result["reference_solver"]["status"] != "completed_source_protocol") else 0
+        result["reference_solver"]["status"] not in
+        ("completed_source_protocol", "completed_version_comparison")) else 0

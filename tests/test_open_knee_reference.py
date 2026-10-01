@@ -223,3 +223,79 @@ def test_completed_protocol_does_not_promote_source_equivalence(tmp_path, monkey
     result = run_reference_case(out, Path(shutil.which('false')))
     assert result['reference_solver']['status'] == expected
     assert not any(result['qualification'].values())
+
+
+def test_comparison_version_and_config_are_explicit_and_frozen(tmp_path, monkeypatch):
+    import shutil
+    from types import SimpleNamespace
+    from numilab_human import open_knee_reference
+    _, out = runnable_case(tmp_path, monkeypatch)
+    config = tmp_path/'superlu.xml'
+    config.write_text('<febio_config version="1.0"><linear_solver type="superlu"/></febio_config>')
+    original = config.read_bytes()
+    def process(command, **kwargs):
+        assert command[-2] == '-config'
+        assert Path(command[-1]).read_bytes() == original
+        config.write_text('modified after capture')
+        (kwargs['cwd']/'FeBio_custom.log').write_text('version-2.9.0')
+        return SimpleNamespace(returncode=0)
+    monkeypatch.setattr(open_knee_reference.subprocess, 'run', process)
+    result = run_reference_case(out, Path(shutil.which('false')), config=config, comparison_version='2.9.0')
+    run = result['reference_solver']
+    assert run['comparison_version'] == '2.9.0'
+    assert run['status'] == 'failed_or_nonmatching_reference'
+    assert (out/'execution/reference-config.xml').read_bytes() == original
+    assert not any(result['qualification'].values())
+
+
+@pytest.mark.parametrize('version', ['2.9.1', 'latest', ''])
+def test_invalid_comparison_version_rejected_before_run(tmp_path, monkeypatch, version):
+    _, out = runnable_case(tmp_path, monkeypatch)
+    with pytest.raises(ValueError, match='comparison version'):
+        run_reference_case(out, Path('/bin/false'), comparison_version=version)
+
+
+def test_febio3_frame_translation_preserves_fiber_and_isochoric_prestrain():
+    import numpy as np
+    from numilab_human.open_knee_reference import _translate_febio3_material_frames
+    root = ET.Element('febio_spec')
+    materials = ET.SubElement(root, 'Material')
+    for name in ['QAT','ACL','PCL','MCL','LCL','PTL']:
+        m = ET.SubElement(materials, 'material', name=name, type='uncoupled prestrain elastic')
+        e = ET.SubElement(m, 'elastic', type='trans iso Mooney-Rivlin')
+        ET.SubElement(e, 'c1').text = '1.95'
+        p = ET.SubElement(m, 'prestrain', type='in-situ stretch')
+        ET.SubElement(p, 'stretch', lc='3').text = '1'
+        ET.SubElement(m, 'fiber', type='vector').text = '.36,-.48,.8'
+    before = ET.tostring(root)
+    records = _translate_febio3_material_frames(root)
+    assert len(records) == 6
+    for material, record in zip(materials, records):
+        a = np.array(record['normalized_axis']);d = np.array(record['transverse_seed'])
+        c = np.cross(a, d);c /= np.linalg.norm(c)
+        b = np.cross(c, a);q = np.column_stack([a,b,c])
+        assert np.allclose(q.T @ q, np.eye(3), atol=1e-15)
+        assert np.linalg.det(q) == pytest.approx(1, abs=1e-15)
+        assert np.allclose(q @ [1,0,0], a, atol=1e-15)
+        for stretch in [1,1.016,1.027,1.034]:
+            f = q @ np.diag([stretch,stretch**-.5,stretch**-.5]) @ q.T
+            expected = np.eye(3)*stretch**-.5 + np.outer(a,a)*(stretch-stretch**-.5)
+            assert np.allclose(f, expected, atol=1e-15)
+            assert np.linalg.det(f) == pytest.approx(1, abs=1e-15)
+        # Undo only the declared change; every other node/attribute/value
+        # must still match the input, including its load-curve assignment.
+        material.remove(material.find('mat_axis'))
+        material.find('elastic').remove(material.find('elastic/fiber'))
+        ET.SubElement(material,'fiber',type='vector').text = '.36,-.48,.8'
+    assert ET.tostring(root) == before
+
+
+def test_translated_deck_cannot_be_reported_as_original_version(tmp_path, monkeypatch):
+    import json
+    _, out = runnable_case(tmp_path, monkeypatch)
+    receipt = out/'receipt.json'
+    r = json.loads(receipt.read_text())
+    r['execution_deck']['required_comparison_version'] = '3.0.0'
+    receipt.write_text(json.dumps(r))
+    with pytest.raises(ValueError, match='explicit comparison version'):
+        run_reference_case(out, Path('/bin/false'))

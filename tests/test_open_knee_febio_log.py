@@ -48,3 +48,10 @@ def test_nonfinite_vector_is_rejected():
 def test_duplicate_records_are_rejected():
     with pytest.raises(ValueError, match='duplicate source observation'):
         parse_febio_log(log() + 'Data Record' + log().split('Data Record', 1)[1])
+
+
+def test_public_three_banner_does_not_become_original_version():
+    text = log().replace('v e r s i o n - 2 . 9 . 1', 'version 3.0.0')
+    assert parse_febio_log(text)['version'] == '3.0.0'
+    with pytest.raises(ValueError, match='conflicting source solver versions'):
+        parse_febio_log(text + '\nversion 2.9.1\n')

@@ -1,0 +1,194 @@
+--- a/NumCore/CSRMatrix.cpp
++++ b/NumCore/CSRMatrix.cpp
+@@ -28,7 +28,7 @@
+ #include "stdafx.h"
+ #include "CSRMatrix.h"
+ #include <assert.h>
+-#include "mkl_spblas.h"
++// Portable CSR product; no proprietary BLAS dependency.
+ 
+ CSRMatrix::CSRMatrix() : m_nr(0), m_nc(0), m_offset(0)
+ {
+@@ -171,16 +171,15 @@
+ 
+ void CSRMatrix::multv(const std::vector<double>& x, std::vector<double>& r)
+ {
+-	if (m_offset == 0)
+-		mkl_cspblas_dcsrgemv("N", &m_nr, &m_values[0], &m_rowIndex[0], &m_columns[0], (double*) &x[0], &r[0]);
+-	else 
+-		mkl_dcsrgemv("N", &m_nr, &m_values[0], &m_rowIndex[0], &m_columns[0], (double*)&x[0], &r[0]);
++    multv(x.data(), r.data());
+ }
+ 
+ void CSRMatrix::multv(const double* x, double* r)
+ {
+-	if (m_offset == 0)
+-		mkl_cspblas_dcsrgemv("N", &m_nr, &m_values[0], &m_rowIndex[0], &m_columns[0], (double*)x, r);
+-	else
+-		mkl_dcsrgemv("N", &m_nr, &m_values[0], &m_rowIndex[0], &m_columns[0], (double*)x, r);
++    for (int i=0; i<m_nr; ++i) {
++        double sum=0;
++        for (int k=m_rowIndex[i]-m_offset; k<m_rowIndex[i+1]-m_offset; ++k)
++            sum += m_values[k]*x[m_columns[k]-m_offset];
++        r[i]=sum;
++    }
+ }
+--- a/NumCore/Preconditioner.cpp
++++ b/NumCore/Preconditioner.cpp
+@@ -27,6 +27,7 @@
+ 
+ #include "stdafx.h"
+ #include "Preconditioner.h"
++#include <stdexcept>
+ #include "CompactUnSymmMatrix.h"
+ 
+ //-----------------------------------------------------------------------------
+@@ -61,6 +62,10 @@
+ 
+ bool ILU0_Preconditioner::Create(SparseMatrix* A)
+ {
++#ifndef MKL_ISS
++    return false;
++#else
++
+ 	m_K = dynamic_cast<CRSSparseMatrix*>(A);
+ 	if (m_K == 0) return false;
+ 	assert(m_K->Offset() == 1);
+@@ -91,10 +96,16 @@
+ 	if (ierr != 0) return false;
+ 
+ 	return true;
++
++#endif
+ }
+ 
+ void ILU0_Preconditioner::mult_vector(double* x, double* y)
+ {
++#ifndef MKL_ISS
++    throw std::runtime_error("MKL ILU unavailable in public Apple build");
++#else
++
+ 	int ivar = m_K->Rows();
+ 	int* ia = m_K->Pointers();
+ 	int* ja = m_K->Indices();
+@@ -107,6 +118,8 @@
+ 	cvar = 'N';
+ 	cvar2 = 'N';
+ 	mkl_dcsrtrsv(&cvar1, &cvar, &cvar2, &ivar, &m_bilu0[0], ia, ja, &m_tmp[0], &y[0]);
++
++#endif
+ }
+ 
+ //=================================================================================================
+@@ -123,6 +136,10 @@
+ 
+ bool ILUT_Preconditioner::Create(SparseMatrix* A)
+ {
++#ifndef MKL_ISS
++    return false;
++#else
++
+ 	m_K = dynamic_cast<CRSSparseMatrix*>(A);
+ 	if (m_K == 0) return false;
+ 
+@@ -160,10 +177,16 @@
+ 	if (ierr != 0) return false;
+ 
+ 	return true;
++
++#endif
+ }
+ 
+ void ILUT_Preconditioner::mult_vector(double* x, double* y)
+ {
++#ifndef MKL_ISS
++    throw std::runtime_error("MKL ILU unavailable in public Apple build");
++#else
++
+ 	int ivar = m_K->Rows();
+ 	char cvar1 = 'L';
+ 	char cvar = 'N';
+@@ -173,6 +196,8 @@
+ 	cvar = 'N';
+ 	cvar2 = 'N';
+ 	mkl_dcsrtrsv(&cvar1, &cvar, &cvar2, &ivar, &m_bilut[0], &m_ibilut[0], &m_jbilut[0], &m_tmp[0], y);
++
++#endif
+ }
+ 
+ 
+--- a/NumCore/PardisoSolverDL.cpp
++++ b/NumCore/PardisoSolverDL.cpp
+@@ -49,6 +49,13 @@
+ #endif
+ }
+ 
++void PardisoSolver::SetSparseMatrix(CompactMatrix* pA)
++{
++    (void)pA;
++    fprintf(stderr, "FATAL ERROR: Pardiso is unavailable in this public Apple build\n");
++    exit(1);
++}
++
+ //-----------------------------------------------------------------------------
+ SparseMatrix* PardisoSolver::CreateSparseMatrix(Matrix_Type ntype)
+ {
+--- a/NumCore/SuperLUSolver.cpp
++++ b/NumCore/SuperLUSolver.cpp
+@@ -55,7 +55,7 @@
+ 	return false;
+ #else
+ 
+-	int N = m_pA->Size();
++	int N = m_pA->Rows();
+ 	int nnz = m_pA->NonZeroes();
+ 
+ 	// set custom options
+@@ -98,7 +98,7 @@
+ 	int* ptr = m_pA->Pointers();
+ 	double* pval = m_pA->Values(), *pv;
+ 
+-	for (int i=0; i<A.Size(); ++i)
++	for (int i=0; i<A.Rows(); ++i)
+ 	{
+ 		nc = 0;
+ 		l = ptr[i+1] - ptr[i];
+@@ -141,9 +141,10 @@
+ 	options.Fact = DOFACT;
+     dgssvx(&options, &A, &perm_c[0], &perm_r[0], &etree[0], equed, NULL, NULL,
+            &L, &U, NULL, 0, &B, &X, &rpg, &rcond, &ferr, &berr,
+-           &mem_usage, &stat, &info);
+-
+-	m_bfact = true;
++           &globalLU, &mem_usage, &stat, &info);
++
++	m_bfact = (info == 0);
++    if (info != 0) { StatFree(&stat); return false; }
+ 
+ 	// calculate condition number
+ 	if (m_bcond)
+@@ -198,12 +199,12 @@
+ 	options.Fact = FACTORED;
+     dgssvx(&options, &A, &perm_c[0], &perm_r[0], &etree[0], equed, NULL, NULL,
+            &L, &U, NULL, 0, &B, &X, &rpg, &rcond, &ferr, &berr,
+-           &mem_usage, &stat, &info);
++           &globalLU, &mem_usage, &stat, &info);
+ 
+ 	// free the stats
+ 	StatFree(&stat);
+ 
+-	return true;
++	return info == 0;
+ #endif
+ }
+ 
+--- a/NumCore/SuperLUSolver.h
++++ b/NumCore/SuperLUSolver.h
+@@ -77,6 +77,7 @@
+ 	superlu_options_t	options;
+ 	SuperLUStat_t	stat;
+ 	mem_usage_t	mem_usage;
++    GlobalLU_t globalLU{};
+ 
+ 	double	rpg, rcond;
+ 	double	ferr, berr;

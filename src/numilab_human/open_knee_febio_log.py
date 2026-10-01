@@ -25,7 +25,11 @@ def parse_febio_log(text: str) -> dict:
     Missing/truncated records never count as successful completion.
     """
     compact = re.sub(r"[ \t]", "", text)
-    version = re.search(r"version-(\d+\.\d+\.\d+)", compact)
+    # 2.9's spaced banner contains a hyphen; the public 3.0 banner does not.
+    versions = set(re.findall(r"version-?(\d+\.\d+\.\d+)", compact))
+    if len(versions) > 1:
+        raise ValueError("conflicting source solver versions")
+    version = next(iter(versions), None)
     converged = [float(x) for x in re.findall(r"converged at time\s*:\s*([^\s]+)", text)]
     if any(not math.isfinite(x) for x in converged):
         raise ValueError("nonfinite accepted source time")
@@ -80,7 +84,7 @@ def parse_febio_log(text: str) -> dict:
     # Terminal footer alone is insufficient; retain all trial errors separately.
     status = ("normal_termination_with_complete_observations" if normal and not failed and complete
               else "failed_or_incomplete")
-    return {"status": status, "version": version[1] if version else None,
+    return {"status": status, "version": version,
             "time_semantics": "quasi-static continuation parameter, not elapsed physical seconds",
             "normal_termination_reported": normal, "error_termination_reported": failed,
             "observations_complete": bool(complete), "accepted_times": converged,

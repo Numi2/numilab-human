@@ -1,0 +1,87 @@
+{
+  "status": "built_comparison_dependency_not_original_binary",
+  "version": "2.9.0",
+  "original_version": "2.9.1",
+  "source_equivalence": false,
+  "sources": {
+    "febio2": {
+      "url": "https://codeload.github.com/Kevin-Mattheus-Moerman/febio2/tar.gz/fc13f37e72cd0014535e1c2ea5f3d0396c447165",
+      "commit": "fc13f37e72cd0014535e1c2ea5f3d0396c447165",
+      "sha256": "72eca36868f42df23ce9d7035a11031b12f323770d0d2c57f7ac3a24856bc321"
+    },
+    "superlu": {
+      "url": "https://codeload.github.com/xiaoyeli/superlu/tar.gz/a8a0caafa593772450b35339c8fa4e76b7bc934f",
+      "commit": "a8a0caafa593772450b35339c8fa4e76b7bc934f",
+      "sha256": "82fb2b3d7e50728daa22d1e64f0f66545097072a71dbc7711d060ade369d8b36"
+    }
+  },
+  "commands": [
+    [
+      "patch",
+      "--batch",
+      "-p1",
+      "-i",
+      "/Users/home/numilab-human/tools/open_knee_reference/febio-2.9.0-arm64.patch"
+    ],
+    [
+      "cmake",
+      "-S",
+      "/Users/home/numilab-human/Build/open-knee-reference-20261001/reproducible-public-build/superlu-a8a0caafa593772450b35339c8fa4e76b7bc934f",
+      "-B",
+      "/Users/home/numilab-human/Build/open-knee-reference-20261001/reproducible-public-build/superlu-build",
+      "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DXSDK_ENABLE_Fortran=OFF",
+      "-Denable_tests=OFF",
+      "-Denable_single=OFF",
+      "-Denable_complex=OFF",
+      "-Denable_complex16=OFF",
+      "-Denable_internal_blaslib=OFF",
+      "-DTPL_BLAS_LIBRARIES=-framework Accelerate"
+    ],
+    [
+      "cmake",
+      "--build",
+      "/Users/home/numilab-human/Build/open-knee-reference-20261001/reproducible-public-build/superlu-build",
+      "-j",
+      "4"
+    ],
+    [
+      "cmake",
+      "-S",
+      "/Users/home/numilab-human/Build/open-knee-reference-20261001/reproducible-public-build/febio2-fc13f37e72cd0014535e1c2ea5f3d0396c447165",
+      "-B",
+      "/Users/home/numilab-human/Build/open-knee-reference-20261001/reproducible-public-build/febio-build",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DOPENMP_ROOT=/opt/homebrew/Cellar/libomp/22.1.8"
+    ],
+    [
+      "cmake",
+      "--build",
+      "/Users/home/numilab-human/Build/open-knee-reference-20261001/reproducible-public-build/febio-build",
+      "-j",
+      "4"
+    ]
+  ],
+  "machine": "macOS-26.6-arm64-arm-64bit",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.0.123.102)\nTarget: arm64-apple-darwin25.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin\n",
+  "linear_backend": "SuperLU 5.2.2 with Apple Accelerate BLAS",
+  "openmp_sha256": "b6d9b621ca10f9e097de32b77b1bd50ca0b6e606168a0d7368e82fd279dbfb4f",
+  "recipe_sha256": {
+    "build_public_reference.py": "767d6dee66dfc966e109b6dc3ed20bd32e2640a003a50a93da69e5f3cbd44fca",
+    "CMakeLists.txt": "eb3f729a8f791afb13102b8adae52ab9257b9588ae2c9defcb7b7c00a6cc96d9",
+    "febio-2.9.0-arm64.patch": "920c9d7f8b34c14e67d31b140cca7d883f41f82ab8ef16e4ece0b0e75486134d",
+    "febio_joint_oracle.cpp": "3ab6851e36eee308764c5fa0a622cf30fa615b3baa613ddcd543d924e8a2239b"
+  },
+  "version_output": "compiled on Oct  1 2026\nFEBio version  = 2.9.0\nFECore version = 0.1\nSVN revision   = 0\n",
+  "binaries": {
+    "febio2": {
+      "file": "/Users/home/numilab-human/Build/open-knee-reference-20261001/reproducible-public-build/febio-build/febio2",
+      "sha256": "cbdb3a274660adf7e5a67b53e55d6e060bb90a565ce418ae696bbbeaea1806d8"
+    },
+    "febio-joint-oracle": {
+      "file": "/Users/home/numilab-human/Build/open-knee-reference-20261001/reproducible-public-build/febio-build/febio-joint-oracle",
+      "sha256": "cf45cd997fd264e2ad8270559500c7b3cab9e7e718171e961490e939756ca3f3"
+    }
+  }
+}

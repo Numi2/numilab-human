@@ -1564,6 +1564,12 @@ def parser() -> argparse.ArgumentParser:
         help="hash-pinned DOI final-model downloads, including customized geometry and original log")
     reference_parser.add_argument("--febio", type=Path,
         help="run the frozen problem with this reference executable; requires FEBio 2.9.1 for matching status")
+    reference_parser.add_argument("--febio-config", type=Path,
+        help="freeze explicit linear-solver/thread configuration for the reference run")
+    reference_parser.add_argument("--comparison-version",
+        help="explicitly run a different FEBio version as comparison, never original-version reproduction")
+    reference_parser.add_argument("--febio3-material-frames", action="store_true",
+        help="explicitly translate the six legacy prestrain fibre frames for the FEBio 3.0 comparator")
     reference_parser.set_defaults(handler=open_knee_reference_cli)
     from .open_knee_xplt import cli as open_knee_reference_contact_cli
     reference_contact_parser = commands.add_parser("open-knee-reference-contact",

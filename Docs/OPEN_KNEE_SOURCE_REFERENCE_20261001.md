@@ -19,7 +19,7 @@ load curves, solver controls, and requested outputs.
 
 This is a source-program compiler and dependency audit. Matter lowering is
 explicitly unsupported, all physical qualification flags are false, and the
-reference solver has **not run locally**. The separately recovered original run is recorded as archived evidence. The command cannot promote its output to a
+original FEBio 2.9.1 solver has **not been reproduced**. Public comparison builds have now executed and their failures are retained separately. The recovered original run remains archived evidence. The command cannot promote its output to a
 native mechanics result. The existing NHKNEE1 payload remains the reduced
 hybrid and its generated manifest now states that boundary.
 
@@ -117,11 +117,25 @@ exit, complete observations, and final continuation time 2. Original executable
 build identity is still unknown; a matching version alone does not prove an
 identical original binary or numerical backend.
 
-No FEBio 2.9.1 executable was found locally or on the inspected Mac mini PATH.
-The official [installer archive](https://febio.org/archive/) requires login;
-the current browser is signed out. The user has been asked to sign in or supply
-the existing executable/source package. A different FEBio version is not
-silently substituted.
+No FEBio account is required for the new public-source comparison route.
+[`tools/open_knee_reference`](../tools/open_knee_reference/README.md) builds pinned
+public FEBio 2.9.0 and 3.0.0 sources with SuperLU/Apple Accelerate. Neither is
+silently relabelled as the original 2.9.1 executable. Source mechanics files are
+unchanged; portability changes affect optional linear backends and their failure
+handling. Build identities and all three attempted full-deck runs are retained in
+[`media/open-knee-reference-public-20261001`](media/open-knee-reference-public-20261001).
+
+The 2.9.0 build rejects the prestrain material. The unadapted 3.0 build rejects the
+legacy outer fibre field. An explicit 3.0-only frame translation then loads the
+complete mesh and assembles **495,960 equations / 19,903,986 stiffness entries**,
+matching the archived counts. It preserves the source axes through parent
+material frames and local elastic fibres. During its first SuperLU factorization,
+RSS reached **18,891,248 KiB**, crossing an explicit 18 GiB limit on the 24 GiB
+Mac mini. The guarded process was terminated with **zero accepted increments**.
+These remain unsuccessful baselines; the login barrier is removed but reference
+reproduction is not complete. The raw failed receipt predates support for the
+3.0 version-banner format; an additional reparse identifies 3.0.0 without changing
+the retained original receipt.
 
 ## Archived contact and native material checks
 
@@ -169,16 +183,39 @@ stress/tangent Frobenius relative error is 7.0947e-6 against a 1e-5 limit.
 Component error near cancellation is retained separately (maximum scaled error
 9.17732e-4); the original scalar-case gates remain unchanged.
 
-These are constitutive checks against independent analytical equations, not
-an executable FEBio 2.9.1 comparison, assembled tissue equilibrium, or a live
-knee force-path repair. The source material defaults to zero dissipation; the
-preserved hybrid still explicitly requests 25 Pa s. Exposing energy bytecode
-does not yet supply complete assembled runtime energy accounting.
+The new compiled public FEBio 3.0 material comparison also passes **486**
+cases, including the actual prestrain wrapper and isochoric generator. Maximum
+Frobenius errors are **2.954e-15** for first Piola stress and **9.254e-15** for
+directional tangent (normalization floor 1 MPa). The source tangent independently
+matches stress finite differences within **7.856e-9**. These are equation-level
+comparisons, not assembled tissue equilibrium or a live tendon force-path repair.
+
+Energy needs a separate qualification: the public build has no GSL, so legacy
+fibre energy reporting is unavailable; the source's GSL high-stretch expression
+also lacks the constant matching the toe energy at the transition. The 3.0
+prestrain wrapper does not override deviatoric energy reporting. Matter's
+continuous stored energy remains verified against the force law, but **legacy
+energy-output equivalence is not claimed**. Exposing energy bytecode still does
+not supply assembled runtime energy accounting. The source material defaults to
+zero dissipation; the preserved hybrid explicitly requests 25 Pa s.
+
+Matter now contains a native CPU/Metal cylindrical-connector residual and exact
+directional derivative, preserving finite penalties, both free/prescribed
+coordinates, attachment lever arms and explicit multipliers. Against the compiled
+public 2.9.0 connector at **840** identical source-pose inputs, maximum force
+error is **1.452e-10 N**, and connector-moment error is **1.772e-4 N mm**. The
+latter includes the legacy quaternion `acos` precision loss near zero rotation.
+The operator also passes 2,016 finite-difference component checks, mm/metre unit
+conversion, and 1,035 Metal rows (maximum scaled CPU/Metal error 2.580e-7).
+It is **not yet connected to the assembled knee solve**. Archived poses have
+rounded precision and are not used as exact reaction truth. No removal of three
+MyoSim equality rows is substituted for the source graph.
 
 ## Required continuation
 
-1. Pin the original solver executable or reproducibly built source and run the
-   complete source problem in specimen coordinates. Preserve any failed baseline.
+1. Complete an independently converged reference comparison in specimen coordinates.
+   The pinned public builds remove login dependence; the first full comparison
+   remains memory-limited and unsuccessful. Preserve its baseline.
 2. Lower the complete rigid/joint graph and exact material/prestrain laws into
    existing Matter, with source solver energy/stress/tangent comparisons.
    Continuum fibre restoration must retire the corresponding reduced force.
@@ -191,31 +228,33 @@ does not yet supply complete assembled runtime energy accounting.
 5. Complete swept-contact, refinement, energy/momentum, rollback, and sustained
    loading gates before replacing the local MyoSim prescription in the whole body.
 
-The native force path and contact kernel remain unchanged. The compiler and
-source-material changes described above do not qualify the assembled subsystem. Existing Matter worktree changes belong to other work
+The integrated native force path and contact kernel remain unchanged. The compiler,
+material and joint-operator changes above do not qualify the assembled subsystem. Existing Matter worktree changes belong to other work
 and were preserved. The remaining work above is not complete.
 
 ## Verification
 
-Forty focused Human tests cover missing attachments/springs/contact pairs,
+Forty-two focused Human tests cover missing attachments/springs/contact pairs,
 load-curve and rigid-body references, complete distributed fibre indexing,
 unknown-field retention, cylindrical-chain rank, source hash rejection,
 byte-preserving freezing, and refusal to overwrite an earlier case. The
-existing importer, cartilage-material, and extensor-stack checks are included. Four native tests cover source material CPU/Metal execution, material frames and stateful package round trips. The live legacy importer still
+existing importer, cartilage-material, and extensor-stack checks are included. Four current native tests cover source material and cylindrical-joint CPU/Metal execution; prior material-frame and stateful-package checks are retained. The live legacy importer still
 reads 16 regions / 248,236 nodes and now retains all nine FEBio sections.
 
 ## Publication and continuation location
 
 Human's reference authoring and readers are scoped to its `main` branch.
-The native changes are committed locally as `081072b5` on
-`codex/open-knee-reference-20261001`, in
-`/Users/home/numi-open-knee-source-20261001`. They are based on `coupled@fac41f55`.
-The repository's prescribed production branch, `numisolver` (inspected remote
-head `00feb4ae`), does not contain the Matter tree. The native commit was not
-pushed to a different branch or promoted by importing unrelated branch history.
-The existing shared Matter checkout and its unrelated changes remain intact.
+Native commits `081072b5` and `7846d6ff` are published on
+`codex/open-knee-reference-20261001`, with
+[draft PR #6](https://github.com/Numi2/numi-lab/pull/6) targeting the owning
+`coupled` branch. Their isolated checkout is
+`/Users/home/numi-open-knee-source-20261001`, based on `coupled@fac41f55`.
+The prescribed production branch `numisolver` (inspected remote head `00feb4ae`)
+does not contain the Matter tree. The draft does not migrate unrelated branch
+history or claim production qualification. The shared dirty Matter checkout
+and its unrelated changes remain intact.
 
-The completed local reference is
+The frozen case with complete archived evidence is
 `Build/open-knee-reference-20261001/reference-with-complete-archive`.
 The original outputs live in `Build/open-knee-reference-20261001/doi-archive`.
 No downloader or simulation remains running for this task. No local reference

@@ -1,0 +1,515 @@
+--- a/NumCore/NumCore.cpp
++++ b/NumCore/NumCore.cpp
+@@ -26,6 +26,7 @@
+ #include "stdafx.h"
+ #include "NumCore.h"
+ #include "SkylineSolver.h"
++#include "SuperLUSolver.h"
+ #include "LUSolver.h"
+ #include "PardisoSolver.h"
+ #include "RCICGSolver.h"
+@@ -51,6 +52,7 @@
+ void NumCore::InitModule()
+ {
+ 	// register linear solvers
++    REGISTER_FECORE_CLASS(SuperLUSolver, "superlu");
+ 	REGISTER_FECORE_CLASS(PardisoSolver  , "pardiso");
+ 	REGISTER_FECORE_CLASS(SkylineSolver  , "skyline");
+ 	REGISTER_FECORE_CLASS(LUSolver       , "LU"     );
+@@ -61,7 +63,9 @@
+ 	REGISTER_FECORE_CLASS(HypreGMRESsolver    , "hypre_gmres");
+ 	REGISTER_FECORE_CLASS(Hypre_PCG_AMG       , "hypre_pcg_amg");
+ 	REGISTER_FECORE_CLASS(BlockIterativeSolver, "block");
++	#ifdef MKL_ISS
+ 	REGISTER_FECORE_CLASS(BIPNSolver          , "bipn");
++#endif
+ 	REGISTER_FECORE_CLASS(BiCGStabSolver      , "bicgstab");
+ 	REGISTER_FECORE_CLASS(StrategySolver      , "strategy");
+ 
+@@ -71,7 +75,9 @@
+ 	REGISTER_FECORE_CLASS(IncompleteCholesky , "ichol");
+ 
+ 	// register eigen solvers
++	#ifdef MKL_ISS
+ 	REGISTER_FECORE_CLASS(FEASTEigenSolver, "feast");
++#endif
+ 
+ 	// set default linear solver
+ 	// (Set this before the configuration is read in because
+--- a/NumCore/CompactUnSymmMatrix.cpp
++++ b/NumCore/CompactUnSymmMatrix.cpp
+@@ -362,14 +362,16 @@
+ 	// get the matrix size
+ 	const int N = Rows();
+ 
++	#ifdef MKL_ISS
+ 	if (Offset() == 1)
+ 	{
+ 		const char transa = 'N';
+ 		mkl_dcsrgemv(&transa, &N, m_pd, m_ppointers, m_pindices, x, r);
+ 	}
+ 	else
+-	{
+-		assert(m_offset == 0);
++#endif
++	{
++		// Portable loop supports zero- and one-based indices.
+ 		// loop over all rows
+ 	#pragma omp parallel for schedule(guided)
+ 		for (int i = 0; i < N; ++i)
+--- a/NumCore/ILU0_Preconditioner.cpp
++++ b/NumCore/ILU0_Preconditioner.cpp
+@@ -66,6 +66,10 @@
+ 
+ bool ILU0_Preconditioner::Factor()
+ {
++#ifndef MKL_ISS
++    return false;
++#else
++
+ 	if (m_K == 0) return false;
+ 	assert(m_K->Offset() == 1);
+ 
+@@ -95,10 +99,16 @@
+ 	if (ierr != 0) return false;
+ 
+ 	return true;
++
++#endif
+ }
+ 
+ bool ILU0_Preconditioner::BackSolve(double* x, double* y)
+ {
++#ifndef MKL_ISS
++    return false;
++#else
++
+ 	int ivar = m_K->Rows();
+ 	int* ia = m_K->Pointers();
+ 	int* ja = m_K->Indices();
+@@ -113,4 +123,6 @@
+ 	mkl_dcsrtrsv(&cvar1, &cvar, &cvar2, &ivar, &m_bilu0[0], ia, ja, &m_tmp[0], &x[0]);
+ 
+ 	return true;
++
++#endif
+ }
+--- a/NumCore/ILUT_Preconditioner.cpp
++++ b/NumCore/ILUT_Preconditioner.cpp
+@@ -68,6 +68,10 @@
+ 
+ bool ILUT_Preconditioner::Factor()
+ {
++#ifndef MKL_ISS
++    return false;
++#else
++
+ 	if (m_K == 0) return false;
+ 	assert(m_K->Offset() == 1);
+ 
+@@ -104,10 +108,16 @@
+ 	if (ierr != 0) return false;
+ 
+ 	return true;
++
++#endif
+ }
+ 
+ bool ILUT_Preconditioner::BackSolve(double* x, double* y)
+ {
++#ifndef MKL_ISS
++    return false;
++#else
++
+ 	int ivar = m_K->Rows();
+ 	char cvar1 = 'L';
+ 	char cvar = 'N';
+@@ -119,4 +129,6 @@
+ 	mkl_dcsrtrsv(&cvar1, &cvar, &cvar2, &ivar, &m_bilut[0], &m_ibilut[0], &m_jbilut[0], &m_tmp[0], x);
+ 
+ 	return true;
++
++#endif
+ }
+--- a/NumCore/IncompleteCholesky.cpp
++++ b/NumCore/IncompleteCholesky.cpp
+@@ -159,6 +159,10 @@
+ 
+ bool IncompleteCholesky::BackSolve(double* x, double* y)
+ {
++#ifndef MKL_ISS
++    return false;
++#else
++
+ 	int ivar = m_L->Rows();
+ 	double* pa = m_L->Values();
+ 	int* ia = m_L->Pointers();
+@@ -174,4 +178,6 @@
+ 	mkl_dcsrtrsv(&cvar1, &cvar, &cvar2, &ivar, pa, ia, ja, &z[0], &x[0]);
+ 
+ 	return true;
++
++#endif
+ }
+--- a/NumCore/PardisoSolver.cpp
++++ b/NumCore/PardisoSolver.cpp
+@@ -321,3 +321,22 @@
+ }
+ 
+ #endif
++
++#ifndef PARDISO
++#include <stdexcept>
++BEGIN_FECORE_CLASS(PardisoSolver, LinearSolver)
++END_FECORE_CLASS();
++PardisoSolver::PardisoSolver(FEModel* fem) : LinearSolver(fem), m_pA(nullptr) {
++    throw std::runtime_error("Pardiso unavailable in public Apple build; explicitly select SuperLU");
++}
++PardisoSolver::~PardisoSolver() {}
++bool PardisoSolver::PreProcess() { return false; }
++bool PardisoSolver::Factor() { return false; }
++bool PardisoSolver::BackSolve(double*,double*) { return false; }
++bool PardisoSolver::SetSparseMatrix(SparseMatrix*) { return false; }
++SparseMatrix* PardisoSolver::CreateSparseMatrix(Matrix_Type) { return nullptr; }
++void PardisoSolver::Destroy() {}
++void PardisoSolver::PrintConditionNumber(bool) {}
++void PardisoSolver::UseIterativeFactorization(bool) {}
++double PardisoSolver::condition_number() { throw std::runtime_error("Pardiso unavailable"); }
++#endif
+--- /dev/null
++++ b/NumCore/SuperLUSolver.cpp
+@@ -0,0 +1,243 @@
++/*This file is part of the FEBio source code and is licensed under the MIT license
++listed below.
++
++See Copyright-FEBio.txt for details.
++
++Copyright (c) 2019 University of Utah, The Trustees of Columbia University in 
++the City of New York, and others.
++
++Permission is hereby granted, free of charge, to any person obtaining a copy
++of this software and associated documentation files (the "Software"), to deal
++in the Software without restriction, including without limitation the rights
++to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++copies of the Software, and to permit persons to whom the Software is
++furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in all
++copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++SOFTWARE.*/
++
++
++#include "stdafx.h"
++#include <stdio.h>
++#include "SuperLUSolver.h"
++#include <math.h>
++
++//-----------------------------------------------------------------------------
++SuperLUSolver::SuperLUSolver(FEModel* fem) : LinearSolver(fem), m_pA(0)
++{ 
++	m_balloc = false; 
++	m_bfact = false; 
++	m_bcond = false; 
++	m_bsymm = true; 
++}
++
++//-----------------------------------------------------------------------------
++SparseMatrix* SuperLUSolver::CreateSparseMatrix(Matrix_Type ntype)
++{
++	m_bsymm = (ntype == REAL_SYMMETRIC);
++	return (m_pA = new CCSSparseMatrix());
++}
++
++//-----------------------------------------------------------------------------
++bool SuperLUSolver::PreProcess()
++{
++	// Make sure the solver is available
++#ifndef SUPERLU
++	fprintf(stderr, "FATAL ERROR: The SUPERLU solver is not available on this platform\n\n");
++	return false;
++#else
++
++	int N = m_pA->Rows();
++	int nnz = m_pA->NonZeroes();
++
++	// set custom options
++	set_default_options(&options);
++	options.ColPerm			= MMD_AT_PLUS_A;
++	options.SymmetricMode	= (m_bsymm ? YES : NO);		// we use symmetric mode
++	options.DiagPivotThresh	= 0.0;
++	options.Equil			= NO;		// no equilibration
++
++	// create the supermatrix A
++    dCreate_CompCol_Matrix(&A, N, N, nnz, m_pA->Values(), m_pA->Indices(), m_pA->Pointers(), SLU_NC, SLU_D, SLU_GE);
++
++	// since we don't have any values yet, we don't supply any data to the matrix B and X
++	dCreate_Dense_Matrix(&B, N, 0, NULL, N, SLU_DN, SLU_D, SLU_GE);
++	dCreate_Dense_Matrix(&X, N, 0, NULL, N, SLU_DN, SLU_D, SLU_GE);
++
++
++	// allocate storage for the permutation matrices
++	perm_c.resize(N);
++	perm_r.resize(N);
++
++	// allocate storage for elimination tree
++	etree.resize(N);
++
++	m_balloc = true;
++
++	return LinearSolver::PreProcess();
++#endif
++}
++
++#ifdef SUPERLU
++double SuperLUSolver::norm(SparseMatrix& K)
++{
++	double n = 0, nc;
++	int l;
++
++	// get a reference to the correct matrix type
++	CCSSparseMatrix& A = dynamic_cast<CCSSparseMatrix&> (K);
++
++	int* ptr = m_pA->Pointers();
++	double* pval = m_pA->Values(), *pv;
++
++	for (int i=0; i<A.Rows(); ++i)
++	{
++		nc = 0;
++		l = ptr[i+1] - ptr[i];
++		pv = pval + (ptr[i]);
++		for (int j=0; j<l; ++j, ++pv) nc += fabs(*pv);
++
++		if (nc > n) n = nc;
++	}
++
++	return n;
++}
++#endif
++
++bool SuperLUSolver::Factor()
++{
++	// Make sure the solver is available
++#ifndef SUPERLU
++	fprintf(stderr, "FATAL ERROR: The SUPERLU solver is not available on this platform\n\n");
++	return false;
++#else
++
++	if (m_bfact)
++	{
++		// deallocate storage for  L and U
++		Destroy_SuperNode_Matrix(&L);
++		Destroy_CompCol_Matrix(&U);
++	}
++
++	double normA = 0;
++	if (m_bcond) normA = norm(*m_pA);
++
++	// initialize stats
++	StatInit(&stat);
++
++	// set nr of columns of B to zero to make sure we don't solve anything here
++	B.ncol = 0;
++	X.ncol = 0;
++
++	// factorize the matrix
++	options.Fact = DOFACT;
++    dgssvx(&options, &A, &perm_c[0], &perm_r[0], &etree[0], equed, NULL, NULL,
++           &L, &U, NULL, 0, &B, &X, &rpg, &rcond, &ferr, &berr,
++           &globalLU, &mem_usage, &stat, &info);
++
++	m_bfact = (info == 0);
++    if (info != 0) { StatFree(&stat); return false; }
++
++	// calculate condition number
++	if (m_bcond)
++	{
++		double rcond;
++		int info;
++		char cnorm = '1';
++		dgscon(&cnorm, &L, &U, normA, &rcond, &stat, &info);
++		if (info == 0)
++		{
++			fprintf(stdout, " ESTIMATED CONDITION NUMBER : %lg\n", 1./rcond);
++		}
++		else
++		{
++			fprintf(stdout, " FAILED ESTIMAING CONDITION NUMBER\n");
++		}
++	}
++
++	// free the stats
++	StatFree(&stat);
++
++	return true;
++
++#endif
++}
++
++bool SuperLUSolver::BackSolve(double* x, double* b)
++{
++	// Make sure the solver is available
++#ifndef SUPERLU
++	fprintf(stderr, "FATAL ERROR: The SUPERLU solver is not available on this platform\n\n");
++	return false;
++#else
++
++	int info;
++
++	// set the data in the B matrix
++	DNformat *Bstore = (DNformat*) B.Store;
++	Bstore->nzval = &b[0];
++	B.ncol = 1;
++
++	// set the data in the X matrix
++	DNformat *Xstore = (DNformat*) X.Store;
++	Xstore->nzval = &x[0];
++	X.ncol = 1;
++
++	// initialize stats
++	SuperLUStat_t stat;
++	StatInit(&stat);
++
++	// solve the system
++	options.Fact = FACTORED;
++    dgssvx(&options, &A, &perm_c[0], &perm_r[0], &etree[0], equed, NULL, NULL,
++           &L, &U, NULL, 0, &B, &X, &rpg, &rcond, &ferr, &berr,
++           &globalLU, &mem_usage, &stat, &info);
++
++	// free the stats
++	StatFree(&stat);
++
++	return info == 0;
++#endif
++}
++
++void SuperLUSolver::Destroy()
++{
++	// Make sure the solver is available
++#ifndef SUPERLU
++	fprintf(stderr, "FATAL ERROR: The SUPERLU solver is not available on this platform\n\n");
++	return;
++#else
++
++	// since superlu by default deallocates the memory for the matrix data
++	// we can't use the destroy routines for A and B. In stead we deallocate the memory for A
++	// ourselve
++	if (m_balloc)
++	{
++		Destroy_SuperMatrix_Store(&A);
++		Destroy_SuperMatrix_Store(&B);
++		Destroy_SuperMatrix_Store(&X);
++
++		m_balloc = false;
++	}
++
++	if (m_bfact)
++	{
++		// we can however for L and U
++		Destroy_SuperNode_Matrix(&L);
++		Destroy_CompCol_Matrix(&U);
++
++		m_bfact = false;
++	}
++
++	LinearSolver::Destroy();
++
++#endif
++}
+--- /dev/null
++++ b/NumCore/SuperLUSolver.h
+@@ -0,0 +1,88 @@
++/*This file is part of the FEBio source code and is licensed under the MIT license
++listed below.
++
++See Copyright-FEBio.txt for details.
++
++Copyright (c) 2019 University of Utah, The Trustees of Columbia University in 
++the City of New York, and others.
++
++Permission is hereby granted, free of charge, to any person obtaining a copy
++of this software and associated documentation files (the "Software"), to deal
++in the Software without restriction, including without limitation the rights
++to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++copies of the Software, and to permit persons to whom the Software is
++furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in all
++copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++SOFTWARE.*/
++
++
++#pragma once
++#include "FECore/LinearSolver.h"
++#include "CompactUnSymmMatrix.h"
++
++//-----------------------------------------------------------------------------
++//! Implements a wrapper class for the SuperLU library
++
++//! This solver can only be used on systems where it is available.
++//! This solver also uses some of the BLAS routines so this package also needs
++//! to be available on the system. Although SuperLU comes with a stripped down
++//! version of BLAS.
++
++#ifdef SUPERLU
++		#include "slu_ddefs.h"
++#endif
++
++class SuperLUSolver : public LinearSolver
++{
++public:
++	SuperLUSolver(FEModel* fem);
++	bool PreProcess();
++	bool Factor();
++	bool BackSolve(double* x, double* b);
++	void Destroy();
++	SparseMatrix* CreateSparseMatrix(Matrix_Type ntype);
++
++	void print_cnorm(bool b) { m_bcond = b; }
++
++#ifdef SUPERLU
++protected:
++	double norm(SparseMatrix& K); // calculates the 1-norm of the matrix A
++#endif
++
++private:
++
++	bool m_bsymm;	// use symmetric mode or not
++	bool m_balloc;
++	bool m_bfact;
++	bool m_bcond;	// calculate condition numbers
++
++	CCSSparseMatrix*	m_pA;
++
++#ifdef SUPERLU
++
++	SuperMatrix A, L, U, B, X;
++	vector<int>	perm_c;
++	vector<int>	perm_r;
++	vector<int>	etree;
++
++	superlu_options_t	options;
++	SuperLUStat_t	stat;
++	mem_usage_t	mem_usage;
++    GlobalLU_t globalLU{};
++
++	double	rpg, rcond;
++	double	ferr, berr;
++	int		info;
++	char	equed[1];
++
++#endif // SUPERLU
++};
