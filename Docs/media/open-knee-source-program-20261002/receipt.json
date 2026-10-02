@@ -1,346 +1,201 @@
 {
-  "status": "passed_source_inventory_compilation_not_native_admission",
-  "scope": "typed inventory of the pinned FEBio source program; no source mechanics are executed by the NHKNEE1 hybrid",
-  "human_worktree_base_revision": "582fcd0",
-  "matter_operator_revision": "9a25b00d2e49f9e8ce9eab5189847039b67337ae",
-  "source_sha256": {
-    "src/numilab_human/open_knee.py": "acb2049f42bc61c4f2eb2498af36914f2ef1c830602e39f5c9517dbc436766ff",
-    "tests/test_importer.py": "9560447d1869d2972d61427fa02730971d9f9c5df1597f622c3cfa2573fc49ff",
-    "source-mechanics.json": "80aef9f85727597762ec05a6b32d899d5540ba172ac0274b789bc57cf0d7bef0"
-  },
-  "reference_inputs": {
-    "FeBio_custom.feb": {
-      "sha256": "00b6efb53ad7e7330296cbb9569d358d48ed60819e22732e6149db6fb98a158a",
-      "bytes": 8666471
+  "artifacts": {
+    "source-geometry.bin": {
+      "bytes": 37388532,
+      "sha256": "97c5e7b1c09eb47193bca0b7d2a515088b40938da45fe7aa8c8fc7bb7dd54368"
     },
-    "Geometry_custom.feb": {
-      "sha256": "4155db1d0d7b87ffb2c668102d2495870e4461a539b18e6708f1f4817b5601bf",
-      "bytes": 119032115
+    "source-mechanics.json": {
+      "bytes": 1806106,
+      "sha256": "7b7bac9f69e1540a6c19eb8f0f2f7cfefbcfa6f30504a40ba004b0911205b56c"
     },
-    "FeBio_custom.log": {
-      "sha256": "d47631c09ce7fc93154c7d6c84caa299aab03709abe9ab7d2a41a60a1b78e426",
-      "bytes": 1472687,
-      "reported_solver_version": "2.9.1",
-      "original_binary_identity": "not_supplied_in_archive"
+    "source-meniscus-mesh.bin": {
+      "bytes": 2552276,
+      "sha256": "796c73e342e5f5f9865a6d636a04647f73892c4975a78ebd0e255186af10214a"
+    },
+    "source-meshdata.bin": {
+      "bytes": 2686936,
+      "sha256": "f3802520c712f3c939934d53e0e4de9ce6e6c275287ede3279bbdc3b3abf63c8"
     }
   },
   "compiled_counts": {
-    "material_records": 21,
+    "contacts": 18,
+    "cylindrical_joints": 6,
+    "load_curves": 9,
+    "materials": 21,
+    "prestrain_target_states": 18,
     "rigid_bodies": 9,
     "rigid_ties": 18,
-    "cylindrical_joints": 6,
-    "other_constraints": 2,
-    "prescribed_body_boundaries": 2,
-    "sliding_contacts": 18,
-    "load_curves": 9,
-    "resolved_source_contact_pairs": 18,
-    "resolved_source_rigid_ties": 18,
-    "typed_source_material_programs": 21,
-    "prestrain_programs": 6,
-    "resolved_prestrain_curves": 6,
-    "compiled_isochoric_prestrain_target_states": 18
+    "source_mesh_element_data_groups": 2,
+    "source_mesh_element_fiber_vectors": 95962
   },
-  "source_equivalence_admission": "rejected_unsupported_source_mechanics",
-  "compiled_rigid_graph_fields": "typed finite source-frame centers, density, connector origin/axis, penalties, prescribed flags/targets, curve references, and numeric load-curve points; source XML text and hashes retained",
-  "compiled_rigid_graph_execution_status": "unsupported_not_executed",
-  "not_qualified": [
-    "original FEBio 2.9.1 execution",
-    "NHKNEE1 payload manifest rebuild because the pinned myo_sim module is unavailable",
-    "source rigid graph runtime assembly",
-    "source contact and prestrain execution",
-    "assembled tissue equilibrium or whole-body integration",
-    "native execution of resolved source rigid graph, contacts, prestrain, tissues, and loading",
-    "native constitutive execution of the compiled source tissue and prestrain programs",
-    "application and equilibrium of the compiled isochoric prestrain tensor targets"
-  ],
-  "validation": {
-    "tests": [
-      "test_open_knee_parser_preserves_named_topology_and_contact",
-      "test_open_knee_exact_fiber_directions_are_source_authored_and_unit"
+  "compiler_sources": {
+    "cli.py": "0a56b9a8d495e6694ed79dfdf0e2dde442b1b3c09a37811c9b8c540c31dfc6b2",
+    "open_knee.py": "4c97eec2b7beacccc83b87cde181e2dcabbf121f801105607c52412b3a5b1e2f"
+  },
+  "geometry_binary": {
+    "bytes": 37388532,
+    "file": "source-geometry.bin",
+    "record_order": "source XML Geometry child order; per-group records retain source order",
+    "schema": "numi.human.open-knee-source-geometry-binary.v1",
+    "sha256": "97c5e7b1c09eb47193bca0b7d2a515088b40938da45fe7aa8c8fc7bb7dd54368"
+  },
+  "meniscus_mesh_binary": {
+    "bytes": 2552276,
+    "file": "source-meniscus-mesh.bin",
+    "groups": {
+      "MNS-L": {
+        "binary_bytes": 1204308,
+        "fiber_mapping": "source ElementData local lid maps to one-based tetrahedron order within the element set",
+        "header_offset_bytes": 0,
+        "material_id": 12,
+        "node_count": 10901,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 20,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 44953,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 305248
+      },
+      "MNS-M": {
+        "binary_bytes": 1347968,
+        "fiber_mapping": "source ElementData local lid maps to one-based tetrahedron order within the element set",
+        "header_offset_bytes": 1204308,
+        "material_id": 13,
+        "node_count": 11706,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 1204328,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 51009,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 1532096
+      }
+    },
+    "header_layout": "little-endian 4-byte NOKM magic, u32 version, u32 source material ID, u32 node count, u32 tetrahedron count",
+    "schema": "numi.human.open-knee-source-meniscus-mesh.v1",
+    "sha256": "796c73e342e5f5f9865a6d636a04647f73892c4975a78ebd0e255186af10214a"
+  },
+  "mesh_element_data": {
+    "bytes": 2686936,
+    "file": "source-meshdata.bin",
+    "groups": [
+      {
+        "binary_sha256": "9c2596de039ddb60798d29695f4b3271984262867d3de49a6bbd46ce64f71fa4",
+        "element_set": "MNS-M",
+        "geometry_element_count": 51009,
+        "native_execution_status": "compiled_source_input_not_executed",
+        "record_count": 51009,
+        "source_xml_sha256": "6e42c5cfb53c82b56f8eafe4e48ba59548a0334fff26ddc7256f2b97c64f9a18"
+      },
+      {
+        "binary_sha256": "1be0688d223817861a22b839f1845d406e99af95feb15ae3bd400951d2643b5c",
+        "element_set": "MNS-L",
+        "geometry_element_count": 44953,
+        "native_execution_status": "compiled_source_input_not_executed",
+        "record_count": 44953,
+        "source_xml_sha256": "2310e2a707ab0ee0309bda43ffebfcd92d1eb2b0618e956cbe10dae32689c9a6"
+      }
     ],
-    "result": "passed",
-    "pinned_source_mechanical_descriptor_rebuild": "passed against exact deck and Geometry_custom hashes; typed material/prestrain schedules, 18 contact pairs, and 18 rigid ties resolve",
-    "python_compileall": "passed",
-    "git_diff_check": "passed",
-    "source_prestrain_tensor_targets": "passed: 18 scheduled tensors reconstructed, determinant-one check <1e-12; targets not applied or equilibrated"
+    "record_count": 95962,
+    "record_stride_bytes": 28,
+    "schema": "numi.human.open-knee-mesh-element-data-f64.v1",
+    "sha256": "f3802520c712f3c939934d53e0e4de9ce6e6c275287ede3279bbdc3b3abf63c8"
   },
-  "inventory": "source-mechanics.json",
+  "not_qualified": [
+    "exact re-execution from the unidentified archived FEBio binary",
+    "native source joint, material, prestrain, contact, and load execution",
+    "source tissue equilibrium, extensor loading, or whole-body integration"
+  ],
+  "reference_inputs": {
+    "FeBio_custom.feb": {
+      "bytes": 8666471,
+      "sha256": "00b6efb53ad7e7330296cbb9569d358d48ed60819e22732e6149db6fb98a158a"
+    },
+    "FeBio_custom.log": {
+      "bytes": 1472687,
+      "last_accepted_time": 2.0,
+      "original_binary_identity": "not_supplied_in_archive",
+      "reported_solver_version": "2.9.1",
+      "sha256": "d47631c09ce7fc93154c7d6c84caa299aab03709abe9ab7d2a41a60a1b78e426",
+      "status": "normal_termination_with_complete_observations"
+    },
+    "Geometry_custom.feb": {
+      "bytes": 119032115,
+      "sha256": "4155db1d0d7b87ffb2c668102d2495870e4461a539b18e6708f1f4817b5601bf"
+    }
+  },
   "resolved_geometry": {
-    "status": "resolved_against_pinned_Geometry_custom",
-    "nodes": 248236,
-    "surfaces": 88,
-    "surface_pairs": 19,
+    "element_set_count": 16,
+    "mesh_data_element_sets": {
+      "MNS-L": {
+        "binary_bytes": 899060,
+        "binary_offset_bytes": 18865492,
+        "binary_record_layout": "little-endian u32 element_id and u32[4] node_ids",
+        "binary_record_stride_bytes": 20,
+        "connectivity_sha256": "100ef070db7176d1fc1720a954f4a1d6b4e0b83b37c032311c13d1442c7108a1",
+        "element_count": 44953,
+        "element_ids_contiguous_in_source_order": true,
+        "element_type": "tet4",
+        "first_element_id_in_source_order": 600718,
+        "last_element_id_in_source_order": 645670,
+        "material_assignment_status": "resolved_to_pinned_source_deck_material",
+        "material_id": 12,
+        "material_id_source_text": "12",
+        "material_name": "MNS-L",
+        "material_source_xml_sha256": "1a74a5c8b48f1664ae6ddd0bfd4df320184369c0080b7248e61529fd63b7a6b6",
+        "material_type": "trans iso Mooney-Rivlin",
+        "source_attributes": {
+          "mat": "12",
+          "name": "MNS-L",
+          "type": "tet4"
+        }
+      },
+      "MNS-M": {
+        "binary_bytes": 1020180,
+        "binary_offset_bytes": 19764552,
+        "binary_record_layout": "little-endian u32 element_id and u32[4] node_ids",
+        "binary_record_stride_bytes": 20,
+        "connectivity_sha256": "f15531b73cb43c8ca8b67f5348eeee84f07a15fe5ff9c83276e07ab4521b928b",
+        "element_count": 51009,
+        "element_ids_contiguous_in_source_order": true,
+        "element_type": "tet4",
+        "first_element_id_in_source_order": 645671,
+        "last_element_id_in_source_order": 696679,
+        "material_assignment_status": "resolved_to_pinned_source_deck_material",
+        "material_id": 13,
+        "material_id_source_text": "13",
+        "material_name": "MNS-M",
+        "material_source_xml_sha256": "bb4b9b15ea098c64b9a62e78084b834657934064888227642eb76d6189f6741e",
+        "material_type": "trans iso Mooney-Rivlin",
+        "source_attributes": {
+          "mat": "13",
+          "name": "MNS-M",
+          "type": "tet4"
+        }
+      }
+    },
+    "node_count": 248236,
     "resolved_contacts": 18,
     "resolved_rigid_ties": 18,
-    "rigid_tie_node_members": 29427,
+    "surface_count": 88,
+    "surface_pair_count": 19,
     "unreferenced_surface_pair_names": [
       "MCL_To_MNS-M"
     ]
   },
-  "source_tissue_parameters": {
-    "QAT": {
-      "elastic": {
-        "density": 1e-09,
-        "c1": 2.75,
-        "c2": 0.0,
-        "c3": 0.065,
-        "c4": 115.89,
-        "c5": 777.56,
-        "lam_max": 1.042
-      },
-      "prestrain": {
-        "type": "in-situ stretch",
-        "stretch": 1.0,
-        "load_curve_id": "1",
-        "isochoric": true,
-        "resolved_load_curve": [
-          {
-            "source_text": "0,1.0",
-            "time": 0.0,
-            "value": 1.0,
-            "attributes": {}
-          },
-          {
-            "source_text": "1,1.0",
-            "time": 1.0,
-            "value": 1.0,
-            "attributes": {}
-          },
-          {
-            "source_text": "2,1.0",
-            "time": 2.0,
-            "value": 1.0,
-            "attributes": {}
-          }
-        ]
-      },
-      "fiber_direction": [
-        0.0021382483725627954,
-        -0.22397946374811423,
-        0.9745915183875777
-      ]
-    },
-    "PCL": {
-      "elastic": {
-        "density": 1e-09,
-        "c1": 3.25,
-        "c2": 0.0,
-        "c3": 0.1196,
-        "c4": 87.178,
-        "c5": 431.063,
-        "lam_max": 1.035
-      },
-      "prestrain": {
-        "type": "in-situ stretch",
-        "stretch": 1.0,
-        "load_curve_id": "2",
-        "isochoric": true,
-        "resolved_load_curve": [
-          {
-            "source_text": "0,1.0",
-            "time": 0.0,
-            "value": 1.0,
-            "attributes": {}
-          },
-          {
-            "source_text": "1,1.0",
-            "time": 1.0,
-            "value": 1.0,
-            "attributes": {}
-          },
-          {
-            "source_text": "2,1.0",
-            "time": 2.0,
-            "value": 1.0,
-            "attributes": {}
-          }
-        ]
-      },
-      "fiber_direction": [
-        -0.13894548213429192,
-        -0.7522134084051663,
-        -0.6441033622097867
-      ]
-    },
-    "ACL": {
-      "elastic": {
-        "density": 1e-09,
-        "c1": 1.95,
-        "c2": 0.0,
-        "c3": 0.0139,
-        "c4": 116.22,
-        "c5": 535.039,
-        "lam_max": 1.046
-      },
-      "prestrain": {
-        "type": "in-situ stretch",
-        "stretch": 1.0,
-        "load_curve_id": "3",
-        "isochoric": true,
-        "resolved_load_curve": [
-          {
-            "source_text": "0,1.0",
-            "time": 0.0,
-            "value": 1.0,
-            "attributes": {}
-          },
-          {
-            "source_text": "1,1.016",
-            "time": 1.0,
-            "value": 1.016,
-            "attributes": {}
-          },
-          {
-            "source_text": "2,1.016",
-            "time": 2.0,
-            "value": 1.016,
-            "attributes": {}
-          }
-        ]
-      },
-      "fiber_direction": [
-        -0.1012763293512546,
-        -0.5108021004916831,
-        0.8537120821719818
-      ]
-    },
-    "MCL": {
-      "elastic": {
-        "density": 1e-09,
-        "c1": 1.44,
-        "c2": 0.0,
-        "c3": 0.57,
-        "c4": 48.0,
-        "c5": 467.1,
-        "lam_max": 1.063
-      },
-      "prestrain": {
-        "type": "in-situ stretch",
-        "stretch": 1.0,
-        "load_curve_id": "4",
-        "isochoric": true,
-        "resolved_load_curve": [
-          {
-            "source_text": "0,1.0",
-            "time": 0.0,
-            "value": 1.0,
-            "attributes": {}
-          },
-          {
-            "source_text": "1,1.034",
-            "time": 1.0,
-            "value": 1.034,
-            "attributes": {}
-          },
-          {
-            "source_text": "2,1.034",
-            "time": 2.0,
-            "value": 1.034,
-            "attributes": {}
-          }
-        ]
-      },
-      "fiber_direction": [
-        0.2862545445153689,
-        -0.03912610167242837,
-        0.9573544191741205
-      ]
-    },
-    "PTL": {
-      "elastic": {
-        "density": 1e-09,
-        "c1": 2.75,
-        "c2": 0.0,
-        "c3": 0.065,
-        "c4": 115.89,
-        "c5": 777.56,
-        "lam_max": 1.042
-      },
-      "prestrain": {
-        "type": "in-situ stretch",
-        "stretch": 1.0,
-        "load_curve_id": "5",
-        "isochoric": true,
-        "resolved_load_curve": [
-          {
-            "source_text": "0,1.0",
-            "time": 0.0,
-            "value": 1.0,
-            "attributes": {}
-          },
-          {
-            "source_text": "1,1.0",
-            "time": 1.0,
-            "value": 1.0,
-            "attributes": {}
-          },
-          {
-            "source_text": "2,1.0",
-            "time": 2.0,
-            "value": 1.0,
-            "attributes": {}
-          }
-        ]
-      },
-      "fiber_direction": [
-        0.2536841532034668,
-        0.41872016059340167,
-        0.8719620275711987
-      ]
-    },
-    "LCL": {
-      "elastic": {
-        "density": 1e-09,
-        "c1": 1.44,
-        "c2": 0.0,
-        "c3": 0.57,
-        "c4": 48.0,
-        "c5": 467.1,
-        "lam_max": 1.063
-      },
-      "prestrain": {
-        "type": "in-situ stretch",
-        "stretch": 1.0,
-        "load_curve_id": "6",
-        "isochoric": true,
-        "resolved_load_curve": [
-          {
-            "source_text": "0,1.0",
-            "time": 0.0,
-            "value": 1.0,
-            "attributes": {}
-          },
-          {
-            "source_text": "1,1.027",
-            "time": 1.0,
-            "value": 1.027,
-            "attributes": {}
-          },
-          {
-            "source_text": "2,1.027",
-            "time": 2.0,
-            "value": 1.027,
-            "attributes": {}
-          }
-        ]
-      },
-      "fiber_direction": [
-        0.22214778048527417,
-        0.16495808684018612,
-        0.9609574356918686
-      ]
-    }
-  },
-  "reference_state_contract": {
-    "material_reference_coordinates": {
-      "source_geometry_sha256": "4155db1d0d7b87ffb2c668102d2495870e4461a539b18e6708f1f4817b5601bf",
-      "status": "immutable_source_Geometry_custom_reference"
-    },
-    "initialized_current_coordinates": {
-      "status": "not_materialized_by_source_program_compilation"
-    },
-    "prestrain_targets": {
-      "status": "compiled_schedule_targets_not_applied_or_equilibrated"
-    }
+  "schema": "numi.human.open-knee-source-mechanics-receipt.v1",
+  "scope": "source program and exact elementwise fiber inputs compiled; no source mechanics are executed or admitted by this artifact",
+  "source_equivalence_admission": "rejected_unsupported_source_mechanics",
+  "status": "passed_source_inventory_compilation_not_native_admission",
+  "validation": {
+    "archived_reference_log": "normal_termination_with_complete_observations",
+    "archived_reference_log_last_time": 2.0,
+    "meniscus_element_set_counts": "match exact Geometry_custom sets",
+    "meniscus_vector_payload": "independently reproducible little-endian source values",
+    "native_mechanics_execution": "not performed",
+    "pinned_source_deck_and_geometry": "passed exact SHA-256 identity checks",
+    "resolved_contact_pairs": 18,
+    "resolved_rigid_ties": 18
   }
 }

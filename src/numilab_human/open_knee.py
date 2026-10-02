@@ -386,8 +386,8 @@ def parse_source(directory: Path, *, enforce_exact: bool = True) -> Source:
 _SOURCE_SECTION_REASONS = {
     "Module": "the NHKNEE1 runtime does not execute FEBio module or solver settings",
     "Material": "selected scalar fields are copied to the reduced hybrid, not the complete FEBio material laws",
-    "Geometry": "the hybrid registers geometry into MyoSim frames instead of executing this source-coordinate problem",
-    "MeshData": "source element-wise material frames are retained by the deck but not executed by NHKNEE1",
+    "Geometry": "source coordinates and topology are compiled to an exact archive, but the native runtime does not execute the complete source geometry problem",
+    "MeshData": "source element-wise fiber frames are compiled exactly but are not executed by NHKNEE1",
     "Boundary": "source rigid ties are reduced to hybrid attachment ownership rather than the source rigid-body graph",
     "Discrete": "source discrete springs and discrete ties are not executed by NHKNEE1",
     "LoadData": "source load curves and prestrain continuation are not executed by NHKNEE1",
@@ -470,11 +470,15 @@ def _geometry_archive_cross_references(
     expected_sha256: str | None,
     contact_pair_names: set[str],
     rigid_tie_node_sets: set[str],
+    mesh_data_element_counts: dict[str, int] | None = None,
+    source_material_ids: set[int] | None = None,
+    binary_output_path: Path | None = None,
+    meniscus_mesh_output_path: Path | None = None,
 ) -> dict[str, Any]:
-    """Stream the archived Geometry_custom and resolve source contact/tie IDs.
+    """Stream archived geometry and resolve source contact/tie/material IDs.
 
     The archive is over 100 MB. Only node IDs, requested rigid-tie members,
-    surface connectivity digests/counts, and named pair links are retained.
+    surface and element connectivity digests/counts, and named pair links are retained.
     This validates references without substituting the smaller registered
     Geometry.feb or materializing a second full mesh in memory.
     """
@@ -484,11 +488,27 @@ def _geometry_archive_cross_references(
     if expected_sha256 is not None and geometry_sha256 != expected_sha256:
         raise ValueError("Open Knee(s) archived Geometry_custom identity drifted")
 
+    store_binary = binary_output_path is not None
+    geometry_payload = bytearray()
+    geometry_payload_size = 0
+
+    def append_geometry_record(payload: bytes) -> int:
+        nonlocal geometry_payload_size
+        offset = geometry_payload_size
+        if store_binary:
+            geometry_payload.extend(payload)
+        geometry_payload_size += len(payload)
+        return offset
+
     node_ids: set[int] = set()
-    surface_node_ids: set[int] = set()
+    referenced_node_ids: set[int] = set()
+    node_coordinate_groups: dict[str, dict[str, Any]] = {}
     node_sets: dict[str, dict[str, Any]] = {}
     surfaces: dict[str, dict[str, Any]] = {}
     surface_pairs: dict[str, dict[str, str]] = {}
+    element_sets: dict[str, dict[str, Any]] = {}
+    source_mesh_node_groups: dict[str, dict[str, Any]] = {}
+    source_mesh_element_groups: dict[str, dict[str, Any]] = {}
     active: dict[int, dict[str, Any]] = {}
     stack: list[ET.Element] = []
     node_record_count = 0
@@ -512,21 +532,59 @@ def _geometry_archive_cross_references(
             if event == "start":
                 parent = stack[-1] if stack else None
                 parent_tag = local_tag(parent) if parent is not None else ""
-                if parent_tag == "Geometry" and tag in {"NodeSet", "Surface", "SurfacePair"}:
+                if parent_tag == "Geometry" and tag in {
+                    "Nodes", "NodeSet", "Surface", "SurfacePair", "Elements"
+                }:
                     name = element.attrib.get("name")
                     if not name:
                         raise ValueError(
                             f"Open Knee(s) archived geometry {tag} has no name"
                         )
-                    if tag == "NodeSet":
+                    if tag == "Nodes":
+                        active[id(element)] = {
+                            "kind": tag, "name": name, "count": 0,
+                            "offset": geometry_payload_size,
+                            "source_mesh_payload": bytearray()
+                            if binary_output_path is not None and
+                            name in (mesh_data_element_counts or {}) else None,
+                            "source_mesh_node_ids": set()
+                            if binary_output_path is not None and
+                            name in (mesh_data_element_counts or {}) else None,
+                        }
+                    elif tag == "NodeSet":
                         active[id(element)] = {
                             "kind": tag, "name": name, "count": 0,
                             "ids": [] if name in rigid_tie_node_sets else None,
+                            "offset": geometry_payload_size,
                             "digest": hashlib.sha256(),
                         }
                     elif tag == "Surface":
                         active[id(element)] = {
                             "kind": tag, "name": name, "count": 0,
+                            "offset": geometry_payload_size,
+                            "face_type": None,
+                            "digest": hashlib.sha256(),
+                        }
+                    elif tag == "Elements":
+                        element_type = element.attrib.get("type")
+                        arity = {"tet4": 4, "tri3": 3}.get(element_type)
+                        if arity is None:
+                            raise ValueError(
+                                f"Open Knee(s) archived geometry uses unsupported element type {element_type}"
+                            )
+                        active[id(element)] = {
+                            "kind": tag, "name": name, "type": element_type,
+                            "arity": arity, "offset": geometry_payload_size,
+                            "material_id_source_text": element.attrib.get("mat"),
+                            "attributes": dict(sorted(element.attrib.items())),
+                            "count": 0, "ids": set(), "first_id": None, "last_id": None,
+                            "ids_follow_source_order": True,
+                            "source_mesh_payload": bytearray()
+                            if binary_output_path is not None and
+                            name in (mesh_data_element_counts or {}) else None,
+                            "source_mesh_node_ids": set()
+                            if binary_output_path is not None and
+                            name in (mesh_data_element_counts or {}) else None,
                             "digest": hashlib.sha256(),
                         }
                     else:
@@ -549,8 +607,31 @@ def _geometry_archive_cross_references(
             parent = stack[-2] if len(stack) > 1 else None
             parent_tag = local_tag(parent) if parent is not None else ""
             if parent_tag == "Nodes" and tag == "node":
-                node_ids.add(record_number(element.attrib.get("id"), "node ID"))
+                group = active.get(id(parent))
+                node_id = record_number(element.attrib.get("id"), "node ID")
+                try:
+                    coordinates = tuple(
+                        float(value.strip()) for value in (element.text or "").split(",")
+                    )
+                except ValueError as error:
+                    raise ValueError(
+                        "Open Knee(s) archived geometry has invalid node coordinates"
+                    ) from error
+                if len(coordinates) != 3 or not all(
+                    math.isfinite(value) for value in coordinates
+                ):
+                    raise ValueError(
+                        "Open Knee(s) archived geometry node must have three finite coordinates"
+                    )
+                node_ids.add(node_id)
                 node_record_count += 1
+                if group is not None:
+                    group["count"] += 1
+                    node_record = struct.pack("<I3d", node_id, *coordinates)
+                    append_geometry_record(node_record)
+                    if group["source_mesh_payload"] is not None:
+                        group["source_mesh_payload"].extend(node_record)
+                        group["source_mesh_node_ids"].add(node_id)
             elif parent_tag == "NodeSet":
                 group = active.get(id(parent))
                 if group is not None:
@@ -562,7 +643,9 @@ def _geometry_archive_cross_references(
                     else:
                         node_id = record_number(element.attrib.get("id"), "node-set node ID")
                         group["count"] += 1
+                        referenced_node_ids.add(node_id)
                         group["digest"].update(f"{node_id}\n".encode("ascii"))
+                        append_geometry_record(struct.pack("<I", node_id))
                         if group["ids"] is not None:
                             group["ids"].append(node_id)
             elif parent_tag == "Surface":
@@ -579,17 +662,97 @@ def _geometry_archive_cross_references(
                         raise ValueError(
                             "Open Knee(s) archived source surface has invalid node IDs"
                         )
+                    arity = {"tri3": 3, "quad4": 4}.get(tag)
+                    if arity is None or len(face_ids) != arity:
+                        raise ValueError(
+                            f"Open Knee(s) archived source surface has unsupported face type {tag}"
+                        )
+                    if group["face_type"] is None:
+                        group["face_type"] = tag
+                    elif group["face_type"] != tag:
+                        raise ValueError(
+                            "Open Knee(s) archived source surface mixes face types"
+                        )
                     group["count"] += 1
-                    surface_node_ids.update(face_ids)
+                    referenced_node_ids.update(face_ids)
+                    append_geometry_record(struct.pack(
+                        "<I" + ("I" * arity),
+                        record_number(element.attrib.get("id"), "surface face ID"),
+                        *face_ids,
+                    ))
                     encoded = ",".join(str(value) for value in face_ids)
                     group["digest"].update(
                         f"{tag}:{element.attrib.get('id', '')}:{encoded}\n".encode("ascii")
                     )
+            elif parent_tag == "Elements" and tag == "elem":
+                group = active.get(id(parent))
+                if group is not None:
+                    element_id = record_number(
+                        element.attrib.get("id"), "element ID"
+                    )
+                    if element_id in group["ids"]:
+                        raise ValueError(
+                            "Open Knee(s) archived geometry has duplicate element IDs in a set"
+                        )
+                    try:
+                        node_references = tuple(
+                            int(value.strip())
+                            for value in (element.text or "").split(",")
+                        )
+                    except ValueError as error:
+                        raise ValueError(
+                            "Open Knee(s) archived element has invalid connectivity"
+                        ) from error
+                    if (
+                        len(node_references) != group["arity"] or
+                        any(value <= 0 for value in node_references)
+                    ):
+                        raise ValueError(
+                            "Open Knee(s) archived element has invalid connectivity"
+                        )
+                    group["count"] += 1
+                    if group["first_id"] is None:
+                        group["first_id"] = element_id
+                    elif element_id != group["last_id"] + 1:
+                        group["ids_follow_source_order"] = False
+                    group["last_id"] = element_id
+                    group["ids"].add(element_id)
+                    referenced_node_ids.update(node_references)
+                    element_record = struct.pack(
+                        "<I" + ("I" * group["arity"]), element_id,
+                        *node_references,
+                    )
+                    append_geometry_record(element_record)
+                    if group["source_mesh_payload"] is not None:
+                        group["source_mesh_payload"].extend(element_record)
+                        group["source_mesh_node_ids"].update(node_references)
+                    encoded = ",".join(str(value) for value in node_references)
+                    group["digest"].update(
+                        f"{element_id}:{encoded}\n".encode("ascii")
+                    )
 
-            if tag in {"NodeSet", "Surface", "SurfacePair"} and id(element) in active:
+            if tag in {"Nodes", "NodeSet", "Surface", "SurfacePair", "Elements"} and id(element) in active:
                 group = active.pop(id(element))
                 name = group["name"]
-                if group["kind"] == "NodeSet":
+                if group["kind"] == "Nodes":
+                    if name in node_coordinate_groups:
+                        raise ValueError(
+                            "Open Knee(s) archived geometry has duplicate Nodes names"
+                        )
+                    node_coordinate_groups[name] = {
+                        "node_count": group["count"],
+                        "binary_offset_bytes": group["offset"],
+                        "binary_record_stride_bytes": 28,
+                        "binary_bytes": group["count"] * 28,
+                        "binary_record_layout": "little-endian u32 node_id, then float64[3] coordinates in source units",
+                    }
+                    if group["source_mesh_payload"] is not None:
+                        source_mesh_node_groups[name] = {
+                            "count": group["count"],
+                            "payload": group["source_mesh_payload"],
+                            "node_ids": group["source_mesh_node_ids"],
+                        }
+                elif group["kind"] == "NodeSet":
                     if name in node_sets:
                         raise ValueError(
                             "Open Knee(s) archived geometry has duplicate NodeSet names"
@@ -597,6 +760,10 @@ def _geometry_archive_cross_references(
                     node_sets[name] = {
                         "node_count": group["count"],
                         "node_ids_sha256": group["digest"].hexdigest(),
+                        "binary_offset_bytes": group["offset"],
+                        "binary_record_stride_bytes": 4,
+                        "binary_bytes": group["count"] * 4,
+                        "binary_record_layout": "little-endian u32 node_id",
                     }
                     if group["ids"] is not None:
                         node_sets[name]["node_ids"] = group["ids"]
@@ -607,8 +774,69 @@ def _geometry_archive_cross_references(
                         )
                     surfaces[name] = {
                         "face_count": group["count"],
+                        "face_type": group["face_type"],
+                        "binary_offset_bytes": group["offset"],
+                        "binary_record_stride_bytes": (
+                            16 if group["face_type"] == "tri3" else 20
+                        ),
+                        "binary_bytes": group["count"] * (
+                            16 if group["face_type"] == "tri3" else 20
+                        ),
+                        "binary_record_layout": (
+                            "little-endian u32 face_id and u32[3] node_ids"
+                            if group["face_type"] == "tri3"
+                            else "little-endian u32 face_id and u32[4] node_ids"
+                        ),
                         "connectivity_sha256": group["digest"].hexdigest(),
                     }
+                elif group["kind"] == "Elements":
+                    if name in element_sets:
+                        raise ValueError(
+                            "Open Knee(s) archived geometry has duplicate Elements names"
+                        )
+                    material_id_source_text = group["material_id_source_text"]
+                    material_id = (
+                        record_number(material_id_source_text, "element material ID")
+                        if material_id_source_text is not None else None
+                    )
+                    if expected_sha256 is not None and material_id is None:
+                        raise ValueError(
+                            f"Open Knee(s) archived element set {name} has no material assignment"
+                        )
+                    if (
+                        material_id is not None and source_material_ids is not None and
+                        material_id not in source_material_ids
+                    ):
+                        raise ValueError(
+                            f"Open Knee(s) archived element set {name} references unknown source material {material_id}"
+                        )
+                    element_sets[name] = {
+                        "element_type": group["type"],
+                        "element_count": group["count"],
+                        "binary_offset_bytes": group["offset"],
+                        "binary_record_stride_bytes": 4 * (1 + group["arity"]),
+                        "binary_bytes": group["count"] * 4 * (1 + group["arity"]),
+                        "binary_record_layout": (
+                            "little-endian u32 element_id and u32[4] node_ids"
+                            if group["type"] == "tet4" else
+                            "little-endian u32 element_id and u32[3] node_ids"
+                        ),
+                        "first_element_id_in_source_order": group["first_id"],
+                        "last_element_id_in_source_order": group["last_id"],
+                        "element_ids_contiguous_in_source_order": group[
+                            "ids_follow_source_order"
+                        ],
+                        "material_id": material_id,
+                        "material_id_source_text": material_id_source_text,
+                        "source_attributes": group["attributes"],
+                        "connectivity_sha256": group["digest"].hexdigest(),
+                    }
+                    if group["source_mesh_payload"] is not None:
+                        source_mesh_element_groups[name] = {
+                            "count": group["count"],
+                            "payload": group["source_mesh_payload"],
+                            "node_ids": group["source_mesh_node_ids"],
+                        }
                 else:
                     if name in surface_pairs:
                         raise ValueError(
@@ -633,8 +861,8 @@ def _geometry_archive_cross_references(
 
     if not node_ids or node_record_count != len(node_ids):
         raise ValueError("Open Knee(s) archived geometry node IDs are empty or duplicated")
-    if not surface_node_ids.issubset(node_ids):
-        raise ValueError("Open Knee(s) archived surface refers to a missing mesh node")
+    if not referenced_node_ids.issubset(node_ids):
+        raise ValueError("Open Knee(s) archived geometry references a missing mesh node")
     for name in rigid_tie_node_sets:
         record = node_sets.get(name)
         if record is None or record["node_count"] == 0 or "node_ids" not in record:
@@ -645,6 +873,21 @@ def _geometry_archive_cross_references(
             raise ValueError(
                 f"Open Knee(s) archived rigid-tie NodeSet {name} refers to a missing node"
             )
+
+    resolved_mesh_data_element_sets = {}
+    for name, expected_count in sorted((mesh_data_element_counts or {}).items()):
+        record = element_sets.get(name)
+        if record is None or record["element_count"] != expected_count:
+            raise ValueError(
+                f"Open Knee(s) archived geometry element set {name} does not match MeshData"
+            )
+        if expected_sha256 is not None and not record[
+            "element_ids_contiguous_in_source_order"
+        ]:
+            raise ValueError(
+                f"Open Knee(s) archived geometry element set {name} does not preserve MeshData local-ID order"
+            )
+        resolved_mesh_data_element_sets[name] = record
 
     resolved_pairs: dict[str, dict[str, Any]] = {}
     for name in sorted(contact_pair_names):
@@ -665,19 +908,105 @@ def _geometry_archive_cross_references(
             "slave_face_count": surfaces[slave]["face_count"],
             "slave_connectivity_sha256": surfaces[slave]["connectivity_sha256"],
         }
+    binary_storage = None
+    if binary_output_path is not None:
+        if len(geometry_payload) != geometry_payload_size:
+            raise ValueError("Open Knee(s) source geometry binary size accounting drifted")
+        binary_output_path.parent.mkdir(parents=True, exist_ok=True)
+        binary_output_path.write_bytes(geometry_payload)
+        binary_storage = {
+            "schema": "numi.human.open-knee-source-geometry-binary.v1",
+            "file": binary_output_path.name,
+            "bytes": geometry_payload_size,
+            "sha256": hashlib.sha256(geometry_payload).hexdigest(),
+            "record_order": "source XML Geometry child order; per-group records retain source order",
+        }
+    meniscus_mesh_storage = None
+    if meniscus_mesh_output_path is not None:
+        meniscus_payload = bytearray()
+        meniscus_groups = {}
+        for name in sorted((mesh_data_element_counts or {}), key=lambda key: element_sets[key]["material_id"]):
+            node_group = source_mesh_node_groups.get(name)
+            element_group = source_mesh_element_groups.get(name)
+            element_set = element_sets.get(name)
+            expected_count = (mesh_data_element_counts or {})[name]
+            if (
+                node_group is None or element_group is None or element_set is None or
+                element_set["element_type"] != "tet4" or
+                element_group["count"] != expected_count or
+                element_set["element_count"] != expected_count or
+                node_group["count"] != node_coordinate_groups[name]["node_count"]
+            ):
+                raise ValueError(
+                    f"Open Knee(s) source meniscus mesh {name} is incomplete or mismatched"
+                )
+            if not element_group["node_ids"].issubset(node_group["node_ids"]):
+                raise ValueError(
+                    f"Open Knee(s) source meniscus mesh {name} references nodes outside its named part"
+                )
+            material_id = element_set["material_id"]
+            if material_id is None:
+                raise ValueError(
+                    f"Open Knee(s) source meniscus mesh {name} has no material ID"
+                )
+            header_offset = len(meniscus_payload)
+            meniscus_payload.extend(struct.pack(
+                "<4sIIII", b"NOKM", 1, material_id,
+                node_group["count"], element_group["count"],
+            ))
+            node_offset = len(meniscus_payload)
+            meniscus_payload.extend(node_group["payload"])
+            element_offset = len(meniscus_payload)
+            meniscus_payload.extend(element_group["payload"])
+            meniscus_groups[name] = {
+                "material_id": material_id,
+                "node_count": node_group["count"],
+                "tetrahedron_count": element_group["count"],
+                "header_offset_bytes": header_offset,
+                "node_records_offset_bytes": node_offset,
+                "node_record_stride_bytes": 28,
+                "tetrahedron_records_offset_bytes": element_offset,
+                "tetrahedron_record_stride_bytes": 20,
+                "binary_bytes": len(meniscus_payload) - header_offset,
+                "source_coordinates": "preserved without scaling",
+                "node_id_mapping": "source global node IDs preserved in both tables",
+                "fiber_mapping": "source ElementData local lid maps to one-based tetrahedron order within the element set",
+            }
+        meniscus_mesh_output_path.parent.mkdir(parents=True, exist_ok=True)
+        meniscus_mesh_output_path.write_bytes(meniscus_payload)
+        meniscus_mesh_storage = {
+            "schema": "numi.human.open-knee-source-meniscus-mesh.v1",
+            "file": meniscus_mesh_output_path.name,
+            "bytes": len(meniscus_payload),
+            "sha256": hashlib.sha256(meniscus_payload).hexdigest(),
+            "header_layout": "little-endian 4-byte NOKM magic, u32 version, u32 source material ID, u32 node count, u32 tetrahedron count",
+            "groups": meniscus_groups,
+        }
     return {
         "status": "resolved_against_pinned_Geometry_custom",
         "file": path.name,
         "file_bytes": path.stat().st_size,
         "sha256": geometry_sha256,
+        "coordinate_units": "not_declared_in_pinned_FEBio_source",
+        "coordinate_binary_semantics": "source numeric coordinates preserved as float64 without scaling",
         "node_count": len(node_ids),
+        "node_coordinate_groups": {
+            name: node_coordinate_groups[name] for name in sorted(node_coordinate_groups)
+        },
         "node_set_count": len(node_sets),
+        "node_sets": {name: node_sets[name] for name in sorted(node_sets)},
         "surface_count": len(surfaces),
+        "surfaces": {name: surfaces[name] for name in sorted(surfaces)},
         "surface_pair_count": len(surface_pairs),
+        "element_set_count": len(element_sets),
         "rigid_tie_node_sets": {
             name: node_sets[name] for name in sorted(rigid_tie_node_sets)
         },
         "contact_surface_pairs": resolved_pairs,
+        "element_sets": {name: element_sets[name] for name in sorted(element_sets)},
+        "mesh_data_element_sets": resolved_mesh_data_element_sets,
+        "binary_storage": binary_storage,
+        "source_meniscus_mesh_storage": meniscus_mesh_storage,
         "unreferenced_surface_pair_names": sorted(
             set(surface_pairs) - contact_pair_names
         ),
@@ -827,6 +1156,81 @@ def _source_material_program(
     }
 
 
+def _source_mesh_element_data(
+    root: ET.Element,
+) -> tuple[list[dict[str, Any]], bytes, dict[str, int]]:
+    records: list[dict[str, Any]] = []
+    packed_records = bytearray()
+    element_counts: dict[str, int] = {}
+    seen: set[tuple[str, str]] = set()
+    for element_data in root.findall("MeshData/ElementData"):
+        variable = element_data.attrib.get("var")
+        element_set = element_data.attrib.get("elem_set")
+        if not variable or not element_set:
+            raise ValueError("Open Knee(s) source ElementData lacks var or elem_set")
+        key = (variable, element_set)
+        if key in seen:
+            raise ValueError("Open Knee(s) source ElementData has duplicate var/elem_set")
+        seen.add(key)
+        if variable != "fiber":
+            records.append({
+                "variable": variable,
+                "element_set": element_set,
+                "source_xml_sha256": _xml_digest(element_data),
+                "native_execution_status": "unsupported_not_executed",
+            })
+            continue
+
+        offset = len(packed_records)
+        values_hash = hashlib.sha256()
+        minimum_norm = math.inf
+        maximum_norm = 0.0
+        previous_id = 0
+        for index, element in enumerate(element_data, 1):
+            if element.tag != "elem":
+                raise ValueError("Open Knee(s) source fiber ElementData uses unsupported rows")
+            try:
+                local_id = int(element.attrib.get("lid", ""))
+                vector = tuple(
+                    float(value.strip()) for value in (element.text or "").split(",")
+                )
+            except ValueError as error:
+                raise ValueError("Open Knee(s) source element fiber is invalid") from error
+            if local_id != index or local_id <= previous_id or len(vector) != 3 or not all(
+                math.isfinite(value) for value in vector
+            ):
+                raise ValueError(
+                    "Open Knee(s) source fiber rows must be finite, three-component, and consecutively indexed"
+                )
+            previous_id = local_id
+            packed = struct.pack("<I3d", local_id, *vector)
+            packed_records.extend(packed)
+            values_hash.update(packed)
+            vector_norm = math.hypot(*vector)
+            if not math.isfinite(vector_norm) or vector_norm <= 1.0e-12:
+                raise ValueError("Open Knee(s) source element fiber direction is degenerate")
+            minimum_norm = min(minimum_norm, vector_norm)
+            maximum_norm = max(maximum_norm, vector_norm)
+        if previous_id == 0:
+            raise ValueError("Open Knee(s) source fiber ElementData is empty")
+        element_counts[element_set] = previous_id
+        records.append({
+            "variable": variable,
+            "element_set": element_set,
+            "record_count": previous_id,
+            "local_element_ids": "one_based_contiguous",
+            "raw_source_vectors_preserved": True,
+            "vector_norm_range": [minimum_norm, maximum_norm],
+            "binary_offset_bytes": offset,
+            "binary_bytes": previous_id * 28,
+            "binary_sha256": values_hash.hexdigest(),
+            "record_layout": "little-endian u32 local_element_id, then float64[3] source vector",
+            "source_xml_sha256": _xml_digest(element_data),
+            "native_execution_status": "compiled_source_input_not_executed",
+        })
+    return records, bytes(packed_records), element_counts
+
+
 def _isochoric_fiber_prestrain_tensor(
     stretch: float, fiber_direction: list[float]
 ) -> list[list[float]]:
@@ -853,6 +1257,9 @@ def compile_source_mechanical_description(
     expected_deck_sha256: str | None = None,
     source_geometry_archive_sha256: str | None = None,
     source_geometry_archive_path: Path | None = None,
+    source_geometry_binary_output_path: Path | None = None,
+    source_meniscus_mesh_output_path: Path | None = None,
+    source_mesh_data_output_path: Path | None = None,
     reference_solver_version: str | None = None,
     reference_log_sha256: str | None = None,
 ) -> dict[str, Any]:
@@ -924,6 +1331,9 @@ def compile_source_mechanical_description(
             "source_xml": ET.tostring(item, encoding="unicode"),
             "native_execution_status": "unsupported_not_executed",
         })
+    source_material_ids = {int(material["id"]) for material in materials}
+    if len(source_material_ids) != len(materials):
+        raise ValueError("Open Knee(s) source material IDs are missing or duplicated")
 
     rigid_bodies = []
     for item in root.findall("Material/material"):
@@ -1109,6 +1519,26 @@ def compile_source_mechanical_description(
                 )
         material["source_program"] = source_program
 
+    source_mesh_data, source_mesh_data_bytes, mesh_data_element_counts = (
+        _source_mesh_element_data(root)
+    )
+    source_mesh_data_storage = None
+    if source_mesh_data_output_path is not None:
+        source_mesh_data_output_path.parent.mkdir(parents=True, exist_ok=True)
+        source_mesh_data_output_path.write_bytes(source_mesh_data_bytes)
+        for record in source_mesh_data:
+            if record["variable"] == "fiber":
+                record["storage_file"] = source_mesh_data_output_path.name
+        source_mesh_data_storage = {
+            "schema": "numi.human.open-knee-mesh-element-data-f64.v1",
+            "file": source_mesh_data_output_path.name,
+            "bytes": len(source_mesh_data_bytes),
+            "sha256": hashlib.sha256(source_mesh_data_bytes).hexdigest(),
+            "record_count": len(source_mesh_data_bytes) // 28,
+            "record_stride_bytes": 28,
+            "record_layout": "little-endian u32 local_element_id, then float64[3] raw source vector",
+        }
+
     rigid_ties = []
     for item in root.findall("Boundary/rigid"):
         node_set = item.attrib.get("node_set")
@@ -1149,7 +1579,49 @@ def compile_source_mechanical_description(
             expected_sha256=source_geometry_archive_sha256,
             contact_pair_names={contact["surface_pair"] for contact in contacts},
             rigid_tie_node_sets={tie["attributes"]["node_set"] for tie in rigid_ties},
+            mesh_data_element_counts=mesh_data_element_counts,
+            source_material_ids=source_material_ids,
+            binary_output_path=source_geometry_binary_output_path,
+            meniscus_mesh_output_path=source_meniscus_mesh_output_path,
         )
+        materials_by_id = {int(material["id"]): material for material in materials}
+        for element_set in geometry_resolution["element_sets"].values():
+            material_id = element_set["material_id"]
+            if material_id is None:
+                element_set["material_assignment_status"] = "source_geometry_material_not_authored"
+                continue
+            source_material = materials_by_id[material_id]
+            element_set.update({
+                "material_name": source_material["name"],
+                "material_type": source_material["type"],
+                "material_source_xml_sha256": source_material["source_xml_sha256"],
+                "material_assignment_status": "resolved_to_pinned_source_deck_material",
+            })
+        if expected_deck_sha256 == EXPECTED_HASHES["FeBio_custom.feb"]:
+            expected_mesh_data = {"MNS-L": 44953, "MNS-M": 51009}
+            actual_mesh_data = {
+                record["element_set"]: record["record_count"]
+                for record in source_mesh_data
+                if record["variable"] == "fiber"
+            }
+            if actual_mesh_data != expected_mesh_data:
+                raise ValueError(
+                    "Open Knee(s) pinned meniscus fiber element sets changed"
+                )
+            for name, material_id in (("MNS-L", 12), ("MNS-M", 13)):
+                element_set = geometry_resolution["element_sets"].get(name)
+                material = materials_by_id.get(material_id)
+                if (
+                    element_set is None or material is None or
+                    element_set["material_id"] != material_id or
+                    not element_set["element_ids_contiguous_in_source_order"] or
+                    material["name"] != name or
+                    material["type"] != "trans iso Mooney-Rivlin" or
+                    material["source_program"]["outer_scalar_parameters"].get("c2") != 0.0
+                ):
+                    raise ValueError(
+                        f"Open Knee(s) pinned source fiber set {name} no longer resolves to its c2=0 trans-iso material"
+                    )
         for tie in rigid_ties:
             resolved = geometry_resolution["rigid_tie_node_sets"][
                 tie["attributes"]["node_set"]
@@ -1191,6 +1663,8 @@ def compile_source_mechanical_description(
             if geometry_resolution is not None else source_geometry_archive_sha256
         ),
         "source_geometry_resolution": geometry_resolution,
+        "source_mesh_element_data": source_mesh_data,
+        "source_mesh_element_data_storage": source_mesh_data_storage,
         "reference_state_contract": {
             "material_reference_coordinates": {
                 "source_geometry_sha256": (
@@ -1238,6 +1712,204 @@ def compile_source_mechanical_description(
         },
         "unsupported_source_sections": unsupported,
     }
+
+
+def compile_source_mechanical_artifacts(
+    *, open_knee: Path, geometry_archive: Path, reference_log: Path, output: Path,
+) -> dict[str, Any]:
+    """Write the pinned source program and element data without MyoSim imports.
+
+    This compiles an auditable source inventory only. It does not run FEBio,
+    execute a native mechanics solve, apply prestrain, or admit equivalence.
+    """
+    output.mkdir(parents=True, exist_ok=True)
+    source = parse_source(open_knee, enforce_exact=True)
+    if _sha256(reference_log) != ARCHIVED_REFERENCE_LOG_SHA256:
+        raise ValueError("Open Knee(s) archived FEBio reference-log identity drifted")
+    from .open_knee_febio_log import parse_febio_log
+
+    reference_observations = parse_febio_log(
+        reference_log.read_text(encoding="utf-8", errors="strict")
+    )
+    mesh_data_path = output / "source-meshdata.bin"
+    geometry_binary_path = output / "source-geometry.bin"
+    meniscus_mesh_path = output / "source-meniscus-mesh.bin"
+    description = compile_source_mechanical_description(
+        source,
+        source_deck=open_knee / "FeBio_custom.feb",
+        expected_deck_sha256=EXPECTED_HASHES["FeBio_custom.feb"],
+        source_geometry_archive_sha256=ARCHIVED_REFERENCE_GEOMETRY_SHA256,
+        source_geometry_archive_path=geometry_archive,
+        source_geometry_binary_output_path=geometry_binary_path,
+        source_meniscus_mesh_output_path=meniscus_mesh_path,
+        source_mesh_data_output_path=mesh_data_path,
+        reference_solver_version=reference_observations.get("version"),
+        reference_log_sha256=ARCHIVED_REFERENCE_LOG_SHA256,
+    )
+    accepted_times = reference_observations.get("accepted_times", [])
+    description["reference_run_observation"] = {
+        "status": reference_observations.get("status"),
+        "version": reference_observations.get("version"),
+        "accepted_time_count": len(accepted_times),
+        "first_accepted_time": accepted_times[0] if accepted_times else None,
+        "last_accepted_time": accepted_times[-1] if accepted_times else None,
+        "complete_observations": (
+            reference_observations.get("status") ==
+            "normal_termination_with_complete_observations"
+        ),
+        "binary_identity": "not_supplied_in_archive",
+        "log_sha256": ARCHIVED_REFERENCE_LOG_SHA256,
+    }
+    description_path = output / "source-mechanics.json"
+    description_path.write_text(
+        json.dumps(description, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    mesh_groups = description["source_mesh_element_data"]
+    receipt = {
+        "schema": "numi.human.open-knee-source-mechanics-receipt.v1",
+        "status": "passed_source_inventory_compilation_not_native_admission",
+        "scope": (
+            "source program and exact elementwise fiber inputs compiled; no source "
+            "mechanics are executed or admitted by this artifact"
+        ),
+        "source_equivalence_admission": description["source_equivalence_admission"],
+        "validation": {
+            "pinned_source_deck_and_geometry": "passed exact SHA-256 identity checks",
+            "archived_reference_log": reference_observations.get("status"),
+            "archived_reference_log_last_time": (
+                accepted_times[-1] if accepted_times else None
+            ),
+            "resolved_contact_pairs": len(description["contacts"]),
+            "resolved_rigid_ties": len(description["rigid_graph"]["rigid_ties"]),
+            "meniscus_element_set_counts": "match exact Geometry_custom sets",
+            "meniscus_vector_payload": "independently reproducible little-endian source values",
+            "native_mechanics_execution": "not performed",
+        },
+        "resolved_geometry": {
+            "node_count": description["source_geometry_resolution"]["node_count"],
+            "surface_count": description["source_geometry_resolution"]["surface_count"],
+            "surface_pair_count": description["source_geometry_resolution"][
+                "surface_pair_count"
+            ],
+            "element_set_count": description["source_geometry_resolution"][
+                "element_set_count"
+            ],
+            "resolved_contacts": len(description["source_geometry_resolution"][
+                "contact_surface_pairs"
+            ]),
+            "resolved_rigid_ties": len(description["source_geometry_resolution"][
+                "rigid_tie_node_sets"
+            ]),
+            "mesh_data_element_sets": description["source_geometry_resolution"][
+                "mesh_data_element_sets"
+            ],
+            "unreferenced_surface_pair_names": description[
+                "source_geometry_resolution"
+            ]["unreferenced_surface_pair_names"],
+        },
+        "reference_inputs": {
+            "FeBio_custom.feb": {
+                "sha256": description["source_file_sha256"],
+                "bytes": description["source_file_bytes"],
+            },
+            "Geometry_custom.feb": {
+                "sha256": description["source_geometry_archive_sha256"],
+                "bytes": description["source_geometry_resolution"]["file_bytes"],
+            },
+            "FeBio_custom.log": {
+                "sha256": ARCHIVED_REFERENCE_LOG_SHA256,
+                "bytes": reference_log.stat().st_size,
+                "reported_solver_version": reference_observations.get("version"),
+                "status": reference_observations.get("status"),
+                "last_accepted_time": accepted_times[-1] if accepted_times else None,
+                "original_binary_identity": "not_supplied_in_archive",
+            },
+        },
+        "compiled_counts": {
+            "materials": len(description["materials"]),
+            "rigid_bodies": len(description["rigid_graph"]["bodies"]),
+            "rigid_ties": len(description["rigid_graph"]["rigid_ties"]),
+            "cylindrical_joints": len(description["rigid_graph"]["cylindrical_joints"]),
+            "contacts": len(description["contacts"]),
+            "load_curves": len(description["load_curves"]),
+            "prestrain_target_states": sum(
+                len((material["source_program"].get("prestrain") or {}).get(
+                    "target_states", []
+                ))
+                for material in description["materials"]
+            ),
+            "source_mesh_element_data_groups": len(mesh_groups),
+            "source_mesh_element_fiber_vectors": sum(
+                group["record_count"] for group in mesh_groups
+            ),
+        },
+        "mesh_element_data": {
+            "file": mesh_data_path.name,
+            "schema": description["source_mesh_element_data_storage"]["schema"],
+            "bytes": mesh_data_path.stat().st_size,
+            "sha256": _sha256(mesh_data_path),
+            "record_count": description["source_mesh_element_data_storage"]["record_count"],
+            "record_stride_bytes": description["source_mesh_element_data_storage"][
+                "record_stride_bytes"
+            ],
+            "groups": [
+                {
+                    "element_set": group["element_set"],
+                    "record_count": group["record_count"],
+                    "binary_sha256": group["binary_sha256"],
+                    "source_xml_sha256": group["source_xml_sha256"],
+                    "geometry_element_count": description[
+                        "source_geometry_resolution"
+                    ]["mesh_data_element_sets"][group["element_set"]][
+                        "element_count"
+                    ],
+                    "native_execution_status": group["native_execution_status"],
+                }
+                for group in mesh_groups
+            ],
+        },
+        "geometry_binary": description["source_geometry_resolution"][
+            "binary_storage"
+        ],
+        "meniscus_mesh_binary": description["source_geometry_resolution"][
+            "source_meniscus_mesh_storage"
+        ],
+        "artifacts": {
+            description_path.name: {
+                "bytes": description_path.stat().st_size,
+                "sha256": _sha256(description_path),
+            },
+            mesh_data_path.name: {
+                "bytes": mesh_data_path.stat().st_size,
+                "sha256": _sha256(mesh_data_path),
+            },
+            geometry_binary_path.name: {
+                "bytes": geometry_binary_path.stat().st_size,
+                "sha256": _sha256(geometry_binary_path),
+            },
+            meniscus_mesh_path.name: {
+                "bytes": meniscus_mesh_path.stat().st_size,
+                "sha256": _sha256(meniscus_mesh_path),
+            },
+        },
+        "compiler_sources": {
+            Path(__file__).name: _sha256(Path(__file__)),
+            "cli.py": _sha256(Path(__file__).resolve().parents[2]
+                               / "src/numilab_human/cli.py"),
+        },
+        "not_qualified": [
+            "exact re-execution from the unidentified archived FEBio binary",
+            "native source joint, material, prestrain, contact, and load execution",
+            "source tissue equilibrium, extensor loading, or whole-body integration",
+        ],
+    }
+    receipt_path = output / "receipt.json"
+    receipt_path.write_text(
+        json.dumps(receipt, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return receipt
 
 
 def _unit(vector: Any, np: Any) -> Any:
@@ -1527,6 +2199,7 @@ def compile_payload(
     *, sources: Path, open_knee: Path, registration_path: Path, output: Path,
     side: str = "left", projected_visual_frame: bool = False,
     source_geometry_archive_path: Path | None = None,
+    source_mesh_data_output_path: Path | None = None,
 ) -> dict[str, Any]:
     if side not in {"left", "right"}:
         raise ValueError("Open Knee(s) payload side must be left or right")
@@ -2023,6 +2696,7 @@ def compile_payload(
             expected_deck_sha256=EXPECTED_HASHES["FeBio_custom.feb"],
             source_geometry_archive_sha256=ARCHIVED_REFERENCE_GEOMETRY_SHA256,
             source_geometry_archive_path=source_geometry_archive_path,
+            source_mesh_data_output_path=source_mesh_data_output_path,
             reference_solver_version=ARCHIVED_REFERENCE_SOLVER_VERSION,
             reference_log_sha256=ARCHIVED_REFERENCE_LOG_SHA256,
         ),

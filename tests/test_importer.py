@@ -3741,6 +3741,9 @@ class ImporterTests(unittest.TestCase):
 <Nodes name="B"><node id="5">0,0,0</node><node id="6">1,0,0</node>
 <node id="7">0,1,0</node></Nodes>
 <Elements name="B" type="tri3"><elem id="2">5,6,7</elem></Elements>
+<Nodes name="MNS-M"><node id="8">0,0,0</node><node id="9">1,0,0</node>
+<node id="10">0,1,0</node><node id="11">0,0,1</node></Nodes>
+<Elements name="MNS-M" type="tet4" mat="3"><elem id="3">8,9,10,11</elem></Elements>
 <NodeSet name="A_@_B_TiesNodes"><node id="1"/><node id="2"/></NodeSet>
 <Surface name="A_All_Faces"><tri3 id="1">1,2,3</tri3></Surface>
 <Surface name="B_All_Faces"><tri3 id="2">5,6,7</tri3></Surface>
@@ -3759,6 +3762,8 @@ class ImporterTests(unittest.TestCase):
 <c2>0</c2><c3>0.2</c3><c4>20</c4><c5>30</c5><lam_max>1.1</lam_max></elastic>
 <prestrain type="in-situ stretch"><stretch lc="9">1.05</stretch><isochoric>1</isochoric></prestrain>
 <fiber type="vector">1,0,0</fiber></material></Material>
+<MeshData><ElementData var="fiber" elem_set="MNS-M">
+<elem lid="1">0.6,0.8,0.0</elem></ElementData></MeshData>
 <Boundary><rigid name="A_tie" node_set="A_@_B_TiesNodes" rb="1"/></Boundary>
 <Discrete><discrete_material id="1" type="linear spring"><E>100</E></discrete_material>
 <discrete discrete_set="spring_set" dmat="1"/></Discrete>
@@ -3788,7 +3793,67 @@ class ImporterTests(unittest.TestCase):
             mechanics = compile_source_mechanical_description(
                 source, source_deck=directory / "FeBio_custom.feb",
                 source_geometry_archive_path=directory / "Geometry.feb",
+                source_geometry_binary_output_path=directory / "source-geometry.bin",
+                source_meniscus_mesh_output_path=directory / "source-meniscus-mesh.bin",
+                source_mesh_data_output_path=directory / "source-meshdata.bin",
             )
+            geometry_binary = (directory / "source-geometry.bin").read_bytes()
+            geometry_storage = mechanics["source_geometry_resolution"]["binary_storage"]
+            self.assertEqual(len(geometry_binary), geometry_storage["bytes"])
+            self.assertEqual(
+                hashlib.sha256(geometry_binary).hexdigest(), geometry_storage["sha256"]
+            )
+            mns_geometry = mechanics["source_geometry_resolution"]["element_sets"]["MNS-M"]
+            geometry_record = struct.unpack_from(
+                "<I4I", geometry_binary, mns_geometry["binary_offset_bytes"]
+            )
+            self.assertEqual(geometry_record, (3, 8, 9, 10, 11))
+            meniscus_mesh = (directory / "source-meniscus-mesh.bin").read_bytes()
+            meniscus_record = mechanics["source_geometry_resolution"][
+                "source_meniscus_mesh_storage"
+            ]["groups"]["MNS-M"]
+            self.assertEqual(
+                struct.unpack_from("<4sIIII", meniscus_mesh, 0),
+                (b"NOKM", 1, 3, 4, 1),
+            )
+            self.assertEqual(
+                struct.unpack_from(
+                    "<I4I", meniscus_mesh,
+                    meniscus_record["tetrahedron_records_offset_bytes"],
+                ),
+                (3, 8, 9, 10, 11),
+            )
+            mesh_data_bytes = (directory / "source-meshdata.bin").read_bytes()
+            self.assertEqual(
+                struct.unpack("<I3d", mesh_data_bytes), (1, 0.6, 0.8, 0.0)
+            )
+            self.assertEqual(
+                hashlib.sha256(mesh_data_bytes).hexdigest(),
+                mechanics["source_mesh_element_data_storage"]["sha256"],
+            )
+            self.assertEqual(
+                mechanics["source_geometry_resolution"]["element_sets"]["MNS-M"]["material_id"],
+                3,
+            )
+            self.assertEqual(
+                mechanics["source_geometry_resolution"]["element_sets"]["MNS-M"]["material_name"],
+                "A",
+            )
+            self.assertTrue(
+                mechanics["source_geometry_resolution"]["element_sets"]["MNS-M"][
+                    "element_ids_contiguous_in_source_order"
+                ]
+            )
+            geometry_text = (directory / "Geometry.feb").read_text(encoding="utf-8")
+            (directory / "Geometry.feb").write_text(
+                geometry_text.replace('mat="3"', 'mat="99"'), encoding="utf-8"
+            )
+            with self.assertRaisesRegex(ValueError, "unknown source material 99"):
+                compile_source_mechanical_description(
+                    source, source_deck=directory / "FeBio_custom.feb",
+                    source_geometry_archive_path=directory / "Geometry.feb",
+                )
+            (directory / "Geometry.feb").write_text(geometry_text, encoding="utf-8")
             joint_axis = source.mechanical_program.find(
                 "Step/Constraints/constraint[@name='A_B']/joint_axis"
             )
@@ -3813,7 +3878,7 @@ class ImporterTests(unittest.TestCase):
                 compile_source_mechanical_description(
                     source, source_deck=directory / "FeBio_custom.feb"
                 )
-        self.assertEqual(set(source.regions), {"A", "B"})
+        self.assertEqual(set(source.regions), {"A", "B", "MNS-M"})
         self.assertEqual(source.regions["A"].element_type, "tet4")
         self.assertEqual(source.regions["A"].elements, [(1, 2, 3, 4)])
         self.assertEqual(source.node_sets["A_@_B_TiesNodes"], [1, 2])
@@ -3831,8 +3896,20 @@ class ImporterTests(unittest.TestCase):
             mechanics["contact_surface_pair_resolution"],
             "resolved_against_pinned_Geometry_custom",
         )
-        self.assertEqual(mechanics["source_geometry_resolution"]["node_count"], 7)
+        self.assertEqual(mechanics["source_geometry_resolution"]["node_count"], 11)
         self.assertEqual(mechanics["source_geometry_resolution"]["surface_pair_count"], 1)
+        self.assertEqual(
+            mechanics["source_geometry_resolution"]["mesh_data_element_sets"]["MNS-M"]["element_count"],
+            1,
+        )
+        mesh_data_record = mechanics["source_mesh_element_data"][0]
+        self.assertEqual(mesh_data_record["record_count"], 1)
+        self.assertEqual(mesh_data_record["raw_source_vectors_preserved"], True)
+        self.assertEqual(mesh_data_record["binary_bytes"], 28)
+        self.assertNotIn("element_vectors", mesh_data_record)
+        self.assertEqual(
+            mechanics["source_mesh_element_data_storage"]["record_count"], 1
+        )
         self.assertEqual(
             mechanics["rigid_graph"]["rigid_ties"][0]["node_set_node_ids"],
             [1, 2],

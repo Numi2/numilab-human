@@ -595,6 +595,24 @@ def open_knee_payload(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def open_knee_source_mechanics(arguments: argparse.Namespace) -> int:
+    from .open_knee import compile_source_mechanical_artifacts
+
+    result = compile_source_mechanical_artifacts(
+        open_knee=arguments.open_knee.resolve(),
+        geometry_archive=arguments.geometry_archive.resolve(),
+        reference_log=arguments.reference_log.resolve(),
+        output=arguments.output.resolve(),
+    )
+    print(f"status: {result['status']}")
+    print(f"wrote {arguments.output.resolve() / 'source-mechanics.json'}")
+    print(f"wrote {arguments.output.resolve() / 'source-meshdata.bin'}")
+    print(f"wrote {arguments.output.resolve() / 'source-geometry.bin'}")
+    print(f"wrote {arguments.output.resolve() / 'source-meniscus-mesh.bin'}")
+    print(f"wrote {arguments.output.resolve() / 'receipt.json'}")
+    return 0
+
+
 def myosim_thoracic_registration(arguments: argparse.Namespace) -> int:
     exporter = arguments.python.expanduser().absolute()
     if not exporter.is_file() or not os.access(exporter, os.X_OK):
@@ -1552,6 +1570,15 @@ def parser() -> argparse.ArgumentParser:
         help="Python environment with pinned MyoSim, NumPy, and MuJoCo",
     )
     open_knee_parser.set_defaults(handler=open_knee_payload)
+    open_knee_source_parser = commands.add_parser(
+        "open-knee-source-mechanics",
+        help="compile the pinned source program and exact elementwise fiber fields without MyoSim",
+    )
+    open_knee_source_parser.add_argument("--open-knee", type=Path, required=True)
+    open_knee_source_parser.add_argument("--geometry-archive", type=Path, required=True)
+    open_knee_source_parser.add_argument("--reference-log", type=Path, required=True)
+    open_knee_source_parser.add_argument("--output", type=Path, required=True)
+    open_knee_source_parser.set_defaults(handler=open_knee_source_mechanics)
     from .open_knee_reference import cli as open_knee_reference_cli
     reference_parser = commands.add_parser(
         "open-knee-reference-case",
