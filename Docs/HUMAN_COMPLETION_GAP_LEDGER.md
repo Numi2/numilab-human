@@ -1086,6 +1086,18 @@ bitwise replay through 512 steps. The run still records
 standing remain open; recovery, walking, anatomical mechanics, materials,
 blood/tissue exchange, and subject calibration remain open.
 
+The 2026-10-02 [accepted-step standing diagnostic](NATIVE_STAND_ACCEPTED_TRACE_20261002.md)
+adds a matched 512 ms, 1 ms Apple Metal trace using uniform 0.8 activation
+across all 416 source muscles. It does not stand. Acceleration peaks at
+`3396.17 rad/s²` in `shoulder_rot_r`; `shoulder_rot_l` has the next largest
+accepted acceleration, and right knee flexion reaches `0.91920 rad` in 512 ms.
+Maximum foot penetration is `1.813 mm` and joint-equality velocity error is
+`0.0571 m/s`. A matched 64-iteration run also fails balance, so contact
+iteration count remains trajectory-sensitive without resolving the standing
+gap. Calibrated closed-loop recruitment and a source-corrected left-knee range
+contract remain prerequisites; the requested standing video and board visuals
+stay paused until requested.
+
 ## Single-male release target
 
 The current release is one source-bound adult male at one fixed measured age.
