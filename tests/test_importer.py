@@ -3784,6 +3784,23 @@ class ImporterTests(unittest.TestCase):
             mechanics = compile_source_mechanical_description(
                 source, source_deck=directory / "FeBio_custom.feb"
             )
+            joint_axis = source.mechanical_program.find(
+                "Step/Constraints/constraint[@name='A_B']/joint_axis"
+            )
+            original_axis = joint_axis.text
+            deck_text = (directory / "FeBio_custom.feb").read_text(encoding="utf-8")
+            (directory / "FeBio_custom.feb").write_text(
+                deck_text.replace("<joint_axis>0,0,1</joint_axis>",
+                                  "<joint_axis>0,0,0</joint_axis>"),
+                encoding="utf-8",
+            )
+            joint_axis.text = "0,0,0"
+            with self.assertRaisesRegex(ValueError, "axis must be unit length"):
+                compile_source_mechanical_description(
+                    source, source_deck=directory / "FeBio_custom.feb"
+                )
+            joint_axis.text = original_axis
+            (directory / "FeBio_custom.feb").write_text(deck_text, encoding="utf-8")
             source.mechanical_program.find(
                 "Step/Constraints/constraint[@name='A_B']/joint_axis"
             ).text = "1,0,0"
@@ -3807,14 +3824,30 @@ class ImporterTests(unittest.TestCase):
                          "rejected_unsupported_source_mechanics")
         self.assertEqual([body["material_id"] for body in
                           mechanics["rigid_graph"]["bodies"]], [1, 2])
+        body = mechanics["rigid_graph"]["bodies"][0]
+        self.assertEqual(body["center_of_mass"], [0.0, 0.0, 0.0])
+        self.assertEqual(body["density"], 1.0)
         joint = mechanics["rigid_graph"]["cylindrical_joints"][0]
         self.assertEqual((joint["body_a"], joint["body_b"]), (1, 2))
+        self.assertEqual(joint["force_penalty"], 10000.0)
+        self.assertEqual(joint["moment_penalty"], 3000000.0)
+        self.assertEqual(joint["joint_origin"], [0.0, 0.0, 0.0])
+        self.assertEqual(joint["joint_axis"], [0.0, 0.0, 1.0])
+        self.assertFalse(joint["prescribed_translation"])
+        self.assertTrue(joint["prescribed_rotation"])
+        self.assertEqual(joint["translation"]["value"], 0.0)
+        self.assertEqual(joint["rotation"]["value"], -1.57)
+        self.assertEqual(joint["rotation"]["load_curve_id"], "9")
         self.assertEqual(joint["rotation"]["attributes"], {"lc": "9"})
         self.assertEqual(mechanics["contacts"][0]["parameters"][0], {
             "name": "penalty", "source_text": "0.1", "attributes": {},
         })
         self.assertEqual(mechanics["load_curves"][0]["points"][1]["source_text"],
                          "1,1")
+        self.assertEqual(mechanics["load_curves"][0]["numeric_points"], [
+            {"source_text": "0,0", "time": 0.0, "value": 0.0, "attributes": {}},
+            {"source_text": "1,1", "time": 1.0, "value": 1.0, "attributes": {}},
+        ])
         self.assertTrue(any(section["name"] == "Step" and
                             section["native_execution_status"] ==
                             "unsupported_not_executed"

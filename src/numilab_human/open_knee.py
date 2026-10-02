@@ -417,6 +417,53 @@ def _required_xml_text(element: ET.Element, tag: str, path: str) -> str:
     return child.text.strip()
 
 
+def _required_xml_float(element: ET.Element, tag: str, path: str) -> float:
+    text = _required_xml_text(element, tag, path)
+    try:
+        value = float(text)
+    except ValueError as error:
+        raise ValueError(f"Open Knee(s) source mechanics has invalid number at {path}/{tag}") from error
+    if not math.isfinite(value):
+        raise ValueError(f"Open Knee(s) source mechanics has non-finite number at {path}/{tag}")
+    return value
+
+
+def _required_xml_flag(element: ET.Element, tag: str, path: str) -> bool:
+    value = _required_xml_float(element, tag, path)
+    if value not in (0.0, 1.0):
+        raise ValueError(f"Open Knee(s) source mechanics flag {path}/{tag} must be 0 or 1")
+    return bool(value)
+
+
+def _required_xml_vector(element: ET.Element, tag: str, path: str) -> tuple[float, float, float]:
+    return _vector(_required_xml_text(element, tag, path), f"source mechanics {path}/{tag}")
+
+
+def _source_curve_points(element: ET.Element) -> list[dict[str, Any]]:
+    points = []
+    previous_time: float | None = None
+    for point in element.findall("point"):
+        text = (point.text or "").strip()
+        try:
+            pair = tuple(float(value.strip()) for value in text.split(","))
+        except ValueError as error:
+            raise ValueError("Open Knee(s) source load curve has an invalid point") from error
+        if len(pair) != 2 or not all(math.isfinite(value) for value in pair):
+            raise ValueError("Open Knee(s) source load curve point must be a finite time/value pair")
+        if previous_time is not None and pair[0] <= previous_time:
+            raise ValueError("Open Knee(s) source load curve times must increase strictly")
+        previous_time = pair[0]
+        points.append({
+            "source_text": text,
+            "time": pair[0],
+            "value": pair[1],
+            "attributes": dict(sorted(point.attrib.items())),
+        })
+    if not points:
+        raise ValueError("Open Knee(s) source load curve has no points")
+    return points
+
+
 def _xml_parameter_records(element: ET.Element) -> list[dict[str, Any]]:
     return [
         {
@@ -512,9 +559,13 @@ def compile_source_mechanical_description(
             "center_of_mass_source_text": _required_xml_text(
                 item, "center_of_mass", "Material/material"
             ),
+            "center_of_mass": list(_required_xml_vector(
+                item, "center_of_mass", "Material/material"
+            )),
             "density_source_text": _required_xml_text(
                 item, "density", "Material/material"
             ),
+            "density": _required_xml_float(item, "density", "Material/material"),
             "source_xml_sha256": _xml_digest(item),
         })
     body_ids = [body["material_id"] for body in rigid_bodies]
@@ -536,22 +587,44 @@ def compile_source_mechanical_description(
             "native_execution_status": "unsupported_not_executed",
         }
         if kind == "rigid cylindrical joint":
+            axis = _required_xml_vector(item, "joint_axis", "Step/Constraints/constraint")
+            axis_length = math.sqrt(sum(value * value for value in axis))
+            if not 0.99999 <= axis_length <= 1.00001:
+                raise ValueError("Open Knee(s) source cylindrical joint axis must be unit length")
+            translation_element = item.find("translation")
+            rotation_element = item.find("rotation")
+            if translation_element is None or rotation_element is None:
+                raise ValueError("Open Knee(s) source cylindrical joint coordinate is incomplete")
+            translation_text = _required_xml_text(item, "translation", "Step/Constraints/constraint")
+            rotation_text = _required_xml_text(item, "rotation", "Step/Constraints/constraint")
+            translation_attributes = dict(sorted(translation_element.attrib.items()))
+            rotation_attributes = dict(sorted(rotation_element.attrib.items()))
             record.update({
                 "body_a": int(_required_xml_text(item, "body_a", "Step/Constraints/constraint")),
                 "body_b": int(_required_xml_text(item, "body_b", "Step/Constraints/constraint")),
                 "force_penalty_source_text": _required_xml_text(item, "force_penalty", "Step/Constraints/constraint"),
+                "force_penalty": _required_xml_float(item, "force_penalty", "Step/Constraints/constraint"),
                 "moment_penalty_source_text": _required_xml_text(item, "moment_penalty", "Step/Constraints/constraint"),
+                "moment_penalty": _required_xml_float(item, "moment_penalty", "Step/Constraints/constraint"),
                 "joint_origin_source_text": _required_xml_text(item, "joint_origin", "Step/Constraints/constraint"),
+                "joint_origin": list(_required_xml_vector(item, "joint_origin", "Step/Constraints/constraint")),
                 "joint_axis_source_text": _required_xml_text(item, "joint_axis", "Step/Constraints/constraint"),
+                "joint_axis": list(axis),
                 "prescribed_translation_source_text": _required_xml_text(item, "prescribed_translation", "Step/Constraints/constraint"),
+                "prescribed_translation": _required_xml_flag(item, "prescribed_translation", "Step/Constraints/constraint"),
                 "translation": {
-                    "source_text": _required_xml_text(item, "translation", "Step/Constraints/constraint"),
-                    "attributes": dict(sorted(item.find("translation").attrib.items())),
+                    "source_text": translation_text,
+                    "value": _required_xml_float(item, "translation", "Step/Constraints/constraint"),
+                    "load_curve_id": translation_attributes.get("lc"),
+                    "attributes": translation_attributes,
                 },
                 "prescribed_rotation_source_text": _required_xml_text(item, "prescribed_rotation", "Step/Constraints/constraint"),
+                "prescribed_rotation": _required_xml_flag(item, "prescribed_rotation", "Step/Constraints/constraint"),
                 "rotation": {
-                    "source_text": _required_xml_text(item, "rotation", "Step/Constraints/constraint"),
-                    "attributes": dict(sorted(item.find("rotation").attrib.items())),
+                    "source_text": rotation_text,
+                    "value": _required_xml_float(item, "rotation", "Step/Constraints/constraint"),
+                    "load_curve_id": rotation_attributes.get("lc"),
+                    "attributes": rotation_attributes,
                 },
                 "force": None if item.find("force") is None else {
                     "source_text": (item.findtext("force") or "").strip(),
@@ -566,6 +639,10 @@ def compile_source_mechanical_description(
             })
             if record["body_a"] not in body_ids or record["body_b"] not in body_ids:
                 raise ValueError("Open Knee(s) cylindrical joint references an unknown rigid body")
+            if record["body_a"] == record["body_b"]:
+                raise ValueError("Open Knee(s) cylindrical joint cannot join a body to itself")
+            if record["force_penalty"] <= 0.0 or record["moment_penalty"] <= 0.0:
+                raise ValueError("Open Knee(s) cylindrical joint penalties must be positive")
             for coordinate in (record["translation"], record["rotation"]):
                 curve_id = coordinate["attributes"].get("lc")
                 if curve_id is not None and curve_id not in curve_ids:
@@ -603,6 +680,7 @@ def compile_source_mechanical_description(
 
     curves = []
     for item in root.findall("LoadData/loadcurve"):
+        numeric_points = _source_curve_points(item)
         curves.append({
             "id": item.attrib.get("id"),
             "name": item.attrib.get("name"),
@@ -612,6 +690,7 @@ def compile_source_mechanical_description(
                  "attributes": dict(sorted(point.attrib.items()))}
                 for point in item.findall("point")
             ],
+            "numeric_points": numeric_points,
             "source_xml_sha256": _xml_digest(item),
             "native_execution_status": "unsupported_not_executed",
         })
