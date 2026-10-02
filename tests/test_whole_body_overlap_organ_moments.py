@@ -19,7 +19,7 @@ def test_overlap_only_organ_sources_get_nonowned_surface_moments() -> None:
         "organ_mass_inventory_member_count": 378,
         "overlap_census_only_organ_member_count": 74,
         "computed_single_closed_surface_moment_count": 73,
-        "unaggregated_multi_component_member_count": 1,
+        "unaggregated_nested_component_member_count": 1,
         "ontology_priority_class_counts": {
             "organ": 11,
             "organ_component": 4,
@@ -35,10 +35,16 @@ def test_overlap_only_organ_sources_get_nonowned_surface_moments() -> None:
     assert all(row["mechanical_mass_owner"] is False for row in rows)
 
     separated = next(row for row in rows if row["member_id"] == "FJ3150")
-    assert separated["moment_status"] == "unaggregated_multi_component_member"
+    assert separated["moment_status"] == "unaggregated_nested_components"
     assert separated["source_surface_moments"] is None
     assert separated["component_aabb_pairwise_disjoint"] is False
     assert len(separated["source_component_moments"]) == 2
+    relation = separated["component_relation_audit"]
+    assert relation["triangle_intersection_pair_count"] == 0
+    assert relation["containment"]["first_in_second"]["location"] == "outside"
+    assert relation["containment"]["second_in_first"]["location"] == "inside"
+    assert [row["surface_moments"]["source_winding"]
+            for row in separated["source_component_moments"]] == ["positive", "negative"]
     assert result["qualification"]["cross_surface_moments_summed"] is False
     assert result["qualification"]["physical_volume_owner"] is False
 

@@ -15,10 +15,15 @@ import zipfile
 from typing import Any
 
 from . import cvsim21_anatomy
+from .cardiac_cavity_intersections import audit_cavity_intersections
 from .cardiac_cavity_geometry import exact_coordinate_quotient, parse_obj
 from .model import ImportError as HumanImportError
 from .organ_geometry import ROOT, _topology_summary
-from .organ_geometry_component_moments import _aabbs_disjoint, _component_details
+from .organ_geometry_component_moments import (
+    _aabbs_disjoint,
+    _component_details,
+    _component_geometry,
+)
 from .physiology import canonical, read_json
 
 SCHEMA = "HumanPack.whole-body-overlap-organ-surface-moments.v1"
@@ -198,6 +203,7 @@ def compile_candidates(
             moments: dict[str, Any] | None = None
             component_records = None
             component_disjoint = None
+            component_relation = None
             if topology["face_component_count"] == 1:
                 moments = cvsim21_anatomy.geometry_moments(
                     quotient["vertices_m"], quotient["triangles"]
@@ -218,7 +224,27 @@ def compile_candidates(
                     }
                     for detail, moment in zip(details, component_moments, strict=True)
                 ]
-                status = "unaggregated_multi_component_member"
+                component_chambers = []
+                for detail in details:
+                    geometry, _ = _component_geometry(quotient, detail["source_face_ids"])
+                    component_chambers.append({
+                        "source_id": f"{member_id}_component_{detail['component_index']}",
+                        "exact_coordinate_quotient": geometry,
+                    })
+                relation_audit = audit_cavity_intersections({"chambers": component_chambers})
+                require(relation_audit["all_surfaces_embedded"] and
+                        len(relation_audit["per_pair"]) == 1,
+                        f"disconnected source component embeddedness audit failed: {member_id}")
+                relation_pair = relation_audit["per_pair"][0]
+                component_relation = {
+                    "algorithm": relation_audit["algorithm"],
+                    "first_component": relation_pair["first"],
+                    "second_component": relation_pair["second"],
+                    "triangle_intersection_pair_count": relation_pair["count"],
+                    "containment": relation_pair["containment"],
+                    "disjoint_closed_domains": relation_pair["disjoint_closed_domains"],
+                }
+                status = "unaggregated_nested_components"
                 moments = None
 
             require(moments is None or
@@ -242,6 +268,7 @@ def compile_candidates(
                 "source_surface_moments": moments,
                 "source_component_moments": component_records,
                 "component_aabb_pairwise_disjoint": component_disjoint,
+                "component_relation_audit": component_relation,
                 "physical_volume_m3": None,
                 "density_kg_per_m3": None,
                 "mechanical_mass_kg": None,
@@ -256,7 +283,7 @@ def compile_candidates(
 
     require(status_counts == {
         "computed_single_closed_component": 73,
-        "unaggregated_multi_component_member": 1,
+        "unaggregated_nested_components": 1,
     }, f"source moment candidate status counts changed: {status_counts}")
     return {
         "schema": SCHEMA,
@@ -274,7 +301,7 @@ def compile_candidates(
             "organ_mass_inventory_member_count": len(organ_ids),
             "overlap_census_only_organ_member_count": len(selected_ids),
             "computed_single_closed_surface_moment_count": status_counts["computed_single_closed_component"],
-            "unaggregated_multi_component_member_count": status_counts["unaggregated_multi_component_member"],
+            "unaggregated_nested_component_member_count": status_counts["unaggregated_nested_components"],
             "ontology_priority_class_counts": dict(sorted(class_counts.items())),
         },
         "identity_bindings": {
@@ -289,6 +316,7 @@ def compile_candidates(
             "closed_surface_topology_recomputed": True,
             "single_component_surface_moments_computed": True,
             "disconnected_components_summed": False,
+            "nested_component_surface_intersection_and_containment_checked": True,
             "cross_surface_moments_summed": False,
             "self_intersection_recomputed": False,
             "interdomain_overlap_checked": False,
@@ -299,8 +327,9 @@ def compile_candidates(
         "boundary": (
             "These are source-frame surface integral candidates for the 74 overlap-census "
             "organ identities outside the 18-region organ-mass inventory. 73 single closed "
-            "components have per-surface moments. FJ3150 has two closed components whose "
-            "source AABBs overlap; their moments remain separate and unaggregated. No "
+            "components have per-surface moments. FJ3150 has two closed components with "
+            "zero exact triangle crossings and opposite winding, with one contained inside "
+            "the other; their moments remain separate and unaggregated. No "
             "candidate is a clinical volume, a disjoint tissue partition, a body-registered "
             "organ, a density, or a mechanical mass owner."
         ),

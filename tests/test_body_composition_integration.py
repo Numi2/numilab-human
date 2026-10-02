@@ -169,7 +169,7 @@ def test_whole_body_overlap_census_duplicate_identity_is_rejected(tmp_path: Path
 
 
 def test_overlap_organ_surface_moments_cannot_be_promoted_to_physical_volume(tmp_path: Path) -> None:
-    source = Path("Docs/media/whole-body-overlap-organ-moments-20261002/receipt-v1.json")
+    source = Path("Docs/media/whole-body-overlap-organ-moments-20261002/receipt-v2.json")
     value = json.loads(source.read_text(encoding="utf-8"))
     value["members"][0]["physical_volume_m3"] = 1.0
     path = tmp_path / "overlap-organ-moments.json"

@@ -95,7 +95,8 @@ census and 348 only in the organ-mass candidate. The integration records these
 as separate evidence scopes and keeps physical-volume and mechanical-mass owner
 counts at zero. The 74 census-only identities are individually source hashed;
 73 have per-surface source-frame moments. FJ3150's two closed components have
-overlapping bounds, so their component moments remain unaggregated. These are
+zero exact triangle crossings, with the smaller reverse-winding component
+inside the larger; their component moments remain unaggregated. These are
 geometry integrals, not physical-volume or mass owners.
 
 ## Historical requalification snapshot — 2026-09-15

@@ -62,7 +62,7 @@ WHOLE_BODY_SOURCE_OVERLAP_CENSUS = ROOT / (
     "Docs/media/whole-body-source-overlap-census-20261002/receipt-v4.json"
 )
 WHOLE_BODY_OVERLAP_ORGAN_MOMENTS = ROOT / (
-    "Docs/media/whole-body-overlap-organ-moments-20261002/receipt-v1.json"
+    "Docs/media/whole-body-overlap-organ-moments-20261002/receipt-v2.json"
 )
 
 
@@ -564,7 +564,7 @@ def compile_candidate(
                  "organ_mass_inventory_member_count": 378,
                  "overlap_census_only_organ_member_count": 74,
                  "computed_single_closed_surface_moment_count": 73,
-                 "unaggregated_multi_component_member_count": 1,
+                 "unaggregated_nested_component_member_count": 1,
                  "ontology_priority_class_counts": {
                      "organ": 11,
                      "organ_component": 4,
@@ -592,18 +592,24 @@ def compile_candidate(
              "whole-body overlap-only organ moment source member hashes changed")
     overlap_moment_statuses = {
         status: sum(1 for row in overlap_moment_rows if row.get("moment_status") == status)
-        for status in ("computed_single_closed_component", "unaggregated_multi_component_member")
+        for status in ("computed_single_closed_component", "unaggregated_nested_components")
     }
     _require(overlap_moment_statuses == {
         "computed_single_closed_component": 73,
-        "unaggregated_multi_component_member": 1,
+        "unaggregated_nested_components": 1,
     }, "whole-body overlap-only organ moment statuses changed")
     unaggregated_member = next(row for row in overlap_moment_rows
-                               if row.get("moment_status") == "unaggregated_multi_component_member")
+                               if row.get("moment_status") == "unaggregated_nested_components")
     _require(unaggregated_member.get("member_id") == "FJ3150" and
              unaggregated_member.get("source_surface_moments") is None and
              unaggregated_member.get("component_aabb_pairwise_disjoint") is False and
-             len(unaggregated_member.get("source_component_moments", [])) == 2,
+             len(unaggregated_member.get("source_component_moments", [])) == 2 and
+             unaggregated_member.get("component_relation_audit", {}).get(
+                 "triangle_intersection_pair_count") == 0 and
+             unaggregated_member.get("component_relation_audit", {}).get(
+                 "containment", {}).get("second_in_first", {}).get("location") == "inside" and
+             [row.get("surface_moments", {}).get("source_winding")
+              for row in unaggregated_member["source_component_moments"]] == ["positive", "negative"],
              "disconnected thymus components were aggregated")
     _all_none(organ_rows, ("mechanical_mass_owner", "physical_volume_owner"), "organ candidate")
     _require(organ.get("totals", {}).get("physical_mass_owner_count") == 0 and
@@ -1380,7 +1386,8 @@ def compile_candidate(
             "crosswalk has 30 shared members, 74 census-only members, and 348 "
             "organ-candidate-only members; the census is not an organ-mass subset. "
             "Seventy-three census-only organ surfaces have per-surface source-frame "
-            "moments; two disconnected FJ3150 components remain unaggregated. "
+            "moments; FJ3150's nested reverse-winding component pair is exactly "
+            "checked and remains unaggregated. "
             "It also joins regional tissue "
             "mass, the exact-clock CVSim21 aggregate blood mass, regional blood "
             "transport, six-vessel source/world registration, tissue oxygen "
