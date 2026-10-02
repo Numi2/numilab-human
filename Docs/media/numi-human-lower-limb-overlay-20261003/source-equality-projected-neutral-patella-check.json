@@ -1,0 +1,31 @@
+{
+  "display_gate": {
+    "kind": "patella_body_center_anterior_to_source_knee_anchor",
+    "minimum_m": 0.025,
+    "sides": [
+      {
+        "offset_m": 0.04434208902755106,
+        "passed": true,
+        "side": "r"
+      },
+      {
+        "offset_m": 0.044340074049506614,
+        "passed": true,
+        "side": "l"
+      }
+    ]
+  },
+  "evidence_boundary": "Source-model geometry preflight only; not a rendered image, compiled full-mesh contact result, clinical tracking validation, or loaded mechanics qualification.",
+  "pose": {
+    "maximum_slide_correction_m": 0.0524192,
+    "projected_joint_equalities": 51,
+    "state": "source_equality_projected_neutral"
+  },
+  "schema": "numi.human.source-equality-projected-patella-visual-preflight.v1",
+  "source": {
+    "archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "model": "myofullbody",
+    "mujoco_version": "3.12.0",
+    "myosim_revision": "33c89c2bde282553dde3f526768eb3bdcfaa7649"
+  }
+}

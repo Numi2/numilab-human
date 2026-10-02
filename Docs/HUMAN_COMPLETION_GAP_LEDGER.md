@@ -32,32 +32,60 @@ The sparse failure trace first records horizontal drift above 10 mm at
 support contacts drop at 2.504 s. It does not identify the initiating cause;
 the next standing attempt needs a source-aligned failure-onset diagnosis.
 
-## Current-registration native anatomy visual — 2026-10-02
+## Lower-limb source-consistent registration candidate — 2026-10-03
 
-The [ABI 3 native visual and patella geometry record](NATIVE_VISUAL_ABI3_CURRENT_REGISTRATION_20261002.md)
-renders the matched provisional current bone/NHTISS4 pair on Apple M4 with
-source-owner verification. In literal source qpos0, every patella vertex is
-anterior to its knee-anchor plane by at least 11.312 mm on the right and
-11.342 mm on the left. A separate 16/16 projected-pose geometry sweep also
-passes anteriority, but its equality corrections reach 1.101 m (602 mm for
-knee flexion), so those samples do not establish realistic patellar tracking.
-The current candidate is still a provisional visual registration; formal
-lower-limb registration, clinical anatomy, cartilage contact, loaded force
-transfer, skin/organ integration and physiology remain open. Native ABI 3
-support and ABI 2 compatibility are covered by [PR #7](https://github.com/Numi2/numi-lab/pull/7).
-The paired tendon candidate for this registration resolves all 832 endpoints,
-but only 152 are distributed surface envelopes and 680 remain point fallbacks
-(18.27% coverage), versus 653/179 for the prior `1ec681e5` candidate. It was
-not promoted or used dynamically. The current lower-limb registration builder
-is blocked by a stale reference manifest that omits the live left-knee
-translation-range overlay. Joint 112's cached range is positive and the live
-source range is reflected negative; the exact NHRIGID2 bytes and 2,250 checked
-source fields match. An exact-source rebuild was stopped during compliant
-force-law fitting before producing artifacts. Re-exporting an overlay-
-consistent reference, then recompiling and auditing the paired
-registration/tendon candidate, is the next prerequisite for standing work on
-this registration. The machine-readable check is retained with the
-[current-registration QA evidence](media/native-visual-current-registration-abi3-20261002/tendon-candidate-not-promoted/source-registration-refresh-attempt.json).
+The overlay-consistent source export and registration refresh now complete.
+The [candidate registration](media/numi-human-lower-limb-overlay-20261003/lower-limb-source-registration.json.gz)
+binds the reflected left-knee translation-range overlay; its 185 source-owner
+anchors retain their transforms, and its lower-limb fit covers both sides of
+the femur, patella, tibia, talus, calcaneus and toe compound. The paired ABI 3
+bone payload contains 185 source surfaces and is bound to registration
+fingerprint `b22f93ed` (payload SHA-256
+`bb30d0497b2613a2a0b0334a08dfcbd1ff8834f57d7b273a18c92331584e7cb7`).
+
+The [compiled pose audit](media/numi-human-lower-limb-overlay-20261003/lower-limb-compiled-pose-audit.json.gz)
+passes eight bounded source poses: 320 continuity evaluations, 160 bilateral
+comparisons, exact decoded/source surface and owner checks, and 16/16
+projected-pose patellar anteriority checks. The minimum projected patella
+vertex offset is 9.414 mm. It also exposed a rendering trap: in literal,
+unprojected source qpos0, 121/178 right and 130/180 left patella vertices lie
+on or behind the knee-anchor plane, with minimum offsets of -17.070 mm and
+-17.286 mm. That qpos0 is a pre-constraint diagnostic state, not an
+equality-consistent neutral pose; no native accepted neutral state was produced.
+Exact source-equality projection moves the patella bodies to the front; the
+source visual preflight measured 44.342 mm and 44.340 mm anterior body-center
+offsets, both above its 25 mm display gate. Static anatomy views made from this
+new source-consistent registration must use the equality-projected neutral
+pose. The existing projected source visual path already applies all 51
+equalities; raw qpos0 remains diagnostic only.
+
+The previous audit and visual note reported equality corrections as lengths.
+The corrected unit-separated maxima are 52.419 mm for a slide coordinate at
+neutral and 1.10078 rad for a hinge coordinate in deep crouch (knee flexion is
+0.60208 rad). The sampled geometry does not establish clinical patellar
+tracking or loaded motion. The paired [tendon candidate manifest](media/numi-human-lower-limb-overlay-20261003/paired-lower-limb-tendon-manifest.json.gz)
+resolves all 832 endpoints, with 166 distributed surface envelopes and 666
+point fallbacks (19.95% coverage), up from 152/680 (18.27%) for the prior
+visual registration. Eighteen endpoints migrated; maximum site migration is
+17.251 mm and sampled total-force amplification is 3.984. This is an offline
+candidate only: it has not entered a native tendon transaction or a standing
+run and remains marked not admitted to collision or physics.
+
+This refresh closes the stale-reference-manifest builder blocker. Clinical
+anatomy, patellofemoral cartilage/contact, loaded force transfer, subject
+calibration, tissue integration and physiology remain open. The earlier
+[2 October ABI 3 native visual record](NATIVE_VISUAL_ABI3_CURRENT_REGISTRATION_20261002.md)
+is retained as a different registration and its images were not regenerated.
+
+## HCM1 source activation map import — 2026-10-03
+
+The [Rodero-2026 HCM1 importer](CARDIAC_RODERO26_HCM_SOURCE_ACTIVATION_20261003.md)
+now preserves sample 53's 749,238-point activation-time field and its 68,260
+inactive `-1` sentinels in exact publisher VTK point order. It is a separate
+HCM patient variant from healthy case18 and closes source ingestion and point
+identity only. Numi electrical/voltage dynamics, ionic state, native accepted
+steps, HCM1 registration, electromechanical coupling, heartbeat and clinical
+prediction remain open.
 
 ## Native ventricular tension sequence - 2026-10-02
 

@@ -434,7 +434,52 @@ def _joint_for_qpos(model: Any, q_index: int) -> int | None:
     return None
 
 
-def _pose_qpos(model: Any, pose: tuple[tuple[int, float], ...], mujoco: Any, np: Any) -> tuple[Any, int, float]:
+def _joint_equality_correction_by_unit(
+    model: Any, before: Any, after: Any, mujoco: Any,
+) -> dict[str, dict[str, Any] | None]:
+    """Report the largest prescribed-coordinate projection separately by unit."""
+    maxima: dict[str, dict[str, Any] | None] = {"m": None, "rad": None}
+    for equality_index in range(model.neq):
+        if (
+            not bool(model.eq_active0[equality_index])
+            or int(model.eq_type[equality_index]) != int(mujoco.mjtEq.mjEQ_JOINT)
+        ):
+            continue
+        dependent_joint = int(model.eq_obj1id[equality_index])
+        dependent_type = int(model.jnt_type[dependent_joint])
+        if dependent_type == int(mujoco.mjtJoint.mjJNT_SLIDE):
+            unit = "m"
+        elif dependent_type == int(mujoco.mjtJoint.mjJNT_HINGE):
+            unit = "rad"
+        else:
+            raise RuntimeError(
+                "joint-equality correction diagnostics require scalar slide or hinge "
+                f"coordinates; joint_id={dependent_joint}, type={dependent_type}"
+            )
+        q_index = int(model.jnt_qposadr[dependent_joint])
+        signed = float(after[q_index] - before[q_index])
+        magnitude = abs(signed)
+        current = maxima[unit]
+        if current is None or magnitude > current["maximum_absolute_correction"]:
+            driver_joint = int(model.eq_obj2id[equality_index])
+            maxima[unit] = {
+                "maximum_absolute_correction": magnitude,
+                "signed_correction": signed,
+                "dependent_joint": mujoco.mj_id2name(
+                    model, mujoco.mjtObj.mjOBJ_JOINT, dependent_joint
+                ),
+                "driver_joint": (
+                    mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_JOINT, driver_joint)
+                    if driver_joint >= 0 else None
+                ),
+                "qpos_index": q_index,
+            }
+    return maxima
+
+
+def _pose_qpos_with_unit_metrics(
+    model: Any, pose: tuple[tuple[int, float], ...], mujoco: Any, np: Any,
+) -> tuple[Any, int, float, dict[str, dict[str, Any] | None]]:
     qpos = np.asarray(model.qpos0, dtype=float).copy()
     seen: set[int] = set()
     for q_index, value in pose:
@@ -451,7 +496,19 @@ def _pose_qpos(model: Any, pose: tuple[tuple[int, float], ...], mujoco: Any, np:
                     f"upper-limb pose audit q index {q_index} exceeds its source range"
                 )
         qpos[q_index] = value
+    requested = qpos.copy()
     equality_count, maximum_correction = _project_joint_equalities(model, qpos, mujoco)
+    by_unit = _joint_equality_correction_by_unit(model, requested, qpos, mujoco)
+    return qpos, equality_count, maximum_correction, by_unit
+
+
+def _pose_qpos(
+    model: Any, pose: tuple[tuple[int, float], ...], mujoco: Any, np: Any,
+) -> tuple[Any, int, float]:
+    """Backward-compatible projected pose without dimensional diagnostics."""
+    qpos, equality_count, maximum_correction, _ = _pose_qpos_with_unit_metrics(
+        model, pose, mujoco, np
+    )
     return qpos, equality_count, maximum_correction
 
 
@@ -716,8 +773,12 @@ def audit_upper_limb_poses(
     all_parity = []
     equality_count: int | None = None
     equality_maximum_correction = 0.0
+    equality_maximum_by_unit: dict[str, dict[str, Any] | None] = {
+        "m": None,
+        "rad": None,
+    }
     for pose_name, overrides in POSE_SUITE:
-        qpos, current_equality_count, correction = _pose_qpos(
+        qpos, current_equality_count, correction, correction_by_unit = _pose_qpos_with_unit_metrics(
             model, overrides, mujoco, np
         )
         if equality_count is None:
@@ -725,6 +786,14 @@ def audit_upper_limb_poses(
         elif equality_count != current_equality_count:
             raise RuntimeError("upper-limb pose audit equality coverage changed across poses")
         equality_maximum_correction = max(equality_maximum_correction, correction)
+        for unit, record in correction_by_unit.items():
+            current = equality_maximum_by_unit[unit]
+            if record is not None and (
+                current is None
+                or record["maximum_absolute_correction"]
+                > current["maximum_absolute_correction"]
+            ):
+                equality_maximum_by_unit[unit] = {"pose": pose_name, **record}
         data.qpos[:] = qpos
         mujoco.mj_forward(model, data)
         world_vertices = {
@@ -819,6 +888,7 @@ def audit_upper_limb_poses(
             ],
             "joint_equality_count": current_equality_count,
             "joint_equality_maximum_correction": correction,
+            "joint_equality_maximum_correction_by_unit": correction_by_unit,
             "source_equality_projection_oracle": source_equality_projection_oracle(
                 model, data, mujoco, PROJECTED_JOINT_RANGE_TOLERANCE,
             ),
@@ -876,6 +946,11 @@ def audit_upper_limb_poses(
         ),
         "rigid_source_program_checks": rigid_program,
         "joint_equality_maximum_correction": equality_maximum_correction,
+        "joint_equality_maximum_correction_by_unit": equality_maximum_by_unit,
+        "joint_equality_maximum_correction_unit_basis": (
+            "legacy scalar is a raw maximum across mixed slide (m) and hinge (rad) "
+            "coordinates; use the unit-separated values for physical interpretation"
+        ),
         "default_frame_maximum_centroid_residual_m": default_frame_maximum_residual,
         "default_frame_worst_member": default_frame_worst_member,
         "default_frame_maximum_allowed_residual_m": DEFAULT_FRAME_RESIDUAL_MAXIMUM_M,

@@ -23,7 +23,7 @@ from .lower_limb_source_registration import (
 from .myosim_bone_proximity import _compiled_meshes_by_body
 from .myosim_export import export_fullbody
 from .upper_limb_pose_audit import (
-    PoseAuditError, _finish_pose_audit, _pose_qpos,
+    PoseAuditError, _finish_pose_audit, _pose_qpos_with_unit_metrics,
     _compiled_bone_members, _compiled_member_geometry_check,
     _compiled_bone_geometry_checks,
     _pose_joint_range_context, _projected_joint_range_checks,
@@ -104,6 +104,47 @@ def _patellar_anteriority(vertices, knee_origin, anterior_axis, *, side, member_
         'p05_signed_anterior_offset_m': float(np.quantile(signed, .05)),
         'vertices_posterior_or_on_knee_anchor_plane': int((signed <= 0).sum()),
         'passed': bool((signed > 0).all()),
+    }
+
+
+def _patellar_pose_status(source_qpos0_rows, pose_receipts):
+    """Keep the diagnostic raw qpos0 pose distinct from projected poses."""
+    projected = [
+        row
+        for pose in pose_receipts
+        for row in pose["patellar_anteriority"]
+    ]
+    qpos0_passed = all(row["passed"] for row in source_qpos0_rows)
+    projected_passed = bool(projected) and all(row["passed"] for row in projected)
+    return {
+        "literal_unprojected_source_qpos0": {
+            "status": (
+                "all_patella_vertices_anterior"
+                if qpos0_passed else "posterior_or_intersecting_knee_anchor_plane"
+            ),
+            "runtime_acceptance_pose": False,
+            "failed_sides": [
+                row["side"] for row in source_qpos0_rows if not row["passed"]
+            ],
+        },
+        "source_equality_projected_pose_suite": {
+            "status": (
+                "all_patella_vertices_anterior"
+                if projected_passed else "posterior_or_intersecting_knee_anchor_plane"
+            ),
+            "pose_count": len(pose_receipts),
+            "evaluation_count": len(projected),
+            "minimum_signed_anterior_offset_m": (
+                min(row["minimum_signed_anterior_offset_m"] for row in projected)
+                if projected else None
+            ),
+        },
+        "visual_guidance": (
+            "Use a source-equality-projected neutral pose for static anatomy views of the "
+            "current source-consistent registration. Literal qpos0 is diagnostic only and "
+            "may place patellae behind the knee-anchor plane; this projection is not a "
+            "native accepted state."
+        ),
     }
 
 
@@ -378,6 +419,10 @@ def audit_lower_limb_poses(
     all_parity = []
     equality_count: int | None = None
     equality_maximum_correction = 0.0
+    equality_maximum_by_unit: dict[str, dict[str, Any] | None] = {
+        "m": None,
+        "rad": None,
+    }
 
     # Registration centroids are authored in the source model's literal qpos0
     # frame.  Patellofemoral equality projection intentionally moves each
@@ -435,7 +480,7 @@ def audit_lower_limb_poses(
             default_frame_worst_member = str(member_id)
 
     for pose_name, overrides in POSE_SUITE:
-        qpos, current_equality_count, correction = _pose_qpos(
+        qpos, current_equality_count, correction, correction_by_unit = _pose_qpos_with_unit_metrics(
             model, overrides, mujoco, np
         )
         if equality_count is None:
@@ -443,6 +488,14 @@ def audit_lower_limb_poses(
         elif equality_count != current_equality_count:
             raise RuntimeError("lower-limb pose audit equality coverage changed across poses")
         equality_maximum_correction = max(equality_maximum_correction, correction)
+        for unit, record in correction_by_unit.items():
+            current = equality_maximum_by_unit[unit]
+            if record is not None and (
+                current is None
+                or record["maximum_absolute_correction"]
+                > current["maximum_absolute_correction"]
+            ):
+                equality_maximum_by_unit[unit] = {"pose": pose_name, **record}
         data.qpos[:] = qpos
         mujoco.mj_forward(model, data)
         anterior_axis = (data.xmat[pelvis_id].reshape(3, 3)
@@ -539,6 +592,7 @@ def audit_lower_limb_poses(
             ],
             "joint_equality_count": current_equality_count,
             "joint_equality_maximum_correction": correction,
+            "joint_equality_maximum_correction_by_unit": correction_by_unit,
             "source_equality_projection_oracle": source_equality_projection_oracle(
                 model, data, mujoco, PROJECTED_JOINT_RANGE_TOLERANCE,
             ),
@@ -601,7 +655,15 @@ def audit_lower_limb_poses(
         ),
         "rigid_source_program_checks": rigid_program,
         "joint_equality_maximum_correction": equality_maximum_correction,
+        "joint_equality_maximum_correction_by_unit": equality_maximum_by_unit,
+        "joint_equality_maximum_correction_unit_basis": (
+            "legacy scalar is a raw maximum across mixed slide (m) and hinge (rad) "
+            "coordinates; use the unit-separated values for physical interpretation"
+        ),
         "source_qpos0_patellar_anteriority": source_qpos0_patellar_anteriority,
+        "patellar_pose_status": _patellar_pose_status(
+            source_qpos0_patellar_anteriority, pose_receipts,
+        ),
         "projected_patellar_anteriority_evaluation_count": 2 * len(POSE_SUITE),
         "minimum_projected_patellar_anterior_offset_m": min(
             row['minimum_signed_anterior_offset_m'] for pose in pose_receipts

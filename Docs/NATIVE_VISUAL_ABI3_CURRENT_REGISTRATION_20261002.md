@@ -1,5 +1,15 @@
 # Current-registration native anatomy QA — 2 October 2026
 
+**Historical candidate notice (3 October 2026):** the images below use
+registration `a241f5d3`. A later overlay-consistent source registration is
+recorded in the [3 October lower-limb audit](media/numi-human-lower-limb-overlay-20261003/receipt.json)
+with fingerprint `b22f93ed`; its raw source-qpos0 pose puts most patella
+vertices behind the knee-anchor plane. The source-equality-projected neutral
+pose passes the source-side geometry checks, but any future static anatomy
+view built from that candidate must use that pose; it is not a native accepted
+state. These earlier images are not images of the later candidate and have not
+been regenerated.
+
 The current provisional bone and muscle-surface payloads now render together
 on an Apple M4. Their registration fingerprint is `a241f5d3`; the renderer
 verified all ABI 3 source-record indices against the source-to-Core map in the
@@ -15,12 +25,12 @@ not present in this provisional payload's source pose.
 
 A separate all-vertex geometry diagnostic also reports 16/16 anteriority checks
 passing after equality projection across eight generated poses, with a minimum
-offset of **15.425 mm**. Those projected poses are not credible motion evidence:
-even the named neutral sample required **52.4 mm** maximum equality correction,
-knee flexion required **602.1 mm**, and deep crouch required **1.101 m**. The
-pose sweep therefore does not confirm realistic patellar tracking or anatomical
-correctness through motion. A source-consistent lower-limb registration and
-pose audit remain open.
+offset of **15.425 mm**. Those projected poses are a geometry audit, not
+validated motion evidence. The old single “maximum correction” diagnostic
+mixed coordinate units: neutral includes a **52.419 mm** slide correction,
+knee flexion has a **0.60208 rad** hinge correction, and deep crouch has a
+**1.10078 rad** hinge correction. The pose sweep therefore does not confirm
+clinical patellar tracking or anatomical correctness through motion.
 
 The focused images below are unedited native-renderer QA captures. They are
 engineering evidence, not a clinical anatomy certificate or a board slide.
@@ -74,6 +84,28 @@ The evidence receipt, exact payload and renderer hashes, four full-body views,
 four focused-knee views, renderer manifests, compressed logs, and the
 machine-readable patellar diagnostic are retained in
 [`media/native-visual-current-registration-abi3-20261002/`](media/native-visual-current-registration-abi3-20261002/).
+
+## Source-consistent registration follow-up — 3 October 2026
+
+The refreshed candidate has a separate [source registration and pose audit](media/numi-human-lower-limb-overlay-20261003/receipt.json).
+The unprojected source qpos0 diagnostic fails anteriority on both sides
+(minimum offsets **-17.070 mm** right and **-17.286 mm** left). Exact
+source-equality projection moves the compiled patella vertices anterior to the
+knee-anchor plane in all 16 tested evaluations, with a minimum **9.414 mm**
+margin; at projected neutral, the minimum margins are **35.197 mm** right and
+**34.979 mm** left. The independent MyoSim source-visual preflight also passes
+its 25 mm body-center display gate at **44.342 mm** right and **44.340 mm**
+left. These are two different registrations and pose states: the earlier
+images use `a241f5d3`; the qpos0 failure and projection result apply to
+`b22f93ed`. For static views of `b22f93ed`, use the projected neutral pose.
+That kinematic projection is not a native accepted state. Neither candidate
+qualifies cartilage-facing orientation, patellofemoral contact, loaded
+transfer, clinical tracking, or standing.
+
+The refreshed registration remains provisional and is not admitted to
+collision or physics. Its paired tendon map has 19.95% distributed surface
+coverage and was not used in a native transaction or run. No new images or
+board deliverables were produced for this update.
 
 ## Remaining anatomy and simulation gates
 

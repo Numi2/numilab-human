@@ -1,0 +1,151 @@
+{
+  "bone_payload": {
+    "abi": 3,
+    "bytes": 11577432,
+    "file": "Build/bodyparts3d-myosim-lower-limb-overlay-20261003/bodyparts3d-myosim-major-bones.nhbones",
+    "sha256": "bb30d0497b2613a2a0b0334a08dfcbd1ff8834f57d7b273a18c92331584e7cb7",
+    "surface_count": 185
+  },
+  "date": "2026-10-03",
+  "evidence_boundary": "Source registration and bounded projected-pose geometry only. Registration remains provisional and is not admitted to collision or physics. The raw qpos0 failure is not a native accepted-state result; the source-equality projection is a static visual pose aid, not a qualified dynamic state. No clinical patellofemoral tracking, cartilage/contact, loaded force transfer, tendon dynamics, standing, or whole-Human qualification is established.",
+  "paired_tendon_candidate": {
+    "distributed_surface_envelopes": 166,
+    "endpoint_count": 832,
+    "manifest_compressed_sha256": "8285dfd16813359b9a9131d227b1b7f9538b8ef10ad2c93094f525907fd09ccc",
+    "manifest_source_sha256": "dbb455721e23b1564dc728ccd20e021a1f011c2c610c0f2b52234836e2a0e6fa",
+    "maximum_endpoint_migration_m": 0.017250818340606704,
+    "maximum_sampled_force_amplification": 3.983916979768715,
+    "migrated_endpoints": 18,
+    "native_transaction_or_standing_run": false,
+    "payload_sha256": "1de5d98c6bc9bce541c6daff994e5d2bd62a0a8b3cda7a8262065dfc6c346a13",
+    "point_fallbacks": 666,
+    "surface_coverage_fraction": 0.19951923076923078
+  },
+  "pose_audit": {
+    "bilateral_comparisons": 160,
+    "compressed_sha256": "77499496d57e620360d2495d2826fb5a1634e80f2b97e04be6c59f0a44a5dccd",
+    "continuity_evaluations": 320,
+    "equality_projection_maximum_by_unit": {
+      "m": {
+        "dependent_joint": "knee_angle_beta_translation1_r",
+        "driver_joint": "knee_angle_r",
+        "maximum_absolute_correction": 0.0524192,
+        "pose": "neutral",
+        "qpos_index": 113,
+        "signed_correction": 0.0524192
+      },
+      "rad": {
+        "dependent_joint": "knee_angle_beta_rotation1_r",
+        "driver_joint": "knee_angle_r",
+        "maximum_absolute_correction": 1.1007813352000002,
+        "pose": "bilateral_deep_crouch",
+        "qpos_index": 114,
+        "signed_correction": -1.1007813352000002
+      }
+    },
+    "failure_count": 0,
+    "literal_unprojected_qpos0": {
+      "failed_sides": [
+        "r",
+        "l"
+      ],
+      "left_minimum_offset_m": -0.01728577207120352,
+      "left_posterior_vertex_count": 130,
+      "left_vertex_count": 180,
+      "right_minimum_offset_m": -0.01706977564713827,
+      "right_posterior_vertex_count": 121,
+      "right_vertex_count": 178,
+      "status": "posterior_or_intersecting_knee_anchor_plane"
+    },
+    "pose_count": 8,
+    "projected_patellar_anteriority": {
+      "evaluations": 16,
+      "minimum_offset_m": 0.009414333728546833,
+      "status": "all_patella_vertices_anterior"
+    },
+    "source_geometry_checks": 185,
+    "source_sha256": "1e09c43df1e5ced3aea2cc1561d0cbdfc77b0a2da113afb61c9f47ea7324f63b",
+    "status": "passed_source_owned_bilateral_lower_limb_multi_pose_interface_patches",
+    "visual_guidance": "Use a source-equality-projected neutral pose for static anatomy views of the current source-consistent registration. Literal qpos0 is diagnostic only and may place patellae behind the knee-anchor plane; this projection is not a native accepted state."
+  },
+  "preserved_artifacts": {
+    "lower-limb-compiled-pose-audit.json.gz": {
+      "compressed_bytes": 130552,
+      "file": "lower-limb-compiled-pose-audit.json.gz",
+      "sha256": "77499496d57e620360d2495d2826fb5a1634e80f2b97e04be6c59f0a44a5dccd",
+      "source_bytes": 1920279,
+      "source_sha256": "1e09c43df1e5ced3aea2cc1561d0cbdfc77b0a2da113afb61c9f47ea7324f63b"
+    },
+    "lower-limb-source-registration.json.gz": {
+      "compressed_bytes": 125020,
+      "file": "lower-limb-source-registration.json.gz",
+      "sha256": "6fd0ec5221cdd5b2bb340da2467e265cf35015c4c248816be8aa143917234ba9",
+      "source_bytes": 1381450,
+      "source_sha256": "b22f93eda0d4ceff430ddbeccff3f77f1b60b4d85b8707f7601004aee7086359"
+    },
+    "paired-lower-limb-tendon-manifest.json.gz": {
+      "compressed_bytes": 101942,
+      "file": "paired-lower-limb-tendon-manifest.json.gz",
+      "sha256": "8285dfd16813359b9a9131d227b1b7f9538b8ef10ad2c93094f525907fd09ccc",
+      "source_bytes": 922000,
+      "source_sha256": "dbb455721e23b1564dc728ccd20e021a1f011c2c610c0f2b52234836e2a0e6fa"
+    }
+  },
+  "projected_neutral_source_visual_preflight": {
+    "body_center_offsets_m": {
+      "l": 0.044340074049506614,
+      "r": 0.04434208902755106
+    },
+    "file": "source-equality-projected-neutral-patella-check.json",
+    "minimum_gate_m": 0.025,
+    "sha256": "f094acc00183cef396140e56e6c47a298d48ec07eeb85af080a1a7b0c7e93a2c"
+  },
+  "registration": {
+    "artifact_manifest_sha256": "6f77958df63a9785f00b3837197d521290b5cfcb0d6640692e9cf47aac7b7913",
+    "compressed_sha256": "6fd0ec5221cdd5b2bb340da2467e265cf35015c4c248816be8aa143917234ba9",
+    "registration_fingerprint32": "b22f93ed",
+    "source_anchor_count": 185,
+    "source_sha256": "b22f93eda0d4ceff430ddbeccff3f77f1b60b4d85b8707f7601004aee7086359",
+    "status": "provisional_visual_registration_not_admitted_to_collision_or_physics"
+  },
+  "schema": "numi.human.lower-limb-source-registration-refresh.v1",
+  "source": {
+    "left_knee_overlay": {
+      "driver_joint": "knee_angle_l",
+      "driver_range_rad": [
+        0.0,
+        2.0944
+      ],
+      "equality_polycoef": [
+        -7.69254e-11,
+        -0.00587971,
+        0.00125622,
+        2.61846e-06,
+        -6.24355e-07
+      ],
+      "id": "myosim-left-knee-translation2-reflected-range-20261002",
+      "manifest": "source-overlays/myosim-left-knee-translation2-range.v1.json",
+      "manifest_sha256": "05f6b7698e571c83a62bdbc7055ff24322800a36e9b53e455a18b451e7b9dad4",
+      "modified_source_file": "checkout/myo_sim/models/leg/assets/myolegs_chain.xml",
+      "polynomial_range_witness_m": [
+        -0.006791998837245416,
+        -7.69254e-11
+      ],
+      "range_after_m": [
+        -0.006792,
+        -7.69254e-11
+      ],
+      "range_before_m": [
+        7.69254e-11,
+        0.006792
+      ],
+      "source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+      "source_file_sha256_after": "885fdc6fa0e8a2d24d590c3987856f4a17256f1d44f277f46ecf9dbfedc02b0a",
+      "source_file_sha256_before": "da7c4a13eec2abfedc683210972ea423d630461a56909bee2884e181e1bf1d97",
+      "source_joint": "knee_angle_translation2_l"
+    },
+    "mujoco_version": "3.12.0",
+    "myosim_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "myosim_revision": "33c89c2bde282553dde3f526768eb3bdcfaa7649"
+  }
+}
