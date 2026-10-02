@@ -12,6 +12,7 @@ readme = "README.md"
 
 [project.scripts]
 numilab-human = "numilab_human.cli:main"
+numilab-human-capability-registry = "numilab_human.whole_body_capability_registry:main"
 
 [project.optional-dependencies]
 skin-authoring = ["numpy>=1.26.4,<2.7", "scipy==1.17.1"]

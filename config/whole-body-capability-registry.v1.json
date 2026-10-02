@@ -1,0 +1,256 @@
+{
+  "schema": "numi.human.whole-body-capability-profile.v1",
+  "id": "numi-human-whole-body-capability",
+  "systems": [
+    {
+      "id": "whole_body_anatomy",
+      "domain": "source anatomy",
+      "scope": "Complete, disjoint, physically owned whole-body anatomy rather than declared source-family coverage alone.",
+      "evidence": [
+        {"id": "visceral", "path": "Docs/media/whole-visceral-coverage-20260929/receipt.json", "schema": "numi.human.whole-visceral-source-evidence.v1"}
+      ],
+      "facts": [
+        {"id": "source_families", "evidence": "visceral", "path": "coverage.source_families"},
+        {"id": "unique_source_members", "evidence": "visceral", "path": "coverage.required_unique_source_members"},
+        {"id": "source_geometry", "evidence": "visceral", "path": "qualification.source_geometry"},
+        {"id": "declared_membership", "evidence": "visceral", "path": "qualification.complete_declared_family_membership"}
+      ],
+      "requirements": [
+        {"id": "whole_human_anatomy", "evidence": "visceral", "path": "qualification.whole_human_anatomy", "operator": "equals", "value": true, "reason": "Whole-body anatomical coverage is not yet admitted."},
+        {"id": "disjoint_tissue", "evidence": "visceral", "path": "qualification.disjoint_tissue", "operator": "equals", "value": true, "reason": "Cross-domain tissue disjointness is not yet verified."},
+        {"id": "physical_volume", "evidence": "visceral", "path": "qualification.physical_volume", "operator": "equals", "value": true, "reason": "Source surfaces do not yet have admitted physical volumes."}
+      ]
+    },
+    {
+      "id": "internal_organs",
+      "domain": "internal organ anatomy and mechanics",
+      "scope": "Source organ geometry with connected lumens, disjoint tissues, physical volumes, and mechanical owners.",
+      "evidence": [
+        {"id": "visceral", "path": "Docs/media/whole-visceral-coverage-20260929/receipt.json", "schema": "numi.human.whole-visceral-source-evidence.v1"}
+      ],
+      "facts": [
+        {"id": "surface_count", "evidence": "visceral", "path": "coverage.total_surfaces"},
+        {"id": "connected_lumen", "evidence": "visceral", "path": "qualification.connected_lumen"},
+        {"id": "mechanics", "evidence": "visceral", "path": "qualification.mechanics"}
+      ],
+      "requirements": [
+        {"id": "disjoint_tissue", "evidence": "visceral", "path": "qualification.disjoint_tissue", "operator": "equals", "value": true, "reason": "Cross-domain organ/tissue separation is not yet admitted."},
+        {"id": "connected_lumen", "evidence": "visceral", "path": "qualification.connected_lumen", "operator": "equals", "value": true, "reason": "Organ and vascular source geometry is not a connected lumen."},
+        {"id": "physical_volume", "evidence": "visceral", "path": "qualification.physical_volume", "operator": "equals", "value": true, "reason": "Organ geometry has no admitted physical-volume owner."},
+        {"id": "organ_mechanics", "evidence": "visceral", "path": "qualification.mechanics", "operator": "equals", "value": true, "reason": "Organ mechanics and loading are not qualified."}
+      ]
+    },
+    {
+      "id": "skin",
+      "domain": "skin geometry, motion, and mechanics",
+      "scope": "Closed embedded skin over retained poses, continuous motion, and a physical tissue/contact owner.",
+      "evidence": [
+        {"id": "native_pose_audit", "path": "Docs/media/skin-native-embeddedness-20260929/summary.json", "schema": "numi.human.compiled-native-skin-embeddedness.v1"},
+        {"id": "candidate_heldout_audit", "path": "Docs/media/skin-geodesic-visual-candidate-20260930/heldout-summary.json", "schema": "numi.human.derived-geodesic-skin-heldout-native-audit.v1"}
+      ],
+      "facts": [
+        {"id": "sampled_states", "evidence": "native_pose_audit", "path": "sampled_state_count"},
+        {"id": "intersection_free_states", "evidence": "native_pose_audit", "path": "exact_self_intersection_free_state_count"},
+        {"id": "open_boundary_edges", "evidence": "native_pose_audit", "path": "source_boundary_edge_count"},
+        {"id": "vertex_link_defects", "evidence": "native_pose_audit", "path": "source_vertex_link_defect_count"},
+        {"id": "candidate_heldout_status", "evidence": "candidate_heldout_audit", "path": "status"},
+        {"id": "candidate_new_intersection_pairs", "evidence": "candidate_heldout_audit", "path": "new_intersection_pair_count"},
+        {"id": "candidate_removed_intersection_pairs", "evidence": "candidate_heldout_audit", "path": "removed_intersection_pair_count"}
+      ],
+      "requirements": [
+        {"id": "no_new_heldout_intersections", "evidence": "candidate_heldout_audit", "path": "new_intersection_pair_count", "operator": "equals", "value": 0, "reason": "The diagnostic skin candidate removes 42 crossings but introduces 37 new held-out pairs."},
+        {"id": "all_states_self_intersection_free", "evidence": "native_pose_audit", "path": "all_sampled_states_self_intersection_free", "operator": "equals", "value": true, "reason": "Three of ten sampled states still have exact intersections."},
+        {"id": "closed_embedded_skin", "evidence": "native_pose_audit", "path": "all_sampled_states_closed_embedded", "operator": "equals", "value": true, "reason": "The retained skin surface is open or nonmanifold."},
+        {"id": "motion_trajectory", "evidence": "native_pose_audit", "path": "motion_trajectory_qualification", "operator": "equals", "value": true, "reason": "Discrete pose snapshots do not qualify intervening motion."},
+        {"id": "physical_skin_owner", "evidence": "native_pose_audit", "path": "physical_skin_volume", "operator": "equals", "value": true, "reason": "Skin material, mass, and contact remain unowned."}
+      ]
+    },
+    {
+      "id": "muscle",
+      "domain": "muscle anatomy and mechanics",
+      "scope": "Admitted muscle surfaces, physical volume/mass ownership, force transmission, and calibrated mechanics.",
+      "evidence": [
+        {"id": "surface_audit", "path": "Docs/media/muscle-surface-embeddedness-20260929/receipt-v3.json", "schema": "numi.human.compiled-muscle-surface-embeddedness.v1"}
+      ],
+      "facts": [
+        {"id": "muscle_surface_count", "evidence": "surface_audit", "path": "coverage.muscle_surface_count"},
+        {"id": "embedded_muscle_surface_candidates", "evidence": "surface_audit", "path": "coverage.single_embedded_muscle_surface_candidate_count"},
+        {"id": "mechanics", "evidence": "surface_audit", "path": "mechanics"},
+        {"id": "physical_volume_owner", "evidence": "surface_audit", "path": "physical_volume_owner"}
+      ],
+      "requirements": [
+        {"id": "physical_volume_owner", "evidence": "surface_audit", "path": "physical_volume_owner", "operator": "equals", "value": true, "reason": "Muscle surfaces have no admitted physical-volume/mass owner."},
+        {"id": "muscle_mechanics", "evidence": "surface_audit", "path": "mechanics", "operator": "equals", "value": true, "reason": "Calibrated muscle mechanics and force transfer remain open."}
+      ]
+    },
+    {
+      "id": "tendon",
+      "domain": "tendon anatomy and mechanics",
+      "scope": "Embedded, oriented tendon sheets with admitted entheses, material, and load transfer.",
+      "evidence": [
+        {"id": "surface_audit", "path": "Docs/media/muscle-surface-embeddedness-20260929/receipt-v3.json", "schema": "numi.human.compiled-muscle-surface-embeddedness.v1"},
+        {"id": "calcaneal_delta", "path": "Docs/media/tendon-harmonic-boundary-20260929/receipt-v1.json", "schema": "numi.human.calcaneal-tendon-visual-delta.v1"}
+      ],
+      "facts": [
+        {"id": "tendon_surface_count", "evidence": "surface_audit", "path": "coverage.tendon_surface_count"},
+        {"id": "embedded_tendon_surface_candidates", "evidence": "surface_audit", "path": "coverage.single_embedded_tendon_surface_candidate_count"},
+        {"id": "right_open_boundary_edges", "evidence": "calcaneal_delta", "path": "tendons.0.open_boundary_edge_count"},
+        {"id": "left_open_boundary_edges", "evidence": "calcaneal_delta", "path": "tendons.1.open_boundary_edge_count"},
+        {"id": "right_normal_reversals", "evidence": "calcaneal_delta", "path": "tendons.0.source_face_normal_reversal_ids"},
+        {"id": "left_normal_reversals", "evidence": "calcaneal_delta", "path": "tendons.1.source_face_normal_reversal_ids"}
+      ],
+      "requirements": [
+        {"id": "all_tendon_surfaces_embedded", "evidence": "surface_audit", "path": "coverage.single_embedded_tendon_surface_candidate_count", "operator": "at_least", "value": 2, "reason": "Neither compiled tendon sheet passes the embedded-surface candidate gate."},
+        {"id": "right_sheet_closed", "evidence": "calcaneal_delta", "path": "tendons.0.open_boundary_edge_count", "operator": "equals", "value": 0, "reason": "Right calcaneal tendon sheet remains open."},
+        {"id": "left_sheet_closed", "evidence": "calcaneal_delta", "path": "tendons.1.open_boundary_edge_count", "operator": "equals", "value": 0, "reason": "Left calcaneal tendon sheet remains open."},
+        {"id": "right_sheet_oriented", "evidence": "calcaneal_delta", "path": "tendons.0.source_face_normal_reversal_ids", "operator": "equals", "value": [], "reason": "Right tendon source sheet has reversed face normals."},
+        {"id": "left_sheet_oriented", "evidence": "calcaneal_delta", "path": "tendons.1.source_face_normal_reversal_ids", "operator": "equals", "value": [], "reason": "Left tendon source sheet has reversed face normals."},
+        {"id": "tendon_mechanics", "evidence": "surface_audit", "path": "mechanics", "operator": "equals", "value": true, "reason": "Tendon material and native load transfer are not qualified."}
+      ]
+    },
+    {
+      "id": "bloodflow",
+      "domain": "blood flow and tissue exchange",
+      "scope": "Spatial blood transport through owned lumens with mass, moment, exchange, and rollback closure.",
+      "evidence": [
+        {"id": "regional_transport", "path": "Docs/media/organ-blood-tissue-transport-20260914/receipt-v1.json", "schema": "HumanPack.organ-blood-tissue-transport-candidate.v1"}
+      ],
+      "facts": [
+        {"id": "accepted_steps", "evidence": "regional_transport", "path": "accepted_steps"},
+        {"id": "attempted_steps", "evidence": "regional_transport", "path": "attempted_steps"},
+        {"id": "conserved_mass", "evidence": "regional_transport", "path": "conservation.mass_conserved"},
+        {"id": "conserved_volume", "evidence": "regional_transport", "path": "conservation.volume_conserved"},
+        {"id": "bed_count", "evidence": "regional_transport", "path": "counts.bed_count"},
+        {"id": "rollback", "evidence": "regional_transport", "path": "rollback.rejected_candidate_state_neutral"}
+      ],
+      "requirements": [
+        {"id": "anatomical_lumen_owner", "evidence": "regional_transport", "path": "qualification.anatomical_vessel_tube_or_lumen", "operator": "equals", "value": true, "reason": "Regional flow is routed through candidates, not admitted anatomical lumens."},
+        {"id": "blood_spatial_moments", "evidence": "regional_transport", "path": "qualification.blood_first_second_spatial_moments", "operator": "equals", "value": true, "reason": "Only zeroth-moment mass/volume transport is closed."},
+        {"id": "mechanical_mass_owners", "evidence": "regional_transport", "path": "qualification.mechanical_mass_owner", "operator": "equals", "value": true, "reason": "Mechanical blood and tissue mass owners are absent."},
+        {"id": "two_way_tissue_exchange", "evidence": "regional_transport", "path": "qualification.two_way_tissue_exchange", "operator": "equals", "value": true, "reason": "Blood-to-tissue exchange is not qualified."},
+        {"id": "calibrated_material_density", "evidence": "regional_transport", "path": "qualification.material_density_calibrated", "operator": "equals", "value": true, "reason": "Transport density and subject physiology are candidates, not calibrated."}
+      ]
+    },
+    {
+      "id": "circulation",
+      "domain": "systemic circulation",
+      "scope": "Native, source-requalified circulation with measured physiological validation.",
+      "evidence": [
+        {"id": "circulation_receipt", "path": "Docs/media/organ-circulation-20260913/receipt.json", "schema": "numi.human.organ-circulation-evidence.v1"}
+      ],
+      "facts": [
+        {"id": "scientific_status", "evidence": "circulation_receipt", "path": "scientific_status"},
+        {"id": "source_reverified_date", "evidence": "circulation_receipt", "path": "source_requalification.verified"}
+      ],
+      "requirements": [
+        {"id": "physiological_circulation", "evidence": "circulation_receipt", "path": "scientific_status", "operator": "equals", "value": "qualified", "reason": "The source circulation model remains scientifically unqualified."}
+      ]
+    },
+    {
+      "id": "cardiac_electrical",
+      "domain": "cardiac electrical activation",
+      "scope": "Source-ordered, coupled native electrical propagation with a physiological ionic model.",
+      "evidence": [
+        {"id": "electrical_reference", "path": "Docs/media/cardiac-electrical-reference-20260930/summary.json", "schema": "numi.human.cardiac-passive-electrical-reference.v1"},
+        {"id": "fec_layer_audit", "path": "Docs/media/cardiac-fec-layer-topology-20260930/receipt.json", "schema": "numi.human.cardiac-fec-layer-topology.v1"}
+      ],
+      "facts": [
+        {"id": "electrical_dofs", "evidence": "electrical_reference", "path": "electrical_dof_count"},
+        {"id": "inter_region_edges", "evidence": "electrical_reference", "path": "explicit_inter_region_conduction_edges"},
+        {"id": "native_runtime", "evidence": "electrical_reference", "path": "native_electrical_runtime"},
+        {"id": "ionic_model", "evidence": "electrical_reference", "path": "ionic_model"},
+        {"id": "heartbeat", "evidence": "electrical_reference", "path": "heartbeat_qualified"},
+        {"id": "native_source_electrical_steps", "evidence": "fec_layer_audit", "path": "native_accepted_electrical_steps"},
+        {"id": "fec_source_model_reproduced", "evidence": "fec_layer_audit", "path": "source_model_reproduced"}
+      ],
+      "requirements": [
+        {"id": "native_electrical_runtime", "evidence": "electrical_reference", "path": "native_electrical_runtime", "operator": "equals", "value": true, "reason": "No native electrical time-stepping runtime is admitted."},
+        {"id": "ionic_model", "evidence": "electrical_reference", "path": "ionic_model", "operator": "equals", "value": true, "reason": "A physiological ionic model is absent."},
+        {"id": "source_activation_map", "evidence": "electrical_reference", "path": "source_voltage_or_activation_map", "operator": "equals", "value": true, "reason": "There is no source voltage or activation map in this reference."},
+        {"id": "inter_region_conduction", "evidence": "electrical_reference", "path": "explicit_inter_region_conduction_edges", "operator": "at_least", "value": 1, "reason": "No explicit inter-region conduction edges are admitted."},
+        {"id": "qualified_heartbeat", "evidence": "electrical_reference", "path": "heartbeat_qualified", "operator": "equals", "value": true, "reason": "This is a passive operator reference, not a heartbeat."},
+        {"id": "source_model_reproduced", "evidence": "fec_layer_audit", "path": "source_model_reproduced", "operator": "equals", "value": true, "reason": "The retained FEC topology remains a candidate with a source-model mismatch."},
+        {"id": "native_source_electrical_steps", "evidence": "fec_layer_audit", "path": "native_accepted_electrical_steps", "operator": "at_least", "value": 1, "reason": "The FEC sensitivity receipt contains no accepted native electrical steps."}
+      ]
+    },
+    {
+      "id": "cardiac_mechanics",
+      "domain": "cardiac activation-to-contraction",
+      "scope": "Reproduced source excitation driving accepted native anatomical mechanics over a qualified beat.",
+      "evidence": [
+        {"id": "native_tension_gate", "path": "Docs/media/cardiac-native-tension-sequence-20261002/independent-gate.json", "schema": "numi.human.cardiac-active-tension-ingress-gate.v1"},
+        {"id": "tension_sequence", "path": "Docs/media/cardiac-native-tension-sequence-20261002/source-summary.json", "schema": "numi.human.cardiac-active-tension-ingress.v1"}
+      ],
+      "facts": [
+        {"id": "source_cells_per_frame", "evidence": "native_tension_gate", "path": "source_cells_checked_per_frame"},
+        {"id": "assembled_ventricular_cells", "evidence": "native_tension_gate", "path": "ventricular_cells_assembled_per_frame"},
+        {"id": "accepted_anatomical_steps", "evidence": "native_tension_gate", "path": "accepted_native_anatomical_steps"},
+        {"id": "source_model_reproduced", "evidence": "tension_sequence", "path": "source_model_reproduced"},
+        {"id": "heartbeat", "evidence": "tension_sequence", "path": "heartbeat_qualified"}
+      ],
+      "requirements": [
+        {"id": "source_model_reproduction", "evidence": "tension_sequence", "path": "source_model_reproduced", "operator": "equals", "value": true, "reason": "The tension sequence is a prescribed candidate and does not reproduce the source excitation model."},
+        {"id": "accepted_native_steps", "evidence": "native_tension_gate", "path": "accepted_native_anatomical_steps", "operator": "at_least", "value": 1, "reason": "No accepted native anatomical cardiac step was recorded."},
+        {"id": "qualified_heartbeat", "evidence": "native_tension_gate", "path": "heartbeat_qualified", "operator": "equals", "value": true, "reason": "Active-tension ingress parity does not qualify heartbeat mechanics."}
+      ]
+    },
+    {
+      "id": "neural_physiology",
+      "domain": "neural anatomy and conduction",
+      "scope": "Source-bound neural anatomy connected to a qualified native neural-conduction owner.",
+      "evidence": [
+        {"id": "visceral", "path": "Docs/media/whole-visceral-coverage-20260929/receipt.json", "schema": "numi.human.whole-visceral-source-evidence.v1"}
+      ],
+      "facts": [
+        {"id": "source_families", "evidence": "visceral", "path": "coverage.source_families"},
+        {"id": "neural_physiology_field", "evidence": "visceral", "path": "qualification.neural_physiology"}
+      ],
+      "requirements": [
+        {"id": "neural_physiology_owner", "evidence": "visceral", "path": "qualification.neural_physiology", "operator": "equals", "value": true, "reason": "The anatomy receipt does not provide a neural-conduction or physiology owner."}
+      ]
+    },
+    {
+      "id": "whole_body_dynamics",
+      "domain": "assistance-free whole-body dynamics",
+      "scope": "Measured, balanced, at least ten-second native standing with no hidden assistance.",
+      "evidence": [
+        {"id": "stand_diagnostic", "path": "Build/native-human-stand-512x1ms-activation08-independent-peak-20261002/standing-diagnostic.json", "schema": "numi.human.native-standing-diagnostic.v1"}
+      ],
+      "facts": [
+        {"id": "duration_seconds", "evidence": "stand_diagnostic", "path": "horizon.duration_seconds"},
+        {"id": "balanced", "evidence": "stand_diagnostic", "path": "metrics.balanced"},
+        {"id": "right_knee_drift_rad", "evidence": "stand_diagnostic", "path": "metrics.maximum_configuration_delta_rad"},
+        {"id": "assistance_free", "evidence": "stand_diagnostic", "path": "qualification.assistance_free"},
+        {"id": "sustained_standing", "evidence": "stand_diagnostic", "path": "qualification.sustained_standing"}
+      ],
+      "requirements": [
+        {"id": "ten_second_horizon", "evidence": "stand_diagnostic", "path": "horizon.duration_seconds", "operator": "at_least", "value": 10.0, "reason": "The retained native trajectory is 0.512 seconds, not ten seconds."},
+        {"id": "balanced_native_state", "evidence": "stand_diagnostic", "path": "metrics.balanced", "operator": "equals", "value": true, "reason": "The native balance gate is false."},
+        {"id": "sustained_standing", "evidence": "stand_diagnostic", "path": "qualification.sustained_standing", "operator": "equals", "value": true, "reason": "The run is a bounded failure diagnostic, not sustained standing."},
+        {"id": "assistance_free", "evidence": "stand_diagnostic", "path": "qualification.assistance_free", "operator": "equals", "value": true, "reason": "A standing claim must explicitly report zero root assistance."}
+      ]
+    },
+    {
+      "id": "whole_body_calibration",
+      "domain": "whole-body integration and calibration",
+      "scope": "Measured subject, activation, material, mass-transfer, and integrated Human owners.",
+      "evidence": [
+        {"id": "calibration_registry", "path": "Build/native-human-gap-registry-20261002/human-calibration-evidence-registry.json", "schema": "HumanPack.calibration-evidence-registry.v1"}
+      ],
+      "facts": [
+        {"id": "blocker_count", "evidence": "calibration_registry", "path": "counts.blockers"},
+        {"id": "production_owner_rows", "evidence": "calibration_registry", "path": "counts.production_owner_rows"},
+        {"id": "integrated_human", "evidence": "calibration_registry", "path": "qualification.integrated_human_qualification"}
+      ],
+      "requirements": [
+        {"id": "subject_calibration", "evidence": "calibration_registry", "path": "qualification.subject_calibration", "operator": "equals", "value": true, "reason": "Subject reference tables have no admitted Numi prediction comparison."},
+        {"id": "activation_calibration", "evidence": "calibration_registry", "path": "qualification.activation_calibration", "operator": "equals", "value": true, "reason": "Activation remains an uncalibrated candidate."},
+        {"id": "material_calibration", "evidence": "calibration_registry", "path": "qualification.material_calibration", "operator": "equals", "value": true, "reason": "Whole-Human material calibration remains open."},
+        {"id": "blood_mass_transfer", "evidence": "calibration_registry", "path": "qualification.anatomical_blood_mass_transfer", "operator": "equals", "value": true, "reason": "Anatomical blood and tissue mass ownership remains open."},
+        {"id": "zero_blockers", "evidence": "calibration_registry", "path": "counts.blockers", "operator": "equals", "value": 0, "reason": "The current calibration registry has unresolved blockers."},
+        {"id": "production_owner_admission", "evidence": "calibration_registry", "path": "counts.production_owner_rows", "operator": "at_least", "value": 1, "reason": "No production owners are admitted in the current calibration registry."},
+        {"id": "integrated_human", "evidence": "calibration_registry", "path": "qualification.integrated_human_qualification", "operator": "equals", "value": true, "reason": "Integrated Human behavior is not qualified."}
+      ]
+    }
+  ]
+}
