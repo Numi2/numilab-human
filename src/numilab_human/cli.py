@@ -2303,6 +2303,12 @@ def parser() -> argparse.ArgumentParser:
         help="bind single-closed muscle surface volumes to immutable source identities without promoting mechanics",
     )
     add_muscle_volume_candidate_arguments(muscle_volume_candidate)
+    from .cardiac_rodero04_lat_import import add_arguments as add_rodero04_lat_import_arguments
+    rodero04_lat_import = commands.add_parser(
+        "rodero-case04-source-lat",
+        help="transfer the published Healthy Rodero-04 cell activation field by exact VTK/TetGen cell identity",
+    )
+    add_rodero04_lat_import_arguments(rodero04_lat_import)
     return result
 
 
