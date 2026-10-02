@@ -1,0 +1,86 @@
+{
+  "artifacts": {
+    "gap_execution_report": {
+      "gzip_sha256": "af04a6c16550c41813bf0a50869526b13a30b9dcc6cc5edf0036bee35455fa8a",
+      "path": "Docs/media/human-source-coverage-20261002/gap-execution-report.json.gz",
+      "uncompressed_sha256": "7e4be40c30a5ddd9ee7db88dbdc15d8c585191c05ee129ce5c379200fc7fc1a5"
+    },
+    "myosim_export": {
+      "gzip_sha256": "9486d3a73220fff4a5261b8765d704d51ca12493d370cb41a0bf277e236a8d2b",
+      "path": "Docs/media/human-source-coverage-20261002/myosim-export.json.gz",
+      "uncompressed_sha256": "35e90b5625efbb8ad9cab936c29238c0e1760a3821e52e9ffbc96198879b45af"
+    },
+    "target_coverage": {
+      "gzip_sha256": "9717b55f7f13276f279c1fc2eeffda10c065f69cc9597c688d1d72e9532c951f",
+      "path": "Docs/media/human-source-coverage-20261002/target-coverage.json.gz",
+      "uncompressed_sha256": "2d7980a11fa42b8c1215b7a92fc10efff1f1500b9b2ebbe90117eb0286cd05c3"
+    }
+  },
+  "coverage": {
+    "compiler": "numilab-human.target-coverage.2",
+    "counts": {
+      "all_leaves": 27815,
+      "composed_bodies": 103,
+      "composed_joint_equalities": 51,
+      "composed_joints": 123,
+      "composed_muscles": 416,
+      "composed_nonmuscle_tendons": 8,
+      "composed_route_elements": 1872,
+      "composed_sites": 1839,
+      "composed_support_contacts": 10,
+      "composed_wrap_geometries": 151,
+      "mandatory_targets": 95,
+      "unresolved_source_registers": 3
+    },
+    "integrated_qualification": "unknown",
+    "manifest_sha256": "9402c87ea3806e68ccc801d4be3d5e9634e522f069c74f70cbb8a930125abf1d",
+    "schema": "HumanPack.target-coverage.v1",
+    "scope_status": "blocked",
+    "serialized_sha256": "2d7980a11fa42b8c1215b7a92fc10efff1f1500b9b2ebbe90117eb0286cd05c3",
+    "unresolved_registers": [
+      {
+        "declaration_count": 0,
+        "path": "source_inventory",
+        "source_record_sha256": "21df003209d2d9ff5c4ac7062b03c35b958dd305c0dde0a0eb6c35c45cf4c439",
+        "status": "unavailable_source_inventory"
+      },
+      {
+        "declaration_count": 15,
+        "path": "myosim/myo_sim-33c89c2b.tar.gz#/myo_sim/models/legacy/elbow/myoelbow_1dof6muscles_1dofSoftexo_sim2.xml",
+        "source_record_sha256": "ba761f20e8ed98ac0d81c671f6adfe210f3791a2a7aeed1531339b9ac5fb809b",
+        "status": "invalid_source_xml"
+      },
+      {
+        "declaration_count": 0,
+        "path": "source_inventory",
+        "source_record_sha256": "ea3012642a7d956df2d4a0cd966b085ae16e60b70b33639bb7d3b8175613b1d9",
+        "status": "unavailable_source_inventory"
+      }
+    ]
+  },
+  "date": "2026-10-02",
+  "evidence_boundary": "Pinned source and current mandatory-target identity coverage only. Source leaves remain unmapped; anatomy, physical ownership, mechanics, physiology, calibration, and integrated Human qualification are not established.",
+  "gap_execution": {
+    "compiler": "numilab-human.gap-execution.1",
+    "coverage_binding_status": "mandatory_targets_bound",
+    "integrated_qualification": "not_assessed",
+    "mandatory_targets": 95,
+    "report_sha256": "c808fd5add0ca8209521773c366d0d611ad3d72a3f7cb715595c80bf8d236b3b",
+    "serialized_sha256": "7e4be40c30a5ddd9ee7db88dbdc15d8c585191c05ee129ce5c379200fc7fc1a5",
+    "source_assignment_status": "unmapped_source_leaves",
+    "tasks": 54,
+    "unmapped_source_leaves": 27720,
+    "workstreams": 14
+  },
+  "schema": "HumanPack.source-coverage-receipt.v1",
+  "source": {
+    "archive": "myo_sim-33c89c2b.tar.gz",
+    "archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "export_schema": "numi.human.myosim-mujoco-export.v1",
+    "export_sha256": "35e90b5625efbb8ad9cab936c29238c0e1760a3821e52e9ffbc96198879b45af",
+    "license": "Apache-2.0",
+    "mujoco_version": "3.12.0",
+    "revision": "33c89c2bde282553dde3f526768eb3bdcfaa7649",
+    "source_lock_sha256": "03d20d46bfb47b67fb251182758eebbc8f1bbe2f38ce51881dc4c2694774fdee"
+  }
+}

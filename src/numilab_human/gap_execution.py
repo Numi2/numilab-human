@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path, PurePosixPath
+import re
 from typing import Any
 
 from .model import ImportError as HumanImportError
@@ -71,21 +72,30 @@ def read_json(path: Path) -> dict[str, Any]:
 
 def ledger_rows(path: Path) -> dict[str, dict[str, str]]:
     """Read the authoritative top-level table, not dated narrative updates."""
-    header = "| Workstream | Current evidence | Status | Gap that still matters | Completion gate |"
+    header = ["Workstream", "Current evidence", "Status", "Gap that still matters", "Completion gate"]
     lines = path.read_text(encoding="utf-8").splitlines()
-    if lines.count(header) != 1:
+
+    def cells(line: str) -> list[str]:
+        stripped = line.strip()
+        if not (stripped.startswith("|") and stripped.endswith("|")):
+            return []
+        return [cell.strip() for cell in stripped[1:-1].split("|")]
+
+    headers = [index for index, line in enumerate(lines) if cells(line) == header]
+    if len(headers) != 1:
         raise HumanImportError("completion ledger must contain exactly one workstream table")
-    start = lines.index(header)
-    if start + 1 >= len(lines) or lines[start + 1].replace(" ", "") != "|---|---|---|---|---|":
+    start = headers[0]
+    separator = cells(lines[start + 1]) if start + 1 < len(lines) else []
+    if len(separator) != len(header) or any(not re.fullmatch(r":?-{3,}:?", cell) for cell in separator):
         raise HumanImportError("completion ledger workstream table separator changed")
     result = {}
     for line in lines[start + 2:]:
         if not line.startswith("|"):
             break
-        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
-        if len(cells) != 5 or not all(cells):
+        row = cells(line)
+        if len(row) != 5 or not all(row):
             raise HumanImportError("malformed completion ledger workstream row")
-        name, evidence, status, gap, closure = cells
+        name, evidence, status, gap, closure = row
         if name in result or status not in {"open", "partial", "proved"}:
             raise HumanImportError("duplicate ledger workstream or unsupported status")
         result[name] = {"current_evidence": evidence, "status": status,

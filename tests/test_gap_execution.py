@@ -12,7 +12,7 @@ import unittest
 from unittest.mock import patch
 
 from numilab_human.gap_execution import (
-    ROOT, command, dependency_layers, ledger_rows, materialize, read_json, validate_registry,
+    ROOT, command, ledger_rows, materialize, read_json, validate_registry,
 )
 from numilab_human.model import ImportError as HumanImportError
 from numilab_human.target_coverage import MANDATORY, canonical_bytes, digest, materialize as coverage_materialize
@@ -56,6 +56,36 @@ class GapExecutionTests(unittest.TestCase):
         self.assertEqual(report["coverage"]["binding_status"], "not_supplied")
         self.assertIsNone(report["counts"]["unmapped_source_leaves"])
 
+    def test_ledger_table_accepts_markdown_column_alignment(self) -> None:
+        path = self.root / "aligned-ledger.md"
+        header = ["Workstream", "Current evidence", "Status", "Gap that still matters", "Completion gate"]
+        row = ["Runtime", "native receipt", "partial", "clock parity", "accepted replay"]
+        widths = [max(len(left), len(right)) for left, right in zip(header, row)]
+
+        def render(values: list[str]) -> str:
+            return "| " + " | ".join(value.ljust(width) for value, width in zip(values, widths)) + " |"
+
+        separator = "| " + " | ".join("-" * width for width in widths) + " |"
+        path.write_text("\n".join((render(header), separator, render(row))) + "\n")
+        self.assertEqual(ledger_rows(path), {
+            "Runtime": {
+                "current_evidence": "native receipt",
+                "status": "partial",
+                "remaining_gap": "clock parity",
+                "completion_gate": "accepted replay",
+            },
+        })
+
+    def test_ledger_table_still_rejects_malformed_separator(self) -> None:
+        path = self.root / "bad-separator-ledger.md"
+        path.write_text(
+            "| Workstream | Current evidence | Status | Gap that still matters | Completion gate |\n"
+            "| --- | --- | no | --- | --- |\n"
+            "| Runtime | native receipt | partial | clock parity | accepted replay |\n"
+        )
+        with self.assertRaisesRegex(HumanImportError, "separator changed"):
+            ledger_rows(path)
+
     def test_stable_content_and_independent_frontier(self) -> None:
         first = materialize(self.registry, root=self.root)
         self.assertEqual(canonical_bytes(first), canonical_bytes(materialize(self.registry, root=self.root)))
@@ -73,7 +103,10 @@ class GapExecutionTests(unittest.TestCase):
         with self.assertRaisesRegex(HumanImportError, "every ledger"):
             validate_registry(missing, root=self.root)
         path = self.root / self.registry["ledger"]
-        path.write_text(path.read_text().replace("| Source foundation |", "| New source scope |", 1))
+        original = path.read_text()
+        updated = original.replace("| Source foundation ", "| New source scope ", 1)
+        self.assertNotEqual(updated, original)
+        path.write_text(updated)
         with self.assertRaisesRegex(HumanImportError, "every ledger"):
             materialize(self.registry, root=self.root)
 

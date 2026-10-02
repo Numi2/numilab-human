@@ -7,6 +7,16 @@ The dependency graph has ten layers and twelve initial independent tasks.
 These are scheduling relationships; tasks are not assessed for readiness or
 completion by this command.
 
+The 2 October [source-coverage receipt](media/human-source-coverage-20261002/receipt.json)
+binds a composed MyoSim export from revision `33c89c2b` using MuJoCo `3.12.0`.
+The export contributes 103 bodies, 123 joints, 51 joint equalities, 416
+muscles, 1,872 route elements, eight nonmuscle tendons, and ten source support
+contacts. The report binds all 95 mandatory target leaves, but 27,720 other
+source leaves remain unmapped and three source registers remain unresolved;
+scope is `blocked` and integrated qualification remains `not_assessed`. This is
+source identity coverage only. The compressed export, full coverage manifest,
+and gap report are retained beside the receipt.
+
 The [29 September cumulative source anatomy extension](WHOLE_VISCERAL_SOURCE_GEOMETRY_20260929.md)
 adds independently checked brain, ocular and visceral references while retaining
 the prior source geometry. Its 46-family membership proof does not change task
