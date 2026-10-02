@@ -1685,6 +1685,34 @@ def compile_source_mechanical_description(
     step_control = root.find("Step/Control")
     if step_control is None:
         raise ValueError("Open Knee(s) source Step has no Control program")
+    step = root.find("Step")
+    if step is None:
+        raise ValueError("Open Knee(s) source has no loading Step")
+    # ElementTree excludes XML comments. In the pinned deck the old QAT
+    # <force> text is commented out, so it must not be counted as a load or
+    # used to calibrate the archived XPLT. Keep an explicit executable-load
+    # manifest beside the prescribed flexion and prestrain curves.
+    active_loads = [
+        {
+            "source_path": f"{parent_path}/{item.tag}",
+            "attributes": dict(sorted(item.attrib.items())),
+            "source_xml_sha256": _xml_digest(item),
+            "native_execution_status": "unsupported_not_executed",
+        }
+        for parent_path, parent in (
+            ("Loads", root.find("Loads")),
+            ("Step/Loads", step.find("Loads")),
+        )
+        if parent is not None
+        for item in parent
+    ]
+    if expected_deck_sha256 == EXPECTED_HASHES["FeBio_custom.feb"]:
+        if active_loads or {child.tag for child in step} != {
+            "Control", "Boundary", "Contact", "Constraints"
+        }:
+            raise ValueError(
+                "Open Knee(s) pinned step has an unexpected active load or construct"
+            )
     if not sections:
         raise ValueError("Open Knee(s) source mechanical program has no sections")
     geometry_resolution = None
@@ -1837,6 +1865,14 @@ def compile_source_mechanical_description(
         "discrete_materials": discrete_materials,
         "discrete_interactions": discrete_interactions,
         "contacts": contacts,
+        "active_applied_loads": active_loads,
+        "source_loading_interpretation": (
+            "prescribed_flexion_and_prestrain_only; no active quadriceps force"
+            if not active_loads and
+            expected_deck_sha256 == EXPECTED_HASHES["FeBio_custom.feb"]
+            else ("no_active_applied_loads" if not active_loads else
+                  "active_applied_loads_require_native_execution")
+        ),
         "load_curves": curves,
         "step_control": {
             "step_name": root.find("Step").attrib.get("name"),

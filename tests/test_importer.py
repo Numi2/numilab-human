@@ -3947,6 +3947,11 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(mechanics["febio_spec_version"], "2.5")
         self.assertEqual(mechanics["source_equivalence_admission"],
                          "rejected_unsupported_source_mechanics")
+        self.assertEqual(mechanics["active_applied_loads"], [])
+        self.assertEqual(
+            mechanics["source_loading_interpretation"],
+            "no_active_applied_loads",
+        )
         self.assertEqual(
             mechanics["contact_surface_pair_resolution"],
             "resolved_against_pinned_Geometry_custom",
@@ -4108,6 +4113,11 @@ class ImporterTests(unittest.TestCase):
         )
         self.assertEqual(mechanics["source_equivalence_admission"],
                          "rejected_unsupported_source_mechanics")
+        self.assertEqual(mechanics["active_applied_loads"], [])
+        self.assertEqual(
+            mechanics["source_loading_interpretation"],
+            "prescribed_flexion_and_prestrain_only; no active quadriceps force",
+        )
 
     def test_open_knee_rigid_ties_bind_unique_source_volume_nodes(self) -> None:
         artifact_root = ROOT / "Docs/media/open-knee-source-program-20261002"
