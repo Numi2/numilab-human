@@ -4,9 +4,9 @@
   "human_worktree_base_revision": "582fcd0",
   "matter_operator_revision": "9a25b00d2e49f9e8ce9eab5189847039b67337ae",
   "source_sha256": {
-    "src/numilab_human/open_knee.py": "7da31a178ac0a9f00d681dc2fc2624d4e2f01b7d21f8f3c11a06a8c3692c53ef",
-    "tests/test_importer.py": "cadda42634cd26e2f72ac9ca95a970ceca960bdffb1253f067b213245163b3a2",
-    "source-mechanics.json": "b44987244c27a00544d1b1850a099bbc9445e170855ad2ee07a93034e53830a2"
+    "src/numilab_human/open_knee.py": "739804ebf81616138573bc898ee11562d4434fccb80019d4e9bed6ec25dd2266",
+    "tests/test_importer.py": "94ec92880cdcf884ff0f0ac42393856c3c8ba0da0cfa5ca17722cca6100e3915",
+    "source-mechanics.json": "aedcc35bbbfd328af78484c863e0c7cc76722c008126b6b44fc360952e9458d7"
   },
   "reference_inputs": {
     "FeBio_custom.feb": {
@@ -34,7 +34,10 @@
     "sliding_contacts": 18,
     "load_curves": 9,
     "resolved_source_contact_pairs": 18,
-    "resolved_source_rigid_ties": 18
+    "resolved_source_rigid_ties": 18,
+    "typed_source_material_programs": 21,
+    "prestrain_programs": 6,
+    "resolved_prestrain_curves": 6
   },
   "source_equivalence_admission": "rejected_unsupported_source_mechanics",
   "compiled_rigid_graph_fields": "typed finite source-frame centers, density, connector origin/axis, penalties, prescribed flags/targets, curve references, and numeric load-curve points; source XML text and hashes retained",
@@ -45,7 +48,8 @@
     "source rigid graph runtime assembly",
     "source contact and prestrain execution",
     "assembled tissue equilibrium or whole-body integration",
-    "native execution of resolved source rigid graph, contacts, prestrain, tissues, and loading"
+    "native execution of resolved source rigid graph, contacts, prestrain, tissues, and loading",
+    "native constitutive execution of the compiled source tissue and prestrain programs"
   ],
   "validation": {
     "tests": [
@@ -53,7 +57,7 @@
       "test_open_knee_exact_fiber_directions_are_source_authored_and_unit"
     ],
     "result": "passed",
-    "pinned_source_mechanical_descriptor_rebuild": "passed against exact deck and Geometry_custom hashes; 18 contacts and 18 rigid ties resolve",
+    "pinned_source_mechanical_descriptor_rebuild": "passed against exact deck and Geometry_custom hashes; typed material/prestrain programs, 18 contact pairs, and 18 rigid ties resolve",
     "python_compileall": "passed",
     "git_diff_check": "passed"
   },
@@ -69,5 +73,259 @@
     "unreferenced_surface_pair_names": [
       "MCL_To_MNS-M"
     ]
+  },
+  "source_tissue_parameters": {
+    "QAT": {
+      "elastic": {
+        "density": 1e-09,
+        "c1": 2.75,
+        "c2": 0.0,
+        "c3": 0.065,
+        "c4": 115.89,
+        "c5": 777.56,
+        "lam_max": 1.042
+      },
+      "prestrain": {
+        "type": "in-situ stretch",
+        "stretch": 1.0,
+        "load_curve_id": "1",
+        "isochoric": true,
+        "resolved_load_curve": [
+          {
+            "source_text": "0,1.0",
+            "time": 0.0,
+            "value": 1.0,
+            "attributes": {}
+          },
+          {
+            "source_text": "1,1.0",
+            "time": 1.0,
+            "value": 1.0,
+            "attributes": {}
+          },
+          {
+            "source_text": "2,1.0",
+            "time": 2.0,
+            "value": 1.0,
+            "attributes": {}
+          }
+        ]
+      },
+      "fiber_direction": [
+        0.0021382483725627954,
+        -0.22397946374811423,
+        0.9745915183875777
+      ]
+    },
+    "PCL": {
+      "elastic": {
+        "density": 1e-09,
+        "c1": 3.25,
+        "c2": 0.0,
+        "c3": 0.1196,
+        "c4": 87.178,
+        "c5": 431.063,
+        "lam_max": 1.035
+      },
+      "prestrain": {
+        "type": "in-situ stretch",
+        "stretch": 1.0,
+        "load_curve_id": "2",
+        "isochoric": true,
+        "resolved_load_curve": [
+          {
+            "source_text": "0,1.0",
+            "time": 0.0,
+            "value": 1.0,
+            "attributes": {}
+          },
+          {
+            "source_text": "1,1.0",
+            "time": 1.0,
+            "value": 1.0,
+            "attributes": {}
+          },
+          {
+            "source_text": "2,1.0",
+            "time": 2.0,
+            "value": 1.0,
+            "attributes": {}
+          }
+        ]
+      },
+      "fiber_direction": [
+        -0.13894548213429192,
+        -0.7522134084051663,
+        -0.6441033622097867
+      ]
+    },
+    "ACL": {
+      "elastic": {
+        "density": 1e-09,
+        "c1": 1.95,
+        "c2": 0.0,
+        "c3": 0.0139,
+        "c4": 116.22,
+        "c5": 535.039,
+        "lam_max": 1.046
+      },
+      "prestrain": {
+        "type": "in-situ stretch",
+        "stretch": 1.0,
+        "load_curve_id": "3",
+        "isochoric": true,
+        "resolved_load_curve": [
+          {
+            "source_text": "0,1.0",
+            "time": 0.0,
+            "value": 1.0,
+            "attributes": {}
+          },
+          {
+            "source_text": "1,1.016",
+            "time": 1.0,
+            "value": 1.016,
+            "attributes": {}
+          },
+          {
+            "source_text": "2,1.016",
+            "time": 2.0,
+            "value": 1.016,
+            "attributes": {}
+          }
+        ]
+      },
+      "fiber_direction": [
+        -0.1012763293512546,
+        -0.5108021004916831,
+        0.8537120821719818
+      ]
+    },
+    "MCL": {
+      "elastic": {
+        "density": 1e-09,
+        "c1": 1.44,
+        "c2": 0.0,
+        "c3": 0.57,
+        "c4": 48.0,
+        "c5": 467.1,
+        "lam_max": 1.063
+      },
+      "prestrain": {
+        "type": "in-situ stretch",
+        "stretch": 1.0,
+        "load_curve_id": "4",
+        "isochoric": true,
+        "resolved_load_curve": [
+          {
+            "source_text": "0,1.0",
+            "time": 0.0,
+            "value": 1.0,
+            "attributes": {}
+          },
+          {
+            "source_text": "1,1.034",
+            "time": 1.0,
+            "value": 1.034,
+            "attributes": {}
+          },
+          {
+            "source_text": "2,1.034",
+            "time": 2.0,
+            "value": 1.034,
+            "attributes": {}
+          }
+        ]
+      },
+      "fiber_direction": [
+        0.2862545445153689,
+        -0.03912610167242837,
+        0.9573544191741205
+      ]
+    },
+    "PTL": {
+      "elastic": {
+        "density": 1e-09,
+        "c1": 2.75,
+        "c2": 0.0,
+        "c3": 0.065,
+        "c4": 115.89,
+        "c5": 777.56,
+        "lam_max": 1.042
+      },
+      "prestrain": {
+        "type": "in-situ stretch",
+        "stretch": 1.0,
+        "load_curve_id": "5",
+        "isochoric": true,
+        "resolved_load_curve": [
+          {
+            "source_text": "0,1.0",
+            "time": 0.0,
+            "value": 1.0,
+            "attributes": {}
+          },
+          {
+            "source_text": "1,1.0",
+            "time": 1.0,
+            "value": 1.0,
+            "attributes": {}
+          },
+          {
+            "source_text": "2,1.0",
+            "time": 2.0,
+            "value": 1.0,
+            "attributes": {}
+          }
+        ]
+      },
+      "fiber_direction": [
+        0.2536841532034668,
+        0.41872016059340167,
+        0.8719620275711987
+      ]
+    },
+    "LCL": {
+      "elastic": {
+        "density": 1e-09,
+        "c1": 1.44,
+        "c2": 0.0,
+        "c3": 0.57,
+        "c4": 48.0,
+        "c5": 467.1,
+        "lam_max": 1.063
+      },
+      "prestrain": {
+        "type": "in-situ stretch",
+        "stretch": 1.0,
+        "load_curve_id": "6",
+        "isochoric": true,
+        "resolved_load_curve": [
+          {
+            "source_text": "0,1.0",
+            "time": 0.0,
+            "value": 1.0,
+            "attributes": {}
+          },
+          {
+            "source_text": "1,1.027",
+            "time": 1.0,
+            "value": 1.027,
+            "attributes": {}
+          },
+          {
+            "source_text": "2,1.027",
+            "time": 2.0,
+            "value": 1.027,
+            "attributes": {}
+          }
+        ]
+      },
+      "fiber_direction": [
+        0.22214778048527417,
+        0.16495808684018612,
+        0.9609574356918686
+      ]
+    }
   }
 }

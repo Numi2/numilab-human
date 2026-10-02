@@ -695,6 +695,138 @@ def _xml_parameter_records(element: ET.Element) -> list[dict[str, Any]]:
     ]
 
 
+def _typed_source_xml(element: ET.Element) -> dict[str, Any]:
+    """Retain a source XML subtree while exposing finite scalar/vector leaves."""
+    text = (element.text or "").strip()
+    record: dict[str, Any] = {
+        "tag": element.tag,
+        "attributes": dict(sorted(element.attrib.items())),
+        "source_text": text,
+        "children": [_typed_source_xml(child) for child in element],
+    }
+    if text and not record["children"]:
+        fields = [field.strip() for field in text.split(",")]
+        try:
+            numeric = [float(field) for field in fields]
+        except ValueError:
+            return record
+        if not all(math.isfinite(value) for value in numeric):
+            raise ValueError(
+                f"Open Knee(s) source {element.tag} contains a non-finite number"
+            )
+        if len(numeric) == 1:
+            record["numeric_value"] = numeric[0]
+        else:
+            record["numeric_vector"] = numeric
+    return record
+
+
+def _source_material_program(
+    element: ET.Element,
+    *,
+    curve_ids: set[str],
+    require_open_knee_tissue_schema: bool,
+) -> dict[str, Any]:
+    def scalar_parameters(parent: ET.Element | None) -> dict[str, float]:
+        if parent is None:
+            return {}
+        result: dict[str, float] = {}
+        for child in parent:
+            if list(child):
+                continue
+            text = (child.text or "").strip()
+            if not text or "," in text:
+                continue
+            try:
+                value = float(text)
+            except ValueError:
+                continue
+            if not math.isfinite(value):
+                raise ValueError(
+                    f"Open Knee(s) source material has non-finite {child.tag}"
+                )
+            result[child.tag] = value
+        return result
+
+    material_type = element.attrib.get("type", "")
+    elastic = element.find("elastic")
+    prestrain_element = element.find("prestrain")
+    fiber = element.find("fiber")
+    fiber_direction: list[float] | None = None
+    if fiber is not None:
+        try:
+            fiber_direction = [
+                float(value.strip()) for value in (fiber.text or "").split(",")
+            ]
+        except ValueError as error:
+            raise ValueError("Open Knee(s) source material fiber vector is invalid") from error
+        if len(fiber_direction) != 3 or not all(
+            math.isfinite(value) for value in fiber_direction
+        ):
+            raise ValueError("Open Knee(s) source material fiber vector is invalid")
+        length = math.sqrt(sum(value * value for value in fiber_direction))
+        if length <= 1.0e-12:
+            raise ValueError("Open Knee(s) source material fiber vector is degenerate")
+
+    prestrain: dict[str, Any] | None = None
+    if prestrain_element is not None:
+        stretch = prestrain_element.find("stretch")
+        if stretch is None:
+            raise ValueError("Open Knee(s) source prestrain has no stretch definition")
+        try:
+            stretch_value = float((stretch.text or "").strip())
+        except ValueError as error:
+            raise ValueError("Open Knee(s) source prestrain stretch is invalid") from error
+        if not math.isfinite(stretch_value) or stretch_value <= 0.0:
+            raise ValueError("Open Knee(s) source prestrain stretch is nonpositive or non-finite")
+        curve_id = stretch.attrib.get("lc")
+        if curve_id is not None and curve_id not in curve_ids:
+            raise ValueError("Open Knee(s) source prestrain references an unknown load curve")
+        prestrain = {
+            "type": prestrain_element.attrib.get("type"),
+            "stretch": stretch_value,
+            "load_curve_id": curve_id,
+            "isochoric": _required_xml_flag(
+                prestrain_element, "isochoric", "Material/material/prestrain"
+            ),
+        }
+
+    outer_parameters = scalar_parameters(element)
+    elastic_parameters = scalar_parameters(elastic)
+    if require_open_knee_tissue_schema and material_type == "uncoupled prestrain elastic":
+        if elastic is None or elastic.attrib.get("type") != "trans iso Mooney-Rivlin":
+            raise ValueError(
+                "Open Knee(s) ligament/tendon material has an unsupported elastic law"
+            )
+        required = {"density", "c1", "c2", "c3", "c4", "c5", "lam_max"}
+        if required - set(elastic_parameters):
+            raise ValueError(
+                "Open Knee(s) ligament/tendon elastic parameters are incomplete"
+            )
+        if "k" not in outer_parameters or fiber_direction is None or prestrain is None:
+            raise ValueError(
+                "Open Knee(s) ligament/tendon bulk, fiber, or prestrain definition is missing"
+            )
+        if prestrain["type"] != "in-situ stretch":
+            raise ValueError(
+                "Open Knee(s) ligament/tendon has an unsupported prestrain type"
+            )
+        length = math.sqrt(sum(value * value for value in fiber_direction))
+        if not 0.99999 <= length <= 1.00001:
+            raise ValueError("Open Knee(s) source fiber direction must be unit length")
+
+    return {
+        "material_type": material_type,
+        "elastic_type": None if elastic is None else elastic.attrib.get("type"),
+        "outer_scalar_parameters": outer_parameters,
+        "elastic_scalar_parameters": elastic_parameters,
+        "fiber_direction_source_text": None if fiber is None else (fiber.text or "").strip(),
+        "fiber_direction": fiber_direction,
+        "prestrain": prestrain,
+        "source_xml_tree": _typed_source_xml(element),
+    }
+
+
 def compile_source_mechanical_description(
     source: Source,
     *,
@@ -721,6 +853,10 @@ def compile_source_mechanical_description(
     deck_root = ET.fromstring(deck_bytes)
     if ET.tostring(deck_root) != ET.tostring(root):
         raise ValueError("Open Knee(s) source program tree differs from the hashed FEBio deck")
+
+    curve_ids = {
+        item.attrib.get("id") for item in root.findall("LoadData/loadcurve")
+    }
 
     sections: list[dict[str, Any]] = []
     unsupported: list[dict[str, str]] = []
@@ -792,10 +928,6 @@ def compile_source_mechanical_description(
     body_ids = [body["material_id"] for body in rigid_bodies]
     if len(body_ids) != len(set(body_ids)):
         raise ValueError("Open Knee(s) source rigid-body IDs are duplicated")
-    curve_ids = {
-        item.attrib.get("id") for item in root.findall("LoadData/loadcurve")
-    }
-
     cylindrical_joints = []
     other_constraints = []
     for item in root.findall("Step/Constraints/constraint"):
@@ -915,6 +1047,22 @@ def compile_source_mechanical_description(
             "source_xml_sha256": _xml_digest(item),
             "native_execution_status": "unsupported_not_executed",
         })
+
+    curves_by_id = {curve["id"]: curve for curve in curves}
+    for source_material, material in zip(
+        root.findall("Material/material"), materials, strict=True
+    ):
+        source_program = _source_material_program(
+            source_material,
+            curve_ids={value for value in curve_ids if value is not None},
+            require_open_knee_tissue_schema=expected_deck_sha256 is not None,
+        )
+        prestrain = source_program["prestrain"]
+        if prestrain is not None and prestrain["load_curve_id"] is not None:
+            prestrain["resolved_load_curve"] = curves_by_id[
+                prestrain["load_curve_id"]
+            ]["numeric_points"]
+        material["source_program"] = source_program
 
     rigid_ties = []
     for item in root.findall("Boundary/rigid"):

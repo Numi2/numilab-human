@@ -3754,7 +3754,10 @@ class ImporterTests(unittest.TestCase):
 <center_of_mass>0,0,0</center_of_mass></material>
 <material id="2" name="R2" type="rigid body"><density>1</density>
 <center_of_mass>1,0,0</center_of_mass></material>
-<material id="3" name="A" type="uncoupled prestrain elastic">
+<material id="3" name="A" type="uncoupled prestrain elastic"><k>100</k>
+<elastic type="trans iso Mooney-Rivlin"><density>1</density><c1>2.5</c1>
+<c2>0</c2><c3>0.2</c3><c4>20</c4><c5>30</c5><lam_max>1.1</lam_max></elastic>
+<prestrain type="in-situ stretch"><stretch lc="9">1.05</stretch><isochoric>1</isochoric></prestrain>
 <fiber type="vector">1,0,0</fiber></material></Material>
 <Boundary><rigid name="A_tie" node_set="A_@_B_TiesNodes" rb="1"/></Boundary>
 <Discrete><discrete_material id="1" type="linear spring"><E>100</E></discrete_material>
@@ -3846,6 +3849,16 @@ class ImporterTests(unittest.TestCase):
         body = mechanics["rigid_graph"]["bodies"][0]
         self.assertEqual(body["center_of_mass"], [0.0, 0.0, 0.0])
         self.assertEqual(body["density"], 1.0)
+        source_material = mechanics["materials"][2]["source_program"]
+        self.assertEqual(source_material["elastic_type"], "trans iso Mooney-Rivlin")
+        self.assertEqual(source_material["elastic_scalar_parameters"]["c3"], 0.2)
+        self.assertEqual(source_material["fiber_direction"], [1.0, 0.0, 0.0])
+        self.assertEqual(source_material["prestrain"]["stretch"], 1.05)
+        self.assertEqual(source_material["prestrain"]["load_curve_id"], "9")
+        self.assertEqual(
+            source_material["prestrain"]["resolved_load_curve"][1]["value"], 1.0
+        )
+        self.assertTrue(source_material["prestrain"]["isochoric"])
         joint = mechanics["rigid_graph"]["cylindrical_joints"][0]
         self.assertEqual((joint["body_a"], joint["body_b"]), (1, 2))
         self.assertEqual(joint["force_penalty"], 10000.0)
