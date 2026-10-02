@@ -23,6 +23,7 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
         "muscle_geometric_volume_candidate": 60,
         "organ_surface_candidates": 378,
         "whole_body_source_overlap_census": 104,
+        "whole_body_overlap_organ_surface_identities": 74,
         "regional_blood_transport": 329,
         "muscle_tendon_surface_identity": 150,
         "skin_shell_surface_identity": 1,
@@ -105,6 +106,7 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
         "overlap_census_is_subset_of_organ_candidates": False,
     }
     assert result["qualification"]["whole_body_source_overlap_census_bound"]
+    assert result["qualification"]["whole_body_overlap_organ_surface_moment_candidates_bound"]
     assert result["qualification"]["organ_overlap_scope_reconciled_with_candidate_identity"]
     assert result["identity_bindings"]["surface_ids_disjoint_from_organ_members"]
     assert result["identity_bindings"]["vessel_members_subset_of_organ_members"]
@@ -164,3 +166,14 @@ def test_whole_body_overlap_census_duplicate_identity_is_rejected(tmp_path: Path
     path.write_bytes(canonical(value) + b"\n")
     with pytest.raises(ImportError, match="whole-body source overlap census member identities are invalid"):
         compile_candidate(whole_body_source_overlap_census=path)
+
+
+def test_overlap_organ_surface_moments_cannot_be_promoted_to_physical_volume(tmp_path: Path) -> None:
+    source = Path("Docs/media/whole-body-overlap-organ-moments-20261002/receipt-v1.json")
+    value = json.loads(source.read_text(encoding="utf-8"))
+    value["members"][0]["physical_volume_m3"] = 1.0
+    path = tmp_path / "overlap-organ-moments.json"
+    path.write_bytes(canonical(value) + b"\n")
+
+    with pytest.raises(ImportError, match="whole-body overlap-only organ moments promoted or summed an owner"):
+        compile_candidate(whole_body_overlap_organ_moments=path)

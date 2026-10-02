@@ -2175,6 +2175,12 @@ def parser() -> argparse.ArgumentParser:
         help="crosswalk every selected whole-body atlas surface to pinned source ontology terms",
     )
     add_whole_body_source_semantics_arguments(source_semantics)
+    from .whole_body_overlap_organ_moments import add_arguments as add_overlap_organ_moments_arguments
+    overlap_organ_moments = commands.add_parser(
+        "whole-body-overlap-organ-moments",
+        help="compute source-frame surface moments for overlap-census organs outside the 18-region mass inventory",
+    )
+    add_overlap_organ_moments_arguments(overlap_organ_moments)
     from .capability_protocol import add_arguments as add_capability_arguments
     capability = commands.add_parser(
         "capability-protocol", help="compile single-subject measured whole-body requirements and evidence bindings",

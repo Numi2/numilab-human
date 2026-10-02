@@ -93,8 +93,10 @@ now binds this census to the distinct 378-member, 18-region organ-mass
 candidate. The inventories share 30 identities; 74 occur only in the overlap
 census and 348 only in the organ-mass candidate. The integration records these
 as separate evidence scopes and keeps physical-volume and mechanical-mass owner
-counts at zero. The census-only identities still lack organ-mass moments in
-that candidate; no subset or physical-ownership claim is inferred.
+counts at zero. The 74 census-only identities are individually source hashed;
+73 have per-surface source-frame moments. FJ3150's two closed components have
+overlapping bounds, so their component moments remain unaggregated. These are
+geometry integrals, not physical-volume or mass owners.
 
 ## Historical requalification snapshot — 2026-09-15
 

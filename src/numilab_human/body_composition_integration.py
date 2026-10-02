@@ -61,6 +61,9 @@ MYOSIM_MASS_OWNER = ROOT / (
 WHOLE_BODY_SOURCE_OVERLAP_CENSUS = ROOT / (
     "Docs/media/whole-body-source-overlap-census-20261002/receipt-v4.json"
 )
+WHOLE_BODY_OVERLAP_ORGAN_MOMENTS = ROOT / (
+    "Docs/media/whole-body-overlap-organ-moments-20261002/receipt-v1.json"
+)
 
 
 def _require(condition: bool, message: str) -> None:
@@ -118,6 +121,7 @@ def _read_profile(path: Path) -> dict[str, Any]:
         "muscle_surface_geometry_audit": 150,
         "organ_surface_candidates": 378,
         "whole_body_source_overlap_census": 104,
+        "whole_body_overlap_organ_surface_identities": 74,
         "regional_blood_transport": 329,
         "muscle_geometric_volume_candidate": 60,
         "muscle_tendon_surface_identity": 150,
@@ -137,7 +141,7 @@ def _read_profile(path: Path) -> dict[str, Any]:
         "blood_mass_transfer_rejected_steps": 1,
     }, "integration profile runtime counts differ")
     _require(value.get("inputs") == [
-        "organ_mass", "whole_body_source_overlap_census", "regional_tissue", "muscle_surfaces", "muscle_geometry_audit", "skin_shell", "skin_native_visual",
+        "organ_mass", "whole_body_source_overlap_census", "whole_body_overlap_organ_moments", "regional_tissue", "muscle_surfaces", "muscle_geometry_audit", "skin_shell", "skin_native_visual",
         "muscle_geometric_volume_candidate",
         "foot_contact_registration", "activation",
         "blood_transport", "tissue_exchange", "blood_mass_transfer", "cardiac_blood",
@@ -192,12 +196,14 @@ def compile_candidate(
     vessel_mass_moments: Path = VESSEL_MASS_MOMENTS,
     vessel_moment_transport: Path = VESSEL_MOMENT_TRANSPORT,
     whole_body_source_overlap_census: Path = WHOLE_BODY_SOURCE_OVERLAP_CENSUS,
+    whole_body_overlap_organ_moments: Path = WHOLE_BODY_OVERLAP_ORGAN_MOMENTS,
 ) -> dict[str, Any]:
     profile = Path(profile)
     profile_document = _read_profile(profile)
     paths = {
         "organ_mass": Path(organ_mass),
         "whole_body_source_overlap_census": Path(whole_body_source_overlap_census),
+        "whole_body_overlap_organ_moments": Path(whole_body_overlap_organ_moments),
         "regional_tissue": Path(regional_tissue),
         "muscle_surfaces": Path(surfaces),
         "muscle_geometry_audit": Path(muscle_geometry_audit),
@@ -227,6 +233,7 @@ def compile_candidate(
     labels = {
         "organ_mass": "organ mass candidate",
         "whole_body_source_overlap_census": "whole-body source overlap census",
+        "whole_body_overlap_organ_moments": "whole-body overlap-only organ surface moments",
         "regional_tissue": "regional tissue candidate",
         "muscle_surfaces": "muscle surface candidate",
         "muscle_geometry_audit": "muscle surface geometry audit",
@@ -302,6 +309,9 @@ def compile_candidate(
     _schema(documents["whole_body_source_overlap_census"],
             "numi.human.whole-body-source-overlap-census.v2",
             labels["whole_body_source_overlap_census"])
+    _schema(documents["whole_body_overlap_organ_moments"],
+            "HumanPack.whole-body-overlap-organ-surface-moments.v1",
+            labels["whole_body_overlap_organ_moments"])
 
     overlap_census = documents["whole_body_source_overlap_census"]
     overlap_scope = overlap_census.get("scope", {})
@@ -535,6 +545,66 @@ def compile_candidate(
         "sets_are_equal": False,
         "overlap_census_is_subset_of_organ_candidates": False,
     }, "whole-body overlap census and organ candidate identity crosswalk changed")
+    overlap_organ_moments = documents["whole_body_overlap_organ_moments"]
+    overlap_moment_source = overlap_organ_moments.get("source", {})
+    overlap_moment_counts = overlap_organ_moments.get("counts", {})
+    overlap_moment_rows = overlap_organ_moments.get("members")
+    _require(overlap_organ_moments.get("status") == "partial" and
+             overlap_moment_source.get("census") == {
+                 "path": _relative(paths["whole_body_source_overlap_census"]),
+                 "sha256": hashes["whole_body_source_overlap_census"],
+             } and
+             overlap_moment_source.get("organ_mass_candidate") == {
+                 "path": _relative(paths["organ_mass"]),
+                 "sha256": hashes["organ_mass"],
+             } and
+             overlap_moment_source.get("semantics") == overlap_census.get("source_semantics") and
+             overlap_moment_counts == {
+                 "overlap_census_member_count": 104,
+                 "organ_mass_inventory_member_count": 378,
+                 "overlap_census_only_organ_member_count": 74,
+                 "computed_single_closed_surface_moment_count": 73,
+                 "unaggregated_multi_component_member_count": 1,
+                 "ontology_priority_class_counts": {
+                     "organ": 11,
+                     "organ_component": 4,
+                     "organ_region": 59,
+                 },
+             } and isinstance(overlap_moment_rows, list) and len(overlap_moment_rows) == 74,
+             "whole-body overlap-only organ moment inventory or source bindings changed")
+    overlap_moment_ids = [row.get("member_id") for row in overlap_moment_rows]
+    _require(all(isinstance(value, str) and value for value in overlap_moment_ids) and
+             len(set(overlap_moment_ids)) == 74 and
+             set(overlap_moment_ids) == overlap_id_set - organ_id_set,
+             "whole-body overlap-only organ moment identities changed")
+    _require(all(row.get("physical_volume_m3") is None and
+                 row.get("density_kg_per_m3") is None and
+                 row.get("mechanical_mass_kg") is None and
+                 row.get("physical_volume_owner") is False and
+                 row.get("mechanical_mass_owner") is False and
+                 row.get("additive_with_other_surface_candidates") is False
+                 for row in overlap_moment_rows),
+             "whole-body overlap-only organ moments promoted or summed an owner")
+    overlap_rows_by_id = {row["source_member_id"]: row for row in overlap_members}
+    _require(all(row.get("source_member_sha256") ==
+                 overlap_rows_by_id[row["member_id"]].get("source_member_sha256")
+                 for row in overlap_moment_rows),
+             "whole-body overlap-only organ moment source member hashes changed")
+    overlap_moment_statuses = {
+        status: sum(1 for row in overlap_moment_rows if row.get("moment_status") == status)
+        for status in ("computed_single_closed_component", "unaggregated_multi_component_member")
+    }
+    _require(overlap_moment_statuses == {
+        "computed_single_closed_component": 73,
+        "unaggregated_multi_component_member": 1,
+    }, "whole-body overlap-only organ moment statuses changed")
+    unaggregated_member = next(row for row in overlap_moment_rows
+                               if row.get("moment_status") == "unaggregated_multi_component_member")
+    _require(unaggregated_member.get("member_id") == "FJ3150" and
+             unaggregated_member.get("source_surface_moments") is None and
+             unaggregated_member.get("component_aabb_pairwise_disjoint") is False and
+             len(unaggregated_member.get("source_component_moments", [])) == 2,
+             "disconnected thymus components were aggregated")
     _all_none(organ_rows, ("mechanical_mass_owner", "physical_volume_owner"), "organ candidate")
     _require(organ.get("totals", {}).get("physical_mass_owner_count") == 0 and
              organ.get("qualification", {}).get("interdomain_disjointness_qualified") is False,
@@ -1044,6 +1114,7 @@ def compile_candidate(
         "muscle_geometric_volume_candidate": len(geometric_volume_owners),
         "organ_surface_candidates": len(organ_id_set),
         "whole_body_source_overlap_census": len(overlap_id_set),
+        "whole_body_overlap_organ_surface_identities": len(overlap_moment_ids),
         "regional_blood_transport": len(set(blood_member_ids)),
         "muscle_tendon_surface_identity": len(surface_ids),
         "skin_shell_surface_identity": 1,
@@ -1073,6 +1144,9 @@ def compile_candidate(
             "organ_member_ids_sha256": _identity_digest(organ_id_set),
             "whole_body_source_overlap_census_member_ids_sha256": _identity_digest(overlap_id_set),
             "whole_body_overlap_census_vs_organ_candidates": overlap_census_vs_organ,
+            "whole_body_overlap_organ_surface_moment_member_ids_sha256": _identity_digest(
+                set(overlap_moment_ids)
+            ),
             "blood_transport_member_ids_sha256": _identity_digest(set(blood_member_ids)),
             "muscle_tendon_surface_ids_sha256": _identity_digest(surface_ids),
             "muscle_surface_geometry_audit_sha256": hashes["muscle_geometry_audit"],
@@ -1265,6 +1339,7 @@ def compile_candidate(
             "native_costal_tissue_whole_body_mass_owner": False,
             "native_regional_exchange_requalification_bound": True,
             "whole_body_source_overlap_census_bound": True,
+            "whole_body_overlap_organ_surface_moment_candidates_bound": True,
             "organ_overlap_scope_reconciled_with_candidate_identity": True,
             "native_regional_exchange_mechanical_blood_mass_owner": False,
             "native_regional_exchange_anatomical_lumen": False,
@@ -1304,6 +1379,8 @@ def compile_candidate(
             "scoped 104-member whole-body source-overlap census. Their identity "
             "crosswalk has 30 shared members, 74 census-only members, and 348 "
             "organ-candidate-only members; the census is not an organ-mass subset. "
+            "Seventy-three census-only organ surfaces have per-surface source-frame "
+            "moments; two disconnected FJ3150 components remain unaggregated. "
             "It also joins regional tissue "
             "mass, the exact-clock CVSim21 aggregate blood mass, regional blood "
             "transport, six-vessel source/world registration, tissue oxygen "
@@ -1384,6 +1461,7 @@ def run(arguments: argparse.Namespace) -> int:
         vessel_mass_moments=arguments.vessel_mass_moments,
         vessel_moment_transport=arguments.vessel_moment_transport,
         whole_body_source_overlap_census=arguments.whole_body_source_overlap_census,
+        whole_body_overlap_organ_moments=arguments.whole_body_overlap_organ_moments,
     )
     output = arguments.output.resolve()
     digest = _immutable_write(output, result)
@@ -1423,6 +1501,8 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--vessel-moment-transport", type=Path, default=VESSEL_MOMENT_TRANSPORT)
     parser.add_argument("--whole-body-source-overlap-census", type=Path,
                         default=WHOLE_BODY_SOURCE_OVERLAP_CENSUS)
+    parser.add_argument("--whole-body-overlap-organ-moments", type=Path,
+                        default=WHOLE_BODY_OVERLAP_ORGAN_MOMENTS)
     parser.add_argument("--output", type=Path, required=True)
     parser.set_defaults(handler=run)
 
