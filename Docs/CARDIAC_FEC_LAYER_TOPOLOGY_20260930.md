@@ -43,3 +43,34 @@ asserted as the published tag. The source comparator is simulation output,
 not a patient measurement. Voltage, ionic state, atrial/AV conduction,
 accepted native electrical steps, electromechanical feedback, and heartbeat
 remain unqualified.
+
+## Face-centroid interpretation — 2 October 2026
+
+The [S4 supplement](media/cardiac-source-activation-20260930/rodero-s4-source.pdf)
+describes the FEC layer as one element thick and limits its apicobasal extent
+to `Z ≤ 0.7`. The earlier exact-face sensitivity required
+all four tetrahedron vertices to satisfy the Z limit. A second discretization
+now selects a ventricular tetrahedron when it owns an exterior triangular
+face whose three vertices have `rho = 0` and whose mean face Z is at or below
+0.7. This gives **35,454** tetrahedra from **35,455** endocardial faces.
+
+The face-centroid field reaches an LV span of **74.8949 ms** and a 10–90%
+interval of **36.8280 ms**. Against the published simulation outputs of
+71.9895 ms and 29.8410 ms, the errors remain **+2.9054 ms** and **+6.9870 ms**.
+Relative to the vertex-ring reconstruction, this discretization reduces those
+errors by only **0.2943 ms** and **0.5015 ms**. Its largest local edge
+travel-time violation is `1.55e-14 s`, and two native CPU runs replayed
+bitwise. This small change does not resolve the timing gap.
+
+The [face-centroid receipt and fields](media/cardiac-fec-face-centroid-20261002/receipt.json)
+are reproduced by the same [auditor](../tools/audit_cardiac_fec_layer_topology.py)
+with:
+
+```sh
+PYTHONPATH=src:. OPENBLAS_NUM_THREADS=1 .venv-mujoco312/bin/python \
+  -m tools.audit_cardiac_fec_layer_topology --face-centroid --execute
+```
+
+This remains a geometrically motivated sensitivity candidate. The exact
+case18 FEC cell tag is still absent, so the existing source reconstruction is
+unchanged and neither candidate is identified as CARP's mask.

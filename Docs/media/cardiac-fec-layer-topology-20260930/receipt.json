@@ -1,5 +1,5 @@
 {
-  "auditor_source_sha256": "55ad99588b5ffc00eabc522ebb141cffa8281b556b76c8f954f024b88e01ab03",
+  "auditor_source_sha256": "7c3aeb6691208d17bec58272fa734b722beaeb21f8582b0168bee43dc1023475",
   "boundary": "Geometric fast-layer sensitivity on the pinned case18 mesh. The source FEC cell tag is absent; neither vertex-ring nor boundary-face mask is asserted to be the published CARP tag. No voltage, ionic state, native accepted electrical step or heartbeat.",
   "boundary_face_arrival_sha256": "6c64ea4ae0279b0968a14b1f52326179aae084b567f8591322ff329898662612",
   "boundary_face_mask_sha256": "73422876778da53155bbae52bfe782bc05130ac7505f439d2d4cf6c673422df8",
@@ -8,6 +8,8 @@
     "boundary_endocardial_faces": 35082,
     "boundary_face_fec_cells": 35081,
     "edge_contact_only_cells": 33837,
+    "face_centroid_endocardial_faces": 35455,
+    "face_centroid_fec_cells": 35454,
     "point_contact_only_cells": 32792,
     "three_or_four_endo_corner_cells_without_boundary_face": 2,
     "ventricular_cells": 1097534,
@@ -28,6 +30,7 @@
   "source_refiner_sha256": "219cb620b652b9b1fcacf9e29cab32b2c9ce8ec39b78eb77af5896db29f9c51c",
   "status": "boundary_face_candidate_measured_source_mismatch_retained",
   "variant": {
+    "fec_mask_sha256": "73422876778da53155bbae52bfe782bc05130ac7505f439d2d4cf6c673422df8",
     "generated_refiner_sha256": "5765a871ba2b62759f4176577cf6d7ce4cd171b9724a54dd5f841b55982edff7",
     "graph_arrival_sha256": "6491df9b469bf6d957869451fdb04ed9fe38c985c2288a059676de4b55d0f916",
     "graph_edges": 1386798,
@@ -41,6 +44,7 @@
       "span_ms": 75.2904694795797
     },
     "native_replay_bitwise": true,
+    "refined_arrival_sha256": "6c64ea4ae0279b0968a14b1f52326179aae084b567f8591322ff329898662612",
     "refiner_binary_sha256": "ade6f392734a3fc908a696316c624e58bc5f636458eed33cfb762890ea534794",
     "refiner_stdout_sha256": "b9155da38bd5c4947f34d3afd345a48e01dde8d53d68c5661102c99478ca91f3",
     "rv": {

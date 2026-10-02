@@ -1,0 +1,76 @@
+{
+  "artifact_sha256": {
+    "fec-mask.u8le": "842a59212f018b1b4ebba8faca1ffc740f19cee2246d20805d4a5825c9f847ec",
+    "graph-arrival.f64le": "df2cfb8546fe5c47c67c787df8e329577f41e30aaf4b6528221030cd3ea6adfa",
+    "refined-arrival.f64le": "396017f9d05ca51fda185d3359a983de2d289675eacebdee5de1e731ebe5ec6b",
+    "ventricular-dof-regions.u32le": "5846478a5b9ecdc406bd821866e5ec4ee8bf2b7e26ad4496f6a654b0d5151603",
+    "ventricular-source-nodes.u32le": "dba00562eb2cef9da107d41aec26e7bd601557be7585c666cc3ca6ceafae07fe"
+  },
+  "auditor_source_sha256": "7c3aeb6691208d17bec58272fa734b722beaeb21f8582b0168bee43dc1023475",
+  "boundary": "A face-centroid discretization of the published one-element endocardial-layer description. The exact case18 FEC tag and CARP reaction-eikonal output are absent; this remains a sensitivity candidate and is not substituted for the published source model. No voltage, ionic state or heartbeat.",
+  "case18_source_simulation": {
+    "comparison_is_simulation_output_not_measurement": true,
+    "lv_10_to_90_ms": 29.841,
+    "lv_span_ms": 71.9895
+  },
+  "difference_from_source": {
+    "delta_from_vertex_ring_error_ms": {
+      "lv_10_to_90": -0.501479643981618,
+      "lv_span": -0.2942955222963235
+    },
+    "lv_10_to_90_ms": 6.987018217348933,
+    "lv_span_ms": 2.905428305754995
+  },
+  "fast_layer_tetrahedra": 35454,
+  "generated_refiner_sha256": "5765a871ba2b62759f4176577cf6d7ce4cd171b9724a54dd5f841b55982edff7",
+  "graph_edges": 1386798,
+  "heartbeat_qualified": false,
+  "lv": {
+    "maximum_ms": 74.894928305755,
+    "minimum_ms": 0.0,
+    "p10_ms": 3.6806739089323863,
+    "p10_to_p90_ms": 36.828018217348934,
+    "p90_ms": 40.50869212628132,
+    "source_node_count": 139642,
+    "span_ms": 74.894928305755
+  },
+  "maximum_local_edge_travel_time_violation_seconds": 1.5501922662197742e-14,
+  "measurements": {
+    "boundary_endocardial_faces": 35082,
+    "boundary_face_fec_cells": 35081,
+    "edge_contact_only_cells": 33837,
+    "face_centroid_endocardial_faces": 35455,
+    "face_centroid_fec_cells": 35454,
+    "point_contact_only_cells": 32792,
+    "three_or_four_endo_corner_cells_without_boundary_face": 2,
+    "ventricular_cells": 1097534,
+    "ventricular_exterior_faces": 142374,
+    "ventricular_nonmanifold_faces": 0,
+    "ventricular_unique_faces": 2266255,
+    "vertex_only_fec_cells": 66631,
+    "vertex_ring_fec_cells": 101712
+  },
+  "method": "Select a ventricular tetrahedron if it owns at least one exterior triangular face whose three source vertices have rho=0 and whose mean UVC Z is <=0.7.",
+  "native_accepted_electrical_steps": 0,
+  "native_replay_bitwise": true,
+  "original_refiner_source_sha256": "219cb620b652b9b1fcacf9e29cab32b2c9ce8ec39b78eb77af5896db29f9c51c",
+  "prior_vertex_ring_summary_sha256": "4bd6b06afbd430900b75b0e9ca952d0c018690bc0d441f8e65b953901519ea2f",
+  "refiner_binary_sha256": "ade6f392734a3fc908a696316c624e58bc5f636458eed33cfb762890ea534794",
+  "rv": {
+    "maximum_ms": 72.59538651093165,
+    "minimum_ms": 0.0,
+    "p10_ms": 3.921949188944734,
+    "p10_to_p90_ms": 46.92658334556641,
+    "p90_ms": 50.84853253451114,
+    "source_node_count": 81066,
+    "span_ms": 72.59538651093165
+  },
+  "schema": "numi.human.cardiac-fec-face-centroid-candidate.v1",
+  "source_config_sha256": "513bcee4194dcbb793dd4bc5df284ee5db58110f0a66b4b4bf4f427500a363e9",
+  "source_manifest_sha256": "e8cb0391623577efc4eac04e5710cf7c9a4757614e09d936f5af3889c37d56f1",
+  "source_model_reproduced": false,
+  "source_output_sha256": "3f59ea2e6388aa370efe9046ecd5b4fd8bee87037aa904f45a80356f3932edcd",
+  "source_supplement_sha256": "5699feb01b7f91f93fd75e26a9a5043ca6bfb5da1803f010c45c71270992ebc6",
+  "status": "measured_sensitivity_candidate_source_mismatch_retained",
+  "stimulus_dofs": 3927
+}
