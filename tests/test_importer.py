@@ -14,6 +14,7 @@ from numilab_human.open_knee import compile_payload as compile_open_knee_payload
 from numilab_human.open_knee import _anatomical_femoral_basis
 from numilab_human.open_knee import _orientation_preserving_connectivity
 from numilab_human.open_knee import _parse_febio_fiber_directions
+from numilab_human.open_knee import compile_source_mechanical_description
 from numilab_human.open_knee import parse_source as parse_open_knee_source
 
 from numilab_human.model import (
@@ -3746,14 +3747,50 @@ class ImporterTests(unittest.TestCase):
 <slave surface="B_All_Faces"/></SurfacePair>
 </Geometry></febio_spec>"""
         febio = """<?xml version="1.0"?>
-<febio_spec><Material><material name="A" type="uncoupled prestrain elastic">
-<fiber type="vector">1,0,0</fiber></material></Material></febio_spec>"""
+<febio_spec version="2.5"><Module type="solid"/>
+<Material>
+<material id="1" name="R1" type="rigid body"><density>1</density>
+<center_of_mass>0,0,0</center_of_mass></material>
+<material id="2" name="R2" type="rigid body"><density>1</density>
+<center_of_mass>1,0,0</center_of_mass></material>
+<material id="3" name="A" type="uncoupled prestrain elastic">
+<fiber type="vector">1,0,0</fiber></material></Material>
+<Boundary><rigid name="A_tie" node_set="A_@_B_TiesNodes" rb="1"/></Boundary>
+<Discrete><discrete_material id="1" type="linear spring"><E>100</E></discrete_material>
+<discrete discrete_set="spring_set" dmat="1"/></Discrete>
+<LoadData><loadcurve id="9" type="linear"><point>0,0</point>
+<point>1,1</point></loadcurve></LoadData>
+<Step><Control><analysis type="static"/></Control>
+<Boundary><rigid_body mat="2"><prescribed bc="x" lc="9">0</prescribed>
+</rigid_body></Boundary>
+<Contact><contact type="sliding-elastic" surface_pair="A_To_B">
+<penalty>0.1</penalty></contact></Contact>
+<Constraints>
+<constraint type="prestrain"><update>1</update></constraint>
+<constraint type="rigid cylindrical joint" name="A_B">
+<force_penalty>10000</force_penalty><moment_penalty>3000000</moment_penalty>
+<body_a>1</body_a><body_b>2</body_b><joint_origin>0,0,0</joint_origin>
+<joint_axis>0,0,1</joint_axis><prescribed_translation>0</prescribed_translation>
+<translation>0</translation><prescribed_rotation>1</prescribed_rotation>
+<rotation lc="9">-1.57</rotation><minaug>0</minaug><maxaug>0</maxaug>
+</constraint>
+</Constraints></Step></febio_spec>"""
         with tempfile.TemporaryDirectory() as temporary:
             directory = Path(temporary)
             (directory / "ModelProperties.xml").write_text(properties, encoding="utf-8")
             (directory / "Geometry.feb").write_text(geometry, encoding="utf-8")
             (directory / "FeBio_custom.feb").write_text(febio, encoding="utf-8")
             source = parse_open_knee_source(directory, enforce_exact=False)
+            mechanics = compile_source_mechanical_description(
+                source, source_deck=directory / "FeBio_custom.feb"
+            )
+            source.mechanical_program.find(
+                "Step/Constraints/constraint[@name='A_B']/joint_axis"
+            ).text = "1,0,0"
+            with self.assertRaisesRegex(ValueError, "differs from the hashed FEBio deck"):
+                compile_source_mechanical_description(
+                    source, source_deck=directory / "FeBio_custom.feb"
+                )
         self.assertEqual(set(source.regions), {"A", "B"})
         self.assertEqual(source.regions["A"].element_type, "tet4")
         self.assertEqual(source.regions["A"].elements, [(1, 2, 3, 4)])
@@ -3765,6 +3802,24 @@ class ImporterTests(unittest.TestCase):
         )
         self.assertEqual(source.materials["A"]["c1"], 2.54)
         self.assertEqual(source.fiber_directions["A"], (1.0, 0.0, 0.0))
+        self.assertEqual(mechanics["febio_spec_version"], "2.5")
+        self.assertEqual(mechanics["source_equivalence_admission"],
+                         "rejected_unsupported_source_mechanics")
+        self.assertEqual([body["material_id"] for body in
+                          mechanics["rigid_graph"]["bodies"]], [1, 2])
+        joint = mechanics["rigid_graph"]["cylindrical_joints"][0]
+        self.assertEqual((joint["body_a"], joint["body_b"]), (1, 2))
+        self.assertEqual(joint["rotation"]["attributes"], {"lc": "9"})
+        self.assertEqual(mechanics["contacts"][0]["parameters"][0], {
+            "name": "penalty", "source_text": "0.1", "attributes": {},
+        })
+        self.assertEqual(mechanics["load_curves"][0]["points"][1]["source_text"],
+                         "1,1")
+        self.assertTrue(any(section["name"] == "Step" and
+                            section["native_execution_status"] ==
+                            "unsupported_not_executed"
+                            for section in mechanics["source_sections"]))
+        self.assertTrue(mechanics["unsupported_source_sections"])
 
     def test_open_knee_compiler_rejects_unknown_side_before_source_work(self) -> None:
         with self.assertRaisesRegex(ValueError, "side must be left or right"):

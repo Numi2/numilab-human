@@ -36,6 +36,13 @@ EXPECTED_HASHES = {
     "FeBio_custom.feb": "00b6efb53ad7e7330296cbb9569d358d48ed60819e22732e6149db6fb98a158a",
     "license.txt": "d72918838b4adf30979d2a26c23837f0ca05185ba799a3a4fe1fe1b4c05b20b8",
 }
+ARCHIVED_REFERENCE_SOLVER_VERSION = "2.9.1"
+ARCHIVED_REFERENCE_LOG_SHA256 = (
+    "d47631c09ce7fc93154c7d6c84caa299aab03709abe9ab7d2a41a60a1b78e426"
+)
+ARCHIVED_REFERENCE_GEOMETRY_SHA256 = (
+    "4155db1d0d7b87ffb2c668102d2495870e4461a539b18e6708f1f4817b5601bf"
+)
 
 EXPECTED_REGIONS = {
     "QAT": (14963, "tet4", 69410),
@@ -374,6 +381,327 @@ def parse_source(directory: Path, *, enforce_exact: bool = True) -> Source:
         regions, node_sets, surfaces, surface_pairs, landmarks, materials,
         fiber_directions, ET.parse(directory / "FeBio_custom.feb").getroot(),
     )
+
+
+_SOURCE_SECTION_REASONS = {
+    "Module": "the NHKNEE1 runtime does not execute FEBio module or solver settings",
+    "Material": "selected scalar fields are copied to the reduced hybrid, not the complete FEBio material laws",
+    "Geometry": "the hybrid registers geometry into MyoSim frames instead of executing this source-coordinate problem",
+    "MeshData": "source element-wise material frames are retained by the deck but not executed by NHKNEE1",
+    "Boundary": "source rigid ties are reduced to hybrid attachment ownership rather than the source rigid-body graph",
+    "Discrete": "source discrete springs and discrete ties are not executed by NHKNEE1",
+    "LoadData": "source load curves and prestrain continuation are not executed by NHKNEE1",
+    "Step": "source prescribed coordinates, contact enforcement, constraints and step controls are not executed by NHKNEE1",
+    "Output": "source output requests are retained as provenance but have no native mechanics execution",
+}
+_EXPECTED_SOURCE_PROGRAM_COUNTS = {
+    "materials": 21,
+    "rigid_bodies": 9,
+    "rigid_ties": 18,
+    "cylindrical_joints": 6,
+    "other_constraints": 2,
+    "prescribed_body_boundaries": 2,
+    "contacts": 18,
+    "load_curves": 9,
+}
+
+
+def _xml_digest(element: ET.Element) -> str:
+    return hashlib.sha256(ET.tostring(element, encoding="utf-8")).hexdigest()
+
+
+def _required_xml_text(element: ET.Element, tag: str, path: str) -> str:
+    child = element.find(tag)
+    if child is None or child.text is None or not child.text.strip():
+        raise ValueError(f"Open Knee(s) source mechanics is missing {path}/{tag}")
+    return child.text.strip()
+
+
+def _xml_parameter_records(element: ET.Element) -> list[dict[str, Any]]:
+    return [
+        {
+            "name": child.tag,
+            "source_text": (child.text or "").strip(),
+            "attributes": dict(sorted(child.attrib.items())),
+        }
+        for child in element
+    ]
+
+
+def compile_source_mechanical_description(
+    source: Source,
+    *,
+    source_deck: Path,
+    expected_deck_sha256: str | None = None,
+    source_geometry_archive_sha256: str | None = None,
+    reference_solver_version: str | None = None,
+    reference_log_sha256: str | None = None,
+) -> dict[str, Any]:
+    """Compile an auditable inventory of the complete source mechanics program.
+
+    The result deliberately records which constructs the current NHKNEE1 path
+    rejects. Retaining source XML or selected scalar parameters is not execution.
+    Geometry remains in the source coordinate system in this descriptor.
+    """
+    root = source.mechanical_program
+    if root is None or root.tag != "febio_spec":
+        raise ValueError("Open Knee(s) source mechanics requires a febio_spec root")
+    deck_bytes = source_deck.read_bytes()
+    deck_sha256 = hashlib.sha256(deck_bytes).hexdigest()
+    if expected_deck_sha256 is not None and deck_sha256 != expected_deck_sha256:
+        raise ValueError("Open Knee(s) FEBio mechanical program identity drifted")
+    deck_root = ET.fromstring(deck_bytes)
+    if ET.tostring(deck_root) != ET.tostring(root):
+        raise ValueError("Open Knee(s) source program tree differs from the hashed FEBio deck")
+
+    sections: list[dict[str, Any]] = []
+    unsupported: list[dict[str, str]] = []
+    for section in root:
+        reason = _SOURCE_SECTION_REASONS.get(
+            section.tag,
+            "source section has no exact NHKNEE1 implementation and is rejected",
+        )
+        status = (
+            "nonmechanical_provenance_only"
+            if section.tag == "Output"
+            else "unsupported_not_executed"
+        )
+        tag_counts: dict[str, int] = {}
+        type_counts: dict[str, int] = {}
+        for item in section.iter():
+            tag_counts[item.tag] = tag_counts.get(item.tag, 0) + 1
+            item_type = item.attrib.get("type")
+            if item_type is not None:
+                key = f"{item.tag}:{item_type}"
+                type_counts[key] = type_counts.get(key, 0) + 1
+        sections.append({
+            "name": section.tag,
+            "attributes": dict(sorted(section.attrib.items())),
+            "element_count_including_section": sum(tag_counts.values()),
+            "tag_counts": dict(sorted(tag_counts.items())),
+            "typed_construct_counts": dict(sorted(type_counts.items())),
+            "source_subtree_sha256": _xml_digest(section),
+            "native_execution_status": status,
+            "reason": reason,
+        })
+        if status == "unsupported_not_executed":
+            unsupported.append({
+                "source_path": section.tag,
+                "status": status,
+                "reason": reason,
+            })
+
+    materials = []
+    for item in root.findall("Material/material"):
+        materials.append({
+            "id": item.attrib.get("id"),
+            "name": item.attrib.get("name"),
+            "type": item.attrib.get("type"),
+            "source_xml_sha256": _xml_digest(item),
+            "source_xml": ET.tostring(item, encoding="unicode"),
+            "native_execution_status": "unsupported_not_executed",
+        })
+
+    rigid_bodies = []
+    for item in root.findall("Material/material"):
+        if item.attrib.get("type") != "rigid body":
+            continue
+        rigid_bodies.append({
+            "material_id": int(item.attrib["id"]),
+            "name": item.attrib.get("name"),
+            "center_of_mass_source_text": _required_xml_text(
+                item, "center_of_mass", "Material/material"
+            ),
+            "density_source_text": _required_xml_text(
+                item, "density", "Material/material"
+            ),
+            "source_xml_sha256": _xml_digest(item),
+        })
+    body_ids = [body["material_id"] for body in rigid_bodies]
+    if len(body_ids) != len(set(body_ids)):
+        raise ValueError("Open Knee(s) source rigid-body IDs are duplicated")
+    curve_ids = {
+        item.attrib.get("id") for item in root.findall("LoadData/loadcurve")
+    }
+
+    cylindrical_joints = []
+    other_constraints = []
+    for item in root.findall("Step/Constraints/constraint"):
+        kind = item.attrib.get("type", "")
+        record: dict[str, Any] = {
+            "name": item.attrib.get("name"),
+            "type": kind,
+            "source_xml_sha256": _xml_digest(item),
+            "source_xml": ET.tostring(item, encoding="unicode"),
+            "native_execution_status": "unsupported_not_executed",
+        }
+        if kind == "rigid cylindrical joint":
+            record.update({
+                "body_a": int(_required_xml_text(item, "body_a", "Step/Constraints/constraint")),
+                "body_b": int(_required_xml_text(item, "body_b", "Step/Constraints/constraint")),
+                "force_penalty_source_text": _required_xml_text(item, "force_penalty", "Step/Constraints/constraint"),
+                "moment_penalty_source_text": _required_xml_text(item, "moment_penalty", "Step/Constraints/constraint"),
+                "joint_origin_source_text": _required_xml_text(item, "joint_origin", "Step/Constraints/constraint"),
+                "joint_axis_source_text": _required_xml_text(item, "joint_axis", "Step/Constraints/constraint"),
+                "prescribed_translation_source_text": _required_xml_text(item, "prescribed_translation", "Step/Constraints/constraint"),
+                "translation": {
+                    "source_text": _required_xml_text(item, "translation", "Step/Constraints/constraint"),
+                    "attributes": dict(sorted(item.find("translation").attrib.items())),
+                },
+                "prescribed_rotation_source_text": _required_xml_text(item, "prescribed_rotation", "Step/Constraints/constraint"),
+                "rotation": {
+                    "source_text": _required_xml_text(item, "rotation", "Step/Constraints/constraint"),
+                    "attributes": dict(sorted(item.find("rotation").attrib.items())),
+                },
+                "force": None if item.find("force") is None else {
+                    "source_text": (item.findtext("force") or "").strip(),
+                    "attributes": dict(sorted(item.find("force").attrib.items())),
+                },
+                "moment": None if item.find("moment") is None else {
+                    "source_text": (item.findtext("moment") or "").strip(),
+                    "attributes": dict(sorted(item.find("moment").attrib.items())),
+                },
+                "minaug_source_text": _required_xml_text(item, "minaug", "Step/Constraints/constraint"),
+                "maxaug_source_text": _required_xml_text(item, "maxaug", "Step/Constraints/constraint"),
+            })
+            if record["body_a"] not in body_ids or record["body_b"] not in body_ids:
+                raise ValueError("Open Knee(s) cylindrical joint references an unknown rigid body")
+            for coordinate in (record["translation"], record["rotation"]):
+                curve_id = coordinate["attributes"].get("lc")
+                if curve_id is not None and curve_id not in curve_ids:
+                    raise ValueError("Open Knee(s) cylindrical joint references an unknown load curve")
+            cylindrical_joints.append(record)
+        else:
+            other_constraints.append(record)
+
+    contacts = []
+    for item in root.findall("Step/Contact/contact"):
+        pair_name = item.attrib.get("surface_pair")
+        contacts.append({
+            "type": item.attrib.get("type"),
+            "surface_pair": item.attrib.get("surface_pair"),
+            "parameters": _xml_parameter_records(item),
+            "source_xml_sha256": _xml_digest(item),
+            "native_execution_status": "unsupported_not_executed",
+        })
+
+    prescribed_body_boundaries = []
+    for item in root.findall("Step/Boundary/rigid_body"):
+        material_id = int(item.attrib["mat"])
+        if material_id not in body_ids:
+            raise ValueError("Open Knee(s) prescribed boundary references an unknown rigid body")
+        for coordinate in item.findall("prescribed"):
+            curve_id = coordinate.attrib.get("lc")
+            if curve_id is not None and curve_id not in curve_ids:
+                raise ValueError("Open Knee(s) prescribed boundary references an unknown load curve")
+        prescribed_body_boundaries.append({
+            "material_id": material_id,
+            "coordinates": _xml_parameter_records(item),
+            "source_xml_sha256": _xml_digest(item),
+            "native_execution_status": "unsupported_not_executed",
+        })
+
+    curves = []
+    for item in root.findall("LoadData/loadcurve"):
+        curves.append({
+            "id": item.attrib.get("id"),
+            "name": item.attrib.get("name"),
+            "type": item.attrib.get("type"),
+            "points": [
+                {"source_text": (point.text or "").strip(),
+                 "attributes": dict(sorted(point.attrib.items()))}
+                for point in item.findall("point")
+            ],
+            "source_xml_sha256": _xml_digest(item),
+            "native_execution_status": "unsupported_not_executed",
+        })
+
+    rigid_ties = []
+    for item in root.findall("Boundary/rigid"):
+        node_set = item.attrib.get("node_set")
+        rigid_body = item.attrib.get("rb")
+        if not node_set or rigid_body is None or int(rigid_body) not in body_ids:
+            raise ValueError("Open Knee(s) source rigid tie has an invalid source reference")
+        rigid_ties.append({
+            "attributes": dict(sorted(item.attrib.items())),
+            "source_xml_sha256": _xml_digest(item),
+            "node_set_resolution": "not_checked_against_the_archived_Geometry_custom_file",
+            "native_execution_status": "reduced_attachment_only",
+        })
+    discrete_materials = [
+        {"id": item.attrib.get("id"), "type": item.attrib.get("type"),
+         "parameters": _xml_parameter_records(item),
+         "source_xml_sha256": _xml_digest(item),
+         "native_execution_status": "unsupported_not_executed"}
+        for item in root.findall("Discrete/discrete_material")
+    ]
+    discrete_interactions = [
+        {"attributes": dict(sorted(item.attrib.items())),
+         "source_xml_sha256": _xml_digest(item),
+         "native_execution_status": "unsupported_not_executed"}
+        for item in root.findall("Discrete/discrete")
+    ]
+    step_control = root.find("Step/Control")
+    if step_control is None:
+        raise ValueError("Open Knee(s) source Step has no Control program")
+    if not sections:
+        raise ValueError("Open Knee(s) source mechanical program has no sections")
+    if expected_deck_sha256 is not None:
+        observed_counts = {
+            "materials": len(materials),
+            "rigid_bodies": len(rigid_bodies),
+            "rigid_ties": len(rigid_ties),
+            "cylindrical_joints": len(cylindrical_joints),
+            "other_constraints": len(other_constraints),
+            "prescribed_body_boundaries": len(prescribed_body_boundaries),
+            "contacts": len(contacts),
+            "load_curves": len(curves),
+        }
+        if observed_counts != _EXPECTED_SOURCE_PROGRAM_COUNTS:
+            raise ValueError(
+                "Open Knee(s) pinned source mechanical construct counts drifted: "
+                f"{observed_counts}"
+            )
+    return {
+        "schema": "numi.human.open-knee-source-mechanics.v1",
+        "source_file": source_deck.name,
+        "source_file_bytes": len(deck_bytes),
+        "source_file_sha256": deck_sha256,
+        "febio_spec_version": root.attrib.get("version"),
+        "reference_solver_version_from_archived_log": reference_solver_version,
+        "reference_log_sha256": reference_log_sha256,
+        "source_geometry_archive_sha256": source_geometry_archive_sha256,
+        "source_geometry_reference": (
+            None if root.find("Geometry") is None else
+            dict(sorted(root.find("Geometry").attrib.items()))
+        ),
+        "contact_surface_pair_resolution": (
+            "not_checked_against_the_archived_Geometry_custom_file"
+        ),
+        "module": dict(root.find("Module").attrib) if root.find("Module") is not None else None,
+        "coordinate_frame": "original FEBio source coordinates; no anatomical registration or scale applied",
+        "source_equivalence_admission": "rejected_unsupported_source_mechanics",
+        "source_sections": sections,
+        "rigid_graph": {
+            "bodies": rigid_bodies,
+            "rigid_ties": rigid_ties,
+            "cylindrical_joints": cylindrical_joints,
+            "other_constraints": other_constraints,
+            "prescribed_body_boundaries": prescribed_body_boundaries,
+        },
+        "materials": materials,
+        "discrete_materials": discrete_materials,
+        "discrete_interactions": discrete_interactions,
+        "contacts": contacts,
+        "load_curves": curves,
+        "step_control": {
+            "step_name": root.find("Step").attrib.get("name"),
+            "parameters": _xml_parameter_records(step_control),
+            "source_xml_sha256": _xml_digest(step_control),
+            "native_execution_status": "unsupported_not_executed",
+        },
+        "unsupported_source_sections": unsupported,
+    }
 
 
 def _unit(vector: Any, np: Any) -> Any:
@@ -1152,6 +1480,14 @@ def compile_payload(
             "subject": {"side": "left", "sex": "female", "age_years": 25,
                         "height_m": 1.73, "mass_kg": 68.0, "bmi": 22.8},
         },
+        "source_mechanical_program": compile_source_mechanical_description(
+            source,
+            source_deck=open_knee / "FeBio_custom.feb",
+            expected_deck_sha256=EXPECTED_HASHES["FeBio_custom.feb"],
+            source_geometry_archive_sha256=ARCHIVED_REFERENCE_GEOMETRY_SHA256,
+            reference_solver_version=ARCHIVED_REFERENCE_SOLVER_VERSION,
+            reference_log_sha256=ARCHIVED_REFERENCE_LOG_SHA256,
+        ),
         "registration": {
             "method": (
                 "FMO_to_live_left_knee_origin_Xf_to_flexion_axis_Zf_to_proximal_axis_uniform_condylar_width_scale"

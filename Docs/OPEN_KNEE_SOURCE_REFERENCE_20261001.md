@@ -17,6 +17,27 @@ The program includes nested materials and prestrain, per-element meniscus
 fibres, rigid-body definitions and ties, discrete springs, contact enforcement,
 load curves, solver controls, and requested outputs.
 
+The NHKNEE1 manifest now also emits a typed `source_mechanical_program`
+inventory. Its checked record binds the 8,666,471-byte deck, archived FEBio
+2.9.1 log, and DOI `Geometry_custom.feb` identity, all in the original source
+coordinates. It lists the 21 material records, nine rigid bodies, 18 rigid ties,
+six cylindrical joints, two other constraints, two prescribed-body boundaries,
+18 sliding contacts, nine load curves, discrete interactions, and complete step
+control values. Source material XML and every top-level FEBio section are hashed
+and retained in the inventory. The current runtime admission remains explicitly
+`rejected_unsupported_source_mechanics`; preserving this description does not
+execute it. The cross-file contact-pair and rigid-tie references are explicitly
+left unchecked against the archived geometry rather than resolved using the
+different registered `Geometry.feb`.
+
+The source inventory [receipt](media/open-knee-source-program-20261002/receipt.json)
+and full [machine-readable record](media/open-knee-source-program-20261002/source-mechanics.json)
+are retained.
+The direct inventory compiler and its focused tests passed. Rebuilding the
+registered NHKNEE1 payload manifest was not possible in this worktree because
+the pinned `myo_sim` Python module is unavailable; no new registered payload is
+claimed.
+
 This is a source-program compiler and dependency audit. Matter lowering is
 explicitly unsupported, all physical qualification flags are false, and the
 original FEBio 2.9.1 solver has **not been reproduced**. Public comparison builds have now executed and their failures are retained separately. The recovered original run remains archived evidence. The command cannot promote its output to a

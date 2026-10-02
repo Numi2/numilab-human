@@ -1,0 +1,56 @@
+{
+  "status": "passed_source_inventory_compilation_not_native_admission",
+  "scope": "typed inventory of the pinned FEBio source program; no source mechanics are executed by the NHKNEE1 hybrid",
+  "human_worktree_base_revision": "86a53c8",
+  "matter_operator_revision": "7dceb7d53dea0ee6fe6f8a484d993af1b1abb6aa",
+  "source_sha256": {
+    "src/numilab_human/open_knee.py": "b871ad76aa92a0ae796824656407bd7f35122db4d280023ab9f3272fd115d1e0",
+    "tests/test_importer.py": "1b4cc65bdf7a2548ef72cb17fd4b72b8ee769250d734a90af76d3be9f95227eb",
+    "source-mechanics.json": "660b700a9a76d7b2a7d6b764ed3051388eea88578a4925b0a0b3d46e51da9447"
+  },
+  "reference_inputs": {
+    "FeBio_custom.feb": {
+      "sha256": "00b6efb53ad7e7330296cbb9569d358d48ed60819e22732e6149db6fb98a158a",
+      "bytes": 8666471
+    },
+    "Geometry_custom.feb": {
+      "sha256": "4155db1d0d7b87ffb2c668102d2495870e4461a539b18e6708f1f4817b5601bf",
+      "bytes": 119032115
+    },
+    "FeBio_custom.log": {
+      "sha256": "d47631c09ce7fc93154c7d6c84caa299aab03709abe9ab7d2a41a60a1b78e426",
+      "bytes": 1472687,
+      "reported_solver_version": "2.9.1",
+      "original_binary_identity": "not_supplied_in_archive"
+    }
+  },
+  "compiled_counts": {
+    "material_records": 21,
+    "rigid_bodies": 9,
+    "rigid_ties": 18,
+    "cylindrical_joints": 6,
+    "other_constraints": 2,
+    "prescribed_body_boundaries": 2,
+    "sliding_contacts": 18,
+    "load_curves": 9
+  },
+  "source_equivalence_admission": "rejected_unsupported_source_mechanics",
+  "not_qualified": [
+    "original FEBio 2.9.1 execution",
+    "archived-geometry cross-reference resolution in this compiler",
+    "NHKNEE1 payload manifest rebuild because the pinned myo_sim module is unavailable",
+    "source rigid graph runtime assembly",
+    "source contact and prestrain execution",
+    "assembled tissue equilibrium or whole-body integration"
+  ],
+  "validation": {
+    "tests": [
+      "test_open_knee_parser_preserves_named_topology_and_contact",
+      "test_open_knee_exact_fiber_directions_are_source_authored_and_unit"
+    ],
+    "result": "passed",
+    "python_compileall": "passed",
+    "git_diff_check": "passed"
+  },
+  "inventory": "source-mechanics.json"
+}
