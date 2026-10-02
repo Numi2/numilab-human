@@ -457,11 +457,11 @@ def command(arguments: argparse.Namespace) -> int:
     _write_immutable(arguments.output, result)
     print(json.dumps({
         "status": result["status"],
-            "source_surface_count": result["source_surface_count"],
-            "unique_source_member_count": result["unique_source_member_count"],
-            "bodyparts3d_member_id_missing_surface_count": result[
-                "bodyparts3d_member_id_missing_surface_count"
-            ],
+        "source_surface_count": result["source_surface_count"],
+        "unique_source_member_count": result["unique_source_member_count"],
+        "bodyparts3d_member_id_missing_surface_count": result[
+            "bodyparts3d_member_id_missing_surface_count"
+        ],
         "layer_counts": result["layer_counts"],
         "output": str(arguments.output.resolve()),
     }, sort_keys=True), flush=True)

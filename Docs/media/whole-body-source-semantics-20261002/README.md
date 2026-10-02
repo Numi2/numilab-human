@@ -34,9 +34,9 @@ PYTHONPATH=src .venv-mujoco312/bin/python -m numilab_human.cli \
 ```
 
 The deterministic gzip receipt is `receipt.json.gz` (compressed SHA-256
-`9f0f86241b689614cecdba6eb9fb6ae596dfa8d7c02d921ded0da5af11a9a6ff`); its
+`b3282a2341791c9edca182a0e324bacd16b980a52d409e9e1b22b60f759bca6d`); its
 uncompressed JSON SHA-256 is
-`7579499ec9385db3b4c9b70d6425f86ae39077e47656d1ea89f7ef1c6a967c29`.
+`aa51a4a536e1d0d0bdb7f738d6f5d586ad615d33996722e8982890f57a65a226`.
 
 This is a source-identity and taxonomy crosswalk. It does not establish
 clinical anatomy, resolve tissue boundaries or component ownership, construct
