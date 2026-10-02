@@ -12,6 +12,7 @@ from numilab_human.muscle_surface_volume_disjointness import (
 
 
 TETRA_FACES = [[0, 2, 1], [0, 1, 3], [1, 2, 3], [2, 0, 3]]
+REVERSED_TETRA_FACES = [[a, c, b] for a, b, c in TETRA_FACES]
 
 
 def _mesh(vertices):
@@ -19,15 +20,16 @@ def _mesh(vertices):
     return {"vertices": scaled, "records": _records(scaled, TETRA_FACES)}
 
 
-def _member_mesh(shells):
+def _member_mesh(shells, shell_faces=None):
     vertices = []
     faces = []
-    for shell in shells:
+    shell_faces = shell_faces or [TETRA_FACES] * len(shells)
+    for shell, local_faces in zip(shells, shell_faces, strict=True):
         offset = len(vertices)
         vertices.extend(
             tuple(round(value * 1000) for value in point) for point in shell
         )
-        faces.extend([[offset + index for index in face] for face in TETRA_FACES])
+        faces.extend([[offset + index for index in face] for face in local_faces])
     components, _ = _component_meshes(vertices, faces)
     return {
         "vertices": vertices,
@@ -86,11 +88,14 @@ def test_exact_pair_distinguishes_containment_without_surface_crossing():
 def test_disconnected_closed_components_can_form_an_unambiguous_union():
     member = _member_mesh([_translated_tetrahedron(0), _translated_tetrahedron(6)])
 
-    status, pair_counts, unresolved = _component_domain_status(member["components"])
+    status, pair_counts, unresolved, shells = _component_domain_status(
+        member["components"]
+    )
 
     assert status == "disjoint_closed_component_union"
     assert pair_counts == {"strictly_disjoint_aabbs": 1}
     assert unresolved == []
+    assert [row["role"] for row in shells] == ["solid_boundary", "solid_boundary"]
 
 
 def test_pair_audit_handles_unions_with_overlapping_global_bounds():
@@ -104,16 +109,63 @@ def test_pair_audit_handles_unions_with_overlapping_global_bounds():
     assert result["containment"]["component_pairs_checked"] == 0
 
 
-def test_nested_shell_components_are_withheld_from_domain_union():
+def test_domain_inside_an_oriented_cavity_is_not_classified_as_nested():
+    outer = [(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 1)]
+    cavity = [
+        (0.1, 0.1, 0.1),
+        (0.2, 0.1, 0.1),
+        (0.1, 0.2, 0.1),
+        (0.1, 0.1, 0.2),
+    ]
+    first = _member_mesh([outer, cavity], [TETRA_FACES, REVERSED_TETRA_FACES])
+    second = _member_mesh(
+        [
+            [
+                (0.12, 0.12, 0.12),
+                (0.14, 0.12, 0.12),
+                (0.12, 0.14, 0.12),
+                (0.12, 0.12, 0.14),
+            ]
+        ]
+    )
+
+    result = _member_pair_status(first, second)
+
+    assert result["status"] == "separate_closed_domains"
+    assert result["intersection_pairs"] == 0
+
+
+def test_nested_oppositely_oriented_shell_is_admitted_as_a_cavity():
+    outer = [(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 1)]
+    inner = [(0.1, 0.1, 0.1), (0.2, 0.1, 0.1), (0.1, 0.2, 0.1), (0.1, 0.1, 0.2)]
+    member = _member_mesh([outer, inner], [TETRA_FACES, REVERSED_TETRA_FACES])
+
+    status, pair_counts, unresolved, shells = _component_domain_status(
+        member["components"]
+    )
+
+    assert status == "closed_shell_domain_with_cavities"
+    assert pair_counts == {"nested_closed_domains": 1}
+    assert unresolved == []
+    assert [(row["role"], row["containment_depth"]) for row in shells] == [
+        ("solid_boundary", 0),
+        ("cavity_boundary", 1),
+    ]
+
+
+def test_nested_same_orientation_shell_is_withheld():
     outer = [(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 1)]
     inner = [(0.1, 0.1, 0.1), (0.2, 0.1, 0.1), (0.1, 0.2, 0.1), (0.1, 0.1, 0.2)]
     member = _member_mesh([outer, inner])
 
-    status, pair_counts, unresolved = _component_domain_status(member["components"])
+    status, pair_counts, unresolved, shells = _component_domain_status(
+        member["components"]
+    )
 
-    assert status == "component_union_unresolved"
+    assert status == "component_shell_domain_unresolved"
     assert pair_counts == {"nested_closed_domains": 1}
-    assert unresolved[0]["status"] == "nested_closed_domains"
+    assert unresolved[0]["status"] == "shell_orientation_mismatch"
+    assert shells == []
 
 
 def test_immutable_receipt_writer_rejects_symlink_output(tmp_path):

@@ -16,12 +16,18 @@ import struct
 from typing import Any
 
 from . import model as human
-from .cardiac_cavity_intersections import _audit_pair, _records, point_location
+from .cardiac_cavity_intersections import (
+    _audit_pair,
+    _cross,
+    _dot,
+    _records,
+    point_location,
+)
 from .compiled_quotient_embeddedness import coordinate_quotient
 from .physiology import canonical
 
 
-SCHEMA = "numi.human.compiled-muscle-volume-disjointness.v2"
+SCHEMA = "numi.human.compiled-muscle-volume-disjointness.v3"
 PREDICATE_FILES = (
     "muscle_surface_volume_disjointness.py",
     "muscle_surface_embeddedness.py",
@@ -166,6 +172,13 @@ def _component_meshes(
         component_faces = [
             [local_index[vertex] for vertex in faces[face_id]] for face_id in face_ids
         ]
+        signed_volume6 = sum(
+            _dot(
+                component_vertices[a],
+                _cross(component_vertices[b], component_vertices[c]),
+            )
+            for a, b, c in component_faces
+        )
         meshes.append(
             {
                 "component_index": component_index,
@@ -174,6 +187,7 @@ def _component_meshes(
                 "faces": component_faces,
                 "records": _records(component_vertices, component_faces),
                 "bounds": _bounds(component_vertices),
+                "signed_volume6": signed_volume6,
             }
         )
     return meshes, face_components
@@ -202,14 +216,32 @@ def _strict_aabb_separation(
 
 def _component_domain_status(
     components: list[dict[str, Any]],
-) -> tuple[str, dict[str, int], list[dict[str, Any]]]:
-    """Admit a multi-shell member only when its components form a disjoint union."""
+) -> tuple[str, dict[str, int], list[dict[str, Any]], list[dict[str, Any]]]:
+    """Admit disjoint shells or exact, alternating-winding cavity boundaries."""
     counts: Counter[str] = Counter()
     unresolved = []
+    contains: set[tuple[int, int]] = set()
     for first_index, first in enumerate(components):
         for second in components[first_index + 1 :]:
             pair = _surface_pair_status(first, second)
             counts[pair["status"]] += 1
+            if pair["status"] in {"strictly_disjoint_aabbs", "separate_closed_domains"}:
+                continue
+            if pair["status"] == "nested_closed_domains":
+                first_in_second = pair["containment"][
+                    "first_representative_vertex_in_second"
+                ]["location"]
+                second_in_first = pair["containment"][
+                    "second_representative_vertex_in_first"
+                ]["location"]
+                first_id = first["component_index"]
+                second_id = second["component_index"]
+                if first_in_second == "inside" and second_in_first == "outside":
+                    contains.add((first_id, second_id))
+                    continue
+                if second_in_first == "inside" and first_in_second == "outside":
+                    contains.add((second_id, first_id))
+                    continue
             if pair["status"] not in {
                 "strictly_disjoint_aabbs",
                 "separate_closed_domains",
@@ -220,22 +252,131 @@ def _component_domain_status(
                         "second_component": second["component_index"],
                         "status": pair["status"],
                         "intersection_pairs": pair["intersection_pairs"],
+                        "reason": "component_relation_not_a_strict_separation_or_nesting",
                     }
                 )
     if unresolved:
-        return "component_union_unresolved", dict(sorted(counts.items())), unresolved
-    status = (
-        "single_closed_component"
-        if len(components) == 1
-        else "disjoint_closed_component_union"
-    )
-    return status, dict(sorted(counts.items())), unresolved
+        return (
+            "component_shell_domain_unresolved",
+            dict(sorted(counts.items())),
+            unresolved,
+            [],
+        )
+
+    by_id = {component["component_index"]: component for component in components}
+    ancestors = {
+        component_id: {
+            outer_id for inner_id, outer_id in contains if inner_id == component_id
+        }
+        for component_id in by_id
+    }
+    for inner_id, outer_id in contains:
+        if outer_id not in ancestors.get(inner_id, set()) or inner_id not in by_id:
+            unresolved.append(
+                {
+                    "first_component": inner_id,
+                    "second_component": outer_id,
+                    "status": "invalid_containment_hierarchy",
+                    "intersection_pairs": 0,
+                    "reason": "containment_relation_is_not_acyclic",
+                }
+            )
+    for inner_id, outer_id in contains:
+        if len(ancestors[inner_id]) <= len(ancestors[outer_id]):
+            unresolved.append(
+                {
+                    "first_component": inner_id,
+                    "second_component": outer_id,
+                    "status": "invalid_containment_hierarchy",
+                    "intersection_pairs": 0,
+                    "reason": "containment_depth_is_not_strictly_increasing",
+                }
+            )
+    if unresolved:
+        return (
+            "component_shell_domain_unresolved",
+            dict(sorted(counts.items())),
+            unresolved,
+            [],
+        )
+
+    shell_rows = []
+    for component_id in sorted(by_id):
+        component = by_id[component_id]
+        depth = len(ancestors[component_id])
+        immediate_parents = sorted(
+            outer_id
+            for outer_id in ancestors[component_id]
+            if len(ancestors[outer_id]) == depth - 1
+        )
+        expected_parent_count = 0 if depth == 0 else 1
+        if len(immediate_parents) != expected_parent_count:
+            unresolved.append(
+                {
+                    "first_component": component_id,
+                    "second_component": immediate_parents[0]
+                    if immediate_parents
+                    else -1,
+                    "status": "invalid_containment_hierarchy",
+                    "intersection_pairs": 0,
+                    "reason": "shell_does_not_have_one_immediate_parent",
+                }
+            )
+            continue
+        sign = (
+            1
+            if component["signed_volume6"] > 0
+            else -1
+            if component["signed_volume6"] < 0
+            else 0
+        )
+        expected_sign = 1 if depth % 2 == 0 else -1
+        if sign != expected_sign:
+            unresolved.append(
+                {
+                    "first_component": component_id,
+                    "second_component": immediate_parents[0]
+                    if immediate_parents
+                    else -1,
+                    "status": "shell_orientation_mismatch",
+                    "intersection_pairs": 0,
+                    "reason": "oriented_volume_sign_does_not_alternate_with_containment_depth",
+                }
+            )
+            continue
+        shell_rows.append(
+            {
+                "component_index": component_id,
+                "containment_depth": depth,
+                "immediate_parent_component": immediate_parents[0]
+                if immediate_parents
+                else None,
+                "role": "cavity_boundary" if depth % 2 else "solid_boundary",
+                "signed_volume6_integer": str(component["signed_volume6"]),
+            }
+        )
+    if unresolved:
+        return (
+            "component_shell_domain_unresolved",
+            dict(sorted(counts.items())),
+            unresolved,
+            [],
+        )
+
+    status = "single_closed_component"
+    if len(components) > 1:
+        status = (
+            "closed_shell_domain_with_cavities"
+            if contains
+            else "disjoint_closed_component_union"
+        )
+    return status, dict(sorted(counts.items())), unresolved, shell_rows
 
 
 def _member_pair_status(
     first: dict[str, Any], second: dict[str, Any]
 ) -> dict[str, Any]:
-    """Compare unions of one or more internally separated closed components."""
+    """Compare exact oriented shell domains, including cavity boundaries."""
     if _strict_aabb_separation(_bounds(first["vertices"]), _bounds(second["vertices"])):
         return {
             "status": "strictly_disjoint_aabbs",
@@ -289,10 +430,10 @@ def _member_pair_status(
                 continue
             checked_component_pairs += 1
             first_location = point_location(
-                first_component["vertices"][0], second_component["records"]
+                first_component["vertices"][0], second["records"]
             )
             second_location = point_location(
-                second_component["vertices"][0], first_component["records"]
+                second_component["vertices"][0], first["records"]
             )
             component_ids = [
                 first_component["component_index"],
@@ -595,17 +736,20 @@ def audit(
             component_status,
             component_pair_counts,
             unresolved_component_pairs,
+            component_shells,
         ) = _component_domain_status(mesh["components"])
         mesh["surface"]["component_domain_status"] = component_status
         mesh["surface"]["component_pair_status_counts"] = component_pair_counts
         mesh["surface"]["unresolved_component_pairs"] = unresolved_component_pairs
-        mesh["domain_union_admitted"] = component_status in {
+        mesh["surface"]["oriented_component_shells"] = component_shells
+        mesh["domain_admitted"] = component_status in {
             "single_closed_component",
             "disjoint_closed_component_union",
+            "closed_shell_domain_with_cavities",
         }
 
-    admitted_meshes = [mesh for mesh in exact_meshes if mesh["domain_union_admitted"]]
-    _require(bool(admitted_meshes), "no unambiguous closed muscle domain unions")
+    admitted_meshes = [mesh for mesh in exact_meshes if mesh["domain_admitted"]]
+    _require(bool(admitted_meshes), "no unambiguous closed muscle shell domains")
 
     pair_rows: list[dict[str, Any]] = []
     for first_index, first in enumerate(admitted_meshes):
@@ -636,7 +780,16 @@ def audit(
     pair_counts = Counter(row["status"] for row in pair_rows)
     candidate_count = len(admitted_meshes)
     closed_embedded_candidate_count = len(exact_meshes)
-    component_union_rejected_count = closed_embedded_candidate_count - candidate_count
+    component_domain_rejected_count = closed_embedded_candidate_count - candidate_count
+    cavity_shell_domain_count = sum(
+        mesh["surface"]["component_domain_status"]
+        == "closed_shell_domain_with_cavities"
+        for mesh in admitted_meshes
+    )
+    disjoint_component_union_count = sum(
+        mesh["surface"]["component_domain_status"] == "disjoint_closed_component_union"
+        for mesh in admitted_meshes
+    )
     expected_pair_count = candidate_count * (candidate_count - 1) // 2
     _require(
         len(pair_rows) == expected_pair_count, "pairwise muscle audit is incomplete"
@@ -693,8 +846,10 @@ def audit(
                 and row["source_face_component_count"] > 1
                 for row in surface_rows
             ),
-            "admitted_muscle_domain_union_count": candidate_count,
-            "component_union_rejected_count": component_union_rejected_count,
+            "admitted_muscle_shell_domain_count": candidate_count,
+            "admitted_disjoint_component_union_count": disjoint_component_union_count,
+            "admitted_cavity_shell_domain_count": cavity_shell_domain_count,
+            "component_domain_rejected_count": component_domain_rejected_count,
             "candidate_pair_count": len(pair_rows),
             "expected_candidate_pair_count": expected_pair_count,
             "pair_status_counts": dict(sorted(pair_counts.items())),
@@ -703,7 +858,7 @@ def audit(
         "surfaces": surface_rows,
         "pairs": pair_rows,
         "qualification": {
-            "pairwise_admitted_muscle_domain_unions_disjoint": pairwise_domains_disjoint,
+            "pairwise_admitted_muscle_shell_domains_disjoint": pairwise_domains_disjoint,
             "all_closed_embedded_muscle_surfaces_admitted": candidate_count
             == closed_embedded_candidate_count,
             "all_source_muscle_surfaces_admitted": candidate_count == 148,
@@ -714,8 +869,10 @@ def audit(
             "muscle_mechanics": False,
         },
         "boundary": (
-            "Exact pairwise intersection and containment checks for the closed, "
-            "self-embedded compiled muscle-surface candidates only. Invalid/open "
+            "Exact pairwise intersection and containment checks for closed, "
+            "self-embedded compiled muscle shell domains, including only cavity "
+            "boundaries with strict containment and alternating exact signed winding. "
+            "Invalid/open "
             "muscle surfaces, tendons, skin, bone, organs and other tissue layers "
             "are excluded from this volume-domain pair set. This audit does not "
             "establish a disjoint whole-body partition or assign any physical "
@@ -748,7 +905,7 @@ def run(arguments: argparse.Namespace) -> int:
             {
                 "status": result["status"],
                 "candidate_muscles": result["coverage"][
-                    "admitted_muscle_domain_union_count"
+                    "admitted_muscle_shell_domain_count"
                 ],
                 "closed_embedded_surface_candidates": result["coverage"][
                     "closed_embedded_muscle_surface_candidate_count"

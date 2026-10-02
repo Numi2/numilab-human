@@ -123,3 +123,44 @@ NUMI_HUMAN_PYTHON=.venv-mujoco312/bin/python \
   --embeddedness Docs/media/muscle-volume-disjointness-20261002/self-embeddedness.json \
   --output Build/muscle-geometry-current-20261002/muscle-volume-disjointness-reproduced-v2.json
 ```
+
+### Signed cavity-shell extension - 2026-10-02
+
+The [v3 pairwise receipt](media/muscle-volume-disjointness-20261002/receipt-v3.json)
+extends the exact component model to nested shells only when each component is
+strictly contained or separate, the containment hierarchy has one immediate
+parent per non-root shell, and exact signed volume alternates with containment
+depth. This admits the four previously withheld nested meshes as **cavity-shell
+domain candidates**: `FJ1442/FJ1442M` and `FJ1497/FJ1497M`. Their large outer
+shells have positive signed volume; all contained shells have negative signed
+volume and are disjoint from one another. Same-winding nested shells, crossings,
+and ambiguous hierarchies still fail closed.
+
+All 84 closed, individually embedded muscle surfaces now enter the domain
+census: 54 single-shell domains, 26 disjoint-component unions, and four
+cavity-bearing shell domains. The 3,486 exact inter-member comparisons classify
+3,072 as strict AABB separations, 304 as separate closed domains, and 110 as
+surface intersections. The latter may include boundary contact and do not
+prove positive-volume penetration. The other 64 muscle surfaces remain outside
+the per-surface embeddedness gate; both tendons and all cross-layer pairs also
+remain outside this census.
+
+This is an oriented geometric boundary interpretation of those four source
+meshes, not independent evidence that their small inner shells are clinical
+muscle cavities. The receipt therefore continues to assign zero physical
+volume or mass owners and does not qualify materials, mechanics, cross-layer
+placement, or whole-body disjointness. Its SHA-256 is
+`d2496ebe872356e763d4fbbb62a1fb383e611f18acbde15fe4e77a8aa84811b7`; the
+payload and manifest hashes match v2, and its self-embeddedness input hash
+matches the retained receipt.
+
+Reproduce v3 against the same rebuilt payload and exact embeddedness input:
+
+```sh
+PYTHONPATH=src .venv-mujoco312/bin/python \
+  -m numilab_human.muscle_surface_volume_disjointness \
+  --payload Build/muscle-geometry-current-20261002/surface-payload/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue \
+  --manifest Build/muscle-geometry-current-20261002/surface-payload/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json \
+  --embeddedness Build/muscle-geometry-current-20261002/embeddedness-current.json \
+  --output Build/muscle-geometry-current-20261002/muscle-volume-disjointness-reproduced-v3.json
+```
