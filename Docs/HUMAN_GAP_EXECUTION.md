@@ -31,6 +31,14 @@ remains discrepant with the observed mask values. This does not bind the masks
 to Numi's current mechanical subject or close organ, skin, tendon, vessel,
 physiology, material, calibration, or behavior gates.
 
+The 3 October [HCM1 source geometry audit](CARDIAC_RODERO26_HCM_GEOMETRY_AUDIT_20261003.md)
+binds 3,917,596 tetrahedra to the imported 749,238-point sample 53 activation
+map, with no zero-volume cells. It also found that the imported `HCM1.vtk`
+contains only regional tags 1–24; the publisher's extra conduction tags 25–29
+belong to a separate electromechanics mesh that has not yet been admitted. This
+patient-specific source audit does not qualify electrical or mechanical
+behavior.
+
 ```sh
 numi human gap-execution
 numi human gap-execution --output /private/tmp/human-gap-execution.json

@@ -2356,6 +2356,14 @@ def parser() -> argparse.ArgumentParser:
         help="import the pinned HCM1 sample 53 point activation map in source VTK order",
     )
     add_rodero26_hcm_activation_import_arguments(rodero26_hcm_activation_import)
+    from .cardiac_rodero26_hcm_geometry_audit import (
+        add_arguments as add_rodero26_hcm_geometry_audit_arguments,
+    )
+    rodero26_hcm_geometry_audit = commands.add_parser(
+        "rodero-hcm1-source-geometry-audit",
+        help="audit pinned HCM1 tetra geometry, source element tags, and point activation coverage",
+    )
+    add_rodero26_hcm_geometry_audit_arguments(rodero26_hcm_geometry_audit)
     return result
 
 
