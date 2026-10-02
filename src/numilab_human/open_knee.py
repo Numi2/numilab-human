@@ -473,7 +473,7 @@ def _geometry_archive_cross_references(
     mesh_data_element_counts: dict[str, int] | None = None,
     source_material_ids: set[int] | None = None,
     binary_output_path: Path | None = None,
-    meniscus_mesh_output_path: Path | None = None,
+    source_volume_mesh_output_path: Path | None = None,
 ) -> dict[str, Any]:
     """Stream archived geometry and resolve source contact/tie/material IDs.
 
@@ -545,11 +545,9 @@ def _geometry_archive_cross_references(
                             "kind": tag, "name": name, "count": 0,
                             "offset": geometry_payload_size,
                             "source_mesh_payload": bytearray()
-                            if binary_output_path is not None and
-                            name in (mesh_data_element_counts or {}) else None,
+                            if source_volume_mesh_output_path is not None else None,
                             "source_mesh_node_ids": set()
-                            if binary_output_path is not None and
-                            name in (mesh_data_element_counts or {}) else None,
+                            if source_volume_mesh_output_path is not None else None,
                         }
                     elif tag == "NodeSet":
                         active[id(element)] = {
@@ -580,11 +578,11 @@ def _geometry_archive_cross_references(
                             "count": 0, "ids": set(), "first_id": None, "last_id": None,
                             "ids_follow_source_order": True,
                             "source_mesh_payload": bytearray()
-                            if binary_output_path is not None and
-                            name in (mesh_data_element_counts or {}) else None,
+                            if source_volume_mesh_output_path is not None and
+                            element_type == "tet4" else None,
                             "source_mesh_node_ids": set()
-                            if binary_output_path is not None and
-                            name in (mesh_data_element_counts or {}) else None,
+                            if source_volume_mesh_output_path is not None and
+                            element_type == "tet4" else None,
                             "digest": hashlib.sha256(),
                         }
                     else:
@@ -921,44 +919,52 @@ def _geometry_archive_cross_references(
             "sha256": hashlib.sha256(geometry_payload).hexdigest(),
             "record_order": "source XML Geometry child order; per-group records retain source order",
         }
-    meniscus_mesh_storage = None
-    if meniscus_mesh_output_path is not None:
-        meniscus_payload = bytearray()
-        meniscus_groups = {}
-        for name in sorted((mesh_data_element_counts or {}), key=lambda key: element_sets[key]["material_id"]):
+    source_volume_mesh_storage = None
+    if source_volume_mesh_output_path is not None:
+        volume_payload = bytearray()
+        volume_groups = {}
+        volume_set_names = sorted(
+            (
+                name for name, record in element_sets.items()
+                if record["element_type"] == "tet4"
+            ),
+            key=lambda key: (
+                element_sets[key]["material_id"] is None,
+                element_sets[key]["material_id"] or 0,
+            ),
+        )
+        for name in volume_set_names:
             node_group = source_mesh_node_groups.get(name)
             element_group = source_mesh_element_groups.get(name)
             element_set = element_sets.get(name)
-            expected_count = (mesh_data_element_counts or {})[name]
             if (
                 node_group is None or element_group is None or element_set is None or
                 element_set["element_type"] != "tet4" or
-                element_group["count"] != expected_count or
-                element_set["element_count"] != expected_count or
+                element_group["count"] != element_set["element_count"] or
                 node_group["count"] != node_coordinate_groups[name]["node_count"]
             ):
                 raise ValueError(
-                    f"Open Knee(s) source meniscus mesh {name} is incomplete or mismatched"
+                    f"Open Knee(s) source volume mesh {name} is incomplete or mismatched"
                 )
             if not element_group["node_ids"].issubset(node_group["node_ids"]):
                 raise ValueError(
-                    f"Open Knee(s) source meniscus mesh {name} references nodes outside its named part"
+                    f"Open Knee(s) source volume mesh {name} references nodes outside its named part"
                 )
             material_id = element_set["material_id"]
             if material_id is None:
                 raise ValueError(
-                    f"Open Knee(s) source meniscus mesh {name} has no material ID"
+                    f"Open Knee(s) source volume mesh {name} has no material ID"
                 )
-            header_offset = len(meniscus_payload)
-            meniscus_payload.extend(struct.pack(
-                "<4sIIII", b"NOKM", 1, material_id,
+            header_offset = len(volume_payload)
+            volume_payload.extend(struct.pack(
+                "<4sIIII", b"NOKT", 1, material_id,
                 node_group["count"], element_group["count"],
             ))
-            node_offset = len(meniscus_payload)
-            meniscus_payload.extend(node_group["payload"])
-            element_offset = len(meniscus_payload)
-            meniscus_payload.extend(element_group["payload"])
-            meniscus_groups[name] = {
+            node_offset = len(volume_payload)
+            volume_payload.extend(node_group["payload"])
+            element_offset = len(volume_payload)
+            volume_payload.extend(element_group["payload"])
+            volume_groups[name] = {
                 "material_id": material_id,
                 "node_count": node_group["count"],
                 "tetrahedron_count": element_group["count"],
@@ -967,20 +973,28 @@ def _geometry_archive_cross_references(
                 "node_record_stride_bytes": 28,
                 "tetrahedron_records_offset_bytes": element_offset,
                 "tetrahedron_record_stride_bytes": 20,
-                "binary_bytes": len(meniscus_payload) - header_offset,
+                "binary_bytes": len(volume_payload) - header_offset,
                 "source_coordinates": "preserved without scaling",
                 "node_id_mapping": "source global node IDs preserved in both tables",
-                "fiber_mapping": "source ElementData local lid maps to one-based tetrahedron order within the element set",
+                "fiber_mapping": (
+                    "source ElementData local lid maps to one-based tetrahedron order within the element set"
+                    if name in (mesh_data_element_counts or {}) else
+                    "source material fiber direction is compiled separately"
+                ),
             }
-        meniscus_mesh_output_path.parent.mkdir(parents=True, exist_ok=True)
-        meniscus_mesh_output_path.write_bytes(meniscus_payload)
-        meniscus_mesh_storage = {
-            "schema": "numi.human.open-knee-source-meniscus-mesh.v1",
-            "file": meniscus_mesh_output_path.name,
-            "bytes": len(meniscus_payload),
-            "sha256": hashlib.sha256(meniscus_payload).hexdigest(),
-            "header_layout": "little-endian 4-byte NOKM magic, u32 version, u32 source material ID, u32 node count, u32 tetrahedron count",
-            "groups": meniscus_groups,
+        if expected_sha256 is not None and len(volume_groups) != 12:
+            raise ValueError(
+                "Open Knee(s) pinned source volume mesh must contain 12 tet4 element sets"
+            )
+        source_volume_mesh_output_path.parent.mkdir(parents=True, exist_ok=True)
+        source_volume_mesh_output_path.write_bytes(volume_payload)
+        source_volume_mesh_storage = {
+            "schema": "numi.human.open-knee-source-volume-mesh.v1",
+            "file": source_volume_mesh_output_path.name,
+            "bytes": len(volume_payload),
+            "sha256": hashlib.sha256(volume_payload).hexdigest(),
+            "header_layout": "little-endian 4-byte NOKT magic, u32 version, u32 source material ID, u32 node count, u32 tetrahedron count",
+            "groups": volume_groups,
         }
     return {
         "status": "resolved_against_pinned_Geometry_custom",
@@ -1006,7 +1020,7 @@ def _geometry_archive_cross_references(
         "element_sets": {name: element_sets[name] for name in sorted(element_sets)},
         "mesh_data_element_sets": resolved_mesh_data_element_sets,
         "binary_storage": binary_storage,
-        "source_meniscus_mesh_storage": meniscus_mesh_storage,
+        "source_volume_mesh_storage": source_volume_mesh_storage,
         "unreferenced_surface_pair_names": sorted(
             set(surface_pairs) - contact_pair_names
         ),
@@ -1258,7 +1272,7 @@ def compile_source_mechanical_description(
     source_geometry_archive_sha256: str | None = None,
     source_geometry_archive_path: Path | None = None,
     source_geometry_binary_output_path: Path | None = None,
-    source_meniscus_mesh_output_path: Path | None = None,
+    source_volume_mesh_output_path: Path | None = None,
     source_mesh_data_output_path: Path | None = None,
     reference_solver_version: str | None = None,
     reference_log_sha256: str | None = None,
@@ -1582,7 +1596,7 @@ def compile_source_mechanical_description(
             mesh_data_element_counts=mesh_data_element_counts,
             source_material_ids=source_material_ids,
             binary_output_path=source_geometry_binary_output_path,
-            meniscus_mesh_output_path=source_meniscus_mesh_output_path,
+            source_volume_mesh_output_path=source_volume_mesh_output_path,
         )
         materials_by_id = {int(material["id"]): material for material in materials}
         for element_set in geometry_resolution["element_sets"].values():
@@ -1733,7 +1747,7 @@ def compile_source_mechanical_artifacts(
     )
     mesh_data_path = output / "source-meshdata.bin"
     geometry_binary_path = output / "source-geometry.bin"
-    meniscus_mesh_path = output / "source-meniscus-mesh.bin"
+    source_volume_mesh_path = output / "source-volume-mesh.bin"
     description = compile_source_mechanical_description(
         source,
         source_deck=open_knee / "FeBio_custom.feb",
@@ -1741,7 +1755,7 @@ def compile_source_mechanical_artifacts(
         source_geometry_archive_sha256=ARCHIVED_REFERENCE_GEOMETRY_SHA256,
         source_geometry_archive_path=geometry_archive,
         source_geometry_binary_output_path=geometry_binary_path,
-        source_meniscus_mesh_output_path=meniscus_mesh_path,
+        source_volume_mesh_output_path=source_volume_mesh_path,
         source_mesh_data_output_path=mesh_data_path,
         reference_solver_version=reference_observations.get("version"),
         reference_log_sha256=ARCHIVED_REFERENCE_LOG_SHA256,
@@ -1872,8 +1886,8 @@ def compile_source_mechanical_artifacts(
         "geometry_binary": description["source_geometry_resolution"][
             "binary_storage"
         ],
-        "meniscus_mesh_binary": description["source_geometry_resolution"][
-            "source_meniscus_mesh_storage"
+        "source_volume_mesh_binary": description["source_geometry_resolution"][
+            "source_volume_mesh_storage"
         ],
         "artifacts": {
             description_path.name: {
@@ -1888,9 +1902,9 @@ def compile_source_mechanical_artifacts(
                 "bytes": geometry_binary_path.stat().st_size,
                 "sha256": _sha256(geometry_binary_path),
             },
-            meniscus_mesh_path.name: {
-                "bytes": meniscus_mesh_path.stat().st_size,
-                "sha256": _sha256(meniscus_mesh_path),
+            source_volume_mesh_path.name: {
+                "bytes": source_volume_mesh_path.stat().st_size,
+                "sha256": _sha256(source_volume_mesh_path),
             },
         },
         "compiler_sources": {

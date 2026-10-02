@@ -5,16 +5,16 @@
       "sha256": "97c5e7b1c09eb47193bca0b7d2a515088b40938da45fe7aa8c8fc7bb7dd54368"
     },
     "source-mechanics.json": {
-      "bytes": 1806106,
-      "sha256": "7b7bac9f69e1540a6c19eb8f0f2f7cfefbcfa6f30504a40ba004b0911205b56c"
-    },
-    "source-meniscus-mesh.bin": {
-      "bytes": 2552276,
-      "sha256": "796c73e342e5f5f9865a6d636a04647f73892c4975a78ebd0e255186af10214a"
+      "bytes": 1812339,
+      "sha256": "26d7f9e19a854b53df1f7ad67b19b1f57d600e5bc16e57934114860a37ef2e49"
     },
     "source-meshdata.bin": {
       "bytes": 2686936,
       "sha256": "f3802520c712f3c939934d53e0e4de9ce6e6c275287ede3279bbdc3b3abf63c8"
+    },
+    "source-volume-mesh.bin": {
+      "bytes": 22338392,
+      "sha256": "39b86f2f55853c74968f36a8d6c67eaed94639a3d42b558bb17787e2af8ffdba"
     }
   },
   "compiled_counts": {
@@ -29,8 +29,8 @@
     "source_mesh_element_fiber_vectors": 95962
   },
   "compiler_sources": {
-    "cli.py": "0a56b9a8d495e6694ed79dfdf0e2dde442b1b3c09a37811c9b8c540c31dfc6b2",
-    "open_knee.py": "4c97eec2b7beacccc83b87cde181e2dcabbf121f801105607c52412b3a5b1e2f"
+    "cli.py": "75267841c399d38258c04c513d5cb5edbb5a198f1a520720abd253bdebd34c62",
+    "open_knee.py": "afb123b65310f3faef6230298134276b2c436b3323d888abcdd0f9336ebb5d2d"
   },
   "geometry_binary": {
     "bytes": 37388532,
@@ -38,43 +38,6 @@
     "record_order": "source XML Geometry child order; per-group records retain source order",
     "schema": "numi.human.open-knee-source-geometry-binary.v1",
     "sha256": "97c5e7b1c09eb47193bca0b7d2a515088b40938da45fe7aa8c8fc7bb7dd54368"
-  },
-  "meniscus_mesh_binary": {
-    "bytes": 2552276,
-    "file": "source-meniscus-mesh.bin",
-    "groups": {
-      "MNS-L": {
-        "binary_bytes": 1204308,
-        "fiber_mapping": "source ElementData local lid maps to one-based tetrahedron order within the element set",
-        "header_offset_bytes": 0,
-        "material_id": 12,
-        "node_count": 10901,
-        "node_id_mapping": "source global node IDs preserved in both tables",
-        "node_record_stride_bytes": 28,
-        "node_records_offset_bytes": 20,
-        "source_coordinates": "preserved without scaling",
-        "tetrahedron_count": 44953,
-        "tetrahedron_record_stride_bytes": 20,
-        "tetrahedron_records_offset_bytes": 305248
-      },
-      "MNS-M": {
-        "binary_bytes": 1347968,
-        "fiber_mapping": "source ElementData local lid maps to one-based tetrahedron order within the element set",
-        "header_offset_bytes": 1204308,
-        "material_id": 13,
-        "node_count": 11706,
-        "node_id_mapping": "source global node IDs preserved in both tables",
-        "node_record_stride_bytes": 28,
-        "node_records_offset_bytes": 1204328,
-        "source_coordinates": "preserved without scaling",
-        "tetrahedron_count": 51009,
-        "tetrahedron_record_stride_bytes": 20,
-        "tetrahedron_records_offset_bytes": 1532096
-      }
-    },
-    "header_layout": "little-endian 4-byte NOKM magic, u32 version, u32 source material ID, u32 node count, u32 tetrahedron count",
-    "schema": "numi.human.open-knee-source-meniscus-mesh.v1",
-    "sha256": "796c73e342e5f5f9865a6d636a04647f73892c4975a78ebd0e255186af10214a"
   },
   "mesh_element_data": {
     "bytes": 2686936,
@@ -187,6 +150,183 @@
   "schema": "numi.human.open-knee-source-mechanics-receipt.v1",
   "scope": "source program and exact elementwise fiber inputs compiled; no source mechanics are executed or admitted by this artifact",
   "source_equivalence_admission": "rejected_unsupported_source_mechanics",
+  "source_volume_mesh_binary": {
+    "bytes": 22338392,
+    "file": "source-volume-mesh.bin",
+    "groups": {
+      "ACL": {
+        "binary_bytes": 1893236,
+        "fiber_mapping": "source material fiber direction is compiled separately",
+        "header_offset_bytes": 10492616,
+        "material_id": 9,
+        "node_count": 15792,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 10492636,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 72552,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 10934812
+      },
+      "FMC": {
+        "binary_bytes": 2437820,
+        "fiber_mapping": "source material fiber direction is compiled separately",
+        "header_offset_bytes": 19900572,
+        "material_id": 16,
+        "node_count": 24870,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 19900592,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 87072,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 20596952
+      },
+      "LCL": {
+        "binary_bytes": 278360,
+        "fiber_mapping": "source material fiber direction is compiled separately",
+        "header_offset_bytes": 17603972,
+        "material_id": 14,
+        "node_count": 2960,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 17603992,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 9773,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 17686872
+      },
+      "MCL": {
+        "binary_bytes": 1693664,
+        "fiber_mapping": "source material fiber direction is compiled separately",
+        "header_offset_bytes": 12385852,
+        "material_id": 10,
+        "node_count": 15693,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 12385872,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 62712,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 12825276
+      },
+      "MNS-L": {
+        "binary_bytes": 1204308,
+        "fiber_mapping": "source ElementData local lid maps to one-based tetrahedron order within the element set",
+        "header_offset_bytes": 15051696,
+        "material_id": 12,
+        "node_count": 10901,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 15051716,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 44953,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 15356944
+      },
+      "MNS-M": {
+        "binary_bytes": 1347968,
+        "fiber_mapping": "source ElementData local lid maps to one-based tetrahedron order within the element set",
+        "header_offset_bytes": 16256004,
+        "material_id": 13,
+        "node_count": 11706,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 16256024,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 51009,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 16583792
+      },
+      "PCL": {
+        "binary_bytes": 391592,
+        "fiber_mapping": "source material fiber direction is compiled separately",
+        "header_offset_bytes": 6947516,
+        "material_id": 7,
+        "node_count": 3714,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 6947536,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 14379,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 7051528
+      },
+      "PTC": {
+        "binary_bytes": 3153508,
+        "fiber_mapping": "source material fiber direction is compiled separately",
+        "header_offset_bytes": 7339108,
+        "material_id": 8,
+        "node_count": 26121,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 7339128,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 121105,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 8070516
+      },
+      "PTL": {
+        "binary_bytes": 972180,
+        "fiber_mapping": "source material fiber direction is compiled separately",
+        "header_offset_bytes": 14079516,
+        "material_id": 11,
+        "node_count": 9280,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 14079536,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 35616,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 14339376
+      },
+      "QAT": {
+        "binary_bytes": 1807184,
+        "fiber_mapping": "source material fiber direction is compiled separately",
+        "header_offset_bytes": 0,
+        "material_id": 5,
+        "node_count": 14963,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 20,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 69410,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 418984
+      },
+      "TBC-L": {
+        "binary_bytes": 5140332,
+        "fiber_mapping": "source material fiber direction is compiled separately",
+        "header_offset_bytes": 1807184,
+        "material_id": 6,
+        "node_count": 40669,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 1807204,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 200079,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 2945936
+      },
+      "TBC-M": {
+        "binary_bytes": 2018240,
+        "fiber_mapping": "source material fiber direction is compiled separately",
+        "header_offset_bytes": 17882332,
+        "material_id": 15,
+        "node_count": 18060,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 17882352,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 75627,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 18388032
+      }
+    },
+    "header_layout": "little-endian 4-byte NOKT magic, u32 version, u32 source material ID, u32 node count, u32 tetrahedron count",
+    "schema": "numi.human.open-knee-source-volume-mesh.v1",
+    "sha256": "39b86f2f55853c74968f36a8d6c67eaed94639a3d42b558bb17787e2af8ffdba"
+  },
   "status": "passed_source_inventory_compilation_not_native_admission",
   "validation": {
     "archived_reference_log": "normal_termination_with_complete_observations",

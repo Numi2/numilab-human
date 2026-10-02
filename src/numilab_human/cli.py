@@ -608,7 +608,7 @@ def open_knee_source_mechanics(arguments: argparse.Namespace) -> int:
     print(f"wrote {arguments.output.resolve() / 'source-mechanics.json'}")
     print(f"wrote {arguments.output.resolve() / 'source-meshdata.bin'}")
     print(f"wrote {arguments.output.resolve() / 'source-geometry.bin'}")
-    print(f"wrote {arguments.output.resolve() / 'source-meniscus-mesh.bin'}")
+    print(f"wrote {arguments.output.resolve() / 'source-volume-mesh.bin'}")
     print(f"wrote {arguments.output.resolve() / 'receipt.json'}")
     return 0
 

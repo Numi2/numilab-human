@@ -3737,7 +3737,7 @@ class ImporterTests(unittest.TestCase):
 <febio_spec><Geometry>
 <Nodes name="A"><node id="1">0,0,0</node><node id="2">1,0,0</node>
 <node id="3">0,1,0</node><node id="4">0,0,1</node></Nodes>
-<Elements name="A" type="tet4"><elem id="1">1,2,3,4</elem></Elements>
+<Elements name="A" type="tet4" mat="3"><elem id="1">1,2,3,4</elem></Elements>
 <Nodes name="B"><node id="5">0,0,0</node><node id="6">1,0,0</node>
 <node id="7">0,1,0</node></Nodes>
 <Elements name="B" type="tri3"><elem id="2">5,6,7</elem></Elements>
@@ -3794,7 +3794,7 @@ class ImporterTests(unittest.TestCase):
                 source, source_deck=directory / "FeBio_custom.feb",
                 source_geometry_archive_path=directory / "Geometry.feb",
                 source_geometry_binary_output_path=directory / "source-geometry.bin",
-                source_meniscus_mesh_output_path=directory / "source-meniscus-mesh.bin",
+                source_volume_mesh_output_path=directory / "source-volume-mesh.bin",
                 source_mesh_data_output_path=directory / "source-meshdata.bin",
             )
             geometry_binary = (directory / "source-geometry.bin").read_bytes()
@@ -3808,17 +3808,19 @@ class ImporterTests(unittest.TestCase):
                 "<I4I", geometry_binary, mns_geometry["binary_offset_bytes"]
             )
             self.assertEqual(geometry_record, (3, 8, 9, 10, 11))
-            meniscus_mesh = (directory / "source-meniscus-mesh.bin").read_bytes()
+            volume_mesh = (directory / "source-volume-mesh.bin").read_bytes()
             meniscus_record = mechanics["source_geometry_resolution"][
-                "source_meniscus_mesh_storage"
+                "source_volume_mesh_storage"
             ]["groups"]["MNS-M"]
             self.assertEqual(
-                struct.unpack_from("<4sIIII", meniscus_mesh, 0),
-                (b"NOKM", 1, 3, 4, 1),
+                struct.unpack_from(
+                    "<4sIIII", volume_mesh, meniscus_record["header_offset_bytes"]
+                ),
+                (b"NOKT", 1, 3, 4, 1),
             )
             self.assertEqual(
                 struct.unpack_from(
-                    "<I4I", meniscus_mesh,
+                    "<I4I", volume_mesh,
                     meniscus_record["tetrahedron_records_offset_bytes"],
                 ),
                 (3, 8, 9, 10, 11),
