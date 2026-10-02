@@ -39,6 +39,21 @@ clinical placement, volume/lumen ownership, independent cervical/eye motion,
 deformation and whole-Human anatomy remain open. The prior knee-range,
 cardiac/lung topology and shoulder/skin gaps are not closed by this increment.
 
+## Whole-body source semantics crosswalk — 2026-10-02
+
+The complete [source semantics receipt](media/whole-body-source-semantics-20261002/README.md)
+joins all 579 selected compiled surfaces to their pinned source identity,
+available BodyParts3D 4.0 `part_of`/`is_a` terms, native rigid owner, geometry
+hash, and separate selected-topology status. The coarse `organ` layer contains
+21 organ, 70 organ-region, 21 organ-component, and 8 other cardinal-organ-part
+terms under the receipt's declared priority grouping. Six Z-Anatomy surfaces
+use pinned source object IDs instead of BodyParts3D member IDs; the five lobe
+FMA concepts match their pinned parent-lung edges, while Pleura has no FMA
+concept ID in the source configuration. Eight organ-layer surfaces remain
+individually unqualified by the topology gate. These taxonomy results improve
+source traceability only: clinical anatomy, physical volumes, tissue
+boundaries, mechanics, and physiology remain open.
+
 ## Historical requalification snapshot — 2026-09-15
 
 The current repository evidence layer is published at `4bca31c` on `main` and

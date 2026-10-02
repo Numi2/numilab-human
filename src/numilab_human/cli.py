@@ -2169,6 +2169,12 @@ def parser() -> argparse.ArgumentParser:
         help="run exact same-owner cross-surface diagnostics on selected embedded organ atlas surfaces",
     )
     add_whole_body_organ_overlap_arguments(organ_overlap)
+    from .whole_body_source_semantics import add_arguments as add_whole_body_source_semantics_arguments
+    source_semantics = commands.add_parser(
+        "whole-body-source-semantics",
+        help="crosswalk every selected whole-body atlas surface to pinned source ontology terms",
+    )
+    add_whole_body_source_semantics_arguments(source_semantics)
     from .capability_protocol import add_arguments as add_capability_arguments
     capability = commands.add_parser(
         "capability-protocol", help="compile single-subject measured whole-body requirements and evidence bindings",
