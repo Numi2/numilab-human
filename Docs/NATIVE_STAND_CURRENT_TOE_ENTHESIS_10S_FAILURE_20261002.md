@@ -50,3 +50,22 @@ does not establish bitwise q/v replay because these rows omit joint state,
 per-contact wrench, and route-level force. The first recorded 10 mm drift at
 1.576 s therefore occurs after this matching prefix, while its mechanical or
 controller cause remains unresolved.
+
+An isolated source-alignment check built a clean checkout at the recorded
+Numi Lab commit `c35f0082ffcc29806d8bece2e31177b64fe7e5c0`. All five local
+mechanics payload hashes matched the failed run, and this source contains the
+`--persistent-stand-trace` option. However, its probe rejected the failed
+run's `--stand-muscle-path-feedback` argument before mechanics began. The
+clean build's probe SHA-256 was
+`8851b551e8a12cd43a2724cfc7eb04c6524f31e22e894d5aa819fe0313af3362`, and its
+Metal library SHA-256 was
+`4e033659a1adf0c8f3e3aa4ec22011bfcb4e5785fefad8b4841c4e8186e33878`; both
+differ from the hashes in the failed run's
+[binary/input manifest](media/native-stand-current-toe-enthesis-feedback-10s-20261002/input-binary-sha256.txt).
+The retained execution context says the no-Git-metadata source export and
+patch were on `/Users/n/numi-human-standing-20260922`, which is not present on
+this host. Thus the recorded commit and payload hashes do not reproduce the
+complete feedback-enabled runtime. No trace was produced from the rejected
+local launch, and this check provides no causal result. The failure-onset
+trace requires the exact runtime source patch or export; running the clean
+commit without feedback would change the mechanics under investigation.
