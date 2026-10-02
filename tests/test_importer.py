@@ -18,6 +18,7 @@ from numilab_human.open_knee import _geometry_archive_cross_references
 from numilab_human.open_knee import compile_source_mechanical_description
 from numilab_human.open_knee import _source_rigid_graph_program_bytes
 from numilab_human.open_knee import _write_source_reference_baseline
+from numilab_human.open_knee import _write_source_rigid_ties_program
 from numilab_human.open_knee import parse_source as parse_open_knee_source
 
 from numilab_human.model import (
@@ -4099,6 +4100,32 @@ class ImporterTests(unittest.TestCase):
         )
         self.assertEqual(mechanics["source_equivalence_admission"],
                          "rejected_unsupported_source_mechanics")
+
+    def test_open_knee_rigid_ties_bind_unique_source_volume_nodes(self) -> None:
+        artifact_root = ROOT / "Docs/media/open-knee-source-program-20261002"
+        mechanics = json.loads((artifact_root / "source-mechanics.json").read_text())
+        receipt = json.loads((artifact_root / "receipt.json").read_text())
+        volume = artifact_root / "source-volume-mesh.bin"
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "source-rigid-ties.bin"
+            storage = _write_source_rigid_ties_program(mechanics, volume, output)
+            program = output.read_bytes()
+        self.assertEqual(program, (artifact_root / "source-rigid-ties.bin").read_bytes())
+        self.assertEqual(storage, mechanics["source_rigid_ties_program_storage"])
+        self.assertEqual(storage, receipt["artifacts"]["source-rigid-ties.bin"])
+        self.assertEqual(storage["record_count"], 29427)
+        self.assertEqual(struct.unpack_from("<8s4I", program),
+                         (b"NHTIES1\0", 1, 18, 29427, 0))
+        rows = [struct.unpack_from("<4I", program, 88 + 16 * index)
+                for index in range(storage["record_count"])]
+        self.assertEqual(len({row[0] for row in rows}), 29427)
+        self.assertEqual(sorted(row[0] for row in rows), [row[0] for row in rows])
+        mechanics["rigid_graph"]["rigid_ties"][1]["node_set_node_ids"][0] = rows[0][0]
+        with tempfile.TemporaryDirectory() as temporary:
+            with self.assertRaisesRegex(ValueError, "multiply owned"):
+                _write_source_rigid_ties_program(
+                    mechanics, volume, Path(temporary) / "bad.bin"
+                )
 
     def test_open_knee_compiler_rejects_unknown_side_before_source_work(self) -> None:
         with self.assertRaisesRegex(ValueError, "side must be left or right"):

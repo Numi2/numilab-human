@@ -1808,6 +1808,7 @@ def compile_source_mechanical_artifacts(
     geometry_binary_path = output / "source-geometry.bin"
     source_volume_mesh_path = output / "source-volume-mesh.bin"
     rigid_graph_path = output / "source-rigid-graph.bin"
+    rigid_ties_path = output / "source-rigid-ties.bin"
     description = compile_source_mechanical_description(
         source,
         source_deck=open_knee / "FeBio_custom.feb",
@@ -1838,6 +1839,10 @@ def compile_source_mechanical_artifacts(
         description, rigid_graph_path
     )
     description["source_rigid_graph_program_storage"] = rigid_graph_storage
+    rigid_ties_storage = _write_source_rigid_ties_program(
+        description, source_volume_mesh_path, rigid_ties_path
+    )
+    description["source_rigid_ties_program_storage"] = rigid_ties_storage
     reference_baseline_path = output / "source-reference-baseline.json"
     reference_baseline_storage = _write_source_reference_baseline(
         description, reference_baseline_path
@@ -1917,6 +1922,7 @@ def compile_source_mechanical_artifacts(
             "materials": len(description["materials"]),
             "rigid_bodies": len(description["rigid_graph"]["bodies"]),
             "rigid_ties": len(description["rigid_graph"]["rigid_ties"]),
+            "rigid_tie_nodes": rigid_ties_storage["record_count"],
             "cylindrical_joints": len(description["rigid_graph"]["cylindrical_joints"]),
             "contacts": len(description["contacts"]),
             "load_curves": len(description["load_curves"]),
@@ -1980,6 +1986,7 @@ def compile_source_mechanical_artifacts(
                 "sha256": _sha256(source_volume_mesh_path),
             },
             rigid_graph_path.name: rigid_graph_storage,
+            rigid_ties_path.name: rigid_ties_storage,
             reference_baseline_path.name: reference_baseline_storage,
         },
         "compiler_sources": {
@@ -1999,6 +2006,85 @@ def compile_source_mechanical_artifacts(
         encoding="utf-8",
     )
     return receipt
+
+
+_SOURCE_RIGID_TIES_MAGIC = b"NHTIES1\0"
+_SOURCE_RIGID_TIES_SCHEMA = "numi.human.open-knee-rigid-ties-program.v1"
+
+
+def _write_source_rigid_ties_program(
+    description: dict[str, Any], source_volume_mesh_path: Path, output_path: Path,
+) -> dict[str, Any]:
+    """Bind every source rigid-tie node to one preserved volume node and body.
+
+    Coordinates remain in the volume sidecar. Matter derives each body-local
+    point from those immutable coordinates and the source body's reference COM.
+    No moving attachment or contact law is executed by this writer.
+    """
+    volume = source_volume_mesh_path.read_bytes()
+    storage = description["source_geometry_resolution"]["source_volume_mesh_storage"]
+    if hashlib.sha256(volume).hexdigest() != storage["sha256"]:
+        raise ValueError("Open Knee(s) source volume sidecar identity drifted")
+    node_material: dict[int, int] = {}
+    offset = 0
+    while offset < len(volume):
+        if len(volume) - offset < 20:
+            raise ValueError("Open Knee(s) source volume header is truncated")
+        magic, version, material_id, node_count, tet_count = struct.unpack_from(
+            "<4s4I", volume, offset
+        )
+        if magic != b"NOKT" or version != 1 or material_id not in range(5, 17):
+            raise ValueError("Open Knee(s) source volume group is unsupported")
+        offset += 20
+        group_bytes = 28 * node_count + 20 * tet_count
+        if len(volume) - offset < group_bytes:
+            raise ValueError("Open Knee(s) source volume group is truncated")
+        for local in range(node_count):
+            node_id = struct.unpack_from("<I", volume, offset + 28 * local)[0]
+            if not node_id or node_id in node_material:
+                raise ValueError("Open Knee(s) source volume node ID is duplicated")
+            node_material[node_id] = material_id
+        offset += group_bytes
+    ties = description["rigid_graph"]["rigid_ties"]
+    body_ids = {body["material_id"] for body in description["rigid_graph"]["bodies"]}
+    rows: list[tuple[int, int, int, int]] = []
+    claimed: set[int] = set()
+    for tie_index, tie in enumerate(ties):
+        body_id = int(tie["rigid_body_material_id"])
+        ids = tie["node_set_node_ids"]
+        if body_id not in body_ids or len(ids) != tie["node_set_node_count"]:
+            raise ValueError("Open Knee(s) source rigid tie has invalid ownership")
+        for node_id in ids:
+            if node_id not in node_material or node_id in claimed:
+                raise ValueError("Open Knee(s) rigid tie node is missing or multiply owned")
+            claimed.add(node_id)
+            rows.append((node_id, node_material[node_id], body_id, tie_index))
+    rows.sort()
+    if len(ties) != 18 or len(rows) != 29427:
+        raise ValueError("Open Knee(s) pinned rigid-tie topology drifted")
+    deck_hash = bytes.fromhex(description["source_file_sha256"])
+    geometry_hash = bytes.fromhex(description["source_geometry_archive_sha256"])
+    if len(deck_hash) != 32 or len(geometry_hash) != 32:
+        raise ValueError("Open Knee(s) source rigid-tie hashes are invalid")
+    payload = bytearray(struct.pack(
+        "<8s4I32s32s", _SOURCE_RIGID_TIES_MAGIC, 1, len(ties), len(rows), 0,
+        deck_hash, geometry_hash,
+    ))
+    for row in rows:
+        payload.extend(struct.pack("<4I", *row))
+    output_path.write_bytes(payload)
+    return {
+        "schema": _SOURCE_RIGID_TIES_SCHEMA,
+        "file": output_path.name,
+        "bytes": len(payload),
+        "sha256": hashlib.sha256(payload).hexdigest(),
+        "record_count": len(rows),
+        "tie_set_count": len(ties),
+        "header_bytes": 88,
+        "record_stride_bytes": 16,
+        "record_layout": "little-endian source node ID, source tissue material ID, rigid body material ID, source tie-set index",
+        "native_execution_status": "compiled_for_Matter_binding_not_executed",
+    }
 
 
 _SOURCE_RIGID_GRAPH_MAGIC = b"NHRGPH3\0"
