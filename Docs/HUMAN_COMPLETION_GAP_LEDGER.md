@@ -76,6 +76,18 @@ pair sample before native rendering. This localizes the observed crossing to
 the source meshes; a proper regional seam or segmentation boundary remains
 unresolved, so no arbitrary surface translation is adopted.
 
+The follow-up [source-frame census](WHOLE_BODY_SOURCE_OVERLAP_CENSUS_20261002.md)
+extends this attribution to all 198 compiled crossings across 104 raw meshes;
+all have source-supported triangle witnesses after exact source-face mapping.
+187 pairs match directly, 10 match after documented topology-repair mapping,
+and the final pair's two-count reduction is exactly the two opposite duplicate
+source faces removed by that repair (34,806 raw-source versus 34,804 compiled
+triangle-pair intersections). No unexplained source/compiled crossing
+difference remains in this census. It does not decide whether any crossing is
+anatomically intended, close a seam or mechanics gate, or change geometry; the
+eight individually unqualified organ surfaces remain outside the overlap
+diagnostic.
+
 ## Historical requalification snapshot — 2026-09-15
 
 The current repository evidence layer is published at `4bca31c` on `main` and
