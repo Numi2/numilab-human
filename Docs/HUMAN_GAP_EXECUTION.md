@@ -23,6 +23,14 @@ the prior source geometry. Its 46-family membership proof does not change task
 readiness or integrated qualification; clinical, volume/lumen, tissue motion
 and whole-Human acceptance gates remain open.
 
+The [3 October Healthy Total Body CT source intake](HEALTHY_TOTAL_BODY_CT_SOURCE_INGEST_20261003.md)
+adds a hash-bound second-cohort segmentation inventory for whole-body organs,
+bones, skeletal muscle and fat. All 30 masks and source frames were scanned;
+36 of the workbook's 119 labels occur, and the source's 37-tissue description
+remains discrepant with the observed mask values. This does not bind the masks
+to Numi's current mechanical subject or close organ, skin, tendon, vessel,
+physiology, material, calibration, or behavior gates.
+
 ```sh
 numi human gap-execution
 numi human gap-execution --output /private/tmp/human-gap-execution.json

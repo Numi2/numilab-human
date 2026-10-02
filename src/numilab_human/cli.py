@@ -2170,6 +2170,12 @@ def parser() -> argparse.ArgumentParser:
         "gap-execution", help="inspect ledger owners, prerequisites and unqualified source target links",
     )
     add_gap_execution_arguments(execution)
+    from .healthy_total_body_ct_source import add_arguments as add_healthy_total_body_ct_source_arguments
+    healthy_total_body_ct_source = commands.add_parser(
+        "healthy-total-body-ct-source",
+        help="ingest TCIA CC BY whole-body tissue masks as source evidence, without admitting mechanics",
+    )
+    add_healthy_total_body_ct_source_arguments(healthy_total_body_ct_source)
     from .whole_body_organ_overlap import add_arguments as add_whole_body_organ_overlap_arguments
     organ_overlap = commands.add_parser(
         "whole-body-organ-overlap",

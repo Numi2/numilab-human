@@ -1,0 +1,26 @@
+{
+  "schema": "numi.human.external-segmentation-source.v1",
+  "source_id": "healthy_total_body_cts_v3",
+  "title": "Low-Dose CT Images of Healthy Cohort (Healthy-Total-Body-CTs)",
+  "release": "Version 3, updated 2026-09-23",
+  "doi": "10.7937/NC7Z-4F76",
+  "dataset_page": "https://www.cancerimagingarchive.net/collection/healthy-total-body-cts/",
+  "archive_url": "https://www.cancerimagingarchive.net/wp-content/uploads/Healthy-Total-Body-Cts_20260923.zip",
+  "archive_sha256": "f3daa9c5e9740c8d68688bd800f5d3107236099d3e319bbef04076aa4719b13f",
+  "archive_bytes": 85445051,
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "citation": "Selfridge, A., Spencer, B., Shiyam Sundar, L., Abdelhafez, Y., Nardo, L., Cherry, S., Badawi, R. (2023). Low-Dose CT Images of Healthy Cohort (Healthy-Total-Body-CTs) (Version 3) [dataset]. The Cancer Imaging Archive. https://doi.org/10.7937/nc7z-4f76",
+  "provenance": "TCIA describes 30 healthy adult participants; segmentation masks were automatically generated at the 90-minute timepoint using MOOSE. The archive contains segmentation NIfTI files and the label-value workbook. This ingestion excludes the separate 58.95 GB DICOM CT download, which is governed by NIH Controlled Data Access Policy.",
+  "expected_scan_count": 30,
+  "nifti_member_directory": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/",
+  "label_dictionary_member": "Healthy-Total-Body-Cts/segmentation_organ_values.xlsx",
+  "expected_shape_ijk": [512, 512, 828],
+  "expected_spatial_units": "mm",
+  "expected_voxel_spacing_mm": [0.9765625, 0.9765625, 2.3440001010894775],
+  "accepted_voxel_spacings_mm": [
+    [0.9765625, 0.9765625, 2.3440001010894775],
+    [0.96484375, 0.96484375, 2.3440001010894775]
+  ],
+  "evidence_boundary": "Cohort source-mask inventory only. It does not bind these participants to Numi's current mechanical subject, establish expert-reviewed segmentation accuracy, reconstruct skin, provide arterial/venous lumens, calibrate tissue material, or qualify physiology, mechanics, or clinical use."
+}
