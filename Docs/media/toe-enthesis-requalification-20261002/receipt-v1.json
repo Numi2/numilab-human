@@ -1,0 +1,125 @@
+{
+  "candidate": {
+    "distributed_envelope_count": 653,
+    "endpoint_count": 832,
+    "inferred_independent_toe_actuators": 0,
+    "manifest_compressed_sha256": "bd95a152945d83f69c49b9a7b5a548599ecbd28a82e314e5b18f4ab2af7c6c2a",
+    "manifest_compression": "gzip -n -9; decompress to verify manifest_sha256",
+    "manifest_path": "numi-human-tendon-attachments.manifest.json.gz",
+    "manifest_sha256": "0db3392c47d25e447663ad18c523d2414a24115f6c8c60cc6b07ff8c35202e92",
+    "maximum_admitted_force_amplification": 3.962514355759075,
+    "maximum_migrated_endpoint_distance_m": 0.017205522722418157,
+    "payload_bytes": 241456,
+    "payload_path": "numi-human-tendon-attachments.nhtendon",
+    "payload_sha256": "130705ed1d9edd1d27d6e92d6b0558b1eaa0e1cdd3f7bdfe96b4aa05ab9e7b55",
+    "point_fallback_count": 179,
+    "point_fallback_reasons": {
+      "body_has_no_registered_bone_surface": 24,
+      "source_model_non_bone_endpoint": 2,
+      "surface_distance_exceeds_gate": 153
+    },
+    "toe_map_summary": [
+      {
+        "maximum_span_m": 0.042807317093730785,
+        "route": "edl_r",
+        "sampled_total_force_amplification": 2.0813726843
+      },
+      {
+        "maximum_span_m": 0.043733968489082814,
+        "route": "fdl_r",
+        "sampled_total_force_amplification": 2.3992607228
+      },
+      {
+        "maximum_span_m": 0.044317157015582656,
+        "route": "edl_l",
+        "sampled_total_force_amplification": 1.7882216448
+      },
+      {
+        "maximum_span_m": 0.045374530681980725,
+        "route": "fdl_l",
+        "sampled_total_force_amplification": 2.7490207963
+      }
+    ],
+    "toe_route_point_migration_m": 0.0,
+    "toe_route_source_force_laws_preserved": true,
+    "toe_semantic_maximum_spread_m": 0.05,
+    "toe_wrench_residual_upper_bounds": {
+      "force": 6.5e-16,
+      "moment_m": 2.5e-17
+    },
+    "unchanged_force_amplification_limit": 4.0,
+    "unchanged_generic_patch_radius_m": 0.012,
+    "unchanged_generic_surface_distance_m": 0.012
+  },
+  "date": "2026-10-02",
+  "focused_test": {
+    "command": "PYTHONPATH=src .venv-mujoco312/bin/python -m pytest -q tests/test_importer.py::ImporterTests::test_lumped_digitorum_route_maps_to_all_four_lesser_toes tests/test_importer.py::ImporterTests::test_lumped_digitorum_current_span_passes_toe_only_bound",
+    "result": "2 passed"
+  },
+  "input_artifacts": {
+    "bodyparts3d_bones_nhbones": {
+      "path": "Build/bodyparts3d-myosim-major-bones-v2/bodyparts3d-myosim-major-bones.nhbones",
+      "sha256": "482c040f197e183b31a98fc82c17fa1bf908eb5c60c788cc054e4699ddd42027"
+    },
+    "equality_nheq": {
+      "path": "Build/myosim-fullbody/myosim-fullbody-joint-equalities.nheq",
+      "sha256": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a"
+    },
+    "myosim_core_nhrigid": {
+      "path": "Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid",
+      "sha256": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951"
+    },
+    "myosim_muscle_nhmyo": {
+      "path": "Build/myosim-fullbody/myosim-fullbody-muscle-reference.nhmyo",
+      "sha256": "a4381465ca97a7af20108180e2fc0d0f0d9c11778d913de4c0728bd20ed459a7"
+    },
+    "support_contact_nhcnt": {
+      "path": "Build/myosim-fullbody/myosim-fullbody-support-contact.nhcnt",
+      "sha256": "4d54f8155cd83baaee7af536099824ac0da61e5d5e77544b42c6e5ce1b48c907"
+    }
+  },
+  "native_smoke": {
+    "compiled_stand_balanced": false,
+    "completed_steps": 1,
+    "diagnostic_visual_pack_retained_in_repository": false,
+    "diagnostic_visual_pack_sha256": "6aa2d5e6615fe9a801b80e9a94fb34d612a8b1a46ded7f97bdc8581e369db396",
+    "executable_path": "/private/tmp/numi-human-stand-extended-horizon/build/bin/metalrobo_numilab_human_myosim_visual_probe",
+    "executable_sha256": "116dbe411e043d2a216c5b2feefa0f28865a5e18a04a9ff262de456e3c30c00e",
+    "metal_transactions": 1,
+    "root_assistance": false,
+    "runtime_device": "Apple M4",
+    "scope": "package admission and one 1 ms transfer step only; not standing, gait, clinical anatomy, or integrated whole-Human qualification",
+    "stderr_path": "native.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_path": "native.stdout.log",
+    "stdout_sha256": "2088268a1033d5b555cacd732dd46a380e28f0021c69cd464edf41f665ae459d",
+    "tendon_payload_summary": "tendon_payload=NHTENDON3 tendon_endpoints=832 tendon_point_bindings=179 tendon_triangle_bindings=0 tendon_envelope_bindings=653 tendon_migrated_envelope_bindings=18 tendon_max_reference_path_delta_m=0.0107642 tendon_max_architecture_scale_change=0.0492621",
+    "timestep_seconds": 0.001
+  },
+  "repository": {
+    "compiler_source_path": "src/numilab_human/model.py",
+    "compiler_source_sha256": "0af477d63a574173a57ae5a81578271d46a7206366ea4e9ec62f1b9e83387ca1",
+    "head_before_commit": "6f9e1b78c80e44e98ab9d230ae2ff5901c71687c",
+    "path": "/Users/home/numilab-human"
+  },
+  "retained_artifacts": {
+    "native.stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native.stdout.log": {
+      "bytes": 23158,
+      "sha256": "2088268a1033d5b555cacd732dd46a380e28f0021c69cd464edf41f665ae459d"
+    },
+    "numi-human-tendon-attachments.manifest.json.gz": {
+      "bytes": 304359,
+      "sha256": "bd95a152945d83f69c49b9a7b5a548599ecbd28a82e314e5b18f4ab2af7c6c2a"
+    },
+    "numi-human-tendon-attachments.nhtendon": {
+      "bytes": 241456,
+      "sha256": "130705ed1d9edd1d27d6e92d6b0558b1eaa0e1cdd3f7bdfe96b4aa05ab9e7b55"
+    }
+  },
+  "schema": "numi.human.toe-enthesis-requalification-receipt.v1",
+  "scope": "current-source EDL/FDL four-lesser-toe distributed attachment candidate and one-step native package smoke"
+}

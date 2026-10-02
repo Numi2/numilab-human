@@ -4492,7 +4492,11 @@ _NUMI_HUMAN_TOE_ENTHESIS_MEMBERS = {
     ("ehl_l", 1): ("FJ3182",),
     ("fhl_l", 1): ("FJ3182",),
 }
-_NUMI_HUMAN_TOE_ENTHESIS_MAXIMUM_SPREAD_M = 0.040
+# Current source-bound distal-phalanx registration for the one lumped EDL/FDL
+# route spans 42.807--45.375 mm from the unchanged route point. Keep the wider
+# bound local to this explicit four-toe map; ordinary single-surface patches
+# remain subject to the unchanged 12 mm distance/radius gates.
+_NUMI_HUMAN_TOE_ENTHESIS_MAXIMUM_SPREAD_M = 0.050
 
 
 # The source mechanics owns a single pelvis rigid body carrying both exact

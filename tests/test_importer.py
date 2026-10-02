@@ -878,6 +878,61 @@ class ImporterTests(unittest.TestCase):
         self.assertLess(envelope["moment_residual_m"], 2.0e-8)
         self.assertLess(envelope["sampled_total_force_amplification"], 4.0)
 
+    def test_lumped_digitorum_current_span_passes_toe_only_bound(self) -> None:
+        source_point = [0.0, 0.0, 0.0]
+        nodes = [
+            [0.010, 0.0, 0.0],
+            [0.0, 0.020, 0.0],
+            [0.0, 0.0, 0.030],
+            [0.027, 0.027, 0.027],
+        ]
+        member_ids = ("FJ1", "FJ2", "FJ3", "FJ4")
+
+        def surfaces_at(points: list[list[float]]) -> list[dict[str, Any]]:
+            rows = []
+            for stable_id, (member_id, point) in enumerate(
+                zip(member_ids, points, strict=True), start=1,
+            ):
+                rows.append({
+                    "member_id": member_id,
+                    "body_index": 7,
+                    "stable_id": stable_id,
+                    "vertices": [
+                        point,
+                        [point[0] + 0.0001, point[1], point[2]],
+                        [point[0], point[1] + 0.0001, point[2] + 0.00001],
+                    ],
+                    "triangles": [(0, 1, 2)],
+                })
+            return rows
+
+        envelope, reason = _numi_human_semantic_enthesis_envelope(
+            source_point, surfaces_at(nodes), member_ids, 0.012, 0.012, 4.0,
+        )
+        self.assertEqual(reason, "admitted_semantic_multi_enthesis_map")
+        self.assertIsNotNone(envelope)
+        assert envelope is not None
+        self.assertGreater(envelope["patch_radius_m"], 0.040)
+        self.assertLessEqual(envelope["patch_radius_m"], 0.050)
+        self.assertEqual(
+            envelope["semantic_enthesis_map"]["source_force_law_count"], 1,
+        )
+        self.assertEqual(
+            envelope["semantic_enthesis_map"]["inferred_independent_toe_actuator_count"],
+            0,
+        )
+        self.assertEqual(envelope["semantic_enthesis_map"]["source_endpoint_migration_m"], 0.0)
+        self.assertLess(envelope["force_residual"], 2.0e-6)
+        self.assertLess(envelope["moment_residual_m"], 2.0e-8)
+        self.assertLess(envelope["sampled_total_force_amplification"], 4.0)
+
+        beyond_bound = [*nodes[:3], [0.030, 0.030, 0.030]]
+        rejected, rejection = _numi_human_semantic_enthesis_envelope(
+            source_point, surfaces_at(beyond_bound), member_ids, 0.012, 0.012, 4.0,
+        )
+        self.assertIsNone(rejected)
+        self.assertEqual(rejection, "semantic_enthesis_spread_exceeds_gate")
+
     def test_multi_member_limb_routes_select_exact_same_body_bones(self) -> None:
         self.assertEqual(len(_NUMI_HUMAN_LIMB_ENTHESIS_MEMBERS), 104)
         self.assertFalse(

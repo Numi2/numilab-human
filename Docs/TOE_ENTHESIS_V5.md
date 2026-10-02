@@ -1,5 +1,11 @@
 # Numi Human toe enthesis v5
 
+The `34.24 mm` span below is specific to the earlier 184-member bone pack and
+its paired MyoSim manifest. The current source-bound rebuild uses the updated
+body/bone identity and measures up to `45.375 mm`; see the [current toe-map
+requalification](TOE_ENTHESIS_REQUALIFICATION_20261002.md) for its toe-only
+bound, exact residuals, and native package smoke.
+
 ## Outcome
 
 This first investigation corrected a real lesser-toe presentation ambiguity,
