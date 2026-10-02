@@ -39,3 +39,14 @@ The exact command, input/output hashes, partial stdout, stderr, execution
 context, and machine-readable [receipt](media/native-stand-current-toe-enthesis-feedback-10s-20261002/receipt.json)
 are retained under
 [`media/native-stand-current-toe-enthesis-feedback-10s-20261002/`](media/native-stand-current-toe-enthesis-feedback-10s-20261002/).
+
+An offline prefix reconciliation against the matching 512 ms toe-prefix receipt
+found identical device and runtime identities, all seven recorded input
+SHA-256 values, and all 64 `human_standing_progress` rows for steps 8 through
+512. The normalized newline-joined progress-row digest is
+`10e40846981a7062b77dc90f011621ba369104be214b61ee908039f9c231327d`. This
+confirms the reported first half-second is consistent across the two runs; it
+does not establish bitwise q/v replay because these rows omit joint state,
+per-contact wrench, and route-level force. The first recorded 10 mm drift at
+1.576 s therefore occurs after this matching prefix, while its mechanical or
+controller cause remains unresolved.
