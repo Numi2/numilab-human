@@ -1,0 +1,91 @@
+{
+  "accepted_native_anatomical_steps": 0,
+  "candidate_activation_summary_sha256": "4bd6b06afbd430900b75b0e9ca952d0c018690bc0d441f8e65b953901519ea2f",
+  "fixed_reference_summary_sha256": "82d8884eb5296a412d30d870b034f2a64030ce34c0971c885f9cf89ed8876647",
+  "frames": [
+    {
+      "active_ventricular_cells": 1097534,
+      "bytes": 5880332,
+      "file": "active-tension-100ms.f32le",
+      "maximum_f32_tension_pa": 101918.9765625,
+      "reference_internal_residual_sha256": "03b3e7f7f09fc59da8c7b5a7cfbcd6270aa26a1f72b96611a40ca2055afbb2e1",
+      "sha256": "358d88a1603e73f8a09c6677afbe9e2f5584031d56bd345295a468153d1d5366",
+      "time_ms": 100.0
+    },
+    {
+      "active_ventricular_cells": 1097534,
+      "bytes": 5880332,
+      "file": "active-tension-100p001ms.f32le",
+      "maximum_f32_tension_pa": 101919.640625,
+      "sha256": "d424711a6f42a0e4fdf6e9054faeea585e8f6197ef56cb85e6b6e1e5b03508d4",
+      "time_ms": 100.001
+    },
+    {
+      "active_ventricular_cells": 1097534,
+      "bytes": 5880332,
+      "file": "active-tension-100p002ms.f32le",
+      "maximum_f32_tension_pa": 101920.3125,
+      "sha256": "dd8624d75b9d37a8c12e7284b650e362e116322869683d187393ab89670b6d79",
+      "time_ms": 100.002
+    },
+    {
+      "active_ventricular_cells": 1097534,
+      "bytes": 5880332,
+      "file": "active-tension-100p003ms.f32le",
+      "maximum_f32_tension_pa": 101920.9765625,
+      "sha256": "484ef6c75662b1af50ea180ccc7691791e2cdf07638c8818f8ddc7ec723341f6",
+      "time_ms": 100.003
+    },
+    {
+      "active_ventricular_cells": 1097534,
+      "bytes": 5880332,
+      "file": "active-tension-100p004ms.f32le",
+      "maximum_f32_tension_pa": 101921.640625,
+      "sha256": "5e67ecab0a80661e27e81c3272a2375fb8ee28d62d9d7bf1696ff5edc03cb018",
+      "time_ms": 100.004
+    },
+    {
+      "active_ventricular_cells": 1097534,
+      "bytes": 5880332,
+      "file": "active-tension-100p005ms.f32le",
+      "maximum_f32_tension_pa": 101922.3125,
+      "sha256": "bef16052c3a35e97dd574755780fb5210cb4244a13a20122b79bcd5563e03b94",
+      "time_ms": 100.005
+    },
+    {
+      "active_ventricular_cells": 1097534,
+      "bytes": 5880332,
+      "file": "active-tension-100p006ms.f32le",
+      "maximum_f32_tension_pa": 101922.9765625,
+      "sha256": "da9772022ab171f446cc5671e0bc3931844f4a3afda1d075fdd6c7a217da68f0",
+      "time_ms": 100.006
+    },
+    {
+      "active_ventricular_cells": 1097534,
+      "bytes": 5880332,
+      "file": "active-tension-100p007ms.f32le",
+      "maximum_f32_tension_pa": 101923.640625,
+      "sha256": "58c5d2fa537117ee5c2d3e8e3275aba2280f992e242c705762085dc3520bcdc8",
+      "time_ms": 100.007
+    }
+  ],
+  "heartbeat_qualified": false,
+  "ordering": "one little-endian Float32 Cauchy tension per source tetrahedron; labels 1/2 active, all other labels zero",
+  "producer_source_sha256": "73ce61f6070da0905c2f40d947cbf3fd23594001bc038b921248718cc210c772",
+  "requested_times_ms": [
+    100.0,
+    100.001,
+    100.002,
+    100.003,
+    100.004,
+    100.005,
+    100.006,
+    100.007
+  ],
+  "schema": "numi.human.cardiac-active-tension-ingress.v1",
+  "source_asset_manifest_sha256": "e8cb0391623577efc4eac04e5710cf7c9a4757614e09d936f5af3889c37d56f1",
+  "source_cell_count": 1470083,
+  "source_model_reproduced": false,
+  "status": "source_ordered_prescribed_active_tension_candidate",
+  "time_series_boundary": "source-parameter Tanh reconstruction over the fixed activation-arrival field; no periodic excitation is inferred"
+}

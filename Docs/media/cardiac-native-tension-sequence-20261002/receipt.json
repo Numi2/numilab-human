@@ -1,0 +1,396 @@
+{
+  "schema": "numi.human.cardiac-native-active-tension-sequence.v1",
+  "status": "eight_consecutive_native_ventricular_steps_accepted_bitwise_replay_and_zero_control",
+  "native": {
+    "device": "Apple M4",
+    "host": "local MacBook Air M4",
+    "matter_repository": "https://github.com/Numi2/numi-lab.git",
+    "matter_revision": "7bcbf5d97e529abb425b81359d4457d7e91fe08f",
+    "matter_branch": "coupled",
+    "abi": 35,
+    "source_sha256": {
+      "ventricular_source_cook_cpp": "ac78490e574b62662e46b820d771b2d3843c6d69c457f68e560667046eec163c",
+      "ventricular_source_step_mm": "e32f20aa0e2a1bf43b69a2f6806eb1feb7d9bdfa996996fc7039a46403e1c219",
+      "runtime_mm": "70b6152377ab51009ec9f22b359fbf2f9b8ba6bd3c596003adcc8752d97af35d",
+      "cardiac_active_tension_gate_py": "9f9d36b0856325e0db793d1e2d9fe34206e5208535a01ac145cf74c7d53a7689"
+    },
+    "binary_sha256": {
+      "cook": "5c1df6b1830c4dd35b21e018b43ae232d4a308ff688528cef1e27009c0eec281",
+      "step": "c4b99d9ff4a4a65c93e628d9c2ff8421e56294078c82d37cf0fdf75bf267a16b",
+      "metallib": "b653627bfef555997f4c89472427ccf66b527c6e61ac6a49e9d7564aead7c6a2"
+    },
+    "timestep_s": 9.999999974752427e-07,
+    "accepted_duration_s": 7.9999999798e-06,
+    "run_order": [
+      "active",
+      "replay",
+      "zero"
+    ],
+    "active": {
+      "device": "Apple M4",
+      "abi": 35,
+      "status_code": 0,
+      "sequence_count": 8,
+      "accepted_native_steps": 8,
+      "step_status_codes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "step_completed_microsteps": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "step_fgmres_iterations": [
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "step_failing_indices": [
+        4294967295,
+        4294967295,
+        4294967295,
+        4294967295,
+        4294967295,
+        4294967295,
+        4294967295,
+        4294967295
+      ],
+      "moved_nodes": 218001,
+      "maximum_displacement_m": 8.06033685126e-06,
+      "accepted_duration_s": 7.9999999798e-06,
+      "zero_tension_input": false,
+      "synthetic_density_kg_m3": 1050,
+      "synthetic_fixed_nodes": 3,
+      "point_only_lv_rv_nodes_split": 3,
+      "heartbeat_qualified": false
+    },
+    "replay": {
+      "device": "Apple M4",
+      "abi": 35,
+      "status_code": 0,
+      "sequence_count": 8,
+      "accepted_native_steps": 8,
+      "step_status_codes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "step_completed_microsteps": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "step_fgmres_iterations": [
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "step_failing_indices": [
+        4294967295,
+        4294967295,
+        4294967295,
+        4294967295,
+        4294967295,
+        4294967295,
+        4294967295,
+        4294967295
+      ],
+      "moved_nodes": 218001,
+      "maximum_displacement_m": 8.06033685126e-06,
+      "accepted_duration_s": 7.9999999798e-06,
+      "zero_tension_input": false,
+      "synthetic_density_kg_m3": 1050,
+      "synthetic_fixed_nodes": 3,
+      "point_only_lv_rv_nodes_split": 3,
+      "heartbeat_qualified": false
+    },
+    "zero": {
+      "device": "Apple M4",
+      "abi": 35,
+      "status_code": 0,
+      "sequence_count": 8,
+      "accepted_native_steps": 8,
+      "step_status_codes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "step_completed_microsteps": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "step_fgmres_iterations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "step_failing_indices": [
+        4294967295,
+        4294967295,
+        4294967295,
+        4294967295,
+        4294967295,
+        4294967295,
+        4294967295,
+        4294967295
+      ],
+      "moved_nodes": 60,
+      "maximum_displacement_m": 8.18545231596e-12,
+      "accepted_duration_s": 7.9999999798e-06,
+      "zero_tension_input": true,
+      "synthetic_density_kg_m3": 1050,
+      "synthetic_fixed_nodes": 3,
+      "point_only_lv_rv_nodes_split": 3,
+      "heartbeat_qualified": false
+    },
+    "active_replay_bitwise_identical": true,
+    "state_audit": {
+      "finite_active_state": true,
+      "finite_zero_state": true,
+      "fixed_nodes_unchanged_from_source": true,
+      "active_zero_mass_fields_bitwise_equal": true,
+      "split_point_contact_pairs": [
+        {
+          "source_node": 17565,
+          "lv_cooked_node": 13174,
+          "rv_cooked_node": 218077,
+          "active_separation_m": 6.805056500525097e-07,
+          "zero_separation_m": 0.0
+        },
+        {
+          "source_node": 170947,
+          "lv_cooked_node": 126653,
+          "rv_cooked_node": 218078,
+          "active_separation_m": 3.785434273595456e-06,
+          "zero_separation_m": 0.0
+        },
+        {
+          "source_node": 235754,
+          "lv_cooked_node": 173376,
+          "rv_cooked_node": 218079,
+          "active_separation_m": 1.0119152875631698e-06,
+          "zero_separation_m": 0.0
+        }
+      ],
+      "active_state_sha256": "aaaf71749aec609f91657eb411b3a772277d0da2aa9a2c25a63ca36f856bf7d2",
+      "replay_state_sha256": "aaaf71749aec609f91657eb411b3a772277d0da2aa9a2c25a63ca36f856bf7d2",
+      "zero_state_sha256": "75eac854eaa2d2678b26872ef7576bc4857dccbdf17f66b7be333c845a909002"
+    },
+    "output_sha256": {
+      "active": "aaaf71749aec609f91657eb411b3a772277d0da2aa9a2c25a63ca36f856bf7d2",
+      "replay": "aaaf71749aec609f91657eb411b3a772277d0da2aa9a2c25a63ca36f856bf7d2",
+      "zero": "75eac854eaa2d2678b26872ef7576bc4857dccbdf17f66b7be333c845a909002"
+    },
+    "stdout_sha256": {
+      "active": "4d05b80dc29702c0db3f11130effbca56d39c51974e3d35301b94aebad6ed07a",
+      "replay": "4d05b80dc29702c0db3f11130effbca56d39c51974e3d35301b94aebad6ed07a",
+      "zero": "502c849611c5109334e8518a95c498e53e20e4fc0f2fdc4a3dbf742feac13cae"
+    }
+  },
+  "source": {
+    "anatomical_case": "Rodero case18 source ventricular subset",
+    "source_asset_manifest_sha256": "e8cb0391623577efc4eac04e5710cf7c9a4757614e09d936f5af3889c37d56f1",
+    "source_cells": 1470083,
+    "ventricular_tetrahedra": 1097534,
+    "ventricular_nodes": 218080,
+    "point_only_lv_rv_nodes_split": 3,
+    "material_frame_rotations_sha256": "9fb21ec06d6d73b209f47b1f905708b9ff26cb228114786fb3dbf9163e1ff0be",
+    "source_ventricular_node_map_sha256": "dba00562eb2cef9da107d41aec26e7bd601557be7585c666cc3ca6ceafae07fe",
+    "source_region_map_sha256": "5846478a5b9ecdc406bd821866e5ec4ee8bf2b7e26ad4496f6a654b0d5151603",
+    "source_tension_gate": {
+      "status": "passed_full_source_float32_tension_to_residual",
+      "source_sha256": "9f9d36b0856325e0db793d1e2d9fe34206e5208535a01ac145cf74c7d53a7689",
+      "candidate_summary_sha256": "e67b76dea389d5bfd0404ebb4652e33af1eda46315219685b7033003450357f6",
+      "frames_independently_recomputed": 8,
+      "ventricular_cells_per_frame": 1097534,
+      "maximum_component_difference_n": 4.36312956250684e-09,
+      "maximum_relative_l2_difference": 1.0593378453127362e-07,
+      "maximum_net_internal_residual_n": 2.637176880312266e-13,
+      "accepted_native_anatomical_steps": 0
+    },
+    "sample_times_ms": [
+      100.0,
+      100.001,
+      100.002,
+      100.003,
+      100.004,
+      100.005,
+      100.006,
+      100.007
+    ],
+    "sample_interval_ms": 0.001,
+    "source_frame_sha256": [
+      "358d88a1603e73f8a09c6677afbe9e2f5584031d56bd345295a468153d1d5366",
+      "d424711a6f42a0e4fdf6e9054faeea585e8f6197ef56cb85e6b6e1e5b03508d4",
+      "dd8624d75b9d37a8c12e7284b650e362e116322869683d187393ab89670b6d79",
+      "484ef6c75662b1af50ea180ccc7691791e2cdf07638c8818f8ddc7ec723341f6",
+      "5e67ecab0a80661e27e81c3272a2375fb8ee28d62d9d7bf1696ff5edc03cb018",
+      "bef16052c3a35e97dd574755780fb5210cb4244a13a20122b79bcd5563e03b94",
+      "da9772022ab171f446cc5671e0bc3931844f4a3afda1d075fdd6c7a217da68f0",
+      "58c5d2fa537117ee5c2d3e8e3275aba2280f992e242c705762085dc3520bcdc8"
+    ],
+    "source_active_tension_files_sha256": {
+      "source-active-tension-100ms.f32le": "358d88a1603e73f8a09c6677afbe9e2f5584031d56bd345295a468153d1d5366",
+      "source-active-tension-100p001ms.f32le": "d424711a6f42a0e4fdf6e9054faeea585e8f6197ef56cb85e6b6e1e5b03508d4",
+      "source-active-tension-100p002ms.f32le": "dd8624d75b9d37a8c12e7284b650e362e116322869683d187393ab89670b6d79",
+      "source-active-tension-100p003ms.f32le": "484ef6c75662b1af50ea180ccc7691791e2cdf07638c8818f8ddc7ec723341f6",
+      "source-active-tension-100p004ms.f32le": "5e67ecab0a80661e27e81c3272a2375fb8ee28d62d9d7bf1696ff5edc03cb018",
+      "source-active-tension-100p005ms.f32le": "bef16052c3a35e97dd574755780fb5210cb4244a13a20122b79bcd5563e03b94",
+      "source-active-tension-100p006ms.f32le": "da9772022ab171f446cc5671e0bc3931844f4a3afda1d075fdd6c7a217da68f0",
+      "source-active-tension-100p007ms.f32le": "58c5d2fa537117ee5c2d3e8e3275aba2280f992e242c705762085dc3520bcdc8"
+    },
+    "cooked_tension_sequence_sha256": "4ce4dcd7727125391b53b7ae27420e861dd6f53ea3e68f85ee76dda26b0652bd",
+    "cooked_package_sha256": "f6ad2e22d4ebaa4c78952b7815210aa0d378220ab376f18447bb7e842ef5b699",
+    "cooked_package_bytes": 230151184,
+    "cooked_source_node_map_sha256": "28a979109e515020101263ace0801d8f4fe24cf2dd6d172ce6bbf5446e6d0138",
+    "first_cooked_frame_matches_cpp_cook_bitwise": true,
+    "all_eight_source_fields_cpp_cook_bitwise_verified": true,
+    "seven_followup_cpp_cook_checks": {
+      "frames_independently_cpp_cook_checked": 7,
+      "results": [
+        {
+          "time_label": "100p001ms",
+          "status": "full_source_ventricular_cook_pass",
+          "source_to_cooked_float32_bitwise": true,
+          "ventricular_tetrahedra": 1097534,
+          "ventricular_nodes": 218080
+        },
+        {
+          "time_label": "100p002ms",
+          "status": "full_source_ventricular_cook_pass",
+          "source_to_cooked_float32_bitwise": true,
+          "ventricular_tetrahedra": 1097534,
+          "ventricular_nodes": 218080
+        },
+        {
+          "time_label": "100p003ms",
+          "status": "full_source_ventricular_cook_pass",
+          "source_to_cooked_float32_bitwise": true,
+          "ventricular_tetrahedra": 1097534,
+          "ventricular_nodes": 218080
+        },
+        {
+          "time_label": "100p004ms",
+          "status": "full_source_ventricular_cook_pass",
+          "source_to_cooked_float32_bitwise": true,
+          "ventricular_tetrahedra": 1097534,
+          "ventricular_nodes": 218080
+        },
+        {
+          "time_label": "100p005ms",
+          "status": "full_source_ventricular_cook_pass",
+          "source_to_cooked_float32_bitwise": true,
+          "ventricular_tetrahedra": 1097534,
+          "ventricular_nodes": 218080
+        },
+        {
+          "time_label": "100p006ms",
+          "status": "full_source_ventricular_cook_pass",
+          "source_to_cooked_float32_bitwise": true,
+          "ventricular_tetrahedra": 1097534,
+          "ventricular_nodes": 218080
+        },
+        {
+          "time_label": "100p007ms",
+          "status": "full_source_ventricular_cook_pass",
+          "source_to_cooked_float32_bitwise": true,
+          "ventricular_tetrahedra": 1097534,
+          "ventricular_nodes": 218080
+        }
+      ]
+    }
+  },
+  "physics_boundary": {
+    "density_kg_m3": 1050,
+    "fixed_nodes": 3,
+    "gravity_m_s2": [
+      0,
+      0,
+      0
+    ],
+    "boundary_condition": "three synthetic fixed nodes; no anatomical support",
+    "chamber_pressure_or_flow": false,
+    "valves_or_closed_loop_circulation": false,
+    "native_electrical_to_mechanical_coupling": false,
+    "calibrated_material_or_subject": false,
+    "heartbeat_qualified": false
+  },
+  "retained_files_sha256": {
+    "active-accepted-nodes.bin": "aaaf71749aec609f91657eb411b3a772277d0da2aa9a2c25a63ca36f856bf7d2",
+    "active.json": "4d05b80dc29702c0db3f11130effbca56d39c51974e3d35301b94aebad6ed07a",
+    "cook.json": "b3c6b30fd151112489757b8c9190bad712aa56c7771388e0871e661d0a804a6e",
+    "cooked-source-nodes.u32le": "28a979109e515020101263ace0801d8f4fe24cf2dd6d172ce6bbf5446e6d0138",
+    "cooked-tension-sequence.f32le": "4ce4dcd7727125391b53b7ae27420e861dd6f53ea3e68f85ee76dda26b0652bd",
+    "frame-cook-checks.json": "cb2c45aac0052fbfd9386741e97c16137004480ebbd2b8f62582216521966136",
+    "independent-gate.json": "09ad74af964c0f867c7c7b76f536528a8157f7875266d87cf15c7f48cfda54ec",
+    "replay-accepted-nodes.bin": "aaaf71749aec609f91657eb411b3a772277d0da2aa9a2c25a63ca36f856bf7d2",
+    "replay.json": "4d05b80dc29702c0db3f11130effbca56d39c51974e3d35301b94aebad6ed07a",
+    "sequence-manifest.json": "012f8a6d895bd42d5ddcc3365bad9b94f09cc4b66b8d36770781dfc50f05e83a",
+    "source-active-tension-100ms.f32le": "358d88a1603e73f8a09c6677afbe9e2f5584031d56bd345295a468153d1d5366",
+    "source-active-tension-100p001ms.f32le": "d424711a6f42a0e4fdf6e9054faeea585e8f6197ef56cb85e6b6e1e5b03508d4",
+    "source-active-tension-100p002ms.f32le": "dd8624d75b9d37a8c12e7284b650e362e116322869683d187393ab89670b6d79",
+    "source-active-tension-100p003ms.f32le": "484ef6c75662b1af50ea180ccc7691791e2cdf07638c8818f8ddc7ec723341f6",
+    "source-active-tension-100p004ms.f32le": "5e67ecab0a80661e27e81c3272a2375fb8ee28d62d9d7bf1696ff5edc03cb018",
+    "source-active-tension-100p005ms.f32le": "bef16052c3a35e97dd574755780fb5210cb4244a13a20122b79bcd5563e03b94",
+    "source-active-tension-100p006ms.f32le": "da9772022ab171f446cc5671e0bc3931844f4a3afda1d075fdd6c7a217da68f0",
+    "source-active-tension-100p007ms.f32le": "58c5d2fa537117ee5c2d3e8e3275aba2280f992e242c705762085dc3520bcdc8",
+    "source-summary.json": "e67b76dea389d5bfd0404ebb4652e33af1eda46315219685b7033003450357f6",
+    "state-audit.json": "da26c191fc9583bb6497b58d62800731a166310a9edc0c4392596791e91d6d34",
+    "zero-accepted-nodes.bin": "75eac854eaa2d2678b26872ef7576bc4857dccbdf17f66b7be333c845a909002",
+    "zero.json": "502c849611c5109334e8518a95c498e53e20e4fc0f2fdc4a3dbf742feac13cae"
+  },
+  "evidence_directory": "Docs/media/cardiac-native-tension-sequence-20261002/",
+  "notes": [
+    "The source-tension residual gate evaluates field assembly only; it accepts zero native anatomical steps.",
+    "The native run is a short 8 microsecond source-derived active-tension mechanics sequence with synthetic inertia and support.",
+    "This is not a cardiac cycle, anatomical loading qualification, blood-flow result, or whole-Human result."
+  ]
+}

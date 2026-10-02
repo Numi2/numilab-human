@@ -10,6 +10,22 @@ a calendar schedule. The current physical runtime baseline is the published
 integration branch and [four-grid production diagnostic](NATIVE_COMMON_DURATION_PRODUCTION.md);
 reconciliation onto the native default line remains open.
 
+## Native ventricular tension sequence - 2026-10-02
+
+The [source-derived native ventricular sequence](CARDIAC_NATIVE_ACTIVE_TENSION_SEQUENCE_20261002.md)
+now accepts eight consecutive `1 µs` Matter FEM steps on the Apple M4. All
+eight active-tension fields independently pass source residual and C++
+source-to-cooked Float32 checks. A fresh active replay is byte-identical over
+all 218,080 node states; the matched zero-tension run also accepts all eight
+steps. Active loading moves 218,001 nodes by at most `8.06 µm`, compared with
+60 nodes and `8.19 pm` in the zero control. The three point-only LV/RV pairs
+show source-tension-dependent separation. The fixture remains a synthetic
+1050 kg/m³, three-fixed-node, zero-gravity ventricular subset with no chamber
+loading, blood flow, native electrical coupling, or calibrated reference.
+This closes only the bounded transient mechanics/replay subgate. The activation
+timing mismatch, four-chamber electromechanics, heartbeat, anatomical support,
+and whole-Human physiology remain open.
+
 ## Cumulative source anatomy extension - 2026-09-29
 
 The [brain, ocular and visceral source receipt](WHOLE_VISCERAL_SOURCE_GEOMETRY_20260929.md)
