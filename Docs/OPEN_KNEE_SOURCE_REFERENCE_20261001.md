@@ -181,10 +181,25 @@ conditions; their archived processed tibiofemoral rotations are -0.00874,
 qualification cases.
 
 `open-knee-reference-contact --plot PATH --output NEW_JSON` reads the original
-uncompressed XPLT version 5 contact gap and pressure fields, preserving surface
-IDs, face counts, array hashes, and source units. It rejects unsupported
-compression/layouts and incomplete fields. Partial downloads expose only complete
-states and return status 2; they do not establish full-archive completion.
+uncompressed XPLT version 5 nodal displacement/reaction, element stress and
+prestrain/fibre stretch, rigid-region pose/wrench, and surface gap/pressure/
+traction fields. It preserves source dictionary IDs, mesh-domain and surface
+IDs, array hashes, and source units. Repeated `--checkpoint-state INDEX` options
+can export exact raw float32 arrays to a new `--checkpoint-output-dir`, with the
+reference XPLT and source-mesh identities plus field mapping embedded in each
+NPZ. It rejects unsupported compression/layouts and malformed or incomplete
+fields. Partial downloads expose only complete states and return status 2; they
+do not establish full-archive completion.
+
+`open-knee-compare-source-checkpoints --reference REF.npz --matter MATTER.npz
+--output NEW_JSON` verifies matching source identities, continuation time,
+field/domain/surface mapping, and array shapes before reporting per-array max,
+RMS, relative-RMS, and mean errors. The Matter checkpoint must use the source
+mesh's global node, domain-element, and surface-face order. The command reports
+differences without inventing a pass threshold. The archive reader and comparator
+are implemented; no source-equivalent Matter checkpoint has yet been emitted, so
+there is not yet a Matter-versus-FEBio comparison or accepted preload/flexion
+state.
 
 At the first accepted preload increment (continuation 0.05), the original
 patellofemoral output has positive pressure on **7 of 22,478 femoral faces**

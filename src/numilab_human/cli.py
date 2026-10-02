@@ -1602,10 +1602,23 @@ def parser() -> argparse.ArgumentParser:
     reference_parser.set_defaults(handler=open_knee_reference_cli)
     from .open_knee_xplt import cli as open_knee_reference_contact_cli
     reference_contact_parser = commands.add_parser("open-knee-reference-contact",
-        help="read original XPLT v5 contact fields and explicitly report partial downloads")
+        help="read source XPLT v5 mechanics fields and export selected FEBio checkpoints")
     reference_contact_parser.add_argument("--plot", type=Path, required=True)
     reference_contact_parser.add_argument("--output", type=Path, required=True)
+    reference_contact_parser.add_argument("--checkpoint-state", type=int, action="append",
+        help="zero-based retained XPLT state to export as a field-preserving NPZ archive")
+    reference_contact_parser.add_argument("--checkpoint-output-dir", type=Path,
+        help="new directory for selected checkpoint arrays; existing state files are never overwritten")
     reference_contact_parser.set_defaults(handler=open_knee_reference_contact_cli)
+    from .open_knee_xplt import compare_cli as open_knee_checkpoint_compare_cli
+    compare_parser = commands.add_parser("open-knee-compare-source-checkpoints",
+        help="compare field-preserving Matter arrays against one hash-pinned FEBio XPLT state")
+    compare_parser.add_argument("--reference", type=Path, required=True,
+        help="NPZ archive exported by open-knee-reference-contact")
+    compare_parser.add_argument("--matter", type=Path, required=True,
+        help="Matter NPZ checkpoint with matching source identities and field layout")
+    compare_parser.add_argument("--output", type=Path, required=True)
+    compare_parser.set_defaults(handler=open_knee_checkpoint_compare_cli)
     thoracic_registration_parser = commands.add_parser(
         "myosim-thoracic-registration",
         help="propose exact T1-T12 source-mesh registration with enthesis and continuity gates",
