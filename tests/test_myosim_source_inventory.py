@@ -49,6 +49,30 @@ class MyoSimSourceInventoryTests(unittest.TestCase):
                 for site in entry["sites"]:
                     self.assertEqual(site["position_body_m"], model.site_pos[site["id"]].tolist())
 
+    def test_left_knee_translation_range_overlay_is_explicit_and_mirrored(self):
+        value = self.value
+        overlays = value["source"]["source_overlays"]
+        self.assertEqual(len(overlays), 1)
+        overlay = overlays[0]
+        self.assertEqual(
+            overlay["id"],
+            "myosim-left-knee-translation2-reflected-range-20261002",
+        )
+        self.assertEqual(
+            overlay["source_archive_sha256"],
+            value["source"]["archive_sha256"],
+        )
+        ranges = {joint["name"]: joint["range"] for joint in value["joints"]}
+        self.assertEqual(ranges["knee_angle_translation2_r"], [7.69254e-11, 0.006792])
+        self.assertEqual(
+            ranges["knee_angle_translation2_l"],
+            [-0.006792, -7.69254e-11],
+        )
+        equalities = {row["name"]: row["polycoef"] for row in value["joint_equalities"]}
+        right = equalities["knee_angle_translation2_constraint_r"]
+        left = equalities["knee_angle_translation2_constraint_l"]
+        self.assertEqual(left, [-component for component in right])
+
 
 if __name__ == "__main__":
     unittest.main()

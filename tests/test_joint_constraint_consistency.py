@@ -138,7 +138,7 @@ def test_all_source_driver_domain_conflict_witnesses_join_engine_constraints(who
     model,mujoco,exported,joined=wholebody
     check=joint_equality_driver_domain_audit(exported,joined,np,PROJECTED_JOINT_RANGE_TOLERANCE)
     assert check['expected_source_equalities']==check['evaluated_equalities']==51
-    assert check['source_range_conflict_count']==38
+    assert check['source_range_conflict_count']==37
     assert check['unverified_driver_domain_count']==0
     original=copy.deepcopy(exported['joint_equalities'])
     count=0
@@ -153,4 +153,4 @@ def test_all_source_driver_domain_conflict_witnesses_join_engine_constraints(who
             assert oracle['passed'] and oracle['measured_joint_equalities']==51
             assert witness['source_range_violation']>PROJECTED_JOINT_RANGE_TOLERANCE
             count+=1
-    assert count>=38 and exported['joint_equalities']==original
+    assert count>=37 and exported['joint_equalities']==original

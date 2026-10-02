@@ -14,6 +14,8 @@ import json
 import sys
 from pathlib import Path
 
+from .myosim_source_overlays import apply_myo_sim_source_overlays
+
 
 def _sha256(path: Path) -> str:
     digest = hashlib.sha256()
@@ -155,6 +157,11 @@ def _support_point_on_geometry(
 
 
 def export_fullbody(sources: Path) -> dict[str, object]:
+    sources = sources.resolve()
+    source_overlays = apply_myo_sim_source_overlays(sources)
+    source_checkout = (sources / "myosim" / "checkout").resolve()
+    if source_checkout.is_dir() and str(source_checkout) not in sys.path:
+        sys.path.insert(0, str(source_checkout))
     try:
         import mujoco
         import numpy as np
@@ -174,6 +181,28 @@ def export_fullbody(sources: Path) -> dict[str, object]:
         raise RuntimeError(f"MyoSim source archive is absent: {archive}")
 
     model = build_model("myofullbody")
+    joint = source_overlays["source_joint"]
+    joint_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, joint)
+    expected_range = source_overlays["range_after_m"]
+    if joint_id < 0 or not bool(model.jnt_limited[joint_id]) or \
+            [float(value) for value in model.jnt_range[joint_id]] != expected_range:
+        raise RuntimeError(
+            f"compiled MyoSim model did not consume source overlay range for {joint}"
+        )
+    equality_name = "knee_angle_translation2_constraint_l"
+    equality_id = mujoco.mj_name2id(
+        model, mujoco.mjtObj.mjOBJ_EQUALITY, equality_name
+    )
+    expected_polycoef = source_overlays["equality_polycoef"]
+    if equality_id < 0 or any(
+            float(actual) != expected
+            for actual, expected in zip(
+                model.eq_data[equality_id, :5], expected_polycoef, strict=True
+            )
+        ):
+        raise RuntimeError(
+            "compiled MyoSim knee equality differs from its source overlay witness"
+        )
     if mujoco.__version__ != "3.12.0":
         raise RuntimeError("NHEQ2 export requires pinned MuJoCo 3.12.0")
     if int(model.opt.integrator) != int(mujoco.mjtIntegrator.mjINT_EULER):
@@ -519,6 +548,7 @@ def export_fullbody(sources: Path) -> dict[str, object]:
             "archive_sha256": _sha256(archive),
             "license": "Apache-2.0",
             "mujoco_version": mujoco.__version__,
+            "source_overlays": [source_overlays],
         },
         "model": {
             "name": "myofullbody",

@@ -1094,9 +1094,16 @@ accepted acceleration, and right knee flexion reaches `0.91920 rad` in 512 ms.
 Maximum foot penetration is `1.813 mm` and joint-equality velocity error is
 `0.0571 m/s`. A matched 64-iteration run also fails balance, so contact
 iteration count remains trajectory-sensitive without resolving the standing
-gap. Calibrated closed-loop recruitment and a source-corrected left-knee range
-contract remain prerequisites; the requested standing video and board visuals
-stay paused until requested.
+gap. The [left knee source-range overlay](MYOSIM_LEFT_KNEE_RANGE_OVERLAY_20261002.md)
+now corrects the sign-mirrored `knee_angle_translation2_l` interval against
+the pinned equality law. The refreshed native reference artifact consumes the
+corrected `NHLIM1` range; both equality payloads remain byte-exact across all
+51 source rows, and the full source driver-domain audit now has 37 conflicts
+with no unverified domains. Neutral, bilateral knee flexion, and deep crouch
+pass the corrected left-slide range; functional crouch retains two separate knee rotation-range
+residuals. Calibrated closed-loop recruitment, loaded knee/contact mechanics,
+and sustained standing remain open; the requested standing video and board
+visuals stay paused until requested.
 
 ## Single-male release target
 

@@ -297,10 +297,10 @@ def joint_ranges(inputs):
 
 @pytest.mark.parametrize("pose_name,expected", [
     ("neutral", set()),
-    ("bilateral_knee_flexion", {"knee_angle_translation2_l"}),
-    ("bilateral_deep_crouch", {"knee_angle_translation2_l"}),
+    ("bilateral_knee_flexion", set()),
+    ("bilateral_deep_crouch", set()),
     ("bilateral_functional_crouch", {
-        "knee_angle_translation2_l", "knee_angle_rotation2_r", "knee_angle_rotation2_l",
+        "knee_angle_rotation2_r", "knee_angle_rotation2_l",
     }),
 ])
 def test_source_projection_conflicts_are_distinct_from_consumed_limits(inputs, joint_ranges, pose_name, expected):
@@ -310,13 +310,12 @@ def test_source_projection_conflicts_are_distinct_from_consumed_limits(inputs, j
     assert len(checks) == 122
     failed = {c["source_joint_name"]: c for c in checks if not c["passed"]}
     assert set(failed) == expected
-    if "knee_angle_translation2_l" in failed:
-        left = failed["knee_angle_translation2_l"]
-        assert left["unit"] == "m" and left["q_index"] == 118
-        assert not left["native_position_limit_enabled"]
-        assert left["native_position_range"] is None and left["native_position_range_passed"]
-        assert left["source_range_violation"] > .003
-    for name in expected - {"knee_angle_translation2_l"}:
+    corrected_left_translation = next(
+        c for c in checks if c["source_joint_name"] == "knee_angle_translation2_l"
+    )
+    assert corrected_left_translation["source_range"] == [-0.006792, -7.69254e-11]
+    assert corrected_left_translation["source_range_passed"]
+    for name in expected:
         assert failed[name]["native_position_limit_enabled"]
         assert not failed[name]["native_position_range_passed"]
         assert failed[name]["native_range_violation"] == pytest.approx(.00010107457637786865, abs=1e-12)

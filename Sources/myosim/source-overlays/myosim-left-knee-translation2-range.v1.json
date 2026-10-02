@@ -1,0 +1,60 @@
+{
+  "change": {
+    "derivative_monotonicity": "p_second_derivative is positive throughout the driver interval; p_prime increases from -0.00587971 to -0.000606142021, so p is strictly decreasing and its interval extrema occur at the endpoints.",
+    "driver_joint": "knee_angle_l",
+    "driver_range_rad": [
+      0.0,
+      2.0944
+    ],
+    "equality_polycoef": [
+      -7.69254e-11,
+      -0.00587971,
+      0.00125622,
+      2.61846e-06,
+      -6.24355e-07
+    ],
+    "file": "checkout/myo_sim/models/leg/assets/myolegs_chain.xml",
+    "file_sha256_after": "885fdc6fa0e8a2d24d590c3987856f4a17256f1d44f277f46ecf9dbfedc02b0a",
+    "file_sha256_before": "da7c4a13eec2abfedc683210972ea423d630461a56909bee2884e181e1bf1d97",
+    "polynomial_range_witness_m": [
+      -0.006791998837245416,
+      -7.69254e-11
+    ],
+    "range_after_m": [
+      -0.006792,
+      -7.69254e-11
+    ],
+    "range_before_m": [
+      7.69254e-11,
+      0.006792
+    ],
+    "rationale": "The left equality polynomial is the exact sign mirror of the right polynomial while the authored interval was copied with the right-side sign. Reflecting the interval preserves the complete source law and exact bilateral range symmetry.",
+    "right_counterpart": {
+      "equality_polycoef": [
+        7.69254e-11,
+        0.00587971,
+        -0.00125622,
+        -2.61846e-06,
+        6.24355e-07
+      ],
+      "range_m": [
+        7.69254e-11,
+        0.006792
+      ],
+      "source_joint": "knee_angle_translation2_r"
+    },
+    "source_joint": "knee_angle_translation2_l",
+    "source_text_after": "                <joint axis=\"0.992246 0.123982 0.00878916\" name=\"knee_angle_translation2_l\" pos=\"0 0 0\" range=\"-0.006792 -7.69254e-11\" type=\"slide\"/>",
+    "source_text_before": "                <joint axis=\"0.992246 0.123982 0.00878916\" name=\"knee_angle_translation2_l\" pos=\"0 0 0\" range=\"7.69254e-11 0.006792\" type=\"slide\"/>"
+  },
+  "evidence_boundary": "Derived source-tree overlay only. The pinned upstream archive remains byte-identical; this does not qualify loaded knee mechanics or clinical anatomy.",
+  "id": "myosim-left-knee-translation2-reflected-range-20261002",
+  "schema": "numi.human.myosim-source-range-overlay.v1",
+  "source": {
+    "archive": "myo_sim-33c89c2b.tar.gz",
+    "archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "license": "Apache-2.0",
+    "repository": "https://github.com/MyoHub/myo_sim",
+    "revision": "33c89c2bde282553dde3f526768eb3bdcfaa7649"
+  }
+}

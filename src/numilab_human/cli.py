@@ -59,6 +59,7 @@ from .model import (
     sha256,
     write_json,
 )
+from .myosim_source_overlays import apply_myo_sim_source_overlays
 from .zanatomy import build_zanatomy_calf_visual_supplement_payload
 from .lower_limb_registration import propose_lower_limb_registration
 from .open_knee import SCHEMA as OPEN_KNEE_SCHEMA
@@ -256,12 +257,15 @@ def myosim_fetch(arguments: argparse.Namespace) -> int:
             _extract_pinned_tarball(archive, checkout)
         if not expected.is_file():
             raise ImportError(f"{archive.name} did not contain expected source {source['expected_file']}")
+        if key == "myosim_fullbody":
+            apply_myo_sim_source_overlays(source_dir)
         print(f"verified {key} {actual}")
     return 0
 
 
 def myosim_build(arguments: argparse.Namespace) -> int:
     source_dir = arguments.sources.resolve()
+    apply_myo_sim_source_overlays(source_dir)
     # Do not resolve the interpreter symlink: virtual-environment ``python``
     # links point at the base interpreter, and resolving them drops site-packages.
     exporter = arguments.python.expanduser().absolute()
@@ -270,10 +274,13 @@ def myosim_build(arguments: argparse.Namespace) -> int:
     with tempfile.TemporaryDirectory(prefix="numilab-human-myosim-") as temporary:
         exported_path = Path(temporary) / "myosim-export.json"
         environment = dict(os.environ)
-        source_path = str(REPOSITORY_ROOT / "src")
-        environment["PYTHONPATH"] = source_path + (
-            os.pathsep + environment["PYTHONPATH"] if environment.get("PYTHONPATH") else ""
-        )
+        source_paths = [
+            str(REPOSITORY_ROOT / "src"),
+            str(source_dir / "myosim" / "checkout"),
+        ]
+        if environment.get("PYTHONPATH"):
+            source_paths.append(environment["PYTHONPATH"])
+        environment["PYTHONPATH"] = os.pathsep.join(source_paths)
         command = [
             str(exporter), "-m", "numilab_human.myosim_export",
             "--sources", str(source_dir), "--output", str(exported_path),
