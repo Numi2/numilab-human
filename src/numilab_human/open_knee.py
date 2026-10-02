@@ -464,6 +464,226 @@ def _source_curve_points(element: ET.Element) -> list[dict[str, Any]]:
     return points
 
 
+def _geometry_archive_cross_references(
+    path: Path,
+    *,
+    expected_sha256: str | None,
+    contact_pair_names: set[str],
+    rigid_tie_node_sets: set[str],
+) -> dict[str, Any]:
+    """Stream the archived Geometry_custom and resolve source contact/tie IDs.
+
+    The archive is over 100 MB. Only node IDs, requested rigid-tie members,
+    surface connectivity digests/counts, and named pair links are retained.
+    This validates references without substituting the smaller registered
+    Geometry.feb or materializing a second full mesh in memory.
+    """
+    if not path.is_file():
+        raise ValueError("Open Knee(s) archived source geometry file is absent")
+    geometry_sha256 = _sha256(path)
+    if expected_sha256 is not None and geometry_sha256 != expected_sha256:
+        raise ValueError("Open Knee(s) archived Geometry_custom identity drifted")
+
+    node_ids: set[int] = set()
+    surface_node_ids: set[int] = set()
+    node_sets: dict[str, dict[str, Any]] = {}
+    surfaces: dict[str, dict[str, Any]] = {}
+    surface_pairs: dict[str, dict[str, str]] = {}
+    active: dict[int, dict[str, Any]] = {}
+    stack: list[ET.Element] = []
+    node_record_count = 0
+
+    def local_tag(element: ET.Element) -> str:
+        return element.tag.rsplit("}", 1)[-1]
+
+    def record_number(text: str | None, label: str) -> int:
+        try:
+            value = int((text or "").strip())
+        except ValueError as error:
+            raise ValueError(f"Open Knee(s) archived geometry has invalid {label}") from error
+        if value <= 0:
+            raise ValueError(f"Open Knee(s) archived geometry has nonpositive {label}")
+        return value
+
+    try:
+        events = ET.iterparse(path, events=("start", "end"))
+        for event, element in events:
+            tag = local_tag(element)
+            if event == "start":
+                parent = stack[-1] if stack else None
+                parent_tag = local_tag(parent) if parent is not None else ""
+                if parent_tag == "Geometry" and tag in {"NodeSet", "Surface", "SurfacePair"}:
+                    name = element.attrib.get("name")
+                    if not name:
+                        raise ValueError(
+                            f"Open Knee(s) archived geometry {tag} has no name"
+                        )
+                    if tag == "NodeSet":
+                        active[id(element)] = {
+                            "kind": tag, "name": name, "count": 0,
+                            "ids": [] if name in rigid_tie_node_sets else None,
+                            "digest": hashlib.sha256(),
+                        }
+                    elif tag == "Surface":
+                        active[id(element)] = {
+                            "kind": tag, "name": name, "count": 0,
+                            "digest": hashlib.sha256(),
+                        }
+                    else:
+                        active[id(element)] = {"kind": tag, "name": name}
+                elif parent_tag == "SurfacePair" and tag in {"master", "slave"}:
+                    group = active.get(id(parent))
+                    if group is None or group["kind"] != "SurfacePair":
+                        raise ValueError(
+                            "Open Knee(s) archived geometry has malformed SurfacePair nesting"
+                        )
+                    target = element.attrib.get("surface")
+                    if not target or tag in group:
+                        raise ValueError(
+                            "Open Knee(s) archived SurfacePair reference is missing or duplicated"
+                        )
+                    group[tag] = target
+                stack.append(element)
+                continue
+
+            parent = stack[-2] if len(stack) > 1 else None
+            parent_tag = local_tag(parent) if parent is not None else ""
+            if parent_tag == "Nodes" and tag == "node":
+                node_ids.add(record_number(element.attrib.get("id"), "node ID"))
+                node_record_count += 1
+            elif parent_tag == "NodeSet":
+                group = active.get(id(parent))
+                if group is not None:
+                    if tag != "node":
+                        if group["ids"] is not None:
+                            raise ValueError(
+                                "Open Knee(s) archived rigid-tie node set uses an unsupported member"
+                            )
+                    else:
+                        node_id = record_number(element.attrib.get("id"), "node-set node ID")
+                        group["count"] += 1
+                        group["digest"].update(f"{node_id}\n".encode("ascii"))
+                        if group["ids"] is not None:
+                            group["ids"].append(node_id)
+            elif parent_tag == "Surface":
+                group = active.get(id(parent))
+                if group is not None:
+                    text = (element.text or "").strip()
+                    try:
+                        face_ids = tuple(int(value.strip()) for value in text.split(","))
+                    except ValueError as error:
+                        raise ValueError(
+                            "Open Knee(s) archived source surface has invalid connectivity"
+                        ) from error
+                    if not face_ids or any(value <= 0 for value in face_ids):
+                        raise ValueError(
+                            "Open Knee(s) archived source surface has invalid node IDs"
+                        )
+                    group["count"] += 1
+                    surface_node_ids.update(face_ids)
+                    encoded = ",".join(str(value) for value in face_ids)
+                    group["digest"].update(
+                        f"{tag}:{element.attrib.get('id', '')}:{encoded}\n".encode("ascii")
+                    )
+
+            if tag in {"NodeSet", "Surface", "SurfacePair"} and id(element) in active:
+                group = active.pop(id(element))
+                name = group["name"]
+                if group["kind"] == "NodeSet":
+                    if name in node_sets:
+                        raise ValueError(
+                            "Open Knee(s) archived geometry has duplicate NodeSet names"
+                        )
+                    node_sets[name] = {
+                        "node_count": group["count"],
+                        "node_ids_sha256": group["digest"].hexdigest(),
+                    }
+                    if group["ids"] is not None:
+                        node_sets[name]["node_ids"] = group["ids"]
+                elif group["kind"] == "Surface":
+                    if name in surfaces:
+                        raise ValueError(
+                            "Open Knee(s) archived geometry has duplicate Surface names"
+                        )
+                    surfaces[name] = {
+                        "face_count": group["count"],
+                        "connectivity_sha256": group["digest"].hexdigest(),
+                    }
+                else:
+                    if name in surface_pairs:
+                        raise ValueError(
+                            "Open Knee(s) archived geometry has duplicate SurfacePair names"
+                        )
+                    if "master" not in group or "slave" not in group:
+                        raise ValueError(
+                            "Open Knee(s) archived SurfacePair lacks master or slave"
+                        )
+                    surface_pairs[name] = {
+                        "master_surface": group["master"],
+                        "slave_surface": group["slave"],
+                    }
+
+            if stack and stack[-1] is element:
+                stack.pop()
+            if parent is not None:
+                parent.remove(element)
+            element.clear()
+    except ET.ParseError as error:
+        raise ValueError("Open Knee(s) archived Geometry_custom XML is invalid") from error
+
+    if not node_ids or node_record_count != len(node_ids):
+        raise ValueError("Open Knee(s) archived geometry node IDs are empty or duplicated")
+    if not surface_node_ids.issubset(node_ids):
+        raise ValueError("Open Knee(s) archived surface refers to a missing mesh node")
+    for name in rigid_tie_node_sets:
+        record = node_sets.get(name)
+        if record is None or record["node_count"] == 0 or "node_ids" not in record:
+            raise ValueError(
+                f"Open Knee(s) archived geometry is missing rigid-tie NodeSet {name}"
+            )
+        if not set(record["node_ids"]).issubset(node_ids):
+            raise ValueError(
+                f"Open Knee(s) archived rigid-tie NodeSet {name} refers to a missing node"
+            )
+
+    resolved_pairs: dict[str, dict[str, Any]] = {}
+    for name in sorted(contact_pair_names):
+        pair = surface_pairs.get(name)
+        if pair is None:
+            raise ValueError(
+                f"Open Knee(s) archived geometry is missing contact SurfacePair {name}"
+            )
+        master, slave = pair["master_surface"], pair["slave_surface"]
+        if master not in surfaces or slave not in surfaces:
+            raise ValueError(
+                f"Open Knee(s) archived contact pair {name} references an unknown Surface"
+            )
+        resolved_pairs[name] = {
+            **pair,
+            "master_face_count": surfaces[master]["face_count"],
+            "master_connectivity_sha256": surfaces[master]["connectivity_sha256"],
+            "slave_face_count": surfaces[slave]["face_count"],
+            "slave_connectivity_sha256": surfaces[slave]["connectivity_sha256"],
+        }
+    return {
+        "status": "resolved_against_pinned_Geometry_custom",
+        "file": path.name,
+        "file_bytes": path.stat().st_size,
+        "sha256": geometry_sha256,
+        "node_count": len(node_ids),
+        "node_set_count": len(node_sets),
+        "surface_count": len(surfaces),
+        "surface_pair_count": len(surface_pairs),
+        "rigid_tie_node_sets": {
+            name: node_sets[name] for name in sorted(rigid_tie_node_sets)
+        },
+        "contact_surface_pairs": resolved_pairs,
+        "unreferenced_surface_pair_names": sorted(
+            set(surface_pairs) - contact_pair_names
+        ),
+    }
+
+
 def _xml_parameter_records(element: ET.Element) -> list[dict[str, Any]]:
     return [
         {
@@ -481,6 +701,7 @@ def compile_source_mechanical_description(
     source_deck: Path,
     expected_deck_sha256: str | None = None,
     source_geometry_archive_sha256: str | None = None,
+    source_geometry_archive_path: Path | None = None,
     reference_solver_version: str | None = None,
     reference_log_sha256: str | None = None,
 ) -> dict[str, Any]:
@@ -702,6 +923,9 @@ def compile_source_mechanical_description(
         if not node_set or rigid_body is None or int(rigid_body) not in body_ids:
             raise ValueError("Open Knee(s) source rigid tie has an invalid source reference")
         rigid_ties.append({
+            "name": item.attrib.get("name"),
+            "node_set_name": node_set,
+            "rigid_body_material_id": int(rigid_body),
             "attributes": dict(sorted(item.attrib.items())),
             "source_xml_sha256": _xml_digest(item),
             "node_set_resolution": "not_checked_against_the_archived_Geometry_custom_file",
@@ -725,6 +949,26 @@ def compile_source_mechanical_description(
         raise ValueError("Open Knee(s) source Step has no Control program")
     if not sections:
         raise ValueError("Open Knee(s) source mechanical program has no sections")
+    geometry_resolution = None
+    if source_geometry_archive_path is not None:
+        geometry_resolution = _geometry_archive_cross_references(
+            source_geometry_archive_path,
+            expected_sha256=source_geometry_archive_sha256,
+            contact_pair_names={contact["surface_pair"] for contact in contacts},
+            rigid_tie_node_sets={tie["attributes"]["node_set"] for tie in rigid_ties},
+        )
+        for tie in rigid_ties:
+            resolved = geometry_resolution["rigid_tie_node_sets"][
+                tie["attributes"]["node_set"]
+            ]
+            tie["node_set_resolution"] = geometry_resolution["status"]
+            tie["node_set_node_count"] = resolved["node_count"]
+            tie["node_set_node_ids_sha256"] = resolved["node_ids_sha256"]
+            tie["node_set_node_ids"] = resolved["node_ids"]
+        for contact in contacts:
+            contact["geometry_resolution"] = geometry_resolution[
+                "contact_surface_pairs"
+            ][contact["surface_pair"]]
     if expected_deck_sha256 is not None:
         observed_counts = {
             "materials": len(materials),
@@ -749,12 +993,17 @@ def compile_source_mechanical_description(
         "febio_spec_version": root.attrib.get("version"),
         "reference_solver_version_from_archived_log": reference_solver_version,
         "reference_log_sha256": reference_log_sha256,
-        "source_geometry_archive_sha256": source_geometry_archive_sha256,
+        "source_geometry_archive_sha256": (
+            geometry_resolution["sha256"]
+            if geometry_resolution is not None else source_geometry_archive_sha256
+        ),
+        "source_geometry_resolution": geometry_resolution,
         "source_geometry_reference": (
             None if root.find("Geometry") is None else
             dict(sorted(root.find("Geometry").attrib.items()))
         ),
         "contact_surface_pair_resolution": (
+            geometry_resolution["status"] if geometry_resolution is not None else
             "not_checked_against_the_archived_Geometry_custom_file"
         ),
         "module": dict(root.find("Module").attrib) if root.find("Module") is not None else None,
@@ -1069,6 +1318,7 @@ def _fixed_name(value: str, width: int) -> bytes:
 def compile_payload(
     *, sources: Path, open_knee: Path, registration_path: Path, output: Path,
     side: str = "left", projected_visual_frame: bool = False,
+    source_geometry_archive_path: Path | None = None,
 ) -> dict[str, Any]:
     if side not in {"left", "right"}:
         raise ValueError("Open Knee(s) payload side must be left or right")
@@ -1564,6 +1814,7 @@ def compile_payload(
             source_deck=open_knee / "FeBio_custom.feb",
             expected_deck_sha256=EXPECTED_HASHES["FeBio_custom.feb"],
             source_geometry_archive_sha256=ARCHIVED_REFERENCE_GEOMETRY_SHA256,
+            source_geometry_archive_path=source_geometry_archive_path,
             reference_solver_version=ARCHIVED_REFERENCE_SOLVER_VERSION,
             reference_log_sha256=ARCHIVED_REFERENCE_LOG_SHA256,
         ),

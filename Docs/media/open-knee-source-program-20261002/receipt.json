@@ -1,12 +1,12 @@
 {
   "status": "passed_source_inventory_compilation_not_native_admission",
   "scope": "typed inventory of the pinned FEBio source program; no source mechanics are executed by the NHKNEE1 hybrid",
-  "human_worktree_base_revision": "86a53c8",
+  "human_worktree_base_revision": "582fcd0",
   "matter_operator_revision": "9a25b00d2e49f9e8ce9eab5189847039b67337ae",
   "source_sha256": {
-    "src/numilab_human/open_knee.py": "e8d8ba9dc33564cf1d7b73ed6a2247886915caf30b64c098acf6f5fc7c3495dc",
-    "tests/test_importer.py": "8093520629cd4d6d04010fbcf71c3ac0e6ca614471b0d9cb32cd334083ae5798",
-    "source-mechanics.json": "635ac61ce0c4bd68bd8838e73dc9b5e3c84f5588a0a0cf39d8d8aca39b659c1a"
+    "src/numilab_human/open_knee.py": "7da31a178ac0a9f00d681dc2fc2624d4e2f01b7d21f8f3c11a06a8c3692c53ef",
+    "tests/test_importer.py": "cadda42634cd26e2f72ac9ca95a970ceca960bdffb1253f067b213245163b3a2",
+    "source-mechanics.json": "b44987244c27a00544d1b1850a099bbc9445e170855ad2ee07a93034e53830a2"
   },
   "reference_inputs": {
     "FeBio_custom.feb": {
@@ -32,18 +32,20 @@
     "other_constraints": 2,
     "prescribed_body_boundaries": 2,
     "sliding_contacts": 18,
-    "load_curves": 9
+    "load_curves": 9,
+    "resolved_source_contact_pairs": 18,
+    "resolved_source_rigid_ties": 18
   },
-    "source_equivalence_admission": "rejected_unsupported_source_mechanics",
-    "compiled_rigid_graph_fields": "typed finite source-frame centers, density, connector origin/axis, penalties, prescribed flags/targets, curve references, and numeric load-curve points; source XML text and hashes retained",
-    "compiled_rigid_graph_execution_status": "unsupported_not_executed",
+  "source_equivalence_admission": "rejected_unsupported_source_mechanics",
+  "compiled_rigid_graph_fields": "typed finite source-frame centers, density, connector origin/axis, penalties, prescribed flags/targets, curve references, and numeric load-curve points; source XML text and hashes retained",
+  "compiled_rigid_graph_execution_status": "unsupported_not_executed",
   "not_qualified": [
     "original FEBio 2.9.1 execution",
-    "archived-geometry cross-reference resolution in this compiler",
     "NHKNEE1 payload manifest rebuild because the pinned myo_sim module is unavailable",
     "source rigid graph runtime assembly",
     "source contact and prestrain execution",
-    "assembled tissue equilibrium or whole-body integration"
+    "assembled tissue equilibrium or whole-body integration",
+    "native execution of resolved source rigid graph, contacts, prestrain, tissues, and loading"
   ],
   "validation": {
     "tests": [
@@ -51,9 +53,21 @@
       "test_open_knee_exact_fiber_directions_are_source_authored_and_unit"
     ],
     "result": "passed",
-    "pinned_source_mechanical_descriptor_rebuild": "passed with exact FEBio deck SHA; no NHKNEE1 payload rebuild",
+    "pinned_source_mechanical_descriptor_rebuild": "passed against exact deck and Geometry_custom hashes; 18 contacts and 18 rigid ties resolve",
     "python_compileall": "passed",
     "git_diff_check": "passed"
   },
-  "inventory": "source-mechanics.json"
+  "inventory": "source-mechanics.json",
+  "resolved_geometry": {
+    "status": "resolved_against_pinned_Geometry_custom",
+    "nodes": 248236,
+    "surfaces": 88,
+    "surface_pairs": 19,
+    "resolved_contacts": 18,
+    "resolved_rigid_ties": 18,
+    "rigid_tie_node_members": 29427,
+    "unreferenced_surface_pair_names": [
+      "MCL_To_MNS-M"
+    ]
+  }
 }

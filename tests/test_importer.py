@@ -14,6 +14,7 @@ from numilab_human.open_knee import compile_payload as compile_open_knee_payload
 from numilab_human.open_knee import _anatomical_femoral_basis
 from numilab_human.open_knee import _orientation_preserving_connectivity
 from numilab_human.open_knee import _parse_febio_fiber_directions
+from numilab_human.open_knee import _geometry_archive_cross_references
 from numilab_human.open_knee import compile_source_mechanical_description
 from numilab_human.open_knee import parse_source as parse_open_knee_source
 
@@ -3782,7 +3783,8 @@ class ImporterTests(unittest.TestCase):
             (directory / "FeBio_custom.feb").write_text(febio, encoding="utf-8")
             source = parse_open_knee_source(directory, enforce_exact=False)
             mechanics = compile_source_mechanical_description(
-                source, source_deck=directory / "FeBio_custom.feb"
+                source, source_deck=directory / "FeBio_custom.feb",
+                source_geometry_archive_path=directory / "Geometry.feb",
             )
             joint_axis = source.mechanical_program.find(
                 "Step/Constraints/constraint[@name='A_B']/joint_axis"
@@ -3822,6 +3824,23 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(mechanics["febio_spec_version"], "2.5")
         self.assertEqual(mechanics["source_equivalence_admission"],
                          "rejected_unsupported_source_mechanics")
+        self.assertEqual(
+            mechanics["contact_surface_pair_resolution"],
+            "resolved_against_pinned_Geometry_custom",
+        )
+        self.assertEqual(mechanics["source_geometry_resolution"]["node_count"], 7)
+        self.assertEqual(mechanics["source_geometry_resolution"]["surface_pair_count"], 1)
+        self.assertEqual(
+            mechanics["rigid_graph"]["rigid_ties"][0]["node_set_node_ids"],
+            [1, 2],
+        )
+        self.assertEqual(
+            mechanics["rigid_graph"]["rigid_ties"][0]["rigid_body_material_id"], 1
+        )
+        self.assertEqual(
+            mechanics["contacts"][0]["geometry_resolution"]["master_face_count"],
+            1,
+        )
         self.assertEqual([body["material_id"] for body in
                           mechanics["rigid_graph"]["bodies"]], [1, 2])
         body = mechanics["rigid_graph"]["bodies"][0]
@@ -3833,6 +3852,38 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(joint["moment_penalty"], 3000000.0)
         self.assertEqual(joint["joint_origin"], [0.0, 0.0, 0.0])
         self.assertEqual(joint["joint_axis"], [0.0, 0.0, 1.0])
+
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            geometry_path = directory / "Geometry.feb"
+            geometry_path.write_text(geometry, encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "identity drifted"):
+                _geometry_archive_cross_references(
+                    geometry_path, expected_sha256="0" * 64,
+                    contact_pair_names={"A_To_B"},
+                    rigid_tie_node_sets={"A_@_B_TiesNodes"},
+                )
+            geometry_path.write_text(
+                geometry.replace("<SurfacePair name=\"A_To_B\">",
+                                 "<SurfacePair name=\"Other\">"),
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(ValueError, "missing contact SurfacePair"):
+                _geometry_archive_cross_references(
+                    geometry_path, expected_sha256=None,
+                    contact_pair_names={"A_To_B"},
+                    rigid_tie_node_sets={"A_@_B_TiesNodes"},
+                )
+            geometry_path.write_text(
+                geometry.replace("A_@_B_TiesNodes", "Other_TiesNodes"),
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(ValueError, "missing rigid-tie NodeSet"):
+                _geometry_archive_cross_references(
+                    geometry_path, expected_sha256=None,
+                    contact_pair_names={"A_To_B"},
+                    rigid_tie_node_sets={"A_@_B_TiesNodes"},
+                )
         self.assertFalse(joint["prescribed_translation"])
         self.assertTrue(joint["prescribed_rotation"])
         self.assertEqual(joint["translation"]["value"], 0.0)
