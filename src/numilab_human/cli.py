@@ -2342,6 +2342,14 @@ def parser() -> argparse.ArgumentParser:
         help="transfer the published Healthy Rodero-04 cell activation field by exact VTK/TetGen cell identity",
     )
     add_rodero04_lat_import_arguments(rodero04_lat_import)
+    from .cardiac_rodero26_hcm_activation_import import (
+        add_arguments as add_rodero26_hcm_activation_import_arguments,
+    )
+    rodero26_hcm_activation_import = commands.add_parser(
+        "rodero-hcm1-source-activation",
+        help="import the pinned HCM1 sample 53 point activation map in source VTK order",
+    )
+    add_rodero26_hcm_activation_import_arguments(rodero26_hcm_activation_import)
     return result
 
 
