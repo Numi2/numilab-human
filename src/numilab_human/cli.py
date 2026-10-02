@@ -2308,7 +2308,7 @@ def parser() -> argparse.ArgumentParser:
     )
     muscle_volume_disjointness = commands.add_parser(
         "muscle-surface-volume-disjointness",
-        help="exactly audit pairwise interiors of closed compiled muscle-surface candidates",
+        help="exactly audit closed compiled muscle domains and separated shell unions",
     )
     add_muscle_volume_disjointness_arguments(muscle_volume_disjointness)
     from .cardiac_rodero04_lat_import import add_arguments as add_rodero04_lat_import_arguments

@@ -94,8 +94,26 @@ SHA-256 is
 `a241f5d368b686b31890256eadd552e7547e72646f009369f91eb0d6ac4df84d`, and the
 MyoSim reference manifest SHA-256 is
 `5d1d749632b521bc84bbd1d08b86044740635724c062667d6a4710e7c9735b07`. The
-full import route is documented in [IMPORT.md](IMPORT.md). To repeat the pair
-audit with this retained manifest and embeddedness receipt:
+full import route is documented in [IMPORT.md](IMPORT.md). Receipt-v1 is the
+immutable 54-single-shell audit published in commit `4e658b2`. The current
+version extends the domain model to selected multi-component meshes:
+
+The [v2 pairwise receipt](media/muscle-volume-disjointness-20261002/receipt-v2.json)
+checks all 84 per-surface closed-embedded candidates. It admits 26 of 30
+multi-component surfaces as unions only after every component pair passes
+exact separation and non-containment checks. Together with the 54 single-shell
+surfaces, this yields 80 domain unions and 3,160 inter-member comparisons:
+2,792 are strict AABB separations, 268 are separate closed domains, and 100
+are surface intersections (50 mirrored right/left member-pair relationships).
+The intersections may include boundary contact and do not establish
+positive-volume penetration. Four multi-component surfaces are withheld
+because their shells are nested: right and left vastus lateralis (`FJ1442`,
+`FJ1442M`) and right and left flexor digitorum profundus (`FJ1497`, `FJ1497M`).
+The other 64 muscle surfaces fail the per-surface embeddedness gate. Tendons,
+other tissue layers, physical volume/mass, mechanics, and whole-body
+disjointness remain unqualified.
+
+To repeat v2 from the retained manifest and embeddedness receipt:
 
 ```sh
 NUMI_HUMAN_PYTHON=.venv-mujoco312/bin/python \
@@ -103,5 +121,5 @@ NUMI_HUMAN_PYTHON=.venv-mujoco312/bin/python \
   --payload Build/muscle-geometry-current-20261002/surface-payload/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue \
   --manifest Docs/media/muscle-volume-disjointness-20261002/payload-manifest.json \
   --embeddedness Docs/media/muscle-volume-disjointness-20261002/self-embeddedness.json \
-  --output Build/muscle-geometry-current-20261002/muscle-volume-disjointness-reproduced.json
+  --output Build/muscle-geometry-current-20261002/muscle-volume-disjointness-reproduced-v2.json
 ```

@@ -7,7 +7,7 @@ mass, material, force-transfer, or whole-body owners.
 from __future__ import annotations
 
 import argparse
-from collections import Counter
+from collections import Counter, defaultdict
 import hashlib
 import json
 import math
@@ -21,7 +21,7 @@ from .compiled_quotient_embeddedness import coordinate_quotient
 from .physiology import canonical
 
 
-SCHEMA = "numi.human.compiled-muscle-volume-disjointness.v1"
+SCHEMA = "numi.human.compiled-muscle-volume-disjointness.v2"
 PREDICATE_FILES = (
     "muscle_surface_volume_disjointness.py",
     "muscle_surface_embeddedness.py",
@@ -117,6 +117,212 @@ def _surface_pair_status(
         "containment": {
             "first_representative_vertex_in_second": first_in_second,
             "second_representative_vertex_in_first": second_in_first,
+        },
+    }
+
+
+def _face_components(faces: list[list[int]]) -> list[list[int]]:
+    """Return edge-connected triangle components in stable face order."""
+    edge_faces: dict[tuple[int, int], list[int]] = defaultdict(list)
+    for face_index, face in enumerate(faces):
+        _require(len(face) == 3, "component input contains a nontriangle")
+        for first, second in (
+            (face[0], face[1]),
+            (face[1], face[2]),
+            (face[2], face[0]),
+        ):
+            edge_faces[tuple(sorted((first, second)))].append(face_index)
+    adjacent: dict[int, set[int]] = defaultdict(set)
+    for incident in edge_faces.values():
+        for first in incident:
+            adjacent[first].update(second for second in incident if second != first)
+    unseen = set(range(len(faces)))
+    components = []
+    while unseen:
+        todo = [min(unseen)]
+        component = []
+        while todo:
+            face_index = todo.pop()
+            if face_index not in unseen:
+                continue
+            unseen.remove(face_index)
+            component.append(face_index)
+            todo.extend(adjacent[face_index] & unseen)
+        components.append(sorted(component))
+    return components
+
+
+def _component_meshes(
+    vertices: list[tuple[int, int, int]], faces: list[list[int]]
+) -> tuple[list[dict[str, Any]], list[list[int]]]:
+    face_components = _face_components(faces)
+    meshes = []
+    for component_index, face_ids in enumerate(face_components):
+        used_vertices = sorted(
+            {vertex for face_id in face_ids for vertex in faces[face_id]}
+        )
+        local_index = {vertex: index for index, vertex in enumerate(used_vertices)}
+        component_vertices = [vertices[index] for index in used_vertices]
+        component_faces = [
+            [local_index[vertex] for vertex in faces[face_id]] for face_id in face_ids
+        ]
+        meshes.append(
+            {
+                "component_index": component_index,
+                "source_face_ids": face_ids,
+                "vertices": component_vertices,
+                "faces": component_faces,
+                "records": _records(component_vertices, component_faces),
+                "bounds": _bounds(component_vertices),
+            }
+        )
+    return meshes, face_components
+
+
+def _bounds(
+    vertices: list[tuple[int, int, int]],
+) -> tuple[tuple[int, ...], tuple[int, ...]]:
+    return (
+        tuple(min(point[axis] for point in vertices) for axis in range(3)),
+        tuple(max(point[axis] for point in vertices) for axis in range(3)),
+    )
+
+
+def _strict_aabb_separation(
+    first_bounds: tuple[tuple[int, ...], tuple[int, ...]],
+    second_bounds: tuple[tuple[int, ...], tuple[int, ...]],
+) -> bool:
+    first_lo, first_hi = first_bounds
+    second_lo, second_hi = second_bounds
+    return any(
+        first_hi[axis] < second_lo[axis] or second_hi[axis] < first_lo[axis]
+        for axis in range(3)
+    )
+
+
+def _component_domain_status(
+    components: list[dict[str, Any]],
+) -> tuple[str, dict[str, int], list[dict[str, Any]]]:
+    """Admit a multi-shell member only when its components form a disjoint union."""
+    counts: Counter[str] = Counter()
+    unresolved = []
+    for first_index, first in enumerate(components):
+        for second in components[first_index + 1 :]:
+            pair = _surface_pair_status(first, second)
+            counts[pair["status"]] += 1
+            if pair["status"] not in {
+                "strictly_disjoint_aabbs",
+                "separate_closed_domains",
+            }:
+                unresolved.append(
+                    {
+                        "first_component": first["component_index"],
+                        "second_component": second["component_index"],
+                        "status": pair["status"],
+                        "intersection_pairs": pair["intersection_pairs"],
+                    }
+                )
+    if unresolved:
+        return "component_union_unresolved", dict(sorted(counts.items())), unresolved
+    status = (
+        "single_closed_component"
+        if len(components) == 1
+        else "disjoint_closed_component_union"
+    )
+    return status, dict(sorted(counts.items())), unresolved
+
+
+def _member_pair_status(
+    first: dict[str, Any], second: dict[str, Any]
+) -> dict[str, Any]:
+    """Compare unions of one or more internally separated closed components."""
+    if _strict_aabb_separation(_bounds(first["vertices"]), _bounds(second["vertices"])):
+        return {
+            "status": "strictly_disjoint_aabbs",
+            "aabb_candidate_pairs": 0,
+            "intersection_pairs": 0,
+            "intersecting_component_pair_count": 0,
+            "containment": "impossible_for_strictly_disjoint_aabbs",
+        }
+
+    checked = _audit_pair(first["records"], second["records"], same_surface=False)
+    if checked["count"]:
+        first_face_component = {
+            face_id: component["component_index"]
+            for component in first["components"]
+            for face_id in component["source_face_ids"]
+        }
+        second_face_component = {
+            face_id: component["component_index"]
+            for component in second["components"]
+            for face_id in component["source_face_ids"]
+        }
+        intersecting_components = sorted(
+            {
+                (first_face_component[first_face], second_face_component[second_face])
+                for first_face, second_face in checked["triangle_pairs"]
+            }
+        )
+        pair_digest = hashlib.sha256(
+            json.dumps(checked["triangle_pairs"], separators=(",", ":")).encode()
+        ).hexdigest()
+        return {
+            "status": "surface_intersection",
+            "aabb_candidate_pairs": checked["aabb_candidate_pairs"],
+            "intersection_pairs": checked["count"],
+            "intersection_pair_list_sha256": pair_digest,
+            "first_intersecting_face_pairs": checked["triangle_pairs"][:16],
+            "intersecting_component_pair_count": len(intersecting_components),
+            "first_intersecting_component_pairs": intersecting_components[:16],
+            "containment": "not_checked_after_surface_intersection",
+        }
+
+    first_inside_second = []
+    second_inside_first = []
+    ambiguous_component_pairs = []
+    checked_component_pairs = 0
+    for first_component in first["components"]:
+        for second_component in second["components"]:
+            if _strict_aabb_separation(
+                first_component["bounds"], second_component["bounds"]
+            ):
+                continue
+            checked_component_pairs += 1
+            first_location = point_location(
+                first_component["vertices"][0], second_component["records"]
+            )
+            second_location = point_location(
+                second_component["vertices"][0], first_component["records"]
+            )
+            component_ids = [
+                first_component["component_index"],
+                second_component["component_index"],
+            ]
+            if first_location["location"] == "inside":
+                first_inside_second.append(component_ids)
+            if second_location["location"] == "inside":
+                second_inside_first.append(component_ids)
+            if any(
+                location["location"] in {"boundary", "indeterminate"}
+                for location in (first_location, second_location)
+            ):
+                ambiguous_component_pairs.append(component_ids)
+    if ambiguous_component_pairs:
+        status = "indeterminate_containment"
+    elif first_inside_second or second_inside_first:
+        status = "nested_closed_domains"
+    else:
+        status = "separate_closed_domains"
+    return {
+        "status": status,
+        "aabb_candidate_pairs": checked["aabb_candidate_pairs"],
+        "intersection_pairs": 0,
+        "intersecting_component_pair_count": 0,
+        "containment": {
+            "component_pairs_checked": checked_component_pairs,
+            "first_components_inside_second": first_inside_second,
+            "second_components_inside_first": second_inside_first,
+            "indeterminate_component_pairs": ambiguous_component_pairs,
         },
     }
 
@@ -312,10 +518,13 @@ def audit(
             evidence.get("compiled_geometry_sha256") == geometry_sha,
             f"self-embeddedness geometry hash differs for {member_id}",
         )
-        is_candidate = (
+        is_closed_embedded_candidate = (
             expected_layer == "muscle"
             and evidence.get("status") == "closed_embedded_source_candidate"
-            and evidence.get("single_embedded_surface_candidate") is True
+            and evidence.get("topology_closed_oriented") is True
+            and evidence.get("exact_intersection_pairs") == 0
+            and type(evidence.get("face_component_count")) is int
+            and evidence["face_component_count"] > 0
         )
         surface = {
             "stable_id": stable_id,
@@ -323,10 +532,11 @@ def audit(
             "layer": expected_layer,
             "compiled_geometry_sha256": geometry_sha,
             "triangle_count": local_index_count // 3,
-            "closed_embedded_candidate": is_candidate,
+            "closed_embedded_candidate": is_closed_embedded_candidate,
+            "source_face_component_count": evidence.get("face_component_count"),
         }
         surface_rows.append(surface)
-        if not is_candidate:
+        if not is_closed_embedded_candidate:
             continue
         source_vertices = (
             positions[first_vertex : first_vertex + local_vertex_count, :3]
@@ -336,6 +546,10 @@ def audit(
         local_faces = (global_faces.reshape(-1, 3) - first_vertex).tolist()
         quotient_vertices, quotient_faces, _ = coordinate_quotient(
             source_vertices, local_faces
+        )
+        _require(
+            len(_face_components(quotient_faces)) == evidence["face_component_count"],
+            f"live component quotient differs for {member_id}",
         )
         surface["quotient_vertex_count"] = len(quotient_vertices)
         surface["quotient_triangle_count"] = len(quotient_faces)
@@ -369,11 +583,34 @@ def audit(
         )
         mesh["vertices"] = integer_vertices
         mesh["records"] = _records(integer_vertices, mesh["faces"])
+        mesh["components"], component_face_groups = _component_meshes(
+            integer_vertices, mesh["faces"]
+        )
+        _require(
+            len(component_face_groups)
+            == mesh["surface"]["source_face_component_count"],
+            f"exact component topology differs for {mesh['surface']['member_id']}",
+        )
+        (
+            component_status,
+            component_pair_counts,
+            unresolved_component_pairs,
+        ) = _component_domain_status(mesh["components"])
+        mesh["surface"]["component_domain_status"] = component_status
+        mesh["surface"]["component_pair_status_counts"] = component_pair_counts
+        mesh["surface"]["unresolved_component_pairs"] = unresolved_component_pairs
+        mesh["domain_union_admitted"] = component_status in {
+            "single_closed_component",
+            "disjoint_closed_component_union",
+        }
+
+    admitted_meshes = [mesh for mesh in exact_meshes if mesh["domain_union_admitted"]]
+    _require(bool(admitted_meshes), "no unambiguous closed muscle domain unions")
 
     pair_rows: list[dict[str, Any]] = []
-    for first_index, first in enumerate(exact_meshes):
-        for second in exact_meshes[first_index + 1 :]:
-            pair = _surface_pair_status(first, second)
+    for first_index, first in enumerate(admitted_meshes):
+        for second in admitted_meshes[first_index + 1 :]:
+            pair = _member_pair_status(first, second)
             pair_rows.append(
                 {
                     "first_member_id": first["surface"]["member_id"],
@@ -397,7 +634,9 @@ def audit(
                 )
 
     pair_counts = Counter(row["status"] for row in pair_rows)
-    candidate_count = len(exact_meshes)
+    candidate_count = len(admitted_meshes)
+    closed_embedded_candidate_count = len(exact_meshes)
+    component_union_rejected_count = closed_embedded_candidate_count - candidate_count
     expected_pair_count = candidate_count * (candidate_count - 1) // 2
     _require(
         len(pair_rows) == expected_pair_count, "pairwise muscle audit is incomplete"
@@ -408,9 +647,11 @@ def audit(
     )
     result: dict[str, Any] = {
         "schema": SCHEMA,
-        "status": "pairwise_muscle_volume_domains_disjoint"
-        if pairwise_domains_disjoint
-        else "pairwise_muscle_volume_domains_not_disjoint",
+        "status": (
+            "pairwise_muscle_volume_domains_not_disjoint"
+            if not pairwise_domains_disjoint
+            else "pairwise_muscle_volume_domains_disjoint_for_admitted_candidates"
+        ),
         "source": {
             "payload": str(payload.relative_to(human.REPOSITORY_ROOT))
             if payload.is_relative_to(human.REPOSITORY_ROOT)
@@ -441,7 +682,19 @@ def audit(
             "source_tendon_surface_count": sum(
                 row["layer"] == "tendon" for row in surface_rows
             ),
-            "closed_embedded_muscle_candidate_count": candidate_count,
+            "closed_embedded_muscle_surface_candidate_count": closed_embedded_candidate_count,
+            "closed_embedded_muscle_single_component_count": sum(
+                row["closed_embedded_candidate"]
+                and row["source_face_component_count"] == 1
+                for row in surface_rows
+            ),
+            "closed_embedded_muscle_multi_component_count": sum(
+                row["closed_embedded_candidate"]
+                and row["source_face_component_count"] > 1
+                for row in surface_rows
+            ),
+            "admitted_muscle_domain_union_count": candidate_count,
+            "component_union_rejected_count": component_union_rejected_count,
             "candidate_pair_count": len(pair_rows),
             "expected_candidate_pair_count": expected_pair_count,
             "pair_status_counts": dict(sorted(pair_counts.items())),
@@ -450,7 +703,9 @@ def audit(
         "surfaces": surface_rows,
         "pairs": pair_rows,
         "qualification": {
-            "pairwise_embedded_muscle_candidate_domains_disjoint": pairwise_domains_disjoint,
+            "pairwise_admitted_muscle_domain_unions_disjoint": pairwise_domains_disjoint,
+            "all_closed_embedded_muscle_surfaces_admitted": candidate_count
+            == closed_embedded_candidate_count,
             "all_source_muscle_surfaces_admitted": candidate_count == 148,
             "cross_layer_disjointness": False,
             "whole_body_disjointness": False,
@@ -493,7 +748,10 @@ def run(arguments: argparse.Namespace) -> int:
             {
                 "status": result["status"],
                 "candidate_muscles": result["coverage"][
-                    "closed_embedded_muscle_candidate_count"
+                    "admitted_muscle_domain_union_count"
+                ],
+                "closed_embedded_surface_candidates": result["coverage"][
+                    "closed_embedded_muscle_surface_candidate_count"
                 ],
                 "candidate_pairs": result["coverage"]["candidate_pair_count"],
                 "pair_status_counts": result["coverage"]["pair_status_counts"],
