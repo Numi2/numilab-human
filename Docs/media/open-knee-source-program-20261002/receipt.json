@@ -5,8 +5,8 @@
       "sha256": "97c5e7b1c09eb47193bca0b7d2a515088b40938da45fe7aa8c8fc7bb7dd54368"
     },
     "source-mechanics.json": {
-      "bytes": 1815057,
-      "sha256": "1180fcc969279de4ba1bb4607663e37dadc6d2898be1dd1a1a57b7f74bab3260"
+      "bytes": 1815904,
+      "sha256": "4e89c2bb9080826f2ba80cd490056ee92ab8c023d247eda0e9279d2694acb5f7"
     },
     "source-meshdata.bin": {
       "bytes": 2686936,
@@ -58,12 +58,43 @@
       "sha256": "cb06f3e1d566ac5d551c17daea6bb222e74c0c84ac33111e02f9e5f0f5d83221",
       "tie_set_count": 18
     },
+    "source-sliding-contact.bin": {
+      "bytes": 6092668,
+      "face_count": 345070,
+      "face_record_bytes": 16,
+      "file": "source-sliding-contact.bin",
+      "header_bytes": 156,
+      "native_execution_status": "compiled_for_whole_Matter_contact_not_executed",
+      "pair_count": 18,
+      "pair_record_bytes": 168,
+      "parameter_order": [
+        "laugon",
+        "tolerance",
+        "gaptol",
+        "penalty",
+        "two_pass",
+        "auto_penalty",
+        "fric_coeff",
+        "search_tol",
+        "search_radius",
+        "minaug",
+        "maxaug",
+        "seg_up"
+      ],
+      "rigid_node_count": 17676,
+      "rigid_node_record_bytes": 32,
+      "schema": "numi.human.open-knee-sliding-contact-program.v1",
+      "sha256": "f0d72ed6fdb7fced00a4656e53876791ffd7c995e803bceec7238d6fc4695181",
+      "surface_count": 36,
+      "surface_record_bytes": 76
+    },
     "source-volume-mesh.bin": {
       "bytes": 22338392,
       "sha256": "39b86f2f55853c74968f36a8d6c67eaed94639a3d42b558bb17787e2af8ffdba"
     }
   },
   "compiled_counts": {
+    "contact_surface_faces": 345070,
     "contacts": 18,
     "cylindrical_joints": 6,
     "load_curves": 9,
@@ -78,8 +109,8 @@
     "source_mesh_element_fiber_vectors": 95962
   },
   "compiler_sources": {
-    "cli.py": "d87cbddde571cb767c9f33d66d9628114a222d698bdfa60dbfc0847fe31f9e8a",
-    "open_knee.py": "4f17ba4edfa9876d6b6088155d7690b385fef736a91c863017bb59e69824a421"
+    "cli.py": "329b64f5b954ef5c495b6669a5c0210ab02152e6aae0806d7e29d72722f655e9",
+    "open_knee.py": "5507b712926f9246dccef6a800add8eee8d8f860c1e6826d765878d3f75239cd"
   },
   "geometry_binary": {
     "bytes": 37388532,

@@ -19,6 +19,7 @@ from numilab_human.open_knee import compile_source_mechanical_description
 from numilab_human.open_knee import _source_rigid_graph_program_bytes
 from numilab_human.open_knee import _write_source_reference_baseline
 from numilab_human.open_knee import _write_source_rigid_ties_program
+from numilab_human.open_knee import _write_source_sliding_contact_program
 from numilab_human.open_knee import parse_source as parse_open_knee_source
 
 from numilab_human.model import (
@@ -4126,6 +4127,27 @@ class ImporterTests(unittest.TestCase):
                 _write_source_rigid_ties_program(
                     mechanics, volume, Path(temporary) / "bad.bin"
                 )
+
+    def test_open_knee_source_contact_preserves_all_authored_faces(self) -> None:
+        root = ROOT / "Docs/media/open-knee-source-program-20261002"
+        mechanics = json.loads((root / "source-mechanics.json").read_text())
+        receipt = json.loads((root / "receipt.json").read_text())
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "source-sliding-contact.bin"
+            storage = _write_source_sliding_contact_program(
+                mechanics, root / "source-geometry.bin",
+                root / "source-volume-mesh.bin", output,
+            )
+            program = output.read_bytes()
+        self.assertEqual(program, (root / "source-sliding-contact.bin").read_bytes())
+        self.assertEqual(storage, mechanics["source_sliding_contact_program_storage"])
+        self.assertEqual(storage, receipt["artifacts"]["source-sliding-contact.bin"])
+        self.assertEqual(
+            struct.unpack_from("<8s5I", program),
+            (b"NHCNTP1\0", 1, 18, 36, 345070, 17676),
+        )
+        self.assertEqual(storage["parameter_order"][3], "penalty")
+        self.assertEqual(receipt["compiled_counts"]["contact_surface_faces"], 345070)
 
     def test_open_knee_compiler_rejects_unknown_side_before_source_work(self) -> None:
         with self.assertRaisesRegex(ValueError, "side must be left or right"):

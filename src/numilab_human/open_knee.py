@@ -1809,6 +1809,7 @@ def compile_source_mechanical_artifacts(
     source_volume_mesh_path = output / "source-volume-mesh.bin"
     rigid_graph_path = output / "source-rigid-graph.bin"
     rigid_ties_path = output / "source-rigid-ties.bin"
+    contact_path = output / "source-sliding-contact.bin"
     description = compile_source_mechanical_description(
         source,
         source_deck=open_knee / "FeBio_custom.feb",
@@ -1843,6 +1844,10 @@ def compile_source_mechanical_artifacts(
         description, source_volume_mesh_path, rigid_ties_path
     )
     description["source_rigid_ties_program_storage"] = rigid_ties_storage
+    contact_storage = _write_source_sliding_contact_program(
+        description, geometry_binary_path, source_volume_mesh_path, contact_path
+    )
+    description["source_sliding_contact_program_storage"] = contact_storage
     reference_baseline_path = output / "source-reference-baseline.json"
     reference_baseline_storage = _write_source_reference_baseline(
         description, reference_baseline_path
@@ -1925,6 +1930,7 @@ def compile_source_mechanical_artifacts(
             "rigid_tie_nodes": rigid_ties_storage["record_count"],
             "cylindrical_joints": len(description["rigid_graph"]["cylindrical_joints"]),
             "contacts": len(description["contacts"]),
+            "contact_surface_faces": contact_storage["face_count"],
             "load_curves": len(description["load_curves"]),
             "prestrain_target_states": sum(
                 len((material["source_program"].get("prestrain") or {}).get(
@@ -1987,6 +1993,7 @@ def compile_source_mechanical_artifacts(
             },
             rigid_graph_path.name: rigid_graph_storage,
             rigid_ties_path.name: rigid_ties_storage,
+            contact_path.name: contact_storage,
             reference_baseline_path.name: reference_baseline_storage,
         },
         "compiler_sources": {
@@ -2084,6 +2091,193 @@ def _write_source_rigid_ties_program(
         "record_stride_bytes": 16,
         "record_layout": "little-endian source node ID, source tissue material ID, rigid body material ID, source tie-set index",
         "native_execution_status": "compiled_for_Matter_binding_not_executed",
+    }
+
+
+_SOURCE_SLIDING_CONTACT_MAGIC = b"NHCNTP1\0"
+_SOURCE_SLIDING_CONTACT_SCHEMA = "numi.human.open-knee-sliding-contact-program.v1"
+_SOURCE_SLIDING_CONTACT_PARAMETERS = (
+    "laugon", "tolerance", "gaptol", "penalty", "two_pass",
+    "auto_penalty", "fric_coeff", "search_tol", "search_radius",
+    "minaug", "maxaug", "seg_up",
+)
+
+
+def _write_source_sliding_contact_program(
+    description: dict[str, Any], geometry_binary_path: Path,
+    volume_mesh_path: Path, output_path: Path,
+) -> dict[str, Any]:
+    """Pack the complete authored contact graph for the whole Matter case.
+
+    This preserves source faces and enforcement parameters, including rigid
+    bone vertices that have no tetrahedra. It is an execution input, not a
+    replacement contact law or an accepted contact state.
+    """
+    geometry = description["source_geometry_resolution"]
+    binary = geometry_binary_path.read_bytes()
+    volume = volume_mesh_path.read_bytes()
+    if hashlib.sha256(binary).hexdigest() != geometry["binary_storage"]["sha256"]:
+        raise ValueError("Open Knee(s) contact geometry binary identity drifted")
+    if hashlib.sha256(volume).hexdigest() != geometry[
+        "source_volume_mesh_storage"
+    ]["sha256"]:
+        raise ValueError("Open Knee(s) contact volume binary identity drifted")
+    contacts = description["contacts"]
+    material_ids = {
+        material["name"]: int(material["id"])
+        for material in description["materials"]
+    }
+    node_owner: dict[int, int] = {}
+    offset = 0
+    while offset < len(volume):
+        if len(volume) - offset < 20:
+            raise ValueError("Open Knee(s) contact volume header is truncated")
+        magic, version, owner, nodes, tetrahedra = struct.unpack_from(
+            "<4s4I", volume, offset
+        )
+        if magic != b"NOKT" or version != 1 or owner not in material_ids.values():
+            raise ValueError("Open Knee(s) contact volume group is invalid")
+        offset += 20
+        if len(volume) - offset < nodes * 28 + tetrahedra * 20:
+            raise ValueError("Open Knee(s) contact volume group is truncated")
+        for local in range(nodes):
+            node_id = struct.unpack_from("<I", volume, offset + 28 * local)[0]
+            if not node_id or node_id in node_owner:
+                raise ValueError("Open Knee(s) contact volume node is duplicated")
+            node_owner[node_id] = owner
+        offset += nodes * 28 + tetrahedra * 20
+
+    referenced_names = sorted({
+        contact["geometry_resolution"][side]
+        for contact in contacts
+        for side in ("master_surface", "slave_surface")
+    })
+    source_surfaces = geometry["surfaces"]
+    rigid_owners = {int(body["material_id"]) for body in
+                    description["rigid_graph"]["bodies"]}
+    needed_rigid: dict[int, set[int]] = {}
+    surfaces = []
+    face_bytes = bytearray()
+    for name in referenced_names:
+        record = source_surfaces.get(name)
+        owner_name = name.split("_@_", 1)[0]
+        owner = material_ids.get(owner_name)
+        if (record is None or owner is None or
+                record["face_type"] != "tri3" or len(name.encode("ascii")) >= 32):
+            raise ValueError("Open Knee(s) source contact surface is unsupported")
+        start = int(record["binary_offset_bytes"])
+        count = int(record["face_count"])
+        end = start + count * 16
+        if (count <= 0 or end > len(binary) or
+                record["binary_bytes"] != count * 16):
+            raise ValueError("Open Knee(s) source contact face range is invalid")
+        raw = binary[start:end]
+        source_digest = hashlib.sha256()
+        for local in range(count):
+            face_id, a, b, c = struct.unpack_from("<4I", raw, local * 16)
+            if not face_id or not a or len({a, b, c}) != 3:
+                raise ValueError("Open Knee(s) source contact face is degenerate")
+            source_digest.update(f"tri3:{face_id}:{a},{b},{c}\n".encode("ascii"))
+            if owner in rigid_owners:
+                needed_rigid.setdefault(owner, set()).update((a, b, c))
+            elif any(node_owner.get(node) != owner for node in (a, b, c)):
+                raise ValueError("Open Knee(s) tissue contact face has wrong owner")
+        if source_digest.hexdigest() != record["connectivity_sha256"]:
+            raise ValueError("Open Knee(s) source contact face hash drifted")
+        surfaces.append((name, owner, len(face_bytes) // 16, count,
+                         bytes.fromhex(record["connectivity_sha256"])))
+        face_bytes.extend(raw)
+
+    rigid_node_coordinates: dict[int, tuple[int, tuple[float, float, float]]] = {}
+    for material_name, owner in material_ids.items():
+        wanted = needed_rigid.get(owner)
+        if not wanted:
+            continue
+        group = geometry["node_coordinate_groups"].get(material_name)
+        if group is None or group["binary_record_stride_bytes"] != 28:
+            raise ValueError("Open Knee(s) rigid contact node group is missing")
+        start = int(group["binary_offset_bytes"])
+        count = int(group["node_count"])
+        if start + count * 28 > len(binary):
+            raise ValueError("Open Knee(s) rigid contact node group is truncated")
+        for local in range(count):
+            node_id, x, y, z = struct.unpack_from(
+                "<I3d", binary, start + local * 28
+            )
+            if node_id not in wanted:
+                continue
+            if node_id in rigid_node_coordinates or not all(
+                math.isfinite(value) for value in (x, y, z)
+            ):
+                raise ValueError("Open Knee(s) rigid contact node is invalid")
+            rigid_node_coordinates[node_id] = (owner, (x, y, z))
+        if not wanted.issubset(rigid_node_coordinates):
+            raise ValueError("Open Knee(s) rigid contact surface has a missing node")
+    if len(rigid_node_coordinates) != len(set().union(*needed_rigid.values())):
+        raise ValueError("Open Knee(s) rigid contact vertex coverage is incomplete")
+
+    deck_hash = bytes.fromhex(description["source_file_sha256"])
+    archive_hash = bytes.fromhex(description["source_geometry_archive_sha256"])
+    if len(deck_hash) != 32 or len(archive_hash) != 32:
+        raise ValueError("Open Knee(s) source contact identities are invalid")
+    payload = bytearray(struct.pack(
+        "<8s5I32s32s32s32s", _SOURCE_SLIDING_CONTACT_MAGIC, 1,
+        len(contacts), len(surfaces), len(face_bytes) // 16,
+        len(rigid_node_coordinates), deck_hash, archive_hash,
+        bytes.fromhex(geometry["binary_storage"]["sha256"]),
+        bytes.fromhex(geometry["source_volume_mesh_storage"]["sha256"]),
+    ))
+    for name, owner, first, count, digest in surfaces:
+        payload.extend(struct.pack(
+            "<32sIII32s", name.encode("ascii"), owner, first, count, digest
+        ))
+    surface_index = {record[0]: index for index, record in enumerate(surfaces)}
+    for contact in contacts:
+        if contact["type"] != "sliding-elastic":
+            raise ValueError("Open Knee(s) source contact has an unsupported law")
+        parameters = {
+            parameter["name"]: float(parameter["source_text"])
+            for parameter in contact["parameters"]
+        }
+        if set(parameters) != set(_SOURCE_SLIDING_CONTACT_PARAMETERS) or not all(
+            math.isfinite(value) for value in parameters.values()
+        ):
+            raise ValueError("Open Knee(s) source contact parameters are incomplete")
+        pair = contact["geometry_resolution"]
+        name = contact["surface_pair"]
+        if len(name.encode("ascii")) >= 32:
+            raise ValueError("Open Knee(s) source contact pair name is too long")
+        payload.extend(struct.pack(
+            "<32sII12d32s", name.encode("ascii"),
+            surface_index[pair["master_surface"]],
+            surface_index[pair["slave_surface"]],
+            *(parameters[key] for key in _SOURCE_SLIDING_CONTACT_PARAMETERS),
+            bytes.fromhex(contact["source_xml_sha256"]),
+        ))
+    payload.extend(face_bytes)
+    for node_id, (owner, (x, y, z)) in sorted(rigid_node_coordinates.items()):
+        payload.extend(struct.pack("<II3d", node_id, owner, x, y, z))
+    if description["source_file_sha256"] == EXPECTED_HASHES["FeBio_custom.feb"] and (
+        len(contacts) != 18 or len(surfaces) != 36 or len(face_bytes) // 16 != 345070
+    ):
+        raise ValueError("Open Knee(s) pinned contact graph drifted")
+    output_path.write_bytes(payload)
+    return {
+        "schema": _SOURCE_SLIDING_CONTACT_SCHEMA,
+        "file": output_path.name,
+        "bytes": len(payload),
+        "sha256": hashlib.sha256(payload).hexdigest(),
+        "pair_count": len(contacts),
+        "surface_count": len(surfaces),
+        "face_count": len(face_bytes) // 16,
+        "rigid_node_count": len(rigid_node_coordinates),
+        "header_bytes": 156,
+        "surface_record_bytes": 76,
+        "pair_record_bytes": 168,
+        "face_record_bytes": 16,
+        "rigid_node_record_bytes": 32,
+        "parameter_order": list(_SOURCE_SLIDING_CONTACT_PARAMETERS),
+        "native_execution_status": "compiled_for_whole_Matter_contact_not_executed",
     }
 
 
