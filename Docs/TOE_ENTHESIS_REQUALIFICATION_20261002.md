@@ -34,6 +34,18 @@ decompressed content hash), full native stdout, stderr, Apple M4 binary, and
 exact input hashes. The native package accepted one 1 ms Metal step with all
 832 endpoint records and the new 653-envelope/179-point split. The two focused
 importer regressions pass. This checks package admission and a bounded transfer
-step only; the run reports
-`compiled_stand_balanced=false` and does not qualify toe tracking, loaded foot
-contact, standing, gait, clinical anatomy, or an integrated whole-Human result.
+step only; that one-step run reports `compiled_stand_balanced=false` and does
+not qualify toe tracking, loaded foot contact, standing, gait, clinical anatomy,
+or an integrated whole-Human result. A later physical-M4 source-path-feedback
+prefix consumed this exact payload for 512 accepted 1 ms steps, preserving all
+six authored support contacts with zero root assistance; see the
+[bounded native standing-prefix record](NATIVE_STAND_CURRENT_TOE_ENTHESIS_PREFIX_20261002.md).
+The prefix remains diagnostic and does not establish a ten-second standing
+result or integrated whole-Human qualification.
+
+The follow-up 10-second attempt with this exact payload was stopped at 5.728
+simulated seconds after the root diverged 7.729 m horizontally from its first
+retained sample, support contacts dropped to zero at one sample, and feedback
+reached its correction bound. The complete failure boundary and retained
+partial trace are documented in the
+[current-payload standing attempt record](NATIVE_STAND_CURRENT_TOE_ENTHESIS_10S_FAILURE_20261002.md).

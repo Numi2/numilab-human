@@ -1,0 +1,76 @@
+{
+  "coverage": {
+    "bilateral_counterpart_enthesis_envelope_count": 0,
+    "compass_vertex_envelope_count": 82,
+    "connected_face_path_envelope_count": 12,
+    "disconnected_component_recovery_count": 0,
+    "distributed_surface_envelope_count": 152,
+    "expected_endpoint_count": 832,
+    "fixed_metacarpal_cluster_enthesis_envelope_count": 0,
+    "maximum_admitted_sampled_total_force_amplification": 3.9802685505792077,
+    "maximum_admitted_surface_distance_m": 0.022526418725109583,
+    "maximum_endpoint_migration_m": 0.022526418725109583,
+    "mechanical_endpoint_count": 832,
+    "muscle_count": 416,
+    "registered_bone_distributed_envelope_count": 152,
+    "registered_bone_migrated_distributed_envelope_count": 14,
+    "semantic_axial_enthesis_envelope_count": 0,
+    "semantic_limb_enthesis_envelope_count": 78,
+    "semantic_toe_enthesis_envelope_count": 0,
+    "source_component_anterior_thorax_composite_enthesis_envelope_count": 0,
+    "source_component_enthesis_envelope_count": 0,
+    "source_component_mechanics_surface_enthesis_envelope_count": 0,
+    "source_site_point_fallback_count": 680,
+    "surface_coverage_fraction": 0.18269230769230768,
+    "topology_aware_exact_surface_envelope_count": 58
+  },
+  "owner": "Numi Lab Human",
+  "payloads": {
+    "bone_surfaces": {
+      "bone_count": 185,
+      "bytes": 11577432,
+      "file": "bodyparts3d-myosim-major-bones.nhbones",
+      "manifest": {
+        "file": "bodyparts3d-myosim-major-bones.manifest.json",
+        "sha256": "e3d03cb1c935a7c47671e8e3c67d4a261cc850d3cd9e8d55475e7427c31a0792"
+      },
+      "payload_abi": 3,
+      "registration_fingerprint32": "a241f5d3",
+      "sha256": "5b39e0ccfee038d8c84e97e9fe590555bbcbd67b7a0d1818eaf1705e00c7ccfa"
+    },
+    "muscles": {
+      "bytes": 149372,
+      "file": "myosim-fullbody-muscle-reference.nhmyo",
+      "payload_abi": 2,
+      "sha256": "a4381465ca97a7af20108180e2fc0d0f0d9c11778d913de4c0728bd20ed459a7"
+    },
+    "rigid": {
+      "bytes": 60324,
+      "file": "myosim-fullbody-core-reference.nhrigid",
+      "payload_abi": 1,
+      "sha256": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951"
+    },
+    "support_contact": {
+      "bytes": 564,
+      "file": "myosim-fullbody-support-contact.nhcnt",
+      "payload_abi": 1,
+      "sha256": "4d54f8155cd83baaee7af536099824ac0da61e5d5e77544b42c6e5ce1b48c907"
+    },
+    "tendon_attachments": {
+      "bytes": 97168,
+      "file": "numi-human-tendon-attachments.nhtendon",
+      "magic": "NHTENDON3",
+      "payload_abi": 3,
+      "sha256": "f601a00dbd0badfd4824a8214029d7cc942f3de6c4129a190bf115d62efbed73"
+    }
+  },
+  "runtime_owner": "Numi Lab C++/Metal; Python is an offline compiler only",
+  "schema": "numi.human.pack.v2",
+  "source_authorities": {
+    "active_full_body_seed": "compiled MyoSim full-body source program",
+    "geometry": "BodyParts3D 4.0",
+    "lower_body_comparison": "OpenSim RajagopalLaiUhlrich2023",
+    "upper_extremity_comparison": "OpenSim Upper Extremity Dynamic Model"
+  },
+  "status": "complete_endpoint_coverage_with_inferred_surface_envelopes_and_explicit_point_fallbacks"
+}

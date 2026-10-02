@@ -1,0 +1,13 @@
+host=ns-Mac-mini.local
+cpu=Apple M4 Pro
+utc=2026-10-02T17:36:21Z
+Native source: https://github.com/Numi2/numi-lab/commit/c35f0082ffcc29806d8bece2e31177b64fe7e5c0
+Human command: https://github.com/Numi2/numilab-human/commit/f115eeb4af309068883a46cc739e79aef094d907
+Build host: macmini, Apple M4 Pro
+Remote source export: /Users/n/numi-human-standing-20260922 (git metadata excluded; source patch retained locally)
+Build: /Users/n/numi-human-standing-build-20260922
+Scene launcher: run-standing-scene.sh
+Input and binary hashes: unassisted-10-seconds/input-binary-sha256.txt
+Validation: original 64-step terminal q/v and all physical summary metrics exactly matched after parallel response and limit conditioning; deterministic replay was bitwise. 64 native 1 ms steps decreased from 32800.939 ms to 13909.680 ms, excluding static recruitment.
+Rejected speed shortcut: eight constraint sweeps increased maximum generalized acceleration from 29.2015 to 112.1155 and changed terminal q by 0.02094, v by 0.34300. Production run retains all 64 sweeps.
+Qualification boundary: source-route muscle and articulated skeletal standing model, not a calibrated 1:1 physiological human or demonstrated balance feedback controller.

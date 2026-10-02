@@ -1,0 +1,87 @@
+{
+  "device": {
+    "cpu": "Apple M4 Pro",
+    "host": "ns-Mac-mini.local"
+  },
+  "evidence_boundary": "512 accepted 1 ms whole-body source-path-feedback diagnostic using the exact committed toe-enthesis NHTENDON3 payload. Runtime resolved 653 distributed envelopes and 179 point fallbacks across all 832 endpoints. The compiled static preload reports balanced; that is not dynamic standing qualification. This is not a ten-second run, full replay, measured-human calibration, anatomical contact qualification, energy closure, perturbation recovery, gait, or real-time performance result.",
+  "execution": {
+    "accepted_progress_rows": 64,
+    "contact_iterations": 64,
+    "feedback": "reference_path length_gain=10 velocity_gain_seconds=1 excitation_correction_bound=0.2 update_period_seconds=0.001; observes committed joint q/v; changes muscle excitation only",
+    "peak_resident_bytes": 102940672,
+    "progress_cadence_steps": 8,
+    "root_assistance": false,
+    "simulated_seconds": 0.512,
+    "steps": 512,
+    "swaps": 0,
+    "timestep_seconds": 0.001,
+    "wall_seconds": 166.74
+  },
+  "human_source_head": "86454b6eebdfd61ee5464acd2168b51d3e0a3df3",
+  "inputs_sha256": {
+    "MetalRobo.metallib": "a8778b712d342cd900766952147874bf9405679ca7c6fe466b166825a9c9cfe1",
+    "metalrobo_numilab_human_myosim_visual_probe": "424f373f2a63bd45088ec73631ed861e95f2921e1be7740c68f14021422ae4bf",
+    "myosim-fullbody-core-reference.nhrigid": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951",
+    "myosim-fullbody-joint-equalities.nheq": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a",
+    "myosim-fullbody-muscle-reference.nhmyo": "a4381465ca97a7af20108180e2fc0d0f0d9c11778d913de4c0728bd20ed459a7",
+    "myosim-fullbody-support-contact.nhcnt": "4d54f8155cd83baaee7af536099824ac0da61e5d5e77544b42c6e5ce1b48c907",
+    "numi-human-tendon-attachments.nhtendon": "130705ed1d9edd1d27d6e92d6b0558b1eaa0e1cdd3f7bdfe96b4aa05ab9e7b55"
+  },
+  "measured": {
+    "active_support_contacts_all_progress_samples": true,
+    "compiled_initial_static_preload_balanced": true,
+    "compiled_initial_static_preload_initial_normalized_residual_rms": 0.728012314762,
+    "compiled_initial_static_preload_normalized_residual_rms": 0.0020170549458,
+    "deterministic_replay": "not_requested",
+    "energy_closure": "not_measured",
+    "maximum_reported_support_penetration_m": 1.95819188775e-06,
+    "maximum_root_assistance_force_n": 0.0,
+    "maximum_root_assistance_torque_nm": 0.0,
+    "maximum_tendon_step_force_residual_n": 6.86645507812e-05,
+    "maximum_tendon_step_moment_residual_nm": 1.01896057458e-06,
+    "root_horizontal_displacement_from_authored_seed_m": 0.001660645813362661,
+    "root_orientation_change_from_authored_seed_degrees": 0.09691330308237883,
+    "root_vertical_change_from_authored_seed_m": -4.510630791676462e-05,
+    "runtime_resolved_envelope_bindings": 653,
+    "runtime_resolved_migrated_envelope_bindings": 18,
+    "runtime_resolved_point_bindings": 179,
+    "runtime_resolved_tendon_endpoints": 832,
+    "sampled_feedback_excitation_delta_peak": 0.0197359137237,
+    "sampled_generalized_acceleration_peak_mixed_units": 20.3644218445,
+    "sampled_root_linear_speed_peak_m_s": 0.0177141176931,
+    "sampled_support_force_max_n": 955.794394016,
+    "sampled_support_force_min_n": 945.14220953,
+    "tendon_envelope_transfers_total": 334336,
+    "tendon_point_fallback_transfers_total": 91648,
+    "tendon_transfers_total": 425984
+  },
+  "retained_files": {
+    "execution-context.txt": {
+      "bytes": 1217,
+      "sha256": "1175d88812f45d059b145cf1bd9467e11b594a90a43eae5842b67ddee7a15e98"
+    },
+    "input-binary-sha256.txt": {
+      "bytes": 1163,
+      "sha256": "441c94248efc405bfc554a44cd0a3abea39c5ba999fedf4a3d81e2e27e4949c4"
+    },
+    "run.sh": {
+      "bytes": 2681,
+      "sha256": "77da6782b6f15637c08ef711f540118cf7cc7c5f50bf355c9874fb0033d2c2b7"
+    },
+    "stderr.txt": {
+      "bytes": 777,
+      "sha256": "ef425c5576889c940c65bdef32e4a832fad0171a56d1f20543decd054a8c24b7"
+    },
+    "stdout.txt.gz": {
+      "bytes": 23289,
+      "sha256": "df12e3d7d10fd423e24348441a6bbfb3260a9aee35e38cf9a59269cdee4d1e9c"
+    }
+  },
+  "runtime_source": {
+    "git_metadata_on_execution_export": false,
+    "human_command_commit": "f115eeb4af309068883a46cc739e79aef094d907",
+    "numi_lab_commit": "c35f0082ffcc29806d8bece2e31177b64fe7e5c0",
+    "runtime_is_current_human_head": false
+  },
+  "schema": "numi.human.native-stand-current-toe-enthesis-prefix.v1"
+}

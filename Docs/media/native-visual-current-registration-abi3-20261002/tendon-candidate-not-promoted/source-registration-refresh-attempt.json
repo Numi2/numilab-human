@@ -1,0 +1,57 @@
+{
+  "schema": "numi.human.current-registration-source-refresh-attempt.v1",
+  "created_utc": "2026-10-02T19:14:42Z",
+  "baseline": {
+    "registration_sha256": "a241f5d368b686b31890256eadd552e7547e72646f009369f91eb0d6ac4df84d",
+    "bone_payload_sha256": "5b39e0ccfee038d8c84e97e9fe590555bbcbd67b7a0d1818eaf1705e00c7ccfa",
+    "tendon_payload_sha256": "f601a00dbd0badfd4824a8214029d7cc942f3de6c4129a190bf115d62efbed73",
+    "tendon_endpoint_count": 832,
+    "tendon_distributed_surface_envelopes": 152,
+    "tendon_point_fallbacks": 680,
+    "status": "provisional_visual_only_candidate_not_used_dynamically"
+  },
+  "source_registration_builder": {
+    "command": "PYTHONPATH=src:Sources/myosim/checkout .venv-mujoco312/bin/python -m numilab_human.cli myosim-lower-limb-source-mesh-registration --sources Sources --artifact Build/myosim-fullbody --registration Build/muscle-geometry-current-20261002/bodyparts3d-major-bone-registration.candidate.v2.json --tendon-manifest Build/numi-human-tendon-current-registration-20261002/numi-human-tendon-attachments.manifest.json --output Build/numi-human-lower-limb-current-registration-candidate-20261002.json --python .venv-mujoco312/bin/python",
+    "python": ".venv-mujoco312/bin/python",
+    "mujoco_version": "3.12.0",
+    "result": "rejected_before_registration_or_output",
+    "rigid_program_check": {
+      "payload_sha256_actual": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951",
+      "payload_sha256_expected": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951",
+      "payload_bytes_actual": 60324,
+      "payload_bytes_expected": 60324,
+      "declared_identity_matches": true,
+      "source_metadata_matches": false,
+      "checked_field_count": 2250,
+      "failed_field_count": 0,
+      "engine_body_count": 157,
+      "joint_count": 156,
+      "source_body_count": 103,
+      "tolerance_basis": "existing_source_lowerer_FP32_fields_and_native_norm_admission_with_common_scale_rounding_bins"
+    },
+    "exact_source_difference": {
+      "live_overlay_count": 1,
+      "overlay_id": "myosim-left-knee-translation2-reflected-range-20261002",
+      "overlay_manifest_sha256": "05f6b7698e571c83a62bdbc7055ff24322800a36e9b53e455a18b451e7b9dad4",
+      "source_joint_id": 112,
+      "source_joint": "knee_angle_translation2_l",
+      "cached_manifest_range_m": [
+        7.69254e-11,
+        0.006792
+      ],
+      "live_export_range_m": [
+        -0.006792,
+        -7.69254e-11
+      ]
+    }
+  },
+  "fresh_source_build": {
+    "command": "PYTHONPATH=src .venv-mujoco312/bin/python -m numilab_human.cli myosim-build --sources Sources --output Build/myosim-fullbody-current-source-20261002 --python .venv-mujoco312/bin/python",
+    "result": "operator_stopped_during_compliant_force_law_fit",
+    "stage": "_fit_myosim_compliant_architecture.search_grid",
+    "output_directory_emitted": false,
+    "artifacts_emitted": false,
+    "next_gate": "finish_overlay-consistent source export before re-running registration builder"
+  },
+  "evidence_boundary": "Source metadata alignment only. No anatomy qualification, native tendon transaction, contact, dynamics, or standing claim."
+}

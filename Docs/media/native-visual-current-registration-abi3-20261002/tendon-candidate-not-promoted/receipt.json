@@ -1,0 +1,44 @@
+{
+  "command": ".numi/commands/human numi-human-tendon-envelope-payload --artifact Build/myosim-fullbody --bone-artifact Build/bodyparts3d-myosim-major-bones-current-20261002 --migrate-semantic-rigid-foot-endpoints --maximum-surface-distance 0.012 --maximum-patch-radius 0.012 --maximum-force-amplification 4 --maximum-migrated-endpoint-distance 0.025",
+  "comparison_candidate": {
+    "bone_payload_abi": 2,
+    "bone_payload_sha256": "482c040f197e183b31a98fc82c17fa1bf908eb5c60c788cc054e4699ddd42027",
+    "bone_registration_fingerprint32": "1ec681e5",
+    "comparison_receipt": "Docs/media/toe-enthesis-requalification-20261002/receipt-v1.json",
+    "distributed_surface_envelopes": 653,
+    "source_point_fallbacks": 179
+  },
+  "current_candidate": {
+    "bone_registration_fingerprint32": "a241f5d3",
+    "distributed_surface_envelopes": 152,
+    "endpoint_count": 832,
+    "maximum_endpoint_migration_m": 0.022526418725109583,
+    "source_point_fallbacks": 680,
+    "status": "complete_endpoint_coverage_with_inferred_surface_envelopes_and_explicit_point_fallbacks",
+    "surface_coverage_fraction": 0.18269230769230768
+  },
+  "decision": "Do not substitute this current-registration compile for the previously executed tendon candidate. It retains endpoint records but maps far fewer endpoints to surfaces; its only evidence is offline compilation, with no native tendon transaction or standing run.",
+  "evidence_boundary": "Attachment coverage comparison only; no dynamic mechanics, force transfer, contact, energy, or standing conclusion.",
+  "inputs_sha256": {
+    "nhbones_abi3": "5b39e0ccfee038d8c84e97e9fe590555bbcbd67b7a0d1818eaf1705e00c7ccfa",
+    "nhmyo": "a4381465ca97a7af20108180e2fc0d0f0d9c11778d913de4c0728bd20ed459a7",
+    "nhrigid": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951",
+    "registration": "a241f5d368b686b31890256eadd552e7547e72646f009369f91eb0d6ac4df84d"
+  },
+  "outputs": {
+    "numi-human-pack.manifest.json": {
+      "bytes": 3122,
+      "sha256": "08abff080228045ce342fcae10c3df03fa3672ce84763828ea24ecaac4c6527d"
+    },
+    "numi-human-tendon-attachments.manifest.json": {
+      "bytes": 905546,
+      "sha256": "a1be192fc02249da511e7a5d96d80f33717cb20fce66297d51dbb0662b427c3d"
+    },
+    "numi-human-tendon-attachments.nhtendon": {
+      "bytes": 97168,
+      "sha256": "f601a00dbd0badfd4824a8214029d7cc942f3de6c4129a190bf115d62efbed73"
+    }
+  },
+  "schema": "numi.human.registration-paired-tendon-candidate-review.v1",
+  "status": "compiled_candidate_not_promoted_or_executed"
+}

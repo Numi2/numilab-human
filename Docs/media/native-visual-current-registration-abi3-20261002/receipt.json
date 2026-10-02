@@ -1,0 +1,139 @@
+{
+  "created_utc": "2026-10-02T18:54:57Z",
+  "evidence_boundary": "Visual and raw source-qpos0 patellar anteriority only. Projected-pose anteriority checks require large equality corrections and are not realistic motion evidence. No clinical anatomy, cartilage contact, loaded force transfer, tissue mechanics, skin, organ physiology, blood flow, heart/electrical behavior, or sustained standing claim.",
+  "host": {
+    "architecture": "arm64",
+    "chip": "Apple M4",
+    "macos": "26.6"
+  },
+  "human_repository_commit": "86454b6eebdfd61ee5464acd2168b51d3e0a3df3",
+  "inputs_sha256": {
+    "/private/tmp/numi-human-renderer-abi3-build/bin/metalrobo_numilab_human_myosim_visual_probe": "adc0342c588a5a577b0e1e1a7e4e6fea68065270d8dd87834347f9c98485d409",
+    "Build/bodyparts3d-myosim-major-bones-current-20261002/bodyparts3d-myosim-major-bones.nhbones": "5b39e0ccfee038d8c84e97e9fe590555bbcbd67b7a0d1818eaf1705e00c7ccfa",
+    "Build/muscle-geometry-current-20261002/surface-payload/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "7cefa97bf65aa75edddbb7ac4c0a56d5d5f41c8b0aeca4c6146e867cc45d4bd8",
+    "Build/myosim-fullbody/myosim-fullbody-core-reference.nhrigid": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951",
+    "Build/myosim-fullbody/myosim-fullbody-muscle-reference.nhmyo": "a4381465ca97a7af20108180e2fc0d0f0d9c11778d913de4c0728bd20ed459a7"
+  },
+  "native_render": {
+    "dimension_px": 512,
+    "focused_knees": {
+      "image_files": [
+        "knees-front.png",
+        "knees-oblique.png",
+        "knees-side.png",
+        "knees-rear.png"
+      ],
+      "members": [
+        "right/left femur",
+        "right/left tibia",
+        "right/left patella"
+      ],
+      "source_owner_bindings_verified": true,
+      "visible_stable_ids": [
+        2,
+        3,
+        4,
+        5,
+        24,
+        25
+      ]
+    },
+    "full_body": {
+      "bodyparts_bones": 185,
+      "bodyparts_soft_tissues": 150,
+      "core_bodies": 157,
+      "device": "Apple M4",
+      "image_files": [
+        "full-body-front.png",
+        "full-body-oblique.png",
+        "full-body-rear.png",
+        "full-body-side.png",
+        "knees-front.png",
+        "knees-oblique.png",
+        "knees-rear.png",
+        "knees-side.png"
+      ],
+      "knee_cartilage": 0,
+      "knee_ligament": 0,
+      "knee_meniscus": 0,
+      "nerve_surfaces": 0,
+      "organ_surfaces": 0,
+      "rendered_link_visuals": 185,
+      "skin_shells": 0,
+      "soft_tissue_binding": "exact_route_body_sparse_four_influence_world_surface_snapshot",
+      "source_owner_bindings_verified": true,
+      "vessel_surfaces": 0
+    }
+  },
+  "native_runtime": {
+    "abi_behavior": {
+      "NHBONES1_ABI_2_compatibility_payload": "accepted; source owner bindings reported unverified",
+      "NHBONES1_ABI_3_current_payload": "accepted; source owner bindings verified against NHRIGID2 source-to-Core map",
+      "corrupted_ABI_3_source_record_index": "rejected before rendering"
+    },
+    "base_commit": "a11cb801cf88cb8a52c477a65a7535c5c8aa551c",
+    "build": "CMake Release target metalrobo_numilab_human_myosim_visual_probe with -Wall -Wextra -Wpedantic -Werror",
+    "patch_commit": "cbe234aa",
+    "probe_sha256": "adc0342c588a5a577b0e1e1a7e4e6fea68065270d8dd87834347f9c98485d409",
+    "pull_request": "https://github.com/Numi2/numi-lab/pull/7",
+    "repository": "Numi2/numi-lab"
+  },
+  "outputs": {
+    "full-body-front.png": {
+      "bytes": 65006,
+      "sha256": "e177a3b8c0c55c2f1b1fbf38bcc2e21e582c14e8dceee85880ab90986d385863"
+    },
+    "full-body-oblique.png": {
+      "bytes": 58998,
+      "sha256": "327bbaaa977cd1e2730fa072b79d357f2a15f6496d342b3001c96412db691866"
+    },
+    "full-body-rear.png": {
+      "bytes": 68170,
+      "sha256": "d0f47e50a82558bfc88dd4748749e228fe203784d49dde0c84c33d4b0cd82e98"
+    },
+    "full-body-side.png": {
+      "bytes": 42548,
+      "sha256": "517e1caeae8525a53349f9e56eb6047665243161a036826c7350c8ac7493172e"
+    },
+    "knees-front.png": {
+      "bytes": 34990,
+      "sha256": "18c680a99946c1822cbfa8414940f79bdbd36d8d2bfeb6ee94b4741c2f99b0ec"
+    },
+    "knees-oblique.png": {
+      "bytes": 35105,
+      "sha256": "97a2fa4bf032c0c3e674435e7846f57d95d660a5f9ce4bad581ca21d18ce6eb5"
+    },
+    "knees-rear.png": {
+      "bytes": 37087,
+      "sha256": "2b2116cdd8a5312ad076ac38355f83d10fcda32fdc3e8529d2d318344664e541"
+    },
+    "knees-side.png": {
+      "bytes": 24846,
+      "sha256": "70f709c135083628c10654bc542ab6e156c1bb08ba0abe17072e3e45174be0f8"
+    }
+  },
+  "patellar_anteriority_diagnostic": {
+    "deep_crouch_equality_projection_m": 1.1007813352000002,
+    "json_file": "patellar-anteriority-diagnostic.json",
+    "knee_flexion_equality_projection_m": 0.6020796191999999,
+    "maximum_equality_projection_m": 1.1007813352000002,
+    "minimum_anterior_offset_m": 0.015424724132027978,
+    "neutral_equality_projection_m": 0.0524192,
+    "passed_checks": 16,
+    "pose_suite_qualification": "geometry_only_not_qualified_as_realistic_kinematic_pose_set",
+    "posterior_or_on_plane_vertex_count": 0,
+    "projected_mesh_checks": 16,
+    "projected_pose_count": 8,
+    "raw_qpos0_minimum_anterior_offsets_m": {
+      "l": 0.011341834236625464,
+      "r": 0.011312492970435822
+    },
+    "status_boundary": "bounded_source_pose_geometry_diagnostic_not_lower_limb_registration_qualification"
+  },
+  "registration": {
+    "fingerprint32": "a241f5d3",
+    "sha256": "a241f5d368b686b31890256eadd552e7547e72646f009369f91eb0d6ac4df84d",
+    "status_boundary": "provisional visual registration; not admitted to collision or physics"
+  },
+  "schema": "numi.human.native-visual-registration-admission.v1"
+}

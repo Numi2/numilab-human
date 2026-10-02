@@ -10,6 +10,55 @@ a calendar schedule. The current physical runtime baseline is the published
 integration branch and [four-grid production diagnostic](NATIVE_COMMON_DURATION_PRODUCTION.md);
 reconciliation onto the native default line remains open.
 
+## Current toe-enthesis standing prefix — 2026-10-02
+
+The physical M4 Pro accepted a 512-step, 1 ms source-path-feedback prefix using
+the exact toe-enthesis `NHTENDON3` candidate: all 832 endpoints resolved as
+653 distributed envelopes and 179 explicit point fallbacks. Six authored
+support contacts remained active in every retained progress sample, support
+force ranged from 945.14 to 955.79 N, and root assistance was zero. The compiled
+static preload was balanced at normalized residual RMS `0.002017`; that result
+does not establish dynamic standing. A current-payload 10-second attempt was
+stopped at 5.728 simulated seconds after severe state divergence: horizontal
+root displacement from the first retained sample reached 7.729 m, sampled root
+speed peaked at 37.79 m/s, support fell to zero, and excitation correction
+reached its bound. The [prefix record](NATIVE_STAND_CURRENT_TOE_ENTHESIS_PREFIX_20261002.md)
+and [failure-focused partial trace](NATIVE_STAND_CURRENT_TOE_ENTHESIS_10S_FAILURE_20261002.md)
+are retained separately. Current-source runtime requalification, replay,
+energy closure, anatomical contact, measured-subject calibration, and
+integrated physiology remain open.
+The sparse failure trace first records horizontal drift above 10 mm at
+1.576 s, before feedback correction reaches its bound at 2.016 s and before
+support contacts drop at 2.504 s. It does not identify the initiating cause;
+the next standing attempt needs a source-aligned failure-onset diagnosis.
+
+## Current-registration native anatomy visual — 2026-10-02
+
+The [ABI 3 native visual and patella geometry record](NATIVE_VISUAL_ABI3_CURRENT_REGISTRATION_20261002.md)
+renders the matched provisional current bone/NHTISS4 pair on Apple M4 with
+source-owner verification. In literal source qpos0, every patella vertex is
+anterior to its knee-anchor plane by at least 11.312 mm on the right and
+11.342 mm on the left. A separate 16/16 projected-pose geometry sweep also
+passes anteriority, but its equality corrections reach 1.101 m (602 mm for
+knee flexion), so those samples do not establish realistic patellar tracking.
+The current candidate is still a provisional visual registration; formal
+lower-limb registration, clinical anatomy, cartilage contact, loaded force
+transfer, skin/organ integration and physiology remain open. Native ABI 3
+support and ABI 2 compatibility are covered by [PR #7](https://github.com/Numi2/numi-lab/pull/7).
+The paired tendon candidate for this registration resolves all 832 endpoints,
+but only 152 are distributed surface envelopes and 680 remain point fallbacks
+(18.27% coverage), versus 653/179 for the prior `1ec681e5` candidate. It was
+not promoted or used dynamically. The current lower-limb registration builder
+is blocked by a stale reference manifest that omits the live left-knee
+translation-range overlay. Joint 112's cached range is positive and the live
+source range is reflected negative; the exact NHRIGID2 bytes and 2,250 checked
+source fields match. An exact-source rebuild was stopped during compliant
+force-law fitting before producing artifacts. Re-exporting an overlay-
+consistent reference, then recompiling and auditing the paired
+registration/tendon candidate, is the next prerequisite for standing work on
+this registration. The machine-readable check is retained with the
+[current-registration QA evidence](media/native-visual-current-registration-abi3-20261002/tendon-candidate-not-promoted/source-registration-refresh-attempt.json).
+
 ## Native ventricular tension sequence - 2026-10-02
 
 The [source-derived native ventricular sequence](CARDIAC_NATIVE_ACTIVE_TENSION_SEQUENCE_20261002.md)
