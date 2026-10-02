@@ -409,7 +409,8 @@ _EXPECTED_SOURCE_PROGRAM_COUNTS = {
     "rigid_bodies": 9,
     "rigid_ties": 18,
     "cylindrical_joints": 6,
-    "other_constraints": 2,
+    "other_constraints": 1,
+    "rigid_springs": 1,
     "prescribed_body_boundaries": 2,
     "contacts": 18,
     "load_curves": 9,
@@ -1382,6 +1383,7 @@ def compile_source_mechanical_description(
     if len(body_ids) != len(set(body_ids)):
         raise ValueError("Open Knee(s) source rigid-body IDs are duplicated")
     cylindrical_joints = []
+    rigid_springs = []
     other_constraints = []
     for item in root.findall("Step/Constraints/constraint"):
         kind = item.attrib.get("type", "")
@@ -1454,6 +1456,51 @@ def compile_source_mechanical_description(
                 if curve_id is not None and curve_id not in curve_ids:
                     raise ValueError("Open Knee(s) cylindrical joint references an unknown load curve")
             cylindrical_joints.append(record)
+        elif kind == "rigid spring":
+            body_a = int(_required_xml_text(item, "body_a", "Step/Constraints/constraint"))
+            body_b = int(_required_xml_text(item, "body_b", "Step/Constraints/constraint"))
+            insertion_a = _required_xml_vector(
+                item, "insertion_a", "Step/Constraints/constraint"
+            )
+            insertion_b = _required_xml_vector(
+                item, "insertion_b", "Step/Constraints/constraint"
+            )
+            stiffness = _required_xml_float(item, "k", "Step/Constraints/constraint")
+            free_length_element = item.find("free_length")
+            free_length_source_text = (
+                None if free_length_element is None or free_length_element.text is None
+                else free_length_element.text.strip()
+            )
+            free_length = (
+                0.0 if free_length_source_text is None
+                else _required_xml_float(item, "free_length", "Step/Constraints/constraint")
+            )
+            if body_a not in body_ids or body_b not in body_ids or body_a == body_b:
+                raise ValueError("Open Knee(s) rigid spring references invalid rigid bodies")
+            if (not all(math.isfinite(value) for value in (*insertion_a, *insertion_b))
+                    or not math.isfinite(stiffness) or stiffness <= 0.0
+                    or not math.isfinite(free_length) or free_length < 0.0):
+                raise ValueError("Open Knee(s) rigid spring parameters are invalid")
+            record.update({
+                "body_a": body_a,
+                "body_b": body_b,
+                "insertion_a_source_text": _required_xml_text(
+                    item, "insertion_a", "Step/Constraints/constraint"
+                ),
+                "insertion_a": list(insertion_a),
+                "insertion_b_source_text": _required_xml_text(
+                    item, "insertion_b", "Step/Constraints/constraint"
+                ),
+                "insertion_b": list(insertion_b),
+                "stiffness_source_text": _required_xml_text(
+                    item, "k", "Step/Constraints/constraint"
+                ),
+                "stiffness": stiffness,
+                "free_length_source_text": free_length_source_text,
+                "free_length": free_length,
+                "free_length_uses_initial_insertion_distance": free_length == 0.0,
+            })
+            rigid_springs.append(record)
         else:
             other_constraints.append(record)
 
@@ -1664,6 +1711,7 @@ def compile_source_mechanical_description(
             "rigid_bodies": len(rigid_bodies),
             "rigid_ties": len(rigid_ties),
             "cylindrical_joints": len(cylindrical_joints),
+            "rigid_springs": len(rigid_springs),
             "other_constraints": len(other_constraints),
             "prescribed_body_boundaries": len(prescribed_body_boundaries),
             "contacts": len(contacts),
@@ -1720,6 +1768,7 @@ def compile_source_mechanical_description(
             "bodies": rigid_bodies,
             "rigid_ties": rigid_ties,
             "cylindrical_joints": cylindrical_joints,
+            "rigid_springs": rigid_springs,
             "other_constraints": other_constraints,
             "prescribed_body_boundaries": prescribed_body_boundaries,
         },
@@ -1952,8 +2001,8 @@ def compile_source_mechanical_artifacts(
     return receipt
 
 
-_SOURCE_RIGID_GRAPH_MAGIC = b"NHRGPH2\0"
-_SOURCE_RIGID_GRAPH_SCHEMA = "numi.human.open-knee-rigid-graph-program-f64.v2"
+_SOURCE_RIGID_GRAPH_MAGIC = b"NHRGPH3\0"
+_SOURCE_RIGID_GRAPH_SCHEMA = "numi.human.open-knee-rigid-graph-program-f64.v3"
 _SOURCE_RIGID_COORDINATES = ("x", "y", "z", "Rx", "Ry", "Rz")
 
 
@@ -1970,12 +2019,15 @@ def _source_rigid_graph_program_bytes(description: dict[str, Any]) -> bytes:
     """Encode the exact rigid graph records consumed by Matter's source check.
 
     The binary is a narrow execution input, not a claim that all FEBio source
-    mechanics have been compiled. The JSON description remains authoritative
-    for names and full XML records; hashes bind these numeric records to it.
+    mechanics have been compiled. It contains the rigid bodies, cylindrical
+    joints, rigid springs, prescribed boundaries, and referenced load curves.
+    The JSON description remains authoritative for names and full XML records;
+    hashes bind these numeric records to it.
     """
     graph = description["rigid_graph"]
     bodies = graph["bodies"]
     joints = graph["cylindrical_joints"]
+    springs = graph["rigid_springs"]
     boundaries = graph["prescribed_body_boundaries"]
     referenced_curve_ids = {
         _source_program_load_curve_id(joint[key].get("load_curve_id"))
@@ -2006,7 +2058,8 @@ def _source_rigid_graph_program_bytes(description: dict[str, Any]) -> bytes:
         raise ValueError("Open Knee(s) rigid graph requires SHA-256 source identities")
     output = bytearray(_SOURCE_RIGID_GRAPH_MAGIC)
     output.extend(struct.pack(
-        "<IIIII", 2, len(bodies), len(joints), len(boundaries), len(referenced_curves)
+        "<IIIIII", 3, len(bodies), len(joints), len(springs),
+        len(boundaries), len(referenced_curves)
     ))
     output.extend(deck_digest)
     output.extend(geometry_digest)
@@ -2046,6 +2099,25 @@ def _source_rigid_graph_program_bytes(description: dict[str, Any]) -> bytes:
         output.extend(struct.pack(
             "<II10dIIii32s", body_a, body_b, *origin, *axis,
             *penalties_and_targets, *flags, *curves, digest,
+        ))
+
+    for spring in springs:
+        body_a, body_b = int(spring["body_a"]), int(spring["body_b"])
+        insertion_a = tuple(float(value) for value in spring["insertion_a"])
+        insertion_b = tuple(float(value) for value in spring["insertion_b"])
+        stiffness = float(spring["stiffness"])
+        free_length = float(spring["free_length"])
+        digest = bytes.fromhex(spring["source_xml_sha256"])
+        if (body_a not in body_ids or body_b not in body_ids or body_a == body_b
+                or len(insertion_a) != 3 or len(insertion_b) != 3
+                or len(digest) != 32
+                or not all(math.isfinite(v) for v in (*insertion_a, *insertion_b,
+                                                       stiffness, free_length))
+                or stiffness <= 0.0 or free_length < 0.0):
+            raise ValueError("Open Knee(s) source rigid spring record is invalid")
+        output.extend(struct.pack(
+            "<II8d32s", body_a, body_b, *insertion_a, *insertion_b,
+            stiffness, free_length, digest,
         ))
 
     for boundary in boundaries:
@@ -2100,9 +2172,10 @@ def _write_source_rigid_graph_program(
         "endianness": "little",
         "coordinate_unit": "source_deck_coordinate_unit_unresolved",
         "record_layout": {
-            "header_bytes": 92,
+            "header_bytes": 96,
             "body_bytes": 60,
             "cylindrical_joint_bytes": 136,
+            "rigid_spring_bytes": 104,
             "prescribed_body_boundary_bytes": 112,
             "load_curve_header_bytes": 12,
             "load_curve_point_bytes": 16,
@@ -2111,6 +2184,7 @@ def _write_source_rigid_graph_program(
         "record_counts": {
             "bodies": len(description["rigid_graph"]["bodies"]),
             "cylindrical_joints": len(description["rigid_graph"]["cylindrical_joints"]),
+            "rigid_springs": len(description["rigid_graph"]["rigid_springs"]),
             "prescribed_body_boundaries": len(
                 description["rigid_graph"]["prescribed_body_boundaries"]
             ),

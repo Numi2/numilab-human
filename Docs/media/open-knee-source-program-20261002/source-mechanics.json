@@ -4630,13 +4630,6 @@
         "source_xml": "<constraint type=\"prestrain\">\n        <update>1</update>\n        <tolerance>0.03</tolerance>\n        <min_iters>0</min_iters>\n        <max_iters>0</max_iters>\n      </constraint>\n      ",
         "source_xml_sha256": "6e87f47aaea4712f46571b5f0df63d555eeb8b159c8cac040028838cfbed6cd0",
         "type": "prestrain"
-      },
-      {
-        "name": null,
-        "native_execution_status": "unsupported_not_executed",
-        "source_xml": "<constraint type=\"rigid spring\">\n        <body_a>21</body_a>\n        <body_b>4</body_b>\n        <insertion_a>1.0835532632546936,38.06618835977137,90.2025146484375</insertion_a>\n        <insertion_b>1.0835532632546936,38.06618835977137,90.2025146484375</insertion_b>\n        <k>0.1</k>\n      </constraint>\n    ",
-        "source_xml_sha256": "f07be57fe433495fa3c5868d1997e3bee37e9b8efe68de9e509d869d6a9ef792",
-        "type": "rigid spring"
       }
     ],
     "prescribed_body_boundaries": [
@@ -4749,6 +4742,34 @@
         "material_id": 2,
         "native_execution_status": "unsupported_not_executed",
         "source_xml_sha256": "5a8bbfb4efdb08d821f8469ded716733ca708314cdaffbdc6da100afbdf232fe"
+      }
+    ],
+    "rigid_springs": [
+      {
+        "body_a": 21,
+        "body_b": 4,
+        "free_length": 0.0,
+        "free_length_source_text": null,
+        "free_length_uses_initial_insertion_distance": true,
+        "insertion_a": [
+          1.0835532632546936,
+          38.06618835977137,
+          90.2025146484375
+        ],
+        "insertion_a_source_text": "1.0835532632546936,38.06618835977137,90.2025146484375",
+        "insertion_b": [
+          1.0835532632546936,
+          38.06618835977137,
+          90.2025146484375
+        ],
+        "insertion_b_source_text": "1.0835532632546936,38.06618835977137,90.2025146484375",
+        "name": null,
+        "native_execution_status": "unsupported_not_executed",
+        "source_xml": "<constraint type=\"rigid spring\">\n        <body_a>21</body_a>\n        <body_b>4</body_b>\n        <insertion_a>1.0835532632546936,38.06618835977137,90.2025146484375</insertion_a>\n        <insertion_b>1.0835532632546936,38.06618835977137,90.2025146484375</insertion_b>\n        <k>0.1</k>\n      </constraint>\n    ",
+        "source_xml_sha256": "f07be57fe433495fa3c5868d1997e3bee37e9b8efe68de9e509d869d6a9ef792",
+        "stiffness": 0.1,
+        "stiffness_source_text": "0.1",
+        "type": "rigid spring"
       }
     ],
     "rigid_ties": [
@@ -95643,7 +95664,7 @@
     "source_xplt_sha256": "c370ae9f94e9faee2d7060bf2a6819e03be1312e82ca79bd2e9cebf8b34398de"
   },
   "source_rigid_graph_program_storage": {
-    "bytes": 1764,
+    "bytes": 1872,
     "coordinate_unit": "source_deck_coordinate_unit_unresolved",
     "endianness": "little",
     "native_execution_status": "compiled_source_program_not_executed",
@@ -95651,19 +95672,21 @@
       "bodies": 9,
       "cylindrical_joints": 6,
       "prescribed_body_boundaries": 2,
-      "referenced_load_curves": 1
+      "referenced_load_curves": 1,
+      "rigid_springs": 1
     },
     "record_layout": {
       "body_bytes": 60,
       "cylindrical_joint_bytes": 136,
-      "header_bytes": 92,
+      "header_bytes": 96,
       "load_curve_header_bytes": 12,
       "load_curve_point_bytes": 16,
       "load_curve_sha256_bytes": 32,
-      "prescribed_body_boundary_bytes": 112
+      "prescribed_body_boundary_bytes": 112,
+      "rigid_spring_bytes": 104
     },
-    "schema": "numi.human.open-knee-rigid-graph-program-f64.v2",
-    "sha256": "e2285453812182f9a525bd3b6f1b32aaae77a52bf7f865563d483ed0b4e7b792"
+    "schema": "numi.human.open-knee-rigid-graph-program-f64.v3",
+    "sha256": "cc0abaaa9165976f2df5c134b963247205a732092b96c51f9369d48526dde794"
   },
   "source_sections": [
     {

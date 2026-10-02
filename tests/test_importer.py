@@ -3785,6 +3785,9 @@ class ImporterTests(unittest.TestCase):
 <translation>0</translation><prescribed_rotation>1</prescribed_rotation>
 <rotation lc="9">-1.57</rotation><minaug>0</minaug><maxaug>0</maxaug>
 </constraint>
+<constraint type="rigid spring"><body_a>1</body_a><body_b>2</body_b>
+<insertion_a>0,0,0</insertion_a><insertion_b>1,0,0</insertion_b>
+<k>0.1</k></constraint>
 </Constraints></Step></febio_spec>"""
         with tempfile.TemporaryDirectory() as temporary:
             directory = Path(temporary)
@@ -3836,21 +3839,30 @@ class ImporterTests(unittest.TestCase):
                 mechanics["source_mesh_element_data_storage"]["sha256"],
             )
             rigid_graph = _source_rigid_graph_program_bytes(mechanics)
-            self.assertEqual(len(rigid_graph), 92 + 2 * 60 + 136 + 112 + 12 + 2 * 16 + 32)
+            self.assertEqual(len(rigid_graph), 96 + 2 * 60 + 136 + 104 + 112 + 12 + 2 * 16 + 32)
             self.assertEqual(
-                struct.unpack_from("<8sIIIII", rigid_graph),
-                (b"NHRGPH2\0", 2, 2, 1, 1, 1),
+                struct.unpack_from("<8sIIIIII", rigid_graph),
+                (b"NHRGPH3\0", 3, 2, 1, 1, 1, 1),
             )
             self.assertEqual(
-                rigid_graph[28:60].hex(), mechanics["source_file_sha256"]
+                rigid_graph[32:64].hex(), mechanics["source_file_sha256"]
             )
             self.assertEqual(
-                rigid_graph[60:92].hex(), mechanics["source_geometry_archive_sha256"]
+                rigid_graph[64:96].hex(), mechanics["source_geometry_archive_sha256"]
             )
-            self.assertEqual(struct.unpack_from("<I3d", rigid_graph, 92),
+            self.assertEqual(struct.unpack_from("<I3d", rigid_graph, 96),
                              (1, 0.0, 0.0, 0.0))
-            self.assertEqual(struct.unpack_from("<II", rigid_graph, 212), (1, 2))
-            boundary_offset = 92 + 2 * 60 + 136
+            joint_offset = 96 + 2 * 60
+            self.assertEqual(struct.unpack_from("<II", rigid_graph, joint_offset), (1, 2))
+            spring_offset = joint_offset + 136
+            self.assertEqual(
+                struct.unpack_from("<II8d", rigid_graph, spring_offset),
+                (1, 2, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.1, 0.0),
+            )
+            spring = mechanics["rigid_graph"]["rigid_springs"][0]
+            self.assertTrue(spring["free_length_uses_initial_insertion_distance"])
+            self.assertEqual(spring["stiffness"], 0.1)
+            boundary_offset = spring_offset + 104
             self.assertEqual(
                 struct.unpack_from("<IB3x6d6i", rigid_graph, boundary_offset),
                 (2, 1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 9, -1, -1, -1, -1, -1),
@@ -4062,6 +4074,31 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(len(baseline["contact_archive"]["peak_pressure_by_surface"]), 36)
         self.assertEqual(len(baseline["contact_archive"]["checkpoints"]), 3)
         self.assertIn("elementwise tissue stress/strain", baseline["unavailable_reference_outputs"][0])
+
+    def test_open_knee_source_rigid_spring_artifact_matches_receipt(self) -> None:
+        artifact_root = ROOT / "Docs/media/open-knee-source-program-20261002"
+        mechanics = json.loads(
+            (artifact_root / "source-mechanics.json").read_text(encoding="utf-8")
+        )
+        receipt = json.loads(
+            (artifact_root / "receipt.json").read_text(encoding="utf-8")
+        )
+        program = (artifact_root / "source-rigid-graph.bin").read_bytes()
+        storage = receipt["artifacts"]["source-rigid-graph.bin"]
+        self.assertEqual(storage["schema"], "numi.human.open-knee-rigid-graph-program-f64.v3")
+        self.assertEqual(storage["bytes"], len(program))
+        self.assertEqual(storage["sha256"], hashlib.sha256(program).hexdigest())
+        self.assertEqual(storage, mechanics["source_rigid_graph_program_storage"])
+        self.assertEqual(receipt["compiled_counts"]["rigid_springs"], 1)
+        spring = mechanics["rigid_graph"]["rigid_springs"][0]
+        self.assertEqual((spring["body_a"], spring["body_b"]), (21, 4))
+        self.assertTrue(spring["free_length_uses_initial_insertion_distance"])
+        self.assertEqual(
+            [item["type"] for item in mechanics["rigid_graph"]["other_constraints"]],
+            ["prestrain"],
+        )
+        self.assertEqual(mechanics["source_equivalence_admission"],
+                         "rejected_unsupported_source_mechanics")
 
     def test_open_knee_compiler_rejects_unknown_side_before_source_work(self) -> None:
         with self.assertRaisesRegex(ValueError, "side must be left or right"):
