@@ -827,6 +827,25 @@ def _source_material_program(
     }
 
 
+def _isochoric_fiber_prestrain_tensor(
+    stretch: float, fiber_direction: list[float]
+) -> list[list[float]]:
+    if not math.isfinite(stretch) or stretch <= 0.0:
+        raise ValueError("Open Knee(s) source prestrain stretch is invalid")
+    norm = math.sqrt(sum(value * value for value in fiber_direction))
+    if not 0.99999 <= norm <= 1.00001:
+        raise ValueError("Open Knee(s) source prestrain fiber direction is not unit length")
+    transverse = stretch ** -0.5
+    return [
+        [
+            transverse * (1.0 if row == column else 0.0) +
+            (stretch - transverse) * fiber_direction[row] * fiber_direction[column]
+            for column in range(3)
+        ]
+        for row in range(3)
+    ]
+
+
 def compile_source_mechanical_description(
     source: Source,
     *,
@@ -1058,10 +1077,36 @@ def compile_source_mechanical_description(
             require_open_knee_tissue_schema=expected_deck_sha256 is not None,
         )
         prestrain = source_program["prestrain"]
-        if prestrain is not None and prestrain["load_curve_id"] is not None:
-            prestrain["resolved_load_curve"] = curves_by_id[
-                prestrain["load_curve_id"]
-            ]["numeric_points"]
+        if prestrain is not None:
+            resolved_curve = (
+                curves_by_id[prestrain["load_curve_id"]]["numeric_points"]
+                if prestrain["load_curve_id"] is not None else
+                [{"time": None, "value": 1.0}]
+            )
+            if prestrain["load_curve_id"] is not None:
+                prestrain["resolved_load_curve"] = resolved_curve
+            if prestrain["isochoric"]:
+                fiber = source_program["fiber_direction"]
+                if fiber is None:
+                    raise ValueError(
+                        "Open Knee(s) isochoric prestrain has no source fiber direction"
+                    )
+                target_states = []
+                for point in resolved_curve:
+                    stretch = prestrain["stretch"] * point["value"]
+                    target_states.append({
+                        "time": point["time"],
+                        "load_curve_value": point["value"],
+                        "fiber_stretch": stretch,
+                        "fiber_direction": fiber,
+                        "deformation_gradient": _isochoric_fiber_prestrain_tensor(
+                            stretch, fiber
+                        ),
+                    })
+                prestrain["target_states"] = target_states
+                prestrain["target_state_status"] = (
+                    "compiled_isochoric_target_tensor_not_applied_or_equilibrated"
+                )
         material["source_program"] = source_program
 
     rigid_ties = []
@@ -1146,6 +1191,21 @@ def compile_source_mechanical_description(
             if geometry_resolution is not None else source_geometry_archive_sha256
         ),
         "source_geometry_resolution": geometry_resolution,
+        "reference_state_contract": {
+            "material_reference_coordinates": {
+                "source_geometry_sha256": (
+                    geometry_resolution["sha256"]
+                    if geometry_resolution is not None else source_geometry_archive_sha256
+                ),
+                "status": "immutable_source_Geometry_custom_reference",
+            },
+            "initialized_current_coordinates": {
+                "status": "not_materialized_by_source_program_compilation",
+            },
+            "prestrain_targets": {
+                "status": "compiled_schedule_targets_not_applied_or_equilibrated",
+            },
+        },
         "source_geometry_reference": (
             None if root.find("Geometry") is None else
             dict(sorted(root.find("Geometry").attrib.items()))

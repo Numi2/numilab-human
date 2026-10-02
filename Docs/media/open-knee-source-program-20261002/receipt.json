@@ -4,9 +4,9 @@
   "human_worktree_base_revision": "582fcd0",
   "matter_operator_revision": "9a25b00d2e49f9e8ce9eab5189847039b67337ae",
   "source_sha256": {
-    "src/numilab_human/open_knee.py": "739804ebf81616138573bc898ee11562d4434fccb80019d4e9bed6ec25dd2266",
-    "tests/test_importer.py": "94ec92880cdcf884ff0f0ac42393856c3c8ba0da0cfa5ca17722cca6100e3915",
-    "source-mechanics.json": "aedcc35bbbfd328af78484c863e0c7cc76722c008126b6b44fc360952e9458d7"
+    "src/numilab_human/open_knee.py": "acb2049f42bc61c4f2eb2498af36914f2ef1c830602e39f5c9517dbc436766ff",
+    "tests/test_importer.py": "9560447d1869d2972d61427fa02730971d9f9c5df1597f622c3cfa2573fc49ff",
+    "source-mechanics.json": "80aef9f85727597762ec05a6b32d899d5540ba172ac0274b789bc57cf0d7bef0"
   },
   "reference_inputs": {
     "FeBio_custom.feb": {
@@ -37,7 +37,8 @@
     "resolved_source_rigid_ties": 18,
     "typed_source_material_programs": 21,
     "prestrain_programs": 6,
-    "resolved_prestrain_curves": 6
+    "resolved_prestrain_curves": 6,
+    "compiled_isochoric_prestrain_target_states": 18
   },
   "source_equivalence_admission": "rejected_unsupported_source_mechanics",
   "compiled_rigid_graph_fields": "typed finite source-frame centers, density, connector origin/axis, penalties, prescribed flags/targets, curve references, and numeric load-curve points; source XML text and hashes retained",
@@ -49,7 +50,8 @@
     "source contact and prestrain execution",
     "assembled tissue equilibrium or whole-body integration",
     "native execution of resolved source rigid graph, contacts, prestrain, tissues, and loading",
-    "native constitutive execution of the compiled source tissue and prestrain programs"
+    "native constitutive execution of the compiled source tissue and prestrain programs",
+    "application and equilibrium of the compiled isochoric prestrain tensor targets"
   ],
   "validation": {
     "tests": [
@@ -57,9 +59,10 @@
       "test_open_knee_exact_fiber_directions_are_source_authored_and_unit"
     ],
     "result": "passed",
-    "pinned_source_mechanical_descriptor_rebuild": "passed against exact deck and Geometry_custom hashes; typed material/prestrain programs, 18 contact pairs, and 18 rigid ties resolve",
+    "pinned_source_mechanical_descriptor_rebuild": "passed against exact deck and Geometry_custom hashes; typed material/prestrain schedules, 18 contact pairs, and 18 rigid ties resolve",
     "python_compileall": "passed",
-    "git_diff_check": "passed"
+    "git_diff_check": "passed",
+    "source_prestrain_tensor_targets": "passed: 18 scheduled tensors reconstructed, determinant-one check <1e-12; targets not applied or equilibrated"
   },
   "inventory": "source-mechanics.json",
   "resolved_geometry": {
@@ -326,6 +329,18 @@
         0.16495808684018612,
         0.9609574356918686
       ]
+    }
+  },
+  "reference_state_contract": {
+    "material_reference_coordinates": {
+      "source_geometry_sha256": "4155db1d0d7b87ffb2c668102d2495870e4461a539b18e6708f1f4817b5601bf",
+      "status": "immutable_source_Geometry_custom_reference"
+    },
+    "initialized_current_coordinates": {
+      "status": "not_materialized_by_source_program_compilation"
+    },
+    "prestrain_targets": {
+      "status": "compiled_schedule_targets_not_applied_or_equilibrated"
     }
   }
 }

@@ -3762,7 +3762,7 @@ class ImporterTests(unittest.TestCase):
 <Boundary><rigid name="A_tie" node_set="A_@_B_TiesNodes" rb="1"/></Boundary>
 <Discrete><discrete_material id="1" type="linear spring"><E>100</E></discrete_material>
 <discrete discrete_set="spring_set" dmat="1"/></Discrete>
-<LoadData><loadcurve id="9" type="linear"><point>0,0</point>
+<LoadData><loadcurve id="9" type="linear"><point>0,1</point>
 <point>1,1</point></loadcurve></LoadData>
 <Step><Control><analysis type="static"/></Control>
 <Boundary><rigid_body mat="2"><prescribed bc="x" lc="9">0</prescribed>
@@ -3858,6 +3858,16 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(
             source_material["prestrain"]["resolved_load_curve"][1]["value"], 1.0
         )
+        self.assertEqual(
+            source_material["prestrain"]["target_states"][0]["deformation_gradient"],
+            [[1.05, 0.0, 0.0],
+             [0.0, 1.05 ** -0.5, 0.0],
+             [0.0, 0.0, 1.05 ** -0.5]],
+        )
+        self.assertEqual(
+            source_material["prestrain"]["target_state_status"],
+            "compiled_isochoric_target_tensor_not_applied_or_equilibrated",
+        )
         self.assertTrue(source_material["prestrain"]["isochoric"])
         joint = mechanics["rigid_graph"]["cylindrical_joints"][0]
         self.assertEqual((joint["body_a"], joint["body_b"]), (1, 2))
@@ -3909,7 +3919,7 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(mechanics["load_curves"][0]["points"][1]["source_text"],
                          "1,1")
         self.assertEqual(mechanics["load_curves"][0]["numeric_points"], [
-            {"source_text": "0,0", "time": 0.0, "value": 0.0, "attributes": {}},
+            {"source_text": "0,1", "time": 0.0, "value": 1.0, "attributes": {}},
             {"source_text": "1,1", "time": 1.0, "value": 1.0, "attributes": {}},
         ])
         self.assertTrue(any(section["name"] == "Step" and
