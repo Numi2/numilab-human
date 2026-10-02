@@ -71,6 +71,60 @@ def _relative(path: Path) -> str:
     return str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)
 
 
+def _oriented_nested_boundary_moments(component_moments: list[dict[str, Any]]) -> dict[str, Any]:
+    require(len(component_moments) == 2 and
+            [row.get("source_winding") for row in component_moments] == ["positive", "negative"],
+            "nested shell boundary does not have one positive outer and one negative inner component")
+    signs = [1.0, -1.0]
+    volume = math.fsum(sign * row["absolute_signed_volume_m3"]
+                       for sign, row in zip(signs, component_moments, strict=True))
+    first = [math.fsum(sign * row["first_volume_moment_m4"][axis]
+                       for sign, row in zip(signs, component_moments, strict=True))
+             for axis in range(3)]
+    second = [[math.fsum(sign * row["second_volume_moment_m5"][i][j]
+                         for sign, row in zip(signs, component_moments, strict=True))
+                for j in range(3)] for i in range(3)]
+    require(math.isfinite(volume) and volume > 0 and
+            all(math.isfinite(value) for value in first) and
+            all(math.isfinite(value) for row in second for value in row),
+            "nested shell boundary integrals are nonfinite or nonpositive")
+    centroid = [value / volume for value in first]
+    central = [[math.fsum((second[i][j], -volume * centroid[i] * centroid[j]))
+                for j in range(3)] for i in range(3)]
+    scale = max(abs(value) for row in central for value in row)
+    require(math.isfinite(scale) and scale > 0, "nested shell central moment is degenerate")
+    normalized = [[value / scale for value in row] for row in central]
+    require(all(normalized[i][i] > 0 for i in range(3)) and
+            all(normalized[i][i] * normalized[j][j] - normalized[i][j] ** 2 > 0
+                for i in range(3) for j in range(i)),
+            "nested shell central moment is not positive definite")
+    determinant = (
+        normalized[0][0] * (normalized[1][1] * normalized[2][2] - normalized[1][2] * normalized[2][1])
+        - normalized[0][1] * (normalized[1][0] * normalized[2][2] - normalized[1][2] * normalized[2][0])
+        + normalized[0][2] * (normalized[1][0] * normalized[2][1] - normalized[1][1] * normalized[2][0])
+    )
+    require(determinant > 0, "nested shell central moment determinant is not positive")
+    inertia = [[(math.fsum(central[k][k] for k in range(3)) if i == j else 0.0) - central[i][j]
+                for j in range(3)] for i in range(3)]
+    return {
+        "method": "exact_nested_opposite_winding_boundary_moment_sum",
+        "status": "algebraic_geometry_moments_not_physiological_volume_or_mass",
+        "signed_volume_m3": volume,
+        "absolute_signed_volume_m3": volume,
+        "source_winding": "positive_outer_negative_inner",
+        "centroid_source_frame_m": centroid,
+        "first_volume_moment_m4": first,
+        "second_volume_moment_m5": second,
+        "central_second_volume_moment_m5": central,
+        "inertia_per_unit_density_m5": inertia,
+        "physical_volume_m3": None,
+        "density_kg_per_m3": None,
+        "mechanical_mass_kg": None,
+        "self_intersection_qualified": False,
+        "interdomain_disjointness_qualified": False,
+    }
+
+
 def _archive_roots(source_rows: list[dict[str, Any]]) -> dict[str, str]:
     roots = {}
     for row in source_rows:
@@ -244,8 +298,15 @@ def compile_candidates(
                     "containment": relation_pair["containment"],
                     "disjoint_closed_domains": relation_pair["disjoint_closed_domains"],
                 }
-                status = "unaggregated_nested_components"
-                moments = None
+                containment = relation_pair["containment"]
+                require(relation_pair["count"] == 0 and
+                        containment.get("status") == "checked" and
+                        containment.get("first_in_second", {}).get("location") == "outside" and
+                        containment.get("second_in_first", {}).get("location") == "inside" and
+                        relation_pair["disjoint_closed_domains"] is False,
+                        f"nested source component relation changed: {member_id}")
+                moments = _oriented_nested_boundary_moments(component_moments)
+                status = "computed_nested_opposite_winding_boundary_moments"
 
             require(moments is None or
                     (moments.get("physical_volume_m3") is None and
@@ -283,7 +344,7 @@ def compile_candidates(
 
     require(status_counts == {
         "computed_single_closed_component": 73,
-        "unaggregated_nested_components": 1,
+        "computed_nested_opposite_winding_boundary_moments": 1,
     }, f"source moment candidate status counts changed: {status_counts}")
     return {
         "schema": SCHEMA,
@@ -301,7 +362,9 @@ def compile_candidates(
             "organ_mass_inventory_member_count": len(organ_ids),
             "overlap_census_only_organ_member_count": len(selected_ids),
             "computed_single_closed_surface_moment_count": status_counts["computed_single_closed_component"],
-            "unaggregated_nested_component_member_count": status_counts["unaggregated_nested_components"],
+            "computed_nested_opposite_winding_boundary_moment_count": status_counts[
+                "computed_nested_opposite_winding_boundary_moments"
+            ],
             "ontology_priority_class_counts": dict(sorted(class_counts.items())),
         },
         "identity_bindings": {
@@ -315,6 +378,7 @@ def compile_candidates(
             "census_and_semantics_identities_bound": True,
             "closed_surface_topology_recomputed": True,
             "single_component_surface_moments_computed": True,
+            "nested_opposite_winding_boundary_moments_computed": True,
             "disconnected_components_summed": False,
             "nested_component_surface_intersection_and_containment_checked": True,
             "cross_surface_moments_summed": False,
@@ -327,9 +391,9 @@ def compile_candidates(
         "boundary": (
             "These are source-frame surface integral candidates for the 74 overlap-census "
             "organ identities outside the 18-region organ-mass inventory. 73 single closed "
-            "components have per-surface moments. FJ3150 has two closed components with "
-            "zero exact triangle crossings and opposite winding, with one contained inside "
-            "the other; their moments remain separate and unaggregated. No "
+            "components have per-surface moments. FJ3150's two closed components have "
+            "zero exact triangle crossings, opposite winding and exact nesting; their "
+            "oriented boundary moments are combined algebraically. No "
             "candidate is a clinical volume, a disjoint tissue partition, a body-registered "
             "organ, a density, or a mechanical mass owner."
         ),

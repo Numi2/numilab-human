@@ -1,6 +1,6 @@
 # Body composition and source-overlap identity crosswalk - 2026-10-02
 
-The new [body-composition integration receipt](media/body-composition-integration-20261002/receipt-v3.json)
+The new [body-composition integration receipt](media/body-composition-integration-20261002/receipt-v4.json)
 binds the current whole-body source-frame overlap census alongside the existing
 18-region organ-mass candidate. It does not merge their member sets or promote
 any physical owner.
@@ -26,17 +26,19 @@ conservation and replay receipts remain scoped to their individual source
 models.
 
 The integration receipt SHA-256 is
-`3603d2a0e853dcc892a8f8ae2240fbd63567df996d234a9695fef58208704f5e`; it binds
+`675ac5845056db94507356473ecde1750309c300a7fcd5f2801991c23ed51e49`; it binds
 the exact overlap census receipt SHA-256
 `9a669122521a11389ea4e4f69869e400d61908b2b0b5e5d4377620f3a9ff6b26`.
 
-The [overlap-only organ moment receipt](media/whole-body-overlap-organ-moments-20261002/receipt-v2.json)
+The [overlap-only organ moment receipt](media/whole-body-overlap-organ-moments-20261002/receipt-v3.json)
 adds individual source-frame moments for **73** of those 74 identities. FJ3150
 has two closed surface components with overlapping source AABBs, zero exact
 triangle crossings, and exact containment of the smaller reverse-winding
-component inside the larger one. The compiler retains their component moments
-separately and does not aggregate them. The moments are not additive across
-atlas surfaces and carry no physical-volume or mass owner.
+component inside the larger one. After those exact intersection and
+containment checks, the compiler combines their signed component integrals as
+an oriented boundary moment candidate while retaining both component records.
+It does not assign a physical volume or mass. The moments are not additive
+across atlas surfaces.
 
 This identity crosswalk does not decide whether any crossing is anatomically
 intended, supply regional organ-mass moments for the 74 census-only identities,
@@ -49,8 +51,8 @@ Reproduce the receipt with:
 ```sh
 NUMI_HUMAN_PYTHON=.venv-mujoco312/bin/python \
 .numi/commands/human whole-body-overlap-organ-moments \
-  --output Docs/media/whole-body-overlap-organ-moments-20261002/receipt-v2.json
+  --output Docs/media/whole-body-overlap-organ-moments-20261002/receipt-v3.json
 NUMI_HUMAN_PYTHON=.venv-mujoco312/bin/python \
 .numi/commands/human body-composition-integration \
-  --output Docs/media/body-composition-integration-20261002/receipt-v3.json
+  --output Docs/media/body-composition-integration-20261002/receipt-v4.json
 ```
