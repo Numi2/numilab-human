@@ -22,6 +22,8 @@ def sha(path: Path) -> str:
 
 
 def main() -> None:
+    receipt_path = ROOT / 'Docs/media/patellar-extensor-stack-20260930/receipt.json'
+    prior_receipt = json.loads(receipt_path.read_text())
     source = parse_source(ROOT / 'Sources/open-knee-oks003')
     names = ('PTB', 'PTC', 'QAT', 'PTL')
     centers_mm = {name: np.asarray(source.regions[name].nodes_mm).mean(axis=0)
@@ -37,6 +39,7 @@ def main() -> None:
             float((centers_mm['PTB'] - centers_mm['PTL']) @ proximal),
     }
     compiled = {}
+    registrations = {}
     for side, stem in [('left', 'open-knee-oks003-left'),
                        ('right', 'open-knee-oks003-right-mirrored')]:
         manifest_path = BUILD / side / (stem + '.manifest.json')
@@ -45,6 +48,7 @@ def main() -> None:
         assert manifest['payload']['sha256'] == sha(payload)
         assert manifest['registration']['patella_anterior_offset_m'] >= .025
         assert manifest['registration']['fibula_lateral_offset_m'] >= .020
+        registrations[side] = manifest['registration']
         scale = manifest['registration']['uniform_scale'] * .001
         offsets = manifest['registration']['patellar_extensor_stack']
         for key, raw in source_metrics_mm.items():
@@ -59,6 +63,8 @@ def main() -> None:
             'extensor_stack_m': offsets,
             'uniform_scale': manifest['registration']['uniform_scale'],
         }
+        assert compiled[side]['manifest_sha256'] == prior_receipt['compiled'][side]['manifest_sha256']
+        assert compiled[side]['payload_sha256'] == prior_receipt['compiled'][side]['payload_sha256']
     assert all(compiled['left']['extensor_stack_m'][name] ==
                compiled['right']['extensor_stack_m'][name] for name in source_metrics_mm)
 
@@ -83,13 +89,17 @@ def main() -> None:
     patella = json.loads(patella_path.read_text())
     posed = [row for pose in patella['projected_poses'] for row in pose['patellar_anteriority']]
     assert len(posed) == 16 and all(row['passed'] for row in posed)
+    assert sha(patella_path) == prior_receipt['compiled_bone_full_support_summary_sha256']
+    assert visual == prior_receipt['myosim_visual_body_center_anterior_offset_m']
+    registration_records_sha256 = hashlib.sha256(json.dumps(
+        registrations, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
     result = {
         'schema': 'numi.human.patellar-extensor-stack-check.v1',
         'status': 'passed_gross_source_ordering_and_projected_presentation',
         'open_knee_source_sha256': {name: sha(ROOT / 'Sources/open-knee-oks003' / name)
                                       for name in ('Geometry.feb', 'ModelProperties.xml',
                                                    'FeBio_custom.feb', 'license.txt')},
-        'registration_sha256': sha(ROOT / 'Build/knee-parity-registration-20260929/candidate.v6.registration.json'),
+        'compiled_registration_records_sha256': registration_records_sha256,
         'compiled': compiled,
         'source_axis_offsets_mm': source_metrics_mm,
         'myosim_visual_body_center_anterior_offset_m': visual,
@@ -107,7 +117,7 @@ def main() -> None:
                      'poses. Neither check proves patellar cartilage-facing normals, contact '
                      'pressure, loaded extensor force transfer, or clinical anatomy.'),
     }
-    output = ROOT / 'Docs/media/patellar-extensor-stack-20260930/receipt.json'
+    output = receipt_path
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2, sort_keys=True) + '\n')
     print(json.dumps({'status': result['status'], 'source_visual': visual,

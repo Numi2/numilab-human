@@ -912,6 +912,13 @@ patch mostly facing across the joint. Exact surface gap, loaded contact and
 pressure, clinical anatomy, five knee range conflicts, and the old standing
 video's anatomy remain open.
 
+On 2026-10-02 the source/compiled extensor-stack check reran successfully on
+the current Human checkout. It confirmed the same 16/16 full-mesh anteriority
+checks and the projected source pose. The verifier now binds the compiled
+left/right registration manifests directly instead of requiring an absent
+temporary registration file; the exact source candidate and mirrored-right
+boundary remain unchanged.
+
 The subsequent [exact patellofemoral intersection audit](PATELLOFEMORAL_CONTACT_INTERSECTIONS_20260930.md)
 finds the same **18** crossing cartilage triangle pairs in the pinned source
 and both compiled sides (longest source segment 0.423 mm). Static

@@ -23,7 +23,10 @@ to the knee anchor and fibula **28.565 mm lateral** to tibia. Reversing any
 of these three extensor layers fails compilation. Both 34 MB knee payloads
 compiled on the CPU and passed the new gate. The [source-bound receipt](media/patellar-extensor-stack-20260930/receipt.json)
 contains exact input, output and program hashes plus an independent
-source-coordinate check.
+source-coordinate check. Its verifier now rebuilds a registration-record hash
+from the compiled left/right manifests and checks their payload identities
+against the retained receipt, so requalification no longer depends on the
+temporary ignored `candidate.v6.registration.json` under `Build/`.
 
 The left source is subject `oks003`; the right remains its declared sagittal
 mirror, not an independently segmented right knee. The expected chain follows
