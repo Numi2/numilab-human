@@ -88,6 +88,14 @@ anatomically intended, close a seam or mechanics gate, or change geometry; the
 eight individually unqualified organ surfaces remain outside the overlap
 diagnostic.
 
+The [body-composition source-overlap crosswalk](BODY_COMPOSITION_SOURCE_OVERLAP_CROSSWALK_20261002.md)
+now binds this census to the distinct 378-member, 18-region organ-mass
+candidate. The inventories share 30 identities; 74 occur only in the overlap
+census and 348 only in the organ-mass candidate. The integration records these
+as separate evidence scopes and keeps physical-volume and mechanical-mass owner
+counts at zero. The census-only identities still lack organ-mass moments in
+that candidate; no subset or physical-ownership claim is inferred.
+
 ## Historical requalification snapshot — 2026-09-15
 
 The current repository evidence layer is published at `4bca31c` on `main` and

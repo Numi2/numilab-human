@@ -58,6 +58,9 @@ VESSEL_MOMENT_TRANSPORT = ROOT / (
 MYOSIM_MASS_OWNER = ROOT / (
     "Docs/media/myosim-mass-owner-20260915/receipt-v1.json"
 )
+WHOLE_BODY_SOURCE_OVERLAP_CENSUS = ROOT / (
+    "Docs/media/whole-body-source-overlap-census-20261002/receipt-v4.json"
+)
 
 
 def _require(condition: bool, message: str) -> None:
@@ -114,6 +117,7 @@ def _read_profile(path: Path) -> dict[str, Any]:
         "cardiac_wall_region_identity": 24,
         "muscle_surface_geometry_audit": 150,
         "organ_surface_candidates": 378,
+        "whole_body_source_overlap_census": 104,
         "regional_blood_transport": 329,
         "muscle_geometric_volume_candidate": 60,
         "muscle_tendon_surface_identity": 150,
@@ -133,7 +137,7 @@ def _read_profile(path: Path) -> dict[str, Any]:
         "blood_mass_transfer_rejected_steps": 1,
     }, "integration profile runtime counts differ")
     _require(value.get("inputs") == [
-        "organ_mass", "regional_tissue", "muscle_surfaces", "muscle_geometry_audit", "skin_shell", "skin_native_visual",
+        "organ_mass", "whole_body_source_overlap_census", "regional_tissue", "muscle_surfaces", "muscle_geometry_audit", "skin_shell", "skin_native_visual",
         "muscle_geometric_volume_candidate",
         "foot_contact_registration", "activation",
         "blood_transport", "tissue_exchange", "blood_mass_transfer", "cardiac_blood",
@@ -187,11 +191,13 @@ def compile_candidate(
     blood_mass_transfer: Path = BLOOD_MASS_TRANSFER,
     vessel_mass_moments: Path = VESSEL_MASS_MOMENTS,
     vessel_moment_transport: Path = VESSEL_MOMENT_TRANSPORT,
+    whole_body_source_overlap_census: Path = WHOLE_BODY_SOURCE_OVERLAP_CENSUS,
 ) -> dict[str, Any]:
     profile = Path(profile)
     profile_document = _read_profile(profile)
     paths = {
         "organ_mass": Path(organ_mass),
+        "whole_body_source_overlap_census": Path(whole_body_source_overlap_census),
         "regional_tissue": Path(regional_tissue),
         "muscle_surfaces": Path(surfaces),
         "muscle_geometry_audit": Path(muscle_geometry_audit),
@@ -220,6 +226,7 @@ def compile_candidate(
     hashes: dict[str, str] = {}
     labels = {
         "organ_mass": "organ mass candidate",
+        "whole_body_source_overlap_census": "whole-body source overlap census",
         "regional_tissue": "regional tissue candidate",
         "muscle_surfaces": "muscle surface candidate",
         "muscle_geometry_audit": "muscle surface geometry audit",
@@ -292,6 +299,39 @@ def compile_candidate(
     _schema(documents["myosim_mass_owner"],
             "HumanPack.myosim-rigid-body-mass-owner-candidate.v1",
             labels["myosim_mass_owner"])
+    _schema(documents["whole_body_source_overlap_census"],
+            "numi.human.whole-body-source-overlap-census.v2",
+            labels["whole_body_source_overlap_census"])
+
+    overlap_census = documents["whole_body_source_overlap_census"]
+    overlap_scope = overlap_census.get("scope", {})
+    overlap_members = overlap_census.get("source_members")
+    _require(overlap_census.get("status") == "source_frame_overlap_census_complete" and
+             overlap_scope == {
+                 "compiled_crossing_pairs": 198,
+                 "compiled_pairs_tested": 481,
+                 "eligible_same_declared_owner_pairs": 198,
+                 "excluded_crossing_pairs_without_same_declared_owner_map": 0,
+                 "source_members_read": 104,
+             } and
+             overlap_census.get("disposition_counts") == {
+                 "crossings_match_after_exact_source_face_mapping": 10,
+                 "raw_source_and_compiled_crossing_witnesses_match": 187,
+                 "topology_repair_removed_mapped_source_crossings": 1,
+             } and isinstance(overlap_members, list) and len(overlap_members) == 104 and
+             all(isinstance(row, dict) for row in overlap_members) and
+             overlap_census.get("registration_repair_adopted") is False and
+             overlap_census.get("source_geometry_modified") is False,
+             "whole-body source overlap census scope or dispositions changed")
+    overlap_member_ids = [row.get("source_member_id") for row in overlap_members]
+    _require(all(isinstance(value, str) and value for value in overlap_member_ids) and
+             len(set(overlap_member_ids)) == 104,
+             "whole-body source overlap census member identities are invalid")
+    _require(all(isinstance(row.get("source_member_sha256"), str) and
+                 len(row["source_member_sha256"]) == 64 and
+                 all(character in "0123456789abcdef" for character in row["source_member_sha256"])
+                 for row in overlap_members),
+             "whole-body source overlap census member hashes are invalid")
 
     myosim_mass_owner = documents["myosim_mass_owner"]
     myosim_mass_source = myosim_mass_owner.get("source", {})
@@ -474,6 +514,27 @@ def compile_candidate(
     _require(all(isinstance(value, str) and value for value in organ_ids),
              "organ mass member identity is invalid")
     _require(len(set(organ_ids)) == len(organ_ids), "organ mass members repeat")
+    organ_id_set = set(organ_ids)
+    overlap_id_set = set(overlap_member_ids)
+    overlap_shared_ids = organ_id_set & overlap_id_set
+    overlap_census_vs_organ = {
+        "whole_body_source_overlap_census_member_count": len(overlap_id_set),
+        "organ_surface_candidate_member_count": len(organ_id_set),
+        "shared_source_member_identity_count": len(overlap_shared_ids),
+        "overlap_census_only_member_count": len(overlap_id_set - organ_id_set),
+        "organ_candidate_only_member_count": len(organ_id_set - overlap_id_set),
+        "sets_are_equal": overlap_id_set == organ_id_set,
+        "overlap_census_is_subset_of_organ_candidates": overlap_id_set <= organ_id_set,
+    }
+    _require(overlap_census_vs_organ == {
+        "whole_body_source_overlap_census_member_count": 104,
+        "organ_surface_candidate_member_count": 378,
+        "shared_source_member_identity_count": 30,
+        "overlap_census_only_member_count": 74,
+        "organ_candidate_only_member_count": 348,
+        "sets_are_equal": False,
+        "overlap_census_is_subset_of_organ_candidates": False,
+    }, "whole-body overlap census and organ candidate identity crosswalk changed")
     _all_none(organ_rows, ("mechanical_mass_owner", "physical_volume_owner"), "organ candidate")
     _require(organ.get("totals", {}).get("physical_mass_owner_count") == 0 and
              organ.get("qualification", {}).get("interdomain_disjointness_qualified") is False,
@@ -982,6 +1043,7 @@ def compile_candidate(
         "muscle_surface_geometry_audit": geometry_counts["source_surface_count"],
         "muscle_geometric_volume_candidate": len(geometric_volume_owners),
         "organ_surface_candidates": len(organ_id_set),
+        "whole_body_source_overlap_census": len(overlap_id_set),
         "regional_blood_transport": len(set(blood_member_ids)),
         "muscle_tendon_surface_identity": len(surface_ids),
         "skin_shell_surface_identity": 1,
@@ -1009,6 +1071,8 @@ def compile_candidate(
             "cardiac_wall_region_ids_sha256": _identity_digest(cardiac_wall_ids),
             "tissue_calibration_id_sha256": _identity_digest({calibration_id}),
             "organ_member_ids_sha256": _identity_digest(organ_id_set),
+            "whole_body_source_overlap_census_member_ids_sha256": _identity_digest(overlap_id_set),
+            "whole_body_overlap_census_vs_organ_candidates": overlap_census_vs_organ,
             "blood_transport_member_ids_sha256": _identity_digest(set(blood_member_ids)),
             "muscle_tendon_surface_ids_sha256": _identity_digest(surface_ids),
             "muscle_surface_geometry_audit_sha256": hashes["muscle_geometry_audit"],
@@ -1200,6 +1264,8 @@ def compile_candidate(
             "native_costal_tissue_requalification_bound": True,
             "native_costal_tissue_whole_body_mass_owner": False,
             "native_regional_exchange_requalification_bound": True,
+            "whole_body_source_overlap_census_bound": True,
+            "organ_overlap_scope_reconciled_with_candidate_identity": True,
             "native_regional_exchange_mechanical_blood_mass_owner": False,
             "native_regional_exchange_anatomical_lumen": False,
             "native_regional_exchange_oxygen_exchange": True,
@@ -1234,7 +1300,11 @@ def compile_candidate(
             "integrated_human_qualification": False,
         },
         "boundary": (
-            "This record joins source organ candidate moments, regional tissue "
+            "This record joins source organ candidate moments and a separately "
+            "scoped 104-member whole-body source-overlap census. Their identity "
+            "crosswalk has 30 shared members, 74 census-only members, and 348 "
+            "organ-candidate-only members; the census is not an organ-mass subset. "
+            "It also joins regional tissue "
             "mass, the exact-clock CVSim21 aggregate blood mass, regional blood "
             "transport, six-vessel source/world registration, tissue oxygen "
             "exchange, cardiac blood budget, 24-region Rodero cardiac-wall "
@@ -1313,6 +1383,7 @@ def run(arguments: argparse.Namespace) -> int:
         blood_mass_transfer=arguments.blood_mass_transfer,
         vessel_mass_moments=arguments.vessel_mass_moments,
         vessel_moment_transport=arguments.vessel_moment_transport,
+        whole_body_source_overlap_census=arguments.whole_body_source_overlap_census,
     )
     output = arguments.output.resolve()
     digest = _immutable_write(output, result)
@@ -1350,6 +1421,8 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--blood-mass-transfer", type=Path, default=BLOOD_MASS_TRANSFER)
     parser.add_argument("--vessel-mass-moments", type=Path, default=VESSEL_MASS_MOMENTS)
     parser.add_argument("--vessel-moment-transport", type=Path, default=VESSEL_MOMENT_TRANSPORT)
+    parser.add_argument("--whole-body-source-overlap-census", type=Path,
+                        default=WHOLE_BODY_SOURCE_OVERLAP_CENSUS)
     parser.add_argument("--output", type=Path, required=True)
     parser.set_defaults(handler=run)
 

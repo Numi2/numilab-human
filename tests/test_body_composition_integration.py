@@ -22,6 +22,7 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
         "muscle_surface_geometry_audit": 150,
         "muscle_geometric_volume_candidate": 60,
         "organ_surface_candidates": 378,
+        "whole_body_source_overlap_census": 104,
         "regional_blood_transport": 329,
         "muscle_tendon_surface_identity": 150,
         "skin_shell_surface_identity": 1,
@@ -94,6 +95,17 @@ def test_cross_domain_candidate_binds_source_layers_without_promoting_owners() -
     assert result["qualification"]["fat_source_absence_bound"]
     assert not result["qualification"]["integrated_human_qualification"]
     assert result["identity_bindings"]["blood_members_subset_of_organ_members"]
+    assert result["identity_bindings"]["whole_body_overlap_census_vs_organ_candidates"] == {
+        "whole_body_source_overlap_census_member_count": 104,
+        "organ_surface_candidate_member_count": 378,
+        "shared_source_member_identity_count": 30,
+        "overlap_census_only_member_count": 74,
+        "organ_candidate_only_member_count": 348,
+        "sets_are_equal": False,
+        "overlap_census_is_subset_of_organ_candidates": False,
+    }
+    assert result["qualification"]["whole_body_source_overlap_census_bound"]
+    assert result["qualification"]["organ_overlap_scope_reconciled_with_candidate_identity"]
     assert result["identity_bindings"]["surface_ids_disjoint_from_organ_members"]
     assert result["identity_bindings"]["vessel_members_subset_of_organ_members"]
     assert result["identity_bindings"]["vessel_members_disjoint_from_blood_members"]
@@ -142,3 +154,13 @@ def test_native_regional_exchange_boundary_is_rejected_if_promoted(tmp_path: Pat
     path.write_text(json.dumps(value, sort_keys=True, indent=2) + "\n", encoding="utf-8")
     with pytest.raises(ImportError, match="native regional exchange qualification boundary changed"):
         compile_candidate(native_regional_exchange=path)
+
+
+def test_whole_body_overlap_census_duplicate_identity_is_rejected(tmp_path: Path) -> None:
+    source = Path("Docs/media/whole-body-source-overlap-census-20261002/receipt-v4.json")
+    value = json.loads(source.read_text(encoding="utf-8"))
+    value["source_members"][1]["source_member_id"] = value["source_members"][0]["source_member_id"]
+    path = tmp_path / "whole-body-overlap-census.json"
+    path.write_bytes(canonical(value) + b"\n")
+    with pytest.raises(ImportError, match="whole-body source overlap census member identities are invalid"):
+        compile_candidate(whole_body_source_overlap_census=path)
