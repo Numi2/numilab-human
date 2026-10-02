@@ -1096,14 +1096,18 @@ Maximum foot penetration is `1.813 mm` and joint-equality velocity error is
 iteration count remains trajectory-sensitive without resolving the standing
 gap. The [left knee source-range overlay](MYOSIM_LEFT_KNEE_RANGE_OVERLAY_20261002.md)
 now corrects the sign-mirrored `knee_angle_translation2_l` interval against
-the pinned equality law. The refreshed native reference artifact consumes the
-corrected `NHLIM1` range; both equality payloads remain byte-exact across all
+the pinned equality law. The refreshed reference artifact carries the corrected
+`NHLIM1` range; both equality payloads remain byte-exact across all
 51 source rows, and the full source driver-domain audit now has 37 conflicts
 with no unverified domains. Neutral, bilateral knee flexion, and deep crouch
-pass the corrected left-slide range; functional crouch retains two separate knee rotation-range
+pass the corrected left-slide range; functional crouch retains two separate
+knee rotation-range
 residuals. Calibrated closed-loop recruitment, loaded knee/contact mechanics,
-and sustained standing remain open; the requested standing video and board
-visuals stay paused until requested.
+and the Matter accepted-state transaction with the new source-limit bytes
+remain open. The source-compliance compiler/schema now bind the new `NHLIM1`
+payload, while the accepted-step stand invocation does not consume `NHLIM1` and
+its trajectory is unchanged by this source correction. The requested standing
+video and board visuals stay paused until requested.
 
 ## Single-male release target
 

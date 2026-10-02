@@ -20,7 +20,7 @@ EQUALITY_PATH = (
 )
 LIMIT_PATH = (
     knee.ROOT
-    / "Docs/media/native-prepared-support-history-v1/inputs/"
+    / "Docs/media/myosim-left-knee-range-overlay-20261002/"
     "myosim-fullbody-joint-limits.nhlim"
 )
 
@@ -72,6 +72,17 @@ def test_exact_source_programs_compile_deterministically() -> None:
     assert value["programs"]["joint_limits"]["file_sha256"] == (
         compliance.LIMIT_PAYLOAD_SHA256
     )
+    limits = []
+    for index in range(value["programs"]["joint_limits"]["row_count"]):
+        offset = compliance.HEADER.size + index * (
+            compliance.PROGRAMS["joint_limits"]["record_bytes"]
+        )
+        source_joint_id = struct.unpack_from("<I", limit, offset + 8)[0]
+        if source_joint_id == 112:
+            limits.append(struct.unpack_from("<2f", limit, offset + 16))
+    assert len(limits) == 1
+    expected = struct.unpack("<2f", struct.pack("<2f", -0.006792, -7.69254e-11))
+    assert limits[0] == expected
     assert value["source_model"] == {
         "nq": 129,
         "nv": 128,

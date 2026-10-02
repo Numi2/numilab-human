@@ -41,7 +41,14 @@ their separate source ranges.
 
 A refreshed local native reference artifact at
 `Build/myosim-fullbody-left-knee-overlay-20261002` binds the overlay in its
-manifest and carries the corrected `NHLIM1` source-compliance range. Its rigid,
+manifest and carries the corrected `NHLIM1` source-compliance range. The
+2026-10-02 accepted-step visual stand invocation does not take an `NHLIM1`
+input, so this source correction has not changed that standing trajectory. The
+loaded-knee source-compliance compiler and strict schema now bind the refreshed
+limit payload; its regression suite passes against the tracked binary fixture
+at `Docs/media/myosim-left-knee-range-overlay-20261002/`. This verifies only
+the source-program binding. No Matter accepted-state transaction has run with
+the new bytes. The artifact's rigid,
 muscle, support, equality, extensor-hood, and support-primitive payload hashes
 match the parent artifact. The 416 cached muscle-fit records were accepted only
 after their source archive, ordering, fit objective, input arguments, and
