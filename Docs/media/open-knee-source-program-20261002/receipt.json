@@ -1,12 +1,32 @@
 {
   "artifacts": {
+    "source-discrete-springs.bin": {
+      "bytes": 26812,
+      "curve_count": 9,
+      "curve_stride_bytes": 56,
+      "edge_count": 406,
+      "edge_stride_bytes": 64,
+      "file": "source-discrete-springs.bin",
+      "header_bytes": 120,
+      "native_execution_status": "compiled_for_Matter_binding_not_executed",
+      "schema": "numi.human.open-knee-discrete-and-curves-program.v1",
+      "set_count": 3,
+      "set_names_in_source_order": [
+        "MPFL",
+        "LPFL",
+        "MCL_MNS-M_tie"
+      ],
+      "set_stride_bytes": 68,
+      "sha256": "332521897ae3116f7467f9bf8f81a0ab3942e11cf4ee734078b576cc51908be3",
+      "source_coordinates": "preserved as float64 without scaling"
+    },
     "source-geometry.bin": {
       "bytes": 37388532,
       "sha256": "97c5e7b1c09eb47193bca0b7d2a515088b40938da45fe7aa8c8fc7bb7dd54368"
     },
     "source-mechanics.json": {
-      "bytes": 1815904,
-      "sha256": "4e89c2bb9080826f2ba80cd490056ee92ab8c023d247eda0e9279d2694acb5f7"
+      "bytes": 1843729,
+      "sha256": "32836d968b5a1d9383966b961dff78ead0178719bdb634826a57d4359747d2e3"
     },
     "source-meshdata.bin": {
       "bytes": 2686936,
@@ -97,9 +117,9 @@
     "contact_surface_faces": 345070,
     "contacts": 18,
     "cylindrical_joints": 6,
+    "discrete_spring_edges": 406,
     "load_curves": 9,
     "materials": 21,
-    "other_constraints": 1,
     "prestrain_target_states": 18,
     "rigid_bodies": 9,
     "rigid_springs": 1,
@@ -109,8 +129,8 @@
     "source_mesh_element_fiber_vectors": 95962
   },
   "compiler_sources": {
-    "cli.py": "329b64f5b954ef5c495b6669a5c0210ab02152e6aae0806d7e29d72722f655e9",
-    "open_knee.py": "5507b712926f9246dccef6a800add8eee8d8f860c1e6826d765878d3f75239cd"
+    "cli.py": "8c442066bb6131296ba95c6e69e3c56f8f11a68304438a931d3194b72a76e852",
+    "open_knee.py": "840d9684f09d890d608353b859feee30a50541ebacd1fa947e449805b97ed3e4"
   },
   "geometry_binary": {
     "bytes": 37388532,
@@ -168,22 +188,9 @@
       "sha256": "4155db1d0d7b87ffb2c668102d2495870e4461a539b18e6708f1f4817b5601bf"
     }
   },
-  "reference_outputs": {
-    "archived_contact_sha256": "4ff55ec22a541d0207dcfe4d3e60cfd2ab426fd1c012d69b910c7439fb2da382",
-    "archived_observations_sha256": "9a99bbdcc94b4ba1aca22c9cc3d72919db9b1e08fec703732f8fcf635705d149",
-    "solver_rerun": "not_performed_by_native_compiler",
-    "source_reference_baseline.json": {
-      "bytes": 105037,
-      "native_execution_status": "archived_reference_outputs_summarized_not_rerun",
-      "retained_contact_archive_sha256": "4ff55ec22a541d0207dcfe4d3e60cfd2ab426fd1c012d69b910c7439fb2da382",
-      "retained_observation_archive_sha256": "9a99bbdcc94b4ba1aca22c9cc3d72919db9b1e08fec703732f8fcf635705d149",
-      "schema": "numi.human.open-knee-source-reference-baseline.v1",
-      "sha256": "e8aa8771e80fc2a479ae80d38ee742272c50ac4fd54fffbb959cf2ebddbbb5e6",
-      "source_xplt_sha256": "c370ae9f94e9faee2d7060bf2a6819e03be1312e82ca79bd2e9cebf8b34398de"
-    },
-    "source_xplt_sha256": "c370ae9f94e9faee2d7060bf2a6819e03be1312e82ca79bd2e9cebf8b34398de"
-  },
   "resolved_geometry": {
+    "discrete_set_count": 3,
+    "discrete_spring_edges": 406,
     "element_set_count": 16,
     "mesh_data_element_sets": {
       "MNS-L": {
@@ -431,6 +438,7 @@
     "native_mechanics_execution": "not performed",
     "pinned_source_deck_and_geometry": "passed exact SHA-256 identity checks",
     "resolved_contact_pairs": 18,
-    "resolved_rigid_ties": 18
+    "resolved_rigid_ties": 18,
+    "rigid_graph_program": "compiled from source rigid bodies, cylindrical joints, and prescribed body coordinates; not executed by this compiler"
   }
 }

@@ -481,6 +481,7 @@ def _geometry_archive_cross_references(
     expected_sha256: str | None,
     contact_pair_names: set[str],
     rigid_tie_node_sets: set[str],
+    discrete_set_names: set[str] | None = None,
     mesh_data_element_counts: dict[str, int] | None = None,
     source_material_ids: set[int] | None = None,
     binary_output_path: Path | None = None,
@@ -517,6 +518,7 @@ def _geometry_archive_cross_references(
     node_sets: dict[str, dict[str, Any]] = {}
     surfaces: dict[str, dict[str, Any]] = {}
     surface_pairs: dict[str, dict[str, str]] = {}
+    discrete_sets: dict[str, dict[str, Any]] = {}
     element_sets: dict[str, dict[str, Any]] = {}
     source_mesh_node_groups: dict[str, dict[str, Any]] = {}
     source_mesh_element_groups: dict[str, dict[str, Any]] = {}
@@ -544,7 +546,8 @@ def _geometry_archive_cross_references(
                 parent = stack[-1] if stack else None
                 parent_tag = local_tag(parent) if parent is not None else ""
                 if parent_tag == "Geometry" and tag in {
-                    "Nodes", "NodeSet", "Surface", "SurfacePair", "Elements"
+                    "Nodes", "NodeSet", "Surface", "SurfacePair", "Elements",
+                    "DiscreteSet",
                 }:
                     name = element.attrib.get("name")
                     if not name:
@@ -594,6 +597,11 @@ def _geometry_archive_cross_references(
                             "source_mesh_node_ids": set()
                             if source_volume_mesh_output_path is not None and
                             element_type == "tet4" else None,
+                            "digest": hashlib.sha256(),
+                        }
+                    elif tag == "DiscreteSet":
+                        active[id(element)] = {
+                            "kind": tag, "name": name, "edges": [],
                             "digest": hashlib.sha256(),
                         }
                     else:
@@ -739,8 +747,27 @@ def _geometry_archive_cross_references(
                     group["digest"].update(
                         f"{element_id}:{encoded}\n".encode("ascii")
                     )
+            elif parent_tag == "DiscreteSet" and tag == "delem":
+                group = active.get(id(parent))
+                if group is not None:
+                    try:
+                        nodes = tuple(int(value.strip()) for value in
+                                      (element.text or "").split(","))
+                    except ValueError as error:
+                        raise ValueError(
+                            "Open Knee(s) archived discrete edge is invalid"
+                        ) from error
+                    if len(nodes) != 2 or nodes[0] <= 0 or nodes[1] <= 0 or \
+                            nodes[0] == nodes[1]:
+                        raise ValueError(
+                            "Open Knee(s) archived discrete edge has invalid nodes"
+                        )
+                    group["edges"].append(nodes)
+                    group["digest"].update(f"{nodes[0]},{nodes[1]}\n".encode("ascii"))
+                    referenced_node_ids.update(nodes)
 
-            if tag in {"Nodes", "NodeSet", "Surface", "SurfacePair", "Elements"} and id(element) in active:
+            if tag in {"Nodes", "NodeSet", "Surface", "SurfacePair", "Elements",
+                       "DiscreteSet"} and id(element) in active:
                 group = active.pop(id(element))
                 name = group["name"]
                 if group["kind"] == "Nodes":
@@ -846,6 +873,16 @@ def _geometry_archive_cross_references(
                             "payload": group["source_mesh_payload"],
                             "node_ids": group["source_mesh_node_ids"],
                         }
+                elif group["kind"] == "DiscreteSet":
+                    if name in discrete_sets or not group["edges"]:
+                        raise ValueError(
+                            "Open Knee(s) archived discrete set is duplicate or empty"
+                        )
+                    discrete_sets[name] = {
+                        "edge_count": len(group["edges"]),
+                        "connectivity_sha256": group["digest"].hexdigest(),
+                        "edges": group["edges"],
+                    }
                 else:
                     if name in surface_pairs:
                         raise ValueError(
@@ -872,6 +909,11 @@ def _geometry_archive_cross_references(
         raise ValueError("Open Knee(s) archived geometry node IDs are empty or duplicated")
     if not referenced_node_ids.issubset(node_ids):
         raise ValueError("Open Knee(s) archived geometry references a missing mesh node")
+    for name in discrete_set_names or set():
+        if name not in discrete_sets:
+            raise ValueError(
+                f"Open Knee(s) archived geometry is missing DiscreteSet {name}"
+            )
     for name in rigid_tie_node_sets:
         record = node_sets.get(name)
         if record is None or record["node_count"] == 0 or "node_ids" not in record:
@@ -1023,6 +1065,8 @@ def _geometry_archive_cross_references(
         "surface_count": len(surfaces),
         "surfaces": {name: surfaces[name] for name in sorted(surfaces)},
         "surface_pair_count": len(surface_pairs),
+        "discrete_set_count": len(discrete_sets),
+        "discrete_sets": {name: discrete_sets[name] for name in sorted(discrete_sets)},
         "element_set_count": len(element_sets),
         "rigid_tie_node_sets": {
             name: node_sets[name] for name in sorted(rigid_tie_node_sets)
@@ -1650,6 +1694,8 @@ def compile_source_mechanical_description(
             expected_sha256=source_geometry_archive_sha256,
             contact_pair_names={contact["surface_pair"] for contact in contacts},
             rigid_tie_node_sets={tie["attributes"]["node_set"] for tie in rigid_ties},
+            discrete_set_names={item["attributes"]["discrete_set"]
+                                for item in discrete_interactions},
             mesh_data_element_counts=mesh_data_element_counts,
             source_material_ids=source_material_ids,
             binary_output_path=source_geometry_binary_output_path,
@@ -1705,6 +1751,21 @@ def compile_source_mechanical_description(
             contact["geometry_resolution"] = geometry_resolution[
                 "contact_surface_pairs"
             ][contact["surface_pair"]]
+        discrete_material_ids = {record["id"] for record in discrete_materials}
+        for interaction in discrete_interactions:
+            attributes = interaction["attributes"]
+            if attributes["dmat"] not in discrete_material_ids:
+                raise ValueError(
+                    "Open Knee(s) discrete interaction references an unknown material"
+                )
+            resolved = geometry_resolution["discrete_sets"][
+                attributes["discrete_set"]
+            ]
+            interaction["edge_count"] = resolved["edge_count"]
+            interaction["connectivity_sha256"] = resolved[
+                "connectivity_sha256"
+            ]
+            interaction["geometry_resolution"] = geometry_resolution["status"]
     if expected_deck_sha256 is not None:
         observed_counts = {
             "materials": len(materials),
@@ -1809,6 +1870,7 @@ def compile_source_mechanical_artifacts(
     source_volume_mesh_path = output / "source-volume-mesh.bin"
     rigid_graph_path = output / "source-rigid-graph.bin"
     rigid_ties_path = output / "source-rigid-ties.bin"
+    discrete_path = output / "source-discrete-springs.bin"
     contact_path = output / "source-sliding-contact.bin"
     description = compile_source_mechanical_description(
         source,
@@ -1844,6 +1906,10 @@ def compile_source_mechanical_artifacts(
         description, source_volume_mesh_path, rigid_ties_path
     )
     description["source_rigid_ties_program_storage"] = rigid_ties_storage
+    discrete_storage = _write_source_discrete_program(
+        description, geometry_binary_path, discrete_path
+    )
+    description["source_discrete_program_storage"] = discrete_storage
     contact_storage = _write_source_sliding_contact_program(
         description, geometry_binary_path, source_volume_mesh_path, contact_path
     )
@@ -1889,6 +1955,12 @@ def compile_source_mechanical_artifacts(
             "surface_pair_count": description["source_geometry_resolution"][
                 "surface_pair_count"
             ],
+            "discrete_set_count": description["source_geometry_resolution"][
+                "discrete_set_count"
+            ],
+            "discrete_spring_edges": sum(
+                item["edge_count"] for item in description["discrete_interactions"]
+            ),
             "element_set_count": description["source_geometry_resolution"][
                 "element_set_count"
             ],
@@ -1929,7 +2001,11 @@ def compile_source_mechanical_artifacts(
             "rigid_ties": len(description["rigid_graph"]["rigid_ties"]),
             "rigid_tie_nodes": rigid_ties_storage["record_count"],
             "cylindrical_joints": len(description["rigid_graph"]["cylindrical_joints"]),
+            "rigid_springs": len(description["rigid_graph"]["rigid_springs"]),
             "contacts": len(description["contacts"]),
+            "discrete_spring_edges": sum(
+                item["edge_count"] for item in description["discrete_interactions"]
+            ),
             "contact_surface_faces": contact_storage["face_count"],
             "load_curves": len(description["load_curves"]),
             "prestrain_target_states": sum(
@@ -1993,6 +2069,7 @@ def compile_source_mechanical_artifacts(
             },
             rigid_graph_path.name: rigid_graph_storage,
             rigid_ties_path.name: rigid_ties_storage,
+            discrete_path.name: discrete_storage,
             contact_path.name: contact_storage,
             reference_baseline_path.name: reference_baseline_storage,
         },
@@ -2090,6 +2167,131 @@ def _write_source_rigid_ties_program(
         "header_bytes": 88,
         "record_stride_bytes": 16,
         "record_layout": "little-endian source node ID, source tissue material ID, rigid body material ID, source tie-set index",
+        "native_execution_status": "compiled_for_Matter_binding_not_executed",
+    }
+
+
+_SOURCE_DISCRETE_MAGIC = b"NHDISC1\0"
+_SOURCE_DISCRETE_SCHEMA = "numi.human.open-knee-discrete-and-curves-program.v1"
+
+
+def _write_source_discrete_program(
+    description: dict[str, Any], geometry_binary_path: Path, output_path: Path,
+) -> dict[str, Any]:
+    """Retain every discrete edge and load curve in source order and units.
+
+    Endpoints carry their exact source coordinates and material owners so a
+    Matter lowering can choose FEM nodes or rigid-body attachment points.
+    Compiling these rows does not apply their spring forces.
+    """
+    resolution = description["source_geometry_resolution"]
+    geometry = geometry_binary_path.read_bytes()
+    if hashlib.sha256(geometry).hexdigest() != resolution["binary_storage"]["sha256"]:
+        raise ValueError("Open Knee(s) source geometry sidecar identity drifted")
+    sets = resolution["discrete_sets"]
+    interactions = description["discrete_interactions"]
+    materials = {row["id"]: row for row in description["discrete_materials"]}
+    owners = {row["name"]: int(row["id"]) for row in description["materials"]}
+    needed = {node for interaction in interactions
+              for edge in sets[interaction["attributes"]["discrete_set"]]["edges"]
+              for node in edge}
+    nodes: dict[int, tuple[int, tuple[float, float, float]]] = {}
+    for name, group in resolution["node_coordinate_groups"].items():
+        first = group["binary_offset_bytes"]
+        for local in range(group["node_count"]):
+            node_id, *position = struct.unpack_from("<I3d", geometry, first + 28 * local)
+            if node_id in needed:
+                if node_id in nodes or name not in owners:
+                    raise ValueError("Open Knee(s) discrete endpoint has ambiguous owner")
+                nodes[node_id] = (owners[name], tuple(position))
+    if len(nodes) != len(needed):
+        raise ValueError("Open Knee(s) discrete endpoint is missing from source geometry")
+
+    curves = sorted(description["load_curves"], key=lambda row: int(row["id"]))
+    if len(curves) != 9 or [int(row["id"]) for row in curves] != list(range(1, 10)):
+        raise ValueError("Open Knee(s) pinned load-curve table drifted")
+    edge_count = sum(sets[row["attributes"]["discrete_set"]]["edge_count"]
+                     for row in interactions)
+    if len(interactions) != 3 or edge_count != 406:
+        raise ValueError("Open Knee(s) pinned discrete spring count drifted")
+    payload = bytearray(struct.pack(
+        "<8s4I32s32s32s", _SOURCE_DISCRETE_MAGIC, 1, len(curves),
+        len(interactions), edge_count, bytes.fromhex(description["source_file_sha256"]),
+        bytes.fromhex(description["source_geometry_archive_sha256"]),
+        bytes.fromhex(resolution["binary_storage"]["sha256"]),
+    ))
+    for curve in curves:
+        points = curve["numeric_points"]
+        if curve["type"] != "linear" or len(points) != 3:
+            raise ValueError("Open Knee(s) discrete program has unsupported load curve")
+        times = [float(point["time"]) for point in points]
+        values = [float(point["value"]) for point in points]
+        if any(not math.isfinite(value) for value in times + values) or \
+                any(a >= b for a, b in zip(times, times[1:])):
+            raise ValueError("Open Knee(s) discrete program load curve is invalid")
+        payload.extend(struct.pack("<2I6d", int(curve["id"]), 3,
+                                   *(value for pair in zip(times, values)
+                                     for value in pair)))
+
+    edge_rows = bytearray()
+    first_edge = 0
+    set_names = []
+    for interaction in interactions:
+        attributes = interaction["attributes"]
+        name = attributes["discrete_set"]
+        set_names.append(name)
+        material = materials[attributes["dmat"]]
+        parameters = {row["name"]: row for row in material["parameters"]}
+        if material["type"] == "nonlinear spring":
+            force = parameters.get("force")
+            if force is None or force["attributes"].get("lc") not in {"7", "8"}:
+                raise ValueError("Open Knee(s) nonlinear spring force curve drifted")
+            law = 1
+            curve_id = int(force["attributes"]["lc"])
+            stiffness = 0.0
+            scale = float(force["source_text"])
+        elif material["type"] == "linear spring":
+            law = 2
+            curve_id = 0
+            stiffness = float(parameters["E"]["source_text"])
+            scale = 1.0
+        else:
+            raise ValueError("Open Knee(s) discrete material type is unsupported")
+        if not math.isfinite(stiffness) or stiffness < 0.0 or \
+                not math.isfinite(scale) or scale <= 0.0:
+            raise ValueError("Open Knee(s) discrete material parameter is invalid")
+        edges = sets[name]["edges"]
+        payload.extend(struct.pack(
+            "<5I2d32s", int(attributes["dmat"]), law, curve_id,
+            first_edge, len(edges), stiffness, scale,
+            bytes.fromhex(sets[name]["connectivity_sha256"]),
+        ))
+        for a, b in edges:
+            owner_a, position_a = nodes[a]
+            owner_b, position_b = nodes[b]
+            edge_rows.extend(struct.pack(
+                "<4I6d", a, b, owner_a, owner_b, *position_a, *position_b,
+            ))
+        first_edge += len(edges)
+    if set_names != ["MPFL", "LPFL", "MCL_MNS-M_tie"] or \
+            [sets[name]["edge_count"] for name in set_names] != [2, 2, 402]:
+        raise ValueError("Open Knee(s) pinned discrete set order or size drifted")
+    payload.extend(edge_rows)
+    output_path.write_bytes(payload)
+    return {
+        "schema": _SOURCE_DISCRETE_SCHEMA,
+        "file": output_path.name,
+        "bytes": len(payload),
+        "sha256": hashlib.sha256(payload).hexdigest(),
+        "curve_count": len(curves),
+        "set_count": len(interactions),
+        "edge_count": edge_count,
+        "set_names_in_source_order": set_names,
+        "header_bytes": 120,
+        "curve_stride_bytes": 56,
+        "set_stride_bytes": 68,
+        "edge_stride_bytes": 64,
+        "source_coordinates": "preserved as float64 without scaling",
         "native_execution_status": "compiled_for_Matter_binding_not_executed",
     }
 
