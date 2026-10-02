@@ -46,13 +46,15 @@ joins all 579 selected compiled surfaces to their pinned source identity,
 available BodyParts3D 4.0 `part_of`/`is_a` terms, native rigid owner, geometry
 hash, and separate selected-topology status. The coarse `organ` layer contains
 21 organ, 70 organ-region, 21 organ-component, and 8 other cardinal-organ-part
-terms under the receipt's declared priority grouping. Six Z-Anatomy surfaces
-use pinned source object IDs instead of BodyParts3D member IDs; the five lobe
-FMA concepts match their pinned parent-lung edges, while Pleura has no FMA
-concept ID in the source configuration. Eight organ-layer surfaces remain
-individually unqualified by the topology gate. These taxonomy results improve
-source traceability only: clinical anatomy, physical volumes, tissue
-boundaries, mechanics, and physiology remain open.
+terms under the receipt's declared priority grouping. Its 573 BodyParts3D
+members partition into 571 members of 46 declared source families plus two
+baseline members outside those families (`FJ1737`, `FJ2428`); six Z-Anatomy
+source objects complete the 579-surface identity partition. Their five lobe
+FMA concepts match pinned parent-lung edges, while Pleura has no FMA concept ID
+in its source configuration. Eight organ-layer surfaces remain individually
+unqualified by the topology gate. These taxonomy results improve source
+traceability only: clinical anatomy, physical volumes, tissue boundaries,
+mechanics, and physiology remain open.
 
 ## Historical requalification snapshot — 2026-09-15
 

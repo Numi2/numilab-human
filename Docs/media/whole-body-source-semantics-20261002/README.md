@@ -12,12 +12,14 @@ retains the nonexclusive ontology closure: 99 of those surfaces inherit the
 cardinal-organ-part concept, so these priority counts are a reporting
 convention, not exclusive ontology truth.
 
-There are 573 unique mapped BodyParts3D member IDs. Six Z-Anatomy surfaces use
-their pinned source object IDs at stable IDs 305–310 instead of BodyParts3D
-member IDs; all six match the source configuration and its hash-locked export.
-The five lung lobes have FMA concept IDs that match the pinned parent-lung
-edges. The Pleura object has no FMA concept ID in the source configuration and
-remains taxonomy-unmapped.
+The 573 BodyParts3D member IDs partition into 571 members of the 46 declared
+source families and two baseline members outside those families (`FJ1737` and
+`FJ2428`). Six Z-Anatomy surfaces use pinned source object IDs at stable IDs
+305–310 instead of BodyParts3D member IDs. Together these groups account for
+all 579 surfaces. The six Z-Anatomy objects match the source configuration and
+its hash-locked export. The five lung lobes have FMA concept IDs that match the
+pinned parent-lung edges. The Pleura object has no FMA concept ID in the source
+configuration and remains taxonomy-unmapped.
 
 Eight surfaces in the `organ` layer remain individually unqualified by the
 existing selected-topology gate (one self-intersection, three exact
@@ -32,9 +34,9 @@ PYTHONPATH=src .venv-mujoco312/bin/python -m numilab_human.cli \
 ```
 
 The deterministic gzip receipt is `receipt.json.gz` (compressed SHA-256
-`a5dd478ede383e35e8d20eda601742fe8f3f83cef4bb8f2d577c6e29f11ff98f`); its
+`9f0f86241b689614cecdba6eb9fb6ae596dfa8d7c02d921ded0da5af11a9a6ff`); its
 uncompressed JSON SHA-256 is
-`d254bf04a618da6b7732fbea5ccbb7a75c133cb750a1ba80b87e9f1a78b1c36b`.
+`7579499ec9385db3b4c9b70d6425f86ae39077e47656d1ea89f7ef1c6a967c29`.
 
 This is a source-identity and taxonomy crosswalk. It does not establish
 clinical anatomy, resolve tissue boundaries or component ownership, construct

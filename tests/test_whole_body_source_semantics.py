@@ -28,6 +28,19 @@ def test_crosswalk_covers_surfaces_and_exposes_organ_layer_semantics():
     assert report["source_configured_object_count"] == 6
     assert report["source_configured_fma_concept_count"] == 5
     assert report["source_configured_fma_concept_id_unmapped_surface_count"] == 1
+    assert report["source_identity_partition_surface_counts"] == {
+        "declared_bodyparts3d_family_member": 571,
+        "bodyparts3d_baseline_member_outside_families": 2,
+        "zanatomy_source_objects": 6,
+    }
+    assert report["declared_source_family_count"] == 46
+    assert report["baseline_source_member_count"] == 381
+    assert report["baseline_source_member_in_family_count"] == 379
+    outside_family = [row for row in report["rows"] if row[
+        "source_family_membership_status"
+    ] == "bodyparts3d_member_outside_declared_source_families"]
+    assert [(row["source_stable_id"], row["source_member_id"])
+            for row in outside_family] == [(12, "FJ1737"), (23, "FJ2428")]
     assert report["bodyparts3d_ontology_priority_class_order"] == [
         "organ", "organ_region", "organ_component", "cardinal_organ_part",
     ]

@@ -130,6 +130,41 @@ def audit(selected_report: Path, indexed_census: Path, quotient_census: Path,
 
     owner_names = human.read_json(body_manifest)["core_tree"]["body_order"]
     hierarchy = overlap.SourceHierarchy.load(sources, source_lock)
+    family_config_path = (ROOT / "config/source-organ-family-composite.v2.json").resolve()
+    family_config = human.read_json(family_config_path)
+    family_template_path = (ROOT / family_config["template"]["file"]).resolve()
+    baseline_members_path = (ROOT / family_config["baseline_map"]["file"]).resolve()
+    require(human.sha256(family_template_path) == family_config["template"]["sha256"]
+            and human.sha256(baseline_members_path) == family_config["baseline_map"]["sha256"],
+            "pinned source-family template/baseline hashes")
+    family_template = human.read_json(family_template_path)
+    baseline_members = human.read_json(baseline_members_path)
+    family_regions = family_template["regions"]
+    family_members_by_name = {
+        region["id"]: set(region["member_ids"]) for region in family_regions
+    }
+    family_names_by_member: dict[str, set[str]] = {}
+    for family_name, member_ids in family_members_by_name.items():
+        for member_id in member_ids:
+            family_names_by_member.setdefault(member_id, set()).add(family_name)
+    baseline_member_ids = {row["member_id"] for row in baseline_members["entries"]}
+    family_manifest_path = (
+        ROOT / "Docs/media/whole-visceral-coverage-20260929/payload-manifest.json"
+    ).resolve()
+    family_manifest = human.read_json(family_manifest_path)
+    family_selection = family_manifest["selection"]
+    selected_family_members = {
+        row["id"]: set(row["expected_members"]) for row in family_selection["families"]
+    }
+    require(family_config["schema"] == "numi.human.source-organ-family-composite.v2"
+            and len(family_regions) == len(family_config["family_bindings"]) == 46
+            and set(family_members_by_name) == set(family_config["family_bindings"])
+            and selected_family_members == family_members_by_name
+            and len(family_names_by_member) == family_selection["required_member_count"] == 571
+            and family_manifest["source_configuration_sha256"]
+                == human.sha256(family_config_path)
+            and family_selection["required_member_count"] == 571,
+            "declared 46-family membership replay")
     zanatomy_config_path = (ROOT / "config/zanatomy-thorax-source.v1.json").resolve()
     zanatomy_config = human.read_json(zanatomy_config_path)
     require(zanatomy_config["schema"] == "numi.human.zanatomy-thorax-source.v1"
@@ -196,6 +231,13 @@ def audit(selected_report: Path, indexed_census: Path, quotient_census: Path,
                 "bodyparts3d_member_hierarchy_mapped"
                 if member_id is not None else "source_member_and_fma_concept_unmapped"
             )
+        source_family_names = sorted(family_names_by_member.get(member_id, ())) \
+            if member_id is not None else []
+        family_membership_status = (
+            "declared_source_family_member" if source_family_names else
+            "bodyparts3d_member_outside_declared_source_families" if member_id is not None else
+            "z_anatomy_object_outside_bodyparts3d_family_registry"
+        )
 
         is_a_concepts = _concept_rows(hierarchy, "is_a", member_id,
                                       include_ancestors=True)
@@ -226,6 +268,11 @@ def audit(selected_report: Path, indexed_census: Path, quotient_census: Path,
             "source_anatomy_concept_id": source_concept_id,
             "source_anatomy_concept_name": source_concept_name,
             "source_anatomy_concept_mapping_status": concept_mapping_status,
+            "source_family_names": source_family_names,
+            "source_family_membership_status": family_membership_status,
+            "baseline_source_member_registry_entry": (
+                member_id in baseline_member_ids if member_id is not None else False
+            ),
             "source_geometry_sha256": census["geometry_sha256"],
             "body_index": owner,
             "body_name": owner_names[owner],
@@ -253,6 +300,21 @@ def audit(selected_report: Path, indexed_census: Path, quotient_census: Path,
                  if row["source_member_id"] is not None}) == 573
             and sum(row["source_member_id"] is None for row in rows) == 6,
             "pinned unique source member count")
+    source_family_member_ids = {row["source_member_id"] for row in rows
+                                if row["source_family_names"]}
+    outside_family_member_ids = {row["source_member_id"] for row in rows
+                                 if row["source_family_membership_status"]
+                                 == "bodyparts3d_member_outside_declared_source_families"}
+    current_bodyparts3d_member_ids = {row["source_member_id"] for row in rows
+                                      if row["source_member_id"] is not None}
+    require(len(source_family_member_ids) == 571
+            and outside_family_member_ids == {"FJ1737", "FJ2428"}
+            and outside_family_member_ids <= baseline_member_ids
+            and current_bodyparts3d_member_ids
+                == source_family_member_ids | outside_family_member_ids
+            and baseline_member_ids
+                == (source_family_member_ids & baseline_member_ids) | outside_family_member_ids,
+            "whole-body BodyParts3D family versus baseline membership partition")
     source_identity_count = sum(
         row["source_member_id"] is not None
         or row["source_object_reference_id"] is not None for row in rows
@@ -287,6 +349,15 @@ def audit(selected_report: Path, indexed_census: Path, quotient_census: Path,
                     row["source_specific_semantic_class"] for row in group
                     if row["source_specific_semantic_class"] is not None
                 ).items())),
+                "declared_source_family_surface_count": sum(
+                    row["source_family_membership_status"] == "declared_source_family_member"
+                    for row in group
+                ),
+                "bodyparts3d_members_outside_families": [
+                    row["source_member_id"] for row in group
+                    if row["source_family_membership_status"]
+                    == "bodyparts3d_member_outside_declared_source_families"
+                ],
                 "bodyparts3d_ontology_priority_class_counts": dict(sorted(Counter(
                     row["bodyparts3d_ontology_priority_class"] for row in group
                 ).items())),
@@ -324,6 +395,26 @@ def audit(selected_report: Path, indexed_census: Path, quotient_census: Path,
         "zanatomy_source_export_uncompressed_sha256": zanatomy_config["export"]["sha256"],
         "zanatomy_source_blend_sha256": zanatomy_config["source"]["blend"]["sha256"],
         "source_identity_complete_surface_count": source_identity_count,
+        "source_identity_partition_surface_counts": {
+            "declared_bodyparts3d_family_member": len(source_family_member_ids),
+            "bodyparts3d_baseline_member_outside_families": len(outside_family_member_ids),
+            "zanatomy_source_objects": sum(
+                row["source_object_reference_id"] is not None for row in rows
+            ),
+        },
+        "declared_source_family_count": len(family_members_by_name),
+        "declared_source_family_unique_member_count": len(source_family_member_ids),
+        "bodyparts3d_members_outside_declared_source_families": sorted(
+            outside_family_member_ids
+        ),
+        "baseline_source_member_count": len(baseline_member_ids),
+        "baseline_source_member_in_family_count": len(
+            source_family_member_ids & baseline_member_ids
+        ),
+        "source_family_config_sha256": human.sha256(family_config_path),
+        "source_family_template_sha256": human.sha256(family_template_path),
+        "source_family_baseline_members_sha256": human.sha256(baseline_members_path),
+        "source_family_coverage_manifest_sha256": human.sha256(family_manifest_path),
         "bodyparts3d_member_id_missing_surface_count": sum(
             row["source_member_id"] is None for row in rows
         ),
