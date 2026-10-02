@@ -46,7 +46,9 @@ activation map. The mismatch is real and retained. A graph-only solve gave a
 75.1892 ms without fitting the source output. This is still not a reproduction
 of the CARP reaction-eikonal numerical scheme or its exact fast-layer tags.
 The source archive contains no case18 voltage trace or local activation-time
-field to compare pointwise.
+field to compare pointwise. A later [archive field audit](CARDIAC_CASE18_SOURCE_FIELD_AUDIT_20261002.md)
+verified the exact VTK declaration list and also confirmed that no source
+fast-endocardial cell tag is present in the pinned case18 member.
 
 The follow-up [exact-face sensitivity audit](CARDIAC_FEC_LAYER_TOPOLOGY_20260930.md)
 shows this is a *vertex one-ring* interpretation: only 35,081 of those cells

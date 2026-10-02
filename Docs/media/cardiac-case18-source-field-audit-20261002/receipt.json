@@ -1,0 +1,96 @@
+{
+  "archive": {
+    "bytes": 53661258,
+    "member_count": 1,
+    "name": "18.tar.gz",
+    "sha256": "b50919a711dc3914cc0a4dd9cabc19679a9f36be9ac6eb26a23ca6799f501720"
+  },
+  "boundary": "The pinned archive contains geometry and the listed source fields. Electrical activation and fast-endocardial membership remain reconstruction inputs; this audit performs no electrophysiology or mechanics step and qualifies no heartbeat.",
+  "field_presence": {
+    "case18_activation_time_field": false,
+    "cell_material_labels": true,
+    "fast_endocardial_cell_tag": false,
+    "fibres": true,
+    "sheets": true,
+    "transmembrane_voltage_or_ionic_state": false,
+    "ventricular_coordinates_rho_phi_z_v": true
+  },
+  "member": {
+    "bytes": 154064076,
+    "path": "18.vtk",
+    "sha256": "f0d4f3fc21ea229fa1b334888d374ee606a2915b414fff047764aad44f1c0a41"
+  },
+  "schema": "HumanPack.cardiac-case18-source-field-audit.v1",
+  "source_config_sha256": "23c931fef53edced85e0e0a36c73d8490dddb87db6bd988482a2cdfc5a1442cc",
+  "source_record": "https://zenodo.org/records/4590294",
+  "vtk_field_declarations": [
+    [
+      "SCALARS",
+      "ID",
+      "int",
+      "1"
+    ],
+    [
+      "VECTORS",
+      "fibres",
+      "float"
+    ],
+    [
+      "VECTORS",
+      "sheets",
+      "float"
+    ],
+    [
+      "SCALARS",
+      "RHO.dat",
+      "float",
+      "1"
+    ],
+    [
+      "SCALARS",
+      "PHI.dat",
+      "float",
+      "1"
+    ],
+    [
+      "SCALARS",
+      "Z.dat",
+      "float",
+      "1"
+    ],
+    [
+      "SCALARS",
+      "V.dat",
+      "float",
+      "1"
+    ]
+  ],
+  "vtk_structure": [
+    [
+      "DATASET",
+      "UNSTRUCTURED_GRID"
+    ],
+    [
+      "POINTS",
+      "300965",
+      "float"
+    ],
+    [
+      "CELL_TYPES",
+      "1470083"
+    ],
+    [
+      "CELLS",
+      "1470083",
+      "7350415"
+    ],
+    [
+      "CELL_DATA",
+      "1470083"
+    ],
+    [
+      "POINT_DATA",
+      "300965"
+    ]
+  ]
+}
