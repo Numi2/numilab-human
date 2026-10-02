@@ -1,0 +1,190 @@
+{
+  "50us_to_100us_refinement": {
+    "cycle20_lv_stroke_volume_change_percent": -0.0028395054766282668,
+    "end_lv_volume_change_percent": -0.0014112574636322719
+  },
+  "artifact_paths": {
+    "figure_png": "Docs/media/cardiac-source-heartbeat-20261002/heartbeat-cycle20.png",
+    "figure_svg": "Build/cardiac-source-heartbeat-20261002/heartbeat-cycle20.svg",
+    "receipt": "Build/cardiac-source-heartbeat-20261002/twenty-cycles-50us-optimized.json",
+    "receipt_local_build": "Build/cardiac-source-heartbeat-20261002/twenty-cycles-50us-optimized.json",
+    "summary_json": "Docs/media/cardiac-source-heartbeat-20261002/source-heartbeat-result.json",
+    "trace": "Build/cardiac-source-heartbeat-20261002/twenty-cycles-50us-optimized.csv",
+    "trace_local_build": "Build/cardiac-source-heartbeat-20261002/twenty-cycles-50us-optimized.csv"
+  },
+  "cycle_20": {
+    "cycle19_to_20_lv_stroke_volume_change_percent": 0.00014265833517379138,
+    "end_lv_pressure_difference_vs_reference_percent": 0.0018316692386016725,
+    "end_lv_volume_difference_vs_reference_percent": 0.0018973364453022485,
+    "lv_aortic_stroke_volume_difference_vs_reference_percent": -0.016573784498598497,
+    "lv_aortic_stroke_volume_ml": 84.45164028744546,
+    "lv_diastolic_pressure_kpa": 1.0524571610617162,
+    "lv_filling_volume_ml": 84.45196132342781,
+    "lv_systolic_pressure_kpa": 16.941734040929,
+    "pulmonary_venous_return_ml": 84.45212572637634,
+    "rv_diastolic_pressure_kpa": 1.0105807150972304,
+    "rv_pulmonary_stroke_volume_difference_vs_reference_percent": -0.01882821047054488,
+    "rv_pulmonary_stroke_volume_ml": 84.45110935071654,
+    "rv_systolic_pressure_kpa": 6.401933964778358,
+    "systemic_venous_return_ml": 84.45004882537506
+  },
+  "implementation": {
+    "native_graph_sha256": "6949b2c95ed58440c6e63d99f5f9012f6ae35013be06f62506b9e50b0c046f61",
+    "sha256": "c151e6c8ff52f2a1ee500f279981ded40ab89ee8ce421c0ccbcb985542e2ce0c",
+    "source": "src/numilab_human/shi_hose_step.py",
+    "source_cellml_sha256": {
+      "third_party/physiome/shi_hose_2009/EAtrium.cellml": "6397d16eb3d0b8611aa9c3583b2dbb9981f8a1308d1525bff985c0a2d18822b4",
+      "third_party/physiome/shi_hose_2009/EVentricle.cellml": "d55497da832fa8671e2cb544fad1c6010337ce14e8652fb11f895980f2801517",
+      "third_party/physiome/shi_hose_2009/ModelHeart.cellml": "5e7a66858f92baed090103778bde6886e6c3bede8ba199aaae2f5b6a51483b32",
+      "third_party/physiome/shi_hose_2009/ModelMain.cellml": "f5dc9dd72c24a66a2c0aa1f1b81bdb24ecccf7a8ae15ac79aa9f005dedbd5a8f",
+      "third_party/physiome/shi_hose_2009/ModelPul.cellml": "b074ab527219e43cf7b408abce50e07e0fd0743689b853102e91e22be28047be",
+      "third_party/physiome/shi_hose_2009/ModelSys.cellml": "ceb8d9841f1f33dae9afcb326f0a2fdd88f5da0dc22a6ef50faa2ee4d3ce8b34",
+      "third_party/physiome/shi_hose_2009/ParaHeart.cellml": "71bab9b0ef24577900b405f8e2b6b5280990b234bd28bc3af1cf955e6871b2e7",
+      "third_party/physiome/shi_hose_2009/ParaPul.cellml": "270eaa01a5f60ea59b084ec01843d5dc8270f344b506c7c14d59518dce59f96c",
+      "third_party/physiome/shi_hose_2009/ParaSys.cellml": "a2e9b2370cb1a58a5f766cd9ae271d8dd0644832c8ab104d85c1c2c39279d0e1",
+      "third_party/physiome/shi_hose_2009/TempCDv.cellml": "c9d5da0fdb9b5e2a5e4b8519a16579459a95ad22f3c3e0f222ad968bd7fea15b",
+      "third_party/physiome/shi_hose_2009/TempRLC.cellml": "e5fa37b944dd1fff362247540613506146f4ddfae6850b04f668caa9fff0d88f"
+    },
+    "source_lowering_manifest_sha256": "1e9dfa9c968677fca67868a81eb0ef7bb5c11053e2e0796da55153b80357f011"
+  },
+  "pointwise_error_vs_reference_at_common_1ms_samples": {
+    "common_samples": 20000,
+    "fields": {
+      "aortic_flow_m3_s": {
+        "max_absolute_difference": 1.772182109482746e-05,
+        "max_difference_over_reference_peak": 0.0058895689989603775,
+        "rms_difference": 6.651556502881916e-07
+      },
+      "mitral_flow_m3_s": {
+        "max_absolute_difference": 6.236624898307982e-05,
+        "max_difference_over_reference_peak": 0.06440899079257177,
+        "rms_difference": 5.755612044149625e-07
+      },
+      "pressure_la_pa": {
+        "max_absolute_difference": 1.1591853006117674,
+        "max_difference_over_reference_peak": 0.000580387740138862,
+        "rms_difference": 0.03637615302672569
+      },
+      "pressure_lv_pa": {
+        "max_absolute_difference": 2.4392041656392394,
+        "max_difference_over_reference_peak": 6.236181943997167e-05,
+        "rms_difference": 0.26489970972773447
+      },
+      "pressure_ra_pa": {
+        "max_absolute_difference": 0.23574745858877577,
+        "max_difference_over_reference_peak": 0.00012050201954991015,
+        "rms_difference": 0.08513970466746876
+      },
+      "pressure_rv_pa": {
+        "max_absolute_difference": 1.1134083769538847,
+        "max_difference_over_reference_peak": 6.38126715378839e-05,
+        "rms_difference": 0.13685297485457762
+      },
+      "pulmonary_flow_m3_s": {
+        "max_absolute_difference": 1.4260370296648693e-05,
+        "max_difference_over_reference_peak": 0.006140332742382181,
+        "rms_difference": 2.7733157552216257e-07
+      },
+      "pulmonary_venous_return_m3_s": {
+        "max_absolute_difference": 6.234664490331002e-05,
+        "max_difference_over_reference_peak": 0.014926716572554389,
+        "rms_difference": 6.904678496684027e-07
+      },
+      "systemic_venous_return_m3_s": {
+        "max_absolute_difference": 9.498958305214245e-08,
+        "max_difference_over_reference_peak": 0.0008186656400758133,
+        "rms_difference": 2.4005541680562362e-08
+      },
+      "tricuspid_flow_m3_s": {
+        "max_absolute_difference": 2.0677493523993772e-05,
+        "max_difference_over_reference_peak": 0.028802152504080976,
+        "rms_difference": 3.9249244128254134e-07
+      },
+      "volume_la_m3": {
+        "max_absolute_difference": 5.592252800809356e-08,
+        "max_difference_over_reference_peak": 0.0005766220585492584,
+        "rms_difference": 1.7590404899411553e-09
+      },
+      "volume_lv_m3": {
+        "max_absolute_difference": 3.3439877226905824e-08,
+        "max_difference_over_reference_peak": 6.687975445381165e-05,
+        "rms_difference": 3.975846320924841e-09
+      },
+      "volume_ra_m3": {
+        "max_absolute_difference": 8.19685165874334e-09,
+        "max_difference_over_reference_peak": 9.286859210826789e-05,
+        "rms_difference": 4.046688601465061e-09
+      },
+      "volume_rv_m3": {
+        "max_absolute_difference": 1.4873844777303549e-08,
+        "max_difference_over_reference_peak": 2.9830852217628075e-05,
+        "rms_difference": 3.5375158040063375e-09
+      }
+    },
+    "largest_normalized_field_error_by_family": {
+      "flow": [
+        "mitral_flow_m3_s",
+        {
+          "max_absolute_difference": 6.236624898307982e-05,
+          "max_difference_over_reference_peak": 0.06440899079257177,
+          "rms_difference": 5.755612044149625e-07
+        }
+      ],
+      "pressure": [
+        "pressure_la_pa",
+        {
+          "max_absolute_difference": 1.1591853006117674,
+          "max_difference_over_reference_peak": 0.000580387740138862,
+          "rms_difference": 0.03637615302672569
+        }
+      ],
+      "volume": [
+        "volume_la_m3",
+        {
+          "max_absolute_difference": 5.592252800809356e-08,
+          "max_difference_over_reference_peak": 0.0005766220585492584,
+          "rms_difference": 1.7590404899411553e-09
+        }
+      ]
+    }
+  },
+  "qualification": "pinned Shi/Hose four-chamber and systemic/pulmonary 0D source-model reproduction",
+  "run": {
+    "accepted_steps": 400000,
+    "accepted_steps_per_second": 33954.393499442565,
+    "activation_trace_sha256": "fd1b4de5828df2dff9168a4c8425dc569626787650f0bc51bab169295be08b2a",
+    "completed_cycles": 20,
+    "conserved_storage_residual_m3": 1.1709383462843448e-17,
+    "heart_rate_beats_per_minute": 60.0,
+    "period_seconds": 1.0,
+    "pre_optimization_matched_wall_seconds": 17.057086499407887,
+    "receipt_sha256": "c319f09997a9dcfb2d0c336713168ed449e209be65b55c4433e29b0d35c4fb90",
+    "rejected_steps": 0,
+    "result_trace_byte_identical_after_optimization": true,
+    "state_trace_sha256": "d37016bf1fd63cec35667d4f982c3456818e9d63ba36c8d5b4e0efece7e41f06",
+    "timestep_seconds": 5e-05,
+    "trace_rows": 20000,
+    "trace_sha256": "b572e23c2366915eb1341ead4be43e7c05f0260fba29554f66df62562113dfcd",
+    "wall_seconds_after_candidate_copy_optimization": 11.780507874675095,
+    "wall_time_reduction_percent": 30.93481776571844
+  },
+  "schema": "HumanPack.source-heartbeat-result.v1",
+  "source_boundary": "Not anatomical tissue motion, ECG, biological observation, or subject calibration.",
+  "source_reference": {
+    "cycle_20_integrals_trapezoidal_from_1ms_samples_m3": {
+      "lv_aortic_ejection_m3": 8.446563944050169e-05,
+      "lv_filling_m3": 8.439331722074693e-05,
+      "pulmonary_venous_return_m3": 8.444908184197443e-05,
+      "rv_filling_m3": 8.44325160701248e-05,
+      "rv_pulmonary_ejection_m3": 8.446701297769816e-05,
+      "systemic_venous_return_m3": 8.44481078070936e-05
+    },
+    "output_interval_seconds": 0.001,
+    "samples": 20001,
+    "solver": "pinned C++ DOPRI5 reference",
+    "source_revision": "a679cdc2e97429fb5280af8132c119758626c1f2",
+    "time_seconds": 20,
+    "trace": "Docs/media/cardiac-source-20260912/source-20cycles-1e13.csv.gz",
+    "trace_sha256": "30ef621c5fae87ff3e45ae37118d4002ace17dfa27dc6bd4b372951b7b4cb084"
+  }
+}
