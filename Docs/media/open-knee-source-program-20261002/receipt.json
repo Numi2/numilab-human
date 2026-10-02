@@ -5,12 +5,35 @@
       "sha256": "97c5e7b1c09eb47193bca0b7d2a515088b40938da45fe7aa8c8fc7bb7dd54368"
     },
     "source-mechanics.json": {
-      "bytes": 1812339,
-      "sha256": "26d7f9e19a854b53df1f7ad67b19b1f57d600e5bc16e57934114860a37ef2e49"
+      "bytes": 1813140,
+      "sha256": "f58f697e300ad6797a475959aaf0478bb1a709dc497e3b6828d1c361204eeb4c"
     },
     "source-meshdata.bin": {
       "bytes": 2686936,
       "sha256": "f3802520c712f3c939934d53e0e4de9ce6e6c275287ede3279bbdc3b3abf63c8"
+    },
+    "source-rigid-graph.bin": {
+      "bytes": 1764,
+      "coordinate_unit": "source_deck_coordinate_unit_unresolved",
+      "endianness": "little",
+      "native_execution_status": "compiled_source_program_not_executed",
+      "record_counts": {
+        "bodies": 9,
+        "cylindrical_joints": 6,
+        "prescribed_body_boundaries": 2,
+        "referenced_load_curves": 1
+      },
+      "record_layout": {
+        "body_bytes": 60,
+        "cylindrical_joint_bytes": 136,
+        "header_bytes": 92,
+        "load_curve_header_bytes": 12,
+        "load_curve_point_bytes": 16,
+        "load_curve_sha256_bytes": 32,
+        "prescribed_body_boundary_bytes": 112
+      },
+      "schema": "numi.human.open-knee-rigid-graph-program-f64.v2",
+      "sha256": "e2285453812182f9a525bd3b6f1b32aaae77a52bf7f865563d483ed0b4e7b792"
     },
     "source-volume-mesh.bin": {
       "bytes": 22338392,
@@ -29,8 +52,8 @@
     "source_mesh_element_fiber_vectors": 95962
   },
   "compiler_sources": {
-    "cli.py": "75267841c399d38258c04c513d5cb5edbb5a198f1a520720abd253bdebd34c62",
-    "open_knee.py": "afb123b65310f3faef6230298134276b2c436b3323d888abcdd0f9336ebb5d2d"
+    "cli.py": "e34bb671e413ffca43f334b6d386610d8eaa81a7aed26bd1bcda85694e744fa2",
+    "open_knee.py": "f6c57785de215b232c648bc3edbc91d8364f20e106af49f49d1a44e1fa1c8538"
   },
   "geometry_binary": {
     "bytes": 37388532,

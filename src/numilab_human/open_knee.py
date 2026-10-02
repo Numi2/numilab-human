@@ -1748,6 +1748,7 @@ def compile_source_mechanical_artifacts(
     mesh_data_path = output / "source-meshdata.bin"
     geometry_binary_path = output / "source-geometry.bin"
     source_volume_mesh_path = output / "source-volume-mesh.bin"
+    rigid_graph_path = output / "source-rigid-graph.bin"
     description = compile_source_mechanical_description(
         source,
         source_deck=open_knee / "FeBio_custom.feb",
@@ -1774,6 +1775,10 @@ def compile_source_mechanical_artifacts(
         "binary_identity": "not_supplied_in_archive",
         "log_sha256": ARCHIVED_REFERENCE_LOG_SHA256,
     }
+    rigid_graph_storage = _write_source_rigid_graph_program(
+        description, rigid_graph_path
+    )
+    description["source_rigid_graph_program_storage"] = rigid_graph_storage
     description_path = output / "source-mechanics.json"
     description_path.write_text(
         json.dumps(description, indent=2, sort_keys=True) + "\n",
@@ -1799,6 +1804,10 @@ def compile_source_mechanical_artifacts(
             "meniscus_element_set_counts": "match exact Geometry_custom sets",
             "meniscus_vector_payload": "independently reproducible little-endian source values",
             "native_mechanics_execution": "not performed",
+            "rigid_graph_program": (
+                "compiled from source rigid bodies, cylindrical joints, and prescribed body coordinates; "
+                "not executed by this compiler"
+            ),
         },
         "resolved_geometry": {
             "node_count": description["source_geometry_resolution"]["node_count"],
@@ -1906,6 +1915,7 @@ def compile_source_mechanical_artifacts(
                 "bytes": source_volume_mesh_path.stat().st_size,
                 "sha256": _sha256(source_volume_mesh_path),
             },
+            rigid_graph_path.name: rigid_graph_storage,
         },
         "compiler_sources": {
             Path(__file__).name: _sha256(Path(__file__)),
@@ -1924,6 +1934,185 @@ def compile_source_mechanical_artifacts(
         encoding="utf-8",
     )
     return receipt
+
+
+_SOURCE_RIGID_GRAPH_MAGIC = b"NHRGPH2\0"
+_SOURCE_RIGID_GRAPH_SCHEMA = "numi.human.open-knee-rigid-graph-program-f64.v2"
+_SOURCE_RIGID_COORDINATES = ("x", "y", "z", "Rx", "Ry", "Rz")
+
+
+def _source_program_load_curve_id(value: Any) -> int:
+    if value is None or value == "":
+        return -1
+    parsed = int(value)
+    if parsed < 0 or parsed > 0x7FFFFFFF:
+        raise ValueError("Open Knee(s) rigid graph load curve ID is out of range")
+    return parsed
+
+
+def _source_rigid_graph_program_bytes(description: dict[str, Any]) -> bytes:
+    """Encode the exact rigid graph records consumed by Matter's source check.
+
+    The binary is a narrow execution input, not a claim that all FEBio source
+    mechanics have been compiled. The JSON description remains authoritative
+    for names and full XML records; hashes bind these numeric records to it.
+    """
+    graph = description["rigid_graph"]
+    bodies = graph["bodies"]
+    joints = graph["cylindrical_joints"]
+    boundaries = graph["prescribed_body_boundaries"]
+    referenced_curve_ids = {
+        _source_program_load_curve_id(joint[key].get("load_curve_id"))
+        for joint in joints for key in ("translation", "rotation")
+    }
+    referenced_curve_ids.update(
+        _source_program_load_curve_id(value["attributes"].get("lc"))
+        for boundary in boundaries for value in boundary["coordinates"]
+    )
+    referenced_curve_ids.discard(-1)
+    curves_by_id = {int(curve["id"]): curve for curve in description["load_curves"]}
+    if not referenced_curve_ids.issubset(curves_by_id):
+        raise ValueError("Open Knee(s) rigid graph references a missing source load curve")
+    referenced_curves = [curves_by_id[curve_id] for curve_id in sorted(referenced_curve_ids)]
+    for curve in referenced_curves:
+        if curve["type"] != "linear" or len(curve["numeric_points"]) < 2:
+            raise ValueError(
+                "Open Knee(s) rigid graph only compiles linear source load curves"
+            )
+        times = [float(point["time"]) for point in curve["numeric_points"]]
+        values = [float(point["value"]) for point in curve["numeric_points"]]
+        if (not all(math.isfinite(value) for value in (*times, *values)) or
+                any(right <= left for left, right in zip(times, times[1:]))):
+            raise ValueError("Open Knee(s) rigid graph load curve points are invalid")
+    deck_digest = bytes.fromhex(description["source_file_sha256"])
+    geometry_digest = bytes.fromhex(description["source_geometry_archive_sha256"])
+    if len(deck_digest) != 32 or len(geometry_digest) != 32:
+        raise ValueError("Open Knee(s) rigid graph requires SHA-256 source identities")
+    output = bytearray(_SOURCE_RIGID_GRAPH_MAGIC)
+    output.extend(struct.pack(
+        "<IIIII", 2, len(bodies), len(joints), len(boundaries), len(referenced_curves)
+    ))
+    output.extend(deck_digest)
+    output.extend(geometry_digest)
+
+    body_ids: set[int] = set()
+    for body in bodies:
+        body_id = int(body["material_id"])
+        com = tuple(float(value) for value in body["center_of_mass"])
+        digest = bytes.fromhex(body["source_xml_sha256"])
+        if body_id <= 0 or body_id in body_ids or len(com) != 3 or len(digest) != 32:
+            raise ValueError("Open Knee(s) source rigid body record is invalid")
+        if not all(math.isfinite(value) for value in com):
+            raise ValueError("Open Knee(s) source rigid body center is non-finite")
+        body_ids.add(body_id)
+        output.extend(struct.pack("<I3d32s", body_id, *com, digest))
+
+    for joint in joints:
+        body_a, body_b = int(joint["body_a"]), int(joint["body_b"])
+        origin = tuple(float(value) for value in joint["joint_origin"])
+        axis = tuple(float(value) for value in joint["joint_axis"])
+        penalties_and_targets = (
+            float(joint["force_penalty"]), float(joint["moment_penalty"]),
+            float(joint["translation"]["value"]), float(joint["rotation"]["value"]),
+        )
+        digest = bytes.fromhex(joint["source_xml_sha256"])
+        if (body_a not in body_ids or body_b not in body_ids or body_a == body_b
+                or len(origin) != 3 or len(axis) != 3 or len(digest) != 32
+                or not all(math.isfinite(v) for v in (*origin, *axis, *penalties_and_targets))
+                or penalties_and_targets[0] <= 0 or penalties_and_targets[1] <= 0):
+            raise ValueError("Open Knee(s) source cylindrical joint record is invalid")
+        flags = (int(bool(joint["prescribed_translation"])),
+                 int(bool(joint["prescribed_rotation"])))
+        curves = (
+            _source_program_load_curve_id(joint["translation"].get("load_curve_id")),
+            _source_program_load_curve_id(joint["rotation"].get("load_curve_id")),
+        )
+        output.extend(struct.pack(
+            "<II10dIIii32s", body_a, body_b, *origin, *axis,
+            *penalties_and_targets, *flags, *curves, digest,
+        ))
+
+    for boundary in boundaries:
+        body_id = int(boundary["material_id"])
+        if body_id not in body_ids:
+            raise ValueError("Open Knee(s) prescribed rigid body boundary references no body")
+        coordinates = {
+            str(value["attributes"].get("bc")): value
+            for value in boundary["coordinates"]
+        }
+        if len(coordinates) != len(boundary["coordinates"]):
+            raise ValueError("Open Knee(s) prescribed rigid body coordinates are duplicated")
+        unsupported_coordinates = set(coordinates) - set(_SOURCE_RIGID_COORDINATES)
+        if unsupported_coordinates:
+            raise ValueError(
+                "Open Knee(s) rigid graph has unsupported prescribed coordinates: "
+                f"{sorted(unsupported_coordinates)}"
+            )
+        mask = 0
+        values = [0.0] * 6
+        curves = [-1] * 6
+        for index, coordinate in enumerate(_SOURCE_RIGID_COORDINATES):
+            record = coordinates.get(coordinate)
+            if record is None:
+                continue
+            mask |= 1 << index
+            values[index] = float(record["source_text"])
+            curves[index] = _source_program_load_curve_id(
+                record["attributes"].get("lc")
+            )
+        digest = bytes.fromhex(boundary["source_xml_sha256"])
+        if len(digest) != 32 or not all(math.isfinite(value) for value in values):
+            raise ValueError("Open Knee(s) prescribed rigid body boundary is invalid")
+        output.extend(struct.pack("<IB3x6d6i32s", body_id, mask, *values, *curves, digest))
+    for curve in referenced_curves:
+        output.extend(struct.pack("<III", int(curve["id"]), 1, len(curve["numeric_points"])))
+        for point in curve["numeric_points"]:
+            output.extend(struct.pack("<2d", float(point["time"]), float(point["value"])))
+        output.extend(bytes.fromhex(curve["source_xml_sha256"]))
+    return bytes(output)
+
+
+def _write_source_rigid_graph_program(
+    description: dict[str, Any], output_path: Path,
+) -> dict[str, Any]:
+    payload = _source_rigid_graph_program_bytes(description)
+    output_path.write_bytes(payload)
+    return {
+        "schema": _SOURCE_RIGID_GRAPH_SCHEMA,
+        "bytes": len(payload),
+        "sha256": hashlib.sha256(payload).hexdigest(),
+        "endianness": "little",
+        "coordinate_unit": "source_deck_coordinate_unit_unresolved",
+        "record_layout": {
+            "header_bytes": 92,
+            "body_bytes": 60,
+            "cylindrical_joint_bytes": 136,
+            "prescribed_body_boundary_bytes": 112,
+            "load_curve_header_bytes": 12,
+            "load_curve_point_bytes": 16,
+            "load_curve_sha256_bytes": 32,
+        },
+        "record_counts": {
+            "bodies": len(description["rigid_graph"]["bodies"]),
+            "cylindrical_joints": len(description["rigid_graph"]["cylindrical_joints"]),
+            "prescribed_body_boundaries": len(
+                description["rigid_graph"]["prescribed_body_boundaries"]
+            ),
+            "referenced_load_curves": len({
+                int(curve["id"]) for curve in description["load_curves"]
+                if int(curve["id"]) in {
+                    _source_program_load_curve_id(joint[key].get("load_curve_id"))
+                    for joint in description["rigid_graph"]["cylindrical_joints"]
+                    for key in ("translation", "rotation")
+                } | {
+                    _source_program_load_curve_id(value["attributes"].get("lc"))
+                    for boundary in description["rigid_graph"]["prescribed_body_boundaries"]
+                    for value in boundary["coordinates"]
+                }
+            }),
+        },
+        "native_execution_status": "compiled_source_program_not_executed",
+    }
 
 
 def _unit(vector: Any, np: Any) -> Any:

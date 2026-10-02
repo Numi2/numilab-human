@@ -16,6 +16,7 @@ from numilab_human.open_knee import _orientation_preserving_connectivity
 from numilab_human.open_knee import _parse_febio_fiber_directions
 from numilab_human.open_knee import _geometry_archive_cross_references
 from numilab_human.open_knee import compile_source_mechanical_description
+from numilab_human.open_knee import _source_rigid_graph_program_bytes
 from numilab_human.open_knee import parse_source as parse_open_knee_source
 
 from numilab_human.model import (
@@ -3833,6 +3834,36 @@ class ImporterTests(unittest.TestCase):
                 hashlib.sha256(mesh_data_bytes).hexdigest(),
                 mechanics["source_mesh_element_data_storage"]["sha256"],
             )
+            rigid_graph = _source_rigid_graph_program_bytes(mechanics)
+            self.assertEqual(len(rigid_graph), 92 + 2 * 60 + 136 + 112 + 12 + 2 * 16 + 32)
+            self.assertEqual(
+                struct.unpack_from("<8sIIIII", rigid_graph),
+                (b"NHRGPH2\0", 2, 2, 1, 1, 1),
+            )
+            self.assertEqual(
+                rigid_graph[28:60].hex(), mechanics["source_file_sha256"]
+            )
+            self.assertEqual(
+                rigid_graph[60:92].hex(), mechanics["source_geometry_archive_sha256"]
+            )
+            self.assertEqual(struct.unpack_from("<I3d", rigid_graph, 92),
+                             (1, 0.0, 0.0, 0.0))
+            self.assertEqual(struct.unpack_from("<II", rigid_graph, 212), (1, 2))
+            boundary_offset = 92 + 2 * 60 + 136
+            self.assertEqual(
+                struct.unpack_from("<IB3x6d6i", rigid_graph, boundary_offset),
+                (2, 1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 9, -1, -1, -1, -1, -1),
+            )
+            curve_offset = boundary_offset + 112
+            self.assertEqual(struct.unpack_from("<III", rigid_graph, curve_offset), (9, 1, 2))
+            self.assertEqual(
+                struct.unpack_from("<4d", rigid_graph, curve_offset + 12),
+                (0.0, 1.0, 1.0, 1.0),
+            )
+            unsupported_curve = json.loads(json.dumps(mechanics))
+            unsupported_curve["load_curves"][0]["type"] = "cubic"
+            with self.assertRaisesRegex(ValueError, "only compiles linear"):
+                _source_rigid_graph_program_bytes(unsupported_curve)
             self.assertEqual(
                 mechanics["source_geometry_resolution"]["element_sets"]["MNS-M"]["material_id"],
                 3,
