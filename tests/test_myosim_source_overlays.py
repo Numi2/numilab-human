@@ -78,20 +78,34 @@ class MyoSimSourceOverlayTests(unittest.TestCase):
         model = build_model("myofullbody")
         joints = {
             name: mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, name)
-            for name in ("knee_angle_translation2_l", "knee_angle_translation2_r")
+            for name in (
+                "knee_angle_translation2_l", "knee_angle_translation2_r",
+                "knee_angle_rotation2_l", "knee_angle_rotation2_r",
+            )
         }
-        left_range = [float(value) for value in model.jnt_range[joints["knee_angle_translation2_l"]]]
-        right_range = [float(value) for value in model.jnt_range[joints["knee_angle_translation2_r"]]]
+        left_translation_range = [float(value) for value in model.jnt_range[joints["knee_angle_translation2_l"]]]
+        right_translation_range = [float(value) for value in model.jnt_range[joints["knee_angle_translation2_r"]]]
         self.assertTrue(model.jnt_limited[joints["knee_angle_translation2_l"]])
-        self.assertEqual(left_range, [-0.006792, -7.69254e-11])
-        self.assertEqual(left_range, [-value for value in right_range[::-1]])
+        self.assertEqual(left_translation_range, [-0.006792, -7.69254e-11])
+        self.assertEqual(left_translation_range, [-value for value in right_translation_range[::-1]])
+        left_rotation_range = [float(value) for value in model.jnt_range[joints["knee_angle_rotation2_l"]]]
+        right_rotation_range = [float(value) for value in model.jnt_range[joints["knee_angle_rotation2_r"]]]
+        self.assertTrue(model.jnt_limited[joints["knee_angle_rotation2_l"]])
+        self.assertEqual(left_rotation_range, [-0.00167821, 0.0335354])
+        self.assertTrue(model.jnt_limited[joints["knee_angle_rotation2_r"]])
+        self.assertEqual(left_rotation_range, right_rotation_range)
 
         selected = dict(POSE_SUITE)
-        for pose_name in ("neutral", "bilateral_knee_flexion", "bilateral_deep_crouch"):
+        for pose_name in (
+            "neutral", "bilateral_knee_flexion", "bilateral_deep_crouch",
+            "bilateral_functional_crouch",
+        ):
             qpos, _, _ = _pose_qpos(model, selected[pose_name], mujoco, np)
-            left_q = float(qpos[int(model.jnt_qposadr[joints["knee_angle_translation2_l"]])])
-            self.assertGreaterEqual(left_q, left_range[0] - 1e-12, pose_name)
-            self.assertLessEqual(left_q, left_range[1] + 1e-12, pose_name)
+            for name, joint in joints.items():
+                value = float(qpos[int(model.jnt_qposadr[joint])])
+                limits = model.jnt_range[joint]
+                self.assertGreaterEqual(value, float(limits[0]) - 1e-12, f"{pose_name}:{name}")
+                self.assertLessEqual(value, float(limits[1]) + 1e-12, f"{pose_name}:{name}")
 
 
 if __name__ == "__main__":

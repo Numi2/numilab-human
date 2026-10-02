@@ -92,9 +92,8 @@ def _sample(points: Any, maximum: int, np: Any) -> Any:
     return np.asarray(points, dtype=float)[indices].copy()
 
 
-def _nearest(source: Any, target: Any, np: Any) -> tuple[Any, Any]:
-    if not len(source) or not len(target):
-        raise RuntimeError("upper-limb registration cannot match an empty surface")
+def _nearest_brute_force(source: Any, target: Any, np: Any) -> tuple[Any, Any]:
+    """Exact NumPy fallback for environments without SciPy."""
     indices = []
     distances = []
     for address in range(0, len(source), 128):
@@ -107,6 +106,88 @@ def _nearest(source: Any, target: Any, np: Any) -> tuple[Any, Any]:
         indices.append(nearest)
         distances.append(squared[np.arange(len(nearest)), nearest])
     return np.concatenate(indices), np.concatenate(distances)
+
+
+def _nearest(source: Any, target: Any, np: Any) -> tuple[Any, Any]:
+    """Return exact nearest target vertices without a dense all-pairs matrix.
+
+    The old 128-by-target broadcast was quadratic in surface size and was
+    repeatedly rebuilt during lower-limb interface refinement.  When SciPy is
+    available, an exact single-worker KD-tree query bounds that work to the
+    spatial index.  The returned distances are recomputed with the same NumPy
+    sum-of-squares used by the original implementation.  Numerically tied
+    neighbours are resolved by original target index so witness selection is
+    stable across runs and agrees with ``argmin`` ordering.
+    """
+    source = np.asarray(source, dtype=float)
+    target = np.asarray(target, dtype=float)
+    if (source.ndim != 2 or target.ndim != 2
+            or source.shape[1:] != (3,) or target.shape[1:] != (3,)):
+        raise RuntimeError("upper-limb registration nearest-neighbour surfaces must be Nx3")
+    if not len(source) or not len(target):
+        raise RuntimeError("upper-limb registration cannot match an empty surface")
+    if not bool(np.isfinite(source).all()) or not bool(np.isfinite(target).all()):
+        raise RuntimeError("upper-limb registration nearest-neighbour metric became non-finite")
+    try:
+        from scipy.spatial import cKDTree
+    except ImportError:  # pragma: no cover - optional dependency fallback
+        return _nearest_brute_force(source, target, np)
+
+    unique_target, first_target_indices = np.unique(target, axis=0, return_index=True)
+    tree = cKDTree(unique_target, compact_nodes=True, balanced_tree=True, copy_data=True)
+    indices = np.empty(len(source), dtype=np.intp)
+    squared_distances = np.empty(len(source), dtype=float)
+    tie_tolerance = np.finfo(float).eps * 64.0
+    for address in range(0, len(source), 8192):
+        block = source[address:address + 8192]
+        if len(unique_target) == 1:
+            nearest_distance, unique_indices = tree.query(
+                block, k=1, eps=0.0, p=2.0, workers=1,
+            )
+            nearest_distance = np.asarray(nearest_distance, dtype=float).reshape(-1)
+            unique_indices = np.asarray(unique_indices, dtype=np.intp).reshape(-1)
+            tied_rows = np.empty(0, dtype=np.intp)
+        else:
+            queried_distance, queried_indices = tree.query(
+                block, k=2, eps=0.0, p=2.0, workers=1,
+            )
+            queried_distance = np.asarray(queried_distance, dtype=float)
+            queried_indices = np.asarray(queried_indices, dtype=np.intp)
+            nearest_distance = queried_distance[:, 0]
+            unique_indices = queried_indices[:, 0]
+            tie_margin = tie_tolerance * np.maximum(1.0, np.abs(nearest_distance))
+            tied_rows = np.flatnonzero(
+                queried_distance[:, 1] - nearest_distance <= tie_margin
+            )
+        if not bool(np.isfinite(nearest_distance).all()):
+            raise RuntimeError("upper-limb registration nearest-neighbour metric became non-finite")
+
+        original_indices = first_target_indices[unique_indices].astype(np.intp, copy=True)
+        selected = target[original_indices]
+        delta = block - selected
+        block_squared = np.sum(delta * delta, axis=1)
+
+        # Resolve only ambiguous rows.  Exact-coordinate duplicates were
+        # removed above; query_ball_point then returns the small set of
+        # genuinely equidistant neighbours, including all symmetric ties.
+        for row in tied_rows:
+            distance = float(nearest_distance[row])
+            radius = distance + tie_tolerance * max(1.0, abs(distance))
+            candidates = tree.query_ball_point(
+                block[row], r=radius, p=2.0, eps=0.0, workers=1,
+            )
+            candidate_indices = first_target_indices[np.asarray(candidates, dtype=np.intp)]
+            candidate_delta = target[candidate_indices] - block[row]
+            candidate_squared = np.sum(candidate_delta * candidate_delta, axis=1)
+            minimum = float(np.min(candidate_squared))
+            original_indices[row] = int(np.min(candidate_indices[candidate_squared == minimum]))
+            block_squared[row] = minimum
+
+        indices[address:address + len(block)] = original_indices
+        squared_distances[address:address + len(block)] = block_squared
+    if not bool(np.isfinite(squared_distances).all()):
+        raise RuntimeError("upper-limb registration nearest-neighbour metric became non-finite")
+    return indices, squared_distances
 
 
 def _symmetric_metrics(first: Any, second: Any, np: Any) -> dict[str, float]:
