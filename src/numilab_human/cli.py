@@ -2303,6 +2303,14 @@ def parser() -> argparse.ArgumentParser:
         help="bind single-closed muscle surface volumes to immutable source identities without promoting mechanics",
     )
     add_muscle_volume_candidate_arguments(muscle_volume_candidate)
+    from .muscle_surface_volume_disjointness import (
+        add_arguments as add_muscle_volume_disjointness_arguments,
+    )
+    muscle_volume_disjointness = commands.add_parser(
+        "muscle-surface-volume-disjointness",
+        help="exactly audit pairwise interiors of closed compiled muscle-surface candidates",
+    )
+    add_muscle_volume_disjointness_arguments(muscle_volume_disjointness)
     from .cardiac_rodero04_lat_import import add_arguments as add_rodero04_lat_import_arguments
     rodero04_lat_import = commands.add_parser(
         "rodero-case04-source-lat",

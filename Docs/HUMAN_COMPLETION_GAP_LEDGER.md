@@ -817,6 +817,15 @@ baseline; 62 closed surfaces
 still self-intersect, and physical tissue-volume, material, loading and
 clinical placement gates remain open.
 
+The [2026-10-02 pairwise muscle-domain receipt](media/muscle-volume-disjointness-20261002/receipt-v1.json)
+checks all 1,431 pairs among the 54 compiled single-embedded muscle candidates.
+It finds 1,237 strict AABB separations, 144 separate closed domains and 50
+surface-intersection pairs (25 mirrored right/left relations). These contacts
+may be boundary-touching rather than volumetric penetration, so they remain
+unresolved. The audit excludes 94 ineligible muscle surfaces, both tendons,
+and every cross-layer pair; it changes no physical-volume, mass, mechanics or
+whole-body qualification.
+
 The subsequent [right EHL Float32 visual-face repair](EHL_FP32_VISUAL_PROJECTION_20260929.md)
 prevents a named hallux attachment projection from collapsing two emitted
 triangles. Only surface 23 changes, by at most 20.061 nm in compiled position;

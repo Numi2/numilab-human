@@ -61,3 +61,47 @@ derived muscle visual candidates. The [v4 full census](media/muscle-surface-embe
 raises single embedded muscle visual candidates to **54 of 148**; both biceps
 short-head members change from three exact self-intersections to zero. This
 does not add physical muscle volumes or change MyoSim force paths.
+
+## Pairwise candidate-domain audit
+
+The [2026-10-02 exact pairwise receipt](media/muscle-volume-disjointness-20261002/receipt-v1.json)
+checks every pair among the 54 single, closed, self-embedded compiled muscle
+candidates from a freshly rebuilt NHTISS4 payload. It classifies 1,237 pairs
+as strictly separated by exact-coordinate bounds, 144 as separate closed
+domains after exact triangle and containment checks, and 50 as surface
+intersections. Those 50 rows form 25 mirrored right/left member-pair
+relationships. The audit finds no nested or indeterminate pair.
+
+“Surface intersection” is deliberately conservative: it includes boundary
+contact and does not by itself prove positive-volume penetration. Those pairs
+cannot yet be certified as separate closed domains. The other 94 of 148 muscle
+surfaces fail the single-embedded-candidate input gate; both tendon surfaces
+and skin, bone, organs, and other tissue layers are outside this pair set.
+Cross-layer placement, physical volume and mass ownership, material and force
+transfer, and mechanics remain unqualified. The result therefore admits no
+physical volume owner and does not qualify whole-body disjointness.
+
+This receipt binds payload SHA-256
+`7cefa97bf65aa75edddbb7ac4c0a56d5d5f41c8b0aeca4c6146e867cc45d4bd8`, manifest
+SHA-256 `bb4e9c63dd5e526fc28f26141cf53208cb4fce92228091a5f36d9a07e795f64c`,
+and self-embeddedness receipt SHA-256
+`240fe0db336b4ec38bf5450cd708558333f3ff639a9c3bd62fc90378dd767018`. Its
+[payload manifest](media/muscle-volume-disjointness-20261002/payload-manifest.json)
+and [matching self-embeddedness receipt](media/muscle-volume-disjointness-20261002/self-embeddedness.json)
+are retained with the pairwise receipt. The manifest binds BodyParts3D 4.0,
+MyoSim, the surface map, and the rebuilt registration candidate; registration
+SHA-256 is
+`a241f5d368b686b31890256eadd552e7547e72646f009369f91eb0d6ac4df84d`, and the
+MyoSim reference manifest SHA-256 is
+`5d1d749632b521bc84bbd1d08b86044740635724c062667d6a4710e7c9735b07`. The
+full import route is documented in [IMPORT.md](IMPORT.md). To repeat the pair
+audit with this retained manifest and embeddedness receipt:
+
+```sh
+NUMI_HUMAN_PYTHON=.venv-mujoco312/bin/python \
+  .numi/commands/human muscle-surface-volume-disjointness \
+  --payload Build/muscle-geometry-current-20261002/surface-payload/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue \
+  --manifest Docs/media/muscle-volume-disjointness-20261002/payload-manifest.json \
+  --embeddedness Docs/media/muscle-volume-disjointness-20261002/self-embeddedness.json \
+  --output Build/muscle-geometry-current-20261002/muscle-volume-disjointness-reproduced.json
+```
