@@ -1,0 +1,142 @@
+{
+  "accepted_native_anatomical_steps": 0,
+  "boundary": "Sampled single-transient candidate over fixed activation arrivals; no repeated excitation, accepted anatomical step, source-model reproduction, or heartbeat qualification.",
+  "candidate_activation_summary_sha256": "4bd6b06afbd430900b75b0e9ca952d0c018690bc0d441f8e65b953901519ea2f",
+  "device": "Apple M4 MacBook Air; Python CPU source-field and independent residual processing",
+  "files": {
+    "active-tension-100ms.f32le": {
+      "bytes": 5880332,
+      "sha256": "358d88a1603e73f8a09c6677afbe9e2f5584031d56bd345295a468153d1d5366"
+    },
+    "active-tension-150ms.f32le": {
+      "bytes": 5880332,
+      "sha256": "65456a63e218f3031b1707eaea4db82d885e12c58021328aa4bb5ea5b9ddd013"
+    },
+    "active-tension-250ms.f32le": {
+      "bytes": 5880332,
+      "sha256": "dfcbc3623717a7ce5af38b5cdeaf574e0eedf7be945fbfe26b9ba2a96af1b1c4"
+    },
+    "active-tension-400ms.f32le": {
+      "bytes": 5880332,
+      "sha256": "3f5a8c104779159323727a293b51086515f7842d71dc646a86a0c07c6e68c678"
+    },
+    "active-tension-600ms.f32le": {
+      "bytes": 5880332,
+      "sha256": "517736e7356f8e9a3dc8bb958c1f1987d5b6286f7d52b630263f382678413c31"
+    },
+    "active-tension-650ms.f32le": {
+      "bytes": 5880332,
+      "sha256": "7b900b05c7e5b7b3b9a4f54cc5d2e5f78d58ac63eacc0234806e7018a2dc6afd"
+    },
+    "independent-gate.json": {
+      "bytes": 3626,
+      "sha256": "5ca92f2225ee621159f7c9199e835284afd10f7a11fc2f8836f0675e40abbf22"
+    },
+    "summary.json": {
+      "bytes": 2929,
+      "sha256": "bdef41672c81de7cf036bb480480ade91c8391d7f54581398376cc6b281a0638"
+    },
+    "tamper-control.json": {
+      "bytes": 579,
+      "sha256": "90db15dfcce15e8b93b894ba72cc559d504b8cb74a2651a43bfb767b27500e9c"
+    }
+  },
+  "frames": [
+    {
+      "active_ventricular_cells": 1097534,
+      "bytes": 5880332,
+      "file": "active-tension-100ms.f32le",
+      "maximum_f32_tension_pa": 101918.9765625,
+      "reference_internal_residual_sha256": "03b3e7f7f09fc59da8c7b5a7cfbcd6270aa26a1f72b96611a40ca2055afbb2e1",
+      "sha256": "358d88a1603e73f8a09c6677afbe9e2f5584031d56bd345295a468153d1d5366",
+      "time_ms": 100.0
+    },
+    {
+      "active_ventricular_cells": 1097534,
+      "bytes": 5880332,
+      "file": "active-tension-150ms.f32le",
+      "maximum_f32_tension_pa": 117378.234375,
+      "sha256": "65456a63e218f3031b1707eaea4db82d885e12c58021328aa4bb5ea5b9ddd013",
+      "time_ms": 150.0
+    },
+    {
+      "active_ventricular_cells": 1097534,
+      "bytes": 5880332,
+      "file": "active-tension-250ms.f32le",
+      "maximum_f32_tension_pa": 119950.1328125,
+      "reference_internal_residual_sha256": "ec09035fff5c3d6d9d0ab420a66edd330396510db6e2c6327762a94c847a8e62",
+      "sha256": "dfcbc3623717a7ce5af38b5cdeaf574e0eedf7be945fbfe26b9ba2a96af1b1c4",
+      "time_ms": 250.0
+    },
+    {
+      "active_ventricular_cells": 1097534,
+      "bytes": 5880332,
+      "file": "active-tension-400ms.f32le",
+      "maximum_f32_tension_pa": 119970.75,
+      "sha256": "3f5a8c104779159323727a293b51086515f7842d71dc646a86a0c07c6e68c678",
+      "time_ms": 400.0
+    },
+    {
+      "active_ventricular_cells": 266763,
+      "bytes": 5880332,
+      "file": "active-tension-600ms.f32le",
+      "maximum_f32_tension_pa": 61192.625,
+      "sha256": "517736e7356f8e9a3dc8bb958c1f1987d5b6286f7d52b630263f382678413c31",
+      "time_ms": 600.0
+    },
+    {
+      "active_ventricular_cells": 0,
+      "bytes": 5880332,
+      "file": "active-tension-650ms.f32le",
+      "maximum_f32_tension_pa": 0.0,
+      "sha256": "7b900b05c7e5b7b3b9a4f54cc5d2e5f78d58ac63eacc0234806e7018a2dc6afd",
+      "time_ms": 650.0
+    }
+  ],
+  "gate_metrics": {
+    "maximum_component_difference_n": 4.624164962399591e-09,
+    "maximum_net_internal_residual_norm_n": 2.8777774084081353e-13,
+    "maximum_python_to_archived_cpp_reference_difference_n": 7.806255641895632e-17,
+    "maximum_relative_l2_difference": 1.0540503008758288e-07,
+    "zero_endpoint": {
+      "maximum_component_difference_n": 0.0,
+      "net_internal_residual_norm_n": 0.0,
+      "python_reference_difference_maximum_n": null,
+      "reference_residual_sha256": null,
+      "relative_l2_difference": 0.0,
+      "residual_independently_recomputed": true,
+      "stress_volume_integral_j": 0.0,
+      "tension_sha256": "7b900b05c7e5b7b3b9a4f54cc5d2e5f78d58ac63eacc0234806e7018a2dc6afd",
+      "time_ms": 650.0
+    }
+  },
+  "gate_source_sha256": "9f9d36b0856325e0db793d1e2d9fe34206e5208535a01ac145cf74c7d53a7689",
+  "heartbeat_qualified": false,
+  "producer_source_sha256": "73ce61f6070da0905c2f40d947cbf3fd23594001bc038b921248718cc210c772",
+  "reproduction_argv": [
+    "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 .venv-mujoco312/bin/python -m numilab_human.cardiac_active_tension_ingress",
+    "--asset Build/cardiac-electrical-source-20260930/asset",
+    "--activation Docs/media/cardiac-source-activation-20260930",
+    "--output Build/cardiac-active-tension-series-20261002",
+    "--times-ms 100 150 250 400 600 650"
+  ],
+  "requested_times_ms": [
+    100.0,
+    150.0,
+    250.0,
+    400.0,
+    600.0,
+    650.0
+  ],
+  "schema": "numi.human.cardiac-active-tension-series-publication.v1",
+  "source_asset_manifest_sha256": "e8cb0391623577efc4eac04e5710cf7c9a4757614e09d936f5af3889c37d56f1",
+  "source_cell_count": 1470083,
+  "source_model_reproduced": false,
+  "status": "passed_full_source_float32_tension_to_residual",
+  "ventricular_cells_assembled_per_frame": 1097534,
+  "zero_tension_mismatch_control": {
+    "mutated_tension_pa": 1.0,
+    "rejection": "numilab_human.model.ImportError: cardiac active-force independent gate: full-source active force parity at 650.0 ms",
+    "status": "rejected_as_expected"
+  }
+}

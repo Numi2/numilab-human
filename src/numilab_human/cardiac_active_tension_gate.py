@@ -29,7 +29,11 @@ def audit(asset: Path, activation: Path, candidate: Path) -> dict:
         and summary['source_cell_count'] == 1470083
         and summary['accepted_native_anatomical_steps'] == 0
         and summary['heartbeat_qualified'] is False
-        and [f['time_ms'] for f in summary['frames']] == [100, 250],
+        and summary.get('requested_times_ms',
+                        [f['time_ms'] for f in summary['frames']]) ==
+            [f['time_ms'] for f in summary['frames']]
+        and all(right['time_ms'] > left['time_ms']
+                for left, right in zip(summary['frames'], summary['frames'][1:])),
         'source-order ingress provenance and boundary')
     nodes = arrays['nodes.f64le']
     tetrahedra = arrays['tetrahedra.u32le']
@@ -40,10 +44,12 @@ def audit(asset: Path, activation: Path, candidate: Path) -> dict:
     reference.require(len(selected) == 1097534, 'ventricular source-cell count')
     source_nodes = arrays['ventricular-source-nodes.u32le'][:218077]
     output = []
-    for frame, prior in zip(summary['frames'], force_summary['frames']):
-        reference.require(frame['time_ms'] == prior['time_ms'] and
-                          frame['reference_internal_residual_sha256'] == prior['sha256'],
-                          'source force-frame identity')
+    prior_by_time = {frame['time_ms']: frame for frame in force_summary['frames']}
+    for frame in summary['frames']:
+        prior = prior_by_time.get(frame['time_ms'])
+        if prior is not None:
+            reference.require(frame.get('reference_internal_residual_sha256') == prior['sha256'],
+                              'source force-frame identity')
         path = candidate / frame['file']
         reference.checked_file(path, frame['sha256'], 1470083 * 4)
         tension = np.fromfile(path, '<f4').astype(np.float64)
@@ -55,6 +61,22 @@ def audit(asset: Path, activation: Path, candidate: Path) -> dict:
                           frame['active_ventricular_cells']
                           and float(tension.max()) == frame['maximum_f32_tension_pa'],
                           f'finite ventricular-only active tension at {frame["time_ms"]} ms')
+        expected, expected_metrics = reference.independently_assemble(
+            arrays, frame['time_ms'], config['source_parameters'])
+        expected_stress_volume = expected_metrics['stress_volume_integral_j']
+        python_reference_difference = None
+        if prior is not None:
+            reference_path = ingress.REFERENCE / prior['file']
+            reference.checked_file(reference_path, prior['sha256'], 218077 * 3 * 8)
+            source_reference = np.fromfile(reference_path, '<f8').reshape(218077, 3)
+            python_reference_difference = float(np.max(np.abs(expected - source_reference)))
+            reference.require(
+                python_reference_difference < 1e-8
+                and abs(expected_metrics['stress_volume_integral_j'] -
+                        prior['native_metrics']['stress_volume_integral_j']) < 1e-5,
+                f'independent source reference reconstruction at {frame["time_ms"]} ms')
+            expected = source_reference
+            expected_stress_volume = prior['native_metrics']['stress_volume_integral_j']
         assembled = np.zeros_like(nodes)
         stress_volume = 0.0
         for start in range(0, len(selected), 25000):
@@ -80,21 +102,27 @@ def audit(asset: Path, activation: Path, candidate: Path) -> dict:
                              directional[:, :, None] * f[:, None, :])
             np.add.at(assembled, ids.ravel(), contributions.reshape(-1, 3))
             stress_volume += float(np.dot(volume, tension[index]))
-        reference_path = ingress.REFERENCE / prior['file']
-        reference.checked_file(reference_path, prior['sha256'], 218077 * 3 * 8)
-        expected = np.fromfile(reference_path, '<f8').reshape(218077, 3)
         actual = assembled[source_nodes]
         error = actual - expected
         maximum = float(np.max(np.abs(error)))
-        relative = float(np.linalg.norm(error) / np.linalg.norm(expected))
+        error_norm = float(np.linalg.norm(error))
+        expected_norm = float(np.linalg.norm(expected))
+        relative = (error_norm / expected_norm if expected_norm > 0.0 else
+                    0.0 if error_norm == 0.0 else float('inf'))
         net = actual.sum(axis=0)
         reference.require(maximum < 1e-8 and relative < 1e-6
                           and np.linalg.norm(net) < 1e-9
                           and abs(stress_volume -
-                                  prior['native_metrics']['stress_volume_integral_j']) < 1e-5,
+                                  expected_stress_volume) < 1e-5
+                          and frame['active_ventricular_cells'] ==
+                                  expected_metrics['active_cells'],
                           f'full-source active force parity at {frame["time_ms"]} ms')
         output.append({'time_ms': frame['time_ms'], 'tension_sha256': frame['sha256'],
-                       'reference_residual_sha256': prior['sha256'],
+                       'reference_residual_sha256':
+                           prior['sha256'] if prior is not None else None,
+                       'residual_independently_recomputed': True,
+                       'python_reference_difference_maximum_n':
+                           python_reference_difference,
                        'maximum_component_difference_n': maximum,
                        'relative_l2_difference': relative,
                        'net_internal_residual_norm_n': float(np.linalg.norm(net)),

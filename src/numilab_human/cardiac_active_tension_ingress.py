@@ -17,11 +17,26 @@ ROOT = reference.ROOT
 REFERENCE = ROOT / 'Docs/media/cardiac-active-force-reference-20260930'
 
 
-def produce(asset: Path, activation: Path, output: Path) -> dict:
+def produce(asset: Path, activation: Path, output: Path,
+            times_ms: list[float] | None = None) -> dict:
     asset, activation, output = (Path(p).resolve() for p in
                                  (asset, activation, output))
     config, _, _, earlier, arrays = reference.source_inputs(
         asset, activation, REFERENCE)
+    if times_ms is None:
+        requested = [(frame['time_ms'], frame) for frame in earlier['frames']]
+    else:
+        requested_times = [float(time_ms) for time_ms in times_ms]
+        reference.require(bool(requested_times) and
+                          all(math.isfinite(time_ms) and time_ms >= 0.0
+                              for time_ms in requested_times) and
+                          all(right > left for left, right in
+                              zip(requested_times, requested_times[1:])),
+                          'requested frame times must be finite, nonnegative, and strictly increasing')
+        reference_frames = {float(frame['time_ms']): frame
+                            for frame in earlier['frames']}
+        requested = [(time_ms, reference_frames.get(time_ms))
+                     for time_ms in requested_times]
     source_nodes = arrays['ventricular-source-nodes.u32le']
     regions = arrays['ventricular-dof-regions.u32le']
     arrivals = arrays['refined-arrival.f64le'] * 1000.0
@@ -47,8 +62,7 @@ def produce(asset: Path, activation: Path, output: Path) -> dict:
     duration = p['transient_duration_ms']
     output.mkdir(parents=True, exist_ok=True)
     frames = []
-    for earlier_frame in earlier['frames']:
-        time_ms = earlier_frame['time_ms']
+    for time_ms, earlier_frame in requested:
         tensions = np.zeros(len(labels), dtype='<f4')
         active_cells = 0
         for start in range(0, len(selected), 25000):
@@ -70,12 +84,15 @@ def produce(asset: Path, activation: Path, output: Path) -> dict:
             cell_tension = stress.mean(axis=1)
             active_cells += int(np.count_nonzero(cell_tension > 0))
             tensions[index] = cell_tension.astype('<f4')
-        reference.require(active_cells == earlier_frame['native_metrics']['active_cells']
+        reference.require((earlier_frame is None or
+                           active_cells == earlier_frame['native_metrics']['active_cells'])
                           and np.isfinite(tensions).all()
                           and np.all((tensions >= 0) & (tensions <= peak))
                           and np.all(tensions[(labels != 1) & (labels != 2)] == 0),
                           f'finite ventricular source tension at {time_ms} ms')
-        path = output / f'active-tension-{time_ms}ms.f32le'
+        time_token = (str(int(time_ms)) if float(time_ms).is_integer()
+                      else format(time_ms, '.12g').replace('.', 'p'))
+        path = output / f'active-tension-{time_token}ms.f32le'
         data = tensions.tobytes()
         if path.exists():
             reference.require(path.read_bytes() == data,
@@ -84,11 +101,13 @@ def produce(asset: Path, activation: Path, output: Path) -> dict:
             pending = path.with_name(path.name + f'.{os.getpid()}.pending')
             pending.write_bytes(data)
             os.replace(pending, path)
-        frames.append({'time_ms': time_ms, 'file': path.name,
-                       'bytes': len(data), 'sha256': reference.sha(path),
-                       'active_ventricular_cells': active_cells,
-                       'maximum_f32_tension_pa': float(tensions.max()),
-                       'reference_internal_residual_sha256': earlier_frame['sha256']})
+        frame = {'time_ms': time_ms, 'file': path.name,
+                 'bytes': len(data), 'sha256': reference.sha(path),
+                 'active_ventricular_cells': active_cells,
+                 'maximum_f32_tension_pa': float(tensions.max())}
+        if earlier_frame is not None:
+            frame['reference_internal_residual_sha256'] = earlier_frame['sha256']
+        frames.append(frame)
     result = {
         'schema': 'numi.human.cardiac-active-tension-ingress.v1',
         'status': 'source_ordered_prescribed_active_tension_candidate',
@@ -98,6 +117,8 @@ def produce(asset: Path, activation: Path, output: Path) -> dict:
         'producer_source_sha256': reference.sha(Path(__file__)),
         'source_cell_count': len(labels),
         'ordering': 'one little-endian Float32 Cauchy tension per source tetrahedron; labels 1/2 active, all other labels zero',
+        'requested_times_ms': [frame['time_ms'] for frame in frames],
+        'time_series_boundary': 'source-parameter Tanh reconstruction over the fixed activation-arrival field; no periodic excitation is inferred',
         'frames': frames,
         'accepted_native_anatomical_steps': 0,
         'source_model_reproduced': False,
@@ -119,8 +140,10 @@ def main() -> None:
     parser.add_argument('--asset', type=Path, required=True)
     parser.add_argument('--activation', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--times-ms', type=float, nargs='+',
+                        help='source times to sample; defaults to the two fixed reference frames')
     args = parser.parse_args()
-    result = produce(args.asset, args.activation, args.output)
+    result = produce(args.asset, args.activation, args.output, args.times_ms)
     print(json.dumps({'status': result['status'], 'frames': result['frames']}))
 
 

@@ -543,9 +543,18 @@ accepts optional per-cooked-tetrahedron tension in the native non-mixed FEM
 stress and tangent. A physical Apple M4 one-cell run with exact case18 geometry,
 derived fibre frame and source-derived tension accepts and replays bitwise;
 synthetic density and three fixed nodes keep that result a bounded fixture.
-That one-cell increment left source-to-cooked mapping and ventricular-scale
-stepping open. Anatomical boundary conditions, calibrated wall motion and
-heartbeat remain open.
+That initial one-cell increment left source-to-cooked mapping and
+ventricular-scale stepping open at the time.
+
+The [six-frame source-derived tension sequence](CARDIAC_ACTIVE_TENSION_SERIES_20261002.md)
+now spans contraction and relaxation samples at 100, 150, 250, 400, 600 and
+650 ms. An independent full-source residual gate passes all six, including the
+exact zero-tension endpoint; the maximum component difference is 4.63e-9 N.
+An updated-hash 1 Pa single-cell mutation fails residual parity. This closes
+sampled tension ingress and its zero-force audit case. The source
+activation mismatch, stress-free reference, calibrated chamber loads,
+circulation, sustained four-chamber mechanics, accepted electrical-to-mechanical
+steps and heartbeat qualification remain open.
 
 The subsequent [source-ventricular native step](CARDIAC_VENTRICULAR_NATIVE_STEP_20260930.md)
 closes that initial source-to-cooked mapping and accepts one 1 µs native FEM
