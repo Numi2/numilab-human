@@ -56,6 +56,26 @@ unqualified by the topology gate. These taxonomy results improve source
 traceability only: clinical anatomy, physical volumes, tissue boundaries,
 mechanics, and physiology remain open.
 
+## Whole-body organ-overlap identity and semantic triage — 2026-10-02
+
+The [corrected exact-overlap receipt](media/whole-body-organ-overlap-20261002/receipt-v4.json.gz)
+now records selected visible IDs and the full 112-surface inventory; the
+[source-semantic join](WHOLE_BODY_OVERLAP_SEMANTIC_TRIAGE_20261002.md) verifies
+all 112 identities, including the one singleton without a same-owner pair.
+The correction changes 34 exact-pair references and adds visible IDs to the
+2,697 AABB-separated pairs. All 481 pair geometries, exact outcomes, and
+geometry hashes reproduce unchanged. The 198 crossings classify as 156 shared
+source-family pairs, 28 pairs with a specific shared FMA concept, and 14 pairs
+with directional FMA ancestry only. The largest measured crossing segment is
+13.401 mm between small-intestine members FJ2577 and FJ2605. This prioritizes
+source-registration review but does not establish overlap intent, penetration
+depth, tissue ownership, clinical anatomy, or mechanics; the eight individually
+unqualified organ surfaces remain excluded. The [pinned raw-source comparison](media/whole-body-source-overlap-pair-20261002/receipt-v2.json)
+reproduces all 21 exact FJ2577/FJ2605 triangle crossings and the same first-12
+pair sample before native rendering. This localizes the observed crossing to
+the source meshes; a proper regional seam or segmentation boundary remains
+unresolved, so no arbitrary surface translation is adopted.
+
 ## Historical requalification snapshot — 2026-09-15
 
 The current repository evidence layer is published at `4bca31c` on `main` and

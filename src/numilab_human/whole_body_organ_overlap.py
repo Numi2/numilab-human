@@ -178,12 +178,14 @@ class SourceHierarchy:
         return result
 
 
-def _surface_reference(row: dict, owner_names: list[str]) -> dict:
+def _surface_reference(row: dict, owner_names: list[str], *,
+                       visible_stable_id: int | None = None) -> dict:
     body_index = row['source_body_index']
     source_id = row['source_stable_id'] if 'source_stable_id' in row else row['stable_id']
     return {
         'source_stable_id': source_id,
-        'visible_stable_id': row.get('visible_stable_id', source_id),
+        'visible_stable_id': (visible_stable_id if visible_stable_id is not None
+                              else row.get('visible_stable_id', source_id)),
         'source_member_id': row['source_member_id'],
         'body_index': body_index,
         'body_name': owner_names[body_index],
@@ -294,7 +296,9 @@ def audit(candidate_payload: Path, selected_report: Path, indexed_census: Path,
         if row['source_layer_code'] != 1:
             continue
         if not row['selected_closed_embedded_surface_candidate']:
-            exclusions.append({**_surface_reference(census_row, owner_names),
+            exclusions.append({**_surface_reference(
+                                   census_row, owner_names,
+                                   visible_stable_id=visible_id),
                                'selected_status': row['selected_status']})
             continue
         record = list(map(int, records[visible_id-1]))
@@ -321,7 +325,8 @@ def audit(candidate_payload: Path, selected_report: Path, indexed_census: Path,
         faces = (indices[fi:fi+ni].reshape(-1, 3).astype(np.int64)-fv)
         require(bool(((faces >= 0) & (faces < nv)).all()),
                 f'selected organ face escapes its mesh at stable ID {sid}')
-        reference = _surface_reference(census_row, owner_names)
+        reference = _surface_reference(census_row, owner_names,
+                                       visible_stable_id=visible_id)
         reference.update({'triangle_count': ni//3,
                           'compiled_geometry_sha256': geometry_hash,
                           'source_hierarchy_terms': {
@@ -368,6 +373,8 @@ def audit(candidate_payload: Path, selected_report: Path, indexed_census: Path,
                 disjoint_pairs.append({'body_index': owner,
                                        'first_stable_id': first_id,
                                        'second_stable_id': second_id,
+                                       'first_visible_stable_id': first['visible_stable_id'],
+                                       'second_visible_stable_id': second['visible_stable_id'],
                                        'first_member_id': first['source_member_id'],
                                        'second_member_id': second['source_member_id']})
                 if owner == 7:
@@ -478,6 +485,7 @@ def audit(candidate_payload: Path, selected_report: Path, indexed_census: Path,
         'selected_organ_triangle_count': sum(row['triangle_count'] for row in organ_rows),
         'excluded_individually_unqualified_organ_surfaces': exclusions,
         'owner_summary': owner_counts,
+        'selected_organ_surfaces': organ_rows,
         'all_same_owner_surface_pairs': sum(v['possible_same_owner_pairs']
                                             for v in owner_counts.values()),
         'aabb_disjoint_pairs': len(disjoint_pairs),

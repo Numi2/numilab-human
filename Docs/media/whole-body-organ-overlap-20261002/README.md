@@ -1,5 +1,15 @@
 # Whole-body same-owner organ overlap diagnostic
 
+The original immutable [receipt.json.gz](receipt.json.gz) preserves the first
+run. The corrected [receipt-v4.json.gz](receipt-v4.json.gz) is the controlling
+identity record: it retains the same exact geometry outcomes while reporting
+the selected visible stable IDs and all 112 selected surfaces. The earlier
+receipt had fallen back to source stable IDs for replacement meshes. The
+[semantic triage](../whole-body-overlap-semantics-20261002/receipt-v2.json)
+joins those corrected IDs to the whole-body source-family and ontology
+crosswalk. See the [engineering note](../../WHOLE_BODY_OVERLAP_SEMANTIC_TRIAGE_20261002.md)
+for the identity correction and bounded interpretation.
+
 This is the first exact cross-surface census over the selected, individually
 embedded organ atlas surfaces. It compares meshes only when they share a native
 rigid owner, using exact rational predicates over the compiled Float32
