@@ -5,12 +5,21 @@
       "sha256": "97c5e7b1c09eb47193bca0b7d2a515088b40938da45fe7aa8c8fc7bb7dd54368"
     },
     "source-mechanics.json": {
-      "bytes": 1813140,
-      "sha256": "f58f697e300ad6797a475959aaf0478bb1a709dc497e3b6828d1c361204eeb4c"
+      "bytes": 1813749,
+      "sha256": "4cbf980556ce3480804a67a4028a6ea1ea3fa31917115384675fb3484436bfe2"
     },
     "source-meshdata.bin": {
       "bytes": 2686936,
       "sha256": "f3802520c712f3c939934d53e0e4de9ce6e6c275287ede3279bbdc3b3abf63c8"
+    },
+    "source-reference-baseline.json": {
+      "bytes": 105037,
+      "native_execution_status": "archived_reference_outputs_summarized_not_rerun",
+      "retained_contact_archive_sha256": "4ff55ec22a541d0207dcfe4d3e60cfd2ab426fd1c012d69b910c7439fb2da382",
+      "retained_observation_archive_sha256": "9a99bbdcc94b4ba1aca22c9cc3d72919db9b1e08fec703732f8fcf635705d149",
+      "schema": "numi.human.open-knee-source-reference-baseline.v1",
+      "sha256": "e8aa8771e80fc2a479ae80d38ee742272c50ac4fd54fffbb959cf2ebddbbb5e6",
+      "source_xplt_sha256": "c370ae9f94e9faee2d7060bf2a6819e03be1312e82ca79bd2e9cebf8b34398de"
     },
     "source-rigid-graph.bin": {
       "bytes": 1764,
@@ -52,8 +61,8 @@
     "source_mesh_element_fiber_vectors": 95962
   },
   "compiler_sources": {
-    "cli.py": "e34bb671e413ffca43f334b6d386610d8eaa81a7aed26bd1bcda85694e744fa2",
-    "open_knee.py": "f6c57785de215b232c648bc3edbc91d8364f20e106af49f49d1a44e1fa1c8538"
+    "cli.py": "a464ee99dccf60cc782fbcb09c0fd8939bcb3bebeb712695d858c7b6a5e9a7a2",
+    "open_knee.py": "35e216b7cce8950665e068edaf212e56b2e6038a3c04a43841866f8a47350269"
   },
   "geometry_binary": {
     "bytes": 37388532,
@@ -110,6 +119,21 @@
       "bytes": 119032115,
       "sha256": "4155db1d0d7b87ffb2c668102d2495870e4461a539b18e6708f1f4817b5601bf"
     }
+  },
+  "reference_outputs": {
+    "archived_contact_sha256": "4ff55ec22a541d0207dcfe4d3e60cfd2ab426fd1c012d69b910c7439fb2da382",
+    "archived_observations_sha256": "9a99bbdcc94b4ba1aca22c9cc3d72919db9b1e08fec703732f8fcf635705d149",
+    "solver_rerun": "not_performed_by_native_compiler",
+    "source_reference_baseline.json": {
+      "bytes": 105037,
+      "native_execution_status": "archived_reference_outputs_summarized_not_rerun",
+      "retained_contact_archive_sha256": "4ff55ec22a541d0207dcfe4d3e60cfd2ab426fd1c012d69b910c7439fb2da382",
+      "retained_observation_archive_sha256": "9a99bbdcc94b4ba1aca22c9cc3d72919db9b1e08fec703732f8fcf635705d149",
+      "schema": "numi.human.open-knee-source-reference-baseline.v1",
+      "sha256": "e8aa8771e80fc2a479ae80d38ee742272c50ac4fd54fffbb959cf2ebddbbb5e6",
+      "source_xplt_sha256": "c370ae9f94e9faee2d7060bf2a6819e03be1312e82ca79bd2e9cebf8b34398de"
+    },
+    "source_xplt_sha256": "c370ae9f94e9faee2d7060bf2a6819e03be1312e82ca79bd2e9cebf8b34398de"
   },
   "resolved_geometry": {
     "element_set_count": 16,

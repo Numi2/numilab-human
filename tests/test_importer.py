@@ -17,6 +17,7 @@ from numilab_human.open_knee import _parse_febio_fiber_directions
 from numilab_human.open_knee import _geometry_archive_cross_references
 from numilab_human.open_knee import compile_source_mechanical_description
 from numilab_human.open_knee import _source_rigid_graph_program_bytes
+from numilab_human.open_knee import _write_source_reference_baseline
 from numilab_human.open_knee import parse_source as parse_open_knee_source
 
 from numilab_human.model import (
@@ -4037,6 +4038,30 @@ class ImporterTests(unittest.TestCase):
                             "unsupported_not_executed"
                             for section in mechanics["source_sections"]))
         self.assertTrue(mechanics["unsupported_source_sections"])
+
+    def test_open_knee_archived_reference_outputs_form_a_hashed_baseline(self) -> None:
+        source_description = json.loads((
+            ROOT / "Docs/media/open-knee-source-program-20261002/source-mechanics.json"
+        ).read_text(encoding="utf-8"))
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "source-reference-baseline.json"
+            storage = _write_source_reference_baseline(source_description, output)
+            output_sha256 = hashlib.sha256(output.read_bytes()).hexdigest()
+            baseline = json.loads(output.read_text(encoding="utf-8"))
+        self.assertEqual(storage["schema"], baseline["schema"])
+        self.assertEqual(storage["sha256"], output_sha256)
+        self.assertEqual(baseline["source_solver_rerun"], "not_performed_by_native_compiler")
+        self.assertEqual(baseline["reference_run"]["accepted_increment_count"], 140)
+        self.assertEqual(baseline["reference_run"]["observation_record_count"], 840)
+        self.assertEqual(
+            [item["continuation_time"] for item in baseline["reference_run"]["checkpoints"]],
+            [0.05, 1.0, 2.0],
+        )
+        self.assertEqual(baseline["contact_archive"]["state_count"], 141)
+        self.assertEqual(baseline["contact_archive"]["surface_count"], 36)
+        self.assertEqual(len(baseline["contact_archive"]["peak_pressure_by_surface"]), 36)
+        self.assertEqual(len(baseline["contact_archive"]["checkpoints"]), 3)
+        self.assertIn("elementwise tissue stress/strain", baseline["unavailable_reference_outputs"][0])
 
     def test_open_knee_compiler_rejects_unknown_side_before_source_work(self) -> None:
         with self.assertRaisesRegex(ValueError, "side must be left or right"):

@@ -10,6 +10,7 @@ warp or an unconstrained nearest-surface flip.
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
 import json
 import math
@@ -39,6 +40,15 @@ EXPECTED_HASHES = {
 ARCHIVED_REFERENCE_SOLVER_VERSION = "2.9.1"
 ARCHIVED_REFERENCE_LOG_SHA256 = (
     "d47631c09ce7fc93154c7d6c84caa299aab03709abe9ab7d2a41a60a1b78e426"
+)
+ARCHIVED_REFERENCE_OBSERVATIONS_SHA256 = (
+    "9a99bbdcc94b4ba1aca22c9cc3d72919db9b1e08fec703732f8fcf635705d149"
+)
+ARCHIVED_REFERENCE_CONTACT_SHA256 = (
+    "4ff55ec22a541d0207dcfe4d3e60cfd2ab426fd1c012d69b910c7439fb2da382"
+)
+ARCHIVED_REFERENCE_XPLT_SHA256 = (
+    "c370ae9f94e9faee2d7060bf2a6819e03be1312e82ca79bd2e9cebf8b34398de"
 )
 ARCHIVED_REFERENCE_GEOMETRY_SHA256 = (
     "4155db1d0d7b87ffb2c668102d2495870e4461a539b18e6708f1f4817b5601bf"
@@ -1779,6 +1789,11 @@ def compile_source_mechanical_artifacts(
         description, rigid_graph_path
     )
     description["source_rigid_graph_program_storage"] = rigid_graph_storage
+    reference_baseline_path = output / "source-reference-baseline.json"
+    reference_baseline_storage = _write_source_reference_baseline(
+        description, reference_baseline_path
+    )
+    description["source_reference_baseline_storage"] = reference_baseline_storage
     description_path = output / "source-mechanics.json"
     description_path.write_text(
         json.dumps(description, indent=2, sort_keys=True) + "\n",
@@ -1916,6 +1931,7 @@ def compile_source_mechanical_artifacts(
                 "sha256": _sha256(source_volume_mesh_path),
             },
             rigid_graph_path.name: rigid_graph_storage,
+            reference_baseline_path.name: reference_baseline_storage,
         },
         "compiler_sources": {
             Path(__file__).name: _sha256(Path(__file__)),
@@ -2112,6 +2128,194 @@ def _write_source_rigid_graph_program(
             }),
         },
         "native_execution_status": "compiled_source_program_not_executed",
+    }
+
+
+def _write_source_reference_baseline(
+    description: dict[str, Any], output_path: Path,
+) -> dict[str, Any]:
+    """Bind retained FEBio observations/contact outputs without rerunning FEBio."""
+    root = Path(__file__).resolve().parents[2]
+    archive_root = root / "Docs/media/open-knee-reference-20261001"
+    observation_path = archive_root / "archived-observations.json.gz"
+    contact_path = archive_root / "archived-contact.json.gz"
+    observation_sha = _sha256(observation_path)
+    contact_sha = _sha256(contact_path)
+    if observation_sha != ARCHIVED_REFERENCE_OBSERVATIONS_SHA256:
+        raise ValueError("Open Knee(s) archived observation identity drifted")
+    if contact_sha != ARCHIVED_REFERENCE_CONTACT_SHA256:
+        raise ValueError("Open Knee(s) archived contact identity drifted")
+    observations = json.loads(gzip.decompress(observation_path.read_bytes()))
+    contact = json.loads(gzip.decompress(contact_path.read_bytes()))
+    if (
+        observations.get("status") != "normal_termination_with_complete_observations" or
+        observations.get("version") != ARCHIVED_REFERENCE_SOLVER_VERSION or
+        not observations.get("observations_complete") or
+        not observations.get("normal_termination_reported") or
+        observations.get("error_termination_reported") or
+        contact.get("archive_complete") is not True or
+        contact.get("archive_identity_verified") is not True or
+        contact.get("complete_chunk_prefix_sha256") != ARCHIVED_REFERENCE_XPLT_SHA256 or
+        contact.get("available_bytes") != contact.get("expected_archive_bytes")
+    ):
+        raise ValueError("Open Knee(s) archived reference run is incomplete or mismatched")
+
+    accepted_times = [float(value) for value in observations["accepted_times"]]
+    if len(accepted_times) != 140 or not accepted_times or accepted_times[-1] != 2.0:
+        raise ValueError("Open Knee(s) archived reference continuation changed")
+    bodies = {
+        str(body["material_id"]): body["name"]
+        for body in description["rigid_graph"]["bodies"]
+    }
+    records_by_time: dict[float, dict[str, Any]] = defaultdict(dict)
+    for record in observations["records"]:
+        records_by_time[float(record["continuation_time"])][record["field"]] = record
+    expected_fields = {
+        ("center_of_mass", "mm"),
+        ("rotation_quaternion", "dimensionless; xyzw"),
+        ("Reaction_Forces", "N"),
+        ("Reaction_Torques", "N mm"),
+        ("Rigid_Connector_Force", "N"),
+        ("Rigid_Connector_Moment", "N mm"),
+    }
+    observed_fields = {(record["field"], record["units"]) for record in observations["records"]}
+    if observed_fields != expected_fields or len(observations["records"]) != 840:
+        raise ValueError("Open Knee(s) archived rigid observation fields changed")
+
+    observation_snapshots = []
+    for target_time in (accepted_times[0], 1.0, accepted_times[-1]):
+        actual_time = min(accepted_times, key=lambda value: abs(value - target_time))
+        if abs(actual_time - target_time) > 1.0e-9:
+            raise ValueError("Open Knee(s) reference checkpoint is absent")
+        by_field = records_by_time[actual_time]
+        if set(by_field) != {field for field, _ in expected_fields}:
+            raise ValueError("Open Knee(s) archived rigid checkpoint is incomplete")
+        observation_snapshots.append({
+            "continuation_time": actual_time,
+            "units": {"position": "mm", "rotation": "xyzw", "force": "N", "moment": "N mm"},
+            "rigid_bodies": {
+                bodies[body_id]: {
+                    "material_id": int(body_id),
+                    "center_of_mass": by_field["center_of_mass"]["values"][body_id],
+                    "rotation_quaternion_xyzw": by_field["rotation_quaternion"]["values"][body_id],
+                    "reaction_force": by_field["Reaction_Forces"]["values"][body_id],
+                    "reaction_torque": by_field["Reaction_Torques"]["values"][body_id],
+                }
+                for body_id in sorted(bodies, key=int)
+            },
+            "rigid_connector_force": by_field["Rigid_Connector_Force"]["values"],
+            "rigid_connector_moment": by_field["Rigid_Connector_Moment"]["values"],
+        })
+
+    contact_snapshots = []
+    peak_pressure: dict[str, dict[str, Any]] = {}
+    for state in contact["states"]:
+        time = float(state["continuation_time"])
+        fields = state["contact_fields"]
+        if len(fields) != 72:
+            raise ValueError("Open Knee(s) archived contact state is incomplete")
+        for field in fields:
+            if field["field"] != "contact pressure":
+                continue
+            item = peak_pressure.setdefault(field["name"], {
+                "units": field["units"], "maximum": -math.inf,
+                "continuation_time": None, "positive_faces_at_peak": 0,
+            })
+            if float(field["maximum"]) > item["maximum"]:
+                item.update({
+                    "maximum": float(field["maximum"]),
+                    "continuation_time": time,
+                    "positive_faces_at_peak": int(field["positive_faces"]),
+                })
+        if any(abs(time - target) < 1.0e-5 for target in (0.0, 1.0, 2.0)):
+            contact_snapshots.append({
+                "continuation_time": time,
+                "surfaces": [{
+                    "name": field["name"],
+                    "field": field["field"],
+                    "faces": int(field["faces"]),
+                    "minimum": float(field["minimum"]),
+                    "mean": float(field["mean"]),
+                    "maximum": float(field["maximum"]),
+                    "negative_faces": int(field["negative_faces"]),
+                    "positive_faces": int(field["positive_faces"]),
+                    "units": field["units"],
+                } for field in fields],
+            })
+    if len(contact["states"]) != 141 or len(peak_pressure) != 36 or len(contact_snapshots) != 3:
+        raise ValueError("Open Knee(s) archived contact continuation changed")
+
+    baseline = {
+        "schema": "numi.human.open-knee-source-reference-baseline.v1",
+        "status": "passed_retained_reference_archive_identity_and_summary",
+        "source_solver_rerun": "not_performed_by_native_compiler",
+        "source_deck_sha256": description["source_file_sha256"],
+        "source_geometry_sha256": description["source_geometry_archive_sha256"],
+        "reference_run": {
+            "solver": f"FEBio {observations['version']}",
+            "status": observations["status"],
+            "source_log_sha256": description["reference_log_sha256"],
+            "solver_binary_identity": description["reference_run_observation"][
+                "binary_identity"
+            ],
+            "step_control": description["step_control"],
+            "time_semantics": observations["time_semantics"],
+            "accepted_increment_count": int(observations["accepted_increment_count"]),
+            "first_accepted_continuation_time": accepted_times[0],
+            "last_accepted_continuation_time": accepted_times[-1],
+            "observation_record_count": len(observations["records"]),
+            "fields": [
+                {"name": name, "units": units}
+                for name, units in sorted(expected_fields)
+            ],
+            "checkpoints": observation_snapshots,
+        },
+        "contact_archive": {
+            "format": contact["format"],
+            "status": "complete_archive_identity_verified",
+            "source_xplt_sha256": ARCHIVED_REFERENCE_XPLT_SHA256,
+            "source_xplt_bytes": int(contact["expected_archive_bytes"]),
+            "state_count": len(contact["states"]),
+            "surface_count": int(contact["surface_count"]),
+            "time_semantics": contact["time_semantics"],
+            "checkpoints": contact_snapshots,
+            "peak_pressure_by_surface": [
+                {"name": name, **values}
+                for name, values in sorted(peak_pressure.items())
+            ],
+        },
+        "retained_archive_files": {
+            observation_path.name: {
+                "repository_path": str(observation_path.relative_to(root)),
+                "bytes": observation_path.stat().st_size,
+                "sha256": observation_sha,
+            },
+            contact_path.name: {
+                "repository_path": str(contact_path.relative_to(root)),
+                "bytes": contact_path.stat().st_size,
+                "sha256": contact_sha,
+            },
+        },
+        "unavailable_reference_outputs": [
+            "elementwise tissue stress/strain and stored-energy fields are not present in the retained observation/contact summaries",
+            "source native solver executable binary identity is not retained",
+        ],
+        "qualification": {
+            "archived_source_solver_run": "normal_termination_with_complete_observations",
+            "native_source_reproduction": "not_performed",
+            "tissue_equilibrium_reproduced_by_matter": False,
+        },
+    }
+    payload = json.dumps(baseline, indent=2, sort_keys=True) + "\n"
+    output_path.write_text(payload, encoding="utf-8")
+    return {
+        "schema": baseline["schema"],
+        "bytes": output_path.stat().st_size,
+        "sha256": _sha256(output_path),
+        "retained_observation_archive_sha256": observation_sha,
+        "retained_contact_archive_sha256": contact_sha,
+        "source_xplt_sha256": ARCHIVED_REFERENCE_XPLT_SHA256,
+        "native_execution_status": "archived_reference_outputs_summarized_not_rerun",
     }
 
 
