@@ -2163,6 +2163,12 @@ def parser() -> argparse.ArgumentParser:
         "gap-execution", help="inspect ledger owners, prerequisites and unqualified source target links",
     )
     add_gap_execution_arguments(execution)
+    from .whole_body_organ_overlap import add_arguments as add_whole_body_organ_overlap_arguments
+    organ_overlap = commands.add_parser(
+        "whole-body-organ-overlap",
+        help="run exact same-owner cross-surface diagnostics on selected embedded organ atlas surfaces",
+    )
+    add_whole_body_organ_overlap_arguments(organ_overlap)
     from .capability_protocol import add_arguments as add_capability_arguments
     capability = commands.add_parser(
         "capability-protocol", help="compile single-subject measured whole-body requirements and evidence bindings",
