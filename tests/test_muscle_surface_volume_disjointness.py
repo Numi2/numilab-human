@@ -5,6 +5,7 @@ from numilab_human.muscle_surface_volume_disjointness import (
     MuscleDisjointnessError,
     _component_domain_status,
     _component_meshes,
+    _isolated_candidate_subset,
     _member_pair_status,
     _surface_pair_status,
     _write_immutable,
@@ -53,6 +54,84 @@ def test_exact_pair_aabb_separation_proves_disjoint_domains():
 
     assert result["status"] == "strictly_disjoint_aabbs"
     assert result["intersection_pairs"] == 0
+
+
+def test_isolated_subset_keeps_only_members_separated_from_the_full_pair_universe():
+    surfaces = [
+        {
+            "stable_id": stable_id,
+            "member_id": f"FJ{stable_id}",
+            "closed_embedded_candidate": True,
+            "compiled_geometry_sha256": f"{stable_id:064x}",
+            "triangle_count": 4,
+            "source_face_component_count": 1,
+            "component_domain_status": "single_closed_component",
+        }
+        for stable_id in (1, 2, 3, 4)
+    ]
+    pairs = [
+        {
+            "first_stable_id": 1,
+            "second_stable_id": 2,
+            "status": "strictly_disjoint_aabbs",
+        },
+        {
+            "first_stable_id": 1,
+            "second_stable_id": 3,
+            "status": "separate_closed_domains",
+        },
+        {
+            "first_stable_id": 1,
+            "second_stable_id": 4,
+            "status": "strictly_disjoint_aabbs",
+        },
+        {
+            "first_stable_id": 2,
+            "second_stable_id": 3,
+            "status": "separate_closed_domains",
+        },
+        {
+            "first_stable_id": 2,
+            "second_stable_id": 4,
+            "status": "strictly_disjoint_aabbs",
+        },
+        {"first_stable_id": 3, "second_stable_id": 4, "status": "surface_intersection"},
+    ]
+
+    result = _isolated_candidate_subset(surfaces, pairs)
+
+    assert [row["stable_id"] for row in result] == [1, 2]
+    assert [row["member_id"] for row in result] == ["FJ1", "FJ2"]
+
+
+def test_isolated_subset_fails_closed_on_an_incomplete_pair_matrix():
+    surfaces = [
+        {
+            "stable_id": stable_id,
+            "member_id": f"FJ{stable_id}",
+            "closed_embedded_candidate": True,
+            "compiled_geometry_sha256": f"{stable_id:064x}",
+            "triangle_count": 4,
+            "source_face_component_count": 1,
+            "component_domain_status": "single_closed_component",
+        }
+        for stable_id in (1, 2, 3)
+    ]
+    pairs = [
+        {
+            "first_stable_id": 1,
+            "second_stable_id": 2,
+            "status": "strictly_disjoint_aabbs",
+        },
+        {
+            "first_stable_id": 1,
+            "second_stable_id": 3,
+            "status": "separate_closed_domains",
+        },
+    ]
+
+    with pytest.raises(MuscleDisjointnessError, match="complete pairwise"):
+        _isolated_candidate_subset(surfaces, pairs)
 
 
 def test_exact_pair_reports_crossing_surface_intersection():

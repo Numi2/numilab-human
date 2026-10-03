@@ -27,7 +27,7 @@ from .compiled_quotient_embeddedness import coordinate_quotient
 from .physiology import canonical
 
 
-SCHEMA = "numi.human.compiled-muscle-volume-disjointness.v3"
+SCHEMA = "numi.human.compiled-muscle-volume-disjointness.v4"
 PREDICATE_FILES = (
     "muscle_surface_volume_disjointness.py",
     "muscle_surface_embeddedness.py",
@@ -488,6 +488,80 @@ def _exact_integer_vertices(
     return converted
 
 
+def _isolated_candidate_subset(
+    surfaces: list[dict[str, Any]], pairs: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """Select candidates separated from every other admitted candidate.
+
+    This intentionally returns only zero-conflict vertices in the pair graph;
+    it does not choose a maximal independent set from overlapping clusters.
+    """
+    by_id: dict[int, dict[str, Any]] = {}
+    for surface in surfaces:
+        stable_id = surface.get("stable_id")
+        member_id = surface.get("member_id")
+        _require(
+            type(stable_id) is int
+            and stable_id > 0
+            and stable_id not in by_id
+            and isinstance(member_id, str)
+            and member_id,
+            "isolated-subset surface identity is malformed or duplicated",
+        )
+        _require(
+            surface.get("closed_embedded_candidate") is True,
+            f"isolated-subset surface is not a closed embedded candidate: {member_id}",
+        )
+        by_id[stable_id] = surface
+
+    expected_pairs = {
+        (first, second)
+        for offset, first in enumerate(sorted(by_id))
+        for second in sorted(by_id)[offset + 1 :]
+    }
+    observed_pairs: set[tuple[int, int]] = set()
+    conflicted: set[int] = set()
+    isolated_statuses = {"strictly_disjoint_aabbs", "separate_closed_domains"}
+    for pair in pairs:
+        first = pair.get("first_stable_id")
+        second = pair.get("second_stable_id")
+        _require(
+            type(first) is int
+            and type(second) is int
+            and first in by_id
+            and second in by_id
+            and first != second,
+            "isolated-subset pair references an unknown or repeated surface",
+        )
+        identity = tuple(sorted((first, second)))
+        _require(
+            identity in expected_pairs and identity not in observed_pairs,
+            "isolated-subset pair matrix contains an unexpected or duplicate pair",
+        )
+        observed_pairs.add(identity)
+        if pair.get("status") not in isolated_statuses:
+            conflicted.update(identity)
+    _require(
+        observed_pairs == expected_pairs,
+        "isolated-subset requires a complete pairwise relation matrix",
+    )
+
+    selected = [
+        by_id[stable_id] for stable_id in sorted(by_id) if stable_id not in conflicted
+    ]
+    return [
+        {
+            "stable_id": row["stable_id"],
+            "member_id": row["member_id"],
+            "compiled_geometry_sha256": row["compiled_geometry_sha256"],
+            "triangle_count": row["triangle_count"],
+            "source_face_component_count": row["source_face_component_count"],
+            "component_domain_status": row["component_domain_status"],
+        }
+        for row in selected
+    ]
+
+
 def audit(
     payload: Path, manifest_path: Path, embeddedness_path: Path, output: Path
 ) -> dict[str, Any]:
@@ -798,6 +872,15 @@ def audit(
         row["status"] in {"strictly_disjoint_aabbs", "separate_closed_domains"}
         for row in pair_rows
     )
+    isolated_members = _isolated_candidate_subset(
+        [mesh["surface"] for mesh in admitted_meshes], pair_rows
+    )
+    isolated_ids = {row["stable_id"] for row in isolated_members}
+    isolated_pair_count = sum(
+        row["first_stable_id"] in isolated_ids
+        or row["second_stable_id"] in isolated_ids
+        for row in pair_rows
+    )
     result: dict[str, Any] = {
         "schema": SCHEMA,
         "status": (
@@ -854,9 +937,31 @@ def audit(
             "expected_candidate_pair_count": expected_pair_count,
             "pair_status_counts": dict(sorted(pair_counts.items())),
             "pairwise_domains_disjoint": pairwise_domains_disjoint,
+            "isolated_muscle_surface_candidate_count": len(isolated_members),
+            "isolated_subset_pair_check_count": isolated_pair_count,
         },
         "surfaces": surface_rows,
         "pairs": pair_rows,
+        "isolated_candidate_subset": {
+            "status": (
+                "isolated_from_every_admitted_muscle_candidate"
+                if isolated_members
+                else "no_isolated_muscle_candidates"
+            ),
+            "admitted_candidate_universe_count": candidate_count,
+            "member_count": len(isolated_members),
+            "pair_check_count": isolated_pair_count,
+            "members": isolated_members,
+            "boundary": (
+                "Only closed, embedded compiled muscle shell candidates are in "
+                "this pairwise universe. Every listed member is strictly "
+                "separated from every other admitted candidate. Open or "
+                "topology-defective muscle surfaces, tendons, bones, organs, "
+                "fat and skin were not included. This is not a whole-muscle or "
+                "whole-body disjoint partition and does not assign physical "
+                "volume, mass, material, force or mechanics ownership."
+            ),
+        },
         "qualification": {
             "pairwise_admitted_muscle_shell_domains_disjoint": pairwise_domains_disjoint,
             "all_closed_embedded_muscle_surfaces_admitted": candidate_count
@@ -911,6 +1016,9 @@ def run(arguments: argparse.Namespace) -> int:
                     "closed_embedded_muscle_surface_candidate_count"
                 ],
                 "candidate_pairs": result["coverage"]["candidate_pair_count"],
+                "isolated_muscle_surface_candidates": result["coverage"][
+                    "isolated_muscle_surface_candidate_count"
+                ],
                 "pair_status_counts": result["coverage"]["pair_status_counts"],
                 "physical_volume_owner": result["qualification"][
                     "physical_volume_owner"
