@@ -43,27 +43,37 @@ prior body transforms within `1.15e-16 m`. This confirms source geometry
 orientation in the sampled states; it does not certify clinical landmarks or
 loaded patellofemoral tracking.
 
-The native visual check did not produce an image. The installed local renderer
-was built from MetalRobo revision `298e5f8565d1cea297c705572493c8d29934d76e`
-(binary SHA-256
-`9d5aa65222a702d77f1d244525229fb21274fcb9444a20425400be42cf08a3c4`). The
-first preregistered command used unsupported focus flags; the second exposed
-that this renderer accepts NHBONES1 ABI 2 while the source candidate is ABI 3.
-For the third plan, an independently byte-checked diagnostic projection
-removed only ABI 3's trailing `source_record_index` from each record. The
-renderer then accepted the payload but failed in its native Metal pose pass
-before saving a frame. Only the first right-side bone arm was attempted under
-each plan; the preregistered stop rule prevented further arms after each
-failure. The failure logs, three plans, and result summaries are retained in
-the [native-render evidence directory](media/skin-patella-rebase-source-preflight-20261003/).
-The ABI 2 payload is a compatibility diagnostic, not a replacement for the
-ABI 3 source payload.
+The initial native attempts exposed two compatibility gaps: the installed
+probe binary did not accept the focus flags present in its checked-out source,
+and that runtime accepts NHBONES1 ABI 2 while the current source candidate is
+ABI 3. A third attempt with an independently byte-checked ABI 2 diagnostic
+projection failed in the Metal pose pass without useful status detail. The
+projection strips only ABI 3's trailing `source_record_index`; all body, pose,
+geometry, normal and triangle data stay byte-identical. It is a compatibility
+diagnostic, not a replacement for the ABI 3 source payload.
+
+I rebuilt the probe object from the current Objective-C++ source using the
+project's strict warning flags and linked it against the existing MetalRobo
+libraries. The complete CMake target remains blocked by an unrelated
+`NeuronCulture.metal` unused-parameter warning treated as an error. With the
+updated probe, both one-pass side views completed on Apple M4 at literal source
+`qpos0`: the right and left frames each contain the requested patella, femur
+and tibia, with 15,057 and 16,131 bone pixels respectively. In both views the
+patella is on the anterior side, matching the independent source-plane check.
+These are bone-only frames: native logs report zero cartilage, meniscus,
+ligament and tendon pixels, so the images do not judge patellar cartilage
+contact or soft-tissue fill. The [right frame](../Build/skin-patella-rebase-source-preflight-20261003/native-render-v4-right-bone_anatomy/myosim-fullbody-articulated-bodyparts-bones-focus-body-142-side.png)
+and [left frame](../Build/skin-patella-rebase-source-preflight-20261003/native-render-v5-left-bone_anatomy/myosim-fullbody-articulated-bodyparts-bones-focus-body-156-side.png)
+are retained locally under ignored `Build/` outputs.
 
 The installed renderer supports NHSKIN1 through ABI 4 and cannot consume the
-current ABI 5 full-weight candidate. Its ABI 4 top-four diagnostic shell was
-not rendered. A compatible current native runtime and a successful Metal pose
-pass are required before visual shell review or held-out flexion screening can
-close that gap. No board visuals or video were generated.
+current ABI 5 full-weight candidate. The ABI 4 top-four diagnostic projection
+did render successfully as a side silhouette with 18,454 skin-shell pixels.
+That confirms only static visual payload consumption; it is not the ABI 5
+candidate and does not test deformation or high-flex embeddedness. The
+renderer plans, results, output hashes and source-only receipt are retained in
+the [native-render evidence directory](media/skin-patella-rebase-source-preflight-20261003/).
+No board deck or video was generated.
 
 Re-run the source-only gate against the retained local artifact and payload:
 

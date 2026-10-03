@@ -109,11 +109,12 @@ landmarking or loaded tracking.
 
 The [paired skin source preflight](SKIN_PATELLA_REBASE_SOURCE_PREFLIGHT_20261003.md)
 passes independent provenance, full-weight, seam and rest-reconstruction
-checks. Native visual review remains blocked: the installed renderer accepts
-older bone/skin ABIs, and its Metal pose pass failed before saving a frame
-after a hash-bound ABI 2 bone diagnostic projection. The ABI 5 shell has not
-been rendered, high-flex embeddedness has not been measured for this new
-candidate, and skin collision/mechanics remain open.
+checks. Native Apple M4 side views of both bone-only knees place the patella
+anterior to the distal femur; the ABI 4 top-four outer-shell diagnostic also
+renders as a side silhouette. These are static visual results, not ABI 5
+runtime or tissue-mechanics qualification. High-flex embeddedness for this
+candidate, cartilage/contact, skin collision/mechanics and clinical anatomy
+remain open.
 
 This refresh closes the stale-reference-manifest builder blocker. Clinical
 anatomy, patellofemoral cartilage/contact, loaded force transfer, subject

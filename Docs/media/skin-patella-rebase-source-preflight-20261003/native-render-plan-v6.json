@@ -1,0 +1,74 @@
+{
+  "amendment": {
+    "bone_payload_sha256": "3af27b74e6b45570e0a56bddc2969e0ef095fc0fe3ebaf48aba8c98dee82d69e",
+    "previous_right_bone_plan_sha256": "e88bee4509e6399f865fe8dcef20af493f3d90849e0fa4f9cbc4caa7230de4d5",
+    "prior_result": "Both right and left source patella meshes rendered anterior to the distal femur in their side-view bone-only captures on Apple M4. The shell candidate itself has not yet been rendered.",
+    "purpose": "Render the top-four ABI4 diagnostic projection of the new source FJ2810 outer shell at literal source qpos0, as a visual-only outer-contour check. The authoritative full-weight ABI5 candidate remains separate and unchanged.",
+    "renderer_binary_sha256": "91a50b6a528a8dec2d1e821a939b1f3fbe202cbd171bf83d8f3d0d40c66606cb",
+    "renderer_source_revision": "298e5f8565d1cea297c705572493c8d29934d76e",
+    "renderer_source_sha256": "116dce65c88bbc3a0e966648e5feef67302d8aec8032ab51831d6b56a570357f",
+    "shell_payload_sha256": "9c0234251abdc53ed317c085d8ba641f9389b245bcf98d7bfa95600eaccb6b0e",
+    "supersedes_plan_sha256": "57ef1f195794c95ccf94585a5c808f77d5819d8c6b4eaa1adef2dcfd5a3e6afa"
+  },
+  "analysis": "Inspect a one-frame side silhouette of the source-rest ABI4 top-four diagnostic outer shell. Because focus filtering is omitted, this uses full-shell bounds and gives context rather than a knee close-up. It is not the ABI5 full-weight candidate, a high-flex test, a skin mechanics result or clinical validation.",
+  "commands": [
+    {
+      "argv": [
+        "/Users/home/Documents/emergentnumilife/MetalRobo/build/bin/metalrobo_numilab_human_myosim_visual_probe",
+        "/Users/home/numilab-human/Build/myosim-fullbody-patella-rebase-core-audit-20261003/myosim-fullbody-core-reference.nhrigid",
+        "/Users/home/numilab-human/Build/myosim-fullbody-patella-rebase-core-audit-20261003/myosim-fullbody-muscle-reference.nhmyo",
+        "/Users/home/numilab-human/Build/skin-patella-rebase-source-preflight-20261003/native-diagnostic/bodyparts3d-myosim-major-bones-abi2-diagnostic.nhbones",
+        "/Users/home/numilab-human/Build/skin-patella-rebase-source-preflight-20261003/native-render-v6-bilateral-skin-shell",
+        "--skin-payload",
+        "/Users/home/numilab-human/Build/skin-patella-rebase-source-preflight-20261003/native-diagnostic/bodyparts3d-myosim-skinned-shell-top-four-diagnostic-abi4.nhskin",
+        "--camera-index",
+        "2",
+        "--dimension",
+        "512"
+      ],
+      "mode": "skin_shell",
+      "output_directory": "Build/skin-patella-rebase-source-preflight-20261003/native-render-v6-bilateral-skin-shell",
+      "side": "bilateral"
+    }
+  ],
+  "device": "Record the actual Metal device and host/GPU failure fields reported by the updated local probe.",
+  "experimental_units_and_conditions": {
+    "anatomical_sides": [
+      "bilateral"
+    ],
+    "arms": "one full-body side view of the ABI4 top-four diagnostic outer-shell projection only; no bones are drawn with a skin payload; no ABI5 or full-weight runtime claim",
+    "camera": "side view, camera index 2, 512 px; whole shell bounds determine framing",
+    "pose": "literal source qpos0, no trajectory or force input",
+    "retries": "none; preserve any failure as inconclusive",
+    "runs_per_side_per_arm": 1,
+    "sides_are_independent_replicates": false,
+    "source_model_units": 1
+  },
+  "model_and_mechanism": {
+    "abi4_diagnostic_skin_payload_sha256": "9c0234251abdc53ed317c085d8ba641f9389b245bcf98d7bfa95600eaccb6b0e",
+    "abi5_full_weight_skin_payload_sha256": "7d296e45ba497f56ac4380a64605b30a794432b945ac28bf7bebf91657cfc4a1",
+    "bodyparts_bone_manifest_sha256": "56e6a416ecf90ca9cd912a380d7317113d265c61f043bffccebef6f1851bd259",
+    "bodyparts_bone_payload_sha256": "7d94e2f28ac6cea30c6c11a79919077acc40281636eb20b11b50b50aebd3ec49",
+    "bodyparts_source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+    "current_muscle_sha256": "a4381465ca97a7af20108180e2fc0d0f0d9c11778d913de4c0728bd20ed459a7",
+    "current_rigid_sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4",
+    "myosim_source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "patella_rebase_receipt_sha256": "06dfe9644138ad63de9a58337cd4df29ff18ebad0f343e96be8a28e9fc580399",
+    "registration_sha256": "b1b410ad6d4ac8c0c95fd0c3e10f655b24c890d5767a5c377cf78e28ef598f8e",
+    "renderer_abi_limit": "This local renderer accepts ABI 4 and does not accept the ABI 5 full-weight payload. The ABI 4 input is an explicit top-four diagnostic projection, not the ABI 5 candidate.",
+    "renderer_binary_sha256": "9d5aa65222a702d77f1d244525229fb21274fcb9444a20425400be42cf08a3c4",
+    "renderer_source_revision": "298e5f8565d1cea297c705572493c8d29934d76e",
+    "renderer_source_sha256": "d579f37c3fecb20ccda9b30d8bc075780271d5fe0f4b691d26b090c43b6ca479"
+  },
+  "prediction_and_refutation": {
+    "expected_source_metric_m": "not applicable to a single outer-shell silhouette frame",
+    "native_visibility": "Successful native output contains a nonzero skin-shell pixel count and a full-body shell frame.",
+    "refutation": "Native pose/render failure, zero skin-shell pixels or a missing frame. This one static shell does not test deformation or high-flex embeddedness.",
+    "source_metric": "The single ABI4 diagnostic shell output reports nonzero skin-shell pixels and is paired with the registration and source artifact hashes.",
+    "source_metric_input_receipt": "Docs/media/skin-patella-rebase-source-preflight-20261003/receipt.json"
+  },
+  "question": "Does the current equality-neutral source pose place each BodyParts3D patella anterior to the source knee-anchor plane, and does the native ABI4 diagnostic shell still present a coherent outer knee contour around it?",
+  "schema": "numi.human.patella-rebase-native-diagnostic-render-plan.v6",
+  "status": "preregistered_single_literal_qpos0_outer_shell_view",
+  "stopping_rule": "Run exactly this one full-shell capture once. Stop on success or failure; no retries, no camera adjustment, no additional views."
+}
