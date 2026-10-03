@@ -2188,6 +2188,12 @@ def parser() -> argparse.ArgumentParser:
         help="extract exact voxel-boundary mesh candidates from registered CT labels without admitting mechanics",
     )
     add_healthy_total_body_ct_surface_arguments(healthy_total_body_ct_surface)
+    from .healthy_total_body_ct_surface_audit import add_arguments as add_healthy_total_body_ct_surface_audit_arguments
+    healthy_total_body_ct_surface_audit = commands.add_parser(
+        "healthy-total-body-ct-surface-audit",
+        help="independently verify registered CT source-surface payloads, topology, and voxel occupancy",
+    )
+    add_healthy_total_body_ct_surface_audit_arguments(healthy_total_body_ct_surface_audit)
     from .whole_body_organ_overlap import add_arguments as add_whole_body_organ_overlap_arguments
     organ_overlap = commands.add_parser(
         "whole-body-organ-overlap",

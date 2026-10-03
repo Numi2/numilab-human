@@ -58,6 +58,34 @@ The consolidated all-label audit is
 [`scan-001-all-source-labels-audit.json`](media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json)
 with SHA-256 `2cccac715e63c614cfe3b2257f93c6c4c7eb9c3929c6b7a8b244dca69e1f05d1`.
 
+The 12 whole-organ and major-vessel surfaces were then regenerated from scan
+001 and extracted from scan 002 using the same compiler revision, intake,
+archive, labels, and Python/NumPy/SciPy environment. A new
+[independent source-surface audit](media/healthy-total-body-ct-surface-20261003/independent-organ-scans-001-002-audit-v1.json)
+re-hashed the registered archive and each decompressed NIfTI member, reparsed
+all 24 PLY files, recomputed edge incidence and vertex links, checked every
+vertex against its scan-local voxel envelope, and recalculated signed
+occupancy volumes. All 24 files passed those integrity and geometry checks;
+the largest relative volume discrepancy was 1.0251171986964199e-15. The
+independent audit receipt SHA-256 is
+98c9f2145a7d5cbdb0939f3aad75e8d705beee8aa5c93e58dfe9b55c093c42c5.
+
+The topology varies by scan: 8/12 scan-001 surfaces and 4/12 scan-002 surfaces
+are closed two-manifolds. Scan 001 has nonmanifold Adrenal-glands, Kidneys,
+Liver and Lung meshes; scan 002 has Adrenal-glands, Bladder, Brain, Heart,
+Kidneys, Liver, VCI and Lung. Only Aorta, Pancreas, Spleen and Thyroid are
+closed in both scans. The independent audit reproduces the defects from the
+serialized mesh bytes. They remain source topology findings, not renderer
+artifacts or anatomy corrections.
+
+The reusable verifier is available as the numi human
+healthy-total-body-ct-surface-audit command. The immutable scan plans, compiler
+receipts, meshes, checksums and independent audit are in
+[media/healthy-total-body-ct-surface-20261003](media/healthy-total-body-ct-surface-20261003/).
+Neither scan is registered to Numi's mechanical subject, and the automatic
+segmentations remain unreviewed; no tissue, mechanical, physiological or
+clinical qualification follows.
+
 The artifacts are under
 [`media/healthy-total-body-ct-surface-20261003/`](media/healthy-total-body-ct-surface-20261003/).
 Install the CPU mesh-audit dependencies with `pip install -e '.[volume-surface]'`.
