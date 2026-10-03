@@ -205,7 +205,8 @@
       "scope": "Source-ordered, coupled native electrical propagation with a physiological ionic model.",
       "evidence": [
         {"id": "electrical_reference", "path": "Docs/media/cardiac-electrical-reference-20260930/summary.json", "schema": "numi.human.cardiac-passive-electrical-reference.v1"},
-        {"id": "fec_layer_audit", "path": "Docs/media/cardiac-fec-layer-topology-20260930/receipt.json", "schema": "numi.human.cardiac-fec-layer-topology.v1"}
+        {"id": "fec_layer_audit", "path": "Docs/media/cardiac-fec-layer-topology-20260930/receipt.json", "schema": "numi.human.cardiac-fec-layer-topology.v1"},
+        {"id": "hcm1_source_activation", "path": "Build/cardiac-rodero26-hcm1-activation/source-activation-import.json", "schema": "HumanPack.rodero26-hcm-source-activation-import.v1"}
       ],
       "facts": [
         {"id": "electrical_dofs", "evidence": "electrical_reference", "path": "electrical_dof_count"},
@@ -214,7 +215,19 @@
         {"id": "ionic_model", "evidence": "electrical_reference", "path": "ionic_model"},
         {"id": "heartbeat", "evidence": "electrical_reference", "path": "heartbeat_qualified"},
         {"id": "native_source_electrical_steps", "evidence": "fec_layer_audit", "path": "native_accepted_electrical_steps"},
-        {"id": "fec_source_model_reproduced", "evidence": "fec_layer_audit", "path": "source_model_reproduced"}
+        {"id": "fec_source_model_reproduced", "evidence": "fec_layer_audit", "path": "source_model_reproduced"},
+        {"id": "hcm1_patient_variant", "evidence": "hcm1_source_activation", "path": "qualification.patient_variant"},
+        {"id": "hcm1_sample_id", "evidence": "hcm1_source_activation", "path": "source_members.activation.sample_id"},
+        {"id": "hcm1_point_count", "evidence": "hcm1_source_activation", "path": "source_members.activation.value_count"},
+        {"id": "hcm1_active_point_count", "evidence": "hcm1_source_activation", "path": "source_members.activation.active_point_count"},
+        {"id": "hcm1_inactive_sentinel", "evidence": "hcm1_source_activation", "path": "source_members.activation.inactive_sentinel"},
+        {"id": "hcm1_inactive_sentinel_count", "evidence": "hcm1_source_activation", "path": "source_members.activation.inactive_sentinel_count"},
+        {"id": "hcm1_maximum_active_time_ms", "evidence": "hcm1_source_activation", "path": "source_members.activation.maximum_active_ms"},
+        {"id": "hcm1_point_order", "evidence": "hcm1_source_activation", "path": "point_order.mapping"},
+        {"id": "hcm1_field_sha256", "evidence": "hcm1_source_activation", "path": "source_members.activation.field_sha256"},
+        {"id": "hcm1_native_electrical_steps", "evidence": "hcm1_source_activation", "path": "qualification.native_numi_electrical_steps"},
+        {"id": "hcm1_electromechanical_coupling", "evidence": "hcm1_source_activation", "path": "qualification.electromechanical_coupling"},
+        {"id": "hcm1_heartbeat_qualified", "evidence": "hcm1_source_activation", "path": "qualification.heartbeat_qualified"}
       ],
       "requirements": [
         {"id": "native_electrical_runtime", "evidence": "electrical_reference", "path": "native_electrical_runtime", "operator": "equals", "value": true, "reason": "No native electrical time-stepping runtime is admitted."},

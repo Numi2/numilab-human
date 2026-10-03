@@ -107,6 +107,22 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert systems["bloodflow"]["facts"][0]["value"] == 511
     assert systems["cardiac_mechanics"]["facts"][2]["value"] == 0
     assert not systems["cardiac_electrical"]["requirements"][0]["satisfied"]
+    cardiac_facts = {
+        item["id"]: item for item in systems["cardiac_electrical"]["facts"]
+    }
+    assert next(item for item in systems["cardiac_electrical"]["evidence"]
+                if item["id"] == "hcm1_source_activation")["status"] == "verified"
+    assert cardiac_facts["hcm1_patient_variant"]["value"] == "HCM1 hypertrophic cardiomyopathy"
+    assert cardiac_facts["hcm1_sample_id"]["value"] == 53
+    assert cardiac_facts["hcm1_point_count"]["value"] == 749238
+    assert cardiac_facts["hcm1_active_point_count"]["value"] == 680978
+    assert cardiac_facts["hcm1_inactive_sentinel"]["value"] == -1.0
+    assert cardiac_facts["hcm1_inactive_sentinel_count"]["value"] == 68260
+    assert cardiac_facts["hcm1_point_order"]["value"] == (
+        "direct source vector index to same-index HCM1.vtk point")
+    assert cardiac_facts["hcm1_native_electrical_steps"]["value"] == 0
+    assert cardiac_facts["hcm1_electromechanical_coupling"]["value"] is False
+    assert cardiac_facts["hcm1_heartbeat_qualified"]["value"] is False
     assert not systems["skin"]["requirements"][0]["satisfied"]
 
     skin = systems["skin"]
