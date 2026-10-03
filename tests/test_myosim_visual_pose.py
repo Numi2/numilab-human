@@ -10,11 +10,17 @@ from numilab_human.myosim_visual import _patella_body_center_anteriority, _visua
 
 def test_projected_neutral_is_default_and_raw_rest_is_explicit():
     source = SimpleNamespace(
-        qpos0=np.array([0., 0.]), neq=1,
+        qpos0=np.array([0., 0.]), nq=2, njnt=2, neq=1,
         eq_active0=[True], eq_type=[1], eq_obj1id=[1], eq_obj2id=[0],
-        jnt_qposadr=[0, 1], eq_data=np.array([[.052, 0., 0., 0., 0.]]),
+        jnt_qposadr=[0, 1], jnt_type=[2, 2],
+        eq_data=np.array([[.052, 0., 0., 0., 0.]]),
     )
-    mujoco = SimpleNamespace(mjtEq=SimpleNamespace(mjEQ_JOINT=1))
+    mujoco = SimpleNamespace(
+        mjtEq=SimpleNamespace(mjEQ_JOINT=1),
+        mjtJoint=SimpleNamespace(mjJNT_SLIDE=2, mjJNT_HINGE=3),
+        mjtObj=SimpleNamespace(mjOBJ_JOINT=3),
+        mj_id2name=lambda _model, _kind, joint: ("driver", "dependent")[joint],
+    )
 
     neutral, neutral_info = _visual_qpos(source, mujoco, False)
     raw, raw_info = _visual_qpos(source, mujoco, True)
