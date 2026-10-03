@@ -709,6 +709,29 @@ def open_knee_payload(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def open_knee_source_mechanics(arguments: argparse.Namespace) -> int:
+    from .open_knee import compile_source_mechanical_artifacts
+
+    result = compile_source_mechanical_artifacts(
+        open_knee=arguments.open_knee.resolve(),
+        geometry_archive=arguments.geometry_archive.resolve(),
+        reference_log=arguments.reference_log.resolve(),
+        output=arguments.output.resolve(),
+    )
+    print(f"status: {result['status']}")
+    print(f"wrote {arguments.output.resolve() / 'source-mechanics.json'}")
+    print(f"wrote {arguments.output.resolve() / 'source-meshdata.bin'}")
+    print(f"wrote {arguments.output.resolve() / 'source-geometry.bin'}")
+    print(f"wrote {arguments.output.resolve() / 'source-volume-mesh.bin'}")
+    print(f"wrote {arguments.output.resolve() / 'source-rigid-graph.bin'}")
+    print(f"wrote {arguments.output.resolve() / 'source-rigid-ties.bin'}")
+    print(f"wrote {arguments.output.resolve() / 'source-discrete-springs.bin'}")
+    print(f"wrote {arguments.output.resolve() / 'source-sliding-contact.bin'}")
+    print(f"wrote {arguments.output.resolve() / 'source-reference-baseline.json'}")
+    print(f"wrote {arguments.output.resolve() / 'receipt.json'}")
+    return 0
+
+
 def myosim_thoracic_registration(arguments: argparse.Namespace) -> int:
     exporter = arguments.python.expanduser().absolute()
     if not exporter.is_file() or not os.access(exporter, os.X_OK):
@@ -1720,6 +1743,15 @@ def parser() -> argparse.ArgumentParser:
         help="Python environment with pinned MyoSim, NumPy, and MuJoCo",
     )
     open_knee_parser.set_defaults(handler=open_knee_payload)
+    open_knee_source_parser = commands.add_parser(
+        "open-knee-source-mechanics",
+        help="compile the pinned source program and exact elementwise fiber fields without MyoSim",
+    )
+    open_knee_source_parser.add_argument("--open-knee", type=Path, required=True)
+    open_knee_source_parser.add_argument("--geometry-archive", type=Path, required=True)
+    open_knee_source_parser.add_argument("--reference-log", type=Path, required=True)
+    open_knee_source_parser.add_argument("--output", type=Path, required=True)
+    open_knee_source_parser.set_defaults(handler=open_knee_source_mechanics)
     from .open_knee_reference import cli as open_knee_reference_cli
     reference_parser = commands.add_parser(
         "open-knee-reference-case",
@@ -1741,10 +1773,23 @@ def parser() -> argparse.ArgumentParser:
     reference_parser.set_defaults(handler=open_knee_reference_cli)
     from .open_knee_xplt import cli as open_knee_reference_contact_cli
     reference_contact_parser = commands.add_parser("open-knee-reference-contact",
-        help="read original XPLT v5 contact fields and explicitly report partial downloads")
+        help="read source XPLT v5 mechanics fields and export selected FEBio checkpoints")
     reference_contact_parser.add_argument("--plot", type=Path, required=True)
     reference_contact_parser.add_argument("--output", type=Path, required=True)
+    reference_contact_parser.add_argument("--checkpoint-state", type=int, action="append",
+        help="zero-based retained XPLT state to export as a field-preserving NPZ archive")
+    reference_contact_parser.add_argument("--checkpoint-output-dir", type=Path,
+        help="new directory for selected checkpoint arrays; existing state files are never overwritten")
     reference_contact_parser.set_defaults(handler=open_knee_reference_contact_cli)
+    from .open_knee_xplt import compare_cli as open_knee_checkpoint_compare_cli
+    compare_parser = commands.add_parser("open-knee-compare-source-checkpoints",
+        help="compare field-preserving Matter arrays against one hash-pinned FEBio XPLT state")
+    compare_parser.add_argument("--reference", type=Path, required=True,
+        help="NPZ archive exported by open-knee-reference-contact")
+    compare_parser.add_argument("--matter", type=Path, required=True,
+        help="Matter NPZ checkpoint with matching source identities and field layout")
+    compare_parser.add_argument("--output", type=Path, required=True)
+    compare_parser.set_defaults(handler=open_knee_checkpoint_compare_cli)
     thoracic_registration_parser = commands.add_parser(
         "myosim-thoracic-registration",
         help="propose exact T1-T12 source-mesh registration with enthesis and continuity gates",

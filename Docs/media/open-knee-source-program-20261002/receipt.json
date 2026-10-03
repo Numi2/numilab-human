@@ -1,0 +1,444 @@
+{
+  "artifacts": {
+    "source-discrete-springs.bin": {
+      "bytes": 26812,
+      "curve_count": 9,
+      "curve_stride_bytes": 56,
+      "edge_count": 406,
+      "edge_stride_bytes": 64,
+      "file": "source-discrete-springs.bin",
+      "header_bytes": 120,
+      "native_execution_status": "compiled_for_Matter_binding_not_executed",
+      "schema": "numi.human.open-knee-discrete-and-curves-program.v1",
+      "set_count": 3,
+      "set_names_in_source_order": [
+        "MPFL",
+        "LPFL",
+        "MCL_MNS-M_tie"
+      ],
+      "set_stride_bytes": 68,
+      "sha256": "332521897ae3116f7467f9bf8f81a0ab3942e11cf4ee734078b576cc51908be3",
+      "source_coordinates": "preserved as float64 without scaling"
+    },
+    "source-geometry.bin": {
+      "bytes": 37388532,
+      "sha256": "97c5e7b1c09eb47193bca0b7d2a515088b40938da45fe7aa8c8fc7bb7dd54368"
+    },
+    "source-mechanics.json": {
+      "bytes": 1843863,
+      "sha256": "1162d9dac7b1dd65a78d71efc37ed554451522c1f15d93c8c319f01111f04eb7"
+    },
+    "source-meshdata.bin": {
+      "bytes": 2686936,
+      "sha256": "f3802520c712f3c939934d53e0e4de9ce6e6c275287ede3279bbdc3b3abf63c8"
+    },
+    "source-reference-baseline.json": {
+      "bytes": 105037,
+      "native_execution_status": "archived_reference_outputs_summarized_not_rerun",
+      "retained_contact_archive_sha256": "4ff55ec22a541d0207dcfe4d3e60cfd2ab426fd1c012d69b910c7439fb2da382",
+      "retained_observation_archive_sha256": "9a99bbdcc94b4ba1aca22c9cc3d72919db9b1e08fec703732f8fcf635705d149",
+      "schema": "numi.human.open-knee-source-reference-baseline.v1",
+      "sha256": "e8aa8771e80fc2a479ae80d38ee742272c50ac4fd54fffbb959cf2ebddbbb5e6",
+      "source_xplt_sha256": "c370ae9f94e9faee2d7060bf2a6819e03be1312e82ca79bd2e9cebf8b34398de"
+    },
+    "source-rigid-graph.bin": {
+      "bytes": 1872,
+      "coordinate_unit": "source_deck_coordinate_unit_unresolved",
+      "endianness": "little",
+      "native_execution_status": "compiled_source_program_not_executed",
+      "record_counts": {
+        "bodies": 9,
+        "cylindrical_joints": 6,
+        "prescribed_body_boundaries": 2,
+        "referenced_load_curves": 1,
+        "rigid_springs": 1
+      },
+      "record_layout": {
+        "body_bytes": 60,
+        "cylindrical_joint_bytes": 136,
+        "header_bytes": 96,
+        "load_curve_header_bytes": 12,
+        "load_curve_point_bytes": 16,
+        "load_curve_sha256_bytes": 32,
+        "prescribed_body_boundary_bytes": 112,
+        "rigid_spring_bytes": 104
+      },
+      "schema": "numi.human.open-knee-rigid-graph-program-f64.v3",
+      "sha256": "cc0abaaa9165976f2df5c134b963247205a732092b96c51f9369d48526dde794"
+    },
+    "source-rigid-ties.bin": {
+      "bytes": 470920,
+      "file": "source-rigid-ties.bin",
+      "header_bytes": 88,
+      "native_execution_status": "compiled_for_Matter_binding_not_executed",
+      "record_count": 29427,
+      "record_layout": "little-endian source node ID, source tissue material ID, rigid body material ID, source tie-set index",
+      "record_stride_bytes": 16,
+      "schema": "numi.human.open-knee-rigid-ties-program.v1",
+      "sha256": "cb06f3e1d566ac5d551c17daea6bb222e74c0c84ac33111e02f9e5f0f5d83221",
+      "tie_set_count": 18
+    },
+    "source-sliding-contact.bin": {
+      "bytes": 6092668,
+      "face_count": 345070,
+      "face_record_bytes": 16,
+      "file": "source-sliding-contact.bin",
+      "header_bytes": 156,
+      "native_execution_status": "compiled_for_whole_Matter_contact_not_executed",
+      "pair_count": 18,
+      "pair_record_bytes": 168,
+      "parameter_order": [
+        "laugon",
+        "tolerance",
+        "gaptol",
+        "penalty",
+        "two_pass",
+        "auto_penalty",
+        "fric_coeff",
+        "search_tol",
+        "search_radius",
+        "minaug",
+        "maxaug",
+        "seg_up"
+      ],
+      "rigid_node_count": 17676,
+      "rigid_node_record_bytes": 32,
+      "schema": "numi.human.open-knee-sliding-contact-program.v1",
+      "sha256": "f0d72ed6fdb7fced00a4656e53876791ffd7c995e803bceec7238d6fc4695181",
+      "surface_count": 36,
+      "surface_record_bytes": 76
+    },
+    "source-volume-mesh.bin": {
+      "bytes": 22338392,
+      "sha256": "39b86f2f55853c74968f36a8d6c67eaed94639a3d42b558bb17787e2af8ffdba"
+    }
+  },
+  "compiled_counts": {
+    "contact_surface_faces": 345070,
+    "contacts": 18,
+    "cylindrical_joints": 6,
+    "discrete_spring_edges": 406,
+    "load_curves": 9,
+    "materials": 21,
+    "prestrain_target_states": 18,
+    "rigid_bodies": 9,
+    "rigid_springs": 1,
+    "rigid_tie_nodes": 29427,
+    "rigid_ties": 18,
+    "source_mesh_element_data_groups": 2,
+    "source_mesh_element_fiber_vectors": 95962
+  },
+  "compiler_sources": {
+    "cli.py": "42a20c092fcd4e8677d7802624f9296414fc4d0f4bc0147e94b76f2d1c925f05",
+    "open_knee.py": "3e84bc3490f4e4c7473c505b539baed5225c8afede4fc765fb3f5850062e2ea9"
+  },
+  "geometry_binary": {
+    "bytes": 37388532,
+    "file": "source-geometry.bin",
+    "record_order": "source XML Geometry child order; per-group records retain source order",
+    "schema": "numi.human.open-knee-source-geometry-binary.v1",
+    "sha256": "97c5e7b1c09eb47193bca0b7d2a515088b40938da45fe7aa8c8fc7bb7dd54368"
+  },
+  "mesh_element_data": {
+    "bytes": 2686936,
+    "file": "source-meshdata.bin",
+    "groups": [
+      {
+        "binary_sha256": "9c2596de039ddb60798d29695f4b3271984262867d3de49a6bbd46ce64f71fa4",
+        "element_set": "MNS-M",
+        "geometry_element_count": 51009,
+        "native_execution_status": "compiled_source_input_not_executed",
+        "record_count": 51009,
+        "source_xml_sha256": "6e42c5cfb53c82b56f8eafe4e48ba59548a0334fff26ddc7256f2b97c64f9a18"
+      },
+      {
+        "binary_sha256": "1be0688d223817861a22b839f1845d406e99af95feb15ae3bd400951d2643b5c",
+        "element_set": "MNS-L",
+        "geometry_element_count": 44953,
+        "native_execution_status": "compiled_source_input_not_executed",
+        "record_count": 44953,
+        "source_xml_sha256": "2310e2a707ab0ee0309bda43ffebfcd92d1eb2b0618e956cbe10dae32689c9a6"
+      }
+    ],
+    "record_count": 95962,
+    "record_stride_bytes": 28,
+    "schema": "numi.human.open-knee-mesh-element-data-f64.v1",
+    "sha256": "f3802520c712f3c939934d53e0e4de9ce6e6c275287ede3279bbdc3b3abf63c8"
+  },
+  "not_qualified": [
+    "exact re-execution from the unidentified archived FEBio binary",
+    "native source joint, material, prestrain, contact, and load execution",
+    "source tissue equilibrium, extensor loading, or whole-body integration"
+  ],
+  "reference_inputs": {
+    "FeBio_custom.feb": {
+      "bytes": 8666471,
+      "sha256": "00b6efb53ad7e7330296cbb9569d358d48ed60819e22732e6149db6fb98a158a"
+    },
+    "FeBio_custom.log": {
+      "bytes": 1472687,
+      "last_accepted_time": 2.0,
+      "original_binary_identity": "not_supplied_in_archive",
+      "reported_solver_version": "2.9.1",
+      "sha256": "d47631c09ce7fc93154c7d6c84caa299aab03709abe9ab7d2a41a60a1b78e426",
+      "status": "normal_termination_with_complete_observations"
+    },
+    "Geometry_custom.feb": {
+      "bytes": 119032115,
+      "sha256": "4155db1d0d7b87ffb2c668102d2495870e4461a539b18e6708f1f4817b5601bf"
+    }
+  },
+  "resolved_geometry": {
+    "discrete_set_count": 3,
+    "discrete_spring_edges": 406,
+    "element_set_count": 16,
+    "mesh_data_element_sets": {
+      "MNS-L": {
+        "binary_bytes": 899060,
+        "binary_offset_bytes": 18865492,
+        "binary_record_layout": "little-endian u32 element_id and u32[4] node_ids",
+        "binary_record_stride_bytes": 20,
+        "connectivity_sha256": "100ef070db7176d1fc1720a954f4a1d6b4e0b83b37c032311c13d1442c7108a1",
+        "element_count": 44953,
+        "element_ids_contiguous_in_source_order": true,
+        "element_type": "tet4",
+        "first_element_id_in_source_order": 600718,
+        "last_element_id_in_source_order": 645670,
+        "material_assignment_status": "resolved_to_pinned_source_deck_material",
+        "material_id": 12,
+        "material_id_source_text": "12",
+        "material_name": "MNS-L",
+        "material_source_xml_sha256": "1a74a5c8b48f1664ae6ddd0bfd4df320184369c0080b7248e61529fd63b7a6b6",
+        "material_type": "trans iso Mooney-Rivlin",
+        "source_attributes": {
+          "mat": "12",
+          "name": "MNS-L",
+          "type": "tet4"
+        }
+      },
+      "MNS-M": {
+        "binary_bytes": 1020180,
+        "binary_offset_bytes": 19764552,
+        "binary_record_layout": "little-endian u32 element_id and u32[4] node_ids",
+        "binary_record_stride_bytes": 20,
+        "connectivity_sha256": "f15531b73cb43c8ca8b67f5348eeee84f07a15fe5ff9c83276e07ab4521b928b",
+        "element_count": 51009,
+        "element_ids_contiguous_in_source_order": true,
+        "element_type": "tet4",
+        "first_element_id_in_source_order": 645671,
+        "last_element_id_in_source_order": 696679,
+        "material_assignment_status": "resolved_to_pinned_source_deck_material",
+        "material_id": 13,
+        "material_id_source_text": "13",
+        "material_name": "MNS-M",
+        "material_source_xml_sha256": "bb4b9b15ea098c64b9a62e78084b834657934064888227642eb76d6189f6741e",
+        "material_type": "trans iso Mooney-Rivlin",
+        "source_attributes": {
+          "mat": "13",
+          "name": "MNS-M",
+          "type": "tet4"
+        }
+      }
+    },
+    "node_count": 248236,
+    "resolved_contacts": 18,
+    "resolved_rigid_ties": 18,
+    "surface_count": 88,
+    "surface_pair_count": 19,
+    "unreferenced_surface_pair_names": [
+      "MCL_To_MNS-M"
+    ]
+  },
+  "schema": "numi.human.open-knee-source-mechanics-receipt.v1",
+  "scope": "source program and exact elementwise fiber inputs compiled; no source mechanics are executed or admitted by this artifact",
+  "source_equivalence_admission": "rejected_unsupported_source_mechanics",
+  "source_volume_mesh_binary": {
+    "bytes": 22338392,
+    "file": "source-volume-mesh.bin",
+    "groups": {
+      "ACL": {
+        "binary_bytes": 1893236,
+        "fiber_mapping": "source material fiber direction is compiled separately",
+        "header_offset_bytes": 10492616,
+        "material_id": 9,
+        "node_count": 15792,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 10492636,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 72552,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 10934812
+      },
+      "FMC": {
+        "binary_bytes": 2437820,
+        "fiber_mapping": "source material fiber direction is compiled separately",
+        "header_offset_bytes": 19900572,
+        "material_id": 16,
+        "node_count": 24870,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 19900592,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 87072,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 20596952
+      },
+      "LCL": {
+        "binary_bytes": 278360,
+        "fiber_mapping": "source material fiber direction is compiled separately",
+        "header_offset_bytes": 17603972,
+        "material_id": 14,
+        "node_count": 2960,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 17603992,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 9773,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 17686872
+      },
+      "MCL": {
+        "binary_bytes": 1693664,
+        "fiber_mapping": "source material fiber direction is compiled separately",
+        "header_offset_bytes": 12385852,
+        "material_id": 10,
+        "node_count": 15693,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 12385872,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 62712,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 12825276
+      },
+      "MNS-L": {
+        "binary_bytes": 1204308,
+        "fiber_mapping": "source ElementData local lid maps to one-based tetrahedron order within the element set",
+        "header_offset_bytes": 15051696,
+        "material_id": 12,
+        "node_count": 10901,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 15051716,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 44953,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 15356944
+      },
+      "MNS-M": {
+        "binary_bytes": 1347968,
+        "fiber_mapping": "source ElementData local lid maps to one-based tetrahedron order within the element set",
+        "header_offset_bytes": 16256004,
+        "material_id": 13,
+        "node_count": 11706,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 16256024,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 51009,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 16583792
+      },
+      "PCL": {
+        "binary_bytes": 391592,
+        "fiber_mapping": "source material fiber direction is compiled separately",
+        "header_offset_bytes": 6947516,
+        "material_id": 7,
+        "node_count": 3714,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 6947536,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 14379,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 7051528
+      },
+      "PTC": {
+        "binary_bytes": 3153508,
+        "fiber_mapping": "source material fiber direction is compiled separately",
+        "header_offset_bytes": 7339108,
+        "material_id": 8,
+        "node_count": 26121,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 7339128,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 121105,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 8070516
+      },
+      "PTL": {
+        "binary_bytes": 972180,
+        "fiber_mapping": "source material fiber direction is compiled separately",
+        "header_offset_bytes": 14079516,
+        "material_id": 11,
+        "node_count": 9280,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 14079536,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 35616,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 14339376
+      },
+      "QAT": {
+        "binary_bytes": 1807184,
+        "fiber_mapping": "source material fiber direction is compiled separately",
+        "header_offset_bytes": 0,
+        "material_id": 5,
+        "node_count": 14963,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 20,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 69410,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 418984
+      },
+      "TBC-L": {
+        "binary_bytes": 5140332,
+        "fiber_mapping": "source material fiber direction is compiled separately",
+        "header_offset_bytes": 1807184,
+        "material_id": 6,
+        "node_count": 40669,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 1807204,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 200079,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 2945936
+      },
+      "TBC-M": {
+        "binary_bytes": 2018240,
+        "fiber_mapping": "source material fiber direction is compiled separately",
+        "header_offset_bytes": 17882332,
+        "material_id": 15,
+        "node_count": 18060,
+        "node_id_mapping": "source global node IDs preserved in both tables",
+        "node_record_stride_bytes": 28,
+        "node_records_offset_bytes": 17882352,
+        "source_coordinates": "preserved without scaling",
+        "tetrahedron_count": 75627,
+        "tetrahedron_record_stride_bytes": 20,
+        "tetrahedron_records_offset_bytes": 18388032
+      }
+    },
+    "header_layout": "little-endian 4-byte NOKT magic, u32 version, u32 source material ID, u32 node count, u32 tetrahedron count",
+    "schema": "numi.human.open-knee-source-volume-mesh.v1",
+    "sha256": "39b86f2f55853c74968f36a8d6c67eaed94639a3d42b558bb17787e2af8ffdba"
+  },
+  "status": "passed_source_inventory_compilation_not_native_admission",
+  "validation": {
+    "archived_reference_log": "normal_termination_with_complete_observations",
+    "archived_reference_log_last_time": 2.0,
+    "meniscus_element_set_counts": "match exact Geometry_custom sets",
+    "meniscus_vector_payload": "independently reproducible little-endian source values",
+    "native_mechanics_execution": "not performed",
+    "pinned_source_deck_and_geometry": "passed exact SHA-256 identity checks",
+    "resolved_contact_pairs": 18,
+    "resolved_rigid_ties": 18,
+    "rigid_graph_program": "compiled from source rigid bodies, cylindrical joints, and prescribed body coordinates; not executed by this compiler"
+  }
+}

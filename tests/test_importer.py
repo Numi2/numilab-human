@@ -14,6 +14,13 @@ from numilab_human.open_knee import compile_payload as compile_open_knee_payload
 from numilab_human.open_knee import _anatomical_femoral_basis
 from numilab_human.open_knee import _orientation_preserving_connectivity
 from numilab_human.open_knee import _parse_febio_fiber_directions
+from numilab_human.open_knee import _geometry_archive_cross_references
+from numilab_human.open_knee import compile_source_mechanical_description
+from numilab_human.open_knee import _source_rigid_graph_program_bytes
+from numilab_human.open_knee import _write_source_reference_baseline
+from numilab_human.open_knee import _write_source_rigid_ties_program
+from numilab_human.open_knee import _write_source_sliding_contact_program
+from numilab_human.open_knee import _write_source_discrete_program
 from numilab_human.open_knee import parse_source as parse_open_knee_source
 
 from numilab_human.model import (
@@ -3790,26 +3797,198 @@ class ImporterTests(unittest.TestCase):
 <febio_spec><Geometry>
 <Nodes name="A"><node id="1">0,0,0</node><node id="2">1,0,0</node>
 <node id="3">0,1,0</node><node id="4">0,0,1</node></Nodes>
-<Elements name="A" type="tet4"><elem id="1">1,2,3,4</elem></Elements>
+<Elements name="A" type="tet4" mat="3"><elem id="1">1,2,3,4</elem></Elements>
 <Nodes name="B"><node id="5">0,0,0</node><node id="6">1,0,0</node>
 <node id="7">0,1,0</node></Nodes>
 <Elements name="B" type="tri3"><elem id="2">5,6,7</elem></Elements>
+<Nodes name="MNS-M"><node id="8">0,0,0</node><node id="9">1,0,0</node>
+<node id="10">0,1,0</node><node id="11">0,0,1</node></Nodes>
+<Elements name="MNS-M" type="tet4" mat="3"><elem id="3">8,9,10,11</elem></Elements>
 <NodeSet name="A_@_B_TiesNodes"><node id="1"/><node id="2"/></NodeSet>
 <Surface name="A_All_Faces"><tri3 id="1">1,2,3</tri3></Surface>
 <Surface name="B_All_Faces"><tri3 id="2">5,6,7</tri3></Surface>
+<DiscreteSet name="spring_set"><delem>1,5</delem></DiscreteSet>
 <SurfacePair name="A_To_B"><master surface="A_All_Faces"/>
 <slave surface="B_All_Faces"/></SurfacePair>
 </Geometry></febio_spec>"""
         febio = """<?xml version="1.0"?>
-<febio_spec><Material><material name="A" type="uncoupled prestrain elastic">
-<fiber type="vector">1,0,0</fiber></material></Material></febio_spec>"""
+<febio_spec version="2.5"><Module type="solid"/>
+<Material>
+<material id="1" name="R1" type="rigid body"><density>1</density>
+<center_of_mass>0,0,0</center_of_mass></material>
+<material id="2" name="R2" type="rigid body"><density>1</density>
+<center_of_mass>1,0,0</center_of_mass></material>
+<material id="3" name="A" type="uncoupled prestrain elastic"><k>100</k>
+<elastic type="trans iso Mooney-Rivlin"><density>1</density><c1>2.5</c1>
+<c2>0</c2><c3>0.2</c3><c4>20</c4><c5>30</c5><lam_max>1.1</lam_max></elastic>
+<prestrain type="in-situ stretch"><stretch lc="9">1.05</stretch><isochoric>1</isochoric></prestrain>
+<fiber type="vector">1,0,0</fiber></material></Material>
+<MeshData><ElementData var="fiber" elem_set="MNS-M">
+<elem lid="1">0.6,0.8,0.0</elem></ElementData></MeshData>
+<Boundary><rigid name="A_tie" node_set="A_@_B_TiesNodes" rb="1"/></Boundary>
+<Discrete><discrete_material id="1" type="linear spring"><E>100</E></discrete_material>
+<discrete discrete_set="spring_set" dmat="1"/></Discrete>
+<LoadData><loadcurve id="9" type="linear"><point>0,1</point>
+<point>1,1</point></loadcurve></LoadData>
+<Step><Control><analysis type="static"/></Control>
+<Boundary><rigid_body mat="2"><prescribed bc="x" lc="9">0</prescribed>
+</rigid_body></Boundary>
+<Contact><contact type="sliding-elastic" surface_pair="A_To_B">
+<penalty>0.1</penalty></contact></Contact>
+<Constraints>
+<constraint type="prestrain"><update>1</update></constraint>
+<constraint type="rigid cylindrical joint" name="A_B">
+<force_penalty>10000</force_penalty><moment_penalty>3000000</moment_penalty>
+<body_a>1</body_a><body_b>2</body_b><joint_origin>0,0,0</joint_origin>
+<joint_axis>0,0,1</joint_axis><prescribed_translation>0</prescribed_translation>
+<translation>0</translation><prescribed_rotation>1</prescribed_rotation>
+<rotation lc="9">-1.57</rotation><minaug>0</minaug><maxaug>0</maxaug>
+</constraint>
+<constraint type="rigid spring"><body_a>1</body_a><body_b>2</body_b>
+<insertion_a>0,0,0</insertion_a><insertion_b>1,0,0</insertion_b>
+<k>0.1</k></constraint>
+</Constraints></Step></febio_spec>"""
         with tempfile.TemporaryDirectory() as temporary:
             directory = Path(temporary)
             (directory / "ModelProperties.xml").write_text(properties, encoding="utf-8")
             (directory / "Geometry.feb").write_text(geometry, encoding="utf-8")
             (directory / "FeBio_custom.feb").write_text(febio, encoding="utf-8")
             source = parse_open_knee_source(directory, enforce_exact=False)
-        self.assertEqual(set(source.regions), {"A", "B"})
+            mechanics = compile_source_mechanical_description(
+                source, source_deck=directory / "FeBio_custom.feb",
+                source_geometry_archive_path=directory / "Geometry.feb",
+                source_geometry_binary_output_path=directory / "source-geometry.bin",
+                source_volume_mesh_output_path=directory / "source-volume-mesh.bin",
+                source_mesh_data_output_path=directory / "source-meshdata.bin",
+            )
+            self.assertEqual(
+                mechanics["source_geometry_resolution"]["discrete_sets"]
+                ["spring_set"]["edges"], [(1, 5)]
+            )
+            self.assertEqual(mechanics["discrete_interactions"][0]["edge_count"], 1)
+            geometry_binary = (directory / "source-geometry.bin").read_bytes()
+            geometry_storage = mechanics["source_geometry_resolution"]["binary_storage"]
+            self.assertEqual(len(geometry_binary), geometry_storage["bytes"])
+            self.assertEqual(
+                hashlib.sha256(geometry_binary).hexdigest(), geometry_storage["sha256"]
+            )
+            mns_geometry = mechanics["source_geometry_resolution"]["element_sets"]["MNS-M"]
+            geometry_record = struct.unpack_from(
+                "<I4I", geometry_binary, mns_geometry["binary_offset_bytes"]
+            )
+            self.assertEqual(geometry_record, (3, 8, 9, 10, 11))
+            volume_mesh = (directory / "source-volume-mesh.bin").read_bytes()
+            meniscus_record = mechanics["source_geometry_resolution"][
+                "source_volume_mesh_storage"
+            ]["groups"]["MNS-M"]
+            self.assertEqual(
+                struct.unpack_from(
+                    "<4sIIII", volume_mesh, meniscus_record["header_offset_bytes"]
+                ),
+                (b"NOKT", 1, 3, 4, 1),
+            )
+            self.assertEqual(
+                struct.unpack_from(
+                    "<I4I", volume_mesh,
+                    meniscus_record["tetrahedron_records_offset_bytes"],
+                ),
+                (3, 8, 9, 10, 11),
+            )
+            mesh_data_bytes = (directory / "source-meshdata.bin").read_bytes()
+            self.assertEqual(
+                struct.unpack("<I3d", mesh_data_bytes), (1, 0.6, 0.8, 0.0)
+            )
+            self.assertEqual(
+                hashlib.sha256(mesh_data_bytes).hexdigest(),
+                mechanics["source_mesh_element_data_storage"]["sha256"],
+            )
+            rigid_graph = _source_rigid_graph_program_bytes(mechanics)
+            self.assertEqual(len(rigid_graph), 96 + 2 * 60 + 136 + 104 + 112 + 12 + 2 * 16 + 32)
+            self.assertEqual(
+                struct.unpack_from("<8sIIIIII", rigid_graph),
+                (b"NHRGPH3\0", 3, 2, 1, 1, 1, 1),
+            )
+            self.assertEqual(
+                rigid_graph[32:64].hex(), mechanics["source_file_sha256"]
+            )
+            self.assertEqual(
+                rigid_graph[64:96].hex(), mechanics["source_geometry_archive_sha256"]
+            )
+            self.assertEqual(struct.unpack_from("<I3d", rigid_graph, 96),
+                             (1, 0.0, 0.0, 0.0))
+            joint_offset = 96 + 2 * 60
+            self.assertEqual(struct.unpack_from("<II", rigid_graph, joint_offset), (1, 2))
+            spring_offset = joint_offset + 136
+            self.assertEqual(
+                struct.unpack_from("<II8d", rigid_graph, spring_offset),
+                (1, 2, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.1, 0.0),
+            )
+            spring = mechanics["rigid_graph"]["rigid_springs"][0]
+            self.assertTrue(spring["free_length_uses_initial_insertion_distance"])
+            self.assertEqual(spring["stiffness"], 0.1)
+            boundary_offset = spring_offset + 104
+            self.assertEqual(
+                struct.unpack_from("<IB3x6d6i", rigid_graph, boundary_offset),
+                (2, 1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 9, -1, -1, -1, -1, -1),
+            )
+            curve_offset = boundary_offset + 112
+            self.assertEqual(struct.unpack_from("<III", rigid_graph, curve_offset), (9, 1, 2))
+            self.assertEqual(
+                struct.unpack_from("<4d", rigid_graph, curve_offset + 12),
+                (0.0, 1.0, 1.0, 1.0),
+            )
+            unsupported_curve = json.loads(json.dumps(mechanics))
+            unsupported_curve["load_curves"][0]["type"] = "cubic"
+            with self.assertRaisesRegex(ValueError, "only compiles linear"):
+                _source_rigid_graph_program_bytes(unsupported_curve)
+            self.assertEqual(
+                mechanics["source_geometry_resolution"]["element_sets"]["MNS-M"]["material_id"],
+                3,
+            )
+            self.assertEqual(
+                mechanics["source_geometry_resolution"]["element_sets"]["MNS-M"]["material_name"],
+                "A",
+            )
+            self.assertTrue(
+                mechanics["source_geometry_resolution"]["element_sets"]["MNS-M"][
+                    "element_ids_contiguous_in_source_order"
+                ]
+            )
+            geometry_text = (directory / "Geometry.feb").read_text(encoding="utf-8")
+            (directory / "Geometry.feb").write_text(
+                geometry_text.replace('mat="3"', 'mat="99"'), encoding="utf-8"
+            )
+            with self.assertRaisesRegex(ValueError, "unknown source material 99"):
+                compile_source_mechanical_description(
+                    source, source_deck=directory / "FeBio_custom.feb",
+                    source_geometry_archive_path=directory / "Geometry.feb",
+                )
+            (directory / "Geometry.feb").write_text(geometry_text, encoding="utf-8")
+            joint_axis = source.mechanical_program.find(
+                "Step/Constraints/constraint[@name='A_B']/joint_axis"
+            )
+            original_axis = joint_axis.text
+            deck_text = (directory / "FeBio_custom.feb").read_text(encoding="utf-8")
+            (directory / "FeBio_custom.feb").write_text(
+                deck_text.replace("<joint_axis>0,0,1</joint_axis>",
+                                  "<joint_axis>0,0,0</joint_axis>"),
+                encoding="utf-8",
+            )
+            joint_axis.text = "0,0,0"
+            with self.assertRaisesRegex(ValueError, "axis must be unit length"):
+                compile_source_mechanical_description(
+                    source, source_deck=directory / "FeBio_custom.feb"
+                )
+            joint_axis.text = original_axis
+            (directory / "FeBio_custom.feb").write_text(deck_text, encoding="utf-8")
+            source.mechanical_program.find(
+                "Step/Constraints/constraint[@name='A_B']/joint_axis"
+            ).text = "1,0,0"
+            with self.assertRaisesRegex(ValueError, "differs from the hashed FEBio deck"):
+                compile_source_mechanical_description(
+                    source, source_deck=directory / "FeBio_custom.feb"
+                )
+        self.assertEqual(set(source.regions), {"A", "B", "MNS-M"})
         self.assertEqual(source.regions["A"].element_type, "tet4")
         self.assertEqual(source.regions["A"].elements, [(1, 2, 3, 4)])
         self.assertEqual(source.node_sets["A_@_B_TiesNodes"], [1, 2])
@@ -3820,6 +3999,250 @@ class ImporterTests(unittest.TestCase):
         )
         self.assertEqual(source.materials["A"]["c1"], 2.54)
         self.assertEqual(source.fiber_directions["A"], (1.0, 0.0, 0.0))
+        self.assertEqual(mechanics["febio_spec_version"], "2.5")
+        self.assertEqual(mechanics["source_equivalence_admission"],
+                         "rejected_unsupported_source_mechanics")
+        self.assertEqual(mechanics["active_applied_loads"], [])
+        self.assertEqual(
+            mechanics["source_loading_interpretation"],
+            "no_active_applied_loads",
+        )
+        self.assertEqual(
+            mechanics["contact_surface_pair_resolution"],
+            "resolved_against_pinned_Geometry_custom",
+        )
+        self.assertEqual(mechanics["source_geometry_resolution"]["node_count"], 11)
+        self.assertEqual(mechanics["source_geometry_resolution"]["surface_pair_count"], 1)
+        self.assertEqual(
+            mechanics["source_geometry_resolution"]["mesh_data_element_sets"]["MNS-M"]["element_count"],
+            1,
+        )
+        mesh_data_record = mechanics["source_mesh_element_data"][0]
+        self.assertEqual(mesh_data_record["record_count"], 1)
+        self.assertEqual(mesh_data_record["raw_source_vectors_preserved"], True)
+        self.assertEqual(mesh_data_record["binary_bytes"], 28)
+        self.assertNotIn("element_vectors", mesh_data_record)
+        self.assertEqual(
+            mechanics["source_mesh_element_data_storage"]["record_count"], 1
+        )
+        self.assertEqual(
+            mechanics["rigid_graph"]["rigid_ties"][0]["node_set_node_ids"],
+            [1, 2],
+        )
+        self.assertEqual(
+            mechanics["rigid_graph"]["rigid_ties"][0]["rigid_body_material_id"], 1
+        )
+        self.assertEqual(
+            mechanics["contacts"][0]["geometry_resolution"]["master_face_count"],
+            1,
+        )
+        self.assertEqual([body["material_id"] for body in
+                          mechanics["rigid_graph"]["bodies"]], [1, 2])
+        body = mechanics["rigid_graph"]["bodies"][0]
+        self.assertEqual(body["center_of_mass"], [0.0, 0.0, 0.0])
+        self.assertEqual(body["density"], 1.0)
+        source_material = mechanics["materials"][2]["source_program"]
+        self.assertEqual(source_material["elastic_type"], "trans iso Mooney-Rivlin")
+        self.assertEqual(source_material["elastic_scalar_parameters"]["c3"], 0.2)
+        self.assertEqual(source_material["fiber_direction"], [1.0, 0.0, 0.0])
+        self.assertEqual(source_material["prestrain"]["stretch"], 1.05)
+        self.assertEqual(source_material["prestrain"]["load_curve_id"], "9")
+        self.assertEqual(
+            source_material["prestrain"]["resolved_load_curve"][1]["value"], 1.0
+        )
+        self.assertEqual(
+            source_material["prestrain"]["target_states"][0]["deformation_gradient"],
+            [[1.05, 0.0, 0.0],
+             [0.0, 1.05 ** -0.5, 0.0],
+             [0.0, 0.0, 1.05 ** -0.5]],
+        )
+        self.assertEqual(
+            source_material["prestrain"]["target_state_status"],
+            "compiled_isochoric_target_tensor_not_applied_or_equilibrated",
+        )
+        self.assertTrue(source_material["prestrain"]["isochoric"])
+        joint = mechanics["rigid_graph"]["cylindrical_joints"][0]
+        self.assertEqual((joint["body_a"], joint["body_b"]), (1, 2))
+        self.assertEqual(joint["force_penalty"], 10000.0)
+        self.assertEqual(joint["moment_penalty"], 3000000.0)
+        self.assertEqual(joint["joint_origin"], [0.0, 0.0, 0.0])
+        self.assertEqual(joint["joint_axis"], [0.0, 0.0, 1.0])
+
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            geometry_path = directory / "Geometry.feb"
+            geometry_path.write_text(geometry, encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "identity drifted"):
+                _geometry_archive_cross_references(
+                    geometry_path, expected_sha256="0" * 64,
+                    contact_pair_names={"A_To_B"},
+                    rigid_tie_node_sets={"A_@_B_TiesNodes"},
+                )
+            geometry_path.write_text(
+                geometry.replace("<SurfacePair name=\"A_To_B\">",
+                                 "<SurfacePair name=\"Other\">"),
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(ValueError, "missing contact SurfacePair"):
+                _geometry_archive_cross_references(
+                    geometry_path, expected_sha256=None,
+                    contact_pair_names={"A_To_B"},
+                    rigid_tie_node_sets={"A_@_B_TiesNodes"},
+                )
+            geometry_path.write_text(
+                geometry.replace("A_@_B_TiesNodes", "Other_TiesNodes"),
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(ValueError, "missing rigid-tie NodeSet"):
+                _geometry_archive_cross_references(
+                    geometry_path, expected_sha256=None,
+                    contact_pair_names={"A_To_B"},
+                    rigid_tie_node_sets={"A_@_B_TiesNodes"},
+                )
+        self.assertFalse(joint["prescribed_translation"])
+        self.assertTrue(joint["prescribed_rotation"])
+        self.assertEqual(joint["translation"]["value"], 0.0)
+        self.assertEqual(joint["rotation"]["value"], -1.57)
+        self.assertEqual(joint["rotation"]["load_curve_id"], "9")
+        self.assertEqual(joint["rotation"]["attributes"], {"lc": "9"})
+        self.assertEqual(mechanics["contacts"][0]["parameters"][0], {
+            "name": "penalty", "source_text": "0.1", "attributes": {},
+        })
+        self.assertEqual(mechanics["load_curves"][0]["points"][1]["source_text"],
+                         "1,1")
+        self.assertEqual(mechanics["load_curves"][0]["numeric_points"], [
+            {"source_text": "0,1", "time": 0.0, "value": 1.0, "attributes": {}},
+            {"source_text": "1,1", "time": 1.0, "value": 1.0, "attributes": {}},
+        ])
+        self.assertTrue(any(section["name"] == "Step" and
+                            section["native_execution_status"] ==
+                            "unsupported_not_executed"
+                            for section in mechanics["source_sections"]))
+        self.assertTrue(mechanics["unsupported_source_sections"])
+
+    def test_open_knee_archived_reference_outputs_form_a_hashed_baseline(self) -> None:
+        source_description = json.loads((
+            ROOT / "Docs/media/open-knee-source-program-20261002/source-mechanics.json"
+        ).read_text(encoding="utf-8"))
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "source-reference-baseline.json"
+            storage = _write_source_reference_baseline(source_description, output)
+            output_sha256 = hashlib.sha256(output.read_bytes()).hexdigest()
+            baseline = json.loads(output.read_text(encoding="utf-8"))
+        self.assertEqual(storage["schema"], baseline["schema"])
+        self.assertEqual(storage["sha256"], output_sha256)
+        self.assertEqual(baseline["source_solver_rerun"], "not_performed_by_native_compiler")
+        self.assertEqual(baseline["reference_run"]["accepted_increment_count"], 140)
+        self.assertEqual(baseline["reference_run"]["observation_record_count"], 840)
+        self.assertEqual(
+            [item["continuation_time"] for item in baseline["reference_run"]["checkpoints"]],
+            [0.05, 1.0, 2.0],
+        )
+        self.assertEqual(baseline["contact_archive"]["state_count"], 141)
+        self.assertEqual(baseline["contact_archive"]["surface_count"], 36)
+        self.assertEqual(len(baseline["contact_archive"]["peak_pressure_by_surface"]), 36)
+        self.assertEqual(len(baseline["contact_archive"]["checkpoints"]), 3)
+        self.assertIn("elementwise tissue stress/strain", baseline["unavailable_reference_outputs"][0])
+
+    def test_open_knee_source_rigid_spring_artifact_matches_receipt(self) -> None:
+        artifact_root = ROOT / "Docs/media/open-knee-source-program-20261002"
+        mechanics = json.loads(
+            (artifact_root / "source-mechanics.json").read_text(encoding="utf-8")
+        )
+        receipt = json.loads(
+            (artifact_root / "receipt.json").read_text(encoding="utf-8")
+        )
+        program = (artifact_root / "source-rigid-graph.bin").read_bytes()
+        storage = receipt["artifacts"]["source-rigid-graph.bin"]
+        self.assertEqual(storage["schema"], "numi.human.open-knee-rigid-graph-program-f64.v3")
+        self.assertEqual(storage["bytes"], len(program))
+        self.assertEqual(storage["sha256"], hashlib.sha256(program).hexdigest())
+        self.assertEqual(storage, mechanics["source_rigid_graph_program_storage"])
+        self.assertEqual(receipt["compiled_counts"]["rigid_springs"], 1)
+        spring = mechanics["rigid_graph"]["rigid_springs"][0]
+        self.assertEqual((spring["body_a"], spring["body_b"]), (21, 4))
+        self.assertTrue(spring["free_length_uses_initial_insertion_distance"])
+        self.assertEqual(
+            [item["type"] for item in mechanics["rigid_graph"]["other_constraints"]],
+            ["prestrain"],
+        )
+        self.assertEqual(mechanics["source_equivalence_admission"],
+                         "rejected_unsupported_source_mechanics")
+        self.assertEqual(mechanics["active_applied_loads"], [])
+        self.assertEqual(
+            mechanics["source_loading_interpretation"],
+            "prescribed_flexion_and_prestrain_only; no active quadriceps force",
+        )
+
+    def test_open_knee_rigid_ties_bind_unique_source_volume_nodes(self) -> None:
+        artifact_root = ROOT / "Docs/media/open-knee-source-program-20261002"
+        mechanics = json.loads((artifact_root / "source-mechanics.json").read_text())
+        receipt = json.loads((artifact_root / "receipt.json").read_text())
+        volume = artifact_root / "source-volume-mesh.bin"
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "source-rigid-ties.bin"
+            storage = _write_source_rigid_ties_program(mechanics, volume, output)
+            program = output.read_bytes()
+        self.assertEqual(program, (artifact_root / "source-rigid-ties.bin").read_bytes())
+        self.assertEqual(storage, mechanics["source_rigid_ties_program_storage"])
+        self.assertEqual(storage, receipt["artifacts"]["source-rigid-ties.bin"])
+        self.assertEqual(storage["record_count"], 29427)
+        self.assertEqual(struct.unpack_from("<8s4I", program),
+                         (b"NHTIES1\0", 1, 18, 29427, 0))
+        rows = [struct.unpack_from("<4I", program, 88 + 16 * index)
+                for index in range(storage["record_count"])]
+        self.assertEqual(len({row[0] for row in rows}), 29427)
+        self.assertEqual(sorted(row[0] for row in rows), [row[0] for row in rows])
+        mechanics["rigid_graph"]["rigid_ties"][1]["node_set_node_ids"][0] = rows[0][0]
+        with tempfile.TemporaryDirectory() as temporary:
+            with self.assertRaisesRegex(ValueError, "multiply owned"):
+                _write_source_rigid_ties_program(
+                    mechanics, volume, Path(temporary) / "bad.bin"
+                )
+
+    def test_open_knee_source_contact_preserves_all_authored_faces(self) -> None:
+        root = ROOT / "Docs/media/open-knee-source-program-20261002"
+        mechanics = json.loads((root / "source-mechanics.json").read_text())
+        receipt = json.loads((root / "receipt.json").read_text())
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "source-sliding-contact.bin"
+            storage = _write_source_sliding_contact_program(
+                mechanics, root / "source-geometry.bin",
+                root / "source-volume-mesh.bin", output,
+            )
+            program = output.read_bytes()
+        self.assertEqual(program, (root / "source-sliding-contact.bin").read_bytes())
+        self.assertEqual(storage, mechanics["source_sliding_contact_program_storage"])
+        self.assertEqual(storage, receipt["artifacts"]["source-sliding-contact.bin"])
+        self.assertEqual(
+            struct.unpack_from("<8s5I", program),
+            (b"NHCNTP1\0", 1, 18, 36, 345070, 17676),
+        )
+        self.assertEqual(storage["parameter_order"][3], "penalty")
+        self.assertEqual(receipt["compiled_counts"]["contact_surface_faces"], 345070)
+
+    def test_open_knee_discrete_edges_bind_source_geometry(self) -> None:
+        root = ROOT / "Docs/media/open-knee-source-program-20261002"
+        mechanics = json.loads((root / "source-mechanics.json").read_text())
+        receipt = json.loads((root / "receipt.json").read_text())
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "source-discrete-springs.bin"
+            storage = _write_source_discrete_program(
+                mechanics, root / "source-geometry.bin", output,
+            )
+            program = output.read_bytes()
+        self.assertEqual(program, (root / "source-discrete-springs.bin").read_bytes())
+        self.assertEqual(storage, mechanics["source_discrete_program_storage"])
+        self.assertEqual(storage, receipt["artifacts"]["source-discrete-springs.bin"])
+        self.assertEqual(struct.unpack_from("<8s4I", program),
+                         (b"NHDISC1\0", 1, 9, 3, 406))
+        self.assertEqual(receipt["compiled_counts"]["discrete_spring_edges"], 406)
+        first_edge = 120 + 9 * 56 + 3 * 68
+        edges = [struct.unpack_from("<4I6d", program, first_edge + 64 * index)
+                 for index in range(406)]
+        self.assertEqual(len({tuple(edge[:2]) for edge in edges}), 406)
+        self.assertEqual({tuple(edge[2:4]) for edge in edges[:4]}, {(4, 1)})
+        self.assertEqual({tuple(edge[2:4]) for edge in edges[4:]}, {(10, 13)})
 
     def test_open_knee_compiler_rejects_unknown_side_before_source_work(self) -> None:
         with self.assertRaisesRegex(ValueError, "side must be left or right"):
