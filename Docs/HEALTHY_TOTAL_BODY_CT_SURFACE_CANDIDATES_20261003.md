@@ -70,13 +70,44 @@ the largest relative volume discrepancy was 1.0251171986964199e-15. The
 independent audit receipt SHA-256 is
 98c9f2145a7d5cbdb0939f3aad75e8d705beee8aa5c93e58dfe9b55c093c42c5.
 
-The topology varies by scan: 8/12 scan-001 surfaces and 4/12 scan-002 surfaces
-are closed two-manifolds. Scan 001 has nonmanifold Adrenal-glands, Kidneys,
-Liver and Lung meshes; scan 002 has Adrenal-glands, Bladder, Brain, Heart,
-Kidneys, Liver, VCI and Lung. Only Aorta, Pancreas, Spleen and Thyroid are
-closed in both scans. The independent audit reproduces the defects from the
-serialized mesh bytes. They remain source topology findings, not renderer
-artifacts or anatomy corrections.
+The raw, unsplit topology varies by scan: 8/12 scan-001 surfaces and 4/12
+scan-002 surfaces are closed two-manifolds. Scan 001 has nonmanifold
+Adrenal-glands, Kidneys, Liver and Lung meshes; scan 002 has Adrenal-glands,
+Bladder, Brain, Heart, Kidneys, Liver, VCI and Lung. Only Aorta, Pancreas,
+Spleen and Thyroid are closed in both scans. The independent audit reproduces
+the raw defects from serialized mesh bytes.
+
+A preregistered scan-001 topology-split candidate now closes all 12
+organ/vessel surfaces, including the four defects in the raw controls. The
+Liver and Lung each had one four-face saddle where the source-voxel pairing
+left a nonmanifold edge; the compiler selected the sole alternate face pairing
+that yields a globally closed two-manifold for each mesh. Adrenal-glands and
+Kidneys close under the source-owner pairing. The controlled comparison
+confirms all triangle counts and triangle-coordinate sequences are unchanged,
+surface-area deltas are zero, and the maximum absolute signed-volume delta is
+`4.656612873077393e-10 mm3`. The independent occupancy-volume error is at most
+`4.975140063085482e-16`. This is vertex-index topology repair only; it does
+not test geometric self-intersection or embeddedness, and it does not correct
+or qualify the underlying automatic segmentations.
+
+The v4 plan, compiler receipt, independent audit and raw-control comparison
+are retained as
+[`preregistered-contact-split-scan-001-manifold-plan-v4.json`](media/healthy-total-body-ct-surface-20261003/preregistered-contact-split-scan-001-manifold-plan-v4.json),
+[`contact-split-scan-001-manifold-v4/receipt.json`](media/healthy-total-body-ct-surface-20261003/contact-split-scan-001-manifold-v4/receipt.json),
+[`independent-contact-split-scan-001-audit-v4.json`](media/healthy-total-body-ct-surface-20261003/independent-contact-split-scan-001-audit-v4.json),
+and
+[`contact-split-controlled-comparison-scan-001-manifold-v4.json`](media/healthy-total-body-ct-surface-20261003/contact-split-controlled-comparison-scan-001-manifold-v4.json).
+The comparison source is
+[`contact_split_control_compare_v3.py`](media/healthy-total-body-ct-surface-20261003/contact_split_control_compare_v3.py).
+The candidate receipt, independent audit and comparison report SHA-256 values
+are `8bc62fbf87a018bee0f5722e428bf7d9a0f89b5ad1981a448493f09df87b0dcd`,
+`727882bd1beaf9210fc5a6f6e16d2d4a0147800052a4113c3f70877ab000c2e0`, and
+`d33da8345d15ac82deb84885ff37e34cbf1119ab748456f782ba8c1e530ce5d4`.
+
+These are topology-only candidates for external automatic segmentations in
+each scan's own coordinate frame. The scans are not registered to Numi's
+mechanical subject; expert segmentation accuracy, tissue ownership, mechanics,
+physiology and clinical anatomy remain unqualified.
 
 The reusable verifier is available as the numi human
 healthy-total-body-ct-surface-audit command. The immutable scan plans, compiler
