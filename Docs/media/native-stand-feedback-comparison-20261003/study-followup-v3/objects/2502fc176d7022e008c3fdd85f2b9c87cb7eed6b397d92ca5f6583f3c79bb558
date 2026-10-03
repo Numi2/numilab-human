@@ -1,0 +1,91 @@
+{
+  "accepted_progress_rows": 200,
+  "device_cpu": "Apple M4 Pro",
+  "feedback_arm": "control; path-feedback flag absent; all accepted-row feedback excitation deltas are 0",
+  "final_progress_step": 1600,
+  "final_simulated_seconds": 1.6,
+  "human_command_revision": "f115eeb4af309068883a46cc739e79aef094d907",
+  "launch_disposition": "out-of-band-after-preregistration",
+  "launch_note": "An attempted remote shell syntax check was passed through OpenSSH without preserving the -c arguments. The sealed control-arm native command executed directly on the owner. The raw output confirms the planned 1600-step horizon, but no numi science trial receipt or native exit-code capture was produced.",
+  "metal_library_sha256": "a8778b712d342cd900766952147874bf9405679ca7c6fe466b166825a9c9cfe1",
+  "native_exit_status_captured": false,
+  "native_probe_sha256": "424f373f2a63bd45088ec73631ed861e95f2921e1be7740c68f14021422ae4bf",
+  "originating_plan_path": "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/plan.json",
+  "originating_registration_sha256": "b2d5e107fe14a6013464bfc9163d1bda6b4274aafc2227c48db9d27409803d35",
+  "originating_study_path": "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/study",
+  "post_run_hash_checks": [
+    {
+      "expected_sha256": "424f373f2a63bd45088ec73631ed861e95f2921e1be7740c68f14021422ae4bf",
+      "matches": true,
+      "observed_sha256": "424f373f2a63bd45088ec73631ed861e95f2921e1be7740c68f14021422ae4bf",
+      "path": "/Users/n/numi-human-standing-build-20260922/bin/metalrobo_numilab_human_myosim_visual_probe"
+    },
+    {
+      "expected_sha256": "a8778b712d342cd900766952147874bf9405679ca7c6fe466b166825a9c9cfe1",
+      "matches": true,
+      "observed_sha256": "a8778b712d342cd900766952147874bf9405679ca7c6fe466b166825a9c9cfe1",
+      "path": "/Users/n/numi-human-standing-build-20260922/shaders/MetalRobo.metallib"
+    },
+    {
+      "expected_sha256": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951",
+      "matches": true,
+      "observed_sha256": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951",
+      "path": "/Users/n/human-standing-20260922/current-toe-enthesis-input-20261002/myosim-fullbody-core-reference.nhrigid"
+    },
+    {
+      "expected_sha256": "a4381465ca97a7af20108180e2fc0d0f0d9c11778d913de4c0728bd20ed459a7",
+      "matches": true,
+      "observed_sha256": "a4381465ca97a7af20108180e2fc0d0f0d9c11778d913de4c0728bd20ed459a7",
+      "path": "/Users/n/human-standing-20260922/current-toe-enthesis-input-20261002/myosim-fullbody-muscle-reference.nhmyo"
+    },
+    {
+      "expected_sha256": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a",
+      "matches": true,
+      "observed_sha256": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a",
+      "path": "/Users/n/human-standing-20260922/current-toe-enthesis-input-20261002/myosim-fullbody-joint-equalities.nheq"
+    },
+    {
+      "expected_sha256": "4d54f8155cd83baaee7af536099824ac0da61e5d5e77544b42c6e5ce1b48c907",
+      "matches": true,
+      "observed_sha256": "4d54f8155cd83baaee7af536099824ac0da61e5d5e77544b42c6e5ce1b48c907",
+      "path": "/Users/n/human-standing-20260922/current-toe-enthesis-input-20261002/myosim-fullbody-support-contact.nhcnt"
+    },
+    {
+      "expected_sha256": "130705ed1d9edd1d27d6e92d6b0558b1eaa0e1cdd3f7bdfe96b4aa05ab9e7b55",
+      "matches": true,
+      "observed_sha256": "130705ed1d9edd1d27d6e92d6b0558b1eaa0e1cdd3f7bdfe96b4aa05ab9e7b55",
+      "path": "/Users/n/human-standing-20260922/current-toe-enthesis-input-20261002/numi-human-tendon-attachments.nhtendon"
+    },
+    {
+      "expected_sha256": "d8c73fe2f4692c3df8427a73628e5c84a2476cc6b590d32ba270619defb5bc5a",
+      "matches": true,
+      "observed_sha256": "d8c73fe2f4692c3df8427a73628e5c84a2476cc6b590d32ba270619defb5bc5a",
+      "path": "/Users/n/numi-human-standing-20260922/apps/numilab_human_myosim_visual_probe.mm"
+    },
+    {
+      "expected_sha256": "949a1f6478652618e0288d4aef067aa25d6ce565cc617fe92b7cc10674727f6d",
+      "matches": true,
+      "observed_sha256": "949a1f6478652618e0288d4aef067aa25d6ce565cc617fe92b7cc10674727f6d",
+      "path": "/Users/n/numi-human-standing-build-20260922/compile_commands.json"
+    },
+    {
+      "expected_sha256": "8e5a385cdd4db2bcdfdc15858d01438089ead5deb6c23d14c330034a1286e787",
+      "matches": true,
+      "observed_sha256": "8e5a385cdd4db2bcdfdc15858d01438089ead5deb6c23d14c330034a1286e787",
+      "path": "/Users/n/numi-human-standing-20260922/CMakeLists.txt"
+    },
+    {
+      "expected_sha256": "990f17fc1995ab728e48e8842de9c45f4f75e5b7f2e771d0f63116fb6cf3982a",
+      "matches": true,
+      "observed_sha256": "990f17fc1995ab728e48e8842de9c45f4f75e5b7f2e771d0f63116fb6cf3982a",
+      "path": "/Users/n/numi-human-standing-20260922/numi/REVISION.in"
+    }
+  ],
+  "remote_output": "/Users/n/human-standing-20260922/science-stand-feedback-comparison-20261003-control",
+  "remote_stderr_sha256": "aaa4aee054bdd4eb419ad112c484fabab698c7565492e3884fc9b5683139f74e",
+  "remote_stdout_sha256": "6ee96e1f97c4f0227e4a13b02706c42501fdaddf8e8a1c4e4e8615892240b353",
+  "root_assistance": false,
+  "runtime_identity_file_sha256": "1d0ba2a32ba9fb0e388d958adbff9e47dd0151a4680b872feeef0762b8a5c0ec",
+  "runtime_source_revision": "c35f0082ffcc29806d8bece2e31177b64fe7e5c0",
+  "schema": "numi.human.out-of-band-control-provenance.v1"
+}

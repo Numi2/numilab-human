@@ -32,6 +32,31 @@ The sparse failure trace first records horizontal drift above 10 mm at
 support contacts drop at 2.504 s. It does not identify the initiating cause;
 the next standing attempt needs a source-aligned failure-onset diagnosis.
 
+## Source-path feedback onset comparison — 2026-10-03
+
+The [single-pair M4 Pro comparison](NATIVE_STAND_FEEDBACK_COMPARISON_20261003.md)
+ran the preregistered 1.6-second control and feedback conditions from the same
+source stance and exact initial q/v hashes. The no-feedback control drifted
+2.927 mm; the feedback treatment drifted 10.900 mm, a treatment-minus-control
+increase of 7.973 mm. The fixed prediction of a 5–50 mm reduction is
+contradicted. All 200 accepted samples in each trajectory retained six support
+contacts and zero root assistance. The treatment first exceeded 10 mm drift at
+1.576 s, while feedback correction remained below its 0.2 bound. The clean
+native treatment and wrapper-failed repeat have identical 200-row progress
+streams.
+
+The control was imported from its retained native output because a malformed
+syntax-check launch bypassed the notebook runner; its native exit code was not
+captured. The first treatment wrapper also failed after zsh rejected an
+assignment to its read-only `status` parameter. Both raw outcomes and failure
+receipts are retained; the corrected treatment run recorded native exit code
+0. Notebook data-integrity verification passes, but this remains a single
+source-specific diagnostic rather than standing qualification. The runtime is
+the retained 2 October package, not current-main requalification, and its
+progress stream does not expose per-route force decomposition. The next
+standing gate is a feedback-compatible, source-aligned q/v and route-force
+trace around the 1.576 s drift onset.
+
 ## Lower-limb source-consistent registration candidate — 2026-10-03
 
 The overlay-consistent source export and registration refresh now complete.

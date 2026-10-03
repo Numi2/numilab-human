@@ -1,0 +1,15 @@
+{
+  "schema": "numi.science.human-stand-progress-parser-calibration.v1",
+  "reference": "retained current-toe-enthesis 10-second attempt, step 104",
+  "input_line": "human_standing_progress=accepted step=104 simulated_seconds=0.104 root_xyz_m=[-0.0500202551484,0.200115159154,1.94540810585] root_orientation_xyzw=[-3.71097048628e-05,-1.51588574226e-05,6.92944740877e-05,1] max_generalized_acceleration=1.5069000721 root_linear_speed_m_s=0.00776184065634 support_force_n=953.841209412 penetration_m=7.42059057757e-07 contact_count=6 muscle_feedback_max_excitation_delta=0.00541132688522 root_assistance_force_n=0 root_assistance_torque_nm=0",
+  "expected": {
+    "step": 104,
+    "simulated_seconds": 0.104,
+    "root_xyz_m": [-0.0500202551484, 0.200115159154, 1.94540810585],
+    "root_linear_speed_m_s": 0.00776184065634,
+    "support_force_n": 953.841209412,
+    "contact_count": 6,
+    "root_assistance_force_n": 0.0,
+    "root_assistance_torque_nm": 0.0
+  }
+}

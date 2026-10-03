@@ -1,0 +1,49 @@
+{
+  "payload": {
+    "evidence_level": "simulation",
+    "issues": [],
+    "limitations": "Single paired comparison with no population inference. The run uses the exact 2 October source/runtime/input package to isolate the previously observed drift mechanism; it predates the current Human head and the 3 October neutral-coordinate overlay. The overlay preserves equality-projected rigid poses, but this comparison is not a fresh current-main 10-second standing result, anatomical or physiological qualification, clinical assessment, or a controller pass. The progress stream exposes root-level accepted summaries, not the full q/v vector or per-route force decomposition. The control process exit status was not captured by the original malformed wrapper, although its raw stdout contains 200 accepted rows and a terminal-state record at step 1600; the follow-up labels this explicitly and does not claim a notebook-native control receipt. Only the treatment executes under this follow-up notebook. This remains a one-pair source-specific simulation diagnostic. A prior treatment attempt reached step 1600 but is excluded because an SSH/zsh wrapper assigned the read-only special parameter status and failed before capturing the native process exit code. Its raw remote output and exact shell error are retained. The corrected treatment wrapper is syntax-checked with zsh reading the exact script from stdin, and captures the native exit code. The imported control still lacks a native exit code; comparisons remain a one-pair source-specific simulation diagnostic.",
+    "mean_difference": 0.007972851278628647,
+    "observed_spread": {
+      "maximum": 0.007972851278628647,
+      "minimum": 0.007972851278628647,
+      "sample_sd": null
+    },
+    "paired_differences": [
+      {
+        "pair": "source-stance-20261003",
+        "treatment_minus_control": 0.007972851278628647
+      }
+    ],
+    "registration_sha256": "d168f9ec8c603dea8f3ff061214bb04815909242a8f8519b4453679df6839f77",
+    "schema": "numi.science.analysis.v1",
+    "trials": [
+      {
+        "arm": "control",
+        "experimental_unit": {
+          "source_stance": "current-toe-enthesis-20261002"
+        },
+        "id": "source-stance-feedback-off-imported",
+        "pair": "source-stance-20261003",
+        "receipt_sha256": "1d58d4a69697ce7f8904dbd02c0aa296a319818c4dca844cae21c5de04a0d16f",
+        "status": "valid",
+        "value": 0.002926672732445067
+      },
+      {
+        "arm": "treatment",
+        "experimental_unit": {
+          "source_stance": "current-toe-enthesis-20261002"
+        },
+        "id": "source-stance-feedback-on-clean-wrapper",
+        "pair": "source-stance-20261003",
+        "receipt_sha256": "840c620f383f1ad035a4f9eaab83c7d709ab314091100356a097c1c0dc04307a",
+        "status": "valid",
+        "value": 0.010899524011073714
+      }
+    ],
+    "uncertainty": "Descriptive variation across declared pairs, not a confidence interval or population inference.",
+    "unit": "m",
+    "verdict": "contradicted"
+  },
+  "sha256": "af6ce0317ea13b5916968ddd55e1931b07cd580849af816b4e42cb9a50b6c9ed"
+}

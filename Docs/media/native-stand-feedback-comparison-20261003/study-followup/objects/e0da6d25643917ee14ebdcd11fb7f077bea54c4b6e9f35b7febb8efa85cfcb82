@@ -1,0 +1,40 @@
+{
+  "bindings": {
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/parser-calibration-result.json": "c8cbc40fb968ce8699c00df2ac12439356ae780c28829453c8555687c3b94626",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/parser-calibration.json": "34c97ef3a88ad39d591cddeb378489b18171e82f3f7b646f71a1990ed5f80538",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/remote_stand_trial.py": "f458fe100e98daca31562322c4d0a5b26016396355681ac3b1ee0d72e9474d16",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/runtime-identity.json": "1d0ba2a32ba9fb0e388d958adbff9e47dd0151a4680b872feeef0762b8a5c0ec",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/source-snapshot/CMakeLists.txt": "8e5a385cdd4db2bcdfdc15858d01438089ead5deb6c23d14c330034a1286e787",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/source-snapshot/REVISION.in": "990f17fc1995ab728e48e8842de9c45f4f75e5b7f2e771d0f63116fb6cf3982a",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/source-snapshot/compile_commands.json": "949a1f6478652618e0288d4aef067aa25d6ce565cc617fe92b7cc10674727f6d",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/source-snapshot/native-probe-source.patch": "cb6c8c6033bfb707dab95044afa327a00e3ffd301b56f387647ea41b2b5fe8e7",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/source-snapshot/numilab_human_myosim_visual_probe.mm": "d8c73fe2f4692c3df8427a73628e5c84a2476cc6b590d32ba270619defb5bc5a",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/source-snapshot/upstream-c35-numilab_human_myosim_visual_probe.mm": "4182286471a2947c15c7e0d873aee1412df62b09f2140b6320e253a03f3cede3"
+  },
+  "checks": [
+    {
+      "id": "retained-progress-row-field-reader",
+      "passed": true
+    },
+    {
+      "id": "step-time-position-and-unit-reference-values",
+      "passed": true
+    },
+    {
+      "id": "root-horizontal-distance-uses-two-horizontal-axes",
+      "passed": true
+    }
+  ],
+  "evidence": {
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/parser-calibration-result.json": "c8cbc40fb968ce8699c00df2ac12439356ae780c28829453c8555687c3b94626",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/parser-calibration.json": "34c97ef3a88ad39d591cddeb378489b18171e82f3f7b646f71a1990ed5f80538"
+  },
+  "observed_units": [
+    {
+      "source_stance": "parser-calibration-step-104"
+    }
+  ],
+  "schema": "numi.science.calibration.v1",
+  "scope": "Calibrates progress-row parsing against an exact retained accepted-step row and checks its step, timestamp, position, speed, support and assistance values. This validates the reader and units only; it does not calibrate the simulator or its anatomy.",
+  "status": "passed"
+}

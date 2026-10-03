@@ -1,0 +1,84 @@
+{
+  "analysis_sha256": "b7cf4c8e895947fd1e267ef11f698b83902f0257393f086779d5d606e5a6d640",
+  "control": {
+    "accepted_progress_rows": 200,
+    "contact_count_max": 6,
+    "contact_count_min": 6,
+    "duration_s": 1.6,
+    "final_root_speed_m_s": 0.0105987893999,
+    "first_drift_gt_10mm": null,
+    "horizontal_drift_m": 0.002926672732445067,
+    "initial_q_sha256": "3115b8ffeb069867e95b938b418779a6ea9484731c39a6976b34993e3b4c5fb8",
+    "initial_v_sha256": "48be08a3472ef9752fd789dc87f1a942b58da5d73c15e6d3c10f73dd4667bce1",
+    "max_feedback_excitation_delta": 0.0,
+    "max_penetration_m": 2.02430123863e-06,
+    "max_progress_acceleration_mixed_units": 915.479919434,
+    "max_root_speed_m_s": 0.0105987893999,
+    "root_assistance_force_n": 0.0,
+    "root_assistance_torque_nm": 0.0,
+    "root_end_xyz_m": [
+      -0.0509494207799,
+      0.202776759863,
+      1.94570183754
+    ],
+    "root_start_xyz_m": [
+      -0.0499980524182,
+      0.200009033084,
+      1.94541180134
+    ],
+    "stdout_sha256": "6ee96e1f97c4f0227e4a13b02706c42501fdaddf8e8a1c4e4e8615892240b353",
+    "step_count": 1600,
+    "support_force_max_n": 956.696629524,
+    "support_force_min_n": 945.823192596
+  },
+  "control_native_exit_status_captured": false,
+  "failed_wrapper_attempt_progress_matches_clean_run": true,
+  "initial_q_matches": true,
+  "initial_v_matches": true,
+  "interpretation": "Single source-specific simulation pair. The imported control lacks its native exit status; do not use as standing qualification or population inference.",
+  "model_prediction_m": [
+    -0.05,
+    -0.005
+  ],
+  "registration_sha256": "d168f9ec8c603dea8f3ff061214bb04815909242a8f8519b4453679df6839f77",
+  "schema": "numi.human.stand-feedback-rowwise-comparison.v1",
+  "treatment": {
+    "accepted_progress_rows": 200,
+    "contact_count_max": 6,
+    "contact_count_min": 6,
+    "duration_s": 1.6,
+    "final_root_speed_m_s": 0.00504906185689,
+    "first_drift_gt_10mm": {
+      "drift_m": 0.010214346158594786,
+      "feedback_max_excitation_delta": 0.036619246006,
+      "simulated_seconds": 1.576,
+      "step": 1576
+    },
+    "horizontal_drift_m": 0.010899524011073714,
+    "initial_q_sha256": "3115b8ffeb069867e95b938b418779a6ea9484731c39a6976b34993e3b4c5fb8",
+    "initial_v_sha256": "48be08a3472ef9752fd789dc87f1a942b58da5d73c15e6d3c10f73dd4667bce1",
+    "max_feedback_excitation_delta": 0.141204118729,
+    "max_penetration_m": 2.14821807276e-06,
+    "max_progress_acceleration_mixed_units": 146.56892395,
+    "max_root_speed_m_s": 0.0697533834003,
+    "root_assistance_force_n": 0.0,
+    "root_assistance_torque_nm": 0.0,
+    "root_end_xyz_m": [
+      -0.0502752512693,
+      0.210903823376,
+      1.94512236118
+    ],
+    "root_start_xyz_m": [
+      -0.04999858886,
+      0.200007811189,
+      1.94541168213
+    ],
+    "stdout_sha256": "a63c2c51c7ddc00fbbfe5e67c6b87bb2ebdab818f82d8cdacf5245b33663543c",
+    "step_count": 1600,
+    "support_force_max_n": 1070.19066811,
+    "support_force_min_n": 921.085417271
+  },
+  "treatment_minus_control_m": 0.007972851278628647,
+  "treatment_native_exit_code": 0,
+  "verdict": "contradicted"
+}

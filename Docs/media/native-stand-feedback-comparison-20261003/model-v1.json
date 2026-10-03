@@ -1,0 +1,64 @@
+{
+  "parameters": {
+    "contact_iterations": 64,
+    "feedback_update_period_seconds": 0.001,
+    "path_feedback_treatment": {
+      "length_gain": 10,
+      "velocity_gain_seconds": 1
+    },
+    "primary_observable": "horizontal root displacement from first accepted progress sample to step 1600",
+    "root_assistance": false,
+    "steps": 1600,
+    "support_contact_witnesses": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "support_stance_dofs": [
+      [
+        2,
+        0.02
+      ],
+      [
+        108,
+        0.1
+      ],
+      [
+        109,
+        0.1
+      ],
+      [
+        110,
+        0.1
+      ],
+      [
+        122,
+        0.1
+      ],
+      [
+        123,
+        0.1
+      ],
+      [
+        124,
+        0.1
+      ]
+    ],
+    "timestep_seconds": 0.001
+  },
+  "prediction": {
+    "estimand": "paired_difference_mean",
+    "maximum": -0.005,
+    "minimum": -0.05
+  },
+  "statement": "Under the retained MyoSim source stance and matching NHTENDON3 mechanics payloads, source-path feedback with gains 10 and 1 s should reduce horizontal root drift over 1.6 simulated seconds by at least 5 mm relative to the same compiled posture recruitment without feedback.",
+  "training_units": [
+    {
+      "source_stance": "current-toe-enthesis-20261002"
+    }
+  ],
+  "version": "source-path-feedback-onset-vs-excitation-baseline-20261003.v1"
+}

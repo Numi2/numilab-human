@@ -1,0 +1,298 @@
+{
+  "artifacts": [
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/remote_stand_trial.py",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/parser-calibration.json",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/runtime-identity.json",
+    "/Users/home/numilab-human/Docs/media/native-stand-current-toe-enthesis-feedback-10s-20261002/input-binary-sha256.txt",
+    "/Users/home/numilab-human/Docs/media/native-stand-current-toe-enthesis-feedback-10s-20261002/receipt.json",
+    "/Users/home/numilab-human/Docs/media/native-stand-current-toe-enthesis-feedback-10s-20261002/stdout.txt.gz",
+    "/Users/home/numilab-human/Docs/media/native-stand-current-toe-enthesis-feedback-10s-20261002/run.sh",
+    "/Users/home/numilab-human/Docs/NATIVE_STAND_CURRENT_TOE_ENTHESIS_10S_FAILURE_20261002.md",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/source-snapshot/numilab_human_myosim_visual_probe.mm",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/source-snapshot/native-probe-source.patch",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/source-snapshot/upstream-c35-numilab_human_myosim_visual_probe.mm",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/source-snapshot/compile_commands.json",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/source-snapshot/CMakeLists.txt",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/source-snapshot/REVISION.in",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/model-v1.json",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/predict_effect.py",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/calibration-report.json",
+    "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/parser-calibration-result.json"
+  ],
+  "backend": "Apple Metal articulated MyoSim source stance, direct native execution by SSH to the idle Mac mini owner; exact prior runtime binary and all model inputs are hash-checked before each arm.",
+  "design": {
+    "allocation": "One pair, control first then treatment, serial execution after an idle-owner preflight; no overlapping Metal workload.",
+    "controls": "Same M4 Pro, native probe and Metal library hashes, exact NHRIGID/NHMYO/NHEQ/NHCNT/NHTENDON input hashes, six source support witnesses, source passive-joint preload, 64 contact iterations, 1 ms timestep, 1600 steps and no root assistance.",
+    "experimental_unit": "One source-bound initial stance per arm. Timesteps and progress rows within a trajectory are repeated measurements, not independent units.",
+    "intervention": "Treatment adds --stand-muscle-path-feedback 10 1; the control uses the same source-compilation, stance preload, NHTENDON3, support contacts, timestep and horizon with no feedback controller.",
+    "unit_paths": {
+      "source_stance": [
+        "stance_id"
+      ]
+    }
+  },
+  "evidence_level": "simulation",
+  "hypothesis": "The feedback-on treatment reduces horizontal root drift by 5 to 50 mm relative to the matched no-feedback control.",
+  "instrument": {
+    "artifacts": [
+      "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/remote_stand_trial.py",
+      "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/parser-calibration.json",
+      "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/parser-calibration-result.json",
+      "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/runtime-identity.json",
+      "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/source-snapshot/numilab_human_myosim_visual_probe.mm",
+      "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/source-snapshot/native-probe-source.patch",
+      "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/source-snapshot/upstream-c35-numilab_human_myosim_visual_probe.mm",
+      "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/source-snapshot/compile_commands.json",
+      "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/source-snapshot/CMakeLists.txt",
+      "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/source-snapshot/REVISION.in"
+    ],
+    "calibration": "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/calibration-report.json",
+    "description": "Native accepted standing progress rows parsed by a standard-library adapter; every row carries accepted step, simulated time, root pose and speed, support load, contact count, penetration, generalized acceleration summary and assistance counters."
+  },
+  "limitations": "Single paired comparison with no population inference. The run uses the exact 2 October source/runtime/input package to isolate the previously observed drift mechanism; it predates the current Human head and the 3 October neutral-coordinate overlay. The overlay preserves equality-projected rigid poses, but this comparison is not a fresh current-main 10-second standing result, anatomical or physiological qualification, clinical assessment, or a controller pass. The progress stream exposes root-level accepted summaries, not the full q/v vector or per-route force decomposition.",
+  "model": {
+    "parameters": {
+      "contact_iterations": 64,
+      "feedback_update_period_seconds": 0.001,
+      "path_feedback_treatment": {
+        "length_gain": 10,
+        "velocity_gain_seconds": 1
+      },
+      "primary_observable": "horizontal root displacement from first accepted progress sample to step 1600",
+      "root_assistance": false,
+      "steps": 1600,
+      "support_contact_witnesses": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "support_stance_dofs": [
+        [
+          2,
+          0.02
+        ],
+        [
+          108,
+          0.1
+        ],
+        [
+          109,
+          0.1
+        ],
+        [
+          110,
+          0.1
+        ],
+        [
+          122,
+          0.1
+        ],
+        [
+          123,
+          0.1
+        ],
+        [
+          124,
+          0.1
+        ]
+      ],
+      "timestep_seconds": 0.001
+    },
+    "prediction": {
+      "estimand": "paired_difference_mean",
+      "maximum": -0.005,
+      "minimum": -0.05
+    },
+    "statement": "Under the retained MyoSim source stance and matching NHTENDON3 mechanics payloads, source-path feedback with gains 10 and 1 s should reduce horizontal root drift over 1.6 simulated seconds by at least 5 mm relative to the same compiled posture recruitment without feedback.",
+    "training_units": [
+      {
+        "source_stance": "current-toe-enthesis-20261002"
+      }
+    ],
+    "version": "source-path-feedback-onset-vs-excitation-baseline-20261003.v1"
+  },
+  "model_file": "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/model-v1.json",
+  "observable": {
+    "name": "root_horizontal_drift_m",
+    "path": [
+      "root_horizontal_drift_m"
+    ],
+    "unit": "m"
+  },
+  "owner": "Numi Human native persistent-standing owner on Apple M4 Pro",
+  "paired_equal": [
+    [
+      "input_hashes"
+    ],
+    [
+      "runtime_identity_sha256"
+    ],
+    [
+      "native_probe_sha256"
+    ],
+    [
+      "metal_library_sha256"
+    ],
+    [
+      "native_source_file_sha256"
+    ],
+    [
+      "native_source_revision"
+    ],
+    [
+      "human_command_revision"
+    ],
+    [
+      "initial_root_xyz_m"
+    ],
+    [
+      "initial_root_orientation_xyzw"
+    ],
+    [
+      "first_progress_observation_sha256"
+    ],
+    [
+      "steps"
+    ],
+    [
+      "timestep_seconds"
+    ],
+    [
+      "contact_iterations"
+    ],
+    [
+      "root_assistance_force_n"
+    ],
+    [
+      "root_assistance_torque_nm"
+    ]
+  ],
+  "prediction": {
+    "estimand": "paired_difference_mean",
+    "maximum": -0.005,
+    "minimum": -0.05
+  },
+  "predictor": {
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/predict_effect.py",
+      "predict",
+      "--model",
+      "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/model-v1.json"
+    ],
+    "env": {},
+    "timeout_seconds": 30
+  },
+  "purpose": "replication",
+  "question": "Does committed source-path muscle feedback attenuate early horizontal root drift in the current-toe-enthesis source stance over 1.6 simulated seconds?",
+  "repository": "/Users/home/numilab-human",
+  "schema": "numi.science.plan.v2",
+  "trials": [
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/remote_stand_trial.py",
+        "--arm",
+        "control",
+        "--trial-id",
+        "control",
+        "--run",
+        "{run}"
+      ],
+      "arm": "control",
+      "env": {},
+      "id": "source-stance-feedback-off",
+      "pair": "source-stance-20261003",
+      "timeout_seconds": 900,
+      "unit": {
+        "source_stance": "current-toe-enthesis-20261002"
+      }
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/Users/home/numilab-human/Docs/media/native-stand-feedback-comparison-20261003/remote_stand_trial.py",
+        "--arm",
+        "treatment",
+        "--trial-id",
+        "treatment",
+        "--run",
+        "{run}"
+      ],
+      "arm": "treatment",
+      "env": {},
+      "id": "source-stance-feedback-on",
+      "pair": "source-stance-20261003",
+      "timeout_seconds": 900,
+      "unit": {
+        "source_stance": "current-toe-enthesis-20261002"
+      }
+    }
+  ],
+  "validity": [
+    {
+      "equals": "numi.science.human-stand-controller-comparison.v1",
+      "path": [
+        "schema"
+      ]
+    },
+    {
+      "equals": true,
+      "path": [
+        "run_completed"
+      ]
+    },
+    {
+      "equals": 1600,
+      "path": [
+        "step_count"
+      ]
+    },
+    {
+      "equals": 1600,
+      "path": [
+        "steps"
+      ]
+    },
+    {
+      "equals": 0.001,
+      "path": [
+        "timestep_seconds"
+      ]
+    },
+    {
+      "equals": 64,
+      "path": [
+        "contact_iterations"
+      ]
+    },
+    {
+      "equals": true,
+      "path": [
+        "input_hashes_match"
+      ]
+    },
+    {
+      "equals": 0.0,
+      "path": [
+        "root_assistance_force_n"
+      ]
+    },
+    {
+      "equals": 0.0,
+      "path": [
+        "root_assistance_torque_nm"
+      ]
+    },
+    {
+      "equals": "Apple M4 Pro",
+      "path": [
+        "device",
+        "cpu"
+      ]
+    }
+  ]
+}

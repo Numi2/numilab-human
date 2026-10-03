@@ -1,0 +1,171 @@
+{
+  "device": {
+    "cpu": "Apple M4 Pro",
+    "host": "ns-Mac-mini.local"
+  },
+  "evidence_boundary": "The requested 10-second current-toe-enthesis run did not complete. The last retained accepted progress sample is at 5.728 simulated seconds. By then the root had moved several metres from its initial sample, sampled root speed had peaked at 37.79 m/s, support force had ranged from zero to 267.7 kN, contact count had fallen to zero at an intermediate sample, maximum reported penetration was 9.51 mm, and muscle feedback correction reached its 0.2 bound. The operator terminated the process with SIGTERM after observing this unsupported, divergent state. This is a failure-focused partial diagnostic, not a 10-second result, standing pass, measured-human calibration, energy closure, replay, gait, or integrated whole-Human qualification.",
+  "execution": {
+    "accepted_progress_rows": 716,
+    "contact_iterations": 64,
+    "exit_code": 143,
+    "feedback": "reference_path length_gain=10 velocity_gain_seconds=1 excitation_correction_bound=0.2 update_period_seconds=0.001; observes committed joint q/v; changes muscle excitation only",
+    "last_retained_accepted_progress_seconds": 5.728,
+    "last_retained_accepted_progress_step": 5728,
+    "peak_resident_bytes": 47841280,
+    "progress_cadence_steps": 8,
+    "requested_simulated_seconds": 10.0,
+    "requested_steps": 10000,
+    "root_assistance": false,
+    "run_completed": false,
+    "swaps": 0,
+    "termination": "operator sent SIGTERM after observed loss of support and large state divergence",
+    "timestep_seconds": 0.001,
+    "wall_seconds": 1256.29
+  },
+  "failure_onset_analysis": {
+    "basis": "progress rows emitted every 8 accepted 1 ms steps; these are first recorded threshold crossings, not exact transition times",
+    "first_recorded_contact_loss_from_six": {
+      "contact_count": 5,
+      "horizontal_drift_from_first_sample_m": 0.037641764910557936,
+      "muscle_feedback_max_excitation_delta": 0.131803482771,
+      "root_linear_speed_m_s": 0.0495303446909,
+      "root_xyz_m": [
+        -0.0460160635412,
+        0.237438306212,
+        1.94460833073
+      ],
+      "simulated_seconds": 2.504,
+      "step": 2504,
+      "support_force_n": 953.768193722
+    },
+    "first_recorded_feedback_correction_at_bound": {
+      "contact_count": 6,
+      "horizontal_drift_from_first_sample_m": 0.0190777175295089,
+      "muscle_feedback_max_excitation_delta": 0.20000000298,
+      "root_linear_speed_m_s": 0.0805183707744,
+      "root_xyz_m": [
+        -0.0487908758223,
+        0.219047263265,
+        1.94496536255
+      ],
+      "simulated_seconds": 2.016,
+      "step": 2016,
+      "support_force_n": 905.345618725
+    },
+    "first_recorded_horizontal_drift_over_10mm": {
+      "contact_count": 6,
+      "horizontal_drift_from_first_sample_m": 0.010214346158594786,
+      "muscle_feedback_max_excitation_delta": 0.036619246006,
+      "root_linear_speed_m_s": 0.0501178554439,
+      "root_xyz_m": [
+        -0.0501929968596,
+        0.210220307112,
+        1.94514369965
+      ],
+      "simulated_seconds": 1.576,
+      "step": 1576,
+      "support_force_n": 953.037261963
+    },
+    "first_recorded_root_speed_over_1m_s": {
+      "contact_count": 4,
+      "horizontal_drift_from_first_sample_m": 0.4001464764388533,
+      "muscle_feedback_max_excitation_delta": 0.20000000298,
+      "root_linear_speed_m_s": 1.00480431325,
+      "root_xyz_m": [
+        0.0362257696688,
+        0.59075397253,
+        1.90118062496
+      ],
+      "simulated_seconds": 3.808,
+      "step": 3808,
+      "support_force_n": 906.145811081
+    },
+    "first_recorded_zero_support_force": {
+      "contact_count": 1,
+      "horizontal_drift_from_first_sample_m": 2.7773185645246485,
+      "muscle_feedback_max_excitation_delta": 0.200000017881,
+      "root_linear_speed_m_s": 2.2378368217,
+      "root_xyz_m": [
+        0.0410615243018,
+        2.97583317757,
+        -1.49093782902
+      ],
+      "simulated_seconds": 4.824,
+      "step": 4824,
+      "support_force_n": 0.0
+    },
+    "interpretation": "Drift is present before the correction reaches its cap and before recorded contact loss. Sparse progress rows establish temporal order only; they do not identify the initiating mechanical or controller cause.",
+    "next_gate": "Source-aligned failure-onset diagnosis before another long-horizon standing attempt."
+  },
+  "human_source_head": "86454b6eebdfd61ee5464acd2168b51d3e0a3df3",
+  "inputs_sha256": {
+    "MetalRobo.metallib": "a8778b712d342cd900766952147874bf9405679ca7c6fe466b166825a9c9cfe1",
+    "metalrobo_numilab_human_myosim_visual_probe": "424f373f2a63bd45088ec73631ed861e95f2921e1be7740c68f14021422ae4bf",
+    "myosim-fullbody-core-reference.nhrigid": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951",
+    "myosim-fullbody-joint-equalities.nheq": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a",
+    "myosim-fullbody-muscle-reference.nhmyo": "a4381465ca97a7af20108180e2fc0d0f0d9c11778d913de4c0728bd20ed459a7",
+    "myosim-fullbody-support-contact.nhcnt": "4d54f8155cd83baaee7af536099824ac0da61e5d5e77544b42c6e5ce1b48c907",
+    "numi-human-tendon-attachments.nhtendon": "130705ed1d9edd1d27d6e92d6b0558b1eaa0e1cdd3f7bdfe96b4aa05ab9e7b55"
+  },
+  "measured": {
+    "deterministic_replay": "not_requested",
+    "energy_closure": "not_measured",
+    "feedback_correction_bound_reached": true,
+    "last_progress_active_support_contacts": 1,
+    "last_progress_root_displacement_from_first_sample_m": [
+      -7.46609895676,
+      1.997603282331,
+      -1.6908604204670001
+    ],
+    "last_progress_root_horizontal_displacement_from_first_sample_m": 7.7287160968502615,
+    "last_progress_root_xyz_m": [
+      -7.51609754562,
+      2.19761109352,
+      0.254551261663
+    ],
+    "maximum_active_support_contacts": 6,
+    "maximum_feedback_excitation_delta": 0.200000017881,
+    "maximum_generalized_acceleration_progress_peak_mixed_units": 284013.40625,
+    "maximum_reported_support_penetration_m": 0.00950689986348,
+    "maximum_root_linear_speed_m_s": 37.7857969775,
+    "maximum_support_force_n": 267666.412354,
+    "minimum_active_support_contacts": 0,
+    "minimum_support_force_n": 0.0,
+    "root_assistance_force_n_all_progress_rows_max": 0.0,
+    "root_assistance_torque_nm_all_progress_rows_max": 0.0,
+    "runtime_resolved_envelope_bindings": 653,
+    "runtime_resolved_migrated_envelope_bindings": 18,
+    "runtime_resolved_point_bindings": 179,
+    "runtime_resolved_tendon_endpoints": 832
+  },
+  "outcome": "early_stopped_after_severe_divergence",
+  "retained_files": {
+    "execution-context.txt": {
+      "bytes": 1217,
+      "sha256": "41a86f9041e0637864971b060de250db21cec953bcc1ec88fbbc74b646453305"
+    },
+    "input-binary-sha256.txt": {
+      "bytes": 1163,
+      "sha256": "441c94248efc405bfc554a44cd0a3abea39c5ba999fedf4a3d81e2e27e4949c4"
+    },
+    "run.sh": {
+      "bytes": 2778,
+      "sha256": "2d8daf9c08d8b8f391f8860e6a7430ff272d02b96cb0acc2476c7a5eb846d89b"
+    },
+    "stderr.txt": {
+      "bytes": 813,
+      "sha256": "cc4c03d49788f9f88208094aa5a58e699578661672cbf60650e964bc86723c8b"
+    },
+    "stdout.txt.gz": {
+      "bytes": 84746,
+      "sha256": "f6da2e8468e8a24b2ba88b475161d36f74c82c3dd0844137cb2fcfc55c586a8f"
+    }
+  },
+  "runtime_source": {
+    "git_metadata_on_execution_export": false,
+    "human_command_commit": "f115eeb4af309068883a46cc739e79aef094d907",
+    "numi_lab_commit": "c35f0082ffcc29806d8bece2e31177b64fe7e5c0",
+    "runtime_is_current_human_head": false
+  },
+  "schema": "numi.human.native-stand-current-toe-enthesis-10s-attempt.v1"
+}

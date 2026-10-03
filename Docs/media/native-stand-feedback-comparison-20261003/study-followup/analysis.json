@@ -1,0 +1,42 @@
+{
+  "payload": {
+    "evidence_level": "simulation",
+    "issues": [
+      "source-stance-feedback-on-followup: invalid"
+    ],
+    "limitations": "Single paired comparison with no population inference. The run uses the exact 2 October source/runtime/input package to isolate the previously observed drift mechanism; it predates the current Human head and the 3 October neutral-coordinate overlay. The overlay preserves equality-projected rigid poses, but this comparison is not a fresh current-main 10-second standing result, anatomical or physiological qualification, clinical assessment, or a controller pass. The progress stream exposes root-level accepted summaries, not the full q/v vector or per-route force decomposition. The control process exit status was not captured by the original malformed wrapper, although its raw stdout contains 200 accepted rows and a terminal-state record at step 1600; the follow-up labels this explicitly and does not claim a notebook-native control receipt. Only the treatment executes under this follow-up notebook. This remains a one-pair source-specific simulation diagnostic.",
+    "mean_difference": null,
+    "observed_spread": null,
+    "paired_differences": [],
+    "registration_sha256": "e1ceca66115aa4b457a197f91cdfc72601572b7389b59941b02cf4dc048c1d8a",
+    "schema": "numi.science.analysis.v1",
+    "trials": [
+      {
+        "arm": "control",
+        "experimental_unit": {
+          "source_stance": "current-toe-enthesis-20261002"
+        },
+        "id": "source-stance-feedback-off-imported",
+        "pair": "source-stance-20261003",
+        "receipt_sha256": "140dc5efe58c946d5080f0596c0748f793dd6cfcff23ae544352b8aa8e7414cf",
+        "status": "valid",
+        "value": 0.002926672732445067
+      },
+      {
+        "arm": "treatment",
+        "experimental_unit": {
+          "source_stance": "current-toe-enthesis-20261002"
+        },
+        "id": "source-stance-feedback-on-followup",
+        "pair": "source-stance-20261003",
+        "reason": "native execution failed: process_exit_2",
+        "receipt_sha256": "20c333fd39fdc60419b5bd61069df3f68cb871dd0122139a82751ab17ec51c53",
+        "status": "invalid"
+      }
+    ],
+    "uncertainty": "Descriptive variation across declared pairs, not a confidence interval or population inference.",
+    "unit": "m",
+    "verdict": "inconclusive"
+  },
+  "sha256": "4f338b033c2fc2fc2a381bba1668b3ca8e356d1ab927c05141bee65d801aa170"
+}
