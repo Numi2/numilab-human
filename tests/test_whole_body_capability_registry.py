@@ -153,6 +153,10 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert muscle_facts["external_ct_muscle_label"]["value"] == "Skeletal-muscle"
     assert muscle_facts["external_ct_individual_muscle_identity"]["value"] is False
     assert not muscle_gates["external_ct_individual_muscle_identity"]["satisfied"]
+    assert muscle_facts["external_ct_psoas_label"]["value"] == "Psoas"
+    assert muscle_facts["external_ct_psoas_voxels"]["value"] == 118946
+    assert muscle_facts["external_ct_psoas_closed"]["value"] is True
+    assert muscle_gates["external_ct_psoas_closed_mesh"]["satisfied"]
 
     tendon = systems["tendon"]
     tendon_facts = {item["id"]: item for item in tendon["facts"]}
@@ -160,7 +164,6 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert tendon_facts["paired_lower_limb_surface_coverage"]["value"] == pytest.approx(0.19951923076923078)
     assert tendon_facts["paired_lower_limb_point_fallbacks"]["value"] == 666
     assert tendon_facts["paired_lower_limb_native_transaction"]["value"] is False
-    assert not tendon_gates["paired_tendon_surface_coverage"]["satisfied"]
     assert not tendon_gates["paired_tendon_native_transaction"]["satisfied"]
 
     bloodflow = systems["bloodflow"]

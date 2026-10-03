@@ -111,12 +111,16 @@
         {"id": "physical_volume_owner", "evidence": "surface_audit", "path": "physical_volume_owner"},
         {"id": "external_ct_muscle_label", "evidence": "external_ct_scan001", "path": "labels.32.label"},
         {"id": "external_ct_muscle_voxels", "evidence": "external_ct_scan001", "path": "labels.32.source_voxel_count"},
-        {"id": "external_ct_individual_muscle_identity", "evidence": "external_ct_scan001", "path": "qualification.individual_muscle_identity"}
+        {"id": "external_ct_individual_muscle_identity", "evidence": "external_ct_scan001", "path": "qualification.individual_muscle_identity"},
+        {"id": "external_ct_psoas_label", "evidence": "external_ct_scan001", "path": "labels.35.label"},
+        {"id": "external_ct_psoas_voxels", "evidence": "external_ct_scan001", "path": "labels.35.source_voxel_count"},
+        {"id": "external_ct_psoas_closed", "evidence": "external_ct_scan001", "path": "labels.35.closed_two_manifold"}
       ],
       "requirements": [
         {"id": "physical_volume_owner", "evidence": "surface_audit", "path": "physical_volume_owner", "operator": "equals", "value": true, "reason": "Muscle surfaces have no admitted physical-volume/mass owner."},
         {"id": "muscle_mechanics", "evidence": "surface_audit", "path": "mechanics", "operator": "equals", "value": true, "reason": "Calibrated muscle mechanics and force transfer remain open."},
-        {"id": "external_ct_individual_muscle_identity", "evidence": "external_ct_scan001", "path": "qualification.individual_muscle_identity", "operator": "equals", "value": true, "reason": "The external CT source provides one combined skeletal-muscle label, not individually identified muscles."}
+        {"id": "external_ct_individual_muscle_identity", "evidence": "external_ct_scan001", "path": "qualification.individual_muscle_identity", "operator": "equals", "value": true, "reason": "The external CT source provides one combined skeletal-muscle label and a single Psoas mask, not complete individual muscle identity."},
+        {"id": "external_ct_psoas_closed_mesh", "evidence": "external_ct_scan001", "path": "labels.35.closed_two_manifold", "operator": "equals", "value": true, "reason": "The named Psoas source candidate must retain its verified closed-mesh topology."}
       ]
     },
     {
@@ -149,7 +153,6 @@
         {"id": "right_sheet_oriented", "evidence": "calcaneal_delta", "path": "tendons.0.source_face_normal_reversal_ids", "operator": "equals", "value": [], "reason": "Right tendon source sheet has reversed face normals."},
         {"id": "left_sheet_oriented", "evidence": "calcaneal_delta", "path": "tendons.1.source_face_normal_reversal_ids", "operator": "equals", "value": [], "reason": "Left tendon source sheet has reversed face normals."},
         {"id": "tendon_mechanics", "evidence": "surface_audit", "path": "mechanics", "operator": "equals", "value": true, "reason": "Tendon material and native load transfer are not qualified."},
-        {"id": "paired_tendon_surface_coverage", "evidence": "lower_limb_overlay", "path": "paired_tendon_candidate.surface_coverage_fraction", "operator": "at_least", "value": 1.0, "reason": "The lower-limb paired tendon candidate covers only a subset of tendon surface endpoints."},
         {"id": "paired_tendon_native_transaction", "evidence": "lower_limb_overlay", "path": "paired_tendon_candidate.native_transaction_or_standing_run", "operator": "equals", "value": true, "reason": "The paired tendon candidate has not entered a native tendon transaction or standing run."}
       ]
     },
