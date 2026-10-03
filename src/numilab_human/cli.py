@@ -2331,6 +2331,12 @@ def parser() -> argparse.ArgumentParser:
         "gap-execution", help="inspect ledger owners, prerequisites and unqualified source target links",
     )
     add_gap_execution_arguments(execution)
+    from .gap_reference_audit import add_arguments as add_gap_reference_audit_arguments
+    reference_audit = commands.add_parser(
+        "gap-reference-audit",
+        help="verify registered Human evidence paths, local Markdown links and JSON syntax",
+    )
+    add_gap_reference_audit_arguments(reference_audit)
     from .healthy_total_body_ct_source import add_arguments as add_healthy_total_body_ct_source_arguments
     healthy_total_body_ct_source = commands.add_parser(
         "healthy-total-body-ct-source",

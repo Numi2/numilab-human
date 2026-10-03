@@ -67,7 +67,7 @@ clinical registration. The execution boundary and inputs are retained in the
 
 ## Corrected BodyParts3D calcaneal attachment check — 2026-08-27
 
-The four-angle [source-bound attachment review](VISUAL_PROGRESS.md#corrected-bodyparts3d-calcaneal-attachment--2026-08-27)
+The four-angle [source-bound attachment review](VISUAL_PROGRESS.md#retained-bodyparts3d-calcaneal-correspondence-evidence--2026-08-27)
 was rendered at 2048 px on the local Apple M4 after the bounded calf drive.
 It uses the exact `FJ1405` calcaneal tendon and `FJ3360` calcaneus with their
 per-anchor, articulated Core registration. The right tendon has 944 fully
@@ -85,7 +85,7 @@ are in the [capture record](media/myosim-native-calcaneal-attachment-2048/captur
 
 ## Smooth-insertion right-calf mechanics inspection — 2026-08-27
 
-The four-angle [right-calf mechanics inspection](VISUAL_PROGRESS.md#smooth-insertion-right-calf-mechanics-inspection--2026-08-27)
+The four-angle [right-calf mechanics inspection](VISUAL_PROGRESS.md#retired-smooth-insertion-right-calf-diagnostic--2026-08-27)
 was reviewed from front, oblique, side, and rear at 2048 px. The original
 matching-source tendon is retained as a local provenance record, but its
 serrated closed distal cap is not present in this visual successor. A single
@@ -333,7 +333,7 @@ attachments, contact, replay, standing, or gait.
 ## Retired native muscle-driven BodyParts3D major-bone overlay — 2026-08-27
 
 The four M4 Pro frames in
-[visual progress](VISUAL_PROGRESS.md#native-bounded-muscle-driven-27-bone-snapshot--2026-08-27)
+[visual progress](VISUAL_PROGRESS.md#retired-bounded-muscle-driven-27-bone-route-overlay-snapshot--2026-08-27)
 re-run the current 27-mesh `NHBONES1` binding after one bounded full-body muscle
 force step. Core `2aab522` projects all 416 source MyoSim muscles at the
 source-default activation/excitation, advances an FP64 free-body state, and
@@ -347,7 +347,7 @@ contact, recurrence, muscle-belly/skin deformation, or stability validation.
 ## Retired native articulated BodyParts3D major-bone overlay — 2026-08-27
 
 The four inspected frames in
-[visual progress](VISUAL_PROGRESS.md#native-bodyparts3d-27-major-bone-binding--2026-08-27)
+[visual progress](VISUAL_PROGRESS.md#retired-native-bodyparts3d-27-major-bone-route-overlay-snapshot--2026-08-27)
 are historical pose-bound BodyParts3D geometry evidence. An offline import
 uses an 18-mesh unambiguous similarity-fit set, then writes 27 exact source
 bone meshes and their link-local uniform-scale transforms into `NHBONES1`.
