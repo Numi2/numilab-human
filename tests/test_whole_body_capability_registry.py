@@ -103,7 +103,7 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert report["counts"]["required_subsystems"] == len(SYSTEM_IDS)
     assert report["counts"]["qualified_subsystems"] < len(SYSTEM_IDS)
     assert not report["qualification"]["whole_human_capability"]
-    assert report["counts"]["verified_evidence_sources"] == 37
+    assert report["counts"]["verified_evidence_sources"] == 44
     assert report["counts"]["missing_evidence_sources"] == 0
     assert report["counts"]["schema_mismatch_sources"] == 0
     assert systems["whole_body_anatomy"]["facts"][0]["value"] == 46
@@ -208,6 +208,16 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert anatomy_facts["external_ct_kidney_ordered_pairs"]["value"] == 30
     assert anatomy_facts["external_ct_kidney_lateral_separation_median_mm"]["value"] == pytest.approx(126.4233481566)
     assert anatomy_facts["external_ct_kidney_balance_ratio_median"]["value"] == pytest.approx(0.9466252060)
+    assert anatomy_facts["external_ct_lower_limb_split_closed_meshes"]["value"] == 4
+    assert anatomy_facts["external_ct_lower_limb_split_raw_defects_closed"]["value"] == 2
+    assert anatomy_facts["external_ct_lower_limb_split_geometry_preserved"]["value"] is True
+    assert anatomy_facts["external_ct_organ_vessel_two_scan_mesh_count"]["value"] == 24
+    assert anatomy_facts["external_ct_organ_vessel_two_scan_closed_meshes"]["value"] == 24
+    assert anatomy_facts["external_ct_organ_vessel_two_scan_raw_defects_closed"]["value"] == 12
+    assert anatomy_facts["external_ct_organ_vessel_two_scan_all_source_audits_passed"]["value"] is True
+    assert anatomy_facts["external_ct_organ_vessel_two_scan_same_frame_registration"]["value"] is False
+    assert next(item for item in anatomy["evidence"]
+                if item["id"] == "external_ct_organ_vessel_split_comparison")["status"] == "verified"
     assert not anatomy_gates["external_scan_subject_binding"]["satisfied"]
     assert next(item for item in anatomy["evidence"]
                 if item["id"] == "patella_rebase")["status"] == "verified"
@@ -254,6 +264,11 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert organ_facts["external_ct_kidney_occupancy_median_ml"]["value"] == pytest.approx(306.5533198003)
     assert organ_facts["external_ct_lung_26_single_component_scans"]["value"] == 25
     assert organ_facts["external_ct_lung_26_component_max"]["value"] == 6
+    assert organ_facts["external_two_scan_closed_meshes"]["value"] == 24
+    assert organ_facts["external_two_scan_contact_defects_fixed"]["value"] == 12
+    assert organ_facts["external_two_scan_source_audit_passed"]["value"] is True
+    assert next(item for item in organs["evidence"]
+                if item["id"] == "external_ct_organ_vessel_split_audit")["status"] == "verified"
     assert not organ_gates["external_vessel_lumen_connectivity"]["satisfied"]
 
     muscle = systems["muscle"]
@@ -290,4 +305,8 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert bloodflow_facts["external_ct_vci_26_single_component_scans"]["value"] == 29
     assert bloodflow_facts["external_ct_aorta_26_component_max"]["value"] == 1
     assert bloodflow_facts["external_ct_vci_26_component_max"]["value"] == 2
+    assert bloodflow_facts["external_ct_aorta_scan001_surface_closed"]["value"] is True
+    assert bloodflow_facts["external_ct_vci_scan001_surface_closed"]["value"] is True
+    assert bloodflow_facts["external_ct_aorta_scan002_surface_closed"]["value"] is True
+    assert bloodflow_facts["external_ct_vci_scan002_surface_closed"]["value"] is True
     assert not bloodflow_gates["external_ct_vascular_lumen_connectivity"]["satisfied"]

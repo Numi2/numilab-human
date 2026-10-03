@@ -13,7 +13,11 @@
         {"id": "external_ct_component_census", "path": "Docs/media/healthy-total-body-ct-component-census-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-component-census.v1"},
         {"id": "external_ct_paired_kidneys", "path": "Docs/media/healthy-total-body-ct-paired-kidney-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-paired-kidney-audit.v1"},
         {"id": "patella_rebase", "path": "Docs/media/numi-human-patella-neutral-rebase-geometry-20261003/receipt.json", "schema": "numi.human.lower-limb-patella-rebase-geometry-evidence.v1"},
-        {"id": "patellofemoral_pose_intersections", "path": "Docs/media/numi-human-patellofemoral-pose-intersections-20261003/receipt.json", "schema": "numi.human.patellofemoral-pose-intersection-audit.v1"}
+        {"id": "patellofemoral_pose_intersections", "path": "Docs/media/numi-human-patellofemoral-pose-intersections-20261003/receipt.json", "schema": "numi.human.patellofemoral-pose-intersection-audit.v1"},
+        {"id": "external_ct_lower_limb_split_audit", "path": "Docs/media/healthy-total-body-ct-surface-20261003/independent-lower-limb-contact-split-scan-001-audit-v1.json", "schema": "numi.healthy-total-body-ct-surface-independent-audit.v1"},
+        {"id": "external_ct_lower_limb_split_comparison", "path": "Docs/media/healthy-total-body-ct-surface-20261003/lower-limb-contact-split-controlled-comparison-v1.json", "schema": "numi.healthy-total-body-ct-lower-limb-contact-split-controlled-comparison.v1"},
+        {"id": "external_ct_organ_vessel_split_audit", "path": "Docs/media/healthy-total-body-ct-surface-20261003/independent-current-contact-split-organ-scans-001-002-audit-v1.json", "schema": "numi.healthy-total-body-ct-surface-independent-audit.v1"},
+        {"id": "external_ct_organ_vessel_split_comparison", "path": "Docs/media/healthy-total-body-ct-surface-20261003/current-contact-split-organ-scans-001-002-controlled-comparison-v1.json", "schema": "numi.healthy-total-body-ct-contact-split-controlled-comparison.v2"}
       ],
       "facts": [
         {"id": "source_families", "evidence": "visceral", "path": "coverage.source_families"},
@@ -22,6 +26,14 @@
         {"id": "declared_membership", "evidence": "visceral", "path": "qualification.complete_declared_family_membership"},
         {"id": "external_ct_surface_candidates", "evidence": "external_ct_scan001", "path": "coverage.surface_candidate_count"},
         {"id": "external_ct_closed_meshes", "evidence": "external_ct_scan001", "path": "topology.closed_two_manifold_label_count"},
+        {"id": "external_ct_lower_limb_split_closed_meshes", "evidence": "external_ct_lower_limb_split_audit", "path": "runs.0.closed_two_manifold_mesh_count"},
+        {"id": "external_ct_lower_limb_split_raw_defects_closed", "evidence": "external_ct_lower_limb_split_comparison", "path": "defective_surfaces_closed_by_candidate"},
+        {"id": "external_ct_lower_limb_split_geometry_preserved", "evidence": "external_ct_lower_limb_split_comparison", "path": "all_triangle_coordinate_sequences_identical"},
+        {"id": "external_ct_organ_vessel_two_scan_mesh_count", "evidence": "external_ct_organ_vessel_split_comparison", "path": "surface_unit_count"},
+        {"id": "external_ct_organ_vessel_two_scan_closed_meshes", "evidence": "external_ct_organ_vessel_split_comparison", "path": "candidate_closed_surface_count"},
+        {"id": "external_ct_organ_vessel_two_scan_raw_defects_closed", "evidence": "external_ct_organ_vessel_split_comparison", "path": "defective_surfaces_closed_by_candidate"},
+        {"id": "external_ct_organ_vessel_two_scan_all_source_audits_passed", "evidence": "external_ct_organ_vessel_split_comparison", "path": "all_independent_ply_source_audits_passed"},
+        {"id": "external_ct_organ_vessel_two_scan_same_frame_registration", "evidence": "external_ct_organ_vessel_split_audit", "path": "cross_scan_comparison.registered_same_scan_frame"},
         {"id": "external_ct_max_volume_error", "evidence": "external_ct_scan001", "path": "integrity.maximum_relative_signed_volume_error"},
         {"id": "external_ct_subject_binding", "evidence": "external_ct_scan001", "path": "qualification.current_numi_subject_binding"},
         {"id": "external_ct_cohort_scan_count", "evidence": "external_ct_cohort_relations", "path": "counts.scan_count"},
@@ -75,7 +87,9 @@
         {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"},
         {"id": "external_ct_cohort_relations", "path": "Docs/media/healthy-total-body-ct-anatomy-relations-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-anatomy-relations.v1"},
         {"id": "external_ct_component_census", "path": "Docs/media/healthy-total-body-ct-component-census-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-component-census.v1"},
-        {"id": "external_ct_paired_kidneys", "path": "Docs/media/healthy-total-body-ct-paired-kidney-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-paired-kidney-audit.v1"}
+        {"id": "external_ct_paired_kidneys", "path": "Docs/media/healthy-total-body-ct-paired-kidney-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-paired-kidney-audit.v1"},
+        {"id": "external_ct_organ_vessel_split_audit", "path": "Docs/media/healthy-total-body-ct-surface-20261003/independent-current-contact-split-organ-scans-001-002-audit-v1.json", "schema": "numi.healthy-total-body-ct-surface-independent-audit.v1"},
+        {"id": "external_ct_organ_vessel_split_comparison", "path": "Docs/media/healthy-total-body-ct-surface-20261003/current-contact-split-organ-scans-001-002-controlled-comparison-v1.json", "schema": "numi.healthy-total-body-ct-contact-split-controlled-comparison.v2"}
       ],
       "facts": [
         {"id": "surface_count", "evidence": "visceral", "path": "coverage.total_surfaces"},
@@ -86,6 +100,9 @@
         {"id": "external_vci_label", "evidence": "external_ct_scan001", "path": "labels.10.label"},
         {"id": "external_vascular_lumen_connectivity", "evidence": "external_ct_scan001", "path": "qualification.vascular_lumen_or_branch_connectivity"},
         {"id": "external_subject_binding", "evidence": "external_ct_scan001", "path": "qualification.current_numi_subject_binding"},
+        {"id": "external_two_scan_closed_meshes", "evidence": "external_ct_organ_vessel_split_comparison", "path": "candidate_closed_surface_count"},
+        {"id": "external_two_scan_contact_defects_fixed", "evidence": "external_ct_organ_vessel_split_comparison", "path": "defective_surfaces_closed_by_candidate"},
+        {"id": "external_two_scan_source_audit_passed", "evidence": "external_ct_organ_vessel_split_comparison", "path": "all_independent_ply_source_audits_passed"},
         {"id": "external_ct_cohort_scan_count", "evidence": "external_ct_cohort_relations", "path": "counts.scan_count"},
         {"id": "external_ct_organ_ordering_relations_passed", "evidence": "external_ct_cohort_relations", "path": "counts.passed_relation_rows"},
         {"id": "external_ct_organ_ordering_relations_total", "evidence": "external_ct_cohort_relations", "path": "counts.total_relation_rows"},
@@ -220,7 +237,8 @@
       "evidence": [
         {"id": "regional_transport", "path": "Docs/media/organ-blood-tissue-transport-20260914/receipt-v1.json", "schema": "HumanPack.organ-blood-tissue-transport-candidate.v1"},
         {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"},
-        {"id": "external_ct_component_census", "path": "Docs/media/healthy-total-body-ct-component-census-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-component-census.v1"}
+        {"id": "external_ct_component_census", "path": "Docs/media/healthy-total-body-ct-component-census-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-component-census.v1"},
+        {"id": "external_ct_organ_vessel_split_audit", "path": "Docs/media/healthy-total-body-ct-surface-20261003/independent-current-contact-split-organ-scans-001-002-audit-v1.json", "schema": "numi.healthy-total-body-ct-surface-independent-audit.v1"}
       ],
       "facts": [
         {"id": "accepted_steps", "evidence": "regional_transport", "path": "accepted_steps"},
@@ -232,6 +250,10 @@
         {"id": "external_ct_aorta_label", "evidence": "external_ct_scan001", "path": "labels.1.label"},
         {"id": "external_ct_vci_label", "evidence": "external_ct_scan001", "path": "labels.10.label"},
         {"id": "external_ct_vascular_lumen_connectivity", "evidence": "external_ct_scan001", "path": "qualification.vascular_lumen_or_branch_connectivity"},
+        {"id": "external_ct_aorta_scan001_surface_closed", "evidence": "external_ct_organ_vessel_split_audit", "path": "runs.0.meshes.1.closed_two_manifold"},
+        {"id": "external_ct_vci_scan001_surface_closed", "evidence": "external_ct_organ_vessel_split_audit", "path": "runs.0.meshes.10.closed_two_manifold"},
+        {"id": "external_ct_aorta_scan002_surface_closed", "evidence": "external_ct_organ_vessel_split_audit", "path": "runs.1.meshes.1.closed_two_manifold"},
+        {"id": "external_ct_vci_scan002_surface_closed", "evidence": "external_ct_organ_vessel_split_audit", "path": "runs.1.meshes.10.closed_two_manifold"},
         {"id": "external_ct_aorta_26_single_component_scans", "evidence": "external_ct_component_census", "path": "distributions.Aorta.full26.single_component_scan_count"},
         {"id": "external_ct_vci_26_single_component_scans", "evidence": "external_ct_component_census", "path": "distributions.VCI.full26.single_component_scan_count"},
         {"id": "external_ct_aorta_26_component_max", "evidence": "external_ct_component_census", "path": "distributions.Aorta.full26.maximum"},

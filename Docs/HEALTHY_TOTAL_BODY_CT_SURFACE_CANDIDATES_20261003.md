@@ -133,6 +133,34 @@ anterior surface ordering establishes expert segmentation accuracy, subject
 binding, clinical anatomy, patellar tracking, physical tissue ownership,
 mechanics, or physiology.
 
+## Two-scan organ and vessel topology refresh
+
+The best retained contact-split candidates now cover all 12 organ/major-vessel
+labels in scans 001 and 002. Independent re-audit of both candidate receipts
+passes all 24 serialized meshes against the pinned archive, NIfTI members,
+affines, voxel counts, source envelopes, topology, and occupancy volumes. The
+controlled comparison with the two raw scans finds 12/24 raw meshes closed and
+24/24 candidates closed; 12 raw defects are resolved. Every triangle count and
+ordered triangle-coordinate sequence is unchanged, all surface-area deltas are
+zero, and the maximum relative occupancy-volume error is
+`3.758122649536059e-15`. Two unique alternate pairings resolve the scan-001
+Liver and Lung saddles. Scan frames remain independent and unregistered.
+
+The current [scan-001 plan and candidate](media/healthy-total-body-ct-surface-20261003/preregistered-contact-split-scan-001-manifold-plan-v4.json)
+and [scan-002 plan and candidate](media/healthy-total-body-ct-surface-20261003/preregistered-contact-split-scan-002-plan-v2.json)
+are joined by the [24-mesh independent audit](media/healthy-total-body-ct-surface-20261003/independent-current-contact-split-organ-scans-001-002-audit-v1.json)
+and [raw-control comparison](media/healthy-total-body-ct-surface-20261003/current-contact-split-organ-scans-001-002-controlled-comparison-v1.json).
+Their SHA-256 values are `3ce0094da4a34b8ee22bf235f0ea344c9036fffcca347f9c60c1fba47272821e`
+and `574c310301265f8fceb15e1264c03c5df1b6d279d74a1652b91b2f7129572ae1`.
+The refreshed [whole-body capability registry](media/whole-body-capability-registry-20261003/ct-multiscan-refresh-v1.json)
+binds this audit and the lower-limb comparison. It remains `partial`: 44
+evidence sources verified, 53 requirements open, and 0/12 subsystems qualified
+(SHA-256 `5f9956060e5c7bb92784d93429d51d49e643b32e3fb2a6b63245e724d8ef22e8`).
+
+These are still scan-local automatic source masks, not Numi subject anatomy.
+Aorta and VCI surfaces do not establish vascular lumens, branch connectivity,
+flow, or blood ownership; no clinical or mechanical qualification follows.
+
 These are topology-only candidates for external automatic segmentations in
 each scan's own coordinate frame. The scans are not registered to Numi's
 mechanical subject; expert segmentation accuracy, tissue ownership, mechanics,

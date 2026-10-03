@@ -23,6 +23,19 @@ resolve the MyoSim patellofemoral crossings, or qualify clinical anatomy,
 mechanics, contact, or physiology. The [plan, meshes, audit, and comparison](HEALTHY_TOTAL_BODY_CT_SURFACE_CANDIDATES_20261003.md#scan-001-lower-limb-contact-split-candidate)
 preserve the exact source identities and controls.
 
+## External two-scan organ and vessel topology refresh — 2026-10-03
+
+The best retained contact-split candidates now independently pass for all 12
+organ/major-vessel masks in each of two TCIA scans: 24/24 are closed
+two-manifolds, compared with 12/24 in the raw controls. Twelve raw contact
+defects were closed, every ordered triangle-coordinate sequence and area is
+preserved, and both independent archive/NIfTI/PLY audits pass. The refreshed
+capability receipt now binds these candidates and the lower-limb result: 44
+evidence sources verified, 53 requirements still open, and 0/12 systems
+qualified. These scan-local automatic masks still do not establish expert
+accuracy, Numi-subject anatomy, a vascular lumen, or tissue mechanics. See the
+[two-scan comparison and refreshed evidence record](HEALTHY_TOTAL_BODY_CT_SURFACE_CANDIDATES_20261003.md#two-scan-organ-and-vessel-topology-refresh).
+
 ## Current toe-enthesis standing prefix — 2026-10-02
 
 The physical M4 Pro accepted a 512-step, 1 ms source-path-feedback prefix using
