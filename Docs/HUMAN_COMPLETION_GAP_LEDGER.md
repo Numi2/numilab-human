@@ -131,6 +131,15 @@ identity, vascular lumen and flow connectivity, cardiac electrical/chamber
 mechanics, subject registration, tissue ownership and Numi integration remain
 open.
 
+The versioned [whole-body capability profile](../config/whole-body-capability-registry.v1.json)
+now joins this hash-checked audit into anatomy, internal-organ, muscle and
+blood-flow evidence. The generated registry exposes all 36 scan-local surface
+candidates, 14 closed meshes, the Aorta/VCI labels, and the combined
+Skeletal-muscle mask while explicitly leaving Numi-subject binding, connected
+vascular lumens and individual muscle identity unsatisfied. This makes the
+external geometry visible to subsystem reviews without admitting it as owned
+or qualified Human anatomy.
+
 ## HCM1 source activation map import — 2026-10-03
 
 The [Rodero-2026 HCM1 importer](CARDIAC_RODERO26_HCM_SOURCE_ACTIVATION_20261003.md)

@@ -7,18 +7,24 @@
       "domain": "source anatomy",
       "scope": "Complete, disjoint, physically owned whole-body anatomy rather than declared source-family coverage alone.",
       "evidence": [
-        {"id": "visceral", "path": "Docs/media/whole-visceral-coverage-20260929/receipt.json", "schema": "numi.human.whole-visceral-source-evidence.v1"}
+        {"id": "visceral", "path": "Docs/media/whole-visceral-coverage-20260929/receipt.json", "schema": "numi.human.whole-visceral-source-evidence.v1"},
+        {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"}
       ],
       "facts": [
         {"id": "source_families", "evidence": "visceral", "path": "coverage.source_families"},
         {"id": "unique_source_members", "evidence": "visceral", "path": "coverage.required_unique_source_members"},
         {"id": "source_geometry", "evidence": "visceral", "path": "qualification.source_geometry"},
-        {"id": "declared_membership", "evidence": "visceral", "path": "qualification.complete_declared_family_membership"}
+        {"id": "declared_membership", "evidence": "visceral", "path": "qualification.complete_declared_family_membership"},
+        {"id": "external_ct_surface_candidates", "evidence": "external_ct_scan001", "path": "coverage.surface_candidate_count"},
+        {"id": "external_ct_closed_meshes", "evidence": "external_ct_scan001", "path": "topology.closed_two_manifold_label_count"},
+        {"id": "external_ct_max_volume_error", "evidence": "external_ct_scan001", "path": "integrity.maximum_relative_signed_volume_error"},
+        {"id": "external_ct_subject_binding", "evidence": "external_ct_scan001", "path": "qualification.current_numi_subject_binding"}
       ],
       "requirements": [
         {"id": "whole_human_anatomy", "evidence": "visceral", "path": "qualification.whole_human_anatomy", "operator": "equals", "value": true, "reason": "Whole-body anatomical coverage is not yet admitted."},
         {"id": "disjoint_tissue", "evidence": "visceral", "path": "qualification.disjoint_tissue", "operator": "equals", "value": true, "reason": "Cross-domain tissue disjointness is not yet verified."},
-        {"id": "physical_volume", "evidence": "visceral", "path": "qualification.physical_volume", "operator": "equals", "value": true, "reason": "Source surfaces do not yet have admitted physical volumes."}
+        {"id": "physical_volume", "evidence": "visceral", "path": "qualification.physical_volume", "operator": "equals", "value": true, "reason": "Source surfaces do not yet have admitted physical volumes."},
+        {"id": "external_scan_subject_binding", "evidence": "external_ct_scan001", "path": "qualification.current_numi_subject_binding", "operator": "equals", "value": true, "reason": "Scan 001 surfaces remain scan-local external reference geometry, not registered Numi anatomy."}
       ]
     },
     {
@@ -26,18 +32,26 @@
       "domain": "internal organ anatomy and mechanics",
       "scope": "Source organ geometry with connected lumens, disjoint tissues, physical volumes, and mechanical owners.",
       "evidence": [
-        {"id": "visceral", "path": "Docs/media/whole-visceral-coverage-20260929/receipt.json", "schema": "numi.human.whole-visceral-source-evidence.v1"}
+        {"id": "visceral", "path": "Docs/media/whole-visceral-coverage-20260929/receipt.json", "schema": "numi.human.whole-visceral-source-evidence.v1"},
+        {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"}
       ],
       "facts": [
         {"id": "surface_count", "evidence": "visceral", "path": "coverage.total_surfaces"},
         {"id": "connected_lumen", "evidence": "visceral", "path": "qualification.connected_lumen"},
-        {"id": "mechanics", "evidence": "visceral", "path": "qualification.mechanics"}
+        {"id": "mechanics", "evidence": "visceral", "path": "qualification.mechanics"},
+        {"id": "external_organ_vessel_labels", "evidence": "external_ct_scan001", "path": "coverage.groups.organ-vessel"},
+        {"id": "external_aorta_label", "evidence": "external_ct_scan001", "path": "labels.1.label"},
+        {"id": "external_vci_label", "evidence": "external_ct_scan001", "path": "labels.10.label"},
+        {"id": "external_vascular_lumen_connectivity", "evidence": "external_ct_scan001", "path": "qualification.vascular_lumen_or_branch_connectivity"},
+        {"id": "external_subject_binding", "evidence": "external_ct_scan001", "path": "qualification.current_numi_subject_binding"}
       ],
       "requirements": [
         {"id": "disjoint_tissue", "evidence": "visceral", "path": "qualification.disjoint_tissue", "operator": "equals", "value": true, "reason": "Cross-domain organ/tissue separation is not yet admitted."},
         {"id": "connected_lumen", "evidence": "visceral", "path": "qualification.connected_lumen", "operator": "equals", "value": true, "reason": "Organ and vascular source geometry is not a connected lumen."},
         {"id": "physical_volume", "evidence": "visceral", "path": "qualification.physical_volume", "operator": "equals", "value": true, "reason": "Organ geometry has no admitted physical-volume owner."},
-        {"id": "organ_mechanics", "evidence": "visceral", "path": "qualification.mechanics", "operator": "equals", "value": true, "reason": "Organ mechanics and loading are not qualified."}
+        {"id": "organ_mechanics", "evidence": "visceral", "path": "qualification.mechanics", "operator": "equals", "value": true, "reason": "Organ mechanics and loading are not qualified."},
+        {"id": "external_source_subject_binding", "evidence": "external_ct_scan001", "path": "qualification.current_numi_subject_binding", "operator": "equals", "value": true, "reason": "External scan-local organ candidates have not been registered to the Numi subject."},
+        {"id": "external_vessel_lumen_connectivity", "evidence": "external_ct_scan001", "path": "qualification.vascular_lumen_or_branch_connectivity", "operator": "equals", "value": true, "reason": "The external vessel masks do not establish lumen surfaces or branch connectivity."}
       ]
     },
     {
@@ -70,17 +84,22 @@
       "domain": "muscle anatomy and mechanics",
       "scope": "Admitted muscle surfaces, physical volume/mass ownership, force transmission, and calibrated mechanics.",
       "evidence": [
-        {"id": "surface_audit", "path": "Docs/media/muscle-surface-embeddedness-20260929/receipt-v3.json", "schema": "numi.human.compiled-muscle-surface-embeddedness.v1"}
+        {"id": "surface_audit", "path": "Docs/media/muscle-surface-embeddedness-20260929/receipt-v3.json", "schema": "numi.human.compiled-muscle-surface-embeddedness.v1"},
+        {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"}
       ],
       "facts": [
         {"id": "muscle_surface_count", "evidence": "surface_audit", "path": "coverage.muscle_surface_count"},
         {"id": "embedded_muscle_surface_candidates", "evidence": "surface_audit", "path": "coverage.single_embedded_muscle_surface_candidate_count"},
         {"id": "mechanics", "evidence": "surface_audit", "path": "mechanics"},
-        {"id": "physical_volume_owner", "evidence": "surface_audit", "path": "physical_volume_owner"}
+        {"id": "physical_volume_owner", "evidence": "surface_audit", "path": "physical_volume_owner"},
+        {"id": "external_ct_muscle_label", "evidence": "external_ct_scan001", "path": "labels.32.label"},
+        {"id": "external_ct_muscle_voxels", "evidence": "external_ct_scan001", "path": "labels.32.source_voxel_count"},
+        {"id": "external_ct_individual_muscle_identity", "evidence": "external_ct_scan001", "path": "qualification.individual_muscle_identity"}
       ],
       "requirements": [
         {"id": "physical_volume_owner", "evidence": "surface_audit", "path": "physical_volume_owner", "operator": "equals", "value": true, "reason": "Muscle surfaces have no admitted physical-volume/mass owner."},
-        {"id": "muscle_mechanics", "evidence": "surface_audit", "path": "mechanics", "operator": "equals", "value": true, "reason": "Calibrated muscle mechanics and force transfer remain open."}
+        {"id": "muscle_mechanics", "evidence": "surface_audit", "path": "mechanics", "operator": "equals", "value": true, "reason": "Calibrated muscle mechanics and force transfer remain open."},
+        {"id": "external_ct_individual_muscle_identity", "evidence": "external_ct_scan001", "path": "qualification.individual_muscle_identity", "operator": "equals", "value": true, "reason": "The external CT source provides one combined skeletal-muscle label, not individually identified muscles."}
       ]
     },
     {
@@ -113,7 +132,8 @@
       "domain": "blood flow and tissue exchange",
       "scope": "Spatial blood transport through owned lumens with mass, moment, exchange, and rollback closure.",
       "evidence": [
-        {"id": "regional_transport", "path": "Docs/media/organ-blood-tissue-transport-20260914/receipt-v1.json", "schema": "HumanPack.organ-blood-tissue-transport-candidate.v1"}
+        {"id": "regional_transport", "path": "Docs/media/organ-blood-tissue-transport-20260914/receipt-v1.json", "schema": "HumanPack.organ-blood-tissue-transport-candidate.v1"},
+        {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"}
       ],
       "facts": [
         {"id": "accepted_steps", "evidence": "regional_transport", "path": "accepted_steps"},
@@ -121,14 +141,18 @@
         {"id": "conserved_mass", "evidence": "regional_transport", "path": "conservation.mass_conserved"},
         {"id": "conserved_volume", "evidence": "regional_transport", "path": "conservation.volume_conserved"},
         {"id": "bed_count", "evidence": "regional_transport", "path": "counts.bed_count"},
-        {"id": "rollback", "evidence": "regional_transport", "path": "rollback.rejected_candidate_state_neutral"}
+        {"id": "rollback", "evidence": "regional_transport", "path": "rollback.rejected_candidate_state_neutral"},
+        {"id": "external_ct_aorta_label", "evidence": "external_ct_scan001", "path": "labels.1.label"},
+        {"id": "external_ct_vci_label", "evidence": "external_ct_scan001", "path": "labels.10.label"},
+        {"id": "external_ct_vascular_lumen_connectivity", "evidence": "external_ct_scan001", "path": "qualification.vascular_lumen_or_branch_connectivity"}
       ],
       "requirements": [
         {"id": "anatomical_lumen_owner", "evidence": "regional_transport", "path": "qualification.anatomical_vessel_tube_or_lumen", "operator": "equals", "value": true, "reason": "Regional flow is routed through candidates, not admitted anatomical lumens."},
         {"id": "blood_spatial_moments", "evidence": "regional_transport", "path": "qualification.blood_first_second_spatial_moments", "operator": "equals", "value": true, "reason": "Only zeroth-moment mass/volume transport is closed."},
         {"id": "mechanical_mass_owners", "evidence": "regional_transport", "path": "qualification.mechanical_mass_owner", "operator": "equals", "value": true, "reason": "Mechanical blood and tissue mass owners are absent."},
         {"id": "two_way_tissue_exchange", "evidence": "regional_transport", "path": "qualification.two_way_tissue_exchange", "operator": "equals", "value": true, "reason": "Blood-to-tissue exchange is not qualified."},
-        {"id": "calibrated_material_density", "evidence": "regional_transport", "path": "qualification.material_density_calibrated", "operator": "equals", "value": true, "reason": "Transport density and subject physiology are candidates, not calibrated."}
+        {"id": "calibrated_material_density", "evidence": "regional_transport", "path": "qualification.material_density_calibrated", "operator": "equals", "value": true, "reason": "Transport density and subject physiology are candidates, not calibrated."},
+        {"id": "external_ct_vascular_lumen_connectivity", "evidence": "external_ct_scan001", "path": "qualification.vascular_lumen_or_branch_connectivity", "operator": "equals", "value": true, "reason": "The external CT masks do not supply connected lumen geometry or flow topology."}
       ]
     },
     {

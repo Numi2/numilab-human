@@ -108,3 +108,32 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert systems["cardiac_mechanics"]["facts"][2]["value"] == 0
     assert not systems["cardiac_electrical"]["requirements"][0]["satisfied"]
     assert not systems["skin"]["requirements"][0]["satisfied"]
+
+    anatomy = systems["whole_body_anatomy"]
+    anatomy_facts = {item["id"]: item for item in anatomy["facts"]}
+    anatomy_gates = {item["id"]: item for item in anatomy["requirements"]}
+    assert next(item for item in anatomy["evidence"]
+                if item["id"] == "external_ct_scan001")["status"] == "verified"
+    assert anatomy_facts["external_ct_surface_candidates"]["value"] == 36
+    assert anatomy_facts["external_ct_closed_meshes"]["value"] == 14
+    assert anatomy_facts["external_ct_max_volume_error"]["value"] < 1e-9
+    assert anatomy_facts["external_ct_subject_binding"]["value"] is False
+    assert not anatomy_gates["external_scan_subject_binding"]["satisfied"]
+
+    organs = systems["internal_organs"]
+    organ_facts = {item["id"]: item for item in organs["facts"]}
+    organ_gates = {item["id"]: item for item in organs["requirements"]}
+    assert organ_facts["external_aorta_label"]["value"] == "Aorta"
+    assert organ_facts["external_vci_label"]["value"] == "VCI"
+    assert not organ_gates["external_vessel_lumen_connectivity"]["satisfied"]
+
+    muscle = systems["muscle"]
+    muscle_facts = {item["id"]: item for item in muscle["facts"]}
+    muscle_gates = {item["id"]: item for item in muscle["requirements"]}
+    assert muscle_facts["external_ct_muscle_label"]["value"] == "Skeletal-muscle"
+    assert muscle_facts["external_ct_individual_muscle_identity"]["value"] is False
+    assert not muscle_gates["external_ct_individual_muscle_identity"]["satisfied"]
+
+    bloodflow = systems["bloodflow"]
+    bloodflow_gates = {item["id"]: item for item in bloodflow["requirements"]}
+    assert not bloodflow_gates["external_ct_vascular_lumen_connectivity"]["satisfied"]
