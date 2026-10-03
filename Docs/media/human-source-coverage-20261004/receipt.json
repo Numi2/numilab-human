@@ -1,0 +1,141 @@
+{
+  "artifacts": {
+    "myosim_export": {
+      "gzip_sha256": "593f0f180602fbf0c233eaa9727cba7d3224b63638c99dbb27a0ce157dd1acfc",
+      "path": "Docs/media/human-source-coverage-20261004/myosim-export.json.gz",
+      "uncompressed_bytes": 1209717,
+      "uncompressed_sha256": "ab2e0224e0d09f29dfab0cc2f37b99a35d1f6eb1e8923d69db908e391bf1fdf2"
+    },
+    "target_coverage": {
+      "gzip_sha256": "b7b362c0a025ce9cf21f74d26610eb9b5cb435e8659b444bb10cc3767b1ab761",
+      "path": "Docs/media/human-source-coverage-20261004/target-coverage.json.gz",
+      "uncompressed_bytes": 20161592,
+      "uncompressed_sha256": "0f147278fc5fe4bd2e5ec6609b76534ef9f31b6258014f4968b611b02c7ff007"
+    }
+  },
+  "coverage": {
+    "compiler": "numilab-human.target-coverage.2",
+    "counts": {
+      "all_leaves": 28415,
+      "composed_bodies": 105,
+      "composed_joint_equalities": 102,
+      "composed_joints": 246,
+      "composed_muscles": 832,
+      "composed_nonmuscle_tendons": 16,
+      "composed_route_elements": 1872,
+      "mandatory_targets": 95,
+      "unmapped_nonmandatory_source_leaves": 28320,
+      "unresolved_source_registers": 3
+    },
+    "integrated_qualification": "unknown",
+    "manifest_sha256": "407098ce1d3c6b568c461b9e91b493593016d462ca10fb9145f0130695eea06d",
+    "previous_manifest_sha256": "9402c87ea3806e68ccc801d4be3d5e9634e522f069c74f70cbb8a930125abf1d",
+    "schema": "HumanPack.target-coverage.v1",
+    "scope_status": "blocked",
+    "serialized_sha256": "0f147278fc5fe4bd2e5ec6609b76534ef9f31b6258014f4968b611b02c7ff007",
+    "unresolved_registers": [
+      {
+        "actual_sha256": null,
+        "declaration_count": 0,
+        "expected_sha256": null,
+        "path": "source_inventory",
+        "source_id": "mobl_arms_upper_extremity",
+        "source_record": {
+          "allowed_use": "do not redistribute from this repository",
+          "license": "official project terms: non-commercial use only, BSD-3-Clause text, acknowledgement required",
+          "metadata": {
+            "download_url": "https://simtk.org/frs/download_confirm.php/file/6366/MobL_ARMS_OpenSim3_bimanual_model.zip?group_id=657",
+            "license": "official project terms: non-commercial use only, BSD-3-Clause text, acknowledgement required",
+            "manual_download_required": true,
+            "project_url": "https://simtk.org/projects/upexdyn/",
+            "redistribution": "do not redistribute from this repository",
+            "release_file": "MobL_ARMS_OpenSim3_bimanual_model.zip",
+            "release_id": "6366"
+          },
+          "source_url": "https://simtk.org/projects/upexdyn/"
+        },
+        "status": "unavailable_source_inventory"
+      },
+      {
+        "actual_sha256": "9df2192a504b92b2785528cf786b049776bbbb91051805ea2013712ce8d90637",
+        "declaration_count": 15,
+        "expected_sha256": "9df2192a504b92b2785528cf786b049776bbbb91051805ea2013712ce8d90637",
+        "path": "myosim/myo_sim-33c89c2b.tar.gz#/myo_sim/models/legacy/elbow/myoelbow_1dof6muscles_1dofSoftexo_sim2.xml",
+        "source_id": "myosim_fullbody",
+        "source_record": {
+          "allowed_use": "unknown",
+          "license": "Apache-2.0",
+          "metadata": {
+            "archive_file": "myo_sim-33c89c2b.tar.gz",
+            "archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+            "archive_url": "https://github.com/MyoHub/myo_sim/archive/33c89c2bde282553dde3f526768eb3bdcfaa7649.tar.gz",
+            "expected_file": "myo_sim/build/compose.py",
+            "license": "Apache-2.0",
+            "repository": "https://github.com/MyoHub/myo_sim",
+            "revision": "33c89c2bde282553dde3f526768eb3bdcfaa7649",
+            "role": "active full-body MuJoCo muscle-tendon source",
+            "storage_dir": "myosim"
+          },
+          "source_url": "https://github.com/MyoHub/myo_sim"
+        },
+        "status": "invalid_source_xml"
+      },
+      {
+        "actual_sha256": null,
+        "declaration_count": 0,
+        "expected_sha256": null,
+        "path": "source_inventory",
+        "source_id": "zanatomy_right_calf_visual_supplement",
+        "source_record": {
+          "allowed_use": "raw blend not redistributed; tracked native visual derivative carries CC-BY-SA attribution",
+          "license": "CC-BY-SA-4.0",
+          "metadata": {
+            "blend_file": "Startup.blend",
+            "license": "CC-BY-SA-4.0",
+            "redistribution": "raw blend not redistributed; tracked native visual derivative carries CC-BY-SA attribution",
+            "repository": "https://github.com/Z-Anatomy/Models-of-human-anatomy",
+            "revision": "9a2ef22cc8443d14f9aa18ba91246416b1c6ab7a",
+            "role": "four-surface right-calf visual supplement only; BodyParts3D and MyoSim remain mechanics authority"
+          },
+          "source_url": "https://github.com/Z-Anatomy/Models-of-human-anatomy"
+        },
+        "status": "unavailable_source_inventory"
+      }
+    ]
+  },
+  "cumulative_transition": {
+    "added_by_kind": {
+      "composed:bodies": 2,
+      "composed:joint_equalities": 51,
+      "composed:joints": 123,
+      "composed:muscles": 416,
+      "composed:nonmuscle_tendons": 8
+    },
+    "added_by_source_id": {
+      "myosim_fullbody": 600
+    },
+    "added_leaf_count": 600,
+    "all_previous_leaf_hashes_preserved": true,
+    "current_leaf_count": 28415,
+    "previous_leaf_count": 27815
+  },
+  "date": "2026-10-04",
+  "evidence_boundary": "Pinned source declarations and mandatory-target identities only. Nonmandatory source declarations remain unassigned to workstream targets. No physical anatomy, mechanics, physiology, calibration, or whole-Human qualification is established.",
+  "reproduction_commands": [
+    "gzip -dc Docs/media/human-source-coverage-20261002/target-coverage.json.gz > Build/human-source-coverage-20261004/previous-target-coverage.json",
+    "PYTHONPATH=src .venv-mujoco312/bin/python -m numilab_human.myosim_export --sources Sources --output Build/human-source-coverage-20261004/myosim-export.json",
+    "PYTHONPATH=src .venv-mujoco312/bin/python -m numilab_human.cli target-coverage --sources Sources --source-lock sources.lock.json --myosim-ir Build/human-source-coverage-20261004/myosim-export.json --myosim-ir-sha256 ab2e0224e0d09f29dfab0cc2f37b99a35d1f6eb1e8923d69db908e391bf1fdf2 --previous Build/human-source-coverage-20261004/previous-target-coverage.json --output Build/human-source-coverage-20261004/target-coverage.json"
+  ],
+  "schema": "HumanPack.source-coverage-receipt.v1",
+  "source": {
+    "archive": "myo_sim-33c89c2b.tar.gz",
+    "archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "export_schema": "numi.human.myosim-mujoco-export.v1",
+    "export_sha256": "ab2e0224e0d09f29dfab0cc2f37b99a35d1f6eb1e8923d69db908e391bf1fdf2",
+    "license": "Apache-2.0",
+    "mujoco_version": "3.12.0",
+    "repository": "https://github.com/MyoHub/myo_sim",
+    "revision": "33c89c2bde282553dde3f526768eb3bdcfaa7649",
+    "source_lock_sha256": "03d20d46bfb47b67fb251182758eebbc8f1bbe2f38ce51881dc4c2694774fdee"
+  }
+}
