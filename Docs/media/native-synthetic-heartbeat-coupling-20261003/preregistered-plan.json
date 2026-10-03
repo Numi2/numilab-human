@@ -1,0 +1,42 @@
+{
+  "analysis": "Use only the fixture assertions plus retained per-step CSV; report measured values, device, source/runtime/artifact hashes, stdout/stderr and exact gate outcome. No population inference.",
+  "claim_boundary": "Even a pass is synthetic native heartbeat mechanics evidence. It does not establish anatomical heart qualification, electrical activation, ECG, clinical/physiological calibration, biological validity, or integrated whole-body Human capability.",
+  "model_and_intervention": {
+    "base_commit": "5bf85aed50cf9af1d55445ac38b2a2bc71b1dcfe",
+    "branch": "coupled",
+    "dirty_path": "matter/tools/heartbeat_coupling_check.mm",
+    "fixture": "synthetic 64-node, 156-tetrahedron hollow tissue shell; two environments; active periodic tension versus zero tension; synthetic vascular reservoirs, directional valves, and return resistor",
+    "fixture_source_sha256": "258398d26f8a6e78830f8121a4a6f442f340e6f9b0484e1224c6df28871d0c38",
+    "native_repo": "Numi2/numi-lab",
+    "working_tree_checker_sha256": "8f6d80d881105f4b512d47d954c3d2874b83f64ec7cc11f169097a183ae57322",
+    "working_tree_diff_sha256": "e5f999586449e0acde5e0876df3b7f8e8203ecc433b93abc01c648a86a62a55a"
+  },
+  "plan_id": "native-synthetic-heartbeat-coupling-20261003",
+  "predictions_and_refutation": {
+    "active_excess_aortic_ejection_each_beat_m3": ">1e-10",
+    "active_vs_control_wall_difference_m": ">1e-8",
+    "active_wall_displacement_m": ">1e-8",
+    "all_required": true,
+    "failure_rule": "Any missing artifact, failed step, or failed threshold refutes this fixture-level prediction; retain the failed result and do not tune/retry to pass.",
+    "filling_vs_ejection_each_beat": "within 5%",
+    "max_blood_volume_error_fraction": "<1e-4",
+    "max_cavity_wall_volume_error_fraction": "<5e-3",
+    "native_status": "all 400 steps accepted on physical Apple Metal for both environments",
+    "relative_beat_ejection_drift": "<5%",
+    "systemic_return_vs_ejection_each_beat": "98% to 102%"
+  },
+  "protocol": {
+    "beats": 2,
+    "duration_s": 1.6,
+    "held_fixed": "same initial fixture and clock; only active-tension input differs",
+    "independent_unit": "one paired active and zero-tension environment in a single run; beats are repeated observations, not independent replicates",
+    "period_s": 0.8,
+    "randomization": "not applicable to deterministic paired fixture",
+    "steps_per_environment": 400,
+    "timestep_s": 0.004
+  },
+  "purpose": "exploratory paired native-runtime mechanism check; one run, no physiology or anatomy claim",
+  "question": "Does the current native Metal fixture produce two repeatable active-tension ejections with tissue response and closed-loop volume/flow while its matched zero-tension environment remains the control?",
+  "sealed_utc": "2026-10-03T02:45:36.936700+00:00",
+  "stopping_rule": "One declared paired run; stop after the 400-step attempt whether pass or fail."
+}
