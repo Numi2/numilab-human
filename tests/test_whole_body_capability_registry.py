@@ -103,6 +103,9 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert report["counts"]["required_subsystems"] == len(SYSTEM_IDS)
     assert report["counts"]["qualified_subsystems"] < len(SYSTEM_IDS)
     assert not report["qualification"]["whole_human_capability"]
+    assert report["counts"]["verified_evidence_sources"] == 33
+    assert report["counts"]["missing_evidence_sources"] == 0
+    assert report["counts"]["schema_mismatch_sources"] == 0
     assert systems["whole_body_anatomy"]["facts"][0]["value"] == 46
     assert systems["bloodflow"]["facts"][0]["value"] == 511
     assert report["counts"]["open_requirements"] == 51
@@ -197,6 +200,10 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert anatomy_facts["external_ct_organ_ordering_relations_passed"]["value"] == 120
     assert anatomy_facts["external_ct_organ_ordering_relations_total"]["value"] == 120
     assert anatomy_facts["external_ct_cohort_numi_subject_binding"]["value"] is False
+    assert anatomy_facts["external_ct_component_scan_count"]["value"] == 30
+    assert anatomy_facts["external_ct_component_pairs_measured"]["value"] == 450
+    assert anatomy_facts["external_ct_component_pairs_missing"]["value"] == 0
+    assert anatomy_facts["external_ct_lung_26_component_max"]["value"] == 6
     assert not anatomy_gates["external_scan_subject_binding"]["satisfied"]
     assert next(item for item in anatomy["evidence"]
                 if item["id"] == "patella_rebase")["status"] == "verified"
@@ -221,6 +228,12 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     organ_gates = {item["id"]: item for item in organs["requirements"]}
     assert organ_facts["external_aorta_label"]["value"] == "Aorta"
     assert organ_facts["external_vci_label"]["value"] == "VCI"
+    assert organ_facts["external_ct_heart_26_single_component_scans"]["value"] == 29
+    assert organ_facts["external_ct_brain_26_single_component_scans"]["value"] == 28
+    assert organ_facts["external_ct_liver_26_single_component_scans"]["value"] == 29
+    assert organ_facts["external_ct_kidneys_26_component_median"]["value"] == 2
+    assert organ_facts["external_ct_lung_26_single_component_scans"]["value"] == 25
+    assert organ_facts["external_ct_lung_26_component_max"]["value"] == 6
     assert not organ_gates["external_vessel_lumen_connectivity"]["satisfied"]
 
     muscle = systems["muscle"]
@@ -232,6 +245,10 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert muscle_facts["external_ct_psoas_label"]["value"] == "Psoas"
     assert muscle_facts["external_ct_psoas_voxels"]["value"] == 118946
     assert muscle_facts["external_ct_psoas_closed"]["value"] is True
+    assert muscle_facts["external_ct_psoas_26_component_median"]["value"] == 2
+    assert muscle_facts["external_ct_skeletal_muscle_26_component_median"]["value"] == 109
+    assert muscle_facts["external_ct_skeletal_muscle_26_component_max"]["value"] == 306
+    assert muscle_facts["external_ct_skeletal_muscle_largest26_fraction_min"]["value"] > 0.99
     assert muscle_gates["external_ct_psoas_closed_mesh"]["satisfied"]
 
     tendon = systems["tendon"]
@@ -243,5 +260,10 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert not tendon_gates["paired_tendon_native_transaction"]["satisfied"]
 
     bloodflow = systems["bloodflow"]
+    bloodflow_facts = {item["id"]: item for item in bloodflow["facts"]}
     bloodflow_gates = {item["id"]: item for item in bloodflow["requirements"]}
+    assert bloodflow_facts["external_ct_aorta_26_single_component_scans"]["value"] == 30
+    assert bloodflow_facts["external_ct_vci_26_single_component_scans"]["value"] == 29
+    assert bloodflow_facts["external_ct_aorta_26_component_max"]["value"] == 1
+    assert bloodflow_facts["external_ct_vci_26_component_max"]["value"] == 2
     assert not bloodflow_gates["external_ct_vascular_lumen_connectivity"]["satisfied"]

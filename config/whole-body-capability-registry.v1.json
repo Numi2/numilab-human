@@ -10,6 +10,7 @@
         {"id": "visceral", "path": "Docs/media/whole-visceral-coverage-20260929/receipt.json", "schema": "numi.human.whole-visceral-source-evidence.v1"},
         {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"},
         {"id": "external_ct_cohort_relations", "path": "Docs/media/healthy-total-body-ct-anatomy-relations-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-anatomy-relations.v1"},
+        {"id": "external_ct_component_census", "path": "Docs/media/healthy-total-body-ct-component-census-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-component-census.v1"},
         {"id": "patella_rebase", "path": "Docs/media/numi-human-patella-neutral-rebase-geometry-20261003/receipt.json", "schema": "numi.human.lower-limb-patella-rebase-geometry-evidence.v1"}
       ],
       "facts": [
@@ -25,6 +26,10 @@
         {"id": "external_ct_organ_ordering_relations_passed", "evidence": "external_ct_cohort_relations", "path": "counts.passed_relation_rows"},
         {"id": "external_ct_organ_ordering_relations_total", "evidence": "external_ct_cohort_relations", "path": "counts.total_relation_rows"},
         {"id": "external_ct_cohort_numi_subject_binding", "evidence": "external_ct_cohort_relations", "path": "qualification.current_numi_subject_binding"},
+        {"id": "external_ct_component_scan_count", "evidence": "external_ct_component_census", "path": "counts.scan_count"},
+        {"id": "external_ct_component_pairs_measured", "evidence": "external_ct_component_census", "path": "counts.measured_scan_label_pairs"},
+        {"id": "external_ct_component_pairs_missing", "evidence": "external_ct_component_census", "path": "counts.missing_scan_label_pairs"},
+        {"id": "external_ct_lung_26_component_max", "evidence": "external_ct_component_census", "path": "distributions.Lung.full26.maximum"},
         {"id": "lower_limb_pose_count", "evidence": "patella_rebase", "path": "pose_audit.pose_count"},
         {"id": "lower_limb_source_geometry_checks", "evidence": "patella_rebase", "path": "pose_audit.source_geometry_check_count"},
         {"id": "lower_limb_pose_audit_status", "evidence": "patella_rebase", "path": "pose_audit.status"},
@@ -52,7 +57,8 @@
       "evidence": [
         {"id": "visceral", "path": "Docs/media/whole-visceral-coverage-20260929/receipt.json", "schema": "numi.human.whole-visceral-source-evidence.v1"},
         {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"},
-        {"id": "external_ct_cohort_relations", "path": "Docs/media/healthy-total-body-ct-anatomy-relations-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-anatomy-relations.v1"}
+        {"id": "external_ct_cohort_relations", "path": "Docs/media/healthy-total-body-ct-anatomy-relations-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-anatomy-relations.v1"},
+        {"id": "external_ct_component_census", "path": "Docs/media/healthy-total-body-ct-component-census-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-component-census.v1"}
       ],
       "facts": [
         {"id": "surface_count", "evidence": "visceral", "path": "coverage.total_surfaces"},
@@ -65,7 +71,13 @@
         {"id": "external_subject_binding", "evidence": "external_ct_scan001", "path": "qualification.current_numi_subject_binding"},
         {"id": "external_ct_cohort_scan_count", "evidence": "external_ct_cohort_relations", "path": "counts.scan_count"},
         {"id": "external_ct_organ_ordering_relations_passed", "evidence": "external_ct_cohort_relations", "path": "counts.passed_relation_rows"},
-        {"id": "external_ct_organ_ordering_relations_total", "evidence": "external_ct_cohort_relations", "path": "counts.total_relation_rows"}
+        {"id": "external_ct_organ_ordering_relations_total", "evidence": "external_ct_cohort_relations", "path": "counts.total_relation_rows"},
+        {"id": "external_ct_heart_26_single_component_scans", "evidence": "external_ct_component_census", "path": "distributions.Heart.full26.single_component_scan_count"},
+        {"id": "external_ct_brain_26_single_component_scans", "evidence": "external_ct_component_census", "path": "distributions.Brain.full26.single_component_scan_count"},
+        {"id": "external_ct_liver_26_single_component_scans", "evidence": "external_ct_component_census", "path": "distributions.Liver.full26.single_component_scan_count"},
+        {"id": "external_ct_kidneys_26_component_median", "evidence": "external_ct_component_census", "path": "distributions.Kidneys.full26.median"},
+        {"id": "external_ct_lung_26_single_component_scans", "evidence": "external_ct_component_census", "path": "distributions.Lung.full26.single_component_scan_count"},
+        {"id": "external_ct_lung_26_component_max", "evidence": "external_ct_component_census", "path": "distributions.Lung.full26.maximum"}
       ],
       "requirements": [
         {"id": "disjoint_tissue", "evidence": "visceral", "path": "qualification.disjoint_tissue", "operator": "equals", "value": true, "reason": "Cross-domain organ/tissue separation is not yet admitted."},
@@ -116,7 +128,8 @@
       "scope": "Admitted muscle surfaces, physical volume/mass ownership, force transmission, and calibrated mechanics.",
       "evidence": [
         {"id": "surface_audit", "path": "Docs/media/muscle-surface-embeddedness-20260929/receipt-v3.json", "schema": "numi.human.compiled-muscle-surface-embeddedness.v1"},
-        {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"}
+        {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"},
+        {"id": "external_ct_component_census", "path": "Docs/media/healthy-total-body-ct-component-census-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-component-census.v1"}
       ],
       "facts": [
         {"id": "muscle_surface_count", "evidence": "surface_audit", "path": "coverage.muscle_surface_count"},
@@ -128,7 +141,11 @@
         {"id": "external_ct_individual_muscle_identity", "evidence": "external_ct_scan001", "path": "qualification.individual_muscle_identity"},
         {"id": "external_ct_psoas_label", "evidence": "external_ct_scan001", "path": "labels.35.label"},
         {"id": "external_ct_psoas_voxels", "evidence": "external_ct_scan001", "path": "labels.35.source_voxel_count"},
-        {"id": "external_ct_psoas_closed", "evidence": "external_ct_scan001", "path": "labels.35.closed_two_manifold"}
+        {"id": "external_ct_psoas_closed", "evidence": "external_ct_scan001", "path": "labels.35.closed_two_manifold"},
+        {"id": "external_ct_psoas_26_component_median", "evidence": "external_ct_component_census", "path": "distributions.Psoas.full26.median"},
+        {"id": "external_ct_skeletal_muscle_26_component_median", "evidence": "external_ct_component_census", "path": "distributions.Skeletal-muscle.full26.median"},
+        {"id": "external_ct_skeletal_muscle_26_component_max", "evidence": "external_ct_component_census", "path": "distributions.Skeletal-muscle.full26.maximum"},
+        {"id": "external_ct_skeletal_muscle_largest26_fraction_min", "evidence": "external_ct_component_census", "path": "distributions.Skeletal-muscle.full26.largest_component_fraction_minimum"}
       ],
       "requirements": [
         {"id": "physical_volume_owner", "evidence": "surface_audit", "path": "physical_volume_owner", "operator": "equals", "value": true, "reason": "Muscle surfaces have no admitted physical-volume/mass owner."},
@@ -176,7 +193,8 @@
       "scope": "Spatial blood transport through owned lumens with mass, moment, exchange, and rollback closure.",
       "evidence": [
         {"id": "regional_transport", "path": "Docs/media/organ-blood-tissue-transport-20260914/receipt-v1.json", "schema": "HumanPack.organ-blood-tissue-transport-candidate.v1"},
-        {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"}
+        {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"},
+        {"id": "external_ct_component_census", "path": "Docs/media/healthy-total-body-ct-component-census-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-component-census.v1"}
       ],
       "facts": [
         {"id": "accepted_steps", "evidence": "regional_transport", "path": "accepted_steps"},
@@ -187,7 +205,11 @@
         {"id": "rollback", "evidence": "regional_transport", "path": "rollback.rejected_candidate_state_neutral"},
         {"id": "external_ct_aorta_label", "evidence": "external_ct_scan001", "path": "labels.1.label"},
         {"id": "external_ct_vci_label", "evidence": "external_ct_scan001", "path": "labels.10.label"},
-        {"id": "external_ct_vascular_lumen_connectivity", "evidence": "external_ct_scan001", "path": "qualification.vascular_lumen_or_branch_connectivity"}
+        {"id": "external_ct_vascular_lumen_connectivity", "evidence": "external_ct_scan001", "path": "qualification.vascular_lumen_or_branch_connectivity"},
+        {"id": "external_ct_aorta_26_single_component_scans", "evidence": "external_ct_component_census", "path": "distributions.Aorta.full26.single_component_scan_count"},
+        {"id": "external_ct_vci_26_single_component_scans", "evidence": "external_ct_component_census", "path": "distributions.VCI.full26.single_component_scan_count"},
+        {"id": "external_ct_aorta_26_component_max", "evidence": "external_ct_component_census", "path": "distributions.Aorta.full26.maximum"},
+        {"id": "external_ct_vci_26_component_max", "evidence": "external_ct_component_census", "path": "distributions.VCI.full26.maximum"}
       ],
       "requirements": [
         {"id": "anatomical_lumen_owner", "evidence": "regional_transport", "path": "qualification.anatomical_vessel_tube_or_lumen", "operator": "equals", "value": true, "reason": "Regional flow is routed through candidates, not admitted anatomical lumens."},

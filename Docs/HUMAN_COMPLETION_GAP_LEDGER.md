@@ -147,6 +147,16 @@ participant coordinate frames remain separate. This improves external source
 consistency evidence only; Numi subject binding, organ volumes and mechanics
 remain open.
 
+The [CT source-mask component census](HEALTHY_TOTAL_BODY_CT_COMPONENT_CENSUS_20261003.md)
+re-decodes 15 organ, vessel, and soft-tissue labels across the 30 pinned scans.
+All 450 scan-label counts and member hashes match intake. Aorta is one
+26-connected mask in all scans and VCI in 29/30; the aggregate Lung label has
+more than two components in four scans and a maximum of six. Combined
+skeletal-muscle masks have a median of 109 26-connected components, while one
+component contains at least 99.4% of labelled voxels. These are automatic
+source-mask topology measurements only: they establish neither vessel lumens,
+individual muscle identities, skin layers, nor Numi anatomy.
+
 ## HCM1 source activation map import — 2026-10-03
 
 The [Rodero-2026 HCM1 importer](CARDIAC_RODERO26_HCM_SOURCE_ACTIVATION_20261003.md)

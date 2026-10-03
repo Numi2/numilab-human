@@ -1,0 +1,78 @@
+{
+  "analysis": [
+    "Retain every scan-label row and report missing rows without imputation.",
+    "Report per-label minimum, median, and maximum component counts for both connectivities.",
+    "Report the largest-component fraction to distinguish small disconnected islands from dominant components.",
+    "Treat all outputs as source-label topology only; never infer lumen continuity or Numi subject binding."
+  ],
+  "connectivity_modes": [
+    "face6",
+    "full26"
+  ],
+  "evidence_boundary": "Automatic CT source-mask connectivity only. No clinical segmentation review, vascular lumen, skin layer, subject registration, physical volume owner, mechanics, or physiology is qualified.",
+  "experimental_unit": "one source scan and one registered source label ID",
+  "input_intake_path": "Docs/media/healthy-total-body-ct-source-20261003/intake-v4.json",
+  "input_intake_sha256": "b23e5d88b9bbd0f1e017045ddae0f9f2d69a3c302b3435a24c66ee0f6ed1ea21",
+  "label_ids": {
+    "Aorta": 2,
+    "Bladder": 3,
+    "Brain": 4,
+    "Heart": 5,
+    "Kidneys": 6,
+    "Liver": 7,
+    "Lung": 12,
+    "Pancreas": 8,
+    "Psoas": 36,
+    "Skeletal-muscle": 33,
+    "Spleen": 9,
+    "Subcutaneous-fat": 34,
+    "Thyroid": 10,
+    "Torso-fat": 35,
+    "VCI": 11
+  },
+  "labels": [
+    "Aorta",
+    "VCI",
+    "Bladder",
+    "Brain",
+    "Heart",
+    "Kidneys",
+    "Liver",
+    "Lung",
+    "Pancreas",
+    "Spleen",
+    "Thyroid",
+    "Psoas",
+    "Skeletal-muscle",
+    "Subcutaneous-fat",
+    "Torso-fat"
+  ],
+  "planned_scan_label_pairs": 450,
+  "predicate_source_sha256": {
+    "healthy_total_body_ct_component_census.py": "c7200ad8e6c75cda77f0a0d49a30098340d6dafc270aa30fbc28b44a5361f067",
+    "healthy_total_body_ct_source.py": "01967bdd50bcf3370073078e87f0e6004c9f0955fa7e27a4cc6288709588d5f9"
+  },
+  "predictions": [
+    "For every measured row, full26 component count is no greater than face6 component count.",
+    "Aorta and VCI masks will each be one full26-connected component in at least 27 of 30 scans.",
+    "Heart, bladder, liver, pancreas, spleen, and thyroid masks will each be one full26-connected component in at least 27 of 30 scans.",
+    "Aggregate kidneys and lung masks will each have one or two full26-connected components in at least 27 of 30 scans.",
+    "Psoas, combined skeletal muscle, subcutaneous fat, and torso fat are descriptive; no single-component expectation is imposed."
+  ],
+  "preregistration_id": "healthy_total_body_ct_mask_connectivity_20261003_v1",
+  "question": "How many face-connected and corner-inclusive voxel components occur for each selected organ, vessel, and soft-tissue source label in each of the 30 independent CT segmentation scans?",
+  "scan_count": 30,
+  "schema": "numi.healthy-total-body-ct-component-census-plan.v1",
+  "source_archive_sha256": "f3daa9c5e9740c8d68688bd800f5d3107236099d3e319bbef04076aa4719b13f",
+  "source_id": "healthy_total_body_cts_v3",
+  "source_release": "Version 3, updated 2026-09-23",
+  "stop_rule": "Stop the single full-cohort run on the first archive, member-hash, array-shape, affine, voxel-count, source-code, or component-order invariant failure. Retain the failure and do not filter, overwrite, or rerun under this plan.",
+  "validity_checks": [
+    "Whole archive byte count and SHA-256 match the registered intake.",
+    "Each selected NIfTI member uncompressed SHA-256 matches its intake row.",
+    "Each NIfTI array shape, affine source, and RAS affine match the intake.",
+    "Every selected mask voxel count redecoded from the source member matches its intake count.",
+    "No scan or selected label is dropped from the 30 by 15 census.",
+    "Each full26 component count is no greater than the corresponding face6 count."
+  ]
+}
