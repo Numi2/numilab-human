@@ -42,3 +42,8 @@ numi human healthy-total-body-ct-source \
 ```
 
 The v3 intake remains unchanged as the initial inventory snapshot.
+
+The follow-up [source-named cohort summary](HEALTHY_TOTAL_BODY_CT_COHORT_SUMMARY_20261003.md)
+joins observed mask values to the exact workbook label names and reports
+per-label coverage and affine-scaled voxel-occupancy distributions without
+pooling participant coordinate frames.

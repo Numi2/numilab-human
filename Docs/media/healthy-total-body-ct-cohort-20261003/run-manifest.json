@@ -1,0 +1,25 @@
+{
+  "claim_boundary": "source label cohort summary only; not scan re-decoding, cross-scan registration, physical tissue volume, mechanics, physiology, or clinical qualification",
+  "cli_registration_source_sha256": "b029def2a2e2620d4e13f2fa8b2ec3a8ff7bae40809f6b2c0d33183ef62d15b4",
+  "cohort_receipt_sha256": "6e8795e54d6929bacfa8cd1ab2dc1a3d6875490f10f75957a4375bfd6d2ba79f",
+  "command": [
+    "numi",
+    "human",
+    "healthy-total-body-ct-cohort",
+    "--receipt",
+    "Docs/media/healthy-total-body-ct-source-20261003/intake-v4.json",
+    "--output",
+    "/Users/home/numilab-human/Docs/media/healthy-total-body-ct-cohort-20261003/cohort-v1.json"
+  ],
+  "compiler_source_sha256": "5d03abc29ca3682862f7bc4c9ebb9fa50ee637d4d2f6dd767c021cc0a7f89fd3",
+  "exit_status": 0,
+  "input_receipt": "Docs/media/healthy-total-body-ct-source-20261003/intake-v4.json",
+  "input_receipt_sha256": "b23e5d88b9bbd0f1e017045ddae0f9f2d69a3c302b3435a24c66ee0f6ed1ea21",
+  "owner_cli": "numi human healthy-total-body-ct-cohort",
+  "owner_python": "3.14.6",
+  "schema": "numi.healthy-total-body-ct-cohort-run.v1",
+  "source_archive_sha256": "f3daa9c5e9740c8d68688bd800f5d3107236099d3e319bbef04076aa4719b13f",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_sha256": "ffbea285646e379c17cbf2902b051d93e80ab53ce0b6d59e6fd1231a82940750",
+  "verified_test_runtime": "Python 3.11.12 with pytest 9.1.1"
+}
