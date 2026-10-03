@@ -123,14 +123,18 @@ calibration, tissue integration and physiology remain open. The earlier
 is retained as a different registration and its images were not regenerated.
 
 The new [exact patellofemoral pose-intersection audit](PATELLOFEMORAL_POSE_INTERSECTION_AUDIT_20261003.md)
-checks the current ABI 3 patella/femur surfaces through the equality-projected
-source pose suite and 43 samples of the declared knee-angle range. It finds
-1,631 exact triangle-pair intersections across 41 side-pose states within 34
-range-valid samples; both knees intersect in the 0.7 rad functional crouch and
-0.9 rad knee-flexion inspection poses. This closes the anteriority-only blind
-spot and adds a failed patellofemoral geometry requirement to the capability
-registry. It does not justify an uncalibrated translation or qualify clinical
-tracking, cartilage contact, loaded behavior, or a continuous flexion path.
+checks both pinned MyoSim source bone geoms and registered ABI 3 patella/femur
+surfaces through the equality-projected source pose suite and 43 samples of the
+declared knee-angle range. Within 34 range-valid samples, the registered
+surfaces contain 1,631 exact triangle-pair intersections in 41 side-pose
+states; MyoSim's own source geoms contain 1,236 intersections in 56 side-pose
+states. Source mesh crossings also occur in both knees at 1.4 rad deep crouch,
+in addition to the 0.7 rad functional crouch and 0.9 rad knee-flexion poses.
+The source mesh failure means registration-only changes are insufficient.
+This closes the anteriority-only blind spot and adds separate failed
+registered-surface and source-mesh requirements to the capability registry.
+It does not justify an uncalibrated translation or qualify clinical tracking,
+cartilage contact, loaded behavior, or a continuous flexion path.
 
 ## Healthy whole-body CT spatial source candidates — 2026-10-03
 

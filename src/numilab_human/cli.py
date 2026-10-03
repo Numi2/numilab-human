@@ -1551,7 +1551,7 @@ def parser() -> argparse.ArgumentParser:
     lower_limb_pose_audit_parser.set_defaults(handler=myosim_lower_limb_pose_audit)
     patellofemoral_pose_intersection_parser = commands.add_parser(
         "myosim-patellofemoral-pose-intersection-audit",
-        help="exactly check registered patella/femur surface intersections across source poses",
+        help="exactly check source and registered patella/femur intersections across poses",
     )
     patellofemoral_pose_intersection_parser.add_argument("--sources", type=Path, required=True)
     patellofemoral_pose_intersection_parser.add_argument("--artifact", type=Path, required=True)

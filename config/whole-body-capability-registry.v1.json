@@ -49,6 +49,8 @@
         {"id": "patellofemoral_range_valid_sample_count", "evidence": "patellofemoral_pose_intersections", "path": "sweep.collision_gate.range_valid_sample_count"},
         {"id": "patellofemoral_intersecting_range_valid_side_pose_count", "evidence": "patellofemoral_pose_intersections", "path": "sweep.collision_gate.range_valid_intersecting_pose_side_count"},
         {"id": "patellofemoral_surface_intersection_pair_count", "evidence": "patellofemoral_pose_intersections", "path": "sweep.collision_gate.range_valid_intersection_pair_count"},
+        {"id": "patellofemoral_source_mesh_intersecting_side_pose_count", "evidence": "patellofemoral_pose_intersections", "path": "sweep.source_myo_sim_mesh_collision_gate.range_valid_intersecting_pose_side_count"},
+        {"id": "patellofemoral_source_mesh_intersection_pair_count", "evidence": "patellofemoral_pose_intersections", "path": "sweep.source_myo_sim_mesh_collision_gate.range_valid_intersection_pair_count"},
         {"id": "patellofemoral_pose_audit_status", "evidence": "patellofemoral_pose_intersections", "path": "status"},
         {"id": "patellofemoral_continuous_motion_qualified", "evidence": "patellofemoral_pose_intersections", "path": "qualification.continuous_angle_interval_qualified"}
       ],
@@ -60,7 +62,8 @@
         {"id": "lower_limb_multi_pose_source_audit", "evidence": "patella_rebase", "path": "pose_audit.status", "operator": "equals", "value": "passed_source_owned_bilateral_lower_limb_multi_pose_interface_patches", "reason": "The current lower-limb registration must retain its source-owned bilateral multi-pose interface audit."},
         {"id": "projected_patella_anteriority", "evidence": "patella_rebase", "path": "pose_audit.projected_patellar_anteriority.status", "operator": "equals", "value": "all_patella_vertices_anterior", "reason": "Source-equality-projected poses keep every patella vertex anterior to the source knee-anchor plane; this remains a geometry audit, not a native loaded-dynamics or clinical claim."},
         {"id": "literal_qpos0_patellar_anteriority", "evidence": "patella_rebase", "path": "pose_audit.literal_unprojected_qpos0.status", "operator": "equals", "value": "all_patella_vertices_anterior", "reason": "The neutral-coordinate rebase keeps both source patella meshes anterior to their pinned knee-anchor planes at literal qpos0; this geometry check does not make qpos0 a native runtime acceptance pose."},
-        {"id": "patellofemoral_bone_surface_intersection_gate", "evidence": "patellofemoral_pose_intersections", "path": "qualification.range_valid_sampled_pose_surface_intersections_absent", "operator": "equals", "value": true, "reason": "Exact registered patella/femur surfaces still intersect in range-valid sampled poses; the current source pose remains anatomically unqualified through flexion."}
+        {"id": "patellofemoral_bone_surface_intersection_gate", "evidence": "patellofemoral_pose_intersections", "path": "qualification.range_valid_sampled_pose_surface_intersections_absent", "operator": "equals", "value": true, "reason": "Exact registered and pinned MyoSim source patella/femur surfaces still intersect in range-valid sampled poses; the current source pose remains anatomically unqualified through flexion."},
+        {"id": "patellofemoral_source_mesh_intersection_gate", "evidence": "patellofemoral_pose_intersections", "path": "qualification.source_myo_sim_patella_femur_surfaces_range_valid_intersections_absent", "operator": "equals", "value": true, "reason": "The pinned MyoSim source meshes themselves intersect during valid knee poses, so changing only BodyParts3D registration cannot resolve the tracking gap."}
       ]
     },
     {

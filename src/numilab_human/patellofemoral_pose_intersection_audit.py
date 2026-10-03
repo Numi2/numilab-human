@@ -1,10 +1,10 @@
-"""Exact sampled-pose intersection audit for registered patella/femur surfaces.
+"""Exact sampled-pose intersection audit for source and registered knee meshes.
 
-This audit asks whether the current registered bony surface candidates cross
-under source-equality-projected MyoSim poses.  It is a necessary geometric
-check only: an intersection-free sample does not establish continuous motion,
-volume containment, cartilage contact, clinical registration, or loaded
-patellar tracking.
+This audit asks whether the pinned MyoSim source geoms and current registered
+bony surface candidates cross under source-equality-projected poses. It is a
+necessary geometric check only: an intersection-free sample does not establish
+continuous motion, volume containment, cartilage contact, clinical
+registration, or loaded patellar tracking.
 """
 from __future__ import annotations
 
@@ -23,6 +23,7 @@ from .cardiac_cavity_intersections import (
     triangle_intersection_points,
 )
 from .lower_limb_pose_audit import POSE_SUITE, _sha256
+from .myosim_bone_proximity import _compiled_meshes_by_body
 from .myosim_export import export_fullbody
 from .upper_limb_pose_audit import (
     _compiled_bone_members,
@@ -141,14 +142,16 @@ def _range_check_summary(checks: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
-def _collision_gate(samples: list[dict[str, Any]]) -> dict[str, Any]:
+def _collision_gate(
+    samples: list[dict[str, Any]], surface_field: str = "by_side"
+) -> dict[str, Any]:
     admitted = [sample for sample in samples
                 if sample["projected_ranges"]["all_projected_coordinates_within_declared_ranges"]]
     collisions = [
         {"pose": sample["name"], "side": side,
          "triangle_pair_count": row["surface_intersection_triangle_pair_count"]}
         for sample in admitted
-        for side, row in sample["by_side"].items()
+        for side, row in sample[surface_field].items()
         if row["surface_intersection_triangle_pair_count"] > 0
     ]
     return {
@@ -219,6 +222,7 @@ def audit_patellofemoral_pose_intersections(
 
     model = build_model("myofullbody")
     data = mujoco.MjData(model)
+    source_meshes_by_body = _compiled_meshes_by_body(model, mujoco, np)
     joint_ranges = _pose_joint_range_context(artifact, runtime_reference, model, mujoco)
     rigid_program = human_model._myosim_rigid_program_checks(artifact, exported)
     equality_programs = _joint_equality_program_checks(
@@ -264,12 +268,44 @@ def audit_patellofemoral_pose_intersections(
             "triangle_count": len(faces),
         }]
 
+    def posed_source_mesh(target_name: str) -> tuple[np.ndarray, np.ndarray, list[dict[str, Any]]]:
+        anchor = anchor_by_target[target_name][0]
+        body_id = int(anchor["target"]["source_body_id"])
+        body_name = str(anchor["target"]["name"])
+        meshes = source_meshes_by_body.get(body_id, [])
+        if not meshes or mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_BODY, body_id) != body_name:
+            raise RuntimeError(f"pinned MyoSim source has no owner mesh for {body_name}")
+        world_vertices = []
+        faces = []
+        source_records = []
+        vertex_offset = 0
+        for mesh in meshes:
+            local_vertices = np.asarray(mesh["vertices"], dtype=np.float64)
+            posed_vertices = np.einsum(
+                "ki,ji->kj", local_vertices, data.xmat[body_id].reshape(3, 3)
+            ) + data.xpos[body_id]
+            mesh_faces = np.asarray(mesh["faces"], dtype=np.int64)
+            if len(mesh_faces):
+                faces.append(mesh_faces + vertex_offset)
+            world_vertices.append(posed_vertices)
+            source_records.append({
+                "geom_name": mesh["geom_name"],
+                "mesh_name": mesh["mesh_name"],
+                "vertex_count": len(local_vertices),
+                "triangle_count": len(mesh_faces),
+            })
+            vertex_offset += len(local_vertices)
+        if not faces:
+            raise RuntimeError(f"pinned MyoSim source mesh for {body_name} has no triangles")
+        return np.concatenate(world_vertices), np.concatenate(faces), source_records
+
     def audit_qpos(name: str, overrides: tuple[tuple[int, float], ...]) -> dict[str, Any]:
         qpos, _, _, _ = _pose_qpos_with_unit_metrics(model, overrides, mujoco, np)
         data.qpos[:] = qpos
         mujoco.mj_forward(model, data)
         range_summary = _range_check_summary(_projected_joint_range_checks(qpos, joint_ranges, np))
         by_side = {}
+        source_mesh_by_side = {}
         for side, pair in SIDE_MEMBERS.items():
             femur_vertices, femur_faces, femur_sources = posed_mesh(pair["femur"])
             patella_vertices, patella_faces, patella_sources = posed_mesh(pair["patella"])
@@ -279,12 +315,29 @@ def audit_patellofemoral_pose_intersections(
                     femur_vertices, femur_faces, patella_vertices, patella_faces
                 ),
             }
+            source_femur_vertices, source_femur_faces, source_femur_records = posed_source_mesh(
+                pair["femur"]
+            )
+            source_patella_vertices, source_patella_faces, source_patella_records = posed_source_mesh(
+                pair["patella"]
+            )
+            source_mesh_by_side[side] = {
+                "source_surfaces": {
+                    "femur": source_femur_records,
+                    "patella": source_patella_records,
+                },
+                **_exact_surface_pair_audit(
+                    source_femur_vertices, source_femur_faces,
+                    source_patella_vertices, source_patella_faces,
+                ),
+            }
         return {
             "name": name,
             "knee_angle_qpos_r_rad": float(qpos[106]),
             "knee_angle_qpos_l_rad": float(qpos[120]),
             "projected_ranges": range_summary,
             "by_side": by_side,
+            "source_mesh_by_side": source_mesh_by_side,
         }
 
     pose_samples = [audit_qpos(name, overrides) for name, overrides in POSE_SUITE]
@@ -294,18 +347,33 @@ def audit_patellofemoral_pose_intersections(
         for index, angle in enumerate(sweep_angles)
     ]
     gate = _collision_gate(sweep_samples)
+    source_mesh_gate = _collision_gate(sweep_samples, "source_mesh_by_side")
     failed_pose_suite = _collision_gate(pose_samples)
-    sampled_intersections_absent = (
+    source_mesh_pose_gate = _collision_gate(pose_samples, "source_mesh_by_side")
+    registered_surface_intersections_absent = (
         gate["range_valid_pose_surface_intersections_absent"]
         and failed_pose_suite["range_valid_pose_surface_intersections_absent"]
     )
+    source_mesh_intersections_absent = (
+        source_mesh_gate["range_valid_pose_surface_intersections_absent"]
+        and source_mesh_pose_gate["range_valid_pose_surface_intersections_absent"]
+    )
+    both_surface_gates_pass = (
+        registered_surface_intersections_absent and source_mesh_intersections_absent
+    )
     qualification = {
         "source_programs_match_pinned_source": source_programs_match,
+        "registered_patella_femur_surfaces_range_valid_intersections_absent": (
+            registered_surface_intersections_absent
+        ),
+        "source_myo_sim_patella_femur_surfaces_range_valid_intersections_absent": (
+            source_mesh_intersections_absent
+        ),
         "range_valid_sampled_pose_surface_intersections_absent": (
-            sampled_intersections_absent
+            both_surface_gates_pass
         ),
         "sampled_range_collision_gate_passed": (
-            sampled_intersections_absent and source_programs_match
+            both_surface_gates_pass and source_programs_match
         ),
         "continuous_angle_interval_qualified": False,
         "closed_volume_containment_tested": False,
@@ -356,18 +424,22 @@ def audit_patellofemoral_pose_intersections(
             "sample_count": len(sweep_samples),
             "sampling_basis": "uniform_source_range_samples_plus_exact_upper_endpoint",
             "collision_gate": gate,
+            "source_myo_sim_mesh_collision_gate": source_mesh_gate,
             "samples": sweep_samples,
         },
         "source_pose_suite": {
             "sample_count": len(pose_samples),
-            "collision_gate": failed_pose_suite,
+            "registered_source_surface_collision_gate": failed_pose_suite,
+            "source_myo_sim_mesh_collision_gate": source_mesh_pose_gate,
             "samples": pose_samples,
         },
         "boundary": (
-            "Exact triangle-surface intersections use source-owned ABI 3 NHBONES1 geometry "
-            "posed by pinned MyoSim/MuJoCo source equality projection. A crossing at a pose "
+            "Exact triangle-surface intersections are checked on both pinned MyoSim source "
+            "mesh geoms and source-owned ABI 3 NHBONES1 geometry after MyoSim/MuJoCo source "
+            "equality projection. A crossing at a pose "
             "whose projected joint coordinates pass declared source and native ranges fails "
-            "this sampled geometric gate. Passing discrete samples does not prove a continuous "
+            "this sampled geometric gate. Source-mesh crossings locate a source pose/geometry "
+            "problem that cannot be explained by BodyParts3D registration alone. Passing discrete samples does not prove a continuous "
             "motion envelope, closed-volume containment, cartilage contact, loaded patellar "
             "tracking, subject calibration, clinical anatomy, or whole-Human qualification."
         ),

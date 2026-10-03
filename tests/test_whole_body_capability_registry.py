@@ -108,7 +108,7 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert report["counts"]["schema_mismatch_sources"] == 0
     assert systems["whole_body_anatomy"]["facts"][0]["value"] == 46
     assert systems["bloodflow"]["facts"][0]["value"] == 511
-    assert report["counts"]["open_requirements"] == 52
+    assert report["counts"]["open_requirements"] == 53
     assert systems["cardiac_electrical"]["status"] == "partial"
     cardiac_facts = {
         item["id"]: item for item in systems["cardiac_electrical"]["facts"]
@@ -232,9 +232,12 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert anatomy_facts["patellofemoral_range_valid_sample_count"]["value"] == 34
     assert anatomy_facts["patellofemoral_intersecting_range_valid_side_pose_count"]["value"] == 41
     assert anatomy_facts["patellofemoral_surface_intersection_pair_count"]["value"] == 1631
+    assert anatomy_facts["patellofemoral_source_mesh_intersecting_side_pose_count"]["value"] == 56
+    assert anatomy_facts["patellofemoral_source_mesh_intersection_pair_count"]["value"] == 1236
     assert anatomy_facts["patellofemoral_pose_audit_status"]["value"] == (
         "failed_sampled_surface_intersection_gate")
     assert not anatomy_gates["patellofemoral_bone_surface_intersection_gate"]["satisfied"]
+    assert not anatomy_gates["patellofemoral_source_mesh_intersection_gate"]["satisfied"]
 
     organs = systems["internal_organs"]
     organ_facts = {item["id"]: item for item in organs["facts"]}
