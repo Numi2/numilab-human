@@ -1,0 +1,11 @@
+# Patella qpos0 neutral-coordinate rebase
+
+The source model placed most of each patella behind its knee-anchor plane at literal `qpos0`. The lower-limb audit recorded 121 of 178 right patella vertices and 130 of 180 left vertices on or behind that plane. A projected-neutral image hid the source-default defect by applying a 52.4192 mm dependent translation.
+
+The pinned MyoSim source overlay now removes the neutral constants from both bilateral dependent patellar translations, shifts each patella body frame by those same constants, and translates the corresponding slide ranges. This reparameterizes the coordinates while preserving their equality-constrained poses. The upstream archive is unchanged. Exact replacement witnesses, source archive identity, pre/post hashes, and the required prior knee-range overlay are recorded in [the rebase manifest](../config/myosim-patella-neutral-coordinate-rebase.v1.json).
+
+The direct compiled-geometry receipt shows all 72 vertices on each source patella mesh anterior to its knee-anchor plane at unprojected `qpos0`: the minimum offsets are 33.591 mm on the right and 33.589 mm on the left. All four rebased translation coordinates have zero correction during neutral equality projection. Rebuilding the prior source state from the pinned archive and comparing all body transforms over the eight bounded lower-limb poses gave a maximum translation difference of `1.15e-16 m` and zero rotation difference. See [the geometry and equivalence receipt](media/myosim-patella-qpos0-rebase-20261003/receipt.json).
+
+The source overlay, compiled ranges, raw-qpos0 patellar mesh geometry, coordinate constants, and idempotence checks passed in the focused tests. The source-inventory and pose-diagnostic suites passed as well.
+
+The full-body native reference artifact was not rebuilt: its complete muscle-architecture fit was still CPU-bound after nine minutes and had emitted no output, so that run was stopped. The prior lower-limb registration receipt remains a record of the defect and has not been replaced. The new receipt establishes only source geometry and deterministic equality-projected pose equivalence; it does not establish clinical landmarks, patellofemoral tracking, loaded contact, dynamic standing, or whole-Human qualification. No board visuals were generated.

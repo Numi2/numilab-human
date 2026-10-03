@@ -81,4 +81,5 @@ def test_patellar_status_separates_raw_qpos0_from_projected_visual_poses():
         "minimum_signed_anterior_offset_m": 0.034,
     }
     assert "Use a source-equality-projected neutral pose" in result["visual_guidance"]
-    assert "not a native accepted state" in result["visual_guidance"]
+    assert "every patella vertex anterior" in result["visual_guidance"]
+    assert "Neither pose is a native accepted runtime state" in result["visual_guidance"]

@@ -141,9 +141,10 @@ def _patellar_pose_status(source_qpos0_rows, pose_receipts):
         },
         "visual_guidance": (
             "Use a source-equality-projected neutral pose for static anatomy views of the "
-            "current source-consistent registration. Literal qpos0 is diagnostic only and "
-            "may place patellae behind the knee-anchor plane; this projection is not a "
-            "native accepted state."
+            "current source-consistent registration. The literal source qpos0 is evaluated "
+            "independently and, after the pinned neutral-coordinate rebase, should place "
+            "every patella vertex anterior to the source knee-anchor plane. Neither pose "
+            "is a native accepted runtime state."
         ),
     }
 

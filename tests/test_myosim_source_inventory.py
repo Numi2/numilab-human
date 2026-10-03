@@ -72,6 +72,16 @@ class MyoSimSourceInventoryTests(unittest.TestCase):
         right = equalities["knee_angle_translation2_constraint_r"]
         left = equalities["knee_angle_translation2_constraint_l"]
         self.assertEqual(left, [-component for component in right])
+        patella_rebases = overlay["additional_source_overlays"]
+        self.assertEqual(len(patella_rebases), 1)
+        self.assertEqual(
+            patella_rebases[0]["id"],
+            "myosim-bilateral-patella-qpos0-neutral-coordinate-rebase-20261003",
+        )
+        self.assertEqual(
+            patella_rebases[0]["source_archive_sha256"],
+            value["source"]["archive_sha256"],
+        )
 
 
 if __name__ == "__main__":

@@ -1,0 +1,189 @@
+{
+  "date": "2026-10-03",
+  "evidence_boundary": "Compiled source-mesh geometry and deterministic source-equality-projected pose equivalence only. This corrects the default patella position relative to the source knee-anchor plane; it does not establish clinical landmarks, patellofemoral tracking, loaded contact, dynamic standing, or whole-Human qualification.",
+  "model": {
+    "body_count": 104,
+    "joint_count": 123,
+    "literal_unprojected_source_qpos0_patellar_anteriority": [
+      {
+        "centroid_signed_anterior_offset_m": 0.0455493421218777,
+        "compiled_body_position_m": [
+          -0.10226948905926131,
+          0.11148927240824469,
+          0.5027125931114886
+        ],
+        "compiled_mesh_count": 1,
+        "minimum_signed_anterior_offset_m": 0.033591332163175086,
+        "p05_signed_anterior_offset_m": 0.03517447991665018,
+        "passed": true,
+        "patella_vertex_count": 72,
+        "side": "r",
+        "source_anterior_axis_world": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "source_knee_anchor_world_m": [
+          -0.1010395303527707,
+          0.15583134957739472,
+          0.5170403868739167
+        ],
+        "source_member_id": "compiled_patella_r",
+        "vertices_posterior_or_on_knee_anchor_plane": 0
+      },
+      {
+        "centroid_signed_anterior_offset_m": 0.04554729421973939,
+        "compiled_body_position_m": [
+          0.05225046194736579,
+          0.11161232077257247,
+          0.5027124951247584
+        ],
+        "compiled_mesh_count": 1,
+        "minimum_signed_anterior_offset_m": 0.033589316737554234,
+        "p05_signed_anterior_offset_m": 0.035161912002754946,
+        "passed": true,
+        "patella_vertex_count": 72,
+        "side": "l",
+        "source_anterior_axis_world": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "source_knee_anchor_world_m": [
+          0.050949901456203726,
+          0.15595238282169338,
+          0.5170402904918808
+        ],
+        "source_member_id": "compiled_patella_l",
+        "vertices_posterior_or_on_knee_anchor_plane": 0
+      }
+    ],
+    "mujoco_version": "3.12.0",
+    "qpos_count": 129,
+    "rebased_neutral_translation_coordinates": [
+      {
+        "default_qpos": 0.0,
+        "joint": "knee_angle_beta_translation1_r",
+        "neutral_correction": 0.0,
+        "projected_neutral_qpos": 0.0,
+        "qpos_index": 113
+      },
+      {
+        "default_qpos": 0.0,
+        "joint": "knee_angle_beta_translation1_l",
+        "neutral_correction": 0.0,
+        "projected_neutral_qpos": 0.0,
+        "qpos_index": 127
+      },
+      {
+        "default_qpos": 0.0,
+        "joint": "knee_angle_beta_translation2_r",
+        "neutral_correction": 0.0,
+        "projected_neutral_qpos": 0.0,
+        "qpos_index": 112
+      },
+      {
+        "default_qpos": 0.0,
+        "joint": "knee_angle_beta_translation2_l",
+        "neutral_correction": 0.0,
+        "projected_neutral_qpos": 0.0,
+        "qpos_index": 126
+      }
+    ]
+  },
+  "prior_atlas_qpos0_failure": {
+    "literal_unprojected_qpos0": {
+      "failed_sides": [
+        "r",
+        "l"
+      ],
+      "left_minimum_offset_m": -0.01728577207120352,
+      "left_posterior_vertex_count": 130,
+      "left_vertex_count": 180,
+      "right_minimum_offset_m": -0.01706977564713827,
+      "right_posterior_vertex_count": 121,
+      "right_vertex_count": 178,
+      "status": "posterior_or_intersecting_knee_anchor_plane"
+    },
+    "pose_audit_sha256": "77499496d57e620360d2495d2826fb5a1634e80f2b97e04be6c59f0a44a5dccd",
+    "receipt": "Docs/media/numi-human-lower-limb-overlay-20261003/receipt.json",
+    "receipt_sha256": "422b4731195d7a734688ffd4a96a7bcdf55ef3f5d6c0583f965fd89325291e9f"
+  },
+  "projected_pose_equivalence": {
+    "all_passed": true,
+    "maximum_body_rotation_component_difference": 0.0,
+    "maximum_body_translation_difference_m": 1.1464934308770758e-16,
+    "method": "Rebuilt the previous source state from the pinned archive plus the existing range overlay, then compared all compiled body positions and rotations for the same eight source-equality-projected poses.",
+    "pose_count": 8,
+    "poses": [
+      {
+        "maximum_body_rotation_component_difference": 0.0,
+        "maximum_body_translation_difference_m": 1.962615573354719e-17,
+        "passed_1e-12": true,
+        "pose": "neutral"
+      },
+      {
+        "maximum_body_rotation_component_difference": 0.0,
+        "maximum_body_translation_difference_m": 1.1443916996305594e-16,
+        "passed_1e-12": true,
+        "pose": "bilateral_hip_flexion"
+      },
+      {
+        "maximum_body_rotation_component_difference": 0.0,
+        "maximum_body_translation_difference_m": 5.721958498152797e-17,
+        "passed_1e-12": true,
+        "pose": "bilateral_knee_flexion"
+      },
+      {
+        "maximum_body_rotation_component_difference": 0.0,
+        "maximum_body_translation_difference_m": 1.962615573354719e-17,
+        "passed_1e-12": true,
+        "pose": "bilateral_ankle_dorsiflexion"
+      },
+      {
+        "maximum_body_rotation_component_difference": 0.0,
+        "maximum_body_translation_difference_m": 1.962615573354719e-17,
+        "passed_1e-12": true,
+        "pose": "bilateral_subtalar_rotation"
+      },
+      {
+        "maximum_body_rotation_component_difference": 0.0,
+        "maximum_body_translation_difference_m": 1.962615573354719e-17,
+        "passed_1e-12": true,
+        "pose": "bilateral_mtp_flexion"
+      },
+      {
+        "maximum_body_rotation_component_difference": 0.0,
+        "maximum_body_translation_difference_m": 1.1464934308770758e-16,
+        "passed_1e-12": true,
+        "pose": "bilateral_deep_crouch"
+      },
+      {
+        "maximum_body_rotation_component_difference": 0.0,
+        "maximum_body_translation_difference_m": 0.0,
+        "passed_1e-12": true,
+        "pose": "bilateral_functional_crouch"
+      }
+    ]
+  },
+  "schema": "numi.human.patella-qpos0-rebase-compiled-geometry-receipt.v1",
+  "source": {
+    "archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "files": {
+      "checkout/myo_sim/models/leg/assets/myolegs_assets.xml": {
+        "after": "293a7f618e4ae151ff9cab6f277cbb88caa1d7f418104ab85776c208d6ab3b3d",
+        "before": "ea48e7612c8da4ed852d66b922d01311d24823d171c733b77a884fb6a5e01be3"
+      },
+      "checkout/myo_sim/models/leg/assets/myolegs_chain.xml": {
+        "after": "98e514ce869683e273a18794f6494df0c64dec13eec636b683a165cf30109b29",
+        "before": "885fdc6fa0e8a2d24d590c3987856f4a17256f1d44f277f46ecf9dbfedc02b0a"
+      }
+    },
+    "patella_rebase_id": "myosim-bilateral-patella-qpos0-neutral-coordinate-rebase-20261003",
+    "patella_rebase_manifest_sha256": "4188bcd6d7c0b4d755845e736a6d083ef238818e146819c7456836a1ea18641c",
+    "range_overlay_id": "myosim-left-knee-translation2-reflected-range-20261002",
+    "range_overlay_manifest_sha256": "05f6b7698e571c83a62bdbc7055ff24322800a36e9b53e455a18b451e7b9dad4",
+    "repository": "https://github.com/MyoHub/myo_sim",
+    "revision": "33c89c2bde282553dde3f526768eb3bdcfaa7649"
+  }
+}
