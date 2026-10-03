@@ -122,6 +122,16 @@ calibration, tissue integration and physiology remain open. The earlier
 [2 October ABI 3 native visual record](NATIVE_VISUAL_ABI3_CURRENT_REGISTRATION_20261002.md)
 is retained as a different registration and its images were not regenerated.
 
+The new [exact patellofemoral pose-intersection audit](PATELLOFEMORAL_POSE_INTERSECTION_AUDIT_20261003.md)
+checks the current ABI 3 patella/femur surfaces through the equality-projected
+source pose suite and 43 samples of the declared knee-angle range. It finds
+1,631 exact triangle-pair intersections across 41 side-pose states within 34
+range-valid samples; both knees intersect in the 0.7 rad functional crouch and
+0.9 rad knee-flexion inspection poses. This closes the anteriority-only blind
+spot and adds a failed patellofemoral geometry requirement to the capability
+registry. It does not justify an uncalibrated translation or qualify clinical
+tracking, cartilage contact, loaded behavior, or a continuous flexion path.
+
 ## Healthy whole-body CT spatial source candidates — 2026-10-03
 
 The [30-scan TCIA source intake](HEALTHY_TOTAL_BODY_CT_SOURCE_INGEST_20261003.md)

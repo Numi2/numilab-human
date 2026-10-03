@@ -500,6 +500,44 @@ def myosim_lower_limb_pose_audit(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def myosim_patellofemoral_pose_intersection_audit(arguments: argparse.Namespace) -> int:
+    auditor = arguments.python.expanduser().absolute()
+    if not auditor.is_file() or not os.access(auditor, os.X_OK):
+        raise ImportError(
+            f"MyoSim patellofemoral pose-audit Python is unavailable: {auditor}"
+        )
+    output = arguments.output.resolve()
+    environment = dict(os.environ)
+    source_path = str(REPOSITORY_ROOT / "src")
+    environment["PYTHONPATH"] = source_path + (
+        os.pathsep + environment["PYTHONPATH"] if environment.get("PYTHONPATH") else ""
+    )
+    command = [
+        str(auditor), "-m", "numilab_human.patellofemoral_pose_intersection_audit",
+        "--sources", str(arguments.sources.resolve()),
+        "--artifact", str(arguments.artifact.resolve()),
+        "--bone-artifact", str(arguments.bone_artifact.resolve()),
+        "--registration", str(arguments.registration.resolve()),
+        "--output", str(output),
+    ]
+    completed = subprocess.run(
+        command, capture_output=True, text=True, check=False, env=environment
+    )
+    if not output.is_file():
+        detail = completed.stderr.strip() or completed.stdout.strip() or "no audit receipt"
+        raise ImportError(f"MyoSim patellofemoral pose audit failed: {detail}")
+    receipt = read_json(output)
+    if receipt.get("schema") != (
+        "numi.human.patellofemoral-pose-intersection-audit.v1"
+    ):
+        raise ImportError("MyoSim patellofemoral pose audit wrote an unsupported schema")
+    if completed.returncode not in (0, 2):
+        detail = completed.stderr.strip() or completed.stdout.strip() or "audit process failed"
+        raise ImportError(f"MyoSim patellofemoral pose audit failed: {detail}")
+    print(f"wrote {output}; status={receipt['status']}")
+    return completed.returncode
+
+
 def myosim_sternal_girdle_registration(arguments: argparse.Namespace) -> int:
     output = arguments.output.resolve()
     try:
@@ -1511,6 +1549,25 @@ def parser() -> argparse.ArgumentParser:
         help="Python environment with the pinned myo-sim checkout, NumPy, and MuJoCo installed",
     )
     lower_limb_pose_audit_parser.set_defaults(handler=myosim_lower_limb_pose_audit)
+    patellofemoral_pose_intersection_parser = commands.add_parser(
+        "myosim-patellofemoral-pose-intersection-audit",
+        help="exactly check registered patella/femur surface intersections across source poses",
+    )
+    patellofemoral_pose_intersection_parser.add_argument("--sources", type=Path, required=True)
+    patellofemoral_pose_intersection_parser.add_argument("--artifact", type=Path, required=True)
+    patellofemoral_pose_intersection_parser.add_argument(
+        "--bone-artifact", type=Path, required=True,
+        help="exact source-owned NHBONES1 ABI 3 geometry and manifest",
+    )
+    patellofemoral_pose_intersection_parser.add_argument("--registration", type=Path, required=True)
+    patellofemoral_pose_intersection_parser.add_argument("--output", type=Path, required=True)
+    patellofemoral_pose_intersection_parser.add_argument(
+        "--python", type=Path, default=Path(sys.executable),
+        help="Python environment with the pinned myo-sim checkout, NumPy, and MuJoCo installed",
+    )
+    patellofemoral_pose_intersection_parser.set_defaults(
+        handler=myosim_patellofemoral_pose_intersection_audit
+    )
     sternal_girdle_registration_parser = commands.add_parser(
         "myosim-sternal-girdle-registration",
         help="restore exact manubrium and common-frame sternum/clavicle continuity",

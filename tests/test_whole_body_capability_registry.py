@@ -103,12 +103,12 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert report["counts"]["required_subsystems"] == len(SYSTEM_IDS)
     assert report["counts"]["qualified_subsystems"] < len(SYSTEM_IDS)
     assert not report["qualification"]["whole_human_capability"]
-    assert report["counts"]["verified_evidence_sources"] == 36
+    assert report["counts"]["verified_evidence_sources"] == 37
     assert report["counts"]["missing_evidence_sources"] == 0
     assert report["counts"]["schema_mismatch_sources"] == 0
     assert systems["whole_body_anatomy"]["facts"][0]["value"] == 46
     assert systems["bloodflow"]["facts"][0]["value"] == 511
-    assert report["counts"]["open_requirements"] == 51
+    assert report["counts"]["open_requirements"] == 52
     assert systems["cardiac_electrical"]["status"] == "partial"
     cardiac_facts = {
         item["id"]: item for item in systems["cardiac_electrical"]["facts"]
@@ -211,6 +211,8 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert not anatomy_gates["external_scan_subject_binding"]["satisfied"]
     assert next(item for item in anatomy["evidence"]
                 if item["id"] == "patella_rebase")["status"] == "verified"
+    assert next(item for item in anatomy["evidence"]
+                if item["id"] == "patellofemoral_pose_intersections")["status"] == "verified"
     assert anatomy_facts["lower_limb_pose_count"]["value"] == 8
     assert anatomy_facts["lower_limb_source_geometry_checks"]["value"] == 185
     assert anatomy_facts["literal_qpos0_patellar_status"]["value"] == (
@@ -226,6 +228,13 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert anatomy_gates["lower_limb_multi_pose_source_audit"]["satisfied"]
     assert anatomy_gates["projected_patella_anteriority"]["satisfied"]
     assert anatomy_gates["literal_qpos0_patellar_anteriority"]["satisfied"]
+    assert anatomy_facts["patellofemoral_pose_sweep_sample_count"]["value"] == 43
+    assert anatomy_facts["patellofemoral_range_valid_sample_count"]["value"] == 34
+    assert anatomy_facts["patellofemoral_intersecting_range_valid_side_pose_count"]["value"] == 41
+    assert anatomy_facts["patellofemoral_surface_intersection_pair_count"]["value"] == 1631
+    assert anatomy_facts["patellofemoral_pose_audit_status"]["value"] == (
+        "failed_sampled_surface_intersection_gate")
+    assert not anatomy_gates["patellofemoral_bone_surface_intersection_gate"]["satisfied"]
 
     organs = systems["internal_organs"]
     organ_facts = {item["id"]: item for item in organs["facts"]}
