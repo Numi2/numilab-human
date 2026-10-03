@@ -62,6 +62,27 @@ class GapReferenceAuditTests(unittest.TestCase):
             {key: value for key, value in report.items() if key != "audit_sha256"}
         ))
 
+    def test_gap_execution_can_embed_validated_references_without_promotion(self) -> None:
+        registry_path = ROOT / "config/human-gap-execution.v1.json"
+        registry = gap_execution.read_json(registry_path)
+        audit = materialize(registry, root=ROOT, registry_path=registry_path)
+
+        report = gap_execution.materialize(registry, root=ROOT, reference_audit=audit)
+
+        validation = report["evidence_reference_validation"]
+        self.assertEqual(validation["status"], "passed_local_reference_graph")
+        self.assertEqual(validation["audit_sha256"], audit["audit_sha256"])
+        self.assertEqual(report["integrated_qualification"], "not_assessed")
+
+    def test_gap_execution_rejects_stale_or_forged_reference_audit(self) -> None:
+        registry_path = ROOT / "config/human-gap-execution.v1.json"
+        registry = gap_execution.read_json(registry_path)
+        audit = materialize(registry, root=ROOT, registry_path=registry_path)
+        audit["audit_sha256"] = "0" * 64
+
+        with self.assertRaisesRegex(gap_execution.HumanImportError, "stale, invalid, or failed"):
+            gap_execution.materialize(registry, root=ROOT, reference_audit=audit)
+
     def test_external_registry_is_rejected(self) -> None:
         registry_path = ROOT / "config/human-gap-execution.v1.json"
         registry = gap_execution.read_json(registry_path)

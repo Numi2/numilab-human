@@ -17,12 +17,13 @@ from .target_coverage import MANDATORY, canonical_bytes, digest, file_digest, va
 
 ROOT = Path(__file__).resolve().parents[2]
 SCHEMA = "HumanPack.gap-execution.v1"
-REPORT_SCHEMA = "HumanPack.gap-execution-report.v1"
-COMPILER = "numilab-human.gap-execution.1"
+REPORT_SCHEMA = "HumanPack.gap-execution-report.v2"
+COMPILER = "numilab-human.gap-execution.2"
 CATEGORIES = {"engineering", "source_data", "calibration", "validation", "performance"}
 BOUNDARY = (
-    "Execution metadata only. Ledger statuses are quoted, evidence files are referenced "
-    "but not validated, and dependency order is not readiness or qualification. "
+    "Execution metadata only. Ledger statuses are quoted, local evidence references "
+    "may be machine-checked for availability and syntax, and dependency order is not "
+    "readiness or qualification. "
     "Source inventory and an implemented importer do not close scientific gates."
 )
 
@@ -167,7 +168,8 @@ def validate_registry(value: dict[str, Any], *, root: Path = ROOT) -> tuple[dict
 
 
 def materialize(value: dict[str, Any], *, root: Path = ROOT,
-                coverage: dict[str, Any] | None = None) -> dict[str, Any]:
+                coverage: dict[str, Any] | None = None,
+                reference_audit: dict[str, Any] | None = None) -> dict[str, Any]:
     _object(value, {"schema", "ledger", "workstreams"}, "execution registry")
     ledger_sha256 = file_digest(_path(root, value["ledger"]))
     rows, tasks, layers = validate_registry(value, root=root)
@@ -179,6 +181,34 @@ def materialize(value: dict[str, Any], *, root: Path = ROOT,
     snapshots = {reference: file_digest(_path(root, reference)) for reference in references}
     if snapshots[value["ledger"]] != ledger_sha256:
         raise HumanImportError("completion ledger changed while reading its workstreams")
+    reference_validation: dict[str, Any] = {
+        "status": "not_performed",
+        "scope": "registered documents and their local Markdown links were not scanned",
+    }
+    if reference_audit is not None:
+        _object(reference_audit, {
+            "schema", "compiler", "registry_sha256", "registry_file_sha256",
+            "predicate_source_sha256", "registered_reference_sha256",
+            "validated_json_references", "local_markdown_targets", "linked_file_sha256",
+            "linked_directories", "external_links_not_fetched",
+            "external_domains_not_verified", "unresolved_local_targets",
+            "unparsed_markdown_link_syntax", "status", "counts", "evidence_boundary",
+            "audit_sha256",
+        }, "gap reference audit")
+        audit_body = {key: item for key, item in reference_audit.items() if key != "audit_sha256"}
+        if (reference_audit["schema"] != "HumanPack.human-gap-reference-audit.v1"
+                or reference_audit["registry_sha256"] != digest(value)
+                or reference_audit["registered_reference_sha256"] != snapshots
+                or reference_audit["status"] != "passed_local_reference_graph"
+                or reference_audit["audit_sha256"] != digest(audit_body)):
+            raise HumanImportError("gap reference audit is stale, invalid, or failed")
+        reference_validation = {
+            "status": reference_audit["status"],
+            "audit_sha256": reference_audit["audit_sha256"],
+            "counts": reference_audit["counts"],
+            "external_domains_not_verified": reference_audit["external_domains_not_verified"],
+            "evidence_boundary": reference_audit["evidence_boundary"],
+        }
     links: dict[str, list[str]] = {}
     for workstream in value["workstreams"]:
         for target in workstream["target_ids"]:
@@ -192,7 +222,7 @@ def materialize(value: dict[str, Any], *, root: Path = ROOT,
         "schema": REPORT_SCHEMA, "compiler": COMPILER, "registry_sha256": digest(value),
         "reference_sha256": snapshots, "evidence_boundary": BOUNDARY,
         "integrated_qualification": "not_assessed",
-        "evidence_reference_validation": "not_performed",
+        "evidence_reference_validation": reference_validation,
         "workstreams": [{**workstream, "ledger": rows[workstream["ledger_workstream"]],
                          "task_assessment": "not_assessed"} for workstream in value["workstreams"]],
         "dependency_layers": layers,
@@ -220,7 +250,15 @@ def materialize(value: dict[str, Any], *, root: Path = ROOT,
 def command(arguments: argparse.Namespace) -> int:
     registry = read_json(arguments.registry)
     coverage = None if arguments.coverage is None else read_json(arguments.coverage)
-    result = materialize(registry, root=arguments.repository_root, coverage=coverage)
+    reference_audit = None
+    if getattr(arguments, "validate_references", False):
+        from .gap_reference_audit import materialize as audit_references
+        reference_audit = audit_references(
+            registry, root=arguments.repository_root,
+            registry_path=arguments.registry,
+        )
+    result = materialize(registry, root=arguments.repository_root, coverage=coverage,
+                         reference_audit=reference_audit)
     encoded = canonical_bytes(result) + b"\n"
     if arguments.output is None:
         print(encoded.decode("utf-8"), end="")
@@ -242,6 +280,8 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--repository-root", type=Path, default=ROOT,
                         help="root containing the ledger and referenced evidence")
     parser.add_argument("--coverage", type=Path, help="existing validated target-coverage manifest")
+    parser.add_argument("--validate-references", action="store_true",
+                        help="include the local Markdown/JSON evidence-reference audit")
     parser.add_argument("--output", type=Path, help="new immutable report; default is stdout")
     parser.set_defaults(handler=command)
 

@@ -52,7 +52,7 @@ class GapExecutionTests(unittest.TestCase):
             self.assertEqual(row["ledger"], ledger_rows(self.root / self.registry["ledger"])[row["ledger_workstream"]])
             self.assertEqual(row["task_assessment"], "not_assessed")
         self.assertEqual(report["integrated_qualification"], "not_assessed")
-        self.assertEqual(report["evidence_reference_validation"], "not_performed")
+        self.assertEqual(report["evidence_reference_validation"]["status"], "not_performed")
         self.assertEqual(report["coverage"]["binding_status"], "not_supplied")
         self.assertIsNone(report["counts"]["unmapped_source_leaves"])
 
@@ -192,7 +192,7 @@ class GapExecutionTests(unittest.TestCase):
         path.write_text(path.read_text() + "\nchanged fixture reference\n")
         after = materialize(self.registry, root=self.root)
         self.assertNotEqual(before["report_sha256"], after["report_sha256"])
-        self.assertEqual(after["evidence_reference_validation"], "not_performed")
+        self.assertEqual(after["evidence_reference_validation"]["status"], "not_performed")
 
     def test_immutable_output_and_existing_cli_registration(self) -> None:
         registry = self.root / "registry.json"
@@ -209,6 +209,8 @@ class GapExecutionTests(unittest.TestCase):
         from numilab_human.cli import parser
         parsed = parser().parse_args(["gap-execution", "--registry", str(registry)])
         self.assertIs(parsed.handler, command)
+        validated = parser().parse_args(["gap-execution", "--validate-references"])
+        self.assertTrue(validated.validate_references)
 
     def test_reference_change_during_materialization_is_rejected(self) -> None:
         from numilab_human import gap_execution

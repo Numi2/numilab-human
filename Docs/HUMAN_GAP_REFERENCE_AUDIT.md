@@ -8,6 +8,12 @@ separate check with:
 numi human gap-reference-audit --output <new-receipt-path>
 ```
 
+To include the validated reference summary in the task/dependency report, run:
+
+```sh
+numi human gap-execution --validate-references --output <new-report-path>
+```
+
 The audit validates every path named by the execution registry, parses its
 registered JSON and JSON.GZ files, checks inline Markdown links, image paths,
 local heading anchors and linked-directory availability, and hashes each
