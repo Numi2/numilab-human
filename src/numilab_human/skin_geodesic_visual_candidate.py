@@ -26,7 +26,8 @@ SCHEMA = 'numi.human.derived-geodesic-skin-visual-candidate.v1'
 BLEND = 0.05
 RADIUS_M = 0.12
 CODE_FILES = ('skin_geodesic_visual_candidate.py',
-              'skin_crossing_attribution.py', 'skin_embeddedness_gate.py')
+              'skin_crossing_attribution.py', 'skin_embeddedness_gate.py',
+              'skin_crossing_support.py')
 
 
 def require(condition: bool, message: str) -> None:
@@ -48,13 +49,17 @@ def _write_immutable(path: Path, data: bytes) -> None:
 
 
 def compile_candidate(payload: Path, manifest_path: Path, solution_path: Path,
-                      attribution_path: Path, output_dir: Path) -> dict:
+                      attribution_path: Path, output_dir: Path, *,
+                      blend: float = BLEND, radius_m: float = RADIUS_M) -> dict:
     payload, manifest_path, solution_path, attribution_path, output_dir = (
         Path(p).resolve() for p in (payload, manifest_path, solution_path,
                                    attribution_path, output_dir))
     require(all(p.is_file() and not p.is_symlink() for p in
                 (payload, manifest_path, solution_path, attribution_path)),
             'retained source input missing')
+    require(np.isfinite(blend) and 0 < blend <= 1
+            and np.isfinite(radius_m) and radius_m > 0,
+            'candidate blend/radius range')
     manifest = human.read_json(manifest_path)
     nb, nv, ni, fingerprint, vertices, faces = _source_mesh(payload, manifest)
     require(manifest['coverage']['binding_solution']['sha256'] == human.sha256(solution_path),
@@ -86,18 +91,28 @@ def compile_candidate(payload: Path, manifest_path: Path, solution_path: Path,
     screened /= screened.sum(axis=1, keepdims=True)
 
     attribution = human.read_json(attribution_path)
-    require(attribution['schema'] == 'numi.human.native-skin-crossing-attribution.v1'
-            and attribution['total_exact_intersection_pairs'] == 42
-            and attribution['source']['payload_sha256'] == human.sha256(payload)
-            and attribution['source']['manifest_sha256'] == human.sha256(manifest_path)
-            and attribution['source']['binding_solution_sha256'] == human.sha256(solution_path)
-            and {c['case']: c['exact_intersection_pair_count']
-                 for c in attribution['cases']} ==
-                {'coupled-reach': 3, 'knee-flexion': 18, 'asymmetric-knee': 21},
-            'exact crossing attribution identity')
+    cases = attribution.get('cases', [])
+    case_ids = [c.get('case') for c in cases]
+    pairs_by_case = [c.get('exact_intersection_pairs') for c in cases]
+    require(attribution.get('schema') == 'numi.human.native-skin-crossing-attribution.v1'
+            and attribution.get('source', {}).get('payload_sha256') == human.sha256(payload)
+            and attribution.get('source', {}).get('manifest_sha256') == human.sha256(manifest_path)
+            and attribution.get('source', {}).get('binding_solution_sha256') == human.sha256(solution_path)
+            and bool(cases) and all(isinstance(case_id, str) and case_id for case_id in case_ids)
+            and len(set(case_ids)) == len(case_ids)
+            and all(isinstance(pairs, list)
+                    and c.get('exact_intersection_pair_count') == len(pairs)
+                    for c, pairs in zip(cases, pairs_by_case, strict=True))
+            and attribution.get('total_exact_intersection_pairs') ==
+                sum(len(pairs) for pairs in pairs_by_case),
+            'exact crossing attribution identity and complete pair counts')
     support_faces = sorted({int(face) for case in attribution['cases']
                             for pair in case['exact_intersection_pairs'] for face in pair})
-    require(len(support_faces) > 0 and support_faces[-1] < len(faces),
+    require(len(support_faces) > 0 and support_faces[0] >= 0
+            and support_faces[-1] < len(faces)
+            and all(len(pair) == 2 and all(type(face) is int and 0 <= face < len(faces)
+                                           for face in pair)
+                    for pairs in pairs_by_case for pair in pairs),
             'source crossing witness faces')
     points, check_inverse = np.unique(vertices, axis=0, return_inverse=True)
     require(np.array_equal(inverse, check_inverse), 'source quotient replay')
@@ -115,9 +130,9 @@ def compile_candidate(payload: Path, manifest_path: Path, solution_path: Path,
                                     indices=support, min_only=True)[inverse]
     require(bool(np.isfinite(distance_to_crossing).all()),
             'crossing support does not cover the connected skin')
-    fraction = np.clip(distance_to_crossing/RADIUS_M, 0, 1)
+    fraction = np.clip(distance_to_crossing/radius_m, 0, 1)
     locality = 1-(3*fraction*fraction-2*fraction*fraction*fraction)
-    candidate = full+BLEND*locality[:, None]*(screened-full)
+    candidate = full+blend*locality[:, None]*(screened-full)
     require(bool(np.isfinite(candidate).all()) and candidate.min() >= 0
             and float(np.max(np.abs(candidate.sum(axis=1)-1))) < 1e-12,
             'derived candidate partition and positivity')
@@ -162,7 +177,7 @@ def compile_candidate(payload: Path, manifest_path: Path, solution_path: Path,
         'binding_solution_sha256': human.sha256(solution_path),
         'crossing_attribution_sha256': human.sha256(attribution_path),
         'method': 'source_graph_geodesic_localized_envelope_attenuation_blend',
-        'blend_fraction': BLEND, 'source_geodesic_radius_m': RADIUS_M,
+        'blend_fraction': blend, 'source_geodesic_radius_m': radius_m,
         'support_face_ids': support_faces,
         'support_face_count': len(support_faces),
         'changed_vertex_count': int((locality > 0).sum()),
@@ -193,9 +208,13 @@ def main() -> None:
     parser.add_argument('--solution', type=Path, default=root/'Build/skin-seam-continuity-20260929/production/payload/bodyparts3d-skin-binding-solution.npz')
     parser.add_argument('--attribution', type=Path, default=root/'Build/skin-embeddedness-20260930/crossing-attribution.json')
     parser.add_argument('--output-dir', type=Path, required=True)
+    parser.add_argument('--blend-fraction', type=float, default=BLEND)
+    parser.add_argument('--source-geodesic-radius-m', type=float, default=RADIUS_M)
     a = parser.parse_args()
     result = compile_candidate(a.payload, a.manifest, a.solution,
-                               a.attribution, a.output_dir)
+                               a.attribution, a.output_dir,
+                               blend=a.blend_fraction,
+                               radius_m=a.source_geodesic_radius_m)
     print(json.dumps({'schema': result['schema'], 'payload_sha256': result['payload']['sha256'],
                       'changed_vertex_count': result['changed_vertex_count'],
                       'source_unchanged': result['source_positions_normals_bindings_and_faces_byte_identical']}))
