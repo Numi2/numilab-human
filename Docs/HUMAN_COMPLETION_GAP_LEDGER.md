@@ -168,6 +168,18 @@ pressure-volume loops, and heartbeat qualification remain open. The trace,
 activation map, and exact checkpoint hash are retained with the receipt; it
 does not qualify cardiac or whole-Human physiology.
 
+## Current toe-enthesis standing failure evidence — 2026-10-02
+
+The current-toe-enthesis standing attempt is included directly in the
+whole-body capability registry as failure evidence: it reached 5.728 of 10
+requested simulated seconds before severe divergence. The registry records
+that the first retained 10 mm drift occurred at 1.576 seconds with all six
+contacts active and feedback correction below its bound; correction saturation
+followed at 2.016 seconds, then recorded contact loss at 2.504 seconds. Zero
+root assistance is explicitly reported, so that evidence condition is closed.
+Ten-second duration, balance, and sustained standing remain open. The sparse
+samples establish ordering, not the cause of drift.
+
 ## Native ventricular tension sequence - 2026-10-02
 
 The [source-derived native ventricular sequence](CARDIAC_NATIVE_ACTIVE_TENSION_SEQUENCE_20261002.md)

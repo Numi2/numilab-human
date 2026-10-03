@@ -295,20 +295,32 @@
       "domain": "assistance-free whole-body dynamics",
       "scope": "Measured, balanced, at least ten-second native standing with no hidden assistance.",
       "evidence": [
-        {"id": "stand_diagnostic", "path": "Build/native-human-stand-512x1ms-activation08-independent-peak-20261002/standing-diagnostic.json", "schema": "numi.human.native-standing-diagnostic.v1"}
+        {"id": "stand_diagnostic", "path": "Build/native-human-stand-512x1ms-activation08-independent-peak-20261002/standing-diagnostic.json", "schema": "numi.human.native-standing-diagnostic.v1"},
+        {"id": "toe_enthesis_10s_attempt", "path": "Docs/media/native-stand-current-toe-enthesis-feedback-10s-20261002/receipt.json", "schema": "numi.human.native-stand-current-toe-enthesis-10s-attempt.v1"}
       ],
       "facts": [
         {"id": "duration_seconds", "evidence": "stand_diagnostic", "path": "horizon.duration_seconds"},
         {"id": "balanced", "evidence": "stand_diagnostic", "path": "metrics.balanced"},
         {"id": "right_knee_drift_rad", "evidence": "stand_diagnostic", "path": "metrics.maximum_configuration_delta_rad"},
-        {"id": "assistance_free", "evidence": "stand_diagnostic", "path": "qualification.assistance_free"},
-        {"id": "sustained_standing", "evidence": "stand_diagnostic", "path": "qualification.sustained_standing"}
+        {"id": "root_assistance_applied", "evidence": "toe_enthesis_10s_attempt", "path": "execution.root_assistance"},
+        {"id": "sustained_standing", "evidence": "stand_diagnostic", "path": "qualification.sustained_standing"},
+        {"id": "latest_attempt_requested_seconds", "evidence": "toe_enthesis_10s_attempt", "path": "execution.requested_simulated_seconds"},
+        {"id": "latest_attempt_last_retained_progress_seconds", "evidence": "toe_enthesis_10s_attempt", "path": "execution.last_retained_accepted_progress_seconds"},
+        {"id": "latest_attempt_completed", "evidence": "toe_enthesis_10s_attempt", "path": "execution.run_completed"},
+        {"id": "first_10mm_drift_seconds", "evidence": "toe_enthesis_10s_attempt", "path": "failure_onset_analysis.first_recorded_horizontal_drift_over_10mm.simulated_seconds"},
+        {"id": "first_10mm_drift_contact_count", "evidence": "toe_enthesis_10s_attempt", "path": "failure_onset_analysis.first_recorded_horizontal_drift_over_10mm.contact_count"},
+        {"id": "first_10mm_drift_feedback_delta", "evidence": "toe_enthesis_10s_attempt", "path": "failure_onset_analysis.first_recorded_horizontal_drift_over_10mm.muscle_feedback_max_excitation_delta"},
+        {"id": "feedback_bound_seconds", "evidence": "toe_enthesis_10s_attempt", "path": "failure_onset_analysis.first_recorded_feedback_correction_at_bound.simulated_seconds"},
+        {"id": "first_contact_loss_seconds", "evidence": "toe_enthesis_10s_attempt", "path": "failure_onset_analysis.first_recorded_contact_loss_from_six.simulated_seconds"},
+        {"id": "maximum_root_speed_m_s", "evidence": "toe_enthesis_10s_attempt", "path": "measured.maximum_root_linear_speed_m_s"},
+        {"id": "maximum_support_force_n", "evidence": "toe_enthesis_10s_attempt", "path": "measured.maximum_support_force_n"},
+        {"id": "maximum_support_penetration_m", "evidence": "toe_enthesis_10s_attempt", "path": "measured.maximum_reported_support_penetration_m"}
       ],
       "requirements": [
-        {"id": "ten_second_horizon", "evidence": "stand_diagnostic", "path": "horizon.duration_seconds", "operator": "at_least", "value": 10.0, "reason": "The retained native trajectory is 0.512 seconds, not ten seconds."},
+        {"id": "ten_second_horizon", "evidence": "toe_enthesis_10s_attempt", "path": "execution.last_retained_accepted_progress_seconds", "operator": "at_least", "value": 10.0, "reason": "The latest current-toe-enthesis attempt stopped at 5.728 seconds after severe divergence."},
         {"id": "balanced_native_state", "evidence": "stand_diagnostic", "path": "metrics.balanced", "operator": "equals", "value": true, "reason": "The native balance gate is false."},
         {"id": "sustained_standing", "evidence": "stand_diagnostic", "path": "qualification.sustained_standing", "operator": "equals", "value": true, "reason": "The run is a bounded failure diagnostic, not sustained standing."},
-        {"id": "assistance_free", "evidence": "stand_diagnostic", "path": "qualification.assistance_free", "operator": "equals", "value": true, "reason": "A standing claim must explicitly report zero root assistance."}
+        {"id": "assistance_free", "evidence": "toe_enthesis_10s_attempt", "path": "execution.root_assistance", "operator": "equals", "value": false, "reason": "A standing claim must explicitly report zero root assistance."}
       ]
     },
     {

@@ -69,3 +69,17 @@ complete feedback-enabled runtime. No trace was produced from the rejected
 local launch, and this check provides no causal result. The failure-onset
 trace requires the exact runtime source patch or export; running the clean
 commit without feedback would change the mechanics under investigation.
+
+## Source recovery follow-up — 3 October 2026
+
+The feedback implementation was recovered in an isolated Human worktree at
+commit `58cc13b2e74737dece400a9be7c48c295aebad3b`. Its native probe and Metal
+library build successfully and expose both
+`--stand-muscle-path-feedback` and `--persistent-stand-trace`. The rebuilt
+probe (`eb2b33bb17da0eb3d1c966897b14d12ddda60508f43cf7642c5e11efbcdaf859`)
+and library (`4e033659a1adf0c8f3e3aa4ec22011bfcb4e5785fefad8b4841c4e8186e33878`)
+do not match the failed run's recorded binary and library hashes. This recovers
+the source-level diagnostic path but does not reproduce the original runtime.
+No new standing simulation was launched while the native cardiac continuation
+owned the GPU. The source-aligned onset trace remains the next standing gate;
+the sparse 1 ms progress stream still cannot identify the initiating cause.

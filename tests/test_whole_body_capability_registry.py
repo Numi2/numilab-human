@@ -151,6 +151,28 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert not mechanics_gates["qualified_heartbeat"]["satisfied"]
     assert not systems["skin"]["requirements"][0]["satisfied"]
 
+    dynamics = systems["whole_body_dynamics"]
+    dynamics_facts = {item["id"]: item for item in dynamics["facts"]}
+    dynamics_gates = {item["id"]: item for item in dynamics["requirements"]}
+    assert next(item for item in dynamics["evidence"]
+                if item["id"] == "toe_enthesis_10s_attempt")["status"] == "verified"
+    assert dynamics_facts["latest_attempt_requested_seconds"]["value"] == 10.0
+    assert dynamics_facts["latest_attempt_last_retained_progress_seconds"]["value"] == 5.728
+    assert dynamics_facts["latest_attempt_completed"]["value"] is False
+    assert dynamics_facts["root_assistance_applied"]["value"] is False
+    assert dynamics_facts["first_10mm_drift_seconds"]["value"] == 1.576
+    assert dynamics_facts["first_10mm_drift_contact_count"]["value"] == 6
+    assert dynamics_facts["first_10mm_drift_feedback_delta"]["value"] < 0.2
+    assert dynamics_facts["feedback_bound_seconds"]["value"] == 2.016
+    assert dynamics_facts["first_contact_loss_seconds"]["value"] == 2.504
+    assert dynamics_facts["maximum_root_speed_m_s"]["value"] == pytest.approx(37.7857969775)
+    assert dynamics_facts["maximum_support_force_n"]["value"] == pytest.approx(267666.412354)
+    assert dynamics_facts["maximum_support_penetration_m"]["value"] == pytest.approx(0.00950689986348)
+    assert not dynamics_gates["ten_second_horizon"]["satisfied"]
+    assert dynamics_gates["assistance_free"]["satisfied"]
+    assert not dynamics_gates["balanced_native_state"]["satisfied"]
+    assert not dynamics_gates["sustained_standing"]["satisfied"]
+
     skin = systems["skin"]
     skin_facts = {item["id"]: item for item in skin["facts"]}
     skin_gates = {item["id"]: item for item in skin["requirements"]}
