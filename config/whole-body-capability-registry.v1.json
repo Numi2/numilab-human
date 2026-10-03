@@ -68,7 +68,8 @@
       "scope": "Closed embedded skin over retained poses, continuous motion, and a physical tissue/contact owner.",
       "evidence": [
         {"id": "native_pose_audit", "path": "Docs/media/skin-native-embeddedness-20260929/summary.json", "schema": "numi.human.compiled-native-skin-embeddedness.v1"},
-        {"id": "candidate_heldout_audit", "path": "Docs/media/skin-geodesic-visual-candidate-20260930/heldout-summary.json", "schema": "numi.human.derived-geodesic-skin-heldout-native-audit.v1"}
+        {"id": "candidate_heldout_audit", "path": "Docs/media/skin-geodesic-visual-candidate-20260930/heldout-summary.json", "schema": "numi.human.derived-geodesic-skin-heldout-native-audit.v1"},
+        {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"}
       ],
       "facts": [
         {"id": "sampled_states", "evidence": "native_pose_audit", "path": "sampled_state_count"},
@@ -77,14 +78,22 @@
         {"id": "vertex_link_defects", "evidence": "native_pose_audit", "path": "source_vertex_link_defect_count"},
         {"id": "candidate_heldout_status", "evidence": "candidate_heldout_audit", "path": "status"},
         {"id": "candidate_new_intersection_pairs", "evidence": "candidate_heldout_audit", "path": "new_intersection_pair_count"},
-        {"id": "candidate_removed_intersection_pairs", "evidence": "candidate_heldout_audit", "path": "removed_intersection_pair_count"}
+        {"id": "candidate_removed_intersection_pairs", "evidence": "candidate_heldout_audit", "path": "removed_intersection_pair_count"},
+        {"id": "external_ct_subcutaneous_fat_label", "evidence": "external_ct_scan001", "path": "labels.33.label"},
+        {"id": "external_ct_subcutaneous_fat_voxels", "evidence": "external_ct_scan001", "path": "labels.33.source_voxel_count"},
+        {"id": "external_ct_subcutaneous_fat_closed", "evidence": "external_ct_scan001", "path": "labels.33.closed_two_manifold"},
+        {"id": "external_ct_torso_fat_label", "evidence": "external_ct_scan001", "path": "labels.34.label"},
+        {"id": "external_ct_torso_fat_voxels", "evidence": "external_ct_scan001", "path": "labels.34.source_voxel_count"},
+        {"id": "external_ct_torso_fat_closed", "evidence": "external_ct_scan001", "path": "labels.34.closed_two_manifold"},
+        {"id": "external_ct_skin_layer_present", "evidence": "external_ct_scan001", "path": "qualification.skin_layer_present"}
       ],
       "requirements": [
         {"id": "no_new_heldout_intersections", "evidence": "candidate_heldout_audit", "path": "new_intersection_pair_count", "operator": "equals", "value": 0, "reason": "The diagnostic skin candidate removes 42 crossings but introduces 37 new held-out pairs."},
         {"id": "all_states_self_intersection_free", "evidence": "native_pose_audit", "path": "all_sampled_states_self_intersection_free", "operator": "equals", "value": true, "reason": "Three of ten sampled states still have exact intersections."},
         {"id": "closed_embedded_skin", "evidence": "native_pose_audit", "path": "all_sampled_states_closed_embedded", "operator": "equals", "value": true, "reason": "The retained skin surface is open or nonmanifold."},
         {"id": "motion_trajectory", "evidence": "native_pose_audit", "path": "motion_trajectory_qualification", "operator": "equals", "value": true, "reason": "Discrete pose snapshots do not qualify intervening motion."},
-        {"id": "physical_skin_owner", "evidence": "native_pose_audit", "path": "physical_skin_volume", "operator": "equals", "value": true, "reason": "Skin material, mass, and contact remain unowned."}
+        {"id": "physical_skin_owner", "evidence": "native_pose_audit", "path": "physical_skin_volume", "operator": "equals", "value": true, "reason": "Skin material, mass, and contact remain unowned."},
+        {"id": "external_ct_skin_layer_present", "evidence": "external_ct_scan001", "path": "qualification.skin_layer_present", "operator": "equals", "value": true, "reason": "Scan 001 includes subcutaneous and torso fat masks but no separate skin layer."}
       ]
     },
     {

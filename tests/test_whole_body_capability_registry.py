@@ -109,6 +109,17 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert not systems["cardiac_electrical"]["requirements"][0]["satisfied"]
     assert not systems["skin"]["requirements"][0]["satisfied"]
 
+    skin = systems["skin"]
+    skin_facts = {item["id"]: item for item in skin["facts"]}
+    skin_gates = {item["id"]: item for item in skin["requirements"]}
+    assert next(item for item in skin["evidence"]
+                if item["id"] == "external_ct_scan001")["status"] == "verified"
+    assert skin_facts["external_ct_subcutaneous_fat_label"]["value"] == "Subcutaneous-fat"
+    assert skin_facts["external_ct_subcutaneous_fat_closed"]["value"] is False
+    assert skin_facts["external_ct_torso_fat_label"]["value"] == "Torso-fat"
+    assert skin_facts["external_ct_skin_layer_present"]["value"] is False
+    assert not skin_gates["external_ct_skin_layer_present"]["satisfied"]
+
     anatomy = systems["whole_body_anatomy"]
     anatomy_facts = {item["id"]: item for item in anatomy["facts"]}
     anatomy_gates = {item["id"]: item for item in anatomy["requirements"]}
