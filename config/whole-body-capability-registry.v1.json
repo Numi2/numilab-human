@@ -8,7 +8,8 @@
       "scope": "Complete, disjoint, physically owned whole-body anatomy rather than declared source-family coverage alone.",
       "evidence": [
         {"id": "visceral", "path": "Docs/media/whole-visceral-coverage-20260929/receipt.json", "schema": "numi.human.whole-visceral-source-evidence.v1"},
-        {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"}
+        {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"},
+        {"id": "lower_limb_overlay", "path": "Docs/media/numi-human-lower-limb-overlay-20261003/receipt.json", "schema": "numi.human.lower-limb-source-registration-refresh.v1"}
       ],
       "facts": [
         {"id": "source_families", "evidence": "visceral", "path": "coverage.source_families"},
@@ -18,13 +19,20 @@
         {"id": "external_ct_surface_candidates", "evidence": "external_ct_scan001", "path": "coverage.surface_candidate_count"},
         {"id": "external_ct_closed_meshes", "evidence": "external_ct_scan001", "path": "topology.closed_two_manifold_label_count"},
         {"id": "external_ct_max_volume_error", "evidence": "external_ct_scan001", "path": "integrity.maximum_relative_signed_volume_error"},
-        {"id": "external_ct_subject_binding", "evidence": "external_ct_scan001", "path": "qualification.current_numi_subject_binding"}
+        {"id": "external_ct_subject_binding", "evidence": "external_ct_scan001", "path": "qualification.current_numi_subject_binding"},
+        {"id": "lower_limb_pose_count", "evidence": "lower_limb_overlay", "path": "pose_audit.pose_count"},
+        {"id": "lower_limb_source_geometry_checks", "evidence": "lower_limb_overlay", "path": "pose_audit.source_geometry_checks"},
+        {"id": "lower_limb_pose_audit_status", "evidence": "lower_limb_overlay", "path": "pose_audit.status"},
+        {"id": "literal_qpos0_patellar_status", "evidence": "lower_limb_overlay", "path": "pose_audit.literal_unprojected_qpos0.status"},
+        {"id": "projected_patella_min_anterior_offset_m", "evidence": "lower_limb_overlay", "path": "pose_audit.projected_patellar_anteriority.minimum_offset_m"}
       ],
       "requirements": [
         {"id": "whole_human_anatomy", "evidence": "visceral", "path": "qualification.whole_human_anatomy", "operator": "equals", "value": true, "reason": "Whole-body anatomical coverage is not yet admitted."},
         {"id": "disjoint_tissue", "evidence": "visceral", "path": "qualification.disjoint_tissue", "operator": "equals", "value": true, "reason": "Cross-domain tissue disjointness is not yet verified."},
         {"id": "physical_volume", "evidence": "visceral", "path": "qualification.physical_volume", "operator": "equals", "value": true, "reason": "Source surfaces do not yet have admitted physical volumes."},
-        {"id": "external_scan_subject_binding", "evidence": "external_ct_scan001", "path": "qualification.current_numi_subject_binding", "operator": "equals", "value": true, "reason": "Scan 001 surfaces remain scan-local external reference geometry, not registered Numi anatomy."}
+        {"id": "external_scan_subject_binding", "evidence": "external_ct_scan001", "path": "qualification.current_numi_subject_binding", "operator": "equals", "value": true, "reason": "Scan 001 surfaces remain scan-local external reference geometry, not registered Numi anatomy."},
+        {"id": "lower_limb_multi_pose_source_audit", "evidence": "lower_limb_overlay", "path": "pose_audit.status", "operator": "equals", "value": "passed_source_owned_bilateral_lower_limb_multi_pose_interface_patches", "reason": "The current lower-limb registration must retain its source-owned bilateral multi-pose interface audit."},
+        {"id": "projected_patella_anteriority", "evidence": "lower_limb_overlay", "path": "pose_audit.projected_patellar_anteriority.status", "operator": "equals", "value": "all_patella_vertices_anterior", "reason": "Static knee anatomy must use the equality-projected neutral pose; literal unprojected qpos0 is a pre-constraint diagnostic."}
       ]
     },
     {
@@ -108,7 +116,8 @@
       "scope": "Embedded, oriented tendon sheets with admitted entheses, material, and load transfer.",
       "evidence": [
         {"id": "surface_audit", "path": "Docs/media/muscle-surface-embeddedness-20260929/receipt-v3.json", "schema": "numi.human.compiled-muscle-surface-embeddedness.v1"},
-        {"id": "calcaneal_delta", "path": "Docs/media/tendon-harmonic-boundary-20260929/receipt-v1.json", "schema": "numi.human.calcaneal-tendon-visual-delta.v1"}
+        {"id": "calcaneal_delta", "path": "Docs/media/tendon-harmonic-boundary-20260929/receipt-v1.json", "schema": "numi.human.calcaneal-tendon-visual-delta.v1"},
+        {"id": "lower_limb_overlay", "path": "Docs/media/numi-human-lower-limb-overlay-20261003/receipt.json", "schema": "numi.human.lower-limb-source-registration-refresh.v1"}
       ],
       "facts": [
         {"id": "tendon_surface_count", "evidence": "surface_audit", "path": "coverage.tendon_surface_count"},
@@ -116,7 +125,13 @@
         {"id": "right_open_boundary_edges", "evidence": "calcaneal_delta", "path": "tendons.0.open_boundary_edge_count"},
         {"id": "left_open_boundary_edges", "evidence": "calcaneal_delta", "path": "tendons.1.open_boundary_edge_count"},
         {"id": "right_normal_reversals", "evidence": "calcaneal_delta", "path": "tendons.0.source_face_normal_reversal_ids"},
-        {"id": "left_normal_reversals", "evidence": "calcaneal_delta", "path": "tendons.1.source_face_normal_reversal_ids"}
+        {"id": "left_normal_reversals", "evidence": "calcaneal_delta", "path": "tendons.1.source_face_normal_reversal_ids"},
+        {"id": "paired_lower_limb_surface_coverage", "evidence": "lower_limb_overlay", "path": "paired_tendon_candidate.surface_coverage_fraction"},
+        {"id": "paired_lower_limb_point_fallbacks", "evidence": "lower_limb_overlay", "path": "paired_tendon_candidate.point_fallbacks"},
+        {"id": "paired_lower_limb_migrated_endpoints", "evidence": "lower_limb_overlay", "path": "paired_tendon_candidate.migrated_endpoints"},
+        {"id": "paired_lower_limb_max_endpoint_migration_m", "evidence": "lower_limb_overlay", "path": "paired_tendon_candidate.maximum_endpoint_migration_m"},
+        {"id": "paired_lower_limb_force_amplification", "evidence": "lower_limb_overlay", "path": "paired_tendon_candidate.maximum_sampled_force_amplification"},
+        {"id": "paired_lower_limb_native_transaction", "evidence": "lower_limb_overlay", "path": "paired_tendon_candidate.native_transaction_or_standing_run"}
       ],
       "requirements": [
         {"id": "all_tendon_surfaces_embedded", "evidence": "surface_audit", "path": "coverage.single_embedded_tendon_surface_candidate_count", "operator": "at_least", "value": 2, "reason": "Neither compiled tendon sheet passes the embedded-surface candidate gate."},
@@ -124,7 +139,9 @@
         {"id": "left_sheet_closed", "evidence": "calcaneal_delta", "path": "tendons.1.open_boundary_edge_count", "operator": "equals", "value": 0, "reason": "Left calcaneal tendon sheet remains open."},
         {"id": "right_sheet_oriented", "evidence": "calcaneal_delta", "path": "tendons.0.source_face_normal_reversal_ids", "operator": "equals", "value": [], "reason": "Right tendon source sheet has reversed face normals."},
         {"id": "left_sheet_oriented", "evidence": "calcaneal_delta", "path": "tendons.1.source_face_normal_reversal_ids", "operator": "equals", "value": [], "reason": "Left tendon source sheet has reversed face normals."},
-        {"id": "tendon_mechanics", "evidence": "surface_audit", "path": "mechanics", "operator": "equals", "value": true, "reason": "Tendon material and native load transfer are not qualified."}
+        {"id": "tendon_mechanics", "evidence": "surface_audit", "path": "mechanics", "operator": "equals", "value": true, "reason": "Tendon material and native load transfer are not qualified."},
+        {"id": "paired_tendon_surface_coverage", "evidence": "lower_limb_overlay", "path": "paired_tendon_candidate.surface_coverage_fraction", "operator": "at_least", "value": 1.0, "reason": "The lower-limb paired tendon candidate covers only a subset of tendon surface endpoints."},
+        {"id": "paired_tendon_native_transaction", "evidence": "lower_limb_overlay", "path": "paired_tendon_candidate.native_transaction_or_standing_run", "operator": "equals", "value": true, "reason": "The paired tendon candidate has not entered a native tendon transaction or standing run."}
       ]
     },
     {
