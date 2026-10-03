@@ -96,6 +96,25 @@ visual registration. Eighteen endpoints migrated; maximum site migration is
 candidate only: it has not entered a native tendon transaction or a standing
 run and remains marked not admitted to collision or physics.
 
+### Literal-qpos0 patella rebase follow-up — 2026-10-03
+
+The later [neutral-coordinate rebase](PATELLA_QPOS0_NEUTRAL_COORDINATE_REBASE_20261003.md)
+corrects the literal-source-default front/back defect without changing the
+eight sampled equality-consistent body poses: every vertex on both 72-vertex
+patella meshes is now anterior to its source knee-anchor plane at unprojected
+`qpos0`, with minimum offsets of 33.591 mm right and 33.589 mm left. This
+supersedes the earlier raw-qpos0 posterior-vertex counts above for the
+rebased source state. It remains a geometric plane check, not clinical
+landmarking or loaded tracking.
+
+The [paired skin source preflight](SKIN_PATELLA_REBASE_SOURCE_PREFLIGHT_20261003.md)
+passes independent provenance, full-weight, seam and rest-reconstruction
+checks. Native visual review remains blocked: the installed renderer accepts
+older bone/skin ABIs, and its Metal pose pass failed before saving a frame
+after a hash-bound ABI 2 bone diagnostic projection. The ABI 5 shell has not
+been rendered, high-flex embeddedness has not been measured for this new
+candidate, and skin collision/mechanics remain open.
+
 This refresh closes the stale-reference-manifest builder blocker. Clinical
 anatomy, patellofemoral cartilage/contact, loaded force transfer, subject
 calibration, tissue integration and physiology remain open. The earlier

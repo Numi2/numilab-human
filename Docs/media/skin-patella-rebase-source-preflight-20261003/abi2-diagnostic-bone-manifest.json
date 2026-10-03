@@ -1,0 +1,45 @@
+{
+  "diagnostic_payload": {
+    "bytes": 11576692,
+    "path": "Build/skin-patella-rebase-source-preflight-20261003/native-diagnostic/bodyparts3d-myosim-major-bones-abi2-diagnostic.nhbones",
+    "payload_abi": 2,
+    "sha256": "3af27b74e6b45570e0a56bddc2969e0ef095fc0fe3ebaf48aba8c98dee82d69e"
+  },
+  "projection": {
+    "bytes_removed": 740,
+    "preserved_exactly": [
+      "magic",
+      "bone_count",
+      "vertex_count",
+      "index_count",
+      "registration_fingerprint32",
+      "source archive SHA-256",
+      "all leading body/geometry/stable-id/local-pose fields",
+      "all vertex and normal bytes",
+      "all triangle index bytes"
+    ],
+    "records": 185,
+    "records_diagnostic_format": "<6I8f",
+    "records_source_format": "<6I8fI",
+    "removed_field": "trailing source_record_index, unused by installed ABI2 renderer BoneRecord"
+  },
+  "schema": "numi.human.bone-payload-abi2-diagnostic-projection.v1",
+  "source_payload": {
+    "bone_count": 185,
+    "index_count": 1378566,
+    "path": "Build/skin-patella-rebase-source-preflight-20261003/bone-payload/bodyparts3d-myosim-major-bones.nhbones",
+    "payload_abi": 3,
+    "registration_fingerprint32": "b1b410ad",
+    "sha256": "7d94e2f28ac6cea30c6c11a79919077acc40281636eb20b11b50b50aebd3ec49",
+    "source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "vertex_count": 252167
+  },
+  "status": "passed_exact_abi3_to_abi2_visual_layout_projection",
+  "verification": {
+    "finite_local_poses": true,
+    "geometry_ranges_valid": true,
+    "record_prefixes_bit_identical": true,
+    "stable_ids_contiguous": true,
+    "vertex_and_index_stream_bit_identical": true
+  }
+}

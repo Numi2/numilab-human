@@ -1,0 +1,149 @@
+{
+  "amendment": {
+    "interface_basis": "Actual installed binary usage supports --focus-body-index. The renderer source SHA in v1 requires NHBONES1 ABI 2 and NHSKIN1 ABI 4; all arms use the same ABI2 diagnostic geometry projection, and the skin arm adds the unchanged ABI4 diagnostic shell paired by the unchanged registration fingerprint.",
+    "no_change": "No source pose, geometry, registration, camera, threshold, skin weights, or prediction changed. v1 and v2 plans and failures remain retained.",
+    "original_plan_sha256": "9e5b53fe8e4f57b46883caf234b35e43656ad4987f34c3408fb4910b36820c54",
+    "payload_adapter": {
+      "input_sha256": "7d94e2f28ac6cea30c6c11a79919077acc40281636eb20b11b50b50aebd3ec49",
+      "manifest_path": "Build/skin-patella-rebase-source-preflight-20261003/native-diagnostic/bodyparts3d-myosim-major-bones-abi2-diagnostic.manifest.json",
+      "manifest_sha256": "78a846c9f8d517778c540e7fa146da50b64f28315096d7e5235e178310df0952",
+      "operation": "strip only the ABI3 trailing source_record_index field from each bone record and set the ABI field to 2 for the installed renderer; preserve every leading body/geometry/stable-id/local-pose field and exact vertex/normal/index streams, registration fingerprint, and source archive hash.",
+      "output_sha256": "3af27b74e6b45570e0a56bddc2969e0ef095fc0fe3ebaf48aba8c98dee82d69e",
+      "scope": "diagnostic compatibility projection only; it does not alter source evidence or qualify an ABI3/ABI5 runtime."
+    },
+    "prior_attempt_status": "v2 failed before render at input validation: installed binary accepts NHBONES1 ABI 2, candidate geometry payload was ABI 3.",
+    "supersedes_plan_sha256": "fadd6ee082bcf884b26b3d39a41a88c16a004ff0796b8da632dcf11f570b0d38"
+  },
+  "analysis": "Compare source geometry receipt to native owner outputs and inspect each retained side frame. This is a one-subject visual diagnostic, not a population estimate, clinical validation, loaded mechanics result or ABI5 runtime qualification. A deterministic, byte-verified ABI2 projection feeds this installed visual-only renderer; the ABI3 candidate remains the source-authoritative geometry payload.",
+  "commands": [
+    {
+      "argv": [
+        "/Users/home/Documents/emergentnumilife/MetalRobo/build/bin/metalrobo_numilab_human_myosim_visual_probe",
+        "/Users/home/numilab-human/Build/myosim-fullbody-patella-rebase-core-audit-20261003/myosim-fullbody-core-reference.nhrigid",
+        "/Users/home/numilab-human/Build/myosim-fullbody-patella-rebase-core-audit-20261003/myosim-fullbody-muscle-reference.nhmyo",
+        "/Users/home/numilab-human/Build/skin-patella-rebase-source-preflight-20261003/native-diagnostic/bodyparts3d-myosim-major-bones-abi2-diagnostic.nhbones",
+        "/Users/home/numilab-human/Build/skin-patella-rebase-source-preflight-20261003/native-render-v3-right-bone_anatomy",
+        "--visible-bone-body-index",
+        "131",
+        "--visible-bone-body-index",
+        "136",
+        "--visible-bone-body-index",
+        "142",
+        "--camera-index",
+        "2",
+        "--dimension",
+        "512",
+        "--focus-body-index",
+        "142"
+      ],
+      "mode": "bone_anatomy",
+      "output_directory": "Build/skin-patella-rebase-source-preflight-20261003/native-render-v3-right-bone_anatomy",
+      "side": "right"
+    },
+    {
+      "argv": [
+        "/Users/home/Documents/emergentnumilife/MetalRobo/build/bin/metalrobo_numilab_human_myosim_visual_probe",
+        "/Users/home/numilab-human/Build/myosim-fullbody-patella-rebase-core-audit-20261003/myosim-fullbody-core-reference.nhrigid",
+        "/Users/home/numilab-human/Build/myosim-fullbody-patella-rebase-core-audit-20261003/myosim-fullbody-muscle-reference.nhmyo",
+        "/Users/home/numilab-human/Build/skin-patella-rebase-source-preflight-20261003/native-diagnostic/bodyparts3d-myosim-major-bones-abi2-diagnostic.nhbones",
+        "/Users/home/numilab-human/Build/skin-patella-rebase-source-preflight-20261003/native-render-v3-right-skin_shell",
+        "--skin-payload",
+        "/Users/home/numilab-human/Build/skin-patella-rebase-source-preflight-20261003/native-diagnostic/bodyparts3d-myosim-skinned-shell-top-four-diagnostic-abi4.nhskin",
+        "--camera-index",
+        "2",
+        "--dimension",
+        "512",
+        "--focus-body-index",
+        "142"
+      ],
+      "mode": "skin_shell",
+      "output_directory": "Build/skin-patella-rebase-source-preflight-20261003/native-render-v3-right-skin_shell",
+      "side": "right"
+    },
+    {
+      "argv": [
+        "/Users/home/Documents/emergentnumilife/MetalRobo/build/bin/metalrobo_numilab_human_myosim_visual_probe",
+        "/Users/home/numilab-human/Build/myosim-fullbody-patella-rebase-core-audit-20261003/myosim-fullbody-core-reference.nhrigid",
+        "/Users/home/numilab-human/Build/myosim-fullbody-patella-rebase-core-audit-20261003/myosim-fullbody-muscle-reference.nhmyo",
+        "/Users/home/numilab-human/Build/skin-patella-rebase-source-preflight-20261003/native-diagnostic/bodyparts3d-myosim-major-bones-abi2-diagnostic.nhbones",
+        "/Users/home/numilab-human/Build/skin-patella-rebase-source-preflight-20261003/native-render-v3-left-bone_anatomy",
+        "--visible-bone-body-index",
+        "145",
+        "--visible-bone-body-index",
+        "150",
+        "--visible-bone-body-index",
+        "156",
+        "--camera-index",
+        "2",
+        "--dimension",
+        "512",
+        "--focus-body-index",
+        "156"
+      ],
+      "mode": "bone_anatomy",
+      "output_directory": "Build/skin-patella-rebase-source-preflight-20261003/native-render-v3-left-bone_anatomy",
+      "side": "left"
+    },
+    {
+      "argv": [
+        "/Users/home/Documents/emergentnumilife/MetalRobo/build/bin/metalrobo_numilab_human_myosim_visual_probe",
+        "/Users/home/numilab-human/Build/myosim-fullbody-patella-rebase-core-audit-20261003/myosim-fullbody-core-reference.nhrigid",
+        "/Users/home/numilab-human/Build/myosim-fullbody-patella-rebase-core-audit-20261003/myosim-fullbody-muscle-reference.nhmyo",
+        "/Users/home/numilab-human/Build/skin-patella-rebase-source-preflight-20261003/native-diagnostic/bodyparts3d-myosim-major-bones-abi2-diagnostic.nhbones",
+        "/Users/home/numilab-human/Build/skin-patella-rebase-source-preflight-20261003/native-render-v3-left-skin_shell",
+        "--skin-payload",
+        "/Users/home/numilab-human/Build/skin-patella-rebase-source-preflight-20261003/native-diagnostic/bodyparts3d-myosim-skinned-shell-top-four-diagnostic-abi4.nhskin",
+        "--camera-index",
+        "2",
+        "--dimension",
+        "512",
+        "--focus-body-index",
+        "156"
+      ],
+      "mode": "skin_shell",
+      "output_directory": "Build/skin-patella-rebase-source-preflight-20261003/native-render-v3-left-skin_shell",
+      "side": "left"
+    }
+  ],
+  "device": "Record the actual Metal pose and renderer device from each native summary; no device name is assumed in advance.",
+  "experimental_units_and_conditions": {
+    "anatomical_sides": [
+      "right",
+      "left"
+    ],
+    "arms": "bone_anatomy shows registered patella, femur and tibia; skin_shell shows the same source pose with only the top-four diagnostic shell selected by the ABI4 renderer",
+    "camera": "side view, camera index 2, 512 px; focus patella source body using installed --focus-body-index default framing distance",
+    "pose": "literal source qpos0, no trajectory or force input",
+    "retries": "none; preserve any failure as inconclusive",
+    "runs_per_side_per_arm": 1,
+    "sides_are_independent_replicates": false,
+    "source_model_units": 1
+  },
+  "model_and_mechanism": {
+    "abi4_diagnostic_skin_payload_sha256": "9c0234251abdc53ed317c085d8ba641f9389b245bcf98d7bfa95600eaccb6b0e",
+    "abi5_full_weight_skin_payload_sha256": "7d296e45ba497f56ac4380a64605b30a794432b945ac28bf7bebf91657cfc4a1",
+    "bodyparts_bone_manifest_sha256": "56e6a416ecf90ca9cd912a380d7317113d265c61f043bffccebef6f1851bd259",
+    "bodyparts_bone_payload_sha256": "7d94e2f28ac6cea30c6c11a79919077acc40281636eb20b11b50b50aebd3ec49",
+    "bodyparts_source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+    "current_muscle_sha256": "a4381465ca97a7af20108180e2fc0d0f0d9c11778d913de4c0728bd20ed459a7",
+    "current_rigid_sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4",
+    "myosim_source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "patella_rebase_receipt_sha256": "06dfe9644138ad63de9a58337cd4df29ff18ebad0f343e96be8a28e9fc580399",
+    "registration_sha256": "b1b410ad6d4ac8c0c95fd0c3e10f655b24c890d5767a5c377cf78e28ef598f8e",
+    "renderer_abi_limit": "This local renderer accepts ABI 4 and does not accept the ABI 5 full-weight payload. The ABI 4 input is an explicit top-four diagnostic projection, not the ABI 5 candidate.",
+    "renderer_binary_sha256": "9d5aa65222a702d77f1d244525229fb21274fcb9444a20425400be42cf08a3c4",
+    "renderer_source_revision": "298e5f8565d1cea297c705572493c8d29934d76e",
+    "renderer_source_sha256": "d579f37c3fecb20ccda9b30d8bc075780271d5fe0f4b691d26b090c43b6ca479"
+  },
+  "prediction_and_refutation": {
+    "expected_source_metric_m": 0.033589316737554234,
+    "native_visibility": "Each bone-only output reports the three requested source-bone surfaces; each diagnostic skin output reports one shell and more than zero skin-shell pixels.",
+    "refutation": "The source offset is below 0.025 m on either side, a requested bone surface is absent, or either skin-shell output has zero skin-shell pixels. A native command/load failure is inconclusive, not a pass.",
+    "source_metric": "minimum literal-qpos0 patella-body-center anteriority to the pinned source knee-anchor plane is at least 0.025 m on each side.",
+    "source_metric_input_receipt": "Docs/media/myosim-patella-qpos0-rebase-20261003/receipt.json"
+  },
+  "question": "Does the current equality-neutral source pose place each BodyParts3D patella anterior to the source knee-anchor plane, and does the native ABI4 diagnostic shell still present a coherent outer knee contour around it?",
+  "schema": "numi.human.patella-rebase-native-side-render-plan.v3",
+  "status": "preregistered_exploratory_static_visual_check",
+  "stopping_rule": "Run the four planned one-frame outputs once in order, stopping at the first invalid or failed arm. No retries or camera adjustment."
+}

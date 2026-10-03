@@ -1,0 +1,90 @@
+{
+  "schema": "numi.human.skin-source-payload-independent-preflight.v1",
+  "status": "passed_source_provenance_weights_seams_and_rest_reconstruction",
+  "inputs": {
+    "payload": {
+      "path": "Build/skin-patella-rebase-source-preflight-20261003/payload/bodyparts3d-myosim-skinned-shell.nhskin",
+      "sha256": "7d296e45ba497f56ac4380a64605b30a794432b945ac28bf7bebf91657cfc4a1"
+    },
+    "manifest": {
+      "path": "Build/skin-patella-rebase-source-preflight-20261003/payload/bodyparts3d-myosim-skinned-shell.manifest.json",
+      "sha256": "bd8711819f789d3ef192106801833337509fa22b9bb3533eb012145b0ecdc49e"
+    },
+    "binding_solution": {
+      "path": "Build/skin-patella-rebase-source-preflight-20261003/payload/bodyparts3d-skin-binding-solution.npz",
+      "sha256": "99c913815b2cc615673ca3c1ac3ee36b640c5166c8a3e770ed6d54a3a5a281fc"
+    },
+    "registration": {
+      "path": "Docs/media/skin-patella-rebase-source-preflight-20261003/registration.json",
+      "sha256": "b1b410ad6d4ac8c0c95fd0c3e10f655b24c890d5767a5c377cf78e28ef598f8e"
+    },
+    "rigid": {
+      "path": "Build/myosim-fullbody-patella-rebase-core-audit-20261003/myosim-fullbody-core-reference.nhrigid",
+      "sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4"
+    },
+    "bodyparts3d_source_archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e"
+  },
+  "source_surface": {
+    "outer_vertices": 54949,
+    "triangles": 109183,
+    "edge_components_in_source_archive": 100,
+    "raw_archive_vertices": 102467,
+    "raw_archive_triangles": 203382
+  },
+  "binding": {
+    "passed": true,
+    "method": "positive_source_surface_exact_seam_projection_gap_full_weight.v3",
+    "maximum_relative_equation_residual": 1.110905881707651e-15,
+    "source_bone_count": 185,
+    "source_graph_edge_count": 163860,
+    "source_graph_vertex_count": 54663,
+    "seed_candidate_count": 12025,
+    "seed_vertex_count": 5039,
+    "rejected_seed_count": 696,
+    "exact_coincident_vertex_group_count": 257,
+    "exact_coincident_redundant_vertex_count": 286,
+    "minimum_retained_four_weight_mass": 0.34255114647803797,
+    "maximum_discarded_weight_mass": 0.657448853521962,
+    "minimum_source_projection_gap_m": 0.0012839524840258909,
+    "maximum_source_projection_gap_m": 0.10720182024294735
+  },
+  "runtime": {
+    "payload_abi": 5,
+    "body_binding_count": 86,
+    "full_weight_shape": [
+      54949,
+      86
+    ],
+    "minimum_full_weight": 1.8408641810311984e-16,
+    "maximum_float32_partition_error": 2.980232238769531e-07,
+    "maximum_float64_solution_partition_error": 5.3512749786932545e-14,
+    "runtime_discarded_weight_mass": 0,
+    "exact_seam_weight_mismatch": 0,
+    "maximum_rest_reconstruction_error_m": 4.53711824409223e-14,
+    "body_checks_passed": 86
+  },
+  "source_program_checks": {
+    "actual_sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4",
+    "expected_source_sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4",
+    "actual_bytes": 60324,
+    "expected_bytes": 60324,
+    "declared_identity_matches": true,
+    "source_metadata_matches": true,
+    "checked_field_count": 2250,
+    "engine_body_count": 157,
+    "joint_count": 156,
+    "source_body_count": 103,
+    "failures": [],
+    "tolerance_basis": "existing_source_lowerer_FP32_fields_and_native_norm_admission_with_common_scale_rounding_bins",
+    "passed": true,
+    "boundary": "source_program_agreement_not_native_execution_loaded_or_clinical_anatomy",
+    "file": "Build/myosim-fullbody-patella-rebase-core-audit-20261003/myosim-fullbody-core-reference.nhrigid"
+  },
+  "audit_code_sha256": {
+    "skin_source_payload_preflight.py": "a5fb3b4fa3134a12231f68b4c29d012d1fb845fcc13ac413e65b83281caaea04",
+    "skin_surface_audit.py": "4f9bd13fd164c61c28cc79d063ca2b2bd5408c75ee226b4293a6716e728cab78",
+    "skin_surface_binding.py": "baf571721d990aac3f55aef54df57f6bcb4ceb7bdaccd6724a85faea957360ef",
+    "model.py": "0af477d63a574173a57ae5a81578271d46a7206366ea4e9ec62f1b9e83387ca1"
+  },
+  "boundary": "Source visual-shell provenance, full-weight binding equations, exact seams and rest-frame reconstruction only. No native render/pose, high-flex embeddedness, clinical skin weights, physical skin mechanics, contact or physiological qualification."
+}
