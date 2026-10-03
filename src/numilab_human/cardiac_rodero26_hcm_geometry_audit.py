@@ -20,7 +20,7 @@ from .cardiac_rodero26_hcm_activation_import import EP_ARCHIVE, MESH_ARCHIVE, PO
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SCHEMA = "HumanPack.rodero26-hcm-source-geometry-audit.v1"
+SCHEMA = "HumanPack.rodero26-hcm-source-geometry-audit.v2"
 TAG_NAMES = {
     1: "left_ventricle", 2: "right_ventricle", 3: "left_atrium", 4: "right_atrium",
     5: "aorta", 6: "pulmonary_artery", 7: "mitral_valve", 8: "tricuspid_valve",
@@ -35,6 +35,20 @@ TAG_NAMES = {
     26: "bachmann_bundle", 27: "atrioventricular_isolating_plane",
     28: "right_ventricular_fast_endocardial_layer", 29: "septal_fast_conduction_layer",
 }
+HCM1_EP_TAG_DEFINITIONS = {
+    "LV": 1, "RV": 2, "LA": 3, "RA": 4, "atria": [3, 4],
+    "FEC_LV": 25, "FEC_RV": 28, "FEC_SV": 29,
+    "fast_endo": [25, 28, 29], "BB": 26, "AV_plane": [27],
+    "aorta": [5], "pulmonary_artery": [6],
+    "vein_rings": [18, 19, 20, 21, 22, 23, 24],
+    "valve_planes": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+}
+HCM1_EP_TAG_MEMBER = {
+    "path": "HCM1_EP/inputs/json_files/tags_EP.json",
+    "bytes": 335,
+    "sha256": "bc9d786e289fe36eb4df8e62fb7f5967b90947a79513f42a89396a9e77fa9f99",
+}
+HCM1_CONDUCTION_TAG_IDS = (25, 26, 27, 28, 29)
 ACTIVATION_FIELD = "hcm1-sample53-activation-time-ms.f64le"
 ACTIVATION_MEMBER_SHA256 = "0987c560ba3fca8134a2f0d676ec5b5e8a5fe152506e8e0705aa519bddafdbdf"
 ACTIVATION_FIELD_SHA256 = "e0f42c5f5b0a64c6ca0c164ff5938982be8b9f9c0c03cadf8ae5b821f2a9da35"
@@ -72,8 +86,18 @@ def _read_exact(stream, byte_count: int, label: str) -> bytes:
     return data
 
 
+def _validate_tag_schema(tag_source: Any) -> dict[str, Any]:
+    require(isinstance(tag_source, dict), "publisher EP tag member is absent")
+    require(
+        all(tag_source.get(key) == value for key, value in HCM1_EP_TAG_MEMBER.items())
+        and tag_source.get("definitions") == HCM1_EP_TAG_DEFINITIONS,
+        "publisher EP tag member or conduction-label definitions changed",
+    )
+    return tag_source["definitions"]
+
+
 def parse_vtk_tetra_mesh(path: Path, *, expected_points: int = POINT_COUNT) -> dict[str, Any]:
-    """Read the reviewed binary VTK points, tetrahedra, and elemTag array."""
+    """Read reviewed binary VTK points, tetrahedra, tags, and cell fibers."""
     import numpy as np
 
     path = Path(path)
@@ -145,10 +169,24 @@ def parse_vtk_tetra_mesh(path: Path, *, expected_points: int = POINT_COUNT) -> d
         require(int(tags.min()) >= min(TAG_NAMES) and int(tags.max()) <= max(TAG_NAMES),
                 "VTK elemTag contains an unregistered anatomy identity")
 
+        fiber_header = _read_nonblank_line(stream, "fiber vectors")
+        require(fiber_header.split() == ["VECTORS", "fiber", "float"],
+                "VTK source cell-fiber vector array is missing or changed")
+        fiber_raw = _read_exact(stream, cell_count * 3 * 4, "fiber vectors")
+        fibers = np.frombuffer(fiber_raw, dtype=">f4").reshape(cell_count, 3)
+        require(bool(np.isfinite(fibers).all()), "VTK cell-fiber vectors contain non-finite values")
+        fiber_norms = np.linalg.norm(fibers.astype(np.float64), axis=1)
+        require(bool((np.abs(fiber_norms - 1.0) <= 1.0e-6).all()),
+                "VTK source cell-fiber vectors are not unit directions")
+        require(stream.read() == b"\n", "VTK fiber payload has truncation or trailing data")
+
     return {
         "points_um": points_um,
         "connectivity": connectivity,
         "tags": tags,
+        "fiber_vectors": fibers,
+        "fiber_bytes": fiber_raw,
+        "fiber_norms": fiber_norms,
         "cell_type_counts": {"vtk_tetra": int(cell_count)},
         "point_count": int(point_count),
         "cell_count": int(cell_count),
@@ -180,6 +218,7 @@ def _activation_field(path: Path, receipt_path: Path, expected_points: int):
             and ep.get("sha256") == EP_ARCHIVE["sha256"]
             and ep.get("bytes") == EP_ARCHIVE["bytes"],
             "activation receipt is bound to different HCM1 source archives")
+    _validate_tag_schema(receipt.get("source_members", {}).get("tags"))
     activation = receipt.get("source_members", {}).get("activation", {})
     output = receipt.get("output", {}).get(field_path.name, {})
     require(activation.get("sample_id") == 53 and activation.get("unit") == "ms"
@@ -210,6 +249,8 @@ def audit_geometry(
     mesh_path: Path,
     activation_field_path: Path,
     activation_receipt_path: Path,
+    *,
+    fiber_output_path: Path | None = None,
 ) -> dict[str, Any]:
     import numpy as np
 
@@ -272,10 +313,28 @@ def audit_geometry(
                 int(value) for value in activation_incidence[tag_id]
             ],
         })
+    fiber_bytes = mesh["fiber_bytes"]
+    fiber_norms = mesh["fiber_norms"]
+    fiber_output = None
+    if fiber_output_path is not None:
+        fiber_output_path = Path(fiber_output_path)
+        fiber_digest = _write_immutable_bytes(fiber_output_path, fiber_bytes)
+        fiber_output = {
+            "path": str(Path(os.path.abspath(fiber_output_path))),
+            "bytes": len(fiber_bytes),
+            "sha256": fiber_digest,
+            "dtype": "big-endian float32",
+            "shape": [mesh["cell_count"], 3],
+            "order": "HCM1.vtk CELL_DATA order; one vector per tetrahedron",
+        }
+    conduction_counts = {
+        str(tag_id): int(tetra_count_by_tag[tag_id])
+        for tag_id in HCM1_CONDUCTION_TAG_IDS
+    }
     active = activation[activation >= 0.0]
     return {
         "schema": SCHEMA,
-        "compiler": "numilab-human.rodero26-hcm-geometry-audit.1",
+        "compiler": "numilab-human.rodero26-hcm-geometry-audit.2",
         "status": "source_geometry_and_activation_audited_candidate",
         "source": {
             "mesh_record": MESH_ARCHIVE["record"],
@@ -310,6 +369,29 @@ def audit_geometry(
             "maximum_active_ms": float(active.max()),
         },
         "element_tags": tags_report,
+        "cell_fiber_field": {
+            "array": "CELL_DATA VECTORS fiber float",
+            "vector_count": mesh["cell_count"],
+            "bytes": len(fiber_bytes),
+            "sha256": hashlib.sha256(fiber_bytes).hexdigest(),
+            "finite_vector_count": int(len(fiber_norms)),
+            "unit_vector_tolerance": 1.0e-6,
+            "unit_vector_count": int(len(fiber_norms)),
+            "norm_min": float(fiber_norms.min()),
+            "norm_median": float(np.median(fiber_norms)),
+            "norm_max": float(fiber_norms.max()),
+            "maximum_absolute_unit_norm_error": float(
+                np.max(np.abs(fiber_norms - 1.0))
+            ),
+            "extracted_sidecar": fiber_output,
+        },
+        "fast_conduction_geometry": {
+            "publisher_tag_schema_member": HCM1_EP_TAG_MEMBER,
+            "publisher_tag_ids": list(HCM1_CONDUCTION_TAG_IDS),
+            "base_mesh_cell_count_by_conduction_tag": conduction_counts,
+            "base_mesh_contains_conduction_cells": any(conduction_counts.values()),
+            "separate_electromechanics_mesh_imported": False,
+        },
         "mesh_quality": {
             "signed_orientation_cell_counts": orientation_counts,
             "minimum_nonzero_signed_six_volume_um3": (
@@ -324,6 +406,9 @@ def audit_geometry(
             "pinned_mesh_identity_verified": True,
             "vtk_connectivity_and_cell_types_verified": True,
             "element_tags_bound_to_publisher_dictionary": True,
+            "publisher_ep_tag_member_hash_verified": True,
+            "source_cell_fiber_field_and_unit_norms_verified": True,
+            "fast_conduction_geometry_present": any(conduction_counts.values()),
             "point_activation_map_bound_to_same_mesh": True,
             "source_units_verified_from_publisher_record": True,
             "mesh_registered_to_current_numi_healthy_subject": False,
@@ -345,9 +430,14 @@ def audit_geometry(
 
 def _write_immutable(path: Path, value: dict[str, Any]) -> str:
     raw = canonical(value) + b"\n"
-    require(not path.is_symlink(), "receipt output is redirected")
+    return _write_immutable_bytes(path, raw)
+
+
+def _write_immutable_bytes(path: Path, raw: bytes) -> str:
+    path = Path(path)
+    require(not path.is_symlink(), "output path is redirected by a symlink")
     if path.exists():
-        require(path.read_bytes() == raw, "receipt output is immutable; choose a new path")
+        require(path.read_bytes() == raw, "output is immutable; choose a new path")
     else:
         path.parent.mkdir(parents=True, exist_ok=True)
         temporary = path.with_name(path.name + f".{os.getpid()}.pending")
@@ -367,6 +457,10 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--mesh-vtk", type=Path, required=True)
     parser.add_argument("--activation-field", type=Path, required=True)
     parser.add_argument("--activation-receipt", type=Path, required=True)
+    parser.add_argument(
+        "--fiber-output", type=Path,
+        help="optional immutable source-order CELL_DATA fiber vector sidecar",
+    )
     parser.add_argument("--output", type=Path, required=True)
     parser.set_defaults(handler=run)
 
@@ -376,6 +470,7 @@ def run(arguments: argparse.Namespace) -> int:
         arguments.mesh_vtk,
         arguments.activation_field,
         arguments.activation_receipt,
+        fiber_output_path=arguments.fiber_output,
     )
     output = Path(os.path.abspath(arguments.output))
     digest = _write_immutable(output, result)
