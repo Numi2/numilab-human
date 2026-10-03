@@ -128,6 +128,29 @@ def test_vectorized_vertex_link_audit_matches_reference_for_all_two_cube_masks()
         assert _nonmanifold_vertex_count(triangles, len(vertices), np) == expected
 
 
+def test_contact_split_preserves_coordinates_and_closes_all_two_cube_masks() -> None:
+    affine = np.eye(4).tolist()
+    for pattern in range(1, 1 << 8):
+        mask = np.array(
+            [(pattern >> bit) & 1 for bit in range(8)], dtype=np.bool_,
+        ).reshape(2, 2, 2)
+        raw_vertices, raw_triangles, raw_metrics = build_voxel_boundary_mesh(mask, affine)
+        split_vertices, split_triangles, split_metrics = build_voxel_boundary_mesh(
+            mask, affine, split_contact_topology=True,
+        )
+
+        assert np.array_equal(raw_vertices[raw_triangles],
+                              split_vertices[split_triangles])
+        assert split_metrics["signed_volume_mm3"] == raw_metrics["signed_volume_mm3"]
+        assert split_metrics["surface_area_mm2"] == raw_metrics["surface_area_mm2"]
+        assert split_metrics["closed_two_manifold"]
+        assert split_metrics["edge_incidence"][
+            "all_edges_have_two_incident_triangles"
+        ]
+        assert split_metrics["nonmanifold_vertex_count"] == 0
+        assert split_metrics["topology_split"]["triangle_coordinates_preserved"]
+
+
 def test_empty_label_is_rejected_and_compressed_ply_is_deterministic(tmp_path) -> None:
     affine = [
         [1.0, 0.0, 0.0, 0.0],

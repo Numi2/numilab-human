@@ -396,6 +396,13 @@ def audit_run(
         archive_path.is_file() and not archive_path.is_symlink(),
         "source archive is not a regular file",
     )
+    independent_auditor_sha256 = _sha256_file(Path(__file__).resolve())
+    topology_method = receipt.get("topology_method", "raw_voxel_boundary")
+    if topology_method == "voxel_boundary_contact_fan_split_candidate":
+        _require(
+            plan.get("independent_auditor_sha256") == independent_auditor_sha256,
+            "contact-split plan does not bind this independent auditor source",
+        )
     intake_sha, archive_sha = _sha256_bytes(intake_raw), _sha256_file(archive_path)
     _require(
         archive_sha == intake.get("source", {}).get("archive_sha256"),
@@ -484,13 +491,19 @@ def audit_run(
     )
     return {
         "schema": SCHEMA,
-        "status": "independent_source_and_mesh_geometry_checks_passed_topology_defects_retained",
+        "status": (
+            "independent_source_and_mesh_geometry_checks_passed_topology_split_candidate"
+            if receipt.get("topology_method") == "voxel_boundary_contact_fan_split_candidate"
+            else "independent_source_and_mesh_geometry_checks_passed_topology_defects_retained"
+        ),
         "intake_receipt_sha256": intake_sha,
         "source_archive_sha256": archive_sha,
         "trial_plan_sha256": plan_sha,
         "compiler_receipt_sha256": _sha256_bytes(receipt_raw),
         "compiler": receipt["compiler"],
         "compiler_sources_sha256": receipt["compiler_sources_sha256"],
+        "independent_auditor_sha256": independent_auditor_sha256,
+        "topology_method": topology_method,
         "runtime": receipt["runtime"],
         "scan_id": scan_id,
         "source_nifti_member": scan["nifti_member"],
@@ -518,6 +531,9 @@ def audit_run(
             "physical_tissue_volume_owner": False,
             "mechanics_or_physiology": False,
             "clinical_anatomy": False,
+            "topology_split_candidate": (
+                receipt.get("topology_method") == "voxel_boundary_contact_fan_split_candidate"
+            ),
         },
         "boundary": (
             "Independent archive/NIfTI identity, serialized PLY integrity, source-envelope, "

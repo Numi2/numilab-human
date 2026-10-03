@@ -28,7 +28,7 @@ from .physiology import canonical
 
 
 SCHEMA = "HumanPack.external-segmentation-voxel-surface-candidates.v2"
-COMPILER = "numilab-human.healthy-total-body-ct-surface.3"
+COMPILER = "numilab-human.healthy-total-body-ct-surface.4"
 INTAKE_SCHEMA = "HumanPack.external-segmentation-source-ingest.v2"
 PLAN_SCHEMA = "numi.healthy-total-body-ct-surface-trial-plan.v2"
 SHA256 = re.compile(r"[0-9a-f]{64}\Z")
@@ -161,11 +161,129 @@ def _nonmanifold_vertex_count(triangles: Any, vertex_count: int, np: Any) -> int
     return int(np.count_nonzero(invalid))
 
 
+def _split_voxel_contact_vertex_fans(
+    vertices: Any,
+    triangles: Any,
+    triangle_owners_ijk: Any,
+    np: Any,
+) -> tuple[Any, Any]:
+    """Split coincident voxel contacts while preserving every triangle coordinate.
+
+    Two-face edges define ordinary surface adjacency. At a four-face edge contact,
+    the two incident faces from each occupied voxel are paired by their source
+    voxel owner. Triangle corners connected through those paired edges form one
+    output vertex fan. This changes only vertex indexing; it does not move,
+    delete, add, smooth, or retriangulate any source boundary face.
+    """
+    try:
+        from scipy import sparse
+        from scipy.sparse.csgraph import connected_components
+    except ImportError as error:
+        raise HumanImportError(
+            "contact topology splitting requires SciPy; install numilab-human[volume-surface]"
+        ) from error
+
+    require(triangles.ndim == 2 and triangles.shape[1] == 3,
+            "contact split requires triangular faces")
+    require(triangle_owners_ijk.shape == (len(triangles), 3),
+            "contact split source voxel ownership is incomplete")
+    face_count = len(triangles)
+    triangle_ids = np.tile(np.arange(face_count, dtype=np.int64), 3)
+    edges = np.concatenate((
+        triangles[:, (0, 1)], triangles[:, (1, 2)], triangles[:, (2, 0)],
+    ))
+    edges.sort(axis=1)
+    unique_edges, inverse, incidence = np.unique(
+        edges, axis=0, return_inverse=True, return_counts=True,
+    )
+    grouped_order = np.argsort(inverse, kind="stable")
+    group_starts = np.cumsum(np.r_[0, incidence[:-1]])
+
+    manifold_edges = np.flatnonzero(incidence == 2)
+    pair_group_offsets = np.repeat(group_starts[manifold_edges], 2)
+    pair_group_offsets += np.tile(np.array([0, 1], dtype=np.int64), len(manifold_edges))
+    paired_faces = triangle_ids[grouped_order[pair_group_offsets]].reshape(-1, 2)
+    paired_edge_ids = np.repeat(manifold_edges, 1)
+
+    contact_edges = np.flatnonzero(incidence > 2)
+    contact_pairs: list[tuple[int, int]] = []
+    contact_pair_edge_ids: list[int] = []
+    for edge_id in contact_edges:
+        edge_incidence = int(incidence[edge_id])
+        require(edge_incidence == 4,
+                f"contact split encountered unsupported edge incidence {edge_incidence}")
+        start = int(group_starts[edge_id])
+        face_ids = triangle_ids[grouped_order[start:start + edge_incidence]]
+        owner_rows = triangle_owners_ijk[face_ids]
+        _, owner_inverse, owner_counts = np.unique(
+            owner_rows, axis=0, return_inverse=True, return_counts=True,
+        )
+        require(len(owner_counts) == 2 and bool(np.all(owner_counts == 2)),
+                "four-face contact does not resolve into two paired source voxels")
+        for owner_group in range(2):
+            pair = face_ids[owner_inverse == owner_group]
+            contact_pairs.append((int(pair[0]), int(pair[1])))
+            contact_pair_edge_ids.append(int(edge_id))
+
+    if contact_pairs:
+        paired_faces = np.concatenate((
+            paired_faces, np.asarray(contact_pairs, dtype=np.int64),
+        ))
+        paired_edge_ids = np.concatenate((
+            paired_edge_ids, np.asarray(contact_pair_edge_ids, dtype=np.int64),
+        ))
+    require(len(paired_faces) > 0, "contact split produced no triangle adjacency")
+
+    paired_endpoints = unique_edges[paired_edge_ids]
+    selected_faces = triangles[paired_faces]
+    corner_pairs = []
+    for endpoint_slot in (0, 1):
+        endpoint = paired_endpoints[:, endpoint_slot]
+        positions = np.argmax(selected_faces == endpoint[:, None, None], axis=2)
+        require(bool(np.all(selected_faces[
+            np.arange(len(selected_faces))[:, None],
+            np.arange(2)[None, :],
+            positions,
+        ] == endpoint[:, None])), "contact edge endpoint is absent from a paired face")
+        corner_pairs.append(paired_faces * 3 + positions)
+    adjacency_pairs = np.concatenate(corner_pairs, axis=0)
+    graph_rows = np.concatenate((adjacency_pairs[:, 0], adjacency_pairs[:, 1]))
+    graph_columns = np.concatenate((adjacency_pairs[:, 1], adjacency_pairs[:, 0]))
+    graph = sparse.coo_matrix(
+        (np.ones(len(graph_rows), dtype=np.uint8), (graph_rows, graph_columns)),
+        shape=(face_count * 3, face_count * 3),
+    ).tocsr()
+    _, corner_components = connected_components(graph, directed=False)
+
+    original_corner_vertices = triangles.reshape(-1)
+    component_ids, first_corner, corner_to_component = np.unique(
+        corner_components, return_inverse=True, return_index=True,
+    )
+    del component_ids
+    component_order = np.argsort(first_corner)
+    component_first_corners = first_corner[component_order]
+    old_to_new = np.empty(len(component_order), dtype=np.int64)
+    old_to_new[component_order] = np.arange(len(component_order), dtype=np.int64)
+    remapped_faces = old_to_new[corner_to_component].reshape(-1, 3).astype(
+        triangles.dtype, copy=False,
+    )
+    component_source_vertices = original_corner_vertices[component_first_corners]
+    require(bool(np.all(
+        original_corner_vertices == component_source_vertices[corner_to_component]
+    )), "triangle adjacency crossed distinct source vertices")
+    split_vertices = vertices[component_source_vertices]
+    require(bool(np.array_equal(split_vertices[remapped_faces], vertices[triangles])),
+            "contact split changed source triangle coordinates")
+
+    return split_vertices, remapped_faces
+
+
 def build_voxel_boundary_mesh(
     binary_mask: Any,
     affine: list[list[float]],
     *,
     voxel_offset_ijk: tuple[int, int, int] = (0, 0, 0),
+    split_contact_topology: bool = False,
     np: Any | None = None,
 ) -> tuple[Any, Any, dict[str, Any]]:
     """Mesh the exact union of occupied voxels without smoothing or decimation."""
@@ -178,6 +296,7 @@ def build_voxel_boundary_mesh(
     padded = np.pad(mask, 1, mode="constant", constant_values=False)
     center = padded[1:-1, 1:-1, 1:-1]
     face_corners = []
+    face_owners_ijk = []
     exposed_face_count = 0
     for axis, direction, corner_offsets in _FACE_CORNERS:
         neighbor_slice = [slice(1, -1)] * 3
@@ -189,6 +308,7 @@ def build_voxel_boundary_mesh(
             continue
         offset = np.asarray(voxel_offset_ijk, dtype=np.int32)
         global_centers = centers + offset
+        face_owners_ijk.append(global_centers)
         corners = 2 * global_centers[:, None, :] + np.asarray(corner_offsets, dtype=np.int32)[None, :, :]
         face_corners.append(corners.reshape(-1, 3))
     require(exposed_face_count > 0 and face_corners, "mask has no exposed voxel faces")
@@ -224,6 +344,35 @@ def build_voxel_boundary_mesh(
     ).sum(dtype=np.float64) / 6.0)
     edges = _edge_incidence(triangles, np)
     nonmanifold_vertices = _nonmanifold_vertex_count(triangles, len(vertices_ras), np)
+    raw_topology = {
+        "vertex_count": int(len(vertices_ras)),
+        "edge_incidence": edges,
+        "nonmanifold_vertex_count": nonmanifold_vertices,
+        "closed_two_manifold": bool(
+            edges["all_edges_have_two_incident_triangles"] and nonmanifold_vertices == 0
+        ),
+    }
+    topology_split = None
+    if split_contact_topology:
+        triangle_owners = np.repeat(np.concatenate(face_owners_ijk, axis=0), 2, axis=0)
+        vertices_ras, triangles = _split_voxel_contact_vertex_fans(
+            vertices_ras, triangles, triangle_owners, np,
+        )
+        edges = _edge_incidence(triangles, np)
+        nonmanifold_vertices = _nonmanifold_vertex_count(triangles, len(vertices_ras), np)
+        topology_split = {
+            "algorithm": "triangle-corner-fans-paired-by-source-voxel-at-four-face-contacts.v1",
+            "raw_vertex_count": raw_topology["vertex_count"],
+            "split_vertex_count": int(len(vertices_ras)),
+            "cloned_vertex_count": int(len(vertices_ras) - raw_topology["vertex_count"]),
+            "triangle_coordinates_preserved": True,
+            "raw_closed_two_manifold": raw_topology["closed_two_manifold"],
+            "split_closed_two_manifold": bool(
+                edges["all_edges_have_two_incident_triangles"] and nonmanifold_vertices == 0
+            ),
+            "remaining_nonmanifold_vertex_count": nonmanifold_vertices,
+            "remaining_edge_incidence_histogram": edges["incidence_histogram"],
+        }
     metrics = {
         "occupied_voxel_count": int(mask.sum(dtype=np.int64)),
         "exposed_voxel_face_count": exposed_face_count,
@@ -238,6 +387,9 @@ def build_voxel_boundary_mesh(
         ),
         "affine_determinant_mm3_per_voxel": abs(determinant),
     }
+    if topology_split is not None:
+        metrics["raw_topology"] = raw_topology
+        metrics["topology_split"] = topology_split
     return vertices_ras, triangles, metrics
 
 
@@ -330,6 +482,7 @@ def _read_trial_plan(
     label_ids: list[int],
     compiler_sources_sha256: dict[str, str],
     runtime: dict[str, str | None],
+    split_contact_topology: bool = False,
 ) -> tuple[dict[str, Any], str]:
     require(path.is_file() and not path.is_symlink(), "trial plan is not a regular file")
     raw = path.read_bytes()
@@ -344,7 +497,8 @@ def _read_trial_plan(
             plan.get("scan_id") == scan_id and
             plan.get("label_ids") == sorted(label_ids) and
             plan.get("compiler_sources_sha256") == compiler_sources_sha256 and
-            plan.get("runtime") == runtime,
+            plan.get("runtime") == runtime and
+            plan.get("split_contact_topology", False) == split_contact_topology,
             "trial plan does not bind this exact intake, source, scan, labels, and compiler")
     return plan, hashlib.sha256(raw).hexdigest()
 
@@ -356,6 +510,7 @@ def compile_surface_candidates(
     scan_id: str,
     label_ids: list[int],
     trial_plan_path: Path | None = None,
+    split_contact_topology: bool = False,
 ) -> tuple[dict[str, Any], list[tuple[str, Any, Any]]]:
     np = _load_numpy()
     runtime = _runtime_info(np)
@@ -395,7 +550,7 @@ def compile_surface_candidates(
             Path(trial_plan_path), receipt_sha256=receipt_sha, source_archive_sha256=archive_sha,
             scan_id=scan_id,
             label_ids=label_ids, compiler_sources_sha256=compiler_sources_sha256,
-            runtime=runtime,
+            runtime=runtime, split_contact_topology=split_contact_topology,
         )
     scan = scans[scan_id]
     affine = scan["voxel_to_world_affine"]
@@ -457,7 +612,8 @@ def compile_surface_candidates(
             require(voxel_count == expected_count,
                     f"scan {scan_id} label {label_id} cropped voxel count differs from intake")
             vertices, triangles, metrics = build_voxel_boundary_mesh(
-                binary, affine, voxel_offset_ijk=tuple(crop_lower), np=np,
+                binary, affine, voxel_offset_ijk=tuple(crop_lower),
+                split_contact_topology=split_contact_topology, np=np,
             )
             expected_volume_mm3 = voxel_count * float(info["voxel_volume_in_source_units_cubed"])
             volume_error = abs(metrics["signed_volume_mm3"] - expected_volume_mm3) / expected_volume_mm3
@@ -508,6 +664,10 @@ def compile_surface_candidates(
             "coordinate_convention": "NIfTI RAS+ millimetres; this scan's affine only",
         },
         "trial_plan_sha256": plan_sha,
+        "topology_method": (
+            "voxel_boundary_contact_fan_split_candidate"
+            if split_contact_topology else "raw_voxel_boundary"
+        ),
         "meshes": [candidate[3] for candidate in candidates],
         "qualification": {
             "archive_and_decompressed_nifti_hashes_match_intake": True,
@@ -526,7 +686,9 @@ def compile_surface_candidates(
         },
         "boundary": (
             "Exact boundary of the registered label's occupied voxel union, without "
-            "smoothing, interpolation, or decimation. Source labels are automatic; "
+            "smoothing, interpolation, or decimation. Optional contact splitting duplicates "
+            "vertex indices while preserving the exact triangle-coordinate sequence. "
+            "Source labels are automatic; "
             "meshes remain scan-specific geometry candidates and are not mechanics-ready."
         ),
     }
@@ -543,6 +705,8 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
                         help="source dictionary IDs to mesh from this scan")
     parser.add_argument("--plan", type=Path,
                         help="optional preregistered plan bound to this receipt, scan, and labels")
+    parser.add_argument("--split-contact-topology", action="store_true",
+                        help="emit a topology-split geometry candidate; duplicates only vertex indices")
     parser.add_argument("--output", type=Path, required=True,
                         help="new output directory; existing directories are not overwritten")
     parser.set_defaults(handler=run)
@@ -558,6 +722,7 @@ def run(arguments: argparse.Namespace) -> int:
         scan_id=arguments.scan_id,
         label_ids=arguments.label_ids,
         trial_plan_path=arguments.plan,
+        split_contact_topology=arguments.split_contact_topology,
     )
     output.mkdir(parents=True, exist_ok=False)
     np = _load_numpy()
