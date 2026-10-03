@@ -5,19 +5,22 @@ automatic TCIA segmentation masks. These are scan-specific reference geometry
 candidates in each source affine's RAS+ frame. The exporter performs no
 smoothing, interpolation, decimation or topology repair.
 
-The compiler-bound scan-001 runs cover 12 whole-organ and major-vessel labels
-and all 20 source skeletal labels. For every selected label, source archive,
-decompressed NIfTI, affine, exact intake voxel count and signed mesh occupancy
-volume were checked. Independent audits re-read every compressed PLY, checked
-binary payload lengths, finite coordinates, index ranges, source envelopes,
-edge incidences and occupancy-volume arithmetic. All selected signed volumes
-close to the affine-scaled source voxel counts within `1.1e-15` relative error
-or better.
+The compiler-bound scan-001 runs now cover all 36 labels observed in that
+scan: 12 whole-organ and major-vessel labels, 20 skeletal labels, and four
+soft-tissue labels. For every label, the source archive, decompressed NIfTI,
+affine, exact intake voxel count and signed mesh occupancy volume were checked.
+Independent audits re-read every compressed PLY and checked binary payload
+lengths, finite coordinates, index ranges, source envelopes, edge incidences
+and occupancy-volume arithmetic. The maximum relative signed-volume
+discrepancy is `1.7384093126870536e-14` (Fingers), below the `1e-9`
+preregistered arithmetic tolerance.
 
-Eight of 12 organ/vessel masks and five of 20 bone masks are closed
-two-manifolds in this discrete mesh representation. The other masks retain
-nonmanifold voxel contacts: adrenal glands, kidneys, liver and lung among the
-organ/vessel labels, and 15 skeletal labels. Each receipt records the exact
+Fourteen of 36 masks are closed two-manifolds in this discrete mesh
+representation: 8/12 organ/vessel, 5/20 skeletal, and 1/4 soft-tissue labels.
+The other 22 retain nonmanifold voxel contacts: Adrenal-glands, Kidneys, Liver
+and Lung; Carpal, Femur, Metacarpal, Metatarsal, Pelvis, Fingers, Radius,
+Ribcage, Scapula, Skull, Spine, Sternum, Tarsal, Tibia and Toes; plus
+Skeletal-muscle, Subcutaneous-fat and Torso-fat. Each receipt records the exact
 edge-incidence and vertex-link defects. These are source-topology findings;
 they remain visible and have not been smoothed away. A closed two-manifold
 result describes mesh topology only.
@@ -46,10 +49,18 @@ patella anteriority plan and result have SHA-256 values
 `ff3f27f33d33345103adb3f16c8bf8f92cd30da96851c2aa68ae367d190d705a`.
 Compiler source hashes and Python/NumPy versions are bound in each plan and
 receipt. The first three-label run is retained alongside a compiler-bound
-byte-identical reproduction.
+byte-identical reproduction. The soft-tissue plan, compiler receipt and
+independent audit have SHA-256 values
+`879a8b544c23c93b267fce4f5edd692e6db8ec62a837ef3d791046f89e9a07d3`,
+`4230e6482b3cb506fce07e83a75ed8741e796e3ab1428b767e64e9e299a181fb`, and
+`ead1647bf289199afd9e8c7fe70a83c2b2076d5465c1e8c426a56d20166f7a84`.
+The consolidated all-label audit is
+[`scan-001-all-source-labels-audit.json`](media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json)
+with SHA-256 `2cccac715e63c614cfe3b2257f93c6c4c7eb9c3929c6b7a8b244dca69e1f05d1`.
 
 The artifacts are under
 [`media/healthy-total-body-ct-surface-20261003/`](media/healthy-total-body-ct-surface-20261003/).
+Install the CPU mesh-audit dependencies with `pip install -e '.[volume-surface]'`.
 The export command is available through `numi human
 healthy-total-body-ct-surface`. The 30-scan CT cohort is separate from Numi's
 mechanical subject, and its MOOSE segmentations are automatic rather than

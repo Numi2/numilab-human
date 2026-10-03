@@ -28,7 +28,7 @@ from .physiology import canonical
 
 
 SCHEMA = "HumanPack.external-segmentation-voxel-surface-candidates.v2"
-COMPILER = "numilab-human.healthy-total-body-ct-surface.2"
+COMPILER = "numilab-human.healthy-total-body-ct-surface.3"
 INTAKE_SCHEMA = "HumanPack.external-segmentation-source-ingest.v2"
 PLAN_SCHEMA = "numi.healthy-total-body-ct-surface-trial-plan.v2"
 SHA256 = re.compile(r"[0-9a-f]{64}\Z")
@@ -38,6 +38,7 @@ COMPILER_SOURCE_FILES = (
     "healthy_total_body_ct_source.py",
     "physiology.py",
     "cli.py",
+    "pyproject.toml",
 )
 
 # Each row gives an outward-oriented quad's four offsets from its voxel centre
@@ -78,35 +79,86 @@ def _edge_incidence(triangles: Any, np: Any) -> dict[str, Any]:
     }
 
 
-def _nonmanifold_vertex_count(triangles: Any, vertex_count: int) -> int:
+def _nonmanifold_vertex_count(triangles: Any, vertex_count: int, np: Any) -> int:
     """Count vertices whose triangle link is not one connected cycle."""
-    links: list[list[tuple[int, int]]] = [[] for _ in range(vertex_count)]
-    for a, b, c in triangles:
-        a, b, c = int(a), int(b), int(c)
-        links[a].append((b, c))
-        links[b].append((c, a))
-        links[c].append((a, b))
-    invalid = 0
-    for link_edges in links:
-        adjacency: dict[int, list[int]] = {}
-        for left, right in link_edges:
-            adjacency.setdefault(left, []).append(right)
-            adjacency.setdefault(right, []).append(left)
-        if not adjacency or any(len(neighbors) != 2 for neighbors in adjacency.values()):
-            invalid += 1
-            continue
-        first = next(iter(adjacency))
-        visited = {first}
-        stack = [first]
-        while stack:
-            current = stack.pop()
-            for neighbor in adjacency[current]:
-                if neighbor not in visited:
-                    visited.add(neighbor)
-                    stack.append(neighbor)
-        if len(visited) != len(adjacency):
-            invalid += 1
-    return invalid
+    if not len(triangles):
+        return vertex_count
+    a, b, c = triangles.T
+    centers = np.concatenate((a, b, c))
+    left = np.concatenate((b, c, a))
+    right = np.concatenate((c, a, b))
+    link_edges = np.empty((len(centers), 3), dtype=triangles.dtype)
+    link_edges[:, 0] = centers
+    link_edges[:, 1] = np.minimum(left, right)
+    link_edges[:, 2] = np.maximum(left, right)
+    unique_edges, edge_multiplicity = np.unique(link_edges, axis=0, return_counts=True)
+    del centers, left, right, link_edges
+
+    link_nodes = np.empty((len(unique_edges) * 2, 2), dtype=unique_edges.dtype)
+    link_nodes[:len(unique_edges), :] = unique_edges[:, :2]
+    link_nodes[len(unique_edges):, 0] = unique_edges[:, 0]
+    link_nodes[len(unique_edges):, 1] = unique_edges[:, 2]
+    unique_nodes, node_inverse = np.unique(link_nodes, axis=0, return_inverse=True)
+    del link_nodes
+    node_weights = np.concatenate((edge_multiplicity, edge_multiplicity))
+    node_degrees = np.bincount(node_inverse, weights=node_weights, minlength=len(unique_nodes))
+    del node_weights
+
+    try:
+        from scipy import sparse
+        from scipy.sparse.csgraph import connected_components
+    except ImportError as error:
+        if len(triangles) > 100_000:
+            raise HumanImportError(
+                "healthy total-body CT surface: install the volume-surface extra "
+                "to audit large mesh vertex links"
+            ) from error
+        link_count = len(unique_edges)
+        node_left, node_right = node_inverse[:link_count], node_inverse[link_count:]
+        adjacency_by_node: list[list[int]] = [[] for _ in range(len(unique_nodes))]
+        for left_node, right_node in zip(node_left, node_right, strict=True):
+            adjacency_by_node[int(left_node)].append(int(right_node))
+            adjacency_by_node[int(right_node)].append(int(left_node))
+        component_labels = np.full(len(unique_nodes), -1, dtype=np.int64)
+        component_id = 0
+        for node_id, neighbors in enumerate(adjacency_by_node):
+            if component_labels[node_id] >= 0:
+                continue
+            component_labels[node_id] = component_id
+            stack = [node_id]
+            while stack:
+                for neighbor in adjacency_by_node[stack.pop()]:
+                    if component_labels[neighbor] < 0:
+                        component_labels[neighbor] = component_id
+                        stack.append(neighbor)
+            component_id += 1
+    else:
+        link_count = len(unique_edges)
+        node_left, node_right = node_inverse[:link_count], node_inverse[link_count:]
+        row_indices = np.concatenate((node_left, node_right))
+        col_indices = np.concatenate((node_right, node_left))
+        adjacency = sparse.csr_matrix(
+            (np.ones(len(row_indices), dtype=np.uint8), (row_indices, col_indices)),
+            shape=(len(unique_nodes), len(unique_nodes)),
+        )
+        _, component_labels = connected_components(adjacency, directed=False)
+        del adjacency, row_indices, col_indices
+    del node_inverse
+
+    nodes_per_vertex = np.bincount(unique_nodes[:, 0], minlength=vertex_count)
+    bad_degrees_per_vertex = np.bincount(
+        unique_nodes[:, 0], weights=(node_degrees != 2), minlength=vertex_count,
+    )
+    component_pairs = np.unique(
+        np.column_stack((unique_nodes[:, 0], component_labels)), axis=0,
+    )
+    components_per_vertex = np.bincount(component_pairs[:, 0], minlength=vertex_count)
+    invalid = (
+        (nodes_per_vertex == 0) |
+        (bad_degrees_per_vertex != 0) |
+        (components_per_vertex != 1)
+    )
+    return int(np.count_nonzero(invalid))
 
 
 def build_voxel_boundary_mesh(
@@ -144,8 +196,8 @@ def build_voxel_boundary_mesh(
     half_grid_vertices, inverse = np.unique(
         np.concatenate(face_corners, axis=0), axis=0, return_inverse=True,
     )
-    quads = inverse.reshape(exposed_face_count, 4).astype(np.int64, copy=False)
-    triangles = np.empty((exposed_face_count * 2, 3), dtype=np.int64)
+    quads = inverse.reshape(exposed_face_count, 4).astype(np.int32, copy=False)
+    triangles = np.empty((exposed_face_count * 2, 3), dtype=np.int32)
     triangles[0::2] = quads[:, (0, 1, 2)]
     triangles[1::2] = quads[:, (0, 2, 3)]
 
@@ -171,7 +223,7 @@ def build_voxel_boundary_mesh(
         np.cross(relative_points[:, 1], relative_points[:, 2]),
     ).sum(dtype=np.float64) / 6.0)
     edges = _edge_incidence(triangles, np)
-    nonmanifold_vertices = _nonmanifold_vertex_count(triangles, len(vertices_ras))
+    nonmanifold_vertices = _nonmanifold_vertex_count(triangles, len(vertices_ras), np)
     metrics = {
         "occupied_voxel_count": int(mask.sum(dtype=np.int64)),
         "exposed_voxel_face_count": exposed_face_count,
@@ -247,16 +299,25 @@ def _nifti_payload_to_file(
 
 def _compiler_source_hashes() -> dict[str, str]:
     package = Path(__file__).resolve().parent
+    paths = {name: package / name for name in COMPILER_SOURCE_FILES[:-1]}
+    paths[COMPILER_SOURCE_FILES[-1]] = package.parent.parent / "pyproject.toml"
     return {
-        name: _sha256_file(package / name)
-        for name in COMPILER_SOURCE_FILES
+        name: _sha256_file(path)
+        for name, path in paths.items()
     }
 
 
-def _runtime_info(np: Any) -> dict[str, str]:
+def _runtime_info(np: Any) -> dict[str, str | None]:
+    try:
+        import scipy
+    except ImportError:
+        scipy_version = None
+    else:
+        scipy_version = scipy.__version__
     return {
         "python_version": sys.version.split()[0],
         "numpy_version": np.__version__,
+        "scipy_version": scipy_version,
     }
 
 
@@ -268,7 +329,7 @@ def _read_trial_plan(
     scan_id: str,
     label_ids: list[int],
     compiler_sources_sha256: dict[str, str],
-    runtime: dict[str, str],
+    runtime: dict[str, str | None],
 ) -> tuple[dict[str, Any], str]:
     require(path.is_file() and not path.is_symlink(), "trial plan is not a regular file")
     raw = path.read_bytes()
@@ -374,16 +435,24 @@ def compile_surface_candidates(
             shape = info["shape_ijk"]
             crop_lower = [max(0, int(lower[axis]) - 1) for axis in range(3)]
             crop_upper = [min(shape[axis] - 1, int(upper[axis]) + 1) for axis in range(3)]
-            region = np.asarray(values[
+            region = values[
                 crop_lower[0]:crop_upper[0] + 1,
                 crop_lower[1]:crop_upper[1] + 1,
                 crop_lower[2]:crop_upper[2] + 1,
-            ])
-            scaled = region.astype(np.float64, copy=False) * float(slope) + float(intercept)
-            require(bool(np.isfinite(scaled).all()) and
-                    bool(np.equal(scaled, np.rint(scaled)).all()),
-                    f"scan {scan_id} crop for label {label_id} contains invalid labels")
-            binary = np.equal(np.rint(scaled), label_id)
+            ]
+            if float(slope) == 1.0 and float(intercept) == 0.0:
+                require(bool(np.isfinite(region).all()),
+                        f"scan {scan_id} crop for label {label_id} contains non-finite labels")
+                binary = np.equal(region, label_id)
+            else:
+                scaled = np.asarray(region, dtype=np.float64) * float(slope) + float(intercept)
+                rounded = np.rint(scaled)
+                require(bool(np.isfinite(scaled).all()) and
+                        bool(np.equal(scaled, rounded).all()),
+                        f"scan {scan_id} crop for label {label_id} contains invalid labels")
+                binary = np.equal(rounded, label_id)
+                del scaled, rounded
+            del region
             voxel_count = int(binary.sum(dtype=np.int64))
             require(voxel_count == expected_count,
                     f"scan {scan_id} label {label_id} cropped voxel count differs from intake")
@@ -410,6 +479,7 @@ def compile_surface_candidates(
                 "source_nifti_uncompressed_sha256": nifti_sha,
                 "mesh_metrics": metrics,
             }))
+            del binary
         del values
 
     result = {

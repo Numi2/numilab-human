@@ -1,0 +1,88 @@
+{
+  "all_mesh_files_and_source_identity_checks_pass": true,
+  "boundary": "Source voxel-boundary artifacts, exact source receipt counts and occupancy-volume arithmetic only. Does not establish expert segmentation accuracy, tissue identity beyond source labels, subject binding or mechanics.",
+  "closed_two_manifold_label_count": 1,
+  "compiler_receipt_sha256": "4230e6482b3cb506fce07e83a75ed8741e796e3ab1428b767e64e9e299a181fb",
+  "compiler_sources_sha256": {
+    "cli.py": "87588ef439078a8561d6ebfb8879b29a3ef204fe79eef74986f71649b5b8265d",
+    "healthy_total_body_ct_source.py": "01967bdd50bcf3370073078e87f0e6004c9f0955fa7e27a4cc6288709588d5f9",
+    "healthy_total_body_ct_surface.py": "5632d116190ca875b14eabc48a7da0c63933f5b3f0bbe794fb5bccadf7fcbdc0",
+    "physiology.py": "efb717aee62893268b266abe6a5c2901b0259333ccbae90110fda2070d84ecef",
+    "pyproject.toml": "8d5711942ed0310df8ce2017eec5705454860e6faf54c4d7c33529681c227fc0"
+  },
+  "label_count": 4,
+  "plan_sha256": "879a8b544c23c93b267fce4f5edd692e6db8ec62a837ef3d791046f89e9a07d3",
+  "runtime": {
+    "numpy_version": "2.4.6",
+    "python_version": "3.11.12",
+    "scipy_version": "1.17.1"
+  },
+  "schema": "numi.healthy-total-body-ct-surface-independent-ply-audit.v2",
+  "selected_meshes": [
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 7443098,
+        "4": 3404
+      },
+      "label": "Skeletal-muscle",
+      "label_id": 33,
+      "mesh_sha256": "3aefd2c6ba82f302781fdf1dcf61bd0118682ff96f128b6e4440905226432ff6",
+      "nonmanifold_vertex_count": 6646,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 3.026736507752871e-15,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 4966604,
+      "vertices": 2478805
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 7187738,
+        "4": 8504
+      },
+      "label": "Subcutaneous-fat",
+      "label_id": 34,
+      "mesh_sha256": "0d89da1c126afeff76a6fa26401c507120e78bb254521d557be88b64df71bebb",
+      "nonmanifold_vertex_count": 16195,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 8.400626464491207e-16,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 4803164,
+      "vertices": 2391118
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 2669150,
+        "4": 7283
+      },
+      "label": "Torso-fat",
+      "label_id": 35,
+      "mesh_sha256": "2a6b2edd6a9595bb5afaddc4a4907f6da5009894ebdc4b49ab77cb5f6c463444",
+      "nonmanifold_vertex_count": 13497,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 1.4187160165085324e-15,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 1789144,
+      "vertices": 885399
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 90342
+      },
+      "label": "Psoas",
+      "label_id": 36,
+      "mesh_sha256": "b666bd033d7d807287928b773b10b27f90f68155760e1d20fc591ec8dab9c46d",
+      "nonmanifold_vertex_count": 0,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 1.0945676215331663e-15,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 60228,
+      "vertices": 30118
+    }
+  ],
+  "source_archive_sha256": "f3daa9c5e9740c8d68688bd800f5d3107236099d3e319bbef04076aa4719b13f",
+  "source_intake_receipt_sha256": "b23e5d88b9bbd0f1e017045ddae0f9f2d69a3c302b3435a24c66ee0f6ed1ea21"
+}

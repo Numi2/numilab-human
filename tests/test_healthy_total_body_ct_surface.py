@@ -8,11 +8,39 @@ import pytest
 
 from numilab_human.healthy_total_body_ct_surface import (
     PLAN_SCHEMA,
+    _nonmanifold_vertex_count,
     _read_trial_plan,
     _write_binary_ply_gzip,
     build_voxel_boundary_mesh,
 )
 from numilab_human.model import ImportError
+
+
+def _reference_nonmanifold_vertex_count(triangles, vertex_count: int) -> int:
+    links = [[] for _ in range(vertex_count)]
+    for a, b, c in triangles:
+        a, b, c = int(a), int(b), int(c)
+        links[a].append((b, c))
+        links[b].append((c, a))
+        links[c].append((a, b))
+    invalid = 0
+    for link_edges in links:
+        adjacency = {}
+        for left, right in link_edges:
+            adjacency.setdefault(left, []).append(right)
+            adjacency.setdefault(right, []).append(left)
+        if not adjacency or any(len(neighbors) != 2 for neighbors in adjacency.values()):
+            invalid += 1
+            continue
+        first = next(iter(adjacency))
+        visited, stack = {first}, [first]
+        while stack:
+            for neighbor in adjacency[stack.pop()]:
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    stack.append(neighbor)
+        invalid += len(visited) != len(adjacency)
+    return invalid
 
 
 def test_single_anisotropic_reflected_voxel_has_exact_closed_boundary() -> None:
@@ -78,6 +106,28 @@ def test_diagonal_voxel_touch_is_retained_as_nonmanifold_vertex_evidence() -> No
     assert not metrics["closed_two_manifold"]
 
 
+def test_edge_touch_reports_four_face_edge_without_topology_repair() -> None:
+    mask = np.zeros((2, 2, 2), dtype=np.bool_)
+    mask[0, 0, 0] = True
+    mask[1, 1, 0] = True
+    affine = np.eye(4).tolist()
+
+    _, _, metrics = build_voxel_boundary_mesh(mask, affine)
+
+    assert metrics["edge_incidence"]["incidence_histogram"].get("4", 0) > 0
+    assert metrics["nonmanifold_vertex_count"] > 0
+    assert not metrics["closed_two_manifold"]
+
+
+def test_vectorized_vertex_link_audit_matches_reference_for_all_two_cube_masks() -> None:
+    affine = np.eye(4).tolist()
+    for pattern in range(1, 1 << 8):
+        mask = np.array([(pattern >> bit) & 1 for bit in range(8)], dtype=np.bool_).reshape(2, 2, 2)
+        vertices, triangles, _ = build_voxel_boundary_mesh(mask, affine)
+        expected = _reference_nonmanifold_vertex_count(triangles, len(vertices))
+        assert _nonmanifold_vertex_count(triangles, len(vertices), np) == expected
+
+
 def test_empty_label_is_rejected_and_compressed_ply_is_deterministic(tmp_path) -> None:
     affine = [
         [1.0, 0.0, 0.0, 0.0],
@@ -110,7 +160,11 @@ def test_trial_plan_binds_exact_archive_and_compiler_sources(tmp_path) -> None:
         "scan_id": "001",
         "label_ids": [2, 5],
         "compiler_sources_sha256": compiler_sources,
-        "runtime": {"python_version": "3.11.12", "numpy_version": "2.2.0"},
+        "runtime": {
+            "python_version": "3.11.12",
+            "numpy_version": "2.2.0",
+            "scipy_version": "1.17.1",
+        },
     }
     path = tmp_path / "plan.json"
     path.write_text(json.dumps(plan), encoding="utf-8")

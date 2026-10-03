@@ -115,15 +115,21 @@ accuracy, subject binding, physical volume/mass, skin layers, vascular lumens,
 tissue mechanics, physiology and clinical use remain unqualified.
 
 The compiler-bound [source-surface runs](HEALTHY_TOTAL_BODY_CT_SURFACE_CANDIDATES_20261003.md)
-now cover 12 whole-organ/major-vessel labels and all 20 skeletal labels in
-scan 001. Exact intake counts and mesh occupancy volumes close; 8/12
-organ/vessel surfaces and 5/20 bone surfaces are closed two-manifolds. The
-remaining source contacts are retained with their exact incidence defects.
-The Patella mask itself is closed and its anterior surface leads the distal
-Femur by a median 23.44 mm across 1,730 shared scan-local projections. This is
-external reference geometry, not Numi-subject registration or expert anatomy
-approval. Subject registration, mask accuracy, separate tissue ownership and
-Numi integration remain open.
+now cover all 36 labels observed in external scan 001: 12 organ/major-vessel,
+20 skeletal, and four soft-tissue labels. The consolidated
+[all-label audit](media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json)
+independently reconciles the mesh hashes, source counts, topology checks, and
+occupancy-volume arithmetic; the maximum relative volume discrepancy is
+`1.7384093126870536e-14`, and 14/36 masks are closed two-manifolds. The other
+22 retain their exact source-contact defects. The added soft-tissue labels are
+one combined skeletal-muscle mask, subcutaneous fat, torso fat, and psoas; only
+psoas is closed. The Patella mask itself is closed and its anterior surface
+leads the distal Femur by a median 23.44 mm across 1,730 shared scan-local
+projections. This remains external reference geometry, not Numi-subject
+registration or expert anatomy approval. Skin, individual muscle/tendon/fascia
+identity, vascular lumen and flow connectivity, cardiac electrical/chamber
+mechanics, subject registration, tissue ownership and Numi integration remain
+open.
 
 ## HCM1 source activation map import — 2026-10-03
 

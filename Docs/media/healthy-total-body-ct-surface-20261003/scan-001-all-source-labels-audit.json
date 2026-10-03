@@ -1,0 +1,905 @@
+{
+  "coverage": {
+    "all_observed_source_labels_covered_once": true,
+    "covered_label_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36
+    ],
+    "groups": {
+      "organ-vessel": 12,
+      "skeletal": 20,
+      "soft-tissue": 4
+    },
+    "scan_001_observed_label_count": 36,
+    "surface_candidate_count": 36
+  },
+  "evidence_sets": [
+    {
+      "closed_two_manifold_label_count": 8,
+      "compiler_receipt": "organ-scan-001-run-v1/receipt.json",
+      "compiler_receipt_sha256": "9bd2839f1efd08ff2c14cad7ee938b64d68e2656c5841745738ea3b30ec51b0d",
+      "compiler_source_sha256": {
+        "cli.py": "87588ef439078a8561d6ebfb8879b29a3ef204fe79eef74986f71649b5b8265d",
+        "healthy_total_body_ct_source.py": "01967bdd50bcf3370073078e87f0e6004c9f0955fa7e27a4cc6288709588d5f9",
+        "healthy_total_body_ct_surface.py": "01aeb53930454fc8a3d68a86c345f4fa7c2062e8a2aa18c2c33fd9a5aea54d5e",
+        "physiology.py": "efb717aee62893268b266abe6a5c2901b0259333ccbae90110fda2070d84ecef"
+      },
+      "group": "organ-vessel",
+      "independent_audit": "independent-organ-set-audit-v1.json",
+      "independent_audit_sha256": "1432a3bad82fc858215b4e8b457df33670569a15a194ad8dc99c6525f1667300",
+      "independent_geometry_identity_checks_pass": true,
+      "label_count": 12,
+      "plan_sha256": "9bfa6e7f459e430dcc504a9e7b81ecb5162cbd5647321afd10d14bfdbb8ae013",
+      "runtime": {
+        "numpy_version": "2.4.6",
+        "python_version": "3.11.12"
+      },
+      "trial_plan": "media/healthy-total-body-ct-surface-20261003/preregistered-organ-set-plan-v1.json",
+      "trial_plan_sha256": "9bfa6e7f459e430dcc504a9e7b81ecb5162cbd5647321afd10d14bfdbb8ae013"
+    },
+    {
+      "closed_two_manifold_label_count": 5,
+      "compiler_receipt": "skeletal-scan-001-run-v1/receipt.json",
+      "compiler_receipt_sha256": "2ceab1a5d9be07f35e3a29628065f3f443acaba79820089ff47970fb7a6b759c",
+      "compiler_source_sha256": {
+        "cli.py": "87588ef439078a8561d6ebfb8879b29a3ef204fe79eef74986f71649b5b8265d",
+        "healthy_total_body_ct_source.py": "01967bdd50bcf3370073078e87f0e6004c9f0955fa7e27a4cc6288709588d5f9",
+        "healthy_total_body_ct_surface.py": "01aeb53930454fc8a3d68a86c345f4fa7c2062e8a2aa18c2c33fd9a5aea54d5e",
+        "physiology.py": "efb717aee62893268b266abe6a5c2901b0259333ccbae90110fda2070d84ecef"
+      },
+      "group": "skeletal",
+      "independent_audit": "independent-skeletal-set-audit-v1.json",
+      "independent_audit_sha256": "108f12d8dc4127c45b64907231b30eee43d2336bbf6706be2326929f83c17268",
+      "independent_geometry_identity_checks_pass": true,
+      "label_count": 20,
+      "plan_sha256": "b5a3f4a558c47c974d43eae04b5e50620166dd0f9bb7507e581c2faefead9ec4",
+      "runtime": {
+        "numpy_version": "2.4.6",
+        "python_version": "3.11.12"
+      },
+      "trial_plan": "media/healthy-total-body-ct-surface-20261003/preregistered-skeletal-plan-v1.json",
+      "trial_plan_sha256": "b5a3f4a558c47c974d43eae04b5e50620166dd0f9bb7507e581c2faefead9ec4"
+    },
+    {
+      "closed_two_manifold_label_count": 1,
+      "compiler_receipt": "soft-tissue-scan-001-run-v1/receipt.json",
+      "compiler_receipt_sha256": "4230e6482b3cb506fce07e83a75ed8741e796e3ab1428b767e64e9e299a181fb",
+      "compiler_source_sha256": {
+        "cli.py": "87588ef439078a8561d6ebfb8879b29a3ef204fe79eef74986f71649b5b8265d",
+        "healthy_total_body_ct_source.py": "01967bdd50bcf3370073078e87f0e6004c9f0955fa7e27a4cc6288709588d5f9",
+        "healthy_total_body_ct_surface.py": "5632d116190ca875b14eabc48a7da0c63933f5b3f0bbe794fb5bccadf7fcbdc0",
+        "physiology.py": "efb717aee62893268b266abe6a5c2901b0259333ccbae90110fda2070d84ecef",
+        "pyproject.toml": "8d5711942ed0310df8ce2017eec5705454860e6faf54c4d7c33529681c227fc0"
+      },
+      "group": "soft-tissue",
+      "independent_audit": "independent-soft-tissue-set-audit-v1.json",
+      "independent_audit_sha256": "ead1647bf289199afd9e8c7fe70a83c2b2076d5465c1e8c426a56d20166f7a84",
+      "independent_geometry_identity_checks_pass": true,
+      "label_count": 4,
+      "plan_sha256": "879a8b544c23c93b267fce4f5edd692e6db8ec62a837ef3d791046f89e9a07d3",
+      "runtime": {
+        "numpy_version": "2.4.6",
+        "python_version": "3.11.12",
+        "scipy_version": "1.17.1"
+      },
+      "trial_plan": "media/healthy-total-body-ct-surface-20261003/preregistered-soft-tissue-plan-v1.json",
+      "trial_plan_sha256": "879a8b544c23c93b267fce4f5edd692e6db8ec62a837ef3d791046f89e9a07d3"
+    }
+  ],
+  "integrity": {
+    "all_compiler_and_independent_source_identity_checks_pass": true,
+    "all_frozen_trial_plan_hashes_match": true,
+    "all_independent_compressed_ply_payload_index_envelope_and_edge_checks_pass": true,
+    "all_signed_volumes_match_affine_scaled_voxel_occupancy_below_1e-9_relative": true,
+    "all_source_voxel_counts_match_pinned_intake": true,
+    "maximum_error_label": "Fingers",
+    "maximum_relative_signed_volume_error": 1.7384093126870536e-14
+  },
+  "interpretation": "Coverage, source identity, mesh payload integrity, and voxel-occupancy volume arithmetic are independently audited for all 36 labels observed in external scan 001. Mesh topology reflects discrete automatic-mask boundaries. This does not qualify segmentation anatomy, participant registration, Numi integration, tissue ownership, mechanics, physiology, or clinical use.",
+  "labels": [
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 5906,
+        "4": 2
+      },
+      "group": "organ-vessel",
+      "label": "Adrenal-glands",
+      "label_id": 1,
+      "mesh_sha256": "44ee5d2eda2eab308bba4c360331303528dbe6615454250436ee56f0da1ec4c5",
+      "nonmanifold_vertex_count": 4,
+      "relative_signed_volume_error": 1.0251171986964199e-15,
+      "source_voxel_count": 1786,
+      "triangle_count": 3940
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 99966
+      },
+      "group": "organ-vessel",
+      "label": "Aorta",
+      "label_id": 2,
+      "mesh_sha256": "1554a531ed7b79a6284abd8bd3f6e0ca323e8dcd9806210b0e71ee3c0c05dc2b",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 4.1884712492241663e-16,
+      "source_voxel_count": 124336,
+      "triangle_count": 66644
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 50694
+      },
+      "group": "organ-vessel",
+      "label": "Bladder",
+      "label_id": 3,
+      "mesh_sha256": "783ae9592302648364c50179b9606de9384b4c4f2e8fa571b0e974cf0ef50f66",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 0.0,
+      "source_voxel_count": 61152,
+      "triangle_count": 33796
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 209268
+      },
+      "group": "organ-vessel",
+      "label": "Brain",
+      "label_id": 4,
+      "mesh_sha256": "799c7867924dc34c6b682cdc7659bbffabd473abd8f81869c89dd9613ed99625",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 3.1570372488927376e-16,
+      "source_voxel_count": 659831,
+      "triangle_count": 139512
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 126438
+      },
+      "group": "organ-vessel",
+      "label": "Heart",
+      "label_id": 5,
+      "mesh_sha256": "fa2bc9483dd2f51a2512eb234763310d042270fe88299e29b2fde8e0c3cc60b6",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 0.0,
+      "source_voxel_count": 260376,
+      "triangle_count": 84292
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 103956,
+        "4": 3
+      },
+      "group": "organ-vessel",
+      "label": "Kidneys",
+      "label_id": 6,
+      "mesh_sha256": "abfe6afc37a5e2f6de62267c7e161a6abfe0a130ba922875dcb62a87ec7bed64",
+      "nonmanifold_vertex_count": 6,
+      "relative_signed_volume_error": 1.658380021028494e-16,
+      "source_voxel_count": 157014,
+      "triangle_count": 69308
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 208686,
+        "4": 3
+      },
+      "group": "organ-vessel",
+      "label": "Liver",
+      "label_id": 7,
+      "mesh_sha256": "576519e6339f87d69c035ba2137cdc659ffb8e5dec877229991c649991a631f7",
+      "nonmanifold_vertex_count": 6,
+      "relative_signed_volume_error": 3.969826817626661e-16,
+      "source_voxel_count": 524736,
+      "triangle_count": 139128
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 35184
+      },
+      "group": "organ-vessel",
+      "label": "Pancreas",
+      "label_id": 8,
+      "mesh_sha256": "fa1e1e4e0e60c9b176951d7fb97e5a6cef62379f07b0b3ce184630f8b78daa5a",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 3.9344761960336443e-16,
+      "source_voxel_count": 24818,
+      "triangle_count": 23456
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 33834
+      },
+      "group": "organ-vessel",
+      "label": "Spleen",
+      "label_id": 9,
+      "mesh_sha256": "b3f1f8e6c685624e4a243c79daba48f4b38e6b930e9159e888b920fe7fa88b92",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 1.5744502528767473e-16,
+      "source_voxel_count": 41346,
+      "triangle_count": 22556
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 10800
+      },
+      "group": "organ-vessel",
+      "label": "Thyroid",
+      "label_id": 10,
+      "mesh_sha256": "84d6c2790d9b142fa6cd4cdc66fdc06f57fda17d25c712af29ccd45b781d118f",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 0.0,
+      "source_voxel_count": 5904,
+      "triangle_count": 7200
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 33162
+      },
+      "group": "organ-vessel",
+      "label": "VCI",
+      "label_id": 11,
+      "mesh_sha256": "c27d1393e97dbd1f0552ca0a8aeebfcfc567c1eb808806c3c20631ae028ca764",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 1.1854394171876386e-16,
+      "source_voxel_count": 27457,
+      "triangle_count": 22108
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 560526,
+        "4": 12
+      },
+      "group": "organ-vessel",
+      "label": "Lung",
+      "label_id": 12,
+      "mesh_sha256": "fa8a372599e07a8b893a9884666ad2f973f1af1b1dbad9f5be8722b47f1416bb",
+      "nonmanifold_vertex_count": 23,
+      "relative_signed_volume_error": 2.8210726072257096e-16,
+      "source_voxel_count": 1476822,
+      "triangle_count": 373700
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 28856,
+        "4": 2
+      },
+      "group": "skeletal",
+      "label": "Carpal",
+      "label_id": 13,
+      "mesh_sha256": "eaeb036a3081a10f61284e45fd618f76cc4284a364ca7cdbbdfee7410e04fbc3",
+      "nonmanifold_vertex_count": 4,
+      "relative_signed_volume_error": 1.499866829994977e-16,
+      "source_voxel_count": 21701,
+      "triangle_count": 19240
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 68994
+      },
+      "group": "skeletal",
+      "label": "Clavicle",
+      "label_id": 14,
+      "mesh_sha256": "7ffe5795a786ff5117da6b63ed60b930c9354eb6b5977c6c30bc0167c48c4de0",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 4.1464958271333384e-15,
+      "source_voxel_count": 47098,
+      "triangle_count": 45996
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 343702,
+        "4": 1
+      },
+      "group": "skeletal",
+      "label": "Femur",
+      "label_id": 15,
+      "mesh_sha256": "55f75bc2fd5f828fab0ac9382402c134f9ac02d454f80ca4f40a2762611ee795",
+      "nonmanifold_vertex_count": 2,
+      "relative_signed_volume_error": 1.7448683209566893e-16,
+      "source_voxel_count": 596925,
+      "triangle_count": 229136
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 86862
+      },
+      "group": "skeletal",
+      "label": "Fibula",
+      "label_id": 16,
+      "mesh_sha256": "c10136462d25ff34356493f449d1dc1a4bd96f4cb7d9674ef7e333fdc2fb7147",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 1.1019419408453997e-15,
+      "source_voxel_count": 70890,
+      "triangle_count": 57908
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 187122
+      },
+      "group": "skeletal",
+      "label": "Humerus",
+      "label_id": 17,
+      "mesh_sha256": "6a7a1c7a7d253e9b923be37f99f4e96b8a517a5cebc2113dacaa4f88c1ad6c3a",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 1.3033688814881654e-14,
+      "source_voxel_count": 225753,
+      "triangle_count": 124748
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 65618,
+        "4": 5
+      },
+      "group": "skeletal",
+      "label": "Metacarpal",
+      "label_id": 18,
+      "mesh_sha256": "52d4672d82b5d8bdfa7be1e2277637d5aacce7175d264391545e068e5d5859b4",
+      "nonmanifold_vertex_count": 13,
+      "relative_signed_volume_error": 2.6551953502156938e-15,
+      "source_voxel_count": 31872,
+      "triangle_count": 43752
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 78920,
+        "4": 17
+      },
+      "group": "skeletal",
+      "label": "Metatarsal",
+      "label_id": 19,
+      "mesh_sha256": "02649c40205dbdb6bb68d2fc2578b0c09fb1036ff95d5b60e98b05b3a6022f58",
+      "nonmanifold_vertex_count": 37,
+      "relative_signed_volume_error": 0.0,
+      "source_voxel_count": 52939,
+      "triangle_count": 52636
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 26790
+      },
+      "group": "skeletal",
+      "label": "Patella",
+      "label_id": 20,
+      "mesh_sha256": "41335ed8d0f553258d5a0c5000a9c70d5b6c3721d18affe16140ab1dbab3a5b1",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 8.834099900897482e-16,
+      "source_voxel_count": 25791,
+      "triangle_count": 17860
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 358250,
+        "4": 2
+      },
+      "group": "skeletal",
+      "label": "Pelvis",
+      "label_id": 21,
+      "mesh_sha256": "73c5bbf2bb86b89b2cb45c6bf5d72b276ea55b28cc6adb51651fb2e3b35a87f9",
+      "nonmanifold_vertex_count": 4,
+      "relative_signed_volume_error": 0.0,
+      "source_voxel_count": 393825,
+      "triangle_count": 238836
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 59104,
+        "4": 4
+      },
+      "group": "skeletal",
+      "label": "Fingers",
+      "label_id": 22,
+      "mesh_sha256": "0ae7179bcb9aaa08826f952b8cd3a237db2002aafc39e85c0925f1cb961c119a",
+      "nonmanifold_vertex_count": 6,
+      "relative_signed_volume_error": 1.7384093126870536e-14,
+      "source_voxel_count": 20970,
+      "triangle_count": 39408
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 89464,
+        "4": 4
+      },
+      "group": "skeletal",
+      "label": "Radius",
+      "label_id": 23,
+      "mesh_sha256": "09378cef6c117576c5b216e278863dc270b66f52eed027c3e16b230dd1e85808",
+      "nonmanifold_vertex_count": 8,
+      "relative_signed_volume_error": 3.361475815727593e-15,
+      "source_voxel_count": 58097,
+      "triangle_count": 59648
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 636360,
+        "4": 45
+      },
+      "group": "skeletal",
+      "label": "Ribcage",
+      "label_id": 24,
+      "mesh_sha256": "0ef53815c2c1298c740eeda4e85ebad501982e70e2448484d297694fb07c43c4",
+      "nonmanifold_vertex_count": 92,
+      "relative_signed_volume_error": 7.78963149855151e-15,
+      "source_voxel_count": 267421,
+      "triangle_count": 424300
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 229018,
+        "4": 37
+      },
+      "group": "skeletal",
+      "label": "Scapula",
+      "label_id": 25,
+      "mesh_sha256": "a7bfe20c41370babe16d395762581193c9881919c4c0716abdd88a10f81d6742",
+      "nonmanifold_vertex_count": 96,
+      "relative_signed_volume_error": 5.708672881557129e-15,
+      "source_voxel_count": 127716,
+      "triangle_count": 152728
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 549230,
+        "4": 38
+      },
+      "group": "skeletal",
+      "label": "Skull",
+      "label_id": 26,
+      "mesh_sha256": "99b875573533d33f63985e4655b19a985de4714b2f63fc050a7a26a04ef2cc84",
+      "nonmanifold_vertex_count": 78,
+      "relative_signed_volume_error": 1.287836157997972e-16,
+      "source_voxel_count": 404382,
+      "triangle_count": 366204
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 531446,
+        "4": 71
+      },
+      "group": "skeletal",
+      "label": "Spine",
+      "label_id": 27,
+      "mesh_sha256": "741c1808585c0b43fc0d84167c5871dcfc8c5022d9b6d8dbe9117b8f0158d172",
+      "nonmanifold_vertex_count": 137,
+      "relative_signed_volume_error": 3.2569271209144295e-16,
+      "source_voxel_count": 639594,
+      "triangle_count": 354392
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 49618,
+        "4": 1
+      },
+      "group": "skeletal",
+      "label": "Sternum",
+      "label_id": 28,
+      "mesh_sha256": "26794ffde6c774d55d36a51da6bede4c3aad78f961b3b2c77b5606815d577f57",
+      "nonmanifold_vertex_count": 2,
+      "relative_signed_volume_error": 7.514917361867611e-16,
+      "source_voxel_count": 43312,
+      "triangle_count": 33080
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 126824,
+        "4": 5
+      },
+      "group": "skeletal",
+      "label": "Tarsal",
+      "label_id": 29,
+      "mesh_sha256": "8eb65e946c12e08b1cd1992ddcc154885b86448e2b29c25a75c7f86b7ecba2e1",
+      "nonmanifold_vertex_count": 10,
+      "relative_signed_volume_error": 3.0449853897814157e-16,
+      "source_voxel_count": 171028,
+      "triangle_count": 84556
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 226626,
+        "4": 3
+      },
+      "group": "skeletal",
+      "label": "Tibia",
+      "label_id": 30,
+      "mesh_sha256": "c1ff64677134650c92009499b89238112e085f10c7c4d4d386443b488287004d",
+      "nonmanifold_vertex_count": 6,
+      "relative_signed_volume_error": 1.0641489243640702e-15,
+      "source_voxel_count": 342569,
+      "triangle_count": 151088
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 35800,
+        "4": 1
+      },
+      "group": "skeletal",
+      "label": "Toes",
+      "label_id": 31,
+      "mesh_sha256": "8c7c455d31f61e97a3c4000862a176d91cccb57dbdf7ba5c31887c32b625b5ac",
+      "nonmanifold_vertex_count": 2,
+      "relative_signed_volume_error": 8.848165846370756e-16,
+      "source_voxel_count": 12875,
+      "triangle_count": 23868
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 95502
+      },
+      "group": "skeletal",
+      "label": "Ulna",
+      "label_id": 32,
+      "mesh_sha256": "b2eb96e3ac195f9a3a8ee932247e98a3c7cfdef0a899283fe2bcf38068e64b59",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 5.038322047568795e-15,
+      "source_voxel_count": 62018,
+      "triangle_count": 63668
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 7443098,
+        "4": 3404
+      },
+      "group": "soft-tissue",
+      "label": "Skeletal-muscle",
+      "label_id": 33,
+      "mesh_sha256": "3aefd2c6ba82f302781fdf1dcf61bd0118682ff96f128b6e4440905226432ff6",
+      "nonmanifold_vertex_count": 6646,
+      "relative_signed_volume_error": 3.026736507752871e-15,
+      "source_voxel_count": 11562376,
+      "triangle_count": 4966604
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 7187738,
+        "4": 8504
+      },
+      "group": "soft-tissue",
+      "label": "Subcutaneous-fat",
+      "label_id": 34,
+      "mesh_sha256": "0d89da1c126afeff76a6fa26401c507120e78bb254521d557be88b64df71bebb",
+      "nonmanifold_vertex_count": 16195,
+      "relative_signed_volume_error": 8.400626464491207e-16,
+      "source_voxel_count": 5951302,
+      "triangle_count": 4803164
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 2669150,
+        "4": 7283
+      },
+      "group": "soft-tissue",
+      "label": "Torso-fat",
+      "label_id": 35,
+      "mesh_sha256": "2a6b2edd6a9595bb5afaddc4a4907f6da5009894ebdc4b49ab77cb5f6c463444",
+      "nonmanifold_vertex_count": 13497,
+      "relative_signed_volume_error": 1.4187160165085324e-15,
+      "source_voxel_count": 1615138,
+      "triangle_count": 1789144
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 90342
+      },
+      "group": "soft-tissue",
+      "label": "Psoas",
+      "label_id": 36,
+      "mesh_sha256": "b666bd033d7d807287928b773b10b27f90f68155760e1d20fc591ec8dab9c46d",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 1.0945676215331663e-15,
+      "source_voxel_count": 118946,
+      "triangle_count": 60228
+    }
+  ],
+  "qualification": {
+    "clinical_use": false,
+    "current_numi_subject_binding": false,
+    "expert_segmentation_accuracy_qualified": false,
+    "heart_electrical_activity_or_chamber_mechanics": false,
+    "individual_muscle_identity": false,
+    "physical_tissue_volume_or_mass_owner": false,
+    "skin_layer_present": false,
+    "tendon_or_fascia_identity": false,
+    "tissue_mechanics_or_physiology": false,
+    "vascular_lumen_or_branch_connectivity": false
+  },
+  "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1",
+  "source": {
+    "archive_sha256": "f3daa9c5e9740c8d68688bd800f5d3107236099d3e319bbef04076aa4719b13f",
+    "coordinate_frame": "scan 001 NIfTI RAS+ millimetres; not a shared 30-scan frame",
+    "doi": "10.7937/NC7Z-4F76",
+    "intake_receipt_sha256": "b23e5d88b9bbd0f1e017045ddae0f9f2d69a3c302b3435a24c66ee0f6ed1ea21",
+    "license": "CC BY 4.0",
+    "scan_id": "001",
+    "scan_nifti_uncompressed_sha256": "ae91e4f6dd3a10fa1aea69dcafc82ff2324992fd5305d4e169eb077c80bf859d",
+    "source_id": "healthy_total_body_cts_v3"
+  },
+  "status": "independently_audited_source_geometry_candidates",
+  "topology": {
+    "closed_label_ids": [
+      2,
+      3,
+      4,
+      5,
+      8,
+      9,
+      10,
+      11,
+      14,
+      16,
+      17,
+      20,
+      32,
+      36
+    ],
+    "closed_two_manifold_label_count": 14,
+    "non_closed_labels": [
+      {
+        "edge_incidence_histogram": {
+          "2": 5906,
+          "4": 2
+        },
+        "label": "Adrenal-glands",
+        "label_id": 1,
+        "nonmanifold_vertex_count": 4
+      },
+      {
+        "edge_incidence_histogram": {
+          "2": 103956,
+          "4": 3
+        },
+        "label": "Kidneys",
+        "label_id": 6,
+        "nonmanifold_vertex_count": 6
+      },
+      {
+        "edge_incidence_histogram": {
+          "2": 208686,
+          "4": 3
+        },
+        "label": "Liver",
+        "label_id": 7,
+        "nonmanifold_vertex_count": 6
+      },
+      {
+        "edge_incidence_histogram": {
+          "2": 560526,
+          "4": 12
+        },
+        "label": "Lung",
+        "label_id": 12,
+        "nonmanifold_vertex_count": 23
+      },
+      {
+        "edge_incidence_histogram": {
+          "2": 28856,
+          "4": 2
+        },
+        "label": "Carpal",
+        "label_id": 13,
+        "nonmanifold_vertex_count": 4
+      },
+      {
+        "edge_incidence_histogram": {
+          "2": 343702,
+          "4": 1
+        },
+        "label": "Femur",
+        "label_id": 15,
+        "nonmanifold_vertex_count": 2
+      },
+      {
+        "edge_incidence_histogram": {
+          "2": 65618,
+          "4": 5
+        },
+        "label": "Metacarpal",
+        "label_id": 18,
+        "nonmanifold_vertex_count": 13
+      },
+      {
+        "edge_incidence_histogram": {
+          "2": 78920,
+          "4": 17
+        },
+        "label": "Metatarsal",
+        "label_id": 19,
+        "nonmanifold_vertex_count": 37
+      },
+      {
+        "edge_incidence_histogram": {
+          "2": 358250,
+          "4": 2
+        },
+        "label": "Pelvis",
+        "label_id": 21,
+        "nonmanifold_vertex_count": 4
+      },
+      {
+        "edge_incidence_histogram": {
+          "2": 59104,
+          "4": 4
+        },
+        "label": "Fingers",
+        "label_id": 22,
+        "nonmanifold_vertex_count": 6
+      },
+      {
+        "edge_incidence_histogram": {
+          "2": 89464,
+          "4": 4
+        },
+        "label": "Radius",
+        "label_id": 23,
+        "nonmanifold_vertex_count": 8
+      },
+      {
+        "edge_incidence_histogram": {
+          "2": 636360,
+          "4": 45
+        },
+        "label": "Ribcage",
+        "label_id": 24,
+        "nonmanifold_vertex_count": 92
+      },
+      {
+        "edge_incidence_histogram": {
+          "2": 229018,
+          "4": 37
+        },
+        "label": "Scapula",
+        "label_id": 25,
+        "nonmanifold_vertex_count": 96
+      },
+      {
+        "edge_incidence_histogram": {
+          "2": 549230,
+          "4": 38
+        },
+        "label": "Skull",
+        "label_id": 26,
+        "nonmanifold_vertex_count": 78
+      },
+      {
+        "edge_incidence_histogram": {
+          "2": 531446,
+          "4": 71
+        },
+        "label": "Spine",
+        "label_id": 27,
+        "nonmanifold_vertex_count": 137
+      },
+      {
+        "edge_incidence_histogram": {
+          "2": 49618,
+          "4": 1
+        },
+        "label": "Sternum",
+        "label_id": 28,
+        "nonmanifold_vertex_count": 2
+      },
+      {
+        "edge_incidence_histogram": {
+          "2": 126824,
+          "4": 5
+        },
+        "label": "Tarsal",
+        "label_id": 29,
+        "nonmanifold_vertex_count": 10
+      },
+      {
+        "edge_incidence_histogram": {
+          "2": 226626,
+          "4": 3
+        },
+        "label": "Tibia",
+        "label_id": 30,
+        "nonmanifold_vertex_count": 6
+      },
+      {
+        "edge_incidence_histogram": {
+          "2": 35800,
+          "4": 1
+        },
+        "label": "Toes",
+        "label_id": 31,
+        "nonmanifold_vertex_count": 2
+      },
+      {
+        "edge_incidence_histogram": {
+          "2": 7443098,
+          "4": 3404
+        },
+        "label": "Skeletal-muscle",
+        "label_id": 33,
+        "nonmanifold_vertex_count": 6646
+      },
+      {
+        "edge_incidence_histogram": {
+          "2": 7187738,
+          "4": 8504
+        },
+        "label": "Subcutaneous-fat",
+        "label_id": 34,
+        "nonmanifold_vertex_count": 16195
+      },
+      {
+        "edge_incidence_histogram": {
+          "2": 2669150,
+          "4": 7283
+        },
+        "label": "Torso-fat",
+        "label_id": 35,
+        "nonmanifold_vertex_count": 13497
+      }
+    ],
+    "not_closed_two_manifold_label_count": 22
+  }
+}
