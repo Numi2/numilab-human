@@ -211,15 +211,22 @@
       "evidence": [
         {"id": "electrical_reference", "path": "Docs/media/cardiac-electrical-reference-20260930/summary.json", "schema": "numi.human.cardiac-passive-electrical-reference.v1"},
         {"id": "fec_layer_audit", "path": "Docs/media/cardiac-fec-layer-topology-20260930/receipt.json", "schema": "numi.human.cardiac-fec-layer-topology.v1"},
-        {"id": "hcm1_source_activation", "path": "Build/cardiac-rodero26-hcm1-activation/source-activation-import.json", "schema": "HumanPack.rodero26-hcm-source-activation-import.v1"}
+        {"id": "hcm1_source_activation", "path": "Build/cardiac-rodero26-hcm1-activation/source-activation-import.json", "schema": "HumanPack.rodero26-hcm-source-activation-import.v1"},
+        {"id": "native_spatial_pacing_progress", "path": "Docs/media/cardiac-native-spatial-pacing-progress-20261003/receipt.json", "schema": "numi.human.cardiac-native-spatial-pacing-progress.v1"}
       ],
       "facts": [
         {"id": "electrical_dofs", "evidence": "electrical_reference", "path": "electrical_dof_count"},
         {"id": "inter_region_edges", "evidence": "electrical_reference", "path": "explicit_inter_region_conduction_edges"},
-        {"id": "native_runtime", "evidence": "electrical_reference", "path": "native_electrical_runtime"},
+        {"id": "native_runtime", "evidence": "native_spatial_pacing_progress", "path": "native_electrical_runtime"},
+        {"id": "passive_reference_native_runtime", "evidence": "electrical_reference", "path": "native_electrical_runtime"},
         {"id": "ionic_model", "evidence": "electrical_reference", "path": "ionic_model"},
-        {"id": "heartbeat", "evidence": "electrical_reference", "path": "heartbeat_qualified"},
-        {"id": "native_source_electrical_steps", "evidence": "fec_layer_audit", "path": "native_accepted_electrical_steps"},
+        {"id": "heartbeat", "evidence": "native_spatial_pacing_progress", "path": "heartbeat_qualified"},
+        {"id": "native_source_electrical_steps", "evidence": "native_spatial_pacing_progress", "path": "native_accepted_electrical_steps"},
+        {"id": "fec_native_source_electrical_steps", "evidence": "fec_layer_audit", "path": "native_accepted_electrical_steps"},
+        {"id": "partial_activation_map_status", "evidence": "native_spatial_pacing_progress", "path": "spatial_activation_map.status"},
+        {"id": "partial_activation_map_voltage_arrivals", "evidence": "native_spatial_pacing_progress", "path": "spatial_activation_map.voltage_arrivals_recorded"},
+        {"id": "partial_activation_map_activation_arrivals", "evidence": "native_spatial_pacing_progress", "path": "spatial_activation_map.activation_arrivals_recorded"},
+        {"id": "complete_source_activation_map", "evidence": "native_spatial_pacing_progress", "path": "qualification.complete_source_voltage_or_activation_map"},
         {"id": "fec_source_model_reproduced", "evidence": "fec_layer_audit", "path": "source_model_reproduced"},
         {"id": "hcm1_patient_variant", "evidence": "hcm1_source_activation", "path": "qualification.patient_variant"},
         {"id": "hcm1_sample_id", "evidence": "hcm1_source_activation", "path": "source_members.activation.sample_id"},
@@ -235,13 +242,13 @@
         {"id": "hcm1_heartbeat_qualified", "evidence": "hcm1_source_activation", "path": "qualification.heartbeat_qualified"}
       ],
       "requirements": [
-        {"id": "native_electrical_runtime", "evidence": "electrical_reference", "path": "native_electrical_runtime", "operator": "equals", "value": true, "reason": "No native electrical time-stepping runtime is admitted."},
+        {"id": "native_electrical_runtime", "evidence": "native_spatial_pacing_progress", "path": "native_electrical_runtime", "operator": "equals", "value": true, "reason": "No source-bound native electrical time-stepping runtime receipt is admitted."},
         {"id": "ionic_model", "evidence": "electrical_reference", "path": "ionic_model", "operator": "equals", "value": true, "reason": "A physiological ionic model is absent."},
-        {"id": "source_activation_map", "evidence": "electrical_reference", "path": "source_voltage_or_activation_map", "operator": "equals", "value": true, "reason": "There is no source voltage or activation map in this reference."},
-        {"id": "inter_region_conduction", "evidence": "electrical_reference", "path": "explicit_inter_region_conduction_edges", "operator": "at_least", "value": 1, "reason": "No explicit inter-region conduction edges are admitted."},
-        {"id": "qualified_heartbeat", "evidence": "electrical_reference", "path": "heartbeat_qualified", "operator": "equals", "value": true, "reason": "This is a passive operator reference, not a heartbeat."},
-        {"id": "source_model_reproduced", "evidence": "fec_layer_audit", "path": "source_model_reproduced", "operator": "equals", "value": true, "reason": "The retained FEC topology remains a candidate with a source-model mismatch."},
-        {"id": "native_source_electrical_steps", "evidence": "fec_layer_audit", "path": "native_accepted_electrical_steps", "operator": "at_least", "value": 1, "reason": "The FEC sensitivity receipt contains no accepted native electrical steps."}
+        {"id": "source_activation_map", "evidence": "native_spatial_pacing_progress", "path": "qualification.complete_source_voltage_or_activation_map", "operator": "equals", "value": true, "reason": "The native run contains a partial first-arrival map, not a complete source-bound activation map."},
+        {"id": "inter_region_conduction", "evidence": "native_spatial_pacing_progress", "path": "qualification.qualified_inter_region_conduction_edges", "operator": "at_least", "value": 1, "reason": "No qualified explicit inter-region conduction edges are admitted."},
+        {"id": "qualified_heartbeat", "evidence": "native_spatial_pacing_progress", "path": "heartbeat_qualified", "operator": "equals", "value": true, "reason": "The captured native trajectory has no outlet ejection or repeated beat."},
+        {"id": "source_model_reproduced", "evidence": "native_spatial_pacing_progress", "path": "qualification.source_model_reproduced", "operator": "equals", "value": true, "reason": "The native run does not reproduce the reference excitation model; the FEC timing discrepancy remains open."},
+        {"id": "native_source_electrical_steps", "evidence": "native_spatial_pacing_progress", "path": "native_accepted_electrical_steps", "operator": "at_least", "value": 1, "reason": "No accepted source-driven native electrical step is recorded."}
       ]
     },
     {
@@ -250,19 +257,22 @@
       "scope": "Reproduced source excitation driving accepted native anatomical mechanics over a qualified beat.",
       "evidence": [
         {"id": "native_tension_gate", "path": "Docs/media/cardiac-native-tension-sequence-20261002/independent-gate.json", "schema": "numi.human.cardiac-active-tension-ingress-gate.v1"},
-        {"id": "tension_sequence", "path": "Docs/media/cardiac-native-tension-sequence-20261002/source-summary.json", "schema": "numi.human.cardiac-active-tension-ingress.v1"}
+        {"id": "tension_sequence", "path": "Docs/media/cardiac-native-tension-sequence-20261002/source-summary.json", "schema": "numi.human.cardiac-active-tension-ingress.v1"},
+        {"id": "native_spatial_pacing_progress", "path": "Docs/media/cardiac-native-spatial-pacing-progress-20261003/receipt.json", "schema": "numi.human.cardiac-native-spatial-pacing-progress.v1"}
       ],
       "facts": [
         {"id": "source_cells_per_frame", "evidence": "native_tension_gate", "path": "source_cells_checked_per_frame"},
         {"id": "assembled_ventricular_cells", "evidence": "native_tension_gate", "path": "ventricular_cells_assembled_per_frame"},
-        {"id": "accepted_anatomical_steps", "evidence": "native_tension_gate", "path": "accepted_native_anatomical_steps"},
-        {"id": "source_model_reproduced", "evidence": "tension_sequence", "path": "source_model_reproduced"},
-        {"id": "heartbeat", "evidence": "tension_sequence", "path": "heartbeat_qualified"}
+        {"id": "accepted_anatomical_steps", "evidence": "native_spatial_pacing_progress", "path": "accepted_native_anatomical_steps"},
+        {"id": "tension_fixture_accepted_anatomical_steps", "evidence": "native_tension_gate", "path": "accepted_native_anatomical_steps"},
+        {"id": "source_model_reproduced", "evidence": "native_spatial_pacing_progress", "path": "qualification.source_model_reproduced"},
+        {"id": "tension_sequence_source_model_reproduced", "evidence": "tension_sequence", "path": "source_model_reproduced"},
+        {"id": "heartbeat", "evidence": "native_spatial_pacing_progress", "path": "heartbeat_qualified"}
       ],
       "requirements": [
-        {"id": "source_model_reproduction", "evidence": "tension_sequence", "path": "source_model_reproduced", "operator": "equals", "value": true, "reason": "The tension sequence is a prescribed candidate and does not reproduce the source excitation model."},
-        {"id": "accepted_native_steps", "evidence": "native_tension_gate", "path": "accepted_native_anatomical_steps", "operator": "at_least", "value": 1, "reason": "No accepted native anatomical cardiac step was recorded."},
-        {"id": "qualified_heartbeat", "evidence": "native_tension_gate", "path": "heartbeat_qualified", "operator": "equals", "value": true, "reason": "Active-tension ingress parity does not qualify heartbeat mechanics."}
+        {"id": "source_model_reproduction", "evidence": "native_spatial_pacing_progress", "path": "qualification.source_model_reproduced", "operator": "equals", "value": true, "reason": "The current native package has not reproduced the reference excitation model."},
+        {"id": "accepted_native_steps", "evidence": "native_spatial_pacing_progress", "path": "accepted_native_anatomical_steps", "operator": "at_least", "value": 1, "reason": "No accepted native anatomical cardiac step is recorded in the current spatial-pacing run."},
+        {"id": "qualified_heartbeat", "evidence": "native_spatial_pacing_progress", "path": "heartbeat_qualified", "operator": "equals", "value": true, "reason": "The captured continuation has no outlet ejection or repeated pressure-volume cycle."}
       ]
     },
     {

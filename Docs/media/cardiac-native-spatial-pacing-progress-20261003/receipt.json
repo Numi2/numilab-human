@@ -1,0 +1,150 @@
+{
+  "accepted_native_anatomical_steps": 22,
+  "captured_at_utc": "2026-10-03T08:15:12.442091+00:00",
+  "heartbeat_qualified": false,
+  "input_hashes": {
+    "/Users/home/MetalRobo-human-coupled-current/Build/human-skin-patch-current/matter/numi-matter-ventricular-source-step": {
+      "sha256": "1b23c299026c39c93960a6c59f9d78b48ef4a77f49d54889c58be983a5466088"
+    },
+    "/Users/home/MetalRobo-human-coupled-current/Build/human-skin-patch-current/matter/shaders/NumiMatter.metallib": {
+      "sha256": "230727d6c074c60d7e2964387568fa9a4cd9eb96f4ad59c8352ed59de5698b88"
+    },
+    "/Users/home/MetalRobo-human-coupled-current/matter/tools/fixtures/cvsim21.native.v3.json": {
+      "sha256": "eeb6ebc5dad5cb413587038532ac5badc3d3e8aa419cca111604239e7f692818"
+    },
+    "/Users/home/MetalRobo-human-coupled-current/matter/tools/left_ventricular_cavity_source_cook.mm": {
+      "sha256": "346d095ce0d24e3c2941acc13dcd5d46ddb924356376b2d2f5ba307d8e5399d9"
+    },
+    "/Users/home/MetalRobo-human-coupled-current/matter/tools/ventricular_source_step.mm": {
+      "sha256": "81a3fbebbd6a72d152a9c693e3e352a24c2fbd508c7fc0597861f69f8a3e159e"
+    },
+    "/Users/home/heartbeat-evidence-20261003-spatial-pacing/model-revision.json": {
+      "sha256": "e2b0c8b906cf95f9e7c397fde6f3c91ab7761ae350474ce2876d2d3c7bcf5be7"
+    },
+    "/Users/home/heartbeat-evidence-20261003-spatial-pacing/ventricles.nmpkg": {
+      "sha256": "5c8bf0318fc3b743f8ab6540d52bd6be8b4c3695c58c253ab69131409a08d896"
+    }
+  },
+  "limitations": [
+    "The Mitchell-Schaeffer package is a phenomenological hybrid and has no physiological ionic-model calibration.",
+    "The earlier FEC/source-model timing discrepancy remains unresolved; this run does not reproduce the source model.",
+    "The observed activation map is partial and ends at the captured accepted step.",
+    "No aortic or pulmonary outlet ejection has occurred in the captured trajectory.",
+    "Repeated contraction and relaxation, positive stroke volume, pressure-volume loop closure, and heartbeat qualification remain open."
+  ],
+  "measurements": {
+    "aortic_flow_ml_s": 0.0,
+    "current_activation_nodes_over_0_01": 42944,
+    "current_unpaced_voltage_nodes_over_0_5": 37577,
+    "current_voltage_nodes_over_0_5": 41504,
+    "max_abs_total_blood_error_ml": 0.00026180058557656594,
+    "max_normalized_voltage": 0.9451358914375305,
+    "max_recovery_gate": 1.0,
+    "min_normalized_voltage": -1.7516147636342794e-05,
+    "min_recovery_gate": 0.9308293461799622,
+    "positive_aortic_flow_observed": false,
+    "positive_pulmonary_flow_observed": false,
+    "pulmonary_flow_ml_s": 0.0,
+    "total_blood_ml": 5150.000261800586
+  },
+  "model": {
+    "description": "Mitchell-Schaeffer native full-source biventricular package; all geometry, material, source node set, pulse duration, cycle, solver budgets and tolerances held fixed.",
+    "myocardial_nodes_observed": 218077,
+    "native_nodes": 227737,
+    "native_tetrahedra": 1142114,
+    "package": "/Users/home/heartbeat-evidence-20261003-spatial-pacing/ventricles.nmpkg",
+    "package_sha256": "5c8bf0318fc3b743f8ab6540d52bd6be8b4c3695c58c253ab69131409a08d896",
+    "revision_record": "/Users/home/heartbeat-evidence-20261003-spatial-pacing/model-revision.json",
+    "revision_record_sha256": "e2b0c8b906cf95f9e7c397fde6f3c91ab7761ae350474ce2876d2d3c7bcf5be7"
+  },
+  "native_accepted_electrical_steps": 22,
+  "native_electrical_runtime": true,
+  "native_runtime": {
+    "all_planned_sha256_inputs_verified": true,
+    "checkpoint": {
+      "accepted_step": 22,
+      "bytes": 138795524,
+      "driver_record": "NUMI_VENTRICULAR_DRIVER_V2 12635511956335355084 22 0.51199999870732427 0 1.0239999974146485 857.14285714285711 0 12682136518656 0\n",
+      "driver_sha256": "1d5b36945ba6937adf489d55104e29b8ae254bd1cd25b68bfcca7480572c8642",
+      "retained_snapshot": "/private/tmp/numi-accepted-step22.nmsnap",
+      "sha256": "2c3ec02143ba7d49f2db30028c4056a63821ea84dff706b130747549a42ad765"
+    },
+    "executable": "/Users/home/MetalRobo-human-coupled-current/Build/human-skin-patch-current/matter/numi-matter-ventricular-source-step",
+    "metallib": "/Users/home/MetalRobo-human-coupled-current/Build/human-skin-patch-current/matter/shaders/NumiMatter.metallib",
+    "plan": "/Users/home/heartbeat-evidence-20261003-spatial-pacing/continuation-plan.json",
+    "plan_sha256": "3ec7ec6e0fc62d24b6ceca22b3ac691c393fc66caf0c9cd715ce139b4abb1005",
+    "source_files": {
+      "/Users/home/MetalRobo-human-coupled-current/matter/tools/fixtures/cvsim21.native.v3.json": {
+        "sha256": "eeb6ebc5dad5cb413587038532ac5badc3d3e8aa419cca111604239e7f692818"
+      },
+      "/Users/home/MetalRobo-human-coupled-current/matter/tools/left_ventricular_cavity_source_cook.mm": {
+        "sha256": "346d095ce0d24e3c2941acc13dcd5d46ddb924356376b2d2f5ba307d8e5399d9"
+      },
+      "/Users/home/MetalRobo-human-coupled-current/matter/tools/ventricular_source_step.mm": {
+        "sha256": "81a3fbebbd6a72d152a9c693e3e352a24c2fbd508c7fc0597861f69f8a3e159e"
+      }
+    }
+  },
+  "parent_propagation_gate": {
+    "all_preregistered_gates_passed": true,
+    "artifact": "/Users/home/heartbeat-evidence-20261003-spatial-pacing/analysis.json",
+    "gate_names": [
+      "eight_steps_finished",
+      "checkpoint_boundary_equal",
+      "blood_error_under_0_01_ml",
+      "voltage_bounds",
+      "recovery_bounds",
+      "post_pulse_voltage_over_half",
+      "unpaced_depolarized_nodes_at_least_1000",
+      "unpaced_spread_after_pulse"
+    ],
+    "sha256": "de12bbeaea4bdaea7d79f315a79cf2fd0332bbc0bdbbaa1ff5d2571880ad4515"
+  },
+  "qualification": {
+    "accepted_native_anatomical_steps": 22,
+    "complete_source_voltage_or_activation_map": false,
+    "heartbeat_qualified": false,
+    "ionic_model": false,
+    "native_accepted_electrical_steps": 22,
+    "native_electrical_runtime": true,
+    "note": "The accepted run demonstrates native source-driven coupled electrical and anatomical steps in a full-source biventricular package. It does not reproduce the reference excitation, use a physiologically calibrated ionic model, or complete a heartbeat.",
+    "qualified_inter_region_conduction_edges": 0,
+    "source_model_reproduced": false
+  },
+  "run": {
+    "accepted_steps": 22,
+    "continuation_steps": 14,
+    "heartbeat_qualified": false,
+    "initial_accepted_step": 1,
+    "parent_propagation_gate_steps": 8,
+    "pulse_current_normalized_per_s": 800,
+    "pulse_duration_ms": 1.0239999974146485,
+    "state": "in_progress_snapshot",
+    "target_time_ms": 122.87999968975782,
+    "target_total_steps": 240,
+    "time_ms": 11.263999971561134,
+    "timestep_ms": 0.5119999987073243
+  },
+  "schema": "numi.human.cardiac-native-spatial-pacing-progress.v1",
+  "spatial_activation_map": {
+    "activation_arrivals_recorded": 42944,
+    "last_observed_accepted_step": 22,
+    "map_artifact": "activation-arrivals.npz",
+    "map_sha256": "9e4d44756271ada814a0976ac98534f669fddbcceb642d438d08dc1bc1517cae",
+    "myocardial_nodes": 218077,
+    "observer_history": "activation-observations.jsonl",
+    "observer_history_sha256": "b3ec15cc458c0b589b209ecbf326b7398902ac954f87acc27c32e94479afdc21",
+    "observer_status": "activation-observer-status.json",
+    "observer_status_sha256": "d1d474e5c42853c59f3ea5fefdd8d81fd256ad321ca85643ed87cc4b1222b0f4",
+    "precision": "Arrivals are left- or interval-censored at exact accepted native timestamps; unobserved crossings are not interpolated.",
+    "status": "partial_first_arrival_map",
+    "voltage_arrivals_recorded": 41504
+  },
+  "trajectory": {
+    "artifact": "trajectory-through-step-22.csv",
+    "first_step": 1,
+    "last_step": 22,
+    "sha256": "470d771931f3102081bfd3f4da7423c09c6839e0e4b4f3cc5cebee85449d6553",
+    "unique_accepted_step_rows": 22
+  }
+}

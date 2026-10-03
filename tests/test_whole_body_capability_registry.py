@@ -105,11 +105,29 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert not report["qualification"]["whole_human_capability"]
     assert systems["whole_body_anatomy"]["facts"][0]["value"] == 46
     assert systems["bloodflow"]["facts"][0]["value"] == 511
-    assert systems["cardiac_mechanics"]["facts"][2]["value"] == 0
-    assert not systems["cardiac_electrical"]["requirements"][0]["satisfied"]
+    assert report["counts"]["open_requirements"] == 51
+    assert systems["cardiac_electrical"]["status"] == "partial"
     cardiac_facts = {
         item["id"]: item for item in systems["cardiac_electrical"]["facts"]
     }
+    cardiac_gates = {
+        item["id"]: item for item in systems["cardiac_electrical"]["requirements"]
+    }
+    assert cardiac_facts["native_runtime"]["value"] is True
+    assert cardiac_facts["passive_reference_native_runtime"]["value"] is False
+    assert cardiac_facts["native_source_electrical_steps"]["value"] == 22
+    assert cardiac_facts["fec_native_source_electrical_steps"]["value"] == 0
+    assert cardiac_facts["partial_activation_map_status"]["value"] == "partial_first_arrival_map"
+    assert cardiac_facts["partial_activation_map_voltage_arrivals"]["value"] == 41504
+    assert cardiac_facts["partial_activation_map_activation_arrivals"]["value"] == 42944
+    assert cardiac_facts["complete_source_activation_map"]["value"] is False
+    assert cardiac_gates["native_electrical_runtime"]["satisfied"]
+    assert cardiac_gates["native_source_electrical_steps"]["satisfied"]
+    assert not cardiac_gates["ionic_model"]["satisfied"]
+    assert not cardiac_gates["source_activation_map"]["satisfied"]
+    assert not cardiac_gates["inter_region_conduction"]["satisfied"]
+    assert not cardiac_gates["qualified_heartbeat"]["satisfied"]
+    assert not cardiac_gates["source_model_reproduced"]["satisfied"]
     assert next(item for item in systems["cardiac_electrical"]["evidence"]
                 if item["id"] == "hcm1_source_activation")["status"] == "verified"
     assert cardiac_facts["hcm1_patient_variant"]["value"] == "HCM1 hypertrophic cardiomyopathy"
@@ -123,6 +141,14 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert cardiac_facts["hcm1_native_electrical_steps"]["value"] == 0
     assert cardiac_facts["hcm1_electromechanical_coupling"]["value"] is False
     assert cardiac_facts["hcm1_heartbeat_qualified"]["value"] is False
+    mechanics = systems["cardiac_mechanics"]
+    mechanics_facts = {item["id"]: item for item in mechanics["facts"]}
+    mechanics_gates = {item["id"]: item for item in mechanics["requirements"]}
+    assert mechanics_facts["accepted_anatomical_steps"]["value"] == 22
+    assert mechanics_facts["tension_fixture_accepted_anatomical_steps"]["value"] == 0
+    assert mechanics_gates["accepted_native_steps"]["satisfied"]
+    assert not mechanics_gates["source_model_reproduction"]["satisfied"]
+    assert not mechanics_gates["qualified_heartbeat"]["satisfied"]
     assert not systems["skin"]["requirements"][0]["satisfied"]
 
     skin = systems["skin"]

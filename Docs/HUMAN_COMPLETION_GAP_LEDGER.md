@@ -150,6 +150,24 @@ identity only. Numi electrical/voltage dynamics, ionic state, native accepted
 steps, HCM1 registration, electromechanical coupling, heartbeat and clinical
 prediction remain open.
 
+## Native biventricular spatial-pacing continuation — 2026-10-03
+
+The [source-bound native progress receipt](media/cardiac-native-spatial-pacing-progress-20261003/receipt.json)
+captures 22 accepted 512 µs steps through 11.264 ms on the 1,142,114-tetrahedron,
+227,737-node biventricular package. The retained trace conserves 5,150 ml of
+blood to a maximum absolute error of 0.000262 ml, and the censored first-arrival
+map records voltage and activation observations across 218,077 myocardial
+nodes. The capability registry now admits the native electrical runtime,
+accepted source-driven electrical steps, and accepted anatomical steps.
+
+This is a partial Mitchell–Schaeffer hybrid continuation, not source-model
+reproduction or a calibrated ionic model. The captured state has no aortic or
+pulmonary ejection; the activation map is incomplete, and explicit inter-region
+conduction, repeated contraction/relaxation, positive stroke volume, closed
+pressure-volume loops, and heartbeat qualification remain open. The trace,
+activation map, and exact checkpoint hash are retained with the receipt; it
+does not qualify cardiac or whole-Human physiology.
+
 ## Native ventricular tension sequence - 2026-10-02
 
 The [source-derived native ventricular sequence](CARDIAC_NATIVE_ACTIVE_TENSION_SEQUENCE_20261002.md)
