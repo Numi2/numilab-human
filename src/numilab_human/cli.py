@@ -538,6 +538,41 @@ def myosim_patellofemoral_pose_intersection_audit(arguments: argparse.Namespace)
     return completed.returncode
 
 
+def myosim_patellofemoral_reference_path_audit(arguments: argparse.Namespace) -> int:
+    auditor = arguments.python.expanduser().absolute()
+    if not auditor.is_file() or not os.access(auditor, os.X_OK):
+        raise ImportError(
+            f"MyoSim patellofemoral reference-audit Python is unavailable: {auditor}"
+        )
+    output = arguments.output.resolve()
+    environment = dict(os.environ)
+    source_path = str(REPOSITORY_ROOT / "src")
+    environment["PYTHONPATH"] = source_path + (
+        os.pathsep + environment["PYTHONPATH"] if environment.get("PYTHONPATH") else ""
+    )
+    command = [
+        str(auditor), "-m", "numilab_human.patellofemoral_reference_path_comparison",
+        "--sources", str(arguments.sources.resolve()),
+        "--observations", str(arguments.observations.resolve()),
+        "--archive-audit", str(arguments.archive_audit.resolve()),
+        "--intersection-receipt", str(arguments.intersection_receipt.resolve()),
+        "--output", str(output),
+    ]
+    completed = subprocess.run(
+        command, capture_output=True, text=True, check=False, env=environment
+    )
+    if completed.returncode != 0:
+        detail = completed.stderr.strip() or completed.stdout.strip() or "no comparison output"
+        raise ImportError(f"MyoSim patellofemoral reference comparison failed: {detail}")
+    receipt = read_json(output)
+    if receipt.get("schema") != (
+        "numi.human.patellofemoral-reference-path-comparison.v1"
+    ):
+        raise ImportError("MyoSim patellofemoral reference comparison wrote an unsupported schema")
+    print(f"wrote {output}; status={receipt['status']}")
+    return 0
+
+
 def myosim_sternal_girdle_registration(arguments: argparse.Namespace) -> int:
     output = arguments.output.resolve()
     try:
@@ -1567,6 +1602,24 @@ def parser() -> argparse.ArgumentParser:
     )
     patellofemoral_pose_intersection_parser.set_defaults(
         handler=myosim_patellofemoral_pose_intersection_audit
+    )
+    patellofemoral_reference_path_parser = commands.add_parser(
+        "myosim-patellofemoral-reference-path-audit",
+        help="compare source-equality patellar motion with archived Open Knee kinematics",
+    )
+    patellofemoral_reference_path_parser.add_argument("--sources", type=Path, required=True)
+    patellofemoral_reference_path_parser.add_argument("--observations", type=Path, required=True)
+    patellofemoral_reference_path_parser.add_argument("--archive-audit", type=Path, required=True)
+    patellofemoral_reference_path_parser.add_argument(
+        "--intersection-receipt", type=Path, required=True,
+    )
+    patellofemoral_reference_path_parser.add_argument("--output", type=Path, required=True)
+    patellofemoral_reference_path_parser.add_argument(
+        "--python", type=Path, default=Path(sys.executable),
+        help="Python environment with the pinned myo-sim checkout, NumPy, and MuJoCo installed",
+    )
+    patellofemoral_reference_path_parser.set_defaults(
+        handler=myosim_patellofemoral_reference_path_audit
     )
     sternal_girdle_registration_parser = commands.add_parser(
         "myosim-sternal-girdle-registration",

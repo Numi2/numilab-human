@@ -136,6 +136,19 @@ registered-surface and source-mesh requirements to the capability registry.
 It does not justify an uncalibrated translation or qualify clinical tracking,
 cartilage contact, loaded behavior, or a continuous flexion path.
 
+The exploratory [reference-path comparison](PATELLOFEMORAL_REFERENCE_PATH_COMPARISON_20261003.md)
+measures equality-projected MyoSim poses against all 140 archived Open Knee
+rigid states. At 30°, 60°, and the archived 89.945° endpoint, the MyoSim
+patella's orientation excursion is 14.640°, 43.627°, and 72.999°, compared
+with 16.179°, 37.368°, and 58.522° in that different specimen. Translation
+proxies are similar at the endpoint but use different body origins, so they do
+not calibrate MyoSim. This check also excludes 26/181 sampled MyoSim poses whose
+projected source joint coordinates exceed declared ranges (0.5–1.0°,
+42.5–50.0°, and 60.5–64.0°); it therefore does not establish a continuous
+valid path. The immutable [receipt](media/numi-human-patellofemoral-reference-path-20261003/receipt.json)
+preserves both datasets and keeps source-path correction, clinical tracking,
+contact, and whole-Human qualification open.
+
 ## Healthy whole-body CT spatial source candidates — 2026-10-03
 
 The [30-scan TCIA source intake](HEALTHY_TOTAL_BODY_CT_SOURCE_INGEST_20261003.md)

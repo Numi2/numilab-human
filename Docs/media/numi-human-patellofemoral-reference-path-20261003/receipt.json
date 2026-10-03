@@ -1,0 +1,524 @@
+{
+  "finding": "All three matched target poses pass MyoSim source joint limits. Their relative-origin displacement proxies are close near the archived endpoint, while MyoSim's patellar orientation excursion is larger. The 0.5 degree sweep also includes source-limit violations at intermediate angles, so it does not establish a continuous valid path. The translation origins differ (MyoSim body origin versus Open Knee rigid-body center of mass), and the specimens and mechanics differ, so these values cannot calibrate or select a MyoSim path. The source-mesh intersection failure remains.",
+  "limitations": {
+    "anatomical_frame_registration_between_specimens": false,
+    "clinical_validation": false,
+    "different_specimens": true,
+    "local_febio_reproduction_completed": false,
+    "myosim_origin_is_body_frame_origin": true,
+    "open_knee_continuation_is_quasi_static_not_elapsed_time": true,
+    "open_knee_translation_uses_rigid_body_center_of_mass": true,
+    "original_febio_binary_identity_supplied": false,
+    "quadriceps_active_loading_in_reference": false,
+    "source_path_correction_performed": false
+  },
+  "method": {
+    "baseline_states": {
+      "myosim": {
+        "flexion_deg": 0.0,
+        "source_range_valid": true,
+        "state": "equality-projected qpos0"
+      },
+      "open_knee": {
+        "continuation_parameter": 0.05,
+        "flexion_deg": 0.1294684279282639,
+        "state": "first accepted archived observation; not exact zero flexion",
+        "step": 1
+      }
+    },
+    "comparison": "Patellar orientation excursion is the shortest relative-quaternion angle from each model's own starting state. Translation is the change in relative frame origin, expressed as a Euclidean magnitude from that state. MyoSim uses qpos0; Open Knee uses its first accepted observation.",
+    "myosim": "MyoSim full-body left knee; source joint equalities projected; only source-range-valid coordinates retained from a 0.5 degree sample grid covering 0 to 90 degrees",
+    "open_knee": "Archived FEBio 2.9.1 oks003 rigid observations; femur FMB=4, tibia TBB=3, patella PTB=1; all 140 accepted quasi-static states"
+  },
+  "qualification": {
+    "clinical_anatomy_qualified": false,
+    "continuous_angle_interval_qualified": false,
+    "loaded_tracking_qualified": false,
+    "source_mesh_intersection_gate_passed": false,
+    "source_path_correction_selected": false,
+    "whole_human_qualification": false
+  },
+  "question": "How do gross patellar orientation and relative-origin path magnitudes compare between the pinned MyoSim left knee and one retained Open Knee specimen?",
+  "reproduction_command": [
+    "/private/tmp/numi-human-myosim-20261003/bin/python",
+    "-m",
+    "numilab_human.patellofemoral_reference_path_comparison",
+    "--sources",
+    "/Users/home/numilab-human/Sources",
+    "--observations",
+    "/Users/home/numilab-human/Docs/media/open-knee-reference-20261001/archived-observations.json.gz",
+    "--archive-audit",
+    "/Users/home/numilab-human/Docs/media/open-knee-reference-20261001/recovered-source-audit.json",
+    "--intersection-receipt",
+    "/Users/home/numilab-human/Docs/media/numi-human-patellofemoral-pose-intersections-20261003/receipt.json",
+    "--output",
+    "<new-receipt-path>"
+  ],
+  "results": {
+    "matched_flexion_comparison": [
+      {
+        "flexion_deg": 30.0,
+        "interpolation": "linear_between_adjacent_observed_scalar_samples_without_angle_extrapolation",
+        "myosim_patella_body_origin_delta_from_qpos0_mm": 26.314503776692984,
+        "myosim_patella_orientation_change_from_qpos0_deg": 14.64016924089274,
+        "open_knee_patella_com_delta_from_first_observation_mm": 28.65788777907905,
+        "open_knee_patella_orientation_change_from_first_observation_deg": 16.17893725793354
+      },
+      {
+        "flexion_deg": 60.0,
+        "interpolation": "linear_between_adjacent_observed_scalar_samples_without_angle_extrapolation",
+        "myosim_patella_body_origin_delta_from_qpos0_mm": 49.05126556076616,
+        "myosim_patella_orientation_change_from_qpos0_deg": 43.626874399759046,
+        "open_knee_patella_com_delta_from_first_observation_mm": 47.93926858590285,
+        "open_knee_patella_orientation_change_from_first_observation_deg": 37.36756025891952
+      },
+      {
+        "flexion_deg": 89.94454550419701,
+        "interpolation": "linear_between_adjacent_observed_scalar_samples_without_angle_extrapolation",
+        "myosim_patella_body_origin_delta_from_qpos0_mm": 65.77107550097115,
+        "myosim_patella_orientation_change_from_qpos0_deg": 72.99861435771193,
+        "open_knee_patella_com_delta_from_first_observation_mm": 64.95548180503243,
+        "open_knee_patella_orientation_change_from_first_observation_deg": 58.52189469586265
+      }
+    ],
+    "myosim_full_0_to_90_continuous_path_available": false,
+    "myosim_source_range_invalid_flexion_ranges_deg": [
+      {
+        "end_deg": 1.0,
+        "sample_count": 2,
+        "start_deg": 0.5
+      },
+      {
+        "end_deg": 50.0,
+        "sample_count": 16,
+        "start_deg": 42.5
+      },
+      {
+        "end_deg": 64.0,
+        "sample_count": 8,
+        "start_deg": 60.5
+      }
+    ],
+    "myosim_source_range_invalid_sample_count": 26,
+    "myosim_source_range_valid_sample_count": 155,
+    "myosim_valid_source_interval_motion": [
+      {
+        "body_origin_travel_mm": 0.0,
+        "end_flexion_deg": 0.0,
+        "sample_count": 1,
+        "start_flexion_deg": 0.0
+      },
+      {
+        "body_origin_travel_mm": 35.79835446440027,
+        "end_flexion_deg": 42.0,
+        "sample_count": 82,
+        "start_flexion_deg": 1.5000000000000002
+      },
+      {
+        "body_origin_travel_mm": 7.8127232381594265,
+        "end_flexion_deg": 59.99999999999999,
+        "sample_count": 20,
+        "start_flexion_deg": 50.5
+      },
+      {
+        "body_origin_travel_mm": 19.97978375237925,
+        "end_flexion_deg": 90.0,
+        "sample_count": 52,
+        "start_flexion_deg": 64.5
+      }
+    ],
+    "open_knee_flexion_order_diagnostic": {
+      "accepted_state_order_preserved": true,
+      "interpolation_order": "sorted_by_measured_flexion_within_observed_range",
+      "maximum_reverse_increment_deg": 0.0016642533474559296,
+      "reverse_increment_count": 1
+    },
+    "open_knee_flexion_range_deg": [
+      0.12780417458080798,
+      89.94454550419701
+    ]
+  },
+  "schema": "numi.human.patellofemoral-reference-path-comparison.v1",
+  "sources": {
+    "existing_patellofemoral_intersection_audit_sha256": "8a1e5c8456fd8c88bbc797f8db1524794bedf5cc69e1b907fd6db528009e5c7f",
+    "myosim": {
+      "archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+      "left_knee_qpos_index": 120,
+      "left_knee_source_range_rad": [
+        0.0,
+        2.0944
+      ],
+      "mujoco_version": "3.12.0",
+      "overlay_files": {
+        "checkout/myo_sim/models/leg/assets/myolegs_assets.xml": {
+          "sha256": "293a7f618e4ae151ff9cab6f277cbb88caa1d7f418104ab85776c208d6ab3b3d"
+        },
+        "checkout/myo_sim/models/leg/assets/myolegs_chain.xml": {
+          "sha256": "98e514ce869683e273a18794f6494df0c64dec13eec636b683a165cf30109b29"
+        }
+      },
+      "projected_sample_count": 181,
+      "repository": "https://github.com/MyoHub/myo_sim",
+      "revision": "33c89c2bde282553dde3f526768eb3bdcfaa7649",
+      "sample_step_deg": 0.5,
+      "source_range_invalid_sample_count": 26,
+      "source_range_invalid_samples": [
+        {
+          "flexion_deg": 0.5,
+          "violations": [
+            {
+              "joint": "knee_angle_beta_rotation1_l",
+              "range": [
+                -1.79241,
+                0.010506
+              ],
+              "value": 0.010622305183225569
+            }
+          ]
+        },
+        {
+          "flexion_deg": 1.0,
+          "violations": [
+            {
+              "joint": "knee_angle_beta_rotation1_l",
+              "range": [
+                -1.79241,
+                0.010506
+              ],
+              "value": 0.010540945635589575
+            }
+          ]
+        },
+        {
+          "flexion_deg": 42.5,
+          "violations": [
+            {
+              "joint": "knee_angle_rotation2_l",
+              "range": [
+                -0.00167821,
+                0.0335354
+              ],
+              "value": 0.03358715353693199
+            }
+          ]
+        },
+        {
+          "flexion_deg": 43.0,
+          "violations": [
+            {
+              "joint": "knee_angle_rotation2_l",
+              "range": [
+                -0.00167821,
+                0.0335354
+              ],
+              "value": 0.033639187821939844
+            }
+          ]
+        },
+        {
+          "flexion_deg": 43.5,
+          "violations": [
+            {
+              "joint": "knee_angle_rotation2_l",
+              "range": [
+                -0.00167821,
+                0.0335354
+              ],
+              "value": 0.03368314684174647
+            }
+          ]
+        },
+        {
+          "flexion_deg": 44.0,
+          "violations": [
+            {
+              "joint": "knee_angle_rotation2_l",
+              "range": [
+                -0.00167821,
+                0.0335354
+              ],
+              "value": 0.03371906045566394
+            }
+          ]
+        },
+        {
+          "flexion_deg": 44.5,
+          "violations": [
+            {
+              "joint": "knee_angle_rotation2_l",
+              "range": [
+                -0.00167821,
+                0.0335354
+              ],
+              "value": 0.03374696003069894
+            }
+          ]
+        },
+        {
+          "flexion_deg": 45.0,
+          "violations": [
+            {
+              "joint": "knee_angle_rotation2_l",
+              "range": [
+                -0.00167821,
+                0.0335354
+              ],
+              "value": 0.033766878441552815
+            }
+          ]
+        },
+        {
+          "flexion_deg": 45.5,
+          "violations": [
+            {
+              "joint": "knee_angle_rotation2_l",
+              "range": [
+                -0.00167821,
+                0.0335354
+              ],
+              "value": 0.0337788500706215
+            }
+          ]
+        },
+        {
+          "flexion_deg": 46.0,
+          "violations": [
+            {
+              "joint": "knee_angle_rotation2_l",
+              "range": [
+                -0.00167821,
+                0.0335354
+              ],
+              "value": 0.033782910807995635
+            }
+          ]
+        },
+        {
+          "flexion_deg": 46.5,
+          "violations": [
+            {
+              "joint": "knee_angle_rotation2_l",
+              "range": [
+                -0.00167821,
+                0.0335354
+              ],
+              "value": 0.033779098051460434
+            }
+          ]
+        },
+        {
+          "flexion_deg": 47.0,
+          "violations": [
+            {
+              "joint": "knee_angle_rotation2_l",
+              "range": [
+                -0.00167821,
+                0.0335354
+              ],
+              "value": 0.03376745070649578
+            }
+          ]
+        },
+        {
+          "flexion_deg": 47.5,
+          "violations": [
+            {
+              "joint": "knee_angle_rotation2_l",
+              "range": [
+                -0.00167821,
+                0.0335354
+              ],
+              "value": 0.0337480091862762
+            }
+          ]
+        },
+        {
+          "flexion_deg": 48.00000000000001,
+          "violations": [
+            {
+              "joint": "knee_angle_rotation2_l",
+              "range": [
+                -0.00167821,
+                0.0335354
+              ],
+              "value": 0.03372081541167084
+            }
+          ]
+        },
+        {
+          "flexion_deg": 48.5,
+          "violations": [
+            {
+              "joint": "knee_angle_rotation2_l",
+              "range": [
+                -0.00167821,
+                0.0335354
+              ],
+              "value": 0.033685912811243474
+            }
+          ]
+        },
+        {
+          "flexion_deg": 49.0,
+          "violations": [
+            {
+              "joint": "knee_angle_rotation2_l",
+              "range": [
+                -0.00167821,
+                0.0335354
+              ],
+              "value": 0.03364334632125255
+            }
+          ]
+        },
+        {
+          "flexion_deg": 49.5,
+          "violations": [
+            {
+              "joint": "knee_angle_rotation2_l",
+              "range": [
+                -0.00167821,
+                0.0335354
+              ],
+              "value": 0.03359316238565114
+            }
+          ]
+        },
+        {
+          "flexion_deg": 50.0,
+          "violations": [
+            {
+              "joint": "knee_angle_rotation2_l",
+              "range": [
+                -0.00167821,
+                0.0335354
+              ],
+              "value": 0.03353540895608692
+            }
+          ]
+        },
+        {
+          "flexion_deg": 60.5,
+          "violations": [
+            {
+              "joint": "knee_angle_beta_translation2_l",
+              "range": [
+                -0.03,
+                0.0
+              ],
+              "value": -0.03001471448814669
+            }
+          ]
+        },
+        {
+          "flexion_deg": 61.0,
+          "violations": [
+            {
+              "joint": "knee_angle_beta_translation2_l",
+              "range": [
+                -0.03,
+                0.0
+              ],
+              "value": -0.030026732242772882
+            }
+          ]
+        },
+        {
+          "flexion_deg": 61.50000000000001,
+          "violations": [
+            {
+              "joint": "knee_angle_beta_translation2_l",
+              "range": [
+                -0.03,
+                0.0
+              ],
+              "value": -0.03003455373495763
+            }
+          ]
+        },
+        {
+          "flexion_deg": 62.0,
+          "violations": [
+            {
+              "joint": "knee_angle_beta_translation2_l",
+              "range": [
+                -0.03,
+                0.0
+              ],
+              "value": -0.030038186081931918
+            }
+          ]
+        },
+        {
+          "flexion_deg": 62.50000000000001,
+          "violations": [
+            {
+              "joint": "knee_angle_beta_translation2_l",
+              "range": [
+                -0.03,
+                0.0
+              ],
+              "value": -0.030037636887628325
+            }
+          ]
+        },
+        {
+          "flexion_deg": 63.0,
+          "violations": [
+            {
+              "joint": "knee_angle_beta_translation2_l",
+              "range": [
+                -0.03,
+                0.0
+              ],
+              "value": -0.030032914242681168
+            }
+          ]
+        },
+        {
+          "flexion_deg": 63.50000000000001,
+          "violations": [
+            {
+              "joint": "knee_angle_beta_translation2_l",
+              "range": [
+                -0.03,
+                0.0
+              ],
+              "value": -0.03002402672442635
+            }
+          ]
+        },
+        {
+          "flexion_deg": 64.0,
+          "violations": [
+            {
+              "joint": "knee_angle_beta_translation2_l",
+              "range": [
+                -0.03,
+                0.0
+              ],
+              "value": -0.030010983396901496
+            }
+          ]
+        }
+      ],
+      "source_range_valid_end_deg": 90.0,
+      "source_range_valid_sample_count": 155,
+      "source_range_valid_start_deg": 0.0
+    },
+    "open_knee": {
+      "accepted_increment_count": 140,
+      "febio_version_from_log": "2.9.1",
+      "local_solver_reproduction": false,
+      "negative_jacobian_trial_diagnostics": 185,
+      "observations_complete": true,
+      "observations_compressed_sha256": "9a99bbdcc94b4ba1aca22c9cc3d72919db9b1e08fec703732f8fcf635705d149",
+      "observations_uncompressed_sha256": "5fec6147af8a59968f84b6c328bfcff8a82a84c79c5bb5b6b05f201db6d26404",
+      "original_binary_identity": "not_supplied_in_archive",
+      "source_audit_sha256": "3990ca21feda4d8541d2695f00b68eb5656c4a223e61793fa1dad76ad675911d",
+      "source_doi": "https://doi.org/10.18735/b0zv-n395",
+      "warning_blocks": 19
+    }
+  },
+  "status": "exploratory_only_no_qualification"
+}
