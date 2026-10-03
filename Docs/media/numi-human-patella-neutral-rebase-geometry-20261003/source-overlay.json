@@ -1,0 +1,89 @@
+{
+  "schema": "numi.human.myosim-patella-neutral-coordinate-rebase.v1",
+  "id": "myosim-bilateral-patella-qpos0-neutral-coordinate-rebase-20261003",
+  "source": {
+    "repository": "https://github.com/MyoHub/myo_sim",
+    "revision": "33c89c2bde282553dde3f526768eb3bdcfaa7649",
+    "archive": "myo_sim-33c89c2b.tar.gz",
+    "archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "license": "Apache-2.0"
+  },
+  "requires_source_overlay": {
+    "id": "myosim-left-knee-translation2-reflected-range-20261002",
+    "manifest_sha256": "05f6b7698e571c83a62bdbc7055ff24322800a36e9b53e455a18b451e7b9dad4"
+  },
+  "coordinate_reparameterization": {
+    "description": "Rebase the two dependent patellar translation coordinates so their equality polynomials have zero neutral constants, shift each patella body frame by the corresponding former neutral constants, and translate the exact slide ranges by the same constants. This keeps the complete source-constrained poses invariant while making the literal qpos0 patella surfaces anterior to the knee-anchor plane.",
+    "neutral_constants_removed_m": {
+      "knee_angle_beta_translation1": 0.0524192,
+      "knee_angle_beta_translation2": -0.0108281
+    },
+    "patella_body_position_before_m": [-0.00809, -0.40796, 0.0],
+    "patella_body_position_after_m": [0.0443292, -0.4187881, 0.0],
+    "files": [
+      {
+        "file": "checkout/myo_sim/models/leg/assets/myolegs_chain.xml",
+        "file_sha256_before": "885fdc6fa0e8a2d24d590c3987856f4a17256f1d44f277f46ecf9dbfedc02b0a",
+        "file_sha256_after": "98e514ce869683e273a18794f6494df0c64dec13eec636b683a165cf30109b29",
+        "replacements": [
+          {
+            "source_text_before": "name=\"patella_r\" pos=\"-0.00809 -0.40796 0\"",
+            "source_text_after": "name=\"patella_r\" pos=\"0.0443292 -0.4187881 0\""
+          },
+          {
+            "source_text_before": "name=\"patella_l\" pos=\"-0.00809 -0.40796 0\"",
+            "source_text_after": "name=\"patella_l\" pos=\"0.0443292 -0.4187881 0\""
+          },
+          {
+            "source_text_before": "name=\"knee_angle_beta_translation2_r\" pos=\"0 0 0\" range=\"-0.0408267 -0.0108281\"",
+            "source_text_after": "name=\"knee_angle_beta_translation2_r\" pos=\"0 0 0\" range=\"-0.03 0\""
+          },
+          {
+            "source_text_before": "name=\"knee_angle_beta_translation2_l\" pos=\"0 0 0\" range=\"-0.0408267 -0.0108281\"",
+            "source_text_after": "name=\"knee_angle_beta_translation2_l\" pos=\"0 0 0\" range=\"-0.03 0\""
+          },
+          {
+            "source_text_before": "name=\"knee_angle_beta_translation1_r\" pos=\"0 0 0\" range=\"-0.0227731 0.0524192\"",
+            "source_text_after": "name=\"knee_angle_beta_translation1_r\" pos=\"0 0 0\" range=\"-0.0751923 0\""
+          },
+          {
+            "source_text_before": "name=\"knee_angle_beta_translation1_l\" pos=\"0 0 0\" range=\"-0.0227731 0.0524192\"",
+            "source_text_after": "name=\"knee_angle_beta_translation1_l\" pos=\"0 0 0\" range=\"-0.0751923 0\""
+          }
+        ]
+      },
+      {
+        "file": "checkout/myo_sim/models/leg/assets/myolegs_assets.xml",
+        "file_sha256_before": "ea48e7612c8da4ed852d66b922d01311d24823d171c733b77a884fb6a5e01be3",
+        "file_sha256_after": "293a7f618e4ae151ff9cab6f277cbb88caa1d7f418104ab85776c208d6ab3b3d",
+        "replacements": [
+          {
+            "source_text_before": "name=\"knee_angle_beta_translation2_constraint_r\" polycoef=\"-0.0108281 -0.0487847",
+            "source_text_after": "name=\"knee_angle_beta_translation2_constraint_r\" polycoef=\"0 -0.0487847"
+          },
+          {
+            "source_text_before": "name=\"knee_angle_beta_translation2_constraint_l\" polycoef=\"-0.0108281 -0.0487847",
+            "source_text_after": "name=\"knee_angle_beta_translation2_constraint_l\" polycoef=\"0 -0.0487847"
+          },
+          {
+            "source_text_before": "name=\"knee_angle_beta_translation1_constraint_r\" polycoef=\"0.0524192 -0.0150188",
+            "source_text_after": "name=\"knee_angle_beta_translation1_constraint_r\" polycoef=\"0 -0.0150188"
+          },
+          {
+            "source_text_before": "name=\"knee_angle_beta_translation1_constraint_l\" polycoef=\"0.0524192 -0.0150188",
+            "source_text_after": "name=\"knee_angle_beta_translation1_constraint_l\" polycoef=\"0 -0.0150188"
+          }
+        ]
+      }
+    ]
+  },
+  "equivalence_evidence": {
+    "method": "Recompiled pinned source before and after rebasing, projected the same eight neutral, limb-flexion, ankle, subtalar, MTP, deep-crouch, and functional-crouch coordinate sets through the original equality program, and compared all body transforms.",
+    "maximum_projected_body_translation_difference_m": 1.1464934308770758e-16,
+    "maximum_projected_body_rotation_difference_rad": 0.0,
+    "minimum_literal_qpos0_patella_anteriority_m": 0.033589316737554234,
+    "all_literal_qpos0_patella_vertices_anterior": true,
+    "evidence_boundary": "Static source and equality-projected pose equivalence only. This does not establish loaded knee contact, dynamic standing, clinical validity, or accepted runtime behavior."
+  },
+  "evidence_boundary": "The upstream archive remains immutable; the exact source-tree changes are reversible and hash-bound. The anteriority comparison uses the pinned source knee-anchor plane, not a clinical landmark standard."
+}

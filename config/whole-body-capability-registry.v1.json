@@ -9,7 +9,7 @@
       "evidence": [
         {"id": "visceral", "path": "Docs/media/whole-visceral-coverage-20260929/receipt.json", "schema": "numi.human.whole-visceral-source-evidence.v1"},
         {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"},
-        {"id": "lower_limb_overlay", "path": "Docs/media/numi-human-lower-limb-overlay-20261003/receipt.json", "schema": "numi.human.lower-limb-source-registration-refresh.v1"}
+        {"id": "patella_rebase", "path": "Docs/media/numi-human-patella-neutral-rebase-geometry-20261003/receipt.json", "schema": "numi.human.lower-limb-patella-rebase-geometry-evidence.v1"}
       ],
       "facts": [
         {"id": "source_families", "evidence": "visceral", "path": "coverage.source_families"},
@@ -20,19 +20,24 @@
         {"id": "external_ct_closed_meshes", "evidence": "external_ct_scan001", "path": "topology.closed_two_manifold_label_count"},
         {"id": "external_ct_max_volume_error", "evidence": "external_ct_scan001", "path": "integrity.maximum_relative_signed_volume_error"},
         {"id": "external_ct_subject_binding", "evidence": "external_ct_scan001", "path": "qualification.current_numi_subject_binding"},
-        {"id": "lower_limb_pose_count", "evidence": "lower_limb_overlay", "path": "pose_audit.pose_count"},
-        {"id": "lower_limb_source_geometry_checks", "evidence": "lower_limb_overlay", "path": "pose_audit.source_geometry_checks"},
-        {"id": "lower_limb_pose_audit_status", "evidence": "lower_limb_overlay", "path": "pose_audit.status"},
-        {"id": "literal_qpos0_patellar_status", "evidence": "lower_limb_overlay", "path": "pose_audit.literal_unprojected_qpos0.status"},
-        {"id": "projected_patella_min_anterior_offset_m", "evidence": "lower_limb_overlay", "path": "pose_audit.projected_patellar_anteriority.minimum_offset_m"}
+        {"id": "lower_limb_pose_count", "evidence": "patella_rebase", "path": "pose_audit.pose_count"},
+        {"id": "lower_limb_source_geometry_checks", "evidence": "patella_rebase", "path": "pose_audit.source_geometry_check_count"},
+        {"id": "lower_limb_pose_audit_status", "evidence": "patella_rebase", "path": "pose_audit.status"},
+        {"id": "literal_qpos0_patellar_status", "evidence": "patella_rebase", "path": "pose_audit.literal_unprojected_qpos0.status"},
+        {"id": "projected_patella_min_anterior_offset_m", "evidence": "patella_rebase", "path": "pose_audit.projected_patellar_anteriority.minimum_offset_m"},
+        {"id": "literal_qpos0_patella_right_min_anterior_offset_m", "evidence": "patella_rebase", "path": "pose_audit.literal_unprojected_qpos0.by_side.right.minimum_signed_anterior_offset_m"},
+        {"id": "literal_qpos0_patella_left_min_anterior_offset_m", "evidence": "patella_rebase", "path": "pose_audit.literal_unprojected_qpos0.by_side.left.minimum_signed_anterior_offset_m"},
+        {"id": "literal_qpos0_patella_posterior_or_on_plane_vertices", "evidence": "patella_rebase", "path": "pose_audit.literal_unprojected_qpos0.posterior_or_on_plane_vertex_count"},
+        {"id": "literal_qpos0_is_runtime_acceptance_pose", "evidence": "patella_rebase", "path": "pose_audit.literal_unprojected_qpos0.runtime_acceptance_pose"}
       ],
       "requirements": [
         {"id": "whole_human_anatomy", "evidence": "visceral", "path": "qualification.whole_human_anatomy", "operator": "equals", "value": true, "reason": "Whole-body anatomical coverage is not yet admitted."},
         {"id": "disjoint_tissue", "evidence": "visceral", "path": "qualification.disjoint_tissue", "operator": "equals", "value": true, "reason": "Cross-domain tissue disjointness is not yet verified."},
         {"id": "physical_volume", "evidence": "visceral", "path": "qualification.physical_volume", "operator": "equals", "value": true, "reason": "Source surfaces do not yet have admitted physical volumes."},
         {"id": "external_scan_subject_binding", "evidence": "external_ct_scan001", "path": "qualification.current_numi_subject_binding", "operator": "equals", "value": true, "reason": "Scan 001 surfaces remain scan-local external reference geometry, not registered Numi anatomy."},
-        {"id": "lower_limb_multi_pose_source_audit", "evidence": "lower_limb_overlay", "path": "pose_audit.status", "operator": "equals", "value": "passed_source_owned_bilateral_lower_limb_multi_pose_interface_patches", "reason": "The current lower-limb registration must retain its source-owned bilateral multi-pose interface audit."},
-        {"id": "projected_patella_anteriority", "evidence": "lower_limb_overlay", "path": "pose_audit.projected_patellar_anteriority.status", "operator": "equals", "value": "all_patella_vertices_anterior", "reason": "Static knee anatomy must use the equality-projected neutral pose; literal unprojected qpos0 is a pre-constraint diagnostic."}
+        {"id": "lower_limb_multi_pose_source_audit", "evidence": "patella_rebase", "path": "pose_audit.status", "operator": "equals", "value": "passed_source_owned_bilateral_lower_limb_multi_pose_interface_patches", "reason": "The current lower-limb registration must retain its source-owned bilateral multi-pose interface audit."},
+        {"id": "projected_patella_anteriority", "evidence": "patella_rebase", "path": "pose_audit.projected_patellar_anteriority.status", "operator": "equals", "value": "all_patella_vertices_anterior", "reason": "Source-equality-projected poses keep every patella vertex anterior to the source knee-anchor plane; this remains a geometry audit, not a native loaded-dynamics or clinical claim."},
+        {"id": "literal_qpos0_patellar_anteriority", "evidence": "patella_rebase", "path": "pose_audit.literal_unprojected_qpos0.status", "operator": "equals", "value": "all_patella_vertices_anterior", "reason": "The neutral-coordinate rebase keeps both source patella meshes anterior to their pinned knee-anchor planes at literal qpos0; this geometry check does not make qpos0 a native runtime acceptance pose."}
       ]
     },
     {

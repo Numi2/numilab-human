@@ -147,14 +147,22 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert anatomy_facts["external_ct_subject_binding"]["value"] is False
     assert not anatomy_gates["external_scan_subject_binding"]["satisfied"]
     assert next(item for item in anatomy["evidence"]
-                if item["id"] == "lower_limb_overlay")["status"] == "verified"
+                if item["id"] == "patella_rebase")["status"] == "verified"
     assert anatomy_facts["lower_limb_pose_count"]["value"] == 8
     assert anatomy_facts["lower_limb_source_geometry_checks"]["value"] == 185
     assert anatomy_facts["literal_qpos0_patellar_status"]["value"] == (
-        "posterior_or_intersecting_knee_anchor_plane")
+        "all_patella_vertices_anterior")
+    assert anatomy_facts[
+        "literal_qpos0_patella_right_min_anterior_offset_m"]["value"] > 0.035
+    assert anatomy_facts[
+        "literal_qpos0_patella_left_min_anterior_offset_m"]["value"] > 0.035
+    assert anatomy_facts[
+        "literal_qpos0_patella_posterior_or_on_plane_vertices"]["value"] == 0
+    assert anatomy_facts["literal_qpos0_is_runtime_acceptance_pose"]["value"] is False
     assert anatomy_facts["projected_patella_min_anterior_offset_m"]["value"] > 0.009
     assert anatomy_gates["lower_limb_multi_pose_source_audit"]["satisfied"]
     assert anatomy_gates["projected_patella_anteriority"]["satisfied"]
+    assert anatomy_gates["literal_qpos0_patellar_anteriority"]["satisfied"]
 
     organs = systems["internal_organs"]
     organ_facts = {item["id"]: item for item in organs["facts"]}

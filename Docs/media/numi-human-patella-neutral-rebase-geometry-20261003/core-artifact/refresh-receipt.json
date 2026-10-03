@@ -1,0 +1,107 @@
+{
+  "artifact": {
+    "directory": "Build/myosim-fullbody-left-knee-overlay-20261002",
+    "manifest_sha256": "6f77958df63a9785f00b3837197d521290b5cfcb0d6640692e9cf47aac7b7913",
+    "parent_manifest_sha256": "5d1d749632b521bc84bbd1d08b86044740635724c062667d6a4710e7c9735b07",
+    "payloads": {
+      "extensor_hood": {
+        "bytes": 7044,
+        "matches_parent": true,
+        "sha256": "9af89a7e5b4ea48d9e00674da8b9fb67e6749b66a3b62d267487cce89bfb1962"
+      },
+      "joint_equalities": {
+        "bytes": 4976,
+        "matches_parent": true,
+        "sha256": "b97f755c769d0af16e02ab5deb9d85bd0cc921649197f71d308e98130ac69b6a"
+      },
+      "joint_equalities_source_compliance": {
+        "bytes": 5792,
+        "matches_parent": true,
+        "sha256": "12db05fddb492e77e7fd461fad566d3e1e75390f2cb6f77f26568254a6cb4477"
+      },
+      "joint_limits_source_compliance": {
+        "bytes": 9840,
+        "matches_parent": false,
+        "sha256": "fb799ed55a61c0d08a84fcb5ddd3f278ed8561e881318ca76d61e9e51268a29c"
+      },
+      "muscles": {
+        "bytes": 149372,
+        "matches_parent": true,
+        "sha256": "a4381465ca97a7af20108180e2fc0d0f0d9c11778d913de4c0728bd20ed459a7"
+      },
+      "rigid": {
+        "bytes": 60324,
+        "matches_parent": true,
+        "sha256": "5b756750447862643356517db9dfa6b77d0527d244b449638dca16bb9c520951"
+      },
+      "support_contact": {
+        "bytes": 564,
+        "matches_parent": true,
+        "sha256": "4d54f8155cd83baaee7af536099824ac0da61e5d5e77544b42c6e5ce1b48c907"
+      },
+      "support_primitives": {
+        "bytes": 1044,
+        "matches_parent": true,
+        "sha256": "c7712daf79cd8a589a6d23942a4df84a7da928e5911455ce19078f9b24daaaf4"
+      }
+    }
+  },
+  "compiled_pose_checks": [
+    {
+      "left_source_range_passed": true,
+      "left_translation2_m": -7.69254e-11,
+      "pose": "neutral",
+      "source_range_failures": []
+    },
+    {
+      "left_source_range_passed": true,
+      "left_translation2_m": -0.004272701658900899,
+      "pose": "bilateral_knee_flexion",
+      "source_range_failures": []
+    },
+    {
+      "left_source_range_passed": true,
+      "left_translation2_m": -0.005764616344853398,
+      "pose": "bilateral_deep_crouch",
+      "source_range_failures": []
+    },
+    {
+      "left_source_range_passed": true,
+      "left_translation2_m": -0.0037022517139371188,
+      "pose": "bilateral_functional_crouch",
+      "source_range_failures": [
+        "knee_angle_rotation2_r",
+        "knee_angle_rotation2_l"
+      ]
+    }
+  ],
+  "equality_payload_checks": {
+    "all_exact": true,
+    "count": 2,
+    "mismatches": 0
+  },
+  "muscle_fit_cache": {
+    "muscle_count": 416,
+    "muscle_payload_matches_parent": true,
+    "name_order_and_fit_inputs_matched_export": true,
+    "source_archive_sha256_matches": true
+  },
+  "qualification_boundary": "Source interval and compiler payload checks only; does not qualify loaded knee mechanics, clinical anatomy, contact, or sustained standing.",
+  "schema": "numi.human.myosim-left-knee-range-overlay-refresh.v1",
+  "source": {
+    "archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "overlay_id": "myosim-left-knee-translation2-reflected-range-20261002",
+    "overlay_manifest_sha256": "05f6b7698e571c83a62bdbc7055ff24322800a36e9b53e455a18b451e7b9dad4",
+    "revision": "33c89c2bde282553dde3f526768eb3bdcfaa7649",
+    "source_file_sha256_after": "885fdc6fa0e8a2d24d590c3987856f4a17256f1d44f277f46ecf9dbfedc02b0a",
+    "source_file_sha256_before": "da7c4a13eec2abfedc683210972ea423d630461a56909bee2884e181e1bf1d97"
+  },
+  "source_domain_audit": {
+    "evaluated_equalities": 51,
+    "expected_equalities": 51,
+    "left_translation2_conflict": false,
+    "range_conflicts": 37,
+    "unverified_driver_domains": 0
+  },
+  "status": "source_and_compiled_range_verified"
+}
