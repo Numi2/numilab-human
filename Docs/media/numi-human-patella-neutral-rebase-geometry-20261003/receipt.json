@@ -135,12 +135,15 @@
     "--bone-artifact",
     "Docs/media/numi-human-patella-neutral-rebase-geometry-20261003/bone-artifact",
     "--output",
-    "Docs/media/numi-human-patella-neutral-rebase-geometry-20261003/pose-audit.reproduced.json"
+    "Docs/media/numi-human-patella-neutral-rebase-geometry-20261003/pose-audit.reproduced.json",
+    "--python",
+    "/private/tmp/numi-human-myosim-20261003/bin/python"
   ],
   "runtime_boundary": {
     "bone_payload_status": "native_visual_binding_input_not_collision_or_physics",
     "claim": "Geometry/source-pose audit only. This does not establish cartilage-facing orientation, contact, native loaded dynamics, gait, clinical registration, physiological validity, or runtime acceptance of literal qpos0.",
-    "core_runtime_admission": "staging_core_only_geometry_pose_audit"
+    "core_runtime_admission": "staging_core_only_geometry_pose_audit",
+    "python_environment": "Pinned MyoSim/MuJoCo environment used by the owner CLI; system Python 3.14 does not include the required MyoSim/MuJoCo dependencies."
   },
   "schema": "numi.human.lower-limb-patella-rebase-geometry-evidence.v1",
   "source": {
