@@ -1,0 +1,369 @@
+{
+  "finding": "The source-defined frame shows whether the gross patellar path moves anteriorly, proximally, or around the flexion axis, but these cross-specimen components are diagnostic only. The MyoSim path remains source-range-discontinuous and its pinned femur/patella meshes still intersect at sampled range-valid poses; no path correction is selected by this comparison.",
+  "limitations": {
+    "clinical_anatomy_qualified": false,
+    "continuous_angle_interval_qualified": false,
+    "different_specimens_and_mechanics": true,
+    "loaded_tracking_qualified": false,
+    "open_knee_active_quadriceps_load_present": false,
+    "quasi_static_open_knee_reference_not_local_solver_replay": true,
+    "registered_surface_intersection_gate_passed": false,
+    "source_mesh_intersection_gate_passed": false,
+    "source_path_correction_selected": false,
+    "source_range_valid_path_is_discontinuous": true,
+    "translation_uses_each_model_inertial_com": true,
+    "whole_human_qualified": false
+  },
+  "method": {
+    "baseline_states": {
+      "myosim": {
+        "flexion_deg": 0.0,
+        "state": "source-equality-projected qpos0"
+      },
+      "open_knee": {
+        "continuation_parameter_is_elapsed_time": false,
+        "flexion_deg": 0.1294684279282639,
+        "step": 1
+      }
+    },
+    "comparison": "Open Knee inertial COM path change is relative to its first accepted state; MyoSim inertial COM path change is relative to source-equality-projected qpos0. Patella orientation uses femur-relative quaternion change from each model's baseline, expressed as rotation-vector components.",
+    "component_order": [
+      "flexion",
+      "anterior",
+      "proximal"
+    ],
+    "component_units": {
+      "orientation": "degrees",
+      "position": "m"
+    },
+    "myosim": "The pinned full-body source model is equality-projected at each 0.5 degree flexion sample; only samples whose projected joint coordinates remain within all declared source ranges are retained.",
+    "open_knee": "Archived FEBio rigid-body centers and rotations are made femur-relative, then transformed by the pinned proper uniform source-to-MyoSim femoral registration.",
+    "registration_semantics": "Open Knee Xf/Yf/Zf anatomical axes map to the MyoSim flexion/anterior/proximal axes. The transform preserves handedness and uses the source registration's uniform condylar-width scale."
+  },
+  "predicate_sources": {
+    "open_knee.py": "4a8695d3786edea29a69c18c657b92bea13ce918226dcd979685a4d40844bbf8",
+    "patellofemoral_anatomical_frame_audit.py": "923cbc25f514ad7e0851b8f91d209937d7575eea56cf74d212cb03a3cc46f69e",
+    "patellofemoral_reference_path_comparison.py": "424dadcd317d73f47a17370a24040d82731767a24a7f18caf5d3b444bb76fc18"
+  },
+  "question": "Do source-equality MyoSim and archived Open Knee patella paths move in the same directions in an anatomically registered femoral frame?",
+  "registration": {
+    "manifest_file": "Docs/media/numi-human-patellofemoral-anatomical-frame-path-20261003/open-knee-oks003-left.manifest.json",
+    "manifest_schema": "numi.human.open-knee-oks003-payload.v3",
+    "manifest_sha256": "0c2153f78d69c3e21978e67d33f527d2e03076a91c7341903e70ed7477c74153",
+    "myosim_femoral_condylar_width_m": 0.07112647905878794,
+    "proper_rotation_determinant": 1.0000000000000002,
+    "source_axes_xyz": {
+      "Xf_axis": [
+        0.9889108468842679,
+        -0.1485103932882822,
+        0.0
+      ],
+      "Yf_axis": [
+        0.1485103932882822,
+        0.9889108468842679,
+        -0.0
+      ],
+      "Zf_axis": [
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    "source_femoral_condylar_width_m": 0.07226716070809897,
+    "source_origin_fmo_mm": [
+      -1.036,
+      -6.717,
+      0.171
+    ],
+    "source_to_myo_femur_body_rotation": [
+      [
+        0.14851039289333826,
+        0.9889108469435789,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ],
+      [
+        0.9889108469435789,
+        -0.14851039289333826,
+        0.0
+      ]
+    ],
+    "target_anterior_alignment": 0.9999993658640881,
+    "target_axes_in_myo_femur_body": {
+      "anterior": [
+        1.0,
+        -0.0,
+        3.993726296921194e-10
+      ],
+      "flexion": [
+        -3.993726296921194e-10,
+        -0.0,
+        1.0
+      ],
+      "proximal": [
+        0.0,
+        1.0,
+        0.0
+      ]
+    },
+    "uniform_scale": 0.9842157677410566
+  },
+  "reproduction_command": [
+    "/Users/home/numilab-human/.venv-mujoco312/bin/python",
+    "-m",
+    "numilab_human.patellofemoral_anatomical_frame_audit",
+    "--sources",
+    "/Users/home/numilab-human/Sources",
+    "--observations",
+    "/Users/home/numilab-human/Docs/media/open-knee-reference-20261001/archived-observations.json.gz",
+    "--archive-audit",
+    "/Users/home/numilab-human/Docs/media/open-knee-reference-20261001/recovered-source-audit.json",
+    "--intersection-receipt",
+    "/Users/home/numilab-human/Docs/media/numi-human-patellofemoral-pose-intersections-20261003/receipt.json",
+    "--open-knee-manifest",
+    "/Users/home/numilab-human/Docs/media/numi-human-patellofemoral-anatomical-frame-path-20261003/open-knee-oks003-left.manifest.json",
+    "--output",
+    "<new-receipt-path>"
+  ],
+  "results": {
+    "baseline_patella_com_relative_to_femur_com_flexion_anterior_proximal_m": {
+      "myosim_source_equality_qpos0": [
+        -0.0012396985731491443,
+        0.046509917954486564,
+        -0.19579694728777305
+      ],
+      "open_knee_first_observation": [
+        -0.003092361334773244,
+        0.052367655199286635,
+        0.003389423631953884
+      ]
+    },
+    "matched_flexion_path_components": [
+      {
+        "flexion_deg": 30.0,
+        "myosim_com_path_change_from_qpos0_flexion_anterior_proximal_m": [
+          3.3334707938738252e-12,
+          -0.008346785645620088,
+          -0.022833087771510385
+        ],
+        "myosim_minus_open_knee_com_path_change_flexion_anterior_proximal_m": [
+          0.0009921419577144331,
+          -0.003442859191821722,
+          0.004925122795598716
+        ],
+        "myosim_minus_open_knee_rotation_change_flexion_anterior_proximal_deg": [
+          1.2550208218282428,
+          -0.5721661841999293,
+          -2.9617954695541706
+        ],
+        "myosim_patella_inertial_com_minus_femur_inertial_com_flexion_anterior_proximal_m": [
+          -0.0012396985698156736,
+          0.038163132308866476,
+          -0.21863003505928344
+        ],
+        "myosim_patella_rotation_change_flexion_anterior_proximal_deg": [
+          -14.640169240892876,
+          -5.846883312103239e-09,
+          -3.2130374207344294e-15
+        ],
+        "myosim_source_sample_bracket_deg": [
+          29.999999999999996
+        ],
+        "open_knee_com_path_change_from_first_observation_flexion_anterior_proximal_m": [
+          -0.0009921419543809623,
+          -0.0049039264537983655,
+          -0.0277582105671091
+        ],
+        "open_knee_observation_steps": [
+          60,
+          61
+        ],
+        "open_knee_patella_com_minus_femur_com_flexion_anterior_proximal_m": [
+          -0.0040845032891542055,
+          0.04746372874548827,
+          -0.024368786935155217
+        ],
+        "open_knee_patella_rotation_change_flexion_anterior_proximal_deg": [
+          -15.895190062721118,
+          0.572166178353046,
+          2.9617954695541675
+        ]
+      },
+      {
+        "flexion_deg": 60.0,
+        "myosim_com_path_change_from_qpos0_flexion_anterior_proximal_m": [
+          8.026649454033995e-12,
+          -0.020098180834299144,
+          -0.03923290402498389
+        ],
+        "myosim_minus_open_knee_com_path_change_flexion_anterior_proximal_m": [
+          0.002214451384486836,
+          0.002698535658114804,
+          0.0020173562845830634
+        ],
+        "myosim_minus_open_knee_rotation_change_flexion_anterior_proximal_deg": [
+          -6.77593767942826,
+          3.4875345957956334,
+          -5.115940172452682
+        ],
+        "myosim_patella_inertial_com_minus_femur_inertial_com_flexion_anterior_proximal_m": [
+          -0.0012396985651224948,
+          0.026411737120187424,
+          -0.23502985131275694
+        ],
+        "myosim_patella_rotation_change_flexion_anterior_proximal_deg": [
+          -43.62687439975905,
+          -1.742337745636044e-08,
+          9.531908423502808e-15
+        ],
+        "myosim_source_sample_bracket_deg": [
+          59.99999999999999
+        ],
+        "open_knee_com_path_change_from_first_observation_flexion_anterior_proximal_m": [
+          -0.0022144513764601865,
+          -0.022796716492413948,
+          -0.04125026030956695
+        ],
+        "open_knee_observation_steps": [
+          100,
+          101
+        ],
+        "open_knee_patella_com_minus_femur_com_flexion_anterior_proximal_m": [
+          -0.005306812711233431,
+          0.029570938706872687,
+          -0.03786083667761307
+        ],
+        "open_knee_patella_rotation_change_flexion_anterior_proximal_deg": [
+          -36.85093672033079,
+          -3.487534613219011,
+          5.115940172452691
+        ]
+      },
+      {
+        "flexion_deg": 89.94454550419701,
+        "myosim_com_path_change_from_qpos0_flexion_anterior_proximal_m": [
+          1.4378790328579401e-11,
+          -0.03600346192616673,
+          -0.04591165255401983
+        ],
+        "myosim_minus_open_knee_com_path_change_flexion_anterior_proximal_m": [
+          -0.001911960710676675,
+          0.0070814623416428565,
+          0.0012805648144102316
+        ],
+        "myosim_minus_open_knee_rotation_change_flexion_anterior_proximal_deg": [
+          -14.982921783632207,
+          7.527690237470402,
+          -1.5249396624754425
+        ],
+        "myosim_patella_inertial_com_minus_femur_inertial_com_flexion_anterior_proximal_m": [
+          -0.001239698558770354,
+          0.01050645602831984,
+          -0.24170859984179288
+        ],
+        "myosim_patella_rotation_change_flexion_anterior_proximal_deg": [
+          -72.99861446302044,
+          -2.9153648075014936e-08,
+          3.4909680931162108e-15
+        ],
+        "myosim_source_sample_bracket_deg": [
+          89.5,
+          90.0
+        ],
+        "open_knee_com_path_change_from_first_observation_flexion_anterior_proximal_m": [
+          0.0019119607250554652,
+          -0.043084924267809584,
+          -0.04719221736843006
+        ],
+        "open_knee_observation_steps": [
+          140
+        ],
+        "open_knee_patella_com_minus_femur_com_flexion_anterior_proximal_m": [
+          -0.0011804006097177785,
+          0.009282730931477055,
+          -0.04380279373647618
+        ],
+        "open_knee_patella_rotation_change_flexion_anterior_proximal_deg": [
+          -58.01569267938824,
+          -7.527690266624051,
+          1.524939662475446
+        ]
+      }
+    ],
+    "registered_surface_collision_gate": {
+      "range_valid_intersecting_pose_side_count": 41,
+      "range_valid_intersection_pair_count": 1631,
+      "range_valid_pose_surface_intersections_absent": false,
+      "range_valid_sample_count": 34
+    },
+    "sampled_anterior_com_component_relative_to_femur_com_m": {
+      "component_semantics": "signed projection on the registered anterior axis; not surface clearance",
+      "myosim_source_range_valid": {
+        "maximum_m": 0.046509917954486564,
+        "minimum_m": 0.010476328474046908,
+        "positive_at_every_retained_sample": true,
+        "sample_count": 155
+      },
+      "open_knee": {
+        "maximum_m": 0.05365296470870085,
+        "minimum_m": 0.009282730931477055,
+        "positive_at_every_accepted_sample": true,
+        "sample_count": 140
+      }
+    },
+    "source_myo_sim_collision_gate": {
+      "range_valid_intersecting_pose_side_count": 56,
+      "range_valid_intersection_pair_count": 1236,
+      "range_valid_pose_surface_intersections_absent": false,
+      "range_valid_sample_count": 34
+    }
+  },
+  "schema": "numi.human.patellofemoral-anatomical-frame-path-audit.v1",
+  "sources": {
+    "intersection_receipt_sha256": "8a1e5c8456fd8c88bbc797f8db1524794bedf5cc69e1b907fd6db528009e5c7f",
+    "myosim": {
+      "archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+      "mujoco_version": "3.12.0",
+      "revision": "33c89c2bde282553dde3f526768eb3bdcfaa7649",
+      "source_overlays": {
+        "checkout/myo_sim/models/leg/assets/myolegs_assets.xml": {
+          "sha256": "293a7f618e4ae151ff9cab6f277cbb88caa1d7f418104ab85776c208d6ab3b3d"
+        },
+        "checkout/myo_sim/models/leg/assets/myolegs_chain.xml": {
+          "sha256": "98e514ce869683e273a18794f6494df0c64dec13eec636b683a165cf30109b29"
+        }
+      },
+      "source_range_invalid_ranges_deg": [
+        {
+          "end_deg": 1.0,
+          "sample_count": 2,
+          "start_deg": 0.5
+        },
+        {
+          "end_deg": 50.0,
+          "sample_count": 16,
+          "start_deg": 42.5
+        },
+        {
+          "end_deg": 64.0,
+          "sample_count": 8,
+          "start_deg": 60.5
+        }
+      ],
+      "source_range_invalid_sample_count": 26,
+      "source_range_valid_sample_count": 155
+    },
+    "open_knee": {
+      "accepted_increment_count": 140,
+      "archive_audit_sha256": "3990ca21feda4d8541d2695f00b68eb5656c4a223e61793fa1dad76ad675911d",
+      "negative_jacobian_trial_diagnostics": 185,
+      "observation_sha256": "9a99bbdcc94b4ba1aca22c9cc3d72919db9b1e08fec703732f8fcf635705d149",
+      "original_binary_identity_supplied": true
+    }
+  },
+  "status": "exploratory_only_no_qualification"
+}

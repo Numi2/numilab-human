@@ -54,8 +54,12 @@ binds the MyoSim source overlays, Open Knee observations and archive audit, and
 the earlier exact-intersection failure. It records 185 negative-Jacobian trial
 diagnostics in the reference log. Clinical anatomy, loaded tracking, continuous
 motion, contact, source-path correction and whole-Human qualification remain
-false. The next repair needs source-bound anatomical frame registration and a
-loaded patellar path that preserves quadriceps/patellar-tendon ownership while
-passing the existing range and surface-intersection gates.
+false. The follow-up [anatomical-frame path audit](PATELLOFEMORAL_ANATOMICAL_FRAME_PATH_AUDIT_20261003.md)
+adds a source-defined Open Knee-to-MyoSim femoral frame. It finds positive
+anterior COM projection at every accepted/retained sample, while exposing a
+14.983° endpoint flexion-axis rotation excess and the unchanged range and
+surface-intersection failures. No path correction is selected; future tracking
+work still needs a continuous source-range-valid, collision-free path and loaded
+quadriceps/patellar-tendon evidence.
 
 The focused analysis tests pass (5 passed); Ruff and `git diff --check` pass.

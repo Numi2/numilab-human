@@ -149,6 +149,19 @@ valid path. The immutable [receipt](media/numi-human-patellofemoral-reference-pa
 preserves both datasets and keeps source-path correction, clinical tracking,
 contact, and whole-Human qualification open.
 
+The [source-registered anatomical-frame follow-up](PATELLOFEMORAL_ANATOMICAL_FRAME_PATH_AUDIT_20261003.md)
+maps Open Knee femoral axes into the current MyoSim femoral frame with a proper
+rotation and bounded uniform scale. Patella COMs project anteriorly at every
+accepted/retained sample in both records (minimum 9.283 mm in Open Knee and
+10.476 mm in MyoSim), supporting the front/back interpretation for those
+samples. The frame comparison exposes a 14.983° extra MyoSim flexion-axis
+rotation at the archived endpoint and smaller missing anterior/proximal
+components. It remains cross-specimen and passive: 26/181 MyoSim path samples
+are outside source limits, exact source surfaces still intersect at sampled
+valid poses, and loaded, continuous, clinical, and whole-Human qualification
+remain open. The [immutable receipt](media/numi-human-patellofemoral-anatomical-frame-path-20261003/receipt.json)
+binds this comparison and its registration.
+
 ## Healthy whole-body CT spatial source candidates — 2026-10-03
 
 The [30-scan TCIA source intake](HEALTHY_TOTAL_BODY_CT_SOURCE_INGEST_20261003.md)

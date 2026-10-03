@@ -364,10 +364,15 @@ def _myosim_rows(sources: Path, np: Any, mujoco: Any) -> tuple[dict[str, Any], l
             qf_inverse,
             (data.xpos[patella_body] - data.xpos[femur_body]).tolist(),
         )
+        inertial_com_position = _quaternion_rotate(
+            qf_inverse,
+            (data.xipos[patella_body] - data.xipos[femur_body]).tolist(),
+        )
         rotation = _quaternion_multiply(qf_inverse, qp)
         rows.append({
             "knee_flexion_deg": math.degrees(float(theta)),
             "patella_position_relative_femur_body_origin_m": position,
+            "patella_inertial_com_relative_femur_inertial_com_m": inertial_com_position,
             "patella_rotation_relative_femur_xyzw": rotation,
         })
 
