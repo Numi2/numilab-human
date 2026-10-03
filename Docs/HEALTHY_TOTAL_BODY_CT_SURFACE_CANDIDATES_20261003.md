@@ -104,6 +104,35 @@ are `8bc62fbf87a018bee0f5722e428bf7d9a0f89b5ad1981a448493f09df87b0dcd`,
 `727882bd1beaf9210fc5a6f6e16d2d4a0147800052a4113c3f70877ab000c2e0`, and
 `d33da8345d15ac82deb84885ff37e34cbf1119ab748456f782ba8c1e530ce5d4`.
 
+## Scan-001 lower-limb contact-split candidate
+
+A separate preregistered run applies the same coordinate-preserving contact
+split to the scan-001 Femur, Fibula, Patella, and Tibia masks. The raw Femur and
+Tibia each had four-face contact edges and nonmanifold vertex links; Fibula and
+Patella were already closed. All four candidate meshes are now closed
+two-manifolds. The independent source/PLY audit passes all four, and the
+controlled comparison against the retained raw meshes confirms unchanged face
+counts, identical ordered triangle coordinates, and zero surface-area delta.
+Maximum absolute signed-volume delta is `1.0477378964424133e-9 mm3`; maximum
+relative candidate occupancy-volume error is `1.1019419408453997e-15`.
+
+The [preregistered plan](media/healthy-total-body-ct-surface-20261003/preregistered-lower-limb-contact-split-scan-001-plan-v1.json),
+[candidate receipt and PLYs](media/healthy-total-body-ct-surface-20261003/lower-limb-contact-split-scan-001-v1/receipt.json),
+[independent audit](media/healthy-total-body-ct-surface-20261003/independent-lower-limb-contact-split-scan-001-audit-v1.json),
+and [raw-control comparison](media/healthy-total-body-ct-surface-20261003/lower-limb-contact-split-controlled-comparison-v1.json)
+bind this result. The plan, candidate receipt, audit, comparison, and comparison
+script SHA-256 values are `64b6d640886666bd0a8e5f18c78b086faa44d683d67f8c3f16008b515a0224f57`,
+`d3b57ab6ceebcfbef76671a27a90c9d811cb7cf19ed3211ada974fdc20fe705d`,
+`be32dc937fcce817ac384d64a7b3517f2b659017b65d1f44514916063b817da8`,
+`2f3c447199f6158e0c9d6cd8836cd20ff452be4e003b4f24e7a92b671e656001`, and
+`3a27850eef94c7f8d3107a56a34e33cd1e5ce4ca36ed2364d0dad4414331bc66`.
+
+The split only duplicates vertex indices at voxel-contact fans. These remain
+scan-specific candidates from an automatic segmentation; neither topology nor
+anterior surface ordering establishes expert segmentation accuracy, subject
+binding, clinical anatomy, patellar tracking, physical tissue ownership,
+mechanics, or physiology.
+
 These are topology-only candidates for external automatic segmentations in
 each scan's own coordinate frame. The scans are not registered to Numi's
 mechanical subject; expert segmentation accuracy, tissue ownership, mechanics,

@@ -10,6 +10,19 @@ a calendar schedule. The current physical runtime baseline is the published
 integration branch and [four-grid production diagnostic](NATIVE_COMMON_DURATION_PRODUCTION.md);
 reconciliation onto the native default line remains open.
 
+## External lower-limb mesh topology candidate — 2026-10-03
+
+The preregistered scan-001 contact split closes the raw Femur and Tibia voxel
+boundary defects; the selected Fibula and Patella controls were already closed.
+All four candidates pass the independent archive/NIfTI/PLY audit. The controlled
+comparison preserves every triangle-coordinate sequence and surface area, with
+maximum relative occupancy-volume error `1.1019419408453997e-15`. This is a
+vertex-index topology candidate for one external automatic segmentation. It
+does not bind the surfaces to Numi's participant, validate the segmentation,
+resolve the MyoSim patellofemoral crossings, or qualify clinical anatomy,
+mechanics, contact, or physiology. The [plan, meshes, audit, and comparison](HEALTHY_TOTAL_BODY_CT_SURFACE_CANDIDATES_20261003.md#scan-001-lower-limb-contact-split-candidate)
+preserve the exact source identities and controls.
+
 ## Current toe-enthesis standing prefix — 2026-10-02
 
 The physical M4 Pro accepted a 512-step, 1 ms source-path-feedback prefix using
